@@ -1,0 +1,34 @@
+<div class="bg-white shadow rounded-lg mb-8">
+    <div class="bg-white px-4 py-5 border-b border-gray-200 sm:px-6">
+      <div class="-ml-4 -mt-2 flex items-center justify-between flex-wrap sm:flex-no-wrap">
+        <div class="ml-4 mt-2">
+          <h3 class="text-lg leading-6 font-medium text-gray-900">
+            <%= @feed_title %>
+          </h3>
+        </div>
+        <div class="ml-4 mt-2 flex-shrink-0">
+          <span class="inline-flex">
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4"></path></svg>
+          </span>
+        </div>
+      </div>
+    </div>
+    <div class="max-w-7xl mx-auto">
+      <%= live_component(
+        @socket,
+        ActivityLive
+      ) %>
+      <%= live_component(
+        @socket,
+        ActivityLive
+      ) %>
+      <%= live_component(
+        @socket,
+        ActivityLive
+      ) %>
+      <%= live_component(
+        @socket,
+        ActivityLive
+      ) %>
+    </div>
+</div>

@@ -1,0 +1,43 @@
+  <div class="flex flex-col overflow-hidden my-6">
+    <div class="rounded-t-md flex-shrink-0 flex h-16 bg-white shadow justify-between">
+      <div class="flex items-center flex-shrink-0 px-4">
+        <div class="border-r pr-4">
+          <img class="inline-block h-10 w-10 rounded-md" src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80" alt="">
+        </div>
+        <div class="hidden lg:block lg:ml-6">
+          <div class="flex">
+            <a href="#" class="px-3 py-2 rounded-md text-sm leading-5 font-normal text-gray-800 focus:outline-none focus:text-gray-700 transition duration-150 ease-in-out">About</a>
+            <a href="#" class="ml-4 px-3 py-2 rounded-md text-sm leading-5 font-normal text-gray-800 hover:text-gray-700 focus:outline-none focus:text-gray-700 transition duration-150 ease-in-out">Timeline</a>
+            <a href="#" class="ml-4 px-3 py-2 rounded-md text-sm leading-5 font-normal text-gray-800 hover:text-gray-700 focus:outline-none focus:text-gray-700 transition duration-150 ease-in-out">Media</a>
+          </div>
+        </div>
+      </div>
+      <div class="px-4 flex ">
+        <div class="ml-4 flex items-center md:ml-6">
+          <span class="inline-flex rounded-md shadow-sm">
+            <button type="button" class="inline-flex items-center px-4 py-2 text-sm leading-5 font-medium rounded-md text-gray-100 bg-gray-900 hover:bg-gray-800 hover:text-gray-200 focus:outline-none focus:border-blue-300 focus:shadow-outline-blue active:text-gray-200 active:bg-gray-700 transition ease-in-out duration-150">
+              Follow
+            </button>
+          </span>
+          <span class="inline-flex ml-3">
+              <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="M5 12h.01M12 12h.01M19 12h.01M6 12a1 1 0 11-2 0 1 1 0 012 0zm7 0a1 1 0 11-2 0 1 1 0 012 0zm7 0a1 1 0 11-2 0 1 1 0 012 0z"></path></svg>
+          </span>
+        </div>
+    </div>
+  </div>
+  <div class="relative">
+    <div style="height: 315px" class="bg-gray-400"></div>
+    <div class="absolute ml-6 mb-6 bottom-0 left-0">
+      <div class="flex items-center">
+        <img style="width: 140px; height: 140px" class="inline-block h-24 w-24 rounded-md" src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80" alt="">
+        <div class="ml-6">
+          <h1 class="text-3xl font-bold text-gray-800"><%= @current_user.profile.name %></h1>
+          <h3 class="text-md font-bold text-gray-800">@<%= @current_user.character.username %></h3>
+          <span class="inline-flex items-center px-2 py-1 mt-2 rounded-md text-sm font-medium leading-5 bg-pink-100 text-pink-800">
+            Badge
+          </span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,131 @@
+
+  <div class="hidden lg:flex mt-6 md:flex-shrink-0">
+    <div class="flex flex-col w-64">
+      <div class="flex flex-col flex-grow  pb-4 overflow-y-auto">
+        <!-- div class="flex items-center flex-shrink-0 px-4">
+          <%= link to: Routes.live_path(@socket, Bonfire.Me.Web.MeHomeLive, @current_user.character.username) do %>
+            <div class="flex items-center">
+              <svg class="mx-auto" width="28px" height="28px" viewBox="0 0 28 28" version="1.1" xmlns="http://www.w3.org/2000/svg">
+                <g id="Artboard-Copy-2" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+                    <rect id="Rectangle-14-Copy-3" fill="#353535" x="0" y="0" width="28" height="28" rx="4"></rect>
+                    <path d="M19.5,41.5 L41.0058132,19.9941868" id="Line-7" stroke="#FFFFFF" stroke-width="3" stroke-linecap="square"></path>
+                </g>
+              </svg>
+              <h2 class="ml-2 text-sm font-medium text-gray-900">Bonfire / Instance name</h2>
+            </div>
+          <% end %>
+        </div -->
+        <!-- div class="mt-5 px-2">
+          <form class="w-full items-center flex md:ml-0" action="#" method="GET">
+            <label for="search_field" class="sr-only">Search</label>
+            <div style="max-width: 290px; height: 40px;" class="relative w-full text-gray-400 focus-within:text-gray-600">
+              <div style="left: 8px" class="text-gray-500 absolute inset-y-0 left-0 flex items-center pointer-events-none">
+                <svg class="h-5 w-5 fill-current" fill="currentColor" viewBox="0 0 20 20">
+                  <path fill-rule="evenodd" clip-rule="evenodd" d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z" />
+                </svg>
+              </div>
+              <input type="search" id="search_field" class="pl-8 w-full bg-gray-300 placeholder-gray-500 h-full" placeholder="Search">
+            </div>
+          </form>
+        </div -->
+        <!-- div class="mt-5 px-2">
+          <div class="flex items-center">
+            <img class="inline-block h-12 w-12 rounded-full" src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80" alt="">
+            <div class="flex-1 ml-3">
+              <h3 class="text-base text-gray-700"><a class="font-bold" href="#"><%= @current_user.character.username %></a></h3>
+              <span class="text-sm text-gray-500">@<%= @current_user.character.username %></span>
+            </div>
+            <div class="flex items-center">
+              <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"></path></svg>
+              <svg class="ml-2 w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="M12 5v.01M12 12v.01M12 19v.01M12 6a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2z"></path></svg>
+            </div>
+          </div>
+        </div -->
+
+        <!-- div class="mt-5 px-2">
+          <div class="bg-white overflow-hidden shadow rounded-lg">
+            <div class="border-b">
+              <label class="block">
+                <span class="sr-only text-gray-700">Select an action</span>
+                <select class="form-select border-none shadow-none rounded-none mt-1 block w-full">
+                  <option>Write a post</option>
+                  <option>Create a poll</option>
+                  <option>Upload an image</option>
+                </select>
+              </label>
+            </div>
+            <label class="block">
+              <span class="sr-only text-gray-700">Textarea</span>
+              <textarea class=" border-none focus:outline-none active:outline-none shadow-none rounded-none form-textarea mt-1 block w-full" rows="3" placeholder="Enter some long form content."></textarea>
+            </label>
+            <div class="flex items-center bg-gray-200 p-2 rounded-b border-t">
+              <div class="flex-1 flex items-center ">
+                <svg class="w-5 mr-3 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="M4 8V4m0 0h4M4 4l5 5m11-1V4m0 0h-4m4 0l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5l-5-5m5 5v-4m0 4h-4"></path></svg>
+                <svg class="w-5 mr-3 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><polyline points="4 7 4 4 20 4 20 7"></polyline><line x1="9" y1="20" x2="15" y2="20"></line><line x1="12" y1="4" x2="12" y2="20"></line></svg>
+              </div>
+              <span class="inline-flex rounded-md shadow-sm">
+              <button type="button" class="inline-flex items-center px-4 py-2 text-sm leading-5 font-medium rounded-md text-gray-100 bg-gray-900 hover:bg-gray-800 hover:text-gray-200 focus:outline-none focus:border-blue-300 focus:shadow-outline-blue active:text-gray-200 active:bg-gray-700 transition ease-in-out duration-150">
+                Login
+              </button>
+            </span>
+            </div>
+          </div>
+        </div -->
+
+
+        <div class="flex-grow flex flex-col">
+          <nav class="flex-1 px-2 space-y-1">
+
+            <%= link to: Routes.live_path(@socket, Bonfire.Me.Web.MeHomeLive ) do %>
+              <button class="group flex items-center px-2 py-2 text-sm leading-5 font-medium text-gray-600 rounded-md hover:text-gray-900 hover:bg-gray-50 focus:outline-none focus:text-gray-900 focus:bg-gray-50 transition ease-in-out duration-150">
+                <!-- Heroicon name: folder -->
+                <svg class="mr-3 h-6 w-6 text-gray-500 group-hover:text-gray-600 group-focus:text-gray-600 transition ease-in-out duration-150" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 5c7.18 0 13 5.82 13 13M6 11a7 7 0 017 7m-6 0a1 1 0 11-2 0 1 1 0 012 0z"></path>
+                </svg>
+                My feed
+              </button>
+            <% end %>
+
+            <%= link to: Routes.live_path(@socket, Bonfire.Me.Web.MeInstanceLive ) do %>
+              <button class="group flex items-center px-2 py-2 text-sm leading-5 font-medium text-gray-600 rounded-md hover:text-gray-900 hover:bg-gray-50 focus:outline-none focus:text-gray-900 focus:bg-gray-50 transition ease-in-out duration-150">
+                <!-- Heroicon name: folder -->
+                <svg class="mr-3 w-6 h-6 text-gray-500 group-hover:text-gray-600 group-focus:text-gray-600 transition ease-in-out duration-150" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"></path></svg>
+                Instance timeline
+              </button>
+            <% end %>
+
+            <%= link to: Routes.live_path(@socket, Bonfire.Me.Web.MeFediverseLive) do %>
+              <button class="group flex items-center px-2 py-2 text-sm leading-5 font-medium text-gray-600 rounded-md hover:text-gray-900 hover:bg-gray-50 focus:outline-none focus:text-gray-900 focus:bg-gray-50 transition ease-in-out duration-150">
+                <!-- Heroicon name: globe-alt -->
+                <svg class="mr-3 h-6 w-6 text-gray-500 group-hover:text-gray-600 group-focus:text-gray-600 transition ease-in-out duration-150" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 01-9 9m9-9a9 9 0 00-9-9m9 9H3m9 9a9 9 0 01-9-9m9 9c1.657 0 3-4.03 3-9s-1.343-9-3-9m0 18c-1.657 0-3-4.03-3-9s1.343-9 3-9m-9 9a9 9 0 019-9" />
+                </svg>
+                Federated timeline
+              </button>
+            <% end %>
+
+            <%= link to: Routes.live_path(@socket, Bonfire.Me.Web.MeInstanceLive) do %>
+              <button class="group flex items-center px-2 py-2 text-sm leading-5 font-medium text-gray-600 rounded-md hover:text-gray-900 hover:bg-gray-50 focus:outline-none focus:text-gray-900 focus:bg-gray-50 transition ease-in-out duration-150">
+                <!-- Heroicon name: inbox -->
+                <svg class="mr-3 h-6 w-6 text-gray-500 group-hover:text-gray-600 group-focus:text-gray-600 transition ease-in-out duration-150" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 18.657A8 8 0 016.343 7.343S7 9 9 10c0-2 .5-5 2.986-7C14 5 16.09 5.777 17.656 7.343A7.975 7.975 0 0120 13a7.975 7.975 0 01-2.343 5.657z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.879 16.121A3 3 0 1012.015 11L11 14H9c0 .768.293 1.536.879 2.121z"></path>
+                </svg>
+                Circles
+              </button>
+            <% end %>
+
+            <%= link to: Routes.live_path(@socket, Bonfire.Me.Web.MeInstanceLive) do %>
+              <button class="group flex items-center px-2 py-2 text-sm leading-5 font-medium text-gray-600 rounded-md hover:text-gray-900 hover:bg-gray-50 focus:outline-none focus:text-gray-900 focus:bg-gray-50 transition ease-in-out duration-150">
+                <!-- Heroicon name: chart-bar -->
+                <svg class="mr-3 h-6 w-6 text-gray-500 group-hover:text-gray-600 group-focus:text-gray-600 transition ease-in-out duration-150" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 13V6a2 2 0 00-2-2H6a2 2 0 00-2 2v7m16 0v5a2 2 0 01-2 2H6a2 2 0 01-2-2v-5m16 0h-2.586a1 1 0 00-.707.293l-2.414 2.414a1 1 0 01-.707.293h-3.172a1 1 0 01-.707-.293l-2.414-2.414A1 1 0 006.586 13H4"></path>
+                </svg>
+                Direct messages
+              </button>
+            <% end %>
+
+          </nav>
+        </div>
+      </div>
+    </div>
+  </div>
