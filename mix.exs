@@ -5,7 +5,7 @@ defmodule Bonfire.UI.ValueFlows.MixProject do
 
   def project do
     [
-      app: :bonfire_ui_valueflows,
+      app: :bonfire_ui_social,
       version: "0.1.0",
       elixir: "~> 1.10",
       elixirc_paths: elixirc_paths(Mix.env()),
