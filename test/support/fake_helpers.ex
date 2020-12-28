@@ -1,11 +1,11 @@
-defmodule Bonfire.UI.ValueFlows.Test.FakeHelpers do
+defmodule Bonfire.UI.Social.Test.FakeHelpers do
 
   alias Bonfire.Data.Identity.Account
-  alias Bonfire.UI.ValueFlows.Fake
-  alias Bonfire.UI.ValueFlows.Identity.{Accounts, Users}
+  alias Bonfire.UI.Social.Fake
+  alias Bonfire.UI.Social.Identity.{Accounts, Users}
   import ExUnit.Assertions
 
-  import Bonfire.UI.ValueFlows.Integration
+  import Bonfire.UI.Social.Integration
 
   def fake_account!(attrs \\ %{}) do
     cs = Accounts.signup_changeset(Fake.account(attrs))

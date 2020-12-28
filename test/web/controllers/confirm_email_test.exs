@@ -1,7 +1,7 @@
-defmodule Bonfire.UI.ValueFlows.Web.ConfirmEmailController.Test do
+defmodule Bonfire.UI.Social.Web.ConfirmEmailController.Test do
 
-  use Bonfire.UI.ValueFlows.ConnCase
-  alias Bonfire.UI.ValueFlows.Fake
+  use Bonfire.UI.Social.ConnCase
+  alias Bonfire.UI.Social.Fake
 
   describe "request" do
 

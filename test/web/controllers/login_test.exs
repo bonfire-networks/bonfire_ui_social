@@ -1,7 +1,7 @@
-defmodule Bonfire.UI.ValueFlows.Web.LoginController.Test do
+defmodule Bonfire.UI.Social.Web.LoginController.Test do
 
-  use Bonfire.UI.ValueFlows.ConnCase
-  alias Bonfire.UI.ValueFlows.Accounts
+  use Bonfire.UI.Social.ConnCase
+  alias Bonfire.UI.Social.Accounts
 
   test "form renders" do
     conn = conn()

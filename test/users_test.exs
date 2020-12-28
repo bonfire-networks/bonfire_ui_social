@@ -1,8 +1,8 @@
-defmodule Bonfire.UI.ValueFlows.UsersTest do
+defmodule Bonfire.UI.Social.UsersTest do
 
-  use Bonfire.UI.ValueFlows.DataCase, async: true
-  alias Bonfire.UI.ValueFlows.{Accounts, Users}
-  alias Bonfire.UI.ValueFlows.Fake
+  use Bonfire.UI.Social.DataCase, async: true
+  alias Bonfire.UI.Social.{Accounts, Users}
+  alias Bonfire.UI.Social.Fake
 
   test "creation works" do
     assert {:ok, account} = Accounts.signup(Fake.account())

@@ -1,4 +1,4 @@
-defmodule Bonfire.UI.ValueFlows.ConnCase do
+defmodule Bonfire.UI.Social.ConnCase do
   @moduledoc """
   This module defines the test case to be used by
   tests that require setting up a connection.
@@ -23,20 +23,20 @@ defmodule Bonfire.UI.ValueFlows.ConnCase do
       import Plug.Conn
       import Phoenix.ConnTest
       import Phoenix.LiveViewTest
-      import Bonfire.UI.ValueFlows.ConnCase
-      import Bonfire.UI.ValueFlows.Test.ConnHelpers
-      import Bonfire.UI.ValueFlows.Test.FakeHelpers
-      alias Bonfire.UI.ValueFlows.Fake
-      # alias Bonfire.UI.ValueFlows.Web.Router.Helpers, as: Routes
+      import Bonfire.UI.Social.ConnCase
+      import Bonfire.UI.Social.Test.ConnHelpers
+      import Bonfire.UI.Social.Test.FakeHelpers
+      alias Bonfire.UI.Social.Fake
+      # alias Bonfire.UI.Social.Web.Router.Helpers, as: Routes
 
       # The default endpoint for testing
-      @endpoint Bonfire.UI.ValueFlows.Web.Endpoint
+      @endpoint Bonfire.UI.Social.Web.Endpoint
     end
   end
 
   setup tags do
 
-    import Bonfire.UI.ValueFlows.Integration
+    import Bonfire.UI.Social.Integration
 
     :ok = Ecto.Adapters.SQL.Sandbox.checkout(repo())
 

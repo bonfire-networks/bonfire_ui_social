@@ -1,7 +1,7 @@
-defmodule Bonfire.UI.ValueFlows.Web.SwitchUserController.Test do
+defmodule Bonfire.UI.Social.Web.SwitchUserController.Test do
 
-  use Bonfire.UI.ValueFlows.ConnCase
-  alias Bonfire.UI.ValueFlows.Fake
+  use Bonfire.UI.Social.ConnCase
+  alias Bonfire.UI.Social.Fake
 
   describe "index" do
 

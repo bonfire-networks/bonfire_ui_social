@@ -1,6 +1,6 @@
-defmodule Bonfire.UI.ValueFlows.Web.CreateUserController.Test do
+defmodule Bonfire.UI.Social.Web.CreateUserController.Test do
 
-  use Bonfire.UI.ValueFlows.ConnCase
+  use Bonfire.UI.Social.ConnCase
 
   test "form renders" do
     alice = fake_account!()

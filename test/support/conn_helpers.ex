@@ -1,4 +1,4 @@
-defmodule Bonfire.UI.ValueFlows.Test.ConnHelpers do
+defmodule Bonfire.UI.Social.Test.ConnHelpers do
 
   import ExUnit.Assertions
   import Plug.Conn
@@ -8,7 +8,7 @@ defmodule Bonfire.UI.ValueFlows.Test.ConnHelpers do
   alias Bonfire.Data.Identity.Account
   alias Bonfire.Data.Identity.User
 
-  @endpoint Bonfire.UI.ValueFlows.Web.Endpoint
+  @endpoint Bonfire.UI.Social.Web.Endpoint
 
   ### conn
 

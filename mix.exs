@@ -1,5 +1,5 @@
 Code.eval_file("mess.exs")
-defmodule Bonfire.UI.ValueFlows.MixProject do
+defmodule Bonfire.UI.Social.MixProject do
 
   use Mix.Project
 
@@ -22,7 +22,7 @@ defmodule Bonfire.UI.ValueFlows.MixProject do
 
   def application do
     [
-      # mod: {Bonfire.UI.ValueFlows.FallbackApplication, []},
+      # mod: {Bonfire.UI.Social.FallbackApplication, []},
       extra_applications: [:logger, :runtime_tools]
     ]
   end

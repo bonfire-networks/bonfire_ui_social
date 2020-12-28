@@ -1,8 +1,8 @@
-defmodule Bonfire.UI.ValueFlows.AccountsTest do
+defmodule Bonfire.UI.Social.AccountsTest do
 
-  use Bonfire.UI.ValueFlows.DataCase, async: true
-  alias Bonfire.UI.ValueFlows.Accounts
-  alias Bonfire.UI.ValueFlows.Fake
+  use Bonfire.UI.Social.DataCase, async: true
+  alias Bonfire.UI.Social.Accounts
+  alias Bonfire.UI.Social.Fake
 
   describe "[registration]" do
 

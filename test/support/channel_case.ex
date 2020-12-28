@@ -1,4 +1,4 @@
-defmodule Bonfire.UI.ValueFlows.ChannelCase do
+defmodule Bonfire.UI.Social.ChannelCase do
   @moduledoc """
   This module defines the test case to be used by
   channel tests.
@@ -17,16 +17,16 @@ defmodule Bonfire.UI.ValueFlows.ChannelCase do
 
   use ExUnit.CaseTemplate
 
-  import Bonfire.UI.ValueFlows.Integration
+  import Bonfire.UI.Social.Integration
 
   using do
     quote do
       # Import conveniences for testing with channels
       import Phoenix.ChannelTest
-      import Bonfire.UI.ValueFlows.ChannelCase
+      import Bonfire.UI.Social.ChannelCase
 
       # The default endpoint for testing
-      @endpoint Bonfire.UI.ValueFlows.Web.Endpoint
+      @endpoint Bonfire.UI.Social.Web.Endpoint
     end
   end
 
