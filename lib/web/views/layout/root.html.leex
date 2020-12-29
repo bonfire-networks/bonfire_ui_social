@@ -13,7 +13,7 @@
       <script defer phx-track-static type="text/javascript" src="<%= Routes.static_path(@conn, "/js/guest.js") %>"></script>
     <% end %>
   </head>
-  <body class="overflow-hidden">
+  <body id="layout-root" class="overflow-hidden">
     <%= if Code.ensure_loaded?(Thesis.View), do: Thesis.View.thesis_editor(@conn) %>
     <%= @inner_content %>
   </body>
