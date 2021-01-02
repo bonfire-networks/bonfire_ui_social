@@ -2,13 +2,8 @@
 
 An extension for [Bonfire](https://bonfire.cafe/) that handles:
 
-- Account creation
-- Email verification
-- Authentication
-- User/Profile creation
-- User/Profile switching
-- User Profile
-- Settings
+- UI components and views for the *Social* and *Me* Bonfire extensions
+
 
 ## Handy commands
 
