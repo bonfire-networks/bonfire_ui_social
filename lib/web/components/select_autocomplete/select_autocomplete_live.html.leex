@@ -1,17 +1,20 @@
-<input 
+<div> 
+  <input
   phx-change="suggest" 
-  phx-submit="search" 
-  phx-target="<%= @myself %>"
+  phx-submit="search"
+  phx-target="<%= @myself %>" 
   type="text" 
   class="block w-full border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
   name="q" 
-  value="<%= @query %>" 
-  list="matches" 
+  list="matches"
+  phx-debounce="1000"
+  autocomplete="off"
   placeholder="Search..."
     <%= if @loading, do: "readonly" %>/>
-      <datalist id="matches">
-        <%= for match <- @matches do %>
-          <option value="<%= match %>"><%= match %></option>
-        <% end %>
+  
+    <datalist id="matches">
+      <%= for match <- @matches do %>
+      <option value="<%= match.id %>"><%= match.name %></option>
+      <% end %>
     </datalist>
-<%= if @result do %><pre><%= @result %></pre><% end %>
+</div>

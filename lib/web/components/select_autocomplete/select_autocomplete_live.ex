@@ -6,9 +6,9 @@ defmodule Bonfire.UI.Social.SelectAutocompleteLive do
   end
 
   def handle_event("suggest", %{"q" => query}, socket) when byte_size(query) <= 100 do
-    {words, _} = System.cmd("grep", ~w"^#{query}.* -m 5" <> socket.assigns.matches)
-    {:noreply, assign(socket, matches: String.split(words, "\n"))}
+    {:noreply, assign(socket, matches: suggest(Enum.map(socket.assigns.locations, fn x -> x.name end), query))}
   end
+
 
   def handle_event("search", %{"q" => query}, socket) when byte_size(query) <= 100 do
     send(self(), {:search, query})
@@ -18,5 +18,15 @@ defmodule Bonfire.UI.Social.SelectAutocompleteLive do
   def handle_info({:search, query}, socket) do
     {result, _} = System.cmd("dict", ["#{query}"], stderr_to_stdout: true)
     {:noreply, assign(socket, loading: false, result: result, matches: [])}
+  end
+
+  def suggest(""), do: []
+
+  def suggest(list, prefix) do
+    Enum.filter(list, &has_prefix?(&1, prefix))
+  end
+
+  defp has_prefix?(item, prefix) do
+    String.starts_with?(String.downcase(item), String.downcase(prefix))
   end
 end
