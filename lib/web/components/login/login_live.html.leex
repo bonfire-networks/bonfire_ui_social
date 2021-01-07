@@ -1,8 +1,8 @@
-<div class="bg-white shadow rounded-lg">
-  <div class="bg-white px-4 py-5 border-b rounded-t-md border-gray-200 sm:px-6">
-    <div class="-ml-4 -mt-2 flex items-center justify-between flex-wrap sm:flex-no-wrap">
-      <div class="ml-4 mt-2">
-        <h3 class="text-lg leading-6 font-medium text-gray-900">
+<div class="bg-white rounded-lg shadow">
+  <div class="px-4 py-5 bg-white border-b border-gray-200 rounded-t-md sm:px-6">
+    <div class="flex flex-wrap items-center justify-between -mt-2 -ml-4 sm:flex-no-wrap">
+      <div class="mt-2 ml-4">
+        <h3 class="text-lg font-medium leading-6 text-gray-900">
           Login
         </h3>
       </div>
@@ -48,10 +48,10 @@
         <%= error_tag f, :password %>
       </div>
 
-      <div class="mt-6 flex items-center justify-between">
+      <div class="flex items-center justify-between mt-6">
         <div class="flex items-center">
           <%= checkbox f, :remember_me, class: "form-checkbox h-4 w-4 text-gray-900 transition duration-150 ease-in-out" %>
-          <label for="remember_me" class="ml-2 block text-sm leading-5 text-gray-900">
+          <label for="remember_me" class="block ml-2 text-sm leading-5 text-gray-900">
             Remember me
           </label>
         </div>
@@ -65,7 +65,7 @@
 
       <div class="mt-6">
         <span class="block w-full rounded-md shadow-sm">
-          <button type="submit" class="w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-gray-100 bg-gray-900 hover:bg-gray-800 hover:text-gray-200 focus:outline-none focus:border-blue-300 focus:shadow-outline-blue active:text-gray-200 active:bg-gray-700 transition ease-in-out duration-150">
+          <button type="submit" class="flex justify-center w-full px-4 py-2 text-sm font-medium text-gray-100 transition duration-150 ease-in-out bg-gray-900 border border-transparent rounded-md hover:bg-gray-800 hover:text-gray-200 focus:outline-none focus:border-blue-300 focus:shadow-outline-blue active:text-gray-200 active:bg-gray-700">
             Log in
           </button>
         </span>
@@ -74,12 +74,11 @@
       <div class="mt-4">
         <p>
           <span>&#x01f44b; </span>
-          <%= link "Did you forgot your password?", to: Routes.forgot_password_path(@socket, :index), class: "underline font-bold" %>
+          <%= link "Did you forgot your password?", to: Routes.forgot_password_path(@socket, :index), class: "underline font-medium text-sm" %>
         </p>
-        <p>
-          <span>&#x01F195; </span>
-          <%= link "Need to sign up instead?", to: Routes.signup_path(@socket, :index), class: "underline font-bold" %>
-        </p>
+        <div class="flex p-3 mt-6 -mx-8 -mb-4 border-t place-content-center">
+          <%= link "Need to sign up instead?", to: Routes.signup_path(@socket, :index), class: "font-medium text-sm" %>
+        </div>
       </div>
     </form>
   </div>

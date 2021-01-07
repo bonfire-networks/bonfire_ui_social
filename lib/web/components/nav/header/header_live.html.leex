@@ -55,7 +55,7 @@
                   <div class="absolute right-0 z-10 w-48 mt-2 origin-top-right rounded-md shadow-lg">
                     <div class="py-1 bg-white rounded-md shadow-xs" role="menu" aria-orientation="vertical" aria-labelledby="user-menu">
                      <%= link to: Routes.live_path(@socket, Bonfire.Me.Web.ProfileLive, @current_user.character.username) do %>
-                      <button class="block w-full px-4 py-2 text-sm text-gray-700 transition duration-150 ease-in-out hover:bg-gray-100" role="menuitem">Your Profile</button>
+                      <button class="block w-full px-4 py-2 text-sm text-left text-gray-700 transition duration-150 ease-in-out hover:bg-gray-100" role="menuitem">Your Profile</button>
                     <% end %>
                       <a href="/switch-user" class="block px-4 py-2 text-sm text-gray-700 transition duration-150 ease-in-out hover:bg-gray-100" role="menuitem">Switch User Profile</a>
                       <a href="/settings" class="block px-4 py-2 text-sm text-gray-700 transition duration-150 ease-in-out hover:bg-gray-100" role="menuitem">Settings</a>
