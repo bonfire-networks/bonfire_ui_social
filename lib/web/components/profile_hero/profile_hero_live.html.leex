@@ -36,6 +36,10 @@
           <span class="inline-flex items-center px-2 py-1 mt-2 rounded-md text-sm font-medium leading-5 bg-pink-100 text-pink-800">
             Badge
           </span>
+          <p><%= e(@user, :profile, :location, "") %></p>
+          <%= if e(@user, :profile, :website, nil) do %>
+            <p><a href="<%= e(@user, :profile, :website, "") %>"><%= e(@user, :profile, :website, "") %></a></p>
+          <% end %>
         </div>
       </div>
     </div>
