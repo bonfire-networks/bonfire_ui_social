@@ -1,11 +1,11 @@
 Code.eval_file("mess.exs")
-defmodule Bonfire.UI.Social.MixProject do
+defmodule Bonfire.Website.MixProject do
 
   use Mix.Project
 
   def project do
     [
-      app: :bonfire_ui_social,
+      app: :bonfire_website,
       version: "0.1.0",
       elixir: "~> 1.10",
       elixirc_paths: elixirc_paths(Mix.env()),
@@ -22,7 +22,7 @@ defmodule Bonfire.UI.Social.MixProject do
 
   def application do
     [
-      # mod: {Bonfire.UI.Social.FallbackApplication, []},
+      # mod: {Bonfire.Website.FallbackApplication, []},
       extra_applications: [:logger, :runtime_tools]
     ]
   end

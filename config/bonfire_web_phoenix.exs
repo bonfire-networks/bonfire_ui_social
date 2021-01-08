@@ -6,7 +6,7 @@ secret_key_base = System.get_env("SECRET_KEY_BASE", "g7K250qlSxhNDt5qnV6f4HFnyoD
 
 config :bonfire_web_phoenix, :signing_salt, signing_salt
 config :bonfire_web_phoenix, :encryption_salt, encryption_salt
-config :bonfire_web_phoenix, :routes_module, Bonfire.UI.Social.Web.FallbackRoutes
+config :bonfire_web_phoenix, :routes_module, Bonfire.Website.Web.FallbackRoutes
 config :bonfire_web_phoenix, :routes_helper_module, Bonfire.Web.Routes.Helpers
 config :bonfire_web_phoenix, :live_view_module, Bonfire.Web.PageLive
 config :bonfire_web_phoenix, :otp_app, :bonfire

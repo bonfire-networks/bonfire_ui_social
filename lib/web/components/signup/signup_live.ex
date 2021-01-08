@@ -1,4 +1,4 @@
-defmodule Bonfire.UI.Social.SignupLive do
+defmodule Bonfire.Website.SignupLive do
   use Bonfire.Web, :live_component
 
 end
