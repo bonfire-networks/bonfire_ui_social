@@ -1,8 +1,8 @@
-# Bonfire:UI:Social
+# Bonfire:Website
 
 An extension for [Bonfire](https://bonfire.cafe/) that handles:
 
-- UI components and views for the *Social* and *Me* Bonfire extensions
+- UI components and views for the Bonfire website
 
 
 ## Handy commands

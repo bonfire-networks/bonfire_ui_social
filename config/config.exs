@@ -13,7 +13,7 @@ use Mix.Config
 # import_config "bonfire_web_phoenix.exs"
 
 # include all used Bonfire extensions
-import_config "bonfire_ui_social.exs"
+import_config "bonfire_website.exs"
 
 
 #### Basic configuration

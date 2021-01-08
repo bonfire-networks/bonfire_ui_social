@@ -1,4 +1,4 @@
-defmodule Bonfire.UI.Social.Repo.Migrations.InitPointers do
+defmodule Bonfire.Website.Repo.Migrations.InitPointers do
   use Ecto.Migration
   import Pointers.Migration
   import Pointers.ULID.Migration

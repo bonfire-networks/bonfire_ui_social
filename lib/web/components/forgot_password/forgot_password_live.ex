@@ -1,4 +1,4 @@
-defmodule Bonfire.UI.Social.ForgotPasswordLive do
+defmodule Bonfire.Website.ForgotPasswordLive do
   use Bonfire.Web, :live_component
 
   def mount(socket) do

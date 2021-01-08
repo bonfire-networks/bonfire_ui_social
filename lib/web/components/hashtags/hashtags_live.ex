@@ -1,3 +1,3 @@
-defmodule Bonfire.UI.Social.HashtagsLive do
+defmodule Bonfire.Website.HashtagsLive do
   use Bonfire.Web, :live_component
 end
