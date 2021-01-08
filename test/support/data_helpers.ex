@@ -1,4 +1,4 @@
-defmodule Bonfire.Website.DataHelpers do
+defmodule Bonfire.UI.Social.DataHelpers do
 
   # import ExUnit.Assertions
   # alias Bonfire.Me.Fake

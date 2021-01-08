@@ -1,4 +1,4 @@
-defmodule Bonfire.Website.SelectAutocompleteLive do
+defmodule Bonfire.UI.Social.SelectAutocompleteLive do
   use Bonfire.Web, :live_component
 
   def mount(socket) do

@@ -1,5 +1,5 @@
-defmodule Bonfire.Website.FeedLive do
+defmodule Bonfire.UI.Social.FeedLive do
   use Bonfire.Web, :live_component
-  alias Bonfire.Website.ActivityLive
+  alias Bonfire.UI.Social.ActivityLive
 
 end

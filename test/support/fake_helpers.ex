@@ -1,11 +1,11 @@
-defmodule Bonfire.Website.Test.FakeHelpers do
+defmodule Bonfire.UI.Social.Test.FakeHelpers do
 
   alias Bonfire.Data.Identity.Account
   alias Bonfire.Me.Fake
-  alias Bonfire.Website.Identity.{Accounts, Users}
+  alias Bonfire.UI.Social.Identity.{Accounts, Users}
   import ExUnit.Assertions
 
-  import Bonfire.Website.Integration
+  import Bonfire.UI.Social.Integration
 
 
 end
