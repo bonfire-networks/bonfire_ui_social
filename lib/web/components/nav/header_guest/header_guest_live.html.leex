@@ -6,8 +6,12 @@
         </div>
         <div class="hidden lg:block lg:ml-6">
           <div class="flex">
-            <a href="#" class="px-3 py-2 rounded-md text-sm leading-5 font-normal text-gray-800 focus:outline-none focus:text-gray-700 transition duration-150 ease-in-out">About</a>
-            <a href="#" class="ml-4 px-3 py-2 rounded-md text-sm leading-5 font-normal text-gray-800 hover:text-gray-700 focus:outline-none focus:text-gray-700 transition duration-150 ease-in-out">Discover</a>
+          <%= link to: Routes.live_path(@socket, Bonfire.Common.Config.get!(:home_page)) do %>
+            <span class="px-3 py-2 rounded-md text-sm leading-5 font-normal text-gray-800 focus:outline-none focus:text-gray-700 transition duration-150 ease-in-out">About</span>
+          <% end %>
+          <%= link to: Routes.live_path(@socket, Bonfire.UI.Social.InstanceLive) do %>
+            <span class="ml-4 px-3 py-2 rounded-md text-sm leading-5 font-normal text-gray-800 hover:text-gray-700 focus:outline-none focus:text-gray-700 transition duration-150 ease-in-out">Discover</a>
+          <% end %>
             <a href="#" class="ml-4 px-3 py-2 rounded-md text-sm leading-5 font-normal text-gray-800 hover:text-gray-700 focus:outline-none focus:text-gray-700 transition duration-150 ease-in-out">Contact us</a>
           </div>
         </div>

@@ -1,10 +1,9 @@
-defmodule Bonfire.UI.Social.FeedPageLive do
+defmodule Bonfire.UI.Social.InstanceLive do
   use Bonfire.Web, :live_view
   alias Bonfire.Fake
   alias Bonfire.Common.Web.LivePlugs
   alias Bonfire.Me.Identity.Users
   alias Bonfire.Me.Web.{CreateUserLive}
-  alias Bonfire.UI.Social.FeedLive
 
   def mount(params, session, socket) do
     LivePlugs.live_plug params, session, socket, [
@@ -18,9 +17,9 @@ defmodule Bonfire.UI.Social.FeedPageLive do
   end
 
   defp mounted(params, session, socket) do
-    title = "@#{socket.assigns.current_user.character.username}'s feed"
+    title = "Feed of all activities by users on this instance"
     {:ok, socket
-    |> assign(page_title: "My Feed", feed_title: title)}
+    |> assign(page_title: "Instance Feed", feed_title: title)}
   end
 
 
