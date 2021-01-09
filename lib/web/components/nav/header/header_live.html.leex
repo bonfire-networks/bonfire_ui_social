@@ -2,19 +2,20 @@
   <div class="relative z-10 flex flex-shrink-0 h-16 bg-white shadow">
 
     <div class="flex items-center flex-shrink-0 px-4">
-        <div class="pr-4 border-r">
-          <%= link to: Routes.live_path(@socket, Bonfire.Me.Web.MeHomeLive, @current_user.character.username) do %>
-            <div class="flex items-center">
-              <svg class="mx-auto" width="28px" height="28px" viewBox="0 0 28 28" version="1.1" xmlns="http://www.w3.org/2000/svg">
-                <g id="Artboard-Copy-2" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
-                    <rect id="Rectangle-14-Copy-3" fill="#353535" x="0" y="0" width="28" height="28" rx="4"></rect>
-                    <path d="M19.5,41.5 L41.0058132,19.9941868" id="Line-7" stroke="#FFFFFF" stroke-width="3" stroke-linecap="square"></path>
-                </g>
-              </svg>
-              <h2 class="ml-2 text-sm font-medium text-gray-900">Bonfire / Instance name</h2>
-            </div>
-          <% end %>
-        </div>
+      <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path d="M5 3a2 2 0 00-2 2v2a2 2 0 002 2h2a2 2 0 002-2V5a2 2 0 00-2-2H5zM5 11a2 2 0 00-2 2v2a2 2 0 002 2h2a2 2 0 002-2v-2a2 2 0 00-2-2H5zM11 5a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V5zM11 13a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z"></path></svg>
+      <div class="pr-4 border-r">
+        <%= link to: Routes.live_path(@socket, Bonfire.Me.Web.LoggedDashboardLive) do %>
+          <div class="flex items-center">
+            <svg class="mx-auto" width="28px" height="28px" viewBox="0 0 28 28" version="1.1" xmlns="http://www.w3.org/2000/svg">
+              <g id="Artboard-Copy-2" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+                  <rect id="Rectangle-14-Copy-3" fill="#353535" x="0" y="0" width="28" height="28" rx="4"></rect>
+                  <path d="M19.5,41.5 L41.0058132,19.9941868" id="Line-7" stroke="#FFFFFF" stroke-width="3" stroke-linecap="square"></path>
+              </g>
+            </svg>
+            <h2 class="ml-2 text-sm font-medium text-gray-900">Bonfire</h2>
+          </div>
+        <% end %>
+      </div>
       </div>
       <div class="flex items-center flex-1">
         <div class="flex flex-1">
