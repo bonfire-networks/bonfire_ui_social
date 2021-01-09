@@ -2,7 +2,7 @@
   <div class="relative z-10 flex flex-shrink-0 h-16 bg-white shadow">
 
     <div class="flex items-center flex-shrink-0 px-4">
-      <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path d="M5 3a2 2 0 00-2 2v2a2 2 0 002 2h2a2 2 0 002-2V5a2 2 0 00-2-2H5zM5 11a2 2 0 00-2 2v2a2 2 0 002 2h2a2 2 0 002-2v-2a2 2 0 00-2-2H5zM11 5a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V5zM11 13a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z"></path></svg>
+      <%= live_component(@socket, Bonfire.UI.Social.AppsLive, assigns) %>
       <div class="pr-4 border-r">
         <%= link to: Routes.live_path(@socket, Bonfire.Me.Web.LoggedDashboardLive) do %>
           <div class="flex items-center">
@@ -21,13 +21,13 @@
         <div class="flex flex-1">
           <form class="flex w-full md:ml-0" action="#" method="GET">
             <label for="search_field" class="sr-only">Search</label>
-            <div style="max-width: 290px" class="relative w-full text-gray-400 focus-within:text-gray-600">
+            <div class="relative w-full text-gray-400 focus-within:text-gray-600">
               <div style="left: 8px" class="absolute inset-y-0 left-0 flex items-center text-gray-500 pointer-events-none">
                 <svg class="w-5 h-5 fill-current" fill="currentColor" viewBox="0 0 20 20">
                   <path fill-rule="evenodd" clip-rule="evenodd" d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z" />
                 </svg>
               </div>
-              <input type="search" id="search_field" class="w-full h-full pl-8 text-gray-800 placeholder-gray-600 bg-gray-200" placeholder="Search">
+              <input type="search" id="search_field" class="w-full h-full max-w-lg pl-8 text-gray-800 placeholder-gray-600 bg-gray-200" placeholder="Search">
             </div>
           </form>
         </div>

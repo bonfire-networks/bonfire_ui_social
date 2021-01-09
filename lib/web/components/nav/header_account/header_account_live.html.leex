@@ -1,35 +1,26 @@
 <div class="flex flex-col overflow-hidden">
-  <div class="relative z-10 flex justify-between flex-shrink-0 h-16 bg-white rounded-md shadow">
+  <div class="relative z-10 flex justify-between flex-shrink-0 h-16 bg-white shadow">
       <div class="flex items-center flex-shrink-0 px-4">
+        <%= live_component(@socket, Bonfire.UI.Social.AppsLive, assigns) %>
         <div class="pr-4 border-r">
-          <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"></path></svg>
-        </div>
-        <div class="hidden lg:block lg:ml-6">
-          <div class="flex items-center">
           <%= link to: Routes.live_path(@socket, Bonfire.Common.Config.get!(:home_page)) do %>
-            <span class="px-3 py-2 text-sm font-normal leading-5 text-gray-800 transition duration-150 ease-in-out rounded-md focus:outline-none focus:text-gray-700">About</span>
+          <svg class="w-6 h-6 text-gray-500 hover:text-gray-600" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path d="M10.707 2.293a1 1 0 00-1.414 0l-7 7a1 1 0 001.414 1.414L4 10.414V17a1 1 0 001 1h2a1 1 0 001-1v-2a1 1 0 011-1h2a1 1 0 011 1v2a1 1 0 001 1h2a1 1 0 001-1v-6.586l.293.293a1 1 0 001.414-1.414l-7-7z"></path></svg>          
           <% end %>
-          <%= link to: Routes.live_path(@socket, Bonfire.UI.Social.InstanceLive) do %>
-            <span class="px-3 py-2 ml-4 text-sm font-normal leading-5 text-gray-800 transition duration-150 ease-in-out rounded-md hover:text-gray-700 focus:outline-none focus:text-gray-700">Discover</a>
-          <% end %>
-            <a href="#" class="px-3 py-2 ml-4 text-sm font-normal leading-5 text-gray-800 transition duration-150 ease-in-out rounded-md hover:text-gray-700 focus:outline-none focus:text-gray-700">Contact us</a>
-          </div>
         </div>
+       
       </div>
-      <div class="flex items-center flex-1 px-4">
-        <div class="flex flex-1">
+      <div class="flex items-center justify-center flex-1 px-4">
           <form class="flex w-full md:ml-0" action="#" method="GET">
             <label for="search_field" class="sr-only">Search</label>
-            <div style="max-width: 290px" class="relative w-full text-gray-400 focus-within:text-gray-600">
+            <div  class="relative w-full max-w-lg mx-auto text-gray-400 focus-within:text-gray-600">
               <div style="left: 8px" class="absolute inset-y-0 left-0 flex items-center text-gray-500 pointer-events-none">
                 <svg class="w-5 h-5 fill-current" fill="currentColor" viewBox="0 0 20 20">
                   <path fill-rule="evenodd" clip-rule="evenodd" d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z" />
                 </svg>
               </div>
-              <input type="search" id="search_field" class="w-full h-full pl-8 placeholder-gray-500 bg-gray-200" placeholder="Search">
+              <input type="search" id="search_field" class="w-full h-full pl-8 mx-auto placeholder-gray-500 bg-gray-200" placeholder="Search">
             </div>
           </form>
-        </div>
       </div>
       <div class="flex px-4 ">
         <%= if !@current_account do %>
