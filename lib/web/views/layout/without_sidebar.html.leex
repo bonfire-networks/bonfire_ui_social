@@ -1,4 +1,4 @@
-<div id="layout-live">
+<div id="without-sidebar-live">
   <!-- <% info = live_flash(@flash, :info) %>
   <% error = live_flash(@flash, :error) %>
   <%= if info || error do %>
@@ -16,5 +16,5 @@
     </div>
   <% end %> -->
 
-  <%= live_component(@socket, Bonfire.UI.Social.NavLive, assigns) %>
+  <%= live_component(@socket, Bonfire.UI.Social.WithoutSidebarLive, assigns) %>
 </div>

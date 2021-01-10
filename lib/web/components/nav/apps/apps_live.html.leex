@@ -14,7 +14,7 @@
           x-transition:leave="transform transition ease-in-out duration-500 sm:duration-700" 
           x-transition:leave-start="-translate-x-0" 
           x-transition:leave-end="-translate-x-full">
-          <div class="flex flex-col h-full py-6 overflow-y-scroll bg-white shadow-xl">
+          <div class="flex flex-col h-full py-6 overflow-hidden bg-white shadow-xl">
             <div class="px-4 sm:px-6">
               <div class="flex items-start justify-between">
                 <h2 id="slide-over-heading" class="ml-1 text-xl font-bold text-gray-800">
@@ -30,7 +30,7 @@
                 </div>
               </div>
             </div>
-            <div class="relative flex-1 px-0 mt-4 space-y-2 sm:px-4">
+            <div class="relative flex-1 px-0 mt-4 space-y-2 overflow-y-auto sm:px-4">
               <h5 class="mt-5 mb-3 ml-3 text-xs font-medium tracking-wider text-gray-800 uppercase ">Your apps</h5>
               <%= link to: Routes.live_path(@socket, Bonfire.Me.Web.LoggedDashboardLive) do %>
               <div class="transition-shadow duration-500 ease-in-out rounded cursor-pointer hover:border-gray-100 hover:bg-blueGray-50 hover:shadow-lg">
