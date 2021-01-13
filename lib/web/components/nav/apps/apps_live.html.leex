@@ -6,13 +6,13 @@
   <div x-show="open" @keydown.window.escape="open = false;" class="fixed inset-0 z-50 overflow-hidden">
     <div class="absolute inset-0 overflow-hidden">
       <section @click.away="open = false;" class="absolute inset-y-0 left-0 flex max-w-full pr-10" aria-labelledby="slide-over-heading">
-        <div class="w-screen max-w-sm" x-description="Slide-over panel, show/hide based on slide-over state." 
-          x-show="open" 
-          x-transition:enter="transform transition ease-in-out duration-500 sm:duration-700" 
-          x-transition:enter-start="-translate-x-full" 
-          x-transition:enter-end="-translate-x-0" 
-          x-transition:leave="transform transition ease-in-out duration-500 sm:duration-700" 
-          x-transition:leave-start="-translate-x-0" 
+        <div class="w-screen max-w-sm" x-description="Slide-over panel, show/hide based on slide-over state."
+          x-show="open"
+          x-transition:enter="transform transition ease-in-out duration-500 sm:duration-700"
+          x-transition:enter-start="-translate-x-full"
+          x-transition:enter-end="-translate-x-0"
+          x-transition:leave="transform transition ease-in-out duration-500 sm:duration-700"
+          x-transition:leave-start="-translate-x-0"
           x-transition:leave-end="-translate-x-full">
           <div class="flex flex-col h-full py-6 overflow-hidden bg-white shadow-xl">
             <div class="px-4 sm:px-6">
@@ -41,16 +41,18 @@
                 </div>
               </div>
               <% end %>
-              <%= link to: Routes.live_path(@socket, Bonfire.UI.ValueFlows.BreadDashboardLive) do %>
-              <div class="transition-shadow duration-500 ease-in-out rounded cursor-pointer hover:border-gray-100 hover:bg-blueGray-50 hover:shadow-lg">
-                <div class="flex items-center p-3 space-x-3">
-                  <span class="w-8 h-8 bg-gray-900 rounded"></span>
-                  <h3 class="text-base font-normal text-gray-800">BreadPub</h3>
-                  <svg class="w-6 h-6 ml-4 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"></path></svg>
+              <%= if module_exists?(Bonfire.UI.ValueFlows.BreadDashboardLive) do %>
+                <%= link to: Routes.live_path(@socket, Bonfire.UI.ValueFlows.BreadDashboardLive) do %>
+                <div class="transition-shadow duration-500 ease-in-out rounded cursor-pointer hover:border-gray-100 hover:bg-blueGray-50 hover:shadow-lg">
+                  <div class="flex items-center p-3 space-x-3">
+                    <span class="w-8 h-8 bg-gray-900 rounded"></span>
+                    <h3 class="text-base font-normal text-gray-800">BreadPub</h3>
+                    <svg class="w-6 h-6 ml-4 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"></path></svg>
+                  </div>
                 </div>
-              </div>
+                <% end %>
               <% end %>
-              <h5 class="flex items-center pt-4 mb-3 ml-3 text-sm font-medium tracking-wider text-rose-400 ">Discover new apps   
+              <h5 class="flex items-center pt-4 mb-3 ml-3 text-sm font-medium tracking-wider text-rose-400 ">Discover new apps
                 <svg class="w-6 h-6 ml-4 text-rose-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"></path></svg>
               </h5>
             </div>
