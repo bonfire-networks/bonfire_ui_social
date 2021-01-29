@@ -12,17 +12,54 @@
     <%= f = form_for @form, Routes.login_path(@socket, :create), class: "w-full md:ml-0" %>
       <%= case @form.errors[:form] do %>
       <%= {"not_found",_} -> %>
-        <div role="status" class="box__warning">
-          <span>Account not found. Either your username or password was incorrect. Did you want to <%= link "sign up", to: Routes.signup_path(@socket, :index), class: "underline font-bold" %>?</span>
+      <div role="status" class="p-4 mb-4 rounded-md bg-yellow-50">
+        <div class="flex">
+          <div class="flex-shrink-0">
+            <!-- Heroicon name: exclamation -->
+            <svg class="w-5 h-5 text-yellow-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+              <path fill-rule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clip-rule="evenodd" />
+            </svg>
+          </div>
+          <div class="ml-3">
+            <h3 class="text-sm font-medium text-yellow-800">
+              Account not found. Either your username or password was incorrect. Did you want to <%= link "sign up", to: Routes.signup_path(@socket, :index), class: "underline font-bold" %>?
+            </h3>
+          </div>
         </div>
+      </div>
+
       <%= {"email_not_confirmed",_} -> %>
-        <div role="status" class="box__warning">
-          <span>We need you to click the link in the email we sent you to verify your email address.</span>
+      <div role="status" class="p-4 mb-4 rounded-md bg-yellow-50">
+        <div class="flex">
+          <div class="flex-shrink-0">
+            <!-- Heroicon name: exclamation -->
+            <svg class="w-5 h-5 text-yellow-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+              <path fill-rule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clip-rule="evenodd" />
+            </svg>
+          </div>
+          <div class="ml-3">
+            <h3 class="text-sm font-medium text-yellow-800">
+              We need you to click the link in the email we sent you to verify your email address.            
+            </h3>
+          </div>
         </div>
+      </div>
       <%= {error,_} -> %>
-        <div role="status" class="box__warning">
-          <span>There was an error (<%= error %>), please try again.</span>
+      <div role="status" class="p-4 mb-4 rounded-md bg-yellow-50">
+        <div class="flex">
+          <div class="flex-shrink-0">
+            <!-- Heroicon name: exclamation -->
+            <svg class="w-5 h-5 text-yellow-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+              <path fill-rule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clip-rule="evenodd" />
+            </svg>
+          </div>
+          <div class="ml-3">
+            <h3 class="text-sm font-medium text-yellow-800">
+              There was an error (<%= error %>), please try again.        
+            </h3>
+          </div>
         </div>
+      </div>
       <%= nil -> %>
       <% end %>
 

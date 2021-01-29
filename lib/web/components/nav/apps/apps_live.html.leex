@@ -52,6 +52,17 @@
                 </div>
                 <% end %>
               <% end %>
+              <%= if module_exists?(Bonfire.UI.Contribution.ContributionDashboardLive) do %>
+              <%= link to: Routes.live_path(@socket, Bonfire.UI.Contribution.ContributionDashboardLive) do %>
+              <div class="transition-shadow duration-500 ease-in-out rounded cursor-pointer hover:border-gray-100 hover:bg-blueGray-50 hover:shadow-lg">
+                <div class="flex items-center p-3 space-x-3">
+                  <span class="w-8 h-8 bg-blue-600 rounded"></span>
+                  <h3 class="text-base font-normal text-gray-800">Contribution</h3>
+                  <svg class="w-6 h-6 ml-4 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"></path></svg>
+                </div>
+              </div>
+              <% end %>
+            <% end %>
               <h5 class="flex items-center pt-4 mb-3 ml-3 text-sm font-medium tracking-wider text-rose-400 ">Discover new apps
                 <svg class="w-6 h-6 ml-4 text-rose-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"></path></svg>
               </h5>
