@@ -1,6 +1,11 @@
 
 <div class="h-screen overflow-hidden">
-  <%= live_component(@socket, Bonfire.UI.Social.HeaderLive, assigns) %>
+  <%= cond do %>
+    <% !@current_user and @current_account -> %>
+      <%= live_component(@socket, Bonfire.UI.Social.HeaderAccountLive, assigns) %>
+    <% true -> %>
+      <%= live_component(@socket, Bonfire.UI.Social.HeaderLive, assigns) %>
+  <% end %>
   <div class="h-screen overflow-y-auto">
     <div class="container flex max-w-screen-xl mx-auto">
       <div class="flex flex-col flex-1 w-0">
