@@ -14,21 +14,12 @@
       </div>
     </div>
     <div class="max-w-7xl mx-auto">
+    <%= for activity <- @feed do %>
       <%= live_component(
         @socket,
-        ActivityLive
+        ActivityLive,
+        activity: activity
       ) %>
-      <%= live_component(
-        @socket,
-        ActivityLive
-      ) %>
-      <%= live_component(
-        @socket,
-        ActivityLive
-      ) %>
-      <%= live_component(
-        @socket,
-        ActivityLive
-      ) %>
+    <% end %>
     </div>
 </div>

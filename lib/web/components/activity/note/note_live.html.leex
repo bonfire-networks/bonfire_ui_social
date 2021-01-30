@@ -1,0 +1,13 @@
+<div class="p-4 border-b">
+  <div class="flex items-center">
+    <img class="inline-block h-12 w-12 rounded-full" src="https://thispersondoesnotexist.com/image" alt="">
+    <div class="flex-1 ml-4">
+      <h3 class="text-base text-gray-700"><a class="font-bold" href="/user/<%= e(@activity, :subject_user, :character, :username, "") %>"><%= e(@activity, :subject_user, :profile, :name, "Anonymous") %></a> <%= e(@activity, :verb, :verb, "posted") %></h3>
+      <span class="text-sm text-gray-500">@<%= e(@activity, :subject_user, :character, :username, "") %> | <%=@date_ago%></span>
+    </div>
+  </div>
+  <div class="bg-gray-200 rounded-md p-3 mt-4">
+    <div class="prose">
+      <%= e(@activity, :object, :post_content, :html_body, "...") %>
+    </div>
+  </div>

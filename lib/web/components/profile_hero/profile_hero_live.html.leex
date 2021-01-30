@@ -44,8 +44,8 @@
       <div class="flex items-center">
         <img style="width: 140px; height: 140px" class="inline-block h-24 w-24 rounded-md" src="https://thispersondoesnotexist.com/image" alt="">
         <div class="ml-6">
-          <h1 class="text-3xl font-bold text-gray-800"><%= @user.profile.name %></h1>
-          <h3 class="text-md font-bold text-gray-800">@<%= @user.character.username %></h3>
+          <h1 class="text-3xl font-bold text-gray-800"><%= e(@user, :profile, :name, "Anonymous") %></h1>
+          <h3 class="text-md font-bold text-gray-800">@<%= e(@user, :character, :username, "") %></h3>
           <span class="inline-flex items-center px-2 py-1 mt-2 rounded-md text-sm font-medium leading-5 bg-pink-100 text-pink-800">
             Badge
           </span>

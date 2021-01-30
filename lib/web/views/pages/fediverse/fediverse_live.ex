@@ -19,7 +19,11 @@ defmodule Bonfire.UI.Social.FediverseLive do
   defp mounted(params, session, socket) do
     title = "Feed of activities by users followed from this instance"
     {:ok, socket
-    |> assign(page_title: "Fediverse Feed", feed_title: title)}
+    |> assign(
+      page_title: "Fediverse Feed",
+      feed_title: title,
+      feed: [],
+    )}
   end
 
 

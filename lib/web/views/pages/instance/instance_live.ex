@@ -19,7 +19,11 @@ defmodule Bonfire.UI.Social.InstanceLive do
   defp mounted(params, session, socket) do
     title = "Feed of all activities by users on this instance"
     {:ok, socket
-    |> assign(page_title: "Instance Feed", feed_title: title)}
+    |> assign(
+      page_title: "Instance Feed",
+      feed_title: title,
+      feed: [],
+      )}
   end
 
 
