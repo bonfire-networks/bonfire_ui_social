@@ -18,7 +18,7 @@
       <%= live_component(
         @socket,
         ActivityLive,
-        activity: activity
+        activity: e(activity, :activity, activity)
       ) %>
     <% end %>
     </div>

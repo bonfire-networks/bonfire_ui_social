@@ -1,25 +1,26 @@
 <div class="mb-4 overflow-hidden bg-white rounded-lg shadow">
   <div class="px-4 py-4 pb-0">
     <div
-      x-data="{open: false}" 
+      x-data="{open: false}"
       class="flex items-start mb-3">
       <img class="inline-block w-10 h-10 rounded-full" src="https://images.unsplash.com/photo-1491528323818-fdd1faba62cc?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80" alt="">
+      <form phx-submit="post">
       <div class="flex-1 ml-3 ">
-        <h3 
+        <h3
           x-show="!open"
           @click="open = !open"
-          
+
           class="p-3 text-sm font-normal tracking-wide text-gray-600 rounded-full cursor-pointer hover:bg-blueGray-200 bg-blueGray-100">Hey Ivan, do you want to post something?</h3>
         <div
-          x-show="open" 
-          x-description="create post textarea" 
-         
+          x-show="open"
+          x-description="create post textarea"
+
           >
-          <textarea 
-            id="note" 
-            name="need[note]" 
+          <textarea
+            id="note"
+            name="note"
             rows="4"
-            placeholder="Write something meaningful" 
+            placeholder="Write something meaningful"
             class="block w-full border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"></textarea>
           <div class="flex items-center justify-end mt-2">
             <button
@@ -34,6 +35,7 @@
           </div>
         </div>
       </div>
+      </form>
     </div>
   </div>
 </div>
