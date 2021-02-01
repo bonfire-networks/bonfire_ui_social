@@ -1,13 +1,14 @@
-<div class="p-4 border-b">
-  <div class="flex items-center">
-    <img class="inline-block h-10 w-10 rounded-full" src="https://thispersondoesnotexist.com/image" alt="">
-    <div class="flex-1 ml-2">
-      <h3 class="text-base text-gray-700"><a class="font-bold" href="/user/<%= e(@activity, :subject_user, :character, :username, "") %>"><%= e(@activity, :subject_user, :profile, :name, "Anonymous") %></a> <%= e(@activity, :verb, :verb, "posted") %></h3>
-      <span class="block mt-0 text-sm text-gray-500">@<%= e(@activity, :subject_user, :character, :username, "") %> | <%=@date_ago%></span>
-    </div>
+<div class="flex items-center">
+  <img class="inline-block h-10 w-10 rounded-full" src="https://thispersondoesnotexist.com/image" alt="">
+  <div class="flex-1 ml-2">
+    <h3 class="text-base text-gray-700"><a class="font-bold" href="/user/<%= e(@activity, :subject_user, :character, :username, "") %>"><%= e(@activity, :subject_user, :profile, :name, "Anonymous") %></a> <%= e(@activity, :verb, :verb, "posted") %></h3>
+    <span class="block mt-0 text-sm text-gray-500">@<%= e(@activity, :subject_user, :character, :username, "") %> | <%=@date_ago%></span>
   </div>
-  <div class="mt-2 p-2">
+</div>
+<div class="mt-2 p-2">
+  <%= live_redirect to: "/posts/"<> e(@activity, :id, "")  do %>
     <div class="max-w-prose">
       <%= e(@activity, :object, :post_content, :html_body, "...") %>
     </div>
-  </div>
+  <% end %>
+</div>
