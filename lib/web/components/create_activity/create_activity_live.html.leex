@@ -13,9 +13,12 @@
           class="p-3 text-sm font-normal tracking-wide text-gray-600 rounded-full cursor-pointer hover:bg-blueGray-200 bg-blueGray-100">Hey Ivan, do you want to post something?</h3>
         <div
           x-show="open"
-          x-description="create post textarea"
-
-          >
+          x-description="create post form">
+          <input
+            name="name"
+            id="name"
+            placeholder="Choose a title"
+            class="mb-2 flex-grow block w-full min-w-0 border-gray-300 rounded-none focus:ring-light-blue-500 focus:border-light-blue-500 rounded-l-md sm:text-sm border p-2" />
           <textarea
             id="note"
             name="html_body"
