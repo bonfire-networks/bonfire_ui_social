@@ -19,7 +19,9 @@
       <% end %>
     <% end %>
     <%= if e(@page_info, :after, nil) do %>
-      <button phx-click="load-more" phx-value-after="<%= e(@page_info, :after, nil) %>">Load more</button>
+    <div class="flex place-items-center p-3 mx-auto justify-center">
+      <button class="relative inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50" phx-click="load-more" phx-value-after="<%= e(@page_info, :after, nil) %>">Load more</button>
+    </div>
     <% end %>
     </div>
 </div>
