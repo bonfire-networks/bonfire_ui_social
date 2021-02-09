@@ -2,8 +2,8 @@
 <div class="flex flex-col min-h-screen overflow-hidden">
   <%= cond do %>
     <% !@current_user and !@current_account -> %>
-      <div class="max-w-screen-lg container mx-auto">
-        <%= live_component(@socket, Bonfire.UI.Social.LogoHeaderLive, assigns) %>
+      <div class="">
+        <%# <%= live_component(@socket, Bonfire.UI.Social.LogoHeaderLive, assigns) %>
         <%= live_component(@socket, Bonfire.UI.Social.HeaderGuestLive, assigns) %>
       </div>
       <div class="pt-0">
