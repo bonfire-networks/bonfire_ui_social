@@ -1,8 +1,8 @@
-<div class="flex-col flex-1 hidden lg:flex w-100">
+<div class="flex-col flex-1 hidden fixed lg:flex top-0 z-10 w-full">
   <div class="relative z-10 flex flex-shrink-0 h-16 bg-white shadow">
 
     <div class="flex items-center flex-shrink-0 px-4">
-      <%= live_component(@socket, Bonfire.UI.Social.AppsLive, assigns) %>
+      <%# <%= live_component(@socket, Bonfire.UI.Social.AppsLive, assigns) %>
       <div class="pr-4 border-r">
         <%= link to: Routes.live_path(@socket, Bonfire.Me.Web.LoggedDashboardLive) do %>
           <div class="flex items-center">
@@ -82,8 +82,6 @@
       </div>
   </div>
 </div>
-
-
 
 <div class="flex flex-col flex-1 lg:hidden w-100">
   <div class="relative z-10 flex flex-shrink-0 h-16 bg-white shadow">
