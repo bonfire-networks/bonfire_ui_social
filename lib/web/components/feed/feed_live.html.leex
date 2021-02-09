@@ -17,5 +17,8 @@
         activity: e(activity, :activity, activity)
       ) %>
     <% end %>
+    <%= if e(@page_info, :after, nil) do %>
+      <button phx-click="load-more" phx-value-after="<%= e(@page_info, :after, nil) %>">Load more</button>
+    <% end %>
     </div>
 </div>
