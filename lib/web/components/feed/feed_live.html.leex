@@ -14,7 +14,9 @@
       <%= live_component(
         @socket,
         ActivityLive,
-        activity: e(activity, :activity, activity)
+        id: e(activity, :activity, :id, e(activity, :id, nil)),
+        activity: e(activity, :activity, activity),
+        current_user: @current_user
       ) %>
     <% end %>
     <%= if e(@page_info, :after, nil) do %>

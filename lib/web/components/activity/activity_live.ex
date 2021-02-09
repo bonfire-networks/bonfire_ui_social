@@ -38,11 +38,9 @@ defmodule Bonfire.UI.Social.ActivityLive do
   end
 
   def activity_object(activity) do
-    e(activity, :object_post, nil) || e(
-        repo().maybe_preload(activity, :object),
-        :object,
-        nil
-        )
+    e(activity, :object_post, e(activity, :object, nil))
   end
+
+  def handle_event("like-"<>_ = action, attrs, socket), do: Bonfire.Me.Social.Likes.live_action(action, attrs, socket)
 
 end

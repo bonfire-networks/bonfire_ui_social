@@ -8,7 +8,7 @@
       </button>
     </div>
     <div class="flex items-center flex-shrink-0 px-4 mb-8">
-      <%= link to: Routes.live_path(@socket, Bonfire.UI.Social.FeedPageLive) do %>
+      <%= link to: Routes.live_path(@socket, Bonfire.Me.Web.MyFeedLive) do %>
             <div class="flex items-center">
               <svg class="mx-auto" width="28px" height="28px" viewBox="0 0 28 28" version="1.1" xmlns="http://www.w3.org/2000/svg">
                 <g id="Artboard-Copy-2" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
@@ -22,7 +22,7 @@
     </div>
     <div class="flex flex-col flex-grow">
           <nav class="flex-1 px-2 space-y-1">
-            <%= link to: Routes.live_path(@socket, Bonfire.UI.Social.InstanceLive ) do %>
+            <%= link to: Routes.live_path(@socket, Bonfire.Me.Web.InstanceLive ) do %>
               <button class="flex items-center px-2 py-2 text-sm font-medium leading-5 text-gray-600 transition duration-150 ease-in-out rounded-md group hover:text-gray-900 hover:bg-gray-50 focus:outline-none focus:text-gray-900 focus:bg-gray-50">
                 <!-- Heroicon name: folder -->
                 <svg class="w-6 h-6 mr-3 text-gray-500 transition duration-150 ease-in-out group-hover:text-gray-600 group-focus:text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"></path></svg>
@@ -30,7 +30,7 @@
               </button>
             <% end %>
 
-            <%= link to: Routes.live_path(@socket, Bonfire.UI.Social.FediverseLive) do %>
+            <%= link to: Routes.live_path(@socket, Bonfire.Me.Web.FediverseLive) do %>
               <button class="flex items-center px-2 py-2 text-sm font-medium leading-5 text-gray-600 transition duration-150 ease-in-out rounded-md group hover:text-gray-900 hover:bg-gray-50 focus:outline-none focus:text-gray-900 focus:bg-gray-50">
                 <!-- Heroicon name: calendar -->
                 <svg class="w-6 h-6 mr-3 text-gray-500 transition duration-150 ease-in-out group-hover:text-gray-600 group-focus:text-gray-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -40,7 +40,7 @@
               </button>
             <% end %>
 
-            <%= link to: Routes.live_path(@socket, Bonfire.UI.Social.InstanceLive) do %>
+            <%= link to: Routes.live_path(@socket, Bonfire.Me.Web.InstanceLive) do %>
               <button class="flex items-center px-2 py-2 text-sm font-medium leading-5 text-gray-600 transition duration-150 ease-in-out rounded-md group hover:text-gray-900 hover:bg-gray-50 focus:outline-none focus:text-gray-900 focus:bg-gray-50">
                 <!-- Heroicon name: inbox -->
                 <svg class="w-6 h-6 mr-3 text-gray-500 transition duration-150 ease-in-out group-hover:text-gray-600 group-focus:text-gray-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -50,7 +50,7 @@
               </button>
             <% end %>
 
-            <%= link to: Routes.live_path(@socket, Bonfire.UI.Social.InstanceLive) do %>
+            <%= link to: Routes.live_path(@socket, Bonfire.Me.Web.InstanceLive) do %>
               <button class="flex items-center px-2 py-2 text-sm font-medium leading-5 text-gray-600 transition duration-150 ease-in-out rounded-md group hover:text-gray-900 hover:bg-gray-50 focus:outline-none focus:text-gray-900 focus:bg-gray-50">
                 <!-- Heroicon name: chart-bar -->
                 <svg class="w-6 h-6 mr-3 text-gray-500 transition duration-150 ease-in-out group-hover:text-gray-600 group-focus:text-gray-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
