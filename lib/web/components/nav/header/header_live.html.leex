@@ -1,5 +1,5 @@
 <div class="flex-col flex-1 hidden fixed lg:flex top-0 z-10 w-full">
-  <div class="relative z-10 flex flex-shrink-0 h-16 bg-white shadow">
+  <div class="relative z-10 flex flex-shrink-0 h-16 bg-white border-b">
 
     <div class="flex items-center flex-shrink-0 px-4">
       <%# <%= live_component(@socket, Bonfire.UI.Social.AppsLive, assigns) %>
@@ -20,14 +20,14 @@
       <div class="flex items-center flex-1">
         <div class="flex flex-1">
           <form class="flex w-full md:ml-0" action="#" method="GET">
-            <label for="search_field" class="sr-only">Search</label>
+            <label for="search_field_full" class="sr-only">Search</label>
             <div class="relative w-full text-gray-400 focus-within:text-gray-600">
               <div style="left: 8px" class="absolute inset-y-0 left-0 flex items-center text-gray-500 pointer-events-none">
                 <svg class="w-5 h-5 fill-current" fill="currentColor" viewBox="0 0 20 20">
                   <path fill-rule="evenodd" clip-rule="evenodd" d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z" />
                 </svg>
               </div>
-              <input type="search" id="search_field" class="w-full h-full max-w-lg pl-8 text-gray-800 placeholder-gray-600 bg-gray-200" placeholder="Search">
+              <input type="search" id="search_field_full" class="w-full h-full max-w-lg pl-8 text-gray-800 placeholder-gray-600 bg-gray-200" placeholder="Search">
             </div>
           </form>
         </div>
@@ -35,23 +35,22 @@
       <div class="flex items-center px-8">
         <div class="relative flex items-center">
           <div class="flex items-center mr-8">
-            <svg class="w-6 h-6 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"></path></svg>
+            <svg class="w-6 h-6 text-gray-500" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path d="M10 2a6 6 0 00-6 6v3.586l-.707.707A1 1 0 004 14h12a1 1 0 00.707-1.707L16 11.586V8a6 6 0 00-6-6zM10 18a3 3 0 01-3-3h6a3 3 0 01-3 3z"></path></svg>
           </div>
           <details class="details-dropdown">
-                <summary>
-                  <div class="flex items-center max-w-xs text-sm rounded-full focus:outline-none focus:shadow-outline" id="user-menu" aria-label="User menu" aria-haspopup="true">
-                    <img class="inline-block w-8 h-8 rounded-full" src="https://thispersondoesnotexist.com/image" alt="">
-                    <div class="flex-1 ml-3">
-                      <h3 class="text-sm text-gray-700"><a class="font-bold" href="#"><%= @current_user.profile.name %></a></h3>
-                      <span class="text-sm text-gray-500">@<%= @current_user.character.username %></span>
-                    </div>
-                    <div class="flex items-center mr-8">
-                      <svg class="w-4 h-4 ml-4 text-gray-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
-                      </svg>
-                    </div>
-                  </div>
-                </summary>
+            <summary>
+              <div class="flex items-center max-w-xs text-sm rounded px-3 py-2 focus:outline-none focus:shadow-outline hover:bg-gray-100" id="user-menu" aria-label="User menu" aria-haspopup="true">
+                <img class="inline-block w-8 h-8 rounded-full" src="https://thispersondoesnotexist.com/image" alt="">
+                <div class="flex-1 ml-3">
+                  <h3 class="text-sm text-gray-700 font-semibold"><%= @current_user.profile.name %></h3>
+                </div>
+                <div class="flex items-center">
+                  <svg class="w-4 h-4 ml-4 text-gray-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+                  </svg>
+                </div>
+              </div>
+            </summary>
                 <details-menu>
                   <div class="absolute right-0 z-10 w-48 mt-2 origin-top-right rounded-md shadow-lg">
                     <div class="py-1 bg-white rounded-md shadow-xs" role="menu" aria-orientation="vertical" aria-labelledby="user-menu">
@@ -102,14 +101,14 @@
     <div class="flex justify-between flex-1 px-4">
       <div class="flex flex-1">
        <form class="flex items-center w-full md:ml-0" action="#" method="GET">
-        <label for="search_field" class="sr-only">Search</label>
+        <label for="search_field_mobile" class="sr-only">Search</label>
         <div style="max-width: 290px; height: 40px;" class="relative w-full text-gray-400 focus-within:text-gray-600">
           <div style="left: 8px" class="absolute inset-y-0 left-0 flex items-center text-gray-500 pointer-events-none">
             <svg class="w-5 h-5 fill-current" fill="currentColor" viewBox="0 0 20 20">
               <path fill-rule="evenodd" clip-rule="evenodd" d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z" />
             </svg>
           </div>
-          <input type="search" id="search_field" class="w-full h-full pl-8 placeholder-gray-500 bg-gray-300" placeholder="Search">
+          <input type="search" id="search_field_mobile" class="w-full h-full pl-8 placeholder-gray-500 bg-gray-300" placeholder="Search">
         </div>
       </form>
       </div>
@@ -118,13 +117,13 @@
         <div class="relative">
               <details class="details-dropdown">
                 <summary>
-                  <div class="flex items-center max-w-xs text-sm rounded-full focus:outline-none focus:shadow-outline" id="user-menu" aria-label="User menu" aria-haspopup="true">
+                  <div class="flex items-center max-w-xs text-sm rounded-full focus:outline-none focus:shadow-outline" id="user-menu-mobile" aria-label="User menu" aria-haspopup="true">
                     <img class="w-8 h-8 rounded-full" src="https://thispersondoesnotexist.com/image" alt="">
                   </div>
                 </summary>
                 <details-menu>
                   <div class="absolute right-0 z-10 w-48 mt-2 origin-top-right rounded-md shadow-lg">
-                    <div class="py-1 bg-white rounded-md shadow-xs" role="menu" aria-orientation="vertical" aria-labelledby="user-menu">
+                    <div class="py-1 bg-white rounded-md shadow-xs" role="menu" aria-orientation="vertical" aria-labelledby="user-menu-mobile">
                       <a href="#" class="block px-4 py-2 text-sm text-gray-700 transition duration-150 ease-in-out hover:bg-gray-100" role="menuitem">Your Profile</a>
                       <a href="#" class="block px-4 py-2 text-sm text-gray-700 transition duration-150 ease-in-out hover:bg-gray-100" role="menuitem">Settings</a>
                       <details class="details-dialog">

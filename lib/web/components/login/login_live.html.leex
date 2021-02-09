@@ -1,4 +1,4 @@
-<div class="bg-white rounded-lg shadow">
+<div class="bg-white rounded-lg border">
   <div class="px-4 py-5 bg-white border-b border-gray-200 rounded-t-md sm:px-6">
     <div class="flex flex-wrap items-center justify-between -mt-2 -ml-4 sm:flex-no-wrap">
       <div class="mt-2 ml-4">
@@ -39,7 +39,7 @@
           </div>
           <div class="ml-3">
             <h3 class="text-sm font-medium text-yellow-800">
-              We need you to click the link in the email we sent you to verify your email address.            
+              We need you to click the link in the email we sent you to verify your email address.
             </h3>
           </div>
         </div>
@@ -55,7 +55,7 @@
           </div>
           <div class="ml-3">
             <h3 class="text-sm font-medium text-yellow-800">
-              There was an error (<%= error %>), please try again.        
+              There was an error (<%= error %>), please try again.
             </h3>
           </div>
         </div>
@@ -66,7 +66,7 @@
       <%= hidden_input f, :go %>
 
       <div>
-        <label for="email" class="block text-sm font-medium leading-5 text-gray-700">
+        <label for="login_fields_email_or_username" class="block text-sm font-medium leading-5 text-gray-700">
           Email address or @username
         </label>
         <div class="mt-1 rounded-md shadow-sm">
@@ -76,7 +76,7 @@
       </div>
 
       <div class="mt-6">
-        <label for="password" class="block text-sm font-medium leading-5 text-gray-700">
+        <label for="login_fields_password" class="block text-sm font-medium leading-5 text-gray-700">
           Password
         </label>
         <div class="mt-1 rounded-md shadow-sm">
@@ -88,7 +88,7 @@
       <div class="flex items-center justify-between mt-6">
         <div class="flex items-center">
           <%= checkbox f, :remember_me, class: "form-checkbox h-4 w-4 text-gray-900 transition duration-150 ease-in-out" %>
-          <label for="remember_me" class="block ml-2 text-sm leading-5 text-gray-900">
+          <label for="login_fields_remember_me" class="block ml-2 text-sm leading-5 text-gray-900">
             Remember me
           </label>
         </div>

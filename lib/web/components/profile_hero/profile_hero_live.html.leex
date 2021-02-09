@@ -33,7 +33,7 @@
         <% end %>
       </div>
       <div class="mt-1">
-        <h1 class="text-lg font-bold text-gray-800"><%= e(@user, :profile, :name, "Anonymous") %></h1>
+        <h2 class="text-lg font-bold text-gray-800"><%= e(@user, :profile, :name, "Anonymous") %></h1>
         <h3 class="-mt-1 text-sm font-normal text-gray-600">@<%= e(@user, :character, :username, "") %></h3>
         <p><%= e(@user, :profile, :location, "") %></p>
         <%= if e(@user, :profile, :website, nil) do %>

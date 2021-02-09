@@ -1,9 +1,10 @@
 <%= cond do %>
   <% !@current_user and !@current_account -> %>
-    <div class="container max-w-screen-lg mx-auto">
-      <%= live_component(@socket, Bonfire.UI.Social.LogoHeaderLive, assigns) %>
+    <div class="">
       <%= live_component(@socket, Bonfire.UI.Social.HeaderGuestLive, assigns) %>
-      <%= @inner_content %>
+      <div class="container max-w-screen-lg mx-auto">
+        <%= @inner_content %>
+      </div>
     </div>
   <% !@current_user and @current_account -> %>
     <div class="pt-16">

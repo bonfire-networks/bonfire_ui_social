@@ -1,4 +1,4 @@
-<div class="mb-4 overflow-hidden bg-white rounded-lg shadow">
+<div class="mb-4 overflow-hidden bg-white rounded-lg bg-blueGray-100">
   <div class="px-4 py-4 pb-0">
     <div
       x-data="{open: false}"
@@ -9,8 +9,7 @@
         <h3
           x-show="!open"
           @click="open = !open"
-
-          class="p-3 text-sm font-normal tracking-wide text-gray-600 rounded-full cursor-pointer hover:bg-blueGray-200 bg-blueGray-100">Hey Ivan, do you want to post something?</h3>
+          class="p-3 text-sm font-semibold text-gray-700 rounded-full cursor-pointer hover:bg-blueGray-200">Hey Ivan, do you want to post something?</h3>
         <div
           x-show="open"
           x-description="create post form">
@@ -29,10 +28,10 @@
             <button
               @click="open = false"
               type="button"
-              class="inline-flex items-center px-4 py-2 mr-3 text-base font-medium text-gray-700 bg-white border border-gray-300 rounded-md shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+              class="btn-secondary mr-3">
               Cancel
             </button>
-            <button type="submit" class="flex justify-center px-4 py-2 text-sm font-medium text-gray-100 transition duration-150 ease-in-out bg-gray-900 border border-transparent rounded-md hover:bg-gray-800 hover:text-gray-200 focus:outline-none focus:border-blue-300 focus:shadow-outline-blue active:text-gray-200 active:bg-gray-700">
+            <button type="submit" class="btn-primary">
               Publish
             </button>
           </div>
