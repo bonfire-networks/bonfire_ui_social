@@ -1,13 +1,13 @@
-<div class="flex flex-col overflow-hidden">
+<div class="flex-col flex-1 hidden fixed lg:flex top-0 z-10 w-full">
   <div class="relative z-10 flex justify-between flex-shrink-0 h-16 bg-white shadow">
       <div class="flex items-center flex-shrink-0 px-4">
-        <%= live_component(@socket, Bonfire.UI.Social.AppsLive, assigns) %>
+        <%# <%= live_component(@socket, Bonfire.UI.Social.AppsLive, assigns) %>
         <div class="pr-4 border-r">
           <%= link to: Routes.live_path(@socket, Bonfire.Common.Config.get!(:home_page)) do %>
-          <svg class="w-6 h-6 text-gray-500 hover:text-gray-600" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path d="M10.707 2.293a1 1 0 00-1.414 0l-7 7a1 1 0 001.414 1.414L4 10.414V17a1 1 0 001 1h2a1 1 0 001-1v-2a1 1 0 011-1h2a1 1 0 011 1v2a1 1 0 001 1h2a1 1 0 001-1v-6.586l.293.293a1 1 0 001.414-1.414l-7-7z"></path></svg>          
+          <svg class="w-6 h-6 text-gray-500 hover:text-gray-600" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path d="M10.707 2.293a1 1 0 00-1.414 0l-7 7a1 1 0 001.414 1.414L4 10.414V17a1 1 0 001 1h2a1 1 0 001-1v-2a1 1 0 011-1h2a1 1 0 011 1v2a1 1 0 001 1h2a1 1 0 001-1v-6.586l.293.293a1 1 0 001.414-1.414l-7-7z"></path></svg>
           <% end %>
         </div>
-       
+
       </div>
       <div class="flex items-center justify-center flex-1 px-4">
           <form class="flex w-full md:ml-0" action="#" method="GET">
