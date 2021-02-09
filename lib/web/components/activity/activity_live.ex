@@ -5,17 +5,20 @@ defmodule Bonfire.UI.Social.ActivityLive do
   def update(assigns, socket) do
 
     activity = assigns.activity
-    |> repo().maybe_preload(:object)
-    |> repo().maybe_preload([object: [:profile, :character]])
-    |> repo().maybe_preload([object: [:post_content]])
+    # |> repo().maybe_preload(:object)
+    # |> repo().maybe_preload([object: [:profile, :character]])
+    # |> repo().maybe_preload([object: [:post_content]])
+
+    object = activity_object(activity)
 
     assigns = assigns
     |> Map.merge(%{
         activity: activity,
+        object: object,
         activity_object_component: activity_object_component(activity),
         date_ago: date_ago(activity.id)
       })
-    |> IO.inspect
+    # |> IO.inspect
 
     {:ok, assign(socket, assigns) }
   end
@@ -32,6 +35,14 @@ defmodule Bonfire.UI.Social.ActivityLive do
       ts
       # TODO: make it nice
     end
+  end
+
+  def activity_object(activity) do
+    e(activity, :object_post, nil) || e(
+        repo().maybe_preload(activity, :object),
+        :object,
+        nil
+        )
   end
 
 end
