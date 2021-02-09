@@ -1,21 +1,21 @@
 <%= cond do %>
   <% !@current_user and !@current_account -> %>
-    <div class="container h-screen max-w-screen-lg mx-auto">
+    <div class="container max-w-screen-lg mx-auto">
       <%= live_component(@socket, Bonfire.UI.Social.LogoHeaderLive, assigns) %>
       <%= live_component(@socket, Bonfire.UI.Social.HeaderGuestLive, assigns) %>
       <%= @inner_content %>
     </div>
   <% !@current_user and @current_account -> %>
-    <div class="h-screen">
+    <div class="pt-16">
       <%= live_component(@socket, Bonfire.UI.Social.HeaderAccountLive, assigns) %>
       <div class="container max-w-screen-lg mx-auto">
         <%= @inner_content %>
       </div>
     </div>
   <% true -> %>
-    <div class="flex flex-col min-h-screen overflow-hidden">
+    <div class="flex flex-col">
       <%= live_component(@socket, Bonfire.UI.Social.HeaderLive, assigns) %>
-      <div class="h-screen -mt-40 pt-16 overflow-y-auto">
+      <div class="pt-16">
         <div class="container flex max-w-screen-lg mx-auto">
           <%= live_component(@socket, Bonfire.UI.Social.SidebarLive, assigns) %>
           <div class="flex flex-col flex-1 w-0">
