@@ -2,7 +2,7 @@
 
 An extension for [Bonfire](https://bonfire.cafe/) that handles:
 
-- UI components and views for the *Social* and *Me* Bonfire extensions
+- UI components and templates for the Bonfire:Me and Bonfire:Social extensions 
 
 
 ## Handy commands
