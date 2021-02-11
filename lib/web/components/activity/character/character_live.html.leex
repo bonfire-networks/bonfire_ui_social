@@ -1,7 +1,7 @@
 <div class="flex items-center">
   <img class="inline-block h-10 w-10 rounded-full" src="https://thispersondoesnotexist.com/image" alt="">
   <div class="flex-1 ml-2">
-    <span class="float-right text-sm text-gray-500">@<%= e(@activity, :subject_character, :username, "") %> | <%=@date_ago%></span>
     <h3 class="text-base text-gray-700"><a class="font-bold" href="/user/<%= e(@activity, :subject_character, :username, "") %>"><%= e(@activity, :subject_profile, :name, "Anonymous") %></a> <%= @verb_display || e(@activity, :verb, :verb, "posted") %> <a class="font-bold" href="/user/<%= e(@object, :character, :username, "") %>"><%= e(@object, :profile, :name, "Anonymous") %></a></h3>
+    <span class="text-xs text-gray-500">@<%= e(@activity, :subject_character, :username, "") %> · <%=@date_ago%></span>
   </div>
 </div>

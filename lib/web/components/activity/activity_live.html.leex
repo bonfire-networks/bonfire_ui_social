@@ -5,7 +5,7 @@
     @activity_object_component,
     assigns
   ) %>
-  <div class="float-right flex pt-2 items-center">
+  <div class="flex pt-2 items-center">
     <%# <button class="inline-flex items-center px-4 py-2 text-sm leading-5 font-medium rounded-md text-gray-100 bg-gray-900 hover:bg-gray-800 hover:text-gray-200 focus:outline-none focus:border-blue-300 focus:shadow-outline-blue active:text-gray-200 active:bg-gray-700 transition ease-in-out duration-150">View activity</button> %>
     <%= live_redirect to: "/discussion/"<> e(@object, :id, "")  do %>
       <div class="flex items-center cursor-pointer rounded py-1 px-2 group hover:bg-gray-200">
@@ -22,5 +22,4 @@
       <span class="group-hover:text-gray-600 font-semibold text-xs text-gray-400">More</span>
     </div>
   </div>
-  &nbsp;
 </div>
