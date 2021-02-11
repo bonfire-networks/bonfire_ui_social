@@ -5,13 +5,15 @@
     <div
       x-data="{open: false}"
       class="flex items-start mb-3">
-      <img class="inline-block w-10 h-10 rounded-full" src="https://images.unsplash.com/photo-1491528323818-fdd1faba62cc?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80" alt="">
+      <%= link to: Routes.live_path(@socket, Bonfire.Me.Web.ProfileLive, @current_user.character.username || "" ) do %>
+        <img class="inline-block w-10 h-10 rounded-full ring-4 ring-blueGray-100 hover:ring-pink-200" src="https://images.unsplash.com/photo-1491528323818-fdd1faba62cc?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80" alt="">
+      <% end %>
       <form class="flex-1 ml-3 " phx-submit="post">
       <div>
         <h3
           x-show="!open"
           @click="open = !open"
-          class="p-3 text-sm font-semibold text-gray-700 rounded-full cursor-pointer bg-blueGray-200 ring-0 ring-blueGray-200 hover:ring-2 hover:ring-blue-200">Hey Ivan, do you want to post something?</h3>
+          class="px-3 h-10 flex flex-wrap content-center text-left text-sm font-semibold text-gray-700 rounded-full cursor-pointer bg-blueGray-200 ring-blueGray-200 ring-4 hover:ring-pink-200">Hey Ivan, do you want to post something?</h3>
         <div
           x-show="open"
           x-description="create post form">
