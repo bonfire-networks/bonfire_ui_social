@@ -11,7 +11,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
     # |> repo().maybe_preload([object: [:post_content]])
 
     object = object(activity)
-    |> IO.inspect
+    # |> IO.inspect
 
     verb_display = e(activity, :verb, :verb, "post")
       |> Verbs.conjugate(tense: "past", person: "third", plurality: "plural")
@@ -46,7 +46,10 @@ defmodule Bonfire.UI.Social.ActivityLive do
   end
 
   def object(%{object_post: %{id: _} = object}), do: object
-  def object(%{object: %Pointers.Pointer{id: _} = object}), do: Bonfire.Common.Pointers.get!(object)
+  def object(%{object: %Pointers.Pointer{id: _} = object}) do
+    Bonfire.Common.Pointers.get!(object)
+    |> repo().maybe_preload([:profile, :character])
+  end
   def object(%{object: %{id: _} = object}), do: object
 
 
