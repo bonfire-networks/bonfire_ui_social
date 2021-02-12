@@ -5,9 +5,9 @@
         <div class="flex flex-col flex-grow">
           <nav class="flex-1 px-2 space-y-1">
             <%= live_redirect to: Routes.live_path(@socket, Bonfire.Me.Web.LoggedDashboardLive ) do %>
-              <button class="<%= if @page == "dashboard", do: "text-pink-500 bg-pink-50", else: "text-gray-600" %> border-0 border-l-4 border-white flex items-center mt-1 px-2 py-2 text-sm font-medium leading-5 transition duration-150 ease-in-out  group hover:bg-pink-50 focus:outline-none focus:text-gray-900 focus:bg-gray-50">
+              <button class="<%= if @page == "dashboard", do: "text-pink-700 bg-pink-50", else: "text-gray-600" %> border-0 border-l-4 border-white flex items-center mt-1 px-2 py-2 text-sm font-medium leading-5 transition duration-150 ease-in-out  group hover:bg-pink-50 focus:outline-none focus:text-gray-900 focus:bg-gray-50">
                 <svg
-                  class="<%= if @page == "dashboard", do: "text-pink-500", else: "text-gray-500" %> w-5 h-5 mr-3 transition duration-150 ease-in-out"
+                  class="<%= if @page == "dashboard", do: "text-pink-700", else: "text-gray-500" %> w-5 h-5 mr-3 transition duration-150 ease-in-out"
                   fill="none"
                   stroke="currentColor"
                   viewBox="0 0 24 24"
@@ -18,9 +18,9 @@
             <% end %>
 
             <%= live_redirect to: Routes.live_path(@socket, Bonfire.Me.Web.ProfileLive, @current_user.character.username || "" ) do %>
-              <button class="<%= if @page == "profile", do: "text-pink-500 bg-pink-50", else: "text-gray-600" %> border-0 border-l-4 border-white flex items-center mt-1 px-2 py-2 text-sm font-medium leading-5 transition duration-150 ease-in-out  group hover:bg-pink-50 focus:outline-none focus:text-gray-900 focus:bg-gray-50">
+              <button class="<%= if @page == "profile", do: "text-pink-700 bg-pink-50", else: "text-gray-600" %> border-0 border-l-4 border-white flex items-center mt-1 px-2 py-2 text-sm font-medium leading-5 transition duration-150 ease-in-out  group hover:bg-pink-50 focus:outline-none focus:text-gray-900 focus:bg-gray-50">
                 <svg
-                  class="<%= if @page == "profile", do: "text-pink-500", else: "text-gray-500" %> w-5 h-5 mr-3 transition duration-150 ease-in-out"
+                  class="<%= if @page == "profile", do: "text-pink-700", else: "text-gray-500" %> w-5 h-5 mr-3 transition duration-150 ease-in-out"
                   fill="currentColor"
                   viewBox="0 0 20 20"
                   xmlns="http://www.w3.org/2000/svg">
@@ -31,9 +31,9 @@
 
 
             <%= live_redirect to: Routes.live_path(@socket, Bonfire.Me.Web.MyFeedLive ) do %>
-              <button class="<%= if @page == "feed", do: "text-pink-500 bg-pink-50", else: "text-gray-600" %> border-0 border-l-4 border-white flex items-center mt-1 px-2 py-2 text-sm font-medium leading-5 transition duration-150 ease-in-out  group hover:bg-pink-50 focus:outline-none focus:text-gray-900 focus:bg-gray-50">
+              <button class="<%= if @page == "feed", do: "text-pink-700 bg-pink-50", else: "text-gray-600" %> border-0 border-l-4 border-white flex items-center mt-1 px-2 py-2 text-sm font-medium leading-5 transition duration-150 ease-in-out  group hover:bg-pink-50 focus:outline-none focus:text-gray-900 focus:bg-gray-50">
                 <svg
-                  class="<%= if @page == "feed", do: "text-pink-500", else: "text-gray-500" %> w-5 h-5 mr-3 transition duration-150 ease-in-out"
+                  class="<%= if @page == "feed", do: "text-pink-700", else: "text-gray-500" %> w-5 h-5 mr-3 transition duration-150 ease-in-out"
                   fill="currentColor"
                   viewBox="0 0 20 20"
                   xmlns="http://www.w3.org/2000/svg">
@@ -43,9 +43,9 @@
             <% end %>
 
             <%= live_redirect to: Routes.live_path(@socket, Bonfire.Me.Web.InstanceLive ) do %>
-              <button class="<%= if @page == "instance", do: "text-pink-500 bg-pink-50", else: "text-gray-600" %> border-0 border-l-4 border-white flex items-center mt-1 px-2 py-2 text-sm font-medium leading-5 transition duration-150 ease-in-out  group hover:bg-pink-50 focus:outline-none focus:text-gray-900 focus:bg-gray-50">
+              <button class="<%= if @page == "instance", do: "text-pink-700 bg-pink-50", else: "text-gray-600" %> border-0 border-l-4 border-white flex items-center mt-1 px-2 py-2 text-sm font-medium leading-5 transition duration-150 ease-in-out  group hover:bg-pink-50 focus:outline-none focus:text-gray-900 focus:bg-gray-50">
                 <svg
-                  class="<%= if @page == "instance", do: "text-pink-500", else: "text-gray-500" %> w-5 h-5 mr-3 transition duration-150 ease-in-out"
+                  class="<%= if @page == "instance", do: "text-pink-700", else: "text-gray-500" %> w-5 h-5 mr-3 transition duration-150 ease-in-out"
                   fill="currentColor"
                   viewBox="0 0 20 20"
                   xmlns="http://www.w3.org/2000/svg">
@@ -56,9 +56,9 @@
 
             <%= live_redirect to: Routes.live_path(@socket, Bonfire.Me.Web.FediverseLive) do %>
               <button
-                class="<%= if @page == "fediverse", do: "text-pink-500 bg-pink-50", else: "text-gray-600" %> border-0 border-l-4 border-white flex items-center mt-1 px-2 py-2 text-sm font-medium leading-5 transition duration-150 ease-in-out  group hover:bg-pink-50 focus:outline-none focus:text-gray-900 focus:bg-gray-50">
+                class="<%= if @page == "fediverse", do: "text-pink-700 bg-pink-50", else: "text-gray-600" %> border-0 border-l-4 border-white flex items-center mt-1 px-2 py-2 text-sm font-medium leading-5 transition duration-150 ease-in-out  group hover:bg-pink-50 focus:outline-none focus:text-gray-900 focus:bg-gray-50">
                 <svg
-                  class="<%= if @page == "fediverse", do: "text-pink-500", else: "text-gray-500" %> w-5 h-5 mr-3 transition duration-150 ease-in-out"
+                  class="<%= if @page == "fediverse", do: "text-pink-700", else: "text-gray-500" %> w-5 h-5 mr-3 transition duration-150 ease-in-out"
                   fill="currentColor"
                   viewBox="0 0 20 20"
                   xmlns="http://www.w3.org/2000/svg">
