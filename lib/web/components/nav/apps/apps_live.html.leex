@@ -32,7 +32,7 @@
             </div>
             <div class="relative flex-1 px-0 mt-4 space-y-2 overflow-y-auto sm:px-4">
               <h5 class="mt-5 mb-3 ml-3 text-xs font-medium tracking-wider text-gray-800 uppercase ">Your apps</h5>
-              <%= link to: Routes.live_path(@socket, Bonfire.Me.Web.LoggedDashboardLive) do %>
+              <%= live_redirect to: Routes.live_path(@socket, Bonfire.Me.Web.LoggedDashboardLive) do %>
               <div class="transition-shadow duration-500 ease-in-out rounded cursor-pointer hover:border-gray-100 hover:bg-blueGray-50 hover:shadow-lg">
                 <div class="flex items-center p-3 space-x-3">
                   <span class="w-8 h-8 rounded bg-rose-900"></span>
@@ -42,7 +42,7 @@
               </div>
               <% end %>
               <%= if module_exists?(Bonfire.UI.ValueFlows.BreadDashboardLive) do %>
-                <%= link to: Routes.live_path(@socket, Bonfire.UI.ValueFlows.BreadDashboardLive) do %>
+                <%= live_redirect to: Routes.live_path(@socket, Bonfire.UI.ValueFlows.BreadDashboardLive) do %>
                 <div class="transition-shadow duration-500 ease-in-out rounded cursor-pointer hover:border-gray-100 hover:bg-blueGray-50 hover:shadow-lg">
                   <div class="flex items-center p-3 space-x-3">
                     <span class="w-8 h-8 bg-gray-900 rounded"></span>
@@ -53,7 +53,7 @@
                 <% end %>
               <% end %>
               <%= if module_exists?(Bonfire.Recyclapp.RecyclappDashboardLive) do %>
-              <%= link to: Routes.live_path(@socket, Bonfire.Recyclapp.RecyclappDashboardLive) do %>
+              <%= live_redirect to: Routes.live_path(@socket, Bonfire.Recyclapp.RecyclappDashboardLive) do %>
               <div class="transition-shadow duration-500 ease-in-out rounded cursor-pointer hover:border-gray-100 hover:bg-blueGray-50 hover:shadow-lg">
                 <div class="flex items-center p-3 space-x-3">
                   <span class="w-8 h-8 bg-blue-600 rounded"></span>

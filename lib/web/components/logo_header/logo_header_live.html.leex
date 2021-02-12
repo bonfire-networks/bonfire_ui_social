@@ -1,5 +1,5 @@
 <div class="mx-auto block mb-8 pt-12 text-center">
-<%= link to: Routes.live_path(@socket, Bonfire.Common.Config.get!(:home_page)) do %>
+<%= live_redirect to: Routes.live_path(@socket, Bonfire.Common.Config.get!(:home_page)) do %>
   <div class="sr-only">Home</div>
   <svg class="mx-auto" width="60px" height="60px" viewBox="0 0 60 60" version="1.1" xmlns="http://www.w3.org/2000/svg">
     <g id="Artboard-Copy-2" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
@@ -8,7 +8,7 @@
     </g>
 </svg>
 <% end %>
-<%= link to: Routes.live_path(@socket, Bonfire.Common.Config.get!(:home_page)) do %>
+<%= live_redirect to: Routes.live_path(@socket, Bonfire.Common.Config.get!(:home_page)) do %>
   <h1 class="leading-5 font-bold text-gray-900 mt-4 text-2xl">Instance name</h1>
 <% end %>
 </div>

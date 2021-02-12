@@ -2,7 +2,7 @@
   <div class="flex flex-col overflow-hidden container max-w-screen-lg mx-auto">
     <div class="relative z-10 flex justify-between flex-shrink-0 h-20">
         <div class="flex items-center flex-shrink-0 px-4">
-          <%= link to: Routes.live_path(@socket, Bonfire.Common.Config.get!(:home_page)) do %>
+          <%= live_redirect to: Routes.live_path(@socket, Bonfire.Common.Config.get!(:home_page)) do %>
             <div class="pr-4 border-r flex items-center">
               <svg class="w-6 h-6 text-gray-500 hover:text-gray-600" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path d="M10.707 2.293a1 1 0 00-1.414 0l-7 7a1 1 0 001.414 1.414L4 10.414V17a1 1 0 001 1h2a1 1 0 001-1v-2a1 1 0 011-1h2a1 1 0 011 1v2a1 1 0 001 1h2a1 1 0 001-1v-6.586l.293.293a1 1 0 001.414-1.414l-7-7z"></path></svg>
               <span class="ml-2 font-bold text-sm text-gray-800">Instance name</span>
@@ -11,10 +11,10 @@
 
           <div class="hidden lg:block ml-3">
             <div class="flex items-center">
-              <%= link to: Routes.live_path(@socket, Bonfire.Common.Config.get!(:home_page)) do %>
+              <%= live_redirect to: Routes.live_path(@socket, Bonfire.Common.Config.get!(:home_page)) do %>
                 <span class="text-sm font-medium leading-5 text-gray-600 transition duration-150 hover:text-gray-900 hover:bg-gray-100 rounded px-4 py-2 ease-in-out rounded-md focus:outline-none focus:text-gray-700">About</span>
               <% end %>
-              <%= link to: Routes.live_path(@socket, Bonfire.Me.Web.InstanceLive) do %>
+              <%= live_redirect to: Routes.live_path(@socket, Bonfire.Me.Web.InstanceLive) do %>
                 <span class="ml-4 text-sm font-medium leading-5 text-gray-600 transition duration-150 hover:text-gray-900 ease-in-out hover:bg-gray-100 rounded px-4 py-2 rounded-md hover:text-gray-700 focus:outline-none focus:text-gray-700">Discover</a>
               <% end %>
             </div>
