@@ -63,9 +63,10 @@ defmodule Bonfire.UI.Social.ActivityLive do
       |> verb_maybe_modify(activity, object)
   end
 
-  def verb_maybe_modify("created", %{reply_to: %{id: _} = reply_to}, %Bonfire.Data.Social.Post{}), do: "commented on " <> reply_to_display(reply_to)
-  def verb_maybe_modify("created", %{reply_to: %{id: _} = reply_to}, _), do: "responded to " <> reply_to_display(reply_to)
-  def verb_maybe_modify("created", _, %Bonfire.Data.Social.Post{}), do: "wrote"
+  def verb_maybe_modify("created", %{reply_to: %{id: _} = reply_to}, %Bonfire.Data.Social.Post{}), do: reply_to_display(reply_to)
+  def verb_maybe_modify("created", %{reply_to: %{id: _} = reply_to}, _), do: reply_to_display(reply_to)
+  def verb_maybe_modify("created", _, %Bonfire.Data.Social.Post{post_content: %{name: name}} = post), do: "wrote " <> object_link(name, post)
+  def verb_maybe_modify("created", _, %Bonfire.Data.Social.Post{} = _post), do: "wrote "
   def verb_maybe_modify(verb, _, _), do: verb
 
   def reply_to_display(%Pointers.Pointer{} = reply_to) do
@@ -76,13 +77,14 @@ defmodule Bonfire.UI.Social.ActivityLive do
   end
   def reply_to_display(%{post_content: post_content} = _post), do: post_content |> reply_to_display()
   def reply_to_display(%{profile: profile, character: character}), do: Map.merge(profile, character) |> reply_to_display()
-  def reply_to_display(%{name: name} = reply_to) when is_binary(name) and name !="", do: name |> reply_to_link(reply_to)
-  def reply_to_display(%{summary: summary} = reply_to) when is_binary(summary) and summary !="", do: summary |> reply_to_link(reply_to)
-  def reply_to_display(%{html_body: html_body} = reply_to), do: html_body |> reply_to_link(reply_to)
+
+  def reply_to_display(%{name: name} = reply_to) when is_binary(name) and name !="", do: "commented on " <> object_link(name, reply_to)
+  def reply_to_display(%{summary: summary} = reply_to) when is_binary(summary) and summary !="", do: "responded to " <> object_link(summary, reply_to)
+  def reply_to_display(%{html_body: html_body} = reply_to), do: "responded to " <> object_link(html_body, reply_to, "hover:underline italic")
 
   # TODO: use live_redirect
-  def reply_to_link(text, %{character: %{username: username}}), do: "<a class='hover:underline font-bold' href='/user/#{username}'>#{text}</a>"
-  def reply_to_link(text, %{id: id}), do: "<a class='hover:underline font-bold' href='/discussion/#{id}'>#{text}</a>"
+  def object_link(text, %{character: %{username: username}}, class \\ "hover:underline font-bold"), do: "<a class='#{class}' href='/user/#{username}'>#{text}</a>"
+  def object_link(text, %{id: id}, class), do: "<a class='#{class}' href='/discussion/#{id}'>#{text}</a>"
 
   def handle_event("like"=action, attrs, socket), do: Bonfire.Me.Social.Likes.live_action(action, attrs, socket)
 

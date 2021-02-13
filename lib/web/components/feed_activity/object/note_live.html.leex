@@ -2,7 +2,6 @@
 <div class="ml-12 mt-1">
   <%= live_redirect to: "/post/"<> e(@object, :id, "")  do %>
     <div class="max-w-prose">
-      <h3><%= e(@object, :post_content, :name, "") %></h3>
       <%= e(@object, :post_content, :summary, e(@object, :post_content, :html_body, "...")) %>
     </div>
   <% end %>
