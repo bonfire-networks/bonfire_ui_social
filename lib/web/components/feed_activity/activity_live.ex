@@ -5,7 +5,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
   def update(assigns, socket) do
 
     activity = assigns.activity
-    # |> IO.inspect
+    |> IO.inspect
     # |> repo().maybe_preload(:object)
     # |> repo().maybe_preload([object: [:profile, :character]])
     # |> repo().maybe_preload([object: [:post_content]])
@@ -55,6 +55,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
     |> repo().maybe_preload([:profile, :character])
   end
   def object(%{object: %{id: _} = object}), do: object
+  def object(%{object_id: id}), do: Bonfire.Common.Pointers.get!(id)
 
   def verb_display(verb, activity, object) do
     verb
