@@ -1,0 +1,7 @@
+<div class="flex items-center">
+  <img class="inline-block h-10 w-10 rounded-full" src="https://thispersondoesnotexist.com/image" alt="">
+  <div class="flex-1 ml-2">
+    <h3 class="text-base text-gray-700"><a class="hover:underline font-bold" href="/user/<%= e(@activity, :object_creator_character, :username, "") %>"><%= e(@activity, :object_creator_profile, :name, "Anonymous") %></a> <%= raw @created_verb_display %></h3>
+    <span class="block mt-0 text-xs text-gray-500">@<%= e(@activity, :object_creator_character, :username, "") %> · <%=@date_ago%></span>
+  </div>
+</div>
