@@ -1,0 +1,45 @@
+<div class="flex flex-col bg-blueGray-800 rounded-lg overflow-hidden mb-3">
+  <div class="flex-shrink-0 flex h-16 justify-between">
+    <div class="flex items-center flex-shrink-0 px-4">
+      <div class="pr-2">
+        <img class="inline-block h-10 w-10 rounded-md" src="https://thispersondoesnotexist.com/image" alt="">
+      </div>
+      <div>
+        <div class="sm:block ml-2">
+          <nav class="flex space-x-4" aria-label="Tabs">
+            <%= live_patch to: "/user/" <>  e(@current_user, :character, :username, "") <> "/about" do %>
+              <div aria-current="<%= if @selected_tab == "about", do: "page" %>" class="<%= if @selected_tab == "about", do: "bg-rose-500 text-gray-100" %> text-gray-100 hover:text-gray-200 px-3 py-2 font-medium text-sm rounded-md">
+                About
+              </div>
+            <% end %>
+
+            <%= live_patch to: "/user/" <>  e(@current_user, :character, :username, "") <> "/timeline" do %>
+              <div aria-current="<%= if @selected_tab == "timeline", do: "page" %>" class="<%= if @selected_tab == "timeline", do: "bg-rose-500 text-gray-100" %> text-gray-100 hover:text-gray-200 px-3 py-2 font-medium text-sm rounded-md">
+                Timeline
+              </div>
+            <% end %>
+
+            <%= live_patch to: "/user/" <>  e(@current_user, :character, :username, "") <> "/likes" do %>
+              <div aria-current="<%= if @selected_tab == "likes", do: "page" %>" class="<%= if @selected_tab == "likes", do: "bg-rose-500 text-gray-100" %> text-gray-100 hover:text-gray-200 px-3 py-2 font-medium text-sm rounded-md">
+                Likes
+              </div>
+            <% end %>
+
+            <%= live_patch to: "/user/" <>  e(@current_user, :character, :username, "") <> "/media" do %>
+              <div aria-current="<%= if @selected_tab == "media", do: "page" %>" class="<%= if @selected_tab == "media", do: "bg-rose-500 text-gray-100" %> text-gray-100 hover:text-gray-200 px-3 py-2 font-medium text-sm rounded-md">
+                Media
+              </div>
+            <% end %>
+          </nav>
+        </div>
+      </div>
+    </div>
+    <%# <div class="px-4 flex ">
+      <div class="ml-4 flex items-center md:ml-6">
+        <span class="inline-flex ml-3">
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="M5 12h.01M12 12h.01M19 12h.01M6 12a1 1 0 11-2 0 1 1 0 012 0zm7 0a1 1 0 11-2 0 1 1 0 012 0zm7 0a1 1 0 11-2 0 1 1 0 012 0z"></path></svg>
+        </span>
+      </div>
+    </div> %>
+  </div>
+</div>
