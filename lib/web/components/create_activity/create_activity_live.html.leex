@@ -15,11 +15,15 @@
           <input
             x-show.transition="title_open"
             name="name"
-            id="name"
-            placeholder="Choose a title"
+            placeholder="Enter a title"
             class="transition-all duration-300 ease-in-out mb-2 flex-grow block rounded w-full min-w-0 border-gray-300 focus:ring-light-blue-500 focus:border-light-blue-500 sm:text-sm border p-2" />
           <textarea
-            id="note"
+            x-show.transition="title_open"
+            name="summary"
+            rows="4"
+            placeholder="Write a short summary"
+            class="block h-20 text-sm w-full transition-all duration-300 ease-in-out border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500"></textarea>
+          <textarea
             name="html_body"
             rows="4"
             @keydown.window.escape="open = false;"
@@ -38,7 +42,7 @@
               :class="{'bg-pink-50' : title_open === true }"
             >
               <svg :class="{'text-pink-700' : title_open === true }" class="w-5 h-5 text-gray-700" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M18 3a1 1 0 00-1.447-.894L8.763 6H5a3 3 0 000 6h.28l1.771 5.316A1 1 0 008 18h1a1 1 0 001-1v-4.382l6.553 3.276A1 1 0 0018 15V3z" clip-rule="evenodd"></path></svg>
-              <span :class="{'text-pink-700' : title_open === true}" class="ml-2 text-xs font-semibold text-gray-800">Add a title</span>
+              <span :class="{'text-pink-700' : title_open === true}" class="ml-2 text-xs font-semibold text-gray-800">Add a title / summary</span>
             </button>
             </div>
             <button

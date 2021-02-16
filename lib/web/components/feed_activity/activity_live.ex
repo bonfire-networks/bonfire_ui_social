@@ -65,7 +65,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
 
   def verb_maybe_modify("created", %{reply_to: %{id: _} = reply_to}, %Bonfire.Data.Social.Post{}), do: reply_to_display(reply_to)
   def verb_maybe_modify("created", %{reply_to: %{id: _} = reply_to}, _), do: reply_to_display(reply_to)
-  def verb_maybe_modify("created", _, %Bonfire.Data.Social.Post{post_content: %{name: name}} = post), do: "wrote " <> object_link(name, post)
+  def verb_maybe_modify("created", _, %Bonfire.Data.Social.Post{post_content: %{name: name}} = post), do: "wrote " #<> object_link(name, post)
   def verb_maybe_modify("created", _, %Bonfire.Data.Social.Post{} = _post), do: "wrote "
   def verb_maybe_modify(verb, _, _), do: verb
 
