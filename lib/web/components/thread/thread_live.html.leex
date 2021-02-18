@@ -1,0 +1,28 @@
+
+
+<div id="" class="my-6 flex">
+  <%# <div class="mb-2 flex rounded-md shadow-sm">
+    <label class="inline-flex items-center px-3 rounded-l-md border border-r-0 border-gray-300 bg-gray-50 text-gray-500 sm:text-sm">
+      Title
+    </label>
+    <input type="text" name="company_website" id="company_website" class="flex-1 min-w-0 block w-full px-3 py-2 rounded-none rounded-r-md focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border-gray-300" placeholder="www.example.com">
+  </div> %>
+  <img class="inline-block h-10 w-10 rounded-full" src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80" alt="">
+  <div class="flex-1 ml-2">
+    <%= live_component(@socket, Bonfire.UI.Social.ReplyLive, current_user: @current_user, thread: @thread, reply_to: @thread, thread_component: @myself) %>
+  </div>
+</div>
+
+
+<div class="mt-2 pt-2 border-t flex items-center text-xs uppercase text-normal tracking-wider">
+  <label>sort by</label>
+  <select class="ml-2 py-1 text-indigo-600 text-xs font-semibold"><option>most voted</option></select>
+</div>
+
+<div id="replies" class="mt-6">
+
+  <%= for {reply, child_replies} <- @threaded_replies do %>
+    <%= live_component(@socket, Bonfire.UI.Social.CommentLive, current_user: @current_user, thread: @thread, comment: reply, child_replies: child_replies, thread_max_depth: @thread_max_depth, thread_level: 1, thread_component: @myself) %>
+  <% end %>
+
+</div>

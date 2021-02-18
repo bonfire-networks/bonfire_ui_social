@@ -1,10 +1,30 @@
 <div class="p-4 border-b float-none">
 <%= for component <- @activity_object_components do %>
   <%=
-  live_component(
-    @socket,
-    component,
-    assigns
-  ) %>
+  case component do
+
+  {module, component_assigns} ->
+    IO.inspect(incepting: component_assigns)
+    live_component(
+      @socket,
+      module,
+      id: e(@activity, :id, "activity") <> e(component_assigns, :activity, :id, e(component_assigns, :activity, :object, :id, "sub-activity")),
+      activity: e(component_assigns, :activity, @activity),
+      verb: e(component_assigns, :verb, @verb),
+      verb_display: e(component_assigns, :verb_display, @verb_display),
+      activity_inception: true,
+      current_user: @current_user
+    )
+
+  module ->
+
+    live_component(
+      @socket,
+      module,
+      assigns
+    )
+
+  end
+   %>
 <% end %>
 </div>

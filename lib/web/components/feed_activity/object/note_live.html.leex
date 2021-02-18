@@ -1,29 +1,29 @@
 
 <div class="ml-12 mt-1" x-data="{content_open: false}">
 
-      <%= if e(@object, :post_content, :name, nil) do %>
+      <%= if e(@activity, :object_post_content, :name, nil) do %>
 
-        <%= live_redirect to: "/post/"<> e(@object, :id, "")  do %>
-          <h2><%= e(@object, :post_content, :name, "Title") %></h2>
+        <%= live_redirect to: "/post/"<> e(@activity, :object_id, "")  do %>
+          <h2><%= e(@activity, :object_post_content, :name, "Title") %></h2>
           <div class="max-w-prose">
-            <%= e(@object, :post_content, :summary, "") %>
+            <%= e(@activity, :object_post_content, :summary, "") %>
           </div>
         <% end %>
 
         <button @click="{content_open = true}" x-show="content_open == false" class="btn-secondary">Read contents</button>
         <button @click="{content_open = false}" x-show="content_open" class="btn-secondary">Hide contents</button>
         <div x-show.transition="content_open" class="max-w-prose">
-          <%= e(@object, :post_content, :html_body, "") %>
+          <%= e(@activity, :object_post_content, :html_body, "") %>
         </div>
 
       <% else %>
 
-        <%= live_redirect to: "/post/"<> e(@object, :id, "")  do %>
-          <h2><%= e(@object, :post_content, :summary, "") %></h2>
+        <%= live_redirect to: "/post/"<> e(@activity, :object_id, "") do %>
+          <h2><%= e(@activity, :object_post_content, :summary, "") %></h2>
         <% end %>
 
         <div class="max-w-prose">
-          <%= e(@object, :post_content, :html_body, "...") %>
+          <%= e(@activity, :object_post_content, :html_body, "...") %>
         </div>
       <% end %>
 

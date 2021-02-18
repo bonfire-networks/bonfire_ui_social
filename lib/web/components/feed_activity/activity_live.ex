@@ -4,70 +4,109 @@ defmodule Bonfire.UI.Social.ActivityLive do
 
   def update(assigns, socket) do
 
-    activity = assigns.activity
-    |> IO.inspect
+    activity = %{assigns.activity | object: object(assigns.activity)}
+    # |> IO.inspect
     # |> repo().maybe_preload(:object)
     # |> repo().maybe_preload([object: [:profile, :character]])
     # |> repo().maybe_preload([object: [:post_content]])
 
-    object = object(activity)
-    # |> IO.inspect
+    verb = e(activity, :verb, :verb, "post") |> verb_maybe_modify(activity)
 
-    verb = e(activity, :verb, :verb, "post")
+    components = component_activity_subject(verb, activity)
+    # ++ component_object_subject(verb, activity)
+    ++ component_object(verb, activity)
+    ++ component_actions(verb, activity)
 
-    verb_display = verb_display(verb, activity, object)
-    created_display = verb_display("create", activity, object)
-
-    components = component_activity_subject(verb, activity, object)
-    # ++ component_object_subject(verb, activity, object)
-    ++ component_object(verb, activity, object)
-    ++ component_actions(verb, activity, object)
+    verb_display = verb_display(verb, activity)
+    created_verb_display = "create" |> verb_maybe_modify(activity) |> verb_display(activity)
 
     assigns = assigns
     |> Map.merge(%{
         activity: activity,
-        object: object,
         activity_object_components: components,
-        date_ago: date_from_now(object),
+        date_ago: date_from_now(activity.object),
+        verb: verb,
         verb_display: verb_display,
-        created_verb_display: created_display
+        created_verb_display: created_verb_display
       })
     # |> IO.inspect
 
     {:ok, assign(socket, assigns) }
   end
 
-  def component_activity_subject("like", _, _), do: [Bonfire.UI.Social.Activity.SubjectMinimalLive, Bonfire.UI.Social.Activity.CreatorLive]
-  def component_activity_subject(_, _, %Bonfire.Data.Identity.User{}), do: []
-  def component_activity_subject(_, _, _), do: [Bonfire.UI.Social.Activity.SubjectLive]
 
-  def component_object(_, _, %Bonfire.Data.Social.Post{}), do: [Bonfire.UI.Social.Activity.NoteLive]
-  def component_object(_, _, %Bonfire.Data.Identity.User{}), do: [Bonfire.UI.Social.Activity.CharacterLive]
-  def component_object(_, _, _), do: [Bonfire.UI.Social.Activity.NoteLive]
+  def component_activity_subject("like"=verb, _), do: [{Bonfire.UI.Social.Activity.SubjectMinimalLive, %{verb: verb}}, Bonfire.UI.Social.Activity.CreatorLive]
 
-  def component_actions(_, _, %Bonfire.Data.Social.Post{}), do: [Bonfire.UI.Social.Activity.ActionsLive]
-  def component_actions(_, _, _), do: [Bonfire.UI.Social.Activity.NoActionsLive]
+  def component_activity_subject(verb,
+    %{reply_to_post_content: %{id: _} = reply_to_post_content,
+    reply_to_creator_character: %{id: _} = reply_to_creator_character,
+    reply_to_creator_profile: %{id: _} = reply_to_creator_profile})
+  when verb in ["reply","respond"], do: [
+    {Bonfire.UI.Social.Activity.SubjectMinimalLive, %{verb: verb}},
+    {Bonfire.UI.Social.ActivityLive, %{activity: %{
+      object: reply_to_post_content,
+      object_post_content: reply_to_post_content, # TODO: avoid duplication
+      subject_profile: reply_to_creator_profile,
+      subject_character: reply_to_creator_character
+    }}},
+    Bonfire.UI.Social.Activity.SubjectLive]
 
-  def object(%{object_post: %{id: _} = object}), do: object
-  def object(%{object: %Pointers.Pointer{id: _} = object}) do
-    Bonfire.Common.Pointers.get!(object)
-    # |> repo().maybe_preload([creator: [:creator_user]])
-    |> repo().maybe_preload([:profile, :character])
+  def component_activity_subject(verb, %{reply_to: %{id: _} = reply_to})
+  when verb in ["reply","respond"], do: [
+    {Bonfire.UI.Social.Activity.SubjectMinimalLive, %{verb: verb}},
+    {Bonfire.UI.Social.ActivityLive, %{activity: load_reply_to(reply_to)}},
+    Bonfire.UI.Social.Activity.SubjectLive]
+
+  def component_activity_subject(_, %{object: %Bonfire.Data.Identity.User{}}), do: []
+
+  def component_activity_subject(_, _), do: [Bonfire.UI.Social.Activity.SubjectLive]
+
+
+  def component_object(_, %{object: %Bonfire.Data.Social.Post{}}), do: [Bonfire.UI.Social.Activity.NoteLive]
+  def component_object(_, %{object: %Bonfire.Data.Identity.User{}}), do: [Bonfire.UI.Social.Activity.CharacterLive]
+  def component_object(_, _), do: [Bonfire.UI.Social.Activity.NoteLive]
+
+
+  def component_actions(_, %{object: %Bonfire.Data.Social.Post{}}), do: [Bonfire.UI.Social.Activity.ActionsLive]
+  def component_actions(_, _), do: [Bonfire.UI.Social.Activity.NoActionsLive]
+
+
+  def object(%{object_post_content: %{id: _} = object}), do: object # posts are already preloaded in query
+  def object(%{object: %Pointers.Pointer{id: _} = object}), do: load_object(object) # get other pointable objects
+  def object(%{object: %{id: _} = object}), do: object # any other preloaded object
+  def object(%{object_id: id}), do: load_object(id) # any non-preloaded pointable object
+
+  def load_reply_to(%Pointers.Pointer{} = reply_to) do
+    object = load_object(reply_to)
+
+    %{
+      object: object,
+      subject_profile: e(object, :creator_profile, nil),
+      subject_character: e(object, :creator_character, nil)
+    }
   end
-  def object(%{object: %{id: _} = object}), do: object
-  def object(%{object_id: id}), do: Bonfire.Common.Pointers.get!(id)
 
-  def verb_display(verb, activity, object) do
+  def load_object(id_or_pointer) do
+    Bonfire.Common.Pointers.get!(id_or_pointer)
+      # TODO: avoid so many queries
+      |> repo().maybe_preload([:post_content])
+      |> repo().maybe_preload([:creator_profile, :creator_character])
+      |> repo().maybe_preload([:profile, :character])
+  end
+
+  def verb_maybe_modify("create", %{reply_to_post_content: %{id: _} = reply_to}), do: "reply"
+  def verb_maybe_modify("create", %{reply_to: %{id: _} = reply_to}), do: "respond"
+  # def verb_maybe_modify("created", %{reply_to: %{id: _} = reply_to, object: %Bonfire.Data.Social.Post{}}), do: reply_to_display(reply_to)
+  # def verb_maybe_modify("created", %{reply_to: %{id: _} = reply_to}), do: reply_to_display(reply_to)
+  def verb_maybe_modify("create", %{object: %Bonfire.Data.Social.PostContent{name: name} = post}), do: "write" #<> object_link(name, post)
+  def verb_maybe_modify("create", %{object: %Bonfire.Data.Social.PostContent{} = _post}), do: "write"
+  def verb_maybe_modify("create", %{object: %Bonfire.Data.Social.Post{} = _post}), do: "write"
+  def verb_maybe_modify(verb, _), do: verb
+
+  def verb_display(verb, activity) do
     verb
       |> Verbs.conjugate(tense: "past", person: "third", plurality: "plural")
-      |> verb_maybe_modify(activity, object)
   end
-
-  def verb_maybe_modify("created", %{reply_to: %{id: _} = reply_to}, %Bonfire.Data.Social.Post{}), do: reply_to_display(reply_to)
-  def verb_maybe_modify("created", %{reply_to: %{id: _} = reply_to}, _), do: reply_to_display(reply_to)
-  def verb_maybe_modify("created", _, %Bonfire.Data.Social.Post{post_content: %{name: name}} = post), do: "wrote " #<> object_link(name, post)
-  def verb_maybe_modify("created", _, %Bonfire.Data.Social.Post{} = _post), do: "wrote "
-  def verb_maybe_modify(verb, _, _), do: verb
 
   def reply_to_display(%Pointers.Pointer{} = reply_to) do
     Bonfire.Common.Pointers.get!(reply_to)
@@ -85,6 +124,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
   # TODO: use live_redirect
   def object_link(text, %{character: %{username: username}}, class \\ "hover:underline font-bold"), do: "<a class='#{class}' href='/user/#{username}'>#{text}</a>"
   def object_link(text, %{id: id}, class), do: "<a class='#{class}' href='/discussion/#{id}'>#{text}</a>"
+
 
   def handle_event("like"=action, attrs, socket), do: Bonfire.Me.Social.Likes.live_action(action, attrs, socket)
 

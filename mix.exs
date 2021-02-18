@@ -12,10 +12,13 @@ defmodule Bonfire.UI.Social.MixProject do
       compilers: [:phoenix, :gettext] ++ Mix.compilers(),
       start_permanent: Mix.env() == :prod,
       aliases: aliases(),
-      deps: Mess.deps [
+      deps: Mess.deps([
         {:phoenix_live_reload, "~> 1.2", only: :dev},
         {:dbg, "~> 1.0", only: [:dev, :test]},
         {:floki, ">= 0.0.0", only: [:dev, :test]},
+      ]),
+      package: [
+        licenses: ["AGPL v3"]
       ]
     ]
   end
