@@ -55,20 +55,10 @@
                   <div class="absolute right-0 z-10 w-48 mt-2 origin-top-right rounded-md shadow-lg">
                     <div class="py-1 bg-white rounded-md shadow-xs" role="menu" aria-orientation="vertical" aria-labelledby="user-menu">
                      <%= live_redirect to: Routes.live_path(@socket, Bonfire.Me.Web.ProfileLive, @current_user.character.username || "") do %>
-                      <button class="block w-full px-4 py-2 text-sm text-left text-gray-700 transition duration-150 ease-in-out hover:bg-gray-100" role="menuitem">Your Profile</button>
+                      <button class="block w-full px-4 py-2 text-sm text-left text-gray-700 transition duration-150 ease-in-out hover:bg-gray-100" role="menuitem">My Profile</button>
                     <% end %>
-                      <a href="/switch-user" class="block px-4 py-2 text-sm text-gray-700 transition duration-150 ease-in-out hover:bg-gray-100" role="menuitem">Switch User Profile</a>
+                      <a href="/switch-user" class="block px-4 py-2 text-sm text-gray-700 transition duration-150 ease-in-out hover:bg-gray-100" role="menuitem">Switch User</a>
                       <a href="/settings" class="block px-4 py-2 text-sm text-gray-700 transition duration-150 ease-in-out hover:bg-gray-100" role="menuitem">Settings</a>
-
-                      <details class="details-dialog">
-                        <summary>
-                          <div class="block px-4 py-2 text-sm text-gray-700 transition duration-150 ease-in-out hover:bg-gray-100" role="menuitem">Deactivate my account</div>
-                        </summary>
-                        <details-dialog>
-                          <%= live_component(@socket, ModalLive, assigns) %>
-                        <%# <button type="button" data-close-dialog>Close</button> %>
-                        </details-dialog>
-                      </details>
 
                       <a href="/logout" class="block px-4 py-2 text-sm text-gray-700 transition duration-150 ease-in-out hover:bg-gray-100" role="menuitem">Logout</a>
 

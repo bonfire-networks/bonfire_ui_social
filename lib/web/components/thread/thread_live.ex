@@ -4,7 +4,7 @@ defmodule Bonfire.UI.Social.ThreadLive do
   alias Bonfire.Common.Web.LivePlugs
   alias Bonfire.Me.Users
   alias Bonfire.Me.Web.{CreateUserLive, LoggedDashboardLive}
-  import Bonfire.Me.Integration
+  # import Bonfire.Me.Integration
 
   @thread_max_depth 3 # TODO: put in config
 
