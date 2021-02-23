@@ -1,6 +1,6 @@
 <form
   x-data="{open: false}"
-  phx-submit="reply"
+  phx-submit="post_reply"
   phx-target="<%= @thread_component %>">
   <label for="html_body_<%= e(@reply_to, :id, "") %>" class="sr-only">Add a reply</label>
   <input type="hidden" name="reply_to[reply_to_id]" value="<%= e(@reply_to, :id, "") %>" />

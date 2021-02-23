@@ -46,32 +46,7 @@ defmodule Bonfire.UI.Social.ThreadLive do
   #    )}
   # end
 
-  def handle_event("load_replies", %{"id" => id, "level" => level}, socket) do
-    {level, _} = Integer.parse(level)
-    replies = Bonfire.Me.Social.Posts.list_replies(id, level + @thread_max_depth)
-    replies = replies ++ socket.assigns.replies
-    {:noreply,
-        assign(socket,
-        replies: replies,
-        threaded_replies: Bonfire.Me.Social.Posts.arrange_replies_tree(replies) || []
-     )}
-  end
+  defdelegate handle_event(action, attrs, socket), to: Bonfire.Me.Web.LiveHandlers
 
-  def handle_event("reply", attrs, socket) do
-
-    attrs = attrs
-    |> Bonfire.Common.Utils.input_to_atoms()
-
-    with {:ok, published} <- Bonfire.Me.Social.Posts.reply(socket.assigns.current_user, attrs) do
-      replies = [published] ++ socket.assigns.replies
-    IO.inspect(replies, label: "rep:")
-      {:noreply,
-        assign(socket,
-        replies: replies,
-        threaded_replies: Bonfire.Me.Social.Posts.arrange_replies_tree(replies) || []
-     )}
-    end
-
-  end
 
 end

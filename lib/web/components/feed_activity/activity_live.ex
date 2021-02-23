@@ -63,10 +63,12 @@ defmodule Bonfire.UI.Social.ActivityLive do
 
 
   def component_object(_, %{object: %Bonfire.Data.Social.Post{}}), do: [Bonfire.UI.Social.Activity.NoteLive]
+  def component_object(_, %{object_post_content: %{id: _}}), do: [Bonfire.UI.Social.Activity.NoteLive]
   def component_object(_, %{object: %Bonfire.Data.Identity.User{}}), do: [Bonfire.UI.Social.Activity.CharacterLive]
   def component_object(_, _), do: [Bonfire.UI.Social.Activity.NoteLive]
 
 
+  def component_actions(_, %{object_post_content: %{id: _}}), do: [Bonfire.UI.Social.Activity.ActionsLive]
   def component_actions(_, %{object: %Bonfire.Data.Social.Post{}}), do: [Bonfire.UI.Social.Activity.ActionsLive]
   def component_actions(_, _), do: [Bonfire.UI.Social.Activity.NoActionsLive]
 
@@ -126,6 +128,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
   def object_link(text, %{id: id}, class), do: "<a class='#{class}' href='/discussion/#{id}'>#{text}</a>"
 
 
-  def handle_event("like"=action, attrs, socket), do: Bonfire.Me.Social.Likes.live_action(action, attrs, socket)
+  # def handle_event("like"=action, attrs, socket), do: Bonfire.Me.Social.Likes.live_action(action, attrs, socket)
+  defdelegate handle_event(action, attrs, socket), to: Bonfire.Me.Web.LiveHandlers
 
 end
