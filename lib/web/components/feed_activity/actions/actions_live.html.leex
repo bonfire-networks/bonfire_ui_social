@@ -19,9 +19,9 @@
       <span class="<%= if e(@activity, :my_boost, :id, nil), do: "text-pink-500 group-hover:text-pink-700", else: "text-gray-500 group-hover:text-gray-700" %> font-semibold text-xs"><%= if e(@activity, :my_boost, :id, nil), do: "Boosted", else: "Boost" %> (12)</span>
     </div>
 
-    <div class="ml-4 flex items-center cursor-pointer rounded py-1 px-2 group hover:bg-gray-200">
+    <div phx-click="<%= if e(@activity, :my_flag, :id, nil), do: "flag_undo", else: "flag" %>" phx-value-id="<%= e(@activity, :object, :id, "") %>" class="ml-4 flex items-center cursor-pointer rounded py-1 px-2 group hover:bg-gray-200">
       <svg class="group-hover:text-gray-600 w-4 h-4 mr-1 text-gray-500"  fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M3 6a3 3 0 013-3h10a1 1 0 01.8 1.6L14.25 8l2.55 3.4A1 1 0 0116 13H6a1 1 0 00-1 1v3a1 1 0 11-2 0V6z" clip-rule="evenodd"></path></svg>
-      <span class="group-hover:text-gray-700 font-semibold text-xs text-gray-500">Flag</span>
+      <span class="group-hover:text-gray-700 font-semibold text-xs text-gray-500"><%= if e(@activity, :my_flag, :id, nil), do: "Flagged", else: "Flag" %></span>
     </div>
 
     <% end %>
