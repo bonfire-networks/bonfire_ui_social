@@ -36,6 +36,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
 
 
   def component_activity_subject("like"=verb, _), do: [{Bonfire.UI.Social.Activity.SubjectMinimalLive, %{verb: verb}}, Bonfire.UI.Social.Activity.CreatorLive]
+  def component_activity_subject("boost"=verb, _), do: [{Bonfire.UI.Social.Activity.SubjectMinimalLive, %{verb: verb}}, Bonfire.UI.Social.Activity.CreatorLive]
 
   def component_activity_subject(verb,
     %{reply_to_post_content: %{id: _} = reply_to_post_content,
