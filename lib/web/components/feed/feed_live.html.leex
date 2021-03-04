@@ -22,7 +22,7 @@
     <% end %>
     <%= if e(@page_info, :after, nil) do %>
     <div class="flex place-items-center p-3 mx-auto justify-center">
-      <button class="relative inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50" phx-click="feed_load_more" phx-value-after="<%= e(@page_info, :after, nil) %>">Load more</button>
+      <a phx-click="feed_load_more" phx-value-after="<%= e(@page_info, :after, nil) %>" href="?feed[after]=<%= e(@page_info, :after, nil) %>" class="relative inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50">Load more</a>
     </div>
     <% end %>
     </div>
