@@ -6,7 +6,7 @@
         <%# <%= live_component(@socket, Bonfire.UI.Social.LogoHeaderLive, assigns) %>
         <%= live_component(@socket, Bonfire.UI.Social.HeaderGuestLive, assigns) %>
       </div>
-      <div class="pt-0 bg-gray-700">
+      <div class="pt-0 bg-blueGray-100">
         <div class="container flex max-w-screen-lg mx-auto">
           <div class="w-full p-4 mx-auto lg:p-0">
             <%= @inner_content %>
@@ -15,7 +15,7 @@
       </div>
     <% !@current_user and @current_account -> %>
       <%= live_component(@socket, Bonfire.UI.Social.HeaderAccountLive, assigns) %>
-      <div class="pt-16 bg-gray-700">
+      <div class="pt-16 bg-blueGray-100">
         <div class="container flex max-w-screen-lg mx-auto">
           <div class="w-full p-4 mx-auto lg:p-0">
             <%= @inner_content %>
@@ -24,7 +24,7 @@
       </div>
     <% true -> %>
       <%= live_component(@socket, Bonfire.UI.Social.HeaderLive, assigns) %>
-      <div class="pt-16 bg-gray-700">
+      <div class="pt-16 bg-blueGray-100">
         <div class="container flex max-w-screen-lg mx-auto">
           <div class="w-full p-4 mx-auto lg:p-0">
             <%= @inner_content %>
