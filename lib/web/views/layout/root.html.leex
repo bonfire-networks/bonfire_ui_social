@@ -16,7 +16,7 @@
       <script defer phx-track-static type="text/javascript" src="<%= Routes.static_path(@conn, "/js/non_live.js") %>"></script>
     <% end %>
   </head>
-  <body id="layout-root">
+  <body id="layout-root" class="<%= if @current_account, do: "bg-blueGray-100" %>">
     <%= if Code.ensure_loaded?(Thesis.View), do: Thesis.View.thesis_editor(@conn) %>
     <%= @inner_content %>
   </body>
