@@ -1,5 +1,5 @@
 
-<div class="ml-12 mt-1" x-data="{content_open: false}">
+<div class="ml-11" x-data="{content_open: false}">
 
       <%= if e(@activity, :object_post_content, :name, nil) do %>
 
@@ -30,10 +30,10 @@
       <% else %>
 
         <%= live_redirect to: "/post/"<> e(@activity, :object, :id, "") do %>
-          <div class="max-w-prose prose-sm"><%= e(@activity, :object_post_content, :summary, "") %></div>
+          <div class="max-w-prose prose-sm mb-2"><%= e(@activity, :object_post_content, :summary, "") %></div>
         <% end %>
 
-        <article class="max-w-prose py-3">
+        <article class="max-w-prose">
           <%= e(@activity, :object_post_content, :html_body, "...") %>
         </article>
       <% end %>
