@@ -1,4 +1,4 @@
-<div class="flex items-center">
+<div class="flex items-center <%= if e(@activity, :replied, :reply_to_id, nil), do: "ml-8" %>">
   <img class="inline-block h-9 w-9 rounded-full" src="https://thispersondoesnotexist.com/image" alt="">
   <div class="flex-1 ml-2">
     <h3 class="text-base flex items-center text-gray-700">

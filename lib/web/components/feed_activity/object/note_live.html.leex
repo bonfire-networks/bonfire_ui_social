@@ -1,5 +1,5 @@
 
-<div class="ml-11" x-data="{content_open: false}">
+<div class='<%= if e(@activity, :replied, :reply_to_id, nil), do: "ml-20", else: "ml-11" %>' x-data="{content_open: false}">
 
       <%= if e(@activity, :object_post_content, :name, nil) do %>
 
