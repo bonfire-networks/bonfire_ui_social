@@ -21,7 +21,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
     created_verb_display = "create" |> verb_maybe_modify(activity) |> verb_display(activity)
 
     assigns = assigns
-    |> Map.merge(%{
+    |> assigns_merge(%{
         activity: activity,
         activity_object_components: components,
         date_ago: date_from_now(activity.object),
@@ -29,7 +29,6 @@ defmodule Bonfire.UI.Social.ActivityLive do
         verb_display: verb_display,
         created_verb_display: created_verb_display
       })
-    # |> IO.inspect
 
     {:ok, assign(socket, assigns) }
   end
@@ -40,23 +39,36 @@ defmodule Bonfire.UI.Social.ActivityLive do
   def component_activity_subject("flag"=verb, _), do: [{Bonfire.UI.Social.Activity.SubjectMinimalLive, %{verb: verb}}, Bonfire.UI.Social.Activity.CreatorLive]
 
   def component_activity_subject(verb,
-    %{reply_to_post_content: %{id: _} = reply_to_post_content,
-    reply_to_creator_character: %{id: _} = reply_to_creator_character,
-    reply_to_creator_profile: %{id: _} = reply_to_creator_profile})
-  when verb in ["reply","respond"], do: [
+    %{
+      id: activity_id,
+      reply_to_post_content: %{id: reply_id} = reply_to_post_content,
+      reply_to_creator_character: %{id: _} = reply_to_creator_character,
+      reply_to_creator_profile: %{id: _} = reply_to_creator_profile
+    } )
+  when verb in ["reply","respond"], do: [ # post reply
     {Bonfire.UI.Social.Activity.SubjectMinimalLive, %{verb: verb}},
-    {Bonfire.UI.Social.ActivityLive, %{activity: %{
-      object: reply_to_post_content,
-      object_post_content: reply_to_post_content, # TODO: avoid duplication
-      subject_profile: reply_to_creator_profile,
-      subject_character: reply_to_creator_character
+    {Bonfire.UI.Social.ActivityLive, %{
+      activity_inception: true,
+      id: activity_id <> reply_id,
+      activity: %{
+        object: reply_to_post_content,
+        object_post_content: reply_to_post_content, # TODO: avoid data duplication
+        subject_profile: reply_to_creator_profile,
+        subject_character: reply_to_creator_character
     }}},
     Bonfire.UI.Social.Activity.SubjectLive]
 
-  def component_activity_subject(verb, %{reply_to: %{id: _} = reply_to})
-  when verb in ["reply","respond"], do: [
+  def component_activity_subject(verb, %{
+    id: activity_id,
+    reply_to: %{id: reply_id} = reply_to
+  })
+  when verb in ["reply","respond"], do: [ # other kind of reply
     {Bonfire.UI.Social.Activity.SubjectMinimalLive, %{verb: verb}},
-    {Bonfire.UI.Social.ActivityLive, %{activity: load_reply_to(reply_to)}},
+    {Bonfire.UI.Social.ActivityLive, %{
+      activity_inception: true,
+      id: activity_id <> reply_id,
+      activity: load_reply_to(reply_to)
+    }},
     Bonfire.UI.Social.Activity.SubjectLive]
 
   def component_activity_subject(_, %{object: %Bonfire.Data.Identity.User{}}), do: []
@@ -67,7 +79,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
   def component_object(_, %{object: %Bonfire.Data.Social.Post{}}), do: [Bonfire.UI.Social.Activity.NoteLive]
   def component_object(_, %{object_post_content: %{id: _}}), do: [Bonfire.UI.Social.Activity.NoteLive]
   def component_object(_, %{object: %Bonfire.Data.Identity.User{}}), do: [Bonfire.UI.Social.Activity.CharacterLive]
-  def component_object(_, _), do: [Bonfire.UI.Social.Activity.NoteLive]
+  def component_object(_, _), do: [Bonfire.UI.Social.Activity.NoteLive] # TODO: fallback for unknown objects
 
 
   def component_actions(_, %{object_post_content: %{id: _}}), do: [Bonfire.UI.Social.Activity.ActionsLive]
