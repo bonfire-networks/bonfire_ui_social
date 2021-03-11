@@ -1,5 +1,5 @@
-<div class="flex items-center <%= if e(@activity, :replied, :reply_to_id, nil), do: "ml-8" %>">
-  <img class="inline-block h-9 w-9 rounded-full" src="https://thispersondoesnotexist.com/image" alt="">
+<div class="<%= if e(@activity, :replied, :reply_to_id, nil), do: "pl-1" %> flex items-center">
+  <img class="inline-block rounded-full <%= if e(@activity, :replied, :reply_to_id, nil), do: "w-6 h-6", else: "w-8 h-8" %>" src="https://thispersondoesnotexist.com/image" alt="">
   <div class="flex-1 ml-2">
     <h3 class="text-base flex items-center text-gray-700">
       <a class="hover:underline font-bold" href="/user/<%= e(@activity, :subject_character, :username, "") %>"><%= e(@activity, :subject_profile, :name, "Anonymous") %></a>

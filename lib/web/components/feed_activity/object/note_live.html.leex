@@ -1,8 +1,10 @@
 
-<div class='<%= if e(@activity, :replied, :reply_to_id, nil), do: "ml-20", else: "ml-11" %>' x-data="{content_open: false}">
-
+<div class='ml-10'
+    x-data="{content_open: false}">
+    <%# = e(@activity, :replied, :reply_to_id, nil) %>
+    <%# = e(@activity, :object, :id, nil) %>
+    <%# = e(@activity, :id, nil) %>
       <%= if e(@activity, :object_post_content, :name, nil) do %>
-
         <%= live_redirect to: "/post/"<> e(@activity, :object, :id, "")  do %>
           <h2 class="text-xl font-bold text-gray-700 hover:underline"><%= e(@activity, :object_post_content, :name, "Title") %></h2>
         <% end %>
@@ -29,8 +31,10 @@
 
       <% else %>
 
-        <%= live_redirect to: "/post/"<> e(@activity, :object, :id, "") do %>
-          <div class="max-w-prose prose-sm mb-2"><%= e(@activity, :object_post_content, :summary, "") %></div>
+        <%= if e(@activity, :object_post_content, :summary, nil) do %>
+          <%= live_redirect to: "/post/"<> e(@activity, :object, :id, "") do %>
+            <div class="max-w-prose prose-sm mb-2"><%= e(@activity, :object_post_content, :summary, "") %></div>
+          <% end %>
         <% end %>
 
         <article class="max-w-prose">

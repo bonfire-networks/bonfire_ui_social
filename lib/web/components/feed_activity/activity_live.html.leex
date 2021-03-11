@@ -1,14 +1,30 @@
-<div class="p-4 border-b float-none">
+<div class="
+  <%= cond do %>
+    <% e(@activity, :object, :id, nil) != nil and e(@activity, :replied, :reply_to_id, nil) == nil and e(@activity, :id, nil) == nil -> %>
+      ml-0 relative p-0 float-none mb-3
+    <% e(@activity, :object, :id, nil) != nil and e(@activity, :replied, :reply_to_id, nil) != nil and e(@activity, :id, nil) != nil -> %>
+      p-4 ml-0 border-b
+    <% true -> %>
+      p-4 ml-0 border-b
+  <% end %>">
+  <%= if e(@activity, :object, :id, nil) != nil && e(@activity, :replied, :reply_to_id, nil) == nil && e(@activity, :id, nil) == nil do %>
+    <span style="width: 2px" class="absolute block -mb-1 top-10 bottom-0 bg-gray-200 left-4"></span>
+  <% end %>
 <%= for component <- @activity_object_components do %>
   <%=
   case component do
 
   {module, component_assigns} ->
+    #IO.inspect(incepting: component_assigns)
     live_component(
       @socket,
       module,
-      assigns
-      |> assigns_merge(component_assigns)
+      id: e(@activity, :id, "activity") <> e(component_assigns, :activity, :id, e(component_assigns, :activity, :object, :id, "sub-activity")),
+      activity: e(component_assigns, :activity, @activity),
+      verb: e(component_assigns, :verb, @verb),
+      verb_display: e(component_assigns, :verb_display, @verb_display),
+      activity_inception: true,
+      current_user: @current_user
     )
 
   module ->
