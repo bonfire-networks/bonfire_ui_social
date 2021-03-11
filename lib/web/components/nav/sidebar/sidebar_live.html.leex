@@ -7,28 +7,14 @@
             <%= live_redirect to: Routes.live_path(@socket, Bonfire.Me.Web.LoggedDashboardLive ) do %>
               <button class="w-full border-blueGray-100 border-l-4 flex items-center mt-1 px-2 py-2 text-base font-medium leading-5 transition duration-150 ease-in-out  group hover:bg-blueGray-200 focus:outline-none focus:text-gray-900 focus:bg-gray-50 <%= if @page == "dashboard", do: "text-pink-500", else: "text-gray-800" %>">
                 <svg
-                  class="<%= if @page == "dashboard", do: "text-pink-500", else: "text-gray-500" %> w-5 h-5 mr-3 transition duration-150 ease-in-out"
-                  fill="none"
-                  stroke="currentColor"
+                  class="w-5 h-5 mr-3 transition duration-150 ease-in-out <%= if @page == "dashboard", do: "text-pink-500", else: "text-gray-500" %>"
+                  fill="currentColor"
                   viewBox="0 0 24 24"
                   xmlns="http://www.w3.org/2000/svg">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z"></path></svg>
+                  <path stroke-linecap="round" stroke-linejoin="round"  d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z"></path></svg>
                 Dashboard
               </button>
             <% end %>
-
-            <%= live_redirect to: Routes.live_path(@socket, Bonfire.Me.Web.ProfileLive, @current_user.character.username || "" ) do %>
-              <button class="w-full border-blueGray-100 border-l-4 flex items-center mt-1 px-2 py-2 text-base font-medium leading-5 transition duration-150 ease-in-out  group hover:bg-blueGray-200 focus:outline-none focus:text-gray-900 focus:bg-gray-50 <%= if @page == "profile", do: "text-pink-500", else: "text-gray-800" %> ">
-                <svg
-                  class="w-5 h-5 mr-3 transition duration-150 ease-in-out <%= if @page == "profile", do: "text-pink-500", else: "text-gray-500" %>"
-                  fill="currentColor"
-                  viewBox="0 0 20 20"
-                  xmlns="http://www.w3.org/2000/svg">
-                  <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-6-3a2 2 0 11-4 0 2 2 0 014 0zm-2 4a5 5 0 00-4.546 2.916A5.986 5.986 0 0010 16a5.986 5.986 0 004.546-2.084A5 5 0 0010 11z" clip-rule="evenodd"></path></svg>
-                Profile
-              </button>
-            <% end %>
-
 
             <%= live_redirect to: Routes.live_path(@socket, Bonfire.Me.Web.MyFeedLive ) do %>
               <button class="w-full border-blueGray-100 border-l-4 flex items-center mt-1 px-2 py-2 text-base font-medium leading-5 transition duration-150 ease-in-out  group hover:bg-blueGray-200 focus:outline-none focus:text-gray-900 focus:bg-gray-50 <%= if @page == "feed", do: "text-pink-500", else: "text-gray-800" %>">
@@ -42,11 +28,18 @@
               </button>
             <% end %>
 
-            <%= live_redirect to: Routes.live_path(@socket, Bonfire.Me.Web.InboxLive ) do %>
-              <button class="w-full border-blueGray-100 border-l-4 flex items-center mt-1 px-2 py-2 text-base font-medium leading-5 transition duration-150 ease-in-out  group hover:bg-blueGray-200 focus:outline-none focus:text-gray-900 focus:bg-gray-50 <%= if @page == "notifications", do: "text-pink-500", else: "text-gray-800" %>">
-                <svg class="w-5 h-5 mr-3 transition duration-150 ease-in-out <%= if @page == "notifications", do: "text-pink-500", else: "text-gray-500" %>"
- fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path d="M10 2a6 6 0 00-6 6v3.586l-.707.707A1 1 0 004 14h12a1 1 0 00.707-1.707L16 11.586V8a6 6 0 00-6-6zM10 18a3 3 0 01-3-3h6a3 3 0 01-3 3z"></path></svg>
-                Notifications
+            <%= live_redirect to: Routes.live_path(@socket, Bonfire.Me.Web.FediverseLive) do %>
+              <button
+                class="w-full border-blueGray-100 border-l-4 flex items-center mt-1 px-2 py-2 text-base font-medium leading-5 transition duration-150 ease-in-out  group hover:bg-blueGray-200 focus:outline-none focus:text-gray-900 focus:bg-gray-50 <%= if @page == "fediverse", do: "text-pink-500", else: "text-gray-800" %>">
+                <svg
+                  class="w-5 h-5 mr-3 transition duration-150 ease-in-out <%= if @page == "fediverse", do: "text-pink-500", else: "text-gray-500" %>"
+                  fill="currentColor"
+                  stroke-width="1"
+                  viewBox="0 0 20 20"
+                  xmlns="http://www.w3.org/2000/svg">
+                  <path fill-rule="evenodd" d="M4.083 9h1.946c.089-1.546.383-2.97.837-4.118A6.004 6.004 0 004.083 9zM10 2a8 8 0 100 16 8 8 0 000-16zm0 2c-.076 0-.232.032-.465.262-.238.234-.497.623-.737 1.182-.389.907-.673 2.142-.766 3.556h3.936c-.093-1.414-.377-2.649-.766-3.556-.24-.56-.5-.948-.737-1.182C10.232 4.032 10.076 4 10 4zm3.971 5c-.089-1.546-.383-2.97-.837-4.118A6.004 6.004 0 0115.917 9h-1.946zm-2.003 2H8.032c.093 1.414.377 2.649.766 3.556.24.56.5.948.737 1.182.233.23.389.262.465.262.076 0 .232-.032.465-.262.238-.234.498-.623.737-1.182.389-.907.673-2.142.766-3.556zm1.166 4.118c.454-1.147.748-2.572.837-4.118h1.946a6.004 6.004 0 01-2.783 4.118zm-6.268 0C6.412 13.97 6.118 12.546 6.03 11H4.083a6.004 6.004 0 002.783 4.118z" clip-rule="evenodd"></path>
+                </svg>
+                Fediverse
               </button>
             <% end %>
 
@@ -62,19 +55,31 @@
               </button>
             <% end %>
 
-            <%= live_redirect to: Routes.live_path(@socket, Bonfire.Me.Web.FediverseLive) do %>
-              <button
-                class="w-full border-blueGray-100 border-l-4 flex items-center mt-1 px-2 py-2 text-base font-medium leading-5 transition duration-150 ease-in-out  group hover:bg-blueGray-200 focus:outline-none focus:text-gray-900 focus:bg-gray-50 <%= if @page == "fediverse", do: "text-pink-500", else: "text-gray-800" %>">
+            <%= live_redirect to: Routes.live_path(@socket, Bonfire.Me.Web.InboxLive ) do %>
+              <button class="w-full border-blueGray-100 border-l-4 flex items-center mt-1 px-2 py-2 text-base font-medium leading-5 transition duration-150 ease-in-out  group hover:bg-blueGray-200 focus:outline-none focus:text-gray-900 focus:bg-gray-50 <%= if @page == "notifications", do: "text-pink-500", else: "text-gray-800" %>">
+                <svg class="w-5 h-5 mr-3 transition duration-150 ease-in-out <%= if @page == "notifications", do: "text-pink-500", else: "text-gray-500" %>" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path d="M10 2a6 6 0 00-6 6v3.586l-.707.707A1 1 0 004 14h12a1 1 0 00.707-1.707L16 11.586V8a6 6 0 00-6-6zM10 18a3 3 0 01-3-3h6a3 3 0 01-3 3z"></path></svg>
+                Notifications
+              </button>
+            <% end %>
+
+
+            <%= live_redirect to: Routes.live_path(@socket, Bonfire.Me.Web.ProfileLive, @current_user.character.username || "" ) do %>
+              <button class="w-full border-blueGray-100 border-l-4 flex items-center mt-1 px-2 py-2 text-base font-medium leading-5 transition duration-150 ease-in-out  group hover:bg-blueGray-200 focus:outline-none focus:text-gray-900 focus:bg-gray-50 <%= if @page == "profile", do: "text-pink-500", else: "text-gray-800" %> ">
                 <svg
-                  class="w-5 h-5 mr-3 transition duration-150 ease-in-out <%= if @page == "fediverse", do: "text-pink-500", else: "text-gray-500" %>"
+                  class="w-5 h-5 mr-3 transition duration-150 ease-in-out <%= if @page == "profile", do: "text-pink-500", else: "text-gray-500" %>"
                   fill="currentColor"
                   viewBox="0 0 20 20"
                   xmlns="http://www.w3.org/2000/svg">
-                  <path fill-rule="evenodd" d="M4.083 9h1.946c.089-1.546.383-2.97.837-4.118A6.004 6.004 0 004.083 9zM10 2a8 8 0 100 16 8 8 0 000-16zm0 2c-.076 0-.232.032-.465.262-.238.234-.497.623-.737 1.182-.389.907-.673 2.142-.766 3.556h3.936c-.093-1.414-.377-2.649-.766-3.556-.24-.56-.5-.948-.737-1.182C10.232 4.032 10.076 4 10 4zm3.971 5c-.089-1.546-.383-2.97-.837-4.118A6.004 6.004 0 0115.917 9h-1.946zm-2.003 2H8.032c.093 1.414.377 2.649.766 3.556.24.56.5.948.737 1.182.233.23.389.262.465.262.076 0 .232-.032.465-.262.238-.234.498-.623.737-1.182.389-.907.673-2.142.766-3.556zm1.166 4.118c.454-1.147.748-2.572.837-4.118h1.946a6.004 6.004 0 01-2.783 4.118zm-6.268 0C6.412 13.97 6.118 12.546 6.03 11H4.083a6.004 6.004 0 002.783 4.118z" clip-rule="evenodd"></path>
-                </svg>
-                Fediverse
+                  <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-6-3a2 2 0 11-4 0 2 2 0 014 0zm-2 4a5 5 0 00-4.546 2.916A5.986 5.986 0 0010 16a5.986 5.986 0 004.546-2.084A5 5 0 0010 11z" clip-rule="evenodd"></path></svg>
+                Profile
               </button>
             <% end %>
+
+
+
+
+
+
 
             <%#= live_redirect to: Routes.live_path(@socket, Bonfire.Me.Web.InstanceLive) do %>
               <%# <button class="flex items-center px-2 py-2 text-base font-medium leading-5 text-gray-600 transition duration-150 ease-in-out rounded-md group hover:text-gray-900 hover:bg-indigo-100 focus:outline-none focus:text-gray-900 focus:bg-gray-50">

@@ -13,16 +13,8 @@
   </div>
 </div>
 
-
-<div class="mt-2 pt-2 border-t flex items-center text-xs uppercase text-normal tracking-wider">
-  <label>sort by</label>
-  <select class="ml-2 py-1 text-indigo-600 text-xs font-semibold"><option>most voted</option></select>
-</div>
-
-<div id="replies" class="mt-6">
-
+<div id="replies" class="mt-6 pt-3 border-t">
   <%= for {reply, child_replies} <- @threaded_replies do %>
     <%= live_component(@socket, Bonfire.UI.Social.CommentLive, current_user: @current_user, thread: @thread, comment: reply, child_replies: child_replies, thread_max_depth: @thread_max_depth, thread_level: 1, thread_component: @myself) %>
   <% end %>
-
 </div>
