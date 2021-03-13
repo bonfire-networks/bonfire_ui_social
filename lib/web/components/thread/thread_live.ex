@@ -16,20 +16,28 @@ defmodule Bonfire.UI.Social.ThreadLive do
 
     # replies = Bonfire.Me.Social.Posts.replies_tree(e(thread, :thread_replies, []))
 
-    thread = Map.get(assigns, :thread) || Map.get(assigns, :thread_id)
+    thread_id = e(assigns, :thread_id, nil)
 
-    replies = if thread, do: Bonfire.Me.Social.Posts.list_replies(thread, @thread_max_depth)
-    # IO.inspect(replies, label: "REPLIES:")
+    if thread_id do
 
-    {:ok,
-     socket
-     |> assign(
-       thread_max_depth: @thread_max_depth,
-       thread: thread,
-       current_user: e(assigns, :current_user, nil),
-       replies: replies || [],
-       threaded_replies: Bonfire.Me.Social.Posts.arrange_replies_tree(replies || []) || []
-     )}
+      activity = e(assigns, :activity, nil)
+      current_user = e(assigns, :current_user, nil)
+
+      replies = Bonfire.Me.Social.Posts.list_replies(thread_id, current_user, @thread_max_depth)
+      # IO.inspect(replies, label: "REPLIES:")
+
+      {:ok,
+      socket
+      |> assign(
+        thread_id: thread_id,
+        activity: activity,
+        reply_to_thread_id: e(activity, :thread_post_content, :id, nil) || thread_id, # TODO: change for thread forking?
+        current_user: current_user,
+        replies: replies || [],
+        threaded_replies: Bonfire.Me.Social.Posts.arrange_replies_tree(replies || []) || [],
+        thread_max_depth: @thread_max_depth
+      )}
+    end
   end
 
   # def handle_params(%{"tab" => tab} = _params, _url, socket) do

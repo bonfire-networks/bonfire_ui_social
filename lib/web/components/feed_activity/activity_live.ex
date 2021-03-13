@@ -82,10 +82,11 @@ defmodule Bonfire.UI.Social.ActivityLive do
   def component_object(_, _), do: [Bonfire.UI.Social.Activity.NoteLive] # TODO: fallback for unknown objects
 
 
-  def component_actions(_, %{object_post_content: %{id: _}}), do: [Bonfire.UI.Social.Activity.ActionsLive]
-  def component_actions(_, %{object: %Bonfire.Data.Social.Post{}}), do: [Bonfire.UI.Social.Activity.ActionsLive]
+  def component_actions(_, %{object_post_content: %{id: _} = object}), do: component_show_actions(object)
+  def component_actions(_, %{object: %Bonfire.Data.Social.Post{} = object}), do: component_show_actions(object) # TODO: make which object have actions configurable
   def component_actions(_, _), do: [Bonfire.UI.Social.Activity.NoActionsLive]
 
+  def component_show_actions(object), do: [{Bonfire.UI.Social.Activity.ActionsLive, %{object: object}}]
 
   def object(%{object_post_content: %{id: _} = object}), do: object # posts are already preloaded in query
   def object(%{object: %Pointers.Pointer{id: _} = object}), do: load_object(object) # get other pointable objects

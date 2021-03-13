@@ -1,0 +1,65 @@
+<div class="mt-4 bg-white p-2">
+
+  <div class="bg-gray-800 rounded-t p-2 -m-2 flex items-center justify-between">
+    <h2 class="py-1 text-gray-100 font-bold text-sm"><%= e(@activity, :object_post_content, :name, nil) || e(@activity, :thread_post_content, :name, "") %></h2>
+    <div class="flex items-center space-x-3">
+      <%# <div class="flex items-center cursor-pointer rounded py-1 px-2 group hover:bg-gray-600" @click="toggle_zen_mode =!toggle_zen_mode" >
+        <svg class="group-hover:text-gray-100 text-gray-100 w-6 h-6 pr-2" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M11.3 1.046A1 1 0 0112 2v5h4a1 1 0 01.82 1.573l-7 10A1 1 0 018 18v-5H4a1 1 0 01-.82-1.573l7-10a1 1 0 011.12-.38z" clip-rule="evenodd"></path></svg>
+        <span class="group-hover:text-gray-100 text-gray-100 font-bold text-xs">Zen mode</span>
+      </div> %>
+      <div class="flex items-center cursor-pointer rounded py-1 px-2 group hover:bg-gray-600">
+        <svg class="text-gray-100 w-6 h-6 pr-2" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path d="M10 12a2 2 0 100-4 2 2 0 000 4z"></path><path fill-rule="evenodd" d="M.458 10C1.732 5.943 5.522 3 10 3s8.268 2.943 9.542 7c-1.274 4.057-5.064 7-9.542 7S1.732 14.057.458 10zM14 10a4 4 0 11-8 0 4 4 0 018 0z" clip-rule="evenodd"></path></svg>
+        <span class="text-gray-100 font-bold text-xs">Follow</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="lg:flex mt-6">
+    <div class="w-full lg:w-2/3 mx-auto lg:px-2">
+      <section class="py-2 px-3">
+
+        <%= if e(@activity, :object_post_content, :name, "") != "" do %>
+          <h1 class="text-4xl font-bold mt-6 mb-4 text-gray-800"><%= e(@activity, :object_post_content, :name, "No title") %></h1>
+        <% end %>
+
+        <div class="flex items-center">
+          <div class="flex-shrink-0">
+            <img class="h-8 w-8 rounded-full" src="https://images.unsplash.com/photo-1519345182560-3f2917c472ef?ixlib=rb-1.2.1&amp;ixid=eyJhcHBfaWQiOjEyMDd9&amp;auto=format&amp;fit=facearea&amp;facepad=2&amp;w=256&amp;h=256&amp;q=80" alt="">
+          </div>
+          <div class="flex-1 ml-2">
+            <a href="/user/<%= e(@activity, :subject_character, :username, "anon")%>">
+              <span class="text-sm font-semibold text-gray-800 truncate">
+                <%= e(@activity, :subject_profile, :name, "Anonymous")%> 
+              </span> 
+              <span class="text-xs text-gray-400">@<%= e(@activity, :subject_character, :username, "") %>
+            </a>
+            <div class="-mt-1 text-sm text-gray-600">
+              <%=@date_ago%>
+            </div>
+          </div>
+          <div>
+          </div>
+        </div>
+
+
+        <div class="mt-4">
+          <%= if e(@activity, :object_post_content, :summary, "") != "" do %>
+            <span class="uppercase tracking-wider text-xs font-bold text-gray-800">Summary</span>
+            <h2 class="prose-sm mb-6 text-gray-700 mt-2">
+              <%= e(@activity, :object_post_content, :summary, "") %>
+            </h2>
+          <% end %>
+
+          <article class="prose max-w-prose">
+            <%= e(@activity, :object_post_content, :html_body, "") %>
+          </article>
+
+          <%= live_component(@socket, Bonfire.UI.Social.Activity.ActionsLive, id: "post-actions-"<>e(@object, :id, ""), object: @object, activity: @activity, hide_reply: true, current_user: @current_user) %>
+
+          <%= live_component(@socket, Bonfire.UI.Social.ThreadLive, id: "post-thread-"<>e(@object, :id, ""), thread_id: e(@object, :id, ""), activity: @activity, current_user: @current_user) %>
+
+        </div>
+      </section>
+    </div>
+  </div>
+</div>

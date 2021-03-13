@@ -1,6 +1,33 @@
+  <%= if e(@activity, :reply_to_post_content, nil) do %>
+    <div class="rounded-md bg-blue-50 p-4 mt-3">
+      <div class="flex">
+        <div class="flex-1 text-center md:flex md:justify-between">
+          <p class="block flex-1 text-sm text-blue-700">
+            <%= live_redirect to: "/post/"<> e(@activity, :reply_to_post_content, :id, "") do %> <span class="whitespace-nowrap font-medium text-blue-700 hover:text-blue-600">View what <%= e(@activity, :object_creator_profile, :name, "") %> was replying to <span aria-hidden="true">&rarr;</span></span>
+            (<%= e(@activity, :reply_to_post_content, :name, nil) || e(@activity, :reply_to_post_content, :summary, nil) || e(@activity, :reply_to_post_content, :html_body, "") %>...)
+              <% end %>
+          </p>
+        </div>
+      </div>
+    </div>
+  <% end %>
 
+  <%= if e(@activity, :thread_post_content, nil) && e(@activity, :thread_post_content, nil) != e(@activity, :reply_to_post_content, nil) do %>
+    <div class="rounded-md bg-blue-50 p-4 mt-3">
+      <div class="flex">
+        <div class="flex-1 text-center md:flex md:justify-between">
+          <p class="block flex-1 text-sm text-blue-700">
+            <%= live_redirect to: "/post/"<> e(@activity, :thread_post_content, :id, "") do %> <span class="whitespace-nowrap font-medium text-blue-700 hover:text-blue-600">View entire thread <span aria-hidden="true">&rarr;</span></span>
+            (<%= e(@activity, :thread_post_content, :name, nil) || e(@activity, :thread_post_content, :summary, nil) || e(@activity, :thread_post_content, :html_body, "") %>...)
+              <% end %>
+          </p>
+        </div>
+      </div>
+    </div>
+  <% end %>
 
 <div id="" class="my-6 flex">
+
   <%# <div class="mb-2 flex rounded-md shadow-sm">
     <label class="inline-flex items-center px-3 rounded-l-md border border-r-0 border-gray-300 bg-gray-50 text-gray-500 sm:text-sm">
       Title
@@ -9,12 +36,24 @@
   </div> %>
   <img class="inline-block h-10 w-10 rounded-full" src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80" alt="">
   <div class="flex-1 ml-2">
-    <%= live_component(@socket, Bonfire.UI.Social.ReplyLive, current_user: @current_user, thread: @thread, reply_to: @thread, thread_component: @myself) %>
+    <%= live_component(@socket, Bonfire.UI.Social.ReplyLive, 
+    current_user: @current_user, 
+    reply_to_thread_id: @reply_to_thread_id, 
+    reply_to_id: @thread_id, 
+    thread_component: @myself) %>
   </div>
 </div>
 
 <div id="replies" class="mt-6 pt-3 border-t">
   <%= for {reply, child_replies} <- @threaded_replies do %>
-    <%= live_component(@socket, Bonfire.UI.Social.CommentLive, current_user: @current_user, thread: @thread, comment: reply, child_replies: child_replies, thread_max_depth: @thread_max_depth, thread_level: 1, thread_component: @myself) %>
+    <%= live_component(@socket, Bonfire.UI.Social.CommentLive, 
+    current_user: @current_user, 
+    thread_id: @thread_id, 
+    reply_to_thread_id: @reply_to_thread_id, 
+    comment: reply, 
+    child_replies: child_replies, 
+    thread_max_depth: @thread_max_depth, 
+    thread_level: 1, 
+    thread_component: @myself) %>
   <% end %>
 </div>
