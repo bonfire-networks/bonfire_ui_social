@@ -14,7 +14,7 @@ defmodule Bonfire.UI.Social.ThreadLive do
     # IO.inspect(replies, label: "REPLIES:")
     # replies = replies |> repo().all
 
-    # replies = Bonfire.Me.Social.Posts.replies_tree(e(thread, :thread_replies, []))
+    # replies = Bonfire.Social.Posts.replies_tree(e(thread, :thread_replies, []))
 
     thread_id = e(assigns, :thread_id, nil)
 
@@ -23,7 +23,7 @@ defmodule Bonfire.UI.Social.ThreadLive do
       activity = e(assigns, :activity, nil)
       current_user = e(assigns, :current_user, nil)
 
-      replies = Bonfire.Me.Social.Posts.list_replies(thread_id, current_user, @thread_max_depth)
+      replies = Bonfire.Social.Posts.list_replies(thread_id, current_user, @thread_max_depth)
       # IO.inspect(replies, label: "REPLIES:")
 
       {:ok,
@@ -34,7 +34,7 @@ defmodule Bonfire.UI.Social.ThreadLive do
         reply_to_thread_id: e(activity, :thread_post_content, :id, nil) || thread_id, # TODO: change for thread forking?
         current_user: current_user,
         replies: replies || [],
-        threaded_replies: Bonfire.Me.Social.Posts.arrange_replies_tree(replies || []) || [],
+        threaded_replies: Bonfire.Social.Posts.arrange_replies_tree(replies || []) || [],
         thread_max_depth: @thread_max_depth
       )}
     end
@@ -54,7 +54,7 @@ defmodule Bonfire.UI.Social.ThreadLive do
   #    )}
   # end
 
-  defdelegate handle_event(action, attrs, socket), to: Bonfire.Me.Web.LiveHandlers
+  defdelegate handle_event(action, attrs, socket), to: Bonfire.Web.LiveHandler
 
 
 end

@@ -143,7 +143,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
   def object_link(text, %{id: id}, class), do: "<a class='#{class}' href='/discussion/#{id}'>#{text}</a>"
 
 
-  # def handle_event("like"=action, attrs, socket), do: Bonfire.Me.Social.Likes.live_action(action, attrs, socket)
-  defdelegate handle_event(action, attrs, socket), to: Bonfire.Me.Web.LiveHandlers
+  # def handle_event("like"=action, attrs, socket), do: Bonfire.Social.Likes.live_action(action, attrs, socket)
+  defdelegate handle_event(action, attrs, socket), to: Bonfire.Web.LiveHandler
 
 end

@@ -14,7 +14,7 @@
               <%= live_redirect to: Routes.live_path(@socket, Bonfire.Common.Config.get!(:home_page)) do %>
                 <span class="text-sm font-medium leading-5 text-gray-600 transition duration-150 hover:text-gray-900 hover:bg-gray-100 rounded px-4 py-2 ease-in-out rounded-md focus:outline-none focus:text-gray-700">About</span>
               <% end %>
-              <%= live_redirect to: Routes.live_path(@socket, Bonfire.Me.Web.InstanceLive) do %>
+              <%= live_redirect to: Routes.live_path(@socket, Bonfire.Social.Web.Feeds.InstanceLive) do %>
                 <span class="ml-4 text-sm font-medium leading-5 text-gray-600 transition duration-150 hover:text-gray-900 ease-in-out hover:bg-gray-100 rounded px-4 py-2 rounded-md hover:text-gray-700 focus:outline-none focus:text-gray-700">Discover</a>
               <% end %>
             </div>
