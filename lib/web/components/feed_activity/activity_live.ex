@@ -15,7 +15,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
     components = component_activity_subject(verb, activity)
     # ++ component_object_subject(verb, activity)
     ++ component_object(verb, activity)
-    ++ component_actions(verb, activity)
+    ++ component_actions(verb, activity, assigns)
 
     verb_display = verb_display(verb, activity)
     created_verb_display = "create" |> verb_maybe_modify(activity) |> verb_display(activity)
@@ -82,9 +82,10 @@ defmodule Bonfire.UI.Social.ActivityLive do
   def component_object(_, _), do: [Bonfire.UI.Social.Activity.NoteLive] # TODO: fallback for unknown objects
 
 
-  def component_actions(_, %{object_post_content: %{id: _} = object}), do: component_show_actions(object)
-  def component_actions(_, %{object: %Bonfire.Data.Social.Post{} = object}), do: component_show_actions(object) # TODO: make which object have actions configurable
-  def component_actions(_, _), do: [Bonfire.UI.Social.Activity.NoActionsLive]
+  def component_actions(_, _, %{activity_inception: true}), do: []
+  def component_actions(_, %{object_post_content: %{id: _} = object}, _), do: component_show_actions(object)
+  def component_actions(_, %{object: %Bonfire.Data.Social.Post{} = object}, _), do: component_show_actions(object) # TODO: make which object have actions configurable
+  def component_actions(_, _, _), do: []
 
   def component_show_actions(object), do: [{Bonfire.UI.Social.Activity.ActionsLive, %{object: object}}]
 
