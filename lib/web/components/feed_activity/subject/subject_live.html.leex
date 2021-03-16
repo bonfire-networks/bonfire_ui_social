@@ -1,8 +1,8 @@
 <div class="<%= if e(@activity, :replied, :reply_to_id, nil), do: "pl-1" %> flex items-center">
-  <img class="inline-block rounded-full <%= if e(@activity, :replied, :reply_to_id, nil), do: "w-6 h-6", else: "w-8 h-8" %>" src="https://thispersondoesnotexist.com/image" alt="">
+  <img class="inline-block rounded-full <%= if e(@activity, :replied, :reply_to_id, nil), do: "w-8 h-8", else: "w-6 h-6" %>" src="https://thispersondoesnotexist.com/image" alt="">
   <div class="flex-1 ml-2">
-    <h3 class="text-base flex items-center text-gray-700">
-      <a class="hover:underline font-bold" href="/user/<%= e(@activity, :subject_character, :username, "") %>"><%= e(@activity, :subject_profile, :name, "Anonymous") %></a>
+    <h3 class="flex items-center text-base text-gray-700">
+      <a class="font-bold hover:underline" href="/user/<%= e(@activity, :subject_character, :username, "") %>"><%= e(@activity, :subject_profile, :name, "Anonymous") %></a>
       <!--<%= raw @verb_display %>-->
       <span class="ml-2 text-sm text-gray-500">@<%= e(@activity, :subject_character, :username, "") %> · <%=@date_ago%></span>
     </h3>
