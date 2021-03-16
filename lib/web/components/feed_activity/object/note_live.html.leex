@@ -1,5 +1,5 @@
 
-<div class='ml-10'
+<div class='my-2'
     x-data="{content_open: false}">
     <%# = e(@activity, :replied, :reply_to_id, nil) %>
     <%# = e(@activity, :object, :id, nil) %>
@@ -8,24 +8,24 @@
         <%= live_redirect to: "/post/"<> e(@activity, :object, :id, "")  do %>
           <h2 class="text-xl font-bold text-gray-700 hover:underline"><%= e(@activity, :object_post_content, :name, "Title") %></h2>
         <% end %>
-        <div class="max-w-prose prose-sm">
+        <div class="prose-sm max-w-prose">
           <%= e(@activity, :object_post_content, :summary, "") %>
         </div>
 
         <button
           @click="{content_open = true}"
           x-show="content_open == false"
-          class="border-b w-full text-center flex items-center place-content-center font-medium text-gray-600 text-sm pb-3 mt-4 mb-2">
+          class="flex items-center w-full pb-3 mt-4 mb-2 text-sm font-medium text-center text-gray-600 border-b place-content-center">
           Read contents
-          <svg class="ml-3 w-4 h-4 text-gray-600" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd"></path></svg></button>
+          <svg class="w-4 h-4 ml-3 text-gray-600" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd"></path></svg></button>
         <button
           @click="{content_open = false}"
           x-show="content_open"
-          class="border-b w-full text-center flex items-center place-content-center font-medium text-gray-600 text-sm pb-3 mt-4 mb-2">
+          class="flex items-center w-full pb-3 mt-4 mb-2 text-sm font-medium text-center text-gray-600 border-b place-content-center">
           Hide contents
-          <svg class="ml-3 w-4 h-4 text-gray-600" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M14.707 12.707a1 1 0 01-1.414 0L10 9.414l-3.293 3.293a1 1 0 01-1.414-1.414l4-4a1 1 0 011.414 0l4 4a1 1 0 010 1.414z" clip-rule="evenodd"></path></svg>
+          <svg class="w-4 h-4 ml-3 text-gray-600" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M14.707 12.707a1 1 0 01-1.414 0L10 9.414l-3.293 3.293a1 1 0 01-1.414-1.414l4-4a1 1 0 011.414 0l4 4a1 1 0 010 1.414z" clip-rule="evenodd"></path></svg>
         </button>
-        <div x-show.transition="content_open" class="max-w-prose py-3">
+        <div x-show.transition="content_open" class="py-3 max-w-prose">
           <%= e(@activity, :object_post_content, :html_body, "") %>
         </div>
 
@@ -33,7 +33,7 @@
 
         <%= if e(@activity, :object_post_content, :summary, nil) do %>
           <%= live_redirect to: "/post/"<> e(@activity, :object, :id, "") do %>
-            <div class="max-w-prose prose-sm mb-2"><%= e(@activity, :object_post_content, :summary, "") %></div>
+            <div class="mb-2 prose-sm max-w-prose"><%= e(@activity, :object_post_content, :summary, "") %></div>
           <% end %>
         <% end %>
 

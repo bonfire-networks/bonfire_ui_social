@@ -4,6 +4,7 @@
       <div class="p-4 m-3 mb-4 font-bold text-center text-gray-700 rounded">Take a deep breath...</div>
     <% else %>
       <%= for activity <- @feed do %>
+      <div class="px-3 border-b">
         <%= live_component(
         @socket,
         ActivityLive,
@@ -11,6 +12,7 @@
         activity: e(activity, :activity, activity),
         current_user: @current_user
       ) %>
+      </div>
       <% end %>
     <% end %>
     <%= if e(@page_info, :after, nil) do %>
