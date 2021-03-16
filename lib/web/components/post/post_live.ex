@@ -6,6 +6,7 @@ defmodule  Bonfire.UI.Social.PostLive do
 
     {:ok, assign(socket, assigns
     |> assigns_merge(%{
+        page: "Thread",
         date_ago: date_from_now(assigns.object),
       })) }
   end

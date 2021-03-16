@@ -33,6 +33,7 @@ defmodule Bonfire.UI.Social.ThreadLive do
         activity: activity,
         reply_to_thread_id: e(activity, :thread_post_content, :id, nil) || thread_id, # TODO: change for thread forking?
         current_user: current_user,
+        page: "thread",
         replies: replies || [],
         threaded_replies: Bonfire.Social.Posts.arrange_replies_tree(replies || []) || [],
         thread_max_depth: @thread_max_depth
