@@ -1,14 +1,7 @@
 <div class="mb-8">
-    <%# <div class="p-3 border-b">
-      <div class="flex items-center justify-between flex-wrap sm:flex-no-wrap">
-        <h3 class="text-base font-bold text-gray-700"> %>
-          <%# = @feed_title %>
-        <%# </h3>
-      </div>
-    </div> %>
-    <div class="max-w-7xl mx-auto">
+    <div class="mx-auto max-w-7xl">
     <%= if length(@feed) == 0 do %>
-      <div class="p-4 bg-rose-50 rounded text-center text-gray-800 font-bold m-3">Take a deep breath...</div>
+      <div class="p-4 m-3 mb-4 font-bold text-center text-gray-700 rounded">Take a deep breath...</div>
     <% else %>
       <%= for activity <- @feed do %>
         <%= live_component(
@@ -21,8 +14,8 @@
       <% end %>
     <% end %>
     <%= if e(@page_info, :after, nil) do %>
-    <div class="flex place-items-center p-3 mx-auto justify-center">
-      <a phx-click="feed_load_more" phx-value-after="<%= e(@page_info, :after, nil) %>" href="?feed[after]=<%= e(@page_info, :after, nil) %>" class="relative inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50">Load more</a>
+    <div class="flex justify-center p-3 mx-auto place-items-center">
+      <a phx-click="feed_load_more" phx-value-after="<%= e(@page_info, :after, nil) %>" href="?feed[after]=<%= e(@page_info, :after, nil) %>" class="relative inline-flex items-center px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md hover:bg-gray-50">Load more</a>
     </div>
     <% end %>
     </div>
