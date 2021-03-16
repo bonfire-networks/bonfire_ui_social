@@ -23,7 +23,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
     assigns = assigns
     |> assigns_merge(%{
         activity: activity,
-        activity_object_components: components,
+        activity_object_components: components |> Enum.filter(& &1),
         date_ago: date_from_now(activity.object),
         verb: verb,
         verb_display: verb_display,
@@ -34,9 +34,9 @@ defmodule Bonfire.UI.Social.ActivityLive do
   end
 
 
-  def component_activity_subject("like"=verb, _), do: [{Bonfire.UI.Social.Activity.SubjectMinimalLive, %{verb: verb}}, Bonfire.UI.Social.Activity.CreatorLive]
-  def component_activity_subject("boost"=verb, _), do: [{Bonfire.UI.Social.Activity.SubjectMinimalLive, %{verb: verb}}, Bonfire.UI.Social.Activity.CreatorLive]
-  def component_activity_subject("flag"=verb, _), do: [{Bonfire.UI.Social.Activity.SubjectMinimalLive, %{verb: verb}}, Bonfire.UI.Social.Activity.CreatorLive]
+  def component_activity_subject("like"=verb, activity), do: [{Bonfire.UI.Social.Activity.SubjectMinimalLive, %{verb: verb}}, component_activity_maybe_creator(activity)]
+  def component_activity_subject("boost"=verb, activity), do: [{Bonfire.UI.Social.Activity.SubjectMinimalLive, %{verb: verb}}, component_activity_maybe_creator(activity)]
+  def component_activity_subject("flag"=verb, activity), do: [{Bonfire.UI.Social.Activity.SubjectMinimalLive, %{verb: verb}}, component_activity_maybe_creator(activity)]
 
   def component_activity_subject(verb,
     %{
@@ -75,6 +75,9 @@ defmodule Bonfire.UI.Social.ActivityLive do
 
   def component_activity_subject(_, _), do: [Bonfire.UI.Social.Activity.SubjectLive]
 
+  def component_activity_maybe_creator(%{object_creator_profile: %{id: _}}), do: Bonfire.UI.Social.Activity.CreatorLive
+  def component_activity_maybe_creator(_), do: nil
+
 
   def component_object(_, %{object: %Bonfire.Data.Social.Post{}}), do: [Bonfire.UI.Social.Activity.NoteLive]
   def component_object(_, %{object_post_content: %{id: _}}), do: [Bonfire.UI.Social.Activity.NoteLive]
@@ -105,11 +108,14 @@ defmodule Bonfire.UI.Social.ActivityLive do
   end
 
   def load_object(id_or_pointer) do
-    Bonfire.Common.Pointers.get!(id_or_pointer)
+    with {:ok, obj} <- Bonfire.Common.Pointers.get(id_or_pointer)
       # TODO: avoid so many queries
       |> repo().maybe_preload([:post_content])
       |> repo().maybe_preload([:creator_profile, :creator_character])
-      |> repo().maybe_preload([:profile, :character])
+      |> repo().maybe_preload([:profile, :character]) do
+        obj
+      else _ -> nil
+      end
   end
 
   def verb_maybe_modify("create", %{reply_to_post_content: %{id: _} = reply_to}), do: "reply"

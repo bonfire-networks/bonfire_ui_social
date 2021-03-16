@@ -1,3 +1,4 @@
+<%= if maybe_get(@current_user, :id) != maybe_get(@user, :id) do %>
 <div class="p-3 rounded-lg shadow bg-white">
       <h4 class="flex items-center text-gray-700 mb-3 text-base font-semibold">
         <svg
@@ -15,7 +16,7 @@
             <div class="truncate">
               <div class="text-sm font-bold text-gray-700 flex items-center">
                 <span class="inline-flex w-2 h-2 rounded-full bg-pink-500 mr-2"></span>
-                <span class="flex-1">Ivan</span>
+                <span class="flex-1"><%= e(@user, :profile, :name, "Anonymous") %></span>
                 <span class="font-normal flex-end text-gray-500 text-xs">1 hour</span>
               </div>
               <p class="truncate text-sm font-light text-gray-700">Manually check that all custom direct...</p>
@@ -25,7 +26,7 @@
             <div class="truncate">
               <div class="text-sm font-bold text-gray-700 flex items-center">
                 <span class="inline-flex w-2 h-2 rounded-full bg-pink-500 mr-2"></span>
-                <span class="flex-1">Ivan</span>
+                <span class="flex-1"><%= e(@current_user, :profile, :name, "Anonymous") %></span>
                 <span class="font-normal flex-end text-gray-500 text-xs">1 hour</span>
               </div>
               <p class="truncate text-sm font-light text-gray-700">Manually check that all custom direct...</p>
@@ -35,7 +36,7 @@
             <div class="truncate">
               <div class="text-sm font-bold text-gray-700 flex items-center">
                 <span class="inline-flex w-2 h-2 rounded-full bg-pink-500 mr-2"></span>
-                <span class="flex-1">Ivan</span>
+                <span class="flex-1"><%= e(@user, :profile, :name, "Anonymous") %></span>
                 <span class="font-normal flex-end text-gray-500 text-xs">1 hour</span>
               </div>
               <p class="truncate text-sm font-light text-gray-700">Manually check that all custom direct...</p>
@@ -49,3 +50,4 @@
         </div>
       </div>
     </div>
+<% end %> 
