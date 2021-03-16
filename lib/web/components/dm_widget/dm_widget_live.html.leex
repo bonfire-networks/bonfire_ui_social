@@ -1,3 +1,4 @@
+<%= if maybe_get(@current_user, :id) != maybe_get(@user, :id) do %>
 <div class="p-3 bg-white rounded-lg shadow">
       <h4 class="flex items-center mb-3 text-base font-semibold text-gray-700">
         <svg
@@ -15,7 +16,7 @@
             <div class="w-full">
               <div class="flex items-center text-sm font-bold text-gray-700">
                 <span class="inline-flex w-2 h-2 mr-2 bg-pink-500 rounded-full"></span>
-                <span class="flex-1">Ivan</span>
+                <span class="flex-1"><%= e(@user, :profile, :name, "Anonymous") %></span>
                 <span class="text-xs font-normal text-gray-500 flex-end">1 hour</span>
               </div>
               <p class="text-sm font-light text-gray-700 truncate">Manually check that all custom direct in the step of direct knowledge</p>
@@ -25,7 +26,7 @@
             <div class="w-full">
               <div class="flex items-center text-sm font-bold text-gray-700">
                 <span class="inline-flex w-2 h-2 mr-2 bg-pink-500 rounded-full"></span>
-                <span class="flex-1">Ivan</span>
+                <span class="flex-1"><%= e(@current_user, :profile, :name, "Anonymous") %></span>
                 <span class="text-xs font-normal text-gray-500 flex-end">1 hour</span>
               </div>
               <p class="text-sm font-light text-gray-700 truncate">Manually check that all custom direct in the step of direct knowledge</p>
@@ -35,7 +36,7 @@
             <div class="w-full">
               <div class="flex items-center text-sm font-bold text-gray-700">
                 <span class="inline-flex w-2 h-2 mr-2 bg-pink-500 rounded-full"></span>
-                <span class="flex-1">Ivan</span>
+                <span class="flex-1"><%= e(@user, :profile, :name, "Anonymous") %></span>
                 <span class="text-xs font-normal text-gray-500 flex-end">1 hour</span>
               </div>
               <p class="text-sm font-light text-gray-700 truncate">Manually check that all custom direct in the step of direct knowledge</p>
@@ -49,3 +50,4 @@
         </div>
       </div>
     </div>
+<% end %> 
