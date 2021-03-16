@@ -50,8 +50,11 @@
   </div>
   <div class="w-full px-2 lg:w-1/3">
     <div class="p-3 bg-white rounded-lg shadow">
-      <button class="w-full text-center btn-secondary place-content-center">
-        Subscribe to the thread
+      <button       
+        phx-click="post_follow"
+        phx-value-id="<%= e(@object, :id, "") %>"
+        class="w-full text-center btn-secondary place-content-center">
+        Follow this discussion
       </button>
     </div>
   </div>

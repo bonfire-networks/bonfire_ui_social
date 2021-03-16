@@ -4,31 +4,44 @@ defmodule Bonfire.UI.Social.ActivityLive do
 
   def update(assigns, socket) do
 
-    activity = %{assigns.activity | object: object(assigns.activity)}
-    # |> IO.inspect
-    # |> repo().maybe_preload(:object)
-    # |> repo().maybe_preload([object: [:profile, :character]])
-    # |> repo().maybe_preload([object: [:post_content]])
+    assigns = if is_map(assigns.activity) do
+      activity = %{assigns.activity | object: object(assigns.activity)}
+      # |> IO.inspect
+      # |> repo().maybe_preload(:object)
+      # |> repo().maybe_preload([object: [:profile, :character]])
+      # |> repo().maybe_preload([object: [:post_content]])
 
-    verb = e(activity, :verb, :verb, "post") |> verb_maybe_modify(activity)
+      verb = e(activity, :verb, :verb, "post") |> verb_maybe_modify(activity)
 
-    components = component_activity_subject(verb, activity)
-    # ++ component_object_subject(verb, activity)
-    ++ component_object(verb, activity)
-    ++ component_actions(verb, activity, assigns)
+      components = component_activity_subject(verb, activity)
+      # ++ component_object_subject(verb, activity)
+      ++ component_object(verb, activity)
+      ++ component_actions(verb, activity, assigns)
 
-    verb_display = verb_display(verb, activity)
-    created_verb_display = "create" |> verb_maybe_modify(activity) |> verb_display(activity)
+      verb_display = verb_display(verb, activity)
+      created_verb_display = "create" |> verb_maybe_modify(activity) |> verb_display(activity)
 
-    assigns = assigns
-    |> assigns_merge(%{
-        activity: activity,
-        activity_object_components: components |> Enum.filter(& &1),
-        date_ago: date_from_now(activity.object),
-        verb: verb,
-        verb_display: verb_display,
-        created_verb_display: created_verb_display
-      })
+      assigns
+      |> assigns_merge(%{
+          activity: activity,
+          activity_object_components: components |> Enum.filter(& &1),
+          date_ago: date_from_now(activity.object),
+          verb: verb,
+          verb_display: verb_display,
+          created_verb_display: created_verb_display
+        })
+
+    else
+      assigns
+      |> assigns_merge(%{
+          activity: nil,
+          activity_object_components: [],
+          date_ago: nil,
+          verb: "",
+          verb_display: "",
+          created_verb_display: ""
+        })
+    end
 
     {:ok, assign(socket, assigns) }
   end
@@ -96,6 +109,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
   def object(%{object: %Pointers.Pointer{id: _} = object}), do: load_object(object) # get other pointable objects
   def object(%{object: %{id: _} = object}), do: object # any other preloaded object
   def object(%{object_id: id}), do: load_object(id) # any non-preloaded pointable object
+  def object(_), do: nil
 
   def load_reply_to(%Pointers.Pointer{} = reply_to) do
     object = load_object(reply_to)
