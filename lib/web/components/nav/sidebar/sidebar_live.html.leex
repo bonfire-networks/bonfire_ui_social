@@ -1,9 +1,20 @@
 
-  <div class="hidden mt-6 lg:flex md:flex-shrink-0">
+  <div class="hidden lg:flex md:flex-shrink-0">
     <div class="flex flex-col w-56">
       <div class="flex flex-col flex-grow pb-4 overflow-y-auto">
         <div class="flex flex-col flex-grow">
           <nav class="flex-1 px-2 space-y-1">
+            <%= live_redirect to: Routes.live_path(@socket, Bonfire.Me.Web.LoggedDashboardLive) do %>
+              <div class="flex items-center px-2 py-2 border-l-4 border-blueGray-100">
+                <svg  width="28px" height="28px" viewBox="0 0 28 28" version="1.1" xmlns="http://www.w3.org/2000/svg">
+                  <g id="Artboard-Copy-2" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+                      <rect id="Rectangle-14-Copy-3" fill="#353535" x="0" y="0" width="28" height="28" rx="4"></rect>
+                      <path d="M19.5,41.5 L41.0058132,19.9941868" id="Line-7" stroke="#FFFFFF" stroke-width="3" stroke-linecap="square"></path>
+                  </g>
+                </svg>
+                <h2 class="ml-2 text-sm font-medium text-gray-900">Bonfire</h2>
+              </div>
+            <% end %>
             <%= live_redirect to: Routes.live_path(@socket, Bonfire.Me.Web.LoggedDashboardLive ) do %>
               <button class="w-full border-blueGray-100 border-l-4 flex items-center mt-1 px-2 py-2 text-base font-medium leading-5 transition duration-150 ease-in-out  group hover:bg-blueGray-200 focus:outline-none focus:text-gray-900 focus:bg-gray-50 <%= if @page == "dashboard", do: "text-pink-500", else: "text-gray-800" %>">
                 <svg
@@ -90,7 +101,7 @@
 
             <%#= live_redirect to: Routes.live_path(@socket, Bonfire.Social.Web.Feeds.InstanceLive) do %>
               <%# <button class="flex items-center px-2 py-2 text-base font-medium leading-5 text-gray-600 transition duration-150 ease-in-out rounded-md group hover:text-gray-900 hover:bg-indigo-100 focus:outline-none focus:text-gray-900 focus:bg-gray-50">
-                <svg class="w-5 h-5  mr-3 text-gray-500 transition duration-150 ease-in-out" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M18 5v8a2 2 0 01-2 2h-5l-5 4v-4H4a2 2 0 01-2-2V5a2 2 0 012-2h12a2 2 0 012 2zM7 8H5v2h2V8zm2 0h2v2H9V8zm6 0h-2v2h2V8z" clip-rule="evenodd"></path></svg>
+                <svg class="w-5 h-5 mr-3 text-gray-500 transition duration-150 ease-in-out" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M18 5v8a2 2 0 01-2 2h-5l-5 4v-4H4a2 2 0 01-2-2V5a2 2 0 012-2h12a2 2 0 012 2zM7 8H5v2h2V8zm2 0h2v2H9V8zm6 0h-2v2h2V8z" clip-rule="evenodd"></path></svg>
                 Direct messages
               </button> %>
             <%# end %>
