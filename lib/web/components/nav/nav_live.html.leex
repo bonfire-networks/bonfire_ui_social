@@ -16,11 +16,11 @@
   <% true -> %>
     <div class="flex flex-col">
       <%# = live_component(@socket, Bonfire.UI.Social.HeaderLive, assigns) %>
-      <div class="pt-2">
+      <div class="">
         <div class="container flex max-w-screen-xl mx-auto">
           <%= live_component(@socket, Bonfire.UI.Social.SidebarLive, assigns) %>
-          <div class="flex flex-col flex-1 w-0">
-            <div class="container mx-auto mb-16">
+          <div class="flex w-0">
+            <div class="mb-16">
               <%# = live_component(@socket, Bonfire.UI.Social.SmartInputLive, assigns) %>
               <div class="p-4 lg:p-0">
                 <%= @inner_content %>
