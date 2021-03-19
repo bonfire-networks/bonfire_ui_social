@@ -1,4 +1,5 @@
-<div class="bg-white rounded-lg border">
+
+<div class="bg-white border rounded-lg">
   <div class="px-4 py-5 bg-white border-b border-gray-200 rounded-t-md sm:px-6">
     <div class="flex flex-wrap items-center justify-between -mt-2 -ml-4 sm:flex-no-wrap">
       <div class="mt-2 ml-4">
@@ -9,32 +10,9 @@
     </div>
   </div>
   <div class="py-5 mx-auto sm:px-6 lg:px-8">
-    <%= if @registered do %>
-        <div
-          role="status"
-          class="p-4 rounded-md bg-green-50">
-            <div class="flex">
-              <div class="flex-shrink-0">
-                <!-- Heroicon name: check-circle -->
-                <svg class="w-5 h-5 text-green-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
-                  <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
-                </svg>
-              </div>
-              <div class="ml-3">
-                <h3 class="text-sm font-medium text-green-800">Hooray! You are registered</h3>
-                <div class="mt-2 text-sm text-green-700">
-                  <p>
-                    Now we need you to confirm your email address. We've emailed
-                    you a link (check your spam folder!). Please click on it to continue.
-                  </p>
-                </div>
-              </div>
-            </div>
-        </div>
-      <% else %>
-        <%= case @error do %>
-        <%= nil -> %>
-        <%= :taken -> %>
+    <%= case @error do %>
+      <%= nil -> %>
+      <%= :taken -> %>
 
         <div role="status" class="p-4 rounded-md bg-yellow-50">
           <div class="flex">
@@ -52,7 +30,7 @@
           </div>
         </div>
 
-        <%= error -> %>
+      <%= error -> %>
         <div role="status" class="p-4 rounded-md bg-yellow-50">
           <div class="flex">
             <div class="flex-shrink-0">
@@ -68,7 +46,7 @@
             </div>
           </div>
         </div>
-        <% end %>
+      <% end %>
         <%= f = form_for @form, Routes.signup_path(@socket, :create), [id: "signup-form"] %>
         <div>
           <label for="signup-form_email_email_address" class="block text-sm font-medium leading-5 text-gray-700">
@@ -108,6 +86,5 @@
           </p>
         </div>
       </form>
-    <% end %>
   </div>
 </div>
