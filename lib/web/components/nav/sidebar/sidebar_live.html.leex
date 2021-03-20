@@ -1,24 +1,50 @@
 
   <div class="hidden lg:flex md:flex-shrink-0">
-    <div class="flex flex-col w-56">
-      <div class="flex flex-col flex-grow pb-4 overflow-y-auto">
+    <div class="flex flex-col w-60">
+      <div class="fixed flex flex-col flex-grow pb-4 overflow-y-auto w-60">
         <div class="flex flex-col flex-grow">
-          <nav class="flex-1 px-2 space-y-1">
+          <nav class="flex flex-col flex-1 px-2 mt-2 space-y-3">
             <%= live_redirect to: Routes.live_path(@socket, Bonfire.Me.Web.LoggedDashboardLive) do %>
-              <div class="flex items-center px-2 py-2 border-l-4 border-blueGray-100">
-                <svg  width="28px" height="28px" viewBox="0 0 28 28" version="1.1" xmlns="http://www.w3.org/2000/svg">
-                  <g id="Artboard-Copy-2" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
-                      <rect id="Rectangle-14-Copy-3" fill="#353535" x="0" y="0" width="28" height="28" rx="4"></rect>
-                      <path d="M19.5,41.5 L41.0058132,19.9941868" id="Line-7" stroke="#FFFFFF" stroke-width="3" stroke-linecap="square"></path>
-                  </g>
-                </svg>
-                <h2 class="ml-2 text-sm font-medium text-gray-900">Bonfire</h2>
+              <div class="flex items-center py-2 ml-1">
+                <span class="text-3xl">🔥</span>
               </div>
             <% end %>
+            <div class="flex items-center">
+              <div class="relative flex items-center flex-1">
+                <details class="w-full details-dropdown">
+                  <summary>
+                    <div class="flex items-center max-w-xs px-3 py-2 text-sm rounded hover:bg-blueGray-200 focus:outline-none focus:shadow-outline" id="user-menu" aria-label="User menu" aria-haspopup="true">
+                      <img class="inline-block w-8 h-8 rounded-full" src="https://thispersondoesnotexist.com/image" alt="">
+                      <div class="flex-1 ml-3">
+                        <h3 class="text-base font-semibold text-gray-700"><%= @current_user.profile.name %></h3>
+                        <span class="mt-0 text-sm text-gray-500 font-regular">@<%= @current_user.character.username %></span>
+                      </div>
+                      <div class="flex items-center">
+                        <svg class="w-6 h-6 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+                      </div>
+                    </div>
+                  </summary>
+                  <details-menu>
+                    <div class="absolute right-0 z-10 w-48 mt-2 origin-top-right rounded-md shadow-lg">
+                      <div class="py-1 bg-white rounded-md shadow-xs" role="menu" aria-orientation="vertical" aria-labelledby="user-menu">
+                        <%= live_redirect to: Routes.live_path(@socket, Bonfire.Me.Web.ProfileLive, @current_user.character.username || "") do %>
+                        <button class="block w-full px-4 py-2 text-sm text-left text-gray-700 transition duration-150 ease-in-out hover:bg-gray-100" role="menuitem">My Profile</button>
+                      <% end %>
+                        <a href="/switch-user" class="block px-4 py-2 text-sm text-gray-700 transition duration-150 ease-in-out hover:bg-gray-100" role="menuitem">Switch User</a>
+                        <a href="/settings" class="block px-4 py-2 text-sm text-gray-700 transition duration-150 ease-in-out hover:bg-gray-100" role="menuitem">Settings</a>
+          
+                        <a href="/logout" class="block px-4 py-2 text-sm text-gray-700 transition duration-150 ease-in-out hover:bg-gray-100" role="menuitem">Logout</a>
+          
+                      </div>
+                    </div>
+                  </details-menu>
+                </details>
+              </div>
+            </div>
             <%= live_redirect to: Routes.live_path(@socket, Bonfire.Me.Web.LoggedDashboardLive ) do %>
-              <button class="w-full border-blueGray-100 border-l-4 flex items-center mt-1 px-2 py-2 text-base font-medium leading-5 transition duration-150 ease-in-out  group hover:bg-blueGray-200 focus:outline-none focus:text-gray-900 focus:bg-gray-50 <%= if @page == "dashboard", do: "text-pink-500", else: "text-gray-800" %>">
+              <button class="w-full border-blueGray-100 border-l-4 flex items-center px-2 py-2 text-base font-medium leading-5 transition duration-150 ease-in-out  group hover:bg-blueGray-200 focus:outline-none focus:text-gray-900 focus:bg-gray-50 <%= if @page == "dashboard", do: "text-pink-500", else: "text-gray-800" %>">
                 <svg
-                  class="w-5 h-5 mr-3 transition duration-150 ease-in-out <%= if @page == "dashboard", do: "text-pink-500", else: "text-gray-500" %>"
+                  class="w-6 h-6 mr-3 transition duration-150 ease-in-out <%= if @page == "dashboard", do: "text-pink-500", else: "text-gray-700" %>"
                   fill="currentColor"
                   viewBox="0 0 24 24"
                   xmlns="http://www.w3.org/2000/svg">
@@ -28,9 +54,9 @@
             <% end %>
 
             <%= live_redirect to: Routes.live_path(@socket, Bonfire.Social.Web.Feeds.MyFeedLive ) do %>
-              <button class="w-full border-blueGray-100 border-l-4 flex items-center mt-1 px-2 py-2 text-base font-medium leading-5 transition duration-150 ease-in-out  group hover:bg-blueGray-200 focus:outline-none focus:text-gray-900 focus:bg-gray-50 <%= if @page == "feed", do: "text-pink-500", else: "text-gray-800" %>">
+              <button class="w-full border-blueGray-100 border-l-4 flex items-center px-2 py-2 text-base font-medium leading-5 transition duration-150 ease-in-out  group hover:bg-blueGray-200 focus:outline-none focus:text-gray-900 focus:bg-gray-50 <%= if @page == "feed", do: "text-pink-500", else: "text-gray-800" %>">
                 <svg
-                  class="w-5 h-5 mr-3 transition duration-150 ease-in-out <%= if @page == "feed", do: "text-pink-500", else: "text-gray-500" %>"
+                  class="w-6 h-6 mr-3 transition duration-150 ease-in-out <%= if @page == "feed", do: "text-pink-500", else: "text-gray-700" %>"
                   fill="currentColor"
                   viewBox="0 0 20 20"
                   xmlns="http://www.w3.org/2000/svg">
@@ -41,9 +67,9 @@
 
             <%= live_redirect to: Routes.live_path(@socket, Bonfire.Social.Web.Feeds.FediverseLive) do %>
               <button
-                class="w-full border-blueGray-100 border-l-4 flex items-center mt-1 px-2 py-2 text-base font-medium leading-5 transition duration-150 ease-in-out  group hover:bg-blueGray-200 focus:outline-none focus:text-gray-900 focus:bg-gray-50 <%= if @page == "fediverse", do: "text-pink-500", else: "text-gray-800" %>">
+                class="w-full border-blueGray-100 border-l-4 flex items-center px-2 py-2 text-base font-medium leading-5 transition duration-150 ease-in-out  group hover:bg-blueGray-200 focus:outline-none focus:text-gray-900 focus:bg-gray-50 <%= if @page == "fediverse", do: "text-pink-500", else: "text-gray-800" %>">
                 <svg
-                  class="w-5 h-5 mr-3 transition duration-150 ease-in-out <%= if @page == "fediverse", do: "text-pink-500", else: "text-gray-500" %>"
+                  class="w-6 h-6 mr-3 transition duration-150 ease-in-out <%= if @page == "fediverse", do: "text-pink-500", else: "text-gray-700" %>"
                   fill="currentColor"
                   stroke-width="1"
                   viewBox="0 0 20 20"
@@ -55,9 +81,9 @@
             <% end %>
 
             <%= live_redirect to: Routes.live_path(@socket, Bonfire.Social.Web.Feeds.InstanceLive ) do %>
-              <button class="w-full border-blueGray-100 border-l-4 flex items-center mt-1 px-2 py-2 text-base font-medium leading-5 transition duration-150 ease-in-out  group hover:bg-blueGray-200 focus:outline-none focus:text-gray-900 focus:bg-gray-50 <%= if @page == "instance", do: "text-pink-500", else: "text-gray-800" %> ">
+              <button class="w-full border-blueGray-100 border-l-4 flex items-center px-2 py-2 text-base font-medium leading-5 transition duration-150 ease-in-out  group hover:bg-blueGray-200 focus:outline-none focus:text-gray-900 focus:bg-gray-50 <%= if @page == "instance", do: "text-pink-500", else: "text-gray-800" %> ">
                 <svg
-                  class="w-5 h-5 mr-3 transition duration-150 ease-in-out <%= if @page == "instance", do: "text-pink-500", else: "text-gray-500" %>"
+                  class="w-6 h-6 mr-3 transition duration-150 ease-in-out <%= if @page == "instance", do: "text-pink-500", else: "text-gray-700" %>"
                   fill="currentColor"
                   viewBox="0 0 20 20"
                   xmlns="http://www.w3.org/2000/svg">
@@ -67,17 +93,17 @@
             <% end %>
 
             <%= live_redirect to: Routes.live_path(@socket, Bonfire.Social.Web.Feeds.InboxLive ) do %>
-              <button class="w-full border-blueGray-100 border-l-4 flex items-center mt-1 px-2 py-2 text-base font-medium leading-5 transition duration-150 ease-in-out  group hover:bg-blueGray-200 focus:outline-none focus:text-gray-900 focus:bg-gray-50 <%= if @page == "notifications", do: "text-pink-500", else: "text-gray-800" %>">
-                <svg class="w-5 h-5 mr-3 transition duration-150 ease-in-out <%= if @page == "notifications", do: "text-pink-500", else: "text-gray-500" %>" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path d="M10 2a6 6 0 00-6 6v3.586l-.707.707A1 1 0 004 14h12a1 1 0 00.707-1.707L16 11.586V8a6 6 0 00-6-6zM10 18a3 3 0 01-3-3h6a3 3 0 01-3 3z"></path></svg>
+              <button class="w-full border-blueGray-100 border-l-4 flex items-center px-2 py-2 text-base font-medium leading-5 transition duration-150 ease-in-out  group hover:bg-blueGray-200 focus:outline-none focus:text-gray-900 focus:bg-gray-50 <%= if @page == "notifications", do: "text-pink-500", else: "text-gray-800" %>">
+                <svg class="w-6 h-6 mr-3 transition duration-150 ease-in-out <%= if @page == "notifications", do: "text-pink-500", else: "text-gray-700" %>" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path d="M10 2a6 6 0 00-6 6v3.586l-.707.707A1 1 0 004 14h12a1 1 0 00.707-1.707L16 11.586V8a6 6 0 00-6-6zM10 18a3 3 0 01-3-3h6a3 3 0 01-3 3z"></path></svg>
                 Notifications
               </button>
             <% end %>
 
 
             <%= live_redirect to: Routes.live_path(@socket, Bonfire.Me.Web.ProfileLive, @current_user.character.username || "" ) do %>
-              <button class="w-full border-blueGray-100 border-l-4 flex items-center mt-1 px-2 py-2 text-base font-medium leading-5 transition duration-150 ease-in-out  group hover:bg-blueGray-200 focus:outline-none focus:text-gray-900 focus:bg-gray-50 <%= if @page == "profile", do: "text-pink-500", else: "text-gray-800" %> ">
+              <button class="w-full border-blueGray-100 border-l-4 flex items-center px-2 py-2 text-base font-medium leading-5 transition duration-150 ease-in-out  group hover:bg-blueGray-200 focus:outline-none focus:text-gray-900 focus:bg-gray-50 <%= if @page == "profile", do: "text-pink-500", else: "text-gray-800" %> ">
                 <svg
-                  class="w-5 h-5 mr-3 transition duration-150 ease-in-out <%= if @page == "profile", do: "text-pink-500", else: "text-gray-500" %>"
+                  class="w-6 h-6 mr-3 transition duration-150 ease-in-out <%= if @page == "profile", do: "text-pink-500", else: "text-gray-700" %>"
                   fill="currentColor"
                   viewBox="0 0 20 20"
                   xmlns="http://www.w3.org/2000/svg">

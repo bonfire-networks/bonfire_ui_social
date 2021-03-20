@@ -8,7 +8,7 @@
         summary_open: false
       }"
       @click.away="{open=false; title_open=false; summary_open=false}"
-      class="flex items-start mb-3">
+      class="flex items-start">
       <span class="flex items-center w-10 h-10 bg-pink-200 rounded-full place-content-center">
         <svg class="w-5 h-5 text-gray-500" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path d="M13.586 3.586a2 2 0 112.828 2.828l-.793.793-2.828-2.828.793-.793zM11.379 5.793L3 14.172V17h2.828l8.38-8.379-2.83-2.828z"></path></svg>
       </span>
@@ -53,12 +53,6 @@
             x-show="open"
             class="flex items-center mt-2">
             <div class="flex-1">
-                <%= for {slug, id} <- Bonfire.Boundaries.Circles.circles do %>
-                  <label><input type="checkbox" name="to_circles[]" value="<%=id%>"> <%=Bonfire.Boundaries.Circles.circle_names()[slug]%></label>
-                <% end %> 
-                <%= for circle <- e(assigns, :my_circles, []) do %>
-                  <label><input type="checkbox" name="to_circles[]" value="<%=circle.id%>"> <%=e(circle, :named, :name, "Unknown")%></label>
-                <% end %> 
               <button
                 type="button"
                 @click="title_open = !title_open"
