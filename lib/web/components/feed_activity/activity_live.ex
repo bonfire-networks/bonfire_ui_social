@@ -57,6 +57,9 @@ defmodule Bonfire.UI.Social.ActivityLive do
   def permalink(_, %{object: %{id: id}}) do
     "/discussion/"<>id
   end
+  def permalink(_, %{object_id: id}) do
+    "/discussion/"<>id
+  end
 
   def component_activity_subject("like"=verb, activity), do: [{Bonfire.UI.Social.Activity.SubjectMinimalLive, %{verb: verb}}, component_activity_maybe_creator(activity)]
   def component_activity_subject("boost"=verb, activity), do: [{Bonfire.UI.Social.Activity.SubjectMinimalLive, %{verb: verb}}, component_activity_maybe_creator(activity)]
