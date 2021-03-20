@@ -53,6 +53,12 @@
             x-show="open"
             class="flex items-center mt-2">
             <div class="flex-1">
+              <%= live_component(
+                @socket,
+                Bonfire.UI.Social.SetBoundariesLive,
+                assigns
+              ) %>
+
               <button
                 type="button"
                 @click="title_open = !title_open"

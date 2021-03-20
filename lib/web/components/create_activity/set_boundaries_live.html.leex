@@ -1,0 +1,7 @@
+Who should see?
+<%= for {slug, id} <- Bonfire.Boundaries.Circles.circles do %>
+    <label><input type="checkbox" name="circles[]" value="<%=id%>"> <%=Bonfire.Boundaries.Circles.circle_names()[slug]%></label>
+<% end %> 
+<%= for circle <- e(assigns, :my_circles, []) do %>
+    <label><input type="checkbox" name="circles[]" value="<%=circle.id%>"> <%=e(circle, :named, :name, "Unknown")%></label>
+<% end %> 
