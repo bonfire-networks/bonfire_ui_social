@@ -8,7 +8,17 @@ defmodule Bonfire.UI.Social.ThreadLive do
 
   @thread_max_depth 3 # TODO: put in config
 
+
+  def update(%{replies: replies, threaded_replies: threaded_replies, page_info: page_info} = assigns, socket) when is_list(replies) and length(replies)>0 do
+    IO.inspect("merge")
+    {:ok, assign(socket, assigns |> assigns_merge(%{
+      reply_to_thread_id: e(assigns, :activity, :thread_post_content, :id, nil) || e(assigns, :thread_id, nil), # TODO: change for thread forking?
+      thread_max_depth: @thread_max_depth
+    })) }
+  end
+
   def update(assigns, socket) do
+    IO.inspect(assigns)
 
     # replies = Bonfire.Data.Social.Replied.descendants(thread)
     # IO.inspect(replies, label: "REPLIES:")
@@ -23,39 +33,28 @@ defmodule Bonfire.UI.Social.ThreadLive do
       activity = e(assigns, :activity, nil)
       current_user = e(assigns, :current_user, nil)
 
-      replies = Bonfire.Social.Posts.list_replies(thread_id, current_user, @thread_max_depth)
-      # IO.inspect(replies, label: "REPLIES:")
+      with %{entries: replies, metadata: page_info} <- Bonfire.Social.Posts.list_replies(thread_id, current_user, e(assigns, :after, nil), @thread_max_depth) do
+        threaded_replies = if is_list(replies) and length(replies)>0, do: Bonfire.Social.Posts.arrange_replies_tree(replies), else: []
+        # IO.inspect(replies, label: "REPLIES:")
 
-      {:ok,
-      socket
-      |> assign(
-        thread_id: thread_id,
-        activity: activity,
-        reply_to_thread_id: e(activity, :thread_post_content, :id, nil) || thread_id, # TODO: change for thread forking?
-        current_user: current_user,
-        page: "thread",
-        replies: replies || [],
-        threaded_replies: Bonfire.Social.Posts.arrange_replies_tree(replies || []) || [],
-        thread_max_depth: @thread_max_depth
-      )}
+        {:ok,
+        socket
+        |> assign(
+          thread_id: thread_id,
+          activity: activity,
+          reply_to_thread_id: e(activity, :thread_post_content, :id, nil) || thread_id, # TODO: change for thread forking?
+          current_user: current_user,
+          page: "thread",
+          replies: replies || [],
+          threaded_replies: threaded_replies,
+          page_info: page_info,
+          thread_max_depth: @thread_max_depth
+        )}
+      end
     end
   end
 
-  # def handle_params(%{"tab" => tab} = _params, _url, socket) do
-  #   {:noreply,
-  #    assign(socket,
-  #      selected_tab: tab
-  #    )}
-  # end
-
-  # def handle_params(%{} = _params, _url, socket) do
-  #   {:noreply,
-  #    assign(socket,
-  #      current_user: Fake.user_live()
-  #    )}
-  # end
 
   defdelegate handle_event(action, attrs, socket), to: Bonfire.Web.LiveHandler
-
 
 end

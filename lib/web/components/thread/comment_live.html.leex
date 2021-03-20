@@ -3,7 +3,7 @@
 
     <div x-data="{reply: false}"> 
       <div class="flex items-center px-3 pt-2">
-        <%= live_component(@socket, Bonfire.UI.Social.ActivityLive, id: "comment-"<>e(@comment, :id, ""), object: @comment, activity: e(@activity , nil), reply_click: "reply = !reply; return false;", current_user: @current_user) %>
+        <%= live_component(@socket, Bonfire.UI.Social.ActivityLive, id: "comment-"<>e(@comment, :id, ""), activity: @activity, reply_to_thread_id: @reply_to_thread_id, reply_click: "reply = !reply; return false;", current_user: @current_user) %>
       </div>
       <div x-show="reply" class="mt-2 mb-4">
         <%= live_component(@socket, Bonfire.UI.Social.CreateActivityLive, 

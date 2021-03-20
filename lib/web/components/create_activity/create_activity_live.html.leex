@@ -31,6 +31,9 @@
                   class="text-xs font-semibold tracking-wide text-gray-600 hover:underline ">Add a summary</button>
               </nav>
 
+              <input type="hidden" name="reply_to[reply_to_id]" value="<%= e(assigns, :reply_to_id, "") %>" />
+              <input type="hidden" name="reply_to[thread_id]" value="<%= e(assigns, :reply_to_thread_id, "") %>" />
+
             <textarea
               x-show.transition="summary_open"
               name="summary"

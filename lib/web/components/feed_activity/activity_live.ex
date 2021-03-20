@@ -21,6 +21,8 @@ defmodule Bonfire.UI.Social.ActivityLive do
       verb_display = verb_display(verb, activity)
       created_verb_display = "create" |> verb_maybe_modify(activity) |> verb_display(activity)
 
+      permalink = permalink(assigns, activity)
+
       assigns
       |> assigns_merge(%{
           activity: activity,
@@ -28,7 +30,8 @@ defmodule Bonfire.UI.Social.ActivityLive do
           date_ago: date_from_now(activity.object),
           verb: verb,
           verb_display: verb_display,
-          created_verb_display: created_verb_display
+          created_verb_display: created_verb_display,
+          permalink: permalink
         })
 
     else
@@ -39,13 +42,21 @@ defmodule Bonfire.UI.Social.ActivityLive do
           date_ago: nil,
           verb: "",
           verb_display: "",
-          created_verb_display: ""
+          created_verb_display: "",
+          permalink: ""
         })
     end
 
     {:ok, assign(socket, assigns) }
   end
 
+
+  # def permalink(%{reply_to_thread_id: reply_to_thread_id}, %{object: %{id: id}}) do
+  #   "/discussion/"<>reply_to_thread_id<>"/reply/"<>id
+  # end
+  def permalink(_, %{object: %{id: id}}) do
+    "/discussion/"<>id
+  end
 
   def component_activity_subject("like"=verb, activity), do: [{Bonfire.UI.Social.Activity.SubjectMinimalLive, %{verb: verb}}, component_activity_maybe_creator(activity)]
   def component_activity_subject("boost"=verb, activity), do: [{Bonfire.UI.Social.Activity.SubjectMinimalLive, %{verb: verb}}, component_activity_maybe_creator(activity)]
@@ -67,7 +78,8 @@ defmodule Bonfire.UI.Social.ActivityLive do
         object: reply_to_post_content,
         object_post_content: reply_to_post_content, # TODO: avoid data duplication
         subject_profile: reply_to_creator_profile,
-        subject_character: reply_to_creator_character
+        subject_character: reply_to_creator_character,
+        viewing_main_object: false
     }}},
     Bonfire.UI.Social.Activity.SubjectLive]
 
@@ -80,7 +92,8 @@ defmodule Bonfire.UI.Social.ActivityLive do
     {Bonfire.UI.Social.ActivityLive, %{
       activity_inception: true,
       id: activity_id <> reply_id,
-      activity: load_reply_to(reply_to)
+      activity: load_reply_to(reply_to),
+      viewing_main_object: false
     }},
     Bonfire.UI.Social.Activity.SubjectLive]
 

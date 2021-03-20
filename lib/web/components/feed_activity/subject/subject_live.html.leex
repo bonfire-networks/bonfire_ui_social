@@ -4,7 +4,19 @@
     <h3 class="flex items-center text-base text-gray-700">
       <a class="font-bold hover:underline" href="/user/<%= e(@activity, :subject_character, :username, "") %>"><%= e(@activity, :subject_profile, :name, "Anonymous") %></a>
       <!--<%= raw @verb_display %>-->
-      <span class="ml-2 text-sm text-gray-500">@<%= e(@activity, :subject_character, :username, "") %> · <%=@date_ago%></span>
+      <span class="ml-2 text-sm text-gray-500">
+        @<%= e(@activity, :subject_character, :username, "") %> 
+        <%= if e(assigns, :viewing_main_object, nil) !=true do %> 
+          ·
+          <%= live_redirect to: @permalink do %><%=@date_ago%><% end %>
+        <% end %>
+      </span>
+
     </h3>
+          <%= if e(assigns, :viewing_main_object, nil) do %> 
+            <div class="mt-0 text-sm text-gray-600">
+              <%= live_redirect to: @permalink do %><%=@date_ago%><% end %>
+            </div>
+      <% end %>
   </div>
 </div>

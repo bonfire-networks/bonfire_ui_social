@@ -1,4 +1,4 @@
-defmodule  Bonfire.UI.Social.PostLive do
+defmodule  Bonfire.UI.Social.ObjectThreadLive do
   use Bonfire.Web, :live_component
 
   def update(assigns, socket) do
@@ -6,7 +6,7 @@ defmodule  Bonfire.UI.Social.PostLive do
 
     {:ok, assign(socket, assigns
     |> assigns_merge(%{
-        page: "Thread",
+        page: "Discussion",
         date_ago: date_from_now(assigns.object),
       })) }
   end
