@@ -5,7 +5,7 @@
         <div class="flex flex-col flex-grow">
           <nav class="flex flex-col flex-1 px-2 mt-2 space-y-3">
             <%= live_redirect to: Routes.live_path(@socket, Bonfire.Me.Web.LoggedDashboardLive) do %>
-              <div class="flex items-center py-2 ml-1">
+              <div class="flex items-center py-2 px-2 ml-1">
                 <span class="text-3xl">🔥</span>
               </div>
             <% end %>
@@ -32,26 +32,26 @@
                       <% end %>
                         <a href="/switch-user" class="block px-4 py-2 text-sm text-gray-700 transition duration-150 ease-in-out hover:bg-gray-100" role="menuitem">Switch User</a>
                         <a href="/settings" class="block px-4 py-2 text-sm text-gray-700 transition duration-150 ease-in-out hover:bg-gray-100" role="menuitem">Settings</a>
-          
+
                         <a href="/logout" class="block px-4 py-2 text-sm text-gray-700 transition duration-150 ease-in-out hover:bg-gray-100" role="menuitem">Logout</a>
-          
+
                       </div>
                     </div>
                   </details-menu>
                 </details>
               </div>
             </div>
-            <%= live_redirect to: Routes.live_path(@socket, Bonfire.Me.Web.LoggedDashboardLive ) do %>
-              <button class="w-full border-blueGray-100 border-l-4 flex items-center px-2 py-2 text-base font-medium leading-5 transition duration-150 ease-in-out  group hover:bg-blueGray-200 focus:outline-none focus:text-gray-900 focus:bg-gray-50 <%= if @page == "dashboard", do: "text-pink-500", else: "text-gray-800" %>">
-                <svg
-                  class="w-6 h-6 mr-3 transition duration-150 ease-in-out <%= if @page == "dashboard", do: "text-pink-500", else: "text-gray-700" %>"
-                  fill="currentColor"
-                  viewBox="0 0 24 24"
-                  xmlns="http://www.w3.org/2000/svg">
-                  <path stroke-linecap="round" stroke-linejoin="round"  d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z"></path></svg>
-                Dashboard
-              </button>
-            <% end %>
+            <%# <%= live_redirect to: Routes.live_path(@socket, Bonfire.Me.Web.LoggedDashboardLive ) do %>
+              <%# <button class="w-full border-blueGray-100 border-l-4 flex items-center px-2 py-2 text-base font-medium leading-5 transition duration-150 ease-in-out  group hover:bg-blueGray-200 focus:outline-none focus:text-gray-900 focus:bg-gray-50 <%= if @page == "dashboard", do: "text-pink-500", else: "text-gray-800" %>
+                <%# <svg
+                  class="w-6 h-6 mr-3 transition duration-150 ease-in-out <%= if @page == "dashboard", do: "text-pink-500", else: "text-gray-700" %>
+                  <%# fill="currentColor" %>
+                  <%# viewBox="0 0 24 24" %>
+                  <%# xmlns="http://www.w3.org/2000/svg"> %>
+                  <%# <path stroke-linecap="round" stroke-linejoin="round"  d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z"></path></svg> %>
+                <%# Dashboard %>
+              <%# </button> %>
+            <%# <% end %>
 
             <%= live_redirect to: Routes.live_path(@socket, Bonfire.Social.Web.Feeds.MyFeedLive ) do %>
               <button class="w-full border-blueGray-100 border-l-4 flex items-center px-2 py-2 text-base font-medium leading-5 transition duration-150 ease-in-out  group hover:bg-blueGray-200 focus:outline-none focus:text-gray-900 focus:bg-gray-50 <%= if @page == "feed", do: "text-pink-500", else: "text-gray-800" %>">
