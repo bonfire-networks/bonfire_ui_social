@@ -1,29 +1,29 @@
 <div class="reply thread-level-<%= @thread_level %> flex relative">
   <div class="flex-1 w-full ">
 
-    <div x-data="{reply: false}"> 
+    <div x-data="{reply: false}">
       <div class="flex items-center px-3 pt-2">
         <%= live_component(@socket, Bonfire.UI.Social.ActivityLive, id: "comment-"<>e(@comment, :id, ""), activity: @activity, reply_to_thread_id: @reply_to_thread_id, reply_click: "reply = !reply; return false;", current_user: @current_user) %>
       </div>
       <div x-show="reply" class="mt-2 mb-4">
-        <%= live_component(@socket, Bonfire.UI.Social.CreateActivityLive, 
-        current_user: @current_user, 
-        reply_to_thread_id: @reply_to_thread_id, 
-        reply_to_id: e(@comment, :id, nil), 
+        <%= live_component(@socket, Bonfire.UI.Social.CreateActivityLive,
+        current_user: @current_user,
+        reply_to_thread_id: @reply_to_thread_id,
+        reply_to_id: e(@comment, :id, nil),
         thread_component: @thread_component) %>
       </div>
     </div>
 
     <div class="replies replies-level-<%= @thread_level+1 %> border-l ml-8 mr-3  bg-blueGray-100 ">
           <%= for {reply, sub_child_replies} <- @child_replies do %>
-            <%= live_component(@socket, Bonfire.UI.Social.CommentLive, 
-            current_user: @current_user, 
-            thread_id: @thread_id, 
-            reply_to_thread_id: @reply_to_thread_id, 
-            comment: reply, 
-            child_replies: sub_child_replies, 
-            thread_max_depth: @thread_max_depth, 
-            thread_level: @thread_level+1, 
+            <%= live_component(@socket, Bonfire.UI.Social.CommentLive,
+            current_user: @current_user,
+            thread_id: @thread_id,
+            reply_to_thread_id: @reply_to_thread_id,
+            comment: reply,
+            child_replies: sub_child_replies,
+            thread_max_depth: @thread_max_depth,
+            thread_level: @thread_level+1,
             thread_component: @thread_component) %>
           <% end %>
 

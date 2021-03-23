@@ -1,5 +1,5 @@
 
-<div class='my-2'
+<div class="<%= if e(@activity, :object, :id, nil) != nil and e(@activity, :replied, :reply_to_id, nil) == nil and e(@activity, :id, nil) == nil, do: "py-0", else: "py-2" %>"
     x-data="{content_open: false}">
     <%# = e(@activity, :replied, :reply_to_id, nil) %>
     <%# = e(@activity, :object, :id, nil) %>
