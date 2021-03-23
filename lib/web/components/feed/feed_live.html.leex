@@ -1,7 +1,10 @@
 <div class="mb-8">
     <div class="mx-auto max-w-7xl">
     <%= if length(@feed) == 0 do %>
-      <div class="p-4 m-3 mb-4 font-bold text-center text-gray-700 rounded">Take a deep breath...</div>
+      <div class="p-4 text-center">
+        <div class="mb-3 text-3xl">🧐</div>
+        <span class="font-medium text-base text-gray-700">Take a deep breath...<span>
+      </div>
     <% else %>
       <%= for activity <- @feed do %>
       <div class="px-3 border-b">
