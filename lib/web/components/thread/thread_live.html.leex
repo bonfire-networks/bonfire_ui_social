@@ -1,30 +1,14 @@
 
 <div class="px-3">
-  <%= live_component(@socket, Bonfire.UI.Social.CreateActivityLive, 
-    current_user: @current_user, 
-    reply_to_thread_id: @reply_to_thread_id, 
-    reply_to_id: @thread_id, 
+  <%= live_component(@socket, Bonfire.UI.Social.CreateActivityLive,
+    current_user: @current_user,
+    reply_to_thread_id: @reply_to_thread_id,
+    reply_to_id: @thread_id,
     thread_component: @myself) %>
 </div>
 
+<% if length(@threaded_replies) > 0 do %>
 <div id="replies" class="pt-3 mt-6 border-t">
-
-  <div class="px-6">
-    <div class="sm:hidden">
-      <label for="tabs" class="sr-only">Select a tab</label>
-      <select id="tabs" name="tabs" class="block w-full border-gray-300 rounded-md focus:ring-indigo-500 focus:border-indigo-500">
-        <option>Discussion</option>
-      </select>
-    </div>
-    <div class="hidden sm:block">
-      <nav class="flex space-x-4" aria-label="Tabs">
-        <a href="#" class="px-3 py-2 text-sm font-medium text-gray-700 bg-gray-100 rounded-md hover:text-gray-700">
-          Discussion
-        </a>
-      </nav>
-    </div>
-  </div>
-
   <%= if e(@page_info, :before, nil) do %>
   <div class="flex justify-center p-3 mx-auto place-items-center">
     <a phx-click="post_load_more" phx-value-after="<%= e(@page_info, :before, nil) %>" href="?post[cursor][before]=<%= e(@page_info, :before, nil) %>" class="relative inline-flex items-center px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md hover:bg-gray-50">Load more</a>
@@ -32,18 +16,18 @@
   <% end %>
 
   <%= for {reply, child_replies} <- @threaded_replies do %>
-    <%= live_component(@socket, Bonfire.UI.Social.CommentLive, 
-    current_user: @current_user, 
-    thread_id: @thread_id, 
-    reply_to_thread_id: @reply_to_thread_id, 
-    comment: reply, 
-    child_replies: child_replies, 
-    thread_max_depth: @thread_max_depth, 
-    thread_level: 1, 
+    <%= live_component(@socket, Bonfire.UI.Social.CommentLive,
+    current_user: @current_user,
+    thread_id: @thread_id,
+    reply_to_thread_id: @reply_to_thread_id,
+    comment: reply,
+    child_replies: child_replies,
+    thread_max_depth: @thread_max_depth,
+    thread_level: 1,
     thread_component: @myself) %>
   <% end %>
 </div>
-
+<% end %>
   <%= if e(@page_info, :after, nil) do %>
   <div class="flex justify-center p-3 mx-auto place-items-center">
     <a phx-click="post_load_more" phx-value-after="<%= e(@page_info, :after, nil) %>" href="?post[cursor][after]=<%= e(@page_info, :after, nil) %>" class="relative inline-flex items-center px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md hover:bg-gray-50">Load more</a>
