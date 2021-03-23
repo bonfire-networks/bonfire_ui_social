@@ -8,7 +8,7 @@
       <%= if e(assigns, :viewing_main_object, nil) !=true && e(@activity, :object_post_content, :name, nil) do %>
 
         <%= live_redirect to: @permalink do %>
-          <h2 class="text-xl font-bold text-gray-700 hover:underline"><%= e(@activity, :object_post_content, :name, "Title") %></h2>
+          <h2 class="text-xl font-bold hover:underline"><%= e(@activity, :object_post_content, :name, "Title") %></h2>
         <% end %>
         <div class="prose-sm max-w-prose">
           <%= e(@activity, :object_post_content, :summary, "") %>

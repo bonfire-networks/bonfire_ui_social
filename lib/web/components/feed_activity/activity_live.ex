@@ -13,8 +13,8 @@ defmodule Bonfire.UI.Social.ActivityLive do
 
       verb = e(activity, :verb, :verb, "post") |> verb_maybe_modify(activity)
 
-      components = component_activity_subject(verb, activity)
-      # ++ component_object_subject(verb, activity)
+      components = component_activity_subject(verb, activity, assigns)
+      ++ component_reply_to(verb, activity)
       ++ component_object(verb, activity)
       ++ component_actions(verb, activity, assigns)
 
@@ -61,11 +61,20 @@ defmodule Bonfire.UI.Social.ActivityLive do
     "/discussion/"<>id
   end
 
-  def component_activity_subject("like"=verb, activity), do: [{Bonfire.UI.Social.Activity.SubjectMinimalLive, %{verb: verb}}, component_activity_maybe_creator(activity)]
-  def component_activity_subject("boost"=verb, activity), do: [{Bonfire.UI.Social.Activity.SubjectMinimalLive, %{verb: verb}}, component_activity_maybe_creator(activity)]
-  def component_activity_subject("flag"=verb, activity), do: [{Bonfire.UI.Social.Activity.SubjectMinimalLive, %{verb: verb}}, component_activity_maybe_creator(activity)]
+  def component_activity_subject("like"=verb, activity, _), do: [{Bonfire.UI.Social.Activity.SubjectMinimalLive, %{verb: verb}}, component_activity_maybe_creator(activity)]
+  def component_activity_subject("boost"=verb, activity, _), do: [{Bonfire.UI.Social.Activity.SubjectMinimalLive, %{verb: verb}}, component_activity_maybe_creator(activity)]
+  def component_activity_subject("flag"=verb, activity, _), do: [{Bonfire.UI.Social.Activity.SubjectMinimalLive, %{verb: verb}}, component_activity_maybe_creator(activity)]
 
-  def component_activity_subject(verb,
+  def component_activity_subject(_, %{object: %Bonfire.Data.Identity.User{}}, _), do: []
+
+  def component_activity_subject(_, _, %{activity_inception: true}), do: [Bonfire.UI.Social.Activity.SubjectRepliedLive]
+
+  def component_activity_subject(_, _, _), do: [Bonfire.UI.Social.Activity.SubjectLive]
+
+  def component_activity_maybe_creator(%{object_creator_profile: %{id: _}}), do: Bonfire.UI.Social.Activity.CreatorLive
+  def component_activity_maybe_creator(_), do: nil
+
+  def component_reply_to(verb,
     %{
       id: activity_id,
       reply_to_post_content: %{id: reply_id} = reply_to_post_content,
@@ -73,40 +82,35 @@ defmodule Bonfire.UI.Social.ActivityLive do
       reply_to_creator_profile: %{id: _} = reply_to_creator_profile
     } )
   when verb in ["reply","respond"], do: [ # post reply
-    {Bonfire.UI.Social.Activity.SubjectMinimalLive, %{verb: verb}},
+    # {Bonfire.UI.Social.Activity.SubjectLive, %{verb: verb}},
     {Bonfire.UI.Social.ActivityLive, %{
       activity_inception: true,
       id: activity_id <> reply_id,
+      viewing_main_object: false,
       activity: %{
         object: reply_to_post_content,
-        object_post_content: reply_to_post_content, # TODO: avoid data duplication
+        object_post_content: reply_to_post_content,
         subject_profile: reply_to_creator_profile,
         subject_character: reply_to_creator_character,
-        viewing_main_object: false
     }}},
-    Bonfire.UI.Social.Activity.SubjectLive]
+    # Bonfire.UI.Social.Activity.SubjectLive
+  ]
 
-  def component_activity_subject(verb, %{
+  def component_reply_to(verb, %{
     id: activity_id,
     reply_to: %{id: reply_id} = reply_to
   })
   when verb in ["reply","respond"], do: [ # other kind of reply
-    {Bonfire.UI.Social.Activity.SubjectMinimalLive, %{verb: verb}},
+    # {Bonfire.UI.Social.Activity.SubjectLive, %{verb: verb}},
     {Bonfire.UI.Social.ActivityLive, %{
       activity_inception: true,
       id: activity_id <> reply_id,
       activity: load_reply_to(reply_to),
       viewing_main_object: false
     }},
-    Bonfire.UI.Social.Activity.SubjectLive]
-
-  def component_activity_subject(_, %{object: %Bonfire.Data.Identity.User{}}), do: []
-
-  def component_activity_subject(_, _), do: [Bonfire.UI.Social.Activity.SubjectLive]
-
-  def component_activity_maybe_creator(%{object_creator_profile: %{id: _}}), do: Bonfire.UI.Social.Activity.CreatorLive
-  def component_activity_maybe_creator(_), do: nil
-
+    # Bonfire.UI.Social.Activity.SubjectLive
+  ]
+  def component_reply_to(_, _), do: []
 
   def component_object(_, %{object: %Bonfire.Data.Social.Post{}}), do: [Bonfire.UI.Social.Activity.NoteLive]
   def component_object(_, %{object_post_content: %{id: _}}), do: [Bonfire.UI.Social.Activity.NoteLive]
