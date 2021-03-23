@@ -15,12 +15,12 @@
     </div>
 
     <div class="replies replies-level-<%= @thread_level+1 %> border-l ml-8 mr-3  bg-blueGray-100 ">
-          <%= for {reply, sub_child_replies} <- @child_replies do %>
+          <%= for {subreply, sub_child_replies} <- @child_replies do %>
             <%= live_component(@socket, Bonfire.UI.Social.CommentLive,
             current_user: @current_user,
             thread_id: @thread_id,
             reply_to_thread_id: @reply_to_thread_id,
-            comment: reply,
+            comment: subreply,
             child_replies: sub_child_replies,
             thread_max_depth: @thread_max_depth,
             thread_level: @thread_level+1,
