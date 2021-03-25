@@ -1,28 +1,28 @@
-<div class="border-b">
-  <div class="flex flex-col overflow-hidden container max-w-screen-lg mx-auto">
-    <div class="relative z-10 flex justify-between flex-shrink-0 h-20">
+
+  <div class="mt-4 bg-white rounded-lg shadow flex flex-col overflow-hidden container max-w-screen-lg mx-auto">
+    <div class="relative z-10 flex justify-between flex-shrink-0 h-16">
         <div class="flex items-center flex-shrink-0 px-4">
           <%= live_redirect to: Routes.live_path(@socket, Bonfire.Common.Config.get!(:home_page)) do %>
-            <div class="pr-2 flex items-center">
+            <div class="rounded px-4 py-2  flex items-center">
               <span class="text-2xl">🔥</span>
-              <span class="ml-2 font-bold text-sm text-gray-800">Bonfire</span>
+              <span class="ml-2 font-semibold text-base text-gray-800">Bonfire</span>
             </div>
           <% end %>
 
-          <div class="hidden lg:block ml-3">
-            <div class="flex items-center">
+          <!--div class="hidden lg:block ml-0">
+            <div class="flex items-center space-x-1">
               <%= live_redirect to: Routes.live_path(@socket, Bonfire.Common.Config.get!(:home_page)) do %>
-                <span class="text-sm font-medium leading-5 text-gray-600 transition duration-150 hover:text-gray-900 hover:bg-gray-100 rounded px-4 py-2 ease-in-out rounded-md focus:outline-none focus:text-gray-700">Users directory</span>
+                <span class="text-sm font-bold text-gray-700 transition duration-150 hover:text-gray-900 hover:bg-gray-100 rounded px-4 py-2 ease-in-out focus:outline-none focus:text-gray-700">Users directory</span>
               <% end %>
               <%= live_redirect to: Routes.live_path(@socket, Bonfire.Social.Web.Feeds.InstanceLive) do %>
-                <span class="ml-4 text-sm font-medium leading-5 text-gray-600 transition duration-150 hover:text-gray-900 ease-in-out hover:bg-gray-100 rounded px-4 py-2 rounded-md hover:text-gray-700 focus:outline-none focus:text-gray-700">Discover</a>
+                <span class="text-sm font-bold text-gray-700 transition duration-150  ease-in-out hover:bg-gray-100 rounded px-4 py-2 hover:text-gray-700 focus:outline-none focus:text-gray-700">Discover</a>
               <% end %>
             </div>
-          </div>
+          </div -->
         </div>
 
         <div class="flex px-4 ">
-        <div class="flex items-center flex-1 px-4">
+          <div class="flex items-center flex-1 px-4">
             <div class="flex flex-1">
               <form class="flex w-full md:ml-0" action="#" method="GET">
                 <label for="search_field_guest" class="sr-only">Search</label>
@@ -32,7 +32,7 @@
                       <path fill-rule="evenodd" clip-rule="evenodd" d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z" />
                     </svg>
                   </div>
-                  <input type="search" id="search_field_guest" class="w-full h-full pl-8 placeholder-gray-500 bg-gray-100" placeholder="Search">
+                  <input type="search" id="search_field_guest" class="w-full h-full pl-8 rounded-full placeholder-gray-500 bg-gray-100" placeholder="Search">
                 </div>
               </form>
             </div>
@@ -68,4 +68,3 @@
         </div>
     </div>
   </div>
-</div>

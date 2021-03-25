@@ -7,7 +7,7 @@
       </div>
     </div>
   <% !@current_user and @current_account -> %>
-    <div class="pt-16">
+    <div class="">
       <%= live_component(@socket, Bonfire.UI.Social.HeaderAccountLive, assigns) %>
       <div class="container max-w-screen-lg mx-auto">
         <%= @inner_content %>
