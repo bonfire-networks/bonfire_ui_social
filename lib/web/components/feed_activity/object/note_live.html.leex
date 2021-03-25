@@ -33,13 +33,20 @@
 
       <% else %>
 
-        <%= if e(@activity, :object_post_content, :summary, nil) do %>
+        <%= if e(@activity, :object_post_content, :name, nil) do %>
           <%= live_redirect to: @permalink do %>
-            <div class="mb-2 prose-sm max-w-prose"><%= e(@activity, :object_post_content, :summary, "") %></div>
+            <h2 class="text-gray-800 text-3xl font-bold hover:underline"><%= e(@activity, :object_post_content, :name, "Title") %></h2>
           <% end %>
         <% end %>
 
-        <article class='<%= if e(assigns, :viewing_main_object, nil), do: "prose prose-xl max-w-prose", else: "prose max-w-prose" %>'>
+        <%= if e(@activity, :object_post_content, :summary, nil) do %>
+            <h3 class="mt-4 uppercase text-gray-600 tracking-wider text-xs">Summary</h3>
+          <%= live_redirect to: @permalink do %>
+            <div class="mb-2 prose-sm max-w-prose text-gray-700"><%= e(@activity, :object_post_content, :summary, "") %></div>
+          <% end %>
+        <% end %>
+
+        <article class='<%= if e(assigns, :viewing_main_object, nil), do: "prose max-w-prose", else: "prose max-w-prose" %>'>
           <%= e(@activity, :object_post_content, :html_body, "...") %>
         </article>
       <% end %>
