@@ -1,12 +1,14 @@
 
-<div class="<%= if e(@activity, :object, :id, nil) != nil and e(@activity, :replied, :reply_to_id, nil) == nil and e(@activity, :id, nil) == nil, do: "py-0", else: "py-2" %>"
-    x-data="{content_open: false}">
-    <%# = e(@activity, :replied, :reply_to_id, nil) %>
-    <%# = e(@activity, :object, :id, nil) %>
-    <%# = e(@activity, :id, nil) %>
-
+<div class="
+   <%= cond do %>
+    <% e(@activity, :object, :id, nil) != nil and e(@activity, :replied, :reply_to_id, nil) == nil and e(@activity, :id, nil) == nil -> %>
+      py-0
+    <% e(assigns, :is_comment , nil) == true -> %>
+      ml-8 py-0
+    <% true -> %>
+      py-2
+  <% end %>" x-data="{content_open: false}">
       <%= if e(assigns, :viewing_main_object, nil) !=true && e(@activity, :object_post_content, :name, nil) do %>
-
         <%= live_redirect to: @permalink do %>
           <h2 class="text-base font-bold hover:underline"><%= e(@activity, :object_post_content, :name, "Title") %></h2>
         <% end %>
