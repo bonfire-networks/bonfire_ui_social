@@ -1,0 +1,10 @@
+<form phx-submit="circle_create">
+<input type="text" name="name" placeholder="Circle name"/><button type="submit">Create</button>
+</form>
+<ul>
+<%= for circle <- @circles do %>
+<li>
+<a href="/settings/circle/<%=circle.id%>"><%= e(circle, :named, :name, "Untitled") %></a>
+</li>
+<% end %>
+</ul> 

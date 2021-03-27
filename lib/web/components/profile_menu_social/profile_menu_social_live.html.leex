@@ -10,12 +10,12 @@
     <nav class="flex -mb-px space-x-8" aria-label="Tabs">
       <%= live_patch to: "/user/" <>  e(@user, :character, :username, "") <> "/followers" do %>
         <div aria-current="<%= if @selected_tab == "followers", do: "page" %>" class="<%= if @selected_tab == "followers", do: "border-pink-500 text-pink-600", else: "border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300" %> whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm">
-        Followers (34)
+        Followers (<%= e(@user, :character, :follow_count, :follower_count, 0) %>)
         </div>
       <% end %>
       <%= live_patch to: "/user/" <>  e(@user, :character, :username, "") <> "/following" do %>
         <div aria-current="<%= if @selected_tab == "following", do: "page" %>" class="<%= if @selected_tab == "following", do: "border-pink-500 text-pink-600", else: "border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300" %> whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm">
-        Following (134)
+        Following (<%= e(@user, :character, :follow_count, :follow_count, 0) %>)
         </div>
       <% end %>
     </nav>

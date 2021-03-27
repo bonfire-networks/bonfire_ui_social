@@ -3,13 +3,11 @@
   <div class="flow-root my-4">
     <ul class="-my-5 divide-y divide-gray-200">
       <%= for follow <- @follows do %>
-        <%= case follow do %>
-          <% %{followed_profile: profile, followed_character: character} -> %>
-            <%= live_component(@socket, Bonfire.UI.Social.FollowEntryLive, profile: profile, character: character) %>
-            
-          <% %{follower_profile: profile, follower_character: character} -> %>
-            <%= live_component(@socket, Bonfire.UI.Social.FollowEntryLive, profile: profile, character: character) %>
-        <% end %>
+        <li class="px-3 py-4">
+
+          <%= live_component(@socket, Bonfire.UI.Social.FollowEntryLive, follow: follow) %>
+
+        </li>
       <% end %>
     </ul>
   </div>
