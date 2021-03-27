@@ -1,3 +1,4 @@
+<%= if e(assigns, :is_comment , nil) != true do %>
 <div class="<%= if e(@activity, :replied, :reply_to_id, nil), do: "pl-1" %> flex items-center">
   <img class="inline-block w-8 h-8 rounded-full" src="https://thispersondoesnotexist.com/image" alt="">
   <div class="flex justify-between flex-1 ml-2">
@@ -11,3 +12,17 @@
     </div>
   </div>
 </div>
+<% else %>
+<div class="<%= if e(@activity, :replied, :reply_to_id, nil), do: "pl-1" %> flex items-center">
+  <img class="inline-block w-6 h-6 rounded-full" src="https://thispersondoesnotexist.com/image" alt="">
+  <div class="ml-2">
+  <div class="flex items-baseline space-x-1 flex-1">
+    <h3 class="text-sm font-bold text-gray-700">
+      <a class="hover:underline" href="/user/<%= e(@activity, :subject_character, :username, "") %>"><%= e(@activity, :subject_profile, :name, "Anonymous") %></a>
+    </h3>
+    <span class="text-xs text-gray-500"><%= live_redirect to: @permalink do %><%=@date_ago%><% end %></span>
+  </div>
+</div>
+</div>
+
+<% end %>
