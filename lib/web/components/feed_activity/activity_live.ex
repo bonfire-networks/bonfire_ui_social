@@ -5,7 +5,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
   def update(assigns, socket) do
 
     assigns = if is_map(assigns.activity) do
-      activity = %{assigns.activity | object: object(assigns.activity)}
+      activity = Map.merge(assigns.activity, %{object: object(assigns.activity)})
       # |> IO.inspect
       # |> repo().maybe_preload(:object)
       # |> repo().maybe_preload([object: [:profile, :character]])
@@ -185,6 +185,6 @@ defmodule Bonfire.UI.Social.ActivityLive do
 
 
   # def handle_event("like"=action, attrs, socket), do: Bonfire.Social.Likes.live_action(action, attrs, socket)
-  defdelegate handle_event(action, attrs, socket), to: Bonfire.Web.LiveHandler
+  def handle_event(action, attrs, socket), do: Bonfire.Web.LiveHandler.handle_event(action, attrs, socket, __MODULE__)
 
 end

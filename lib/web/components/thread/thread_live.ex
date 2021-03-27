@@ -8,20 +8,31 @@ defmodule Bonfire.UI.Social.ThreadLive do
 
   @thread_max_depth 3 # TODO: put in config
 
-
-  def update(%{replies: replies, threaded_replies: threaded_replies, page_info: page_info} = assigns, socket) when is_list(replies) and length(replies)>0 do
-    IO.inspect("merge")
+  def update(%{replies: replies, threaded_replies: threaded_replies} = assigns, socket) when is_list(replies) and length(replies)>0 and is_list(threaded_replies) and length(threaded_replies)>0 do
+    IO.inspect("preloaded replies")
     {:ok, assign(socket, assigns |> assigns_merge(%{
       reply_to_thread_id: e(assigns, :activity, :thread_post_content, :id, nil) || e(assigns, :thread_id, nil), # TODO: change for thread forking?
       thread_max_depth: @thread_max_depth
     })) }
   end
 
+  def update(%{replies: replies} = assigns, %{assigns: %{replies: previous_replies}} = socket) when is_list(replies) and length(replies)>0 do
+    IO.inspect("add thread reply")
+    # IO.inspect(merge_reply: previous_replies)
+    replies = e(socket, assigns, :replies, []) ++ previous_replies
+    {:ok, assign(socket, assigns |> assigns_merge(%{
+      replies: replies,
+      threaded_replies: Bonfire.Social.Posts.arrange_replies_tree(replies),
+      reply_to_thread_id: e(assigns, :activity, :thread_post_content, :id, nil) || e(assigns, :thread_id, nil), # TODO: change for thread forking?
+      thread_max_depth: @thread_max_depth
+    })) }
+  end
+
   def update(assigns, socket) do
-    IO.inspect(assigns)
+    # IO.inspect(assigns)
 
     # replies = Bonfire.Data.Social.Replied.descendants(thread)
-    # IO.inspect(replies, label: "REPLIES:")
+    #IO.inspect(replies, label: "REPLIES:")
     # replies = replies |> repo().all
 
     # replies = Bonfire.Social.Posts.replies_tree(e(thread, :thread_replies, []))
@@ -35,7 +46,7 @@ defmodule Bonfire.UI.Social.ThreadLive do
 
       with %{entries: replies, metadata: page_info} <- Bonfire.Social.Posts.list_replies(thread_id, current_user, e(assigns, :after, nil), @thread_max_depth) do
         threaded_replies = if is_list(replies) and length(replies)>0, do: Bonfire.Social.Posts.arrange_replies_tree(replies), else: []
-        # IO.inspect(replies, label: "REPLIES:")
+        #IO.inspect(replies, label: "REPLIES:")
 
         {:ok,
         socket
@@ -55,6 +66,7 @@ defmodule Bonfire.UI.Social.ThreadLive do
   end
 
 
-  defdelegate handle_event(action, attrs, socket), to: Bonfire.Web.LiveHandler
+  def handle_event(action, attrs, socket), do: Bonfire.Web.LiveHandler.handle_event(action, attrs, socket, __MODULE__)
+  def handle_info(info, socket), do: Bonfire.Web.LiveHandler.handle_info(info, socket, __MODULE__)
 
 end

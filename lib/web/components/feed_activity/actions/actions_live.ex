@@ -1,6 +1,6 @@
 defmodule Bonfire.UI.Social.Activity.ActionsLive do
   use Bonfire.Web, :live_component
 
-  defdelegate handle_event(action, attrs, socket), to: Bonfire.Web.LiveHandler
+  def handle_event(action, attrs, socket), do: Bonfire.Web.LiveHandler.handle_event(action, attrs, socket, __MODULE__)
 
 end

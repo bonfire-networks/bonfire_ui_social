@@ -7,25 +7,25 @@
       <div>
         <div class="sm:block ml-2">
           <nav class="flex space-x-4" aria-label="Tabs">
-            <%= live_patch to: "/user/" <>  e(@current_user, :character, :username, "") <> "/about" do %>
+            <%= live_patch to: "/user/" <>  e(@user, :character, :username, "") <> "/about" do %>
               <div aria-current="<%= if @selected_tab == "about", do: "page" %>" class="<%= if @selected_tab == "about", do: "bg-rose-500 text-gray-100" %> text-gray-100 hover:text-gray-200 px-3 py-2 font-medium text-sm rounded-md">
                 About
               </div>
             <% end %> 
 
-            <%= live_patch to: "/user/" <>  e(@current_user, :character, :username, "") <> "/timeline" do %>
+            <%= live_patch to: "/user/" <>  e(@user, :character, :username, "") <> "/timeline" do %>
               <div aria-current="<%= if @selected_tab == "timeline", do: "page" %>" class="<%= if @selected_tab == "timeline", do: "bg-rose-500 text-gray-100" %> text-gray-100 hover:text-gray-200 px-3 py-2 font-medium text-sm rounded-md">
                 Timeline
               </div>
             <% end %> 
 
-            <%= live_patch to: "/user/" <>  e(@current_user, :character, :username, "") <> "/boosts" do %>
+            <%= live_patch to: "/user/" <>  e(@user, :character, :username, "") <> "/boosts" do %>
               <div aria-current="<%= if @selected_tab == "likes", do: "page" %>" class="<%= if @selected_tab == "boosts", do: "bg-rose-500 text-gray-100" %> text-gray-100 hover:text-gray-200 px-3 py-2 font-medium text-sm rounded-md">
                 Boosts
               </div>
             <% end %>
 
-            <%= live_patch to: "/user/" <>  e(@current_user, :character, :username, "") <> "/media" do %>
+            <%= live_patch to: "/user/" <>  e(@user, :character, :username, "") <> "/media" do %>
               <div aria-current="<%= if @selected_tab == "media", do: "page" %>" class="<%= if @selected_tab == "media", do: "bg-rose-500 text-gray-100" %> text-gray-100 hover:text-gray-200 px-3 py-2 font-medium text-sm rounded-md">
                 Media
               </div>

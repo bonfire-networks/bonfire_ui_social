@@ -33,7 +33,7 @@
     </div>
 
     <div class="mt-3">
-      <%= live_patch to: "/user/" <>  e(@current_user, :character, :username, "") <> "/timeline" do %>
+      <%= live_patch to: "/user/" <>  e(@user, :character, :username, "") <> "/timeline" do %>
         <h2 class="hover:underline text-xl font-extrabold text-gray-800"><%= e(@user, :profile, :name, "Anonymous") %></h1>
       <% end %>
       <span class="-mt-1 text-base font-normal text-gray-500">@<%= e(@user, :character, :username, "") %></span>
@@ -64,12 +64,12 @@
 
       <div class="flex items-center mt-3">
         <svg class="w-5 h-5 text-gray-400" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path d="M9 6a3 3 0 11-6 0 3 3 0 016 0zM17 6a3 3 0 11-6 0 3 3 0 016 0zM12.93 17c.046-.327.07-.66.07-1a6.97 6.97 0 00-1.5-4.33A5 5 0 0119 16v1h-6.07zM6 11a5 5 0 015 5v1H1v-1a5 5 0 015-5z"></path></svg>
-        <%= live_patch to: "/user/" <>  e(@current_user, :character, :username, "") <> "/followers" do %>
-          <span class="ml-2 text-sm text-gray-500 mr-2 hover:underline"> <strong class="text-gray-800">71</strong> Followers </span>
+        <%= live_patch to: "/user/" <>  e(@user, :character, :username, "") <> "/followers" do %>
+          <span class="ml-2 text-sm text-gray-500 mr-2 hover:underline"> <strong class="text-gray-800"><%= e(@user, :character, :follow_count, :follower_count, 0) %></strong> Followers </span>
         <% end %>
         ·
-        <%= live_patch to: "/user/" <>  e(@current_user, :character, :username, "") <> "/following" do %>
-          <span class="ml-2 text-sm text-gray-500 hover:underline"> <strong class="text-gray-800">18</strong> Following</span>
+        <%= live_patch to: "/user/" <>  e(@user, :character, :username, "") <> "/following" do %>
+          <span class="ml-2 text-sm text-gray-500 hover:underline"> <strong class="text-gray-800"><%= e(@user, :character, :follow_count, :follow_count, 0) %></strong> Following</span>
         <% end %>
       </div>
     </div>
@@ -77,25 +77,25 @@
 
   <nav class="px-6 my-4 pb-3 flex justify-between border-b-4" aria-label="Tabs">
 
-    <%= live_patch to: "/user/" <>  e(@current_user, :character, :username, "") <> "/timeline" do %>
+    <%= live_patch to: "/user/" <>  e(@user, :character, :username, "") <> "/timeline" do %>
       <div aria-current="<%= if @selected_tab == "timeline", do: "page" %>" class="text-gray-500 hover:text-gray-700 px-3 py-2 font-medium text-sm hover:border-b-4 border-gray-300 -mb-4 <%= if @selected_tab == "timeline", do: "hover:text-pink-600 hover:border-pink-500 border-b-4 border-pink-500 text-pink-600 font-bold" %>">
         Timeline
       </div>
     <% end %>
 
-    <%= live_patch to: "/user/" <>  e(@current_user, :character, :username, "") <> "/posts" do %>
+    <%= live_patch to: "/user/" <>  e(@user, :character, :username, "") <> "/posts" do %>
       <div aria-current="<%= if @selected_tab == "posts", do: "page" %>" class="text-gray-500 hover:text-gray-700 px-3 py-2 font-medium text-sm hover:border-b-4 border-gray-300 -mb-4 <%= if @selected_tab == "posts", do: "hover:text-pink-600 hover:border-pink-500 border-b-4 border-pink-500 text-pink-600 font-bold" %>">
         Posts
       </div>
     <% end %>
 
-    <%= live_patch to: "/user/" <>  e(@current_user, :character, :username, "") <> "/boosts" do %>
+    <%= live_patch to: "/user/" <>  e(@user, :character, :username, "") <> "/boosts" do %>
       <div aria-current="<%= if @selected_tab == "boosts", do: "page" %>" class="text-gray-500 hover:text-gray-700 px-3 py-2 font-medium text-sm hover:border-b-4 border-gray-300 -mb-4 <%= if @selected_tab == "boosts", do: "hover:text-pink-600 hover:border-pink-500 border-b-4 border-pink-500 text-pink-600 font-bold" %>">
         Boosts
       </div>
     <% end %>
 
-    <%= live_patch to: "/user/" <>  e(@current_user, :character, :username, "") <> "/media" do %>
+    <%= live_patch to: "/user/" <>  e(@user, :character, :username, "") <> "/media" do %>
       <div aria-current="<%= if @selected_tab == "media", do: "page" %>" class="text-gray-500 hover:text-gray-700 px-3 py-2 font-medium text-sm hover:border-b-4 border-gray-300 -mb-4 <%= if @selected_tab == "media", do: "hover:text-pink-600 hover:border-pink-500 border-b-4 border-pink-500 text-pink-600 font-bold" %>">
         Media
       </div>
