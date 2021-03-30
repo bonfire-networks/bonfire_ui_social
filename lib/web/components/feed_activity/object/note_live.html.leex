@@ -1,7 +1,7 @@
 
 <div class="
    <%= cond do %>
-    <% e(@activity, :object, :id, nil) != nil and e(@activity, :replied, :reply_to_id, nil) == nil and e(@activity, :id, nil) == nil -> %>
+    <% e(@activity, :object, :id, nil) != nil and e(@activity, :reply_to_creator_character, nil) == nil and e(@activity, :id, nil) == nil -> %>
       py-0
     <% e(assigns, :is_comment , nil) == true -> %>
       ml-8 py-0

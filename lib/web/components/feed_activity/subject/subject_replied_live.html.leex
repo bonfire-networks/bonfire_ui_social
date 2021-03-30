@@ -1,4 +1,4 @@
-<div class="<%= if e(@activity, :replied, :reply_to_id, nil), do: "pl-1" %> flex items-center">
+<div class="<%= if e(@activity, :reply_to_creator_character, nil), do: "pl-1" %> flex items-center">
   <div class="flex justify-between flex-1">
     <h3 class="flex items-center text-sm font-bold text-gray-700">
       <a class="hover:underline" href="/user/<%= e(@activity, :subject_character, :username, "") %>"><%= e(@activity, :subject_profile, :name, "Anonymous") %></a>
