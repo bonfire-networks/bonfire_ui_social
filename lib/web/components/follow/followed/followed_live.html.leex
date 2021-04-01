@@ -5,7 +5,7 @@
       <%= for follow <- @follows do %>
         <li class="px-3 py-4">
 
-          <%= live_component(@socket, Bonfire.UI.Social.FollowEntryLive, follow: follow) %>
+          <%= live_component(@socket, Bonfire.UI.Social.FollowEntryLive, assigns |> assigns_merge(%{ profile: e(follow, :followed_profile, nil), character: e(follow, :followed_character, nil), following: [e(follow, :followed_character, :id, nil)] })) %>
 
         </li>
       <% end %>

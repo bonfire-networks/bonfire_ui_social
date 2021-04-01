@@ -5,16 +5,17 @@
   </div>
   <div class="flex-1 min-w-0">
     <p class="text-sm font-medium text-gray-900 truncate">
-      <%= e(@follow, :profile, :name, "Anon")%>
+      <%= e(@profile, :name, "Anon")%>
     </p>
     <p class="text-sm text-gray-500 truncate">
-      @<%= e(@follow, :character, :username, "anon")%>
+      @<%= e(@character, :username, "anon")%>
 
     </p>
   </div>
   <div>
-    <a href="#" class="inline-flex items-center shadow-sm px-2.5 py-0.5 border border-gray-300 text-sm leading-5 font-medium rounded-full text-gray-700 bg-white hover:bg-gray-50">
-      Follow
-    </a>
+    <%= if @current_user && maybe_get(@current_user, :id) != maybe_get(@character, :id) do %>
+      <%= live_component(@socket, Bonfire.UI.Social.FollowButtonLive, assigns |> assigns_merge(%{ id: e(@character, :id, nil), label: ""})) %>
+    <% end %>
+
   </div>
 </div>
