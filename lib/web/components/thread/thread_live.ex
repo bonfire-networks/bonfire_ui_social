@@ -11,7 +11,7 @@ defmodule Bonfire.UI.Social.ThreadLive do
   def update(%{replies: replies, threaded_replies: threaded_replies} = assigns, socket) when is_list(replies) and length(replies)>0 and is_list(threaded_replies) and length(threaded_replies)>0 do
     IO.inspect("preloaded replies")
     {:ok, assign(socket, assigns |> assigns_merge(%{
-      reply_to_thread_id: e(assigns, :activity, :thread_post_content, :id, nil) || e(assigns, :thread_id, nil), # TODO: change for thread forking?
+      reply_to_thread_id: e(assigns, :activity, :replied, :thread_id, nil) || e(assigns, :thread_id, nil), # TODO: change for thread forking?
       thread_max_depth: @thread_max_depth
     })) }
   end
@@ -23,7 +23,7 @@ defmodule Bonfire.UI.Social.ThreadLive do
     {:ok, assign(socket, assigns |> assigns_merge(%{
       replies: replies,
       threaded_replies: Bonfire.Social.Posts.arrange_replies_tree(replies),
-      reply_to_thread_id: e(assigns, :activity, :thread_post_content, :id, nil) || e(assigns, :thread_id, nil), # TODO: change for thread forking?
+      reply_to_thread_id: e(assigns, :activity, :replied, :thread_id, nil) || e(assigns, :thread_id, nil), # TODO: change for thread forking?
       thread_max_depth: @thread_max_depth
     })) }
   end
@@ -53,7 +53,7 @@ defmodule Bonfire.UI.Social.ThreadLive do
         |> assign(
           thread_id: thread_id,
           activity: activity,
-          reply_to_thread_id: e(activity, :thread_post_content, :id, nil) || thread_id, # TODO: change for thread forking?
+          reply_to_thread_id: e(activity, :replied, :thread_id, nil) || thread_id, # TODO: change for thread forking?
           current_user: current_user,
           page: "thread",
           replies: replies || [],

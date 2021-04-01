@@ -13,13 +13,13 @@
           </a>
 
 
-        <%= if e(@activity, :thread_post_content, nil) && e(@activity, :thread_post_content, nil) != e(@activity, :reply_to_post_content, nil) do %>
+        <%= if e(@activity, :replied, :thread_id, nil) && e(@activity, :replied, :thread_id, nil) != e(@activity, :replied, :reply_to_id, nil) do %>
           <div class="p-4 m-3 rounded-md bg-blue-50">
             <div class="flex">
               <div class="flex-1 text-center md:flex md:justify-between">
                 <p class="flex-1 block text-sm text-blue-700">
-                  <%= live_redirect to: "/discussion/"<> e(@activity, :thread_post_content, :id, "") do %> <span class="font-medium text-blue-700 whitespace-nowrap hover:text-blue-600">View entire discussion <span aria-hidden="true">&rarr;</span></span>
-                  <em><%= e(@activity, :thread_post_content, :name, nil) || e(@activity, :thread_post_content, :summary, nil) || e(@activity, :thread_post_content, :html_body, "") %>...</em>
+                  <%= live_redirect to: "/discussion/"<> e(@activity, :replied, :thread_post_content, :id, "") do %> <span class="font-medium text-blue-700 whitespace-nowrap hover:text-blue-600">View entire discussion <span aria-hidden="true">&rarr;</span></span>
+                  <em><%= e(@activity, :replied, :thread_post_content, :name, nil) || e(@activity, :replied, :thread_post_content, :summary, nil) || e(@activity, :replied, :thread_post_content, :html_body, "") %>...</em>
                     <% end %>
                 </p>
               </div>

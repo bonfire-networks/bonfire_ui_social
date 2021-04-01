@@ -14,7 +14,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
       verb = e(activity, :verb, :verb, "post") |> verb_maybe_modify(activity)
 
       components = component_activity_subject(verb, activity, assigns)
-      ++ component_reply_to(verb, activity)
+      ++ component_maybe_reply_to(verb, activity)
       ++ component_object(verb, activity)
       ++ component_actions(verb, activity, assigns)
 
@@ -71,46 +71,82 @@ defmodule Bonfire.UI.Social.ActivityLive do
 
   def component_activity_subject(_, _, _), do: [Bonfire.UI.Social.Activity.SubjectLive]
 
-  def component_activity_maybe_creator(%{object_creator_profile: %{id: _}}), do: Bonfire.UI.Social.Activity.CreatorLive
+  def component_activity_maybe_creator(%{created: %{creator_profile: %{id: _}}}), do: Bonfire.UI.Social.Activity.CreatorLive
   def component_activity_maybe_creator(_), do: nil
 
-  def component_reply_to(verb,
+  def component_maybe_reply_to(verb,
     %{
       id: activity_id,
-      reply_to_post_content: %{id: reply_id} = reply_to_post_content,
-      reply_to_creator_character: %{id: _} = reply_to_creator_character,
-      reply_to_creator_profile: %{id: _} = reply_to_creator_profile
+      replied: %{
+        reply_to_id: reply_to_id,
+        reply_to_post_content: %{id: _} = reply_to_post_content,
+        reply_to_created: %{
+          creator_character: %{id: _} = subject_character,
+          creator_profile: %{id: _} = subject_profile
+        }
+      }
     } )
   when verb in ["reply","respond"], do: [ # post reply
     # {Bonfire.UI.Social.Activity.SubjectLive, %{verb: verb}},
     {Bonfire.UI.Social.ActivityLive, %{
       activity_inception: true,
-      id: activity_id <> reply_id,
+      id: activity_id <> reply_to_id,
       viewing_main_object: false,
       activity: %{
         object: reply_to_post_content,
         object_post_content: reply_to_post_content,
-        subject_profile: reply_to_creator_profile,
-        subject_character: reply_to_creator_character,
+        subject_profile: subject_profile,
+        subject_character: subject_character,
     }}},
     # Bonfire.UI.Social.Activity.SubjectLive
   ]
 
-  def component_reply_to(verb, %{
+  def component_maybe_reply_to(verb, %{
     id: activity_id,
-    reply_to: %{id: reply_id} = reply_to
+    replied: %{
+      reply_to_id: reply_to_id,
+      reply_to_created: %{
+        creator_character: %{id: _} = subject_character,
+        creator_profile: %{id: _} = subject_profile
+      }
+    } = replied
   })
-  when verb in ["reply","respond"], do: [ # other kind of reply
+  when verb in ["reply","respond"] and not is_nil(reply_to_id), do: [ # other kind of reply
     # {Bonfire.UI.Social.Activity.SubjectLive, %{verb: verb}},
     {Bonfire.UI.Social.ActivityLive, %{
       activity_inception: true,
-      id: activity_id <> reply_id,
-      activity: load_reply_to(reply_to),
+      id: activity_id <> reply_to_id,
+      viewing_main_object: false,
+      activity: %{
+        object: load_object(e(replied, :reply_to, reply_to_id)),
+        subject_profile: subject_profile,
+        subject_character: subject_character,
+    }
+    }},
+    # Bonfire.UI.Social.Activity.SubjectLive
+  ]
+
+  def component_maybe_reply_to(verb, %{
+    id: activity_id,
+    replied: %{
+      reply_to_id: reply_to_id,
+    } = replied
+  })
+  when verb in ["reply","respond"] and not is_nil(reply_to_id), do: [ # other kind of reply
+    # {Bonfire.UI.Social.Activity.SubjectLive, %{verb: verb}},
+    {Bonfire.UI.Social.ActivityLive, %{
+      activity_inception: true,
+      id: activity_id <> reply_to_id,
+      activity: load_reply_to(e(replied, :reply_to, reply_to_id)),
       viewing_main_object: false
     }},
     # Bonfire.UI.Social.Activity.SubjectLive
   ]
-  def component_reply_to(_, _), do: []
+  def component_maybe_reply_to(verb, a) do
+    # IO.inspect(not_reply_verb: verb)
+    # IO.inspect(not_reply: a)
+    []
+  end
 
   def component_object(_, %{object: %Bonfire.Data.Social.Post{}}), do: [Bonfire.UI.Social.Activity.NoteLive]
   def component_object(_, %{object_post_content: %{id: _}}), do: [Bonfire.UI.Social.Activity.NoteLive]
@@ -131,13 +167,13 @@ defmodule Bonfire.UI.Social.ActivityLive do
   def object(%{object_id: id}), do: load_object(id) # any non-preloaded pointable object
   def object(_), do: nil
 
-  def load_reply_to(%Pointers.Pointer{} = reply_to) do
+  def load_reply_to(reply_to) do
     object = load_object(reply_to)
 
     %{
       object: object,
-      subject_profile: e(object, :creator_profile, nil),
-      subject_character: e(object, :creator_character, nil)
+      subject_profile: e(object, :created, :creator_profile, nil),
+      subject_character: e(object, :created, :creator_character, nil)
     }
   end
 
@@ -145,15 +181,15 @@ defmodule Bonfire.UI.Social.ActivityLive do
     with {:ok, obj} <- Bonfire.Common.Pointers.get(id_or_pointer)
       # TODO: avoid so many queries
       |> repo().maybe_preload([:post_content])
-      |> repo().maybe_preload([:creator_profile, :creator_character])
+      |> repo().maybe_preload([created: [:creator_profile, :creator_character]])
       |> repo().maybe_preload([:profile, :character]) do
         obj
       else _ -> nil
       end
   end
 
-  def verb_maybe_modify("create", %{reply_to_post_content: %{id: _} = reply_to}), do: "reply"
-  def verb_maybe_modify("create", %{reply_to: %{id: _} = reply_to}), do: "respond"
+  def verb_maybe_modify("create", %{replied: %{reply_to_post_content: %{id: _} = _reply_to}}), do: "reply"
+  def verb_maybe_modify("create", %{replied: %{reply_to: %{id: _} = _reply_to}}), do: "respond"
   # def verb_maybe_modify("created", %{reply_to: %{id: _} = reply_to, object: %Bonfire.Data.Social.Post{}}), do: reply_to_display(reply_to)
   # def verb_maybe_modify("created", %{reply_to: %{id: _} = reply_to}), do: reply_to_display(reply_to)
   def verb_maybe_modify("create", %{object: %Bonfire.Data.Social.PostContent{name: name} = post}), do: "write" #<> object_link(name, post)
