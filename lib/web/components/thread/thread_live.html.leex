@@ -1,14 +1,5 @@
 
-<div class="px-3">
-  <%= live_component(@socket, Bonfire.UI.Social.CreateActivityLive,
-    current_user: @current_user,
-    reply_to_thread_id: @reply_to_thread_id,
-    reply_to_id: @thread_id,
-    target_component: @myself) %>
-</div>
-
-
-<div id="replies" class="pt-3 mt-6 border-t">
+<div id="replies" class="border-t flex-1">
   <%= if e(@page_info, :before, nil) do %>
   <div class="flex justify-center p-3 mx-auto place-items-center">
     <a phx-click="post_load_more" phx-value-after="<%= e(@page_info, :before, nil) %>" href="?post[cursor][before]=<%= e(@page_info, :before, nil) %>" class="relative inline-flex items-center px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md hover:bg-gray-50">Load previous comments</a>
@@ -33,3 +24,12 @@
     <a phx-click="post_load_more" phx-value-after="<%= e(@page_info, :after, nil) %>" href="?post[cursor][after]=<%= e(@page_info, :after, nil) %>" class="relative inline-flex items-center px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md hover:bg-gray-50">Load more</a>
   </div>
   <% end %>
+
+  <div class="sticky bottom-0 z-10 p-3 border-t bg-white">
+    <%= live_component(@socket, Bonfire.UI.Social.CreateActivityLive,
+      current_user: @current_user,
+      reply_to_thread_id: @reply_to_thread_id,
+      reply_to_id: @thread_id,
+
+      target_component: @myself) %>
+  </div>

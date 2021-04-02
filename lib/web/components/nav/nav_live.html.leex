@@ -20,11 +20,8 @@
         <div class="place-content-center flex max-w-screen-xl mx-auto">
           <%= live_component(@socket, Bonfire.UI.Social.SidebarLive, assigns) %>
           <div class="flex">
-            <div class="mb-16">
-              <%# = live_component(@socket, Bonfire.UI.Social.SmartInputLive, assigns) %>
-              <div class="p-4 lg:p-0">
-                <%= @inner_content %>
-              </div>
+            <div class="p-4 lg:p-0">
+              <%= @inner_content %>
             </div>
           </div>
         </div>

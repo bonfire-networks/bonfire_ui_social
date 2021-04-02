@@ -65,7 +65,6 @@ defmodule Bonfire.UI.Social.ThreadLive do
     end
   end
 
-
   def handle_event(action, attrs, socket), do: Bonfire.Web.LiveHandler.handle_event(action, attrs, socket, __MODULE__)
   def handle_info(info, socket), do: Bonfire.Web.LiveHandler.handle_info(info, socket, __MODULE__)
 
