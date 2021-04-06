@@ -1,8 +1,6 @@
-<section class="sticky top-0 z-10 p-3 mb-4 bg-white rounded-b-lg shadow">
-  <h1 class="text-xl font-semibold tracking-wide text-gray-700 "><%= @page_title %></h1>
+
   <%= if @smart_input do %>
     <div class="px-3 pt-3 mt-3 -mx-3 border-t">
       <%= live_component(@socket, Bonfire.UI.Social.CreateActivityLive, assigns) %>
     </div>
   <% end %>
-</section>
