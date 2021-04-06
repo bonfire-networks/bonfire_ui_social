@@ -63,10 +63,10 @@
 
         <div class="pb-5 border-b">
           <h5 class="text-xs font-bold text-gray-700 mb-2">Notification</h5>
-
-          <%= if e(@activity, :replied, :thread_id, nil), do: live_component(@socket, Bonfire.UI.Social.FollowButtonLive, following: e(assigns, :following, []), id: e(@activity, :replied, :thread_id, nil), label: "entire discussion", class: "w-full flex flex-1 text-center btn-secondary place-content-center") %>
-          <%= if e(@activity, :object_id, nil) && e(@activity, :object_id, nil) != e(@activity, :replied, :thread_id, nil), do: live_component(@socket, Bonfire.UI.Social.FollowButtonLive, following: e(assigns, :following, []), id: e(@activity, :object_id, nil), label: "this sub-thread", class: "w-full flex flex-1 text-center btn-secondary place-content-center") %>
-
+          <div class="flex flex-col space-y-3">
+            <%= if e(@activity, :replied, :thread_id, nil), do: live_component(@socket, Bonfire.UI.Social.FollowButtonLive, following: e(assigns, :following, []), id: e(@activity, :replied, :thread_id, nil), label: "entire discussion", class: "w-full flex flex-1 text-center btn-secondary place-content-center") %>
+            <%= if e(@activity, :object_id, nil) && e(@activity, :object_id, nil) != e(@activity, :replied, :thread_id, nil), do: live_component(@socket, Bonfire.UI.Social.FollowButtonLive, following: e(assigns, :following, []), id: e(@activity, :object_id, nil), label: "this sub-thread", class: "w-full flex flex-1 text-center btn-secondary place-content-center") %>
+          </div>
         </div>
 
         <div class="pb-5 mt-5 border-b">
