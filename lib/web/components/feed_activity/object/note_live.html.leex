@@ -13,21 +13,18 @@
         <button
           @click="{content_open = true}"
           x-show="content_open == false"
-          class="text-sm font-semibold text-gray-800 hover:underline flex items-center">
+          class="text-sm font-semibold text-gray-800 hover:underline flex text-left items-center">
           <%= e(@activity, :object_post_content, :name, "Title") %> (Read more)
-          <svg class="w-4 h-4 ml-1 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 13l-7 7-7-7m14-8l-7 7-7-7"></path></svg>
         <button
           @click="{content_open = false}"
           x-show="content_open"
-          class="text-sm font-semibold text-gray-800 hover:underline flex items-center">
+          class="text-sm font-semibold text-gray-800 hover:underline flex text-left items-center">
           <%= e(@activity, :object_post_content, :name, "Title") %> (Read less)
-          <svg class="w-4 h-4 ml-1 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 11l7-7 7 7M5 19l7-7 7 7"></path></svg>
-
         </button>
-        <div class="prose-sm max-w-prose">
+        <div class="prose-sm max-w-prose font-light">
           <%= e(@activity, :object_post_content, :summary, "") %>
         </div>
-        <div x-show.transition="content_open" class="py-3 prose-sm max-w-prose">
+        <div x-show.transition="content_open" class="prose-sm max-w-prose">
           <%= e(@activity, :object_post_content, :html_body, "") %>
         </div>
 
