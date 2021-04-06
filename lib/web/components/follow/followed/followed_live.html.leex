@@ -2,7 +2,7 @@
 <div>
   <div class="flow-root my-4">
     <ul class="-my-5 divide-y divide-gray-200">
-      <%= for follow <- @follows do %>
+      <%= for follow <- @followed do %>
         <li class="px-3 py-4">
 
           <%= live_component(@socket, Bonfire.UI.Social.ProfileItemLive, assigns |> assigns_merge(%{ profile: e(follow, :followed_profile, nil), character: e(follow, :followed_character, nil), following: [e(follow, :followed_character, :id, nil)] })) %>

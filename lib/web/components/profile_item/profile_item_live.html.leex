@@ -14,7 +14,7 @@
   </div>
   <div>
     <%= if @current_user && maybe_get(@current_user, :id) != maybe_get(@character, :id) do %>
-      <%= live_component(@socket, Bonfire.UI.Social.FollowButtonLive, assigns |> assigns_merge(%{ id: e(@character, :id, nil), label: ""})) %>
+      <%= live_component(@socket, Bonfire.UI.Social.FollowButtonLive, assigns |> assigns_merge(%{ label: ""})) %>
     <% end %>
 
   </div>

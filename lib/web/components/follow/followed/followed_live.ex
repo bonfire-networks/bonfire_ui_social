@@ -6,7 +6,7 @@ defmodule Bonfire.UI.Social.FollowedLive do
 
     {:ok, assign(socket, assigns
     |> assigns_merge(%{
-      follows: followed
+      followed: followed
       })) }
   end
 end

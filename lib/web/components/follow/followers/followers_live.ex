@@ -6,7 +6,7 @@ defmodule Bonfire.UI.Social.FollowersLive do
 
     {:ok, assign(socket, assigns
     |> assigns_merge(%{
-      follows: followers,
+      followers: followers,
       } ) ) }
   end
 end

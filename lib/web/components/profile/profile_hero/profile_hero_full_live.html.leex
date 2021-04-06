@@ -54,7 +54,7 @@
           <span class="ml-2 text-sm text-gray-500 mr-2 hover:underline"> <strong class="text-gray-800"><%= e(@user, :character, :follow_count, :follower_count, 0) %></strong> Followers </span>
         <% end %>
         ·
-        <%= live_patch to: "/user/" <>  e(@user, :character, :username, "") <> "/following" do %>
+        <%= live_patch to: "/user/" <>  e(@user, :character, :username, "") <> "/followed" do %>
           <span class="ml-2 text-sm text-gray-500 hover:underline"> <strong class="text-gray-800"><%= e(@user, :character, :follow_count, :follow_count, 0) %></strong> Following</span>
         <% end %>
       </div>
