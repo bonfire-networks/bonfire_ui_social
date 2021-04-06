@@ -1,10 +1,19 @@
 <div class="reply thread-level-<%= @thread_level %> flex relative">
   <div class="flex-1 w-full relative comment_lined">
 
+    <div x-data="{reply: false}">
       <div class="flex items-center">
         <%= live_component(@socket, Bonfire.UI.Social.ActivityLive, id: "comment-"<>e(@comment, :id, ""), activity: @activity, reply_to_thread_id: @reply_to_thread_id, reply_click: "reply = !reply; return false;", current_user: @current_user, showing_within_thread: true) %>
       </div>
-
+      <div x-show="reply" class="ml-8 p-3 -mt-3">
+        <%= live_component(@socket, Bonfire.UI.Social.CreateActivityLive,
+        current_user: @current_user,
+        reply_to_thread_id: @reply_to_thread_id,
+        reply_to_id: e(@comment, :id, nil),
+        showing_within_thread: true,
+        target_component: @target_component) %>
+      </div>
+    </div>
 
     <div class="replies replies-level-<%= @thread_level+1 %> ml-8">
       <%= if is_list(@child_replies) and length(@child_replies)>0 do %>

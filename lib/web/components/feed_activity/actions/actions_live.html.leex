@@ -122,22 +122,19 @@
 
 
    <div class="flex ml-8 space-x-4 items-center">
-    <%= if !e(assigns, :hide_reply , nil) do %>
-      <%= if e(assigns, :reply_click , nil) do %>
-      <div
-        phx-click="create_reply"
-        phx-value-id="<%= e(@object, :id, "") %>"
-        class="flex items-center py-1 rounded cursor-pointer group">
-        <span class="text-xs font-normal text-gray-500 group-hover:text-pink-600">Reply (<%= e(@activity, :replied, :direct_replies_count, 0) %>)</span>
-      </div>
-      <% else %>
-        <%= live_redirect to: @permalink do %>
-          <div class="flex items-center py-1 rounded cursor-pointer group">
-            <span class="text-xs font-normal text-gray-500 group-hover:text-pink-600">Reply (<%= e(@activity, :replied, :direct_replies_count, 0) %>)</span>
-          </div>
+      <%= if !e(assigns, :hide_reply , nil) do %>
+        <%= if e(assigns, :reply_click , nil) do %>
+        <a href="<%= @permalink %>" @click="<%=e(assigns, :reply_click, "") %>" class="flex items-center py-1 rounded cursor-pointer group">
+          <span class="text-xs font-normal text-gray-500 group-hover:text-pink-600">Reply (<%= e(@activity, :replied, :direct_replies_count, 0) %>)</span>
+        </a>
+        <% else %>
+          <%= live_redirect to: @permalink do %>
+            <div class="flex items-center py-1 rounded cursor-pointer group">
+              <span class="text-xs font-normal text-gray-500 group-hover:text-pink-600">Reply (<%= e(@activity, :replied, :direct_replies_count, 0) %>)</span>
+            </div>
+          <% end %>
         <% end %>
-      <% end %>
-    <% end %>
+  <% end %>
 
     <%= if @current_user do %>
 
