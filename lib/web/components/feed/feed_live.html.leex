@@ -6,13 +6,13 @@
         <span class="font-medium text-base text-gray-700">Take a deep breath...<span>
       </div>
     <% else %>
-      <%= for activity <- @feed do %>
+      <%= for entry <- @feed do %>
       <div class="px-3 border-b">
         <%= live_component(
         @socket,
         ActivityLive,
-        id: e(activity, :activity, :id, e(activity, :id, nil)),
-        activity: e(activity, :activity, activity),
+        id: e(entry, :activity, :id, e(entry, :id, nil)),
+        activity: e(entry, :activity, entry),# |> IO.inspect,
         current_user: @current_user
       ) %>
       </div>

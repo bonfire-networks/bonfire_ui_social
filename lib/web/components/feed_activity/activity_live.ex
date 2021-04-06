@@ -90,7 +90,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
     # {Bonfire.UI.Social.Activity.SubjectLive, %{verb: verb}},
     {Bonfire.UI.Social.ActivityLive, %{
       activity_inception: true,
-      id: activity_id <> reply_to_id,
+      id: activity_id <> "-reply-post-" <> reply_to_id,
       viewing_main_object: false,
       activity: %{
         object: reply_to_post_content,
@@ -115,7 +115,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
     # {Bonfire.UI.Social.Activity.SubjectLive, %{verb: verb}},
     {Bonfire.UI.Social.ActivityLive, %{
       activity_inception: true,
-      id: activity_id <> reply_to_id,
+      id: activity_id <> "-reply-" <> reply_to_id,
       viewing_main_object: false,
       activity: %{
         object: load_object(e(replied, :reply_to, reply_to_id)),
@@ -136,7 +136,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
     # {Bonfire.UI.Social.Activity.SubjectLive, %{verb: verb}},
     {Bonfire.UI.Social.ActivityLive, %{
       activity_inception: true,
-      id: activity_id <> reply_to_id,
+      id: activity_id <> "-reply-" <> reply_to_id,
       activity: load_reply_to(e(replied, :reply_to, reply_to_id)),
       viewing_main_object: false
     }},
