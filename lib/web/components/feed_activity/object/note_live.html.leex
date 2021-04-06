@@ -33,7 +33,7 @@
           x-transition:leave-start="transform opacity-100 scale-100"
           x-transition:leave-end="transform opacity-0 scale-95"
           class="prose-sm max-w-prose">
-          <%= e(@activity, :object_post_content, :html_body, "") %>
+          <%= raw e(@activity, :object_post_content, :html_body, "") %>
         </div>
 
       <% else %>
@@ -52,7 +52,7 @@
         <% end %>
 
         <article class='<%= if e(assigns, :viewing_main_object, nil), do: "prose max-w-prose", else: "prose-sm max-w-prose" %>'>
-          <%= e(@activity, :object_post_content, :html_body, "...") %>
+          <%= raw e(@activity, :object_post_content, :html_body, "...") %>
         </article>
       <% end %>
 

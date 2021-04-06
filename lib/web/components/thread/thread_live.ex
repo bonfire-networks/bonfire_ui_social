@@ -22,7 +22,7 @@ defmodule Bonfire.UI.Social.ThreadLive do
     replies = e(socket, assigns, :replies, []) ++ previous_replies
     {:ok, assign(socket, assigns |> assigns_merge(%{
       replies: replies,
-      threaded_replies: Bonfire.Social.Posts.arrange_replies_tree(replies),
+      threaded_replies: Bonfire.Social.Threads.arrange_replies_tree(replies),
       reply_to_thread_id: e(assigns, :activity, :replied, :thread_id, nil) || e(assigns, :thread_id, nil), # TODO: change for thread forking?
       thread_max_depth: @thread_max_depth
     })) }
@@ -44,8 +44,8 @@ defmodule Bonfire.UI.Social.ThreadLive do
       activity = e(assigns, :activity, nil)
       current_user = e(assigns, :current_user, nil)
 
-      with %{entries: replies, metadata: page_info} <- Bonfire.Social.Posts.list_replies(thread_id, current_user, e(assigns, :after, nil), @thread_max_depth) do
-        threaded_replies = if is_list(replies) and length(replies)>0, do: Bonfire.Social.Posts.arrange_replies_tree(replies), else: []
+      with %{entries: replies, metadata: page_info} <- Bonfire.Social.Threads.list_replies(thread_id, current_user, e(assigns, :after, nil), @thread_max_depth) do
+        threaded_replies = if is_list(replies) and length(replies)>0, do: Bonfire.Social.Threads.arrange_replies_tree(replies), else: []
         #IO.inspect(replies, label: "REPLIES:")
 
         {:ok,
