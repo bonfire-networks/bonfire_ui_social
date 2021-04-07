@@ -1,17 +1,20 @@
 <div class="bg-white rounded-lg shadow overflow-hidden sm:rounded-md">
   <ul class="divide-y divide-gray-200">
+
+        <%= for %{activity: activity} <- @feed do %>
+
     <li>
       <a href="#" class="block hover:bg-gray-50">
         <div class="px-3 py-4 flex items-center">
           <div class="min-w-0 flex-1 sm:flex sm:items-center sm:justify-between">
             <div class="truncate">
               <div class="flex text-sm">
-                <p class="font-medium text-pink-600 truncate">Peggy Duddhenaim, Quentin Jack, Silver Star, Black Panther, Sloppy Joe</p>
+                <p class="font-medium text-pink-600 truncate"><%= e(activity, :subject_profile, :name, nil) %></p>
               </div>
               <div class="mt-1">
-                <p class="text-sm text-gray-600 font-regular truncate">vent'anni, i giorni più belli della nostra vita, una storia e i sobborghi di roma come scenario.. una stanza che era un mondo intero. A letto fumando e te come sottofondo ci bastava ed era tutto.. quante volte abbiam fatto l'amore con te. Grazie Sandro</p>
+                <p class="text-sm text-gray-600 font-regular truncate"><em><%= e(activity, :object_post_content, :name, nil) || e(activity, :object_post_content, :summary, nil) || raw e(activity, :object_post_content, :html_body, "") %>...</em> </p>
                 <div class="flex items-center text-xs text-gray-500 mt-1">
-                  <p><time datetime="2020-01-07">Last activity January 7, 2020</time></p>
+                  <p><time datetime="2020-01-07">Last activity <%= date_from_now(activity)%></time></p>
                 </div>
               </div>
             </div>
@@ -36,6 +39,9 @@
         </div>
       </a>
     </li>
+          <% end %>
+
+
     <li>
       <a href="#" class="block hover:bg-gray-50">
         <div class="px-3 py-4 flex items-center">

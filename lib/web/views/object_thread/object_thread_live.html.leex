@@ -27,16 +27,20 @@
           </div>
         <% end %>
 
-          <%= live_component(@socket, Bonfire.UI.Social.ActivityLive, id: "main-"<>e(@activity, :id, ""), activity: @activity, viewing_main_object: true, hide_reply: true, current_user: @current_user) %>
+          <%= live_component(@socket, Bonfire.UI.Social.ActivityLive,
+          assigns
+            |> assigns_merge(
+              id: "main-"<>e(@activity, :id, ""),
+              viewing_main_object: true,
+              hide_reply: true
+            )) %>
+
           <%= live_component(@socket, Bonfire.UI.Social.ThreadLive,
-            id: "post-thread-"<>e(@object, :id, ""),
-            thread_id: e(@object, :id, ""),
-            reply_id: @reply_id,
-            activity: @activity,
-            current_user: @current_user,
-            replies: e(assigns, :replies, []),
-            threaded_replies: e(assigns, :threaded_replies, []),
-            page_info: e(assigns, :page_info, nil)
+            assigns
+            |> assigns_merge(
+              id: "post-thread-"<>e(@object, :id, ""),
+              thread_id: e(@object, :id, ""),
+            )
           ) %>
 
         </section>

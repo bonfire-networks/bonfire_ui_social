@@ -49,8 +49,8 @@ defmodule Bonfire.UI.Social.ThreadLive do
         #IO.inspect(replies, label: "REPLIES:")
 
         {:ok,
-        socket
-        |> assign(
+        assign(socket, assigns
+        |> assigns_merge(
           thread_id: thread_id,
           activity: activity,
           reply_to_thread_id: e(activity, :replied, :thread_id, nil) || thread_id, # TODO: change for thread forking?
@@ -60,7 +60,7 @@ defmodule Bonfire.UI.Social.ThreadLive do
           threaded_replies: threaded_replies,
           page_info: page_info,
           thread_max_depth: @thread_max_depth
-        )}
+        ))}
       end
     end
   end

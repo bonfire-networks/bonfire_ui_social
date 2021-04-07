@@ -13,7 +13,7 @@
       <form class="flex-1 ml-3 " phx-submit="post" <%= if e(assigns, :target_component, nil), do: "phx-target=#{e(assigns, :target_component, nil)}" %>>
       <div>
         <div
-          x-description="create post form">
+          x-description="create activity form">
           <div
             x-show.transition="title_open"
             class="mb-3">
@@ -31,6 +31,10 @@
 
               <input type="hidden" name="reply_to[reply_to_id]" value="<%= e(assigns, :reply_to_id, "") %>" />
               <input type="hidden" name="reply_to[thread_id]" value="<%= e(assigns, :reply_to_thread_id, "") %>" />
+              <input type="hidden" name="is_private" value="<%= if e(assigns, :smart_input_private, nil), do: "1", else: "0" %>" />
+              <%= for circle_id <- e(assigns, :to_circle_ids, []) do  %>
+                <input type="hidden" name="circles[]" value="<%= circle_id %>" />
+              <% end %>
 
             <textarea
               x-show.transition="summary_open"
@@ -46,7 +50,7 @@
             @click = "open = true"
             placeholder="<%= e(assigns, :smart_input_placeholder, "Write something meaningful") %>"
             :class="{'h-40' : open === true}"
-            class="block w-full h-10 text-sm transition-all duration-300 ease-in-out border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500"></textarea>
+            class="block w-full h-10 text-sm transition-all duration-300 ease-in-out border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500"><%=e(assigns, :smart_input_text, "")%></textarea>
           <div
             x-show="open"
             class="flex items-center mt-2">
@@ -77,7 +81,7 @@
               @click="{open = false; title_open = false}"
               type="submit"
               class="btn-primary">
-              Publish
+              <%= if e(assigns, :smart_input_private, nil), do: "Send", else: "Publish" %>
             </button>
           </div>
         </div>

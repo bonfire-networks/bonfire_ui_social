@@ -3,15 +3,22 @@
 
     <div x-data="{reply: false}">
       <div class="flex items-center">
-        <%= live_component(@socket, Bonfire.UI.Social.ActivityLive, id: "comment-"<>e(@comment, :id, ""), activity: @activity, reply_to_thread_id: @reply_to_thread_id, reply_click: "reply = !reply; return false;", current_user: @current_user, showing_within_thread: true) %>
+        <%= live_component(@socket, Bonfire.UI.Social.ActivityLive,
+          assigns
+          |> assigns_merge(
+            id: "comment-"<>e(@comment, :id, ""),
+            reply_click: "reply = !reply; return false;",
+            showing_within_thread: true
+          )) %>
       </div>
       <div x-show="reply" class="ml-8 p-3 -mt-3">
         <%= live_component(@socket, Bonfire.UI.Social.CreateActivityLive,
-        current_user: @current_user,
-        reply_to_thread_id: @reply_to_thread_id,
-        reply_to_id: e(@comment, :id, nil),
-        showing_within_thread: true,
-        target_component: @target_component) %>
+        assigns
+        |> assigns_merge(
+          reply_to_id: e(@comment, :id, nil),
+          showing_within_thread: true,
+          to_circle_ids: e(assigns, :to_circle_ids, []) ++ [e(@activity, :subject_character, :id, nil)]
+        ))  %>
       </div>
     </div>
 
@@ -19,14 +26,14 @@
       <%= if is_list(@child_replies) and length(@child_replies)>0 do %>
           <%= for {subreply, sub_child_replies} <- @child_replies do %>
             <%= live_component(@socket, Bonfire.UI.Social.CommentLive,
-            current_user: @current_user,
-            thread_id: @thread_id,
-            reply_to_thread_id: @reply_to_thread_id,
-            comment: subreply,
-            child_replies: sub_child_replies,
-            thread_max_depth: @thread_max_depth,
-            thread_level: @thread_level+1,
-            target_component: @target_component) %>
+            assigns
+            |> assigns_merge(
+              reply_to_id: e(@comment, :id, nil),
+              showing_within_thread: true,
+              comment: subreply,
+              child_replies: sub_child_replies,
+              thread_level: @thread_level+1,
+          )) %>
           <% end %>
 
       <%= else %>
