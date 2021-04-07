@@ -22,7 +22,9 @@ defmodule Bonfire.UI.Social.SettingsViewsLive.ExtensionsLive do
     {:ok, assign(socket,
       extensions: extensions,
       schemas: schemas,
-      other_deps: other_deps
+      other_deps: other_deps,
+      settings_section_title: "Bonfire Extensions",
+      settings_section_description: "These are the extensions currently installed on this instance."
    ) }
   end
 

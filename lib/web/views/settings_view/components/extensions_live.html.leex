@@ -1,12 +1,7 @@
 <div class="divide-y divide-gray-200 lg:col-span-9">
   <!-- Profile section -->
   <div class="px-4 py-6 sm:p-6 lg:pb-8">
-    <div>
-      <h2 class="text-lg font-medium leading-6 text-gray-900">Bonfire Extensions</h2>
-      <p class="mt-1 text-sm text-gray-500">
-        These are the extensions currently installed on this instance.
-      </p>
-    </div>
+    <%= live_component(@socket, Bonfire.UI.Social.SettingsViewLive.SettingsHeaderLive, assigns) %>
     <div class="flex flex-col lg:flex-row">
       <div class="flex-grow lg:mt-0 lg:mr-6 lg:flex-grow-0 lg:flex-shrink-0">
       <%= for dep <- @extensions do %>

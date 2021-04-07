@@ -2,8 +2,8 @@
     <div class="overflow-hidden bg-white">
       <div class="divide-y divide-gray-200 lg:grid lg:grid-cols-10 lg:divide-y-0 lg:divide-x">
 
-        <aside class="py-6 lg:col-span-2 bg-blueGray-800">
-          <nav class="fixed h-full flex flex-col flex-grow overflow-y-auto">
+        <aside class="py-6 lg:col-span-2 min-h-screen bg-blueGray-800">
+          <nav class="fixed h-full flex  flex-col flex-grow overflow-y-auto">
 
             <%= live_patch to: "/dashboard" do %>
               <div class="flex items-center px-3 py-2 mt-0 text-sm font-medium  hover:text-gray-100 group text-gray-100">
@@ -107,7 +107,7 @@
         <% @selected_tab == "circle" ->  %>
            <%= live_component(
             @socket,
-            Bonfire.UI.Social.EditCircleLive,
+            Bonfire.UI.Social.ViewCircleLive,
             assigns
           )  %>
         <% @selected_tab == "extensions" ->  %>
@@ -117,7 +117,14 @@
             assigns
           )  %>
         <% @selected_tab == "preferences" ->  %>
-          <div>preferences</div>
+          <div class="px-4 py-6 sm:p-6 lg:pb-8">
+            <div>
+              <h2 class="text-lg font-medium leading-6 text-gray-900">Preferences</h2>
+              <p class="mt-1 text-sm text-gray-500">
+                  Here you can customize your own bonfire.
+              </p>
+            </div>
+          </div>
         <% true -> %>
 
         <%= if @current_user do %>

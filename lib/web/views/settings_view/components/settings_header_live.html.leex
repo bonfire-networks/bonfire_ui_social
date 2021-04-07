@@ -1,0 +1,13 @@
+<div class="border-b pb-4">
+  <div class="flex items-center">
+    <a href="javascript:window.history.back()">
+      <span class="w-8 h-8 items-center flex place-content-center hover:bg-pink-100 rounded-full">
+        <svg class="w-4 h-4 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path></svg>
+      </span>
+    </a>
+    <div class="ml-4">
+      <h2 class="text-base font-medium text-gray-800"><%= e(assigns, :settings_section_title, "Section title") %></h2>
+      <p class="text-sm text-gray-500"><%= e(assigns, :settings_section_description, "Section description") %></p>
+    </div>
+  </div>
+</div>
