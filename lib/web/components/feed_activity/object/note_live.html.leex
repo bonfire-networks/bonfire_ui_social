@@ -21,7 +21,7 @@
           class="text-sm font-semibold text-gray-800 hover:underline flex text-left items-center">
           <%= e(@activity, :object_post_content, :name, "Title") %> (Read less)
         </button>
-        <div class="prose-sm max-w-prose font-light">
+        <div class="prose prose-sm max-w-prose font-light">
           <%= e(@activity, :object_post_content, :summary, "") %>
         </div>
         <div
@@ -32,7 +32,7 @@
           x-transition:leave="transition ease-in duration-75"
           x-transition:leave-start="transform opacity-100 scale-100"
           x-transition:leave-end="transform opacity-0 scale-95"
-          class="prose-sm max-w-prose">
+          class="prose prose-sm max-w-prose">
           <%= raw e(@activity, :object_post_content, :html_body, "") %>
         </div>
 
@@ -47,11 +47,11 @@
         <%= if e(@activity, :object_post_content, :summary, nil) do %>
             <h3 class="mt-4 uppercase text-gray-600 tracking-wider text-xs">Summary</h3>
           <%= live_redirect to: @permalink do %>
-            <div class="mb-2 prose-sm max-w-prose text-gray-700"><%= e(@activity, :object_post_content, :summary, "") %></div>
+            <div class="mb-2 prose prose-sm max-w-prose text-gray-700"><%= e(@activity, :object_post_content, :summary, "") %></div>
           <% end %>
         <% end %>
 
-        <article class='<%= if e(assigns, :viewing_main_object, nil), do: "prose max-w-prose", else: "prose-sm max-w-prose" %>'>
+        <article class='<%= if e(assigns, :viewing_main_object, nil), do: "prose max-w-prose", else: "prose prose-sm max-w-prose" %>'>
           <%= raw e(@activity, :object_post_content, :html_body, "...") %>
         </article>
       <% end %>

@@ -10,10 +10,11 @@
       class="flex items-start">
 
       <img class="w-10 h-10 rounded-full" src="https://thispersondoesnotexist.com/image" alt="" />
-      <form class="flex-1 ml-3 " phx-submit="post" <%= if e(assigns, :target_component, nil), do: "phx-target=#{e(assigns, :target_component, nil)}" %>>
-      <div>
-        <div
-          x-description="create activity form">
+      <form
+        class="flex-1 ml-3"
+        phx-submit="post"
+        <%= if e(assigns, :target_component, nil), do: "phx-target=#{e(assigns, :target_component, nil)}" %>>
+        <div x-description="create post form">
           <div
             x-show.transition="title_open"
             class="mb-3">
@@ -85,7 +86,7 @@
             </button>
           </div>
         </div>
-      </div>
+
       </form>
     </div>
 <% end %>

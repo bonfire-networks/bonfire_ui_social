@@ -9,16 +9,17 @@
     )) %>
 </div>
 
-<div id="replies" class="pt-3 mt-6 border-t">
-  <%= if e(@page_info, :before, nil) do %>
-  <div class="flex justify-center p-3 mx-auto place-items-center">
-    <a phx-click="post_load_more" phx-value-after="<%= e(@page_info, :before, nil) %>" href="?post[cursor][before]=<%= e(@page_info, :before, nil) %>" class="relative inline-flex items-center px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md hover:bg-gray-50">Load previous comments</a>
-  </div>
-  <% end %>
+<% if length(@threaded_replies) > 0 do %>
+  <div id="replies" class="pt-3 mt-6 border-t">
+    <%= if e(@page_info, :before, nil) do %>
+    <div class="flex justify-center p-3 mx-auto place-items-center">
+      <a phx-click="post_load_more" phx-value-after="<%= e(@page_info, :before, nil) %>" href="?post[cursor][before]=<%= e(@page_info, :before, nil) %>" class="relative inline-flex items-center px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md hover:bg-gray-50">Load previous comments</a>
+    </div>
+    <% end %>
 
-  <%= for {reply, child_replies} <- @threaded_replies do %>
-    <%= live_component(@socket, Bonfire.UI.Social.CommentLive,
-    assigns
+    <%= for {reply, child_replies} <- @threaded_replies do %>
+      <%= live_component(@socket, Bonfire.UI.Social.CommentLive,
+      assigns
       |> assigns_merge(
         target_component: @myself,
         comment: reply,
@@ -26,9 +27,11 @@
         thread_level: 1,
         target_component: @myself
       )
-    ) %>
-  <% end %>
-</div>
+    )
+   %>
+    <% end %>
+  </div>
+<% end %>
 
   <%= if e(@page_info, :after, nil) do %>
   <div class="flex justify-center p-3 mx-auto place-items-center">

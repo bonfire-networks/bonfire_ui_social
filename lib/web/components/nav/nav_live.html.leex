@@ -2,14 +2,14 @@
   <% !@current_user and !@current_account -> %>
     <div class="">
       <%= live_component(@socket, Bonfire.UI.Social.HeaderGuestLive, assigns) %>
-      <div class="container max-w-screen-lg mx-auto">
+      <div class="container max-w-screen-lg mx-auto mt-6">
         <%= @inner_content %>
       </div>
     </div>
   <% !@current_user and @current_account -> %>
     <div class="">
       <%= live_component(@socket, Bonfire.UI.Social.HeaderAccountLive, assigns) %>
-      <div class="container max-w-screen-lg mx-auto">
+      <div class="container max-w-screen-lg mx-auto mt-6">
         <%= @inner_content %>
       </div>
     </div>
@@ -17,7 +17,7 @@
     <div class="flex flex-col">
       <%# = live_component(@socket, Bonfire.UI.Social.HeaderLive, assigns) %>
       <div class="">
-        <div class="place-content-center flex max-w-screen-xl mx-auto">
+        <div class="place-content-center space-x-4 flex max-w-screen-xl mx-auto">
           <%= live_component(@socket, Bonfire.UI.Social.SidebarLive, assigns) %>
           <div class="flex">
             <div class="p-4 lg:p-0">
