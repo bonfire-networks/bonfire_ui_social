@@ -1,8 +1,6 @@
 <div class="bg-white rounded-lg shadow overflow-hidden sm:rounded-md">
   <ul class="divide-y divide-gray-200">
-
-        <%= for %{activity: activity} <- @feed do %>
-
+    <%= for %{activity: activity} <- @feed do %>
     <li>
       <a href="/message/<%= e(activity, :object_id, nil) %>" class="block hover:bg-gray-50">
         <div class="px-3 py-4 flex items-center">
@@ -12,9 +10,9 @@
                 <p class="font-medium text-pink-600 truncate"><%= e(activity, :subject_profile, :name, nil) %></p>
               </div>
               <div class="mt-1">
-                <p class="text-sm text-gray-600 font-regular truncate"><em><%= e(activity, :object_post_content, :name, nil) || e(activity, :object_post_content, :summary, nil) || raw e(activity, :object_post_content, :html_body, "") %>...</em> </p>
+                <p class="text-sm text-gray-600 font-regular truncate"><%= e(activity, :object_post_content, :name, nil) || e(activity, :object_post_content, :summary, nil) %>...</p>
                 <div class="flex items-center text-xs text-gray-500 mt-1">
-                  <p><time datetime="2020-01-07">Last activity <%= date_from_now(activity)%></time></p>
+                  <p><time datetime="<%= date_from_now(activity)%>">Last activity <%= date_from_now(activity)%></time></p>
                 </div>
               </div>
             </div>
@@ -39,75 +37,12 @@
         </div>
       </a>
     </li>
-          <% end %>
 
 
-    <li>
-      <a href="#" class="block hover:bg-gray-50">
-        <div class="px-3 py-4 flex items-center">
-          <div class="min-w-0 flex-1 sm:flex sm:items-center sm:justify-between">
-            <div class="truncate">
-              <div class="flex text-sm">
-                <p class="font-medium text-pink-600 truncate">Desaparecidos</p>
-              </div>
-              <div class="mt-1">
-                <p class="text-sm text-gray-600 font-regular truncate">vent'anni, i giorni più belli della nostra vita, una storia e i sobborghi di roma come scenario.. una stanza che era un mondo intero. A letto fumando e te come sottofondo ci bastava ed era tutto.. quante volte abbiam fatto l'amore con te. Grazie Sandro</p>
-                <div class="flex items-center text-xs text-gray-500 mt-1">
-                  <p><time datetime="2020-01-07">Last activity 3 days ago</time></p>
-                </div>
-              </div>
-            </div>
-            <div class="mt-4 flex-shrink-0 sm:mt-0 sm:ml-5">
-              <div class="flex overflow-hidden -space-x-1">
-                <img class="inline-block h-6 w-6 rounded-full ring-2 ring-white" src="https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?ixlib=rb-1.2.1&ixqx=zBd4LgsYUu&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80" alt="Dries Vincent">
+    <% end %>
 
-                <img class="inline-block h-6 w-6 rounded-full ring-2 ring-white" src="https://images.unsplash.com/photo-1517841905240-472988babdf9?ixlib=rb-1.2.1&ixqx=zBd4LgsYUu&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80" alt="Lindsay Walton">
 
-                <img class="inline-block h-6 w-6 rounded-full ring-2 ring-white" src="https://images.unsplash.com/photo-1438761681033-6461ffad8d80?ixlib=rb-1.2.1&ixqx=zBd4LgsYUu&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80" alt="Courtney Henry">
 
-                <img class="inline-block h-6 w-6 rounded-full ring-2 ring-white" src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixqx=zBd4LgsYUu&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80" alt="Tom Cook">
-              </div>
-            </div>
-          </div>
-          <div class="ml-5 flex-shrink-0">
-            <!-- Heroicon name: solid/chevron-right -->
-            <svg class="h-5 w-5 text-gray-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
-              <path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd" />
-            </svg>
-          </div>
-        </div>
-      </a>
-    </li>
-    <li>
-      <a href="#" class="block hover:bg-gray-50">
-        <div class="px-3 py-4 flex items-center">
-          <div class="min-w-0 flex-1 sm:flex sm:items-center sm:justify-between">
-            <div class="truncate">
-              <div class="flex text-sm">
-                <p class="font-medium text-pink-600 truncate">Peggy Duddhenaim</p>
-              </div>
-              <div class="mt-1">
-                <p class="text-sm text-gray-600 font-regular truncate">vent'anni, i giorni più belli della nostra vita, una storia e i sobborghi di roma come scenario.. una stanza che era un mondo intero. A letto fumando e te come sottofondo ci bastava ed era tutto.. quante volte abbiam fatto l'amore con te. Grazie Sandro</p>
-                <div class="flex items-center text-xs text-gray-500 mt-1">
-                  <p><time datetime="2020-01-07">Last activity January 7, 2020</time></p>
-                </div>
-              </div>
-            </div>
-            <div class="mt-4 flex-shrink-0 sm:mt-0 sm:ml-5">
-              <div class="flex overflow-hidden -space-x-1">
-                <img class="inline-block h-6 w-6 rounded-full ring-2 ring-white" src="https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?ixlib=rb-1.2.1&ixqx=zBd4LgsYUu&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80" alt="Dries Vincent">
-              </div>
-            </div>
-          </div>
-          <div class="ml-5 flex-shrink-0">
-            <!-- Heroicon name: solid/chevron-right -->
-            <svg class="h-5 w-5 text-gray-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
-              <path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd" />
-            </svg>
-          </div>
-        </div>
-      </a>
-    </li>
 
 
   </ul>
