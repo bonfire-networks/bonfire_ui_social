@@ -4,7 +4,7 @@
         <%= for %{activity: activity} <- @feed do %>
 
     <li>
-      <a href="#" class="block hover:bg-gray-50">
+      <a href="/message/<%= e(activity, :object_id, nil) %>" class="block hover:bg-gray-50">
         <div class="px-3 py-4 flex items-center">
           <div class="min-w-0 flex-1 sm:flex sm:items-center sm:justify-between">
             <div class="truncate">

@@ -19,16 +19,15 @@
 
     <%= for {reply, child_replies} <- @threaded_replies do %>
       <%= live_component(@socket, Bonfire.UI.Social.CommentLive,
-      assigns
-      |> assigns_merge(
-        target_component: @myself,
-        comment: reply,
-        child_replies: child_replies,
-        thread_level: 1,
-        target_component: @myself
-      )
-    )
-   %>
+          assigns
+          |> assigns_merge(
+            target_component: @myself,
+            comment: reply,
+            child_replies: child_replies,
+            thread_level: 1,
+            target_component: @myself
+          )
+        )%>
     <% end %>
   </div>
 <% end %>
