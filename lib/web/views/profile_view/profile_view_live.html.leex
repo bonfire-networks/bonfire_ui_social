@@ -1,6 +1,8 @@
-<div class="lg:flex">
-  <div class="lg:px-4 w-center">
-    <%= live_component(@socket, Bonfire.UI.Social.PageHeaderLive, assigns) %>
+<div class="lg:flex lg:space-x-4">
+  <div class="w-center">
+    <%= if @current_user do %>
+      <%= live_component(@socket, Bonfire.UI.Social.PageHeaderLive, assigns) %>
+    <% end %>
     <%= cond do %>
       <% @selected_tab == "private" ->  %>
         <%= live_component(@socket, Bonfire.UI.Social.PrivateLive, assigns) %>
@@ -44,9 +46,11 @@
   <div class="hidden lg:flex md:flex-shrink-0">
     <div class="mt-2">
       <div class="h-full px-1 bg-blueGray-100 w-80">
+      <%= if @current_user do %>
         <div class="sticky top-0 z-10 flex-1 px-2 py-2 mb-4 -mx-2 bg-blueGray-100">
           <%= live_component(@socket, Bonfire.UI.Social.SearchLive, assigns) %>
         </div>
+      <% end %>
         <%#= live_component(@socket, Bonfire.UI.Social.DMWidgetLive, assigns) %>
       </div>
     </div>

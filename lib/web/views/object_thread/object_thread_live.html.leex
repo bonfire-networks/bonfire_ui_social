@@ -1,5 +1,5 @@
-<div class="lg:flex">
-  <div class="lg:px-4 w-center">
+<div class="lg:flex lg:space-x-4">
+  <div class="w-center">
     <div class="">
       <div class="bg-white shadow min-h-screen">
         <section class="min-h-screen flex flex-col">
@@ -46,10 +46,13 @@
   <div class="hidden lg:flex md:flex-shrink-0">
     <div class="mt-2">
       <div class="h-full px-1 bg-blueGray-100 w-80">
-        <div class="sticky top-0 z-10 flex-1 px-2 py-2 mb-4 -mx-2 bg-blueGray-100">
-          <%= live_component(@socket, Bonfire.UI.Social.SearchLive, assigns) %>
-        </div>
+        <%= if @current_user do %>
+          <div class="sticky top-0 z-10 flex-1 px-2 py-2 mb-4 -mx-2 bg-blueGray-100">
+            <%= live_component(@socket, Bonfire.UI.Social.SearchLive, assigns) %>
+          </div>
+        <% end %>
 
+        <%= if @current_user do %>
         <div class="pb-5 border-b">
           <h5 class="text-xs font-bold text-gray-700 mb-2">Notification</h5>
           <div class="flex flex-col space-y-3">
@@ -57,6 +60,7 @@
             <%= if e(@activity, :object_id, nil) && e(@activity, :object_id, nil) != e(@activity, :replied, :thread_id, nil), do: live_component(@socket, Bonfire.UI.Social.FollowButtonLive, following: e(assigns, :following, []), id: e(@activity, :object_id, nil), label: "this sub-thread", class: "w-full flex flex-1 text-center btn-secondary place-content-center") %>
           </div>
         </div>
+        <% end %>
 
         <div class="pb-5 mt-5 border-b">
           <h5 class="text-xs font-bold text-gray-700 mb-2">5 Participants</h5>
