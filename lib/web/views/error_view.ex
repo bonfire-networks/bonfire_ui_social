@@ -1,4 +1,4 @@
-defmodule Bonfire.Web.ErrorView do
+defmodule Bonfire.UI.Social.ErrorView do
   use Bonfire.Web, :view
 
   # If you want to customize a particular status code
