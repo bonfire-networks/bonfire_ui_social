@@ -1,21 +1,19 @@
 
-<div class="flex items-center space-x-4">
+<div class="flex">
   <div class="flex-shrink-0">
-    <img class="w-8 h-8 rounded-full" src="https://images.unsplash.com/photo-1519345182560-3f2917c472ef?ixlib=rb-1.2.1&amp;ixid=eyJhcHBfaWQiOjEyMDd9&amp;auto=format&amp;fit=facearea&amp;facepad=2&amp;w=256&amp;h=256&amp;q=80" alt="">
+    <img class="h-10 w-10 rounded-full" src="https://images.unsplash.com/photo-1519345182560-3f2917c472ef?ixlib=rb-1.2.1&amp;ixid=eyJhcHBfaWQiOjEyMDd9&amp;auto=format&amp;fit=facearea&amp;facepad=2&amp;w=256&amp;h=256&amp;q=80" alt="">
   </div>
-  <div class="flex-1 min-w-0">
-    <p class="text-sm font-medium text-gray-900 truncate">
+  <div class="ml-2">
+    <p class="text-base font-semibold text-gray-800">
       <%= e(@profile, :name, "Anon")%>
     </p>
-    <p class="text-sm text-gray-500 truncate">
+    <p class="text-sm -mt-px text-gray-600">
       @<%= e(@character, :username, "anon")%>
-
     </p>
   </div>
-  <div>
-    <%= if @current_user && maybe_get(@current_user, :id) != maybe_get(@character, :id) do %>
-      <%= live_component(@socket, Bonfire.UI.Social.FollowButtonLive, assigns |> assigns_merge(%{ label: ""})) %>
-    <% end %>
-
-  </div>
+  <%# <div> %>
+    <%# = if @current_user && maybe_get(@current_user, :id) != maybe_get(@character, :id) do %>
+      <%#= live_component(@socket, Bonfire.UI.Social.FollowButtonLive, assigns |> assigns_merge(%{ label: ""})) %>
+    <%# end %>
+  <%# </div> %>
 </div>
