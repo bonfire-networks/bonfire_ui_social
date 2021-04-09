@@ -1,17 +1,16 @@
-<div class="flex-col hidden lg:flex top-0 z-10 w-full mt-4 bg-white rounded-lg shadow container max-w-screen-lg mx-auto">
+<div class="flex-col flex lg:hidden top-0 z-10 w-full bg-white shadow container max-w-screen-lg mx-auto">
   <div class="relative z-10 flex justify-between flex-shrink-0 h-16">
-    <div class="flex items-center flex-shrink-0 px-4">
+    <div class="flex items-center flex-shrink-0">
       <%# <%= live_component(@socket, Bonfire.UI.Social.AppsLive, assigns) %>
       <%= live_redirect to: Routes.live_path(@socket, Bonfire.Me.Web.LoggedDashboardLive) do %>
         <div class="rounded px-4 py-2  flex items-center">
           <span class="text-2xl">🔥</span>
-          <span class="ml-2 font-semibold text-base text-gray-800">Bonfire</span>
         </div>
       <% end %>
     </div>
 
-    <div class="flex items-center px-8">
-      <div class="flex items-center flex-1 mr-3">
+    <div class="flex flex-1 pr-4 lg:px-4">
+      <div class="flex items-center flex-1 pr-4">
         <div class="flex flex-1 ">
           <%= live_component(@socket, Bonfire.UI.Social.SearchLive, assigns) %>
         </div>
@@ -49,69 +48,6 @@
               </div>
             </div>
           </div>
-        </div>
-      </div>
-    </div>
-  </div>
-</div>
-
-<div class="flex flex-col flex-1 lg:hidden w-100">
-  <div class="relative z-10 flex flex-shrink-0 h-16 bg-white shadow">
-    <details class="details-dialog">
-      <summary class="flex items-center h-full">
-        <div class="px-4 text-gray-500 border-r border-gray-200 focus:outline-none focus:bg-gray-100 focus:text-gray-600 lg:hidden" aria-label="Open sidebar">
-          <svg class="w-6 h-6" stroke="currentColor" fill="none" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h7" />
-          </svg>
-        </div>
-      </summary>
-      <details-dialog>
-      <div class="lg:hidden">
-        <%= live_component(@socket, SidebarMobileLive, assigns) %>
-      </div>
-      </details-dialog>
-    </details>
-    <div class="flex justify-between flex-1 px-4">
-      <div class="flex flex-1">
-       <form class="flex items-center w-full md:ml-0" action="#" method="GET">
-        <label for="search_field_mobile" class="sr-only">Search</label>
-        <div style="max-width: 290px; height: 40px;" class="relative w-full text-gray-400 focus-within:text-gray-600">
-          <div style="left: 8px" class="absolute inset-y-0 left-0 flex items-center text-gray-500 pointer-events-none">
-            <svg class="w-5 h-5 fill-current" fill="currentColor" viewBox="0 0 20 20">
-              <path fill-rule="evenodd" clip-rule="evenodd" d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z" />
-            </svg>
-          </div>
-          <input type="search" id="search_field_mobile" class="w-full h-full pl-8 placeholder-gray-500 bg-gray-300" placeholder="Search">
-        </div>
-      </form>
-      </div>
-      <div class="flex items-center ml-4 md:ml-6">
-        <!-- Profile dropdown -->
-        <div class="relative">
-              <details class="details-dropdown">
-                <summary>
-                  <div class="flex items-center max-w-xs text-sm rounded-full focus:outline-none focus:shadow-outline" id="user-menu-mobile" aria-label="User menu" aria-haspopup="true">
-                    <img class="w-8 h-8 rounded-full" src="https://thispersondoesnotexist.com/image" alt="">
-                  </div>
-                </summary>
-                <details-menu>
-                  <div class="absolute right-0 z-10 w-48 mt-2 origin-top-right rounded-md shadow-lg">
-                    <div class="py-1 bg-white rounded-md shadow-xs" role="menu" aria-orientation="vertical" aria-labelledby="user-menu-mobile">
-                      <a href="#" class="block px-4 py-2 text-sm text-gray-700 transition duration-150 ease-in-out hover:bg-gray-100" role="menuitem">Your Profile</a>
-                      <a href="#" class="block px-4 py-2 text-sm text-gray-700 transition duration-150 ease-in-out hover:bg-gray-100" role="menuitem">Settings</a>
-                      <details class="details-dialog">
-                        <summary>
-                          <div class="block px-4 py-2 text-sm text-gray-700 transition duration-150 ease-in-out hover:bg-gray-100" role="menuitem">Sign out</div>
-                        </summary>
-                        <details-dialog>
-                          <%= live_component(@socket, ModalLive, assigns) %>
-                        <%# <button type="button" data-close-dialog>Close</button> %>
-                        </details-dialog>
-                      </details>
-                    </div>
-                  </div>
-                </details-menu>
-              </details>
         </div>
       </div>
     </div>

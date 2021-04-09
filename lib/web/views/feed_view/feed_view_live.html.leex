@@ -3,7 +3,7 @@
     <%= if @current_user do %>
       <%= live_component(@socket, Bonfire.UI.Social.PageHeaderLive, assigns) %>
     <% end %>
-    <div class="bg-white rounded-lg shadow">
+    <div class="bg-white rounded-lg shadow mx-3 lg:mx-0">
       <%= live_component(@socket, Bonfire.UI.Social.FeedHeaderLive, assigns) %>
       <%= live_component(@socket, Bonfire.UI.Social.FeedLive, assigns) %>
     </div>

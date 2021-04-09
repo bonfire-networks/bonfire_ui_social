@@ -27,24 +27,8 @@
       </div>
   </div>
 <% else %>
-  <div class="flex -mx-2">
-    <div class="w-3/5 px-2">
-      <div class="">
-          <div class="px-4 py-5 bg-white rounded-t-md sm:px-6">
-            <div class="flex flex-wrap items-center justify-between -mt-2 -ml-4 sm:flex-no-wrap">
-              <div class="mt-2 ml-4 prose">
-                <h1 class="text-gray-900">
-                  Welcome to Bonfire
-                </h1>
-                <p>For most of us, the idea of astronomy is something we directly connect to “stargazing”, telescopes and seeing magnificent displays in the heavens. And to be sure, that is the exciting area of astronomy that accounts for it’s huge popularity.</p>
-              </div>
-            </div>
-          </div>
-          <div class="py-5 mx-auto sm:px-6 lg:px-8">
-         </div>
-      </div>
-    </div>
-    <div class="w-2/5 px-2">
+  <div class="flex m-3 mb-3 md:m-0">
+    <div class="lg:w-2/5 md:w-2/3 w-full mx-auto">
       <%= live_component(@socket, Bonfire.UI.Social.SignupLive, assigns) %>
     </div>
   </div>
