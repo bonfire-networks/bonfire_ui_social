@@ -1,46 +1,76 @@
-<button
-    type="button"
-    @click="open_boundaries = !open_boundaries"
-    class="flex items-center hover:underline"
-    :class="{'bg-pink-50' : open_boundaries === true }"
-  >
-    <%# <svg :class="{'text-blue-600' : open_boundaries === true }" class="w-5 h-5 text-blue-700" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
-      <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM4.332 8.027a6.012 6.012 0 011.912-2.706C6.512 5.73 6.974 6 7.5 6A1.5 1.5 0 019 7.5V8a2 2 0 004 0 2 2 0 011.523-1.943A5.977 5.977 0 0116 10c0 .34-.028.675-.083 1H15a2 2 0 00-2 2v2.197A5.973 5.973 0 0110 16v-2a2 2 0 00-2-2 2 2 0 01-2-2 2 2 0 00-1.668-1.973z" clip-rule="evenodd"></path>
-    </svg> %>
-    <span :class="{'text-blue-800' : open_boundaries === true}" class="text-sm font-medium text-blue-700">Customize</span>
-  </button>
+<input type="hidden" name="is_private" value="<%= if e(assigns, :smart_input_private, nil), do: "1", else: "0" %>" />
 
-<div  @keydown.window.escape="open_boundaries = false"  x-show="open_boundaries"
-  class="fixed z-50 inset-0 overflow-y-auto" aria-labelledby="modal-title" x-ref="dialog" role="dialog" aria-modal="true">
-  <div class="flex items-end justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
-    <div x-show="open_boundaries" x-transition:enter="ease-out duration-300" x-transition:enter-start="opacity-0" x-transition:enter-end="opacity-100" x-transition:leave="ease-in duration-200" x-transition:leave-start="opacity-100" x-transition:leave-end="opacity-0" x-description="Background overlay, show/hide based on modal state." class="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity" @click="open_boundaries = false" aria-hidden="true"></div>
-    <!-- This element is to trick the browser into centering the modal contents. -->
-    <span class="hidden sm:inline-block sm:align-middle sm:h-screen" aria-hidden="true">&#8203;</span>
-      <div x-show="open_boundaries" x-transition:enter="ease-out duration-300" x-transition:enter-start="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95" x-transition:enter-end="opacity-100 translate-y-0 sm:scale-100" x-transition:leave="ease-in duration-200" x-transition:leave-start="opacity-100 translate-y-0 sm:scale-100" x-transition:leave-end="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95" x-description="Modal panel, show/hide based on modal state." class="inline-block align-bottom bg-white rounded-lg  text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-sm sm:w-full">
-        <div>
-          <div class="flex items-center p-3 border-b">
-            <span class="w-8 h-8 items-center flex place-content-center hover:bg-pink-100 rounded-full">
-              <svg class="w-6 h-6 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path></svg>
-            </span>
-            <span class="ml-2 text-base font-medium text-gray-800">Select your audience</span>
+
+<div
+  x-show.transition="open"
+  class="rounded-md bg-blue-50 h-10 items-center px-2 flex mb-2">
+  <div class="flex flex-1">
+    <div class="flex-shrink-0">
+      <svg class="h-5 w-5 text-blue-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+        <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd" />
+      </svg>
+    </div>
+    <div class="ml-3 flex-1 md:flex md:justify-between">
+      <div class="text-sm flex-1 text-blue-700">
+        Share
+
+        <%= if !e(assigns, :smart_input_private, nil) do %>
+          <span class="font-bold underline">publicly</span>
+        <% else %>
+          <span class="font-bold underline">privately</span>
+        <% end %>
+
+        <%= if length(e(assigns, :to_circles, []))>0 do  %>
+          with
+          <%= for {circle_name, _circle_id} <- e(assigns, :to_circles, []) |> Enum.dedup() do  %>
+            <span class="font-bold underline"><%= circle_name %></span>
+          <% end %>
+        <% end %>
+
+        <div @keydown.window.escape="open_boundaries = false" x-show="open_boundaries"
+          class="flex z-50 inset-0" x-transition:enter="ease-out duration-300" x-transition:enter-start="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95" x-transition:enter-end="opacity-100 translate-y-0 sm:scale-100" x-transition:leave="ease-in duration-200" x-transition:leave-start="opacity-100 translate-y-0 sm:scale-100" x-transition:leave-end="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95" >
+          <div class="relative items-end justify-center pt-4 px-4 pb-20 text-center sm:block sm:p-0">
+              <div class="absolute inline-block align-bottom bg-white rounded-lg text-left shadow-xl transform transition-all sm:my-8 sm:align-middle" style="min-width: 300px">
+                  <div class="flex items-center p-3 border-b">
+                    <span class="w-8 h-8 items-center flex place-content-center hover:bg-pink-100 rounded-full">
+                      <svg class="w-6 h-6 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path></svg>
+                    </span>
+                    <span class="ml-2 text-base font-medium text-gray-800">Select your audience</span>
+                  </div>
+                  <div class="p-3">
+                    <h4 class="text-base font-semibold text-gray-700">Who can see your post?</h4>
+                    <p class="text-sm text-gray-700 font-normal">Decide which circles or contacts can see and interact with your post. <a href="#" class="text-xs underline text-gray-800 font-semibold"> Read more</a>
+                  </div>
+                  <ul class="divide-y divide-gray-200">
+                    <%= for {circle_name, circle_id} <- e(assigns, :to_circles, []) |> Enum.dedup() do  %>
+                      <li class="p-2">
+                        <label class="flex items-center space-x-2"><input type="checkbox" checked="checked" name="circles[]" value="<%=circle_id%>"> <span class="hover:underline text-gray-800 font-semibold"><%=circle_name%></span></label>
+                      </li>
+                    <% end %>
+
+                    <%= for circle <- e(assigns, :my_circles, []) do %>
+                      <li class="p-2">
+                        <label class="flex items-center space-x-2"><input type="checkbox" name="circles[]" value="<%=circle.id%>"> <span class="hover:underline text-gray-800 font-semibold"><%=e(circle, :named, :name, e(circle, :name, "Unknown"))%></span></label>
+                      </li>
+                    <% end %>
+
+                  </ul>
+                </div>
           </div>
-          <div class="p-3">
-            <h4 class="text-base font-semibold text-gray-700">Who can see your post?</h4>
-            <p class="text-sm text-gray-700 font-normal">You can decide which users or circles can see and interact with your post <a href="#" class="text-xs underline text-gray-800 font-semibold">Read more about circles and acl</a>
-          </div>
-          <ul class="divide-y divide-gray-200">
-            <%= for {slug, id} <- Bonfire.Boundaries.Circles.circles do %>
-              <li class="p-3">
-                <label class="flex items-center space-x-2"><input type="checkbox" name="circles[]" value="<%=id%>"> <span class="hover:underline text-gray-800 font-semibold"><%=Bonfire.Boundaries.Circles.circle_names()[slug]%></span></label>
-              </li>
-            <% end %>
-            <%= for circle <- e(assigns, :my_circles, []) do %>
-              <li class="p-2">
-                <label class="flex items-center space-x-2"><input type="checkbox" name="circles[]" value="<%=circle.id%>"> <span class="hover:underline text-gray-800 font-semibold"><%=e(circle, :named, :name, "Unknown")%></span></label>
-              </li>
-            <% end %>
-          </ul>
         </div>
+
+
+        <button
+            type="button"
+            @click="open_boundaries = !open_boundaries"
+            :class="{'bg-pink-50' : open_boundaries === true }"
+          >
+            <svg class="-mr-1 ml-2 h-5 w-5" x-description="Heroicon name: solid/chevron-down" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                        <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd"></path>
+                      </svg>
+            <%# <span :class="{'text-blue-800' : open_boundaries === true}" class="text-sm font-medium text-blue-700">Customize</span> %>
+          </button>
       </div>
+    </div>
   </div>
 </div>
