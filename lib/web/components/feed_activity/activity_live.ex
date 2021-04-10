@@ -54,16 +54,19 @@ defmodule Bonfire.UI.Social.ActivityLive do
   # def permalink(%{reply_to_thread_id: reply_to_thread_id}, %{object: %{id: id}}) do
   #   "/discussion/"<>reply_to_thread_id<>"/reply/"<>id
   # end
-  def permalink(_, %{object_post: %{id: id}}) do
+  def permalink(_, %{object_post: %{id: id}}) when is_binary(id) do
     "/post/"<>id
   end
-  def permalink(_, %{object_message: %{id: id}}) do
+  def permalink(_, %{object_post_content: %{id: id}}) when is_binary(id) do
+    "/post/"<>id
+  end
+  def permalink(_, %{object_message: %{id: id}}) when is_binary(id) do
     "/message/"<>id
   end
-  def permalink(_, %{object_id: id}) do
+  def permalink(_, %{object_id: id}) when is_binary(id) do
     "/discussion/"<>id
   end
-  def permalink(_, %{object: %{id: id}}) do
+  def permalink(_, %{object: %{id: id}}) when is_binary(id) do
     "/discussion/"<>id
   end
 

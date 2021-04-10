@@ -19,11 +19,13 @@ defmodule Bonfire.UI.Social.FeedLive do
 
     {:ok, socket
     |> assign(
+      assigns
+    |> assigns_merge(
       feed_title: title,
       feed_id: feed_id,
       feed: e(feed, :entries, []),
       page_info: e(feed, :metadata, [])
-    )}
+    ))}
   end
 
 end

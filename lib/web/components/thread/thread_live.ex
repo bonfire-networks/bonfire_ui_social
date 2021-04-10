@@ -59,7 +59,8 @@ defmodule Bonfire.UI.Social.ThreadLive do
           replies: replies || [],
           threaded_replies: threaded_replies,
           page_info: page_info,
-          thread_max_depth: @thread_max_depth
+          thread_max_depth: @thread_max_depth,
+          # participants: participants
         ))}
       end
     end

@@ -9,7 +9,7 @@
     )) %>
 </div>
 
-<% if length(@threaded_replies) > 0 do %>
+<%= if length(@threaded_replies) > 0 do %>
   <div id="replies" class="pt-3 mt-6 border-t">
     <%= if e(@page_info, :before, nil) do %>
     <div class="flex justify-center p-3 mx-auto place-items-center">
@@ -25,7 +25,7 @@
             comment: reply,
             child_replies: child_replies,
             thread_level: 1,
-            target_component: @myself
+            target_component: @myself,
           )
         )%>
     <% end %>

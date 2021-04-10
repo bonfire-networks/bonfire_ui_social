@@ -9,16 +9,14 @@
             </div>
           <% end %>
 
-          <!--div class="hidden lg:block ml-0">
+          <%# <div class="hidden lg:block ml-0">
             <div class="flex items-center space-x-1">
-              <%= live_redirect to: Routes.live_path(@socket, Bonfire.Common.Config.get!(:home_page)) do %>
                 <span class="text-sm font-bold text-gray-700 transition duration-150 hover:text-gray-900 hover:bg-gray-100 rounded px-4 py-2 ease-in-out focus:outline-none focus:text-gray-700">Users directory</span>
-              <% end %>
-              <%= live_redirect to: Routes.live_path(@socket, Bonfire.Social.Web.Feeds.InstanceLive) do %>
+
                 <span class="text-sm font-bold text-gray-700 transition duration-150  ease-in-out hover:bg-gray-100 rounded px-4 py-2 hover:text-gray-700 focus:outline-none focus:text-gray-700">Discover</a>
-              <% end %>
             </div>
-          </div -->
+          </div> %>
+
         </div>
 
         <div class="flex flex-1 pr-4 lg:px-4">

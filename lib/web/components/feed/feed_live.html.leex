@@ -11,9 +11,12 @@
         <%= live_component(
         @socket,
         ActivityLive,
-        id: e(entry, :activity, :id, e(entry, :id, nil)),
-        activity: e(entry, :activity, entry),# |> IO.inspect,
-        current_user: @current_user
+        assigns
+        |> assigns_merge(
+          id: e(entry, :activity, :id, e(entry, :id, nil)),
+          activity: e(entry, :activity, entry),# |> IO.inspect,
+          current_user: @current_user
+        )
       ) %>
       </div>
       <% end %>
