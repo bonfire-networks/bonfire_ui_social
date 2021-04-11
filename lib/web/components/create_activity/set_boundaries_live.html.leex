@@ -5,12 +5,7 @@
   x-show.transition="open"
   class="rounded-md bg-blue-50 h-10 items-center px-2 flex mb-2">
   <div class="flex flex-1">
-    <div class="flex-shrink-0">
-      <svg class="h-5 w-5 text-blue-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
-        <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd" />
-      </svg>
-    </div>
-    <div class="ml-3 flex-1 md:flex md:justify-between">
+    <div class="flex-1 md:flex md:justify-between">
       <div class="text-sm flex-1 text-blue-700">
         Share
 
@@ -22,7 +17,7 @@
 
         <%= if length(e(assigns, :to_circles, []))>0 do  %>
           with
-          <%= for {circle_name, _circle_id} <- e(assigns, :to_circles, []) |> Enum.dedup() do  %>
+          <%= for {circle_name, _circle_id} <- e(assigns, :to_circles, []) |> Enum.uniq() do  %>
             <span class="font-bold underline"><%= circle_name %></span>
           <% end %>
         <% end %>
@@ -31,18 +26,11 @@
           class="flex z-50 inset-0" x-transition:enter="ease-out duration-300" x-transition:enter-start="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95" x-transition:enter-end="opacity-100 translate-y-0 sm:scale-100" x-transition:leave="ease-in duration-200" x-transition:leave-start="opacity-100 translate-y-0 sm:scale-100" x-transition:leave-end="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95" >
           <div class="relative items-end justify-center pt-4 px-4 pb-20 text-center sm:block sm:p-0">
               <div class="absolute inline-block align-bottom bg-white rounded-lg text-left shadow-xl transform transition-all sm:my-8 sm:align-middle" style="min-width: 300px">
-                  <div class="flex items-center p-3 border-b">
-                    <span class="w-8 h-8 items-center flex place-content-center hover:bg-pink-100 rounded-full">
-                      <svg class="w-6 h-6 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path></svg>
-                    </span>
-                    <span class="ml-2 text-base font-medium text-gray-800">Select your audience</span>
-                  </div>
-                  <div class="p-3">
-                    <h4 class="text-base font-semibold text-gray-700">Who can see your post?</h4>
-                    <p class="text-sm text-gray-700 font-normal">Decide which circles or contacts can see and interact with your post. <a href="#" class="text-xs underline text-gray-800 font-semibold"> Read more</a>
+                  <div class="flex items-center p-2 border-b">
+                    <span class="text-sm font-medium text-gray-800">Select your audience</span>
                   </div>
                   <ul class="divide-y divide-gray-200">
-                    <%= for {circle_name, circle_id} <- e(assigns, :to_circles, []) |> Enum.dedup() do  %>
+                    <%= for {circle_name, circle_id} <- e(assigns, :to_circles, []) |> Enum.uniq() do  %>
                       <li class="p-2">
                         <label class="flex items-center space-x-2"><input type="checkbox" checked="checked" name="circles[]" value="<%=circle_id%>"> <span class="hover:underline text-gray-800 font-semibold"><%=circle_name%></span></label>
                       </li>
@@ -53,7 +41,6 @@
                         <label class="flex items-center space-x-2"><input type="checkbox" name="circles[]" value="<%=circle.id%>"> <span class="hover:underline text-gray-800 font-semibold"><%=e(circle, :named, :name, e(circle, :name, "Unknown"))%></span></label>
                       </li>
                     <% end %>
-
                   </ul>
                 </div>
           </div>
