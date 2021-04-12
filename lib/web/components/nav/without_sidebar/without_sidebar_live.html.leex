@@ -3,33 +3,24 @@
   <%= cond do %>
     <% !@current_user and !@current_account -> %>
       <div class="">
-        <%# <%= live_component(@socket, Bonfire.UI.Social.LogoHeaderLive, assigns) %>
         <%= live_component(@socket, Bonfire.UI.Social.HeaderGuestLive, assigns) %>
-      </div>
-      <div class="pt-0">
-        <div class="container flex max-w-screen-lg mx-auto">
-          <div class="w-full p-4 mx-auto lg:p-0">
-            <%= @inner_content %>
-          </div>
+        <div class="container max-w-screen-lg mx-auto mt-6">
+          <%= @inner_content %>
         </div>
       </div>
     <% !@current_user and @current_account -> %>
-      <%= live_component(@socket, Bonfire.UI.Social.HeaderAccountLive, assigns) %>
-      <div class="pt-8">
-        <div class="container flex max-w-screen-lg mx-auto">
-          <div class="w-full  p-4 mx-auto lg:p-0">
-            <%= @inner_content %>
-          </div>
+      <div class="">
+        <%= live_component(@socket, Bonfire.UI.Social.HeaderAccountLive, assigns) %>
+        <div class="container max-w-screen-lg mx-auto mt-6">
+          <%= @inner_content %>
         </div>
       </div>
     <% true -> %>
-      <%= live_component(@socket, Bonfire.UI.Social.HeaderLive, assigns) %>
       <div class="">
-        <div class="container flex max-w-screen-lg mx-auto">
-          <div class="w-full p-4 mx-auto lg:p-0">
-            <%= @inner_content %>
-          </div>
-        </div>
+        <%= live_component(@socket, Bonfire.UI.Social.HeaderLive, assigns) %>
+        <div class="container max-w-screen-lg mx-auto mt-6">
+          <%= @inner_content %>
+      </div>
       </div>
   <% end %>
 

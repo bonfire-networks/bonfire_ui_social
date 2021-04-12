@@ -1,18 +1,9 @@
 <div class="lg:flex lg:space-x-4">
   <div class="w-center">
-    <div class="">
-      <div class="bg-white shadow min-h-screen">
-        <section class="min-h-screen flex flex-col">
-          <div class="sticky top-0 z-20 bg-white p-3 border-b">
-            <a class="flex items-center" href="javascript:window.history.back()">
-              <span class="w-8 h-8 items-center flex place-content-center hover:bg-pink-100 rounded-full">
-                <svg class="w-4 h-4 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path></svg>
-              </span>
-              <span class="ml-2 text-base font-medium text-gray-800">Discussion</span>
-            </a>
-          </div>
+  <%= live_component(@socket, Bonfire.UI.Social.PageHeaderLive, assigns) %>
 
-
+    <div class="mx-4 lg:mx-0 bg-white rounded-lg shadow min-h-screen">
+      <section class="min-h-screen flex flex-col">
         <%= if e(@activity, :replied, :thread_id, nil) && e(@activity, :replied, :thread_id, nil) != e(@activity, :replied, :reply_to_id, nil) do %>
           <div class="p-4 m-3 rounded-md bg-blue-50">
             <div class="flex">
@@ -27,29 +18,28 @@
           </div>
         <% end %>
 
-          <%= live_component(@socket, Bonfire.UI.Social.ActivityLive,
+        <%= live_component(@socket, Bonfire.UI.Social.ActivityLive,
+        assigns
+          |> assigns_merge(
+            id: "main-"<>e(@activity, :id, ""),
+            viewing_main_object: true,
+            hide_reply: true
+          )) %>
+
+        <%= live_component(@socket, Bonfire.UI.Social.ThreadLive,
           assigns
-            |> assigns_merge(
-              id: "main-"<>e(@activity, :id, ""),
-              viewing_main_object: true,
-              hide_reply: true
-            )) %>
+          |> assigns_merge(
+            id: "post-thread-"<>e(@object, :id, ""),
+            thread_id: e(@object, :id, ""),
+          )
+        ) %>
 
-          <%= live_component(@socket, Bonfire.UI.Social.ThreadLive,
-            assigns
-            |> assigns_merge(
-              id: "post-thread-"<>e(@object, :id, ""),
-              thread_id: e(@object, :id, ""),
-            )
-          ) %>
-
-        </section>
-      </div>
+      </section>
     </div>
+
   </div>
-  <div class="hidden lg:flex md:flex-shrink-0">
-    <div class="mt-2">
-      <div class="h-full px-1 bg-blueGray-100 w-80">
+  <div class="flex-1 hidden mt-2 lg:flex md:flex-shrink-0">
+      <div class="h-full px-1 bg-blueGray-100 w-full">
         <%= if @current_user do %>
           <div class="sticky top-0 z-10 flex-1 px-2 py-2 mb-4 -mx-2 bg-blueGray-100">
             <%= live_component(@socket, Bonfire.UI.Social.SearchLive, assigns) %>
@@ -78,7 +68,7 @@
           </div>
         </div>
       </div>
-    </div>
+
   </div>
 
 </div>

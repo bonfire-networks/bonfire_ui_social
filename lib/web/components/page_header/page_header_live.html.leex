@@ -1,27 +1,107 @@
-<section class="sticky top-0 z-10 p-3 mb-4 bg-white lg:rounded-b-lg shadow">
-  <div class="flex items-center">
-    <div class="mr-3 px-4 text-gray-500 border-r border-gray-200 focus:outline-none focus:bg-gray-100 focus:text-gray-600 lg:hidden" aria-label="Open sidebar">
-      <svg class="w-6 h-6" stroke="currentColor" fill="none" viewBox="0 0 24 24">
-        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h7" />
-      </svg>
-    </div>
-    <a class="flex flex-1 text-left items-center" href="javascript:window.history.back()">
-      <span class="w-8 h-8 items-center flex place-content-center hover:bg-pink-100 rounded-full">
-        <svg class="w-4 h-4 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path></svg>
-      </span>
-      <h1 class="ml-2 text-base font-medium text-gray-800"><%= @page_title %></h1>
-    </a>
-    <div class="flex items-center space-x-3 lg:hidden">
-      <button type="button" class="inline-flex items-center p-2 border border-transparent rounded-full shadow-sm text-gray-600 bg-blueGray-200 hover:bg-blueGray-300 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blueGray-300">
-        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
+<section
+  x-data="{
+    open_search: false,
+    open_sidebar: false,
+    open_profile_mobile_menu: false
+  }"
+  @close-popover-group.window="onClosePopoverGroup"
+  class="sticky top-0 z-10 mb-4 bg-white lg:rounded-b-lg shadow">
+  <div class="p-3 flex items-center">
+    <div class="relative flex items-center mr-3 px-4 border-r border-gray-200 lg:hidden">
+      <button
+        type="button"
+        x-state:on="Item active"
+        x-state:off="Item inactive"
+        @click="open_sidebar = true"
+        @mousedown="if (open_sidebar) $event.preventDefault()"
+        aria-expanded="true"
+        :aria-expanded="open_sidebar.toString()"
+        class="-m-2 p-2 rounded-full hover:bg-gray-200 hover:text-gray-800 text-gray-500  focus:outline-none focus:bg-gray-100 focus:text-gray-600"
+        aria-label="Open sidebar">
+        <svg class="w-6 h-6" stroke="currentColor" fill="none" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h7" />
+        </svg>
       </button>
-      <button type="button" class="inline-flex items-center p-2 border border-transparent rounded-full shadow-sm text-gray-600 bg-blueGray-200 hover:bg-blueGray-300 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blueGray-300">
-        <svg class="w-4 h-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-sidebar"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect><line x1="9" y1="3" x2="9" y2="21"></line></svg>
-      </button>
-    </div>
+      <%= live_component(@socket, Bonfire.UI.Social.SidebarMobileLive, assigns) %>
+      <div class="text-left flex items-center flex-1 space-x-2">
+        <a href="javascript:window.history.back()">
+          <span class="w-8 h-8 items-center flex place-content-center hover:bg-pink-100 rounded-full">
+            <svg class="w-4 h-4 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path></svg>
+          </span>
+        </a>
+        <h1 class="text-base font-medium text-gray-800"><%= @page_title %></h1>
+      </div>
+      <div class="flex items-center space-x-3 lg:hidden">
+        <button
+          type="button"
+          x-state:on="Item active"
+          x-state:off="Item inactive"
+          @click="open_search = true"
+          @mousedown="if (open_search) $event.preventDefault()"
+          aria-expanded="true"
+          :aria-expanded="open.toString()"
+          :class="{ 'text-pink-600 ring-2 ring-offset-2 ring-pink-500': open_search }"
+          class="inline-flex items-center p-2 border border-transparent rounded-full text-gray-600 bg-blueGray-200 hover:bg-blueGray-300 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blueGray-300">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
+        </button>
+        <%# <button
+          type="button"
+          x-state:on="Item active"
+          x-state:off="Item inactive"
+          @click="open_right_panel = true"
+          @mousedown="if (open_right_panel) $event.preventDefault()"
+          aria-expanded="true"
+          :aria-expanded="open.toString()"
+          :class="{ 'text-pink-600 ring-2 ring-offset-2 ring-pink-500': open_right_panel }"
+          class="inline-flex items-center p-2 border border-transparent rounded-full shadow-sm text-gray-600 bg-blueGray-200 hover:bg-blueGray-300 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blueGray-300">
+          <svg class="w-4 h-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-sidebar"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect><line x1="9" y1="3" x2="9" y2="21"></line></svg>
+        </button> %>
+      </div>
   <%= if @has_private_tab == true do %>
-    <%= live_component(@socket, Bonfire.UI.Social.PublicPrivateTabsLive, assigns) %>
+    <div class="ml-2">
+      <%= live_component(@socket, Bonfire.UI.Social.PublicPrivateTabsLive, assigns) %>
+    </div>
   <% end %>
   </div>
-  <%= live_component(@socket, Bonfire.UI.Social.SmartInputLive, assigns) %>
+  <%= if @current_user do %>
+    <%= live_component(@socket, Bonfire.UI.Social.SmartInputLive, assigns) %>
+  <% end %>
+  <div
+    x-show="open_search"
+    x-transition:enter="transition ease-out duration-200"
+    x-transition:enter-start="opacity-0 -translate-y-1"
+    x-transition:enter-end="opacity-100 translate-y-0"
+    x-transition:leave="transition ease-in duration-150"
+    x-transition:leave-start="opacity-100 translate-y-0"
+    x-transition:leave-end="opacity-0 -translate-y-1"
+    x-description="Flyout menu, show/hide based on flyout menu state."
+    class="absolute border-t rounded-b-lg z-10 inset-x-0 transform shadow-lg"
+    style="top: 58px"
+    x-ref="panel"
+    >
+    <div class="bg-white rounded-b-lg">
+      <div class="p-3 flex items-center">
+        <%= live_component(@socket, Bonfire.UI.Social.SearchLive, assigns) %>
+      </div>
+    </div>
+  </div>
+  <div
+    x-show="open_search"
+    x-transition:enter="transition ease-out duration-200"
+    x-transition:enter-start="opacity-0 -translate-y-1"
+    x-transition:enter-end="opacity-100 translate-y-0"
+    x-transition:leave="transition ease-in duration-150"
+    x-transition:leave-start="opacity-100 translate-y-0"
+    x-transition:leave-end="opacity-0 -translate-y-1"
+    x-description="Flyout menu, show/hide based on flyout menu state."
+    class="absolute border-t rounded-b-lg z-10 inset-x-0 transform shadow-lg"
+    style="top: 58px"
+    x-ref="panel"
+    @click.away="open_search = false">
+    <div class="bg-white rounded-b-lg">
+      <div class="p-3 flex items-center">
+        <%= live_component(@socket, Bonfire.UI.Social.SearchLive, assigns) %>
+      </div>
+    </div>
+  </div>
 </section>

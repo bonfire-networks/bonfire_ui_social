@@ -9,6 +9,8 @@ defmodule  Bonfire.UI.Social.ObjectThreadLive do
     {:ok, assign(socket, assigns
     |> assigns_merge(%{
         page: "Discussion",
+        has_private_tab: false,
+        smart_input: false,
         date_ago: date_from_now(assigns.object),
         participants: participants
       })) }

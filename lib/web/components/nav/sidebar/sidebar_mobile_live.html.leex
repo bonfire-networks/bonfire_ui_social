@@ -1,0 +1,115 @@
+<div
+    x-show="open_sidebar"
+    x-transition:enter="duration-200 ease-out"
+    x-transition:enter-start="opacity-0 scale-95"
+    x-transition:enter-end="opacity-100 scale-100"
+    x-transition:leave="duration-100 ease-in"
+    x-transition:leave-start="opacity-100 scale-100"
+    x-transition:leave-end="opacity-0 scale-95"
+    x-description="Mobile menu, show/hide based on mobile menu state."
+    class="fixed z-30 top-0 left-0 right-0 bottom-0 w-full h-full inset-x-0 p-2 transition transform origin-top-right lg:hidden"
+    x-ref="panel"
+    @click.away="open_sidebar = false"
+    style="display: none;">
+    <div class="rounded-lg h-full shadow-lg ring-1 ring-black ring-opacity-5 bg-white divide-y-2 divide-gray-50">
+      <div class="pt-5 pb-6 px-5 sm:pb-8">
+          <nav class="flex flex-col flex-1 mt-2 space-y-3">
+            <div class="flex items-center border-b pb-3">
+              <div class="relative flex items-center flex-1">
+                  <div class="w-full relative">
+                    <div class="flex items-center justify-between">
+                      <img class="inline-block w-12 h-12 rounded-full" src="https://thispersondoesnotexist.com/image" alt="">
+                      <button
+                        type="button"
+                        class="-mr-2 bg-white rounded-md p-2 inline-flex items-center justify-center text-gray-400 hover:text-gray-500 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-indigo-500"
+                        @click="open_sidebar = false">
+                        <span class="sr-only">Close menu</span>
+                        <svg class="h-6 w-6" x-description="Heroicon name: outline/x" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
+                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                        </svg>
+                      </button>
+                    </div>
+                    <div class="flex items-center">
+                      <div class="flex-1 text-left mt-2">
+                        <h3 class="text-base font-semibold text-gray-700"><%= e(@current_user, :profile, :name, "Me")%></h3>
+                        <span class="block text-sm text-gray-500 font-regular">@<%= e(@current_user, :character, :username, "") %></span>
+                      </div>
+                      <button
+                        type="button"
+                        class="text-sm underline font-medium text-gray-800 hover:bg-blueGray-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-100 focus:ring-pink-500"
+                        id="options-menu"
+                        @click="open_profile_mobile_menu = !open_profile_mobile_menu"
+                        aria-haspopup="true"
+                        x-bind:aria-expanded="open_profile_mobile_menu"
+                        aria-expanded="true">
+                        <span x-text="open_profile_mobile_menu ? 'Show less' : 'Show more'"></span>
+                      </button>
+                    </div>
+                  </div>
+              </div>
+            </div>
+
+
+
+            <div class="flex flex-col space-y-3 divide-y divide-gray-100" x-show="open_profile_mobile_menu">
+              <div class="py-1" role="none">
+                <%= live_redirect to: Routes.live_path(@socket, Bonfire.Me.Web.ProfileLive, e(@current_user, :character, :username, "")) do %>
+                  <button class="block w-full -mx-2 px-2 py-2 text-sm text-left text-gray-700 transition duration-150 ease-in-out hover:bg-gray-100" role="menuitem">My Profile</button>
+                <% end %>
+                <a href="/switch-user" class="block -mx-2 px-2 py-2 text-sm text-gray-700 transition duration-150 ease-in-out hover:bg-gray-100" role="menuitem">Switch User</a>
+                <a href="/settings" class="block -mx-2 px-2 py-2 text-sm text-gray-700 transition duration-150 ease-in-out hover:bg-gray-100" role="menuitem">Settings</a>
+              </div>
+              <div class="py-1" role="none">
+                <a href="/home" class="block -mx-2 px-2 py-2 text-sm text-gray-700 transition duration-150 ease-in-out hover:bg-gray-100" role="menuitem">Home</a>
+                <a href="/users" class="block -mx-2 px-2 py-2 text-sm text-gray-700 transition duration-150 ease-in-out hover:bg-gray-100" role="menuitem">Users discovery</a>
+                <a href="/guidelines" class="block -mx-2 px-2 py-2 text-sm text-gray-700 transition duration-150 ease-in-out hover:bg-gray-100" role="menuitem">Guidelines</a>
+              </div>
+              <div class="py-1" role="none">
+                <a href="/logout" class="block -mx-2 px-2 py-2 text-sm text-gray-700 transition duration-150 ease-in-out hover:bg-gray-100" role="menuitem">Logout</a>
+              </div>
+            </div>
+
+
+            <div class="flex flex-col space-y-3" x-show="!open_profile_mobile_menu" >
+            <%= live_redirect to: Routes.live_path(@socket, Bonfire.Social.Web.Feeds.BrowseLive ) do %>
+              <button class="w-full flex items-center -mx-2 px-2 py-2 text-base font-medium leading-5 transition duration-150 ease-in-out  group hover:bg-blueGray-200 focus:outline-none focus:text-gray-900 focus:bg-gray-50 <%= if @page == "browse", do: "text-pink-500", else: "text-gray-800" %>">
+                <svg
+                  class="w-6 h-6 mr-3 transition duration-150 ease-in-out <%= if @page == "browse", do: "text-pink-500", else: "text-gray-700" %>"
+                  fill="currentColor"
+                  viewBox="0 0 20 20"
+                  xmlns="http://www.w3.org/2000/svg">
+                  <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM4.332 8.027a6.012 6.012 0 011.912-2.706C6.512 5.73 6.974 6 7.5 6A1.5 1.5 0 019 7.5V8a2 2 0 004 0 2 2 0 011.523-1.943A5.977 5.977 0 0116 10c0 .34-.028.675-.083 1H15a2 2 0 00-2 2v2.197A5.973 5.973 0 0110 16v-2a2 2 0 00-2-2 2 2 0 01-2-2 2 2 0 00-1.668-1.973z" clip-rule="evenodd"></path></svg>
+                Browse
+              </button>
+            <% end %>
+            <%= live_patch to: "/user/" <>  e(@current_user, :character, :username, "") <> "/private" do %>
+              <button class="w-full flex items-center -mx-2 px-2 py-2 text-base font-medium leading-5 transition duration-150 ease-in-out  group hover:bg-blueGray-200 focus:outline-none focus:text-gray-900 focus:bg-gray-50 <%= if @page == "private", do: "text-pink-500", else: "text-gray-800" %>">
+                <svg class="w-6 h-6 mr-3 transition duration-150 ease-in-out <%= if @page == "private", do: "text-pink-500", else: "text-gray-700" %>"" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z" clip-rule="evenodd"></path></svg>
+                Private
+              </button>
+            <% end %>
+            <%= live_redirect to: Routes.live_path(@socket, Bonfire.Social.Web.Feeds.InboxLive ) do %>
+              <button class="w-full flex items-center -mx-2 px-2 py-2 text-base font-medium leading-5 transition duration-150 ease-in-out  group hover:bg-blueGray-200 focus:outline-none focus:text-gray-900 focus:bg-gray-50 <%= if @page == "notifications", do: "text-pink-500", else: "text-gray-800" %>">
+                <svg class="w-6 h-6 mr-3 transition duration-150 ease-in-out <%= if @page == "notifications", do: "text-pink-500", else: "text-gray-700" %>" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path d="M10 2a6 6 0 00-6 6v3.586l-.707.707A1 1 0 004 14h12a1 1 0 00.707-1.707L16 11.586V8a6 6 0 00-6-6zM10 18a3 3 0 01-3-3h6a3 3 0 01-3 3z"></path></svg>
+                Notifications
+              </button>
+            <% end %>
+            <%= live_redirect to: Routes.live_path(@socket, Bonfire.Me.Web.ProfileLive, e(@current_user, :character, :username, "") ) do %>
+              <button class="w-full flex items-center -mx-2 px-2 py-2 text-base font-medium leading-5 transition duration-150 ease-in-out  group hover:bg-blueGray-200 focus:outline-none focus:text-gray-900 focus:bg-gray-50 <%= if @page == "profile", do: "text-pink-500", else: "text-gray-800" %> ">
+                <svg
+                  class="w-6 h-6 mr-3 transition duration-150 ease-in-out <%= if @page == "profile", do: "text-pink-500", else: "text-gray-700" %>"
+                  fill="currentColor"
+                  viewBox="0 0 20 20"
+                  xmlns="http://www.w3.org/2000/svg">
+                  <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-6-3a2 2 0 11-4 0 2 2 0 014 0zm-2 4a5 5 0 00-4.546 2.916A5.986 5.986 0 0010 16a5.986 5.986 0 004.546-2.084A5 5 0 0010 11z" clip-rule="evenodd"></path></svg>
+                Profile
+              </button>
+            <% end %>
+          </div>
+
+
+          </nav>
+      </div>
+    </div>
+  </div>
+</div>

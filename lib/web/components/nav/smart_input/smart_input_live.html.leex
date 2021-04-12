@@ -1,6 +1,6 @@
 
   <%= if @smart_input do %>
-    <div class="px-3 pt-3 mt-3 -mx-3 border-t">
+    <div class="p-3 border-t">
       <%= live_component(@socket, Bonfire.UI.Social.CreateActivityLive, assigns) %>
     </div>
   <% end %>
