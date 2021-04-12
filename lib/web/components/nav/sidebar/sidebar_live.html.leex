@@ -14,7 +14,7 @@
                 <div x-data="{ open: false }" @keydown.escape.stop="open = false" @click.away="open = false" class="relative block w-full text-left">
                   <div class="w-full">
                     <button type="button" class="inline-flex items-center justify-center w-full rounded-md  px-3 py-2 bg-blueGray-100 text-sm font-medium text-gray-700 hover:bg-blueGray-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-100 focus:ring-pink-500" id="options-menu" @click="open = !open" aria-haspopup="true" x-bind:aria-expanded="open" aria-expanded="true">
-                      <img class="inline-block w-8 h-8 rounded-full" src="https://thispersondoesnotexist.com/image" alt="">
+                      <img class="inline-block w-10 h-10 rounded-full" src="https://thispersondoesnotexist.com/image" alt="">
                       <div class="flex-1 text-left ml-3">
                         <h3 class="text-base font-semibold text-gray-700"><%= e(@current_user, :profile, :name, "Me")%></h3>
                         <span class="-mt-1 text-sm text-gray-500 font-regular">@<%= e(@current_user, :character, :username, "") %></span>
