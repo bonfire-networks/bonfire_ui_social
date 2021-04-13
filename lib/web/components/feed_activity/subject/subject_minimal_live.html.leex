@@ -19,8 +19,11 @@
     <% end %>
   </div>
   <div class="flex-1 ml-2">
-    <h3 class="text-sm font-medium text-gray-500">
-      <a class="font-medium"  href="/user/<%= e(@activity, :subject_character, :username, "") %>"><%= e(@activity, :subject_profile, :name, "Anonymous") %></a> <%= raw @verb_display %>
-    </h3>
+    <div class="text-sm font-medium text-gray-500">
+      <a
+        aria-label="<%= e(@activity, :subject_character, :username, "") %> profile"
+        class="font-medium"
+        href="/user/<%= e(@activity, :subject_character, :username, "") %>"><%= e(@activity, :subject_profile, :name, "Anonymous") %></a> <%= raw @verb_display %>
+    </div>
   </div>
 </div>

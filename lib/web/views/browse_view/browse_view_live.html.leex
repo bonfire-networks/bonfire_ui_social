@@ -5,34 +5,20 @@
   <section class="w-center">
     <%= live_component(@socket, Bonfire.UI.Social.PageHeaderLive, assigns) %>
     <div class="mx-4 lg:mx-0 bg-white rounded-lg shadow">
-      <div class="flex flex-wrap items-center justify-between sm:flex-no-wrap">
-        <div class="flex-1">
-          <div class="sm:block">
-            <div class="border-b border-gray-200">
-              <nav class="-mb-px flex" aria-label="browse main sections">
-                <!-- Current: "border-indigo-500 text-indigo-600", Default: "border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300" -->
-                  <div aria-current="<%= if @selected_tab == "feed", do: "page" %>" class="<%= if @selected_tab == "feed", do: "border-pink-500 text-pink-600", else: "border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300" %> w-1/3 py-4 px-1 text-center border-b-2 font-medium text-sm">
-                    <%= live_patch to: "/browse" do %>My feed<% end %>
-                  </div>
-                  <div aria-current="<%= if @selected_tab == "instance", do: "page" %>" class="<%= if @selected_tab == "instance", do: "border-pink-500 text-pink-600", else: "border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300" %> w-1/3 py-4 px-1 text-center border-b-2 font-medium text-sm">
-                    <%= live_patch to: "/browse/instance" do %>Instance<% end %>
-                  </div>
-                  <div aria-current="<%= if @selected_tab == "fediverse", do: "page" %>" class="<%= if @selected_tab == "fediverse", do: "border-pink-500 text-pink-600", else: "border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300" %> w-1/3 py-4 px-1 text-center border-b-2 font-medium text-sm">
-                    <%= live_patch to: "/browse/fediverse" do %>Fediverse<% end %>
-                  </div>
-              </nav>
-            </div>
-          </div>
-        </div>
-
-      </div>
+      <%= live_component(@socket, Bonfire.UI.Social.BrowseTabsLive, assigns) %>
       <%= cond do %>
         <% @selected_tab == "instance" ->  %>
-          <%= live_component(@socket, Bonfire.UI.Social.FeedLive, assigns) %>
+          <div id="instance_section">
+            <%= live_component(@socket, Bonfire.UI.Social.FeedLive, assigns) %>
+          </div>
         <% @selected_tab == "fediverse" ->  %>
-          <%= live_component(@socket, Bonfire.UI.Social.FeedLive, assigns) %>
+          <div id="fediverse_section">
+            <%= live_component(@socket, Bonfire.UI.Social.FeedLive, assigns) %>
+          </div>
         <% true -> %>
-          <%= live_component(@socket, Bonfire.UI.Social.FeedLive, assigns) %>
+          <div id="instance_section">
+            <%= live_component(@socket, Bonfire.UI.Social.FeedLive, assigns) %>
+          </div>
       <% end %>
     </div>
   </section>
@@ -44,6 +30,5 @@
           </div>
         <% end %>
       </div>
-
   </aside>
 </main>

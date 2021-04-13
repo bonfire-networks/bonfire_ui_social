@@ -2,17 +2,40 @@
   <div class="flex-1">
     <div class="sm:block">
       <div class="border-b border-gray-200">
-        <nav class="-mb-px flex" aria-label="Tabs">
-          <!-- Current: "border-indigo-500 text-indigo-600", Default: "border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300" -->
-            <div aria-current="<%= if @selected_tab == "feed", do: "page" %>" class="<%= if @selected_tab == "feed", do: "border-pink-500 text-pink-600", else: "border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300" %> w-1/3 py-4 px-1 text-center border-b-2 font-regular text-sm">
-              <%= live_patch to: "/browse" do %>My feed<% end %>
-            </div>
-            <div aria-current="<%= if @selected_tab == "instance", do: "page" %>" class="<%= if @selected_tab == "instance", do: "border-pink-500 text-pink-600", else: "border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300" %> w-1/3 py-4 px-1 text-center border-b-2 font-regular text-sm">
-              <%= live_patch to: "/browse/instance" do %>Instance<% end %>
-            </div>
-            <div aria-current="<%= if @selected_tab == "fediverse", do: "page" %>" class="<%= if @selected_tab == "fediverse", do: "border-pink-500 text-pink-600", else: "border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300" %> w-1/3 py-4 px-1 text-center border-b-2 font-regular text-sm">
-              <%= live_patch to: "/browse/fediverse" do %>Fediverse<% end %>
-            </div>
+        <nav
+          role="tablist"
+          class="-mb-px flex"
+          aria-label="Switch between my feed, instance or fediverse tabs">
+            <%= live_patch to: "/browse", class: "flex flex-1" do %>
+            <button
+              role="tab"
+              aria-control="myfeed_section"
+              aria-selected="<%= if @selected_tab == "feed", do: true, else: false %>"
+              aria-current="<%= if @selected_tab == "feed", do: "page" %>"
+              class="<%= if @selected_tab == "feed", do: "border-pink-500 text-pink-600", else: "border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300" %> w-full  w-1/3 py-4 px-1 text-center border-b-2 font-regular text-sm">
+              My feed
+            </button>
+            <% end %>
+            <%= live_patch to: "/browse/instance", class: "flex flex-1" do %>
+            <button
+              role="tab"
+              aria-control="instance_section"
+              aria-selected="<%= if @selected_tab == "instance", do: true, else: false %>"
+              aria-current="<%= if @selected_tab == "instance", do: "page" %>"
+              class="<%= if @selected_tab == "instance", do: "border-pink-500 text-pink-600", else: "border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300" %> w-full  w-1/3 py-4 px-1 text-center border-b-2 font-regular text-sm">
+              Instance
+            </button>
+            <% end %>
+            <%= live_patch to: "/browse/fediverse", class: "flex flex-1" do %>
+            <button
+              role="tab"
+              aria-selected="<%= if @selected_tab == "fediverse", do: true, else: false %>"
+              aria-control="fediverse_section"
+              aria-current="<%= if @selected_tab == "fediverse", do: "page" %>"
+              class="<%= if @selected_tab == "fediverse", do: "border-pink-500 text-pink-600", else: "border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300" %> w-full  w-1/3 py-4 px-1 text-center border-b-2 font-regular text-sm">
+              Fediverse
+            </button>
+            <% end %>
         </nav>
       </div>
     </div>
