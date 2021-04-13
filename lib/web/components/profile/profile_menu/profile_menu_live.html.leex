@@ -2,7 +2,7 @@
   <div class="flex-shrink-0 flex h-16 justify-between">
     <div class="flex items-center flex-shrink-0 px-4">
       <div class="pr-2">
-        <img class="inline-block h-10 w-10 rounded-md" src="https://thispersondoesnotexist.com/image" alt="">
+        <img class="inline-block h-10 w-10 rounded-md" src="<%=avatar_url(@user)%>" alt="">
       </div>
       <div>
         <div class="sm:block ml-2">
@@ -11,13 +11,13 @@
               <div aria-current="<%= if @selected_tab == "about", do: "page" %>" class="<%= if @selected_tab == "about", do: "bg-rose-500 text-gray-100" %> text-gray-100 hover:text-gray-200 px-3 py-2 font-medium text-sm rounded-md">
                 About
               </div>
-            <% end %> 
+            <% end %>
 
             <%= live_patch to: "/user/" <>  e(@user, :character, :username, "") <> "/timeline" do %>
               <div aria-current="<%= if @selected_tab == "timeline", do: "page" %>" class="<%= if @selected_tab == "timeline", do: "bg-rose-500 text-gray-100" %> text-gray-100 hover:text-gray-200 px-3 py-2 font-medium text-sm rounded-md">
                 Timeline
               </div>
-            <% end %> 
+            <% end %>
 
             <%= live_patch to: "/user/" <>  e(@user, :character, :username, "") <> "/boosts" do %>
               <div aria-current="<%= if @selected_tab == "likes", do: "page" %>" class="<%= if @selected_tab == "boosts", do: "bg-rose-500 text-gray-100" %> text-gray-100 hover:text-gray-200 px-3 py-2 font-medium text-sm rounded-md">

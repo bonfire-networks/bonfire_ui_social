@@ -3,7 +3,7 @@
   <div class="-mt-8 px-3 pb-2">
     <div class="">
       <div class="flex items-center justify-between">
-        <img class="inline-block h-16 w-16 ring-4 ring-white rounded-md" src="https://thispersondoesnotexist.com/image" alt="">
+        <img class="inline-block h-16 w-16 ring-4 ring-white rounded-md" src="<%=avatar_url(@user)%>" alt="">
         <%= if @current_user && maybe_get(@current_user, :id) != maybe_get(@user, :id) do %>
           <%= live_component(@socket, Bonfire.UI.Social.FollowButtonLive, following: e(assigns, :following, []), id: e(@user, :id, nil), label: "") %>
         <% end %>
