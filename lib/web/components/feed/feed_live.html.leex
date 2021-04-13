@@ -1,4 +1,8 @@
-<div class="mb-8">
+<div
+  role="feed"
+  aria-live="assertive"
+  aria-atomic="true"
+  class="mb-8">
     <div class="mx-auto max-w-7xl">
     <%= if length(@feed) == 0 do %>
       <div class="p-4 text-center">
@@ -7,7 +11,11 @@
       </div>
     <% else %>
       <%= for entry <- @feed do %>
-      <div class="px-3 border-b">
+      <article
+        role="article"
+        tabIndex="0"
+        aria-label="user activity"
+        class="px-3 border-b">
         <%= live_component(
         @socket,
         ActivityLive,
@@ -18,7 +26,7 @@
           current_user: @current_user
         )
       ) %>
-      </div>
+      </article>
       <% end %>
     <% end %>
     <%= if e(@page_info, :after, nil) do %>

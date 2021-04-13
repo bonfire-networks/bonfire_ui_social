@@ -1,6 +1,6 @@
 <%= if @current_user do %>
 
-<div
+<button
   phx-click="<%= if e(@object, :id, "") in e(assigns, :boosted, []) || e(@activity, :my_boost, :id, nil), do: "boost_undo", else: "boost" %>"
   phx-value-id="<%= e(@object, :id, "") %>"
   phx-target="<%= @myself %>"
@@ -19,9 +19,9 @@
   <span class="<%= if e(@object, :id, "") in e(assigns, :boosted, []) || e(@activity, :my_boost, :id, nil), do: "text-pink-500 group-hover:text-pink-600", else: "text-gray-500 group-hover:text-pink-600" %> font-normal text-xs">
   <%= if e(@object, :id, "") in e(assigns, :boosted, []) || e(@activity, :my_boost, :id, nil), do: "Boosted", else: "Boost" %>
   <% if  e(@activity, :boost_count, :booster_count, 0) > 0 do %> (<%= e(@activity, :boost_count, :booster_count, 0) %>) <% end %> </span>
-</div>
+</button>
 
-<div
+<button
   phx-click="like"
   phx-value-direction="<%= if e(@object, :id, "") in e(assigns, :liked, []) || e(@activity, :my_like, :id, nil), do: "down", else: "up" %>"
   phx-value-id="<%= e(@object, :id, "") %>"
@@ -41,9 +41,9 @@
   <span class="<%= if e(@object, :id, "") in e(assigns, :liked, []) || e(@activity, :my_like, :id, nil), do: "text-pink-500 group-hover:text-pink-600", else: "text-gray-500 group-hover:text-pink-600" %> font-normal text-xs">
   <%= if e(@object, :id, "") in e(assigns, :liked, []) || e(@activity, :my_like, :id, nil), do: "Liked", else: "Like" %>
   <% if e(@activity, :like_count, :liker_count, 0) > 0 do %>(<%= e(@activity, :like_count, :liker_count, 0) %>)<% end %></span>
-</div>
+</button>
 
-<div
+<button
   x-data="{more: false}"
   @keydown.escape.stop="more = false"
   @click.away="more = false"
@@ -99,5 +99,5 @@
       </span>
     </div>
   </div>
-</div>
+</button>
 <% end %>

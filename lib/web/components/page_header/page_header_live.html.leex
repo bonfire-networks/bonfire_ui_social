@@ -1,4 +1,5 @@
 <section
+  role="banner"
   x-data="{
     open_search: false,
     open_sidebar: false,
@@ -24,7 +25,9 @@
       </button>
       <%= live_component(@socket, Bonfire.UI.Social.SidebarMobileLive, assigns) %>
       <div class="text-left flex items-center flex-1 space-x-2">
-        <a href="javascript:window.history.back()">
+        <a
+          aria-label="Navigate to the previous page"
+          href="javascript:window.history.back()">
           <span class="w-8 h-8 items-center flex place-content-center hover:bg-pink-100 rounded-full">
             <svg class="w-4 h-4 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path></svg>
           </span>
