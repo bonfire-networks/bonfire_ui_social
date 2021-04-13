@@ -8,7 +8,7 @@
 
   <%= if e(assigns, :showing_within_thread, false) != true do %>
   <svg
-    class="<%= if e(@object, :id, "") in e(assigns, :boosted, []) || e(@activity, :my_boost, :id, nil), do: "text-pink-500 group-hover:text-pink-700", else: "text-gray-500 group-hover:text-pink-600" %>  w-5 h-5 mr-2"
+    class="<%= if e(@object, :id, "") in e(assigns, :boosted, []) || e(@activity, :my_boost, :id, nil), do: "text-pink-600 group-hover:text-pink-700", else: "text-gray-500 group-hover:text-pink-700" %>  w-5 h-5 mr-2"
     stroke="currentColor"
     fill="none"
     viewBox="0 0 24 24"
@@ -16,7 +16,7 @@
       <polyline points="17 1 21 5 17 9"></polyline><path d="M3 11V9a4 4 0 0 1 4-4h14"></path><polyline points="7 23 3 19 7 15"></polyline><path d="M21 13v2a4 4 0 0 1-4 4H3"></path></svg>
   <% end %>
 
-  <span class="<%= if e(@object, :id, "") in e(assigns, :boosted, []) || e(@activity, :my_boost, :id, nil), do: "text-pink-500 group-hover:text-pink-600", else: "text-gray-500 group-hover:text-pink-600" %> font-normal text-xs">
+  <span class="<%= if e(@object, :id, "") in e(assigns, :boosted, []) || e(@activity, :my_boost, :id, nil), do: "text-pink-600 group-hover:text-pink-700", else: "text-gray-500 group-hover:text-pink-700" %> font-normal text-xs">
   <%= if e(@object, :id, "") in e(assigns, :boosted, []) || e(@activity, :my_boost, :id, nil), do: "Boosted", else: "Boost" %>
   <% if  e(@activity, :boost_count, :booster_count, 0) > 0 do %> (<%= e(@activity, :boost_count, :booster_count, 0) %>) <% end %> </span>
 </button>
@@ -30,7 +30,7 @@
 
     <%= if e(assigns, :showing_within_thread, false) != true do %>
     <svg
-      class="<%= if e(@object, :id, "") in e(assigns, :liked, []) || e(@activity, :my_like, :id, nil), do: "text-pink-500 group-hover:text-pink-700", else: "text-gray-500 group-hover:text-pink-600" %>  w-5 h-5 mr-1"
+      class="<%= if e(@object, :id, "") in e(assigns, :liked, []) || e(@activity, :my_like, :id, nil), do: "text-pink-600 group-hover:text-pink-700", else: "text-gray-500 group-hover:text-pink-700" %>  w-5 h-5 mr-1"
       stroke="<%= if e(@object, :id, "") in e(assigns, :liked, []) || e(@activity, :my_like, :id, nil), do: "none", else: "currentColor" %>"
       fill="<%= if e(@object, :id, "") in e(assigns, :liked, []) || e(@activity, :my_like, :id, nil), do: "currentColor", else: "none" %>"
       viewBox="0 0 20 20"
@@ -38,7 +38,7 @@
       <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"></path>
     </svg>
     <% end %>
-  <span class="<%= if e(@object, :id, "") in e(assigns, :liked, []) || e(@activity, :my_like, :id, nil), do: "text-pink-500 group-hover:text-pink-600", else: "text-gray-500 group-hover:text-pink-600" %> font-normal text-xs">
+  <span class="<%= if e(@object, :id, "") in e(assigns, :liked, []) || e(@activity, :my_like, :id, nil), do: "text-pink-600 group-hover:text-pink-700", else: "text-gray-500 group-hover:text-pink-700" %> font-normal text-xs">
   <%= if e(@object, :id, "") in e(assigns, :liked, []) || e(@activity, :my_like, :id, nil), do: "Liked", else: "Like" %>
   <% if e(@activity, :like_count, :liker_count, 0) > 0 do %>(<%= e(@activity, :like_count, :liker_count, 0) %>)<% end %></span>
 </button>
@@ -51,8 +51,8 @@
   aria-haspopup="true"
   x-bind:aria-expanded="more"
   class="relative flex items-center rounded cursor-pointer py-1text-left group">
-  <svg class="w-4 h-4 mr-1 text-gray-500 group-hover:text-pink-500" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path d="M6 10a2 2 0 11-4 0 2 2 0 014 0zM12 10a2 2 0 11-4 0 2 2 0 014 0zM16 12a2 2 0 100-4 2 2 0 000 4z"></path></svg>
-  <span class="text-xs font-normal text-gray-500 group-hover:text-pink-500">More</span>
+  <svg aria-hidden="true" class="w-4 h-4 mr-1 text-gray-500 group-hover:text-pink-700" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path d="M6 10a2 2 0 11-4 0 2 2 0 014 0zM12 10a2 2 0 11-4 0 2 2 0 014 0zM16 12a2 2 0 100-4 2 2 0 000 4z"></path></svg>
+  <span id="more-menu" class="text-xs font-normal text-gray-500 group-hover:text-pink-700">More</span>
   <div
     x-description="Dropdown menu, show/hide based on menu state."
     x-show="more"
@@ -65,7 +65,7 @@
     class="absolute top-0 right-0 z-50 w-56 mt-2 origin-bottom-right bg-white divide-y divide-gray-100 rounded-md shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none"
     role="menu"
     aria-orientation="vertical"
-    aria-labelledby="options-menu">
+    aria-labelledby="more-menu">
     <div class="py-1" role="none">
       <span
         role="menuitem"

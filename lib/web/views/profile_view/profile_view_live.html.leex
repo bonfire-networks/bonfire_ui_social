@@ -1,5 +1,5 @@
-<div class="lg:flex lg:space-x-4">
-  <div class="w-center">
+<main class="lg:flex lg:space-x-4">
+  <section class="w-center">
     <%= live_component(@socket, Bonfire.UI.Social.PageHeaderLive, assigns) %>
     <%= cond do %>
       <% @selected_tab == "private" ->  %>
@@ -39,9 +39,9 @@
             <%= live_component(@socket, Bonfire.UI.Social.FeedLive, assigns) %>
           </div>
     <% end %>
-  </div>
+  </section>
 
-  <div class="flex-1 hidden mt-2 lg:flex md:flex-shrink-0">
+  <aside class="flex-1 hidden mt-2 lg:flex md:flex-shrink-0">
     <div class="h-full px-1 bg-blueGray-100 w-full">
       <%= if @current_user do %>
         <div class="sticky top-0 z-10 flex-1 px-2 py-2 mb-4 -mx-2 bg-blueGray-100">
@@ -50,5 +50,5 @@
       <% end %>
         <%#= live_component(@socket, Bonfire.UI.Social.DMWidgetLive, assigns) %>
     </div>
-  </div>
-</div>
+  </aside>
+</main>
