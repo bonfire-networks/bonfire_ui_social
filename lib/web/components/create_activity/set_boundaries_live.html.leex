@@ -1,4 +1,4 @@
-<input type="hidden" name="is_private" value="<%= if e(assigns, :smart_input_private, nil), do: "1", else: "0" %>" />
+<input type="hidden" name="is_private" value="<%= if e(assigns, :smart_input_private, nil) || e(assigns, :is_private, nil), do: "1", else: "0" %>" />
 
 
 <div
