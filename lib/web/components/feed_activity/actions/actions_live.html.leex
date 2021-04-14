@@ -2,52 +2,57 @@
   <div class="flex items-center justify-between">
 
     <%= if !e(assigns, :hide_reply , nil) do %>
-      <%= if !e(assigns, :reply_click, nil) do %>
+        <%= if !e(assigns, :reply_click, nil) do %>
         <%= live_redirect to: @permalink do %>
-          <div class="flex items-center py-1 rounded cursor-pointer group">
+            <div class="flex items-center py-1 rounded cursor-pointer group">
             <svg
-              class="w-5 h-5 mr-1 text-gray-500 group-hover:text-pink-600"
-              stroke="currentColor" fill="none" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-              <path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"></path>
+                class="w-5 h-5 mr-1 text-gray-500 group-hover:text-pink-600"
+                stroke="currentColor" fill="none" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                <path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"></path>
             </svg>
             <span
-              class="text-xs font-normal text-gray-500 group-hover:text-pink-600">Reply <%= if e(@activity, :replied, :nested_replies_count, 0) + e(@activity, :replied, :direct_replies_count, 0) > 0 do %>(<%= e(@activity, :replied, :nested_replies_count, 0) + e(@activity, :replied, :direct_replies_count, 0) %>) <% end %></span>
-          </div>
+                class="text-xs font-normal text-gray-500 group-hover:text-pink-600">Reply <%= if e(@activity, :replied, :nested_replies_count, 0) + e(@activity, :replied, :direct_replies_count, 0) > 0 do %>(<%= e(@activity, :replied, :nested_replies_count, 0) + e(@activity, :replied, :direct_replies_count, 0) %>) <% end %></span>
+            </div>
         <% end %>
-      <%= else %>
+        <%= else %>
         <a href="<%= @permalink%>" x-on:click="<%=e(assigns, :reply_click, "") %>">
-          <div class="flex items-center py-1 rounded cursor-pointer group">
+            <div class="flex items-center py-1 rounded cursor-pointer group">
             <svg class="w-5 h-5 mr-1 text-gray-500 group-hover:text-pink-600" stroke="currentColor" fill="none" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-              <path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"></path>
+                <path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"></path>
             </svg>
             <span class="text-xs font-normal text-gray-500 group-hover:text-pink-600">Reply <%= if e(@activity, :replied, :nested_replies_count, 0) + e(@activity, :replied, :direct_replies_count, 0) > 0 do %> (<%= e(@activity, :replied, :nested_replies_count, 0) + e(@activity, :replied, :direct_replies_count, 0) %>) <% end %></span>
-          </div>
+            </div>
         </a>
-      <% end %>
+        <% end %>
     <% end %>
 
     <%= live_component(@socket, Bonfire.UI.Social.Activity.MoreActionsLive, assigns) %>
+</div>
+
+<% else %>
 
 
-  <% else %>
-
-
-   <div class="flex ml-8 space-x-4 items-center">
-      <%= if !e(assigns, :hide_reply , nil) do %>
+    <div class="flex ml-8 space-x-4 items-center">
+    <%= if !e(assigns, :hide_reply , nil) do %>
         <%= if e(assigns, :reply_click , nil) do %>
-        <a href="<%= @permalink %>" @click="<%=e(assigns, :reply_click, "") %>" class="flex items-center py-1 rounded cursor-pointer group">
-          <span class="text-xs font-normal text-gray-500 group-hover:text-pink-600">Reply <% if e(@activity, :replied, :direct_replies_count, 0) > 0 do %>(<%= e(@activity, :replied, :direct_replies_count, 0) %>)<% end %></span>
-        </a>
+            <a href="<%= @permalink %>" @click="<%=e(assigns, :reply_click, "") %>" class="flex items-center py-1 rounded cursor-pointer group">
+                <span class="text-xs font-normal text-gray-500 group-hover:text-pink-600">
+                    Reply
+                    <% if e(@activity, :replied, :direct_replies_count, 0) > 0 do %>(<%= e(@activity, :replied, :direct_replies_count, 0) %>)<% end %>
+                </span>
+            </a>
         <% else %>
-          <%= live_redirect to: @permalink do %>
-            <div class="flex items-center py-1 rounded cursor-pointer group">
-              <span class="text-xs font-normal text-gray-500 group-hover:text-pink-600">Reply <% if e(@activity, :replied, :direct_replies_count, 0) > 0 do %> (<%= e(@activity, :replied, :direct_replies_count, 0) %>)<% end %></span>
-            </div>
-          <% end %>
+            <%= live_redirect to: @permalink do %>
+                <div class="flex items-center py-1 rounded cursor-pointer group">
+                    <span class="text-xs font-normal text-gray-500 group-hover:text-pink-600">
+                        Reply
+                        <% if e(@activity, :replied, :direct_replies_count, 0) > 0 do %> (<%= e(@activity, :replied, :direct_replies_count, 0) %>)<% end %>
+                    </span>
+                </div>
+            <% end %>
         <% end %>
-  <% end %>
+    <% end %>
 
     <%= live_component(@socket, Bonfire.UI.Social.Activity.MoreActionsLive, assigns) %>
-
-
-  <% end %>
+    </div>
+<% end %>

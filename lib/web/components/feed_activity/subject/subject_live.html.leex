@@ -1,6 +1,6 @@
 <%= if e(assigns, :showing_within_thread , nil) != true do %>
 <div class="<%= if e(@activity, :replied, :reply_to_id, nil), do: "pl-1" %> flex items-center">
-  <img class="inline-block w-8 h-8 rounded-full" src="https://thispersondoesnotexist.com/image" alt="">
+  <img class="inline-block w-8 h-8 rounded-full" src="<%=avatar_url(e(@activity, :subject_profile, nil))%>" alt="">
   <div class="flex justify-between items-center flex-1 ml-2">
     <div class="flex items-center text-sm">
       <a
@@ -20,7 +20,7 @@
 <% else %>
 
 <div class="<%= if e(@activity, :replied, :reply_to_id, nil), do: "pl-1" %> flex items-center">
-  <img class="inline-block w-6 h-6 rounded-full" src="https://thispersondoesnotexist.com/image" alt="">
+  <img class="inline-block w-6 h-6 rounded-full" src="<%=avatar_url(e(@activity, :subject_profile, nil))%>" alt="">
   <div class="ml-2">
   <div class="flex items-baseline space-x-1 flex-1">
     <div class="text-sm font-bold text-gray-700">

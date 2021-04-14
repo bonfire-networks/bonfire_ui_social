@@ -1,6 +1,6 @@
-<form
+<%# <form
   x-data="{open: false}"
-  phx-submit="post_reply"
+  phx-submit="post"
   phx-target="<%= @target_component %>">
   <label for="reply_<%= @reply_to_id %>" class="sr-only">Add a reply  </label>
     <input type="hidden" name="reply_to[reply_to_id]" value="<%= @reply_to_id %>" />
@@ -18,4 +18,4 @@
   <div x-show="open" class="flex rounded-b items-center px-2 bg-gray-200 justify-end py-2	-mt-0.5">
     <button class="inline-flex items-center px-4 py-1.5 text-sm leading-5 font-medium rounded-md text-gray-100 bg-gray-900 hover:bg-gray-800 hover:text-gray-200 focus:outline-none focus:border-blue-300 focus:shadow-outline-blue active:text-gray-200 active:bg-gray-700 transition ease-in-out duration-150">Publish</button>
   </div>
-</form>
+</form> %>

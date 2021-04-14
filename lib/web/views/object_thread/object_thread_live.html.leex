@@ -60,7 +60,7 @@
           <div class="flex space-x-1 items-center">
           <%= for p <- e(@participants, :entries, [])  do %>
             <%= live_redirect to: "/user/"<>e(p, :activity, :subject_character, :username, "404") do %>
-              <img title="<%=e(p, :activity, :subject_profile, :name, "")%>" class="w-6 h-6 rounded-full" src="https://thispersondoesnotexist.com/image" />
+              <img title="<%=e(p, :activity, :subject_profile, :name, "")%>" class="w-6 h-6 rounded-full" src="<%=avatar_url(e(p, :activity, :subject_profile, nil))%>" />
             <% end %>
           <% end %>
 

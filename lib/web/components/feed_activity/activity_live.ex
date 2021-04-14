@@ -80,7 +80,8 @@ defmodule Bonfire.UI.Social.ActivityLive do
 
   def component_activity_subject(_, _, _), do: [Bonfire.UI.Social.Activity.SubjectLive]
 
-  def component_activity_maybe_creator(%{created: %{creator_profile: %{id: _}}}), do: Bonfire.UI.Social.Activity.CreatorLive
+  def component_activity_maybe_creator(%{object_created: %{creator_profile: %{id: _}}}), do: Bonfire.UI.Social.Activity.CreatorLive
+  def component_activity_maybe_creator(%{object_created: %{creator_character: %{id: _}}}), do: Bonfire.UI.Social.Activity.CreatorLive
   def component_activity_maybe_creator(_), do: nil
 
   def component_maybe_reply_to(verb,
