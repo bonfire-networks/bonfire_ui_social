@@ -1,0 +1,33 @@
+<div class="transition duration-300 ease-in-out bg-white shadow hover:shadow-xl rounded-lg hover:bg-blueGray-50">
+  <%= live_redirect to: Routes.switch_user_path(@socket, :show, @user.character.username || "") <> @go do %>
+    <div
+      aria-hidden="true"
+      class="bg-pink-600 h-32 rounded-t-lg"></div>
+    <div class="-mt-8 px-3 pb-2">
+      <div class="">
+        <div class="flex items-center justify-between">
+          <img
+            class="inline-block h-16 w-16 ring-2 ring-white rounded-full"
+            src="<%=avatar_url(@user)%>"
+            alt="user image">
+        </div>
+        <div class="mt-1">
+          <span class="block text-lg font-bold text-gray-800"><%= e(@user, :profile, :name, "Anonymous") %></span>
+          <%= if Utils.module_exists?(Bonfire.Me.SharedUsers) && e(@user, :shared_user, :label, nil) do %>
+            <h3 class="-mt-1 text-sm font-normal text-gray-600">@<%= e(@user, :shared_user, :label, "") %></h3>
+          <% else %>
+          <h3 class="-mt-1 text-sm font-normal text-gray-600">@<%= e(@user, :character, :username, "") %></h3>
+        <% end %>
+        </div>
+      </div>
+      <div class="flex items-center mt-2 mb-4">
+        <svg
+          aria-hidden="true"
+          class="w-5 h-5 text-gray-500" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+          <path d="M9 6a3 3 0 11-6 0 3 3 0 016 0zM17 6a3 3 0 11-6 0 3 3 0 016 0zM12.93 17c.046-.327.07-.66.07-1a6.97 6.97 0 00-1.5-4.33A5 5 0 0119 16v1h-6.07zM6 11a5 5 0 015 5v1H1v-1a5 5 0 015-5z" />
+        </svg>
+        <div class="ml-2 text-sm  text-gray-800 mr-2"> <b><%= e(@user, :character, :follow_count, :follower_count, 0) %></b> Followers </div> · <div class="ml-2 text-sm text-gray-800"> <b><%= e(@user, :character, :follow_count, :follow_count, 0) %></b> Following</div>
+      </div>
+    </div>
+  <% end %>
+</div>
