@@ -7,7 +7,7 @@
       ml-8 py-0
     <% true -> %>
       py-2
-  <% end %>" x-data="{content_open: false}">
+  <% end %>" x-cloak  x-data="{content_open: false}">
       <%= if e(assigns, :viewing_main_object, nil) !=true && e(@activity, :object_post_content, :name, nil) do %>
 
         <button

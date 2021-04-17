@@ -11,6 +11,7 @@
           <div class="flex items-center">
             <div class="relative flex items-center flex-1">
               <div
+                x-cloak
                 x-data="{ open: false }"
                 @keydown.escape.stop="open = false"
                 @click.away="open = false"

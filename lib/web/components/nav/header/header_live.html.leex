@@ -18,7 +18,7 @@
       <div class="relative flex items-center">
 
         <div class="mx-auto text-right">
-          <div x-data="{ open: false }" @keydown.escape.stop="open = false" @click.away="open = false" class="relative inline-block text-left">
+          <div x-cloak x-data="{ open: false }" @keydown.escape.stop="open = false" @click.away="open = false" class="relative inline-block text-left">
             <div>
               <button
                 type="button"

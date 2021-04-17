@@ -1,7 +1,10 @@
 
 
 <h2><%= e(@circle, :named, :name, "Edit Circle") %>
-<div class="drag_drop" x-data="{ adding: false, removing: false }">
+<div
+  x-cloak
+  class="drag_drop"
+  x-data="{ adding: false, removing: false }">
     <div class="drag_drop__container drag_drop__container__from">
         <h3 class="drag_drop__title">Suggestions</h3>
         <ul
@@ -37,6 +40,7 @@
                     event.dataTransfer.setData('text/plain', event.target.id);
                 "
                 x-on:dragend="dragging = false"
+                x-cloak
                 x-data="{ dragging: false }"
                 draggable="true">
 
@@ -69,6 +73,7 @@
                     event.dataTransfer.setData('text/plain', event.target.id);
                 "
                 x-on:dragend="dragging = false"
+                x-cloak
                 x-data="{ dragging: false }"
                 draggable="true">
 
@@ -138,6 +143,7 @@
                     event.dataTransfer.setData('text/plain', event.target.id);
                 "
                 x-on:dragend="dragging = false"
+                x-cloak
                 x-data="{ dragging: false }"
                 draggable="true">
 

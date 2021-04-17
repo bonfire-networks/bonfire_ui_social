@@ -1,7 +1,7 @@
 <div class="reply thread-level-<%= @thread_level %> flex relative">
   <div class="flex-1 w-full relative comment_lined">
 
-    <div x-data="{reply: false}">
+    <div x-cloak x-data="{reply: false}">
       <div class="flex items-center">
         <%= live_component(@socket, Bonfire.UI.Social.ActivityLive,
           assigns
@@ -39,7 +39,7 @@
       <%= else %>
 
         <%= if @sub_replies_count > 0 do %>
-        <div class="flex items-center -mx-2 -mt-1" x-data="{ show: true }">
+        <div class="flex items-center -mx-2 -mt-1" x-cloak x-data="{ show: true }">
           <%# <button class="inline-flex items-center px-4 py-2 text-sm font-medium leading-5 text-gray-100 transition duration-150 ease-in-out bg-gray-900 rounded-md hover:bg-gray-800 hover:text-gray-200 focus:outline-none focus:border-blue-300 focus:shadow-outline-blue active:text-gray-200 active:bg-gray-700">View activity</button> %>
           <div @click="show = false" x-show="show" phx-click="post_load_replies" phx-target="<%= @target_component %>" phx-value-id="<%= @comment.id %>" phx-value-level="<%= @thread_level %>" class="flex items-center visible px-2 py-1 ml-6 rounded cursor-pointer group hover:bg-gray-200 click:invisible">
             <span class="text-xs font-semibold text-indigo-700 group-hover:text-indigo-700">Show <%= @sub_replies_count %> more replies</span></span>

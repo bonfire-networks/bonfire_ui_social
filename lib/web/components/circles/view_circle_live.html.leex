@@ -18,7 +18,7 @@
   </div>
   <div class="mt-8">
 
-  <div class="block" x-data="{ adding: false, removing: false }">
+  <div class="block"x-cloak  x-data="{ adding: false, removing: false }">
 
     <h3 class="font-sm mb-2 text-medium text-gray-800">Circle Members</h3>
     <div class="overflow-hidden relative border rounded-lg  drag_drop__container__to">
@@ -59,6 +59,7 @@
                     event.dataTransfer.effectAllowed='move';
                     event.dataTransfer.setData('text/plain', event.target.id);
                 "
+                x-cloak
                 x-on:dragend="dragging = false"
                 x-data="{ dragging: false }"
                 draggable="true">
@@ -134,6 +135,7 @@
                     event.dataTransfer.setData('text/plain', event.target.id);
                 "
                 x-on:dragend="dragging = false"
+                x-cloak
                 x-data="{ dragging: false }"
                 draggable="true">
 
@@ -175,6 +177,7 @@
                     event.dataTransfer.setData('text/plain', event.target.id);
                 "
                 x-on:dragend="dragging = false"
+                x-cloak
                 x-data="{ dragging: false }"
                 draggable="true">
 

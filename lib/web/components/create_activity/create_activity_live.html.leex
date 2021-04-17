@@ -1,5 +1,6 @@
 <%= if @current_user do %>
     <div
+      x-cloak
       x-data="{
         open: false,
         title_open: false,
@@ -17,11 +18,13 @@
         <%= if e(assigns, :target_component, nil), do: "phx-target=#{e(assigns, :target_component, nil)}" %>>
         <div x-description="create post form">
 
+        <div x-show="open">
           <%= live_component(
             @socket,
             Bonfire.UI.Social.SetBoundariesLive,
             assigns
           ) %>
+        </div>
 
           <div
             x-show.transition="title_open"
