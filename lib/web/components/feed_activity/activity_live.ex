@@ -24,7 +24,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
       permalink = permalink(assigns, activity)
 
       assigns
-      |> assigns_merge(%{
+      |> assigns_merge(
           activity: activity,
           activity_object_components: components |> Enum.filter(& &1),
           date_ago: date_from_now(activity.object),
@@ -32,11 +32,11 @@ defmodule Bonfire.UI.Social.ActivityLive do
           verb_display: verb_display,
           created_verb_display: created_verb_display,
           permalink: permalink
-        })
+        )
 
     else
       assigns
-      |> assigns_merge(%{
+      |> assigns_merge(
           activity: nil,
           activity_object_components: [],
           date_ago: nil,
@@ -44,7 +44,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
           verb_display: "",
           created_verb_display: "",
           permalink: ""
-        })
+        )
     end
 
     {:ok, assign(socket, assigns) }

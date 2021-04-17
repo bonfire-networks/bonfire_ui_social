@@ -4,17 +4,30 @@
   @click.away="close"
   x-data="dropdown()">
   <div
-    @click="open($refs.autocomplete, $nextTick)"
+    @click="toggle($refs.autocomplete, $nextTick)"
     class="cursor-pointer space-y-1 border p-1 pb-2 bg-white shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border-gray-300 rounded-md hover:bg-gray-50">
-    <span class="inline-flex pl-2 pr-3 mr-1 border-r">To</span>
-    <span class="inline-flex rounded-full items-center py-0.5 pl-2.5 pr-1 text-sm font-medium bg-indigo-100 text-indigo-700">@alice
-      <button type="button" class="flex-shrink-0 ml-0.5 h-4 w-4 rounded-full inline-flex items-center justify-center text-indigo-400 hover:bg-indigo-200 hover:text-indigo-500 focus:outline-none focus:bg-indigo-500 focus:text-white">
-        <span class="sr-only">Remove large option</span>
-        <svg class="h-2 w-2" stroke="currentColor" fill="none" viewBox="0 0 8 8">
-          <path stroke-linecap="round" stroke-width="1.5" d="M1 1l6 6m0-6L1 7" />
-        </svg>
-      </button>
+
+    <span id="multiselect_label" class="inline-flex pl-2 pr-3 mr-1 border-r">
+      <%=raw @label %>
     </span>
+
+    <%= for {name_content, id} <- e(assigns, :selected_options, []) do  %>
+      <span class="inline-flex rounded-full items-center py-0.5 pl-2.5 pr-1 text-sm font-medium bg-indigo-100 text-indigo-700">
+        <%=raw name_content %>
+        <button
+          phx-click="<%=@remove_event %>"
+          phx-value-id="<%=id%>"
+          type="button"
+          class="flex-shrink-0 ml-0.5 h-4 w-4 rounded-full inline-flex items-center justify-center text-indigo-400 hover:bg-indigo-200 hover:text-indigo-500 focus:outline-none focus:bg-indigo-500 focus:text-white">
+          <span class="sr-only">Remove large option</span>
+          <svg class="h-2 w-2" stroke="currentColor" fill="none" viewBox="0 0 8 8">
+            <path stroke-linecap="round" stroke-width="1.5" d="M1 1l6 6m0-6L1 7" />
+          </svg>
+        </button>
+      </span>
+    <% end %>
+
+
   </div>
   <div
     x-transition:enter="transition ease-out duration-100"
@@ -29,29 +42,34 @@
         id="autocomplete"
         x-ref="autocomplete"
         class="w-full rounded-t-md border-b p-2 bg-gray-100"
-        placeholder="search here" />
+        placeholder="search here"
+        tabindex="1"
+        aria-labelledby="multiselect_label"
+        aria-haspopup="listbox" />
       <div class="rounded-b-md w-full" id="users">
         <ul
           id="autocomplete-options--destination"
           class="divide-y"
-          role="listbox">
-        <li
-          role="option"
-          tabindex="0"
-          aria-selected="false"
-          data-option-value="1"
-          id="autocomplete_1" class="p-2 cursor-pointer hover:bg-gray-100 text-sm text-gray-800">
-          kawen
-        </li>
-        <li
-          class="p-2 hover:bg-gray-100 cursor-pointer text-sm text-gray-800"
-          role="option"
-          tabindex="0"
-          aria-selected="true"
-          data-option-value="2"
-          id="autocomplete_2">
-          rage
-        </li>
+          role="listbox"
+          aria-labelledby="multiselect_label">
+
+          <%= for {{name_content, id}, i} <- e(assigns, :preloaded_options, []) |> Enum.with_index() do  %>
+
+            <li
+            class="p-2 hover:bg-gray-100 focus:bg-gray-100 cursor-pointer text-sm text-gray-800"
+            role="option"
+            tabindex="<%=i+2%>"
+            aria-selected="false"
+            phx-click="<%=@pick_event %>"
+            phx-value-id="<%=id%>"
+            <%# phx-window-keyup="@pick_event"
+            phx-throttle="1000" %>
+            >
+              <%=raw name_content %>
+            </li>
+
+          <% end %>
+
       <!-- more options here -->
       </ul>
     </div>
@@ -70,6 +88,7 @@
         this.show = false
       },
       isOpen() { return this.show === true },
+      toggle(ref, next) { if(this.isOpen()) this.close(); else this.open(ref, next); }
     }
   }
 </script>

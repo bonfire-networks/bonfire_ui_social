@@ -13,7 +13,7 @@
       <img class="w-10 h-10 rounded-full" src="<%=avatar_url(@current_user)%>" alt="" />
       <form
         class="flex-1 ml-3"
-        phx-change="post_input"
+        <%# phx-change="post_input" %>
         phx-submit="post"
         <%= if e(assigns, :target_component, nil), do: "phx-target=#{e(assigns, :target_component, nil)}" %>>
         <div x-description="create post form">
