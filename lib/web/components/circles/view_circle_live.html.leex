@@ -46,10 +46,11 @@
             "
             x-on:dragover.prevent="adding = true"
             x-on:dragleave.prevent="adding = false">
-            <!-- loop through current circle members -->
+
+             <%# loop through current circle members  %>
 
             <%= for member <- e(@circle, :encircles, []) do %>
-            <% IO.inspect(member: member) %>
+            <%# IO.inspect(member: member) %>
 
               <li id="item-<%= member.id %>"
                 class="p-2 flex"
@@ -102,6 +103,7 @@
 
     <h3 class="font-sm mt-4 mb-2 text-medium text-gray-800">Suggestions</h3>
     <div class="overflow-hidden relative border rounded-lg drag_drop__container__from">
+      <%=if length(@followed)>0 || length(@followers)>0 do %>
         <ul
             id="circle_suggestions"
             class="flex flex-col divide-y-2"
@@ -122,8 +124,8 @@
             "
             x-on:dragover.prevent="removing = true"
             x-on:dragleave.prevent="removing = false">
-            <!-- loop through the items -->
 
+             <%# loop through people that can be added  %>
 
             <%= for suggested <- @followed do %>
               <li id="item-<%= suggested.id %>"
@@ -200,9 +202,12 @@
               </li>
             <% end %>
 
-
-
         </ul>
+
+        <% else %>
+          <div id="no_suggestions">Follow some people first...</div>
+        <% end %>
+
     </div>
 
 

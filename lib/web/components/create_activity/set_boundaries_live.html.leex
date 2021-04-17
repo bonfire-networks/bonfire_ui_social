@@ -1,9 +1,12 @@
 <div class="mb-2">
+
   <%= live_component(@socket, Bonfire.UI.Social.MultiselectLive, assigns |> assigns_merge(
     preloaded_options: @default_circles,
     selected_options: @to_circles,
     label: @label,
+    form_input_name: "circles[]",
     pick_event: "boundary_select",
     remove_event: "boundary_deselect"
   )) %>
+
 </div>

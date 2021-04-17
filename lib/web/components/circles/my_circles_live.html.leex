@@ -19,8 +19,8 @@
           </div>
           <div class="flex-1 flex items-center justify-between border-t border-r border-b border-gray-200 bg-white rounded-r-md">
             <div class="flex-1 px-4 py-2 text-sm">
-              <a href="/settings/circle/<%=circle.id%>" class="text-gray-900 truncate font-medium hover:text-gray-600"><%= e(circle, :named, :name, "Untitled") %></a>
-              <p class="text-gray-500">16 Members</p>
+              <a href="/settings/circle/<%=circle.id%>" class="text-gray-900 truncate font-medium hover:text-gray-600"><%= e(circle, :named, :name, nil) || e(circle, :name, "Untitled") %></a>
+              <%# <p class="text-gray-500">16 Members</p> %>
             </div>
             <div class="flex-shrink-0 pr-2">
               <div x-cloak x-data="{ open: false }" @keydown.escape.stop="open = false" @click.away="open = false" class="relative inline-block text-left">

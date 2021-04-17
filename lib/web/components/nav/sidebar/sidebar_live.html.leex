@@ -3,7 +3,7 @@
       class="hidden lg:flex md:flex-shrink-0 flex-col w-48 xl:w-60">
       <div class="fixed h-full flex flex-col flex-grow overflow-y-auto w-48 xl:w-60">
         <div class="flex flex-col flex-1 px-2 mt-2 space-y-3">
-          <%= live_redirect to: Routes.live_path(@socket, Bonfire.Me.Web.LoggedDashboardLive) do %>
+          <%= live_patch to: Routes.live_path(@socket, Bonfire.Me.Web.LoggedDashboardLive) do %>
             <div class="flex items-center py-2 px-2 ml-1">
               <span class="text-3xl">🔥</span>
             </div>
@@ -58,7 +58,7 @@
                   aria-orientation="vertical"
                   aria-labelledby="user-profile-menu">
                   <div class="py-1" role="none">
-                    <%= live_redirect to: Routes.live_path(@socket, Bonfire.Me.Web.ProfileLive, e(@current_user, :character, :username, "")) do %>
+                    <%= live_patch to: Routes.live_path(@socket, Bonfire.Me.Web.ProfileLive, e(@current_user, :character, :username, "")) do %>
                       <button class="block w-full px-4 py-2 text-sm text-left text-gray-700 transition duration-150 ease-in-out hover:bg-gray-100" role="menuitem">My Profile</button>
                     <% end %>
                     <a href="/switch-user" class="block px-4 py-2 text-sm text-gray-700 transition duration-150 ease-in-out hover:bg-gray-100" role="menuitem">Switch User</a>
@@ -76,7 +76,7 @@
               </div>
             </div>
           </div>
-          <%= live_redirect to: Routes.live_path(@socket, Bonfire.Social.Web.Feeds.BrowseLive ) do %>
+          <%= live_patch to: Routes.live_path(@socket, Bonfire.Social.Web.Feeds.BrowseLive ) do %>
             <div class="rounded-full w-full flex items-center px-2 py-2 text-base font-medium leading-5 transition duration-150 ease-in-out  group hover:bg-blueGray-200  focus:outline-none focus:text-gray-900 focus:bg-gray-50 <%= if @page == "browse", do: "text-pink-700", else: "text-gray-800" %>">
               <svg
                 aria-labelledby="navigation_browse"
@@ -96,7 +96,7 @@
               <span class="capitalize" id="navigation_private">private</span>
             </div>
           <% end %>
-          <%= live_redirect to: Routes.live_path(@socket, Bonfire.Social.Web.Feeds.InboxLive ) do %>
+          <%= live_patch to: Routes.live_path(@socket, Bonfire.Social.Web.Feeds.NotificationsLive ) do %>
             <div class="rounded-full w-full flex items-center px-2 py-2 text-base font-medium leading-5 transition duration-150 ease-in-out  group hover:bg-blueGray-200  focus:outline-none focus:text-gray-900 focus:bg-gray-50 <%= if @page == "notifications", do: "text-pink-700", else: "text-gray-800" %>">
               <svg
                 aria-labelledby="navigation_notification"
@@ -104,7 +104,7 @@
               <span class="capitalize" id="navigation_notification">notifications</span>
             </div>
           <% end %>
-          <%= live_redirect to: Routes.live_path(@socket, Bonfire.Me.Web.ProfileLive, e(@current_user, :character, :username, "") ) do %>
+          <%= live_patch to: Routes.live_path(@socket, Bonfire.Me.Web.ProfileLive, e(@current_user, :character, :username, "") ) do %>
             <div class="rounded-full w-full flex items-center px-2 py-2 text-base font-medium leading-5 transition duration-150 ease-in-out  group hover:bg-blueGray-200  focus:outline-none focus:text-gray-900 focus:bg-gray-50 <%= if @page == "profile", do: "text-pink-700", else: "text-gray-800" %> ">
               <svg
                 aria-labelledby="navigation_profile"

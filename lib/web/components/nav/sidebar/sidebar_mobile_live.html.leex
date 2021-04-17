@@ -94,7 +94,7 @@
               <span class="capitalize" id="navigation_private_mobile">private</span>
             </div>
           <% end %>
-          <%= live_redirect to: Routes.live_path(@socket, Bonfire.Social.Web.Feeds.InboxLive ) do %>
+          <%= live_redirect to: Routes.live_path(@socket, Bonfire.Social.Web.Feeds.NotificationsLive) do %>
             <div class="w-full flex items-center px-2 py-2 text-base font-medium leading-5 transition duration-150 ease-in-out  group hover:bg-blueGray-200 focus:outline-none focus:text-gray-900 focus:bg-gray-50 <%= if @page == "notifications", do: "text-pink-700", else: "text-gray-800" %>">
               <svg
                 aria-labelledby="navigation_notification_mobile"

@@ -4,7 +4,7 @@ defmodule  Bonfire.UI.Social.ObjectThreadLive do
   def update(assigns, socket) do
 
     participants = Bonfire.Social.Threads.list_participants(e(assigns, :object, :id, nil), e(assigns, :current_user, nil))
-    |> IO.inspect
+    # |> IO.inspect
 
     {:ok, assign(socket, assigns
     |> assigns_merge(%{

@@ -3,7 +3,6 @@
 <button
   phx-click="<%= if e(@object, :id, "") in e(assigns, :boosted, []) || e(@activity, :my_boost, :id, nil), do: "boost_undo", else: "boost" %>"
   phx-value-id="<%= e(@object, :id, "") %>"
-  phx-target="<%= @myself %>"
   class="flex items-center py-1 rounded cursor-pointer group">
 
   <%= if e(assigns, :showing_within_thread, false) != true do %>
@@ -25,7 +24,6 @@
   phx-click="like"
   phx-value-direction="<%= if e(@object, :id, "") in e(assigns, :liked, []) || e(@activity, :my_like, :id, nil), do: "down", else: "up" %>"
   phx-value-id="<%= e(@object, :id, "") %>"
-  phx-target="<%= @myself %>"
   class="flex items-center py-1 rounded cursor-pointer group">
 
     <%= if e(assigns, :showing_within_thread, false) != true do %>

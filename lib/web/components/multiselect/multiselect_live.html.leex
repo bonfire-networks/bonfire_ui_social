@@ -14,6 +14,7 @@
     <%= for {name_content, id} <- e(assigns, :selected_options, []) do  %>
       <span class="inline-flex rounded-full items-center py-0.5 pl-2.5 pr-1 text-sm font-medium bg-indigo-100 text-indigo-700">
         <%=raw name_content %>
+        <input type="hidden" name="<%=@form_input_name %>" value="<%=id%>" />
         <button
           phx-click="<%=@remove_event %>"
           phx-value-id="<%=id%>"
