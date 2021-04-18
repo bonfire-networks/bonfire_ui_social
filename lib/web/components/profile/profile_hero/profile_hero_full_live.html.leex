@@ -1,62 +1,49 @@
-<div class="">
-  <div style="height: 215px" class="bg-pink-300 rounded-t-lg"></div>
-  <div class="px-6 pb-2">
-    <div class="flex items-center justify-between">
-      <img class="inline-block -mt-16 h-32 w-32 ring-2 ring-white rounded-md" src="<%=avatar_url(@user)%>" alt="">
-      <%= if @current_user && maybe_get(@current_user, :id) != maybe_get(@user, :id) do %>
-          <%= live_component(@socket, Bonfire.UI.Social.FollowButtonLive, following: e(assigns, :following, []), id: e(@user, :id, nil), label: "") %>
-      <% end %>
-      <%= if @current_user && maybe_get(@current_user, :id) == maybe_get(@user, :id) do %>
-        <%= live_redirect to: "/settings" do %>
-          <span class="inline-flex rounded-md shadow-sm">
-            <button type="button" class="btn-secondary">
-              <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>
-              Settings
-            </button>
-          </span>
-        <% end %>
-      <% end %>
+<div class="mt-4">
+  <%# <div style="height: 215px" class="bg-pink-300 rounded-t-lg"></div> %>
+  <div class="px-6 pb-2 flex">
+    <div class="">
+      <img class="inline-block h-32 w-32 ring-4 shadow-lg ring-white rounded-full" src="<%=avatar_url(@user)%>" alt="">
     </div>
 
-    <div class="mt-3">
+    <div class="ml-4 mt-2">
       <%= live_patch to: "/user/" <>  e(@user, :character, :username, "") <> "/timeline" do %>
-        <h2 class="hover:underline text-xl font-extrabold text-gray-800"><%= e(@user, :profile, :name, "Anonymous") %></h1>
+        <h2 class="hover:underline text-xl font-bold text-gray-700"><%= e(@user, :profile, :name, "Anonymous") %></h1>
       <% end %>
-      <span class="-mt-1 text-base font-normal text-gray-500">@<%= e(@user, :character, :username, "") %></span>
-    </div>
+      <span class="-mt-1 text-sm font-normal text-gray-500">@<%= e(@user, :character, :username, "") %></span>
 
-    <div class="mt-2">
-      <div class="prose">
-        <%= e(@user, :profile, :summary, "") %>
-      </div>
+      <div class="mt-0">
+        <div class="prose prose-sm">
+          <%= e(@user, :profile, :summary, "") %>
+        </div>
 
-
-      <%= if e(@user, :profile, :location, nil) || e(@user, :profile, :website, nil) do %>
-      <div class="flex mt-2 items-center space-x-4">
-        <%= if e(@user, :profile, :location, nil) do %>
-        <div class="flex items-center">
-          <svg class="w-5 h-5 text-gray-400" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M5.05 4.05a7 7 0 119.9 9.9L10 18.9l-4.95-4.95a7 7 0 010-9.9zM10 11a2 2 0 100-4 2 2 0 000 4z" clip-rule="evenodd"></path></svg>
-          <span class="ml-2 text-sm text-gray-500"><%= e(@user, :profile, :location, "") %></span>
+        <%= if e(@user, :profile, :location, nil) || e(@user, :profile, :website, nil) do %>
+        <div class="flex mt-2 items-center space-x-4">
+          <%= if e(@user, :profile, :location, nil) do %>
+          <div class="flex items-center">
+            <svg class="w-5 h-5 text-gray-400" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M5.05 4.05a7 7 0 119.9 9.9L10 18.9l-4.95-4.95a7 7 0 010-9.9zM10 11a2 2 0 100-4 2 2 0 000 4z" clip-rule="evenodd"></path></svg>
+            <span class="ml-2 text-sm text-gray-500"><%= e(@user, :profile, :location, "") %></span>
+          </div>
+          <% end %>
+          <%= if e(@user, :profile, :website, nil) do %>
+          <div class="flex items-center">
+            <svg class="w-5 h-5 text-gray-400" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path d="M11 3a1 1 0 100 2h2.586l-6.293 6.293a1 1 0 101.414 1.414L15 6.414V9a1 1 0 102 0V4a1 1 0 00-1-1h-5z"></path><path d="M5 5a2 2 0 00-2 2v8a2 2 0 002 2h8a2 2 0 002-2v-3a1 1 0 10-2 0v3H5V7h3a1 1 0 000-2H5z"></path></svg>
+            <a href="<%= e(@user, :profile, :website, "") %>" target="blank" class="underline ml-2 text-sm text-pink-600"><%= e(@user, :profile, :website, "") %></a>
+          </div>
+          <% end %>
         </div>
         <% end %>
-        <%= if e(@user, :profile, :website, nil) do %>
-        <div class="flex items-center">
-          <svg class="w-5 h-5 text-gray-400" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path d="M11 3a1 1 0 100 2h2.586l-6.293 6.293a1 1 0 101.414 1.414L15 6.414V9a1 1 0 102 0V4a1 1 0 00-1-1h-5z"></path><path d="M5 5a2 2 0 00-2 2v8a2 2 0 002 2h8a2 2 0 002-2v-3a1 1 0 10-2 0v3H5V7h3a1 1 0 000-2H5z"></path></svg>
-          <a href="<%= e(@user, :profile, :website, "") %>" target="blank" class="underline ml-2 text-sm text-pink-600"><%= e(@user, :profile, :website, "") %></a>
-        </div>
-        <% end %>
-      </div>
-      <% end %>
 
-      <div class="flex items-center mt-3">
-        <svg class="w-5 h-5 text-gray-400" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path d="M9 6a3 3 0 11-6 0 3 3 0 016 0zM17 6a3 3 0 11-6 0 3 3 0 016 0zM12.93 17c.046-.327.07-.66.07-1a6.97 6.97 0 00-1.5-4.33A5 5 0 0119 16v1h-6.07zM6 11a5 5 0 015 5v1H1v-1a5 5 0 015-5z"></path></svg>
-        <%= live_patch to: "/user/" <>  e(@user, :character, :username, "") <> "/followers" do %>
-          <span class="ml-2 text-sm text-gray-500 mr-2 hover:underline"> <strong class="text-gray-800"><%= e(@user, :character, :follow_count, :follower_count, 0) %></strong> Followers </span>
-        <% end %>
-        ·
-        <%= live_patch to: "/user/" <>  e(@user, :character, :username, "") <> "/followed" do %>
-          <span class="ml-2 text-sm text-gray-500 hover:underline"> <strong class="text-gray-800"><%= e(@user, :character, :follow_count, :follow_count, 0) %></strong> Following</span>
-        <% end %>
+        <div class="flex items-center mt-2">
+          <svg class="w-5 h-5 text-gray-400" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path d="M9 6a3 3 0 11-6 0 3 3 0 016 0zM17 6a3 3 0 11-6 0 3 3 0 016 0zM12.93 17c.046-.327.07-.66.07-1a6.97 6.97 0 00-1.5-4.33A5 5 0 0119 16v1h-6.07zM6 11a5 5 0 015 5v1H1v-1a5 5 0 015-5z"></path></svg>
+          <%= live_patch to: "/user/" <>  e(@user, :character, :username, "") <> "/followers" do %>
+            <span class="ml-2 text-sm text-gray-500 mr-2 hover:underline"> <strong class="text-gray-800"><%= e(@user, :character, :follow_count, :follower_count, 0) %></strong> Followers </span>
+          <% end %>
+          ·
+          <%= live_patch to: "/user/" <>  e(@user, :character, :username, "") <> "/followed" do %>
+            <span class="ml-2 text-sm text-gray-500 hover:underline"> <strong class="text-gray-800"><%= e(@user, :character, :follow_count, :follow_count, 0) %></strong> Following</span>
+          <% end %>
+        </div>
+
       </div>
     </div>
   </div>

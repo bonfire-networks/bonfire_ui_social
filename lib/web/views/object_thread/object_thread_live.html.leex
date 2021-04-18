@@ -1,7 +1,7 @@
 <main class="lg:flex lg:space-x-4">
-  <section class="w-center">
+  <section class="w-center min-h-screen border-l border-r">
     <%= live_component(@socket, Bonfire.UI.Social.PageHeaderLive, assigns) %>
-    <div class="mx-4 lg:mx-0 bg-white rounded-lg shadow min-h-screen">
+    <div class="mx-4 lg:mx-0 bg-white">
       <div class="min-h-screen flex flex-col">
         <%= if e(@activity, :replied, :thread_id, nil) && e(@activity, :replied, :thread_id, nil) != e(@activity, :replied, :reply_to_id, nil) do %>
           <div class="p-4 m-3 rounded-md bg-blue-50">
@@ -38,9 +38,9 @@
 
   </section>
   <aside class="flex-1 hidden mt-2 lg:flex md:flex-shrink-0">
-      <div class="h-full px-1 bg-blueGray-100 w-full">
+      <div class="h-full px-1 bg-white w-full">
         <%= if @current_user do %>
-          <div class="sticky top-0 z-10 flex-1 px-2 py-2 mb-4 -mx-2 bg-blueGray-100">
+          <div class="sticky top-0 z-10 flex-1 px-2 py-2 mb-4 -mx-2 bg-white">
             <%= live_component(@socket, Bonfire.UI.Social.SearchLive, assigns) %>
           </div>
         <% end %>

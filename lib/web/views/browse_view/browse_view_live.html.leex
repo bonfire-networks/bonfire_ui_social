@@ -3,33 +3,52 @@
   x-cloak
   x-data="{open_right_panel: false}"
   >
-  <section class="w-center">
+  <section class="w-center min-h-screen	 border-l border-r">
     <%= live_component(@socket, Bonfire.UI.Social.PageHeaderLive, assigns) %>
-    <div class="mx-4 lg:mx-0 bg-white rounded-lg shadow">
-      <%= live_component(@socket, Bonfire.UI.Social.BrowseTabsLive, assigns) %>
+    <div class="mx-4 lg:mx-0 bg-white">
+      <%# = live_component(@socket, Bonfire.UI.Social.BrowseTabsLive, assigns) %>
       <%= cond do %>
         <% @selected_tab == "instance" ->  %>
           <div id="instance_section">
+            <%= live_component(@socket, Bonfire.UI.Social.FeedHeaderLive, assigns) %>
             <%= live_component(@socket, Bonfire.UI.Social.FeedLive, assigns) %>
           </div>
         <% @selected_tab == "fediverse" ->  %>
           <div id="fediverse_section">
+            <%= live_component(@socket, Bonfire.UI.Social.FeedHeaderLive, assigns) %>
             <%= live_component(@socket, Bonfire.UI.Social.FeedLive, assigns) %>
           </div>
         <% true -> %>
           <div id="instance_section">
+            <%= live_component(@socket, Bonfire.UI.Social.FeedHeaderLive, assigns) %>
             <%= live_component(@socket, Bonfire.UI.Social.FeedLive, assigns) %>
           </div>
       <% end %>
     </div>
   </section>
-  <aside class="flex-1 hidden mt-2 lg:flex md:flex-shrink-0">
-      <div class="h-full px-1 bg-blueGray-100 w-full">
-        <%= if @current_user do %>
-          <div class="sticky top-0 z-10 flex-1 px-2 py-2 mb-4 -mx-2 bg-blueGray-100">
-            <%= live_component(@socket, Bonfire.UI.Social.SearchLive, assigns) %>
-          </div>
-        <% end %>
+  <aside class="flex-1 hidden lg:block mt-2 md:flex-shrink-0">
+    <div class="h-full px-1 w-full">
+      <%= if @current_user do %>
+        <div class="sticky top-0 z-10 flex-1 px-2 py-2 mb-4 -mx-2 ">
+          <%= live_component(@socket, Bonfire.UI.Social.SearchLive, assigns) %>
+        </div>
+      <% end %>
+      <div class="pb-5 border-b">
+        <h5 class="text-base font-bold text-gray-700 mb-2">Explore</h5>
+        <div class="flex flex-col space-y-3">
+          <%= live_patch to: "/browse/instance", class: "flex flex-1" do %>
+            <div
+              aria-current="<%= if @selected_tab == "instance", do: "page" %>"
+              class="btn-secondary w-full">
+              Browse the instance</div>
+          <% end %>
+          <%= live_patch to: "/browse/fediverse", class: "flex flex-1" do %>
+            <div
+              aria-current="<%= if @selected_tab == "fediverse", do: "page" %>"
+              class="btn-secondary w-full">Browse the fediverse</div>
+          <% end %>
+        </div>
       </div>
+    </div>
   </aside>
 </main>

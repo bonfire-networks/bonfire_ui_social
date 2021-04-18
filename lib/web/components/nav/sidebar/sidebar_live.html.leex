@@ -2,7 +2,7 @@
       role="navigation"
       class="hidden lg:flex md:flex-shrink-0 flex-col w-48 xl:w-60">
       <div class="fixed h-full flex flex-col flex-grow overflow-y-auto w-48 xl:w-60">
-        <div class="flex flex-col flex-1 px-2 mt-2 space-y-3">
+        <div class="flex flex-col flex-1 px-2 mt-2 space-y-2">
           <%= live_patch to: Routes.live_path(@socket, Bonfire.Me.Web.LoggedDashboardLive) do %>
             <div class="flex items-center py-2 px-2 ml-1">
               <span class="text-3xl">🔥</span>
@@ -77,42 +77,46 @@
             </div>
           </div>
           <%= live_patch to: Routes.live_path(@socket, Bonfire.Social.Web.Feeds.BrowseLive ) do %>
-            <div class="rounded-full w-full flex items-center px-2 py-2 text-base font-medium leading-5 transition duration-150 ease-in-out  group hover:bg-blueGray-200  focus:outline-none focus:text-gray-900 focus:bg-gray-50 <%= if @page == "browse", do: "text-pink-700", else: "text-gray-800" %>">
+            <div class="rounded-full w-full flex items-center px-2 py-2 text-sm font-regular transition duration-150 ease-in-out  group hover:bg-blueGray-200  focus:outline-none focus:text-gray-900 focus:bg-gray-50 <%= if @page == "browse", do: "text-pink-700", else: "text-gray-700" %>">
               <svg
                 aria-labelledby="navigation_browse"
-                class="w-6 h-6 mr-3 transition duration-150 ease-in-out <%= if @page == "browse", do: "text-pink-700", else: "text-gray-700" %>"
-                fill="currentColor"
-                viewBox="0 0 20 20"
+                class="w-5 h-5 mr-2 transition duration-150 ease-in-out <%= if @page == "browse", do: "text-pink-700", else: "text-gray-500" %>"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
                 xmlns="http://www.w3.org/2000/svg">
-                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM4.332 8.027a6.012 6.012 0 011.912-2.706C6.512 5.73 6.974 6 7.5 6A1.5 1.5 0 019 7.5V8a2 2 0 004 0 2 2 0 011.523-1.943A5.977 5.977 0 0116 10c0 .34-.028.675-.083 1H15a2 2 0 00-2 2v2.197A5.973 5.973 0 0110 16v-2a2 2 0 00-2-2 2 2 0 01-2-2 2 2 0 00-1.668-1.973z" clip-rule="evenodd"></path></svg>
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
               <span class="capitalize" id="navigation_browse">browse</span>
             </div>
           <% end %>
           <%= live_patch to: "/user/" <>  e(@current_user, :character, :username, "") <> "/private" do %>
-            <div class="rounded-full w-full flex items-center px-2 py-2 text-base font-medium leading-5 transition duration-150 ease-in-out  group hover:bg-blueGray-200  focus:outline-none focus:text-gray-900 focus:bg-gray-50 <%= if @page == "private", do: "text-pink-700", else: "text-gray-800" %>">
+            <div class="rounded-full w-full flex items-center px-2 py-2 text-sm font-regular transition duration-150 ease-in-out  group hover:bg-blueGray-200  focus:outline-none focus:text-gray-900 focus:bg-gray-50 <%= if @page == "private", do: "text-pink-700", else: "text-gray-700" %>">
               <svg
                 aria-labelledby="navigation_private"
-                class="w-6 h-6 mr-3 transition duration-150 ease-in-out <%= if @page == "private", do: "text-pink-700", else: "text-gray-700" %>"" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z" clip-rule="evenodd"></path></svg>
-              <span class="capitalize" id="navigation_private">private</span>
+                class="w-5 h-5 mr-2 transition duration-150 ease-in-out <%= if @page == "private", do: "text-pink-700", else: "text-gray-500" %>"" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+              </svg>
+              <span class="capitalize" id="navigation_private">Direct messages</span>
             </div>
           <% end %>
           <%= live_patch to: Routes.live_path(@socket, Bonfire.Social.Web.Feeds.NotificationsLive ) do %>
-            <div class="rounded-full w-full flex items-center px-2 py-2 text-base font-medium leading-5 transition duration-150 ease-in-out  group hover:bg-blueGray-200  focus:outline-none focus:text-gray-900 focus:bg-gray-50 <%= if @page == "notifications", do: "text-pink-700", else: "text-gray-800" %>">
+            <div class="rounded-full w-full flex items-center px-2 py-2 text-sm font-regular transition duration-150 ease-in-out  group hover:bg-blueGray-200  focus:outline-none focus:text-gray-900 focus:bg-gray-50 <%= if @page == "notifications", do: "text-pink-700", else: "text-gray-700" %>">
               <svg
                 aria-labelledby="navigation_notification"
-                class="w-6 h-6 mr-3 transition duration-150 ease-in-out <%= if @page == "notifications", do: "text-pink-700", else: "text-gray-700" %>" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path d="M10 2a6 6 0 00-6 6v3.586l-.707.707A1 1 0 004 14h12a1 1 0 00.707-1.707L16 11.586V8a6 6 0 00-6-6zM10 18a3 3 0 01-3-3h6a3 3 0 01-3 3z"></path></svg>
+                class="w-5 h-5 mr-2 transition duration-150 ease-in-out <%= if @page == "notifications", do: "text-pink-700", else: "text-gray-500" %>" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" /></svg>
               <span class="capitalize" id="navigation_notification">notifications</span>
             </div>
           <% end %>
           <%= live_patch to: Routes.live_path(@socket, Bonfire.Me.Web.ProfileLive, e(@current_user, :character, :username, "") ) do %>
-            <div class="rounded-full w-full flex items-center px-2 py-2 text-base font-medium leading-5 transition duration-150 ease-in-out  group hover:bg-blueGray-200  focus:outline-none focus:text-gray-900 focus:bg-gray-50 <%= if @page == "profile", do: "text-pink-700", else: "text-gray-800" %> ">
+            <div class="rounded-full w-full flex items-center px-2 py-2 text-sm font-regular transition duration-150 ease-in-out  group hover:bg-blueGray-200  focus:outline-none focus:text-gray-900 focus:bg-gray-50 <%= if @page == "profile", do: "text-pink-700", else: "text-gray-700" %> ">
               <svg
                 aria-labelledby="navigation_profile"
-                class="w-6 h-6 mr-3 transition duration-150 ease-in-out <%= if @page == "profile", do: "text-pink-700", else: "text-gray-700" %>"
-                fill="currentColor"
-                viewBox="0 0 20 20"
+                class="w-5 h-5 mr-2 transition duration-150 ease-in-out <%= if @page == "profile", do: "text-pink-700", else: "text-gray-500" %>"
+                fill="none" stroke="currentColor"
+                viewBox="0 0 24 24"
                 xmlns="http://www.w3.org/2000/svg">
-                <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-6-3a2 2 0 11-4 0 2 2 0 014 0zm-2 4a5 5 0 00-4.546 2.916A5.986 5.986 0 0010 16a5.986 5.986 0 004.546-2.084A5 5 0 0010 11z" clip-rule="evenodd"></path></svg>
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5.121 17.804A13.937 13.937 0 0112 16c2.5 0 4.847.655 6.879 1.804M15 10a3 3 0 11-6 0 3 3 0 016 0zm6 2a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
               <span class="capitalize" id="navigation_profile">profile</span>
             </div>
           <% end %>
