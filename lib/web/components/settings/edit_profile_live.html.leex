@@ -1,4 +1,4 @@
-<form class="divide-y divide-gray-200 " phx-submit="profile_save" method="POST">
+<form class="divide-y divide-gray-200 " phx-submit="profile_save" phx-change="validate" method="POST">
   <!-- Profile section -->
   <div class="px-4 py-6 sm:p-6 lg:pb-8">
     <%= live_component(@socket, Bonfire.UI.Social.SettingsViewLive.SettingsHeaderLive, assigns) %>
@@ -8,31 +8,40 @@
           Primary information
         </label>
         <div class="mt-1 sm:mt-0">
-          <div class="flex justify-center px-6 py-10 border-2 border-gray-300 border-dashed rounded-md">
+
+          <div phx-drop-target="<%= @uploads.image.ref %>" class="flex justify-center px-6 py-10 border-2 border-gray-300 border-dashed rounded-md" style="background-image: url('<%=image_url(@current_user)%>')">
             <div class="space-y-1 text-center">
               <svg class="mx-auto h-12 w-12 text-gray-400" stroke="currentColor" fill="none" viewBox="0 0 48 48" aria-hidden="true">
                 <path d="M28 8H12a4 4 0 00-4 4v20m32-12v8m0 0v8a4 4 0 01-4 4H12a4 4 0 01-4-4v-4m32-4l-3.172-3.172a4 4 0 00-5.656 0L28 28M8 32l9.172-9.172a4 4 0 015.656 0L28 28m0 0l4 4m4-24h8m-4-4v8m-12 4h.02" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
               </svg>
               <div class="flex text-sm text-gray-600">
-                <label for="file-upload" class="relative cursor-pointer bg-white rounded-md font-medium text-indigo-600 hover:text-indigo-500 focus-within:outline-none focus-within:ring-2 focus-within:ring-offset-2 focus-within:ring-indigo-500">
-                  <span>Upload a file</span>
-                  <input id="file-upload" name="file-upload" type="file" class="sr-only">
+                <label class="relative cursor-pointer bg-white rounded-md font-medium text-indigo-600 hover:text-indigo-500 focus-within:outline-none focus-within:ring-2 focus-within:ring-offset-2 focus-within:ring-indigo-500">
+                  <%= live_file_input @uploads.image, class: "sr-only" %>
+                  <%# <input id="file-upload" name="file-upload" type="file" class="sr-only"> %>
+                  <span>Upload a background image</span>
+                  <p class="pl-1">or drag and drop</p>
                 </label>
-                <p class="pl-1">or drag and drop</p>
               </div>
               <p class="text-xs text-gray-500">
+              <%= if length(@uploads.image.entries)>0 do %>
+                <%= for entry <- @uploads.image.entries do %>
+                  <%= entry.client_name %> - <%= entry.progress %>%
+                <% end %>
+              <% else %>
                 PNG, JPG, GIF up to 10MB
+              <% end %>
               </p>
             </div>
           </div>
-          <div class="relative -mt-8 ml-8 w-32 h-32 mb-6 hidden overflow-hidden rounded-full lg:block">
-            <div class="flex items-center w-32 h-32 bg-blueGray-100 border-2 border-gray-300 border-dashed rounded-full" style='background-image: url(<%= e(@current_user, :profile, :icon_url, "") %>)'>
+
+          <div phx-drop-target="<%= @uploads.icon.ref %>" class="relative -mt-8 ml-8 w-32 h-32 mb-6 hidden overflow-hidden rounded-full lg:block">
+            <div class="flex items-center w-32 h-32 bg-blueGray-100 border-2 border-gray-300 border-dashed rounded-full" style="background-image: url('<%=avatar_url(@current_user)%>')">
               <svg class="mx-auto h-10 w-10 text-gray-400" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-6-3a2 2 0 11-4 0 2 2 0 014 0zm-2 4a5 5 0 00-4.546 2.916A5.986 5.986 0 0010 16a5.986 5.986 0 004.546-2.084A5 5 0 0010 11z" clip-rule="evenodd"></path></svg>
             </div>
-            <label for="user-photo" class="absolute inset-0 flex items-center justify-center w-full h-full text-sm font-medium text-white bg-gray-700 bg-opacity-75 opacity-0 hover:opacity-100 focus-within:opacity-100">
-              <span>Change</span>
-              <span class="sr-only"> user photo</span>
-              <input type="file" id="user-photo" name="user-photo" class="absolute inset-0 w-full h-full border-gray-300 rounded-md opacity-0 cursor-pointer">
+            <label for="<%= @uploads.icon.ref %>" class="absolute inset-0 flex items-center justify-center w-full h-full text-sm font-medium text-white bg-gray-700 bg-opacity-75 opacity-0 hover:opacity-100 focus-within:opacity-100">
+              <span>Upload or drop</span>
+              <span class="sr-only"> avatar</span>
+              <%= live_file_input @uploads.icon, class: "sr-only" %>
             </label>
           </div>
         <div class="flex-grow space-y-6">
