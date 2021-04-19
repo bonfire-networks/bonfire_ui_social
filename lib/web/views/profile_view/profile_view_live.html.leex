@@ -5,36 +5,36 @@
       <% @selected_tab == "private" ->  %>
         <%= live_component(@socket, Bonfire.UI.Social.PrivateLive, assigns) %>
       <% @selected_tab == "followers" ->  %>
-        <div class="mx-4 lg:mx-0 pb-1 bg-white">
+        <div class="pb-1 bg-white">
           <%= live_component(@socket, Bonfire.UI.Social.ProfileMenuSocialLive, assigns) %>
           <%= live_component(@socket, Bonfire.UI.Social.FollowersLive, assigns) %>
         </div>
       <% @selected_tab == "followed" ->  %>
-        <div class="mx-4 lg:mx-0pb-1 bg-white">
+        <div class="pb-1 bg-white">
           <%= live_component(@socket, Bonfire.UI.Social.ProfileMenuSocialLive, assigns) %>
           <%= live_component(@socket, Bonfire.UI.Social.FollowedLive, assigns) %>
         </div>
         <% @selected_tab == "media" ->  %>
-        <div class="mx-4 lg:mx-0 bg-white">
+        <div class="bg-white">
           <%= live_component(@socket, Bonfire.UI.Social.ProfileHeroFullLive, assigns) %>
         </div>
         <% @selected_tab == "posts" ->  %>
-          <div class="mx-4 lg:mx-0 bg-white">
+          <div class="bg-white">
             <%= live_component(@socket, Bonfire.UI.Social.ProfileHeroFullLive, assigns) %>
             <%= live_component(@socket, Bonfire.UI.Social.FeedLive, assigns) %>
           </div>
         <% @selected_tab == "boosts" ->  %>
-          <div class="mx-4 lg:mx-0 bg-white">
+          <div class="bg-white">
             <%= live_component(@socket, Bonfire.UI.Social.ProfileHeroFullLive, assigns) %>
             <%= live_component(@socket, Bonfire.UI.Social.FeedLive, assigns) %>
           </div>
         <% @selected_tab == "timeline" ->  %>
-          <div class="mx-4 lg:mx-0 bg-white">
+          <div class="bg-white">
             <%= live_component(@socket, Bonfire.UI.Social.ProfileHeroFullLive, assigns) %>
             <%= live_component(@socket, Bonfire.UI.Social.FeedLive, assigns) %>
           </div>
         <% true -> %>
-          <div class="mx-4 lg:mx-0 bg-white">
+          <div class="bg-white">
             <%= live_component(@socket, Bonfire.UI.Social.ProfileHeroFullLive, assigns) %>
             <%= live_component(@socket, Bonfire.UI.Social.FeedLive, assigns) %>
           </div>

@@ -1,14 +1,10 @@
-<form class="divide-y divide-gray-200 " phx-submit="profile_save" phx-change="validate" method="POST">
+<form  phx-submit="profile_save" phx-change="validate" method="POST">
   <!-- Profile section -->
+  <%= live_component(@socket, Bonfire.UI.Social.SettingsViewLive.SettingsHeaderLive, assigns) %>
   <div class="px-4 py-6 sm:p-6 lg:pb-8">
-    <%= live_component(@socket, Bonfire.UI.Social.SettingsViewLive.SettingsHeaderLive, assigns) %>
     <div class="mt-6 sm:mt-5 space-y-6 sm:space-y-5">
-      <div class="max-w-lg sm:pt-5">
-        <label for="username" class="block mb-6 text-sm font-medium text-gray-700 sm:mt-px sm:pt-2">
-          Primary information
-        </label>
+      <div class="sm:pt-5">
         <div class="mt-1 sm:mt-0">
-
           <div phx-drop-target="<%= @uploads.image.ref %>" class="flex justify-center px-6 py-10 border-2 border-gray-300 border-dashed rounded-md" style="background-image: url('<%=image_url(@current_user)%>')">
             <div class="space-y-1 text-center">
               <svg class="mx-auto h-12 w-12 text-gray-400" stroke="currentColor" fill="none" viewBox="0 0 48 48" aria-hidden="true">
@@ -104,7 +100,7 @@
     </div>
   </div>
 
-  <div class="border-t mt-4 max-w-lg">
+  <div class="border-t mt-4">
     <div class="flex">
       <button type="submit" class="flex-1 flex place-content-center items-center btn-primary text-center">
         Save

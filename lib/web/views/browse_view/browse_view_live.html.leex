@@ -39,13 +39,13 @@
           <%= live_patch to: "/browse/instance", class: "flex flex-1" do %>
             <div
               aria-current="<%= if @selected_tab == "instance", do: "page" %>"
-              class="btn-secondary w-full">
+              class="<%= if @selected_tab == "instance", do: "ring-2 inline-flex items-center px-4 py-2 border border-gray-300 shadow-sm text-sm font-medium rounded-md text-gray-700 bg-gray-100 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500", else: "btn-secondary" %> w-full">
               Browse the instance</div>
           <% end %>
           <%= live_patch to: "/browse/fediverse", class: "flex flex-1" do %>
             <div
               aria-current="<%= if @selected_tab == "fediverse", do: "page" %>"
-              class="btn-secondary w-full">Browse the fediverse</div>
+              class="<%= if @selected_tab == "fediverse", do: "ring-2 inline-flex items-center px-4 py-2 border border-gray-300 shadow-sm text-sm font-medium rounded-md text-gray-700 bg-gray-100 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500", else: "btn-secondary" %> w-full">Browse the fediverse</div>
           <% end %>
         </div>
       </div>
