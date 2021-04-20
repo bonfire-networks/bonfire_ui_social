@@ -30,11 +30,11 @@
                       src="<%=avatar_url(@current_user)%>"
                       alt="user profile image">
                     <div class="flex-1 text-left ml-3">
-                      <h3 class="text-base font-semibold text-gray-700"><%= e(@current_user, :profile, :name, "Me")%></h3>
+                      <h3 class="text-sm font-semibold text-gray-700 truncate"><%= e(@current_user, :profile, :name, "Me")%></h3>
                       <span class="-mt-1 text-sm text-gray-600 font-light">@<%= e(@current_user, :character, :username, "") %></span>
                     </div>
                     <svg
-                      class="-mr-1 ml-2 h-5 w-5"
+                      class="ml-2 h-5 w-5"
                       x-description="Heroicon name: solid/chevron-down"
                       xmlns="http://www.w3.org/2000/svg"
                       viewBox="0 0 20 20"
