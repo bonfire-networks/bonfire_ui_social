@@ -1,60 +1,60 @@
-<div class="divide-y divide-gray-200 lg:col-span-9">
-  <!-- Profile section -->
-  <div class="px-4 py-6 sm:p-6 lg:pb-8">
-    <%= live_component(@socket, Bonfire.UI.Social.SettingsViewLive.SettingsHeaderLive, assigns) %>
+<div class="">
+  <%= live_component(@socket, Bonfire.UI.Social.SettingsViewLive.SettingsHeaderLive, assigns) %>
 
-    <div class="mb-3">
-      <h2 class="mt-6 text-lg font-medium leading-6 text-gray-900">Bonfire Extensions</h2>
-      <p class="mt-1 text-sm text-gray-500">
-        These are the data schemas currently installed on this instance, which can be shared among multiple apps and extensions.
-      </p>
-    </div>
-    <div class="flex flex-col lg:flex-row">
-      <div class="flex-grow space-y-3 lg:mt-0 lg:mr-6 lg:flex-grow-0 lg:flex-shrink-0">
-      <%= for dep <- @extensions do %>
-        <div class="p-3 rounded-lg shadow text-sm font-medium text-gray-700" aria-hidden="true">
-          <a href="<%= get_link(dep) %>" target="_blank"><span class="hover:underline"><%=  e(dep, :app, "Unknown") %></span>
-          <span class="ml-2 inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-indigo-100 text-indigo-800"><%= get_version(dep) %></span></a>
-        </div>
-      <% end %>
-    </div>
-  </div>
-    <div class="mb-3">
-      <h2 class="mt-6 text-lg font-medium leading-6 text-gray-900">Bonfire Schemas</h2>
-      <p class="mt-1 text-sm text-gray-500">
-        These are the data schemas currently installed on this instance, which can be shared among multiple apps and extensions.
-      </p>
-    </div>
-    <div class="flex flex-col lg:flex-row">
-      <div class="flex-grow space-y-3 lg:mt-0 lg:mr-6 lg:flex-grow-0 lg:flex-shrink-0">
-      <%= for dep <- @schemas do %>
-        <div class="p-3 rounded-lg shadow text-sm font-medium text-gray-700" aria-hidden="true">
-          <a href="<%= get_link(dep) %>" target="_blank">
-          <span class="hover:underline"><%= e(dep, :app, "Unknown") %> </span>
-          <span class="ml-2 inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-indigo-100 text-indigo-800"><%= get_version(dep) %></span></a>
-        </div>
-      <% end %>
-    </div>
-  </div>
+  <div class="">
 
-    <div class="mb-3">
-      <h2 class="mt-6 text-lg font-medium leading-6 text-gray-900">Other Dependencies</h2>
-      <p class="mt-1 text-sm text-gray-500">
-        These are other libraries used by the app and extensions.
-      </p>
+    <div>
+      <div class="p-4">
+        <h2 class="text-lg font-medium leading-6 text-gray-900">Bonfire Extensions</h2>
+        <p class="mt-1 text-sm text-gray-500">
+          These are the data schemas currently installed on this instance, which can be shared among multiple apps and extensions.
+        </p>
+      </div>
+      <div class="flex flex-col lg:flex-row">
+        <div class="flex-grow space-y-3 lg:mt-0">
+        <%= for dep <- @extensions do %>
+          <div class="p-3 border-b text-sm font-medium text-gray-700">
+            <a href="<%= get_link(dep) %>" target="_blank"><span class="flex-1 hover:underline"><%=  e(dep, :app, "Unknown") %></span>
+            <span class="ml-2 inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-indigo-100 text-indigo-800"><%= get_version(dep) %></span></a>
+          </div>
+        <% end %>
+      </div>
     </div>
 
-    <div class="flex flex-col lg:flex-row">
-      <div class="flex-grow space-y-3 lg:mt-0 lg:mr-6 lg:flex-grow-0 lg:flex-shrink-0">
-        <%= for dep <- @other_deps do %>
-        <div class="p-3 rounded-lg shadow text-sm font-medium text-gray-700" aria-hidden="true">
-          <a href="<%= get_link(dep) %>" target="_blank">
-          <span class="hover:underline"><%= e(dep, :app, "Unknown") %> </span>
-          <span class="ml-2 inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-indigo-100 text-indigo-800"><%= get_version(dep) %></span></a>
-          </a>
+        <div class="mt-6">
+          <div class="p-4">
+            <h2 class="text-lg font-medium leading-6 text-gray-900">Bonfire schemas</h2>
+            <p class="mt-1 text-sm text-gray-500">
+              These are the data schemas currently installed on this instance, which can be shared among multiple apps and extensions.
+            </p>
+          </div>
+          <div class="flex flex-col lg:flex-row">
+            <div class="flex-grow space-y-3 lg:mt-0">
+            <%= for dep <- @schemas do %>
+              <div class="p-3 border-b text-sm font-medium text-gray-700">
+                <a href="<%= get_link(dep) %>" target="_blank"><span class="flex-1 hover:underline"><%=  e(dep, :app, "Unknown") %></span>
+                <span class="ml-2 inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-indigo-100 text-indigo-800"><%= get_version(dep) %></span></a>
+              </div>
+            <% end %>
+          </div>
         </div>
-      <% end %>
-    </div>
-  </div>
+
+        <div class="mt-6">
+          <div class="p-4">
+            <h2 class="text-lg font-medium leading-6 text-gray-900">Other Dependencies</h2>
+            <p class="mt-1 text-sm text-gray-500">
+              These are other libraries used by the app and extensions.
+            </p>
+          </div>
+          <div class="flex flex-col lg:flex-row">
+            <div class="flex-grow space-y-3 lg:mt-0">
+              <%= for dep <- @other_deps do %>
+              <div class="p-3 border-b text-sm font-medium text-gray-700">
+                <a href="<%= get_link(dep) %>" target="_blank"><span class="flex-1 hover:underline"><%=  e(dep, :app, "Unknown") %></span>
+                <span class="ml-2 inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-indigo-100 text-indigo-800"><%= get_version(dep) %></span></a>
+              </div>
+            <% end %>
+          </div>
+        </div>
 
 </div>

@@ -1,6 +1,5 @@
-<div class="px-4 py-6 sm:p-6 lg:pb-8">
-  <%= live_component(@socket, Bonfire.UI.Social.SettingsViewLive.SettingsHeaderLive, assigns) %>
-
+<%= live_component(@socket, Bonfire.UI.Social.SettingsViewLive.SettingsHeaderLive, assigns) %>
+<div class="p-4">
   <div class="py-3">
     <form class="flex items-center" phx-submit="circle_create">
       <input class="flex-1 mr-2" type="text" name="name" placeholder="Circle name"/>

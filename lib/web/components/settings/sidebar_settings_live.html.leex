@@ -7,7 +7,7 @@
           <%= live_patch to: "/dashboard" do %>
             <div
               class="rounded-full w-full flex items-center px-2 py-2 text-sm font-regular transition duration-150 ease-in-out  group hover:bg-blueGray-200  focus:outline-none focus:text-gray-900 focus:bg-gray-50 text-gray-700">
-              <span class="w-8 h-8 items-center flex place-content-center hover:bg-blueGray-700 rounded-full">
+              <span class="w-8 h-8 items-center flex place-content-center rounded-full">
                 <svg class="w-4 h-4 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path></svg>
               </span>
               <span class="ml-2 truncate">Back to dashboard</span>
@@ -31,7 +31,7 @@
                 aria-current="<%= if @selected_tab == "preferences", do: "page" %>"
                 class="rounded-full w-full flex items-center px-2 py-2 text-sm font-regular transition duration-150 ease-in-out  group hover:bg-blueGray-200  focus:outline-none focus:text-gray-900 focus:bg-gray-50 <%= if @selected_tab == "preferences", do: "text-pink-700", else: "text-gray-700" %>">
                 <svg class="w-5 h-5 mr-2 transition duration-150 ease-in-out <%= if @selected_tab == "preferences", do: "text-pink-700", else: "text-gray-500" %>" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                    <path fill-rule="evenodd" d="M4 2a2 2 0 00-2 2v11a3 3 0 106 0V4a2 2 0 00-2-2H4zm1 14a1 1 0 100-2 1 1 0 000 2zm5-1.757l4.9-4.9a2 2 0 000-2.828L13.485 5.1a2 2 0 00-2.828 0L10 5.757v8.486zM16 18H9.071l6-6H16a2 2 0 012 2v2a2 2 0 01-2 2z" clip-rule="evenodd"></path>
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 21a4 4 0 01-4-4V5a2 2 0 012-2h4a2 2 0 012 2v12a4 4 0 01-4 4zm0 0h12a2 2 0 002-2v-4a2 2 0 00-2-2h-2.343M11 7.343l1.657-1.657a2 2 0 012.828 0l2.829 2.829a2 2 0 010 2.828l-8.486 8.485M7 17h.01" />
                 </svg>
                 <span class="ml-2 truncate">
                   General preferences
@@ -43,8 +43,9 @@
               <div
                 aria-current="<%= if @selected_tab == "circles", do: "page" %>"
                 class="rounded-full w-full flex items-center px-2 py-2 text-sm font-regular transition duration-150 ease-in-out  group hover:bg-blueGray-200  focus:outline-none focus:text-gray-900 focus:bg-gray-50 <%= if @selected_tab == "circles", do: "text-pink-700", else: "text-gray-700" %>">
-                <svg class="w-5 h-5 mr-2 transition duration-150 ease-in-out <%= if @selected_tab == "circles", do: "text-pink-700", else: "text-gray-500" %>" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
-                    <path fill-rule="evenodd" d="M12.395 2.553a1 1 0 00-1.45-.385c-.345.23-.614.558-.822.88-.214.33-.403.713-.57 1.116-.334.804-.614 1.768-.84 2.734a31.365 31.365 0 00-.613 3.58 2.64 2.64 0 01-.945-1.067c-.328-.68-.398-1.534-.398-2.654A1 1 0 005.05 6.05 6.981 6.981 0 003 11a7 7 0 1011.95-4.95c-.592-.591-.98-.985-1.348-1.467-.363-.476-.724-1.063-1.207-2.03zM12.12 15.12A3 3 0 017 13s.879.5 2.5.5c0-1 .5-4 1.25-4.5.5 1 .786 1.293 1.371 1.879A2.99 2.99 0 0113 13a2.99 2.99 0 01-.879 2.121z" clip-rule="evenodd"></path>
+                <svg class="w-5 h-5 mr-2 transition duration-150 ease-in-out <%= if @selected_tab == "circles", do: "text-pink-700", else: "text-gray-500" %>" fill="none" stroke="currentColor"  viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 18.657A8 8 0 016.343 7.343S7 9 9 10c0-2 .5-5 2.986-7C14 5 16.09 5.777 17.656 7.343A7.975 7.975 0 0120 13a7.975 7.975 0 01-2.343 5.657z" />
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.879 16.121A3 3 0 1012.015 11L11 14H9c0 .768.293 1.536.879 2.121z" />
                 </svg>
                 <span class="ml-2 truncate">
                   Circles
@@ -57,7 +58,7 @@
                 aria-current="<%= if @selected_tab == "extensions", do: "page" %>"
                 class="rounded-full w-full flex items-center px-2 py-2 text-sm font-regular transition duration-150 ease-in-out  group hover:bg-blueGray-200  focus:outline-none focus:text-gray-900 focus:bg-gray-50 <%= if @selected_tab == "extensions", do: "text-pink-700", else: "text-gray-700" %>">
                 <svg class="w-5 h-5 mr-2 transition duration-150 ease-in-out <%= if @selected_tab == "extensions", do: "text-pink-700", else: "text-gray-500" %>" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 14v6m-3-3h6M6 10h2a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v2a2 2 0 002 2zm10 0h2a2 2 0 002-2V6a2 2 0 00-2-2h-2a2 2 0 00-2 2v2a2 2 0 002 2zM6 20h2a2 2 0 002-2v-2a2 2 0 00-2-2H6a2 2 0 00-2 2v2a2 2 0 002 2z"></path>
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 4a2 2 0 114 0v1a1 1 0 001 1h3a1 1 0 011 1v3a1 1 0 01-1 1h-1a2 2 0 100 4h1a1 1 0 011 1v3a1 1 0 01-1 1h-3a1 1 0 01-1-1v-1a2 2 0 10-4 0v1a1 1 0 01-1 1H7a1 1 0 01-1-1v-3a1 1 0 00-1-1H4a2 2 0 110-4h1a1 1 0 001-1V7a1 1 0 011-1h3a1 1 0 001-1V4z" />
                 </svg>
                 <span class="ml-2 truncate">
                   Extensions
@@ -70,8 +71,7 @@
                 aria-current="<%= if @selected_tab == "account", do: "page" %>"
                 class="rounded-full w-full flex items-center px-2 py-2 text-sm font-regular transition duration-150 ease-in-out  group hover:bg-blueGray-200  focus:outline-none focus:text-gray-900 focus:bg-gray-50 <%= if @selected_tab == "account", do: "text-pink-700", else: "text-gray-700" %>">
                 <svg class="w-5 h-5 mr-2 transition duration-150 ease-in-out <%= if @selected_tab == "account", do: "text-pink-700", else: "text-gray-500" %>" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 7a2 2 0 012 2m4 0a6 6 0 01-7.743 5.743L11 17H9v2H7v2H4a1 1 0 01-1-1v-2.586a1 1 0 01.293-.707l5.964-5.964A6 6 0 1121 9z" />
                 </svg>
                 <span class="ml-2 truncate">
                   Account
@@ -85,10 +85,10 @@
                 <div
                   aria-current="<%= if @selected_tab == "admin", do: "page" %>"
                   class="rounded-full w-full flex items-center px-2 py-2 text-sm font-regular transition duration-150 ease-in-out  group hover:bg-blueGray-200  focus:outline-none focus:text-gray-900 focus:bg-gray-50 <%= if @selected_tab == "admin", do: "text-pink-700", else: "text-gray-700" %>">
-                  <svg class="flex-shrink-0 w-6 h-6 mr-3 -ml-1 group-hover:text-gray-500 <%= if @selected_tab == "admin", do: "text-white group-hover:text-white", else: "text-gray-400" %>" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V8a2 2 0 00-2-2h-5m-4 0V5a2 2 0 114 0v1m-4 0a2 2 0 104 0m-5 8a2 2 0 100-4 2 2 0 000 4zm0 0c1.306 0 2.417.835 2.83 2M9 14a3.001 3.001 0 00-2.83 2M15 11h3m-3 4h2"></path>
+                  <svg class="w-5 h-5 mr-2 transition duration-150 ease-in-out <%= if @selected_tab == "admin", do: "text-pink-700", else: "text-gray-500" %>" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z" />
                   </svg>
-                  <span class="truncate">
+                  <span class="ml-2 truncate">
                     Instance settings
                   </span>
                 </div>
@@ -97,10 +97,10 @@
                 <div
                   aria-current="<%= if @selected_tab == "admin", do: "page" %>"
                   class="rounded-full w-full flex items-center px-2 py-2 text-sm font-regular transition duration-150 ease-in-out  group hover:bg-blueGray-200  focus:outline-none focus:text-gray-900 focus:bg-gray-50 <%= if @selected_tab == "admin", do: "text-pink-700", else: "text-gray-700" %>">
-                  <svg class="flex-shrink-0 w-6 h-6 mr-3 -ml-1 group-hover:text-gray-500 <%= if @selected_tab == "admin", do: "text-white group-hover:text-white", else: "text-gray-400" %>" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V8a2 2 0 00-2-2h-5m-4 0V5a2 2 0 114 0v1m-4 0a2 2 0 104 0m-5 8a2 2 0 100-4 2 2 0 000 4zm0 0c1.306 0 2.417.835 2.83 2M9 14a3.001 3.001 0 00-2.83 2M15 11h3m-3 4h2"></path>
+                  <svg class="w-5 h-5 mr-2 transition duration-150 ease-in-out <%= if @selected_tab == "admin", do: "text-pink-700", else: "text-gray-500" %>" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 21v-4m0 0V5a2 2 0 012-2h6.5l1 1H21l-3 6 3 6h-8.5l-1-1H5a2 2 0 00-2 2zm9-13.5V9" />
                   </svg>
-                  <span class="truncate">
+                  <span class="ml-2 truncate">
                     Flagged activities
                   </span>
                 </div>
@@ -109,10 +109,10 @@
                 <div
                   aria-current="<%= if @selected_tab == "admin", do: "page" %>"
                   class="rounded-full w-full flex items-center px-2 py-2 text-sm font-regular transition duration-150 ease-in-out  group hover:bg-blueGray-200  focus:outline-none focus:text-gray-900 focus:bg-gray-50 <%= if @selected_tab == "admin", do: "text-pink-700", else: "text-gray-700" %>">
-                  <svg class="flex-shrink-0 w-6 h-6 mr-3 -ml-1 group-hover:text-gray-500 <%= if @selected_tab == "admin", do: "text-white group-hover:text-white", else: "text-gray-400" %>" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V8a2 2 0 00-2-2h-5m-4 0V5a2 2 0 114 0v1m-4 0a2 2 0 104 0m-5 8a2 2 0 100-4 2 2 0 000 4zm0 0c1.306 0 2.417.835 2.83 2M9 14a3.001 3.001 0 00-2.83 2M15 11h3m-3 4h2"></path>
+                  <svg class="w-5 h-5 mr-2 transition duration-150 ease-in-out <%= if @selected_tab == "admin", do: "text-pink-700", else: "text-gray-500" %>" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18.364 18.364A9 9 0 005.636 5.636m12.728 12.728A9 9 0 015.636 5.636m12.728 12.728L5.636 5.636" />
                   </svg>
-                  <span class="truncate">
+                  <span class="ml-2 truncate">
                     Blocked users
                   </span>
                 </div>
