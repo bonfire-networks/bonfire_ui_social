@@ -1,7 +1,24 @@
 <div class="mt-4">
   <div class="px-6 pb-2">
     <div class="bg-pink-300 rounded-lg bg-cover" style="height: 200px; background-image: url('<%=image_url(@user)%>')"></div>
-    <img class="inline-block h-32 w-32 ring-4 ml-6 -mt-16 shadow-lg ring-white rounded-full" src="<%=avatar_url(@user)%>" alt="">
+    <div class="flex justify-between items-center">
+      <img class="inline-block h-32 w-32 ring-4 ml-6 -mt-16 shadow-lg ring-white rounded-full" src="<%=avatar_url(@user)%>" alt="">
+      <div>
+        <%= if @current_user && maybe_get(@current_user, :id) != maybe_get(@user, :id) do %>
+          <%= live_component(@socket, Bonfire.UI.Social.FollowButtonLive, following: e(assigns, :following, []), id: e(@user, :id, nil), label: "", class: "rounded-md shadow-sm w-full flex flex-1 text-left btn-secondary") %>
+      <% end %>
+      <%= if @current_user && maybe_get(@current_user, :id) == maybe_get(@user, :id) do %>
+        <%= live_redirect to: "/settings" do %>
+          <span class="flex w-full rounded-md shadow-sm">
+            <div class="btn-secondary w-full">
+              <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>
+              Settings
+            </div>
+          </span>
+        <% end %>
+      <% end %>
+      </div>
+    </div>
     <div class="flex-1 mt-2">
       <%= live_patch to: "/user/" <>  e(@user, :character, :username, "") <> "/timeline" do %>
         <h2 class="hover:underline text-xl font-bold text-gray-700"><%= e(@user, :profile, :name, "Anonymous") %></h1>
