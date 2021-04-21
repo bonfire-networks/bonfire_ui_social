@@ -1,19 +1,44 @@
 <div class="container h-full max-w-lg mx-auto mb-6">
+
+  <%= case @error do %>
+    <%= nil -> %> <!-- all good -->
+    <%= "username has already been taken" -> %>
+
+      <div role="status" class="p-4 rounded-md bg-yellow-50">
+        <div class="flex">
+          <div class="flex-shrink-0">
+            <!-- Heroicon name: exclamation -->
+            <svg class="w-5 h-5 text-yellow-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+              <path fill-rule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clip-rule="evenodd" />
+            </svg>
+          </div>
+          <div class="ml-3">
+            <h3 class="text-sm font-medium text-yellow-800">
+              This username is taken. Please choose another. <p>Did you mean to <%= link "switch user", to: "/switch-user " %> or <%= link "log in", to: "/login" %>?
+            </h3>
+          </div>
+        </div>
+      </div>
+
+    <%= error -> %>
+      <div role="status" class="p-4 rounded-md bg-yellow-50">
+        <div class="flex">
+          <div class="flex-shrink-0">
+            <!-- Heroicon name: exclamation -->
+            <svg class="w-5 h-5 text-yellow-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+              <path fill-rule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clip-rule="evenodd" />
+            </svg>
+          </div>
+          <div class="ml-3">
+            <h3 class="text-sm font-medium text-yellow-800">
+              An error occurred: <%=error %>
+            </h3>
+          </div>
+        </div>
+      </div>
+    <% end %>
+
   <%= f = form_for @form, Routes.create_user_path(@socket, :create), id: "create-form" %>
-    <!-- <div class="section__preview"> -->
-    <!--   <div class="preview__card"> -->
-    <!--     <label class="card__upload" for="upload_bg"> -->
-    <!--       <div class="card__bg" style="background-image: url(<%= Faker.Avatar.image_url() %>)"></div> -->
-    <!--       <input name="image[upload]" type="file" id="upload_bg" aria-label="Image file selector"> -->
-    <!--     </label> -->
-    <!--     <div class="card__bar"> -->
-    <!--       <label class="card__upload icon" for="upload_icon"> -->
-    <!--         <div class="bar__icon" style="background-image: url(<%= Faker.Avatar.image_url(60,60) %>)"></div> -->
-    <!--         <input name="icon[upload]" type="file" id="upload_icon" aria-label="Icon file selector"> -->
-    <!--       </label> -->
-    <!--     </div> -->
-    <!--   </div> -->
-    <!-- </div> -->
     <section class="bg-white rounded-lg shadow-xl">
       <div class="px-4 py-5 bg-white border-b border-gray-200 rounded-t-lg sm:px-6">
         <h3 class="text-3xl font-bold leading-6 text-gray-800">
