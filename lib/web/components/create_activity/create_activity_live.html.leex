@@ -10,7 +10,7 @@
       @click.away="{open=false; title_open=false; summary_open=false}"
       class="flex items-start">
 
-      <img class="w-10 h-10 rounded-full" src="<%=avatar_url(@current_user)%>" alt="" />
+      <img class="w-10 h-10 object-cover rounded-full" src="<%=avatar_url(@current_user)%>" alt="current user profile image" />
       <form
         class="flex-1 ml-3"
         <%# phx-change="post_input" %>
