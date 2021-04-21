@@ -39,13 +39,13 @@
       <% else %>
 
         <%= if e(@activity, :object_post_content, :name, nil) do %>
-          <%= live_redirect to: @permalink do %>
-            <h2 class="text-gray-800 text-3xl font-bold hover:underline"><%= e(@activity, :object_post_content, :name, "Title") %></h2>
-          <% end %>
+          <%# = live_redirect to: @permalink do %>
+            <h2 class="text-gray-800 text-3xl font-bold mb-4"><%= e(@activity, :object_post_content, :name, "Title") %></h2>
+          <%# end %>
         <% end %>
 
         <%= if e(@activity, :object_post_content, :summary, nil) do %>
-            <h3 class="mt-4 uppercase text-gray-600 tracking-wider text-xs">Summary</h3>
+            <h3 class="uppercase text-gray-600 tracking-wider text-xs">Summary</h3>
           <%= live_redirect to: @permalink do %>
             <div class="mb-2 prose prose-sm max-w-prose text-gray-700"><%= e(@activity, :object_post_content, :summary, "") %></div>
           <% end %>
