@@ -1,6 +1,6 @@
 <div class="mt-4">
   <div class="px-6 pb-2">
-    <div class="bg-pink-300 rounded-lg bg-cover" style="height: 200px; background-image: url('<%=image_url(@user)%>')"></div>
+    <div class="bg-pink-300 rounded-lg bg-center bg-cover" style="height: 225px; background-image: url('<%=image_url(@user)%>')"></div>
     <div class="flex justify-between items-center">
       <img class="inline-block h-32 w-32 ring-4 ml-6 -mt-16 shadow-lg ring-white rounded-full" src="<%=avatar_url(@user)%>" alt="">
       <div>
@@ -61,36 +61,4 @@
       </div>
     </div>
   </div>
-
-  <nav
-    role="tabpanel"
-    class="px-6 my-4 pb-3 flex justify-between border-b-4"
-    aria-label="Switch between timeline, posts, boosts, media tabs">
-
-    <%= live_patch to: "/user/" <>  e(@user, :character, :username, "") <> "/timeline" do %>
-      <div aria-current="<%= if @selected_tab == "timeline", do: "page" %>" class="text-gray-500 hover:text-gray-700 px-3 py-2 font-medium text-sm hover:border-b-4 border-gray-300 -mb-4 <%= if @selected_tab == "timeline", do: "hover:text-pink-600 hover:border-pink-500 border-b-4 border-pink-500 text-pink-600 font-bold" %>">
-        Timeline
-      </div>
-    <% end %>
-
-    <%= live_patch to: "/user/" <>  e(@user, :character, :username, "") <> "/posts" do %>
-      <div aria-current="<%= if @selected_tab == "posts", do: "page" %>" class="text-gray-500 hover:text-gray-700 px-3 py-2 font-medium text-sm hover:border-b-4 border-gray-300 -mb-4 <%= if @selected_tab == "posts", do: "hover:text-pink-600 hover:border-pink-500 border-b-4 border-pink-500 text-pink-600 font-bold" %>">
-        Posts
-      </div>
-    <% end %>
-
-    <%= live_patch to: "/user/" <>  e(@user, :character, :username, "") <> "/boosts" do %>
-      <div aria-current="<%= if @selected_tab == "boosts", do: "page" %>" class="text-gray-500 hover:text-gray-700 px-3 py-2 font-medium text-sm hover:border-b-4 border-gray-300 -mb-4 <%= if @selected_tab == "boosts", do: "hover:text-pink-600 hover:border-pink-500 border-b-4 border-pink-500 text-pink-600 font-bold" %>">
-        Boosts
-      </div>
-    <% end %>
-
-    <%= live_patch to: "/user/" <>  e(@user, :character, :username, "") <> "/media" do %>
-      <div aria-current="<%= if @selected_tab == "media", do: "page" %>" class="text-gray-500 hover:text-gray-700 px-3 py-2 font-medium text-sm hover:border-b-4 border-gray-300 -mb-4 <%= if @selected_tab == "media", do: "hover:text-pink-600 hover:border-pink-500 border-b-4 border-pink-500 text-pink-600 font-bold" %>">
-        Media
-      </div>
-    <% end %>
-  </nav>
-
-
 </div>

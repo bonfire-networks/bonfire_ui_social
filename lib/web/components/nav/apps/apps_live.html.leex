@@ -41,8 +41,8 @@
                 </div>
               </div>
               <% end %>
-              <%= if module_exists?(Bonfire.UI.ValueFlows.BreadDashboardLive) do %>
-                <%= live_redirect to: Routes.live_path(@socket, Bonfire.UI.ValueFlows.BreadDashboardLive) do %>
+              <%= if module_exists?(Bonfire.Breadpub.BreadDashboardLive) do %>
+                <%= live_redirect to: Routes.live_path(@socket, Bonfire.Breadpub.BreadDashboardLive) do %>
                 <div class="transition-shadow duration-500 ease-in-out rounded cursor-pointer hover:border-gray-100 hover:bg-blueGray-50 hover:shadow-lg">
                   <div class="flex items-center p-3 space-x-3">
                     <span class="w-8 h-8 bg-gray-900 rounded"></span>
