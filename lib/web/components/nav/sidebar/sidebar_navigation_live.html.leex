@@ -1,4 +1,3 @@
-<div>
   <%= live_patch to: Routes.live_path(@socket, Bonfire.Social.Web.Feeds.BrowseLive ) do %>
     <div class="rounded-full w-full flex items-center px-2 py-2 text-sm font-regular transition duration-150 ease-in-out  group hover:bg-blueGray-200  focus:outline-none focus:text-gray-900 focus:bg-gray-50 <%= if @page == "browse", do: "text-pink-700", else: "text-gray-700" %>">
       <svg
@@ -43,15 +42,3 @@
       <span class="capitalize" id="navigation_profile">profile</span>
     </div>
   <% end %>
-
-  <%= for component <- Bonfire.Common.Config.get([:ui, :sidebar_components], []) do %>
-    <%=
-      #IO.inspect(sidebar_module: component)
-      live_component(
-        @socket,
-        component,
-        assigns
-      )
-    %>
-  <% end %>
-</div>

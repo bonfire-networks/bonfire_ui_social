@@ -9,8 +9,17 @@
             </div>
           <% end %>
           <%= live_component(@socket, Bonfire.UI.Social.SidebarUserLive, assigns) %>
-          <%# = if module_enabled?(Breadpub.UI.Reflow.SidebarNavigationLive), do: live_component(@socket, Bonfire.UI.Social.SidebarNavigationLive, assigns) %>
-          <%= live_component(@socket, Bonfire.UI.Social.SidebarNavigationLive, assigns) %>
+          <div>
+          <%= for component <- Bonfire.Common.Config.get([:ui, :sidebar_components], []) do %>
+            <%=
+              live_component(
+                @socket,
+                component,
+                assigns
+              )
+            %>
+          <% end %>
+          </div>
         </div>
       </div>
     </nav>
