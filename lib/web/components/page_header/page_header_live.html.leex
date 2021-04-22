@@ -61,11 +61,11 @@
           <svg class="w-4 h-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-sidebar"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect><line x1="9" y1="3" x2="9" y2="21"></line></svg>
         </button> %>
       </div>
-  <%= if @has_private_tab == true do %>
-    <div class="ml-2">
-      <%= live_component(@socket, Bonfire.UI.Social.PublicPrivateTabsLive, assigns) %>
-    </div>
-  <% end %>
+  <%# <%= if @has_private_tab == true do %>
+    <!--div class="ml-2">
+      <%#= live_component(@socket, Bonfire.UI.Social.PublicPrivateTabsLive, assigns) %>
+    </div-->
+  <%# end %>
   </div>
   <%= if @current_user do %>
     <%= live_component(@socket, Bonfire.UI.Social.SmartInputLive, assigns) %>
