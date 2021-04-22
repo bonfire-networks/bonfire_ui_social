@@ -5,22 +5,22 @@
   >
   <section class="w-center min-h-screen	 border-l border-r">
     <%= live_component(@socket, Bonfire.UI.Social.PageHeaderLive, assigns) %>
-    <div class="mx-4 lg:mx-0 bg-white">
+    <div class="mx-4 border-t-8 lg:mx-0 bg-white">
       <%# = live_component(@socket, Bonfire.UI.Social.BrowseTabsLive, assigns) %>
       <%= cond do %>
         <% @selected_tab == "instance" ->  %>
           <div id="instance_section">
-            <%= live_component(@socket, Bonfire.UI.Social.FeedHeaderLive, assigns) %>
+            <%#= live_component(@socket, Bonfire.UI.Social.FeedHeaderLive, assigns) %>
             <%= live_component(@socket, Bonfire.UI.Social.FeedLive, assigns) %>
           </div>
         <% @selected_tab == "fediverse" ->  %>
           <div id="fediverse_section">
-            <%= live_component(@socket, Bonfire.UI.Social.FeedHeaderLive, assigns) %>
+            <%#= live_component(@socket, Bonfire.UI.Social.FeedHeaderLive, assigns) %>
             <%= live_component(@socket, Bonfire.UI.Social.FeedLive, assigns) %>
           </div>
         <% true -> %>
           <div id="instance_section">
-            <%= live_component(@socket, Bonfire.UI.Social.FeedHeaderLive, assigns) %>
+            <%#= live_component(@socket, Bonfire.UI.Social.FeedHeaderLive, assigns) %>
             <%= live_component(@socket, Bonfire.UI.Social.FeedLive, assigns) %>
           </div>
       <% end %>
@@ -33,19 +33,26 @@
           <%= live_component(@socket, Bonfire.UI.Social.SearchLive, assigns) %>
         </div>
       <% end %>
-      <div class="pb-5 border-b">
-        <h5 class="text-base font-bold text-gray-700 mb-2">Explore</h5>
-        <div class="flex flex-col space-y-3">
+      <div class=" bg-blueGray-100 rounded-xl">
+        <div class="border-b p-3 text-lg font-bold text-gray-800">Explore</div>
+        <div class="flex flex-col">
+          <%= live_patch to: "/browse", class: "flex flex-1" do %>
+            <div
+              aria-current="<%= if @selected_tab == "feed", do: "page" %>"
+              class="<%= if @selected_tab == "feed", do: "text-pink-900", else: "hover:bg-blueGray-200 hover:text-gray-900" %> text-sm text-gray-700 p-3 w-full font-semibold">
+              Browse your feed</div>
+          <% end %>
           <%= live_patch to: "/browse/instance", class: "flex flex-1" do %>
             <div
               aria-current="<%= if @selected_tab == "instance", do: "page" %>"
-              class="<%= if @selected_tab == "instance", do: "ring-2 inline-flex items-center px-4 py-2 border border-gray-300 shadow-sm text-sm font-medium rounded-md text-gray-700 bg-gray-100 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500", else: "btn-secondary" %> w-full">
+              class="<%= if @selected_tab == "instance", do: "text-pink-900", else: "hover:bg-blueGray-200 hover:text-gray-900" %> text-sm text-gray-700 p-3 w-full font-semibold pt-3 border-t">
               Browse the instance</div>
           <% end %>
           <%= live_patch to: "/browse/fediverse", class: "flex flex-1" do %>
             <div
               aria-current="<%= if @selected_tab == "fediverse", do: "page" %>"
-              class="<%= if @selected_tab == "fediverse", do: "ring-2 inline-flex items-center px-4 py-2 border border-gray-300 shadow-sm text-sm font-medium rounded-md text-gray-700 bg-gray-100 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500", else: "btn-secondary" %> w-full">Browse the fediverse</div>
+              class="<%= if @selected_tab == "fediverse", do: "text-pink-900", else: "hover:bg-blueGray-200 hover:text-gray-900" %> rounded-b-xl  text-sm text-gray-700 p-3  w-full font-semibold pt-3 border-t">
+              Browse the fediverse</div>
           <% end %>
         </div>
       </div>

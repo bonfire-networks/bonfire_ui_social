@@ -1,0 +1,62 @@
+<div class="flex items-center m-2">
+  <div class="relative flex items-center flex-1">
+    <div
+      x-cloak
+      x-data="{ open: false }"
+      @keydown.escape.stop="open = false"
+      @click.away="open = false"
+      class="relative block w-full text-left">
+      <div class="w-full">
+        <button
+          type="button"
+          class="inline-flex items-center justify-center w-full px-3 py-2 shadow-sm rounded-lg bg-blueGray-200 text-sm font-medium text-gray-700 hover:bg-blueGray-200  focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-100 focus:ring-pink-500"
+          id="user-profile-menu"
+          @click="open = !open"
+          aria-haspopup="true"
+          x-bind:aria-expanded="open"
+          aria-expanded="true">
+          <img
+            class="object-cover inline-block w-10 h-10 rounded-full"
+            src="<%=avatar_url(@current_user)%>"
+            alt="user profile image">
+          <div class="flex-1 text-left ml-3">
+            <h3 class="text-sm font-semibold text-gray-700 truncate"><%= e(@current_user, :profile, :name, "Me")%></h3>
+            <span class="-mt-1 text-sm text-gray-600 font-light">@<%= e(@current_user, :character, :username, "") %></span>
+          </div>
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-gray-700" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 12h.01M12 12h.01M19 12h.01M6 12a1 1 0 11-2 0 1 1 0 012 0zm7 0a1 1 0 11-2 0 1 1 0 012 0zm7 0a1 1 0 11-2 0 1 1 0 012 0z" />
+          </svg>
+        </button>
+      </div>
+      <div
+        x-description="Usr profile dropdown menu, show/hide based on menu state."
+        x-show="open"
+        x-transition:enter="transition ease-out duration-100"
+        x-transition:enter-start="transform opacity-0 scale-95"
+        x-transition:enter-end="transform opacity-100 scale-100"
+        x-transition:leave="transition ease-in duration-75"
+        x-transition:leave-start="transform opacity-100 scale-100"
+        x-transition:leave-end="transform opacity-0 scale-95"
+        class="origin-top-right absolute left-0 mt-2 w-56 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 divide-y divide-gray-100 focus:outline-none"
+        role="menu"
+        aria-orientation="vertical"
+        aria-labelledby="user-profile-menu">
+        <div class="py-1" role="none">
+          <%= live_patch to: Routes.live_path(@socket, Bonfire.Me.Web.ProfileLive, e(@current_user, :character, :username, "")) do %>
+            <button class="block w-full px-4 py-2 text-sm text-left text-gray-700 transition duration-150 ease-in-out hover:bg-gray-100" role="menuitem">My Profile</button>
+          <% end %>
+          <a href="/switch-user" class="block px-4 py-2 text-sm text-gray-700 transition duration-150 ease-in-out hover:bg-gray-100" role="menuitem">Switch User</a>
+          <a href="/settings" class="block px-4 py-2 text-sm text-gray-700 transition duration-150 ease-in-out hover:bg-gray-100" role="menuitem">Settings</a>
+        </div>
+        <div class="py-1" role="none">
+          <a href="/home" class="block px-4 py-2 text-sm text-gray-700 transition duration-150 ease-in-out hover:bg-gray-100" role="menuitem">Home</a>
+          <a href="/users" class="block px-4 py-2 text-sm text-gray-700 transition duration-150 ease-in-out hover:bg-gray-100" role="menuitem">Users discovery</a>
+          <a href="/guidelines" class="block px-4 py-2 text-sm text-gray-700 transition duration-150 ease-in-out hover:bg-gray-100" role="menuitem">Guidelines</a>
+        </div>
+        <div class="py-1" role="none">
+          <a href="/logout" class="block px-4 py-2 text-sm text-gray-700 transition duration-150 ease-in-out hover:bg-gray-100" role="menuitem">Logout</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

@@ -4,8 +4,8 @@
     <%= if @current_user do %>
       <%= live_component(@socket, Bonfire.UI.Social.PageHeaderLive, assigns) %>
     <% end %>
-    <div class="mx-4 lg:mx-0 bg-white">
-      <%= live_component(@socket, Bonfire.UI.Social.FeedHeaderLive, assigns) %>
+    <div class="mx-4 border-t-8 lg:mx-0 bg-white">
+      <%#= live_component(@socket, Bonfire.UI.Social.FeedHeaderLive, assigns) %>
       <%= live_component(@socket, Bonfire.UI.Social.FeedLive, assigns) %>
     </div>
   </section>
