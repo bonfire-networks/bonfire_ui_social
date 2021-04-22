@@ -10,7 +10,7 @@
                 <p class="font-medium text-pink-600 truncate"><%= e(activity, :subject_profile, :name, nil) %></p>
               </div>
               <div class="mt-1">
-                <p class="text-sm text-gray-600 font-regular truncate"><%= e(activity, :object_post_content, :name, nil) || e(activity, :object_post_content, :summary, nil) %>...</p>
+                <p class="text-sm text-gray-600 font-regular truncate"><%= e(activity, :object, :name, nil) || e(activity, :object, :summary, nil) %>...</p>
                 <div class="flex items-center text-xs text-gray-500 mt-1">
                   <p><time datetime="<%= date_from_now(activity)%>">Last activity <%= date_from_now(activity)%></time></p>
                 </div>

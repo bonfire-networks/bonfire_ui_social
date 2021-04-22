@@ -1,41 +1,43 @@
 defmodule Bonfire.UI.Social.ActivityLive do
   use Bonfire.Web, :live_component
   import Bonfire.UI.Social.Integration
+  alias Bonfire.Social.Activities
+
+  def update(%{activity: %{} = activity} = assigns, socket) do
+
+    activity = activity |> Map.merge(%{object: object(activity)})
+    # |> IO.inspect
+    # |> repo().maybe_preload(:object)
+    # |> repo().maybe_preload([object: [:profile, :character]])
+    # |> repo().maybe_preload([object: [:post_content]])
+
+    verb = e(activity, :verb, :verb, "create") |> verb_maybe_modify(activity)
+
+    components = component_activity_subject(verb, activity, assigns)
+    ++ component_maybe_reply_to(verb, activity)
+    ++ component_object(verb, activity)
+    ++ component_actions(verb, activity, assigns)
+
+    verb_display = verb_display(verb, activity)
+    created_verb_display = "create" |> verb_maybe_modify(activity) |> verb_display(activity)
+
+    permalink = Activities.permalink(assigns, activity)
+
+  {:ok, assign(socket, assigns
+    |> assigns_merge(
+        activity: activity,
+        activity_object_components: components |> Enum.filter(& &1),
+        date_ago: date_from_now(activity.object),
+        verb: verb,
+        verb_display: verb_display,
+        created_verb_display: created_verb_display,
+        permalink: permalink
+      )) }
+  end
 
   def update(assigns, socket) do
 
-    assigns = if is_map(assigns.activity) do
-      activity = Map.merge(assigns.activity, %{object: object(assigns.activity)})
-      # |> IO.inspect
-      # |> repo().maybe_preload(:object)
-      # |> repo().maybe_preload([object: [:profile, :character]])
-      # |> repo().maybe_preload([object: [:post_content]])
-
-      verb = e(activity, :verb, :verb, "post") |> verb_maybe_modify(activity)
-
-      components = component_activity_subject(verb, activity, assigns)
-      ++ component_maybe_reply_to(verb, activity)
-      ++ component_object(verb, activity)
-      ++ component_actions(verb, activity, assigns)
-
-      verb_display = verb_display(verb, activity)
-      created_verb_display = "create" |> verb_maybe_modify(activity) |> verb_display(activity)
-
-      permalink = permalink(assigns, activity)
-
-      assigns
-      |> assigns_merge(
-          activity: activity,
-          activity_object_components: components |> Enum.filter(& &1),
-          date_ago: date_from_now(activity.object),
-          verb: verb,
-          verb_display: verb_display,
-          created_verb_display: created_verb_display,
-          permalink: permalink
-        )
-
-    else
-      assigns
+    {:ok, assign(socket, assigns
       |> assigns_merge(
           activity: nil,
           activity_object_components: [],
@@ -44,35 +46,14 @@ defmodule Bonfire.UI.Social.ActivityLive do
           verb_display: "",
           created_verb_display: "",
           permalink: ""
-        )
-    end
-
-    {:ok, assign(socket, assigns) }
+        )) }
   end
 
-
-  # def permalink(%{reply_to_thread_id: reply_to_thread_id}, %{object: %{id: id}}) do
-  #   "/discussion/"<>reply_to_thread_id<>"/reply/"<>id
-  # end
-  def permalink(_, %{object_post: %{id: id}}) when is_binary(id) do
-    "/post/"<>id
-  end
-  def permalink(_, %{object_post_content: %{id: id}}) when is_binary(id) do
-    "/post/"<>id
-  end
-  def permalink(_, %{object_message: %{id: id}}) when is_binary(id) do
-    "/message/"<>id
-  end
-  def permalink(_, %{object_id: id}) when is_binary(id) do
-    "/discussion/"<>id
-  end
-  def permalink(_, %{object: %{id: id}}) when is_binary(id) do
-    "/discussion/"<>id
-  end
 
   def component_activity_subject("like"=verb, activity, _), do: [{Bonfire.UI.Social.Activity.SubjectMinimalLive, %{verb: verb}}, component_activity_maybe_creator(activity)]
   def component_activity_subject("boost"=verb, activity, _), do: [{Bonfire.UI.Social.Activity.SubjectMinimalLive, %{verb: verb}}, component_activity_maybe_creator(activity)]
   def component_activity_subject("flag"=verb, activity, _), do: [{Bonfire.UI.Social.Activity.SubjectMinimalLive, %{verb: verb}}, component_activity_maybe_creator(activity)]
+  def component_activity_subject("create"=verb, activity, _), do: [component_activity_maybe_creator(activity)]
 
   def component_activity_subject(_, %{object: %Bonfire.Data.Identity.User{}}, _), do: []
 
@@ -104,7 +85,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
       viewing_main_object: false,
       activity: %{
         object: reply_to_post_content,
-        object_post_content: reply_to_post_content,
+        # object_post_content: reply_to_post_content,
         subject_profile: subject_profile,
         subject_character: subject_character,
     }}},
@@ -159,6 +140,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
   end
 
   def component_object(_, %{object: %Bonfire.Data.Social.Post{}}), do: [Bonfire.UI.Social.Activity.NoteLive]
+  def component_object(_, %{object: %Bonfire.Data.Social.PostContent{}}), do: [Bonfire.UI.Social.Activity.NoteLive]
   def component_object(_, %{object_post_content: %{id: _}}), do: [Bonfire.UI.Social.Activity.NoteLive]
   def component_object(_, %{object: %Bonfire.Data.Identity.User{}}), do: [Bonfire.UI.Social.Activity.CharacterLive]
   def component_object(_, _), do: [Bonfire.UI.Social.Activity.NoteLive] # TODO: fallback for unknown objects
@@ -166,16 +148,21 @@ defmodule Bonfire.UI.Social.ActivityLive do
 
   def component_actions(_, _, %{activity_inception: true}), do: []
   def component_actions(_, %{object_post_content: %{id: _} = object}, _), do: component_show_actions(object)
-  def component_actions(_, %{object: %Bonfire.Data.Social.Post{} = object}, _), do: component_show_actions(object) # TODO: make which object have actions configurable
+  def component_actions(_, %{object: %Bonfire.Data.Social.Post{} = object}, _), do: component_show_actions(object)
+  def component_actions(_, %{object: %Bonfire.Data.Social.PostContent{} = object}, _), do: component_show_actions(object)
+  # TODO: make which object have actions configurable
   def component_actions(_, _, _), do: []
 
   def component_show_actions(object), do: [{Bonfire.UI.Social.Activity.ActionsLive, %{object: object}}]
 
   def object(%{object_post_content: %{id: _} = object}), do: object # posts are already preloaded in query
+  def object(%{object: %{post: %{post_content: %{id: _} = object} = post}}), do: Map.merge(object, post) |> IO.inspect
+  def object(%{object: %{post_content: %{id: _} = object}}), do: object
   def object(%{object: %Pointers.Pointer{id: _} = object}), do: load_object(object) # get other pointable objects
   def object(%{object: %{id: _} = object}), do: object # any other preloaded object
   def object(%{object_id: id}), do: load_object(id) # any non-preloaded pointable object
   def object(_), do: nil
+
 
   def load_reply_to(reply_to) do
     object = load_object(reply_to)
