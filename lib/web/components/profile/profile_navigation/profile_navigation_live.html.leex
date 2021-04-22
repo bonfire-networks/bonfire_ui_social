@@ -2,28 +2,13 @@
   role="tabpanel"
   class="px-6 my-4 pb-3 flex justify-between border-b-4"
   aria-label="Switch between timeline, posts, boosts, media tabs">
-
-  <%= live_patch to: "/user/" <>  e(@user, :character, :username, "") <> "/timeline" do %>
-    <div aria-current="<%= if @selected_tab == "timeline", do: "page" %>" class="text-gray-500 hover:text-gray-700 px-3 py-2 font-medium text-sm hover:border-b-4 border-gray-300 -mb-4 <%= if @selected_tab == "timeline", do: "hover:text-pink-600 hover:border-pink-500 border-b-4 border-pink-500 text-pink-600 font-bold" %>">
-      Timeline
-    </div>
-  <% end %>
-
-  <%= live_patch to: "/user/" <>  e(@user, :character, :username, "") <> "/posts" do %>
-    <div aria-current="<%= if @selected_tab == "posts", do: "page" %>" class="text-gray-500 hover:text-gray-700 px-3 py-2 font-medium text-sm hover:border-b-4 border-gray-300 -mb-4 <%= if @selected_tab == "posts", do: "hover:text-pink-600 hover:border-pink-500 border-b-4 border-pink-500 text-pink-600 font-bold" %>">
-      Posts
-    </div>
-  <% end %>
-
-  <%= live_patch to: "/user/" <>  e(@user, :character, :username, "") <> "/boosts" do %>
-    <div aria-current="<%= if @selected_tab == "boosts", do: "page" %>" class="text-gray-500 hover:text-gray-700 px-3 py-2 font-medium text-sm hover:border-b-4 border-gray-300 -mb-4 <%= if @selected_tab == "boosts", do: "hover:text-pink-600 hover:border-pink-500 border-b-4 border-pink-500 text-pink-600 font-bold" %>">
-      Boosts
-    </div>
-  <% end %>
-
-  <%= live_patch to: "/user/" <>  e(@user, :character, :username, "") <> "/media" do %>
-    <div aria-current="<%= if @selected_tab == "media", do: "page" %>" class="text-gray-500 hover:text-gray-700 px-3 py-2 font-medium text-sm hover:border-b-4 border-gray-300 -mb-4 <%= if @selected_tab == "media", do: "hover:text-pink-600 hover:border-pink-500 border-b-4 border-pink-500 text-pink-600 font-bold" %>">
-      Media
-    </div>
-  <% end %>
+    <%= for {item, route} <- Bonfire.Common.Config.get([:ui, :profile_navigation], []) do %>
+      <%= live_patch to: "/user/" <>  e(@user, :character, :username, "") <> "/" <> route do %>
+        <div
+          aria-current="<%= if @selected_tab == item, do: "page" %>"
+          class="capitalize text-gray-500 hover:text-gray-700 px-3 py-2 font-medium text-sm hover:border-b-4 border-gray-300 -mb-4 <%= if @selected_tab == item, do: "hover:text-pink-600 hover:border-pink-500 border-b-4 border-pink-500 text-pink-600 font-bold" %>">
+          <%= item %>
+        </div>
+      <% end %>
+    <% end %>
 </nav>

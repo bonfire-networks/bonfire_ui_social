@@ -1,49 +1,7 @@
 <main class="lg:flex lg:space-x-4">
   <section class="w-center min-h-screen border-l border-r">
     <%= live_component(@socket, Bonfire.UI.Social.PageHeaderLive, assigns) %>
-    <%= cond do %>
-      <% @selected_tab == "private" ->  %>
-        <%= live_component(@socket, Bonfire.UI.Social.PrivateLive, assigns) %>
-      <% @selected_tab == "followers" ->  %>
-        <div class="pb-1 bg-white">
-          <%= live_component(@socket, Bonfire.UI.Social.ProfileMenuSocialLive, assigns) %>
-          <%= live_component(@socket, Bonfire.UI.Social.FollowersLive, assigns) %>
-        </div>
-      <% @selected_tab == "followed" ->  %>
-        <div class="pb-1 bg-white">
-          <%= live_component(@socket, Bonfire.UI.Social.ProfileMenuSocialLive, assigns) %>
-          <%= live_component(@socket, Bonfire.UI.Social.FollowedLive, assigns) %>
-        </div>
-        <% @selected_tab == "media" ->  %>
-        <div class="bg-white">
-          <%= live_component(@socket, Bonfire.UI.Social.ProfileHeroFullLive, assigns) %>
-          <%= live_component(@socket, Bonfire.UI.Social.ProfileNavigationLive, assigns) %>
-        </div>
-        <% @selected_tab == "posts" ->  %>
-          <div class="bg-white">
-            <%= live_component(@socket, Bonfire.UI.Social.ProfileHeroFullLive, assigns) %>
-            <%= live_component(@socket, Bonfire.UI.Social.ProfileNavigationLive, assigns) %>
-            <%= live_component(@socket, Bonfire.UI.Social.FeedLive, assigns) %>
-          </div>
-        <% @selected_tab == "boosts" ->  %>
-          <div class="bg-white">
-            <%= live_component(@socket, Bonfire.UI.Social.ProfileHeroFullLive, assigns) %>
-            <%= live_component(@socket, Bonfire.UI.Social.ProfileNavigationLive, assigns) %>
-            <%= live_component(@socket, Bonfire.UI.Social.FeedLive, assigns) %>
-          </div>
-        <% @selected_tab == "timeline" ->  %>
-          <div class="bg-white">
-            <%= live_component(@socket, Bonfire.UI.Social.ProfileHeroFullLive, assigns) %>
-            <%= live_component(@socket, Bonfire.UI.Social.ProfileNavigationLive, assigns) %>
-            <%= live_component(@socket, Bonfire.UI.Social.FeedLive, assigns) %>
-          </div>
-        <% true -> %>
-          <div class="bg-white">
-            <%= live_component(@socket, Bonfire.UI.Social.ProfileHeroFullLive, assigns) %>
-            <%= live_component(@socket, Bonfire.UI.Social.ProfileNavigationLive, assigns) %>
-            <%= live_component(@socket, Bonfire.UI.Social.FeedLive, assigns) %>
-          </div>
-    <% end %>
+    <%= live_component(@socket,  Bonfire.Common.Config.get([:ui, :profile_sections, String.to_existing_atom(@selected_tab)],  Bonfire.UI.Social.ProfileTimelineLive), assigns) %>
   </section>
 
   <aside class="flex-1 hidden mt-2 lg:flex md:flex-shrink-0">
@@ -53,7 +11,6 @@
           <%= live_component(@socket, Bonfire.UI.Social.SearchLive, assigns) %>
         </div>
       <% end %>
-        <%#= live_component(@socket, Bonfire.UI.Social.DMWidgetLive, assigns) %>
     </div>
   </aside>
 </main>
