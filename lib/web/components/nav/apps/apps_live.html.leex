@@ -41,7 +41,7 @@
                 </div>
               </div>
               <% end %>
-              <%= if module_exists?(Bonfire.Breadpub.BreadDashboardLive) do %>
+              <%= if module_enabled?(Bonfire.Breadpub.BreadDashboardLive) do %>
                 <%= live_redirect to: Routes.live_path(@socket, Bonfire.Breadpub.BreadDashboardLive) do %>
                 <div class="transition-shadow duration-500 ease-in-out rounded cursor-pointer hover:border-gray-100 hover:bg-blueGray-50 hover:shadow-lg">
                   <div class="flex items-center p-3 space-x-3">
@@ -52,7 +52,7 @@
                 </div>
                 <% end %>
               <% end %>
-              <%= if module_exists?(Bonfire.Recyclapp.RecyclappDashboardLive) do %>
+              <%= if module_enabled?(Bonfire.Recyclapp.RecyclappDashboardLive) do %>
               <%= live_redirect to: Routes.live_path(@socket, Bonfire.Recyclapp.RecyclappDashboardLive) do %>
               <div class="transition-shadow duration-500 ease-in-out rounded cursor-pointer hover:border-gray-100 hover:bg-blueGray-50 hover:shadow-lg">
                 <div class="flex items-center p-3 space-x-3">

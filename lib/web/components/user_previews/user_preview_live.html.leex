@@ -14,7 +14,7 @@
         </div>
         <div class="mt-1">
           <span class="block text-lg font-bold text-gray-800"><%= e(@user, :profile, :name, "Anonymous") %></span>
-          <%= if Utils.module_exists?(Bonfire.Me.SharedUsers) && e(@user, :shared_user, :label, nil) do %>
+          <%= if Utils.module_enabled?(Bonfire.Me.SharedUsers) && e(@user, :shared_user, :label, nil) do %>
             <h3 class="-mt-1 text-sm font-normal text-gray-600">@<%= e(@user, :shared_user, :label, "") %></h3>
           <% else %>
           <h3 class="-mt-1 text-sm font-normal text-gray-600">@<%= e(@user, :character, :username, "") %></h3>
