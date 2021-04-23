@@ -1,12 +1,12 @@
 <nav
   role="tabpanel"
-  class="px-6 my-4 pb-3 flex justify-between border-b-4"
+  class="my-4 pb-3 flex justify-between border-b-4"
   aria-label="Switch between timeline, posts, boosts, media tabs">
-    <%= for {item, _} <- Bonfire.Common.Config.get([:ui, :profile_sections], []) do %>
-      <%= live_patch to: "/user/" <>  e(@user, :character, :username, "") <> "/#{item}" do %>
+    <%= for {item, route} <- Bonfire.Common.Config.get([:ui, :profile_navigation], []) do %>
+      <%= live_patch to: "/user/" <>  e(@user, :character, :username, "") <> "/#{route}", class: "flex-1" do %>
         <div
           aria-current="<%= if @selected_tab == Atom.to_string(item), do: "page" %>"
-          class="capitalize text-gray-500 hover:text-gray-700 px-3 py-2 font-medium text-sm hover:border-b-4 border-gray-300 -mb-4 <%= if @selected_tab == Atom.to_string(item), do: "hover:text-pink-600 hover:border-pink-500 border-b-4 border-pink-500 text-pink-600 font-bold" %>">
+          class="text-center capitalize text-gray-500 hover:text-gray-700 px-3 py-2 font-medium text-sm hover:border-b-4 border-gray-300 -mb-4 <%= if @selected_tab == Atom.to_string(item), do: "hover:text-pink-600 hover:border-pink-500 border-b-4 border-pink-500 text-pink-600 font-bold" %>">
           <%= item %>
         </div>
       <% end %>
