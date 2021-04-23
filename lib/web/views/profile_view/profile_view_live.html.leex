@@ -1,7 +1,7 @@
 <main class="lg:flex lg:space-x-4">
   <section class="w-center min-h-screen border-l border-r">
     <%= live_component(@socket, Bonfire.UI.Social.PageHeaderLive, assigns) %>
-    <%= live_component(@socket,  Bonfire.Common.Config.get([:ui, :profile_sections, String.to_existing_atom(@selected_tab)],  Bonfire.UI.Social.ProfileTimelineLive), assigns) %>
+    <%= live_component(@socket,  Bonfire.Common.Config.get([:ui, :profile_sections, maybe_str_to_atom(@selected_tab)],  Bonfire.UI.Social.ProfileTimelineLive), assigns) %>
   </section>
 
   <aside class="flex-1 hidden mt-2 lg:flex md:flex-shrink-0">
