@@ -1,1 +1,1 @@
-<%= if module_enabled?(Bonfire.Search.Web.FormLive), do: live_component(@socket, Bonfire.Search.Web.FormLive, assigns), else: "<!-- Bonfire.Search.Web.FormLive not available -->" %>
+<%= if module_enabled?(Bonfire.Search.Web.FormLive), do: live_component(@socket, Bonfire.Search.Web.FormLive, assigns |> assigns_merge(search_limit: 5, show_more_link: true)), else: "<!-- Bonfire.Search.Web.FormLive not available -->" %>

@@ -1,16 +1,23 @@
 <div class="flex items-center">
-  <img class="object-cover inline-block h-9 w-9 rounded-full" src="<%=avatar_url(e(@activity, :subject_profile, nil))%>" alt="user profile image">
+  <img class="object-cover inline-block h-9 w-9 rounded-full" src="<%=avatar_url(e(@activity, :object, :profile, nil))%>" alt="profile image">
   <div class="flex-1 ml-2">
     <div class="text-base flex items-center text-gray-700">
-      <a
-        aria-label="<%= e(@activity, :subject_character, :username, "") %> profile"
-        class="hover:underline font-bold"
-        href="/user/<%= e(@activity, :subject_character, :username, "") %>">
-        <%= e(@activity, :subject_profile, :name, "Anonymous") %>
-      </a>
-      <span class="mx-1"><%= @verb_display || e(@activity, :verb, :verb, "posted") %></span> <a class="hover:underline font-bold" href="/user/<%= e(@activity, :object, :character, :username, "") %>"><%= e(@activity, :object, :profile, :name, "Anonymous") %></a>
+
+      <% if e(@activity, :subject_character, nil) do %>
+        <a
+          aria-label="<%= e(@activity, :subject_character, :username, "") %> profile"
+          class="hover:underline font-bold"
+          href="/user/<%= e(@activity, :subject_character, :username, "") %>">
+          <%= e(@activity, :subject_profile, :name, "Anonymous") %>
+        </a>
+        <span class="mx-1"><%= @verb_display || e(@activity, :verb, :verb, "posted") %></span>
+      <% end %>
+
+      <a class="hover:underline font-bold" href="/user/<%= e(@activity, :object, :character, :username, "") %>"><%= e(@activity, :object, :profile, :name, "Anonymous") %></a>
+
     </div>
-    <span class="block text-sm text-gray-500">@<%= e(@activity, :subject_character, :username, "") %> ·
+
+    <span class="block text-sm text-gray-500">@<%= e(@activity, :object, :character, :username, "") %> ·
       <%= live_redirect to: @permalink do %><%=@date_ago%><% end %>
     </span>
   </div>
