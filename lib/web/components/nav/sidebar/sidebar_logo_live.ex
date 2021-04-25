@@ -1,4 +1,4 @@
 defmodule Bonfire.UI.Social.SidebarLogoLive do
-  use Bonfire.Web, :live_component
-
+  use Surface.Component
+  alias Surface.Components.LivePatch
 end

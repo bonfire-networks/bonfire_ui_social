@@ -2,8 +2,8 @@
   role="feed"
   aria-live="assertive"
   aria-atomic="true"
-  class="mb-8">
-    <div class="mx-auto max-w-7xl">
+  class="">
+    <div class="mx-auto flex flex-col divide-y max-w-7xl">
     <%= if length(@feed) == 0 do %>
       <div class="p-4 text-center">
         <div class="mb-3 text-3xl">🧐</div>
@@ -15,7 +15,7 @@
         role="article"
         tabIndex="0"
         aria-label="user activity"
-        class="lg:px-3 border-b">
+        class="lg:px-3">
         <%= live_component(
         @socket,
         ActivityLive,

@@ -6,7 +6,7 @@
           class="flex items-start">
           <img class="w-10 h-10 object-cover rounded-full" src="<%=avatar_url(@current_user)%>" alt="current user profile image" />
           <div class="flex-1 flex flex-col space-y-2 ml-3">
-            <%= if  Bonfire.Common.Config.get([:ui, :smart_input_activities, :post], []) == true do %>
+            <%= if  Bonfire.Common.Config.get([:ui, :smart_input_post], []) == true do %>
               <%= live_component(@socket, Bonfire.UI.Social.CreateActivityLive, assigns) %>
             <% end %>
             <%= if Enum.count(Bonfire.Common.Config.get([:ui, :smart_input_activities], [])) > 0  do %>
