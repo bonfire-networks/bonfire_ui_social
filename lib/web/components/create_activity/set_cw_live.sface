@@ -1,0 +1,36 @@
+<div
+  x-show.transition="title_open"
+  class="mb-3">
+  <Field name="name">
+    <TextInput
+      opts={{
+        placeholder: "Enter a title"
+      }}
+      class="flex-grow block w-full min-w-0 p-2 mb-2 transition-all duration-300 ease-in-out border border-gray-300 rounded focus:ring-light-blue-500 focus:border-light-blue-500 sm:text-sm" />
+  </Field>
+
+
+    <div 
+      :if={{Bonfire.Common.Config.get([:ui, :smart_input, :summary], []) == true}}
+      class="flex mt-2 mb-3 space-x-4">
+      <button
+        type="button"
+        @click="summary_open = !summary_open"
+        :class="{'text-pink-600 bg-pink-100' : summary_open === true}"
+        class="text-xs font-semibold tracking-wide text-gray-600 hover:underline ">Add a summary</button>
+    </div>
+
+    <HiddenInput name="reply_to[reply_to_id]" value="{{e(assigns, :reply_to_id, "")}}" />
+    <HiddenInput name="reply_to[thread_id]" value="{{e(assigns, :reply_to_thread_id, "")}}" />
+
+    <div 
+      x-show.transition="summary_open"
+      :if={{Bonfire.Common.Config.get([:ui, :smart_input, :summary], []) == true}}
+      >
+      <TextArea
+        name="summary"
+        rows="4"
+        opts={{placeholder: "Write a short summary"}}
+        class="block w-full h-20 text-sm transition-all duration-300 ease-in-out border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500" />
+    </div>
+</div>

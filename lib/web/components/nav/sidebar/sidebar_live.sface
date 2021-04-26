@@ -1,7 +1,7 @@
 <nav
   role="navigation"
-  class="lg:ml-3 hidden lg:flex md:flex-shrink-0 flex-col w-60">
-  <div class="fixed h-full flex flex-col flex-grow overflow-y-auto w-60">
+  class="hidden lg:flex md:flex-shrink-0 flex-col w-60">
+  <div class="lg:pr-3 lg:pl-1 fixed h-full flex flex-col flex-grow overflow-y-auto w-60">
     <Bonfire.UI.Social.SidebarLogoLive />
     <Bonfire.UI.Social.SidebarUserLive user_image={{@user_image}} name={{@name}} username={{@username}} />
     <Bonfire.UI.Social.SidebarNavigationLive username={{@username}} page={{@page}} />

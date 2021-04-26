@@ -1,0 +1,75 @@
+<div
+    x-show="open_sidebar"
+    x-transition:enter="duration-200 ease-out"
+    x-transition:enter-start="opacity-0 scale-95"
+    x-transition:enter-end="opacity-100 scale-100"
+    x-transition:leave="duration-100 ease-in"
+    x-transition:leave-start="opacity-100 scale-100"
+    x-transition:leave-end="opacity-0 scale-95"
+    x-description="Mobile menu, show/hide based on mobile menu state."
+    class="fixed z-30 top-0 left-0 right-0 bottom-0 w-full h-full inset-x-0 p-2 transition transform origin-top-right lg:hidden"
+    x-ref="panel"
+    @click.away="open_sidebar = false"
+    style="display: none;">
+    <div class="rounded-lg h-full shadow-lg ring-1 ring-black ring-opacity-5 bg-white divide-y-2 divide-gray-50">
+      <div class="pt-5 pb-6 px-5 sm:pb-8">
+        <nav class="flex flex-col flex-1 mt-2 space-y-3">
+          <div class="flex items-center border-b pb-3">
+            <div class="relative flex items-center flex-1">
+              <div class="w-full relative">
+                <div class="flex items-center justify-between">
+                  <img class="object-cover -block w-12 h-12 rounded-full" src={{@user_image}} alt="current user profile image">
+                  <button
+                    type="button"
+                    class="-mr-2 bg-white rounded-md p-2 inline-flex items-center justify-center text-gray-400 hover:text-gray-500 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-indigo-500"
+                    @click="open_sidebar = false">
+                    <span class="sr-only">Close menu</span>
+                    <svg class="h-6 w-6" x-description="Heroicon name: outline/x" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                    </svg>
+                  </button>
+                </div>
+                <div class="flex items-center">
+                  <div class="flex-1 text-left mt-2">
+                    <h3 class="text-base font-semibold text-gray-700">{{@name}}</h3>
+                    <span class="block text-sm text-gray-500 font-regular">{{@username}}</span>
+                  </div>
+                  <button
+                    type="button"
+                    class="text-sm underline font-medium text-gray-800 hover:bg-blueGray-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-100 focus:ring-pink-500"
+                    id="mobile-toggle-user-menu"
+                    @click="open_profile_mobile_menu = !open_profile_mobile_menu"
+                    aria-haspopup="true"
+                    x-bind:aria-expanded="open_profile_mobile_menu"
+                    aria-expanded="true">
+                    <span x-text="open_profile_mobile_menu ? 'Show less' : 'Show more'"></span>
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div
+            aria-labelledby="mobile-toggle-user-menu"
+            class="flex flex-col space-y-3 divide-y divide-gray-100"
+            x-show="open_profile_mobile_menu">
+            <div class="py-1" role="none">
+              <LivePatch to={{"user/" <>  @username}} class="block w-full -mx-2 px-2 py-2 text-sm text-left text-gray-700 transition duration-150 ease-in-out hover:bg-gray-100">My Profile</LivePatch>
+              <LivePatch to="switch-user" class="block w-full -mx-2 px-2 py-2 text-sm text-left text-gray-700 transition duration-150 ease-in-out hover:bg-gray-100">Switch user</LivePatch>
+              <LivePatch to="settings" class="block w-full -mx-2 px-2 py-2 text-sm text-left text-gray-700 transition duration-150 ease-in-out hover:bg-gray-100">Settings</LivePatch>
+            </div>
+            <div class="py-1" role="none">
+              <LivePatch to="/home" class="block w-full -mx-2 px-2 py-2 text-sm text-left text-gray-700 transition duration-150 ease-in-out hover:bg-gray-100">Home</LivePatch>
+              <LivePatch to="users" class="block w-full -mx-2 px-2 py-2 text-sm text-left text-gray-700 transition duration-150 ease-in-out hover:bg-gray-100">Users directory</LivePatch>
+              <LivePatch to="guidelines" class="block w-full -mx-2 px-2 py-2 text-sm text-left text-gray-700 transition duration-150 ease-in-out hover:bg-gray-100">Guidelines</LivePatch>
+            </div>
+            <div class="py-1" role="none">
+              <LivePatch to="/logout" class="block w-full -mx-2 px-2 py-2 text-sm text-left text-gray-700 transition duration-150 ease-in-out hover:bg-gray-100">Logout</LivePatch>
+            </div>
+          </div>
+          <div class="flex flex-col space-y-3" x-show="!open_profile_mobile_menu" >
+            <Bonfire.UI.Social.SidebarNavigationLive username={{@username}} page={{@page}} />
+          </div>
+        </nav>
+      </div>
+    </div>
+</div>

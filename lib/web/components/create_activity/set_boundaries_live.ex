@@ -1,5 +1,6 @@
 defmodule Bonfire.UI.Social.SetBoundariesLive do
-  use Bonfire.Web, :live_component
+  use Surface.Component
+  import Bonfire.Common.Utils
 
   def mount(socket) do
 
