@@ -28,7 +28,7 @@
   <span class="capitalize" id="navigation_browse">Direct Messages</span>
 </LivePatch>
 
-<LivePatch to={{"/user" <> @username}} class={{"rounded-full w-full flex items-center px-2 py-2 text-sm font-regular transition duration-150 ease-in-out group hover:bg-blueGray-200 focus:outline-none focus:text-gray-900 focus:bg-gray-50 text-gray-700", "text-pink-700": @page == "profile"}}>
+<LivePatch to={{"/user/" <> @username}} class={{"rounded-full w-full flex items-center px-2 py-2 text-sm font-regular transition duration-150 ease-in-out group hover:bg-blueGray-200 focus:outline-none focus:text-gray-900 focus:bg-gray-50 text-gray-700", "text-pink-700": @page == "profile"}}>
   <svg
     aria-labelledby="navigation_profile"
     class={{"w-5 h-5 mr-2 transition duration-150 ease-in-out text-gray-500", "text-pink-700": @page == "profile"}}

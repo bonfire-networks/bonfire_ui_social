@@ -1,0 +1,73 @@
+
+<div
+  x-cloak
+  x-data="{
+    open: false,
+    title_open: false,
+    summary_open: false,
+    open_boundaries: false
+  }"
+  @click.away="{open=false; title_open=false; summary_open=false}">
+  <form :on-submit="post" autocomplete="off">
+    <div x-description="create post form">
+      <Field name="create_activity_type">
+        <HiddenInput
+          :if={{ e(assigns, :smart_input_private, nil) || e(assigns, :create_activity_type, nil) == "message" }} 
+          value="message" />
+        <HiddenInput
+          :if={{ e(assigns, :smart_input_private, nil) == false || e(assigns, :create_activity_type, nil) != "message" }}  
+          value="post" />
+      </Field>
+      <div x-show="open">
+        <Bonfire.UI.Social.SetBoundariesLive />
+      </div>
+      <div :if={{Bonfire.Common.Config.get([:ui, :smart_input, :cw], []) == true}}>
+        <Bonfire.UI.Social.SetCWLive />
+      </div>
+      <div 
+        @keydown.window.escape="open = false"
+        @click = "open = true"
+        class="h-10 transition-all duration-300 ease-in-out"
+        :class="{'h-40' : open === true}" 
+        >
+          <TextArea
+           name="html_body"
+           opts={{
+            value: @smart_input_text,
+            placeholder: @smart_input_placeholder
+           }}
+          
+          class="block w-full h-full text-sm transition-all duration-300 ease-in-out border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500" />
+      </div>
+      <div
+        x-show="open"
+        class="flex items-center mt-2">
+        <div class="flex-1 flex items-center space-x-4">
+          <button
+            :if={{Bonfire.Common.Config.get([:ui, :smart_input, :cw], []) == true}}
+            type="button"
+            @click="title_open = !title_open"
+            class="flex items-center hover:underline"
+            :class="{'bg-pink-50' : title_open === true }">
+            <svg :class="{'text-pink-600' : title_open === true }" class="w-5 h-5 text-gray-700" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M18 3a1 1 0 00-1.447-.894L8.763 6H5a3 3 0 000 6h.28l1.771 5.316A1 1 0 008 18h1a1 1 0 001-1v-4.382l6.553 3.276A1 1 0 0018 15V3z" clip-rule="evenodd"></path></svg>
+            <span :class="{'text-pink-600 bg-pink-100' : title_open === true}" class="ml-2 text-xs font-semibold text-gray-800">Add a CW</span>
+          </button>
+        </div>
+        <button
+          @click="{open = false; title_open = false}"
+          type="button"
+          class="mr-3 btn-secondary">
+          Cancel
+        </button>
+        <button
+          @click="{open = false; title_open = false}"
+          type="submit"
+          
+          class="btn-primary">
+          <span :if={{e(assigns, :smart_input_private, nil)}}>Send</span>
+          <span :if={{e(assigns, :smart_input_private, nil) == nil}}>Publish</span>
+        </button>
+      </div>
+    </div>
+  </form>
+</div>

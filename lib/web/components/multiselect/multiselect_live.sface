@@ -1,24 +1,19 @@
 <div
   id="bonfire_tags"
   x-cloak
-  x-on:click.away="close"
-  phx-update="ignore"
+  @click.away="close"
   x-data="dropdown()">
   <div
     @click="toggle($refs.autocomplete, $nextTick)"
-    class="cursor-pointer space-y-1 border p-1 pb-2 bg-white shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border-gray-300 rounded-md hover:bg-gray-50">
-
-    <span id="multiselect_label" class="inline-flex pl-2 pr-3 mr-1 border-r">
-      <%=raw @label %>
-    </span>
-
-    <%= for {name_content, id} <- e(assigns, :selected_options, []) do  %>
-      <span class="inline-flex rounded-full items-center py-0.5 pl-2.5 pr-1 text-sm font-medium bg-indigo-100 text-indigo-700">
-        <%=raw name_content %>
-        <input type="hidden" name="<%=@form_input_name %>" value="<%=id%>" />
+    class="space-x-1 cursor-pointer space-y-1 border p-1 pb-2 bg-white shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border-gray-300 rounded-md hover:bg-gray-50">
+      <span
+        :for={{ {name_content, id} <- e(assigns, :selected_options, []) }} 
+        class="inline-flex rounded-full items-center py-0.5 pl-2.5 pr-1 text-sm font-medium bg-indigo-100 text-indigo-700">
+        {{ raw name_content }}
+        <input type="hidden" name="{{@form_input_name}}" value="{{ id }}" />
         <button
-          phx-click="<%=@remove_event %>"
-          phx-value-id="<%=id%>"
+          :on-click="remove_event"
+          phx-value-id="{{ id }}"
           type="button"
           class="flex-shrink-0 ml-0.5 h-4 w-4 rounded-full inline-flex items-center justify-center text-indigo-400 hover:bg-indigo-200 hover:text-indigo-500 focus:outline-none focus:bg-indigo-500 focus:text-white">
           <span class="sr-only">Remove large option</span>
@@ -27,8 +22,6 @@
           </svg>
         </button>
       </span>
-    <% end %>
-
 
   </div>
   <div
@@ -55,22 +48,17 @@
           role="listbox"
           aria-labelledby="multiselect_label">
 
-          <%= for {{name_content, id}, i} <- e(assigns, :preloaded_options, []) |> Enum.with_index() do  %>
-
             <li
+            :for={{ {{name_content, id}, i} <- e(assigns, :preloaded_options, []) |> Enum.with_index() }}
             class="p-2 hover:bg-gray-100 focus:bg-gray-100 cursor-pointer text-sm text-gray-800"
             role="option"
-            tabindex="<%=i+2%>"
+            tabindex="{{i+2}}"
             aria-selected="false"
-            phx-click="<%=@pick_event %>"
-            phx-value-id="<%=id%>"
-            <%# phx-window-keyup="@pick_event"
-            phx-throttle="1000" %>
+            :on-click="pick_event"
+            phx-value-id="{{ id }}"
             >
-              <%=raw name_content %>
+              {{raw name_content}}
             </li>
-
-          <% end %>
 
       <!-- more options here -->
       </ul>
@@ -79,7 +67,7 @@
 </div>
 
 <script>
-  window.dropdown = function () {
+  function dropdown() {
     return {
       show: false,
       open(ref, next) {
