@@ -11,32 +11,6 @@
   <% end %>">
 
 <%= for component <- @activity_object_components do %>
-  <%=
-  case component do
-
-  {module, %{} = component_assigns} when is_atom(module) ->
-    #IO.inspect(activity_module: module)
-    #IO.inspect(activity_assign: component_assigns)
-    live_component(
-      @socket,
-      module,
-      assigns
-      |> assigns_merge(component_assigns)
-    )
-
-
-  module when is_atom(module) ->
-    #IO.inspect(activity_module: module)
-    live_component(
-      @socket,
-      module,
-      assigns
-    )
-
-  string when is_binary(string) ->
-    string
-
-    end
-   %>
+  <%= activity_component(component, assigns, @socket) %>
 <% end %>
 </div>
