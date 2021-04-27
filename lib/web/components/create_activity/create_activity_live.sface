@@ -8,7 +8,7 @@
     open_boundaries: false
   }"
   @click.away="{open=false; title_open=false; summary_open=false}">
-  <form :on-submit="post" autocomplete="off">
+  <Form for={{ @changeset }} submit="post" opts={{  autocomplete: "off" }}>
     <div x-description="create post form">
       <Field name="create_activity_type">
         <HiddenInput
@@ -24,21 +24,23 @@
       <div :if={{Bonfire.Common.Config.get([:ui, :smart_input, :cw], []) == true}}>
         <Bonfire.UI.Social.SetCWLive />
       </div>
-      <div 
-        @keydown.window.escape="open = false"
-        @click = "open = true"
-        class="h-10 transition-all duration-300 ease-in-out"
-        :class="{'h-40' : open === true}" 
-        >
-          <TextArea
-           name="html_body"
-           opts={{
-            value: @smart_input_text,
-            placeholder: @smart_input_placeholder
-           }}
-          
-          class="block w-full h-full text-sm transition-all duration-300 ease-in-out border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500" />
-      </div>
+        <Inputs for="post_content">
+          <Field name="html_body">
+            <div 
+              @keydown.window.escape="open = false"
+              @click = "open = true"
+              class="h-10 transition-all duration-300 ease-in-out"
+              :class="{'h-40' : open === true}" 
+              >
+              <TextArea
+              opts={{
+                value: @smart_input_text,
+                placeholder: @smart_input_placeholder
+              }}
+              class="block w-full h-full text-sm transition-all duration-300 ease-in-out border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500" />
+            </div>
+          </Field>
+        </Inputs>
       <div
         x-show="open"
         class="flex items-center mt-2">
@@ -69,5 +71,5 @@
         </button>
       </div>
     </div>
-  </form>
+  </Form>
 </div>

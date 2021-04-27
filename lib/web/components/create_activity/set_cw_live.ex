@@ -4,6 +4,7 @@ defmodule Bonfire.UI.Social.SetCWLive do
   alias Surface.Components.Form.TextArea
   alias Surface.Components.Form.HiddenInput
   alias Surface.Components.Form.TextInput
+  alias Surface.Components.Form.Inputs
   alias Surface.Components.Form.Field
 
 end
