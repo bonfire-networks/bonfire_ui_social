@@ -216,6 +216,32 @@ defmodule Bonfire.UI.Social.ActivityLive do
   def object_link(text, %{character: %{username: username}}, class \\ "hover:underline font-bold"), do: "<a class='#{class}' href='/user/#{username}'>#{text}</a>"
   def object_link(text, %{id: id}, class), do: "<a class='#{class}' href='/discussion/#{id}'>#{text}</a>"
 
+  def activity_component(component, assigns, socket) do
+    case component do
+
+    {module, %{} = component_assigns} when is_atom(module) ->
+      #IO.inspect(activity_module: module)
+      #IO.inspect(activity_assign: component_assigns)
+      live_component(
+        socket,
+        module,
+        assigns
+        |> assigns_merge(component_assigns)
+      )
+
+    module when is_atom(module) ->
+      #IO.inspect(activity_module: module)
+      live_component(
+        socket,
+        module,
+        assigns
+      )
+
+    string when is_binary(string) ->
+      string
+
+    end
+  end
 
   # def handle_event("like"=action, attrs, socket), do: Bonfire.Social.Likes.live_action(action, attrs, socket)
   # def handle_event(action, attrs, socket), do: Bonfire.Web.LiveHandler.handle_event(action, attrs, socket, __MODULE__)
