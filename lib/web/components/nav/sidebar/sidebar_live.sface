@@ -5,6 +5,6 @@
     <Bonfire.UI.Social.SidebarLogoLive />
     <Bonfire.UI.Social.SidebarUserLive user_image={{@user_image}} name={{@name}} username={{@username}} />
     <Bonfire.UI.Social.SidebarNavigationLive username={{@username}} page={{@page}} />
-    <Bonfire.UI.ValueFlows.ProcessesListLive />
+    <!-- <Bonfire.UI.ValueFlows.ProcessesListLive /> -->
   </div>
 </nav>
