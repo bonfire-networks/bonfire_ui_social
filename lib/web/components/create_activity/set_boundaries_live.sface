@@ -1,6 +1,6 @@
 <div class="mb-2">
 
-  <Bonfire.UI.Social.MultiselectLive 
+  <Bonfire.UI.Social.MultiselectLive
     preloaded_options={{@default_circles}}
     selected_options={{@to_circles}}
     label={{@label}}

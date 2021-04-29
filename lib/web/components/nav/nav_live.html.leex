@@ -18,7 +18,7 @@
       <%# = live_component(@socket, Bonfire.UI.Social.HeaderLive, assigns) %>
       <div class="">
         <div class="lg:px-3 place-content-center flex xl:max-w-screen-xl mx-auto">
-          <%= live_component(@socket, Bonfire.UI.Social.SidebarLive, name: e(@current_user, :profile, :name, "Anonymous"), username: e(@current_user, :character, :username, ""), page: @page, user_image: avatar_url(@current_user)) %>
+          <%= live_component(@socket, Bonfire.UI.Social.SidebarLive, assigns_clean(assigns)) %>
           <div class="flex flex-1">
             <div class="flex-1 xl:mr-4">
               <%= @inner_content %>

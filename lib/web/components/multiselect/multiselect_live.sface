@@ -6,17 +6,18 @@
   <div
     @click="toggle($refs.autocomplete, $nextTick)"
     class="space-x-1 cursor-pointer space-y-1 border p-1 pb-2 bg-white shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border-gray-300 rounded-md hover:bg-gray-50">
+      <label id="multiselect_label">{{ @label }}</label>
       <span
-        :for={{ {name_content, id} <- e(assigns, :selected_options, []) }} 
+        :for={{ {name_content, id} <- @selected_options }}
         class="inline-flex rounded-full items-center py-0.5 pl-2.5 pr-1 text-sm font-medium bg-indigo-100 text-indigo-700">
         {{ raw name_content }}
         <input type="hidden" name="{{@form_input_name}}" value="{{ id }}" />
         <button
-          :on-click="remove_event"
+          :on-click="{{ @remove_event }}"
           phx-value-id="{{ id }}"
           type="button"
           class="flex-shrink-0 ml-0.5 h-4 w-4 rounded-full inline-flex items-center justify-center text-indigo-400 hover:bg-indigo-200 hover:text-indigo-500 focus:outline-none focus:bg-indigo-500 focus:text-white">
-          <span class="sr-only">Remove large option</span>
+          <span class="sr-only">Remove {{ raw name_content }}</span>
           <svg class="h-2 w-2" stroke="currentColor" fill="none" viewBox="0 0 8 8">
             <path stroke-linecap="round" stroke-width="1.5" d="M1 1l6 6m0-6L1 7" />
           </svg>
@@ -49,12 +50,12 @@
           aria-labelledby="multiselect_label">
 
             <li
-            :for={{ {{name_content, id}, i} <- e(assigns, :preloaded_options, []) |> Enum.with_index() }}
+            :for.with_index={{ {{name_content, id}, i} <- @preloaded_options }}
             class="p-2 hover:bg-gray-100 focus:bg-gray-100 cursor-pointer text-sm text-gray-800"
             role="option"
             tabindex="{{i+2}}"
             aria-selected="false"
-            :on-click="pick_event"
+            :on-click="{{ @pick_event }}"
             phx-value-id="{{ id }}"
             >
               {{raw name_content}}

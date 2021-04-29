@@ -5,9 +5,9 @@ defmodule Bonfire.UI.Social.FeedLive do
 
   def update(%{feed: feed} =assigns, socket) when is_list(feed) do
 
-    {:ok, assign(socket, assigns
-    |> assigns_merge(%{
-      })) }
+    {:ok, socket
+    |> assigns_merge(assigns, %{
+      }) }
   end
 
 
@@ -16,19 +16,17 @@ defmodule Bonfire.UI.Social.FeedLive do
 
     feed_id = Bonfire.Social.Feeds.instance_feed_id()
 
-    feed = Bonfire.Social.FeedActivities.feed(feed_id, e(socket.assigns, :current_user, nil))
+    feed = Bonfire.Social.FeedActivities.feed(feed_id, socket)
 
     title = e(assigns, :feed_title, "Recent activity on this instance")
 
     {:ok, socket
-    |> assign(
-      assigns
-    |> assigns_merge(
+    |> assigns_merge( assigns,
       feed_title: title,
       feed_id: feed_id,
       feed: e(feed, :entries, []),
       page_info: e(feed, :metadata, [])
-    ))}
+    )}
   end
 
 

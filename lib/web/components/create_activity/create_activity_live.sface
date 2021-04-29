@@ -12,10 +12,10 @@
     <div x-description="create post form">
       <Field name="create_activity_type">
         <HiddenInput
-          :if={{ e(assigns, :smart_input_private, nil) || e(assigns, :create_activity_type, nil) == "message" }} 
+          :if={{ e(assigns, :smart_input_private, nil) || e(assigns, :create_activity_type, nil) == "message" }}
           value="message" />
         <HiddenInput
-          :if={{ e(assigns, :smart_input_private, nil) == false || e(assigns, :create_activity_type, nil) != "message" }}  
+          :if={{ e(assigns, :smart_input_private, nil) == false || e(assigns, :create_activity_type, nil) != "message" }}
           value="post" />
       </Field>
       <div x-show="open">
@@ -26,11 +26,11 @@
       </div>
         <Inputs for="post_content">
           <Field name="html_body">
-            <div 
+            <div
               @keydown.window.escape="open = false"
               @click = "open = true"
               class="h-10 transition-all duration-300 ease-in-out"
-              :class="{'h-40' : open === true}" 
+              :class="{'h-40' : open === true}"
               >
               <TextArea
               opts={{
@@ -64,7 +64,7 @@
         <button
           @click="{open = false; title_open = false}"
           type="submit"
-          
+
           class="btn-primary">
           <span :if={{e(assigns, :smart_input_private, nil)}}>Send</span>
           <span :if={{e(assigns, :smart_input_private, nil) == nil}}>Publish</span>

@@ -24,7 +24,7 @@
         </svg>
       </button>
     </div>
-    <Bonfire.UI.Social.SidebarMobileLive name={{@name}} username={{@username}} user_image={{@user_image}} page={{@page}} />
+    <Bonfire.UI.Social.SidebarMobileLive page={{@page}} current_user={{@current_user}} />
     <div class="text-left flex items-center flex-1 space-x-2">
       <a
         aria-label="Navigate to the previous page"
@@ -62,15 +62,8 @@
       </button> -->
     </div>
   </div>
-  <Bonfire.UI.Social.SmartInputLive 
-    :if={{@current_user != nil and @smart_input == true}} 
-    user_image={{@user_image}}
-    smart_input_private={{@smart_input_private}}
-    create_activity_type={{@create_activity_type}}
-    reply_to_id={{@reply_to_id}}
-    reply_to_thread_id={{@reply_to_thread_id}}
-    smart_input_placeholder={{@smart_input_placeholder}}
-    smart_input_text={{@smart_input_text}}
+  <Bonfire.UI.Social.SmartInputLive
+    :if={{@current_user != nil and @smart_input == true}}
      />
   <!-- <div
     x-show="open_search"

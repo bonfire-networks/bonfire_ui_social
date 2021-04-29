@@ -1,19 +1,7 @@
 <main class="lg:flex lg:space-x-4">
   <section class="w-center min-h-screen border-l border-r">
   <%= live_component(@socket, Bonfire.UI.Social.PageHeaderLive,
-      current_user: @current_user,
-      name: e(@current_user, :profile, :name, "Anonymous"),
-      user_image: avatar_url(@current_user),
-      username: e(@current_user, :character, :username, ""),
-      page_title: @page_title,
-      page: @page,
-      smart_input: @smart_input,
-      smart_input_private: e(assigns, :smart_input_private, false),
-      create_activity_type: e(assigns, :create_activity_type, nil ),
-      reply_to_id: nil,
-      reply_to_thread_id: nil,
-      smart_input_placeholder: e(assigns, :smart_input_placeholder, ""),
-      smart_input_text: e(assigns, :smart_input_text, "") )%>
+    assigns |> assigns_clean())%>
 
     <div class="mx-4 lg:mx-0 bg-white">
       <div class="min-h-screen flex flex-col">

@@ -1,5 +1,5 @@
 defmodule Bonfire.UI.Social.SidebarNavigationLive do
-  use Surface.Component
+  use Bonfire.Web, :stateless_component
   alias Surface.Components.LivePatch
 
   prop page, :string, required: true

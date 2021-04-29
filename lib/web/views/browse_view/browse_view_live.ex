@@ -11,7 +11,7 @@ defmodule  Bonfire.UI.Social.BrowseViewLive do
 
   def update(%{current_user: %{id: user_id} = current_user} = assigns, socket) do # default to instance feed if none other was specified and we're logged in
 
-    feed = Bonfire.Social.FeedActivities.my_feed(current_user)
+    feed = Bonfire.Social.FeedActivities.my_feed(socket)
 
     {:ok, socket
     |> assign(
