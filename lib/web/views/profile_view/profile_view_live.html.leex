@@ -14,12 +14,12 @@
       reply_to_thread_id: nil,
       smart_input_placeholder:  e(assigns, :smart_input_placeholder, ""),
       smart_input_text: e(assigns, :smart_input_text, "") )%>
-    <%= live_component(@socket,  Bonfire.Common.Config.get([:ui, :profile_sections, maybe_str_to_atom(@selected_tab)],  Bonfire.UI.Social.ProfileTimelineLive), assigns) %>
+    <%= live_component(@socket,  Bonfire.Common.Config.get([:ui, :profile, :sections, maybe_str_to_atom(@selected_tab)],  Bonfire.UI.Social.ProfileTimelineLive), assigns) %>
   </section>
 
   <aside class="flex-1 hidden mt-2 lg:flex md:flex-shrink-0">
     <div class="h-full px-1 w-full">
-      <%= for component <- Bonfire.Common.Config.get([:ui, :profile_widgets], []) do %>
+      <%= for component <- Bonfire.Common.Config.get([:ui, :profile, :widgets], []) do %>
             <%=
               live_component(
                 @socket,

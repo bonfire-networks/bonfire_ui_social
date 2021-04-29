@@ -2,7 +2,7 @@
   role="tabpanel"
   class="my-4 pb-3 flex justify-between border-b-4"
   aria-label="Switch between timeline, posts, boosts, media tabs">
-    <%= for {item, route} <- Bonfire.Common.Config.get([:ui, :profile_navigation], []) do %>
+    <%= for {item, route} <- Bonfire.Common.Config.get([:ui, :profile, :navigation], []) do %>
       <%= live_patch to: "/user/" <>  e(@user, :character, :username, "") <> "/#{route}", class: "flex-1" do %>
         <div
           aria-current="<%= if @selected_tab == Atom.to_string(item), do: "page" %>"
