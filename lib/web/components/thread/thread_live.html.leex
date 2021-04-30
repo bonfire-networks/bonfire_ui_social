@@ -5,7 +5,8 @@
     |> assigns_merge(
       target_component: @myself,
       reply_to_id: e(@object, :id, nil),
-      to_circles: e(assigns, :to_circles, []) ++ [{e(@activity, :subject_profile, :name, e(@activity, :subject_character, :username, "someone")), e(@activity, :subject_character, :id, nil)}]
+      to_circles: e(assigns, :to_circles, []) ++ [{e(@activity, :subject_profile, :name, e(@activity, :subject_character, :username, "someone")), e(@activity, :subject_character, :id, nil)}],
+      smart_input_text: ""
     )) %>
 </div>
 

@@ -7,7 +7,18 @@
 
     <Bonfire.UI.Social.SidebarUserLive current_user={{@current_user}} />
 
-    <Bonfire.UI.Social.SidebarNavigationLive current_user={{@current_user}} page={{@page}} />
+    <div
+      :for={{{component, component_assigns} <- Bonfire.Common.Config.get([:ui, :sidebar_components], [{Bonfire.UI.Social.SidebarNavigationLive, []}])}}>
+
+        {{ live_component(
+          @socket,
+          component,
+          assigns_merge(component_assigns, [
+          current_user: @current_user,
+          page: @page
+        ])) }}
+
+      </div>
 
   </div>
 </nav>

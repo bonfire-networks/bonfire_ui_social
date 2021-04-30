@@ -12,7 +12,7 @@
   </Inputs>
 
 
-    <div 
+    <div
       :if={{Bonfire.Common.Config.get([:ui, :smart_input, :summary], []) == true}}
       class="flex mt-2 mb-3 space-x-4">
       <button
@@ -22,10 +22,7 @@
         class="text-xs font-semibold tracking-wide text-gray-600 hover:underline ">Add a summary</button>
     </div>
 
-    <HiddenInput name="reply_to[reply_to_id]" value="{{e(assigns, :reply_to_id, "")}}" />
-    <HiddenInput name="reply_to[thread_id]" value="{{e(assigns, :reply_to_thread_id, "")}}" />
-
-    <div 
+    <div
       x-show.transition="summary_open"
       :if={{Bonfire.Common.Config.get([:ui, :smart_input, :summary], []) == true}}
       >

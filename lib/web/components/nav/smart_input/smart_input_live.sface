@@ -11,23 +11,26 @@
           smart_input_placeholder={{@smart_input_placeholder}}
           smart_input_text={{@smart_input_text}}
         />
-       <div :if={{Enum.count(Bonfire.Common.Config.get([:ui, :smart_input_activities], [])) > 0}}>
+       <div :if={{length(Bonfire.Common.Config.get([:ui, :smart_input_activities], [])) > 0}}>
         <div class="flex items-center space-x-3">
+
           <div
             :for={{{component, slug} <- Bonfire.Common.Config.get([:ui, :smart_input_activities], [])}}
             x-cloak
             x-data="{open: false}"
             @click.away="{open=false}">
+
             <button x-on:click="open = true" class="btn-secondary">{{slug}}</button>
-            <!-- <div x-show.transition="open">
-              <%= live_component(
+            <div x-show.transition="open">
+
+              {{ live_component(
                 @socket,
                 Bonfire.Common.Config.get([:ui, :smart_input_forms, component], []),
                 current_user: @current_user
-              ) %>
-            </div> -->
-          </div>
+              ) }}
 
+            </div>
+          </div>
         </div>
       </div>
     </div>
