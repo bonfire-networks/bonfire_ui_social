@@ -2,12 +2,12 @@
   <section class="w-center min-h-screen border-l border-r">
     <%= live_component(@socket, Bonfire.UI.Social.PageHeaderLive,
     assigns |> assigns_clean())%>
-    <%= live_component(@socket,  Bonfire.Common.Config.get([:ui, :profile_sections, maybe_str_to_atom(@selected_tab)],  Bonfire.UI.Social.ProfileTimelineLive), assigns) %>
+    <%= live_component(@socket,  Bonfire.Common.Config.get([:ui, :profile, :sections, maybe_str_to_atom(@selected_tab)],  Bonfire.UI.Social.ProfileTimelineLive), assigns) %>
   </section>
 
   <aside class="flex-1 hidden mt-2 lg:flex md:flex-shrink-0">
     <div class="h-full px-1 w-full">
-      <%= for component <- Bonfire.Common.Config.get([:ui, :profile_widgets], []) do %>
+      <%= for component <- Bonfire.Common.Config.get([:ui, :profile, :widgets], []) do %>
             <%=
               live_component(
                 @socket,

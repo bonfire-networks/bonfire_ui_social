@@ -3,8 +3,8 @@
   <%= live_component(@socket, Bonfire.UI.Social.CreateActivityLive,
   assigns
     |> assigns_merge(
-      target_component: @myself,
-      reply_to_id: e(@object, :id, nil),
+      #target_component: @myself,
+      reply_to_id: @reply_to_id,
       to_circles: e(assigns, :to_circles, []) ++ [{e(@activity, :subject_profile, :name, e(@activity, :subject_character, :username, "someone")), e(@activity, :subject_character, :id, nil)}],
       smart_input_text: ""
     )) %>
@@ -22,11 +22,10 @@
       <%= live_component(@socket, Bonfire.UI.Social.CommentLive,
           assigns
           |> assigns_merge(
-            target_component: @myself,
+            #target_component: @myself,
             comment: reply,
             child_replies: child_replies,
             thread_level: 1,
-            target_component: @myself,
           )
         )%>
     <% end %>

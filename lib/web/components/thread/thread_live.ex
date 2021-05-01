@@ -53,6 +53,7 @@ defmodule Bonfire.UI.Social.ThreadLive do
         |> assigns_merge(
           thread_id: thread_id,
           activity: activity,
+          reply_to_id: e(activity, :object, :id, nil) || thread_id, # TODO: change for thread forking?
           reply_to_thread_id: e(activity, :replied, :thread_id, nil) || thread_id, # TODO: change for thread forking?
           current_user: current_user,
           page: "thread",
@@ -66,7 +67,7 @@ defmodule Bonfire.UI.Social.ThreadLive do
     end
   end
 
-  def handle_event(action, attrs, socket), do: Bonfire.Web.LiveHandler.handle_event(action, attrs, socket, __MODULE__)
-  def handle_info(info, socket), do: Bonfire.Web.LiveHandler.handle_info(info, socket, __MODULE__)
+  # def handle_event(action, attrs, socket), do: Bonfire.Web.LiveHandler.handle_event(action, attrs, socket, __MODULE__)
+  # def handle_info(info, socket), do: Bonfire.Web.LiveHandler.handle_info(info, socket, __MODULE__)
 
 end

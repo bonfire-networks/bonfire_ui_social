@@ -22,7 +22,7 @@
         <%= live_component(@socket, Bonfire.UI.Social.ActivityLive,
         assigns
           |> assigns_merge(
-            id: "main-"<>e(@activity, :id, ""),
+            #id: "main-"<>e(@activity, :id, ""),
             viewing_main_object: true,
             hide_reply: true
           )) %>
@@ -30,7 +30,7 @@
         <%= live_component(@socket, Bonfire.UI.Social.ThreadLive,
           assigns
           |> assigns_merge(
-            id: "post-thread-"<>e(@object, :id, ""),
+            #id: "post-thread-"<>e(@object, :id, ""),
             thread_id: e(@object, :id, ""),
           )
         ) %>
