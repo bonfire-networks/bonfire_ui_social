@@ -1,3 +1,4 @@
+<Context get={{ current_user: current_user }}>
 <div class="flex items-center my-2">
   <div class="relative flex items-center flex-1">
     <div
@@ -17,11 +18,11 @@
           aria-expanded="true">
           <img
             class="object-cover inline-block w-10 h-10 rounded-full"
-            src={{ avatar_url(@current_user)}}
+            src={{ avatar_url(current_user)}}
             alt="current user profile image">
           <div class="flex-1 text-left ml-3">
-            <h3 class="text-sm font-semibold text-gray-700 truncate">{{ e(@current_user, :profile, :name, "Me") }}</h3>
-            <span class="-mt-1 text-sm text-gray-600 font-light">@{{ e(@current_user, :character, :username, "anon") }}</span>
+            <h3 class="text-sm font-semibold text-gray-700 truncate">{{ e(current_user, :profile, :name, "Me") }}</h3>
+            <span class="-mt-1 text-sm text-gray-600 font-light">@{{ e(current_user, :character, :username, "anon") }}</span>
           </div>
           <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-gray-700" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 12h.01M12 12h.01M19 12h.01M6 12a1 1 0 11-2 0 1 1 0 012 0zm7 0a1 1 0 11-2 0 1 1 0 012 0zm7 0a1 1 0 11-2 0 1 1 0 012 0z" />
@@ -41,20 +42,9 @@
         role="menu"
         aria-orientation="vertical"
         aria-labelledby="user-profile-menu">
-        <div class="py-1" role="none">
-          <LivePatch to={{"user/" <>  e(@current_user, :character, :username, "anon")}} class="block w-full px-4 py-2 text-sm text-left text-gray-700 transition duration-150 ease-in-out hover:bg-gray-100">My Profile</LivePatch>
-          <LiveRedirect to="/switch-user" class="block px-4 py-2 text-sm text-gray-700 transition duration-150 ease-in-out hover:bg-gray-100">Switch user</LiveRedirect>
-          <LiveRedirect to="/settings" class="block px-4 py-2 text-sm text-gray-700 transition duration-150 ease-in-out hover:bg-gray-100">Settings</LiveRedirect>
-        </div>
-        <div class="py-1" role="none">
-          <LiveRedirect to="/home" class="block px-4 py-2 text-sm text-gray-700 transition duration-150 ease-in-out hover:bg-gray-100">Home</LiveRedirect>
-          <LiveRedirect to="/users" class="block px-4 py-2 text-sm text-gray-700 transition duration-150 ease-in-out hover:bg-gray-100">Users discovery</LiveRedirect>
-          <LiveRedirect to="/guidelnes" class="block px-4 py-2 text-sm text-gray-700 transition duration-150 ease-in-out hover:bg-gray-100">Guidelines</LiveRedirect>
-        </div>
-        <div class="py-1" role="none">
-          <LiveRedirect to="/logout" class="block px-4 py-2 text-sm text-gray-700 transition duration-150 ease-in-out hover:bg-gray-100">Logout</LiveRedirect>
-        </div>
+          <Bonfire.UI.Social.Sidebar.MoreLinksLive />
       </div>
     </div>
   </div>
 </div>
+</Context>

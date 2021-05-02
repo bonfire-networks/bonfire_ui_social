@@ -1,3 +1,5 @@
+<Context get={{ current_user: current_user }}>
+
 <LivePatch to="/browse" class={{"rounded-full w-full flex items-center px-2 py-2 text-sm font-regular transition duration-150 ease-in-out group hover:bg-blueGray-200 focus:outline-none focus:text-gray-900 focus:bg-gray-50 text-gray-700", "text-pink-700": @page == "browse"}}>
   <svg
     aria-labelledby="navigation_browse"
@@ -10,7 +12,7 @@
   <span class="capitalize" id="navigation_browse">browse</span>
 </LivePatch>
 
-<LivePatch to={{"/notifications"}} class={{"rounded-full w-full flex items-center px-2 py-2 text-sm font-regular transition duration-150 ease-in-out group hover:bg-blueGray-200 focus:outline-none focus:text-gray-900 focus:bg-gray-50 text-gray-700", "text-pink-700": @page == "notifications"}}>
+<LivePatch :if={{@current_user}} to={{"/notifications"}} class={{"rounded-full w-full flex items-center px-2 py-2 text-sm font-regular transition duration-150 ease-in-out group hover:bg-blueGray-200 focus:outline-none focus:text-gray-900 focus:bg-gray-50 text-gray-700", "text-pink-700": @page == "notifications"}}>
   <svg
     aria-labelledby="navigation_notification"
     class={{"w-5 h-5 mr-2 transition duration-150 ease-in-out text-gray-500", "text-pink-700": @page == "notifications"}} fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
@@ -19,7 +21,7 @@
   <span class="capitalize" id="navigation_notification">Notification</span>
 </LivePatch>
 
-<LivePatch to={{"/user/" <> e(@current_user, :character, :username, "anon") <> "/private"}} class={{"rounded-full w-full flex items-center px-2 py-2 text-sm font-regular transition duration-150 ease-in-out group hover:bg-blueGray-200 focus:outline-none focus:text-gray-900 focus:bg-gray-50 text-gray-700", "text-pink-700": @page == "private"}}>
+<LivePatch :if={{@current_user}} to={{"/user/" <> e(@current_user, :character, :username, "anon") <> "/private"}} class={{"rounded-full w-full flex items-center px-2 py-2 text-sm font-regular transition duration-150 ease-in-out group hover:bg-blueGray-200 focus:outline-none focus:text-gray-900 focus:bg-gray-50 text-gray-700", "text-pink-700": @page == "private"}}>
   <svg
     aria-labelledby="navigation_private"
     class={{"w-5 h-5 mr-2 transition duration-150 ease-in-out text-gray-500", "text-pink-700": @page == "private"}} fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
@@ -28,7 +30,7 @@
   <span class="capitalize" id="navigation_browse">Direct Messages</span>
 </LivePatch>
 
-<LivePatch to={{"/user/" <> e(@current_user, :character, :username, "anon")}} class={{"rounded-full w-full flex items-center px-2 py-2 text-sm font-regular transition duration-150 ease-in-out group hover:bg-blueGray-200 focus:outline-none focus:text-gray-900 focus:bg-gray-50 text-gray-700", "text-pink-700": @page == "profile"}}>
+<LivePatch :if={{@current_user}} to={{"/user/" <> e(@current_user, :character, :username, "anon")}} class={{"rounded-full w-full flex items-center px-2 py-2 text-sm font-regular transition duration-150 ease-in-out group hover:bg-blueGray-200 focus:outline-none focus:text-gray-900 focus:bg-gray-50 text-gray-700", "text-pink-700": @page == "profile"}}>
   <svg
     aria-labelledby="navigation_profile"
     class={{"w-5 h-5 mr-2 transition duration-150 ease-in-out text-gray-500", "text-pink-700": @page == "profile"}}
@@ -38,3 +40,5 @@
     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5.121 17.804A13.937 13.937 0 0112 16c2.5 0 4.847.655 6.879 1.804M15 10a3 3 0 11-6 0 3 3 0 016 0zm6 2a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
   <span class="capitalize" id="navigation_profile">profile</span>
 </LivePatch>
+
+</Context>

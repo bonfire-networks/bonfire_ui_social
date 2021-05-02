@@ -21,7 +21,7 @@ defmodule Bonfire.UI.Social.SetBoundariesLive do
     assigns
     |> assigns_merge(%{
       default_circles: circles, # circles showing before typing in autocomplete
-      to_circles: circles, # default selected circles if none specified
+      # to_circles: circles, # default selected circles if none specified
     })
     |> set_label(socket)
   end

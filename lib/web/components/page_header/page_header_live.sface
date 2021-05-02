@@ -1,3 +1,5 @@
+<Context put={{ current_user: @current_user, to_circles: e(assigns, :to_circles, []) }}>
+
 <div
   role="banner"
   x-cloak
@@ -85,3 +87,5 @@
     </div>
   </div> -->
 </div>
+
+</Context>

@@ -1,3 +1,4 @@
+<Context put={{ current_user: @current_user }}>
 <nav
   role="navigation"
   class="hidden lg:flex md:flex-shrink-0 flex-col w-60">
@@ -5,7 +6,7 @@
 
     <Bonfire.UI.Social.SidebarLogoLive />
 
-    <Bonfire.UI.Social.SidebarUserLive current_user={{@current_user}} />
+    <Bonfire.UI.Social.SidebarUserLive />
 
     <div
       :for={{{component, component_assigns} <- Bonfire.Common.Config.get([:ui, :sidebar_components], [{Bonfire.UI.Social.SidebarNavigationLive, []}])}}>
@@ -22,3 +23,4 @@
 
   </div>
 </nav>
+</Context>
