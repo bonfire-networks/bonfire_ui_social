@@ -1,4 +1,4 @@
 defmodule Bonfire.UI.Social.SearchLive do
-  use Bonfire.Web, :live_component
+  use Bonfire.Web, :stateless_component
 
 end

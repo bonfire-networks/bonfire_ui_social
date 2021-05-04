@@ -28,7 +28,6 @@ defmodule Bonfire.UI.Social.SettingsViewsLive.ExtensionsLive do
    ) }
   end
 
-  @spec deps() :: list(Mix.Dep.t())
   defp deps() do
     {func, args} = loaded_deps_func_name()
     apply(Mix.Dep, func, args)

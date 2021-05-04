@@ -43,7 +43,7 @@
       <div class="h-full px-4 w-full">
         <%= if @current_user do %>
           <div class="sticky top-0 z-10 flex-1 px-2 py-2 mb-4 -mx-2 ">
-            <%= live_component(@socket, Bonfire.UI.Social.SearchLive, assigns) %>
+            <%= live_component(@socket, Bonfire.UI.Social.SearchLive) %>
           </div>
         <% end %>
 
