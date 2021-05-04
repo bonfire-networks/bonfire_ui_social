@@ -39,17 +39,17 @@
     </div>
 
   </section>
-  <aside class="flex-1 hidden mt-2 lg:flex md:flex-shrink-0">
-      <div class="h-full px-1 bg-white w-full">
+  <aside class="flex-1 hidden mt-4 mx-3 rounded-lg lg:flex md:flex-shrink-0">
+      <div class="h-full px-4 w-full">
         <%= if @current_user do %>
-          <div class="sticky top-0 z-10 flex-1 px-2 py-2 mb-4 -mx-2 bg-white">
+          <div class="sticky top-0 z-10 flex-1 px-2 py-2 mb-4 -mx-2 ">
             <%= live_component(@socket, Bonfire.UI.Social.SearchLive, assigns) %>
           </div>
         <% end %>
 
         <%= if @current_user do %>
         <div class="pb-5 border-b">
-          <h5 class="text-base font-bold text-gray-700 mb-2">Notification</h5>
+          <span class="block uppercase text-gray-600 text-xs mb-2 tracking-wide">Notifications</span>
           <div class="flex flex-col space-y-3">
             <%= if e(@activity, :replied, :thread_id, nil), do: live_component(@socket, Bonfire.UI.Social.FollowButtonLive, following: e(assigns, :following, []), id: e(@activity, :replied, :thread_id, nil), label: "the entire discussion", class: "rounded-md shadow-sm w-full flex flex-1 text-left btn-secondary") %>
             <%= if e(@activity, :object_id, nil) && e(@activity, :object_id, nil) != e(@activity, :replied, :thread_id, nil), do: live_component(@socket, Bonfire.UI.Social.FollowButtonLive, following: e(assigns, :following, []), id: e(@activity, :object_id, nil), label: "this sub-thread", class: "rounded-md shadow-sm w-full flex flex-1 text-left btn-secondary") %>
@@ -58,7 +58,7 @@
         <% end %>
 
         <div class="pb-5 mt-5 border-b">
-          <h5 class="text-base font-bold text-gray-700 mb-2"><%= Enum.count(e(@participants, :entries, [])) %> Participants</h5>
+          <span class="block uppercase text-gray-600 text-xs mb-2 tracking-wide"><%= Enum.count(e(@participants, :entries, [])) %> Participants</span>
           <div class="flex space-x-1 items-center">
           <%= for p <- e(@participants, :entries, [])  do %>
             <%= live_redirect to: "/user/"<>e(p, :activity, :subject_character, :username, "404") do %>
