@@ -1,0 +1,26 @@
+
+<div class="
+   <%= cond do %>
+    <% e(@activity, :object, :id, nil) != nil and e(@activity, :replied, :reply_to_id, nil) == nil and e(@activity, :id, nil) == nil -> %>
+      py-0
+    <% e(assigns, :showing_within_thread, nil) == true -> %>
+      ml-8 py-0
+    <% true -> %>
+      py-2
+  <% end %>">
+
+
+    <%= live_redirect to: @permalink do %>
+      <h2 class="text-gray-800 text-xl font-bold mb-4"><%= e(@activity, :object, :name, e(@activity, :object, :title, "Unidentified federated object")) %></h2>
+    <% end %>
+
+    <%= if e(@activity, :object, :summary, nil) do %>
+        <h3 class="uppercase text-gray-600 tracking-wider text-xs">Summary</h3>
+        <div class="mb-2 prose prose-sm max-w-prose text-gray-700"><%= e(@activity, :object, :summary, "") %></div>
+    <% end %>
+
+    <article class='<%= if e(assigns, :viewing_main_object, nil), do: "prose max-w-prose", else: "prose prose-sm max-w-prose" %>'>
+      <%= raw e(@activity, :object, :html_body, e(@activity, :object, :note, e(@activity, :object, :html_body, ""))) %>
+    </article>
+
+</div>

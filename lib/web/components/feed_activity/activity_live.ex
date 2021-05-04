@@ -102,7 +102,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
       }
     } = replied
   })
-  when verb in ["reply","respond"] and not is_nil(reply_to_id), do: [ # other kind of reply
+  when verb in ["reply","respond"] and is_binary(reply_to_id), do: [ # other kind of reply, with creator
     # {Bonfire.UI.Social.Activity.SubjectLive, %{verb: verb}},
     {Bonfire.UI.Social.ActivityLive, %{
       activity_inception: true,
@@ -123,12 +123,13 @@ defmodule Bonfire.UI.Social.ActivityLive do
       reply_to_id: reply_to_id,
     } = replied
   })
-  when verb in ["reply","respond"] and not is_nil(reply_to_id), do: [ # other kind of reply
+  when verb in ["reply","respond"] and is_binary(reply_to_id), do: [ # other kind of reply
+
     # {Bonfire.UI.Social.Activity.SubjectLive, %{verb: verb}},
     {Bonfire.UI.Social.ActivityLive, %{
       activity_inception: true,
       # id: activity_id <> "-reply-" <> reply_to_id,
-      activity: load_reply_to(e(replied, :reply_to, reply_to_id)),
+      activity: load_reply_to(e(replied, :reply_to, reply_to_id)), #|> IO.inspect,
       viewing_main_object: false
     }},
     # Bonfire.UI.Social.Activity.SubjectLive
@@ -143,7 +144,12 @@ defmodule Bonfire.UI.Social.ActivityLive do
   def component_object(_, %{object: %Bonfire.Data.Social.PostContent{}}), do: [Bonfire.UI.Social.Activity.NoteLive]
   def component_object(_, %{object_post_content: %{id: _}}), do: [Bonfire.UI.Social.Activity.NoteLive]
   def component_object(_, %{object: %Bonfire.Data.Identity.User{}}), do: [Bonfire.UI.Social.Activity.CharacterLive]
-  def component_object(_, _), do: [Bonfire.UI.Social.Activity.NoteLive] # TODO: fallback for unknown objects
+  def component_object(_, %{object: %{profile: _}}), do: [Bonfire.UI.Social.Activity.CharacterLive]
+  def component_object(_, %{object: %{character: _}}), do: [Bonfire.UI.Social.Activity.CharacterLive]
+  def component_object(_, activity) do
+    # IO.inspect(component_object_unknown: activity)
+    [Bonfire.UI.Social.Activity.UnknownLive]
+  end
 
 
   def component_actions(_, _, %{activity_inception: true}), do: []
@@ -156,7 +162,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
   def component_show_actions(object), do: [{Bonfire.UI.Social.Activity.ActionsLive, %{object: object}}]
 
   def object(%{object_post_content: %{id: _} = object}), do: object # posts are already preloaded in query
-  def object(%{object: %{post: %{post_content: %{id: _} = object} = post}}), do: Map.merge(object, post) |> IO.inspect
+  def object(%{object: %{post: %{post_content: %{id: _} = object} = post}}), do: Map.merge(object, post) #|> IO.inspect
   def object(%{object: %{post_content: %{id: _} = object}}), do: object
   def object(%{object: %Pointers.Pointer{id: _} = object}), do: load_object(object) # get other pointable objects
   def object(%{object: %{id: _} = object}), do: object # any other preloaded object
@@ -175,18 +181,22 @@ defmodule Bonfire.UI.Social.ActivityLive do
   end
 
   def load_object(id_or_pointer) do
-    with {:ok, obj} <- Bonfire.Common.Pointers.get(id_or_pointer)
+    with %{id: _} = obj <- Bonfire.Common.Pointers.get(id_or_pointer)
+      # |> IO.inspect
       # TODO: avoid so many queries
       |> repo().maybe_preload([:post_content])
       |> repo().maybe_preload([created: [:creator_profile, :creator_character]])
       |> repo().maybe_preload([:profile, :character]) do
         obj
-      else _ -> nil
+      else
+        {:ok, obj} -> obj
+        _ -> nil
       end
   end
 
   def verb_maybe_modify("create", %{replied: %{reply_to_post_content: %{id: _} = _reply_to}}), do: "reply"
   def verb_maybe_modify("create", %{replied: %{reply_to: %{id: _} = _reply_to}}), do: "respond"
+  def verb_maybe_modify("create", %{replied: %{reply_to_id: reply_to_id}}) when is_binary(reply_to_id), do: "respond"
   # def verb_maybe_modify("created", %{reply_to: %{id: _} = reply_to, object: %Bonfire.Data.Social.Post{}}), do: reply_to_display(reply_to)
   # def verb_maybe_modify("created", %{reply_to: %{id: _} = reply_to}), do: reply_to_display(reply_to)
   def verb_maybe_modify("create", %{object: %Bonfire.Data.Social.PostContent{name: name} = post}), do: "write" #<> object_link(name, post)
