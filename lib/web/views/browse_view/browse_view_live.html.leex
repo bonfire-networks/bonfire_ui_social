@@ -1,9 +1,9 @@
 <main
-  class="lg:flex lg:space-x-4"
+  class="lg:flex"
   x-cloak
   x-data="{open_right_panel: false}"
   >
-  <section class="w-center min-h-screen	 border-l border-r">
+  <section class="w-center min-h-screen border mt-4">
    <%= live_component(@socket, Bonfire.UI.Social.PageHeaderLive,
     assigns |> assigns_clean())%>
     <div class="mx-4 border-t-8 lg:mx-0 bg-white">
@@ -28,35 +28,13 @@
     </div>
   </section>
   <aside class="flex-1 hidden lg:block mt-2 md:flex-shrink-0">
-    <div class="h-full px-1 w-full">
+    <div class="h-full px-3 w-full">
       <%= if @current_user do %>
         <div class="sticky top-0 z-10 flex-1 px-2 py-2 mb-4 -mx-2 ">
           <%= live_component(@socket, Bonfire.UI.Social.SearchLive, assigns) %>
         </div>
       <% end %>
-      <div class=" bg-blueGray-100 rounded-xl">
-        <div class="border-b p-3 text-lg font-bold text-gray-800">Explore</div>
-        <div class="flex flex-col">
-          <%= live_patch to: "/browse", class: "flex flex-1" do %>
-            <div
-              aria-current="<%= if @selected_tab == "feed", do: "page" %>"
-              class="<%= if @selected_tab == "feed", do: "text-pink-900", else: "hover:bg-blueGray-200 hover:text-gray-900" %> text-sm text-gray-700 p-3 w-full font-semibold">
-              Browse your feed</div>
-          <% end %>
-          <%= live_patch to: "/browse/instance", class: "flex flex-1" do %>
-            <div
-              aria-current="<%= if @selected_tab == "instance", do: "page" %>"
-              class="<%= if @selected_tab == "instance", do: "text-pink-900", else: "hover:bg-blueGray-200 hover:text-gray-900" %> text-sm text-gray-700 p-3 w-full font-semibold pt-3 border-t">
-              Browse the instance</div>
-          <% end %>
-          <%= live_patch to: "/browse/fediverse", class: "flex flex-1" do %>
-            <div
-              aria-current="<%= if @selected_tab == "fediverse", do: "page" %>"
-              class="<%= if @selected_tab == "fediverse", do: "text-pink-900", else: "hover:bg-blueGray-200 hover:text-gray-900" %> rounded-b-xl  text-sm text-gray-700 p-3  w-full font-semibold pt-3 border-t">
-              Browse the fediverse</div>
-          <% end %>
-        </div>
-      </div>
+
     </div>
   </aside>
 </main>

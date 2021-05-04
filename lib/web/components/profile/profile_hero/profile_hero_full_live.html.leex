@@ -1,9 +1,9 @@
-<div class="mt-4">
-  <div class="px-6 pb-2">
-    <div class="bg-pink-300 rounded-lg bg-center bg-cover" style="height: 225px; background-image: url('<%=image_url(@user)%>')"></div>
+<div class="">
+  <div class="pb-2">
+    <div class="bg-pink-300 bg-center bg-cover" style="height: 225px; background-image: url('<%=image_url(@user)%>')"></div>
     <div class="flex justify-between items-center">
       <img class="object-cover inline-block h-32 w-32 ring-4 ml-6 -mt-16 shadow-lg ring-white rounded-full" src="<%=avatar_url(@user)%>" alt="current user profile image">
-      <div class="flex items-center space-x-3">
+      <div class="flex items-center space-x-3 pr-6">
         <%= if @current_user && maybe_get(@current_user, :id) != maybe_get(@user, :id) do %>
         <%= live_patch to: "/user/" <>  e(@user, :character, :username, "") <> "/private" do %>
           <div class="btn-primary">
@@ -33,7 +33,7 @@
         <% end %>
       </div>
     </div>
-    <div class="flex-1 mt-2">
+    <div class="flex-1 mt-4 px-6">
       <%= live_patch to: "/user/" <>  e(@user, :character, :username, "") <> "/timeline" do %>
         <h2 class="text-2xl font-bold text-gray-700"><%= e(@user, :profile, :name, "Anonymous") %></h1>
       <% end %>
