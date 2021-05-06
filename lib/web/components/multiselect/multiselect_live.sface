@@ -23,7 +23,7 @@
         {{ raw name_content }}
         <input :if={{id}} type="hidden" name="{{@form_input_name}}" value="{{ id }}" />
         <button
-          :if={{ id && @remove_event |> IO.inspect && @remove_event !=""}}
+          :if={{ id && @remove_event && @remove_event !=""}}
           :on-click={{ @remove_event }}
           phx-value-id="{{ id }}"
           type="button"
@@ -49,6 +49,7 @@
     <input
         id="autocomplete"
         x-ref="autocomplete"
+        name="autocomplete_{{@form_input_name}}"
         class="w-full rounded-t-md border-b p-2 bg-gray-100"
         placeholder="search here"
         tabindex="1"
