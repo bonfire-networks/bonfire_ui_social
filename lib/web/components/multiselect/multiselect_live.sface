@@ -23,7 +23,7 @@
         {{ raw name_content }}
         <input :if={{id}} type="hidden" name="{{@form_input_name}}" value="{{ id }}" />
         <button
-          :if={{name_content || id}}
+          :if={{ id && @remove_event |> IO.inspect && @remove_event !=""}}
           :on-click={{ @remove_event }}
           phx-value-id="{{ id }}"
           type="button"
