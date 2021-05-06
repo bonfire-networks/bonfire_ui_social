@@ -16,19 +16,24 @@
       <label id="multiselect_label">{{ @label }}</label>
       <span
         :for={{ {name_content, id} <- @selected_options }}
+      >
+      <span
+        :if={{ name_content || id }}
         class="inline-flex rounded-full items-center py-0.5 pl-2.5 pr-1 text-sm font-medium bg-indigo-100 text-indigo-700">
         {{ raw name_content }}
-        <input type="hidden" name="{{@form_input_name}}" value="{{ id }}" />
+        <input :if={{id}} type="hidden" name="{{@form_input_name}}" value="{{ id }}" />
         <button
+          :if={{name_content || id}}
           :on-click={{ @remove_event }}
           phx-value-id="{{ id }}"
           type="button"
           class="flex-shrink-0 ml-0.5 h-4 w-4 rounded-full inline-flex items-center justify-center text-indigo-400 hover:bg-indigo-200 hover:text-indigo-500 focus:outline-none focus:bg-indigo-500 focus:text-white">
-          <span class="sr-only">Remove {{ raw name_content }}</span>
+          <span class="sr-only">Remove {{ raw (name_content || id) }}</span>
           <svg class="h-2 w-2" stroke="currentColor" fill="none" viewBox="0 0 8 8">
             <path stroke-linecap="round" stroke-width="1.5" d="M1 1l6 6m0-6L1 7" />
           </svg>
         </button>
+      </span>
       </span>
 
   </div>
@@ -49,7 +54,7 @@
         tabindex="1"
         aria-labelledby="multiselect_label"
         aria-haspopup="listbox" />
-      <div class="rounded-b-md w-full" id="users">
+      <div class="rounded-b-md w-full">
         <ul
           id="autocomplete-options--destination"
           class="divide-y"
@@ -57,13 +62,14 @@
           aria-labelledby="multiselect_label">
 
             <li
-            :for.with_index={{ {{name_content, id}, i} <- @preloaded_options }}
+            :for={{ {name_content, id} <- @preloaded_options }}
             class="p-2 hover:bg-gray-100 focus:bg-gray-100 cursor-pointer text-sm text-gray-800"
             role="option"
-            tabindex="{{i+2}}"
+            tabindex="1"
             aria-selected="false"
             :on-click={{ @pick_event }}
             phx-value-id="{{ id }}"
+            phx-value-name="{{ name_content }}"
             >
               {{raw name_content}}
             </li>
