@@ -5,11 +5,10 @@
   <div class="lg:px-3 fixed h-full flex flex-col flex-grow overflow-y-auto w-72">
 
     <!-- Sidebar Search -->
-    <div class="my-2">
+    <div class="my-2 mt-4 shadow-tick rounded-lg p-3 bg-white">
       <Bonfire.UI.Social.SearchLive/>
+      <Bonfire.UI.Social.SidebarUserLive />
     </div>
-
-    <Bonfire.UI.Social.SidebarUserLive />
 
     <div
       :for={{{component, component_assigns} <- Bonfire.Common.Config.get([:ui, :sidebar_components], [{Bonfire.UI.Social.SidebarNavigationLive, []}])}}>

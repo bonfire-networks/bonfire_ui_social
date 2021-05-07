@@ -1,6 +1,6 @@
 <main
   class="lg:flex">
-    <section class="w-center min-h-screen border mt-4">
+    <section class="w-center min-h-screen shadow-tick bg-white mt-4 rounded-lg">
       <%= cond do %>
         <% @selected_tab == "admin" ->  %>
             <%= live_component(
