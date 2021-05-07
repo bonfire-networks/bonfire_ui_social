@@ -1,10 +1,10 @@
-<div class="flex-col flex top-0 z-10 w-full lg:mt-4 lg:rounded-lg bg-white shadow container max-w-screen-lg mx-auto">
+<div class="bg-white flex flex-col overflow-hidden border-b">
   <div class="relative z-10 flex justify-between flex-shrink-0 h-16">
     <div class="flex items-center flex-shrink-0">
       <%# <%= live_component(@socket, Bonfire.UI.Social.AppsLive, assigns) %>
       <%= live_redirect to: Routes.live_path(@socket, Bonfire.Me.Web.LoggedDashboardLive) do %>
         <div class="rounded px-4 py-2  flex items-center">
-          <span class="text-2xl">🔥</span>
+          <span class="text-2xl">test</span>
         </div>
       <% end %>
     </div>
