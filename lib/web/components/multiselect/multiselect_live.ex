@@ -6,7 +6,7 @@ defmodule Bonfire.UI.Social.MultiselectLive do
   prop label, :string, default: ""
   prop preloaded_options, :list, default: []
   prop selected_options, :list, default: []
-  prop pick_event, :event, required: true
-  prop remove_event, :event, required: true
+  prop pick_event, :string, required: true
+  prop remove_event, :string, required: true
 
 end
