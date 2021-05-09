@@ -7,8 +7,8 @@ defmodule Bonfire.UI.Social.Test.FakeHelpers do
 
   import Bonfire.UI.Social.Integration
 
-  require Bonfire.Common.Utils
-  Bonfire.Common.Utils.import_if_enabled(Bonfire.Me.Fake)
+  require Bonfire.Common.Extend
+  Bonfire.Common.Extend.import_if_enabled(Bonfire.Me.Fake)
 
 
 end
