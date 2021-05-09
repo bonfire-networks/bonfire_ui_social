@@ -7,7 +7,7 @@
    <%= live_component(@socket, Bonfire.UI.Social.PageHeaderLive,
     assigns |> assigns_clean())%>
     <div class="mx-4 border-t-8 lg:mx-0 bg-white">
-      <%# = live_component(@socket, Bonfire.UI.Social.BrowseTabsLive, assigns) %>
+      <%= live_component(@socket, Bonfire.UI.Social.BrowseTabsLive, assigns) %>
       <%= cond do %>
         <% @selected_tab == "instance" ->  %>
           <div id="instance_section">

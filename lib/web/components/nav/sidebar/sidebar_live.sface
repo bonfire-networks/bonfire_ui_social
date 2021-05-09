@@ -5,7 +5,7 @@
   <div class="lg:px-3 fixed h-full flex flex-col flex-grow overflow-y-auto w-72">
 
     <!-- Sidebar Search -->
-    <div class="my-2 mt-4 shadow-tick rounded-lg p-3 bg-white">
+    <div class="mt-4 mb-4">
       <Bonfire.UI.Social.SearchLive/>
       <Bonfire.UI.Social.SidebarUserLive />
     </div>
