@@ -71,6 +71,7 @@
             :on-click={{ @pick_event }}
             phx-value-id="{{ id }}"
             phx-value-name="{{ name_content }}"
+            phx-value-field="{{ @form_input_name }}"
             >
               {{raw name_content}}
             </li>
