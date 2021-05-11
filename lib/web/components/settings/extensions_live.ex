@@ -29,9 +29,14 @@ defmodule Bonfire.UI.Social.SettingsViewsLive.ExtensionsLive do
   end
 
   defp deps() do
-    {func, args} = loaded_deps_func_name()
-    apply(Mix.Dep, func, args)
-    # |> IO.inspect
+    if module_enabled?(Mix.Dep) do
+      {func, args} = loaded_deps_func_name()
+      apply(Mix.Dep, func, args)
+      # |> IO.inspect
+    else
+      # TODO: cache this at compile-time so it is available in releases
+      []
+    end
   end
 
   defp loaded_deps_func_name() do
@@ -53,11 +58,11 @@ defmodule Bonfire.UI.Social.SettingsViewsLive.ExtensionsLive do
     end)
   end
 
-  defp get_version(%Mix.Dep{scm: Mix.SCM.Path}=dep), do: " (local fork based on "<>get_branch(dep)<>" "<>do_get_version(dep)<>")"
+  defp get_version(%{scm: Mix.SCM.Path}=dep), do: " (local fork based on "<>get_branch(dep)<>" "<>do_get_version(dep)<>")"
   defp get_version(dep), do: do_get_version(dep)
 
-  defp do_get_version(%Mix.Dep{status: {:ok, version}}), do: version
-  defp do_get_version(%Mix.Dep{requirement: version}), do: version
+  defp do_get_version(%{status: {:ok, version}}), do: version
+  defp do_get_version(%{requirement: version}), do: version
   defp do_get_version(_), do: ""
 
   defp get_branch(%{opts: opts}) when is_list(opts), do: get_branch(Enum.into(opts, %{}))
