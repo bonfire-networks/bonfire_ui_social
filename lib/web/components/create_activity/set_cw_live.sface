@@ -1,7 +1,7 @@
 <div
   x-show.transition="title_open"
   class="mb-3">
-  <Inputs for="post_content">
+  <Inputs for={{:post_content}}>
   <Field name="name">
     <TextInput
       opts={{
@@ -26,7 +26,7 @@
       x-show.transition="summary_open"
       :if={{Bonfire.Common.Config.get([:ui, :smart_input, :summary], []) == true}}
       >
-      <Inputs for="post_content">
+      <Inputs for={{:post_content}}>
         <Field name="summary">
           <TextArea
             rows="4"

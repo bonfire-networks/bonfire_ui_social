@@ -28,7 +28,7 @@
       <div :if={{Bonfire.Common.Config.get([:ui, :smart_input, :cw], []) == true}}>
         <Bonfire.UI.Social.SetCWLive />
       </div>
-        <Inputs for="post_content">
+        <Inputs for={{:post_content}}>
           <Field name="html_body">
             <div
               @keydown.window.escape="open = false"
