@@ -3,6 +3,6 @@
   selected_options={{@selected_options}}
   label={{e(assigns, :label, "Select someone...")}}
   form_input_name={{@form_input_name}}
-  pick_event={{e(assigns, :pick_event, "Bonfire.UI.Social.MultiselectLive.UserSelectorLive:select")}}
-  remove_event={{e(assigns, :remove_event, "Bonfire.UI.Social.MultiselectLive.UserSelectorLive:deselect")}}
+  pick_event={{e(assigns, :pick_event, nil)}}
+  remove_event={{e(assigns, :remove_event, nil)}}
   />
