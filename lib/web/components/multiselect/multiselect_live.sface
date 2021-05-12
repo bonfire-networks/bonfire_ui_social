@@ -12,8 +12,8 @@
         $nextTick(() => { $refs.autocomplete.focus() })
       }
     }"
-    class="space-x-1 cursor-pointer space-y-1 border p-1 pb-2 bg-white shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border-gray-300 rounded-md hover:bg-gray-50">
-      <label id="multiselect_label">{{ @label }}</label>
+    class="space-x-1 h-9 cursor-pointer space-y-1 border flex items-center bg-white shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border-gray-300 rounded-md hover:bg-gray-50">
+      <label :if={{ Enum.count(@selected_options) == 0 }} class="ml-2" id="multiselect_label">{{ @label }}</label>
       <span
         :for={{ {name_content, id} <- @selected_options }}
       >

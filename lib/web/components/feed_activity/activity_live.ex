@@ -148,7 +148,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
   def component_object(_, %{object: %{character: _}}), do: [Bonfire.UI.Social.Activity.CharacterLive]
   def component_object(_, activity) do
     # IO.inspect(component_object_unknown: activity)
-    [Bonfire.UI.Social.Activity.UnknownLive]
+    [Bonfire.UI.Social.Activity.EconomicEventLive]
   end
 
 

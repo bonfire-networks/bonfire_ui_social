@@ -8,7 +8,7 @@
     open_boundaries: false
   }"
   @click.away="{open=false; title_open=false; summary_open=false}">
-  <Form for={{ @changeset }} submit="post" opts={{  autocomplete: "off" }}>
+  <Form for={{ :changeset }} submit="post" opts={{  autocomplete: "off" }}>
     <div x-description="create post form">
 
       <HiddenInput name="reply_to[reply_to_id]" value="{{@reply_to_id}}" />
