@@ -145,13 +145,24 @@ defmodule Bonfire.UI.Social.ActivityLive do
   def component_object(_, %{object: %{profile: _}}), do: [Bonfire.UI.Social.Activity.CharacterLive]
   def component_object(_, %{object: %{character: _}}), do: [Bonfire.UI.Social.Activity.CharacterLive]
 
-  if Code.ensure_loaded?(ValueFlows.EconomicEvent) do
-    def component_object(_, %{object: %ValueFlows.EconomicEvent{}}), do: [Bonfire.UI.Social.Activity.EconomicEventLive]
-    def component_object(_, %{object: %ValueFlows.EconomicResource{}}), do: [Bonfire.UI.Social.Activity.EconomicResourceLive]
+  # if Code.ensure_loaded?(ValueFlows.EconomicEvent) do
+    # def component_object(_, %{object: %ValueFlows.EconomicEvent{}}), do: [Bonfire.UI.Social.Activity.EconomicEventLive]
+    # def component_object(_, %{object: %ValueFlows.EconomicResource{}}), do: [Bonfire.UI.Social.Activity.EconomicResourceLive]
+  # end
+
+  def component_object(_, %{object: %{__struct__: schema} = object}) do
+    IO.inspect(component_object_unknown_schema: schema)
+    # IO.inspect(component_object_unknown: object)
+
+    case schema do
+      ValueFlows.EconomicEvent -> [Bonfire.UI.Social.Activity.EconomicEventLive]
+      ValueFlows.EconomicResource -> [Bonfire.UI.Social.Activity.EconomicResourceLive]
+      _ -> [Bonfire.UI.Social.Activity.UnknownLive]
+    end
   end
 
   def component_object(_, activity) do
-    # IO.inspect(component_object_unknown: activity)
+    IO.inspect(component_object_unknown: activity)
     [Bonfire.UI.Social.Activity.UnknownLive]
   end
 
