@@ -16,6 +16,7 @@ defmodule Bonfire.UI.Social.MixProject do
         {:phoenix_live_reload, "~> 1.2", only: :dev},
         {:dbg, "~> 1.0", only: [:dev, :test]},
         {:floki, ">= 0.0.0", only: [:dev, :test]},
+        {:bonfire_valueflows, "https://github.com/bonfire-networks/bonfire_valueflows#main", optional: true}
       ]),
       package: [
         licenses: ["AGPL v3"]
@@ -33,12 +34,6 @@ defmodule Bonfire.UI.Social.MixProject do
   defp elixirc_paths(:test), do: ["lib", "test/support"]
   defp elixirc_paths(_), do: ["lib"]
 
-  @bonfire_deps [
-    "pointers",
-    "bonfire_data_access_control",
-    "bonfire_data_identity",
-    "bonfire_data_social",
-  ] |> Enum.join(" ")
 
   defp aliases do
     [
@@ -46,8 +41,6 @@ defmodule Bonfire.UI.Social.MixProject do
       "rebar.setup": ["local.rebar --force"],
       "js.deps.get": ["cmd npm install --prefix assets"],
       "ecto.seeds": ["run priv/repo/seeds.exs"],
-      "bonfire.deps.update": ["deps.update #{@bonfire_deps}"],
-      "bonfire.deps.clean": ["deps.clean #{@bonfire_deps} --build"],
       "bonfire.deps": ["bonfire.deps.update", "bonfire.deps.clean"],
       setup: ["hex.setup", "rebar.setup", "deps.get", "bonfire.deps.clean", "ecto.setup", "js.deps.get"],
       updates: ["deps.get", "bonfire.deps.clean", "ecto.migrate", "js.deps.get"],
