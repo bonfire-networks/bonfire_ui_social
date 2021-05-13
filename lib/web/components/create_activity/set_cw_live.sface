@@ -2,7 +2,7 @@
   x-show.transition="title_open"
   class="mb-3">
   <Inputs for={{:post_content}}>
-  <Field name="name">
+  <Field name={{:name}}>
     <TextInput
       opts={{
         placeholder: "Enter a title"
