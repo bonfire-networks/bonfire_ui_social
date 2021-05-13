@@ -5,7 +5,7 @@ defmodule Bonfire.UI.Social.MultiselectLive.UserSelectorLive do
   prop label, :string
   prop pick_event, :string
   prop remove_event, :string
-  prop selected_options, :list
+  prop selected_options, :any
 
   def update(assigns, socket) do
     IO.inspect(userSelectorLive: assigns)

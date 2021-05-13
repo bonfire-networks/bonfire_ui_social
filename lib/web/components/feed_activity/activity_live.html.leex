@@ -1,8 +1,8 @@
 <div class="w-full
   <%= cond do %>
-    <% e(@activity, :object, :id, nil) != nil and e(@activity, :replied, :reply_to_id, nil) == nil and e(@activity, :id, nil) == nil -> %>
+    <% e(@object, :id, nil) != nil and e(@activity, :replied, :reply_to_id, nil) == nil and e(@activity, :id, nil) == nil -> %>
       border-l-4 border-gray-200 pl-2 pb-0 mt-2
-    <% e(@activity, :object, :id, nil) != nil and e(@activity, :replied, :reply_to_id, nil) != nil and e(@activity, :id, nil) != nil -> %>
+    <% e(@object, :id, nil) != nil and e(@activity, :replied, :reply_to_id, nil) != nil and e(@activity, :id, nil) != nil -> %>
       ml-0 p-3
     <% e(assigns, :showing_within_thread , nil) == true -> %>
       ml-0 p-1

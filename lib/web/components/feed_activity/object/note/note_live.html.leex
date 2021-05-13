@@ -1,28 +1,28 @@
 
 <div class="
    <%= cond do %>
-    <% e(@activity, :object, :id, nil) != nil and e(@activity, :replied, :reply_to_id, nil) == nil and e(@activity, :id, nil) == nil -> %>
+    <% e(@object, :id, nil) != nil and e(@activity, :replied, :reply_to_id, nil) == nil and e(@activity, :id, nil) == nil -> %>
       py-0
     <% e(assigns, :showing_within_thread, nil) == true -> %>
       ml-8 py-0
     <% true -> %>
       py-2
   <% end %>" x-cloak  x-data="{content_open: false}">
-      <%= if e(assigns, :viewing_main_object, nil) !=true && e(@activity, :object, :name, nil) do %>
+      <%= if e(assigns, :viewing_main_object, nil) !=true && e(@object, :name, nil) do %>
 
         <button
           @click="{content_open = true}"
           x-show="content_open == false"
           class="text-sm font-semibold text-gray-800 hover:underline flex text-left items-center">
-          <%= rich e(@activity, :object, :name, "Title") %> (Read more)
+          <%= rich e(@object, :name, "Title") %> (Read more)
         <button
           @click="{content_open = false}"
           x-show="content_open"
           class="text-sm font-semibold text-gray-800 hover:underline flex text-left items-center">
-          <%= rich e(@activity, :object, :name, "Title") %> (Read less)
+          <%= rich e(@object, :name, "Title") %> (Read less)
         </button>
         <div class="prose prose-sm max-w-prose font-light">
-          <%= rich e(@activity, :object, :summary, "") %>
+          <%= rich e(@object, :summary, "") %>
         </div>
         <div
           x-show="content_open"
@@ -33,26 +33,26 @@
           x-transition:leave-start="transform opacity-100 scale-100"
           x-transition:leave-end="transform opacity-0 scale-95"
           class="prose prose-sm max-w-prose">
-          <%= rich e(@activity, :object, :html_body, "") %>
+          <%= rich e(@object, :html_body, "") %>
         </div>
 
       <% else %>
 
-        <%= if e(@activity, :object, :name, nil) do %>
+        <%= if e(@object, :name, nil) do %>
           <%# = live_redirect to: @permalink do %>
-            <h2 class="text-gray-800 text-3xl font-bold mb-4"><%= rich e(@activity, :object, :name, "Title") %></h2>
+            <h2 class="text-gray-800 text-3xl font-bold mb-4"><%= rich e(@object, :name, "Title") %></h2>
           <%# end %>
         <% end %>
 
-        <%= if e(@activity, :object, :summary, nil) do %>
+        <%= if e(@object, :summary, nil) do %>
             <h3 class="uppercase text-gray-600 tracking-wider text-xs">Summary</h3>
           <%= live_redirect to: @permalink do %>
-            <div class="mb-2 prose prose-sm max-w-prose text-gray-700"><%= rich e(@activity, :object, :summary, "") %></div>
+            <div class="mb-2 prose prose-sm max-w-prose text-gray-700"><%= rich e(@object, :summary, "") %></div>
           <% end %>
         <% end %>
 
         <article class='<%= if e(assigns, :viewing_main_object, nil), do: "prose max-w-prose", else: "prose prose-sm max-w-prose" %>'>
-          <%= rich e(@activity, :object, :html_body, "...") %>
+          <%= rich e(@object, :html_body, "...") %>
         </article>
       <% end %>
 

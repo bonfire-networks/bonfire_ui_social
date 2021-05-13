@@ -5,7 +5,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
 
   def update(%{activity: %{} = activity} = assigns, socket) do
 
-    activity = activity |> Map.merge(%{object: object(activity)})
+    activity = activity |> Map.merge(%{object: e(assigns, :object, object(activity))})
     # |> IO.inspect
     # |> repo().maybe_preload(:object)
     # |> repo().maybe_preload([object: [:profile, :character]])
@@ -18,16 +18,17 @@ defmodule Bonfire.UI.Social.ActivityLive do
     ++ component_object(verb, activity)
     ++ component_actions(verb, activity, assigns)
 
-    verb_display = verb_display(verb, activity)
-    created_verb_display = "create" |> verb_maybe_modify(activity) |> verb_display(activity)
+    verb_display = verb_display(verb)
+    created_verb_display = "create" |> verb_maybe_modify(activity) |> verb_display()
 
     permalink = Activities.permalink(assigns, activity)
 
   {:ok, assign(socket, assigns
     |> assigns_merge(
-        activity: activity,
-        activity_object_components: components |> Enum.filter(& &1),
+        object: activity.object,
         date_ago: date_from_now(activity.object),
+        activity: activity |> Map.drop([:object]),
+        activity_object_components: components |> Enum.filter(& &1),
         verb: verb,
         verb_display: verb_display,
         created_verb_display: created_verb_display,
@@ -54,16 +55,13 @@ defmodule Bonfire.UI.Social.ActivityLive do
   def component_activity_subject("boost"=verb, activity, _), do: [{Bonfire.UI.Social.Activity.SubjectMinimalLive, %{verb: verb}}, component_activity_maybe_creator(activity)]
   def component_activity_subject("flag"=verb, activity, _), do: [{Bonfire.UI.Social.Activity.SubjectMinimalLive, %{verb: verb}}, component_activity_maybe_creator(activity)]
   def component_activity_subject("create"=verb, activity, _), do: [component_activity_maybe_creator(activity)]
-
   def component_activity_subject(_, %{object: %Bonfire.Data.Identity.User{}}, _), do: []
-
   def component_activity_subject(_, _, %{activity_inception: true}), do: [Bonfire.UI.Social.Activity.SubjectRepliedLive]
-
   def component_activity_subject(_, _, _), do: [Bonfire.UI.Social.Activity.SubjectLive]
 
   def component_activity_maybe_creator(%{object_created: %{creator_profile: %{id: _}}}), do: Bonfire.UI.Social.Activity.CreatorLive
   def component_activity_maybe_creator(%{object_created: %{creator_character: %{id: _}}}), do: Bonfire.UI.Social.Activity.CreatorLive
-  def component_activity_maybe_creator(_), do: nil
+  def component_activity_maybe_creator(%{subject_character: _, subject_profile: _}), do: Bonfire.UI.Social.Activity.SubjectLive
 
   def component_maybe_reply_to(verb,
     %{
@@ -146,9 +144,15 @@ defmodule Bonfire.UI.Social.ActivityLive do
   def component_object(_, %{object: %Bonfire.Data.Identity.User{}}), do: [Bonfire.UI.Social.Activity.CharacterLive]
   def component_object(_, %{object: %{profile: _}}), do: [Bonfire.UI.Social.Activity.CharacterLive]
   def component_object(_, %{object: %{character: _}}), do: [Bonfire.UI.Social.Activity.CharacterLive]
+
+  if Code.ensure_loaded?(ValueFlows.EconomicEvent) do
+    def component_object(_, %{object: %ValueFlows.EconomicEvent{}}), do: [Bonfire.UI.Social.Activity.EconomicEventLive]
+    def component_object(_, %{object: %ValueFlows.EconomicResource{}}), do: [Bonfire.UI.Social.Activity.EconomicResourceLive]
+  end
+
   def component_object(_, activity) do
     # IO.inspect(component_object_unknown: activity)
-    [Bonfire.UI.Social.Activity.EconomicEventLive]
+    [Bonfire.UI.Social.Activity.UnknownLive]
   end
 
 
@@ -204,7 +208,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
   def verb_maybe_modify("create", %{object: %Bonfire.Data.Social.Post{} = _post}), do: "write"
   def verb_maybe_modify(verb, _), do: verb
 
-  def verb_display(verb, activity) do
+  def verb_display(verb) do
     verb
       |> Verbs.conjugate(tense: "past", person: "third", plurality: "plural")
   end
@@ -244,7 +248,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
       live_component(
         socket,
         module,
-        assigns
+        assigns_clean(assigns)
       )
 
     string when is_binary(string) ->
