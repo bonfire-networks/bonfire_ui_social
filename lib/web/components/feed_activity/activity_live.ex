@@ -172,6 +172,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
   def component_actions(_, %{object: %Bonfire.Data.Social.Post{} = object}, _), do: component_show_actions(object)
   def component_actions(_, %{object: %Bonfire.Data.Social.PostContent{} = object}, _), do: component_show_actions(object)
   # TODO: make which object have actions configurable
+  def component_actions(_, %{object: %{id: _} = object}, _), do: component_show_actions(object)
   def component_actions(_, _, _), do: []
 
   def component_show_actions(object), do: [{Bonfire.UI.Social.Activity.ActionsLive, %{object: object}}]
