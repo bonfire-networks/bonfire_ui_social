@@ -6,7 +6,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
   def update(%{activity: %{} = activity} = assigns, socket) do
 
     activity = activity |> Map.merge(%{object: e(assigns, :object, object(activity))})
-    # |> IO.inspect
+    |> IO.inspect
     # |> repo().maybe_preload(:object)
     # |> repo().maybe_preload([object: [:profile, :character]])
     # |> repo().maybe_preload([object: [:post_content]])
@@ -54,9 +54,11 @@ defmodule Bonfire.UI.Social.ActivityLive do
   def component_activity_subject("like"=verb, activity, _), do: [{Bonfire.UI.Social.Activity.SubjectMinimalLive, %{verb: verb}}, component_activity_maybe_creator(activity)]
   def component_activity_subject("boost"=verb, activity, _), do: [{Bonfire.UI.Social.Activity.SubjectMinimalLive, %{verb: verb}}, component_activity_maybe_creator(activity)]
   def component_activity_subject("flag"=verb, activity, _), do: [{Bonfire.UI.Social.Activity.SubjectMinimalLive, %{verb: verb}}, component_activity_maybe_creator(activity)]
-  def component_activity_subject("create"=verb, activity, _), do: [component_activity_maybe_creator(activity)]
   def component_activity_subject(_, %{object: %Bonfire.Data.Identity.User{}}, _), do: []
   def component_activity_subject(_, _, %{activity_inception: true}), do: [Bonfire.UI.Social.Activity.SubjectRepliedLive]
+  def component_activity_subject(_, %{provider: _}, _), do: [Bonfire.UI.Social.Activity.ProviderReceiverLive]
+  def component_activity_subject(_, %{receiver: _}, _), do: [Bonfire.UI.Social.Activity.ProviderReceiverLive]
+  def component_activity_subject("create"=verb, activity, _), do: [component_activity_maybe_creator(activity)]
   def component_activity_subject(_, _, _), do: [Bonfire.UI.Social.Activity.SubjectLive]
 
   def component_activity_maybe_creator(%{object_created: %{creator_profile: %{id: _}}}), do: Bonfire.UI.Social.Activity.CreatorLive
@@ -145,10 +147,8 @@ defmodule Bonfire.UI.Social.ActivityLive do
   def component_object(_, %{object: %{profile: _}}), do: [Bonfire.UI.Social.Activity.CharacterLive]
   def component_object(_, %{object: %{character: _}}), do: [Bonfire.UI.Social.Activity.CharacterLive]
 
-  # if Code.ensure_loaded?(ValueFlows.EconomicEvent) do
-    # def component_object(_, %{object: %ValueFlows.EconomicEvent{}}), do: [Bonfire.UI.Social.Activity.EconomicEventLive]
-    # def component_object(_, %{object: %ValueFlows.EconomicResource{}}), do: [Bonfire.UI.Social.Activity.EconomicResourceLive]
-  # end
+  def component_object(_, %{object: %{__typename: "EconomicEvent"}}), do: [Bonfire.UI.Social.Activity.EconomicEventLive]
+  def component_object(_, %{object:  %{__typename: "EconomicResource"}}), do: [Bonfire.UI.Social.Activity.EconomicResourceLive]
 
   def component_object(_, %{object: %{__struct__: schema} = object}) do
     IO.inspect(component_object_unknown_schema: schema)
@@ -183,7 +183,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
   def object(%{object: %Pointers.Pointer{id: _} = object}), do: load_object(object) # get other pointable objects
   def object(%{object: %{id: _} = object}), do: object # any other preloaded object
   def object(%{object_id: id}), do: load_object(id) # any non-preloaded pointable object
-  def object(_), do: nil
+  def object(activity), do: activity
 
 
   def load_reply_to(reply_to) do
