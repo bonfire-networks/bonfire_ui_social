@@ -2,7 +2,7 @@
   <div class="relative z-10 flex justify-between flex-shrink-0 h-16">
       <div class="flex items-center flex-shrink-0 lg:px-4">
         <%# <%= live_component(@socket, Bonfire.UI.Social.AppsLive, assigns) %>
-        <%= live_redirect to: Routes.live_path(@socket, Bonfire.Common.Config.get!(:home_page)) do %>
+        <%= live_redirect to: path(Bonfire.Common.Config.get!(:home_page)) do %>
           <div class="rounded px-4 py-2  flex items-center">
             <span class="text-2xl">🔥</span>
             <span class="hidden lg:block ml-2 font-semibold text-base text-gray-800">Bonfire</span>

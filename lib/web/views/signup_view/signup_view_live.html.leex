@@ -22,7 +22,7 @@
               you a link (check your spam folder!). Please click on it to continue.
             </p>
           </div>
-            <%= live_redirect to: Routes.live_path(@socket, Bonfire.Common.Config.get!(:home_page)) do %>
+            <%= live_redirect to: path(Bonfire.Common.Config.get!(:home_page)) do %>
             <div class="flex items-center pr-4 border-r">
               <span class="mt-6 text-sm font-bold text-gray-800 underline">Back to home page</span>
             </div>
