@@ -27,7 +27,7 @@
       :if={{Bonfire.Common.Config.get([:ui, :smart_input, :summary], []) == true}}
       >
       <Inputs for={{:post_content}}>
-        <Field name="summary">
+        <Field name={{:summary}}>
           <TextArea
             rows="4"
             opts={{placeholder: "Write a short summary"}}

@@ -8,13 +8,13 @@
     open_boundaries: false
   }"
   @click.away="{open=false; title_open=false; summary_open=false}">
-  <Form for={{ :changeset }} submit="post" opts={{  autocomplete: "off" }}>
+  <Form for={{ Bonfire.Social.Web.LiveHandlers.Posts.post_changeset() }} submit="post" opts={{  autocomplete: "off" }}>
     <div x-description="create post form">
 
       <HiddenInput name="reply_to[reply_to_id]" value="{{@reply_to_id}}" />
       <HiddenInput name="reply_to[thread_id]" value="{{@reply_to_thread_id}}" />
 
-      <Field name="create_activity_type">
+      <Field name={{:create_activity_type}}>
         <HiddenInput
           :if={{ e(assigns, :smart_input_private, nil) || e(assigns, :create_activity_type, nil) == "message" }}
           value="message" />
@@ -29,7 +29,7 @@
         <Bonfire.UI.Social.SetCWLive />
       </div>
         <Inputs for={{:post_content}}>
-          <Field name="html_body">
+          <Field name={{:html_body}}>
             <div
               @keydown.window.escape="open = false"
               @click = "open = true"

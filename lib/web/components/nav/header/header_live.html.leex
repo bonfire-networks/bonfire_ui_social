@@ -51,7 +51,7 @@
               aria-orientation="vertical"
               aria-labelledby="sidebar-menu">
               <div class="py-1" role="none">
-                <%= live_redirect to: Routes.live_path(@socket, Bonfire.Me.Web.ProfileLive, e(@current_user, :character, :username, "")) do %>
+                <%= live_redirect to: path(Bonfire.Me.Web.ProfileLive, e(@current_user, :character, :username, "")) do %>
                   <button class="block w-full px-4 py-2 text-sm text-left text-gray-700 transition duration-150 ease-in-out hover:bg-gray-100" role="menuitem">My Profile</button>
                 <% end %>
                 <a href="/switch-user" class="block px-4 py-2 text-sm text-gray-700 transition duration-150 ease-in-out hover:bg-gray-100" role="menuitem">Switch User</a>

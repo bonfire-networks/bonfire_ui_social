@@ -10,7 +10,7 @@ defmodule Bonfire.UI.Social.Activity.EconomicEventLive do
   def update(assigns, socket) do
     {:ok, socket |>
       assigns_merge(assigns,
-        verb_display: Bonfire.UI.Social.ActivityLive.verb_display(assigns.object.action_id),
+        verb_display: Bonfire.UI.Social.ActivityLive.verb_display(e(assigns.object, :action, :label, e(assigns.object, :action_id, ""))),
         object: assigns.object |> preloads() #|> IO.inspect
       )
     }
