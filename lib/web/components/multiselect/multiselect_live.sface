@@ -12,14 +12,14 @@
         $nextTick(() => { $refs.autocomplete.focus() })
       }
     }"
-    class="space-x-1 h-9 cursor-pointer space-y-1 border flex items-center bg-white shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border-gray-300 rounded-md hover:bg-gray-50">
+    class="px-2 space-x-1 h-9 cursor-pointer space-y-1 border flex items-center bg-white shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border-gray-300 rounded-md hover:bg-gray-50">
       <label :if={{ Enum.count(@selected_options) == 0 }} class="ml-2" id="multiselect_label">{{ @label }}</label>
       <span
         :for={{ {name_content, id} <- @selected_options }}
       >
       <span
         :if={{ name_content || id }}
-        class="inline-flex rounded-full items-center py-0.5 pl-2.5 pr-1 text-sm font-medium bg-indigo-100 text-indigo-700">
+        class="inline-flex rounded-full items-center py-0.5 px-2.5 text-sm font-medium bg-indigo-100 text-indigo-700">
         {{ raw name_content }}
         <input :if={{id}} type="hidden" name="{{@form_input_name}}" value="{{ id }}" />
         <button
@@ -46,12 +46,12 @@
     x-transition:leave-start="transform opacity-100 scale-100"
     x-transition:leave-end="transform opacity-0 scale-95"
     x-show="show === true"
-    class="mt-1 relative bg-white rounded-md shadow-lg w-full">
+    class="p-1 mt-1 relative bg-white rounded-md w-full">
     <input
         id="autocomplete"
         x-ref="autocomplete"
         name="autocomplete_{{@form_input_name}}"
-        class="w-full rounded-t-md border-b p-2 bg-gray-100"
+        class="w-full rounded-md border p-2 bg-gray-100"
         placeholder="search here"
         tabindex="1"
         aria-labelledby="multiselect_label"
