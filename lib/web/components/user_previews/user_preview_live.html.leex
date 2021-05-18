@@ -1,5 +1,5 @@
 <div class="transition duration-300 ease-in-out bg-white shadow hover:shadow-xl rounded-lg hover:bg-blueGray-50">
-  <%= live_redirect to: Routes.switch_user_path(@socket, :show, @user.character.username || "") <> @go do %>
+  <%= live_redirect to: path(:switch_user, [:show, @user.character.username || ""]) <> @go do %>
     <div
       aria-hidden="true"
       class="bg-pink-600 h-32 bg-cover rounded-t-lg"

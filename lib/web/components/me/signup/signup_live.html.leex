@@ -42,7 +42,7 @@
           </div>
         </div>
       <% end %>
-        <%= f = form_for @form, Routes.signup_path(@socket, :create), [id: "signup-form"] %>
+        <%= f = form_for @form, path(:signup, :create), [id: "signup-form"] %>
         <div>
           <label for="signup-form_email_email_address" class="block text-sm font-medium leading-5 text-gray-700">
             Email address
@@ -77,7 +77,7 @@
           <p>
             <span>&#x01f44b; </span>
             Do you already have an account?
-            <%= link "Log in", to: Routes.login_path(@socket, :index), class: "underline font-bold" %>.
+            <%= link "Log in", to: path(:login, :index), class: "underline font-bold" %>.
           </p>
         </div>
       </form>

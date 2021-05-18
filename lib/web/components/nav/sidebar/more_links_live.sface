@@ -6,7 +6,7 @@
   <LiveRedirect to="/settings" class="block px-4 py-2 text-sm text-gray-700 transition duration-150 ease-in-out hover:bg-gray-100">Settings</LiveRedirect>
 </div>
 <div class="py-1" role="none">
-  <LiveRedirect to="/home" class="block px-4 py-2 text-sm text-gray-700 transition duration-150 ease-in-out hover:bg-gray-100">Home</LiveRedirect>
+  <LiveRedirect to="{{path(:home)}}" class="block px-4 py-2 text-sm text-gray-700 transition duration-150 ease-in-out hover:bg-gray-100">Home</LiveRedirect>
   <LiveRedirect to="/users" class="block px-4 py-2 text-sm text-gray-700 transition duration-150 ease-in-out hover:bg-gray-100">Users discovery</LiveRedirect>
   <LiveRedirect to="/guidelnes" class="block px-4 py-2 text-sm text-gray-700 transition duration-150 ease-in-out hover:bg-gray-100">Guidelines</LiveRedirect>
 </div>

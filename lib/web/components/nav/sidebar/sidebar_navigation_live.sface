@@ -14,7 +14,7 @@
       <span class="capitalize text-sm font-semibold" id="navigation_browse">browse</span>
     </LivePatch>
 
-    <LivePatch :if={{@current_user}} to={{"/notifications"}} class={{"rounded-lg w-full flex items-center p-1.5 text-sm font-regular transition duration-150 ease-in-out group hover:bg-blueGray-200 focus:outline-none focus:text-gray-900 focus:bg-gray-50 text-gray-600", "bg-blueGray-200 text-gray-800": @page == "notifications"}}>
+    <LivePatch :if={{@current_user}} to={{path(:notifications)}} class={{"rounded-lg w-full flex items-center p-1.5 text-sm font-regular transition duration-150 ease-in-out group hover:bg-blueGray-200 focus:outline-none focus:text-gray-900 focus:bg-gray-50 text-gray-600", "bg-blueGray-200 text-gray-800": @page == "notifications"}}>
       <span class="w-8 h-8 mr-3 items-center flex place-content-center bg-blueGray-200 hover:bg-blueGray-300 rounded-full">
       <svg
         aria-labelledby="navigation_notification"
@@ -25,7 +25,7 @@
       <span class="capitalize text-sm font-semibold" id="navigation_notification">Notification</span>
     </LivePatch>
 
-    <LivePatch :if={{@current_user}} to={{"/user/" <> e(@current_user, :character, :username, "anon") <> "/private"}} class={{"rounded-lg w-full flex items-center p-1.5 text-sm font-regular transition duration-150 ease-in-out group hover:bg-blueGray-200 focus:outline-none focus:text-gray-900 focus:bg-gray-50 text-gray-600", "bg-blueGray-200 text-gray-800": @page == "private"}}>
+    <LivePatch :if={{@current_user}} to={{"/user/" <> e(@current_user, :character, :username, "anon") <> path(:private)}} class={{"rounded-lg w-full flex items-center p-1.5 text-sm font-regular transition duration-150 ease-in-out group hover:bg-blueGray-200 focus:outline-none focus:text-gray-900 focus:bg-gray-50 text-gray-600", "bg-blueGray-200 text-gray-800": @page == "private"}}>
       <span class="w-8 h-8 mr-3 items-center flex place-content-center bg-blueGray-200 hover:bg-blueGray-300 rounded-full">
       <svg
         aria-labelledby="navigation_private"
