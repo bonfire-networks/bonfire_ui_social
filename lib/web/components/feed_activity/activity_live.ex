@@ -6,7 +6,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
   def update(%{activity: %{} = activity} = assigns, socket) do
 
     activity = activity |> Map.merge(%{object: e(assigns, :object, object(activity))})
-    |> IO.inspect
+    # |> IO.inspect
     # |> repo().maybe_preload(:object)
     # |> repo().maybe_preload([object: [:profile, :character]])
     # |> repo().maybe_preload([object: [:post_content]])

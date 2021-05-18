@@ -12,7 +12,7 @@ defmodule Bonfire.UI.Social.SetBoundariesLive do
 
   defp updated(assigns, socket) do
 
-    IO.inspect(assigns: assigns)
+    # IO.inspect(assigns: assigns)
 
     circles = Bonfire.Me.Users.Circles.list_my_defaults() # TODO link to current user for configure
 
