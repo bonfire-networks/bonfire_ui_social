@@ -1,27 +1,14 @@
 <div>
-
-  <div class="prose prose-sm mb-2 max-w-prose">
-    {{rich e(@object, :note, "")}}
-  </div>
-
-  <div class="bg-white rounded-lg border p-2">
-
-    <Bonfire.UI.Social.Activity.EconomicResourceLive :if={{e(@object, :resource_inventoried_as, nil)}} activity={{@activity}} object={{@object.resource_inventoried_as}} />
-
-    <div class="text-gray-800 text-sm mt-3 mb-3">
-
+  <div class="text-gray-800 text-sm mt-3 mb-3">
       <span class="capitalize">{{@verb_display}}</span>
-
       <span :if={{e(@object, :resource_quantity, nil)}}>{{e(@object, :resource_quantity, :has_numerical_value, "unknown quantity")}} {{e(@object, :resource_quantity, :unit, :label, e(@object, :resource_quantity, :has_unit, :label, ""))}}</span>
       <span :if={{e(@object, :effort_quantity, nil)}}>{{e(@object, :effort_quantity, :has_numerical_value, "unknown quantity")}} {{e(@object, :effort_quantity, :unit, :label, e(@object, :effort_quantity, :has_unit, :label, ""))}}</span>
-
+      <span>of <LivePatch to={{"/resource/"<> e(@object, :resource_inventoried_as, :id, nil)}} class="underline font-bold"> {{e(@object, :resource_inventoried_as, :name, nil)}}</LivePatch></span>
       <span :if={{e(@object, :output_of, nil)}}>from <a href="{{ e(assigns, :process_url, "/list/")}}{{ e(@object, :output_of, :id, "")}}" class="font-bold underline">{{ e(@object, :output_of, :name, "")}}</a></span>
       <span :if={{e(@object, :input_of, nil)}}>for <a href="{{ e(assigns, :process_url, "/list/")}}{{ e(@object, :output_of, :id, "")}}" class="font-bold underline">{{ e(@object, :input_of, :name, "")}}</a></span>
-
     </div>
-
-    <Bonfire.UI.Social.Activity.EconomicResourceLive :if={{e(@object, :to_resource_inventoried_as, nil)}} activity={{@activity}} object={{@object.to_resource_inventoried_as}} />
-
+  <div class="prose pl-3 border-l-4 border-gray-400 prose-sm mb-2 max-w-prose">
+    {{rich e(@object, :note, "")}}
   </div>
 
 </div>

@@ -65,7 +65,7 @@
     </div>
   </div>
   <Bonfire.UI.Social.SmartInputLive
-    :if={{@current_user != nil and @smart_input == true}}
+    :if={{@current_user != nil and @smart_input == true and Bonfire.Common.Config.get([:ui, :smart_input, :post], []) == true}}
     create_activity_type={{e(assigns, :create_activity_type, nil)}}
      />
   <!-- <div

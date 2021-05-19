@@ -54,6 +54,7 @@
         name="autocomplete_{{@form_input_name}}"
         class="w-full rounded-md border p-2 bg-gray-100"
         placeholder="search here"
+        autocomplete="off"
         tabindex="1"
         aria-labelledby="multiselect_label"
         aria-haspopup="listbox" />

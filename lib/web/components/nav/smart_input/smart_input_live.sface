@@ -4,7 +4,6 @@
     <img class="w-10 h-10 object-cover rounded-full" src={{ avatar_url(current_user)}} alt="current user profile image" />
     <div class="flex-1 flex flex-col space-y-2 ml-3">
         <Bonfire.UI.Social.CreateActivityLive
-          :if={{Bonfire.Common.Config.get([:ui, :smart_input, :post], []) == true}}
           smart_input_private={{@smart_input_private}}
           create_activity_type={{@create_activity_type}}
           reply_to_id={{@reply_to_id}}
