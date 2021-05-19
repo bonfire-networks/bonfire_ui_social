@@ -3,7 +3,7 @@
   role="tablist"
   class="my-4 pb-2 flex justify-between border-b-4"
   aria-label="Switch between my feed, instance or fediverse tabs">
-    <%= live_patch to: "/browse", class: "flex-1" do %>
+    <%= live_patch to: path(:browse), class: "flex-1" do %>
     <button
       role="tab"
       aria-current="<%= if @selected_tab == "feed", do: "page" %>"

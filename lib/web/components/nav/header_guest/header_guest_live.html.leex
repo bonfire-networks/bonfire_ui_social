@@ -15,14 +15,14 @@
           <%= if !@current_account do %>
             <div class="flex items-center">
               <span class="inline-flex rounded-md shadow-sm">
-                <%= link to: Routes.login_path(@socket, :index) do %>
+                <%= link to: path(:login, :index) do %>
                   <button type="button" class="btn-secondary">
                     Login
                   </button>
                 <% end %>
               </span>
               <span class="inline-flex ml-3 rounded-md shadow-sm">
-                <%= link to: Routes.signup_path(@socket, :index) do %>
+                <%= link to: path(:signup) do %>
                   <button type="button" class="btn-primary">
                     Signup
                   </button>
@@ -32,7 +32,7 @@
           <% else %>
             <div class="flex items-center">
               <span class="inline-flex rounded-md shadow-sm">
-                <%= link to: Routes.switch_user_path(@socket, :index) do %>
+                <%= link to: path(:switch_user) do %>
                   <button type="button" class="inline-flex items-center px-4 py-2 text-sm font-medium leading-5 text-gray-100 transition duration-150 ease-in-out bg-gray-900 rounded-md hover:bg-gray-800 hover:text-gray-200 focus:outline-none focus:border-blue-300 focus:shadow-outline-blue active:text-gray-200 active:bg-gray-700">
                     Select User
                   </button>
