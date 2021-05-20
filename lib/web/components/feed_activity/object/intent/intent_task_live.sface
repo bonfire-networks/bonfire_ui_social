@@ -1,0 +1,60 @@
+<div class="flex p-3 items-center hover:bg-gray-50 bg-white">
+  <div class="flex-1 flex items-center">
+
+    <svg :if={{!@object.finished and !@object.provider}} class="mr-2" width="14" height="14" viewBox="0 0 14 14" fill="none"><rect x="1" y="1" width="12" height="12" rx="6" stroke="#e2e2e2" stroke-width="2" fill="none"></rect><path fill="#e2e2e2" stroke="none" d="M 3.5,3.5 L3.5,0 A3.5,3.5 0 0,1 3.5, 0 z" transform="translate(3.5,3.5)"></path></svg>
+    <svg :if={{!@object.finished and @object.provider}} width="14" height="14" class="mr-2" viewBox="0 0 14 14" fill="none"><rect x="1" y="1" width="12" height="12" rx="6" stroke="#f2c94c" stroke-width="2" fill="none"></rect><path fill="#f2c94c" stroke="none" d="M 3.5,3.5 L3.5,0 A3.5,3.5 0 0,1 3.5, 7 z" transform="translate(3.5,3.5)"></path></svg>
+    <svg :if={{@object.finished}} xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-green-500 mr-2" viewBox="0 0 20 20" fill="currentColor">
+      <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
+    </svg>
+
+    <span :if={{length(e(@object, :in_scope_of, []))>0}}>
+      <LivePatch :for={{scope <- @object.in_scope_of}} to="/task/{{scope.id}}" class="cursor-pointer text-sm font-medium text-gray-400 hover:underline">
+        {{e(scope, :name, "")}} :&nbsp;
+      </LivePatch>
+    </span>
+
+    <LivePatch to="/task/{{@object.id}}" class="cursor-pointer text-sm font-medium text-gray-800 hover:underline">{{@object.name}}
+    </LivePatch>
+  </div>
+
+  <div class="flex items-center space-x-6">
+
+    <LivePatch
+    :if={{e(@object, :provider, :id, nil)}}
+    to={{"/user/"<>e(@object, :provider, :display_username, e(@object, :provider, :character, :username, ""))}}
+    class="flex items-center text-xs text-medium text-gray-700">
+      <img class="inline-block h-6 w-6 bg-gray-200 rounded-full" src="{{avatar_url(@object.provider)}}" alt="">
+    </LivePatch>
+
+    <div :if={{module_enabled?(Bonfire.UI.ValueFlows.DueItemLive)}}>
+      <Bonfire.UI.ValueFlows.DueItemLive date={{@object.due}} is_editable={{true}} />
+    </div>
+    <div :if={{!module_enabled?(Bonfire.UI.ValueFlows.DueItemLive) && e(@object, :due, nil)}} class="flex items-center text-xs text-medium text-gray-700">
+      <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-gray-500 mr-1" viewBox="0 0 20 20" fill="currentColor">
+        <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-12a1 1 0 10-2 0v4a1 1 0 00.293.707l2.828 2.829a1 1 0 101.415-1.415L11 9.586V6z" clip-rule="evenodd" />
+      </svg>
+      <span>{{ @object.due || "Anytime"}}</span>
+    </div>
+
+
+    <div :if={{e(assigns, :show_likes, nil)}} class="flex items-center text-xs text-medium text-gray-700">
+      {{ live_component(@socket, Bonfire.UI.Social.LikeActionLive,
+        object_id: @object.id,
+        my_like: nil,
+        like_count: nil
+      ) }}
+    </div>
+
+    <div :if={{module_enabled?(Bonfire.UI.Coordination.TaskActionsMenuLive)}}>
+      <Bonfire.UI.Coordination.TaskActionsMenuLive task={{@object}} />
+    </div>
+
+  </div>
+</div>
+
+
+
+<!--
+<svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-gray-500" viewBox="0 0 20 20" fill="currentColor">
+        <path fill-rule="evenodd" d="M3 5a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zM3 10a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zM3 15a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1z" clip-rule="evenodd" />
+      </svg> -->

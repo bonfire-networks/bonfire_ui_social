@@ -7,11 +7,13 @@ defmodule Bonfire.UI.Social.Activity.EconomicEventLive do
 
   @resource_preloads [:image, :current_location, onhand_quantity: [:unit], accounting_quantity: [:unit]]
 
-  def update(assigns, socket) do
+  def update(%{object: object} = assigns, socket) do
+    # TODO: run these preloads when fetching the feed, rather than n+1
+    object = object |> preloads()
     {:ok, socket |>
       assigns_merge(assigns,
-        verb_display: Bonfire.UI.Social.ActivityLive.verb_display(e(assigns.object, :action, :label, e(assigns.object, :action_id, ""))),
-        object: assigns.object |> preloads() #|> IO.inspect
+        verb_display: Bonfire.UI.Social.ActivityLive.verb_display(e(object, :action, :label, e(assigns.object, :action_id, ""))),
+        object: object #|> IO.inspect
       )
     }
   end
@@ -28,7 +30,13 @@ defmodule Bonfire.UI.Social.Activity.EconomicEventLive do
       effort_quantity: [:unit],
       resource_inventoried_as: resource_preloads,
       to_resource_inventoried_as: resource_preloads,
+      action: preload_action(object)
     ])
+  end
+
+  def preload_action(object) do
+    if module_enabled?(ValueFlows.EconomicEvent.EconomicEvents), do: ValueFlows.EconomicEvent.EconomicEvents.preload_action(object),
+    else: Map.get(object, :action, Map.get(object, :action_id, nil))
   end
 
 end

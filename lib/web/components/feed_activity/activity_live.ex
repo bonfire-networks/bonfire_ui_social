@@ -147,25 +147,19 @@ defmodule Bonfire.UI.Social.ActivityLive do
   def component_object(_, %{object: %{profile: _}}), do: [Bonfire.UI.Social.Activity.CharacterLive]
   def component_object(_, %{object: %{character: _}}), do: [Bonfire.UI.Social.Activity.CharacterLive]
 
-  def component_object(_, %{object: %{__typename: "EconomicEvent"}}), do: [Bonfire.UI.Social.Activity.EconomicEventLive]
-  def component_object(_, %{object:  %{__typename: "EconomicResource"}}), do: [Bonfire.UI.Social.Activity.EconomicResourceLive]
+  def component_object(_, %{object: %{__struct__: schema} = object}), do: object_type(schema)
 
-  def component_object(_, %{object: %{__struct__: schema} = object}) do
-    IO.inspect(component_object_unknown_schema: schema)
-    # IO.inspect(component_object_unknown: object)
-
-    case schema do
-      ValueFlows.EconomicEvent -> [Bonfire.UI.Social.Activity.EconomicEventLive]
-      ValueFlows.EconomicResource -> [Bonfire.UI.Social.Activity.EconomicResourceLive]
-      _ -> [Bonfire.UI.Social.Activity.UnknownLive]
-    end
-  end
+  def component_object(_, %{object: %{__typename: type}}), do: object_type(type) # for graphql queries
 
   def component_object(_, activity) do
     IO.inspect(component_object_unknown: activity)
     [Bonfire.UI.Social.Activity.UnknownLive]
   end
 
+  def object_type(type) when type in [ValueFlows.EconomicEvent, "EconomicEvent"], do: [Bonfire.UI.Social.Activity.EconomicEventLive]
+  def object_type(type) when type in [ValueFlows.EconomicResource, "EconomicResource"], do: [Bonfire.UI.Social.Activity.EconomicResourceLive]
+  def object_type(type) when type in [ValueFlows.Planning.Intent, "Intent"], do: [Bonfire.UI.Social.Activity.IntentTaskLive] # TODO: choose between Task and other Intent types
+  def object_type(type), do: [Bonfire.UI.Social.Activity.UnknownLive]
 
   def component_actions(_, _, %{activity_inception: true}), do: []
   def component_actions(_, %{object_post_content: %{id: _} = object}, _), do: component_show_actions(object)
