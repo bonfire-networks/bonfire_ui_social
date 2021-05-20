@@ -61,8 +61,8 @@ defmodule Bonfire.UI.Social.ActivityLive do
   def component_activity_subject("create"=verb, activity, _), do: [component_activity_maybe_creator(activity)]
   def component_activity_subject(_, _, _), do: [Bonfire.UI.Social.Activity.SubjectLive]
 
-  def component_activity_maybe_creator(%{object_created: %{creator_profile: %{id: _}}}), do: Bonfire.UI.Social.Activity.CreatorLive
-  def component_activity_maybe_creator(%{object_created: %{creator_character: %{id: _}}}), do: Bonfire.UI.Social.Activity.CreatorLive
+  def component_activity_maybe_creator(%{object_created: %{creator_profile: %{id: _}} = object_created}), do: {Bonfire.UI.Social.Activity.CreatorLive, %{object_created: object_created}}
+  def component_activity_maybe_creator(%{object_created: %{creator_character: %{id: _}} = object_created}), do: {Bonfire.UI.Social.Activity.CreatorLive, %{object_created: object_created}}
   def component_activity_maybe_creator(%{subject_character: _, subject_profile: _}), do: Bonfire.UI.Social.Activity.SubjectLive
 
   def component_maybe_reply_to(verb,
