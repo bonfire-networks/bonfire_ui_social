@@ -17,7 +17,7 @@ defmodule Bonfire.UI.Social.MixProject do
         {:dbg, "~> 1.0", only: [:dev, :test]},
         {:floki, ">= 0.0.0", only: [:dev, :test]},
         # {:bonfire_valueflows, "https://github.com/bonfire-networks/bonfire_valueflows#main", optional: true}
-        {:bonfire_ui_valueflows, "https://github.com/bonfire-networks/bonfire_ui_valueflows#main", optional: true}
+        # {:bonfire_ui_valueflows, "https://github.com/bonfire-networks/bonfire_ui_valueflows#main", optional: true}
       ]),
       package: [
         licenses: ["AGPL v3"]
