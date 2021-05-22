@@ -1,10 +1,10 @@
 <main class="lg:flex">
-  <section class="w-center min-h-screen shadow-tick bg-white mt-4 rounded-lg rounded-lg">
+  <section class="min-h-screen bg-white w-center shadow-tick">
   <%= live_component(@socket, Bonfire.UI.Social.PageHeaderLive,
     assigns |> assigns_clean())%>
 
-    <div class="mx-4 lg:mx-0 bg-white">
-      <div class="min-h-screen flex flex-col">
+    <div class="mx-4 bg-white lg:mx-0">
+      <div class="flex flex-col min-h-screen">
         <%= if e(@activity, :replied, :thread_id, nil) && e(@activity, :replied, :thread_id, nil) != e(@activity, :replied, :reply_to_id, nil) do %>
           <div class="p-4 m-3 rounded-md bg-blue-50">
             <div class="flex">
@@ -39,12 +39,12 @@
     </div>
 
   </section>
-  <aside class="flex-1 hidden mt-4 mx-3 rounded-lg lg:flex md:flex-shrink-0">
-      <div class="h-full px-4 w-full">
+  <aside class="flex-1 hidden mx-3 mt-4 rounded-lg lg:flex md:flex-shrink-0">
+      <div class="w-full h-full px-4">
 
         <%= if @current_user do %>
         <div class="pb-5 border-b">
-          <span class="block uppercase text-gray-600 text-xs mb-2 tracking-wide">Notifications</span>
+          <span class="block mb-2 text-xs tracking-wide text-gray-600 uppercase">Notifications</span>
           <div class="flex flex-col space-y-3">
             <%= if e(@activity, :replied, :thread_id, nil), do: live_component(@socket, Bonfire.UI.Social.FollowButtonLive, following: e(assigns, :following, []), id: e(@activity, :replied, :thread_id, nil), label: "the entire discussion", class: "rounded-md shadow-sm w-full flex flex-1 text-left btn-secondary") %>
             <%= if e(@activity, :object_id, nil) && e(@activity, :object_id, nil) != e(@activity, :replied, :thread_id, nil), do: live_component(@socket, Bonfire.UI.Social.FollowButtonLive, following: e(assigns, :following, []), id: e(@activity, :object_id, nil), label: "this sub-thread", class: "rounded-md shadow-sm w-full flex flex-1 text-left btn-secondary") %>
@@ -53,8 +53,8 @@
         <% end %>
 
         <div class="pb-5 mt-5 border-b">
-          <span class="block uppercase text-gray-600 text-xs mb-2 tracking-wide"><%= Enum.count(e(@participants, :entries, [])) %> Participants</span>
-          <div class="flex space-x-1 items-center">
+          <span class="block mb-2 text-xs tracking-wide text-gray-600 uppercase"><%= Enum.count(e(@participants, :entries, [])) %> Participants</span>
+          <div class="flex items-center space-x-1">
           <%= for p <- e(@participants, :entries, [])  do %>
             <%= live_redirect to: "/user/"<>e(p, :activity, :subject_character, :username, "404") do %>
               <img title="<%=e(p, :activity, :subject_profile, :name, "")%>" class="object-cover w-6 h-6 rounded-full" src="<%=avatar_url(e(p, :activity, :subject_profile, nil))%>" />
