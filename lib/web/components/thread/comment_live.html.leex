@@ -30,7 +30,6 @@
             assigns
             |> assigns_merge(
               reply_to_id: e(@comment, :id, nil),
-              showing_within_thread: true,
               comment: subreply,
               child_replies: sub_child_replies,
               thread_level: @thread_level+1,

@@ -14,7 +14,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
     verb = e(activity, :verb, :verb, "create") |> verb_maybe_modify(activity)
 
     components = component_activity_subject(verb, activity, assigns)
-    ++ component_maybe_reply_to(verb, activity)
+    ++ component_maybe_reply_to(verb, activity, e(assigns, :showing_within_thread, nil))
     ++ component_object(verb, activity)
     ++ component_actions(verb, activity, assigns)
 
@@ -64,6 +64,11 @@ defmodule Bonfire.UI.Social.ActivityLive do
   def component_activity_maybe_creator(%{object_created: %{creator_profile: %{id: _}} = object_created}), do: {Bonfire.UI.Social.Activity.CreatorLive, %{object_created: object_created}}
   def component_activity_maybe_creator(%{object_created: %{creator_character: %{id: _}} = object_created}), do: {Bonfire.UI.Social.Activity.CreatorLive, %{object_created: object_created}}
   def component_activity_maybe_creator(%{subject_character: _, subject_profile: _}), do: Bonfire.UI.Social.Activity.SubjectLive
+  def component_activity_maybe_creator(_), do: nil
+
+  def component_maybe_reply_to(verb, activity, showing_within_thread \\ nil)
+
+  def component_maybe_reply_to(verb, activity, true), do: []
 
   def component_maybe_reply_to(verb,
     %{
@@ -76,15 +81,15 @@ defmodule Bonfire.UI.Social.ActivityLive do
           creator_profile: %{id: _} = subject_profile
         }
       }
-    } )
+    }, _)
   when verb in ["reply","respond"], do: [ # post reply
     # {Bonfire.UI.Social.Activity.SubjectLive, %{verb: verb}},
     {Bonfire.UI.Social.ActivityLive, %{
       activity_inception: true,
       # id: activity_id <> "-reply-post-" <> reply_to_id,
       viewing_main_object: false,
+      object: reply_to_post_content,
       activity: %{
-        object: reply_to_post_content,
         # object_post_content: reply_to_post_content,
         subject_profile: subject_profile,
         subject_character: subject_character,
@@ -101,15 +106,15 @@ defmodule Bonfire.UI.Social.ActivityLive do
         creator_profile: %{id: _} = subject_profile
       }
     } = replied
-  })
+  }, _)
   when verb in ["reply","respond"] and is_binary(reply_to_id), do: [ # other kind of reply, with creator
     # {Bonfire.UI.Social.Activity.SubjectLive, %{verb: verb}},
     {Bonfire.UI.Social.ActivityLive, %{
       activity_inception: true,
       # id: activity_id <> "-reply-" <> reply_to_id,
       viewing_main_object: false,
+      object: load_object(e(replied, :reply_to, reply_to_id)),
       activity: %{
-        object: load_object(e(replied, :reply_to, reply_to_id)),
         subject_profile: subject_profile,
         subject_character: subject_character,
     }
@@ -122,19 +127,24 @@ defmodule Bonfire.UI.Social.ActivityLive do
     replied: %{
       reply_to_id: reply_to_id,
     } = replied
-  })
-  when verb in ["reply","respond"] and is_binary(reply_to_id), do: [ # other kind of reply
+  }, _)
+  when verb in ["reply","respond"] and is_binary(reply_to_id) do # other kind of reply
+    reply_to_activity = load_reply_to(e(replied, :reply_to, reply_to_id))
 
-    # {Bonfire.UI.Social.Activity.SubjectLive, %{verb: verb}},
-    {Bonfire.UI.Social.ActivityLive, %{
-      activity_inception: true,
-      # id: activity_id <> "-reply-" <> reply_to_id,
-      activity: load_reply_to(e(replied, :reply_to, reply_to_id)), #|> IO.inspect,
-      viewing_main_object: false
-    }},
-    # Bonfire.UI.Social.Activity.SubjectLive
-  ]
-  def component_maybe_reply_to(verb, a) do
+    [
+      # {Bonfire.UI.Social.Activity.SubjectLive, %{verb: verb}},
+      {Bonfire.UI.Social.ActivityLive, %{
+        activity_inception: true,
+        # id: activity_id <> "-reply-" <> reply_to_id,
+        object: e(reply_to_activity, :object, nil),
+        activity: reply_to_activity, #|> IO.inspect,
+        viewing_main_object: false
+      }},
+      # Bonfire.UI.Social.Activity.SubjectLive
+    ]
+  end
+
+  def component_maybe_reply_to(verb, a, _) do
     # IO.inspect(not_reply_verb: verb)
     # IO.inspect(not_reply: a)
     []
@@ -191,7 +201,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
   end
 
   def load_object(id_or_pointer) do
-    with %{id: _} = obj <- Bonfire.Common.Pointers.get(id_or_pointer)
+    with {:ok, obj} <- Bonfire.Common.Pointers.get(id_or_pointer)
       # |> IO.inspect
       # TODO: avoid so many queries
       |> repo().maybe_preload([:post_content])
@@ -199,7 +209,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
       |> repo().maybe_preload([:profile, :character]) do
         obj
       else
-        {:ok, obj} -> obj
+        # {:ok, obj} -> obj
         _ -> nil
       end
   end
@@ -219,22 +229,22 @@ defmodule Bonfire.UI.Social.ActivityLive do
       |> Verbs.conjugate(tense: "past", person: "third", plurality: "plural")
   end
 
-  def reply_to_display(%Pointers.Pointer{} = reply_to) do
-    Bonfire.Common.Pointers.get!(reply_to)
-    |> repo().maybe_preload([:post_content])
-    |> repo().maybe_preload([:profile, :character])
-    |> reply_to_display()
-  end
-  def reply_to_display(%{post_content: post_content} = _post), do: post_content |> reply_to_display()
-  def reply_to_display(%{profile: profile, character: character}), do: Map.merge(profile, character) |> reply_to_display()
+  # def reply_to_display(%Pointers.Pointer{} = reply_to) do
+  #   Bonfire.Common.Pointers.get!(reply_to)
+  #   |> repo().maybe_preload([:post_content])
+  #   |> repo().maybe_preload([:profile, :character])
+  #   |> reply_to_display()
+  # end
+  # def reply_to_display(%{post_content: post_content} = _post), do: post_content |> reply_to_display()
+  # def reply_to_display(%{profile: profile, character: character}), do: Map.merge(profile, character) |> reply_to_display()
 
-  def reply_to_display(%{name: name} = reply_to) when is_binary(name) and name !="", do: "commented on " <> object_link(name, reply_to)
-  def reply_to_display(%{summary: summary} = reply_to) when is_binary(summary) and summary !="", do: "responded to " <> object_link(summary, reply_to)
-  def reply_to_display(%{html_body: html_body} = reply_to), do: "responded to " <> object_link(html_body, reply_to, "hover:underline italic")
+  # def reply_to_display(%{name: name} = reply_to) when is_binary(name) and name !="", do: "commented on " <> object_link(name, reply_to)
+  # def reply_to_display(%{summary: summary} = reply_to) when is_binary(summary) and summary !="", do: "responded to " <> object_link(summary, reply_to)
+  # def reply_to_display(%{html_body: html_body} = reply_to), do: "responded to " <> object_link(html_body, reply_to, "hover:underline italic")
 
-  # TODO: use live_redirect
-  def object_link(text, %{character: %{username: username}}, class \\ "hover:underline font-bold"), do: "<a class='#{class}' href='/user/#{username}'>#{text}</a>"
-  def object_link(text, %{id: id}, class), do: "<a class='#{class}' href='/discussion/#{id}'>#{text}</a>"
+  # # TODO: use live_redirect
+  # def object_link(text, %{character: %{username: username}}, class \\ "hover:underline font-bold"), do: "<a class='#{class}' href='/user/#{username}'>#{text}</a>"
+  # def object_link(text, %{id: id}, class), do: "<a class='#{class}' href='/discussion/#{id}'>#{text}</a>"
 
   def activity_component(component, assigns, socket) do
     case component do

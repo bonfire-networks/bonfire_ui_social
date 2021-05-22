@@ -2,9 +2,9 @@
 <div class="
    <%= cond do %>
     <% e(@object, :id, nil) != nil and e(@activity, :replied, :reply_to_id, nil) == nil and e(@activity, :id, nil) == nil -> %>
-      py-0
+      reply_to py-0
     <% e(assigns, :showing_within_thread, nil) == true -> %>
-      ml-8 py-0
+      showing_within_thread ml-8 py-0
     <% true -> %>
       py-2
   <% end %>" x-cloak  x-data="{content_open: false}">
