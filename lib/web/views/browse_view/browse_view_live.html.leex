@@ -3,17 +3,17 @@
   x-cloak
   x-data="{open_right_panel: false}"
   >
-  <section class="w-center min-h-screen shadow-tick bg-white mt-4 rounded-lg">
+  <section class="min-h-screen mt-4 bg-white rounded-lg w-center shadow-tick">
    <%= live_component(@socket, Bonfire.UI.Social.PageHeaderLive,
     assigns |> assigns_clean())%>
-    <div class="mx-4 border-t-8 lg:mx-0 bg-white">
+    <div class="mx-4 bg-white border-t-8 border-gray-100 lg:mx-0">
       <%= live_component(@socket, Bonfire.UI.Social.BrowseTabsLive, assigns) %>
 
       <%= live_component(@socket, Bonfire.UI.Social.FeedLive, assigns) %>
     </div>
   </section>
-  <aside class="flex-1 hidden lg:block mt-2 md:flex-shrink-0">
-    <div class="h-full px-3 w-full">
+  <aside class="flex-1 hidden mt-2 lg:block md:flex-shrink-0">
+    <div class="w-full h-full px-3">
 
     </div>
   </aside>
