@@ -1,6 +1,6 @@
 <main
   class="lg:flex">
-  <section class="min-h-screen mt-4 bg-white rounded-lg w-center shadow-tick">
+  <section class="min-h-screen bg-white w-center shadow-tick">
     <%= if @current_user do %>
       <%= live_component(@socket, Bonfire.UI.Social.PageHeaderLive,
     assigns |> assigns_clean())%>
