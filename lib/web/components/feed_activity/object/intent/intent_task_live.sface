@@ -9,7 +9,7 @@
 
     <span :if={{length(e(@object, :in_scope_of, []))>0}}>
     <span :for={{scope <- e(@object, :in_scope_of, [])}}>
-      <LivePatch to="/task/{{scope.id}}" class="text-sm text-gray-500 cursor-pointer font-regular hover:underline">
+      <LivePatch :if={{e(scope, :id, nil)}} to="/task/{{e(scope, :id, "")}}" class="text-sm text-gray-500 cursor-pointer font-regular hover:underline">
         {{e(scope, :name, "")}}
         <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 mx-1 text-gray-500" viewBox="0 0 20 20" fill="currentColor">
           <path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd" />
@@ -18,7 +18,7 @@
     </span>
     </span>
 
-    <LivePatch to="/task/{{@object.id}}" class="text-sm font-medium text-gray-800 cursor-pointer hover:underline">{{@object.name}}
+    <LivePatch to="/task/{{e(@object, :id, "")}}" class="text-sm font-medium text-gray-800 cursor-pointer hover:underline">{{e(@object, :name, e(@object, :note, "Untitled task"))}}
     </LivePatch>
   </div>
 
@@ -32,11 +32,11 @@
     </LivePatch>
 
 
-    <div class="flex items-center text-xs text-gray-700 text-medium">
+    <div :if={{ e(@object, :due, nil)}} class="flex items-center text-xs text-gray-700 text-medium">
       <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 mr-1 text-gray-500" viewBox="0 0 20 20" fill="currentColor">
         <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-12a1 1 0 10-2 0v4a1 1 0 00.293.707l2.828 2.829a1 1 0 101.415-1.415L11 9.586V6z" clip-rule="evenodd" />
       </svg>
-      <span>{{ @object.due || "Anytime"}}</span>
+      <span>{{ e(@object, :due, "Anytime")}}</span>
     </div>
 
 
@@ -50,10 +50,3 @@
 
   </div>
 </div>
-
-
-
-<!--
-<svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 text-gray-500" viewBox="0 0 20 20" fill="currentColor">
-        <path fill-rule="evenodd" d="M3 5a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zM3 10a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zM3 15a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1z" clip-rule="evenodd" />
-      </svg> -->
