@@ -19,7 +19,7 @@ defmodule Bonfire.UI.Social.Activity.IntentTaskLive do
     }
   end
 
-  def intent_preloads(), do: [provider: [:profile, :character]]
+  def intent_preloads(), do: [:output_of, provider: [:profile, :character]]
 
   def preloads(object) do
     object
