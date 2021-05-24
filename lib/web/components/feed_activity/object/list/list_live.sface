@@ -1,0 +1,36 @@
+<div class="block bg-white ">
+  <div class="grid justify-between grid-cols-2 gap-8 p-3">
+    <div class="">
+      <div class="flex items-center space-x-2">
+        <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 text-gray-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z" />
+        </svg>
+        <LivePatch to={{"/list/"<>e(@object, :id,"")}}>
+          <div class="text-lg font-bold text-gray-700 hover:underline hover:text-gray-800">{{@object.name}}</div>
+        </LivePatch>
+      </div>
+      <div class="flex items-center mt-1 space-x-4">
+        <div class="flex items-center text-xs text-gray-700 text-medium">
+          <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 mr-1 text-gray-500" viewBox="0 0 20 20" fill="currentColor">
+            <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-12a1 1 0 10-2 0v4a1 1 0 00.293.707l2.828 2.829a1 1 0 101.415-1.415L11 9.586V6z" clip-rule="evenodd" />
+          </svg>
+        <span>{{ e(@object, :due, "No due date")}}</span>
+        </div>
+      </div>
+      <div class="mt-1 text-sm text-gray-600 line-clamp-1">{{e(@object, :note, "")}}</div>
+    </div>
+    <div>
+      <div class="relative mt-2">
+        <div class="flex h-3 mb-2 overflow-hidden text-xs bg-pink-100 rounded">
+          <div style="width:{{e(@object, :percentage, "0")}}%" class="flex flex-col justify-center text-center text-white bg-pink-500 shadow-none whitespace-nowrap"></div>
+        </div>
+      </div>
+      <div class="flex items-center space-x-4 text-sm text-gray-700">
+        <div><span class="font-bold">{{e(@object, :percentage, "0%")}}%</span> complete</div>
+        <div><span class="font-bold">{{e(@object, :tasks_total, "0")}}</span> tasks</div>
+        <div><span class="font-bold">{{e(@object, :tasks_completed, "0")}}</span> closed</div>
+      </div>
+    </div>
+  </div>
+</div>
+
