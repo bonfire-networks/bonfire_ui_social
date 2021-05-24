@@ -169,7 +169,11 @@ defmodule Bonfire.UI.Social.ActivityLive do
   def object_type(type) when type in [ValueFlows.EconomicEvent, "EconomicEvent"], do: [Bonfire.UI.Social.Activity.EconomicEventLive]
   def object_type(type) when type in [ValueFlows.EconomicResource, "EconomicResource"], do: [Bonfire.UI.Social.Activity.EconomicResourceLive]
   def object_type(type) when type in [ValueFlows.Planning.Intent, "Intent"], do: [Bonfire.UI.Social.Activity.IntentTaskLive] # TODO: choose between Task and other Intent types
-  def object_type(type), do: [Bonfire.UI.Social.Activity.UnknownLive]
+  def object_type(type) when type in [ValueFlows.Process, "Process"], do: [Bonfire.UI.Social.Activity.ProcessListLive] # TODO: choose between Task and other Intent types
+  def object_type(type) do
+    IO.inspect(component_object_type_unknown: type)
+    [Bonfire.UI.Social.Activity.UnknownLive]
+  end
 
   def component_actions(_, _, %{activity_inception: true}), do: []
   def component_actions(_, %{object_post_content: %{id: _} = object}, _), do: component_show_actions(object)
