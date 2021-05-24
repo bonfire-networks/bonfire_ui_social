@@ -60,7 +60,7 @@
   </div>
   <div class="flex items-center text-sm text-gray-600">
     in <LivePatch
-        to={{ "/list/"<>e(@object, :output_of, :name, "")}}
+        to={{ "/list/"<>e(@object, :output_of, :id, "")}}
         class="flex items-center ml-2 text-sm text-gray-600 underline cursor-pointer hover:text-gray-800 text-medium">
         {{ e(@object, :output_of, :name, "Unknown")}}
       </LivePatch>
