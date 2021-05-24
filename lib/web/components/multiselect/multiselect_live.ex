@@ -11,6 +11,7 @@ defmodule Bonfire.UI.Social.MultiselectLive do
   prop context_id, :string
 
   def update(%{selected_options: selected_options} = assigns, socket) when not is_list(selected_options) do
+    
     {:ok, socket |> assigns_merge(assigns, selected_options: [selected_options])}
   end
 
