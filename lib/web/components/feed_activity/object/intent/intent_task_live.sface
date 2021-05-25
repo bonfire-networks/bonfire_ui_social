@@ -1,4 +1,4 @@
-<div class="mt-2 text-sm text-gray-700 line-clamp-1">Created <LivePatch to={{"/list/"<>e(@object, :id,"")}} class="font-bold text-gray-700 hover:underline text-sn hover:text-gray-800">{{@object.name}}</LivePatch> task</div>
+<div class="mt-2 text-sm text-gray-700 line-clamp-1">Created <LivePatch to={{"/task/"<>e(@object, :id,"")}} class="font-bold text-gray-700 hover:underline text-sn hover:text-gray-800">{{@object.name}}</LivePatch> task</div>
 <div class="flex flex-col p-3 mt-2 bg-white border rounded bg-gray-50">
   <div class="flex items-center flex-1 mb-3">
 
