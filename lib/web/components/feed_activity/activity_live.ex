@@ -32,7 +32,8 @@ defmodule Bonfire.UI.Social.ActivityLive do
         verb: verb,
         verb_display: verb_display,
         created_verb_display: created_verb_display,
-        permalink: permalink
+        permalink: permalink,
+        within_feed: true # WIP a boolean for adapting previews based on specific views (Feeds, search results, or other contexts)
       )) }
   end
 

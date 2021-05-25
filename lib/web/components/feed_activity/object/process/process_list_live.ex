@@ -4,6 +4,7 @@ defmodule Bonfire.UI.Social.Activity.ProcessListLive do
   import Bonfire.UI.Social.Integration
 
   prop object, :map, required: true
+  prop within_feed, :boolean, required: false, default: false
 
   def update(assigns, socket) do
 
