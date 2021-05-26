@@ -2,7 +2,7 @@
   <% !@current_user and !@current_account -> %>
     <div class="">
       <%= live_component(@socket, Bonfire.UI.Social.HeaderGuestLive, assigns) %>
-      <div class="container max-w-screen-lg mx-auto mt-6">
+      <div class="container max-w-screen-lg mx-auto mt-20">
         <%= @inner_content %>
       </div>
     </div>
