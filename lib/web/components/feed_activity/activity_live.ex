@@ -58,6 +58,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
   def component_activity_subject(_, %{object: %Bonfire.Data.Identity.User{}}, _), do: []
   def component_activity_subject(_, _, %{activity_inception: true}), do: [Bonfire.UI.Social.Activity.SubjectRepliedLive]
   def component_activity_subject(_, %{provider: _}, _), do: [Bonfire.UI.Social.Activity.ProviderReceiverLive]
+  def component_activity_subject(_, %{primary_accountable: primary_accountable} = activity, _), do: [{Bonfire.UI.Social.Activity.ProviderReceiverLive, %{activity: Map.merge(activity, %{provider: primary_accountable})}}]
   def component_activity_subject(_, %{receiver: _}, _), do: [Bonfire.UI.Social.Activity.ProviderReceiverLive]
   def component_activity_subject("create"=verb, activity, _), do: [component_activity_maybe_creator(activity)]
   def component_activity_subject(_, _, _), do: [Bonfire.UI.Social.Activity.SubjectLive]
