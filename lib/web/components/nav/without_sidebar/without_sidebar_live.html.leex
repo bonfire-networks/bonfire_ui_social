@@ -11,14 +11,14 @@
     <% !@current_user and @current_account -> %>
       <div class="">
         <%= live_component(@socket, Bonfire.UI.Social.HeaderAccountLive, assigns) %>
-        <div class="container max-w-screen-lg mx-auto mt-20">
+        <div class="flex max-w-screen-lg mx-auto mt-20 space-x-4 place-content-center">
           <%= @inner_content %>
         </div>
       </div>
     <% true -> %>
       <div class="">
         <%= live_component(@socket, Bonfire.UI.Social.HeaderLive, assigns) %>
-        <div class="flex mx-auto mt-20 space-x-4 place-content-center xl:max-w-screen-xl">
+        <div class="flex max-w-screen-lg mx-auto mt-20 space-x-4 place-content-center">
           <%= @inner_content %>
       </div>
       </div>

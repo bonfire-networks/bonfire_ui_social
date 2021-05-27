@@ -9,7 +9,7 @@
     open_profile_mobile_menu: false
   }"
   @close-popover-group.window="onClosePopoverGroup"
-  class="sticky top-0 z-10 bg-white border-b">
+  class={{"sticky top-0 z-10 bg-white border-b", "rounded-t-lg": @current_user == nil}}>
   <div class="flex items-center p-3">
     <div class="relative flex items-center px-4 mr-3 border-r border-gray-200 lg:hidden">
       <button

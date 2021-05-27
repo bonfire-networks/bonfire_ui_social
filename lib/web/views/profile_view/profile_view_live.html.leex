@@ -1,5 +1,5 @@
 <main class="lg:flex">
-  <section class="min-h-screen bg-white w-center shadow-tick ">
+  <section class="min-h-screen bg-white w-center shadow ">
     <%= live_component(@socket, Bonfire.UI.Social.PageHeaderLive,
     assigns |> assigns_clean())%>
     <%= live_component(@socket, Bonfire.Common.Config.get([:ui, :profile, :sections, maybe_str_to_atom(@selected_tab)], Bonfire.UI.Social.ProfileTimelineLive), assigns) %>
