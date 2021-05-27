@@ -1,0 +1,32 @@
+<div :if={{@within_feed == true}} class="mt-2 text-sm text-gray-700 line-clamp-1">Created <LivePatch to={{"/process/"<>e(@object, :id,"")}} class="font-bold text-gray-700 hover:underline text-sn hover:text-gray-800">{{@object.name}}</LivePatch> process</div>
+<div class={{"block bg-white", "border rounded-lg my-2": @within_feed}}>
+  <div class={{"grid justify-between p-3", "grid-cols-2 gap-8": !@within_feed, "py-0 grid-cols-1 gap-0": @within_feed}}>
+    <div class={{"order-last": @within_feed}}>
+      <div class={{"flex items-center space-x-2", "mt-2": @within_feed}}>
+         {{ live_component(@socket, Bonfire.UI.Social.LikeActionWithoutLabelLive,
+        object_id: @object.id,
+        my_like: nil,
+        like_count: nil
+      ) }}
+        <LivePatch to={{"/process/"<>e(@object, :id,"")}}>
+          <div class="text-lg font-bold text-gray-700 hover:underline hover:text-gray-800">{{@object.name}}</div>
+        </LivePatch>
+      </div>
+      <div :if={{e(@object, :due, nil)}} class="flex items-center mt-1 space-x-4">
+        <div class="flex items-center text-xs text-gray-700 text-medium">
+          <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 mr-1 text-gray-500" viewBox="0 0 20 20" fill="currentColor">
+            <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-12a1 1 0 10-2 0v4a1 1 0 00.293.707l2.828 2.829a1 1 0 101.415-1.415L11 9.586V6z" clip-rule="evenodd" />
+          </svg>
+          <span>{{ e(@object, :due, "No due date")}}</span>
+        </div>
+      </div>
+      <div class="mt-1 text-sm text-gray-600 line-clamp-1">{{e(@object, :note, "")}}</div>
+      
+    </div>
+    <div>
+      
+
+      
+    </div>
+  </div>
+</div>

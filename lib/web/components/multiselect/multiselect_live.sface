@@ -15,12 +15,12 @@
     }"
     class="flex items-center block w-full px-2 bg-white border border-gray-300 rounded-md shadow-sm cursor-pointer focus:ring-gray-500 focus:border-gray-500 sm:text-sm hover:bg-gray-50">
       <div class="h-9"></div>
-      <label :if={{ Enum.count(@selected_options) < 1 }} class="flex-1 ml-2 " id="multiselect_label">{{ @label }}</label>
-      <div class="flex flex-wrap flex-1">
+      <label :if={{ Enum.count(@selected_options) == 0 }} class="flex-1 w-full ml-2 ">{{ @label }}</label>
+      <div :if={{ Enum.count(@selected_options) > 0 }} class="flex flex-wrap flex-1">
         <span
           :for={{ {name_content, id} <- @selected_options }}
           :if={{ name_content || id }}
-          class="flex m-0.5 rounded-sm items-center py-0.5 pl-2 text-sm font-medium bg-gray-200 text-gray-700">
+          class={{"flex m-0.5 rounded-sm items-center py-0.5 pl-2 text-sm font-medium bg-gray-200 text-gray-700", "pr-2": @remove_event ==""}}>
           {{ raw name_content }}
           <input :if={{id}} type="hidden" name="{{@form_input_name}}" value="{{ id }}" />
           <button
@@ -52,7 +52,7 @@
     x-transition:leave-start="transform opacity-100 scale-100"
     x-transition:leave-end="transform opacity-0 scale-95"
     x-show="show === true"
-    class="absolute left-0 right-0 w-full p-1 mt-1 bg-white border rounded-md shadow-xl top-12">
+    class="absolute left-0 right-0 z-40 w-full p-1 bg-white border rounded-md shadow-xl top-12">
     <input
         id="autocomplete"
         x-ref="autocomplete"
