@@ -1,0 +1,14 @@
+
+<div class="flex">
+  <div class="flex-shrink-0">
+    <img class="object-cover w-10 h-10 rounded-full" src="{{avatar_url(@user)}}" alt="current user profile image" />
+  </div>
+  <div class="ml-2">
+    <p class="text-base font-semibold text-gray-800">
+      {{ e(@profile, :name, "Anon") }}
+    </p>
+    <p class="-mt-px text-sm text-gray-600">
+      @{{ e(@character, :username, "anon") }} 
+    </p>
+  </div>
+</div>

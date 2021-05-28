@@ -1,3 +1,5 @@
 defmodule Bonfire.UI.Social.PrivateLive do
-  use Bonfire.Web, :live_component
+  use Bonfire.Web, :stateless_component
+
+  prop feed, :map
 end

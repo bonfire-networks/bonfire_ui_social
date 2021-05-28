@@ -1,4 +1,5 @@
 defmodule Bonfire.UI.Social.FeedHeaderLive do
-  use Bonfire.Web, :live_component
-
+  use Bonfire.Web, :stateless_component
+  
+  prop feed_title, :string
 end

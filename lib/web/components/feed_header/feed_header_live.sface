@@ -1,0 +1,7 @@
+<div class="p-3 border-b">
+  <div class="flex flex-wrap items-center justify-between sm:flex-no-wrap">
+    <h3 class="flex-1 text-base text-gray-800 font-regular">
+      {{ @feed_title }}
+    </h3>
+  </div>
+</div>

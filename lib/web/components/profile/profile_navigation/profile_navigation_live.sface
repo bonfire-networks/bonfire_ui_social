@@ -1,0 +1,16 @@
+<nav
+  role="tabpanel"
+  class="flex justify-between my-2 border-b"
+  aria-label="Switch between timeline, posts, boosts, media tabs">
+  <LivePatch 
+    :for={{ {item, route} <- Bonfire.Common.Config.get([:ui, :profile, :navigation], [timeline: "timeline"]) }}
+    to="/user/{{e(@user, :character, :username, "")}}/{{route}}" 
+    class="flex-1 pt-2 hover:bg-pink-100 group">
+    <div class={{"group-hover:text-pink-600 text-center w-full capitalize text-gray-500 px-3 font-medium text-sm border-gray-200", "hover:text-pink-600 text-pink-600 font-bold": @selected_tab == Atom.to_string(item)}}>
+      {{ item }}
+    </div>
+      <span
+        :if={{ @selected_tab ==  Atom.to_string(item)}} 
+        class="block w-20 h-1 mx-auto mt-2 bg-pink-400 rounded-full"></span>
+  </LivePatch>
+</nav>

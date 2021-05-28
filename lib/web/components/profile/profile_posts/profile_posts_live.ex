@@ -1,6 +1,5 @@
-defmodule Bonfire.UI.Social.ProfileViewLive do
+defmodule Bonfire.UI.Social.ProfilePostsLive do
   use Bonfire.Web, :stateless_component
-
 
   prop page_title, :string, required: true
   prop page, :string, required: true
@@ -13,4 +12,5 @@ defmodule Bonfire.UI.Social.ProfileViewLive do
   prop feed_title, :string
   prop user, :map
   prop following, :map
+
 end
