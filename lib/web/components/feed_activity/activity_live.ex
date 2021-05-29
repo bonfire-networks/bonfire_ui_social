@@ -160,17 +160,17 @@ defmodule Bonfire.UI.Social.ActivityLive do
   def component_object(_, %{object: %{character: _}}), do: [Bonfire.UI.Social.Activity.CharacterLive]
 
   def component_object(_, %{object: %{__struct__: schema} = object}), do: object_type(schema)
-
   def component_object(_, %{object: %{__typename: type}}), do: object_type(type) # for graphql queries
+  def component_object(_, %{object: %{table_id: type}}), do: object_type(type) # for schema-less queries
 
   def component_object(_, activity) do
     IO.inspect(component_object_unknown: activity)
     [Bonfire.UI.Social.Activity.UnknownLive]
   end
 
-  def object_type(type) when type in [ValueFlows.EconomicEvent, "EconomicEvent"], do: [Bonfire.UI.Social.Activity.EconomicEventLive]
+  def object_type(type) when type in [ValueFlows.EconomicEvent, "EconomicEvent", "2CTVA10BSERVEDF10WS0FVA1VE"], do: [Bonfire.UI.Social.Activity.EconomicEventLive]
   def object_type(type) when type in [ValueFlows.EconomicResource, "EconomicResource"], do: [Bonfire.UI.Social.Activity.EconomicResourceLive]
-  def object_type(type) when type in [ValueFlows.Planning.Intent, "Intent"], do: [Bonfire.UI.Social.Activity.IntentTaskLive] # TODO: choose between Task and other Intent types
+  def object_type(type) when type in [ValueFlows.Planning.Intent, "Intent", "1NTENTC0V1DBEAN0FFER0RNEED"], do: [Bonfire.UI.Social.Activity.IntentTaskLive] # TODO: choose between Task and other Intent types
   def object_type(type) when type in [ValueFlows.Process, "Process"], do: [Bonfire.UI.Social.Activity.ProcessListLive] # TODO: choose between Task and other Intent types
   def object_type(type) do
     IO.inspect(component_object_type_unknown: type)
