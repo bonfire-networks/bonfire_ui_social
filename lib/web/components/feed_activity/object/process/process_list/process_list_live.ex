@@ -8,7 +8,7 @@ defmodule Bonfire.UI.Social.Activity.ProcessListLive do
 
   def update(assigns, socket) do
 
-    object = assigns.object |> preloads() |> IO.inspect(label: "process_preloaded")
+    object = assigns.object |> preload() |> IO.inspect(label: "process_preloaded")
 
     tasks = e(object, :intended_outputs, [])
 
@@ -31,11 +31,11 @@ defmodule Bonfire.UI.Social.Activity.ProcessListLive do
     }
   end
 
-  def process_preloads(), do: [:intended_outputs]
+  def preloads(), do: [:intended_outputs]
 
-  def preloads(object) do
+  defp preload(object) do
     object
-    |> repo().maybe_preload(process_preloads())
+    |> repo().maybe_preload(preloads())
     # |> repo().maybe_preload([:context])
   end
 

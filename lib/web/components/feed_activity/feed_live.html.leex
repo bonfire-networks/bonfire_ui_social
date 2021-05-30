@@ -4,7 +4,7 @@
   aria-atomic="true"
   class="">
     <div class="mx-auto flex flex-col divide-y max-w-7xl">
-    <%= if length(@feed) == 0 do %>
+    <%= if is_list(@feed) and length(@feed) == 0 do %>
       <div class="p-4 text-center">
         <div class="mb-3 text-3xl">🧐</div>
         <span class="font-medium text-base text-gray-700">Take a deep breath...<span>

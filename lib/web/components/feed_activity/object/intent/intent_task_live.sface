@@ -2,8 +2,8 @@
 <div class="flex flex-col p-3 mt-2 bg-white border rounded bg-gray-50">
   <div class="flex items-center flex-1 mb-3">
 
-    <span  :if={{length(e(@object, :in_scope_of, []))>0}}>
-      <span  :for={{scope <- e(@object, :in_scope_of, [])}}>
+    <span  :if={{length(e(@object, :context, []))>0}}>
+      <span  :for={{scope <- e(@object, :context, [])}}>
         <LivePatch :if={{e(scope, :id, nil)}} to="/task/{{e(scope, :id, "")}}" class="flex items-center text-sm text-gray-500 cursor-pointer font-regular hover:underline">
           {{e(scope, :name, "")}}
           <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 mx-1 text-gray-500" viewBox="0 0 20 20" fill="currentColor">

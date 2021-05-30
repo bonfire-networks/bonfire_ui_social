@@ -9,15 +9,15 @@ defmodule Bonfire.UI.Social.Activity.EconomicResourceLive do
     {:ok, socket |>
       assigns_merge(assigns,
         object: assigns.object
-        |> preloads() #|> IO.inspect
+        |> preload() #|> IO.inspect
       )
     }
   end
 
-  def resource_preloads(), do: [:image, :current_location, onhand_quantity: [:unit], accounting_quantity: [:unit]]
+  def preloads(), do: [:image, :current_location, onhand_quantity: [:unit], accounting_quantity: [:unit]]
 
-  def preloads(object) do
+  defp preload(object) do
     object
-    |> repo().maybe_preload(resource_preloads())
+    |> repo().maybe_preload(preloads())
   end
 end
