@@ -1,8 +1,8 @@
 <div class="mx-4 overflow-hidden bg-white border-t-8 border-gray-100 lg:mx-0">
   <ul class="divide-y divide-gray-200">
-    
+
     <li :for={{ %{activity: activity} <- @feed }}>
-      <LiveRedirect to="/message/{{e(activity, :object_id, nil)}}" class="block hover:bg-gray-50">
+      <LiveRedirect to="{{path(Bonfire.Data.Social.Message, e(activity, :object_id, nil))}}" class="block hover:bg-gray-50">
         <div class="flex items-center px-3 py-4">
           <div class="flex-1 min-w-0 sm:flex sm:items-center sm:justify-between">
             <div class="truncate">

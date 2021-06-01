@@ -5,9 +5,11 @@ defmodule Bonfire.UI.Social.ActivityLive do
 
   def update(%{activity: %{} = activity} = assigns, socket) do
 
+    # IO.inspect(assigns, label: "ActivityLive assigns")
+
     activity = activity
                 |> Map.put(:object, e(assigns, :object, object(activity)))
-                # |> IO.inspect
+                # |> IO.inspect(label: "ActivityLive activity")
 
 
     verb = e(activity, :verb, :verb, "create") |> verb_maybe_modify(activity)
@@ -20,7 +22,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
     verb_display = verb_display(verb)
     created_verb_display = "create" |> verb_maybe_modify(activity) |> verb_display()
 
-    permalink = Activities.permalink(assigns, activity)
+    permalink = path(activity.object)
 
   {:ok, assign(socket, assigns
     |> assigns_merge(
@@ -157,9 +159,16 @@ defmodule Bonfire.UI.Social.ActivityLive do
   def component_object(_, %{object: %{profile: _}}), do: [Bonfire.UI.Social.Activity.CharacterLive]
   def component_object(_, %{object: %{character: _}}), do: [Bonfire.UI.Social.Activity.CharacterLive]
 
-  def component_object(_, %{object: %{__struct__: schema} = object}), do: object_type(schema)
-  def component_object(_, %{object: %{__typename: type}}), do: object_type(type) # for graphql queries
-  def component_object(_, %{object: %{table_id: type}}), do: object_type(type) # for schema-less queries
+  def component_object(_, %{object: %{} = object}) do
+    case Bonfire.Common.Types.object_type(object) do
+      type ->
+        object_type(type)
+
+      _ ->
+        IO.inspect(component_object_type_unrecognised: object)
+        [Bonfire.UI.Social.Activity.UnknownLive]
+    end
+  end
 
   def component_object(_, activity) do
     IO.inspect(component_object_unknown: activity)

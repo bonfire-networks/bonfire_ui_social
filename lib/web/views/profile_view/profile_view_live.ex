@@ -13,4 +13,11 @@ defmodule Bonfire.UI.Social.ProfileViewLive do
   prop feed_title, :string
   prop user, :map
   prop following, :map
+
+  def tab(selected_tab) do
+    case maybe_str_to_atom(selected_tab) do
+      tab when is_atom(tab) -> tab
+      _ -> :timeline
+    end
+  end
 end

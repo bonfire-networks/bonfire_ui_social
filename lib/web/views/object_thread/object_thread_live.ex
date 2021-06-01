@@ -3,7 +3,9 @@ defmodule  Bonfire.UI.Social.ObjectThreadLive do
 
   def update(assigns, socket) do
 
-    participants = Bonfire.Social.Threads.list_participants(e(assigns, :object, :id, nil), e(assigns, :current_user, nil))
+    thread_id = e(assigns, :thread_id, e(assigns, :object, :id, nil))
+
+    participants = Bonfire.Social.Threads.list_participants(thread_id, e(assigns, :current_user, nil))
     # |> IO.inspect
 
     {:ok, assign(socket, assigns
@@ -11,7 +13,8 @@ defmodule  Bonfire.UI.Social.ObjectThreadLive do
         page: "Discussion",
         has_private_tab: false,
         smart_input: false,
-        date_ago: date_from_now(assigns.object),
+        thread_id: thread_id,
+        date_ago: date_from_now(e(assigns, :object, e(assigns, :activity, :object, nil))),
         participants: participants
       })) }
   end
