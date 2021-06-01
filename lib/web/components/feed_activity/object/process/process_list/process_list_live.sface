@@ -24,10 +24,7 @@
       <div :if={{@within_feed == true}} class="flex items-center p-3 mt-2 -mx-3 space-x-4 text-sm text-gray-700 bg-gray-100 rounded-b-lg">
         <div><span class="font-bold text-gray-600">{{e(@object, :percentage, "0")}}%</span> complete</div>
         <div>
-          <span class="font-bold text-gray-600">{{e(@object, :tasks_completed, "0")}}</span> out of
-          <span class="font-bold text-gray-600">{{e(@object, :tasks_total, "0")}}</span>
-        </div>
-        <div>
+          <span class="font-bold text-gray-600">{{e(@object, :tasks_completed, "0")}}</span> of
           <span class="font-bold text-gray-600">{{e(@object, :tasks_total, "0")}}</span> tasks
         </div>
       </div>
@@ -42,10 +39,8 @@
       <div :if={{!@within_feed}} class="flex items-center space-x-4 text-sm text-gray-700">
         <div :if={{e(@object, :tasks_total, 0)>0}}><span class="font-bold text-gray-600">{{e(@object, :percentage, "0")}}%</span> complete</div>
         <div :if={{e(@object, :tasks_completed, 0)>0}}>
-          <span class="font-bold text-gray-600">{{e(@object, :tasks_completed, "0")}}</span> out of <span class="font-bold text-gray-600">{{e(@object, :tasks_total, "0")}}</span>
-        </div>
-        <div :if={{e(@object, :tasks_total, 0)>0}}>
-          <span class="font-bold text-gray-600">{{e(@object, :tasks_total, "0")}}</span> tasks
+          <span class="font-bold text-gray-600">{{e(@object, :tasks_completed, "0")}}</span>
+         of <span class="font-bold text-gray-600">{{e(@object, :tasks_total, "0")}}</span> tasks
         </div>
       </div>
     </div>
