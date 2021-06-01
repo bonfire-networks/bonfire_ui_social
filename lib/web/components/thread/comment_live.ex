@@ -4,7 +4,7 @@ defmodule  Bonfire.UI.Social.CommentLive do
   def update(assigns, socket) do
 
     {activity, comment} = Map.pop(assigns.comment, :activity)
-    {object, activity} = Map.pop(activity, :object_post_content)
+    {object, activity} = Map.pop(activity, :object)
 
     {:ok, assign(socket, assigns
     |> assigns_merge(

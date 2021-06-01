@@ -9,7 +9,13 @@ defmodule Bonfire.UI.Social.Activity.EconomicEventLive do
 
   def update(%{object: object} = assigns, socket) do
     # TODO: run these preloads when fetching the feed, rather than n+1
-    object = object |> maybe_to_struct(ValueFlows.EconomicEvent) |> preload() |> maybe_preload_action()
+    object = object
+    # |> IO.inspect(label: "event")
+    |> maybe_to_struct(ValueFlows.EconomicEvent)
+    # |> IO.inspect(label: "struct")
+    |> preload()
+    |> maybe_preload_action()
+
  #|> IO.inspect
     {:ok, socket |>
       assigns_merge(assigns,
