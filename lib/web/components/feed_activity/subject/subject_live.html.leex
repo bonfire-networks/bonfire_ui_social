@@ -23,13 +23,13 @@
   <img class="inline-block object-cover w-6 h-6 bg-gray-100 rounded-full" src="<%=avatar_url(e(@activity, :subject_profile, nil))%>" alt="subject profile image" onerror="this.style.display='none'" >
   <div class="ml-2">
   <div class="flex items-baseline flex-1 space-x-1">
-    <div class="text-sm font-bold text-gray-700">
+    <div class="text-sm font-bold text-gray-700 dark:text-gray-200">
       <a
         aria-label="<%= e(@activity, :subject_character, :username, "") %> profile"
         class="hover:underline"
         href="/user/<%= e(@activity, :subject_character, :username, "") %>"><%= e(@activity, :subject_profile, :name, "Anonymous") %></a>
     </div>
-    <span class="text-xs text-gray-500"><%= live_redirect to: @permalink do %><%=@date_ago%><% end %></span>
+    <span class="text-xs text-gray-500 dark:text-gray-400"><%= live_redirect to: @permalink do %><%=@date_ago%><% end %></span>
   </div>
 </div>
 </div>

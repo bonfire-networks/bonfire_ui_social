@@ -16,7 +16,7 @@
     </svg>
     <svg
       :if={{ @object_id not in e(assigns, :liked, []) && !e(@my_like, :id, nil) }}
-      class="w-5 h-5 mr-1 text-gray-500 text-grey-600 dark:text-gray-400 group-hover:text-pink-700"
+      class="w-5 h-5 mr-1 text-gray-500 dark:text-gray-400 group-hover:text-pink-700"
       stroke="none"
       fill="currentColor"
       viewBox="0 0 20 20"
@@ -25,7 +25,7 @@
     </svg>
   </span>
 
-  <span class="text-xs font-normal text-gray-500 dark:text-gray-500 group-hover:text-pink-700">
+  <span class="text-xs font-normal text-gray-500 dark:text-gray-400 group-hover:text-pink-700">
 
     {{ if @object_id in e(assigns, :liked, []) || e(@my_like, :id, nil), do: "Liked", else: "Like" }}
 

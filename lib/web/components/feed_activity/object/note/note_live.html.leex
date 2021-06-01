@@ -51,7 +51,7 @@
           <% end %>
         <% end %>
 
-        <article class='<%= if e(assigns, :viewing_main_object, nil), do: "prose max-w-prose", else: "prose prose-sm max-w-prose" %>'>
+        <article class='<%= if e(assigns, :viewing_main_object, nil), do: "prose max-w-prose dark:prose-light", else: "dark:prose-light prose prose-sm max-w-prose" %>'>
           <%= rich e(@object, :html_body, "...") %>
         </article>
       <% end %>

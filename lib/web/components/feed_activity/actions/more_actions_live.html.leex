@@ -8,11 +8,12 @@
   <%= if e(assigns, :showing_within_thread, false) != true do %>
   <svg
     class="<%= if e(@object, :id, "") in e(assigns, :boosted, []) || e(@activity, :my_boost, :id, nil), do: "text-pink-600 group-hover:text-pink-700", else: "dark:text-gray-400 text-gray-500 group-hover:text-pink-700" %>  w-5 h-5 mr-2"
-    stroke="currentColor"
-    fill="none"
-    viewBox="0 0 24 24"
+    fill="currentColor"
+    stroke="none"
+    viewBox="0 0 20 20"
     xmlns="http://www.w3.org/2000/svg">
-      <polyline points="17 1 21 5 17 9"></polyline><path d="M3 11V9a4 4 0 0 1 4-4h14"></path><polyline points="7 23 3 19 7 15"></polyline><path d="M21 13v2a4 4 0 0 1-4 4H3"></path></svg>
+      <path d="M8 5a1 1 0 100 2h5.586l-1.293 1.293a1 1 0 001.414 1.414l3-3a1 1 0 000-1.414l-3-3a1 1 0 10-1.414 1.414L13.586 5H8zM12 15a1 1 0 100-2H6.414l1.293-1.293a1 1 0 10-1.414-1.414l-3 3a1 1 0 000 1.414l3 3a1 1 0 001.414-1.414L6.414 15H12z" />
+  </svg>
   <% end %>
 
   <span class="<%= if e(@object, :id, "") in e(assigns, :boosted, []) || e(@activity, :my_boost, :id, nil), do: "text-pink-600 group-hover:text-pink-700", else: "dark:text-gray-400 text-gray-500 group-hover:text-pink-700" %> font-normal text-xs">
