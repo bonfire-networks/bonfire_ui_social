@@ -5,11 +5,10 @@ defmodule Bonfire.UI.Social.ActivityLive do
 
   def update(%{activity: %{} = activity} = assigns, socket) do
 
-    activity = activity |> Map.merge(%{object: e(assigns, :object, object(activity))})
-    # |> IO.inspect
-    # |> repo().maybe_preload(:object)
-    # |> repo().maybe_preload([object: [:profile, :character]])
-    # |> repo().maybe_preload([object: [:post_content]])
+    activity = activity
+                |> Map.put(:object, e(assigns, :object, object(activity)))
+                # |> IO.inspect
+
 
     verb = e(activity, :verb, :verb, "create") |> verb_maybe_modify(activity)
 
@@ -92,7 +91,6 @@ defmodule Bonfire.UI.Social.ActivityLive do
       viewing_main_object: false,
       object: reply_to_post_content,
       activity: %{
-        # object_post_content: reply_to_post_content,
         subject_profile: subject_profile,
         subject_character: subject_character,
     }}},
@@ -153,8 +151,8 @@ defmodule Bonfire.UI.Social.ActivityLive do
   end
 
   def component_object(_, %{object: %Bonfire.Data.Social.Post{}}), do: [Bonfire.UI.Social.Activity.NoteLive]
+  def component_object(_, %{object: %{post_content: %Bonfire.Data.Social.PostContent{}}}), do: [Bonfire.UI.Social.Activity.NoteLive]
   def component_object(_, %{object: %Bonfire.Data.Social.PostContent{}}), do: [Bonfire.UI.Social.Activity.NoteLive]
-  def component_object(_, %{object_post_content: %{id: _}}), do: [Bonfire.UI.Social.Activity.NoteLive]
   def component_object(_, %{object: %Bonfire.Data.Identity.User{}}), do: [Bonfire.UI.Social.Activity.CharacterLive]
   def component_object(_, %{object: %{profile: _}}), do: [Bonfire.UI.Social.Activity.CharacterLive]
   def component_object(_, %{object: %{character: _}}), do: [Bonfire.UI.Social.Activity.CharacterLive]
@@ -178,7 +176,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
   end
 
   def component_actions(_, _, %{activity_inception: true}), do: []
-  def component_actions(_, %{object_post_content: %{id: _} = object}, _), do: component_show_actions(object)
+  def component_actions(_, %{object: %{post_content: %{id: _} = object}}, _), do: component_show_actions(object)
   def component_actions(_, %{object: %Bonfire.Data.Social.Post{} = object}, _), do: component_show_actions(object)
   def component_actions(_, %{object: %Bonfire.Data.Social.PostContent{} = object}, _), do: component_show_actions(object)
   # TODO: make which object have actions configurable
@@ -187,12 +185,10 @@ defmodule Bonfire.UI.Social.ActivityLive do
 
   def component_show_actions(object), do: [{Bonfire.UI.Social.Activity.ActionsLive, %{object: object}}]
 
-  def object(%{object_post_content: %{id: _} = object}), do: object # posts are already preloaded in query
-  def object(%{object: %{post: %{post_content: %{id: _} = object} = post}}), do: Map.merge(object, post) #|> IO.inspect
-  def object(%{object: %{post_content: %{id: _} = object}}), do: object
-  def object(%{object: %Pointers.Pointer{id: _} = object}), do: load_object(object) # get other pointable objects
+  def object(%{object: %{post_content: %{id: _} = _content} = object}), do: object # no need to load Post object
+  def object(%{object: %Pointers.Pointer{id: _} = object}), do: load_object(object) # get other pointable objects (only as fallback, should normally already be preloaded)
   def object(%{object: %{id: _} = object}), do: object # any other preloaded object
-  def object(%{object_id: id}), do: load_object(id) # any non-preloaded pointable object
+  def object(%{object_id: id}), do: load_object(id) # last fallback, load any non-preloaded pointable object
   def object(activity), do: activity
 
 

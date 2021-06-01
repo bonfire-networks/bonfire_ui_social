@@ -40,8 +40,8 @@ defmodule Bonfire.UI.Social.FeedLive do
     # # |> Enum.map(&[activity: [object: &1]])
     # |> IO.inspect(label: "preload feed")
 
-
-    Bonfire.Common.Pointers.Preload.maybe_preload_pointers([activity: [:object]], feed)
+    feed
+    |> Bonfire.Common.Pointers.Preload.maybe_preload_nested_pointers([activity: [:object]])
     # |> repo().maybe_preload(preloads)
     |> preload_objects()
     # |> IO.inspect(label: "feed with extra preloads")

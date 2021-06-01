@@ -43,7 +43,7 @@ defmodule Bonfire.UI.Social.ThreadLive do
 
       current_user = e(assigns, :current_user, nil)
       activity = e(assigns, :activity, nil)
-      object = e(assigns, :object, e(activity, :object_post_content, e(activity, :object)))
+      object = e(assigns, :object, e(activity, :object))
       # IO.inspect(object, label: "thread_object:")
 
       with %{entries: replies, metadata: page_info} <- Bonfire.Social.Threads.list_replies(thread_id, current_user, e(assigns, :after, nil), @thread_max_depth) do
