@@ -7,7 +7,7 @@
 
   <%= if e(assigns, :showing_within_thread, false) != true do %>
   <svg
-    class="<%= if e(@object, :id, "") in e(assigns, :boosted, []) || e(@activity, :my_boost, :id, nil), do: "text-pink-600 group-hover:text-pink-700", else: "text-gray-500 group-hover:text-pink-700" %>  w-5 h-5 mr-2"
+    class="<%= if e(@object, :id, "") in e(assigns, :boosted, []) || e(@activity, :my_boost, :id, nil), do: "text-pink-600 group-hover:text-pink-700", else: "dark:text-gray-400 text-gray-500 group-hover:text-pink-700" %>  w-5 h-5 mr-2"
     stroke="currentColor"
     fill="none"
     viewBox="0 0 24 24"
@@ -15,7 +15,7 @@
       <polyline points="17 1 21 5 17 9"></polyline><path d="M3 11V9a4 4 0 0 1 4-4h14"></path><polyline points="7 23 3 19 7 15"></polyline><path d="M21 13v2a4 4 0 0 1-4 4H3"></path></svg>
   <% end %>
 
-  <span class="<%= if e(@object, :id, "") in e(assigns, :boosted, []) || e(@activity, :my_boost, :id, nil), do: "text-pink-600 group-hover:text-pink-700", else: "text-gray-500 group-hover:text-pink-700" %> font-normal text-xs">
+  <span class="<%= if e(@object, :id, "") in e(assigns, :boosted, []) || e(@activity, :my_boost, :id, nil), do: "text-pink-600 group-hover:text-pink-700", else: "dark:text-gray-400 text-gray-500 group-hover:text-pink-700" %> font-normal text-xs">
   <%= if e(@object, :id, "") in e(assigns, :boosted, []) || e(@activity, :my_boost, :id, nil), do: "Boosted", else: "Boost" %>
   <% if  e(@activity, :boost_count, :booster_count, 0) > 0 do %> (<%= e(@activity, :boost_count, :booster_count, 0) %>) <% end %> </span>
 </button>
@@ -36,8 +36,8 @@
   aria-haspopup="true"
   x-bind:aria-expanded="more"
   class="relative flex items-center rounded cursor-pointer py-1text-left group">
-  <svg aria-hidden="true" class="w-4 h-4 mr-1 text-gray-500 group-hover:text-pink-700" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path d="M6 10a2 2 0 11-4 0 2 2 0 014 0zM12 10a2 2 0 11-4 0 2 2 0 014 0zM16 12a2 2 0 100-4 2 2 0 000 4z"></path></svg>
-  <span id="more-menu" class="text-xs font-normal text-gray-500 group-hover:text-pink-700">More</span>
+  <svg aria-hidden="true" class="w-4 h-4 mr-1 text-gray-500 dark:text-gray-400 group-hover:text-pink-700" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path d="M6 10a2 2 0 11-4 0 2 2 0 014 0zM12 10a2 2 0 11-4 0 2 2 0 014 0zM16 12a2 2 0 100-4 2 2 0 000 4z"></path></svg>
+  <span id="more-menu" class="text-xs font-normal text-gray-500 dark:text-gray-400 group-hover:text-pink-700">More</span>
   <div
     x-description="Dropdown menu, show/hide based on menu state."
     x-show="more"

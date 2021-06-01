@@ -9,9 +9,9 @@
     open_profile_mobile_menu: false
   }"
   @close-popover-group.window="onClosePopoverGroup"
-  class={{"sticky top-0 z-10 bg-white border-b"}}>
+  class={{"sticky top-0 z-10 bg-white dark:bg-gray-700 dark:border-gray-600 border-b"}}>
   <div class="flex items-center p-3">
-    <div class="relative flex items-center px-4 mr-3 border-r border-gray-200 lg:hidden">
+    <div class="relative flex items-center px-4 mr-3 border-r border-gray-200 dark:border-gray-600 lg:hidden">
       <button
         type="button"
         x-state:on="Item active"
@@ -31,11 +31,11 @@
       <a
         aria-label="Navigate to the previous page"
         href="javascript:window.history.back()">
-        <span class="flex items-center w-8 h-8 rounded-full place-content-center bg-blueGray-200 hover:bg-blueGray-300">
-          <svg class="w-4 h-4 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path></svg>
+        <span class="flex items-center w-8 h-8 rounded-full place-content-center bg-blueGray-200 dark:bg-gray-600 hover:bg-blueGray-300">
+          <svg class="w-4 h-4 text-gray-600 dark:text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path></svg>
         </span>
       </a>
-      <h1 class="text-xs text-gray-800 uppercase font-regular">{{ @page_title }}</h1>
+      <h1 class="text-xs text-gray-800 uppercase dark:text-gray-100 font-regular">{{ @page_title }}</h1>
     </div>
     <div class="flex items-center space-x-3 lg:hidden">
       <button

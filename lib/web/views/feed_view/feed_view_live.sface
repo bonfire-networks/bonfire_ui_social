@@ -1,0 +1,18 @@
+<main
+  class="lg:flex">
+  <section class="min-h-screen bg-white shadow w-center">
+   <Bonfire.UI.Social.PageHeaderLive 
+      :if={{e(assigns, :current_user, nil) != nil}}
+      page_title={{@page_title}}
+      page={{@page}}
+      smart_input={{@smart_input}}
+    />
+    <div class="mx-4 bg-white border-t-8 border-gray-100 lg:mx-0">
+      {{ live_component(@socket, Bonfire.UI.Social.FeedLive, assigns_clean(assigns)) }}
+    </div>
+  </section>
+  <aside class="flex-1 hidden mt-2 lg:flex md:flex-shrink-0">
+    <div class="w-full h-full px-1">
+    </div>
+  </aside>
+</main>

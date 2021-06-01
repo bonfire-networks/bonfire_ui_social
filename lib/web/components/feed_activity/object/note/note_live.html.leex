@@ -13,15 +13,15 @@
         <button
           @click="{content_open = true}"
           x-show="content_open == false"
-          class="text-sm font-semibold text-gray-800 hover:underline flex text-left items-center">
+          class="flex items-center text-sm font-semibold text-left text-gray-800 dark:text-gray-100 hover:underline">
           <%= rich e(@object, :name, "Title") %> (Read more)
         <button
           @click="{content_open = false}"
           x-show="content_open"
-          class="text-sm font-semibold text-gray-800 hover:underline flex text-left items-center">
+          class="flex items-center text-sm font-semibold text-left text-gray-800 dark:text-gray-100 hover:underline">
           <%= rich e(@object, :name, "Title") %> (Read less)
         </button>
-        <div class="prose prose-sm max-w-prose font-light">
+        <div class="font-light prose-sm prose max-w-prose dark:prose-light">
           <%= rich e(@object, :summary, "") %>
         </div>
         <div
@@ -32,7 +32,7 @@
           x-transition:leave="transition ease-in duration-75"
           x-transition:leave-start="transform opacity-100 scale-100"
           x-transition:leave-end="transform opacity-0 scale-95"
-          class="prose prose-sm max-w-prose">
+          class="prose-sm prose dark:prose-light max-w-prose">
           <%= rich e(@object, :html_body, "") %>
         </div>
 
@@ -40,14 +40,14 @@
 
         <%= if e(@object, :name, nil) do %>
           <%# = live_redirect to: @permalink do %>
-            <h2 class="text-gray-800 text-3xl font-bold mb-4"><%= rich e(@object, :name, "Title") %></h2>
+            <h2 class="mb-4 text-3xl font-bold text-gray-800 dark:text-gray-100"><%= rich e(@object, :name, "Title") %></h2>
           <%# end %>
         <% end %>
 
         <%= if e(@object, :summary, nil) do %>
-            <h3 class="uppercase text-gray-600 tracking-wider text-xs">Summary</h3>
+            <h3 class="text-xs tracking-wider text-gray-600 uppercase dark:text-gray-300">Summary</h3>
           <%= live_redirect to: @permalink do %>
-            <div class="mb-2 prose prose-sm max-w-prose text-gray-700"><%= rich e(@object, :summary, "") %></div>
+            <div class="mb-2 prose-sm prose text-gray-700 dark:text-gray-200 dark:prose-light max-w-prose"><%= rich e(@object, :summary, "") %></div>
           <% end %>
         <% end %>
 

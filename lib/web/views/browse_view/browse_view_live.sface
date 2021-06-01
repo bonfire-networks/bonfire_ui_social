@@ -3,14 +3,14 @@
   x-cloak
   x-data="{open_right_panel: false}"
   >
-  <section class="min-h-screen bg-white shadow w-center">
+  <section class="min-h-screen bg-white shadow dark:bg-gray-700 w-center">
    <Bonfire.UI.Social.PageHeaderLive 
       :if={{e(assigns, :current_user, nil) != nil}}
       page_title={{@page_title}}
       page={{@page}}
       smart_input={{@smart_input}}
     />
-    <div class="mx-4 bg-white border-t-8 border-gray-100 lg:mx-0">
+    <div class="mx-4 bg-white border-t-8 border-gray-100 dark:border-gray-600 dark:bg-gray-700 lg:mx-0">
      <Bonfire.UI.Social.BrowseTabsLive selected_tab={{@selected_tab}} user={{@user}} />
       {{ live_component(@socket, Bonfire.UI.Social.FeedLive, assigns_clean(assigns)) }}
     </div>
