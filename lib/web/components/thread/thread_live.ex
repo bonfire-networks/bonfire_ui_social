@@ -8,28 +8,32 @@ defmodule Bonfire.UI.Social.ThreadLive do
 
   @thread_max_depth 3 # TODO: put in config
 
-  def update(%{__context__: %{replies: replies}} = assigns, socket) when is_list(replies) and length(replies)>0  do
-    update(Map.merge(assigns, %{replies: replies}), socket)
-  end
+  # def update(%{replies: replies, threaded_replies: threaded_replies} = assigns, socket) when is_list(replies) and length(replies)>0 and is_list(threaded_replies) and length(threaded_replies)>0 do
+  #   IO.inspect("preloaded replies")
+  #   {:ok, assign(socket, assigns |> assigns_merge(
+  #     reply_to_thread_id: e(assigns, :activity, :replied, :thread_id, nil) || e(assigns, :thread_id, nil), # TODO: change for thread forking?
+  #     thread_max_depth: @thread_max_depth
+  #   )) }
+  # end
 
-  def update(%{replies: replies, threaded_replies: threaded_replies} = assigns, socket) when is_list(replies) and length(replies)>0 and is_list(threaded_replies) and length(threaded_replies)>0 do
-    IO.inspect("preloaded replies")
-    {:ok, assign(socket, assigns |> assigns_merge(
-      reply_to_thread_id: e(assigns, :activity, :replied, :thread_id, nil) || e(assigns, :thread_id, nil), # TODO: change for thread forking?
-      thread_max_depth: @thread_max_depth
-    )) }
-  end
-
-  def update(%{replies: replies} = assigns, %{assigns: %{replies: previous_replies}} = socket) when is_list(replies) and length(replies)>0 do
-    IO.inspect("add thread reply")
+  def update(%{post_new_reply: post_new_reply} = assigns, socket) when is_map(post_new_reply) do
+    IO.inspect("adding new thread reply")
     # IO.inspect(merge_reply: previous_replies)
-    replies = e(socket, assigns, :replies, []) ++ previous_replies
+
+    post_new_reply = post_new_reply |> Map.put(:path, e(post_new_reply, :activity, :object, :replied, :path, []))
+    IO.inspect(post_new_reply: post_new_reply)
+    replies = [post_new_reply] ++ e(socket, :assigns, :replies, [])
     {:ok, assign(socket, assigns |> assigns_merge(
       replies: replies,
       threaded_replies: Bonfire.Social.Threads.arrange_replies_tree(replies),
       reply_to_thread_id: e(assigns, :activity, :replied, :thread_id, nil) || e(assigns, :thread_id, nil), # TODO: change for thread forking?
       thread_max_depth: @thread_max_depth
     )) }
+  end
+
+  def update(%{__context__: %{post_new_reply: post_new_reply}} = assigns, socket) do
+    # IO.inspect(context_reply: post_new_reply)
+    update(Map.merge(assigns, %{post_new_reply: post_new_reply}), socket)
   end
 
   def update(assigns, socket) do
@@ -50,7 +54,10 @@ defmodule Bonfire.UI.Social.ThreadLive do
       object = e(assigns, :object, e(activity, :object))
       # IO.inspect(object, label: "thread_object:")
 
-      with %{entries: replies, metadata: page_info} <- Bonfire.Social.Threads.list_replies(thread_id, current_user, e(assigns, :after, nil), @thread_max_depth) do
+      with %{entries: replies, metadata: page_info} <- Bonfire.Social.Threads.list_replies(thread_id, socket, e(assigns, :after, nil), @thread_max_depth) do
+
+        # IO.inspect(replies, label: "replies:")
+
         threaded_replies = if is_list(replies) and length(replies)>0, do: Bonfire.Social.Threads.arrange_replies_tree(replies), else: []
 
         # IO.inspect(threaded_replies, label: "threaded_replies:")

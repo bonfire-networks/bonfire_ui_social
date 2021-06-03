@@ -1,5 +1,3 @@
-<Context put={{ current_user: @current_user, to_circles: e(assigns, :to_circles, []) }}>
-
 <div
   role="banner"
   x-cloak
@@ -65,7 +63,7 @@
     </div>
   </div>
   <Bonfire.UI.Social.SmartInputLive
-    :if={{@current_user != nil and @smart_input == true and Bonfire.Common.Config.get([:ui, :smart_input, :post], []) == true}}
+    :if={{e(assigns, :current_user, nil) && @smart_input !=false && Bonfire.Common.Config.get([:ui, :smart_input, :post], true)}}
     create_activity_type={{e(assigns, :create_activity_type, nil)}}
      />
   <!-- <div
@@ -88,5 +86,3 @@
     </div>
   </div> -->
 </div>
-
-</Context>

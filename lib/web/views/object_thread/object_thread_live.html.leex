@@ -5,7 +5,7 @@
 
     <div class="mx-4 bg-white lg:mx-0">
       <div class="flex flex-col min-h-screen">
-        <%= if e(@activity, :replied, :thread_id, nil) && e(@activity, :replied, :thread_id, nil) != e(@activity, :replied, :reply_to_id, nil) do %>
+        <%= if e(@activity, :replied, :thread_id, nil) && e(@activity, :replied, :thread_id, nil) != e(@activity, :replied, :reply_to_id, nil) && e(@activity, :replied, :thread_post_content, nil) do %>
           <div class="p-4 m-3 rounded-md bg-blue-50">
             <div class="flex">
               <div class="flex-1 text-center md:flex md:justify-between">
@@ -29,7 +29,7 @@
           )) %>
 
         <%= live_component(@socket, Bonfire.UI.Social.ThreadLive,
-          assigns_clean(assigns)) %>
+          assigns_merge(assigns, id: @thread_id)) %>
 
       </div>
     </div>

@@ -40,7 +40,7 @@ defmodule  Bonfire.UI.Social.BrowseViewLive do
     {:ok, socket
       |> assigns_merge(assigns,
         feed: e(feed, :entries, []),
-        page_info: e(feed, :metadata, [])
+        page_info: e(feed, :metadata, []) |> IO.inspect
     )}
   end
 end

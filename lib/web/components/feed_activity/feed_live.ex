@@ -3,14 +3,40 @@ defmodule Bonfire.UI.Social.FeedLive do
   alias Bonfire.UI.Social.ActivityLive
   import Bonfire.UI.Social.Integration
 
-  def update(%{feed: feed} = assigns, socket) when is_list(feed) do
+  def mount(socket) do
+    {:ok, socket
+    |> assign(
+      feed: [],
+      feed_future: []
+    ),
+    temporary_assigns: [
+      feed: [],
+      feed_future: []
+    ]}
+  end
+
+
+  def update(%{feed_new_activity: feed_new_activity} = assigns, socket) when is_map(feed_new_activity) do # feed provided by parent component/view
 
     {:ok, socket
     |> assigns_merge(assigns,
-      feed: preloads(feed)
+      feed_future: [feed_new_activity] # feed is a temporary assign, so only add new
       ) }
   end
 
+  def update(%{__context__: %{feed_new_activity: feed_new_activity}} = assigns, socket) do # adding new feed item
+    # IO.inspect(context_reply: feed_new_activity)
+    update(Map.merge(assigns, %{feed_new_activity: feed_new_activity}), socket)
+  end
+
+  def update(%{feed: feed} = assigns, socket) when is_list(feed) do # feed provided by parent component/view
+
+    {:ok, socket
+    |> assigns_merge(assigns,
+      feed: preloads(feed),
+      page_info: e(assigns, :page_info, e(socket, :assigns, :page_info, nil))
+      ) }
+  end
 
   def update(assigns, socket) do
     IO.inspect("default to instance feed as none other was specified")
@@ -22,11 +48,11 @@ defmodule Bonfire.UI.Social.FeedLive do
     title = e(assigns, :feed_title, "Recent activity on this instance")
 
     {:ok, socket
-    |> assigns_merge( assigns,
+    |> assigns_merge(assigns,
       feed_title: title,
       feed_id: feed_id,
       feed: preloads(e(feed, :entries, [])),
-      page_info: e(feed, :metadata, [])
+      page_info: e(feed, :metadata, []) #|> IO.inspect(label)
     )}
   end
 
