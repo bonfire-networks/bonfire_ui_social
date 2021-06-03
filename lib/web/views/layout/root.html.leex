@@ -9,12 +9,7 @@
     <meta name="author" content="Bonfire">
     <%= csrf_meta_tag() %>
     <%= live_title_tag assigns[:page_title] || "Home", suffix: " · Bonfire" %>
-    <link phx-track-static rel="stylesheet" href="<%= Routes.static_path(@conn, "/css/app.css") %>"/>
-    <%= if @current_account do %>
-      <script defer phx-track-static type="text/javascript" src="<%= Routes.static_path(@conn, "/js/live.js") %>"></script>
-    <% else %>
-      <script defer phx-track-static type="text/javascript" src="<%= Routes.static_path(@conn, "/js/non_live.js") %>"></script>
-    <% end %>
+    <%= raw Bonfire.Web.Endpoint.include_assets(@conn)%>
   </head>
   <body id="layout-root" class="bg-blueGray-50 dark:bg-gray-800">
     <style>

@@ -8,6 +8,10 @@ defmodule Bonfire.UI.Social.ThreadLive do
 
   @thread_max_depth 3 # TODO: put in config
 
+  def update(%{__context__: %{replies: replies}} = assigns, socket) when is_list(replies) and length(replies)>0  do
+    update(Map.merge(assigns, %{replies: replies}), socket)
+  end
+
   def update(%{replies: replies, threaded_replies: threaded_replies} = assigns, socket) when is_list(replies) and length(replies)>0 and is_list(threaded_replies) and length(threaded_replies)>0 do
     IO.inspect("preloaded replies")
     {:ok, assign(socket, assigns |> assigns_merge(
