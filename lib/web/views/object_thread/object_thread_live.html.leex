@@ -38,7 +38,7 @@
   <aside class="flex-1 hidden mx-3 mt-4 rounded-lg lg:flex md:flex-shrink-0">
       <div class="w-full h-full px-4">
 
-        <%= if @current_user do %>
+        <%= if e(assigns, :current_user, nil) do %>
         <div class="pb-5 border-b">
           <span class="block mb-2 text-xs tracking-wide text-gray-600 uppercase">Notifications</span>
           <div class="flex flex-col space-y-3">

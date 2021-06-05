@@ -26,7 +26,7 @@
         <% end %>
     <% end %>
 
-    <%= live_component(@socket, Bonfire.UI.Social.Activity.MoreActionsLive, assigns) %>
+    <%= live_component(@socket, Bonfire.UI.Social.Activity.MoreActionsLive, assigns_clean(assigns)) %>
 </div>
 
 <% else %>
@@ -53,6 +53,6 @@
         <% end %>
     <% end %>
 
-    <%= live_component(@socket, Bonfire.UI.Social.Activity.MoreActionsLive, assigns) %>
+    <%= live_component(@socket, Bonfire.UI.Social.Activity.MoreActionsLive, assigns_clean(assigns)) %>
     </div>
 <% end %>

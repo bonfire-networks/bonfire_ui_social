@@ -1,4 +1,4 @@
-<Context put={{ current_user: @current_user }}>
+
 <div
     x-show="open_sidebar"
     x-transition:enter="duration-200 ease-out"
@@ -19,7 +19,7 @@
             <div class="relative flex items-center flex-1">
               <div class="w-full relative">
                 <div class="flex items-center justify-between">
-                  <img :if={{@current_user}} class="object-cover -block w-12 h-12 rounded-full" src={{ avatar_url(@current_user)}} alt="current user profile image">
+                  <img :if={{e(assigns, :current_user, nil)}} class="object-cover -block w-12 h-12 rounded-full" src={{ avatar_url(e(assigns, :current_user, nil))}} alt="current user profile image">
                   <button
                     type="button"
                     class="-mr-2 bg-white rounded-md p-2 inline-flex items-center justify-center text-gray-400 hover:text-gray-500 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-indigo-500"
@@ -31,9 +31,9 @@
                   </button>
                 </div>
                 <div class="flex items-center">
-                  <div :if={{@current_user}} class="flex-1 text-left mt-2">
-                    <h3 class="text-base font-semibold text-gray-700">{{e(@current_user, :profile, :name, "Anonymous")}}</h3>
-                    <span class="block text-sm text-gray-500 font-regular">{{e(@current_user, :character, :username, "anon")}}</span>
+                  <div :if={{e(assigns, :current_user, nil)}} class="flex-1 text-left mt-2">
+                    <h3 class="text-base font-semibold text-gray-700">{{e(assigns, :current_user, :profile, :name, "Anonymous")}}</h3>
+                    <span class="block text-sm text-gray-500 font-regular">{{e(assigns, :current_user, :character, :username, "anon")}}</span>
                   </div>
                   <button
                     type="button"
@@ -64,7 +64,7 @@
                   @socket,
                   component,
                   assigns_merge(component_assigns, [
-                  current_user: @current_user,
+
                   page: @page
                 ])) }}
 
@@ -75,4 +75,3 @@
       </div>
     </div>
 </div>
-</Context>

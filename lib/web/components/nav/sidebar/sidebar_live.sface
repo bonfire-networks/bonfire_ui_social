@@ -1,4 +1,4 @@
-<Context put={{ current_user: @current_user }}>
+
 <nav
   role="navigation"
   class="flex-col hidden lg:flex md:flex-shrink-0 w-72">
@@ -7,7 +7,7 @@
     <!-- Sidebar Search -->
     <div class="mt-2 mb-4">
       <Bonfire.UI.Social.SearchLive/>
-      <Bonfire.UI.Social.SidebarUserLive />
+      <Bonfire.UI.Social.SidebarUserLive current_user={{e(assigns, :current_user, nil)}} />
     </div>
 
     <div
@@ -17,12 +17,11 @@
           @socket,
           component,
           assigns_merge(component_assigns, [
-          current_user: @current_user,
-          page: @page
+          page: @page,
+          current_user: e(assigns, :current_user, nil)
         ])) }}
 
       </div>
 
   </div>
 </nav>
-</Context>

@@ -24,7 +24,7 @@
         </svg>
       </button>
     </div>
-    <Bonfire.UI.Social.SidebarMobileLive page={{@page}} current_user={{@current_user}} />
+    <Bonfire.UI.Social.SidebarMobileLive page={{@page}}  />
     <div class="flex items-center flex-1 space-x-2 text-left">
       <a
         aria-label="Navigate to the previous page"
@@ -64,7 +64,6 @@
   </div>
   <Bonfire.UI.Social.SmartInputLive
     :if={{e(assigns, :current_user, nil) && @smart_input !=false && Bonfire.Common.Config.get([:ui, :smart_input, :post], true)}}
-    create_activity_type={{e(assigns, :create_activity_type, nil)}}
      />
   <!-- <div
     x-show="open_search"
@@ -81,7 +80,7 @@
     >
     <div class="bg-white rounded-b-lg">
       <div class="flex items-center p-3">
-        <%= live_component(@socket, Bonfire.UI.Social.SearchLive, assigns) %>
+        <%= live_component(@socket, Bonfire.UI.Social.SearchLive, assigns_clean(assigns)) %>
       </div>
     </div>
   </div> -->

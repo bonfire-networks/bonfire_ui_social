@@ -5,10 +5,14 @@ defmodule Bonfire.UI.Social.SetBoundariesLive do
   prop label, :string, default: ""
   prop default_circles, :list, default: []
   prop to_circles, :list, default: []
+  prop hide_selector, :boolean, default: false
 
-  def update(assigns, socket), do: {:ok, updated(assigns, socket) |> self_subscribe([:to_circles])}
+  def update(assigns, socket), do: {:ok, updated(assigns, socket)
+  # |> self_subscribe([:to_circles])
+  }
 
   defp updated(%{to_circles: to_circles} = assigns, socket) when is_list(to_circles) and length(to_circles)>0, do: set_label(assigns, socket)
+  defp updated(%{__context__: %{to_circles: to_circles}} = assigns, socket) when is_list(to_circles) and length(to_circles)>0, do: set_label(assigns, socket)
 
   defp updated(assigns, socket) do
 

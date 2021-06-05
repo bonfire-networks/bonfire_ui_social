@@ -1,4 +1,4 @@
-<Context get={{ current_user: current_user }}>
+
   <div class="flex flex-col space-y-1">
     <LivePatch to="/browse" class={{"rounded-lg w-full flex items-center p-1.5 text-sm font-regular transition duration-150 ease-in-out group hover:bg-blueGray-200 focus:outline-none dark:hover:bg-gray-700 focus:text-gray-900 focus:bg-gray-50 text-gray-600 dark:text-gray-200", "bg-blueGray-200 text-gray-800": @page == "browse"}}>
       <span class="flex items-center w-8 h-8 mr-3 rounded-full place-content-center bg-blueGray-200 hover:bg-blueGray-300">
@@ -14,7 +14,7 @@
       <span class="text-sm font-semibold capitalize" id="navigation_browse">browse</span>
     </LivePatch>
 
-    <LivePatch :if={{@current_user}} to={{path(:notifications)}} class={{"rounded-lg w-full flex items-center p-1.5 text-sm font-regular transition duration-150 ease-in-out group hover:bg-blueGray-200 focus:outline-none dark:hover:bg-gray-700 focus:text-gray-900 focus:bg-gray-50 text-gray-600 dark:text-gray-200", "bg-blueGray-200 text-gray-800": @page == "notifications"}}>
+    <LivePatch :if={{e(assigns, :current_user, nil)}} to={{path(:notifications)}} class={{"rounded-lg w-full flex items-center p-1.5 text-sm font-regular transition duration-150 ease-in-out group hover:bg-blueGray-200 focus:outline-none dark:hover:bg-gray-700 focus:text-gray-900 focus:bg-gray-50 text-gray-600 dark:text-gray-200", "bg-blueGray-200 text-gray-800": @page == "notifications"}}>
       <span class="flex items-center w-8 h-8 mr-3 rounded-full place-content-center bg-blueGray-200 hover:bg-blueGray-300">
       <svg
         aria-labelledby="navigation_notification"
@@ -25,7 +25,7 @@
       <span class="text-sm font-semibold capitalize" id="navigation_notification">Notification</span>
     </LivePatch>
 
-    <LivePatch :if={{@current_user}} to={{path(@current_user) <> path(:private)}} class={{"rounded-lg w-full flex items-center p-1.5 text-sm font-regular transition duration-150 ease-in-out group hover:bg-blueGray-200 focus:outline-none dark:hover:bg-gray-700 focus:text-gray-900 focus:bg-gray-50 text-gray-600 dark:text-gray-200", "bg-blueGray-200 text-gray-800": @page == "private"}}>
+    <LivePatch :if={{e(assigns, :current_user, nil)}} to={{path(e(assigns, :current_user, nil)) <> path(:private)}} class={{"rounded-lg w-full flex items-center p-1.5 text-sm font-regular transition duration-150 ease-in-out group hover:bg-blueGray-200 focus:outline-none dark:hover:bg-gray-700 focus:text-gray-900 focus:bg-gray-50 text-gray-600 dark:text-gray-200", "bg-blueGray-200 text-gray-800": @page == "private"}}>
       <span class="flex items-center w-8 h-8 mr-3 rounded-full place-content-center bg-blueGray-200 hover:bg-blueGray-300">
       <svg
         aria-labelledby="navigation_private"
@@ -36,7 +36,7 @@
       <span class="text-sm font-semibold capitalize" id="navigation_browse">Direct Messages</span>
     </LivePatch>
 
-    <LivePatch :if={{@current_user}} to={{path(@current_user)}} class={{"rounded-lg w-full flex items-center p-1.5 text-sm font-regular transition duration-150 ease-in-out group hover:bg-blueGray-200 focus:outline-none dark:hover:bg-gray-700 focus:text-gray-900 focus:bg-gray-50 text-gray-600 dark:text-gray-200", "bg-blueGray-200 text-gray-800": @page == "profile"}}>
+    <LivePatch :if={{e(assigns, :current_user, nil)}} to={{path(e(assigns, :current_user, nil))}} class={{"rounded-lg w-full flex items-center p-1.5 text-sm font-regular transition duration-150 ease-in-out group hover:bg-blueGray-200 focus:outline-none dark:hover:bg-gray-700 focus:text-gray-900 focus:bg-gray-50 text-gray-600 dark:text-gray-200", "bg-blueGray-200 text-gray-800": @page == "profile"}}>
       <span class="flex items-center w-8 h-8 mr-3 rounded-full place-content-center bg-blueGray-200 hover:bg-blueGray-300">
       <svg
         aria-labelledby="navigation_profile"
@@ -49,4 +49,3 @@
       <span class="text-sm font-semibold capitalize" id="navigation_profile">profile</span>
     </LivePatch>
   </div>
-</Context>

@@ -14,10 +14,13 @@ defmodule Bonfire.UI.Social.ActivityLive do
 
     verb = e(activity, :verb, :verb, "create") |> verb_maybe_modify(activity)
 
-    components = component_activity_subject(verb, activity, assigns)
-    ++ component_maybe_reply_to(verb, activity, e(assigns, :showing_within_thread, nil))
-    ++ component_object(verb, activity)
-    ++ component_actions(verb, activity, assigns)
+    components = (
+      component_activity_subject(verb, activity, assigns)
+      ++ component_maybe_reply_to(verb, activity, e(assigns, :showing_within_thread, nil))
+      ++ component_object(verb, activity)
+      ++ component_actions(verb, activity, assigns)
+    ) |> Enum.filter(& &1)
+    # |> IO.inspect(label: "activity components")
 
     verb_display = verb_display(verb)
     created_verb_display = "create" |> verb_maybe_modify(activity) |> verb_display()
@@ -29,7 +32,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
         object: activity.object,
         date_ago: date_from_now(activity.object),
         activity: activity |> Map.drop([:object]),
-        activity_object_components: components |> Enum.filter(& &1),
+        activity_object_components: components,
         verb: verb,
         verb_display: verb_display,
         created_verb_display: created_verb_display,
@@ -64,10 +67,15 @@ defmodule Bonfire.UI.Social.ActivityLive do
   def component_activity_subject("create"=verb, activity, _), do: [component_activity_maybe_creator(activity)]
   def component_activity_subject(_, _, _), do: [Bonfire.UI.Social.Activity.SubjectLive]
 
-  def component_activity_maybe_creator(%{object_created: %{creator_profile: %{id: _}} = object_created}), do: {Bonfire.UI.Social.Activity.CreatorLive, %{object_created: object_created}}
-  def component_activity_maybe_creator(%{object_created: %{creator_character: %{id: _}} = object_created}), do: {Bonfire.UI.Social.Activity.CreatorLive, %{object_created: object_created}}
-  def component_activity_maybe_creator(%{subject_character: _, subject_profile: _}), do: Bonfire.UI.Social.Activity.SubjectLive
-  def component_activity_maybe_creator(_), do: nil
+  def component_activity_maybe_creator(%{object_created: %{
+    creator_profile: %{id: _} = profile,
+    creator_character: %{id: _} = character
+    } = object_created}), do: {Bonfire.UI.Social.Activity.CreatorLive, %{profile: profile, character: character}}
+  # def component_activity_maybe_creator(%{subject_character: %{id: _} = character, subject_profile: %{id: _} = profile}), do: {Bonfire.UI.Social.Activity.CreatorLive, %{profile: profile, character: character}} #|> IO.inspect
+  def component_activity_maybe_creator(activity) do
+    IO.inspect(no_creation: activity)
+    nil
+  end
 
   def component_maybe_reply_to(verb, activity, showing_within_thread \\ nil)
 
@@ -153,16 +161,17 @@ defmodule Bonfire.UI.Social.ActivityLive do
   end
 
   def component_object(_, %{object: %Bonfire.Data.Social.Post{}}), do: [Bonfire.UI.Social.Activity.NoteLive]
+  def component_object(_, %{object: %Bonfire.Data.Social.Message{}}), do: [Bonfire.UI.Social.Activity.NoteLive]
   def component_object(_, %{object: %{post_content: %Bonfire.Data.Social.PostContent{}}}), do: [Bonfire.UI.Social.Activity.NoteLive]
   def component_object(_, %{object: %Bonfire.Data.Social.PostContent{}}), do: [Bonfire.UI.Social.Activity.NoteLive]
   def component_object(_, %{object: %Bonfire.Data.Identity.User{}}), do: [Bonfire.UI.Social.Activity.CharacterLive]
-  def component_object(_, %{object: %{profile: _}}), do: [Bonfire.UI.Social.Activity.CharacterLive]
-  def component_object(_, %{object: %{character: _}}), do: [Bonfire.UI.Social.Activity.CharacterLive]
+  # def component_object(_, %{object: %{profile: _}}), do: [Bonfire.UI.Social.Activity.CharacterLive]
+  # def component_object(_, %{object: %{character: _}}), do: [Bonfire.UI.Social.Activity.CharacterLive]
 
   def component_object(_, %{object: %{} = object}) do
     case Bonfire.Common.Types.object_type(object) do
       type ->
-        object_type(type)
+        component_for_object_type(type)
 
       _ ->
         IO.inspect(component_object_type_unrecognised: object)
@@ -175,11 +184,11 @@ defmodule Bonfire.UI.Social.ActivityLive do
     [Bonfire.UI.Social.Activity.UnknownLive]
   end
 
-  def object_type(type) when type in [ValueFlows.EconomicEvent, "EconomicEvent", "2CTVA10BSERVEDF10WS0FVA1VE"], do: [Bonfire.UI.Social.Activity.EconomicEventLive]
-  def object_type(type) when type in [ValueFlows.EconomicResource, "EconomicResource"], do: [Bonfire.UI.Social.Activity.EconomicResourceLive]
-  def object_type(type) when type in [ValueFlows.Planning.Intent, "Intent", "1NTENTC0V1DBEAN0FFER0RNEED"], do: [Bonfire.UI.Social.Activity.IntentTaskLive] # TODO: choose between Task and other Intent types
-  def object_type(type) when type in [ValueFlows.Process, "Process"], do: [Bonfire.UI.Social.Activity.ProcessListLive] # TODO: choose between Task and other Intent types
-  def object_type(type) do
+  def component_for_object_type(type) when type in [ValueFlows.EconomicEvent], do: [Bonfire.UI.Social.Activity.EconomicEventLive]
+  def component_for_object_type(type) when type in [ValueFlows.EconomicResource], do: [Bonfire.UI.Social.Activity.EconomicResourceLive]
+  def component_for_object_type(type) when type in [ValueFlows.Planning.Intent], do: [Bonfire.UI.Social.Activity.IntentTaskLive] # TODO: choose between Task and other Intent types
+  def component_for_object_type(type) when type in [ValueFlows.Process], do: [Bonfire.UI.Social.Activity.ProcessListLive] # TODO: choose between Task and other Intent types
+  def component_for_object_type(type) do
     IO.inspect(component_object_type_unknown: type)
     [Bonfire.UI.Social.Activity.UnknownLive]
   end

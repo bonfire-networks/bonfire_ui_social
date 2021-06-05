@@ -8,7 +8,9 @@
     </div>
     <div class="flex items-center">
       <svg class="w-4 h-4 mr-1 text-gray-500 dark:text-gray-300" fill="currentColor" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" x="0px" y="0px" viewBox="0 0 100 80" enable-background="new 0 0 100 100" xml:space="preserve"><path d="M100,39.297L65.616,10.645v17.645c0,0-0.004,0-0.012,0c-0.771,0-42.682,0.175-42.682,38.145  c0,0,13.02-17.346,33.798-17.346c2.826,0,5.794,0.32,8.896,1.05V67.95L100,39.297z"></path></svg>
-      <span class="text-xs text-gray-500 dark:text-gray-300"><%= live_redirect to: @permalink do %><%=@date_ago%><% end %></span>
+      <span class="text-xs text-gray-500 dark:text-gray-300">
+        <span class="capitalize"><%=e(assigns, :verb_display, "") %></span>
+        <%= live_redirect to: @permalink do %><%=@date_ago%><% end %></span>
     </div>
   </div>
 </div>

@@ -1,5 +1,5 @@
 <div class="flex m-3 mb-3 md:m-0">
   <div class="lg:w-96 md:w-2/3 w-full mt-16 mx-auto">
-    <%= live_component(@socket, Bonfire.UI.Social.LoginLive, assigns) %>
+    <%= live_component(@socket, Bonfire.UI.Social.LoginLive, assigns_clean(assigns)) %>
   </div>
 </div>

@@ -1,9 +1,8 @@
 <main
   class="lg:flex">
-  <section class={{"min-h-screen w-center bg-white dark:bg-gray-700 shadow", "mx-auto rounded-lg": e(assigns, :current_user, nil) == nil }}>
+  <section class={{"min-h-screen w-center bg-white dark:bg-gray-700 shadow", "mx-auto rounded-lg": !e(assigns, :current_user, nil) }}>
     <Bonfire.UI.Social.PageHeaderLive
-      :if={{e(assigns, :current_user, nil) != nil}}
-      current_user={{@current_user}}
+      :if={{e(assigns, :current_user, :id, nil)}}
       page_title={{@page_title}}
       page={{@page}}
       smart_input={{@smart_input}}
@@ -12,7 +11,7 @@
   </section>
 
   <aside
-    :if={{e(assigns, :current_user, nil) != nil}}
+    :if={{e(assigns, :current_user, :id, nil)}}
     class="flex-1 hidden mt-2 lg:flex md:flex-shrink-0">
     <div class="w-full h-full px-3">
       <div :for={{ component <- Bonfire.Common.Config.get([:ui, :profile, :widgets], []) }}>
@@ -20,7 +19,7 @@
           live_component(
             @socket,
             component,
-             assigns
+            assigns_clean(assigns)
           )
         }}
       </div>

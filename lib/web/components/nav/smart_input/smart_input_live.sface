@@ -1,11 +1,9 @@
-<Context get={{ current_user: current_user }}>
 <div class="p-3 border-t">
   <div class="flex items-start">
-    <img class="w-10 h-10 object-cover rounded-full" src={{ avatar_url(current_user)}} alt="current user profile image" />
+    <img class="w-10 h-10 object-cover rounded-full" src={{ avatar_url(e(assigns, :current_user, nil)) }} alt="current user profile image" />
     <div class="flex-1 flex flex-col space-y-2 ml-3">
         <Bonfire.UI.Social.CreateActivityLive
-          smart_input_private={{@smart_input_private}}
-          create_activity_type={{@create_activity_type}}
+
           reply_to_id={{@reply_to_id}}
           reply_to_thread_id={{@reply_to_thread_id}}
           smart_input_placeholder={{@smart_input_placeholder}}
@@ -25,8 +23,7 @@
 
               {{ live_component(
                 @socket,
-                Bonfire.Common.Config.get([:ui, :smart_input_forms, component], []),
-                current_user: current_user
+                Bonfire.Common.Config.get([:ui, :smart_input_forms, component], [])
               ) }}
 
             </div>
@@ -36,4 +33,3 @@
     </div>
   </div>
 </div>
-</Context>

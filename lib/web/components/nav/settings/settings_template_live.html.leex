@@ -1,8 +1,8 @@
 <div class="flex flex-col">
-    <%# = live_component(@socket, Bonfire.UI.Social.HeaderLive, assigns) %>
+    <%# = live_component(@socket, Bonfire.UI.Social.HeaderUserLive, assigns_clean(assigns)) %>
     <div class="">
     <div class="place-content-center lg:space-x-4 flex xl:max-w-screen-xl mx-auto">
-        <%= live_component(@socket, Bonfire.UI.Social.SettingsViewLive.SidebarSettingsLive, assigns) %>
+        <%= live_component(@socket, Bonfire.UI.Social.SettingsViewLive.SidebarSettingsLive, assigns_clean(assigns)) %>
         <div class="flex flex-1">
         <div class="flex-1 xl:mr-4">
             <%= @inner_content %>

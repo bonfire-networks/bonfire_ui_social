@@ -1,4 +1,3 @@
-<div :if={{@within_feed == true}} class="mt-2 text-sm text-gray-700 dark:text-gray-200 line-clamp-1">Created <LivePatch to={{"/list/"<>e(@object, :id,"")}} class="font-bold hover:underline">{{@object.name}}</LivePatch> process</div>
 <div class={{"block bg-white", "border rounded-lg my-2": @within_feed}}>
   <div class={{"grid justify-between p-3", "grid-cols-2 gap-8": !@within_feed, "py-0 grid-cols-1 gap-0": @within_feed}}>
     <div class={{"order-last": @within_feed}}>

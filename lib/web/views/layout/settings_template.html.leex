@@ -16,5 +16,5 @@
     </div>
   <% end %>
 
-  <%= live_component(@socket, Bonfire.UI.Social.SettingsTemplateLive, assigns) %>
+  <%= live_component(@socket, Bonfire.UI.Social.SettingsTemplateLive, assigns_clean(assigns)) %>
 </div>

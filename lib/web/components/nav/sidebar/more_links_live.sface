@@ -1,7 +1,6 @@
-<Context get={{ current_user: current_user }}>
 
-<div :if={{current_user}} class="py-1" role="none">
-  <LivePatch to={{"user/" <>  e(current_user, :character, :username, "anon")}} class="block w-full px-4 py-2 text-sm text-left text-gray-700 transition duration-150 ease-in-out hover:bg-gray-100">My Profile</LivePatch>
+<div :if={{ e(assigns, :current_user, nil)}} class="py-1" role="none">
+  <LivePatch to={{ path(Bonfire.Me.Web.ProfileLive, e(assigns, :current_user, :character, :username, ""))}} class="block w-full px-4 py-2 text-sm text-left text-gray-700 transition duration-150 ease-in-out hover:bg-gray-100">My Profile</LivePatch>
   <LiveRedirect to="/switch-user" class="block px-4 py-2 text-sm text-gray-700 transition duration-150 ease-in-out hover:bg-gray-100">Switch User</LiveRedirect>
   <LiveRedirect to="/settings" class="block px-4 py-2 text-sm text-gray-700 transition duration-150 ease-in-out hover:bg-gray-100">Settings</LiveRedirect>
 </div>
@@ -10,7 +9,6 @@
   <LiveRedirect to="/users" class="block px-4 py-2 text-sm text-gray-700 transition duration-150 ease-in-out hover:bg-gray-100">Users discovery</LiveRedirect>
   <LiveRedirect to="/guidelnes" class="block px-4 py-2 text-sm text-gray-700 transition duration-150 ease-in-out hover:bg-gray-100">Guidelines</LiveRedirect>
 </div>
-<div :if={{current_user}} class="py-1" role="none">
+<div :if={{e(assigns, :current_user, nil)}} class="py-1" role="none">
   <LiveRedirect to="/logout" class="block px-4 py-2 text-sm text-gray-700 transition duration-150 ease-in-out hover:bg-gray-100">Logout</LiveRedirect>
 </div>
-</Context>
