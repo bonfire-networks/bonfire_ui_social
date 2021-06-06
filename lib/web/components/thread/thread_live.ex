@@ -16,13 +16,13 @@ defmodule Bonfire.UI.Social.ThreadLive do
   #   )) }
   # end
 
-  def update(%{post_new_reply: post_new_reply} = assigns, socket) when is_map(post_new_reply) do
+  def update(%{new_reply: new_reply} = assigns, socket) when is_map(new_reply) do
     IO.inspect("adding new thread reply")
     # IO.inspect(merge_reply: previous_replies)
 
-    post_new_reply = post_new_reply |> Map.put(:path, e(post_new_reply, :activity, :object, :replied, :path, []))
-    # IO.inspect(post_new_reply: post_new_reply)
-    replies = [post_new_reply] ++ e(socket, :assigns, :replies, [])
+    new_reply = new_reply |> Map.put(:path, e(new_reply, :activity, :object, :replied, :path, []))
+    # IO.inspect(new_reply: new_reply)
+    replies = [new_reply] ++ e(socket, :assigns, :replies, [])
     {:ok, assign(socket, assigns |> assigns_merge(
       replies: replies,
       threaded_replies: Bonfire.Social.Threads.arrange_replies_tree(replies),
@@ -31,9 +31,9 @@ defmodule Bonfire.UI.Social.ThreadLive do
     )) }
   end
 
-  def update(%{__context__: %{post_new_reply: post_new_reply}} = assigns, socket) do
-    # IO.inspect(context_reply: post_new_reply)
-    update(Map.merge(assigns, %{post_new_reply: post_new_reply}), socket)
+  def update(%{__context__: %{new_reply: new_reply}} = assigns, socket) do
+    # IO.inspect(context_reply: new_reply)
+    update(Map.merge(assigns, %{new_reply: new_reply}), socket)
   end
 
   def update(assigns, socket) do
@@ -82,7 +82,7 @@ defmodule Bonfire.UI.Social.ThreadLive do
     end
   end
 
-  # def handle_event(action, attrs, socket), do: Bonfire.Web.LiveHandler.handle_event(action, attrs, socket, __MODULE__)
-  # def handle_info(info, socket), do: Bonfire.Web.LiveHandler.handle_info(info, socket, __MODULE__)
+  # def handle_event(action, attrs, socket), do: Bonfire.Common.LiveHandlers.handle_event(action, attrs, socket, __MODULE__)
+  # def handle_info(info, socket), do: Bonfire.Common.LiveHandlers.handle_info(info, socket, __MODULE__)
 
 end

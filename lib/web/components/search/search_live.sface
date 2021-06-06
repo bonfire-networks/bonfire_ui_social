@@ -1,3 +1,1 @@
-<Context get={{search: search, hits: hits, num_hits: num_hits, selected_facets: selected_facets, current_user: current_user}}>
-{{ if module_enabled?(Bonfire.Search.Web.FormLive), do: live_component(@socket, Bonfire.Search.Web.FormLive, search_limit: 5, show_more_link: true, search: search, hits: hits, num_hits: num_hits, selected_facets: selected_facets, current_user: current_user), else: "<!-- Bonfire.Search.Web.FormLive not available -->" }}
-</Context>
+{{ if module_enabled?(Bonfire.Search.Web.FormLive), do: live_component(@socket |> assign_global(search_limit: 5), Bonfire.Search.Web.FormLive, search_limit: 5, show_more_link: true), else: "<!-- Bonfire.Search.Web.FormLive not available -->" }}

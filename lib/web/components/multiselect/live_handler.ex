@@ -6,7 +6,7 @@ defmodule Bonfire.UI.Social.MultiselectLive.LiveHandler do
     # TODO, handle cases when we want to select multiple
     {:noreply,
         socket
-        |> cast_self(
+        |> assign_global(
           {field, [{name, id}]}
         )
     }
@@ -16,7 +16,7 @@ defmodule Bonfire.UI.Social.MultiselectLive.LiveHandler do
 
     {:noreply,
         socket
-        |> cast_self(
+        |> assign_global(
           {field, []}
         )
     }

@@ -16,17 +16,17 @@ defmodule Bonfire.UI.Social.FeedLive do
   end
 
 
-  def update(%{feed_new_activity: feed_new_activity} = assigns, socket) when is_map(feed_new_activity) do # feed provided by parent component/view
+  def update(%{new_activity: new_activity} = assigns, socket) when is_map(new_activity) do # feed provided by parent component/view
 
     {:ok, socket
     |> assigns_merge(assigns,
-      feed_future: [feed_new_activity] # feed is a temporary assign, so only add new
+      feed_future: [new_activity] # feed is a temporary assign, so only add new
       ) }
   end
 
-  def update(%{__context__: %{feed_new_activity: feed_new_activity}} = assigns, socket) do # adding new feed item
-    # IO.inspect(context_reply: feed_new_activity)
-    update(Map.merge(assigns, %{feed_new_activity: feed_new_activity}), socket)
+  def update(%{__context__: %{new_activity: new_activity}} = assigns, socket) do # adding new feed item
+    # IO.inspect(context_reply: new_activity)
+    update(Map.merge(assigns, %{new_activity: new_activity}), socket)
   end
 
   def update(%{feed: feed} = assigns, socket) when is_list(feed) do # feed provided by parent component/view
