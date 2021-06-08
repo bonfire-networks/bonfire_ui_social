@@ -1,6 +1,6 @@
 <main
   class="lg:flex">
-  <section class="min-h-screen bg-white shadow w-center">
+  <section class="min-h-screen bg-white shadow dark:bg-gray-700 w-center">
    <Bonfire.UI.Social.PageHeaderLive
       :if={{e(assigns, :current_user, nil) != nil}}
 
@@ -8,7 +8,7 @@
       page={{@page}}
       smart_input={{@smart_input}}
     />
-    <div class="mx-4 bg-white border-t-8 border-gray-100 lg:mx-0">
+    <div class="mx-4 bg-white border-t-8 border-gray-100 dark:bg-gray-700 dark:border-gray-600 lg:mx-0">
       {{ live_component(@socket, Bonfire.UI.Social.FeedLive, assigns_merge(assigns, id: "feed")) }}
     </div>
   </section>

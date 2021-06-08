@@ -1,5 +1,5 @@
 <main class="lg:flex">
-  <section class="min-h-screen bg-white shadow w-center ">
+  <section class="min-h-screen bg-white shadow dark:bg-gray-700 w-center ">
     <%= live_component(@socket, Bonfire.UI.Social.PageHeaderLive,
     assigns |> assigns_clean())%>
     <%= live_component(@socket, Bonfire.UI.Social.PrivateLive, assigns_clean(assigns)) %>

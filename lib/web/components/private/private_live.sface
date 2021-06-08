@@ -1,4 +1,4 @@
-<div class="mx-4 overflow-hidden bg-white border-t-8 border-gray-100 lg:mx-0">
+<div class="mx-4 overflow-hidden bg-white border-t-8 border-gray-100 dark:border-gray-600 lg:mx-0">
   <ul class="divide-y divide-gray-200">
 
     <li :for={{ %{activity: activity} <- @feed }}>
