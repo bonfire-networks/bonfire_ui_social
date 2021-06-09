@@ -2,34 +2,34 @@
   role="tabpanel"
   class="flex justify-between my-2 border-b dark:border-gray-600"
   aria-label="Switch between my feed, instance or fediverse tabs">
-  <LivePatch 
-    to="/browse" 
+  <LivePatch
+    to="/browse"
     class="flex-1 pt-2 hover:bg-pink-100 group">
     <div class={{"group-hover:text-pink-600 text-center w-full capitalize text-gray-500 dark:text-gray-300 px-3 font-medium text-sm border-gray-200", "hover:text-pink-600 text-pink-600 font-bold": @selected_tab == "feed"}}>
-      My feed
+      {{l("My feed")}}
     </div>
       <span
-        :if={{ @selected_tab ==  "feed"}} 
+        :if={{ @selected_tab ==  "feed"}}
         class="block w-20 h-1 mx-auto mt-2 bg-pink-400 rounded-full"></span>
   </LivePatch>
-  <LivePatch 
-    to="/browse/instance" 
+  <LivePatch
+    to="/browse/instance"
     class="flex-1 pt-2 hover:bg-pink-100 group">
     <div class={{"group-hover:text-pink-600 text-center w-full capitalize text-gray-500 dark:text-gray-300 px-3 font-medium text-sm border-gray-200", "hover:text-pink-600 text-pink-600 font-bold": @selected_tab == "instance"}}>
      Instance
     </div>
       <span
-        :if={{ @selected_tab ==  "instance"}} 
+        :if={{ @selected_tab ==  "instance"}}
         class="block w-20 h-1 mx-auto mt-2 bg-pink-400 rounded-full"></span>
   </LivePatch>
-  <LivePatch 
-    to="/browse/fediverse" 
+  <LivePatch
+    to="/browse/fediverse"
     class="flex-1 pt-2 hover:bg-pink-100 group">
     <div class={{"group-hover:text-pink-600 text-center w-full capitalize text-gray-500 dark:text-gray-300 px-3 font-medium text-sm border-gray-200", "hover:text-pink-600 text-pink-600 font-bold": @selected_tab == "fediverse"}}>
      Fediverse
     </div>
       <span
-        :if={{ @selected_tab ==  "fediverse"}} 
+        :if={{ @selected_tab ==  "fediverse"}}
         class="block w-20 h-1 mx-auto mt-2 bg-pink-400 rounded-full"></span>
   </LivePatch>
 </nav>
