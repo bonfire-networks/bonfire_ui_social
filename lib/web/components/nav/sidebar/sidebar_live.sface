@@ -17,7 +17,7 @@
           @socket,
           component,
           assigns_merge(component_assigns, [
-          page: @page,
+          page: e(assigns, :page, nil),
           current_user: e(assigns, :current_user, nil)
         ])) }}
 
