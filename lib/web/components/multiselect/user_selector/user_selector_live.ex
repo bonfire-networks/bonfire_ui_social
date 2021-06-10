@@ -11,7 +11,7 @@ defmodule Bonfire.UI.Social.MultiselectLive.UserSelectorLive do
   def update(assigns, socket) do
     # IO.inspect(userSelectorLive: assigns)
 
-    current_user = e(assigns, :current_user, nil)
+    current_user = current_user(assigns)
 
     followed = if current_user, do: Bonfire.Social.Follows.list_my_followed(current_user, false) # TODO: paginate
     |> Enum.map(&follow_to_tuple/1), else: []

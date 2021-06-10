@@ -63,7 +63,7 @@
     </div>
   </div>
   <Bonfire.UI.Social.SmartInputLive
-    :if={{e(assigns, :current_user, nil) && @smart_input !=false && Bonfire.Common.Config.get([:ui, :smart_input, :post], true)}}
+    :if={{current_user(assigns) && @smart_input !=false && Bonfire.Common.Config.get([:ui, :smart_input, :post], true)}}
      />
   <!-- <div
     x-show="open_search"

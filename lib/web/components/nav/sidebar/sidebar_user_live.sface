@@ -18,7 +18,7 @@
           aria-expanded="true">
           <img
             class="inline-block object-cover w-10 h-10 bg-gray-200 rounded-full"
-            src={{ avatar_url(e(assigns, :current_user, nil))}}
+            src={{ avatar_url(current_user(assigns))}}
             alt="current user profile image">
           <div class="flex-1 ml-3 text-left">
 
@@ -43,7 +43,7 @@
         role="menu"
         aria-orientation="vertical"
         aria-labelledby="user-profile-menu">
-          <Bonfire.UI.Social.Sidebar.MoreLinksLive current_user={{e(assigns, :current_user, nil)}} />
+          <Bonfire.UI.Social.Sidebar.MoreLinksLive current_user={{current_user(assigns)}} />
       </div>
     </div>
   </div>

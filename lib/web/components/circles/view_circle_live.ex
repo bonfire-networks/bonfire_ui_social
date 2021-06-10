@@ -5,12 +5,12 @@ defmodule Bonfire.UI.Social.ViewCircleLive do
   def update(assigns, socket) do
     # FIXME: what's the difference with EditCircleLive?
 
-      with {:ok, circle} <- Bonfire.Me.Users.Circles.get(assigns.id, e(assigns, :current_user, nil)) |> repo().maybe_preload(encircles: [:subject_profile, :subject_character]) do
+      with {:ok, circle} <- Bonfire.Me.Users.Circles.get(assigns.id, current_user(assigns)) |> repo().maybe_preload(encircles: [:subject_profile, :subject_character]) do
         IO.inspect(circle)
 
       # TODO: paginate?
-      followed = Bonfire.Social.Follows.list_my_followed(e(assigns, :current_user, nil)) #|> IO.inspect
-      followers = Bonfire.Social.Follows.list_my_followers(e(assigns, :current_user, nil)) #|> IO.inspect
+      followed = Bonfire.Social.Follows.list_my_followed(current_user(assigns)) #|> IO.inspect
+      followers = Bonfire.Social.Follows.list_my_followers(current_user(assigns)) #|> IO.inspect
 
       {:ok, assign(socket, assigns
       |> assigns_merge(%{

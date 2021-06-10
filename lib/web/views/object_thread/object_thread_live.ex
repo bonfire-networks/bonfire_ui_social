@@ -5,7 +5,7 @@ defmodule  Bonfire.UI.Social.ObjectThreadLive do
 
     thread_id = e(assigns, :thread_id, e(assigns, :object, :id, nil))
 
-    participants = Bonfire.Social.Threads.list_participants(thread_id, e(assigns, :current_user, nil))
+    participants = Bonfire.Social.Threads.list_participants(thread_id, current_user(assigns))
     # |> IO.inspect
 
     participant_tuples = participants |> Map.get(:entries, []) |> Enum.map(&{e(&1, :profile, :name, "someone"), &1.id})

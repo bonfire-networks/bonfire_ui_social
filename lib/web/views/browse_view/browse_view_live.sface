@@ -5,7 +5,7 @@
   >
   <section class="min-h-screen bg-white shadow dark:bg-gray-700 w-center">
    <Bonfire.UI.Social.PageHeaderLive
-      :if={{e(assigns, :current_user, nil) != nil}}
+      :if={{current_user(assigns) != nil}}
 
       page_title={{@page_title}}
       page={{@page}}

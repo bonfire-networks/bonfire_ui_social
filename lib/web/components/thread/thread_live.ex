@@ -49,7 +49,7 @@ defmodule Bonfire.UI.Social.ThreadLive do
 
     if thread_id do
 
-      current_user = e(assigns, :current_user, nil)
+      current_user = current_user(assigns)
       activity = e(assigns, :activity, nil)
       object = e(assigns, :object, e(activity, :object))
       # IO.inspect(object, label: "thread_object:")

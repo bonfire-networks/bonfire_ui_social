@@ -7,7 +7,7 @@
     <!-- Sidebar Search -->
     <div class="mt-2 mb-4">
       <Bonfire.UI.Social.SearchLive/>
-      <Bonfire.UI.Social.SidebarUserLive current_user={{e(assigns, :current_user, nil)}} />
+      <Bonfire.UI.Social.SidebarUserLive current_user={{current_user(assigns)}} />
     </div>
 
     <div
@@ -18,7 +18,7 @@
           component,
           assigns_merge(component_assigns, [
           page: e(assigns, :page, nil),
-          current_user: e(assigns, :current_user, nil)
+          current_user: current_user(assigns)
         ])) }}
 
       </div>

@@ -43,7 +43,7 @@
           </div>
         <% true -> %>
 
-        <%= if e(assigns, :current_user, nil) do %>
+        <%= if current_user(assigns) do %>
           <%= live_component(
             @socket,
             EditProfileLive,

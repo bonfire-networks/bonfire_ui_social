@@ -79,7 +79,7 @@
               </div>
             <% end %>
 
-            <%= if Bonfire.Me.Users.is_admin(e(assigns, :current_user, nil)) do %>
+            <%= if Bonfire.Me.Users.is_admin(current_user(assigns)) do %>
             <div class="px-2 pt-6 uppercase text-gray-500 text-xs font-bold tracking-wide ">Admins</div>
               <%= live_patch to: "/settings/admin" do %>
                 <div

@@ -1,6 +1,6 @@
 <div class="p-3 border-t dark:border-gray-600">
   <div class="flex items-start">
-    <img class="object-cover w-10 h-10 rounded-full" src={{ avatar_url(e(assigns, :current_user, nil)) }} alt="current user profile image" />
+    <img class="object-cover w-10 h-10 rounded-full" src={{ avatar_url(current_user(assigns)) }} alt="current user profile image" />
     <div class="flex flex-col flex-1 ml-3 space-y-2">
         <Bonfire.UI.Social.CreateActivityLive
 

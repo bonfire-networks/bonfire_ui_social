@@ -3,7 +3,7 @@
   <%= live_component(@socket, Bonfire.UI.Social.SettingsViewLive.SettingsHeaderLive, assigns_clean(assigns)) %>
   <div class="p-4">
     <div class="mt-1 sm:mt-0">
-      <div phx-drop-target="<%= @uploads.image.ref %>" class="relative flex justify-center px-6 py-10 bg-pink-300 rounded-lg bg-center bg-cover" style="height: 225px; background-image: url('<%=image_url(e(assigns, :current_user, nil))%>')">
+      <div phx-drop-target="<%= @uploads.image.ref %>" class="relative flex justify-center px-6 py-10 bg-pink-300 rounded-lg bg-center bg-cover" style="height: 225px; background-image: url('<%=image_url(current_user(assigns))%>')">
         <div class="space-y-1 text-center">
           <div class="flex text-sm text-gray-600">
             <label for="<%= @uploads.image.ref %>" class="cursor-pointer transition duration-150 ease-in-out absolute inset-0 flex rounded-lg flex-col items-center justify-center w-full h-full text-sm font-medium text-white bg-gray-700 bg-opacity-75 opacity-0 hover:opacity-100 focus-within:opacity-100">
@@ -28,7 +28,7 @@
       </div>
 
       <div phx-drop-target="<%= @uploads.icon.ref %>" class="ring-4 ring-white relative -mt-16 ml-6 w-32 h-32 mb-6  overflow-hidden rounded-full block">
-        <div class="flex items-center w-32 h-32 bg-blueGray-100 shadow-lg rounded-full bg-cover" style="background-image: url('<%=avatar_url(e(assigns, :current_user, nil))%>')"></div>
+        <div class="flex items-center w-32 h-32 bg-blueGray-100 shadow-lg rounded-full bg-cover" style="background-image: url('<%=avatar_url(current_user(assigns))%>')"></div>
         <label for="<%= @uploads.icon.ref %>" class="cursor-pointer transition duration-150 ease-in-out absolute inset-0 flex items-center justify-center w-full h-full text-sm font-medium text-white bg-gray-700 bg-opacity-75 opacity-0 hover:opacity-100 focus-within:opacity-100">
           <span>Upload or drop</span>
           <span class="sr-only"> avatar</span>
