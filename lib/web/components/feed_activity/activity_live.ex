@@ -73,7 +73,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
     } = object_created}), do: {Bonfire.UI.Social.Activity.CreatorLive, %{profile: profile, character: character}}
   # def component_activity_maybe_creator(%{subject_character: %{id: _} = character, subject_profile: %{id: _} = profile}), do: {Bonfire.UI.Social.Activity.CreatorLive, %{profile: profile, character: character}} #|> IO.inspect
   def component_activity_maybe_creator(activity) do
-    IO.inspect(no_creation: activity)
+    # IO.inspect(no_creation: activity)
     nil
   end
 
