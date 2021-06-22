@@ -41,7 +41,7 @@ defmodule Bonfire.UI.Social.ThreadLive do
 
     # replies = Bonfire.Data.Social.Replied.descendants(thread)
     #IO.inspect(replies, label: "REPLIES:")
-    # replies = replies |> repo().all
+    # replies = replies |> repo().many
 
     # replies = Bonfire.Social.Posts.replies_tree(e(thread, :thread_replies, []))
 
