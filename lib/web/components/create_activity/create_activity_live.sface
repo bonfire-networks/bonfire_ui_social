@@ -8,26 +8,26 @@
     open_boundaries: false
   }"
   @click.away="{open=false; title_open=false; summary_open=false}">
-  <Form for={{ Bonfire.Social.Posts.LiveHandler.post_changeset() }} submit="Bonfire.Social.Posts:post" opts={{  autocomplete: "off" }}>
+  <Form for={Bonfire.Social.Posts.LiveHandler.post_changeset()} submit="Bonfire.Social.Posts:post" opts={ autocomplete: "off"}>
     <div x-description="create post form">
 
-      <HiddenInput name="reply_to[reply_to_id]" value="{{@reply_to_id}}" />
-      <HiddenInput name="reply_to[thread_id]" value="{{@reply_to_thread_id}}" />
+      <HiddenInput name="reply_to[reply_to_id]" value={"#{@reply_to_id}"} />
+      <HiddenInput name="reply_to[thread_id]" value={"#{@reply_to_thread_id}"} />
 
-      <Field name={{:create_activity_type}}>
+      <Field name={:create_activity_type}>
         <HiddenInput
-          value={{e(assigns, :create_activity_type, "post")}} />
+          value={e(assigns, :create_activity_type, "post")} />
       </Field>
 
       <div x-show="open">
-        <Bonfire.UI.Social.SetBoundariesLive hide_selector={{e(assigns, :create_activity_type, nil)=="message"}} />
+        <Bonfire.UI.Social.SetBoundariesLive hide_selector={e(assigns, :create_activity_type, nil)=="message"} />
       </div>
 
-      <div :if={{Bonfire.Common.Config.get([:ui, :smart_input, :cw], []) == true}}>
+      <div :if={Bonfire.Common.Config.get([:ui, :smart_input, :cw], []) == true}>
         <Bonfire.UI.Social.SetCWLive />
       </div>
-        <Inputs for={{:post_content}}>
-          <Field name={{:html_body}}>
+        <Inputs for={:post_content}>
+          <Field name={:html_body}>
             <div
               @keydown.window.escape="open = false"
               @click = "open = true"
@@ -35,10 +35,10 @@
               :class="{'h-40' : open === true}"
               >
               <TextArea
-              opts={{
+              opts={
                 value: @smart_input_text,
                 placeholder: @smart_input_placeholder
-              }}
+              }
               class="block w-full h-full text-sm transition-all duration-300 ease-in-out border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500" />
             </div>
           </Field>
@@ -48,7 +48,7 @@
         class="flex items-center mt-2">
         <div class="flex-1 flex items-center space-x-4">
           <button
-            :if={{Bonfire.Common.Config.get([:ui, :smart_input, :cw], []) == true}}
+            :if={Bonfire.Common.Config.get([:ui, :smart_input, :cw], []) == true}
             type="button"
             @click="title_open = !title_open"
             class="flex items-center hover:underline"
@@ -68,8 +68,8 @@
           type="submit"
 
           class="btn-primary">
-          <span :if={{e(assigns, :smart_input_private, nil)}}>Send</span>
-          <span :if={{e(assigns, :smart_input_private, nil) == nil}}>Publish</span>
+          <span :if={e(assigns, :smart_input_private, nil)}>Send</span>
+          <span :if={e(assigns, :smart_input_private, nil) == nil}>Publish</span>
         </button>
       </div>
     </div>

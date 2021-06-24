@@ -1,1 +1,1 @@
-{{ if module_enabled?(Bonfire.Search.Web.FormLive), do: live_component(@socket |> assign_global(search_limit: 5), Bonfire.Search.Web.FormLive, search_limit: 5, show_more_link: true), else: "<!-- Bonfire.Search.Web.FormLive not available -->" }}
+{if module_enabled?(Bonfire.Search.Web.FormLive), do: live_component(@socket |> assign_global(search_limit: 5), Bonfire.Search.Web.FormLive, search_limit: 5, show_more_link: true), else: "<!-- Bonfire.Search.Web.FormLive not available -->"}

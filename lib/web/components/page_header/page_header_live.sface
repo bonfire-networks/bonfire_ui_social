@@ -7,7 +7,7 @@
     open_profile_mobile_menu: false
   }"
   @close-popover-group.window="onClosePopoverGroup"
-  class={{"sticky top-0 z-10 bg-white dark:bg-gray-700 dark:border-gray-600 border-b"}}>
+  class={"sticky top-0 z-10 bg-white dark:bg-gray-700 dark:border-gray-600 border-b"}>
   <div class="flex items-center p-3">
     <div class="relative flex items-center px-4 mr-3 border-r border-gray-200 dark:border-gray-600 lg:hidden">
       <button
@@ -24,7 +24,7 @@
         </svg>
       </button>
     </div>
-    <Bonfire.UI.Social.SidebarMobileLive page={{@page}}  />
+    <Bonfire.UI.Social.SidebarMobileLive page={@page}  />
     <div class="flex items-center flex-1 space-x-2 text-left">
       <a
         aria-label="Navigate to the previous page"
@@ -33,7 +33,7 @@
           <svg class="w-4 h-4 text-gray-600 dark:text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path></svg>
         </span>
       </a>
-      <h1 class="text-xs text-gray-800 uppercase dark:text-gray-100 font-regular">{{ @page_title }}</h1>
+      <h1 class="text-xs text-gray-800 uppercase dark:text-gray-100 font-regular">{@page_title}</h1>
     </div>
     <div class="flex items-center space-x-3 lg:hidden">
       <button
@@ -63,7 +63,7 @@
     </div>
   </div>
   <Bonfire.UI.Social.SmartInputLive
-    :if={{current_user(assigns) && @smart_input !=false && Bonfire.Common.Config.get([:ui, :smart_input, :post], true)}}
+    :if={current_user(assigns) && @smart_input !=false && Bonfire.Common.Config.get([:ui, :smart_input, :post], true)}
      />
   <!-- <div
     x-show="open_search"

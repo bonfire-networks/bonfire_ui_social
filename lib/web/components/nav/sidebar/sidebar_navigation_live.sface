@@ -1,10 +1,10 @@
 
   <div class="flex flex-col space-y-1">
-    <LivePatch to="/dashboard" class={{"rounded-lg w-full flex items-center p-1.5 text-sm font-regular transition duration-150 ease-in-out group hover:bg-blueGray-200 focus:outline-none dark:hover:bg-gray-700 focus:text-gray-900 focus:bg-gray-50 text-gray-600 dark:text-gray-200", "bg-blueGray-200 text-gray-800 dark:bg-gray-700 dark:text-gray-200": @page == "dashboard"}}>
+    <LivePatch to="/dashboard" class={"rounded-lg w-full flex items-center p-1.5 text-sm font-regular transition duration-150 ease-in-out group hover:bg-blueGray-200 focus:outline-none dark:hover:bg-gray-700 focus:text-gray-900 focus:bg-gray-50 text-gray-600 dark:text-gray-200", "bg-blueGray-200 text-gray-800 dark:bg-gray-700 dark:text-gray-200": @page == "dashboard"}>
       <span class="flex items-center w-8 h-8 mr-3 rounded-full place-content-center bg-blueGray-200 hover:bg-blueGray-300">
         <svg
           aria-labelledby="navigation_browse"
-          class={{"w-5 h-5 transition duration-150 ease-in-out text-gray-600", "text-gray-800": @page == "dashboard"}}
+          class={"w-5 h-5 transition duration-150 ease-in-out text-gray-600", "text-gray-800": @page == "dashboard"}
           fill="none"
           stroke="currentColor"
           viewBox="0 0 24 24"
@@ -14,33 +14,33 @@
       <span class="text-sm font-semibold capitalize" id="navigation_browse">Dashboard</span>
     </LivePatch>
 
-    <LivePatch :if={{current_user(assigns)}} to={{path(:notifications)}} class={{"rounded-lg w-full flex items-center p-1.5 text-sm font-regular transition duration-150 ease-in-out group hover:bg-blueGray-200 focus:outline-none dark:hover:bg-gray-700 focus:text-gray-900 focus:bg-gray-50 text-gray-600 dark:text-gray-200", "bg-blueGray-200 text-gray-800 dark:bg-gray-700 dark:text-gray-200": @page == "notifications"}}>
+    <LivePatch :if={current_user(assigns)} to={path(:notifications)} class={"rounded-lg w-full flex items-center p-1.5 text-sm font-regular transition duration-150 ease-in-out group hover:bg-blueGray-200 focus:outline-none dark:hover:bg-gray-700 focus:text-gray-900 focus:bg-gray-50 text-gray-600 dark:text-gray-200", "bg-blueGray-200 text-gray-800 dark:bg-gray-700 dark:text-gray-200": @page == "notifications"}>
       <span class="flex items-center w-8 h-8 mr-3 rounded-full place-content-center bg-blueGray-200 hover:bg-blueGray-300">
       <svg
         aria-labelledby="navigation_notification"
-        class={{"w-5 h-5 transition duration-150 ease-in-out text-gray-600", "text-gray-800": @page == "notifications"}} fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+        class={"w-5 h-5 transition duration-150 ease-in-out text-gray-600", "text-gray-800": @page == "notifications"} fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" />
       </svg>
       </span>
       <span class="text-sm font-semibold capitalize" id="navigation_notification">Notifications</span>
     </LivePatch>
 
-    <LivePatch :if={{current_user(assigns)}} to={{path(current_user(assigns)) <> path(:private)}} class={{"rounded-lg w-full flex items-center p-1.5 text-sm font-regular transition duration-150 ease-in-out group hover:bg-blueGray-200 focus:outline-none dark:hover:bg-gray-700 focus:text-gray-900 focus:bg-gray-50 text-gray-600 dark:text-gray-200", "bg-blueGray-200 text-gray-800 dark:bg-gray-700 dark:text-gray-200": @page == "private"}}>
+    <LivePatch :if={current_user(assigns)} to={path(current_user(assigns)) <> path(:private)} class={"rounded-lg w-full flex items-center p-1.5 text-sm font-regular transition duration-150 ease-in-out group hover:bg-blueGray-200 focus:outline-none dark:hover:bg-gray-700 focus:text-gray-900 focus:bg-gray-50 text-gray-600 dark:text-gray-200", "bg-blueGray-200 text-gray-800 dark:bg-gray-700 dark:text-gray-200": @page == "private"}>
       <span class="flex items-center w-8 h-8 mr-3 rounded-full place-content-center bg-blueGray-200 hover:bg-blueGray-300">
       <svg
         aria-labelledby="navigation_private"
-        class={{"w-5 h-5  transition duration-150 ease-in-out text-gray-600", "text-gray-800": @page == "private"}} fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+        class={"w-5 h-5  transition duration-150 ease-in-out text-gray-600", "text-gray-800": @page == "private"} fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
       </svg>
       </span>
       <span class="text-sm font-semibold capitalize" id="navigation_browse">Direct Messages</span>
     </LivePatch>
 
-    <LivePatch :if={{current_user(assigns)}} to={{path(current_user(assigns))}} class={{"rounded-lg w-full flex items-center p-1.5 text-sm font-regular transition duration-150 ease-in-out group hover:bg-blueGray-200 focus:outline-none dark:hover:bg-gray-700 focus:text-gray-900 focus:bg-gray-50 text-gray-600 dark:text-gray-200", "bg-blueGray-200 text-gray-800 dark:bg-gray-700 dark:text-gray-200": @page == "profile"}}>
+    <LivePatch :if={current_user(assigns)} to={path(current_user(assigns))} class={"rounded-lg w-full flex items-center p-1.5 text-sm font-regular transition duration-150 ease-in-out group hover:bg-blueGray-200 focus:outline-none dark:hover:bg-gray-700 focus:text-gray-900 focus:bg-gray-50 text-gray-600 dark:text-gray-200", "bg-blueGray-200 text-gray-800 dark:bg-gray-700 dark:text-gray-200": @page == "profile"}>
       <span class="flex items-center w-8 h-8 mr-3 rounded-full place-content-center bg-blueGray-200 hover:bg-blueGray-300">
       <svg
         aria-labelledby="navigation_profile"
-        class={{"w-5 h-5 transition duration-150 ease-in-out text-gray-600", "text-gray-800": @page == "profile"}}
+        class={"w-5 h-5 transition duration-150 ease-in-out text-gray-600", "text-gray-800": @page == "profile"}
         fill="none" stroke="currentColor"
         viewBox="0 0 24 24"
         xmlns="http://www.w3.org/2000/svg">

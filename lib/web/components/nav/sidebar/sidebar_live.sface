@@ -7,19 +7,19 @@
     <!-- Sidebar Search -->
     <div class="mt-2 mb-4">
       <Bonfire.UI.Social.SearchLive/>
-      <Bonfire.UI.Social.SidebarUserLive current_user={{current_user(assigns)}} />
+      <Bonfire.UI.Social.SidebarUserLive current_user={current_user(assigns)} />
     </div>
 
     <div
-      :for={{{component, component_assigns} <- Bonfire.Common.Config.get([:ui, :sidebar_components], [{Bonfire.UI.Social.SidebarNavigationLive, []}])}}>
+      :for={{component, component_assigns} <- Bonfire.Common.Config.get([:ui, :sidebar_components], [{Bonfire.UI.Social.SidebarNavigationLive, []}])}>
 
-        {{ if module_enabled?(component), do: live_component(
+        {if module_enabled?(component), do: live_component(
           @socket,
           component,
           assigns_merge(component_assigns, [
           page: e(assigns, :page, nil),
           current_user: current_user(assigns)
-        ])) }}
+        ]))}
 
       </div>
 

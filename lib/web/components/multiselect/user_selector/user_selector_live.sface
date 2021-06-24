@@ -1,9 +1,9 @@
 <Bonfire.UI.Social.MultiselectLive
-  preloaded_options={{@preloaded_options}}
-  selected_options={{@selected_options}}
-  label={{e(assigns, :label, "Select someone...")}}
-  form_input_name={{@form_input_name}}
-  context_id={{e(assigns, :context_id, nil)}}
-  pick_event={{e(assigns, :pick_event, nil)}}
-  remove_event={{e(assigns, :remove_event, nil)}}
+  preloaded_options={@preloaded_options}
+  selected_options={@selected_options}
+  label={e(assigns, :label, "Select someone...")}
+  form_input_name={@form_input_name}
+  context_id={e(assigns, :context_id, nil)}
+  pick_event={e(assigns, :pick_event, nil)}
+  remove_event={e(assigns, :remove_event, nil)}
   />

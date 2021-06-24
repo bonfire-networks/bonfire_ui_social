@@ -1,18 +1,18 @@
 <div class="mx-4 overflow-hidden bg-white border-t-8 border-gray-100 dark:border-gray-600 lg:mx-0">
   <ul class="divide-y divide-gray-200">
 
-    <li :for={{ %{activity: activity} <- @feed }}>
-      <LiveRedirect to="{{path(Bonfire.Data.Social.Message, e(activity, :object_id, nil))}}" class="block hover:bg-gray-50">
+    <li :for={%{activity: activity} <- @feed}>
+      <LiveRedirect to={"#{path(Bonfire.Data.Social.Message, e(activity, :object_id, nil))}"} class="block hover:bg-gray-50">
         <div class="flex items-center px-3 py-4">
           <div class="flex-1 min-w-0 sm:flex sm:items-center sm:justify-between">
             <div class="truncate">
               <div class="flex">
-                <p class="text-xs text-pink-600 truncate">{{ e(activity, :subject_profile, :name, nil) }}</p>
+                <p class="text-xs text-pink-600 truncate">{e(activity, :subject_profile, :name, nil)}</p>
               </div>
               <div class="mt-1">
-                <p class="text-sm text-gray-600 truncate font-regular">{{ e(activity, :object, :name, nil) || e(activity, :object, :post_content, :summary, nil) || e(activity, :object, :post_content, :html_body, nil) }}</p>
+                <p class="text-sm text-gray-600 truncate font-regular">{e(activity, :object, :name, nil) || e(activity, :object, :post_content, :summary, nil) || e(activity, :object, :post_content, :html_body, nil)}</p>
                 <div class="flex items-center mt-1 text-xs text-gray-500">
-                  <p><time datetime="{{ date_from_now(activity) }}">{{date_from_now(activity)}}</time></p>
+                  <p><time datetime={"#{date_from_now(activity)}"}>{date_from_now(activity)}</time></p>
                 </div>
               </div>
             </div>

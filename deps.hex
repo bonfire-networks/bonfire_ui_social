@@ -19,3 +19,5 @@ surface = "~> 0.4"
 # bonfire_data_activity_pub = "~> 0.1"
 # bonfire_data_identity = "~> 0.1"
 # bonfire_data_social = "~> 0.1"
+# for this extension:
+# surface_heroicons = "~> 0.5"

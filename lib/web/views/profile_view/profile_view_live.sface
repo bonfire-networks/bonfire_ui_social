@@ -1,27 +1,27 @@
 <main
   class="lg:flex">
-  <section class={{"min-h-screen w-center bg-white dark:bg-gray-700 shadow", "mx-auto rounded-lg": !current_user(assigns) }}>
+  <section class={"min-h-screen w-center bg-white dark:bg-gray-700 shadow", "mx-auto rounded-lg": !current_user(assigns)}>
     <Bonfire.UI.Social.PageHeaderLive
-      :if={{e(assigns, :current_user, :id, nil)}}
-      page_title={{@page_title}}
-      page={{@page}}
-      smart_input={{@smart_input}}
+      :if={e(assigns, :current_user, :id, nil)}
+      page_title={@page_title}
+      page={@page}
+      smart_input={@smart_input}
     />
-    {{ live_component(@socket, Bonfire.Common.Config.get([:ui, :profile, :sections, tab(@selected_tab)], Bonfire.UI.Social.ProfileTimelineLive), assigns_clean(assigns)) }}
+    {live_component(@socket, Bonfire.Common.Config.get([:ui, :profile, :sections, tab(@selected_tab)], Bonfire.UI.Social.ProfileTimelineLive), assigns_clean(assigns))}
   </section>
 
   <aside
-    :if={{e(assigns, :current_user, :id, nil)}}
+    :if={e(assigns, :current_user, :id, nil)}
     class="flex-1 hidden mt-2 lg:flex md:flex-shrink-0">
     <div class="w-full h-full px-3">
-      <div :for={{ component <- Bonfire.Common.Config.get([:ui, :profile, :widgets], []) }}>
-        {{
+      <div :for={component <- Bonfire.Common.Config.get([:ui, :profile, :widgets], [])}>
+        {
           live_component(
             @socket,
             component,
             assigns_clean(assigns)
           )
-        }}
+        }
       </div>
     </div>
   </aside>

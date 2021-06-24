@@ -1,5 +1,5 @@
 <div class="bg-white dark:bg-gray-700">
-  <Bonfire.UI.Social.ProfileHeroFullLive user={{@user}} current_user={{current_user(assigns)}}  />
-  <Bonfire.UI.Social.ProfileNavigationLive selected_tab={{@selected_tab}} user={{@user}} />
-  {{ live_component(@socket, Bonfire.UI.Social.FeedLive, assigns_merge(assigns, id: "feed")) }}
+  <Bonfire.UI.Social.ProfileHeroFullLive user={@user} current_user={current_user(assigns)}  />
+  <Bonfire.UI.Social.ProfileNavigationLive selected_tab={@selected_tab} user={@user} />
+  {live_component(@socket, Bonfire.UI.Social.FeedLive, assigns_merge(assigns, id: "feed"))}
 </div>
