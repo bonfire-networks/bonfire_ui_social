@@ -1,3 +1,4 @@
+<!-- TODO: refactor with TW -->
 <div class="guest__container">
   <div class="page__auth-grid">
     <div class="grid__background"></div>
@@ -6,7 +7,7 @@
         <div class="form__confirmation">
           <h2>Great!</h2>
           <p>
-            We've mailed you another link. Please click it to continue.
+            We've emailed you another link. Please click it to continue.
           </p>
         </div>
       <% else %>
@@ -22,9 +23,9 @@
           </div>
         <% end %>
         <%= f = form_for @form, path(Bonfire.Me.Web.ConfirmEmailController), [id: "confirm-email-form", phx_submit: :submit] %>
-          <%= text_input f, :email, placeholder: "Type your email..." %>
+          <%= email_input f, :email, placeholder: "Type your email..." %>
           <%= error_tag f, :email %>
-          <%= submit "Mail me!" %>
+          <%= submit "Send" %>
         </form>
         <div class="auth__helpers">
           <p>
