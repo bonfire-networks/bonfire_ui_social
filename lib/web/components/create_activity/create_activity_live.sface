@@ -19,9 +19,9 @@
           value={e(assigns, :create_activity_type, "post")} />
       </Field>
 
-      <div x-show="open">
+      <!-- <div x-show="open">
         <Bonfire.UI.Social.SetBoundariesLive hide_selector={e(assigns, :create_activity_type, nil)=="message"} />
-      </div>
+      </div> -->
 
       <div :if={Bonfire.Common.Config.get([:ui, :smart_input, :cw], []) == true}>
         <Bonfire.UI.Social.SetCWLive />
@@ -31,7 +31,7 @@
             <div
               @keydown.window.escape="open = false"
               @click = "open = true"
-              class="h-10 transition-all duration-300 ease-in-out"
+              class="h-10 transition-all duration-300 ease-in-out rounded"
               :class="{'h-40' : open === true}"
               >
               <TextArea
@@ -39,14 +39,16 @@
                 value: @smart_input_text,
                 placeholder: @smart_input_placeholder
               }
-              class="block w-full h-full text-sm transition-all duration-300 ease-in-out border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500" />
+              class="block w-full h-full text-sm transition-all duration-300 ease-in-out border-gray-300 shadow-sm" 
+              :class="{'rounded-b-none' : open === true}"
+              />
             </div>
           </Field>
         </Inputs>
       <div
         x-show="open"
-        class="flex items-center mt-2">
-        <div class="flex-1 flex items-center space-x-4">
+        class="flex items-center p-2 py-3 bg-gray-300 rounded-b">
+        <div class="flex items-center flex-1 space-x-4">
           <button
             :if={Bonfire.Common.Config.get([:ui, :smart_input, :cw], []) == true}
             type="button"
@@ -54,20 +56,25 @@
             class="flex items-center hover:underline"
             :class="{'bg-pink-50' : title_open === true }">
             <svg :class="{'text-pink-600' : title_open === true }" class="w-5 h-5 text-gray-700" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M18 3a1 1 0 00-1.447-.894L8.763 6H5a3 3 0 000 6h.28l1.771 5.316A1 1 0 008 18h1a1 1 0 001-1v-4.382l6.553 3.276A1 1 0 0018 15V3z" clip-rule="evenodd"></path></svg>
-            <span :class="{'text-pink-600 bg-pink-100' : title_open === true}" class="ml-2 text-xs font-semibold text-gray-800">Add a CW</span>
+            <span :class="{'text-pink-600 bg-pink-100' : title_open === true}" class="ml-2 text-xs font-semibold text-gray-800">CW</span>
           </button>
         </div>
-        <button
+        <!-- <button
           @click="{open = false; title_open = false}"
           type="button"
           class="mr-3 btn-secondary">
           Cancel
-        </button>
+        </button> -->
+      </div>
+      <div
+      class="flex mt-2"
+        x-show="open">
+
         <button
           @click="{open = false; title_open = false}"
           type="submit"
 
-          class="btn-primary">
+          class=" justify-self-end btn-primary">
           <span :if={e(assigns, :smart_input_private, nil)}>Send</span>
           <span :if={e(assigns, :smart_input_private, nil) == nil}>Publish</span>
         </button>

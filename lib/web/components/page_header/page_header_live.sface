@@ -62,9 +62,9 @@
       </button> -->
     </div>
   </div>
-  <Bonfire.UI.Social.SmartInputLive
+  <!-- <Bonfire.UI.Social.SmartInputLive
     :if={current_user(assigns) && @smart_input !=false && Bonfire.Common.Config.get([:ui, :smart_input, :post], true)}
-     />
+     /> -->
   <!-- <div
     x-show="open_search"
     x-transition:enter="transition ease-out duration-200"

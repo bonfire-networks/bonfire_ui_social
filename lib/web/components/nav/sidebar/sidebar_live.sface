@@ -1,13 +1,16 @@
 
 <nav
   role="navigation"
-  class="flex-col hidden lg:flex md:flex-shrink-0 w-72">
-  <div class="fixed flex flex-col flex-grow h-full overflow-y-auto lg:px-3 w-72">
+  class="flex-col hidden lg:flex md:flex-shrink-0 w-90">
+  <div class="fixed flex flex-col flex-grow h-full overflow-y-auto lg:px-3 w-90">
 
     <!-- Sidebar Search -->
     <div class="mt-2 mb-4">
       <Bonfire.UI.Social.SearchLive/>
+      <div class="p-3 mt-2 bg-gray-700 rounded shadow">
       <Bonfire.UI.Social.SidebarUserLive current_user={current_user(assigns)} />
+      <Bonfire.UI.Social.SmartInputLive :if={current_user(assigns) && Bonfire.Common.Config.get([:ui, :smart_input, :post], true)} />
+      </div>
     </div>
 
     <div

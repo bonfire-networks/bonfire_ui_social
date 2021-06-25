@@ -4,8 +4,8 @@
   aria-label="Switch between my feed, instance or fediverse tabs">
   <LivePatch
     to="/browse"
-    class="flex-1 pt-2 hover:bg-pink-100 group">
-    <div class={"group-hover:text-pink-600 text-center w-full capitalize text-gray-500 dark:text-gray-300 px-3 font-medium text-sm border-gray-200", "hover:text-pink-600 text-pink-600 font-bold": @selected_tab == "feed"}>
+    class="flex-1 pt-2 group">
+    <div class={"group-hover:text-pink-400 text-center w-full capitalize text-gray-500 dark:text-gray-300 px-3 font-medium text-sm border-gray-200", "hover:text-pink-600 text-pink-600 dark:text-pink-400 font-bold": @selected_tab == "feed"}>
       {l("My feed")}
     </div>
       <span
@@ -14,8 +14,8 @@
   </LivePatch>
   <LivePatch
     to="/browse/instance"
-    class="flex-1 pt-2 hover:bg-pink-100 group">
-    <div class={"group-hover:text-pink-600 text-center w-full capitalize text-gray-500 dark:text-gray-300 px-3 font-medium text-sm border-gray-200", "hover:text-pink-600 text-pink-600 font-bold": @selected_tab == "instance"}>
+    class="flex-1 pt-2 group">
+    <div class={"group-hover:text-pink-400 text-center w-full capitalize text-gray-500 dark:text-gray-300 px-3 font-medium text-sm border-gray-200", "hover:text-pink-600 text-pink-600 dark:text-pink-400 font-bold": @selected_tab == "instance"}>
      Instance
     </div>
       <span
@@ -24,8 +24,8 @@
   </LivePatch>
   <LivePatch
     to="/browse/fediverse"
-    class="flex-1 pt-2 hover:bg-pink-100 group">
-    <div class={"group-hover:text-pink-600 text-center w-full capitalize text-gray-500 dark:text-gray-300 px-3 font-medium text-sm border-gray-200", "hover:text-pink-600 text-pink-600 font-bold": @selected_tab == "fediverse"}>
+    class="flex-1 pt-2 group">
+    <div class={"group-hover:text-pink-400 text-center w-full capitalize text-gray-500 dark:text-gray-300 px-3 font-medium text-sm border-gray-200", "hover:text-pink-600 text-pink-600 dark:text-pink-400 font-bold": @selected_tab == "fediverse"}>
      Fediverse
     </div>
       <span

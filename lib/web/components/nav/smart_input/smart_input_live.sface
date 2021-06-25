@@ -1,7 +1,7 @@
-<div class="p-3 border-t dark:border-gray-600">
+<div class="mt-3">
   <div class="flex items-start">
-    <img class="object-cover w-10 h-10 rounded-full" src={avatar_url(current_user(assigns))} alt="current user profile image" />
-    <div class="flex flex-col flex-1 ml-3 space-y-2">
+    <!-- <img class="object-cover w-10 h-10 rounded-full" src={avatar_url(current_user(assigns))} alt="current user profile image" /> -->
+    <div class="flex flex-col flex-1">
         <Bonfire.UI.Social.CreateActivityLive
 
           reply_to_id={@reply_to_id}

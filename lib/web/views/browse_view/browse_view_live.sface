@@ -12,7 +12,7 @@
     />
     <div id={"tab-"<>@selected_tab} class="mx-4 bg-white border-t-8 border-gray-100 dark:border-gray-600 dark:bg-gray-700 lg:mx-0">
      <Bonfire.UI.Social.BrowseTabsLive selected_tab={@selected_tab} user={@user} />
-     <Bonfire.UI.Social.FeedHeaderLive selected_tab={@selected_tab} feed_title={@feed_title} />
+     <!-- <Bonfire.UI.Social.FeedHeaderLive selected_tab={@selected_tab} feed_title={@feed_title} /> -->
       {live_component(@socket, Bonfire.UI.Social.FeedLive, 
       assigns_merge(assigns, id: "feed"))
       }

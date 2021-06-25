@@ -1,4 +1,4 @@
-<div class={"bg-white dark:bg-gray-600",  "mb-4 rounded-lg": current_user(assigns) == nil}>
+<div class={"bg-white dark:bg-gray-700",  "mb-4 rounded-lg": current_user(assigns) == nil}>
   <div class="pb-2">
     <div :if={e(assigns, :current_user, :id, nil) != nil} class="bg-pink-300 bg-center bg-cover" style={"height: 225px; background-image: url('#{image_url(@user)}')"}></div>
     <div :if={e(assigns, :current_user, :id, nil) == nil} class="bg-pink-300 bg-center bg-cover rounded-t-lg" style={"height: 225px; background-image: url('#{image_url(@user)}')"}></div>
