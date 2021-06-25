@@ -3,7 +3,6 @@
   <section class="min-h-screen bg-white shadow dark:bg-gray-700 w-center">
    <Bonfire.UI.Social.PageHeaderLive
       :if={current_user(assigns) != nil}
-
       page_title={@page_title}
       page={@page}
       smart_input={@smart_input}
