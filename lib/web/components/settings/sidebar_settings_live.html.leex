@@ -1,25 +1,25 @@
     <nav
       role="navigation"
-      class="hidden lg:flex md:flex-shrink-0 flex-col w-60">
-      <div class="fixed h-full flex flex-col flex-grow overflow-y-auto w-60">
+      class="flex-col hidden lg:flex md:flex-shrink-0 w-60">
+      <div class="fixed flex flex-col flex-grow h-full overflow-y-auto w-60">
         <div class="flex flex-col flex-1 px-2 mt-2 space-y-2">
 
           <%= live_patch to: path(:dashboard) do %>
             <div
-              class="rounded-full w-full flex items-center px-2 py-2 text-sm font-regular transition duration-150 ease-in-out  group hover:bg-blueGray-200  focus:outline-none focus:text-gray-900 focus:bg-gray-50 text-gray-700">
-              <span class="w-8 h-8 items-center flex place-content-center rounded-full">
-                <svg class="w-4 h-4 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path></svg>
+              class="flex items-center w-full px-2 py-2 text-sm text-gray-700 transition duration-150 ease-in-out rounded-full font-regular group hover:bg-blueGray-200 dark:hover:bg-gray-600 focus:outline-none focus:text-gray-900 focus:bg-gray-50 dark:text-gray-200">
+              <span class="flex items-center w-8 h-8 rounded-full place-content-center">
+                <svg class="w-4 h-4 text-gray-700 dark:text-gray-200" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path></svg>
               </span>
               <span class="ml-2 truncate">Back to dashboard</span>
             </div>
           <% end %>
 
-        <div class="px-2 pt-6 uppercase text-gray-500 text-xs font-bold tracking-wide ">General settings</div>
+        <div class="px-2 pt-6 text-xs font-bold tracking-wide text-gray-500 uppercase dark:text-gray-400 ">General settings</div>
          <%= live_patch to: "/settings/user" do %>
               <div
                 aria-current="<%= if @selected_tab == "user", do: "page" %>"
-                class="rounded-full w-full flex items-center px-2 py-2 text-sm font-regular transition duration-150 ease-in-out  group hover:bg-blueGray-200  focus:outline-none focus:text-gray-900 focus:bg-gray-50 <%= if @selected_tab == "user", do: "text-pink-700", else: "text-gray-700" %>">
-                <svg class="w-5 h-5 mr-2 transition duration-150 ease-in-out <%= if @selected_tab == "user", do: "text-pink-700", else: "text-gray-500" %>" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                class="rounded-full w-full flex items-center px-2 py-2 text-sm font-regular transition duration-150 ease-in-out  group hover:bg-blueGray-200  focus:outline-none  dark:hover:bg-gray-600 focus:text-gray-900 focus:bg-gray-50 <%= if @selected_tab == "user", do: "dark:text-pink-400 text-pink-700", else: "dark:text-gray-200 text-gray-700" %>">
+                <svg class="w-5 h-5 mr-2 transition duration-150 ease-in-out <%= if @selected_tab == "user", do: "dark:text-pink-400 text-pink-700", else: "dark:text-gray-200 text-gray-500" %>" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5.121 17.804A13.937 13.937 0 0112 16c2.5 0 4.847.655 6.879 1.804M15 10a3 3 0 11-6 0 3 3 0 016 0zm6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
                 </svg>
                 <span class="ml-2 truncate">Profile information</span>
@@ -29,8 +29,8 @@
             <%= live_patch to: "/settings/preferences" do %>
               <div
                 aria-current="<%= if @selected_tab == "preferences", do: "page" %>"
-                class="rounded-full w-full flex items-center px-2 py-2 text-sm font-regular transition duration-150 ease-in-out  group hover:bg-blueGray-200  focus:outline-none focus:text-gray-900 focus:bg-gray-50 <%= if @selected_tab == "preferences", do: "text-pink-700", else: "text-gray-700" %>">
-                <svg class="w-5 h-5 mr-2 transition duration-150 ease-in-out <%= if @selected_tab == "preferences", do: "text-pink-700", else: "text-gray-500" %>" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                class="rounded-full w-full flex items-center px-2 py-2 text-sm font-regular transition duration-150 ease-in-out  group hover:bg-blueGray-200  focus:outline-none  dark:hover:bg-gray-600 focus:text-gray-900 focus:bg-gray-50 <%= if @selected_tab == "preferences", do: "dark:text-pink-400 text-pink-700", else: "dark:text-gray-200 text-gray-700" %>">
+                <svg class="w-5 h-5 mr-2 transition duration-150 ease-in-out <%= if @selected_tab == "preferences", do: "dark:text-pink-400 text-pink-700", else: "dark:text-gray-200 text-gray-500" %>" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 21a4 4 0 01-4-4V5a2 2 0 012-2h4a2 2 0 012 2v12a4 4 0 01-4 4zm0 0h12a2 2 0 002-2v-4a2 2 0 00-2-2h-2.343M11 7.343l1.657-1.657a2 2 0 012.828 0l2.829 2.829a2 2 0 010 2.828l-8.486 8.485M7 17h.01" />
                 </svg>
                 <span class="ml-2 truncate">
@@ -42,8 +42,8 @@
             <%= live_patch to: "/settings/circles" do %>
               <div
                 aria-current="<%= if @selected_tab == "circles", do: "page" %>"
-                class="rounded-full w-full flex items-center px-2 py-2 text-sm font-regular transition duration-150 ease-in-out  group hover:bg-blueGray-200  focus:outline-none focus:text-gray-900 focus:bg-gray-50 <%= if @selected_tab == "circles", do: "text-pink-700", else: "text-gray-700" %>">
-                <svg class="w-5 h-5 mr-2 transition duration-150 ease-in-out <%= if @selected_tab == "circles", do: "text-pink-700", else: "text-gray-500" %>" fill="none" stroke="currentColor"  viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                class="rounded-full w-full flex items-center px-2 py-2 text-sm font-regular transition duration-150 ease-in-out  group hover:bg-blueGray-200  focus:outline-none  dark:hover:bg-gray-600 focus:text-gray-900 focus:bg-gray-50 <%= if @selected_tab == "circles", do: "dark:text-pink-400 text-pink-700", else: "dark:text-gray-200 text-gray-700" %>">
+                <svg class="w-5 h-5 mr-2 transition duration-150 ease-in-out <%= if @selected_tab == "circles", do: "dark:text-pink-400 text-pink-700", else: "dark:text-gray-200 text-gray-500" %>" fill="none" stroke="currentColor"  viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 18.657A8 8 0 016.343 7.343S7 9 9 10c0-2 .5-5 2.986-7C14 5 16.09 5.777 17.656 7.343A7.975 7.975 0 0120 13a7.975 7.975 0 01-2.343 5.657z" />
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.879 16.121A3 3 0 1012.015 11L11 14H9c0 .768.293 1.536.879 2.121z" />
                 </svg>
@@ -56,8 +56,8 @@
             <%= live_patch to: "/settings/extensions" do %>
               <div
                 aria-current="<%= if @selected_tab == "extensions", do: "page" %>"
-                class="rounded-full w-full flex items-center px-2 py-2 text-sm font-regular transition duration-150 ease-in-out  group hover:bg-blueGray-200  focus:outline-none focus:text-gray-900 focus:bg-gray-50 <%= if @selected_tab == "extensions", do: "text-pink-700", else: "text-gray-700" %>">
-                <svg class="w-5 h-5 mr-2 transition duration-150 ease-in-out <%= if @selected_tab == "extensions", do: "text-pink-700", else: "text-gray-500" %>" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
+                class="rounded-full w-full flex items-center px-2 py-2 text-sm font-regular transition duration-150 ease-in-out  group hover:bg-blueGray-200  focus:outline-none  dark:hover:bg-gray-600 focus:text-gray-900 focus:bg-gray-50 <%= if @selected_tab == "extensions", do: "dark:text-pink-400 text-pink-700", else: "dark:text-gray-200 text-gray-700" %>">
+                <svg class="w-5 h-5 mr-2 transition duration-150 ease-in-out <%= if @selected_tab == "extensions", do: "dark:text-pink-400 text-pink-700", else: "dark:text-gray-200 text-gray-500" %>" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 4a2 2 0 114 0v1a1 1 0 001 1h3a1 1 0 011 1v3a1 1 0 01-1 1h-1a2 2 0 100 4h1a1 1 0 011 1v3a1 1 0 01-1 1h-3a1 1 0 01-1-1v-1a2 2 0 10-4 0v1a1 1 0 01-1 1H7a1 1 0 01-1-1v-3a1 1 0 00-1-1H4a2 2 0 110-4h1a1 1 0 001-1V7a1 1 0 011-1h3a1 1 0 001-1V4z" />
                 </svg>
                 <span class="ml-2 truncate">
@@ -69,8 +69,8 @@
             <%= live_patch to: "/settings/account" do %>
               <div
                 aria-current="<%= if @selected_tab == "account", do: "page" %>"
-                class="rounded-full w-full flex items-center px-2 py-2 text-sm font-regular transition duration-150 ease-in-out  group hover:bg-blueGray-200  focus:outline-none focus:text-gray-900 focus:bg-gray-50 <%= if @selected_tab == "account", do: "text-pink-700", else: "text-gray-700" %>">
-                <svg class="w-5 h-5 mr-2 transition duration-150 ease-in-out <%= if @selected_tab == "account", do: "text-pink-700", else: "text-gray-500" %>" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
+                class="rounded-full w-full flex items-center px-2 py-2 text-sm font-regular transition duration-150 ease-in-out  group hover:bg-blueGray-200  focus:outline-none  dark:hover:bg-gray-600 focus:text-gray-900 focus:bg-gray-50 <%= if @selected_tab == "account", do: "dark:text-pink-400 text-pink-700", else: "dark:text-gray-200 text-gray-700" %>">
+                <svg class="w-5 h-5 mr-2 transition duration-150 ease-in-out <%= if @selected_tab == "account", do: "dark:text-pink-400 text-pink-700", else: "dark:text-gray-200 text-gray-500" %>" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 7a2 2 0 012 2m4 0a6 6 0 01-7.743 5.743L11 17H9v2H7v2H4a1 1 0 01-1-1v-2.586a1 1 0 01.293-.707l5.964-5.964A6 6 0 1121 9z" />
                 </svg>
                 <span class="ml-2 truncate">
@@ -80,12 +80,12 @@
             <% end %>
 
             <%= if Bonfire.Me.Users.is_admin(current_user(assigns)) do %>
-            <div class="px-2 pt-6 uppercase text-gray-500 text-xs font-bold tracking-wide ">Admins</div>
+            <div class="px-2 pt-6 text-xs font-bold tracking-wide text-gray-500 uppercase dark:text-gray-400 ">Admins</div>
               <%= live_patch to: "/settings/admin" do %>
                 <div
                   aria-current="<%= if @selected_tab == "admin", do: "page" %>"
-                  class="rounded-full w-full flex items-center px-2 py-2 text-sm font-regular transition duration-150 ease-in-out  group hover:bg-blueGray-200  focus:outline-none focus:text-gray-900 focus:bg-gray-50 <%= if @selected_tab == "admin", do: "text-pink-700", else: "text-gray-700" %>">
-                  <svg class="w-5 h-5 mr-2 transition duration-150 ease-in-out <%= if @selected_tab == "admin", do: "text-pink-700", else: "text-gray-500" %>" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
+                  class="rounded-full w-full flex items-center px-2 py-2 text-sm font-regular transition duration-150 ease-in-out  group hover:bg-blueGray-200  focus:outline-none  dark:hover:bg-gray-600 focus:text-gray-900 focus:bg-gray-50 <%= if @selected_tab == "admin", do: "dark:text-pink-400 text-pink-700", else: "dark:text-gray-200 text-gray-700" %>">
+                  <svg class="w-5 h-5 mr-2 transition duration-150 ease-in-out <%= if @selected_tab == "admin", do: "dark:text-pink-400 text-pink-700", else: "dark:text-gray-200 text-gray-500" %>" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z" />
                   </svg>
                   <span class="ml-2 truncate">
@@ -96,8 +96,8 @@
               <%= live_patch to: "/settings/admin" do %>
                 <div
                   aria-current="<%= if @selected_tab == "admin", do: "page" %>"
-                  class="rounded-full w-full flex items-center px-2 py-2 text-sm font-regular transition duration-150 ease-in-out  group hover:bg-blueGray-200  focus:outline-none focus:text-gray-900 focus:bg-gray-50 <%= if @selected_tab == "admin", do: "text-pink-700", else: "text-gray-700" %>">
-                  <svg class="w-5 h-5 mr-2 transition duration-150 ease-in-out <%= if @selected_tab == "admin", do: "text-pink-700", else: "text-gray-500" %>" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
+                  class="rounded-full w-full flex items-center px-2 py-2 text-sm font-regular transition duration-150 ease-in-out  group hover:bg-blueGray-200  focus:outline-none  dark:hover:bg-gray-600 focus:text-gray-900 focus:bg-gray-50 <%= if @selected_tab == "admin", do: "dark:text-pink-400 text-pink-700", else: "dark:text-gray-200 text-gray-700" %>">
+                  <svg class="w-5 h-5 mr-2 transition duration-150 ease-in-out <%= if @selected_tab == "admin", do: "dark:text-pink-400 text-pink-700", else: "dark:text-gray-200 text-gray-500" %>" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 21v-4m0 0V5a2 2 0 012-2h6.5l1 1H21l-3 6 3 6h-8.5l-1-1H5a2 2 0 00-2 2zm9-13.5V9" />
                   </svg>
                   <span class="ml-2 truncate">
@@ -108,8 +108,8 @@
               <%= live_patch to: "/settings/admin" do %>
                 <div
                   aria-current="<%= if @selected_tab == "admin", do: "page" %>"
-                  class="rounded-full w-full flex items-center px-2 py-2 text-sm font-regular transition duration-150 ease-in-out  group hover:bg-blueGray-200  focus:outline-none focus:text-gray-900 focus:bg-gray-50 <%= if @selected_tab == "admin", do: "text-pink-700", else: "text-gray-700" %>">
-                  <svg class="w-5 h-5 mr-2 transition duration-150 ease-in-out <%= if @selected_tab == "admin", do: "text-pink-700", else: "text-gray-500" %>" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
+                  class="rounded-full w-full flex items-center px-2 py-2 text-sm font-regular transition duration-150 ease-in-out  group hover:bg-blueGray-200  focus:outline-none  dark:hover:bg-gray-600 focus:text-gray-900 focus:bg-gray-50 <%= if @selected_tab == "admin", do: "dark:text-pink-400 text-pink-700", else: "dark:text-gray-200 text-gray-700" %>">
+                  <svg class="w-5 h-5 mr-2 transition duration-150 ease-in-out <%= if @selected_tab == "admin", do: "dark:text-pink-400 text-pink-700", else: "dark:text-gray-200 text-gray-500" %>" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18.364 18.364A9 9 0 005.636 5.636m12.728 12.728A9 9 0 015.636 5.636m12.728 12.728L5.636 5.636" />
                   </svg>
                   <span class="ml-2 truncate">
