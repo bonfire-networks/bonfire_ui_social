@@ -12,7 +12,7 @@
           to={"/user/#{e(@user, :character, :username, "")}/private"}
           class="btn-primary">Message</LivePatch>
         <div :if={e(assigns, :current_user, :id, nil) && e(assigns, :current_user, :id, nil) != maybe_get(@user, :id)} >
-          {live_component(@socket, Bonfire.UI.Social.FollowButtonLive, following: e(assigns, :following, []), id: e(@user, :id, nil), label: "", class: "rounded-md shadow-sm w-full flex flex-1 text-left btn-secondary")}
+          {live_component(@socket, Bonfire.UI.Social.FollowButtonLive, following: e(assigns, :following, []), id: e(@user, :id, nil), label: "", class: "profile_follow rounded-md shadow-sm w-full flex flex-1 text-left btn-secondary")}
         </div>
         <LiveRedirect
           :if={e(assigns, :current_user, :id, nil) && e(assigns, :current_user, :id, nil) == maybe_get(@user, :id)}

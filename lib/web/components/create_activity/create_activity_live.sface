@@ -1,5 +1,6 @@
 
 <div
+  class="create_activity"
   x-cloak
   x-data="{
     open: false,
