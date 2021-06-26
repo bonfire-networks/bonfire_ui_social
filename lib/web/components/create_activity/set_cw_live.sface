@@ -17,7 +17,7 @@
         type="button"
         @click="summary_open = !summary_open"
         :class="{'text-pink-600 bg-pink-100' : summary_open === true}"
-        class="text-xs font-semibold tracking-wide text-gray-600 dark:text-gray-300 hover:underline ">Add a summary</button>
+        class="text-xs font-semibold tracking-wide text-gray-600 dark:text-gray-300 hover:underline ">{l "Add a summary"}</button>
     </div>
 
     <div

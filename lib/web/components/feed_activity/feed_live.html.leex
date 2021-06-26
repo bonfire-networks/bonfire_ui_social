@@ -53,8 +53,12 @@
     </div>
 
     <%= if e(@page_info, :after, nil) do %>
-    <div class="flex justify-center w-full p-3 mx-auto place-items-center">
-      <button phx-click="Bonfire.Social.Feeds:load_more" phx-value-after="<%= e(@page_info, :after, nil) %>" href="?Bonfire.Social.Feeds[after]=<%= e(@page_info, :after, nil) %>" class="relative inline-flex items-center px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md hover:bg-gray-50">Load more</button>
+    <div class="flex justify-center w-full p-3 mx-auto border-t dark:border-gray-600 place-items-center">
+      <button 
+        phx-click="Bonfire.Social.Feeds:load_more" 
+        phx-value-after="<%= e(@page_info, :after, nil) %>" 
+        href="?Bonfire.Social.Feeds[after]=<%= e(@page_info, :after, nil) %>" 
+        class="relative inline-flex items-center px-4 py-2 text-sm font-medium text-gray-700 rounded-md dark:text-gray-300 dark:hover:bg-gray-500 hover:bg-gray-50">Load more</button>
     </div>
     <% end %>
 

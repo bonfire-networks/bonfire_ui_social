@@ -16,7 +16,7 @@
     to="/browse/instance"
     class="flex-1 pt-2 group">
     <div class={"group-hover:text-pink-400 text-center w-full capitalize text-gray-500 dark:text-gray-300 px-3 font-medium text-sm border-gray-200", "hover:text-pink-600 text-pink-600 dark:text-pink-400 font-bold": @selected_tab == "instance"}>
-     Instance
+     {l "Instance"}
     </div>
       <span
         :if={@selected_tab ==  "instance"}
@@ -26,7 +26,7 @@
     to="/browse/fediverse"
     class="flex-1 pt-2 group">
     <div class={"group-hover:text-pink-400 text-center w-full capitalize text-gray-500 dark:text-gray-300 px-3 font-medium text-sm border-gray-200", "hover:text-pink-600 text-pink-600 dark:text-pink-400 font-bold": @selected_tab == "fediverse"}>
-     Fediverse
+     {l "Fediverse"}
     </div>
       <span
         :if={@selected_tab ==  "fediverse"}

@@ -5,7 +5,7 @@
     <%= live_component(@socket, Bonfire.UI.Social.PrivateLive, assigns_clean(assigns)) %>
   </section>
 
-  <aside class="flex-1 hidden mt-2 lg:flex md:flex-shrink-0">
+  <!-- <aside class="flex-1 hidden mt-2 lg:flex md:flex-shrink-0">
     <div class="w-full h-full px-3">
       <%= for component <- Bonfire.Common.Config.get([:ui, :profile, :widgets], []) do %>
             <%=
@@ -17,5 +17,5 @@
             %>
           <% end %>
     </div>
-  </aside>
+  </aside> -->
 </main>

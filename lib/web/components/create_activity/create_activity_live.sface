@@ -75,8 +75,8 @@
           type="submit"
 
           class=" justify-self-end btn-primary">
-          <span :if={e(assigns, :smart_input_private, nil)}>Send</span>
-          <span :if={e(assigns, :smart_input_private, nil) == nil}>Publish</span>
+          <span :if={e(assigns, :smart_input_private, nil)}>{l "Send"}</span>
+          <span :if={e(assigns, :smart_input_private, nil) == nil}>{l "Publish"}</span>
         </button>
       </div>
     </div>

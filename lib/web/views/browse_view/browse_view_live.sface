@@ -18,9 +18,9 @@
       }
     </div>
   </section>
-  <aside class="flex-1 hidden mt-2 lg:block md:flex-shrink-0">
+  <!-- <aside class="flex-1 hidden mt-2 lg:block md:flex-shrink-0">
     <div class="w-full h-full px-3">
 
     </div>
-  </aside>
+  </aside> -->
 </main>

@@ -26,7 +26,7 @@
               </div>
             <% end %>
 
-            <%= live_patch to: "/settings/preferences" do %>
+            <!-- <%= live_patch to: "/settings/preferences" do %>
               <div
                 aria-current="<%= if @selected_tab == "preferences", do: "page" %>"
                 class="rounded-full w-full flex items-center px-2 py-2 text-sm font-regular transition duration-150 ease-in-out  group hover:bg-blueGray-200  focus:outline-none  dark:hover:bg-gray-600 focus:text-gray-900 focus:bg-gray-50 <%= if @selected_tab == "preferences", do: "dark:text-pink-400 text-pink-700", else: "dark:text-gray-200 text-gray-700" %>">
@@ -37,9 +37,9 @@
                   General preferences
                 </span>
               </div>
-            <% end %>
+            <% end %> -->
 
-            <%= live_patch to: "/settings/circles" do %>
+            <!-- <%= live_patch to: "/settings/circles" do %>
               <div
                 aria-current="<%= if @selected_tab == "circles", do: "page" %>"
                 class="rounded-full w-full flex items-center px-2 py-2 text-sm font-regular transition duration-150 ease-in-out  group hover:bg-blueGray-200  focus:outline-none  dark:hover:bg-gray-600 focus:text-gray-900 focus:bg-gray-50 <%= if @selected_tab == "circles", do: "dark:text-pink-400 text-pink-700", else: "dark:text-gray-200 text-gray-700" %>">
@@ -51,7 +51,7 @@
                   Circles
                 </span>
               </div>
-            <% end %>
+            <% end %> -->
 
             <%= live_patch to: "/settings/extensions" do %>
               <div
@@ -66,7 +66,7 @@
               </div>
             <% end %>
 
-            <%= live_patch to: "/settings/account" do %>
+            <!-- <%= live_patch to: "/settings/account" do %>
               <div
                 aria-current="<%= if @selected_tab == "account", do: "page" %>"
                 class="rounded-full w-full flex items-center px-2 py-2 text-sm font-regular transition duration-150 ease-in-out  group hover:bg-blueGray-200  focus:outline-none  dark:hover:bg-gray-600 focus:text-gray-900 focus:bg-gray-50 <%= if @selected_tab == "account", do: "dark:text-pink-400 text-pink-700", else: "dark:text-gray-200 text-gray-700" %>">
@@ -77,9 +77,9 @@
                   Account
                 </span>
               </div>
-            <% end %>
+            <% end %> -->
 
-            <%= if Bonfire.Me.Users.is_admin(current_user(assigns)) do %>
+            <!-- <%= if Bonfire.Me.Users.is_admin(current_user(assigns)) do %>
             <div class="px-2 pt-6 text-xs font-bold tracking-wide text-gray-500 uppercase dark:text-gray-400 ">Admins</div>
               <%= live_patch to: "/settings/admin" do %>
                 <div
@@ -117,7 +117,7 @@
                   </span>
                 </div>
               <% end %>
-            <% end %>
+            <% end %> -->
         </div>
       </div>
     </nav>
