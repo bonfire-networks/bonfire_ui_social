@@ -2,6 +2,7 @@ defmodule Bonfire.UI.Social.FeedLive do
   use Bonfire.Web, :live_component
   alias Bonfire.UI.Social.ActivityLive
   import Bonfire.UI.Social.Integration
+  require Logger
 
   def mount(socket) do
     {:ok, socket
@@ -29,32 +30,31 @@ defmodule Bonfire.UI.Social.FeedLive do
     update(Map.merge(assigns, %{new_activity: new_activity}), socket)
   end
 
-  def update(%{feed: feed} = assigns, socket) when is_list(feed) do # feed provided by parent component/view
+  def update(%{feed: feed, page_info: page_info} =assigns, socket) when is_list(feed) do
+    Logger.debug("FeedLive: a feed was provided")
 
     {:ok, socket
     |> assigns_merge(assigns,
-      feed: preloads(feed),
-      page_info: e(assigns, :page_info, e(socket, :assigns, :page_info, nil))
-      ) }
+      feed: feed |> preloads(),
+      page_info: page_info
+    )}
   end
 
   def update(assigns, socket) do
-    IO.inspect("default to instance feed as none other was specified")
+    Logger.debug("FeedLive: NO feed provided, try fetching one via Bonfire.Social")
+    socket = assign(socket, assigns) #|> IO.inspect
 
-    feed_id = Bonfire.Social.Feeds.instance_feed_id()
+    assigns = if module_enabled?(Bonfire.Social.Web.Feeds.BrowseLive), do: Bonfire.Social.Web.Feeds.BrowseLive.default_feed(socket),
+    else: []
 
-    feed = Bonfire.Social.FeedActivities.feed(feed_id, socket)
-
-    title = e(assigns, :feed_title, "Recent activity on this instance")
+    # IO.inspect(assigns)
 
     {:ok, socket
     |> assigns_merge(assigns,
-      feed_title: title,
-      feed_id: feed_id,
-      feed: preloads(e(feed, :entries, [])),
-      page_info: e(feed, :metadata, []) #|> IO.inspect(label)
+      feed: e(assigns, :feed, []) |> preloads()
     )}
   end
+
 
   def preloads(feed) do
     # preloads = (

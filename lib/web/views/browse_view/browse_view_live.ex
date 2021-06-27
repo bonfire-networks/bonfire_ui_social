@@ -12,18 +12,4 @@ defmodule  Bonfire.UI.Social.BrowseViewLive do
   prop search_placholder, :string
 
 
-  def update(%{feed: feed} =assigns, socket) when is_list(feed) and length(feed)>0 do
-    # IO.inspect("BrowseViewLive: a feed was provided")
-
-    {:ok, assign(socket, assigns) }
-  end
-
-
-  def update(assigns, socket) do
-    # IO.inspect("BrowseViewLive: NO feed provided, fallback to fetching one")
-
-    if module_enabled?(Bonfire.Social.Feeds.BrowseLive), do: Bonfire.Social.Feeds.BrowseLive.default_feed(socket),
-    else: {:ok, assign(socket, assigns) }
-
-  end
 end

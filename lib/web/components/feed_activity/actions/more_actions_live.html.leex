@@ -3,7 +3,7 @@
 <button
   phx-click="Bonfire.Social.Boosts:<%= if e(@object, :id, "") in e(assigns, :boosted, []) || e(@activity, :my_boost, :id, nil), do: "undo", else: "boost" %>"
   phx-value-id="<%= e(@object, :id, "") %>"
-  class="flex items-center py-1 rounded cursor-pointer group">
+  class="boost flex items-center py-1 rounded cursor-pointer group">
 
   <%= if e(assigns, :showing_within_thread, false) != true do %>
   <svg
