@@ -1,10 +1,10 @@
 
   <div class="relative z-40 flex flex-col ">
     <div class="fixed top-0 left-0 right-0 h-20 bg-blueGray-50 dark:bg-gray-800"></div>
-    <div class="container fixed top-0 left-0 right-0 flex flex-shrink-0 h-16 max-w-screen-lg px-3 mx-auto mt-2 bg-white rounded-lg shadow lg:justify-between">
+    <div class="fixed top-0 left-0 right-0 flex flex-shrink-0 h-16 px-3 mx-auto mt-2 lg:justify-between">
         <div class="flex items-center flex-shrink-0">
           <LiveRedirect to={path(Bonfire.Common.Config.get!(:home_page))}>
-          <div class="w-10 h-10 bg-center bg-no-repeat bg-contain" style="background-image: url(<%= Bonfire.Common.Config.get([:ui, :theme, :instance_logo], '') %>)"></div>
+          <div class="w-10 h-10 bg-center bg-no-repeat bg-contain" style={"background-image: url(" <> Bonfire.Common.Config.get([:ui, :theme, :instance_logo], '')  <> ")"}></div>
           </LiveRedirect>
         </div>
         <div class="flex flex-1 pl-4">
