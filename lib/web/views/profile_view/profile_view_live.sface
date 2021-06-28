@@ -10,7 +10,7 @@
     {live_component(@socket, Bonfire.Common.Config.get([:ui, :profile, :sections, tab(@selected_tab)], Bonfire.UI.Social.ProfileTimelineLive), assigns_clean(assigns))}
   </section>
 
-  <aside
+  <!-- <aside
     :if={e(assigns, :current_user, :id, nil)}
     class="flex-1 hidden mt-2 lg:flex md:flex-shrink-0">
     <div class="w-full h-full px-3">
@@ -24,5 +24,5 @@
         }
       </div>
     </div>
-  </aside>
+  </aside> -->
 </main>
