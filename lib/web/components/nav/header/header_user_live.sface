@@ -31,7 +31,7 @@
                 aria-expanded="true">
                 <img
                   class="inline-block object-cover w-8 h-8 rounded-full"
-                  src="<%=avatar_url(current_user(assigns))%>"
+                  src={avatar_url(current_user(assigns))}
                   alt="current user profile image" />
                 <div class="flex-1 ml-3">
                   <p class="text-sm font-semibold text-gray-700 dark:text-gray-200">{ e(assigns, :current_user, :profile, :name, "Me") }</p>
