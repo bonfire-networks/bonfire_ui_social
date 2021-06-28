@@ -2,7 +2,7 @@
   phx-click="Bonfire.Social.Likes:like"
   phx-value-direction={"#{if @object_id in e(assigns, :liked, []) || e(@my_like, :id, nil), do: "down", else: "up"}"}
   phx-value-id={"#{@object_id}"}
-  class="like flex items-center py-1 rounded cursor-pointer group">
+  class="flex items-center py-1 rounded cursor-pointer like group">
 
   <span :if={e(assigns, :showing_within_thread, false) != true}>
     <svg

@@ -53,7 +53,7 @@
     </div>
 
     <%= if e(@page_info, :after, nil) do %>
-    <div class="flex justify-center w-full p-3 mx-auto border-t dark:border-gray-600 place-items-center">
+    <div id="load_more" class="flex justify-center w-full p-3 mx-auto border-t dark:border-gray-600 place-items-center">
       <button 
         phx-click="Bonfire.Social.Feeds:load_more" 
         phx-value-after="<%= e(@page_info, :after, nil) %>" 

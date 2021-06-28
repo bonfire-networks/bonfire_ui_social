@@ -2,7 +2,7 @@
 <nav
   role="navigation"
   class="flex-col hidden lg:flex md:flex-shrink-0 w-90">
-  <div class="fixed flex flex-col flex-grow h-full overflow-y-auto lg:px-3 w-90">
+  <div class="fixed flex flex-col flex-grow h-full overflow-y-auto lg:pr-3 w-90">
 
     <!-- Sidebar Search -->
     <div class="mt-2 mb-4">
