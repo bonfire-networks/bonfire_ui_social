@@ -8,7 +8,7 @@
     summary_open: false,
     open_boundaries: false
   }"
-  @click.away="{open=false; title_open=false; summary_open=false}">
+  @click.away="{open=false; title_open=false; summary_open=false; open_boundaries=false}">
   <Form for={Bonfire.Social.Posts.LiveHandler.post_changeset()} submit="Bonfire.Social.Posts:post" opts={ autocomplete: "off"}>
     <div x-description="create post form">
 
@@ -49,16 +49,58 @@
       <div
         x-show="open"
         class="flex items-center p-2 py-3 bg-gray-300 rounded-b">
-        <div class="flex items-center flex-1 space-x-4">
+        <div class="flex items-center flex-1 space-x-3">
           <button
             :if={Bonfire.Common.Config.get([:ui, :smart_input, :cw], []) == true}
             type="button"
             @click="title_open = !title_open"
-            class="flex items-center hover:underline"
+            class="flex items-center p-1 rounded hover:bg-gray-400"
             :class="{'bg-pink-50' : title_open === true }">
-            <svg :class="{'text-pink-600' : title_open === true }" class="w-5 h-5 text-gray-700" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M18 3a1 1 0 00-1.447-.894L8.763 6H5a3 3 0 000 6h.28l1.771 5.316A1 1 0 008 18h1a1 1 0 001-1v-4.382l6.553 3.276A1 1 0 0018 15V3z" clip-rule="evenodd"></path></svg>
+            <svg :class="{'text-pink-600' : title_open === true }" class="w-4 h-4 text-gray-700" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M18 3a1 1 0 00-1.447-.894L8.763 6H5a3 3 0 000 6h.28l1.771 5.316A1 1 0 008 18h1a1 1 0 001-1v-4.382l6.553 3.276A1 1 0 0018 15V3z" clip-rule="evenodd"></path></svg>
             <span :class="{'text-pink-600 bg-pink-100' : title_open === true}" class="ml-2 text-xs font-semibold text-gray-800">CW</span>
           </button>
+
+          <div class="relative">
+            <button
+              type="button"
+              @click="open_boundaries = !open_boundaries"
+              class="flex items-center p-1 rounded hover:bg-gray-400"
+              :class="{'bg-pink-50' : open_boundaries === true }">
+              <svg xmlns="http://www.w3.org/2000/svg"  :class="{'text-pink-600' : open_boundaries === true }" class="w-4 h-4 text-gray-700" viewBox="0 0 20 20" fill="currentColor">
+                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM4.332 8.027a6.012 6.012 0 011.912-2.706C6.512 5.73 6.974 6 7.5 6A1.5 1.5 0 019 7.5V8a2 2 0 004 0 2 2 0 011.523-1.943A5.977 5.977 0 0116 10c0 .34-.028.675-.083 1H15a2 2 0 00-2 2v2.197A5.973 5.973 0 0110 16v-2a2 2 0 00-2-2 2 2 0 01-2-2 2 2 0 00-1.668-1.973z" clip-rule="evenodd" />
+              </svg>
+            </button>
+            <div
+              x-description="Usr profile dropdown menu, show/hide based on menu state."
+              x-show="open_boundaries"
+              x-transition:enter="transition ease-out duration-100"
+              x-transition:enter-start="transform opacity-0 scale-95"
+              x-transition:enter-end="transform opacity-100 scale-100"
+              x-transition:leave="transition ease-in duration-75"
+              x-transition:leave-start="transform opacity-100 scale-100"
+              x-transition:leave-end="transform opacity-0 scale-95"
+              class="absolute left-0 z-10 mt-2 -ml-16 origin-top-right bg-white divide-y divide-gray-100 rounded-md shadow-lg w-60 ring-1 ring-black ring-opacity-5 focus:outline-none"
+              role="menu"
+              aria-orientation="vertical"
+              aria-labelledby="user-profile-menu">
+                <div class="block px-4 py-2 text-sm transition duration-150 ease-in-out cursor-pointer rounded-t-md hover:bg-gray-100">
+                  <div class="text-sm text-gray-700">Public</div>
+                  <p class="text-xs text-gray-500">The activity will be visible within the fediverse</p>
+                </div>
+                <div class="block px-4 py-2 text-sm text-gray-700 transition duration-150 ease-in-out cursor-pointer hover:bg-gray-100">
+                  <div class="text-sm text-gray-700">Private</div>
+                  <p class="text-xs text-gray-500">The activity will be visible to the mentioned users</p>
+                </div>
+                <div class="block px-4 py-2 text-sm text-gray-700 transition duration-150 ease-in-out cursor-pointer rounded-b-md hover:bg-gray-100">
+                  <div class="text-sm text-gray-700">Instance only</div>
+                  <p class="text-xs text-gray-500">The activity will be visible to instance members</p>
+                </div>
+                <div class="block px-4 py-2 text-sm text-gray-700 transition duration-150 ease-in-out cursor-pointer rounded-b-md hover:bg-gray-100">
+                  <div class="text-sm text-gray-700">Custom</div>
+                  <p class="text-xs text-gray-500">Pick your audience</p>
+                </div>
+            </div>
+          </div>
         </div>
         <!-- <button
           @click="{open = false; title_open = false}"
