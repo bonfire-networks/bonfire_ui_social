@@ -7,10 +7,10 @@
       <div
         :if={current_user(assigns) != nil}
         class="flex items-center pr-6 space-x-3">
-        <LivePatch
+        <!-- <LivePatch
           :if={e(assigns, :current_user, :id, nil) && e(assigns, :current_user, :id, nil) != maybe_get(@user, :id)}
           to={"/user/#{e(@user, :character, :username, "")}/private"}
-          class="btn-primary">Message</LivePatch>
+          class="btn-primary">Message</LivePatch> -->
         <div :if={e(assigns, :current_user, :id, nil) && e(assigns, :current_user, :id, nil) != maybe_get(@user, :id)} >
           {live_component(@socket, Bonfire.UI.Social.FollowButtonLive, following: e(assigns, :following, []), id: e(@user, :id, nil), label: "", class: "profile_follow rounded-md shadow-sm w-full flex flex-1 text-left btn-secondary")}
         </div>
@@ -24,14 +24,14 @@
             </div>
           </span>
         </LiveRedirect>
-        <button
+        <!-- <button
           :if={e(assigns, :current_user, :id, nil) && e(assigns, :current_user, :id, nil) != maybe_get(@user, :id)}
           type="button"
           class="btn-secondary">
           <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 5v.01M12 12v.01M12 19v.01M12 6a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2z" />
           </svg>
-        </button>
+        </button> -->
       </div>
     </div>
     <div class={"flex-1 px-6 mt-4"}>
