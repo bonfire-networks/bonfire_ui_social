@@ -1,6 +1,6 @@
 <div class="<%= if e(@activity, :replied, :reply_to_id, nil), do: "pl-1" %> flex items-center">
   <div class="flex justify-between flex-1">
-    <div class="flex items-center text-sm font-medium text-gray-700 dark:text-gray-100">
+    <div class="flex items-center text-sm font-medium text-gray-700 dark:text-gray-300">
       <a
         aria-label="<%= e(@activity, :subject_character, :username, "") %> profile"
         class="hover:underline"
