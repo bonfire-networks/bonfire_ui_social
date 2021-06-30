@@ -1,5 +1,5 @@
 defmodule Bonfire.UI.Social.FeedLive do
-  use Bonfire.Web, :live_component
+  use Bonfire.Web, :stateless_component
   alias Bonfire.UI.Social.ActivityLive
   import Bonfire.UI.Social.Integration
   require Logger

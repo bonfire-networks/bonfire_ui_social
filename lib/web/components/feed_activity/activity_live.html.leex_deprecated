@@ -11,6 +11,8 @@
       activity_default ml-0 p-3
   <% end %>">
 <%= for component <- @activity_object_components do %>
-  <%= activity_component(component, assigns, @socket) %>
+  <% IO.inspect("component") %>
+  <% IO.inspect(component) %>
+  <!-- <%= activity_component(component, assigns_clean(assigns), @socket) %> -->
 <% end %>
 </div>

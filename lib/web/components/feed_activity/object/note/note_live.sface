@@ -1,0 +1,53 @@
+
+<div class={
+  "py-2",
+  "reply_to py-0": e(@object, :id, nil) != nil and e(@activity, :replied, :reply_to_id, nil) == nil and e(@activity, :id, nil) == nil,  
+  "showing_within_thread ml-8 py-0": e(assigns, :showing_within_thread, nil) == true}
+   x-cloak 
+   x-data="{content_open: false}">
+    {#if e(assigns, :viewing_main_object, nil) !=true && e(@object, :name, nil)}
+      <button
+        @click="{content_open = true}"
+        x-show="content_open == false"
+        class="flex items-center text-sm font-semibold text-left text-gray-800 dark:text-gray-100 hover:underline">
+        { rich e(@object, :name, "Title")} (Read more)
+      </button>
+      <button
+        @click="{content_open = false}"
+        x-show="content_open"
+        class="flex items-center text-sm font-semibold text-left text-gray-800 dark:text-gray-100 hover:underline">
+        {rich e(@object, :name, "Title")} (Read less)
+      </button>
+      <div class="font-light prose-sm prose max-w-prose dark:prose-light">
+        {rich e(@object, :summary, "")}
+      </div>
+      <div
+        x-show="content_open"
+        x-transition:enter="transition ease-out duration-100"
+        x-transition:enter-start="transform opacity-0 scale-95"
+        x-transition:enter-end="transform opacity-100 scale-100"
+        x-transition:leave="transition ease-in duration-75"
+        x-transition:leave-start="transform opacity-100 scale-100"
+        x-transition:leave-end="transform opacity-0 scale-95"
+        class="prose-sm prose dark:prose-light max-w-prose">
+        {rich e(@object, :html_body, "")}
+      </div>
+    {#else}
+      <h2 
+        :if={e(@object, :name, nil)}
+        class="mb-4 text-3xl font-bold text-gray-800 dark:text-gray-100">
+        {rich e(@object, :name, "Title")}
+      </h2>
+
+        {#if e(@object, :summary, nil)}
+          <h3 class="text-xs tracking-wider text-gray-600 uppercase dark:text-gray-300">Summary</h3>
+          <LiveRedirect to={@permalink}>
+            <div class="mb-2 prose-sm prose text-gray-700 dark:text-gray-200 dark:prose-light max-w-prose">{rich e(@object, :summary, "")}</div>
+          </LiveRedirect>
+        {/if}
+
+        <article class={"dark:prose-light prose prose-sm max-w-prose", "prose max-w-prose dark:prose-light": e(assigns, :viewing_main_object, nil)}>
+          {rich e(@object, :html_body, "...")}
+        </article>
+    {/if}
+</div>

@@ -36,7 +36,7 @@ defmodule Bonfire.UI.Social.Activity.ProcessReflowLive do
   def preloads(object) do
     object
     |> repo().maybe_preload(process_preloads())
-    # |> repo().maybe_preload([:context])
+    |> repo().maybe_preload([:context])
   end
 
 end

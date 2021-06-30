@@ -1,0 +1,23 @@
+
+  <div class={"flex items-center space-x-8"}>
+    <Bonfire.UI.Social.Activity.ReplyLive 
+      permalink={@permalink} 
+      replied={e(@activity, :replied, [])}
+      showing_within_thread={e(assigns, :showing_within_thread, false)}
+      hide_reply={e(assigns, :hide_reply, nil )}
+      reply_click={e(assigns, :reply_click, nil )}
+      />
+
+    {#if e(assigns, :current_user, [])}
+      <Bonfire.UI.Social.Activity.BoostsLive 
+        object_id={e(@activity, :id, "")} 
+        my_boost={e(@activity, :my_boost, [])}
+        boost_count={e(@activity, :boost_count, [])}
+        />
+      <Bonfire.UI.Social.LikeActionLive
+        object_id={e(@object, :id, "")}
+        my_like={e(@activity, :my_like, [])}
+        like_count={e(@activity, :like_count, [])} 
+      />
+    {/if}
+  </div>

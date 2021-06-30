@@ -1,7 +1,10 @@
 defmodule Bonfire.UI.Social.ActivityLive do
-  use Bonfire.Web, :live_component
+  use Bonfire.Web, :stateless_component
   import Bonfire.UI.Social.Integration
   alias Bonfire.Social.Activities
+
+  prop activity, :map
+
 
   def update(%{activity: %{} = activity} = assigns, socket) do
 
@@ -174,13 +177,13 @@ defmodule Bonfire.UI.Social.ActivityLive do
         component_for_object_type(type)
 
       _ ->
-        IO.inspect(component_object_type_unrecognised: object)
+        # IO.inspect(component_object_type_unrecognised: object)
         [Bonfire.UI.Social.Activity.UnknownLive]
     end
   end
 
   def component_object(_, activity) do
-    IO.inspect(component_object_unknown: activity)
+    # IO.inspect(component_object_unknown: activity)
     [Bonfire.UI.Social.Activity.UnknownLive]
   end
 
@@ -189,7 +192,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
   def component_for_object_type(type) when type in [ValueFlows.Planning.Intent], do: [Bonfire.UI.Social.Activity.IntentTaskLive] # TODO: choose between Task and other Intent types
   def component_for_object_type(type) when type in [ValueFlows.Process], do: [Bonfire.UI.Social.Activity.ProcessListLive] # TODO: choose between Task and other Intent types
   def component_for_object_type(type) do
-    IO.inspect(component_object_type_unknown: type)
+    # IO.inspect(component_object_type_unknown: type)
     [Bonfire.UI.Social.Activity.UnknownLive]
   end
 
@@ -197,11 +200,17 @@ defmodule Bonfire.UI.Social.ActivityLive do
   def component_actions(_, %{object: %{post_content: %{id: _} = object}}, _), do: component_show_actions(object)
   def component_actions(_, %{object: %Bonfire.Data.Social.Post{} = object}, _), do: component_show_actions(object)
   def component_actions(_, %{object: %Bonfire.Data.Social.PostContent{} = object}, _), do: component_show_actions(object)
+
+  # WIP: Attempt to configure actions based on object type
+  def component_actions(_, %{object: %ValueFlows.Process{} = object}, _), do: component_show_process_actions(object)
+
   # TODO: make which object have actions configurable
-  def component_actions(_, %{object: %{id: _} = object}, _), do: component_show_actions(object)
+  def component_actions(_, %{object: %{id: _} = object}, _), do: object |> component_show_actions
   def component_actions(_, _, _), do: []
 
   def component_show_actions(object), do: [{Bonfire.UI.Social.Activity.ActionsLive, %{object: object}}]
+  def component_show_process_actions(object), do: [{Bonfire.UI.Social.Activity.ProcessActionsLive, %{object: object}}]
+
 
   def object(%{object: %{post_content: %{id: _} = _content} = object}), do: object # no need to load Post object
   def object(%{object: %Pointers.Pointer{id: _} = object}), do: load_object(object) # get other pointable objects (only as fallback, should normally already be preloaded)
@@ -270,13 +279,13 @@ defmodule Bonfire.UI.Social.ActivityLive do
     case component do
 
     {module, %{} = component_assigns} when is_atom(module) ->
-      #IO.inspect(activity_module: module)
-      #IO.inspect(activity_assign: component_assigns)
       live_component(
         socket,
         module,
-        assigns
-        |> assigns_merge(component_assigns)
+        assigns_clean(
+          assigns
+          |> assigns_merge(component_assigns)
+        )
       )
 
     module when is_atom(module) ->

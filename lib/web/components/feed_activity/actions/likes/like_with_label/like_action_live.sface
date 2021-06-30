@@ -29,7 +29,7 @@
 
     {if @object_id in e(assigns, :liked, []) || e(@my_like, :id, nil), do: l("Liked"), else: l("Like")}
 
-    <span :if={e(@like_count, :liker_count, 0) > 0}>({e(@like_count, :liker_count, 0)})</span>
+    <span :if={e(@like_count, :like_count, 0) > 0}>({e(@like_count, :like_count, 0)})</span>
 
   </span>
 </button>

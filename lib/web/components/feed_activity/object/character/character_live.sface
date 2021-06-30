@@ -1,0 +1,22 @@
+<div class="flex items-center">
+  <img class="inline-block object-cover rounded-full h-9 w-9" src={avatar_url(e(@object, :profile, nil))} alt="profile image">
+  <div class="flex-1 ml-2">
+    <div class="flex items-center text-base text-gray-700 dark:text-gray-200">
+      <LiveRedirect
+        :if={e(@activity, :subject_character, nil)}
+        to={"/user/" <> e(@activity, :subject_character, :username, "")}
+        aria-label={e(@activity, :subject_character, :username, "") <> " profile"}
+        class="font-bold hover:underline">
+        { e(@activity, :subject_profile, :name, "Anonymous") }
+      </LiveRedirect>
+      <span class="mx-1">{@verb_display || e(@activity, :verb, :verb, "posted")}</span>
+      <LiveRedirect class="font-bold hover:underline" to={"/user/" <>  e(@object, :character, :username, "")}>
+        {e(@object, :profile, :name, "Anonymous")}
+      </LiveRedirect>
+    </div>
+
+    <span class="block text-sm text-gray-500 dark:text-gray-300">@{e(@object, :character, :username, "")} ·
+      <LiveRedirect to={@permalink}>{@date_ago}</LiveRedirect>
+    </span>
+  </div>
+</div>

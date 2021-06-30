@@ -1,5 +1,5 @@
 defmodule Bonfire.UI.Social.Activity.UnknownLive do
-  use Bonfire.Web, :live_component
+  use Bonfire.Web, :stateless_component
   import Bonfire.UI.Social.Integration
 
   def update(%{object: nil} = assigns, socket) do

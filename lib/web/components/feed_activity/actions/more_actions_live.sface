@@ -1,33 +1,3 @@
-<%= if current_user(assigns) do %>
-
-<button
-  phx-click="Bonfire.Social.Boosts:<%= if e(@object, :id, "") in e(assigns, :boosted, []) || e(@activity, :my_boost, :id, nil), do: "undo", else: "boost" %>"
-  phx-value-id="<%= e(@object, :id, "") %>"
-  class="boost flex items-center py-1 rounded cursor-pointer group">
-
-  <%= if e(assigns, :showing_within_thread, false) != true do %>
-    <svg
-      class="<%= if e(@object, :id, "") in e(assigns, :boosted, []) || e(@activity, :my_boost, :id, nil), do: "text-pink-600 dark:text-pink-400 group-hover:text-pink-700 dark:group-hover:text-pink-400", else: "dark:text-gray-400 text-gray-500 group-hover:text-pink-700 dark:group-hover:text-pink-400" %>  w-5 h-5 mr-2"
-      fill="currentColor"
-      stroke="none"
-      viewBox="0 0 20 20"
-      xmlns="http://www.w3.org/2000/svg">
-        <path d="M8 5a1 1 0 100 2h5.586l-1.293 1.293a1 1 0 001.414 1.414l3-3a1 1 0 000-1.414l-3-3a1 1 0 10-1.414 1.414L13.586 5H8zM12 15a1 1 0 100-2H6.414l1.293-1.293a1 1 0 10-1.414-1.414l-3 3a1 1 0 000 1.414l3 3a1 1 0 001.414-1.414L6.414 15H12z" />
-    </svg>
-  <% end %>
-
-  <span class="<%= if e(@object, :id, "") in e(assigns, :boosted, []) || e(@activity, :my_boost, :id, nil), do: "text-pink-600 dark:text-pink-400", else: "dark:text-gray-400 text-gray-500" %> font-normal text-xs">
-  <%= if e(@object, :id, "") in e(assigns, :boosted, []) || e(@activity, :my_boost, :id, nil), do: "Boosted", else: "Boost" %>
-  <% if  e(@activity, :boost_count, :booster_count, 0) > 0 do %> (<%= e(@activity, :boost_count, :booster_count, 0) %>) <% end %> </span>
-</button>
-
-<%= live_component(@socket, Bonfire.UI.Social.LikeActionLive,
-  object_id: e(@object, :id, ""),
-  my_like: e(@activity, :my_like, nil),
-  like_count: e(@activity, :like_count, nil)
-) %>
-
-
 <button
   x-cloak
   x-data="{more: false}"
@@ -69,21 +39,22 @@
     <div class="py-1" role="none">
     <span class="flex items-center w-full px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-gray-900">
       <svg class="w-5 h-5 mr-2 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="M5.586 15H4a1 1 0 01-1-1v-4a1 1 0 011-1h1.586l4.707-4.707C10.923 3.663 12 4.109 12 5v14c0 .891-1.077 1.337-1.707.707L5.586 15z" clip-rule="evenodd"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2"></path></svg>
-      <span class="">Silent <span class="ml-1"><%= e(@activity, :subject_profile, :name, "Anonymous") %></span></span>
+      <span class="">Silent <span class="ml-1">{e(@activity, :subject_profile, :name, "Anonymous")}</span></span>
     </span>
     <span class="flex items-center w-full px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-gray-900">
       <svg class="w-5 h-5 mr-2 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="M18.364 18.364A9 9 0 005.636 5.636m12.728 12.728A9 9 0 015.636 5.636m12.728 12.728L5.636 5.636"></path></svg>
-      <span>Block <span class="ml-1"><%= e(@activity, :subject_profile, :name, "Anonymous") %></span></span>
+      <span>Block <span class="ml-1">{e(@activity, :subject_profile, :name, "Anonymous")}</span></span>
     </span>
     </div>
     <div
-      phx-click="Bonfire.Social.Flags:<%= if e(@object, :id, "") in e(assigns, :flagged, []) || e(@activity, :my_flag, :id, nil), do: "undo", else: "flag" %>" phx-value-id="<%= e(@object, :id, "") %>"
-      class="flex items-center py-1" role="none">
+      phx-click={if e(@object, :id, "") in e(assigns, :flagged, []) || e(@activity, :my_flag, :id, nil), do: "Bonfire.Social.Flags:undo", else: "Bonfire.Social.Flags:flag"} 
+      phx-value-id={e(@object, :id, "")}
+      class="flex items-center py-1" 
+      role="none">
       <span class="flex items-center w-full px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-gray-900">
         <svg class="w-5 h-5 mr-2 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="M3 21v-4m0 0V5a2 2 0 012-2h6.5l1 1H21l-3 6 3 6h-8.5l-1-1H5a2 2 0 00-2 2zm9-13.5V9"></path></svg>
-        <%= if e(@object, :id, "") in e(assigns, :flagged, []) || e(@activity, :my_flag, :id, nil), do: "Already reported", else: "Report this activity" %>
+        {if e(@object, :id, "") in e(assigns, :flagged, []) || e(@activity, :my_flag, :id, nil), do: "Already reported", else: "Report this activity" }
       </span>
     </div>
   </div>
 </button>
-<% end %>
