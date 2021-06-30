@@ -5,9 +5,9 @@ defmodule Bonfire.UI.Social.Feeds.FeedActivityTest do
   alias Bonfire.Social.{Boosts, Likes, Follows, Posts}
 
 
-  describe "Feed UX" do
+  describe "Feed UX:" do
 
-
+    @tag :todo
     test "As a user I want to see the activity boundary" do
 
     end
