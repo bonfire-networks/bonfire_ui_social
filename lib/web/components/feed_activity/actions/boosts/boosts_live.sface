@@ -14,9 +14,7 @@
   {/if}
 
 <span class="text-xs font-normal text-gray-500 dark:text-gray-400">
-   {if @object_id in e(assigns, :boosted, []) || e(@my_boost, :id, nil), do: l("Boosted"), else: l("Boost")}
-
-    <span :if={e(@boost_count, :boost_count, 0) > 0}>({e(@boost_count, :boost_count, 0)})</span>
+   {if @object_id in e(assigns, :boosted, []) || e(@my_boost, :id, nil), do: l("Boosted"), else: l("Boost")} <span :if={e(@boost_count, :booster_count, 0) > 0}>({e(@boost_count, :booster_count, 0)})</span>
 </span>
 
 </button>
