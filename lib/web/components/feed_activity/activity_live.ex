@@ -202,7 +202,27 @@ defmodule Bonfire.UI.Social.ActivityLive do
   def component_actions(_, %{object: %Bonfire.Data.Social.PostContent{} = object}, _), do: component_show_actions(object)
 
   # WIP: Attempt to configure actions based on object type
-  def component_actions(_, %{object: %ValueFlows.Process{} = object}, _), do: component_show_process_actions(object)
+  # def component_actions(_, %{object: %ValueFlows.Process{} = object}, _), do: component_show_process_actions(object)
+  def component_actions(_, %{object: %{} = object}, _) do
+    case Bonfire.Common.Types.object_type(object) do
+      type ->
+        actions_for_object_type(object, type)
+
+      _ ->
+        # IO.inspect(component_object_type_unrecognised: object)
+        [Bonfire.UI.Social.Activity.UnknownLive]
+    end
+  end
+
+  # WIP: Customize actions for each activity type
+  def actions_for_object_type(object, type) when type in [ValueFlows.EconomicEvent], do: component_show_process_actions(object)
+  def actions_for_object_type(object, type) when type in [ValueFlows.EconomicResource], do: component_show_process_actions(object)
+  def actions_for_object_type(object, type) when type in [ValueFlows.Planning.Intent], do: component_show_process_actions(object)# TODO: choose between Task and other Intent types
+  def actions_for_object_type(object, type) when type in [ValueFlows.Process], do: component_show_process_actions(object) # TODO: choose between Task and other Intent types
+  def actions_for_object_type(object, type) do
+    # IO.inspect(component_object_type_unknown: type)
+    component_show_process_actions(object)
+  end
 
   # TODO: make which object have actions configurable
   def component_actions(_, %{object: %{id: _} = object}, _), do: object |> component_show_actions

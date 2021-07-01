@@ -2,14 +2,16 @@ defmodule Bonfire.UI.Social.Activity.ProcessReflowLive do
   use Bonfire.Web, :stateless_component
   alias Surface.Components.LivePatch
   import Bonfire.UI.Social.Integration
+  alias Bonfire.Social.{Likes}
 
   prop object, :map, required: true
   prop within_feed, :boolean, required: false, default: false
 
   def update(assigns, socket) do
-
     object = assigns.object |> preloads() |> IO.inspect(label: "process_preloaded")
-
+    # my_like = Likes.liked?(current_user(assigns), %{id: object.id})
+    # IO.inspect("my_like")
+    # IO.inspect(my_like)
     tasks = e(object, :intended_outputs, [])
 
     tasks_total = Enum.count(tasks)
