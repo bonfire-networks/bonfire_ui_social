@@ -10,7 +10,7 @@
 
     {#if e(assigns, :current_user, [])}
       <Bonfire.UI.Social.Activity.BoostsLive 
-        object_id={e(@activity, :id, "")} 
+        object_id={e(@object, :id, "")} 
         my_boost={e(@activity, :my_boost, [])}
         boost_count={e(@activity, :boost_count, [])}
         />

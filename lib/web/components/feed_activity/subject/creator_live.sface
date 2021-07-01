@@ -9,7 +9,7 @@
       <LiveRedirect
         aria-label={e(@character, :username, "") <> "profile"}
         class="font-medium hover:underline"
-        to={"/user/" <> {e(@character, :username, "")}}>
+        to={"/user/" <> e(@character, :username, "")}>
         {e(@profile, :name, "Anonymous")}
       </LiveRedirect>
       <span class="ml-1 text-sm text-gray-500 dark:text-gray-200">@{e(@character, :username, "")}</span>
