@@ -5,7 +5,6 @@
         <Bonfire.UI.Social.LikeActionWithoutLabelLive
         id={@object.id}
         current_user={current_user(assigns)}
-        object_id={@object.id}
         />
         <LivePatch to={"/list/"<>e(@object, :id,"")}>
           <div class="text-lg font-bold text-gray-700 hover:underline hover:text-gray-800">{@object.name}</div>

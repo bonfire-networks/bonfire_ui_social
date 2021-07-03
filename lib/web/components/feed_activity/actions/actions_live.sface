@@ -15,7 +15,7 @@
         boost_count={e(@activity, :boost_count, [])}
         />
       <Bonfire.UI.Social.LikeActionLive
-        object_id={e(@object, :id, "")}
+        id={e(@object, :id, "")}
         my_like={e(@activity, :my_like, [])}
         like_count={e(@activity, :like_count, [])} 
       />
