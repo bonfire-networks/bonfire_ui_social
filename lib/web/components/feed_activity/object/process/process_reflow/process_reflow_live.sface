@@ -4,9 +4,17 @@
     <div class={"order-last": @within_feed}>
       <div class={"flex items-center space-x-2", "mt-2": @within_feed}>
          {live_component(@socket, Bonfire.UI.Social.LikeActionWithoutLabelLive,
+<<<<<<< HEAD
           object_id: @object.id,
           my_like: nil,
           like_count: nil
+=======
+        id: @object.id,
+        object_id: @object.id,
+        my_like: nil,
+        like_count: nil,
+        current_user: current_user(assigns)
+>>>>>>> 1221fb1 (stateful likes)
       )}
         <LivePatch to={"/process/"<>e(@object, :id,"")}>
           <div class="text-lg font-bold text-gray-700 dark:text-gray-200 hover:underline hover:text-gray-800">{@object.name}</div>

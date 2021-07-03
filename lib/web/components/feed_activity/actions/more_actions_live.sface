@@ -1,3 +1,38 @@
+<<<<<<< HEAD:lib/web/components/feed_activity/actions/more_actions_live.sface
+=======
+<%= if current_user(assigns) do %>
+
+<button
+  phx-click="Bonfire.Social.Boosts:<%= if e(@object, :id, "") in e(assigns, :boosted, []) || e(@activity, :my_boost, :id, nil), do: "undo", else: "boost" %>"
+  phx-value-id="<%= e(@object, :id, "") %>"
+  class="boost flex items-center py-1 rounded cursor-pointer group">
+
+  <%= if e(assigns, :showing_within_thread, false) != true do %>
+    <svg
+      class="<%= if e(@object, :id, "") in e(assigns, :boosted, []) || e(@activity, :my_boost, :id, nil), do: "text-pink-600 dark:text-pink-400 group-hover:text-pink-700 dark:group-hover:text-pink-400", else: "dark:text-gray-400 text-gray-500 group-hover:text-pink-700 dark:group-hover:text-pink-400" %>  w-5 h-5 mr-2"
+      fill="currentColor"
+      stroke="none"
+      viewBox="0 0 20 20"
+      xmlns="http://www.w3.org/2000/svg">
+        <path d="M8 5a1 1 0 100 2h5.586l-1.293 1.293a1 1 0 001.414 1.414l3-3a1 1 0 000-1.414l-3-3a1 1 0 10-1.414 1.414L13.586 5H8zM12 15a1 1 0 100-2H6.414l1.293-1.293a1 1 0 10-1.414-1.414l-3 3a1 1 0 000 1.414l3 3a1 1 0 001.414-1.414L6.414 15H12z" />
+    </svg>
+  <% end %>
+
+  <span class="<%= if e(@object, :id, "") in e(assigns, :boosted, []) || e(@activity, :my_boost, :id, nil), do: "text-pink-600 dark:text-pink-400", else: "dark:text-gray-400 text-gray-500" %> font-normal text-xs">
+  <%= if e(@object, :id, "") in e(assigns, :boosted, []) || e(@activity, :my_boost, :id, nil), do: "Boosted", else: "Boost" %>
+  <% if  e(@activity, :boost_count, :booster_count, 0) > 0 do %> (<%= e(@activity, :boost_count, :booster_count, 0) %>) <% end %> </span>
+</button>
+
+<%= live_component(@socket, Bonfire.UI.Social.LikeActionLive,
+  id: e(@object, :id, ""),
+  object_id: e(@object, :id, ""),
+  current_user: current_user(assigns),
+  my_like: e(@activity, :my_like, nil),
+  like_count: e(@activity, :like_count, nil)
+) %>
+
+
+>>>>>>> 1221fb1 (stateful likes):lib/web/components/feed_activity/actions/more_actions_live.html.leex
 <button
   x-cloak
   x-data="{more: false}"

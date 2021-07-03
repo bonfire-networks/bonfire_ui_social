@@ -2,11 +2,11 @@
   <div class={"grid justify-between p-3", "grid-cols-2 gap-8": !@within_feed, "py-0 grid-cols-1 gap-0": @within_feed}>
     <div class={"order-last": @within_feed}>
       <div class={"flex items-center space-x-2", "mt-2": @within_feed}>
-         {live_component(@socket, Bonfire.UI.Social.LikeActionWithoutLabelLive,
-        object_id: @object.id,
-        my_like: nil,
-        like_count: nil
-      )}
+        <Bonfire.UI.Social.LikeActionWithoutLabelLive
+        id={@object.id}
+        current_user={current_user(assigns)}
+        object_id={@object.id}
+        />
         <LivePatch to={"/list/"<>e(@object, :id,"")}>
           <div class="text-lg font-bold text-gray-700 hover:underline hover:text-gray-800">{@object.name}</div>
         </LivePatch>
