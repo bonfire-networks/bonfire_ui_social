@@ -78,7 +78,7 @@ defmodule Bonfire.UI.Social.Feeds.FeedActivityTest do
       assert doc = render_component(Bonfire.UI.Social.ActivityLive, %{activity: fp.activity})
 
       assert doc
-        |> Floki.text =~ "Liked (1)"
+        |> Floki.text =~ "Like (1)"
     end
 
     test "As a user I want to see if I already boosted an activity" do
