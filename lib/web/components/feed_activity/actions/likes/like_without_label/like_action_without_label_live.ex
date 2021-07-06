@@ -1,7 +1,7 @@
 defmodule Bonfire.UI.Social.LikeActionWithoutLabelLive do
   use Bonfire.Web, :stateful_component
 
-  # prop id, :string
+  prop object_id, :string
   prop liked, :list
   prop my_like, :any
 
