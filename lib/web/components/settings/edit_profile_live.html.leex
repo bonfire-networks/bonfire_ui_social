@@ -55,7 +55,7 @@
         </span>
         <input type="text" name="character[username]" id="username" autocomplete="username" class="flex-grow block w-full min-w-0 border-gray-300 rounded-none dark:border-gray-700 dark:bg-gray-600 dark:text-gray-100 focus:ring-light-blue-500 focus:border-light-blue-500 sm:text-sm" value='<%= e(assigns, :current_user, :character, :username, "") %>'>
         <span class="inline-flex items-center px-3 text-gray-500 border border-l-0 border-gray-300 rounded-r dark:border-gray-700 dark:bg-gray-600 dark:text-gray-100 bg-gray-50 sm:text-sm">
-          @bonfire.cafe
+          <%= Bonfire.Common.Config.get(:host) %>
         </span>
       </div>
     </div>

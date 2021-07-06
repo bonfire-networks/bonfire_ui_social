@@ -4,7 +4,7 @@ defmodule  Bonfire.UI.Social.BrowseViewLive do
   prop feed, :list, required: false
   prop page_title, :string, required: true
   prop page, :string, required: true
-  prop selected_tab, :string, default: "timeline"
+  prop selected_tab, :string, default: "feed"
   prop smart_input, :boolean, required: true
   prop has_private_tab, :boolean, required: true
   prop smart_input_placeholder, :string
