@@ -10,7 +10,7 @@
   <% !e(assigns, :current_user, :id, nil) && e(assigns, :current_account, :id, nil) -> %>
     <div class="">
       <%= live_component(@socket, Bonfire.UI.Social.HeaderAccountLive, assigns_clean(assigns)) %>
-      <div class="container max-w-screen-lg mx-auto mt-6">
+      <div class="container max-w-screen-lg mx-auto mt-20">
         <%= @inner_content %>
       </div>
     </div>
