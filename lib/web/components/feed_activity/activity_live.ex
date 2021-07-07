@@ -74,9 +74,13 @@ defmodule Bonfire.UI.Social.ActivityLive do
     creator_profile: %{id: _} = profile,
     creator_character: %{id: _} = character
     } = object_created}), do: {Bonfire.UI.Social.Activity.CreatorLive, %{profile: profile, character: character}}
-  # def component_activity_maybe_creator(%{subject_character: %{id: _} = character, subject_profile: %{id: _} = profile}), do: {Bonfire.UI.Social.Activity.CreatorLive, %{profile: profile, character: character}} #|> IO.inspect
+  
+
+  # WIP: subjects didn't showed up for economic activities, I've uncommented this function as temp workaround.
+  def component_activity_maybe_creator(%{subject_character: %{id: _} = character, subject_profile: %{id: _} = profile}), do: {Bonfire.UI.Social.Activity.CreatorLive, %{profile: profile, character: character}} #|> IO.inspect
+  
   def component_activity_maybe_creator(activity) do
-    # IO.inspect(no_creation: activity)
+    #IO.inspect(no_creation: activity)
     nil
   end
 
@@ -309,7 +313,6 @@ defmodule Bonfire.UI.Social.ActivityLive do
       )
 
     module when is_atom(module) ->
-      #IO.inspect(activity_module: module)
       live_component(
         socket,
         module,
