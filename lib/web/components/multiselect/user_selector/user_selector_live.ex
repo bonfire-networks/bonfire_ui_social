@@ -6,7 +6,14 @@ defmodule Bonfire.UI.Social.MultiselectLive.UserSelectorLive do
   prop pick_event, :string
   prop remove_event, :string
   prop selected_options, :any
+  prop preloaded_options, :any
   prop context_id, :string
+
+  def update(%{preloaded_options: pre} = assigns, socket) when is_list(pre) do
+
+    {:ok, socket
+      |> assign(assigns)}
+  end
 
   def update(assigns, socket) do
     # IO.inspect(userSelectorLive: assigns)
@@ -26,11 +33,7 @@ defmodule Bonfire.UI.Social.MultiselectLive.UserSelectorLive do
       )}
   end
 
-  def update(assigns, socket) do
 
-    {:ok, socket
-      |> assign(assigns)}
-  end
 
   def follow_to_tuple(%{followed_profile: profile}) do
     {profile.name, profile.id}

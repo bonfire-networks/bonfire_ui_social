@@ -6,8 +6,10 @@ defmodule Bonfire.UI.Social.MultiselectLive do
   prop label, :string, default: ""
   prop preloaded_options, :list, default: []
   prop selected_options, :any, default: []
-  prop pick_event, :string, required: true
-  prop remove_event, :string, required: true
+  prop focus_event, :string, required: false
+  # prop autocomplete_event, :string, required: false
+  prop pick_event, :string, required: false
+  prop remove_event, :string, required: false
   prop context_id, :string
 
   def update(%{selected_options: selected_options} = assigns, socket) when not is_list(selected_options) do
