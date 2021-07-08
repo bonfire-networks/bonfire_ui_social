@@ -7,9 +7,9 @@ defmodule Bonfire.UI.Social.Activity.ProcessReflowLive do
   prop object, :map, required: true
   prop within_feed, :boolean, required: false, default: false
 
-
+  
   def update(assigns, socket) do
-    object = assigns.object |> preloads()#|> IO.inspect(label: "process_preloaded")
+    object = assigns.object |> preloads() #|> IO.inspect(label: "process_preloaded")
     # my_like = Likes.liked?(current_user(assigns), %{id: object.id})
     # IO.inspect("my_like")
     # IO.inspect(my_like)

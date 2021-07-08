@@ -194,7 +194,8 @@ defmodule Bonfire.UI.Social.ActivityLive do
   def component_for_object_type(type) when type in [ValueFlows.EconomicEvent], do: [Bonfire.UI.Social.Activity.EconomicEventLive]
   def component_for_object_type(type) when type in [ValueFlows.EconomicResource], do: [Bonfire.UI.Social.Activity.EconomicResourceLive]
   def component_for_object_type(type) when type in [ValueFlows.Planning.Intent], do: [Bonfire.UI.Social.Activity.IntentTaskLive] # TODO: choose between Task and other Intent types
-  def component_for_object_type(type) when type in [ValueFlows.Process], do: [Bonfire.UI.Social.Activity.ProcessListLive] # TODO: choose between Task and other Intent types
+  # def component_for_object_type(type) when type in [ValueFlows.Process], do: [Bonfire.UI.Social.Activity.ProcessListLive] # TODO: choose between Task and other Intent types
+  def component_for_object_type(type) when type in [ValueFlows.Process], do: [Bonfire.Common.Config.get([:ui, :default_instance_feed_previews, :process], [{Bonfire.UI.Social.Activity.ProcessListLive}])]
   def component_for_object_type(type) do
     # IO.inspect(component_object_type_unknown: type)
     [Bonfire.UI.Social.Activity.UnknownLive]
