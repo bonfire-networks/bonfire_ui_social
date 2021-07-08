@@ -214,18 +214,19 @@ defmodule Bonfire.UI.Social.ActivityLive do
 
       _ ->
         # IO.inspect(component_object_type_unrecognised: object)
-        [Bonfire.UI.Social.Activity.UnknownLive]
+        [Bonfire.UI.Social.Activity.NoActionsLive] 
     end
   end
 
   # WIP: Customize actions for each activity type
-  def actions_for_object_type(object, type) when type in [ValueFlows.EconomicEvent], do: component_show_process_actions(object)
+  def actions_for_object_type(object, type) when type in [ValueFlows.EconomicEvent], do: component_show_event_actions(object)
   def actions_for_object_type(object, type) when type in [ValueFlows.EconomicResource], do: component_show_process_actions(object)
   def actions_for_object_type(object, type) when type in [ValueFlows.Planning.Intent], do: component_show_process_actions(object)# TODO: choose between Task and other Intent types
   def actions_for_object_type(object, type) when type in [ValueFlows.Process], do: component_show_process_actions(object) # TODO: choose between Task and other Intent types
   def actions_for_object_type(object, type) do
     # IO.inspect(component_object_type_unknown: type)
-    component_show_process_actions(object)
+    [Bonfire.UI.Social.Activity.NoActionsLive]
+    # component_show_process_actions(object)
   end
 
   # TODO: make which object have actions configurable
@@ -234,6 +235,9 @@ defmodule Bonfire.UI.Social.ActivityLive do
 
   def component_show_actions(object), do: [{Bonfire.UI.Social.Activity.ActionsLive, %{object: object}}]
   def component_show_process_actions(object), do: [{Bonfire.UI.Social.Activity.ProcessActionsLive, %{object: object}}]
+  def component_show_event_actions(object) do
+    [{Bonfire.UI.Social.Activity.EventActionsLive, %{object: e(object, :resource_inventoried_as, "")}}]
+  end
 
 
   def object(%{object: %{post_content: %{id: _} = _content} = object}), do: object # no need to load Post object
