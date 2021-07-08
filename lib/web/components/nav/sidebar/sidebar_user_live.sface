@@ -17,7 +17,7 @@
           x-bind:aria-expanded="open"
           aria-expanded="true">
           <img
-            class="inline-block object-cover w-10 h-10 bg-gray-200 rounded-full"
+            class="inline-block object-cover w-8 h-8 bg-gray-200 rounded-full"
             src={avatar_url(current_user(assigns))}
             alt="current user profile image">
           <div class="flex-1 ml-3 text-left">
@@ -39,7 +39,7 @@
         x-transition:leave="transition ease-in duration-75"
         x-transition:leave-start="transform opacity-100 scale-100"
         x-transition:leave-end="transform opacity-0 scale-95"
-        class="absolute left-0 w-56 mt-2 origin-top-right bg-white divide-y divide-gray-100 rounded-md shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none"
+        class="absolute right-0 w-56 mt-2 origin-top-left bg-white divide-y divide-gray-100 rounded-md shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none"
         role="menu"
         aria-orientation="vertical"
         aria-labelledby="user-profile-menu">
