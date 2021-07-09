@@ -37,22 +37,7 @@
       </article>
     </div>
 
-    <!-- Pagination -->
-    <div 
-      :if={e(@page_info, :after, nil)}
-      id="load_more" 
-      phx-click="Bonfire.Social.Feeds:load_more" 
-      phx-value-after={e(@page_info, :after, nil)} 
-      class="flex justify-center w-full p-3 mx-auto border-t dark:border-gray-600 place-items-center cursor-pointer"> 
-      <div class="relative w-full items-center px-4 py-2 text-sm text-center font-medium text-gray-700 rounded-md dark:text-gray-300 dark:hover:bg-gray-500 hover:bg-gray-50 ">
-        {l "Load more"}
-        <noscript>
-          <a href={"?Bonfire.Social.Feeds[after]=" <> e(@page_info, :after, nil)} class="text-underline">
-            (click here)
-          </a>
-        </noscript>
-      </div>
-    </div>
+    <Bonfire.UI.Social.LoadMoreLive live_handler={Bonfire.Social.Feeds} page_info={@page_info} />
 
     </div>
 </div>

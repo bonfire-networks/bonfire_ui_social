@@ -7,6 +7,7 @@ defmodule Bonfire.UI.Social.ThreadLive do
   # import Bonfire.Me.Integration
 
   @thread_max_depth 3 # TODO: put in config
+  @pagination_limit 5
 
   # def update(%{replies: replies, threaded_replies: threaded_replies} = assigns, socket) when is_list(replies) and length(replies)>0 and is_list(threaded_replies) and length(threaded_replies)>0 do
   #   IO.inspect("preloaded replies")
@@ -17,7 +18,7 @@ defmodule Bonfire.UI.Social.ThreadLive do
   # end
 
   def update(%{new_reply: new_reply} = assigns, socket) when is_map(new_reply) do
-    IO.inspect("adding new thread reply")
+    IO.inspect("Thread: adding new thread reply")
     # IO.inspect(merge_reply: previous_replies)
 
     new_reply = new_reply |> Map.put(:path, e(new_reply, :activity, :object, :replied, :path, []))
@@ -46,6 +47,7 @@ defmodule Bonfire.UI.Social.ThreadLive do
     # replies = Bonfire.Social.Posts.replies_tree(e(thread, :thread_replies, []))
 
     thread_id = e(assigns, :thread_id, nil)
+    IO.inspect(thread_id, label: "Thread: load replies")
 
     if thread_id do
 
@@ -54,9 +56,9 @@ defmodule Bonfire.UI.Social.ThreadLive do
       object = e(assigns, :object, e(activity, :object))
       # IO.inspect(object, label: "thread_object:")
 
-      with %{entries: replies, metadata: page_info} <- Bonfire.Social.Threads.list_replies(thread_id, socket, e(assigns, :after, nil), @thread_max_depth) do
+      with %{entries: replies, metadata: page_info} <- Bonfire.Social.Threads.list_replies(thread_id, current_user, e(assigns, :after, nil), @thread_max_depth, @pagination_limit) do
 
-        # IO.inspect(replies, label: "replies:")
+        IO.inspect(replies, label: "replies:")
 
         threaded_replies = if is_list(replies) and length(replies)>0, do: Bonfire.Social.Threads.arrange_replies_tree(replies), else: []
 
