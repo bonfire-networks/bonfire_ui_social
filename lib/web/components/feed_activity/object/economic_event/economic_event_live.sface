@@ -2,18 +2,18 @@
   <div class="mt-3 mb-3 text-sm text-gray-800 dark:text-gray-200">
     <span class="capitalize">{@verb_display}</span>
 
-    <LivePatch to={"/resource/"<> e(@object, :to_resource_inventoried_as, :id, e(@object, :resource_inventoried_as, :id, e(@object, :to_resource_inventoried_as_id, e(@object, :resource_inventoried_as_id, ""))))}>
+    <LivePatch to={path(e(@object, :to_resource_inventoried_as, e(@object, :resource_inventoried_as, e(@object, :to_resource_inventoried_as_id, e(@object, :resource_inventoried_as_id, "")))))}>
       <span :if={e(@object, :resource_quantity, nil)}>{e(@object, :resource_quantity, :has_numerical_value, "unknown quantity")} {e(@object, :resource_quantity, :unit, :label, e(@object, :resource_quantity, :has_unit, :label, ""))}</span>
       <span :if={e(@object, :effort_quantity, nil)}>{e(@object, :effort_quantity, :has_numerical_value, "unknown quantity")} {e(@object, :effort_quantity, :unit, :label, e(@object, :effort_quantity, :has_unit, :label, ""))}</span>
     </LivePatch>
 
     <span :if={e(@object, :resource_quantity, nil) || e(@object, :effort_quantity, nil)}>of</span>
 
-    <LivePatch :if={e(@object, :resource_inventoried_as, :id, nil)} to={"/resource/"<> e(@object, :resource_inventoried_as, :id, "")} class="font-bold underline"> {e(@object, :resource_inventoried_as, :name, "")}</LivePatch>
+    <LivePatch :if={e(@object, :resource_inventoried_as, :id, nil)} to={path(e(@object, :resource_inventoried_as, ""))} class="font-bold underline"> {e(@object, :resource_inventoried_as, :name, "")}</LivePatch>
 
-    <span :if={e(@object, :output_of, nil)}>from <a href={"#{e(assigns, :process_url, "/list/")}#{e(@object, :output_of, :id, "")}"} class="font-bold underline">{e(@object, :output_of, :name, "")}</a></span>
+    <span :if={e(@object, :output_of, nil)}>from <LivePatch to={path(e(@object, :output_of, ""))} class="font-bold underline">{e(@object, :output_of, :name, "")}</LivePatch></span>
 
-    <span :if={e(@object, :input_of, nil)}>for <a href={"#{e(assigns, :process_url, "/list/")}#{e(@object, :output_of, :id, "")}"} class="font-bold underline">{e(@object, :input_of, :name, "")}</a></span>
+    <span :if={e(@object, :input_of, nil)}>for <LivePatch to={path(e(@object, :output_of, ""))} class="font-bold underline">{e(@object, :input_of, :name, "")}</LivePatch></span>
 
   </div>
 

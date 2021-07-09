@@ -74,11 +74,11 @@ defmodule Bonfire.UI.Social.ActivityLive do
     creator_profile: %{id: _} = profile,
     creator_character: %{id: _} = character
     } = object_created}), do: {Bonfire.UI.Social.Activity.CreatorLive, %{profile: profile, character: character}}
-  
+
 
   # WIP: subjects didn't showed up for economic activities, I've uncommented this function as temp workaround.
   def component_activity_maybe_creator(%{subject_character: %{id: _} = character, subject_profile: %{id: _} = profile}), do: {Bonfire.UI.Social.Activity.CreatorLive, %{profile: profile, character: character}} #|> IO.inspect
-  
+
   def component_activity_maybe_creator(activity) do
     #IO.inspect(no_creation: activity)
     nil
@@ -195,7 +195,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
   def component_for_object_type(type) when type in [ValueFlows.EconomicResource], do: [Bonfire.UI.Social.Activity.EconomicResourceLive]
   def component_for_object_type(type) when type in [ValueFlows.Planning.Intent], do: [Bonfire.UI.Social.Activity.IntentTaskLive] # TODO: choose between Task and other Intent types
   # def component_for_object_type(type) when type in [ValueFlows.Process], do: [Bonfire.UI.Social.Activity.ProcessListLive] # TODO: choose between Task and other Intent types
-  def component_for_object_type(type) when type in [ValueFlows.Process], do: [Bonfire.Common.Config.get([:ui, :default_instance_feed_previews, :process], [{Bonfire.UI.Social.Activity.ProcessListLive}])]
+  def component_for_object_type(type) when type in [ValueFlows.Process], do: [Bonfire.Common.Config.get([:ui, :default_instance_feed_previews, :process], Bonfire.UI.Social.Activity.ProcessListLive)]
   def component_for_object_type(type) do
     # IO.inspect(component_object_type_unknown: type)
     [Bonfire.UI.Social.Activity.UnknownLive]
@@ -215,7 +215,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
 
       _ ->
         # IO.inspect(component_object_type_unrecognised: object)
-        [Bonfire.UI.Social.Activity.NoActionsLive] 
+        [Bonfire.UI.Social.Activity.NoActionsLive]
     end
   end
 
