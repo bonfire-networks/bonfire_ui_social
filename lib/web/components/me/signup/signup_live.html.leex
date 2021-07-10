@@ -5,6 +5,18 @@
 </div>
 <div class="bg-white rounded shadow-xl -mt-14">
   <div class="px-6 pt-16 pb-6 mx-auto">
+
+
+    <%= if Bonfire.Me.Accounts.invite_only? do  %>
+    <div role="status" class="p-4 rounded-md bg-yellow-50">
+          <div class="flex">
+            <div class="flex-shrink-0">
+    <%=l("Warning: this instance is currently invite-only.") %>
+     </div>
+          </div>
+        </div>
+    <% end %>
+
     <%= case @error do %>
       <%= nil -> %>
       <%= :taken -> %>
@@ -42,7 +54,9 @@
           </div>
         </div>
       <% end %>
-        <%= f = form_for @form, path(:signup, :create), [id: "signup-form"] %>
+
+
+      <%= f = form_for @form, path(:signup, :create), [id: "signup-form"] %>
         <div>
           <label for="signup-form_email_email_address" class="block text-sm font-medium leading-5 text-gray-700">
             Email address
