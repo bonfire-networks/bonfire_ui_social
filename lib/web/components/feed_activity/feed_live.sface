@@ -37,7 +37,7 @@
       </article>
     </div>
 
-    <Bonfire.UI.Social.LoadMoreLive live_handler={Bonfire.Social.Feeds} page_info={@page_info} />
+    <Bonfire.UI.Social.LoadMoreLive live_handler={Bonfire.Social.Feeds} page_info={@page_info} target={@myself} />
 
     </div>
 </div>

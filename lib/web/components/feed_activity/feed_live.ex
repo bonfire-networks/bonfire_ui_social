@@ -1,5 +1,5 @@
 defmodule Bonfire.UI.Social.FeedLive do
-  use Bonfire.Web, :stateless_component
+  use Bonfire.Web, :stateful_component
   alias Bonfire.UI.Social.ActivityLive
   import Bonfire.UI.Social.Integration
   require Logger
@@ -17,16 +17,14 @@ defmodule Bonfire.UI.Social.FeedLive do
   end
 
 
-  def update(%{new_activity: new_activity} = assigns, socket) when is_map(new_activity) do # feed provided by parent component/view
-
+  def update(%{new_activity: new_activity} = assigns, socket) when is_map(new_activity) do # adding new feed item
     {:ok, socket
     |> assigns_merge(assigns,
       feed_future: [new_activity] # feed is a temporary assign, so only add new
       ) }
   end
 
-  def update(%{__context__: %{new_activity: new_activity}} = assigns, socket) do # adding new feed item
-    # IO.inspect(context_reply: new_activity)
+  def update(%{__context__: %{new_activity: new_activity}} = assigns, socket) do
     update(Map.merge(assigns, %{new_activity: new_activity}), socket)
   end
 
@@ -41,7 +39,7 @@ defmodule Bonfire.UI.Social.FeedLive do
   end
 
   def update(assigns, socket) do
-    Logger.debug("FeedLive: NO feed provided, try fetching one via Bonfire.Social")
+    Logger.debug("FeedLive: feed NOT provided, try fetching one via Bonfire.Social")
     socket = assign(socket, assigns) #|> IO.inspect
 
     assigns = if module_enabled?(Bonfire.Social.Web.Feeds.BrowseLive), do: Bonfire.Social.Web.Feeds.BrowseLive.default_feed(socket),
@@ -86,5 +84,8 @@ defmodule Bonfire.UI.Social.FeedLive do
 
     repo().maybe_preloads_per_schema(feed, [:activity, :object], preloads)
   end
+
+  def handle_event(action, attrs, socket), do: Bonfire.Common.LiveHandlers.handle_event(action, attrs, socket, __MODULE__)
+  def handle_info(info, socket), do: Bonfire.Common.LiveHandlers.handle_info(info, socket, __MODULE__)
 
 end

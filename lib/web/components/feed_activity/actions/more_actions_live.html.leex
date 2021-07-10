@@ -22,7 +22,6 @@
 </button>
 
 <%= live_component(@socket, Bonfire.UI.Social.LikeActionLive,
-  id: "like:"<>e(@object, :id, ""),
   object_id: e(@object, :id, ""),
   current_user: current_user(assigns),
   my_like: e(@activity, :my_like, nil),

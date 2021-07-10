@@ -3,6 +3,6 @@ defmodule Bonfire.UI.Social.Activity.BoostsLive do
 
   # def handle_event(action, attrs, socket), do: Bonfire.Common.LiveHandlers.handle_event(action, attrs, socket, __MODULE__)
   prop object_id, :string
-  prop my_boost, :map
-  prop boost_count, :map
+  prop my_boost, :any
+  prop boost_count, :any
 end

@@ -30,7 +30,11 @@
         )%>
     <% end %>
   </div>
+
+  <%# <Bonfire.UI.Social.LoadMoreLive live_handler={Bonfire.Social.Posts} page_info={@page_info} target={@myself} /> %>
+    <%= live_component(@socket, Bonfire.UI.Social.LoadMoreLive,
+       live_handler: Bonfire.Social.Posts,
+       page_info: @page_info,
+       target: @myself
+        )%>
 <% end %>
-
-
-<Bonfire.UI.Social.LoadMoreLive live_handler={Bonfire.Social.Posts} page_info={@page_info} />

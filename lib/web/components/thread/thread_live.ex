@@ -6,16 +6,15 @@ defmodule Bonfire.UI.Social.ThreadLive do
   alias Bonfire.Me.Web.{CreateUserLive, LoggedDashboardLive}
   # import Bonfire.Me.Integration
 
-  @thread_max_depth 3 # TODO: put in config
-  @pagination_limit 5
+  # TODO: put in config
+  @thread_max_depth 3
+  @pagination_limit 10
 
-  # def update(%{replies: replies, threaded_replies: threaded_replies} = assigns, socket) when is_list(replies) and length(replies)>0 and is_list(threaded_replies) and length(threaded_replies)>0 do
-  #   IO.inspect("preloaded replies")
-  #   {:ok, assign(socket, assigns |> assigns_merge(
-  #     reply_to_thread_id: e(assigns, :activity, :replied, :thread_id, nil) || e(assigns, :thread_id, nil), # TODO: change for thread forking?
-  #     thread_max_depth: @thread_max_depth
-  #   )) }
-  # end
+  def update(%{replies: replies, threaded_replies: threaded_replies, page_info: page_info} = assigns, socket) when is_list(replies) and is_list(threaded_replies) and is_map(page_info) do
+    IO.inspect("preloaded replies")
+    assigns |> assign_thread(socket)
+  end
+
 
   def update(%{new_reply: new_reply} = assigns, socket) when is_map(new_reply) do
     IO.inspect("Thread: adding new thread reply")
@@ -38,6 +37,31 @@ defmodule Bonfire.UI.Social.ThreadLive do
   end
 
   def update(assigns, socket) do
+
+    thread_id = e(assigns, :thread_id, nil)
+
+    if thread_id do
+
+      current_user = current_user(assigns)
+
+      with %{entries: replies, metadata: page_info} <- Bonfire.Social.Threads.list_replies(thread_id, current_user, e(assigns, :after, nil), @thread_max_depth, @pagination_limit) do
+
+        # IO.inspect(replies, label: "replies")
+
+        threaded_replies = if is_list(replies) and length(replies)>0, do: Bonfire.Social.Threads.arrange_replies_tree(replies), else: []
+      # IO.inspect(threaded_replies, label: "threaded_replies:")
+
+        assigns_merge(assigns,
+          replies: replies || [],
+          threaded_replies: threaded_replies,
+          page_info: page_info,
+        )
+        |> assign_thread(socket)
+      end
+    end
+  end
+
+  def assign_thread(assigns, socket) do
     # IO.inspect(assigns)
 
     # replies = Bonfire.Data.Social.Replied.descendants(thread)
@@ -47,7 +71,7 @@ defmodule Bonfire.UI.Social.ThreadLive do
     # replies = Bonfire.Social.Posts.replies_tree(e(thread, :thread_replies, []))
 
     thread_id = e(assigns, :thread_id, nil)
-    IO.inspect(thread_id, label: "Thread: load replies")
+    # IO.inspect(thread_id, label: "Thread: load replies")
 
     if thread_id do
 
@@ -56,35 +80,24 @@ defmodule Bonfire.UI.Social.ThreadLive do
       object = e(assigns, :object, e(activity, :object))
       # IO.inspect(object, label: "thread_object:")
 
-      with %{entries: replies, metadata: page_info} <- Bonfire.Social.Threads.list_replies(thread_id, current_user, e(assigns, :after, nil), @thread_max_depth, @pagination_limit) do
+      {:ok,
+      assign(socket, assigns
+      |> assigns_merge(
+        thread_id: thread_id,
+        activity: activity,
+        object: object,
+        reply_to_id: e(activity, :object, :id, nil) || thread_id, # TODO: change for thread forking?
+        reply_to_thread_id: e(activity, :replied, :thread_id, nil) || thread_id, # TODO: change for thread forking?
+        current_user: current_user,
+        page: "thread",
+        thread_max_depth: @thread_max_depth,
+        # participants: participants
+      ))}
 
-        IO.inspect(replies, label: "replies:")
-
-        threaded_replies = if is_list(replies) and length(replies)>0, do: Bonfire.Social.Threads.arrange_replies_tree(replies), else: []
-
-        # IO.inspect(threaded_replies, label: "threaded_replies:")
-
-        {:ok,
-        assign(socket, assigns
-        |> assigns_merge(
-          thread_id: thread_id,
-          activity: activity,
-          object: object,
-          reply_to_id: e(activity, :object, :id, nil) || thread_id, # TODO: change for thread forking?
-          reply_to_thread_id: e(activity, :replied, :thread_id, nil) || thread_id, # TODO: change for thread forking?
-          current_user: current_user,
-          page: "thread",
-          replies: replies || [],
-          threaded_replies: threaded_replies,
-          page_info: page_info,
-          thread_max_depth: @thread_max_depth,
-          # participants: participants
-        ))}
-      end
     end
   end
 
-  # def handle_event(action, attrs, socket), do: Bonfire.Common.LiveHandlers.handle_event(action, attrs, socket, __MODULE__)
-  # def handle_info(info, socket), do: Bonfire.Common.LiveHandlers.handle_info(info, socket, __MODULE__)
+  def handle_event(action, attrs, socket), do: Bonfire.Common.LiveHandlers.handle_event(action, attrs, socket, __MODULE__)
+  def handle_info(info, socket), do: Bonfire.Common.LiveHandlers.handle_info(info, socket, __MODULE__)
 
 end

@@ -3,5 +3,6 @@ defmodule Bonfire.UI.Social.LoadMoreLive do
 
   prop live_handler, :string
   prop page_info, :map
+  prop target, :any
 
 end
