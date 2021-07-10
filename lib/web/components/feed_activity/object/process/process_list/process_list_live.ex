@@ -31,7 +31,10 @@ defmodule Bonfire.UI.Social.Activity.ProcessListLive do
     }
   end
 
-  def preloads(), do: [:intended_outputs]
+  def preloads(), do: [
+      :intended_outputs,
+      creator: [:character, profile: [:icon]],
+    ]
 
   defp preload(object) do
     object

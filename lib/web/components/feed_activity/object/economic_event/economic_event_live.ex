@@ -31,6 +31,8 @@ defmodule Bonfire.UI.Social.Activity.EconomicEventLive do
     [
       :input_of,
       :output_of,
+      provider: [:character, profile: [:icon]],
+      receiver: [:character, profile: [:icon]],
       resource_quantity: [:unit],
       effort_quantity: [:unit],
       resource_inventoried_as: resource_preloads,

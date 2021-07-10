@@ -5,6 +5,10 @@ defmodule Bonfire.UI.Social.ActivityLive do
 
   prop activity, :map
 
+  # TODO: put in config and/or autogenerate with Verbs genserver
+  @reply_verbs ["reply","respond"]
+  @create_verbs ["create"] ++ @reply_verbs
+  @react_verbs ["like", "boost", "flag"]
 
   def update(%{activity: %{} = activity} = assigns, socket) do
 
@@ -15,7 +19,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
                 # |> IO.inspect(label: "ActivityLive activity")
 
 
-    verb = e(activity, :verb, :verb, "create") |> verb_maybe_modify(activity)
+    verb = e(activity, :verb, :verb, "create") |> verb_maybe_modify(activity) #|> IO.inspect
 
     components = (
       component_activity_subject(verb, activity, assigns)
@@ -26,7 +30,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
     # |> IO.inspect(label: "activity components")
 
     verb_display = verb_display(verb)
-    created_verb_display = "create" |> verb_maybe_modify(activity) |> verb_display()
+    created_verb_display = "create" |> verb_display()
 
     permalink = path(activity.object)
 
@@ -58,29 +62,41 @@ defmodule Bonfire.UI.Social.ActivityLive do
         )) }
   end
 
-
-  def component_activity_subject("like"=verb, activity, _), do: [{Bonfire.UI.Social.Activity.SubjectMinimalLive, %{verb: verb}}, component_activity_maybe_creator(activity)]
-  def component_activity_subject("boost"=verb, activity, _), do: [{Bonfire.UI.Social.Activity.SubjectMinimalLive, %{verb: verb}}, component_activity_maybe_creator(activity)]
-  def component_activity_subject("flag"=verb, activity, _), do: [{Bonfire.UI.Social.Activity.SubjectMinimalLive, %{verb: verb}}, component_activity_maybe_creator(activity)]
+  # don't show subject twice
   def component_activity_subject(_, %{object: %Bonfire.Data.Identity.User{}}, _), do: []
+  # quoting a reply_to
   def component_activity_subject(_, _, %{activity_inception: true}), do: [Bonfire.UI.Social.Activity.SubjectRepliedLive]
-  def component_activity_subject(_, %{provider: _}, _), do: [Bonfire.UI.Social.Activity.ProviderReceiverLive]
-  def component_activity_subject(_, %{primary_accountable: primary_accountable} = activity, _), do: [{Bonfire.UI.Social.Activity.ProviderReceiverLive, %{activity: Map.merge(activity, %{provider: primary_accountable})}}]
-  def component_activity_subject(_, %{receiver: _}, _), do: [Bonfire.UI.Social.Activity.ProviderReceiverLive]
-  def component_activity_subject("create"=verb, activity, _), do: [component_activity_maybe_creator(activity)]
-  def component_activity_subject(_, _, _), do: [Bonfire.UI.Social.Activity.SubjectLive]
+  # create activities
+  def component_activity_subject(verb, %{subject_profile: %{id: _} = profile, subject_character: %{id: _} = character}, _) when verb in @create_verbs, do: [{Bonfire.UI.Social.Activity.SubjectLive, %{profile: profile, character: character}}]
+  def component_activity_subject(verb, %{subject_profile: %{id: _} = profile}, _) when verb in @create_verbs, do: [{Bonfire.UI.Social.Activity.SubjectLive, %{profile: profile, character: nil}}]
+  def component_activity_subject(verb, %{subject_character: %{id: _} = character}, _) when verb in @create_verbs, do: [{Bonfire.UI.Social.Activity.SubjectLive, %{profile: nil, character: character}}]
+  # reactions should show the reactor + original creator
+  def component_activity_subject(verb, activity, _) when verb in @react_verbs, do: [{Bonfire.UI.Social.Activity.SubjectMinimalLive, %{verb: verb}}, component_activity_maybe_creator(activity)]
+  def component_activity_subject(verb, activity, _), do: [component_activity_maybe_creator(activity)]
+
 
   def component_activity_maybe_creator(%{object_created: %{
     creator_profile: %{id: _} = profile,
     creator_character: %{id: _} = character
-    } = object_created}), do: {Bonfire.UI.Social.Activity.CreatorLive, %{profile: profile, character: character}}
+    } = _object_created}), do: {Bonfire.UI.Social.Activity.SubjectLive, %{profile: profile, character: character}}
+
+  def component_activity_maybe_creator(%{creator: %{
+    profile: %{id: _} = profile,
+    character: %{id: _} = character
+    } = _object_creator}), do: {Bonfire.UI.Social.Activity.SubjectLive, %{profile: profile, character: character}}
+
+  def component_activity_maybe_creator(%{provider: _}), do: Bonfire.UI.Social.Activity.ProviderReceiverLive
+  def component_activity_maybe_creator(%{primary_accountable: primary_accountable}), do: {Bonfire.UI.Social.Activity.ProviderReceiverLive, %{provider: primary_accountable}}
+  def component_activity_maybe_creator(%{receiver: _}), do: Bonfire.UI.Social.Activity.ProviderReceiverLive
+
+  def component_activity_maybe_creator(%{object: %{} = object}), do: component_activity_maybe_creator(object)
 
 
   # WIP: subjects didn't showed up for economic activities, I've uncommented this function as temp workaround.
-  def component_activity_maybe_creator(%{subject_character: %{id: _} = character, subject_profile: %{id: _} = profile}), do: {Bonfire.UI.Social.Activity.CreatorLive, %{profile: profile, character: character}} #|> IO.inspect
+  # def component_activity_maybe_creator(%{subject_character: %{id: _} = character, subject_profile: %{id: _} = profile}), do: {Bonfire.UI.Social.Activity.SubjectLive, %{profile: profile, character: character}} #|> IO.inspect
 
   def component_activity_maybe_creator(activity) do
-    #IO.inspect(no_creation: activity)
+    IO.inspect(no_creation: activity)
     nil
   end
 
@@ -100,8 +116,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
         }
       }
     }, _)
-  when verb in ["reply","respond"], do: [ # post reply
-    # {Bonfire.UI.Social.Activity.SubjectLive, %{verb: verb}},
+  when verb in @reply_verbs, do: [ # post reply
     {Bonfire.UI.Social.ActivityLive, %{
       activity_inception: true,
       # id: activity_id <> "-reply-post-" <> reply_to_id,
@@ -111,7 +126,6 @@ defmodule Bonfire.UI.Social.ActivityLive do
         subject_profile: subject_profile,
         subject_character: subject_character,
     }}},
-    # Bonfire.UI.Social.Activity.SubjectLive
   ]
 
   def component_maybe_reply_to(verb, %{
@@ -124,8 +138,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
       }
     } = replied
   }, _)
-  when verb in ["reply","respond"] and is_binary(reply_to_id), do: [ # other kind of reply, with creator
-    # {Bonfire.UI.Social.Activity.SubjectLive, %{verb: verb}},
+  when verb in @reply_verbs and is_binary(reply_to_id), do: [ # other kind of reply, with creator
     {Bonfire.UI.Social.ActivityLive, %{
       activity_inception: true,
       # id: activity_id <> "-reply-" <> reply_to_id,
@@ -136,7 +149,6 @@ defmodule Bonfire.UI.Social.ActivityLive do
         subject_character: subject_character,
     }
     }},
-    # Bonfire.UI.Social.Activity.SubjectLive
   ]
 
   def component_maybe_reply_to(verb, %{
@@ -145,11 +157,10 @@ defmodule Bonfire.UI.Social.ActivityLive do
       reply_to_id: reply_to_id,
     } = replied
   }, _)
-  when verb in ["reply","respond"] and is_binary(reply_to_id) do # other kind of reply
+  when verb in @reply_verbs and is_binary(reply_to_id) do # other kind of reply
     reply_to_activity = load_reply_to(e(replied, :reply_to, reply_to_id))
 
     [
-      # {Bonfire.UI.Social.Activity.SubjectLive, %{verb: verb}},
       {Bonfire.UI.Social.ActivityLive, %{
         activity_inception: true,
         # id: activity_id <> "-reply-" <> reply_to_id,
@@ -157,7 +168,6 @@ defmodule Bonfire.UI.Social.ActivityLive do
         activity: reply_to_activity, #|> IO.inspect,
         viewing_main_object: false
       }},
-      # Bonfire.UI.Social.Activity.SubjectLive
     ]
   end
 
@@ -280,6 +290,10 @@ defmodule Bonfire.UI.Social.ActivityLive do
   def verb_maybe_modify("create", %{object: %Bonfire.Data.Social.PostContent{name: name} = post}), do: "write" #<> object_link(name, post)
   def verb_maybe_modify("create", %{object: %Bonfire.Data.Social.PostContent{} = _post}), do: "write"
   def verb_maybe_modify("create", %{object: %Bonfire.Data.Social.Post{} = _post}), do: "write"
+  def verb_maybe_modify("create", %{object: %{action: %{label: label}} = _economic_event}), do: label
+  def verb_maybe_modify("create", %{object: %{action: %{id: id}} = _economic_event}), do: id
+  def verb_maybe_modify("create", %{object: %{action_id: label} = _economic_event}) when is_binary(label), do: label
+  def verb_maybe_modify("create", %{object: %{action: label} = _economic_event}) when is_binary(label), do: label
   def verb_maybe_modify(verb, _), do: verb
 
   def verb_display(verb) do

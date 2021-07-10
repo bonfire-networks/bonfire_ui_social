@@ -1,29 +1,32 @@
 <div class="flex items-center">
-
-  <img :if={e(@activity, :provider, nil)} class="inline-block object-cover w-8 h-8 bg-gray-100 rounded-full" src={"#{avatar_url(e(@activity, :provider, nil))}"} alt="creator profile image" onerror="this.style.display='none'">
+  <img :if={e(provider(assigns) , nil)} class="inline-block object-cover w-8 h-8 bg-gray-100 rounded-full" src={"#{avatar_url(e(profile(provider(assigns) ), nil))}"} alt="creator profile image" onerror="this.style.display='none'"> 
 
   <div class="flex justify-between flex-1 ml-2">
 
-    <div :if={e(@activity, :provider, nil)} class="flex items-center text-base text-gray-700 dark:text-gray-100">
-      <LiveRedirect to={"/user/#{e(@activity, :provider, :username, "")}"}
-        aria-label={"#{e(@activity, :provider, :username, "")} profile"}
+    <div :if={e(provider(assigns) , nil)} class="vf_provider flex items-center text-base text-gray-700 dark:text-gray-100">
+      <LiveRedirect to={"/user/#{e(character(provider(assigns) ), [:username, :display_username], "")}"}
+        aria-label={"#{e(character(provider(assigns) ), [:username, :display_username], "")} profile"}
         class="font-medium hover:underline"
-        >{e(@activity, :provider, :name, "Anonymous")}</LiveRedirect>
-      <span class="ml-1 text-sm text-gray-500 dark:text-gray-400">@{e(@activity, :provider, :username, "")}</span>
+        >{e(profile(provider(assigns) ), :name, "Anonymous")}</LiveRedirect>
+      <span class="ml-1 text-sm text-gray-500 dark:text-gray-400">{e(character(provider(assigns) ), [:username, :display_username], "")}</span>
     </div>
-
+ 
     <div class="flex items-center">
       <svg class="w-4 h-4 mr-1 text-gray-500 dark:text-gray-400" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM4.332 8.027a6.012 6.012 0 011.912-2.706C6.512 5.73 6.974 6 7.5 6A1.5 1.5 0 019 7.5V8a2 2 0 004 0 2 2 0 011.523-1.943A5.977 5.977 0 0116 10c0 .34-.028.675-.083 1H15a2 2 0 00-2 2v2.197A5.973 5.973 0 0110 16v-2a2 2 0 00-2-2 2 2 0 01-2-2 2 2 0 00-1.668-1.973z" clip-rule="evenodd"></path></svg>
-      <span class="text-xs text-gray-500 dark:text-gray-400"><LiveRedirect to={@permalink}>{@date_ago}</LiveRedirect></span>
+      <span class="text-xs text-gray-500 dark:text-gray-400">
+        <span :if={e(assigns, :verb_display, nil) !="created"} class="capitalize">{e(assigns, :verb_display, "")}</span>
+        <LiveRedirect to={@permalink}>{@date_ago}</LiveRedirect>
+      </span>
     </div>
 
-    <div :if={e(@activity, :receiver, nil) && e(@activity, :receiver, nil) != e(@activity, :provider, nil)} class="flex items-center text-base text-gray-700">
-      <LiveRedirect to={"/user/#{e(@activity, :receiver, :username, "")}"}
-        aria-label={"#{e(@activity, :receiver, :username, "")} profile"}
+    <div :if={e(@object, :receiver, nil) && e(@object, :receiver, nil) != e(provider(assigns) , nil)} class="vf_receiver flex items-center text-base text-gray-700">
+      <LiveRedirect to={"/user/#{e(character(@object, :receiver), [:username, :display_username], "")}"}
+        aria-label={"#{e(character(@object, :receiver), [:username, :display_username], "")} profile"}
         class="font-medium hover:underline"
-        >{e(@activity, :receiver, :name, "Anonymous")}</LiveRedirect>
-      <span class="ml-1 text-sm text-gray-500 dark:text-gray-400">@{e(@activity, :receiver, :username, "")}</span>
-      <img class="inline-block object-cover w-8 h-8 ml-2 rounded-full" src={"#{avatar_url(e(@activity, :receiver, nil))}"} alt="creator profile image" onerror="this.style.display='none'">
+        >{e(profile(@object, :receiver), :name, "Anonymous")}</LiveRedirect>
+      <span class="ml-1 text-sm text-gray-500 dark:text-gray-400">{e(character(@object, :receiver), [:username, :display_username], "")}</span>
+
+      <img class="inline-block object-cover w-8 h-8 ml-2 rounded-full" src={"#{avatar_url(e(profile(@object, :receiver), nil))}"} alt="creator profile image" onerror="this.style.display='none'">
 
     </div>
 
