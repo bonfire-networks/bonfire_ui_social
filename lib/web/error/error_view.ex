@@ -21,7 +21,7 @@ defmodule Bonfire.UI.Social.Web.ErrorView do
   end
 
   defp error(error \\ "Something went wrong", details) do
-    html(error, details<>"<img src='https://media2.giphy.com/media/QMHoU66sBXqqLqYvGO/giphy.gif'/>")
+    html(error, "#{details}<img src='https://media2.giphy.com/media/QMHoU66sBXqqLqYvGO/giphy.gif'/>")
   end
 
   defp reason(%{message: reason}), do: reason
