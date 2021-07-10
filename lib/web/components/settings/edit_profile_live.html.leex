@@ -1,4 +1,4 @@
-<form phx-submit="Bonfire.Me.Profiles:save"  method="POST">
+<form phx-change="Bonfire.Me.Profiles:validate" phx-submit="Bonfire.Me.Profiles:save" method="POST">
   <!-- Profile section -->
   <%= live_component(@socket, Bonfire.UI.Social.SettingsViewLive.SettingsHeaderLive, assigns_clean(assigns)) %>
   <div class="p-4">
