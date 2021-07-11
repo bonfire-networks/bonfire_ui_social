@@ -43,7 +43,13 @@ defmodule Bonfire.UI.Social.Profile.ProfileTest do
     test "If I navigate to a user that I do not follow profile, I want to see the follow button" do
     end
 
+    test "If I click to follow, I want to see the button label changing from follow to unfollow" do
+    end
+
     test "If I navigate to a user that I do not follow profile, I want to see the unfollow button" do
+    end
+
+    test "If I click to unfollow, I want to see the button label changing from unfollow to follow" do
     end
     
   end
