@@ -3,7 +3,7 @@
     <div class="flex items-center text-sm font-medium text-gray-700 dark:text-gray-300">
       <LiveRedirect
         aria-label={e(@activity, :subject_character, :username, "") <> " profile"}
-        class="hover:underline"
+        class="hover:underline subject_replied"
         to={"/user/" <> e(@activity, :subject_character, :username, "")}>
         {e(@activity, :subject_profile, :name, "Anonymous")}
       </LiveRedirect>

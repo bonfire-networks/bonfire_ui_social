@@ -29,7 +29,7 @@
         x-transition:leave="transition ease-in duration-75"
         x-transition:leave-start="transform opacity-100 scale-100"
         x-transition:leave-end="transform opacity-0 scale-95"
-        class="prose-sm prose dark:prose-light max-w-prose">
+        class="prose-sm prose object_body dark:prose-light max-w-prose">
         {rich e(@object, :html_body, "")}
       </div>
     {#else}

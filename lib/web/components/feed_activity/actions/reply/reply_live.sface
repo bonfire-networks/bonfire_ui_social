@@ -1,7 +1,7 @@
 {#if e(@showing_within_thread, false) != true }
   {#if !@hide_reply }
     {#if !@reply_click }
-      <LiveRedirect to={@permalink}>
+      <LiveRedirect to={@permalink} class="redirect_to_discussion_page">
         <div class="flex items-center py-1 rounded cursor-pointer group">
           <svg
             class="w-5 h-5 mr-1 text-gray-500 dark:text-gray-400 group-hover:text-pink-600 dark:group-hover:text-pink-400"
