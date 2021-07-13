@@ -14,8 +14,13 @@
         <div class="flex-grow space-y-3 lg:mt-0">
         <%= for dep <- @extensions do %>
           <div class="p-3 text-sm font-medium text-gray-700 border-b dark:text-gray-300">
-            <a href="<%= get_link(dep) %>" target="_blank"><span class="flex-1 dark:text-gray-300 hover:underline"><%=  e(dep, :app, "Unknown") %></span>
-            <span class="ml-2 inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-indigo-100 text-indigo-800"><%= get_version(dep) %></span></a>
+            <a href="<%= get_link(dep) %>" target="_blank">
+              <span class="flex-1 dark:text-gray-300 hover:underline"><%=  e(dep, :app, "Unknown") %></span>
+            </a>
+
+            <a href="<%= get_version_link(dep) %>" target="_blank">
+              <span class="ml-2 inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-indigo-100 text-indigo-800"><%= get_version(dep) %></span>
+            </a>
           </div>
         <% end %>
       </div>
@@ -32,8 +37,13 @@
             <div class="flex-grow space-y-3 lg:mt-0">
             <%= for dep <- @schemas do %>
               <div class="p-3 text-sm font-medium text-gray-800 border-b dark:text-gray-200">
-                <a href="<%= get_link(dep) %>" target="_blank"><span class="flex-1 dark:text-gray-300 hover:underline"><%=  e(dep, :app, "Unknown") %></span>
-                <span class="ml-2 inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-indigo-100 text-indigo-800"><%= get_version(dep) %></span></a>
+                <a href="<%= get_link(dep) %>" target="_blank">
+                  <span class="flex-1 dark:text-gray-300 hover:underline"><%=  e(dep, :app, "Unknown") %></span>
+                </a>
+
+                <a href="<%= get_version_link(dep) %>" target="_blank">
+                  <span class="ml-2 inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-indigo-100 text-indigo-800"><%= get_version(dep) %></span>
+                </a>
               </div>
             <% end %>
           </div>
@@ -50,8 +60,13 @@
             <div class="flex-grow space-y-3 lg:mt-0">
               <%= for dep <- @other_deps do %>
               <div class="p-3 text-sm font-medium text-gray-700 border-b dark:text-gray-300">
-                <a href="<%= get_link(dep) %>" target="_blank"><span class="flex-1  dark:text-gray-300 hover:underline"><%=  e(dep, :app, "Unknown") %></span>
-                <span class="ml-2 inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-indigo-100 text-indigo-800"><%= get_version(dep) %></span></a>
+                <a href="<%= get_link(dep) %>" target="_blank">
+                  <span class="flex-1 dark:text-gray-300 hover:underline"><%=  e(dep, :app, "Unknown") %></span>
+                </a>
+
+                <a href="<%= get_version_link(dep) %>" target="_blank">
+                  <span class="ml-2 inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-indigo-100 text-indigo-800"><%= get_version(dep) %></span>
+                </a>
               </div>
             <% end %>
           </div>
