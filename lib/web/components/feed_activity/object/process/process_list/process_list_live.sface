@@ -20,10 +20,10 @@
       </div>
       <div class="mt-1 text-sm text-gray-600 dark:text-gray-400 line-clamp-1">{e(@object, :note, "")}</div>
       <div :if={@within_feed == true} class="flex items-center p-3 mt-2 -mx-3 space-x-4 text-sm text-gray-700 bg-gray-100 rounded-b-lg">
-        <div><span class="font-bold text-gray-600 dark:text-gray-400">{e(@object, :percentage, "0")}%</span> complete</div>
+        <div><span class="font-bold text-gray-600 dark:text-gray-400">{e(@object, :percentage, "0")}%</span> {l "complete"}</div>
         <div>
-          <span class="font-bold text-gray-600 dark:text-gray-400">{e(@object, :tasks_completed, "0")}</span> of
-          <span class="font-bold text-gray-600 dark:text-gray-400">{e(@object, :tasks_total, "0")}</span> tasks
+          <span class="font-bold text-gray-600 dark:text-gray-400">{e(@object, :tasks_completed, "0")}</span> {l "of"}
+          <span class="font-bold text-gray-600 dark:text-gray-400">{e(@object, :tasks_total, "0")}</span> {l "tasks"}
         </div>
       </div>
     </div>

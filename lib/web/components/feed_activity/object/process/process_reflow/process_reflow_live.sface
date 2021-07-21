@@ -20,9 +20,9 @@
 
        <div>
        {#if e(@object, :finished, nil)}
-        <span class="inline-flex items-center px-3 py-0.5 rounded-full text-xs font-medium bg-purple-100 text-purple-800">Completed</span>
+        <span class="inline-flex items-center px-3 py-0.5 rounded-full text-xs font-medium bg-purple-100 text-purple-800">{l "Completed"}</span>
         {#else}
-        <span class="inline-flex items-center px-3 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">Open</span>
+        <span class="inline-flex items-center px-3 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">{l "Open"}</span>
         {/if}
         </div>
       </div>

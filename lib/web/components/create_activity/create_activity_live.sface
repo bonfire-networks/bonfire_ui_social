@@ -84,20 +84,20 @@
               aria-orientation="vertical"
               aria-labelledby="user-profile-menu">
                 <div class="block px-4 py-2 text-sm transition duration-150 ease-in-out cursor-pointer rounded-t-md hover:bg-gray-100">
-                  <div class="text-sm text-gray-700">Public</div>
-                  <p class="text-xs text-gray-500">The activity will be visible within the fediverse</p>
+                  <div class="text-sm text-gray-700">{l "Public"}</div>
+                  <p class="text-xs text-gray-500">{l "The activity will be visible within the fediverse"}</p>
                 </div>
                 <div class="block px-4 py-2 text-sm text-gray-700 transition duration-150 ease-in-out cursor-pointer hover:bg-gray-100">
-                  <div class="text-sm text-gray-700">Private</div>
-                  <p class="text-xs text-gray-500">The activity will be visible to the mentioned users</p>
+                  <div class="text-sm text-gray-700">{l "Private"}</div>
+                  <p class="text-xs text-gray-500">{l "The activity will be visible to the mentioned users"}</p>
                 </div>
                 <div class="block px-4 py-2 text-sm text-gray-700 transition duration-150 ease-in-out cursor-pointer rounded-b-md hover:bg-gray-100">
-                  <div class="text-sm text-gray-700">Instance only</div>
-                  <p class="text-xs text-gray-500">The activity will be visible to instance members</p>
+                  <div class="text-sm text-gray-700">{l "Instance only"}</div>
+                  <p class="text-xs text-gray-500">{l "The activity will be visible to instance members"}</p>
                 </div>
                 <div class="block px-4 py-2 text-sm text-gray-700 transition duration-150 ease-in-out cursor-pointer rounded-b-md hover:bg-gray-100">
-                  <div class="text-sm text-gray-700">Custom</div>
-                  <p class="text-xs text-gray-500">Pick your audience</p>
+                  <div class="text-sm text-gray-700">{l "Custom"}</div>
+                  <p class="text-xs text-gray-500">{l "Pick your audience"}</p>
                 </div>
             </div>
           </div>

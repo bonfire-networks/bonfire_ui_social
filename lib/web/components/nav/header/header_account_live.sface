@@ -17,12 +17,12 @@
             <div class="flex items-center">
               <span class="inline-flex rounded-md shadow-sm">
                 <Link to={path(:switch_user)} class="btn-primary">
-                    Select User
+                    {l "Select User"}
                 </Link>
               </span>
               <span class="inline-flex ml-3 rounded-md shadow-sm">
                   <a href="/logout" class="btn-secondary">
-                    Log out
+                    {l "Log out"}
                   </a>
               </span>
             </div>
