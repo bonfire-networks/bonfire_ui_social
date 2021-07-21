@@ -571,26 +571,26 @@ defmodule Bonfire.UI.Social.Feeds.FeedActivityTest do
       |> Floki.text =~ "first post"
     end
 
-    test "As a user, when a user I do not follow boosts a post, I want to see the author of the boost the post" do
-      # account = fake_account!()
-      # alice = fake_user!(account)
-      # account2 = fake_account!()
-      # bob = fake_user!(account2)
-      # account3 = fake_account!()
-      # carl = fake_user!(account3)
+    test "As a user, when a user I do not follow boosts a post, I want to see the boost activity author in the instance timeline" do
+      account = fake_account!()
+      alice = fake_user!(account)
+      account2 = fake_account!()
+      bob = fake_user!(account2)
+      account3 = fake_account!()
+      carl = fake_user!(account3)
 
-      # attrs = %{circles: [:guest], post_content: %{summary: "summary", name: "test post name", html_body: "<p>first post/p>"}}
-      # assert {:ok, post} = Posts.publish(alice, attrs)
-      # assert {:ok, boost} = Boosts.boost(bob, post)
-      # feed_id = Bonfire.Social.Feeds.instance_feed_id()
-      # feed = Bonfire.Social.FeedActivities.feed(feed_id, %{})
-      # fp = feed.entries |> List.first() #|> IO.inspect
-      # assert doc = render_component(Bonfire.UI.Social.ActivityLive, %{activity: fp.activity})
+      attrs = %{circles: [:guest], post_content: %{summary: "summary", name: "test post name", html_body: "<p>first post/p>"}}
+      assert {:ok, post} = Posts.publish(alice, attrs)
+      assert {:ok, boost} = Boosts.boost(bob, post)
+      feed_id = Bonfire.Social.Feeds.instance_feed_id()
+      feed = Bonfire.Social.FeedActivities.feed(feed_id, carl)
+      fp = feed.entries |> List.first() #|> IO.inspect
+      assert doc = render_component(Bonfire.UI.Social.ActivityLive, %{activity: fp.activity})
 
-      # assert doc
-      # |> Floki.find("a.subject_minimal")
-      # |> List.first
-      # |> Floki.text =~ bob.profile.name
+      assert doc
+      |> Floki.find("a.subject_minimal")
+      |> List.first
+      |> Floki.text =~ bob.profile.name
     end
 
     test "As a user, when a user I do not follow boosts a post, I want to see the activity boosted subject" do
