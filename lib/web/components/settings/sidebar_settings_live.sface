@@ -4,29 +4,25 @@
       <div class="fixed flex flex-col flex-grow h-full overflow-y-auto w-60">
         <div class="flex flex-col flex-1 px-2 mt-2 space-y-2">
 
-          <%= live_patch to: path(:dashboard) do %>
+          <LivePatch to={path(:dashboard)} class="flex items-center w-full px-2 py-2 text-sm text-gray-700 transition duration-150 ease-in-out rounded-full font-regular group hover:bg-blueGray-200 dark:hover:bg-gray-600 focus:outline-none focus:text-gray-900 focus:bg-gray-50 dark:text-gray-200">
+            <span class="flex items-center w-8 h-8 rounded-full place-content-center">
+              <svg class="w-4 h-4 text-gray-700 dark:text-gray-200" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path></svg>
+            </span>
+            <span class="ml-2 truncate">{l "Back to dashboard"}</span>
+          </LivePatch>
+
+        <div class="px-2 pt-6 text-xs font-bold tracking-wide text-gray-500 uppercase dark:text-gray-400 ">{l "General settings"}</div>
+          <LivePatch to={"/settings/user"}>
             <div
-              class="flex items-center w-full px-2 py-2 text-sm text-gray-700 transition duration-150 ease-in-out rounded-full font-regular group hover:bg-blueGray-200 dark:hover:bg-gray-600 focus:outline-none focus:text-gray-900 focus:bg-gray-50 dark:text-gray-200">
-              <span class="flex items-center w-8 h-8 rounded-full place-content-center">
-                <svg class="w-4 h-4 text-gray-700 dark:text-gray-200" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path></svg>
-              </span>
-              <span class="ml-2 truncate">Back to dashboard</span>
+              class={"rounded-full w-full flex items-center px-2 py-2 text-sm font-regular transition duration-150 ease-in-out  group hover:bg-blueGray-200  focus:outline-none  dark:hover:bg-gray-600 focus:text-gray-900 focus:bg-gray-50", "dark:text-pink-400 text-pink-700": @selected_tab == "user",  "dark:text-gray-200 text-gray-700": @selected_tab != "user"}>
+              <svg class={"w-5 h-5 mr-2 transition duration-150 ease-in-out",  "dark:text-pink-400 text-pink-700": @selected_tab == "user", "dark:text-gray-200 text-gray-500": @selected_tab != "user"} fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5.121 17.804A13.937 13.937 0 0112 16c2.5 0 4.847.655 6.879 1.804M15 10a3 3 0 11-6 0 3 3 0 016 0zm6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+              </svg>
+              <span class="ml-2 truncate">{l "Profile information"}</span>
             </div>
-          <% end %>
+          </LivePatch>
 
-        <div class="px-2 pt-6 text-xs font-bold tracking-wide text-gray-500 uppercase dark:text-gray-400 ">General settings</div>
-         <%= live_patch to: "/settings/user" do %>
-              <div
-                aria-current="<%= if @selected_tab == "user", do: "page" %>"
-                class="rounded-full w-full flex items-center px-2 py-2 text-sm font-regular transition duration-150 ease-in-out  group hover:bg-blueGray-200  focus:outline-none  dark:hover:bg-gray-600 focus:text-gray-900 focus:bg-gray-50 <%= if @selected_tab == "user", do: "dark:text-pink-400 text-pink-700", else: "dark:text-gray-200 text-gray-700" %>">
-                <svg class="w-5 h-5 mr-2 transition duration-150 ease-in-out <%= if @selected_tab == "user", do: "dark:text-pink-400 text-pink-700", else: "dark:text-gray-200 text-gray-500" %>" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5.121 17.804A13.937 13.937 0 0112 16c2.5 0 4.847.655 6.879 1.804M15 10a3 3 0 11-6 0 3 3 0 016 0zm6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-                </svg>
-                <span class="ml-2 truncate">Profile information</span>
-              </div>
-            <% end %>
-
-            <!-- <%= live_patch to: "/settings/preferences" do %>
+            <!-- <LivePatch to={"/settings/preferences"}>
               <div
                 aria-current="<%= if @selected_tab == "preferences", do: "page" %>"
                 class="rounded-full w-full flex items-center px-2 py-2 text-sm font-regular transition duration-150 ease-in-out  group hover:bg-blueGray-200  focus:outline-none  dark:hover:bg-gray-600 focus:text-gray-900 focus:bg-gray-50 <%= if @selected_tab == "preferences", do: "dark:text-pink-400 text-pink-700", else: "dark:text-gray-200 text-gray-700" %>">
@@ -39,7 +35,7 @@
               </div>
             <% end %> -->
 
-            <!-- <%= live_patch to: "/settings/circles" do %>
+            <!-- <LivePatch to={"/settings/circles"}>
               <div
                 aria-current="<%= if @selected_tab == "circles", do: "page" %>"
                 class="rounded-full w-full flex items-center px-2 py-2 text-sm font-regular transition duration-150 ease-in-out  group hover:bg-blueGray-200  focus:outline-none  dark:hover:bg-gray-600 focus:text-gray-900 focus:bg-gray-50 <%= if @selected_tab == "circles", do: "dark:text-pink-400 text-pink-700", else: "dark:text-gray-200 text-gray-700" %>">
@@ -53,20 +49,18 @@
               </div>
             <% end %> -->
 
-            <%= live_patch to: "/settings/extensions" do %>
-              <div
-                aria-current="<%= if @selected_tab == "extensions", do: "page" %>"
-                class="rounded-full w-full flex items-center px-2 py-2 text-sm font-regular transition duration-150 ease-in-out  group hover:bg-blueGray-200  focus:outline-none  dark:hover:bg-gray-600 focus:text-gray-900 focus:bg-gray-50 <%= if @selected_tab == "extensions", do: "dark:text-pink-400 text-pink-700", else: "dark:text-gray-200 text-gray-700" %>">
-                <svg class="w-5 h-5 mr-2 transition duration-150 ease-in-out <%= if @selected_tab == "extensions", do: "dark:text-pink-400 text-pink-700", else: "dark:text-gray-200 text-gray-500" %>" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
+            <LivePatch to={"/settings/extensions"}>
+              <div class={"rounded-full w-full flex items-center px-2 py-2 text-sm font-regular transition duration-150 ease-in-out  group hover:bg-blueGray-200  focus:outline-none  dark:hover:bg-gray-600 focus:text-gray-900 focus:bg-gray-50", "dark:text-pink-400 text-pink-700": @selected_tab == "extensions", "dark:text-gray-200 text-gray-700": @selected_tab != "extensions"}>
+                <svg class={"w-5 h-5 mr-2 transition duration-150 ease-in-out", "dark:text-pink-400 text-pink-700": @selected_tab == "extensions", "dark:text-gray-200 text-gray-500": @selected_tab != "extensions"} xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 4a2 2 0 114 0v1a1 1 0 001 1h3a1 1 0 011 1v3a1 1 0 01-1 1h-1a2 2 0 100 4h1a1 1 0 011 1v3a1 1 0 01-1 1h-3a1 1 0 01-1-1v-1a2 2 0 10-4 0v1a1 1 0 01-1 1H7a1 1 0 01-1-1v-3a1 1 0 00-1-1H4a2 2 0 110-4h1a1 1 0 001-1V7a1 1 0 011-1h3a1 1 0 001-1V4z" />
                 </svg>
                 <span class="ml-2 truncate">
-                  Extensions
+                  {l "Extensions"}
                 </span>
               </div>
-            <% end %>
+            </LivePatch>
 
-            <!-- <%= live_patch to: "/settings/account" do %>
+            <!-- <LivePatch to={"/settings/account"}>
               <div
                 aria-current="<%= if @selected_tab == "account", do: "page" %>"
                 class="rounded-full w-full flex items-center px-2 py-2 text-sm font-regular transition duration-150 ease-in-out  group hover:bg-blueGray-200  focus:outline-none  dark:hover:bg-gray-600 focus:text-gray-900 focus:bg-gray-50 <%= if @selected_tab == "account", do: "dark:text-pink-400 text-pink-700", else: "dark:text-gray-200 text-gray-700" %>">
@@ -79,9 +73,9 @@
               </div>
             <% end %> -->
 
-            <!-- <%= if Bonfire.Me.Users.is_admin(current_user(assigns)) do %>
+            <!-- <%= if Bonfire.Me.Users.is_admin(current_user(assigns))}>
             <div class="px-2 pt-6 text-xs font-bold tracking-wide text-gray-500 uppercase dark:text-gray-400 ">Admins</div>
-              <%= live_patch to: "/settings/admin" do %>
+              <LivePatch to={"/settings/admin"}>
                 <div
                   aria-current="<%= if @selected_tab == "admin", do: "page" %>"
                   class="rounded-full w-full flex items-center px-2 py-2 text-sm font-regular transition duration-150 ease-in-out  group hover:bg-blueGray-200  focus:outline-none  dark:hover:bg-gray-600 focus:text-gray-900 focus:bg-gray-50 <%= if @selected_tab == "admin", do: "dark:text-pink-400 text-pink-700", else: "dark:text-gray-200 text-gray-700" %>">
@@ -93,7 +87,7 @@
                   </span>
                 </div>
               <% end %>
-              <%= live_patch to: "/settings/admin" do %>
+              <LivePatch to={"/settings/admin"}>
                 <div
                   aria-current="<%= if @selected_tab == "admin", do: "page" %>"
                   class="rounded-full w-full flex items-center px-2 py-2 text-sm font-regular transition duration-150 ease-in-out  group hover:bg-blueGray-200  focus:outline-none  dark:hover:bg-gray-600 focus:text-gray-900 focus:bg-gray-50 <%= if @selected_tab == "admin", do: "dark:text-pink-400 text-pink-700", else: "dark:text-gray-200 text-gray-700" %>">
@@ -105,7 +99,7 @@
                   </span>
                 </div>
               <% end %>
-              <%= live_patch to: "/settings/admin" do %>
+              <LivePatch to={"/settings/admin"}>
                 <div
                   aria-current="<%= if @selected_tab == "admin", do: "page" %>"
                   class="rounded-full w-full flex items-center px-2 py-2 text-sm font-regular transition duration-150 ease-in-out  group hover:bg-blueGray-200  focus:outline-none  dark:hover:bg-gray-600 focus:text-gray-900 focus:bg-gray-50 <%= if @selected_tab == "admin", do: "dark:text-pink-400 text-pink-700", else: "dark:text-gray-200 text-gray-700" %>">

@@ -1,5 +1,5 @@
 defmodule Bonfire.UI.Social.SettingsViewsLive.EditAccountLive do
-  use Bonfire.Web, :live_component
+  use Bonfire.Web, :stateless_component
 
   def update(assigns, socket) do
     {:ok, assign(socket, assigns

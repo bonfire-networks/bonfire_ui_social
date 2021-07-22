@@ -8,8 +8,8 @@
       </span>
     </a>
     <div class="ml-4">
-      <h1 class="text-base font-medium text-gray-800 dark:text-gray-200"><%= e(assigns, :settings_section_title, "Section title") %></h1>
-      <p class="text-sm text-gray-500 dark:text-gray-400"><%= e(assigns, :settings_section_description, "Section description") %></p>
+      <h1 class="text-base font-medium text-gray-800 dark:text-gray-200">{e(assigns, :settings_section_title, "Section title") }</h1>
+      <p class="text-sm text-gray-500 dark:text-gray-400">{ e(assigns, :settings_section_description, "Section description") }</p>
     </div>
   </div>
 </div>

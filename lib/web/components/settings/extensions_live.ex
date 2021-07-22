@@ -1,6 +1,11 @@
 defmodule Bonfire.UI.Social.SettingsViewsLive.ExtensionsLive do
-  use Bonfire.Web, :live_component
+  use Bonfire.Web, :stateless_component
   import Bonfire.Common.Extensions
+  
+  prop extensions, :any
+  prop schemas, :any
+  prop other_deps, :any
+  prop get_link, :any
 
   def update(assigns, socket) do
 
