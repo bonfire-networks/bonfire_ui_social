@@ -1,0 +1,33 @@
+
+<div class="p-3 border-t dark:bg-blueGray-600 bg-blueGray-100 dark:border-gray-500">
+  <Bonfire.UI.Social.CreateActivityLive
+    reply_to_id={@reply_to_id}
+    smart_input_text={""}
+  />
+</div>
+
+{#if length(@threaded_replies) > 0}
+  <div id="replies" class="pt-3 border-t dark:border-gray-600">
+    <div if={e(@page_info, :before, nil)} class="flex justify-center w-full p-3 mx-auto place-items-center">
+      <a 
+        phx-click="Bonfire.Social.Posts:load_more" 
+        phx-value-after={e(@page_info, :before, nil)} 
+        href={"?Bonfire.Social.Posts[cursor][before]=" <> to_string(e(@page_info, :before, nil))} 
+        class="relative inline-flex items-center px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md hover:bg-gray-50">{l "Load previous comments"}</a>
+    </div>
+
+    {#for {reply, child_replies} <- @threaded_replies }
+      <Bonfire.UI.Social.CommentLive
+        comment={reply}
+        child_replies={child_replies}
+        thread_level={1}
+      />
+    {/for}
+  </div>
+
+  <Bonfire.UI.Social.LoadMoreLive
+    live_handler={Bonfire.Social.Posts}
+    page_info={@page_info}
+    target={@myself}
+  />
+{/if}

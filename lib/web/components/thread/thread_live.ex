@@ -1,11 +1,15 @@
 defmodule Bonfire.UI.Social.ThreadLive do
-  use Bonfire.Web, :live_component
+  use Bonfire.Web, :stateless_component
   alias Bonfire.Fake
   alias Bonfire.Web.LivePlugs
   alias Bonfire.Me.Users
   alias Bonfire.Me.Web.{CreateUserLive, LoggedDashboardLive}
   # import Bonfire.Me.Integration
 
+  prop reply_to_id, :any
+  prop replies, :any
+  prop threaded_replies, :any
+  prop page_info, :any
   # TODO: put in config
   @thread_max_depth 3
   @pagination_limit 10

@@ -1,6 +1,9 @@
 defmodule Bonfire.UI.Social.CommentLive do
-  use Bonfire.Web, :live_component
+  use Bonfire.Web, :stateless_component
 
+  prop comment, :map
+  prop thread_level, :any
+  prop child_replies, :map
 
   def update(%{comment: %{__struct__: Bonfire.Data.Social.Activity} = activity} = assigns, socket) do
 
