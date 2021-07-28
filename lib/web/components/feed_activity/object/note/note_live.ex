@@ -2,6 +2,13 @@ defmodule Bonfire.UI.Social.Activity.NoteLive do
   use Bonfire.Web, :stateless_component
   import Bonfire.UI.Social.Integration
 
+  prop object, :any
+  prop activity, :any
+  prop viewing_main_object, :boolean
+  prop permalink, :string
+  prop date_ago, :string
+  prop showing_within_thread, :boolean
+
   def update(assigns, socket) do
 
     {:ok, socket |>

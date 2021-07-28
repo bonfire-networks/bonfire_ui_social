@@ -5,6 +5,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
 
   prop activity, :map
   prop object, :map
+
   # TODO: put in config and/or autogenerate with Verbs genserver
   @reply_verbs ["reply","respond"]
   @create_verbs ["create"] ++ @reply_verbs
@@ -27,7 +28,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
       ++ component_object(verb, activity)
       ++ component_actions(verb, activity, assigns)
     ) |> Enum.filter(& &1)
-    # |> IO.inspect(label: "activity components")
+     |> IO.inspect(label: "activity components")
 
     verb_display = verb_display(verb)
     created_verb_display = "create" |> verb_display()
@@ -96,8 +97,8 @@ defmodule Bonfire.UI.Social.ActivityLive do
   # def component_activity_maybe_creator(%{subject_character: %{id: _} = character, subject_profile: %{id: _} = profile}), do: {Bonfire.UI.Social.Activity.SubjectLive, %{profile: profile, character: character}} #|> IO.inspect
 
   def component_activity_maybe_creator(activity) do
-    # IO.inspect(no_creation: activity)
-    nil
+     IO.inspect(no_creation: activity)
+     nil
   end
 
   def component_maybe_reply_to(verb, activity, showing_within_thread \\ nil)

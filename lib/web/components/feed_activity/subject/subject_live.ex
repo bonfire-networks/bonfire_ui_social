@@ -7,5 +7,5 @@ defmodule Bonfire.UI.Social.Activity.SubjectLive do
   prop character, :map
   prop date_ago, :any
   prop permalink, :string
-
+  prop verb_display, :string
 end
