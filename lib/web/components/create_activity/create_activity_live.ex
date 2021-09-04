@@ -26,6 +26,7 @@ defmodule Bonfire.UI.Social.CreateActivityLive do
       assigns,
       changeset: Bonfire.Social.Posts.LiveHandler.post_changeset(%{}),
       smart_input_placeholder: e(assigns, :smart_input_placeholder, "Write something..."),
+      smart_input_text: e(assigns, :smart_input_text, ""),
       create_activity_type: create_activity_type
     )}
   end

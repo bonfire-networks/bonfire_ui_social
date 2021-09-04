@@ -1,21 +1,23 @@
 <div class={"bg-white dark:bg-gray-700",  "mb-4 rounded-lg": current_user(assigns) == nil}>
   <div class="pb-2">
-    <div :if={e(assigns, :current_user, :id, nil) != nil} class="bg-pink-300 bg-center bg-cover" style={"height: 225px; background-image: url('#{image_url(@user)}')"}></div>
-    <div :if={e(assigns, :current_user, :id, nil) == nil} class="bg-pink-300 bg-center bg-cover rounded-t-lg" style={"height: 225px; background-image: url('#{image_url(@user)}')"}></div>
+    <div :if={e(current_user(assigns), :id, nil)} class="bg-pink-300 bg-center bg-cover" style={"height: 225px; background-image: url('#{image_url(@user)}')"}></div>
+    <div :if={!e(current_user(assigns), :id, nil)} class="bg-pink-300 bg-center bg-cover rounded-t-lg" style={"height: 225px; background-image: url('#{image_url(@user)}')"}></div>
     <div class="flex items-center justify-between">
       <img class={"inline-block object-cover -mt-16 rounded-full shadow-lg ring-4 ring-white bg-white w-32 h-32 ml-6"} src={"#{avatar_url(@user)}"} alt="current user profile image">
       <div
-        :if={current_user(assigns) != nil}
+        :if={current_user(assigns)}
         class="flex items-center pr-6 space-x-3">
-        <!-- <LivePatch
-          :if={e(assigns, :current_user, :id, nil) && e(assigns, :current_user, :id, nil) != maybe_get(@user, :id)}
+        <LivePatch
+          :if={e(current_user(assigns), :id, nil) && e(current_user(assigns), :id, nil) != maybe_get(@user, :id)}
           to={"/user/#{e(@user, :character, :username, "")}/private"}
-          class="btn-primary">Message</LivePatch> -->
-        <div :if={e(assigns, :current_user, :id, nil) && e(assigns, :current_user, :id, nil) != maybe_get(@user, :id)} >
+          class="btn-primary">Message</LivePatch> 
+
+        <div :if={e(current_user(assigns), :id, nil) && e(current_user(assigns), :id, nil) != maybe_get(@user, :id)} >
           {live_component(@socket, Bonfire.UI.Social.FollowButtonLive, following: e(assigns, :following, []), id: e(@user, :id, nil), label: "", class: "profile_follow rounded-md shadow-sm w-full flex flex-1 text-left btn-secondary")}
         </div>
+        
         <LiveRedirect
-          :if={e(assigns, :current_user, :id, nil) && e(assigns, :current_user, :id, nil) == maybe_get(@user, :id)}
+          :if={e(current_user(assigns), :id, nil) && e(current_user(assigns), :id, nil) == maybe_get(@user, :id)}
           to="/settings">
           <span class="flex w-full rounded-md shadow-sm">
             <div class="w-full btn-secondary">
@@ -25,7 +27,7 @@
           </span>
         </LiveRedirect>
         <!-- <button
-          :if={e(assigns, :current_user, :id, nil) && e(assigns, :current_user, :id, nil) != maybe_get(@user, :id)}
+          :if={e(current_user(assigns), :id, nil) && e(current_user(assigns), :id, nil) != maybe_get(@user, :id)}
           type="button"
           class="btn-secondary">
           <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">

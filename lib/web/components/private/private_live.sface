@@ -1,5 +1,9 @@
 <div class="mx-4 overflow-hidden bg-white border-t-8 border-gray-100 dark:border-gray-600 lg:mx-0">
-  <ul class="divide-y divide-gray-200">
+  <p :if={length(@feed)<1} class="text-sm text-gray-600 font-regular">
+    {l("No messages in this bottle... Why not start by writing one?")}
+  </p>
+
+  <ul :if={length(@feed)>0} class="divide-y divide-gray-200">
 
     <li :for={%{activity: activity} <- @feed}>
       <LiveRedirect to={"#{path(Bonfire.Data.Social.Message, e(activity, :object_id, nil))}"} class="block hover:bg-gray-50">
@@ -10,7 +14,9 @@
                 <p class="text-xs text-pink-600 truncate">{e(activity, :subject_profile, :name, nil)}</p>
               </div>
               <div class="mt-1">
-                <p class="text-sm text-gray-600 truncate font-regular">{e(activity, :object, :name, nil) || e(activity, :object, :post_content, :summary, nil) || e(activity, :object, :post_content, :html_body, nil)}</p>
+                <p class="text-sm text-gray-600 truncate font-regular">
+                {r( e(activity, :object, :name, nil) || e(activity, :object, :post_content, :summary, nil) || e(activity, :object, :post_content, :html_body, nil) )}
+                </p>
                 <div class="flex items-center mt-1 text-xs text-gray-500">
                   <p><time datetime={"#{date_from_now(activity)}"}>{date_from_now(activity)}</time></p>
                 </div>
