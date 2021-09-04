@@ -7,7 +7,7 @@
   <div class="px-6 pt-16 pb-6 mx-auto">
 
 
-    <%= if Bonfire.Me.Accounts.invite_only? do  %>
+    <%= if Bonfire.Me.Accounts.instance_is_invite_only? do  %>
     <div role="status" class="p-4 rounded-md bg-yellow-50">
           <div class="flex">
             <div class="flex-shrink-0">
