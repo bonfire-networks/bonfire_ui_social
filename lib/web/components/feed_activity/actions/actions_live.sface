@@ -7,7 +7,8 @@
       hide_reply={e(assigns, :hide_reply, nil )}
       reply_click={e(assigns, :reply_click, nil )}
       />
-    <Bonfire.UI.Social.Activity.BoostsLive  
+    <BoostActionLive 
+      id={ComponentID.new(BoostActionLive, e(@object, :id, ""))} 
       object_id={e(@object, :id, "")} 
       my_boost={e(@activity, :my_boost, nil)}
       boost_count={e(@activity, :boost_count, nil)}
