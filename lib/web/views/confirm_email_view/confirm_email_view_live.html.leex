@@ -1,45 +1,49 @@
 <!-- TODO: refactor with TW -->
-<div class="guest__container">
-  <div class="page__auth-grid">
-    <div class="grid__background"></div>
-    <div class="grid__form">
-      <%= if @requested do %>
-        <div class="form__confirmation">
-          <h2>Great!</h2>
-          <p>
-            We've emailed you another link. Please click it to continue.
-          </p>
-        </div>
-      <% else %>
-        <h1>Re-request email confirmation link</h1>
-        <%= if @error do %>
-          <div class="error">
-            <%= case @error do %>
-            <% :not_found -> %>
-              <span>Invalid confirmation link. Please request a new one below.</span>
-            <% :expired -> %>
-              <span>This confirmation link has expired. Please request a new one below.</span>
-            <% end %>
-          </div>
-        <% end %>
-        <%= f = form_for @form, path(Bonfire.Me.Web.ConfirmEmailController), [id: "confirm-email-form", phx_submit: :submit] %>
-          <%= email_input f, :email, placeholder: "Type your email..." %>
-          <%= error_tag f, :email %>
-          <%= submit "Send" %>
-        </form>
-        <div class="auth__helpers">
-          <p>
-            <span>&#x01f44b; </span>
-            Already confirmed your email?
-            <%= link "Log in", to: path(:login, :index) %>.
-          </p>
-          <p>
-            <span>&#x01f9d0; </span>
-            Don&#39;t have an account yet?
-            <%= link "Create a new one", to: path(:signup) %>
-          </p>
-        </div>
-      <% end %>
+<div class="max-w-md mx-auto mt-6">
+  <h1 class="text-xl font-bold text-center text-gray-800 mb-10">Request email confirmation link</h1>
+
+  <%= if @flash do %>
+    <div class="w-4/5 mx-auto">
+      <p>
+        <%= live_flash(@flash, :error) || live_flash(@flash, :info) %>
+      </p>
     </div>
-  </div>
+  <% end %>
+  <%= if @requested do %>
+    <div class="w-4/5 mx-auto">
+      <h2>Great!</h2>
+      <p>
+        We've emailed you another link. Please click it to continue.
+      </p>
+    </div>
+  <% else %>
+    <%= if @error do %>
+      <div class="error w-4/5 mx-auto">
+        <%= case @error do %>
+        <% :not_found -> %>
+          <span>Invalid confirmation link. Please request a new one below.</span>
+        <% :expired -> %>
+          <span>This confirmation link has expired. Please request a new one below.</span>
+        <% end %>
+      </div>
+    <% end %>
+    <%= f = form_for @form, path(Bonfire.Me.Web.ConfirmEmailController), [id: "confirm-email-form", phx_submit: :submit, class: "w-4/5 mx-auto"] %>
+      <%= email_input f, :email, placeholder: "Type your email..." %>
+      <%= error_tag f, :email %>
+      <%= submit "Send" %>
+    </form>
+    <div class="mt-10 w-4/5 mx-auto">
+      <p>
+        <span>&#x01f44b; </span>
+        Already confirmed your email?
+        <%= link l("Log in"), to: path(:login, :index) %>.
+      </p>
+      <p>
+        <span>&#x01f9d0; </span>
+        Don&#39;t have an account yet?
+        <%= link l("Sign up"), to: path(:signup) %>
+      </p>
+    </div>
+  <% end %>
+
 </div>

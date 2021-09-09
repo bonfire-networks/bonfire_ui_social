@@ -3,7 +3,6 @@
     <img 
       class="inline-block object-cover w-8 h-8 bg-gray-100 rounded-full subject_avatar" 
       src={avatar_url(@profile)} 
-      alt={e(@profile, :name, "Anonymous") <> " profile image"} 
       onerror="this.style.display='none'">
     <div class="flex items-center justify-between flex-1 ml-2">
       <div class="flex items-center text-sm">
