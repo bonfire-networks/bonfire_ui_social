@@ -28,7 +28,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
       ++ component_object(verb, activity)
       ++ component_actions(verb, activity, assigns)
     ) |> Enum.filter(& &1)
-     |> IO.inspect(label: "activity components")
+     # |> IO.inspect(label: "activity components")
 
     verb_display = verb_display(verb)
     created_verb_display = "create" |> verb_display()
