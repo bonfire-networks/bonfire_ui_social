@@ -20,7 +20,7 @@
             class="inline-block object-cover w-8 h-8 bg-gray-200 rounded-full"
             src={avatar_url(current_user(assigns))}
             alt="current user profile image">
-          <div class="flex-1 ml-3 text-left">
+          <div class="flex-1 mx-3 text-left">
 
             <h3 class="text-sm font-semibold text-gray-700 truncate dark:text-gray-300">{e(assigns, :current_user, :profile, :name, "Me")}</h3>
             <span class="-mt-1 text-sm font-light text-gray-600 dark:text-gray-300">@{e(assigns, :current_user, :character, :username, "anon")}</span>

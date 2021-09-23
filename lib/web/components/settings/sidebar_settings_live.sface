@@ -4,11 +4,11 @@
       <div class="fixed flex flex-col flex-grow h-full overflow-y-auto w-60">
         <div class="flex flex-col flex-1 px-2 mt-2 space-y-2">
 
-          <LivePatch to={path(:dashboard)} class="flex items-center w-full px-2 py-2 text-sm text-gray-700 transition duration-150 ease-in-out rounded-full font-regular group hover:bg-blueGray-200 dark:hover:bg-gray-600 focus:outline-none focus:text-gray-900 focus:bg-gray-50 dark:text-gray-200">
+          <LivePatch to={path(:home)} class="flex items-center w-full px-2 py-2 text-sm text-gray-700 transition duration-150 ease-in-out rounded-full font-regular group hover:bg-blueGray-200 dark:hover:bg-gray-600 focus:outline-none focus:text-gray-900 focus:bg-gray-50 dark:text-gray-200">
             <span class="flex items-center w-8 h-8 rounded-full place-content-center">
               <svg class="w-4 h-4 text-gray-700 dark:text-gray-200" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path></svg>
             </span>
-            <span class="ml-2 truncate">{l "Back to dashboard"}</span>
+            <span class="ml-2 truncate">{l "Back Home"}</span>
           </LivePatch>
 
         <div class="px-2 pt-6 text-xs font-bold tracking-wide text-gray-500 uppercase dark:text-gray-400 ">{l "General settings"}</div>

@@ -1,9 +1,7 @@
-<div class="relative z-40 flex flex-col">
-  <div class="fixed top-0 left-0 right-0 h-20 bg-blueGray-50 dark:bg-gray-800"></div>
 
-  <div class="fixed top-0 left-0 right-0 flex flex-shrink-0 h-16 px-3 mx-auto mt-2 lg:justify-between">
+<div class="sticky top-0 flex flex-shrink-0 w-full h-16 max-w-screen-lg mx-auto lg:justify-between bg-blueGray-800">
     <div class="flex items-center flex-shrink-0">
-      <LiveRedirect to={path(:dashboard)}>
+      <LiveRedirect to={path(:home)}>
         <div class="w-10 h-10 bg-center bg-no-repeat bg-contain" style={"background-image: url(" <> Bonfire.Common.Config.get([:ui, :theme, :instance_logo], '')  <> ")"}></div>
       </LiveRedirect>
     </div>
@@ -20,60 +18,7 @@
 
         <div class="inline-flex items-center justify-center w-full px-4 py-2 text-sm font-medium text-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-100 focus:ring-indigo-500">
           <Bonfire.UI.Social.SidebarUserLive  current_user={current_user(assigns)} />
-
-          <!-- <div x-cloak x-data="{ open: false }" @keydown.escape.stop="open = false" @click.away="open = false" class="relative inline-block text-left">
-            <div>
-              <button
-                type="button"
-                class="inline-flex items-center justify-center w-full px-4 py-2 text-sm font-medium text-gray-700 bg-white rounded-md dark:bg-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-100 focus:ring-indigo-500"
-                id="sidebar-menu"
-                @click="open = !open"
-                aria-haspopup="true"
-                x-bind:aria-expanded="open"
-                aria-expanded="true">
-                <img
-                  class="inline-block object-cover w-8 h-8 rounded-full"
-                  src={avatar_url(current_user(assigns))}
-                  alt="current user profile image" />
-                <div class="flex-1 ml-3">
-                  <p class="text-sm font-semibold text-gray-700 dark:text-gray-200">{ e(assigns, :current_user, :profile, :name, "Me") }</p>
-                </div>
-                <svg class="w-5 h-5 ml-2 -mr-1 dark:text-gray-200" x-description="Heroicon name: solid/chevron-down" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
-                  <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd"></path>
-                </svg>
-              </button>
-            </div>
-            <div
-              x-description="Dropdown menu, show/hide based on menu state."
-              x-show="open" x-transition:enter="transition ease-out duration-100"
-              x-transition:enter-start="transform opacity-0 scale-95"
-              x-transition:enter-end="transform opacity-100 scale-100"
-              x-transition:leave="transition ease-in duration-75"
-              x-transition:leave-start="transform opacity-100 scale-100"
-              x-transition:leave-end="transform opacity-0 scale-95"
-              class="absolute right-0 w-56 mt-2 origin-top-right bg-white divide-y divide-gray-100 rounded-md shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none"
-              role="menu"
-              aria-orientation="vertical"
-              aria-labelledby="sidebar-menu">
-              <div class="py-1" role="none">
-                <LiveRedirect to={path(Bonfire.Me.Web.ProfileLive, e(assigns, :current_user, :character, :username, ""))} class="block w-full px-4 py-2 text-sm text-left text-gray-700 transition duration-150 ease-in-out hover:bg-gray-100" role="menuitem">
-                  My Profile
-                </LiveRedirect>
-                <LiveRedirect to="/switch-user" class="block px-4 py-2 text-sm text-gray-700 transition duration-150 ease-in-out hover:bg-gray-100" role="menuitem">Switch User</LiveRedirect>
-                <LiveRedirect to={"/settings"} class="block px-4 py-2 text-sm text-gray-700 transition duration-150 ease-in-out hover:bg-gray-100" role="menuitem">Settings</LiveRedirect>
-              </div>
-              <div class="py-1" role="none">
-                <LiveRedirect to={path(:home)} class="block px-4 py-2 text-sm text-gray-700 transition duration-150 ease-in-out hover:bg-gray-100" role="menuitem">Home</LiveRedirect>
-                <LiveRedirect to={"/users"} class="block px-4 py-2 text-sm text-gray-700 transition duration-150 ease-in-out hover:bg-gray-100" role="menuitem">Users discovery</LiveRedirect>
-                <LiveRedirect to={"/guidelines"} class="block px-4 py-2 text-sm text-gray-700 transition duration-150 ease-in-out hover:bg-gray-100" role="menuitem">Guidelines</LiveRedirect>
-              </div>
-              <div class="py-1" role="none">
-                <LiveRedirect to={"/logout"} class="block px-4 py-2 text-sm text-gray-700 transition duration-150 ease-in-out hover:bg-gray-100" role="menuitem">Logout</LiveRedirect>
-              </div>
-            </div>
-          </div> -->
         </div>
       </div>
     </div>
   </div>
-</div>

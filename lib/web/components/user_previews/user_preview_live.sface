@@ -1,12 +1,8 @@
-<div class="component_user_preview transition duration-300 ease-in-out bg-white rounded-lg shadow hover:shadow-xl hover:bg-blueGray-50">
-    <div
-      aria-hidden="true"
-      class="h-32 bg-pink-600 bg-cover rounded-t-lg"
-      style={"background-image: url('#{image_url(@user)} ')"}>
-      <LiveRedirect to={path(@user)} class="float-right" opts={target: "_blank"}>
-        <Solid.ExternalLinkIcon /> 
-      </LiveRedirect>
-      </div>
+<div class="transition duration-300 ease-in-out bg-white rounded-lg shadow component_user_preview hover:shadow-xl hover:bg-blueGray-50">
+  <div
+    aria-hidden="true"
+    class="h-32 bg-pink-600 bg-cover rounded-t-lg"
+    style={"background-image: url('#{image_url(@user)} ')"} />
   <LiveRedirect to={path(:switch_user, [:show, @user.character.username || ""]) <> @go}>
     <div class="px-3 pb-2 -mt-8">
       <div class="">
