@@ -3,12 +3,12 @@
   class="create_activity"
   x-cloak
   x-data="{
-    open: false,
+    open: true,
     title_open: false,
     summary_open: false,
     open_boundaries: false
   }"
-  @click.away="{open=false; title_open=false; summary_open=false; open_boundaries=false}">
+  @click.away="{open=true; title_open=false; summary_open=false; open_boundaries=false}">
   <Form for={Bonfire.Social.Posts.LiveHandler.post_changeset()} submit="Bonfire.Social.Posts:post" opts={ autocomplete: "off"}>
     <div x-description="create post form">
 
@@ -41,7 +41,7 @@
                 value: @smart_input_text,
                 placeholder: @smart_input_placeholder
               }
-              class="block w-full h-full text-sm transition-all duration-300 ease-in-out border-gray-300 shadow-sm" 
+              class="block w-full h-full text-sm transition-all duration-300 ease-in-out border-gray-300 rounded-t shadow-sm" 
               :class="{'rounded-b-none' : open === true}"
               />
             </div>
@@ -111,11 +111,11 @@
         </button> -->
       </div>
       <div
-      class="flex mt-2"
+      class="flex justify-end mt-2"
         x-show="open">
 
         <button
-          @click="{open = false; title_open = false}"
+          @click="{open = true; title_open = false}"
           type="submit"
 
           class=" justify-self-end btn-primary">
