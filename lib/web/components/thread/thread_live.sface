@@ -1,5 +1,5 @@
 
-<div class="p-3 border-t dark:bg-blueGray-600 bg-blueGray-100 dark:border-gray-500">
+<div class="p-3 border-t dark:border-gray-500">
   <Bonfire.UI.Social.CreateActivityLive
     reply_to_id={@reply_to_id}
     smart_input_text={""}

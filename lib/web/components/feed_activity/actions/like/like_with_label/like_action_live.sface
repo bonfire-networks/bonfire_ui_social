@@ -5,7 +5,7 @@
   class="flex items-center py-1 rounded cursor-pointer like_with_label like group">
 
   <span 
-    class="flex items-center mr-2 rounded-full group-hover:bg-opacity-25 h-7 w-7 place-content-center group-hover:bg-yellow-400"
+    class="flex items-center mr-2 rounded-full dark:group-hover:bg-opacity-25 h-7 w-7 place-content-center dark:group-hover:bg-yellow-300"
     :if={e(assigns, :showing_within_thread, false) != true}>
     <svg
       :if={@object_id in e(assigns, :liked, []) || e(@my_like, :id, nil)}
