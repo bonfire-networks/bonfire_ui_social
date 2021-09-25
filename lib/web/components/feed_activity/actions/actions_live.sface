@@ -1,4 +1,4 @@
-
+<div class="-ml-2">
   <div class={"flex items-center space-x-8"}>
     <Bonfire.UI.Social.Activity.ReplyLive 
       permalink={@permalink} 
@@ -19,3 +19,4 @@
       like_count={e(@activity, :like_count, nil)} 
     />
   </div>
+</div>
