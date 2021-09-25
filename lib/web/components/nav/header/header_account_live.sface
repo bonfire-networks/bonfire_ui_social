@@ -1,29 +1,26 @@
-<div class="sticky top-0 flex flex-shrink-0 w-full h-16 max-w-screen-lg mx-auto lg:justify-between bg-blueGray-800">
+<div class="sticky top-0 flex flex-shrink-0 w-full h-16 px-3 mb-4 bg-gray-800 border-b border-blueGray-700 lg:justify-between">
   <div class="flex items-center flex-shrink-0">
     <LiveRedirect to={path(Bonfire.Common.Config.get!(:home_page))}>
-    <div class="w-10 h-10 bg-center bg-no-repeat bg-contain" style={"background-image: url(" <> Bonfire.Common.Config.get([:ui, :theme, :instance_logo], '')  <> ")"}></div>
+      <div class="flex items-center space-x-2">
+        <div class="w-10 h-10 bg-center bg-no-repeat bg-contain" style={"background-image: url(" <> Bonfire.Common.Config.get([:ui, :theme, :instance_logo], '')  <> ")"}></div>
+        <div class="text-base font-medium tracking-wide text-gray-300">{Bonfire.Common.Config.get([:ui, :theme, :instance_name], '')}</div>
+      </div>
     </LiveRedirect>
   </div>
-  <div class="flex flex-1 pl-4">
-    <div class="flex items-center flex-1">
-      <div class="flex flex-1 pr-4">
-        <Bonfire.UI.Social.SearchLive />
-      </div>
+  <div class="flex items-center space-x-3">
+    <Bonfire.UI.Social.SearchLive />
+    <div class="flex items-center">
+      <span class="inline-flex rounded-md shadow-sm">
+        <Link to={path(:switch_user)} class="btn-primary">
+            {l "Select User"}
+        </Link>
+      </span>
+      <span class="inline-flex ml-3 rounded-md shadow-sm">
+          <a href="/logout" class="btn-secondary">
+            {l "Log out"}
+          </a>
+      </span>
     </div>
-    
-      <div class="flex items-center">
-        <span class="inline-flex rounded-md shadow-sm">
-          <Link to={path(:switch_user)} class="btn-primary">
-              {l "Select User"}
-          </Link>
-        </span>
-        <span class="inline-flex ml-3 rounded-md shadow-sm">
-            <a href="/logout" class="btn-secondary">
-              {l "Log out"}
-            </a>
-        </span>
-      </div>
-    
   </div>
 </div>
 
