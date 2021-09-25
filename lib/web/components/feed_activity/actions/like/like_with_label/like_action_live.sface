@@ -4,10 +4,12 @@
   phx-value-id={"#{@object_id}"}
   class="flex items-center py-1 rounded cursor-pointer like_with_label like group">
 
-  <span :if={e(assigns, :showing_within_thread, false) != true}>
+  <span 
+    class="flex items-center mr-2 rounded-full group-hover:bg-opacity-25 h-7 w-7 place-content-center group-hover:bg-yellow-400"
+    :if={e(assigns, :showing_within_thread, false) != true}>
     <svg
       :if={@object_id in e(assigns, :liked, []) || e(@my_like, :id, nil)}
-      class="w-5 h-5 mr-1 text-gray-500 dark:text-yellow-400"
+      class="w-5 h-5 text-gray-500 dark:text-yellow-400"
       stroke="none" 
       fill="currentColor"
       viewBox="0 0 20 20"
@@ -16,7 +18,7 @@
     </svg>
     <svg
       :if={@object_id not in e(assigns, :liked, []) && !e(@my_like, :id, nil)}
-      class="w-5 h-5 mr-1 text-gray-500 dark:text-gray-400 group-hover:text-yellow-700 dark:group-hover:text-yellow-400" 
+      class="w-5 h-5 text-gray-500 dark:text-gray-400 group-hover:text-yellow-700 dark:group-hover:text-yellow-400" 
       stroke="currentColor"
       fill="none"
       viewBox="0 0 20 20"
@@ -25,11 +27,7 @@
     </svg>
   </span>
 
-  <span class="text-xs font-normal text-gray-500 dark:text-gray-400">
-
+  <span class="text-xs font-normal text-gray-500 dark:text-gray-400 group-hover:text-yellow-600 dark:group-hover:text-yellow-400">
     {if @object_id in e(assigns, :liked, []) || e(@my_like, :id, nil), do: l("Liked"), else: l("Like")} 
-    
-    <span :if={Bonfire.Social.Likes.LiveHandler.liker_count(@like_count) > 0}>({Bonfire.Social.Likes.LiveHandler.liker_count(@like_count)})</span>
-
   </span>
 </button>
