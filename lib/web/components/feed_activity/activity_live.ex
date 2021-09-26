@@ -19,7 +19,6 @@ defmodule Bonfire.UI.Social.ActivityLive do
                 |> Map.put(:object, e(assigns, :object, object(activity)))
                 # |> IO.inspect(label: "ActivityLive activity")
 
-
     verb = e(activity, :verb, :verb, "create") |> verb_maybe_modify(activity) #|> IO.inspect
 
     components = (
@@ -189,10 +188,11 @@ defmodule Bonfire.UI.Social.ActivityLive do
   def component_object(_, %{object: %{} = object}) do
     case Bonfire.Common.Types.object_type(object) do
       type ->
+        IO.inspect(component_object_type_recognised: type)
         component_for_object_type(type)
 
       _ ->
-        # IO.inspect(component_object_type_unrecognised: object)
+        IO.inspect(component_object_type_unrecognised: object)
         [Bonfire.UI.Social.Activity.UnknownLive]
     end
   end
@@ -202,6 +202,8 @@ defmodule Bonfire.UI.Social.ActivityLive do
     [Bonfire.UI.Social.Activity.UnknownLive]
   end
 
+
+  def component_for_object_type(type) when type in [Bonfire.Classify.Category], do: [Bonfire.UI.Social.Activity.CategoryLive]
   def component_for_object_type(type) when type in [ValueFlows.EconomicEvent], do: [Bonfire.UI.Social.Activity.EconomicEventLive]
   def component_for_object_type(type) when type in [ValueFlows.EconomicResource], do: [Bonfire.UI.Social.Activity.EconomicResourceLive]
   def component_for_object_type(type) when type in [ValueFlows.Planning.Intent], do: [Bonfire.UI.Social.Activity.IntentTaskLive] # TODO: choose between Task and other Intent types
