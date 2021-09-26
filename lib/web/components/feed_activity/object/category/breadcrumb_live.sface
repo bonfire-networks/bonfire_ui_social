@@ -1,5 +1,0 @@
-{#if e(@parent, :parent, :name, nil)}
-  <Bonfire.UI.Social.Activity.BreadcrumbLive parent={e(@parent, :parent, nil)}/>
-{/if}
-
-{rich e(@parent, :name, "")} >

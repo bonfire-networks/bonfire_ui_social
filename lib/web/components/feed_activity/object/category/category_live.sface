@@ -5,8 +5,8 @@
     {rich crumbs(e(@object, :parent, nil))}
 
 
-  <LiveRedirect to={@permalink} class="text-md">
-    {rich e(@object, :name, e(@object, :profile, :name, e(@object, :post_content, :name, e(@object, :title, "Unidentified category"))))}
+  <LiveRedirect to={"?s=#{@name}"} class="text-md">
+    {rich @name}
   </LiveRedirect>
 
     </div>
