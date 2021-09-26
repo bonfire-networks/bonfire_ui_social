@@ -4,17 +4,22 @@ defmodule Bonfire.UI.Social.Activity.CategoryLive do
 
 
   def update(assigns, socket) do
-    {:ok, assign(socket, assigns)}
+    name = e(assigns, :object, :name, e(assigns, :object, :profile, :name, e(assigns, :object, :post_content, :name, e(assigns, :object, :title, "Unidentified category"))))
+    {:ok, assigns_merge(socket, assigns, name: name)}
   end
 
   defp crumbs(%{name: name, parent: grandparent} = _parent) do
-    crumbs(grandparent) <> name<>" > "
+    crumbs(grandparent) <> crumb_link(name)
   end
   defp crumbs(%{name: name}) do
-    name<>" > "
+    crumb_link(name)
   end
   defp crumbs(_) do
     ""
+  end
+
+  def crumb_link(name) do
+    "<a data-phx-link='redirect' data-phx-link-state='push' href='?s=#{name}'>#{name}</a> > "
   end
 
 end
