@@ -3,7 +3,7 @@
   <%= live_component(@socket, Bonfire.UI.Social.PageHeaderLive,
     assigns |> assigns_clean())%>
 
-    <div class="mx-4 bg-white dark:bg-gray-700 lg:mx-0">
+    <div class="bg-white dark:bg-gray-700">
       <div class="flex flex-col min-h-screen">
         <%= if e(@activity, :replied, :thread_id, nil) && e(@activity, :replied, :thread_id, nil) != e(@activity, :replied, :reply_to_id, nil) && e(@activity, :replied, :thread_post_content, nil) do %>
           <div class="p-4 m-3 rounded-md bg-blue-50">
