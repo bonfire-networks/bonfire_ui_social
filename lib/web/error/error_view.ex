@@ -69,27 +69,14 @@ defmodule Bonfire.UI.Social.Web.ErrorView do
   </div>
 </div>
 
-      <div class="container max-w-screen-lg mx-auto mt-6">
-<div class="flex my-6 -mx-2">
-    <div class="w-3/5 px-2">
-      <div class="">
-          <div class="px-4 py-5 bg-white rounded-t-md sm:px-6">
-            <div class="flex flex-wrap items-center justify-between -mt-2 -ml-4 sm:flex-no-wrap">
-              <div class="mt-2 ml-4 prose">
-                <h1 class="text-gray-900">
-#{error}
-                </h1>
-#{details}
-
-              </div>
-            </div>
-          </div>
-          <div class="py-5 mx-auto sm:px-6 lg:px-8">
-         </div>
+    <div class="mx-auto mt-12 w-center">
+      <div class="prose">
+        <h1 class="text-gray-900">
+          #{error}
+        </h1>
+          #{details}
       </div>
     </div>
-  </div>
-      </div>
     </div>
 </div>
 </div>
