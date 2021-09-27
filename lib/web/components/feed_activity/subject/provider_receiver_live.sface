@@ -1,14 +1,15 @@
-<div class="flex items-center">
-  <img :if={e(provider(assigns) , nil)} class="inline-block object-cover w-8 h-8 bg-gray-100 rounded-full" src={"#{avatar_url(e(profile(provider(assigns) ), nil))}"} alt="creator profile image" onerror="this.style.display='none'"> 
+<div class="flex items-center text-sm">
+  <img :if={e(provider(assigns) , nil)} class="inline-block object-cover w-8 h-8 bg-gray-100 rounded-full subject_avatar" src={"#{avatar_url(e(profile(provider(assigns) ), nil))}"} alt="creator profile image" onerror="this.style.display='none'"> 
 
   <div class="flex justify-between flex-1 ml-2">
 
-    <div :if={e(provider(assigns) , nil)} class="vf_provider flex items-center text-base text-gray-700 dark:text-gray-100">
+    <div :if={e(provider(assigns) , nil)} class="flex items-center text-sm text-gray-700 vf_provider dark:text-gray-100">
       <LiveRedirect to={"/user/#{e(character(provider(assigns) ), [:username, :display_username], "")}"}
         aria-label={"#{e(character(provider(assigns) ), [:username, :display_username], "")} profile"}
-        class="font-medium hover:underline"
+        class="font-medium text-gray-800 subject_name dark:text-gray-100 hover:underline"
         >{e(profile(provider(assigns) ), :name, "Anonymous")}</LiveRedirect>
-      <span class="ml-1 text-sm text-gray-500 dark:text-gray-400">{e(character(provider(assigns) ), [:username, :display_username], "")}</span>
+        <span aria-hidden="true" class="mx-1 text-gray-400 dark:text-gray-300">•</span>
+      <span class="text-sm text-gray-500 subject_username dark:text-gray-300 text-light">{e(character(provider(assigns) ), [:username, :display_username], "")}</span>
     </div>
  
     <div class="flex items-center">
@@ -19,14 +20,15 @@
       </span>
     </div>
 
-    <div :if={e(@object, :receiver, nil) && e(@object, :receiver, nil) != e(provider(assigns) , nil)} class="vf_receiver flex items-center text-base text-gray-700">
+    <div :if={e(@object, :receiver, nil) && e(@object, :receiver, nil) != e(provider(assigns) , nil)} class="flex items-center text-sm text-gray-700 vf_receiver">
       <LiveRedirect to={"/user/#{e(character(@object, :receiver), [:username, :display_username], "")}"}
         aria-label={"#{e(character(@object, :receiver), [:username, :display_username], "")} profile"}
-        class="font-medium hover:underline"
+        class="font-medium text-gray-800 subject_name dark:text-gray-100 hover:underline"
         >{e(profile(@object, :receiver), :name, "Anonymous")}</LiveRedirect>
-      <span class="ml-1 text-sm text-gray-500 dark:text-gray-400">{e(character(@object, :receiver), [:username, :display_username], "")}</span>
+        <span aria-hidden="true" class="mx-1 text-gray-400 dark:text-gray-300">•</span>
+      <span class="text-sm text-gray-500 subject_username dark:text-gray-300 text-light">{e(character(@object, :receiver), [:username, :display_username], "")}</span>
 
-      <img class="inline-block object-cover w-8 h-8 ml-2 rounded-full" src={"#{avatar_url(e(profile(@object, :receiver), nil))}"} alt="creator profile image" onerror="this.style.display='none'">
+      <img class="inline-block object-cover w-8 h-8 bg-gray-100 rounded-full subject_avatar" src={"#{avatar_url(e(profile(@object, :receiver), nil))}"} alt="creator profile image" onerror="this.style.display='none'">
 
     </div>
 
