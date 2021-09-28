@@ -51,9 +51,8 @@
       </div>
         <Inputs for={:post_content}>
           <Field name={:html_body}>
-            <Label :if={@smart_input_text && @smart_input_text !="" && @smart_input_placeholder} class="text-sm">{@smart_input_placeholder}</Label>
+            <Label :if={@smart_input_text && @smart_input_text !="" && @smart_input_placeholder} class="flex items-center p-2 mb-2 space-x-2 text-xs tracking-wide text-gray-800 bg-blue-200 bg-opacity-50 rounded-md">{@smart_input_placeholder}</Label>
             <div
-              @keydown.window.escape="open = false"
               @click = "open = true"
               class="h-10 transition-all duration-300 ease-in-out rounded"
               :class="{'h-40' : open === true}"
