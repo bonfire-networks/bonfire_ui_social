@@ -1,16 +1,17 @@
 
 <div class="sticky top-0 flex flex-shrink-0 w-full h-16 px-3 mb-4 bg-gray-800 border-b border-blueGray-700 lg:justify-between">
-  <div class="items-center flex-shrink-0 hidden space-x-3 lg:flex">
+  <div class="items-center flex-shrink-0 hidden lg:flex">
     <LiveRedirect to={path(:home)}>
       <div class="flex items-center space-x-2">
         <div class="w-10 h-10 bg-center bg-no-repeat bg-contain" style={"background-image: url(" <> Bonfire.Common.Config.get([:ui, :theme, :instance_logo], '')  <> ")"}></div>
         <div class="text-base font-medium tracking-wide text-gray-300">{Bonfire.Common.Config.get([:ui, :theme, :instance_name], '')}</div>
       </div>
     </LiveRedirect>
-
-    {#for {name, route} <- Bonfire.Common.Config.get([:ui, :app_menu_extension_paths], [])}
-      <LiveRedirect to={path(route)} class={"text-base font-light tracking-wide text-gray-300"}>{name}</LiveRedirect>
-    {/for}
+    <div class="flex items-center ml-6 space-x-4">
+      {#for {name, route} <- Bonfire.Common.Config.get([:ui, :app_menu_extension_paths], [])}
+        <LiveRedirect to={path(route)} class={"text-sm font-medium tracking-wide text-gray-300"}>{name}</LiveRedirect>
+      {/for}
+    </div>
   </div>
 
 
