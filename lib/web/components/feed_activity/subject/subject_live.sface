@@ -9,7 +9,7 @@
         <LiveRedirect
           aria-label={e(@character, :username, "") <> " profile"}
           class="font-medium text-gray-800 subject_name dark:text-gray-100 hover:underline"
-          to={"/user/" <> e(@character, :username, "")}>
+          to={path(@character)}>
           {e(@profile, :name, "Anonymous")}
         </LiveRedirect>
         <span aria-hidden="true" class="mx-1 text-gray-400 dark:text-gray-300">•</span>
@@ -39,7 +39,7 @@
           <LiveRedirect
             aria-label={e(@character, :username, "") <> " profile"}
             class="font-semibold text-gray-800 dark:text-gray-100 hover:underline"
-            to={"/user/" <> e(@character, :username, "")}>
+            to={path(@character)}>
             {e(@profile, :name, "Anonymous")}
           </LiveRedirect>
         </div>

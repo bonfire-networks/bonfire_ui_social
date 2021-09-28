@@ -24,7 +24,7 @@
       <LiveRedirect
         aria-label={e(@activity, :subject_character, :username, "") <> " profile"}
         class="font-medium subject_minimal"
-        to={"/user/" <> e(@activity, :subject_character, :username, "") }>
+        to={path(e(@activity, :subject_character, nil)) }>
         {e(@activity, :subject_profile, :name, "Anonymous")}
       </LiveRedirect>
       {raw @verb_display}
