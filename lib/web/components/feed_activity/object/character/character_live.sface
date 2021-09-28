@@ -4,13 +4,13 @@
     <div class="flex items-center text-base text-gray-700 dark:text-gray-200">
       <LiveRedirect
         :if={e(@activity, :subject_character, nil)}
-        to={"/user/" <> e(@activity, :subject_character, :username, "")}
+        to={path(e(@activity, :subject_character, nil))}
         aria-label={e(@activity, :subject_character, :username, "") <> " profile"}
         class="font-bold hover:underline">
         { e(@activity, :subject_profile, :name, "Anonymous") }
       </LiveRedirect>
       <span class="mx-1">{@verb_display || e(@activity, :verb, :verb, "posted")}</span>
-      <LiveRedirect class="font-bold hover:underline" to={"/user/" <>  e(@object, :character, :username, "")}>
+      <LiveRedirect class="font-bold hover:underline" to={path(@object)}>
         {e(@object, :profile, :name, "Anonymous")}
       </LiveRedirect>
     </div>

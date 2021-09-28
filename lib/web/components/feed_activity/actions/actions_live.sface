@@ -14,6 +14,7 @@
       boost_count={e(@activity, :boost_count, nil)}
       />
     <Bonfire.UI.Social.LikeActionLive
+      id={ComponentID.new(Bonfire.UI.Social.LikeActionLive, @object)} 
       object_id={e(@object, :id, "")} 
       my_like={e(@activity, :my_like, nil)}
       like_count={e(@activity, :like_count, nil)} 

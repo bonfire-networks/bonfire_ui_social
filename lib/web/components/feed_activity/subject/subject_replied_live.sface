@@ -4,7 +4,7 @@
       <LiveRedirect
         aria-label={e(@activity, :subject_character, :username, "") <> " profile"}
         class="hover:underline subject_replied"
-        to={"/user/" <> e(@activity, :subject_character, :username, "")}>
+        to={path(e(@activity, :subject_character, nil))}>
         {e(@activity, :subject_profile, :name, "Anonymous")}
       </LiveRedirect>
     </div>

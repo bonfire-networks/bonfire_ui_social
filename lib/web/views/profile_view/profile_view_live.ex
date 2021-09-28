@@ -12,7 +12,6 @@ defmodule Bonfire.UI.Social.ProfileViewLive do
   prop search_placholder, :string
   prop feed_title, :string
   prop user, :map
-  prop following, :map
 
   def tab(selected_tab) do
     case maybe_str_to_atom(selected_tab) do

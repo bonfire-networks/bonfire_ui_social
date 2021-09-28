@@ -3,6 +3,7 @@
     <div class={"order-last": @within_feed}>
       <div class={"flex items-center space-x-2", "mt-2": @within_feed}>
         <Bonfire.UI.Social.LikeActionWithoutLabelLive
+          id={ComponentID.new(Bonfire.UI.Social.LikeActionWithoutLabelLive, @object)} 
         object_id={@object.id}
         current_user={current_user(assigns)}
         />

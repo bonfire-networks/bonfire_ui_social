@@ -1,6 +1,6 @@
 
 <div :if={current_user(assigns)} class="py-1" role="none">
-  <LivePatch to={path(Bonfire.Me.Web.ProfileLive, e(assigns, :current_user, :character, :username, ""))} class="block w-full px-4 py-2 text-sm text-left text-gray-700 transition duration-150 ease-in-out hover:bg-gray-100">{l "My Profile"}</LivePatch>
+  <LivePatch to={path(current_user(assigns))} class="block w-full px-4 py-2 text-sm text-left text-gray-700 transition duration-150 ease-in-out hover:bg-gray-100">{l "My Profile"}</LivePatch>
   <LiveRedirect to="/switch-user" class="block px-4 py-2 text-sm text-gray-700 transition duration-150 ease-in-out hover:bg-gray-100">{l "Switch User"}</LiveRedirect>
   <LiveRedirect to="/settings" class="block px-4 py-2 text-sm text-gray-700 transition duration-150 ease-in-out hover:bg-gray-100">{l "Settings"}</LiveRedirect>
 </div>

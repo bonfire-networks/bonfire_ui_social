@@ -1,5 +1,5 @@
 defmodule Bonfire.UI.Social.LikeActionLive do
-  use Bonfire.Web, :stateless_component
+  use Bonfire.Web, :stateful_component
 
   prop object_id, :string
   prop like_count, :any
@@ -8,6 +8,7 @@ defmodule Bonfire.UI.Social.LikeActionLive do
 
   # def preload(list_of_assigns), do: Bonfire.Social.Likes.LiveHandler.preload(list_of_assigns)
 
+  def handle_event(action, attrs, socket), do: Bonfire.Common.LiveHandlers.handle_event(action, attrs, socket, __MODULE__)
 
 
 end

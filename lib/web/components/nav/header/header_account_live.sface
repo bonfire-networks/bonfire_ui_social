@@ -7,8 +7,12 @@
       </div>
     </LiveRedirect>
   </div>
+
+  <div class="items-center hidden space-x-3 lg:flex">
+    <Bonfire.UI.Social.SearchLive class="ml-10" />
+  </div>
+
   <div class="flex items-center space-x-3">
-    <Bonfire.UI.Social.SearchLive />
     <div class="flex items-center">
       <span class="inline-flex rounded-md shadow-sm">
         <Link to={path(:switch_user)} class="btn-primary">

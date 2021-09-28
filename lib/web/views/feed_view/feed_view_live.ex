@@ -9,6 +9,5 @@ defmodule  Bonfire.UI.Social.FeedViewLive do
   prop search_placholder, :string
   prop feed_title, :string
   prop user, :map
-  prop following, :map
 
 end
