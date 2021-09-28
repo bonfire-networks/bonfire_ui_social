@@ -1,6 +1,6 @@
 
 <div class="sticky top-0 flex flex-shrink-0 w-full h-16 px-3 mb-4 bg-gray-800 border-b border-blueGray-700 lg:justify-between">
-  <div class="items-center flex-shrink-0 hidden lg:flex">
+  <div class="items-center flex-1 flex-shrink-0 hidden lg:flex">
     <LiveRedirect to={path(:home)}>
       <div class="flex items-center space-x-2">
         <div class="w-10 h-10 bg-center bg-no-repeat bg-contain" style={"background-image: url(" <> Bonfire.Common.Config.get([:ui, :theme, :instance_logo], '')  <> ")"}></div>
@@ -16,11 +16,11 @@
 
 
 
-  <div class="items-center hidden space-x-3 lg:flex">
+  <div class="items-center hidden mr-2 lg:flex">
     <Bonfire.UI.Social.SearchLive class="ml-10" />
   </div>
 
-  <div class="items-center hidden space-x-3 lg:flex">
+  <div class="items-center hidden lg:flex">
     <Bonfire.UI.Social.SidebarUserLive  current_user={current_user(assigns)} />
   </div>
 
