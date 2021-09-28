@@ -18,13 +18,15 @@ defmodule Bonfire.UI.Social.FeedLive do
 
 
   def update(%{new_activity: new_activity} = assigns, socket) when is_map(new_activity) do # adding new feed item
+    Logger.debug("feed is a temporary assign, so only add new activities")
     {:ok, socket
     |> assigns_merge(assigns,
-      feed_future: [new_activity] # feed is a temporary assign, so only add new
+      feed_future: [new_activity] #
       ) }
   end
 
-  def update(%{__context__: %{new_activity: new_activity}} = assigns, socket) do
+  def update(%{__context__: %{new_activity: new_activity}} = assigns, socket) when is_map(new_activity) do
+    Logger.debug("add new activity from component context")
     update(Map.merge(assigns, %{new_activity: new_activity}), socket)
   end
 
@@ -32,10 +34,11 @@ defmodule Bonfire.UI.Social.FeedLive do
     Logger.debug("FeedLive: a feed was provided")
 
     {:ok, socket
-    |> assigns_merge(assigns,
+    |> assign(assigns)
+    |> assign(
       feed: feed |> preloads(),
       page_info: page_info
-    )}
+      )}
   end
 
   def update(assigns, socket) do

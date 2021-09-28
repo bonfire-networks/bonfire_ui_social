@@ -2,6 +2,7 @@
   <Bonfire.UI.Social.ProfileHeroFullLive user={@user} current_user={current_user(assigns)}  />
     <div class={"mt-4 bg-white dark:bg-gray-700 shadow rounded-lg": current_user(assigns) == nil}>
       <Bonfire.UI.Social.ProfileNavigationLive selected_tab={@selected_tab} user={@user} />
+      
       {live_component(@socket, Bonfire.UI.Social.FeedLive, assigns_merge(assigns, id: "feed"))}
     </div>
 </div>

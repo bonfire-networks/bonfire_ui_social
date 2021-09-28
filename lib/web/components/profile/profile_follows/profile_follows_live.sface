@@ -30,7 +30,7 @@
     <div class="flow-root my-4">
       <ul class="-my-5 divide-y divide-gray-200">
         <li :for={follow <- @followed} class="px-3 py-4">
-          <Bonfire.UI.Social.ProfileItemLive user={@user} profile={e(follow, :followed_profile, nil)} character={e(follow, :followed_character, nil)} />
+          <Bonfire.UI.Social.ProfileItemLive profile={e(follow, :followed_profile, nil)} character={e(follow, :followed_character, nil)} />
         </li>
       </ul>
     </div>
@@ -40,7 +40,7 @@
     <div class="flow-root my-4">
       <ul class="-my-5 divide-y divide-gray-200">
         <li :for={follow <- @followers} class="px-3 py-4">
-          <Bonfire.UI.Social.ProfileItemLive user={@user} profile={e(follow, :followed_profile, nil)} character={e(follow, :followed_character, nil)} />
+          <Bonfire.UI.Social.ProfileItemLive profile={e(follow, :follower_profile, nil)} character={e(follow, :follower_character, nil)} />
         </li>
       </ul>
     </div>
