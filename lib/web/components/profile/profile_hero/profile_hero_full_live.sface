@@ -10,7 +10,9 @@
         <LivePatch
           :if={e(current_user(assigns), :id, nil) && e(current_user(assigns), :id, nil) != maybe_get(@user, :id)}
           to={"/user/#{e(@user, :character, :username, "")}/private"}
-          class="btn-primary">Message</LivePatch> 
+          class="flex items-center w-10 h-10 text-gray-300 border border-gray-500 rounded-full hover:bg-blueGray-600 place-content-center">
+          <Solid.MailIcon />  
+        </LivePatch> 
         <div :if={e(current_user(assigns), :id, nil) && e(current_user(assigns), :id, nil) != maybe_get(@user, :id)} >
           <Bonfire.UI.Social.FollowButtonLive 
           id={ComponentID.new(Bonfire.UI.Social.FollowButtonLive, e(@user, :id, ""))} 
@@ -25,8 +27,10 @@
           :if={e(current_user(assigns), :id, nil) && e(current_user(assigns), :id, nil) == maybe_get(@user, :id)}
           to="/settings">
           <span class="flex w-full rounded-md shadow-sm">
-            <div class="w-full btn-secondary">
-              <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>
+            <div class="inline-flex items-center px-4 py-2 text-sm font-medium leading-5 text-gray-300 transition duration-150 ease-in-out border border-gray-500 rounded-md group border-blueGray-400 hover:bg-gray-600 hover:text-gray-200 focus:outline-none focus:border-blue-300 focus:shadow-outline-blue active:text-gray-200 active:bg-gray-700">
+              <span class="mr-2 text-gray-400">
+              <Solid.CogIcon />
+              </span>
               Settings
             </div>
           </span>

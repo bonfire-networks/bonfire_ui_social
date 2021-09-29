@@ -4,21 +4,18 @@
     @click="open_boundaries = !open_boundaries"
     class="flex items-center p-1 rounded focus:outline-none hover:bg-gray-400"
     :class="{'bg-pink-50' : open_boundaries === true }">
-    
-    <div x-show="boundary_selected == 'public'">
+    <div class="text-gray-700" x-show="boundary_selected == 'public'">
       <Solid.GlobeIcon/>
     </div>
-    <div x-show="boundary_selected == 'local'">
+    <div class="text-gray-700" x-show="boundary_selected == 'local'">
       <Solid.HomeIcon/>
     </div>
-    <div x-show="boundary_selected == 'private'">
+    <div class="text-gray-700" x-show="boundary_selected == 'private'">
       <Solid.AtSymbolIcon/>
     </div>
-    <div x-show="boundary_selected == 'custom'">
+    <div class="text-gray-700" x-show="boundary_selected == 'custom'">
       <Solid.CogIcon/>
     </div>
-
-  
   </button>
   <div
     x-description="Usr profile dropdown menu, show/hide based on menu state."
@@ -33,21 +30,21 @@
     role="menu"
     aria-orientation="vertical"
     aria-labelledby="user-profile-menu">
-      <div @click="{boundary_selected = 'public'; open_boundaries = false}" class="flex p-2 space-x-2 text-sm transition duration-150 ease-in-out cursor-pointer rounded-t-md hover:bg-gray-100">
+      <div @click="{boundary_selected = 'public'; open_boundaries = false}" class="flex p-2 space-x-2 text-sm text-gray-800 transition duration-150 ease-in-out cursor-pointer rounded-t-md hover:bg-gray-100">
         <Solid.GlobeIcon/>
         <div class="flex-1">
           <div class="text-sm font-medium text-gray-800">{l "Public"}</div>
           <p class="text-xs text-gray-500">{l "Publicly visible to everyone on the fediverse and in search engines"}</p>
         </div>
       </div>
-      <div @click="{boundary_selected = 'local'; open_boundaries = false}" class="flex p-2 space-x-2 text-sm text-gray-700 transition duration-150 ease-in-out cursor-pointer rounded-b-md hover:bg-gray-100">
+      <div @click="{boundary_selected = 'local'; open_boundaries = false}" class="flex p-2 space-x-2 text-sm text-gray-700 text-gray-800 transition duration-150 ease-in-out cursor-pointer rounded-b-md hover:bg-gray-100">
         <Solid.HomeIcon/>
         <div class="flex-1">
           <div class="text-sm font-medium text-gray-800">{l "Local Instance"}</div>
           <p class="text-xs text-gray-500">{l "Only visible to members of this instance"}</p>
           </div>
       </div>
-      <div @click="{boundary_selected = 'private'; open_boundaries = false}" class="flex p-2 space-x-2 text-sm text-gray-700 transition duration-150 ease-in-out cursor-pointer hover:bg-gray-100">
+      <div @click="{boundary_selected = 'private'; open_boundaries = false}" class="flex p-2 space-x-2 text-sm text-gray-700 text-gray-800 transition duration-150 ease-in-out cursor-pointer hover:bg-gray-100">
         <Solid.AtSymbolIcon/>
         <div class="flex-1">
         <div class="text-sm font-medium text-gray-800">{l "Mention"}</div>
