@@ -13,16 +13,22 @@
 
 
   <div x-show="boundary_selected == 'public'" class="flex items-center p-2 mb-2 space-x-2 text-xs tracking-wide text-gray-800 bg-blue-200 bg-opacity-50 rounded-md">
-    <Solid.GlobeIcon/>
+    <span class="flex-1">
+      <Solid.GlobeIcon/>
+    </span>
     <span>{l "Your %{activity_type} will be publicly visible to everyone on the fediverse and in search engines.", activity_type: @activity_type_or_reply}</span>
   </div>
   <div x-show="boundary_selected == 'local'" class="flex items-center p-2 mb-2 space-x-2 text-xs tracking-wide text-gray-800 bg-blue-200 bg-opacity-50 rounded-md">
-    <Solid.HomeIcon/>
+    <span class="flex-1">
+      <Solid.HomeIcon/>
+    </span>
     <span>
     {l "Your %{activity_type} will only be visible to your local instance members.", activity_type: @activity_type_or_reply} </span>
   </div>
   <div x-show="boundary_selected == 'private'" class="flex items-center p-2 mb-2 space-x-2 text-xs tracking-wide text-gray-800 bg-blue-200 bg-opacity-50 rounded-md">
-    <Solid.AtSymbolIcon/>
+    <span class="flex-1">
+      <Solid.AtSymbolIcon/>
+    </span>
     <span>
     {l "Your %{activity_type} will only be visible to everyone mentioned.", activity_type: @activity_type_or_reply} </span>
   </div>
