@@ -5,39 +5,28 @@
     <span class="text-base font-medium text-gray-700 dark:text-gray-100">{l "Take a deep breath..."}</span>
   </div>
 
-  <ul :if={length(e(@feed, :entries, []))>0} class="divide-y divide-gray-200">
+  <ul :if={length(e(@feed, :entries, []))>0} class="divide-y divide-gray-600">
 
-    <li :for={%{activity: activity} <- e(@feed, :entries, [])}>
-      <LiveRedirect to={"#{path(Bonfire.Data.Social.Message, e(activity, :object_id, nil))}"} class="block hover:bg-gray-50">
+    <li class="bg-gray-700 hover:bg-gray-600" :for={%{activity: activity} <- e(@feed, :entries, [])}>
+      <LiveRedirect to={"#{path(Bonfire.Data.Social.Message, e(activity, :object_id, nil))}"} class="block ">
         <div class="flex items-center px-3 py-4">
           <div class="flex-1 min-w-0 sm:flex sm:items-center sm:justify-between">
             <div class="truncate">
-              <div class="flex">
-                <p class="text-xs text-pink-600 truncate">{e(activity, :subject_profile, :name, nil)}</p>
+              <div class="flex items-center space-x-2">
+                <img src={e(activity, :subject_profile, :icon, "")} class="w-8 h-8 bg-pink-400 rounded-full" />
+                <p class="text-base font-medium text-pink-400 truncate">{e(activity, :subject_profile, :name, nil)}</p>
               </div>
               <div class="mt-1">
-                <p class="text-sm text-gray-600 truncate font-regular">
-                {r( e(activity, :object, :name, nil) || e(activity, :object, :post_content, :summary, nil) || e(activity, :object, :post_content, :html_body, nil) )}
+                <p class="text-sm text-gray-300 truncate font-regular">
+                  {r( e(activity, :object, :name, nil) || e(activity, :object, :post_content, :summary, nil) || e(activity, :object, :post_content, :html_body, nil) )}
                 </p>
-                <div class="flex items-center mt-1 text-xs text-gray-500">
+                <div class="flex items-center mt-1 text-xs text-gray-400">
                   <p><time datetime={"#{date_from_now(activity)}"}>{date_from_now(activity)}</time></p>
                 </div>
               </div>
             </div>
-            <div class="flex-shrink-0 mt-4 sm:mt-0 sm:ml-5">
-              <!-- <div class="flex -space-x-1 overflow-hidden">
-                <img class="inline-block object-cover w-6 h-6 rounded-full ring-2 ring-white" src="https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?ixlib=rb-1.2.1&ixqx=zBd4LgsYUu&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80" alt="Dries Vincent">
-
-                <img class="inline-block object-cover w-6 h-6 rounded-full ring-2 ring-white" src="https://images.unsplash.com/photo-1517841905240-472988babdf9?ixlib=rb-1.2.1&ixqx=zBd4LgsYUu&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80" alt="Lindsay Walton">
-
-                <img class="inline-block object-cover w-6 h-6 rounded-full ring-2 ring-white" src="https://images.unsplash.com/photo-1438761681033-6461ffad8d80?ixlib=rb-1.2.1&ixqx=zBd4LgsYUu&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80" alt="Courtney Henry">
-
-                <img class="inline-block object-cover w-6 h-6 rounded-full ring-2 ring-white" src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixqx=zBd4LgsYUu&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80" alt="Tom Cook">
-              </div> -->
-            </div>
           </div>
           <div class="flex-shrink-0 ml-5">
-            <!-- Heroicon name: solid/chevron-right -->
             <svg class="w-5 h-5 text-gray-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
               <path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd" />
             </svg>
