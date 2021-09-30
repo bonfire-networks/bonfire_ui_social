@@ -6,7 +6,7 @@
   phx-target={@target}
   phx-value-after={e(@page_info, :after, nil)} 
   class="flex justify-center w-full p-3 mx-auto border-t cursor-pointer dark:border-gray-600 place-items-center"> 
-  <div class="relative items-center w-full px-4 py-2 text-sm font-medium text-center text-gray-700 rounded-md dark:text-gray-300 dark:hover:bg-gray-500 hover:bg-gray-50 ">
+  <div class="relative items-center w-full px-4 py-2 text-sm font-medium text-center text-gray-700 bg-gray-600 rounded-md dark:text-gray-300 dark:hover:bg-gray-500 hover:bg-gray-50 ">
     {l "Load more"}
     <noscript>
       <a href={"?#{@live_handler}[after]=" <> e(@page_info, :after, nil)} class="text-underline">
