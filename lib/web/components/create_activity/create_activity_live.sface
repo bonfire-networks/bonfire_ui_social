@@ -40,7 +40,7 @@
   <Form for={Bonfire.Social.Posts.LiveHandler.post_changeset()} submit="Bonfire.Social.Posts:post" opts={ autocomplete: "off"}>
     <div x-description="create post form">
 
-      <HiddenInput name="reply_to[reply_to_id]" value={"#{@reply_to_id}"} />
+      <HiddenInput name="reply_to[reply_to_id]" value={"#{e(@reply_to_id, "")}"} />
       <HiddenInput name="reply_to[thread_id]" value={"#{@reply_to_thread_id}"} />
 
       <Field name={:create_activity_type}>

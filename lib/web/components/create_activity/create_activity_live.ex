@@ -33,6 +33,8 @@ defmodule Bonfire.UI.Social.CreateActivityLive do
   end
 
   def activity_type_or_reply(assigns, create_activity_type) do
-    if e(assigns, :reply_to_id, "") !="" or e(assigns, :reply_to_thread_id, "") !="", do: "reply", else: create_activity_type
+    if e(assigns, :reply_to_id, "") !="" or e(assigns, :reply_to_thread_id, "") !="",
+    do: "reply",
+    else: create_activity_type
   end
 end
