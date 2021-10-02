@@ -85,12 +85,14 @@ defmodule Bonfire.UI.Social.ActivityLive do
     character: %{id: _} = character
     } = _object_creator}), do: {Bonfire.UI.Social.Activity.SubjectLive, %{profile: profile, character: character}}
 
+
   def component_activity_maybe_creator(%{provider: _}), do: Bonfire.UI.Social.Activity.ProviderReceiverLive
   def component_activity_maybe_creator(%{primary_accountable: primary_accountable}), do: {Bonfire.UI.Social.Activity.ProviderReceiverLive, %{provider: primary_accountable}}
   def component_activity_maybe_creator(%{receiver: _}), do: Bonfire.UI.Social.Activity.ProviderReceiverLive
 
   def component_activity_maybe_creator(%{object: %{} = object}), do: component_activity_maybe_creator(object)
 
+  def component_activity_maybe_creator(%{created: created} = object), do: object |> repo().maybe_preload(created: [creator: [:profile, :character]]) |> Map.get(:created) |> component_activity_maybe_creator()
 
   # WIP: subjects didn't showed up for economic activities, I've uncommented this function as temp workaround.
   # def component_activity_maybe_creator(%{subject_character: %{id: _} = character, subject_profile: %{id: _} = profile}), do: {Bonfire.UI.Social.Activity.SubjectLive, %{profile: profile, character: character}} #|> IO.inspect
