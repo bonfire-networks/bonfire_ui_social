@@ -12,7 +12,7 @@ defmodule Bonfire.UI.Social.ThreadLive do
   # prop threaded_replies, :any, default: []
   prop page_info, :any
   prop activity, :any
-  prop object, :any
+  # prop object, :any
   # TODO: put in config
   @thread_max_depth 3
   @pagination_limit 10
@@ -53,9 +53,10 @@ defmodule Bonfire.UI.Social.ThreadLive do
 
       with %{entries: replies, metadata: page_info} <- Bonfire.Social.Threads.list_replies(thread_id, current_user, e(assigns, :after, nil), @thread_max_depth, @pagination_limit) do
         IO.inspect(thread_id, label: "thread_id")
-        IO.inspect(page_info, label: "page_info")
+        IO.inspect(replies, label: "replies")
 
         threaded_replies = if is_list(replies) and length(replies)>0, do: Bonfire.Social.Threads.arrange_replies_tree(replies), else: []
+        IO.inspect(threaded_replies, label: "threaded_replies")
 
         assigns_merge(assigns,
           replies: replies || [],
