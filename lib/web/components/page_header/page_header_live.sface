@@ -11,22 +11,6 @@
   class={"sticky relative top-20 z-20 bg-white dark:bg-gray-700 dark:border-gray-600 border-b rounded-b-none rounded-t-lg"}>
   <div class="absolute top-0 left-0 right-0 z-10 h-4 -mt-4 dark:bg-gray-800"></div>
   <div class="flex items-center p-3">
-    <!-- <div class="relative flex items-center px-4 mr-3 border-r border-gray-200 dark:border-gray-600 lg:hidden">
-      <button
-        type="button"
-        x-state:on="Item active"
-        x-state:off="Item inactive"
-        @click="open_sidebar = true"
-        @mousedown="if (open_sidebar) $event.preventDefault()"
-        aria-expanded="true"
-        class="p-2 -m-2 text-gray-500 rounded-full hover:bg-gray-200 hover:text-gray-800 focus:outline-none focus:bg-gray-100 focus:text-gray-600"
-        aria-label="Open sidebar">
-        <svg class="w-6 h-6" stroke="currentColor" fill="none" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h7" />
-        </svg>
-      </button>
-    </div> -->
-    <!-- <Bonfire.UI.Social.SidebarMobileLive page={@page}  /> -->
     <div class="flex items-center flex-1 space-x-2 text-left">
       <a
         aria-label="Navigate to the previous page"
@@ -37,53 +21,6 @@
       </a>
       <h1 class="text-xs text-gray-800 uppercase dark:text-gray-100 font-regular">{@page_title}</h1>
     </div>
-    <!-- <div class="flex items-center space-x-3 lg:hidden"> -->
-      <!-- <button
-        type="button"
-        x-state:on="Item active"
-        x-state:off="Item inactive"
-        @click="open_search = true"
-        @mousedown="if (open_search) $event.preventDefault()"
-        aria-expanded="true"
-        :aria-expanded="open.toString()"
-        :class="{ 'text-pink-600 ring-2 ring-offset-2 ring-pink-500': open_search }"
-        class="inline-flex items-center p-2 text-gray-600 border border-transparent rounded-full bg-blueGray-200 hover:bg-blueGray-300 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blueGray-300">
-        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
-      </button> -->
-      <!-- <button
-        type="button"
-        x-state:on="Item active"
-        x-state:off="Item inactive"
-        @click="open_right_panel = true"
-        @mousedown="if (open_right_panel) $event.preventDefault()"
-        aria-expanded="true"
-        :aria-expanded="open.toString()"
-        :class="{ 'text-pink-600 ring-2 ring-offset-2 ring-pink-500': open_right_panel }"
-        class="inline-flex items-center p-2 text-gray-600 border border-transparent rounded-full shadow-sm bg-blueGray-200 hover:bg-blueGray-300 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blueGray-300">
-        <svg class="w-4 h-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-sidebar"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect><line x1="9" y1="3" x2="9" y2="21"></line></svg>
-      </button> -->
-    <!-- </div> -->
   </div>
-  <!-- <Bonfire.UI.Social.SmartInputLive
-    :if={current_user(assigns) && @smart_input !=false && Bonfire.Common.Config.get([:ui, :smart_input, :post], true)}
-     /> -->
-  <!-- <div
-    x-show="open_search"
-    x-transition:enter="transition ease-out duration-200"
-    x-transition:enter-start="opacity-0 -translate-y-1"
-    x-transition:enter-end="opacity-100 translate-y-0"
-    x-transition:leave="transition ease-in duration-150"
-    x-transition:leave-start="opacity-100 translate-y-0"
-    x-transition:leave-end="opacity-0 -translate-y-1"
-    x-description="Flyout menu, show/hide based on flyout menu state."
-    class="absolute inset-x-0 z-10 transform border-t rounded-b-lg shadow-lg"
-    style="top: 58px"
-    x-ref="panel"
-    >
-    <div class="bg-white rounded-b-lg">
-      <div class="flex items-center p-3">
-        <%= live_component(@socket, Bonfire.UI.Social.SearchLive, assigns_clean(assigns)) %>
-      </div>
-    </div>
-  </div> -->
+
 </div>

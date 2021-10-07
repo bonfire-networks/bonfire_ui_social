@@ -4,8 +4,6 @@
     <Bonfire.UI.Social.PageHeaderLive
       :if={e(assigns, :current_user, :id, nil)}
       page_title={@page_title}
-      page={@page}
-      smart_input={@smart_input}
     />
     {live_component(@socket, Bonfire.Common.Config.get([:ui, :profile, :sections, tab(@selected_tab)], Bonfire.UI.Social.ProfileTimelineLive), assigns_clean(assigns))}
   </section>

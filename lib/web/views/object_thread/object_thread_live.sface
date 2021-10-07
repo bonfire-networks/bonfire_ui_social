@@ -1,0 +1,22 @@
+<main class="mx-3 lg:flex lg:mx-0">
+  <section class="bg-white shadow h-bonfire-logged dark:bg-gray-700 w-center">
+    <Bonfire.UI.Social.PageHeaderLive
+      :if={e(assigns, :current_user, :id, nil)}
+      page_title={@page_title}
+    />
+    <Bonfire.UI.Social.BannerPreviousThreadLive  activity={@activity} />
+    <Bonfire.UI.Social.ActivityLive
+      id={"main-"<> e(@thread_id, "")}
+      hide_reply={true}
+      viewing_main_object={true}
+      activity={@activity}
+    />
+    <Bonfire.UI.Social.ThreadLive 
+      id={@thread_id}
+      thread_id={@thread_id}
+      object={@object}
+      activity={@activity}
+    />
+  </section>
+
+</main>

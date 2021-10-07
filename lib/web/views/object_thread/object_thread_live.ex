@@ -1,21 +1,23 @@
 defmodule  Bonfire.UI.Social.ObjectThreadLive do
-  use Bonfire.Web, :live_component
+  use Bonfire.Web, :stateless_component
+
+  prop page, :string
+  prop page_title, :string
+  prop has_private_tab, :boolean
+  prop search_placeholder, :string
+  prop smart_input_placeholder, :string
+  prop reply_id, :string
+  prop activity, :any
+  prop object, :any
+  prop thread_id, :string
 
   def update(assigns, socket) do
-
     thread_id = e(assigns, :thread_id, e(assigns, :object, :id, nil))
-
     participants = Bonfire.Social.Threads.list_participants(thread_id, current_user(assigns))
-    # |> IO.inspect
-
     participant_tuples = participants |> Map.get(:entries, []) |> Enum.map(&{e(&1, :profile, :name, "someone"), &1.id})
 
     {:ok, assign(socket, assigns
     |> assigns_merge(
-        page: "Discussion",
-        has_private_tab: false,
-        smart_input: false,
-        thread_id: thread_id,
         date_ago: date_from_now(e(assigns, :object, e(assigns, :activity, :object, nil))),
         participants: participants
       )

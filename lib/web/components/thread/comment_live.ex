@@ -7,7 +7,6 @@ defmodule Bonfire.UI.Social.CommentLive do
 
   def update(%{comment: %{__struct__: Bonfire.Data.Social.Activity} = activity} = assigns, socket) do
 
-    # IO.inspect(comment)
     # {activity, comment} = Map.pop(comment, :activity)
     # IO.inspect(activity)
     {object, activity} = Map.pop(activity, :object)

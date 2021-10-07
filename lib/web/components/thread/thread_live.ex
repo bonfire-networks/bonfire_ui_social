@@ -1,15 +1,18 @@
 defmodule Bonfire.UI.Social.ThreadLive do
-  use Bonfire.Web, :stateless_component
+  use Bonfire.Web, :stateful_component
   alias Bonfire.Fake
   alias Bonfire.Web.LivePlugs
   alias Bonfire.Me.Users
   alias Bonfire.Me.Web.{CreateUserLive, LoggedDashboardLive}
   # import Bonfire.Me.Integration
 
-  prop reply_to_id, :any
-  prop replies, :any
-  prop threaded_replies, :any
+  # prop reply_to_id, :any
+  prop thread_id, :any
+  # prop replies, :any
+  # prop threaded_replies, :any, default: []
   prop page_info, :any
+  prop activity, :any
+  prop object, :any
   # TODO: put in config
   @thread_max_depth 3
   @pagination_limit 10
@@ -41,24 +44,24 @@ defmodule Bonfire.UI.Social.ThreadLive do
   end
 
   def update(assigns, socket) do
-
     thread_id = e(assigns, :thread_id, nil)
+  
 
     if thread_id do
-
+      
       current_user = current_user(assigns)
 
       with %{entries: replies, metadata: page_info} <- Bonfire.Social.Threads.list_replies(thread_id, current_user, e(assigns, :after, nil), @thread_max_depth, @pagination_limit) do
-
-        # IO.inspect(replies, label: "replies")
+        IO.inspect(thread_id, label: "thread_id")
+        IO.inspect(page_info, label: "page_info")
 
         threaded_replies = if is_list(replies) and length(replies)>0, do: Bonfire.Social.Threads.arrange_replies_tree(replies), else: []
-      # IO.inspect(threaded_replies, label: "threaded_replies:")
 
         assigns_merge(assigns,
           replies: replies || [],
           threaded_replies: threaded_replies,
           page_info: page_info,
+          # thread_id: thread_id
         )
         |> assign_thread(socket)
       end
@@ -66,7 +69,6 @@ defmodule Bonfire.UI.Social.ThreadLive do
   end
 
   def assign_thread(assigns, socket) do
-    # IO.inspect(assigns)
 
     # replies = Bonfire.Data.Social.Replied.descendants(thread)
     #IO.inspect(replies, label: "REPLIES:")
@@ -74,20 +76,18 @@ defmodule Bonfire.UI.Social.ThreadLive do
 
     # replies = Bonfire.Social.Posts.replies_tree(e(thread, :thread_replies, []))
 
-    thread_id = e(assigns, :thread_id, nil)
-    # IO.inspect(thread_id, label: "Thread: load replies")
+    thread_id = e(assigns, :object, :thread_id, nil)
 
     if thread_id do
 
       current_user = current_user(assigns)
       activity = e(assigns, :activity, nil)
       object = e(assigns, :object, e(activity, :object))
-      # IO.inspect(object, label: "thread_object:")
 
       {:ok,
       assign(socket, assigns
       |> assigns_merge(
-        thread_id: thread_id,
+        # thread_id: thread_id,
         activity: activity,
         object: object,
         reply_to_id: e(activity, :object, :id, nil) || thread_id, # TODO: change for thread forking?

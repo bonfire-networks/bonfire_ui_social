@@ -3,8 +3,6 @@
    <Bonfire.UI.Social.PageHeaderLive
       :if={e(assigns, :current_user, :id, nil)}
       page_title={@page_title}
-      page={@page}
-      smart_input={@smart_input}
     />
     <Bonfire.UI.Social.PrivateLive feed={@feed} />
     </section>
