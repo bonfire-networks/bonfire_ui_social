@@ -20,7 +20,7 @@
     </svg>
   </div>
   <div class="flex-1 ml-2">
-    <div class="text-xs font-bold text-gray-500 dark:text-gray-300">
+    <div class="text-xs font-medium text-gray-500 dark:text-gray-300">
       <LiveRedirect
         aria-label={e(@activity, :subject_character, :username, "") <> " profile"}
         class="font-medium subject_minimal"
