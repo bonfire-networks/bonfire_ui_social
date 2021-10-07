@@ -7,9 +7,9 @@
         <div class="text-base font-medium tracking-wide text-gray-300">{Bonfire.Common.Config.get([:ui, :theme, :instance_name], '')}</div>
       </div>
     </LiveRedirect>
-    <div class="flex items-center ml-6 space-x-4">
+    <div class="flex items-center ml-6 space-x-2">
       {#for {name, route} <- Bonfire.Common.Config.get([:ui, :app_menu_extension_paths], [])}
-        <LiveRedirect to={path(route)} class={"text-sm font-medium tracking-wide text-gray-300"}>{name}</LiveRedirect>
+        <LiveRedirect to={path(route)} class={"text-xs hover:bg-blueGray-900 hover:text-gray-100 px-2 py-1.5 rounded bg-gray-700 font-medium tracking-wide text-gray-300"}>{name}</LiveRedirect>
       {/for}
     </div>
   </div>
