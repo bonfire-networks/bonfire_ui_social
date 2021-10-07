@@ -46,7 +46,7 @@
           </LiveRedirect>
         {/if}
 
-        <article class={"dark:prose-light prose prose-sm max-w-prose mt-1", "prose max-w-prose dark:prose-light": e(assigns, :viewing_main_object, nil)}>
+        <article class={"dark:prose-light prose prose-sm max-w-prose mt-2", "prose max-w-prose dark:prose-light": e(assigns, :viewing_main_object, nil)}>
           {rich e(@object, :html_body, "...")}
         </article>
     {/if}

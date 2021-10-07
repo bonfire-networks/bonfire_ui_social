@@ -4,7 +4,9 @@ defmodule Bonfire.UI.Social.ActivityLive do
   alias Bonfire.Social.Activities
 
   prop activity, :map
-  prop object, :map
+  # prop object, :map
+  prop viewing_main_object, :boolean
+  prop hide_reply, :boolean
 
   # TODO: put in config and/or autogenerate with Verbs genserver
   @reply_verbs ["reply","respond"]

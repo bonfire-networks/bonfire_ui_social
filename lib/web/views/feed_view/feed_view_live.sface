@@ -4,8 +4,6 @@
    <Bonfire.UI.Social.PageHeaderLive
       :if={current_user(assigns) != nil}
       page_title={@page_title}
-      page={@page}
-      smart_input={@smart_input}
     />
     <div class="bg-white border-t-8 border-gray-100 dark:bg-gray-700 dark:border-gray-600 lg:mx-0">
       {live_component(@socket, Bonfire.UI.Social.FeedLive, assigns_merge(assigns, id: "feed"))}
