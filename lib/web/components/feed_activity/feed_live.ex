@@ -4,6 +4,9 @@ defmodule Bonfire.UI.Social.FeedLive do
   import Bonfire.UI.Social.Integration
   require Logger
 
+  prop feed, :list
+  prop page_info, :map
+
   def mount(socket) do
     {:ok, socket
     |> assign(
