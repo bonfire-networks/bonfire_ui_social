@@ -6,11 +6,11 @@
       page_title={@page_title}
     />
     <div class="bg-white border-t-8 border-gray-100 dark:bg-gray-700 dark:border-gray-600 lg:mx-0">
-      {live_component(@socket, Bonfire.UI.Social.FeedLive, assigns_merge(assigns, id: "feed"))}
+      <Bonfire.UI.Social.FeedLive 
+        feed={@feed}
+        page_info={@page_info}
+        id="feed"
+      />
     </div>
   </section>
-  <!-- <aside class="flex-1 hidden mt-2 lg:flex md:flex-shrink-0">
-    <div class="w-full h-full px-1">
-    </div>
-  </aside> -->
 </main>
