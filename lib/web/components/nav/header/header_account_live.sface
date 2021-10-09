@@ -1,4 +1,4 @@
-<div class="sticky top-0 flex flex-shrink-0 w-full h-16 px-3 mb-4 bg-gray-800 border-b border-blueGray-700 lg:justify-between">
+<div class="sticky top-0 z-40 flex flex-shrink-0 w-full h-16 px-3 mb-4 bg-gray-800 border-b border-blueGray-700 lg:justify-between">
   <div class="flex items-center flex-shrink-0">
     <LiveRedirect to={path(Bonfire.Common.Config.get!(:home_page))}>
       <div class="flex items-center space-x-2">
