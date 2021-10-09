@@ -52,10 +52,8 @@
         <Bonfire.UI.Social.SetBoundariesLive hide_selector={e(assigns, :create_activity_type, nil)=="message"} />
       </div> -->
 
-      <div :if={Bonfire.Common.Config.get([:ui, :smart_input, :cw], []) == true}>
-        <Bonfire.UI.Social.SetCWLive />
-      </div>
         <Inputs for={:post_content}>
+          <Bonfire.UI.Social.SetCWLive />          
           <Field name={:html_body}>
             <Label :if={@smart_input_text && @smart_input_text !="" && @smart_input_placeholder} class="flex items-center p-2 mb-2 space-x-2 text-xs tracking-wide text-gray-800 bg-blue-200 bg-opacity-50 rounded-md">{@smart_input_placeholder}</Label>
             <div
