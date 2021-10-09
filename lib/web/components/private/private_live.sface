@@ -13,12 +13,12 @@
           <div class="flex-1 min-w-0 sm:flex sm:items-center sm:justify-between">
             <div class="truncate">
               <div class="flex items-center space-x-2">
-                <img src={e(activity, :subject_profile, :icon, "")} class="w-8 h-8 bg-pink-400 rounded-full" />
+                <!-- <img src={e(activity, :subject_profile, :icon, "")} class="w-8 h-8 bg-pink-400 rounded-full" /> -->
                 <p class="text-base font-medium text-pink-400 truncate">{e(activity, :subject_profile, :name, nil)}</p>
               </div>
               <div class="mt-1">
                 <p class="text-sm text-gray-300 truncate font-regular">
-                  {r( e(activity, :object, :name, nil) || e(activity, :object, :post_content, :summary, nil) || e(activity, :object, :post_content, :html_body, nil) )}
+                  {e(activity, :object, :name, nil) || e(activity, :object, :post_content, :summary, nil) || e(activity, :object, :post_content, :html_body, nil)}
                 </p>
                 <div class="flex items-center mt-1 text-xs text-gray-400">
                   <p><time datetime={"#{date_from_now(activity)}"}>{date_from_now(activity)}</time></p>
