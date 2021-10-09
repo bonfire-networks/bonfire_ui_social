@@ -1,5 +1,5 @@
 
-<div class="sticky top-0 flex flex-shrink-0 w-full h-16 px-3 mb-4 bg-gray-800 border-b border-blueGray-700 lg:justify-between">
+<div class="sticky top-0 z-40 flex flex-shrink-0 w-full h-16 px-3 mb-4 bg-gray-800 border-b border-blueGray-700 lg:justify-between">
   <div class="items-center flex-1 flex-shrink-0 hidden lg:flex">
     <LiveRedirect to={path(:home)}>
       <div class="flex items-center space-x-2">
