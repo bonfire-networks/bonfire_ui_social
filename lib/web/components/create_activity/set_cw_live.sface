@@ -1,13 +1,13 @@
+
 <div
   x-show.transition="title_open"
   class="mb-3">
-  <Inputs for={:post_content}>
   <Field name={:name}>
     <TextInput
       opts={placeholder: "Enter a title"}
-      class="flex-grow block w-full min-w-0 p-2 mb-2 transition-all duration-300 ease-in-out border border-gray-300 rounded focus:ring-light-blue-500 focus:border-light-blue-500 sm:text-sm" />
+      class="flex-grow block w-full min-w-0 p-2 mb-2 transition-all duration-300 ease-in-out border border-gray-300 rounded focus:ring-light-blue-500 focus:border-light-blue-500 sm:text-sm" 
+      />
   </Field>
-  </Inputs>
 
 
     <div
@@ -24,13 +24,11 @@
       x-show.transition="summary_open"
       :if={Bonfire.Common.Config.get([:ui, :smart_input, :summary], []) == true}
       >
-      <Inputs for={:post_content}>
-        <Field name={:summary}>
+      <Field name={:summary}>
           <TextArea
             rows="4"
             opts={placeholder: "Write a short summary"}
             class="block w-full h-20 text-sm transition-all duration-300 ease-in-out border-gray-300 rounded shadow-sm focus:ring-indigo-500 focus:border-indigo-500" />
         </Field>
-      </Inputs>
-    </div>
+      </div>
 </div>
