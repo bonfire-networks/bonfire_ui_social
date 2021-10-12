@@ -19,7 +19,7 @@
       <%= live_component(@socket, Bonfire.UI.Social.HeaderUserLive, assigns_clean(assigns)) %>
         <div class="block w-full mx-auto md:flex place-content-center max-w-screen-lg">
           <%= live_component(@socket, Bonfire.UI.Social.SidebarLive, assigns_clean(assigns)) %>
-          <div class="flex-grow inner-content">
+          <div class="flex-grow max-w-screen-sm">
             <%= @inner_content %>
           </div>
         </div>
