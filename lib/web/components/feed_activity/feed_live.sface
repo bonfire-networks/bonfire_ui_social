@@ -19,7 +19,7 @@
         role="article"
         tabIndex="0"
         aria-label="user activity"
-        class="lg:px-3">
+        class="md:px-3">
         <ActivityLive
           activity={e(entry, :activity, entry)}
         />
@@ -32,7 +32,7 @@
         role="article"
         tabIndex="0"
         aria-label="user activity"
-        class="lg:px-3">
+        class="md:px-3">
         <ActivityLive activity={e(entry, :activity, entry)} />
       </article>
     </div>

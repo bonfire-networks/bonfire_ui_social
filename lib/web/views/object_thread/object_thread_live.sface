@@ -1,4 +1,4 @@
-<main class="mx-3 lg:flex lg:mx-0">
+<main class="mx-3 md:flex md:mx-0">
   <section class="bg-white shadow h-bonfire-logged dark:bg-gray-700 w-center">
     <Bonfire.UI.Social.PageHeaderLive
       :if={e(assigns, :current_user, :id, nil)}
