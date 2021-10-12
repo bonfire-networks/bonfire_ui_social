@@ -1,9 +1,11 @@
 defmodule Bonfire.UI.Social.CommentLive do
   use Bonfire.Web, :stateless_component
+  alias Bonfire.UI.Social.CommentLive
 
   prop comment, :map
   prop thread_level, :any
-  prop child_replies, :map
+  prop child_replies, :any
+  prop reply_to_thread_id, :any
 
   def update(%{comment: %{__struct__: Bonfire.Data.Social.Activity} = activity} = assigns, socket) do
 
@@ -12,9 +14,8 @@ defmodule Bonfire.UI.Social.CommentLive do
     {object, activity} = Map.pop(activity, :object)
 
     {:ok, assign(socket, assigns
-                          |> assigns_merge(prepare(activity, object, activity))
-          )
-    }
+      |> assigns_merge(prepare(activity, object, activity))
+    )}
   end
 
   def update(%{comment: comment} = assigns, socket) do
@@ -25,9 +26,8 @@ defmodule Bonfire.UI.Social.CommentLive do
     {object, activity} = Map.pop(activity, :object)
 
     {:ok, assign(socket, assigns
-                          |> assigns_merge(prepare(comment, object, activity))
-          )
-    }
+      |> assigns_merge(prepare(comment, object, activity))
+    )}
   end
 
   def prepare(comment, object, activity) do

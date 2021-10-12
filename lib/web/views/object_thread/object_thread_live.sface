@@ -4,7 +4,7 @@
       :if={e(assigns, :current_user, :id, nil)}
       page_title={@page_title}
     />
-    <Bonfire.UI.Social.BannerPreviousThreadLive  activity={@activity} />
+    <Bonfire.UI.Social.BannerPreviousThreadLive activity={@activity} />
     <Bonfire.UI.Social.ActivityLive
       id={"main-"<> e(@thread_id, "")}
       hide_reply={true}

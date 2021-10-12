@@ -6,7 +6,9 @@ defmodule Bonfire.UI.Social.ActivityLive do
   prop activity, :map
   # prop object, :map
   prop viewing_main_object, :boolean
+  prop showing_within_thread, :boolean, default: false
   prop hide_reply, :boolean
+  prop reply_click, :any
 
   # TODO: put in config and/or autogenerate with Verbs genserver
   @reply_verbs ["reply","respond"]
@@ -55,6 +57,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
     {:ok, assign(socket, assigns
       |> assigns_merge(
           activity: nil,
+          object: nil,
           activity_object_components: [],
           date_ago: nil,
           verb: "",

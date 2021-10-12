@@ -4,6 +4,8 @@
       <div class="flex items-center">
         <Bonfire.UI.Social.ActivityLive
           id={"comment-"<> e(@comment, :id, "")}
+          activity={@activity}
+          object={@object}
           reply_click={"reply = !reply; return false;"}
           showing_within_thread={true}
         />
@@ -11,6 +13,7 @@
       <div x-show="reply" class="p-3 ml-8 -mt-3">
         <Bonfire.UI.Social.CreateActivityLive
           reply_to_id={e(@comment, :id, nil)}
+          reply_to_thread_id={@reply_to_thread_id}
           showing_within_thread={true}
           to_circles={e(assigns, :to_circles, []) ++ [{e(@activity, :subject_profile, :name, e(@activity, :subject_character, :username, "someone")), e(@activity, :subject_character, :id, nil)}]}
           smart_input_text=""
@@ -21,8 +24,9 @@
     <div class={"replies replies-level-" <> to_string(@thread_level+1) <> " ml-8"}>
       {#if is_list(@child_replies) and length(@child_replies)>0 }
         {#for {subreply, sub_child_replies} <- @child_replies }
-          <Bonfire.UI.Social.CommentLive
+          <CommentLive
             reply_to_id={e(@comment, :id, nil)}
+            reply_to_thread_id={@reply_to_thread_id} 
             comment={subreply}
             child_replies={sub_child_replies}
             thread_level={@thread_level+1}
@@ -36,7 +40,7 @@
             @click="show = false" 
             x-show="show" 
             phx-click="Bonfire.Social.Posts:load_replies" 
-            phx-value-id={@comment.id} 
+            phx-value-id={e(@comment, :id, nil)} 
             phx-value-level={@thread_level} 
             class="flex items-center visible px-2 py-1 ml-4 rounded cursor-pointer group dark:bg-gray-400 hover:bg-gray-200 click:invisible">
             <span class="text-xs font-semibold text-gray-800">Show {@sub_replies_count} more replies</span>
