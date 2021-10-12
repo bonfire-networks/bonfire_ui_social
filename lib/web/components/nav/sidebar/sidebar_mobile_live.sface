@@ -8,7 +8,7 @@
     x-transition:leave-start="opacity-100 scale-100"
     x-transition:leave-end="opacity-0 scale-95"
     x-description="Mobile menu, show/hide based on mobile menu state."
-    class="fixed z-30 top-0 left-0 right-0 bottom-0 w-full h-full inset-x-0 p-2 transition transform origin-top-right lg:hidden"
+    class="fixed z-30 top-0 left-0 right-0 bottom-0 w-full h-full inset-x-0 p-2 transition transform origin-top-right md:hidden"
     x-ref="panel"
     @click.away="open_sidebar = false"
     style="display: none;">

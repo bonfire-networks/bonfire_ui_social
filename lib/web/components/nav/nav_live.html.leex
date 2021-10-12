@@ -1,13 +1,13 @@
 
 <%= cond do %>
-  <% !e(assigns, :current_user, :id, nil) && !e(assigns, :current_account, :id, nil) -> %>
+  <% !current_user(assigns) && !current_account(assigns) -> %>
     <div class="">
       <%= live_component(@socket, Bonfire.UI.Social.HeaderGuestLive, assigns_clean(assigns)) %>
       <div class="container max-w-screen-lg mx-auto mt-4">
         <%= @inner_content %>
       </div>
     </div>
-  <% !e(assigns, :current_user, :id, nil) && e(assigns, :current_account, :id, nil) -> %>
+  <% !current_user(assigns) && current_account(assigns) -> %>
     <div class="">
       <%= live_component(@socket, Bonfire.UI.Social.HeaderAccountLive, assigns_clean(assigns)) %>
       <div class="container max-w-screen-lg mx-auto mt-4">
@@ -17,9 +17,9 @@
   <% true -> %>
     <div class="flex flex-col">
       <%= live_component(@socket, Bonfire.UI.Social.HeaderUserLive, assigns_clean(assigns)) %>
-        <div class="block w-full mx-auto lg:flex place-content-center lg:max-w-screen-2xl">
+        <div class="block w-full mx-auto md:flex place-content-center max-w-screen-lg">
           <%= live_component(@socket, Bonfire.UI.Social.SidebarLive, assigns_clean(assigns)) %>
-          <div class="">
+          <div class="flex-grow inner-content">
             <%= @inner_content %>
           </div>
         </div>

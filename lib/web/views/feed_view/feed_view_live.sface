@@ -1,11 +1,11 @@
 <main
-  class="mx-3 mb-3 lg:flex lg:mx-0">
+  class="mx-3 mb-3 md:flex md:mx-0">
   <section class="bg-white rounded-lg shadow dark:bg-gray-700 w-center">
    <Bonfire.UI.Social.PageHeaderLive
       :if={current_user(assigns) != nil}
       page_title={@page_title}
     />
-    <div class="bg-white border-t-8 border-gray-100 dark:bg-gray-700 dark:border-gray-600 lg:mx-0">
+    <div class="bg-white border-t-8 border-gray-100 dark:bg-gray-700 dark:border-gray-600 md:mx-0">
       <Bonfire.UI.Social.FeedLive 
         feed={@feed}
         page_info={@page_info}

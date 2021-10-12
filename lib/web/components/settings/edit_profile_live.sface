@@ -5,10 +5,10 @@
   />
   <div class="p-4">
     <div class="mt-1 sm:mt-0">
-      <div phx-drop-target="<%= @uploads.image.ref %>" class="relative flex justify-center px-6 py-10 bg-pink-300 bg-center bg-cover rounded-lg" style="height: 225px; background-image: url('<%=image_url(current_user(assigns))%>')">
+      <div phx-drop-target={@uploads.image.ref} class="relative flex justify-center px-6 py-10 bg-pink-300 bg-center bg-cover rounded-lg" style={"height: 225px; background-image: url('"<>image_url(current_user(assigns))<>"')"}>
         <div class="space-y-1 text-center">
           <div class="flex text-sm text-gray-600">
-            <label for="<%= @uploads.image.ref %>" class="absolute inset-0 flex flex-col items-center justify-center w-full h-full text-sm font-medium text-white transition duration-150 ease-in-out bg-gray-700 bg-opacity-75 rounded-lg opacity-0 cursor-pointer hover:opacity-100 focus-within:opacity-100">
+            <label for={@uploads.image.ref} class="absolute inset-0 flex flex-col items-center justify-center w-full h-full text-sm font-medium text-white transition duration-150 ease-in-out bg-gray-700 bg-opacity-75 rounded-lg opacity-0 cursor-pointer hover:opacity-100 focus-within:opacity-100">
               { live_file_input @uploads.image, class: "sr-only" }
               <div class="text-center">
               <span>{l "Upload a background image"}</span>

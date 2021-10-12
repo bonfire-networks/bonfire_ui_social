@@ -1,4 +1,4 @@
-<div class="mx-4 overflow-hidden bg-white border-t-8 border-gray-100 dark:border-gray-600 lg:mx-0">
+<div class="mx-4 overflow-hidden bg-white border-t-8 border-gray-100 dark:border-gray-600 md:mx-0">
 
   <div :if={not is_list(e(@feed, :entries, [])) or e(@feed, :entries, []) == []} class="p-4 text-center dark:bg-gray-700">
     <div class="mb-3 text-3xl">🧐</div>
