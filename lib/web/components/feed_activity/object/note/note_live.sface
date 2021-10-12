@@ -1,6 +1,6 @@
 
 <div class={
-  "",
+  "mt-2",
   "reply_to": e(@object, :id, nil) != nil and e(@activity, :replied, :reply_to_id, nil) == nil and e(@activity, :id, nil) == nil,  
   "showing_within_thread ml-8": e(assigns, :showing_within_thread, nil) == true}
    x-cloak 
