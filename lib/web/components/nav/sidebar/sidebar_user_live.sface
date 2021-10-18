@@ -1,5 +1,5 @@
 
-<div class="flex p-1.5 rounded-md shadow-inner h-10 bg-blueGray-700">
+<div class="dropdown dropdown-end">
    <div
       x-cloak
       x-data="{ open: false }"
@@ -8,7 +8,7 @@
       class="relative flex flex-col w-full text-left">
         <button
           type="button"
-          class="inline-flex items-center justify-center w-full text-sm font-medium rounded-lg focus:outline-none"
+          class="btn"
           id="user-profile-menu"
           @click="open = !open"
           aria-haspopup="true"
@@ -20,14 +20,14 @@
             alt="current user profile image">
           <div class="flex-1 mx-3 text-left">
 
-            <span class="text-sm font-medium text-gray-700 truncate dark:text-gray-300">{e(assigns, :current_user, :profile, :name, "Me")}</span>
+            <span class="text-sm font-medium normal-case truncate">{e(assigns, :current_user, :profile, :name, "Me")}</span>
             <!-- <span class="-mt-1 text-sm font-light text-gray-600 dark:text-gray-300">@{e(assigns, :current_user, :character, :username, "anon")}</span> -->
           </div>
           <!-- <svg class="flex-shrink-0 w-5 h-5 text-gray-400 group-hover:text-gray-500" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
             <path fill-rule="evenodd" d="M10 3a1 1 0 01.707.293l3 3a1 1 0 01-1.414 1.414L10 5.414 7.707 7.707a1 1 0 01-1.414-1.414l3-3A1 1 0 0110 3zm-3.707 9.293a1 1 0 011.414 0L10 14.586l2.293-2.293a1 1 0 011.414 1.414l-3 3a1 1 0 01-1.414 0l-3-3a1 1 0 010-1.414z" clip-rule="evenodd" />
           </svg> -->
         </button>
-      <div
+      <ul
         x-description="Usr profile dropdown menu, show/hide based on menu state."
         x-show="open"
         x-transition:enter="transition ease-out duration-100"
@@ -36,11 +36,11 @@
         x-transition:leave="transition ease-in duration-75"
         x-transition:leave-start="transform opacity-100 scale-100"
         x-transition:leave-end="transform opacity-0 scale-95"
-        class="absolute right-0 w-56 mt-12 -mr-1 origin-top-left bg-white divide-y divide-gray-100 rounded-md shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none"
+        class="p-2 mt-12 shadow shadow-lg menu text-base-content dropdown-content bg-base-100 rounded-box w-52"
         role="menu"
         aria-orientation="vertical"
         aria-labelledby="user-profile-menu">
           <Bonfire.UI.Social.Sidebar.MoreLinksLive current_user={current_user(assigns)} />
-      </div>
+      </ul>
     </div>
 </div>

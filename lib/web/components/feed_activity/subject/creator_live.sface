@@ -1,9 +1,5 @@
 <div class="flex items-center">
-  <img 
-    class="inline-block object-cover w-8 h-8 bg-gray-100 rounded-full" 
-    src={avatar_url(e(@profile, nil))} 
-    alt="creator profile image" 
-    onerror="this.style.display='none'">
+  <Bonfire.UI.Social.Activity.AvatarLive profile={@profile} />
   <div class="flex justify-between flex-1 ml-2">
     <div class="flex items-center text-base text-gray-700 dark:text-gray-100">
       <LiveRedirect

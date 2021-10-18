@@ -1,5 +1,10 @@
-<div class="flex items-center text-sm">
-  <img :if={e(provider(assigns) , nil)} class="inline-block object-cover w-8 h-8 bg-gray-100 rounded-full subject_avatar" src={"#{avatar_url(e(profile(provider(assigns) ), nil))}"} alt="creator profile image" onerror="this.style.display='none'"> 
+<div class="flex items-center text-sm">    
+    <div :if={e(provider(assigns) , nil)}>
+      <Bonfire.UI.Social.Activity.AvatarLive profile={e(profile(provider(assigns) ), nil)} />
+    </div>
+    <div :if={e(receiver(assigns) , nil)}>
+      <Bonfire.UI.Social.Activity.AvatarLive profile={e(profile(receiver(assigns) ), nil)} />
+    </div>
 
   <div class="flex justify-between flex-1 ml-2">
 

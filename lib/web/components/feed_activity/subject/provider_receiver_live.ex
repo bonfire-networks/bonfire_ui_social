@@ -10,6 +10,9 @@ defmodule Bonfire.UI.Social.Activity.ProviderReceiverLive do
   def provider(%{provider: provider}), do: provider
   def provider(%{object: %{provider: provider}}), do: provider
 
+  def receiver(%{receiver: receiver}), do: receiver
+  def receiver(%{object: %{receiver: receiver}}), do: receiver
+
   def profile(object, field), do: e(object, field, nil) |> profile
   def profile(%{profile: %{name: _} = profile}), do: profile
   def profile(profile), do: profile

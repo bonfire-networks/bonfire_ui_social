@@ -12,7 +12,7 @@
       :if={is_list(@feed) or length(@feed) > 0}
       id="feed_future" 
       phx-update="prepend" 
-      class={"divide-y dark:divide-gray-600 border-b border-gray-600"}>
+      class={"divide-y"}>
       <article
         :for={entry <- @feed_future}
         id={e(entry, :activity, :id, e(entry, :activity, :object, :id, "unknown-activity"))}
@@ -25,7 +25,7 @@
         />
       </article>
     </div>
-    <div id="feed_past" phx-update={e(assigns, :feed_update_mode, "replace")} class="divide-y dark:divide-gray-600">
+    <div id="feed_past" phx-update={e(assigns, :feed_update_mode, "replace")} class="divide-y divide-base-300">
       <article
         :for={entry <- @feed}
         id={e(entry, :activity, :id, e(entry, :activity, :object, :id, "unknown-activity"))}

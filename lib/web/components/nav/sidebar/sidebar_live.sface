@@ -3,15 +3,8 @@
   role="navigation"
   class="flex-col hidden md:flex w-72">
   <div class="fixed flex flex-col flex-grow h-full pl-1 overflow-y-auto md:pr-3 w-72">
-
-    <!-- Sidebar Search -->
     <div class="mb-4">
-      <!-- <Bonfire.UI.Social.SearchLive/> -->
-      <!-- <div class="p-3 mt-2 rounded shadow bg-blueGray-200 dark:bg-gray-700"> -->
-
-      <!-- <Bonfire.UI.Social.SidebarUserLive current_user={current_user(assigns)} /> -->
       <Bonfire.UI.Social.SmartInputLive :if={current_user(assigns)}  />
-      <!-- </div> -->
     </div>
 
     <div
