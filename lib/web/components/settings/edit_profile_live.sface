@@ -89,7 +89,7 @@
       </div>
     </div>
     <div class="flex mt-8">
-      <button type="submit" class="flex items-center flex-1 text-center place-content-center btn-primary">
+      <button type="submit" class="flex items-center flex-1 text-center place-content-center btn btn-primary">
         {l "Save"}
       </button>
     </div>

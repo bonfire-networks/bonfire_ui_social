@@ -14,3 +14,4 @@
   <li :if={current_user(assigns)}>  
   <LiveRedirect to="/logout" class="text-base-content">{l "Logout"}</LiveRedirect>
   </li>
+

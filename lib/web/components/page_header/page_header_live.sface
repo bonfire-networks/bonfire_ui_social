@@ -8,7 +8,7 @@
       <a
         aria-label="Navigate to the previous page"
         href="javascript:window.history.back()">
-        <span class="btn btn-circle btn-xs md:btn-sm">
+        <span class=" btn btn-circle btn-xs md:btn-sm">
           <svg class="w-4 h-4 stroke-current" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path></svg>
         </span>
       </a>

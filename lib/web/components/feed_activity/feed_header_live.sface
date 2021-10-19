@@ -1,6 +1,6 @@
 <div class="p-3 border-b rounded-t-lg dark:bg-opacity-50 dark:border-transparent dark:bg-gray-800">
   <div class="flex flex-wrap items-center justify-between sm:flex-no-wrap">
-    <h3 class="flex-1 text-base text-gray-800 dark:text-gray-100 font-regular">
+    <h3 class="flex-1 text-base font-regular">
       {@feed_title}
     </h3>
   </div>

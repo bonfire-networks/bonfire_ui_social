@@ -10,23 +10,25 @@
           <Bonfire.UI.Social.SearchLive />
         </div>
       </div>
-      {#if !e(assigns, :current_account, nil) }
-        <div class="flex items-center">
-          <span class="inline-flex rounded-md shadow-sm">
-            <Link to={path(:login, :index)} class="btn-secondary">{l "Login"}</Link>
-          </span>
-          <span class="inline-flex ml-3 rounded-md shadow-sm">
-            <Link to={path(:signup, :index)} class="btn-primary">{l "Signup"}</Link>
-          </span>
-        </div>
-      {#else }
-        <div class="flex items-center">
-          <span class="inline-flex rounded-md shadow-sm">
-            <Link to={path(:switch_user)} class="inline-flex items-center px-4 py-2 text-sm font-medium leading-5 text-gray-100 transition duration-150 ease-in-out bg-gray-900 rounded-md hover:bg-gray-800 hover:text-gray-200 focus:outline-none focus:border-blue-300 focus:shadow-outline-blue active:text-gray-200 active:bg-gray-700">
-                {l "Select User"}
-            </Link>
-          </span>
-        </div>
-      {/if}
+
+      <div class="flex items-center">
+
+        <Bonfire.UI.Social.ChangeThemeLive />
+
+        {#if !e(assigns, :current_account, nil) }
+            <span class="inline-flex ">
+              <Link to={path(:login, :index)} class="btn btn-secondary">{l "Login"}</Link>
+            </span>
+            <span class="inline-flex ml-3 ">
+              <Link to={path(:signup, :index)} class="btn btn-primary">{l "Signup"}</Link>
+            </span>
+        {#else }
+            <span class="inline-flex rounded-md shadow-sm">
+              <Link to={path(:switch_user)} class="inline-flex items-center px-4 py-2 text-sm font-medium leading-5 text-gray-100 transition duration-150 ease-in-out bg-gray-900 rounded-md hover:bg-gray-800 hover:text-gray-200 focus:outline-none focus:border-blue-300 focus:shadow-outline-blue active:text-gray-200 active:bg-gray-700">
+                  {l "Select User"}
+              </Link>
+            </span>
+        {/if}
+      </div>
     </div>
 </div>

@@ -19,7 +19,7 @@
           object_id={e(@user, :id, "")} 
           following={e(assigns, :following, [])}
           current_user={current_user(assigns)} 
-          class={"profile_follow rounded-md shadow-sm w-full flex flex-1 text-left btn-secondary"}
+          class={"profile_follow rounded-md shadow-sm w-full flex flex-1 text-left btn btn-secondary"}
           />
         </div>
         

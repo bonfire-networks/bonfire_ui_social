@@ -1,3 +1,4 @@
+<Bonfire.UI.Social.ChangeThemeLive />
 
 <div class="dropdown dropdown-end">
    <div
@@ -43,4 +44,7 @@
           <Bonfire.UI.Social.Sidebar.MoreLinksLive current_user={current_user(assigns)} />
       </ul>
     </div>
+
+
 </div>
+

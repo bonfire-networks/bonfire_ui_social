@@ -14,13 +14,16 @@
 
   <div class="flex items-center space-x-3">
     <div class="flex items-center">
-      <span class="inline-flex rounded-md shadow-sm">
-        <Link to={path(:switch_user)} class="btn-primary">
+
+      <Bonfire.UI.Social.ChangeThemeLive />
+
+      <span class="inline-flex ">
+        <Link to={path(:switch_user)} class="btn btn-primary">
             {l "Select User"}
         </Link>
       </span>
-      <span class="inline-flex ml-3 rounded-md shadow-sm">
-          <a href="/logout" class="btn-secondary">
+      <span class="inline-flex ml-3">
+          <a href="/logout" class="btn btn-secondary">
             {l "Log out"}
           </a>
       </span>
