@@ -5,7 +5,7 @@
       :if={current_user(assigns) != nil}
       page_title={@page_title}
     />
-    <div class="border-t-8 border-base-300 md:mx-0 text-base-content">
+    <div class="border-t-8 border-base-200 md:mx-0 text-base-content">
       <Bonfire.UI.Social.FeedLive 
         feed={@feed}
         page_info={@page_info}

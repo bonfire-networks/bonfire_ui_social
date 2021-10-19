@@ -1,7 +1,7 @@
 
 <div class="py-2">
   <LiveRedirect to={@permalink}>
-    <div class="mb-2 text-sm font-medium text-gray-800 dark:text-gray-200">
+    <div class="mb-2 text-sm font-medium text-base-content text-opacity-80">
     {rich e(@object, :name, e(@object, :profile, :name, e(@object, :post_content, :name, e(@object, :title, "Unidentified federated object"))))}
     </div>
   </LiveRedirect>
