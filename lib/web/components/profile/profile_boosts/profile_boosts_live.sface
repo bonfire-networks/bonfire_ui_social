@@ -1,8 +1,4 @@
-<<<<<<< HEAD
 <div class="rounded-t-none bg-base-100 rounded-box">
-=======
-<div class="bg-base">
->>>>>>> a08d45ae64e130db1fd2130ea533fe5ab2f57985
   <Bonfire.UI.Social.ProfileHeroFullLive user={@user} current_user={current_user(assigns)}  />
   <Bonfire.UI.Social.ProfileNavigationLive selected_tab={@selected_tab} user={@user}/>
   {live_component(@socket, Bonfire.UI.Social.FeedLive, assigns_merge(assigns, id: "feed"))}
