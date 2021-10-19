@@ -1,14 +1,11 @@
 
 <div class="flex flex-col min-h-screen">
   <%= cond do %>
-    <% !current_user(assigns) && !e(assigns, :current_account, nil) -> %>
-        <%= live_component(@socket, Bonfire.UI.Social.HeaderGuestLive, assigns_clean(assigns)) %>
-        <%= @inner_content %>
-    <% !current_user(assigns) && e(assigns, :current_account, nil) -> %>
-        <%= live_component(@socket, Bonfire.UI.Social.HeaderAccountLive, assigns_clean(assigns)) %>
+    <% current_user(assigns) -> %>
+        <%= live_component(@socket, Bonfire.UI.Social.HeaderUserLive, assigns_clean(assigns)) %>
         <%= @inner_content %>
     <% true -> %>
-        <%= live_component(@socket, Bonfire.UI.Social.HeaderUserLive, assigns_clean(assigns)) %>
+        <%= live_component(@socket, Bonfire.UI.Social.HeaderGuestLive, assigns_clean(assigns)) %>
         <%= @inner_content %>
   <% end %>
 

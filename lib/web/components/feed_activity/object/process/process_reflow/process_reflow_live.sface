@@ -41,7 +41,7 @@
 
 <div 
   :if={@within_feed == false}
-  class={"block bg-white dark:bg-gray-700", "border rounded-lg my-2": @within_feed}>
+  class={"block bg-base", "border rounded-lg my-2": @within_feed}>
   <div class={"grid justify-between p-3 grid-cols-1 gap-0"}>
     <div class={"order-last": @within_feed}>
       <div class={"flex items-center space-x-2", "mt-2": @within_feed}>

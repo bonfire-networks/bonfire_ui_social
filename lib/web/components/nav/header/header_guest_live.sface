@@ -15,7 +15,7 @@
 
         <Bonfire.UI.Social.ChangeThemeLive />
 
-        {#if !e(assigns, :current_account, nil) }
+        {#if !current_account(assigns) }
             <span class="inline-flex ">
               <Link to={path(:login, :index)} class="btn btn-secondary">{l "Login"}</Link>
             </span>

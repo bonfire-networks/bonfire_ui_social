@@ -1,4 +1,4 @@
-<div class={"bg-white dark:bg-gray-700",  "mb-4 rounded-lg": current_user(assigns) == nil}>
+<div class={"bg-base",  "mb-4 rounded-lg": current_user(assigns) == nil}>
   <div class="pb-2">
     <div :if={e(current_user(assigns), :id, nil)} class="bg-pink-300 bg-center bg-cover" style={"height: 225px; background-image: url('#{image_url(@user)}')"}></div>
     <div :if={!e(current_user(assigns), :id, nil)} class="bg-pink-300 bg-center bg-cover rounded-t-lg" style={"height: 225px; background-image: url('#{image_url(@user)}')"}></div>
@@ -47,7 +47,7 @@
     </div>
     <div class={"flex-1 px-6 mt-4"}>
       <LivePatch to={"/user/#{e(@user, :character, :username, "")}/timeline"}>
-        <h1 class="text-2xl font-bold text-gray-700 dark:text-gray-100">{e(@user, :profile, :name, "Anonymous")}</h1>
+        <h1 class="text-2xl font-bold text-secondary">{e(@user, :profile, :name, "Anonymous")}</h1>
       </LivePatch>
       <span class="-mt-1 text-sm font-normal text-gray-500 dark:text-gray-300">@{e(@user, :character, :username, "")}</span>
 
