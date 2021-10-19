@@ -1,27 +1,22 @@
 
 <div class="flex flex-col min-h-screen">
   <%= cond do %>
-    <% !current_user(assigns) && !e(assigns, :current_account, nil) -> %>
+    <% current_user(assigns) -> %>
+      <div class="">
+        <%= live_component(@socket, Bonfire.UI.Social.HeaderUserLive, assigns_clean(assigns)) %>
+        <div class="flex w-full max-w-screen-lg mx-auto">
+          <%= @inner_content %>
+        </div>
+      </div>
+
+    <% true -> %>
       <div class="">
         <%= live_component(@socket, Bonfire.UI.Social.HeaderGuestLive, assigns_clean(assigns)) %>
         <div class="flex w-full max-w-screen-lg mx-auto">
           <%= @inner_content %>
         </div>
       </div>
-    <% !current_user(assigns) && e(assigns, :current_account, nil) -> %>
-      <div class="">
-        <%= live_component(@socket, Bonfire.UI.Social.HeaderAccountLive, assigns_clean(assigns)) %>
-        <div class="flex w-full max-w-screen-lg mx-auto">
-          <%= @inner_content %>
-        </div>
-      </div>
-    <% true -> %>
-      <div class="">
-        <%= live_component(@socket, Bonfire.UI.Social.HeaderUserLive, assigns_clean(assigns)) %>
-        <div class="flex w-full max-w-screen-lg mx-auto">
-          <%= @inner_content %>
-      </div>
-      </div>
+
   <% end %>
 
 </div>
