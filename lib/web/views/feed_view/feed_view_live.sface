@@ -1,6 +1,6 @@
 <main
   class="mx-3 mb-3 md:flex md:mx-0">
-  <section class="shadow-lg bg-base-200 rounded-box w-center">
+  <section class="shadow-lg bg-base-100 rounded-box w-center">
    <Bonfire.UI.Social.PageHeaderLive
       :if={current_user(assigns) != nil}
       page_title={@page_title}

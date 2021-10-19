@@ -25,7 +25,7 @@
         />
       </article>
     </div>
-    <div id="feed_past" phx-update={e(assigns, :feed_update_mode, "replace")} class="divide-y divide-base-300">
+    <div id="feed_past" phx-update={e(assigns, :feed_update_mode, "replace")} class="divide-y divide-base-200">
       <article
         :for={entry <- @feed}
         id={e(entry, :activity, :id, e(entry, :activity, :object, :id, "unknown-activity"))}

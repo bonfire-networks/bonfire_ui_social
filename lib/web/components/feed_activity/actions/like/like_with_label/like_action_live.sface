@@ -3,14 +3,13 @@
   phx-value-direction={"#{if @object_id in e(assigns, :liked, []) || e(@my_like, nil), do: "down", else: "up"}"}
   phx-value-id={@object_id}
   phx-value-component={__MODULE__}
-  class="flex items-center py-1 rounded cursor-pointer like_with_label like group">
+  class="feed_activity_action like_with_label">
 
   <span 
-    class="flex items-center mr-2 rounded-full dark:group-hover:bg-opacity-25 h-7 w-7 place-content-center dark:group-hover:bg-yellow-300"
+     class={"feed_activity_icon", "bg-primary bg-opacity-70":  @object_id in e(assigns, :liked, []) || e(@my_like, :id, nil)}
     :if={e(assigns, :showing_within_thread, false) != true}>
     <svg
       :if={@object_id in e(assigns, :liked, []) || e(@my_like, nil)}
-      class="w-5 h-5 text-gray-500 dark:text-yellow-400"
       stroke="none" 
       fill="currentColor"
       viewBox="0 0 20 20"
@@ -19,7 +18,6 @@
     </svg>
     <svg
       :if={@object_id not in e(assigns, :liked, []) && !e(@my_like, nil)}
-      class="w-5 h-5 text-gray-500 dark:text-gray-400 group-hover:text-yellow-700 dark:group-hover:text-yellow-400" 
       stroke="currentColor"
       fill="none"
       viewBox="0 0 20 20"
@@ -30,12 +28,12 @@
 
   <span 
     :if={@object_id not in e(assigns, :liked, []) && !e(@my_like, nil)}
-    class="text-xs font-normal text-gray-500 dark:text-gray-400 group-hover:text-yellow-600 dark:group-hover:text-yellow-400">
+    class="feed_activity_text">
      {l("Like")} <span :if={e(@like_count, :liker_count, 0) > 0}>({e(@like_count, :liker_count, 0)})</span>
   </span>
   <span 
     :if={@object_id in e(assigns, :liked, []) || e(@my_like, nil)}
-    class="text-xs font-normal text-gray-500 dark:text-yellow-400 group-hover:text-yellow-600 dark:group-hover:text-yellow-400">
+    class="font-medium feed_activity_text">
      {l("Liked")} <span :if={e(@like_count, :liker_count, 0) > 0}>({e(@like_count, :liker_count, 0)})</span>
   </span>
 </button>

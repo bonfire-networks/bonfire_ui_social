@@ -2,18 +2,18 @@
   <button
     type="button"
     @click="open_boundaries = !open_boundaries"
-    class="flex items-center p-1 rounded focus:outline-none hover:bg-gray-400"
+    class="flex items-center p-1 rounded focus:outline-none hover:bg-base-100"
     :class="{'bg-pink-50' : open_boundaries === true }">
-    <div class="text-gray-700" x-show="boundary_selected == 'public'">
+    <div class="text-base-content" x-show="boundary_selected == 'public'">
       <Solid.GlobeIcon/>
     </div>
-    <div class="text-gray-700" x-show="boundary_selected == 'local'">
+    <div class="text-base-content" x-show="boundary_selected == 'local'">
       <Solid.HomeIcon/>
     </div>
-    <div class="text-gray-700" x-show="boundary_selected == 'private'">
+    <div class="text-base-content" x-show="boundary_selected == 'private'">
       <Solid.AtSymbolIcon/>
     </div>
-    <div class="text-gray-700" x-show="boundary_selected == 'custom'">
+    <div class="text-base-content" x-show="boundary_selected == 'custom'">
       <Solid.CogIcon/>
     </div>
   </button>

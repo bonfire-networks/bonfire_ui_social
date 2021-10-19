@@ -12,27 +12,34 @@
   @click.away="{open=true; title_open=false; summary_open=false; open_boundaries=false}">
 
 
-  <div x-show="boundary_selected == 'public'" class="flex items-center p-2 mb-2 space-x-2 text-xs tracking-wide alert">
-    <span class="w-5 h-5">
-      <Solid.GlobeIcon/>
-    </span>
-    <span>{l "Your %{activity_type} will be publicly visible to everyone on the fediverse and in search engines.", activity_type: @activity_type_or_reply}</span>
+  <div x-show="boundary_selected == 'public'" class="mb-2 alert alert-info">
+    <div class="flex-1">
+      <span class="w-5 h-5 mr-2">
+        <Solid.GlobeIcon/>
+      </span>
+      <label>{l "Your %{activity_type} will be publicly visible to everyone on the fediverse and in search engines.", activity_type: @activity_type_or_reply}</label>
+    </div>
   </div>
-  <div x-show="boundary_selected == 'local'" class="flex items-center p-2 mb-2 space-x-2 text-xs tracking-wide alert">
-    <span class="w-5 h-5">
+
+  <div x-show="boundary_selected == 'local'" class="mb-2 alert alert-info">
+  <div class="flex-1">
+    <span class="w-5 h-5 mr-2">
       <Solid.HomeIcon/>
     </span>
     <span>
     {l "Your %{activity_type} will only be visible to your local instance members.", activity_type: @activity_type_or_reply} </span>
+    </div>
   </div>
-  <div x-show="boundary_selected == 'private'" class="flex items-center p-2 mb-2 space-x-2 text-xs tracking-wide alert">
-    <span class="w-5 h-5">
+  <div x-show="boundary_selected == 'private'" class="mb-2 alert alert-info">
+  <div class="flex-1">
+    <span class="w-5 h-5 mr-2">
       <Solid.AtSymbolIcon/>
     </span>
     <span>
     {l "Your %{activity_type} will only be visible to everyone mentioned.", activity_type: @activity_type_or_reply} </span>
+    </div>
   </div>
-  <div x-show="boundary_selected == 'custom'" class="flex items-center p-2 mb-2 space-x-2 text-xs tracking-wide alert">
+  <div x-show="boundary_selected == 'custom'" class="mb-2 alert alert-info">
     TODO
   </div>
 
@@ -55,7 +62,7 @@
         <Inputs for={:post_content}>
           <Bonfire.UI.Social.SetCWLive />          
           <Field name={:html_body}>
-            <Label :if={@smart_input_text && @smart_input_text !="" && @smart_input_placeholder} class="flex items-center p-2 mb-2 space-x-2 text-xs tracking-wide alert">{@smart_input_placeholder}</Label>
+            <Label :if={@smart_input_text && @smart_input_text !="" && @smart_input_placeholder} class="mb-2 alert alert-info">{@smart_input_placeholder}</Label>
             <div
               @click = "open = true"
               class="h-10 transition-all duration-300 ease-in-out rounded"
@@ -66,7 +73,7 @@
                 value: @smart_input_text,
                 placeholder: @smart_input_placeholder
               }
-              class="block w-full h-full text-sm transition-all duration-300 ease-in-out rounded-none rounded-t resize-none textarea textarea-bordered bg-base-200" 
+              class="block w-full h-full text-sm transition-all duration-300 ease-in-out rounded-none rounded-t resize-none textarea textarea-bordered bg-base-100" 
               :class="{'rounded-b-none' : open === true}"
               />
             </div>
@@ -74,7 +81,7 @@
         </Inputs>
       <div
         x-show="open"
-        class="flex items-center p-2 py-3 rounded-b bg-base-200">
+        class="flex items-center p-2 py-3 rounded-b bg-base-100">
         <div class="flex items-center flex-1 space-x-3">
           <button
             :if={Bonfire.Common.Config.get([:ui, :smart_input, :cw], []) == true}

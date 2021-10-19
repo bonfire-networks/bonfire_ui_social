@@ -67,4 +67,5 @@
       </div>
     </div>
   </div>
+  <div class="absolute left-0 right-0 z-30 h-4 top-16 bg-base-200"></div>
 </div>

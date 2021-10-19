@@ -2,11 +2,10 @@
   phx-click={"#{if @object_id in e(assigns, :boosted, []) || e(@my_boost, :id, nil), do: "Bonfire.Social.Boosts:undo", else: "Bonfire.Social.Boosts:boost"}"}
   phx-value-id={@object_id}
   phx-value-component={__MODULE__}
-  class="flex items-center py-1 rounded cursor-pointer boost group">
+  class="feed_activity_action boost">
   {#if e(assigns, :showing_within_thread, false) != true}
-  <span class="flex items-center mr-2 rounded-full group-hover:bg-opacity-25 h-7 w-7 place-content-center group-hover:bg-pink-400">
+  <span class={"feed_activity_icon", "bg-primary bg-opacity-70":  @object_id in e(assigns, :boosted, []) || e(@my_boost, :id, nil)}>
     <svg
-      class={"w-4 h-4 dark:text-gray-400 text-gray-500 group-hover:text-pink-700 dark:group-hover:text-pink-400", "text-pink-600 dark:text-pink-400 group-hover:text-pink-700 dark:group-hover:text-pink-400":  @object_id in e(assigns, :boosted, []) || e(@my_boost, :id, nil)}
       fill="currentColor"
       stroke="none"
       viewBox="0 0 20 20"
@@ -16,7 +15,7 @@
   </span>
   {/if}
 
-<span class={"text-xs font-normal text-gray-500 dark:text-gray-400 group-hover:text-pink-600 dark:group-hover:text-pink-400", "dark:text-pink-400": @object_id in e(assigns, :boosted, []) || e(@my_boost, :id, nil)}>
+<span class={"feed_activity_text", "font-medium": @object_id in e(assigns, :boosted, []) || e(@my_boost, :id, nil)}>
    {if @object_id in e(assigns, :boosted, []) || e(@my_boost, :id, nil), do: l("Boosted"), else: l("Boost")} <span :if={e(@boost_count, :booster_count, 0) > 0}>({e(@boost_count, :booster_count, 0)})</span>
 </span>
 
