@@ -14,7 +14,6 @@
   </div>
 
 
-
   <div class="items-center hidden mr-2 md:flex">
     <Bonfire.UI.Social.SearchLive class="ml-10" />
   </div>
