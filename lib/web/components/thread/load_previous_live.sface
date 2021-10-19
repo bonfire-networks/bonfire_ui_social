@@ -1,4 +1,4 @@
-<div if={e(@page_info, :before, nil)} class="flex justify-center w-full p-3 mx-auto place-items-center">
+<div :if={e(@page_info, :before, nil)} class="flex justify-center w-full p-3 mx-auto place-items-center">
   <a 
     phx-click="Bonfire.Social.Posts:load_more" 
     phx-value-after={e(@page_info, :before, nil)} 
