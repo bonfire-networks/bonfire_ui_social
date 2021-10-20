@@ -5,6 +5,6 @@
     <img 
       class="subject_avatar" 
       src={avatar_url(@profile)} 
-      onerror="this.style.display='none'" />
+      onerror="this.style.background='#dadada'" />
   </div>
 </div>
