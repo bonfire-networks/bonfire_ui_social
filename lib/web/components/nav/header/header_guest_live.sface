@@ -1,15 +1,23 @@
-<div class="sticky top-0 flex flex-shrink-0 w-full h-16 max-w-screen-lg mx-auto lg:justify-between bg-blueGray-800">
-    <div class="flex items-center flex-shrink-0">
-      <LiveRedirect to={path(Bonfire.Common.Config.get!(:home_page))}>
-      <div class="w-10 h-10 bg-center bg-no-repeat bg-contain" style={"background-image: url(" <> Bonfire.Common.Config.get([:ui, :theme, :instance_logo], '')  <> ")"}></div>
-      </LiveRedirect>
+<div class="sticky top-0 z-40 flex flex-shrink-0 w-full h-16 px-3 mb-4 navbar bg-neutral text-neutral-content md:justify-between">
+  <div class="items-center hidden md:flex">
+    <LiveRedirect to={path(:home)}>
+      <div class="flex items-center space-x-2">
+        <div class="w-10 h-10 bg-center bg-no-repeat bg-contain" style={"background-image: url(" <> Bonfire.Common.Config.get([:ui, :theme, :instance_logo], '')  <> ")"}></div>
+        <div class="text-base font-medium tracking-wide text-neutral-content">{Bonfire.Common.Config.get([:ui, :theme, :instance_name], '')}</div>
+      </div>
+    </LiveRedirect>
+    <div class="ml-6 tabs tabs-boxed">
+      {#for {name, route} <- Bonfire.Common.Config.get([:ui, :app_menu_extension_paths], [])}
+        <LiveRedirect to={path(route)} class={"tab"}>{name}</LiveRedirect>
+      {/for}
     </div>
     <div class="flex flex-1 pl-4">
-      <div class="flex items-center flex-1">
-        <div class="flex flex-1 pr-4">
-          <Bonfire.UI.Social.SearchLive />
-        </div>
-      </div>
+      <Bonfire.UI.Social.SearchLive />
+    </div>
+  </div>
+
+    <div class="flex justify-end flex-1 pl-4">
+    
 
       <div class="flex items-center">
 
@@ -17,14 +25,14 @@
 
         {#if !current_account(assigns) }
             <span class="inline-flex ">
-              <Link to={path(:login, :index)} class="btn btn-secondary">{l "Login"}</Link>
+              <Link to={path(:login, :index)} class="btn btn-primary">{l "Login"}</Link>
             </span>
             <span class="inline-flex ml-3 ">
-              <Link to={path(:signup, :index)} class="btn btn-primary">{l "Signup"}</Link>
+              <Link to={path(:signup, :index)} class="btn btn-outline btn-accent">{l "Signup"}</Link>
             </span>
         {#else }
             <span class="inline-flex rounded-md shadow-sm">
-              <Link to={path(:switch_user)} class="inline-flex items-center px-4 py-2 text-sm font-medium leading-5 text-gray-100 transition duration-150 ease-in-out bg-gray-900 rounded-md hover:bg-gray-800 hover:text-gray-200 focus:outline-none focus:border-blue-300 focus:shadow-outline-blue active:text-gray-200 active:bg-gray-700">
+              <Link to={path(:switch_user)} class="btn btn-secondary">
                   {l "Select User"}
               </Link>
             </span>

@@ -1,23 +1,23 @@
-<div class="relative z-10 flex items-center mx-auto bg-gray-100 rounded-full w-28 h-28 place-content-center hover:bg-gray-200 ring-4 ring-white">
+<div class="relative z-10 flex items-center mx-auto rounded-full bg-base-100 w-28 h-28 place-content-center hover:bg-gray-200 ring-4 ring-white">
   <%= live_redirect to: path(Bonfire.Common.Config.get!(:home_page)) do %>
     <div class="w-24 h-24 bg-center bg-no-repeat bg-contain" style="background-image: url(<%= Bonfire.Common.Config.get([:ui, :theme, :instance_logo], '') %>)"></div>
 <% end %>
 </div>
-<div class="bg-white rounded shadow-xl -mt-14">
+<div class="shadow-xl rounded-box bg-base-100 -mt-14">
   <div class="px-6 pt-16 pb-6 mx-auto">
     <%= f = form_for @form, path(:login, :create), class: "w-full md:ml-0" %>
       <%= case @form.errors[:form] do %>
       <%= {"not_found",_} -> %>
-      <div role="status" class="p-4 mb-4 rounded-md bg-yellow-50">
+      <div role="status" class="mb-4 alert alert-warning">
         <div class="flex">
           <div class="flex-shrink-0">
             <!-- Heroicon name: exclamation -->
-            <svg class="w-5 h-5 text-yellow-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+            <svg class="w-5 h-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
               <path fill-rule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clip-rule="evenodd" />
             </svg>
           </div>
           <div class="ml-3">
-            <h3 class="text-sm font-medium text-yellow-800">
+            <h3 class="text-sm font-medium ">
               Account not found. Either your username or password was incorrect. Did you want to <%= link "sign up", to: path(:signup), class: "underline font-bold" %>?
             </h3>
           </div>
@@ -25,32 +25,32 @@
       </div>
 
       <%= {"email_not_confirmed",_} -> %>
-      <div role="status" class="p-4 mb-4 rounded-md bg-yellow-50">
+      <div role="status" class="mb-4 alert alert-warning">
         <div class="flex">
           <div class="flex-shrink-0">
             <!-- Heroicon name: exclamation -->
-            <svg class="w-5 h-5 text-yellow-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+            <svg class="w-5 h-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
               <path fill-rule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clip-rule="evenodd" />
             </svg>
           </div>
           <div class="ml-3">
-            <h3 class="text-sm font-medium text-yellow-800">
+            <h3 class="text-sm font-medium">
               You need to to click the link in the email you should have received to verify your email address.  Need to have it <%= link "resent", to: path(Bonfire.Me.Web.ConfirmEmailController), class: "underline font-bold" %>?
             </h3>
           </div>
         </div>
       </div>
       <%= {error,_} -> %>
-      <div role="status" class="p-4 mb-4 rounded-md bg-yellow-50">
+      <div role="status" class="mb-4 alert alert-warning">
         <div class="flex">
           <div class="flex-shrink-0">
             <!-- Heroicon name: exclamation -->
-            <svg class="w-5 h-5 text-yellow-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+            <svg class="w-5 h-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
               <path fill-rule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clip-rule="evenodd" />
             </svg>
           </div>
           <div class="ml-3">
-            <h3 class="text-sm font-medium text-yellow-800">
+            <h3 class="text-sm font-medium">
               There was an error (<%= error %>), please try again.
             </h3>
           </div>
@@ -61,29 +61,29 @@
 
       <%= hidden_input f, :go %>
 
-      <div>
-        <label for="login_fields_email_or_username" class="block text-sm font-medium leading-5 text-gray-700">
-          Email address or @username
+      <div class="form-control">
+        <label for="login_fields_email_or_username" class="label">
+          <span class="label-text">Email address or @username</span>
         </label>
         <div class="mt-1 rounded-md shadow-sm">
-          <%= text_input f, :email_or_username, required: true, class: "w-full" %>
+          <%= text_input f, :email_or_username, required: true, class: "input input-bordered w-full" %>
         </div>
         <%= error_tag f, :email_or_username %>
       </div>
 
-      <div class="mt-3">
-        <label for="login_fields_password" class="block text-sm font-medium leading-5 text-gray-700">
-          Password
+      <div class="mt-3 form-control">
+        <label for="login_fields_password" class="label">
+          <span class="label-text">Password</span>
         </label>
         <div class="mt-1 rounded-md shadow-sm">
-          <%= password_input f, :password, required: true, class: "w-full" %>
+          <%= password_input f, :password, required: true, class: "input input-bordered w-full" %>
         </div>
         <%= error_tag f, :password %>
       </div>
 
       <div class="mt-3">
         <span class="block w-full rounded-md shadow-sm">
-          <button type="submit" class="flex w-full py-3 btn btn-primary place-content-center">
+          <button type="submit" class="flex w-full btn btn-primary place-content-center">
             Log in
           </button>
         </span>
@@ -91,10 +91,10 @@
 
       <div class="mt-4">
         <p>
-          <%= link "Did you forget your password?", to: path(Bonfire.Me.Web.ForgotPasswordController), class: "text-pink-600 w-full block text-center font-medium text-sm" %>
+          <%= link "Did you forget your password?", to: path(Bonfire.Me.Web.ForgotPasswordController), class: "link link-primary w-full block text-center font-medium" %>
         </p>
-        <div class="flex p-3 mt-6 -mx-6 -mb-4 border-t place-content-center">
-          <%= link "Need to sign up instead?", to: path(:signup), class: "font-medium underline text-gray-800 text-sm" %>
+        <div class="flex p-6 pb-0 mt-6 -mx-6 border-t border-base-300 place-content-center">
+          <%= link "Need to sign up instead?", to: path(:signup), class: "link" %>
         </div>
       </div>
     </form>
