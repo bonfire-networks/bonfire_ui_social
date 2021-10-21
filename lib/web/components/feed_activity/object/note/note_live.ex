@@ -7,7 +7,7 @@ defmodule Bonfire.UI.Social.Activity.NoteLive do
   prop viewing_main_object, :boolean
   prop permalink, :string
   prop date_ago, :string
-  prop showing_within_thread, :boolean
+  prop showing_within, :any
 
   def update(assigns, socket) do
 

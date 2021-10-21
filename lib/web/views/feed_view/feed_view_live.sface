@@ -8,6 +8,7 @@
       <Bonfire.UI.Social.FeedLive 
         feed={@feed}
         page_info={@page_info}
+        showing_within={@showing_within}
         id="feed"
       />
     </div>

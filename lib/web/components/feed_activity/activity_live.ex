@@ -6,14 +6,15 @@ defmodule Bonfire.UI.Social.ActivityLive do
   prop activity, :map
   # prop object, :map
   prop viewing_main_object, :boolean
-  prop showing_within_thread, :boolean, default: false
+  prop showing_within, :any
   prop hide_reply, :boolean
   prop reply_click, :any
 
   # TODO: put in config and/or autogenerate with Verbs genserver
   @reply_verbs ["reply","respond"]
-  @create_verbs ["create"] ++ @reply_verbs
+  @create_verbs ["create"]
   @react_verbs ["like", "boost", "flag"]
+  @create_or_reply_verbs @create_verbs ++ @reply_verbs
 
   def update(%{activity: %{} = activity} = assigns, socket) do
 
@@ -27,7 +28,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
 
     components = (
       component_activity_subject(verb, activity, assigns)
-      ++ component_maybe_reply_to(verb, activity, e(assigns, :showing_within_thread, nil))
+      ++ component_maybe_reply_to(verb, activity, e(assigns, :showing_within, nil))
       ++ component_object(verb, activity)
       ++ component_actions(verb, activity, assigns)
     ) |> Enum.filter(& &1)
@@ -71,12 +72,15 @@ defmodule Bonfire.UI.Social.ActivityLive do
   def component_activity_subject(_, %{object: %Bonfire.Data.Identity.User{}}, _), do: []
   # quoting a reply_to
   def component_activity_subject(_, _, %{activity_inception: true}), do: [Bonfire.UI.Social.Activity.SubjectRepliedLive]
-  # create activities
-  def component_activity_subject(verb, %{subject_profile: %{id: _} = profile, subject_character: %{id: _} = character}, _) when verb in @create_verbs, do: [{Bonfire.UI.Social.Activity.SubjectLive, %{profile: profile, character: character}}]
-  def component_activity_subject(verb, %{subject_profile: %{id: _} = profile}, _) when verb in @create_verbs, do: [{Bonfire.UI.Social.Activity.SubjectLive, %{profile: profile, character: nil}}]
-  def component_activity_subject(verb, %{subject_character: %{id: _} = character}, _) when verb in @create_verbs, do: [{Bonfire.UI.Social.Activity.SubjectLive, %{profile: nil, character: character}}]
   # reactions should show the reactor + original creator
   def component_activity_subject(verb, activity, _) when verb in @react_verbs, do: [{Bonfire.UI.Social.Activity.SubjectMinimalLive, %{verb: verb}}, component_activity_maybe_creator(activity)]
+  # replies (when shown in notifications)
+  def component_activity_subject(verb, activity, %{showing_within: :notifications}) when verb in @reply_verbs, do: [{Bonfire.UI.Social.Activity.SubjectMinimalLive, %{verb: verb}}]
+  # create (or reply) activities
+  def component_activity_subject(verb, %{subject_profile: %{id: _} = profile, subject_character: %{id: _} = character}, _) when verb in @create_or_reply_verbs, do: [{Bonfire.UI.Social.Activity.SubjectLive, %{profile: profile, character: character}}]
+  def component_activity_subject(verb, %{subject_profile: %{id: _} = profile}, _) when verb in @create_or_reply_verbs, do: [{Bonfire.UI.Social.Activity.SubjectLive, %{profile: profile, character: nil}}]
+  def component_activity_subject(verb, %{subject_character: %{id: _} = character}, _) when verb in @create_or_reply_verbs, do: [{Bonfire.UI.Social.Activity.SubjectLive, %{profile: nil, character: character}}]
+  # other
   def component_activity_subject(verb, activity, _), do: [component_activity_maybe_creator(activity)]
 
 
@@ -107,9 +111,9 @@ defmodule Bonfire.UI.Social.ActivityLive do
      nil
   end
 
-  def component_maybe_reply_to(verb, activity, showing_within_thread \\ nil)
+  def component_maybe_reply_to(verb, activity, showing_within \\ nil)
 
-  def component_maybe_reply_to(verb, activity, true), do: []
+  def component_maybe_reply_to(verb, activity, :thread), do: []
 
   def component_maybe_reply_to(verb,
     %{
@@ -235,6 +239,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
   def component_actions(_, _, _), do: []
 
   # WIP: Customize actions for each activity type
+  def actions_for_object_type(object, type) when type in [Bonfire.Data.Identity.User, Bonfire.Data.Identity.Character], do: []
   def actions_for_object_type(object, type) when type in [Bonfire.Data.Social.Post, Bonfire.Data.Social.PostContent], do: component_show_standard_actions(object)
   def actions_for_object_type(object, type) when type in [ValueFlows.EconomicEvent], do: component_show_event_actions(object)
   def actions_for_object_type(object, type) when type in [ValueFlows.EconomicResource], do: component_show_process_actions(object)

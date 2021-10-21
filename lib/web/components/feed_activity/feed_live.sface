@@ -22,6 +22,7 @@
         class="md:px-3">
         <ActivityLive
           activity={e(entry, :activity, entry)}
+          showing_within={e(assigns, :showing_within, nil)}
         />
       </article>
     </div>
@@ -33,7 +34,10 @@
         tabIndex="0"
         aria-label="user activity"
         class="md:px-3">
-        <ActivityLive activity={e(entry, :activity, entry)} />
+        <ActivityLive 
+          activity={e(entry, :activity, entry)}
+          showing_within={e(assigns, :showing_within, nil)}
+          />
       </article>
     </div>
 

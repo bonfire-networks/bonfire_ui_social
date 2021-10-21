@@ -1,4 +1,4 @@
-{#if e(@showing_within_thread, false) != true }
+{#if e(@showing_within, false) != :thread }
   {#if !@hide_reply }
     {#if !@reply_click }
       <LiveRedirect to={@permalink} class="redirect_to_discussion_page">

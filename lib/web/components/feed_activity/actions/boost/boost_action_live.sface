@@ -3,7 +3,7 @@
   phx-value-id={@object_id}
   phx-value-component={__MODULE__}
   class="feed_activity_action boost">
-  {#if e(assigns, :showing_within_thread, false) != true}
+  {#if e(assigns, :showing_within, nil) != :thread}
   <span class={"feed_activity_icon", "bg-primary bg-opacity-70":  @object_id in e(assigns, :boosted, []) || e(@my_boost, :id, nil)}>
     <svg
       fill="currentColor"

@@ -7,7 +7,7 @@
 
   <span 
      class={"feed_activity_icon", "bg-primary bg-opacity-70":  @object_id in e(assigns, :liked, []) || e(@my_like, :id, nil)}
-    :if={e(assigns, :showing_within_thread, false) != true}>
+    :if={e(assigns, :showing_within, nil) != :thread}>
     <svg
       :if={@object_id in e(assigns, :liked, []) || e(@my_like, nil)}
       stroke="none" 

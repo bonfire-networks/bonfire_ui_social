@@ -1,9 +1,11 @@
 <div
   class={
-  "w-full activity_default ml-0 p-3",
-  "reply_to border-l-4 border-base-200 pl-2 py-0 my-2 pr-0": e(@object, :id, nil) != nil and e(@activity, :replied, :reply_to_id, nil) == nil and e(@activity, :id, nil) == nil,
+  "w-full activity ml-0 p-3",
+  "reply_to border-l-4 border-base-200 pl-2 py-0 my-2 pr-0": e(@object, :id, nil) != nil and e(@activity, :replied, :reply_to_id, nil) == nil and e(@activity, :id, nil) == nil, # showing a quoted reply_to
+  "showing_within:thread ml-0 p-1": e(assigns, :showing_within, nil) == :thread,
+  "showing_within:notifications pl-7": e(assigns, :showing_within, nil) == :notifications,
   "activity_regular ml-0 p-3": e(@object, :id, nil) != nil and e(@activity, :replied, :reply_to_id, nil) != nil and e(@activity, :id, nil) != nil,
-  "showing_within_thread ml-0 p-1": e(assigns, :showing_within_thread , nil) == true}>
+  }>
   {#for component <- @activity_object_components}
     {activity_component(component, assigns_clean(assigns), @socket)}
   {/for}

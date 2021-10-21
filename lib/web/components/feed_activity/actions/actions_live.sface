@@ -3,7 +3,7 @@
     <Bonfire.UI.Social.Activity.ReplyLive 
       permalink={@permalink} 
       replied={e(@activity, :replied, nil)}
-      showing_within_thread={e(assigns, :showing_within_thread, false)}
+      showing_within={e(assigns, :showing_within, nil)}
       hide_reply={e(assigns, :hide_reply, nil )}
       reply_click={e(assigns, :reply_click, nil )}
       />

@@ -6,6 +6,7 @@ defmodule Bonfire.UI.Social.FeedLive do
 
   prop feed, :list
   prop page_info, :map
+  prop showing_within, :any
 
   def mount(socket) do
     {:ok, socket

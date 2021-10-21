@@ -7,14 +7,14 @@
           activity={@activity}
           object={@object}
           reply_click={"reply = !reply; return false;"}
-          showing_within_thread={true}
+          showing_within={:thread}
         />
       </div>
       <div x-show="reply" class="p-3 ml-8 -mt-3">
         <Bonfire.UI.Social.CreateActivityLive
           reply_to_id={e(@comment, :id, nil)}
           reply_to_thread_id={@reply_to_thread_id}
-          showing_within_thread={true}
+          showing_within={:thread}
           to_circles={e(assigns, :to_circles, []) ++ [{e(@activity, :subject_profile, :name, e(@activity, :subject_character, :username, "someone")), e(@activity, :subject_character, :id, nil)}]}
           smart_input_text=""
         />

@@ -7,7 +7,7 @@ defmodule Bonfire.UI.Social.Activity.ActionsLive do
   prop activity, :map
   prop object, :map
   prop permalink, :string
-  prop showing_within_thread, :boolean
+  prop showing_within, :any
   prop hide_reply, :boolean
   prop reply_click, :string
 
