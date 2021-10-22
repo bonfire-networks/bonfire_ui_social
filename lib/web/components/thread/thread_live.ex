@@ -14,6 +14,8 @@ defmodule Bonfire.UI.Social.ThreadLive do
   prop page_info, :any
   prop activity, :any
   prop object, :any
+  prop smart_input_placeholder, :string, default: ""
+  prop smart_input_text, :string, default: ""
 
   # TODO: put in config
   @thread_max_depth 3
@@ -48,8 +50,8 @@ defmodule Bonfire.UI.Social.ThreadLive do
 
     if thread_id do
       IO.inspect("Thread: loading by thread_id")
-      # IO.inspect(assigns)
-      current_user = current_user(assigns)
+      IO.inspect(assigns)
+      current_user = current_user(assigns) |> IO.inspect
 
       with %{entries: replies, metadata: page_info} <- Bonfire.Social.Threads.list_replies(thread_id, current_user, e(assigns, :after, nil), @thread_max_depth, @pagination_limit) do
         # IO.inspect(thread_id, label: "thread_id")

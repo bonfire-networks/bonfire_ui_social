@@ -1,7 +1,8 @@
 <div>
 <div class="p-3 m-3 border-t rounded-box border-base-200 bg-base-300">
   <Bonfire.UI.Social.CreateActivityLive
-    smart_input_text={""}
+    smart_input_text={@smart_input_text}
+    smart_input_placeholder={@smart_input_placeholder}
     reply_to_thread_id={@reply_to_thread_id}
     reply_to_id={@reply_to_id}
   />
@@ -15,6 +16,8 @@
         child_replies={child_replies}
         reply_to_thread_id={@reply_to_thread_id}
         thread_level={1}
+        smart_input_text={@smart_input_text}
+        smart_input_placeholder={@smart_input_placeholder}
       />
     {/for}
   </div>
