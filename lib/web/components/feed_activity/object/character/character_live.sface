@@ -1,7 +1,7 @@
 <div class="flex items-center">
   <img class="inline-block object-cover rounded-full h-9 w-9" src={avatar_url(e(@object, :profile, nil))} alt="profile image">
   <div class="flex-1 ml-2">
-    <div class="flex items-center text-base text-gray-700 dark:text-gray-200">
+    <div class="flex items-center text-base">
       
       <LiveRedirect
         :if={e(@activity, :subject_character, nil)}
