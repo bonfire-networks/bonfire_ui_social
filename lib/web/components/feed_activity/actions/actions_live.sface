@@ -1,4 +1,4 @@
-<div class="-ml-2">
+<div :if={e(assigns, :showing_within, nil) != :notifications} class="-ml-2">
   <div class={"flex items-center space-x-8"}>
     <Bonfire.UI.Social.Activity.ReplyLive 
       permalink={@permalink} 

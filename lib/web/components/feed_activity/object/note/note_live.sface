@@ -1,8 +1,10 @@
 
 <div class={
   "mt-2",
-  "reply_to": e(@object, :id, nil) != nil and e(@activity, :replied, :reply_to_id, nil) == nil and e(@activity, :id, nil) == nil,  
-  "showing_within:thread ml-8": e(assigns, :showing_within, nil) == :thread}
+  "showing_within:thread ml-8": e(assigns, :showing_within, nil) == :thread,
+  "showing_within:notifications ml-7": e(assigns, :showing_within, nil) == :notifications,
+  "reply_to": e(@object, :id, nil) != nil and e(@activity, :replied, :reply_to_id, nil) == nil and e(@activity, :id, nil) == nil  
+}
    x-cloak 
    x-data="{content_open: false}">
     {#if e(assigns, :viewing_main_object, nil) !=true && e(@object, :name, nil)}

@@ -5,4 +5,5 @@ defmodule Bonfire.UI.Social.Activity.SubjectMinimalLive do
   prop activity, :map
   prop verb, :string
   prop verb_display, :string 
+  prop showing_within, :any
 end

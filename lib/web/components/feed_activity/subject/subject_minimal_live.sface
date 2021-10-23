@@ -1,36 +1,67 @@
-<div class={
-  "flex items-center mb-2",
-  "showing_within:notifications -ml-7": e(assigns, :showing_within, nil) == :notifications,
-}>
-  <div class="flex items-center justify-start w-5 h-5">
-    <svg
-      :if={@verb == "like"} 
-      class="w-4 h-4 text-base-content text-opacity-80" fill="currentColor"  viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"></path>
-    </svg>
-    <svg
-        :if={@verb == "boost"}
-        class="w-4 h-4 text-base-content text-opacity-80"
-        stroke="currentColor"
-        stroke-width="2"
-        fill="none"
-        viewBox="0 0 24 24"
-        xmlns="http://www.w3.org/2000/svg">
-        <polyline points="17 1 21 5 17 9"></polyline><path d="M3 11V9a4 4 0 0 1 4-4h14"></path><polyline points="7 23 3 19 7 15"></polyline><path d="M21 13v2a4 4 0 0 1-4 4H3"></path></svg>
-    <svg 
-      :if={@verb == "reply"}
-      class="w-4 h-4 text-base-content text-opacity-80" fill="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-      <path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"></path>
-    </svg>
-  </div>
-  <div class="flex-1 ml-2">
-    <div class="text-xs font-medium text-base-content text-opacity-80">
-      <LiveRedirect
-        aria-label={e(@activity, :subject_character, :username, "") <> " profile"}
-        class="font-medium subject_minimal"
-        to={path(e(@activity, :subject_character, nil)) }>
-        {e(@activity, :subject_profile, :name, "Anonymous")}
-      </LiveRedirect>
-      {raw @verb_display}
+{#case e(assigns, :showing_within, nil)}
+  {#match :thread}
+    <div class={"flex items-center mb-2"}>
+      <div class="flex items-center justify-start w-5 h-5">
+        <Solid.StarIcon :if={@verb == "like"} class="w-4 h-4 text-base-content text-opacity-80" />
+        <Solid.SwitchHorizontalIcon :if={@verb == "boost"} class="w-4 h-4 text-base-content text-opacity-80" />
+        <Solid.PencilIcon :if={@verb == "reply"} class="w-4 h-4 text-base-content text-opacity-80" />
+      </div>
+      <div class="flex-1 ml-2">
+        <div class="text-xs font-medium text-base-content text-opacity-80">
+          <LiveRedirect
+            aria-label={e(@activity, :subject_character, :username, "") <> " profile"}
+            class="font-medium subject_minimal"
+            to={path(e(@activity, :subject_character, nil)) }>
+            {e(@activity, :subject_profile, :name, "Anonymous")}
+          </LiveRedirect>
+          {raw @verb_display}
+        </div>
+      </div>
     </div>
-  </div>
-</div>
+  {#match :notifications}
+    <div class="flex w-full p-3 pb-0 space-x-3 -ml-7 activity_notification">
+      {#case @verb}
+        {#match "boost"}
+          <Solid.SwitchHorizontalIcon :if={@verb == "boost"} class="flex-shrink-0 w-8 h-8 text-accent" />
+        {#match "follow"}
+          <Solid.UserIcon :if={@verb == "follow"} class="flex-shrink-0 w-8 h-8 text-accent" />
+        {#match "like"}
+          <Solid.StarIcon :if={@verb == "like"} class="flex-shrink-0 w-8 h-8 text-accent" />
+        {#match "reply"}
+          <Solid.PencilIcon :if={@verb == "reply"} class="flex-shrink-0 w-8 h-8 text-accent" />
+        {#match _}
+          <Solid.SparklesIcon  class="flex-shrink-0 w-8 h-8 text-accent" />
+      {/case}
+      <div class="flex-1 text-base-content">
+        <Bonfire.UI.Social.Activity.AvatarLive profile={e(@activity, :subject_character, nil)} />
+        <div class="mt-1">
+          <div>
+            <LiveRedirect to={path(e(@activity, :subject_character, nil))} class="font-semibold link link-hover">{e(@activity, :subject_profile, :name, "Anonymous")}</LiveRedirect> {raw @verb_display}
+          </div>
+          <!-- <div class="mt-2">
+            <p class="text-sm text-base-content text-opacity-70">@LongLittWoon I am so happy to have found The Way Through The Woods translated in italian - it is such an immersive and wonderful reading experience </p>
+          </div> -->
+        </div>
+      </div>
+    </div>
+
+  {#match _}
+    <div class={"flex items-center mb-2"}>
+      <div class="flex items-center justify-start w-5 h-5">
+        <Solid.StarIcon :if={@verb == "like"} class="w-4 h-4 text-base-content text-opacity-80" />
+        <Solid.SwitchHorizontalIcon :if={@verb == "boost"} class="w-4 h-4 text-base-content text-opacity-80" />
+        <Solid.PencilIcon :if={@verb == "reply"} class="w-4 h-4 text-base-content text-opacity-80" />
+      </div>
+      <div class="flex-1 ml-2">
+        <div class="text-xs font-medium text-base-content text-opacity-80">
+          <LiveRedirect
+            aria-label={e(@activity, :subject_character, :username, "") <> " profile"}
+            class="font-medium subject_minimal"
+            to={path(e(@activity, :subject_character, nil)) }>
+            {e(@activity, :subject_profile, :name, "Anonymous")}
+          </LiveRedirect>
+          {raw @verb_display}
+        </div>
+      </div>
+    </div>
+{/case}
