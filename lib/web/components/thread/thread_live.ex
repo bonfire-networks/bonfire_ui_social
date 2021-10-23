@@ -49,9 +49,9 @@ defmodule Bonfire.UI.Social.ThreadLive do
     thread_id = e(assigns, :thread_id, nil)
 
     if thread_id do
-      IO.inspect("Thread: loading by thread_id")
-      IO.inspect(assigns)
-      current_user = current_user(assigns) |> IO.inspect
+      # IO.inspect("Thread: loading by thread_id")
+      # IO.inspect(assigns)
+      current_user = current_user(assigns) #|> IO.inspect
 
       with %{entries: replies, metadata: page_info} <- Bonfire.Social.Threads.list_replies(thread_id, current_user, e(assigns, :after, nil), @thread_max_depth, @pagination_limit) do
         # IO.inspect(thread_id, label: "thread_id")
