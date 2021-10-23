@@ -1,11 +1,10 @@
 <div class="">
   <Bonfire.UI.Social.SettingsViewLive.SettingsHeaderLive 
-    settings_section_title={@settings_section_title}
-    settings_section_description={@settings_section_description}
+    settings_section_title={l "Account"}
   />
   <details class="p-6 details-dialog">
     <summary>
-      <div class="btn-primary" role="menuitem">{l "Delete my account"}</div>
+      <div class="btn btn-primary" role="menuitem">{l "Delete my account"}</div>
     </summary>
     <details-dialog>
       <div class="fixed z-10 max-w-lg details-modal">

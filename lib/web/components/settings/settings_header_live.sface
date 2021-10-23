@@ -14,7 +14,7 @@
     </a>
     <div class="ml-4">
       <h1 class="text-base font-medium text-base-content">{e(assigns, :settings_section_title, "Section title") }</h1>
-      <p class="text-sm text-base-content text-opacity-80">{ e(assigns, :settings_section_description, "Section description") }</p>
+      <p class="text-sm text-base-content text-opacity-80">{ e(assigns, :settings_section_description, "") }</p>
     </div>
   </div>
     </div>
