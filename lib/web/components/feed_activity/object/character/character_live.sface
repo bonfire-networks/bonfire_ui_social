@@ -1,31 +1,18 @@
-<div class="flex items-center">
-  <img class="inline-block object-cover rounded-full h-9 w-9" src={avatar_url(e(@object, :profile, nil))} alt="profile image">
-  <div class="flex-1 ml-2">
-    <div class="flex items-center text-base">
-      
-      <LiveRedirect
-        :if={e(@activity, :subject_character, nil)}
-        to={path(e(@activity, :subject_character, nil))}
-        aria-label={e(@activity, :subject_character, :username, "") <> " profile"}
-        class="font-bold hover:underline">
-        { e(@activity, :subject_profile, :name, "Anonymous") }
-      </LiveRedirect>
-      
-      <span class="mx-1">{@verb_display || e(@activity, :verb, :verb, "posted")}</span>
-
-      <LiveRedirect class="font-bold hover:underline" to={path(@object)}>
-        <span :if={e(@object, :id, nil)==e(current_user(assigns), :id, nil)}> you</span>
-        <span :if={e(@object, :id, nil) !=e(current_user(assigns), :id, nil)}> {e(@object, :profile, :name, "Anonymous")}</span>
-      </LiveRedirect>
-
-
+<div class="flex w-full p-3 pb-0 space-x-3 -ml-7 activity_notification">
+  <Solid.UserIcon :if={@verb == "follow"} class="flex-shrink-0 w-8 h-8 text-accent" />
+  <div class="flex-1 text-base-content">
+        <Bonfire.UI.Social.Activity.AvatarLive profile={e(@activity, :subject_character, nil)} />
+        <div class="flex mt-1">
+          <div class="flex-1">
+            <LiveRedirect to={path(e(@activity, :subject_character, nil))} class="font-semibold link link-hover">{e(@activity, :subject_profile, :name, "Anonymous")}</LiveRedirect> {raw @verb_display} you
+          </div>
+          <!-- <Bonfire.UI.Social.Activity.DateAgoLive 
+          permalink={@permalink}
+          date_ago={@date_ago}
+          verb_display={@verb_display} /> -->
+          <!-- <div class="mt-2">
+            <p class="text-sm text-base-content text-opacity-70">@LongLittWoon I am so happy to have found The Way Through The Woods translated in italian - it is such an immersive and wonderful reading experience </p>
+          </div> -->
+        </div>
+      </div>
     </div>
-
-  </div>
-
-        <Bonfire.UI.Social.Activity.DateAgoLive 
-        permalink={@permalink}
-        date_ago={@date_ago}
-        verb_display={@verb_display} />
-
-</div>
