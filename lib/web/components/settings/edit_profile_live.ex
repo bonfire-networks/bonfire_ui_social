@@ -1,6 +1,9 @@
 defmodule Bonfire.UI.Social.SettingsViewsLive.EditProfileLive do
   use Bonfire.Web, :stateless_component
 
+  prop uploads, :any
+
+
   def update(assigns, socket) do
     {:ok, assign(socket, assigns
     |> assigns_merge(%{

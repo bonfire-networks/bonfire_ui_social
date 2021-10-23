@@ -1,13 +1,7 @@
 
 defmodule  Bonfire.UI.Social.SettingsViewLive do
-  use Bonfire.Web, :live_component
+  use Bonfire.Web, :stateless_component
 
-  alias Bonfire.UI.Social.SettingsViewsLive.{
-    SettingsNavigationLive,
-    EditProfileLive,
-    ExtensionsLive,
-    EditAccountLive,
-    AdminLive
-  }
-
+  prop selected_tab, :string
+  prop uploads, :any
 end

@@ -1,0 +1,35 @@
+<main
+  class="space-x-3 lg:flex">
+  <Bonfire.UI.Social.SettingsViewLive.SidebarSettingsLive 
+    selected_tab={@selected_tab}
+  />
+  <section class="mx-auto shadow-lg bg-base-100 rounded-box w-center">
+    {#case @selected_tab}
+    {#match "profile"}
+      <Bonfire.UI.Social.SettingsViewsLive.EditProfileLive 
+        uploads={@uploads}
+      />
+    {#match "admin"}
+      <Bonfire.UI.Social.SettingsViewsLive.AdminLive />
+    {#match "account"}
+      <Bonfire.UI.Social.SettingsViewsLive.EditAccountLive />
+    {#match "circles"}
+      <Bonfire.UI.Social.MyCirclesLive />
+    {#match "circle"}
+        <Bonfire.UI.Social.ViewCircleLive />
+    {#match "extensions"}
+        <Bonfire.UI.Social.SettingsViewsLive.ExtensionsLive />
+    {#match "preferences"}
+      <div class="px-4 py-6 sm:p-6 lg:pb-8">
+        <div>
+          <h2 class="text-lg font-medium leading-6 text-gray-900">Preferences</h2>
+          <p class="mt-1 text-sm text-gray-500">
+              Here you can customize your own bonfire.
+          </p>
+        </div>
+      </div>
+    {#match _}
+      <Bonfire.UI.Social.SettingsViewsLive.EditProfileLive />
+    {/case}
+  </section>
+</main>

@@ -1,4 +1,44 @@
-    <nav
+  <ul role="navigation" class="p-4 shadow-lg menu bg-base-100 rounded-box">
+    <li>
+      <LivePatch to={"/settings/user"}>
+        <Solid.UserIcon class="inline-block w-5 h-5 mr-2 stroke-current" />
+        {l "Profile information"}
+      </LivePatch>
+    </li> 
+    <li>
+      <LivePatch to={"/settings/preferences"}>
+        <Solid.UserIcon class="inline-block w-5 h-5 mr-2 stroke-current" />
+        {l "Preferences"}
+      </LivePatch>
+    </li> 
+    <li>
+      <LivePatch to={"/settings/circles"}>
+        <Solid.UserIcon class="inline-block w-5 h-5 mr-2 stroke-current" />
+        {l "Circles"}
+      </LivePatch>
+    </li>
+    <li>
+      <LivePatch to={"/settings/extensions"}>
+        <Solid.UserIcon class="inline-block w-5 h-5 mr-2 stroke-current" />
+        {l "Extensions"}
+      </LivePatch>
+    </li>
+    <li>
+      <LivePatch to={"/settings/account"}>
+        <Solid.UserIcon class="inline-block w-5 h-5 mr-2 stroke-current" />
+        {l "Account"}
+      </LivePatch>
+    </li>
+    <li>
+      <LivePatch to={"/settings/admin"}>
+        <Solid.UserIcon class="inline-block w-5 h-5 mr-2 stroke-current" />
+        {l "Admin"}
+      </LivePatch>
+    </li>
+    
+  </ul>
+
+    <!-- <nav
       role="navigation"
       class="flex-col hidden lg:flex md:flex-shrink-0 w-60">
       <div class="fixed flex flex-col flex-grow h-full overflow-y-auto w-60">
@@ -20,7 +60,7 @@
               </svg>
               <span class="ml-2 truncate">{l "Profile information"}</span>
             </div>
-          </LivePatch>
+          </LivePatch> -->
 
             <!-- <LivePatch to={"/settings/preferences"}>
               <div
@@ -49,7 +89,7 @@
               </div>
             <% end %> -->
 
-            <LivePatch to={"/settings/extensions"}>
+            <!-- <LivePatch to={"/settings/extensions"}>
               <div class={"rounded-full w-full flex items-center px-2 py-2 text-sm font-regular transition duration-150 ease-in-out  group hover:bg-blueGray-200  focus:outline-none  dark:hover:bg-gray-600 focus:text-gray-900 focus:bg-gray-50", "dark:text-pink-400 text-pink-700": @selected_tab == "extensions", "dark:text-gray-200 text-gray-700": @selected_tab != "extensions"}>
                 <svg class={"w-5 h-5 mr-2 transition duration-150 ease-in-out", "dark:text-pink-400 text-pink-700": @selected_tab == "extensions", "dark:text-gray-200 text-gray-500": @selected_tab != "extensions"} xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 4a2 2 0 114 0v1a1 1 0 001 1h3a1 1 0 011 1v3a1 1 0 01-1 1h-1a2 2 0 100 4h1a1 1 0 011 1v3a1 1 0 01-1 1h-3a1 1 0 01-1-1v-1a2 2 0 10-4 0v1a1 1 0 01-1 1H7a1 1 0 01-1-1v-3a1 1 0 00-1-1H4a2 2 0 110-4h1a1 1 0 001-1V7a1 1 0 011-1h3a1 1 0 001-1V4z" />
@@ -58,7 +98,7 @@
                   {l "Extensions"}
                 </span>
               </div>
-            </LivePatch>
+            </LivePatch> -->
 
             <!-- <LivePatch to={"/settings/account"}>
               <div
@@ -112,6 +152,6 @@
                 </div>
               <% end %>
             <% end %> -->
-        </div>
+        <!-- </div>
       </div>
-    </nav>
+    </nav> -->
