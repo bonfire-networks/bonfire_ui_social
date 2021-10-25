@@ -1,41 +1,46 @@
-  <ul role="navigation" class="p-4 shadow-lg menu bg-base-100 rounded-box">
-    <li>
-      <LivePatch to={"/settings/user"}>
-        <Solid.UserIcon class="inline-block w-5 h-5 mr-2 stroke-current" />
-        {l "Profile information"}
+  <ul role="navigation" class="p-4 shadow-lg w-72 menu bg-base-100 rounded-box">
+    <li class={"bg-primary": @selected_tab == "user"}>
+      <LivePatch to={"/settings/user"} >
+        <Outline.UserIcon class="inline-block w-5 h-5 mr-2 stroke-current" />
+        {l "Profile"}
       </LivePatch>
     </li> 
-    <li>
+    <li class={"bg-primary": @selected_tab == "preferences"}>
       <LivePatch to={"/settings/preferences"}>
-        <Solid.UserIcon class="inline-block w-5 h-5 mr-2 stroke-current" />
+        <Outline.AdjustmentsIcon class="inline-block w-5 h-5 mr-2 stroke-current" />
         {l "Preferences"}
       </LivePatch>
     </li> 
-    <li>
+    <!-- <li class={"bg-primary": @selected_tab == "circles"}>
       <LivePatch to={"/settings/circles"}>
-        <Solid.UserIcon class="inline-block w-5 h-5 mr-2 stroke-current" />
+        <Outline.UsersIcon class="inline-block w-5 h-5 mr-2 stroke-current" />
         {l "Circles"}
       </LivePatch>
-    </li>
-    <li>
+    </li> -->
+    <li class={"bg-primary": @selected_tab == "extensions"}>
       <LivePatch to={"/settings/extensions"}>
-        <Solid.UserIcon class="inline-block w-5 h-5 mr-2 stroke-current" />
+        <Outline.BeakerIcon class="inline-block w-5 h-5 mr-2 stroke-current" />
         {l "Extensions"}
       </LivePatch>
     </li>
-    <li>
+    <li class={"bg-primary": @selected_tab == "account"}>
       <LivePatch to={"/settings/account"}>
-        <Solid.UserIcon class="inline-block w-5 h-5 mr-2 stroke-current" />
+        <Outline.LockClosedIcon class="inline-block w-5 h-5 mr-2 stroke-current" />
         {l "Account"}
       </LivePatch>
     </li>
-    <li>
+    <!-- <li class={"bg-primary": @selected_tab == "admin"}>
       <LivePatch to={"/settings/admin"}>
-        <Solid.UserIcon class="inline-block w-5 h-5 mr-2 stroke-current" />
+        <Outline.UserIcon class="inline-block w-5 h-5 mr-2 stroke-current" />
         {l "Admin"}
       </LivePatch>
+    </li> -->
+    <li>
+      <LivePatch to={"/logout"}>
+        <Outline.LogoutIcon class="inline-block w-5 h-5 mr-2 stroke-current" />
+        {l "Logout"}
+      </LivePatch>
     </li>
-    
   </ul>
 
     <!-- <nav

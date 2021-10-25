@@ -11,8 +11,8 @@ defmodule Bonfire.UI.Social.SettingsViewsLive.ExtensionsLive do
 
     {:ok, assign(socket,
       assigns_merge(data(),
-        settings_section_title: "Bonfire Extensions",
-        settings_section_description: "These are the extensions currently installed on this instance."
+        settings_section_title: "Bonfire extensions",
+        settings_section_description: "These are the extensions installed on this instance."
       )) }
   end
 

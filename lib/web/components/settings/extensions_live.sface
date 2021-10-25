@@ -5,9 +5,9 @@
   />
   <div class="flex flex-col space-y-6">
     <div class="">
-      <div class="p-4 dark:bg-blueGray-600">
-        <h2 class="text-lg font-medium leading-6 text-gray-800 dark:text-gray-200">{l "Bonfire Extensions"}</h2>
-        <p class="mt-1 text-sm text-gray-500 dark:text-gray-300">
+      <div class="p-4">
+        <h2 class="text-lg font-medium leading-6 text-base-content">{l "Bonfire Extensions"}</h2>
+        <p class="mt-1 text-sm text-base-content text-opacity-70">
           {l "These are the data schemas currently installed on this instance, which can be shared among multiple apps and extensions."}
         </p>
       </div>
@@ -15,9 +15,9 @@
         <div class="flex-grow space-y-3 lg:mt-0">
         {#for dep <- @extensions}
        
-            <div class="p-3 text-sm font-medium text-gray-700 border-b dark:border-gray-600 dark:text-gray-300">
+            <div class="p-3 text-sm font-medium text-base-content border-base-200">
               <a href={get_link(dep)} target="_blank">
-                <span class="flex-1 dark:text-gray-300 hover:underline">{ e(dep, :app, "Unknown") }</span>
+                <span class="flex-1 hover:underline">{ e(dep, :app, "Unknown") }</span>
               </a>
 
               <a href={get_version_link(dep)} target="_blank">
@@ -30,18 +30,18 @@
     </div>
 
     <div class="">
-      <div class="p-4 dark:bg-blueGray-600">
-        <h2 class="text-lg font-medium leading-6 text-gray-800 dark:text-gray-200">{l "Bonfire schemas"}</h2>
-        <p class="mt-1 text-sm text-gray-500 dark:text-gray-300">
+      <div class="p-4">
+        <h2 class="text-lg font-medium leading-6 text-base-content">{l "Bonfire schemas"}</h2>
+        <p class="mt-1 text-sm text-base-content text-opacity-70">
           {l "These are the data schemas currently installed on this instance, which can be shared among multiple apps and extensions."}
         </p>
       </div>
       <div class="flex flex-col lg:flex-row">
         <div class="flex-grow space-y-3 lg:mt-0">
           {#for dep <- @schemas }
-            <div class="p-3 text-sm font-medium text-gray-800 border-b dark:border-gray-600 dark:text-gray-200">
+            <div class="p-3 text-sm font-medium text-base-content border-base-200">
               <a href={get_link(dep)} target="_blank">
-                <span class="flex-1 dark:text-gray-300 hover:underline">{e(dep, :app, "Unknown")}</span>
+                <span class="flex-1 hover:underline">{e(dep, :app, "Unknown")}</span>
               </a>
 
               <a href={get_version_link(dep)} target="_blank">
@@ -54,18 +54,18 @@
     </div>
 
     <div class="">
-      <div class="p-4 dark:bg-blueGray-600">
+      <div class="p-4">
         <h2 class="text-lg font-medium leading-6text-gray-800 dark:text-gray-200">{l "Other Dependencies"}</h2>
-        <p class="mt-1 text-sm text-gray-500 dark:text-gray-300">
+        <p class="mt-1 text-sm text-base-content text-opacity-70">
           {l "These are other libraries used by the app and extensions."}
         </p>
       </div>
       <div class="flex flex-col lg:flex-row">
         <div class="flex-grow space-y-3 lg:mt-0">
           {#for dep <- @other_deps}
-            <div class="p-3 text-sm font-medium text-gray-700 border-b dark:border-gray-600 dark:text-gray-300">
+            <div class="p-3 text-sm font-medium text-base-content border-base-200">
               <a href={get_link(dep)} target="_blank">
-                <span class="flex-1 dark:text-gray-300 hover:underline">{e(dep, :app, "Unknown")}</span>
+                <span class="flex-1 hover:underline">{e(dep, :app, "Unknown")}</span>
               </a>
 
               <a href={get_version_link(dep)} target="_blank">

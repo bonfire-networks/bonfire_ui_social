@@ -41,9 +41,48 @@
           <label for="name" class="label">
             <span class="label-text">{l "Full name"}</span>
           </label> 
-          <input type="text" name="profile[name]" id="name" autocomplete="name" class="input" value={e(current_user(assigns), :profile, :name, "")}>
+          <input type="text" name="profile[name]" id="name" autocomplete="name" class="input input-bordered" value={e(current_user(assigns), :profile, :name, "")}>
         </div>
 
+        <div class="form-control">
+          <label for="username" class="label">
+            <span class="label-text">{l "Username"}</span>
+          </label> 
+          <label class="w-full input-group">
+            <span>@</span> 
+             <input type="text" name="character[username]" id="username" autocomplete="username" class="flex-1 input input-bordered" value={e(current_user(assigns), :character, :username, "")}>
+            <span>
+              @{Bonfire.Common.Config.get(:host)}
+            </span>
+          </label>
+        </div>
+
+        <div class="form-control">
+          <label for="about" class="label">
+            <span class="label-text">{l "About"}</span>
+          </label> 
+          <textarea id="about" name="profile[summary]" rows="3" class="h-24 textarea textarea-bordered">
+            {e(current_user(assigns), :profile, :summary, "")}
+          </textarea>
+          <p class="mt-2 text-sm text-base-content text-opacity-70">
+          {l "Brief description for your profile. URLs are hyperlinked."}
+        </p>
+        </div>
+
+        <div class="form-control">
+          <label for="website" class="label">
+            <span class="label-text">{l "Website"}</span>
+          </label> 
+          <input type="text" name="profile[website]" id="website" autocomplete="website" class="input input-bordered" value={e(current_user(assigns), :profile, :website, "")}>
+        </div>
+
+        <div class="form-control">
+          <label for="location" class="label">
+            <span class="label-text">{l "Location"}</span>
+          </label> 
+          <input type="text" name="profile[location]" id="location" autocomplete="location" class="input input-bordered" value={e(current_user(assigns), :profile, :location, "")}>
+        </div>
+        
         <!-- <div>
           <label for="name" class="block text-sm font-medium text-gray-700 dark:text-gray-300">
             {l "Full name"}
@@ -51,7 +90,7 @@
           <div class="flex mt-1 rounded shadow-sm">
         </div> -->
       <!-- </div> -->
-      <div>
+      <!-- <div>
         <label for="username" class="block text-sm font-medium text-gray-700 dark:text-gray-300">
           {l "Username"}
         </label>
@@ -64,8 +103,8 @@
             @{Bonfire.Common.Config.get(:host)}
           </span>
         </div>
-      </div>
-      <div>
+      </div> -->
+      <!-- <div>
         <label for="about" class="block text-sm font-medium text-gray-700 dark:text-gray-300">
           {l "About"}
         </label>
@@ -77,8 +116,8 @@
         <p class="mt-2 text-sm text-gray-500 dark:text-gray-300">
           {l "Brief description for your profile. URLs are hyperlinked."}
         </p>
-      </div>
-      <div>
+      </div> -->
+      <!-- <div>
         <label for="website" class="block text-sm font-medium text-gray-700 dark:text-gray-300">
           {l "Website"}
         </label>
@@ -93,10 +132,10 @@
         <div class="flex mt-1 rounded-md shadow-sm">
           <input type="text" name="profile[location]" id="location" autocomplete="location" class="flex-grow block w-full min-w-0 border-gray-300 rounded dark:border-gray-700 dark:bg-gray-600 dark:text-gray-100 focus:ring-light-blue-500 focus:border-light-blue-500 sm:text-sm" value={e(current_user(assigns), :profile, :location, "")}>
         </div>
-      </div>
+      </div> -->
     </div>
-    <div class="flex mt-8">
-      <button type="submit" class="flex items-center flex-1 text-center place-content-center btn btn-primary">
+    <div class="mt-8">
+      <button type="submit" class="w-full btn btn-primary">
         {l "Save"}
       </button>
     </div>

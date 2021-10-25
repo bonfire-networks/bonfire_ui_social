@@ -1,5 +1,5 @@
 <main
-  class="space-x-3 md:flex">
+  class="items-start space-x-3 md:flex">
   <Bonfire.UI.Social.SettingsViewLive.SidebarSettingsLive 
     selected_tab={@selected_tab}
   />
@@ -22,14 +22,9 @@
           current_user={current_user(assigns)}
         />
     {#match "preferences"}
-      <div class="px-4 py-6 sm:p-6 lg:pb-8">
-        <div>
-          <Bonfire.UI.Social.SettingsViewLive.SettingsHeaderLive 
-            settings_section_title={l "Preferences"}
-          />
-
-        </div>
-      </div>
+      <Bonfire.UI.Social.SettingsViewsLive.PreferencesLive
+          current_user={current_user(assigns)}
+        />
     {#match _}
       <Bonfire.UI.Social.SettingsViewsLive.EditProfileLive
        uploads={@uploads} 
