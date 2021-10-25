@@ -27,8 +27,8 @@
           </div>
         </div>
       </div>
-      <div phx-drop-target={@uploads.icon.ref} class="relative block w-32 h-32 mb-6 ml-6 -mt-16 overflow-hidden rounded-full ring-4 ring-white">
-        <div class="flex items-center w-32 h-32 bg-cover rounded-full shadow-lg bg-blueGray-100" style={"background-image: url(" <> avatar_url(current_user(assigns)) <> ")"}></div>
+      <div phx-drop-target={@uploads.icon.ref} class="relative block w-32 h-32 mb-6 ml-6 -mt-16 overflow-hidden rounded-full ring-8 ring-base-100">
+        <div class="flex items-center w-32 h-32 bg-cover rounded-full shadow-lg bg-base-content" style={"background-image: url(" <> avatar_url(current_user(assigns)) <> ")"}></div>
         <label for={@uploads.icon.ref} class="absolute inset-0 flex items-center justify-center w-full h-full text-sm font-medium text-white transition duration-150 ease-in-out bg-gray-700 bg-opacity-75 opacity-0 cursor-pointer hover:opacity-100 focus-within:opacity-100">
           <span>{l "Upload or drop"}</span>
           <span class="sr-only"> {l "avatar"}</span>
@@ -36,14 +36,21 @@
         </label>
       </div>
       <div class="flex-grow space-y-6">
-        <div>
+
+        <div class="form-control">
+          <label for="name" class="label">
+            <span class="label-text">{l "Full name"}</span>
+          </label> 
+          <input type="text" name="profile[name]" id="name" autocomplete="name" class="input" value={e(current_user(assigns), :profile, :name, "")}>
+        </div>
+
+        <!-- <div>
           <label for="name" class="block text-sm font-medium text-gray-700 dark:text-gray-300">
             {l "Full name"}
           </label>
           <div class="flex mt-1 rounded shadow-sm">
-            <input type="text" name="profile[name]" id="name" autocomplete="name" class="flex-grow block w-full min-w-0 border-gray-300 rounded dark:border-gray-700 dark:bg-gray-600 dark:text-gray-100 focus:ring-light-blue-500 focus:border-light-blue-500 sm:text-sm" value={e(current_user(assigns), :profile, :name, "")}>
-        </div>
-      </div>
+        </div> -->
+      <!-- </div> -->
       <div>
         <label for="username" class="block text-sm font-medium text-gray-700 dark:text-gray-300">
           {l "Username"}
