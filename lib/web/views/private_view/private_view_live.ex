@@ -4,5 +4,5 @@ defmodule Bonfire.UI.Social.PrivateViewLive do
   prop page_title, :string, required: true
   prop page, :string, required: true
   prop smart_input, :boolean, required: true
-  prop feed, :map
+  prop feed, :list
 end

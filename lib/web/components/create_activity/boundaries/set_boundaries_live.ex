@@ -4,8 +4,7 @@ defmodule Bonfire.UI.Social.SetBoundariesLive do
 
   prop label, :string, default: ""
   prop default_circles, :list, default: []
-  prop to_circles, :list, default: []
-  prop hide_selector, :boolean, default: false
+  prop to_circles, :list
 
   def update(assigns, socket), do: {:ok, updated(assigns, socket)
   # |> self_subscribe([:to_circles])
@@ -40,7 +39,7 @@ defmodule Bonfire.UI.Social.SetBoundariesLive do
       length(to_circles)==1 && to_circles |> List.first() |> elem(1) == e(assigns, :current_user, :id, nil) ->
         nobody
 
-      e(assigns, :smart_input_private, nil) || e(assigns, :create_activity_type, nil)=="message" ->
+      e(assigns, :create_activity_type, nil)=="message" ->
 
           if length(e(assigns, :to_circles, []))>0 do
             "Send a message to "

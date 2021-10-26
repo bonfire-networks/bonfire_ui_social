@@ -9,8 +9,7 @@ defmodule Bonfire.UI.Social.CreateActivityLive do
   alias Surface.Components.Form.Inputs
 
   # prop target_component, :string
-  prop smart_input_private, :boolean, default: nil
-  prop create_activity_type, :string, default: "post"
+  prop create_activity_type, :string, default: nil
   prop reply_to_id, :string
   prop reply_to_thread_id, :string
   prop smart_input_placeholder, :string, required: false
@@ -18,17 +17,19 @@ defmodule Bonfire.UI.Social.CreateActivityLive do
 
   def update(assigns, socket) do
 
-    create_activity_type = if e(assigns, :smart_input_private, nil), do: "message",
-    else: e(assigns, :create_activity_type, "post")
+    create_activity_type = e(assigns, :create_activity_type, "post")
 
     {:ok,  assign(socket, assigns
     |> assigns_merge(
         changeset: Bonfire.Social.Posts.LiveHandler.post_changeset(%{}),
         smart_input_placeholder: e(assigns, :smart_input_placeholder, "Write something..."),
         smart_input_text: e(assigns, :smart_input_text, ""),
-        create_activity_type: create_activity_type,
-        activity_type_or_reply: activity_type_or_reply(assigns, create_activity_type))
-    )}
+    ))
+    |> assign_global(
+          create_activity_type: create_activity_type,
+          activity_type_or_reply: activity_type_or_reply(assigns, create_activity_type)
+      )
+  }
   end
 
   def activity_type_or_reply(assigns, create_activity_type) do

@@ -4,14 +4,12 @@
   x-cloak
   x-data="{
     open: true,
-    title_open: false,
+    title_open: false, 
     summary_open: false,
     open_boundaries: false,
-    boundary_selected: 'public'
+    boundary_selected: 'guest'  
   }"
   @click.away="{open=true; title_open=false; summary_open=false; open_boundaries=false}">
-
-
 
 
   <Form for={Bonfire.Social.Posts.LiveHandler.post_changeset()} submit="Bonfire.Social.Posts:post" opts={ autocomplete: "off"}>
@@ -25,9 +23,13 @@
           value={e(assigns, :create_activity_type, "post")} />
       </Field>
 
-      <!-- <div x-show="open">
-        <Bonfire.UI.Social.SetBoundariesLive hide_selector={e(assigns, :create_activity_type, nil)=="message"} />
-      </div> -->
+      <input 
+        :if={e(assigns, :create_activity_type, nil) == "message"}
+        :for={{_name, id} <- e(assigns, :to_circles, [])} 
+        type="hidden" 
+        name="to_circles[]" 
+        value={id}
+        />
 
         <Inputs for={:post_content}>
           <Bonfire.UI.Social.SetCWLive />          
@@ -35,37 +37,10 @@
             <Label :if={@smart_input_text && @smart_input_text !="" && @smart_input_placeholder} class="mb-2 alert alert-info">{@smart_input_placeholder}</Label>
 
 
-            <div x-show="boundary_selected == 'public'" class="mb-2 alert alert-info">
-              <div class="flex-1">
-                <span class="w-5 h-5 mr-2">
-                  <Solid.GlobeIcon/>
-                </span>
-                <label>{l "Your %{activity_type} will be publicly visible to everyone on the fediverse and in search engines.", activity_type: @activity_type_or_reply}</label>
-              </div>
-            </div>
-
-            <div x-show="boundary_selected == 'local'" class="mb-2 alert alert-info">
-            <div class="flex-1">
-              <span class="w-5 h-5 mr-2">
-                <Solid.HomeIcon/>
-              </span>
-              <span>
-              {l "Your %{activity_type} will only be visible to members of your local instance.", activity_type: @activity_type_or_reply} </span>
-              </div>
-            </div>
-            <div x-show="boundary_selected == 'private'" class="mb-2 alert alert-info">
-            <div class="flex-1">
-              <span class="w-5 h-5 mr-2">
-                <Solid.AtSymbolIcon/>
-              </span>
-              <span>
-              {l "Your %{activity_type} will be visible to anyone @ mentioned (plus yourself and instance admins).", activity_type: @activity_type_or_reply} </span>
-              </div>
-            </div>
-            <div x-show="boundary_selected == 'custom'" class="mb-2 alert alert-info">
-              TODO
-            </div>
-
+            <Bonfire.UI.Social.BoundariesSelectedLive 
+            :if={e(assigns, :create_activity_type, nil) != "message"}
+            activity_type_or_reply={@activity_type_or_reply} 
+            />
 
             <div
               @click = "open = true"
@@ -95,7 +70,11 @@
             <svg :class="{'text-primary' : title_open === true }" class="w-4 h-4 text-base-content" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M18 3a1 1 0 00-1.447-.894L8.763 6H5a3 3 0 000 6h.28l1.771 5.316A1 1 0 008 18h1a1 1 0 001-1v-4.382l6.553 3.276A1 1 0 0018 15V3z" clip-rule="evenodd"></path></svg>
             <span :class="{'text-primary' : title_open === true}" class="ml-2 text-xs font-semibold text-base-content">CW</span>
           </button>
-          <Bonfire.UI.Social.BoundariesLive />
+
+          <Bonfire.UI.Social.BoundariesLive 
+            :if={e(assigns, :create_activity_type, nil) != "message"}
+          />
+
         </div>
       </div>
       <div
@@ -105,10 +84,9 @@
         <button
           @click="{open = true; title_open = false}"
           type="submit"
-
           class=" justify-self-end btn btn-primary">
-          <span :if={e(assigns, :smart_input_private, nil)}>{l "Send"}</span>
-          <span :if={e(assigns, :smart_input_private, nil) == nil}>{l "Publish"}</span>
+          <span :if={e(assigns, :create_activity_type, nil)=="message"}>{l "Send"}</span>
+          <span :if={e(assigns, :create_activity_type, nil) != "message"}>{l "Post"}</span>
         </button>
       </div>
     </div>

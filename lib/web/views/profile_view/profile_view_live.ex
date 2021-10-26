@@ -1,7 +1,6 @@
 defmodule Bonfire.UI.Social.ProfileViewLive do
   use Bonfire.Web, :stateless_component
 
-
   prop page_title, :string, required: true
   prop page, :string, required: true
   prop selected_tab, :string, default: "timeline"
@@ -12,6 +11,7 @@ defmodule Bonfire.UI.Social.ProfileViewLive do
   prop search_placholder, :string
   prop feed_title, :string
   prop user, :map
+  prop feed, :list
 
   def tab(selected_tab) do
     case maybe_str_to_atom(selected_tab) do

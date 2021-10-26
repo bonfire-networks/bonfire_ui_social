@@ -1,5 +1,5 @@
 <Context get={to_circles: to_circles}>
-<div class="mb-2" :if={!@hide_selector} x-show="open">
+<div class="mb-2" x-show="open">
 
   <Bonfire.UI.Social.MultiselectLive
     preloaded_options={@default_circles}
@@ -10,9 +10,6 @@
     remove_event={"Bonfire.Me.Boundaries:deselect"}
    />
 
-</div>
-<div :if={@hide_selector}>
-<input :for={{_name, id} <- to_circles} type="hidden" name="circles[]" value={id}/>
 </div>
 
 </Context>

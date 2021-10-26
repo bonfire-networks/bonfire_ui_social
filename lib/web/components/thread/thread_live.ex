@@ -14,8 +14,8 @@ defmodule Bonfire.UI.Social.ThreadLive do
   prop page_info, :any
   prop activity, :any
   prop object, :any
-  prop smart_input_placeholder, :string, default: ""
-  prop smart_input_text, :string, default: ""
+  prop smart_input_placeholder, :string
+  prop smart_input_text, :string
 
   # TODO: put in config
   @thread_max_depth 3

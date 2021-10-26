@@ -1,16 +1,19 @@
 <div class="relative">
+
+  <input name="boundary_selected" type="hidden" x-model="boundary_selected" />
+
   <button
     type="button"
     @click="open_boundaries = !open_boundaries"
     class="flex items-center p-1 rounded focus:outline-none hover:bg-base-100"
     :class="{'bg-pink-50' : open_boundaries === true }">
-    <div class="text-base-content" x-show="boundary_selected == 'public'">
+    <div class="text-base-content" x-show="boundary_selected == 'guest'">
       <Solid.GlobeIcon/>
     </div>
     <div class="text-base-content" x-show="boundary_selected == 'local'">
       <Solid.HomeIcon/>
     </div>
-    <div class="text-base-content" x-show="boundary_selected == 'private'">
+    <div class="text-base-content" x-show="boundary_selected == 'mentions'">
       <Solid.AtSymbolIcon/>
     </div>
     <div class="text-base-content" x-show="boundary_selected == 'custom'">
@@ -30,7 +33,7 @@
     role="menu"
     aria-orientation="vertical"
     aria-labelledby="user-profile-menu">
-      <div @click="{boundary_selected = 'public'; open_boundaries = false}" class="flex p-2 space-x-2 text-sm text-gray-800 transition duration-150 ease-in-out cursor-pointer rounded-t-md hover:bg-gray-100">
+      <div @click="{boundary_selected = 'guest'; open_boundaries = false}" class="flex p-2 space-x-2 text-sm text-gray-800 transition duration-150 ease-in-out cursor-pointer rounded-t-md hover:bg-gray-100">
         <Solid.GlobeIcon/>
         <div class="flex-1">
           <div class="text-sm font-medium text-gray-800">{l "Public"}</div>
@@ -44,11 +47,11 @@
           <p class="text-xs text-gray-500">{l "Only visible to members of this instance"}</p>
           </div>
       </div>
-      <div @click="{boundary_selected = 'private'; open_boundaries = false}" class="flex p-2 space-x-2 text-sm text-gray-700 text-gray-800 transition duration-150 ease-in-out cursor-pointer hover:bg-gray-100">
-        <Solid.AtSymbolIcon/>
+      <div @click="{boundary_selected = 'mentions'; open_boundaries = false}" class="flex p-2 space-x-2 text-sm text-gray-700 text-gray-800 transition duration-150 ease-in-out cursor-pointer hover:bg-gray-100">
+        <Solid.AtSymbolIcon/> 
         <div class="flex-1">
-        <div class="text-sm font-medium text-gray-800">{l "Mention"}</div>
-        <p class="text-xs text-gray-500">{l "Only visible to everyone mentioned"}</p>
+        <div class="text-sm font-medium text-gray-800">{l "Mentions"}</div>
+        <p class="text-xs text-gray-500">{l "Visible to everyone mentioned, across the fediverse"}</p>
         </div>
       </div>
       <!-- <div @click="{boundary_selected = 'custom'; open_boundaries = false}" class="block px-4 py-2 text-sm text-gray-700 transition duration-150 ease-in-out cursor-pointer rounded-b-md hover:bg-gray-100">

@@ -21,8 +21,6 @@
 
       <div class="flex items-center">
 
-        <Bonfire.UI.Social.ChangeThemeLive />
-
         {#if !current_account(assigns) }
             <span class="inline-flex ">
               <Link to={path(:login, :index)} class="btn btn-primary">{l "Login"}</Link>
