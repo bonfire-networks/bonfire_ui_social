@@ -2,7 +2,7 @@
     <div :if={e(current_user(assigns), :id, nil)} class="bg-center bg-cover bg-accent" style={"height: 225px; background-image: url('#{image_url(@user)}')"}></div>
     <div :if={!e(current_user(assigns), :id, nil)} class="bg-center bg-cover rounded-t-lg bg-accent" style={"height: 225px; background-image: url('#{image_url(@user)}')"}></div>
     <div class="flex items-center justify-between">
-      <img class={"inline-block object-cover -mt-16 rounded-full shadow-lg ring-4 ring-white bg-white w-32 h-32 ml-6"} src={"#{avatar_url(@user)}"} alt="current user profile image">
+      <img class={"inline-block object-cover -mt-16 rounded-full shadow-lg ring-4 ring-base-100 bg-base-100 w-32 h-32 ml-6"} src={"#{avatar_url(@user)}"} alt="current user profile image">
       <div
         :if={current_user(assigns)}
         class="flex items-center pr-6 space-x-3">

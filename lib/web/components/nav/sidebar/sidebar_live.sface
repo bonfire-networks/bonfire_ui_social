@@ -1,24 +1,28 @@
 
 <nav
   role="navigation"
-  class="flex-col hidden md:flex w-72">
-  <div class="fixed flex flex-col flex-grow h-full pl-1 overflow-y-auto md:pr-3 w-72">
-    <div class="mb-4">
-      <Bonfire.UI.Social.SmartInputLive :if={current_user(assigns)}  />
-    </div>
+  class="flex-col hidden mr-3 md:flex w-80">
+  <div class="fixed flex flex-col flex-grow h-full overflow-y-auto h-fit-content md:pr-2 w-80">
+  <div class="absolute h-full overflow-y-auto">
+    <div>
+      <div class="mb-4">
+        <Bonfire.UI.Social.SmartInputLive :if={current_user(assigns)}  />
+      </div>
 
-    <div
-      :for={{component, component_assigns} <- Bonfire.Common.Config.get([:ui, :sidebar_components], [{Bonfire.UI.Social.SidebarNavigationLive, []}])}>
+      <div
+        :for={{component, component_assigns} <- Bonfire.Common.Config.get([:ui, :sidebar_components], [{Bonfire.UI.Social.SidebarNavigationLive, []}])}>
 
-        {if module_enabled?(component), do: live_component(
-          @socket,
-          component,
-          assigns_merge(component_assigns, [
-          page: e(assigns, :page, nil),
-          current_user: current_user(assigns)
-        ]))}
+          {if module_enabled?(component), do: live_component(
+            @socket,
+            component,
+            assigns_merge(component_assigns, [
+            page: e(assigns, :page, nil),
+            current_user: current_user(assigns)
+          ]))}
 
       </div>
+      </div>
+    </div>
 
   </div>
 </nav>

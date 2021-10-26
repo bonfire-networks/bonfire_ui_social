@@ -32,16 +32,13 @@
         />
 
         <Inputs for={:post_content}>
-          <Bonfire.UI.Social.SetCWLive />          
           <Field name={:html_body}>
             <Label :if={@smart_input_text && @smart_input_text !="" && @smart_input_placeholder} class="mb-2 alert alert-info">{@smart_input_placeholder}</Label>
-
-
-            <Bonfire.UI.Social.BoundariesSelectedLive 
-            :if={e(assigns, :create_activity_type, nil) != "message"}
-            activity_type_or_reply={@activity_type_or_reply} 
-            />
-
+              <Bonfire.UI.Social.BoundariesSelectedLive 
+              :if={e(assigns, :create_activity_type, nil) != "message"}
+              activity_type_or_reply={@activity_type_or_reply} 
+              />
+              <Bonfire.UI.Social.SetCWLive />          
             <div
               @click = "open = true"
               class="h-10 transition-all duration-300 ease-in-out rounded"
@@ -57,6 +54,7 @@
               />
             </div>
           </Field>
+          
         </Inputs>
       <div
         x-show="open"
