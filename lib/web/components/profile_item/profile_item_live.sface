@@ -1,14 +1,14 @@
 
-<div class="flex">
+<LiveRedirect to={"/user/#{e(@character, :username, "anon")}"} class="flex p-6 space-x-3 profile-item group ">
   <div class="flex-shrink-0">
-    <img class="object-cover w-10 h-10 rounded-full" src={"#{avatar_url(@profile)}"} alt="current user profile image" />
+    <img class="object-cover w-10 h-10 bg-base-300 mask mask-squircle" src={"#{avatar_url(@profile)}"} alt="current user profile image" />
   </div>
-  <div class="ml-2">
-    <p class="text-base font-semibold text-gray-800">
+  <div class="">
+    <p class="text-base font-semibold group-hover:underline text-base-content">
       {e(@profile, :name, "Anon")}
     </p>
-    <p class="-mt-px text-sm text-gray-600">
+    <p class="-mt-px text-sm text-base-content text-opacity-70">
       @{e(@character, :username, "anon")} 
     </p>
   </div>
-</div>
+</LiveRedirect>

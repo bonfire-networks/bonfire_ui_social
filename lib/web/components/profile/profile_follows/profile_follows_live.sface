@@ -1,35 +1,27 @@
 <div>
-  <nav
+
+
+<div   
   role="tabpanel"
-  class="flex justify-between my-2 border-b dark:border-gray-600"
-  aria-label="Switch between my feed, instance or fediverse tabs">
-    <LivePatch
-      to={"/user/#{e(@user, :character, :username, "")}/followers"}
-      class="flex-1 pt-2 group">
-      <div class={"group-hover:text-pink-400 text-center w-full capitalize text-gray-500 dark:text-gray-300 px-3 font-medium text-sm border-gray-200", "hover:text-pink-600 text-pink-600 dark:text-pink-400 font-bold": @selected_tab == "followers"}>
-        {l "Followers"} ({e(@user, :character, :follow_count, :follower_count, 0)})
-      </div>
-        <span
-          :if={@selected_tab ==  "followers"}
-          class="block w-20 h-1 mx-auto mt-2 bg-pink-400 rounded-full"></span>
-    </LivePatch>
-    <LivePatch
-      to={"/user/#{e(@user, :character, :username, "")}/followed"}
-      class="flex-1 pt-2 group">
-      <div class={"group-hover:text-pink-400 text-center w-full capitalize text-gray-500 dark:text-gray-300 px-3 font-medium text-sm border-gray-200", "hover:text-pink-600 text-pink-600 dark:text-pink-400 font-bold": @selected_tab == "followed"}>
-        {l "Following"} ({e(@user, :character, :follow_count, :follow_count, 0)}  )
-      </div>
-        <span
-          :if={@selected_tab ==  "followed"}
-          class="block w-20 h-1 mx-auto mt-2 bg-pink-400 rounded-full"></span>
-    </LivePatch>
-  </nav>
+  class="flex w-full tabs">
+  <LivePatch 
+    to={"/user/#{e(@user, :character, :username, "")}/followers"} 
+    class={"tab flex-1 tab-bordered", "tab-active": @selected_tab ==  "followers"}>
+    {l "Followers"} ({e(@user, :character, :follow_count, :follower_count, 0)})
+  </LivePatch> 
+  <LivePatch 
+    to={"/user/#{e(@user, :character, :username, "")}/followed"} 
+    class={"tab flex-1 tab-bordered", "tab-active": @selected_tab ==  "followed"}>
+    {l "Following"} ({e(@user, :character, :follow_count, :follow_count, 0)})
+  </LivePatch>   
+</div>
+
 
 
   <div :if={@selected_tab == "followed"}>
     <div class="flow-root my-4">
-      <ul class="-my-5 divide-y divide-gray-200">
-        <li :for={follow <- @followed} class="px-3 py-4">
+      <ul class="-my-5 divide-y divide-base-200">
+        <li :for={follow <- @followed}>
           <Bonfire.UI.Social.ProfileItemLive profile={e(follow, :followed_profile, nil)} character={e(follow, :followed_character, nil)} />
         </li>
       </ul>
@@ -38,8 +30,8 @@
 
   <div :if={@selected_tab == "followers"}>
     <div class="flow-root my-4">
-      <ul class="-my-5 divide-y divide-gray-200">
-        <li :for={follow <- @followers} class="px-3 py-4">
+      <ul class="-my-5 divide-y divide-base-200">
+        <li :for={follow <- @followers}>
           <Bonfire.UI.Social.ProfileItemLive profile={e(follow, :follower_profile, nil)} character={e(follow, :follower_character, nil)} />
         </li>
       </ul>
