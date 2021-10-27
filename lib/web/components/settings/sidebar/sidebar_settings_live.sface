@@ -1,3 +1,4 @@
+<div>
   <ul role="navigation" class="p-4 shadow-lg w-72 menu bg-base-100 rounded-box">
     <li class={"bg-primary": @selected_tab == "user"}>
       <LivePatch to={"/settings/user"} >
@@ -55,14 +56,12 @@
         </li>
       </ul>
     </li>
-    <li>
-      <LivePatch to={"/logout"}>
-        <Outline.LogoutIcon class="inline-block w-5 h-5 mr-2 stroke-current" />
-        {l "Logout"}
-      </LivePatch>
-    </li>
   </ul>
-
+  <LivePatch to={"/logout"} class="w-full mt-2 btn btn-error">
+    <Outline.LogoutIcon class="inline-block w-5 h-5 mr-2 stroke-current" />
+    {l "Logout"}
+  </LivePatch>
+</div>
     <!-- <nav
       role="navigation"
       class="flex-col hidden lg:flex md:flex-shrink-0 w-60">
