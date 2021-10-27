@@ -1,60 +1,26 @@
-<button
+<div
   x-cloak
-  x-data="{more: false}"
-  @keydown.escape.stop="more = false"
-  @click.away="more = false"
-  @click="more = !more"
+  x-data="{modal_flagging_activity: false}"
   aria-haspopup="true"
-  x-bind:aria-expanded="more"
-  class="relative flex items-center rounded cursor-pointer py-1text-left group">
-  <svg aria-hidden="true" class="w-4 h-4 mr-1 text-gray-500 dark:text-gray-400 group-hover:text-pink-700 dark:group-hover:text-pink-400" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path d="M6 10a2 2 0 11-4 0 2 2 0 014 0zM12 10a2 2 0 11-4 0 2 2 0 014 0zM16 12a2 2 0 100-4 2 2 0 000 4z"></path></svg>
-  <span id="more-menu" class="text-xs font-normal text-gray-500 dark:text-gray-400 group-hover:text-pink-700 dark:group-hover:text-pink-400">More</span>
+  class="dropdown dropdown-end feed_activity">
+  <div 
+    tabindex="0"
+    class="feed_activity_action">
+    <span class="feed_activity_icon">
+      <Solid.DotsHorizontalIcon class="w-4 h-4" />
+    </span>
+    <span id="more-menu" class="feed_activity_text">{l "More"}</span>
+  </div>
   <div
-    x-description="Dropdown menu, show/hide based on menu state."
-    x-show="more"
-    x-transition:enter="transition ease-out duration-100"
-    x-transition:enter-start="transform opacity-0 scale-95"
-    x-transition:enter-end="transform opacity-100 scale-100"
-    x-transition:leave="transition ease-in duration-75"
-    x-transition:leave-start="transform opacity-100 scale-100"
-    x-transition:leave-end="transform opacity-0 scale-95"
-    class="absolute top-0 right-0 z-50 w-56 mt-2 origin-bottom-right bg-white divide-y divide-gray-100 rounded-md shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none"
+    tabindex="0"
+    class="p-2 shadow menu dropdown-content bg-neutral-content rounded-box w-52"
     role="menu"
     aria-orientation="vertical"
     aria-labelledby="more-menu">
-    <div class="py-1" role="none">
-      <span
-        role="menuitem"
-        class="flex items-center w-full px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-gray-900">
-          <svg class="w-5 h-5 mr-2 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path></svg>
-          <span class="">{l "Edit"}</span>
-      </span>
-      <span
-        role="menuitem"
-        class="flex items-center w-full px-4 py-2 text-sm text-red-700 hover:bg-gray-100">
-          <svg class="w-5 h-5 mr-2 text-red-700" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>
-          <span class="">{l "Remove"}</span>
-      </span>
-    </div>
-    <div class="py-1" role="none">
-    <span class="flex items-center w-full px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-gray-900">
-      <svg class="w-5 h-5 mr-2 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="M5.586 15H4a1 1 0 01-1-1v-4a1 1 0 011-1h1.586l4.707-4.707C10.923 3.663 12 4.109 12 5v14c0 .891-1.077 1.337-1.707.707L5.586 15z" clip-rule="evenodd"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2"></path></svg>
-      <span class="">{l "Silent"} <span class="ml-1">{e(@activity, :subject_profile, :name, "Anonymous")}</span></span>
-    </span>
-    <span class="flex items-center w-full px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-gray-900">
-      <svg class="w-5 h-5 mr-2 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="M18.364 18.364A9 9 0 005.636 5.636m12.728 12.728A9 9 0 015.636 5.636m12.728 12.728L5.636 5.636"></path></svg>
-      <span>{l "Block"} <span class="ml-1">{e(@activity, :subject_profile, :name, "Anonymous")}</span></span>
-    </span>
-    </div>
-    <div
-      phx-click={if e(@object, :id, "") in e(assigns, :flagged, []) || e(@activity, :my_flag, :id, nil), do: "Bonfire.Social.Flags:undo", else: "Bonfire.Social.Flags:flag"} 
-      phx-value-id={e(@object, :id, "")}
-      class="flex items-center py-1" 
-      role="none">
-      <span class="flex items-center w-full px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-gray-900">
-        <svg class="w-5 h-5 mr-2 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="M3 21v-4m0 0V5a2 2 0 012-2h6.5l1 1H21l-3 6 3 6h-8.5l-1-1H5a2 2 0 00-2 2zm9-13.5V9"></path></svg>
-        {if e(@object, :id, "") in e(assigns, :flagged, []) || e(@activity, :my_flag, :id, nil), do: "Already reported", else: "Report this activity" }
-      </span>
-    </div>
+    <Bonfire.UI.Social.FlagActionLive 
+      object={@object}
+      activity={@activity}
+      flagged={@flagged}
+    />
   </div>
-</button>
+</div>

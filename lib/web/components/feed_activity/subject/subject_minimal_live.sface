@@ -5,6 +5,7 @@
         <Solid.StarIcon :if={@verb == "like"} class="w-4 h-4 text-base-content text-opacity-80" />
         <Solid.SwitchHorizontalIcon :if={@verb == "boost"} class="w-4 h-4 text-base-content text-opacity-80" />
         <Solid.PencilIcon :if={@verb == "reply"} class="w-4 h-4 text-base-content text-opacity-80" />
+        <Solid.FlagIcon :if={@verb == "flag"} class="w-4 h-4 text-base-content text-opacity-80" />
       </div>
       <div class="flex-1 ml-2">
         <div class="text-xs font-medium text-base-content text-opacity-80">
@@ -29,6 +30,8 @@
           <Solid.StarIcon :if={@verb == "like"} class="flex-shrink-0 w-8 h-8 text-accent" />
         {#match "reply"}
           <Solid.PencilIcon :if={@verb == "reply"} class="flex-shrink-0 w-8 h-8 text-accent" />
+        {#match "flag"}
+          <Solid.FlagIcon :if={@verb == "flag"} class="flex-shrink-0 w-8 h-8 text-accent" />
         {#match _}
           <Solid.SparklesIcon  class="flex-shrink-0 w-8 h-8 text-accent" />
       {/case}
@@ -51,6 +54,7 @@
         <Solid.StarIcon :if={@verb == "like"} class="w-4 h-4 text-base-content text-opacity-80" />
         <Solid.SwitchHorizontalIcon :if={@verb == "boost"} class="w-4 h-4 text-base-content text-opacity-80" />
         <Solid.PencilIcon :if={@verb == "reply"} class="w-4 h-4 text-base-content text-opacity-80" />
+        <Solid.FlagIcon :if={@verb == "flag"} class="w-4 h-4 text-base-content text-opacity-80" />
       </div>
       <div class="flex-1 ml-2">
         <div class="text-xs font-medium text-base-content text-opacity-80">

@@ -10,5 +10,5 @@ defmodule Bonfire.UI.Social.Activity.ActionsLive do
   prop showing_within, :any
   prop hide_reply, :boolean
   prop reply_click, :string
-
+  prop flagged, :any
 end

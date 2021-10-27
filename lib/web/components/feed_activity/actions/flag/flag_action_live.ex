@@ -1,6 +1,8 @@
-defmodule Bonfire.UI.Social.Activity.MoreActionsLive do
+defmodule Bonfire.UI.Social.FlagActionLive do
   use Bonfire.Web, :stateless_component
-  prop activity, :any
+
   prop object, :any
+  prop activity, :any
   prop flagged, :any
+
 end
