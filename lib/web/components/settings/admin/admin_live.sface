@@ -1,0 +1,20 @@
+<!-- - [ ] Configure basic instance info: Name, description, image
+      - [ ] Invite link via email
+      - [ ] Choose between open / invite only instance
+      - [ ] Customize a subset of instance behaviours (to demonstrate one of the bonfire value proposition)
+          - [ ] Show/hide number of likes on activity
+          - [ ] Show/hide number of followers/following on user profile
+          - [ ] Show/hide avatar/bg image on user profile
+          - [ ] Choose default theme
+    - [ ] View the list of reported activities
+      - [ ] Reply to a reported activity, remove or unflag
+      - [ ] Reply to a blocked user activity, block or unblock  -->
+{#if Bonfire.Me.Users.is_admin(current_user(assigns)) }
+  <Bonfire.UI.Social.SettingsViewLive.SettingsHeaderLive 
+  settings_section_title={l "Admin"}
+  settings_section_description={""}
+  />
+  <div class="p-4">
+    
+  </div>
+{/if}

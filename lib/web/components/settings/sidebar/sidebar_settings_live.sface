@@ -29,12 +29,32 @@
         {l "Account"}
       </LivePatch>
     </li>
-    <!-- <li class={"bg-primary": @selected_tab == "admin"}>
-      <LivePatch to={"/settings/admin"}>
-        <Outline.UserIcon class="inline-block w-5 h-5 mr-2 stroke-current" />
+    <li :if={Bonfire.Me.Users.is_admin(current_user(assigns))} >
+      <LivePatch to={"/settings/admin/general"} class={"bg-primary": @selected_tab == "admin" and @admin_tab == "general"}>
+        <Outline.KeyIcon class="inline-block w-5 h-5 mr-2 stroke-current" />
         {l "Admin"}
       </LivePatch>
-    </li> -->
+      <ul class="menu">
+        <li class={"bg-primary": @selected_tab == "admin" and @admin_tab == "instance"}>
+          <LivePatch to="/settings/admin/instance">
+          <Outline.CogIcon class="inline-block w-5 h-5 mr-2 stroke-current" />
+          {l "Configure instance"}
+          </LivePatch>
+        </li>
+        <li class={"bg-primary": @selected_tab == "admin" and @admin_tab == "invites"}>
+          <LivePatch to="/settings/admin/invites">
+            <Outline.MailIcon class="inline-block w-5 h-5 mr-2 stroke-current" />
+            {l "Invites"}
+          </LivePatch>
+        </li>
+        <li class={"bg-primary": @selected_tab == "admin" and @admin_tab == "reports"}>
+          <LivePatch to="/settings/admin/reports">
+            <Outline.FlagIcon class="inline-block w-5 h-5 mr-2 stroke-current" />
+            {l "Reports"}
+          </LivePatch>
+        </li>
+      </ul>
+    </li>
     <li>
       <LivePatch to={"/logout"}>
         <Outline.LogoutIcon class="inline-block w-5 h-5 mr-2 stroke-current" />

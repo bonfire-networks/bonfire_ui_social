@@ -1,14 +1,31 @@
 <main
-  class="items-start space-x-3 md:flex">
+  class="items-start mb-4 space-x-3 md:flex">
   <Bonfire.UI.Social.SettingsViewLive.SidebarSettingsLive 
     selected_tab={@selected_tab}
+    admin_tab={@tab_id}
+    current_user={current_user(assigns)}
   />
   <section class="mx-auto shadow-lg bg-base-100 rounded-box w-center">
   {#case @selected_tab}
     {#match "admin"}
-      <Bonfire.UI.Social.SettingsViewsLive.AdminLive
-        current_user={current_user(assigns)}
-      />
+      {#case @tab_id}
+        {#match "general"}
+          <Bonfire.UI.Social.SettingsViewsLive.AdminLive
+            current_user={current_user(assigns)}
+          />
+        {#match "instance"}
+          <Bonfire.UI.Social.SettingsViewsLive.AdminInstanceLive
+            current_user={current_user(assigns)}
+          />
+        {#match "invites"}
+          <div>invites</div>
+        {#match "reports"}
+          <div>reports</div>
+        {#match _}
+          <Bonfire.UI.Social.SettingsViewsLive.AdminLive
+            current_user={current_user(assigns)}
+          />
+      {/case}
     {#match "account"}
       <Bonfire.UI.Social.SettingsViewsLive.EditAccountLive />
     {#match "circles"}
