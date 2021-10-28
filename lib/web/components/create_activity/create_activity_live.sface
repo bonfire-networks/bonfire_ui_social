@@ -7,7 +7,7 @@
     title_open: false, 
     summary_open: false,
     open_boundaries: false,
-    boundary_selected: 'guest'  
+    boundary_selected: 'public'  
   }"
   @click.away="{open=true; title_open=false; summary_open=false; open_boundaries=false}">
 

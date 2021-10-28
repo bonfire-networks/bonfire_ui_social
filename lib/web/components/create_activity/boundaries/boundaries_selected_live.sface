@@ -1,5 +1,5 @@
 
-  <div x-show="boundary_selected == 'guest'" class="mb-2 alert alert-info">
+  <div x-show="boundary_selected == 'public'" class="mb-2 alert alert-info">
     <div class="flex-1">
       <span class="w-5 h-5 mr-2" 
         type="button"

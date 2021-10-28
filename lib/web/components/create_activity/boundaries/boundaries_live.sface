@@ -7,7 +7,7 @@
     @click="open_boundaries = !open_boundaries"
     class="flex items-center p-1 rounded focus:outline-none hover:bg-base-100"
     :class="{'bg-pink-50' : open_boundaries === true }">
-    <div class="text-base-content" x-show="boundary_selected == 'guest'">
+    <div class="text-base-content" x-show="boundary_selected == 'public'">
       <Solid.GlobeIcon/>
     </div>
     <div class="text-base-content" x-show="boundary_selected == 'local'">
@@ -33,7 +33,7 @@
     role="menu"
     aria-orientation="vertical"
     aria-labelledby="user-profile-menu">
-      <div @click="{boundary_selected = 'guest'; open_boundaries = false}" class="flex p-2 space-x-2 text-sm text-gray-800 transition duration-150 ease-in-out cursor-pointer rounded-t-md hover:bg-gray-100">
+      <div @click="{boundary_selected = 'public'; open_boundaries = false}" class="flex p-2 space-x-2 text-sm text-gray-800 transition duration-150 ease-in-out cursor-pointer rounded-t-md hover:bg-gray-100">
         <Solid.GlobeIcon/>
         <div class="flex-1">
           <div class="text-sm font-medium text-gray-800">{l "Public"}</div>
