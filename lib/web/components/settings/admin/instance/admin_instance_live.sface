@@ -1,10 +1,3 @@
-<!-- Configure basic instance info: Name, description, image
-      - [ ] Choose between open / invite only instance
-      - [ ] Customize a subset of instance behaviours (to demonstrate one of the bonfire value proposition)
-          - [ ] Show/hide number of likes on activity
-          - [ ] Show/hide number of followers/following on user profile
-          - [ ] Show/hide avatar/bg image on user profile
-          - [ ] Choose default theme -->
 <Bonfire.UI.Social.SettingsViewLive.SettingsHeaderLive 
   settings_section_title={l "Instance configuration"}
   settings_section_description={""}

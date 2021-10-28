@@ -18,7 +18,9 @@
             current_user={current_user(assigns)}
           />
         {#match "invites"}
-          <div>invites</div>
+         <Bonfire.UI.Social.SettingsViewsLive.AdminInvitesLive
+            current_user={current_user(assigns)}
+          />
         {#match "reports"}
           <div>reports</div>
         {#match _}
