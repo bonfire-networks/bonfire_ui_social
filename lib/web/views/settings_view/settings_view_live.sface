@@ -22,7 +22,10 @@
             current_user={current_user(assigns)}
           />
         {#match "reports"}
-          <div>reports</div>
+          <Bonfire.UI.Social.SettingsViewsLive.AdminReportsLive
+            current_user={current_user(assigns)}
+            id="admin_report_view"
+          />
         {#match _}
           <Bonfire.UI.Social.SettingsViewsLive.AdminLive
             current_user={current_user(assigns)}

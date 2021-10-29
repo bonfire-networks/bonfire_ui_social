@@ -73,7 +73,7 @@
     </LivePatch> 
     </li>
    <li class="menu-title">
-    <LivePatch :if={current_user(assigns)} to={"/user/#{e(current_user(assigns), :character, :username, "")}/likes"}  class={"w-full flex items-center text-sm font-regular text-base-content", "bg-primary text-primary-content": @page == "favourited"}>
+    <LivePatch :if={current_user(assigns)} to={"/favourited"}  class={"w-full flex items-center text-sm font-regular text-base-content", "bg-primary text-primary-content": @page == "favourited"}>
       <span class={"flex items-center w-8 h-8 mr-3 rounded-full place-content-center text-base-content bg-base-300" ,"bg-primary-focus": @page == "favourited"}>
 
       <svg
