@@ -20,7 +20,7 @@
         class="flex items-center text-sm font-semibold text-left text-base-content hover:underline">
         {rich e(@object, :name, "Title")} {l "(Read less)"}
       </button>
-      <div class="font-light prose-sm prose max-w-prose">
+      <div class="font-light prose max-w-prose">
         {rich e(@object, :summary, "")}
       </div>
       <div
@@ -44,11 +44,11 @@
         {#if e(@object, :summary, nil)}
           <h3 class="text-xs tracking-wider text-gray-600 uppercase dark:text-gray-300">{l "Summary"}</h3>
           <LiveRedirect to={@permalink}>
-            <div class="mb-2 prose-sm prose text-base-content max-w-prose">{rich e(@object, :summary, "")}</div>
+            <div class="mb-2 prose text-base-content max-w-prose">{rich e(@object, :summary, "")}</div>
           </LiveRedirect>
         {/if}
 
-        <article class={"prose prose-sm max-w-prose mt-2", "prose max-w-prose dark:prose-light": e(assigns, :viewing_main_object, nil)}>
+        <article class={"prose max-w-prose mt-2", "prose max-w-prose dark:prose-light": e(assigns, :viewing_main_object, nil)}>
           {rich e(@object, :html_body, "...")}
         </article>
     {/if}

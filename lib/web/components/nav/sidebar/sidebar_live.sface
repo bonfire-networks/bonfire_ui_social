@@ -3,7 +3,7 @@
   role="navigation"
   class="flex-col hidden mr-3 md:flex w-80">
   <div class="fixed flex flex-col flex-grow h-full overflow-y-auto h-fit-content md:pr-2 w-80">
-  <div class="absolute h-full overflow-y-auto">
+  <div class="absolute w-full h-full overflow-y-auto">
     <div>
       <div class="mb-4">
         <Bonfire.UI.Social.SmartInputLive :if={current_user(assigns)}  />
@@ -26,3 +26,7 @@
 
   </div>
 </nav>
+
+
+
+

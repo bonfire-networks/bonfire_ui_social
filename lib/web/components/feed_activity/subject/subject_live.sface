@@ -27,15 +27,15 @@
   <div class="flex items-center">
     <Bonfire.UI.Social.Activity.AvatarLive profile={@profile} />
     
-    <div class="flex items-center justify-between flex-1 ml-2">
-      <div class="flex items-center text-sm">
+    <div class="flex items-center justify-between flex-1 ml-3">
+      <div class="flex items-center text-md">
         <LiveRedirect
           aria-label={e(@character, :username, "") <> " profile"}
           class="font-semibold text-base-content subject_name hover:underline"
           to={path(@character)}>
           {e(@profile, :name, "Anonymous")}
         </LiveRedirect>
-        <span class="ml-2 text-sm text-base-content text-opacity-40 subject_username text-light">@{e(@character, :username, "")}</span>
+        <span class="ml-2 text-md text-base-content text-opacity-60 subject_username text-light">@{e(@character, :username, "")}</span>
       </div>
       <Bonfire.UI.Social.Activity.DateAgoLive 
         permalink={@permalink}

@@ -1,5 +1,6 @@
-<main class="md:flex">
-  <section class="bg-white shadow w-center dark:bg-gray-700">
+<main
+  class="mx-3 mb-3 md:flex md:mx-0">
+  <section class="mx-auto shadow-lg bg-base-100 rounded-box w-center">
    <Bonfire.UI.Social.PageHeaderLive page_title={@page_title} />
     <Bonfire.UI.Social.PrivateLive feed={e(assigns, :feed, []) |> IO.inspect} />
     </section>
