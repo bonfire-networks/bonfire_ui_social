@@ -11,13 +11,13 @@
       <button
         @click="{content_open = true}"
         x-show="content_open == false"
-        class="flex items-center text-sm font-semibold text-left text-base-content hover:underline">
+        class="flex items-center font-semibold text-left text-md text-base-content hover:underline">
         { rich e(@object, :name, "Title")} {l "(Read more)"}
       </button>
       <button
         @click="{content_open = false}"
         x-show="content_open"
-        class="flex items-center text-sm font-semibold text-left text-base-content hover:underline">
+        class="flex items-center font-semibold text-left text-md text-base-content hover:underline">
         {rich e(@object, :name, "Title")} {l "(Read less)"}
       </button>
       <div class="font-light prose max-w-prose">
@@ -31,7 +31,7 @@
         x-transition:leave="transition ease-in duration-75"
         x-transition:leave-start="transform opacity-100 scale-100"
         x-transition:leave-end="transform opacity-0 scale-95"
-        class="prose-sm prose object_body max-w-prose">
+        class="prose  object_body max-w-prose">
         {rich e(@object, :html_body, "")}
       </div>
     {#else}
