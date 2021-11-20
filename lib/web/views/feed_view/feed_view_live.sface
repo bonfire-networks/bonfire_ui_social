@@ -6,10 +6,10 @@
     />
     <div class="border-t-8 border-base-200 md:mx-0 text-base-content">
       <Bonfire.UI.Social.FeedLive 
+        id={@feed_id}
         feed={@feed}
         page_info={@page_info}
         showing_within={@showing_within}
-        id="feed"
       />
     </div>
   </section>

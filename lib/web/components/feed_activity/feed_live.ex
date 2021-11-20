@@ -21,10 +21,10 @@ defmodule Bonfire.UI.Social.FeedLive do
   end
 
 
-  def update(%{new_activity: new_activity} = assigns, socket) when is_map(new_activity) do # adding new feed item
+  def update(%{new_activity: new_activity} = _assigns, socket) when is_map(new_activity) do # adding new feed item
     Logger.debug("feed is a temporary assign, so only add new activities")
     {:ok, socket
-    |> assigns_merge(assigns,
+    |> assign(
       feed_future: [new_activity] #
       ) }
   end
@@ -60,6 +60,13 @@ defmodule Bonfire.UI.Social.FeedLive do
     )}
   end
 
+  # def handle_info({:new_activity, data}, socket) do
+  #   IO.inspect(feed_live_pubsub_received: data)
+
+  #   # send_update(Bonfire.UI.Social.FeedLive, id: "feed", new_activity: data)
+
+  #   {:noreply, socket}
+  # end
 
   def preloads(feed) do
     # preloads = (
