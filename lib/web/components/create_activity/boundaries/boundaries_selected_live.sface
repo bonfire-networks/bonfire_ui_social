@@ -8,7 +8,7 @@
         <Solid.GlobeIcon/>
       </span>
       <label>{l "Your %{activity_type} will be publicly visible to everyone on the fediverse and in search engines.", activity_type: @activity_type_or_reply}</label>
-    </div>
+    </div> 
   </div>
 
   <div x-show="boundary_selected == 'local'" class="mb-2 alert alert-info">

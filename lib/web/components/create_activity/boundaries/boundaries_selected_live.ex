@@ -3,4 +3,5 @@ defmodule Bonfire.UI.Social.BoundariesSelectedLive do
 
   prop activity_type_or_reply, :any
 
+
 end

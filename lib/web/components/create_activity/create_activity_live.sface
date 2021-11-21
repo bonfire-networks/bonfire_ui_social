@@ -12,7 +12,11 @@
   @click.away="{open=true; title_open=false; summary_open=false; open_boundaries=false}">
 
 
-  <Form for={Bonfire.Social.Posts.LiveHandler.post_changeset()} submit="Bonfire.Social.Posts:post" opts={ autocomplete: "off"}>
+  <Form 
+  for={Bonfire.Social.Posts.LiveHandler.post_changeset()} 
+  submit="Bonfire.Social.Posts:post" opts={ autocomplete: "off"}
+  class="form_with_editor"
+  >
     <div x-description="create post form">
       
       <HiddenInput name="reply_to[reply_to_id]" value={@reply_to_id  || ""} />
@@ -44,12 +48,19 @@
               class="h-10 transition-all duration-300 ease-in-out rounded"
               :class="{'h-40' : open === true}"
               >
+             <Bonfire.Editor.Ck.Bubble 
+                :if={module_enabled?(Bonfire.Editor.Ck.Bubble)}
+                content_placeholder={@smart_input_placeholder}
+                field_name="post_content[html_body]"
+                textarea_class={@textarea_class} 
+              /> 
               <TextArea
+              :if={!module_enabled?(Bonfire.Editor.Ck)}
               opts={
                 value: @smart_input_text,
                 placeholder: @smart_input_placeholder
               }
-              class="block w-full h-full text-sm transition-all duration-300 ease-in-out rounded-none rounded-t resize-none textarea textarea-bordered bg-base-100" 
+              class={@textarea_class} 
               :class="{'rounded-b-none' : open === true}"
               />
             </div>
