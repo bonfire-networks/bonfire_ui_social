@@ -1,11 +1,11 @@
 
 <div
   x-show.transition="title_open"
-  class="mb-3">
+  class="border-b">
   <Field name={:name}>
     <TextInput
       opts={placeholder: "Enter a title"}
-      class="w-full mt-2 input" 
+      class="w-full rounded-none input" 
       />
   </Field>
 

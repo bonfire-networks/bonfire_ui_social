@@ -7,17 +7,21 @@
     @click="open_boundaries = !open_boundaries"
     class="flex items-center p-1 rounded focus:outline-none hover:bg-base-100"
     :class="{'bg-pink-50' : open_boundaries === true }">
-    <div class="text-base-content" x-show="boundary_selected == 'public'">
+    <div class="flex items-center px-2 py-1 space-x-2 text-base-content rounded-box bg-base-200" x-show="boundary_selected == 'public'">
       <Solid.GlobeIcon/>
+      <span class="text-sm">{l "Public"}</span>
     </div>
-    <div class="text-base-content" x-show="boundary_selected == 'local'">
+    <div class="flex items-center px-2 py-1 space-x-2 text-base-content rounded-box bg-base-200" x-show="boundary_selected == 'local'">
       <Solid.HomeIcon/>
+      <span class="text-sm">{l "Local instance"}</span>
     </div>
-    <div class="text-base-content" x-show="boundary_selected == 'mentions'">
+    <div class="flex items-center px-2 py-1 space-x-2 text-base-content rounded-box bg-base-200" x-show="boundary_selected == 'mentions'">
       <Solid.AtSymbolIcon/>
+       <span class="text-sm">{l "Mentions"}</span>
     </div>
-    <div class="text-base-content" x-show="boundary_selected == 'custom'">
+    <div class="flex items-center px-2 py-1 space-x-2 text-base-content rounded-box bg-base-200" x-show="boundary_selected == 'custom'">
       <Solid.CogIcon/>
+       <span class="text-sm">{l "Custom"}</span>
     </div>
   </button>
   <div

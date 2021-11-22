@@ -9,7 +9,7 @@
     open_boundaries: false,
     boundary_selected: 'public'  
   }"
-  @click.away="{open=true; title_open=false; summary_open=false; open_boundaries=false}">
+  @click.away="{open=true;  open_boundaries=false}">
 
 
   <Form 
@@ -34,58 +34,58 @@
         name="to_circles[]" 
         value={id}
         />
+        <div class="border border-gray-300 rounded shadow-lg">
+          <Inputs  for={:post_content}>
+            <Field name={:html_body}>
+              <Label :if={@smart_input_text && @smart_input_text !="" && @smart_input_placeholder} class="mb-2 alert alert-info">{@smart_input_placeholder}</Label>
+                <!-- <Bonfire.UI.Social.BoundariesSelectedLive 
+                :if={e(assigns, :create_activity_type, nil) != "message"}
+                activity_type_or_reply={@activity_type_or_reply} 
+                /> -->
+                <Bonfire.UI.Social.SetCWLive />          
+              <div
+                @click = "open = true"
+                class="h-10 transition-all duration-300 ease-in-out rounded"
+                :class="{'h-40' : open === true}"
+                >
+                <Bonfire.Editor.Ck.Bubble 
+                    :if={module_enabled?(Bonfire.Editor.Ck.Bubble)}
+                    content_placeholder={@smart_input_placeholder || "Type something meaningful"}
+                    field_name="post_content[html_body]"
+                    textarea_class={@textarea_class} 
+                  /> 
+                  <TextArea
+                  :if={!module_enabled?(Bonfire.Editor.Ck)}
+                  opts={
+                    value: @smart_input_text,
+                    placeholder: @smart_input_placeholder
+                  }
+                  class={@textarea_class} 
+                  :class="{'rounded-b-none' : open === true}"
+                  />
+                </div>
+            </Field>
+          </Inputs>
+          <div
+            x-show="open"
+            class="flex items-center p-2 py-3 border-t rounded-b bg-base-100">
+            <div class="flex items-center flex-1 space-x-3">
+              <button
+                :if={Bonfire.Common.Config.get([:ui, :smart_input, :cw], []) == true}
+                type="button"
+                @click="title_open = !title_open"
+                class="flex items-center p-1 rounded hover:bg-base-300 focus:outline-none">
+                <svg :class="{'text-primary' : title_open === true }" class="w-4 h-4 text-base-content" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M18 3a1 1 0 00-1.447-.894L8.763 6H5a3 3 0 000 6h.28l1.771 5.316A1 1 0 008 18h1a1 1 0 001-1v-4.382l6.553 3.276A1 1 0 0018 15V3z" clip-rule="evenodd"></path></svg>
+                <span :class="{'text-primary' : title_open === true}" class="ml-2 text-xs font-semibold text-base-content">CW</span>
+              </button>
 
-        <Inputs for={:post_content}>
-          <Field name={:html_body}>
-            <Label :if={@smart_input_text && @smart_input_text !="" && @smart_input_placeholder} class="mb-2 alert alert-info">{@smart_input_placeholder}</Label>
-              <Bonfire.UI.Social.BoundariesSelectedLive 
-              :if={e(assigns, :create_activity_type, nil) != "message"}
-              activity_type_or_reply={@activity_type_or_reply} 
+              <Bonfire.UI.Social.BoundariesLive 
+                :if={e(assigns, :create_activity_type, nil) != "message"}
               />
-              <Bonfire.UI.Social.SetCWLive />          
-            <div
-              @click = "open = true"
-              class="h-10 transition-all duration-300 ease-in-out rounded"
-              :class="{'h-40' : open === true}"
-              >
-             <Bonfire.Editor.Ck.Bubble 
-                :if={module_enabled?(Bonfire.Editor.Ck.Bubble)}
-                content_placeholder={@smart_input_placeholder}
-                field_name="post_content[html_body]"
-                textarea_class={@textarea_class} 
-              /> 
-              <TextArea
-              :if={!module_enabled?(Bonfire.Editor.Ck)}
-              opts={
-                value: @smart_input_text,
-                placeholder: @smart_input_placeholder
-              }
-              class={@textarea_class} 
-              :class="{'rounded-b-none' : open === true}"
-              />
+
             </div>
-          </Field>
-          
-        </Inputs>
-      <div
-        x-show="open"
-        class="flex items-center p-2 py-3 rounded-b bg-base-100">
-        <div class="flex items-center flex-1 space-x-3">
-          <button
-            :if={Bonfire.Common.Config.get([:ui, :smart_input, :cw], []) == true}
-            type="button"
-            @click="title_open = !title_open"
-            class="flex items-center p-1 rounded hover:bg-base-300 focus:outline-none">
-            <svg :class="{'text-primary' : title_open === true }" class="w-4 h-4 text-base-content" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M18 3a1 1 0 00-1.447-.894L8.763 6H5a3 3 0 000 6h.28l1.771 5.316A1 1 0 008 18h1a1 1 0 001-1v-4.382l6.553 3.276A1 1 0 0018 15V3z" clip-rule="evenodd"></path></svg>
-            <span :class="{'text-primary' : title_open === true}" class="ml-2 text-xs font-semibold text-base-content">CW</span>
-          </button>
-
-          <Bonfire.UI.Social.BoundariesLive 
-            :if={e(assigns, :create_activity_type, nil) != "message"}
-          />
-
+          </div>
         </div>
-      </div>
       <div
       class="flex justify-end mt-2"
         x-show="open">
