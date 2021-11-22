@@ -7,7 +7,7 @@
 }
    x-cloak 
    x-data="{content_open: false}">
-    {#if e(assigns, :viewing_main_object, nil) !=true && e(@object, :name, nil)}
+    {#if e(assigns, :viewing_main_object, nil) !=true and e(@object, :name, nil)}
       <button
         @click="{content_open = true}"
         x-show="content_open == false"
@@ -20,7 +20,8 @@
         class="flex items-center font-semibold text-left text-md text-base-content hover:underline">
         {rich e(@object, :name, "Title")} {l "(Read less)"}
       </button>
-      <div class="font-light prose max-w-prose">
+      <div 
+        class="font-light prose max-w-prose">
         {rich e(@object, :summary, "")}
       </div>
       <div
@@ -31,7 +32,12 @@
         x-transition:leave="transition ease-in duration-75"
         x-transition:leave-start="transform opacity-100 scale-100"
         x-transition:leave-end="transform opacity-0 scale-95"
-        class="prose  object_body max-w-prose">
+        class="prose object_body max-w-prose">
+        {rich e(@object, :html_body, "")}
+      </div>
+    {#elseif e(assigns, :viewing_main_object, nil) !=true and e(@object, :name, nil) != true}      
+      <div
+        class="prose object_body max-w-prose">
         {rich e(@object, :html_body, "")}
       </div>
     {#else}
@@ -48,8 +54,15 @@
           </LiveRedirect>
         {/if}
 
-        <article class={"prose max-w-prose mt-2", "prose max-w-prose dark:prose-light": e(assigns, :viewing_main_object, nil)}>
+        <article class={"prose text-xl max-w-prose mt-4", "prose max-w-prose dark:prose-light": e(assigns, :viewing_main_object, nil)}>
           {rich e(@object, :html_body, "...")}
         </article>
+        <div class="mt-4 mb-2">
+          <Bonfire.UI.Social.Activity.DateAgoLive 
+          permalink={@permalink}
+          viewing_main_object={e(assigns, :viewing_main_object, nil)}
+          date_ago={@date_ago}
+          verb_display={@verb_display} />
+        </div>
     {/if}
 </div>

@@ -23,6 +23,25 @@
       </div>
     </div>
   </div>
+{#elseif e(assigns, :viewing_main_object, nil)}
+  <div class="flex items-center">
+    <Bonfire.UI.Social.Activity.AvatarLive 
+      viewing_main_object={e(assigns, :viewing_main_object, false)} 
+      profile={@profile} 
+    />
+    
+    <div class="flex items-center justify-between flex-1 ml-3">
+      <div class="flex flex-col text-md">
+        <LiveRedirect
+          aria-label={e(@character, :username, "") <> " profile"}
+          class="font-semibold text-base-content subject_name hover:underline"
+          to={path(@character)}>
+          {e(@profile, :name, "Anonymous")}
+        </LiveRedirect>
+        <span class="text-md text-base-content text-opacity-60 subject_username text-light">@{e(@character, :username, "")}</span>
+      </div>
+    </div>
+  </div>
 {#else}
   <div class="flex items-center">
     <Bonfire.UI.Social.Activity.AvatarLive profile={@profile} />

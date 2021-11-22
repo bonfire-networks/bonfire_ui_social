@@ -1,18 +1,18 @@
 
 <div
   role="banner"
-  class={"sticky relative top-20 z-30"}>
+  class={"sticky relative top-20 z-30 border-b"}>
   <div class="relative z-50 rounded-b-none bg-base-100 rounded-box">
     <div class="flex items-center p-3">
       <div class="flex items-center flex-1 space-x-2 text-left">
         <a
           aria-label="Navigate to the previous page"
           href="javascript:window.history.back()">
-          <span class=" btn btn-circle btn-xs md:btn-sm">
+          <span class="btn btn-circle btn-outline btn-xs md:btn-sm">
             <svg class="w-4 h-4 stroke-current" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path></svg>
           </span>
         </a>
-        <h1 class="text-xs uppercase font-regular">{@page_title}</h1>
+        <h1 class="text-sm uppercase font-regular">{@page_title}</h1>
       </div>
     </div>
   </div>

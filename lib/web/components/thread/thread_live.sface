@@ -1,5 +1,5 @@
 <div>
-<div class="p-3 m-3 border-t rounded-box border-base-200 bg-base-300">
+<div class="p-3 border-t border-base-300">
   <Bonfire.UI.Social.CreateActivityLive
     smart_input_text={@smart_input_text}
     smart_input_placeholder={@smart_input_placeholder}

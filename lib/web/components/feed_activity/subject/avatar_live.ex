@@ -3,4 +3,5 @@ defmodule Bonfire.UI.Social.Activity.AvatarLive do
   import Bonfire.UI.Social.Integration
 
   prop profile, :any
+  prop viewing_main_object, :boolean
 end
