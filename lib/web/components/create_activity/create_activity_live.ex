@@ -14,6 +14,7 @@ defmodule Bonfire.UI.Social.CreateActivityLive do
   prop reply_to_thread_id, :string
   prop smart_input_placeholder, :string, required: false
   prop smart_input_text, :string, default: "", required: false
+  prop showing_within, :any
 
   def update(assigns, socket) do
 
@@ -24,7 +25,8 @@ defmodule Bonfire.UI.Social.CreateActivityLive do
         changeset: Bonfire.Social.Posts.LiveHandler.post_changeset(%{}),
         smart_input_placeholder: e(assigns, :smart_input_placeholder, "Write something..."),
         smart_input_text: e(assigns, :smart_input_text, ""),
-        textarea_class: "block w-full h-full h-40 text-sm transition-all duration-300 ease-in-out rounded-none rounded-t resize-none textarea textarea-bordered"
+        textarea_class: "block w-full h-full h-40 text-sm transition-all duration-300 ease-in-out rounded-none rounded-t resize-none textarea textarea-bordered",
+        with_editor: e(assigns, :showing_within, nil) != :thread && module_enabled?(Bonfire.Editor.Ck.Bubble)
     ))
     |> assign_global(
           create_activity_type: create_activity_type,

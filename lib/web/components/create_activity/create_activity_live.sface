@@ -15,7 +15,7 @@
   <Form 
   for={Bonfire.Social.Posts.LiveHandler.post_changeset()} 
   submit="Bonfire.Social.Posts:post" opts={ autocomplete: "off"}
-  class="form_with_editor"
+  class={if @with_editor, do: "form_with_editor", else: "form_with_textarea"}
   >
     <div x-description="create post form">
       
@@ -49,13 +49,13 @@
                 :class="{'h-40' : open === true}"
                 >
                 <Bonfire.Editor.Ck.Bubble 
-                    :if={module_enabled?(Bonfire.Editor.Ck.Bubble)}
+                    :if={@with_editor}
                     content_placeholder={@smart_input_placeholder || "Type something meaningful"}
                     field_name="post_content[html_body]"
                     textarea_class={@textarea_class} 
                   /> 
                   <TextArea
-                  :if={!module_enabled?(Bonfire.Editor.Ck)}
+                  :if={!@with_editor}
                   opts={
                     value: @smart_input_text,
                     placeholder: @smart_input_placeholder

@@ -5,6 +5,7 @@
     smart_input_placeholder={@smart_input_placeholder}
     reply_to_thread_id={@reply_to_thread_id}
     reply_to_id={@reply_to_id}
+    showing_within={:thread}
   />
 </div>
 {#if length(@threaded_replies) > 0}
