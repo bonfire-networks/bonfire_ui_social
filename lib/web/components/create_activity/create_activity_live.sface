@@ -34,7 +34,7 @@
         name="to_circles[]" 
         value={id}
         />
-        <div class="border border-gray-300 rounded shadow-lg">
+        <div class="border rounded shadow-lg border-base-300">
           <Inputs  for={:post_content}>
             <Field name={:html_body}>
               <Label :if={@smart_input_text && @smart_input_text !="" && @smart_input_placeholder} class="mb-2 alert alert-info">{@smart_input_placeholder}</Label>
@@ -68,7 +68,7 @@
           </Inputs>
           <div
             x-show="open"
-            class="flex items-center p-2 py-3 border-t rounded-b bg-base-100">
+            class="flex items-center p-2 py-3 border-t rounded-b border-base-300 bg-base-100">
             <div class="flex items-center flex-1 space-x-3">
               <button
                 :if={Bonfire.Common.Config.get([:ui, :smart_input, :cw], []) == true}
