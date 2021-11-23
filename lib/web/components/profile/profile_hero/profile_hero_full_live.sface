@@ -41,7 +41,7 @@
 
       <div
         class="mt-3">
-        <div class="prose-sm prose dark:prose-light">
+        <div class="w-full prose">
           {e(@user, :profile, :summary, "")}
         </div>
 

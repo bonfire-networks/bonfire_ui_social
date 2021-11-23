@@ -34,7 +34,7 @@
         name="to_circles[]" 
         value={id}
         />
-        <div class="border rounded shadow-lg border-base-300">
+        <div class="border rounded border-base-300">
           <Inputs  for={:post_content}>
             <Field name={:html_body}>
               <Label :if={@smart_input_text && @smart_input_text !="" && @smart_input_placeholder} class="mb-2 alert alert-info">{@smart_input_placeholder}</Label>
@@ -84,20 +84,19 @@
               />
 
             </div>
+         
+            <button
+              @click="{open = true; title_open = false}"
+              type="submit"
+              class=" justify-self-end btn-sm btn btn-primary">
+              <span :if={e(assigns, :create_activity_type, nil)=="message"}>{l "Send"}</span>
+              <span :if={e(assigns, :create_activity_type, nil) != "message"}>{l "Post"}</span>
+              <Solid.PaperAirplaneIcon class="w-5 h-5 ml-2 transform rotate-90" />
+            </button>
           </div>
+         
         </div>
-      <div
-      class="flex justify-end mt-2"
-        x-show="open">
-
-        <button
-          @click="{open = true; title_open = false}"
-          type="submit"
-          class=" justify-self-end btn btn-primary">
-          <span :if={e(assigns, :create_activity_type, nil)=="message"}>{l "Send"}</span>
-          <span :if={e(assigns, :create_activity_type, nil) != "message"}>{l "Post"}</span>
-        </button>
-      </div>
+      
     </div>
   </Form>
 </div>

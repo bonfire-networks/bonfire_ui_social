@@ -5,7 +5,7 @@
   <LivePatch 
     :for={{item, route} <- Bonfire.Common.Config.get([:ui, :profile, :navigation], [timeline: "timeline"])}
     to={"/user/#{e(@user, :character, :username, "")}/#{route}"} 
-    class={"tab flex-1 font-normal tab-bordered capitalize", "tab-active": @selected_tab == Atom.to_string(item)}>
+    class={"tab flex-1 font-normal tab-bordered capitalize text-base", "tab-active": @selected_tab == Atom.to_string(item)}>
     {item}
   </LivePatch>
 </nav>

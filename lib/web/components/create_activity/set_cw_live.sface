@@ -1,7 +1,7 @@
 
 <div
   x-show.transition="title_open"
-  class="border-b">
+  class="border-b rounded-md">
   <Field name={:name}>
     <TextInput
       opts={placeholder: "Enter a title"}
