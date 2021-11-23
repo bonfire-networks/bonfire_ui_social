@@ -1,8 +1,8 @@
 <div id="layout-live">
   <% info = live_flash(@flash, :info) %>
   <% error = live_flash(@flash, :error) %>
-  <%= if info || error do %>
-    <div id="flash-messages" class="absolute z-50 right-8 top-8">
+    <div id="flash-messages" class="absolute z-50 right-8 top-20">
+      <%= live_component(@socket, Bonfire.Common.Web.NotificationLive, id: :notification, notification: e(assigns, :notification, nil)) %>
       <%= if info do %>
         <p class="alert alert-info" role="alert"
           phx-click="lv:clear-flash"
@@ -14,7 +14,6 @@
           phx-value-key="error"><%= error %></p>
       <% end %>
     </div>
-  <% end %>
 
   <%= live_component(@socket, Bonfire.UI.Social.NavLive, assigns_clean(assigns)) %>
 </div>
