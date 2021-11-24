@@ -5,7 +5,7 @@
 </div>
 <div class="bg-white rounded shadow-xl -mt-14">
   <div class="px-6 pt-16 pb-6 mx-auto">
-    <Form for={path(:login, :create)} class="w-full md:ml-0">
+    <Form for={@form} action={path(:login, :create)} class="w-full md:ml-0">
       <!-- <%= f = form_for @form, path(:login, :create), class: "w-full md:ml-0" %> -->
        <!-- <%= case @form.errors[:form] do %> -->
       {#case @form.errors[:form]}

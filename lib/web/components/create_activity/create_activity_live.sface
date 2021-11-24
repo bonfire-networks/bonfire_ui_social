@@ -68,7 +68,7 @@
           </Inputs>
           <div
             x-show="open"
-            class="flex items-center p-2 py-3 border-t rounded-b border-base-300 bg-base-100">
+            class="flex items-center p-2 py-3 border-t rounded-b border-base-300 bg-base-200">
             <div class="flex items-center flex-1 space-x-3">
               <button
                 :if={Bonfire.Common.Config.get([:ui, :smart_input, :cw], []) == true}
