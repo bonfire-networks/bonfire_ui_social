@@ -1,4 +1,7 @@
 defmodule Bonfire.UI.Social.SignupViewLive do
-  use Bonfire.Web, :live_component
+  use Bonfire.Web, :stateless_component
+
+  prop form, :any
+  prop error, :any
 
 end

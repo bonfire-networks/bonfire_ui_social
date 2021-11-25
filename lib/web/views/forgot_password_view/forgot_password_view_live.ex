@@ -1,4 +1,4 @@
 defmodule Bonfire.UI.Social.ForgotPasswordViewLive do
-  use Bonfire.Web, :live_component
+  use Bonfire.Web, :stateless_component
 
 end

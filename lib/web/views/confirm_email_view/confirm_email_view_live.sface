@@ -1,0 +1,55 @@
+<!-- TODO: refactor with TW -->
+<div class="max-w-md mx-auto mt-6">
+  <h1 class="mb-10 text-xl font-bold text-center text-gray-800">Request email confirmation link</h1>
+
+  {#if @flash }
+    <div class="w-4/5 mx-auto">
+      <p>
+        wip
+        <!-- <%= live_flash(@flash, :error) || live_flash(@flash, :info) %> -->
+      </p>
+    </div>
+  {/if}
+  {#if @requested }
+    <div class="w-4/5 mx-auto">
+      <h2>Great!</h2>
+      <p>
+        We've emailed you another link. Please click it to continue.
+      </p>
+    </div>
+  {#else}
+    {#if @error }
+      <div class="w-4/5 mx-auto error">
+        {#case @error}
+        {#match :not_found}
+          <span>Invalid confirmation link. Please request a new one below.</span>
+        {#match :expired}
+          <span>This confirmation link has expired. Please request a new one below.</span>
+        {/case}
+      </div>
+    {/if}
+    <Form for={@form} action={path(Bonfire.Me.Web.ConfirmEmailController)} id="confirm-email-form" class="w-4/5 mx-auto">
+    <!-- <%= f = form_for @form, path(Bonfire.Me.Web.ConfirmEmailController), [id: "confirm-email-form", phx_submit: :submit, class: "w-4/5 mx-auto"] %> -->
+      <!-- <%= email_input f, :email, placeholder: "Type your email..." %> -->
+      <input name="email" class="input" placeholder="Type your email..." />
+      <button type="submit">Send</button>
+      <!-- <%= error_tag f, :email %>
+      <%= submit "Send" %> -->
+    </Form>
+    <div class="w-4/5 mx-auto mt-10">
+      <p>
+        <span>&#x01f44b; </span>
+        Already confirmed your email?
+        <LiveRedirect to={path(:login, :index)}>Log in</LiveRedirect>
+        <!-- <%= link l("Log in"), to: path(:login, :index) %>. -->
+      </p>
+      <p>
+        <span>&#x01f9d0; </span>
+        Don&#39;t have an account yet?
+        <LiveRedirect to={path(:signup)}>Signup</LiveRedirect>
+        <!-- <%= link l("Sign up"), to: path(:signup) %> -->
+      </p>
+    </div>
+  <!-- <% end %> -->
+{/if}
+</div>

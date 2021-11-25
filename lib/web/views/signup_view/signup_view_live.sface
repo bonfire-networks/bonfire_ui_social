@@ -1,0 +1,36 @@
+{#if @registered }
+<div class="w-full mx-auto mt-16 lg:w-96 md:w-2/3">
+  <LiveRedirect to={path(Bonfire.Common.Config.get!(:home_page))}>
+    <div class="w-24 h-24 bg-center bg-no-repeat bg-contain" style={"background-image: url(" <> Bonfire.Common.Config.get([:ui, :theme, :instance_logo], '') <> ")"}></div>
+  </LiveRedirect>
+  <div class="bg-white rounded shadow-xl -mt-14">
+    <div class="px-6 pt-16 pb-6 mx-auto">
+    <div class="flex">
+        <div class="flex-shrink-0">
+          <Solid.CheckCircleIcon class="w-5 h-5 text-success" />
+        </div>
+        <div class="ml-3">
+          <h3 class="text-sm font-medium text-gray-800">Hooray! You are registered</h3>
+          <div class="mt-2 text-sm text-gray-700">
+            <p>
+              Now we need you to confirm your email address. We've emailed
+              you a link (check your spam folder!). Please click on it to continue.
+            </p>
+          </div>
+          <LiveRedirect to={path(Bonfire.Common.Config.get!(:home_page))}>
+            <div class="flex items-center pr-4 border-r">
+              <span class="mt-6 text-sm font-bold text-gray-800 underline">Back to home page</span>
+            </div>
+          </LiveRedirect>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{#else}
+  <div class="flex m-3 mb-3 md:m-0">
+    <div class="w-full mx-auto mt-16 lg:w-96 md:w-2/3">
+      <Bonfire.UI.Social.SignupLive form={@form} error={@error}/>
+    </div>
+  </div>
+{/if}
