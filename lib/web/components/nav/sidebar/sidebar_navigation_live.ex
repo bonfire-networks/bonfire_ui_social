@@ -3,5 +3,5 @@ defmodule Bonfire.UI.Social.SidebarNavigationLive do
   alias Surface.Components.LivePatch
 
   prop page, :string, required: true
-  prop username, :string, required: true
+  # prop username, :string, required: true
 end

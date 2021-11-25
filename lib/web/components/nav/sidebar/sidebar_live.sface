@@ -9,7 +9,10 @@
         <Bonfire.UI.Social.SmartInputLive :if={current_user(assigns)}  />
       </div>
 
-      <div
+      <Bonfire.UI.Social.SidebarNavigationLive 
+        page={@page}
+      />
+      <!-- <div
         :for={{component, component_assigns} <- Bonfire.Common.Config.get([:ui, :sidebar_components], [{Bonfire.UI.Social.SidebarNavigationLive, []}])}>
 
           {if module_enabled?(component), do: live_component(
@@ -20,7 +23,7 @@
             current_user: current_user(assigns)
           ]))}
 
-      </div>
+      </div> -->
       </div>
     </div>
 

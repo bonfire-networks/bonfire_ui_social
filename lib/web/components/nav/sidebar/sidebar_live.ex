@@ -5,4 +5,6 @@ defmodule Bonfire.UI.Social.SidebarLive do
   # prop name, :string, required: true
   # prop user_image, :string, required: true
   # prop username, :string, required: true
+  prop page, :string, required: true
+
 end
