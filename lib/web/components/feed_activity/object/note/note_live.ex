@@ -17,7 +17,7 @@ defmodule Bonfire.UI.Social.Activity.NoteLive do
           assigns.object,
           Map.get(assigns.object, :post_content, %{})
             |> Map.drop([:post_content])
-        ) |> IO.inspect
+        ) #|> IO.inspect
       )
     }
   end

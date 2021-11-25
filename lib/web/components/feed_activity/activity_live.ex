@@ -2,9 +2,10 @@ defmodule Bonfire.UI.Social.ActivityLive do
   use Bonfire.Web, :stateless_component
   import Bonfire.UI.Social.Integration
   alias Bonfire.Social.Activities
+  require Logger
 
   prop activity, :map
-  # prop object, :map
+  prop object, :any
   prop viewing_main_object, :boolean
   prop showing_within, :any
   prop hide_reply, :boolean
@@ -21,7 +22,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
     # IO.inspect(assigns, label: "ActivityLive assigns")
 
     activity = activity
-                |> Map.put(:object, e(assigns, :object, object(activity)))
+                |> Map.put(:object, e(assigns, :object, nil) || object(activity))
                 # |> IO.inspect(label: "ActivityLive activity")
 
     verb = e(activity, :verb, :verb, "create") |> verb_maybe_modify(activity) #|> IO.inspect
@@ -199,17 +200,17 @@ defmodule Bonfire.UI.Social.ActivityLive do
   def component_object(_, %{object: %{} = object}) do
     case Bonfire.Common.Types.object_type(object) do
       type ->
-        IO.inspect(component_object_type_recognised: type)
+        Logger.debug("ActivityLive: component object_type recognised: #{type}")
         component_for_object_type(type)
 
       _ ->
-        IO.inspect(component_object_type_unrecognised: object)
+        Logger.warn("ActivityLive: component object_type NOT recognised: #{object}")
         [Bonfire.UI.Social.Activity.UnknownLive]
     end
   end
 
   def component_object(_, activity) do
-    # IO.inspect(component_object_unknown: activity)
+    Logger.warn("ActivityLive: activity with no object")
     [Bonfire.UI.Social.Activity.UnknownLive]
   end
 
@@ -221,7 +222,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
   # def component_for_object_type(type) when type in [ValueFlows.Process], do: [Bonfire.UI.Social.Activity.ProcessListLive] # TODO: choose between Task and other Intent types
   def component_for_object_type(type) when type in [ValueFlows.Process], do: [Bonfire.Common.Config.get([:ui, :default_instance_feed_previews, :process], Bonfire.UI.Social.Activity.ProcessListLive)]
   def component_for_object_type(type) do
-    # IO.inspect(component_object_type_unknown: type)
+    Logger.warn("ActivityLive: no component available for object_type: #{type}")
     [Bonfire.UI.Social.Activity.UnknownLive]
   end
 
@@ -232,7 +233,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
         actions_for_object_type(object, type)
 
       _ ->
-        # IO.inspect(component_object_type_unrecognised: object)
+        # Logger.warn("ActivityLive: object NOT recognised: #{object}")
         [Bonfire.UI.Social.Activity.NoActionsLive]
     end
   end

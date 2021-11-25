@@ -1,5 +1,6 @@
 defmodule Bonfire.UI.Social.ThreadLive do
   use Bonfire.Web, :stateful_component
+  require Logger
   alias Bonfire.Fake
   alias Bonfire.Web.LivePlugs
   alias Bonfire.Me.Users
@@ -22,12 +23,12 @@ defmodule Bonfire.UI.Social.ThreadLive do
   @pagination_limit 10
 
   def update(%{replies: replies, threaded_replies: threaded_replies, page_info: page_info} = assigns, socket) when is_list(replies) and is_list(threaded_replies) and is_map(page_info) do
-    IO.inspect("showing preloaded replies")
+    Logger.debug("ThreadLive: showing preloaded replies")
     assigns |> assign_thread(socket)
   end
 
   def update(%{new_reply: new_reply} = assigns, socket) when is_map(new_reply) do
-    IO.inspect("Thread: adding new reply")
+    Logger.debug("ThreadLive: adding new reply")
     # IO.inspect(merge_reply: previous_replies)
 
     new_reply = new_reply |> Map.put(:path, e(new_reply, :activity, :object, :replied, :path, []))
@@ -74,12 +75,12 @@ defmodule Bonfire.UI.Social.ThreadLive do
 
   def assign_thread(assigns, socket) do
 
-    # IO.inspect(assigns)
+    # IO.inspect(assigns, label: "thread assigns")
 
     current_user = current_user(assigns)
     thread_id = e(assigns, :thread_id, nil)
-    activity = e(assigns, :activity, nil) |> IO.inspect
-    object = e(assigns, :object, e(activity, :object)) |> IO.inspect
+    activity = e(assigns, :activity, nil) #|> IO.inspect
+    object = e(assigns, :object, e(activity, :object)) #|> IO.inspect
 
     {:ok,
     assign(socket,
