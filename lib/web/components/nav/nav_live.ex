@@ -3,4 +3,5 @@ defmodule Bonfire.UI.Social.NavLive do
   alias Bonfire.Me.Fake
 
   prop page, :any
+  prop inner_content, :any
 end
