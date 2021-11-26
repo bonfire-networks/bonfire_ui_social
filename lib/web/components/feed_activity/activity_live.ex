@@ -24,7 +24,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
     #IO.inspect(assigns, label: "ActivityLive initial assigns")
 
     activity = activity
-                |> Map.put(:object, e(assigns, :object, nil) || object(activity))
+                |> Map.put(:object, e(assigns, :object, nil) || Activities.object_from_activity(activity))
                 # |> IO.inspect(label: "ActivityLive activity")
 
     verb = e(activity, :verb, :verb, "create")
@@ -189,7 +189,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
       activity_inception: true,
       # id: activity_id <> "-reply-" <> reply_to_id,
       viewing_main_object: false,
-      object: load_object(e(replied, :reply_to, reply_to_id)),
+      object: Activities.load_object(e(replied, :reply_to, reply_to_id)),
       activity: %{
         subject_profile: subject_profile,
         subject_character: subject_character,
@@ -297,35 +297,17 @@ defmodule Bonfire.UI.Social.ActivityLive do
   end
 
 
-  def object(%{object: %{post_content: %{id: _} = _content} = object}), do: object # no need to load Post object
-  def object(%{object: %Pointers.Pointer{id: _} = object}), do: load_object(object) # get other pointable objects (only as fallback, should normally already be preloaded)
-  def object(%{object: %{id: _} = object}), do: object # any other preloaded object
-  def object(%{object_id: id}), do: load_object(id) # last fallback, load any non-preloaded pointable object
-  def object(activity), do: activity
+
 
 
   def load_reply_to(reply_to) do
-    object = load_object(reply_to)
+    object = Activities.load_object(reply_to)
 
     %{
       object: object,
       subject_profile: e(object, :created, :creator_profile, nil),
       subject_character: e(object, :created, :creator_character, nil)
     }
-  end
-
-  def load_object(id_or_pointer) do
-    with {:ok, obj} <- Bonfire.Common.Pointers.get(id_or_pointer)
-      # |> IO.inspect
-      # TODO: avoid so many queries
-      |> repo().maybe_preload([:post_content])
-      |> repo().maybe_preload([created: [:creator_profile, :creator_character]])
-      |> repo().maybe_preload([:profile, :character]) do
-        obj
-      else
-        # {:ok, obj} -> obj
-        _ -> nil
-      end
   end
 
   def verb_maybe_modify("create", %{replied: %{reply_to_post_content: %{id: _} = _reply_to}}), do: "reply"
