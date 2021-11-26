@@ -7,7 +7,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
   prop activity, :map
   prop object, :any
   prop viewing_main_object, :boolean
-  prop showing_within, :any
+  prop showing_within, :any, default: :feed
   prop hide_reply, :boolean
   prop reply_click, :any
 
@@ -17,30 +17,38 @@ defmodule Bonfire.UI.Social.ActivityLive do
   @react_verbs ["like", "boost", "flag"]
   @create_or_reply_verbs @create_verbs ++ @reply_verbs
 
-  def update(%{activity: %{} = activity} = assigns, socket) do
+  def render(%{activity: %{} = activity} = assigns) do
 
-    # IO.inspect(assigns, label: "ActivityLive assigns")
+    Logger.info("ActivityLive: activity provided")
+
+    #IO.inspect(assigns, label: "ActivityLive initial assigns")
 
     activity = activity
                 |> Map.put(:object, e(assigns, :object, nil) || object(activity))
                 # |> IO.inspect(label: "ActivityLive activity")
 
-    verb = e(activity, :verb, :verb, "create") |> verb_maybe_modify(activity) #|> IO.inspect
+    verb = e(activity, :verb, :verb, "create") 
+            |> verb_maybe_modify(activity) 
+            #|> IO.inspect
+    verb_display = verb_display(verb)
+    created_verb_display = "create" |> verb_display()
+
+    permalink = path(activity.object)
 
     components = (
       component_activity_subject(verb, activity, assigns)
       ++ component_maybe_reply_to(verb, activity, e(assigns, :showing_within, nil))
       ++ component_object(verb, activity)
       ++ component_actions(verb, activity, assigns)
-    ) |> Enum.filter(& &1)
-     # |> IO.inspect(label: "activity components")
+    ) 
+    |> Enum.filter(& &1)
+    |> Enum.map(fn 
+      c when is_atom(c) -> {c, nil} 
+      other -> other
+    end)
+    |> IO.inspect(label: "ActivityLive: activity_object_components")
 
-    verb_display = verb_display(verb)
-    created_verb_display = "create" |> verb_display()
-
-    permalink = path(activity.object)
-
-  {:ok, assign(socket, assigns
+  assigns = assigns 
     |> assigns_merge(
         object: activity.object,
         date_ago: date_from_now(activity.object),
@@ -49,24 +57,50 @@ defmodule Bonfire.UI.Social.ActivityLive do
         verb: verb,
         verb_display: verb_display,
         created_verb_display: created_verb_display,
-        permalink: permalink,
-        within_feed: true # WIP a boolean for adapting previews based on specific views (Feeds, search results, or other contexts)
-      )) }
+        permalink: permalink
+      ) 
+    |> Map.new
+    #|> IO.inspect(label: "ActivityLive final assigns")
+
+
+    ~F"""
+    <div
+      class={
+      "activity p-3",
+      "main_reply_to border-l-4 border-base-200 pl-2 py-0 my-2 pr-0": e(@object, :id, nil) != nil and e(@activity, :replied, :reply_to_id, nil) == nil and e(@activity, :id, nil) == nil, # showing a quoted reply_to
+      "showing_within:thread": e(assigns, :showing_within, nil) == :thread,
+      "showing_within:notifications ml-7 px-0": e(assigns, :showing_within, nil) == :notifications,
+      "activity_regular": e(@object, :id, nil) != nil and e(@activity, :replied, :reply_to_id, nil) != nil and e(@activity, :id, nil) != nil,
+      }>
+      {#for {component, component_assigns} when is_atom(component) <- e(assigns, :activity_object_components, [])}
+        <Surface.Components.Dynamic.Component
+          module={component}
+          activity={e(component_assigns, :activity, @activity)}
+          object={e(component_assigns, :object, @object)}
+          date_ago={e(component_assigns, :date_ago, @date_ago)}
+          verb={e(component_assigns, :verb, @verb)}
+          verb_display={e(component_assigns, :verb_display, @verb_display)}
+          permalink={e(component_assigns, :permalink, @permalink)}
+          viewing_main_object={e(component_assigns, :viewing_main_object, @viewing_main_object)}
+          hide_reply={e(component_assigns, :hide_reply, @hide_reply)}
+          reply_click={e(component_assigns, :reply_click, @reply_click)}
+          created_verb_display={@created_verb_display}
+          showing_within={@showing_within}
+          profile={e(component_assigns, :profile, nil)}
+          character={e(component_assigns, :character, nil)}
+        />
+      {/for}
+    </div>
+    """
   end
 
-  def update(assigns, socket) do
+  def render(assigns) do
 
-    {:ok, assign(socket, assigns
-      |> assigns_merge(
-          activity: nil,
-          object: nil,
-          activity_object_components: [],
-          date_ago: nil,
-          verb: "",
-          verb_display: "",
-          created_verb_display: "",
-          permalink: ""
-        )) }
+    Logger.warn("ActivityLive: No activity provided")
+
+    ~F"""
+    
+    """
   end
 
   # don't show subject twice
@@ -201,7 +235,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
     case Bonfire.Common.Types.object_type(object) do
       type ->
         Logger.debug("ActivityLive: component object_type recognised: #{type}")
-        component_for_object_type(type)
+        component_for_object_type(type, object)
 
       _ ->
         Logger.warn("ActivityLive: component object_type NOT recognised: #{object}")
@@ -215,13 +249,13 @@ defmodule Bonfire.UI.Social.ActivityLive do
   end
 
 
-  def component_for_object_type(type) when type in [Bonfire.Classify.Category], do: [Bonfire.UI.Social.Activity.CategoryLive]
-  def component_for_object_type(type) when type in [ValueFlows.EconomicEvent], do: [Bonfire.UI.Social.Activity.EconomicEventLive]
-  def component_for_object_type(type) when type in [ValueFlows.EconomicResource], do: [Bonfire.UI.Social.Activity.EconomicResourceLive]
-  def component_for_object_type(type) when type in [ValueFlows.Planning.Intent], do: [Bonfire.UI.Social.Activity.IntentTaskLive] # TODO: choose between Task and other Intent types
-  # def component_for_object_type(type) when type in [ValueFlows.Process], do: [Bonfire.UI.Social.Activity.ProcessListLive] # TODO: choose between Task and other Intent types
-  def component_for_object_type(type) when type in [ValueFlows.Process], do: [Bonfire.Common.Config.get([:ui, :default_instance_feed_previews, :process], Bonfire.UI.Social.Activity.ProcessListLive)]
-  def component_for_object_type(type) do
+  def component_for_object_type(type, object) when type in [Bonfire.Classify.Category], do: [Bonfire.UI.Social.Activity.CategoryLive]
+  def component_for_object_type(type, object) when type in [ValueFlows.EconomicEvent], do: [Bonfire.UI.Social.Activity.EconomicEventLive.activity_component(object)]
+  def component_for_object_type(type, object) when type in [ValueFlows.EconomicResource], do: [Bonfire.UI.Social.Activity.EconomicResourceLive]
+  def component_for_object_type(type, object) when type in [ValueFlows.Planning.Intent], do: [Bonfire.UI.Social.Activity.IntentTaskLive] # TODO: choose between Task and other Intent types
+  # def component_for_object_type(type, object) when type in [ValueFlows.Process], do: [Bonfire.UI.Social.Activity.ProcessListLive.activity_component(object)] # TODO: choose between Task and other Intent types
+  def component_for_object_type(type, object) when type in [ValueFlows.Process], do: [{Bonfire.Common.Config.get([:ui, :default_instance_feed_previews, :process], Bonfire.UI.Social.Activity.ProcessListLive), object: Bonfire.UI.Social.Activity.ProcessListLive.prepare(object)}]
+  def component_for_object_type(type, _object) do
     Logger.warn("ActivityLive: no component available for object_type: #{type}")
     [Bonfire.UI.Social.Activity.UnknownLive]
   end
@@ -330,31 +364,6 @@ defmodule Bonfire.UI.Social.ActivityLive do
   # def object_link(text, %{character: %{username: username}}, class \\ "hover:underline font-bold"), do: "<a class='#{class}' href='/user/#{username}'>#{text}</a>"
   # def object_link(text, %{id: id}, class), do: "<a class='#{class}' href='/discussion/#{id}'>#{text}</a>"
 
-  def activity_component(component, assigns, socket) do
-    case component do
-
-    {module, %{} = component_assigns} when is_atom(module) ->
-      live_component(
-        socket,
-        module,
-        assigns_clean(
-          assigns
-          |> assigns_merge(component_assigns)
-        )
-      )
-
-    module when is_atom(module) ->
-      live_component(
-        socket,
-        module,
-        assigns_clean(assigns)
-      )
-
-    string when is_binary(string) ->
-      string
-
-    end
-  end
 
   # def handle_event("like"=action, attrs, socket), do: Bonfire.Social.Likes.live_action(action, attrs, socket)
   # def handle_event(action, attrs, socket), do: Bonfire.Common.LiveHandlers.handle_event(action, attrs, socket, __MODULE__)

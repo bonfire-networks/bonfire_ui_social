@@ -2,20 +2,22 @@
   class="mx-3 md:flex md:mx-0">
   <section class="mx-auto shadow-lg bg-base-100 rounded-box w-center">
     <Bonfire.UI.Social.PageHeaderLive
-      :if={e(assigns, :current_user, :id, nil)}
+      :if={e(current_user(assigns), :id, nil)}
       page_title={@page_title}
     />
-    {live_component(@socket, Bonfire.Common.Config.get([:ui, :profile, :sections, tab(@selected_tab)], Bonfire.UI.Social.ProfileTimelineLive), 
-      page_title: @page_title,
-      page: @page,
-      page_info: @page_info,
-      selected_tab: @selected_tab,
-      smart_input: @smart_input,
-      has_private_tab: @has_private_tab,
-      smart_input_placeholder: @smart_input_placeholder,
-      smart_input_text: @smart_input_text,
-      search_placholder: @search_placholder,
-      feed_title: @feed_title,
-      user: @user)}
+    <Surface.Components.Dynamic.Component
+      module={Bonfire.Common.Config.get([:ui, :profile, :sections, tab(@selected_tab)], Bonfire.UI.Social.ProfileTimelineLive)}
+      user={@user}
+      page_title={@page_title}
+      page={@page}
+      page_info={@page_info}
+      selected_tab={@selected_tab}
+      smart_input={@smart_input}
+      has_private_tab={@has_private_tab}
+      smart_input_placeholder={@smart_input_placeholder}
+      smart_input_text={@smart_input_text}
+      search_placholder={@search_placholder}
+      feed_title={@feed_title}
+    />
   </section>
 </main>

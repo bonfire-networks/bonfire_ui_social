@@ -1,5 +1,20 @@
 <div class="rounded-t-none bg-base-100 rounded-box">
   <Bonfire.UI.Social.ProfileHeroFullLive user={@user} current_user={current_user(assigns)}  />
   <Bonfire.UI.Social.ProfileNavigationLive selected_tab={@selected_tab} user={@user}/>
-  {live_component(@socket, Bonfire.UI.Social.FeedLive, assigns_merge(assigns, id: "feed:profile:boosts"))}
+
+  <Bonfire.UI.Social.FeedLive
+    id={"feed:profile:boosts"}
+    page_info={@page_info}
+    user={@user}
+    page_title={@page_title}
+    page={@page}
+    page_info={@page_info}
+    selected_tab={@selected_tab}
+    smart_input={@smart_input}
+    has_private_tab={@has_private_tab}
+    smart_input_placeholder={@smart_input_placeholder}
+    smart_input_text={@smart_input_text}
+    search_placholder={@search_placholder}
+    feed_title={@feed_title}
+  />
 </div>

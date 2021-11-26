@@ -4,16 +4,6 @@ defmodule Bonfire.UI.Social.Activity.EconomicResourceLive do
 
   prop object, :map
 
-  def update(assigns, socket) do
-    # TODO: run these preloads when fetching the feed, rather than n+1
-    {:ok, socket |>
-      assigns_merge(assigns,
-        object: assigns.object
-        |> preload() #|> IO.inspect
-      )
-    }
-  end
-
   def preloads(), do: [
     :image,
     :current_location,

@@ -1,7 +1,7 @@
 <main class="mx-3 md:flex md:mx-0">
   <section class="shadow-lg bg-base-100 rounded-box w-center mx-auto">
     <Bonfire.UI.Social.PageHeaderLive
-      :if={e(assigns, :current_user, :id, nil)}
+      :if={e(current_user(assigns), :id, nil)}
       page_title={@page_title}
     />
     <Bonfire.UI.Social.BannerPreviousThreadLive activity={@activity} />

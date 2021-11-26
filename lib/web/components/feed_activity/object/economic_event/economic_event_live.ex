@@ -7,23 +7,6 @@ defmodule Bonfire.UI.Social.Activity.EconomicEventLive do
 
   @resource_preloads [:image, :current_location, onhand_quantity: [:unit], accounting_quantity: [:unit]]
 
-  def update(%{object: object} = assigns, socket) do
-    # TODO: run these preloads when fetching the feed, rather than n+1
-    object = object
-    # |> IO.inspect(label: "event")
-    |> maybe_to_struct(ValueFlows.EconomicEvent)
-    # |> IO.inspect(label: "struct")
-    |> preload()
-    |> maybe_preload_action()
-
- #|> IO.inspect
-    {:ok, socket |>
-      assigns_merge(assigns,
-        verb_display: Bonfire.UI.Social.ActivityLive.verb_display(e(object, :action, :label, e(assigns.object, :action_id, ""))),
-        object: object
-      )
-    }
-  end
 
   def preloads() do
     resource_preloads = Bonfire.UI.Social.Activity.EconomicResourceLive.preloads()
@@ -40,9 +23,29 @@ defmodule Bonfire.UI.Social.Activity.EconomicEventLive do
     ]
   end
 
+  def activity_component(object) do
+    object = prepare(object)
+    {__MODULE__,
+      [
+        object: object,
+        verb_display: Bonfire.UI.Social.ActivityLive.verb_display(e(object, :action, :label, e(object, :action_id, "")))
+      ]
+    }
+  end
+  
+
+  def prepare(object) do
+    object
+    # |> IO.inspect(label: "event")
+    |> maybe_to_struct(ValueFlows.EconomicEvent)
+    # |> IO.inspect(label: "struct")
+    |> preload()
+  end
+
   defp preload(object) do
     object
     |> repo().maybe_preload(preloads())
+    |> maybe_preload_action()
   end
 
   def maybe_preload_action(object) do

@@ -2,7 +2,10 @@
   <% info = live_flash(@flash, :info) %>
   <% error = live_flash(@flash, :error) %>
     <div id="flash-messages" class="absolute z-50 right-8 top-20">
-      <%= live_component(@socket, Bonfire.Common.Web.NotificationLive, id: :notification, notification: e(assigns, :notification, nil)) %>
+      <%= live_component(@socket, Bonfire.Common.Web.NotificationLive, 
+      id: :notification, 
+      notification: e(assigns, :notification, nil)
+      ) %>
       <%= if info do %>
         <p class="alert alert-info" role="alert"
           phx-click="lv:clear-flash"
@@ -13,7 +16,13 @@
           phx-click="lv:clear-flash"
           phx-value-key="error"><%= error %></p>
       <% end %>
-    </div>
+    </div> 
 
-  <%= live_component(@socket, Bonfire.UI.Social.NavLive, current_user: e(assigns, :current_user, nil), page: e(assigns, :page, ""), inner_content: e(assigns, :inner_content, nil)) %>
+  <%# live_component(@socket, Bonfire.UI.Social.NavLive, current_user: current_user(assigns), page: e(assigns, :page, ""), inner_content: @inner_content) %>
+   <Bonfire.UI.Social.NavLive.render
+    __context__={%{}}
+    current_user={current_user(assigns)}
+    page={e(assigns, :page, "")}
+    inner_content={@inner_content}
+  />
 </div>

@@ -9,17 +9,8 @@ defmodule Bonfire.UI.Social.Activity.NoteLive do
   prop date_ago, :string
   prop showing_within, :any
 
-  def update(assigns, socket) do
 
-    {:ok, socket |>
-      assigns_merge(assigns,
-        object: Map.merge( # fix this mess
-          assigns.object,
-          Map.get(assigns.object, :post_content, %{})
-            |> Map.drop([:post_content])
-        ) #|> IO.inspect
-      )
-    }
+  def post_content(object) do
+    e(object, :post_content, object)
   end
-
 end

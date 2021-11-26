@@ -1,4 +1,4 @@
-<div :if={@within_feed == true}> 
+<div :if={@showing_within == :feed}> 
  <div class={"block bg-white dark:bg-gray-600 rounded-lg my-2 mt-4"}>
   <div class={"grid justify-between p-3 py-0 grid-cols-1 gap-0"}>
     <div class={"order-last"}>
@@ -40,15 +40,15 @@
 
 
 <div 
-  :if={@within_feed == false}
-  class={"block bg-base", "border rounded-lg my-2": @within_feed}>
+  :if={@showing_within != :feed}
+  class={"block bg-base", "border rounded-lg my-2": @showing_within == :feed}>
   <div class={"grid justify-between p-3 grid-cols-1 gap-0"}>
-    <div class={"order-last": @within_feed}>
-      <div class={"flex items-center space-x-2", "mt-2": @within_feed}>
+    <div class={"order-last": @showing_within == :feed}>
+      <div class={"flex items-center space-x-2", "mt-2": @showing_within == :feed}>
       <Bonfire.UI.Social.LikeActionWithoutLabelLive
           id={ComponentID.new(Bonfire.UI.Social.LikeActionWithoutLabelLive, @object)} 
         object_id={e(@object, :id, "")}
-        current_user={e(assigns, :current_user, nil)}
+        current_user={current_user(assigns)}
       />
         <LivePatch to={"/process/"<>e(@object, :id,"")}>
           <div class="text-lg font-bold text-gray-700 dark:text-gray-200 hover:underline hover:text-gray-800">{@object.name}</div>

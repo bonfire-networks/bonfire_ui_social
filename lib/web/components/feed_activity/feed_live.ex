@@ -42,7 +42,7 @@ defmodule Bonfire.UI.Social.FeedLive do
     {:ok, socket
     |> assign(
       feed: feed
-      |> IO.inspect(label: "FeedLive: feed")
+      #|> IO.inspect(label: "FeedLive: feed")
       |> preloads(current_user: current_user, skip_boundary_check: true),
       page_info: page_info
       )}

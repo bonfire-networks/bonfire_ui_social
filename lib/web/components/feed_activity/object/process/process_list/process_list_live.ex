@@ -4,11 +4,17 @@ defmodule Bonfire.UI.Social.Activity.ProcessListLive do
   import Bonfire.UI.Social.Integration
 
   prop object, :map, required: true
-  prop within_feed, :boolean, required: false, default: false
+  prop showing_within, :any
 
-  def update(assigns, socket) do
+  def activity_component(object) do
+    {__MODULE__,
+      [
+        object: prepare(object)
+      ]
+    }
+  end
 
-    object = assigns.object |> preload() #|> IO.inspect(label: "process_preloaded")
+  def prepare(object) do
 
     tasks = e(object, :intended_outputs, [])
 
@@ -21,14 +27,11 @@ defmodule Bonfire.UI.Social.Activity.ProcessListLive do
 
     percentage = if tasks_total >0, do: ceil(tasks_completed / tasks_total * 100)
 
-    {:ok, socket |>
-      assigns_merge(assigns,
-        object: object
-          |> Map.put(:tasks_total, tasks_total)
-          |> Map.put(:tasks_completed, tasks_completed)
-          |> Map.put(:percentage, percentage)
-      )
-    }
+    object
+      |> Map.put(:tasks_total, tasks_total)
+      |> Map.put(:tasks_completed, tasks_completed)
+      |> Map.put(:percentage, percentage)
+    
   end
 
   def preloads(), do: [

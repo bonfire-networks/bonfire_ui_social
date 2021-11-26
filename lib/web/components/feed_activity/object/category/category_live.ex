@@ -3,9 +3,8 @@ defmodule Bonfire.UI.Social.Activity.CategoryLive do
   import Bonfire.UI.Social.Integration
 
 
-  def update(assigns, socket) do
-    name = e(assigns, :object, :name, e(assigns, :object, :profile, :name, e(assigns, :object, :post_content, :name, e(assigns, :object, :title, "Unidentified category"))))
-    {:ok, assigns_merge(socket, assigns, name: name)}
+  def name(object) do
+    name = e(object, :name, e(object, :profile, :name, e(object, :post_content, :name, e(object, :title, "Unidentified category"))))
   end
 
   defp crumbs(%{name: name, parent: grandparent} = _parent) do

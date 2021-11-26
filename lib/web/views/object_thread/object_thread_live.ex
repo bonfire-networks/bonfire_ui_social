@@ -11,6 +11,7 @@ defmodule  Bonfire.UI.Social.ObjectThreadLive do
   prop object, :any
   prop thread_id, :string
 
+  # FIXME! update no longer works in stateless
   def update(assigns, socket) do
     thread_id = e(assigns, :thread_id, e(assigns, :object, :id, nil))
     participants = Bonfire.Social.Threads.list_participants(thread_id, current_user(assigns))

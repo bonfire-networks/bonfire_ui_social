@@ -5,8 +5,8 @@
     {rich crumbs(e(@object, :parent, nil))}
 
 
-  <LiveRedirect to={"?s=#{@name}"} class="text-md">
-    {rich @name}
+  <LiveRedirect to={"?s=#{name(@object)}"} class="text-md">
+    {rich name(@object)}
   </LiveRedirect>
 
     </div>

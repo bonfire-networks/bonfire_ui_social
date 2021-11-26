@@ -1,4 +1,4 @@
-<div id="layout-live">
+<div id="settings-template-live">
   <% info = live_flash(@flash, :info) %>
   <% error = live_flash(@flash, :error) %>
   <%= if info || error do %>
@@ -16,5 +16,6 @@
     </div>
   <% end %>
 
-  <%= live_component(@socket, Bonfire.UI.Social.NavLive, current_user: current_user(assigns)) %>
+  <%= live_component(@socket, Bonfire.UI.Social.SettingsTemplateLive) %>
+
 </div>

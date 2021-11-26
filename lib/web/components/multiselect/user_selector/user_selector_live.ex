@@ -9,6 +9,7 @@ defmodule Bonfire.UI.Social.MultiselectLive.UserSelectorLive do
   prop preloaded_options, :any
   prop context_id, :string
 
+  # FIXME! update no longer works in stateless
   def update(%{preloaded_options: pre} = assigns, socket) when is_list(pre) do
 
     {:ok, socket

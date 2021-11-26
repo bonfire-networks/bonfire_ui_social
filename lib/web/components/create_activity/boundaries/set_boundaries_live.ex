@@ -6,8 +6,10 @@ defmodule Bonfire.UI.Social.SetBoundariesLive do
   prop default_circles, :list, default: []
   prop to_circles, :list
 
-  def update(assigns, socket), do: {:ok, updated(assigns, socket)
-  # |> self_subscribe([:to_circles])
+  # FIXME! update no longer works in stateless
+  def update(assigns, socket), do: {:ok, 
+    updated(assigns, socket)
+    # |> self_subscribe([:to_circles])
   }
 
   defp updated(%{to_circles: to_circles} = assigns, socket) when is_list(to_circles) and length(to_circles)>0, do: set_label(assigns, socket)
@@ -36,7 +38,7 @@ defmodule Bonfire.UI.Social.SetBoundariesLive do
     to_circles = (e(assigns, :to_circles, []) || []) |> IO.inspect()
 
     label = cond do
-      length(to_circles)==1 && to_circles |> List.first() |> elem(1) == e(assigns, :current_user, :id, nil) ->
+      length(to_circles)==1 && to_circles |> List.first() |> elem(1) == e(current_user(assigns), :id, nil) ->
         nobody
 
       e(assigns, :create_activity_type, nil)=="message" ->

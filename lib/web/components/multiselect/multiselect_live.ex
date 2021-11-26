@@ -12,6 +12,7 @@ defmodule Bonfire.UI.Social.MultiselectLive do
   prop remove_event, :string, required: false
   prop context_id, :string
 
+  # FIXME! update no longer works in stateless
   def update(%{selected_options: selected_options} = assigns, socket) when not is_list(selected_options) do
 
     {:ok, socket |> assigns_merge(assigns, selected_options: [selected_options])}

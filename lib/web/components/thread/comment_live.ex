@@ -3,10 +3,14 @@ defmodule Bonfire.UI.Social.CommentLive do
   alias Bonfire.UI.Social.CommentLive
 
   prop comment, :map
+  prop activity, :map, default: %{}
+  prop object, :map, default: %{}
   prop thread_level, :any
   prop child_replies, :any
   prop reply_to_thread_id, :any
+  prop sub_replies_count, :integer, default: 0
 
+  # FIXME! update no longer works in stateless
   def update(%{comment: %{__struct__: Bonfire.Data.Social.Activity} = activity} = assigns, socket) do
 
     # {activity, comment} = Map.pop(comment, :activity)

@@ -5,9 +5,8 @@ defmodule Bonfire.UI.Social.Activity.ProcessReflowLive do
   alias Bonfire.Social.{Likes}
 
   prop object, :map, required: true
-  prop within_feed, :boolean, required: false, default: false
+  prop showing_within, :any
 
 
-  def update(assigns, socket), do: Bonfire.UI.Social.Activity.ProcessListLive.update(assigns, socket)
 
 end

@@ -1,7 +1,7 @@
-<div class={"block bg-white dark:bg-gray-600", "rounded-lg my-2 shadow": @within_feed}>
-  <div class={"grid justify-between p-3", "grid-cols-2 gap-8": !@within_feed, "py-0 grid-cols-1 gap-0": @within_feed}>
-    <div class={"order-last": @within_feed}>
-      <div class={"flex items-center space-x-2", "mt-2": @within_feed}>
+<div class={"block bg-white dark:bg-gray-600", "rounded-lg my-2 shadow": @showing_within == :feed}>
+  <div class={"grid justify-between p-3", "grid-cols-2 gap-8": @showing_within != :feed, "py-0 grid-cols-1 gap-0": @showing_within == :feed}>
+    <div class={"order-last": @showing_within == :feed}>
+      <div class={"flex items-center space-x-2", "mt-2": @showing_within == :feed}>
         <Bonfire.UI.Social.LikeActionWithoutLabelLive
           id={ComponentID.new(Bonfire.UI.Social.LikeActionWithoutLabelLive, @object)} 
         object_id={@object.id}
@@ -20,7 +20,7 @@
         </div>
       </div>
       <div class="mt-1 text-sm text-gray-600 dark:text-gray-300 line-clamp-1">{e(@object, :note, "")}</div>
-      <div :if={@within_feed == true} class="flex items-center p-3 mt-2 -mx-3 space-x-4 text-sm text-gray-700 bg-gray-300 rounded-b-lg">
+      <div :if={@showing_within == :feed} class="flex items-center p-3 mt-2 -mx-3 space-x-4 text-sm text-gray-700 bg-gray-300 rounded-b-lg">
         <div><span class="font-bold text-gray-600 dark:text-gray-500">{e(@object, :percentage, "0")}%</span> {l "complete"}</div>
         <div>
           <span class="font-bold text-gray-600 dark:text-gray-500">{e(@object, :tasks_completed, "0")}</span> {l "of"}
@@ -30,12 +30,12 @@
     </div>
     <div>
       <div :if={e(@object, :tasks_total, 0)>0} class="relative mt-2">
-        <div class={"flex mb-2 overflow-hidden text-xs bg-pink-100 rounded", "h-3": !@within_feed, "h-2": @within_feed}>
+        <div class={"flex mb-2 overflow-hidden text-xs bg-pink-100 rounded", "h-3": @showing_within != :feed, "h-2": @showing_within == :feed}>
           <div style={"width:#{e(@object, :percentage, "0")}%"} class="flex flex-col justify-center text-center text-white bg-pink-500 shadow-none whitespace-nowrap"></div>
         </div>
       </div>
 
-      <div :if={!@within_feed} class="flex items-center space-x-4 text-sm text-gray-700">
+      <div :if={@showing_within != :feed} class="flex items-center space-x-4 text-sm text-gray-700">
         <div :if={e(@object, :tasks_total, 0)>0}><span class="font-bold text-gray-600 dark:text-gray-400">{e(@object, :percentage, "0")}%</span> complete</div>
         <div :if={e(@object, :tasks_completed, 0)>0}>
           <span class="font-bold text-gray-600 dark:text-gray-500">{e(@object, :tasks_completed, "0")}</span>
