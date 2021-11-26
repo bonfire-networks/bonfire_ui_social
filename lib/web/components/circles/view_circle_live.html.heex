@@ -23,7 +23,7 @@
     <h3 class="font-sm mb-2 text-medium text-gray-800">Circle Members</h3>
     <div class="overflow-hidden relative border rounded-lg  drag_drop__container__to">
         <form phx-change="Bonfire.Me.Circles:member_update">
-        <input type="hidden" name="circle[id]" value="<%=e(@circle, :id, "")%>">
+        <input type="hidden" name="circle[id]" value={e(@circle, :id, "")}>
         <input type="hidden" id="circle_changed" name="circle_changed" value="0">
 
         <ul
@@ -52,7 +52,7 @@
             <%= for member <- e(@circle, :encircles, []) do %>
             <%# IO.inspect(member: member) %>
 
-              <li id="item-<%= member.id %>"
+              <li id={"item-"<> member.id }
                 class="p-2 flex"
                 :class="{ 'bg-indigo-500': dragging }"
                 x-on:dragstart.self="
@@ -65,8 +65,8 @@
                 x-data="{ dragging: false }"
                 draggable="true">
 
-                <input type="hidden" name="circle[encircle][<%=member.id%>][circle_id]" value="<%=e(@circle, :id, "")%>">
-                <input type="hidden" name="circle[encircle][<%=member.id%>][subject_id]" value="<%=e(member, :subject_id, "")%>">
+                <input type="hidden" name={"circle[encircle][#{member.id}][circle_id]"} value={e(@circle, :id, "")}>
+                <input type="hidden" name={"circle[encircle][#{member.id}][subject_id]"} value={e(member, :subject_id, "")}>
                 <div class="flex-1">
                   <%= live_component(@socket, Bonfire.UI.Social.ProfileItemLive, assigns |> assigns_merge(%{profile: e(member, :subject_profile, nil), character: e(member, :subject_character, nil)})) %>
                 </div>
@@ -128,7 +128,7 @@
              <%# loop through people that can be added  %>
 
             <%= for suggested <- @followed do %>
-              <li id="item-<%= suggested.id %>"
+              <li id={"item-"<> suggested.id }
                 class="p-2 flex"
                 :class="{ 'drag_drop__iter__dragging': dragging }"
                 x-on:dragstart.self="
@@ -141,8 +141,8 @@
                 x-data="{ dragging: false }"
                 draggable="true">
 
-                <input type="hidden" name="circle[encircle][<%=suggested.id%>][circle_id]" value="<%=e(@circle, :id, "")%>">
-                <input type="hidden" name="circle[encircle][<%=suggested.id%>][subject_id]" value="<%=e(suggested, :followed_profile, :id, "") %>">
+                <input type="hidden" name={"circle[encircle][#{suggested.id}][circle_id]"} value={e(@circle, :id, "")}>
+                <input type="hidden" name={"circle[encircle][#{suggested.id}][subject_id]"} value={e(suggested, :followed_profile, :id, "")}>
                 <div class="flex-1">
                   <%= live_component(@socket, Bonfire.UI.Social.ProfileItemLive, assigns |> assigns_merge(%{profile: e(suggested, :followed_profile, nil), character: e(suggested, :followed_character, nil)})) %>
                 </div>
@@ -170,7 +170,7 @@
             <% end %>
 
             <%= for suggested <- @followers do %>
-              <li id="item-<%= suggested.id %>"
+              <li id={"item-"<> suggested.id }
                 class="p-2 flex"
                 :class="{ 'drag_drop__iter__dragging': dragging }"
                 x-on:dragstart.self="
@@ -183,8 +183,8 @@
                 x-data="{ dragging: false }"
                 draggable="true">
 
-                <input type="hidden" name="circle[encircle][<%=suggested.id%>][circle_id]" value="<%=e(@circle, :id, "")%>">
-                <input type="hidden" name="circle[encircle][<%=suggested.id%>][subject_id]" value="<%= e(suggested, :follower_profile, :id, "")%>">
+                <input type="hidden" name={"circle[encircle][#{suggested.id}][circle_id]"} value={e(@circle, :id, "")}>
+                <input type="hidden" name={"circle[encircle][#{suggested.id}][subject_id]"} value={ e(suggested, :follower_profile, :id, "")}>
                 <div class="flex-1">
                   <%= live_component(@socket, Bonfire.UI.Social.ProfileItemLive, assigns |> assigns_merge(%{profile: e(suggested, :follower_profile, nil), character: e(suggested, :follower_character, nil)})) %>
                 </div>

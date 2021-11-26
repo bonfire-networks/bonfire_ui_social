@@ -2,7 +2,7 @@
 <% status = patch_status(@patch) %>
 <div class="ghd-file">
   <div class="ghd-file-header">
-    <span class="ghd-file-status ghd-file-status-<%= status %>">
+    <span class={"ghd-file-status ghd-file-status-"<> status}>
       <%= status %>
     </span>
     <%= file_header(@patch, status) %>
@@ -22,7 +22,7 @@
           </td>
         </tr>
         <%= for line <- chunk.lines do %>
-          <tr id="<%= line_id(@patch, line) %>" class="ghd-line ghd-line-type-<%= line_type(line) %>">
+          <tr id={ line_id(@patch, line)} class={"ghd-line ghd-line-type-"<> line_type(line)}>
             <td class="ghd-line-number">
               <div class="ghd-line-number-from">
                 <%= line_number(line.from_line_number) %>

@@ -1,6 +1,6 @@
 
 
-<h2><%= e(@circle, :named, :name, "Edit Circle") %>
+<h2><%= e(@circle, :named, :name, "Edit Circle") %></h2>
 <div
   x-cloak
   class="drag_drop"
@@ -31,7 +31,7 @@
 
 
             <%= for suggested <- @followed do %>
-              <li id="item-<%= suggested.id %>"
+              <li id={"item-"<> suggested.id }
                 class="drag_drop__item px-3 py-4"
                 :class="{ 'drag_drop__iter__dragging': dragging }"
                 x-on:dragstart.self="
@@ -44,8 +44,8 @@
                 x-data="{ dragging: false }"
                 draggable="true">
 
-                <input type="hidden" name="circle[encircle][<%=suggested.id%>][circle_id]" value="<%=e(@circle, :id, "")%>">
-                <input type="hidden" name="circle[encircle][<%=suggested.id%>][subject_id]" value="<%=e(suggested, :followed_profile, :id, "") %>">
+                <input type="hidden" name={"circle[encircle][#{suggested.id}][circle_id]"} value={e(@circle, :id, "")}>
+                <input type="hidden" name={"circle[encircle][#{suggested.id}][subject_id]"} value={e(suggested, :followed_profile, :id, "")}>
 
                 <%= live_component(@socket, Bonfire.UI.Social.ProfileItemLive, assigns |> assigns_merge(%{profile: e(suggested, :followed_profile, nil), character: e(suggested, :followed_character, nil)})) %>
 
@@ -64,7 +64,7 @@
             <% end %>
 
             <%= for suggested <- @followers do %>
-              <li id="item-<%= suggested.id %>"
+              <li id={"item-"<> suggested.id }
                 class="drag_drop__item px-3 py-4"
                 :class="{ 'drag_drop__iter__dragging': dragging }"
                 x-on:dragstart.self="
@@ -77,8 +77,8 @@
                 x-data="{ dragging: false }"
                 draggable="true">
 
-                <input type="hidden" name="circle[encircle][<%=suggested.id%>][circle_id]" value="<%=e(@circle, :id, "")%>">
-                <input type="hidden" name="circle[encircle][<%=suggested.id%>][subject_id]" value="<%= e(suggested, :follower_profile, :id, "")%>">
+                <input type="hidden" name={"circle[encircle][#{suggested.id}][circle_id]"} value={e(@circle, :id, "")}>
+                <input type="hidden" name={"circle[encircle][#{suggested.id}][subject_id]"} value={ e(suggested, :follower_profile, :id, "")}>
 
                 <%= live_component(@socket, Bonfire.UI.Social.ProfileItemLive, assigns |> assigns_merge(%{profile: e(suggested, :follower_profile, nil), character: e(suggested, :follower_character, nil)})) %>
 
@@ -106,7 +106,7 @@
     <div class="drag_drop__container drag_drop__container__to">
         <h3 class="drag_drop__title">Circle Members</h3>
         <form phx-change="Bonfire.Me.Circles:member_update">
-        <input type="hidden" name="circle[id]" value="<%=e(@circle, :id, "")%>">
+        <input type="hidden" name="circle[id]" value={e(@circle, :id, "")}>
         <input type="hidden" id="circle_changed" name="circle_changed" value="0">
 
         <ul
@@ -134,7 +134,7 @@
             <%= for member <- e(@circle, :encircles, []) do %>
             <% IO.inspect(member: member) %>
 
-              <li id="item-<%= member.id %>"
+              <li id={"item-"<> member.id }
                 class="drag_drop__item px-3 py-4"
                 :class="{ 'drag_drop__iter__dragging': dragging }"
                 x-on:dragstart.self="
@@ -147,8 +147,8 @@
                 x-data="{ dragging: false }"
                 draggable="true">
 
-                <input type="hidden" name="circle[encircle][<%=member.id%>][circle_id]" value="<%=e(@circle, :id, "")%>">
-                <input type="hidden" name="circle[encircle][<%=member.id%>][subject_id]" value="<%=e(member, :subject_id, "")%>">
+                <input type="hidden" name={"circle[encircle][#{member.id}][circle_id]"} value={e(@circle, :id, "")}>
+                <input type="hidden" name={"circle[encircle][#{member.id}][subject_id]"} value={e(member, :subject_id, "")}>
                 <%= live_component(@socket, Bonfire.UI.Social.ProfileItemLive, assigns |> assigns_merge(%{profile: e(member, :subject_profile, nil), character: e(member, :subject_character, nil)})) %>
 
                 <span class="to inline-flex items-center shadow-sm px-2.5 py-0.5 border border-gray-300 text-sm leading-5 font-medium rounded-full text-gray-700 bg-white hover:bg-gray-50" @click="

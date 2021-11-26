@@ -18,7 +18,7 @@
           </div>
           <div class="flex-1 flex items-center justify-between border-t border-r border-b border-gray-200 bg-white rounded-r-md">
             <div class="flex-1 px-4 py-2 text-sm">
-              <a href="/settings/circle/<%=circle.id%>" class="text-gray-900 truncate font-medium hover:text-gray-600"><%= e(circle, :named, :name, nil) || e(circle, :name, "Untitled") %></a>
+              <a href={"/settings/circle/"<>circle.id} class="text-gray-900 truncate font-medium hover:text-gray-600"><%= e(circle, :named, :name, nil) || e(circle, :name, "Untitled") %></a>
               <%# <p class="text-gray-500">16 Members</p> %>
             </div>
             <div class="flex-shrink-0 pr-2">
@@ -34,7 +34,7 @@
                 </button>
                 <div x-description="Dropdown menu, show/hide based on menu state." x-show="open" x-transition:enter="transition ease-out duration-100" x-transition:enter-start="transform opacity-0 scale-95" x-transition:enter-end="transform opacity-100 scale-100" x-transition:leave="transition ease-in duration-75" x-transition:leave-start="transform opacity-100 scale-100" x-transition:leave-end="transform opacity-0 scale-95" class="origin-top-right absolute right-0 mt-2 w-56 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 divide-y divide-gray-100 focus:outline-none" role="menu" aria-orientation="vertical" aria-labelledby="options-menu">
                   <div class="py-1" role="none">
-                    <a href="/settings/circle/<%=circle.id%>" class="group flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-gray-900" role="menuitem">
+                    <a href={"/settings/circle/"<>circle.id} class="group flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-gray-900" role="menuitem">
                       <svg class="mr-3 h-5 w-5 text-gray-400 group-hover:text-gray-500" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path d="M10 12a2 2 0 100-4 2 2 0 000 4z"></path><path fill-rule="evenodd" d="M.458 10C1.732 5.943 5.522 3 10 3s8.268 2.943 9.542 7c-1.274 4.057-5.064 7-9.542 7S1.732 14.057.458 10zM14 10a4 4 0 11-8 0 4 4 0 018 0z" clip-rule="evenodd"></path></svg>
                       View details
                     </a>
