@@ -5,7 +5,7 @@
   phx-value-id={@object_id}
   phx-value-component={__MODULE__}
   phx-value-current_count={e(@like_count, :liker_count, @like_count) || 0}
-  class="feed_activity_action like_with_label">
+  class="like feed_activity_action like_with_label">
 
   <span 
      class={"feed_activity_icon", "bg-primary bg-opacity-70":  @object_id in e(assigns, :liked, []) || e(@my_like, :id, nil)}

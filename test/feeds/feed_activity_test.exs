@@ -1,6 +1,7 @@
 defmodule Bonfire.UI.Social.Feeds.FeedActivityTest do
 
   use Bonfire.UI.Social.ConnCase
+
   # alias Bonfire.Social.Fake
   alias Bonfire.Me.Users
   alias Bonfire.Social.{Boosts, Likes, Follows, Posts}
@@ -33,7 +34,8 @@ defmodule Bonfire.UI.Social.Feeds.FeedActivityTest do
 
       feed = Bonfire.Social.FeedActivities.my_feed(bob)
       fp = feed.entries |> List.last() #|> IO.inspect
-      assert doc = render_component(Bonfire.UI.Social.ActivityLive, %{activity: fp.activity})
+      assigns = %{activity: fp.activity}
+      assert doc = render_surface(Bonfire.UI.Social.ActivityLive, assigns)
 
       assert doc
         |> Floki.text =~ "Reply (4)"
@@ -55,7 +57,8 @@ defmodule Bonfire.UI.Social.Feeds.FeedActivityTest do
 
       feed = Bonfire.Social.FeedActivities.my_feed(bob)
       fp = feed.entries |> List.first() #|> IO.inspect
-      assert doc = render_component(Bonfire.UI.Social.ActivityLive, %{activity: fp.activity})
+      assigns = %{activity: fp.activity}
+      assert doc = render_surface(Bonfire.UI.Social.ActivityLive, assigns)
 
       assert doc
         |> Floki.text =~ "Boost (1)"
@@ -77,7 +80,8 @@ defmodule Bonfire.UI.Social.Feeds.FeedActivityTest do
 
       feed = Bonfire.Social.FeedActivities.my_feed(alice)
       fp = feed.entries |> List.first() #|> IO.inspect
-      assert doc = render_component(Bonfire.UI.Social.ActivityLive, %{activity: fp.activity})
+      assigns = %{activity: fp.activity}
+      assert doc = render_surface(Bonfire.UI.Social.ActivityLive, assigns)
 
       assert doc
         |> Floki.text =~ "Like (1)"
@@ -99,7 +103,8 @@ defmodule Bonfire.UI.Social.Feeds.FeedActivityTest do
 
       feed = Bonfire.Social.FeedActivities.my_feed(bob)
       fp = feed.entries |> List.first() #|> IO.inspect
-      assert doc = render_component(Bonfire.UI.Social.ActivityLive, %{activity: fp.activity})
+      assigns = %{activity: fp.activity}
+      assert doc = render_surface(Bonfire.UI.Social.ActivityLive, assigns)
 
       assert doc
         |> Floki.text =~ "Boosted (1)"
@@ -121,7 +126,8 @@ defmodule Bonfire.UI.Social.Feeds.FeedActivityTest do
 
       feed = Bonfire.Social.FeedActivities.my_feed(bob)
       fp = feed.entries |> List.last() #|> IO.inspect
-      assert doc = render_component(Bonfire.UI.Social.ActivityLive, %{activity: fp.activity})
+      assigns = %{activity: fp.activity}
+      assert doc = render_surface(Bonfire.UI.Social.ActivityLive, assigns)
 
       assert doc
         |> Floki.text =~ "Liked"
@@ -144,7 +150,8 @@ defmodule Bonfire.UI.Social.Feeds.FeedActivityTest do
 
         feed = Bonfire.Social.FeedActivities.my_feed(bob)
         fp = feed.entries |> List.first() #|> IO.inspect
-        assert doc = render_component(Bonfire.UI.Social.ActivityLive, %{activity: fp.activity})
+        assigns = %{activity: fp.activity}
+      assert doc = render_surface(Bonfire.UI.Social.ActivityLive, assigns)
 
         assert doc
         |> Floki.text =~ "Liked (2)"
@@ -167,7 +174,8 @@ defmodule Bonfire.UI.Social.Feeds.FeedActivityTest do
 
       feed = Bonfire.Social.FeedActivities.my_feed(bob)
       fp = feed.entries |> List.first() #|> IO.inspect
-      assert doc = render_component(Bonfire.UI.Social.ActivityLive, %{activity: fp.activity})
+      assigns = %{activity: fp.activity}
+      assert doc = render_surface(Bonfire.UI.Social.ActivityLive, assigns)
 
       assert doc
       |> Floki.text =~ "Liked"
@@ -191,7 +199,8 @@ defmodule Bonfire.UI.Social.Feeds.FeedActivityTest do
 
       feed = Bonfire.Social.FeedActivities.my_feed(bob)
       fp = feed.entries |> List.first() #|> IO.inspect
-      assert doc = render_component(Bonfire.UI.Social.ActivityLive, %{activity: fp.activity})
+      assigns = %{activity: fp.activity}
+      assert doc = render_surface(Bonfire.UI.Social.ActivityLive, assigns)
 
       assert doc
       |> Floki.text =~ "Like (1)"
@@ -215,7 +224,8 @@ defmodule Bonfire.UI.Social.Feeds.FeedActivityTest do
 
       feed = Bonfire.Social.FeedActivities.my_feed(bob)
       fp = feed.entries |> List.first() #|> IO.inspect
-      assert doc = render_component(Bonfire.UI.Social.ActivityLive, %{activity: fp.activity})
+      assigns = %{activity: fp.activity}
+      assert doc = render_surface(Bonfire.UI.Social.ActivityLive, assigns)
 
       assert doc
       |> Floki.text =~ "Like"
@@ -239,7 +249,8 @@ defmodule Bonfire.UI.Social.Feeds.FeedActivityTest do
 
       feed = Bonfire.Social.FeedActivities.my_feed(bob)
       fp = feed.entries |> List.first() #|> IO.inspect
-      assert doc = render_component(Bonfire.UI.Social.ActivityLive, %{activity: fp.activity})
+      assigns = %{activity: fp.activity}
+      assert doc = render_surface(Bonfire.UI.Social.ActivityLive, assigns)
 
       assert doc
         |> Floki.text =~ "Boosted (2)"
@@ -263,7 +274,8 @@ defmodule Bonfire.UI.Social.Feeds.FeedActivityTest do
 
       feed = Bonfire.Social.FeedActivities.my_feed(bob)
       fp = feed.entries |> List.first() #|> IO.inspect
-      assert doc = render_component(Bonfire.UI.Social.ActivityLive, %{activity: fp.activity})
+      assigns = %{activity: fp.activity}
+      assert doc = render_surface(Bonfire.UI.Social.ActivityLive, assigns)
 
       assert doc
         |> Floki.text =~ "Boosted"
@@ -288,7 +300,8 @@ defmodule Bonfire.UI.Social.Feeds.FeedActivityTest do
 
       feed = Bonfire.Social.FeedActivities.my_feed(bob)
       fp = feed.entries |> List.first() #|> IO.inspect
-      assert doc = render_component(Bonfire.UI.Social.ActivityLive, %{activity: fp.activity})
+      assigns = %{activity: fp.activity}
+      assert doc = render_surface(Bonfire.UI.Social.ActivityLive, assigns)
 
       assert doc
         |> Floki.text =~ "Boost (1)"
@@ -311,7 +324,8 @@ defmodule Bonfire.UI.Social.Feeds.FeedActivityTest do
 
       feed = Bonfire.Social.FeedActivities.my_feed(bob)
       fp = feed.entries |> List.first() #|> IO.inspect
-      assert doc = render_component(Bonfire.UI.Social.ActivityLive, %{activity: fp.activity})
+      assigns = %{activity: fp.activity}
+      assert doc = render_surface(Bonfire.UI.Social.ActivityLive, assigns)
 
       assert doc
         |> Floki.text =~ "Boost"
@@ -343,7 +357,8 @@ defmodule Bonfire.UI.Social.Feeds.FeedActivityTest do
 
       feed = Bonfire.Social.FeedActivities.my_feed(bob)
       fp = feed.entries |> List.first() #|> IO.inspect
-      assert doc = render_component(Bonfire.UI.Social.ActivityLive, %{activity: fp.activity})
+      assigns = %{activity: fp.activity}
+      assert doc = render_surface(Bonfire.UI.Social.ActivityLive, assigns)
 
       assert doc
         |> Floki.text =~ "Boost (4)"
@@ -364,7 +379,8 @@ defmodule Bonfire.UI.Social.Feeds.FeedActivityTest do
        assert {:ok, post} = Posts.publish(alice, attrs)
        feed = Bonfire.Social.FeedActivities.my_feed(alice)
        fp = feed.entries |> List.first() #|> IO.inspect
-       assert doc = render_component(Bonfire.UI.Social.ActivityLive, %{activity: fp.activity})
+       assigns = %{activity: fp.activity}
+      assert doc = render_surface(Bonfire.UI.Social.ActivityLive, assigns)
 
        assert doc
        |> Floki.find("img.subject_avatar")
@@ -378,7 +394,8 @@ defmodule Bonfire.UI.Social.Feeds.FeedActivityTest do
       assert {:ok, post} = Posts.publish(alice, attrs)
       feed = Bonfire.Social.FeedActivities.my_feed(alice)
       fp = feed.entries |> List.first() #|> IO.inspect
-      assert doc = render_component(Bonfire.UI.Social.ActivityLive, %{activity: fp.activity})
+      assigns = %{activity: fp.activity}
+      assert doc = render_surface(Bonfire.UI.Social.ActivityLive, assigns)
 
       assert doc
       |> Floki.find("a.subject_name")
@@ -392,7 +409,8 @@ defmodule Bonfire.UI.Social.Feeds.FeedActivityTest do
       assert {:ok, post} = Posts.publish(alice, attrs)
       feed = Bonfire.Social.FeedActivities.my_feed(alice)
       fp = feed.entries |> List.first() #|> IO.inspect
-      assert doc = render_component(Bonfire.UI.Social.ActivityLive, %{activity: fp.activity})
+      assigns = %{activity: fp.activity}
+      assert doc = render_surface(Bonfire.UI.Social.ActivityLive, assigns)
 
       assert doc
       |> Floki.find("span.subject_username")
@@ -406,7 +424,8 @@ defmodule Bonfire.UI.Social.Feeds.FeedActivityTest do
       assert {:ok, post} = Posts.publish(alice, attrs)
       feed = Bonfire.Social.FeedActivities.my_feed(alice)
       fp = feed.entries |> List.first() #|> IO.inspect
-      assert doc = render_component(Bonfire.UI.Social.ActivityLive, %{activity: fp.activity})
+      assigns = %{activity: fp.activity}
+      assert doc = render_surface(Bonfire.UI.Social.ActivityLive, assigns)
 
       assert doc
       |> Floki.find("div.object_body")
@@ -421,7 +440,8 @@ defmodule Bonfire.UI.Social.Feeds.FeedActivityTest do
       assert {:ok, post} = Posts.publish(alice, attrs)
       feed = Bonfire.Social.FeedActivities.my_feed(alice)
       fp = feed.entries |> List.first() #|> IO.inspect
-      assert doc = render_component(Bonfire.UI.Social.ActivityLive, %{activity: fp.activity})
+      assigns = %{activity: fp.activity}
+      assert doc = render_surface(Bonfire.UI.Social.ActivityLive, assigns)
 
       assert doc
       |> Floki.find("a.subject_timestamp")
@@ -443,7 +463,8 @@ defmodule Bonfire.UI.Social.Feeds.FeedActivityTest do
 
       feed = Bonfire.Social.FeedActivities.my_feed(alice)
       fp = feed.entries |> List.first() #|> IO.inspect
-      assert doc = render_component(Bonfire.UI.Social.ActivityLive, %{activity: fp.activity})
+      assigns = %{activity: fp.activity}
+      assert doc = render_surface(Bonfire.UI.Social.ActivityLive, assigns)
 
       assert doc
       |> Floki.find("a.subject_name")
@@ -464,7 +485,8 @@ defmodule Bonfire.UI.Social.Feeds.FeedActivityTest do
 
       feed = Bonfire.Social.FeedActivities.my_feed(alice)
       fp = feed.entries |> List.first() #|> IO.inspect
-      assert doc = render_component(Bonfire.UI.Social.ActivityLive, %{activity: fp.activity})
+      assigns = %{activity: fp.activity}
+      assert doc = render_surface(Bonfire.UI.Social.ActivityLive, assigns)
       assert doc
       |> Floki.find("div.object_body")
       |> List.last
@@ -486,7 +508,8 @@ defmodule Bonfire.UI.Social.Feeds.FeedActivityTest do
 
       feed = Bonfire.Social.FeedActivities.my_feed(alice)
       fp = feed.entries |> List.first() #|> IO.inspect
-      assert doc = render_component(Bonfire.UI.Social.ActivityLive, %{activity: fp.activity})
+      assigns = %{activity: fp.activity}
+      assert doc = render_surface(Bonfire.UI.Social.ActivityLive, assigns)
       assert doc
       |> Floki.find("a.subject_replied")
       |> Floki.text() =~ alice.profile.name
@@ -506,7 +529,8 @@ defmodule Bonfire.UI.Social.Feeds.FeedActivityTest do
 
       feed = Bonfire.Social.FeedActivities.my_feed(alice)
       fp = feed.entries |> List.first() #|> IO.inspect
-      assert doc = render_component(Bonfire.UI.Social.ActivityLive, %{activity: fp.activity})
+      assigns = %{activity: fp.activity}
+      assert doc = render_surface(Bonfire.UI.Social.ActivityLive, assigns)
       assert doc
       |> Floki.find("div.object_body")
       |> List.first
@@ -528,7 +552,8 @@ defmodule Bonfire.UI.Social.Feeds.FeedActivityTest do
       assert {:ok, boost} = Boosts.boost(bob, post)
       feed = Bonfire.Social.FeedActivities.my_feed(alice)
       fp = feed.entries |> List.first() #|> IO.inspect
-      assert doc = render_component(Bonfire.UI.Social.ActivityLive, %{activity: fp.activity})
+      assigns = %{activity: fp.activity}
+      assert doc = render_surface(Bonfire.UI.Social.ActivityLive, assigns)
 
       assert doc
       |> Floki.find("a.subject_minimal")
@@ -547,7 +572,8 @@ defmodule Bonfire.UI.Social.Feeds.FeedActivityTest do
       assert {:ok, boost} = Boosts.boost(bob, post)
       feed = Bonfire.Social.FeedActivities.my_feed(alice)
       fp = feed.entries |> List.first() #|> IO.inspect
-      assert doc = render_component(Bonfire.UI.Social.ActivityLive, %{activity: fp.activity})
+      assigns = %{activity: fp.activity}
+      assert doc = render_surface(Bonfire.UI.Social.ActivityLive, assigns)
 
       assert doc
       |> Floki.find("a.subject_name")
@@ -564,7 +590,8 @@ defmodule Bonfire.UI.Social.Feeds.FeedActivityTest do
       assert {:ok, boost} = Boosts.boost(bob, post)
       feed = Bonfire.Social.FeedActivities.my_feed(alice)
       fp = feed.entries |> List.first() #|> IO.inspect
-      assert doc = render_component(Bonfire.UI.Social.ActivityLive, %{activity: fp.activity})
+      assigns = %{activity: fp.activity}
+      assert doc = render_surface(Bonfire.UI.Social.ActivityLive, assigns)
 
       assert doc
       |> Floki.find("div.object_body")
@@ -585,7 +612,8 @@ defmodule Bonfire.UI.Social.Feeds.FeedActivityTest do
       feed_id = Bonfire.Social.Feeds.instance_feed_id()
       feed = Bonfire.Social.FeedActivities.feed(feed_id, carl)
       fp = feed.entries |> List.first() #|> IO.inspect
-      assert doc = render_component(Bonfire.UI.Social.ActivityLive, %{activity: fp.activity})
+      assigns = %{activity: fp.activity}
+      assert doc = render_surface(Bonfire.UI.Social.ActivityLive, assigns)
 
       assert doc
       |> Floki.find("a.subject_minimal")

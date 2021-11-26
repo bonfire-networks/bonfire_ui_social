@@ -10,6 +10,21 @@ defmodule Bonfire.UI.Social.Test.ConnHelpers do
 
   @endpoint Bonfire.Common.Config.get!(:endpoint_module)
 
+
+  def render_surface(component, assigns, conn \\ nil) do
+    conn = conn || conn()
+    {:ok, view, html} = live_isolated(conn, component, assigns)
+    html
+  end
+
+  # defmacro render_surface(component, assigns) do
+  #   quote do
+  #     import Surface.LiveViewTest
+  #     assigns = unquote(assigns)
+  #     render_surface unquote(component)
+  #   end
+  # end
+
   ### conn
 
   def session_conn(conn \\ build_conn()), do: Plug.Test.init_test_session(conn, %{})

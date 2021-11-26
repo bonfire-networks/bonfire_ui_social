@@ -23,6 +23,7 @@ defmodule Bonfire.UI.Social.ConnCase do
       import Plug.Conn
       import Phoenix.ConnTest
       import Phoenix.LiveViewTest
+      import Surface.LiveViewTest
       import Bonfire.UI.Social.ConnCase
       import Bonfire.UI.Social.Test.ConnHelpers
       import Bonfire.UI.Social.Test.FakeHelpers

@@ -25,7 +25,7 @@ defmodule Bonfire.UI.Social.Feeds.FeedTest do
 
     #   assigns = Bonfire.Social.Web.Feeds.BrowseLive.default_feed(bob) #|> IO.inspect
 
-    #   assert doc = render_component(Bonfire.UI.Social.FeedLive, assigns)
+    #   assert doc = render_surface(Bonfire.UI.Social.FeedLive, assigns)
     #   assert Floki.find(doc, "#load_more") == []
     # end
 
@@ -47,7 +47,7 @@ defmodule Bonfire.UI.Social.Feeds.FeedTest do
 
     #   assigns = Bonfire.Social.Web.Feeds.BrowseLive.default_feed(bob) #|> IO.inspect
 
-    #   assert doc = render_component(Bonfire.UI.Social.FeedLive, assigns)
+    #   assert doc = render_surface(Bonfire.UI.Social.FeedLive, assigns)
     #   assert Floki.find(doc, "#load_more") != []
     # end
 

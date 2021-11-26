@@ -19,7 +19,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
 
   def render(%{activity: %{} = activity} = assigns) do
 
-    Logger.info("ActivityLive: activity provided")
+    # Logger.info("ActivityLive: activity provided")
 
     #IO.inspect(assigns, label: "ActivityLive initial assigns")
 
@@ -27,8 +27,8 @@ defmodule Bonfire.UI.Social.ActivityLive do
                 |> Map.put(:object, e(assigns, :object, nil) || object(activity))
                 # |> IO.inspect(label: "ActivityLive activity")
 
-    verb = e(activity, :verb, :verb, "create") 
-            |> verb_maybe_modify(activity) 
+    verb = e(activity, :verb, :verb, "create")
+            |> verb_maybe_modify(activity)
             #|> IO.inspect
     verb_display = verb_display(verb)
     created_verb_display = "create" |> verb_display()
@@ -40,15 +40,15 @@ defmodule Bonfire.UI.Social.ActivityLive do
       ++ component_maybe_reply_to(verb, activity, e(assigns, :showing_within, nil))
       ++ component_object(verb, activity)
       ++ component_actions(verb, activity, assigns)
-    ) 
+    )
     |> Enum.filter(& &1)
-    |> Enum.map(fn 
-      c when is_atom(c) -> {c, nil} 
+    |> Enum.map(fn
+      c when is_atom(c) -> {c, nil}
       other -> other
     end)
-    |> IO.inspect(label: "ActivityLive: activity_object_components")
+    # |> IO.inspect(label: "ActivityLive: activity_object_components")
 
-  assigns = assigns 
+  assigns = assigns
     |> assigns_merge(
         object: activity.object,
         date_ago: date_from_now(activity.object),
@@ -58,7 +58,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
         verb_display: verb_display,
         created_verb_display: created_verb_display,
         permalink: permalink
-      ) 
+      )
     |> Map.new
     #|> IO.inspect(label: "ActivityLive final assigns")
 
@@ -99,7 +99,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
     Logger.warn("ActivityLive: No activity provided")
 
     ~F"""
-    
+
     """
   end
 

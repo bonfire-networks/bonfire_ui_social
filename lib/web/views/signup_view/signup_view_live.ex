@@ -3,5 +3,6 @@ defmodule Bonfire.UI.Social.SignupViewLive do
 
   prop form, :any
   prop error, :any
+  prop registered, :boolean
 
 end
