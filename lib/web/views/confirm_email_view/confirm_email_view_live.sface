@@ -5,11 +5,11 @@
   {#if @flash }
     <div class="w-4/5 mx-auto">
       <p>
-        wip
-        <!-- <%= live_flash(@flash, :error) || live_flash(@flash, :info) %> -->
+        {live_flash(@flash, :error) || live_flash(@flash, :info)}
       </p>
     </div>
   {/if}
+
   {#if @requested }
     <div class="w-4/5 mx-auto">
       <h2>Great!</h2>
@@ -29,12 +29,11 @@
       </div>
     {/if}
     <Form for={@form} action={path(Bonfire.Me.Web.ConfirmEmailController)} id="confirm-email-form" class="w-4/5 mx-auto">
-    <!-- <%= f = form_for @form, path(Bonfire.Me.Web.ConfirmEmailController), [id: "confirm-email-form", phx_submit: :submit, class: "w-4/5 mx-auto"] %> -->
-      <!-- <%= email_input f, :email, placeholder: "Type your email..." %> -->
-      <input name="email" class="input" placeholder="Type your email..." />
-      <button type="submit">Send</button>
-      <!-- <%= error_tag f, :email %>
-      <%= submit "Send" %> -->
+      <Field name={:email}>
+        <ErrorTag />
+        <TextInput class="input" placeholder="Type your email..." />
+      </Field>
+      <button type="submit">Send</button> 
     </Form>
     <div class="w-4/5 mx-auto mt-10">
       <p>
