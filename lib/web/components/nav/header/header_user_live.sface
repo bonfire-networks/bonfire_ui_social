@@ -3,20 +3,20 @@
     <LiveRedirect to={path(:home)}>
       <div class="flex items-center space-x-2">
         <div class="w-10 h-10 bg-center bg-no-repeat bg-contain" style={"background-image: url(" <> Bonfire.Common.Config.get([:ui, :theme, :instance_logo], '')  <> ")"}></div>
-        <div class="text-base font-medium tracking-wide text-neutral-content">{Bonfire.Common.Config.get([:ui, :theme, :instance_name], '')}</div>
+        <!-- <div class="text-base font-medium tracking-wide text-neutral-content">{Bonfire.Common.Config.get([:ui, :theme, :instance_name], '')}</div> -->
       </div>
     </LiveRedirect>
-    <div class="ml-6 tabs tabs-boxed">
+    <div class="items-center hidden ml-3 md:flex">
+      <Bonfire.UI.Social.SearchLive class="ml-10" />
+    </div>
+    <!-- <div class="ml-6 tabs tabs-boxed">
       {#for {name, route} <- Bonfire.Common.Config.get([:ui, :app_menu_extension_paths], [])}
         <LiveRedirect to={path(route)} class={"tab"}>{name}</LiveRedirect>
       {/for}
-    </div>
+    </div> -->
   </div>
 
 
-  <div class="items-center hidden mr-2 md:flex">
-    <Bonfire.UI.Social.SearchLive class="ml-10" />
-  </div>
 
 
   <div class="items-center hidden md:flex">

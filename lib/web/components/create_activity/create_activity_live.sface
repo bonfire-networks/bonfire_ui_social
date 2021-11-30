@@ -74,9 +74,10 @@
                 :if={Bonfire.Common.Config.get([:ui, :smart_input, :cw], []) == true}
                 type="button"
                 @click="title_open = !title_open"
-                class="flex items-center p-1 rounded hover:bg-base-300 focus:outline-none">
-                <svg :class="{'text-primary' : title_open === true }" class="w-4 h-4 text-base-content" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M18 3a1 1 0 00-1.447-.894L8.763 6H5a3 3 0 000 6h.28l1.771 5.316A1 1 0 008 18h1a1 1 0 001-1v-4.382l6.553 3.276A1 1 0 0018 15V3z" clip-rule="evenodd"></path></svg>
-                <span :class="{'text-primary' : title_open === true}" class="ml-2 text-xs font-semibold text-base-content">CW</span>
+                :class="{'text-primary-content bg-primary' : title_open}"
+                class="flex items-center p-1 px-2 rounded-full hover:bg-primary focus:outline-none">
+                <svg  class="w-4 h-4 text-base-content" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M18 3a1 1 0 00-1.447-.894L8.763 6H5a3 3 0 000 6h.28l1.771 5.316A1 1 0 008 18h1a1 1 0 001-1v-4.382l6.553 3.276A1 1 0 0018 15V3z" clip-rule="evenodd"></path></svg>
+                <span  class="ml-2 text-xs text-base-content">CW</span>
               </button>
 
               <Bonfire.UI.Social.BoundariesLive 

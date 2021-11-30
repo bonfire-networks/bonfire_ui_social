@@ -19,7 +19,7 @@
         value={e(assigns, :search, "")} 
         placeholder={e(assigns, :search_placeholder, "Search...")} 
         phx-debounce="300" 
-        class="pl-8 input text-base"/>
+        class="pl-8 text-base rounded-full input h-11 text-base-content"/>
       </div>
     </label>
 </form>
