@@ -10,38 +10,18 @@ defmodule Bonfire.UI.Social.CommentLive do
   prop reply_to_thread_id, :any
   prop sub_replies_count, :integer, default: 0
 
-  # FIXME! update no longer works in stateless
-  def update(%{comment: %{__struct__: Bonfire.Data.Social.Activity} = activity} = assigns, socket) do
 
-    # {activity, comment} = Map.pop(comment, :activity)
-    # IO.inspect(activity)
-    {object, activity} = Map.pop(activity, :object)
-
-    {:ok, assign(socket, assigns
-      |> assigns_merge(prepare(activity, object, activity))
-    )}
+  def activity(%{__struct__: Bonfire.Data.Social.Activity} = activity) do
+    activity
   end
 
-  def update(%{comment: comment} = assigns, socket) do
-
-    # IO.inspect(comment)
-    {activity, comment} = Map.pop(comment, :activity)
-    # IO.inspect(activity)
-    {object, activity} = Map.pop(activity, :object)
-
-    {:ok, assign(socket, assigns
-      |> assigns_merge(prepare(comment, object, activity))
-    )}
+  def activity(%{activity: activity}) do
+    activity
   end
 
-  def prepare(comment, object, activity) do
-    %{
-      activity: activity,
-      object: object,
-      comment: comment,
-      sub_replies_count: e(activity, :replied, :nested_replies_count, 0) + e(activity, :replied, :direct_replies_count, 0),
-      date_ago: date_from_now(comment)
-    }
+  def sub_replies_count(comment) do
+    activity = activity(comment)
+    e(activity, :replied, :nested_replies_count, 0) + e(activity, :replied, :direct_replies_count, 0)
   end
 
 end

@@ -31,8 +31,11 @@ defmodule Bonfire.UI.Social.ThreadLive do
     Logger.debug("ThreadLive: adding new reply")
     # IO.inspect(merge_reply: previous_replies)
 
-    new_reply = new_reply |> Map.put(:path, e(new_reply, :activity, :object, :replied, :path, []))
+    new_reply = new_reply
+      |> Map.put(:path, e(new_reply, :activity, :object, :replied, :path, []))
+
     replies = [new_reply] ++ e(socket, :assigns, :replies, [])
+
     {:ok, assign(socket, assigns |> assigns_merge(
       replies: replies,
       threaded_replies: Bonfire.Social.Threads.arrange_replies_tree(replies),
@@ -47,6 +50,8 @@ defmodule Bonfire.UI.Social.ThreadLive do
   end
 
   def update(assigns, socket) do
+    # IO.inspect(assigns, label: "Thread: assigns")
+
     thread_id = e(assigns, :thread_id, nil)
 
     if thread_id do
