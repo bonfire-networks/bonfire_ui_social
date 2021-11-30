@@ -3,7 +3,7 @@
     aria-hidden="true"
     class="h-32 bg-pink-600 bg-cover rounded-t-lg"
     style={"background-image: url('#{image_url(@user)} ')"} />
-  <LiveRedirect to={path(:switch_user, [:show, @user.character.username || ""]) <> @go}>
+  <LiveRedirect to={path(:switch_user, [:show, @user.character.username || ""]) <> (@go || "")}>
     <div class="px-3 pb-2 -mt-8">
       <div class="">
         <div class="flex items-center justify-between">

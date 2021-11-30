@@ -26,7 +26,7 @@
               <Link to={path(:login, :index)} class="btn btn-primary">{l "Login"}</Link>
             </span>
             <span class="inline-flex ml-3 ">
-              <Link to={path(:signup, :index)} class="btn btn-outline btn-accent">{l "Signup"}</Link>
+              <Link to={path(:signup, :index)} class="btn btn-outline btn-secondary">{l "Signup"}</Link>
             </span>
         {#else }
             <span class="inline-flex rounded-md shadow-sm">
