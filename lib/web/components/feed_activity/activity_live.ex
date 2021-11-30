@@ -234,11 +234,11 @@ defmodule Bonfire.UI.Social.ActivityLive do
   def component_object(_, %{object: %{} = object}) do
     case Bonfire.Common.Types.object_type(object) do
       type ->
-        Logger.debug("ActivityLive: component object_type recognised: #{type}")
+        Logger.debug("ActivityLive: component object_type recognised: #{inspect(type)}")
         component_for_object_type(type, object)
 
       _ ->
-        Logger.warn("ActivityLive: component object_type NOT recognised: #{object}")
+        Logger.warn("ActivityLive: component object_type NOT recognised: #{inspect(object)}")
         [Bonfire.UI.Social.Activity.UnknownLive]
     end
   end
@@ -256,7 +256,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
   # def component_for_object_type(type, object) when type in [ValueFlows.Process], do: [Bonfire.UI.Social.Activity.ProcessListLive.activity_component(object)] # TODO: choose between Task and other Intent types
   def component_for_object_type(type, object) when type in [ValueFlows.Process], do: [{Bonfire.Common.Config.get([:ui, :default_instance_feed_previews, :process], Bonfire.UI.Social.Activity.ProcessListLive), object: Bonfire.UI.Social.Activity.ProcessListLive.prepare(object)}]
   def component_for_object_type(type, _object) do
-    Logger.warn("ActivityLive: no component available for object_type: #{type}")
+    Logger.warn("ActivityLive: no component available for object_type: #{inspect(type) }")
     [Bonfire.UI.Social.Activity.UnknownLive]
   end
 
