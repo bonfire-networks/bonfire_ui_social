@@ -609,7 +609,7 @@ defmodule Bonfire.UI.Social.Feeds.FeedActivityTest do
       attrs = %{to_circles: [:guest], post_content: %{summary: "summary", name: "test post name", html_body: "<p>first post/p>"}}
       assert {:ok, post} = Posts.publish(alice, attrs)
       assert {:ok, boost} = Boosts.boost(bob, post)
-      feed_id = Bonfire.Social.Feeds.instance_feed_id()
+      feed_id = Bonfire.Social.Feeds.named_feed_id(:local)
       feed = Bonfire.Social.FeedActivities.feed(feed_id, carl)
       fp = feed.entries |> List.first() #|> IO.inspect
       assigns = %{activity: fp.activity}
