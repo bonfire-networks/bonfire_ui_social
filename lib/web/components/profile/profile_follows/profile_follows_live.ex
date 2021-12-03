@@ -3,6 +3,5 @@ defmodule Bonfire.UI.Social.ProfileFollowsLive do
 
   prop user, :map
   prop selected_tab, :string
-  prop followers, :map
-  prop following, :map
+  prop feed, :list
 end

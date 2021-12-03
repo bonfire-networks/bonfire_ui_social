@@ -11,6 +11,7 @@
       page_title={@page_title}
       page={@page}
       page_info={@page_info}
+      feed={@feed}
       selected_tab={@selected_tab}
       smart_input={@smart_input}
       has_private_tab={@has_private_tab}
