@@ -28,7 +28,9 @@
     <!-- <img class="object-cover w-10 h-10 rounded-full" src={avatar_url(current_user(assigns))} alt="current user profile image" /> -->
     <div class="flex flex-col flex-1">
       {#if Bonfire.Common.Config.get([:ui, :default_smart_input])}
-        {live_component(@socket, Bonfire.Common.Config.get([:ui, :default_smart_input]), process_url: "/process/")}
+        <Surface.Components.Dynamic.Component
+          module={Bonfire.Common.Config.get([:ui, :default_smart_input])}
+        />
       {#else}
         <Bonfire.UI.Social.CreateActivityLive
           reply_to_id={@reply_to_id}
