@@ -2,7 +2,7 @@ defmodule Bonfire.UI.Social.Feeds.FeedActivityTest do
 
   use Bonfire.UI.Social.ConnCase
 
-  # alias Bonfire.Social.Fake
+   alias Bonfire.Social.Fake
   alias Bonfire.Me.Users
   alias Bonfire.Social.{Boosts, Likes, Follows, Posts}
   alias Bonfire.Repo
@@ -517,6 +517,7 @@ defmodule Bonfire.UI.Social.Feeds.FeedActivityTest do
 
     test "As a user, when someone replies to an activity, I want to see the object of the original activity" do
       account = fake_account!()
+      IO.inspect(account)
       alice = fake_user!(account)
       account2 = fake_account!()
       bob = fake_user!(account2)
