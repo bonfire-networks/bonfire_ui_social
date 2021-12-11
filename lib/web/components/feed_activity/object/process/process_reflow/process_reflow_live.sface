@@ -4,7 +4,7 @@
     <div class={"order-last"}>
       <div class={"flex items-center space-x-2 mt-2"}>
         <LivePatch to={"/process/"<>e(@object, :id,"")}>
-          <div class="text-lg font-bold text-gray-700 hover:underline hover:text-gray-800">{@object.name}</div>
+          <div class="text-lg font-bold text-gray-700 hover:underline hover:text-gray-800">{e(@object, :name, "Untitled")}</div>
         </LivePatch>
       </div>
       <div :if={e(@object, :due, nil)} class="flex items-center mt-1 space-x-4">
@@ -36,9 +36,6 @@
 
 
 
-
-
-
 <div 
   :if={@showing_within != :feed}
   class={"block bg-base", "border rounded-lg my-2": @showing_within == :feed}>
@@ -46,7 +43,7 @@
     <div class={"order-last": @showing_within == :feed}>
       <div class={"flex items-center space-x-2", "mt-2": @showing_within == :feed}>
       <Bonfire.UI.Social.LikeActionWithoutLabelLive
-          id={ComponentID.new(Bonfire.UI.Social.LikeActionWithoutLabelLive, @object)} 
+        id={ComponentID.new(Bonfire.UI.Social.LikeActionWithoutLabelLive, @object)} 
         object_id={e(@object, :id, "")}
         current_user={current_user(assigns)}
       />
@@ -67,7 +64,6 @@
     </div>
     <div>
       
-
       
     </div>
   </div>
