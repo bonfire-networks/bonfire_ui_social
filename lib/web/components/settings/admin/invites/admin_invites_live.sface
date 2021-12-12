@@ -1,125 +1,158 @@
 <Bonfire.UI.Social.SettingsViewLive.SettingsHeaderLive 
   settings_section_title={l "Invites"}
   settings_section_description={""}
-  />
-  <div class="">
-    <div class="pb-4 space-y-6 sm:space-y-5">
-      <div class="p-4">
-        <h1 class="text-xl font-bold text-base-content">{l "Generate a new invite link"}</h1>
-        <p>{l "Generate and share an invite link with others to grant access to this instance"}</p>
-        <div class="mt-4">
-          <div class="grid grid-cols-1 gap-y-6 gap-x-4 sm:grid-cols-6">
-            <div class="sm:col-span-3 form-control">
-              <label for="first-name" class="label">
-                {l "Max number of users"}
-              </label>
-              <div class="">
-                <select class="w-full select select-bordered">
-                  <option>No limits</option>
-                </select>
-              </div>
-            </div>
+/>
 
-            <div class="sm:col-span-3">
-              <label for="last-name" class="label">
-                {l "Expire after"}
-              </label>
-              <div class="">
-                <select class="w-full select select-bordered">
-                  <option>Never</option>
-                </select>
-              </div>
+<div class="">
+  <div class="pb-4 space-y-6 sm:space-y-5">
+    <div class="p-4">
+      <h1 class="text-xl font-bold text-base-content">{l "Generate a new invite link"}</h1>
+      <p>{l "Generate and share an invite link with others to grant access to this instance"}</p>
+      <div class="mt-4">
+        <div class="grid grid-cols-1 gap-y-6 gap-x-4 sm:grid-cols-6">
+          <div class="sm:col-span-3 form-control">
+            <label for="first-name" class="label">
+              {l "Max number of users"}
+            </label>
+            <div class="">
+              <select class="w-full select select-bordered">
+                <option>No limits</option>
+              </select>
             </div>
           </div>
-          <div class="mt-4">
-            <button class="w-full btn btn-primary btn-wide">{l "Generate a new invite link"}</button>
+
+          <div class="sm:col-span-3">
+            <label for="last-name" class="label">
+              {l "Expire after"}
+            </label>
+            <div class="">
+              <select class="w-full select select-bordered">
+                <option>Never</option>
+              </select>
+            </div>
           </div>
         </div>
-      </div>
-      <div class="px-4 divider">{l "Exsisting invites"}</div> 
-      <div class="p-4">
-          <div class="overflow-x-auto">
-            <table class="table w-full table-zebra">
-              <thead>
-                <tr>
-                  <th>Link</th> 
-                  <th>Uses</th> 
-                  <th>Expires</th> 
-                  <th></th>
-                </tr>
-              </thead> 
-              <tbody>
-                <tr>
-                  <td class="">
-                    <div class="form-control">
-                      <div class="relative">
-                        <input type="text" value="https://bonjour.bonfire.cafe/invite/0xdcat9384" class="w-full pr-16 input input-primary input-bordered"> 
-                        <button class="absolute top-0 right-0 rounded-l-none btn btn-primary"><Outline.DuplicateIcon /></button>
-                      </div>
-                    </div> 
-                  </td> 
-                  <td>
-                     <span class="text-sm text-base-content">{"Expired"}</span>
-                  </td> 
-                  <td><span class="text-sm text-base-content">{"1d"}</span></td> 
-                  <th>
-                    <button class="flex items-center space-x-2 btn btn-ghost btn-xs">{l "deactivate"}</button>
-                  </th>
-                </tr>
-                <tr>
-                  <td class="">
-                    <div class="form-control">
-                      <div class="relative">
-                        <input type="text" value="https://bonjour.bonfire.cafe/invite/0xdcat9384" class="w-full pr-16 input input-primary input-bordered"> 
-                        <button class="absolute top-0 right-0 rounded-l-none btn btn-primary"><Outline.DuplicateIcon /></button>
-                      </div>
-                    </div> 
-                  </td> 
-                  <td>
-                     <span class="text-sm text-base-content">{"Expired"}</span>
-                  </td> 
-                  <td><span class="text-sm text-base-content">{"1d"}</span></td> 
-                  <th>
-                    <button class="flex items-center space-x-2 btn btn-ghost btn-xs">{l "deactivate"}</button>
-                  </th>
-                </tr>
-                <tr>
-                  <td class="">
-                    <div class="form-control">
-                      <div class="relative">
-                        <input type="text" value="https://bonjour.bonfire.cafe/invite/0xdcat9384" class="w-full pr-16 input input-primary input-bordered"> 
-                        <button class="absolute top-0 right-0 rounded-l-none btn btn-primary"><Outline.DuplicateIcon /></button>
-                      </div>
-                    </div> 
-                  </td> 
-                  <td>
-                     <span class="text-sm text-base-content">{"Expired"}</span>
-                  </td> 
-                  <td><span class="text-sm text-base-content">{"1d"}</span></td> 
-                  <th>
-                    <button class="flex items-center space-x-2 btn btn-ghost btn-xs">{l "deactivate"}</button>
-                  </th>
-                </tr>
-                <tr>
-                  <td class="">
-                    <div class="form-control">
-                      <div class="relative">
-                        <input type="text" value="https://bonjour.bonfire.cafe/invite/0xdcat9384" class="w-full pr-16 input input-primary input-bordered"> 
-                        <button class="absolute top-0 right-0 rounded-l-none btn btn-primary"><Outline.DuplicateIcon /></button>
-                      </div>
-                    </div> 
-                  </td> 
-                  <td>
-                     <span class="text-sm text-base-content">{"Expired"}</span>
-                  </td> 
-                  <td><span class="text-sm text-base-content">{"1d"}</span></td> 
-                  <th>
-                    <button class="flex items-center space-x-2 btn btn-ghost btn-xs">{l "deactivate"}</button>
-                  </th>
-                </tr>
-              </tbody> 
-            </table>
-          </div>
+        <div class="mt-4">
+          <button class="w-full btn btn-primary btn-wide">
+            {l "Generate a new invite link"}
+          </button>
+        </div>
       </div>
     </div>
+    <div class="px-4 divider">{l "Exsisting invites"}</div>
+    <div class="p-4">
+        <div class="overflow-x-auto">
+          <table class="table w-full table-zebra">
+            <thead>
+              <tr>
+                <th>Link</th>
+                <th>Uses</th>
+                <th>Expires</th>
+                <th></th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td class="">
+                  <div class="form-control">
+                    <div class="relative">
+                      <input
+                        type="text"
+                        value="https://bonjour.bonfire.cafe/invite/0xdcat9384"
+                        class="w-full pr-16 input input-primary input-bordered"
+                      >
+                      <button class="absolute top-0 right-0 rounded-l-none btn btn-primary">
+                        <Outline.DuplicateIcon />
+                      </button>
+                    </div>
+                  </div>
+                </td> 
+                <td>
+                  <span class="text-sm text-base-content">{"Expired"}</span>
+                </td> 
+                <td><span class="text-sm text-base-content">{"1d"}</span></td>
+                <th>
+                  <button class="flex items-center space-x-2 btn btn-ghost btn-xs">{l "deactivate"}</button>
+                </th>
+              </tr>
+              <tr>
+                <td class="">
+                  <div class="form-control">
+                    <div class="relative">
+                      <input
+                        type="text"
+                        value="https://bonjour.bonfire.cafe/invite/0xdcat9384"
+                        class="w-full pr-16 input input-primary input-bordered"
+                      >
+                      <button class="absolute top-0 right-0 rounded-l-none btn btn-primary">
+                        <Outline.DuplicateIcon />
+                      </button>
+                    </div>
+                  </div>
+                </td>
+                <td>
+                  <span class="text-sm text-base-content">{"Expired"}</span>
+                </td> 
+                <td>
+                  <span class="text-sm text-base-content">{"1d"}</span>
+                </td>
+                <th>
+                  <button class="flex items-center space-x-2 btn btn-ghost btn-xs">{l "deactivate"}</button>
+                </th>
+              </tr>
+              <tr>
+                <td class="">
+                  <div class="form-control">
+                    <div class="relative">
+                      <input
+                        type="text"
+                        value="https://bonjour.bonfire.cafe/invite/0xdcat9384"
+                        class="w-full pr-16 input input-primary input-bordered"
+                      >
+                      <button class="absolute top-0 right-0 rounded-l-none btn btn-primary">
+                        <Outline.DuplicateIcon />
+                      </button>
+                    </div>
+                  </div>
+                </td>
+                <td>
+                  <span class="text-sm text-base-content">{"Expired"}</span>
+                </td> 
+                <td>
+                  <span class="text-sm text-base-content">{"1d"}</span>
+                </td>
+                <th>
+                  <button class="flex items-center space-x-2 btn btn-ghost btn-xs">{l "deactivate"}</button>
+                </th>
+              </tr>
+              <tr>
+                <td class="">
+                  <div class="form-control">
+                    <div class="relative">
+                      <input
+                        type="text"
+                        value="https://bonjour.bonfire.cafe/invite/0xdcat9384"
+                        class="w-full pr-16 input input-primary input-bordered"
+                      >
+                      <button class="absolute top-0 right-0 rounded-l-none btn btn-primary">
+                        <Outline.DuplicateIcon />
+                      </button>
+                    </div>
+                  </div>
+                </td>
+                <td>
+                  <span class="text-sm text-base-content">{"Expired"}</span>
+                </td>
+                <td>
+                  <span class="text-sm text-base-content">{"1d"}</span>
+                </td>
+                <th>
+                  <button class="flex items-center space-x-2 btn btn-ghost btn-xs">{l "deactivate"}</button>
+                </th>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+    </div>
   </div>
+</div>

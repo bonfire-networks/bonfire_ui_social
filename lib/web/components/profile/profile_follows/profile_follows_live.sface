@@ -1,28 +1,27 @@
 <div>
-
-
-<div   
-  role="tabpanel"
-  class="flex w-full tabs">
-  <LivePatch 
-    to={"/user/#{e(@user, :character, :username, "")}/followers"} 
-    class={"tab flex-1 tab-bordered", "tab-active": @selected_tab ==  "followers"}>
-    {l "Followers"} ({e(@user, :character, :follow_count, :follower_count, 0)})
-  </LivePatch> 
-  <LivePatch 
-    to={"/user/#{e(@user, :character, :username, "")}/followed"} 
-    class={"tab flex-1 tab-bordered", "tab-active": @selected_tab ==  "followed"}>
-    {l "Following"} ({e(@user, :character, :follow_count, :follow_count, 0)})
-  </LivePatch>   
-</div>
-
-
+  <div role="tabpanel" class="flex w-full tabs">
+    <LivePatch 
+      to={"/user/#{e(@user, :character, :username, "")}/followers"} 
+      class={"tab flex-1 tab-bordered", "tab-active": @selected_tab ==  "followers"}
+    >
+      {l "Followers"} ({e(@user, :character, :follow_count, :follower_count, 0)})
+    </LivePatch> 
+    <LivePatch 
+      to={"/user/#{e(@user, :character, :username, "")}/followed"} 
+      class={"tab flex-1 tab-bordered", "tab-active": @selected_tab ==  "followed"}
+    >
+      {l "Following"} ({e(@user, :character, :follow_count, :follow_count, 0)})
+    </LivePatch>   
+  </div>
 
   <div :if={@selected_tab == "followed"}>
     <div class="flow-root my-4">
       <ul class="-my-5 divide-y divide-base-200">
         <li :for={follow <- @feed}>
-          <Bonfire.UI.Social.ProfileItemLive profile={e(follow, :followed_profile, nil)} character={e(follow, :followed_character, nil)} />
+          <Bonfire.UI.Social.ProfileItemLive
+            profile={e(follow, :followed_profile, nil)}
+            character={e(follow, :followed_character, nil)}
+          />
         </li>
       </ul>
     </div>
@@ -32,11 +31,12 @@
     <div class="flow-root my-4">
       <ul class="-my-5 divide-y divide-base-200">
         <li :for={follow <- @feed}>
-          <Bonfire.UI.Social.ProfileItemLive profile={e(follow, :follower_profile, nil)} character={e(follow, :follower_character, nil)} />
+          <Bonfire.UI.Social.ProfileItemLive
+            profile={e(follow, :follower_profile, nil)}
+            character={e(follow, :follower_character, nil)}
+          />
         </li>
       </ul>
     </div>
   </div>
-
-
 </div>

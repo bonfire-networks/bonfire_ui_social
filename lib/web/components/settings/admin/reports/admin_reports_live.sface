@@ -1,9 +1,10 @@
 <Bonfire.UI.Social.SettingsViewLive.SettingsHeaderLive 
   settings_section_title={l "Reported activities"}
   settings_section_description={""}
-  />
-  <div class="">
-    <div class="pb-4 space-y-6 sm:space-y-5">
-     
-    </div>
+/>
+
+<div class="">
+  <div class="pb-4 space-y-6 sm:space-y-5">
+    
   </div>
+</div>

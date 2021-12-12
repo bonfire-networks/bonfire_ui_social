@@ -1,7 +1,6 @@
-<main
-  class="mx-3 mb-3 md:flex md:mx-0">
+<main class="mx-3 mb-3 md:flex md:mx-0">
   <section class="mx-auto shadow-lg bg-base-100 rounded-box w-center">
-   <Bonfire.UI.Social.PageHeaderLive
+    <Bonfire.UI.Social.PageHeaderLive
       page_title={@page_title}
     />
     <div class="border-t-8 border-base-200 md:mx-0 text-base-content">

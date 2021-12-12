@@ -1,11 +1,13 @@
 <nav
   role="tabpanel"
   class="flex justify-between w-full mt-4 mb-2 tabs"
-  aria-label="Switch between timeline, posts, boosts, media tabs">
+  aria-label="Switch between timeline, posts, boosts, media tabs"
+>
   <LivePatch 
     :for={{item, route} <- Bonfire.Common.Config.get([:ui, :profile, :navigation], [timeline: "timeline"])}
     to={"/user/#{e(@user, :character, :username, "")}/#{route}"} 
-    class={"tab flex-1 font-normal tab-bordered capitalize text-base", "tab-active": @selected_tab == Atom.to_string(item)}>
+    class={"tab flex-1 font-normal tab-bordered capitalize text-base", "tab-active": @selected_tab == Atom.to_string(item)}
+  >
     {item}
   </LivePatch>
 </nav>

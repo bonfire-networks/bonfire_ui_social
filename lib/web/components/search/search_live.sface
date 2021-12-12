@@ -3,9 +3,12 @@
   role="search"
   phx-change="Bonfire.Search:search"
   action="/search"
-  method="GET">
+  method="GET"
+>
   <label>
-    <span class="sr-only">{e(assigns, :search_placeholder, "Search")}</span>
+    <span class="sr-only">
+      {e(assigns, :search_placeholder, "Search")}
+    </span>
     <div class="relative rounded-md">
       <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none" aria-hidden="true">
         <Solid.SearchIcon class="w-4 h-4 mr-3 text-base-content text-opacity-80" />
@@ -19,7 +22,8 @@
         value={e(assigns, :search, "")} 
         placeholder={e(assigns, :search_placeholder, "Search...")} 
         phx-debounce="300" 
-        class="pl-8 text-base rounded-full input h-11 text-base-content"/>
+        class="pl-8 text-base rounded-full input h-11 text-base-content"
+      />
       </div>
     </label>
 </form>

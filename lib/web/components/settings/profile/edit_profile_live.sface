@@ -1,7 +1,7 @@
 <form phx-change="Bonfire.Me.Profiles:validate" phx-submit="Bonfire.Me.Profiles:save" method="POST">
   <Bonfire.UI.Social.SettingsViewLive.SettingsHeaderLive 
-  settings_section_title={l "Profile"}
-  settings_section_description={l "This information will be displayed publicly so be careful what you share."}
+    settings_section_title={l "Profile"}
+    settings_section_description={l "This information will be displayed publicly so be careful what you share."}
   />
   <div class="p-4">
     <div class="mt-1 sm:mt-0">
@@ -39,17 +39,28 @@
 
         <div class="form-control">
           <label for="name" class="label">
-            <span class="label-text">{l "Full name"}</span>
-          </label> 
-          <input type="text" name="profile[name]" id="name" autocomplete="name" class="input input-bordered" value={e(current_user(assigns), :profile, :name, "")}>
+            <span class="label-text">
+              {l "Full name"}
+            </span>
+          </label>
+          <input
+            type="text"
+            name="profile[name]"
+            id="name"
+            autocomplete="name"
+            class="input input-bordered"
+            value={e(current_user(assigns), :profile, :name, "")}
+          >
         </div>
 
         <div class="form-control">
           <label for="username" class="label">
-            <span class="label-text">{l "Username"}</span>
-          </label> 
+            <span class="label-text">
+              {l "Username"}
+            </span>
+          </label>
           <label class="w-full input-group">
-            <span>@</span> 
+            <span>@</span>
              <input type="text" name="character[username]" id="username" autocomplete="username" class="flex-1 input input-bordered" value={e(current_user(assigns), :character, :username, "")}>
             <span>
               @{Bonfire.Common.Config.get(:host)}
@@ -60,7 +71,7 @@
         <div class="form-control">
           <label for="about" class="label">
             <span class="label-text">{l "About"}</span>
-          </label> 
+          </label>
           <textarea id="about" name="profile[summary]" rows="3" class="h-24 textarea textarea-bordered">
             {e(current_user(assigns), :profile, :summary, "")}
           </textarea>
@@ -72,14 +83,21 @@
         <div class="form-control">
           <label for="website" class="label">
             <span class="label-text">{l "Website"}</span>
-          </label> 
-          <input type="text" name="profile[website]" id="website" autocomplete="website" class="input input-bordered" value={e(current_user(assigns), :profile, :website, "")}>
+          </label>
+          <input
+            type="text"
+            name="profile[website]"
+            id="website"
+            autocomplete="website"
+            class="input input-bordered"
+            value={e(current_user(assigns), :profile, :website, "")}
+          >
         </div>
 
         <div class="form-control">
           <label for="location" class="label">
             <span class="label-text">{l "Location"}</span>
-          </label> 
+          </label>
           <input type="text" name="profile[location]" id="location" autocomplete="location" class="input input-bordered" value={e(current_user(assigns), :profile, :location, "")}>
         </div>
         

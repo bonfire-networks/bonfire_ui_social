@@ -1,17 +1,27 @@
 
-  <li :if={current_user(assigns)}>
-  <LivePatch to={path(current_user(assigns))} class="text-base-content">{l "My Profile"}</LivePatch>
-  </li>
-  <li :if={current_user(assigns)}>
-  <LiveRedirect to="/switch-user" class="text-base-content">{l "Switch User"}</LiveRedirect>
-  </li>
-  <li :if={current_user(assigns)}>
-  <LiveRedirect to="/settings" class="text-base-content">{l "Settings"}</LiveRedirect>
-  </li>
-  <li>
-  <LiveRedirect to={"#{path(:home)}"} class="text-base-content">{l "Home"}</LiveRedirect>
-  </li>
-  <li :if={current_user(assigns)}>  
-  <LiveRedirect to="/logout" class="text-base-content">{l "Logout"}</LiveRedirect>
-  </li>
+<li :if={current_user(assigns)}>
+  <LivePatch to={path(current_user(assigns))} class="text-base-content">
+    {l "My Profile"}
+  </LivePatch>
+</li>
+<li :if={current_user(assigns)}>
+  <LiveRedirect to="/switch-user" class="text-base-content">
+    {l "Switch User"}
+  </LiveRedirect>
+</li>
+<li :if={current_user(assigns)}>
+  <LiveRedirect to="/settings" class="text-base-content">
+    {l "Settings"}
+  </LiveRedirect>
+</li>
+<li>
+  <LiveRedirect to={"#{path(:home)}"} class="text-base-content">
+    {l "Home"}
+  </LiveRedirect>
+</li>
+<li :if={current_user(assigns)}>  
+  <LiveRedirect to="/logout" class="text-base-content">
+    {l "Logout"}
+  </LiveRedirect>
+</li>
 
