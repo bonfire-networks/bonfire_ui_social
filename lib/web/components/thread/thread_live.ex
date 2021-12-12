@@ -59,7 +59,7 @@ defmodule Bonfire.UI.Social.ThreadLive do
       # IO.inspect(assigns)
       current_user = current_user(assigns) #|> IO.inspect
 
-      with %{entries: replies, metadata: page_info} <- Bonfire.Social.Threads.list_replies(thread_id, current_user, e(assigns, :after, nil), @thread_max_depth, @pagination_limit) do
+      with %{edges: replies, page_info: page_info} <- Bonfire.Social.Threads.list_replies(thread_id, current_user, e(assigns, :after, nil), @thread_max_depth, @pagination_limit) do
         # IO.inspect(thread_id, label: "thread_id")
         # IO.inspect(replies, label: "replies")
 

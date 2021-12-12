@@ -33,7 +33,7 @@ defmodule Bonfire.UI.Social.Feeds.FeedActivityTest do
       assert {:ok, post_reply} = Posts.publish(eve, attrs_reply)
 
       feed = Bonfire.Social.FeedActivities.my_feed(bob)
-      fp = feed.entries |> List.last() #|> IO.inspect
+      fp = feed.edges |> List.last() #|> IO.inspect
       assigns = %{activity: fp.activity}
       assert doc = render_surface(Bonfire.UI.Social.ActivityLive, assigns)
 
@@ -56,7 +56,7 @@ defmodule Bonfire.UI.Social.Feeds.FeedActivityTest do
       assert {:ok, boost} = Boosts.boost(alice, post)
 
       feed = Bonfire.Social.FeedActivities.my_feed(bob)
-      fp = feed.entries |> List.first() #|> IO.inspect
+      fp = feed.edges |> List.first() #|> IO.inspect
       assigns = %{activity: fp.activity}
       assert doc = render_surface(Bonfire.UI.Social.ActivityLive, assigns)
 
@@ -79,7 +79,7 @@ defmodule Bonfire.UI.Social.Feeds.FeedActivityTest do
       assert {:ok, boost} = Likes.like(bob, post)
 
       feed = Bonfire.Social.FeedActivities.my_feed(alice)
-      fp = feed.entries |> List.first() #|> IO.inspect
+      fp = feed.edges |> List.first() #|> IO.inspect
       assigns = %{activity: fp.activity}
       assert doc = render_surface(Bonfire.UI.Social.ActivityLive, assigns)
 
@@ -102,7 +102,7 @@ defmodule Bonfire.UI.Social.Feeds.FeedActivityTest do
       assert {:ok, boost} = Boosts.boost(bob, post)
 
       feed = Bonfire.Social.FeedActivities.my_feed(bob)
-      fp = feed.entries |> List.first() #|> IO.inspect
+      fp = feed.edges |> List.first() #|> IO.inspect
       assigns = %{activity: fp.activity}
       assert doc = render_surface(Bonfire.UI.Social.ActivityLive, assigns)
 
@@ -125,7 +125,7 @@ defmodule Bonfire.UI.Social.Feeds.FeedActivityTest do
       assert {:ok, like} = Likes.like(bob, post)
 
       feed = Bonfire.Social.FeedActivities.my_feed(bob)
-      fp = feed.entries |> List.last() #|> IO.inspect
+      fp = feed.edges |> List.last() #|> IO.inspect
       assigns = %{activity: fp.activity}
       assert doc = render_surface(Bonfire.UI.Social.ActivityLive, assigns)
 
@@ -149,7 +149,7 @@ defmodule Bonfire.UI.Social.Feeds.FeedActivityTest do
         assert {:ok, like} = Likes.like(bob, post)
 
         feed = Bonfire.Social.FeedActivities.my_feed(bob)
-        fp = feed.entries |> List.first() #|> IO.inspect
+        fp = feed.edges |> List.first() #|> IO.inspect
         assigns = %{activity: fp.activity}
       assert doc = render_surface(Bonfire.UI.Social.ActivityLive, assigns)
 
@@ -173,7 +173,7 @@ defmodule Bonfire.UI.Social.Feeds.FeedActivityTest do
       assert {:ok, like} = Likes.like(bob, post)
 
       feed = Bonfire.Social.FeedActivities.my_feed(bob)
-      fp = feed.entries |> List.first() #|> IO.inspect
+      fp = feed.edges |> List.first() #|> IO.inspect
       assigns = %{activity: fp.activity}
       assert doc = render_surface(Bonfire.UI.Social.ActivityLive, assigns)
 
@@ -198,7 +198,7 @@ defmodule Bonfire.UI.Social.Feeds.FeedActivityTest do
       assert unlike = Likes.unlike(bob, post)
 
       feed = Bonfire.Social.FeedActivities.my_feed(bob)
-      fp = feed.entries |> List.first() #|> IO.inspect
+      fp = feed.edges |> List.first() #|> IO.inspect
       assigns = %{activity: fp.activity}
       assert doc = render_surface(Bonfire.UI.Social.ActivityLive, assigns)
 
@@ -223,7 +223,7 @@ defmodule Bonfire.UI.Social.Feeds.FeedActivityTest do
       assert unlike = Likes.unlike(bob, post)
 
       feed = Bonfire.Social.FeedActivities.my_feed(bob)
-      fp = feed.entries |> List.first() #|> IO.inspect
+      fp = feed.edges |> List.first() #|> IO.inspect
       assigns = %{activity: fp.activity}
       assert doc = render_surface(Bonfire.UI.Social.ActivityLive, assigns)
 
@@ -248,7 +248,7 @@ defmodule Bonfire.UI.Social.Feeds.FeedActivityTest do
       assert {:ok, boost} = Boosts.boost(bob, post)
 
       feed = Bonfire.Social.FeedActivities.my_feed(bob)
-      fp = feed.entries |> List.first() #|> IO.inspect
+      fp = feed.edges |> List.first() #|> IO.inspect
       assigns = %{activity: fp.activity}
       assert doc = render_surface(Bonfire.UI.Social.ActivityLive, assigns)
 
@@ -273,7 +273,7 @@ defmodule Bonfire.UI.Social.Feeds.FeedActivityTest do
       assert {:ok, boost} = Boosts.boost(bob, post)
 
       feed = Bonfire.Social.FeedActivities.my_feed(bob)
-      fp = feed.entries |> List.first() #|> IO.inspect
+      fp = feed.edges |> List.first() #|> IO.inspect
       assigns = %{activity: fp.activity}
       assert doc = render_surface(Bonfire.UI.Social.ActivityLive, assigns)
 
@@ -299,7 +299,7 @@ defmodule Bonfire.UI.Social.Feeds.FeedActivityTest do
       assert unboosted = Boosts.unboost(bob, post)
 
       feed = Bonfire.Social.FeedActivities.my_feed(bob)
-      fp = feed.entries |> List.first() #|> IO.inspect
+      fp = feed.edges |> List.first() #|> IO.inspect
       assigns = %{activity: fp.activity}
       assert doc = render_surface(Bonfire.UI.Social.ActivityLive, assigns)
 
@@ -323,7 +323,7 @@ defmodule Bonfire.UI.Social.Feeds.FeedActivityTest do
       assert unboosted = Boosts.unboost(bob, post)
 
       feed = Bonfire.Social.FeedActivities.my_feed(bob)
-      fp = feed.entries |> List.first() #|> IO.inspect
+      fp = feed.edges |> List.first() #|> IO.inspect
       assigns = %{activity: fp.activity}
       assert doc = render_surface(Bonfire.UI.Social.ActivityLive, assigns)
 
@@ -356,7 +356,7 @@ defmodule Bonfire.UI.Social.Feeds.FeedActivityTest do
       assert unboosted = Boosts.unboost(bob, post)
 
       feed = Bonfire.Social.FeedActivities.my_feed(bob)
-      fp = feed.entries |> List.first() #|> IO.inspect
+      fp = feed.edges |> List.first() #|> IO.inspect
       assigns = %{activity: fp.activity}
       assert doc = render_surface(Bonfire.UI.Social.ActivityLive, assigns)
 
@@ -378,7 +378,7 @@ defmodule Bonfire.UI.Social.Feeds.FeedActivityTest do
        attrs = %{to_circles: [:guest], post_content: %{summary: "summary", name: "test post name", html_body: "<p>first post/p>"}}
        assert {:ok, post} = Posts.publish(alice, attrs)
        feed = Bonfire.Social.FeedActivities.my_feed(alice)
-       fp = feed.entries |> List.first() #|> IO.inspect
+       fp = feed.edges |> List.first() #|> IO.inspect
        assigns = %{activity: fp.activity}
       assert doc = render_surface(Bonfire.UI.Social.ActivityLive, assigns)
 
@@ -393,7 +393,7 @@ defmodule Bonfire.UI.Social.Feeds.FeedActivityTest do
       attrs = %{to_circles: [:guest], post_content: %{summary: "summary", name: "test post name", html_body: "<p>first post/p>"}}
       assert {:ok, post} = Posts.publish(alice, attrs)
       feed = Bonfire.Social.FeedActivities.my_feed(alice)
-      fp = feed.entries |> List.first() #|> IO.inspect
+      fp = feed.edges |> List.first() #|> IO.inspect
       assigns = %{activity: fp.activity}
       assert doc = render_surface(Bonfire.UI.Social.ActivityLive, assigns)
 
@@ -408,7 +408,7 @@ defmodule Bonfire.UI.Social.Feeds.FeedActivityTest do
       attrs = %{to_circles: [:guest], post_content: %{summary: "summary", name: "test post name", html_body: "<p>first post/p>"}}
       assert {:ok, post} = Posts.publish(alice, attrs)
       feed = Bonfire.Social.FeedActivities.my_feed(alice)
-      fp = feed.entries |> List.first() #|> IO.inspect
+      fp = feed.edges |> List.first() #|> IO.inspect
       assigns = %{activity: fp.activity}
       assert doc = render_surface(Bonfire.UI.Social.ActivityLive, assigns)
 
@@ -423,7 +423,7 @@ defmodule Bonfire.UI.Social.Feeds.FeedActivityTest do
       attrs = %{to_circles: [:guest], post_content: %{summary: "summary", name: "test post name", html_body: "<p>first post/p>"}}
       assert {:ok, post} = Posts.publish(alice, attrs)
       feed = Bonfire.Social.FeedActivities.my_feed(alice)
-      fp = feed.entries |> List.first() #|> IO.inspect
+      fp = feed.edges |> List.first() #|> IO.inspect
       assigns = %{activity: fp.activity}
       assert doc = render_surface(Bonfire.UI.Social.ActivityLive, assigns)
 
@@ -439,7 +439,7 @@ defmodule Bonfire.UI.Social.Feeds.FeedActivityTest do
       attrs = %{to_circles: [:guest], post_content: %{summary: "summary", name: "test post name", html_body: "<p>first post/p>"}}
       assert {:ok, post} = Posts.publish(alice, attrs)
       feed = Bonfire.Social.FeedActivities.my_feed(alice)
-      fp = feed.entries |> List.first() #|> IO.inspect
+      fp = feed.edges |> List.first() #|> IO.inspect
       assigns = %{activity: fp.activity}
       assert doc = render_surface(Bonfire.UI.Social.ActivityLive, assigns)
 
@@ -462,7 +462,7 @@ defmodule Bonfire.UI.Social.Feeds.FeedActivityTest do
        assert {:ok, post_reply} = Posts.publish(bob, attrs_reply)
 
       feed = Bonfire.Social.FeedActivities.my_feed(alice)
-      fp = feed.entries |> List.first() #|> IO.inspect
+      fp = feed.edges |> List.first() #|> IO.inspect
       assigns = %{activity: fp.activity}
       assert doc = render_surface(Bonfire.UI.Social.ActivityLive, assigns)
 
@@ -484,7 +484,7 @@ defmodule Bonfire.UI.Social.Feeds.FeedActivityTest do
        assert {:ok, post_reply} = Posts.publish(bob, attrs_reply)
 
       feed = Bonfire.Social.FeedActivities.my_feed(alice)
-      fp = feed.entries |> List.first() #|> IO.inspect
+      fp = feed.edges |> List.first() #|> IO.inspect
       assigns = %{activity: fp.activity}
       assert doc = render_surface(Bonfire.UI.Social.ActivityLive, assigns)
       assert doc
@@ -507,7 +507,7 @@ defmodule Bonfire.UI.Social.Feeds.FeedActivityTest do
        assert {:ok, post_reply} = Posts.publish(bob, attrs_reply)
 
       feed = Bonfire.Social.FeedActivities.my_feed(alice)
-      fp = feed.entries |> List.first() #|> IO.inspect
+      fp = feed.edges |> List.first() #|> IO.inspect
       assigns = %{activity: fp.activity}
       assert doc = render_surface(Bonfire.UI.Social.ActivityLive, assigns)
       assert doc
@@ -529,7 +529,7 @@ defmodule Bonfire.UI.Social.Feeds.FeedActivityTest do
        assert {:ok, post_reply} = Posts.publish(bob, attrs_reply)
 
       feed = Bonfire.Social.FeedActivities.my_feed(alice)
-      fp = feed.entries |> List.first() #|> IO.inspect
+      fp = feed.edges |> List.first() #|> IO.inspect
       assigns = %{activity: fp.activity}
       assert doc = render_surface(Bonfire.UI.Social.ActivityLive, assigns)
       assert doc
@@ -552,7 +552,7 @@ defmodule Bonfire.UI.Social.Feeds.FeedActivityTest do
       assert {:ok, post} = Posts.publish(alice, attrs)
       assert {:ok, boost} = Boosts.boost(bob, post)
       feed = Bonfire.Social.FeedActivities.my_feed(alice)
-      fp = feed.entries |> List.first() #|> IO.inspect
+      fp = feed.edges |> List.first() #|> IO.inspect
       assigns = %{activity: fp.activity}
       assert doc = render_surface(Bonfire.UI.Social.ActivityLive, assigns)
 
@@ -572,7 +572,7 @@ defmodule Bonfire.UI.Social.Feeds.FeedActivityTest do
       assert {:ok, post} = Posts.publish(alice, attrs)
       assert {:ok, boost} = Boosts.boost(bob, post)
       feed = Bonfire.Social.FeedActivities.my_feed(alice)
-      fp = feed.entries |> List.first() #|> IO.inspect
+      fp = feed.edges |> List.first() #|> IO.inspect
       assigns = %{activity: fp.activity}
       assert doc = render_surface(Bonfire.UI.Social.ActivityLive, assigns)
 
@@ -590,7 +590,7 @@ defmodule Bonfire.UI.Social.Feeds.FeedActivityTest do
       assert {:ok, post} = Posts.publish(alice, attrs)
       assert {:ok, boost} = Boosts.boost(bob, post)
       feed = Bonfire.Social.FeedActivities.my_feed(alice)
-      fp = feed.entries |> List.first() #|> IO.inspect
+      fp = feed.edges |> List.first() #|> IO.inspect
       assigns = %{activity: fp.activity}
       assert doc = render_surface(Bonfire.UI.Social.ActivityLive, assigns)
 
@@ -612,7 +612,7 @@ defmodule Bonfire.UI.Social.Feeds.FeedActivityTest do
       assert {:ok, boost} = Boosts.boost(bob, post)
       feed_id = Bonfire.Social.Feeds.named_feed_id(:local)
       feed = Bonfire.Social.FeedActivities.feed(feed_id, carl)
-      fp = feed.entries |> List.first() #|> IO.inspect
+      fp = feed.edges |> List.first() #|> IO.inspect
       assigns = %{activity: fp.activity}
       assert doc = render_surface(Bonfire.UI.Social.ActivityLive, assigns)
 

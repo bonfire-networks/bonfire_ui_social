@@ -15,7 +15,7 @@ defmodule  Bonfire.UI.Social.ObjectThreadLive do
   def update(assigns, socket) do
     thread_id = e(assigns, :thread_id, e(assigns, :object, :id, nil))
     participants = Bonfire.Social.Threads.list_participants(thread_id, current_user(assigns))
-    participant_tuples = participants |> Map.get(:entries, []) |> Enum.map(&{e(&1, :profile, :name, "someone"), &1.id})
+    participant_tuples = participants |> Map.get(:edges, []) |> Enum.map(&{e(&1, :profile, :name, "someone"), &1.id})
 
     {:ok, assign(socket, assigns
     |> assigns_merge(
