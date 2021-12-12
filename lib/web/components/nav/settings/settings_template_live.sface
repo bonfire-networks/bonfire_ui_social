@@ -1,12 +1,12 @@
 <div class="flex flex-col">
-    <div class="">
+  <div class="">
     <div class="flex mx-auto place-content-center xl:max-w-screen-xl">
-        <Bonfire.UI.Social.SettingsViewLive.SidebarSettingsLive />
-        <div class="">
-        <div class="flex-1 xl:mr-4">
-            {@inner_content}
-        </div>
-        </div>
+      <Bonfire.UI.Social.SettingsViewLive.SidebarSettingsLive />
+      <div class="">
+      <div class="flex-1 xl:mr-4">
+        {@inner_content}
+      </div>
+      </div>
     </div>
-    </div>
+  </div>
 </div>

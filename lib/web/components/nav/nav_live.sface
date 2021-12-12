@@ -2,15 +2,15 @@
 {#if current_user(assigns) }
   <div class="flex flex-col">
     <Bonfire.UI.Social.HeaderUserLive current_user={@current_user} />
-      <div class="block w-full max-w-screen-lg mx-auto md:flex place-content-center">
-        <Bonfire.UI.Social.SidebarLive
-          current_user={@current_user}
-          page={@page}
-        />
-        <div class="flex-grow max-w-screen-sm">
-          {@inner_content}
-        </div>
+    <div class="block w-full max-w-screen-lg mx-auto md:flex place-content-center">
+      <Bonfire.UI.Social.SidebarLive
+        current_user={@current_user}
+        page={@page}
+      />
+      <div class="flex-grow max-w-screen-sm">
+        {@inner_content}
       </div>
+    </div>
   </div>
 
   {#else}

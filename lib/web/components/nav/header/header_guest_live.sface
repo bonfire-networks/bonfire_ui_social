@@ -16,25 +16,26 @@
     </div>
   </div>
 
-    <div class="flex justify-end flex-1 pl-4">
-    
-
-      <div class="flex items-center">
-
-        {#if !current_account(assigns) }
-            <span class="inline-flex ">
-              <Link to={path(:login, :index)} class="btn btn-primary">{l "Login"}</Link>
-            </span>
-            <span class="inline-flex ml-3 ">
-              <Link to={path(:signup, :index)} class="btn btn-outline btn-secondary">{l "Signup"}</Link>
-            </span>
-        {#else }
-            <span class="inline-flex rounded-md shadow-sm">
-              <Link to={path(:switch_user)} class="btn btn-secondary">
-                  {l "Select User"}
-              </Link>
-            </span>
-        {/if}
-      </div>
+  <div class="flex justify-end flex-1 pl-4">
+    <div class="flex items-center">
+      {#if !current_account(assigns) }
+          <span class="inline-flex ">
+            <Link to={path(:login, :index)} class="btn btn-primary">
+              {l "Login"}
+            </Link>
+          </span>
+          <span class="inline-flex ml-3 ">
+            <Link to={path(:signup, :index)} class="btn btn-outline btn-secondary">
+              {l "Signup"}
+            </Link>
+          </span>
+      {#else }
+        <span class="inline-flex rounded-md shadow-sm">
+          <Link to={path(:switch_user)} class="btn btn-secondary">
+            {l "Select User"}
+          </Link>
+        </span>
+      {/if}
     </div>
+  </div>
 </div>
