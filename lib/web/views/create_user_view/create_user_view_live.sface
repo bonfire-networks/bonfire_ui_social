@@ -93,11 +93,13 @@
 
 
           <div class="sm:col-span-6">
-            <button type="submit" class="items-center w-full px-4 py-2 text-sm font-medium leading-5 text-gray-100 transition duration-150 ease-in-out bg-gray-900 rounded-md hover:bg-gray-800 hover:text-gray-200 focus:outline-none focus:border-blue-300 focus:shadow-outline-blue active:text-gray-200 active:bg-gray-700">{l "Create"}</button>
+            <button type="submit" class="items-center w-full px-4 py-2 text-sm font-medium leading-5 text-gray-100 transition duration-150 ease-in-out bg-gray-900 rounded-md hover:bg-gray-800 hover:text-gray-200 focus:outline-none focus:border-blue-300 focus:shadow-outline-blue active:text-gray-200 active:bg-gray-700">
+              {l "Create"}
+            </button>
           </div>
         </div>
 
-          <script>
+        <script>
           function suggest_username(string) {
             return string.replace(' ', '_').replace(/[^a-zA-Z0-9_]/g, '');
           }

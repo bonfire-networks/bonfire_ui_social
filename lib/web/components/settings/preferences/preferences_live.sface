@@ -1,7 +1,7 @@
 <div>
-<Bonfire.UI.Social.SettingsViewLive.SettingsHeaderLive 
-  settings_section_title={l "Preferences"}
-  settings_section_description={l "Customize your experience"}
+  <Bonfire.UI.Social.SettingsViewLive.SettingsHeaderLive 
+    settings_section_title={l "Preferences"}
+    settings_section_description={l "Customize your experience"}
   />
   <div class="">
     <Bonfire.UI.Social.ChangeThemeLive />

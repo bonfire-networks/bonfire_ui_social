@@ -1,5 +1,5 @@
 <div class="grid grid-cols-1 gap-3 mx-4 lg:mx-0 sm:grid-cols-2 lg:gap-6 md:grid-cols-3 lg:grid-cols-4">
-    <div class="col-span-1">
-        <Bonfire.UI.Social.UserPreviewLive user={@user} go={@go} />
-    </div>
+  <div class="col-span-1">
+    <Bonfire.UI.Social.UserPreviewLive user={@user} go={@go} />
+  </div>
 </div>
