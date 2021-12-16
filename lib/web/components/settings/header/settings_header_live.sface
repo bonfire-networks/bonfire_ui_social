@@ -1,21 +1,24 @@
-
 <div
   role="banner"
   class={"sticky relative top-20 z-30"}
 >
-  <div class="relative z-50 rounded-b-none bg-base-100 rounded-box">
+  <div class="relative z-50 rounded-b-none bg-base-100 rounded-box"
+  >
     <div class="flex items-center p-3">
       <div class="flex items-center flex-1 space-x-2 text-left">
-    <a
-      aria-label="Navigate to the previous page"
-      href="javascript:window.history.back()"
-    >
-      <span class=" btn btn-circle btn-xs md:btn-sm">
-        <svg class="w-4 h-4 stroke-current" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
-        </svg>
-      </span>
-    </a>
+        <a
+          aria-label="Navigate to the previous page"
+          href="javascript:window.history.back()"
+        >
+          <span class=" btn btn-circle btn-xs md:btn-sm">
+            <svg class="w-4 h-4 stroke-current" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
+            </svg>
+          </span>
+        </a>
+      </div>
+    </div>
+
     <div class="ml-4">
       <h1 class="text-base font-medium text-base-content">
         {e(assigns, :settings_section_title, "Section title") }
@@ -24,7 +27,9 @@
         { e(assigns, :settings_section_description, "") }
       </p>
     </div>
+
   </div>
+
   <div class="absolute top-0 left-0 right-0 z-40 h-4 -mx-4 -mt-4 bg-base-200"></div>
   <div class="absolute top-0 left-0 z-40 w-6 h-6 -ml-2 bg-base-200"></div>
   <div class="absolute top-0 right-0 z-40 w-6 h-6 -mr-2 bg-base-200"></div>
