@@ -1,11 +1,11 @@
-# Bonfire UI Social
+# Bonfire.UI.Social
 ![](https://i.imgur.com/XoQvDCW.png)
 
-[Bonfire:UI:Social](http://bonfirenetworks.org/extensions/ui_social.html) is an extension that includes the main User Interfaces (both assembled pages and single components) required to have a fully working federated social network app.
+[Bonfire.UI.Social](http://bonfirenetworks.org/extensions/ui_social.html) is an extension that includes the main User Interfaces (both assembled pages and single components) required to have a fully working federated social network app.
 
-The UI:Social extension is meant to be used by extensions like [Bonfire:Social](https://github.com/bonfire-networks/bonfire_social) and [Bonfire:Me](https://github.com/bonfire-networks/bonfire_me), which both provide logic for the UI to work with, and define the routes and top-level views which in turn embed UI:Social components.
+This extension is meant to be used by other extensions like [Bonfire.Social](https://github.com/bonfire-networks/bonfire_social) and [Bonfire.Me](https://github.com/bonfire-networks/bonfire_me), which both provide logic for the UI to work with, and define the routes and top-level views which in turn embed the components from this extension.
 
-UI:Social also provides components used by other extensions including: [Bonfire:Common](https://github.com/bonfire-networks/bonfire_common), [Bonfire:Search](https://github.com/bonfire-networks/bonfire_search), [Bonfire:Tag](https://github.com/bonfire-networks/bonfire_tag), [Bonfire:Boundaries](https://github.com/bonfire-networks/bonfire_boundaries). 
+It also provides components used by other extensions including: [Bonfire.Common](https://github.com/bonfire-networks/bonfire_common), [Bonfire.Search](https://github.com/bonfire-networks/bonfire_search), [Bonfire.Tag](https://github.com/bonfire-networks/bonfire_tag), [Bonfire.Boundaries](https://github.com/bonfire-networks/bonfire_boundaries). 
 
 ### Stack
 
