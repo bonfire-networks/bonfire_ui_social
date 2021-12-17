@@ -6,9 +6,9 @@ defmodule Bonfire.UI.Social.ActivityLive do
 
   prop activity, :map
   prop object, :any
-  prop viewing_main_object, :boolean
+  prop viewing_main_object, :boolean, default: false
   prop showing_within, :any, default: :feed
-  prop hide_reply, :boolean
+  prop hide_reply, :boolean, default: false
   prop reply_click, :any
 
   # TODO: put in config and/or autogenerate with Verbs genserver
@@ -81,11 +81,11 @@ defmodule Bonfire.UI.Social.ActivityLive do
           verb={e(component_assigns, :verb, @verb)}
           verb_display={e(component_assigns, :verb_display, @verb_display)}
           permalink={e(component_assigns, :permalink, @permalink)}
-          viewing_main_object={e(component_assigns, :viewing_main_object, @viewing_main_object)}
-          hide_reply={e(component_assigns, :hide_reply, @hide_reply)}
-          reply_click={e(component_assigns, :reply_click, @reply_click)}
+          viewing_main_object={e(component_assigns, :viewing_main_object, e(assigns, :viewing_main_object, false))}
+          hide_reply={e(component_assigns, :hide_reply, e(assigns, :hide_reply, false))}
+          reply_click={e(component_assigns, :reply_click, e(assigns, :reply_click, nil))}
           created_verb_display={@created_verb_display}
-          showing_within={@showing_within}
+          showing_within={e(assigns, :showing_within, :feed)}
           profile={e(component_assigns, :profile, nil)}
           character={e(component_assigns, :character, nil)}
         />

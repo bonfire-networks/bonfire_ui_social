@@ -11,10 +11,9 @@ defmodule Bonfire.UI.Social.Test.ConnHelpers do
   @endpoint Bonfire.Common.Config.get!(:endpoint_module)
 
 
-  def render_surface(component, assigns, conn \\ nil) do
+  def render_surface(component, assigns \\ [], conn \\ nil) do
     conn = conn || conn()
-    {:ok, view, html} = live_isolated(conn, component, assigns)
-    html
+    render_component(&component.render/1, Keyword.merge([__context__: %{}], assigns))
   end
 
   # defmacro render_surface(component, assigns) do
