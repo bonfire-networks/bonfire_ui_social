@@ -11,8 +11,7 @@ defmodule Bonfire.UI.Social.Test.ConnHelpers do
   @endpoint Bonfire.Common.Config.get!(:endpoint_module)
 
 
-  def render_surface(component, assigns \\ [], conn \\ nil) do
-    conn = conn || conn()
+  def render_surface(component, assigns \\ []) do
     render_component(&component.render/1, Keyword.merge([__context__: %{}], assigns))
   end
 
