@@ -10,8 +10,9 @@
 
     <div :if={e(provider(assigns) , nil)} class="flex items-center text-sm text-gray-700 vf_provider dark:text-gray-100">
       <LiveRedirect to={path(provider(assigns))}
+        opts={"data-id": "subject_name"}
         aria-label={"#{e(character(provider(assigns) ), [:username, :display_username], "")} profile"}
-        class="font-semibold text-gray-800 subject_name dark:text-gray-100 hover:underline"
+        class="font-semibold text-gray-800 dark:text-gray-100 hover:underline"
         >{e(profile(provider(assigns) ), :name, "Anonymous")}</LiveRedirect>
       <span class="ml-2 text-sm text-gray-500 subject_username dark:text-gray-400 text-light">{e(character(provider(assigns) ), [:username, :display_username], "")}</span>
     </div>
@@ -26,8 +27,9 @@
 
     <div :if={e(@object, :receiver, nil) && e(@object, :receiver, nil) != e(provider(assigns) , nil)} class="flex items-center text-sm text-gray-700 vf_receiver">
       <LiveRedirect to={path(character(@object, :receiver))}
+        opts={"data-id": "subject_name"}
         aria-label={"#{e(character(@object, :receiver), [:username, :display_username], "")} profile"}
-        class="font-semibold text-gray-800 subject_name dark:text-gray-100 hover:underline"
+        class="font-semibold text-gray-800 dark:text-gray-100 hover:underline"
         >{e(profile(@object, :receiver), :name, "Anonymous")}</LiveRedirect>
       <span class="text-sm text-gray-500 subject_username dark:text-gray-400 text-light">{e(character(@object, :receiver), [:username, :display_username], "")}</span>
 

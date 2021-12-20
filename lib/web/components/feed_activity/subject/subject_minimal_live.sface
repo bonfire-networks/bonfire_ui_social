@@ -39,11 +39,14 @@
         <Bonfire.UI.Social.Activity.AvatarLive profile={e(@activity, :subject_character, nil)} />
         <div class="mt-1">
           <div>
-            <LiveRedirect to={path(e(@activity, :subject_character, nil))} class="font-semibold link link-hover">{e(@activity, :subject_profile, :name, "Anonymous")}</LiveRedirect> {raw @verb_display}
+            <LiveRedirect 
+            opts={"data-id": "subject_name"}
+            to={path(e(@activity, :subject_character, nil))} 
+            class="font-semibold link link-hover">
+              {e(@activity, :subject_profile, :name, "Anonymous")}
+            </LiveRedirect> 
+            {raw @verb_display}
           </div>
-          <!-- <div class="mt-2">
-            <p class="text-sm text-base-content text-opacity-70">@LongLittWoon I am so happy to have found The Way Through The Woods translated in italian - it is such an immersive and wonderful reading experience </p>
-          </div> -->
         </div>
       </div>
     </div>

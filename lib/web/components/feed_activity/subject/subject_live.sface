@@ -32,9 +32,10 @@
     
     <div class="flex items-center justify-between flex-1 ml-3">
       <div class="flex flex-col text-md">
-        <LiveRedirect
+        <LiveRedirect 
+          opts={"data-id": "subject_name"}
           aria-label={e(@character, :username, "") <> " profile"}
-          class="font-semibold text-base-content subject_name hover:underline"
+          class="font-semibold text-base-content hover:underline"
           to={path(@character)}>
           {e(@profile, :name, "Anonymous")}
         </LiveRedirect>
@@ -49,8 +50,9 @@
     <div class="flex items-center justify-between flex-1 ml-3">
       <div class="flex items-center text-md">
         <LiveRedirect
+          opts={"data-id": "subject_name"}
           aria-label={e(@character, :username, "") <> " profile"}
-          class="font-semibold text-base-content subject_name hover:underline"
+          class="font-semibold text-base-content hover:underline"
           to={path(@character)}>
           {e(@profile, :name, "Anonymous")}
         </LiveRedirect>

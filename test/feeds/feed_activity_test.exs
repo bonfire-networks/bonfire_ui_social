@@ -398,7 +398,9 @@ defmodule Bonfire.UI.Social.Feeds.FeedActivityTest do
       assert doc = render_surface(Bonfire.UI.Social.ActivityLive, assigns)
 
       assert doc
-      |> Floki.find("a.subject_name")
+      |> Floki.parse_fragment
+      |> elem(1)
+      |> Floki.find("[data-id=subject_name]")
       |> Floki.text() =~ alice.profile.name
     end
 
@@ -413,6 +415,8 @@ defmodule Bonfire.UI.Social.Feeds.FeedActivityTest do
       assert doc = render_surface(Bonfire.UI.Social.ActivityLive, assigns)
 
       assert doc
+      |> Floki.parse_fragment
+      |> elem(1)
       |> Floki.find("span.subject_username")
       |> Floki.text() =~ alice.character.username
     end
@@ -428,6 +432,8 @@ defmodule Bonfire.UI.Social.Feeds.FeedActivityTest do
       assert doc = render_surface(Bonfire.UI.Social.ActivityLive, assigns)
 
       assert doc
+      |> Floki.parse_fragment
+      |> elem(1)
       |> Floki.find("div.object_body")
       |> Floki.text() =~ "first post"
     end
@@ -444,6 +450,8 @@ defmodule Bonfire.UI.Social.Feeds.FeedActivityTest do
       assert doc = render_surface(Bonfire.UI.Social.ActivityLive, assigns)
 
       assert doc
+      |> Floki.parse_fragment
+      |> elem(1)
       |> Floki.find("a.subject_timestamp")
       |> Floki.text() =~ "3 minutes ago"
     end
@@ -467,28 +475,38 @@ defmodule Bonfire.UI.Social.Feeds.FeedActivityTest do
       assert doc = render_surface(Bonfire.UI.Social.ActivityLive, assigns)
 
       assert doc
-      |> Floki.find("a.subject_name")
+      |> Floki.parse_fragment
+      |> elem(1)
+      |> Floki.find("[data-id=subject_name]")
       |> Floki.text() =~ bob.profile.name
     end
 
     test "As a user, when someone replies to an activity, I want to see the reply message" do
       account = fake_account!()
       alice = fake_user!(account)
+
       account2 = fake_account!()
       bob = fake_user!(account2)
       attrs = %{to_circles: [:guest], post_content: %{summary: "summary", name: "test post name", html_body: "<p>first post</p>"}}
       assert {:ok, post} = Posts.publish(alice, attrs)
 
        # Reply to the original post
-       attrs_reply = %{post_content: %{summary: "summary", name: "name 2", html_body: "<p>reply to first post</p>"}, reply_to_id: post.id}
-       assert {:ok, post_reply} = Posts.publish(bob, attrs_reply)
+      attrs_reply = %{to_circles: [:guest], post_content: %{summary: "summary", name: "name 2", html_body: "<p>reply to first post</p>"}, reply_to_id: post.id}
+      assert {:ok, post_reply} = Posts.publish(bob, attrs_reply) |> IO.inspect()
+
 
       feed = Bonfire.Social.FeedActivities.my_feed(alice)
-      fp = feed.edges |> List.first() |> IO.inspect
+      fp = feed.edges
+      |> IO.inspect()
+      |> List.first() #|> IO.inspect
+
       assigns = [activity: fp.activity]
       assert doc = render_surface(Bonfire.UI.Social.ActivityLive, assigns)
       assert doc
+      |> Floki.parse_fragment
+      |> elem(1)
       |> Floki.find("div.object_body")
+      |> IO.inspect()
       |> List.last
       |> Floki.text =~ "reply to first post"
     end
@@ -511,6 +529,8 @@ defmodule Bonfire.UI.Social.Feeds.FeedActivityTest do
       assigns = [activity: fp.activity]
       assert doc = render_surface(Bonfire.UI.Social.ActivityLive, assigns)
       assert doc
+      |> Floki.parse_fragment
+      |> elem(1)
       |> Floki.find("a.subject_replied")
       |> Floki.text() =~ alice.profile.name
     end
@@ -533,6 +553,8 @@ defmodule Bonfire.UI.Social.Feeds.FeedActivityTest do
       assigns = [activity: fp.activity]
       assert doc = render_surface(Bonfire.UI.Social.ActivityLive, assigns)
       assert doc
+      |> Floki.parse_fragment
+      |> elem(1)
       |> Floki.find("div.object_body")
       |> List.first
       |> Floki.text =~ "first post"
@@ -557,6 +579,8 @@ defmodule Bonfire.UI.Social.Feeds.FeedActivityTest do
       assert doc = render_surface(Bonfire.UI.Social.ActivityLive, assigns)
 
       assert doc
+      |> Floki.parse_fragment
+      |> elem(1)
       |> Floki.find("a.subject_minimal")
       |> List.first
       |> Floki.text =~ bob.profile.name
@@ -577,7 +601,9 @@ defmodule Bonfire.UI.Social.Feeds.FeedActivityTest do
       assert doc = render_surface(Bonfire.UI.Social.ActivityLive, assigns)
 
       assert doc
-      |> Floki.find("a.subject_name")
+      |> Floki.parse_fragment
+      |> elem(1)
+      |> Floki.find("[data-id=subject_name]")
       |> Floki.text =~ alice.profile.name
     end
 
@@ -595,6 +621,8 @@ defmodule Bonfire.UI.Social.Feeds.FeedActivityTest do
       assert doc = render_surface(Bonfire.UI.Social.ActivityLive, assigns)
 
       assert doc
+      |> Floki.parse_fragment
+      |> elem(1)
       |> Floki.find("div.object_body")
       |> Floki.text =~ "first post"
     end
@@ -617,6 +645,8 @@ defmodule Bonfire.UI.Social.Feeds.FeedActivityTest do
       assert doc = render_surface(Bonfire.UI.Social.ActivityLive, assigns)
 
       assert doc
+      |> Floki.parse_fragment
+      |> elem(1)
       |> Floki.find("a.subject_minimal")
       |> List.first
       |> Floki.text =~ bob.profile.name
