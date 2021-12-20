@@ -476,7 +476,7 @@ defmodule Bonfire.UI.Social.Feeds.FeedActivityTest do
       alice = fake_user!(account)
       account2 = fake_account!()
       bob = fake_user!(account2)
-      attrs = %{to_circles: [:guest], post_content: %{summary: "summary", name: "test post name", html_body: "<p>first post/p>"}}
+      attrs = %{to_circles: [:guest], post_content: %{summary: "summary", name: "test post name", html_body: "<p>first post</p>"}}
       assert {:ok, post} = Posts.publish(alice, attrs)
 
        # Reply to the original post
@@ -484,7 +484,7 @@ defmodule Bonfire.UI.Social.Feeds.FeedActivityTest do
        assert {:ok, post_reply} = Posts.publish(bob, attrs_reply)
 
       feed = Bonfire.Social.FeedActivities.my_feed(alice)
-      fp = feed.edges |> List.first() #|> IO.inspect
+      fp = feed.edges |> List.first() |> IO.inspect
       assigns = [activity: fp.activity]
       assert doc = render_surface(Bonfire.UI.Social.ActivityLive, assigns)
       assert doc
