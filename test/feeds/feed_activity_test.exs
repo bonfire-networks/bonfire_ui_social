@@ -21,12 +21,12 @@ defmodule Bonfire.UI.Social.Feeds.FeedActivityTest do
       eve = fake_user!(account)
       # bob follows alice
       Follows.follow(bob, alice)
-      attrs = %{to_circles: [:guest], post_content: %{summary: "summary", name: "test post name", html_body: "<p>first post/p>"}}
+      attrs = %{to_circles: [:guest], post_content: %{summary: "summary", name: "test post name", html_body: "first post"}}
 
       assert {:ok, post} = Posts.publish(alice, attrs)
 
       # Reply to the original post
-      attrs_reply = %{post_content: %{summary: "summary", name: "name 2", html_body: "<p>reply to first post</p>"}, reply_to_id: post.id}
+      attrs_reply = %{post_content: %{summary: "summary", name: "name 2", html_body: "reply to post"}, reply_to_id: post.id}
       assert {:ok, post_reply} = Posts.publish(bob, attrs_reply)
       assert {:ok, post_reply} = Posts.publish(carl, attrs_reply)
       assert {:ok, post_reply} = Posts.publish(demetrius, attrs_reply)
@@ -50,7 +50,7 @@ defmodule Bonfire.UI.Social.Feeds.FeedActivityTest do
       bob = fake_user!(account2)
       # bob follows alice
       Follows.follow(bob, alice)
-      attrs = %{to_circles: [:guest], post_content: %{summary: "summary", name: "test post name", html_body: "<p>first post/p>"}}
+      attrs = %{to_circles: [:guest], post_content: %{summary: "summary", name: "test post name", html_body: "first post"}}
 
       assert {:ok, post} = Posts.publish(alice, attrs)
       assert {:ok, boost} = Boosts.boost(alice, post)
@@ -73,7 +73,7 @@ defmodule Bonfire.UI.Social.Feeds.FeedActivityTest do
       bob = fake_user!(account2)
       # bob follows alice
       Follows.follow(bob, alice)
-      attrs = %{to_circles: [:guest], post_content: %{summary: "summary", name: "test post name", html_body: "<p>first post/p>"}}
+      attrs = %{to_circles: [:guest], post_content: %{summary: "summary", name: "test post name", html_body: "first post"}}
 
       assert {:ok, post} = Posts.publish(alice, attrs)
       assert {:ok, boost} = Likes.like(bob, post)
@@ -96,7 +96,7 @@ defmodule Bonfire.UI.Social.Feeds.FeedActivityTest do
       bob = fake_user!(account2)
       # bob follows alice
       Follows.follow(bob, alice)
-      attrs = %{to_circles: [:guest], post_content: %{summary: "summary", name: "test post name", html_body: "<p>first post/p>"}}
+      attrs = %{to_circles: [:guest], post_content: %{summary: "summary", name: "test post name", html_body: "first post"}}
 
       assert {:ok, post} = Posts.publish(alice, attrs)
       assert {:ok, boost} = Boosts.boost(bob, post)
@@ -119,7 +119,7 @@ defmodule Bonfire.UI.Social.Feeds.FeedActivityTest do
       bob = fake_user!(account2)
       # bob follows alice
       Follows.follow(bob, alice)
-      attrs = %{to_circles: [:guest], post_content: %{summary: "summary", name: "test post name", html_body: "<p>first post/p>"}}
+      attrs = %{to_circles: [:guest], post_content: %{summary: "summary", name: "test post name", html_body: "first post"}}
 
       assert {:ok, post} = Posts.publish(alice, attrs)
       assert {:ok, like} = Likes.like(bob, post)
@@ -143,7 +143,7 @@ defmodule Bonfire.UI.Social.Feeds.FeedActivityTest do
         # bob follows alice
         Follows.follow(bob, alice)
         # Alice posts a message
-        attrs = %{to_circles: [:guest], post_content: %{summary: "summary", name: "test post name", html_body: "<p>first post/p>"}}
+        attrs = %{to_circles: [:guest], post_content: %{summary: "summary", name: "test post name", html_body: "first post"}}
         assert {:ok, post} = Posts.publish(alice, attrs)
         assert {:ok, like} = Likes.like(alice, post)
         assert {:ok, like} = Likes.like(bob, post)
@@ -168,7 +168,7 @@ defmodule Bonfire.UI.Social.Feeds.FeedActivityTest do
       # bob follows alice
       Follows.follow(bob, alice)
       # Alice posts a message
-      attrs = %{to_circles: [:guest], post_content: %{summary: "summary", name: "test post name", html_body: "<p>first post/p>"}}
+      attrs = %{to_circles: [:guest], post_content: %{summary: "summary", name: "test post name", html_body: "first post"}}
       assert {:ok, post} = Posts.publish(alice, attrs)
       assert {:ok, like} = Likes.like(bob, post)
 
@@ -178,6 +178,8 @@ defmodule Bonfire.UI.Social.Feeds.FeedActivityTest do
       assert doc = render_surface(Bonfire.UI.Social.ActivityLive, assigns)
 
       assert doc
+      |> Floki.parse_fragment
+      |> elem(1)
       |> Floki.text =~ "Liked"
     end
 
@@ -191,7 +193,7 @@ defmodule Bonfire.UI.Social.Feeds.FeedActivityTest do
       # bob follows alice
       Follows.follow(bob, alice)
       # Alice posts a message
-      attrs = %{to_circles: [:guest], post_content: %{summary: "summary", name: "test post name", html_body: "<p>first post/p>"}}
+      attrs = %{to_circles: [:guest], post_content: %{summary: "summary", name: "test post name", html_body: "first post"}}
       assert {:ok, post} = Posts.publish(alice, attrs)
       assert {:ok, like} = Likes.like(alice, post)
       assert {:ok, like} = Likes.like(bob, post)
@@ -203,6 +205,8 @@ defmodule Bonfire.UI.Social.Feeds.FeedActivityTest do
       assert doc = render_surface(Bonfire.UI.Social.ActivityLive, assigns)
 
       assert doc
+      |> Floki.parse_fragment
+      |> elem(1)
       |> Floki.text =~ "Like (1)"
     end
 
@@ -216,7 +220,7 @@ defmodule Bonfire.UI.Social.Feeds.FeedActivityTest do
       # bob follows alice
       Follows.follow(bob, alice)
       # Alice posts a message
-      attrs = %{to_circles: [:guest], post_content: %{summary: "summary", name: "test post name", html_body: "<p>first post/p>"}}
+      attrs = %{to_circles: [:guest], post_content: %{summary: "summary", name: "test post name", html_body: "first post"}}
       assert {:ok, post} = Posts.publish(alice, attrs)
       assert {:ok, like} = Likes.like(alice, post)
       assert {:ok, like} = Likes.like(bob, post)
@@ -228,6 +232,8 @@ defmodule Bonfire.UI.Social.Feeds.FeedActivityTest do
       assert doc = render_surface(Bonfire.UI.Social.ActivityLive, assigns)
 
       assert doc
+      |> Floki.parse_fragment
+      |> elem(1)
       |> Floki.text =~ "Like"
     end
 
@@ -240,7 +246,7 @@ defmodule Bonfire.UI.Social.Feeds.FeedActivityTest do
       bob = fake_user!(account2)
       # bob follows alice
       Follows.follow(bob, alice)
-      attrs = %{to_circles: [:guest], post_content: %{summary: "summary", name: "test post name", html_body: "<p>first post/p>"}}
+      attrs = %{to_circles: [:guest], post_content: %{summary: "summary", name: "test post name", html_body: "first post"}}
 
       assert {:ok, post} = Posts.publish(alice, attrs)
       assert {:ok, boost} = Boosts.boost(alice, post)
@@ -265,7 +271,7 @@ defmodule Bonfire.UI.Social.Feeds.FeedActivityTest do
       bob = fake_user!(account2)
       # bob follows alice
       Follows.follow(bob, alice)
-      attrs = %{to_circles: [:guest], post_content: %{summary: "summary", name: "test post name", html_body: "<p>first post/p>"}}
+      attrs = %{to_circles: [:guest], post_content: %{summary: "summary", name: "test post name", html_body: "first post"}}
 
       assert {:ok, post} = Posts.publish(alice, attrs)
       assert {:ok, boost} = Boosts.boost(alice, post)
@@ -290,7 +296,7 @@ defmodule Bonfire.UI.Social.Feeds.FeedActivityTest do
       bob = fake_user!(account2)
       # bob follows alice
       Follows.follow(bob, alice)
-      attrs = %{to_circles: [:guest], post_content: %{summary: "summary", name: "test post name", html_body: "<p>first post/p>"}}
+      attrs = %{to_circles: [:guest], post_content: %{summary: "summary", name: "test post name", html_body: "first post"}}
 
       assert {:ok, post} = Posts.publish(alice, attrs)
       assert {:ok, boost} = Boosts.boost(alice, post)
@@ -316,7 +322,7 @@ defmodule Bonfire.UI.Social.Feeds.FeedActivityTest do
       bob = fake_user!(account2)
       # bob follows alice
       Follows.follow(bob, alice)
-      attrs = %{to_circles: [:guest], post_content: %{summary: "summary", name: "test post name", html_body: "<p>first post/p>"}}
+      attrs = %{to_circles: [:guest], post_content: %{summary: "summary", name: "test post name", html_body: "first post"}}
 
       assert {:ok, post} = Posts.publish(alice, attrs)
       assert {:ok, boost} = Boosts.boost(bob, post)
@@ -344,7 +350,7 @@ defmodule Bonfire.UI.Social.Feeds.FeedActivityTest do
       eve = fake_user!(account)
       # bob follows alice
       Follows.follow(bob, alice)
-      attrs = %{to_circles: [:guest], post_content: %{summary: "summary", name: "test post name", html_body: "<p>first post/p>"}}
+      attrs = %{to_circles: [:guest], post_content: %{summary: "summary", name: "test post name", html_body: "first post"}}
 
       assert {:ok, post} = Posts.publish(alice, attrs)
 
@@ -375,7 +381,7 @@ defmodule Bonfire.UI.Social.Feeds.FeedActivityTest do
        # Create alice user
        account = fake_account!()
        alice = fake_user!(account)
-       attrs = %{to_circles: [:guest], post_content: %{summary: "summary", name: "test post name", html_body: "<p>first post/p>"}}
+       attrs = %{to_circles: [:guest], post_content: %{summary: "summary", name: "test post name", html_body: "first post"}}
        assert {:ok, post} = Posts.publish(alice, attrs)
        feed = Bonfire.Social.FeedActivities.my_feed(alice)
        fp = feed.edges |> List.first() #|> IO.inspect
@@ -390,7 +396,7 @@ defmodule Bonfire.UI.Social.Feeds.FeedActivityTest do
     test "As a user, when I create a new post, I want to see my name in the activity subject" do
       account = fake_account!()
       alice = fake_user!(account)
-      attrs = %{to_circles: [:guest], post_content: %{summary: "summary", name: "test post name", html_body: "<p>first post/p>"}}
+      attrs = %{to_circles: [:guest], post_content: %{summary: "summary", name: "test post name", html_body: "first post"}}
       assert {:ok, post} = Posts.publish(alice, attrs)
       feed = Bonfire.Social.FeedActivities.my_feed(alice)
       fp = feed.edges |> List.first() #|> IO.inspect
@@ -407,7 +413,7 @@ defmodule Bonfire.UI.Social.Feeds.FeedActivityTest do
     test "As a user, when I create a new post, I want to see my username next to my name in the activity subject" do
       account = fake_account!()
       alice = fake_user!(account)
-      attrs = %{to_circles: [:guest], post_content: %{summary: "summary", name: "test post name", html_body: "<p>first post/p>"}}
+      attrs = %{to_circles: [:guest], post_content: %{summary: "summary", name: "test post name", html_body: "first post"}}
       assert {:ok, post} = Posts.publish(alice, attrs)
       feed = Bonfire.Social.FeedActivities.my_feed(alice)
       fp = feed.edges |> List.first() #|> IO.inspect
@@ -424,7 +430,7 @@ defmodule Bonfire.UI.Social.Feeds.FeedActivityTest do
     test "As a user, when I create a new post, I want to see the content as the activity object" do
       account = fake_account!()
       alice = fake_user!(account)
-      attrs = %{to_circles: [:guest], post_content: %{summary: "summary", name: "test post name", html_body: "<p>first post/p>"}}
+      attrs = %{to_circles: [:guest], post_content: %{summary: "summary", name: "test post name", html_body: "first post"}}
       assert {:ok, post} = Posts.publish(alice, attrs)
       feed = Bonfire.Social.FeedActivities.my_feed(alice)
       fp = feed.edges |> List.first() #|> IO.inspect
@@ -442,7 +448,7 @@ defmodule Bonfire.UI.Social.Feeds.FeedActivityTest do
     test "As a user, when I create a new post, I want to see when the post was created" do
       account = fake_account!()
       alice = fake_user!(account)
-      attrs = %{to_circles: [:guest], post_content: %{summary: "summary", name: "test post name", html_body: "<p>first post/p>"}}
+      attrs = %{to_circles: [:guest], post_content: %{summary: "summary", name: "test post name", html_body: "first post"}}
       assert {:ok, post} = Posts.publish(alice, attrs)
       feed = Bonfire.Social.FeedActivities.my_feed(alice)
       fp = feed.edges |> List.first() #|> IO.inspect
@@ -462,11 +468,11 @@ defmodule Bonfire.UI.Social.Feeds.FeedActivityTest do
       alice = fake_user!(account)
       account2 = fake_account!()
       bob = fake_user!(account2)
-      attrs = %{to_circles: [:guest], post_content: %{summary: "summary", name: "test post name", html_body: "<p>first post/p>"}}
+      attrs = %{to_circles: [:guest], post_content: %{summary: "summary", name: "test post name", html_body: "first post"}}
       assert {:ok, post} = Posts.publish(alice, attrs)
 
        # Reply to the original post
-       attrs_reply = %{post_content: %{summary: "summary", name: "name 2", html_body: "<p>reply to first post</p>"}, reply_to_id: post.id}
+       attrs_reply = %{post_content: %{summary: "summary", name: "name 2", html_body: "reply to post"}, reply_to_id: post.id}
        assert {:ok, post_reply} = Posts.publish(bob, attrs_reply)
 
       feed = Bonfire.Social.FeedActivities.my_feed(alice)
@@ -491,7 +497,7 @@ defmodule Bonfire.UI.Social.Feeds.FeedActivityTest do
       assert {:ok, post} = Posts.publish(alice, attrs)
 
        # Reply to the original post
-      attrs_reply = %{to_circles: [:guest], post_content: %{summary: "summary", name: "name 2", html_body: "<p>reply to first post</p>"}, reply_to_id: post.id}
+      attrs_reply = %{to_circles: [:guest], post_content: %{summary: "summary", name: "name 2", html_body: "reply to post"}, reply_to_id: post.id}
       assert {:ok, post_reply} = Posts.publish(bob, attrs_reply) |> IO.inspect()
 
 
@@ -508,7 +514,7 @@ defmodule Bonfire.UI.Social.Feeds.FeedActivityTest do
       |> Floki.find("div.object_body")
       |> IO.inspect()
       |> List.last
-      |> Floki.text =~ "reply to first post"
+      |> Floki.text =~ "reply to post"
     end
 
 
@@ -517,11 +523,11 @@ defmodule Bonfire.UI.Social.Feeds.FeedActivityTest do
       alice = fake_user!(account)
       account2 = fake_account!()
       bob = fake_user!(account2)
-      attrs = %{to_circles: [:guest], post_content: %{summary: "summary", name: "test post name", html_body: "<p>first post/p>"}}
+      attrs = %{to_circles: [:guest], post_content: %{summary: "summary", name: "test post name", html_body: "first post"}}
       assert {:ok, post} = Posts.publish(alice, attrs)
 
        # Reply to the original post
-       attrs_reply = %{post_content: %{summary: "summary", name: "name 2", html_body: "<p>reply to first post</p>"}, reply_to_id: post.id}
+       attrs_reply = %{post_content: %{summary: "summary", name: "name 2", html_body: "reply to post"}, reply_to_id: post.id}
        assert {:ok, post_reply} = Posts.publish(bob, attrs_reply)
 
       feed = Bonfire.Social.FeedActivities.my_feed(alice)
@@ -541,11 +547,11 @@ defmodule Bonfire.UI.Social.Feeds.FeedActivityTest do
       alice = fake_user!(account)
       account2 = fake_account!()
       bob = fake_user!(account2)
-      attrs = %{to_circles: [:guest], post_content: %{summary: "summary", name: "test post name", html_body: "<p>first post/p>"}}
+      attrs = %{to_circles: [:guest], post_content: %{summary: "summary", name: "test post name", html_body: "first post"}}
       assert {:ok, post} = Posts.publish(alice, attrs)
 
        # Reply to the original post
-       attrs_reply = %{post_content: %{summary: "summary", name: "name 2", html_body: "<p>reply to first post</p>"}, reply_to_id: post.id}
+       attrs_reply = %{post_content: %{summary: "summary", name: "name 2", html_body: "reply to post"}, reply_to_id: post.id}
        assert {:ok, post_reply} = Posts.publish(bob, attrs_reply)
 
       feed = Bonfire.Social.FeedActivities.my_feed(alice)
@@ -570,7 +576,7 @@ defmodule Bonfire.UI.Social.Feeds.FeedActivityTest do
       alice = fake_user!(account)
       account2 = fake_account!()
       bob = fake_user!(account2)
-      attrs = %{to_circles: [:guest], post_content: %{summary: "summary", name: "test post name", html_body: "<p>first post/p>"}}
+      attrs = %{to_circles: [:guest], post_content: %{summary: "summary", name: "test post name", html_body: "first post"}}
       assert {:ok, post} = Posts.publish(alice, attrs)
       assert {:ok, boost} = Boosts.boost(bob, post)
       feed = Bonfire.Social.FeedActivities.my_feed(alice)
@@ -592,7 +598,7 @@ defmodule Bonfire.UI.Social.Feeds.FeedActivityTest do
       alice = fake_user!(account)
       account2 = fake_account!()
       bob = fake_user!(account2)
-      attrs = %{to_circles: [:guest], post_content: %{summary: "summary", name: "test post name", html_body: "<p>first post/p>"}}
+      attrs = %{to_circles: [:guest], post_content: %{summary: "summary", name: "test post name", html_body: "first post"}}
       assert {:ok, post} = Posts.publish(alice, attrs)
       assert {:ok, boost} = Boosts.boost(bob, post)
       feed = Bonfire.Social.FeedActivities.my_feed(alice)
@@ -612,7 +618,7 @@ defmodule Bonfire.UI.Social.Feeds.FeedActivityTest do
       alice = fake_user!(account)
       account2 = fake_account!()
       bob = fake_user!(account2)
-      attrs = %{to_circles: [:guest], post_content: %{summary: "summary", name: "test post name", html_body: "<p>first post/p>"}}
+      attrs = %{to_circles: [:guest], post_content: %{summary: "summary", name: "test post name", html_body: "first post"}}
       assert {:ok, post} = Posts.publish(alice, attrs)
       assert {:ok, boost} = Boosts.boost(bob, post)
       feed = Bonfire.Social.FeedActivities.my_feed(alice)
@@ -635,7 +641,7 @@ defmodule Bonfire.UI.Social.Feeds.FeedActivityTest do
       account3 = fake_account!()
       carl = fake_user!(account3)
 
-      attrs = %{to_circles: [:guest], post_content: %{summary: "summary", name: "test post name", html_body: "<p>first post/p>"}}
+      attrs = %{to_circles: [:guest], post_content: %{summary: "summary", name: "test post name", html_body: "first post"}}
       assert {:ok, post} = Posts.publish(alice, attrs)
       assert {:ok, boost} = Boosts.boost(bob, post)
       feed_id = Bonfire.Social.Feeds.named_feed_id(:local)
