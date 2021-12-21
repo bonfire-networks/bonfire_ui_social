@@ -1,34 +1,38 @@
-<div 
-  :if={e(assigns, :showing_within, nil) != :notifications} 
-  class={
-    "thread_actions": e(assigns, :showing_within, nil) == :thread,
-    "-ml-2": e(assigns, :viewing_main_object, nil) != true 
-    }>
-  <div class={"flex items-center space-x-8", "mt-3": e(assigns, :viewing_main_object, nil)}>
-    <Bonfire.UI.Social.Activity.ReplyLive 
-      permalink={@permalink} 
-      replied={e(@activity, :replied, nil)}
-      showing_within={e(assigns, :showing_within, nil)}
-      hide_reply={e(assigns, :hide_reply, nil )}
-      reply_click={e(assigns, :reply_click, nil )}
+{#if e(@object, :id, nil) != nil and e(@activity, :replied, :reply_to_id, nil) == nil and e(@activity, :id, nil) == nil}
+  <div></div>
+{#else}
+  <div 
+    :if={e(assigns, :showing_within, nil) != :notifications} 
+    class={
+      "thread_actions": e(assigns, :showing_within, nil) == :thread,
+      "-ml-2": e(assigns, :viewing_main_object, nil) != true 
+      }>
+    <div class={"flex items-center space-x-8", "mt-3": e(assigns, :viewing_main_object, nil)}>
+      <Bonfire.UI.Social.Activity.ReplyLive 
+        permalink={@permalink} 
+        replied={e(@activity, :replied, nil)}
+        showing_within={e(assigns, :showing_within, nil)}
+        hide_reply={e(assigns, :hide_reply, nil )}
+        reply_click={e(assigns, :reply_click, nil )}
+        />
+      <BoostActionLive 
+        id={ComponentID.new(BoostActionLive, e(@object, :id, ""))} 
+        object_id={e(@object, :id, "")} 
+        my_boost={e(@activity, :my_boost, nil)}
+        boost_count={e(@activity, :boost_count, nil)}
+        />
+      <Bonfire.UI.Social.LikeActionLive
+        id={ComponentID.new(Bonfire.UI.Social.LikeActionLive, @object)} 
+        object_id={e(@object, :id, "")} 
+        my_like={e(@activity, :my_like, nil)}
+        like_count={e(@activity, :like_count, nil)} 
       />
-    <BoostActionLive 
-      id={ComponentID.new(BoostActionLive, e(@object, :id, ""))} 
-      object_id={e(@object, :id, "")} 
-      my_boost={e(@activity, :my_boost, nil)}
-      boost_count={e(@activity, :boost_count, nil)}
+      <Bonfire.UI.Social.Activity.MoreActionsLive
+        id={ComponentID.new(Bonfire.UI.Social.LikeActionLive, @object)} 
+        object={e(@object, nil)} 
+        activity={e(@activity, nil)} 
+        flagged={e(assigns, :flagged, nil)} 
       />
-    <Bonfire.UI.Social.LikeActionLive
-      id={ComponentID.new(Bonfire.UI.Social.LikeActionLive, @object)} 
-      object_id={e(@object, :id, "")} 
-      my_like={e(@activity, :my_like, nil)}
-      like_count={e(@activity, :like_count, nil)} 
-    />
-    <Bonfire.UI.Social.Activity.MoreActionsLive
-      id={ComponentID.new(Bonfire.UI.Social.LikeActionLive, @object)} 
-      object={e(@object, nil)} 
-      activity={e(@activity, nil)} 
-      flagged={e(assigns, :flagged, nil)} 
-    />
+    </div>
   </div>
-</div>
+{/if}

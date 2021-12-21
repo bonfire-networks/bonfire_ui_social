@@ -1,4 +1,28 @@
-{#if e(assigns, :showing_within, nil) == :thread}
+{#if  e(@object, :id, nil) != nil and e(@activity, :replied, :reply_to_id, nil) == nil and e(@activity, :id, nil) == nil}
+  <div class={"flex items-center"}>
+    <div class="flex justify-between flex-1">
+      <div class="flex items-center text-sm font-medium text-base-content">
+        <img 
+        class="inline-block object-cover w-6 h-6 bg-gray-100 mask mask-squircle" 
+        src={avatar_url(@profile)} 
+        alt="subject profile image" 
+        onerror="this.style.display='none'" >
+        <LiveRedirect
+          aria-label={e(@activity, :subject_character, :username, "") <> " profile"}
+          class="ml-2 hover:underline subject_replied"
+          to={path(e(@activity, :subject_character, nil))}>
+          {e(@activity, :subject_profile, :name, "Anonymous")}
+        </LiveRedirect>
+      </div>
+      <Bonfire.UI.Social.Activity.RepliedDateAgoLive 
+        permalink={@permalink}
+        date_ago={@date_ago} 
+      />
+      
+    </div>
+  </div>
+
+{#elseif e(assigns, :showing_within, nil) == :thread}
   <div class={"flex items-center", "pl-1": e(@activity, :replied, :reply_to_id, nil)}>
     <img 
       class="inline-block object-cover w-8 h-8 bg-gray-100 mask mask-squircle" 
@@ -30,7 +54,7 @@
       profile={@profile} 
     />
     
-    <div class="flex items-center justify-between flex-1 ml-3">
+    <div class="flex items-center justify-between flex-1 ml-2">
       <div class="flex flex-col text-md">
         <LiveRedirect 
           opts={"data-id": "subject_name"}
