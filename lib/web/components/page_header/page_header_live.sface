@@ -3,7 +3,7 @@
   role="banner"
   class={"sticky relative top-20 z-30 border-b border-base-300"}
 >
-  <div class="relative z-50 rounded-b-none bg-base-100 rounded-box">
+  <div class="relative z-50 rounded rounded-b-none bg-base-100">
     <div class="flex items-center p-3">
       <div class="flex items-center flex-1 space-x-2 text-left">
         <a

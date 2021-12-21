@@ -1,5 +1,5 @@
-<main class="mx-3 mb-3 md:flex md:mx-0">
-  <section class="mx-auto shadow-lg bg-base-100 rounded-box w-center">
+<main class="mb-3 md:flex md:mx-0">
+  <section class="w-full mx-auto rounded shadow bg-base-100">
     <Bonfire.UI.Social.PageHeaderLive
       page_title={@page_title}
     />

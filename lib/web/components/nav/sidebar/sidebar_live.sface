@@ -1,7 +1,7 @@
 
 <nav
   role="navigation"
-  class="flex-col hidden mr-3 md:flex w-80"
+  class="flex-col justify-end hidden md:flex w-80"
 >
   <div style="top: 80px; bottom: 16px" class="fixed md:pr-2 w-80">
     <div class="absolute w-full h-full overflow-y-auto">

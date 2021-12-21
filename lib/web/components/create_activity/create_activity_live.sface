@@ -45,8 +45,7 @@
                 <Bonfire.UI.Social.SetCWLive />          
               <div
                 @click = "open = true"
-                class="h-10 transition-all duration-300 ease-in-out rounded"
-                :class="{'h-40' : open === true}"
+                class="transition-all duration-300 ease-in-out rounded"
                 >
                 <Bonfire.Editor.Ck.Bubble 
                     :if={with_editor?(assigns)}

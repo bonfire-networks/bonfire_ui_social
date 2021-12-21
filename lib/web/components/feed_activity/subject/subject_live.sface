@@ -56,7 +56,7 @@
           to={path(@character)}>
           {e(@profile, :name, "Anonymous")}
         </LiveRedirect>
-        <span class="ml-2 text-md text-base-content text-opacity-60 subject_username text-light">@{e(@character, :username, "")}</span>
+        <span class="ml-1 text-sm text-base-content text-opacity-60 subject_username text-light">@{e(@character, :username, "")}</span>
       </div>
       <Bonfire.UI.Social.Activity.DateAgoLive 
         permalink={@permalink}

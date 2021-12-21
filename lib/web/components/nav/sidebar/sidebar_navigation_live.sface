@@ -1,10 +1,10 @@
-<ul class="w-full py-3 shadow-lg menu bg-base-100 rounded-box">
+<ul class="w-full py-3 space-y-3 shadow-lg menu bg-base-100 rounded-box">
   <li class="menu-title">
   <LivePatch to="/home" class={"w-full flex items-center text-sm font-regular text-base-content", "bg-primary text-primary-content": @page == "home"}>
     <span class={"flex items-center w-8 h-8 mr-3 rounded-full place-content-center text-base-content bg-base-300" ,"bg-primary-focus": @page == "home"}>
       <svg
         aria-labelledby="navigation_browse"
-        class={"w-5 h-5 transition duration-150 ease-in-out", "text-primary-content font-semibold": @page == "home"}
+        class={"w-5 h-5 transition duration-150 ease-in-out text-base-content text-opacity-80", "text-primary-content font-semibold": @page == "home"}
         fill="none"
         stroke="currentColor"
         viewBox="0 0 24 24"
@@ -21,7 +21,7 @@
     <span class={"flex items-center w-8 h-8 mr-3 rounded-full place-content-center text-base-content bg-base-300" ,"bg-primary-focus": @page == "notifications"}>
     <svg
       aria-labelledby="navigation_notification"
-      class={"w-5 h-5 transition duration-150 ease-in-out text-base-content", "text-primary-content font-semibold": @page == "notifications"} fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+      class={"w-5 h-5 transition duration-150 ease-in-out text-base-content text-opacity-80", "text-primary-content font-semibold": @page == "notifications"} fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
       <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" />
     </svg>
     </span>
@@ -33,7 +33,7 @@
     <span class={"flex items-center w-8 h-8 mr-3 rounded-full place-content-center text-base-content bg-base-300" ,"bg-primary-focus": @page == "local"}>
       <svg
         aria-labelledby="navigation_browse"
-        class={"w-5 h-5 transition duration-150 ease-in-out text-base-content", "text-primary-content font-semibold": @page == "local"}
+        class={"w-5 h-5 transition duration-150 ease-in-out text-base-content text-opacity-80", "text-primary-content font-semibold": @page == "local"}
         fill="none"
         stroke="currentColor"
         viewBox="0 0 24 24"
@@ -49,7 +49,7 @@
     <span class={"flex items-center w-8 h-8 mr-3 rounded-full place-content-center text-base-content bg-base-300" ,"bg-primary-focus": @page == "federation"}>
       <svg
         aria-labelledby="navigation_browse"
-        class={"w-5 h-5 transition duration-150 ease-in-out text-base-content", "text-primary-content font-semibold": @page == "federation"}
+        class={"w-5 h-5 transition duration-150 ease-in-out text-base-content text-opacity-80", "text-primary-content font-semibold": @page == "federation"}
         fill="none"
         stroke="currentColor"
         viewBox="0 0 24 24"
@@ -65,7 +65,7 @@
     <span class={"flex items-center w-8 h-8 mr-3 rounded-full place-content-center text-base-content bg-base-300" ,"bg-primary-focus": @page == "private"}>
     <svg
       aria-labelledby="navigation_private"
-      class={"w-5 h-5  transition duration-150 ease-in-out text-base-content", "text-primary-content font-semibold": @page == "private"} fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+      class={"w-5 h-5 transition duration-150 ease-in-out text-base-content text-opacity-80", "text-primary-content font-semibold": @page == "private"} fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
       <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
     </svg>
     </span>
@@ -77,7 +77,7 @@
     <span class={"flex items-center w-8 h-8 mr-3 rounded-full place-content-center text-base-content bg-base-300" ,"bg-primary-focus": @page == "favourited"}>
     <svg
       aria-labelledby="navigation_profile"
-      class={"w-5 h-5 transition duration-150 ease-in-out text-base-content", "text-primary-content font-semibold": @page == "favourited"}
+      class={"w-5 h-5 transition duration-150 ease-in-out text-base-content text-opacity-80", "text-primary-content font-semibold": @page == "favourited"}
       fill="none" stroke="currentColor"
       viewBox="0 0 24 24"
       xmlns="http://www.w3.org/2000/svg">

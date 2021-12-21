@@ -2,13 +2,16 @@
 {#if current_user(assigns) }
   <div class="flex flex-col">
     <Bonfire.UI.Social.HeaderUserLive current_user={current_user(assigns)} />
-    <div class="block w-full max-w-screen-lg mx-auto md:flex place-content-center">
+    <div class="justify-center w-full h-full max-w-screen-xl mx-auto md:flex ">
       <Bonfire.UI.Social.SidebarLive
         current_user={current_user(assigns)}
         page={@page}
       />
-      <div class="flex-grow max-w-screen-sm">
+      <div class="flex-grow mx-3 max-w-600">
         {@inner_content}
+      </div>
+      <div style="min-width: 285px" class="flex justify-start h-full overflow-hidden pointer-events-none">
+        <div style="width: 285px; top: 80px; bottom: 16px;" class="fixed h-full pointer-events-auto"></div>
       </div>
     </div>
   </div>
