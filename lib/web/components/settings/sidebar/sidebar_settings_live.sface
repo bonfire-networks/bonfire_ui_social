@@ -1,6 +1,6 @@
 <div>
   <ul role="navigation" class="p-4 shadow-lg w-72 menu bg-base-100 rounded-box">
-    <li class={"bg-primary": @selected_tab == "user"}>
+    <li :if={current_user(assigns)} class={"bg-primary": @selected_tab == "user"}>
       <LivePatch to={"/settings/user"} >
         <Outline.UserIcon class="inline-block w-5 h-5 mr-2 stroke-current" />
         {l "Profile"}

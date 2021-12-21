@@ -35,21 +35,32 @@
     {#match "circles"}
       <Bonfire.UI.Social.MyCirclesLive
         current_user={current_user(assigns)}
+        current_account={current_account(assigns)}
       />
     {#match "circle"}
-        <Bonfire.UI.Social.ViewCircleLive />
+      <Bonfire.UI.Social.ViewCircleLive />
     {#match "extensions"}
-        <Bonfire.UI.Social.SettingsViewsLive.ExtensionsLive
-          current_user={current_user(assigns)}
-        />
+      <Bonfire.UI.Social.SettingsViewsLive.ExtensionsLive
+        current_user={current_user(assigns)}
+      />
     {#match "preferences"}
       <Bonfire.UI.Social.SettingsViewsLive.PreferencesLive
-          current_user={current_user(assigns)}
-        />
+        current_user={current_user(assigns)}
+      />
     {#match _}
       <Bonfire.UI.Social.SettingsViewsLive.EditProfileLive
+       :if={current_user(assigns)}
        uploads={@uploads} 
        current_user={current_user(assigns)}
+      />
+      <Bonfire.UI.Social.SettingsViewsLive.EditAccountLive
+       :if={!current_user(assigns) && current_account(assigns)}
+       uploads={@uploads} 
+       current_account={current_account(assigns)}
+      />
+      <Bonfire.UI.Social.SettingsViewsLive.PreferencesLive
+       :if={!current_user(assigns) && !current_account(assigns)}
+       uploads={@uploads} 
       />
   {/case}
   </section>

@@ -2,7 +2,10 @@
 <div class="py-2">
   <LiveRedirect to={@permalink}>
     <div class="mb-2 text-sm font-medium text-base-content text-opacity-80 ">
-    {rich e(@object, :name, e(@object, :profile, :name, e(@object, :post_content, :name, e(@object, :title, l "[Deleted]"))))}
+      <span :if={@object_type}>
+        {@object_type}:
+      </span>
+      {rich e(@object, :name, e(@object, :profile, :name, e(@object, :post_content, :name, e(@object, :title, e(@object, :id, l "[Deleted]")))))}
     </div>
   </LiveRedirect>
 

@@ -13,7 +13,7 @@
     </div> -->
     <div class="flex flex-1 pl-4">
       <Bonfire.UI.Social.SearchLive />
-    </div>
+    </div> 
   </div>
 
   <div class="flex justify-end flex-1 pl-4">

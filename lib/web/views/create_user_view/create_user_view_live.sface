@@ -22,7 +22,20 @@
           </div>
         </div>
       </div>
-
+    {#match "invite_only"}
+      <div role="status" class="p-4 rounded-md bg-yellow-50">
+        <div class="flex">
+          <div class="flex-shrink-0">
+            <Solid.ExclamationIcon class="w-5 h-5 text-warning" />
+          </div>
+          <div class="ml-3">
+            <h3 class="text-sm font-medium text-yellow-800">
+              You need to use the special invite link to sign up.
+            </h3>
+          </div>
+        </div>
+      </div>
+    
     {#match error}
       <div role="status" class="p-4 rounded-md bg-yellow-50">
         <div class="flex">
@@ -36,7 +49,7 @@
           </div>
         </div>
       </div>
-    {/case}
+  {/case}
 
   <Form for={@form} action={path(:create_user, :create)} id="create-form">
     <section class="mt-8 bg-white rounded-lg shadow-xl">

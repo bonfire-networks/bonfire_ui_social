@@ -19,6 +19,7 @@
   <%# live_component(@socket, Bonfire.UI.Social.NavLive, current_user: current_user(assigns)) %>
   <Bonfire.UI.Social.NavLive.render
     __context__={%{}}
+    current_account={current_account(assigns)}
     current_user={current_user(assigns)}
     page={e(assigns, :page, "")}
     inner_content={@inner_content}

@@ -4,4 +4,6 @@ defmodule Bonfire.UI.Social.NavLive do
 
   prop page, :any
   prop inner_content, :any
+  # prop current_account, :any
+  # prop current_user, :any
 end
