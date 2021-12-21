@@ -1,15 +1,10 @@
 {#if  e(@object, :id, nil) != nil and e(@activity, :replied, :reply_to_id, nil) == nil and e(@activity, :id, nil) == nil}
-  <div class={"flex items-center"}>
+  <div class={"flex items-center -mb-2"}>
     <div class="flex justify-between flex-1">
       <div class="flex items-center text-sm font-medium text-base-content">
-        <img 
-        class="inline-block object-cover w-6 h-6 bg-gray-100 mask mask-squircle" 
-        src={avatar_url(@profile)} 
-        alt="subject profile image" 
-        onerror="this.style.display='none'" >
         <LiveRedirect
           aria-label={e(@activity, :subject_character, :username, "") <> " profile"}
-          class="ml-2 hover:underline subject_replied"
+          class="hover:underline subject_replied text-opacity-70"
           to={path(e(@activity, :subject_character, nil))}>
           {e(@activity, :subject_profile, :name, "Anonymous")}
         </LiveRedirect>
