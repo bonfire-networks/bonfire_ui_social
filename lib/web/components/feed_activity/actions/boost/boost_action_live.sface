@@ -1,5 +1,6 @@
 <button
   id={@id}
+  data-id={"boost_action"}
   phx-click={"#{if @object_id in e(assigns, :boosted, []) || e(@my_boost, :id, nil), do: "Bonfire.Social.Boosts:undo", else: "Bonfire.Social.Boosts:boost"}"}
   phx-value-id={@object_id}
   phx-value-component={__MODULE__}

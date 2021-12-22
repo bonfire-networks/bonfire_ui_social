@@ -70,7 +70,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
       "main_reply_to border-l-2 border-base-300 pl-2 py-0 my-2 mt-3 pr-0": e(@object, :id, nil) != nil and e(@activity, :replied, :reply_to_id, nil) == nil and e(@activity, :id, nil) == nil, # showing a quoted reply_to
       "showing_within:thread": e(assigns, :showing_within, nil) == :thread,
       "showing_within:notifications ml-7 px-0": e(assigns, :showing_within, nil) == :notifications,
-      "activity_regular": e(@object, :id, nil) != nil and e(@activity, :replied, :reply_to_id, nil) != nil and e(@activity, :id, nil) != nil,
+      "reply": e(@object, :id, nil) != nil and e(@activity, :replied, :reply_to_id, nil) != nil and e(@activity, :id, nil) != nil,
       }>
       {#for {component, component_assigns} when is_atom(component) <- e(assigns, :activity_object_components, [])}
         <Surface.Components.Dynamic.Component

@@ -1,48 +1,52 @@
 
 <div class={
   "mt-2",
+  "showing_within:feed": e(assigns, :showing_within, nil) == :feed,
   "showing_within:thread -mt-1 ml-12": e(assigns, :showing_within, nil) == :thread,
   "showing_within:notifications ml-7": e(assigns, :showing_within, nil) == :notifications,
-  "reply_to": e(@object, :id, nil) != nil and e(@activity, :replied, :reply_to_id, nil) == nil and e(@activity, :id, nil) == nil  
+  "reply_to": e(@object, :id, nil) != nil and e(@activity, :replied, :reply_to_id, nil) == nil and e(@activity, :id, nil) == nil,
+  "reply_message": e(@activity, :replied, :reply_to_id, nil)
 }
    x-cloak 
    x-data="{content_open: false}">
-    {#if e(assigns, :viewing_main_object, nil) !=true and e(post_content(@object), :name, nil)}
-      <button
-        @click="{content_open = true}"
-        x-show="content_open == false"
-        class="flex items-center font-semibold text-left text-md text-base-content hover:underline">
-        { rich e(post_content(@object), :name, "Title")} {l "(Read more)"}
-      </button>
-      <button
-        @click="{content_open = false}"
-        x-show="content_open"
-        class="flex items-center font-semibold text-left text-md text-base-content hover:underline">
-        {rich e(post_content(@object), :name, "Title")} {l "(Read less)"}
-      </button>
-      <div 
-        class="font-light prose max-w-prose">
-        {rich e(post_content(@object), :summary, "")}
+
+    <!-- When you are visualizing the note in the feed -->
+    {#if e(assigns, :showing_within, nil) == :feed}
+      <div :if={e(post_content(@object), :name, nil)}>
+        <button
+          @click="{content_open = true}"
+          x-show="content_open == false"
+          class="flex items-center font-semibold text-left text-md text-base-content hover:underline">
+          { rich e(post_content(@object), :name, "Title")} {l "(Read more)"}
+        </button>
+        <button
+          @click="{content_open = false}"
+          x-show="content_open"
+          class="flex items-center font-semibold text-left text-md text-base-content hover:underline">
+          {rich e(post_content(@object), :name, "Title")} {l "(Read less)"}
+        </button>
+        <div
+          :if={e(post_content(@object), :summary, "")}
+          class="font-light prose max-w-prose">
+          {rich e(post_content(@object), :summary, "")}
+        </div>
       </div>
+      
       <div
-        x-show="content_open"
+        data-id={"object_body"}
+        x-show={"content_open" == e(post_content(@object), :name, nil)}
         x-transition:enter="transition ease-out duration-100"
         x-transition:enter-start="transform opacity-0 scale-95"
         x-transition:enter-end="transform opacity-100 scale-100"
         x-transition:leave="transition ease-in duration-75"
         x-transition:leave-start="transform opacity-100 scale-100"
         x-transition:leave-end="transform opacity-0 scale-95"
-        class="prose object_body max-w-prose">
+        class={"prose object_body max-w-prose"}>
         {rich e(post_content(@object), :html_body, "")}
       </div>
 
-    {#elseif e(assigns, :viewing_main_object, nil) !=true and e(post_content(@object), :name, nil) != true}      
 
-      <div
-        class="prose object_body max-w-prose">
-        {rich e(post_content(@object), :html_body, "...")}
-      </div>
-    
+    <!-- When you are visualizing the note in the thread -->
     {#else}
 
       <h2 
@@ -64,10 +68,10 @@
 
         <div class="mt-4 mb-2">
           <Bonfire.UI.Social.Activity.DateAgoLive 
-          permalink={@permalink}
-          viewing_main_object={e(assigns, :viewing_main_object, nil)}
-          date_ago={@date_ago}
-          verb_display={@verb_display} />
+            permalink={@permalink}
+            viewing_main_object={e(assigns, :viewing_main_object, nil)}
+            date_ago={@date_ago}
+            verb_display={@verb_display} />
         </div>
     {/if}
 </div>

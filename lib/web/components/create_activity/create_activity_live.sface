@@ -34,15 +34,22 @@
         name="to_circles[]" 
         value={id}
         />
+            
         <div class="border rounded border-base-300">
           <Inputs  for={:post_content}>
+            <div
+              x-show.transition="title_open"
+              class="border-b rounded-md">
+              <Field name={:name}>
+                <TextInput
+                  opts={placeholder: "Enter a title"}
+                  class="w-full rounded-none input" 
+                  />
+              </Field>
+            </div>  
             <Field name={:html_body}>
               <Label :if={@smart_input_text && @smart_input_text !="" && @smart_input_placeholder} class="mb-2 alert alert-info">{@smart_input_placeholder}</Label>
-                <!-- <Bonfire.UI.Social.BoundariesSelectedLive 
-                :if={@create_activity_type != "message"}
-                activity_type_or_reply={activity_type_or_reply(assigns, @create_activity_type)} 
-                /> -->
-                <Bonfire.UI.Social.SetCWLive />          
+                    
               <div
                 @click = "open = true"
                 class="transition-all duration-300 ease-in-out rounded"
