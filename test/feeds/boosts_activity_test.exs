@@ -65,7 +65,7 @@ defmodule Bonfire.UI.Social.Feeds.BoostsActivityTest do
     assert {:ok, boost} = Boosts.boost(carl, post)
     assert {:ok, boost} = Boosts.boost(demetrius, post)
     assert {:ok, boost} = Boosts.boost(eve, post)
-    assert unboosted = Boosts.unboost(bob, post)
+    assert unboosted = Boosts.unboost(eve, post)
     feed = Bonfire.Social.FeedActivities.my_feed(alice)
     fp = feed.edges |> List.first() #|> IO.inspect
     assigns = [activity: fp.activity]
