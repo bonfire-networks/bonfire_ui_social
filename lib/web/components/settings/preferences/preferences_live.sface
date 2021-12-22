@@ -3,7 +3,23 @@
     settings_section_title={l "Preferences"}
     settings_section_description={l "Customize your experience"}
   />
-  <div class="">
-    <Bonfire.UI.Social.ChangeThemeLive />
-  </div>
+
+    <div class="px-4 sm:grid sm:grid-cols-3 sm:gap-4 sm:items-center sm:border-t sm:border-base-200 sm:pt-5">
+      <label for="default-theme" class="block text-sm font-medium text-base-content sm:mt-px sm:pt-2">
+        {l "Look and feel"}
+      </label>
+      <div class="mt-1 sm:mt-0 sm:col-span-2">
+        <Bonfire.UI.Social.ChangeThemeLive />
+      </div>
+    </div>
+
+    <div class="px-4 sm:grid sm:grid-cols-3 sm:gap-4 sm:items-center sm:border-t sm:border-base-200 sm:pt-5">
+      <label for="default-language" class="block text-sm font-medium text-base-content sm:mt-px sm:pt-2">
+        {l "Language"}
+      </label>
+      <div class="mt-1 sm:mt-0 sm:col-span-2">
+        <Bonfire.UI.Social.ChangeLocaleLive />
+      </div>
+    </div>
+
 </div>

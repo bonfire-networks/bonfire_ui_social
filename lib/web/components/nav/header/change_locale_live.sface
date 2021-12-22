@@ -1,0 +1,17 @@
+<div class="" >
+
+    <select id="change_locale" class="" phx-change="locale-changed" phx-hook="ChangeLocaleHook">
+        
+        {#for locale <- Localise.known_locales}
+            <option class=""
+                value={locale}
+                selected={@locale==locale}
+            >
+            {Localise.locale_name(locale)}
+            </option>
+        {#else}
+            <option>No localisation available</option>
+        {/for}
+
+    </select>
+</div>
