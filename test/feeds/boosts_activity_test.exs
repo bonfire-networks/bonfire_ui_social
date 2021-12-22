@@ -75,7 +75,7 @@ defmodule Bonfire.UI.Social.Feeds.BoostsActivityTest do
     |> Floki.parse_fragment
     |> elem(1)
     |> Floki.find("[data-id=boost_action]")
-    |> Floki.text =~ "Boost (4)"
+    |> Floki.text =~ "Boost (3)"
   end
 
   # test "As a user I want to see if I already boosted an activity" do
