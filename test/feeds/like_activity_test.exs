@@ -1,4 +1,4 @@
-defmodule Bonfire.UI.Social.Feeds.BoostsActivityTest do
+defmodule Bonfire.UI.Social.Feeds.LikeActivityTest do
 
   use Bonfire.UI.Social.ConnCase
 
@@ -7,78 +7,93 @@ defmodule Bonfire.UI.Social.Feeds.BoostsActivityTest do
   alias Bonfire.Social.{Boosts, Likes, Follows, Posts}
   alias Bonfire.Repo
 
-  test "As a user I want to see the activity total boosts" do
+  test "As a user I want to see the activity total likes" do
     # Create alice user
     account = fake_account!()
     alice = fake_user!(account)
     # Create bob user
     account2 = fake_account!()
     bob = fake_user!(account2)
-    carl = fake_user!(account2)
-    demetrius = fake_user!(account)
-    eve = fake_user!(account)
     # bob follows alice
     Follows.follow(bob, alice)
     attrs = %{to_circles: [:guest], post_content: %{summary: "summary", name: "test post name", html_body: "first post"}}
 
     assert {:ok, post} = Posts.publish(alice, attrs)
-    assert {:ok, boost} = Boosts.boost(bob, post)
-    assert {:ok, boost} = Boosts.boost(carl, post)
-    assert {:ok, boost} = Boosts.boost(demetrius, post)
-    assert {:ok, boost} = Boosts.boost(eve, post)
-    assert unboosted = Boosts.unboost(eve, post)
+    assert {:ok, boost} = Likes.like(bob, post)
+
     feed = Bonfire.Social.FeedActivities.my_feed(alice)
     fp = feed.edges |> List.first() #|> IO.inspect
     assigns = [activity: fp.activity]
     assert doc = render_surface(Bonfire.UI.Social.ActivityLive, assigns)
 
     assert doc
-    |> Floki.parse_fragment
-    |> elem(1)
-    |> Floki.find("[data-id=boost_action]")
-    |> Floki.text =~ "Boost (3)"
+      |> Floki.parse_fragment
+      |> elem(1)
+      |> Floki.text =~ "Like (1)"
   end
 
-  test "As a user I want to see if I already boosted an activity" do
+
+
+  test "As a user I want to see if I already liked an activity" do
     # Create alice user
     account = fake_account!()
     alice = fake_user!(account)
     # Create bob user
     account2 = fake_account!()
     bob = fake_user!(account2)
-    carl = fake_user!(account2)
-    demetrius = fake_user!(account)
-    eve = fake_user!(account)
     # bob follows alice
     Follows.follow(bob, alice)
     attrs = %{to_circles: [:guest], post_content: %{summary: "summary", name: "test post name", html_body: "first post"}}
 
     assert {:ok, post} = Posts.publish(alice, attrs)
-    assert {:ok, boost} = Boosts.boost(bob, post)
-    assert {:ok, boost} = Boosts.boost(carl, post)
-    assert {:ok, boost} = Boosts.boost(demetrius, post)
-    assert {:ok, boost} = Boosts.boost(eve, post)
+    assert {:ok, like} = Likes.like(bob, post)
+
     feed = Bonfire.Social.FeedActivities.my_feed(bob)
-    fp = feed.edges |> List.first() #|> IO.inspect
+    fp = feed.edges |> List.last() #|> IO.inspect
     assigns = [activity: fp.activity]
     assert doc = render_surface(Bonfire.UI.Social.ActivityLive, assigns)
 
     assert doc
-    |> Floki.parse_fragment
-    |> elem(1)
-    |> Floki.find("[data-id=boost_action]")
-    |> Floki.text =~ "Boosted (4)"
+      |> Floki.parse_fragment
+      |> elem(1)
+      |> Floki.text =~ "Liked"
   end
 
+  test "As a user, when I like an activity the counter should increment" do
+      # Create alice user
+      account = fake_account!()
+      alice = fake_user!(account)
+      # Create bob user
+      account2 = fake_account!()
+      bob = fake_user!(account2)
+      # bob follows alice
+      Follows.follow(bob, alice)
+      # Alice posts a message
+      attrs = %{to_circles: [:guest], post_content: %{summary: "summary", name: "test post name", html_body: "first post"}}
+      assert {:ok, post} = Posts.publish(alice, attrs)
+      assert {:ok, like} = Likes.like(alice, post)
+      assert {:ok, like} = Likes.like(bob, post)
 
-  test "As a user, when I boost a post, I want to see the activity boosted subject" do
+      feed = Bonfire.Social.FeedActivities.my_feed(bob)
+      fp = feed.edges |> List.first() #|> IO.inspect
+      assigns = [activity: fp.activity]
+    assert doc = render_surface(Bonfire.UI.Social.ActivityLive, assigns)
+
+      assert doc
+      |> Floki.parse_fragment
+      |> elem(1)
+      |> Floki.text =~ "Liked (2)"
+
+  end
+
+  test "As a user, when I like a post, I want to see the activity liked subject" do
     account = fake_account!()
     alice = fake_user!(account)
     account2 = fake_account!()
     bob = fake_user!(account2)
     attrs = %{to_circles: [:guest], post_content: %{summary: "summary", name: "test post name", html_body: "first post"}}
     assert {:ok, post} = Posts.publish(alice, attrs)
-    assert {:ok, boost} = Boosts.boost(bob, post)
+    assert {:ok, like} = Likes.like(bob, post)
     feed = Bonfire.Social.FeedActivities.my_feed(alice)
     fp = feed.edges |> List.first() #|> IO.inspect
     assigns = [activity: fp.activity]
@@ -91,15 +106,22 @@ defmodule Bonfire.UI.Social.Feeds.BoostsActivityTest do
     |> Floki.text =~ alice.profile.name
   end
 
-  test "As a user, when I boosts a post, I want to see the activity boosted object" do
+
+  test "As a user, when I like an activity, the label should change from like to liked" do
+    # Create alice user
     account = fake_account!()
     alice = fake_user!(account)
+    # Create bob user
     account2 = fake_account!()
     bob = fake_user!(account2)
+    # bob follows alice
+    Follows.follow(bob, alice)
+    # Alice posts a message
     attrs = %{to_circles: [:guest], post_content: %{summary: "summary", name: "test post name", html_body: "first post"}}
     assert {:ok, post} = Posts.publish(alice, attrs)
-    assert {:ok, boost} = Boosts.boost(bob, post)
-    feed = Bonfire.Social.FeedActivities.my_feed(alice)
+    assert {:ok, like} = Likes.like(bob, post)
+
+    feed = Bonfire.Social.FeedActivities.my_feed(bob)
     fp = feed.edges |> List.first() #|> IO.inspect
     assigns = [activity: fp.activity]
     assert doc = render_surface(Bonfire.UI.Social.ActivityLive, assigns)
@@ -107,22 +129,26 @@ defmodule Bonfire.UI.Social.Feeds.BoostsActivityTest do
     assert doc
     |> Floki.parse_fragment
     |> elem(1)
-    |> Floki.find("div.object_body")
-    |> Floki.text =~ "first post"
+    |> Floki.text =~ "Liked"
   end
 
-
-  test "As a user, when I boost a post, I want to see the author of the boost" do
+  test "As a user when I unlike an activity, the counter should decrement" do
+    # Create alice user
     account = fake_account!()
     alice = fake_user!(account)
+    # Create bob user
     account2 = fake_account!()
     bob = fake_user!(account2)
+    # bob follows alice
+    Follows.follow(bob, alice)
+    # Alice posts a message
     attrs = %{to_circles: [:guest], post_content: %{summary: "summary", name: "test post name", html_body: "first post"}}
     assert {:ok, post} = Posts.publish(alice, attrs)
-    assert {:ok, boost} = Boosts.boost(bob, post)
-    # bob follows alice
-    Follows.follow(alice, bob)
-    feed = Bonfire.Social.FeedActivities.my_feed(alice)
+    assert {:ok, like} = Likes.like(alice, post)
+    assert {:ok, like} = Likes.like(bob, post)
+    assert unlike = Likes.unlike(bob, post)
+
+    feed = Bonfire.Social.FeedActivities.my_feed(bob)
     fp = feed.edges |> List.first() #|> IO.inspect
     assigns = [activity: fp.activity]
     assert doc = render_surface(Bonfire.UI.Social.ActivityLive, assigns)
@@ -130,13 +156,10 @@ defmodule Bonfire.UI.Social.Feeds.BoostsActivityTest do
     assert doc
     |> Floki.parse_fragment
     |> elem(1)
-    |> Floki.find("a.subject_minimal")
-    |> List.first
-    |> Floki.text =~ bob.profile.name
-
+    |> Floki.text =~ "Like (1)"
   end
 
-  test "As a user, when I boost an activity, the counter should increment" do
+  test "As a user, when I unlike an activity, the label should change from liked to like" do
     # Create alice user
     account = fake_account!()
     alice = fake_user!(account)
@@ -145,12 +168,12 @@ defmodule Bonfire.UI.Social.Feeds.BoostsActivityTest do
     bob = fake_user!(account2)
     # bob follows alice
     Follows.follow(bob, alice)
+    # Alice posts a message
     attrs = %{to_circles: [:guest], post_content: %{summary: "summary", name: "test post name", html_body: "first post"}}
-
     assert {:ok, post} = Posts.publish(alice, attrs)
-    assert {:ok, boost} = Boosts.boost(alice, post)
-
-    assert {:ok, boost} = Boosts.boost(bob, post)
+    assert {:ok, like} = Likes.like(alice, post)
+    assert {:ok, like} = Likes.like(bob, post)
+    assert unlike = Likes.unlike(bob, post)
 
     feed = Bonfire.Social.FeedActivities.my_feed(bob)
     fp = feed.edges |> List.first() #|> IO.inspect
@@ -158,68 +181,9 @@ defmodule Bonfire.UI.Social.Feeds.BoostsActivityTest do
     assert doc = render_surface(Bonfire.UI.Social.ActivityLive, assigns)
 
     assert doc
-      |> Floki.parse_fragment
-      |> elem(1)
-      |> Floki.find("[data-id=boost_action]")
-      |> Floki.text =~ "Boosted (2)"
+    |> Floki.parse_fragment
+    |> elem(1)
+    |> Floki.text =~ "Like"
   end
-
-  test "As a user, when I unboost an activity, the counter should decrement" do
-    # Create alice user
-    account = fake_account!()
-    alice = fake_user!(account)
-    # Create bob user
-    account2 = fake_account!()
-    bob = fake_user!(account2)
-    # bob follows alice
-    Follows.follow(bob, alice)
-    attrs = %{to_circles: [:guest], post_content: %{summary: "summary", name: "test post name", html_body: "first post"}}
-
-    assert {:ok, post} = Posts.publish(alice, attrs)
-    assert {:ok, boost} = Boosts.boost(alice, post)
-
-    assert {:ok, boost} = Boosts.boost(bob, post)
-    assert unboosted = Boosts.unboost(bob, post)
-
-    feed = Bonfire.Social.FeedActivities.my_feed(bob)
-    fp = feed.edges |> List.first() #|> IO.inspect
-    assigns = [activity: fp.activity]
-    assert doc = render_surface(Bonfire.UI.Social.ActivityLive, assigns)
-
-    assert doc
-      |> Floki.parse_fragment
-      |> elem(1)
-      |> Floki.find("[data-id=boost_action]")
-      |> Floki.text =~ "Boost (1)"
-  end
-
-  test "As a user, when I unboost an activity, the label should change to boost" do
-    # Create alice user
-    account = fake_account!()
-    alice = fake_user!(account)
-    # Create bob user
-    account2 = fake_account!()
-    bob = fake_user!(account2)
-    # bob follows alice
-    Follows.follow(bob, alice)
-    attrs = %{to_circles: [:guest], post_content: %{summary: "summary", name: "test post name", html_body: "first post"}}
-
-    assert {:ok, post} = Posts.publish(alice, attrs)
-    assert {:ok, boost} = Boosts.boost(bob, post)
-    assert unboosted = Boosts.unboost(bob, post)
-
-    feed = Bonfire.Social.FeedActivities.my_feed(bob)
-    fp = feed.edges |> List.first() #|> IO.inspect
-    assigns = [activity: fp.activity]
-    assert doc = render_surface(Bonfire.UI.Social.ActivityLive, assigns)
-
-    assert doc
-      |> Floki.parse_fragment
-      |> elem(1)
-      |> Floki.find("[data-id=boost_action]")
-      |> Floki.text =~ "Boost"
-  end
-
-
 
 end
