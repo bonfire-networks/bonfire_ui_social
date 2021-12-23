@@ -1,7 +1,7 @@
 defmodule Bonfire.UI.Social.FeedLive do
   use Bonfire.Web, :stateful_component
   alias Bonfire.UI.Social.ActivityLive
-  import Bonfire.UI.Social.Integration
+
   require Logger
 
   prop feed, :list

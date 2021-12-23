@@ -1,7 +1,7 @@
 defmodule Bonfire.UI.Social.Activity.ProcessListLive do
   use Bonfire.Web, :stateless_component
   alias Surface.Components.LivePatch
-  import Bonfire.UI.Social.Integration
+
 
   prop object, :map, required: true
   prop showing_within, :any
@@ -31,7 +31,7 @@ defmodule Bonfire.UI.Social.Activity.ProcessListLive do
       |> Map.put(:tasks_total, tasks_total)
       |> Map.put(:tasks_completed, tasks_completed)
       |> Map.put(:percentage, percentage)
-    
+
   end
 
   def preloads(), do: [

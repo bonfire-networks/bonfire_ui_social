@@ -1,7 +1,7 @@
 defmodule Bonfire.UI.Social.Activity.IntentTaskLive do
   use Bonfire.Web, :stateless_component
   alias Surface.Components.LivePatch
-  import Bonfire.UI.Social.Integration
+
 
   prop object, :map, required: true
 

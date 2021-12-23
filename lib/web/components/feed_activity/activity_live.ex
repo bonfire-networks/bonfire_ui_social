@@ -1,6 +1,6 @@
 defmodule Bonfire.UI.Social.ActivityLive do
   use Bonfire.Web, :stateless_component
-  import Bonfire.UI.Social.Integration
+
   alias Bonfire.Social.Activities
   require Logger
 

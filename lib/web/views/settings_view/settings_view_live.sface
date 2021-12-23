@@ -31,7 +31,9 @@
           />
       {/case}
     {#match "account"}
-      <Bonfire.UI.Social.SettingsViewsLive.EditAccountLive />
+      <Bonfire.UI.Social.SettingsViewsLive.EditAccountLive 
+      current_account={current_account(assigns)}
+    />
     {#match "circles"}
       <Bonfire.UI.Social.MyCirclesLive
         current_user={current_user(assigns)}
@@ -46,6 +48,11 @@
     {#match "preferences"}
       <Bonfire.UI.Social.SettingsViewsLive.PreferencesLive
         current_user={current_user(assigns)}
+      />
+    {#match "shared_user"}
+      <Bonfire.UI.Social.SettingsViewsLive.SharedUserLive
+        current_user={current_user(assigns) |> repo().maybe_preload(:shared_user) }
+        current_account={current_account(assigns)}
       />
     {#match _}
       <Bonfire.UI.Social.SettingsViewsLive.EditProfileLive

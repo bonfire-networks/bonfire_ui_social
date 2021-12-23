@@ -1,6 +1,6 @@
 defmodule Bonfire.UI.Social.Activity.CategoryLive do
   use Bonfire.Web, :stateless_component
-  import Bonfire.UI.Social.Integration
+
 
 
   def name(object) do

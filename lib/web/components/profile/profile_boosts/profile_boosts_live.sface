@@ -1,5 +1,5 @@
 <div class="rounded-t-none bg-base-100 rounded-box">
-  <Bonfire.UI.Social.ProfileHeroFullLive user={@user} current_user={current_user(assigns)}  />
+  <Bonfire.UI.Social.ProfileHeroFullLive user={@user |> repo().maybe_preload(:shared_user)} current_user={current_user(assigns)}  />
   <Bonfire.UI.Social.ProfileNavigationLive selected_tab={@selected_tab} user={@user}/>
 
   <Bonfire.UI.Social.FeedLive

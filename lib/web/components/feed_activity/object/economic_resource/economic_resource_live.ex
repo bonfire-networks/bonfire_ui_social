@@ -1,6 +1,6 @@
 defmodule Bonfire.UI.Social.Activity.EconomicResourceLive do
   use Bonfire.Web, :stateless_component
-  import Bonfire.UI.Social.Integration
+
 
   prop object, :map
 

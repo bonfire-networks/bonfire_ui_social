@@ -53,7 +53,8 @@
           >
         </div>
 
-        <div class="form-control">
+        <!-- TODO: needs better handling in the backend, so old usernames still point to the user
+         <div class="form-control">
           <label for="username" class="label">
             <span class="label-text">
               {l "Username"}
@@ -66,7 +67,7 @@
               @{Bonfire.Common.Config.get(:host)}
             </span>
           </label>
-        </div>
+        </div> -->
 
         <div class="form-control">
           <label for="about" class="label">

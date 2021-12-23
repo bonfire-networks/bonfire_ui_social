@@ -12,18 +12,24 @@
         {l "Preferences"}
       </LivePatch>
     </li> 
+    <li :if={Utils.module_enabled?(Bonfire.Me.SharedUsers)} class={"bg-primary": @selected_tab == "shared_user"}>
+      <LivePatch to={"/settings/shared_user"}>
+        <Solid.UserGroupIcon class="inline-block w-5 h-5 mr-2 stroke-current" />
+        {l "Teams"}
+      </LivePatch>
+    </li> 
     <!-- <li class={"bg-primary": @selected_tab == "circles"}>
       <LivePatch to={"/settings/circles"}>
         <Outline.UsersIcon class="inline-block w-5 h-5 mr-2 stroke-current" />
         {l "Circles"}
       </LivePatch>
     </li> -->
-    <li class={"bg-primary": @selected_tab == "extensions"}>
+    <!-- <li class={"bg-primary": @selected_tab == "extensions"}>
       <LivePatch to={"/settings/extensions"}>
         <Outline.BeakerIcon class="inline-block w-5 h-5 mr-2 stroke-current" />
         {l "Extensions"}
       </LivePatch>
-    </li>
+    </li> -->
     <li class={"bg-primary": @selected_tab == "account"}>
       <LivePatch to={"/settings/account"}>
         <Outline.LockClosedIcon class="inline-block w-5 h-5 mr-2 stroke-current" />

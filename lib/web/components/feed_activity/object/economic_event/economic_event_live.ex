@@ -1,6 +1,6 @@
 defmodule Bonfire.UI.Social.Activity.EconomicEventLive do
   use Bonfire.Web, :stateless_component
-  import Bonfire.UI.Social.Integration
+
 
   prop activity, :map
   prop object, :map
@@ -32,7 +32,7 @@ defmodule Bonfire.UI.Social.Activity.EconomicEventLive do
       ]
     }
   end
-  
+
 
   def prepare(object) do
     object
