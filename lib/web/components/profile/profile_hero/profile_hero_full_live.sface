@@ -46,7 +46,7 @@
 
 
             <span
-              :if={Utils.module_enabled?(Bonfire.Me.SharedUsers) && repo().maybe_preload(@user, :shared_user) |> e(:shared_user, :label, nil)} 
+              :if={Utils.module_enabled?(Bonfire.Me.SharedUsers) && e(@user, :shared_user, :label, nil)} 
               class="-mt-1 text-sm font-light text-gray-400 pull-right"
             >
               {e(@user, :shared_user, :label, "")}
