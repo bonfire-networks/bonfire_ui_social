@@ -2,6 +2,10 @@
   <Bonfire.UI.Social.SettingsViewLive.SettingsHeaderLive 
     settings_section_title={l "Account"}
   />
+
+  
+  <a href={path(Bonfire.Me.Web.ChangePasswordController)} class="btn btn-primary" role="menuitem">{l "Change my password"}</a>
+
   <details class="p-6 details-dialog">
     <summary>
       <div class="btn btn-primary" role="menuitem">{l "Delete my account"}</div>
