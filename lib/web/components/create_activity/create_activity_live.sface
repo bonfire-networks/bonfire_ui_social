@@ -1,7 +1,6 @@
 
 <div
   class="create_activity"
-  x-cloak
   x-data="{
     open: true,
     title_open: false, 
@@ -9,7 +8,7 @@
     open_boundaries: false,
     boundary_selected: 'public'  
   }"
-  @click.away="{open=true;  open_boundaries=false}">
+  @click.outside="open= true;  open_boundaries=false">
 
 
   <Form 
@@ -38,7 +37,8 @@
         <div class="border rounded border-base-300">
           <Inputs  for={:post_content}>
             <div
-              x-show.transition="title_open"
+              x-show="title_open"
+              x-transition
               class="border-b rounded-md">
               <Field name={:name}>
                 <TextInput
@@ -93,7 +93,7 @@
             </div>
          
             <button
-              @click="{open = true; title_open = false}"
+              @click="open = true; title_open = false"
               type="submit"
               class=" justify-self-end btn-sm btn btn-primary">
               <span :if={@create_activity_type=="message"}>{l "Send"}</span>

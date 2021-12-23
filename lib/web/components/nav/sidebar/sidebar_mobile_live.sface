@@ -10,7 +10,7 @@
   x-description="Mobile menu, show/hide based on mobile menu state."
   class="fixed z-30 top-0 left-0 right-0 bottom-0 w-full h-full inset-x-0 p-2 transition transform origin-top-right md:hidden"
   x-ref="panel"
-  @click.away="open_sidebar = false"
+  @click.outside="open_sidebar = false"
   style="display: none;"
 >
   <div class="rounded-lg h-full shadow-lg ring-1 ring-black ring-opacity-5 bg-white divide-y-2 divide-gray-50">

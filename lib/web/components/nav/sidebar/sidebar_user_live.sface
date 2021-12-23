@@ -1,9 +1,8 @@
 <div class="dropdown dropdown-end">
   <div
-    x-cloak
     x-data="{ open: false }"
     @keydown.escape.stop="open = false"
-    @click.away="open = false"
+    @click.outside="open = false"
     class="relative flex flex-col w-full text-left"
   >
     <button
@@ -30,7 +29,7 @@
       </svg> -->
     </button>
     <ul
-      x-description="Usr profile dropdown menu, show/hide based on menu state."
+      x-description="User profile dropdown menu, show/hide based on menu state."
       x-show="open"
       x-transition:enter="transition ease-out duration-100"
       x-transition:enter-start="transform opacity-0 scale-95"

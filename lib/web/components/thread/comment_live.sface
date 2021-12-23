@@ -8,7 +8,7 @@
               id={"comment-"<> e(@comment, :id, "")}
               activity={Map.drop(activity, [:object])}
               object={object}
-              reply_click={"reply = !reply; return false;"}
+              reply_click={"reply = !reply; $event.preventDefault();"}
               showing_within={:thread}
             />
 
@@ -17,7 +17,7 @@
               id={"comment-"<> e(@comment, :id, "")}
               activity={Map.drop(activity, [:object])}
               object={object}
-              reply_click={"reply = !reply; return false;"}
+              reply_click={"reply = !reply; $event.preventDefault();"}
               showing_within={:thread}
             />
           {#match _}

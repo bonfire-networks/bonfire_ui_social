@@ -5,7 +5,7 @@
 
   <div x-show="open" @keydown.window.escape="open = false;" class="fixed inset-0 z-50 overflow-hidden">
     <div class="absolute inset-0 overflow-hidden">
-      <section @click.away="open = false;" class="absolute inset-y-0 left-0 flex max-w-full pr-10" aria-labelledby="slide-over-heading">
+      <section @click.outside="open = false;" class="absolute inset-y-0 left-0 flex max-w-full pr-10" aria-labelledby="slide-over-heading">
         <div class="w-screen max-w-sm" x-description="Slide-over panel, show/hide based on slide-over state."
           x-show="open"
           x-transition:enter="transform transition ease-in-out duration-500 sm:duration-700"

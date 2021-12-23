@@ -2,7 +2,7 @@
   id="bonfire_tags"
   class="relative"
   x-cloak
-  @click.away="show = false"
+  @click.outside="show = false"
   x-data="{show: false}">
   <div
     @click="{

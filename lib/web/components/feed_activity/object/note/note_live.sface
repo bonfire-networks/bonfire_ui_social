@@ -14,13 +14,13 @@
     {#if e(assigns, :showing_within, nil) == :feed}
       <div :if={e(post_content(@object), :name, nil)}>
         <button
-          @click="{content_open = true}"
+          @click="content_open = true"
           x-show="content_open == false"
           class="flex items-center font-semibold text-left text-md text-base-content hover:underline">
           { rich e(post_content(@object), :name, "Title")} {l "(Read more)"}
         </button>
         <button
-          @click="{content_open = false}"
+          @click="content_open = false"
           x-show="content_open"
           class="flex items-center font-semibold text-left text-md text-base-content hover:underline">
           {rich e(post_content(@object), :name, "Title")} {l "(Read less)"}

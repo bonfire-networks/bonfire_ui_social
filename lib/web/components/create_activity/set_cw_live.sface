@@ -1,6 +1,7 @@
 
 <div
-  x-show.transition="title_open"
+  x-show="title_open"
+  x-transition
   class="border-b rounded-md">
   <Field name={:name}>
     <TextInput
@@ -21,7 +22,8 @@
     </div>
 
     <div
-      x-show.transition="summary_open"
+      x-show="summary_open"
+      x-transition
       :if={Bonfire.Common.Config.get([:ui, :smart_input, :summary], []) == true}
       >
       <Field name={:summary}>

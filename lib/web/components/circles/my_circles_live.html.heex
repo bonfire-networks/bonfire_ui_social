@@ -22,7 +22,7 @@
               <%# <p class="text-gray-500">16 Members</p> %>
             </div>
             <div class="flex-shrink-0 pr-2">
-              <div x-cloak x-data="{ open: false }" @keydown.escape.stop="open = false" @click.away="open = false" class="relative inline-block text-left">
+              <div x-cloak x-data="{ open: false }" @keydown.escape.stop="open = false" @click.outside="open = false" class="relative inline-block text-left">
                 <button
                   @click="open = !open" aria-haspopup="true" x-bind:aria-expanded="open" aria-expanded="true"
                   class="w-8 h-8 bg-white inline-flex items-center justify-center text-gray-400 rounded-full bg-transparent hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">

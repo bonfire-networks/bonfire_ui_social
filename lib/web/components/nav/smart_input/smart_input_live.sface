@@ -4,7 +4,7 @@
       x-cloak
       x-data="{ open: false }"
       @keydown.escape.stop="open = false"
-      @click.away="open = false"
+      @click.outside="open = false"
       class="relative block w-full text-left">
       <div class="w-full">
         <LiveRedirect
