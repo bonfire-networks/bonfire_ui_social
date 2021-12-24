@@ -3,7 +3,6 @@ defmodule Bonfire.UI.Social.Activity.ProviderReceiverLive do
 
   prop activity, :map
   prop object, :map
-  prop provider, :map, required: false
   prop date_ago, :any
   prop permalink, :string
 

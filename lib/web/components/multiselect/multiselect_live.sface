@@ -5,14 +5,14 @@
   @click.outside="show = false"
   x-data="{show: false}">
   <div
-    @click="{
+    @click="
       if(show === true) {
         return show = false
       } else {
         show = true
         $nextTick(() => { $refs.autocomplete.focus() })
       }
-    }"
+    "
     class="flex items-center w-full px-2 bg-white border border-gray-300 rounded-md shadow-sm cursor-pointer focus:ring-gray-500 focus:border-gray-500 sm:text-sm hover:bg-gray-50">
       <!-- <div class="h-9"></div> -->
       <label :if={Enum.count(@selected_options) == 0} class="flex-1 w-full py-2 h-9">{@label}</label>

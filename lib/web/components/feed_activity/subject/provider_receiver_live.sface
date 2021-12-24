@@ -1,20 +1,20 @@
 <div class="flex items-center text-sm">    
-    <div :if={e(provider(assigns) , nil)}>
-      <Bonfire.UI.Social.Activity.AvatarLive profile={e(profile(provider(assigns) ), nil)} />
-    </div>
-    <div :if={e(receiver(assigns) , nil)}>
-      <Bonfire.UI.Social.Activity.AvatarLive profile={e(profile(receiver(assigns) ), nil)} />
-    </div>
 
-  <div class="flex justify-between flex-1 ml-2">
+  <div class="flex justify-between flex-1">
 
-    <div :if={e(provider(assigns) , nil)} class="flex items-center text-sm text-gray-700 vf_provider dark:text-gray-100">
+    <div :if={provider(assigns)} class="flex items-center text-sm text-gray-700 vf_provider dark:text-gray-100">
       <LiveRedirect to={path(provider(assigns))}
         opts={"data-id": "subject_name"}
         aria-label={"#{e(character(provider(assigns) ), [:username, :display_username], "")} profile"}
         class="font-semibold text-gray-800 dark:text-gray-100 hover:underline"
-        >{e(profile(provider(assigns) ), :name, "Anonymous")}</LiveRedirect>
-      <span class="ml-2 text-sm text-gray-500 subject_username dark:text-gray-400 text-light">{e(character(provider(assigns) ), [:username, :display_username], "")}</span>
+        >
+        <Bonfire.UI.Social.Activity.AvatarLive profile={profile(provider(assigns))} />
+
+        {e(profile(provider(assigns)), :name, "Anonymous")}
+
+        <!-- <span class="ml-2 text-sm text-gray-500 subject_username dark:text-gray-400 text-light">{e(character(provider(assigns)), [:username, :display_username], "")}</span> -->
+        
+      </LiveRedirect>
     </div>
  
     <div class="flex items-center">
@@ -25,15 +25,22 @@
       </span>
     </div>
 
-    <div :if={e(@object, :receiver, nil) && e(@object, :receiver, nil) != e(provider(assigns) , nil)} class="flex items-center text-sm text-gray-700 vf_receiver">
+    <div :if={receiver(assigns) && receiver(assigns) != e(provider(assigns) , nil)} class="flex items-center text-sm text-gray-700 vf_receiver">
       <LiveRedirect to={path(character(@object, :receiver))}
         opts={"data-id": "subject_name"}
         aria-label={"#{e(character(@object, :receiver), [:username, :display_username], "")} profile"}
         class="font-semibold text-gray-800 dark:text-gray-100 hover:underline"
-        >{e(profile(@object, :receiver), :name, "Anonymous")}</LiveRedirect>
-      <span class="text-sm text-gray-500 subject_username dark:text-gray-400 text-light">{e(character(@object, :receiver), [:username, :display_username], "")}</span>
+        >
+        
+        {e(profile(receiver(assigns)), :name, "Anonymous")}
+        
+        <!-- <span class="text-sm text-gray-500 subject_username dark:text-gray-400 text-light">{e(character(@object, :receiver), [:username, :display_username], "")}</span> -->
 
-      <img class="inline-block object-cover w-8 h-8 bg-gray-100 rounded-full subject_avatar" src={"#{avatar_url(e(profile(@object, :receiver), nil))}"} alt="creator profile image" onerror="this.style.display='none'">
+        <Bonfire.UI.Social.Activity.AvatarLive profile={e(profile(receiver(assigns) ), nil)} />
+
+      </LiveRedirect>
+
+
 
     </div>
 

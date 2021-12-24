@@ -35,7 +35,7 @@
         />
             
         <div class="border rounded border-base-300">
-          <Inputs  for={:post_content}>
+          <Inputs for={:post_content}>
             <div
               x-show="title_open"
               x-transition
@@ -57,7 +57,7 @@
                 <Bonfire.Editor.Ck.Bubble 
                     :if={with_editor?(assigns)}
                     content_placeholder={@smart_input_placeholder || "Type something meaningful"}
-                    field_name="post_content[html_body]"
+                    field_name="post[post_content][html_body]"
                     textarea_class={@textarea_class} 
                   /> 
                   <TextArea

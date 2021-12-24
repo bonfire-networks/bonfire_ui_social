@@ -10,68 +10,55 @@
    x-cloak 
    x-data="{content_open: false}">
 
-    <!-- When you are visualizing the note in the feed -->
-    {#if e(assigns, :showing_within, nil) == :feed}
-      <div :if={e(post_content(@object), :name, nil)}>
-        <button
-          @click="content_open = true"
-          x-show="content_open == false"
-          class="flex items-center font-semibold text-left text-md text-base-content hover:underline">
-          { rich e(post_content(@object), :name, "Title")} {l "(Read more)"}
-        </button>
-        <button
-          @click="content_open = false"
-          x-show="content_open"
-          class="flex items-center font-semibold text-left text-md text-base-content hover:underline">
-          {rich e(post_content(@object), :name, "Title")} {l "(Read less)"}
-        </button>
-        <div
-          :if={e(post_content(@object), :summary, "")}
-          class="font-light prose max-w-prose">
-          {rich e(post_content(@object), :summary, "")}
-        </div>
-      </div>
+    <div :if={e(post_content(@object), :name, nil)}>
+
+      <button
+        @click="content_open = true"
+        x-show="content_open == false"
+        class="flex items-center font-semibold text-left text-md text-base-content hover:underline">
+        { rich e(post_content(@object), :name, "CW")} &nbsp; [{l "read post"}]
+      </button>
+      <button
+        @click="content_open = false"
+        x-show="content_open"
+        class="flex items-center font-semibold text-left text-md text-base-content hover:underline">
+        {rich e(post_content(@object), :name, "CW")} &nbsp; [{l "hide post"}]
+      </button>
+
+    </div>
+
+      
+    <div
+      x-show={if e(post_content(@object), :name, nil), do: "content_open"}
+      x-transition:enter="transition ease-out duration-100"
+      x-transition:enter-start="transform opacity-0 scale-95"
+      x-transition:enter-end="transform opacity-100 scale-100"
+      x-transition:leave="transition ease-in duration-75"
+      x-transition:leave-start="transform opacity-100 scale-100"
+      x-transition:leave-end="transform opacity-0 scale-95">
       
       <div
+        :if={e(post_content(@object), :summary, "")}
+        class="font-light prose max-w-prose">
+        {rich e(post_content(@object), :summary, "")}
+      </div>
+
+      <div
         data-id={"object_body"}
-        x-show={"content_open" == e(post_content(@object), :name, nil)}
-        x-transition:enter="transition ease-out duration-100"
-        x-transition:enter-start="transform opacity-0 scale-95"
-        x-transition:enter-end="transform opacity-100 scale-100"
-        x-transition:leave="transition ease-in duration-75"
-        x-transition:leave-start="transform opacity-100 scale-100"
-        x-transition:leave-end="transform opacity-0 scale-95"
+        :if={e(post_content(@object), :html_body, "")}
         class={"prose object_body max-w-prose"}>
         {rich e(post_content(@object), :html_body, "")}
       </div>
 
+    </div>
 
-    <!-- When you are visualizing the note in the thread -->
-    {#else}
-
-      <h2 
-        :if={e(post_content(@object), :name, nil)}
-        class="mb-4 text-3xl font-bold text-base-content">
-        {rich e(post_content(@object), :name, "Title")}
-      </h2>
-
-        {#if e(post_content(@object), :summary, nil)}
-          <h3 class="text-xs tracking-wider text-gray-600 uppercase dark:text-gray-300">{l "Summary"}</h3>
-          <LiveRedirect to={@permalink}>
-            <div class="mb-2 prose text-base-content max-w-prose">{rich e(post_content(@object), :summary, "")}</div>
-          </LiveRedirect>
-        {/if}
-
-        <article class={"prose text-xl max-w-prose mt-4", "prose max-w-prose dark:prose-light": e(assigns, :viewing_main_object, nil)}>
-          {rich e(post_content(@object), :html_body, "...")}
-        </article>
-
-        <div class="mt-4 mb-2">
-          <Bonfire.UI.Social.Activity.DateAgoLive 
-            permalink={@permalink}
-            viewing_main_object={e(assigns, :viewing_main_object, nil)}
-            date_ago={@date_ago}
-            verb_display={@verb_display} />
-        </div>
-    {/if}
+    <div class="mt-4 mb-2"
+    :if={e(assigns, :showing_within, nil) == :thread}
+    >
+      <Bonfire.UI.Social.Activity.DateAgoLive 
+        permalink={@permalink}
+        viewing_main_object={e(assigns, :viewing_main_object, nil)}
+        date_ago={@date_ago}
+        verb_display={@verb_display} />
+    </div>
 </div>

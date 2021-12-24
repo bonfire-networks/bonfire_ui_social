@@ -1,6 +1,6 @@
 <div class="relative">
 
-  <input name="boundary_selected" type="hidden" x-model="boundary_selected" />
+  <input name={:boundary_selected} type="hidden" x-model="boundary_selected" />
 
   <button
     type="button"
