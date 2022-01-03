@@ -3,11 +3,10 @@
     x-data="{ open: false }"
     @keydown.escape.stop="open = false"
     @click.outside="open = false"
-    class="relative flex flex-col w-full text-left"
+    class="relative flex flex-col w-full"
   >
     <button
       type="button"
-      class="btn"
       id="user-profile-menu"
       @click="open = !open"
       aria-haspopup="true"
@@ -15,19 +14,11 @@
       aria-expanded="true"
     >
       <img
-        class="inline-block object-cover bg-gray-200 rounded-lg w-7 h-7"
+        class="w-10 h-10 mask mask-squircle bg-base-300"
         src={avatar_url(current_user(assigns))}
         alt="current user profile image"
       />
-      <div class="flex-1 hidden mx-3 text-left lg:inline">
-
-        <span class="text-sm font-medium normal-case truncate">{e(current_user(assigns), :profile, :name, "Select a user")}</span>
-        <!-- <span class="-mt-1 text-sm font-light text-gray-600 dark:text-gray-300">@{e(current_user(assigns), :character, :username, "anon")}</span> -->
-      </div>
-      <!-- <svg class="flex-shrink-0 w-5 h-5 text-gray-400 group-hover:text-gray-500" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
-        <path fill-rule="evenodd" d="M10 3a1 1 0 01.707.293l3 3a1 1 0 01-1.414 1.414L10 5.414 7.707 7.707a1 1 0 01-1.414-1.414l3-3A1 1 0 0110 3zm-3.707 9.293a1 1 0 011.414 0L10 14.586l2.293-2.293a1 1 0 011.414 1.414l-3 3a1 1 0 01-1.414 0l-3-3a1 1 0 010-1.414z" clip-rule="evenodd" />
-      </svg> -->
-    </button>
+      </button>
     <ul
       x-description="User profile dropdown menu, show/hide based on menu state."
       x-show="open"

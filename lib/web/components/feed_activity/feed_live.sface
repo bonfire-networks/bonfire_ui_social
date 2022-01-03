@@ -35,7 +35,7 @@
       :if={is_list(@feed) or length(@feed) > 0}
       id="feed_past" 
       phx-update={e(assigns, :feed_update_mode, "replace")} 
-      class="divide-y divide-base-200">
+      class="divide-y divide-base-300">
       <article
         :for={entry <- @feed}
         id={e(entry, :activity, :id, e(entry, :activity, :object, :id, "unknown-"<>Pointers.ULID.generate))}

@@ -30,7 +30,7 @@
         <LiveRedirect
           :if={e(current_user(assigns), :id, nil) && e(current_user(assigns), :id, nil) == maybe_get(@user, :id)}
           to="/settings"
-          class="btn btn-secondary"
+          class="btn btn-outline"
         >
           <span class="mr-2">
             <Solid.CogIcon />

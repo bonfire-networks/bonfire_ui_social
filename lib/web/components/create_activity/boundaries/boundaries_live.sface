@@ -10,20 +10,20 @@
     <div
      :class="{'bg-primary text-primary-content' : open_boundaries === true }"
      class="flex items-center px-2 py-1 space-x-2 hover:bg-primary text-base-content rounded-box bg-base-200" x-show="boundary_selected == 'public'">
-      <Solid.GlobeIcon/>
-      <span class="text-sm">{l "Public"}</span>
+      <Solid.GlobeIcon class="w-4 h-4 text-base-content text-opacity-70"/>
+      <span class="ml-2 text-sm italic text-base-content text-opacity-70">{l "Public"}</span>
     </div>
     <div class="flex items-center px-2 py-1 space-x-2 text-base-content rounded-box bg-base-200" x-show="boundary_selected == 'local'">
-      <Solid.HomeIcon/>
-      <span class="text-sm">{l "Local"}</span>
+      <Solid.HomeIcon class="w-4 h-4 text-base-content text-opacity-70"/>
+      <span class="ml-2 text-sm italic text-base-content text-opacity-70">{l "Local"}</span>
     </div>
     <div class="flex items-center px-2 py-1 space-x-2 text-base-content rounded-box bg-base-200" x-show="boundary_selected == 'mentions'">
-      <Solid.AtSymbolIcon/>
-       <span class="text-sm">{l "Mentions"}</span>
+      <Solid.AtSymbolIcon class="w-4 h-4 text-base-content text-opacity-70"/>
+       <span class="ml-2 text-sm italic text-base-content text-opacity-70">{l "Mentions"}</span>
     </div>
     <div class="flex items-center px-2 py-1 space-x-2 text-base-content rounded-box bg-base-200" x-show="boundary_selected == 'custom'">
-      <Solid.CogIcon/>
-       <span class="text-sm">{l "Custom"}</span>
+      <Solid.CogIcon class="w-4 h-4 text-base-content text-opacity-70"/>
+       <span class="ml-2 text-sm italic text-base-content text-opacity-70">{l "Custom"}</span>
     </div>
   </button>
   <div

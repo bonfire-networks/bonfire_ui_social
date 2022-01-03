@@ -16,7 +16,7 @@
 
   <div :if={@selected_tab == "followed"}>
     <div class="flow-root my-4">
-      <ul class="-my-5 divide-y divide-base-200">
+      <ul class="-my-5 divide-y divide-base-300">
         <li :for={follow <- @feed}>
           <Bonfire.UI.Social.ProfileItemLive
             profile={e(follow, :followed_profile, nil)}
@@ -29,7 +29,7 @@
 
   <div :if={@selected_tab == "followers"}>
     <div class="flow-root my-4">
-      <ul class="-my-5 divide-y divide-base-200">
+      <ul class="-my-5 divide-y divide-base-300">
         <li :for={follow <- @feed}>
           <Bonfire.UI.Social.ProfileItemLive
             profile={e(follow, :follower_profile, nil)}

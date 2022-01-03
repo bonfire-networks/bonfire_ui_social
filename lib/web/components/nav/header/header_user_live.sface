@@ -1,23 +1,33 @@
-<div class="sticky top-0 z-40 w-full h-16 mx-auto mb-4 navbar bg-neutral text-neutral-content md:justify-between">
+<div class="sticky top-0 z-40 w-full mb-4 navbar border-base-300 bg-base-300 text-base-content">
   <div class="flex justify-center flex-shrink-0 w-full max-w-screen-xl mx-auto">
     <div class="flex-col justify-end hidden md:flex w-80">
       <LiveRedirect to={path(:home)}>
         <div class="flex items-center space-x-2">
           <div class="w-10 h-10 bg-center bg-no-repeat bg-contain" style={"background-image: url(" <> Bonfire.Common.Config.get([:ui, :theme, :instance_logo], '')  <> ")"}></div>
-          <div class="font-medium tracking-wide font-sm text-neutral-content">{Bonfire.Common.Config.get([:ui, :theme, :instance_name], '')}</div>
+          <div class="text-lg font-bold">{Bonfire.Common.Config.get([:ui, :theme, :instance_name], '')}</div>
         </div>
       </LiveRedirect>
     </div>
-    <div class="flex-grow mx-3 max-w-600">
+    <div class="flex-grow mx-3 max-w-[600px]">
       <div class="items-center hidden md:flex">
-        <Bonfire.UI.Social.SearchLive class="ml-10" />
+        <Bonfire.UI.Social.SearchLive />
       </div>
     </div>
-    <div style="min-width: 285px" class="flex items-center justify-start">
+    <div class="flex items-center space-x-2 justify-start min-w-[285px]">
+      <div class="flex-none">
+        <LivePatch to={"/private"} class="btn btn-square btn-ghost text-base-content text-opacity-80">
+            <Solid.MailIcon class="w-5 h-5" />
+        </LivePatch>
+      </div> 
+      <div class="flex-none">
+        <LivePatch to={path(:notifications)} class="btn btn-square btn-ghost text-base-content text-opacity-80">
+            <Solid.BellIcon class="w-5 h-5" />
+        </LivePatch>
+      </div> 
       <Bonfire.UI.Social.SidebarUserLive  current_user={current_user(assigns)} />
     </div>
 
-  <!-- MOBILE -->
+    <!-- MOBILE -->
     <div class="grid w-full grid-flow-col grid-cols-6 gap-4 md:hidden">
       <div class="flex items-center place-content-center">
         <LiveRedirect to={path(:home)}>
@@ -61,5 +71,4 @@
       </div>
     </div>
   </div>
-  <div class="absolute left-0 right-0 z-30 h-4 top-16 bg-base-200"></div>
 </div>

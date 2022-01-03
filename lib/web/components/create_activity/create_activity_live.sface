@@ -2,108 +2,239 @@
 <div
   class="create_activity"
   x-data="{
-    open: true,
+    open: false,
     title_open: false, 
     summary_open: false,
     open_boundaries: false,
     boundary_selected: 'public'  
-  }"
-  @click.outside="open= true;  open_boundaries=false">
+  }">
 
+  <div 
+    
+    class="rounded shadow bg-base-100">
+    <div class="flex p-3">
+      <div
+        @click="open = true" 
+        class="flex items-center flex-1 space-x-3 cursor-pointer">
+      <div class="cursor-pointer avatar">
+        <div class="w-8 h-8 mask mask-squircle">
+          <img src="https://i.pravatar.cc/500?img=32">
+        </div>
+      </div>
+      <span class="flex-1 text-sm text-base-content text-opacity-80">{@smart_input_placeholder || "Publish a post"}</span>
+      </div>
+      <div class="flex items-center space-x-2">
+        <!-- <div class="btn btn-square btn-ghost btn-sm">
+          <Outline.ArrowsExpandIcon class="w-4 h-4 text-base-content text-opacity-80" />
+        </div> -->
+        <div 
+          @click="open = !open"
+          :class="open ? 'bg-base-200 rotate-180' : 'text-base-content text-opacity-80' "
+          class="btn btn-square btn-ghost btn-sm">
+          <Outline.ChevronDownIcon 
+            class="w-4 h-4 " />
+        </div>
+      </div>
+    </div>
 
-  <Form 
-  for={Bonfire.Social.Posts.LiveHandler.post_changeset()} 
-  submit="Bonfire.Social.Posts:post" opts={ autocomplete: "off"}
-  class={if with_editor?(assigns), do: "form_with_editor", else: "form_with_textarea"}
-  >
-    <div x-description="create post form">
-      
-      <HiddenInput name="reply_to[reply_to_id]" value={@reply_to_id  || ""} />
-      <HiddenInput name="reply_to[thread_id]" value={@reply_to_thread_id || ""} />
-
-      <Field name={:create_activity_type}>
-        <HiddenInput
-          value={@create_activity_type} />
-      </Field>
-
-      <input 
-        :if={@create_activity_type == "message"}
-        :for={{_name, id} <- e(assigns, :to_circles, [])} 
-        type="hidden" 
-        name="to_circles[]" 
-        value={id}
-        />
-            
-        <div class="border rounded border-base-300">
+    <div 
+      x-transition.scale.origin.top
+      x-show="open"
+      class="relative">
+      <Form 
+        for={Bonfire.Social.Posts.LiveHandler.post_changeset()} 
+        submit="Bonfire.Social.Posts:post" opts={ autocomplete: "off"}
+        class={if with_editor?(assigns), do: "form_with_editor", else: "form_with_textarea"}>
+        <HiddenInput name="reply_to[reply_to_id]" value={@reply_to_id  || ""} />
+        <HiddenInput name="reply_to[thread_id]" value={@reply_to_thread_id || ""} />
+        <Field name={:create_activity_type}>
+          <HiddenInput value={@create_activity_type} />
+        </Field>
+        <input 
+          :if={@create_activity_type == "message"}
+          :for={{_name, id} <- e(assigns, :to_circles, [])} 
+          type="hidden" 
+          name="to_circles[]" 
+          value={id} />
           <Inputs for={:post_content}>
-            <div
-              x-show="title_open"
-              x-transition
-              class="border-b rounded-md">
-              <Field name={:name}>
-                <TextInput
-                  opts={placeholder: "Enter a title"}
-                  class="w-full rounded-none input" 
-                  />
-              </Field>
-            </div>  
-            <Field name={:html_body}>
-              <Label :if={@smart_input_text && @smart_input_text !="" && @smart_input_placeholder} class="mb-2 alert alert-info">{@smart_input_placeholder}</Label>
-                    
-              <div
-                @click = "open = true"
-                class="transition-all duration-300 ease-in-out rounded"
-                >
+            <div class="overflow-hidden">
+              <div x-show="title_open" x-transition>
+                <label for="title" class="sr-only">Title</label>
+                <Field name={:name}>
+                  <TextInput
+                    opts={placeholder: "Enter a title"}
+                    class="block w-full border-0 pt-2.5 text-lg font-medium placeholder-base-content placeholder-opacity-70 bg-base-100 text-base-content focus:ring-0" 
+                    />
+                </Field>
+              </div>  
+              <!-- <input type="text" name="title" id="title" class="block w-full border-0 pt-2.5 text-lg font-medium placeholder-gray-500 focus:ring-0" placeholder="Title"> -->
+              <label for="description" class="sr-only">Description</label>
+              <Field class="h-full min-h-full" name={:html_body}>
+                <!-- <Label :if={@smart_input_text && @smart_input_text !="" && @smart_input_placeholder} class="mb-2 alert alert-info">{@smart_input_placeholder}</Label> -->    
                 <Bonfire.Editor.Ck.Bubble 
                     :if={with_editor?(assigns)}
-                    content_placeholder={@smart_input_placeholder || "Type something meaningful"}
                     field_name="post[post_content][html_body]"
                     textarea_class={@textarea_class} 
                   /> 
                   <TextArea
-                  :if={!with_editor?(assigns)}
-                  opts={
-                    value: @smart_input_text,
-                    placeholder: @smart_input_placeholder
-                  }
-                  class={@textarea_class} 
-                  :class="{'rounded-b-none' : open === true}"
+                    :if={!with_editor?(assigns)}
+                    opts={
+                      value: @smart_input_text,
+                    }
+                    class={@textarea_class} 
+                    :class="{'rounded-b-none' : open === true}"
                   />
+              </Field>
+              
+              <!-- <textarea rows="2" name="description" id="description" class="block w-full py-0 placeholder-gray-500 border-0 resize-none focus:ring-0 sm:text-sm" placeholder="Write a description..."></textarea> -->
+              <!-- Spacer element to match the height of the toolbar -->
+              <!-- <div aria-hidden="true">
+                <div class="py-2">
+                  <div class="h-9"></div>
                 </div>
-            </Field>
+                <div class="h-px"></div>
+                <div class="py-2">
+                  <div class="py-px">
+                    <div class="h-9"></div>
+                  </div>
+                </div>
+              </div> -->
+            </div>
           </Inputs>
-          <div
-            x-show="open"
-            class="flex items-center p-2 py-3 border-t rounded-b border-base-300 bg-base-200">
-            <div class="flex items-center flex-1 space-x-3">
+        <div class="">
+          <!-- Actions: These are just examples to demonstrate the concept, replace/wire these up however makes sense for your project. -->
+        
+          <div class="flex items-center justify-between px-2 py-2 space-x-3 border-t border-base-300 sm:px-3">
+            <div class="flex items-center flex-1 -ml-2 space-x-3">
               <button
                 :if={Bonfire.Common.Config.get([:ui, :smart_input, :cw], []) == true}
                 type="button"
                 @click="title_open = !title_open"
                 :class="{'text-primary-content bg-primary' : title_open}"
                 class="flex items-center p-1 px-2 rounded-full hover:bg-primary focus:outline-none">
-                <svg  class="w-4 h-4 text-base-content" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M18 3a1 1 0 00-1.447-.894L8.763 6H5a3 3 0 000 6h.28l1.771 5.316A1 1 0 008 18h1a1 1 0 001-1v-4.382l6.553 3.276A1 1 0 0018 15V3z" clip-rule="evenodd"></path></svg>
-                <span  class="ml-2 text-xs text-base-content">CW</span>
+                <Solid.SpeakerphoneIcon class="w-4 h-4 text-base-content text-opacity-70" />
+                <!-- <svg  class="w-4 h-4 text-base-content" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M18 3a1 1 0 00-1.447-.894L8.763 6H5a3 3 0 000 6h.28l1.771 5.316A1 1 0 008 18h1a1 1 0 001-1v-4.382l6.553 3.276A1 1 0 0018 15V3z" clip-rule="evenodd"></path></svg> -->
+                <span class="ml-2 text-sm italic text-base-content text-opacity-70">CW</span>
               </button>
 
               <Bonfire.UI.Social.BoundariesLive 
                 :if={@create_activity_type != "message"}
               />
-
             </div>
-         
-            <button
-              @click="open = true; title_open = false"
-              type="submit"
-              class=" justify-self-end btn-sm btn btn-primary">
-              <span :if={@create_activity_type=="message"}>{l "Send"}</span>
-              <span :if={@create_activity_type != "message"}>{l "Post"}</span>
-              <Solid.PaperAirplaneIcon class="w-5 h-5 ml-2 transform rotate-90" />
-            </button>
+            <!-- <div class="flex">
+            
+              <button type="button" class="inline-flex items-center px-3 py-2 -my-2 -ml-2 text-left text-gray-400 rounded-full group">
+                <svg class="w-5 h-5 mr-2 -ml-1 group-hover:text-gray-500" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                  <path fill-rule="evenodd" d="M8 4a3 3 0 00-3 3v4a5 5 0 0010 0V7a1 1 0 112 0v4a7 7 0 11-14 0V7a5 5 0 0110 0v4a3 3 0 11-6 0V7a1 1 0 012 0v4a1 1 0 102 0V7a3 3 0 00-3-3z" clip-rule="evenodd" />
+                </svg>
+                <span class="text-sm italic text-gray-500 group-hover:text-gray-600">Attach a file</span>
+              </button>
+            </div> -->
+            <div class="flex-shrink-0">
+              <button type="submit" class="h-10 min-h-full capitalize btn btn-primary">
+                Create
+              </button>
+            </div>
           </div>
-         
         </div>
-      
+      </Form>
     </div>
-  </Form>
+     <!-- <Form 
+      for={Bonfire.Social.Posts.LiveHandler.post_changeset()} 
+      submit="Bonfire.Social.Posts:post" opts={ autocomplete: "off"}
+      class={if with_editor?(assigns), do: "form_with_editor", else: "form_with_textarea"}>
+      <div 
+        x-show="open"
+        class="mt-3"
+        x-transition.scale.origin.top
+        x-description="create post form"> 
+        <HiddenInput name="reply_to[reply_to_id]" value={@reply_to_id  || ""} />
+        <HiddenInput name="reply_to[thread_id]" value={@reply_to_thread_id || ""} />
+        <Field name={:create_activity_type}>
+          <HiddenInput value={@create_activity_type} />
+        </Field>
+
+        <input 
+          :if={@create_activity_type == "message"}
+          :for={{_name, id} <- e(assigns, :to_circles, [])} 
+          type="hidden" 
+          name="to_circles[]" 
+          value={id} />
+              
+          <div class="border rounded border-base-300">
+            <Inputs for={:post_content}>
+              <div
+                x-show="title_open"
+                x-transition
+                class="border-b rounded-md">
+                <Field name={:name}>
+                  <TextInput
+                    opts={placeholder: "Enter a title"}
+                    class="w-full rounded-none input" 
+                    />
+                </Field>
+              </div>  
+              <Field name={:html_body}>
+                <Label :if={@smart_input_text && @smart_input_text !="" && @smart_input_placeholder} class="mb-2 alert alert-info">{@smart_input_placeholder}</Label>
+                      
+                <div 
+                  :class="open ? 'h-40' : 'h-0'"
+                  class="transition-all duration-300 ease-in-out rounded" >
+                  <Bonfire.Editor.Ck.Bubble 
+                      :if={with_editor?(assigns)}
+                      content_placeholder={@smart_input_placeholder || "Type something meaningful"}
+                      field_name="post[post_content][html_body]"
+                      textarea_class={@textarea_class} 
+                    /> 
+                    <TextArea
+                    :if={!with_editor?(assigns)}
+                    opts={
+                      value: @smart_input_text,
+                      placeholder: @smart_input_placeholder
+                    }
+                    class={@textarea_class} 
+                    :class="{'rounded-b-none' : open === true}"
+                    />
+                  </div>
+              </Field>
+            </Inputs>
+            <div
+              x-show="open"
+              class="flex items-center p-2 py-3 border-t rounded-b border-base-300 bg-base-200">
+              <div class="flex items-center flex-1 space-x-3">
+                <button
+                  :if={Bonfire.Common.Config.get([:ui, :smart_input, :cw], []) == true}
+                  type="button"
+                  @click="title_open = !title_open"
+                  :class="{'text-primary-content bg-primary' : title_open}"
+                  class="flex items-center p-1 px-2 rounded-full hover:bg-primary focus:outline-none">
+                  <svg  class="w-4 h-4 text-base-content" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M18 3a1 1 0 00-1.447-.894L8.763 6H5a3 3 0 000 6h.28l1.771 5.316A1 1 0 008 18h1a1 1 0 001-1v-4.382l6.553 3.276A1 1 0 0018 15V3z" clip-rule="evenodd"></path></svg>
+                  <span  class="ml-2 text-xs text-base-content">CW</span>
+                </button>
+
+                <Bonfire.UI.Social.BoundariesLive 
+                  :if={@create_activity_type != "message"}
+                />
+
+              </div>
+          
+              <button
+                @click="open = true; title_open = false"
+                type="submit"
+                class=" justify-self-end btn-sm btn btn-primary">
+                <span :if={@create_activity_type=="message"}>{l "Send"}</span>
+                <span :if={@create_activity_type != "message"}>{l "Post"}</span>
+                <Solid.PaperAirplaneIcon class="w-5 h-5 ml-2 transform rotate-90" />
+              </button>
+            </div>
+          
+          </div>
+        
+      </div>
+    </Form> -->
+
+    
+  </div>
+  
+ 
 </div>

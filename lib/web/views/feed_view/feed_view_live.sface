@@ -3,7 +3,7 @@
     <Bonfire.UI.Social.PageHeaderLive
       page_title={@page_title}
     />
-    <div class="border-t-8 border-base-200 md:mx-0 text-base-content">
+    <div class="border-t-4 border-base-300 md:mx-0 text-base-content">
       <Bonfire.UI.Social.FeedLive 
         id={@feed_id}
         feed={@feed}
