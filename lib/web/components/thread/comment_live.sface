@@ -1,5 +1,5 @@
-<div class={"reply thread-level-" <> to_string(@thread_level) <> " flex relative"}>
-  <div class="relative flex-1 w-full comment_lined">
+<div class={"reply thread-level-" <> to_string(@thread_level) <> " flex relative w-full mx-auto rounded shadow bg-base-100"}>
+  <div class="relative flex-1 w-full">
     <div x-cloak x-data="{reply: false, show: true}">
       <div class="flex items-center">
         {#case @comment}
@@ -26,7 +26,7 @@
 
 
       </div>
-      <div x-show="reply" class="p-3 ml-8 -mt-3">
+      <!-- <div x-show="reply" class="p-3 ml-8 -mt-3">
         <Bonfire.UI.Social.CreateActivityLive
           reply_to_id={e(@comment, :id, nil)}
           reply_to_thread_id={@reply_to_thread_id}
@@ -34,10 +34,10 @@
           to_circles={e(assigns, :to_circles, []) ++ [{e(@activity, :subject_profile, :name, e(@activity, :subject_character, :username, "someone")), e(@activity, :subject_character, :id, nil)}]}
           smart_input_text=""
         />
-      </div>
+      </div> -->
     </div>
 
-    <div class={"replies replies-level-" <> to_string(@thread_level+1) <> " ml-8"}>
+    <!-- <div class={"replies replies-level-" <> to_string(@thread_level+1) <> " ml-8"}>
 
       {#if is_list(@child_replies) and length(@child_replies)>0 }
         {#for {subreply, sub_child_replies} <- @child_replies }
@@ -70,6 +70,6 @@
         {/case}
 
       {/if}
-    </div>
+    </div> -->
   </div>
 </div>

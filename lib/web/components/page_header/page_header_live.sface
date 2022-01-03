@@ -1,7 +1,7 @@
 
 <div
   role="banner"
-  class={"relative border-b border-base-300"}
+  class={"relative rounded-t border-b border-base-300"}
 >
   <div class="relative rounded rounded-b-none bg-base-100">
     <div class="flex items-center p-3">

@@ -1,5 +1,5 @@
-<div>
-<div class="p-3 border-t border-base-300">
+<div class="flex flex-col mt-3">
+<!-- <div class="p-3 border-t border-base-300">
   <Bonfire.UI.Social.CreateActivityLive
     smart_input_text={@smart_input_text}
     smart_input_placeholder={@smart_input_placeholder}
@@ -7,9 +7,9 @@
     reply_to_id={@reply_to_id}
     showing_within={:thread}
   />
-</div>
+</div> -->
 {#if length(@threaded_replies) > 0}
-  <div id="replies" class="pt-3 border-t border-base-200">
+  <div id="replies" class="flex flex-col space-y-2">
     <Bonfire.UI.Social.LoadPreviousLive page_info={e(@page_info, nil)} />
     {#for {reply, child_replies} <- @threaded_replies }
       <Bonfire.UI.Social.CommentLive

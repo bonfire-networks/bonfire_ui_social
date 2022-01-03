@@ -34,8 +34,8 @@
             {e(@profile, :name, "Anonymous")}
           </LiveRedirect>
         </div>
-        <span class="text-sm text-base-content text-opacity-80">
-          <LiveRedirect  to={@permalink}>
+        <span>
+          <LiveRedirect class="text-xs text-base-content text-opacity-60" to={@permalink}>
             {@date_ago}
           </LiveRedirect>
         </span>
