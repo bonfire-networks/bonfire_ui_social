@@ -12,7 +12,7 @@
       object={@object}
     />
   </section>
-  <div class="flex items-center p-3 py-6 border-t border-b lg:py-3 border-base-200 bg-base-100 lg:mt-6 lg:rounded lg:shadow">
+  <div class="flex items-center p-3 py-6 mt-3 border-t border-b lg:py-3 border-base-200 bg-base-100 lg:rounded lg:shadow">
     <div class="flex items-center flex-1 space-x-2">
       <label class="input-group">
         <span>
