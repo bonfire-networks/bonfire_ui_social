@@ -35,7 +35,7 @@
 
     <div class="btn-group">
       <button class="btn btn-xs btn-active">List view</button> 
-      <button class="btn btn-xs bg-base-200 text-base-content border-base-300 ">Three view</button> 
+      <button class="btn btn-xs bg-base-200 text-base-content border-base-300 ">Tree view</button> 
     </div> 
   </div>
   <div>
