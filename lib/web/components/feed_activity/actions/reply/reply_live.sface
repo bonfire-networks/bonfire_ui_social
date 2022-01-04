@@ -28,7 +28,7 @@
           </svg>
         </span>
         <span class="feed_activity_text">
-          {l "Reply"} {#if e(@replied, :direct_replies_count, 0) > 0}({e(@replied, :direct_replies_count, 0)}){/if}
+          {l "Reply"}
         </span>
       </button>
     {/if}

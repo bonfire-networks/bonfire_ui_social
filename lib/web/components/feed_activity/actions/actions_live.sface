@@ -34,5 +34,43 @@
         flagged={e(assigns, :flagged, nil)} 
       />
     </div>
+    {#if e(assigns, :showing_within, nil) == :thread}
+
+    <div 
+      class="ml-8"
+      x-data="{
+        open_replies: false, 
+        open_likes: false,
+        open_boosts: false
+      }">
+      <div class="flex items-center pt-2 mt-2 space-x-4 border-t border-base-300">
+        <div :class="open_replies ? 'bg-primary' : ''" @click="open_replies = ! open_replies" class="flex w-auto items-center space-x-1 px-1.5 py-1 hover:bg-primary rounded cursor-pointer transition-colors hover:bg-opacity-60">
+          <span :class="open_replies ? 'text-primary-content' : ''" class="text-xs font-bold text-base-content">{e(@activity, :replied, :nested_replies_count, 0) + e(@activity, :replied, :direct_replies_count, 0)}</span>
+          <div :class="open_replies ? 'text-primary-content' : ''" class="text-xs font-light text-base-content text-opacity-80">Replies
+          </div>
+        </div>
+      </div>
+      <div class="flex flex-col mt-2 space-y-1" x-show="open_replies" @click.outside="open_replies = false" style="display: none;">
+          <div class="p-3 border rounded border-base-300">
+            <div class="flex items-center justify-between flex-1">
+              <div class="flex items-baseline flex-1 text-md">
+                <a data-id="subject_name" class="text-sm font-semibold text-base-content hover:underline" href="#">
+                  Keith Jarrett
+                </a>
+                <span class="ml-1 text-xs font-light text-base-content text-opacity-60 subject_username">· 10min ago · <a class="link-hover link" href="#comment_4">#4</a></span>
+              </div>
+              <a href="#comment_4">
+                <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 transition-colors transform cursor-pointer text-base-content text-opacity-70 hover:text-primary" viewBox="0 0 20 20" fill="currentColor">
+                  <path d="M10 12a2 2 0 100-4 2 2 0 000 4z"></path>
+                  <path fill-rule="evenodd" d="M.458 10C1.732 5.943 5.522 3 10 3s8.268 2.943 9.542 7c-1.274 4.057-5.064 7-9.542 7S1.732 14.057.458 10zM14 10a4 4 0 11-8 0 4 4 0 018 0z" clip-rule="evenodd"></path>
+                </svg>
+              </a>
+            </div>
+            <div class="mt-1 text-sm prose">A Love Supreme is an album by American jazz saxophonist John Coltrane. He recorded it in one session on December 9, 1964, at Van Gelder Studio in Englewood Cliffs.</div>
+          </div> 
+        </div>
+      </div>
+
+    {/if}
   </div>
 {/if}

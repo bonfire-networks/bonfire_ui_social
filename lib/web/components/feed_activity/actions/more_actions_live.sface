@@ -1,5 +1,4 @@
 <div
-  x-cloak
   x-data="{modal_flagging_activity: false}"
   aria-haspopup="true"
   class="dropdown dropdown-end feed_activity">
