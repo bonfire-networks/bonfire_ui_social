@@ -1,6 +1,6 @@
 {#if @viewing_main_object}
 <div class="flex items-center space-x-1 ">
-  <Outline.GlobeIcon class="w-5 h-5 text-base-content text-opacity-70" />
+  <Solid.GlobeIcon class="w-4 h-4 text-base-content text-opacity-70" />
   <div class="text-sm text-base-content text-opacity-80">
     <span class="capitalize">{e(@verb_display, "")}</span>
     <LiveRedirect class="subject_timestamp text-base-content text-opacity-80" to={@permalink}>
