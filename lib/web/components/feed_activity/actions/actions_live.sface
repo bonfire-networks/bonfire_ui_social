@@ -5,7 +5,7 @@
     :if={e(assigns, :showing_within, nil) != :notifications} 
     class={
       "thread_actions": e(assigns, :showing_within, nil) == :thread,
-      "ml-10": e(assigns, :viewing_main_object, nil) != true 
+      "feed_actions -ml-1": e(assigns, :viewing_main_object, nil) != true 
       }>
     <div class={"flex items-center space-x-8", "mt-3": e(assigns, :viewing_main_object, nil)}>
       <Bonfire.UI.Social.Activity.ReplyLive 

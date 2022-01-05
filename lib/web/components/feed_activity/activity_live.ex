@@ -66,8 +66,8 @@ defmodule Bonfire.UI.Social.ActivityLive do
     ~F"""
     <div
       class={
-      "activity p-3",
-      "main_reply_to ml-12 -mt-2 p-3 mb-6 relative border-l-4 border-l-base-300 border border-base-200 rounded-sm bg-base-300 bg-opacity-20": e(@object, :id, nil) != nil and e(@activity, :replied, :reply_to_id, nil) == nil and e(@activity, :id, nil) == nil, # showing a quoted reply_to
+      "activity p-3 relative pl-16",
+      "main_reply_to p-3 mb-6 relative border-l-4 border-l-base-300 border border-base-200 rounded-sm bg-base-300 bg-opacity-20": e(@object, :id, nil) != nil and e(@activity, :replied, :reply_to_id, nil) == nil and e(@activity, :id, nil) == nil, # showing a quoted reply_to
       "showing_within:thread": e(assigns, :showing_within, nil) == :thread,
       "showing_within:notifications ml-7 px-0": e(assigns, :showing_within, nil) == :notifications,
       "reply": e(@object, :id, nil) != nil and e(@activity, :replied, :reply_to_id, nil) != nil and e(@activity, :id, nil) != nil,

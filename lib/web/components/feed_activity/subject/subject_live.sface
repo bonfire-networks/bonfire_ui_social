@@ -10,25 +10,6 @@
       <span class="ml-1 text-xs font-light text-base-content text-opacity-60 subject_username"> · {@date_ago} </span>
     </div>
   </div>
-  
-  
-  <!-- <div class={"flex items-center -mb-2"}>
-    <div class="flex justify-between flex-1">
-      <div class="flex items-center text-sm font-medium text-base-content">
-        <LiveRedirect
-          aria-label={e(@activity, :subject_character, :username, "") <> " profile"}
-          class="hover:underline subject_replied text-opacity-70"
-          to={path(e(@activity, :subject_character, nil))}>
-          {e(@activity, :subject_profile, :name, "Anonymous")}
-        </LiveRedirect>
-      </div>
-      <Bonfire.UI.Social.Activity.RepliedDateAgoLive 
-        permalink={@permalink}
-        date_ago={@date_ago} 
-      />
-      
-    </div>
-  </div> -->
 
 {#elseif e(assigns, :showing_within, nil) == :thread}
   <div class={"flex items-center", "pl-1": e(@activity, :replied, :reply_to_id, nil)}>
@@ -55,31 +36,13 @@
       </div>
     </div>
   </div>
-{#elseif e(assigns, :viewing_main_object, nil)}
-  <div class="flex items-center">
-    <Bonfire.UI.Social.Activity.AvatarLive 
-      viewing_main_object={e(assigns, :viewing_main_object, false)} 
-      profile={@profile} 
-    />
-    
-    <div class="flex items-center justify-between flex-1 ml-2">
-      <div class="flex flex-col text-md">
-        <LiveRedirect 
-          opts={"data-id": "subject_name"}
-          aria-label={e(@character, :username, "") <> " profile"}
-          class="font-semibold text-base-content hover:underline"
-          to={path(@character)}>
-          {e(@profile, :name, "Anonymous")}
-        </LiveRedirect>
-        <span class="text-md text-base-content text-opacity-60 subject_username text-light">@{e(@character, :username, "")}</span>
-      </div>
-    </div>
-  </div>
+
 {#else}
-  <div class="flex items-top">
-    <Bonfire.UI.Social.Activity.AvatarLive profile={@profile} />
-    
-    <div class="flex items-baseline justify-between flex-1 ml-2">
+  <div class="flex items-top ">
+    <div class="absolute left-3">
+      <Bonfire.UI.Social.Activity.AvatarLive profile={@profile} />
+    </div>
+    <div class="flex items-baseline justify-between flex-1">
       <div class="flex items-baseline text-md">
         <LiveRedirect
           opts={"data-id": "subject_name"}
