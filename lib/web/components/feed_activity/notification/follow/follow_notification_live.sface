@@ -1,9 +1,0 @@
-<div class="flex w-full p-3 space-x-3 activity_notification">
-  <Solid.UserIcon class="flex-shrink-0 w-8 h-8 text-accent" />
-  <div class="flex-1 text-base-content">
-    <Bonfire.UI.Social.Activity.AvatarLive profile={""} />
-    <div class="mt-1">
-      <LiveRedirect to="/" class="font-semibold link link-hover">Alice</LiveRedirect> follows you
-    </div>
-  </div>
-</div>

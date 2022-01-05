@@ -20,24 +20,36 @@
       </div>
     </div>
   {#match :notifications}
-    <div class="flex w-full p-3 pb-0 space-x-3 -ml-7 activity_notification">
+    <div class="flex w-full activity_notification">
       {#case @verb}
         {#match "boost"}
-          <Solid.SwitchHorizontalIcon :if={@verb == "boost"} class="flex-shrink-0 w-8 h-8 text-accent" />
+         <div class="absolute left-4">
+          <Solid.SwitchHorizontalIcon :if={@verb == "boost"} class="flex-shrink-0 w-8 h-8 text-base-300 text-opacity-80" />
+          </div>
         {#match "follow"}
-          <Solid.UserIcon :if={@verb == "follow"} class="flex-shrink-0 w-8 h-8 text-accent" />
+         <div class="absolute left-4">
+          <Solid.UserIcon :if={@verb == "follow"} class="flex-shrink-0 w-8 h-8 text-base-300 text-opacity-80" />
+          </div>
         {#match "like"}
-          <Solid.StarIcon :if={@verb == "like"} class="flex-shrink-0 w-8 h-8 text-accent" />
+         <div class="absolute left-4">
+          <Solid.StarIcon :if={@verb == "like"} class="flex-shrink-0 w-8 h-8 text-base-300 text-opacity-80" />
+          </div>
         {#match "reply"}
-          <Solid.PencilIcon :if={@verb == "reply"} class="flex-shrink-0 w-8 h-8 text-accent" />
+         <div class="absolute left-4">
+          <Solid.PencilIcon :if={@verb == "reply"} class="flex-shrink-0 w-8 h-8 text-base-300 text-opacity-80" />
+          </div>
         {#match "flag"}
-          <Solid.FlagIcon :if={@verb == "flag"} class="flex-shrink-0 w-8 h-8 text-accent" />
+         <div class="absolute left-4">
+          <Solid.FlagIcon :if={@verb == "flag"} class="flex-shrink-0 w-8 h-8 text-base-300 text-opacity-80" />
+          </div>
         {#match _}
-          <Solid.SparklesIcon  class="flex-shrink-0 w-8 h-8 text-accent" />
+         <div class="absolute left-4">
+          <Solid.SparklesIcon  class="flex-shrink-0 w-8 h-8 text-base-300 text-opacity-80" />
+        </div>
       {/case}
       <div class="flex-1 text-base-content">
         <Bonfire.UI.Social.Activity.AvatarLive profile={e(@activity, :subject_character, nil)} />
-        <div class="mt-1">
+        <div class="my-2">
           <div>
             <LiveRedirect 
             opts={"data-id": "subject_name"}

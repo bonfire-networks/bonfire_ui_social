@@ -7,7 +7,7 @@
         to={path(e(@activity, :subject_character, nil))}>
         {e(@activity, :subject_profile, :name, "Anonymous")}
       </LiveRedirect>
-      <span class="ml-1 text-xs font-light text-base-content text-opacity-60 subject_username"> · {@date_ago} </span>
+      <span class="ml-1 text-sm font-light text-base-content text-opacity-60 subject_username"> · {@date_ago} </span>
     </div>
   </div>
 
