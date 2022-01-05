@@ -14,7 +14,7 @@
   </li>
   
   <li>
-  <LivePatch to="/local" class={"w-full flex items-center text-sm font-regular text-base-content", "bg-primary text-primary-content": @page == "local"}>
+  <LivePatch to="/local" class={"w-full flex items-center text-sm font-regular text-base-content", "focus:bg-primary hover:bg-primary bg-primary text-primary-content": @page == "local"}>
     <span class={"flex items-center w-8 h-8 mr-3 rounded-full place-content-center text-base-content bg-base-300" ,"bg-primary-focus": @page == "local"}>
       <Outline.UserGroupIcon class={"w-5 h-5 transition duration-150 ease-in-out text-base-content text-opacity-80", "text-primary-content font-semibold": @page == "local"} />
     </span>
@@ -23,7 +23,7 @@
   </li>
 
   <li>
-  <LivePatch to="/federation" class={"w-full flex items-center text-sm font-regular text-base-content", "bg-primary text-primary-content": @page == "federation"}>
+  <LivePatch to="/federation" class={"w-full flex items-center text-sm font-regular text-base-content", "focus:bg-primary hover:bg-primary bg-primary text-primary-content": @page == "federation"}>
     <span class={"flex items-center w-8 h-8 mr-3 rounded-full place-content-center text-base-content bg-base-300" ,"bg-primary-focus": @page == "federation"}>
       <Outline.GlobeIcon class={"w-5 h-5 transition duration-150 ease-in-out text-base-content text-opacity-80", "text-primary-content font-semibold": @page == "federation"} />
     </span>

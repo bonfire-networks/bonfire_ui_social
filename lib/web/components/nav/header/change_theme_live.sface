@@ -1,5 +1,5 @@
 <div id="theme-change" phx-hook="Themeable" title="Change Theme" class="dropdown dropdown-end">
-  <div tabindex="0" class="m-1 normal-case btn btn-ghost">
+  <div tabindex="0" class="normal-case btn btn-outline">
     <svg
       xmlns="http://www.w3.org/2000/svg"
       fill="none" viewBox="0 0 24 24"
@@ -13,7 +13,7 @@
       ></path>
     </svg> 
     <span class="">
-      Choose theme
+      {l "Choose theme"}
     </span> 
     <svg
       xmlns="http://www.w3.org/2000/svg"
