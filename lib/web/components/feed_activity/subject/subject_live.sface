@@ -1,5 +1,18 @@
 {#if  e(@object, :id, nil) != nil and e(@activity, :replied, :reply_to_id, nil) == nil and e(@activity, :id, nil) == nil}
-  <div class={"flex items-center -mb-2"}>
+  <div class="flex items-center justify-between flex-1">
+    <div class="flex items-baseline text-sm">
+      <LiveRedirect
+        aria-label={e(@activity, :subject_character, :username, "") <> " profile"}
+        class="font-semibold text-base-content hover:underline"
+        to={path(e(@activity, :subject_character, nil))}>
+        {e(@activity, :subject_profile, :name, "Anonymous")}
+      </LiveRedirect>
+      <span class="ml-1 text-xs font-light text-base-content text-opacity-60 subject_username"> · {@date_ago} </span>
+    </div>
+  </div>
+  
+  
+  <!-- <div class={"flex items-center -mb-2"}>
     <div class="flex justify-between flex-1">
       <div class="flex items-center text-sm font-medium text-base-content">
         <LiveRedirect
@@ -15,7 +28,7 @@
       />
       
     </div>
-  </div>
+  </div> -->
 
 {#elseif e(assigns, :showing_within, nil) == :thread}
   <div class={"flex items-center", "pl-1": e(@activity, :replied, :reply_to_id, nil)}>
@@ -63,11 +76,11 @@
     </div>
   </div>
 {#else}
-  <div class="flex items-center">
+  <div class="flex items-top">
     <Bonfire.UI.Social.Activity.AvatarLive profile={@profile} />
     
-    <div class="flex items-center justify-between flex-1 ml-3">
-      <div class="flex items-center text-md">
+    <div class="flex items-baseline justify-between flex-1 ml-2">
+      <div class="flex items-baseline text-md">
         <LiveRedirect
           opts={"data-id": "subject_name"}
           aria-label={e(@character, :username, "") <> " profile"}

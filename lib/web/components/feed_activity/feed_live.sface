@@ -16,8 +16,7 @@
         id={e(entry, :activity, :id, e(entry, :activity, :object, :id, "unknown-activity"))}
         role="article"
         tabIndex="0"
-        aria-label="user activity"
-        class="md:px-3">
+        aria-label="user activity">
         <ActivityLive
           activity={e(entry, :activity, entry)}
           showing_within={e(assigns, :showing_within, nil)}
@@ -41,8 +40,7 @@
         id={e(entry, :activity, :id, e(entry, :activity, :object, :id, "unknown-"<>Pointers.ULID.generate))}
         role="article"
         tabIndex="0"
-        aria-label="user activity"
-        class="md:px-3">
+        aria-label="user activity">
         <ActivityLive 
           activity={e(entry, :activity, entry)}
           showing_within={e(assigns, :showing_within, nil)}

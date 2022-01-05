@@ -1,7 +1,7 @@
 
 {#if @viewing_main_object}
-  <div class="avatar align-middle">
-    <div class="w-12 h-12 bg-base-300 mask mask-squircle">
+  <div class="align-middle avatar">
+    <div class="w-12 h-12 bg-base-300 rounded-btn">
       <img 
         class="subject_avatar" 
         src={avatar_url(@profile)} 
@@ -9,8 +9,8 @@
     </div>
   </div>
 {#else}
-  <div class="avatar align-middle">
-    <div class="w-8 h-8 bg-base-300 mask mask-squircle">
+  <div class="align-middle avatar">
+    <div class="w-10 h-10 bg-base-300 rounded-btn">
       <img 
         class="subject_avatar" 
         src={avatar_url(@profile)} 
