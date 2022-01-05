@@ -1,9 +1,9 @@
-<div class="relative z-10 flex items-center mx-auto rounded-full bg-base-100 w-28 h-28 place-content-center hover:bg-gray-200 ring-4 ring-white">
+<div class="relative z-10 flex items-center mx-auto rounded-full bg-base-300 w-28 h-28 place-content-center ring-4 ring-base-100">
   <LiveRedirect to={path(Bonfire.Common.Config.get!(:home_page))}>
     <div class="w-24 h-24 bg-center bg-no-repeat bg-contain" style={"background-image: url(" <> Bonfire.Common.Config.get([:ui, :theme, :instance_logo], '') <> ")"}></div>
   </LiveRedirect>
 </div>
-<div class="bg-white rounded shadow-xl -mt-14">
+<div class="rounded shadow-xl bg-base-100 -mt-14">
   <div class="px-6 pt-16 pb-6 mx-auto">
 
     {#if Bonfire.Me.Accounts.instance_is_invite_only? }
@@ -52,6 +52,7 @@
 
       <!-- <%= f = form_for @form, "#", [id: "signup-form"] %> -->
       <Form for={@form} id="signup-form">
+      
           <Inputs for={:email}>
             <Field name={:email_address}>
               <label for="signup-form_email_email_address" class="label">

@@ -1,12 +1,21 @@
 <div class="sticky top-0 z-40 w-full mb-4 navbar border-base-300 bg-base-300 text-base-content">
   <div class="flex justify-center flex-shrink-0 w-full max-w-screen-xl mx-auto">
     <div class="flex-col justify-end hidden md:flex w-80">
+      {#if !current_user(assigns)}
+      <LiveRedirect to={path(Bonfire.Common.Config.get!(:home_page))}>
+        <div class="flex items-center space-x-2">
+          <div class="w-10 h-10 bg-center bg-no-repeat bg-contain" style={"background-image: url(" <> Bonfire.Common.Config.get([:ui, :theme, :instance_logo], '')  <> ")"}></div>
+          <div class="text-lg font-bold">{Bonfire.Common.Config.get([:ui, :theme, :instance_name], '')}</div>
+        </div>
+      </LiveRedirect>
+      {#else}
       <LiveRedirect to={path(:home)}>
         <div class="flex items-center space-x-2">
           <div class="w-10 h-10 bg-center bg-no-repeat bg-contain" style={"background-image: url(" <> Bonfire.Common.Config.get([:ui, :theme, :instance_logo], '')  <> ")"}></div>
           <div class="text-lg font-bold">{Bonfire.Common.Config.get([:ui, :theme, :instance_name], '')}</div>
         </div>
       </LiveRedirect>
+      {/if}
     </div>
     <div class="flex-grow mx-3 max-w-[600px]">
       <div class="items-center hidden md:flex">
