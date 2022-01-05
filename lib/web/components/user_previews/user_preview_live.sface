@@ -1,52 +1,45 @@
-<div class="transition duration-300 ease-in-out bg-white rounded-lg shadow component_user_preview hover:shadow-xl hover:bg-blueGray-50">
+<div class="transition duration-300 ease-in-out rounded-lg shadow bg-base-100 component_user_preview hover:shadow-xl ring-2 ring-primary hover:ring-2">
+  <LiveRedirect to={path(:switch_user, [:show, @user.character.username || ""]) <> (@go || "")}>
   <div
     aria-hidden="true"
-    class="h-32 bg-pink-600 bg-cover rounded-t-lg"
+    class="h-32 bg-cover rounded-t-lg bg-base-300"
     style={"background-image: url('#{image_url(@user)} ')"}
   />
-  <LiveRedirect to={path(:switch_user, [:show, @user.character.username || ""]) <> (@go || "")}>
     <div class="px-3 pb-2 -mt-8">
       <div class="">
         <div class="flex items-center justify-between">
           <img
-            class="inline-block object-cover w-16 h-16 rounded-full ring-2 ring-white"
+            class="inline-block object-cover w-16 h-16 rounded-full ring-2 ring-base-100"
             src={"#{avatar_url(@user)}"}
             alt="user image">
         </div>
         <div class="mt-1">
-          <span class="block text-lg font-bold text-gray-800">
-            {e(@user, :profile, :name, "Anonymous")}
-
+          <div class="flex items-center space-x-2">
+            <span class="text-lg font-bold text-base-content">{e(@user, :profile, :name, "Anonymous")}</span>
             <span
               :if={Utils.module_enabled?(Bonfire.Me.SharedUsers) && e(@user, :shared_user, :label, nil)} 
-              class="-mt-1 text-sm font-light text-gray-400 pull-right"
+              class="badge badge-secondary badge-outline"
             >
               {e(@user, :shared_user, :label, "")}
             </span>
 
-          </span>
+          </div>
             
-            <h3 
-              class="-mt-1 text-sm font-normal text-gray-600"
-            >
+            <div class="text-sm font-normal text-base-content text-opacity-80">
               @{e(@user, :character, :username, "")}
-            </h3>
+            </div>
         </div>
       </div>
-      <div class="flex items-center mt-2 mb-4">
-        <svg
-          aria-hidden="true"
-          class="w-5 h-5 text-gray-500" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
-          <path d="M9 6a3 3 0 11-6 0 3 3 0 016 0zM17 6a3 3 0 11-6 0 3 3 0 016 0zM12.93 17c.046-.327.07-.66.07-1a6.97 6.97 0 00-1.5-4.33A5 5 0 0119 16v1h-6.07zM6 11a5 5 0 015 5v1H1v-1a5 5 0 015-5z" />
-        </svg>
-        <div class="ml-2 mr-2 text-sm text-gray-800">
+      <div class="flex items-center mt-2 mb-4 space-x-2 text-base-content text-opacity-70">
+        <Solid.UsersIcon class="w-5 h-5" />
+        <div class="text-sm">
           <b>{e(@user, :character, :follow_count, :follower_count, 0)}</b>
-          Followers
+          {l "Followers"}
         </div>
-         · 
-        <div class="ml-2 text-sm text-gray-800">
+         
+        <div class="text-sm">
           <b>{e(@user, :character, :follow_count, :follow_count, 0)}</b>
-          Following
+          {l "Following"}
         </div>
       </div>
     </div>

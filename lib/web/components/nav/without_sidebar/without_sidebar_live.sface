@@ -1,9 +1,5 @@
 <div class="flex flex-col">
-  {#if current_user(assigns)}
-    <Bonfire.UI.Social.HeaderUserLive current_user={@current_user} />
-  {#else}
-    <Bonfire.UI.Social.HeaderGuestLive />
-  {/if}
+  <Bonfire.UI.Social.HeaderUserLive current_user={current_user(assigns)} />
   <div class="justify-center w-full h-full max-w-screen-xl mx-auto md:flex">
     { @inner_content }
   </div>

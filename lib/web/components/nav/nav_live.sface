@@ -17,7 +17,7 @@
   </div>
 {#else}
   <div class="">
-    <Bonfire.UI.Social.HeaderGuestLive current_account={current_account(assigns)} />
+    <Bonfire.UI.Social.HeaderUserLive current_user={current_user(assigns)} current_account={current_account(assigns)} />
     <div class="container max-w-screen-lg mx-auto mt-4">
       {@inner_content}
     </div>

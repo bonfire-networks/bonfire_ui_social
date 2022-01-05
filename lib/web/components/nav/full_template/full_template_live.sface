@@ -1,10 +1,5 @@
 
 <div class="flex flex-col min-h-screen">
-  {#if current_user(assigns)}
-      <Bonfire.UI.Social.HeaderUserLive current_user={@current_user} />
-      {@inner_content}
-  {#else}
-      <Bonfire.UI.Social.HeaderGuestLive />
-      {@inner_content}
-  {/if}
+  <Bonfire.UI.Social.HeaderUserLive current_user={@current_user} />
+  {@inner_content}
 </div>
