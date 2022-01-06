@@ -18,7 +18,7 @@
   {/if}
 
 {#else}
-  <div class="flex items-center ml-8 space-x-4">
+  <div class="flex items-center space-x-4">
     {#if !@hide_reply and @reply_click}
       <button @click={e(@reply_click, "")} class="feed_activity_action">
        <span class="feed_activity_icon">

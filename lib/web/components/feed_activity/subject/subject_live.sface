@@ -13,27 +13,23 @@
 
 {#elseif e(assigns, :showing_within, nil) == :thread}
   <div class={"flex items-center", "pl-1": e(@activity, :replied, :reply_to_id, nil)}>
-    <img 
-      class="inline-block object-cover w-8 h-8 bg-gray-100 mask mask-squircle" 
-      src={avatar_url(@profile)} 
-      alt="subject profile image" 
-      onerror="this.style.display='none'" >
-    <div class="ml-3">
-      <div class="flex items-baseline flex-1 space-x-1">
-        <div class="text-base font-bold text-base-content text-opacity-80">
-          <LiveRedirect
-            aria-label={e(@character, :username, "") <> " profile"}
-            class="font-semibold text-base-content hover:underline"
-            to={path(@character)}>
-            {e(@profile, :name, "Anonymous")}
-          </LiveRedirect>
-        </div>
-        <span>
-          <LiveRedirect class="text-xs text-base-content text-opacity-60" to={@permalink}>
-            {@date_ago}
-          </LiveRedirect>
-        </span>
+    <div class="absolute left-3">
+      <Bonfire.UI.Social.Activity.AvatarLive profile={@profile} />
+    </div>
+    <div class="flex items-baseline flex-1 space-x-1">
+      <div class="text-base font-bold text-base-content text-opacity-80">
+        <LiveRedirect
+          aria-label={e(@character, :username, "") <> " profile"}
+          class="font-semibold text-base-content hover:underline"
+          to={path(@character)}>
+          {e(@profile, :name, "Anonymous")}
+        </LiveRedirect>
       </div>
+      <span>
+        <LiveRedirect class="ml-1 text-xs text-base-content text-opacity-60 subject_username text-light" to={@permalink}>
+          {@date_ago}
+        </LiveRedirect>
+      </span>
     </div>
   </div>
 

@@ -30,7 +30,7 @@
      
     </div>
 
-    <!-- <div class={"replies replies-level-" <> to_string(@thread_level+1) <> " ml-8"}>
+    <div class={"replies replies-level-" <> to_string(@thread_level+1) <> " ml-8"}>
 
       {#if is_list(@child_replies) and length(@child_replies)>0 }
         {#for {subreply, sub_child_replies} <- @child_replies }
@@ -63,6 +63,6 @@
         {/case}
 
       {/if}
-    </div> -->
+    </div>
   </div>
 </div>

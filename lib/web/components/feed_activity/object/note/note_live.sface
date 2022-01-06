@@ -1,6 +1,6 @@
 
 <div class={
-  "showing_within:thread -mt-1 ml-12": e(assigns, :showing_within, nil) == :thread,
+  "showing_within:thread ml-1": e(assigns, :showing_within, nil) == :thread,
   "showing_within:feed mt-1": e(assigns, :showing_within, nil) == :feed,
   "showing_within:notifications": e(assigns, :showing_within, nil) == :notifications,
   "reply_to mt-0": e(@object, :id, nil) != nil and e(@activity, :replied, :reply_to_id, nil) == nil and e(@activity, :id, nil) == nil,
