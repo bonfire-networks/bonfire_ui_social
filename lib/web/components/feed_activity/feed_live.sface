@@ -8,6 +8,7 @@
       
     <div
       :if={is_list(@feed_future) or length(@feed_future) > 0}
+      data-id="feed"
       id="feed_future" 
       phx-update="prepend" 
       class={"divide-y"}>

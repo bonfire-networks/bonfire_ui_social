@@ -1,5 +1,6 @@
 
 <div 
+  data-id="load_more"
   :if={e(@page_info, :end_cursor, nil)}
   id="load_more" 
   phx-click={"#{@live_handler}:load_more" }
