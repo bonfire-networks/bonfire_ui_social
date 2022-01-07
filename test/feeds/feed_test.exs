@@ -9,7 +9,6 @@ defmodule Bonfire.UI.Social.Feeds.FeedActivityTest do
 
   def publish_multiple_times(msg, user, n) when n > 0 do
     {:ok, post} = Posts.publish(user, msg)
-    IO.inspect(n)
     publish_multiple_times(msg, user, n-1)
   end
   
@@ -18,9 +17,6 @@ defmodule Bonfire.UI.Social.Feeds.FeedActivityTest do
   end
 
   test "As a user I want to see the whole amount of activities if they are less than 10" do
-    # Create alice user
-    account = fake_account!()
-    alice = fake_user!(account)
     # Create bob user
     account2 = fake_account!()
     bob = fake_user!(account2)
@@ -39,9 +35,6 @@ defmodule Bonfire.UI.Social.Feeds.FeedActivityTest do
   end
 
   test "As a user I want to see up to 10 activities when viewing a feed" do
-    # Create alice user
-    account = fake_account!()
-    alice = fake_user!(account)
     # Create bob user
     account2 = fake_account!()
     bob = fake_user!(account2)
@@ -60,9 +53,6 @@ defmodule Bonfire.UI.Social.Feeds.FeedActivityTest do
   end
 
   test "As a user I cannot see the load more button if there are less than 10 activities in feed" do
-    # Create alice user
-    account = fake_account!()
-    alice = fake_user!(account)
     # Create bob user
     account2 = fake_account!()
     bob = fake_user!(account2)
@@ -71,7 +61,6 @@ defmodule Bonfire.UI.Social.Feeds.FeedActivityTest do
     attrs = %{to_circles: [:guest], post_content: %{summary: "summary", name: "test post name", html_body: "first post"}}
     publish_multiple_times(attrs, bob, total_posts)
     feed = Bonfire.Social.FeedActivities.my_feed(bob)
-    IO.inspect(feed.page_info)
     assigns = [feed: feed.edges, feed_id: "Bob's feed", page_title: "test", page_info: feed.page_info, showing_within: nil]
     assert doc = render_surface(Bonfire.UI.Social.FeedViewLive, assigns)
     assert doc
@@ -82,9 +71,6 @@ defmodule Bonfire.UI.Social.Feeds.FeedActivityTest do
   end
 
   test "As a user I want to click on the load more button to load more activities" do
-    # Create alice user
-    account = fake_account!()
-    alice = fake_user!(account)
     # Create bob user
     account2 = fake_account!()
     bob = fake_user!(account2)
@@ -93,7 +79,6 @@ defmodule Bonfire.UI.Social.Feeds.FeedActivityTest do
     attrs = %{to_circles: [:guest], post_content: %{summary: "summary", name: "test post name", html_body: "first post"}}
     publish_multiple_times(attrs, bob, total_posts)
     feed = Bonfire.Social.FeedActivities.my_feed(bob)
-    IO.inspect(feed.page_info)
     assigns = [feed: feed.edges, feed_id: "Bob's feed", page_title: "test", page_info: feed.page_info, showing_within: nil]
     assert doc = render_surface(Bonfire.UI.Social.FeedViewLive, assigns)
     assert doc
@@ -106,7 +91,19 @@ defmodule Bonfire.UI.Social.Feeds.FeedActivityTest do
   test "As a user when I create a new activity, it appears instantly in the feed" do
   end
 
+  # WIP
   test "Logged-in home activities feed shows the user inbox" do
+    account = fake_account!()
+    user = fake_user!(account)
+
+    total_posts = 12
+    attrs = %{to_circles: [:guest], post_content: %{summary: "summary", name: "test post name", html_body: "first post"}}
+    publish_multiple_times(attrs, user, total_posts)
+
+    conn = conn(user: user, account: account)
+    next = "/home"
+    {view, doc} = floki_live(conn, next)
+    IO.inspect(doc) 
   end
 
   test "Logged-out Home activities feed shows the instance outbox filtered by public boundary" do
@@ -132,6 +129,7 @@ defmodule Bonfire.UI.Social.Feeds.FeedActivityTest do
   end
 
   test "If Alice likes Bob's post, the liked activity should appear only in bob's notification feed" do
+
   end
 
   test "When Alice follows Bob, the followed activity appears only in bob's notification feed" do
