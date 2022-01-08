@@ -14,7 +14,7 @@
         </div>
       </div>
     </div>
-    {/if}
+    {#else}
 
     {#case @error}
       {#match nil }
@@ -106,10 +106,12 @@
         <div class="mt-4 text-base-content">
           <p>
             <span>&#x01f44b; </span>
-            Do you already have an account?
+           {l " Do you already have an account?"}
             <LiveRedirect class="font-bold underline" to={path(:login, :index)}>Log in</LiveRedirect>.
           </p>
         </div>
       </Form>
+    {/if}
+
   </div>
 </div>
