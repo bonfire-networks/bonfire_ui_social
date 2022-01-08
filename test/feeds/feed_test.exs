@@ -91,29 +91,71 @@ defmodule Bonfire.UI.Social.Feeds.FeedActivityTest do
   test "As a user when I create a new activity, it appears instantly in the feed" do
   end
 
-  # WIP
   test "Logged-in home activities feed shows the user inbox" do
     account = fake_account!()
-    user = fake_user!(account)
+    alice = fake_user!(account)
 
-    total_posts = 12
+    account2 = fake_account!()
+    bob = fake_user!(account2)
+
+    account3 = fake_account!()
+    carl = fake_user!(account3)
+
     attrs = %{to_circles: [:guest], post_content: %{summary: "summary", name: "test post name", html_body: "first post"}}
-    publish_multiple_times(attrs, user, total_posts)
+    guest_attrs = %{to_circles: [:guest], post_content: %{summary: "summary", name: "test post name", html_body: "first post"}}
+    local_attrs = %{to_circles: [:local], post_content: %{summary: "summary", name: "test post name", html_body: "first post"}}
+    admin_attrs = %{to_circles: [:admin], post_content: %{summary: "summary", name: "test post name", html_body: "first post"}}
 
-    conn = conn(user: user, account: account)
+    {:ok, post0} = Posts.publish(alice, attrs)
+    # bob follows alice
+    Follows.follow(bob, alice)
+
+    total_posts = 3
+    {:ok, post} = Posts.publish(alice, attrs)
+    publish_multiple_times(local_attrs, bob, total_posts)
+    publish_multiple_times(admin_attrs, carl, total_posts)
+    assert {:ok, boost} = Boosts.boost(alice, post)
+
+    conn = conn(user: bob, account: account)
     next = "/home"
     {view, doc} = floki_live(conn, next)
-    IO.inspect(doc) 
+    assert doc
+      |> Floki.find("article")
+      |> length == 6
   end
 
   test "Logged-out Home activities feed shows the instance outbox filtered by public boundary" do
+    account = fake_account!()
+    alice = fake_user!(account)
+
+    account2 = fake_account!()
+    bob = fake_user!(account2)
+
+    account3 = fake_account!()
+    carl = fake_user!(account3)
+
+    guest_attrs = %{to_circles: [:guest], post_content: %{summary: "summary", name: "test post name", html_body: "first post"}}
+    local_attrs = %{to_circles: [:local], post_content: %{summary: "summary", name: "test post name", html_body: "first post"}}
+    admin_attrs = %{to_circles: [:admin], post_content: %{summary: "summary", name: "test post name", html_body: "first post"}}
+
+    # bob follows alice
+    Follows.follow(bob, alice)
+
+    total_posts = 3
+    {:ok, post} = Posts.publish(alice, guest_attrs)
+    publish_multiple_times(local_attrs, bob, total_posts)
+    publish_multiple_times(admin_attrs, carl, total_posts)
+    assert {:ok, boost} = Boosts.boost(alice, post)
+
+    next = "/"
+    {view, doc} = floki_live(conn, next)
+    assert doc
+      |> Floki.find("article")
+      |> length == 6
   end
 
   test "Local feed shows the instance outbox filtered by local boundary" do
-  end
 
-  # Which activities? 
-  test "Federation feed shows federated outbox" do
   end
 
   test "User timeline feed shows the user outbox" do
