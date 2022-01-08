@@ -17,13 +17,23 @@
       </LiveRedirect>
       {/if}
     </div>
+
+    <!-- SEARCH IS ALWAYS PRESENT -->
     <div class="flex-grow mx-3 max-w-[600px]">
       <div class="items-center hidden md:flex">
         <Bonfire.UI.Social.SearchLive />
       </div>
     </div>
 
-    {#if current_user(assigns)}
+    {#if current_account(assigns) != nil and current_user(assigns) == nil }
+    <div class="flex items-center space-x-2 justify-start min-w-[285px]">
+      <span class="inline-flex rounded-md shadow-sm">
+        <Link to={path(:switch_user)} class="btn btn-secondary">
+          {l "Select User"}
+        </Link>
+      </span>
+    </div>
+    {#elseif current_user(assigns)}
     <div class="flex items-center space-x-2 justify-start min-w-[285px]">
       <div class="flex-none">
         <LivePatch to={"/private"} class="btn btn-square btn-ghost text-base-content text-opacity-80">
@@ -37,14 +47,7 @@
       </div> 
       <Bonfire.UI.Social.SidebarUserLive  current_user={current_user(assigns)} />
     </div>
-    {#elseif !current_user(assigns) and current_account(assigns)}
-    <div class="flex items-center space-x-2 justify-start min-w-[285px]">
-      <span class="inline-flex rounded-md shadow-sm">
-        <Link to={path(:switch_user)} class="btn btn-secondary">
-          {l "Select User"}
-        </Link>
-      </span>
-    </div>
+    
     {#else}
     <div class="flex items-center space-x-2 justify-start min-w-[285px]">
       <span class="inline-flex ">

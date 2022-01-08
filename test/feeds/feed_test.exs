@@ -154,11 +154,12 @@ defmodule Bonfire.UI.Social.Feeds.FeedActivityTest do
       |> length == 6
   end
 
-  test "Local feed shows the instance outbox filtered by local boundary" do
+  test "Local feed shows the instance outbox filtered by local circle" do
 
   end
 
   test "User timeline feed shows the user outbox" do
+    
   end
 
   test "User posts feed only shows posts that are not replies" do

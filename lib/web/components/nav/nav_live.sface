@@ -1,12 +1,15 @@
 
-{#if current_user(assigns) }
   <div class="flex flex-col">
-    <Bonfire.UI.Social.HeaderUserLive current_user={current_user(assigns)} />
+    <Bonfire.UI.Social.HeaderUserLive current_user={current_user(assigns)}  />
     <div class="justify-center w-full h-full max-w-screen-xl mx-auto md:flex ">
+      {#if current_user(assigns) }
       <Bonfire.UI.Social.SidebarLive
         current_user={current_user(assigns)}
         page={@page}
       />
+      {#else}
+      <Bonfire.UI.Social.HomeBannerLive />
+      {/if}
       <div class="flex-grow mx-3 max-w-600">
         {@inner_content}
       </div>
@@ -15,11 +18,5 @@
       </div>
     </div>
   </div>
-{#else}
-  <div class="">
-    <Bonfire.UI.Social.HeaderUserLive current_user={current_user(assigns)} current_account={current_account(assigns)} />
-    <div class="container max-w-screen-lg mx-auto mt-4">
-      {@inner_content}
-    </div>
-  </div> 
-{/if}
+
+
