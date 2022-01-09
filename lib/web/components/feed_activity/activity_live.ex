@@ -25,7 +25,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
 
     activity = activity
                 |> Map.put(:object, e(assigns, :object, nil) || Activities.object_from_activity(activity))
-                |> IO.inspect(label: "ActivityLive activity")
+                # |> IO.inspect(label: "ActivityLive activity")
 
     verb = e(activity, :verb, :verb, "create")
             |> verb_maybe_modify(activity)
