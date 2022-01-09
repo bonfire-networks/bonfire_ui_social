@@ -20,7 +20,7 @@
       {#match nil }
         <div></div>
       {#match :taken }
-        <div role="status" class="mb-4 alert alert-warning">
+        <div role="status" class="mb-4 alert alert-error">
           <div class="flex">
             <div class="flex-shrink-0">
               <!-- Heroicon name: exclamation -->
@@ -35,7 +35,7 @@
         </div>
 
       {#match error}
-        <div role="status" class="mb-4 alert alert-warning">
+        <div role="status" class="mb-4 alert alert-error">
           <div class="flex">
             <div class="flex-shrink-0">
               <Solid.ExclamationIcon />
