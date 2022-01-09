@@ -1,54 +1,67 @@
 <!-- TODO: refactor with TW -->
-<div class="max-w-md mx-auto mt-6">
-  <h1 class="mb-10 text-xl font-bold text-center text-gray-800">Request email confirmation link</h1>
-
-  {#if @flash }
-    <div class="w-4/5 mx-auto">
-      <p>
-        {live_flash(@flash, :error) || live_flash(@flash, :info)}
-      </p>
+<div class="flex m-3 mb-3 md:m-0">
+  <div class="w-full mx-auto mt-8 lg:w-96 md:w-2/3">
+    <div class="relative z-10 flex items-center mx-auto rounded-full bg-base-300 w-28 h-28 place-content-center ring-4 ring-base-100">
+      <LiveRedirect to={path(Bonfire.Common.Config.get!(:home_page))}>
+        <div class="w-24 h-24 bg-center bg-no-repeat bg-contain" style={"background-image: url(" <> Bonfire.Common.Config.get([:ui, :theme, :instance_logo], '') <> ")"}></div>
+      </LiveRedirect>
     </div>
-  {/if}
+    <div class="rounded shadow-xl bg-base-100 -mt-14">
+      <div class="px-6 pt-16 pb-6 mx-auto">
+        <div class="mb-4 text-xl font-bold text-center text-base-content">{l "Request email confirmation link"}</div>
+        
+        {#if @flash }
+          <div class="w-4/5 mx-auto">
+            <p>
+              {live_flash(@flash, :error) || live_flash(@flash, :info)}
+            </p>
+          </div>
+        {/if}
 
-  {#if @requested }
-    <div class="w-4/5 mx-auto">
-      <h2>Great!</h2>
-      <p>
-        We've emailed you another link. Please click it to continue.
-      </p>
-    </div>
-  {#else}
-    {#if @error }
-      <div class="w-4/5 mx-auto error">
-        {#case @error}
-        {#match :not_found}
-          <span>Invalid confirmation link. Please request a new one below.</span>
-        {#match :expired}
-          <span>This confirmation link has expired. Please request a new one below.</span>
-        {/case}
+        {#if @requested }
+          <div class="w-4/5 mx-auto">
+            <h2>Great!</h2>
+            <p>
+              We've emailed you another link. Please click it to continue.
+            </p>
+          </div>
+        {#else}
+          {#if @error }
+            <div class="w-4/5 mx-auto error">
+              {#case @error}
+              {#match :not_found}
+                <span>Invalid confirmation link. Please request a new one below.</span>
+              {#match :expired}
+                <span>This confirmation link has expired. Please request a new one below.</span>
+              {/case}
+            </div>
+          {/if}
+          <Form for={@form} action={path(Bonfire.Me.Web.ConfirmEmailController)} id="confirm-email-form" class="w-4/5 mx-auto">
+            <Field name={:email}>
+              <Label class="label">
+                <span class="label-text">
+                  {l "Type your email"}
+                </span>
+              </Label>
+              <TextInput class="w-full mb-3 input input-bordered" placeholder="Type your email..." />
+              <ErrorTag />
+            </Field>
+            <button class="w-full btn btn-primary" type="submit">{l "Send"}</button> 
+          </Form>
+          <div class="w-4/5 mx-auto mt-6">
+            <p>
+              <span>&#x01f44b; </span>
+              Already confirmed your email?
+              <LiveRedirect class="link" to={path(:login, :index)}>{l "Log in"}</LiveRedirect>
+            </p>
+            <p>
+              <span>&#x01f9d0; </span>
+              Don&#39;t have an account yet?
+              <LiveRedirect class="link" to={path(:signup)}>{l "Signup"}</LiveRedirect>
+            </p>
+          </div>
+        {/if}
       </div>
-    {/if}
-    <Form for={@form} action={path(Bonfire.Me.Web.ConfirmEmailController)} id="confirm-email-form" class="w-4/5 mx-auto">
-      <Field name={:email}>
-        <ErrorTag />
-        <TextInput class="input" placeholder="Type your email..." />
-      </Field>
-      <button type="submit">Send</button> 
-    </Form>
-    <div class="w-4/5 mx-auto mt-10">
-      <p>
-        <span>&#x01f44b; </span>
-        Already confirmed your email?
-        <LiveRedirect to={path(:login, :index)}>Log in</LiveRedirect>
-        <!-- <%= link l("Log in"), to: path(:login, :index) %>. -->
-      </p>
-      <p>
-        <span>&#x01f9d0; </span>
-        Don&#39;t have an account yet?
-        <LiveRedirect to={path(:signup)}>Signup</LiveRedirect>
-        <!-- <%= link l("Sign up"), to: path(:signup) %> -->
-      </p>
     </div>
-  <!-- <% end %> -->
-{/if}
+  </div>
 </div>
