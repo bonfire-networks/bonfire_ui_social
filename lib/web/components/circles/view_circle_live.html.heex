@@ -68,7 +68,7 @@
                 <input type="hidden" name={"circle[encircle][#{member.id}][circle_id]"} value={e(@circle, :id, "")}>
                 <input type="hidden" name={"circle[encircle][#{member.id}][subject_id]"} value={e(member, :subject_id, "")}>
                 <div class="flex-1">
-                  <%= live_component(@socket, Bonfire.UI.Social.ProfileItemLive, assigns |> assigns_merge(%{profile: e(member, :subject_profile, nil), character: e(member, :subject_character, nil)})) %>
+                  <%= live_component(@socket, Bonfire.UI.Social.ProfileItemLive, assigns |> assigns_merge(%{profile: e(member, :subject, :profile, nil), character: e(member, :subject, :character, nil)})) %>
                 </div>
                 <div class="flex mr-1">
                   <span

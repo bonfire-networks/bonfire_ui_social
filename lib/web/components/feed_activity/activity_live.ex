@@ -25,7 +25,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
 
     activity = activity
                 |> Map.put(:object, e(assigns, :object, nil) || Activities.object_from_activity(activity))
-                # |> IO.inspect(label: "ActivityLive activity")
+                |> IO.inspect(label: "ActivityLive activity")
 
     verb = e(activity, :verb, :verb, "create")
             |> verb_maybe_modify(activity)
@@ -113,9 +113,9 @@ defmodule Bonfire.UI.Social.ActivityLive do
   # replies (when shown in notifications)
   def component_activity_subject(verb, activity, %{showing_within: :notifications}) when verb in @reply_verbs, do: [{Bonfire.UI.Social.Activity.SubjectMinimalLive, %{verb: verb}}]
   # create (or reply) activities
-  def component_activity_subject(verb, %{subject_profile: %{id: _} = profile, subject_character: %{id: _} = character}, _) when verb in @create_or_reply_verbs, do: [{Bonfire.UI.Social.Activity.SubjectLive, %{profile: profile, character: character}}]
-  def component_activity_subject(verb, %{subject_profile: %{id: _} = profile}, _) when verb in @create_or_reply_verbs, do: [{Bonfire.UI.Social.Activity.SubjectLive, %{profile: profile, character: nil}}]
-  def component_activity_subject(verb, %{subject_character: %{id: _} = character}, _) when verb in @create_or_reply_verbs, do: [{Bonfire.UI.Social.Activity.SubjectLive, %{profile: nil, character: character}}]
+  def component_activity_subject(verb, %{subject: %{profile: %{id: _} = profile, character: %{id: _} = character}}, _) when verb in @create_or_reply_verbs, do: [{Bonfire.UI.Social.Activity.SubjectLive, %{profile: profile, character: character}}]
+  def component_activity_subject(verb, %{subject: %{profile: %{id: _} = profile}}, _) when verb in @create_or_reply_verbs, do: [{Bonfire.UI.Social.Activity.SubjectLive, %{profile: profile, character: nil}}]
+  def component_activity_subject(verb, %{subject: %{character: %{id: _} = character}}, _) when verb in @create_or_reply_verbs, do: [{Bonfire.UI.Social.Activity.SubjectLive, %{profile: nil, character: character}}]
   # other
   def component_activity_subject(verb, activity, _), do: [component_activity_maybe_creator(activity)]
 
@@ -138,7 +138,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
   def component_activity_maybe_creator(%{created: created} = object), do: object |> repo().maybe_preload(created: [creator: [:profile, :character]]) |> Map.get(:created) |> component_activity_maybe_creator()
 
   # FIXME: subjects don't showed up for economic activities, but they do if you uncomment this
-  def component_activity_maybe_creator(%{subject_character: %{id: _} = character, subject_profile: %{id: _} = profile}), do: {Bonfire.UI.Social.Activity.SubjectLive, %{profile: profile, character: character}} #|> IO.inspect
+  def component_activity_maybe_creator(%{subject: %{character: %{id: _} = character, profile: %{id: _} = profile}}), do: {Bonfire.UI.Social.Activity.SubjectLive, %{profile: profile, character: character}} #|> IO.inspect
 
   def component_activity_maybe_creator(%{object: %{} = object}), do: component_activity_maybe_creator(object)
 
@@ -224,13 +224,10 @@ defmodule Bonfire.UI.Social.ActivityLive do
     []
   end
 
-  def component_object(_, %{object: %Bonfire.Data.Social.Post{}}), do: [Bonfire.UI.Social.Activity.NoteLive]
-  def component_object(_, %{object: %Bonfire.Data.Social.Message{}}), do: [Bonfire.UI.Social.Activity.NoteLive]
   def component_object(_, %{object: %{post_content: %Bonfire.Data.Social.PostContent{}}}), do: [Bonfire.UI.Social.Activity.NoteLive]
-  def component_object(_, %{object: %Bonfire.Data.Social.PostContent{}}), do: [Bonfire.UI.Social.Activity.NoteLive]
-  def component_object(_, %{object: %Bonfire.Data.Identity.User{}}), do: [Bonfire.UI.Social.Activity.CharacterLive]
   # def component_object(_, %{object: %{profile: _}}), do: [Bonfire.UI.Social.Activity.CharacterLive]
   # def component_object(_, %{object: %{character: _}}), do: [Bonfire.UI.Social.Activity.CharacterLive]
+
 
   def component_object(_, %{object: %{} = object}) do
     case Bonfire.Common.Types.object_type(object) do
@@ -250,6 +247,10 @@ defmodule Bonfire.UI.Social.ActivityLive do
   end
 
 
+  def component_for_object_type(type, object) when type in [Bonfire.Data.Social.Post], do: [Bonfire.UI.Social.Activity.NoteLive]
+  def component_for_object_type(type, object) when type in [Bonfire.Data.Social.Message], do: [Bonfire.UI.Social.Activity.NoteLive]
+  def component_for_object_type(type, object) when type in [Bonfire.Data.Social.PostContent], do: [Bonfire.UI.Social.Activity.NoteLive]
+  def component_for_object_type(type, object) when type in [Bonfire.Data.Identity.User], do: [Bonfire.UI.Social.Activity.CharacterLive]
   def component_for_object_type(type, object) when type in [Bonfire.Classify.Category], do: [Bonfire.UI.Social.Activity.CategoryLive]
   def component_for_object_type(type, object) when type in [ValueFlows.EconomicEvent], do: [Bonfire.UI.Social.Activity.EconomicEventLive.activity_component(object)]
   def component_for_object_type(type, object) when type in [ValueFlows.EconomicResource], do: [Bonfire.UI.Social.Activity.EconomicResourceLive]

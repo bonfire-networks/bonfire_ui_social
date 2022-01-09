@@ -10,10 +10,10 @@
       <div class="flex-1 ml-2">
         <div class="text-xs font-medium text-base-content text-opacity-80">
           <LiveRedirect
-            aria-label={e(@activity, :subject_character, :username, "") <> " profile"}
+            aria-label={e(@activity, :subject, :character, :username, "") <> " profile"}
             class="font-medium subject_minimal"
-            to={path(e(@activity, :subject_character, nil)) }>
-            {e(@activity, :subject_profile, :name, "Anonymous")}
+            to={path(e(@activity, :subject, :character, nil)) }>
+            {e(@activity, :subject, :profile, :name, "Anonymous")}
           </LiveRedirect>
           {raw @verb_display}
         </div>
@@ -48,14 +48,14 @@
         </div>
       {/case}
       <div class="flex-1 text-base-content">
-        <Bonfire.UI.Social.Activity.AvatarLive profile={e(@activity, :subject_character, nil)} />
-        <div class="my-2">
+        <Bonfire.UI.Social.Activity.AvatarLive profile={e(@activity, :subject, :character, nil)} />
+        <div class="mt-1">
           <div>
             <LiveRedirect 
             opts={"data-id": "subject_name"}
-            to={path(e(@activity, :subject_character, nil))} 
+            to={path(e(@activity, :subject, :character, nil))} 
             class="font-semibold link link-hover">
-              {e(@activity, :subject_profile, :name, "Anonymous")}
+              {e(@activity, :subject, :profile, :name, "Anonymous")}
             </LiveRedirect> 
             {raw @verb_display}
           </div>
@@ -74,10 +74,10 @@
       <div class="flex-1 ml-2">
         <div class="text-xs font-medium text-base-content text-opacity-80">
           <LiveRedirect
-            aria-label={e(@activity, :subject_character, :username, "") <> " profile"}
+            aria-label={e(@activity, :subject, :character, :username, "") <> " profile"}
             class="font-medium subject_minimal"
-            to={path(e(@activity, :subject_character, nil)) }>
-            {e(@activity, :subject_profile, :name, "Anonymous")}
+            to={path(e(@activity, :subject, :character, nil)) }>
+            {e(@activity, :subject, :profile, :name, "Anonymous")}
           </LiveRedirect>
           {raw @verb_display}
         </div>

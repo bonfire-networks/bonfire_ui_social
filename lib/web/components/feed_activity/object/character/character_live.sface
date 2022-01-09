@@ -3,14 +3,14 @@
     <Solid.UserIcon class="flex-shrink-0 w-8 h-8 text-base-300 text-opacity-80" />
   </div>
   <div class="flex-1 text-base-content">
-        <Bonfire.UI.Social.Activity.AvatarLive profile={e(@activity, :subject_profile, nil) || e(@object, :profile, nil)} />
-        <div class="flex mt-2">
+        <Bonfire.UI.Social.Activity.AvatarLive profile={e(@activity, :subject, :profile, nil) || e(@object, :profile, nil)} />
+        <div class="flex mt-1">
           <div class="flex-1">
             <LiveRedirect 
-              :if={e(@activity, :subject_profile, nil)} 
-              to={path(e(@activity, :subject_character, nil))} 
+              :if={e(@activity, :subject, :profile, nil)} 
+              to={path(e(@activity, :subject, :character, nil))} 
               class="font-semibold link link-hover">
-                {e(@activity, :subject_profile, :name, "Anonymous")}
+                {e(@activity, :subject, :profile, :name, "Anonymous")}
               </LiveRedirect> 
 
             {raw @verb_display} 

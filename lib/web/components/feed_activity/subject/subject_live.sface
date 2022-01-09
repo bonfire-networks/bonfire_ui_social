@@ -1,13 +1,19 @@
 {#if  e(@object, :id, nil) != nil and e(@activity, :replied, :reply_to_id, nil) == nil and e(@activity, :id, nil) == nil}
-  <div class="flex items-center justify-between flex-1">
-    <div class="flex items-baseline text-sm">
-      <LiveRedirect
-        aria-label={e(@activity, :subject_character, :username, "") <> " profile"}
-        class="font-semibold text-base-content hover:underline"
-        to={path(e(@activity, :subject_character, nil))}>
-        {e(@activity, :subject_profile, :name, "Anonymous")}
-      </LiveRedirect>
-      <span class="ml-1 text-sm font-light text-base-content text-opacity-60 subject_username"> · {@date_ago} </span>
+  <div class={"flex items-center -mb-2"}>
+    <div class="flex justify-between flex-1">
+      <div class="flex items-center text-sm font-medium text-base-content">
+        <LiveRedirect
+          aria-label={e(@activity, :subject, :character, :username, "") <> " profile"}
+          class="hover:underline subject_replied text-opacity-70"
+          to={path(e(@activity, :subject, :character, nil))}>
+          {e(@activity, :subject, :profile, :name, "Anonymous")}
+        </LiveRedirect>
+      </div>
+      <Bonfire.UI.Social.Activity.RepliedDateAgoLive 
+        permalink={@permalink}
+        date_ago={@date_ago} 
+      />
+      
     </div>
   </div>
 

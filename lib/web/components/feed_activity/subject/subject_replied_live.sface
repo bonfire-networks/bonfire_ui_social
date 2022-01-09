@@ -2,10 +2,10 @@
   <div class="flex justify-between flex-1">
     <div class="flex items-center text-sm font-medium text-base-content">
       <LiveRedirect
-        aria-label={e(@activity, :subject_character, :username, "") <> " profile"}
+        aria-label={e(@activity, :subject, :character, :username, "") <> " profile"}
         class="hover:underline subject_replied"
-        to={path(e(@activity, :subject_character, nil))}>
-        {e(@activity, :subject_profile, :name, "Anonymous")}
+        to={path(e(@activity, :subject, :character, nil))}>
+        {e(@activity, :subject, :profile, :name, "Anonymous")}
       </LiveRedirect>
     </div>
     <Bonfire.UI.Social.Activity.RepliedDateAgoLive 
