@@ -12,7 +12,7 @@
   </div>
   <div
     tabindex="0"
-    class="p-2 shadow menu dropdown-content bg-neutral-content rounded-box w-52"
+    class="p-2 shadow menu dropdown-content bg-base-200 rounded-box w-52"
     role="menu"
     aria-orientation="vertical"
     aria-labelledby="more-menu">

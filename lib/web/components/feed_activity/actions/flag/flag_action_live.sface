@@ -1,15 +1,13 @@
 <div    
-  class="flex items-center py-1" 
+  class="" 
   role="none">
   {#if e(@object, :id, "") in e(assigns, :flagged, []) || e(@activity, :my_flag, :id, nil)}
-    <div disabled="disabled" class="w-full btn btn-warning btn-xs">
-      <Outline.FlagIcon class="w-4 h-4 mr-2 text-neutral text-opacity-70" />
-      <span class="text-neutral text-opacity-70 ">{l "Already reported"}</span>
+    <div disabled="disabled" class="w-full text-left capitalize btn btn-host btn-sm">
+      {l "Already reported"}
     </div>
   {#else}
-    <div  @click="modal_flagging_activity = true" class="w-full btn btn-warning btn-xs">
-      <Outline.FlagIcon class="w-4 h-4 mr-2" />
-      <span>{l "Report this activity"}</span>
+    <div  @click="modal_flagging_activity = true" class="w-full text-left capitalize btn btn-host btn-sm">
+      {l "Report this activity"}
     </div>
   {/if}
 
