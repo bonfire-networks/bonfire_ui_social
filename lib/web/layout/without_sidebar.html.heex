@@ -1,6 +1,23 @@
 <div id="without-sidebar-live">
-  <%# live_component(@socket, Bonfire.UI.Social.WithoutSidebarLive, current_user: current_user(assigns), page: e(assigns, :page, ""), inner_content: e(assigns, :inner_content, nil)) %>
-  <Bonfire.UI.Social.WithoutSidebarLive.render
+ <% info = live_flash(@flash, :info) %>
+  <% error = live_flash(@flash, :error) %>
+    <div id="flash-messages" class="absolute z-50 right-8 top-20">
+      <Bonfire.Common.Web.NotificationLive.render
+      id={:notification} 
+      notification={e(assigns, :notification, nil)}
+      />
+      <%= if info do %>
+        <p class="alert alert-info" role="alert alert-warning"
+          phx-click="lv:clear-flash"
+          phx-value-key="info"><%= info %></p>
+      <% end %>
+      <%= if error do %>
+        <p class="whitespace-pre-wrap alert alert-error" role="alert"
+          phx-click="lv:clear-flash"
+          phx-value-key="error"><%= error %></p>
+      <% end %>
+    </div> 
+    <Bonfire.UI.Social.WithoutSidebarLive.render
     __context__={%{}}
     current_user={current_user(assigns)}
     current_account={current_account(assigns)}

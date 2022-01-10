@@ -7,18 +7,17 @@
       notification={e(assigns, :notification, nil)}
       />
       <%= if info do %>
-        <p class="alert alert-info" role="alert"
+        <p class="alert alert-info" role="alert alert-warning"
           phx-click="lv:clear-flash"
           phx-value-key="info"><%= info %></p>
       <% end %>
       <%= if error do %>
-        <p class="whitespace-pre-wrap alert alert-danger" role="alert"
+        <p class="whitespace-pre-wrap alert alert-error" role="alert"
           phx-click="lv:clear-flash"
           phx-value-key="error"><%= error %></p>
       <% end %>
     </div> 
 
-  <%# live_component(@socket, Bonfire.UI.Social.NavLive, current_user: current_user(assigns), page: e(assigns, :page, ""), inner_content: @inner_content) %>
    <Bonfire.UI.Social.NavLive.render
     __context__={%{}}
     current_account={current_account(assigns)}
