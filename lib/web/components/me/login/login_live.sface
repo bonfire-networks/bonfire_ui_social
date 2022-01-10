@@ -60,7 +60,7 @@
                 {l "Email address or @username"}
               </span>
             </Label>
-              <TextInput required class="w-full input input-bordered" />
+              <TextInput opts={placeholder: "alice@email.com"} required class="w-full input input-bordered" />
             <ErrorTag />
             <!-- <%= error_tag f, :email_or_username %> -->
           </Field>
@@ -68,10 +68,10 @@
           <Field name={:password} class="mt-3">
             <Label class="label">
               <span class="label-text">
-                {l "Password"}
+                {l "Password (Min 10 characters)"}
               </span>
             </Label>
-            <PasswordInput required class="w-full input input-bordered" />
+            <PasswordInput opts={placeholder: "Type your password"} required class="w-full input input-bordered" />
             <ErrorTag />
             <!-- <%= error_tag f, :password %> -->
           </Field>

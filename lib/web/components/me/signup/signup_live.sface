@@ -60,7 +60,7 @@
                   Email address
                 </span>
               </label>
-              <EmailInput required class="w-full input input-bordered" />
+              <EmailInput opts={placeholder: "alice@email.com"} required class="w-full input input-bordered" />
               <ErrorTag />
             </Field>
           </Inputs>
@@ -80,7 +80,7 @@
                   Choose a password (10 characters minimum)
                 </span>
               </Label>
-              <PasswordInput required class="w-full input input-bordered" />
+              <PasswordInput opts={placeholder: "Type a strong password"} required class="w-full input input-bordered" />
               <ErrorTag />
             </Field>
           </Inputs>
