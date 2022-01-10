@@ -36,14 +36,15 @@
               {/case}
             </div>
           {/if}
-          <Form for={@form} action={path(Bonfire.Me.Web.ConfirmEmailController)} id="confirm-email-form" class="w-4/5 mx-auto">
+          <Form for={@form} action={path(Bonfire.Me.Web.ConfirmEmailController)}
+          class="w-4/5 mx-auto" opts={[id: "confirm-email-form"]}>
             <Field name={:email}>
               <Label class="label">
                 <span class="label-text">
                   {l "Type your email"}
                 </span>
               </Label>
-              <TextInput class="w-full mb-3 input input-bordered" placeholder="Type your email..." />
+              <EmailInput class="w-full mb-3 input input-bordered" placeholder="Type your email..." />
               <ErrorTag />
             </Field>
             <button class="w-full btn btn-primary" type="submit">{l "Send"}</button> 
