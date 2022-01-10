@@ -13,14 +13,12 @@
         </div>
         <div class="ml-3">
           <h3 class="text-sm font-medium text-base-content">{l "Hooray! You are registered"}</h3>
-          <div class="mt-2 text-sm text-base-content text-opacity-80">
-            <p>
+          <div class="mt-2 text-sm text-base-content text-opacity-80" data-id="confirmation_success">
               {l "Now we need you to confirm your email address. We've emailed
               you a link (check your spam folder!). Please click on it to continue."}
-            </p>
           </div>
           <LiveRedirect to={path(Bonfire.Common.Config.get!(:home_page))}>
-            <div class="flex items-center pr-4 border-r">
+            <div class="flex items-center">
               <span class="mt-6 text-sm font-bold underline text-base-content">{l "Back to home page"}</span>
             </div>
           </LiveRedirect>
