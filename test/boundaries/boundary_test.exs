@@ -1,4 +1,4 @@
-defmodule Bonfire.UI.Social.Feeds.FeedActivityTest do
+defmodule Bonfire.UI.Social.Boundaries.BoundaryTest do
 
   use Bonfire.UI.Social.ConnCase
 
@@ -13,6 +13,8 @@ defmodule Bonfire.UI.Social.Feeds.FeedActivityTest do
   test "Local instance: When I create an activity with the local boundary selected, it is visible in the instance and home feed" do
   end
 
-  test "Mentions: When I create an activity with the mentions boundary selected, it is visible in the mentioned users inbox, mentioned users notification feed, mentioned users private feed" do
+  test "Mentions: When I create an activity with the mentions boundary selected,
+  it is visible in the mentioned users inbox, mentioned users notification feed,
+  mentioned users private feed" do
   end 
 end

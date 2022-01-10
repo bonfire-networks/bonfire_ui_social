@@ -63,7 +63,7 @@
               </div>
             </div>
         {/case}
-        <Form for={@form} action={path(:create_user, :create)} id="create-form">
+        <Form for={@form} action={path(:create_user, :create)} opts={[id: "create-form"]}>
             <div x-data="{username:''}" class="flex flex-col mt-4 space-y-3">
               <Inputs for={:profile}>
                 <Field name={:name}>

@@ -1,5 +1,4 @@
-
-defmodule Bonfire.UI.Social.Feeds.FeedActivityTest do
+defmodule Bonfire.UI.Social.AdminTest do
 
   use Bonfire.UI.Social.ConnCase
 
@@ -20,7 +19,10 @@ defmodule Bonfire.UI.Social.Feeds.FeedActivityTest do
   test "As an admin I want to remove a flagged activity " do
   end
 
-  test "As an admin I want to ignore a flagged activity so that it does not show anymore in the flagged activities feed (it may shows in an archive feed?)" do
+  test "As an admin I want to ignore a flagged activity so that it
+  does not show anymore in the flagged activities feed (it may shows
+  in an archive feed?)" do
+    
   end
   
 end

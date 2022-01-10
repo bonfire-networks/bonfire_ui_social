@@ -1,4 +1,4 @@
-defmodule Bonfire.UI.Social.Feeds.FeedActivityTest do
+defmodule Bonfire.UI.Social.Threads.ThreadTest do
 
   use Bonfire.UI.Social.ConnCase
 

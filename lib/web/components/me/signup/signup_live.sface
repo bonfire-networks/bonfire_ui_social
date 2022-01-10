@@ -51,7 +51,7 @@
 
 
       <!-- <%= f = form_for @form, "#", [id: "signup-form"] %> -->
-      <Form for={@form} id="signup-form">
+      <Form for={@form} opts={[id: "signup-form"]}>
       
           <Inputs for={:email}>
             <Field name={:email_address}>
