@@ -17,8 +17,10 @@
         @click="open = true" 
         class="flex items-center flex-1 space-x-3 cursor-pointer">
       <div class="cursor-pointer avatar">
-        <div class="w-8 h-8 mask mask-squircle">
-          <img src="https://i.pravatar.cc/500?img=32">
+        <div class="w-8 h-8 rounded-btn">
+          <img 
+            src={avatar_url(current_user(assigns))}
+            alt="current user profile image" />
         </div>
       </div>
       <span class="flex-1 text-sm text-base-content text-opacity-80">{@smart_input_placeholder || "Publish a post"}</span>
