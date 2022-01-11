@@ -120,10 +120,10 @@ defmodule Bonfire.UI.Social.ActivityLive do
   def component_activity_subject(verb, activity, _), do: [component_activity_maybe_creator(activity)]
 
 
-  def component_activity_maybe_creator(%{object_created: %{
+  def component_activity_maybe_creator(%{object: %{created: %{
     creator_profile: %{id: _} = profile,
     creator_character: %{id: _} = character
-    } = _object_created}), do: {Bonfire.UI.Social.Activity.SubjectLive, %{profile: profile, character: character}}
+    }}}), do: {Bonfire.UI.Social.Activity.SubjectLive, %{profile: profile, character: character}}
 
   def component_activity_maybe_creator(%{creator: %{
     profile: %{id: _} = profile,
