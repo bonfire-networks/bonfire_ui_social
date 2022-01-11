@@ -2,7 +2,6 @@
 <div
   class="create_activity"
   x-data="{
-    open: false,
     title_open: false, 
     summary_open: false,
     open_boundaries: false,
@@ -14,7 +13,7 @@
     class="rounded shadow bg-base-100">
     <div class="flex p-3">
       <div
-        @click="open = true" 
+        @click="create_activity_open = true" 
         class="flex items-center flex-1 space-x-3 cursor-pointer">
       <div class="cursor-pointer avatar">
         <div class="w-8 h-8 rounded-btn">
@@ -23,15 +22,17 @@
             alt="current user profile image" />
         </div>
       </div>
-      <span class="flex-1 text-sm text-base-content text-opacity-80">{@smart_input_placeholder || "Publish a post"}</span>
+      <span class="flex-1 text-sm text-base-content text-opacity-80" x-text= "smart_input_prompt">
+        {@smart_input_placeholder || l "Write a post"}
+      </span>
       </div>
       <div class="flex items-center space-x-2">
         <!-- <div class="btn btn-square btn-ghost btn-sm">
           <Outline.ArrowsExpandIcon class="w-4 h-4 text-base-content text-opacity-80" />
         </div> -->
         <div 
-          @click="open = !open"
-          :class="open ? 'bg-base-200 rotate-180' : 'text-base-content text-opacity-80' "
+          @click="create_activity_open = !create_activity_open"
+          :class="create_activity_open ? 'bg-base-200 rotate-180' : 'text-base-content text-opacity-80' "
           class="btn btn-square btn-ghost btn-sm">
           <Outline.ChevronDownIcon 
             class="w-4 h-4 " />
@@ -41,14 +42,20 @@
 
     <div 
       x-transition.scale.origin.top
-      x-show="open"
+      x-show="create_activity_open"
       class="relative">
       <Form 
         for={Bonfire.Social.Posts.LiveHandler.post_changeset()} 
         submit="Bonfire.Social.Posts:post" opts={ autocomplete: "off"}
         class={if with_editor?(assigns), do: "form_with_editor", else: "form_with_textarea"}>
-        <HiddenInput name="reply_to[reply_to_id]" value={@reply_to_id  || ""} />
-        <HiddenInput name="reply_to[thread_id]" value={@reply_to_thread_id || ""} />
+        <HiddenInput 
+          name="reply_to[reply_to_id]" 
+          opts={["x-model": "reply_to_id"]}
+          value={@reply_to_id  || ""} />
+        <HiddenInput 
+          name="reply_to[thread_id]" 
+          opts={["x-model": "reply_to_thread_id"]}
+          value={@reply_to_thread_id || ""} />
         <Field name={:create_activity_type}>
           <HiddenInput value={@create_activity_type} />
         </Field>
@@ -84,7 +91,7 @@
                       value: @smart_input_text,
                     }
                     class={@textarea_class} 
-                    :class="{'rounded-b-none' : open === true}"
+                    :class="{'rounded-b-none' : create_activity_open === true}"
                   />
               </Field>
               
@@ -146,7 +153,7 @@
       submit="Bonfire.Social.Posts:post" opts={ autocomplete: "off"}
       class={if with_editor?(assigns), do: "form_with_editor", else: "form_with_textarea"}>
       <div 
-        x-show="open"
+        x-show="create_activity_open"
         class="mt-3"
         x-transition.scale.origin.top
         x-description="create post form"> 
@@ -180,7 +187,7 @@
                 <Label :if={@smart_input_text && @smart_input_text !="" && @smart_input_placeholder} class="mb-2 alert alert-info">{@smart_input_placeholder}</Label>
                       
                 <div 
-                  :class="open ? 'h-40' : 'h-0'"
+                  :class="create_activity_open ? 'h-40' : 'h-0'"
                   class="transition-all duration-300 ease-in-out rounded" >
                   <Bonfire.Editor.Ck.Bubble 
                       :if={with_editor?(assigns)}
@@ -195,13 +202,13 @@
                       placeholder: @smart_input_placeholder
                     }
                     class={@textarea_class} 
-                    :class="{'rounded-b-none' : open === true}"
+                    :class="{'rounded-b-none' : create_activity_open === true}"
                     />
                   </div>
               </Field>
             </Inputs>
             <div
-              x-show="open"
+              x-show="create_activity_open"
               class="flex items-center p-2 py-3 border-t rounded-b border-base-300 bg-base-200">
               <div class="flex items-center flex-1 space-x-3">
                 <button
@@ -221,7 +228,7 @@
               </div>
           
               <button
-                @click="open = true; title_open = false"
+                @click="create_activity_open = true; title_open = false"
                 type="submit"
                 class=" justify-self-end btn-sm btn btn-primary">
                 <span :if={@create_activity_type=="message"}>{l "Send"}</span>

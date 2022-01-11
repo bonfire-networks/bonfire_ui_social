@@ -9,7 +9,6 @@ defmodule Bonfire.UI.Social.ActivityLive do
   prop viewing_main_object, :boolean, default: false
   prop showing_within, :any, default: :feed
   prop hide_reply, :boolean, default: false
-  prop reply_click, :any
 
   # TODO: put in config and/or autogenerate with Verbs genserver
   @reply_verbs ["reply","respond"]
@@ -51,6 +50,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
   assigns = assigns
     |> assigns_merge(
         object: activity.object,
+        object_id: e(activity.object, :id, "no-object"),
         date_ago: date_from_now(activity.object),
         activity: activity |> Map.drop([:object]),
         activity_object_components: components,
@@ -78,13 +78,13 @@ defmodule Bonfire.UI.Social.ActivityLive do
           module={component}
           activity={e(component_assigns, :activity, @activity)}
           object={e(component_assigns, :object, @object)}
+          object_id={e(component_assigns, :object_id, @object_id)}
           date_ago={e(component_assigns, :date_ago, @date_ago)}
           verb={e(component_assigns, :verb, @verb)}
           verb_display={e(component_assigns, :verb_display, @verb_display)}
           permalink={e(component_assigns, :permalink, @permalink)}
           viewing_main_object={e(component_assigns, :viewing_main_object, e(assigns, :viewing_main_object, false))}
           hide_reply={e(component_assigns, :hide_reply, e(assigns, :hide_reply, false))}
-          reply_click={e(component_assigns, :reply_click, e(assigns, :reply_click, nil))}
           created_verb_display={@created_verb_display}
           showing_within={e(assigns, :showing_within, :feed)}
           profile={e(component_assigns, :profile, nil)}
@@ -220,7 +220,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
 
   def component_maybe_reply_to(verb, a, _) do
     # IO.inspect(not_reply_verb: verb)
-    # IO.inspect(not_reply: a)
+    IO.inspect(not_reply: a)
     []
   end
 

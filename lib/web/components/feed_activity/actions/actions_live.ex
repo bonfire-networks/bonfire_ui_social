@@ -9,7 +9,6 @@ defmodule Bonfire.UI.Social.Activity.ActionsLive do
   prop permalink, :string
   prop showing_within, :any
   prop hide_reply, :boolean
-  prop reply_click, :string
   prop viewing_main_object, :boolean
   prop flagged, :any
 end

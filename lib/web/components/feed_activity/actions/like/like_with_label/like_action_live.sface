@@ -5,7 +5,7 @@
   phx-value-direction={"#{if @object_id in e(assigns, :liked, []) || e(@my_like, nil), do: "down", else: "up"}"}
   phx-value-id={@object_id}
   phx-value-component={__MODULE__}
-  phx-value-current_count={e(@like_count, :liker_count, @like_count) || 0}
+  phx-value-current_count={e(@like_count, :object_count, 0)}
   class="like feed_activity_action like_with_label">
 
   <span 
@@ -32,11 +32,11 @@
   <span 
     :if={@object_id not in e(assigns, :liked, []) && !e(@my_like, nil)}
     class="feed_activity_text">
-     {l("Like")} <span :if={(e(@like_count, :liker_count, @like_count) || 0) > 0}>({e(@like_count, :liker_count, @like_count) || 0})</span>
+     {l("Like")} <span :if={(e(@like_count, :object_count, 0)) > 0}>({e(@like_count, :object_count, 0)})</span>
   </span>
   <span 
     :if={@object_id in e(assigns, :liked, []) || e(@my_like, nil)}
     class="font-medium feed_activity_text">
-     {l("Liked")} <span :if={(e(@like_count, :liker_count, @like_count) || 0) > 0}>({e(@like_count, :liker_count, @like_count) || 0})</span>
+     {l("Liked")} <span :if={(e(@like_count, :object_count, 0)) > 0}>({e(@like_count, :object_count, 0)})</span>
   </span>
 </button>
