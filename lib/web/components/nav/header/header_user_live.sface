@@ -26,7 +26,7 @@
     </div>
 
     {#if current_account(assigns) != nil and current_user(assigns) == nil }
-    <div class="flex items-center space-x-2 justify-start min-w-[285px]">
+    <div class="xl:min-w-[285px] flex-1 justify-start hidden lg:flex">
       <span class="inline-flex rounded-md shadow-sm">
         <Link to={path(:switch_user)} class="btn btn-secondary">
           {l "Select User"}
@@ -34,7 +34,7 @@
       </span>
     </div>
     {#elseif current_user(assigns)}
-    <div class="xl:min-w-[285px] flex-1 justify-start hidden h-full overflow-hidden pointer-events-none lg:flex">
+    <div class="xl:min-w-[285px] flex-1 justify-start items-center hidden lg:flex">
       <div class="flex-none">
         <LivePatch to={"/private"} class="btn btn-square btn-ghost text-base-content text-opacity-80">
             <Solid.MailIcon class="w-5 h-5" />
@@ -50,7 +50,7 @@
     
     {#else}
     
-    <div class="flex items-center space-x-2 justify-start min-w-[285px]">
+    <div class="xl:min-w-[285px] flex-1 justify-start hidden lg:flex">
       <span class="inline-flex ">
         <Link to={path(:login, :index)} class="btn btn-primary">
           {l "Login"}

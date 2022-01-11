@@ -14,7 +14,7 @@
       aria-expanded="true"
     >
       <img
-        class="w-10 h-10 mask mask-squircle bg-base-300"
+        class="w-8 h-8 rounded-btn bg-base-300"
         src={avatar_url(current_user(assigns))}
         alt="current user profile image"
       />

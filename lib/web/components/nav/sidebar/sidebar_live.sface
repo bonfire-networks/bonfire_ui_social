@@ -3,7 +3,7 @@
   role="navigation"
   class="flex-col justify-end hidden md:flex w-80"
 >
-  <div style="top: 80px; bottom: 16px" class="fixed md:pr-2 w-80">
+  <div style="top: 80px; bottom: 16px" class="fixed w-80">
     <div class="absolute w-full h-full overflow-y-auto">
       <div>
         <div class="mb-4">

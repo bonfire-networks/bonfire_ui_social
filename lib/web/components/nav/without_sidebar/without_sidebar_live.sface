@@ -2,7 +2,7 @@
   <Bonfire.UI.Social.HeaderUserLive 
     current_account={current_account(assigns)} 
     current_user={current_user(assigns)} />
-  <div class="justify-center w-full h-full max-w-screen-xl mx-auto md:flex">
+  <div class="justify-center w-full max-w-screen-xl mt-4 h-body xl:mx-auto md:flex">
     { @inner_content }
   </div>
 </div>

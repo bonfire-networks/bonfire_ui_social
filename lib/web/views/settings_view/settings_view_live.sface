@@ -3,7 +3,7 @@
     admin_tab={@tab_id}
     current_user={current_user(assigns)}
   />
-  <section class="flex-grow mx-3 max-w-600 bg-base-100">
+  <section class="flex-grow w-full h-full mx-auto bg-base-100 shrink-0 md:mx-3 md:mr-0 lg:mr-3 max-w-600">
   {#case @selected_tab}
     {#match "admin"}
       {#case @tab_id}
@@ -69,7 +69,7 @@
       />
   {/case}
   </section>
-  <div style="min-width: 285px" class="flex justify-start h-full overflow-hidden pointer-events-none">
-    <div style="width: 285px; top: 80px; bottom: 16px;" class="fixed h-full pointer-events-auto"></div>
+  <div class="xl:min-w-[285px] flex-1 justify-start hidden h-full overflow-hidden pointer-events-none lg:flex">
+    <div style="top: 80px; bottom: 16px;" class="fixed h-full pointer-events-auto"></div>
   </div>
 
