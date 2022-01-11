@@ -5,15 +5,15 @@
   id="load_more" 
   phx-click={"#{@live_handler}:load_more" }
   phx-target={@target}
-  phx-value-after={e(@page_info, :end_cursor, nil)} 
+  phx-value-after={e(@page_info, :end_cursor, "unknown")} 
   class="flex justify-center w-full p-3 mx-auto border-t cursor-pointer border-base-200 place-items-center"
 > 
-  <div class="relative items-center w-full px-4 py-2 text-sm font-medium text-center text-base-content bg-base-200 rounded-box hover:bg-base-300 ">
+  <a href={"#"<>e(@page_info, :end_cursor, "unknown")} class="relative items-center w-full px-4 py-2 text-sm font-medium text-center text-base-content bg-base-200 rounded-box hover:bg-base-300 ">
     {l "Load more"}
     <noscript>
-      <a href={"?#{@live_handler}[after]=" <> e(@page_info, :end_cursor, nil)} class="text-underline">
+      <a href={"?#{@live_handler}[after]=" <> e(@page_info, :end_cursor, "unknown")} class="text-underline">
         {l "(click here)"}
       </a>
     </noscript>
-  </div>
+  </a>
 </div>

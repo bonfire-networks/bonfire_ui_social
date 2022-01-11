@@ -13,6 +13,6 @@ defmodule Bonfire.UI.Social.Activity.NoteLive do
   def post_content(object) do
     # IO.inspect(object)
     # IO.inspect(e(object, :post_content, object))
-    e(object, :post_content, object)
+    e(object, :post_content, object) |> IO.inspect
   end
 end

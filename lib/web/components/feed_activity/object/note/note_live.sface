@@ -6,7 +6,6 @@
   "reply_to mt-0": e(@object, :id, nil) != nil and e(@activity, :replied, :reply_to_id, nil) == nil and e(@activity, :id, nil) == nil,
   "reply_message": e(@activity, :replied, :reply_to_id, nil)
 }
-   x-cloak 
    x-data="{content_open: false}">
 
     <div :if={e(post_content(@object), :name, nil)}>
@@ -31,14 +30,14 @@
       x-show={if e(post_content(@object), :name, nil), do: "content_open"}
       x-transition.scale.origin.top >
       <div
-        :if={e(post_content(@object), :summary, "")}
+        :if={e(post_content(@object), :summary, nil)}
         class="font-light prose max-w-prose">
         {rich e(post_content(@object), :summary, "")}
       </div>
 
       <div
         data-id={"object_body"}
-        :if={e(post_content(@object), :html_body, "")}
+        :if={e(post_content(@object), :html_body, nil)}
         class={"prose object_body max-w-prose"}>
         {rich e(post_content(@object), :html_body, "")}
       </div>

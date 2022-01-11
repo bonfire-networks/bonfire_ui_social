@@ -3,11 +3,11 @@
   role="none">
   {#if e(@object, :id, "") in e(assigns, :flagged, []) || e(@activity, :my_flag, :id, nil)}
     <div disabled="disabled" class="w-full text-left capitalize btn btn-host btn-sm">
-      {l "Already reported"}
+      {l "You flagged this"}
     </div>
   {#else}
     <div  @click="modal_flagging_activity = true" class="w-full text-left capitalize btn btn-host btn-sm">
-      {l "Report this activity"}
+      {l "Flag this"}
     </div>
   {/if}
 
@@ -25,11 +25,11 @@
           </div>
           <div class="mt-3 text-center sm:mt-0 sm:ml-4 sm:text-left">
             <h3 class="text-lg font-medium leading-6 text-gray-900" id="modal-title">
-              {l "Report this activity to our admins"}
+              {l "Flag this activity for review by instance admins"}
             </h3>
             <div class="mt-2">
               <p class="text-sm text-gray-500">
-                {l "The admins will review the activity and remove it from the feed if appropriate."}
+                {l "The admins will review the activity and remove it from the feed and/or block the person or instance if appropriate."}
               </p>
             </div>
           </div>
