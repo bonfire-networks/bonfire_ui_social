@@ -7,14 +7,23 @@
       "thread_actions -ml-2": e(assigns, :showing_within, nil) == :thread,
       "feed_actions -ml-1": e(assigns, :viewing_main_object, nil) != true 
       }>
+
     <div class={"flex items-center space-x-8", "mt-3": e(assigns, :viewing_main_object, nil)}>
-      <Bonfire.UI.Social.Activity.ReplyLive 
-        permalink={@permalink} 
-        replied={e(@activity, :replied, nil)}
-        showing_within={e(assigns, :showing_within, nil)}
-        hide_reply={e(assigns, :hide_reply, nil )}
-        object_id={e(assigns, :object_id, "no-object")}
+      {#if e(assigns, :viewing_main_object, nil) != true and e(assigns, :showing_within, nil) != :thread}
+        <Bonfire.UI.Social.Activity.ViewThreadLive 
+          permalink={@permalink} 
+          replied={e(@activity, :replied, nil)}
+          object_id={e(assigns, :object_id, "no-object")}
         />
+      {#else}
+        <Bonfire.UI.Social.Activity.ReplyLive 
+          permalink={@permalink} 
+          replied={e(@activity, :replied, nil)}
+          showing_within={e(assigns, :showing_within, nil)}
+          hide_reply={e(assigns, :hide_reply, nil )}
+          object_id={e(assigns, :object_id, "no-object")}
+          />
+      {/if}
       <BoostActionLive 
         id={ComponentID.new(BoostActionLive, e(@object, :id, ""))} 
         object_id={e(@object, :id, "")} 
