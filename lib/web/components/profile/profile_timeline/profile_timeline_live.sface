@@ -3,10 +3,10 @@
   <Bonfire.UI.Social.ProfileNavigationLive selected_tab={@selected_tab} user={@user} />
   <Bonfire.UI.Social.FeedLive
     id={"feed:profile:"<>e(@user, :id, "")}
-    page_info={@page_info}
     user={@user}
     page_title={@page_title}
     page={@page}
+    feed={@feed}
     page_info={@page_info}
     selected_tab={@selected_tab}
     smart_input={@smart_input}

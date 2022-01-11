@@ -11,5 +11,7 @@ defmodule Bonfire.UI.Social.ProfileTimelineLive do
   prop search_placholder, :string
   prop feed_title, :string
   prop user, :map
+  prop feed, :list
+  prop page_info, :any
 
 end
