@@ -1,4 +1,4 @@
-<ul class="py-3 rounded shadow-lg menu bg-base-100">
+<ul class="py-3 rounded shadow menu bg-base-100">
   <li class="uppercase menu-title">
     <span>{l "Main navigation"}</span>
   </li>
