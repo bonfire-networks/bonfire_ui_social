@@ -1,7 +1,6 @@
-<div class={"reply thread-level-" <> to_string(@thread_level) <> " flex relative w-full mx-auto rounded shadow bg-base-100"}>
-  <div class="relative flex-1 w-full">
+<div class={"reply thread-level-" <> to_string(@thread_level) <> " flex relative w-full mx-auto bg-base-100"}>
+  <div class="relative flex-1 w-full comment_lined">
     <div x-cloak x-data="{reply: false, show: true}">
-      <div class="">
         {#case @comment}
           {#match %{__struct__: Bonfire.Data.Social.Activity, object: object} = activity}
             <Bonfire.UI.Social.ActivityLive
@@ -19,16 +18,11 @@
               showing_within={:thread}
             />
           {#match _}
-            Comment not loaded
+            {l "Comment not loaded"}
         {/case}
-
-
-      </div>
-      
-     
     </div>
 
-    <div class={"replies replies-level-" <> to_string(@thread_level+1) <> " ml-8"}>
+    <div class={"replies replies-level-" <> to_string(@thread_level+1) <> " ml-12"}>
 
       {#if is_list(@child_replies) and length(@child_replies)>0 }
         {#for {subreply, sub_child_replies} <- @child_replies }
@@ -44,10 +38,11 @@
       {#else}
 
         {#case sub_replies_count(@comment)}
+
           {#match sub_replies_count when is_integer(sub_replies_count) and sub_replies_count > 0}
             <div class="flex items-center -mx-2 -mt-1">
               <div 
-                @click="show = false" 
+                @click="show = true" 
                 x-show="show" 
                 phx-click="Bonfire.Social.Posts:load_replies" 
                 phx-value-id={e(@comment, :id, nil)} 
@@ -57,7 +52,6 @@
               </div>
             </div>
           {#match _}
-            
         {/case}
 
       {/if}
