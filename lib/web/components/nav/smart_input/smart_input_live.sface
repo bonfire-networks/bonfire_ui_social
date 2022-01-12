@@ -1,31 +1,5 @@
-<!-- <div class="flex items-center">
-  <div class="relative flex items-center flex-1">
-    <div
-      x-cloak
-      x-data="{ open: false }"
-      @keydown.escape.stop="open = false"
-      @click.outside="open = false"
-      class="relative block w-full text-left">
-      <div class="w-full">
-        <LiveRedirect
-          to={path(current_user(assigns))}
-          class="inline-flex items-center justify-center w-full text-sm font-medium rounded-lg focus:outline-none">
-          <img
-            class="inline-block object-cover w-8 h-8 bg-gray-200 rounded-full"
-            src={avatar_url(current_user(assigns))}
-            alt="current user profile image">
-          <div class="flex-1 ml-3 text-left">
-            <h3 class="text-sm font-semibold text-gray-700 truncate dark:text-gray-300">{e(current_user(assigns), :profile, :name, "Me")}</h3>
-          </div>
-        </LiveRedirect>
-      </div>
-    </div>
-  </div>
-</div> -->
-
 <div class="">
   <div class="flex items-start">
-    <!-- <img class="object-cover w-10 h-10 rounded-full" src={avatar_url(current_user(assigns))} alt="current user profile image" /> -->
     <div class="flex flex-col flex-1">
       {#if Bonfire.Common.Config.get([:ui, :default_smart_input])}
         <Surface.Components.Dynamic.Component
@@ -37,6 +11,7 @@
           reply_to_thread_id={@reply_to_thread_id}
           smart_input_placeholder={@smart_input_placeholder}
           smart_input_text={@smart_input_text}
+          current_user={e(@current_user, nil)}
         />
       {/if}    
     </div>

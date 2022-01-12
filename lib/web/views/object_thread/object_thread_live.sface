@@ -12,32 +12,7 @@
       object={@object}
     />
   </section>
-  <div class="flex items-center p-3 py-6 mt-3 border-t border-b lg:py-3 border-base-200 bg-base-100 lg:rounded lg:shadow">
-    <div class="flex items-center flex-1 space-x-2">
-      <label class="input-group">
-        <span>
-          <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 mt-1 ml-2 place-self-center text-base-content text-opacity-80" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 4h13M3 8h9m-9 4h9m5-4v12m0 0l-4-4m4 4l4-4"></path>
-          </svg>  
-        </span> 
-        <select class="py-0 -ml-1 select select-bordered select-sm ">
-        <option> 
-          Oldest first
-        </option> 
-        <option> 
-          Newer first
-        </option> 
-        <option>Most liked</option>
-      </select> 
-      </label>
-      
-    </div>
-
-    <!-- <div class="btn-group">
-      <button class="btn btn-xs btn-active">List view</button> 
-      <button class="btn btn-xs bg-base-200 text-base-content border-base-300 ">Tree view</button> 
-    </div>  -->
-  </div>
+  
   <div>
     <Bonfire.UI.Social.ThreadLive 
       id={@thread_id}
