@@ -55,5 +55,10 @@
     page_info={@page_info}
     target={@myself}
   />
+{#else}
+  <div class="p-4 text-center bg-base-100">
+      <div class="mb-3 text-3xl">🧐</div>
+      <span class="text-base font-medium text-base-content">{l "Be the first to reply..."}</span>
+    </div>
 {/if}
 </div>
