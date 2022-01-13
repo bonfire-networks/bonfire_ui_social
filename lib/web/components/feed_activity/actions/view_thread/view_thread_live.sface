@@ -9,8 +9,7 @@
       </svg>
     </span>
     <span class="feed_activity_text">
-      <!-- {e(@replied, :reply_to_id, nil)}  {@permalink} -->
-      {l "View thread"} {#if e(@replied, :nested_replies_count, 0) + e(@replied, :direct_replies_count, 0) > 0 }({e(@replied, :nested_replies_count, 0) + e(@replied, :direct_replies_count, 0)}) {/if}
+      {l "Replies"} {#if e(@replied, :nested_replies_count, 0) + e(@replied, :direct_replies_count, 0) > 0 }({e(@replied, :nested_replies_count, 0) + e(@replied, :direct_replies_count, 0)}) {/if}
     </span>
   </div>
 </LiveRedirect>
