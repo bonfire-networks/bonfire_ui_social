@@ -1,18 +1,18 @@
 <div id="without-sidebar-live">
  <% info = live_flash(@flash, :info) %>
   <% error = live_flash(@flash, :error) %>
-    <div id="flash-messages" class="absolute z-50 right-8 top-20">
+    <div id="flash-messages" class="bg-base absolute z-50 right-8 top-20 ">
       <Bonfire.Common.Web.NotificationLive.render
       id={:notification} 
       notification={e(assigns, :notification, nil)}
       />
       <%= if info do %>
-        <p class="alert alert-info" role="alert alert-warning"
+        <p class="alert alert-info bg-base " role="alert alert-warning"
           phx-click="lv:clear-flash"
           phx-value-key="info"><%= info %></p>
       <% end %>
       <%= if error do %>
-        <p class="whitespace-pre-wrap alert alert-error" role="alert"
+        <p class="whitespace-pre-wrap alert alert-error bg-base " role="alert"
           phx-click="lv:clear-flash"
           phx-value-key="error"><%= error %></p>
       <% end %>

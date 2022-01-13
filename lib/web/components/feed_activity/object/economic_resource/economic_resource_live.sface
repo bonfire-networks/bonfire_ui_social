@@ -1,4 +1,4 @@
-<div class="flex items-center p-3 bg-neutral">
+<div class="flex items-center p-3 bg-neutral bg-opacity-30">
   <div :if={e(@object, :image, nil)} class="rounded-xl bg-cover bg-no-repeat bg-center w-20 h-20" style={"background-image: url('#{image_url(@object.image)}')"}></div>
   <div class="px-2">
     <div class="text-primary-content-700 text-base font-semibold">

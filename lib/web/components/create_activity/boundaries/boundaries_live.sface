@@ -42,28 +42,28 @@
     aria-labelledby="user-profile-menu">
       <div 
       @click="boundary_selected = 'public'; open_boundaries = false" 
-      class="flex p-2 space-x-2 text-sm text-primary-content-800 transition duration-150 ease-in-out cursor-pointer rounded-t-md hover:bg-neutral">
+      class="flex p-2 space-x-2 text-sm text-primary-content-800 transition duration-150 ease-in-out cursor-pointer rounded-t-md hover:bg-neutral hover:bg-opacity-30 ">
         <Solid.GlobeIcon/>
         <div class="flex-1">
           <div class="text-sm font-medium text-primary-content-800">{l "Public"}</div>
           <p class="text-xs text-primary-content-500">{l "Publicly visible to everyone on the fediverse and in search engines"}</p>
         </div>
       </div>
-      <div @click="boundary_selected = 'local'; open_boundaries = false" class="flex p-2 space-x-2 text-sm text-primary-content-700 text-primary-content-800 transition duration-150 ease-in-out cursor-pointer rounded-b-md hover:bg-neutral">
+      <div @click="boundary_selected = 'local'; open_boundaries = false" class="flex p-2 space-x-2 text-sm text-primary-content-700 text-primary-content-800 transition duration-150 ease-in-out cursor-pointer rounded-b-md hover:bg-neutral hover:bg-opacity-30 ">
         <Solid.HomeIcon/>
         <div class="flex-1">
           <div class="text-sm font-medium text-primary-content-800">{l "Local Instance"}</div>
           <p class="text-xs text-primary-content-500">{l "Only visible to members of this instance"}</p>
           </div>
       </div>
-      <div @click="boundary_selected = 'mentions'; open_boundaries = false" class="flex p-2 space-x-2 text-sm text-primary-content-700 text-primary-content-800 transition duration-150 ease-in-out cursor-pointer hover:bg-neutral">
+      <div @click="boundary_selected = 'mentions'; open_boundaries = false" class="flex p-2 space-x-2 text-sm text-primary-content-700 text-primary-content-800 transition duration-150 ease-in-out cursor-pointer hover:bg-neutral hover:bg-opacity-30 ">
         <Solid.AtSymbolIcon/> 
         <div class="flex-1">
         <div class="text-sm font-medium text-primary-content-800">{l "Mentions"}</div>
         <p class="text-xs text-primary-content-500">{l "Visible to everyone mentioned, across the fediverse"}</p>
         </div>
       </div>
-      <!-- <div @click="boundary_selected = 'custom'; open_boundaries = false" class="block px-4 py-2 text-sm text-primary-content-700 transition duration-150 ease-in-out cursor-pointer rounded-b-md hover:bg-neutral">
+      <!-- <div @click="boundary_selected = 'custom'; open_boundaries = false" class="block px-4 py-2 text-sm text-primary-content-700 transition duration-150 ease-in-out cursor-pointer rounded-b-md hover:bg-neutral hover:bg-opacity-30 ">
         <div class="text-sm text-primary-content-700">{l "Custom"}</div>
         <p class="text-xs text-primary-content-500">{l "Pick your audience"}</p>
       </div> -->
