@@ -1,6 +1,6 @@
 
 <div class="py-2">
-    <div class="mb-2 text-sm font-medium text-gray-800 dark:text-gray-200">
+    <div class="mb-2 text-sm font-medium text-primary-content-800 dark:text-primary-content-200">
     
     {rich crumbs(e(@object, :parent, nil))}
 
@@ -12,8 +12,8 @@
     </div>
 
   {#if e(@object, :summary, e(@object, :profile, :summary, nil))}
-    <h3 class="text-xs tracking-wider text-gray-600 uppercase">Summary</h3>
-    <div class="mb-2 prose-sm prose text-gray-700 dark:text-gray-200 max-w-prose">{rich e(@object, :summary, e(@object, :profile, :summary, ""))}</div>
+    <h3 class="text-xs tracking-wider text-primary-content-600 uppercase">Summary</h3>
+    <div class="mb-2 prose-sm prose text-primary-content-700 dark:text-primary-content-200 max-w-prose">{rich e(@object, :summary, e(@object, :profile, :summary, ""))}</div>
   {/if}
 
 

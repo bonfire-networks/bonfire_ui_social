@@ -74,23 +74,23 @@
         </LiveRedirect>
       </div>
       <div class="flex items-center place-content-center">
-        <LiveRedirect :if={current_user(assigns)} to={path(:notifications)} class="p-3 rounded-md hover:bg-gray-700">
-          <Solid.BellIcon class="w-6 h-6 text-gray-200" />  
+        <LiveRedirect :if={current_user(assigns)} to={path(:notifications)} class="p-3 rounded-md hover:bg-neutral-700">
+          <Solid.BellIcon class="w-6 h-6 text-primary-content-200" />  
         </LiveRedirect>
       </div>
       <div class="flex items-center place-content-center">
-        <LiveRedirect to="/local" class="p-3 rounded-md hover:bg-gray-700">
-          <Solid.UserGroupIcon class="w-6 h-6 text-gray-200" />
+        <LiveRedirect to="/local" class="p-3 rounded-md hover:bg-neutral-700">
+          <Solid.UserGroupIcon class="w-6 h-6 text-primary-content-200" />
         </LiveRedirect>
       </div>
       <div class="flex items-center place-content-center">
-        <LiveRedirect to="/federation" class="p-3 rounded-md hover:bg-gray-700">
-          <Solid.GlobeIcon class="w-6 h-6 text-gray-200" />
+        <LiveRedirect to="/federation" class="p-3 rounded-md hover:bg-neutral-700">
+          <Solid.GlobeIcon class="w-6 h-6 text-primary-content-200" />
         </LiveRedirect>
       </div>
       <div class="flex items-center place-content-center">
-      <LiveRedirect to={"/search"} class="p-3 rounded-md hover:bg-gray-700">
-        <Solid.SearchIcon class="w-6 h-6 text-gray-200" />   
+      <LiveRedirect to={"/search"} class="p-3 rounded-md hover:bg-neutral-700">
+        <Solid.SearchIcon class="w-6 h-6 text-primary-content-200" />   
       </LiveRedirect>
       </div>
       <div class="flex items-center place-content-center">

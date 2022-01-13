@@ -47,8 +47,8 @@
                 phx-click="Bonfire.Social.Posts:load_replies" 
                 phx-value-id={e(@comment, :id, nil)} 
                 phx-value-level={@thread_level} 
-                class="flex items-center visible px-2 py-1 ml-4 rounded cursor-pointer group dark:bg-gray-400 hover:bg-gray-200 click:invisible">
-                <span class="text-xs font-semibold text-gray-800">Show {@sub_replies_count} more replies</span>
+                class="flex items-center visible px-2 py-1 ml-4 rounded cursor-pointer group dark:bg-neutral-400 hover:bg-neutral-200 click:invisible">
+                <span class="text-xs font-semibold text-primary-content-800">Show {@sub_replies_count} more replies</span>
               </div>
             </div>
           {#match _}

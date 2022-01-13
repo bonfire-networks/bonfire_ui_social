@@ -3,5 +3,5 @@
     phx-click="Bonfire.Social.Posts:load_more" 
     phx-value-after={e(@page_info, :start_cursor, nil)} 
     href={"?Bonfire.Social.Posts[cursor][before]=" <> to_string(e(@page_info, :start_cursor, nil))} 
-    class="relative inline-flex items-center px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md hover:bg-gray-50">{l "Load previous comments"}</a>
+    class="relative inline-flex items-center px-4 py-2 text-sm font-medium text-primary-content-700 bg-base-100 border border-gray-300 rounded-md hover:bg-neutral-50">{l "Load previous comments"}</a>
 </div>

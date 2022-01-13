@@ -7,10 +7,10 @@
             GA
         </div>
         <div class="ml-4 flex flex-col">
-            <h3 class="text-2xl font-bold text-gray-800"><%= e(@circle, :named, :name, "Circle name") %></h3>
-            <p class="text-base font-regular text-gray-800 mt-1">This is a sample description to help remember what this circle is about.</p>
+            <h3 class="text-2xl font-bold text-primary-content-800"><%= e(@circle, :named, :name, "Circle name") %></h3>
+            <p class="text-base font-regular text-primary-content-800 mt-1">This is a sample description to help remember what this circle is about.</p>
             <div class="flex items-center mt-3 space-x-3">
-              <button class="btn btn-primary w-max inline-flex items-center"><svg class="w-5 h-5 text-gray-100 mr-2" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v6a1 1 0 102 0V8a1 1 0 00-1-1z" clip-rule="evenodd"></path></svg>Delete</button>
+              <button class="btn btn-primary w-max inline-flex items-center"><svg class="w-5 h-5 text-primary-content-100 mr-2" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v6a1 1 0 102 0V8a1 1 0 00-1-1z" clip-rule="evenodd"></path></svg>Delete</button>
             </div>
         </div>
       </div>
@@ -20,7 +20,7 @@
 
   <div class="block"x-cloak  x-data="{ adding: false, removing: false }">
 
-    <h3 class="font-sm mb-2 text-medium text-gray-800">Circle Members</h3>
+    <h3 class="font-sm mb-2 text-medium text-primary-content-800">Circle Members</h3>
     <div class="overflow-hidden relative border rounded-lg  drag_drop__container__to">
         <form phx-change="Bonfire.Me.Circles:member_update">
         <input type="hidden" name="circle[id]" value={e(@circle, :id, "")}>
@@ -54,7 +54,7 @@
 
               <li id={"item-"<> member.id }
                 class="p-2 flex"
-                :class="{ 'bg-indigo-500': dragging }"
+                :class="{ 'bg-base-2000': dragging }"
                 x-on:dragstart.self="
                     dragging = true;
                     event.dataTransfer.effectAllowed='move';
@@ -78,7 +78,7 @@
                     const element = event.target.closest('li');
                     target.appendChild(element);
                     ">
-                      <svg class="w-6 h-6 text-gray-600 cursor-pointer hover:text-gray-800" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-11a1 1 0 10-2 0v2H7a1 1 0 100 2h2v2a1 1 0 102 0v-2h2a1 1 0 100-2h-2V7z" clip-rule="evenodd"></path></svg>
+                      <svg class="w-6 h-6 text-primary-content-600 cursor-pointer hover:text-primary-content-800" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-11a1 1 0 10-2 0v2H7a1 1 0 100 2h2v2a1 1 0 102 0v-2h2a1 1 0 100-2h-2V7z" clip-rule="evenodd"></path></svg>
                     </span>
                   <span
                     class="from flex items-center"
@@ -87,7 +87,7 @@
                   const element = event.target.closest('li');
                   target.appendChild(element);
                   ">
-                    <svg class="w-6 h-6 text-gray-600 cursor-pointer hover:text-gray-800" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd"></path></svg>
+                    <svg class="w-6 h-6 text-primary-content-600 cursor-pointer hover:text-primary-content-800" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd"></path></svg>
                   </span>
                 </div>
               </li>
@@ -101,7 +101,7 @@
 
 
 
-    <h3 class="font-sm mt-4 mb-2 text-medium text-gray-800">Suggestions</h3>
+    <h3 class="font-sm mt-4 mb-2 text-medium text-primary-content-800">Suggestions</h3>
     <div class="overflow-hidden relative border rounded-lg drag_drop__container__from">
       <%=if length(@followed)>0 || length(@followers)>0 do %>
         <ul
@@ -154,7 +154,7 @@
                       const element = event.target.closest('li');
                       target.appendChild(element);
                       ">
-                        <svg class="w-6 h-6 text-gray-600 cursor-pointer hover:text-gray-800" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-11a1 1 0 10-2 0v2H7a1 1 0 100 2h2v2a1 1 0 102 0v-2h2a1 1 0 100-2h-2V7z" clip-rule="evenodd"></path></svg>
+                        <svg class="w-6 h-6 text-primary-content-600 cursor-pointer hover:text-primary-content-800" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-11a1 1 0 10-2 0v2H7a1 1 0 100 2h2v2a1 1 0 102 0v-2h2a1 1 0 100-2h-2V7z" clip-rule="evenodd"></path></svg>
                       </span>
                     <span
                     class="from flex items-center"
@@ -163,7 +163,7 @@
                       const element = event.target.closest('li');
                       target.appendChild(element);
                     ">
-                      <svg class="w-6 h-6 text-gray-600 cursor-pointer hover:text-gray-800" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd"></path></svg>
+                      <svg class="w-6 h-6 text-primary-content-600 cursor-pointer hover:text-primary-content-800" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd"></path></svg>
                     </span>
                   </div>
               </li>
@@ -188,12 +188,12 @@
                 <div class="flex-1">
                   <%= live_component(@socket, Bonfire.UI.Social.ProfileItemLive, assigns |> assigns_merge(%{profile: e(suggested, :follower_profile, nil), character: e(suggested, :follower_character, nil)})) %>
                 </div>
-                <span class="to inline-flex items-center shadow-sm px-2.5 py-0.5 border border-gray-300 text-sm leading-5 font-medium rounded-full text-gray-700 bg-white hover:bg-gray-50" @click="
+                <span class="to inline-flex items-center shadow-sm px-2.5 py-0.5 border border-gray-300 text-sm leading-5 font-medium rounded-full text-primary-content-700 bg-base-100 hover:bg-neutral-50" @click="
                 const target = document.getElementById('circle_members');
                 const element = event.target.closest('li');
                 target.appendChild(element);
                 ">+</span>
-                <span class="from inline-flex items-center shadow-sm px-2.5 py-0.5 border border-gray-300 text-sm leading-5 font-medium rounded-full text-gray-700 bg-white hover:bg-gray-50" @click="
+                <span class="from inline-flex items-center shadow-sm px-2.5 py-0.5 border border-gray-300 text-sm leading-5 font-medium rounded-full text-primary-content-700 bg-base-100 hover:bg-neutral-50" @click="
                 const target = document.getElementById('circle_suggestions');
                 const element = event.target.closest('li');
                 target.appendChild(element);

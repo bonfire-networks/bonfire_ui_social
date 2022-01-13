@@ -29,7 +29,7 @@
   <LiveRedirect to={path(:create_user)}>
     <div class="flex flex-col items-center flex-1 py-4">
       <Solid.PlusCircleIcon class="w-40 h-40" />
-      <h3 class="mt-4 text-lg font-medium text-gray-700">Create a user profile</h3>
+      <h3 class="mt-4 text-lg font-medium text-primary-content-700">Create a user profile</h3>
     </div>
   </LiveRedirect>
 {/if}

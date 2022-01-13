@@ -37,8 +37,8 @@
       </label>
       <div class="mt-1 sm:mt-0 sm:col-span-2">
         <div class="flex items-center">
-          <span class="w-12 h-12 overflow-hidden bg-gray-100 rounded-full">
-            <svg class="w-full h-full text-gray-300" fill="currentColor" viewBox="0 0 24 24">
+          <span class="w-12 h-12 overflow-hidden bg-neutral-100 rounded-full">
+            <svg class="w-full h-full text-primary-content-300" fill="currentColor" viewBox="0 0 24 24">
               <path d="M24 20.993V24H0v-2.996A14.977 14.977 0 0112.004 15c4.904 0 9.26 2.354 11.996 5.993zM16.002 8.999a4 4 0 11-8 0 4 4 0 018 0z" />
             </svg>
           </span>
@@ -56,7 +56,7 @@
       <div class="mt-1 sm:mt-0 sm:col-span-2">
         <div class="flex justify-center max-w-lg px-6 pt-5 pb-6 border-2 border-gray-300 border-dashed rounded-md">
           <div class="space-y-1 text-center">
-            <svg class="w-12 h-12 mx-auto text-gray-400" stroke="currentColor" fill="none" viewBox="0 0 48 48" aria-hidden="true">
+            <svg class="w-12 h-12 mx-auto text-primary-content-400" stroke="currentColor" fill="none" viewBox="0 0 48 48" aria-hidden="true">
               <path d="M28 8H12a4 4 0 00-4 4v20m32-12v8m0 0v8a4 4 0 01-4 4H12a4 4 0 01-4-4v-4m32-4l-3.172-3.172a4 4 0 00-5.656 0L28 28M8 32l9.172-9.172a4 4 0 015.656 0L28 28m0 0l4 4m4-24h8m-4-4v8m-12 4h.02" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
             </svg>
             <div class="flex text-sm text-base-content text-opacity-80">
@@ -102,11 +102,11 @@
             {l "Admin info"}
           </legend>
           <div class="flex -space-y-px border border-base-200 bg-base-100 rounded-box">
-            <!-- Checked: "bg-indigo-50 border-indigo-200 z-10", Not Checked: "border-gray-200" -->
+            <!-- Checked: "bg-base-200 border-indigo-200 z-10", Not Checked: "border-gray-200" -->
             <label class="relative flex items-center flex-1 p-4 border-r cursor-pointer border-base-200 focus:outline-none">
               <input type="radio" name="admin-info" value="Public access" class="radio radio-secondary" aria-labelledby="admin-info-0-label" aria-describedby="admin-info-0-description">
               <div class="flex flex-col ml-3">
-                <!-- Checked: "text-indigo-900", Not Checked: "text-gray-900" -->
+                <!-- Checked: "text-indigo-900", Not Checked: "text-primary-content-900" -->
                 <span id="admin-info-0-label" class="block text-sm font-medium">
                   {l "yes"}
                 </span>
@@ -114,11 +114,11 @@
             </label>
 
 
-            <!-- Checked: "bg-indigo-50 border-indigo-200 z-10", Not Checked: "border-gray-200" -->
+            <!-- Checked: "bg-base-200 border-indigo-200 z-10", Not Checked: "border-gray-200" -->
             <label class="relative flex items-center flex-1 p-4 cursor-pointer focus:outline-none">
               <input type="radio" name="admin-info" value="Private to you" class="radio radio-secondary" aria-labelledby="admin-info-2-label" aria-describedby="admin-info-2-description">
               <div class="flex flex-col ml-3">
-                <!-- Checked: "text-indigo-900", Not Checked: "text-gray-900" -->
+                <!-- Checked: "text-indigo-900", Not Checked: "text-primary-content-900" -->
                 <span id="admin-info-2-label" class="block text-sm font-medium">
                   {l "No"}
                 </span>
@@ -139,11 +139,11 @@
             {l "Admin info"}
           </legend>
           <div class="flex -space-y-px border border-base-200 bg-base-100 rounded-box">
-            <!-- Checked: "bg-indigo-50 border-indigo-200 z-10", Not Checked: "border-gray-200" -->
+            <!-- Checked: "bg-base-200 border-indigo-200 z-10", Not Checked: "border-gray-200" -->
             <label class="relative flex items-center flex-1 p-4 border-r cursor-pointer border-base-200 focus:outline-none">
               <input type="radio" name="users-amount" value="Public access" class="radio radio-secondary" aria-labelledby="users-amount-0-label" aria-describedby="users-amount-0-description">
               <div class="flex flex-col ml-3">
-                <!-- Checked: "text-indigo-900", Not Checked: "text-gray-900" -->
+                <!-- Checked: "text-indigo-900", Not Checked: "text-primary-content-900" -->
                 <span id="users-amount-0-label" class="block text-sm font-medium">
                   {l "yes"}
                 </span>
@@ -151,11 +151,11 @@
             </label>
 
 
-            <!-- Checked: "bg-indigo-50 border-indigo-200 z-10", Not Checked: "border-gray-200" -->
+            <!-- Checked: "bg-base-200 border-indigo-200 z-10", Not Checked: "border-gray-200" -->
             <label class="relative flex items-center flex-1 p-4 cursor-pointer focus:outline-none">
               <input type="radio" name="users-amount" value="Private to you" class="radio radio-secondary" aria-labelledby="users-amount-2-label" aria-describedby="users-amount-2-description">
               <div class="flex flex-col ml-3">
-                <!-- Checked: "text-indigo-900", Not Checked: "text-gray-900" -->
+                <!-- Checked: "text-indigo-900", Not Checked: "text-primary-content-900" -->
                 <span id="users-amount-2-label" class="block text-sm font-medium">
                   {l "No"}
                 </span>
@@ -176,7 +176,7 @@
             {l "Invites only instance"}
           </legend>
           <div class="-space-y-px bg-base-100 rounded-box">
-            <!-- Checked: "bg-indigo-50 border-indigo-200 z-10", Not Checked: "border-gray-200" -->
+            <!-- Checked: "bg-base-200 border-indigo-200 z-10", Not Checked: "border-gray-200" -->
             <label class="relative flex p-4 border cursor-pointer border-base-200 rounded-tl-md rounded-tr-md focus:outline-none">
               <input
                 type="radio"
@@ -187,7 +187,7 @@
                 aria-describedby="privacy-setting-0-description"
               >
               <div class="flex flex-col ml-3">
-                <!-- Checked: "text-indigo-900", Not Checked: "text-gray-900" -->
+                <!-- Checked: "text-indigo-900", Not Checked: "text-primary-content-900" -->
                 <span id="privacy-setting-label" class="block text-sm font-medium">
                   {l "yes"}
                 </span>
@@ -197,7 +197,7 @@
               </div>
             </label>
 
-            <!-- Checked: "bg-indigo-50 border-indigo-200 z-10", Not Checked: "border-gray-200" -->
+            <!-- Checked: "bg-base-200 border-indigo-200 z-10", Not Checked: "border-gray-200" -->
             <label class="relative flex p-4 border cursor-pointer border-base-200 rounded-bl-md rounded-br-md focus:outline-none">
               <input
                 type="radio"
@@ -208,7 +208,7 @@
                 aria-describedby="privacy-setting-1-description"
               >
               <div class="flex flex-col ml-3">
-                <!-- Checked: "text-indigo-900", Not Checked: "text-gray-900" -->
+                <!-- Checked: "text-indigo-900", Not Checked: "text-primary-content-900" -->
                 <span id="privacy-setting-label" class="block text-sm font-medium">
                   {l "No"}
                 </span>

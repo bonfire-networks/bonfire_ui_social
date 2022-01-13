@@ -35,37 +35,37 @@
     x-transition:leave="transition ease-in duration-75"
     x-transition:leave-start="transform opacity-100 scale-100"
     x-transition:leave-end="transform opacity-0 scale-95"
-    class="absolute left-0 z-10 mt-2 -ml-16 origin-top-right bg-white divide-y divide-gray-100 rounded-md shadow-lg w-60 ring-1 ring-black ring-opacity-5 focus:outline-none"
+    class="absolute left-0 z-10 mt-2 -ml-16 origin-top-right bg-base-100 divide-y divide-gray-100 rounded-md shadow-lg w-60 ring-1 ring-black ring-opacity-5 focus:outline-none"
     role="menu"
     x-cloak
     aria-orientation="vertical"
     aria-labelledby="user-profile-menu">
       <div 
       @click="boundary_selected = 'public'; open_boundaries = false" 
-      class="flex p-2 space-x-2 text-sm text-gray-800 transition duration-150 ease-in-out cursor-pointer rounded-t-md hover:bg-gray-100">
+      class="flex p-2 space-x-2 text-sm text-primary-content-800 transition duration-150 ease-in-out cursor-pointer rounded-t-md hover:bg-neutral-100">
         <Solid.GlobeIcon/>
         <div class="flex-1">
-          <div class="text-sm font-medium text-gray-800">{l "Public"}</div>
-          <p class="text-xs text-gray-500">{l "Publicly visible to everyone on the fediverse and in search engines"}</p>
+          <div class="text-sm font-medium text-primary-content-800">{l "Public"}</div>
+          <p class="text-xs text-primary-content-500">{l "Publicly visible to everyone on the fediverse and in search engines"}</p>
         </div>
       </div>
-      <div @click="boundary_selected = 'local'; open_boundaries = false" class="flex p-2 space-x-2 text-sm text-gray-700 text-gray-800 transition duration-150 ease-in-out cursor-pointer rounded-b-md hover:bg-gray-100">
+      <div @click="boundary_selected = 'local'; open_boundaries = false" class="flex p-2 space-x-2 text-sm text-primary-content-700 text-primary-content-800 transition duration-150 ease-in-out cursor-pointer rounded-b-md hover:bg-neutral-100">
         <Solid.HomeIcon/>
         <div class="flex-1">
-          <div class="text-sm font-medium text-gray-800">{l "Local Instance"}</div>
-          <p class="text-xs text-gray-500">{l "Only visible to members of this instance"}</p>
+          <div class="text-sm font-medium text-primary-content-800">{l "Local Instance"}</div>
+          <p class="text-xs text-primary-content-500">{l "Only visible to members of this instance"}</p>
           </div>
       </div>
-      <div @click="boundary_selected = 'mentions'; open_boundaries = false" class="flex p-2 space-x-2 text-sm text-gray-700 text-gray-800 transition duration-150 ease-in-out cursor-pointer hover:bg-gray-100">
+      <div @click="boundary_selected = 'mentions'; open_boundaries = false" class="flex p-2 space-x-2 text-sm text-primary-content-700 text-primary-content-800 transition duration-150 ease-in-out cursor-pointer hover:bg-neutral-100">
         <Solid.AtSymbolIcon/> 
         <div class="flex-1">
-        <div class="text-sm font-medium text-gray-800">{l "Mentions"}</div>
-        <p class="text-xs text-gray-500">{l "Visible to everyone mentioned, across the fediverse"}</p>
+        <div class="text-sm font-medium text-primary-content-800">{l "Mentions"}</div>
+        <p class="text-xs text-primary-content-500">{l "Visible to everyone mentioned, across the fediverse"}</p>
         </div>
       </div>
-      <!-- <div @click="boundary_selected = 'custom'; open_boundaries = false" class="block px-4 py-2 text-sm text-gray-700 transition duration-150 ease-in-out cursor-pointer rounded-b-md hover:bg-gray-100">
-        <div class="text-sm text-gray-700">{l "Custom"}</div>
-        <p class="text-xs text-gray-500">{l "Pick your audience"}</p>
+      <!-- <div @click="boundary_selected = 'custom'; open_boundaries = false" class="block px-4 py-2 text-sm text-primary-content-700 transition duration-150 ease-in-out cursor-pointer rounded-b-md hover:bg-neutral-100">
+        <div class="text-sm text-primary-content-700">{l "Custom"}</div>
+        <p class="text-xs text-primary-content-500">{l "Pick your audience"}</p>
       </div> -->
   </div>
 </div>

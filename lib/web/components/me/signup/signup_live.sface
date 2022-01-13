@@ -3,18 +3,21 @@
     <div class="w-24 h-24 bg-center bg-no-repeat bg-contain" style={"background-image: url(" <> Bonfire.Common.Config.get([:ui, :theme, :instance_logo], '') <> ")"}></div>
   </LiveRedirect>
 </div>
+
 <div class="rounded shadow-xl bg-base-100 -mt-14">
   <div class="px-6 pt-16 pb-6 mx-auto">
 
-    {#if Bonfire.Me.Accounts.instance_is_invite_only? }
-    <div role="status" class="my-4 alert alert-warning">
-      <div class="flex">
-        <div class="whitespace-normal">
-          {l "Warning: this instance is currently invite-only."}
+    {#if Bonfire.Me.Accounts.instance_is_invite_only? && e(assigns, :invite, nil) |> IO.inspect == nil 
+ }
+      <div role="status" class="my-4 alert alert-warning">
+        <div class="flex">
+          <div class="whitespace-normal">
+            {l "Warning: this instance is currently invite-only."}
+          </div>
         </div>
       </div>
-    </div>
-    {#else}
+    {/if} 
+    <!-- {#else} -->
 
     {#case @error}
       {#match nil }
@@ -28,7 +31,7 @@
             </div>
             <div class="ml-3">
               <h3 class="text-sm font-medium">
-                This email is taken. Did you mean to <LiveRedirect to="/login">log in</LiveRedirect>?
+                {l "This email is taken."} Did you mean to <LiveRedirect to="/login">log in</LiveRedirect>?
               </h3>
             </div>
           </div>
@@ -42,7 +45,7 @@
             </div>
             <div class="ml-3">
               <h3 class="text-sm font-medium ">
-                An error occurred: {error}
+                {l "An error occurred:"} {error}
               </h3>
             </div>
           </div>
@@ -57,7 +60,7 @@
             <Field name={:email_address}>
               <label for="signup-form_email_email_address" class="label">
                 <span class="label-text">
-                  Email address
+                  {l "Email address"}
                 </span>
               </label>
               <EmailInput opts={placeholder: "alice@email.com"} required class="w-full input input-bordered" />
@@ -77,10 +80,10 @@
             <Field name={:password}>
               <Label class="label">
                 <span class="label-text">
-                  Choose a password (10 characters minimum)
+                  {l "Choose a password"} ({l "10 characters minimum"})
                 </span>
               </Label>
-              <PasswordInput opts={placeholder: "Type a strong password"} required class="w-full input input-bordered" />
+              <PasswordInput opts={placeholder: l "Type a strong password"} required class="w-full input input-bordered" />
               <ErrorTag />
             </Field>
           </Inputs>
@@ -99,19 +102,19 @@
         <div class="mt-6">
           <span class="block w-full rounded-md shadow-sm">
             <button type="submit" class="flex w-full btn btn-primary place-content-center">
-              Sign up
+              {l "Sign up"}
             </button>
           </span>
         </div>
         <div class="mt-4 text-base-content">
           <p>
             <span>&#x01f44b; </span>
-           {l " Do you already have an account?"}
-            <LiveRedirect class="font-bold underline" to={path(:login, :index)}>Log in</LiveRedirect>.
+           {l "Do you already have an account?"}
+            <LiveRedirect class="font-bold underline" to={path(:login, :index)}>{l "Log in"}</LiveRedirect>.
           </p>
         </div>
       </Form>
-    {/if}
+    <!-- {/if} -->
 
   </div>
 </div>

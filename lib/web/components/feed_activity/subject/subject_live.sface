@@ -52,7 +52,9 @@
           to={path(@character)}>
           {e(@profile, :name, "Anonymous")}
         </LiveRedirect>
-        <span class="ml-1 text-sm text-base-content text-opacity-60 subject_username text-light">@{e(@character, :username, "")}</span>
+        <span
+         :if={e(@character, :username, nil)}
+         class="ml-1 text-sm text-base-content text-opacity-60 subject_username text-light">@{e(@character, :username, "")}</span>
       </div>
       <Bonfire.UI.Social.Activity.DateAgoLive 
         :if={!@viewing_main_object}

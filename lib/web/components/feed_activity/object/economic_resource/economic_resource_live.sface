@@ -1,14 +1,14 @@
-<div class="flex items-center p-3 bg-gray-100">
+<div class="flex items-center p-3 bg-neutral-100">
   <div :if={e(@object, :image, nil)} class="rounded-xl bg-cover bg-no-repeat bg-center w-20 h-20" style={"background-image: url('#{image_url(@object.image)}')"}></div>
   <div class="px-2">
-    <div class="text-gray-700 text-base font-semibold">
+    <div class="text-primary-content-700 text-base font-semibold">
       <LivePatch to={"/resource/"<> @object.id}>
         {@object.name}
       </LivePatch>
     </div>
-    <div class="text-gray-800 text-sm font-regular">{@object.note}</div>
+    <div class="text-primary-content-800 text-sm font-regular">{@object.note}</div>
     <div class="items-center flex space-x-4">
-      <div :if={e(@object, :accounting_quantity, :has_numerical_value, nil) || e(@object, :onhand_quantity, :has_numerical_value, nil)} class="flex items-center space-x-1 mt-2 text-gray-600 text-sm">
+      <div :if={e(@object, :accounting_quantity, :has_numerical_value, nil) || e(@object, :onhand_quantity, :has_numerical_value, nil)} class="flex items-center space-x-1 mt-2 text-primary-content-600 text-sm">
         <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" viewBox="0 0 20 20" fill="currentColor">
           <path d="M4 3a2 2 0 100 4h12a2 2 0 100-4H4z" />
           <path fill-rule="evenodd" d="M3 8h14v7a2 2 0 01-2 2H5a2 2 0 01-2-2V8zm5 3a1 1 0 011-1h2a1 1 0 110 2H9a1 1 0 01-1-1z" clip-rule="evenodd" />
@@ -17,7 +17,7 @@
         <span :if={e(@object, :accounting_quantity, :has_numerical_value, nil) && e(@object, :accounting_quantity, :has_numerical_value, nil) != e(@object, :onhand_quantity, :has_numerical_value, nil)}>{e(@object, :accounting_quantity, :has_numerical_value, "unknown quantity")} {e(@object, :accounting_quantity, :unit, :label, e(@object, :accounting_quantity, :has_unit, :label, ""))}</span>
       </div>
 
-      <div :if={e(@object, :current_location, nil)} class="flex items-center space-x-1 mt-2 text-gray-600 text-sm">
+      <div :if={e(@object, :current_location, nil)} class="flex items-center space-x-1 mt-2 text-primary-content-600 text-sm">
         <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" viewBox="0 0 20 20" fill="currentColor">
           <path fill-rule="evenodd" d="M5.05 4.05a7 7 0 119.9 9.9L10 18.9l-4.95-4.95a7 7 0 010-9.9zM10 11a2 2 0 100-4 2 2 0 000 4z" clip-rule="evenodd" />
         </svg>

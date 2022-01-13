@@ -49,7 +49,7 @@ defmodule Bonfire.UI.Social.Web.ErrorView do
     <link phx-track-static rel='stylesheet' href='/css/bonfire.css'/>
   </head>
 
-  <body id="layout-root" class="bg-blueGray-50 dark:bg-gray-800">
+  <body id="layout-root" class="bg-blueGray-50 dark:bg-neutral-800">
 <div data-phx-main="true"><div id="layout-error">
 <div class="">
 <div class="flex flex-col mx-auto overflow-hidden lg:mt-4">
@@ -71,7 +71,7 @@ defmodule Bonfire.UI.Social.Web.ErrorView do
 
     <div class="mx-auto mt-12 w-center">
       <div class="prose">
-        <h1 class="text-gray-900">
+        <h1 class="text-primary-content-900">
           #{error}
         </h1>
           #{details}

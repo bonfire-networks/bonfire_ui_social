@@ -21,7 +21,7 @@
               </a>
 
               <a href={get_version_link(dep)} target="_blank">
-                <span class="ml-2 inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-indigo-100 text-indigo-800">{get_version(dep)}</span>
+                <span class="ml-2 inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-indigo-100 text-primary-content">{get_version(dep)}</span>
               </a>
             </div>
           {/for}
@@ -45,7 +45,7 @@
               </a>
 
               <a href={get_version_link(dep)} target="_blank">
-                <span class="ml-2 inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-indigo-100 text-indigo-800">{get_version(dep)}</span>
+                <span class="ml-2 inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-indigo-100 text-primary-content">{get_version(dep)}</span>
               </a>
             </div>
           {/for}
@@ -55,7 +55,7 @@
 
     <div class="">
       <div class="p-4">
-        <h2 class="text-lg font-medium leading-6text-gray-800 dark:text-gray-200">{l "Other Dependencies"}</h2>
+        <h2 class="text-lg font-medium leading-6text-primary-content-800 dark:text-primary-content-200">{l "Other Dependencies"}</h2>
         <p class="mt-1 text-sm text-base-content text-opacity-70">
           {l "These are other libraries used by the app and extensions."}
         </p>
@@ -69,7 +69,7 @@
               </a>
 
               <a href={get_version_link(dep)} target="_blank">
-                <span class="ml-2 inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-indigo-100 text-indigo-800">{get_version(dep)}</span>
+                <span class="ml-2 inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-indigo-100 text-primary-content">{get_version(dep)}</span>
               </a>
             </div>
           {/for}

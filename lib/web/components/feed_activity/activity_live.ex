@@ -120,22 +120,31 @@ defmodule Bonfire.UI.Social.ActivityLive do
   def component_activity_subject(verb, activity, _), do: [component_activity_maybe_creator(activity)]
 
 
-  def component_activity_maybe_creator(%{object: %{created: %{
+  def component_activity_maybe_creator(%{created: %{
     creator_profile: %{id: _} = profile,
     creator_character: %{id: _} = character
-    }}}), do: {Bonfire.UI.Social.Activity.SubjectLive, %{profile: profile, character: character}}
+    }}), do: component_activity_maybe_creator(%{profile: profile, character: character})
+
+  def component_activity_maybe_creator(%{
+    profile: %{id: _} = profile,
+    character: %{id: _} = character
+    } = _creator), do: {Bonfire.UI.Social.Activity.SubjectLive, %{profile: profile, character: character}}
 
   def component_activity_maybe_creator(%{creator: %{
     profile: %{id: _} = profile,
     character: %{id: _} = character
-    } = _object_creator}), do: {Bonfire.UI.Social.Activity.SubjectLive, %{profile: profile, character: character}}
+    } = creator}), do: component_activity_maybe_creator(creator)
 
+  def component_activity_maybe_creator(%{provider: %{id: _}}), do: Bonfire.UI.Social.Activity.ProviderReceiverLive
+  def component_activity_maybe_creator(%{primary_accountable: %{id: _} = primary_accountable}), do: {Bonfire.UI.Social.Activity.ProviderReceiverLive, %{provider: primary_accountable}}
+  def component_activity_maybe_creator(%{receiver: %{id: _}}), do: Bonfire.UI.Social.Activity.ProviderReceiverLive
 
-  def component_activity_maybe_creator(%{provider: _}), do: Bonfire.UI.Social.Activity.ProviderReceiverLive
-  def component_activity_maybe_creator(%{primary_accountable: primary_accountable}), do: {Bonfire.UI.Social.Activity.ProviderReceiverLive, %{provider: primary_accountable}}
-  def component_activity_maybe_creator(%{receiver: _}), do: Bonfire.UI.Social.Activity.ProviderReceiverLive
-
-  def component_activity_maybe_creator(%{created: created} = object), do: object |> repo().maybe_preload(created: [creator: [:profile, :character]]) |> Map.get(:created) |> component_activity_maybe_creator()
+  def component_activity_maybe_creator(%{created: _created} = object), do: object |> repo().maybe_preload(created: [creator: [:profile, :character]]) |> Map.get(:creator) |> Map.get(:created) |> component_activity_maybe_creator()
+  def component_activity_maybe_creator(%{creator: _} = object), do: object |> repo().maybe_preload(creator: [:profile, :character]) |> Map.get(:creator) |> component_activity_maybe_creator()
+  def component_activity_maybe_creator(%{provider: _, receiver: _} = object), do: object |> repo().maybe_preload(provider: [:profile, :character], receiver: [:profile, :character]) |> component_activity_maybe_creator()
+  def component_activity_maybe_creator(%{provider: _} = object), do: object |> repo().maybe_preload(provider: [:profile, :character]) |> component_activity_maybe_creator()
+  def component_activity_maybe_creator(%{receiver: _} = object), do: object |> repo().maybe_preload(receiver: [:profile, :character]) |> component_activity_maybe_creator()
+  def component_activity_maybe_creator(%{primary_accountable: _} = object), do: object |> repo().maybe_preload(primary_accountable: [:profile, :character]) |> component_activity_maybe_creator()
 
   # FIXME: subjects don't showed up for economic activities, but they do if you uncomment this
   def component_activity_maybe_creator(%{subject: %{character: %{id: _} = character, profile: %{id: _} = profile}}), do: {Bonfire.UI.Social.Activity.SubjectLive, %{profile: profile, character: character}} #|> IO.inspect
@@ -144,7 +153,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
 
   def component_activity_maybe_creator(activity) do
      Logger.error("ActivityLive: could not find the creator of #{inspect activity}")
-     nil
+     Bonfire.UI.Social.Activity.SubjectLive
   end
 
   def component_maybe_reply_to(verb, activity, showing_within \\ nil)
