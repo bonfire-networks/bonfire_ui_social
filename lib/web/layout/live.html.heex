@@ -15,12 +15,12 @@
       notification={e(assigns, :notification, nil)}
       />
       <%= if info do %>
-        <p class="alert alert-info bg-base" role="alert alert-warning"
+        <p class="alert alert-info" role="alert alert-warning"
           phx-click="lv:clear-flash"
           phx-value-key="info"><%= info %></p>
       <% end %>
       <%= if error do %>
-        <p class="whitespace-pre-wrap alert alert-error bg-base " role="alert"
+        <p class="whitespace-pre-wrap alert alert-error " role="alert"
           phx-click="lv:clear-flash"
           phx-value-key="error"><%= error %></p>
       <% end %>
