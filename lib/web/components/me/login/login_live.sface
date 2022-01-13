@@ -87,7 +87,7 @@
           <div class="mt-4">
           <Link to={path(Bonfire.Me.Web.ForgotPasswordController)} class="block w-full text-center link link-secondary"> {l "Did you forget your password?"}</Link>
             <!-- <p>
-              <%= link "Did you forget your password?", to: path(Bonfire.Me.Web.ForgotPasswordController), class: "text-pink-600 w-full block text-center font-medium text-sm" %>
+              <%= link "Did you forget your password?", to: path(Bonfire.Me.Web.ForgotPasswordController), class: " w-full block text-center font-medium text-sm" %>
             </p> -->
             <div class="flex p-3 mt-6 -mx-6 -mb-4 border-t border-base-300 place-content-center">
               <Link to={path(:signup)} class="text-center link"> {l "Need to sign up instead?"}</Link>

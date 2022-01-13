@@ -1,5 +1,5 @@
 <div>
-  <div class="mt-3 mb-3 text-sm text-primary-content-800 dark:text-primary-content-200">
+  <div class="mt-3 mb-3 text-sm text-primary-content-800 ">
     <span class="capitalize">{@verb_display}</span>
 
     <LivePatch to={path(e(@object, :to_resource_inventoried_as, e(@object, :resource_inventoried_as, e(@object, :to_resource_inventoried_as_id, e(@object, :resource_inventoried_as_id, "")))))}>

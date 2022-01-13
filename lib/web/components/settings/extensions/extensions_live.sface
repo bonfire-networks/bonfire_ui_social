@@ -55,7 +55,7 @@
 
     <div class="">
       <div class="p-4">
-        <h2 class="text-lg font-medium leading-6text-primary-content-800 dark:text-primary-content-200">{l "Other Dependencies"}</h2>
+        <h2 class="text-lg font-medium leading-6text-primary-content-800 ">{l "Other Dependencies"}</h2>
         <p class="mt-1 text-sm text-base-content text-opacity-70">
           {l "These are other libraries used by the app and extensions."}
         </p>

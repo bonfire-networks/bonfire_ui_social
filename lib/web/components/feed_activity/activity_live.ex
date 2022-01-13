@@ -139,8 +139,8 @@ defmodule Bonfire.UI.Social.ActivityLive do
   def component_activity_maybe_creator(%{primary_accountable: %{id: _} = primary_accountable}), do: {Bonfire.UI.Social.Activity.ProviderReceiverLive, %{provider: primary_accountable}}
   def component_activity_maybe_creator(%{receiver: %{id: _}}), do: Bonfire.UI.Social.Activity.ProviderReceiverLive
 
-  def component_activity_maybe_creator(%{created: _created} = object), do: object |> repo().maybe_preload(created: [creator: [:profile, :character]]) |> Map.get(:creator) |> Map.get(:created) |> component_activity_maybe_creator()
-  def component_activity_maybe_creator(%{creator: _} = object), do: object |> repo().maybe_preload(creator: [:profile, :character]) |> Map.get(:creator) |> component_activity_maybe_creator()
+  def component_activity_maybe_creator(%{created: _created} = object), do: object |> repo().maybe_preload(created: [creator: [:profile, :character]]) |> e(:creator, :created, nil) |> component_activity_maybe_creator()
+  def component_activity_maybe_creator(%{creator: _} = object), do: object |> repo().maybe_preload(creator: [:profile, :character]) |> e(:creator, nil) |> component_activity_maybe_creator()
   def component_activity_maybe_creator(%{provider: _, receiver: _} = object), do: object |> repo().maybe_preload(provider: [:profile, :character], receiver: [:profile, :character]) |> component_activity_maybe_creator()
   def component_activity_maybe_creator(%{provider: _} = object), do: object |> repo().maybe_preload(provider: [:profile, :character]) |> component_activity_maybe_creator()
   def component_activity_maybe_creator(%{receiver: _} = object), do: object |> repo().maybe_preload(receiver: [:profile, :character]) |> component_activity_maybe_creator()

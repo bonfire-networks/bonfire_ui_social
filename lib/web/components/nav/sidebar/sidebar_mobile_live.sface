@@ -23,7 +23,7 @@
                 <img :if={current_user(assigns)} class="object-cover -block w-12 h-12 rounded-full" src={avatar_url(current_user(assigns))} alt="current user profile image">
                 <button
                   type="button"
-                  class="-mr-2 bg-base-100 rounded-md p-2 inline-flex items-center justify-center text-primary-content-400 hover:text-primary-content-500 hover:bg-neutral-100 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-indigo-500"
+                  class="-mr-2 bg-base-100 rounded-md p-2 inline-flex items-center justify-center text-primary-content-400 hover:text-primary-content-500 hover:bg-neutral focus:outline-none focus:ring-2 focus:ring-inset focus:ring-secondary-500"
                   @click="open_sidebar = false">
                   <span class="sr-only">Close menu</span>
                   <svg class="h-6 w-6" x-description="Heroicon name: outline/x" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">

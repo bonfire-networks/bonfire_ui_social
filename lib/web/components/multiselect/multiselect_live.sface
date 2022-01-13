@@ -13,14 +13,14 @@
         $nextTick(() => { $refs.autocomplete.focus() })
       }
     "
-    class="flex items-center w-full px-2 bg-base-100 border border-gray-300 rounded-md shadow-sm cursor-pointer focus:ring-gray-500 focus:border-gray-500 sm:text-sm hover:bg-neutral-50">
+    class="flex items-center w-full px-2 bg-base-100 border border-gray-300 rounded-md shadow-sm cursor-pointer focus:ring-gray-500 focus:border-gray-500 sm:text-sm hover:bg-neutral">
       <!-- <div class="h-9"></div> -->
       <label :if={Enum.count(@selected_options) == 0} class="flex-1 w-full py-2 h-9">{@label}</label>
       <div :if={Enum.count(@selected_options) > 0} class="flex flex-wrap flex-1 h-9">
         <span
           :for={{name_content, id} <- @selected_options}
           :if={name_content || id}
-          class={"flex m-0.5 rounded-sm items-center py-0.5 pl-2 text-sm font-medium bg-neutral-200 text-primary-content-700", "pr-2": @remove_event ==""}>
+          class={"flex m-0.5 rounded-sm items-center py-0.5 pl-2 text-sm font-medium bg-neutral text-primary-content-700", "pr-2": @remove_event ==""}>
           {raw name_content}
           <input 
             :if={id} 
@@ -36,7 +36,7 @@
             phx-value-field={"#{@form_input_name}"}
             phx-value-context_id={e(assigns, :context_id, nil)}
             type="button"
-            class="inline-flex items-center justify-center flex-shrink-0 w-4 h-4 ml-1 mr-2 text-primary-content-400 hover:bg-neutral-300 hover:text-primary-content-700 focus:outline-none focus:bg-neutral-500 focus:text-white">
+            class="inline-flex items-center justify-center flex-shrink-0 w-4 h-4 ml-1 mr-2 text-primary-content-400 hover:bg-neutral-300 hover:text-primary-content-700 focus:outline-none focus:bg-neutral focus:text-white">
             <span class="sr-only">Remove {raw (name_content || id)}</span>
             <svg class="w-2 h-2" stroke="currentColor" fill="none" viewBox="0 0 8 8">
               <path stroke-linecap="round" stroke-width="1.5" d="M1 1l6 6m0-6L1 7" />
@@ -65,7 +65,7 @@
         name={"autocomplete_#{@form_input_name}"}
         :on-focus={e(assigns, :focus_event, "")}
         class="w-full p-2 input border rounded-md"
-        placeholder="search here"
+        placeholder="type here"
         autocomplete="off"
         tabindex="1"
         aria-labelledby="multiselect_label"
@@ -79,7 +79,7 @@
 
             <li
             :for={{name_content, id} <- @preloaded_options}
-            class="p-2 text-sm text-primary-content-800 cursor-pointer hover:bg-neutral-100 focus:bg-neutral-100"
+            class="p-2 text-sm text-primary-content-800 cursor-pointer hover:bg-neutral focus:bg-neutral"
             role="option"
             tabindex="1"
             aria-selected="false"

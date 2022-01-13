@@ -18,7 +18,7 @@
         type="button"
         @click="summary_open = !summary_open"
         :class="{'text-primary-content-100 underline' : summary_open === true}"
-        class="text-xs font-semibold tracking-wide text-primary-content-600 focus:outline-none dark:text-primary-content-300 hover:underline ">{l "Add a summary"}</button>
+        class="text-xs font-semibold tracking-wide text-primary-content-600 focus:outline-none  hover:underline ">{l "Add a summary"}</button>
     </div>
 
     <div
@@ -30,7 +30,7 @@
           <TextArea
             rows="4"
             opts={placeholder: "Write a short summary"}
-            class="block w-full h-20 text-sm transition-all duration-300 ease-in-out border-gray-300 rounded shadow-sm focus:ring-indigo-500 focus:border-indigo-500" />
+            class="block w-full h-20 text-sm transition-all duration-300 ease-in-out border-gray-300 rounded shadow-sm focus:ring-secondary-500 focus:border-indigo-500" />
         </Field>
       </div> -->
 </div>
