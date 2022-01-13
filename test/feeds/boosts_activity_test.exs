@@ -21,7 +21,7 @@ defmodule Bonfire.UI.Social.Feeds.BoostsActivityTest do
     Follows.follow(bob, alice)
     attrs = %{to_circles: [:guest], post_content: %{summary: "summary", name: "test post name", html_body: "first post"}}
 
-    assert {:ok, post} = Posts.publish(alice, attrs)
+    assert {:ok, post} = Posts.publish(alice, attrs, "public")
     assert {:ok, boost} = Boosts.boost(bob, post)
     assert {:ok, boost} = Boosts.boost(carl, post)
     assert {:ok, boost} = Boosts.boost(demetrius, post)
@@ -53,7 +53,7 @@ defmodule Bonfire.UI.Social.Feeds.BoostsActivityTest do
     Follows.follow(bob, alice)
     attrs = %{to_circles: [:guest], post_content: %{summary: "summary", name: "test post name", html_body: "first post"}}
 
-    assert {:ok, post} = Posts.publish(alice, attrs)
+    assert {:ok, post} = Posts.publish(alice, attrs, "public")
     assert {:ok, boost} = Boosts.boost(bob, post)
     assert {:ok, boost} = Boosts.boost(carl, post)
     assert {:ok, boost} = Boosts.boost(demetrius, post)
@@ -77,7 +77,7 @@ defmodule Bonfire.UI.Social.Feeds.BoostsActivityTest do
     account2 = fake_account!()
     bob = fake_user!(account2)
     attrs = %{to_circles: [:guest], post_content: %{summary: "summary", name: "test post name", html_body: "first post"}}
-    assert {:ok, post} = Posts.publish(alice, attrs)
+    assert {:ok, post} = Posts.publish(alice, attrs, "public")
     assert {:ok, boost} = Boosts.boost(bob, post)
     feed = Bonfire.Social.FeedActivities.my_feed(alice)
     fp = feed.edges |> List.first() #|> IO.inspect
@@ -97,7 +97,7 @@ defmodule Bonfire.UI.Social.Feeds.BoostsActivityTest do
     account2 = fake_account!()
     bob = fake_user!(account2)
     attrs = %{to_circles: [:guest], post_content: %{summary: "summary", name: "test post name", html_body: "first post"}}
-    assert {:ok, post} = Posts.publish(alice, attrs)
+    assert {:ok, post} = Posts.publish(alice, attrs, "public")
     assert {:ok, boost} = Boosts.boost(bob, post)
     feed = Bonfire.Social.FeedActivities.my_feed(alice)
     fp = feed.edges |> List.first() #|> IO.inspect
@@ -118,7 +118,7 @@ defmodule Bonfire.UI.Social.Feeds.BoostsActivityTest do
     account2 = fake_account!()
     bob = fake_user!(account2)
     attrs = %{to_circles: [:guest], post_content: %{summary: "summary", name: "test post name", html_body: "first post"}}
-    assert {:ok, post} = Posts.publish(alice, attrs)
+    assert {:ok, post} = Posts.publish(alice, attrs, "public")
     assert {:ok, boost} = Boosts.boost(bob, post)
     # bob follows alice
     Follows.follow(alice, bob)
@@ -147,7 +147,7 @@ defmodule Bonfire.UI.Social.Feeds.BoostsActivityTest do
     Follows.follow(bob, alice)
     attrs = %{to_circles: [:guest], post_content: %{summary: "summary", name: "test post name", html_body: "first post"}}
 
-    assert {:ok, post} = Posts.publish(alice, attrs)
+    assert {:ok, post} = Posts.publish(alice, attrs, "public")
     assert {:ok, boost} = Boosts.boost(alice, post)
 
     assert {:ok, boost} = Boosts.boost(bob, post)
@@ -175,7 +175,7 @@ defmodule Bonfire.UI.Social.Feeds.BoostsActivityTest do
     Follows.follow(bob, alice)
     attrs = %{to_circles: [:guest], post_content: %{summary: "summary", name: "test post name", html_body: "first post"}}
 
-    assert {:ok, post} = Posts.publish(alice, attrs)
+    assert {:ok, post} = Posts.publish(alice, attrs, "public")
     assert {:ok, boost} = Boosts.boost(alice, post)
 
     assert {:ok, boost} = Boosts.boost(bob, post)
@@ -204,7 +204,7 @@ defmodule Bonfire.UI.Social.Feeds.BoostsActivityTest do
     Follows.follow(bob, alice)
     attrs = %{to_circles: [:guest], post_content: %{summary: "summary", name: "test post name", html_body: "first post"}}
 
-    assert {:ok, post} = Posts.publish(alice, attrs)
+    assert {:ok, post} = Posts.publish(alice, attrs, "public")
     assert {:ok, boost} = Boosts.boost(bob, post)
     assert unboosted = Boosts.unboost(bob, post)
 

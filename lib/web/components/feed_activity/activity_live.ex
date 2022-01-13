@@ -220,7 +220,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
 
   def component_maybe_reply_to(verb, a, _) do
     # IO.inspect(not_reply_verb: verb)
-    IO.inspect(not_reply: a)
+    # IO.inspect(not_reply: a)
     []
   end
 

@@ -8,4 +8,8 @@ defmodule Bonfire.UI.Social.Activity.ReplyLive do
   prop boost_count, :any
   prop showing_within, :any
   prop hide_reply, :any
+
+  def count(replied) do
+    e(replied, :nested_replies_count, 0) + e(replied, :direct_replies_count, 0)
+  end
 end

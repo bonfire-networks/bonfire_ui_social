@@ -9,7 +9,7 @@
       }>
 
     <div class={"flex items-center space-x-8", "mt-3": e(assigns, :viewing_main_object, nil)}>
-      {#if e(assigns, :viewing_main_object, nil) != true and e(assigns, :showing_within, nil) != :thread}
+      {#if Bonfire.UI.Social.Activity.ReplyLive.count(e(@activity, :replied, nil)) > 0 and e(assigns, :viewing_main_object, nil) != true and e(assigns, :showing_within, nil) != :thread}
         <Bonfire.UI.Social.Activity.ViewThreadLive 
           permalink={@permalink} 
           replied={e(@activity, :replied, nil)}

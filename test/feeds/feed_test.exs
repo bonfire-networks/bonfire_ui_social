@@ -8,10 +8,10 @@ defmodule Bonfire.UI.Social.Feeds.FeedTest do
   alias Bonfire.Repo
 
   def publish_multiple_times(msg, user, n) when n > 0 do
-    {:ok, post} = Posts.publish(user, msg)
+    {:ok, post} = Posts.publish(user, msg, "public")
     publish_multiple_times(msg, user, n-1)
   end
-  
+
   def publish_multiple_times(_msg, _user, 0) do
     :ok
   end
@@ -106,12 +106,12 @@ defmodule Bonfire.UI.Social.Feeds.FeedTest do
     local_attrs = %{to_circles: [:local], post_content: %{summary: "summary", name: "test post name", html_body: "first post"}}
     admin_attrs = %{to_circles: [:admin], post_content: %{summary: "summary", name: "test post name", html_body: "first post"}}
 
-    {:ok, post0} = Posts.publish(alice, attrs)
+    {:ok, post0} = Posts.publish(alice, attrs, "public")
     # bob follows alice
     Follows.follow(bob, alice)
 
     total_posts = 3
-    {:ok, post} = Posts.publish(alice, attrs)
+    {:ok, post} = Posts.publish(alice, attrs, "public")
     publish_multiple_times(local_attrs, bob, total_posts)
     publish_multiple_times(admin_attrs, carl, total_posts)
     assert {:ok, boost} = Boosts.boost(alice, post)
@@ -159,7 +159,7 @@ defmodule Bonfire.UI.Social.Feeds.FeedTest do
   end
 
   test "User timeline feed shows the user outbox" do
-    
+
   end
 
   test "User posts feed only shows posts that are not replies" do
@@ -177,5 +177,5 @@ defmodule Bonfire.UI.Social.Feeds.FeedTest do
 
   test "When Alice follows Bob, the followed activity appears only in bob's notification feed" do
   end
-  
+
 end

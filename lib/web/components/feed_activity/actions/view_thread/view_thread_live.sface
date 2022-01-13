@@ -9,7 +9,12 @@
       </svg>
     </span>
     <span class="feed_activity_text">
-      {l "Replies"} {#if e(@replied, :nested_replies_count, 0) + e(@replied, :direct_replies_count, 0) > 0 }({e(@replied, :nested_replies_count, 0) + e(@replied, :direct_replies_count, 0)}) {/if}
+      {#if Bonfire.UI.Social.Activity.ReplyLive.count(@replied) > 0 }
+        {l "Replies"}
+        ({Bonfire.UI.Social.Activity.ReplyLive.count(@replied)}) 
+      {#else}
+        {l "Reply"}
+      {/if}
     </span>
   </div>
 </LiveRedirect>

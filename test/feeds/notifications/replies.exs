@@ -18,7 +18,7 @@ defmodule Bonfire.UI.Social.Feeds.Notifications.ReplyTest do
       # Follows.follow(alice, bob)
 
       attrs = %{to_circles: [:guest], post_content: %{summary: "summary", name: "test post name", html_body: "<p>first post</p>"}}
-      assert {:ok, post} = Posts.publish(alice, attrs)
+      assert {:ok, post} = Posts.publish(alice, attrs, "public")
 
        # Reply to the original post
       attrs_reply = %{post_content: %{summary: "summary", name: "name 2", html_body: "<p>reply to first post</p>"}, reply_to_id: post.id}
@@ -52,7 +52,7 @@ defmodule Bonfire.UI.Social.Feeds.Notifications.ReplyTest do
       # Follows.follow(alice, bob)
 
       attrs = %{to_circles: [:guest], post_content: %{summary: "summary", name: "test post name", html_body: "<p>first post</p>"}}
-      assert {:ok, post} = Posts.publish(alice, attrs)
+      assert {:ok, post} = Posts.publish(alice, attrs, "public")
 
        # Reply to the original post
       attrs_reply = %{post_content: %{summary: "summary", name: "name 2", html_body: "reply to first post"}, reply_to_id: post.id}
@@ -84,7 +84,7 @@ defmodule Bonfire.UI.Social.Feeds.Notifications.ReplyTest do
       # Follows.follow(alice, bob)
 
       attrs = %{to_circles: [:guest], post_content: %{summary: "summary", name: "test post name", html_body: "<p>first post</p>"}}
-      assert {:ok, post} = Posts.publish(alice, attrs)
+      assert {:ok, post} = Posts.publish(alice, attrs, "public")
 
        # Reply to the original post
       attrs_reply = %{post_content: %{summary: "summary", name: "name 2", html_body: "reply to first post"}, reply_to_id: post.id}
@@ -117,7 +117,7 @@ defmodule Bonfire.UI.Social.Feeds.Notifications.ReplyTest do
       # Follows.follow(alice, bob)
 
       attrs = %{to_circles: [:guest], post_content: %{summary: "summary", name: "test post name", html_body: "<p>first post</p>"}}
-      assert {:ok, post} = Posts.publish(alice, attrs)
+      assert {:ok, post} = Posts.publish(alice, attrs, "public")
 
        # Reply to the original post
       attrs_reply = %{post_content: %{summary: "summary", name: "name 2", html_body: "reply to first post"}, reply_to_id: post.id}
@@ -139,5 +139,5 @@ defmodule Bonfire.UI.Social.Feeds.Notifications.ReplyTest do
       |> Floki.text() =~ "first post"
     end
 
-    
+
 end

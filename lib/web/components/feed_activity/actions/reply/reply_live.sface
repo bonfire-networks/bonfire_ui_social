@@ -1,7 +1,6 @@
 {#if !@hide_reply }
   <!-- {#if e(@showing_within, false) != :thread } -->
   <button 
-  class="redirect_to_discussion_page"
   @click.prevent={"
     create_activity_open = true; 
     reply_to_id = '"<>@object_id<>"';
@@ -16,7 +15,10 @@
         </svg>
       </span>
       <span class="feed_activity_text">
-        {l "Reply"} {#if e(@replied, :nested_replies_count, 0) + e(@replied, :direct_replies_count, 0) > 0 }({e(@replied, :nested_replies_count, 0) + e(@replied, :direct_replies_count, 0)}) {/if}
+        {l "Reply"} 
+        {#if count(@replied)>0 }
+          ({count(@replied)}) 
+        {/if}
         <noscript>
            <LiveRedirect 
             to={@permalink} 
