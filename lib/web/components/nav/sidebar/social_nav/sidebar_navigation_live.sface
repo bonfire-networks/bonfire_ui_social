@@ -32,12 +32,3 @@
   </li>
 </ul>
 
-<div
-  :for={{component, component_assigns} <- Bonfire.Common.Config.get([:ui, :sidebar_components], [{Bonfire.UI.Social.SidebarNavigationLive, []}])}
->
-  <Surface.Components.Dynamic.Component
-    :if={module_enabled?(component)}
-    module={component}
-    page={@page}
-  />
-</div>

@@ -45,7 +45,7 @@
             <Solid.BellIcon class="w-5 h-5" />
         </LivePatch>
       </div> 
-      <Bonfire.UI.Social.SidebarUserLive  current_user={current_user(assigns)} />
+      <Bonfire.UI.Social.UserMenuLive  current_user={current_user(assigns)} />
     </div>
     
     {#else}
@@ -94,7 +94,7 @@
       </LiveRedirect>
       </div>
       <div class="flex items-center place-content-center">
-        <Bonfire.UI.Social.SidebarUserLive  current_user={current_user(assigns)} />
+        <Bonfire.UI.Social.UserMenuLive  current_user={current_user(assigns)} />
       </div>
     </div>
   </div>

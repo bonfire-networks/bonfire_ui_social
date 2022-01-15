@@ -12,9 +12,16 @@
             :if={current_user(assigns)}  />
         </div>
 
-        <Bonfire.UI.Social.SidebarNavigationLive 
-          page={@page}
-        />
+        <div
+          :for={{component, component_assigns} <- Bonfire.Common.Config.get([:ui, :sidebar_components], [])}
+        >
+          <Surface.Components.Dynamic.Component
+            :if={module_enabled?(component)}
+            module={component}
+            page={@page}
+          />
+        </div>
+
       </div>
     </div>
   </div>

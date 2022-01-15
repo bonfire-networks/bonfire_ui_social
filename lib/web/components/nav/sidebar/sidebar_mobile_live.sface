@@ -60,7 +60,7 @@
           class="flex flex-col space-y-3 divide-y divide-gray-100"
           x-show="open_profile_mobile_menu"
         >
-          <Bonfire.UI.Social.Sidebar.MoreLinksLive />
+          <Bonfire.UI.Social.Sidebar.UserMenuLinksLive />
         </div>
         <div class="flex flex-col space-y-3" x-show="!open_profile_mobile_menu" >
           <div

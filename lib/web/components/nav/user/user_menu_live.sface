@@ -33,7 +33,7 @@
       aria-orientation="vertical"
       aria-labelledby="user-profile-menu"
     >
-      <Bonfire.UI.Social.Sidebar.MoreLinksLive current_user={current_user(assigns)} />
+      <Bonfire.UI.Social.Sidebar.UserMenuLinksLive current_user={current_user(assigns)} />
     </ul>
   </div>
 </div>

@@ -1,4 +1,4 @@
-defmodule Bonfire.UI.Social.Sidebar.MoreLinksLive do
+defmodule Bonfire.UI.Social.UserMenuLive do
   use Bonfire.Web, :stateless_component
   alias Surface.Components.LivePatch
   alias Surface.Components.LiveRedirect
