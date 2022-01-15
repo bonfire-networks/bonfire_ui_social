@@ -1,7 +1,7 @@
 <ul class="py-3 rounded shadow menu bg-base-100">
-  <li class="uppercase menu-title">
-    <span>{l "Main navigation"}</span>
-  </li>
+  <!-- <li class="uppercase menu-title">
+    <span>{l "Social"}</span>
+  </li> -->
   <li>
   <LivePatch 
     to="/home" 
@@ -31,3 +31,13 @@
   </LivePatch>
   </li>
 </ul>
+
+<div
+  :for={{component, component_assigns} <- Bonfire.Common.Config.get([:ui, :sidebar_components], [{Bonfire.UI.Social.SidebarNavigationLive, []}])}
+>
+  <Surface.Components.Dynamic.Component
+    :if={module_enabled?(component)}
+    module={component}
+    page={@page}
+  />
+</div>

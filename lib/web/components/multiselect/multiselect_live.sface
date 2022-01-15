@@ -1,5 +1,5 @@
 <div
-  id="bonfire_tags"
+  data-id="multiselect"
   class="relative"
   x-cloak
   @click.outside="show = false"
@@ -20,7 +20,7 @@
         <span
           :for={{name_content, id} <- @selected_options}
           :if={name_content || id}
-          class={"flex m-0.5 rounded-sm items-center py-0.5 pl-2 text-sm font-medium bg-neutral bg-opacity-40 text-primary-content-700", "pr-2": @remove_event ==""}>
+          class={"flex m-0.5 rounded-sm items-center py-0.5 pl-2 text-sm font-medium bg-base-100 bg-opacity-40 text-primary-content-700", "pr-2": @remove_event ==""}>
           {raw name_content}
           <input 
             :if={id} 
@@ -60,7 +60,7 @@
     x-show="show === true"
     class="absolute left-0 right-0 z-40 w-full p-1 bg-base-100 border rounded-md shadow-xl top-12">
     <input
-        id="autocomplete"
+        data-id="autocomplete"
         x-ref="autocomplete"
         name={"autocomplete_#{@form_input_name}"}
         :on-focus={e(assigns, :focus_event, "")}
