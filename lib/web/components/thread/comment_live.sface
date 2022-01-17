@@ -4,7 +4,7 @@
   class={"reply thread-level-" <> to_string(@thread_level) <> " flex relative w-full mx-auto bg-base-100"}>
   <div class="relative flex-1 w-full">
     <i 
-      :class=" !show_replies ? 'bg-primary bottom-[0px]' : 'bg-base-200 bottom-[-10px]'"
+      :class=" !show_replies ? 'bg-primary bottom-[0px]' : 'bg-base-200 bottom-[0px]'"
       @click="show_replies = !show_replies"
       class="cursor-pointer  hover:bg-primary z-30 left-[30px] w-[2px]  top-[50px] absolute"></i>
     <div x-cloak x-data="{reply: false, show: true}">

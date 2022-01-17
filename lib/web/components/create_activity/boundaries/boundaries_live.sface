@@ -35,7 +35,7 @@
     x-transition:leave="transition ease-in duration-75"
     x-transition:leave-start="transform opacity-100 scale-100"
     x-transition:leave-end="transform opacity-0 scale-95"
-    class="absolute left-0 z-10 mt-2 -ml-16 origin-top-right bg-base-100 divide-y divide-gray-100 rounded-md shadow-lg w-60 ring-1 ring-black ring-opacity-5 focus:outline-none"
+    class="absolute left-0 z-10 mt-2 -ml-16 origin-top-right bg-base-100 divide-y divide-base-300 rounded-md shadow-lg w-60 ring-1 ring-black ring-opacity-5 focus:outline-none"
     role="menu"
     x-cloak
     aria-orientation="vertical"

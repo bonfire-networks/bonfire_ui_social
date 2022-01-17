@@ -38,7 +38,7 @@
       <div
         data-id={"object_body"}
         :if={e(post_content(@object), :html_body, nil)}
-        class={"prose object_body max-w-prose"}>
+        class={"prose object_body max-w-prose text-sm"}>
         {rich e(post_content(@object), :html_body, "")}
       </div>
 
