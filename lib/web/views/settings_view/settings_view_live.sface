@@ -3,7 +3,7 @@
     admin_tab={@tab_id}
     current_user={current_user(assigns)}
   />
-  <section class="flex-grow w-full h-full mx-auto bg-base-100 shrink-0 md:mx-3 md:mr-0 lg:mr-3 max-w-600">
+  <section class="flex-grow w-full h-full mx-auto bg-base-100 shrink-0 md:mx-3 md:mr-0 lg:mr-3 max-w-[580px]">
   {#case @selected_tab}
     {#match "admin"}
       {#case @tab_id}

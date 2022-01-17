@@ -187,7 +187,7 @@
                 <Label :if={@smart_input_text && @smart_input_text !="" && @smart_input_placeholder} class="mb-2 alert alert-info">{@smart_input_placeholder}</Label>
                       
                 <div 
-                  :class="create_activity_open ? 'h-40' : 'h-0'"
+                  :class="create_activity_open ? '' : 'h-0'"
                   class="transition-all duration-300 ease-in-out rounded" >
                   <Bonfire.Editor.Ck.Bubble 
                       :if={with_editor?(assigns)}

@@ -1,5 +1,5 @@
-<div class="flex-col hidden lg:flex md:flex-shrink-0 w-80">
-  <div class="fixed flex flex-col overflow-y-auto rounded-lg shadow-lg bg-base-100 w-80">
+<div class="flex-col hidden lg:flex md:flex-shrink-0 w-72">
+  <div class="fixed flex flex-col overflow-y-auto rounded-lg shadow-lg bg-base-100 w-72">
     <div class="bg-bottom bg-no-repeat bg-cover rounded-t-lg h-[200px]" style={"background-image: url(" <> Bonfire.Common.Config.get([:ui, :theme, :instance_image], '') <> ")"}></div>
     <div class="p-3 rounded-b-lg">
       <h2 class="text-xl font-extrabold text-base-content">

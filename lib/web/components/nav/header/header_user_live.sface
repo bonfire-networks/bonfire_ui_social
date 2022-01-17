@@ -1,6 +1,6 @@
 <div class="sticky top-0 z-40 w-full navbar border-base-300 bg-base-300 text-base-content">
   <div class="flex justify-center flex-shrink-0 w-full max-w-screen-xl mx-auto">
-    <div class="flex-col justify-end hidden lg:flex w-80">
+    <div class="flex-col justify-end hidden lg:flex w-72">
       {#if !current_user(assigns)}
       <LiveRedirect to={path(Bonfire.Common.Config.get!(:home_page))}>
         <div class="flex items-center space-x-2">
@@ -19,14 +19,14 @@
     </div>
 
     <!-- SEARCH IS ALWAYS PRESENT -->
-    <div class="flex-grow hidden w-full shrink-0 lg:block md:mx-3 md:mr-0 lg:mr-3 max-w-600">
+    <div class="flex-grow hidden w-full shrink-0 lg:block md:mx-3 md:mr-0 lg:mr-3 max-w-[580px]">
       <div class="items-center ">
         <Bonfire.UI.Social.SearchLive />
       </div>
     </div>
 
     {#if current_account(assigns) != nil and current_user(assigns) == nil }
-    <div class="xl:min-w-[285px] flex-1 justify-start hidden lg:flex">
+    <div class="xl:w-[285px] justify-start hidden lg:flex">
       <span class="inline-flex rounded-md shadow-sm">
         <Link to={path(:switch_user)} class="btn btn-secondary">
           {l "Select User"}
@@ -34,7 +34,7 @@
       </span>
     </div>
     {#elseif current_user(assigns)}
-    <div class="xl:min-w-[285px] flex-1 justify-start items-center space-x-2 hidden lg:flex">
+    <div class="xl:w-[285px] justify-start items-center space-x-2 hidden lg:flex">
       <div class="flex-none">
         <LivePatch to={"/private"} class="btn btn-square btn-ghost text-base-content text-opacity-80">
             <Solid.MailIcon class="w-5 h-5" />
@@ -50,7 +50,7 @@
     
     {#else}
     
-    <div class="xl:min-w-[285px] flex-1 justify-start hidden lg:flex">
+    <div class="xl:[285px] justify-start hidden lg:flex">
       <span class="inline-flex ">
         <Link to={path(:login, :index)} class="btn btn-primary">
           {l "Login"}
