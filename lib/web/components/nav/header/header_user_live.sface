@@ -50,7 +50,7 @@
     
     {#else}
     
-    <div class="xl:[285px] justify-start hidden lg:flex">
+    <div class="w-[285px] justify-start hidden lg:flex">
       <span class="inline-flex ">
         <Link to={path(:login, :index)} class="btn btn-primary">
           {l "Login"}
