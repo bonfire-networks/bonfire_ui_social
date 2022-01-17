@@ -69,7 +69,7 @@
       />
   {/case}
   </section>
-  <div class="xl:min-w-[285px] flex-1 justify-start hidden h-full overflow-hidden pointer-events-none lg:flex">
+  <div class="w-[285px] justify-start hidden h-full overflow-hidden pointer-events-none lg:flex">
     <div style="top: 80px; bottom: 16px;" class="fixed h-full pointer-events-auto"></div>
   </div>
 
