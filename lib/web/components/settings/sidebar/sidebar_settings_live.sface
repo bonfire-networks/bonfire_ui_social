@@ -36,6 +36,14 @@
         {l "Account"}
       </LivePatch>
     </li>
+    <li>
+        <LivePatch 
+          to="/flags"
+          class={"w-full flex items-center text-sm font-regular text-base-content", "focus:bg-primary hover:bg-primary bg-primary text-primary-content": @admin_tab == "flags"}>
+          <Outline.FlagIcon class="inline-block w-5 h-5 mr-2 stroke-current" />
+          {l "Flags"}
+        </LivePatch>
+      </li>
     <div :if={Bonfire.Me.Users.is_admin(current_user(assigns))} >
       <li class="uppercase menu-title">
         <span>{l "Admin settings"}</span>
@@ -58,10 +66,10 @@
       </li>
       <li>
         <LivePatch 
-          to="/settings/admin/reports"
-          class={"w-full flex items-center text-sm font-regular text-base-content", "focus:bg-primary hover:bg-primary bg-primary text-primary-content": @admin_tab == "reports"}>
+          to="/flags"
+          class={"w-full flex items-center text-sm font-regular text-base-content", "focus:bg-primary hover:bg-primary bg-primary text-primary-content": @admin_tab == "flags"}>
           <Outline.FlagIcon class="inline-block w-5 h-5 mr-2 stroke-current" />
-          {l "Reports"}
+          {l "Moderation"}
         </LivePatch>
       </li>
     </div>

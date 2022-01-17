@@ -4,45 +4,7 @@
   />
 
   
-  <!-- <a href={path(Bonfire.Me.Web.ChangePasswordController)} class="btn btn-primary" role="menuitem">{l "Change my password"}</a> -->
-  <div class="p-3">
-    <div>
-      <h3 class="mt-4 text-lg font-medium leading-6 text-base-content">
-        {l "Change your password"}
-      </h3>
-    </div>
-    <div class="grid grid-cols-1 mt-3 gap-x-4 sm:grid-cols-6">
-      <div class="mb-2 form-control sm:col-span-4">
-        <label for="email" class="label">
-        <span class="label-text">
-          {l "Current password"}
-        </span>
-        </label>
-        <input id="email" name="email" type="email" autocomplete="email" class="input input-bordered">
-        <label class="label">
-          <a href="#" class="text-xs label-text-alt hover:underline">Forgot password?</a> 
-        </label>
-      </div>
-
-      <div class="form-control sm:col-span-3">
-        <label for="first-name" class="label">
-        <span class="label-text">
-          {l "New password"}
-        </span>
-        </label>
-        <input type="text" name="first-name" id="first-name" autocomplete="none" class="input input-bordered">
-      </div>
-
-      <div class="form-control sm:col-span-3">
-        <label for="last-name" class="label">
-        <span class="label-text">
-          {l "Confirm new password"}
-        </span>
-        </label>
-        <input type="text" name="last-name" id="last-name" autocomplete="none" class="input input-bordered">
-      </div>
-    </div>
-    <button class="w-full mt-3 btn btn-primary btn-wide">{l "Submit"}</button>
-  </div>
+  <a href={path(:change_password)} class="btn btn-primary" role="menuitem">{l "Change my password"}</a>
+  
 
 </div>

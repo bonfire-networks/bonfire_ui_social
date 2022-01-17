@@ -73,11 +73,9 @@
           <label for="about" class="label">
             <span class="label-text">{l "About"}</span>
           </label>
-          <textarea id="about" name="profile[summary]" rows="3" class="h-24 textarea textarea-bordered">
-            {e(current_user(assigns), :profile, :summary, "")}
-          </textarea>
+          <textarea id="about" name="profile[summary]" rows="3" class="h-24 textarea textarea-bordered">{e(current_user(assigns), :profile, :summary, "")}</textarea>
           <p class="mt-2 text-sm text-base-content text-opacity-70">
-          {l "Brief description for your profile. URLs are hyperlinked."}
+          {l "Brief description for your profile. You can use markdown formatting."}
         </p>
         </div>
 
