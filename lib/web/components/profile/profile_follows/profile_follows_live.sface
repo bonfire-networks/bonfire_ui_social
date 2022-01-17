@@ -1,4 +1,4 @@
-<div>
+<div class="pt-4">
   <div role="tabpanel" class="flex w-full tabs">
     <LivePatch 
       to={"/user/#{e(@user, :character, :username, "")}/followers"} 

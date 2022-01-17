@@ -18,8 +18,15 @@
 
 {#elseif e(assigns, :showing_within, nil) == :thread}
   <div class={"flex items-center", "pl-1": e(@activity, :replied, :reply_to_id, nil)}>
-    <div class="absolute left-3">
-      <Bonfire.UI.Social.Activity.AvatarLive profile={@profile} />
+    <div class="absolute left-4">
+      <div class="align-middle avatar">
+        <div class="w-8 h-8 bg-base-300 rounded-btn">
+          <img 
+            class="subject_avatar" 
+            src={avatar_url(@profile)} 
+            onerror="this.style.background='#dadada'" />
+        </div>
+      </div>
     </div>
     <div class="flex items-baseline flex-1 space-x-1">
       <div class="text-base font-bold text-base-content text-opacity-80">

@@ -4,4 +4,5 @@ defmodule Bonfire.UI.Social.Activity.AvatarLive do
 
   prop profile, :any
   prop viewing_main_object, :boolean
+  prop comment, :boolean
 end

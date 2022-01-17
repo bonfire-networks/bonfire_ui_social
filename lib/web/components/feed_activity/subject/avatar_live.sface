@@ -8,6 +8,15 @@
         onerror="this.style.background='#dadada'" />
     </div>
   </div>
+{#elseif @comment == true}
+  <div class="align-middle avatar">
+    <div class="w-6 h-6 bg-base-300 rounded-btn">
+      <img 
+        class="subject_avatar" 
+        src={avatar_url(@profile)} 
+        onerror="this.style.background='#dadada'" />
+    </div>
+  </div>
 {#else}
   <div class="align-middle avatar">
     <div class="w-10 h-10 bg-base-300 rounded-btn">

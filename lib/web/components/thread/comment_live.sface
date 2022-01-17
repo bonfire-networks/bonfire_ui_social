@@ -1,5 +1,12 @@
-<div class={"reply thread-level-" <> to_string(@thread_level) <> " flex relative w-full mx-auto bg-base-100"}>
-  <div class="relative flex-1 w-full comment_lined">
+<div
+  x-cloak
+  x-data="{show_replies: true}"
+  class={"reply thread-level-" <> to_string(@thread_level) <> " flex relative w-full mx-auto bg-base-100"}>
+  <div class="relative flex-1 w-full">
+    <i 
+      :class=" !show_replies ? 'bg-primary bottom-[0px]' : 'bg-base-200 bottom-[-10px]'"
+      @click="show_replies = !show_replies"
+      class="cursor-pointer  hover:bg-primary z-30 left-[30px] w-[2px]  top-[50px] absolute"></i>
     <div x-cloak x-data="{reply: false, show: true}">
         {#case @comment}
           {#match %{__struct__: Bonfire.Data.Social.Activity, object: object} = activity}
@@ -22,39 +29,41 @@
         {/case}
     </div>
 
-    <div class={"replies replies-level-" <> to_string(@thread_level+1) <> " ml-12"}>
+    <div  x-show="show_replies" >
+      <div class={"replies replies-level-" <> to_string(@thread_level+1) <> " ml-8 -mt-3"}>
 
-      {#if is_list(@child_replies) and length(@child_replies)>0 }
-        {#for {subreply, sub_child_replies} <- @child_replies }
-          <CommentLive
-            reply_to_id={e(@comment, :id, nil)}
-            reply_to_thread_id={@reply_to_thread_id} 
-            comment={subreply}
-            child_replies={sub_child_replies}
-            thread_level={@thread_level+1}
-          />
-        {/for}
+        {#if is_list(@child_replies) and length(@child_replies)>0 }
+          {#for {subreply, sub_child_replies} <- @child_replies }
+            <CommentLive
+              reply_to_id={e(@comment, :id, nil)}
+              reply_to_thread_id={@reply_to_thread_id} 
+              comment={subreply}
+              child_replies={sub_child_replies}
+              thread_level={@thread_level+1}
+            />
+          {/for}
 
-      {#else}
+        {#else}
 
-        {#case sub_replies_count(@comment)}
+          {#case sub_replies_count(@comment)}
 
-          {#match sub_replies_count when is_integer(sub_replies_count) and sub_replies_count > 0}
-            <div class="flex items-center -mx-2 -mt-1">
-              <div 
-                @click="show = true" 
-                x-show="show" 
-                phx-click="Bonfire.Social.Posts:load_replies" 
-                phx-value-id={e(@comment, :id, nil)} 
-                phx-value-level={@thread_level} 
-                class="flex items-center visible px-2 py-1 ml-4 rounded cursor-pointer group dark:bg-neutral-400 hover:bg-neutral hover:bg-opacity-30  click:invisible">
-                <span class="text-xs font-semibold text-primary-content-800">Show {@sub_replies_count} more replies</span>
+            {#match sub_replies_count when is_integer(sub_replies_count) and sub_replies_count > 0}
+              <div class="flex items-center -mx-2 -mt-1">
+                <div 
+                  @click="show = true" 
+                  x-show="show" 
+                  phx-click="Bonfire.Social.Posts:load_replies" 
+                  phx-value-id={e(@comment, :id, nil)} 
+                  phx-value-level={@thread_level} 
+                  class="flex items-center visible px-2 py-1 ml-4 rounded cursor-pointer group dark:bg-neutral-400 hover:bg-neutral hover:bg-opacity-30 click:invisible">
+                  <span class="text-xs font-semibold text-primary-content-800">Show {@sub_replies_count} more replies</span>
+                </div>
               </div>
-            </div>
-          {#match _}
-        {/case}
+            {#match _}
+          {/case}
 
-      {/if}
+        {/if}
+      </div>
     </div>
   </div>
 </div>
