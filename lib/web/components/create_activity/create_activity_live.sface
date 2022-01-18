@@ -45,7 +45,7 @@
       x-show="create_activity_open"
       class="relative">
       <Form 
-        for={Bonfire.Social.Posts.LiveHandler.post_changeset()} 
+        for={Bonfire.Social.Posts.LiveHandler.post_changeset(current_user(assigns))} 
         submit="Bonfire.Social.Posts:post" opts={ autocomplete: "off"}
         class={if with_editor?(assigns), do: "form_with_editor", else: "form_with_textarea"}>
         <HiddenInput 
