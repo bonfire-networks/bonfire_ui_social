@@ -70,6 +70,6 @@
   {/case}
   </section>
   <div class="w-[285px] justify-start hidden h-full overflow-hidden pointer-events-none lg:flex">
-    <div style="top: 80px; bottom: 16px;" class="fixed h-full pointer-events-auto"></div>
+    <div class="top-[76px] bottom-[16px] fixed h-full pointer-events-auto"></div>
   </div>
 

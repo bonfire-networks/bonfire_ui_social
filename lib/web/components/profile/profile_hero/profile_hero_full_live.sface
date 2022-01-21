@@ -3,13 +3,13 @@
     <div :if={!e(current_user(assigns), :id, nil)} class="bg-center bg-cover rounded-t-lg bg-accent" style={"height: 225px; background-image: url('#{image_url(@user)}')"}></div>
     <div class="flex items-center justify-between">
       <img
-        class={"inline-block object-cover -mt-16 rounded-full shadow-lg ring-4 ring-base-100 bg-base-100 w-32 h-32 ml-6"}
+        class={"inline-block object-cover -mt-16 rounded-full ring-4 ring-base-100 bg-base-100 w-32 h-32 ml-6"}
         src={"#{avatar_url(@user)}"}
         alt="current user profile image"
       >
       <div
         :if={current_user(assigns)}
-        class="flex items-center pr-6 space-x-3"
+        class="flex items-center pr-2 space-x-3"
       >
         <LiveRedirect
           :if={e(current_user(assigns), :id, nil) && e(current_user(assigns), :id, nil) != maybe_get(@user, :id)}
@@ -30,7 +30,7 @@
         <LiveRedirect
           :if={e(current_user(assigns), :id, nil) && e(current_user(assigns), :id, nil) == maybe_get(@user, :id)}
           to="/settings"
-          class="btn btn-outline"
+          class="capitalize btn"
         >
           <span class="mr-2">
             <Solid.CogIcon />

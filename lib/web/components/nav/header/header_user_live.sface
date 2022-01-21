@@ -35,12 +35,17 @@
     </div>
     {#elseif current_user(assigns)}
     <div class="xl:w-[285px] justify-start items-center space-x-2 hidden lg:flex">
-      <div class="flex-none">
+      <div data-tip="Home" class="flex-none tooltip tooltip-bottom">
+        <LivePatch to={"/home"} class="btn btn-square btn-ghost text-base-content text-opacity-80">
+            <Solid.HomeIcon class="w-5 h-5" />
+        </LivePatch>
+      </div> 
+      <div data-tip="Direct Messages" class="flex-none tooltip tooltip-bottom">
         <LivePatch to={"/private"} class="btn btn-square btn-ghost text-base-content text-opacity-80">
             <Solid.MailIcon class="w-5 h-5" />
         </LivePatch>
       </div> 
-      <div class="flex-none">
+      <div data-tip="Notifications" class="flex-none tooltip tooltip-bottom">
         <LivePatch to={path(:notifications)} class="btn btn-square btn-ghost text-base-content text-opacity-80">
             <Solid.BellIcon class="w-5 h-5" />
         </LivePatch>

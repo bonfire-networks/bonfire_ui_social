@@ -3,7 +3,7 @@
   role="navigation"
   class="flex-col justify-end hidden md:flex w-72"
 >
-  <div style="top: 80px; bottom: 16px" class="fixed w-72">
+  <div class="top-[76px] bottom-[16px] fixed w-72">
     <div class="absolute w-full h-full overflow-y-auto">
       <div>
         <div class="mb-4">
@@ -12,7 +12,7 @@
             :if={current_user(assigns)}  />
         </div>
 
-        <div
+        <!-- <div
           :for={{component, component_assigns} <- Bonfire.Common.Config.get([:ui, :sidebar_components], [])}
         >
           <Surface.Components.Dynamic.Component
@@ -20,7 +20,7 @@
             module={component}
             page={@page}
           />
-        </div>
+        </div> -->
 
       </div>
     </div>

@@ -10,7 +10,7 @@
           aria-label="Navigate to the previous page"
           href="javascript:window.history.back()"
         >
-          <span class="btn btn-circle btn-outline btn-xs md:btn-sm">
+          <span class="btn btn-circle btn-ghost btn-xs md:btn-sm">
             <svg
               class="w-4 h-4 stroke-current"
               fill="none"
@@ -22,8 +22,9 @@
             </svg>
           </span>
         </a>
-        <h1 class="text-sm uppercase font-regular">{@page_title}</h1>
+        <h1 class="font-medium capitalize text-md">{@page_title}</h1>
       </div>
+      <#slot><div /></#slot>
     </div>
   </div>
 </div>

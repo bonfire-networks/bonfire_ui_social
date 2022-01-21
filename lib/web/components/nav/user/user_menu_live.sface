@@ -6,6 +6,7 @@
     class="relative flex flex-col w-full"
   >
     <button
+      class="btn btn-square btn-ghost text-base-content text-opacity-80"
       type="button"
       id="user-profile-menu"
       @click="open = !open"

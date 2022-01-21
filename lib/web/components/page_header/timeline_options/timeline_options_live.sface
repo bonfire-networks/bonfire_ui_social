@@ -1,0 +1,19 @@
+<div
+  :if={current_user(assigns)}
+  class="tabs tabs-boxed">
+  <div data-tip="Home Timeline" class="tooltip tooltip-bottom">
+    <LivePatch to="/home" class={"tab h-[1.7rem]", "tab-active": @selected_tab == "home"}>
+      <Solid.HomeIcon class="inline-block w-4 h-4 stroke-current" />
+    </LivePatch> 
+  </div>
+  <div data-tip="Local timeline" class="tooltip tooltip-bottom">
+    <LivePatch to="/home/local" class={"tab h-[1.7rem]", "tab-active": @selected_tab == "local"}>
+      <Solid.UserGroupIcon class="inline-block w-4 h-4 stroke-current" />
+    </LivePatch> 
+  </div>
+  <div data-tip="Instance timeline" class="tooltip tooltip-bottom">
+    <LivePatch to="/home/federation" class={"tab h-[1.7rem]", "tab-active": @selected_tab == "federation"}>
+      <Solid.GlobeIcon class="inline-block w-4 h-4 stroke-current" />
+    </LivePatch>
+  </div>
+</div>

@@ -6,4 +6,6 @@ defmodule  Bonfire.UI.Social.FeedViewLive do
   prop feed_id, :string, required: true
   prop page_info, :any
   prop showing_within, :any, default: nil
+
+  slot default
 end
