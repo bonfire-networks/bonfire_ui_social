@@ -34,7 +34,7 @@
       </span>
     </div>
     {#elseif current_user(assigns)}
-    <div class="xl:w-[285px] justify-start items-center space-x-2 hidden lg:flex">
+    <div class="w-[285px] justify-start items-center space-x-2 hidden lg:flex">
       <div data-tip="Home" class="flex-none tooltip tooltip-bottom">
         <LivePatch to={"/home"} class="btn btn-square btn-ghost text-base-content text-opacity-80">
             <Solid.RssIcon class="w-5 h-5" />

@@ -4,7 +4,7 @@
   class="flex-col justify-end hidden md:flex w-72"
 >
   <div class="top-[76px] bottom-[16px] fixed w-72">
-    <div class="absolute w-full h-full overflow-y-auto">
+    <div class="absolute w-full h-full">
       <div>
         <div class="mb-4">
           <Bonfire.UI.Social.SmartInputLive
