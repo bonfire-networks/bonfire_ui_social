@@ -19,7 +19,7 @@ defmodule Bonfire.UI.Social.Feeds.BoostsActivityTest do
     eve = fake_user!(account)
     # bob follows alice
     Follows.follow(bob, alice)
-    attrs = %{to_circles: [:guest], post_content: %{summary: "summary", name: "test post name", html_body: "first post"}}
+    attrs = %{post_content: %{summary: "summary", name: "test post name", html_body: "first post"}}
 
     assert {:ok, post} = Posts.publish(alice, attrs, "public")
     assert {:ok, boost} = Boosts.boost(bob, post)
@@ -51,7 +51,7 @@ defmodule Bonfire.UI.Social.Feeds.BoostsActivityTest do
     eve = fake_user!(account)
     # bob follows alice
     Follows.follow(bob, alice)
-    attrs = %{to_circles: [:guest], post_content: %{summary: "summary", name: "test post name", html_body: "first post"}}
+    attrs = %{post_content: %{summary: "summary", name: "test post name", html_body: "first post"}}
 
     assert {:ok, post} = Posts.publish(alice, attrs, "public")
     assert {:ok, boost} = Boosts.boost(bob, post)
@@ -76,7 +76,7 @@ defmodule Bonfire.UI.Social.Feeds.BoostsActivityTest do
     alice = fake_user!(account)
     account2 = fake_account!()
     bob = fake_user!(account2)
-    attrs = %{to_circles: [:guest], post_content: %{summary: "summary", name: "test post name", html_body: "first post"}}
+    attrs = %{post_content: %{summary: "summary", name: "test post name", html_body: "first post"}}
     assert {:ok, post} = Posts.publish(alice, attrs, "public")
     assert {:ok, boost} = Boosts.boost(bob, post)
     feed = Bonfire.Social.FeedActivities.my_feed(alice)
@@ -96,7 +96,7 @@ defmodule Bonfire.UI.Social.Feeds.BoostsActivityTest do
     alice = fake_user!(account)
     account2 = fake_account!()
     bob = fake_user!(account2)
-    attrs = %{to_circles: [:guest], post_content: %{summary: "summary", name: "test post name", html_body: "first post"}}
+    attrs = %{post_content: %{summary: "summary", name: "test post name", html_body: "first post"}}
     assert {:ok, post} = Posts.publish(alice, attrs, "public")
     assert {:ok, boost} = Boosts.boost(bob, post)
     feed = Bonfire.Social.FeedActivities.my_feed(alice)
@@ -117,7 +117,7 @@ defmodule Bonfire.UI.Social.Feeds.BoostsActivityTest do
     alice = fake_user!(account)
     account2 = fake_account!()
     bob = fake_user!(account2)
-    attrs = %{to_circles: [:guest], post_content: %{summary: "summary", name: "test post name", html_body: "first post"}}
+    attrs = %{post_content: %{summary: "summary", name: "test post name", html_body: "first post"}}
     assert {:ok, post} = Posts.publish(alice, attrs, "public")
     assert {:ok, boost} = Boosts.boost(bob, post)
     # bob follows alice
@@ -145,7 +145,7 @@ defmodule Bonfire.UI.Social.Feeds.BoostsActivityTest do
     bob = fake_user!(account2)
     # bob follows alice
     Follows.follow(bob, alice)
-    attrs = %{to_circles: [:guest], post_content: %{summary: "summary", name: "test post name", html_body: "first post"}}
+    attrs = %{post_content: %{summary: "summary", name: "test post name", html_body: "first post"}}
 
     assert {:ok, post} = Posts.publish(alice, attrs, "public")
     assert {:ok, boost} = Boosts.boost(alice, post)
@@ -173,7 +173,7 @@ defmodule Bonfire.UI.Social.Feeds.BoostsActivityTest do
     bob = fake_user!(account2)
     # bob follows alice
     Follows.follow(bob, alice)
-    attrs = %{to_circles: [:guest], post_content: %{summary: "summary", name: "test post name", html_body: "first post"}}
+    attrs = %{post_content: %{summary: "summary", name: "test post name", html_body: "first post"}}
 
     assert {:ok, post} = Posts.publish(alice, attrs, "public")
     assert {:ok, boost} = Boosts.boost(alice, post)
@@ -202,7 +202,7 @@ defmodule Bonfire.UI.Social.Feeds.BoostsActivityTest do
     bob = fake_user!(account2)
     # bob follows alice
     Follows.follow(bob, alice)
-    attrs = %{to_circles: [:guest], post_content: %{summary: "summary", name: "test post name", html_body: "first post"}}
+    attrs = %{post_content: %{summary: "summary", name: "test post name", html_body: "first post"}}
 
     assert {:ok, post} = Posts.publish(alice, attrs, "public")
     assert {:ok, boost} = Boosts.boost(bob, post)

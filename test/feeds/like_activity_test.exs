@@ -16,7 +16,7 @@ defmodule Bonfire.UI.Social.Feeds.LikeActivityTest do
     bob = fake_user!(account2)
     # bob follows alice
     Follows.follow(bob, alice)
-    attrs = %{to_circles: [:guest], post_content: %{summary: "summary", name: "test post name", html_body: "first post"}}
+    attrs = %{post_content: %{summary: "summary", name: "test post name", html_body: "first post"}}
 
     assert {:ok, post} = Posts.publish(alice, attrs, "public")
     assert {:ok, boost} = Likes.like(bob, post)
@@ -43,7 +43,7 @@ defmodule Bonfire.UI.Social.Feeds.LikeActivityTest do
     bob = fake_user!(account2)
     # bob follows alice
     Follows.follow(bob, alice)
-    attrs = %{to_circles: [:guest], post_content: %{summary: "summary", name: "test post name", html_body: "first post"}}
+    attrs = %{post_content: %{summary: "summary", name: "test post name", html_body: "first post"}}
 
     assert {:ok, post} = Posts.publish(alice, attrs, "public")
     assert {:ok, like} = Likes.like(bob, post)
@@ -69,7 +69,7 @@ defmodule Bonfire.UI.Social.Feeds.LikeActivityTest do
       # bob follows alice
       Follows.follow(bob, alice)
       # Alice posts a message
-      attrs = %{to_circles: [:guest], post_content: %{summary: "summary", name: "test post name", html_body: "first post"}}
+      attrs = %{post_content: %{summary: "summary", name: "test post name", html_body: "first post"}}
       assert {:ok, post} = Posts.publish(alice, attrs, "public")
       assert {:ok, like} = Likes.like(alice, post)
       assert {:ok, like} = Likes.like(bob, post)
@@ -91,7 +91,7 @@ defmodule Bonfire.UI.Social.Feeds.LikeActivityTest do
     alice = fake_user!(account)
     account2 = fake_account!()
     bob = fake_user!(account2)
-    attrs = %{to_circles: [:guest], post_content: %{summary: "summary", name: "test post name", html_body: "first post"}}
+    attrs = %{post_content: %{summary: "summary", name: "test post name", html_body: "first post"}}
     assert {:ok, post} = Posts.publish(alice, attrs, "public")
     assert {:ok, like} = Likes.like(bob, post)
     feed = Bonfire.Social.FeedActivities.my_feed(alice)
@@ -117,7 +117,7 @@ defmodule Bonfire.UI.Social.Feeds.LikeActivityTest do
     # bob follows alice
     Follows.follow(bob, alice)
     # Alice posts a message
-    attrs = %{to_circles: [:guest], post_content: %{summary: "summary", name: "test post name", html_body: "first post"}}
+    attrs = %{post_content: %{summary: "summary", name: "test post name", html_body: "first post"}}
     assert {:ok, post} = Posts.publish(alice, attrs, "public")
     assert {:ok, like} = Likes.like(bob, post)
 
@@ -142,7 +142,7 @@ defmodule Bonfire.UI.Social.Feeds.LikeActivityTest do
     # bob follows alice
     Follows.follow(bob, alice)
     # Alice posts a message
-    attrs = %{to_circles: [:guest], post_content: %{summary: "summary", name: "test post name", html_body: "first post"}}
+    attrs = %{post_content: %{summary: "summary", name: "test post name", html_body: "first post"}}
     assert {:ok, post} = Posts.publish(alice, attrs, "public")
     assert {:ok, like} = Likes.like(alice, post)
     assert {:ok, like} = Likes.like(bob, post)
@@ -169,7 +169,7 @@ defmodule Bonfire.UI.Social.Feeds.LikeActivityTest do
     # bob follows alice
     Follows.follow(bob, alice)
     # Alice posts a message
-    attrs = %{to_circles: [:guest], post_content: %{summary: "summary", name: "test post name", html_body: "first post"}}
+    attrs = %{post_content: %{summary: "summary", name: "test post name", html_body: "first post"}}
     assert {:ok, post} = Posts.publish(alice, attrs, "public")
     assert {:ok, like} = Likes.like(alice, post)
     assert {:ok, like} = Likes.like(bob, post)

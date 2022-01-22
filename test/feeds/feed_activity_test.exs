@@ -20,7 +20,7 @@ defmodule Bonfire.UI.Social.Feeds.FeedActivityTest do
       eve = fake_user!(account)
       # bob follows alice
       Follows.follow(bob, alice)
-      attrs = %{to_circles: [:guest], post_content: %{summary: "summary", name: "test post name", html_body: "first post"}}
+      attrs = %{post_content: %{summary: "summary", name: "test post name", html_body: "first post"}}
 
       assert {:ok, post} = Posts.publish(alice, attrs, "public")
 
@@ -46,7 +46,7 @@ defmodule Bonfire.UI.Social.Feeds.FeedActivityTest do
        # Create alice user
        account = fake_account!()
        alice = fake_user!(account)
-       attrs = %{to_circles: [:guest], post_content: %{summary: "summary", name: "test post name", html_body: "first post"}}
+       attrs = %{post_content: %{summary: "summary", name: "test post name", html_body: "first post"}}
        assert {:ok, post} = Posts.publish(alice, attrs, "public")
        feed = Bonfire.Social.FeedActivities.my_feed(alice)
        fp = feed.edges |> List.first() #|> IO.inspect
@@ -63,7 +63,7 @@ defmodule Bonfire.UI.Social.Feeds.FeedActivityTest do
     test "As a user, when I create a new post, I want to see my name in the activity subject" do
       account = fake_account!()
       alice = fake_user!(account)
-      attrs = %{to_circles: [:guest], post_content: %{summary: "summary", name: "test post name", html_body: "first post"}}
+      attrs = %{post_content: %{summary: "summary", name: "test post name", html_body: "first post"}}
       assert {:ok, post} = Posts.publish(alice, attrs, "public")
       feed = Bonfire.Social.FeedActivities.my_feed(alice)
       fp = feed.edges |> List.first() #|> IO.inspect
@@ -80,7 +80,7 @@ defmodule Bonfire.UI.Social.Feeds.FeedActivityTest do
     test "As a user, when I create a new post, I want to see my username next to my name in the activity subject" do
       account = fake_account!()
       alice = fake_user!(account)
-      attrs = %{to_circles: [:guest], post_content: %{summary: "summary", name: "test post name", html_body: "first post"}}
+      attrs = %{post_content: %{summary: "summary", name: "test post name", html_body: "first post"}}
       assert {:ok, post} = Posts.publish(alice, attrs, "public")
       feed = Bonfire.Social.FeedActivities.my_feed(alice)
       fp = feed.edges |> List.first() #|> IO.inspect
@@ -97,7 +97,7 @@ defmodule Bonfire.UI.Social.Feeds.FeedActivityTest do
     test "As a user, when I create a new post, I want to see the content as the activity object" do
       account = fake_account!()
       alice = fake_user!(account)
-      attrs = %{to_circles: [:guest], post_content: %{summary: "summary", name: "test post name", html_body: "first post"}}
+      attrs = %{post_content: %{summary: "summary", name: "test post name", html_body: "first post"}}
       assert {:ok, post} = Posts.publish(alice, attrs, "public")
       feed = Bonfire.Social.FeedActivities.my_feed(alice)
       fp = feed.edges |> List.first() #|> IO.inspect
@@ -115,7 +115,7 @@ defmodule Bonfire.UI.Social.Feeds.FeedActivityTest do
     test "As a user, when I create a new post, I want to see when the post was created" do
       account = fake_account!()
       alice = fake_user!(account)
-      attrs = %{to_circles: [:guest], post_content: %{summary: "summary", name: "test post name", html_body: "first post"}}
+      attrs = %{post_content: %{summary: "summary", name: "test post name", html_body: "first post"}}
       assert {:ok, post} = Posts.publish(alice, attrs, "public")
       feed = Bonfire.Social.FeedActivities.my_feed(alice)
       fp = feed.edges |> List.first() #|> IO.inspect

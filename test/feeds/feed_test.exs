@@ -7,8 +7,8 @@ defmodule Bonfire.UI.Social.Feeds.FeedTest do
   alias Bonfire.Social.{Boosts, Likes, Follows, Posts}
   alias Bonfire.Repo
 
-  def publish_multiple_times(msg, user, n) when n > 0 do
-    {:ok, post} = Posts.publish(user, msg, "public")
+  def publish_multiple_times(msg, user, n, preset \\ "public") when n > 0 do
+    {:ok, post} = Posts.publish(user, msg, preset)
     publish_multiple_times(msg, user, n-1)
   end
 
@@ -22,7 +22,7 @@ defmodule Bonfire.UI.Social.Feeds.FeedTest do
     bob = fake_user!(account2)
 
     total_posts = 8
-    attrs = %{to_circles: [:guest], post_content: %{summary: "summary", name: "test post name", html_body: "first post"}}
+    attrs = %{post_content: %{summary: "summary", name: "test post name", html_body: "first post"}}
     publish_multiple_times(attrs, bob, total_posts)
     feed = Bonfire.Social.FeedActivities.my_feed(bob)
     assigns = [feed: feed.edges, feed_id: "Bob's feed", page_title: "test", page_info: [], showing_within: nil]
@@ -40,7 +40,7 @@ defmodule Bonfire.UI.Social.Feeds.FeedTest do
     bob = fake_user!(account2)
 
     total_posts = 13
-    attrs = %{to_circles: [:guest], post_content: %{summary: "summary", name: "test post name", html_body: "first post"}}
+    attrs = %{post_content: %{summary: "summary", name: "test post name", html_body: "first post"}}
     publish_multiple_times(attrs, bob, total_posts)
     feed = Bonfire.Social.FeedActivities.my_feed(bob)
     assigns = [feed: feed.edges, feed_id: "Bob's feed", page_title: "test", page_info: [], showing_within: nil]
@@ -58,7 +58,7 @@ defmodule Bonfire.UI.Social.Feeds.FeedTest do
     bob = fake_user!(account2)
 
     total_posts = 4
-    attrs = %{to_circles: [:guest], post_content: %{summary: "summary", name: "test post name", html_body: "first post"}}
+    attrs = %{post_content: %{summary: "summary", name: "test post name", html_body: "first post"}}
     publish_multiple_times(attrs, bob, total_posts)
     feed = Bonfire.Social.FeedActivities.my_feed(bob)
     assigns = [feed: feed.edges, feed_id: "Bob's feed", page_title: "test", page_info: feed.page_info, showing_within: nil]
@@ -76,7 +76,7 @@ defmodule Bonfire.UI.Social.Feeds.FeedTest do
     bob = fake_user!(account2)
 
     total_posts = 12
-    attrs = %{to_circles: [:guest], post_content: %{summary: "summary", name: "test post name", html_body: "first post"}}
+    attrs = %{post_content: %{summary: "summary", name: "test post name", html_body: "first post"}}
     publish_multiple_times(attrs, bob, total_posts)
     feed = Bonfire.Social.FeedActivities.my_feed(bob)
     assigns = [feed: feed.edges, feed_id: "Bob's feed", page_title: "test", page_info: feed.page_info, showing_within: nil]
@@ -101,10 +101,10 @@ defmodule Bonfire.UI.Social.Feeds.FeedTest do
     account3 = fake_account!()
     carl = fake_user!(account3)
 
-    attrs = %{to_circles: [:guest], post_content: %{summary: "summary", name: "test post name", html_body: "first post"}}
-    guest_attrs = %{to_circles: [:guest], post_content: %{summary: "summary", name: "test post name", html_body: "first post"}}
-    local_attrs = %{to_circles: [:local], post_content: %{summary: "summary", name: "test post name", html_body: "first post"}}
-    admin_attrs = %{to_circles: [:admin], post_content: %{summary: "summary", name: "test post name", html_body: "first post"}}
+    attrs = %{post_content: %{summary: "summary", name: "test post name", html_body: "first post"}}
+    guest_attrs = %{post_content: %{summary: "summary", name: "test post name", html_body: "first post"}}
+    local_attrs = %{post_content: %{summary: "summary", name: "test post name", html_body: "first post"}}
+    admin_attrs = %{post_content: %{summary: "summary", name: "test post name", html_body: "first post"}}
 
     {:ok, post0} = Posts.publish(alice, attrs, "public")
     # bob follows alice
@@ -112,8 +112,8 @@ defmodule Bonfire.UI.Social.Feeds.FeedTest do
 
     total_posts = 3
     {:ok, post} = Posts.publish(alice, attrs, "public")
-    publish_multiple_times(local_attrs, bob, total_posts)
-    publish_multiple_times(admin_attrs, carl, total_posts)
+    publish_multiple_times(local_attrs, bob, total_posts, "local")
+    publish_multiple_times(admin_attrs, carl, total_posts, "admins")
     assert {:ok, boost} = Boosts.boost(alice, post)
 
     conn = conn(user: bob, account: account)
@@ -134,17 +134,17 @@ defmodule Bonfire.UI.Social.Feeds.FeedTest do
     account3 = fake_account!()
     carl = fake_user!(account3)
 
-    guest_attrs = %{to_circles: [:guest], post_content: %{summary: "summary", name: "test post name", html_body: "first post"}}
-    local_attrs = %{to_circles: [:local], post_content: %{summary: "summary", name: "test post name", html_body: "first post"}}
-    admin_attrs = %{to_circles: [:admin], post_content: %{summary: "summary", name: "test post name", html_body: "first post"}}
+    guest_attrs = %{post_content: %{summary: "summary", name: "test post name", html_body: "first post"}}
+    local_attrs = %{post_content: %{summary: "summary", name: "test post name", html_body: "first post"}}
+    admin_attrs = %{post_content: %{summary: "summary", name: "test post name", html_body: "first post"}}
 
     # bob follows alice
     Follows.follow(bob, alice)
 
     total_posts = 3
-    {:ok, post} = Posts.publish(alice, guest_attrs)
-    publish_multiple_times(local_attrs, bob, total_posts)
-    publish_multiple_times(admin_attrs, carl, total_posts)
+    {:ok, post} = Posts.publish(alice, guest_attrs, "public")
+    publish_multiple_times(local_attrs, bob, total_posts, "local")
+    publish_multiple_times(admin_attrs, carl, total_posts, "admins")
     assert {:ok, boost} = Boosts.boost(alice, post)
 
     next = "/"

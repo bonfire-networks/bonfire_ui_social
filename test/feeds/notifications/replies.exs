@@ -17,7 +17,7 @@ defmodule Bonfire.UI.Social.Feeds.Notifications.ReplyTest do
 
       # Follows.follow(alice, bob)
 
-      attrs = %{to_circles: [:guest], post_content: %{summary: "summary", name: "test post name", html_body: "<p>first post</p>"}}
+      attrs = %{post_content: %{summary: "summary", name: "test post name", html_body: "<p>first post</p>"}}
       assert {:ok, post} = Posts.publish(alice, attrs, "public")
 
        # Reply to the original post
@@ -51,7 +51,7 @@ defmodule Bonfire.UI.Social.Feeds.Notifications.ReplyTest do
 
       # Follows.follow(alice, bob)
 
-      attrs = %{to_circles: [:guest], post_content: %{summary: "summary", name: "test post name", html_body: "<p>first post</p>"}}
+      attrs = %{post_content: %{summary: "summary", name: "test post name", html_body: "<p>first post</p>"}}
       assert {:ok, post} = Posts.publish(alice, attrs, "public")
 
        # Reply to the original post
@@ -83,7 +83,7 @@ defmodule Bonfire.UI.Social.Feeds.Notifications.ReplyTest do
 
       # Follows.follow(alice, bob)
 
-      attrs = %{to_circles: [:guest], post_content: %{summary: "summary", name: "test post name", html_body: "<p>first post</p>"}}
+      attrs = %{post_content: %{summary: "summary", name: "test post name", html_body: "<p>first post</p>"}}
       assert {:ok, post} = Posts.publish(alice, attrs, "public")
 
        # Reply to the original post
@@ -116,7 +116,7 @@ defmodule Bonfire.UI.Social.Feeds.Notifications.ReplyTest do
 
       # Follows.follow(alice, bob)
 
-      attrs = %{to_circles: [:guest], post_content: %{summary: "summary", name: "test post name", html_body: "<p>first post</p>"}}
+      attrs = %{post_content: %{summary: "summary", name: "test post name", html_body: "<p>first post</p>"}}
       assert {:ok, post} = Posts.publish(alice, attrs, "public")
 
        # Reply to the original post
