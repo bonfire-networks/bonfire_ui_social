@@ -10,11 +10,11 @@
         { Bonfire.Common.Config.get([:ui, :theme, :instance_description], l "Yet another bonfire instance")}
       </p>
 
-      <div class="badge badge-ghost">
+      <div class="badge badge-ghost mt-1">
         {Bonfire.Application.named_version()} 
-        <div x-data="{msg: '-with-JS'}">
-          <span x-text="msg">-without-JS</span>
-        </div>
+      </div>
+      <div class="badge badge-accent mt-1" x-data="{msg: 'with JS'}">
+        <span x-text="msg">without JS</span>
       </div>
 
 
