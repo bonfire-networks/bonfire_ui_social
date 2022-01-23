@@ -1,4 +1,6 @@
 <main
+  data-id="profile"
+  data-user-id={e(@user, :id, "")}
   class="md:flex md:mx-0">
   <section class="w-full mx-auto rounded shadow bg-base-100">
     <Bonfire.UI.Social.PageHeaderLive
