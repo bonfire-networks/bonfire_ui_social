@@ -40,7 +40,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
       ++ component_object(verb, activity)
       ++ component_actions(verb, activity, assigns)
     )
-    |> Enum.filter(& &1)
+    |> Utils.filter_empty()
     |> Enum.map(fn
       c when is_atom(c) -> {c, nil}
       other -> other
