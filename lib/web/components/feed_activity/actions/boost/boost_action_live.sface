@@ -1,12 +1,14 @@
 <button
   id={@id}
   data-id={"boost_action"}
-  phx-click={"#{if @object_id in e(assigns, :boosted, []) || e(@my_boost, :id, nil), do: "Bonfire.Social.Boosts:undo", else: "Bonfire.Social.Boosts:boost"}"}
-  phx-value-id={@object_id}
+  :if={@object}
+  phx-click={"#{if e(assigns, :my_boost , nil), do: "Bonfire.Social.Boosts:undo", else: "Bonfire.Social.Boosts:boost"}"}
+  phx-value-id={e(@object, :id, nil)}
   phx-value-component={__MODULE__}
   class="feed_activity_action boost">
+
   {#if e(assigns, :showing_within, nil) != :thread}
-  <span class={"feed_activity_icon", "bg-primary bg-opacity-70":  @object_id in e(assigns, :boosted, []) || e(@my_boost, :id, nil)}>
+  <span class={"feed_activity_icon", "bg-primary bg-opacity-70":  e(assigns, :my_boost , nil)}>
     <svg
       fill="currentColor"
       stroke="none"
@@ -17,8 +19,9 @@
   </span>
   {/if}
 
-<span class={"feed_activity_text", "font-medium": @object_id in e(assigns, :boosted, []) || e(@my_boost, :id, nil)}>
-   {if @object_id in e(assigns, :boosted, []) || e(@my_boost, :id, nil), do: l("Boosted"), else: l("Boost")} <span :if={e(@boost_count, :booster_count, 0) > 0}>({e(@boost_count, :booster_count, 0)})</span>
-</span>
+  <span class={"feed_activity_text", "font-medium": e(assigns, :my_boost , nil)}>
+    {if e(assigns, :my_boost , nil), do: l("Boosted"), else: l("Boost")} 
+    <span :if={e(@boost_count, 0) > 0}>({e(@boost_count, 0)})</span>
+  </span>
 
 </button>

@@ -1,9 +1,10 @@
 defmodule Bonfire.UI.Social.Activity.BoostActionLive do
   use Bonfire.Web, :stateful_component
 
-  prop object_id, :string
-  prop my_boost, :any
+  prop object, :map
   prop boost_count, :any
+
+  def preload(list_of_assigns), do: Bonfire.Social.Boosts.LiveHandler.preload(list_of_assigns)
 
   def handle_event(action, attrs, socket), do: Bonfire.Common.LiveHandlers.handle_event(action, attrs, socket, __MODULE__)
 

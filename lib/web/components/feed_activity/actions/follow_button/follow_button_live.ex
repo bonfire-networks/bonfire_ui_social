@@ -2,8 +2,6 @@ defmodule Bonfire.UI.Social.FollowButtonLive do
   use Bonfire.Web, :stateful_component
 
   prop object, :any
-  prop following, :list
-  prop my_follow, :any
 
   def preload(list_of_assigns), do: Bonfire.Social.Follows.LiveHandler.preload(list_of_assigns)
 

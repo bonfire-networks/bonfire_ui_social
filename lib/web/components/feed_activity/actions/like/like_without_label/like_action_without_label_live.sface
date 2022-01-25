@@ -1,5 +1,6 @@
 <button
   data-id="like_action"
+  id={@id}
   phx-click="Bonfire.Social.Likes:like"
   phx-value-direction={"#{if e(assigns, :my_like, nil), do: "down", else: "up"}"}
   phx-value-id={e(@object, :id, nil)}

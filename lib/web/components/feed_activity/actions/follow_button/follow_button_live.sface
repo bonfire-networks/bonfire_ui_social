@@ -1,8 +1,9 @@
-{#if e(assigns, :my_follow, nil)==nil }
+{#if !e(assigns, :my_follow, nil) }
     <button 
+    id={@id}
     data-id="follow"
     :on-click="Bonfire.Social.Follows:follow" 
-    phx-value-id={@object.id} 
+    phx-value-id={e(@object, :id, nil)} 
     type="button" 
     class={e(assigns, :class, "btn btn-secondary")}>
        <Solid.EyeIcon class="w-5 h-5 mr-2" />
@@ -10,9 +11,10 @@
     </button>
 {#else}
     <button 
+        id={@id}
         data-id="unfollow"
         :on-click="Bonfire.Social.Follows:unfollow" 
-        phx-value-id={@object.id} 
+    phx-value-id={e(@object, :id, nil)} 
         type="button" 
         class={e(assigns, :class, "btn btn-accent")}>
         <Solid.EyeOffIcon class="w-5 h-5 mr-2" />
