@@ -1,5 +1,6 @@
 {#if @object_id not in e(assigns, :following, []) and e(assigns, :my_follow, nil)==nil }
     <button 
+    data-id="follow"
     :on-click="Bonfire.Social.Follows:follow" 
     phx-value-id={@object_id} 
     type="button" 
@@ -9,6 +10,7 @@
     </button>
 {#else}
     <button 
+        data-id="unfollow"
         :on-click="Bonfire.Social.Follows:unfollow" 
         phx-value-id={@object_id} 
         type="button" 

@@ -13,6 +13,7 @@
       
     <div 
       :if={is_list(@feed) or length(@feed) > 0}
+      id="feed" 
       data-id="feed" 
       phx-update={e(assigns, :feed_update_mode, "replace")} 
       class="divide-y divide-base-300">

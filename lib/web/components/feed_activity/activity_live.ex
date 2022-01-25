@@ -27,10 +27,10 @@ defmodule Bonfire.UI.Social.ActivityLive do
                 # |> IO.inspect(label: "ActivityLive activity")
 
     verb = e(activity, :verb, :verb, "create")
-            |> verb_maybe_modify(activity)
+            |> Activities.verb_maybe_modify(activity)
             #|> IO.inspect
-    verb_display = verb_display(verb)
-    created_verb_display = "create" |> verb_display()
+    verb_display = Activities.verb_display(verb)
+    created_verb_display = "create" |> Activities.verb_display()
 
     permalink = path(activity.object)
 
@@ -321,24 +321,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
     }
   end
 
-  def verb_maybe_modify("create", %{replied: %{reply_to_post_content: %{id: _} = _reply_to}}), do: "reply"
-  def verb_maybe_modify("create", %{replied: %{reply_to: %{id: _} = _reply_to}}), do: "respond"
-  def verb_maybe_modify("create", %{replied: %{reply_to_id: reply_to_id}}) when is_binary(reply_to_id), do: "respond"
-  # def verb_maybe_modify("created", %{reply_to: %{id: _} = reply_to, object: %Bonfire.Data.Social.Post{}}), do: reply_to_display(reply_to)
-  # def verb_maybe_modify("created", %{reply_to: %{id: _} = reply_to}), do: reply_to_display(reply_to)
-  def verb_maybe_modify("create", %{object: %Bonfire.Data.Social.PostContent{name: name} = post}), do: "write" #<> object_link(name, post)
-  def verb_maybe_modify("create", %{object: %Bonfire.Data.Social.PostContent{} = _post}), do: "write"
-  def verb_maybe_modify("create", %{object: %Bonfire.Data.Social.Post{} = _post}), do: "write"
-  def verb_maybe_modify("create", %{object: %{action: %{label: label}} = _economic_event}), do: label
-  def verb_maybe_modify("create", %{object: %{action: %{id: id}} = _economic_event}), do: id
-  def verb_maybe_modify("create", %{object: %{action_id: label} = _economic_event}) when is_binary(label), do: label
-  def verb_maybe_modify("create", %{object: %{action: label} = _economic_event}) when is_binary(label), do: label
-  def verb_maybe_modify(verb, _), do: verb
 
-  def verb_display(verb) do
-    verb
-      |> Verbs.conjugate(tense: "past", person: "third", plurality: "plural")
-  end
 
   # def reply_to_display(%Pointers.Pointer{} = reply_to) do
   #   Bonfire.Common.Pointers.get!(reply_to)
