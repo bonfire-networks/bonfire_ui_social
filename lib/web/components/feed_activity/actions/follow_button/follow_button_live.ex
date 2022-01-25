@@ -1,7 +1,7 @@
 defmodule Bonfire.UI.Social.FollowButtonLive do
   use Bonfire.Web, :stateful_component
 
-  prop object_id, :any
+  prop object, :any
   prop following, :list
   prop my_follow, :any
 

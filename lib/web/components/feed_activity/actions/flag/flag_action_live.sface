@@ -1,7 +1,7 @@
 <div    
   class="" 
   role="none">
-  {#if e(@object, :id, "") in e(assigns, :flagged, []) || e(@activity, :my_flag, :id, nil)}
+  {#if e(assigns, :my_flag, :id, nil)}
     <div disabled="disabled" class="w-full text-left capitalize btn btn-host btn-sm">
       {l "You flagged this"}
     </div>

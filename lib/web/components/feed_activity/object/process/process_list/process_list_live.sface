@@ -4,7 +4,7 @@
       <div class={"flex items-center space-x-2", "mt-2": @showing_within == :feed}>
         <Bonfire.UI.Social.LikeActionWithoutLabelLive
           id={ComponentID.new(Bonfire.UI.Social.LikeActionWithoutLabelLive, @object)} 
-        object_id={@object.id}
+        object={@object}
         current_user={current_user(assigns)}
         />
         <LivePatch to={"/list/"<>e(@object, :id,"")}>

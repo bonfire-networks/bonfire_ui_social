@@ -2,17 +2,17 @@
   data-id="like_action"
   id={@id}
   phx-click="Bonfire.Social.Likes:like"
-  phx-value-direction={"#{if @object_id in e(assigns, :liked, []) || e(@my_like, nil), do: "down", else: "up"}"}
-  phx-value-id={@object_id}
+  phx-value-direction={"#{if e(@my_like, nil), do: "down", else: "up"}"}
+  phx-value-id={e(@object, :id, nil)}
   phx-value-component={__MODULE__}
-  phx-value-current_count={e(@like_count, :object_count, 0)}
+  phx-value-current_count={e(@like_count, 0)}
   class="like feed_activity_action like_with_label">
 
   <span 
-     class={"feed_activity_icon", "bg-primary bg-opacity-70":  @object_id in e(assigns, :liked, []) || e(@my_like, :id, nil)}
+     class={"feed_activity_icon", "bg-primary bg-opacity-70": e(@my_like, nil)}
     :if={e(assigns, :showing_within, nil) != :thread}>
     <svg
-      :if={@object_id in e(assigns, :liked, []) || e(@my_like, nil)}
+      :if={e(@my_like, nil)}
       stroke="none" 
       fill="currentColor"
       viewBox="0 0 20 20"
@@ -20,7 +20,7 @@
       <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"></path>
     </svg>
     <svg
-      :if={@object_id not in e(assigns, :liked, []) && !e(@my_like, nil)}
+      :if={!e(@my_like, nil)}
       stroke="currentColor"
       fill="none"
       viewBox="0 0 20 20"
@@ -30,13 +30,13 @@
   </span>
 
   <span 
-    :if={@object_id not in e(assigns, :liked, []) && !e(@my_like, nil)}
+    :if={!e(@my_like, nil)}
     class="feed_activity_text">
-     {l("Like")} <span :if={(e(@like_count, :object_count, 0)) > 0}>({e(@like_count, :object_count, 0)})</span>
+     {l("Like")} <span :if={(e(@like_count, 0)) > 0}>({e(@like_count, 0)})</span>
   </span>
   <span 
-    :if={@object_id in e(assigns, :liked, []) || e(@my_like, nil)}
+    :if={e(@my_like, nil)}
     class="font-medium feed_activity_text">
-     {l("Liked")} <span :if={(e(@like_count, :object_count, 0)) > 0}>({e(@like_count, :object_count, 0)})</span>
+     {l("Liked")} <span :if={(e(@like_count, 0)) > 0}>({e(@like_count, 0)})</span>
   </span>
 </button>

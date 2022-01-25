@@ -26,21 +26,18 @@
       {/if}
       <BoostActionLive 
         id={ComponentID.new(BoostActionLive, e(@object, :id, ""))} 
-        object_id={e(@object, :id, "")} 
-        my_boost={e(@activity, :my_boost, nil)}
+        object={@object} 
         boost_count={e(@activity, :boost_count, nil)}
         />
       <Bonfire.UI.Social.LikeActionLive
         id={ComponentID.new(Bonfire.UI.Social.LikeActionLive, @object)} 
-        object_id={e(@object, :id, "")} 
-        my_like={e(@activity, :my_like, nil)}
+        object={@object} 
         like_count={e(@activity, :like_count, nil)} 
       />
       <Bonfire.UI.Social.Activity.MoreActionsLive
         id={ComponentID.new(Bonfire.UI.Social.LikeActionLive, @object)} 
-        object={e(@object, nil)} 
-        activity={e(@activity, nil)} 
-        flagged={e(assigns, :flagged, nil)} 
+        object={@object} 
+        activity={@activity} 
       />
     </div>
   </div>

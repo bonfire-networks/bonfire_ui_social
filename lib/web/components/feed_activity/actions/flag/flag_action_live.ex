@@ -3,6 +3,6 @@ defmodule Bonfire.UI.Social.FlagActionLive do
 
   prop object, :any
   prop activity, :any
-  prop flagged, :any
+  prop my_flag, :any
 
 end
