@@ -6,7 +6,7 @@ defmodule Bonfire.UI.Social.LikeActionWithoutLabelLive do
   prop liked, :list
   prop my_like, :any
 
-  # def preload(list_of_assigns), do: Bonfire.Social.Likes.LiveHandler.preload(list_of_assigns)
+  def preload(list_of_assigns), do: Bonfire.Social.Likes.LiveHandler.preload(list_of_assigns)
 
   def handle_event(action, attrs, socket), do: Bonfire.Common.LiveHandlers.handle_event(action, attrs, socket, __MODULE__)
 
