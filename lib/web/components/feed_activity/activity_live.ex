@@ -17,14 +17,11 @@ defmodule Bonfire.UI.Social.ActivityLive do
   @create_or_reply_verbs @create_verbs ++ @reply_verbs
 
   def render(%{activity: %{} = activity} = assigns) do
-
-    # Logger.info("ActivityLive: activity provided")
-
-    #IO.inspect(assigns, label: "ActivityLive initial assigns")
+    # debug(assigns, "ActivityLive initial assigns")
 
     activity = activity
                 |> Map.put(:object, e(assigns, :object, nil) || Activities.object_from_activity(activity))
-                # |> IO.inspect(label: "ActivityLive activity")
+                |> debug("ActivityLive activity")
 
     verb = e(activity, :verb, :verb, "create")
             |> Activities.verb_maybe_modify(activity)
