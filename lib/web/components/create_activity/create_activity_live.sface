@@ -10,7 +10,7 @@
     for={Bonfire.Social.Posts.LiveHandler.post_changeset(current_user(assigns))} 
     submit="Bonfire.Social.Posts:post" opts={ autocomplete: "off"}
     class={if with_editor?(assigns), do: "form_with_editor", else: "form_with_textarea"}>
-    <div x-show="'reply_to_id' != ''" x-text= "smart_input_prompt" class="mb-2 text-sm alert alert-info">
+    <div x-show="'reply_to_id' != ''" x-text= "smart_input_prompt" class="mb-2 overflow-hidden text-sm alert alert-info text-ellipsis">
        
     </div>
     <div  class="rounded shadow bg-base-100">
