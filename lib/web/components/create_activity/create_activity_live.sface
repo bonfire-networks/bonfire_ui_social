@@ -3,7 +3,6 @@
   class="create_activity"
   x-data="{
     title_open: false, 
-    summary_open: false,
     open_boundaries: false,
     boundary_selected: 'public'  
   }">
@@ -11,12 +10,12 @@
     for={Bonfire.Social.Posts.LiveHandler.post_changeset(current_user(assigns))} 
     submit="Bonfire.Social.Posts:post" opts={ autocomplete: "off"}
     class={if with_editor?(assigns), do: "form_with_editor", else: "form_with_textarea"}>
-
+    <div x-show="'reply_to_id' != ''" x-text= "smart_input_prompt" class="mb-2 text-sm alert alert-info">
+       
+    </div>
     <div  class="rounded shadow bg-base-100">
-      <div class="flex px-3 py-3 pb-1">
-        <div
-          @click="create_activity_open = true" 
-          class="flex items-center flex-1 space-x-3 cursor-pointer">
+      <!-- <div class="flex px-3 py-3 pb-1">
+        <div class="flex items-center flex-1 space-x-3 cursor-pointer">
         <div class="cursor-pointer avatar">
           <div class="w-8 h-8 rounded-btn">
             <img 
@@ -24,20 +23,17 @@
               alt="current user profile image" />
           </div>
         </div>
-        <span class="flex-1 text-sm text-base-content text-opacity-80" x-text= "smart_input_prompt">
+        <span class="flex-1 text-sm text-base-content text-opacity-80">
           {@smart_input_placeholder || l "Write a post"}
         </span>
         </div>
         <div class="flex items-center space-x-2">
-          <!-- <div class="btn btn-square btn-ghost btn-sm">
-            <Outline.ArrowsExpandIcon class="w-4 h-4 text-base-content text-opacity-80" />
-          </div> -->
           <div class="btn btn-square btn-ghost btn-sm">
             <Outline.ArrowsExpandIcon 
               class="w-4 h-4 " />
           </div>
         </div>
-      </div>
+      </div> -->
 
       <div class="relative">
         
@@ -61,7 +57,7 @@
             <Inputs for={:post_content}>
               <div class="overflow-hidden">
                 <div x-show="title_open" x-transition>
-                  <label for="title" class="sr-only">Title</label>
+                  <label for="title" class="sr-only">{l "Title"}</label>
                   <Field name={:name}>
                     <TextInput
                       opts={placeholder: "Enter a title"}
@@ -70,7 +66,7 @@
                   </Field>
                 </div>  
                 <!-- <input type="text" name="title" id="title" class="block w-full border-0 pt-2.5 text-lg font-medium placeholder-gray-500 focus:ring-0" placeholder="Title"> -->
-                <label for="description" class="sr-only">Description</label>
+                <label for="description" class="sr-only">{l "Description"}</label>
                 <Field class="h-full min-h-full" name={:html_body}>
                   <!-- <Label :if={@smart_input_text && @smart_input_text !="" && @smart_input_placeholder} class="mb-2 alert alert-info">{@smart_input_placeholder}</Label> -->    
                   <Bonfire.Editor.Ck.Bubble 
@@ -94,22 +90,27 @@
           
             <div class="flex items-center justify-between p-2 space-x-2 rounded-b bg-base-300 sm:px-3">
               <div class="flex items-center flex-1 space-x-3">
-                <button
-                  type="button"
-                  class="btn btn-ghost btn-square btn-sm">
-                  <Solid.PaperClipIcon class="w-4 h-4 text-base-content text-opacity-70" />
-                </button>
-
-                <button
-                  :if={Bonfire.Common.Config.get([:ui, :smart_input, :cw], []) == true}
-                  type="button"
-                  @click="title_open = !title_open"
-                  :class="{'text-primary-content bg-primary' : title_open}"
-                  class="btn btn-ghost btn-square btn-sm">
-                  <!-- <Solid.SpeakerphoneIcon class="w-4 h-4 text-base-content text-opacity-70" /> -->
-                  <span class="text-xs font-medium text-base-content text-opacity-70">CW</span>
-                </button>
-
+                <div 
+                  data-tip="Upload an image" 
+                  class="flex items-center tooltip tooltip-bottom" >
+                  <button
+                    type="button"
+                    class="btn btn-ghost btn-square btn-sm tooltip tooltip-bottom">
+                    <Solid.PaperClipIcon class="w-4 h-4 mx-auto text-base-content text-opacity-70" />
+                  </button>
+                </div>
+                <div 
+                  data-tip="Add a content warning" 
+                  class="flex items-center tooltip tooltip-bottom">
+                  <button
+                    :if={Bonfire.Common.Config.get([:ui, :smart_input, :cw], []) == true}
+                    type="button"
+                    @click="title_open = !title_open"
+                    :class="{'text-primary-content bg-primary' : title_open}"
+                    class="btn btn-ghost btn-square btn-sm">
+                    <span class="text-xs font-medium text-base-content text-opacity-70">CW</span>
+                  </button>
+                </div>
                 <Bonfire.UI.Social.BoundariesLive 
                   :if={@create_activity_type != "message"}
                 />

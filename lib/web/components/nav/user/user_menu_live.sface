@@ -1,41 +1,26 @@
 <div class="dropdown dropdown-end">
-  <div
-    x-data="{ open: false }"
-    @keydown.escape.stop="open = false"
-    @click.outside="open = false"
-    class="relative flex flex-col w-full"
+  <button
+    tabindex="0"
+    class="btn btn-square btn-ghost text-base-content text-opacity-80"
+    type="button"
+    id="user-profile-menu"
+    aria-haspopup="true"
+    aria-expanded="true"
   >
-    <button
-      class="btn btn-square btn-ghost text-base-content text-opacity-80"
-      type="button"
-      id="user-profile-menu"
-      @click="open = !open"
-      aria-haspopup="true"
-      x-bind:aria-expanded="open"
-      aria-expanded="true"
-    >
-      <img
-        class="w-8 h-8 rounded-btn bg-base-300"
-        src={avatar_url(current_user(assigns))}
-        alt="current user profile image"
-      />
-      </button>
-    <ul
-      x-description="User profile dropdown menu, show/hide based on menu state."
-      x-show="open"
-      x-transition:enter="transition ease-out duration-100"
-      x-transition:enter-start="transform opacity-0 scale-95"
-      x-transition:enter-end="transform opacity-100 scale-100"
-      x-transition:leave="transition ease-in duration-75"
-      x-transition:leave-start="transform opacity-100 scale-100"
-      x-transition:leave-end="transform opacity-0 scale-95"
-      class="p-2 mt-12 shadow shadow-lg menu text-base-content dropdown-content bg-base-100 rounded-box w-52"
-      role="menu"
-      aria-orientation="vertical"
-      aria-labelledby="user-profile-menu"
-    >
-      <Bonfire.UI.Social.Sidebar.UserMenuLinksLive current_user={current_user(assigns)} />
-    </ul>
-  </div>
+    <img
+      class="w-8 h-8 rounded-btn bg-base-300"
+      src={avatar_url(current_user(assigns))}
+      alt="current user profile image"
+    />
+    </button>
+  <ul
+    tabindex="0"
+    class="p-2 shadow menu dropdown-content bg-base-100 rounded-box w-52"
+    role="menu"
+    aria-orientation="vertical"
+    aria-labelledby="user-profile-menu"
+  >
+    <Bonfire.UI.Social.Sidebar.UserMenuLinksLive current_user={current_user(assigns)} />
+  </ul>
 </div>
 

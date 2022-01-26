@@ -1,10 +1,12 @@
-<div class="relative">
-
-  <input name={:boundary_selected} type="hidden" x-model="boundary_selected" />
-
+<div 
+  class="dropdown dropdown-end">
+  <input 
+    name={:boundary_selected} 
+    type="hidden" 
+    x-model="boundary_selected" />
   <button
+    tabindex="0"
     type="button"
-    @click="open_boundaries = !open_boundaries"
     class="flex items-center focus:outline-none"
     >
     <div
@@ -27,17 +29,9 @@
     </div>
   </button>
   <div
-    x-description="Select a boundary for the post, show/hide based on menu state."
-    x-show="open_boundaries"
-    x-transition:enter="transition ease-out duration-100"
-    x-transition:enter-start="transform opacity-0 scale-95"
-    x-transition:enter-end="transform opacity-100 scale-100"
-    x-transition:leave="transition ease-in duration-75"
-    x-transition:leave-start="transform opacity-100 scale-100"
-    x-transition:leave-end="transform opacity-0 scale-95"
-    class="absolute left-0 z-10 mt-2 -ml-16 origin-top-right divide-y rounded-md shadow-lg bg-base-100 divide-base-300 w-60 ring-1 ring-black ring-opacity-5 focus:outline-none"
+    tabindex="0"
+    class="p-2 shadow menu dropdown-content bg-base-100 rounded-box w-52"
     role="menu"
-    x-cloak
     aria-orientation="vertical"
     aria-labelledby="user-profile-menu">
       <div 
