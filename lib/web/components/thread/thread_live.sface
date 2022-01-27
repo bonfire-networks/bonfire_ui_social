@@ -36,8 +36,14 @@
   />
 </div> -->
 {#if length(@threaded_replies) > 0}
-  <div id="replies" class="flex flex-col pt-2 space-y-2 bg-base-100">
-    <Bonfire.UI.Social.LoadPreviousLive page_info={e(@page_info, nil)} />
+  <div data-id="replies" class="flex flex-col pt-2 space-y-2 bg-base-100">
+    
+    <Bonfire.UI.Social.LoadPreviousLive 
+      page_info={@page_info}
+      target={@myself}
+      context={@thread_id}
+    />
+
     {#for {reply, child_replies} <- @threaded_replies }
       <Bonfire.UI.Social.CommentLive
         comment={reply}
@@ -54,6 +60,7 @@
     live_handler={Bonfire.Social.Posts}
     page_info={@page_info}
     target={@myself}
+    context={@thread_id}
   />
 {#else}
   <div class="p-4 text-center bg-base-100">

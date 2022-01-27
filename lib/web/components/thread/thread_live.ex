@@ -18,9 +18,6 @@ defmodule Bonfire.UI.Social.ThreadLive do
   prop smart_input_placeholder, :string
   prop smart_input_text, :string
 
-  # TODO: put in config
-  @thread_max_depth 3
-  @pagination_limit 10
 
   def update(%{replies: replies, threaded_replies: threaded_replies, page_info: page_info} = assigns, socket) when is_list(replies) and is_list(threaded_replies) and is_map(page_info) do
     Logger.debug("ThreadLive: showing preloaded replies")
@@ -40,7 +37,6 @@ defmodule Bonfire.UI.Social.ThreadLive do
       replies: replies,
       threaded_replies: Bonfire.Social.Threads.arrange_replies_tree(replies),
       reply_to_thread_id: e(assigns, :activity, :replied, :thread_id, nil) || e(assigns, :thread_id, nil), # TODO: change for thread forking?
-      thread_max_depth: @thread_max_depth
     )) }
   end
 
@@ -59,7 +55,7 @@ defmodule Bonfire.UI.Social.ThreadLive do
       # IO.inspect(assigns)
       current_user = current_user(assigns) #|> IO.inspect
 
-      with %{edges: replies, page_info: page_info} <- Bonfire.Social.Threads.list_replies(thread_id, current_user, e(assigns, :after, nil), @thread_max_depth, @pagination_limit) do
+      with %{edges: replies, page_info: page_info} <- Bonfire.Social.Threads.list_replies(thread_id, current_user: current_user, after: e(assigns, :after, nil)) do
         # IO.inspect(thread_id, label: "thread_id")
         # IO.inspect(replies, label: "replies")
 
@@ -98,13 +94,11 @@ defmodule Bonfire.UI.Social.ThreadLive do
         reply_to_thread_id: e(activity, :replied, :thread_id, thread_id), # TODO: change for thread forking?
         current_user: current_user,
         page: "thread",
-        thread_max_depth: @thread_max_depth,
         # participants: participants
       ) #|> IO.inspect
     )}
-
-
   end
+
 
   def handle_event(action, attrs, socket), do: Bonfire.Common.LiveHandlers.handle_event(action, attrs, socket, __MODULE__)
   def handle_info(info, socket), do: Bonfire.Common.LiveHandlers.handle_info(info, socket, __MODULE__)

@@ -10,8 +10,7 @@
     </span>
     <span class="feed_activity_text">
       {#if Bonfire.UI.Social.Activity.ReplyLive.count(@replied) > 0 }
-        {l "Replies"}
-        ({Bonfire.UI.Social.Activity.ReplyLive.count(@replied)}) 
+        {l "Replies"} ({Bonfire.UI.Social.Activity.ReplyLive.count(@replied)}) 
       {#else}
         {l "Reply"}
       {/if}

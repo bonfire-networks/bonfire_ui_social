@@ -4,7 +4,8 @@
   :if={e(@page_info, :end_cursor, nil)}
   phx-click={"#{@live_handler}:load_more" }
   phx-target={@target}
-  phx-value-after={e(@page_info, :end_cursor, "unknown")} 
+  phx-value-context={e(assigns, :context, "")} 
+  phx-value-after={e(@page_info, :end_cursor, "")} 
   class="flex justify-center w-full p-3 mx-auto border-t cursor-pointer border-base-200 place-items-center"
 > 
   <a href={"#"<>e(@page_info, :end_cursor, "unknown")} class="relative items-center w-full px-4 py-2 text-sm font-medium text-center text-base-content bg-base-200 rounded hover:bg-base-300 ">
