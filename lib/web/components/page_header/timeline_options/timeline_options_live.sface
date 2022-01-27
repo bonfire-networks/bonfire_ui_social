@@ -2,18 +2,18 @@
   :if={current_user(assigns)}
   class="tabs tabs-boxed">
   <div data-tip="My feed" class="tooltip tooltip-bottom">
-    <LivePatch to="/home" class={"tab h-[1.7rem]", "tab-active": @selected_tab == "home"}>
+    <LiveRedirect to="/home" class={"tab h-[1.7rem]", "tab-active": @selected_tab == "home"}>
       <Solid.RssIcon class="inline-block w-4 h-4 stroke-current" />
-    </LivePatch> 
+    </LiveRedirect> 
   </div>
   <div data-tip="Local instance timeline" class="tooltip tooltip-bottom">
-    <LivePatch to="/home/local" class={"tab h-[1.7rem]", "tab-active": @selected_tab == "local"}>
+    <LiveRedirect to="/home/local" class={"tab h-[1.7rem]", "tab-active": @selected_tab == "local"}>
       <Solid.HomeIcon class="inline-block w-4 h-4 stroke-current" />
-    </LivePatch> 
+    </LiveRedirect> 
   </div>
   <div data-tip="Federated timeline" class="tooltip tooltip-bottom">
-    <LivePatch to="/home/federation" class={"tab h-[1.7rem]", "tab-active": @selected_tab == "federation"}>
+    <LiveRedirect to="/home/federation" class={"tab h-[1.7rem]", "tab-active": @selected_tab == "federation"}>
       <Solid.GlobeIcon class="inline-block w-4 h-4 stroke-current" />
-    </LivePatch>
+    </LiveRedirect>
   </div>
 </div>
