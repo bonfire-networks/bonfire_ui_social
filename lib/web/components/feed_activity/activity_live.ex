@@ -24,6 +24,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
                 # |> debug("ActivityLive activity")
 
     verb = e(activity, :verb, :verb, "create")
+            |> maybe_to_string()
             |> String.downcase()
             |> Activities.verb_maybe_modify(activity)
             # |> debug("verb modified")
