@@ -1,17 +1,17 @@
 <div class="pt-4">
   <div role="tabpanel" class="flex w-full tabs">
-    <LivePatch 
+    <LiveRedirect 
       to={"/user/#{e(@user, :character, :username, "")}/followers"} 
       class={"tab flex-1 tab-bordered", "tab-active": @selected_tab ==  "followers"}
     >
       {l "Followers"} ({e(@user, :character, :follow_count, :follower_count, 0)})
-    </LivePatch> 
-    <LivePatch 
+    </LiveRedirect> 
+    <LiveRedirect 
       to={"/user/#{e(@user, :character, :username, "")}/followed"} 
       class={"tab flex-1 tab-bordered", "tab-active": @selected_tab ==  "followed"}
     >
       {l "Following"} ({e(@user, :character, :follow_count, :follow_count, 0)})
-    </LivePatch>   
+    </LiveRedirect>   
   </div>
 
   <div :if={@selected_tab == "followed"}>

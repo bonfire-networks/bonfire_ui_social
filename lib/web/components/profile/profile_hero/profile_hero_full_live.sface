@@ -109,23 +109,23 @@
           >
             <path d="M9 6a3 3 0 11-6 0 3 3 0 016 0zM17 6a3 3 0 11-6 0 3 3 0 016 0zM12.93 17c.046-.327.07-.66.07-1a6.97 6.97 0 00-1.5-4.33A5 5 0 0119 16v1h-6.07zM6 11a5 5 0 015 5v1H1v-1a5 5 0 015-5z"></path>
           </svg>
-          <LivePatch to={"/user/#{e(@user, :character, :username, "")}/followers"}>
+          <LiveRedirect to={"/user/#{e(@user, :character, :username, "")}/followers"}>
             <span class="ml-2 mr-2 text-sm text-base-content text-opacity-70 hover:underline">
               <strong class="text-base-content text-opacity-70">
                 {e(@user, :character, :follow_count, :follower_count, 0)}
               </strong>
               Followers
             </span>
-          </LivePatch>
+          </LiveRedirect>
           <span class="text-base-content text-opacity-70">·</span>
-          <LivePatch to={"/user/#{e(@user, :character, :username, "")}/followed"}>
+          <LiveRedirect to={"/user/#{e(@user, :character, :username, "")}/followed"}>
             <span class="ml-2 text-sm text-base-content text-opacity-70 hover:underline">
               <strong class="text-base-content text-opacity-70">
                 {e(@user, :character, :follow_count, :follow_count, 0)}
               </strong>
               Following
             </span>
-          </LivePatch>
+          </LiveRedirect>
         </div>
       </div>
     </div>
