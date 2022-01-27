@@ -21,13 +21,14 @@ defmodule Bonfire.UI.Social.ActivityLive do
 
     activity = activity
                 |> Map.put(:object, e(assigns, :object, nil) || Activities.object_from_activity(activity))
-                |> debug("ActivityLive activity")
+                # |> debug("ActivityLive activity")
 
     verb = e(activity, :verb, :verb, "create")
+            |> String.downcase()
             |> Activities.verb_maybe_modify(activity)
-            #|> IO.inspect
+            # |> debug("verb modified")
     verb_display = Activities.verb_display(verb)
-    created_verb_display = "create" |> Activities.verb_display()
+    created_verb_display = Activities.verb_display("create")
 
     permalink = path(activity.object)
 
@@ -116,34 +117,28 @@ defmodule Bonfire.UI.Social.ActivityLive do
   # other
   def component_activity_subject(verb, activity, _), do: [component_activity_maybe_creator(activity)]
 
-
-  def component_activity_maybe_creator(%{created: %{
+  def component_activity_maybe_creator(%{
     creator_profile: %{id: _} = profile,
     creator_character: %{id: _} = character
-    }}), do: component_activity_maybe_creator(%{profile: profile, character: character})
+    }), do: component_activity_maybe_creator(%{profile: profile, character: character})
 
   def component_activity_maybe_creator(%{
     profile: %{id: _} = profile,
     character: %{id: _} = character
     } = _creator), do: {Bonfire.UI.Social.Activity.SubjectLive, %{profile: profile, character: character}}
 
-  def component_activity_maybe_creator(%{creator: %{
-    profile: %{id: _} = profile,
-    character: %{id: _} = character
-    } = creator}), do: component_activity_maybe_creator(creator)
-
   def component_activity_maybe_creator(%{provider: %{id: _}}), do: Bonfire.UI.Social.Activity.ProviderReceiverLive
   def component_activity_maybe_creator(%{primary_accountable: %{id: _} = primary_accountable}), do: {Bonfire.UI.Social.Activity.ProviderReceiverLive, %{provider: primary_accountable}}
   def component_activity_maybe_creator(%{receiver: %{id: _}}), do: Bonfire.UI.Social.Activity.ProviderReceiverLive
 
-  def component_activity_maybe_creator(%{created: _created} = object), do: object |> repo().maybe_preload(created: [creator: [:profile, :character]]) |> e(:creator, :created, nil) |> component_activity_maybe_creator()
+  def component_activity_maybe_creator(%{created: _created} = object), do: object |> repo().maybe_preload(created: [creator: [:profile, :character]]) |> e(:created, :creator, nil) |> component_activity_maybe_creator()
   def component_activity_maybe_creator(%{creator: _} = object), do: object |> repo().maybe_preload(creator: [:profile, :character]) |> e(:creator, nil) |> component_activity_maybe_creator()
   def component_activity_maybe_creator(%{provider: _, receiver: _} = object), do: object |> repo().maybe_preload(provider: [:profile, :character], receiver: [:profile, :character]) |> component_activity_maybe_creator()
   def component_activity_maybe_creator(%{provider: _} = object), do: object |> repo().maybe_preload(provider: [:profile, :character]) |> component_activity_maybe_creator()
   def component_activity_maybe_creator(%{receiver: _} = object), do: object |> repo().maybe_preload(receiver: [:profile, :character]) |> component_activity_maybe_creator()
   def component_activity_maybe_creator(%{primary_accountable: _} = object), do: object |> repo().maybe_preload(primary_accountable: [:profile, :character]) |> component_activity_maybe_creator()
 
-  # FIXME: subjects don't showed up for economic activities, but they do if you uncomment this
+  # FIXME: subjects don't show up for economic activities, but they do if you uncomment this
   def component_activity_maybe_creator(%{subject: %{character: %{id: _} = character, profile: %{id: _} = profile}}), do: {Bonfire.UI.Social.Activity.SubjectLive, %{profile: profile, character: character}} #|> IO.inspect
 
   def component_activity_maybe_creator(%{object: %{} = object}), do: component_activity_maybe_creator(object)
@@ -159,74 +154,72 @@ defmodule Bonfire.UI.Social.ActivityLive do
 
   def component_maybe_reply_to(verb,
     %{
-      id: activity_id,
-      replied: %{
-        reply_to_id: reply_to_id,
-        reply_to_post_content: %{id: _} = reply_to_post_content,
-        reply_to_created: %{
-          creator_character: %{id: _} = subject_character,
-          creator_profile: %{id: _} = subject_profile
-        }
+      reply_to: %{
+        post_content: %{id: _} = reply_to_post_content,
+        created: %{creator: %{
+          character: %{id: _} = subject_character,
+          profile: %{id: _} = subject_profile
+        }}
       }
     }, _)
-  when verb in @reply_verbs, do: [ # post reply
+  when verb in @reply_verbs, do: [ # reply with post_content
     {Bonfire.UI.Social.ActivityLive, %{
       activity_inception: true,
-      # id: activity_id <> "-reply-post-" <> reply_to_id,
       viewing_main_object: false,
       object: reply_to_post_content,
       activity: %{
-        subject_profile: subject_profile,
-        subject_character: subject_character,
+        subject: %{
+          profile: subject_profile,
+          character: subject_character,
+        }
     }}},
   ]
 
   def component_maybe_reply_to(verb, %{
-    id: activity_id,
-    replied: %{
-      reply_to_id: reply_to_id,
-      reply_to_created: %{
-        creator_character: %{id: _} = subject_character,
-        creator_profile: %{id: _} = subject_profile
+    reply_to: %{
+      id: reply_to_id,
+      created: %{
+        character: %{id: _} = subject_character,
+        profile: %{id: _} = subject_profile
       }
     } = replied
   }, _)
   when verb in @reply_verbs and is_binary(reply_to_id), do: [ # other kind of reply, with creator
     {Bonfire.UI.Social.ActivityLive, %{
       activity_inception: true,
-      # id: activity_id <> "-reply-" <> reply_to_id,
       viewing_main_object: false,
-      object: Activities.load_object(e(replied, :reply_to, reply_to_id)),
+      object: Activities.load_object(replied),
       activity: %{
-        subject_profile: subject_profile,
-        subject_character: subject_character,
+        subject: %{
+          profile: subject_profile,
+          character: subject_character,
+        }
     }
     }},
   ]
 
   def component_maybe_reply_to(verb, %{
-    id: activity_id,
-    replied: %{
-      reply_to_id: reply_to_id,
+    reply_to: %{
+      id: reply_to_id,
     } = replied
   }, _)
   when verb in @reply_verbs and is_binary(reply_to_id) do # other kind of reply
-    reply_to_activity = load_reply_to(e(replied, :reply_to, reply_to_id))
+    reply_to_activity = load_reply_to(e(replied, reply_to_id))
 
     [
       {Bonfire.UI.Social.ActivityLive, %{
         activity_inception: true,
-        # id: activity_id <> "-reply-" <> reply_to_id,
         object: e(reply_to_activity, :object, nil),
         activity: reply_to_activity, #|> IO.inspect,
         viewing_main_object: false
       }},
     ]
   end
+  def component_maybe_reply_to(verb, %{replied: %{} = replied}, showing_within), do: component_maybe_reply_to(verb, replied, showing_within)
 
-  def component_maybe_reply_to(verb, a, _) do
-    # IO.inspect(not_reply_verb: verb)
-    # IO.inspect(not_reply: a)
+  def component_maybe_reply_to(_, a, _) do
+    Logger.debug("ActivityLive: no reply_to")
+    debug(a)
     []
   end
 
