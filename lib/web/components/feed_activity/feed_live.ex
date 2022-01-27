@@ -1,5 +1,6 @@
 defmodule Bonfire.UI.Social.FeedLive do
   use Bonfire.Web, :stateful_component
+
   alias Bonfire.UI.Social.ActivityLive
 
   require Logger

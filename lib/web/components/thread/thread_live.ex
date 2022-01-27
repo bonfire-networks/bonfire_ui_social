@@ -32,7 +32,7 @@ defmodule Bonfire.UI.Social.ThreadLive do
     # IO.inspect(merge_reply: previous_replies)
 
     new_reply = new_reply
-      |> Map.put(:path, e(new_reply, :activity, :object, :replied, :path, []))
+      |> Map.put(:path, e(new_reply, :replied, :path, e(new_reply, :activity, :replied, :path, [])))
 
     replies = [new_reply] ++ e(socket, :assigns, :replies, [])
 
