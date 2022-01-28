@@ -1,5 +1,5 @@
 {#if  e(@object, :id, nil) != nil and e(@activity, :replied, :reply_to_id, nil) == nil and e(@activity, :id, nil) == nil}
-  <div class={"flex items-center -mb-2"}>
+  <div class={"flex items-center"}>
     <div class="flex justify-between flex-1">
       <div class="flex items-center text-sm font-medium text-base-content">
         <LiveRedirect
