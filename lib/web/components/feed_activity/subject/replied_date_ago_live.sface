@@ -1,8 +1,12 @@
 <div class="flex items-center space-x-2 text-xs">
-  <Solid.ReplyIcon class="w-4 h-4 text-base-content text-opacity-60" />
+  <!-- <Solid.ReplyIcon class="w-4 h-4 text-base-content text-opacity-60" /> -->
   <LiveRedirect class="replied_timestamp text-base-content text-opacity-60" to={@permalink}>
     {@date_ago}
   </LiveRedirect>
+  <BoundaryIconLive 
+      id={ComponentID.new(BoundaryIconLive, @object)} 
+      object={@object} 
+    />
 </div>
 
 

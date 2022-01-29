@@ -1,21 +1,34 @@
 {#if @viewing_main_object}
 <div class="flex items-center space-x-1 ">
-  <Solid.GlobeIcon class="w-4 h-4 text-base-content text-opacity-70" />
+
   <div class="text-sm text-base-content text-opacity-80">
     <span class="capitalize">{e(@verb_display, "")}</span>
-    <LiveRedirect class="subject_timestamp text-base-content text-opacity-80" to={@permalink}>
+    <LiveRedirect class="subject_timestamp text-base-content text-opacity-80" to={@permalink}> 
       {@date_ago}
     </LiveRedirect>
   </div>
+
+  <BoundaryIconLive 
+    id={ComponentID.new(BoundaryIconLive, @object)} 
+    object={@object} 
+  />
+
 </div>
+
 {#else}
 <div class="flex items-center space-x-2 ">
-  <Solid.GlobeIcon class="w-4 h-4 text-base-content text-opacity-60" />
   <div class="text-xs text-base-content text-opacity-60">
     <span class="capitalize">{e(@verb_display, "")}</span>
     <LiveRedirect class="subject_timestamp text-base-content text-opacity-60" to={@permalink}>
       {@date_ago}
     </LiveRedirect>
   </div>
+
+  <BoundaryIconLive 
+    id={ComponentID.new(BoundaryIconLive, @object)} 
+    object={@object} 
+  />
+
 </div>
 {/if}
+

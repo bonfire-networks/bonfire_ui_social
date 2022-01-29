@@ -11,7 +11,7 @@
     <Bonfire.UI.Social.Activity.RepliedDateAgoLive 
       permalink={@permalink}
       date_ago={@date_ago} 
+      object={@object}
     />
-    
   </div>
 </div>

@@ -12,6 +12,7 @@
       <Bonfire.UI.Social.Activity.RepliedDateAgoLive 
         permalink={@permalink}
         date_ago={@date_ago}
+        object={@object}
       />
     </div>
   </div>
@@ -67,6 +68,7 @@
         :if={!@viewing_main_object}
         permalink={@permalink}
         date_ago={@date_ago}
+        object={@object}
         verb_display={@verb_display} />
     </div>
   </div>

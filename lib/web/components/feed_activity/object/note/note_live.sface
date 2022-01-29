@@ -49,6 +49,7 @@
         permalink={@permalink}
         viewing_main_object={e(assigns, :viewing_main_object, nil)}
         date_ago={@date_ago}
+        object={@object}
         verb_display={@verb_display} />
     </div>
 </div>
