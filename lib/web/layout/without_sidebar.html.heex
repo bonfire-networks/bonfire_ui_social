@@ -3,8 +3,9 @@
   <% error = live_flash(@flash, :error) %>
     <div id="flash-messages" class="bg-base absolute z-50 right-8 top-20 ">
       <Bonfire.Common.Web.NotificationLive.render
-      id={:notification} 
+      id={"notification"} 
       notification={e(assigns, :notification, nil)}
+      myself={nil}
       />
       <%= if info do %>
         <p class="alert alert-info " role="alert alert-warning"
