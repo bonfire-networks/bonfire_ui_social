@@ -12,3 +12,11 @@
     class="w-4 h-4 text-base-content text-opacity-70" 
   />
 </span>
+<span 
+  :if={!e(@object_primary_boundary, :id, nil) || e(@object_primary_boundary, :id, nil) not in ["7W1DE1YAVA11AB1ET0SEENREAD", "710CA1SMY1NTERACTN0TREP1YY", "710CA1SMY1NTERACTANDREP1YY"]} 
+  data-tip={e(@object_primary_boundary, :name, "Custom Boundaries")}
+  class="tooltip tooltip-bottom">
+  <Solid.CogIcon 
+    class="w-4 h-4 text-base-content text-opacity-70" 
+  />
+</span>

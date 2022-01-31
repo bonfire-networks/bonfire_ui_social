@@ -7,14 +7,16 @@ defmodule Bonfire.UI.Social.ThreadLive do
   alias Bonfire.Me.Web.{CreateUserLive, LoggedDashboardLive}
   # import Bonfire.Me.Integration
 
-  # prop reply_to_id, :any
-  # prop reply_to_thread_id, :any
-  prop thread_id, :any
+
   # prop replies, :any
   # prop threaded_replies, :any, default: []
   prop page_info, :any
   prop activity, :any
   prop object, :any
+  prop reply_to_id, :any
+  prop thread_id, :any
+  prop create_activity_type, :any
+  prop to_circles, :list
   prop smart_input_placeholder, :string
   prop smart_input_text, :string
 
@@ -36,7 +38,7 @@ defmodule Bonfire.UI.Social.ThreadLive do
     {:ok, assign(socket, assigns |> assigns_merge(
       replies: replies,
       threaded_replies: Bonfire.Social.Threads.arrange_replies_tree(replies),
-      reply_to_thread_id: e(assigns, :activity, :replied, :thread_id, nil) || e(assigns, :thread_id, nil), # TODO: change for thread forking?
+      thread_id: e(assigns, :activity, :replied, :thread_id, nil) || e(assigns, :thread_id, nil), # TODO: change for thread forking?
     )) }
   end
 
@@ -91,7 +93,7 @@ defmodule Bonfire.UI.Social.ThreadLive do
         activity: activity,
         object: object,
         reply_to_id: e(activity, :object, :id, thread_id),
-        reply_to_thread_id: e(activity, :replied, :thread_id, thread_id), # TODO: change for thread forking?
+        thread_id: e(activity, :replied, :thread_id, thread_id), # TODO: change for thread forking?
         current_user: current_user,
         page: "thread",
         # participants: participants

@@ -44,7 +44,7 @@
           {l "Flags"}
         </LivePatch>
       </li>
-    <div :if={Bonfire.Me.Users.is_admin(current_user(assigns))} >
+    <div :if={Bonfire.Me.Users.is_admin?(current_user(assigns))} >
       <li class="uppercase menu-title">
         <span>{l "Admin settings"}</span>
       </li>

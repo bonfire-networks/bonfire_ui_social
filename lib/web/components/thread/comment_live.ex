@@ -7,7 +7,7 @@ defmodule Bonfire.UI.Social.CommentLive do
   prop object, :map, default: %{}
   prop thread_level, :any
   prop child_replies, :any
-  prop reply_to_thread_id, :any
+  prop thread_id, :any
   prop sub_replies_count, :integer, default: 0
 
 

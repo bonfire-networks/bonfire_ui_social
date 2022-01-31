@@ -4,14 +4,23 @@
       {#if Bonfire.Common.Config.get([:ui, :default_smart_input])}
         <Surface.Components.Dynamic.Component
           module={Bonfire.Common.Config.get([:ui, :default_smart_input])}
+          reply_to_id={@reply_to_id}
+          thread_id={@thread_id}
+          create_activity_type={e(assigns, :create_activity_type, nil)}
+          to_circles={e(assigns, :to_circles, [])}
+          smart_input_placeholder={@smart_input_placeholder}
+          smart_input_text={@smart_input_text}
+          current_user={@current_user}
         />
       {#else}
         <Bonfire.UI.Social.CreateActivityLive
           reply_to_id={@reply_to_id}
-          reply_to_thread_id={@reply_to_thread_id}
+          thread_id={@thread_id}
+          create_activity_type={e(assigns, :create_activity_type, nil)}
+          to_circles={e(assigns, :to_circles, [])}
           smart_input_placeholder={@smart_input_placeholder}
           smart_input_text={@smart_input_text}
-          current_user={e(@current_user, nil)}
+          current_user={@current_user}
         />
       {/if}    
     </div>

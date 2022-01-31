@@ -17,6 +17,8 @@
       selected_tab={@selected_tab}
       smart_input={@smart_input}
       has_private_tab={@has_private_tab}
+      create_activity_type={e(assigns, :create_activity_type, nil)}
+      to_circles={e(assigns, :to_circles, [])}
       smart_input_placeholder={@smart_input_placeholder}
       smart_input_text={@smart_input_text}
       search_placholder={@search_placholder}

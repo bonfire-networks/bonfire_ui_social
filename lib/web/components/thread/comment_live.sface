@@ -35,7 +35,7 @@
           {#for {subreply, sub_child_replies} <- @child_replies }
             <CommentLive
               reply_to_id={e(@comment, :id, nil)}
-              reply_to_thread_id={@reply_to_thread_id} 
+              thread_id={@thread_id} 
               comment={subreply}
               child_replies={sub_child_replies}
               thread_level={@thread_level+1}

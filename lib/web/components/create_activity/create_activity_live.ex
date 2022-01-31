@@ -9,10 +9,11 @@ defmodule Bonfire.UI.Social.CreateActivityLive do
   alias Surface.Components.Form.Inputs
 
   # prop target_component, :string
-  prop create_activity_type, :string, default: "post"
   prop reply_to_id, :string
-  prop reply_to_thread_id, :string
-  prop smart_input_placeholder, :string, default: l("Write something...")
+  prop thread_id, :string
+  prop create_activity_type, :any
+  prop to_circles, :list
+  prop smart_input_placeholder, :string, default: l("Write a post...")
   prop smart_input_text, :string, default: "", required: false
   prop showing_within, :any
   prop with_editor, :boolean, required: false
@@ -28,9 +29,9 @@ defmodule Bonfire.UI.Social.CreateActivityLive do
 
   def activity_type_or_reply(assigns, create_activity_type) do
     IO.inspect(e(assigns, :reply_to_id, ""), label: "reply to id")
-    IO.inspect(e(assigns, :reply_to_thread_id, ""), label: "reply_to_thread_id")
-    if e(assigns, :reply_to_id, "") !="" or e(assigns, :reply_to_thread_id, "") !="",
+    IO.inspect(e(assigns, :thread_id, ""), label: "thread_id")
+    if e(assigns, :reply_to_id, "") !="" or e(assigns, :thread_id, "") !="",
     do: "reply",
-    else: create_activity_type
+    else: "#{create_activity_type}"
   end
 end

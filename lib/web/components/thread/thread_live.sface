@@ -30,7 +30,7 @@
   <Bonfire.UI.Social.CreateActivityLive
     smart_input_text={@smart_input_text}
     smart_input_placeholder={@smart_input_placeholder}
-    reply_to_thread_id={@reply_to_thread_id}
+    thread_id={@thread_id}
     reply_to_id={@reply_to_id}
     showing_within={:thread}
   />
@@ -48,7 +48,8 @@
       <Bonfire.UI.Social.CommentLive
         comment={reply}
         child_replies={child_replies}
-        reply_to_thread_id={@reply_to_thread_id}
+        reply_to_id={e(reply, :id, nil)}
+        thread_id={@thread_id}
         thread_level={1}
         smart_input_text={@smart_input_text}
         smart_input_placeholder={@smart_input_placeholder}

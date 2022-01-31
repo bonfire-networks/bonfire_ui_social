@@ -6,6 +6,12 @@
       <Bonfire.UI.Social.SidebarLive
         current_user={current_user(assigns)}
         page={@page}
+        reply_to_id={@reply_to_id}
+        thread_id={@thread_id}
+        create_activity_type={e(assigns, :create_activity_type, nil)}
+        to_circles={e(assigns, :to_circles, [])}
+        smart_input_placeholder={@smart_input_placeholder}
+        smart_input_text={@smart_input_text}
       />
       {#else}
       <Bonfire.UI.Social.HomeBannerLive />

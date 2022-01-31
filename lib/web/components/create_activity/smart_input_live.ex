@@ -3,9 +3,10 @@ defmodule Bonfire.UI.Social.SmartInputLive do
 
   # prop user_image, :string, required: true
   # prop target_component, :string
-  prop create_activity_type, :string, default: "post"
   prop reply_to_id, :string, default: ""
-  prop reply_to_thread_id, :string, default: "", required: false
+  prop thread_id, :string, default: "", required: false
+  prop create_activity_type, :any
+  prop to_circles, :list
   prop smart_input_placeholder, :string, required: false
   prop smart_input_text, :string, required: false
 

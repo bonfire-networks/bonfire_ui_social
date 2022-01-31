@@ -80,6 +80,7 @@ defmodule Bonfire.UI.Social.FeedLive do
     Logger.debug("FeedLive: preload objects")
 
     feed
+    |> debug("feed before extra preloads")
     |> Bonfire.Common.Pointers.Preload.maybe_preload_nested_pointers([activity: [:object]])
     |> preload_objects(opts)
     # |> IO.inspect(label: "feed with extra preloads")

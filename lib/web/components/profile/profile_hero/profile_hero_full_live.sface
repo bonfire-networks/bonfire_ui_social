@@ -1,6 +1,8 @@
   <div class="pb-2">
-    <div :if={e(current_user(assigns), :id, nil)} class="bg-center bg-cover bg-accent" style={"height: 225px; background-image: url('#{image_url(@user)}')"}></div>
-    <div :if={!e(current_user(assigns), :id, nil)} class="bg-center bg-cover rounded-t-lg bg-accent" style={"height: 225px; background-image: url('#{image_url(@user)}')"}></div>
+    
+    <div :if={current_user(assigns)} class="bg-center bg-cover bg-accent" style={"height: 225px; background-image: url('#{image_url(@user)}')"}></div>
+    <div :if={!current_user(assigns)} class="bg-center bg-cover rounded-t-lg bg-accent" style={"height: 225px; background-image: url('#{image_url(@user)}')"}></div>
+
     <div class="flex items-center justify-between">
       <img
         class={"inline-block object-cover -mt-16 rounded-full ring-4 ring-base-100 bg-base-100 w-32 h-32 ml-6"}
@@ -12,20 +14,43 @@
         class="flex items-center pr-2 space-x-3"
       >
         <LiveRedirect
-          :if={e(current_user(assigns), :id, nil) && e(current_user(assigns), :id, nil) != maybe_get(@user, :id)}
+          :if={current_user(assigns) && e(current_user(assigns), :id, nil) != maybe_get(@user, :id)}
           to={"/user/#{e(@user, :character, :username, "")}/private"}
           class="btn btn-circle"
         >
           <Solid.MailIcon />  
         </LiveRedirect> 
-        <div :if={e(current_user(assigns), :id, nil) && e(current_user(assigns), :id, nil) != maybe_get(@user, :id)} >
+        <div e(current_user(assigns), :id, nil) != maybe_get(@user, :id)} >
           <Bonfire.UI.Social.FollowButtonLive 
             id={ComponentID.new(Bonfire.UI.Social.FollowButtonLive, @user)} 
             object={@user} 
             current_user={current_user(assigns)} 
           />
         </div>
-        
+
+        <span 
+          :if={current_user(assigns) && is_admin?(current_user(assigns))} 
+        >
+          <button
+            :if={!is_admin?(@user)} 
+            class="btn tooltip tooltip-bottom"
+            phx-click="Bonfire.Me.Users:make_admin"
+            phx-value-username_or_id={maybe_get(@user, :id)}
+            data-tip={l "Entrust with admin permissions"}
+          >
+              <Solid.KeyIcon />
+          </button>
+          <button
+            :if={is_admin?(@user)} 
+            class="btn tooltip tooltip-bottom"
+            phx-click="Bonfire.Me.Users:revoke_admin"
+            phx-value-username_or_id={maybe_get(@user, :id)}
+            data-tip={l "Revoke their admin permissions"}
+          >
+              <Outline.KeyIcon />
+          </button>
+        </span>
+
         <LiveRedirect
           :if={e(current_user(assigns), :id, nil) && e(current_user(assigns), :id, nil) == maybe_get(@user, :id)}
           to="/settings"
