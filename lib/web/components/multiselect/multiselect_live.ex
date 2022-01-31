@@ -1,6 +1,6 @@
 defmodule Bonfire.UI.Social.MultiselectLive do
   use Bonfire.Web, :stateless_component
-  import Bonfire.Common.Utils
+  use Bonfire.Common.Utils
 
   prop form_input_name, :string, required: true
   prop label, :string, default: ""

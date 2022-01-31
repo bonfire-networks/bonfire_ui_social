@@ -1,7 +1,7 @@
 defmodule Bonfire.UI.Social.SetCWLive do
   use Bonfire.Web, :stateless_component
 
-  import Bonfire.Common.Utils
+  use Bonfire.Common.Utils
   alias Surface.Components.Form.TextArea
   alias Surface.Components.Form.HiddenInput
   alias Surface.Components.Form.TextInput

@@ -32,7 +32,7 @@
     <div 
       x-show="'reply_to_id' != ''" 
       x-text= "smart_input_prompt" 
-      class="p-2 rounded-t bg-base-300 text-ellipsis overflow-hidden text-sm ">
+      class="p-3 rounded-t bg-base-300 text-ellipsis overflow-hidden text-sm ">
       {@smart_input_prompt || l "Write a post..."}  
     </div>
     <div class="rounded shadow bg-base-100">
@@ -47,7 +47,7 @@
               <Field name={:name}>
                 <TextInput
                   opts={placeholder: "Enter a title"}
-                  class="block w-full border-0 pt-2.5 text-lg font-medium placeholder-base-content placeholder-opacity-70 bg-base-100 text-base-content focus:ring-0" 
+                  class="block w-full border-0 pt-2.5 text-lg font-medium placeholder-base-content placeholder-opacity-70 bg-base-100 text-base-content focus:ring-0 border-b" 
                   />
               </Field>
             </div>  

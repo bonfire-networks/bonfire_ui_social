@@ -4,8 +4,9 @@
   @click.prevent={"
     create_activity_open = true; 
     reply_to_id = '#{@object_id}'; 
-    smart_input_prompt = 'Reply to #{if @showing_within==:thread, do: l "comment", else: l "post"} #{@object_id}';
+    smart_input_prompt = 'Reply to #{if @showing_within==:thread, do: l("comment"), else: l("post")}: #{@reply_to_text || @object_id}';
     smart_input_text = '#{@reply_smart_input_text}'; 
+    window.editor.setData(smart_input_text);
     "}
   >
     <div class="feed_activity_action"> 

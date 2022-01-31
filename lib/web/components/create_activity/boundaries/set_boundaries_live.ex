@@ -1,6 +1,6 @@
 defmodule Bonfire.UI.Social.SetBoundariesLive do
   use Bonfire.Web, {:stateless_component, [module: __MODULE__]}
-  import Bonfire.Common.Utils
+  use Bonfire.Common.Utils
 
   prop label, :string, default: ""
   prop default_circles, :list, default: []

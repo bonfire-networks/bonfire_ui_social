@@ -1,6 +1,6 @@
 defmodule Bonfire.UI.Social.CreateActivityLive do
   use Bonfire.Web, :stateless_component
-  import Bonfire.Common.Utils
+  use Bonfire.Common.Utils
   alias Surface.Components.Form.TextArea
   alias Surface.Components.Form
   alias Surface.Components.Form.HiddenInput
