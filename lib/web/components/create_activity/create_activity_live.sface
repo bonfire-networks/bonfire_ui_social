@@ -33,7 +33,7 @@
       x-show="'reply_to_id' != ''" 
       x-text= "smart_input_prompt" 
       class="p-2 rounded-t bg-base-300 text-ellipsis overflow-hidden text-sm ">
-      {@smart_input_placeholder || l "Write a post..."}  
+      {@smart_input_prompt || l "Write a post..."}  
     </div>
     <div class="rounded shadow bg-base-100">
       <div class="relative">
@@ -54,7 +54,7 @@
             <label for="description" class="sr-only">{l "Description"}</label>
             <Field 
               class="h-full min-h-full" name={:html_body}>
-              <!-- <Label :if={@smart_input_text && @smart_input_text !="" && @smart_input_placeholder} class="mb-2 alert alert-info">{@smart_input_placeholder}</Label> -->    
+              <!-- <Label :if={@smart_input_text && @smart_input_text !="" && @smart_input_prompt} class="mb-2 alert alert-info">{@smart_input_prompt}</Label> -->    
               <Bonfire.Editor.Ck.Bubble 
                   :if={with_editor?(assigns)}
                   field_name="post[post_content][html_body]"
@@ -66,7 +66,8 @@
                   :if={!with_editor?(assigns)}
                   opts={
                     value: @smart_input_text,
-                    placeholder: "|"
+                    placeholder: "|",
+                    "x-model": "smart_input_text"
                   }
                   class={@textarea_class} 
                   :class="{'rounded-b-none' : create_activity_open === true}"

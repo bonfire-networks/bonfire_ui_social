@@ -7,6 +7,7 @@ defmodule Bonfire.UI.Social.Activity.ActionsLive do
   prop activity, :map
   prop object, :map
   prop permalink, :string
+  prop reply_smart_input_text, :string
   prop showing_within, :any
   prop hide_reply, :boolean
   prop viewing_main_object, :boolean

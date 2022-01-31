@@ -29,7 +29,7 @@
 <!-- <div class="p-3 border-t border-base-300">
   <Bonfire.UI.Social.CreateActivityLive
     smart_input_text={@smart_input_text}
-    smart_input_placeholder={@smart_input_placeholder}
+    smart_input_prompt={@smart_input_prompt}
     thread_id={@thread_id}
     reply_to_id={@reply_to_id}
     showing_within={:thread}
@@ -52,7 +52,7 @@
         thread_id={@thread_id}
         thread_level={1}
         smart_input_text={@smart_input_text}
-        smart_input_placeholder={@smart_input_placeholder}
+        smart_input_prompt={@smart_input_prompt}
       />
     {/for}
   </div>

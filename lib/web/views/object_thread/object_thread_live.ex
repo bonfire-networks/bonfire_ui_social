@@ -7,7 +7,8 @@ defmodule  Bonfire.UI.Social.ObjectThreadLive do
   prop search_placeholder, :string
   prop create_activity_type, :any
   prop to_circles, :list
-  prop smart_input_placeholder, :string
+  prop smart_input_prompt, :string
+  prop smart_input_text, :string
   prop reply_to_id, :string
   prop thread_id, :string
   prop activity, :any

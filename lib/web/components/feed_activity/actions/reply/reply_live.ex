@@ -4,6 +4,7 @@ defmodule Bonfire.UI.Social.Activity.ReplyLive do
   # def handle_event(action, attrs, socket), do: Bonfire.Common.LiveHandlers.handle_event(action, attrs, socket, __MODULE__)
   prop object_id, :string
   prop permalink, :string
+  prop reply_smart_input_text, :string
   prop replied, :any
   prop boost_count, :any
   prop showing_within, :any

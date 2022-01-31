@@ -36,7 +36,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
 
     components = (
       component_activity_subject(verb, activity, assigns)
-      ++ component_maybe_reply_to(verb, activity, e(assigns, :showing_within, nil))
+      ++ component_maybe_in_reply_to(verb, activity, e(assigns, :showing_within, nil))
       ++ component_object(verb, activity)
       ++ component_actions(verb, activity, assigns)
     )
@@ -89,6 +89,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
           showing_within={e(assigns, :showing_within, :feed)}
           profile={e(component_assigns, :profile, nil)}
           character={e(component_assigns, :character, nil)}
+          reply_smart_input_text={e(component_assigns, :reply_smart_input_text, nil)}
         />
       {/for}
     </div>
@@ -150,11 +151,11 @@ defmodule Bonfire.UI.Social.ActivityLive do
      Bonfire.UI.Social.Activity.SubjectLive
   end
 
-  def component_maybe_reply_to(verb, activity, showing_within \\ nil)
+  def component_maybe_in_reply_to(verb, activity, showing_within \\ nil)
 
-  def component_maybe_reply_to(verb, activity, :thread), do: []
+  def component_maybe_in_reply_to(verb, activity, :thread), do: []
 
-  def component_maybe_reply_to(verb,
+  def component_maybe_in_reply_to(verb,
     %{
       reply_to: %{
         post_content: %{id: _} = reply_to_post_content,
@@ -177,7 +178,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
     }}},
   ]
 
-  def component_maybe_reply_to(verb, %{
+  def component_maybe_in_reply_to(verb, %{
     reply_to: %{
       id: reply_to_id,
       created: %{
@@ -200,7 +201,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
     }},
   ]
 
-  def component_maybe_reply_to(verb, %{
+  def component_maybe_in_reply_to(verb, %{
     reply_to: %{
       id: reply_to_id,
     } = replied
@@ -212,14 +213,14 @@ defmodule Bonfire.UI.Social.ActivityLive do
       {Bonfire.UI.Social.ActivityLive, %{
         activity_inception: true,
         object: e(reply_to_activity, :object, nil),
-        activity: reply_to_activity, #|> IO.inspect,
+        activity: reply_to_activity |> Map.delete(:object), #|> IO.inspect,
         viewing_main_object: false
       }},
     ]
   end
-  def component_maybe_reply_to(verb, %{replied: %{} = replied}, showing_within), do: component_maybe_reply_to(verb, replied, showing_within)
+  def component_maybe_in_reply_to(verb, %{replied: %{} = replied}, showing_within), do: component_maybe_in_reply_to(verb, replied, showing_within)
 
-  def component_maybe_reply_to(_, a, _) do
+  def component_maybe_in_reply_to(_, a, _) do
     Logger.debug("ActivityLive: no reply_to")
     # debug(a)
     []
@@ -264,10 +265,10 @@ defmodule Bonfire.UI.Social.ActivityLive do
   end
 
   def component_actions(_, _, %{activity_inception: true}), do: []
-  def component_actions(_, %{object: %{} = object}, _) do
-    case Bonfire.Common.Types.object_type(object) do
+  def component_actions(_, %{object: %{}} = activity, _) do
+    case Bonfire.Common.Types.object_type(activity.object) do
       type ->
-        actions_for_object_type(object, type)
+        actions_for_object_type(activity, type)
 
       _ ->
         # Logger.warn("ActivityLive: object NOT recognised: #{object}")
@@ -277,39 +278,38 @@ defmodule Bonfire.UI.Social.ActivityLive do
   def component_actions(_, _, _), do: []
 
   # WIP: Customize actions for each activity type
-  def actions_for_object_type(object, type) when type in [Bonfire.Data.Identity.User, Bonfire.Data.Identity.Character], do: []
-  def actions_for_object_type(object, type) when type in [Bonfire.Data.Social.Post, Bonfire.Data.Social.PostContent], do: component_show_standard_actions(object)
-  def actions_for_object_type(object, type) when type in [ValueFlows.EconomicEvent], do: component_show_event_actions(object)
-  def actions_for_object_type(object, type) when type in [ValueFlows.EconomicResource], do: component_show_process_actions(object)
-  def actions_for_object_type(object, type) when type in [ValueFlows.Planning.Intent], do: component_show_process_actions(object)# TODO: choose between Task and other Intent types
-  def actions_for_object_type(object, type) when type in [ValueFlows.Process], do: component_show_process_actions(object) # TODO: choose between Task and other Intent types
-  def actions_for_object_type(object, type) do
+  def actions_for_object_type(activity, type) when type in [Bonfire.Data.Identity.User, Bonfire.Data.Identity.Character], do: []
+  def actions_for_object_type(activity, type) when type in [Bonfire.Data.Social.Post, Bonfire.Data.Social.PostContent], do: component_show_standard_actions(activity)
+  def actions_for_object_type(activity, type) when type in [ValueFlows.EconomicEvent], do: component_show_event_actions(activity)
+  def actions_for_object_type(activity, type) when type in [ValueFlows.EconomicResource], do: component_show_process_actions(activity)
+  def actions_for_object_type(activity, type) when type in [ValueFlows.Planning.Intent], do: component_show_process_actions(activity)# TODO: choose between Task and other Intent types
+  def actions_for_object_type(activity, type) when type in [ValueFlows.Process], do: component_show_process_actions(activity) # TODO: choose between Task and other Intent types
+  def actions_for_object_type(activity, type) do
     # IO.inspect(component_object_type_unknown: type)
-    component_show_standard_actions(object)
+    component_show_standard_actions(activity)
     # [Bonfire.UI.Social.Activity.NoActionsLive]
   end
 
-  # TODO: make which object have actions configurable
-  def component_actions(_, %{object: %{id: _} = object}, _), do: object |> component_show_standard_actions
-  def component_actions(_, _, _), do: []
 
-  def component_show_standard_actions(object), do: [{Bonfire.UI.Social.Activity.ActionsLive, %{object: object}}]
-  def component_show_process_actions(object), do: [{Bonfire.UI.Social.Activity.ProcessActionsLive, %{object: object}}]
-  def component_show_event_actions(object) do
-    [{Bonfire.UI.Social.Activity.EventActionsLive, %{object: e(object, :resource_inventoried_as, "")}}]
+  def component_show_standard_actions(%{subject: %{character: %{username: username}}}= _activity), do: [{Bonfire.UI.Social.Activity.ActionsLive, %{reply_smart_input_text: "@#{username} "}}] |> debug
+  def component_show_standard_actions(_activity), do: [Bonfire.UI.Social.Activity.ActionsLive]
+
+  def component_show_process_actions(_activity), do: [Bonfire.UI.Social.Activity.ProcessActionsLive]
+  def component_show_event_actions(activity) do
+    [{Bonfire.UI.Social.Activity.EventActionsLive, %{object: e(activity, :object, :resource_inventoried_as, "")}}]
   end
-
-
 
 
 
   def load_reply_to(reply_to) do
-    object = Activities.load_object(reply_to)
+    reply_to = Activities.load_object(reply_to)
 
     %{
-      object: object,
-      subject_profile: e(object, :created, :creator_profile, nil),
-      subject_character: e(object, :created, :creator_character, nil)
+      object: reply_to,
+      subject: %{
+        profile: e(reply_to, :created, :creator_profile, nil),
+        character: e(reply_to, :created, :creator_character, nil)
+      }
     }
   end
 

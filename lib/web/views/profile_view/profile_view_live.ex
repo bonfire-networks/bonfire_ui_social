@@ -10,7 +10,7 @@ defmodule Bonfire.UI.Social.ProfileViewLive do
   prop thread_id, :string
   prop create_activity_type, :any
   prop to_circles, :list
-  prop smart_input_placeholder, :string
+  prop smart_input_prompt, :string
   prop smart_input_text, :string
   prop search_placholder, :string
   prop feed_title, :string
