@@ -5,7 +5,7 @@
 
     <div class="flex items-center justify-between">
       <img
-        class={"inline-block object-cover -mt-16 rounded-full ring-4 ring-base-100 bg-base-100 w-32 h-32 ml-6"}
+        class={"inline-block object-cover -mt-16 rounded-full ring-4 ring-base-100 bg-[#6AA4DA] w-32 h-32 ml-6"}
         src={"#{avatar_url(@user)}"}
         alt="current user profile image"
       >
@@ -20,7 +20,7 @@
         >
           <Solid.MailIcon />  
         </LiveRedirect> 
-        <div {e(current_user(assigns), :id, nil) != maybe_get(@user, :id)} >
+        <div :if={e(current_user(assigns), :id, nil) != maybe_get(@user, :id)} >
           <Bonfire.UI.Social.FollowButtonLive 
             id={ComponentID.new(Bonfire.UI.Social.FollowButtonLive, @user)} 
             object={@user} 

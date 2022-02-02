@@ -9,7 +9,7 @@
       <div class="">
         <div class="flex items-center justify-between">
           <img
-            class="inline-block object-cover w-16 h-16 rounded-full ring-2 ring-base-100"
+            class="inline-block object-cover w-16 h-16 rounded-full ring-2 ring-base-100 bg-[#6AA4DA]"
             src={"#{avatar_url(@user)}"}
             alt="user image">
         </div>

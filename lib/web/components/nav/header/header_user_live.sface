@@ -98,9 +98,9 @@
         <Solid.SearchIcon class="w-6 h-6 text-primary-content-200" />   
       </LiveRedirect>
       </div>
-      <div class="flex items-center place-content-center">
+      <!-- <div class="flex items-center place-content-center">
         <Bonfire.UI.Social.UserMenuLive  current_user={current_user(assigns)} />
-      </div>
+      </div> -->
     </div>
   </div>
 </div>

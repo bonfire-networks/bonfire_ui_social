@@ -21,7 +21,7 @@
   <div class={"flex items-center", "pl-1": e(@activity, :replied, :reply_to_id, nil)}>
     <div class="absolute left-4">
       <div class="align-middle avatar">
-        <div class="w-8 h-8 bg-base-300 rounded-btn">
+        <div class="w-8 h-8 bg-[#6AA4DA] rounded-btn">
           <img 
             class="subject_avatar" 
             src={avatar_url(@profile)} 
