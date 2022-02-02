@@ -14,7 +14,7 @@
         id={@id}
         data-id="unfollow"
         :on-click="Bonfire.Social.Follows:unfollow" 
-    phx-value-id={e(@object, :id, nil)} 
+        phx-value-id={e(@object, :id, nil)} 
         type="button" 
         class={e(assigns, :class, "btn btn-accent")}>
         <Solid.EyeOffIcon class="w-5 h-5 mr-2" />

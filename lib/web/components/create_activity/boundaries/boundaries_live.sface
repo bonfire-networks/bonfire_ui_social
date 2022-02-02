@@ -1,5 +1,5 @@
 <div 
-  class="dropdown dropdown-hover">
+  class="dropdown">
   <input 
     name={:boundary_selected} 
     type="hidden" 

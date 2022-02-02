@@ -20,7 +20,7 @@
         >
           <Solid.MailIcon />  
         </LiveRedirect> 
-        <div e(current_user(assigns), :id, nil) != maybe_get(@user, :id)} >
+        <div {e(current_user(assigns), :id, nil) != maybe_get(@user, :id)} >
           <Bonfire.UI.Social.FollowButtonLive 
             id={ComponentID.new(Bonfire.UI.Social.FollowButtonLive, @user)} 
             object={@user} 
