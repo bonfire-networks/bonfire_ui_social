@@ -12,7 +12,7 @@ defmodule Bonfire.UI.Social.Feeds.FeedTest do
     publish_multiple_times(msg, user, n-1)
   end
 
-  def publish_multiple_times(_msg, _user, 0) do
+  def publish_multiple_times(_msg, _user, 0, _preset) do
     :ok
   end
 
