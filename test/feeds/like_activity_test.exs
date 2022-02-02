@@ -18,7 +18,7 @@ defmodule Bonfire.UI.Social.Feeds.LikeActivityTest do
     Follows.follow(bob, alice)
     attrs = %{post_content: %{summary: "summary", name: "test post name", html_body: "first post"}}
 
-    assert {:ok, post} = Posts.publish(alice, attrs, "public")
+    assert {:ok, post} = Posts.publish(current_user: alice, post_attrs: attrs, boundary: "public")
     assert {:ok, boost} = Likes.like(bob, post)
 
     feed = Bonfire.Social.FeedActivities.my_feed(alice)
@@ -45,7 +45,7 @@ defmodule Bonfire.UI.Social.Feeds.LikeActivityTest do
     Follows.follow(bob, alice)
     attrs = %{post_content: %{summary: "summary", name: "test post name", html_body: "first post"}}
 
-    assert {:ok, post} = Posts.publish(alice, attrs, "public")
+    assert {:ok, post} = Posts.publish(current_user: alice, post_attrs: attrs, boundary: "public")
     assert {:ok, like} = Likes.like(bob, post)
 
     feed = Bonfire.Social.FeedActivities.my_feed(bob)
@@ -70,7 +70,7 @@ defmodule Bonfire.UI.Social.Feeds.LikeActivityTest do
       Follows.follow(bob, alice)
       # Alice posts a message
       attrs = %{post_content: %{summary: "summary", name: "test post name", html_body: "first post"}}
-      assert {:ok, post} = Posts.publish(alice, attrs, "public")
+      assert {:ok, post} = Posts.publish(current_user: alice, post_attrs: attrs, boundary: "public")
       assert {:ok, like} = Likes.like(alice, post)
       assert {:ok, like} = Likes.like(bob, post)
 
@@ -92,7 +92,7 @@ defmodule Bonfire.UI.Social.Feeds.LikeActivityTest do
     account2 = fake_account!()
     bob = fake_user!(account2)
     attrs = %{post_content: %{summary: "summary", name: "test post name", html_body: "first post"}}
-    assert {:ok, post} = Posts.publish(alice, attrs, "public")
+    assert {:ok, post} = Posts.publish(current_user: alice, post_attrs: attrs, boundary: "public")
     assert {:ok, like} = Likes.like(bob, post)
     feed = Bonfire.Social.FeedActivities.my_feed(alice)
     fp = feed.edges |> List.first() #|> IO.inspect
@@ -118,7 +118,7 @@ defmodule Bonfire.UI.Social.Feeds.LikeActivityTest do
     Follows.follow(bob, alice)
     # Alice posts a message
     attrs = %{post_content: %{summary: "summary", name: "test post name", html_body: "first post"}}
-    assert {:ok, post} = Posts.publish(alice, attrs, "public")
+    assert {:ok, post} = Posts.publish(current_user: alice, post_attrs: attrs, boundary: "public")
     assert {:ok, like} = Likes.like(bob, post)
 
     feed = Bonfire.Social.FeedActivities.my_feed(bob)
@@ -143,7 +143,7 @@ defmodule Bonfire.UI.Social.Feeds.LikeActivityTest do
     Follows.follow(bob, alice)
     # Alice posts a message
     attrs = %{post_content: %{summary: "summary", name: "test post name", html_body: "first post"}}
-    assert {:ok, post} = Posts.publish(alice, attrs, "public")
+    assert {:ok, post} = Posts.publish(current_user: alice, post_attrs: attrs, boundary: "public")
     assert {:ok, like} = Likes.like(alice, post)
     assert {:ok, like} = Likes.like(bob, post)
     assert unlike = Likes.unlike(bob, post)
@@ -170,7 +170,7 @@ defmodule Bonfire.UI.Social.Feeds.LikeActivityTest do
     Follows.follow(bob, alice)
     # Alice posts a message
     attrs = %{post_content: %{summary: "summary", name: "test post name", html_body: "first post"}}
-    assert {:ok, post} = Posts.publish(alice, attrs, "public")
+    assert {:ok, post} = Posts.publish(current_user: alice, post_attrs: attrs, boundary: "public")
     assert {:ok, like} = Likes.like(alice, post)
     assert {:ok, like} = Likes.like(bob, post)
     assert unlike = Likes.unlike(bob, post)

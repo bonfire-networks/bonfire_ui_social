@@ -8,7 +8,7 @@ defmodule Bonfire.UI.Social.Feeds.FeedTest do
   alias Bonfire.Repo
 
   def publish_multiple_times(msg, user, n, preset \\ "public") when n > 0 do
-    {:ok, post} = Posts.publish(user, msg, preset)
+    {:ok, post} = Posts.publish(current_user: user, post_attrs: msg, boundary: preset)
     publish_multiple_times(msg, user, n-1)
   end
 
@@ -106,12 +106,12 @@ defmodule Bonfire.UI.Social.Feeds.FeedTest do
     local_attrs = %{post_content: %{summary: "summary", name: "test post name", html_body: "first post"}}
     admin_attrs = %{post_content: %{summary: "summary", name: "test post name", html_body: "first post"}}
 
-    {:ok, post0} = Posts.publish(alice, attrs, "public")
+    {:ok, post0} = Posts.publish(current_user: alice, post_attrs: attrs, boundary: "public")
     # bob follows alice
     Follows.follow(bob, alice)
 
     total_posts = 3
-    {:ok, post} = Posts.publish(alice, attrs, "public")
+    {:ok, post} = Posts.publish(current_user: alice, post_attrs: attrs, boundary: "public")
     publish_multiple_times(local_attrs, bob, total_posts, "local")
     publish_multiple_times(admin_attrs, carl, total_posts, "admins")
     assert {:ok, boost} = Boosts.boost(alice, post)
@@ -142,7 +142,7 @@ defmodule Bonfire.UI.Social.Feeds.FeedTest do
     Follows.follow(bob, alice)
 
     total_posts = 3
-    {:ok, post} = Posts.publish(alice, guest_attrs, "public")
+    {:ok, post} = Posts.publish(current_user: alice, post_attrs: guest_attrs, boundary: "public")
     publish_multiple_times(local_attrs, bob, total_posts, "local")
     publish_multiple_times(admin_attrs, carl, total_posts, "admins")
     assert {:ok, boost} = Boosts.boost(alice, post)

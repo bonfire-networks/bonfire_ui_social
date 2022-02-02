@@ -22,14 +22,14 @@ defmodule Bonfire.UI.Social.Feeds.FeedActivityTest do
       Follows.follow(bob, alice)
       attrs = %{post_content: %{summary: "summary", name: "test post name", html_body: "first post"}}
 
-      assert {:ok, post} = Posts.publish(alice, attrs, "public")
+      assert {:ok, post} = Posts.publish(current_user: alice, post_attrs: attrs, boundary: "public")
 
       # Reply to the original post
       attrs_reply = %{post_content: %{summary: "summary", name: "name 2", html_body: "reply to post"}, reply_to_id: post.id}
-      assert {:ok, post_reply} = Posts.publish(bob, attrs_reply, "public")
-      assert {:ok, post_reply} = Posts.publish(carl, attrs_reply, "public")
-      assert {:ok, post_reply} = Posts.publish(demetrius, attrs_reply, "public")
-      assert {:ok, post_reply} = Posts.publish(eve, attrs_reply, "public")
+      assert {:ok, post_reply} = Posts.publish(current_user: bob, post_attrs: attrs_reply, boundary: "public")
+      assert {:ok, post_reply} = Posts.publish(current_user: carl, post_attrs: attrs_reply, boundary: "public")
+      assert {:ok, post_reply} = Posts.publish(current_user: demetrius, post_attrs: attrs_reply, boundary: "public")
+      assert {:ok, post_reply} = Posts.publish(current_user: eve, post_attrs: attrs_reply, boundary: "public")
 
       feed = Bonfire.Social.FeedActivities.my_feed(bob)
       fp = feed.edges |> List.last() #|> IO.inspect
@@ -47,7 +47,7 @@ defmodule Bonfire.UI.Social.Feeds.FeedActivityTest do
        account = fake_account!()
        alice = fake_user!(account)
        attrs = %{post_content: %{summary: "summary", name: "test post name", html_body: "first post"}}
-       assert {:ok, post} = Posts.publish(alice, attrs, "public")
+       assert {:ok, post} = Posts.publish(current_user: alice, post_attrs: attrs, boundary: "public")
        feed = Bonfire.Social.FeedActivities.my_feed(alice)
        fp = feed.edges |> List.first() #|> IO.inspect
        assigns = [activity: fp.activity]
@@ -64,7 +64,7 @@ defmodule Bonfire.UI.Social.Feeds.FeedActivityTest do
       account = fake_account!()
       alice = fake_user!(account)
       attrs = %{post_content: %{summary: "summary", name: "test post name", html_body: "first post"}}
-      assert {:ok, post} = Posts.publish(alice, attrs, "public")
+      assert {:ok, post} = Posts.publish(current_user: alice, post_attrs: attrs, boundary: "public")
       feed = Bonfire.Social.FeedActivities.my_feed(alice)
       fp = feed.edges |> List.first() #|> IO.inspect
       assigns = [activity: fp.activity]
@@ -81,7 +81,7 @@ defmodule Bonfire.UI.Social.Feeds.FeedActivityTest do
       account = fake_account!()
       alice = fake_user!(account)
       attrs = %{post_content: %{summary: "summary", name: "test post name", html_body: "first post"}}
-      assert {:ok, post} = Posts.publish(alice, attrs, "public")
+      assert {:ok, post} = Posts.publish(current_user: alice, post_attrs: attrs, boundary: "public")
       feed = Bonfire.Social.FeedActivities.my_feed(alice)
       fp = feed.edges |> List.first() #|> IO.inspect
       assigns = [activity: fp.activity]
@@ -98,7 +98,7 @@ defmodule Bonfire.UI.Social.Feeds.FeedActivityTest do
       account = fake_account!()
       alice = fake_user!(account)
       attrs = %{post_content: %{summary: "summary", name: "test post name", html_body: "first post"}}
-      assert {:ok, post} = Posts.publish(alice, attrs, "public")
+      assert {:ok, post} = Posts.publish(current_user: alice, post_attrs: attrs, boundary: "public")
       feed = Bonfire.Social.FeedActivities.my_feed(alice)
       fp = feed.edges |> List.first() #|> IO.inspect
       assigns = [activity: fp.activity]
@@ -116,7 +116,7 @@ defmodule Bonfire.UI.Social.Feeds.FeedActivityTest do
       account = fake_account!()
       alice = fake_user!(account)
       attrs = %{post_content: %{summary: "summary", name: "test post name", html_body: "first post"}}
-      assert {:ok, post} = Posts.publish(alice, attrs, "public")
+      assert {:ok, post} = Posts.publish(current_user: alice, post_attrs: attrs, boundary: "public")
       feed = Bonfire.Social.FeedActivities.my_feed(alice)
       fp = feed.edges |> List.first() #|> IO.inspect
       assigns = [activity: fp.activity]
