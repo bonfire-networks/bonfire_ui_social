@@ -18,7 +18,7 @@
 {#else}
 <div class="flex items-center space-x-2 ">
   <div class="text-xs text-base-content text-opacity-60">
-    <span class="capitalize">{e(@verb_display, "")}</span>
+    <span class="hidden capitalize lg:inline">{e(@verb_display, "")}</span>
     <LiveRedirect class="subject_timestamp text-base-content text-opacity-60" to={@permalink}>
       {@date_ago}
     </LiveRedirect>

@@ -6,9 +6,9 @@
     tabindex="0"
     class="feed_activity_action">
     <span class="feed_activity_icon">
-      <Solid.DotsHorizontalIcon class="w-4 h-4" />
+      <Solid.DotsHorizontalIcon class="w-5 h-5 lg:w-4 lg:h-4" />
     </span>
-    <span id="more-menu" class="feed_activity_text">{l "More"}</span>
+    <span id="more-menu" class="feed_activity_text"><span class="hidden lg:block">{l "More"}</span></span>
   </div>
   <ul
     tabindex="0"

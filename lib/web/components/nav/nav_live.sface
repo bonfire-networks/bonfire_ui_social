@@ -1,7 +1,7 @@
 
   <div class="flex flex-col">
     <Bonfire.UI.Social.HeaderUserLive current_user={current_user(assigns)}  />
-    <div class="justify-center w-full max-w-screen-xl px-3 mx-auto mt-3 h-body md:flex ">
+    <div class="w-full lg:justify-center lg:max-w-screen-xl lg:px-3 lg:mx-auto lg:mt-20 h-body md:flex ">
       {#if current_user(assigns) }
       <Bonfire.UI.Social.SidebarLive
         current_user={current_user(assigns)}
@@ -20,7 +20,7 @@
         {@inner_content}
       </div>
       <div class="w-[285px] justify-start hidden h-full overflow-hidden pointer-events-none lg:flex">
-        <div class="top-[76px] bottom-[16px] fixed h-full pointer-events-auto"></div>
+        <div class="top-[80px] bottom-[16px] fixed h-full pointer-events-auto"></div>
       </div>
     </div>
   </div>

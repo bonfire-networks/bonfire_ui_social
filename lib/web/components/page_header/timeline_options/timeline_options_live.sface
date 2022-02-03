@@ -1,6 +1,6 @@
 <div
   :if={current_user(assigns)}
-  class="tabs tabs-boxed">
+  class="hidden lg:flex tabs tabs-boxed">
   <div data-tip="My feed" class="tooltip tooltip-bottom">
     <LiveRedirect to="/home" class={"tab h-[1.7rem]", "tab-active": @selected_tab == "home"}>
       <Solid.RssIcon class="inline-block w-4 h-4 stroke-current" />
