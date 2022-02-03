@@ -8,7 +8,7 @@
       "feed_actions -ml-1": e(assigns, :viewing_main_object, nil) != true 
       }>
 
-    <div class={"flex items-center space-x-8", "mt-3": e(assigns, :viewing_main_object, nil)}>
+    <div class={"flex items-center justify-between lg:justify-start lg:space-x-8 ", "mt-3": e(assigns, :viewing_main_object, nil)}>
       {#if e(assigns, :viewing_main_object, nil) != true and e(assigns, :showing_within, nil) != :thread}
         <Bonfire.UI.Social.Activity.ViewThreadLive 
           permalink={@permalink} 

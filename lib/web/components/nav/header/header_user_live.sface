@@ -1,4 +1,4 @@
-<div class="sticky top-0 z-40 w-full navbar border-base-300 bg-base-300 text-base-content">
+<div class="fixed top-0 z-40 hidden w-full lg:block navbar border-base-300 bg-base-300 text-base-content">
   <div class="flex justify-center flex-shrink-0 w-full max-w-screen-xl mx-auto">
     <div class="flex-col justify-end hidden lg:flex w-72">
       {#if !current_user(assigns)}
@@ -17,14 +17,12 @@
       </LiveRedirect>
       {/if}
     </div>
-
     <!-- SEARCH IS ALWAYS PRESENT -->
     <div class="flex-grow hidden w-full shrink-0 lg:block md:mx-3 md:mr-0 lg:mr-3 max-w-[580px]">
       <div class="items-center ">
         <Bonfire.UI.Social.SearchLive />
       </div>
     </div>
-
     {#if current_account(assigns) != nil and current_user(assigns) == nil }
     <div class="xl:w-[285px] justify-start hidden lg:flex">
       <span class="inline-flex rounded-md shadow-sm">
@@ -52,9 +50,7 @@
       </div> 
       <Bonfire.UI.Social.UserMenuLive  current_user={current_user(assigns)} />
     </div>
-    
     {#else}
-    
     <div class="w-[285px] justify-start hidden lg:flex">
       <span class="inline-flex ">
         <Link to={path(:login, :index)} class="btn btn-primary">
@@ -70,37 +66,35 @@
       {/if}
     </div>
     {/if}
+  </div>
+</div>
 
-    <!-- MOBILE -->
-    <div class="grid w-full grid-flow-col grid-cols-6 gap-4 lg:hidden">
-      <div class="flex items-center place-content-center">
-        <LiveRedirect to={path(:home)}>
-          <div class="w-10 h-10 bg-center bg-no-repeat bg-contain" style={"background-image: url(" <> Bonfire.Common.Config.get([:ui, :theme, :instance_logo], '')  <> ")"}></div>
-        </LiveRedirect>
-      </div>
-      <div class="flex items-center place-content-center">
-        <LiveRedirect :if={current_user(assigns)} to={path(:notifications)} class="p-3 rounded-md hover:bg-neutral hover:bg-opacity-30 ">
-          <Solid.BellIcon class="w-6 h-6 text-primary-content-200" />  
-        </LiveRedirect>
-      </div>
-      <div class="flex items-center place-content-center">
-        <LiveRedirect to="/local" class="p-3 rounded-md hover:bg-neutral hover:bg-opacity-30 ">
-          <Solid.UserGroupIcon class="w-6 h-6 text-primary-content-200" />
-        </LiveRedirect>
-      </div>
-      <div class="flex items-center place-content-center">
-        <LiveRedirect to="/federation" class="p-3 rounded-md hover:bg-neutral hover:bg-opacity-30 ">
-          <Solid.GlobeIcon class="w-6 h-6 text-primary-content-200" />
-        </LiveRedirect>
-      </div>
-      <div class="flex items-center place-content-center">
-      <LiveRedirect to={"/search"} class="p-3 rounded-md hover:bg-neutral hover:bg-opacity-30 ">
-        <Solid.SearchIcon class="w-6 h-6 text-primary-content-200" />   
+ <!-- MOBILE -->
+ 
+  
+
+ <div class="fixed bottom-0 z-40 w-full border-t lg:hidden navbar border-base-300 bg-base-100 text-base-content">
+  <div class="flex justify-between w-full lg:hidden">
+    <div :if={current_user(assigns)} class="flex items-center place-content-center">
+      <LiveRedirect to={"/search"} class="p-3 rounded-md text-base-content text-opacity-70 hover:bg-neutral hover:bg-opacity-30 ">
+        <Solid.RssIcon class="w-6 h-6" />   
       </LiveRedirect>
-      </div>
-      <!-- <div class="flex items-center place-content-center">
-        <Bonfire.UI.Social.UserMenuLive  current_user={current_user(assigns)} />
-      </div> -->
+    </div> 
+    <div :if={current_user(assigns)} class="flex items-center place-content-center">
+      <LiveRedirect to={"/search"} class="p-3 rounded-md text-base-content text-opacity-70 hover:bg-neutral hover:bg-opacity-30 ">
+        <Solid.SearchIcon class="w-6 h-6" />   
+      </LiveRedirect>
+    </div>   
+    <div :if={current_user(assigns)} class="flex items-center place-content-center">
+      <LiveRedirect  to={path(:notifications)} class="p-3 rounded-md text-base-content text-opacity-70 hover:bg-neutral hover:bg-opacity-30 ">
+        <Outline.BellIcon class="w-6 h-6" />  
+      </LiveRedirect>
     </div>
+    <div :if={current_user(assigns)} class="flex items-center place-content-center">
+      <LivePatch to={"/private"} class="p-3 rounded-md text-base-content text-opacity-70 hover:bg-neutral hover:bg-opacity-30">
+          <Solid.MailIcon class="w-6 h-6" />
+      </LivePatch>
+    </div>
+    
   </div>
 </div>

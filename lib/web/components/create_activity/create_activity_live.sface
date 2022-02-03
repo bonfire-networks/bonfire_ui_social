@@ -32,9 +32,13 @@
     <div 
       x-show="'reply_to_id' != ''" 
       x-text= "smart_input_prompt" 
-      class="p-3 rounded-t bg-base-300 text-ellipsis overflow-hidden text-sm ">
+      class="p-3 overflow-hidden text-sm rounded-t bg-base-300 text-ellipsis ">
       {@smart_input_prompt || l "Write a post..."}  
     </div>
+
+    <div>{@reply_to_id}</div>
+    <div>{@thread_id}</div>
+    
     <div class="rounded shadow bg-base-100">
       <div class="relative">
         <Inputs for={:post_content}>
@@ -69,8 +73,7 @@
                     placeholder: "|",
                     "x-model": "smart_input_text"
                   }
-                  class={@textarea_class} 
-                  :class="{'rounded-b-none' : create_activity_open === true}"
+                  class={@textarea_class}
                 />
             </Field>
           </div>
