@@ -77,7 +77,7 @@
             {l "Select User"}
           </Link>
           {#elseif current_user(assigns)}
-            <Bonfire.UI.Social.UserMenuLive  current_user={current_user(assigns)} />    
+            <Bonfire.UI.Social.MobileUserMenuLive current_user={current_user(assigns)} />    
           {#else}
             <div class="flex items-center place-content-center">
               <LiveRedirect to={path(:home)}>

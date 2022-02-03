@@ -76,7 +76,7 @@
  <div class="fixed bottom-0 z-40 w-full border-t lg:hidden navbar border-base-300 bg-base-100 text-base-content">
   <div class="flex justify-between w-full lg:hidden">
     <div :if={current_user(assigns)} class="flex items-center place-content-center">
-      <LiveRedirect to={"/search"} class="p-3 rounded-md text-base-content text-opacity-70 hover:bg-neutral hover:bg-opacity-30 ">
+      <LiveRedirect to={"/home"} class="p-3 rounded-md text-base-content text-opacity-70 hover:bg-neutral hover:bg-opacity-30 ">
         <Solid.RssIcon class="w-6 h-6" />   
       </LiveRedirect>
     </div> 
