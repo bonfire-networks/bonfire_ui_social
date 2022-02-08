@@ -17,6 +17,7 @@
           />
         {#match "invites"}
          <Bonfire.UI.Social.SettingsViewsLive.AdminInvitesLive
+            id="admin_invites"
             current_user={current_user(assigns)}
           />
         {#match "reports"}
