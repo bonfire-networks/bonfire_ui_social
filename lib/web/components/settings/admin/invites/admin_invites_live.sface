@@ -54,9 +54,13 @@
                 <th></th>
               </tr>
             </thead>
-            <tbody>
+            <tbody
+              id="invites_list" 
+              data-id="invites_list" 
+              phx-update={e(assigns, :feed_update_mode, "append")}
+            >
               {#for invite <- @invites}
-              <tr>
+              <tr id={invite.id}>
                 <td class="">
                   <div class="form-control">
                     <div class="relative">
