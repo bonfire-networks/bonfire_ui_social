@@ -13,20 +13,32 @@
     :if={e(assigns, :showing_within, nil) != :thread}>
     <Solid.StarIcon 
       :if={e(@my_like, nil)}
-      class="w-5 h-5 lg:w-4 lg:h-4" />
-    <Outline.StarIcon 
+      class="w-4 h-4" />
+    <svg 
       :if={!e(@my_like, nil)}
-      class="w-5 h-5 lg:w-4 lg:h-4" />
+      viewBox="0 0 24 24" 
+      width="24" 
+      height="24" 
+      stroke="currentColor" 
+      stroke-width="1"
+      fill="none" 
+      stroke-linecap="round" 
+      stroke-linejoin="round" 
+      class="w-4 h-4">
+      <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>
+    <!-- <Outline.StarIcon 
+      :if={!e(@my_like, nil)}
+      class="w-4 h-4" /> -->
   </span>
 
   <span 
     :if={!e(@my_like, nil)}
     class="feed_activity_text">
-     <span class="hidden mr-1 lg:block">{l("Like")}</span> <span :if={(e(@like_count, 0)) > 0}>({e(@like_count, 0)})</span>
+      <span :if={(e(@like_count, 0)) > 0}>({e(@like_count, 0)})</span>
   </span>
   <span 
     :if={e(@my_like, nil)}
     class="font-medium feed_activity_text">
-     <span class="hidden mr-1 lg:block">{l("Liked")}</span> <span :if={(e(@like_count, 0)) > 0}>({e(@like_count, 0)})</span>
+      <span :if={(e(@like_count, 0)) > 0}>({e(@like_count, 0)})</span>
   </span>
 </button>

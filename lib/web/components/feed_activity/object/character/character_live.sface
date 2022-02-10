@@ -1,6 +1,6 @@
 <div class="flex w-full py-3 pb-0 space-x-3 activity_notification">
   <div :if={@verb == "follow"}  class="absolute left-4">
-    <Solid.UserIcon class="flex-shrink-0 w-8 h-8 text-base-300" />
+    <Solid.UserAddIcon class="flex-shrink-0 w-8 h-8 text-primary" />
   </div>
   <div class="flex-1 text-base-content">
       <LiveRedirect 
