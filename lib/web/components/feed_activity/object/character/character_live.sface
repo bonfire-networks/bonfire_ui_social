@@ -1,41 +1,43 @@
-<div class="flex w-full py-3 pb-0 space-x-3 activity_notification">
-  <div :if={@verb == "follow"}  class="absolute left-4">
-    <Solid.UserAddIcon class="flex-shrink-0 w-8 h-8 text-primary" />
+<div class={"flex items-center mb-3 -ml-7"}>
+  <div class="flex items-center justify-start w-5 h-5">
+    <Solid.UserAddIcon class="w-5 h-5 text-info" />      
   </div>
-  <div class="flex-1 text-base-content">
+  <div class="flex-1 ml-2">
+    <div class="text-sm font-medium text-base-content text-opacity-80">
+      <LiveRedirect
+        aria-label={e(@activity, :subject, :character, :username, "") <> " profile"}
+        class="font-medium subject_minimal"
+        to={path(e(@activity, :subject, :character, nil))}>
+        {e(@activity, :subject, :profile, :name, "Anonymous")}
+      </LiveRedirect>
+      {raw @verb_display}
+      <span :if={e(@object, :id, nil) == e(current_user(assigns), :id, nil)}>
+        you
+      </span>
       <LiveRedirect 
-              to={path(e(@activity, :subject, :character, nil))} 
-              class="font-semibold link link-hover">
-        <Bonfire.UI.Social.Activity.AvatarLive profile={e(@activity, :subject, :profile, nil) || e(@object, :profile, nil)} />
+        :if={e(@object, :id, nil) !=e(current_user(assigns), :id, nil)} 
+        to={path(e(@object, :character, nil))} 
+        class="font-semibold link link-hover">
+        {e(@object, :profile, :name, "Anonymous")}
       </LiveRedirect> 
-
-
-        <div class="flex mt-1">
-          <div class="flex-1">
-            <LiveRedirect 
-              to={path(e(@activity, :subject, :character, nil))} 
-              class="font-semibold link link-hover">
-                {e(@activity, :subject, :profile, :name, "Anonymous")}
-              </LiveRedirect> 
-
-            {raw @verb_display} 
-
-            <span :if={e(@object, :profile, :id, nil) == e(current_user(assigns), :id, nil)}>
-              you
-            </span>
-
-            <LiveRedirect 
-            :if={e(@object, :profile, :id, nil) !=e(current_user(assigns), :id, nil)} 
-            to={path(e(@object, :character, nil))} 
-            class="font-semibold link link-hover">
-              {e(@object, :profile, :name, "Anonymous")}
-            </LiveRedirect> 
-          </div>
-          <!-- <Bonfire.UI.Social.Activity.DateAgoLive 
-          permalink={@permalink}
-          date_ago={@date_ago}
-          object={@object}
-          verb_display={@verb_display} /> -->
-        </div>
-      </div>
     </div>
+  </div>
+</div>
+
+
+<div class="flex w-full activity_notification">
+
+  <LiveRedirect to={"/user/#{e(@activity, :subject, :character, :username, "anon")}"} class="flex profile-item group ">
+    <div class="absolute left-3">
+      <Bonfire.UI.Social.Activity.AvatarLive profile={e(@activity, :subject, :profile, nil)} />
+    </div>
+    <div class="items-baseline justify-between flex-1">
+      <p class="text-base font-semibold group-hover:underline text-base-content">
+        {e(@activity, :subject, :profile, :name, "Anon")}
+      </p>
+      <p class="-mt-px text-sm text-base-content text-opacity-70">
+        @{e(@activity, :subject, :character, :username, "anon")} 
+      </p>
+    </div>
+  </LiveRedirect>
+</div>

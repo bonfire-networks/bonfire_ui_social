@@ -32,12 +32,11 @@
         </div>
       </div>
     </div>
-  {#match :notifications}
+  <!-- {#match :notifications}
     <div class="flex w-full activity_notification">
       {#case @verb}
         {#match "boost"}
          <div class="absolute left-4">
-           <!-- Boost icon -->
            <svg 
            :if={@verb == "boost"}
             viewBox="0 0 24 24" 
@@ -50,15 +49,6 @@
             stroke-linejoin="round" 
             class="flex-shrink-0 w-6 h-6 text-primary">
             <polyline points="17 1 21 5 17 9"></polyline><path d="M3 11V9a4 4 0 0 1 4-4h14"></path><polyline points="7 23 3 19 7 15"></polyline><path d="M21 13v2a4 4 0 0 1-4 4H3"></path></svg>
-            <!-- <svg 
-              :if={@verb == "boost"}
-              viewBox="0 0 24 24" 
-              aria-hidden="true" 
-              fill="currentColor"
-              stroke="none"
-              class="flex-shrink-0 w-6 h-6 text-primary">
-              <g><path d="M23.77 15.67c-.292-.293-.767-.293-1.06 0l-2.22 2.22V7.65c0-2.068-1.683-3.75-3.75-3.75h-5.85c-.414 0-.75.336-.75.75s.336.75.75.75h5.85c1.24 0 2.25 1.01 2.25 2.25v10.24l-2.22-2.22c-.293-.293-.768-.293-1.06 0s-.294.768 0 1.06l3.5 3.5c.145.147.337.22.53.22s.383-.072.53-.22l3.5-3.5c.294-.292.294-.767 0-1.06zm-10.66 3.28H7.26c-1.24 0-2.25-1.01-2.25-2.25V6.46l2.22 2.22c.148.147.34.22.532.22s.384-.073.53-.22c.293-.293.293-.768 0-1.06l-3.5-3.5c-.293-.294-.768-.294-1.06 0l-3.5 3.5c-.294.292-.294.767 0 1.06s.767.293 1.06 0l2.22-2.22V16.7c0 2.068 1.683 3.75 3.75 3.75h5.85c.414 0 .75-.336.75-.75s-.337-.75-.75-.75z"></path></g>
-            </svg> -->
           </div>
         {#match "follow"}
          <div class="absolute left-4">
@@ -95,13 +85,13 @@
           </div>
         </div>
       </div>
-    </div>
+    </div> -->
 
   {#match _}
-    <div class={"flex items-center mb-2"}>
+    <div class={"flex items-center mb-3 -ml-7"}>
       <div class="flex items-center justify-start w-5 h-5">
-        <Solid.StarIcon :if={@verb == "like"} class="w-4 h-4 text-base-content text-opacity-80" />
-
+        <Solid.StarIcon :if={@verb == "like"} class="w-5 h-5 text-yellow-500" />
+        <Solid.UserAddIcon :if={@verb == "follow"} class="flex-shrink-0 w-5 h-5 text-info" />
          <!-- Boost icon -->
          <svg 
           :if={@verb == "boost"}
@@ -109,17 +99,18 @@
           width="24" 
           height="24" 
           stroke="currentColor" 
-          stroke-width="1" 
+          stroke-width="2" 
           fill="none" 
           stroke-linecap="round" 
           stroke-linejoin="round" 
-          class="w-4 h-4 text-base-content text-opacity-80">
+          class="w-4 h-4 text-info">
           <polyline points="17 1 21 5 17 9"></polyline><path d="M3 11V9a4 4 0 0 1 4-4h14"></path><polyline points="7 23 3 19 7 15"></polyline><path d="M21 13v2a4 4 0 0 1-4 4H3"></path></svg>
-        <Solid.PencilIcon :if={@verb == "reply"} class="w-4 h-4 text-base-content text-opacity-80" />
-        <Solid.FlagIcon :if={@verb == "flag"} class="w-4 h-4 text-base-content text-opacity-80" />
-      </div>
+        <Solid.PencilIcon :if={@verb == "reply"} class="w-4 h-4 text-info" />
+        <Solid.FlagIcon :if={@verb == "flag"} class="w-4 h-4 text-error" />
+         
+        </div>
       <div class="flex-1 ml-2">
-        <div class="text-xs font-medium text-base-content text-opacity-80">
+        <div class="text-sm font-medium text-base-content text-opacity-80">
           <LiveRedirect
             aria-label={e(@activity, :subject, :character, :username, "") <> " profile"}
             class="font-medium subject_minimal"
