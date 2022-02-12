@@ -9,11 +9,11 @@
   class="like feed_activity_action like_with_label">
 
   <span 
-     class={"feed_activity_icon", "bg-primary bg-opacity-70": e(@my_like, nil)}
+     class={"feed_activity_icon", "text-yellow-500": e(@my_like, nil)}
     :if={e(assigns, :showing_within, nil) != :thread}>
     <Solid.StarIcon 
       :if={e(@my_like, nil)}
-      class="w-4 h-4" />
+      class="w-5 h-5" />
     <svg 
       :if={!e(@my_like, nil)}
       viewBox="0 0 24 24" 

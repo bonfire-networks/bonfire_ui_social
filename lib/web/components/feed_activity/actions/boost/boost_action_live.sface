@@ -8,7 +8,7 @@
   class="feed_activity_action boost">
 
   {#if e(assigns, :showing_within, nil) != :thread}
-  <span class={"feed_activity_icon", "bg-primary bg-opacity-70":  e(assigns, :my_boost , nil)}>
+  <span class={"feed_activity_icon", "text-info": e(assigns, :my_boost, nil)}>
 
     <svg 
       viewBox="0 0 24 24" 
@@ -19,7 +19,7 @@
       fill="none" 
       stroke-linecap="round" 
       stroke-linejoin="round" 
-      class="w-4 h-4">
+      class={"w-4 h-4"}>
       <polyline points="17 1 21 5 17 9"></polyline><path d="M3 11V9a4 4 0 0 1 4-4h14"></path><polyline points="7 23 3 19 7 15"></polyline><path d="M21 13v2a4 4 0 0 1-4 4H3"></path></svg>
 
     <!-- <svg 
