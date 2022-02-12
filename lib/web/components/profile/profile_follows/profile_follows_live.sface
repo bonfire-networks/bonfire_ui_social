@@ -4,23 +4,23 @@
       to={"/user/#{e(@user, :character, :username, "")}/followers"} 
       class={"tab flex-1 tab-bordered", "tab-active": @selected_tab ==  "followers"}
     >
-      {l "Followers"} ({e(@user, :character, :follow_count, :follower_count, 0)})
+      {l "Followers"} ({e(@user, :character, :follow_count, :object_count, 0)})
     </LiveRedirect> 
     <LiveRedirect 
       to={"/user/#{e(@user, :character, :username, "")}/followed"} 
       class={"tab flex-1 tab-bordered", "tab-active": @selected_tab ==  "followed"}
     >
-      {l "Following"} ({e(@user, :character, :follow_count, :follow_count, 0)})
+      {l "Following"} ({e(@user, :character, :follow_count, :subject_count, 0)})
     </LiveRedirect>   
   </div>
 
   <div :if={@selected_tab == "followed"}>
     <div class="flow-root my-4">
       <ul class="-my-5 divide-y divide-base-300">
-        <li :for={follow <- @feed}>
+        <li class="p-4" :for={follow <- @feed}>
           <Bonfire.UI.Social.ProfileItemLive
-            profile={e(follow, :followed_profile, nil)}
-            character={e(follow, :followed_character, nil)}
+            profile={e(follow, :edge, :subject, :profile, nil )}
+            character={e(follow, :edge, :subject, :character, nil )}
           />
         </li>
       </ul>
@@ -30,10 +30,10 @@
   <div :if={@selected_tab == "followers"}>
     <div class="flow-root my-4">
       <ul class="-my-5 divide-y divide-base-300">
-        <li :for={follow <- @feed}>
+        <li class="p-4" :for={follow <- @feed}>
           <Bonfire.UI.Social.ProfileItemLive
-            profile={e(follow, :follower_profile, nil)}
-            character={e(follow, :follower_character, nil)}
+            profile={e(follow, :edge, :subject, :profile, nil )}
+            character={e(follow, :edge, :subject, :character, nil )}
           />
         </li>
       </ul>
