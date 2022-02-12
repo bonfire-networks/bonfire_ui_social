@@ -136,7 +136,7 @@
           </svg>
           <LiveRedirect to={"/user/#{e(@user, :character, :username, "")}/followers"}>
             <span class="ml-2 mr-2 text-sm text-base-content text-opacity-70 hover:underline">
-              <strong class="text-base-content text-opacity-70">
+              <strong class="text-base-content">
                 {e(@user, :character, :follow_count, :object_count, 0)}
               </strong>
               Followers
@@ -145,7 +145,7 @@
           <span class="text-base-content text-opacity-70">·</span>
           <LiveRedirect to={"/user/#{e(@user, :character, :username, "")}/followed"}>
             <span class="ml-2 text-sm text-base-content text-opacity-70 hover:underline">
-              <strong class="text-base-content text-opacity-70">
+              <strong class="text-base-content">
                 {e(@user, :character, :follow_count, :subject_count, 0)}
               </strong>
               Following
