@@ -23,7 +23,7 @@
     </span>
     <span class="feed_activity_text">
       {#if Bonfire.UI.Social.Activity.ReplyLive.count(@replied) > 0 }
-        ({Bonfire.UI.Social.Activity.ReplyLive.count(@replied)})   
+        {Bonfire.UI.Social.Activity.ReplyLive.count(@replied)}
       {/if}
     </span>
   </div>

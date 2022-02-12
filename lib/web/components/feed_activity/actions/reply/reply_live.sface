@@ -18,7 +18,7 @@
       </span>
       <span class="feed_activity_text">
         {#if count(@replied)>0 }
-          ({count(@replied)}) 
+          {count(@replied)} 
         {/if}
         <noscript>
            <LiveRedirect 

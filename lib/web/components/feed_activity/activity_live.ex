@@ -221,7 +221,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
 
   def component_maybe_in_reply_to(_, a, _) do
     Logger.debug("ActivityLive: no reply_to")
-    # debug(a)
+    debug(a)
     []
   end
 

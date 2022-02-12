@@ -34,7 +34,7 @@
   {/if}
 
   <span class={"feed_activity_text", "font-medium": e(assigns, :my_boost , nil)}>
-    <span :if={e(@boost_count, 0) > 0}>({e(@boost_count, 0)})</span>
+    <span :if={e(@boost_count, 0) > 0}>{e(@boost_count, 0)}</span>
   </span>
 
 </button>
