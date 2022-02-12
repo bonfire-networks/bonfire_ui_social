@@ -28,7 +28,7 @@ defmodule Bonfire.UI.Social.Activity.EconomicEventLive do
     {__MODULE__,
       [
         object: object,
-        verb_display: Bonfire.UI.Social.ActivityLive.verb_display(e(object, :action, :label, e(object, :action_id, "")))
+        verb_display: Bonfire.Social.Activities.verb_display(e(object, :action, :label, e(object, :action_id, "")))
       ]
     }
   end
