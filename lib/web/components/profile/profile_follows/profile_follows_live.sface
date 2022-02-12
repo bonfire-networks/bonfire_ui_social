@@ -19,8 +19,8 @@
       <ul class="-my-5 divide-y divide-base-300">
         <li class="p-4" :for={follow <- @feed}>
           <Bonfire.UI.Social.ProfileItemLive
-            profile={e(follow, :edge, :subject, :profile, nil )}
-            character={e(follow, :edge, :subject, :character, nil )}
+            profile={e(follow, :edge, :object, :profile, nil )}
+            character={e(follow, :edge, :object, :character, nil )}
           />
         </li>
       </ul>
