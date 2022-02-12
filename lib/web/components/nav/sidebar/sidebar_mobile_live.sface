@@ -62,7 +62,7 @@
         >
           <Bonfire.UI.Social.Sidebar.UserMenuLinksLive />
         </div>
-        <div class="flex flex-col space-y-3" x-show="!open_profile_mobile_menu" >
+        <!-- <div class="flex flex-col space-y-3" x-show="!open_profile_mobile_menu" >
           <div
             :for={{component, component_assigns} <- Bonfire.Common.Config.get([:ui, :sidebar_components], [{Bonfire.UI.Social.SidebarNavigationLive, []}])}
           >
@@ -73,8 +73,8 @@
 
               page: @page
             ]))}
-          </div>
-        </div>
+          </div> 
+        </div> -->
       </nav>
     </div>
   </div>

@@ -16,7 +16,8 @@
             current_user={current_user(assigns)}
           />
         {#match "invites"}
-         <Bonfire.Invite.Links.Web.AdminInvitesLive
+         <Surface.Components.Dynamic.LiveComponent
+            module={Bonfire.Common.Config.get([:ui, :invites_component], Bonfire.Invite.Links.Web.InvitesLive)}
             id="admin_invites"
             current_user={current_user(assigns)}
           />
