@@ -2,11 +2,11 @@
 <div class="mt-2 feed_actions">
   <div class={"flex items-center space-x-3"}>
     <button
-     :if={!is_admin?(@user)} 
+     :if={Bonfire.Me.Users.is_admin?(current_user(assigns))} 
     class="btn btn-xs btn-outline">
     {l "View thread"}</button>
     <button 
-     :if={!is_admin?(@user)} 
+     :if={Bonfire.Me.Users.is_admin?(current_user(assigns))} 
     class="items-center btn btn-error btn-xs">
       <Outline.TrashIcon class="w-4 h-4 mr-1"/> 
       {l "Delete"}
