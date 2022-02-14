@@ -263,6 +263,11 @@ defmodule Bonfire.UI.Social.ActivityLive do
     [{Bonfire.UI.Social.Activity.UnknownLive, %{object_type: type}}]
   end
 
+  
+  # WIP: THIS NEEDS TO BE REFACTORED ACCORDING TO actions_for_object_type
+  def component_actions("flag", _, _), do: [Bonfire.UI.Social.Activity.FlagActionsLive]
+
+
   def component_actions(_, _, %{activity_inception: true}), do: []
   def component_actions(_, %{object: %{}} = activity, _) do
     case Bonfire.Common.Types.object_type(activity.object) do
@@ -278,13 +283,14 @@ defmodule Bonfire.UI.Social.ActivityLive do
 
   # WIP: Customize actions for each activity type
   def actions_for_object_type(activity, type) when type in [Bonfire.Data.Identity.User, Bonfire.Data.Identity.Character], do: []
+  def actions_for_object_type(activity, type) when type in [Bonfire.Data.Social.Flag], do: []
   def actions_for_object_type(activity, type) when type in [Bonfire.Data.Social.Post, Bonfire.Data.Social.PostContent], do: component_show_standard_actions(activity)
   def actions_for_object_type(activity, type) when type in [ValueFlows.EconomicEvent], do: component_show_event_actions(activity)
   def actions_for_object_type(activity, type) when type in [ValueFlows.EconomicResource], do: component_show_process_actions(activity)
   def actions_for_object_type(activity, type) when type in [ValueFlows.Planning.Intent], do: component_show_process_actions(activity)# TODO: choose between Task and other Intent types
   def actions_for_object_type(activity, type) when type in [ValueFlows.Process], do: component_show_process_actions(activity) # TODO: choose between Task and other Intent types
   def actions_for_object_type(activity, type) do
-    # IO.inspect(component_object_type_unknown: type)
+    IO.inspect(component_object_type_unknown: type)
     component_show_standard_actions(activity)
     # [Bonfire.UI.Social.Activity.NoActionsLive]
   end
