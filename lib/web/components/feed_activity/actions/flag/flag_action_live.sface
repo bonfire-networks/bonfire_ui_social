@@ -1,12 +1,15 @@
-<li>
+<li class=" hover:bg-neutral hover:bg-opacity-20">
   {#if e(assigns, :my_flag, :id, nil)}
-    <a disabled="disabled" class="">
-      {l "You flagged this"}
-    </a>
+    <button disbuttonbled="disabled" class="flex items-center p-4 text-neutral">
+      {l "You already flagged this"}
+    </button>
   {#else}
-    <a @click="modal_flagging_activity = true" class="">
-      {l "Flag this"}
-    </a>
+    <button 
+      @click="modal_flagging_activity = true" 
+      class="flex items-center p-4 text-sm text-neutral">
+      <Outline.FlagIcon class="w-4 h-4 mr-2 text-neutral text-opacity-70" />
+      {l "Flag this activity"}
+    </button>
   {/if}
 
 

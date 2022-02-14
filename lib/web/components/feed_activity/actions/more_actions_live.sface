@@ -22,7 +22,7 @@
   </div>
   <ul
     tabindex="0"
-    class="p-2 shadow menu dropdown-content bg-base-100 rounded-box w-52"
+    class="w-52 shadow menu dropdown-content bg-neutral-content rounded dropdown_actions
     role="menu"
     aria-orientation="vertical"
     aria-labelledby="more-menu">
@@ -31,5 +31,17 @@
       activity={@activity}
       flagged={@flagged}
     />
+    <li class=" hover:bg-neutral hover:bg-opacity-20">
+      <button class="flex items-center p-4 text-sm text-neutral">
+        <Outline.BanIcon class="w-4 h-4 mr-2 text-neutral text-opacity-70" />
+        {l "Block this user"}
+      </button>
+    </li>
+    <li class=" hover:bg-neutral hover:bg-opacity-20">
+      <button class="flex items-center p-4 text-sm text-neutral">
+        <Outline.UserRemoveIcon class="w-4 h-4 mr-2 text-neutral text-opacity-70" />
+        {l "Stop following this user"}
+      </button>
+    </li>
   </ul>
 </div>
