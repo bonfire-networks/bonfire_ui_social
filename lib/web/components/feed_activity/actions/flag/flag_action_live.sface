@@ -1,4 +1,6 @@
-<li class=" hover:bg-neutral hover:bg-opacity-20">
+<li 
+  :if={e(current_user(assigns), :id, nil) != e(@activity, :subject, :character, :id, nil)}
+  class=" hover:bg-neutral hover:bg-opacity-20">
   {#if e(assigns, :my_flag, :id, nil)}
     <button disbuttonbled="disabled" class="flex items-center p-4 text-neutral">
       {l "You already flagged this"}

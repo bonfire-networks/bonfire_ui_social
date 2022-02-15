@@ -26,18 +26,30 @@
     role="menu"
     aria-orientation="vertical"
     aria-labelledby="more-menu">
+    <li 
+      :if={e(current_user(assigns), :id, nil) == e(@activity, :subject, :character, :id, nil)}
+      class=" hover:bg-neutral hover:bg-opacity-20">
+      <button class="flex items-center p-4 text-sm text-error">
+        <Outline.TrashIcon class="w-4 h-4 mr-2 text-error" />
+        {l "Delete"}
+      </button>
+    </li>
     <Bonfire.UI.Social.FlagActionLive 
       object={@object}
       activity={@activity}
       flagged={@flagged}
     />
-    <li class=" hover:bg-neutral hover:bg-opacity-20">
+    <li 
+      :if={e(current_user(assigns), :id, nil) != e(@activity, :subject, :character, :id, nil)}
+      class=" hover:bg-neutral hover:bg-opacity-20">
       <button class="flex items-center p-4 text-sm text-neutral">
         <Outline.BanIcon class="w-4 h-4 mr-2 text-neutral text-opacity-70" />
         {l "Block this user"}
       </button>
     </li>
-    <li class=" hover:bg-neutral hover:bg-opacity-20">
+    <li 
+      :if={e(current_user(assigns), :id, nil) != e(@activity, :subject, :character, :id, nil)}
+      class=" hover:bg-neutral hover:bg-opacity-20">
       <button class="flex items-center p-4 text-sm text-neutral">
         <Outline.UserRemoveIcon class="w-4 h-4 mr-2 text-neutral text-opacity-70" />
         {l "Stop following this user"}
