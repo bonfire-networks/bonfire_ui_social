@@ -16,9 +16,9 @@
         <LiveRedirect
           :if={current_user(assigns) && e(current_user(assigns), :id, nil) != maybe_get(@user, :id)}
           to={"/user/#{e(@user, :character, :username, "")}/private"}
-          class="btn btn-circle"
+          class="btn btn-sm btn-outline btn-circle"
         >
-          <Solid.MailIcon />  
+          <Solid.MailIcon class="w-4 h-4" />  
         </LiveRedirect> 
         <div :if={e(current_user(assigns), :id, nil) != maybe_get(@user, :id)} >
           <Bonfire.UI.Social.FollowButtonLive 
@@ -28,7 +28,7 @@
           />
         </div>
 
-        <span 
+        <!-- <span 
           :if={current_user(assigns) && is_admin?(current_user(assigns))} 
         >
           <button
@@ -49,18 +49,63 @@
           >
               <Outline.KeyIcon />
           </button>
-        </span>
+        </span> -->
 
         <LiveRedirect
           :if={e(current_user(assigns), :id, nil) && e(current_user(assigns), :id, nil) == maybe_get(@user, :id)}
           to="/settings"
-          class="capitalize btn"
+          class="capitalize rounded-full btn btn-sm btn-outline"
         >
           <span class="mr-2">
             <Solid.CogIcon />
           </span>
           {l "Settings"}
         </LiveRedirect>
+        <div class="dropdown dropdown-end">
+          <label tabindex="0" class="m-1 btn btn-outline btn-sm btn-circle">
+            <Solid.DotsHorizontalIcon />
+          </label>
+          <ul tabindex="0" class="rounded shadow w-52 menu dropdown-content bg-neutral-content dropdown_actions">
+            <li
+             class="hover:bg-neutral hover:bg-opacity-20"
+             :if={current_user(assigns) && is_admin?(current_user(assigns))} >
+              <button
+                class="flex items-center p-4 text-sm text-neutral"
+                :if={!is_admin?(@user)} 
+                phx-click="Bonfire.Me.Users:make_admin"
+                phx-value-username_or_id={maybe_get(@user, :id)}
+              >
+                <Outline.KeyIcon class="w-4 h-4 mr-2 text-neutral text-opacity-70" />
+                <span>{l "Make admin"}</span>
+              </button>
+              <button
+                class="flex items-center p-4 text-sm text-neutral"
+                :if={is_admin?(@user)} 
+                phx-click="Bonfire.Me.Users:revoke_admin"
+                phx-value-username_or_id={maybe_get(@user, :id)}
+              >
+                  <Outline.KeyIcon class="w-4 h-4 mr-2 text-neutral text-opacity-70" />
+                  <span>{l "Revoke admin"}</span>
+              </button>
+            </li>
+            <li 
+              :if={e(current_user(assigns), :id, nil) != e(@user, :character, :id, nil)}
+              class=" hover:bg-neutral hover:bg-opacity-20">
+              <button class="flex items-center p-4 text-sm text-neutral">
+                <Outline.FlagIcon class="w-4 h-4 mr-2 text-neutral text-opacity-70" />
+                {l "Flag this user"}
+              </button>
+            </li>
+            <li 
+              :if={e(current_user(assigns), :id, nil) != e(@user, :character, :id, nil)}
+              class=" hover:bg-neutral hover:bg-opacity-20">
+              <button class="flex items-center p-4 text-sm text-neutral">
+                <Outline.BanIcon class="w-4 h-4 mr-2 text-neutral text-opacity-70" />
+                {l "Block this user"}
+              </button>
+            </li>
+          </ul>
+        </div>
       </div>
     </div>
     <div class={"flex-1 px-6 mt-4"}>

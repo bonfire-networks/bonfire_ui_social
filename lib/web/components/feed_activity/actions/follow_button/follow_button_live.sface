@@ -5,8 +5,8 @@
     :on-click="Bonfire.Social.Follows:follow" 
     phx-value-id={e(@object, :id, nil)} 
     type="button" 
-    class={e(assigns, :class, "btn btn-secondary")}>
-       <Solid.EyeIcon class="w-5 h-5 mr-2" />
+    class={e(assigns, :class, "btn btn-sm btn-outline rounded-full")}>
+       <Solid.EyeIcon class="w-4 h-4 mr-2" />
        {l "Follow"} {e(assigns, :label, "")}
     </button>
 {#else}
@@ -16,8 +16,8 @@
         :on-click="Bonfire.Social.Follows:unfollow" 
         phx-value-id={e(@object, :id, nil)} 
         type="button" 
-        class={e(assigns, :class, "btn btn-accent")}>
-        <Solid.EyeOffIcon class="w-5 h-5 mr-2" />
+        class={e(assigns, :class, "btn btn-sm btn-outline rounded-full")}>
+        <Solid.EyeOffIcon class="w-4 h-4 mr-2" />
         {l "Unfollow"} { e(assigns, :label, "")}
     </button>
 {/if}
