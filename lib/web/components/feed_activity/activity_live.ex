@@ -21,7 +21,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
 
     activity = activity
                 # |> debug("Activity provided")
-                |> Map.put(:object, e(assigns, :object, nil) || Activities.object_from_activity(activity))
+                |> Map.put(:object, object(assigns, activity))
                 |> debug("Activity with object")
 
     verb = e(activity, :verb, :verb, "create")
@@ -103,6 +103,14 @@ defmodule Bonfire.UI.Social.ActivityLive do
     ~F"""
 
     """
+  end
+
+  def object(assigns, activity) do
+    (
+      e(assigns, :object, nil)
+      || Activities.object_from_activity(activity)
+    )
+    |> repo().maybe_preload(created: [creator: [:profile, :character]])
   end
 
   # don't show subject twice
@@ -264,7 +272,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
 
 
   # WIP: THIS NEEDS TO BE REFACTORED ACCORDING TO actions_for_object_type
-  def component_actions("flag", _, _), do: [Bonfire.UI.Social.Activity.FlagActionsLive]
+  def component_actions("flag", _, _), do: [Bonfire.UI.Social.Activity.FlaggedActionsLive]
 
 
   def component_actions(_, _, %{activity_inception: true}), do: []

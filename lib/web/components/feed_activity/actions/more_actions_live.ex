@@ -6,13 +6,13 @@ defmodule Bonfire.UI.Social.Activity.MoreActionsLive do
   prop object, :any
   prop flagged, :any
 
-  def subject(activity) do
-    e(activity, :creator, nil) || e(activity, :subject, nil)
+  def subject(assigns) do
+    e(assigns, :object, :created, :creator, nil) || e(assigns, :activity, :subject, nil)
   end
-  def subject_id(activity) do
-    e(subject(activity), :id, nil)
+  def subject_id(assigns) do
+    e(subject(assigns), :id, nil)
   end
-  def name(activity) do
-    e(subject(activity), :profile, :name, l("this user"))
+  def name(assigns) do
+    e(subject(assigns), :profile, :name, l("this user"))
   end
 end

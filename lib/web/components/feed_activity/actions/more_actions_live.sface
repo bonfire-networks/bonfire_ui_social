@@ -29,7 +29,10 @@
     <li 
       :if={e(current_user(assigns), :id, nil) == e(@activity, :subject, :character, :id, nil)}
       class=" hover:bg-neutral hover:bg-opacity-20">
-      <button class="flex items-center p-4 text-sm text-error">
+      <button 
+        phx-click={"Bonfire.Social.Objects:delete"} 
+        phx-value-id={e(@object, :id, "")}
+        class="flex items-center p-4 text-sm text-error">
         <Outline.TrashIcon class="w-4 h-4 mr-2 text-error" />
         {l "Delete"}
       </button>
@@ -40,22 +43,22 @@
       flagged={@flagged}
     />
     <li 
-      :if={e(current_user(assigns), :id, nil) != subject_id(@activity)}
+      :if={e(current_user(assigns), :id, nil) != subject_id(assigns)}
       class=" hover:bg-neutral hover:bg-opacity-20">
       <Bonfire.UI.Social.BlockButtonLive
-        object={subject(@activity)}
-        label={name(@activity)}
-        id={ComponentID.new(Bonfire.UI.Social.BlockButtonLive, subject(@activity))}
+        object={subject(assigns)}
+        label={name(assigns)}
+        id={ComponentID.new(Bonfire.UI.Social.BlockButtonLive, subject(assigns))}
         class="flex items-center p-4 text-sm text-neutral"
       />
     </li>
     <li 
-      :if={e(current_user(assigns), :id, nil) != subject_id(@activity)}
+      :if={e(current_user(assigns), :id, nil) != subject_id(assigns)}
       class=" hover:bg-neutral hover:bg-opacity-20">
       <Bonfire.UI.Social.FollowButtonLive
-        object={subject(@activity)}
-        label={name(@activity)}
-        id={ComponentID.new(Bonfire.UI.Social.FollowButtonLive, subject(@activity))}
+        object={subject(assigns)}
+        label={name(assigns)}
+        id={ComponentID.new(Bonfire.UI.Social.FollowButtonLive, subject(assigns))}
         class="flex items-center p-4 text-sm text-neutral"
       />
     </li>

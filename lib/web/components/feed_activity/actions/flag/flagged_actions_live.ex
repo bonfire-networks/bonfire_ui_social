@@ -1,4 +1,4 @@
-defmodule Bonfire.UI.Social.Activity.FlagActionsLive do
+defmodule Bonfire.UI.Social.Activity.FlaggedActionsLive do
   use Bonfire.Web, :stateless_component
 
   # def handle_event(action, attrs, socket), do: Bonfire.Common.LiveHandlers.handle_event(action, attrs, socket, __MODULE__)
