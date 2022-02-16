@@ -19,7 +19,7 @@ defmodule Bonfire.UI.Social.SetBoundariesLive do
 
     # IO.inspect(assigns: assigns)
 
-    circles = Bonfire.Me.Users.Circles.list_my_defaults() # TODO link to current user for configure
+    circles = Bonfire.Me.Boundaries.Circles.list_my_defaults() # TODO link to current user for configure
 
     IO.inspect(set_default_circles: circles)
 

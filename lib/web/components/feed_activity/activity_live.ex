@@ -22,7 +22,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
     activity = activity
                 # |> debug("Activity provided")
                 |> Map.put(:object, object(assigns, activity))
-                |> debug("Activity with object")
+                # |> debug("Activity with object")
 
     verb = e(activity, :verb, :verb, "create")
             |> maybe_to_string()
