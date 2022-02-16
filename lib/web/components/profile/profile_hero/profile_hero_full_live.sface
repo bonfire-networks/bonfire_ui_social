@@ -91,18 +91,21 @@
             <li 
               :if={e(current_user(assigns), :id, nil) != e(@user, :character, :id, nil)}
               class=" hover:bg-neutral hover:bg-opacity-20">
-              <button class="flex items-center p-4 text-sm text-neutral">
-                <Outline.FlagIcon class="w-4 h-4 mr-2 text-neutral text-opacity-70" />
-                {l "Flag this user"}
-              </button>
+              <Bonfire.UI.Social.FlagActionLive 
+                object={@user}
+                label={e(@user, :profile, :name, "this user")}
+                class="flex items-center p-4 text-sm text-neutral"
+              />
             </li>
             <li 
               :if={e(current_user(assigns), :id, nil) != e(@user, :character, :id, nil)}
               class=" hover:bg-neutral hover:bg-opacity-20">
-              <button class="flex items-center p-4 text-sm text-neutral">
-                <Outline.BanIcon class="w-4 h-4 mr-2 text-neutral text-opacity-70" />
-                {l "Block this user"}
-              </button>
+              <Bonfire.UI.Social.BlockButtonLive
+                object={@user}
+                label={e(@user, :profile, :name, "this user")}
+                id={ComponentID.new(Bonfire.UI.Social.BlockButtonLive, @user)}
+                class="flex items-center p-4 text-sm text-neutral"
+              />
             </li>
           </ul>
         </div>

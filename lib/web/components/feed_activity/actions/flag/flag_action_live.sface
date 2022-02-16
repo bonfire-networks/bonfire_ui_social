@@ -1,16 +1,16 @@
-<li 
-  :if={e(current_user(assigns), :id, nil) != e(@activity, :subject, :character, :id, nil)}
-  class=" hover:bg-neutral hover:bg-opacity-20">
+<div
+  x-data="{modal_flagging_activity: false}"
+>
   {#if e(assigns, :my_flag, :id, nil)}
-    <button disbuttonbled="disabled" class="flex items-center p-4 text-neutral">
+    <button disabled="disabled" class="flex items-center p-4 text-neutral">
       {l "You already flagged this"}
     </button>
   {#else}
     <button 
       @click="modal_flagging_activity = true" 
-      class="flex items-center p-4 text-sm text-neutral">
+      class={e(assigns, :class, "btn btn-sm btn-danger rounded-full")}>
       <Outline.FlagIcon class="w-4 h-4 mr-2 text-neutral text-opacity-70" />
-      {l "Flag this activity"}
+      {l("Flag")<>" "<>e(assigns, :label, l "this activity")}
     </button>
   {/if}
 
@@ -52,4 +52,4 @@
       </div>    
     </div>
   </div>
-</li>
+</div>

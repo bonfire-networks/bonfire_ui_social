@@ -1,5 +1,4 @@
 <div
-  x-data="{modal_flagging_activity: false}"
   aria-haspopup="true"
   class="dropdown dropdown-end feed_activity">
   <div 
@@ -37,11 +36,15 @@
         {l "Delete"}
       </button>
     </li>
-    <Bonfire.UI.Social.FlagActionLive 
-      object={@object}
-      activity={@activity}
-      flagged={@flagged}
-    />
+    <li 
+    :if={e(current_user(assigns), :id, nil) != e(@activity, :subject, :character, :id, nil)}
+    class=" hover:bg-neutral hover:bg-opacity-20">
+      <Bonfire.UI.Social.FlagActionLive 
+        object={@object}
+        flagged={@flagged}
+        class="flex items-center p-4 text-sm text-neutral"
+      />
+    </li>
     <li 
       :if={e(current_user(assigns), :id, nil) != subject_id(assigns)}
       class=" hover:bg-neutral hover:bg-opacity-20">
