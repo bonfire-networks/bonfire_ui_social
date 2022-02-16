@@ -43,7 +43,7 @@
             phx-value-id={e(@object, :id, "")}
             type="button" 
             class="inline-flex justify-center w-full px-4 py-2 text-base font-medium text-white bg-red-600 border border-transparent rounded-md shadow-sm hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 sm:ml-3 sm:w-auto sm:text-sm">
-            {l "Report"}
+            {l "Flag"}
           </button>
           <button type="button" class="inline-flex justify-center w-full px-4 py-2 mt-3 text-base font-medium border border-gray-300 rounded-md shadow-sm text-primary-content-700 bg-base-100 hover:bg-neutral hover:bg-opacity-30 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-secondary-500 sm:mt-0 sm:w-auto sm:text-sm" @click="modal_flagging_activity = false">
             {l "Cancel"}

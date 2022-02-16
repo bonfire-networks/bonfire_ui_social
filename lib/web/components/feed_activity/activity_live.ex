@@ -22,13 +22,13 @@ defmodule Bonfire.UI.Social.ActivityLive do
     activity = activity
                 # |> debug("Activity provided")
                 |> Map.put(:object, e(assigns, :object, nil) || Activities.object_from_activity(activity))
-                # |> debug("Activity with object")
+                |> debug("Activity with object")
 
     verb = e(activity, :verb, :verb, "create")
             |> maybe_to_string()
             |> String.downcase()
             |> Activities.verb_maybe_modify(activity)
-            # |> debug("verb modified")
+            |> debug("verb modified")
     verb_display = Activities.verb_display(verb)
     created_verb_display = Activities.verb_display("create")
 
@@ -220,8 +220,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
   def component_maybe_in_reply_to(verb, %{replied: %{} = replied}, showing_within), do: component_maybe_in_reply_to(verb, replied, showing_within)
 
   def component_maybe_in_reply_to(_, a, _) do
-    Logger.debug("ActivityLive: no reply_to")
-    debug(a)
+    # debug(a, "ActivityLive: no reply_to")
     []
   end
 
@@ -263,7 +262,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
     [{Bonfire.UI.Social.Activity.UnknownLive, %{object_type: type}}]
   end
 
-  
+
   # WIP: THIS NEEDS TO BE REFACTORED ACCORDING TO actions_for_object_type
   def component_actions("flag", _, _), do: [Bonfire.UI.Social.Activity.FlagActionsLive]
 

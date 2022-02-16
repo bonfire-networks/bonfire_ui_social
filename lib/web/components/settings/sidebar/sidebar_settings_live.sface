@@ -38,7 +38,7 @@
     </li>
     <li>
         <LivePatch 
-          to="/flags"
+          to={path(:flags)}
           class={"w-full flex items-center text-sm font-regular text-base-content", "focus:bg-primary hover:bg-primary bg-primary text-primary-content": @admin_tab == "flags"}>
           <Outline.FlagIcon class="inline-block w-5 h-5 mr-2 stroke-current" />
           {l "Flags"}
@@ -66,7 +66,7 @@
       </li>
       <li>
         <LivePatch 
-          to="/flags"
+          to={path(:flags)}
           class={"w-full flex items-center text-sm font-regular text-base-content", "focus:bg-primary hover:bg-primary bg-primary text-primary-content": @admin_tab == "flags"}>
           <Outline.FlagIcon class="inline-block w-5 h-5 mr-2 stroke-current" />
           {l "Moderation"}

@@ -1,0 +1,23 @@
+{#if !e(assigns, :my_follow, nil) }
+    <button 
+    id={@id}
+    data-id="block"
+    :on-click="Bonfire.Social.Blocks:block" 
+    phx-value-id={e(@object, :id, nil)} 
+    type="button" 
+    class={e(assigns, :class, "btn btn-sm btn-outline rounded-full")}>
+        <Outline.BanIcon class="w-4 h-4 mr-2 text-neutral text-opacity-70" />
+       {l "Block"} {e(assigns, :label, "")}
+    </button>
+{#else}
+    <button 
+        id={@id}
+        data-id="unblock"
+        :on-click="Bonfire.Social.Blocks:unblock" 
+        phx-value-id={e(@object, :id, nil)} 
+        type="button" 
+        class={e(assigns, :class, "btn btn-sm btn-outline rounded-full")}>
+        <Solid.BanIcon class="w-4 h-4 mr-2 text-neutral text-opacity-70" />
+        {l "Unblock"} { e(assigns, :label, "")}
+    </button>
+{/if}

@@ -40,20 +40,24 @@
       flagged={@flagged}
     />
     <li 
-      :if={e(current_user(assigns), :id, nil) != e(@activity, :subject, :character, :id, nil)}
+      :if={e(current_user(assigns), :id, nil) != subject_id(@activity)}
       class=" hover:bg-neutral hover:bg-opacity-20">
-      <button class="flex items-center p-4 text-sm text-neutral">
-        <Outline.BanIcon class="w-4 h-4 mr-2 text-neutral text-opacity-70" />
-        {l "Block this user"}
-      </button>
+      <Bonfire.UI.Social.BlockButtonLive
+        object={subject(@activity)}
+        label={name(@activity)}
+        id={ComponentID.new(Bonfire.UI.Social.BlockButtonLive, subject(@activity))}
+        class="flex items-center p-4 text-sm text-neutral"
+      />
     </li>
     <li 
-      :if={e(current_user(assigns), :id, nil) != e(@activity, :subject, :character, :id, nil)}
+      :if={e(current_user(assigns), :id, nil) != subject_id(@activity)}
       class=" hover:bg-neutral hover:bg-opacity-20">
-      <button class="flex items-center p-4 text-sm text-neutral">
-        <Outline.UserRemoveIcon class="w-4 h-4 mr-2 text-neutral text-opacity-70" />
-        {l "Stop following this user"}
-      </button>
+      <Bonfire.UI.Social.FollowButtonLive
+        object={subject(@activity)}
+        label={name(@activity)}
+        id={ComponentID.new(Bonfire.UI.Social.FollowButtonLive, subject(@activity))}
+        class="flex items-center p-4 text-sm text-neutral"
+      />
     </li>
   </ul>
 </div>
