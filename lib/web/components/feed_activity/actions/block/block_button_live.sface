@@ -3,7 +3,7 @@
         id={@id}
         data-id="block"
         :on-click="Bonfire.Me.Boundaries:block" 
-        phx-value-id={e(@object, :id, nil)} 
+        phx-value-id={e(@object, :id, @object)} 
         phx-value-scope={e(assigns, :scope, nil)} 
         type="button" 
         class={e(assigns, :class, "btn btn-sm btn-outline rounded-full")}>
@@ -15,7 +15,7 @@
         id={@id}
         data-id="unblock"
         :on-click="Bonfire.Me.Boundaries:unblock" 
-        phx-value-id={e(@object, :id, nil)} 
+        phx-value-id={e(@object, :id, @object)} 
         phx-value-scope={e(assigns, :scope, nil)} 
         type="button" 
         class={e(assigns, :class, "btn btn-sm btn-outline rounded-full")}>

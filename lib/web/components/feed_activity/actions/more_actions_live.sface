@@ -26,6 +26,16 @@
     aria-orientation="vertical"
     aria-labelledby="more-menu">
     <li 
+      :if={e(current_user(assigns), :id, nil) != subject_id(assigns)}
+      class=" hover:bg-neutral hover:bg-opacity-20">
+      <Bonfire.UI.Social.FollowButtonLive
+        object={subject(assigns)}
+        label={name(assigns)}
+        id={ComponentID.new(Bonfire.UI.Social.FollowButtonLive, subject(assigns))}
+        class="flex items-center p-4 text-sm text-neutral"
+      />
+    </li>
+    <li 
       :if={e(current_user(assigns), :id, nil) == e(@activity, :subject, :character, :id, nil)}
       class=" hover:bg-neutral hover:bg-opacity-20">
       <button 
@@ -45,25 +55,9 @@
         class="flex items-center p-4 text-sm text-neutral"
       />
     </li>
-    <li 
-      :if={e(current_user(assigns), :id, nil) != subject_id(assigns)}
-      class=" hover:bg-neutral hover:bg-opacity-20">
-      <Bonfire.UI.Social.BlockButtonLive
+    <Bonfire.UI.Social.BlockMenuButtonsLive
         object={subject(assigns)}
-        label={name(assigns)}
-        id={ComponentID.new(Bonfire.UI.Social.BlockButtonLive, subject(assigns))}
-        class="flex items-center p-4 text-sm text-neutral"
       />
-    </li>
-    <li 
-      :if={e(current_user(assigns), :id, nil) != subject_id(assigns)}
-      class=" hover:bg-neutral hover:bg-opacity-20">
-      <Bonfire.UI.Social.FollowButtonLive
-        object={subject(assigns)}
-        label={name(assigns)}
-        id={ComponentID.new(Bonfire.UI.Social.FollowButtonLive, subject(assigns))}
-        class="flex items-center p-4 text-sm text-neutral"
-      />
-    </li>
+    
   </ul>
 </div>

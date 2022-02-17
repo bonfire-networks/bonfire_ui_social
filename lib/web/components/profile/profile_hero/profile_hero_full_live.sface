@@ -85,27 +85,10 @@
                 class="flex items-center p-4 text-sm text-neutral"
               />
             </li>
-            <li 
-              :if={e(current_user(assigns), :id, nil) != e(@user, :character, :id, nil)}
-              class=" hover:bg-neutral hover:bg-opacity-20">
-              <Bonfire.UI.Social.BlockButtonLive
+            <Bonfire.UI.Social.BlockMenuButtonsLive
                 object={@user}
-                label={e(@user, :profile, :name, "this user")}
-                id={ComponentID.new(Bonfire.UI.Social.BlockButtonLive, @user)}
-                class="flex items-center p-4 text-sm text-neutral"
               />
-            </li>
-            <li 
-              :if={e(current_user(assigns), :id, nil) != e(@user, :character, :id, nil) and Bonfire.Me.Users.is_admin?(current_user(assigns))}
-              class=" hover:bg-neutral hover:bg-opacity-20">
-              <Bonfire.UI.Social.BlockButtonLive
-                object={@user}
-                scope="instance"
-                label={l "instance-wide"}
-                id={ComponentID.new(Bonfire.UI.Social.BlockButtonLive, @user)}
-                class="flex items-center p-4 text-sm text-neutral"
-              />
-            </li>
+            
           </ul>
         </div>
       </div>
