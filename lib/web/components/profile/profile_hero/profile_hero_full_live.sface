@@ -13,13 +13,16 @@
         :if={current_user(assigns)}
         class="flex items-center pr-2 space-x-3"
       >
-        <LiveRedirect
-          :if={current_user(assigns) && e(current_user(assigns), :id, nil) != maybe_get(@user, :id)}
-          to={"/user/#{e(@user, :character, :username, "")}/private"}
-          class="btn btn-sm btn-outline btn-circle"
+        <a
+          :if={e(@user, :character, :peered, :canonical_uri, nil)}
+          href={e(@user, :character, :peered, :canonical_uri, "#")}
+          target="_blank"
+          class="btn btn-sm btn-info btn-circle"
         >
-          <Solid.MailIcon class="w-4 h-4" />  
-        </LiveRedirect> 
+          <Solid.ExternalLinkIcon class="w-4 h-4" />  
+        </a> 
+
+        
         <div :if={e(current_user(assigns), :id, nil) != maybe_get(@user, :id)} >
           <Bonfire.UI.Social.FollowButtonLive 
             id={ComponentID.new(Bonfire.UI.Social.FollowButtonLive, @user)} 
@@ -28,29 +31,14 @@
           />
         </div>
 
-        <!-- <span 
-          :if={current_user(assigns) && is_admin?(current_user(assigns))} 
+        <LiveRedirect
+          :if={current_user(assigns) && e(current_user(assigns), :id, nil) != maybe_get(@user, :id)}
+          to={"/user/#{e(@user, :character, :username, "")}/private"}
+          class="btn btn-sm btn-outline btn-circle"
         >
-          <button
-            :if={!is_admin?(@user)} 
-            class="btn tooltip tooltip-bottom"
-            phx-click="Bonfire.Me.Users:make_admin"
-            phx-value-username_or_id={maybe_get(@user, :id)}
-            data-tip={l "Entrust with admin permissions"}
-          >
-              <Solid.KeyIcon />
-          </button>
-          <button
-            :if={is_admin?(@user)} 
-            class="btn tooltip tooltip-bottom"
-            phx-click="Bonfire.Me.Users:revoke_admin"
-            phx-value-username_or_id={maybe_get(@user, :id)}
-            data-tip={l "Revoke their admin permissions"}
-          >
-              <Outline.KeyIcon />
-          </button>
-        </span> -->
-
+          <Solid.MailIcon class="w-4 h-4" />  
+        </LiveRedirect> 
+        
         <LiveRedirect
           :if={e(current_user(assigns), :id, nil) && e(current_user(assigns), :id, nil) == maybe_get(@user, :id)}
           to="/settings"
@@ -103,6 +91,17 @@
               <Bonfire.UI.Social.BlockButtonLive
                 object={@user}
                 label={e(@user, :profile, :name, "this user")}
+                id={ComponentID.new(Bonfire.UI.Social.BlockButtonLive, @user)}
+                class="flex items-center p-4 text-sm text-neutral"
+              />
+            </li>
+            <li 
+              :if={e(current_user(assigns), :id, nil) != e(@user, :character, :id, nil) and Bonfire.Me.Users.is_admin?(current_user(assigns))}
+              class=" hover:bg-neutral hover:bg-opacity-20">
+              <Bonfire.UI.Social.BlockButtonLive
+                object={@user}
+                scope="instance"
+                label={l "instance-wide"}
                 id={ComponentID.new(Bonfire.UI.Social.BlockButtonLive, @user)}
                 class="flex items-center p-4 text-sm text-neutral"
               />
