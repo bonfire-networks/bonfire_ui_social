@@ -2,6 +2,7 @@ defmodule Bonfire.UI.Social.BoundaryIconLive do
   use Bonfire.Web, :stateful_component
 
   prop object, :map
+  prop permalink, :string
 
   def preload(list_of_assigns), do: Bonfire.Social.Objects.preload_boundaries(list_of_assigns)
 

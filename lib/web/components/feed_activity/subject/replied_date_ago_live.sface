@@ -6,6 +6,7 @@
   <BoundaryIconLive 
       id={ComponentID.new(BoundaryIconLive, @object)} 
       object={@object} 
+      permalink={@permalink} 
     />
 </div>
 

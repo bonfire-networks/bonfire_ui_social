@@ -3,15 +3,17 @@
 
   <div class="text-sm text-base-content text-opacity-80">
     <span class="capitalize">{e(@verb_display, "")}</span>
-    <LiveRedirect class="subject_timestamp text-base-content text-opacity-80" to={@permalink}> 
+    <LiveRedirect class="subject_timestamp text-base-content text-opacity-80" to={permalink(assigns)}> 
       {@date_ago}
+
+      <BoundaryIconLive 
+        id={ComponentID.new(BoundaryIconLive, @object)} 
+        object={@object} 
+        permalink={permalink(assigns)} 
+      />
     </LiveRedirect>
   </div>
 
-  <BoundaryIconLive 
-    id={ComponentID.new(BoundaryIconLive, @object)} 
-    object={@object} 
-  />
 
 </div>
 
@@ -19,15 +21,19 @@
 <div class="flex items-center space-x-2 ">
   <div class="text-xs text-base-content text-opacity-60">
     <span class="hidden capitalize lg:inline">{e(@verb_display, "")}</span>
-    <LiveRedirect class="subject_timestamp text-base-content text-opacity-60" to={@permalink}>
+    <LiveRedirect class="subject_timestamp text-base-content text-opacity-60" to={permalink(assigns)}>
       {@date_ago}
+
+      <BoundaryIconLive 
+        id={ComponentID.new(BoundaryIconLive, @object)} 
+        object={@object} 
+        permalink={permalink(assigns)} 
+      />
+
     </LiveRedirect>
   </div>
 
-  <BoundaryIconLive 
-    id={ComponentID.new(BoundaryIconLive, @object)} 
-    object={@object} 
-  />
+
 
 </div>
 {/if}

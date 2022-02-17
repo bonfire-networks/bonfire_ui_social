@@ -1,22 +1,37 @@
-<span 
-  :if={e(@object_primary_boundary, :id, nil)=="7W1DE1YAVA11AB1ET0SEENREAD"} 
-  data-tip={e(@object_primary_boundary, :name, "Public")}
-  class="tooltip tooltip-bottom">
-  <Solid.GlobeIcon class="w-4 h-4 text-base-content text-opacity-70" />
-</span>
-<span 
-  :if={e(@object_primary_boundary, :id, nil) in ["710CA1SMY1NTERACTN0TREP1YY", "710CA1SMY1NTERACTANDREP1YY"]} 
-  data-tip={e(@object_primary_boundary, :name, "Local")}
-  class="tooltip tooltip-bottom">
-  <Solid.HomeIcon 
-    class="w-4 h-4 text-base-content text-opacity-70" 
-  />
-</span>
-<span 
-  :if={!e(@object_primary_boundary, :id, nil) || e(@object_primary_boundary, :id, nil) not in ["7W1DE1YAVA11AB1ET0SEENREAD", "710CA1SMY1NTERACTN0TREP1YY", "710CA1SMY1NTERACTANDREP1YY"]} 
-  data-tip={e(@object_primary_boundary, :name, "Custom Boundaries")}
-  class="tooltip tooltip-bottom">
-  <Solid.CogIcon 
-    class="w-4 h-4 text-base-content text-opacity-70" 
-  />
-</span>
+{#if String.starts_with?(@permalink, "http")}
+
+  <span 
+    data-tip={l "Originates from a remote instance"}
+    class="align-bottom tooltip tooltip-bottom">
+    <Solid.ExternalLinkIcon class="w-4 h-4 text-base-content text-opacity-70" />
+  </span>
+
+{#elseif e(@object_primary_boundary, :id, nil)==Bonfire.Boundaries.Acls.get_id!(:guests_may_see)}
+
+  <span 
+    data-tip={e(@object_primary_boundary, :name, "Public")}
+    class="align-bottom tooltip tooltip-bottom">
+    <Solid.GlobeIcon class="w-4 h-4 text-base-content text-opacity-70" />
+  </span>
+
+{#elseif e(@object_primary_boundary, :id, nil) in [Bonfire.Boundaries.Acls.get_id!(:locals_may_interact), Bonfire.Boundaries.Acls.get_id!(:locals_may_reply)]}
+
+  <span 
+    data-tip={e(@object_primary_boundary, :name, "Local")}
+    class="align-bottom tooltip tooltip-bottom">
+    <Solid.HomeIcon 
+      class="w-4 h-4 text-base-content text-opacity-70" 
+    />
+  </span>
+
+{#else}
+
+  <span 
+    data-tip={e(@object_primary_boundary, :name, "Custom Boundaries")}
+    class="align-bottom tooltip tooltip-bottom">
+    <Solid.CogIcon 
+      class="w-4 h-4 text-base-content text-opacity-70" 
+    />
+  </span>
+
+{/if}
