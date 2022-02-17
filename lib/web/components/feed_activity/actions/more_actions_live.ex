@@ -5,6 +5,8 @@ defmodule Bonfire.UI.Social.Activity.MoreActionsLive do
   prop activity, :any
   prop object, :any
   prop flagged, :any
+  slot extra_items, required: false
+  slot admin_items, required: false
 
   def subject(assigns) do
     e(assigns, :object, :created, :creator, nil) || e(assigns, :activity, :subject, nil)
