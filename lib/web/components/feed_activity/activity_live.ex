@@ -36,7 +36,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
 
     components = (
       component_activity_subject(verb, activity, assigns)
-      ++ component_maybe_in_reply_to(verb, activity, e(assigns, :showing_within, nil))
+      ++ (component_maybe_in_reply_to(verb, activity, e(assigns, :showing_within, nil)) |> debug("component_maybe_in_reply_to"))
       ++ component_object(verb, activity)
       ++ component_actions(verb, activity, assigns)
     )
@@ -228,7 +228,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
   def component_maybe_in_reply_to(verb, %{replied: %{} = replied}, showing_within), do: component_maybe_in_reply_to(verb, replied, showing_within)
 
   def component_maybe_in_reply_to(_, a, _) do
-    # debug(a, "ActivityLive: no reply_to")
+    debug(a, "ActivityLive: no reply_to")
     []
   end
 
