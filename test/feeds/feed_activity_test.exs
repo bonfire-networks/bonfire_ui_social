@@ -126,7 +126,7 @@ defmodule Bonfire.UI.Social.Feeds.FeedActivityTest do
       |> Floki.parse_fragment
       |> elem(1)
       |> Floki.find("a.subject_timestamp")
-      |> Floki.text() =~ "3 minutes ago"
+      |> Floki.text() =~ "now"
     end
 
 
