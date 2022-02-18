@@ -29,14 +29,14 @@
       name="to_circles[]" 
       value={id} />
 
-    <!-- <div 
+    <div 
       x-show="'reply_to_id' != ''" 
       x-text= "smart_input_prompt" 
-      class="p-3 overflow-hidden text-sm rounded-t bg-base-300 text-ellipsis ">
+      class="block mb-2 text-sm truncate rounded shadow-lg alert alert-info ellipsis ">
       {@smart_input_prompt || l "Write a post..."}  
-    </div> -->
+    </div>
     
-    <div class="rounded shadow bg-base-100">
+    <div class="rounded-md shadow bg-base-100">
       <div class="relative">
         <Inputs for={:post_content}>
           <div
