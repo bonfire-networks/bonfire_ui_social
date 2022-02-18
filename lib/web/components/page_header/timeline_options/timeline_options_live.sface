@@ -1,4 +1,4 @@
-<div
+<!-- <div
   :if={current_user(assigns)}
   class="hidden lg:flex tabs tabs-boxed">
   <div data-tip="My feed" class="tooltip tooltip-bottom">
@@ -16,4 +16,22 @@
       <Solid.GlobeIcon class="inline-block w-4 h-4 stroke-current" />
     </LiveRedirect>
   </div>
-</div>
+</div> -->
+<ul class="dropdown">
+  <label tabindex="0" class="btn btn-circle btn-outline btn-xs text-info-content">
+    <Outline.ChevronDownIcon class="w-4 h-4 stroke-current" />
+  </label>
+  <div tabindex="0" class="w-48 rounded shadow card compact dropdown-content bg-neutral-content">
+    <LiveRedirect to="/home" class={"p-4 hover:bg-neutral hover:bg-opacity-20 flex items-center text-sm text-neutral", "bg-neutral bg-opacity-20": @selected_tab == "home"}>
+      <span class="truncate ellipsis">{l "Home timeline"}</span>
+    </LiveRedirect> 
+
+    <LiveRedirect to="/home/local" class={"p-4 hover:bg-neutral hover:bg-opacity-20 flex items-center text-sm text-neutral", "bg-neutral bg-opacity-20": @selected_tab == "local"}>
+      <span class="truncate ellipsis">{l "Local timeline"}</span>
+    </LiveRedirect> 
+
+    <LiveRedirect to="/home/federation" class={"p-4 hover:bg-neutral hover:bg-opacity-20 flex items-center text-sm text-neutral", "bg-neutral bg-opacity-20": @selected_tab == "federation"}>
+      <span class="truncate ellipsis">{l "Federated timeline"}</span>
+    </LiveRedirect> 
+  </div>
+</ul>

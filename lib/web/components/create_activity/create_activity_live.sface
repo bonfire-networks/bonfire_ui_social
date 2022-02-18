@@ -29,12 +29,12 @@
       name="to_circles[]" 
       value={id} />
 
-    <div 
+    <!-- <div 
       x-show="'reply_to_id' != ''" 
       x-text= "smart_input_prompt" 
       class="p-3 overflow-hidden text-sm rounded-t bg-base-300 text-ellipsis ">
       {@smart_input_prompt || l "Write a post..."}  
-    </div>
+    </div> -->
     
     <div class="rounded shadow bg-base-100">
       <div class="relative">
@@ -105,9 +105,9 @@
               />
             </div>
 
-            <button type="submit" class="capitalize justify-self-end btn btn-primary">
-                {l "Post"}
-              </button>
+            <button type="submit" class="capitalize btn-sm justify-self-end btn btn-primary">
+              {l "Post"}
+            </button>
           </div>
         </div>
       </div>
