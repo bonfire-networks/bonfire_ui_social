@@ -33,7 +33,7 @@
 <li 
       class=" hover:bg-neutral hover:bg-opacity-20">
     <LiveRedirect 
-      :if={@object |> debug && e(@object, :created, :creator, :id, nil) && e(current_user(assigns), :id, nil) != e(@object, :created, :creator, :id, nil) && e(@object, :created, :creator, :id, nil) != e(@activity, :subject, :id, nil)}
+      :if={@object && e(@object, :created, :creator, :id, nil) && e(current_user(assigns), :id, nil) != e(@object, :created, :creator, :id, nil) && e(@object, :created, :creator, :id, nil) != e(@activity, :subject, :id, nil)}
       to={"/user/#{e(@object, :created, :creator, :character, :username, "")}/private"}
       class="flex items-center p-4 text-sm text-neutral"
     >

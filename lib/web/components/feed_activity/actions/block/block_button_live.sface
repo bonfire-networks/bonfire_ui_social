@@ -1,4 +1,4 @@
-{#if !e(assigns, :my_follow, nil) }
+{#if !e(assigns, :my_block, nil) }
     <button 
         id={@id}
         data-id="block"

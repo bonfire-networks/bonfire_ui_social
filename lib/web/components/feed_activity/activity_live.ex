@@ -228,7 +228,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
   def component_maybe_in_reply_to(verb, %{replied: %{} = replied}, showing_within), do: component_maybe_in_reply_to(verb, replied, showing_within)
 
   def component_maybe_in_reply_to(_, a, _) do
-    debug(a, "ActivityLive: no reply_to")
+    # debug(a, "ActivityLive: no reply_to")
     []
   end
 
@@ -303,7 +303,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
   end
 
 
-  def component_show_standard_actions(%{subject: %{character: %{username: username}}}= _activity), do: [{Bonfire.UI.Social.Activity.ActionsLive, %{reply_smart_input_text: "@#{username} "}}] |> debug
+  def component_show_standard_actions(%{subject: %{character: %{username: username}}}= _activity), do: [{Bonfire.UI.Social.Activity.ActionsLive, %{reply_smart_input_text: "@#{username} "}}] #|> debug
   def component_show_standard_actions(_activity), do: [Bonfire.UI.Social.Activity.ActionsLive]
 
   def component_show_process_actions(_activity), do: [Bonfire.UI.Social.Activity.ProcessActionsLive]

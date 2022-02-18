@@ -21,7 +21,7 @@
   </div>
   <ul
     tabindex="0"
-    class="w-52 shadow menu dropdown-content bg-neutral-content rounded dropdown_actions
+    class="min-w-fit shadow menu dropdown-content bg-neutral-content rounded dropdown_actions
     role="menu"
     aria-orientation="vertical"
     aria-labelledby="more-menu">
@@ -38,17 +38,7 @@
         class="flex items-center p-4 text-sm text-neutral"
       />
     </li>
-    <li 
-      :if={e(current_user(assigns), :id, nil) == e(@activity, :subject, :character, :id, nil)}
-      class=" hover:bg-neutral hover:bg-opacity-20">
-      <button 
-        phx-click={"Bonfire.Social.Objects:delete"} 
-        phx-value-id={e(@object, :id, "")}
-        class="flex items-center p-4 text-sm text-error">
-        <Outline.TrashIcon class="w-4 h-4 mr-2 text-error" />
-        {l "Delete"}
-      </button>
-    </li>
+    
     <li 
     :if={e(current_user(assigns), :id, nil) != e(@activity, :subject, :character, :id, nil)}
     class=" hover:bg-neutral hover:bg-opacity-20">
@@ -60,8 +50,33 @@
     </li>
     <Bonfire.UI.Social.BlockMenuButtonsLive
         object={subject(assigns)}
+        peered={e(@object, :peered, nil)}
       />
     
+    <li 
+      :if={e(current_user(assigns), :id, nil) == e(@activity, :subject, :character, :id, nil) or Bonfire.Me.Users.is_admin?(current_user(assigns))}
+      class=" hover:bg-neutral hover:bg-opacity-20">
+      <button 
+        phx-click={"Bonfire.Social.Objects:delete"} 
+        phx-value-id={e(@activity, :id, "")}
+        class="flex items-center p-4 text-sm text-error">
+        <Outline.TrashIcon class="w-4 h-4 mr-2 text-error" />
+        {l "Delete this activity"}
+      </button>
+    </li>
+
+    <li 
+      :if={e(current_user(assigns), :id, nil) == e(@activity, :subject, :character, :id, nil) or Bonfire.Me.Users.is_admin?(current_user(assigns))}
+      class=" hover:bg-neutral hover:bg-opacity-20">
+      <button 
+        phx-click={"Bonfire.Social.Objects:delete"} 
+        phx-value-id={e(@object, :id, "")}
+        class="flex items-center p-4 text-sm text-error">
+        <Outline.TrashIcon class="w-4 h-4 mr-2 text-error" />
+        {l "Delete this object & activity"}
+      </button>
+    </li>
+
     <#slot name="admin_items" />
 
   </ul>

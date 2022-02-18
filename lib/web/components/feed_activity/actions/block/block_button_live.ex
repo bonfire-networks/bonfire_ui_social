@@ -6,7 +6,7 @@ defmodule Bonfire.UI.Social.BlockButtonLive do
   prop label, :string
   prop scope, :string
 
-  # def preload(list_of_assigns), do: Bonfire.Me.Boundaries.LiveHandler.preload(list_of_assigns)
+  # def preload(list_of_assigns), do: Bonfire.Me.Boundaries.LiveHandler.preload(list_of_assigns) # TODO for un-blocking
 
   def handle_event(action, attrs, socket), do: Bonfire.Common.LiveHandlers.handle_event(action, attrs, socket, __MODULE__)
 
