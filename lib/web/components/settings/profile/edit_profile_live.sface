@@ -5,7 +5,11 @@
   />
   <div class="p-4">
     <div class="mt-1 sm:mt-0">
-      <div phx-drop-target={@uploads.image.ref} class="relative flex justify-center px-6 py-10 bg-pink-300 bg-center bg-cover rounded-lg" style={"height: 225px; background-image: url('"<>image_url(current_user(assigns))<>"')"}>
+      <div 
+        data-id="upload_image"
+        phx-drop-target={@uploads.image.ref} 
+        class="relative flex justify-center px-6 py-10 bg-pink-300 bg-center bg-cover rounded-lg" 
+        style={"background-image: url('"<>image_url(current_user(assigns))<>"'); height: 225px;"}>
         <div class="space-y-1 text-center">
           <div class="flex text-sm text-primary-content-600">
             <label for={@uploads.image.ref} class="absolute inset-0 flex flex-col items-center justify-center w-full h-full text-sm font-medium text-white transition duration-150 ease-in-out bg-base-100 bg-opacity-40 rounded-lg opacity-0 cursor-pointer hover:opacity-100 focus-within:opacity-100">
@@ -17,7 +21,7 @@
               <p class="block mt-2 text-xs text-center text-primary-content-200">
               {#if length(@uploads.image.entries)>0}
                 {#for entry <- @uploads.image.entries }
-                  {entry.client_name} -  {entry.progress}%
+                  {entry.client_name} - {entry.progress}%
                 {/for}
               {#else}
                 PNG, JPG, GIF up to 10MB
@@ -27,8 +31,12 @@
           </div>
         </div>
       </div>
-      <div phx-drop-target={@uploads.icon.ref} class="relative block w-32 h-32 mb-6 ml-6 -mt-16 overflow-hidden rounded-full ring-8 ring-base-100">
-        <div class="flex items-center w-32 h-32 bg-cover rounded-full shadow-lg bg-base-content" style={"background-image: url(" <> avatar_url(current_user(assigns)) <> ")"}></div>
+      <div 
+        data-id="upload_icon"
+        phx-drop-target={@uploads.icon.ref} class="relative block w-32 h-32 mb-6 ml-6 -mt-16 overflow-hidden rounded-full ring-8 ring-base-100">
+        <div 
+          data-id="preview_icon"
+          class="flex items-center w-32 h-32 bg-cover rounded-full shadow-lg bg-base-content" style={"background-image: url('" <> avatar_url(current_user(assigns)) <> "')"}></div>
         <label for={@uploads.icon.ref} class="absolute inset-0 flex items-center justify-center w-full h-full text-sm font-medium text-white transition duration-150 ease-in-out bg-base-100 bg-opacity-40 opacity-0 cursor-pointer hover:opacity-100 focus-within:opacity-100">
           <span>{l "Upload or drop"}</span>
           <span class="sr-only"> {l "avatar"}</span>
