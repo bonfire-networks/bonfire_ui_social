@@ -2,6 +2,7 @@
   <section class="w-full mx-auto rounded shadow bg-base-100">
     <Bonfire.UI.Social.PageHeaderLive
       page_title={@page_title}
+      before={true}
     />
     <Bonfire.UI.Social.BannerPreviousThreadLive activity={@activity} />
     <Bonfire.UI.Social.ActivityLive

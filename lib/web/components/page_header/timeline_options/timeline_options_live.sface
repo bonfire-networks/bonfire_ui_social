@@ -18,7 +18,7 @@
   </div>
 </div> -->
 <ul class="dropdown">
-  <label tabindex="0" class="btn btn-circle btn-outline btn-xs text-info-content">
+  <label tabindex="0" class="btn btn-circle btn-ghost btn-xs text-info-content">
     <Outline.ChevronDownIcon class="w-4 h-4 stroke-current" />
   </label>
   <div tabindex="0" class="w-48 rounded shadow card compact dropdown-content bg-neutral-content">

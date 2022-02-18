@@ -45,7 +45,8 @@
   <div class="relative rounded rounded-b-none">
     <div class="flex items-center p-3">
       <div class="flex items-center flex-1 space-x-2 text-left">
-        <!-- <a
+        <a
+          :if={@before}
           aria-label="Navigate to the previous page"
           href="javascript:window.history.back()"
         >
@@ -60,7 +61,7 @@
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
             </svg>
           </span>
-        </a>-->
+        </a>
         <h1 class="font-medium capitalize text-md">{@page_title}</h1> 
         <#slot><div /></#slot>
       </div>
