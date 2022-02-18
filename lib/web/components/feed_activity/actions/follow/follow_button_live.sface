@@ -6,8 +6,8 @@
     phx-value-id={e(@object, :id, nil)} 
     type="button" 
     class={e(assigns, :class, "btn btn-sm btn-outline rounded-full")}>
-       <Solid.EyeIcon class="w-4 h-4 mr-2" />
-       {l "Follow"} {e(assigns, :label, "")}
+       <Outline.EyeIcon class="w-4 h-4 mr-2 shrink-0 text-neutral text-opacity-70" />
+       <span class="truncate ellipsis">{l "Follow"} {e(assigns, :label, "")}</span>
     </button>
 {#else}
     <button 
@@ -17,7 +17,7 @@
         phx-value-id={e(@object, :id, nil)} 
         type="button" 
         class={e(assigns, :class, "btn btn-sm btn-outline rounded-full")}>
-        <Solid.EyeOffIcon class="w-4 h-4 mr-2" />
-        {l "Unfollow"} { e(assigns, :label, "")}
+        <Outline.EyeOffIcon class="w-4 h-4 mr-2 shrink-0 text-neutral text-opacity-70" />
+        <span class="truncate ellipsis">{l "Unfollow"} { e(assigns, :label, "")}</span>
     </button>
 {/if}

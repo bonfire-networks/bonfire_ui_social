@@ -9,8 +9,8 @@
     <button 
       @click="modal_flagging_activity = true" 
       class={e(assigns, :class, "btn btn-sm btn-danger rounded-full")}>
-      <Outline.FlagIcon class="w-4 h-4 mr-2 text-neutral text-opacity-70" />
-      {l("Flag")<>" "<>e(assigns, :label, l "this activity")}
+      <Outline.FlagIcon class="w-4 h-4 mr-2 shrink-0 text-neutral text-opacity-70" />
+      <span class="truncate ellipsis"> {l("Flag")<>" "<>e(assigns, :label, l "this activity")}</span>
     </button>
   {/if}
 
