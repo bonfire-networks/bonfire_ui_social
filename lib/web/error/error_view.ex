@@ -15,7 +15,7 @@ defmodule Bonfire.UI.Social.Web.ErrorView do
     show_error(reason(reason))
   end
   def render("500.html", assigns) do
-    IO.inspect(assigns)
+    debug(assigns)
     if Bonfire.Common.Config.get!(:env) != :prod, do: show_error(reason(Map.get(assigns, :reason, ""))),
     else: show_error("Please try again or contact the instance admins.")
   end

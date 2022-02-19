@@ -26,7 +26,7 @@ defmodule Bonfire.UI.Social.Feeds.Notifications.ReplyTest do
 
       feed = Bonfire.Social.FeedActivities.feed(:notifications, alice)
       fp = feed.edges
-      # |> IO.inspect()
+      # |> debug()
       |> List.first()
       #|> IO.inspect
 
@@ -36,7 +36,7 @@ defmodule Bonfire.UI.Social.Feeds.Notifications.ReplyTest do
       assert doc
       |> Floki.parse_fragment
       |> elem(1)
-      # |> IO.inspect()
+      # |> debug()
       |> Floki.find("[data-id=subject_name]")
       |> Floki.text() =~ bob.profile.name
     end
@@ -60,7 +60,7 @@ defmodule Bonfire.UI.Social.Feeds.Notifications.ReplyTest do
 
       feed = Bonfire.Social.FeedActivities.feed(:notifications, alice)
       fp = feed.edges
-      # |> IO.inspect()
+      # |> debug()
       |> List.first()
 
       assigns = [activity: fp.activity, showing_within: :notifications]
@@ -69,7 +69,7 @@ defmodule Bonfire.UI.Social.Feeds.Notifications.ReplyTest do
       assert doc
       |> Floki.parse_fragment
       |> elem(1)
-      # |> IO.inspect()
+      # |> debug()
       |> Floki.find("div.reply_message")
       |> Floki.text() =~ "reply to first post"
     end
@@ -92,7 +92,7 @@ defmodule Bonfire.UI.Social.Feeds.Notifications.ReplyTest do
 
       feed = Bonfire.Social.FeedActivities.feed(:notifications, alice)
       fp = feed.edges
-      # |> IO.inspect()
+      # |> debug()
       |> List.first()
 
       assigns = [activity: fp.activity, showing_within: :notifications]
@@ -101,7 +101,7 @@ defmodule Bonfire.UI.Social.Feeds.Notifications.ReplyTest do
       assert doc
       |> Floki.parse_fragment
       |> elem(1)
-      # |> IO.inspect()
+      # |> debug()
       |> Floki.find("div.main_reply_to a")
       |> Floki.text() =~ alice.profile.name
     end
@@ -125,7 +125,7 @@ defmodule Bonfire.UI.Social.Feeds.Notifications.ReplyTest do
 
       feed = Bonfire.Social.FeedActivities.feed(:notifications, alice)
       fp = feed.edges
-      # |> IO.inspect()
+      # |> debug()
       |> List.first()
 
       assigns = [activity: fp.activity, showing_within: :notifications]
@@ -134,7 +134,7 @@ defmodule Bonfire.UI.Social.Feeds.Notifications.ReplyTest do
       assert doc
       |> Floki.parse_fragment
       |> elem(1)
-      # |> IO.inspect()
+      # |> debug()
       |> Floki.find("div.reply_to")
       |> Floki.text() =~ "first post"
     end

@@ -17,14 +17,14 @@ defmodule Bonfire.UI.Social.MultiselectLive.UserSelectorLive do
   end
 
   def update(assigns, socket) do
-    # IO.inspect(userSelectorLive: assigns)
+    # debug(userSelectorLive: assigns)
 
     current_user = current_user(assigns)
 
     followed = if current_user, do: Bonfire.Social.Follows.list_my_followed(current_user, false) # TODO: paginate
     |> Enum.map(&follow_to_tuple/1), else: []
 
-    IO.inspect(followed: followed)
+    debug(followed: followed)
 
     preloaded_options = [{e(current_user, :profile, :name, "Me"), e(current_user, :id, "me")}] ++ followed
 

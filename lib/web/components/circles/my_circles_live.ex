@@ -3,7 +3,7 @@ defmodule Bonfire.UI.Social.MyCirclesLive do
 
   def update(assigns, socket) do
     circles = Bonfire.Me.Boundaries.Circles.list_my(current_user(assigns), false) #|> IO.inspect
-    IO.inspect(circles, label: "Circles:")
+    debug(circles, label: "Circles:")
     {:ok, assign(socket,
     %{
       circles: circles,

@@ -1,6 +1,6 @@
 defmodule Bonfire.UI.Social.ThreadLive do
   use Bonfire.Web, :stateful_component
-  require Logger
+  import Where
   alias Bonfire.Fake
   alias Bonfire.Web.LivePlugs
   alias Bonfire.Me.Users
@@ -22,13 +22,13 @@ defmodule Bonfire.UI.Social.ThreadLive do
 
 
   def update(%{replies: replies, threaded_replies: threaded_replies, page_info: page_info} = assigns, socket) when is_list(replies) and is_list(threaded_replies) and is_map(page_info) do
-    Logger.debug("ThreadLive: showing preloaded replies")
+    debug("ThreadLive: showing preloaded replies")
     assigns |> assign_thread(socket)
   end
 
   def update(%{new_reply: new_reply} = assigns, socket) when is_map(new_reply) do
-    Logger.debug("ThreadLive: adding new reply")
-    # IO.inspect(merge_reply: previous_replies)
+    debug("ThreadLive: adding new reply")
+    # debug(merge_reply: previous_replies)
 
     new_reply = new_reply
       |> Map.put(:path, e(new_reply, :replied, :path, e(new_reply, :activity, :replied, :path, [])))
@@ -43,26 +43,26 @@ defmodule Bonfire.UI.Social.ThreadLive do
   end
 
   def update(%{__context__: %{new_reply: new_reply}} = assigns, socket) do
-    # IO.inspect(context_reply: new_reply)
+    # debug(context_reply: new_reply)
     update(Map.merge(assigns, %{new_reply: new_reply}), socket)
   end
 
   def update(assigns, socket) do
-    # IO.inspect(assigns, label: "Thread: assigns")
+    # debug(assigns, label: "Thread: assigns")
 
     thread_id = e(assigns, :thread_id, nil)
 
     if thread_id do
-      # IO.inspect("Thread: loading by thread_id")
-      # IO.inspect(assigns)
+      # debug("Thread: loading by thread_id")
+      # debug(assigns)
       current_user = current_user(assigns) #|> IO.inspect
 
       with %{edges: replies, page_info: page_info} <- Bonfire.Social.Threads.list_replies(thread_id, current_user: current_user, after: e(assigns, :after, nil)) do
-        # IO.inspect(thread_id, label: "thread_id")
-        # IO.inspect(replies, label: "replies")
+        # debug(thread_id, label: "thread_id")
+        # debug(replies, label: "replies")
 
         threaded_replies = if is_list(replies) and length(replies)>0, do: Bonfire.Social.Threads.arrange_replies_tree(replies), else: []
-        # IO.inspect(threaded_replies, label: "threaded_replies")
+        # debug(threaded_replies, label: "threaded_replies")
 
         assigns
         |> assigns_merge(
@@ -78,7 +78,7 @@ defmodule Bonfire.UI.Social.ThreadLive do
 
   def assign_thread(assigns, socket) do
 
-    # IO.inspect(assigns, label: "thread assigns")
+    # debug(assigns, label: "thread assigns")
 
     current_user = current_user(assigns)
     thread_id = e(assigns, :thread_id, nil)

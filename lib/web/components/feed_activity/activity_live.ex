@@ -2,7 +2,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
   use Bonfire.Web, :stateless_component
 
   alias Bonfire.Social.Activities
-  require Logger
+  import Where
 
   prop activity, :map
   prop object, :any
@@ -48,7 +48,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
       c when is_atom(c) -> {c, nil}
       other -> other
     end)
-    # |> IO.inspect(label: "ActivityLive: activity_object_components")
+    # |> debug(label: "ActivityLive: activity_object_components")
 
   assigns = assigns
     |> assigns_merge(
@@ -65,7 +65,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
         permalink: permalink
       )
     |> Map.new
-    #|> IO.inspect(label: "ActivityLive final assigns")
+    #|> debug(label: "ActivityLive final assigns")
 
 
     ~F"""
@@ -105,7 +105,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
 
   def render(assigns) do
 
-    Logger.warn("ActivityLive: No activity provided")
+    warn("ActivityLive: No activity provided")
 
     ~F"""
 
@@ -161,7 +161,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
   def component_activity_maybe_creator(%{primary_accountable: _} = object), do: object |> repo().maybe_preload(primary_accountable: [:profile, :character]) |> component_activity_maybe_creator()
 
   def component_activity_maybe_creator(activity) do
-     Logger.error("ActivityLive: could not find the creator of #{inspect activity}")
+     error("ActivityLive: could not find the creator of #{inspect activity}")
      nil
   end
 
@@ -247,17 +247,17 @@ defmodule Bonfire.UI.Social.ActivityLive do
   def component_object(_, %{object: %{} = object}, object_type) do
     case object_type do
       type when is_atom(type) ->
-        Logger.debug("ActivityLive: component object_type recognised: #{inspect(type)}")
+        debug("ActivityLive: component object_type recognised: #{inspect(type)}")
         component_for_object_type(type, object)
 
       _ ->
-        Logger.warn("ActivityLive: component object_type NOT detected: #{inspect(object)}")
+        warn("ActivityLive: component object_type NOT detected: #{inspect(object)}")
         [Bonfire.UI.Social.Activity.UnknownLive]
     end
   end
 
   def component_object(_, _activity, _) do
-    Logger.info("ActivityLive: activity has no object")
+    debug("ActivityLive: activity has no object")
     [Bonfire.UI.Social.Activity.UnknownLive]
   end
 
@@ -273,7 +273,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
   # def component_for_object_type(type, object) when type in [ValueFlows.Process], do: [Bonfire.UI.Social.Activity.ProcessListLive.activity_component(object)] # TODO: choose between Task and other Intent types
   def component_for_object_type(type, object) when type in [ValueFlows.Process], do: [{Bonfire.Common.Config.get([:ui, :default_instance_feed_previews, :process], Bonfire.UI.Social.Activity.ProcessListLive), object: Bonfire.UI.Social.Activity.ProcessListLive.prepare(object)}]
   def component_for_object_type(type, _object) do
-    Logger.warn("ActivityLive: no component set up for object_type: #{inspect(type)}, fallback to UnknownLive")
+    warn("ActivityLive: no component set up for object_type: #{inspect(type)}, fallback to UnknownLive")
     [Bonfire.UI.Social.Activity.UnknownLive]
   end
 
@@ -289,7 +289,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
         actions_for_object_type(activity, type)
 
       _ ->
-        # Logger.warn("ActivityLive: object NOT recognised: #{object}")
+        # warn("ActivityLive: object NOT recognised: #{object}")
         [Bonfire.UI.Social.Activity.NoActionsLive]
     end
   end
@@ -304,7 +304,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
   def actions_for_object_type(activity, type) when type in [ValueFlows.Planning.Intent], do: component_show_process_actions(activity)# TODO: choose between Task and other Intent types
   def actions_for_object_type(activity, type) when type in [ValueFlows.Process], do: component_show_process_actions(activity) # TODO: choose between Task and other Intent types
   def actions_for_object_type(activity, type) do
-    IO.inspect(component_object_type_unknown: type)
+    debug(component_object_type_unknown: type)
     component_show_standard_actions(activity)
     # [Bonfire.UI.Social.Activity.NoActionsLive]
   end

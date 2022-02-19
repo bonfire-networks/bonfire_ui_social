@@ -19,7 +19,7 @@ defmodule  Bonfire.UI.Social.ObjectThreadLive do
     thread_id = e(assigns, :thread_id, e(assigns, :object, :id, nil))
     participants = Bonfire.Social.Threads.list_participants(thread_id, current_user(assigns))
     participant_tuples = participants |> Map.get(:edges, []) |> Enum.map(&{e(&1, :profile, :name, "someone"), &1.id})
-    IO.inspect(participants)
+    debug(participants)
     {:ok, assign(socket, assigns
     |> assigns_merge(
         date_ago: date_from_now(e(assigns, :object, e(assigns, :activity, :object, nil))),

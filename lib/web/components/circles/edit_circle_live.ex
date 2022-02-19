@@ -4,7 +4,7 @@ defmodule Bonfire.UI.Social.EditCircleLive do
   def update(assigns, socket) do
 
       with {:ok, circle} <- Bonfire.Me.Boundaries.Circles.get(assigns.id, current_user(assigns)) |> repo().maybe_preload(encircles: [subject: [:profile, :character]]) do
-        IO.inspect(circle)
+        debug(circle)
 
       # TODO: paginate
       followed = Bonfire.Social.Follows.list_my_followed(current_user(assigns), false) #|> IO.inspect

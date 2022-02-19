@@ -132,7 +132,7 @@
             <!-- loop through current circle members -->
 
             <%= for member <- e(@circle, :encircles, []) do %>
-            <% IO.inspect(member: member) %>
+            <% debug(member: member) %>
 
               <li id={"item-"<> member.id }
                 class="drag_drop__item px-3 py-4"

@@ -3,7 +3,7 @@ defmodule Bonfire.UI.Social.FeedLive do
 
   alias Bonfire.UI.Social.ActivityLive
 
-  require Logger
+  import Where
 
   prop feed, :list
   prop page_info, :map
@@ -22,7 +22,7 @@ defmodule Bonfire.UI.Social.FeedLive do
 
 
   def update(%{new_activity: new_activity} = _assigns, socket) when is_map(new_activity) do # adding new feed item
-    Logger.debug("FeedLive - new_activity (feed is a temporary assign, so only add new activities)")
+    debug("FeedLive - new_activity (feed is a temporary assign, so only add new activities)")
     {:ok, socket
     |> assign(
       feed_update_mode: "prepend",
@@ -33,43 +33,43 @@ defmodule Bonfire.UI.Social.FeedLive do
   end
 
   def update(%{__context__: %{new_activity: new_activity}} = assigns, socket) when is_map(new_activity) do
-    Logger.debug("FeedLive: add new activity from component context")
+    debug("FeedLive: add new activity from component context")
     update(Map.merge(assigns, %{new_activity: new_activity}), socket)
   end
 
   def update(%{feed: feed, page_info: page_info} =assigns, socket) when is_list(feed) do
-    Logger.debug("FeedLive: a feed was provided")
+    debug("FeedLive: a feed was provided")
     socket = assign(socket, assigns)
 
     {:ok, socket
     |> assign(
       feed: feed
-      #|> IO.inspect(label: "FeedLive: feed")
+      #|> debug(label: "FeedLive: feed")
       |> preloads(current_user: current_user(socket), skip_boundary_check: true),
       page_info: page_info
       )}
   end
 
   def update(assigns, socket) do
-    Logger.debug("FeedLive: feed NOT provided, try fetching one via Bonfire.Social")
+    debug("FeedLive: feed NOT provided, try fetching one via Bonfire.Social")
     socket = assign(socket, assigns)
     current_user = current_user(socket)
 
     assigns = if module_enabled?(Bonfire.Social.Web.Feeds.BrowseLive), do: Bonfire.Social.Web.Feeds.BrowseLive.default_feed(socket),
     else: []
 
-    # IO.inspect(assigns: assigns)
+    # debug(assigns: assigns)
 
     {:ok, socket
     |> assign(
       feed: e(assigns, :feed, [])
-      # |> IO.inspect(label: "FeedLive: feed")
+      # |> debug(label: "FeedLive: feed")
       |> preloads(current_user: current_user, skip_boundary_check: true)
     )}
   end
 
   # def handle_info({:new_activity, data}, socket) do
-  #   IO.inspect(feed_live_pubsub_received: data)
+  #   debug(feed_live_pubsub_received: data)
 
   #   # send_update(Bonfire.UI.Social.FeedLive, id: "feed", new_activity: data)
 
@@ -77,13 +77,13 @@ defmodule Bonfire.UI.Social.FeedLive do
   # end
 
   def preloads(feed, opts) do
-    Logger.debug("FeedLive: preload objects")
+    debug("FeedLive: preload objects")
 
     feed
     # |> debug("feed before extra preloads")
     |> Bonfire.Common.Pointers.Preload.maybe_preload_nested_pointers([activity: [:object]])
     |> preload_objects(opts)
-    # |> IO.inspect(label: "feed with extra preloads")
+    # |> debug(label: "feed with extra preloads")
   end
 
   def object_preloads do
@@ -93,7 +93,7 @@ defmodule Bonfire.UI.Social.FeedLive do
       {ValueFlows.Planning.Intent, Bonfire.UI.Social.Activity.IntentTaskLive.preloads()},
       {ValueFlows.Process, Bonfire.UI.Social.Activity.ProcessListLive.preloads()},
     ]
-    # |> IO.inspect(label: "preload feed")
+    # |> debug(label: "preload feed")
   end
 
   def preload_objects(feed, opts) do
