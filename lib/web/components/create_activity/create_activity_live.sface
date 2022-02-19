@@ -23,7 +23,7 @@
       <HiddenInput value={@create_activity_type} />
     </Field>
     <input 
-      :if={e(assigns, :to_circles, []) !=[]}
+      :if={e(assigns, :to_circles, nil) && is_list(e(assigns, :to_circles, nil)) && length(e(assigns, :to_circles, nil))>0}
       :for={{_name, id} <- e(assigns, :to_circles, []) |> debug} 
       type="hidden" 
       name="to_circles[]" 

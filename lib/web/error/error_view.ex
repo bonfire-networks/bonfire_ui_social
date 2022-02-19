@@ -12,15 +12,15 @@ defmodule Bonfire.UI.Social.Web.ErrorView do
   end
 
   def render("500.html", %{current_account: current_account, reason: reason}) when not is_nil(current_account) do
-    error(reason(reason))
+    show_error(reason(reason))
   end
   def render("500.html", assigns) do
     IO.inspect(assigns)
-    if Bonfire.Common.Config.get!(:env) != :prod, do: error(reason(Map.get(assigns, :reason, ""))),
-    else: error("Please try again or contact the instance admins.")
+    if Bonfire.Common.Config.get!(:env) != :prod, do: show_error(reason(Map.get(assigns, :reason, ""))),
+    else: show_error("Please try again or contact the instance admins.")
   end
 
-  defp error(error \\ "Something went wrong", details) do
+  defp show_error(error \\ "Something went wrong", details) do
     html(error, "#{details}<img src='https://media2.giphy.com/media/QMHoU66sBXqqLqYvGO/giphy.gif'/>")
   end
 

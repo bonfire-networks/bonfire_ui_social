@@ -30,7 +30,7 @@
                 </div>
                 <div class="ml-3">
                   <h3 class="text-sm font-medium text-yellow-800">
-                    This username is taken. Please choose another. Did you mean to <LiveRedirect to="/switch-user">Switch user</LiveRedirect> or <LiveRedirect to="/login">login</LiveRedirect>?
+                    This username has already been taken. Please choose another. Did you mean to <LiveRedirect to="/switch-user">Switch user</LiveRedirect> or <LiveRedirect to="/login">login</LiveRedirect>?
                   </h3>
                 </div>
               </div>
