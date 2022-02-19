@@ -40,6 +40,8 @@
         id={ComponentID.new(Bonfire.UI.Social.LikeActionLive, @object)} 
         object={@object} 
         activity={@activity} 
+        verb={@verb}
+        object_type_readable={@object_type_readable}
       />
     </div>
   </div>

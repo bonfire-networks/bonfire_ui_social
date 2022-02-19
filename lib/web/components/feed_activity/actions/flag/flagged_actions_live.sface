@@ -14,6 +14,7 @@
       id={ComponentID.new(Bonfire.UI.Social.LikeActionLive, @object)} 
       object={@object} 
       activity={@activity} 
+      verb={@verb}
     >
 
     <:extra_items>

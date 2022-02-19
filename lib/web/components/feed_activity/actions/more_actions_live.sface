@@ -61,7 +61,7 @@
         phx-value-id={e(@activity, :id, "")}
         class="flex items-center p-4 text-sm text-neutral">
         <Outline.TrashIcon class="w-4 h-4 mr-2 shrink-0 text-neutral text-opacity-70" />
-         <span class="truncate ellipsis">{l "Delete this activity"}</span>
+         <span class="truncate ellipsis">{l("Delete this")<>" "<>(if @verb =="write", do: l("from feeds"), else: @verb)}</span> 
       </button>
     </li>
 
@@ -73,7 +73,7 @@
         phx-value-id={e(@object, :id, "")}
         class="flex items-center p-4 text-sm text-neutral">
         <Outline.TrashIcon class="w-4 h-4 mr-2 shrink-0 text-neutral text-opacity-70" />
-        <span class="truncate ellipsis">{l "Delete this object & activity"}</span>
+        <span class="truncate ellipsis">{l("Delete this")<>" "<>e(assigns, :object_type_readable, l "object")}</span>
       </button>
     </li>
 

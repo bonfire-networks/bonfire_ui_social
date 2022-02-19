@@ -4,6 +4,8 @@ defmodule Bonfire.UI.Social.Activity.MoreActionsLive do
 
   prop activity, :any
   prop object, :any
+  prop verb, :string
+  prop object_type_readable, :any
   prop flagged, :any
   slot extra_items, required: false
   slot admin_items, required: false

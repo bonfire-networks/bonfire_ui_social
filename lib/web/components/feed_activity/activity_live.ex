@@ -32,12 +32,15 @@ defmodule Bonfire.UI.Social.ActivityLive do
     verb_display = Activities.verb_display(verb)
     created_verb_display = Activities.verb_display("create")
 
-    permalink = path(activity.object) |> debug("permalink")
+    object_type = Bonfire.Common.Types.object_type(activity.object)
+    object_type_readable = module_to_human_readable(object_type) |> String.downcase()
+
+    permalink = path(activity.object) #|> debug("permalink")
 
     components = (
       component_activity_subject(verb, activity, assigns)
       ++ (component_maybe_in_reply_to(verb, activity, e(assigns, :showing_within, nil)) |> debug("component_maybe_in_reply_to"))
-      ++ component_object(verb, activity)
+      ++ component_object(verb, activity, object_type)
       ++ component_actions(verb, activity, assigns)
     )
     |> Utils.filter_empty()
@@ -51,6 +54,8 @@ defmodule Bonfire.UI.Social.ActivityLive do
     |> assigns_merge(
         object: activity.object,
         object_id: e(activity.object, :id, "no-object"),
+        object_type: object_type,
+        object_type_readable: object_type_readable,
         date_ago: date_from_now(activity.object),
         activity: activity |> Map.drop([:object]),
         activity_object_components: components,
@@ -79,6 +84,8 @@ defmodule Bonfire.UI.Social.ActivityLive do
           activity={e(component_assigns, :activity, @activity)}
           object={e(component_assigns, :object, @object)}
           object_id={e(component_assigns, :object_id, @object_id)}
+          object_type={e(component_assigns, :object_type, @object_type)}
+          object_type_readable={e(component_assigns, :object_type_readable, @object_type_readable)}
           date_ago={e(component_assigns, :date_ago, @date_ago)}
           verb={e(component_assigns, :verb, @verb)}
           verb_display={e(component_assigns, :verb_display, @verb_display)}
@@ -232,25 +239,25 @@ defmodule Bonfire.UI.Social.ActivityLive do
     []
   end
 
-  def component_object(_, %{object: %{post_content: %Bonfire.Data.Social.PostContent{}}}), do: [Bonfire.UI.Social.Activity.NoteLive]
+  def component_object(_, %{object: %{post_content: %Bonfire.Data.Social.PostContent{}}}, _), do: [Bonfire.UI.Social.Activity.NoteLive]
   # def component_object(_, %{object: %{profile: _}}), do: [Bonfire.UI.Social.Activity.CharacterLive]
   # def component_object(_, %{object: %{character: _}}), do: [Bonfire.UI.Social.Activity.CharacterLive]
 
 
-  def component_object(_, %{object: %{} = object}) do
-    case Bonfire.Common.Types.object_type(object) do
-      type ->
+  def component_object(_, %{object: %{} = object}, object_type) do
+    case object_type do
+      type when is_atom(type) ->
         Logger.debug("ActivityLive: component object_type recognised: #{inspect(type)}")
         component_for_object_type(type, object)
 
       _ ->
-        Logger.warn("ActivityLive: component object_type NOT recognised: #{inspect(object)}")
+        Logger.warn("ActivityLive: component object_type NOT detected: #{inspect(object)}")
         [Bonfire.UI.Social.Activity.UnknownLive]
     end
   end
 
-  def component_object(_, activity) do
-    Logger.warn("ActivityLive: activity with no object")
+  def component_object(_, _activity, _) do
+    Logger.info("ActivityLive: activity has no object")
     [Bonfire.UI.Social.Activity.UnknownLive]
   end
 
@@ -266,8 +273,8 @@ defmodule Bonfire.UI.Social.ActivityLive do
   # def component_for_object_type(type, object) when type in [ValueFlows.Process], do: [Bonfire.UI.Social.Activity.ProcessListLive.activity_component(object)] # TODO: choose between Task and other Intent types
   def component_for_object_type(type, object) when type in [ValueFlows.Process], do: [{Bonfire.Common.Config.get([:ui, :default_instance_feed_previews, :process], Bonfire.UI.Social.Activity.ProcessListLive), object: Bonfire.UI.Social.Activity.ProcessListLive.prepare(object)}]
   def component_for_object_type(type, _object) do
-    Logger.warn("ActivityLive: no component available for object_type: #{inspect(type)}, fallback to UnknownLive")
-    [{Bonfire.UI.Social.Activity.UnknownLive, %{object_type: type}}]
+    Logger.warn("ActivityLive: no component set up for object_type: #{inspect(type)}, fallback to UnknownLive")
+    [Bonfire.UI.Social.Activity.UnknownLive]
   end
 
 
