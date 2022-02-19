@@ -7,8 +7,13 @@
         phx-value-scope={e(assigns, :scope, nil)} 
         type="button" 
         class={e(assigns, :class, "btn btn-sm btn-outline rounded-full")}>
-        <Outline.BanIcon class="w-4 h-4 mr-2 shrink-0 text-neutral text-opacity-70" />
-       <span class="truncate ellipsis">{l "Block"} {e(assigns, :label, "")}</span>
+        <Outline.BanIcon 
+            :if={e(assigns, :scope, nil) !="instance"} 
+            class="w-4 h-4 mr-2 shrink-0 text-neutral text-opacity-70" />
+        <Outline.LockClosedIcon 
+            :if={e(assigns, :scope, nil)=="instance"} 
+            class="w-4 h-4 mr-2 shrink-0 text-neutral text-opacity-70" />
+       <span class="truncate ellipsis">{e(assigns, :label, l "Block")}</span>
     </button>
 {#else}
     <button 
@@ -19,7 +24,13 @@
         phx-value-scope={e(assigns, :scope, nil)} 
         type="button" 
         class={e(assigns, :class, "btn btn-sm btn-outline rounded-full")}>
-        <Solid.BanIcon class="w-4 h-4 mr-2 text-neutral text-opacity-70" />
-         <span class="truncate ellipsis">{l "Unblock"} { e(assigns, :label, "")}</span>
+        <Outline.CheckCircleIcon 
+            :if={e(assigns, :scope, nil) !="instance"} 
+            class="w-4 h-4 mr-2 shrink-0 text-neutral text-opacity-70" />
+        <Outline.LockOpenIcon 
+            :if={e(assigns, :scope, nil)=="instance"} 
+            class="w-4 h-4 mr-2 shrink-0 text-neutral text-opacity-70" />
+
+         <span class="truncate ellipsis">{l "Undo"} { e(assigns, :label, "")}</span>
     </button>
 {/if}

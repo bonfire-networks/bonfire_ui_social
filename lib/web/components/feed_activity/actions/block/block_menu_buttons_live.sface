@@ -4,7 +4,7 @@
   class=" hover:bg-neutral hover:bg-opacity-20">
   <Bonfire.UI.Social.BlockButtonLive
     object={@object}
-    label={e(@object, :profile, :name, "this user")}
+    label={l("Block")<>" "<>e(@object, :profile, :name, l "this user")}
     id={ComponentID.new(Bonfire.UI.Social.BlockButtonLive, @object)}
     class="flex items-center p-4 text-sm text-neutral"
   />
@@ -14,7 +14,7 @@
   class=" hover:bg-neutral hover:bg-opacity-20">
   <Bonfire.UI.Social.BlockButtonLive
     object={e(peered(assigns), :peer_id, nil)}
-    label={URI.parse(e(peered(assigns), :canonical_uri, "#")).host}
+    label={l("Block")<>" "<>URI.parse(e(peered(assigns), :canonical_uri, "#")).host}
     id={ComponentID.new(Bonfire.UI.Social.BlockButtonLive, @object)}
     class="flex items-center p-4 text-sm text-neutral"
   />
@@ -26,7 +26,7 @@
   <Bonfire.UI.Social.BlockButtonLive
     object={@object}
     scope="instance"
-    label={e(@object, :profile, :name, "this user")<>" "<>l "from this instance"}
+    label={l("Ban")<>" "<>e(@object, :profile, :name, l "this user")}
     id={ComponentID.new(Bonfire.UI.Social.BlockButtonLive, @object)}
     class="flex items-center p-4 text-sm text-neutral"
   />
@@ -37,7 +37,7 @@
   <Bonfire.UI.Social.BlockButtonLive
     object={e(peered(assigns), :peer_id, nil)}
     scope="instance"
-    label={URI.parse(e(peered(assigns), :canonical_uri, "#")).host<>" "<>l("from this instance")}
+    label={l("Ban")<>" "<>URI.parse(e(peered(assigns), :canonical_uri, "#")).host}
     id={ComponentID.new(Bonfire.UI.Social.BlockButtonLive, @object)}
     class="flex items-center p-4 text-sm text-neutral"
   />
