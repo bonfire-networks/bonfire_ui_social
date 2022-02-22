@@ -19,7 +19,7 @@
     class="flex items-center p-4 text-sm text-neutral"
   />
 </li>
-<div class="h-0 my-0 divider"></div> 
+<!-- <div class="h-0 my-0 divider"></div>  -->
 <li 
   :if={e(current_user(assigns), :id, nil) != e(@object, :character, :id, nil) and Bonfire.Me.Users.is_admin?(current_user(assigns))}
   class=" hover:bg-neutral hover:bg-opacity-20">

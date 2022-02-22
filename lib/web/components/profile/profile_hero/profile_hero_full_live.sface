@@ -49,11 +49,15 @@
           </span>
           {l "Settings"}
         </LiveRedirect>
-        <div class="dropdown dropdown-end">
+        <div 
+          :if={e(current_user(assigns), :id, nil) != maybe_get(@user, :id)}
+          class="dropdown dropdown-end">
           <label tabindex="0" class="m-1 btn btn-outline btn-sm btn-circle">
             <Solid.DotsHorizontalIcon />
           </label>
-          <ul tabindex="0" class="rounded shadow w-52 menu dropdown-content bg-neutral-content dropdown_actions">
+          <ul  
+            tabindex="0" 
+            class="rounded shadow w-52 menu dropdown-content bg-neutral-content dropdown_actions">
             <li
              class="hover:bg-neutral hover:bg-opacity-20"
              :if={current_user(assigns) && is_admin?(current_user(assigns))} >

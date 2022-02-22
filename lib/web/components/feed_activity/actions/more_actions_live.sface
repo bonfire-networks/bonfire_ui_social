@@ -38,7 +38,7 @@
         class="flex items-center p-4 text-sm text-neutral"
       />
     </li>
-    <div class="h-0 my-0 divider"></div> 
+    <!-- <div class="h-0 my-0 divider"></div>  -->
     <li 
       :if={e(current_user(assigns), :id, nil) != e(@activity, :subject, :character, :id, nil)}
       class=" hover:bg-neutral hover:bg-opacity-20">
@@ -52,7 +52,7 @@
         object={subject(assigns)}
         peered={e(@object, :peered, nil)}
       />
-    <div class="h-0 my-0 divider"></div>  
+    <!-- <div class="h-0 my-0 divider"></div>   -->
     <li 
       :if={e(current_user(assigns), :id, nil) == e(@activity, :subject, :character, :id, nil) or Bonfire.Me.Users.is_admin?(current_user(assigns))}
       class=" hover:bg-neutral hover:bg-opacity-20">
@@ -81,3 +81,20 @@
 
   </ul>
 </div>
+
+<Bonfire.UI.Social.ConfirmActivityLive title="Flag this activity" object_id={e(@object, :id, "")}>
+  <:content>
+    <p class="text-sm text-neutral text-opacity-80">
+      {l "The admins will review the activity and remove it from the feed and/or block the person or instance if appropriate."}
+    </p>
+  </:content>
+  <:actions>
+    <button 
+      phx-click={"Bonfire.Social.Flags:flag"} 
+      phx-value-id={e(@object, :id, "")}
+      type="button" 
+      class="w-full btn btn-wide btn-error text-neutral-content">
+      {l "Flag"}
+    </button>
+  </:actions>
+</Bonfire.UI.Social.ConfirmActivityLive>

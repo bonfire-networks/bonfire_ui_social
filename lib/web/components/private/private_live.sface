@@ -12,7 +12,7 @@
             <div class="truncate">
               <div class="flex items-center space-x-2">
                 <!-- <img src={e(activity, :subject, :profile, :icon, "")} class="w-8 h-8 bg-secondary rounded-btn" /> -->
-                <p class="text-base font-medium truncate text-primary">{e(activity, :subject, :profile, :name, nil)}</p>
+                <p class="text-base font-medium truncate text-base-content">{e(activity, :subject, :profile, :name, nil)}</p>
               </div>
               <div class="mt-1">
                 <p class="text-sm truncate text-base-content text-opacity-80 font-regular">
