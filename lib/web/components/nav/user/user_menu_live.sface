@@ -16,7 +16,7 @@
       </button>
     <ul
       tabindex="0"
-      class="p-2 shadow menu dropdown-content bg-base-100 rounded-box w-52"
+      class="rounded shadow w-52 menu dropdown-content bg-neutral-content"
       role="menu"
       aria-orientation="vertical"
       aria-labelledby="user-profile-menu"
