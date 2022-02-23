@@ -56,25 +56,48 @@
     <li 
       :if={e(current_user(assigns), :id, nil) == e(@activity, :subject, :character, :id, nil) or Bonfire.Me.Users.is_admin?(current_user(assigns))}
       class=" hover:bg-neutral hover:bg-opacity-20">
-      <button 
-        phx-click={"Bonfire.Social.Objects:delete"} 
-        phx-value-id={e(@activity, :id, "")}
-        class="flex items-center p-4 text-sm text-neutral">
-        <Outline.TrashIcon class="w-4 h-4 mr-2 shrink-0 text-neutral text-opacity-70" />
-         <span class="truncate ellipsis">{l("Delete this")<>" "<>(if @verb =="write", do: l("from feeds"), else: @verb)}</span> 
-      </button>
+      <OpenModalLive
+        id={ComponentID.new(ModalLive, e(@object, :id, nil))} 
+        title_text={l("Delete this")<>" "<>(if @verb =="write", do: l("from feeds"), else: @verb)}
+        open_btn_text={l("Delete this")<>" "<>(if @verb =="write", do: l("from feeds"), else: @verb)}
+        open_btn_class="flex items-center p-4 text-sm text-neutral"
+        >
+        {l "You may be able to undo this deletion in some cases, but the data will eventually be permanently deleted."}
+        <:action_btns>
+          <button 
+          phx-click={"Bonfire.Social.Objects:delete"} 
+          phx-value-id={e(@activity, :id, "")}
+          class="btn btn-error">
+          <Outline.TrashIcon class="w-4 h-4 mr-2 shrink-0 text-neutral text-opacity-70" />
+          <span class="truncate ellipsis">{l("Delete this")<>" "<>(if @verb =="write", do: l("from feeds"), else: @verb)}</span> 
+        </button>
+        </:action_btns>
+
+      </OpenModalLive>
+
     </li>
 
     <li 
       :if={e(current_user(assigns), :id, nil) == e(@activity, :subject, :character, :id, nil) or Bonfire.Me.Users.is_admin?(current_user(assigns))}
       class=" hover:bg-neutral hover:bg-opacity-20">
-      <button 
-        phx-click={"Bonfire.Social.Objects:delete"} 
-        phx-value-id={e(@object, :id, "")}
-        class="flex items-center p-4 text-sm text-neutral">
-        <Outline.TrashIcon class="w-4 h-4 mr-2 shrink-0 text-neutral text-opacity-70" />
-        <span class="truncate ellipsis">{l("Delete this")<>" "<>e(assigns, :object_type_readable, l "object")}</span>
-      </button>
+      <OpenModalLive
+        id={ComponentID.new(ModalLive, e(@object, :id, nil))} 
+        open_btn_text={l("Delete this")<>" "<>e(assigns, :object_type_readable, l "object")}
+        title_text={l("Delete this")<>" "<>e(assigns, :object_type_readable, l "object")}
+        open_btn_class="flex items-center p-4 text-sm text-neutral"
+        >
+        {l "You may be able to undo this deletion in some cases, but the data will eventually be permanently deleted."}
+        <:action_btns>
+          <button 
+          phx-click={"Bonfire.Social.Objects:delete"} 
+          phx-value-id={e(@object, :id, "")}
+          class="btn btn-error">
+          <Outline.TrashIcon class="w-4 h-4 mr-2 shrink-0 text-neutral text-opacity-70" />
+          <span class="truncate ellipsis">{l("Delete this")<>" "<>e(assigns, :object_type_readable, l "object")}</span>
+        </button>
+        </:action_btns>
+
+      </OpenModalLive>
     </li>
 
     <#slot name="admin_items" />

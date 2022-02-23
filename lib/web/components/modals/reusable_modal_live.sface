@@ -1,0 +1,31 @@
+<div
+  class={"modal "<>(if e(assigns, :show, nil), do: "modal-open", else: "")}
+  id={@id}
+  :attrs={e(assigns, :opts, [])}>
+
+    <div class="modal-box">
+
+      <h3 class={e(assigns, :title_class, nil)} id={"#{@id}-title"}>
+          <#slot name="title">{e(assigns, :title_text, nil)}</#slot>
+      </h3>
+
+      <div class="mt-2" data-id="modal-contents">
+          <#slot></#slot>
+      </div>
+
+      <div class="modal-action">
+
+      <#slot name="action_btns"></#slot>
+
+      <a
+        href="#"
+      >
+        <#slot name="cancel_btn">
+          <button class={e(assigns, :cancel_btn_class, nil)} type="button">Cancel</button>
+        </#slot>
+      </a>
+
+    </div>
+  </div>  
+</div>
+
