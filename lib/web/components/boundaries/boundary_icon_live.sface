@@ -6,7 +6,7 @@
     <Solid.ExternalLinkIcon class="w-4 h-4 text-base-content text-opacity-70" />
   </span>
 
-{#elseif e(@object_primary_boundary, :id, nil)==Bonfire.Boundaries.Acls.get_id!(:guests_may_see)}
+{#elseif e(@object_primary_boundary, :id, nil)==Bonfire.Boundaries.Acls.get_id!(:guests_may_read)}
 
   <span 
     data-tip={e(@object_primary_boundary, :name, "Public")}

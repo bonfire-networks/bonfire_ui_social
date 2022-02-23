@@ -1,11 +1,11 @@
 <div
-  id={"confirm_activity_modal-#{@object_id}"}
+  id={"confirm_modal-#{@object_id}"}
   class="fixed inset-0 z-50 hidden overflow-y-auto" 
   aria-labelledby="modal-title" x-ref="dialog" aria-modal="true">
   <div 
     class="flex items-end justify-center min-h-screen px-4 pt-4 pb-20 text-center sm:block sm:p-0">   
     <div
-      phx-click={JS.hide(to: "#confirm_activity_modal-#{@object_id}", transition: "fade-out-scale")}
+      phx-click={JS.hide(to: "#confirm_modal-#{@object_id}", transition: "fade-out-scale")}
       class="fixed inset-0 transition-opacity bg-base-100 bg-opacity-60" 
       aria-hidden="true">
     </div>
@@ -15,7 +15,7 @@
       <div class="sm:flex sm:items-start">
         <div class="absolute top-0 right-0 hidden pt-4 pr-4 sm:block">
         <button 
-          phx-click={JS.hide(to: "#confirm_activity_modal-#{@object_id}", transition: "fade-out-scale")}
+          phx-click={JS.hide(to: "#confirm_modal-#{@object_id}", transition: "fade-out-scale")}
           type="button" 
           class="text-gray-400 bg-white rounded-md hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
           <span class="sr-only">Close</span>
@@ -36,7 +36,7 @@
         <button 
           type="button" 
           class="w-full btn-wide btn" 
-          phx-click={JS.hide(to: "#confirm_activity_modal-#{@object_id}", transition: "fade-out-scale")}>
+          phx-click={JS.hide(to: "#confirm_modal-#{@object_id}", transition: "fade-out-scale")}>
           {l "Cancel"}
         </button>
       </div>

@@ -82,7 +82,7 @@
   </ul>
 </div>
 
-<Bonfire.UI.Social.ConfirmActivityLive title="Flag this activity" object_id={e(@object, :id, "")}>
+<Bonfire.UI.Social.ConfirmModalLive title="Flag this activity" object_id={e(@object, :id, "")}>
   <:content>
     <p class="text-sm text-neutral text-opacity-80">
       {l "The admins will review the activity and remove it from the feed and/or block the person or instance if appropriate."}
@@ -97,4 +97,4 @@
       {l "Flag"}
     </button>
   </:actions>
-</Bonfire.UI.Social.ConfirmActivityLive>
+</Bonfire.UI.Social.ConfirmModalLive>

@@ -8,7 +8,7 @@
     </button>
   {#else}
     <button 
-      phx-click={JS.show(to: "#confirm_activity_modal-#{e(@object, :id, nil)}", transition: "fade-in-scale")}
+      phx-click={JS.show(to: "#confirm_modal-#{e(@object, :id, nil)}", transition: "fade-in-scale")}
       class={e(assigns, :class, "btn btn-sm btn-danger rounded-full")}>
       <Outline.FlagIcon class="w-4 h-4 mr-2 shrink-0 text-neutral text-opacity-70" />
       <span class="truncate ellipsis"> {l("Flag")<>" "<>e(assigns, :label, l "this activity")}</span>
