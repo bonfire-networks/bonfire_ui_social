@@ -48,7 +48,7 @@ defmodule Bonfire.UI.Social.ThreadLive do
   end
 
   def update(assigns, socket) do
-    # debug(assigns, label: "Thread: assigns")
+    # debug(assigns, "Thread: assigns")
 
     thread_id = e(assigns, :thread_id, nil)
 
@@ -58,11 +58,11 @@ defmodule Bonfire.UI.Social.ThreadLive do
       current_user = current_user(assigns) #|> IO.inspect
 
       with %{edges: replies, page_info: page_info} <- Bonfire.Social.Threads.list_replies(thread_id, current_user: current_user, after: e(assigns, :after, nil)) do
-        # debug(thread_id, label: "thread_id")
-        # debug(replies, label: "replies")
+        # debug(thread_id, "thread_id")
+        # debug(replies, "replies")
 
         threaded_replies = if is_list(replies) and length(replies)>0, do: Bonfire.Social.Threads.arrange_replies_tree(replies), else: []
-        # debug(threaded_replies, label: "threaded_replies")
+        # debug(threaded_replies, "threaded_replies")
 
         assigns
         |> assigns_merge(
@@ -78,7 +78,7 @@ defmodule Bonfire.UI.Social.ThreadLive do
 
   def assign_thread(assigns, socket) do
 
-    # debug(assigns, label: "thread assigns")
+    # debug(assigns, "thread assigns")
 
     current_user = current_user(assigns)
     thread_id = e(assigns, :thread_id, nil)
