@@ -17,13 +17,13 @@
 
       <#slot name="action_btns"></#slot>
 
-      <a
-        href="#"
+      <div
+        :on-click="close"
       >
         <#slot name="cancel_btn">
           <button class={e(assigns, :cancel_btn_class, nil)} type="button">Cancel</button>
         </#slot>
-      </a>
+      </div>
 
     </div>
   </div>  

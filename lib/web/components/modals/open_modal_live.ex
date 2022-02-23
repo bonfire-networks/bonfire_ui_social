@@ -58,11 +58,16 @@ defmodule Bonfire.UI.Social.OpenModalLive do
   # Default event handlers
 
   def handle_event("open", _, socket) do
-    # socket = socket
-    # |> assign(show: true)
+    socket = socket
+    |> assign(show: true)
 
     set(socket.assigns)
 
+    {:noreply, socket}
+  end
+
+  def handle_event("close", _, socket) do
+    close()
     {:noreply, socket}
   end
 

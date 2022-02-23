@@ -34,7 +34,6 @@ defmodule Bonfire.UI.Social.ReusableModalLive do
   slot cancel_btn
   slot title
 
-
   def handle_event("close", _, socket) do
     {:noreply, assign(socket, show: false)}
   end
