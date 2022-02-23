@@ -23,22 +23,20 @@ defmodule Bonfire.UI.Social.OpenModalLive do
   @doc "Force modal to be open"
   prop show, :boolean, default: false
 
-  @doc "Role should be :box for embeded the reusable modal in the live layout, otherwise leave empty."
-  prop role, :atom, default: nil
 
   @doc """
   Additional attributes to add onto the modal wrapper
   """
   prop opts, :keyword, default: []
 
+
   @doc """
-  The content of the generated `<modal>` element. If no content is provided,
-  the value of property `label` is used instead.
+  Slots for the contents of the modal, title, buttons...
   """
+  slot default
   slot open_btn
   slot action_btns
   slot cancel_btn
-  slot default
   slot title
 
 
