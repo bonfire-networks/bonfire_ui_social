@@ -3,16 +3,16 @@
     <button 
         id={@id}
         data-id="block"
-        :on-click="Bonfire.Me.Boundaries:block" 
+        :on-click="Bonfire.Boundaries:block" 
         phx-value-id={e(@object, :id, @object)} 
         phx-value-scope={e(assigns, :scope, nil)} 
         type="button" 
         class={e(assigns, :class, "btn btn-sm btn-outline rounded-full")}>
         <Outline.BanIcon 
-            :if={e(assigns, :scope, nil) !="instance"} 
+            :if={e(assigns, :scope, nil) !="instance_wide"} 
             class="w-4 h-4 mr-2 shrink-0 text-neutral text-opacity-70" />
         <Outline.LockClosedIcon 
-            :if={e(assigns, :scope, nil)=="instance"} 
+            :if={e(assigns, :scope, nil)=="instance_wide"} 
             class="w-4 h-4 mr-2 shrink-0 text-neutral text-opacity-70" />
        <span class="truncate ellipsis">{e(assigns, :label, l "Block")}</span>
     </button>
@@ -22,16 +22,16 @@
     <button 
         id={@id}
         data-id="unblock"
-        :on-click="Bonfire.Me.Boundaries:unblock" 
+        :on-click="Bonfire.Boundaries:unblock" 
         phx-value-id={e(@object, :id, @object)} 
         phx-value-scope={e(assigns, :scope, nil)} 
         type="button" 
         class={e(assigns, :class, "btn btn-sm btn-outline rounded-full")}>
         <Outline.CheckCircleIcon 
-            :if={e(assigns, :scope, nil) !="instance"} 
+            :if={e(assigns, :scope, nil) !="instance_wide"} 
             class="w-4 h-4 mr-2 shrink-0 text-neutral text-opacity-70" />
         <Outline.LockOpenIcon 
-            :if={e(assigns, :scope, nil)=="instance"} 
+            :if={e(assigns, :scope, nil)=="instance_wide"} 
             class="w-4 h-4 mr-2 shrink-0 text-neutral text-opacity-70" />
 
          <span class="truncate ellipsis">{l "Undo"} { e(assigns, :label, "")}</span>

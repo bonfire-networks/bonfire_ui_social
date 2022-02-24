@@ -19,7 +19,7 @@ defmodule Bonfire.UI.Social.ProfileViewLive do
   prop page_info, :any
 
   def tab(selected_tab) do
-    case maybe_str_to_atom(selected_tab) do
+    case maybe_to_atom(selected_tab) do
       tab when is_atom(tab) -> tab
       _ -> :timeline
     end

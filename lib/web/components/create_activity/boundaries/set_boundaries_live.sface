@@ -6,8 +6,8 @@
     selected_options={e(to_circles, @default_circles)}
     label={@label}
     form_input_name={"circles[]"}
-    pick_event={"Bonfire.Me.Boundaries:select"}
-    remove_event={"Bonfire.Me.Boundaries:deselect"}
+    pick_event={"Bonfire.Boundaries:select"}
+    remove_event={"Bonfire.Boundaries:deselect"}
    />
 
 </div>

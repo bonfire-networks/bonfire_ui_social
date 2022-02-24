@@ -25,7 +25,7 @@
   class=" hover:bg-neutral hover:bg-opacity-20">
   <Bonfire.UI.Social.BlockButtonLive
     object={@object}
-    scope="instance"
+    scope="instance_wide"
     label={l("Ban")<>" "<>e(@object, :profile, :name, l "this user")}
     id={ComponentID.new(Bonfire.UI.Social.BlockButtonLive, @object)}
     class="flex items-center w-full text-sm text-neutral"
@@ -36,7 +36,7 @@
   class=" hover:bg-neutral hover:bg-opacity-20">
   <Bonfire.UI.Social.BlockButtonLive
     object={e(peered(assigns), :peer_id, nil)}
-    scope="instance"
+    scope="instance_wide"
     label={l("Ban")<>" "<>URI.parse(e(peered(assigns), :canonical_uri, "#")).host}
     id={ComponentID.new(Bonfire.UI.Social.BlockButtonLive, @object)}
     class="flex items-center w-full text-sm text-neutral"
