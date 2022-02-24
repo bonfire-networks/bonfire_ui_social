@@ -1,6 +1,8 @@
 
   <div class="flex flex-col">
-    <Bonfire.UI.Social.HeaderUserLive current_user={current_user(assigns)}  />
+    <Bonfire.UI.Social.HeaderUserLive 
+      page={@page}
+      current_user={current_user(assigns)}  />
     <div class="w-full lg:justify-center lg:max-w-screen-xl lg:px-3 lg:mx-auto lg:mt-20 h-body md:flex ">
       {#if current_user(assigns) }
       <Bonfire.UI.Social.SidebarLive

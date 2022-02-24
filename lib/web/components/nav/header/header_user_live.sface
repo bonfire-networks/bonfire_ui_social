@@ -34,17 +34,17 @@
     {#elseif current_user(assigns)}
     <div class="w-[285px] justify-start items-center space-x-2 hidden lg:flex">
       <div data-tip="Home" class="flex-none tooltip tooltip-bottom">
-        <LivePatch to={"/home"} class="btn btn-square btn-ghost text-base-content text-opacity-80">
+        <LivePatch to={"/home"} class={"btn btn-square text-base-content text-opacity-80", "btn-primary": @page == "home", "btn-ghost": @page != "home"}>
             <Solid.RssIcon class="w-5 h-5" />
         </LivePatch>
       </div> 
       <div data-tip="Direct Messages" class="flex-none tooltip tooltip-bottom">
-        <LivePatch to={"/private"} class="btn btn-square btn-ghost text-base-content text-opacity-80">
+        <LivePatch to={"/private"} class={"btn btn-square text-base-content text-opacity-80", "btn-primary": @page == "private", "btn-ghost": @page != "private"}>
             <Solid.MailIcon class="w-5 h-5" />
         </LivePatch>
       </div> 
       <div data-tip="Notifications" class="flex-none tooltip tooltip-bottom">
-        <LivePatch to={path(:notifications)} class="btn btn-square btn-ghost text-base-content text-opacity-80">
+        <LivePatch to={path(:notifications)} class={"btn btn-square text-base-content text-opacity-80", "btn-primary": @page == "notifications", "btn-ghost": @page != "notifications"}>
             <Solid.BellIcon class="w-5 h-5" />
         </LivePatch>
       </div> 
