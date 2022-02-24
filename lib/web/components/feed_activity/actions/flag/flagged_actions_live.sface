@@ -15,7 +15,7 @@
       phx-value-subject={e(@activity, :subject, :id, "")}
       class="normal-case btn btn-sm"
     >
-      <Outline.EyeOffIcon class="w-4 h-4 mr-1 shrink-0 text-base-content text-opacity-70"/>
+      <Outline.EyeOffIcon class="w-4 h-4 mr-1 shrink-0 text-opacity-70"/>
       <span class="truncate ellipsis">{l "Unflag"}</span>
     </button>
     <button 
