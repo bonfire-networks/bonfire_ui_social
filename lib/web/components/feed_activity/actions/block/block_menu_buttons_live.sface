@@ -6,7 +6,7 @@
     object={@object}
     label={l("Block")<>" "<>e(@object, :profile, :name, l "this user")}
     id={ComponentID.new(Bonfire.UI.Social.BlockButtonLive, @object)}
-    class="flex items-center p-4 text-sm text-neutral"
+    class="flex items-center w-full text-sm text-neutral"
   />
 </li>
 <li 
@@ -16,7 +16,7 @@
     object={e(peered(assigns), :peer_id, nil)}
     label={l("Block")<>" "<>URI.parse(e(peered(assigns), :canonical_uri, "#")).host}
     id={ComponentID.new(Bonfire.UI.Social.BlockButtonLive, @object)}
-    class="flex items-center p-4 text-sm text-neutral"
+    class="flex items-center w-full text-sm text-neutral"
   />
 </li>
 <!-- <div class="h-0 my-0 divider"></div>  -->
@@ -28,7 +28,7 @@
     scope="instance"
     label={l("Ban")<>" "<>e(@object, :profile, :name, l "this user")}
     id={ComponentID.new(Bonfire.UI.Social.BlockButtonLive, @object)}
-    class="flex items-center p-4 text-sm text-neutral"
+    class="flex items-center w-full text-sm text-neutral"
   />
 </li>
 <li 
@@ -39,6 +39,6 @@
     scope="instance"
     label={l("Ban")<>" "<>URI.parse(e(peered(assigns), :canonical_uri, "#")).host}
     id={ComponentID.new(Bonfire.UI.Social.BlockButtonLive, @object)}
-    class="flex items-center p-4 text-sm text-neutral"
+    class="flex items-center w-full text-sm text-neutral"
   />
 </li>

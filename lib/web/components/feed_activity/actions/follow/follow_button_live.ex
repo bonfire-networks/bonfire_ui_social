@@ -3,7 +3,9 @@ defmodule Bonfire.UI.Social.FollowButtonLive do
 
   prop object, :any
   prop class, :string
+  prop icon_class, :string
   prop label, :string
+  prop my_follow, :boolean
 
   def preload(list_of_assigns), do: Bonfire.Social.Follows.LiveHandler.preload(list_of_assigns)
 

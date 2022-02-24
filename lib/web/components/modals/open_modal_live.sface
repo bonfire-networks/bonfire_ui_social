@@ -3,6 +3,8 @@
 :on-click={"open"}
 >
   <#slot name="open_btn">
-    <button class={e(assigns, :open_btn_class, nil)} type="button">{e(assigns, :open_btn_text, "Open modal")}</button>
+    <button class={e(assigns, :open_btn_class, nil)} type="button">
+      {e(assigns, :open_btn_text, "Open modal")}
+    </button>
   </#slot>
 </div>

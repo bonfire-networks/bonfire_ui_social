@@ -11,14 +11,8 @@ defmodule Bonfire.UI.Social.OpenModalLive do
   @doc "The classes of the title of the modal"
   prop title_class, :string, default: "font-bold text-lg"
 
-  @doc "The label of the open button for the modal. Only used if no open_btn slot is passed."
-  prop open_btn_text, :string, default: "Open modal"
-
-  @doc "The classes of the open button for the modal. Only used if no open_btn slot is passed."
-  prop open_btn_class, :string, default: "btn btn-primary"
-
   @doc "The classes of the close/cancel button on the modal. Only used if no close_btn slot is passed."
-  prop cancel_btn_class, :string, default: "btn btn-secondary"
+  prop cancel_btn_class, :string, default: "btn btn-outline"
 
   @doc "Force modal to be open"
   prop show, :boolean, default: false

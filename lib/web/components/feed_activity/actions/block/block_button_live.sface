@@ -1,4 +1,5 @@
 {#if !e(assigns, :my_block, nil) }
+    <div>
     <button 
         id={@id}
         data-id="block"
@@ -15,7 +16,9 @@
             class="w-4 h-4 mr-2 shrink-0 text-neutral text-opacity-70" />
        <span class="truncate ellipsis">{e(assigns, :label, l "Block")}</span>
     </button>
+    </div>
 {#else}
+    <div>
     <button 
         id={@id}
         data-id="unblock"
@@ -33,4 +36,5 @@
 
          <span class="truncate ellipsis">{l "Undo"} { e(assigns, :label, "")}</span>
     </button>
+    </div>
 {/if}

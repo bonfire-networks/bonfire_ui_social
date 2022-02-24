@@ -31,12 +31,15 @@
     <li 
       :if={e(current_user(assigns), :id, nil) != subject_id(assigns)}
       class=" hover:bg-neutral hover:bg-opacity-20">
-      <Bonfire.UI.Social.FollowButtonLive
-        object={subject(assigns)}
-        label={name(assigns)}
-        id={ComponentID.new(Bonfire.UI.Social.FollowButtonLive, subject(assigns))}
-        class="flex items-center p-4 text-sm text-neutral"
-      />
+      <div>
+        <Bonfire.UI.Social.FollowButtonLive
+          object={subject(assigns)}
+          label={name(assigns)}
+          id={ComponentID.new(Bonfire.UI.Social.FollowButtonLive, subject(assigns))}
+          class="flex items-center w-full text-sm text-neutral"
+          icon_class="w-4 h-4 mr-2 shrink-0 text-neutral text-opacity-70"
+        />
+      </div>
     </li>
     <!-- <div class="h-0 my-0 divider"></div>  -->
     <li 
@@ -45,7 +48,7 @@
       <Bonfire.UI.Social.FlagActionLive 
         object={@object}
         flagged={@flagged}
-        class="flex items-center p-4 text-sm text-neutral"
+        class="flex items-center py-2 text-sm text-neutral"
       />
     </li>
     <Bonfire.UI.Social.BlockMenuButtonsLive
@@ -59,10 +62,16 @@
       <OpenModalLive
         id={ComponentID.new(ModalLive, e(@object, :id, nil))} 
         title_text={l("Delete this")<>" "<>(if @verb =="write", do: l("from feeds"), else: @verb)}
-        open_btn_text={l("Delete this")<>" "<>(if @verb =="write", do: l("from feeds"), else: @verb)}
-        open_btn_class="flex items-center p-4 text-sm text-neutral"
         >
         {l "You may be able to undo this deletion in some cases, but the data will eventually be permanently deleted."}
+        <:open_btn>
+          <button class="flex items-center text-sm text-neutral" type="button">
+            <Outline.TrashIcon class="w-4 h-4 mr-2 shrink-0 text-neutral text-opacity-70" />
+            <span class="truncate ellipsis">
+              {l("Delete this")<>" "<>(if @verb =="write", do: l("from feeds"), else: @verb)}
+            </span>
+          </button>
+        </:open_btn>
         <:action_btns>
           <button 
           phx-click={"Bonfire.Social.Objects:delete"} 
@@ -72,9 +81,7 @@
           <span class="truncate ellipsis">{l("Delete this")<>" "<>(if @verb =="write", do: l("from feeds"), else: @verb)}</span> 
         </button>
         </:action_btns>
-
       </OpenModalLive>
-
     </li>
 
     <li 
@@ -82,11 +89,17 @@
       class=" hover:bg-neutral hover:bg-opacity-20">
       <OpenModalLive
         id={ComponentID.new(ModalLive, e(@object, :id, nil))} 
-        open_btn_text={l("Delete this")<>" "<>e(assigns, :object_type_readable, l "object")}
         title_text={l("Delete this")<>" "<>e(assigns, :object_type_readable, l "object")}
-        open_btn_class="flex items-center p-4 text-sm text-neutral"
         >
         {l "You may be able to undo this deletion in some cases, but the data will eventually be permanently deleted."}
+        <:open_btn>
+          <button class="flex items-center text-sm text-neutral" type="button">
+            <Outline.TrashIcon class="w-4 h-4 mr-2 shrink-0 text-neutral text-opacity-70" />
+            <span class="truncate ellipsis">
+              {l("Delete this")<>" "<>e(assigns, :object_type_readable, l "object")}
+            </span>
+          </button>
+        </:open_btn>
         <:action_btns>
           <button 
           phx-click={"Bonfire.Social.Objects:delete"} 
@@ -104,20 +117,3 @@
 
   </ul>
 </div>
-
-<Bonfire.UI.Social.ConfirmModalLive title="Flag this activity" object_id={e(@object, :id, "")}>
-  <:content>
-    <p class="text-sm text-neutral text-opacity-80">
-      {l "The admins will review the activity and remove it from the feed and/or block the person or instance if appropriate."}
-    </p>
-  </:content>
-  <:actions>
-    <button 
-      phx-click={"Bonfire.Social.Flags:flag"} 
-      phx-value-id={e(@object, :id, "")}
-      type="button" 
-      class="w-full btn btn-wide btn-error text-neutral-content">
-      {l "Flag"}
-    </button>
-  </:actions>
-</Bonfire.UI.Social.ConfirmModalLive>

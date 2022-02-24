@@ -3,15 +3,31 @@
   x-data="{modal_flagging_activity: false}"
 >
   {#if e(assigns, :my_flag, :id, nil)}
-    <button disabled="disabled" class="flex items-center p-4 text-neutral">
+    <button disabled="disabled" class="flex items-center p-2 text-neutral">
       {l "You already flagged this"}
     </button>
   {#else}
-    <button 
-      phx-click={JS.show(to: "#confirm_modal-#{e(@object, :id, nil)}", transition: "fade-in-scale")}
-      class={e(assigns, :class, "btn btn-sm btn-danger rounded-full")}>
-      <Outline.FlagIcon class="w-4 h-4 mr-2 shrink-0 text-neutral text-opacity-70" />
-      <span class="truncate ellipsis"> {l("Flag")<>" "<>e(assigns, :label, l "this activity")}</span>
+    <Bonfire.UI.Social.OpenModalLive
+    id={ComponentID.new(ModalLive, e(@object, :id, nil))} 
+    title_text={l("Flag this activity")}
+  >
+    {l "The admins will review the activity and remove it from the feed and/or block the person or instance if appropriate."}
+    <:open_btn>
+      <button class="flex items-center text-sm text-neutral" type="button">
+        <Outline.FlagIcon class="w-4 h-4 mr-2 shrink-0 text-neutral text-opacity-70" />
+        <span class="truncate ellipsis"> {l("Flag")<>" "<>e(assigns, :label, l "this activity")}</span>
+      </button>
+    </:open_btn>
+    <:action_btns>
+      <button 
+        phx-click={"Bonfire.Social.Flags:flag"} 
+        phx-value-id={e(@object, :id, "")}
+      class="btn btn-error">
+      {l "Flag"}
     </button>
+    </:action_btns>
+
+  </Bonfire.UI.Social.OpenModalLive>
   {/if}
 </div>
+
