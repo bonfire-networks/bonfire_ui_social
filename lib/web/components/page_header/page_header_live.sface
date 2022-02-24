@@ -62,8 +62,10 @@
             </svg>
           </span>
         </a>
-        <h1 class="font-medium capitalize text-md">{@page_title}</h1> 
-        <#slot><div /></#slot>
+        
+        <#slot>
+          <h1 class="font-medium capitalize text-md">{@page_title}</h1> 
+        </#slot>
       </div>
       <div class="text-base-content">
         {#if current_account(assigns) != nil and current_user(assigns) == nil }

@@ -8,10 +8,10 @@
     </button>
   {#else}
     <Bonfire.UI.Social.OpenModalLive
-    id={ComponentID.new(ModalLive, e(@object, :id, nil))} 
+    id={ComponentID.new(Bonfire.UI.Social.OpenModalLive, @object)} 
     title_text={l("Flag this activity")}
   >
-    {l "The admins will review the activity and remove it from the feed and/or block the person or instance if appropriate."}
+    {l "The admins will review the activity, might be in touch with you or the author for clarification, and may delete it and/or block the person or instance if appropriate."}
     <:open_btn>
       <button class="flex items-center text-sm text-neutral" type="button">
         <Outline.FlagIcon class="w-4 h-4 mr-2 shrink-0 text-neutral text-opacity-70" />
@@ -22,7 +22,7 @@
       <button 
         phx-click={"Bonfire.Social.Flags:flag"} 
         phx-value-id={e(@object, :id, "")}
-      class="btn btn-error">
+        class="btn btn-error">
       {l "Flag"}
     </button>
     </:action_btns>

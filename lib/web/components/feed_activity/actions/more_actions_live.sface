@@ -60,7 +60,7 @@
       :if={e(current_user(assigns), :id, nil) == e(@activity, :subject, :character, :id, nil) or Bonfire.Me.Users.is_admin?(current_user(assigns))}
       class=" hover:bg-neutral hover:bg-opacity-20">
       <OpenModalLive
-        id={ComponentID.new(ModalLive, e(@object, :id, nil))} 
+        id={ComponentID.new(OpenModalLive, @object)} 
         title_text={l("Delete this")<>" "<>(if @verb =="write", do: l("from feeds"), else: @verb)}
         >
         {l "You may be able to undo this deletion in some cases, but the data will eventually be permanently deleted."}
@@ -88,7 +88,7 @@
       :if={e(current_user(assigns), :id, nil) == e(@activity, :subject, :character, :id, nil) or Bonfire.Me.Users.is_admin?(current_user(assigns))}
       class=" hover:bg-neutral hover:bg-opacity-20">
       <OpenModalLive
-        id={ComponentID.new(ModalLive, e(@object, :id, nil))} 
+        id={ComponentID.new(OpenModalLive, @object)} 
         title_text={l("Delete this")<>" "<>e(assigns, :object_type_readable, l "object")}
         >
         {l "You may be able to undo this deletion in some cases, but the data will eventually be permanently deleted."}

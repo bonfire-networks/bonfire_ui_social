@@ -1,14 +1,12 @@
-defmodule Bonfire.UI.Social.BlockButtonLive do
+defmodule Bonfire.UI.Social.BlockButtonsLive do
   use Bonfire.Web, :stateless_component
-  # TODO: make stateful and preload block status?
 
   prop object, :any
   prop class, :string
   prop label, :string
   prop scope, :string
-  prop block_type, :atom
 
-  # def preload(list_of_assigns), do: Bonfire.Boundaries.LiveHandler.preload(list_of_assigns)
+  # def preload(list_of_assigns), do: Bonfire.Boundaries.LiveHandler.preload(list_of_assigns) # TODO for un-blocking
 
   def handle_event(action, attrs, socket), do: Bonfire.Common.LiveHandlers.handle_event(action, attrs, socket, __MODULE__)
 

@@ -1,29 +1,87 @@
 {#if !e(assigns, :my_block, nil) }
-    <div>
-    <button 
-        id={@id}
+
+<Bonfire.UI.Social.OpenModalLive
+id={ComponentID.new(Bonfire.UI.Social.OpenModalLive, @object)} 
+title_text={e(assigns, :label, l "Block")<>(if e(assigns, :scope, nil)=="instance_wide", do: " "<> l("instance-wide"), else: "")}
+>
+    <p :if={e(assigns, :scope, nil)=="instance_wide"}>
+        <em>{l "Warning: you are acting as admin to enforce this block for all users of this instance."}</em>
+    </p>
+    <p :if={@block_type==:silence}>
+        {l "Silencing means you won't be able to see them or any of their activities or content. They also won't be able to message you or appear in your notifications."}        
+    </p>
+    <p :if={@block_type==:ghost}>
+        {l "Ghosting means they won't be able to see you or any of your activities or content. They also won't be able to message you or appear in your notifications."}        
+    </p>
+    <p >
+        {l "You will be able to undo this later but may not be able to see any activities you missed."}
+    </p>
+
+    <:open_btn>
+        <button 
+        type="button" 
+        class={e(assigns, :class, "btn btn-sm btn-outline rounded-full")}>
+
+        <Solid.VolumeOffIcon 
+            :if={@block_type==:silence} 
+            class="w-4 h-4 mr-2 shrink-0 text-neutral text-opacity-70" />
+        <svg
+            :if={@block_type==:ghost} 
+            data-credit="https://commons.wikimedia.org/wiki/File:Ghostlogo.svg"
+            class="w-4 h-4 mr-2 shrink-0 text-neutral text-opacity-70"
+            xmlns:svg="http://www.w3.org/2000/svg"
+            xmlns="http://www.w3.org/2000/svg"
+            version="1.0"
+            viewBox="0 0 103 128"
+            width="103"
+            height="128"
+            >
+            <defs />
+            <g transform="translate(-245.30299,-540.35553)">
+                <path
+                d="m 302.29237,543.25469 c -20.68283,0.73534 -33.33351,17.59005 -41.64097,34.67522 -8.90785,20.05868 -12.91868,50.57004 -11.87875,64.3284 1.03993,13.75835 7.00003,12.193 10.99956,7.91684 3.99953,-4.27617 4.91727,-6.18249 5.08444,-0.90359 0.16716,5.27889 0.6304,11.17537 5.59427,13.08498 4.96386,1.9096 9.84147,-5.47265 12.10944,-9.09589 2.26796,-3.62325 3.31246,-3.74607 4.00721,0.58767 0.69475,4.33373 3.29031,13.18454 8.75905,11.24427 5.46874,-1.94028 5.20479,-11.10586 9.52566,-13.83787 4.32087,-2.73201 5.04099,10.25885 12.22549,10.76824 7.18451,0.50939 7.72225,-16.35581 11.71699,-11.39276 3.99474,4.96305 6.56696,4.25632 8.70979,3.18877 3.49067,-2.38537 5.6118,-7.37908 6.7135,-18.38936 0.72808,-23.69391 3.15417,-47.26191 -8.45924,-68.82542 -7.38322,-12.16837 -18.70125,-22.64999 -33.46644,-23.3495 z"
+                style="fill:#ffffff;fill-opacity:1;stroke:#000000;stroke-width:0.85000002;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none" />
+                <path
+                d="m 295.76724,578.66674 c -2.03409,-5.75561 -0.241,-13.36366 5.28237,-16.72612 2.98471,-1.70911 4.78373,-0.19159 5.13467,0.24395 -6.38428,1.02945 -2.43357,10.70827 3.20317,5.50687 1.15798,4.44073 -0.5509,9.07822 -3.2351,12.16884 -3.44667,3.59574 -8.2077,3.89164 -10.38511,-1.19354 z"
+                style="fill:#000000;fill-opacity:1;stroke:#000000;stroke-width:0.50199574;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none" />
+                <path
+                d="m 277.53086,576.79031 c -4.31611,-1.18908 -3.40833,-11.41601 0.9484,-14.82809 3.15334,-2.18868 4.72925,-0.42114 5.78722,0.32277 -4.75022,-1.39718 -4.32732,7.90364 0.60065,5.86884 -0.55907,6.0162 -2.7665,9.43892 -7.33627,8.6365 l 0,-2e-5 z"
+                style="fill:#000000;fill-opacity:1;stroke:#000000;stroke-width:0.50199574;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none" />
+            </g>
+            </svg>
+
+            <!-- <Outline.BanIcon 
+                :if={e(assigns, :scope, nil) !="instance_wide"} 
+                class="w-4 h-4 mr-2 shrink-0 text-neutral text-opacity-70" />
+            <Outline.LockClosedIcon 
+                :if={e(assigns, :scope, nil)=="instance_wide"} 
+                class="w-4 h-4 mr-2 shrink-0 text-neutral text-opacity-70" /> -->
+
+        <span class="truncate ellipsis">{e(assigns, :label, l "Block")}</span>
+        </button>
+    </:open_btn>
+
+    <:action_btns>
+        <button 
         data-id="block"
         :on-click="Bonfire.Boundaries:block" 
         phx-value-id={e(@object, :id, @object)} 
+        phx-value-block_type={@block_type}
         phx-value-scope={e(assigns, :scope, nil)} 
         type="button" 
-        class={e(assigns, :class, "btn btn-sm btn-outline rounded-full")}>
-        <Outline.BanIcon 
-            :if={e(assigns, :scope, nil) !="instance_wide"} 
-            class="w-4 h-4 mr-2 shrink-0 text-neutral text-opacity-70" />
-        <Outline.LockClosedIcon 
-            :if={e(assigns, :scope, nil)=="instance_wide"} 
-            class="w-4 h-4 mr-2 shrink-0 text-neutral text-opacity-70" />
-       <span class="truncate ellipsis">{e(assigns, :label, l "Block")}</span>
-    </button>
-    </div>
+        class="btn btn-error">
+            <span class="truncate ellipsis">{e(assigns, :label, l "Block")<>(if e(assigns, :scope, nil)=="instance_wide", do: " "<> l("instance-wide"), else: "")}</span>
+        </button>
+    </:action_btns>
+</Bonfire.UI.Social.OpenModalLive>
+
 {#else}
     <div>
     <button 
-        id={@id}
         data-id="unblock"
         :on-click="Bonfire.Boundaries:unblock" 
         phx-value-id={e(@object, :id, @object)} 
+        phx-value-block_type={@block_type}
         phx-value-scope={e(assigns, :scope, nil)} 
         type="button" 
         class={e(assigns, :class, "btn btn-sm btn-outline rounded-full")}>

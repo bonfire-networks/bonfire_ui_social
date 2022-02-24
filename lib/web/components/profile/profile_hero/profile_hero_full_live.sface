@@ -24,7 +24,7 @@
 
         <div :if={e(current_user(assigns), :id, nil) != maybe_get(@user, :id)} >
           <Bonfire.UI.Social.FollowButtonLive 
-            id={e(@user, :id, nil)} 
+            id={ComponentID.new(Bonfire.UI.Social.FollowButtonLive, @user)}
             object={@user} 
             current_user={current_user(assigns)} 
           />

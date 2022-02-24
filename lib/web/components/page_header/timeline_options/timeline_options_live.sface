@@ -18,8 +18,11 @@
   </div>
 </div> -->
 <ul class="dropdown">
-  <label tabindex="0" class="btn btn-circle btn-ghost btn-xs">
-    <Outline.ChevronDownIcon class="w-4 h-4 stroke-current" />
+  <label tabindex="0" class="flex">
+    <h1 class="font-medium capitalize text-md">{@page_title}</h1> 
+    <span class="btn btn-circle btn-ghost btn-xs ml-1">
+      <Outline.ChevronDownIcon class="w-4 h-4 stroke-current" />
+    </span>
   </label>
   <div tabindex="0" class="w-48 rounded shadow card compact dropdown-content bg-neutral-content">
     <LiveRedirect to="/home" class={"p-4 hover:bg-neutral hover:bg-opacity-20 flex items-center text-sm text-neutral", "bg-neutral bg-opacity-20": @selected_tab == "home"}>

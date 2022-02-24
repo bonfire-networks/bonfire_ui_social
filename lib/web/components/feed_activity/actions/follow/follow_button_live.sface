@@ -1,6 +1,6 @@
   <button 
     :if={!e(assigns, :my_follow, nil)}
-    id={@id}
+    data-cid={@id}
     data-id="follow"
     :on-click="Bonfire.Social.Follows:follow" 
     phx-value-id={e(@object, :id, nil)} 
@@ -12,7 +12,7 @@
 
   <button 
     :if={e(assigns, :my_follow, nil)}
-    id={@id}
+    data-cid={@id}
     data-id="unfollow"
     :on-click="Bonfire.Social.Follows:unfollow" 
     phx-value-id={e(@object, :id, nil)} 

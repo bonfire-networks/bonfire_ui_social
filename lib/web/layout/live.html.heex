@@ -9,7 +9,7 @@
 >
   <% info = live_flash(@flash, :info) %>
   <% error = live_flash(@flash, :error) %>
-    <div id="flash-messages" class="absolute z-50 right-8 top-20">
+    <div id="flash-messages" class="fixed absolute z-50 right-8 top-20">
       <Bonfire.Common.Web.NotificationLive.render
       id={"notification"} 
       notification={e(assigns, :notification, nil)}

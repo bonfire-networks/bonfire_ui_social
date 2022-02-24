@@ -1,7 +1,9 @@
 <main class="h-full md:flex md:mx-0">
   <section class="relative w-full h-full mx-auto md:rounded md:shadow bg-base-100">
     <Bonfire.UI.Social.PageHeaderLive page_title={@page_title}>
-      <#slot><div /></#slot>
+      <#slot>
+        <h1 class="font-medium capitalize text-md">{@page_title}</h1> 
+      </#slot>
     </Bonfire.UI.Social.PageHeaderLive>
     <div class="mt-[60px] md:mx-0 text-base-content lg:mt-0">
       <Bonfire.UI.Social.FeedLive 
