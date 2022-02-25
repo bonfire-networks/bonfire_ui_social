@@ -48,6 +48,7 @@
       <Bonfire.UI.Social.FlagActionLive 
         object={@object}
         flagged={@flagged}
+        label={l("Flag this")<>" "<>e(assigns, :object_type_readable, l "object")}
         class="flex items-center py-2 text-sm text-neutral"
       />
     </li>

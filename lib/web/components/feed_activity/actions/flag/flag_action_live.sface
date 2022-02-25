@@ -9,13 +9,13 @@
   {#else}
     <Bonfire.UI.Social.OpenModalLive
     id={ComponentID.new(Bonfire.UI.Social.OpenModalLive, @object)} 
-    title_text={l("Flag this activity")}
+    title_text={e(assigns, :label, l "Flag this object")}
   >
-    {l "The admins will review the activity, might be in touch with you or the author for clarification, and may delete it and/or block the person or instance if appropriate."}
+    {l "The admins will review the content and might get in touch with you or the author for clarification. They may then delete it and/or block the person or originating instance if appropriate."}
     <:open_btn>
       <button class="flex items-center text-sm text-neutral" type="button">
         <Outline.FlagIcon class="w-4 h-4 mr-2 shrink-0 text-neutral text-opacity-70" />
-        <span class="truncate ellipsis"> {l("Flag")<>" "<>e(assigns, :label, l "this activity")}</span>
+        <span class="truncate ellipsis"> {e(assigns, :label, l "Flag this object")}</span>
       </button>
     </:open_btn>
     <:action_btns>

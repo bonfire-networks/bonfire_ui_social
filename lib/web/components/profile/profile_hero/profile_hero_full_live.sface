@@ -84,7 +84,7 @@
               class=" hover:bg-neutral hover:bg-opacity-20">
               <Bonfire.UI.Social.FlagActionLive 
                 object={@user}
-                label={e(@user, :profile, :name, "this user")}
+                label={l("Flag this")<>" "<>e(@user, :profile, :name, "this user")}
                 class="flex items-center p-4 text-sm text-neutral"
               />
             </li>

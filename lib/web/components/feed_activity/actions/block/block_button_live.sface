@@ -8,14 +8,42 @@ title_text={e(assigns, :label, l "Block")<>(if e(assigns, :scope, nil)=="instanc
         <em>{l "Warning: you are acting as admin to enforce this block for all users of this instance."}</em>
     </p>
     <p :if={@block_type==:silence}>
-        {l "Silencing means you won't be able to see them or any of their activities or content. They also won't be able to message you or appear in your notifications."}        
+        {l "Silencing means:"}        
     </p>
     <p :if={@block_type==:ghost}>
-        {l "Ghosting means they won't be able to see you or any of your activities or content. They also won't be able to message you or appear in your notifications."}        
+        {l "Ghosting means:"}        
     </p>
-    <p >
-        {l "You will be able to undo this later but may not be able to see any activities you missed."}
-    </p>
+
+    <ul class="list-disc">
+        <li :if={@block_type==:ghost}>
+            {l "Your activities won't be shown to them from now on."} 
+        </li>
+        <li :if={@block_type==:silence}>
+            {l "You won't see them or any of their activities or content anymore."} 
+        </li>
+
+        <li :if={@block_type==:ghost}>
+            {l "You won't be able to @ mention or message them."} 
+        </li>
+        <li :if={@block_type==:silence}>
+            {l "You won't see any @ mentions or messages they send you."} 
+        </li>
+
+        <li :if={@block_type==:ghost}>
+            {l "They won't be able to follow you."} 
+        </li>
+        <li :if={@block_type==:silence}>
+            {l "You won't be able to follow them."} 
+        </li>
+
+        <li :if={@block_type==:ghost}>
+            {l "You will be able to undo this later but they may not be able to see any activities they missed."}
+        </li>
+        <li :if={@block_type==:silence}>
+            {l "You will be able to undo this later but may not be able to see any activities you missed."}
+        </li>
+    </ul>
+
 
     <:open_btn>
         <button 
