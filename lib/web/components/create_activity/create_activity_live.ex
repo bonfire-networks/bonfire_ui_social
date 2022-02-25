@@ -13,7 +13,7 @@ defmodule Bonfire.UI.Social.CreateActivityLive do
   prop thread_id, :string
   prop create_activity_type, :any
   prop to_circles, :list
-  prop smart_input_prompt, :string, default: l("Write a post...")
+  prop smart_input_prompt, :string, default: ""
   prop smart_input_text, :string, default: "", required: false
   prop showing_within, :any
   prop with_editor, :boolean, required: false
