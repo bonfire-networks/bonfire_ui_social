@@ -85,7 +85,7 @@ title_text={e(assigns, :label, l "Block")<>(if e(assigns, :scope, nil)=="instanc
                 :if={e(assigns, :scope, nil)=="instance_wide"} 
                 class="w-4 h-4 mr-2 shrink-0 text-neutral text-opacity-70" /> -->
 
-        <span class="truncate ellipsis">{e(assigns, :label, l "Block")}</span>
+        <span class="text-left truncate ellipsis">{e(assigns, :label, l "Block")}</span>
         </button>
     </:open_btn>
 
@@ -98,7 +98,7 @@ title_text={e(assigns, :label, l "Block")<>(if e(assigns, :scope, nil)=="instanc
         phx-value-scope={e(assigns, :scope, nil)} 
         type="button" 
         class="btn btn-error">
-            <span class="truncate ellipsis">{e(assigns, :label, l "Block")<>(if e(assigns, :scope, nil)=="instance_wide", do: " "<> l("instance-wide"), else: "")}</span>
+            <span class="text-left truncate ellipsis">{e(assigns, :label, l "Block")<>(if e(assigns, :scope, nil)=="instance_wide", do: " "<> l("instance-wide"), else: "")}</span>
         </button>
     </:action_btns>
 </Bonfire.UI.Social.OpenModalLive>

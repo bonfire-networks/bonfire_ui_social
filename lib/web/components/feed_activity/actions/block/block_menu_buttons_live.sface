@@ -16,12 +16,15 @@
   :if={e(current_user(assigns), :id, nil) != e(@object, :id, nil) and Bonfire.Me.Users.is_admin?(current_user(assigns))}
   class=" hover:bg-neutral hover:bg-opacity-20">
 
-  <label tabindex="0" class="flex items-center w-full text-sm text-neutral">
-    <Outline.KeyIcon 
-      :if={e(assigns, :scope, nil) !="instance_wide"} 
-      class="w-4 h-4 mr-2 shrink-0 text-neutral text-opacity-70" />
-    <span class="truncate ellipsis">{l "Ban instance-wide"}</span>
-  </label>
+  <div tabindex="0">
+    <button class="flex items-center w-full text-sm text-neutral">
+      <Outline.KeyIcon 
+        :if={e(assigns, :scope, nil) !="instance_wide"} 
+        class="w-4 h-4 mr-2 shrink-0 text-neutral text-opacity-70" />
+      <span class="flex-1 text-left truncate ellipsis">{l "Ban instance-wide"}</span>
+      <Solid.ChevronRightIcon class="w-4 h-4 text-neutral text-opacity-70" />
+    </button>
+  </div>
   <ul
       tabindex="0"
       class="w-60 shadow menu dropdown-content bg-neutral-content rounded
