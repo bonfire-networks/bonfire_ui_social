@@ -21,6 +21,7 @@
             id="admin_invites"
             current_user={current_user(assigns)}
           />
+        
         {#match "reports"}
           <Bonfire.UI.Social.SettingsViewsLive.AdminReportsLive
             current_user={current_user(assigns)}
@@ -49,6 +50,12 @@
       <Bonfire.UI.Social.SettingsViewsLive.PreferencesLive
         current_user={current_user(assigns)}
       />
+    {#match "flags"}
+        <Bonfire.Social.Web.FlagsLive
+          id="flags"
+          current_user={current_user(assigns)}
+          test={"test"}
+        />
     {#match "shared_user"}
       <Bonfire.UI.Social.SettingsViewsLive.SharedUserLive
         current_user={current_user(assigns) |> repo().maybe_preload(:shared_user) }
