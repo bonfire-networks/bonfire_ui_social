@@ -16,10 +16,13 @@ title_text={e(assigns, :label, l "Block")<>(if e(assigns, :scope, nil)=="instanc
 
     <ul class="list-disc">
         <li :if={@block_type==:ghost}>
-            {l "Your activities won't be shown to them from now on."} 
+            {l "Things you write or create won't be shown to them from now on."} 
         </li>
         <li :if={@block_type==:silence}>
-            {l "You won't see them or any of their activities or content anymore."} 
+            {l "You won't see anything they write/create in feeds."} 
+        </li>
+        <li :if={@block_type==:silence}>
+            {l "You will still be able to view their profile or read their posts if you know the direct link."} 
         </li>
 
         <li :if={@block_type==:ghost}>
