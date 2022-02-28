@@ -13,6 +13,7 @@ defmodule  Bonfire.UI.Social.ObjectThreadLive do
   prop thread_id, :string
   prop activity, :any
   prop object, :any
+  prop url, :string
 
   # TODO: FIXME! Update no longer works in stateless
   def update(assigns, socket) do

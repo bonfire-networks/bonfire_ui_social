@@ -17,12 +17,14 @@ defmodule Bonfire.UI.Social.ThreadLive do
   prop thread_id, :any
   prop create_activity_type, :any
   prop to_circles, :list
+  prop url, :string
   prop smart_input_prompt, :string
   prop smart_input_text, :string
 
 
   def update(%{replies: replies, threaded_replies: threaded_replies, page_info: page_info} = assigns, socket) when is_list(replies) and is_list(threaded_replies) and is_map(page_info) do
     debug("ThreadLive: showing preloaded replies")
+    IO.inspect(e(assigns, :url, ""), label: "URLLLLL:")
     assigns |> assign_thread(socket)
   end
 
@@ -79,7 +81,6 @@ defmodule Bonfire.UI.Social.ThreadLive do
   def assign_thread(assigns, socket) do
 
     # debug(assigns, "thread assigns")
-
     current_user = current_user(assigns)
     thread_id = e(assigns, :thread_id, nil)
     activity = e(assigns, :activity, nil) #|> IO.inspect
@@ -100,6 +101,7 @@ defmodule Bonfire.UI.Social.ThreadLive do
       ) #|> IO.inspect
     )}
   end
+  
 
 
   def handle_event(action, attrs, socket), do: Bonfire.Common.LiveHandlers.handle_event(action, attrs, socket, __MODULE__)

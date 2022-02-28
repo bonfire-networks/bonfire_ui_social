@@ -1,6 +1,7 @@
 
 <div
   class="create_activity"
+  x-cloak
   x-data="{
     title_open: false, 
     open_boundaries: false,
@@ -77,7 +78,7 @@
         </Inputs>
         <div class="">
         
-          <div class="flex items-center justify-between p-2 space-x-2 rounded-b bg-base-300 sm:px-3">
+          <div class="flex items-center justify-between p-2 space-x-2 rounded-b bg-neutral bg-opacity-30 sm:px-3">
             <div class="flex items-center flex-1 space-x-3">
               <!-- <div 
                 data-tip="Upload an image" 

@@ -9,7 +9,7 @@ defmodule Bonfire.UI.Social.CommentLive do
   prop child_replies, :any
   prop thread_id, :any
   prop sub_replies_count, :integer, default: 0
-
+  prop url, :string 
 
   def activity(%{__struct__: Bonfire.Data.Social.Activity} = activity) do
     activity

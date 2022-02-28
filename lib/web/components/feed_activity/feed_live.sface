@@ -22,6 +22,7 @@
         id={e(entry, :id, e(entry, :activity, :id, e(entry, :activity, :object, :id, nil))) || "unknown-"<>Pointers.ULID.generate}
         role="article"
         tabIndex="0"
+        class="p-3"
         aria-label="user activity">
         <ActivityLive 
           activity={e(entry, :activity, entry)}

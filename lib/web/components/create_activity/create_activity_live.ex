@@ -17,7 +17,7 @@ defmodule Bonfire.UI.Social.CreateActivityLive do
   prop smart_input_text, :string, default: "", required: false
   prop showing_within, :any
   prop with_editor, :boolean, required: false
-  prop textarea_class, :string, default: "block w-full py-0 placeholder-base-content placeholder-opacity-70 bg-base-100 text-base-content border-0 resize-none focus:ring-0 sm:text-sm"
+  prop textarea_class, :string, default: "block w-full py-0 placeholder-base-content placeholder-opacity-70 bg-neutral-content bg-opacity-10 text-base-content border-0 resize-none focus:ring-0 sm:text-sm"
 
 
   def with_editor?(assigns) do

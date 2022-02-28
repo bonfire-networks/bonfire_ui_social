@@ -22,7 +22,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
     activity = activity
                 # |> debug("Activity provided")
                 |> Map.put(:object, object(assigns, activity))
-                # |> debug("Activity with object")
+                |> debug("Activity with object")
 
     verb = e(activity, :verb, :verb, "create")
             |> maybe_to_string()
@@ -31,12 +31,11 @@ defmodule Bonfire.UI.Social.ActivityLive do
             |> debug("verb modified")
     verb_display = Activities.verb_display(verb)
     created_verb_display = Activities.verb_display("create")
-
     object_type = Bonfire.Common.Types.object_type(activity.object)
     object_type_readable = module_to_human_readable(object_type) |> String.downcase()
-
-    permalink = path(activity.object) #|> debug("permalink")
-
+    
+    permalink = if verb == "reply", do: path(e(activity, :replied, :thread_id, "")) <> "#comment-#{activity.object.id}", else: path(activity.object)
+    # permalink = path(activity.object)
     components = (
       component_activity_subject(verb, activity, assigns)
       ++ (component_maybe_in_reply_to(verb, activity, e(assigns, :showing_within, nil)) |> debug("component_maybe_in_reply_to"))
@@ -71,10 +70,10 @@ defmodule Bonfire.UI.Social.ActivityLive do
     ~F"""
     <div
       class={
-      "activity p-3 relative pl-16",
+      "activity relative pl-16",
       "showing_within:feed ": e(assigns, :showing_within, nil) == :feed,
       "main_reply_to mb-2 p-2 mt-2 relative border-l-4 border-l-base-300 border border-base-200 rounded-sm bg-base-300 bg-opacity-20": e(@object, :id, nil) != nil and e(@activity, :replied, :reply_to_id, nil) == nil and e(@activity, :id, nil) == nil, # showing a quoted reply_to
-      "showing_within:thread": e(assigns, :showing_within, nil) == :thread,
+      "pl-14 showing_within:thread": e(assigns, :showing_within, nil) == :thread,
       "showing_within:notifications": e(assigns, :showing_within, nil) == :notifications,
       "reply": e(@object, :id, nil) != nil and e(@activity, :replied, :reply_to_id, nil) != nil and e(@activity, :id, nil) != nil,
       }>

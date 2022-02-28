@@ -5,12 +5,14 @@
       before={true}
     />
     <Bonfire.UI.Social.BannerPreviousThreadLive activity={@activity} />
-    <Bonfire.UI.Social.ActivityLive
-      id={"main-"<> e(@thread_id, "")}
-      viewing_main_object={true}
-      activity={@activity}
-      object={@object}
-    />
+    <div class="p-3">
+      <Bonfire.UI.Social.ActivityLive
+        id={"main-"<> e(@thread_id, "")}
+        viewing_main_object={true}
+        activity={@activity}
+        object={@object}
+      />
+    </div>
   </section>
   
   <div>
@@ -19,6 +21,7 @@
       thread_id={@thread_id}
       activity={@activity}
       object={@object}
+      url={@url}
     />
   </div>
 
