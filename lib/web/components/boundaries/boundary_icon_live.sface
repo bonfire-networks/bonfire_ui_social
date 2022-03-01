@@ -3,7 +3,7 @@
   <span 
     data-tip={l "Originates from a remote instance"}
     class="align-bottom tooltip tooltip-bottom">
-    <Solid.ExternalLinkIcon class="w-4 h-4 text-base-content text-opacity-70" />
+    <Solid.ExternalLinkIcon class="w-4 h-4 text-opacity-50 text-base-content" />
   </span>
 
 {#elseif e(@object_primary_boundary, :id, nil)in [Bonfire.Boundaries.Acls.get_id!(:guests_may_see), Bonfire.Boundaries.Acls.get_id!(:guests_may_read), Bonfire.Boundaries.Acls.get_id!(:guests_may_see_read)]}
@@ -11,7 +11,7 @@
   <span 
     data-tip={e(@object_primary_boundary, :name, "Public")}
     class="align-bottom tooltip tooltip-bottom">
-    <Solid.GlobeIcon class="w-4 h-4 text-base-content text-opacity-70" />
+    <Solid.GlobeIcon class="w-4 h-4 text-opacity-50 text-base-content" />
   </span>
 
 {#elseif e(@object_primary_boundary, :id, nil) in [Bonfire.Boundaries.Acls.get_id!(:locals_may_interact), Bonfire.Boundaries.Acls.get_id!(:locals_may_reply)]}
@@ -20,7 +20,7 @@
     data-tip={e(@object_primary_boundary, :name, "Local")}
     class="align-bottom tooltip tooltip-bottom">
     <Solid.HomeIcon 
-      class="w-4 h-4 text-base-content text-opacity-70" 
+      class="w-4 h-4 text-opacity-50 text-base-content" 
     />
   </span>
 
@@ -30,7 +30,7 @@
     data-tip={e(@object_primary_boundary, :name, "Custom Boundaries")}
     class="align-bottom tooltip tooltip-bottom">
     <Solid.CogIcon 
-      class="w-4 h-4 text-base-content text-opacity-70" 
+      class="w-4 h-4 text-opacity-50 text-base-content" 
     />
   </span>
 

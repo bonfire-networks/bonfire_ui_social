@@ -1,0 +1,23 @@
+<aside 
+  x-cloak
+  x-data="{content_open: false}" 
+  @click.outside="content_open = false"
+  @keyup.escape.window="content_open = false"
+  class="relative w-full h-full mx-auto md:rounded md:shadow bg-base-100">
+  <div class="flex items-center p-2 border-b border-base-300" role="banner">
+    <div class="flex-1 text-sm font-medium capitalize text-base-content">{@widget_title}</div> 
+    <span  
+      :class="content_open ? 'rotate-180' : 'rotate-0'"
+      class="transition-all btn btn-ghost btn-square btn-xs"
+      @click="content_open = !content_open">
+    <Solid.ChevronDownIcon class="w-4 h-4 text-base-content text-opacity-80" />
+    </span>
+  </div>
+  <div 
+    x-show={"content_open"}
+    x-transition.scale.origin.bottom>
+    <#slot>
+      <div class="text-sm font-medium text-center capitalize text-base-content">A sample widget</div>
+    </#slot>
+  </div>
+</aside>

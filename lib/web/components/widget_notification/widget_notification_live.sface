@@ -1,0 +1,10 @@
+
+<div>
+<Bonfire.UI.Social.FeedLive 
+    id={@feed_id}
+    feed={@feed}
+    page_info={@page_info}
+    showing_within={@showing_within}
+    feed_update_mode={@feed_update_mode}
+  />
+  </div>

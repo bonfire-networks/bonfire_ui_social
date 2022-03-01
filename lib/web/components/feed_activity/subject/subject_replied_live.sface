@@ -1,4 +1,16 @@
+{#if e(@object, :id, nil) != nil and e(@activity, :replied, :reply_to_id, nil) == nil and e(@activity, :id, nil) == nil and e(assigns, :showing_within, nil) == :widget}
+  <div>
+    <span>In reply to</span>
+    <LiveRedirect
+      aria-label={e(@activity, :subject, :character, :username, "") <> " profile"}
+      class="hover:underline subject_replied"
+      to={path(e(@activity, :subject, :character, nil))}>
+      {e(@activity, :subject, :profile, :name, "Anonymous")}
+    </LiveRedirect>
+  </div>
+{#else}
 <div class={"flex items-center", "pl-1": e(@activity, :replied, :reply_to_id, nil)}>
+  <div>{e(assigns, :showing_within, "test")}</div> 
   <div class="flex justify-between flex-1">
     <div class="flex items-center text-sm font-medium text-base-content">
       <LiveRedirect
@@ -15,3 +27,4 @@
     />
   </div>
 </div>
+{/if}

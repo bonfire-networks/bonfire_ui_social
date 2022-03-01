@@ -1,4 +1,6 @@
-
+{#if e(@object, :id, nil) != nil and e(@activity, :replied, :reply_to_id, nil) == nil and e(@activity, :id, nil) == nil and e(assigns, :showing_within, nil) == :widget}
+  <div />
+{#else}
 <div class={
   "showing_within:thread ml-1": e(assigns, :showing_within, nil) == :thread,
   "showing_within:feed mt-1": e(assigns, :showing_within, nil) == :feed,
@@ -53,3 +55,4 @@
         verb_display={@verb_display} />
     </div>
 </div>
+{/if}

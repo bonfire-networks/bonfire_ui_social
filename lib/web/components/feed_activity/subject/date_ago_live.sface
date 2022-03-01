@@ -19,17 +19,15 @@
 
 {#else}
 <div class="flex items-center space-x-2">
-  <div class="text-xs text-base-content text-opacity-60">
-    <span class="hidden capitalize lg:inline">{e(@verb_display, "")}</span>
+  <div class="relative z-20 text-xs text-base-content text-opacity-60">
+    <span :if={e(assigns, :showing_within, nil) != :widget} class="hidden capitalize lg:inline">{e(@verb_display, "")}</span>
     <LiveRedirect class="subject_timestamp text-base-content text-opacity-60" to={permalink(assigns)}>
       {@date_ago}
-
       <BoundaryIconLive 
         id={ComponentID.new(BoundaryIconLive, @object)} 
         object={@object} 
         permalink={permalink(assigns)} 
       />
-
     </LiveRedirect>
   </div>
 

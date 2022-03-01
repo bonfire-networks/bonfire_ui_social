@@ -8,4 +8,5 @@ defmodule Bonfire.UI.Social.Activity.SubjectLive do
   prop date_ago, :any
   prop permalink, :string
   prop verb_display, :string
+  prop showing_within, :any, default: :feed
 end

@@ -74,6 +74,8 @@ defmodule Bonfire.UI.Social.ActivityLive do
       "showing_within:feed ": e(assigns, :showing_within, nil) == :feed,
       "main_reply_to mb-2 p-2 mt-2 relative border-l-4 border-l-base-300 border border-base-200 rounded-sm bg-base-300 bg-opacity-20": e(@object, :id, nil) != nil and e(@activity, :replied, :reply_to_id, nil) == nil and e(@activity, :id, nil) == nil, # showing a quoted reply_to
       "pl-14 showing_within:thread": e(assigns, :showing_within, nil) == :thread,
+      "pl-10 showing_within:widget": e(assigns, :showing_within, nil) == :widget,
+      # "main_reply_to pl-0": e(@object, :id, nil) != nil and e(@activity, :replied, :reply_to_id, nil) == nil and e(@activity, :id, nil) == nil and e(assigns, :showing_within, nil) == :widget, # showing a quoted reply_to within a widget
       "showing_within:notifications": e(assigns, :showing_within, nil) == :notifications,
       "reply": e(@object, :id, nil) != nil and e(@activity, :replied, :reply_to_id, nil) != nil and e(@activity, :id, nil) != nil,
       }>
@@ -121,8 +123,10 @@ defmodule Bonfire.UI.Social.ActivityLive do
 
   # don't show subject twice
   def component_activity_subject(_, %{object: %Bonfire.Data.Identity.User{}}, _), do: []
-  # quoting a reply_to
-  def component_activity_subject(_, _, %{activity_inception: true}), do: [Bonfire.UI.Social.Activity.SubjectRepliedLive]
+  
+  # quoting a reply_to <-- this is handled by the Bonfire.UI.Social.Activity.SubjectLive internally
+  # def component_activity_subject(_, _, %{activity_inception: true}), do: [Bonfire.UI.Social.Activity.SubjectRepliedLive]
+  
   # reactions should show the reactor + original creator
   def component_activity_subject(verb, activity, _) when verb in @react_verbs, do: [{Bonfire.UI.Social.Activity.SubjectMinimalLive, %{verb: verb}}, component_activity_maybe_creator(activity)]
   # replies (when shown in notifications)

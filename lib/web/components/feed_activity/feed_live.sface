@@ -19,7 +19,7 @@
       class="divide-y divide-base-300">
       <article
         :for={entry <- @feed}
-        id={e(entry, :id, e(entry, :activity, :id, e(entry, :activity, :object, :id, nil))) || "unknown-"<>Pointers.ULID.generate}
+        id={Atom.to_string(e(assigns, :showing_within, :feed)) <> e(entry, :id, e(entry, :activity, :id, e(entry, :activity, :object, :id, nil))) || "unknown-"<>Pointers.ULID.generate}
         role="article"
         tabIndex="0"
         class="p-3"

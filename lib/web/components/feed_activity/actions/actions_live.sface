@@ -5,7 +5,8 @@
     :if={e(assigns, :showing_within, nil) != :notifications} 
     class={
       "thread_actions -ml-2 mt-0": e(assigns, :showing_within, nil) == :thread,
-      "feed_actions mt-2": e(assigns, :viewing_main_object, nil) != true 
+      "feed_actions mt-2": e(assigns, :viewing_main_object, nil) != true,
+      "mt-0": e(assigns, :showing_within, nil) == :widget,
       }>
 
     <div class={"flex items-center justify-between", "mt-3": e(assigns, :viewing_main_object, nil)}>

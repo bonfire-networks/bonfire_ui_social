@@ -19,6 +19,15 @@
           />
         </div>
 
+        <Bonfire.UI.Social.WidgetLive 
+          widget_title="Notifications"
+          current_user={current_user(assigns)}
+        >
+          <Bonfire.UI.Social.WidgetNotificationLive 
+            current_user={current_user(assigns)}
+            id="widget_notification"
+          />
+        </Bonfire.UI.Social.WidgetLive>
         <!-- <div
           :for={{component, component_assigns} <- Bonfire.Common.Config.get([:ui, :sidebar_components], [])}
         >
