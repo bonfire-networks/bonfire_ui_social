@@ -22,7 +22,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
     activity = activity
                 # |> debug("Activity provided")
                 |> Map.put(:object, object(assigns, activity))
-                |> debug("Activity with object")
+                # |> debug("Activity with object")
 
     verb = e(activity, :verb, :verb, "create")
             |> maybe_to_string()
@@ -123,10 +123,10 @@ defmodule Bonfire.UI.Social.ActivityLive do
 
   # don't show subject twice
   def component_activity_subject(_, %{object: %Bonfire.Data.Identity.User{}}, _), do: []
-  
+
   # quoting a reply_to <-- this is handled by the Bonfire.UI.Social.Activity.SubjectLive internally
   # def component_activity_subject(_, _, %{activity_inception: true}), do: [Bonfire.UI.Social.Activity.SubjectRepliedLive]
-  
+
   # reactions should show the reactor + original creator
   def component_activity_subject(verb, activity, _) when verb in @react_verbs, do: [{Bonfire.UI.Social.Activity.SubjectMinimalLive, %{verb: verb}}, component_activity_maybe_creator(activity)]
   # replies (when shown in notifications)
