@@ -1,8 +1,6 @@
 <aside 
   x-cloak
   x-data="{content_open: false}" 
-  @click.outside="content_open = false"
-  @keyup.escape.window="content_open = false"
   class="relative w-full h-full mx-auto md:rounded md:shadow bg-base-100">
   <div class="flex items-center p-2 border-b border-base-300" role="banner">
     <div class="flex-1 text-sm font-medium capitalize text-base-content">{@widget_title}</div> 
