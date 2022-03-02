@@ -31,7 +31,12 @@
       </article>
     </div>
 
-    <Bonfire.UI.Social.LoadMoreLive live_handler={Bonfire.Social.Feeds} page_info={@page_info} target={@myself} />
+      <Bonfire.UI.Social.LoadMoreLive 
+        :if={e(assigns, :hide_load_more, false) != true}
+        live_handler={Bonfire.Social.Feeds} 
+        page_info={@page_info} 
+        target={@myself} 
+      />
 
     </div>
 </div>

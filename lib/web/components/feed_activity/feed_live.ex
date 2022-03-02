@@ -9,6 +9,7 @@ defmodule Bonfire.UI.Social.FeedLive do
   prop page_info, :map
   prop showing_within, :any
   prop feed_update_mode, :string, default: "prepend"
+  prop hide_load_more, :boolean, default: false
   
   def mount(socket) do
     {:ok, socket

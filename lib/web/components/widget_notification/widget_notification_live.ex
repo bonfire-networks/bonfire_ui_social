@@ -3,7 +3,7 @@ defmodule Bonfire.UI.Social.WidgetNotificationLive do
 
   def update(assigns, socket) do
     pagination = %{
-        limit: 1
+        limit: 3
       }
     feed = Bonfire.Social.FeedActivities.feed(:notifications, Map.put(assigns, :paginate, pagination))
     {:ok, socket
@@ -13,7 +13,8 @@ defmodule Bonfire.UI.Social.WidgetNotificationLive do
         page_info: e(feed, :page_info, []),
         current_user: current_user(assigns),
         showing_within: :widget,
-        feed_update_mode: "replace"
+        feed_update_mode: "prepend",
+        hide_load_more: true
       )
     }
   end
