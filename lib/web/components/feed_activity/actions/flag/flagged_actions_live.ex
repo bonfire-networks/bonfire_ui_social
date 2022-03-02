@@ -10,5 +10,6 @@ defmodule Bonfire.UI.Social.Activity.FlaggedActionsLive do
   prop showing_within, :any
   prop hide_reply, :boolean
   prop viewing_main_object, :boolean
+  prop object_type_readable, :any
   prop flagged, :any
 end

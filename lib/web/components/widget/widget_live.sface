@@ -3,7 +3,7 @@
   x-data="{content_open: true}" 
   class="relative w-full h-full mx-auto md:rounded md:shadow bg-base-100">
   <div class="flex items-center p-2 border-b border-base-300" role="banner">
-    <div class="flex-1 text-sm font-medium capitalize text-base-content">{@widget_title}</div> 
+    <div class="flex-1 text-sm font-medium text-base-content">{@widget_title}</div> 
     <span  
       :class="content_open ? 'rotate-180' : 'rotate-0'"
       class="transition-all btn btn-ghost btn-square btn-xs"

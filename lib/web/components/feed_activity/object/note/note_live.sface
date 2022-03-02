@@ -5,6 +5,7 @@
   "showing_within:thread ml-1": e(assigns, :showing_within, nil) == :thread,
   "showing_within:feed mt-1": e(assigns, :showing_within, nil) == :feed,
   "showing_within:notifications": e(assigns, :showing_within, nil) == :notifications,
+  "showing_within:widget mt-2": e(assigns, :showing_within, nil) == :widget,
   "reply_to": e(@object, :id, nil) != nil and e(@activity, :replied, :reply_to_id, nil) == nil and e(@activity, :id, nil) == nil,
   "reply_message": e(@activity, :replied, :reply_to_id, nil)
 }

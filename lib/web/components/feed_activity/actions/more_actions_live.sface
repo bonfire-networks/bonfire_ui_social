@@ -1,6 +1,9 @@
 <div
   aria-haspopup="true"
-  class="dropdown dropdown-end feed_activity">
+  class={"dropdown  feed_activity",
+  "dropdown-end": e(assigns, :showing_within, nil) != :widget,
+  "dropdown-top dropdown-end showing_within:widget": e(assigns, :showing_within, nil) == :widget
+  }>
   <div 
     tabindex="0"
     class="feed_activity_action">
@@ -43,7 +46,7 @@
     </li>
     <!-- <div class="h-0 my-0 divider"></div>  -->
     <li 
-      :if={e(current_user(assigns), :id, nil) != e(@activity, :subject, :character, :id, nil)}
+      :if={e(current_user(assigns), :id, nil) != e(@activity, :subject, :character, :id, nil) and @verb !="flag"}
       class=" hover:bg-neutral hover:bg-opacity-20">
       <Bonfire.UI.Social.FlagActionLive 
         object={@object}
@@ -62,14 +65,14 @@
       class=" hover:bg-neutral hover:bg-opacity-20">
       <OpenModalLive
         id={ComponentID.new(OpenModalLive, @object)} 
-        title_text={l("Delete this")<>" "<>(if @verb =="write", do: l("from feeds"), else: @verb)}
+        title_text={l("Delete this")<>" "<>(if @verb in ["write", "create"], do: l("from feeds"), else: @verb)}
         >
         {l "You may be able to undo this deletion in some cases, but the data will eventually be permanently deleted."}
         <:open_btn>
           <button class="flex items-center text-sm text-neutral" type="button">
             <Outline.TrashIcon class="w-4 h-4 mr-2 shrink-0 text-neutral text-opacity-70" />
             <span class="truncate ellipsis">
-              {l("Delete this")<>" "<>(if @verb =="write", do: l("from feeds"), else: @verb)}
+              {l("Delete this")<>" "<>(if @verb in ["write", "create"], do: l("from feeds"), else: @verb)}
             </span>
           </button>
         </:open_btn>
@@ -79,7 +82,7 @@
           phx-value-id={e(@activity, :id, "")}
           class="btn btn-error">
           <Outline.TrashIcon class="w-4 h-4 mr-2 shrink-0 text-neutral text-opacity-70" />
-          <span class="truncate ellipsis">{l("Delete this")<>" "<>(if @verb =="write", do: l("from feeds"), else: @verb)}</span> 
+          <span class="truncate ellipsis">{l("Delete this")<>" "<>(if @verb in ["write", "create"], do: l("from feeds"), else: @verb)}</span> 
         </button>
         </:action_btns>
       </OpenModalLive>

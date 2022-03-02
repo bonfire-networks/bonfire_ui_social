@@ -43,6 +43,7 @@
         activity={@activity} 
         verb={@verb}
         object_type_readable={@object_type_readable}
+        showing_within={e(assigns, :showing_within, nil)}
       />
     </div>
   </div>

@@ -9,6 +9,6 @@
     hide_load_more={true}
   />
   <div class="p-2 border-t border-base-300">
-    <LivePatch to={path(:notifications)} class="w-full normal-case btn btn-wide btn-sm">{l "View notifications"}</LivePatch>
+    <LivePatch to={path(:notifications)} class="w-full normal-case btn btn-wide btn-sm">{l "More notifications"}</LivePatch>
   </div>
   </div>

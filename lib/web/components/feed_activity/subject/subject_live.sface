@@ -30,7 +30,7 @@
     </div>
   </div>
 {#elseif e(assigns, :showing_within, nil) == :widget}
-  <div class="flex mb-2 items-top">
+  <div class="flex mb-4 items-top">
     <div class="absolute left-0">
       <div class="align-middle avatar">
         <div class="w-6 h-6 bg-[#6AA4DA] rounded-btn">
@@ -42,7 +42,7 @@
       </div>
     </div>
     <div class="flex ml-8 grow items-baseline justify-between flex-1 w-[calc(100%_-_4rem)]">
-      <div class="flex items-baseline flex-1 truncate grow ellipsis text-md">
+      <div class="flex-1 items-baseline truncate grow ellipsis text-sm">
         <LiveRedirect
           opts={"data-id": "subject_name"}
           aria-label={e(@character, :username, "") <> " profile"}
@@ -50,6 +50,8 @@
           to={path(@character)}>
           {e(@profile, :name, "Anonymous")}
         </LiveRedirect>
+      </div>
+      <div class="flex-0 items-baseline">
         <Bonfire.UI.Social.Activity.DateAgoLive 
           :if={!@viewing_main_object}
           permalink={@permalink}

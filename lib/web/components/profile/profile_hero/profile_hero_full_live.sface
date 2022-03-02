@@ -63,7 +63,7 @@
                 phx-click="Bonfire.Me.Users:make_admin"
                 phx-value-username_or_id={maybe_get(@user, :id)}
               >
-                <Outline.KeyIcon class="w-4 h-4 mr-2 text-neutral text-opacity-70" />
+                <Outline.KeyIcon class="w-4 h-4 mr-1 text-neutral text-opacity-70" />
                 <span>{l "Make admin"}</span>
               </button>
               <button
@@ -72,7 +72,7 @@
                 phx-click="Bonfire.Me.Users:revoke_admin"
                 phx-value-username_or_id={maybe_get(@user, :id)}
               >
-                  <Outline.KeyIcon class="w-4 h-4 mr-2 text-neutral text-opacity-70" />
+                  <Outline.KeyIcon class="w-4 h-4 mr-1 text-neutral text-opacity-70" />
                   <span>{l "Revoke admin"}</span>
               </button>
             </li>
@@ -81,7 +81,7 @@
               class=" hover:bg-neutral hover:bg-opacity-20">
               <Bonfire.UI.Social.FlagActionLive 
                 object={@user}
-                label={l("Flag this")<>" "<>e(@user, :profile, :name, "this user")}
+                label={l("Flag")<>" "<>e(@user, :profile, :name, "this user")}
                 class="flex items-center p-4 text-sm text-neutral"
               />
             </li>

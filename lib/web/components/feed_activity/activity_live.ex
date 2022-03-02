@@ -31,7 +31,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
             |> debug("verb modified")
     verb_display = Activities.verb_display(verb)
     created_verb_display = Activities.verb_display("create")
-    object_type = Bonfire.Common.Types.object_type(activity.object)
+    object_type = Bonfire.Common.Types.object_type(activity.object) |> debug("object_type")
     object_type_readable = module_to_human_readable(object_type) |> String.downcase()
 
     permalink = if verb in ["reply", "respond"], do: path(e(activity, :replied, :thread_id, "")) <> "#comment-#{activity.object.id}", else: path(activity.object)
@@ -74,8 +74,8 @@ defmodule Bonfire.UI.Social.ActivityLive do
       "showing_within:feed ": e(assigns, :showing_within, nil) == :feed,
       "main_reply_to mb-2 p-2 mt-2 relative border-l-4 border-l-base-300 border border-base-200 rounded-sm bg-base-300 bg-opacity-20": e(@object, :id, nil) != nil and e(@activity, :replied, :reply_to_id, nil) == nil and e(@activity, :id, nil) == nil and e(assigns, :showing_within, nil) != :widget, # showing a quoted reply_to
       "pl-14 showing_within:thread": e(assigns, :showing_within, nil) == :thread,
+      "main_reply_to mt-4 mb-2": e(@object, :id, nil) != nil and e(@activity, :replied, :reply_to_id, nil) == nil and e(@activity, :id, nil) == nil and e(assigns, :showing_within, nil) == :widget, # showing a quoted reply_to within a widget
       "pl-0 showing_within:widget": e(assigns, :showing_within, nil) == :widget,
-      # "main_reply_to pl-0": e(@object, :id, nil) != nil and e(@activity, :replied, :reply_to_id, nil) == nil and e(@activity, :id, nil) == nil and e(assigns, :showing_within, nil) == :widget, # showing a quoted reply_to within a widget
       "showing_within:notifications": e(assigns, :showing_within, nil) == :notifications,
       "reply": e(@object, :id, nil) != nil and e(@activity, :replied, :reply_to_id, nil) != nil and e(@activity, :id, nil) != nil,
       }>

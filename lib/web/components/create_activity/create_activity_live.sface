@@ -107,7 +107,7 @@
             </div>
 
             <button type="submit" class="capitalize btn-sm justify-self-end btn btn-primary">
-              {l "Post"}
+              {if @create_activity_type==:message, do: l "Message", else: l "Post"}
             </button>
           </div>
         </div>
