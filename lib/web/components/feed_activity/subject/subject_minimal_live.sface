@@ -32,6 +32,40 @@
         </div>
       </div>
     </div>
+    {#match :widget}
+    <div class={"flex items-center mb-3"}>
+      <div class="flex items-center justify-start w-5 h-5">
+        <Solid.StarIcon :if={@verb == "like"} class="w-5 h-5 text-yellow-500" />
+        <Solid.UserAddIcon :if={@verb == "follow"} class="flex-shrink-0 w-5 h-5 text-info" />
+         <!-- Boost icon -->
+         <svg 
+          :if={@verb == "boost"}
+          viewBox="0 0 24 24" 
+          width="24" 
+          height="24" 
+          stroke="currentColor" 
+          stroke-width="2" 
+          fill="none" 
+          stroke-linecap="round" 
+          stroke-linejoin="round" 
+          class="w-4 h-4 text-info">
+          <polyline points="17 1 21 5 17 9"></polyline><path d="M3 11V9a4 4 0 0 1 4-4h14"></path><polyline points="7 23 3 19 7 15"></polyline><path d="M21 13v2a4 4 0 0 1-4 4H3"></path></svg>
+        <Solid.PencilIcon :if={@verb == "reply"} class="w-4 h-4 text-info" />
+        <Solid.FlagIcon :if={@verb == "flag"} class="w-4 h-4 text-error" />
+         
+        </div>
+      <div class="flex-1 ml-2">
+        <div class="text-sm font-medium text-base-content text-opacity-80">
+          <LiveRedirect
+            aria-label={e(@activity, :subject, :character, :username, "") <> " profile"}
+            class="font-medium subject_minimal"
+            to={path(e(@activity, :subject, :character, nil)) }>
+            {e(@activity, :subject, :profile, :name, "Anonymous")}
+          </LiveRedirect>
+          {raw @verb_display}
+        </div>
+      </div>
+    </div>
   <!-- {#match :notifications}
     <div class="flex w-full activity_notification">
       {#case @verb}

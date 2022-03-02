@@ -1,0 +1,20 @@
+<div class="p-2 menu bg-base-100 rounded-box">
+  <li :if={current_user(@current_user)}>
+    <LiveRedirect to="/home">
+      <Solid.RssIcon class="w-4 h-4" />
+      <span class="text-sm truncate ellipsis">{l "Home timeline"}</span>
+    </LiveRedirect> 
+  </li>
+  <li>
+    <LiveRedirect to={path(:local)}>
+      <Solid.HomeIcon class="w-4 h-4" />
+      <span class="text-sm truncate ellipsis">{l "Local timeline"}</span>
+    </LiveRedirect> 
+  </li>
+  <li>
+  <LiveRedirect to={path(:federation)}>
+    <Outline.GlobeIcon class="w-4 h-4" />
+    <span class="text-sm truncate ellipsis">{l "Federated timeline"}</span>
+  </LiveRedirect> 
+  </li>
+</div>

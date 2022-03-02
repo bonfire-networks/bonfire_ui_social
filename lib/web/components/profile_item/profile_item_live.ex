@@ -3,4 +3,5 @@ defmodule Bonfire.UI.Social.ProfileItemLive do
 
   prop profile, :any
   prop character, :any
+  prop class, :string
 end

@@ -1,8 +1,5 @@
   <div class="pb-2">
-    
-    <div :if={current_user(assigns)} class="bg-center bg-cover bg-accent" style={"height: 225px; background-image: url('#{image_url(@user)}')"}></div>
-    <div :if={!current_user(assigns)} class="bg-center bg-cover rounded-t-lg bg-accent" style={"height: 225px; background-image: url('#{image_url(@user)}')"}></div>
-
+    <div class="bg-center bg-cover bg-base-300 h-[200px] bg-[url('#{image_url(@user)}')" style={"background-image: url('#{image_url(@user)}')"}></div>
     <div class="flex items-center justify-between">
       <img
         class={"inline-block object-cover -mt-16 rounded-full ring-4 ring-base-100 bg-[#6AA4DA] w-32 h-32 ml-6"}
@@ -96,7 +93,7 @@
         </div>
       </div>
     </div>
-    <div class={"flex-1 px-6 mt-4"}>
+    <div class={"flex-1 px-6 mt-3"}>
       <LivePatch to={"/user/#{e(@user, :character, :username, "")}/timeline"}>
         <h1 class="text-2xl font-bold text-base-content">
           {e(@user, :profile, :name, "Anonymous")}
@@ -110,11 +107,11 @@
 
         </h1>
       </LivePatch>
-      <span class="-mt-1 text-sm font-normal text-base-content text-opacity-70">
+      <span class="-mt-2 text-sm font-normal text-base-content text-opacity-70">
         @{e(@user, :character, :username, "")}
       </span>
 
-      <div class="mt-2">
+      <div class="mt-1">
         <div class="w-full prose-sm prose">
           {rich e(@user, :profile, :summary, "")}
         </div>

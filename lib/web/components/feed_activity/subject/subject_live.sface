@@ -30,7 +30,7 @@
     </div>
   </div>
 {#elseif e(assigns, :showing_within, nil) == :widget}
-  <div class="flex items-top ">
+  <div class="flex mb-2 items-top">
     <div class="absolute left-0">
       <div class="align-middle avatar">
         <div class="w-6 h-6 bg-[#6AA4DA] rounded-btn">

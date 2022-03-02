@@ -1,3 +1,56 @@
+{#if e(assigns, :showing_within, nil) == :widget}
+<div class={"flex items-center mb-3"}>
+  <div class="flex items-center justify-start w-5 h-5">
+    <Solid.UserAddIcon class="w-5 h-5 text-info" />      
+  </div>
+  <div class="flex-1 ml-2">
+    <div class="text-sm font-medium text-base-content text-opacity-80">
+      <LiveRedirect
+        aria-label={e(@activity, :subject, :character, :username, "") <> " profile"}
+        class="font-medium subject_minimal"
+        to={path(e(@activity, :subject, :character, nil))}>
+        {e(@activity, :subject, :profile, :name, "Anonymous")}
+      </LiveRedirect>
+      {raw @verb_display}
+      <span :if={e(@object, :id, nil) == e(current_user(assigns), :id, nil)}>
+        you
+      </span>
+      <LiveRedirect 
+        :if={e(@object, :id, nil) !=e(current_user(assigns), :id, nil)} 
+        to={path(e(@object, :character, nil))} 
+        class="font-semibold link link-hover">
+        {e(@object, :profile, :name, "Anonymous")}
+      </LiveRedirect> 
+    </div>
+  </div>
+</div>
+
+
+<div class="flex w-full activity_notification">
+
+  <LiveRedirect to={"/user/#{e(@activity, :subject, :character, :username, "anon")}"} class="flex profile-item group ">
+    <div class="absolute left-0">
+     <div class="align-middle avatar">
+        <div class="w-6 h-6 bg-[#6AA4DA] rounded-btn">
+          <img 
+            class="subject_avatar" 
+            src={avatar_url(e(@activity, :subject, :profile, nil))} 
+            onerror="this.style.background='#dadada'" />
+        </div>
+      </div>
+    </div>
+    <div class="flex items-center justify-between flex-1 ml-8 space-x-1">
+      <p class="text-base font-semibold group-hover:underline text-base-content">
+        {e(@activity, :subject, :profile, :name, "Anon")}
+      </p>
+      <p class="-mt-px text-sm text-base-content text-opacity-70">
+        @{e(@activity, :subject, :character, :username, "anon")} 
+      </p>
+    </div>
+  </LiveRedirect>
+</div>
+
+{#else}
 <div class={"flex items-center mb-3 -ml-7"}>
   <div class="flex items-center justify-start w-5 h-5">
     <Solid.UserAddIcon class="w-5 h-5 text-info" />      
@@ -41,3 +94,4 @@
     </div>
   </LiveRedirect>
 </div>
+{/if}

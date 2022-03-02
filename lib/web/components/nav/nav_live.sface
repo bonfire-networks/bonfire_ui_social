@@ -3,7 +3,7 @@
     <Bonfire.UI.Social.HeaderUserLive 
       page={@page}
       current_user={current_user(assigns)}  />
-    <div class="w-full lg:justify-center lg:max-w-screen-xl lg:px-3 lg:mx-auto lg:mt-20 h-body md:flex ">
+    <div class="items-start w-full lg:justify-center lg:max-w-screen-xl lg:px-3 lg:mx-auto lg:mt-20 h-body md:flex ">
       {#if current_user(assigns) }
       <Bonfire.UI.Social.SidebarLive
         current_user={current_user(assigns)}
@@ -16,13 +16,29 @@
         smart_input_text={@smart_input_text}
       />
       {#else}
-      <Bonfire.UI.Social.HomeBannerLive />
+      <Bonfire.UI.Social.SidebarGuestLive 
+        current_user={current_user(e(assigns, :current_user, nil))}
+      />
       {/if}
       <div class="flex-grow w-full h-full mx-auto shrink-0 md:mx-3 md:mr-0 lg:mr-3 w-center max-w-[580px]">
         {@inner_content}
       </div>
       <div class="w-[285px] justify-start hidden h-full overflow-hidden pointer-events-none lg:flex">
-        <div class="top-[80px] bottom-[16px] fixed h-full pointer-events-auto"></div>
+        <div class="top-[80px] w-full bottom-[16px]  pointer-events-auto">
+          {#if current_user(assigns) }
+            <Bonfire.UI.Social.WidgetLive 
+              widget_title="Admins"
+              current_user={current_user(assigns)}
+            >
+              <Bonfire.UI.Social.WidgetAdminsLive 
+                current_user={current_user(assigns)}
+                id="widget_admins"
+              />
+            </Bonfire.UI.Social.WidgetLive>
+          {#else}
+           <div />
+          {/if}
+        </div>
       </div>
     </div>
   </div>

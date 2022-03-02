@@ -5,9 +5,15 @@
     :on-click="Bonfire.Social.Follows:follow" 
     phx-value-id={e(@object, :id, nil)} 
     type="button" 
-    class={e(assigns, :class, "btn btn-sm btn-outline rounded-full border-opacity-70 capitalize")}>
-    <Outline.EyeIcon class={e(assigns, :icon_class, "w-4 h-4 mr-2 shrink-0")} />
-    <span class="truncate ellipsis">{l "Follow"} {e(assigns, :label, "")}</span>
+    class={e(assigns, :class, "btn btn-sm btn-outline rounded-full border-opacity-70 normal-case")}>
+    <Solid.UserAddIcon
+      :if={!e(assigns, :hide_icon, false)} 
+      
+      class={e(assigns, :icon_class, "w-4 h-4 shrink-0")} />
+    <span
+      :if={!e(assigns, :hide_text, false)} 
+      class={"truncate ellipsis", "ml-2": !e(assigns, :hide_text, nil)}>
+      {l "Follow"} {e(assigns, :label, "")}</span>
   </button>
 
   <button 
@@ -17,8 +23,13 @@
     :on-click="Bonfire.Social.Follows:unfollow" 
     phx-value-id={e(@object, :id, nil)} 
     type="button" 
-    class={e(assigns, :class, "btn btn-sm btn-outline rounded-full border-opacity-70 capitalize")}>
-    <Outline.EyeOffIcon class={e(assigns, :icon_class, "w-4 h-4 mr-2 shrink-0")} />
-    <span class="truncate ellipsis">{l "Unfollow"} { e(assigns, :label, "")}</span>
+    class={e(assigns, :class, "btn btn-sm btn-outline rounded-full border-opacity-70 normal-case")}>
+    <Solid.UserRemoveIcon 
+      :if={!e(assigns, :hide_icon, false)} 
+      class={e(assigns, :icon_class, "w-4 h-4 shrink-0")} />
+    <span 
+      :if={!e(assigns, :hide_text, false)}
+      class={"truncate ellipsis", "ml-2": !e(assigns, :hide_text, nil)}>
+      {l "Unfollow"} { e(assigns, :label, "")}</span>
   </button>
 

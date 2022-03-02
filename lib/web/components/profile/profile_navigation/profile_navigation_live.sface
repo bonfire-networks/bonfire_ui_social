@@ -1,6 +1,6 @@
 <nav
   role="tabpanel"
-  class="flex justify-between w-full mt-4 mb-2 tabs"
+  class="flex justify-between w-full mt-2 mb-2 tabs"
   aria-label="Switch between timeline, posts, boosts, media tabs"
 >
   <LiveRedirect 

@@ -1,23 +1,19 @@
 <div class="flex-col hidden lg:flex md:flex-shrink-0 w-72">
-  <div class="fixed flex flex-col overflow-y-auto rounded-lg shadow-lg bg-base-100 w-72">
+  <div class="flex flex-col overflow-y-auto rounded-lg shadow-lg bg-base-100 w-72">
     <div class="bg-bottom bg-no-repeat bg-cover rounded-t-lg h-[200px]" style={"background-image: url(" <> Bonfire.Common.Config.get([:ui, :theme, :instance_image], '') <> ")"}></div>
     <div class="p-3 rounded-b-lg">
-      <h2 class="text-xl font-extrabold text-base-content">
-      
-      {Bonfire.Common.Config.get([:ui, :theme, :instance_name], "Bonfire")}</h2>
-
+      <LiveRedirect class="text-xl font-extrabold link link-hover text-base-content" to={path(Bonfire.Common.Config.get!(:home_page))}>
+        {Bonfire.Common.Config.get([:ui, :theme, :instance_name], "Bonfire")}
+      </LiveRedirect>
       <p class="mt-1 text-sm text-base-content text-opacity-70">
         { Bonfire.Common.Config.get([:ui, :theme, :instance_description], l "Yet another bonfire instance")}
       </p>
-
-      <div class="badge badge-ghost mt-1">
+      <div class="mt-2 text-xs badge badge-ghost">
         {Bonfire.Application.named_version()} 
       </div>
-      <div class="badge badge-accent mt-1" x-data="{msg: 'with JS'}">
+      <div class="mt-2 text-xs badge badge-accent" x-data="{msg: 'with JS'}">
         <span x-text="msg">without JS</span>
       </div>
-
-
     </div>
   </div>
 </div>
