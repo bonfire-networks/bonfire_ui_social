@@ -6,7 +6,7 @@
   phx-target={@target}
   phx-value-context={e(assigns, :context, "")} 
   phx-value-after={e(@page_info, :end_cursor, "")} 
-  class="flex justify-center w-full p-2 pt-4 pb-20 mx-auto border-t border-base-300"
+  class="flex justify-center w-full p-2 pt-4 mx-auto border-t border-base-300"
 > 
   <a href={"#"<>e(@page_info, :end_cursor, "unknown")} class="w-full p-2 normal-case btn btn-sm btn-wide ">
     {l "Load more"}

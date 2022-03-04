@@ -1,0 +1,20 @@
+<ul class="p-2 menu">
+  <li>
+    <a href="https://notes.zo.team/weekly_meeting" target="_blank">
+      <Solid.LinkIcon class="w-4 h-4" />
+      <span class="text-sm truncate ellipsis">{l "Monthly Meetings"}</span>
+    </a> 
+  </li>
+  <li>
+    <a href="https://socialhub.activitypub.rocks/g/bonfire/activity/posts" target="_blank">
+      <Solid.LinkIcon class="w-4 h-4" />
+      <span class="text-sm truncate ellipsis">{l "Forum"}</span>
+    </a> 
+  </li>
+  <li>
+    <a href="https://bonfirenetworks.org" target="_blank">
+      <Solid.LinkIcon class="w-4 h-4" />
+      <span class="text-sm truncate ellipsis">{l "Code of Conduct"}</span>
+    </a> 
+  </li>
+</ul>

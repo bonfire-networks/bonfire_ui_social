@@ -107,7 +107,8 @@
             </div>
 
             <button type="submit" class="capitalize btn-sm justify-self-end btn btn-primary">
-              {if @create_activity_type==:message, do: l "Message", else: l "Post"}
+              <!-- {if e(assigns, :create_activity_type, nil) == :message, do: l "Message", else: l "Post"} -->
+              {l "Publish"}
             </button>
           </div>
         </div>
