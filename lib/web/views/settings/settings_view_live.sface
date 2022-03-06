@@ -51,7 +51,7 @@
         current_user={current_user(assigns)}
       />
     {#match "flags"}
-        <Bonfire.Social.Web.FlagsLive
+        <Bonfire.UI.Social.Web.FlagsLive
           id="flags"
           current_user={current_user(assigns)}
           test={"test"}
