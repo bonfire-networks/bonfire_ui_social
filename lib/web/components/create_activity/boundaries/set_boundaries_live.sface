@@ -1,6 +1,7 @@
 <Context get={to_circles: to_circles}>
-<div class="mb-2" x-show="open">
-
+  <div 
+    class="mb-2" 
+    x-show="open">
   <Bonfire.UI.Social.MultiselectLive
     preloaded_options={@default_circles}
     selected_options={e(to_circles, @default_circles)}
@@ -9,7 +10,5 @@
     pick_event={"Bonfire.Boundaries:select"}
     remove_event={"Bonfire.Boundaries:deselect"}
    />
-
-</div>
-
+  </div>
 </Context>

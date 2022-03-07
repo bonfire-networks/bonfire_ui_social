@@ -10,9 +10,9 @@
     class="flex items-center focus:outline-none"
     >
     <div
-     x-show="boundary_selected == 'public'"
-     :class="{'bg-primary text-primary-content' : open_boundaries === true }"
-     class="flex items-center px-2 py-1.5 space-x-2 rounded-lg hover:bg-base-200 text-base-content" 
+      x-show="boundary_selected == 'public'"
+      :class="{'bg-primary text-primary-content' : open_boundaries === true }"
+      class="flex items-center px-2 py-1.5 space-x-2 rounded-lg hover:bg-base-200 text-base-content" 
      >
       <Solid.GlobeIcon class="w-4 h-4 text-base-content text-opacity-70"/>
       <span class="ml-2 text-sm text-base-content text-opacity-70">{l "Public"}</span>

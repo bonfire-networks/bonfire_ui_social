@@ -12,9 +12,9 @@
     </a> 
   </li>
   <li>
-    <a href="https://bonfirenetworks.org" target="_blank">
+    <a href="https://opencollective.com/bonfire-networks" target="_blank">
       <Solid.LinkIcon class="w-4 h-4" />
-      <span class="text-sm truncate ellipsis">{l "Code of Conduct"}</span>
+      <span class="text-sm truncate ellipsis">{l "Support"}</span>
     </a> 
   </li>
 </ul>

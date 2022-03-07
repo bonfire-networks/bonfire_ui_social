@@ -28,6 +28,17 @@
             id="widget_notification"
           />
         </Bonfire.UI.Social.WidgetLive>
+
+         <Bonfire.UI.Social.WidgetLive 
+          widget_title="Direct Messages"
+          current_user={current_user(assigns)}
+        >
+          <Bonfire.UI.Social.WidgetMessagesLive 
+            current_user={current_user(assigns)}
+            id="widget_direct_messages"
+          />
+        </Bonfire.UI.Social.WidgetLive>
+            
         <!-- <Bonfire.UI.Social.WidgetLive 
           widget_title="Admins"
           current_user={current_user(assigns)}
