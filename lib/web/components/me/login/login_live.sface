@@ -71,7 +71,18 @@
                 {l "Password (Min 10 characters)"}
               </span>
             </Label>
-            <PasswordInput opts={placeholder: "Type your password"} required class="w-full input input-bordered" />
+            <div class="relative" x-data="{show: false}">
+              <input name="login_fields[password]" placeholder="Type your password" :type="show ? 'text' : 'password'" required class="w-full input input-bordered" />
+              <div x-show="show == false" @click="show = true" class="absolute cursor-pointer top-2 right-3 btn btn-ghost btn-circle btn-sm">
+                <Solid.EyeOffIcon class="w-4 h-4" />
+              </div>
+              <div x-show="show == true" @click="show = false" class="absolute cursor-pointer top-2 right-3 btn btn-ghost btn-circle btn-sm">
+                <Solid.EyeIcon class="w-4 h-4 text-primary" />
+              </div>
+             
+            </div>
+            
+            
             <ErrorTag />
             <!-- <%= error_tag f, :password %> -->
           </Field>
