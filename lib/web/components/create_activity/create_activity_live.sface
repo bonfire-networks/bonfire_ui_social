@@ -43,7 +43,7 @@
           <div
             phx-update="ignore"
             id="textarea_wrapper"
-            class="overflow-hidden">
+            class="">
             <div x-show="title_open" x-transition>
               <label for="title" class="sr-only">{l "Title"}</label>
               <Field name={:name}>
@@ -61,7 +61,7 @@
                   :if={with_editor?(assigns)}
                   field_name="post[post_content][html_body]"
                   textarea_class={@textarea_class}
-                  placeholder="|"
+                  placeholder="Type your message"
                   content={@smart_input_text}
                 /> 
                 <TextArea
@@ -91,7 +91,7 @@
               </div> -->
               <div 
                 data-tip="Add a content warning" 
-                class="flex items-center tooltip tooltip-bottom">
+                class="relative z-20 flex items-center tooltip tooltip-bottom">
                 <button
                   :if={Bonfire.Common.Config.get([:ui, :smart_input, :cw], []) == true}
                   type="button"

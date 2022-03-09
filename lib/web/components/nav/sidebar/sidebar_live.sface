@@ -3,8 +3,8 @@
   role="navigation"
   class="flex-col justify-end hidden md:flex w-72"
 >
-  <div class="top-[80px] bottom-[16px] fixed w-72">
-    <div class="absolute w-full h-full">
+  <div class="top-[80px] bottom-[16px] w-72">
+    <div class="w-full h-full">
       <div class="flex flex-col space-y-4">
         <div class="">
           <Bonfire.UI.Social.SmartInputLive

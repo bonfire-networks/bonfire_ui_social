@@ -79,7 +79,6 @@
               <div x-show="show == true" @click="show = false" class="absolute cursor-pointer top-2 right-3 btn btn-ghost btn-circle btn-sm">
                 <Solid.EyeIcon class="w-4 h-4 text-primary" />
               </div>
-             
             </div>
             
             
