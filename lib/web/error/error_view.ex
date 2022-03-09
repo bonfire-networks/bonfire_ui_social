@@ -1,40 +1,68 @@
 defmodule Bonfire.UI.Social.Web.ErrorView do
   use Bonfire.Web, {:view, [namespace: Bonfire.UI.Social]}
 
-  # If you want to customize a particular status code
-  # for a certain format, you may uncomment below.
-  # def render("500.html", _assigns) do
-  #   "Internal Server Error"
-  # end
+  @codes %{
+    404=> "Not found",
+    500=> "Something went wrong"
+  }
 
   def render("404.html", _assigns) do
-    html("Not found", "<img src='https://data.whicdn.com/images/304187249/original.gif'/>")
+    show_html(404, "<img src='https://data.whicdn.com/images/304187249/original.gif'/>")
   end
 
   def render("500.html", %{current_account: current_account, reason: reason}) when not is_nil(current_account) do
-    show_error(reason(reason))
+    show_error(500, reason, true)
   end
   def render("500.html", assigns) do
-    debug(assigns)
-    if Bonfire.Common.Config.get!(:env) != :prod, do: show_error(reason(Map.get(assigns, :reason, ""))),
-    else: show_error("Please try again or contact the instance admins.")
+    show_error(500, Map.get(assigns, :reason, "Internal error"), true)
   end
 
-  defp show_error(error \\ "Something went wrong", details) do
-    html(error, "#{details}<img src='https://media2.giphy.com/media/QMHoU66sBXqqLqYvGO/giphy.gif'/>")
+  def render("404.activity+json", assigns) do
+    show_error(404, nil, false)
+  end
+  def render("500.activity+json", assigns) do
+    show_error(500, Map.get(assigns, :reason, "Internal error"), false)
+  end
+
+  def render("404.json", assigns) do
+    show_error(404, nil, false)
+  end
+  def render("500.json", assigns) do
+    show_error(500, Map.get(assigns, :reason, "Internal error"), false)
+  end
+
+  defp show_error(error_code, details, as_html?) do
+    error(details)
+
+    details = if error_code !=404 and Bonfire.Common.Config.get!(:env) != :prod, do: reason(details),
+    else: "Please try again or contact the instance admins."
+
+    if as_html?, do: show_html(error_code, "#{details} <img src='https://media2.giphy.com/media/QMHoU66sBXqqLqYvGO/giphy.gif'/>"),
+    else: Jason.encode!(%{
+      "errors"=> [
+        %{
+          "status"=> error_code,
+          "title"=> @codes[error_code],
+          "detail"=> details
+        }
+      ]
+    })
   end
 
   defp reason(%{message: reason}), do: reason
+  defp reason(reason) when is_binary(reason), do: reason
   defp reason(reason), do: inspect reason
 
   # By default, Phoenix returns the status message from
   # the template name. For example, "404.html" becomes
-  # "Not Found".
-  def template_not_found(template, _assigns) do
-    html(Phoenix.Controller.status_message_from_template(template))
+  # 404.
+  def template_not_found(template, assigns) do
+    error(template)
+    show_error(Phoenix.Controller.status_message_from_template(template), Map.get(assigns, :reason, "Unknown Error"), true)
   end
 
-  def html(error, details \\ "") do
+  defp show_html(error_code, details) when is_integer(error_code), do: show_html(@codes[error_code], details)
+  defp show_html(error, details) do
     raw """
     <!DOCTYPE html>
 <html lang="en" class="dark">
