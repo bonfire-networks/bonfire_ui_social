@@ -1,21 +1,12 @@
-<div class="fixed top-0 z-40 hidden w-full lg:block navbar border-base-300 bg-base-300 text-base-content">
+<div class="fixed top-0 z-40 hidden w-full lg:block navbar min-h-[48px] bg-neutral text-base-content">
   <div class="flex justify-center flex-shrink-0 w-full max-w-screen-xl mx-auto">
     <div class="flex-col justify-end hidden lg:flex w-72">
-      {#if !current_user(assigns)}
       <LiveRedirect to={path(Bonfire.Common.Config.get!(:home_page))}>
         <div class="flex items-center space-x-2">
-          <div class="w-10 h-10 bg-center bg-no-repeat bg-contain" style={"background-image: url(" <> Bonfire.Common.Config.get([:ui, :theme, :instance_logo], '')  <> ")"}></div>
-          <div class="text-lg font-bold">{Bonfire.Common.Config.get([:ui, :theme, :instance_name], '')}</div>
+          <div class="w-8 h-8 bg-center bg-no-repeat bg-contain" style={"background-image: url(" <> Bonfire.Common.Config.get([:ui, :theme, :instance_logo], '')  <> ")"}></div>
+          <div class="text-lg font-bold text-neutral-content">{Bonfire.Common.Config.get([:ui, :theme, :instance_name], '')}</div>
         </div>
       </LiveRedirect>
-      {#else}
-      <LiveRedirect to={path(:home)}>
-        <div class="flex items-center space-x-2">
-          <div class="w-10 h-10 bg-center bg-no-repeat bg-contain" style={"background-image: url(" <> Bonfire.Common.Config.get([:ui, :theme, :instance_logo], '')  <> ")"}></div>
-          <div class="text-lg font-bold">{Bonfire.Common.Config.get([:ui, :theme, :instance_name], '')}</div>
-        </div>
-      </LiveRedirect>
-      {/if}
     </div>
     <!-- SEARCH IS ALWAYS PRESENT -->
     <div class="flex-grow hidden w-full shrink-0 lg:block md:mx-3 md:mr-0 lg:mr-3 max-w-[580px]">
@@ -32,19 +23,19 @@
       </span>
     </div>
     {#elseif current_user(assigns)}
-    <div class="w-[285px] justify-start items-center space-x-2 hidden lg:flex">
-      <div data-tip="Home" class="flex-none tooltip tooltip-bottom">
-        <LivePatch to={"/home"} class={"btn btn-square text-base-content text-opacity-80", "btn-primary": @page == "home", "btn-ghost": @page != "home"}>
+    <div class="w-[285px] justify-start items-center space-x-4 hidden lg:flex">
+      <div data-tip="feeds" class="flex-none tooltip tooltip-bottom">
+        <LivePatch to={"/home"} class={"btn-sm btn btn-square btn-ghost text-neutral-content", "btn-primary": @page == "home", "btn-ghost": @page != "home"}>
             <Solid.RssIcon class="w-5 h-5" />
         </LivePatch>
       </div> 
       <div data-tip="Direct Messages" class="flex-none tooltip tooltip-bottom">
-        <LivePatch to={"/private"} class={"btn btn-square text-base-content text-opacity-80", "btn-primary": @page == "private", "btn-ghost": @page != "private"}>
+        <LivePatch to={"/private"} class={"btn-sm btn btn-square btn-ghost text-neutral-content", "btn-primary": @page == "private", "btn-ghost": @page != "private"}>
             <Solid.MailIcon class="w-5 h-5" />
         </LivePatch>
       </div> 
       <div data-tip="Notifications" class="flex-none tooltip tooltip-bottom">
-        <LivePatch to={path(:notifications)} class={"btn btn-square text-base-content text-opacity-80", "btn-primary": @page == "notifications", "btn-ghost": @page != "notifications"}>
+        <LivePatch to={path(:notifications)} class={"btn-sm btn btn-square btn-ghost text-neutral-content", "btn-primary": @page == "notifications", "btn-ghost": @page != "notifications"}>
             <Solid.BellIcon class="w-5 h-5" />
         </LivePatch>
       </div> 
@@ -73,28 +64,63 @@
  
   
 
- <div class="fixed bottom-0 z-40 w-full border-t lg:hidden navbar border-base-300 bg-base-100 text-base-content">
-  <div class="flex justify-between w-full lg:hidden">
-    <div :if={current_user(assigns)} class="flex items-center place-content-center">
-      <LiveRedirect to={"/home"} class="p-3 rounded-md text-base-content text-opacity-70 hover:bg-neutral hover:bg-opacity-30 ">
-        <Solid.RssIcon class="w-6 h-6" />   
-      </LiveRedirect>
-    </div> 
-    <div :if={current_user(assigns)} class="flex items-center place-content-center">
-      <LiveRedirect to={"/search"} class="p-3 rounded-md text-base-content text-opacity-70 hover:bg-neutral hover:bg-opacity-30 ">
-        <Solid.SearchIcon class="w-6 h-6" />   
-      </LiveRedirect>
-    </div>   
-    <div :if={current_user(assigns)} class="flex items-center place-content-center">
-      <LiveRedirect  to={path(:notifications)} class="p-3 rounded-md text-base-content text-opacity-70 hover:bg-neutral hover:bg-opacity-30 ">
-        <Outline.BellIcon class="w-6 h-6" />  
-      </LiveRedirect>
+ <div class="fixed top-0 z-40 w-full p-3 lg:hidden bg-base-300">
+  <div class="bg-base-100 navbar text-base-content min-h-[48px] rounded">
+    <div class="flex justify-between w-full lg:hidden">
+      <div class="flex items-center place-content-center">
+        <LiveRedirect class="btn btn-ghost btn-sm btn-circle " to={path(Bonfire.Common.Config.get!(:home_page))} >
+            <div class="flex items-center space-x-2">
+            <div class="bg-center bg-no-repeat bg-contain w-7 h-7" style={"background-image: url(" <> Bonfire.Common.Config.get([:ui, :theme, :instance_logo], '')  <> ")"}></div>
+            <div class="hidden font-bold 3text-lg">{Bonfire.Common.Config.get([:ui, :theme, :instance_name], '')}</div>
+          </div>
+        </LiveRedirect>
+      </div>
+      <div :if={current_user(assigns)} class="flex items-center place-content-center">
+        <LiveRedirect to={"/home"} class="btn btn-ghost btn-sm btn-circle ">
+          <Solid.RssIcon class="w-5 h-5 text-base-content text-opacity-80" />   
+        </LiveRedirect>
+      </div> 
+      <div :if={current_user(assigns)} class="flex items-center place-content-center">
+        <LiveRedirect to={"/search"} class="btn btn-ghost btn-sm btn-circle ">
+          <Solid.SearchIcon class="w-5 h-5 text-base-content text-opacity-80" />   
+        </LiveRedirect>
+      </div>   
+      <div :if={current_user(assigns)} class="flex items-center place-content-center">
+        <LiveRedirect  to={path(:notifications)} class="btn btn-ghost btn-sm btn-circle ">
+          <Solid.BellIcon class="w-5 h-5 text-base-content text-opacity-80" />  
+        </LiveRedirect>
+      </div>
+
+      <div class="flex items-center text-base-content lg:hidden">
+        {#if current_account(assigns) != nil and current_user(assigns) == nil }
+          
+          <Link to={path(:switch_user)} class="btn btn-secondary">
+            {l "Select User"}
+          </Link>
+          {#elseif current_user(assigns)}
+            <Bonfire.UI.Social.MobileUserMenuLive current_user={current_user(assigns)} />    
+          {#else}
+            <div class="flex items-center place-content-center">
+              <LiveRedirect to={path(:home)}>
+                  <div class="flex items-center space-x-2">
+                  <div class="w-10 h-10 bg-center bg-no-repeat bg-contain" style={"background-image: url(" <> Bonfire.Common.Config.get([:ui, :theme, :instance_logo], '')  <> ")"}></div>
+                  <div class="hidden font-bold 3text-lg">{Bonfire.Common.Config.get([:ui, :theme, :instance_name], '')}</div>
+                </div>
+              </LiveRedirect>
+            </div>
+            <Link to={path(:login, :index)} class="btn btn-primary">
+              {l "Login"}
+            </Link>
+            {#if !Bonfire.Me.Accounts.instance_is_invite_only? }
+            <span class="inline-flex ml-3 ">
+              <Link to={path(:signup, :index)} class="btn btn-outline btn-secondary">
+                {l "Signup"}
+              </Link>
+            </span>
+            {/if}
+        {/if}
+      </div>
+      
     </div>
-    <div :if={current_user(assigns)} class="flex items-center place-content-center">
-      <LivePatch to={"/private"} class="p-3 rounded-md text-base-content text-opacity-70 hover:bg-neutral hover:bg-opacity-30">
-          <Solid.MailIcon class="w-6 h-6" />
-      </LivePatch>
-    </div>
-    
   </div>
 </div>

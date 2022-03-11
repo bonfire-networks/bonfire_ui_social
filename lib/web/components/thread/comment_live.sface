@@ -2,7 +2,7 @@
   id={"comment-"<> e(@comment, :id, "")}
   data-id="comment"
   x-data="{show_replies: true}"
-  class={"reply thread-level-" <> to_string(@thread_level) <> " flex relative w-full mx-auto bg-base-100 p-2", "border bg-info bg-opacity-20 border-info rounded": contains?(@url, e(@comment, :id, "")) }>
+  class={"reply thread-level-" <> to_string(@thread_level) <> " flex relative w-full mx-auto p-2", "bg-base-200 py-4": contains?(@url, e(@comment, :id, "")) }>
   <div class="relative flex-1 w-full">
     <i 
       :class=" !show_replies ? 'bg-primary bottom-[0px]' : 'bg-base-200 bottom-[0px]'"

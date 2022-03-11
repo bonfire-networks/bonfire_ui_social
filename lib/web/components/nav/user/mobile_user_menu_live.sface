@@ -1,10 +1,12 @@
 <div 
-  class="block lg:hidden"
+  class="flex items-center place-content-center"
   x-data="{ open: false }" 
   @keydown.window.escape="open = false">
-  <div @click="open = true">
+  <div
+    class="btn btn-ghost btn-circle btn-sm" 
+    @click="open = true">
       <img
-        class="w-8 h-8 rounded-full bg-[#6AA4DA]"
+        class="w-6 h-6 rounded-full bg-[#6AA4DA]"
         src={avatar_url(current_user(assigns))}
         alt="current user profile image"
       />
@@ -15,33 +17,25 @@
     aria-labelledby="slide-over-title" 
     x-ref="dialog" 
     aria-modal="true">
-    
-      <div 
-        @click="open = false" 
-        class="absolute inset-0 overflow-hidden">
+      <div class="fixed inset-y-0 right-0 flex max-w-full">
         <div 
-        x-show="open" 
-        x-transition:enter="ease-in-out duration-500" 
-        x-transition:enter-start="opacity-0" 
-        x-transition:enter-end="opacity-100" 
-        x-transition:leave="ease-in-out duration-500" 
-        x-transition:leave-start="opacity-100" 
-        x-transition:leave-end="opacity-0" 
-        x-description="Background overlay, show/hide based on slide-over state." 
-        class="absolute inset-0 transition-opacity bg-gray-500 bg-opacity-75" 
-        aria-hidden="true">
-      </div>
-
-      <div class="fixed inset-y-0 right-0 flex max-w-full pl-10">
-        <div x-show="open" x-transition:enter="transform transition ease-in-out duration-500 sm:duration-700" x-transition:enter-start="translate-x-full" x-transition:enter-end="translate-x-0" x-transition:leave="transform transition ease-in-out duration-500 sm:duration-700" x-transition:leave-start="translate-x-0" x-transition:leave-end="translate-x-full" class="w-screen max-w-md" x-description="Slide-over panel, show/hide based on slide-over state.">
+          x-show="open" 
+          x-transition:enter="transform transition ease-in-out duration-500 sm:duration-700" 
+          x-transition:enter-start="translate-x-full" 
+          x-transition:enter-end="translate-x-0" 
+          x-transition:leave="transform transition ease-in-out duration-500 sm:duration-700" 
+          x-transition:leave-start="translate-x-0" 
+          x-transition:leave-end="translate-x-full" 
+          class="w-full w-screen" 
+          x-description="Slide-over panel, show/hide based on slide-over state.">
           <div class="flex flex-col h-full py-6 overflow-y-auto shadow-xl bg-base-100">
             <div class="px-4 sm:px-6">
               <div class="flex items-start justify-between">
-                <h2 class="text-lg font-medium text-gray-900" id="slide-over-title">
+                <h2 class="text-lg font-medium text-base-content" id="slide-over-title">
                   {l "Menu"}
                 </h2>
                 <div class="flex items-center ml-3 h-7">
-                  <button type="button" class="rounded-md text-base-content text-opacity-70 bg-base-100 hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500" @click="open = false">
+                  <button type="button" class="btn btn-ghost" @click="open = false">
                     <span class="sr-only">{l "Close panel"}</span>
                     <svg class="w-6 h-6" x-description="Heroicon name: outline/x" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
                       <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
@@ -77,26 +71,32 @@
                 </div>
               </div>
               <nav class="flex-1 mt-6 space-y-2" aria-label="Sidebar">
-                <LivePatch to={path(current_user(assigns))} class="flex items-center py-2 text-sm font-medium rounded-md text-base-content text-opacity-60">
-                  <Outline.UserIcon class="flex-shrink-0 w-6 h-6 mr-3 -ml-1 text-base-content text-opacity-60" />
+                <LivePatch to={path(current_user(assigns))} class="flex items-center py-2 text-base font-medium rounded-md text-base-content">
+                  <Solid.UserIcon class="flex-shrink-0 w-6 h-6 mr-3 -ml-1 text-base-content text-opacity-80" />
                   <span class="truncate">
                     {l "Profile"}
                   </span>
                 </LivePatch>
-                <LivePatch to="/switch-user" class="flex items-center py-2 text-sm font-medium rounded-md text-base-content text-opacity-60">
-                  <Outline.UsersIcon class="flex-shrink-0 w-6 h-6 mr-3 -ml-1 text-base-content text-opacity-60" />
+                <LivePatch to="/switch-user" class="flex items-center py-2 text-base font-medium rounded-md text-base-content">
+                  <Solid.UsersIcon class="flex-shrink-0 w-6 h-6 mr-3 -ml-1 text-base-content text-opacity-80" />
                   <span class="truncate">
                     {l "Switch User"}
                   </span>
                 </LivePatch>
-                <LivePatch to="/settings" class="flex items-center py-2 text-sm font-medium rounded-md text-base-content text-opacity-60">
-                  <Outline.CogIcon class="flex-shrink-0 w-6 h-6 mr-3 -ml-1 text-base-content text-opacity-60" />
+                <LivePatch to="/private" class="flex items-center py-2 text-base font-medium rounded-md text-base-content">
+                  <Solid.MailIcon class="flex-shrink-0 w-6 h-6 mr-3 -ml-1 text-base-content text-opacity-80" />
+                  <span class="truncate">
+                    {l "Direct Messages"}
+                  </span>
+                </LivePatch>
+                <LivePatch to="/settings" class="flex items-center py-2 text-base font-medium rounded-md text-base-content">
+                  <Solid.CogIcon class="flex-shrink-0 w-6 h-6 mr-3 -ml-1 text-base-content text-opacity-80" />
                   <span class="truncate">
                     {l "Settings"}
                   </span>
                 </LivePatch>
-                <LivePatch to={"#{path(:home)}"} class="flex items-center py-2 text-sm font-medium rounded-md text-base-content text-opacity-60">
-                  <Outline.HomeIcon class="flex-shrink-0 w-6 h-6 mr-3 -ml-1 text-base-content text-opacity-60" />
+                <LivePatch to={"#{path(:home)}"} class="flex items-center py-2 text-base font-medium rounded-md text-base-content">
+                  <Solid.HomeIcon class="flex-shrink-0 w-6 h-6 mr-3 -ml-1 text-base-content text-opacity-80" />
                   <span class="truncate">
                     {l "Home"}
                   </span>
@@ -112,6 +112,5 @@
           </div>
         </div> 
       </div>
-    </div>
   </div>
 </div>

@@ -1,23 +1,25 @@
-<div class="flex flex-col space-y-4">
+<div class="flex-col justify-end w-full tablet:w-72">
   <Bonfire.UI.Social.HomeBannerLive />
 
-  <Bonfire.UI.Social.WidgetLive 
-    widget_title="Timelines"
-    current_user={current_user(assigns)}
-  >
-    <Bonfire.UI.Social.WidgetTimelinesLive 
+  <div class="flex flex-col hidden space-y-4 tablet:flex tablet:mt-4">
+    <Bonfire.UI.Social.WidgetLive 
+      widget_title="Timelines"
       current_user={current_user(assigns)}
-      id="widget_timelines_guest_home"
-    />
-  </Bonfire.UI.Social.WidgetLive>
+    >
+      <Bonfire.UI.Social.WidgetTimelinesLive 
+        current_user={current_user(assigns)}
+        id="widget_timelines_guest_home"
+      />
+    </Bonfire.UI.Social.WidgetLive>
 
-  <Bonfire.UI.Social.WidgetLive 
-    widget_title="Admins"
-    current_user={current_user(assigns)}
-  >
-    <Bonfire.UI.Social.WidgetAdminsLive 
+    <Bonfire.UI.Social.WidgetLive 
+      widget_title="Admins"
       current_user={current_user(assigns)}
-      id="widget_admins_guest_home"
-    />
-  </Bonfire.UI.Social.WidgetLive>
+    >
+      <Bonfire.UI.Social.WidgetAdminsLive 
+        current_user={current_user(assigns)}
+        id="widget_admins_guest_home"
+      />
+    </Bonfire.UI.Social.WidgetLive>
+  </div>
 </div>

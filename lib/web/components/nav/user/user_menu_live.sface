@@ -2,14 +2,14 @@
   <div class="dropdown dropdown-end">
     <button
       tabindex="0"
-      class="btn btn-circle btn-ghost text-base-content text-opacity-80"
+      class="btn btn-circle btn-sm btn-ghost text-base-content text-opacity-80"
       type="button"
       id="user-profile-menu"
       aria-haspopup="true"
       aria-expanded="true"
     >
       <img
-        class="w-8 h-8 btn-circle bg-[#6AA4DA]"
+        class="w-6 h-6 btn-circle bg-[#6AA4DA]"
         src={avatar_url(current_user(assigns))}
         alt="current user profile image"
       />

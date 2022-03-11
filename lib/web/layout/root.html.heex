@@ -1,17 +1,18 @@
 <!DOCTYPE html>
-<html class="overflow-x-hidden overflow-y-scroll bg-base-200" lang="en" data-theme="dark" >
+<html class="overflow-x-hidden overflow-y-scroll bg-base-300" lang="en" data-theme="dark" >
   <head>
     <meta charset="utf-8"/>
     <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     <meta name="description" content="Bonfire instance">
     <meta name="keywords" content="bonfire, fediverse">
+    <link rel="icon" type="image/x-icon" href="/favicon.ico">
     <meta name="author" content="Bonfire">
     <%= csrf_meta_tag() %>
     <%= live_title_tag assigns[:page_title] || "Home", suffix: " · Bonfire" %>
     <%= raw Bonfire.Web.Endpoint.include_assets(@conn)%>
   </head>
-  <body id="layout-root" class="min-h-screen overflow-hidden bg-base-200">
+  <body id="layout-root" class="min-h-screen overflow-hidden bg-base-300">
     <style>
       .shadow {
         box-shadow: 0 1px 2px rgba(0,0,0,.2) !important

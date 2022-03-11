@@ -68,7 +68,7 @@
                   :if={!with_editor?(assigns)}
                   opts={
                     value: @smart_input_text,
-                    placeholder: "|",
+                    placeholder: "Type your message",
                     "x-model": "smart_input_text"
                   }
                   class={@textarea_class}
@@ -80,9 +80,10 @@
         
           <div class="flex items-center justify-between p-2 space-x-2 rounded-b bg-neutral bg-opacity-30 sm:px-3">
             <div class="flex items-center flex-1 space-x-3">
+            
               <!-- <div 
                 data-tip="Upload an image" 
-                class="flex items-center tooltip tooltip-bottom" >
+                class="relative z-20 flex items-center tooltip tooltip-bottom" >
                 <button
                   type="button"
                   class="btn btn-ghost btn-square btn-sm tooltip tooltip-bottom">

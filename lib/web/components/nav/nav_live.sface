@@ -3,7 +3,7 @@
     <Bonfire.UI.Social.HeaderUserLive 
       page={@page}
       current_user={current_user(assigns)}  />
-    <div class="items-start w-full lg:justify-center lg:max-w-screen-xl lg:px-3 lg:mx-auto lg:mt-20 h-body md:flex ">
+    <div class="items-start w-full px-3 mt-[4.5rem] lg:mt-16 lg:justify-center lg:max-w-screen-xl lg:mx-auto h-body md:flex ">
       {#if current_user(assigns) }
       <Bonfire.UI.Social.SidebarLive
         current_user={current_user(assigns)}
@@ -20,10 +20,10 @@
         current_user={current_user(e(assigns, :current_user, nil))}
       />
       {/if}
-      <div class="flex-grow w-full h-full mx-auto shrink-0 md:mx-3 md:mr-0 lg:mr-3 w-center max-w-[580px]">
+      <div class="flex-grow w-full h-full mx-auto shrink-0 tablet:mx-3 w-center max-w-[580px]">
         {@inner_content}
       </div>
-      <div class="w-[285px] justify-start hidden h-full overflow-hidden pointer-events-none lg:flex">
+      <div class="w-[285px] justify-start hidden h-full overflow-hidden pointer-events-none xl:flex">
         <div class="top-[80px] w-full bottom-[16px]  pointer-events-auto">
           {#if current_user(assigns) }
             <Bonfire.UI.Social.WidgetLive 
@@ -35,10 +35,6 @@
                 id="widget_admins"
               />
             </Bonfire.UI.Social.WidgetLive>
-
-
-           
-
           {#else}
            <div />
           {/if}

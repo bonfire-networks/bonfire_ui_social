@@ -24,7 +24,6 @@ defmodule Bonfire.UI.Social.ThreadLive do
 
   def update(%{replies: replies, threaded_replies: threaded_replies, page_info: page_info} = assigns, socket) when is_list(replies) and is_list(threaded_replies) and is_map(page_info) do
     debug("ThreadLive: showing preloaded replies")
-    IO.inspect(e(assigns, :url, ""), label: "URLLLLL:")
     assigns |> assign_thread(socket)
   end
 
