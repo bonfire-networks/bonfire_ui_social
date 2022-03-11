@@ -20,6 +20,7 @@
       <div class="fixed inset-y-0 right-0 flex max-w-full">
         <div 
           x-show="open" 
+          style="display: none"
           x-transition:enter="transform transition ease-in-out duration-500 sm:duration-700" 
           x-transition:enter-start="translate-x-full" 
           x-transition:enter-end="translate-x-0" 
@@ -34,12 +35,10 @@
                 <h2 class="text-lg font-medium text-base-content" id="slide-over-title">
                   {l "Menu"}
                 </h2>
-                <div class="flex items-center ml-3 h-7">
-                  <button type="button" class="btn btn-ghost" @click="open = false">
+                <div class="flex items-center">
+                  <button type="button" class="btn btn-ghost btn-circle" @click="open = false">
                     <span class="sr-only">{l "Close panel"}</span>
-                    <svg class="w-6 h-6" x-description="Heroicon name: outline/x" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
-                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
-                    </svg>
+                    <Outline.XIcon class="w-5 h-5 text-base-content" />
                   </button>
                 </div>
               </div>
