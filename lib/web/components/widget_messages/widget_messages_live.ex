@@ -8,7 +8,6 @@ defmodule Bonfire.UI.Social.WidgetMessagesLive do
     current_user = current_user(assigns)
     # feed = Bonfire.Social.FeedActivities.feed(:notifications, Map.put(assigns, :paginate, pagination))
     feed = if current_user, do: if module_enabled?(Bonfire.Social.Messages), do: Bonfire.Social.Messages.list(current_user, Map.put(%{}, :paginate, pagination)) #|> IO.inspect
-    IO.inspect(feed, label: "FEEEED")
     {:ok, socket
       |> assign(
         feed: e(feed, :edges, []),
