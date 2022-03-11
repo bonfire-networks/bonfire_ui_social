@@ -24,6 +24,3 @@
     </li>
   </ul>
 
-  <div :if={length(@feed) > 0 } class="p-2 border-t border-base-300">
-    <LivePatch to={"/private"} class="w-full normal-case btn btn-wide btn-sm">{l "All direct messages"}</LivePatch>
-  </div>

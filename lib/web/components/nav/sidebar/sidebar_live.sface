@@ -23,6 +23,11 @@
           widget_title="Notifications"
           current_user={current_user(assigns)}
         >
+          <:action>
+            <LivePatch class="text-xs normal-case btn btn-xs btn-outline" to={path(:notifications)}>
+              {l "View more"}
+            </LivePatch>
+          </:action>
           <Bonfire.UI.Social.WidgetNotificationLive 
             current_user={current_user(assigns)}
             id="widget_notification"
@@ -33,6 +38,11 @@
           widget_title="Direct Messages"
           current_user={current_user(assigns)}
         >
+        <:action>
+            <LivePatch class="text-xs normal-case btn btn-xs btn-outline" to={"/private"}>
+              {l "View more"}
+            </LivePatch>
+          </:action>
           <Bonfire.UI.Social.WidgetMessagesLive 
             current_user={current_user(assigns)}
             id="widget_direct_messages"
