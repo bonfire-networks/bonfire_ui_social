@@ -1,6 +1,6 @@
 <div class="hidden lg:block">
   <div class="dropdown dropdown-end">
-    <button
+    <label
       tabindex="0"
       class="btn btn-circle btn-sm btn-ghost text-base-content text-opacity-80"
       type="button"
@@ -13,7 +13,7 @@
         src={avatar_url(current_user(assigns))}
         alt="current user profile image"
       />
-      </button>
+      </label>
     <ul
       tabindex="0"
       class="rounded shadow w-52 menu dropdown-content bg-neutral-content"
