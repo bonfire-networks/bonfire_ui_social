@@ -19,7 +19,7 @@
           <div role="status" class="alert alert-warning">
             <div class="flex flex-1">
               <label>
-                {l "Account not found. Either your username or password was incorrect. Did you want to "} <Link to={path(:signup)} class="font-bold underline">sign up</Link> ?
+                {l "Account not found. Either your username or password was incorrect. Did you want to "} <Link to={path(:signup)} class="font-bold underline text-neutral">sign up</Link> ?
               </label>
             </div>
           </div>
@@ -28,7 +28,7 @@
           <div role="status" class="alert alert-warning">
             <div class="flex flex-1">
               <label>
-                {l "You need to to click the link in the email you should have received to verify your email address.  Need to have it "} <Link to={path(Bonfire.Me.Web.ConfirmEmailController)} class="font-bold underline">resent</Link> ?
+                {l "You need to to click the link in the email you should have received to verify your email address.  Need to have it "} <Link to={path(Bonfire.Me.Web.ConfirmEmailController)} class="font-bold underline text-neutral">resent</Link> ?
               </label>
             </div>
           </div>
