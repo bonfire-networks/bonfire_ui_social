@@ -1,4 +1,188 @@
-<div>
+
+<div class="w-full mb-3 dropdown tablet:hidden">
+  <label tabindex="0" class="w-full normal-case btn btn-outline btn-wide">Select a setting page</label>
+  <ul tabindex="0" class="w-full p-2 shadow dropdown-content menu bg-base-100 rounded-box">
+    <li class="uppercase menu-title">
+      <span>{l "General settings"}</span>
+    </li>
+    
+    <li :if={current_user(assigns)}>
+      <LivePatch 
+        to={"/settings/user"} 
+        class={"w-full flex items-center text-sm font-regular text-base-content", "focus:bg-primary hover:bg-primary bg-primary text-primary-content": @selected_tab == "user"}>
+        <Outline.UserIcon class="inline-block w-5 h-5 mr-2 stroke-current" />
+        {l "Profile"}
+      </LivePatch>
+    </li> 
+    <li>
+      <LivePatch 
+        to={"/settings/preferences"}
+        class={"w-full flex items-center text-sm font-regular text-base-content", "focus:bg-primary hover:bg-primary bg-primary text-primary-content": @selected_tab == "preferences"}>
+        <Outline.AdjustmentsIcon class="inline-block w-5 h-5 mr-2 stroke-current" />
+        {l "Preferences"}
+      </LivePatch>
+    </li> 
+    <li :if={ Utils.module_enabled?(Bonfire.Data.SharedUser) and Utils.module_enabled?(Bonfire.Me.SharedUsers) }>
+      <LivePatch 
+        to={"/settings/shared_user"}
+        class={"w-full flex items-center text-sm font-regular text-base-content", "focus:bg-primary hover:bg-primary bg-primary text-primary-content": @selected_tab == "shared_user"}>
+        <Solid.UserGroupIcon class="inline-block w-5 h-5 mr-2 stroke-current" />
+        {l "Teams"}
+      </LivePatch>
+    </li> 
+    <li>
+      <LivePatch 
+        to={"/settings/account"}
+        class={"w-full flex items-center text-sm font-regular text-base-content", "focus:bg-primary hover:bg-primary bg-primary text-primary-content": @selected_tab == "account"}>
+        <Outline.LockClosedIcon class="inline-block w-5 h-5 mr-2 stroke-current" />
+        {l "Account"}
+      </LivePatch>
+    </li>
+    <li>
+      <div 
+        x-cloak
+        x-data="{content_open: false}" 
+        @click.outside="content_open = false"
+        @keyup.escape.window="content_open = false"
+        class="block"
+        :class="content_open ? 'bg-base-content bg-opacity-10' : ''"> 
+        <div 
+          @click="content_open = !content_open"
+          style="background: transparent" 
+          class="flex items-center w-full min-h-0 p-0 text-sm font-regular text-base-content collapse-title">
+          <Outline.LightningBoltIcon class="inline-block w-5 h-5 mr-5 stroke-current" />
+          <span class="flex-1">{l "Moderation"}</span>
+          <span :class="content_open ? 'rotate-180' : 'rotate-0'" class="transition-transform ease-in-out">
+          <Outline.ChevronDownIcon  class="w-4 h-4 stroke-current" />
+          </span>
+        </div>
+        <div 
+          x-show={"content_open"}
+          x-transition.scale.origin.bottom
+          class="p-0 pb-0 m-0 mt-4 "> 
+          <ul class="-mx-2">
+            <li>
+              <LivePatch 
+                to={"/settings/flags"}
+                class={"p-2 px-3 w-full flex items-center text-sm font-regular text-base-content", "focus:bg-primary hover:bg-primary bg-primary text-primary-content": @selected_tab == "flags"}>
+                <Outline.FlagIcon class="inline-block w-4 h-4 mr-2 stroke-current" />
+                {l "Flagged contents"}
+              </LivePatch>
+            </li>
+            <li>
+              <LivePatch 
+                to={"/settings/flags"}
+                class={"p-2 px-3 w-full flex items-center text-sm font-regular text-base-content", "focus:bg-primary hover:bg-primary bg-primary text-primary-content": @selected_tab == "ghosts"}>
+                <Outline.MinusCircleIcon class="inline-block w-4 h-4 mr-2 stroke-current" />
+                {l "Ghosted users"}
+              </LivePatch>
+            </li>
+            <li>
+              <LivePatch 
+                to={"/settings/flags"}
+                class={"p-2 px-3 w-full flex items-center text-sm font-regular text-base-content", "focus:bg-primary hover:bg-primary bg-primary text-primary-content": @selected_tab == "silence"}>
+                <Outline.VolumeOffIcon class="inline-block w-4 h-4 mr-2 stroke-current" />
+                {l "Silenced users"}
+              </LivePatch>
+            </li>
+            <li>
+              <LivePatch 
+                to={"/settings/flags"}
+                class={"p-2 px-3 w-full flex items-center text-sm font-regular text-base-content", "focus:bg-primary hover:bg-primary bg-primary text-primary-content": @selected_tab == "ban"}>
+                <Outline.BanIcon class="inline-block w-4 h-4 mr-2 stroke-current" />
+                {l "Blocked users"}
+              </LivePatch>
+            </li>
+          </ul>
+        </div>
+      </div>
+      
+    </li>
+    <div :if={Bonfire.Me.Users.is_admin?(current_user(assigns))} >
+      <li class="mt-2 uppercase menu-title">
+        <span>{l "Admin settings"}</span>
+      </li>
+      <li>
+        <LivePatch 
+          to="/settings/admin/instance"
+          class={"w-full flex items-center text-sm font-regular text-base-content", "focus:bg-primary hover:bg-primary bg-primary text-primary-content": @admin_tab == "instance"}>
+        <Outline.CogIcon class="inline-block w-5 h-5 mr-2 stroke-current" />
+        {l "Configure instance"}
+        </LivePatch>
+      </li>
+      <li>
+        <LivePatch 
+          to="/settings/admin/invites"
+          class={"w-full flex items-center text-sm font-regular text-base-content", "focus:bg-primary hover:bg-primary bg-primary text-primary-content": @admin_tab == "invites"}>
+          <Outline.MailIcon class="inline-block w-5 h-5 mr-2 stroke-current" />
+          {l "Invites"}
+        </LivePatch>
+      </li>
+      <li>
+        <div 
+        x-cloak
+        x-data="{content_open: false}" 
+        @click.outside="content_open = false"
+        @keyup.escape.window="content_open = false"
+        class="block"
+        :class="content_open ? 'bg-base-content bg-opacity-10' : ''"> 
+        <div 
+          @click="content_open = !content_open"
+          style="background: transparent" 
+          class="flex items-center w-full min-h-0 p-0 text-sm font-regular text-base-content collapse-title">
+          <Outline.LightningBoltIcon class="inline-block w-5 h-5 mr-5 stroke-current" />
+          <span class="flex-1">{l "Instance Moderation"}</span>
+          <span :class="content_open ? 'rotate-180' : 'rotate-0'" class="transition-transform ease-in-out">
+          <Outline.ChevronDownIcon  class="w-4 h-4 stroke-current" />
+          </span>
+        </div>
+        <div 
+          x-show={"content_open"}
+          x-transition.scale.origin.bottom
+          class="p-0 pb-0 m-0 mt-4 "> 
+          <ul class="-mx-2">
+            <li>
+              <LivePatch 
+                to={"/settings/flags"}
+                class={"p-2 px-3 w-full flex items-center text-sm font-regular text-base-content", "focus:bg-primary hover:bg-primary bg-primary text-primary-content": @selected_tab == "flags"}>
+                <Outline.FlagIcon class="inline-block w-4 h-4 mr-2 stroke-current" />
+                {l "Flagged contents"}
+              </LivePatch>
+            </li>
+            <li>
+              <LivePatch 
+                to={"/settings/flags"}
+                class={"p-2 px-3 w-full flex items-center text-sm font-regular text-base-content", "focus:bg-primary hover:bg-primary bg-primary text-primary-content": @selected_tab == "ghosts"}>
+                <Outline.MinusCircleIcon class="inline-block w-4 h-4 mr-2 stroke-current" />
+                {l "Ghosted users"}
+              </LivePatch>
+            </li>
+            <li>
+              <LivePatch 
+                to={"/settings/flags"}
+                class={"p-2 px-3 w-full flex items-center text-sm font-regular text-base-content", "focus:bg-primary hover:bg-primary bg-primary text-primary-content": @selected_tab == "silence"}>
+                <Outline.VolumeOffIcon class="inline-block w-4 h-4 mr-2 stroke-current" />
+                {l "Silenced users"}
+              </LivePatch>
+            </li>
+            <li>
+              <LivePatch 
+                to={"/settings/flags"}
+                class={"p-2 px-3 w-full flex items-center text-sm font-regular text-base-content", "focus:bg-primary hover:bg-primary bg-primary text-primary-content": @selected_tab == "ban"}>
+                <Outline.BanIcon class="inline-block w-4 h-4 mr-2 stroke-current" />
+                {l "Blocked users"}
+              </LivePatch>
+            </li>
+          </ul>
+        </div>
+      </div>
+      </li>
+    </div>
+  </ul>
+</div>
+
+
+<div class="hidden tablet:block">
   <ul role="navigation" class="py-3 rounded shadow w-72 menu bg-base-100">
     <li class="uppercase menu-title">
       <span>{l "General settings"}</span>

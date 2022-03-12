@@ -3,8 +3,8 @@
     settings_section_title={l "Account"}
   />
 
-  
-  <a href={path(:change_password)} class="btn btn-primary" role="menuitem">{l "Change my password"}</a>
-  
+  <div class="p-3 ">
+    <LiveRedirect to={path(:change_password)} class="w-full normal-case btn btn-primary btn-wide">{l "Change my password"}</LiveRedirect>
+  </div>
 
 </div>
