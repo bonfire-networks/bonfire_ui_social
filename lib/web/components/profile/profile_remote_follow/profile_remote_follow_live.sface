@@ -1,0 +1,33 @@
+<div>
+  <Bonfire.UI.Social.ProfileHeroFullLive user={@user} current_user={current_user(assigns)}  />
+
+  <div class="flex">
+    <div class="w-full mx-auto">
+      <Form for={:outgoing} action="/pub/remote_interaction">
+        <HiddenInput name={:follow} value={canonical_url(@user)} />
+        
+        <div class="mx-auto p-5">
+          <Field name={:me}>
+            <Label class="label">
+              <span class="text-xl font-bold text-base-content">{l "Enter your fediverse nick to follow %{user_name} remotely:", user_name: e(@user, :profile, :name, l "this user")}</span>
+            </Label>
+            <EmailInput required opts={"placeholder": "username@instance.domain"} class="w-full input input-bordered" />
+            <ErrorTag />
+          </Field>
+
+          <button
+            class="w-full mt-2 btn btn-primary"
+            phx-disable-with="sending..."
+            type="submit"
+          >
+            Proceed to follow
+          </button>
+
+          <p class="mt-4 text-sm">{l "Why is this step necessary? This might not be the fediverse instance where you are registered, so we need to redirect you to your home instance first."}</p>
+          <p class="mt-2 text-sm">{l "Are you a user of this instance? Just login first."}</p>
+        </div>
+      </Form>
+    </div>
+  </div>
+
+</div>

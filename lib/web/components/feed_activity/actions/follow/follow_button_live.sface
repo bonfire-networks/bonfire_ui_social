@@ -1,10 +1,10 @@
-  <button 
+  <a 
     :if={!e(assigns, :my_follow, nil)}
     data-cid={@id}
     data-id="follow"
     :on-click="Bonfire.Social.Follows:follow" 
+    href={if !current_user(assigns), do: path(@object)<>"/follow"}
     phx-value-id={e(@object, :id, nil)} 
-    type="button" 
     class={e(assigns, :class, "btn btn-sm btn-outline rounded-full border-opacity-70 normal-case")}>
     <Solid.UserAddIcon
       :if={!e(assigns, :hide_icon, false)} 
@@ -14,15 +14,14 @@
       :if={!e(assigns, :hide_text, false)} 
       class={"truncate ellipsis", "ml-2": !e(assigns, :hide_text, nil)}>
       {l "Follow"} {e(assigns, :label, "")}</span>
-  </button>
+  </a>
 
-  <button 
+  <a 
     :if={e(assigns, :my_follow, nil)}
     data-cid={@id}
     data-id="unfollow"
     :on-click="Bonfire.Social.Follows:unfollow" 
     phx-value-id={e(@object, :id, nil)} 
-    type="button" 
     class={e(assigns, :class, "btn btn-sm btn-outline rounded-full border-opacity-70 normal-case")}>
     <Solid.UserRemoveIcon 
       :if={!e(assigns, :hide_icon, false)} 
@@ -31,5 +30,5 @@
       :if={!e(assigns, :hide_text, false)}
       class={"truncate ellipsis", "ml-2": !e(assigns, :hide_text, nil)}>
       {l "Unfollow"} { e(assigns, :label, "")}</span>
-  </button>
+  </a>
 

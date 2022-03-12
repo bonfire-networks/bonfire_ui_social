@@ -7,7 +7,6 @@
         alt="current user profile image"
       >
       <div
-        :if={current_user(assigns)}
         class="flex items-center pr-2 space-x-3"
       >
         <a
@@ -36,7 +35,7 @@
         </LiveRedirect> 
         
         <LiveRedirect
-          :if={e(current_user(assigns), :id, nil) && e(current_user(assigns), :id, nil) == maybe_get(@user, :id)}
+          :if={current_user(assigns) && e(current_user(assigns), :id, nil) == maybe_get(@user, :id)}
           to="/settings"
           class="capitalize rounded-full btn btn-sm btn-outline"
         >
@@ -46,7 +45,6 @@
           {l "Settings"}
         </LiveRedirect>
         <div 
-          :if={e(current_user(assigns), :id, nil) != maybe_get(@user, :id)}
           class="dropdown dropdown-end">
           <label tabindex="0" class="m-1 btn btn-outline btn-sm btn-circle">
             <Solid.DotsHorizontalIcon />
@@ -56,7 +54,7 @@
             class="rounded shadow w-52 menu dropdown-content bg-neutral-content dropdown_actions">
             <li
              class="hover:bg-neutral hover:bg-opacity-20"
-             :if={current_user(assigns) && is_admin?(current_user(assigns))} >
+             :if={current_user(assigns) && e(current_user(assigns), :id, nil) != maybe_get(@user, :id) && is_admin?(current_user(assigns))} >
               <button
                 class="flex items-center p-4 text-sm text-neutral"
                 :if={!is_admin?(@user)} 
@@ -77,7 +75,7 @@
               </button>
             </li>
             <li 
-              :if={e(current_user(assigns), :id, nil) != e(@user, :character, :id, nil)}
+              :if={current_user(assigns) && e(current_user(assigns), :id, nil) != e(@user, :character, :id, nil)}
               class=" hover:bg-neutral hover:bg-opacity-20">
               <Bonfire.UI.Social.FlagActionLive 
                 object={@user}
@@ -108,7 +106,7 @@
         </h1>
       </LivePatch>
       <span class="-mt-2 text-sm font-normal text-base-content text-opacity-70">
-        @{e(@user, :character, :username, "")}
+        {Bonfire.Me.Characters.display_username(@user)}
       </span>
 
       <div class="mt-1">

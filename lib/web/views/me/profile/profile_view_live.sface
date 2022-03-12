@@ -8,7 +8,7 @@
       page_title={@page_title}
     />
     <Surface.Components.Dynamic.Component
-      module={Bonfire.Common.Config.get([:ui, :profile, :sections, tab(@selected_tab)], Bonfire.UI.Social.ProfileTimelineLive)}
+      module={Bonfire.Common.Config.get([:ui, :profile, :sections, tab(@selected_tab)], Bonfire.UI.Social.ProfileTimelineLive) |> dump("tab module")}
       user={@user}
       page_title={@page_title}
       page={@page}

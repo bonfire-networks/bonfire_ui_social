@@ -1,19 +1,19 @@
 <Bonfire.UI.Social.BlockButtonsLive
-  :if={e(current_user(assigns), :id, nil) != e(@object, :character, :id, nil)}
+  :if={current_user(assigns) && e(current_user(assigns), :id, nil) != e(@object, :character, :id, nil)}
   object={@object}
   label={e(@object, :profile, :name, l "this user")}
   class="flex items-center w-full text-sm text-neutral"
 />
 
 <Bonfire.UI.Social.BlockButtonsLive
-  :if={e(peered(assigns), :peer_id, nil)}
+  :if={current_user(assigns) && e(peered(assigns), :peer_id, nil)}
   object={e(peered(assigns), :peer_id, nil)}
   label={URI.parse(e(peered(assigns), :canonical_uri, "#")).host}
   class="flex items-center w-full text-sm text-neutral"
 />
 
 <li 
-  :if={e(current_user(assigns), :id, nil) != e(@object, :id, nil) and Bonfire.Me.Users.is_admin?(current_user(assigns))}
+  :if={current_user(assigns) && e(current_user(assigns), :id, nil) != e(@object, :id, nil) && Bonfire.Me.Users.is_admin?(current_user(assigns))}
   class=" hover:bg-neutral hover:bg-opacity-20">
 
   <div tabindex="0">
