@@ -1,7 +1,8 @@
 {#if !@hide_reply }
   <!-- {#if e(@showing_within, false) != :thread } -->
-  <button 
-    @click.prevent={"
+  <a 
+    href={@permalink}
+    @click={"
       reply_to_id = '#{@object_id}'; 
       smart_input_prompt = 'Reply to #{if @showing_within==:thread, do: l("comment"), else: l("post")}: #{@reply_to_text || @object_id}';
       smart_input_text = '#{@reply_smart_input_text}'; 
@@ -28,5 +29,5 @@
         </noscript>
       </span>
     </div>
-  </button>
+  </a>
 {/if}

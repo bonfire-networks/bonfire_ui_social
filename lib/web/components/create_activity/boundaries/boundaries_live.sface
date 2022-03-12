@@ -30,6 +30,12 @@
        <span class="ml-2 text-sm text-base-content text-opacity-70">{l "Mentions"}</span>
     </div>
     <div 
+      x-show="boundary_selected == 'message'"
+      class="flex items-center px-2 py-1.5 space-x-2 rounded-lg hover:bg-base-200 text-base-content" >
+      <Solid.ChatAlt2Icon class="w-4 h-4 text-base-content text-opacity-70"/>
+       <span class="ml-2 text-sm text-base-content text-opacity-70">{l "Message"}</span>
+    </div>
+    <div 
     x-show="boundary_selected == 'custom'"
     class="flex items-center px-2 py-1.5 space-x-2 rounded-lg hover:bg-base-200 text-base-content" >
       <Solid.CogIcon class="w-4 h-4 text-base-content text-opacity-70"/>
@@ -42,6 +48,7 @@
     role="menu"
     aria-orientation="vertical"
     aria-labelledby="user-profile-menu">
+      <div x-show="boundary_selected != 'message'">
       <div 
       @click="boundary_selected = 'public'; open_boundaries = false" 
       class="flex p-2 space-x-2 text-sm transition duration-150 ease-in-out cursor-pointer text-neutral rounded-t-md hover:bg-neutral hover:bg-opacity-30 ">
@@ -69,5 +76,13 @@
         <div class="text-sm text-primary-content-700">{l "Custom"}</div>
         <p class="text-xs text-primary-content-500">{l "Pick your audience"}</p>
       </div> -->
+      </div>
+      <div x-show="boundary_selected == 'message'" class="flex p-2 space-x-2 text-sm transition duration-150 ease-in-out cursor-pointer text-primary-content-700 text-neutral hover:bg-neutral hover:bg-opacity-30 ">
+        <Solid.ChatAlt2Icon/> 
+        <div class="flex-1">
+        <div class="text-sm font-medium text-neutral text-opacity-80">{l "Message"}</div>
+        <p class="text-xs text-neutral text-opacity-80">{l "Visible only to people included in this message thread."}</p>
+        </div>
+      </div>
   </div>
 </div>

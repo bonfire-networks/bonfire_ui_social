@@ -34,7 +34,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
     object_type = Bonfire.Common.Types.object_type(activity.object) |> debug("object_type")
     object_type_readable = module_to_human_readable(object_type) |> String.downcase()
 
-    permalink = if verb in ["reply", "respond"], do: path(e(activity, :replied, :thread_id, "")) <> "#comment-#{activity.object.id}", else: path(activity.object)
+    permalink = if verb in ["reply", "respond"], do: path(e(activity, :replied, :thread_id, "")) <> "##{activity.object.id}", else: "#{path(activity.object)}#"
     # permalink = path(activity.object)
     components = (
       component_activity_subject(verb, activity, assigns)

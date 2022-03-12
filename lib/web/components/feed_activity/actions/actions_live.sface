@@ -24,7 +24,7 @@
           hide_reply={e(assigns, :hide_reply, nil )}
           object_id={e(@object, :id, "no-object")}
           reply_smart_input_text={@reply_smart_input_text}
-          reply_to_text={e(@object, :name, nil) || e(@object, :summary, nil) || e(@object, :html_body, nil)}
+          reply_to_text={text_only(e(@object, :post_content, :name, nil) || e(@object, :post_content, :summary, nil) || e(@object, :post_content, :html_body, e(@object, :id, "")))}
         />
       {/if}
       <BoostActionLive 
