@@ -9,5 +9,6 @@ defmodule Bonfire.UI.Social.SmartInputLive do
   prop to_circles, :list
   prop smart_input_prompt, :string, required: false
   prop smart_input_text, :string, required: false
+  prop full_screen, :boolean, default: false
 
 end

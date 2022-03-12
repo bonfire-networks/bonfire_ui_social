@@ -1,7 +1,7 @@
 <div id="without-sidebar-live">
  <% info = live_flash(@flash, :info) %>
   <% error = live_flash(@flash, :error) %>
-    <div id="flash-messages" class="bg-base absolute z-50 right-8 top-20 ">
+    <div id="flash-messages" class="absolute z-50 bg-base right-8 top-20 ">
       <Bonfire.Common.Web.NotificationLive.render
       id={"notification"} 
       notification={e(assigns, :notification, nil)}
@@ -24,5 +24,11 @@
     current_account={current_account(assigns)}
     page={e(assigns, :page, "")}
     inner_content={@inner_content}
+    reply_to_id={e(assigns, :reply_to_id, "")}
+    thread_id={e(assigns, :thread_id, "")}
+    create_activity_type={e(assigns, :create_activity_type, nil)}
+    to_circles={e(assigns, :to_circles, [])}
+    smart_input_prompt={e(assigns, :smart_input_prompt, "")}
+    smart_input_text={e(assigns, :smart_input_text, "")}
   />
 </div>
