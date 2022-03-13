@@ -21,12 +21,7 @@
         {#if count(@replied)>0 }
           {count(@replied)} 
         {/if}
-        <noscript>
-           <LiveRedirect 
-            to={@permalink} 
-            class="redirect_to_discussion_page"
-            >(click here)</LiveRedirect>
-        </noscript>
+       
       </span>
     </div>
   </a>

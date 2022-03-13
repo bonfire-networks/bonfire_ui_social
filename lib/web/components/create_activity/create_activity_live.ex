@@ -19,7 +19,6 @@ defmodule Bonfire.UI.Social.CreateActivityLive do
   prop with_editor, :boolean, required: false
   prop textarea_class, :string, default: "textarea prose prose-sm"
 
-
   def with_editor?(assigns) do
     case e(assigns, :with_editor, nil) do
       nil -> e(assigns, :showing_within, nil) != :thread && module_enabled?(Bonfire.Editor.Ck.Bubble)
