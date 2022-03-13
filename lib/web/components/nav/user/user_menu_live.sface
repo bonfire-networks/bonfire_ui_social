@@ -8,7 +8,7 @@
       aria-haspopup="true"
       aria-expanded="true"
     >
-      <img
+      <LazyImage
         class="w-6 h-6 btn-circle bg-[#6AA4DA]"
         src={avatar_url(current_user(assigns))}
         alt="current user profile image"

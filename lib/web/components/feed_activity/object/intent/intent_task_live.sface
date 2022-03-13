@@ -37,7 +37,7 @@
         :if={e(@object, :provider, :id, nil)}
         to={path(e(@object, :provider, nil))}
         class="flex items-center text-xs text-primary-content-700  text-medium">
-        <img class="inline-block w-6 h-6 bg-base-100 rounded-full" src={"#{avatar_url(@object.provider)}"} alt="">
+        <LazyImage class="inline-block w-6 h-6 bg-base-100 rounded-full" src={"#{avatar_url(@object.provider)}"} alt=""/>
       </LivePatch>
 
 

@@ -34,10 +34,10 @@
     <div class="absolute left-0">
       <div class="align-middle avatar">
         <div class="w-6 h-6 bg-[#6AA4DA] rounded-btn">
-          <img 
+          <LazyImage 
             class="subject_avatar" 
             src={avatar_url(@profile)} 
-            onerror="this.style.background='#dadada'" />
+             />
         </div>
       </div>
     </div>
@@ -67,10 +67,10 @@
     <div class="absolute left-4">
       <div class="align-middle avatar">
         <div class="w-8 h-8 bg-[#6AA4DA] rounded-btn">
-          <img 
+          <LazyImage 
             class="subject_avatar" 
             src={avatar_url(@profile)} 
-            onerror="this.style.background='#dadada'" />
+             />
         </div>
       </div>
     </div>

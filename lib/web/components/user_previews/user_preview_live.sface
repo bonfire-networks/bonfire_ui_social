@@ -8,10 +8,10 @@
     <div class="px-3 pb-2 -mt-8">
       <div class="">
         <div class="flex items-center justify-between">
-          <img
+          <LazyImage
             class="inline-block object-cover w-16 h-16 rounded-full ring-2 ring-base-100 bg-[#6AA4DA]"
             src={"#{avatar_url(@user)}"}
-            alt="user image">
+            alt="user image"/>
         </div>
         <div class="mt-1">
           <div class="flex items-center space-x-2">

@@ -32,10 +32,10 @@
     <div class="absolute left-0">
      <div class="align-middle avatar">
         <div class="w-6 h-6 bg-[#6AA4DA] rounded-btn">
-          <img 
+          <LazyImage 
             class="subject_avatar" 
             src={avatar_url(e(@activity, :subject, :profile, nil))} 
-            onerror="this.style.background='#dadada'" />
+          />
         </div>
       </div>
     </div>

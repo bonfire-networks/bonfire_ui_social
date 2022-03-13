@@ -1,11 +1,11 @@
   <div class="pb-2">
     <div class="bg-center bg-cover bg-base-300 h-[200px] bg-[url('#{image_url(@user)}')" style={"background-image: url('#{image_url(@user)}')"}></div>
     <div class="flex items-center justify-between">
-      <img
+      <LazyImage
         class={"inline-block object-cover -mt-16 rounded-full ring-4 ring-base-100 bg-[#6AA4DA] w-32 h-32 ml-6"}
-        src={"#{avatar_url(@user)}"}
+        src={avatar_url(@user)}
         alt="current user profile image"
-      >
+      />
       <div
         class="flex items-center pr-2 space-x-3"
       >
