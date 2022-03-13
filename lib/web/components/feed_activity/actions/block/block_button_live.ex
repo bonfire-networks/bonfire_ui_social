@@ -3,6 +3,7 @@ defmodule Bonfire.UI.Social.BlockButtonLive do
   # TODO: make stateful and preload block status?
 
   prop object, :any
+  prop my_block, :any
   prop class, :string
   prop label, :string
   prop scope, :string

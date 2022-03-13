@@ -10,9 +10,10 @@
       </p>
     </div>
   </LiveRedirect>
+  
   <div
     class="" 
-    :if={e(current_user(assigns), :id, nil) != maybe_get(@profile, :id) and e(current_user(assigns), :id, nil)}>
+    :if={:follow in @show_controls and e(current_user(assigns), :id, nil) != maybe_get(@profile, :id) and e(current_user(assigns), :id, nil)}>
     <Bonfire.UI.Social.FollowButtonLive 
       id={ComponentID.new(Bonfire.UI.Social.FollowButtonLive, @profile)}
       object={@profile} 
@@ -21,4 +22,6 @@
       current_user={current_user(assigns)} 
     />
   </div>
+
+  <#slot />
 </div>

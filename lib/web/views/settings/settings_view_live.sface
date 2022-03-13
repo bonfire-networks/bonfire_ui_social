@@ -23,10 +23,26 @@
             current_user={current_user(assigns)}
           />
         
-        {#match "reports"}
+        <!-- {#match "flags"}
           <Bonfire.UI.Social.SettingsViewsLive.AdminReportsLive
             current_user={current_user(assigns)}
+          /> -->
+        
+        {#match "silenced"}
+          <Bonfire.UI.Social.BlocksLive
+            scope={:instance_wide}
+            id="blocks"
+            current_user={current_user(assigns)}
+            selected_tab={"silenced"}
           />
+        {#match "ghosted"}
+          <Bonfire.UI.Social.BlocksLive
+            scope={:instance_wide}
+            id="blocks"
+            current_user={current_user(assigns)}
+            selected_tab={"ghosted"}
+          />
+
         {#match _}
           <Bonfire.UI.Social.SettingsViewsLive.AdminLive
             current_user={current_user(assigns)}
@@ -52,11 +68,22 @@
         current_user={current_user(assigns)}
       />
     {#match "flags"}
-        <Bonfire.UI.Social.Web.FlagsLive
-          id="flags"
-          current_user={current_user(assigns)}
-          test={"test"}
-        />
+      <Bonfire.UI.Social.FlagsLive
+        id="flags"
+        current_user={current_user(assigns)}
+      />
+    {#match "silenced"}
+      <Bonfire.UI.Social.BlocksLive
+        id="blocks"
+        current_user={current_user(assigns)}
+        selected_tab={"silenced"}
+      />
+    {#match "ghosted"}
+      <Bonfire.UI.Social.BlocksLive
+        id="blocks"
+        current_user={current_user(assigns)}
+        selected_tab={"ghosted"}
+      />
     {#match "shared_user"}
       <Bonfire.UI.Social.SettingsViewsLive.SharedUserLive
         current_user={current_user(assigns) |> repo().maybe_preload(:shared_user) }

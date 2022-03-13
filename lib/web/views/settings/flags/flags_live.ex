@@ -1,4 +1,4 @@
-defmodule Bonfire.UI.Social.Web.FlagsLive do
+defmodule Bonfire.UI.Social.FlagsLive do
   use Bonfire.Web, :stateful_component
   alias Bonfire.Web.LivePlugs
 

@@ -127,7 +127,7 @@ title_text={e(assigns, :label, l "Block")<>(if e(assigns, :scope, nil)=="instanc
             :if={e(assigns, :scope, nil)=="instance_wide"} 
             class="w-4 h-4 mr-2 shrink-0 text-neutral text-opacity-70" />
 
-         <span class="truncate ellipsis">{l "Undo"} { e(assigns, :label, "")}</span>
+         <span class="truncate ellipsis">{ e(assigns, :label, "")}</span>
     </button>
     </div>
 {/if}

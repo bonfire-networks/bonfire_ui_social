@@ -1,0 +1,37 @@
+<div class="pt-4">
+  <div role="tabpanel" class="flex w-full tabs">
+    <LiveRedirect 
+      to={"/settings/silenced"} 
+      class={"tab flex-1 tab-bordered", "tab-active": @selected_tab ==  "silenced"}
+    >
+      {l "Silenced"} 
+    </LiveRedirect> 
+    <LiveRedirect 
+      to={"/settings/ghosted"} 
+      class={"tab flex-1 tab-bordered", "tab-active": @selected_tab ==  "ghosted"}
+    >
+      {l "Ghosted"} 
+    </LiveRedirect>  
+  </div>
+
+  <div class="flow-root my-4">
+    <ul class="-my-5 divide-y divide-base-300">
+      <li class="p-4" :for={block <- @blocks}>
+        <Bonfire.UI.Social.ProfileItemLive
+          show_controls={[]}
+          profile={e(block, :subject, :profile, nil )}
+          character={e(block, :subject, :character, nil )}
+        >
+          <Bonfire.UI.Social.BlockButtonLive
+            object={e(block, :subject, nil )}
+            scope={e(assigns, :scope, nil)}
+            block_type={@block_type}
+            my_block={true}
+            label=""
+          />
+        </Bonfire.UI.Social.ProfileItemLive>
+
+      </li>
+    </ul>
+  </div>
+</div>

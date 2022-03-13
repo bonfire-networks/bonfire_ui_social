@@ -71,28 +71,28 @@
             </li>
             <li>
               <LivePatch 
-                to={"/settings/flags"}
+                to={"/settings/ghosted"}
                 class={"p-2 px-3 w-full flex items-center text-sm font-regular text-base-content", "focus:bg-primary hover:bg-primary bg-primary text-primary-content": @selected_tab == "ghosts"}>
                 <Outline.MinusCircleIcon class="inline-block w-4 h-4 mr-2 stroke-current" />
-                {l "Ghosted users"}
+                {l "Ghosted"}
               </LivePatch>
             </li>
             <li>
               <LivePatch 
-                to={"/settings/flags"}
+                to={"/settings/silenced"}
                 class={"p-2 px-3 w-full flex items-center text-sm font-regular text-base-content", "focus:bg-primary hover:bg-primary bg-primary text-primary-content": @selected_tab == "silence"}>
                 <Outline.VolumeOffIcon class="inline-block w-4 h-4 mr-2 stroke-current" />
-                {l "Silenced users"}
+                {l "Silenced"}
               </LivePatch>
             </li>
-            <li>
+            <!-- <li>
               <LivePatch 
                 to={"/settings/flags"}
                 class={"p-2 px-3 w-full flex items-center text-sm font-regular text-base-content", "focus:bg-primary hover:bg-primary bg-primary text-primary-content": @selected_tab == "ban"}>
                 <Outline.BanIcon class="inline-block w-4 h-4 mr-2 stroke-current" />
                 {l "Blocked users"}
               </LivePatch>
-            </li>
+            </li> -->
           </ul>
         </div>
       </div>
@@ -151,28 +151,28 @@
             </li>
             <li>
               <LivePatch 
-                to={"/settings/flags"}
+                to={"/settings/admin/ghosted"}
                 class={"p-2 px-3 w-full flex items-center text-sm font-regular text-base-content", "focus:bg-primary hover:bg-primary bg-primary text-primary-content": @selected_tab == "ghosts"}>
                 <Outline.MinusCircleIcon class="inline-block w-4 h-4 mr-2 stroke-current" />
-                {l "Ghosted users"}
+                {l "Ghosted"}
               </LivePatch>
             </li>
             <li>
               <LivePatch 
-                to={"/settings/flags"}
+                to={"/settings/admin/silenced"}
                 class={"p-2 px-3 w-full flex items-center text-sm font-regular text-base-content", "focus:bg-primary hover:bg-primary bg-primary text-primary-content": @selected_tab == "silence"}>
                 <Outline.VolumeOffIcon class="inline-block w-4 h-4 mr-2 stroke-current" />
-                {l "Silenced users"}
+                {l "Silenced"}
               </LivePatch>
             </li>
-            <li>
+            <!-- <li>
               <LivePatch 
                 to={"/settings/flags"}
                 class={"p-2 px-3 w-full flex items-center text-sm font-regular text-base-content", "focus:bg-primary hover:bg-primary bg-primary text-primary-content": @selected_tab == "ban"}>
                 <Outline.BanIcon class="inline-block w-4 h-4 mr-2 stroke-current" />
                 {l "Blocked users"}
               </LivePatch>
-            </li>
+            </li> -->
           </ul>
         </div>
       </div>
@@ -253,28 +253,28 @@
             </li>
             <li>
               <LivePatch 
-                to={"/settings/flags"}
+                to={"/settings/ghosted"}
                 class={"p-2 px-3 w-full flex items-center text-sm font-regular text-base-content", "focus:bg-primary hover:bg-primary bg-primary text-primary-content": @selected_tab == "ghosts"}>
                 <Outline.MinusCircleIcon class="inline-block w-4 h-4 mr-2 stroke-current" />
-                {l "Ghosted users"}
+                {l "Ghosted"}
               </LivePatch>
             </li>
             <li>
               <LivePatch 
-                to={"/settings/flags"}
+                to={"/settings/silenced"}
                 class={"p-2 px-3 w-full flex items-center text-sm font-regular text-base-content", "focus:bg-primary hover:bg-primary bg-primary text-primary-content": @selected_tab == "silence"}>
                 <Outline.VolumeOffIcon class="inline-block w-4 h-4 mr-2 stroke-current" />
-                {l "Silenced users"}
+                {l "Silenced"}
               </LivePatch>
             </li>
-            <li>
+            <!-- <li>
               <LivePatch 
                 to={"/settings/flags"}
                 class={"p-2 px-3 w-full flex items-center text-sm font-regular text-base-content", "focus:bg-primary hover:bg-primary bg-primary text-primary-content": @selected_tab == "ban"}>
                 <Outline.BanIcon class="inline-block w-4 h-4 mr-2 stroke-current" />
                 {l "Blocked users"}
               </LivePatch>
-            </li>
+            </li> -->
           </ul>
         </div>
       </div>
@@ -333,28 +333,28 @@
             </li>
             <li>
               <LivePatch 
-                to={"/settings/flags"}
+                to={"/settings/admin/ghosted"}
                 class={"p-2 px-3 w-full flex items-center text-sm font-regular text-base-content", "focus:bg-primary hover:bg-primary bg-primary text-primary-content": @selected_tab == "ghosts"}>
                 <Outline.MinusCircleIcon class="inline-block w-4 h-4 mr-2 stroke-current" />
-                {l "Ghosted users"}
+                {l "Ghosted"}
               </LivePatch>
             </li>
             <li>
               <LivePatch 
-                to={"/settings/flags"}
+                to={"/settings/admin/silenced"}
                 class={"p-2 px-3 w-full flex items-center text-sm font-regular text-base-content", "focus:bg-primary hover:bg-primary bg-primary text-primary-content": @selected_tab == "silence"}>
                 <Outline.VolumeOffIcon class="inline-block w-4 h-4 mr-2 stroke-current" />
-                {l "Silenced users"}
+                {l "Silenced"}
               </LivePatch>
             </li>
-            <li>
+            <!-- <li>
               <LivePatch 
                 to={"/settings/flags"}
                 class={"p-2 px-3 w-full flex items-center text-sm font-regular text-base-content", "focus:bg-primary hover:bg-primary bg-primary text-primary-content": @selected_tab == "ban"}>
                 <Outline.BanIcon class="inline-block w-4 h-4 mr-2 stroke-current" />
                 {l "Blocked users"}
               </LivePatch>
-            </li>
+            </li> -->
           </ul>
         </div>
       </div>

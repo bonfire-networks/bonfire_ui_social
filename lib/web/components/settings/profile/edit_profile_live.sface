@@ -1,6 +1,6 @@
 <form phx-change="Bonfire.Me.Profiles:validate" phx-submit="Bonfire.Me.Profiles:save" method="POST">
   <Bonfire.UI.Social.SettingsViewLive.SettingsHeaderLive 
-    settings_section_title={l "Profile"}
+    settings_section_title={l "User Profile"}
     settings_section_description={l "This information will be displayed publicly so be careful what you share."}
   />
   <div class="p-4">
