@@ -36,7 +36,7 @@
   />
 </div> -->
 {#if length(@threaded_replies) > 0}
-  <div data-id="replies" class="flex flex-col pt-2 bg-base-100">
+  <div data-id="replies" class="flex flex-col bg-base-100">
     
     <Bonfire.UI.Social.LoadPreviousLive 
       page_info={@page_info}

@@ -4,7 +4,7 @@
   <div 
     :if={e(assigns, :showing_within, nil) != :notifications} 
     class={
-      "thread_actions -ml-2 mt-0": e(assigns, :showing_within, nil) == :thread,
+      "thread_actions -ml-2 mt-2": e(assigns, :showing_within, nil) == :thread,
       "feed_actions mt-2": e(assigns, :viewing_main_object, nil) != true,
       "mt-1": e(assigns, :showing_within, nil) == :widget,
       }>
