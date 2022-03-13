@@ -4,7 +4,7 @@
     name={:boundary_selected} 
     type="hidden" 
     x-model="boundary_selected" />
-  <button
+  <label
     tabindex="0"
     type="button"
     class="flex items-center focus:outline-none"
@@ -41,7 +41,7 @@
       <Solid.CogIcon class="w-4 h-4 text-base-content text-opacity-70"/>
        <span class="ml-2 text-sm text-base-content text-opacity-70">{l "Custom"}</span>
     </div>
-  </button>
+  </label>
   <div
     tabindex="0"
     class="rounded shadow w-52 menu dropdown-content bg-neutral-content"
