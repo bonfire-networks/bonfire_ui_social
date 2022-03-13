@@ -1,16 +1,16 @@
 <div class="flex items-center">
-  <LiveRedirect to={"/user/#{e(@character, :username, "anon")}"} class="flex items-center flex-1 space-x-3 profile-item group ">
+  <LiveRedirect to={if String.starts_with?(e(@character, :username, ""), "http"), do: e(@character, :username, nil), else: "/user/#{e(@character, :username, "")}"} class="flex items-center flex-1 space-x-3 profile-item group ">
     <Bonfire.UI.Social.Activity.AvatarLive profile={@profile} />
     <div class="flex-1">
       <p class="text-sm font-semibold group-hover:underline text-base-content">
         {e(@profile, :name, "Anon")}
       </p>
       <p class="-mt-1 text-sm text-base-content text-opacity-70">
-        @{e(@character, :username, "anon")} 
+        {e(@character, :username, "")} 
       </p>
-    </div>
+    </div> 
   </LiveRedirect>
-  
+
   <div
     class="" 
     :if={:follow in @show_controls and e(current_user(assigns), :id, nil) != maybe_get(@profile, :id) and e(current_user(assigns), :id, nil)}>

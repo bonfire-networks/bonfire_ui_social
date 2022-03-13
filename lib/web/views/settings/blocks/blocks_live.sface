@@ -19,8 +19,8 @@
       <li class="p-4" :for={block <- @blocks}>
         <Bonfire.UI.Social.ProfileItemLive
           show_controls={[]}
-          profile={e(block, :subject, :profile, nil )}
-          character={e(block, :subject, :character, nil )}
+          profile={e(block, :subject, :profile, nil ) || %{name: e(block, :peer, :display_hostname, nil )}}
+          character={e(block, :subject, :character, nil ) || %{username: e(block, :peer, :ap_base_uri, nil )}}
         >
           <Bonfire.UI.Social.BlockButtonLive
             object={e(block, :subject, nil )}
