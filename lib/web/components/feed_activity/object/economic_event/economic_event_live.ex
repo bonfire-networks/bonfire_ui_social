@@ -36,9 +36,9 @@ defmodule Bonfire.UI.Social.Activity.EconomicEventLive do
 
   def prepare(object) do
     object
-    # |> debug(label: "event")
+    # |> debug("event")
     |> maybe_to_struct(ValueFlows.EconomicEvent)
-    # |> debug(label: "struct")
+    # |> debug("struct")
     |> preload()
   end
 

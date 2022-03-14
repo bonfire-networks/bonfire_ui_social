@@ -47,7 +47,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
       c when is_atom(c) -> {c, nil}
       other -> other
     end)
-    # |> debug(label: "ActivityLive: activity_object_components")
+    # |> debug("ActivityLive: activity_object_components")
 
   assigns = assigns
     |> assigns_merge(
@@ -64,7 +64,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
         permalink: permalink
       )
     |> Map.new
-    #|> debug(label: "ActivityLive final assigns")
+    #|> debug("ActivityLive final assigns")
 
 
     ~F"""

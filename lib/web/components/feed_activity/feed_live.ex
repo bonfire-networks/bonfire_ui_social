@@ -10,7 +10,7 @@ defmodule Bonfire.UI.Social.FeedLive do
   prop showing_within, :any
   prop feed_update_mode, :string, default: "prepend"
   prop hide_load_more, :boolean, default: false
-  
+
   def mount(socket) do
     {:ok, socket
     |> assign(
@@ -46,7 +46,7 @@ defmodule Bonfire.UI.Social.FeedLive do
     {:ok, socket
     |> assign(
       feed: feed
-      #|> debug(label: "FeedLive: feed")
+      #|> debug("FeedLive: feed")
       |> preloads(current_user: current_user(socket), skip_boundary_check: true),
       page_info: page_info
       )}
@@ -65,7 +65,7 @@ defmodule Bonfire.UI.Social.FeedLive do
     {:ok, socket
     |> assign(
       feed: e(assigns, :feed, [])
-      # |> debug(label: "FeedLive: feed")
+      # |> debug("FeedLive: feed")
       |> preloads(current_user: current_user, skip_boundary_check: true)
     )}
   end
@@ -85,7 +85,7 @@ defmodule Bonfire.UI.Social.FeedLive do
     # |> debug("feed before extra preloads")
     |> Bonfire.Common.Pointers.Preload.maybe_preload_nested_pointers([activity: [:object]])
     |> preload_objects(opts)
-    # |> debug(label: "feed with extra preloads")
+    # |> debug("feed with extra preloads")
   end
 
   def object_preloads do
@@ -95,7 +95,7 @@ defmodule Bonfire.UI.Social.FeedLive do
       {ValueFlows.Planning.Intent, Bonfire.UI.Social.Activity.IntentTaskLive.preloads()},
       {ValueFlows.Process, Bonfire.UI.Social.Activity.ProcessListLive.preloads()},
     ]
-    # |> debug(label: "preload feed")
+    # |> debug("preload feed")
   end
 
   def preload_objects(feed, opts) do
