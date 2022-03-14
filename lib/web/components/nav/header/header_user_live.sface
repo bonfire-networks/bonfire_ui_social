@@ -17,7 +17,7 @@
     {#if current_account(assigns) != nil and current_user(assigns) == nil }
     <div class="xl:w-[285px] justify-start hidden lg:flex">
       <span class="inline-flex rounded-md shadow-sm">
-        <Link to={path(:switch_user)} class="btn btn-secondary btn-sm">
+        <Link to={path(:switch_user)} class="normal-case btn btn-secondary btn-sm">
           {l "Select User"}
         </Link>
       </span>
@@ -44,13 +44,13 @@
     {#else}
     <div class="w-[285px] justify-start hidden lg:flex">
       <span class="inline-flex ">
-        <Link to={path(:login, :index)} class="btn btn-sm btn-primary">
+        <Link to={path(:login, :index)} class="normal-case btn btn-sm btn-primary">
           {l "Login"}
         </Link>
       </span>
       {#if !Bonfire.Me.Accounts.instance_is_invite_only? }
       <span class="inline-flex ml-3 ">
-        <Link to={path(:signup, :index)} class="btn btn-sm btn-outline btn-secondary">
+        <Link to={path(:signup, :index)} class="normal-case btn btn-sm btn-outline btn-secondary">
           {l "Signup"}
         </Link>
       </span>
