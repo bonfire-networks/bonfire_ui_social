@@ -1,6 +1,7 @@
 <Bonfire.UI.Social.SettingsViewLive.SettingsHeaderLive 
   settings_section_title={l "Instance configuration"}
-  settings_section_description={""}
+  selected_tab={@selected_tab}
+  admin_tab={@admin_tab}
 />
 
 <!--- 
@@ -37,7 +38,7 @@
       </label>
       <div class="mt-1 sm:mt-0 sm:col-span-2">
         <div class="flex items-center">
-          <span class="w-12 h-12 overflow-hidden bg-base-100 rounded-full">
+          <span class="w-12 h-12 overflow-hidden rounded-full bg-base-100">
             <svg class="w-full h-full text-primary-content-300" fill="currentColor" viewBox="0 0 24 24">
               <path d="M24 20.993V24H0v-2.996A14.977 14.977 0 0112.004 15c4.904 0 9.26 2.354 11.996 5.993zM16.002 8.999a4 4 0 11-8 0 4 4 0 018 0z" />
             </svg>

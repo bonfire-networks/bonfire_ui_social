@@ -7,7 +7,8 @@ defmodule Bonfire.UI.Social.SettingsViewsLive.ExtensionsLive do
   prop other_deps, :any
   prop get_link, :any
   prop settings_section_title, :string, default: "Bonfire extensions"
-  prop settings_section_description, :string, default: "These are the extensions installed on this instance."
+  prop selected_tab, :string
+  prop ading_tab, :string
 
   def update(assigns, socket) do
 

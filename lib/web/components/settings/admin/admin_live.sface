@@ -12,7 +12,8 @@
 {#if Bonfire.Me.Users.is_admin?(current_user(assigns)) }
   <Bonfire.UI.Social.SettingsViewLive.SettingsHeaderLive 
   settings_section_title={l "Admin"}
-  settings_section_description={""}
+  selected_tab={@selected_tab}
+  admin_tab={@admin_tab}
   />
   <div class="p-4">
     

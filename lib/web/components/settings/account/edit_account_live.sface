@@ -1,6 +1,8 @@
 <div class="">
   <Bonfire.UI.Social.SettingsViewLive.SettingsHeaderLive 
     settings_section_title={l "Account"}
+    selected_tab={@selected_tab}
+    admin_tab={@admin_tab}
   />
 
   <div class="p-3 ">

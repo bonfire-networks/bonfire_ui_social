@@ -11,15 +11,18 @@
         {#match "general"}
           <Bonfire.UI.Social.SettingsViewsLive.AdminLive
             current_user={current_user(assigns)}
+            selected_tab={@selected_tab}
           />
         {#match "instance"}
           <Bonfire.UI.Social.SettingsViewsLive.AdminInstanceLive
             current_user={current_user(assigns)}
+            selected_tab={@selected_tab}
           />
         {#match "invites"}
          <Surface.Components.Dynamic.LiveComponent
             module={Bonfire.Common.Config.get([:ui, :invites_component], Bonfire.Invite.Links.Web.InvitesLive)}
             id="admin_invites"
+            selected_tab={@selected_tab}
             current_user={current_user(assigns)}
           />
         
@@ -46,31 +49,39 @@
         {#match _}
           <Bonfire.UI.Social.SettingsViewsLive.AdminLive
             current_user={current_user(assigns)}
+            selected_tab={@selected_tab}
           />
       {/case}
     {#match "account"}
       <Bonfire.UI.Social.SettingsViewsLive.EditAccountLive 
       current_account={current_account(assigns)}
+      selected_tab={@selected_tab}
     />
     {#match "circles"}
       <Bonfire.UI.Social.MyCirclesLive
+      selected_tab={@selected_tab}
         current_user={current_user(assigns)}
         current_account={current_account(assigns)}
       />
     {#match "circle"}
-      <Bonfire.UI.Social.ViewCircleLive />
+      <Bonfire.UI.Social.ViewCircleLive
+      selected_tab={@selected_tab}
+       />
     {#match "extensions"}
       <Bonfire.UI.Social.SettingsViewsLive.ExtensionsLive
         current_user={current_user(assigns)}
+        selected_tab={@selected_tab}
       />
     {#match "preferences"}
       <Bonfire.UI.Social.SettingsViewsLive.PreferencesLive
         current_user={current_user(assigns)}
+        selected_tab={@selected_tab}
       />
     {#match "flags"}
       <Bonfire.UI.Social.FlagsLive
         id="flags"
         current_user={current_user(assigns)}
+        selected_tab={@selected_tab}
       />
     {#match "silenced"}
       <Bonfire.UI.Social.BlocksLive
@@ -88,21 +99,25 @@
       <Bonfire.UI.Social.SettingsViewsLive.SharedUserLive
         current_user={current_user(assigns) |> repo().maybe_preload(:shared_user) }
         current_account={current_account(assigns)}
+        selected_tab={@selected_tab}
       />
     {#match _}
       <Bonfire.UI.Social.SettingsViewsLive.EditProfileLive
-       :if={current_user(assigns)}
-       uploads={@uploads} 
-       current_user={current_user(assigns)}
+        :if={current_user(assigns)}
+        uploads={@uploads} 
+        selected_tab={@selected_tab}
+        current_user={current_user(assigns)}
       />
       <Bonfire.UI.Social.SettingsViewsLive.EditAccountLive
-       :if={!current_user(assigns) && current_account(assigns)}
-       uploads={@uploads} 
-       current_account={current_account(assigns)}
+        :if={!current_user(assigns) && current_account(assigns)}
+        uploads={@uploads} 
+        selected_tab={@selected_tab}
+        current_account={current_account(assigns)}
       />
       <Bonfire.UI.Social.SettingsViewsLive.PreferencesLive
-       :if={!current_user(assigns) && !current_account(assigns)}
-       uploads={@uploads} 
+        :if={!current_user(assigns) && !current_account(assigns)}
+        selected_tab={@selected_tab}
+        uploads={@uploads} 
       />
   {/case}
   </section>

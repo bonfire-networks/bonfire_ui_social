@@ -1,10 +1,11 @@
 <Bonfire.UI.Social.SettingsViewLive.SettingsHeaderLive 
   settings_section_title={l "Preferences"}
-  settings_section_description={l "Customize your experience"}
+  selected_tab={@selected_tab}
+  admin_tab={@admin_tab}
 />
 
-<div class="flex flex-col pb-4 space-y-4 divide">
-  <div class="px-4 sm:grid sm:grid-cols-3 sm:gap-4 sm:items-center sm:border-t sm:border-base-200 sm:pt-5">
+<div class="flex flex-col p-4 space-y-4 lg:p-2">
+  <div class="px-4 sm:grid sm:grid-cols-3 sm:gap-4 sm:items-center">
     <label for="default-theme" class="block text-sm font-medium text-base-content sm:mt-px sm:pt-2">
       {l "Look and feel"}
     </label>
@@ -13,7 +14,7 @@
     </div>
   </div>
 
-  <div class="px-4 sm:grid sm:grid-cols-3 sm:gap-4 sm:items-center sm:border-t sm:border-base-200 sm:pt-5">
+  <div class="px-4 sm:grid sm:grid-cols-3 sm:gap-4 sm:items-center">
     <label for="default-language" class="block text-sm font-medium text-base-content sm:mt-px sm:pt-2">
       {l "Language"}
     </label>
