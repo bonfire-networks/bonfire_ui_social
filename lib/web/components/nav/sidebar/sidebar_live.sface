@@ -1,7 +1,7 @@
 
 <nav
   role="navigation"
-  class="sticky flex-col justify-end hidden tablet:flex w-72 top-3 lg:top-16">
+  class="sticky flex-col justify-end hidden tablet:flex w-72 top-3">
   <div class="top-[80px] bottom-[16px] w-72">
     <div class="w-full h-full">
       <div class="flex flex-col space-y-4">

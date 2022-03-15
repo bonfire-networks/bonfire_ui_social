@@ -96,7 +96,7 @@
     <div class="absolute left-3">
       <Bonfire.UI.Social.Activity.AvatarLive profile={@profile} />
     </div>
-    <div class="flex items-center justify-between">
+    <div class="flex items-baseline justify-between">
       <div class="flex items-baseline flex-1 truncate ellipsis text-md">
         <LiveRedirect
           opts={"data-id": "subject_name"}

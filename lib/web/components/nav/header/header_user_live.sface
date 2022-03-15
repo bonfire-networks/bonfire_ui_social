@@ -1,4 +1,4 @@
-<div class="fixed top-0 z-40 hidden w-full lg:block navbar min-h-[48px] bg-neutral text-base-content">
+<div class="sticky top-0 z-40 hidden w-full lg:block navbar min-h-[48px] bg-neutral text-base-content">
   <div class="flex justify-center flex-shrink-0 w-full max-w-screen-xl mx-auto">
     <div class="flex-col justify-end hidden lg:flex w-72">
       <LiveRedirect to={path(Bonfire.Common.Config.get(:user_home_page, Bonfire.Social.Web.HomeLive))}>
