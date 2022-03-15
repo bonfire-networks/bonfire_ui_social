@@ -2,7 +2,7 @@
     <div class="bg-center bg-cover bg-base-300 h-[125px] tablet:h-[200px] bg-[url('#{image_url(@user)}')" style={"background-image: url('#{image_url(@user)}')"}></div>
     <div class="flex items-center justify-between">
       <LazyImage
-        class={"inline-block object-cover -mt-10 tablet:-mt-16 rounded-full ring-4 ring-base-100 bg-[#6AA4DA] w-24 h-24 tablet:w-32 tablet:h-32 ml-3 tablet:ml-6"}
+        class={"inline-block object-cover -mt-10 tablet:-mt-16 rounded-full ring-4 ring-base-100 bg-[#6AA4DA] w-24 h-24 tablet:w-32 tablet:h-32 ml-4 tablet:ml-6"}
         src={avatar_url(@user)}
         alt="current user profile image"
       />

@@ -20,7 +20,7 @@
         current_user={current_user(e(assigns, :current_user, nil))}
       />
       {/if}
-      <div class="flex-grow w-full h-full mx-auto shrink-0 tablet:mx-3 w-center max-w-[580px]">
+      <div class="flex-grow w-full tablet-lg:h-full h-screen bg-base-100 mx-auto shrink-0 tablet:mx-3 w-center max-w-[580px]">
          <Bonfire.UI.Social.HeaderUserMobileLive 
           page={@page}
           current_user={current_user(assigns)}  />
