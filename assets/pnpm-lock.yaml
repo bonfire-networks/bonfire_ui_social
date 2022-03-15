@@ -1,0 +1,13 @@
+lockfileVersion: 5.3
+
+specifiers:
+  theme-change: ^2.0.2
+
+dependencies:
+  theme-change: 2.0.2
+
+packages:
+
+  /theme-change/2.0.2:
+    resolution: {integrity: sha512-YvQqavf8nlGB3J7PdO0zLLhSLlgYhrqZL6By3FuzFIlWBsPTSPG/V98cHJllK3mmU97Jecei8XYiHalhy2umUw==}
+    dev: false
