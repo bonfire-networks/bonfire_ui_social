@@ -2,10 +2,12 @@
   <Bonfire.UI.Social.HeaderUserLive 
     current_account={current_account(assigns)} 
     current_user={current_user(assigns)} />
-  <div class="flex flex-col items-start w-full px-3 mt-0 lg:mt-16 lg:max-w-screen-xl lg:mx-auto h-body">
-    <Bonfire.UI.Social.HeaderUserMobileLive 
-      page={@page}
-      current_user={current_user(assigns)}  />
-    { @inner_content }
+  <div class="items-start justify-center w-full mt-0 tablet:px-3 lg:mt-16 lg:max-w-screen-xl lg:mx-auto h-body md:flex">
+    <div class="flex-grow w-full h-full mx-auto shrink-0 tablet:mx-3 w-center">
+      <Bonfire.UI.Social.HeaderUserMobileLive 
+        page={@page}
+        current_user={current_user(assigns)}  />
+      { @inner_content }
+    </div>
   </div>
 </div>

@@ -1,5 +1,5 @@
-<div class="sticky top-0 z-40 w-full py-3 lg:hidden bg-base-300">
-  <div class="bg-neutral navbar text-base-content min-h-[48px] rounded">
+<div class="sticky top-0 z-40 w-full tablet:py-3 lg:hidden bg-base-300">
+  <div class="bg-neutral navbar text-base-content min-h-[48px] tablet:rounded">
     <div class="flex justify-between w-full lg:hidden">
       <div class="flex items-center place-content-center">
         <LiveRedirect class="" to={path(Bonfire.Common.Config.get!(:home_page))} >
@@ -40,12 +40,12 @@
           {#elseif current_user(assigns)}
             <Bonfire.UI.Social.MobileUserMenuLive current_user={current_user(assigns)} />    
           {#else}
-            <Link to={path(:login, :index)} class="btn btn-primary btn-sm">
+            <Link to={path(:login, :index)} class="normal-case btn btn-primary btn-sm">
               {l "Login"}
             </Link>
             {#if !Bonfire.Me.Accounts.instance_is_invite_only? }
             <span class="inline-flex ml-3 ">
-              <Link to={path(:signup, :index)} class="btn btn-sm btn-outline btn-secondary">
+              <Link to={path(:signup, :index)} class="normal-case btn btn-sm btn-outline btn-secondary">
                 {l "Signup"}
               </Link>
             </span>

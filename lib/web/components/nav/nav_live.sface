@@ -3,7 +3,7 @@
     <Bonfire.UI.Social.HeaderUserLive 
       page={@page}
       current_user={current_user(assigns)}  />
-    <div class="items-start justify-center w-full px-3 mt-0 lg:mt-16 lg:max-w-screen-xl lg:mx-auto h-body md:flex ">
+    <div class="items-start justify-center w-full mt-0 tablet:px-3 lg:mt-16 lg:max-w-screen-xl lg:mx-auto h-body md:flex ">
       {#if current_user(assigns) }
       <Bonfire.UI.Social.SidebarLive
         current_user={current_user(assigns)}

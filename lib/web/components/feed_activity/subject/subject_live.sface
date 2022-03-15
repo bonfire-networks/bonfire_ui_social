@@ -42,7 +42,7 @@
       </div>
     </div>
     <div class="flex ml-8 grow items-baseline justify-between flex-1 w-[calc(100%_-_4rem)]">
-      <div class="flex-1 items-baseline truncate grow ellipsis text-sm">
+      <div class="items-baseline flex-1 text-sm truncate grow ellipsis">
         <LiveRedirect
           opts={"data-id": "subject_name"}
           aria-label={e(@character, :username, "") <> " profile"}
@@ -51,7 +51,7 @@
           {e(@profile, :name, "Anonymous")}
         </LiveRedirect>
       </div>
-      <div class="flex-0 items-baseline">
+      <div class="items-baseline flex-0">
         <Bonfire.UI.Social.Activity.DateAgoLive 
           :if={!@viewing_main_object}
           permalink={@permalink}
@@ -96,19 +96,20 @@
     <div class="absolute left-3">
       <Bonfire.UI.Social.Activity.AvatarLive profile={@profile} />
     </div>
-    <div class="flex items-baseline justify-between flex-1 w-[calc(100%_-_4rem)]">
+    <div class="flex items-center justify-between">
       <div class="flex items-baseline flex-1 truncate ellipsis text-md">
-      <LiveRedirect
-        opts={"data-id": "subject_name"}
-        aria-label={e(@character, :username, "") <> " profile"}
-        class="font-medium text-base-content hover:underline "
-        to={path(@character)}>
-        {e(@profile, :name, "Anonymous")}
-      </LiveRedirect>
-      <span
-        :if={e(@character, :username, nil)}
-        class="ml-1 text-sm truncate ellipsis text-base-content text-opacity-60 subject_username text-light">@{e(@character, :username, "")}</span>
+        <LiveRedirect
+          opts={"data-id": "subject_name"}
+          aria-label={e(@character, :username, "") <> " profile"}
+          class="font-medium text-base-content hover:underline "
+          to={path(@character)}>
+          {e(@profile, :name, "Anonymous")}
+        </LiveRedirect>
+        <span
+          :if={e(@character, :username, nil)}
+          class="ml-1 text-sm truncate ellipsis text-base-content text-opacity-60 subject_username text-light">@{e(@character, :username, "")}</span>
       </div>
+      <span class="mx-1 text-base-content text-opacity-60">·</span>
       <Bonfire.UI.Social.Activity.DateAgoLive 
         :if={!@viewing_main_object}
         permalink={@permalink}

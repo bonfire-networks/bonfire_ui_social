@@ -1,5 +1,5 @@
 <main class="flex flex-col md:mx-0">
-  <section class="w-full mx-auto rounded shadow bg-base-100">
+  <section class="w-full mx-auto shadow tablet:rounded bg-base-100">
     <Bonfire.UI.Social.PageHeaderLive
       page_title={@page_title}
       before={true}

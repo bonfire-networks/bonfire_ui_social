@@ -1,4 +1,5 @@
 <div
+  :if={current_user(assigns)}
   aria-haspopup="true"
   class={"dropdown  feed_activity",
   "dropdown-end": e(assigns, :showing_within, nil) != :widget,
@@ -39,8 +40,8 @@
           object={subject(assigns)}
           label={name(assigns)}
           id={ComponentID.new(Bonfire.UI.Social.FollowButtonLive, subject(assigns))}
-          class="flex items-center w-full text-sm text-neutral"
-          icon_class="w-4 h-4 mr-2 shrink-0 text-neutral text-opacity-70"
+          class="flex items-center w-full text-sm text-neutral no-padding"
+          icon_class="w-4 h-4 mr-0 shrink-0 text-neutral text-opacity-70"
         />
       </div>
     </li>

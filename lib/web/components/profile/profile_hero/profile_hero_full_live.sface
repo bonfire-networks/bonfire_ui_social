@@ -1,8 +1,8 @@
   <div class="pb-2">
-    <div class="bg-center bg-cover bg-base-300 h-[200px] bg-[url('#{image_url(@user)}')" style={"background-image: url('#{image_url(@user)}')"}></div>
+    <div class="bg-center bg-cover bg-base-300 h-[125px] tablet:h-[200px] bg-[url('#{image_url(@user)}')" style={"background-image: url('#{image_url(@user)}')"}></div>
     <div class="flex items-center justify-between">
       <LazyImage
-        class={"inline-block object-cover -mt-16 rounded-full ring-4 ring-base-100 bg-[#6AA4DA] w-32 h-32 ml-6"}
+        class={"inline-block object-cover -mt-10 tablet:-mt-16 rounded-full ring-4 ring-base-100 bg-[#6AA4DA] w-24 h-24 tablet:w-32 tablet:h-32 ml-3 tablet:ml-6"}
         src={avatar_url(@user)}
         alt="current user profile image"
       />
@@ -13,7 +13,7 @@
           :if={e(@user, :character, :peered, :canonical_uri, nil)}
           href={e(@user, :character, :peered, :canonical_uri, "#")}
           target="_blank"
-          class="btn btn-info btn-circle"
+          class="hidden btn lg:flex btn-info btn-circle"
         >
           <Solid.ExternalLinkIcon class="w-4 h-4" />  
         </a> 
@@ -29,7 +29,7 @@
         <LiveRedirect
           :if={current_user(assigns) && e(current_user(assigns), :id, nil) != maybe_get(@user, :id)}
           to={"/user/#{e(@user, :character, :username, "")}/private"}
-          class="btn btn-sm btn-outline btn-circle"
+          class="hidden btn lg:flex btn-sm btn-outline btn-circle"
         >
           <Solid.MailIcon class="w-4 h-4" />  
         </LiveRedirect> 
@@ -45,38 +45,59 @@
           {l "Settings"}
         </LiveRedirect>
         <div 
-          class="dropdown dropdown-end">
+          aria-haspopup="true"
+          class="dropdown dropdown-end"
+          :if={current_user(assigns) && e(current_user(assigns), :id, nil) != maybe_get(@user, :id)} >
           <label tabindex="0" class="m-1 btn btn-outline btn-sm btn-circle">
             <Solid.DotsHorizontalIcon />
           </label>
           <ul  
-            tabindex="0" 
-            class="rounded shadow w-52 menu dropdown-content bg-neutral-content dropdown_actions">
-            <li
-             class="hover:bg-neutral hover:bg-opacity-20"
-             :if={current_user(assigns) && e(current_user(assigns), :id, nil) != maybe_get(@user, :id) && is_admin?(current_user(assigns))} >
-              <button
-                class="flex items-center p-4 text-sm text-neutral"
-                :if={!is_admin?(@user)} 
-                phx-click="Bonfire.Me.Users:make_admin"
-                phx-value-username_or_id={maybe_get(@user, :id)}
-              >
-                <Outline.KeyIcon class="w-4 h-4 mr-1 text-neutral text-opacity-70" />
-                <span>{l "Make admin"}</span>
-              </button>
-              <button
-                class="flex items-center p-4 text-sm text-neutral"
-                :if={is_admin?(@user)} 
-                phx-click="Bonfire.Me.Users:revoke_admin"
-                phx-value-username_or_id={maybe_get(@user, :id)}
-              >
-                  <Outline.KeyIcon class="w-4 h-4 mr-1 text-neutral text-opacity-70" />
-                  <span>{l "Revoke admin"}</span>
-              </button>
+            tabindex="0"     
+            role="menu"
+            aria-orientation="vertical"
+            class="rounded shadow dropdown_actions w-52 menu dropdown-content bg-neutral-content">
+            <li class="lg:hidden">
+              <div class="">
+                <LiveRedirect class="flex items-center text-sm no-padding text-neutral" to={"/user/#{e(@user, :character, :username, "")}/private"}>
+                  <Solid.MailIcon class="w-4 h-4 mr-2 shrink-0 text-neutral text-opacity-70" />
+                  <span>{l "Send a message"}</span>  
+                </LiveRedirect>
+              </div> 
             </li>
             <li 
-              :if={current_user(assigns) && e(current_user(assigns), :id, nil) != e(@user, :character, :id, nil)}
-              class=" hover:bg-neutral hover:bg-opacity-20">
+              :if={e(@user, :character, :peered, :canonical_uri, nil)}
+              class="lg:hidden">
+              <div>
+                <a
+                  href={e(@user, :character, :peered, :canonical_uri, "#")}
+                  target="_blank"
+                  class="flex items-center text-sm no-padding text-neutral"
+                >
+                  <Solid.ExternalLinkIcon class="w-4 h-4 mr-2 shrink-0 text-neutral text-opacity-70" />
+                  <span>{l "Visit the original url"}</span>  
+                </a> 
+              </div>
+            </li>
+            <li
+              phx-click="Bonfire.Me.Users:make_admin"
+              phx-value-username_or_id={maybe_get(@user, :id)}
+              :if={is_admin?(current_user(assigns)) && !is_admin?(@user)} >
+              <label class="flex items-center gap-0">
+                <Outline.KeyIcon class="w-4 h-4 mr-2 shrink-0 text-neutral text-opacity-70" />
+                <span class="text-sm text-neutral">{l "Make admin"}</span>
+              </label>
+            </li>
+            <li
+              :if={is_admin?(current_user(assigns)) && is_admin?(@user)} 
+              phx-click="Bonfire.Me.Users:revoke_admin"
+              phx-value-username_or_id={maybe_get(@user, :id)}
+            >
+              <label class="flex items-center gap-0">
+                <Outline.KeyIcon class="w-4 h-4 mr-2 shrink-0 text-neutral text-opacity-70" />
+                <span class="text-sm text-neutral">{l "Revoke admin"}</span>
+              </label>
+            </li>
+            <li>
               <Bonfire.UI.Social.FlagActionLive 
                 object={@user}
                 label={l("Flag")<>" "<>e(@user, :profile, :name, "this user")}
