@@ -1,4 +1,4 @@
-<div class="flex-col justify-end hidden w-full space-y-4 tablet:flex tablet:w-72">
+<div class="sticky flex-col justify-end hidden w-full mt-3 space-y-4 top-3 tablet:mt-0 tablet:flex tablet:w-72">
   <Bonfire.UI.Social.HomeBannerLive />
   <Bonfire.UI.Social.WidgetLive 
     widget_title="Timelines"
