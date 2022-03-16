@@ -9,7 +9,8 @@
     tabindex="0"
     class="feed_activity_action">
     <span class="feed_activity_icon">
-      <svg 
+      <Solid.DotsHorizontalIcon class="w-4 h-4" />
+      <!-- <svg 
       viewBox="0 0 24 24" 
       width="24" 
       height="24" 
@@ -19,7 +20,7 @@
       stroke-linecap="round" 
       stroke-linejoin="round" 
       class="w-4 h-4">
-      <circle cx="12" cy="12" r="1"></circle><circle cx="19" cy="12" r="1"></circle><circle cx="5" cy="12" r="1"></circle></svg>
+      <circle cx="12" cy="12" r="1"></circle><circle cx="19" cy="12" r="1"></circle><circle cx="5" cy="12" r="1"></circle></svg> -->
       <!-- <Solid.DotsHorizontalIcon class="w-4 h-4" /> -->
     </span>
   </div>
@@ -32,6 +33,22 @@
 
     <#slot name="extra_items" />
 
+    <!-- Copy the activity -->
+    <li 
+      class=" hover:bg-neutral hover:bg-opacity-20">
+      <div class="">
+        <div class="flex items-center w-full text-sm text-neutral no-padding">
+          <Solid.ClipboardIcon
+          class={"w-4 h-4 mr-2 shrink-0 text-neutral text-opacity-70"} />
+          <span 
+            class={"truncate ellipsis"}>
+            {l "Copy the post"}
+          </span>
+        </div>
+      </div>
+    </li>
+
+    <!-- Follow the author-->
     <li 
       :if={e(current_user(assigns), :id, nil) != subject_id(assigns)}
       class=" hover:bg-neutral hover:bg-opacity-20">
@@ -45,7 +62,10 @@
         />
       </div>
     </li>
-    <!-- <div class="h-0 my-0 divider"></div>  -->
+
+    <div class="h-px my-0 divider bg-opacity-40 bg-neutral"></div> 
+    
+    <!-- Flag the action -->
     <li 
       :if={e(current_user(assigns), :id, nil) != e(@activity, :subject, :character, :id, nil) and @verb !="flag"}
       class=" hover:bg-neutral hover:bg-opacity-20">
@@ -56,12 +76,29 @@
         class="flex items-center py-2 text-sm text-neutral"
       />
     </li>
-    <Bonfire.UI.Social.BlockMenuButtonsLive
-        object={subject(assigns)}
-        peered={e(@object, :peered, nil)}
-      />
-    <!-- <div class="h-0 my-0 divider"></div>   -->
+
+    <!-- Flag the author -->
     <li 
+      :if={e(current_user(assigns), :id, nil) != e(@activity, :subject, :character, :id, nil) and @verb !="flag"}
+      class=" hover:bg-neutral hover:bg-opacity-20">
+      <Bonfire.UI.Social.FlagActionLive 
+        object={@object}
+        flagged={@flagged}
+        label={l("Flag ")<>" "<>name(assigns)}
+        class="flex items-center py-2 text-sm text-neutral"
+      />
+    </li>
+
+    <!-- Block the author & Block the author instance wide-->
+    <Bonfire.UI.Social.BlockMenuButtonsLive
+      object={subject(assigns)}
+      peered={e(@object, :peered, nil)}
+    />
+
+    <div 
+      :if={e(current_user(assigns), :id, nil) != subject_id(assigns)}
+      class="h-px my-0 divider bg-opacity-40 bg-neutral"></div> 
+    <!-- <li 
       :if={e(current_user(assigns), :id, nil) == e(@activity, :subject, :character, :id, nil) or Bonfire.Me.Users.is_admin?(current_user(assigns))}
       class=" hover:bg-neutral hover:bg-opacity-20">
       <OpenModalLive
@@ -71,7 +108,7 @@
         {l "You may be able to undo this deletion in some cases, but the data will eventually be permanently deleted."}
         <:open_btn>
           <button class="flex items-center text-sm text-neutral" type="button">
-            <Outline.TrashIcon class="w-4 h-4 mr-2 shrink-0 text-neutral text-opacity-70" />
+            <Solid.TrashIcon class="w-4 h-4 mr-2 shrink-0 text-neutral text-opacity-70" />
             <span class="truncate ellipsis">
               {l("Delete this")<>" "<>(if @verb in ["write", "create"], do: l("from feeds"), else: @verb)}
             </span>
@@ -82,13 +119,15 @@
           phx-click={"Bonfire.Social.Objects:delete"} 
           phx-value-id={e(@activity, :id, "")}
           class="btn btn-error">
-          <Outline.TrashIcon class="w-4 h-4 mr-2 shrink-0 text-neutral text-opacity-70" />
+          <Solid.TrashIcon class="w-4 h-4 mr-2 shrink-0 text-neutral text-opacity-70" />
           <span class="truncate ellipsis">{l("Delete this")<>" "<>(if @verb in ["write", "create"], do: l("from feeds"), else: @verb)}</span> 
         </button>
         </:action_btns>
       </OpenModalLive>
-    </li>
+    </li> -->
 
+
+    <!-- Delete the post -->
     <li 
       :if={e(current_user(assigns), :id, nil) == e(@activity, :subject, :character, :id, nil) or Bonfire.Me.Users.is_admin?(current_user(assigns))}
       class=" hover:bg-neutral hover:bg-opacity-20">
@@ -99,7 +138,7 @@
         {l "You may be able to undo this deletion in some cases, but the data will eventually be permanently deleted."}
         <:open_btn>
           <button class="flex items-center text-sm text-neutral" type="button">
-            <Outline.TrashIcon class="w-4 h-4 mr-2 shrink-0 text-neutral text-opacity-70" />
+            <Solid.TrashIcon class="w-4 h-4 mr-2 shrink-0 text-neutral text-opacity-70" />
             <span class="truncate ellipsis">
               {l("Delete this")<>" "<>e(assigns, :object_type_readable, l "object")}
             </span>
@@ -110,7 +149,7 @@
           phx-click={"Bonfire.Social.Objects:delete"} 
           phx-value-id={e(@object, :id, "")}
           class="btn btn-error">
-          <Outline.TrashIcon class="w-4 h-4 mr-2 shrink-0 text-neutral text-opacity-70" />
+          <Solid.TrashIcon class="w-4 h-4 mr-2 shrink-0 text-neutral text-opacity-70" />
           <span class="truncate ellipsis">{l("Delete this")<>" "<>e(assigns, :object_type_readable, l "object")}</span>
         </button>
         </:action_btns>

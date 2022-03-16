@@ -7,7 +7,7 @@
       class="fixed inset-0 transition-opacity bg-base-100 bg-opacity-60" 
       aria-hidden="true">
     </div>
-    <div class="modal-box">
+    <div class="modal-box card bg-neutral text-neutral-content">
 
       <h3 class={e(assigns, :title_class, nil)} id={"#{@id}-title"}>
         <#slot name="title">{e(assigns, :title_text, nil)}</#slot>
@@ -16,9 +16,9 @@
         <button 
           :on-click="close"
           type="button" 
-          class="btn btn-circle btn-outline btn-xs">
+          class="normal-case btn btn-ghost btn-circle btn-sm">
           <span class="sr-only">Close</span>
-          <Outline.XIcon />
+          <Outline.XIcon class="w-4 h-4" />
         </button>
       </div>
 

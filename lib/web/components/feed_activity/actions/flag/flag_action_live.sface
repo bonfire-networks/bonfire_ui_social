@@ -14,7 +14,7 @@
     {l "The admins will review the content and might get in touch with you or the author for clarification. They may then delete it and/or block the person or originating instance if appropriate."}
     <:open_btn>
       <button class="flex items-center text-sm text-neutral" type="button">
-        <Outline.FlagIcon class="w-4 h-4 mr-2 shrink-0 text-neutral text-opacity-70" />
+        <Solid.FlagIcon class="w-4 h-4 mr-2 shrink-0 text-neutral text-opacity-70" />
         <span class="truncate ellipsis"> {e(assigns, :label, l "Flag this object")}</span>
       </button>
     </:open_btn>

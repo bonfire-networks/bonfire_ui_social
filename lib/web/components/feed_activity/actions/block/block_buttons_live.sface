@@ -3,13 +3,13 @@
     <Bonfire.UI.Social.BlockButtonLive
         object={@object}
         scope={e(assigns, :scope, nil)}
-        block_type={:ghost}
-        label={l("Ghost")<>" "<>@label}
+        block_type={:block}
+        label={l("Block")<>" "<>@label}
         class={@class}
     />
 
 </li>
-<li class=" hover:bg-neutral hover:bg-opacity-20">
+<!-- <li class=" hover:bg-neutral hover:bg-opacity-20">
 
     <Bonfire.UI.Social.BlockButtonLive
         object={@object}
@@ -19,4 +19,4 @@
         class={@class}
     />
 
-</li>
+</li> -->
