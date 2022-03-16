@@ -3,7 +3,6 @@
     <label
       tabindex="0"
       class="btn btn-circle btn-sm btn-ghost text-base-content text-opacity-80"
-      type="button"
       id="user-profile-menu"
       aria-haspopup="true"
       aria-expanded="true"

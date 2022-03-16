@@ -118,7 +118,7 @@
           {e(@user, :profile, :name, "Anonymous")}
 
             <span
-              :if={Utils.module_enabled?(Bonfire.Me.SharedUsers) && e(@user, :shared_user, :label, nil)} 
+              :if={module_enabled?(Bonfire.Me.SharedUsers) && e(@user, :shared_user, :label, nil)} 
               class="-mt-1 text-sm font-light text-primary-content-400 pull-right"
             >
               {e(@user, :shared_user, :label, "")}

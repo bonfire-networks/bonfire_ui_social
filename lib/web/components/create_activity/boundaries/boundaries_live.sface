@@ -6,7 +6,6 @@
     x-model="boundary_selected" />
   <label
     tabindex="0"
-    type="button"
     class="flex items-center focus:outline-none"
     >
     <div

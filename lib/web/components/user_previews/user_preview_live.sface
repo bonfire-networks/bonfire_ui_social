@@ -17,7 +17,7 @@
           <div class="flex items-center space-x-2">
             <span class="text-lg font-bold text-base-content">{e(@user, :profile, :name, "Anonymous")}</span>
             <span
-              :if={Utils.module_enabled?(Bonfire.Me.SharedUsers) && e(@user, :shared_user, :label, nil)} 
+              :if={module_enabled?(Bonfire.Me.SharedUsers) && e(@user, :shared_user, :label, nil)} 
               class="badge badge-secondary badge-outline"
             >
               {e(@user, :shared_user, :label, "")}
