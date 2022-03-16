@@ -38,7 +38,6 @@
         like_count={e(@activity, :like_count, nil)} 
       />
       <Bonfire.UI.Social.Activity.MoreActionsLive
-        id={ComponentID.new(Bonfire.UI.Social.LikeActionLive, @object)} 
         object={@object} 
         activity={@activity} 
         verb={@verb}

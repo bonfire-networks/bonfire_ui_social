@@ -22,12 +22,9 @@ defmodule Bonfire.UI.Social.ActivityLive do
     activity = activity
                 # |> debug("Activity provided")
                 |> Map.put(:object, object(assigns, activity))
-                # |> debug("Activity with object")
+                # |> dump("Activity with object")
 
-    verb = e(activity, :verb, :verb, "create")
-            |> maybe_to_string()
-            |> String.downcase()
-            |> Activities.verb_maybe_modify(activity)
+    verb = Activities.verb_maybe_modify(e(activity, :verb, "create"), activity)
             |> debug("verb modified")
     verb_display = Activities.verb_display(verb)
     created_verb_display = Activities.verb_display("create")
@@ -300,7 +297,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
   def component_actions(_, _, _), do: []
 
   # WIP: Customize actions for each activity type
-  def actions_for_object_type(activity, type) when type in [Bonfire.Data.Identity.User, Bonfire.Data.Identity.Character], do: []
+  def actions_for_object_type(activity, type) when type in [Bonfire.Data.Identity.User, Bonfire.Data.Identity.Character], do: [Bonfire.UI.Social.Activity.MoreActionsLive]
   def actions_for_object_type(activity, type) when type in [Bonfire.Data.Social.Flag], do: []
   def actions_for_object_type(activity, type) when type in [Bonfire.Data.Social.Post, Bonfire.Data.Social.PostContent], do: component_show_standard_actions(activity)
   def actions_for_object_type(activity, type) when type in [ValueFlows.EconomicEvent], do: component_show_event_actions(activity)

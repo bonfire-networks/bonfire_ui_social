@@ -93,5 +93,15 @@
       </p>
     </div>
   </LiveRedirect>
+
+  <button 
+  :if={@verb=="request to follow"}
+  :on-click="Bonfire.Social.Follows:accept" 
+  phx-value-id={e(@activity, :id, nil)}
+  type="button" 
+  class="btn ml-3">
+    Accept
+  </button>
+
 </div>
 {/if}

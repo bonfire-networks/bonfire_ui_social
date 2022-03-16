@@ -13,7 +13,7 @@ defmodule Bonfire.UI.Social.Activity.MoreActionsLive do
   prop showing_within, :any, default: :feed
 
   def subject(assigns) do
-    e(assigns, :object, :created, :creator, nil) || e(assigns, :activity, :subject, nil)
+    e(assigns, :activity, :subject, nil) || e(assigns, :object, :created, :creator, nil)
   end
   def subject_id(assigns) do
     e(subject(assigns), :id, nil)
