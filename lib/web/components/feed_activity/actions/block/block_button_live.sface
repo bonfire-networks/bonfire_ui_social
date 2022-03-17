@@ -107,7 +107,7 @@
     :if={Bonfire.Me.Users.is_admin?(current_user(assigns))}
     class="flex flex-col p-2 mt-4 space-y-3 border rounded bg-base-100 border-error">
     <div class="">
-      <div class="text-base font-semibold">{l "Admin super power"}</div>
+      <div class="text-base font-semibold">{l "Admin super powers"}</div>
       <p class="mt-0 text-sm"> 
         <em>{l "Warning: you are acting as admin to enforce this block for all users of this instance."}</em>
       </p>
