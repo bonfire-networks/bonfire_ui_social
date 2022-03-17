@@ -98,7 +98,7 @@
     <div 
       :if={e(current_user(assigns), :id, nil) != subject_id(assigns)}
       class="h-px my-0 divider bg-opacity-40 bg-neutral"></div> 
-    <!-- <li 
+    <li 
       :if={e(current_user(assigns), :id, nil) == e(@activity, :subject, :character, :id, nil) or Bonfire.Me.Users.is_admin?(current_user(assigns))}
       class=" hover:bg-neutral hover:bg-opacity-20">
       <OpenModalLive
@@ -124,7 +124,7 @@
         </button>
         </:action_btns>
       </OpenModalLive>
-    </li> -->
+    </li>
 
 
     <!-- Delete the post -->
