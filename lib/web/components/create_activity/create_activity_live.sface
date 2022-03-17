@@ -77,11 +77,11 @@
           </div>
         </Inputs>
         <div class="">
-        
+          <Bonfire.UI.Social.BoundariesLive />
           <div class="flex items-center justify-between p-2 space-x-2 rounded-b bg-neutral bg-opacity-30 sm:px-3">
             <div class="flex items-center flex-1 space-x-3">
             
-              <!-- <div 
+              <div 
                 data-tip="Upload an image" 
                 class="relative z-20 flex items-center tooltip tooltip-bottom" >
                 <button
@@ -89,7 +89,7 @@
                   class="btn btn-ghost btn-square btn-sm tooltip tooltip-bottom">
                   <Solid.PaperClipIcon class="w-4 h-4 mx-auto text-base-content text-opacity-70" />
                 </button>
-              </div> -->
+              </div>
               <div 
                 data-tip="Add a content warning" 
                 class="relative z-20 flex items-center tooltip tooltip-bottom">
@@ -102,8 +102,17 @@
                   <span class="text-xs font-medium text-base-content text-opacity-70">CW</span>
                 </button>
               </div>
-              <Bonfire.UI.Social.BoundariesLive 
-              />
+              <div 
+                data-tip="Full-screen mode" 
+                class="relative z-20 flex items-center tooltip tooltip-bottom">
+                <LivePatch
+                  to="/write"
+                  class="btn btn-ghost btn-square btn-sm">
+                  <Solid.EyeIcon class="w-4 h-4 text-opacity-70 text-base-content" />
+                </LivePatch>
+              </div>
+
+              
 
             </div>
 

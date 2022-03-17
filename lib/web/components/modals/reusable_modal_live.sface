@@ -17,7 +17,7 @@
           :on-click="close"
           type="button" 
           class="normal-case btn btn-ghost btn-circle btn-sm">
-          <span class="sr-only">Close</span>
+          <span class="sr-only">{l "Close"}</span>
           <Outline.XIcon class="w-4 h-4" />
         </button>
       </div>
@@ -30,7 +30,7 @@
         <#slot name="action_btns"></#slot>
         <div :on-click="close">
           <#slot name="cancel_btn">
-            <button class={e(assigns, :cancel_btn_class, nil)} type="button">Cancel</button>
+            <button class={e(assigns, :cancel_btn_class, nil)} type="button">{l "Cancel"}</button>
           </#slot>
         </div>
     </div>
