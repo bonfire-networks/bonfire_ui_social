@@ -1,5 +1,5 @@
 <div class="flex flex-col mt-3">
-  <div class="flex items-center px-4 py-3 pb-3 border-b rounded-t border-base-300 bg-base-100">
+  <div class="flex items-center px-4 py-3 pb-3 border-t border-b border-base-300 bg-base-100">
     <div class="flex items-center flex-1 space-x-2">
       <div class="text-base font-semibold text-base-content">{l "Discussion"}</div>
       <!-- <label class="input-group">
@@ -26,15 +26,6 @@
       <button class="btn btn-xs bg-base-200 text-base-content border-base-300 ">Tree view</button> 
     </div>  -->
   </div>
-<!-- <div class="p-3 border-t border-base-300">
-  <Bonfire.UI.Social.CreateActivityLive
-    smart_input_text={@smart_input_text}
-    smart_input_prompt={@smart_input_prompt}
-    thread_id={@thread_id}
-    reply_to_id={@reply_to_id}
-    showing_within={:thread}
-  />
-</div> -->
 {#if length(@threaded_replies) > 0}
   <div data-id="replies" class="flex flex-col bg-base-100">
     
