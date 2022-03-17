@@ -105,7 +105,7 @@
 
   <div 
     :if={Bonfire.Me.Users.is_admin?(current_user(assigns))}
-    class="flex flex-col p-2 mt-4 space-y-3 border rounded bg-base-100 border-error">
+    class="flex flex-col p-2 mt-4 space-y-3 border rounded border-error">
     <div class="">
       <div class="text-base font-semibold">{l "Admin super powers"}</div>
       <p class="mt-0 text-sm"> 

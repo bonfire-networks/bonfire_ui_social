@@ -4,10 +4,10 @@
   :attrs={e(assigns, :opts, [])}>
     <div
       :on-click="close"
-      class="fixed inset-0 transition-opacity bg-base-100 bg-opacity-60" 
+      class="fixed inset-0 transition-opacity bg-base-100 bg-opacity-20" 
       aria-hidden="true">
     </div>
-    <div class="modal-box card bg-neutral text-neutral-content">
+    <div class="relative border-4 modal-box border-base-content border-opacity-20">
 
       <h3 class={e(assigns, :title_class, nil)} id={"#{@id}-title"}>
         <#slot name="title">{e(assigns, :title_text, nil)}</#slot>
