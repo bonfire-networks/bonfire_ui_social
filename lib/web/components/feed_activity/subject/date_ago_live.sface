@@ -1,20 +1,18 @@
 {#if @viewing_main_object}
 <div class="flex items-center space-x-1 ">
-
   <div class="text-sm text-base-content text-opacity-80">
     <span class="capitalize">{e(@verb_display, "")}</span>
-    <LiveRedirect class="subject_timestamp text-base-content text-opacity-80" to={permalink(assigns)}> 
-      {@date_ago}
-
-      <BoundaryIconLive 
-        id={ComponentID.new(BoundaryIconLive, @object)} 
-        object={@object} 
-        permalink={permalink(assigns)} 
-      />
-    </LiveRedirect>
   </div>
-
-
+  <LiveRedirect class="flex items-center subject_timestamp text-base-content text-opacity-80" to={permalink(assigns)}> 
+    <span>
+    {@date_ago}
+    </span>
+    <BoundaryIconLive 
+      id={ComponentID.new(BoundaryIconLive, @object)} 
+      object={@object} 
+      permalink={permalink(assigns)} 
+    />
+  </LiveRedirect>
 </div>
 
 {#else}
