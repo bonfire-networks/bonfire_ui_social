@@ -5,7 +5,7 @@
         <h1 class="font-medium capitalize text-md">{@page_title}</h1> 
       </#slot>
     </Bonfire.UI.Social.PageHeaderLive>
-    <div class="md:mx-0 text-base-content lg:mt-0">
+    <div class="md:mx-0 text-base-content lg:mt-0 bg-base-100">
       <Bonfire.UI.Social.FeedLive 
         id={@feed_id}
         feed={@feed}
