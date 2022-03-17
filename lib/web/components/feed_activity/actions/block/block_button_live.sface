@@ -1,66 +1,145 @@
 {#if !e(assigns, :my_block, nil) }
 
 <Bonfire.UI.Social.OpenModalLive
-id={ComponentID.new(Bonfire.UI.Social.OpenModalLive, @object)} 
-title_text={e(assigns, :label, l "Block")<>(if e(assigns, :scope, nil)=="instance_wide", do: " "<> l("instance-wide"), else: "")}
->
-    <p :if={e(assigns, :scope, nil)=="instance_wide"}>
+  id={ComponentID.new(Bonfire.UI.Social.OpenModalLive, @object)} 
+  title_text={e(assigns, :label, l "Block")<>(if e(assigns, :scope, nil)=="instance_wide", do: " "<> l("instance-wide"), else: "")}
+  >
+ 
+  <div class="mt-2 text-base">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis quis lectus sed nunc rutrum vestibulum vel a nibh.</div>
+  <div class="flex flex-col mt-3 space-y-3">
+    <div class="form-control">
+      <label class="items-start justify-start pb-1 cursor-pointer label">
+        <input type="checkbox" checked="checked" class="checkbox checkbox-primary checkbox-sm">
+        <div class="ml-2 label-text">
+          <div class="text-base font-semibold">{l "Silence bea"}</div>
+          <div class="text-base">{l "Prevent you from interacting with bea and bea’s contents"}</div>
+        </div> 
+      </label>
+      <div 
+        x-data="{active: false}"
+        role="region"
+        class="ml-9">
+        <button 
+          x-on:click="active = ! active"
+          :aria-expanded="active"
+          class="flex items-center w-full text-sm">
+          <span x-show="!active" class="underline">{l "Read more"}</span>
+          <span x-show="active" class="underline">{l "Read less"}</span>
+          <span x-show="active" aria-hidden="true" class="ml-2">&minus;</span>
+          <span x-show="!active" aria-hidden="true" class="ml-2">&plus;</span>
+        </button>
+        <div x-show="active" x-collapse>
+          <div class="block mt-3">
+            <p class="font-semibold">
+              {l "Silencing means"}        
+            </p>
+            <ul class="block pl-4 mt-1 list-disc">
+              <li>
+                  {l "You won't see anything they write/create in feeds."} 
+              </li>
+              <li>
+                  {l "You will still be able to view their profile or read their posts using direct links."} 
+              </li>
+              <li>
+                  {l "You won't see any @ mentions or messages they send you."} 
+              </li>
+              <li>
+                  {l "You won't be able to follow them."} 
+              </li>
+              <li>
+                  {l "You will be able to undo this later but may not be able to see any activities you missed."}
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="form-control">
+      <label class="items-start justify-start pb-1 cursor-pointer label">
+        <input type="checkbox" checked="checked" class="checkbox checkbox-primary checkbox-sm">
+        <div class="ml-2 label-text">
+          <div class="text-base font-semibold">{l "Ghost bea"}</div>
+          <div class="text-base">{l "Prevent bea from interacting with you and your contents"}</div>
+        </div> 
+      </label>
+      <div 
+        x-data="{active: false}"
+        role="region"
+        class="ml-9">
+        <button 
+          x-on:click="active = ! active"
+          :aria-expanded="active"
+          class="flex items-center w-full text-sm">
+          <span x-show="!active" class="underline">{l "Read more"}</span>
+          <span x-show="active" class="underline">{l "Read less"}</span>
+          <span x-show="active" aria-hidden="true" class="ml-2">&minus;</span>
+          <span x-show="!active" aria-hidden="true" class="ml-2">&plus;</span>
+        </button>
+        <div x-show="active" x-collapse>
+          <div class="block mt-3">
+            <p class="font-semibold">
+              {l "Ghosting means"}        
+            </p>
+            <ul class="block pl-4 mt-1 list-disc">
+              <li>
+                {l "Things you post privately won't be shown to them from now on."} 
+              </li>
+              <li>
+                {l "They stll will be able to see things you post publicly."} 
+              </li>
+              <li>
+                {l "You won't be able to @ mention or message them."} 
+              </li>
+              <li>
+                {l "They won't be able to follow you."} 
+              </li>
+              <li>
+                {l "You will be able to undo this later but they may not be able to see any activities they missed."}
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div 
+    :if={Bonfire.Me.Users.is_admin?(current_user(assigns))}
+    class="flex flex-col p-2 mt-4 space-y-3 border rounded border-error">
+    <div class="">
+      <div class="text-base font-semibold">{l "Admin super powers"}</div>
+      <p class="mt-0 text-sm"> 
         <em>{l "Warning: you are acting as admin to enforce this block for all users of this instance."}</em>
-    </p>
-    <p :if={@block_type==:silence}>
-        {l "Silencing means:"}        
-    </p>
-    <p :if={@block_type==:ghost}>
-        {l "Ghosting means:"}        
-    </p>
-
-    <ul class="list-disc">
-        <li :if={@block_type==:ghost}>
-            {l "Things you post privately won't be shown to them from now on."} 
-        </li>
-        <li :if={@block_type==:ghost}>
-            {l "They stll will be able to see things you post publicly."} 
-        </li>
-
-        <li :if={@block_type==:silence}>
-            {l "You won't see anything they write/create in feeds."} 
-        </li>
-        <li :if={@block_type==:silence}>
-            {l "You will still be able to view their profile or read their posts using direct links."} 
-        </li>
-
-        <li :if={@block_type==:ghost}>
-            {l "You won't be able to @ mention or message them."} 
-        </li>
-        <li :if={@block_type==:silence}>
-            {l "You won't see any @ mentions or messages they send you."} 
-        </li>
-
-        <li :if={@block_type==:ghost}>
-            {l "They won't be able to follow you."} 
-        </li>
-        <li :if={@block_type==:silence}>
-            {l "You won't be able to follow them."} 
-        </li>
-
-        <li :if={@block_type==:ghost}>
-            {l "You will be able to undo this later but they may not be able to see any activities they missed."}
-        </li>
-        <li :if={@block_type==:silence}>
-            {l "You will be able to undo this later but may not be able to see any activities you missed."}
-        </li>
-    </ul>
-
-
+      </p>
+    </div>
+    <div class="form-control">
+      <label class="items-start justify-start pb-1 cursor-pointer label">
+        <input type="checkbox" checked="checked" class="checkbox checkbox-primary checkbox-sm">
+        <div class="ml-2 label-text">
+          <div class="text-sm font-semibold">{l "Silence bea instance-wide"}</div>
+          <div class="text-sm">{l "Prevent any user in this instance from interacting with bea and bea’s contents"}</div>
+        </div> 
+      </label>
+    </div>
+    <div class="form-control">
+      <label class="items-start justify-start pb-1 cursor-pointer label">
+        <input type="checkbox" checked="checked" class="checkbox checkbox-primary checkbox-sm">
+        <div class="ml-2 label-text">
+          <div class="text-sm font-semibold">{l "Ghost bea instance-wide"}</div>
+          <div class="text-sm">{l "Prevent bea from interacting with any user in this instance"}</div>
+        </div> 
+      </label>
+    </div>
+  </div>
+   
+   
     <:open_btn>
         <button 
-        type="button" 
-        class={e(assigns, :class, "btn btn-sm btn-outline rounded-full")}>
-
-        <Solid.VolumeOffIcon 
-            :if={@block_type==:silence} 
+          type="button" 
+          class={e(assigns, :class, "btn btn-sm btn-outline rounded-full")}>
+          <Solid.BanIcon
             class="w-4 h-4 mr-2 shrink-0 text-neutral text-opacity-70" />
-        <svg
+            <!-- <svg
             :if={@block_type==:ghost} 
             data-credit="https://commons.wikimedia.org/wiki/File:Ghostlogo.svg"
             class="w-4 h-4 mr-2 shrink-0 text-neutral text-opacity-70"
@@ -83,7 +162,7 @@ title_text={e(assigns, :label, l "Block")<>(if e(assigns, :scope, nil)=="instanc
                 d="m 277.53086,576.79031 c -4.31611,-1.18908 -3.40833,-11.41601 0.9484,-14.82809 3.15334,-2.18868 4.72925,-0.42114 5.78722,0.32277 -4.75022,-1.39718 -4.32732,7.90364 0.60065,5.86884 -0.55907,6.0162 -2.7665,9.43892 -7.33627,8.6365 l 0,-2e-5 z"
                 style="fill:#000000;fill-opacity:1;stroke:#000000;stroke-width:0.50199574;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none" />
             </g>
-            </svg>
+            </svg> -->
 
             <!-- <Outline.BanIcon 
                 :if={e(assigns, :scope, nil) !="instance_wide"} 
@@ -92,12 +171,14 @@ title_text={e(assigns, :label, l "Block")<>(if e(assigns, :scope, nil)=="instanc
                 :if={e(assigns, :scope, nil)=="instance_wide"} 
                 class="w-4 h-4 mr-2 shrink-0 text-neutral text-opacity-70" /> -->
 
-        <span class="text-left truncate ellipsis">{e(assigns, :label, l "Block")}</span>
+          <span class="text-left truncate ellipsis">
+            {e(assigns, :label, l "Block") <>(if e(assigns, :scope, nil)=="instance_wide", do: " "<> l("instance-wide"), else: "")} 
+          </span>
         </button>
     </:open_btn>
 
     <:action_btns>
-        <button 
+      <button 
         data-id="block"
         :on-click="Bonfire.Boundaries:block" 
         phx-value-id={e(@object, :id, @object)} 
@@ -105,8 +186,8 @@ title_text={e(assigns, :label, l "Block")<>(if e(assigns, :scope, nil)=="instanc
         phx-value-scope={e(assigns, :scope, nil)} 
         type="button" 
         class="btn btn-error">
-            <span class="text-left truncate ellipsis">{e(assigns, :label, l "Block")<>(if e(assigns, :scope, nil)=="instance_wide", do: " "<> l("instance-wide"), else: "")}</span>
-        </button>
+        <span class="text-left truncate ellipsis">{e(assigns, :label, l "Block")<>(if e(assigns, :scope, nil)=="instance_wide", do: " "<> l("instance-wide"), else: "")}</span>
+      </button>
     </:action_btns>
 </Bonfire.UI.Social.OpenModalLive>
 
