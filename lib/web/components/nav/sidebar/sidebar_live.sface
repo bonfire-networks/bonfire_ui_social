@@ -2,7 +2,7 @@
 <nav
   role="navigation"
   class="flex-col justify-end hidden mt-0 tablet:flex w-72">
-  <div class="fixed top-3 lg:top-16 bottom-[16px] w-72">
+  <div class="fixed top-3 lg:top-[62px] bottom-[16px] w-72">
     <div class="w-full h-full">
       <div class="flex flex-col space-y-4">
         <div 
@@ -19,7 +19,7 @@
           />
         </div>
 
-        <Bonfire.UI.Social.WidgetLive 
+        <!-- <Bonfire.UI.Social.WidgetLive 
           widget_title="Notifications"
           current_user={current_user(assigns)}
         >
@@ -47,7 +47,7 @@
             current_user={current_user(assigns)}
             id="widget_direct_messages"
           />
-        </Bonfire.UI.Social.WidgetLive>
+        </Bonfire.UI.Social.WidgetLive> -->
             
         <!-- <Bonfire.UI.Social.WidgetLive 
           widget_title="Admins"

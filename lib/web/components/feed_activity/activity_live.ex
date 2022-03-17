@@ -72,7 +72,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
       class={
       "activity relative pl-16",
       "showing_within:feed ": e(assigns, :showing_within, nil) == :feed,
-      "main_reply_to mb-2 p-2 mt-2 relative border-l-4 border-l-base-300 border border-base-200 rounded-sm bg-base-300 bg-opacity-20": e(@object, :id, nil) != nil and e(@activity, :replied, :reply_to_id, nil) == nil and e(@activity, :id, nil) == nil and e(assigns, :showing_within, nil) != :widget  and e(assigns, :showing_within, nil) != :search, # showing a quoted reply_to
+      "main_reply_to mb-2 p-2 mt-2 relative border-l-4 border-l-base-300 border border-base-200 rounded-sm bg-base-300 bg-opacity-50": e(@object, :id, nil) != nil and e(@activity, :replied, :reply_to_id, nil) == nil and e(@activity, :id, nil) == nil and e(assigns, :showing_within, nil) != :widget  and e(assigns, :showing_within, nil) != :search, # showing a quoted reply_to
       "pl-14 showing_within:thread": e(assigns, :showing_within, nil) == :thread,
       "main_reply_to mt-4 mb-2": e(@object, :id, nil) != nil and e(@activity, :replied, :reply_to_id, nil) == nil and e(@activity, :id, nil) == nil and e(assigns, :showing_within, nil) == :widget, # showing a quoted reply_to within a widget
       "pl-0 showing_within:widget": e(assigns, :showing_within, nil) == :widget,
