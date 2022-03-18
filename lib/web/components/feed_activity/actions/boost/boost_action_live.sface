@@ -5,17 +5,17 @@
   phx-click={"#{if e(assigns, :my_boost , nil), do: "Bonfire.Social.Boosts:undo", else: "Bonfire.Social.Boosts:boost"}"}
   phx-value-id={e(@object, :id, nil)}
   phx-value-component={__MODULE__}
-  class="feed_activity_action boost">
+  class="btn btn-ghost btn-sm btn-circle boost">
 
   {#if e(assigns, :showing_within, nil) != :thread}
-  <span class={"feed_activity_icon", "text-info": e(assigns, :my_boost, nil)}>
+  <span class={"text-base-content text-opacity-70", "text-opacity-100 text-info": e(assigns, :my_boost, nil)}>
 
     <svg 
       viewBox="0 0 24 24" 
       width="24" 
       height="24" 
       stroke="currentColor" 
-      stroke-width="1" 
+      stroke-width="2" 
       fill="none" 
       stroke-linecap="round" 
       stroke-linejoin="round" 

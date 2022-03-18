@@ -36,6 +36,24 @@
       class="block mb-2 text-sm truncate rounded shadow-lg alert alert-info ellipsis ">
       {@smart_input_prompt || ""}  
     </div>
+
+    <div :if={@activity_id} class="relative p-3 mb-4 border-4 rounded shadow bg-base-100 border-opacity-20">
+      <div class="relative">
+        <div class="flex items-center mr-10">
+          <Bonfire.UI.Social.Activity.AvatarLive comment />
+          <div class="ml-2 text-sm font-semibold text-base-content">Carl</div>
+          <div class="ml-1 text-sm font-light truncate text-base-content text-opacity-70 ellipsis">@carl@bonjour.bonfirenetworks.org</div>
+        </div>
+        <span class="absolute top-0 right-0 btn btn-ghost btn-xs btn-circle">
+          <Outline.XIcon class="w-4 h-4" />
+        </span>
+      </div>
+      <div class="mt-2 leading-5 prose-sm prose text-opacity-80">
+        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis quis lectus sed nunc rutrum vestibulum vel a nibh. Suspendisse laoreet rhoncus elit in auctor.
+      </div>
+      <!-- {@activity_id} -->
+    </div>
+
     
     <div class="rounded-md shadow bg-base-100">
       <div class="relative">

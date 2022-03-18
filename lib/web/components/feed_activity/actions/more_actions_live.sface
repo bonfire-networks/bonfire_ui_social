@@ -1,27 +1,17 @@
 <div
   :if={current_user(assigns)}
   aria-haspopup="true"
-  class={"dropdown  feed_activity",
+  class={"dropdown  feed_activity relative z-20",
   "dropdown-end": e(assigns, :showing_within, nil) != :widget,
   "dropdown-top dropdown-end showing_within:widget": e(assigns, :showing_within, nil) == :widget
   }>
   <div 
+    type="button"
+    role="button"
     tabindex="0"
-    class="feed_activity_action">
-    <span class="feed_activity_icon">
+    class="btn btn-ghost btn-sm btn-circle">
+    <span class="text-base-content text-opacity-70">
       <Solid.DotsHorizontalIcon class="w-4 h-4" />
-      <!-- <svg 
-      viewBox="0 0 24 24" 
-      width="24" 
-      height="24" 
-      stroke="currentColor" 
-      stroke-width="1" 
-      fill="none" 
-      stroke-linecap="round" 
-      stroke-linejoin="round" 
-      class="w-4 h-4">
-      <circle cx="12" cy="12" r="1"></circle><circle cx="19" cy="12" r="1"></circle><circle cx="5" cy="12" r="1"></circle></svg> -->
-      <!-- <Solid.DotsHorizontalIcon class="w-4 h-4" /> -->
     </span>
   </div>
   <ul

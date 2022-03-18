@@ -20,6 +20,7 @@
           smart_input_prompt={@smart_input_prompt}
           smart_input_text={@smart_input_text}
           current_user={@current_user}
+          id={:create_activity_form}
         />
       {/if}    
     </div>

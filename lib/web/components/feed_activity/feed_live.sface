@@ -17,18 +17,15 @@
       data-id="feed" 
       phx-update={e(assigns, :feed_update_mode, "append")} 
       class="divide-y divide-base-300">
-      <article
+      <div
         :for={entry <- @feed}
         id={Atom.to_string(e(assigns, :showing_within, :feed))<> ":activity:" <> e(entry, :id, e(entry, :activity, :id, e(entry, :activity, :object, :id, nil))) || "unknown-"<>Pointers.ULID.generate}
-        role="article"
-        tabIndex="0"
-        class="p-3"
-        aria-label="user activity">
+        >
         <ActivityLive 
           activity={e(entry, :activity, entry)}
           showing_within={e(assigns, :showing_within, nil)}
           />
-      </article>
+      </div>
     </div>
 
       <Bonfire.UI.Social.LoadMoreLive 

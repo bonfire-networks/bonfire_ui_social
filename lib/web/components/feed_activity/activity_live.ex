@@ -66,6 +66,13 @@ defmodule Bonfire.UI.Social.ActivityLive do
 
 
     ~F"""
+    <article
+      phx-click="Bonfire.Social.Posts:open_activity"
+      phx-value-id={@permalink}
+      aria-label="user activity"
+      role="article"
+      tabIndex="0"
+      class="p-3 cursor-pointer hover:bg-neutral-content hover:bg-opacity-5">
     <div
       class={
       "activity relative pl-16",
@@ -100,6 +107,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
         />
       {/for}
     </div>
+    </article>
     """
   end
 

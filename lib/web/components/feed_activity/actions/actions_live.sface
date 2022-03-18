@@ -10,7 +10,7 @@
       }>
 
     <div class={"flex items-center justify-between", "mt-3": e(assigns, :viewing_main_object, nil)}>
-      {#if e(assigns, :viewing_main_object, nil) != true and e(assigns, :showing_within, nil) != :thread}
+      <!-- {#if e(assigns, :viewing_main_object, nil) != true and e(assigns, :showing_within, nil) != :thread}
         <Bonfire.UI.Social.Activity.ViewThreadLive 
           permalink={@permalink} 
           replied={e(@activity, :replied, nil)}
@@ -26,7 +26,16 @@
           reply_smart_input_text={@reply_smart_input_text}
           reply_to_text={text_only(e(@object, :post_content, :name, nil) || e(@object, :post_content, :summary, nil) || e(@object, :post_content, :html_body, e(@object, :id, "")))}
         />
-      {/if}
+      {/if} -->
+      <Bonfire.UI.Social.Activity.ReplyLive 
+        permalink={@permalink} 
+        replied={e(@activity, :replied, nil)}
+        showing_within={e(assigns, :showing_within, nil)}
+        hide_reply={e(assigns, :hide_reply, nil )}
+        object_id={e(@object, :id, "no-object")}
+        reply_smart_input_text={@reply_smart_input_text}
+        reply_to_text={text_only(e(@object, :post_content, :name, nil) || e(@object, :post_content, :summary, nil) || e(@object, :post_content, :html_body, e(@object, :id, "")))}
+      />
       <BoostActionLive 
         id={ComponentID.new(BoostActionLive, @object)} 
         object={@object} 

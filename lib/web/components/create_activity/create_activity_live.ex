@@ -1,5 +1,5 @@
 defmodule Bonfire.UI.Social.CreateActivityLive do
-  use Bonfire.Web, :stateless_component
+  use Bonfire.Web, :stateful_component
   use Bonfire.Common.Utils
   alias Surface.Components.Form.TextArea
   alias Surface.Components.Form
@@ -18,6 +18,22 @@ defmodule Bonfire.UI.Social.CreateActivityLive do
   prop showing_within, :any
   prop with_editor, :boolean, required: false
   prop textarea_class, :string, default: "textarea prose prose-sm"
+  prop activity_id, :string
+
+
+  def update(%{activity_id: activity_id} = assigns, socket) do
+    IO.inspect "updating..."
+    socket = assign(socket, activity_id: activity_id)
+    {:ok, socket
+    |> assign(assigns)
+    }
+    # {:ok, assign(socket, activity_id: activity_id)}
+  end
+
+    
+  def update(assigns, socket) do
+   {:ok, socket |> assign(assigns)}
+  end
 
   def with_editor?(assigns) do
     case e(assigns, :with_editor, nil) do

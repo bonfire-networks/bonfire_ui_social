@@ -6,10 +6,10 @@
   phx-value-id={e(@object, :id, nil)}
   phx-value-component={__MODULE__}
   phx-value-current_count={e(@like_count, 0)}
-  class="like feed_activity_action like_with_label">
+  class="like btn btn-ghost btn-sm btn-circle like_with_label">
 
   <span 
-     class={"feed_activity_icon", "text-yellow-500": e(@my_like, nil)}
+     class={"text-base-content text-opacity-70", "text-yellow-500 text-opacity-100": e(@my_like, nil)}
     :if={e(assigns, :showing_within, nil) != :thread}>
     <Solid.StarIcon 
       :if={e(@my_like, nil)}
@@ -20,7 +20,7 @@
       width="24" 
       height="24" 
       stroke="currentColor" 
-      stroke-width="1"
+      stroke-width="2"
       fill="none" 
       stroke-linecap="round" 
       stroke-linejoin="round" 
@@ -33,13 +33,13 @@
 
   <span 
     :if={!e(@my_like, nil)}
-    class="sr-only feed_activity_text">
+    class="sr-only">
       {l "Like"}
       <!-- <span :if={(e(@like_count, 0)) > 0}>{e(@like_count, 0)}</span> -->
   </span>
   <span 
     :if={e(@my_like, nil)}
-    class="sr-only feed_activity_text">
+    class="sr-only">
       {l "Liked"}
       <!-- <span :if={(e(@like_count, 0)) > 0}>{e(@like_count, 0)}</span> -->
   </span>
