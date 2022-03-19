@@ -18,18 +18,24 @@ defmodule Bonfire.UI.Social.CreateActivityLive do
   prop showing_within, :any
   prop with_editor, :boolean, required: false
   prop textarea_class, :string, default: "textarea prose prose-sm"
-  prop activity_id, :string
+  prop activity, :list
+  prop object, :list
 
-
-  def update(%{activity_id: activity_id} = assigns, socket) do
-    IO.inspect "updating..."
-    socket = assign(socket, activity_id: activity_id)
+  def update(%{activity: activity, object: object} = assigns, socket) do
+    socket = assign(socket, activity: activity)
     {:ok, socket
     |> assign(assigns)
     }
     # {:ok, assign(socket, activity_id: activity_id)}
   end
 
+  def update(%{activity: activity, object: object} = assigns, socket) do
+    socket = assign(socket, activity: activity)
+    {:ok, socket
+    |> assign(assigns)
+    }
+    # {:ok, assign(socket, activity_id: activity_id)}
+  end
     
   def update(assigns, socket) do
    {:ok, socket |> assign(assigns)}

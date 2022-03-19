@@ -1,5 +1,11 @@
 {#if e(@object, :id, nil) != nil and e(@activity, :replied, :reply_to_id, nil) == nil and e(@activity, :id, nil) == nil}
   <div></div>
+{#elseif  e(assigns, :showing_within, nil) == :create_activity_form}
+  <span 
+    phx-click="Bonfire.Social.Posts:remove_data"
+    class="absolute top-2 right-2 btn btn-ghost btn-xs btn-circle">
+    <Outline.XIcon class="w-4 h-4" />
+  </span>
 {#else}
   <div 
     :if={e(assigns, :showing_within, nil) != :notifications} 
@@ -29,6 +35,7 @@
       {/if} -->
       <Bonfire.UI.Social.Activity.ReplyLive 
         permalink={@permalink} 
+        activity={e(assigns, :activity, nil)}
         replied={e(@activity, :replied, nil)}
         showing_within={e(assigns, :showing_within, nil)}
         hide_reply={e(assigns, :hide_reply, nil )}

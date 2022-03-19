@@ -7,5 +7,6 @@
     showing_within={@showing_within}
     feed_update_mode={@feed_update_mode}
     hide_load_more={true}
+    class="pl-0 showing_within:widget"
   />
 </div>

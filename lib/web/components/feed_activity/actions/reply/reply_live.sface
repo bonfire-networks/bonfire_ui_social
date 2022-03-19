@@ -13,7 +13,7 @@
   <div class="flex items-center">
     <div 
       phx-click="Bonfire.Social.Posts:add_data"
-      phx-value-activity_id={@object_id}>
+      phx-value-activity={e(assigns, :activity, :id, nil)}>
       <div class="btn btn-ghost btn-sm btn-circle"> 
         <span class="text-base-content text-opacity-70">
           <!-- <Outline.ReplyIcon class="w-4 h-4 stroke-1" /> -->

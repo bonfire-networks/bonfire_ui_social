@@ -1,5 +1,5 @@
 defmodule Bonfire.UI.Social.ActivityLive do
-  use Bonfire.Web, :stateless_component
+  use Bonfire.Web, :stateful_component
 
   alias Bonfire.Social.Activities
   import Where
@@ -9,12 +9,27 @@ defmodule Bonfire.UI.Social.ActivityLive do
   prop viewing_main_object, :boolean, default: false
   prop showing_within, :any, default: :feed
   prop hide_reply, :boolean, default: false
+  prop class, :string, default: ""
 
   # TODO: put in config and/or autogenerate with Verbs genserver
   @reply_verbs ["reply","respond"]
   @create_verbs ["create"]
   @react_verbs ["like", "boost", "flag"]
   @create_or_reply_verbs @create_verbs ++ @reply_verbs
+
+
+  
+  def update(%{activity_id: activity_id} = assigns, socket) do
+    send_update(Bonfire.UI.Social.CreateActivityLive, [activity: e(socket, :assigns, :activity, nil), object: e(socket, :assigns, :object, nil), id: :create_activity_form])
+    {:ok, socket |> assign(assigns)}
+    # {:ok, assign(socket, activity_id: activity_id)}
+  end
+
+    
+  def update(assigns, socket) do
+   {:ok, socket |> assign(assigns)}
+  end
+
 
   def render(%{activity: %{} = activity} = assigns) do
     # debug(assigns, "ActivityLive initial assigns")
@@ -67,46 +82,40 @@ defmodule Bonfire.UI.Social.ActivityLive do
 
     ~F"""
     <article
-      phx-click="Bonfire.Social.Posts:open_activity"
-      phx-value-id={@permalink}
-      aria-label="user activity"
-      role="article"
-      tabIndex="0"
-      class="p-3 cursor-pointer hover:bg-neutral-content hover:bg-opacity-5">
-    <div
-      class={
-      "activity relative pl-16",
-      "showing_within:feed ": e(assigns, :showing_within, nil) == :feed,
-      "main_reply_to mb-2 p-2 mt-2 relative border-l-4 border-l-base-300 border border-base-200 rounded-sm bg-base-300 bg-opacity-50": e(@object, :id, nil) != nil and e(@activity, :replied, :reply_to_id, nil) == nil and e(@activity, :id, nil) == nil and e(assigns, :showing_within, nil) != :widget  and e(assigns, :showing_within, nil) != :search, # showing a quoted reply_to
-      "pl-14 showing_within:thread": e(assigns, :showing_within, nil) == :thread,
-      "main_reply_to mt-4 mb-2": e(@object, :id, nil) != nil and e(@activity, :replied, :reply_to_id, nil) == nil and e(@activity, :id, nil) == nil and e(assigns, :showing_within, nil) == :widget, # showing a quoted reply_to within a widget
-      "pl-0 showing_within:widget": e(assigns, :showing_within, nil) == :widget,
-      "showing_within:notifications": e(assigns, :showing_within, nil) == :notifications,
-      "showing_within:search": e(assigns, :showing_within, nil) == :search,
-      "reply": e(@object, :id, nil) != nil and e(@activity, :replied, :reply_to_id, nil) != nil and e(@activity, :id, nil) != nil,
-      }>
-      {#for {component, component_assigns} when is_atom(component) <- e(assigns, :activity_object_components, [])}
-        <Surface.Components.Dynamic.Component
-          module={component}
-          activity={e(component_assigns, :activity, @activity)}
-          object={e(component_assigns, :object, @object)}
-          object_id={e(component_assigns, :object_id, @object_id)}
-          object_type={e(component_assigns, :object_type, @object_type)}
-          object_type_readable={e(component_assigns, :object_type_readable, @object_type_readable)}
-          date_ago={e(component_assigns, :date_ago, @date_ago)}
-          verb={e(component_assigns, :verb, @verb)}
-          verb_display={e(component_assigns, :verb_display, @verb_display)}
-          permalink={e(component_assigns, :permalink, @permalink)}
-          viewing_main_object={e(component_assigns, :viewing_main_object, e(assigns, :viewing_main_object, false))}
-          hide_reply={e(component_assigns, :hide_reply, e(assigns, :hide_reply, false))}
-          created_verb_display={@created_verb_display}
-          showing_within={e(assigns, :showing_within, :feed)}
-          profile={e(component_assigns, :profile, nil)}
-          character={e(component_assigns, :character, nil)}
-          reply_smart_input_text={e(component_assigns, :reply_smart_input_text, nil)}
-        />
-      {/for}
-    </div>
+        phx-click="Bonfire.Social.Posts:open_activity"
+        phx-value-id={@permalink}
+        phx-value-showing_within={e(assigns, :showing_within, :feed)}
+        aria-label="user activity"
+        role="article"
+        tabIndex="0">
+      <div
+        class={
+        "p-3 cursor-pointer hover:bg-neutral-content hover:bg-opacity-5 activity relative pl-16 " <> @class,
+        "main_reply_to mb-2 p-2 mt-2 relative border-l-4 border-l-base-300 border border-base-200 rounded-sm bg-base-300 bg-opacity-50": e(@object, :id, nil) != nil and e(@activity, :replied, :reply_to_id, nil) == nil and e(@activity, :id, nil) == nil and e(assigns, :showing_within, nil) != :widget  and e(assigns, :showing_within, nil) != :search, # showing a quoted reply_to
+        "reply": e(@object, :id, nil) != nil and e(@activity, :replied, :reply_to_id, nil) != nil and e(@activity, :id, nil) != nil,
+        }>
+        {#for {component, component_assigns} when is_atom(component) <- e(assigns, :activity_object_components, [])}
+          <Surface.Components.Dynamic.Component
+            module={component}
+            activity={e(component_assigns, :activity, @activity)}
+            object={e(component_assigns, :object, @object)}
+            object_id={e(component_assigns, :object_id, @object_id)}
+            object_type={e(component_assigns, :object_type, @object_type)}
+            object_type_readable={e(component_assigns, :object_type_readable, @object_type_readable)}
+            date_ago={e(component_assigns, :date_ago, @date_ago)}
+            verb={e(component_assigns, :verb, @verb)}
+            verb_display={e(component_assigns, :verb_display, @verb_display)}
+            permalink={e(component_assigns, :permalink, @permalink)}
+            viewing_main_object={e(component_assigns, :viewing_main_object, e(assigns, :viewing_main_object, false))}
+            hide_reply={e(component_assigns, :hide_reply, e(assigns, :hide_reply, false))}
+            created_verb_display={@created_verb_display}
+            showing_within={e(assigns, :showing_within, :feed)}
+            profile={e(component_assigns, :profile, nil)}
+            character={e(component_assigns, :character, nil)}
+            reply_smart_input_text={e(component_assigns, :reply_smart_input_text, nil)}
+          />
+        {/for}
+      </div>
     </article>
     """
   end

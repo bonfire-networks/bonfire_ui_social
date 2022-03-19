@@ -21,6 +21,7 @@
               activity={Map.drop(activity, [:object])}
               object={object}
               showing_within={:thread}
+              class="pl-14 showing_within:thread"
             />
 
           {#match %{activity: %{object: object} = activity}}
@@ -28,6 +29,7 @@
               activity={Map.drop(activity, [:object])}
               object={object}
               showing_within={:thread}
+              class="pl-14 showing_within:thread"
             />
           {#match _}
             <div class="p-3">

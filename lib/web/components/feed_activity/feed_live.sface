@@ -22,6 +22,7 @@
         id={Atom.to_string(e(assigns, :showing_within, :feed))<> ":activity:" <> e(entry, :id, e(entry, :activity, :id, e(entry, :activity, :object, :id, nil))) || "unknown-"<>Pointers.ULID.generate}
         >
         <ActivityLive 
+          id={"activity_component_" <> e(entry, :activity, :id, "")}
           activity={e(entry, :activity, entry)}
           showing_within={e(assigns, :showing_within, nil)}
           />

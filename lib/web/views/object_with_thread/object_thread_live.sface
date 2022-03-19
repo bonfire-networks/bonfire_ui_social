@@ -5,14 +5,14 @@
       before={true}
     />
     <Bonfire.UI.Social.BannerPreviousThreadLive activity={@activity} />
-    <div class="p-3">
-      <Bonfire.UI.Social.ActivityLive
-        id={"main-"<> e(@thread_id, "")}
-        viewing_main_object={true}
-        activity={@activity}
-        object={@object}
-      />
-    </div>
+    <Bonfire.UI.Social.ActivityLive
+      id={"activity_component_"<> e(@thread_id, "")}
+      viewing_main_object={true}
+      activity={@activity}
+      showing_within={:thread}
+      object={@object}
+      class="cursor-default hover:bg-base-100"
+    />
   </section>
   
   <div>
