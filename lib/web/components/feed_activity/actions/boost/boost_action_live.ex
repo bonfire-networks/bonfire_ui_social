@@ -1,7 +1,7 @@
 defmodule Bonfire.UI.Social.Activity.BoostActionLive do
   use Bonfire.Web, :stateful_component
 
-  prop object, :map
+  prop object, :any
   prop boost_count, :any
 
   def preload(list_of_assigns), do: Bonfire.Social.Boosts.LiveHandler.preload(list_of_assigns)

@@ -2,7 +2,7 @@ defmodule Bonfire.UI.Social.Activity.ProviderReceiverLive do
   use Bonfire.Web, :stateless_component
 
   prop activity, :map
-  prop object, :map
+  prop object, :any
   prop date_ago, :any
   prop permalink, :string
 

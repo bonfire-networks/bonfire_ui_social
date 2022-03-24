@@ -1,7 +1,7 @@
 defmodule Bonfire.UI.Social.LikeActionWithoutLabelLive do
   use Bonfire.Web, :stateful_component
 
-  prop object, :map
+  prop object, :any
   prop like_count, :any
 
   def preload(list_of_assigns), do: Bonfire.Social.Likes.LiveHandler.preload(list_of_assigns)

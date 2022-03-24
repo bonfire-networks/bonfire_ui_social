@@ -4,7 +4,7 @@ defmodule Bonfire.UI.Social.CommentLive do
 
   prop comment, :map
   prop activity, :map, default: %{}
-  prop object, :map, default: %{}
+  prop object, :any, default: %{}
   prop thread_level, :any
   prop child_replies, :any
   prop thread_id, :any

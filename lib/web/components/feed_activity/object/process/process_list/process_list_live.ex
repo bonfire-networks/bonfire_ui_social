@@ -3,7 +3,7 @@ defmodule Bonfire.UI.Social.Activity.ProcessListLive do
   alias Surface.Components.LivePatch
 
 
-  prop object, :map, required: true
+  prop object, :any, required: true
   prop showing_within, :any
 
   def activity_component(object) do
