@@ -78,7 +78,7 @@
           aria-labelledby="multiselect_label">
 
             <li
-            :for={{name_content, id} <- @preloaded_options}
+            :for={{name_content, id} <- e(assigns, :preloaded_options, [])}
             class="p-2 text-sm text-primary-content-800 cursor-pointer hover:bg-neutral hover:bg-opacity-30  "
             role="option"
             tabindex="1"

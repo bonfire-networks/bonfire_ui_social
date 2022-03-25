@@ -5,6 +5,7 @@ defmodule Bonfire.UI.Social.Activity.ProcessListLive do
 
   prop object, :any, required: true
   prop showing_within, :any
+  prop process_url, :string
 
   def activity_component(object) do
     {__MODULE__,

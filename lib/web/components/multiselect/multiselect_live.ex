@@ -4,7 +4,7 @@ defmodule Bonfire.UI.Social.MultiselectLive do
 
   prop form_input_name, :string, required: true
   prop label, :string, default: ""
-  prop preloaded_options, :list, default: []
+  prop preloaded_options, :any, default: []
   prop selected_options, :any, default: []
   prop focus_event, :string, required: false
   # prop autocomplete_event, :string, required: false
