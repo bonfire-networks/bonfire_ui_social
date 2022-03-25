@@ -21,8 +21,8 @@ defmodule Bonfire.UI.Social.CreateActivityLive do
   prop activity, :list
   prop object, :list
 
-  def update(%{activity: activity, object: object} = assigns, socket) do
-    socket = assign(socket, activity: activity)
+  def update(%{activity: activity, object: object, reply_to_id: reply_to_id, thread_id: thread_id} = assigns, socket) do
+    socket = assign(socket, activity: activity, reply_to_id: reply_to_id, thread_id: thread_id)
     {:ok, socket
     |> assign(assigns)
     }
@@ -55,4 +55,12 @@ defmodule Bonfire.UI.Social.CreateActivityLive do
     do: "reply",
     else: "#{create_activity_type}"
   end
+
+
+
+  defdelegate handle_params(params, attrs, socket), to: Bonfire.Common.LiveHandlers
+  def handle_event(action, attrs, socket), do: Bonfire.Common.LiveHandlers.handle_event(action, attrs, socket, __MODULE__)
+  def handle_info(info, socket), do: Bonfire.Common.LiveHandlers.handle_info(info, socket, __MODULE__)
+
+
 end

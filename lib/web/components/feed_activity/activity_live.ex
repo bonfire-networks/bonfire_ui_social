@@ -20,7 +20,13 @@ defmodule Bonfire.UI.Social.ActivityLive do
 
   
   def update(%{activity_id: activity_id} = assigns, socket) do
-    send_update(Bonfire.UI.Social.CreateActivityLive, [activity: e(socket, :assigns, :activity, nil), object: e(socket, :assigns, :object, nil), id: :create_activity_form])
+    send_update(Bonfire.UI.Social.CreateActivityLive, 
+      [
+        reply_to_id: activity_id,
+        thread_id: activity_id,
+        activity: e(socket, :assigns, :activity, nil), 
+        object: e(socket, :assigns, :object, nil), 
+        id: :create_activity_form])
     {:ok, socket |> assign(assigns)}
     # {:ok, assign(socket, activity_id: activity_id)}
   end
