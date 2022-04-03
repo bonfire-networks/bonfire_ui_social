@@ -2,7 +2,7 @@
 <li
   class="hover:bg-neutral hover:bg-opacity-20 text-neutral"
   :if={current_user(assigns)}>
-  <LiveRedirect to={path(current_user(assigns))} class="flex items-center p-4 text-sm text-neutral">
+  <LiveRedirect to={path(current_user(assigns) |> dump)} class="flex items-center p-4 text-sm text-neutral">
     {l "My Profile"}
   </LiveRedirect>
 </li>
