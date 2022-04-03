@@ -84,9 +84,16 @@
         </LiveRedirect>
       </div>
       <span>
+        <BoundaryIconLive 
+        id={ComponentID.new(BoundaryIconLive, @object)} 
+        object={@object} 
+        permalink={@permalink} 
+        />
+
         <LiveRedirect class="ml-1 text-xs text-base-content text-opacity-60 subject_username text-light" to={@permalink}>
           {@date_ago}
         </LiveRedirect>
+        
       </span>
     </div>
   </div>

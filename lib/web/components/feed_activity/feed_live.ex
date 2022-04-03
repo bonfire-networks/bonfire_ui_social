@@ -57,7 +57,7 @@ defmodule Bonfire.UI.Social.FeedLive do
     socket = assign(socket, assigns)
     current_user = current_user(socket)
 
-    assigns = if module_enabled?(Bonfire.Social.Web.Feeds.BrowseLive), do: Bonfire.Social.Web.Feeds.BrowseLive.default_feed(socket),
+    assigns = if module_enabled?(Bonfire.Social.Web.Feeds.HomeLive), do: Bonfire.Social.Feeds.LiveHandler.default_feed_assigns(socket),
     else: []
 
     # debug(assigns: assigns)

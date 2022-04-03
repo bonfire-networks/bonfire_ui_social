@@ -4,7 +4,7 @@ defmodule Bonfire.UI.Social.ThreadLive do
   alias Bonfire.Fake
   alias Bonfire.Web.LivePlugs
   alias Bonfire.Me.Users
-  alias Bonfire.Me.Web.{CreateUserLive, LoggedDashboardLive}
+  alias Bonfire.Me.Web.CreateUserLive
   # import Bonfire.Me.Integration
 
 
@@ -28,8 +28,7 @@ defmodule Bonfire.UI.Social.ThreadLive do
   end
 
   def update(%{new_reply: new_reply} = assigns, socket) when is_map(new_reply) do
-    debug("ThreadLive: adding new reply")
-    # debug(merge_reply: previous_replies)
+    debug(new_reply, "ThreadLive: adding new reply")
 
     new_reply = new_reply
       |> Map.put(:path, e(new_reply, :replied, :path, e(new_reply, :activity, :replied, :path, [])))
@@ -100,7 +99,7 @@ defmodule Bonfire.UI.Social.ThreadLive do
       ) #|> IO.inspect
     )}
   end
-  
+
 
 
   def handle_event(action, attrs, socket), do: Bonfire.Common.LiveHandlers.handle_event(action, attrs, socket, __MODULE__)
