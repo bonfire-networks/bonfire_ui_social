@@ -6,8 +6,8 @@ defmodule Bonfire.UI.Social.BlockButtonLive do
   prop my_block, :any
   prop class, :string
   prop label, :string
-  prop scope, :string
-  prop block_type, :atom
+  prop scope, :any # only used for unblock
+  prop block_type, :any # only used for unblock
 
   # def preload(list_of_assigns), do: Bonfire.Boundaries.LiveHandler.preload(list_of_assigns)
 

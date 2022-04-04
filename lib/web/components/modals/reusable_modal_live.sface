@@ -2,6 +2,7 @@
   class={"modal "<>(if e(assigns, :show, nil), do: "modal-open", else: "")}
   id={@id}
   :attrs={e(assigns, :opts, [])}>
+  <form {...e(assigns, :form_opts, [])}>
     <div
       :on-click="close"
       class="fixed inset-0 transition-opacity bg-base-100 bg-opacity-20" 
@@ -35,5 +36,6 @@
         </div>
     </div>
   </div>  
+  </form>
 </div>
 

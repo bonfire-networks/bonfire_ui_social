@@ -53,7 +53,6 @@
       </div>
       <div class="items-baseline flex-0">
         <Bonfire.UI.Social.Activity.DateAgoLive 
-          :if={!@viewing_main_object}
           permalink={@permalink}
           date_ago={@date_ago}
           object={@object}
@@ -62,7 +61,7 @@
       </div>
     </div>
   </div>
-{#elseif e(assigns, :showing_within, nil) == :thread}
+{#elseif e(assigns, :showing_within, nil) == :thread && !@viewing_main_object}
   <div class={"flex items-center", "pl-1": e(@activity, :replied, :reply_to_id, nil)}>
     <div class="absolute left-4">
       <div class="align-middle avatar">
@@ -81,6 +80,9 @@
           class="font-medium text-base-content hover:underline"
           to={path(@character)}>
           {e(@profile, :name, "Anonymous")}
+          <span class="ml-1 text-xs text-base-content text-opacity-60 text-light">
+            @{e(@character, :username, "")}
+          </span>
         </LiveRedirect>
       </div>
       <span>
@@ -90,7 +92,7 @@
         permalink={@permalink} 
         />
 
-        <LiveRedirect class="ml-1 text-xs text-base-content text-opacity-60 subject_username text-light" to={@permalink}>
+        <LiveRedirect class="ml-1 text-xs text-base-content text-opacity-60 text-light" to={@permalink}>
           {@date_ago}
         </LiveRedirect>
         

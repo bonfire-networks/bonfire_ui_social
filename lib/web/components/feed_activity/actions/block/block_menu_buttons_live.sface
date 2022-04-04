@@ -1,38 +1,17 @@
-<Bonfire.UI.Social.BlockButtonsLive
-  :if={current_user(assigns) && e(current_user(assigns), :id, nil) != e(@object, :character, :id, nil)}
+<li class=" hover:bg-neutral hover:bg-opacity-20">
+<Bonfire.UI.Social.BlockButtonLive
+  :if={current_user(assigns) && e(current_user(assigns), :id, nil) != e(@object, :id, nil)}
   object={@object}
   label={e(@object, :profile, :name, l "this user")}
   class="flex items-center w-full text-sm text-neutral"
 />
+</li>
 
-<Bonfire.UI.Social.BlockButtonsLive
+<li class=" hover:bg-neutral hover:bg-opacity-20">
+<Bonfire.UI.Social.BlockButtonLive
   :if={current_user(assigns) && e(peered(assigns), :peer_id, nil)}
   object={e(peered(assigns), :peer_id, nil)}
   label={URI.parse(e(peered(assigns), :canonical_uri, "#")).host}
   class="flex items-center w-full text-sm text-neutral"
 />
-
-
-
-<!-- <div 
-  :if={current_user(assigns) && e(current_user(assigns), :id, nil) != e(@object, :id, nil) && Bonfire.Me.Users.is_admin?(current_user(assigns))}
-  class=" hover:bg-neutral hover:bg-opacity-20">
-
-  
-
-      <Bonfire.UI.Social.BlockButtonsLive
-        object={@object}
-        scope="instance_wide"
-        label={e(@object, :profile, :name, l "this user")}
-        class="flex items-center w-full text-sm text-neutral"
-      />
-
-      <Bonfire.UI.Social.BlockButtonsLive
-        :if={e(peered(assigns), :peer_id, nil)}
-        object={e(peered(assigns), :peer_id, nil)}
-        scope="instance_wide"
-        label={URI.parse(e(peered(assigns), :canonical_uri, "#")).host}
-        class="flex items-center w-full text-sm text-neutral"
-      />
-
-</div> -->
+</li>

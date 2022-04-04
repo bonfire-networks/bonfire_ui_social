@@ -19,6 +19,8 @@ defmodule Bonfire.UI.Social.ReusableModalLive do
   @doc "Force modal to be open"
   prop show, :boolean, default: false
 
+  prop form_opts, :any, default: []
+
   @doc """
   Additional attributes to add onto the modal wrapper
   """

@@ -24,7 +24,7 @@
     <#slot name="extra_items" />
 
     <!-- Copy the activity -->
-    <li 
+    <!-- <li 
       class=" hover:bg-neutral hover:bg-opacity-20">
       <div class="">
         <div class="flex items-center w-full text-sm text-neutral no-padding">
@@ -36,7 +36,7 @@
           </span>
         </div>
       </div>
-    </li>
+    </li> -->
 
     <!-- Follow the author-->
     <li 

@@ -17,12 +17,12 @@ defmodule Bonfire.UI.Social.OpenModalLive do
   @doc "Force modal to be open"
   prop show, :boolean, default: false
 
+  prop form_opts, :any, default: []
 
   @doc """
   Additional attributes to add onto the modal wrapper
   """
   prop opts, :keyword, default: []
-
 
   @doc """
   Slots for the contents of the modal, title, buttons...
