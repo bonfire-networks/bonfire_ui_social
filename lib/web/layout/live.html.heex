@@ -1,11 +1,5 @@
 <div 
   id="layout-live" 
-  x-data={"{
-    smart_input_prompt: '#{e(assigns, :smart_input_prompt, l "Write something...")}',
-    reply_to_id: window.location.hash && window.location.hash !='' ? window.location.hash : '#{e(assigns, :reply_to_id, "")}',
-    thread_id: '#{e(assigns, :thread_id, "")}',
-    smart_input_text: '#{e(assigns, :smart_input_text, nil)}'
-  }"}
 >
   <% info = live_flash(@flash, :info) %>
   <% error = live_flash(@flash, :error) %>
