@@ -18,6 +18,7 @@
         {#case @comment}
           {#match %{__struct__: Bonfire.Data.Social.Activity, object: object} = activity}
             <Bonfire.UI.Social.ActivityLive
+              id={e(@comment, :id, "ca")<>":"<>e(activity, :id, "")}
               activity={Map.drop(activity, [:object])}
               object={object}
               showing_within={:thread}
@@ -26,6 +27,7 @@
 
           {#match %{activity: %{object: object} = activity}}
             <Bonfire.UI.Social.ActivityLive
+              id={e(@comment, :id, "ca")<>":"<>e(activity, :id, "")}
               activity={Map.drop(activity, [:object])}
               object={object}
               showing_within={:thread}

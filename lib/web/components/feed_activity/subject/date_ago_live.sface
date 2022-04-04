@@ -18,9 +18,15 @@
 {#else}
 <div class="flex items-center space-x-2">
   <div class="relative z-20 text-xs text-base-content text-opacity-60">
-    <span :if={e(assigns, :showing_within, nil) != :widget} class="hidden capitalize lg:inline">{e(@verb_display, "")}</span>
+    <span :if={e(assigns, :showing_within, nil) not in [:widget, :create_activity_form]} class="hidden capitalize lg:inline">
+      {@verb_display}
+    </span>
+    
     <LiveRedirect class="subject_timestamp text-base-content text-opacity-60" to={permalink(assigns)}>
-      {@date_ago}
+      <span :if={e(assigns, :showing_within, nil) not in [:create_activity_form]}>
+        {@date_ago}
+      </span>
+
       <BoundaryIconLive 
         id={ComponentID.new(BoundaryIconLive, @object)} 
         object={@object} 
@@ -28,8 +34,6 @@
       />
     </LiveRedirect>
   </div>
-
-
 
 </div>
 {/if}

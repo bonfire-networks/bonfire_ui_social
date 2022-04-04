@@ -6,27 +6,34 @@
   class="feed">
     <div class="flex flex-col mx-auto max-w-7xl">
 
-    <div :if={not is_list(@feed) or length(@feed) == 0} class="p-4 text-center">
-      <div class="mb-3 text-3xl">🧐</div>
-      <span class="text-base font-medium text-base-content">{l "Take a deep breath..."}</span>
-    </div>
-      
     <div 
       :if={is_list(@feed) or length(@feed) > 0}
-      id={"feed:"<>@id} 
+      id={"feed:"<>e(assigns, :feed_id, @id)} 
       data-id="feed" 
       phx-update={e(assigns, :feed_update_mode, "append")} 
       class="divide-y divide-base-300">
-      <div
-        :for={entry <- @feed}
-        id={Atom.to_string(e(assigns, :showing_within, :feed))<> ":activity:" <> e(entry, :id, e(entry, :activity, :id, e(entry, :activity, :object, :id, nil))) || "unknown-"<>Pointers.ULID.generate}
-        >
-        <ActivityLive 
-          id={"activity_component_" <> e(entry, :activity, :id, "")}
-          activity={e(entry, :activity, entry)}
-          showing_within={e(assigns, :showing_within, nil)}
-          />
+      {#for entry <- @feed}
+        {#case e(assigns, :feed_id, @id)<>"-"<>( e(entry, :activity, :id, nil) || e(entry, :id, nil) || Pointers.ULID.generate )}
+          {#match cid}
+            <div
+              id={cid}
+              >
+              <ActivityLive 
+                id={cid}
+                activity={e(entry, :activity, entry)}
+                showing_within={e(assigns, :showing_within, nil)}
+                />
+            </div>
+          {#match _}
+            
+        {/case}
+
+      {#else}
+        <div class="p-4 text-center">
+          <div class="mb-3 text-3xl">🧐</div>
+          <span class="text-base font-medium text-base-content">{l "Take a deep breath..."}</span>
       </div>
+      {/for}
     </div>
 
       <Bonfire.UI.Social.LoadMoreLive 

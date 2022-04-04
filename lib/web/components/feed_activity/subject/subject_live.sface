@@ -122,6 +122,7 @@
         permalink={@permalink}
         date_ago={@date_ago}
         object={@object}
+        showing_within={@showing_within}
         verb_display={@verb_display} />
     </div>
   </div>

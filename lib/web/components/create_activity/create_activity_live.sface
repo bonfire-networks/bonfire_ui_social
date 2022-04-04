@@ -38,12 +38,12 @@
     </div> -->
 
     <Bonfire.UI.Social.ActivityLive 
-      id={"create_activity_form_" <> e(assigns, :activity, :id, "")}
+      :if={@activity}
+      id={"cap:" <> e(assigns, :activity, :id, "")}
       activity={@activity}
       object={@object}
       class="relative p-3 mb-4 border-4 rounded shadow bg-base-100 border-opacity-20 showing_within:create_activity_form"
       showing_within={:create_activity_form}
-      :if={@activity}
     />
     
     <div class="rounded-md shadow bg-base-100">

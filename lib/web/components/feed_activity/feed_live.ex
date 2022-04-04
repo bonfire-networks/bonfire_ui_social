@@ -5,6 +5,7 @@ defmodule Bonfire.UI.Social.FeedLive do
 
   import Where
 
+  prop feed_id, :string
   prop feed, :list
   prop page_info, :map
   prop showing_within, :any

@@ -6,7 +6,7 @@
     />
     <Bonfire.UI.Social.BannerPreviousThreadLive activity={@activity} />
     <Bonfire.UI.Social.ActivityLive
-      id={"activity_component_"<> e(@thread_id, "")}
+      id={"ta:"<> e(@activity, :id, "")}
       viewing_main_object={true}
       activity={@activity}
       showing_within={:thread}

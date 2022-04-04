@@ -21,25 +21,25 @@ defmodule Bonfire.UI.Social.CreateActivityLive do
   prop activity, :list
   prop object, :list
 
-  def update(%{activity: activity, object: object, reply_to_id: reply_to_id, thread_id: thread_id} = assigns, socket) do
-    socket = assign(socket, activity: activity, reply_to_id: reply_to_id, thread_id: thread_id)
-    {:ok, socket
-    |> assign(assigns)
-    }
-    # {:ok, assign(socket, activity_id: activity_id)}
-  end
+  # def update(%{activity: activity, object: object, reply_to_id: reply_to_id, thread_id: thread_id} = assigns, socket) do
+  #   socket = assign(socket, activity: activity, reply_to_id: reply_to_id, thread_id: thread_id)
+  #   {:ok, socket
+  #   |> assign(assigns)
+  #   }
+  #   # {:ok, assign(socket, activity_id: activity_id)}
+  # end
 
-  def update(%{activity: activity, object: object} = assigns, socket) do
-    socket = assign(socket, activity: activity)
-    {:ok, socket
-    |> assign(assigns)
-    }
-    # {:ok, assign(socket, activity_id: activity_id)}
-  end
-    
-  def update(assigns, socket) do
-   {:ok, socket |> assign(assigns)}
-  end
+  # def update(%{activity: activity, object: object} = assigns, socket) do
+  #   socket = assign(socket, activity: activity)
+  #   {:ok, socket
+  #   |> assign(assigns)
+  #   }
+  #   # {:ok, assign(socket, activity_id: activity_id)}
+  # end
+
+  # def update(assigns, socket) do
+  #  {:ok, socket |> assign(assigns)}
+  # end
 
   def with_editor?(assigns) do
     case e(assigns, :with_editor, nil) do

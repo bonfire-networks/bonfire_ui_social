@@ -12,8 +12,8 @@
     > -->
   <div class="flex items-center">
     <div 
-      phx-click="Bonfire.Social.Posts:add_data"
-      phx-value-activity={e(assigns, :activity, :id, nil)}>
+      phx-target={if e(assigns, :activity_id, nil), do: "#activity-"<>e(assigns, :activity_id, "")}
+      phx-click="reply">
       <div class="btn btn-ghost btn-sm btn-circle"> 
         <span class="text-base-content text-opacity-70">
           <!-- <Outline.ReplyIcon class="w-4 h-4 stroke-1" /> -->

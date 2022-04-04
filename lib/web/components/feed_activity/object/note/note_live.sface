@@ -51,6 +51,7 @@
       <Bonfire.UI.Social.Activity.DateAgoLive 
         permalink={@permalink}
         viewing_main_object={e(assigns, :viewing_main_object, nil)}
+        showing_within={@showing_within}
         date_ago={@date_ago}
         object={@object}
         verb_display={@verb_display} />

@@ -17,26 +17,6 @@ defmodule Bonfire.UI.Social.ActivityLive do
   @react_verbs ["like", "boost", "flag"]
   @create_or_reply_verbs @create_verbs ++ @reply_verbs
 
-
-  
-  def update(%{activity_id: activity_id} = assigns, socket) do
-    send_update(Bonfire.UI.Social.CreateActivityLive, 
-      [
-        reply_to_id: activity_id,
-        thread_id: activity_id,
-        activity: e(socket, :assigns, :activity, nil), 
-        object: e(socket, :assigns, :object, nil), 
-        id: :create_activity_form])
-    {:ok, socket |> assign(assigns)}
-    # {:ok, assign(socket, activity_id: activity_id)}
-  end
-
-    
-  def update(assigns, socket) do
-   {:ok, socket |> assign(assigns)}
-  end
-
-
   def render(%{activity: %{} = activity} = assigns) do
     # debug(assigns, "ActivityLive initial assigns")
 
@@ -85,43 +65,45 @@ defmodule Bonfire.UI.Social.ActivityLive do
     |> Map.new
     #|> debug("ActivityLive final assigns")
 
+        # phx-click="Bonfire.Social.Posts:open_activity"
+        # phx-value-id={@permalink}
+        # phx-value-showing_within={e(assigns, :showing_within, :feed)}
+        # class="cursor-pointer"
 
     ~F"""
     <article
-        phx-click="Bonfire.Social.Posts:open_activity"
-        phx-value-id={@permalink}
-        phx-value-showing_within={e(assigns, :showing_within, :feed)}
-        aria-label="user activity"
-        role="article"
-        tabIndex="0">
-      <div
-        class={
-        "p-3 cursor-pointer hover:bg-neutral-content hover:bg-opacity-5 activity relative pl-16 " <> @class,
-        "main_reply_to mb-2 p-2 mt-2 relative border-l-4 border-l-base-300 border border-base-200 rounded-sm bg-base-300 bg-opacity-50": e(@object, :id, nil) != nil and e(@activity, :replied, :reply_to_id, nil) == nil and e(@activity, :id, nil) == nil and e(assigns, :showing_within, nil) != :widget  and e(assigns, :showing_within, nil) != :search, # showing a quoted reply_to
-        "reply": e(@object, :id, nil) != nil and e(@activity, :replied, :reply_to_id, nil) != nil and e(@activity, :id, nil) != nil,
-        }>
-        {#for {component, component_assigns} when is_atom(component) <- e(assigns, :activity_object_components, [])}
-          <Surface.Components.Dynamic.Component
-            module={component}
-            activity={e(component_assigns, :activity, @activity)}
-            object={e(component_assigns, :object, @object)}
-            object_id={e(component_assigns, :object_id, @object_id)}
-            object_type={e(component_assigns, :object_type, @object_type)}
-            object_type_readable={e(component_assigns, :object_type_readable, @object_type_readable)}
-            date_ago={e(component_assigns, :date_ago, @date_ago)}
-            verb={e(component_assigns, :verb, @verb)}
-            verb_display={e(component_assigns, :verb_display, @verb_display)}
-            permalink={e(component_assigns, :permalink, @permalink)}
-            viewing_main_object={e(component_assigns, :viewing_main_object, e(assigns, :viewing_main_object, false))}
-            hide_reply={e(component_assigns, :hide_reply, e(assigns, :hide_reply, false))}
-            created_verb_display={@created_verb_display}
-            showing_within={e(assigns, :showing_within, :feed)}
-            profile={e(component_assigns, :profile, nil)}
-            character={e(component_assigns, :character, nil)}
-            reply_smart_input_text={e(component_assigns, :reply_smart_input_text, nil)}
-          />
-        {/for}
-      </div>
+      id={"activity-"<>(e(@activity, :id, nil) || e(@object, :id, "no-id"))}
+      aria-label="user activity"
+      role="article"
+      tabIndex="0"
+      class={
+      "p-3 hover:bg-neutral-content hover:bg-opacity-5 activity relative pl-16 " <> @class,
+      "main_reply_to mb-2 p-2 mt-2 relative border-l-4 border-l-base-300 border border-base-200 rounded-sm bg-base-300 bg-opacity-50": e(@object, :id, nil) != nil and e(@activity, :replied, :reply_to_id, nil) == nil and e(@activity, :id, nil) == nil and e(assigns, :showing_within, nil) != :widget  and e(assigns, :showing_within, nil) != :search, # showing a quoted reply_to
+      "reply": e(@object, :id, nil) != nil and e(@activity, :replied, :reply_to_id, nil) != nil and e(@activity, :id, nil) != nil,
+    }>
+      {#for {component, component_assigns} when is_atom(component) <- e(assigns, :activity_object_components, [])}
+        <Surface.Components.Dynamic.Component
+          module={component}
+          id={e(component_assigns, :id, nil)}
+          myself={nil}
+          activity={e(component_assigns, :activity, @activity)}
+          object={e(component_assigns, :object, @object)}
+          object_id={e(component_assigns, :object_id, @object_id)}
+          object_type={e(component_assigns, :object_type, @object_type)}
+          object_type_readable={e(component_assigns, :object_type_readable, @object_type_readable)}
+          date_ago={e(component_assigns, :date_ago, @date_ago)}
+          verb={e(component_assigns, :verb, @verb)}
+          verb_display={e(component_assigns, :verb_display, @verb_display)}
+          permalink={e(component_assigns, :permalink, @permalink)}
+          viewing_main_object={e(component_assigns, :viewing_main_object, e(assigns, :viewing_main_object, false))}
+          hide_reply={e(component_assigns, :hide_reply, e(assigns, :hide_reply, false))}
+          created_verb_display={@created_verb_display}
+          showing_within={e(assigns, :showing_within, :feed)}
+          profile={e(component_assigns, :profile, nil)}
+          character={e(component_assigns, :character, nil)}
+          reply_smart_input_text={e(component_assigns, :reply_smart_input_text, nil)}
+        />
+      {/for}
     </article>
     """
   end
@@ -191,13 +173,13 @@ defmodule Bonfire.UI.Social.ActivityLive do
   end
 
   def component_maybe_in_reply_to(verb, activity, showing_within \\ nil)
-
   def component_maybe_in_reply_to(verb, activity, :thread), do: []
+  def component_maybe_in_reply_to(verb, activity, :create_activity_form), do: []
 
   def component_maybe_in_reply_to(verb,
     %{
       reply_to: %{
-        post_content: %{id: _} = reply_to_post_content,
+        post_content: %{id: id} = reply_to_post_content,
         created: %{creator: %{
           character: %{id: _} = subject_character,
           profile: %{id: _} = subject_profile
@@ -206,6 +188,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
     }, _)
   when verb in @reply_verbs, do: [ # reply with post_content
     {Bonfire.UI.Social.ActivityLive, %{
+      id: "ra:"<>id,
       activity_inception: true,
       viewing_main_object: false,
       object: reply_to_post_content,
@@ -228,6 +211,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
   }, _)
   when verb in @reply_verbs and is_binary(reply_to_id), do: [ # other kind of reply, with creator
     {Bonfire.UI.Social.ActivityLive, %{
+      id: "ra:"<>reply_to_id,
       activity_inception: true,
       viewing_main_object: false,
       object: Activities.load_object(replied),
@@ -250,6 +234,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
 
     [
       {Bonfire.UI.Social.ActivityLive, %{
+        id: "ra:"<>reply_to_id,
         activity_inception: true,
         object: e(reply_to_activity, :object, nil),
         activity: reply_to_activity |> Map.delete(:object), #|> IO.inspect,
@@ -376,8 +361,19 @@ defmodule Bonfire.UI.Social.ActivityLive do
   # def object_link(text, %{character: %{username: username}}, class \\ "hover:underline font-bold"), do: "<a class='#{class}' href='/user/#{username}'>#{text}</a>"
   # def object_link(text, %{id: id}, class), do: "<a class='#{class}' href='/discussion/#{id}'>#{text}</a>"
 
+  def handle_event("reply", _, socket) do
+    debug("reply!")
+    send_update(Bonfire.UI.Social.CreateActivityLive,
+      [
+        id: :create_activity_form,
+        reply_to_id: e(socket, :assigns, :activity, :id, nil),
+        # thread_id: activity_id,
+        activity: e(socket, :assigns, :activity, nil),
+        object: e(socket, :assigns, :object, nil),
+      ])
+    {:noreply, socket}
+  end
 
-  # def handle_event("like"=action, attrs, socket), do: Bonfire.Social.Likes.live_action(action, attrs, socket)
-  # def handle_event(action, attrs, socket), do: Bonfire.Common.LiveHandlers.handle_event(action, attrs, socket, __MODULE__)
+  def handle_event(action, attrs, socket), do: Bonfire.Common.LiveHandlers.handle_event(action, attrs, socket, __MODULE__)
 
 end

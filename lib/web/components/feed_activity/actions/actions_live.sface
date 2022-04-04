@@ -22,24 +22,25 @@
           replied={e(@activity, :replied, nil)}
           object_id={e(@object, :id, "no-object")}
         />
-      {#else}
+      {#else} 
         <Bonfire.UI.Social.Activity.ReplyLive 
+          object_id={e(@object, :id, "no-object")}
+          activity_id={e(assigns, :activity, :id, "no-activity")}
           permalink={@permalink} 
           replied={e(@activity, :replied, nil)}
           showing_within={e(assigns, :showing_within, nil)}
           hide_reply={e(assigns, :hide_reply, nil )}
-          object_id={e(@object, :id, "no-object")}
           reply_smart_input_text={@reply_smart_input_text}
           reply_to_text={text_only(e(@object, :post_content, :name, nil) || e(@object, :post_content, :summary, nil) || e(@object, :post_content, :html_body, e(@object, :id, "")))}
         />
       {/if} -->
       <Bonfire.UI.Social.Activity.ReplyLive 
+        object_id={e(@object, :id, "no-object")}
+        activity_id={e(assigns, :activity, :id, "no-activity")}
         permalink={@permalink} 
-        activity={e(assigns, :activity, nil)}
         replied={e(@activity, :replied, nil)}
         showing_within={e(assigns, :showing_within, nil)}
         hide_reply={e(assigns, :hide_reply, nil )}
-        object_id={e(@object, :id, "no-object")}
         reply_smart_input_text={@reply_smart_input_text}
         reply_to_text={text_only(e(@object, :post_content, :name, nil) || e(@object, :post_content, :summary, nil) || e(@object, :post_content, :html_body, e(@object, :id, "")))}
       />
