@@ -1,4 +1,4 @@
-<div role="banner" class="sticky top-[48px] lg:top-[50px]  lg:-mt-3 bg-base-100 z-30 w-full border-b tablet:rounded-t border-base-300">  
+<div role="banner" class="sticky top-[48px] lg:top-[48px] lg:-mt-[20px] lg:pt-[8px] bg-base-100 z-30 w-full border-b tablet:rounded-t border-base-300">  
   <div class="hidden h-3 tablet:block bg-base-300 "></div>
   <div class="relative rounded-b-none tablet:rounded">
     <div class="flex items-center p-3">
