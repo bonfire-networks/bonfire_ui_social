@@ -66,7 +66,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
         object_id: e(activity.object, :id, nil) || e(activity, :id, "no-object-id"),
         object_type: object_type,
         object_type_readable: object_type_readable,
-        date_ago: date_from_now(activity.object),
+        date_ago: date_from_now(activity),
         activity: activity |> Map.drop([:object]),
         activity_object_components: components,
         verb: verb,

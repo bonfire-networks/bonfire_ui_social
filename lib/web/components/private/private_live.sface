@@ -1,7 +1,6 @@
 <div class="md:mx-0 text-base-content">
   <div :if={not is_list(e(assigns, :feed, [])) or e(assigns, :feed, []) == []} class="w-full p-4 text-center bg-base-100">
-    <div class="mb-3 text-3xl">🧐</div>
-    <span class="text-base font-medium text-base-content">{l "Take a deep breath..."}</span>
+    <Bonfire.UI.Social.EmptyFeed/> 
   </div>
 
   <ul :if={length(e(assigns, :feed, []))>0} class="divide-y divide-base-300">

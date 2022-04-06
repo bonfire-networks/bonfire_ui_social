@@ -30,9 +30,10 @@
         {/case}
 
       {#else}
-        <div class="p-4 text-center">
-          <div class="mb-3 text-3xl">🧐</div>
-          <span class="text-base font-medium text-base-content">{l "Take a deep breath..."}</span>
+        <div id="empty-feed">
+
+          <Bonfire.UI.Social.EmptyFeed/> 
+
       </div>
       {/for}
     </div>

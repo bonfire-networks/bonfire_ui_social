@@ -16,7 +16,8 @@
 
   <div class="flow-root my-4">
     <ul class="-my-5 divide-y divide-base-300">
-      <li class="p-4" :for={block <- @blocks}>
+    {#for block <- @blocks}
+      <li class="p-4">
         <Bonfire.UI.Social.ProfileItemLive
           show_controls={[]}
           profile={e(block, :subject, :profile, nil ) || %{name: e(block, :peer, :display_hostname, nil )}}
@@ -32,6 +33,10 @@
         </Bonfire.UI.Social.ProfileItemLive>
 
       </li>
+
+    {#else}
+      <Bonfire.UI.Social.EmptyFeed/>
+    {/for}
     </ul>
   </div>
 </div>
