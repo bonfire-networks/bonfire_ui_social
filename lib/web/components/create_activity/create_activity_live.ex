@@ -43,9 +43,9 @@ defmodule Bonfire.UI.Social.CreateActivityLive do
 
   def with_editor?(assigns) do
     case e(assigns, :with_editor, nil) do
-      nil -> e(assigns, :showing_within, nil) != :thread && module_enabled?(Bonfire.Editor.Ck.Bubble)
-      overide -> overide
-    end
+      nil -> e(assigns, :showing_within, nil) != :thread
+      opt_assigned -> opt_assigned
+    end && module_enabled?(Bonfire.Editor.Ck.Bubble)
   end
 
   def activity_type_or_reply(assigns, create_activity_type) do
@@ -55,8 +55,6 @@ defmodule Bonfire.UI.Social.CreateActivityLive do
     do: "reply",
     else: "#{create_activity_type}"
   end
-
-
 
   defdelegate handle_params(params, attrs, socket), to: Bonfire.Common.LiveHandlers
   def handle_event(action, attrs, socket), do: Bonfire.Common.LiveHandlers.handle_event(action, attrs, socket, __MODULE__)

@@ -62,7 +62,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
       assigns
       |> assigns_merge(
         object: activity.object,
-        object_id: e(activity.object, :id, "no-object"),
+        object_id: e(activity.object, :id, nil) || e(activity, :id, "no-object-id"),
         object_type: object_type,
         object_type_readable: object_type_readable,
         date_ago: date_from_now(activity.object),
@@ -124,7 +124,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
     warn("ActivityLive: No activity provided")
 
     ~F"""
-    
+
     """
   end
 
@@ -518,13 +518,13 @@ defmodule Bonfire.UI.Social.ActivityLive do
     debug("reply!")
 
     send_update(Bonfire.UI.Social.CreateActivityLive,
-      id: :create_activity_form,
-      reply_to_id: e(socket, :assigns, :activity, :id, nil),
-      # thread_id: activity_id,
-      activity: e(socket, :assigns, :activity, nil),
-      object: e(socket, :assigns, :object, nil)
-    )
-
+      [
+        id: :create_activity_form,
+        reply_to_id: e(socket, :assigns, :object_id, nil) || e(socket, :assigns, :object, :id, nil) || e(socket, :assigns, :activity, :object, :id, nil), # reply to objects, not activities
+        # thread_id: activity_id,
+        activity: e(socket, :assigns, :activity, nil),
+        object: e(socket, :assigns, :object, nil),
+      ])
     {:noreply, socket}
   end
 

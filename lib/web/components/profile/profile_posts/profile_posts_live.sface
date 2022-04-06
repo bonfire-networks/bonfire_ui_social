@@ -4,7 +4,6 @@
   
   <Bonfire.UI.Social.FeedLive
     id={"feed:profile:posts"}
-    user={@user}
     page_title={@page_title}
     page={@page}
     feed={@feed}
@@ -17,4 +16,13 @@
     search_placholder={@search_placholder}
     feed_title={@feed_title}
   />
+
+  <a
+    :if={e(@user, :character, :peered, :canonical_uri, nil)}
+    href={e(@user, :character, :peered, :canonical_uri, "#")}
+    target="_blank"
+    class="m-10 block"
+  >
+    Visit the <u>remote profile</u> if you don't want to miss any of their older posts.
+  </a> 
 </div>
