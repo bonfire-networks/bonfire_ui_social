@@ -6,6 +6,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
 
   prop(activity, :map)
   prop(object, :any)
+  prop(verb_default, :string)
   prop(viewing_main_object, :boolean, default: false)
   prop(showing_within, :any, default: :feed)
   prop(hide_reply, :boolean, default: false)
@@ -28,7 +29,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
     # |> dump("Activity with object")
 
     verb =
-      Activities.verb_maybe_modify(e(activity, :verb, "create"), activity)
+      Activities.verb_maybe_modify(e(activity, :verb, nil) || e(assigns, :verb_default, "create"), activity)
       |> debug("verb modified")
 
     verb_display = Activities.verb_display(verb)

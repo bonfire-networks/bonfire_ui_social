@@ -11,6 +11,7 @@ defmodule Bonfire.UI.Social.FeedLive do
   prop showing_within, :any
   prop feed_update_mode, :string, default: "prepend"
   prop hide_load_more, :boolean, default: false
+  prop verb_default, :string
 
   def mount(socket) do
     {:ok, socket
@@ -82,11 +83,40 @@ defmodule Bonfire.UI.Social.FeedLive do
   def preloads(feed, opts) do
     debug("FeedLive: preload objects")
 
-    feed
-    # |> debug("feed before extra preloads")
-    |> Bonfire.Common.Pointers.Preload.maybe_preload_nested_pointers([activity: [:object]])
-    |> preload_objects(opts)
-    # |> debug("feed with extra preloads")
+    if is_list(feed) and length(feed) > 0 do
+      case List.first(feed) do
+
+        %{activity: %{id: _}} ->
+          feed
+          # |> debug("feed before extra preloads")
+          |> Bonfire.Common.Pointers.Preload.maybe_preload_nested_pointers([activity: [:object]])
+          |> preload_objects([:activity, :object], opts)
+          # |> debug("feed with extra preloads")
+
+        %{edge: %{id: _}} ->
+          feed
+          # |> debug("feed before extra preloads")
+          |> Bonfire.Common.Pointers.Preload.maybe_preload_nested_pointers([edge: [:object]])
+          |> preload_objects([:edge, :object], opts)
+          # |> debug("feed with extra preloads")
+
+        %{object: _} ->
+          feed
+          # |> debug("feed before extra preloads")
+          |> Bonfire.Common.Pointers.Preload.maybe_preload_nested_pointers([:object])
+          |> preload_objects([:object], opts)
+          # |> debug("feed with extra preloads")
+
+        _ -> feed
+      end
+
+    else
+      feed
+    end
+  end
+
+  def preload_objects(feed, under, opts) do
+    repo().maybe_preloads_per_nested_schema(feed, under, object_preloads(), opts)
   end
 
   def object_preloads do
@@ -97,10 +127,6 @@ defmodule Bonfire.UI.Social.FeedLive do
       {ValueFlows.Process, Bonfire.UI.Social.Activity.ProcessListLive.preloads()},
     ]
     # |> debug("preload feed")
-  end
-
-  def preload_objects(feed, opts) do
-    repo().maybe_preloads_per_nested_schema(feed, [:activity, :object], object_preloads(), opts)
   end
 
   def handle_event(action, attrs, socket), do: Bonfire.Common.LiveHandlers.handle_event(action, attrs, socket, __MODULE__)

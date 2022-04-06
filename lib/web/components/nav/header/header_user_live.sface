@@ -16,28 +16,31 @@
       </div> -->
       {#if current_user(assigns)}
       <div class="w-full items-center tabs tab-boxed hidden lg:flex">
-       <div class="tooltip tooltip-bottom flex flex-1" data-tip="Feeds">
-        <LivePatch to={"/home"} class={"tab flex-1 text-neutral-content text-opacity-70", "tab-active text-opacity-100 relative lined": @page == "home"}>
-            <Solid.RssIcon class="w-5 h-5 mr-1" />
-            <span class="sr-only">{l "Feeds"}</span>
-        </LivePatch>
+       <div class="tooltip tooltip-bottom flex flex-1" data-tip={l "Feeds"}>
+          <LivePatch to={"/home"} class={"tab flex-1 text-neutral-content text-opacity-70", "tab-active text-opacity-100 relative lined": @page == "home"}>
+              <Solid.RssIcon class="w-5 h-5 mr-1" />
+              <span class="sr-only">{l "Feeds"}</span>
+          </LivePatch>
         </div>
-        <div class="tooltip tooltip-bottom flex flex-1" data-tip="Messages">
-        <LivePatch to={"/private"} class={"tab flex-1 text-neutral-content text-opacity-70", "tab-active text-opacity-100 relative lined": @page == "private"}>
-            <Solid.MailIcon class="w-5 h-5 mr-1" />
-            <span class="sr-only">{l "Messages"}</span>
-        </LivePatch>
+        <div class="tooltip tooltip-bottom flex flex-1" data-tip={l "Notifications"}>
+          <LivePatch to={path(:notifications)} class={"tab flex-1 text-neutral-content text-opacity-70", "tab-active text-opacity-100 relative lined": @page == "notifications"}>
+              <Solid.BellIcon class="w-5 h-5 mr-1" />
+              <span class="sr-only">{l "Notifications"}</span>
+          </LivePatch>
         </div>
-        <div class="tooltip tooltip-bottom flex flex-1" data-tip="Notifications">
-        <LivePatch to={path(:notifications)} class={"tab flex-1 text-neutral-content text-opacity-70", "tab-active text-opacity-100 relative lined": @page == "notifications"}>
-            <Solid.BellIcon class="w-5 h-5 mr-1" />
-            <span class="sr-only">{l "Notifications"}</span>
-        </LivePatch>
+        <div class="tooltip tooltip-bottom flex flex-1" data-tip={l "Messages"}>
+          <LivePatch to={"/private"} class={"tab flex-1 text-neutral-content text-opacity-70", "tab-active text-opacity-100 relative lined": @page == "private"}>
+              <Solid.MailIcon class="w-5 h-5 mr-1" />
+              <span class="sr-only">{l "Messages"}</span>
+          </LivePatch>
         </div>
-        <!-- <LivePatch to={path(:notifications)} class={"tab flex-1", "tab-active relative lined": @page == "notifications"}>
-            <Solid.UserGroupIcon class="w-5 h-5 mr-1" />
-            <span>Notifications</span> 
-        </LivePatch> -->
+        <div class="tooltip tooltip-bottom flex flex-1" data-tip={l "Likes / Favourites"}>
+          <LivePatch to={"/my/likes"} class={"tab flex-1 text-neutral-content text-opacity-70", "tab-active text-opacity-100 relative lined": @page == "likes"}>
+              <Solid.StarIcon class="w-5 h-5 mr-1" />
+              <span class="sr-only">{l "Likes / Favourites"}</span>
+          </LivePatch>
+        </div>
+
       </div>
       {/if}
     </div>

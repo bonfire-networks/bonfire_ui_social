@@ -1,9 +1,10 @@
 <div class="rounded-t-none bg-base-100 rounded-box">
-  <Bonfire.UI.Social.ProfileHeroFullLive user={@user |> repo().maybe_preload(:shared_user)} current_user={current_user(assigns)}  />
+  <Bonfire.UI.Social.ProfileHeroFullLive user={@user} current_user={current_user(assigns)}  />
   <Bonfire.UI.Social.ProfileNavigationLive selected_tab={@selected_tab} user={@user}/>
 
   <Bonfire.UI.Social.FeedLive
     id={"feed:profile:boosts"}
+    verb_default="boost"
     user={@user}
     page_title={@page_title}
     page={@page}

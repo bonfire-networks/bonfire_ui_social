@@ -20,8 +20,9 @@
               >
               <ActivityLive 
                 id={cid}
-                activity={e(entry, :activity, entry)}
+                activity={e(entry, :activity, nil) || e(entry, :edge, nil) || entry}
                 showing_within={e(assigns, :showing_within, nil)}
+                verb_default={e(assigns, :verb_default, nil)}
                 />
             </div>
           {#match _}

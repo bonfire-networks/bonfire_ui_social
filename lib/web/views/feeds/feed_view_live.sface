@@ -12,6 +12,7 @@
         feed={@feed}
         page_info={@page_info}
         showing_within={@showing_within}
+        verb_default={e(assigns, :verb_default, nil)}
       />
     </div>
   </section>

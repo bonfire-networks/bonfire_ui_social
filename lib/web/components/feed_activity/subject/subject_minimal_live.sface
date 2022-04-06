@@ -149,7 +149,7 @@
             aria-label={e(@activity, :subject, :character, :username, "") <> " profile"}
             class="font-medium subject_minimal"
             to={path(e(@activity, :subject, :character, nil)) }>
-            {e(@activity, :subject, :profile, :name, "Anonymous")}
+            {e(@activity, :subject, :profile, :name, nil) || e(@activity, :subject, :character, :username, nil)}
           </LiveRedirect>
           {raw @verb_display}
         </div>
