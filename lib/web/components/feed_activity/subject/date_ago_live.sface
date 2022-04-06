@@ -17,7 +17,7 @@
 
 {#else}
 <div class="flex items-center space-x-2">
-  <div class="relative z-20 text-xs text-base-content text-opacity-60">
+  <div class="relative text-xs text-base-content text-opacity-60">
     <span :if={e(assigns, :showing_within, nil) not in [:widget, :create_activity_form]} class="hidden capitalize lg:inline">
       {@verb_display}
     </span>

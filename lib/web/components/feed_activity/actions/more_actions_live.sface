@@ -16,7 +16,7 @@
   </div>
   <ul
     tabindex="0"
-    class="w-60 shadow menu dropdown-content bg-neutral-content rounded dropdown_actions
+    class="w-60 z-40 shadow menu dropdown-content bg-neutral-content rounded dropdown_actions
     role="menu"
     aria-orientation="vertical"
     aria-labelledby="more-menu">
@@ -57,7 +57,7 @@
     
     <!-- Flag the action -->
     <li 
-      :if={e(current_user(assigns), :id, nil) != e(@activity, :subject, :character, :id, nil) and @verb !="flag"}
+      :if={e(current_user(assigns), :id, nil) != subject_id(assigns) and @verb !="flag"}
       class=" hover:bg-neutral hover:bg-opacity-20">
       <Bonfire.UI.Social.FlagActionLive 
         object={@object}
@@ -69,7 +69,7 @@
 
     <!-- Flag the author -->
     <li 
-      :if={e(current_user(assigns), :id, nil) != e(@activity, :subject, :character, :id, nil) and @verb !="flag"}
+      :if={e(current_user(assigns), :id, nil) != subject_id(assigns) and @verb !="flag"}
       class=" hover:bg-neutral hover:bg-opacity-20">
       <Bonfire.UI.Social.FlagActionLive 
         object={@object}
@@ -89,7 +89,7 @@
       :if={e(current_user(assigns), :id, nil) != subject_id(assigns)}
       class="h-px my-0 divider bg-opacity-40 bg-neutral"></div> 
     <li 
-      :if={e(current_user(assigns), :id, nil) == e(@activity, :subject, :character, :id, nil) or Bonfire.Me.Users.is_admin?(current_user(assigns))}
+      :if={e(current_user(assigns), :id, nil) == subject_id(assigns) or Bonfire.Me.Users.is_admin?(current_user(assigns))}
       class=" hover:bg-neutral hover:bg-opacity-20">
       <OpenModalLive
         id={ComponentID.new(OpenModalLive, @object)} 
@@ -119,7 +119,7 @@
 
     <!-- Delete the post -->
     <li 
-      :if={e(current_user(assigns), :id, nil) == e(@activity, :subject, :character, :id, nil) or Bonfire.Me.Users.is_admin?(current_user(assigns))}
+      :if={e(current_user(assigns), :id, nil) == subject_id(assigns) or Bonfire.Me.Users.is_admin?(current_user(assigns))}
       class=" hover:bg-neutral hover:bg-opacity-20">
       <OpenModalLive
         id={ComponentID.new(OpenModalLive, @object)} 
@@ -128,7 +128,7 @@
         {l "You may be able to undo this deletion in some cases, but the data will eventually be permanently deleted."}
         <:open_btn>
           <button class="flex items-center text-sm text-neutral" type="button">
-            <Solid.TrashIcon class="w-4 h-4 mr-2 shrink-0" />
+            <Solid.TrashIcon class="w-4 h-4 mr-2 shrink-0 text-neutral text-opacity-70" />
             <span class="truncate ellipsis">
               {l("Delete this")<>" "<>e(assigns, :object_type_readable, l "object")}
             </span>
