@@ -2,7 +2,7 @@
 <nav
   role="navigation"
   class="flex-col justify-end hidden mt-0 tablet:flex w-72">
-  <div class="fixed z-50 top-3 lg:top-[62px] bottom-[16px] w-72">
+  <div class="fixed z-50 top-3 lg:top-[67px] bottom-[16px] w-72">
     <div class="w-full h-full">
       <div class="flex flex-col space-y-4">
         <div 

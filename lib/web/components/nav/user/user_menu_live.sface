@@ -1,18 +1,19 @@
-<div class="hidden lg:block">
+<div class="hidden lg:flex items-center">
   <div class="dropdown dropdown-end">
     <label
       tabindex="0"
-      class="btn btn-circle btn-sm btn-ghost text-base-content text-opacity-80"
+      class="btn normal-case w-full flex-1 gap-2 btn-sm btn-circle px-1 btn-ghost text-base-content text-opacity-80"
       id="user-profile-menu"
       aria-haspopup="true"
       aria-expanded="true"
     >
       <LazyImage
-        class="w-6 h-6 btn-circle bg-[#6AA4DA]"
+        class="w-6 h-6 rounded-full bg-base-100 flex-1"
         src={avatar_url(current_user(assigns))}
         alt="current user profile image"
       />
-      </label>
+      <span class="">{e(assigns, :current_user, :profile, :name, "Unknown")}</span>
+    </label>
     <ul
       tabindex="0"
       class="rounded shadow w-52 menu dropdown-content bg-neutral-content"
