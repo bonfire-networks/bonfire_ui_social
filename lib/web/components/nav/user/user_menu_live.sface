@@ -12,7 +12,7 @@
         src={avatar_url(current_user(assigns))}
         alt="current user profile image"
       />
-      <span class="">{e(assigns, :current_user, :profile, :name, "Unknown")}</span>
+      <span class="text-neutral-content">{e(assigns, :current_user, :profile, :name, "Unknown")}</span>
     </label>
     <ul
       tabindex="0"
