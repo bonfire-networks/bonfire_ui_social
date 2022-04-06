@@ -59,7 +59,9 @@
     </div> -->
 
   </div>
-  <div class="flex items-center text-sm text-primary-content-600 ">
+  <div 
+    :if={e(@object, :output_of, :id, nil)}
+    class="flex items-center text-sm text-primary-content-600 ">
     in <LivePatch
         to={"/list/"<>e(@object, :output_of, :id, "")}
         class="flex items-center ml-2 text-sm text-primary-content-600 underline cursor-pointer  hover:font-medium">
