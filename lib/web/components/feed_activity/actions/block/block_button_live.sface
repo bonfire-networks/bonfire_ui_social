@@ -13,7 +13,7 @@
         <input name="silence" type="checkbox" checked="checked" class="checkbox checkbox-primary checkbox-sm">
         <div class="ml-2 label-text">
           <div class="text-base font-semibold">{l("Silence")<>" "<>@label}</div>
-          <div class="text-base">{l "Stop seeing things they publish"}</div>
+          <div class="text-sm italic">{l "Stop seeing things they publish"}</div>
         </div> 
       </label>
       <div 
@@ -21,9 +21,10 @@
         role="region"
         class="ml-9">
         <button 
+          type="button"
           x-on:click="active = ! active"
           :aria-expanded="active"
-          class="flex items-center w-full text-sm">
+          class="flex items-center  w-full text-sm">
           <span x-show="!active" class="underline">{l "Read more"}</span>
           <span x-show="active" class="underline">{l "Read less"}</span>
           <span x-show="active" aria-hidden="true" class="ml-2">&minus;</span>
@@ -31,10 +32,7 @@
         </button>
         <div x-show="active" x-collapse>
           <div class="block mt-3">
-            <p class="font-semibold">
-              {l "Silencing means"}        
-            </p>
-            <ul class="block pl-4 mt-1 list-disc">
+            <ul class="block pl-4 mt-1 list-disc prose-sm">
               <li>
                   {l "You won't see anything they write/create in feeds."} 
               </li>
@@ -60,7 +58,7 @@
         <input name="ghost" type="checkbox" checked="checked" class="checkbox checkbox-primary checkbox-sm">
         <div class="ml-2 label-text">
           <div class="text-base font-semibold">{l("Ghost")<>" "<>@label}</div>
-          <div class="text-base">{l "Prevent them from seeing or interacting with you or your content"}</div>
+          <div class="text-sm italic">{l "Prevent them from seeing or interacting with you or your content"}</div>
         </div> 
       </label>
       <div 
@@ -68,6 +66,7 @@
         role="region"
         class="ml-9">
         <button 
+          type="button"
           x-on:click="active = ! active"
           :aria-expanded="active"
           class="flex items-center w-full text-sm">
@@ -78,10 +77,8 @@
         </button>
         <div x-show="active" x-collapse>
           <div class="block mt-3">
-            <p class="font-semibold">
-              {l "Ghosting means"}        
-            </p>
-            <ul class="block pl-4 mt-1 list-disc">
+          
+            <ul class="block pl-4 mt-1 list-disc prose-sm">
               <li>
                 {l "Nothing you post privately will be shown to them from now on."} 
               </li>
