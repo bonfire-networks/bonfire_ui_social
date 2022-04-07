@@ -136,7 +136,7 @@
       </span>
 
       <div class="mt-1">
-        <div class="w-full prose-sm prose">
+        <div class="w-full prose-sm prose prose-p:pt-2">
           {rich e(@user, :profile, :summary, "")}
         </div>
 
