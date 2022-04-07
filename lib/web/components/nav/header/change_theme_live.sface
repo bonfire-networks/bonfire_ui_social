@@ -1,5 +1,5 @@
-<div id="theme-change" phx-hook="Themeable" title="Change Theme" class="dropdown dropdown-end">
-  <div tabindex="0" class="w-full gap-2 normal-case btn-wide btn btn-outline border-base-content border-opacity-70 ">
+<div id="theme-change" phx-hook="Themeable" title="Change Theme" class="dropdown dropdown-end w-full">
+  <div tabindex="0" class="w-full gap-2 normal-case btn-wide btn btn-outline border-base-content border-opacity-20 ">
     <svg
       xmlns="http://www.w3.org/2000/svg"
       fill="none" viewBox="0 0 24 24"

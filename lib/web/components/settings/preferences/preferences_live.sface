@@ -4,22 +4,35 @@
   admin_tab={@admin_tab}
 />
 
-<div class="flex flex-col p-4 space-y-4 lg:p-2">
-  <div class="px-4 sm:grid sm:grid-cols-3 sm:gap-4 sm:items-center">
-    <label for="default-theme" class="block text-sm font-medium text-base-content sm:mt-px sm:pt-2">
-      {l "Look and feel"}
-    </label>
-    <div class="mt-1 sm:mt-0 sm:col-span-2">
-      <Bonfire.UI.Social.ChangeThemeLive />
+<div class="flex flex-col p-4">
+
+  <div class="grid grid-cols-2 gap-4">
+    <div class="flex flex-col space-y-2">
+      <label for="default-theme" class="block text-sm font-medium text-base-content sm:mt-px sm:pt-2">
+        {l "Look and feel"}
+      </label>
+      <div class="w-full">
+        <Bonfire.UI.Social.ChangeThemeLive />
+      </div>
+    </div>
+
+    <div class="flex flex-col space-y-2">
+      <label for="default-language" class="block text-sm font-medium text-base-content sm:mt-px sm:pt-2">
+        {l "Language"}
+      </label>
+      <div class="w-full">
+        <Bonfire.UI.Social.ChangeLocaleLive />
+      </div>
     </div>
   </div>
 
-  <div class="px-4 sm:grid sm:grid-cols-3 sm:gap-4 sm:items-center">
-    <label for="default-language" class="block text-sm font-medium text-base-content sm:mt-px sm:pt-2">
-      {l "Language"}
+  <div class="font-bold text-xs uppercase text-base-content text-opacity-80 border-b mt-8 border-base-content border-opacity-30 pb-2">{l "Discoverability"}</div>
+  
+  <div class="form-control mt-2">
+    <label class="label cursor-pointer justify-start">
+      <input type="checkbox" checked="checked" class="checkbox">
+      <span class="ml-2 label-text">I want to appear in search results</span> 
     </label>
-    <div class="mt-1 sm:mt-0 sm:col-span-2">
-      <Bonfire.UI.Social.ChangeLocaleLive />
-    </div>
   </div>
+
 </div>
