@@ -13,7 +13,7 @@
           :if={e(@user, :character, :peered, :canonical_uri, nil)}
           href={e(@user, :character, :peered, :canonical_uri, "#")}
           target="_blank"
-          class="hidden btn lg:flex btn-info btn-circle"
+          class="hidden btn btn-sm lg:flex btn-info btn-circle"
         >
           <Solid.ExternalLinkIcon class="w-4 h-4" />  
         </a> 
@@ -131,9 +131,11 @@
 
         </h1>
       </LivePatch>
-      <span class="-mt-2 text-sm font-normal text-base-content text-opacity-70">
-        {Bonfire.Me.Characters.display_username(@user)}
-      </span>
+      <div class="flex items-center">
+        <span class="text-sm font-normal text-base-content text-opacity-70">{Bonfire.Me.Characters.display_username(@user)}</span>
+        <!-- FOLLOWS YOU LABEL -->
+        <div class="ml-2 opacity-70 text-xs rounded badge badge-outline">{"Follows you"}</div>
+      </div>
 
       <div class="mt-1">
         <div class="w-full prose-sm prose prose-p:pt-2">
