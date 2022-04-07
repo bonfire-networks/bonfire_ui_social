@@ -35,7 +35,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
     verb_display = Activities.verb_display(verb)
     created_verb_display = Activities.verb_display("create")
     object_type = Bonfire.Common.Types.object_type(activity.object) |> debug("object_type")
-    object_type_readable = module_to_human_readable(object_type) |> String.downcase()
+    object_type_readable = module_to_human_readable(object_type) #|> String.downcase()
 
     thread = e(activity, :replied, :thread, nil) || e(activity, :replied, :thread_id, nil)
 
