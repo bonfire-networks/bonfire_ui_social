@@ -9,9 +9,7 @@ defmodule Bonfire.UI.Social.Activity.NoteLive do
   prop showing_within, :any
 
   def post_content(object) do
-    # debug(object)
-    # debug(e(object, :post_content, object))
     e(object, :post_content, object)
-    #|> IO.inspect
+    # |> debug("activity_note_object")
   end
 end
