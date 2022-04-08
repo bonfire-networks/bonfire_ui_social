@@ -29,13 +29,17 @@ defmodule Bonfire.UI.Social.ActivityLive do
     # |> dump("Activity with object")
 
     verb =
-      Activities.verb_maybe_modify(e(activity, :verb, nil) || e(assigns, :verb_default, "create"), activity)
+      Activities.verb_maybe_modify(
+        e(activity, :verb, nil) || e(assigns, :verb_default, "create"),
+        activity
+      )
       |> debug("verb modified")
 
     verb_display = Activities.verb_display(verb)
     created_verb_display = Activities.verb_display("create")
     object_type = Bonfire.Common.Types.object_type(activity.object) |> debug("object_type")
-    object_type_readable = module_to_human_readable(object_type) #|> String.downcase()
+    # |> String.downcase()
+    object_type_readable = module_to_human_readable(object_type)
 
     thread = e(activity, :replied, :thread, nil) || e(activity, :replied, :thread_id, nil)
 
@@ -125,7 +129,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
     warn("ActivityLive: No activity provided")
 
     ~F"""
-
+    
     """
   end
 
@@ -519,13 +523,16 @@ defmodule Bonfire.UI.Social.ActivityLive do
     debug("reply!")
 
     send_update(Bonfire.UI.Social.CreateActivityLive,
-      [
-        id: :create_activity_form,
-        reply_to_id: e(socket, :assigns, :object_id, nil) || e(socket, :assigns, :object, :id, nil) || e(socket, :assigns, :activity, :object, :id, nil), # reply to objects, not activities
-        # thread_id: activity_id,
-        activity: e(socket, :assigns, :activity, nil),
-        object: e(socket, :assigns, :object, nil),
-      ])
+      id: :create_activity_form,
+      # reply to objects, not activities
+      reply_to_id:
+        e(socket, :assigns, :object_id, nil) || e(socket, :assigns, :object, :id, nil) ||
+          e(socket, :assigns, :activity, :object, :id, nil),
+      # thread_id: activity_id,
+      activity: e(socket, :assigns, :activity, nil),
+      object: e(socket, :assigns, :object, nil)
+    )
+
     {:noreply, socket}
   end
 
