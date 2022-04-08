@@ -6,6 +6,8 @@
 
 <div class="flex flex-col p-4">
 
+<form name="settings" phx-change="Bonfire.Me.Settings:set">
+
   <div class="grid grid-cols-2 gap-4">
     <div class="flex flex-col space-y-2">
       <label for="default-theme" class="block text-sm font-medium text-base-content sm:mt-px sm:pt-2">
@@ -30,9 +32,21 @@
   
   <div class="form-control mt-2">
     <label class="label cursor-pointer justify-start">
-      <input type="checkbox" checked="checked" class="checkbox">
+      <input 
+        name="bonfire_me[Bonfire.Me.Users][discoverable]" 
+        value="false"
+        type="hidden" 
+      />
+      <input 
+        name="bonfire_me[Bonfire.Me.Users][discoverable]" 
+        value="true"
+        type="checkbox" 
+        checked="checked" 
+        class="checkbox" 
+      />
       <span class="ml-2 label-text">I want to appear in search results</span> 
     </label>
   </div>
 
+</form>
 </div>
