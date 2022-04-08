@@ -86,6 +86,16 @@
               <PasswordInput opts={placeholder: l "Type a strong password"} required class="w-full input input-bordered" />
               <ErrorTag />
             </Field>
+
+            <Field name={:password_confirmation}>
+              <Label class="label">
+                <span class="label-text">
+                  {l "Verify your password"}
+                </span>
+              </Label>
+              <PasswordInput opts={placeholder: l "Must match password above"} required class="w-full input input-bordered" />
+              <ErrorTag />
+            </Field>
           </Inputs>
           <!-- <%= for g <- inputs_for(f, :credential) do %>
             <label for="signup-form_credential_password" class="label">
