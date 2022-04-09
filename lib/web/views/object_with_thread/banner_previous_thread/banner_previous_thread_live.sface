@@ -1,4 +1,4 @@
-{#if e(@activity, :replied, :thread_id, nil) && e(@activity, :replied, :thread_id, nil) != e(@activity, :replied, :reply_to_id, nil) && e(@activity, :replied, :thread_post_content, nil) }
+<!-- {#if e(@activity, :replied, :thread_id, nil) && e(@activity, :replied, :thread_id, nil) != e(@activity, :replied, :reply_to_id, nil) && e(@activity, :replied, :thread_post_content, nil) }
   <div class="p-4 m-3 rounded-md bg-blue-50">
     <div class="flex">
       <div class="flex-1 text-center md:flex md:justify-between">
@@ -13,4 +13,4 @@
       </div>
     </div>
   </div>
-{/if}
+{/if} -->

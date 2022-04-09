@@ -4,7 +4,7 @@
       page_title={@page_title}
       before={true}
     />
-    <Bonfire.UI.Social.BannerPreviousThreadLive activity={@activity} />
+    <!-- <Bonfire.UI.Social.BannerPreviousThreadLive activity={@activity} /> -->
     <Bonfire.UI.Social.ActivityLive
       id={"ta:"<> e(@activity, :id, "")}
       viewing_main_object={true}

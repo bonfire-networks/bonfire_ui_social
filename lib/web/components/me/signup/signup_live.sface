@@ -90,10 +90,10 @@
             <Field name={:password_confirmation}>
               <Label class="label">
                 <span class="label-text">
-                  {l "Verify your password"}
+                  {l "Confirm your password"}
                 </span>
               </Label>
-              <PasswordInput opts={placeholder: l "Must match password above"} required class="w-full input input-bordered" />
+              <PasswordInput opts={placeholder: l "Enter the same password again"} required class="w-full input input-bordered" />
               <ErrorTag />
             </Field>
           </Inputs>
