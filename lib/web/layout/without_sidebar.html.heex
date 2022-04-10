@@ -8,14 +8,14 @@
       myself={nil}
       />
       <%= if info do %>
-        <p class="alert alert-info " role="alert alert-warning"
+        <div class="alert alert-info " role="alert alert-warning"
           phx-click="lv:clear-flash"
-          phx-value-key="info"><%= info %></p>
+          phx-value-key="info"><%= rich info %></div>
       <% end %>
       <%= if error do %>
-        <p class="whitespace-pre-wrap alert alert-error " role="alert"
+        <div class="whitespace-pre-wrap alert alert-error " role="alert"
           phx-click="lv:clear-flash"
-          phx-value-key="error"><%= error %></p>
+          phx-value-key="error"><%= rich error %></div>
       <% end %>
     </div> 
     <Bonfire.UI.Social.WithoutSidebarLive.render
