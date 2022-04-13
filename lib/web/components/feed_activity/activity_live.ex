@@ -60,8 +60,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
         c when is_atom(c) -> {c, nil}
         other -> other
       end)
-
-    # |> debug("ActivityLive: activity_object_components")
+      # |> debug("ActivityLive: activity_object_components")
 
     assigns =
       assigns
@@ -79,8 +78,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
         permalink: permalink
       )
       |> Map.new()
-
-    # |> debug("ActivityLive final assigns")
+      # |> debug("ActivityLive final assigns")
 
     # phx-click="Bonfire.Social.Posts:open_activity"
     # phx-value-id={@permalink}
@@ -129,7 +127,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
     warn("ActivityLive: No activity provided")
 
     ~F"""
-    
+
     """
   end
 
@@ -148,14 +146,22 @@ defmodule Bonfire.UI.Social.ActivityLive do
   # reactions should show the reactor + original creator
   def component_activity_subject(verb, activity, _) when verb in @react_verbs,
     do: [
-      {Bonfire.UI.Social.Activity.SubjectMinimalLive, %{verb: verb}},
+      {Bonfire.UI.Social.Activity.SubjectMinimalLive, %{
+        activity: repo().maybe_preload(activity, subject: [:character]),
+        verb: verb
+      }},
       component_activity_maybe_creator(activity)
     ]
 
   # replies (when shown in notifications)
   def component_activity_subject(verb, activity, %{showing_within: :notifications})
       when verb in @reply_verbs,
-      do: [{Bonfire.UI.Social.Activity.SubjectMinimalLive, %{verb: verb}}]
+      do: [
+        {Bonfire.UI.Social.Activity.SubjectMinimalLive, %{
+          activity: repo().maybe_preload(activity, subject: [:character]),
+          verb: verb
+        }}
+      ]
 
   # create (or reply) activities
   def component_activity_subject(

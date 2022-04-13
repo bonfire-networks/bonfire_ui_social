@@ -32,7 +32,7 @@
         </div>
       </div>
     </div>
-    {#match :widget}
+  {#match :widget}
     <div class={"flex items-center mb-3"}>
       <div class="flex items-center justify-start w-5 h-5">
         <Solid.StarIcon :if={@verb == "like"} class="w-5 h-5 text-yellow-500" />
