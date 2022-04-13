@@ -132,9 +132,9 @@ defmodule Bonfire.UI.Social.ActivityLive do
   end
 
   def object(assigns, activity) do
-    (e(assigns, :object, nil) ||
-       Activities.object_from_activity(activity))
-    |> repo().maybe_preload(created: [creator: [:profile, :character]])
+    Activities.object_from_activity(e(assigns, :object, nil) || activity)
+    |> debug("object_from_activity")
+    # |> repo().maybe_preload(created: [creator: [:profile, :character]])
   end
 
   # don't show subject twice
@@ -473,7 +473,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
     do: component_show_process_actions(activity)
 
   def actions_for_object_type(activity, type) do
-    debug(component_object_type_unknown: type)
+    warn(type, "No actions defiend fot this type")
     component_show_standard_actions(activity)
     # [Bonfire.UI.Social.Activity.NoActionsLive]
   end

@@ -5,8 +5,10 @@
       <LiveRedirect class="text-xl font-extrabold link link-hover text-base-content" to={path(Bonfire.Common.Config.get!(:home_page))}>
         {Bonfire.Common.Config.get([:ui, :theme, :instance_name], "Bonfire")}
       </LiveRedirect>
-      <p class="mt-1 text-sm text-base-content text-opacity-70">
-        { Bonfire.Common.Config.get([:ui, :theme, :instance_description], l "Yet another bonfire instance")}
+      <p
+        :if={ Bonfire.Common.Config.get([:ui, :theme, :instance_description], nil) && Bonfire.Common.Config.get([:ui, :theme, :instance_welcome, :description], nil)} 
+        class="mt-1 text-sm text-base-content text-opacity-70">
+        { Bonfire.Common.Config.get([:ui, :theme, :instance_description], "")}
       </p>
       <div class="mt-2 text-xs badge badge-ghost">
         {Bonfire.Application.named_version()} 

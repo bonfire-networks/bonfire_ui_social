@@ -1,12 +1,4 @@
-{#if String.starts_with?(@permalink, "http")}
-
-  <span 
-    data-tip={l "Originates from a remote instance"}
-    class="align-bottom tooltip tooltip-bottom">
-    <Solid.ExternalLinkIcon class="w-4 h-4 text-opacity-50 text-base-content" />
-  </span>
-
-{#elseif e(@object_primary_boundary, :id, nil)in [Bonfire.Boundaries.Acls.get_id!(:guests_may_see), Bonfire.Boundaries.Acls.get_id!(:guests_may_read), Bonfire.Boundaries.Acls.get_id!(:guests_may_see_read)]}
+{#if e(@object_primary_boundary, :id, nil)in [Bonfire.Boundaries.Acls.get_id!(:guests_may_see), Bonfire.Boundaries.Acls.get_id!(:guests_may_read), Bonfire.Boundaries.Acls.get_id!(:guests_may_see_read)]}
 
   <span 
     data-tip={e(@object_primary_boundary, :name, "Public")}

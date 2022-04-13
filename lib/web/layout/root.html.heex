@@ -10,7 +10,7 @@
     <meta name="author" content="Bonfire">
     <%= csrf_meta_tag() %>
     <%= live_title_tag assigns[:page_title] || "Home", suffix: " · Bonfire" %>
-    <%= raw Bonfire.Web.Endpoint.include_assets(@conn)%>
+    <%= raw Config.get!(:endpoint_module).include_assets(@conn)%>
   </head>
   <body id="layout-root" class="min-h-screen bg-base-300">
     <style>

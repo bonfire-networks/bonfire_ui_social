@@ -1,20 +1,17 @@
 <ul class="p-2 menu">
-  <li>
-    <a href="https://notes.zo.team/weekly_meeting" target="_blank">
-      <Solid.LinkIcon class="w-4 h-4" />
-      <span class="text-sm truncate ellipsis">{l "Monthly Meetings"}</span>
-    </a> 
-  </li>
-  <li>
-    <a href="https://socialhub.activitypub.rocks/g/bonfire/activity/posts" target="_blank">
-      <Solid.LinkIcon class="w-4 h-4" />
-      <span class="text-sm truncate ellipsis">{l "Forum"}</span>
-    </a> 
-  </li>
-  <li>
-    <a href="https://opencollective.com/bonfire-networks" target="_blank">
-      <Solid.LinkIcon class="w-4 h-4" />
-      <span class="text-sm truncate ellipsis">{l "Support"}</span>
-    </a> 
+  <li
+    :for={{name, link} <- @links} 
+  >
+    <a href={link} target="_blank">
+      
+      {#case Bonfire.Files.FaviconStore.favicon_url(link)}
+        {#match nil}
+          <Solid.LinkIcon class="w-4 h-4" />
+        {#match image}
+          <img src={image} class="w-4 h-4"/>
+      {/case}
+
+      <span class="text-sm truncate ellipsis">{name}</span>
+    </a>  
   </li>
 </ul>

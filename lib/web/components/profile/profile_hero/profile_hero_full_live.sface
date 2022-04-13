@@ -15,7 +15,7 @@
           target="_blank"
           class="hidden btn btn-sm lg:flex btn-info btn-circle"
         >
-          <Solid.ExternalLinkIcon class="w-4 h-4" />  
+          <Solid.ExternalLinkIcon class="w-4 h-4" />
         </a> 
 
         <div :if={e(current_user(assigns), :id, nil) != maybe_get(@user, :id)} >
@@ -134,7 +134,7 @@
       <div class="flex items-center">
         <span class="text-sm font-normal text-base-content text-opacity-70">{Bonfire.Me.Characters.display_username(@user)}</span>
         <!-- FOLLOWS YOU LABEL -->
-        <div class="ml-2 opacity-70 text-xs rounded badge badge-outline">{"Follows you"}</div>
+        <!-- <div class="ml-2 opacity-70 text-xs rounded badge badge-outline">{"Follows you"}</div> -->
       </div>
 
       <div class="mt-1">
@@ -159,7 +159,13 @@
             :if={e(@user, :profile, :website, nil)}
             class="flex items-center "
           >
-            <Solid.ExternalLinkIcon class="w-5 h-5 text-base-content text-opacity-70" />
+            {#case Bonfire.Files.FaviconStore.favicon_url(e(@user, :profile, :website, nil))}
+              {#match nil}
+                <Solid.ExternalLinkIcon class="w-5 h-5 text-base-content text-opacity-70" />
+              {#match image}
+                <img src={image} class="w-4 h-4"/>
+            {/case}
+
             <a href={"#{e(@user, :profile, :website, "")}"} target="blank" class="ml-2 text-sm link">
               {display_url(e(@user, :profile, :website, ""))}
             </a>
