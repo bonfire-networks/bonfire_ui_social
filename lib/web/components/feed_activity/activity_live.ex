@@ -24,9 +24,8 @@ defmodule Bonfire.UI.Social.ActivityLive do
     activity =
       activity
       # |> debug("Activity provided")
-      |> Map.put(:object, object(assigns, activity))
-
-    # |> dump("Activity with object")
+      |> Map.put(:object, Activities.object_from_activity(assigns))
+      |> dump("Activity with :object")
 
     verb =
       Activities.verb_maybe_modify(
@@ -129,12 +128,6 @@ defmodule Bonfire.UI.Social.ActivityLive do
     ~F"""
 
     """
-  end
-
-  def object(assigns, activity) do
-    Activities.object_from_activity(e(assigns, :object, nil) || activity)
-    |> debug("object_from_activity")
-    # |> repo().maybe_preload(created: [creator: [:profile, :character]])
   end
 
   # don't show subject twice

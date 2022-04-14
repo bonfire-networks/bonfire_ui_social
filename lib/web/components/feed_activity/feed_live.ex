@@ -16,7 +16,7 @@ defmodule Bonfire.UI.Social.FeedLive do
   def mount(socket) do
     {:ok, socket
     |> assign(
-      feed: [],
+      feed: []
     ),
     temporary_assigns: [
       feed: [],
