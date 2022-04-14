@@ -13,7 +13,7 @@
         style={"background-image: url('"<>image_url(current_user(assigns))<>"'); height: 225px;"}>
         <div class="space-y-1 text-center">
           <div class="flex text-sm text-primary-content-600">
-            <label for={@uploads.image.ref} class="absolute inset-0 flex flex-col items-center justify-center w-full h-full text-sm font-medium text-white transition duration-150 ease-in-out rounded-lg opacity-0 cursor-pointer bg-base-100 bg-opacity-40 hover:opacity-100 focus-within:opacity-100">
+            <label for={@uploads.image.ref} class="absolute inset-0 flex flex-col items-center justify-center w-full h-full text-sm font-medium text-white transition duration-150 ease-in-out rounded-lg opacity-0 cursor-pointer bg-base-100 bg-opacity-40 hover:opacity-60 focus-within:opacity-60">
               { live_file_input @uploads.image, class: "sr-only" }
               <div class="text-center">
               <span>{l "Upload a background image"}</span>
@@ -38,7 +38,7 @@
         <div 
           data-id="preview_icon"
           class="flex items-center w-32 h-32 bg-cover rounded-full shadow-lg bg-base-content" style={"background-image: url('" <> avatar_url(current_user(assigns)) <> "')"}></div>
-        <label for={@uploads.icon.ref} class="absolute inset-0 flex items-center justify-center w-full h-full text-sm font-medium text-white transition duration-150 ease-in-out opacity-0 cursor-pointer bg-base-100 bg-opacity-40 hover:opacity-100 focus-within:opacity-100">
+        <label for={@uploads.icon.ref} class="absolute inset-0 flex items-center justify-center w-full h-full text-sm font-medium text-white transition duration-150 ease-in-out opacity-0 cursor-pointer bg-base-100 bg-opacity-40 hover:opacity-60 focus-within:opacity-60">
           <span>{l "Upload or drop"}</span>
           <span class="sr-only"> {l "avatar"}</span>
           {live_file_input @uploads.icon, class: "sr-only" }

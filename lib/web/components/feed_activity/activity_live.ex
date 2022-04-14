@@ -492,7 +492,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
   def component_show_event_actions(activity) do
     [
       {Bonfire.UI.Social.Activity.EventActionsLive,
-       %{object: e(activity, :object, :resource_inventoried_as, "")}}
+       %{object: e(activity, :object, :resource_inventoried_as, nil) || e(activity, :object, nil)}}
     ]
   end
 

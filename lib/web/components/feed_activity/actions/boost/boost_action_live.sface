@@ -8,7 +8,7 @@
   class="btn btn-ghost btn-sm btn-circle boost">
 
   {#if e(assigns, :showing_within, nil) != :thread}
-  <span class={"text-base-content text-opacity-70", "text-opacity-100 text-info": e(assigns, :my_boost, nil)}>
+  <span class={"text-base-content text-opacity-70", "text-opacity-60 text-info": e(assigns, :my_boost, nil)}>
 
     <svg 
       viewBox="0 0 24 24" 

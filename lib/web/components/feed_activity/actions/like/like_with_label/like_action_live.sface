@@ -9,7 +9,7 @@
   class="like btn btn-ghost btn-sm btn-circle like_with_label">
 
   <span 
-     class={"text-base-content text-opacity-70", "text-yellow-500 text-opacity-100": e(@my_like, nil)}
+     class={"text-base-content text-opacity-70", "text-yellow-500 text-opacity-60": e(@my_like, nil)}
     :if={e(assigns, :showing_within, nil) != :thread}>
     <Solid.StarIcon 
       :if={e(@my_like, nil)}

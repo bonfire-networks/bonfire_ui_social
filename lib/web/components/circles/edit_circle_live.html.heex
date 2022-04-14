@@ -49,12 +49,12 @@
 
                 <%= live_component(@socket, Bonfire.UI.Social.ProfileItemLive, assigns |> assigns_merge(%{profile: e(suggested, :followed_profile, nil), character: e(suggested, :followed_character, nil)})) %>
 
-                <span class="to inline-flex items-center shadow-sm px-2.5 py-0.5 border border-gray-300 text-sm leading-5 font-medium rounded-full text-base-content-700 bg-base-100 hover:bg-neutral hover:bg-opacity-30 " @click="
+                <span class="to inline-flex items-center shadow-sm px-2.5 py-0.5 border border-gray-300 text-sm leading-5 font-medium rounded-full text-base-content opacity-70 bg-base-100 hover:bg-neutral hover:bg-opacity-30 " @click="
                 const target = document.getElementById('circle_members');
                 const element = event.target.closest('li');
                 target.appendChild(element);
                 ">+</span>
-                <span class="from inline-flex items-center shadow-sm px-2.5 py-0.5 border border-gray-300 text-sm leading-5 font-medium rounded-full text-base-content-700 bg-base-100 hover:bg-neutral hover:bg-opacity-30 " @click="
+                <span class="from inline-flex items-center shadow-sm px-2.5 py-0.5 border border-gray-300 text-sm leading-5 font-medium rounded-full text-base-content opacity-70 bg-base-100 hover:bg-neutral hover:bg-opacity-30 " @click="
                 const target = document.getElementById('circle_suggestions');
                 const element = event.target.closest('li');
                 target.appendChild(element);
@@ -82,12 +82,12 @@
 
                 <%= live_component(@socket, Bonfire.UI.Social.ProfileItemLive, assigns |> assigns_merge(%{profile: e(suggested, :follower_profile, nil), character: e(suggested, :follower_character, nil)})) %>
 
-                <span class="to inline-flex items-center shadow-sm px-2.5 py-0.5 border border-gray-300 text-sm leading-5 font-medium rounded-full text-base-content-700 bg-base-100 hover:bg-neutral hover:bg-opacity-30 " @click="
+                <span class="to inline-flex items-center shadow-sm px-2.5 py-0.5 border border-gray-300 text-sm leading-5 font-medium rounded-full text-base-content opacity-70 bg-base-100 hover:bg-neutral hover:bg-opacity-30 " @click="
                 const target = document.getElementById('circle_members');
                 const element = event.target.closest('li');
                 target.appendChild(element);
                 ">+</span>
-                <span class="from inline-flex items-center shadow-sm px-2.5 py-0.5 border border-gray-300 text-sm leading-5 font-medium rounded-full text-base-content-700 bg-base-100 hover:bg-neutral hover:bg-opacity-30 " @click="
+                <span class="from inline-flex items-center shadow-sm px-2.5 py-0.5 border border-gray-300 text-sm leading-5 font-medium rounded-full text-base-content opacity-70 bg-base-100 hover:bg-neutral hover:bg-opacity-30 " @click="
                 const target = document.getElementById('circle_suggestions');
                 const element = event.target.closest('li');
                 target.appendChild(element);
@@ -151,12 +151,12 @@
                 <input type="hidden" name={"circle[encircle][#{member.id}][subject_id]"} value={e(member, :subject_id, "")}>
                 <%= live_component(@socket, Bonfire.UI.Social.ProfileItemLive, assigns |> assigns_merge(%{profile: e(member, :subject, :profile, nil), character: e(member, :subject, :character, nil)})) %>
 
-                <span class="to inline-flex items-center shadow-sm px-2.5 py-0.5 border border-gray-300 text-sm leading-5 font-medium rounded-full text-base-content-700 bg-base-100 hover:bg-neutral hover:bg-opacity-30 " @click="
+                <span class="to inline-flex items-center shadow-sm px-2.5 py-0.5 border border-gray-300 text-sm leading-5 font-medium rounded-full text-base-content opacity-70 bg-base-100 hover:bg-neutral hover:bg-opacity-30 " @click="
                 const target = document.getElementById('circle_members');
                 const element = event.target.closest('li');
                 target.appendChild(element);
                 ">+</span>
-                <span class="from inline-flex items-center shadow-sm px-2.5 py-0.5 border border-gray-300 text-sm leading-5 font-medium rounded-full text-base-content-700 bg-base-100 hover:bg-neutral hover:bg-opacity-30 " @click="
+                <span class="from inline-flex items-center shadow-sm px-2.5 py-0.5 border border-gray-300 text-sm leading-5 font-medium rounded-full text-base-content opacity-70 bg-base-100 hover:bg-neutral hover:bg-opacity-30 " @click="
                 const target = document.getElementById('circle_suggestions');
                 const element = event.target.closest('li');
                 target.appendChild(element);

@@ -9,7 +9,7 @@
 
     <span :if={e(@object, :resource_quantity, nil) || e(@object, :effort_quantity, nil)}>of</span>
 
-    <LivePatch :if={e(@object, :resource_inventoried_as, :id, nil)} to={path(e(@object, :resource_inventoried_as, ""))} class="font-bold underline"> {e(@object, :resource_inventoried_as, :name, "")}</LivePatch>
+    <LivePatch :if={e(@object, :resource_inventoried_as, :id, nil)} to={path(e(@object, :resource_inventoried_as, nil))} class="font-bold underline"> {e(@object, :resource_inventoried_as, :name, "")}</LivePatch>
 
     <span :if={e(@object, :output_of, nil)}>from <LivePatch to={path(e(@object, :output_of, ""))} class="font-bold underline">{e(@object, :output_of, :name, "")}</LivePatch></span>
 
