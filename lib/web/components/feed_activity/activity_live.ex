@@ -191,6 +191,18 @@ defmodule Bonfire.UI.Social.ActivityLive do
       ),
       do: {Bonfire.UI.Social.Activity.SubjectLive, %{profile: profile, character: character}}
 
+  def component_activity_maybe_creator(%{provider: %{id: _}}),
+    do: Bonfire.UI.Social.Activity.ProviderReceiverLive
+
+  def component_activity_maybe_creator(%{primary_accountable: %{id: _} = primary_accountable}),
+    do: {Bonfire.UI.Social.Activity.ProviderReceiverLive, %{provider: primary_accountable}}
+
+  def component_activity_maybe_creator(%{receiver: %{id: _}}),
+    do: Bonfire.UI.Social.Activity.ProviderReceiverLive
+
+  def component_activity_maybe_creator(%{object: %{id: _} = object}),
+    do: component_activity_maybe_creator(object)
+
   def component_activity_maybe_creator(%{created: _created} = object),
     do:
       object
@@ -205,24 +217,12 @@ defmodule Bonfire.UI.Social.ActivityLive do
       |> e(:creator, nil)
       |> component_activity_maybe_creator()
 
-  def component_activity_maybe_creator(%{object: %{id: _} = object}),
-    do: component_activity_maybe_creator(object)
-
   def component_activity_maybe_creator(%{subject: %{profile: _, character: _}} = object),
     do:
       object
       |> repo().maybe_preload(subject: [:profile, :character])
       |> e(:subject, nil)
       |> component_activity_maybe_creator()
-
-  def component_activity_maybe_creator(%{provider: %{id: _}}),
-    do: Bonfire.UI.Social.Activity.ProviderReceiverLive
-
-  def component_activity_maybe_creator(%{primary_accountable: %{id: _} = primary_accountable}),
-    do: {Bonfire.UI.Social.Activity.ProviderReceiverLive, %{provider: primary_accountable}}
-
-  def component_activity_maybe_creator(%{receiver: %{id: _}}),
-    do: Bonfire.UI.Social.Activity.ProviderReceiverLive
 
   def component_activity_maybe_creator(%{provider: _, receiver: _} = object),
     do:
@@ -247,6 +247,8 @@ defmodule Bonfire.UI.Social.ActivityLive do
       object
       |> repo().maybe_preload(primary_accountable: [:profile, :character])
       |> component_activity_maybe_creator()
+
+
 
   def component_activity_maybe_creator(activity) do
     error("ActivityLive: could not find the creator of #{inspect(activity)}")
@@ -451,19 +453,19 @@ defmodule Bonfire.UI.Social.ActivityLive do
       when type in [Bonfire.Data.Social.Post, Bonfire.Data.Social.PostContent],
       do: component_show_standard_actions(activity)
 
-  def actions_for_object_type(activity, type) when type in [ValueFlows.EconomicEvent],
-    do: component_show_event_actions(activity)
+  # def actions_for_object_type(activity, type) when type in [ValueFlows.EconomicEvent],
+  #   do: component_show_event_actions(activity)
 
-  def actions_for_object_type(activity, type) when type in [ValueFlows.EconomicResource],
-    do: component_show_process_actions(activity)
+  # def actions_for_object_type(activity, type) when type in [ValueFlows.EconomicResource],
+  #   do: component_show_process_actions(activity)
 
-  # TODO: choose between Task and other Intent types
-  def actions_for_object_type(activity, type) when type in [ValueFlows.Planning.Intent],
-    do: component_show_process_actions(activity)
+  # # TODO: choose between Task and other Intent types
+  # def actions_for_object_type(activity, type) when type in [ValueFlows.Planning.Intent],
+  #   do: component_show_process_actions(activity)
 
-  # TODO: choose between Task and other Intent types
-  def actions_for_object_type(activity, type) when type in [ValueFlows.Process],
-    do: component_show_process_actions(activity)
+  # # TODO: choose between Task and other Intent types
+  # def actions_for_object_type(activity, type) when type in [ValueFlows.Process],
+  #   do: component_show_process_actions(activity)
 
   def actions_for_object_type(activity, type) do
     warn(type, "No actions defiend fot this type")

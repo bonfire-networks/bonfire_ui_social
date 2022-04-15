@@ -1,13 +1,13 @@
 {#if @viewing_main_object}
 <div class="flex items-center space-x-1 ">
  
-  <LiveRedirect class="flex items-center subject_timestamp text-base-content text-opacity-80" to={permalink(assigns)}> 
+  <LiveRedirect class="flex items-center subject_timestamp text-base-content text-opacity-80" to={@permalink}> 
 
     <span 
       :if={e(@object, :peered, nil) || e(@object, :character, :peered, nil)}
       data-tip={l "Originates from a remote instance"}
       class="align-bottom tooltip tooltip-bottom">
-      {#case Bonfire.Files.FaviconStore.favicon_url(permalink(assigns))}
+      {#case Bonfire.Files.FaviconStore.favicon_url(@permalink)}
         {#match nil}
           <Solid.ExternalLinkIcon class="w-4 h-4 text-base-content text-opacity-50" />
         {#match image}
@@ -23,7 +23,6 @@
     <BoundaryIconLive 
       id={ComponentID.new(BoundaryIconLive, @object)} 
       object={@object} 
-      permalink={permalink(assigns)} 
     />
   </LiveRedirect>
 </div>
@@ -32,19 +31,12 @@
 <div class="flex items-center space-x-2">
   <div class="relative text-xs text-base-content text-opacity-60">
     
-    <LiveRedirect class="subject_timestamp text-base-content text-opacity-60" to={ path(@object) || permalink(assigns)}>
+    <BoundaryIconLive 
+        id={ComponentID.new(BoundaryIconLive, @object)} 
+        object={@object} 
+      />
 
-      <span 
-        :if={e(@object, :peered, nil) || e(@object, :character, :peered, nil)}
-        data-tip={l "Originates from a remote instance"}
-        class="align-bottom tooltip tooltip-bottom">
-        {#case Bonfire.Files.FaviconStore.favicon_url(permalink(assigns))}
-          {#match nil}
-            <Solid.ExternalLinkIcon class="w-4 h-4 text-base-content text-opacity-50" />
-          {#match image}
-            <img src={image} class="w-4 h-4"/>
-        {/case}
-      </span>
+    <LiveRedirect class="subject_timestamp text-base-content text-opacity-60" to={ path(@object) || @permalink}>
 
       <span :if={e(assigns, :showing_within, nil) not in [:widget, :create_activity_form]} class="hidden capitalize lg:inline">
         {@verb_display}
@@ -53,13 +45,13 @@
       <span :if={e(assigns, :showing_within, nil) not in [:create_activity_form]}>
         {@date_ago}
       </span>
-
-      <BoundaryIconLive 
-        id={ComponentID.new(BoundaryIconLive, @object)} 
-        object={@object} 
-        permalink={permalink(assigns)} 
-      />
+      
     </LiveRedirect>
+
+    <Bonfire.UI.Social.Activity.InstanceIconLive
+        object={@object} 
+      />
+
   </div>
 
 </div>

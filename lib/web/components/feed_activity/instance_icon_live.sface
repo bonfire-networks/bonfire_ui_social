@@ -1,0 +1,18 @@
+
+{#case permalink(assigns)}
+  {#match link when is_binary(link)}
+    <a 
+      href={link}
+      target="_blank"
+      data-tip={l "Originates from a remote instance"}
+      class="align-bottom tooltip tooltip-bottom">
+      {#case Bonfire.Files.FaviconStore.favicon_url(link)}
+        {#match nil}
+          <Solid.ExternalLinkIcon class="w-4 h-4 text-base-content text-opacity-50" />
+        {#match image}
+          <img src={image} class="w-4 h-4"/>
+      {/case}
+    </a>
+  {#match _}
+    
+{/case}

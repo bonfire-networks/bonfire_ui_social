@@ -89,7 +89,6 @@
         <BoundaryIconLive 
         id={ComponentID.new(BoundaryIconLive, @object)} 
         object={@object} 
-        permalink={@permalink} 
         />
 
         <LiveRedirect class="ml-1 text-xs text-base-content text-opacity-60 text-light" to={@permalink}>
