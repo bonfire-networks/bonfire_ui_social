@@ -1,6 +1,6 @@
 <div class="w-full max-w-[580px] mb-4 tablet:w-72 tablet:mb-0 mx-auto shrink-0">
   <div class="flex flex-col w-full overflow-y-auto rounded-lg shadow-lg bg-base-100 tablet:w-72">
-    <div class="bg-bottom bg-no-repeat bg-cover rounded-t-lg h-[200px]" style={"background-image: url(" <> Bonfire.Common.Config.get([:ui, :theme, :instance_image], '') <> ")"}></div>
+    <div class="bg-bottom bg-no-repeat bg-cover rounded-t-lg h-[200px]" style={"background-image: url(#{Bonfire.Common.Config.get([:ui, :theme, :instance_image], nil)})"}></div>
     <div class="p-3 rounded-b-lg">
       <LiveRedirect class="text-xl font-extrabold link link-hover text-base-content" to={path(Bonfire.Common.Config.get!(:home_page))}>
         {Bonfire.Common.Config.get([:ui, :theme, :instance_name], "Bonfire")}

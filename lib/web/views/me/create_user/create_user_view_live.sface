@@ -2,7 +2,7 @@
   <div class="w-full mx-auto mt-8 lg:w-[28rem] md:w-2/3">
     <div class="relative z-10 flex items-center mx-auto rounded-full bg-base-300 w-28 h-28 place-content-center ring-4 ring-base-100">
       <LiveRedirect to={path(Bonfire.Common.Config.get!(:home_page))}>
-        <div class="w-24 h-24 bg-center bg-no-repeat bg-contain" style={"background-image: url(" <> Bonfire.Common.Config.get([:ui, :theme, :instance_logo], '') <> ")"}></div>
+        <div class="w-24 h-24 bg-center bg-no-repeat bg-contain" style={"background-image: url(#{ Bonfire.Common.Config.get([:ui, :theme, :instance_logo], nil)})"}></div>
       </LiveRedirect>
     </div>
     <div class="rounded shadow-xl bg-base-100 -mt-14">

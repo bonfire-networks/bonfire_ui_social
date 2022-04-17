@@ -1,0 +1,21 @@
+<div 
+  :if={e(current_user(assigns), :character, :username, nil)}
+  class="font-bold text-xs uppercase text-base-content text-opacity-80 border-b mt-8 border-base-content border-opacity-30 pb-2">{l "Discoverability"}</div>
+  
+  <div class="form-control mt-2">
+    <label class="label cursor-pointer justify-start">
+      <input 
+        name="Bonfire.Me.Users[discoverable]" 
+        value="false"
+        type="hidden" 
+      />
+      <input 
+        name="Bonfire.Me.Users[discoverable]" 
+        value="true"
+        type="checkbox" 
+        checked={if Bonfire.Me.Settings.get([Bonfire.Me.Users, :discoverable], nil, assigns), do: "checked"} 
+        class="checkbox" 
+      />
+      <span class="ml-2 label-text">{@label}</span> 
+    </label>
+  </div>

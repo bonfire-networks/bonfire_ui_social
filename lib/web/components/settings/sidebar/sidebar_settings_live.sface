@@ -10,7 +10,7 @@
         to={"/settings/user"} 
         class={"w-full flex items-center text-sm font-regular text-base-content", "focus:bg-primary hover:bg-primary bg-primary text-primary-content": @selected_tab == "user"}>
         <Outline.UserIcon class="inline-block w-5 h-5 mr-2 stroke-current" />
-        {l "Profile"}
+        {l "Profile Info"}
       </LivePatch>
     </li> 
     <li>
@@ -18,7 +18,7 @@
         to={"/settings/preferences"}
         class={"w-full flex items-center text-sm font-regular text-base-content", "focus:bg-primary hover:bg-primary bg-primary text-primary-content": @selected_tab == "preferences"}>
         <Outline.AdjustmentsIcon class="inline-block w-5 h-5 mr-2 stroke-current" />
-        {l "Preferences"}
+        {l "User Preferences"}
       </LivePatch>
     </li> 
     <li :if={ module_enabled?(Bonfire.Data.SharedUser) and module_enabled?(Bonfire.Me.SharedUsers) }>
@@ -34,7 +34,7 @@
         to={"/settings/account"}
         class={"w-full flex items-center text-sm font-regular text-base-content", "focus:bg-primary hover:bg-primary bg-primary text-primary-content": @selected_tab == "account"}>
         <Outline.LockClosedIcon class="inline-block w-5 h-5 mr-2 stroke-current" />
-        {l "Account"}
+        {l "Account Settings"}
       </LivePatch>
     </li>
     <li class="uppercase menu-title">

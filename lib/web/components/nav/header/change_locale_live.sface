@@ -1,5 +1,10 @@
-<select id="change_locale" class="w-full max-w-xs select select-bordered" phx-change="locale-changed" phx-hook="ChangeLocaleHook">
-  {#for locale <- Localise.known_locales}
+<select 
+id="change_locale" 
+name="Bonfire.Web.Cldr[default_locale]"
+class="w-full max-w-xs select select-bordered" 
+phx-change="locale-changed" 
+phx-hook="ChangeLocaleHook">
+  {#for locale <- Localise.known_locales()}
     <option class=""
       value={locale}
       selected={@locale==locale}

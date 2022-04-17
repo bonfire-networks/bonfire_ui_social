@@ -9,39 +9,40 @@
   - show number instance users
   - Switch open / invite only instance
   - Show default theme -->
+<form name="settings" phx-change="Bonfire.Me.Settings:set">
+  <input name="scope" value={:instance} type="hidden" />
+  
 <div class="">
   <div class="pb-4 space-y-6 sm:space-y-5">
     <div class="px-4 sm:grid sm:grid-cols-3 sm:gap-4 sm:items-start sm:border-t sm:border-base-200 sm:pt-5">
-      <label for="username" class="block text-sm font-medium text-base-content sm:mt-px sm:pt-2">
+      <label for="instance_name" class="block text-sm font-medium text-base-content sm:mt-px sm:pt-2">
         {l "Instance name"}
       </label>
       <div class="mt-1 sm:mt-0 sm:col-span-2">
         <div class="flex max-w-lg ">
-          <input type="text" name="username" id="username" autocomplete="username" class="w-full input input-bordered">
+          <input type="text" name="ui[theme][instance_name]" id="instance_name" value={Bonfire.Me.Settings.get([:bonfire, :ui, :theme, :instance_name], "")} class="w-full input input-bordered">
         </div>
       </div>
     </div>
 
     <div class="px-4 sm:grid sm:grid-cols-3 sm:gap-4 sm:items-start sm:border-t sm:border-base-200 sm:pt-5">
-      <label for="about" class="block text-sm font-medium text-base-content sm:mt-px sm:pt-2">
+      <label for="instance_description" class="block text-sm font-medium text-base-content sm:mt-px sm:pt-2">
         {l "Instance description"}
       </label>
       <div class="mt-1 sm:mt-0 sm:col-span-2">
-        <textarea id="about" name="about" rows="3" class="w-full h-24 textarea textarea-bordered"></textarea>
+        <textarea id="instance_description" name="ui[theme][instance_description]" rows="3" class="w-full h-24 textarea textarea-bordered">{Bonfire.Me.Settings.get([:bonfire, :ui, :theme, :instance_description], "")}</textarea>
         <p class="mt-1 text-sm text-base-content text-opacity-80">{l "Write a few sentences about what the instance is about."}</p>
       </div>
     </div>
 
     <div class="px-4 sm:grid sm:grid-cols-3 sm:gap-4 sm:items-center sm:border-t sm:border-base-200 sm:pt-5">
       <label for="photo" class="block text-sm font-medium text-base-content">
-        {l "Instance logo"}
+        {l "Instance icon"}
       </label>
       <div class="mt-1 sm:mt-0 sm:col-span-2">
         <div class="flex items-center">
           <span class="w-12 h-12 overflow-hidden rounded-full bg-base-100">
-            <svg class="w-full h-full text-primary-content-300" fill="currentColor" viewBox="0 0 24 24">
-              <path d="M24 20.993V24H0v-2.996A14.977 14.977 0 0112.004 15c4.904 0 9.26 2.354 11.996 5.993zM16.002 8.999a4 4 0 11-8 0 4 4 0 018 0z" />
-            </svg>
+            <img class="w-full h-full" src={Bonfire.Me.Settings.get([:bonfire, :ui, :theme, :instance_logo], "")} />
           </span>
           <button type="button" class="ml-3 btn btn-secondary">
             {l "Change"}
@@ -52,14 +53,12 @@
 
     <div class="px-4 sm:grid sm:grid-cols-3 sm:gap-4 sm:items-start sm:border-t sm:border-base-200 sm:pt-5">
       <label for="cover-photo" class="block text-sm font-medium text-base-content sm:mt-px sm:pt-2">
-        {l "Cover photo"}
+        {l "Cover image"}
       </label>
       <div class="mt-1 sm:mt-0 sm:col-span-2">
         <div class="flex justify-center max-w-lg px-6 pt-5 pb-6 border-2 border-gray-300 border-dashed rounded-md">
           <div class="space-y-1 text-center">
-            <svg class="w-12 h-12 mx-auto text-primary-content-400" stroke="currentColor" fill="none" viewBox="0 0 48 48" aria-hidden="true">
-              <path d="M28 8H12a4 4 0 00-4 4v20m32-12v8m0 0v8a4 4 0 01-4 4H12a4 4 0 01-4-4v-4m32-4l-3.172-3.172a4 4 0 00-5.656 0L28 28M8 32l9.172-9.172a4 4 0 015.656 0L28 28m0 0l4 4m4-24h8m-4-4v8m-12 4h.02" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
-            </svg>
+            <img class="w-full h-auto mx-auto" src={Bonfire.Me.Settings.get([:bonfire, :ui, :theme, :instance_image], "")} />
             <div class="flex text-sm text-base-content text-opacity-80">
               <label for="file-upload" class="btn btn-xs btn-secondary">
                 <span>{l "Upload a file"}</span>
@@ -75,41 +74,49 @@
       </div>
     </div>
 
-    <div class="px-4 sm:grid sm:grid-cols-3 sm:gap-4 sm:items-center sm:border-t sm:border-base-200 sm:pt-5">
+    <!-- <div class="px-4 sm:grid sm:grid-cols-3 sm:gap-4 sm:items-center sm:border-t sm:border-base-200 sm:pt-5">
       <label for="default-theme" class="block text-sm font-medium text-base-content sm:mt-px sm:pt-2">
         {l "Default theme"}
       </label>
       <div class="mt-1 sm:mt-0 sm:col-span-2">
-        <Bonfire.UI.Social.ChangeThemeLive />
+        <Bonfire.UI.Social.ChangeThemeLive
+          selected={Bonfire.Me.Settings.get([:bonfire, :ui, :default_theme], nil)}
+         />
       </div>
-    </div>
+    </div> -->
 
     <div class="px-4 sm:grid sm:grid-cols-3 sm:gap-4 sm:items-center sm:border-t sm:border-base-200 sm:pt-5">
       <label for="default-language" class="block text-sm font-medium text-base-content sm:mt-px sm:pt-2">
         {l "Default language"}
       </label>
       <div class="mt-1 sm:mt-0 sm:col-span-2">
-        <Bonfire.UI.Social.ChangeLocaleLive />
+        <Bonfire.UI.Social.ChangeLocaleLive
+          locale={Bonfire.Me.Settings.get([Bonfire.Web.Cldr, :default_locale], e(assigns, :locale, nil))}
+         />
       </div>
     </div>
 
     <div class="px-4 sm:grid sm:grid-cols-3 sm:gap-4 sm:items-start sm:border-t sm:border-base-200 sm:pt-5">
       <label for="default-theme" class="block text-sm font-medium text-base-content sm:mt-px sm:pt-2">
-        {l "Show admins info on public homepage"}
+        {l "Show list of admins on public homepage"}
       </label>
       <div class="mt-1 sm:mt-0 sm:col-span-2">
         <fieldset>
           <legend class="sr-only">
-            {l "Admin info"}
+            {l "Show list of admins on public homepage"}
           </legend>
           <div class="flex -space-y-px border border-base-200 bg-base-100 rounded-box">
             <!-- Checked: "bg-base-200 border-indigo-200 z-10", Not Checked: "border-gray-200" -->
             <label class="relative flex items-center flex-1 p-4 border-r cursor-pointer border-base-200 focus:outline-none">
-              <input type="radio" name="admin-info" value="Public access" class="radio radio-secondary" aria-labelledby="admin-info-0-label" aria-describedby="admin-info-0-description">
+              <input type="radio" 
+              name="Bonfire.UI.Social.WidgetAdminsLive[show_guests]" 
+              value="true" 
+              checked={if Bonfire.Me.Settings.get([Bonfire.UI.Social.WidgetAdminsLive, :show_guests], true), do: "checked"} 
+              class="radio radio-secondary" aria-labelledby="admin-info-0-label" aria-describedby="admin-info-0-description">
               <div class="flex flex-col ml-3">
                 <!-- Checked: "text-indigo-900", Not Checked: "text-primary-content-900" -->
                 <span id="admin-info-0-label" class="block text-sm font-medium">
-                  {l "yes"}
+                  {l "Yes"}
                 </span>
               </div>
             </label>
@@ -117,7 +124,11 @@
 
             <!-- Checked: "bg-base-200 border-indigo-200 z-10", Not Checked: "border-gray-200" -->
             <label class="relative flex items-center flex-1 p-4 cursor-pointer focus:outline-none">
-              <input type="radio" name="admin-info" value="Private to you" class="radio radio-secondary" aria-labelledby="admin-info-2-label" aria-describedby="admin-info-2-description">
+              <input type="radio" 
+              name="Bonfire.UI.Social.WidgetAdminsLive[show_guests]" 
+              value="false" 
+              checked={if not Bonfire.Me.Settings.get([Bonfire.UI.Social.WidgetAdminsLive, :show_guests], true), do: "checked"} 
+              class="radio radio-secondary" aria-labelledby="admin-info-2-label" aria-describedby="admin-info-2-description">
               <div class="flex flex-col ml-3">
                 <!-- Checked: "text-indigo-900", Not Checked: "text-primary-content-900" -->
                 <span id="admin-info-2-label" class="block text-sm font-medium">
@@ -130,33 +141,29 @@
       </div>
     </div>
 
-    <div class="px-4 sm:grid sm:grid-cols-3 sm:gap-4 sm:items-start sm:border-t sm:border-base-200 sm:pt-5">
+    <!-- <div class="px-4 sm:grid sm:grid-cols-3 sm:gap-4 sm:items-start sm:border-t sm:border-base-200 sm:pt-5">
       <label for="default-theme" class="block text-sm font-medium text-base-content sm:mt-px sm:pt-2">
-        {l "Show instance users total amount"}
+        {l "Display number of users on this instance"}
       </label>
       <div class="mt-1 sm:mt-0 sm:col-span-2">
         <fieldset>
           <legend class="sr-only">
-            {l "Admin info"}
+            {l "Display number of users on this instance"}
           </legend>
           <div class="flex -space-y-px border border-base-200 bg-base-100 rounded-box">
-            <!-- Checked: "bg-base-200 border-indigo-200 z-10", Not Checked: "border-gray-200" -->
             <label class="relative flex items-center flex-1 p-4 border-r cursor-pointer border-base-200 focus:outline-none">
               <input type="radio" name="users-amount" value="Public access" class="radio radio-secondary" aria-labelledby="users-amount-0-label" aria-describedby="users-amount-0-description">
               <div class="flex flex-col ml-3">
-                <!-- Checked: "text-indigo-900", Not Checked: "text-primary-content-900" -->
                 <span id="users-amount-0-label" class="block text-sm font-medium">
-                  {l "yes"}
+                  {l "Yes"}
                 </span>
               </div>
             </label>
 
 
-            <!-- Checked: "bg-base-200 border-indigo-200 z-10", Not Checked: "border-gray-200" -->
             <label class="relative flex items-center flex-1 p-4 cursor-pointer focus:outline-none">
               <input type="radio" name="users-amount" value="Private to you" class="radio radio-secondary" aria-labelledby="users-amount-2-label" aria-describedby="users-amount-2-description">
               <div class="flex flex-col ml-3">
-                <!-- Checked: "text-indigo-900", Not Checked: "text-primary-content-900" -->
                 <span id="users-amount-2-label" class="block text-sm font-medium">
                   {l "No"}
                 </span>
@@ -165,24 +172,25 @@
           </div>
         </fieldset>
       </div>
-    </div>
+    </div> -->
 
     <div class="px-4 sm:grid sm:grid-cols-3 sm:gap-4 sm:items-start sm:border-t sm:border-base-200 sm:pt-5">
-      <label for="default-theme" class="block text-sm font-medium text-base-content sm:mt-px sm:pt-2">
-        {l "Invites only instance"}
+      <label class="block text-sm font-medium text-base-content sm:mt-px sm:pt-2">
+        {l "Open or invite-only"}
       </label>
       <div class="mt-1 sm:mt-0 sm:col-span-2">
         <fieldset>
           <legend class="sr-only">
-            {l "Invites only instance"}
+            {l "Open or invite-only"}
           </legend>
           <div class="-space-y-px bg-base-100 rounded-box">
             <!-- Checked: "bg-base-200 border-indigo-200 z-10", Not Checked: "border-gray-200" -->
             <label class="relative flex p-4 border cursor-pointer border-base-200 rounded-tl-md rounded-tr-md focus:outline-none">
               <input
                 type="radio"
-                name="privacy-setting"
-                value="Private to you"
+                name="invite_only"
+                value="true"
+                checked={if Bonfire.Me.Settings.get(:invite_only, true), do: "checked"} 
                 class="radio radio-secondary"
                 aria-labelledby="privacy-setting-0-label"
                 aria-describedby="privacy-setting-0-description"
@@ -190,10 +198,10 @@
               <div class="flex flex-col ml-3">
                 <!-- Checked: "text-indigo-900", Not Checked: "text-primary-content-900" -->
                 <span id="privacy-setting-label" class="block text-sm font-medium">
-                  {l "yes"}
+                  {l "Closed"}
                 </span>
                 <span id="privacy-setting-description" class="block text-sm">
-                  {"New users cannot register to this instance without an invite link."}
+                  {"Only people with a valid invite link can sign up to this instance."}
                 </span>
               </div>
             </label>
@@ -202,8 +210,9 @@
             <label class="relative flex p-4 border cursor-pointer border-base-200 rounded-bl-md rounded-br-md focus:outline-none">
               <input
                 type="radio"
-                name="privacy-setting"
-                value="Public access"
+                name="invite_only"
+                value="false"
+                checked={if not Bonfire.Me.Settings.get(:invite_only, true), do: "checked"} 
                 class="radio radio-secondary"
                 aria-labelledby="privacy-setting-1-label"
                 aria-describedby="privacy-setting-1-description"
@@ -211,10 +220,10 @@
               <div class="flex flex-col ml-3">
                 <!-- Checked: "text-indigo-900", Not Checked: "text-primary-content-900" -->
                 <span id="privacy-setting-label" class="block text-sm font-medium">
-                  {l "No"}
+                  {l "Open"}
                 </span>
                 <span id="privacy-setting-description" class="block text-sm">
-                  {"Everyone can create an account on this instance."}
+                  {"Anyone can sign up to this instance."}
                 </span>
               </div>
             </label>
@@ -223,5 +232,10 @@
       </div>
     </div>
 
+    <Bonfire.UI.Social.SettingsViewsLive.DiscoverableLive
+      label={l "Users and their content should appear in search engines (in Bonfire, the fediverse, and the web in general) by default (this can be overriden by each account and user's settings)"}
+    />
+
   </div>
 </div>
+</form>

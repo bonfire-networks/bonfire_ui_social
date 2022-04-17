@@ -9,7 +9,7 @@
     <link rel="icon" type="image/x-icon" href="/favicon.ico">
     <meta name="author" content="Bonfire">
     <%= csrf_meta_tag() %>
-    <%= live_title_tag assigns[:page_title] || "Home", suffix: " · Bonfire" %>
+    <%= live_title_tag to_string(assigns[:page_title]) || "Home", suffix: " · Bonfire" %>
     <%= raw Config.get!(:endpoint_module).include_assets(@conn)%>
   </head>
   <body id="layout-root" class="min-h-screen bg-base-300">

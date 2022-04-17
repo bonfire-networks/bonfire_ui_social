@@ -13,7 +13,7 @@
       ></path>
     </svg> 
     <span class="e">
-      {l "Choose theme"}
+      {e(assigns, :selected, l "Choose theme")}
     </span> 
     <svg
       xmlns="http://www.w3.org/2000/svg"
@@ -26,6 +26,8 @@
 
   <div class="dropdown-content bg-base-200 text-base-content rounded-t-box rounded-b-box top-px max-h-96 h-[70vh] w-52 overflow-y-auto shadow-2xl mt-16">
   <div class="grid grid-cols-1 gap-3 p-3" tabindex="0">
+
+
   <div class="overflow-hidden rounded-lg outline-base-content outline outline-2 outline-offset-2" data-set-theme="bonfire" data-act-class="outline">
     <div data-theme="bonfire" class="w-full font-sans cursor-pointer bg-base-100 text-base-content">
       <div class="grid grid-cols-5 grid-rows-3">

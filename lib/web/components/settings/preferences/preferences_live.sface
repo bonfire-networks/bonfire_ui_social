@@ -28,25 +28,9 @@
     </div>
   </div>
 
-  <div class="font-bold text-xs uppercase text-base-content text-opacity-80 border-b mt-8 border-base-content border-opacity-30 pb-2">{l "Discoverability"}</div>
-  
-  <div class="form-control mt-2">
-    <label class="label cursor-pointer justify-start">
-      <input 
-        name="bonfire_me[Bonfire.Me.Users][discoverable]" 
-        value="false"
-        type="hidden" 
-      />
-      <input 
-        name="bonfire_me[Bonfire.Me.Users][discoverable]" 
-        value="true"
-        type="checkbox" 
-        checked={if Bonfire.Me.Settings.get([Bonfire.Me.Users, :discoverable], nil, assigns), do: "checked"} 
-        class="checkbox" 
-      />
-      <span class="ml-2 label-text">I want to appear in search results</span> 
-    </label>
-  </div>
+  <Bonfire.UI.Social.SettingsViewsLive.DiscoverableLive
+    label={l "I want my profile (@%{username}) and content to appear in search engines (in Bonfire, the fediverse, and the web in general)", username: e(current_user(assigns), :character, :username, "")}
+   />
 
 </form>
 </div>
