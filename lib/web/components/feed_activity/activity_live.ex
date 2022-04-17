@@ -25,7 +25,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
       activity
       # |> debug("Activity provided")
       |> Map.put(:object, Activities.object_from_activity(assigns))
-      |> dump("Activity with :object")
+      # |> debug("Activity with :object")
 
     verb =
       Activities.verb_maybe_modify(
