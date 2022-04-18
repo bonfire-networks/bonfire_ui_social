@@ -13,7 +13,7 @@
           phx-value-key="info"><%= rich info %></div>
       <% end %>
       <%= if error do %>
-        <div class="whitespace-pre-wrap alert alert-error " role="alert"
+        <div class="whitespace-pre-wrap alert alert-error prose" role="alert"
           phx-click="lv:clear-flash"
           phx-value-key="error"><%= rich error %></div>
       <% end %>

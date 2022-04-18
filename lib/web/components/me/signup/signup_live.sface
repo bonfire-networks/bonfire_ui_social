@@ -19,6 +19,28 @@
     {/if} 
     <!-- {#else} -->
 
+    {#if Bonfire.Me.Settings.get([:bonfire, :terms, :conduct], nil)}
+      <div class="my-4 alert">
+        <div><div>
+          <h3 class="opacity-70 mb-3">{l "Terms of Use"} / {l "Code of Conduct"}</h3>
+          <div class="whitespace-normal prose">
+            {md Bonfire.Me.Settings.get([:bonfire, :terms, :conduct], "")}
+          </div>
+        </div></div>
+      </div>
+    {/if} 
+
+    {#if Bonfire.Me.Settings.get([:bonfire, :terms, :privacy], nil)}
+      <div class="my-4 alert">
+        <div><div>
+          <h3 class="opacity-70 mb-3">{l "Privacy Policy"}</h3>
+          <div class="whitespace-normal prose">
+            {md Bonfire.Me.Settings.get([:bonfire, :terms, :privacy], "")}
+          </div>
+        </div></div>
+      </div>
+    {/if} 
+
     {#case @error}
       {#match nil }
         <div></div>

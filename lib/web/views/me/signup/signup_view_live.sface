@@ -29,7 +29,7 @@
 </div>
 {#else}
   <div class="flex m-3 mb-3 md:m-0">
-    <div class="w-full mx-auto mt-4 lg:w-96 md:w-2/3">
+    <div class="w-full mx-auto mt-4" style="max-width: 700px">
       <Bonfire.UI.Social.SignupLive form={@form} error={@error}/>
     </div>
   </div>

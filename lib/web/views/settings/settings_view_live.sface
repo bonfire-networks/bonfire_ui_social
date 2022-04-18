@@ -19,6 +19,11 @@
             selected_tab={@selected_tab}
             uploads={@uploads}
           />
+        {#match "terms"}
+          <Bonfire.UI.Social.SettingsViewsLive.TermsLive
+            current_user={current_user(assigns)}
+            selected_tab={@selected_tab}
+          />
         {#match "invites"}
          <Surface.Components.Dynamic.LiveComponent
             module={Bonfire.Common.Config.get([:ui, :invites_component], Bonfire.Invite.Links.Web.InvitesLive)}

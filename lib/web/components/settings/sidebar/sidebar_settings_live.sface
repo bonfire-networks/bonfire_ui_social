@@ -78,6 +78,14 @@
       </li>
       <li>
         <LivePatch 
+          to="/settings/admin/terms"
+          class={"w-full flex items-center text-sm font-regular text-base-content", "focus:bg-primary hover:bg-primary bg-primary text-primary-content": @admin_tab == "terms"}>
+        <Outline.ScaleIcon class="inline-block w-5 h-5 mr-2 stroke-current" />
+        {l "Terms / Policies"}
+        </LivePatch>
+      </li>
+      <li>
+        <LivePatch 
           to="/settings/admin/invites"
           class={"w-full flex items-center text-sm font-regular text-base-content", "focus:bg-primary hover:bg-primary bg-primary text-primary-content": @admin_tab == "invites"}>
           <Outline.MailIcon class="inline-block w-5 h-5 mr-2 stroke-current" />
