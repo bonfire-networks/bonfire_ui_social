@@ -17,6 +17,7 @@
           <Bonfire.UI.Social.SettingsViewsLive.AdminInstanceLive
             current_user={current_user(assigns)}
             selected_tab={@selected_tab}
+            uploads={@uploads}
           />
         {#match "invites"}
          <Surface.Components.Dynamic.LiveComponent

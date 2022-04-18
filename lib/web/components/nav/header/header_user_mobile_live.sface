@@ -5,7 +5,7 @@
         <LiveRedirect class="" to={path(Bonfire.Common.Config.get!(:home_page))} >
           <div class="flex items-center space-x-2">
             <div class="btn btn-ghost btn-sm btn-circle">
-              <div class="bg-center bg-no-repeat bg-contain w-7 h-7" style={"background-image: url(#{Bonfire.Common.Config.get([:ui, :theme, :instance_logo], nil)})"}></div>
+              <div class="bg-center bg-no-repeat bg-contain w-7 h-7" style={"background-image: url(#{Bonfire.Common.Config.get([:ui, :theme, :instance_icon], nil)})"}></div>
             </div>
             <div 
               :if={current_user(assigns) == nil} 

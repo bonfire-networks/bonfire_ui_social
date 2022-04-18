@@ -3,7 +3,7 @@
     <div class="flex-col justify-end hidden lg:flex w-72">
         <div class="flex items-center space-x-2">
           <LiveRedirect to={if current_user(assigns), do: path(Bonfire.Common.Config.get(:user_home_page, Bonfire.Social.Web.HomeLive)), else:  path(Bonfire.Common.Config.get(:home_page, Bonfire.Web.HomeLive))}>
-          <div class="w-8 h-8 bg-center bg-no-repeat bg-contain" style={"background-image: url(#{ Bonfire.Common.Config.get([:ui, :theme, :instance_logo], nil)})"}></div>
+          <div class="w-8 h-8 bg-center bg-no-repeat bg-contain" style={"background-image: url(#{ Bonfire.Common.Config.get([:ui, :theme, :instance_icon], nil)})"}></div>
           <!-- <div class="text-lg font-bold text-neutral-content">{Bonfire.Common.Config.get([:ui, :theme, :instance_name], '')}</div> -->
           </LiveRedirect>
           <Bonfire.UI.Social.SearchLive />

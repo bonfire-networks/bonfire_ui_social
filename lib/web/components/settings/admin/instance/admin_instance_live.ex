@@ -3,5 +3,6 @@ defmodule Bonfire.UI.Social.SettingsViewsLive.AdminInstanceLive do
 
   prop selected_tab, :string
   prop admin_tab, :string
+  prop uploads, :any
 
 end

@@ -22,7 +22,7 @@
       </svg> -->
     </span>
     <span class="sr-only feed_activity_text">
-      {l "Reply"}
+      {l "See discussion"}
       <!-- {#if Bonfire.UI.Social.Activity.ReplyLive.count(@replied) > 0 }
         {Bonfire.UI.Social.Activity.ReplyLive.count(@replied)}
       {/if} -->

@@ -25,7 +25,7 @@
                   {entry.client_name} - {entry.progress}%
                 {/for}
               {#else}
-                PNG, JPG, GIF up to 10MB
+                {l "PNG, JPG, GIF up to 10MB"}
               {/if}
               </p>
             </label>
@@ -34,7 +34,8 @@
       </div>
       <div 
         data-id="upload_icon"
-        phx-drop-target={@uploads.icon.ref} class="relative block w-32 h-32 mb-6 ml-6 -mt-16 overflow-hidden rounded-full ring-8 ring-base-100">
+        phx-drop-target={@uploads.icon.ref} 
+        class="relative block w-32 h-32 mb-6 ml-6 -mt-16 overflow-hidden rounded-full ring-8 ring-base-100">
         <div 
           data-id="preview_icon"
           class="flex items-center w-32 h-32 bg-cover rounded-full shadow-lg bg-base-content" style={"background-image: url('" <> avatar_url(current_user(assigns)) <> "')"}></div>
