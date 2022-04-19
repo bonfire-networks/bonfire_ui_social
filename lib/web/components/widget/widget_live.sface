@@ -1,12 +1,10 @@
 <aside 
-  class="relative w-full h-full mx-auto md:rounded md:shadow bg-base-100">
-  <div class="flex items-center p-2 border-b border-base-300" role="banner">
+  class="relative w-full mx-auto md:rounded md:shadow bg-base-100">
+  <div class="sticky top-0 z-20 flex items-center p-2 border-b bg-base-100 border-base-300" role="banner">
     <div class="flex-1 text-sm font-medium text-base-content">{@widget_title}</div> 
     <#slot name="action" />
   </div>
-  <div >
     <#slot>
       <div class="text-sm font-medium text-center capitalize text-base-content">A sample widget</div>
     </#slot>
-  </div>
 </aside>

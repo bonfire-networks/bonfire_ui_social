@@ -1,40 +1,193 @@
-<div class="md:mx-0 text-base-content">
+<div 
+  x-data="{chat: false}"
+  class="h-full md:mx-0 text-base-content ">
 
-  <button class="btn m-3 normal-case btn-sm btn-primary btn-wide"> 
-    <Solid.PencilAltIcon class="inline-block w-5 h-5 mr-2" />
-    <span>{l "Start a conversation"}</span>
-  </button>
-  <div :if={not is_list(e(assigns, :feed, [])) or e(assigns, :feed, []) == []} class="w-full p-4 text-center bg-base-100">
-    <!-- <Bonfire.UI.Social.EmptyFeed/>  -->
-  </div>
-
-  <ul :if={length(e(assigns, :feed, []))>0} class="divide-y divide-base-300">
-    <li class="bg-base-100 hover:bg-base-200" :for={%{activity: activity} <- e(assigns, :feed, [])}>
-      <LiveRedirect to={"#{path(Bonfire.Data.Social.Message, e(activity, :object_id, nil))}"} class="block ">
-        <div class="flex items-center p-3">
-          <div class="flex-1 min-w-0 sm:flex sm:items-center sm:justify-between">
-            <div class="truncate">
-              <div class="flex items-center space-x-2">
-                <!-- <img src={e(activity, :subject, :profile, :icon, "")} class="w-8 h-8 bg-secondary rounded-btn" /> -->
-                <p class="text-base font-medium truncate text-base-content">{e(activity, :subject, :profile, :name, nil)}</p>
+  <div 
+    style="display: none;"
+    x-show="chat" 
+    class="relative h-full">
+    <div class="p-3">
+      <input type="text" placeholder="Search here" class="w-full h-10 max-w-xs input input-bordered">
+    </div>
+    <nav class="overflow-y-auto border-t border-base-300" aria-label="Directory">
+      <ul role="list" class="relative z-0 divide-y divide-base-300">
+        
+        <li class="bg-base-100 form-control">
+          <label class="px-4 py-3 cursor-pointer label hover:bg-base-300 hover:bg-opacity-60 focus-within:ring-2 focus-within:ring-inset focus-within:ring-primary">
+            <div class="relative flex items-center space-x-3 ">
+              <div class="flex-shrink-0">
+                <img class="w-10 h-10 rounded-full" src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80" alt="">
               </div>
-              <div class="mt-1">
-                <p class="text-sm truncate text-base-content text-opacity-80 font-regular">
-                  {text_only( e(activity, :object, :name, nil) || e(activity, :object, :post_content, :summary, nil) || e(activity, :object, :post_content, :html_body, nil) )}
-                </p> 
-                <div class="flex items-center mt-1 text-xs text-base-content text-opacity-80">
-                  <p><time datetime={"#{date_from_now(activity)}"}>{date_from_now(activity)}</time></p>
+              <div class="flex-1 min-w-0">
+                <span class="absolute inset-0" aria-hidden="true"></span>
+                <p class="text-sm font-medium text-base-content">Alice</p>
+                <p class="text-sm truncate text-base-content text-opacity-70">alice@bonjour.bonfire.cafe</p>
+              </div>
+            </div>
+            <input type="checkbox" class="checkbox checkbox-primary">
+          </label>
+        </li>
+
+        <li class="bg-base-100 form-control">
+          <label class="px-4 py-3 cursor-pointer label hover:bg-base-300 hover:bg-opacity-60 focus-within:ring-2 focus-within:ring-inset focus-within:ring-primary">
+            <div class="relative flex items-center space-x-3 ">
+              <div class="flex-shrink-0">
+                <img class="w-10 h-10 rounded-full" src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80" alt="">
+              </div>
+              <div class="flex-1 min-w-0">
+                <span class="absolute inset-0" aria-hidden="true"></span>
+                <p class="text-sm font-medium text-base-content">Bob</p>
+                <p class="text-sm truncate text-base-content text-opacity-70">bob@bonjour.bonfire.cafe</p>
+              </div>
+            </div>
+            <input type="checkbox" class="checkbox checkbox-primary">
+          </label>
+        </li>
+
+        <li class="bg-base-100 form-control">
+          <label class="px-4 py-3 cursor-pointer label hover:bg-base-300 hover:bg-opacity-60 focus-within:ring-2 focus-within:ring-inset focus-within:ring-primary">
+            <div class="relative flex items-center space-x-3 ">
+              <div class="flex-shrink-0">
+                <img class="w-10 h-10 rounded-full" src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80" alt="">
+              </div>
+              <div class="flex-1 min-w-0">
+                <span class="absolute inset-0" aria-hidden="true"></span>
+                <p class="text-sm font-medium text-base-content">carl</p>
+                <p class="text-sm truncate text-base-content text-opacity-70">carl@bonjour.bonfire.cafe</p>
+              </div>
+            </div>
+            <input type="checkbox" class="checkbox checkbox-primary">
+          </label>
+        </li>
+
+        <li class="bg-base-100 form-control">
+          <label class="px-4 py-3 cursor-pointer label hover:bg-base-300 hover:bg-opacity-60 focus-within:ring-2 focus-within:ring-inset focus-within:ring-primary">
+            <div class="relative flex items-center space-x-3 ">
+              <div class="flex-shrink-0">
+                <img class="w-10 h-10 rounded-full" src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80" alt="">
+              </div>
+              <div class="flex-1 min-w-0">
+                <span class="absolute inset-0" aria-hidden="true"></span>
+                <p class="text-sm font-medium text-base-content">Demetrio</p>
+                <p class="text-sm truncate text-base-content text-opacity-70">demetrio@bonjour.bonfire.cafe</p>
+              </div>
+            </div>
+            <input type="checkbox" class="checkbox checkbox-primary">
+          </label>
+        </li>
+
+        <li class="bg-base-100 form-control">
+          <label class="px-4 py-3 cursor-pointer label hover:bg-base-300 hover:bg-opacity-60 focus-within:ring-2 focus-within:ring-inset focus-within:ring-primary">
+            <div class="relative flex items-center space-x-3 ">
+              <div class="flex-shrink-0">
+                <img class="w-10 h-10 rounded-full" src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80" alt="">
+              </div>
+              <div class="flex-1 min-w-0">
+                <span class="absolute inset-0" aria-hidden="true"></span>
+                <p class="text-sm font-medium text-base-content">ragepanda</p>
+                <p class="text-sm truncate text-base-content text-opacity-70">rage@bonjour.bonfire.cafe</p>
+              </div>
+            </div>
+            <input type="checkbox" class="checkbox checkbox-primary">
+          </label>
+        </li>
+
+        <li class="bg-base-100 form-control">
+          <label class="px-4 py-3 cursor-pointer label hover:bg-base-300 hover:bg-opacity-60 focus-within:ring-2 focus-within:ring-inset focus-within:ring-primary">
+            <div class="relative flex items-center space-x-3 ">
+              <div class="flex-shrink-0">
+                <img class="w-10 h-10 rounded-full" src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80" alt="">
+              </div>
+              <div class="flex-1 min-w-0">
+                <span class="absolute inset-0" aria-hidden="true"></span>
+                <p class="text-sm font-medium text-base-content">mayel</p>
+                <p class="text-sm truncate text-base-content text-opacity-70">mayel@bonjour.bonfire.cafe</p>
+              </div>
+            </div>
+            <input type="checkbox" class="checkbox checkbox-primary">
+          </label>
+        </li>
+
+        <li class="bg-base-100 form-control">
+          <label class="px-4 py-3 cursor-pointer label hover:bg-base-300 hover:bg-opacity-60 focus-within:ring-2 focus-within:ring-inset focus-within:ring-primary">
+            <div class="relative flex items-center space-x-3 ">
+              <div class="flex-shrink-0">
+                <img class="w-10 h-10 rounded-full" src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80" alt="">
+              </div>
+              <div class="flex-1 min-w-0">
+                <span class="absolute inset-0" aria-hidden="true"></span>
+                <p class="text-sm font-medium text-base-content">ivan</p>
+                <p class="text-sm truncate text-base-content text-opacity-70">ivan@bonjour.bonfire.cafe</p>
+              </div>
+            </div>
+            <input type="checkbox" class="checkbox checkbox-primary">
+          </label>
+        </li>
+
+        <li class="bg-base-100 form-control">
+          <label class="px-4 py-3 cursor-pointer label hover:bg-base-300 hover:bg-opacity-60 focus-within:ring-2 focus-within:ring-inset focus-within:ring-primary">
+            <div class="relative flex items-center space-x-3 ">
+              <div class="flex-shrink-0">
+                <img class="w-10 h-10 rounded-full" src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80" alt="">
+              </div>
+              <div class="flex-1 min-w-0">
+                <span class="absolute inset-0" aria-hidden="true"></span>
+                <p class="text-sm font-medium text-base-content">Leslie Abbott</p>
+                <p class="text-sm truncate text-base-content text-opacity-70">Co-Founder / CEO</p>
+              </div>
+            </div>
+            <input type="checkbox" class="checkbox checkbox-primary">
+          </label>
+        </li>
+     
+      </ul>
+    </nav>
+    <div class="sticky bottom-0 left-0 right-0 z-30 bg-base-200">
+      <div class="flex items-center justify-end p-3 space-x-3">
+        <button @click="chat = false" class="normal-case btn btn-ghost btn-sm">Cancel</button>
+        <button class="normal-case btn btn-ghost btn-sm">Start</button>
+      </div>
+    </div>
+  </div>
+  <div x-show="chat === false">
+    <button
+      @click="chat = true"
+      class="flex items-center block w-full py-3 text-center normal-case border-b border-base-300 link place-content-center link-hover"> 
+      <Solid.PencilAltIcon class="inline-block w-5 h-5 mr-2 text-base-content" />
+      <span class="text-sm text-base-content">{l "Start a new conversation"}</span>
+    </button>
+    <div :if={not is_list(e(assigns, :feed, [])) or e(assigns, :feed, []) == []} class="w-full p-4 text-center bg-base-100">
+      <!-- <Bonfire.UI.Social.EmptyFeed/>  -->
+    </div>
+
+    <ul :if={length(e(assigns, :feed, []))>0} class="divide-y divide-base-300">
+      <li class="bg-base-100 hover:bg-base-200" :for={%{activity: activity} <- e(assigns, :feed, [])}>
+        <LiveRedirect to={"#{path(Bonfire.Data.Social.Message, e(activity, :object_id, nil))}"} class="block ">
+          <div class="flex items-center p-3">
+            <div class="flex-1 min-w-0 sm:flex sm:items-center sm:justify-between">
+              <div class="truncate">
+                <div class="flex items-center space-x-2">
+                  <!-- <img src={e(activity, :subject, :profile, :icon, "")} class="w-8 h-8 bg-secondary rounded-btn" /> -->
+                  <p class="text-base font-medium truncate text-base-content">{e(activity, :subject, :profile, :name, nil)}</p>
+                </div>
+                <div class="mt-1">
+                  <p class="text-sm truncate text-base-content text-opacity-80 font-regular">
+                    {text_only( e(activity, :object, :name, nil) || e(activity, :object, :post_content, :summary, nil) || e(activity, :object, :post_content, :html_body, nil) )}
+                  </p> 
+                  <div class="flex items-center mt-1 text-xs text-base-content text-opacity-80">
+                    <p><time datetime={"#{date_from_now(activity)}"}>{date_from_now(activity)}</time></p>
+                  </div>
                 </div>
               </div>
             </div>
+            <div class="flex-shrink-0 ml-5">
+              <svg class="w-5 h-5 text-base-content text-opacity-80" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                <path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd" />
+              </svg>
+            </div>
           </div>
-          <div class="flex-shrink-0 ml-5">
-            <svg class="w-5 h-5 text-base-content text-opacity-80" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
-              <path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd" />
-            </svg>
-          </div>
-        </div>
-      </LiveRedirect>
-    </li>
-  </ul>
+        </LiveRedirect>
+      </li>
+    </ul>
+  </div>
 </div>

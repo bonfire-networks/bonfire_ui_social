@@ -134,7 +134,7 @@
       <div class="flex items-center">
         <span class="text-sm font-normal text-base-content text-opacity-70">{Bonfire.Me.Characters.display_username(@user)}</span>
         <!-- FOLLOWS YOU LABEL -->
-        <!-- <div class="ml-2 opacity-70 text-xs rounded badge badge-outline">{"Follows you"}</div> -->
+        <!-- <div class="ml-2 text-xs rounded opacity-70 badge badge-outline">{"Follows you"}</div> -->
       </div>
 
       <div class="mt-1">

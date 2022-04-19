@@ -1,12 +1,13 @@
 <div class="items-start justify-center w-full max-w-screen-xl mx-auto tablet:flex ">
   <div class="hidden tablet:block w-72">
-    <Bonfire.UI.Social.WidgetLive 
-      widget_title="Direct Messages"
-      current_user={current_user(assigns)}
-    >
-      <Bonfire.UI.Social.PrivateLive feed={e(assigns, :feed, []) |> IO.inspect} />
-    </Bonfire.UI.Social.WidgetLive>
-
+    <div class="fixed top-[68px] overflow-y-auto bottom-[20px] w-72">
+      <Bonfire.UI.Social.WidgetLive 
+        widget_title="Direct Messages"
+        current_user={current_user(assigns)}
+      >
+        <Bonfire.UI.Social.PrivateLive feed={e(assigns, :feed, []) |> IO.inspect} />
+      </Bonfire.UI.Social.WidgetLive>
+    </div>
   </div>
 <main class="flex-grow w-full tablet-lg:h-full h-screen bg-base-100 mx-auto shrink-0 tablet:mx-3 w-center max-w-[580px]">
   {#case @tab_id}
@@ -14,7 +15,7 @@
       <Bonfire.UI.Social.PageHeaderLive page_title={@page_title} />
       <div class="md:mx-0 text-base-content lg:mt-0 bg-base-100">
         <div id="empty-feed">
-          <div class="flex items-center py-8 justify-center">
+          <div class="flex items-center justify-center py-8">
             <div class="badge">
               {l "Select a chat to start messaging"}
             </div>
