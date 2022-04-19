@@ -1,83 +1,79 @@
-<div class="relative z-10 flex items-center mx-auto rounded-full bg-base-300 w-28 h-28 place-content-center ring-4 ring-base-100">
-  <LiveRedirect to={path(Bonfire.Common.Config.get!(:home_page))}>
-    <div class="w-24 h-24 bg-center bg-no-repeat bg-contain" style={"background-image: url(#{Bonfire.Common.Config.get([:ui, :theme, :instance_icon], nil)})"}></div>
-  </LiveRedirect>
-</div>
+<div class="w-full mx-auto mt-4 lg:w-96 md:w-2/3">
+  <div class="relative z-10 flex items-center mx-auto rounded-full bg-base-300 w-28 h-28 place-content-center ring-4 ring-base-100">
+    <LiveRedirect to={path(Bonfire.Common.Config.get!(:home_page))}>
+      <div class="w-24 h-24 bg-center bg-no-repeat bg-contain" style={"background-image: url(#{Bonfire.Common.Config.get([:ui, :theme, :instance_icon], nil)})"}></div>
+    </LiveRedirect>
+  </div>
 
-<div class="rounded shadow-xl bg-base-100 -mt-14">
-  <div class="px-6 pt-16 pb-6 mx-auto">
+  <div class="rounded shadow-xl bg-base-100 -mt-14">
+    <div class="px-6 pt-16 pb-6 mx-auto">
 
-    {#if Bonfire.Me.Accounts.instance_is_invite_only? && e(assigns, :invite, nil) |> IO.inspect == nil 
- }
-      <div role="status" class="my-4 alert alert-warning">
-        <div class="flex">
-          <div class="whitespace-normal">
-            {l "Warning: this instance is currently invite-only."}
-          </div>
-        </div>
-      </div>
-    {/if} 
-    <!-- {#else} -->
-
-    {#if Bonfire.Me.Settings.get([:bonfire, :terms, :conduct], nil)}
-      <div class="my-4 alert">
-        <div><div>
-          <h3 class="opacity-70 mb-3">{l "Terms of Use"} / {l "Code of Conduct"}</h3>
-          <div class="whitespace-normal prose">
-            {md Bonfire.Me.Settings.get([:bonfire, :terms, :conduct], "")}
-          </div>
-        </div></div>
-      </div>
-    {/if} 
-
-    {#if Bonfire.Me.Settings.get([:bonfire, :terms, :privacy], nil)}
-      <div class="my-4 alert">
-        <div><div>
-          <h3 class="opacity-70 mb-3">{l "Privacy Policy"}</h3>
-          <div class="whitespace-normal prose">
-            {md Bonfire.Me.Settings.get([:bonfire, :terms, :privacy], "")}
-          </div>
-        </div></div>
-      </div>
-    {/if} 
-
-    {#case @error}
-      {#match nil }
-        <div></div>
-      {#match :taken }
-        <div role="status" class="mb-4 alert alert-error">
+      {#if Bonfire.Me.Accounts.instance_is_invite_only? && e(assigns, :invite, nil) |> IO.inspect == nil 
+  }
+        <div role="status" class="my-4 alert alert-warning">
           <div class="flex">
-            <div class="flex-shrink-0">
-              <!-- Heroicon name: exclamation -->
-              <Solid.ExclamationIcon />
-            </div>
-            <div class="ml-3">
-              <h3 class="text-sm font-medium">
-                {l "This email is taken."} Did you mean to <LiveRedirect to="/login">log in</LiveRedirect>?
-              </h3>
+            <div class="whitespace-normal">
+              {l "Warning: this instance is currently invite-only."}
             </div>
           </div>
         </div>
+      {/if} 
+      <!-- {#else} -->
 
-      {#match error}
-        <div role="status" class="mb-4 alert alert-error">
-          <div class="flex">
-            <div class="flex-shrink-0">
-              <Solid.ExclamationIcon />
+      {#if Bonfire.Me.Settings.get([:bonfire, :terms, :conduct], nil)}
+        <div class="my-4 alert">
+          <div><div>
+            <h3 class="mb-3 opacity-70">{l "Terms of Use"} / {l "Code of Conduct"}</h3>
+            <div class="prose whitespace-normal">
+              {md Bonfire.Me.Settings.get([:bonfire, :terms, :conduct], "")}
             </div>
-            <div class="ml-3">
-              <h3 class="text-sm font-medium ">
-                {l "An error occurred:"} {error}
-              </h3>
+          </div></div>
+        </div>
+      {/if} 
+
+      {#if Bonfire.Me.Settings.get([:bonfire, :terms, :privacy], nil)}
+        <div class="my-4 alert">
+          <div><div>
+            <h3 class="mb-3 opacity-70">{l "Privacy Policy"}</h3>
+            <div class="prose whitespace-normal">
+              {md Bonfire.Me.Settings.get([:bonfire, :terms, :privacy], "")}
+            </div>
+          </div></div>
+        </div>
+      {/if} 
+
+      {#case @error}
+        {#match nil }
+          <div></div>
+        {#match :taken }
+          <div role="status" class="mb-4 alert alert-error">
+            <div class="flex">
+              <div class="flex-shrink-0">
+                <Solid.ExclamationIcon />
+              </div>
+              <div class="ml-3">
+                <h3 class="text-sm font-medium">
+                  {l "This email is taken."} Did you mean to <LiveRedirect to="/login">log in</LiveRedirect>?
+                </h3>
+              </div>
             </div>
           </div>
-        </div>
-     {/case}
 
-
-      <!-- <%= f = form_for @form, "#", [id: "signup-form"] %> -->
-      <Form for={@form} opts={[id: "signup-form"]}>
-      
+        {#match error}
+          <div role="status" class="mb-4 alert alert-error">
+            <div class="flex">
+              <div class="flex-shrink-0">
+                <Solid.ExclamationIcon />
+              </div>
+              <div class="ml-3">
+                <h3 class="text-sm font-medium ">
+                  {l "An error occurred:"} {error}
+                </h3>
+              </div>
+            </div>
+          </div>
+      {/case}
+        <Form for={@form} opts={[id: "signup-form"]}>
           <Inputs for={:email}>
             <Field name={:email_address}>
               <label for="signup-form_email_email_address" class="label">
@@ -89,64 +85,45 @@
               <ErrorTag />
             </Field>
           </Inputs>
-
-            <!-- <%= for g <- inputs_for(f, :email) do %>
-              <%= email_input g, :email_address, required: true, class: "w-full input input-bordered" %>
-              <%= error_tag g, :email_address %>
-            <% end %>
-          </div>
-          <%= error_tag f, :email_address %> -->
-      
-        <div class="mt-6">
           <Inputs for={:credential}>
-            <Field name={:password}>
-              <Label class="label">
-                <span class="label-text">
-                  {l "Choose a password"} ({l "10 characters minimum"})
-                </span>
-              </Label>
-              <PasswordInput opts={placeholder: l "Type a strong password"} required class="w-full input input-bordered" />
-              <ErrorTag />
-            </Field>
-
-            <Field name={:password_confirmation}>
-              <Label class="label">
-                <span class="label-text">
-                  {l "Confirm your password"}
-                </span>
-              </Label>
-              <PasswordInput opts={placeholder: l "Enter the same password again"} required class="w-full input input-bordered" />
-              <ErrorTag />
-            </Field>
-          </Inputs>
-          <!-- <%= for g <- inputs_for(f, :credential) do %>
-            <label for="signup-form_credential_password" class="label">
-              <span class="label-text">
-                Choose a password (10 characters minimum)
-              </span>
-            </label>
-            <div class="mt-1 rounded-md shadow-sm">
-              <%= password_input g, :password, required: true, class: "w-full input input-bordered" %>
+            <div class="mt-6">
+              <Field name={:password}>
+                <Label class="label">
+                  <span class="label-text">
+                    {l "Choose a password"} ({l "10 characters minimum"})
+                  </span>
+                </Label>
+                <PasswordInput opts={placeholder: l "Type a strong password"} required class="w-full input input-bordered" />
+                <ErrorTag />
+              </Field>
             </div>
-            <%= error_tag g, :password %>
-          <% end %> -->
-        </div>
-        <div class="mt-6">
-          <span class="block w-full rounded-md shadow-sm">
-            <button type="submit" class="flex w-full btn btn-primary place-content-center">
-              {l "Sign up"}
-            </button>
-          </span>
-        </div>
-        <div class="mt-4 text-base-content">
-          <p>
-            <span>&#x01f44b; </span>
-           {l "Do you already have an account?"}
-            <LiveRedirect class="font-bold underline" to={path(:login, :index)}>{l "Log in"}</LiveRedirect>.
-          </p>
-        </div>
-      </Form>
-    <!-- {/if} -->
-
+            <div class="mt-6">
+              <Field name={:password_confirmation}>
+                <Label class="label">
+                  <span class="label-text">
+                    {l "Confirm your password"}
+                  </span>
+                </Label>
+                <PasswordInput opts={placeholder: l "Enter the same password again"} required class="w-full input input-bordered" />
+                <ErrorTag />
+              </Field>
+            </div>
+          </Inputs>
+          <div class="mt-6">
+            <span class="block w-full rounded-md shadow-sm">
+              <button type="submit" class="flex w-full btn btn-primary place-content-center">
+                {l "Sign up"}
+              </button>
+            </span>
+          </div>
+          <div class="mt-4 text-base-content">
+            <p>
+              <span>&#x01f44b; </span>
+            {l "Do you already have an account?"}
+              <LiveRedirect class="font-bold underline" to={path(:login, :index)}>{l "Log in"}</LiveRedirect>.
+            </p>
+          </div>
+        </Form>
+    </div>
   </div>
 </div>
