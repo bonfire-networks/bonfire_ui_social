@@ -1,12 +1,17 @@
 <div class="md:mx-0 text-base-content">
+
+  <button class="btn m-3 normal-case btn-sm btn-primary btn-wide"> 
+    <Solid.PencilAltIcon class="inline-block w-5 h-5 mr-2" />
+    <span>{l "Start a conversation"}</span>
+  </button>
   <div :if={not is_list(e(assigns, :feed, [])) or e(assigns, :feed, []) == []} class="w-full p-4 text-center bg-base-100">
-    <Bonfire.UI.Social.EmptyFeed/> 
+    <!-- <Bonfire.UI.Social.EmptyFeed/>  -->
   </div>
 
   <ul :if={length(e(assigns, :feed, []))>0} class="divide-y divide-base-300">
     <li class="bg-base-100 hover:bg-base-200" :for={%{activity: activity} <- e(assigns, :feed, [])}>
       <LiveRedirect to={"#{path(Bonfire.Data.Social.Message, e(activity, :object_id, nil))}"} class="block ">
-        <div class="flex items-center px-3 py-4">
+        <div class="flex items-center p-3">
           <div class="flex-1 min-w-0 sm:flex sm:items-center sm:justify-between">
             <div class="truncate">
               <div class="flex items-center space-x-2">

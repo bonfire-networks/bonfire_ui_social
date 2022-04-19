@@ -1,6 +1,45 @@
-<main class="mb-3 md:flex md:mx-0">
-  <section class="w-full mx-auto bg-base-100">
-    <Bonfire.UI.Social.PageHeaderLive page_title={@page_title} />
-    <Bonfire.UI.Social.PrivateLive feed={e(assigns, :feed, []) |> IO.inspect} />
-  </section>
+<div class="items-start justify-center w-full max-w-screen-xl mx-auto tablet:flex ">
+  <div class="hidden tablet:block w-72">
+    <Bonfire.UI.Social.WidgetLive 
+      widget_title="Direct Messages"
+      current_user={current_user(assigns)}
+    >
+      <Bonfire.UI.Social.PrivateLive feed={e(assigns, :feed, []) |> IO.inspect} />
+    </Bonfire.UI.Social.WidgetLive>
+
+  </div>
+<main class="flex-grow w-full tablet-lg:h-full h-screen bg-base-100 mx-auto shrink-0 tablet:mx-3 w-center max-w-[580px]">
+  {#case @tab_id}
+    {#match _}
+      <Bonfire.UI.Social.PageHeaderLive page_title={@page_title} />
+      <div class="md:mx-0 text-base-content lg:mt-0 bg-base-100">
+        <div id="empty-feed">
+          <div class="flex items-center py-8 justify-center">
+            <div class="badge">
+              {l "Select a chat to start messaging"}
+            </div>
+          </div>
+        </div>
+      </div>
+
+  {/case}
 </main>
+<div class="w-[285px] justify-start hidden h-full overflow-hidden pointer-events-none tablet-lg:flex">
+  <div class="top-[80px] w-full bottom-[16px]  pointer-events-auto">
+    {#if current_user(assigns) }
+      <Bonfire.UI.Social.WidgetLive 
+        widget_title="Admins"
+        current_user={current_user(assigns)}
+      >
+        <Bonfire.UI.Social.WidgetAdminsLive 
+          current_user={current_user(assigns)}
+          id="widget_admins"
+        />
+      </Bonfire.UI.Social.WidgetLive>
+    {#else}
+      <div />
+    {/if}
+  </div>
+</div>
+
+</div>
