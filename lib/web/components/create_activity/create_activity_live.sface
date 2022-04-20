@@ -9,20 +9,20 @@
   }"}>
   <Form 
     for={Bonfire.Social.Posts.LiveHandler.post_changeset(current_user(assigns))} 
-    submit="Bonfire.Social.Posts:post" opts={ autocomplete: "off"}
+    submit={if @create_activity_type==:message, do: "Bonfire.Social.Messages:send", else: "Bonfire.Social.Posts:post"} 
+    opts={ autocomplete: "off"}
     class={if with_editor?(assigns), do: "form_with_editor", else: "form_with_textarea"}>
 
-    <HiddenInput 
+    <input type="hidden" 
       name="reply_to[reply_to_id]" 
       value={@reply_to_id} />
-    <HiddenInput 
+    <input type="hidden"  
       name="reply_to[thread_id]" 
       value={@thread_id} />
-    <Field name={:create_activity_type}>
-      <HiddenInput value={@create_activity_type} />
-    </Field>
+    <input type="hidden" 
+      name={:create_activity_type}
+      value={@create_activity_type} />
     <input 
-      :if={length(e(assigns, :to_circles, []))>0}
       :for={{_name, id} <- e(assigns, :to_circles, [])} 
       type="hidden" 
       name="to_circles[]" 
