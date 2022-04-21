@@ -48,7 +48,7 @@
         url={@url}
         show_reply_input={true}
         reverse_order={true}
-        textarea_class={"h-8 max-h-16 resize-y textarea prose prose-sm bg-base-200"}
+        textarea_class={"h-8 max-h-16 resize-y max-w-full textarea prose prose-sm bg-base-200"}
         smart_input_class={"border-t border-base-300 bg-base-200"}
         replied_activity_class={"relative p-3 py-2 bg-neutral-content bg-opacity-5 showing_within:create_activity_form"}
       /> 
