@@ -31,7 +31,7 @@
   <LiveRedirect to={"/user/#{e(@activity, :subject, :character, :username, "anon")}"} class="flex profile-item group ">
     <div class="absolute left-0">
      <div class="align-middle avatar">
-        <div class="w-6 h-6 bg-[#6AA4DA] rounded-btn">
+        <div class="w-6 h-6 bg-base-200 rounded-btn">
           <LazyImage 
             class="subject_avatar" 
             src={avatar_url(e(@activity, :subject, :profile, nil))} 

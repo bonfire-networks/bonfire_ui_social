@@ -1,6 +1,6 @@
 
 <div class="align-middle avatar">
-  <div class={classes(assigns)<>" bg-[#6AA4DA] rounded-btn"}>
+  <div class={classes(assigns)<>" bg-base-200 rounded-btn"}>
     <LazyImage 
       class="subject_avatar" 
       src={avatar_url(@profile)}

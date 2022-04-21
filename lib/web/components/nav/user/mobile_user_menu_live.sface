@@ -6,7 +6,7 @@
     class="btn btn-ghost btn-circle btn-sm" 
     @click="open = true">
       <LazyImage
-        class="w-6 h-6 rounded-full bg-[#6AA4DA]"
+        class="w-6 h-6 rounded-full bg-base-200"
         src={avatar_url(current_user(assigns))}
         alt="current user profile image"
       />
@@ -47,7 +47,7 @@
               <div class="flex flex-col space-y-6">
                 <div class="flex items-center space-x-2">
                   <LazyImage
-                    class="w-12 h-12 rounded-full bg-[#6AA4DA]"
+                    class="w-12 h-12 rounded-full bg-base-200"
                     src={avatar_url(current_user(assigns))}
                     alt="current user profile image"
                   />
