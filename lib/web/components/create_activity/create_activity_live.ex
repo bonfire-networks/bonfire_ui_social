@@ -17,9 +17,17 @@ defmodule Bonfire.UI.Social.CreateActivityLive do
   prop smart_input_text, :string, default: "", required: false
   prop showing_within, :any
   prop with_editor, :boolean, required: false
-  prop textarea_class, :string, default: "textarea prose prose-sm"
   prop activity, :any
   prop object, :any
+  
+
+  # Classes to customize the smart input appearance 
+  prop textarea_class, :string
+  prop smart_input_class, :string
+  prop replied_activity_class, :string
+
+
+
 
   # def update(%{activity: activity, object: object, reply_to_id: reply_to_id, thread_id: thread_id} = assigns, socket) do
   #   socket = assign(socket, activity: activity, reply_to_id: reply_to_id, thread_id: thread_id)

@@ -9,13 +9,13 @@
       class="align-bottom tooltip tooltip-bottom">
       {#case Bonfire.Files.FaviconStore.favicon_url(@permalink)}
         {#match nil}
-          <Solid.ExternalLinkIcon class="w-4 h-4 text-base-content text-opacity-50" />
+          <Solid.ExternalLinkIcon class="w-4 h-4 text-opacity-50 text-base-content" />
         {#match image}
           <img src={image} class="w-4 h-4"/>
       {/case}
     </span>
 
-    <span class="text-sm text-base-content text-opacity-80 mx-2">
+    <span class="mr-2 text-sm text-base-content text-opacity-80">
       <span class="capitalize">{e(@verb_display, "")}</span>
       {@date_ago}
     </span>

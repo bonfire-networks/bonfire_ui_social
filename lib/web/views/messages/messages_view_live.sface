@@ -24,11 +24,11 @@
     {/if}
     </div>
   </div>
-  <main class="grow w-full flex flex-col tablet-lg:h-full h-screen bg-base-100 mx-auto shrink-0 tablet:mx-3 w-center max-w-[580px]">
+  <main class="grow w-full flex flex-col tablet-lg:h-full h-body bg-base-100 mx-auto shrink-0 tablet:mx-3 w-center max-w-[580px]">
 
   {#if @tab_id in ["compose", "select_recipients", "thread"]}
 
-    <div class="h-full grow">
+    <div class="flex flex-col h-full grow">
 
     {#if @tab_id=="thread"}
 
@@ -48,6 +48,9 @@
         url={@url}
         show_reply_input={true}
         reverse_order={true}
+        textarea_class={"h-8 max-h-16 resize-y textarea prose prose-sm bg-base-200"}
+        smart_input_class={"border-t border-base-300 bg-base-200"}
+        replied_activity_class={"relative p-3 py-2 bg-neutral-content bg-opacity-5 showing_within:create_activity_form"}
       /> 
 
     {#elseif @tab_id in ["compose", "select_recipients"]}
@@ -102,5 +105,9 @@
   {/if}
   </main>
 
+  <div class="w-[285px] justify-start hidden h-full overflow-hidden pointer-events-none tablet-lg:flex">
+    <div class="top-[80px] w-full bottom-[16px]  pointer-events-auto">
+    </div>
+  </div>
 
 </div>

@@ -73,25 +73,25 @@
         </div>
       </div>
     </div>
-    <div class="flex items-baseline flex-1 space-x-1">
+    <div class="flex items-center flex-1 space-x-2">
       <div class="text-base font-bold text-base-content text-opacity-80">
         <LiveRedirect
           aria-label={e(@character, :username, "") <> " profile"}
           class="font-medium text-base-content hover:underline"
           to={path(@character)}>
           {e(@profile, :name, "Anonymous")}
-          <span class="ml-1 text-xs text-base-content text-opacity-60 text-light">
+          <span class="ml-1 text-sm font-light text-base-content text-opacity-60">
             @{e(@character, :username, "")}
           </span>
         </LiveRedirect>
       </div>
-      <span>
+      <span class="flex items-center mt-1">
         <BoundaryIconLive 
         id={ComponentID.new(BoundaryIconLive, @object)} 
         object={@object} 
         />
 
-        <LivePatch class="ml-1 text-xs text-base-content text-opacity-60 text-light" to={@permalink}>
+        <LivePatch class="ml-1 text-xs font-regular text-base-content text-opacity-60" to={@permalink}>
           {@date_ago}
         </LivePatch>
         
@@ -115,9 +115,9 @@
         </LiveRedirect>
         <span
           :if={e(@character, :username, nil)}
-          class="ml-1 text-sm truncate ellipsis text-base-content text-opacity-60 subject_username text-light">@{e(@character, :username, "")}</span>
+          class="ml-1 text-sm font-light truncate ellipsis text-base-content text-opacity-60 subject_username">@{e(@character, :username, "")}</span>
       </div>
-      <span class="mx-1 text-base-content text-opacity-60">·</span>
+      <span :if={!@viewing_main_object} class="mx-1 text-base-content text-opacity-60">·</span>
       <Bonfire.UI.Social.Activity.DateAgoLive 
         :if={!@viewing_main_object}
         permalink={@permalink}

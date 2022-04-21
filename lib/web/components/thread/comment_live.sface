@@ -13,7 +13,7 @@
     <div 
       x-cloak 
       x-data="{reply: false, show: true}"
-      class="pt-4 pb-2 rounded"
+      class=""
       :class={"reply_to_id === '#{e(@comment, :id, "")}' ? 'bg-base-200 ' : ''"}
     >
         {#case @comment}

@@ -1,74 +1,52 @@
-<div class="flex flex-col mt-3">
 {#if length(@threaded_replies || @replies) > 0}
-  <div class="flex items-center px-4 py-3 pb-3 border-t border-b border-base-300 bg-base-100">
+  <div class="flex flex-col">
+  <!-- <div class="flex items-center px-4 py-3 pb-3 border-t border-b border-base-300 bg-base-100">
     <div class="flex items-center flex-1 space-x-2">
       <div class="text-base font-semibold text-base-content">{l "Discussion"}</div>
-      <!-- <label class="input-group">
-        <span>
-          <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 mt-1 ml-2 place-self-center text-base-content text-opacity-80" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 4h13M3 8h9m-9 4h9m5-4v12m0 0l-4-4m4 4l4-4"></path>
-          </svg>  
-        </span> 
-        <select class="py-0 -ml-1 select select-bordered select-sm ">
-        <option> 
-          Oldest first
-        </option> 
-        <option> 
-          Newer first
-        </option> 
-        <option>Most liked</option>
-      </select> 
-      </label> -->
-      
     </div>
-
-    <!-- <div class="btn-group">
-      <button class="btn btn-xs btn-active">List view</button> 
-      <button class="btn btn-xs bg-base-200 text-base-content border-base-300 ">Tree view</button> 
-    </div>  -->
-  </div>
-  <div data-id="replies" class="flex flex-col bg-base-100">
-    
-    <Bonfire.UI.Social.LoadPreviousLive 
-      page_info={@page_info}
-      target={@myself}
-      context={@thread_id}
-    />
-
-  {#if e(assigns, :thread_mode, nil) !=:flat}
-
-    {#for {reply, child_replies} <- @threaded_replies || @replies }
-      <Bonfire.UI.Social.CommentLive
-        comment={reply}
-        child_replies={child_replies}
-        reply_to_id={e(reply, :id, nil)}
-        thread_id={@thread_id}
-        thread_object={@object}
-        thread_level={1}
-        thread_mode={e(assigns, :thread_mode, nil)}
-        smart_input_text={@smart_input_text}
-        smart_input_prompt={@smart_input_prompt}
-        url={@url}
+  </div> -->
+    <div data-id="replies" class="flex flex-col bg-base-100">
+      
+      <Bonfire.UI.Social.LoadPreviousLive 
+        page_info={@page_info}
+        target={@myself}
+        context={@thread_id}
       />
-    {/for}
 
-  {#else}
+    {#if e(assigns, :thread_mode, nil) !=:flat}
 
-    {#for reply <- @threaded_replies || @replies }
-      <Bonfire.UI.Social.CommentLive
-        comment={reply}
-        reply_to_id={e(reply, :id, nil)}
-        thread_id={@thread_id}
-        thread_object={@object}
-        thread_mode={e(assigns, :thread_mode, nil)}
-        smart_input_text={@smart_input_text}
-        smart_input_prompt={@smart_input_prompt}
-        url={@url}
-      />
-    {/for}
-  {/if}
+      {#for {reply, child_replies} <- @threaded_replies || @replies }
+        <Bonfire.UI.Social.CommentLive
+          comment={reply}
+          child_replies={child_replies}
+          reply_to_id={e(reply, :id, nil)}
+          thread_id={@thread_id}
+          thread_object={@object}
+          thread_level={1}
+          thread_mode={e(assigns, :thread_mode, nil)}
+          smart_input_text={@smart_input_text}
+          smart_input_prompt={@smart_input_prompt}
+          url={@url}
+        />
+      {/for}
 
-  </div>
+    {#else}
+
+      {#for reply <- @threaded_replies || @replies }
+        <Bonfire.UI.Social.CommentLive
+          comment={reply}
+          reply_to_id={e(reply, :id, nil)}
+          thread_id={@thread_id}
+          thread_object={@object}
+          thread_mode={e(assigns, :thread_mode, nil)}
+          smart_input_text={@smart_input_text}
+          smart_input_prompt={@smart_input_prompt}
+          url={@url}
+        />
+      {/for}
+    {/if}
+
+    </div>
 
   <Bonfire.UI.Social.LoadMoreLive
     live_handler={Bonfire.Social.Posts}
@@ -76,9 +54,11 @@
     target={@myself}
     context={@thread_id}
   />
-{#else}
-  <div class="p-4 bg-base-100">
-      <span class="text-base font-medium text-base-content">{l "Be the first to reply..."}</span>
-    </div>
-{/if}
 </div>
+{#else}
+<div class="flex flex-col items-center h-full grow place-content-center">
+  <div class="p-4 bg-base-100">
+      <span class="badge">{l "Be the first to reply..."}</span>
+    </div>
+  </div>
+{/if}

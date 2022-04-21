@@ -96,7 +96,8 @@ defmodule Bonfire.UI.Social.ActivityLive do
       role="article"
       tabIndex="0"
       class={
-      "p-3 hover:bg-neutral-content hover:bg-opacity-5 activity relative pl-16 " <> @class,
+      "p-3 activity relative pl-16 " <> @class,
+      "bg-neutral-content bg-opacity-5": e(assigns, :viewing_main_object, nil) == true,
       "main_reply_to mb-2 p-2 mt-2 relative border-l-4 border-l-base-300 border border-base-200 rounded-sm bg-base-300 bg-opacity-50": e(@object, :id, nil) != nil and e(@activity, :replied, :reply_to_id, nil) == nil and e(@activity, :id, nil) == nil and e(assigns, :showing_within, nil) != :widget  and e(assigns, :showing_within, nil) != :search, # showing a quoted reply_to
       "reply": e(@object, :id, nil) != nil and e(@activity, :replied, :reply_to_id, nil) != nil and e(@activity, :id, nil) != nil,
     }>

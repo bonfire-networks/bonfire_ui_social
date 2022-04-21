@@ -1,4 +1,4 @@
-<main class="flex flex-col md:mx-0">
+<main class="flex flex-col md:mx-0 grow">
   <section class="w-full mx-auto bg-base-100">
     <Bonfire.UI.Social.PageHeaderLive
       page_title={@page_title}
@@ -10,11 +10,11 @@
       viewing_main_object={true}
       activity={@activity}
       object={@object}
-      class="cursor-default hover:bg-base-100"
+      class="cursor-default"
     />
   </section>
   
-  <div>
+  <div class="flex flex-col grow">
     <Bonfire.UI.Social.ThreadLive 
       id={@thread_id}
       thread_id={@thread_id}
@@ -26,6 +26,7 @@
     />
   </div>
 
+  
   <Bonfire.UI.Social.SmartInputLive
     :if={@show_reply_input && current_user(assigns)}
     current_user={current_user(assigns)}
@@ -35,24 +36,24 @@
     to_circles={e(assigns, :to_circles, [])}
     smart_input_prompt={e(assigns, :smart_input_prompt, "")}
     smart_input_text={e(assigns, :smart_input_text, "")}
+    textarea_class={@textarea_class}
+    smart_input_class={@smart_input_class}
+    replied_activity_class={@replied_activity_class}
   />
 
 </main>
 
-  <div class="w-[285px] justify-start hidden h-full overflow-hidden pointer-events-none tablet-lg:flex">
-    <div class="top-[80px] w-full bottom-[16px]  pointer-events-auto">
-      {#if current_user(assigns) }
-        <Bonfire.UI.Social.WidgetLive 
-          widget_title="Participants"
-          current_user={current_user(assigns)}
-        >
-          <Bonfire.UI.Social.WidgetUsersLive 
-            current_user={current_user(assigns)}
-            users={participants(assigns)}
-          />
-        </Bonfire.UI.Social.WidgetLive>
-      {#else}
-        <div />
-      {/if}
-    </div>
-  </div>
+
+  <!-- {#if current_user(assigns) }
+    <Bonfire.UI.Social.WidgetLive 
+      widget_title="Participants"
+      current_user={current_user(assigns)}
+    >
+      <Bonfire.UI.Social.WidgetUsersLive 
+        current_user={current_user(assigns)}
+        users={participants(assigns)}
+      />
+    </Bonfire.UI.Social.WidgetLive>
+  {#else}
+    <div />
+  {/if} -->

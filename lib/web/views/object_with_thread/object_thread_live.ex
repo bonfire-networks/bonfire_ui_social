@@ -18,6 +18,9 @@ defmodule  Bonfire.UI.Social.ObjectThreadLive do
   prop thread_mode, :any
   prop reverse_order, :any
   prop participants, :any
+  prop textarea_class, :string
+  prop smart_input_class, :string
+  prop replied_activity_class, :string
 
   # TODO: FIXME! Update no longer works in stateless
   def participants(assigns) do

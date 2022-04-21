@@ -42,11 +42,11 @@
       id={"cap:" <> e(assigns, :activity, :id, "")}
       activity={@activity}
       object={@object}
-      class="relative p-3 mb-2 rounded bg-base-100 hover:bg-base-100 hover:bg-opacity-60 showing_within:create_activity_form"
+      class={@replied_activity_class}
       showing_within={:create_activity_form}
     />
     
-    <div class="rounded-md shadow bg-base-100">
+    <div class={@smart_input_class}>
       <div class="relative">
         <Inputs for={:post_content}>
           <div
@@ -89,7 +89,7 @@
           <Bonfire.UI.Social.BoundariesLive
             to_circles={e(assigns, :to_circles, [])}
            />
-          <div class="flex items-center justify-between p-2 space-x-2 rounded-b bg-neutral bg-opacity-30 sm:px-3">
+          <div class="flex items-center justify-between p-2 space-x-2 rounded-b bg-base-100 sm:px-3">
             <div class="flex items-center flex-1 space-x-3">
             
               <div 

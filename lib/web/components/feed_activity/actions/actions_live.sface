@@ -15,7 +15,12 @@
       "mt-1": e(assigns, :showing_within, nil) == :widget,
       }>
 
-    <div class={"flex items-center justify-between", "mt-3": e(assigns, :viewing_main_object, nil)}>
+    <div class={
+      "flex items-center",
+      "mt-3": e(assigns, :viewing_main_object, nil),
+      "justify-start space-x-8": e(assigns, :showing_within, nil) == :thread and e(assigns, :viewing_main_object, nil) != true,
+      "justify-between": e(assigns, :showing_within, nil) != :thread
+      }>
       {#if e(assigns, :viewing_main_object, nil) != true and e(assigns, :showing_within, nil) != :thread and Bonfire.UI.Social.Activity.ReplyLive.count(e(@activity, :replied, nil)) > 0}
         <Bonfire.UI.Social.Activity.ViewThreadLive 
           permalink={@permalink} 

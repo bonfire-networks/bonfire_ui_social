@@ -10,11 +10,13 @@ defmodule Bonfire.UI.Social.SmartInputLive do
   prop smart_input_prompt, :string, required: false
   prop smart_input_text, :string, required: false
   prop full_screen, :boolean, default: false
-
   prop showing_within, :any
   prop with_editor, :boolean, required: false
-  prop textarea_class, :string, default: "textarea prose prose-sm"
   prop activity, :any
   prop object, :any
-
+  
+  # Classes to customize the smart input appearance 
+  prop textarea_class, :string, default: "h-32 textarea prose prose-sm"
+  prop smart_input_class, :string, default: "rounded-md shadow bg-base-100"
+  prop replied_activity_class, :string, default: "relative p-3 mb-2 rounded bg-base-100 hover:bg-base-100 hover:bg-opacity-100 showing_within:create_activity_form"
 end

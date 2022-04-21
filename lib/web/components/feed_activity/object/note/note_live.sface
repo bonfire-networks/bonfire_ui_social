@@ -34,14 +34,14 @@
       x-transition.scale.origin.top >
       <div
         :if={e(post_content(@object), :summary, nil)}
-        class="font-light prose max-w-prose prose-p:pt-2">
+        class="font-light prose max-w-prose prose-p:pt-1">
         {rich e(post_content(@object), :summary, "")}
       </div>
 
       <div
         data-id={"object_body"}
         :if={e(post_content(@object), :html_body, nil)}
-        class={"prose object_body max-w-none prose prose-sm prose-p:pt-2"}>
+        class={"prose object_body max-w-none prose prose-sm prose-p:pt-1"}>
         {rich(e(post_content(@object), :html_body, ""))}
       </div>
 

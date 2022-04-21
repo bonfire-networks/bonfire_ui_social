@@ -14,6 +14,9 @@
           showing_within={@showing_within}
           activity={@activity}
           object={@object}
+          textarea_class={@textarea_class}
+          smart_input_class={@smart_input_class}
+          replied_activity_class={@replied_activity_class}
         />
       {#else}
         <Bonfire.UI.Social.CreateActivityLive
@@ -28,6 +31,9 @@
           showing_within={@showing_within}
           activity={@activity}
           object={@object}
+          textarea_class={@textarea_class}
+          smart_input_class={@smart_input_class}
+          replied_activity_class={@replied_activity_class}
         />
       {/if}    
     </div>

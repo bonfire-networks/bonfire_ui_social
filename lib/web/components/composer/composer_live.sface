@@ -1,5 +1,0 @@
-<textarea 
-  placeholder="Type something meaningful..."
-  style="resize:none"
-  class="w-full h-40 textarea">
-</textarea>
