@@ -1,4 +1,4 @@
-defmodule Bonfire.UI.Social.PrivateViewLive do
+defmodule Bonfire.UI.Social.MessagesViewLive do
   use Bonfire.Web, :stateless_component
 
   prop page_title, :string, required: true
@@ -11,4 +11,8 @@ defmodule Bonfire.UI.Social.PrivateViewLive do
   prop smart_input_prompt, :any
   prop smart_input_text, :any
   prop to_circles, :list
+  prop activity, :any
+  prop object, :any
+  prop url, :any
+  prop participants, :any
 end

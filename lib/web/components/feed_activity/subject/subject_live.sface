@@ -91,9 +91,9 @@
         object={@object} 
         />
 
-        <LiveRedirect class="ml-1 text-xs text-base-content text-opacity-60 text-light" to={@permalink}>
+        <LivePatch class="ml-1 text-xs text-base-content text-opacity-60 text-light" to={@permalink}>
           {@date_ago}
-        </LiveRedirect>
+        </LivePatch>
         
       </span>
     </div>

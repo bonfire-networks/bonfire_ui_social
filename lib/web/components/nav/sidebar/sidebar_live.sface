@@ -39,7 +39,7 @@
           current_user={current_user(assigns)}
         >
         <:action>
-            <LivePatch class="text-xs normal-case btn btn-xs btn-outline" to={"/private"}>
+            <LivePatch class="text-xs normal-case btn btn-xs btn-outline" to={path(Bonfire.Data.Social.Message)}>
               {l "View more"}
             </LivePatch>
           </:action>
@@ -53,7 +53,7 @@
           widget_title="Admins"
           current_user={current_user(assigns)}
         >
-          <Bonfire.UI.Social.WidgetAdminsLive 
+          <Bonfire.UI.Social.WidgetUsersLive 
             current_user={current_user(assigns)}
             id="widget_admins"
           />

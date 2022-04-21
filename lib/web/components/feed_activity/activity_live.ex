@@ -11,6 +11,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
   prop(showing_within, :any, default: :feed)
   prop(hide_reply, :boolean, default: false)
   prop(class, :string, default: "")
+  prop(thread_object, :any)
 
   # TODO: put in config and/or autogenerate with Verbs genserver
   @reply_verbs ["reply", "respond"]
@@ -32,7 +33,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
         e(activity, :verb, nil) || e(assigns, :verb_default, "create"),
         activity
       )
-      |> debug("verb modified")
+      # |> debug("verb modified")
 
     verb_display = Activities.verb_display(verb)
     created_verb_display = Activities.verb_display("create")
@@ -40,11 +41,15 @@ defmodule Bonfire.UI.Social.ActivityLive do
     # |> String.downcase()
     object_type_readable = module_to_human_readable(object_type)
 
-    thread = e(activity, :replied, :thread, nil) || e(activity, :replied, :thread_id, nil)
+    thread = e(assigns, :thread_object, nil) || e(activity, :replied, :thread, nil) || e(activity, :replied, :thread_id, nil)
+
+    thread_url = if thread do
+      if is_struct(thread), do: path(thread), else: "/discussion/#{ulid(thread)}"
+    end
 
     permalink =
-      if thread && verb in ["reply", "respond"],
-        do: "/discussion/#{ulid(thread)}##{activity.object.id}",
+      if thread_url && verb in ["reply", "respond"],
+        do: "#{thread_url}##{activity.object.id}",
         else: "#{path(activity.object)}#"
 
     # permalink = path(activity.object)
@@ -263,14 +268,14 @@ defmodule Bonfire.UI.Social.ActivityLive do
         verb,
         %{
           reply_to: %{
-            post_content: %{id: id} = reply_to_post_content,
+            post_content: %{id: id} = _reply_to_post_content,
             created: %{
               creator: %{
                 character: %{id: _} = subject_character,
                 profile: %{id: _} = subject_profile
               }
             }
-          }
+          } = reply_to
         },
         _
       )
@@ -282,7 +287,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
            id: "ra:" <> id,
            activity_inception: true,
            viewing_main_object: false,
-           object: reply_to_post_content,
+           object: reply_to,
            activity: %{
              subject: %{
                profile: subject_profile,

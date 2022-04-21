@@ -82,7 +82,7 @@
                     {l "Switch User"}
                   </span>
                 </LivePatch>
-                <LivePatch to="/private" class="flex items-center py-2 text-base font-medium rounded-md text-base-content">
+                <LivePatch to={path(Bonfire.Data.Social.Message)} class="flex items-center py-2 text-base font-medium rounded-md text-base-content">
                   <Solid.MailIcon class="flex-shrink-0 w-6 h-6 mr-3 -ml-1 text-base-content text-opacity-80" />
                   <span class="truncate">
                     {l "Direct Messages"}

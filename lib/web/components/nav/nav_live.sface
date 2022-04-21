@@ -33,7 +33,7 @@
               widget_title="Admins"
               current_user={current_user(assigns)}
             >
-              <Bonfire.UI.Social.WidgetAdminsLive 
+              <Bonfire.UI.Social.WidgetUsersLive 
                 current_user={current_user(assigns)}
                 id="widget_admins"
               />

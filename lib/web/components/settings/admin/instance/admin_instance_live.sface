@@ -132,9 +132,9 @@
             <!-- Checked: "bg-base-200 border-indigo-200 z-10", Not Checked: "border-gray-200" -->
             <label class="relative flex items-center flex-1 p-4 border-r cursor-pointer border-base-200 focus:outline-none">
               <input type="radio" 
-              name="Bonfire.UI.Social.WidgetAdminsLive[show_guests]" 
+              name="Bonfire.UI.Social.WidgetUsersLive[show_guests]" 
               value="true" 
-              checked={if Bonfire.Me.Settings.get([Bonfire.UI.Social.WidgetAdminsLive, :show_guests], true), do: "checked"} 
+              checked={if Bonfire.Me.Settings.get([Bonfire.UI.Social.WidgetUsersLive, :show_guests], true), do: "checked"} 
               class="radio radio-secondary" aria-labelledby="admin-info-0-label" aria-describedby="admin-info-0-description">
               <div class="flex flex-col ml-3">
                 <!-- Checked: "text-indigo-900", Not Checked: "text-primary-content-900" -->
@@ -148,9 +148,9 @@
             <!-- Checked: "bg-base-200 border-indigo-200 z-10", Not Checked: "border-gray-200" -->
             <label class="relative flex items-center flex-1 p-4 cursor-pointer focus:outline-none">
               <input type="radio" 
-              name="Bonfire.UI.Social.WidgetAdminsLive[show_guests]" 
+              name="Bonfire.UI.Social.WidgetUsersLive[show_guests]" 
               value="false" 
-              checked={if not Bonfire.Me.Settings.get([Bonfire.UI.Social.WidgetAdminsLive, :show_guests], true), do: "checked"} 
+              checked={if not Bonfire.Me.Settings.get([Bonfire.UI.Social.WidgetUsersLive, :show_guests], true), do: "checked"} 
               class="radio radio-secondary" aria-labelledby="admin-info-2-label" aria-describedby="admin-info-2-description">
               <div class="flex flex-col ml-3">
                 <!-- Checked: "text-indigo-900", Not Checked: "text-primary-content-900" -->

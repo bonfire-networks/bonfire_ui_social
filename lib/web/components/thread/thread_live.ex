@@ -20,7 +20,8 @@ defmodule Bonfire.UI.Social.ThreadLive do
   prop url, :string
   prop smart_input_prompt, :string
   prop smart_input_text, :string
-
+  prop thread_mode, :any
+  prop reverse_order, :any
 
   def update(%{replies: replies, threaded_replies: threaded_replies, page_info: page_info} = assigns, socket) when is_list(replies) and is_list(threaded_replies) and is_map(page_info) do
     debug("ThreadLive: showing preloaded replies")
@@ -50,23 +51,25 @@ defmodule Bonfire.UI.Social.ThreadLive do
   def update(assigns, socket) do
     # debug(assigns, "Thread: assigns")
 
-    thread_id = e(assigns, :thread_id, nil)
+    thread_id = e(assigns, :thread_id, e(assigns, :object, :id, nil))
 
     if thread_id do
       # debug("Thread: loading by thread_id")
       # debug(assigns)
       current_user = current_user(assigns) #|> IO.inspect
 
-      with %{edges: replies, page_info: page_info} <- Bonfire.Social.Threads.list_replies(thread_id, current_user: current_user, after: e(assigns, :after, nil)) do
-        # debug(thread_id, "thread_id")
-        # debug(replies, "replies")
+      max_depth = if e(assigns, :thread_mode, nil) !=:flat, do: Config.get(:thread_default_max_depth, 3)
 
-        threaded_replies = if is_list(replies) and length(replies)>0, do: Bonfire.Social.Threads.arrange_replies_tree(replies), else: []
+      with %{edges: replies, page_info: page_info} <- Bonfire.Social.Threads.list_replies(thread_id, current_user: current_user, after: e(assigns, :after, nil), max_depth: max_depth, reverse_order: e(assigns, :reverse_order, nil)) do
+        # debug(thread_id, "thread_id")
+        debug(replies, "queried replies")
+
+        threaded_replies = if e(assigns, :thread_mode, nil) !=:flat and is_list(replies) and length(replies)>0, do: Bonfire.Social.Threads.arrange_replies_tree(replies)
         # debug(threaded_replies, "threaded_replies")
 
         assigns
         |> assigns_merge(
-          replies: replies || [],
+          replies: replies,
           threaded_replies: threaded_replies,
           page_info: page_info,
           thread_id: thread_id

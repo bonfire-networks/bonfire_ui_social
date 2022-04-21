@@ -23,10 +23,12 @@
       name={:create_activity_type}
       value={@create_activity_type} />
     <input 
-      :for={{_name, id} <- e(assigns, :to_circles, [])} 
+      :for={circle <- e(assigns, :to_circles, [])} 
       type="hidden" 
       name="to_circles[]" 
-      value={id} />
+      label={if is_tuple(circle), do: elem(circle, 0)} 
+      value={if is_tuple(circle), do: elem(circle, 1), else: circle} 
+    />
 
     <!-- <div 
       x-show="smart_input_prompt != 'Write something...' && ((reply_to_id && reply_to_id != '') || (smart_input_text && smart_input_text !=''))" 
@@ -84,7 +86,9 @@
           </div>
         </Inputs>
         <div class="">
-          <Bonfire.UI.Social.BoundariesLive />
+          <Bonfire.UI.Social.BoundariesLive
+            to_circles={e(assigns, :to_circles, [])}
+           />
           <div class="flex items-center justify-between p-2 space-x-2 rounded-b bg-neutral bg-opacity-30 sm:px-3">
             <div class="flex items-center flex-1 space-x-3">
             
@@ -111,6 +115,7 @@
               </div>
               <div 
                 data-tip="Full-screen mode" 
+                :if={@create_activity_type != :message}
                 class="relative z-20 flex items-center tooltip tooltip-bottom">
                 <LivePatch
                   to="/write"
@@ -118,8 +123,6 @@
                   <Solid.EyeIcon class="w-4 h-4 text-opacity-70 text-base-content" />
                 </LivePatch>
               </div>
-
-              
 
             </div>
 

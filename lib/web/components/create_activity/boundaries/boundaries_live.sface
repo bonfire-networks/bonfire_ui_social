@@ -85,7 +85,11 @@
         <Solid.ChatAlt2Icon/> 
         <div class="flex-1">
         <div class="text-sm font-medium text-neutral text-opacity-80">{l "Message"}</div>
-        <p class="text-xs text-neutral text-opacity-80">{l "Visible only to people included in this message thread."}</p>
+        <p class="text-xs text-neutral text-opacity-80">{l "Visible only to people included in this message thread:"} 
+        {#for {name, id} <- e(assigns, :to_circles, [])}
+          <span class="badge text-xs">{name}</span>
+        {/for}
+        </p>
         </div>
       </div>
   </div>

@@ -1,0 +1,44 @@
+<div 
+class="h-full md:mx-0 text-base-content ">
+  <div>
+    <LivePatch 
+      to={"/messages/compose"}
+      class="flex items-center block w-full py-3 text-center normal-case border-b border-base-300 link place-content-center link-hover"> 
+      <Solid.PencilAltIcon class="inline-block w-5 h-5 mr-2 text-base-content" />
+      <span class="text-sm text-base-content">{l "Start a new conversation"}</span>
+    </LivePatch>
+    <div :if={not is_list(e(assigns, :feed, [])) or e(assigns, :feed, []) == []} class="w-full p-4 text-center bg-base-100">
+      <!-- <Bonfire.UI.Social.EmptyFeed/>  -->
+    </div>
+
+    <ul :if={length(e(assigns, :feed, []))>0} class="divide-y divide-base-300">
+      <li class="bg-base-100 hover:bg-base-200" :for={%{activity: activity} <- e(assigns, :feed, [])}>
+        <LivePatch to={permalink(e(activity, :replied, :thread_id, nil), e(activity, :object_id, nil))} class="block ">
+          <div class="flex items-center p-3">
+            <div class="flex-1 min-w-0 sm:flex sm:items-center sm:justify-between">
+              <div class="truncate">
+                <div class="flex items-center space-x-2">
+                  <!-- <img src={e(activity, :subject, :profile, :icon, "")} class="w-8 h-8 bg-secondary rounded-btn" /> -->
+                  <p class="text-base font-medium truncate text-base-content">{e(activity, :subject, :profile, :name, nil)}</p>
+                </div>
+                <div class="mt-1">
+                  <p class="text-sm truncate text-base-content text-opacity-80 font-regular">
+                    {text_only( e(activity, :object, :name, nil) || e(activity, :object, :post_content, :summary, nil) || e(activity, :object, :post_content, :html_body, nil) )}
+                  </p> 
+                  <div class="flex items-center mt-1 text-xs text-base-content text-opacity-80">
+                    <p><time datetime={"#{date_from_now(activity)}"}>{date_from_now(activity)}</time></p>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="flex-shrink-0 ml-5">
+              <svg class="w-5 h-5 text-base-content text-opacity-80" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                <path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd" />
+              </svg>
+            </div>
+          </div>
+        </LivePatch>
+      </li>
+    </ul>
+  </div>
+</div>

@@ -25,7 +25,7 @@
           class=" hover:bg-neutral hover:bg-opacity-20">
           <div class="p-2">
           <LiveRedirect  
-            to={"/user/#{e(@activity, :subject, :character, :username, "")}/private"}
+            to={path(Bonfire.Data.Social.Message, e(@user, :character, :username, ""))}
             class="flex items-center text-sm text-neutral"
           >
             <Outline.MailIcon class="w-4 h-4 mr-3 shrink-0 text-neutral text-opacity-70" />  
@@ -39,7 +39,7 @@
           class=" hover:bg-neutral hover:bg-opacity-20">
           <div class="p-2">
           <LiveRedirect 
-            to={"/user/#{e(@object, :created, :creator, :character, :username, "")}/private"}
+            to={path(Bonfire.Data.Social.Message, e(@user, :character, :username, ""))}
             class="flex items-center text-sm text-neutral"
           >
             <Outline.MailIcon class="w-4 h-4 mr-3 shrink-0 text-neutral text-opacity-70" />  

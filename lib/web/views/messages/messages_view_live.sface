@@ -1,0 +1,106 @@
+<div class="items-start justify-center w-full max-w-screen-xl mx-auto tablet:flex ">
+  <div class="hidden tablet:block w-72">
+    <div class="fixed top-[68px] overflow-y-auto bottom-[20px] w-72">
+
+    {#if @tab_id == "select_recipients"}
+      <Bonfire.UI.Social.SelectRecipientsLive 
+          users={e(assigns, :users, [])}
+          tab_id={e(assigns, :tab_id, nil)}
+          to_circles={e(assigns, :to_circles, [])}
+          limit={10}
+        />
+    {#else}
+      <Bonfire.UI.Social.WidgetLive 
+        widget_title="Message Threads"
+        current_user={current_user(assigns)}
+      >
+        <Bonfire.UI.Social.MessageThreadsLive 
+          feed={e(assigns, :feed, [])}
+          tab_id={e(assigns, :tab_id, nil)}
+          to_circles={e(assigns, :to_circles, [])}
+          limit={10}
+        />
+      </Bonfire.UI.Social.WidgetLive>
+    {/if}
+    </div>
+  </div>
+  <main class="grow w-full flex flex-col tablet-lg:h-full h-screen bg-base-100 mx-auto shrink-0 tablet:mx-3 w-center max-w-[580px]">
+
+  {#if @tab_id in ["compose", "select_recipients", "thread"]}
+
+    <div class="h-full grow">
+
+    {#if @tab_id=="thread"}
+
+      <Bonfire.UI.Social.ObjectThreadLive
+        page={@page}
+        page_title={@page_title}
+        create_activity_type={e(assigns, :create_activity_type, nil)}
+        to_circles={e(assigns, :to_circles, [])}
+        participants={e(assigns, :participants, nil)}
+        smart_input_text={@smart_input_text}
+        smart_input_prompt={e(assigns, :smart_input_prompt, "")}
+        thread_id={@thread_id}
+        thread_mode={:flat}
+        reply_to_id={e(assigns, :reply_to_id, "")}
+        activity={@activity}
+        object={@object}
+        url={@url}
+        show_reply_input={true}
+        reverse_order={true}
+      /> 
+
+    {#elseif @tab_id in ["compose", "select_recipients"]}
+
+        <div role="banner" class="sticky top-[48px] lg:top-[48px] lg:-mt-[20px] lg:pt-[8px] bg-base-100 z-30 w-full border-b tablet:rounded-t border-base-300">  
+          <div class="hidden h-3 tablet:block bg-base-300 "></div>
+          <div class="relative rounded-b-none tablet:rounded">
+            <div class="flex items-center p-3">
+              <div class="flex items-center flex-1 space-x-2 text-left">
+                <h1 class="flex items-center font-medium text-md">
+                  <div>
+                    {l "Start a new conversation"}  
+                    <span :if={e(assigns, :to_circles, nil)}>
+                      {l "with"} 
+                    </span>
+                    </div> 
+                  {#for {name, id} <- e(assigns, :to_circles, [])}
+                    <div class="badge">{name}</div>
+                  {/for}
+                </h1> 
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <Bonfire.UI.Social.SmartInputLive
+          :if={current_user(assigns)}
+          current_user={current_user(assigns)}
+          reply_to_id={e(assigns, :reply_to_id, "")}
+          thread_id={e(assigns, :thread_id, nil)}
+          create_activity_type={e(assigns, :create_activity_type, nil)}
+          to_circles={e(assigns, :to_circles, [])}
+          smart_input_prompt={e(assigns, :smart_input_prompt, "")}
+          smart_input_text={e(assigns, :smart_input_text, "")}
+        />
+      {/if}
+    </div>
+
+
+  {#else}
+    <Bonfire.UI.Social.PageHeaderLive page_title={@page_title} />
+    <div class="md:mx-0 text-base-content lg:mt-0 bg-base-100">
+      <div id="empty-feed">
+        <div class="flex items-center justify-center py-8">
+          <div class="badge">
+            {l "Select a thread or start a new one..."}
+          </div>
+        </div>
+      </div>
+    </div>
+
+  {/if}
+  </main>
+
+
+</div>

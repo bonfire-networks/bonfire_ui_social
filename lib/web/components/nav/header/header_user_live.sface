@@ -29,7 +29,7 @@
           </LivePatch>
         </div>
         <div class="flex flex-1 tooltip tooltip-bottom" data-tip={l "Messages"}>
-          <LivePatch to={"/messages"} class={"tab flex-1 text-neutral-content text-opacity-70", "tab-active text-opacity-60 relative lined": @page == "messages"}>
+          <LivePatch to={path(Bonfire.Data.Social.Message)} class={"tab flex-1 text-neutral-content text-opacity-70", "tab-active text-opacity-60 relative lined": @page == "messages"}>
               <Solid.MailIcon class="w-5 h-5 mr-1" />
               <span class="sr-only">{l "Messages"}</span>
           </LivePatch>
@@ -60,7 +60,7 @@
         </LivePatch>
       </div> 
       <div data-tip="Direct Messages" class="flex-none tooltip tooltip-bottom">
-        <LivePatch to={"/private"} class={"btn-sm btn btn-square btn-ghost", "btn-outline text-primary": @page == "private", "btn-ghost text-neutral-content": @page != "private"}>
+        <LivePatch to={path(Bonfire.Data.Social.Message)} class={"btn-sm btn btn-square btn-ghost", "btn-outline text-primary": @page == "private", "btn-ghost text-neutral-content": @page != "private"}>
             <Solid.MailIcon class="w-5 h-5" />
         </LivePatch>
       </div> 

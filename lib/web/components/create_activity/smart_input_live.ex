@@ -11,4 +11,10 @@ defmodule Bonfire.UI.Social.SmartInputLive do
   prop smart_input_text, :string, required: false
   prop full_screen, :boolean, default: false
 
+  prop showing_within, :any
+  prop with_editor, :boolean, required: false
+  prop textarea_class, :string, default: "textarea prose prose-sm"
+  prop activity, :any
+  prop object, :any
+
 end

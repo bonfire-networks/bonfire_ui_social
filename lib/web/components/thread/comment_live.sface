@@ -6,6 +6,7 @@
   >
   <div class="relative flex-1 w-full">
     <i 
+      :if={e(assigns, :thread_mode, nil) !=:flat}
       :class=" !show_replies ? 'bg-primary bottom-[0px]' : 'bg-base-200 bottom-[0px]'"
       @click="show_replies = !show_replies"
       class="cursor-pointer bg-base-content bg-opacity-20 hover:bg-opacity-80 z-30 left-[30px] w-[2px] top-[50px] absolute"></i>
@@ -21,7 +22,9 @@
               id={e(@comment, :id, "ca")<>":"<>e(activity, :id, "")}
               activity={Map.drop(activity, [:object])}
               object={object}
+              thread_object={@thread_object}
               showing_within={:thread}
+              thread_mode={e(assigns, :thread_mode, nil)}
               class="pl-14 showing_within:thread"
             />
 
@@ -30,7 +33,9 @@
               id={e(@comment, :id, "ca")<>":"<>e(activity, :id, "")}
               activity={Map.drop(activity, [:object])}
               object={object}
+              thread_object={@thread_object}
               showing_within={:thread}
+              thread_mode={e(assigns, :thread_mode, nil)}
               class="pl-14 showing_within:thread"
             />
           {#match _}
@@ -40,7 +45,9 @@
         {/case}
     </div>
 
-    <div x-show="show_replies" >
+    <div 
+      :if={e(assigns, :thread_mode, nil) !=:flat}
+      x-show="show_replies" >
       <div class={"replies replies-level-" <> to_string(@thread_level+1) <> " ml-8"}>
 
         {#if is_list(@child_replies) and length(@child_replies)>0 }
@@ -49,6 +56,7 @@
               reply_to_id={e(@comment, :id, nil)}
               thread_id={@thread_id} 
               comment={subreply}
+              thread_object={@thread_object}
               child_replies={sub_child_replies}
               thread_level={@thread_level+1}
               url={@url}

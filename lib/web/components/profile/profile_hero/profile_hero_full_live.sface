@@ -28,7 +28,7 @@
 
         <LiveRedirect
           :if={current_user(assigns) && e(current_user(assigns), :id, nil) != maybe_get(@user, :id)}
-          to={"/user/#{e(@user, :character, :username, "")}/private"}
+          to={path(Bonfire.Data.Social.Message, e(@user, :character, :username, ""))}
           class="hidden btn lg:flex btn-sm btn-outline btn-circle"
         >
           <Solid.MailIcon class="w-4 h-4" />  
@@ -58,7 +58,7 @@
             class="rounded shadow dropdown_actions w-52 menu dropdown-content bg-neutral-content">
             <li class="lg:hidden">
               <div class="">
-                <LiveRedirect class="flex items-center text-sm no-padding text-neutral" to={"/user/#{e(@user, :character, :username, "")}/private"}>
+                <LiveRedirect class="flex items-center text-sm no-padding text-neutral" to={path(Bonfire.Data.Social.Message, e(@user, :character, :username, ""))}>
                   <Solid.MailIcon class="w-4 h-4 mr-2 shrink-0 text-neutral text-opacity-70" />
                   <span>{l "Send a message"}</span>  
                 </LiveRedirect>

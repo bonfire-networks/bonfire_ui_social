@@ -5,11 +5,13 @@ defmodule Bonfire.UI.Social.CommentLive do
   prop comment, :map
   prop activity, :map, default: %{}
   prop object, :any, default: %{}
+  prop thread_object, :any
   prop thread_level, :any
   prop child_replies, :any
   prop thread_id, :any
   prop sub_replies_count, :integer, default: 0
   prop url, :string
+  prop thread_mode, :any
 
   def activity(%{__struct__: Bonfire.Data.Social.Activity} = activity) do
     activity
