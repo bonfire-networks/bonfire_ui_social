@@ -1,82 +1,114 @@
-
-<nav
-  role="navigation"
-  class="flex-col justify-end hidden mt-0 tablet:flex w-72">
-  <div class="fixed z-50 top-3 lg:top-[67px] bottom-[16px] w-72">
-    <div class="w-full h-full">
-      <div class="flex flex-col space-y-4">
-        <div 
-          class="">
-          <Bonfire.UI.Social.SmartInputLive
-            :if={current_user(assigns)}
-            current_user={current_user(assigns)}
-            reply_to_id={e(assigns, :reply_to_id, "")}
-            thread_id={@thread_id}
-            create_activity_type={e(assigns, :create_activity_type, nil)}
-            to_circles={e(assigns, :to_circles, [])}
-            smart_input_prompt={@smart_input_prompt}
-            smart_input_text={@smart_input_text}
-          />
+<div 
+  class="flex flex-col h-full"
+  x-data="{show_smart_input: false}" 
+>
+  <nav
+    role="navigation"
+    class="flex-col justify-end mt-0 tablet:flex "
+    :class="show_smart_input ? 'w-full' : 'w-72 hidden'"
+    >
+    <div 
+      class=""
+      :class="show_smart_input ? 'z-50 bg-base-300 p-3 fixed top-0 bottom-0 w-full' : 'fixed z-50 top-3 lg:top-[67px]  w-72'"
+      >
+      <div x-show="show_smart_input" class="">
+        <div role="banner" class="sticky top-[48px] lg:top-[48px] lg:-mt-[20px] lg:pt-[8px] bg-base-100 z-30 w-full border-b tablet:rounded-t border-base-300">  
+          <div class="relative rounded-b-none tablet:rounded">
+            <div class="flex items-center p-3">
+              <div class="flex items-center flex-1 space-x-2 text-left">
+                <button
+                  @click="show_smart_input = false"
+                  type="button"
+                  aria-label="Go back"
+                >
+                  <span class="flex items-center px-1 space-x-1 normal-case btn btn-ghost btn-sm">
+                    <Solid.ChevronLeftIcon />
+                    <div class="">{l "Go back"}</div>
+                  </span>
+                </button>
+              </div>
+            </div>
+          </div>
         </div>
 
-        <!-- <Bonfire.UI.Social.WidgetLive 
-          widget_title="Notifications"
-          current_user={current_user(assigns)}
-        >
+      </div>
+      <div class="w-full h-full">
+        <div class="flex flex-col space-y-4">
+          <div 
+            class="">
+            <Bonfire.UI.Social.SmartInputLive
+              :if={current_user(assigns)}
+              current_user={current_user(assigns)}
+              reply_to_id={e(assigns, :reply_to_id, "")}
+              thread_id={@thread_id}
+              create_activity_type={e(assigns, :create_activity_type, nil)}
+              to_circles={e(assigns, :to_circles, [])}
+              smart_input_prompt={@smart_input_prompt}
+              smart_input_text={@smart_input_text}
+            />
+          </div>
+
+          <!-- <Bonfire.UI.Social.WidgetLive 
+            widget_title="Notifications"
+            current_user={current_user(assigns)}
+          >
+            <:action>
+              <LivePatch class="text-xs normal-case btn btn-xs btn-outline" to={path(:notifications)}>
+                {l "View more"}
+              </LivePatch>
+            </:action>
+            <Bonfire.UI.Social.WidgetNotificationLive 
+              current_user={current_user(assigns)}
+              id="widget_notification"
+            />
+          </Bonfire.UI.Social.WidgetLive>
+
+          <Bonfire.UI.Social.WidgetLive 
+            widget_title="Direct Messages"
+            current_user={current_user(assigns)}
+          >
           <:action>
-            <LivePatch class="text-xs normal-case btn btn-xs btn-outline" to={path(:notifications)}>
-              {l "View more"}
-            </LivePatch>
-          </:action>
-          <Bonfire.UI.Social.WidgetNotificationLive 
+              <LivePatch class="text-xs normal-case btn btn-xs btn-outline" to={path(Bonfire.Data.Social.Message)}>
+                {l "View more"}
+              </LivePatch>
+            </:action>
+            <Bonfire.UI.Social.WidgetMessagesLive 
+              current_user={current_user(assigns)}
+              id="widget_direct_messages"
+            />
+          </Bonfire.UI.Social.WidgetLive> -->
+              
+          <!-- <Bonfire.UI.Social.WidgetLive 
+            widget_title="Admins"
             current_user={current_user(assigns)}
-            id="widget_notification"
-          />
-        </Bonfire.UI.Social.WidgetLive>
+          >
+            <Bonfire.UI.Social.WidgetUsersLive 
+              current_user={current_user(assigns)}
+              id="widget_admins"
+            />
+          </Bonfire.UI.Social.WidgetLive> -->
+          <!-- <div
+            :for={{component, component_assigns} <- Bonfire.Common.Config.get([:ui, :sidebar_components], [])}
+          >
+            <Surface.Components.Dynamic.Component
+              :if={module_enabled?(component)}
+              module={component}
+              page={@page}
+            />
+          </div> -->
 
-         <Bonfire.UI.Social.WidgetLive 
-          widget_title="Direct Messages"
-          current_user={current_user(assigns)}
-        >
-        <:action>
-            <LivePatch class="text-xs normal-case btn btn-xs btn-outline" to={path(Bonfire.Data.Social.Message)}>
-              {l "View more"}
-            </LivePatch>
-          </:action>
-          <Bonfire.UI.Social.WidgetMessagesLive 
-            current_user={current_user(assigns)}
-            id="widget_direct_messages"
-          />
-        </Bonfire.UI.Social.WidgetLive> -->
-            
-        <!-- <Bonfire.UI.Social.WidgetLive 
-          widget_title="Admins"
-          current_user={current_user(assigns)}
-        >
-          <Bonfire.UI.Social.WidgetUsersLive 
-            current_user={current_user(assigns)}
-            id="widget_admins"
-          />
-        </Bonfire.UI.Social.WidgetLive> -->
-        <!-- <div
-          :for={{component, component_assigns} <- Bonfire.Common.Config.get([:ui, :sidebar_components], [])}
-        >
-          <Surface.Components.Dynamic.Component
-            :if={module_enabled?(component)}
-            module={component}
-            page={@page}
-          />
-        </div> -->
-
+        </div>
       </div>
     </div>
-  </div>
-</nav>
+  </nav>
 
 
-<div class="fixed z-40 tablet:hidden bottom-3 right-3">
-    <LiveRedirect to="/write" class="btn btn-primary btn-lg btn-circle">
+  <div class="fixed z-40 tablet:hidden bottom-3 right-3">
+    <button 
+      @click="show_smart_input = true"
+      type="button" 
+      class="btn btn-primary btn-lg btn-circle">
       <Solid.PencilIcon class="w-8 h-8" />
-    </LiveRedirect>
+    </button>
+  </div>
 </div>
-  
