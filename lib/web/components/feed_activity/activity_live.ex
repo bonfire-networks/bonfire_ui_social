@@ -55,7 +55,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
     # permalink = path(activity.object)
     components =
       (component_activity_subject(verb, activity, assigns) ++
-         (component_maybe_in_reply_to(verb, activity, e(assigns, :showing_within, nil))
+         (component_maybe_in_reply_to(verb, activity, e(assigns, :showing_within, nil), e(assigns, :viewing_main_object, nil), e(assigns, :thread_mode, nil))
           |> debug("component_maybe_in_reply_to")) ++
          component_object(verb, activity, object_type) ++
          component_actions(verb, activity, assigns))
@@ -119,6 +119,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
           hide_reply={e(component_assigns, :hide_reply, e(assigns, :hide_reply, false))}
           created_verb_display={@created_verb_display}
           showing_within={e(assigns, :showing_within, :feed)}
+          thread_mode={e(assigns, :thread_mode, :feed)}
           profile={e(component_assigns, :profile, nil)}
           character={e(component_assigns, :character, nil)}
           reply_smart_input_text={e(component_assigns, :reply_smart_input_text, nil)}
@@ -261,9 +262,9 @@ defmodule Bonfire.UI.Social.ActivityLive do
     nil
   end
 
-  def component_maybe_in_reply_to(verb, activity, showing_within \\ nil)
-  def component_maybe_in_reply_to(verb, activity, :thread), do: []
-  def component_maybe_in_reply_to(verb, activity, :create_activity_form), do: []
+  def component_maybe_in_reply_to(verb, activity, showing_within \\ nil, viewing_main_object \\ false, thread_mode \\ nil)
+  def component_maybe_in_reply_to(verb, activity, showing_within, false, thread_mode) when showing_within in [:thread] and thread_mode not in [:flat], do: []
+  def component_maybe_in_reply_to(verb, activity, :create_activity_form, _, _), do: []
 
   def component_maybe_in_reply_to(
         verb,
@@ -278,7 +279,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
             }
           } = reply_to
         },
-        _
+        _, _, _
       )
       # reply with post_content
       when verb in @reply_verbs,
@@ -310,7 +311,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
               }
             } = replied
         },
-        _
+        _, _, _
       )
       # other kind of reply, with creator
       when verb in @reply_verbs and is_binary(reply_to_id),
@@ -338,7 +339,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
               id: reply_to_id
             } = replied
         },
-        _
+        _, _, _
       )
       # other kind of reply
       when verb in @reply_verbs and is_binary(reply_to_id) do
@@ -357,10 +358,10 @@ defmodule Bonfire.UI.Social.ActivityLive do
     ]
   end
 
-  def component_maybe_in_reply_to(verb, %{replied: %{} = replied}, showing_within),
-    do: component_maybe_in_reply_to(verb, replied, showing_within)
+  def component_maybe_in_reply_to(verb, %{replied: %{} = replied}, showing_within, main_object, thread_mode),
+    do: component_maybe_in_reply_to(verb, replied, showing_within, main_object, thread_mode)
 
-  def component_maybe_in_reply_to(_, a, _) do
+  def component_maybe_in_reply_to(_, a, _, _, _) do
     # debug(a, "ActivityLive: no reply_to")
     []
   end

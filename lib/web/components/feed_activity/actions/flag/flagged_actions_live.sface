@@ -12,6 +12,7 @@
     <Bonfire.UI.Social.Activity.MoreActionsLive
       id={ComponentID.new(Bonfire.UI.Social.LikeActionLive, @object)} 
       object={@object} 
+      object_type={@object_type} 
       activity={@activity} 
       verb={@verb}
       object_type_readable={@object_type_readable}

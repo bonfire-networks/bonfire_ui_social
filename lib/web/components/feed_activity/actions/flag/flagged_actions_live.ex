@@ -4,6 +4,7 @@ defmodule Bonfire.UI.Social.Activity.FlaggedActionsLive do
   # def handle_event(action, attrs, socket), do: Bonfire.Common.LiveHandlers.handle_event(action, attrs, socket, __MODULE__)
   prop activity, :map
   prop object, :any
+  prop object_type, :any
   prop verb, :string
   prop permalink, :string
   prop reply_smart_input_text, :string

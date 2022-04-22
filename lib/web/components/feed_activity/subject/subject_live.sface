@@ -26,6 +26,7 @@
         permalink={@permalink}
         date_ago={@date_ago}
         object={@object}
+        object_type={@object_type}
       />
     </div>
   </div>
@@ -56,8 +57,10 @@
           permalink={@permalink}
           date_ago={@date_ago}
           object={@object}
+          object_type={@object_type}
           showing_within={@showing_within}
-          verb_display={@verb_display} />
+          verb_display={@verb_display} 
+          />
       </div>
     </div>
   </div>
@@ -87,6 +90,7 @@
       </div>
       <span class="flex items-center mt-1">
         <BoundaryIconLive 
+        :if={@object_type not in [Bonfire.Data.Social.Message]}
         id={ComponentID.new(BoundaryIconLive, @object)} 
         object={@object} 
         />
@@ -123,6 +127,7 @@
         permalink={@permalink}
         date_ago={@date_ago}
         object={@object}
+        object_type={@object_type}
         showing_within={@showing_within}
         verb_display={@verb_display} />
     </div>

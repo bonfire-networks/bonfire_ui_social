@@ -24,6 +24,7 @@
       permalink={@permalink}
       date_ago={@date_ago} 
       object={@object}
+      object_type={@object_type}
     />
   </div>
 </div>

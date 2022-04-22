@@ -7,4 +7,6 @@ defmodule Bonfire.UI.Social.Activity.RepliedDateAgoLive do
   prop verb_display, :string
   prop date_ago, :any
   prop permalink, :string
+  prop object_type, :any
+
 end

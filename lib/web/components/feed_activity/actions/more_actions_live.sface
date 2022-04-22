@@ -85,17 +85,19 @@
       peered={e(@object, :peered, nil)}
     />
 
+    <!-- Delete the activity -->
     <div 
       :if={e(current_user(assigns), :id, nil) != subject_id(assigns)}
       class="h-px my-0 divider bg-opacity-40 bg-neutral"></div> 
     <li 
-      :if={e(current_user(assigns), :id, nil) == subject_id(assigns) or Bonfire.Me.Users.is_admin?(current_user(assigns))}
+      :if={@object_type not in [Bonfire.Data.Social.Message] and e(current_user(assigns), :id, nil) == subject_id(assigns) or Bonfire.Me.Users.is_admin?(current_user(assigns))}
       class=" hover:bg-neutral hover:bg-opacity-20">
       <OpenModalLive
         id={ComponentID.new(OpenModalLive, @object)} 
         title_text={l("Delete this")<>" "<>(if @verb in ["write", "create"], do: l("from feeds"), else: @verb)}
         >
-        {l "You may be able to undo this deletion in some cases, but the data will eventually be permanently deleted."}
+        {l "Deleting from feeds means the %{object} can still be accessed by anyone who has a direct link, but won't be discoverable via this instance's feeds.", object: e(assigns, :object_type_readable, l "object")}
+        {l "Remote feeds won't be affected."} 
         <:open_btn>
           <button class="flex items-center text-sm text-neutral" type="button">
             <Solid.TrashIcon class="w-4 h-4 mr-2 shrink-0 text-neutral text-opacity-70" />
@@ -106,7 +108,7 @@
         </:open_btn>
         <:action_btns>
           <button 
-          phx-click={"Bonfire.Social.Objects:delete"} 
+          phx-click={"Bonfire.Social.Feeds:delete"} 
           phx-value-id={e(@activity, :id, "")}
           class="btn btn-error">
           <Solid.TrashIcon class="w-4 h-4 mr-2 shrink-0 text-neutral text-opacity-70" />
@@ -117,7 +119,7 @@
     </li>
 
 
-    <!-- Delete the post -->
+    <!-- Delete the object -->
     <li 
       :if={e(current_user(assigns), :id, nil) == subject_id(assigns) or Bonfire.Me.Users.is_admin?(current_user(assigns))}
       class=" hover:bg-neutral hover:bg-opacity-20">
@@ -125,7 +127,8 @@
         id={ComponentID.new(OpenModalLive, @object)} 
         title_text={l("Delete this")<>" "<>e(assigns, :object_type_readable, l "object")}
         >
-        {l "You may be able to undo this deletion in some cases, but the data will eventually be permanently deleted."}
+        {rich l "You may be able to undo this deletion *in some cases*, but in any case the data will eventually be permanently deleted from this instance."} 
+        {l "Remote instances will be asked to delete it as well."} 
         <:open_btn>
           <button class="flex items-center text-sm text-neutral" type="button">
             <Solid.TrashIcon class="w-4 h-4 mr-2 shrink-0 text-neutral text-opacity-70" />

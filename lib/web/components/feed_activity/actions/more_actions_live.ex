@@ -5,6 +5,7 @@ defmodule Bonfire.UI.Social.Activity.MoreActionsLive do
 
   prop activity, :any
   prop object, :any
+  prop object_type, :any
   prop verb, :string
   prop object_type_readable, :any
   prop flagged, :any

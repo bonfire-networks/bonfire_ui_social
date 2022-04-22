@@ -54,6 +54,7 @@
         showing_within={@showing_within}
         date_ago={@date_ago}
         object={@object}
+        object_type={@object_type}
         verb_display={@verb_display} />
     </div>
 </div>

@@ -38,7 +38,7 @@ defmodule Bonfire.UI.Social.ThreadLive do
 
     {:ok, assign(socket, assigns |> assigns_merge(
       replies: replies,
-      threaded_replies: Bonfire.Social.Threads.arrange_replies_tree(replies),
+      threaded_replies: (if e(assigns, :thread_mode, nil) !=:flat, do: Bonfire.Social.Threads.arrange_replies_tree(replies)),
       thread_id: e(assigns, :activity, :replied, :thread_id, nil) || e(assigns, :thread_id, nil), # TODO: change for thread forking?
     )) }
   end
@@ -60,7 +60,7 @@ defmodule Bonfire.UI.Social.ThreadLive do
 
       max_depth = if e(assigns, :thread_mode, nil) !=:flat, do: Config.get(:thread_default_max_depth, 3)
 
-      with %{edges: replies, page_info: page_info} <- Bonfire.Social.Threads.list_replies(thread_id, current_user: current_user, after: e(assigns, :after, nil), max_depth: max_depth, reverse_order: e(assigns, :reverse_order, nil)) do
+      with %{edges: replies, page_info: page_info} <- Bonfire.Social.Threads.list_replies(thread_id, current_user: current_user, after: e(assigns, :after, nil), max_depth: max_depth, thread_mode: e(assigns, :thread_mode, nil), reverse_order: e(assigns, :reverse_order, nil)) do
         # debug(thread_id, "thread_id")
         debug(replies, "queried replies")
 

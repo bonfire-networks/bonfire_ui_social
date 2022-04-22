@@ -21,6 +21,7 @@
     </span>
 
     <BoundaryIconLive 
+      :if={@object_type not in [Bonfire.Data.Social.Message]}
       id={ComponentID.new(BoundaryIconLive, @object)} 
       object={@object} 
     />
@@ -32,6 +33,7 @@
   <div class="relative text-xs text-base-content text-opacity-60">
     
     <BoundaryIconLive 
+        :if={@object_type not in [Bonfire.Data.Social.Message]}
         id={ComponentID.new(BoundaryIconLive, @object)} 
         object={@object} 
       />

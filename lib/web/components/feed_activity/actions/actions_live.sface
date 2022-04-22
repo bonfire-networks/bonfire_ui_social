@@ -18,7 +18,7 @@
     <div class={
       "flex items-center",
       "mt-3": e(assigns, :viewing_main_object, nil),
-      "justify-start space-x-8": e(assigns, :showing_within, nil) == :thread and e(assigns, :viewing_main_object, nil) != true,
+      "justify-end space-x-8": e(assigns, :showing_within, nil) == :thread,
       "justify-between": e(assigns, :showing_within, nil) != :thread
       }>
       {#if e(assigns, :viewing_main_object, nil) != true and e(assigns, :showing_within, nil) != :thread and Bonfire.UI.Social.Activity.ReplyLive.count(e(@activity, :replied, nil)) > 0}
@@ -51,6 +51,7 @@
       />
       <Bonfire.UI.Social.Activity.MoreActionsLive
         object={@object} 
+        object_type={@object_type} 
         activity={@activity} 
         verb={@verb}
         object_type_readable={@object_type_readable}

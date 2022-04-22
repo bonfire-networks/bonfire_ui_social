@@ -2,18 +2,21 @@
 class="h-full md:mx-0 text-base-content ">
   <div 
     class="relative h-full">
-    <div class="p-3 bg-base-100">
+    <!-- <div class="p-3 bg-base-100">
       <input type="text" placeholder="Search here" class="w-full h-10 max-w-xs input input-bordered">
-    </div>
+    </div> -->
     <nav class="overflow-y-auto border-t border-base-300" aria-label="Directory">
       <ul role="list" class="relative z-0 divide-y divide-base-300">
         {#for user <- @users}
         <li 
+          class="bg-base-100 form-control">
+          <label 
           phx-click="Bonfire.Social.Messages:select_recipient"
+          phx-value-action={if Enum.member?(e(assigns, :to_circles, []), {e(user, :edge, :object, :profile, :name, "Anon"), e(user, :edge, :object, :id, nil)}), do: "deselect"}
           phx-value-id={e(user, :edge, :object, :character, :id, nil)}
           phx-value-name={e(user, :edge, :object, :profile, :name, "Anon")}
-          class="bg-base-100 form-control">
-          <label class="px-4 py-3 cursor-pointer label hover:bg-base-300 hover:bg-opacity-60 focus-within:ring-2 focus-within:ring-inset focus-within:ring-primary">
+          class="px-4 py-3 cursor-pointer label hover:bg-base-300 hover:bg-opacity-60 focus-within:ring-2 focus-within:ring-inset focus-within:ring-primary"
+          >
             <div class="relative flex items-center space-x-3 ">
               <div class="flex-shrink-0">
                 <LazyImage 
@@ -29,16 +32,10 @@ class="h-full md:mx-0 text-base-content ">
                 </p>
               </div>
             </div>
-            {#if Enum.member?(e(assigns, :to_circles, []), {e(user, :edge, :object, :profile, :name, "Anon"), e(user, :edge, :object, :id, nil)})}
-            <input   
+            <input 
               type="checkbox" 
-              checked="checked"
+              checked={if Enum.member?(e(assigns, :to_circles, []), {e(user, :edge, :object, :profile, :name, "Anon"), e(user, :edge, :object, :id, nil)}), do: "checked"}
               class="checkbox checkbox-primary">
-            {#else}
-            <input   
-              type="checkbox" 
-              class="checkbox checkbox-primary">
-            {/if}
           </label>
         </li>
         {/for}

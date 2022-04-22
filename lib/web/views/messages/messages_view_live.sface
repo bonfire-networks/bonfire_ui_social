@@ -17,6 +17,7 @@
         <Bonfire.UI.Social.MessageThreadsLive 
           feed={e(assigns, :feed, [])}
           tab_id={e(assigns, :tab_id, nil)}
+          thread_id={e(assigns, :thread_id, nil)}
           to_circles={e(assigns, :to_circles, [])}
           limit={10}
         />
