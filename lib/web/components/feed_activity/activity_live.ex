@@ -256,7 +256,6 @@ defmodule Bonfire.UI.Social.ActivityLive do
       |> component_activity_maybe_creator()
 
 
-
   def component_activity_maybe_creator(activity) do
     error("ActivityLive: could not find the creator of #{inspect(activity)}")
     nil

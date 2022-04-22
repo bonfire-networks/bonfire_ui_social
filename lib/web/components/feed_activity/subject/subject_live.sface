@@ -3,10 +3,10 @@
     <Solid.ReplyIcon class="w-3 h-3" />
     <span class="">{l "In reply to"}</span>
     <LiveRedirect
-      aria-label={e(@activity, :subject, :character, :username, "") <> " profile"}
+      aria-label={e(@character, :username, "") <> " profile"}
       class="link-hover subject_replied link"
-      to={path(e(@activity, :subject, :character, nil))}>
-      @{e(@activity, :subject, :profile, :name, "Anonymous")}
+      to={path(e(@character, nil))}>
+      @{e(@profile, :name, "Anonymous")}
     </LiveRedirect>
   </div>
   
@@ -16,10 +16,10 @@
     <div class="flex justify-between flex-1">
       <div class="flex items-center text-sm font-medium text-base-content">
         <LiveRedirect
-          aria-label={e(@activity, :subject, :character, :username, "") <> " profile"}
+          aria-label={e(@character, :username, "") <> " profile"}
           class="hover:underline subject_replied text-opacity-70"
-          to={path(e(@activity, :subject, :character, nil))}>
-          {e(@activity, :subject, :profile, :name, "Anonymous")}
+          to={path(e(@character, nil))}>
+          {e(@profile, :name, "Anonymous")}
         </LiveRedirect>
       </div>
       <Bonfire.UI.Social.Activity.RepliedDateAgoLive 
