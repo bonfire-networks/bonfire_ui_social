@@ -1,12 +1,14 @@
 <div 
 class="h-full md:mx-0 text-base-content ">
   <div>
-    <LivePatch 
-      to={"/messages/compose"}
-      class="flex items-center block w-full py-3 text-center normal-case border-b border-base-300 link place-content-center link-hover"> 
-      <Solid.PencilAltIcon class="inline-block w-5 h-5 mr-2 text-base-content" />
-      <span class="text-sm text-base-content">{l "Start a new conversation"}</span>
-    </LivePatch>
+    <div class="m-3">
+      <LivePatch 
+        to={"/messages/compose"}
+        class="flex items-center block w-full normal-case btn btn-sm btn-primary"> 
+        <Solid.PencilAltIcon class="inline-block w-5 h-5 mr-2 text-base-content" />
+        <span class="text-sm text-base-content">{l "New message"}</span>
+      </LivePatch>
+    </div>
     <div :if={not is_list(e(assigns, :feed, [])) or e(assigns, :feed, []) == []} class="w-full p-4 text-center bg-base-100">
       <!-- <Bonfire.UI.Social.EmptyFeed/>  -->
     </div>
