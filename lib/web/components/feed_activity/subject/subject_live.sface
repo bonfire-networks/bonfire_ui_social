@@ -108,7 +108,7 @@
     <div class="absolute left-3">
       <Bonfire.UI.Social.Activity.AvatarLive profile={@profile} />
     </div>
-    <div class="flex items-center justify-between">
+    <div class="flex items-center justify-between leading-[14px]">
       <div class="flex items-center flex-1 truncate ellipsis">
         <LiveRedirect
           opts={"data-id": "subject_name"}
@@ -121,7 +121,7 @@
           :if={e(@character, :username, nil)}
           class="ml-1 text-sm  truncate ellipsis text-base-content text-opacity-60 subject_username">@{e(@character, :username, "")}</span>
       </div>
-      <span class="mx-1 text-base-content text-opacity-60">·</span>
+      <span class="mx-1 text-base-content text-sm text-opacity-60">·</span>
       <Bonfire.UI.Social.Activity.DateAgoLive 
         permalink={@permalink}
         date_ago={@date_ago}

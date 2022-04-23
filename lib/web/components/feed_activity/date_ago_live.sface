@@ -30,7 +30,7 @@
 
 {#else}
 <div class="flex items-center">
-  <div class="relative text-sm text-base-content space-x-1 text-opacity-60 flex items-center">
+  <div class="relative text-xs text-base-content space-x-1 text-opacity-60 flex items-center">
     
     <BoundaryIconLive 
         :if={@object_type not in [Bonfire.Data.Social.Message]}
