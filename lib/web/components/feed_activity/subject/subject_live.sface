@@ -47,7 +47,7 @@
         <LiveRedirect
           opts={"data-id": "subject_name"}
           aria-label={e(@character, :username, "") <> " profile"}
-          class="flex-1 font-medium text-base-content hover:underline "
+          class="flex-1 font-semibold text-base-content hover:underline "
           to={path(@character)}>
           {e(@profile, :name, "Anonymous")}
         </LiveRedirect>
@@ -65,10 +65,10 @@
     </div>
   </div>
 {#elseif e(assigns, :showing_within, nil) == :thread && !@viewing_main_object}
-  <div class={"flex items-center", "pl-1": e(@activity, :replied, :reply_to_id, nil)}>
+  <div class={"flex items-center"}>
     <div class="absolute left-4">
       <div class="align-middle avatar">
-        <div class="w-8 h-8 bg-base-200 rounded-btn">
+        <div class="w-6 h-6 bg-base-200 rounded">
           <LazyImage 
             class="subject_avatar" 
             src={avatar_url(@profile)} 
@@ -77,25 +77,25 @@
       </div>
     </div>
     <div class="flex items-center flex-1 space-x-2">
-      <div class="text-base font-bold text-base-content text-opacity-80">
+      <div class="text-sm font-bold text-base-content text-opacity-80">
         <LiveRedirect
           aria-label={e(@character, :username, "") <> " profile"}
-          class="font-medium text-base-content hover:underline"
+          class="font-semibold text-base-content hover:underline"
           to={path(@character)}>
           {e(@profile, :name, "Anonymous")}
-          <span class="ml-1 text-sm font-light text-base-content text-opacity-60">
+          <span class="ml-0.5 text-sm font-regular text-base-content text-opacity-60">
             @{e(@character, :username, "")}
           </span>
         </LiveRedirect>
       </div>
-      <span class="flex items-center mt-1">
+      <span class="flex items-center">
         <BoundaryIconLive 
         :if={@object_type not in [Bonfire.Data.Social.Message]}
         id={ComponentID.new(BoundaryIconLive, @object)} 
         object={@object} 
         />
 
-        <LivePatch class="ml-1 text-xs font-regular text-base-content text-opacity-60" to={@permalink}>
+        <LivePatch class="ml-1 text-sm font-regular text-base-content text-opacity-60" to={@permalink}>
           {@date_ago}
         </LivePatch>
         
@@ -108,18 +108,18 @@
     <div class="absolute left-3">
       <Bonfire.UI.Social.Activity.AvatarLive profile={@profile} />
     </div>
-    <div class="flex items-baseline justify-between">
-      <div class="flex items-baseline flex-1 truncate ellipsis text-md">
+    <div class="flex items-center justify-between">
+      <div class="flex items-center flex-1 truncate ellipsis">
         <LiveRedirect
           opts={"data-id": "subject_name"}
           aria-label={e(@character, :username, "") <> " profile"}
-          class="font-medium text-base-content hover:underline "
+          class="font-semibold text-base-content hover:underline "
           to={path(@character)}>
           {e(@profile, :name, "Anonymous")}
         </LiveRedirect>
         <span
           :if={e(@character, :username, nil)}
-          class="ml-1 text-sm font-light truncate ellipsis text-base-content text-opacity-60 subject_username">@{e(@character, :username, "")}</span>
+          class="ml-1 text-sm  truncate ellipsis text-base-content text-opacity-60 subject_username">@{e(@character, :username, "")}</span>
       </div>
       <span class="mx-1 text-base-content text-opacity-60">·</span>
       <Bonfire.UI.Social.Activity.DateAgoLive 

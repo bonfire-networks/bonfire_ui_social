@@ -5,9 +5,12 @@
   phx-click={"#{if e(assigns, :my_boost , nil), do: "Bonfire.Social.Boosts:undo", else: "Bonfire.Social.Boosts:boost"}"}
   phx-value-id={e(@object, :id, nil)}
   phx-value-component={__MODULE__}
-  class="btn btn-ghost btn-sm btn-circle boost">
-
-  {#if e(assigns, :showing_within, nil) != :thread}
+  class={
+    "btn btn-ghost btn-circle boost",
+    "btn-xs ": e(assigns, :showing_within, "") == :thread,
+    "btn-sm": e(assigns, :showing_within, "") != :thread,
+  }> 
+  {#if e(assigns, :showing_within, nil) != :message}
   <span class={"text-base-content text-opacity-70", "text-opacity-60 text-info": e(assigns, :my_boost, nil)}>
 
     <svg 

@@ -6,10 +6,16 @@
   "dropdown-top dropdown-end showing_within:widget": e(assigns, :showing_within, nil) == :widget
   }>
   <div 
+    phx-click="Bonfire.Social.Posts:open_activity"
+    phx-value-ignore={true}
     type="button"
     role="button"
     tabindex="0"
-    class="btn btn-ghost btn-sm btn-circle">
+    class={
+    "btn btn-ghost btn-circle",
+    "btn-xs ": e(assigns, :showing_within, "") == :thread,
+    "btn-sm": e(assigns, :showing_within, "") != :thread,
+  }> 
     <span class="text-base-content text-opacity-70">
       <Solid.DotsHorizontalIcon class="w-4 h-4" />
     </span>

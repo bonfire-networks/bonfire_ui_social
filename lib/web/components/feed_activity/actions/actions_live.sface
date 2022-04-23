@@ -10,24 +10,30 @@
   <div 
     :if={e(assigns, :showing_within, nil) != :notifications} 
     class={
-      "thread_actions -ml-2 mt-2": e(assigns, :showing_within, nil) == :thread,
+      "thread_actions mt-2 flex items-center": e(assigns, :showing_within, nil) == :thread,
       "feed_actions mt-2": e(assigns, :viewing_main_object, nil) != true,
       "mt-1": e(assigns, :showing_within, nil) == :widget,
       }>
-
+    <div class="flex-1">
+      <div 
+        :if={count(e(@activity, :replied, nil)) > 0 and e(assigns, :showing_within, nil) == :thread and e(assigns, :viewing_main_object, nil) != true}
+        @click="show_replies = !show_replies"
+        class="btn btn-xs normal-case text-xs">View {count(e(@activity, :replied, nil))} replies
+      </div>
+    </div>
     <div class={
       "flex items-center",
       "mt-3": e(assigns, :viewing_main_object, nil),
-      "justify-end space-x-8": e(assigns, :showing_within, nil) == :thread,
+      "justify-end space-x-4 mt-0": e(assigns, :showing_within, nil) == :thread,
       "justify-between": e(assigns, :showing_within, nil) != :thread
       }>
-      {#if e(assigns, :viewing_main_object, nil) != true and e(assigns, :showing_within, nil) != :thread and Bonfire.UI.Social.Activity.ReplyLive.count(e(@activity, :replied, nil)) > 0}
+      <!-- {#if e(assigns, :viewing_main_object, nil) != true and e(assigns, :showing_within, nil) != :thread and Bonfire.UI.Social.Activity.ReplyLive.count(e(@activity, :replied, nil)) > 0}
         <Bonfire.UI.Social.Activity.ViewThreadLive 
           permalink={@permalink} 
           replied={e(@activity, :replied, nil)}
           object_id={e(@object, :id, "no-object")}
         />
-      {/if} 
+      {/if}  -->
       <Bonfire.UI.Social.Activity.ReplyLive 
         object_id={e(@object, :id, "no-object")}
         activity_id={e(assigns, :activity, :id, "no-activity")}
@@ -42,11 +48,13 @@
         :if={@object_type not in [Bonfire.Data.Social.Message]}
         id={ComponentID.new(BoostActionLive, @object)} 
         object={@object} 
+        showing_within={e(assigns, :showing_within, nil)}
         boost_count={e(@activity, :boost_count, nil)}
         />
       <Bonfire.UI.Social.LikeActionLive
         id={ComponentID.new(Bonfire.UI.Social.LikeActionLive, @object)} 
         object={@object} 
+        showing_within={e(assigns, :showing_within, nil)}
         like_count={e(@activity, :like_count, nil)} 
       />
       <Bonfire.UI.Social.Activity.MoreActionsLive

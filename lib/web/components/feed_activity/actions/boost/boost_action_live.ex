@@ -3,6 +3,7 @@ defmodule Bonfire.UI.Social.Activity.BoostActionLive do
 
   prop object, :any
   prop boost_count, :any
+  prop showing_within, :any
 
   def preload(list_of_assigns), do: Bonfire.Social.Boosts.LiveHandler.preload(list_of_assigns)
 

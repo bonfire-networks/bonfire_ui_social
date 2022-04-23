@@ -15,4 +15,9 @@ defmodule Bonfire.UI.Social.Activity.ActionsLive do
   prop hide_reply, :boolean
   prop viewing_main_object, :boolean
   prop flagged, :any
+
+  def count(replied) do
+    # debug(replied)
+    e(replied, :nested_replies_count, 0) + e(replied, :direct_replies_count, 0)
+  end
 end

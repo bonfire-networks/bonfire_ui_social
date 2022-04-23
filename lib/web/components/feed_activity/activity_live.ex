@@ -84,22 +84,22 @@ defmodule Bonfire.UI.Social.ActivityLive do
       |> Map.new()
       # |> debug("ActivityLive final assigns")
 
-    # phx-click="Bonfire.Social.Posts:open_activity"
-    # phx-value-id={@permalink}
-    # phx-value-showing_within={e(assigns, :showing_within, :feed)}
-    # class="cursor-pointer"
+
 
     ~F"""
     <article
+      phx-click="Bonfire.Social.Posts:open_activity"
+      phx-value-id={@permalink}
+      phx-value-showing_within={e(assigns, :showing_within, :feed)}
       id={"activity-"<>(e(@activity, :id, nil) || e(@object, :id, "no-id"))}
       aria-label="user activity"
       role="article"
       tabIndex="0"
       class={
-      "p-3 activity relative pl-16 " <> @class,
-      "bg-neutral-content bg-opacity-5": e(assigns, :viewing_main_object, nil) == true,
+      "p-3 activity relative pl-16 group cursor-pointer hover:bg-base-content hover:bg-opacity-5 " <> @class,
+      "bg-neutral-content bg-opacity-5 border-b border-base-300": e(assigns, :viewing_main_object, nil) == true,
       "main_reply_to mb-2 p-2 mt-2 relative border-l-4 border-l-base-300 border border-base-200 rounded-sm bg-base-300 bg-opacity-50": e(@object, :id, nil) != nil and e(@activity, :replied, :reply_to_id, nil) == nil and e(@activity, :id, nil) == nil and e(assigns, :showing_within, nil) != :widget  and e(assigns, :showing_within, nil) != :search, # showing a quoted reply_to
-      "reply": e(@object, :id, nil) != nil and e(@activity, :replied, :reply_to_id, nil) != nil and e(@activity, :id, nil) != nil,
+      "reply py-2": e(@object, :id, nil) != nil and e(@activity, :replied, :reply_to_id, nil) != nil and e(@activity, :id, nil) != nil,
     }>
       {#for {component, component_assigns} when is_atom(component) <- e(assigns, :activity_object_components, [])}
         <Surface.Components.Dynamic.Component

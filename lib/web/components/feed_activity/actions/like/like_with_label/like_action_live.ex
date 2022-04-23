@@ -4,6 +4,7 @@ defmodule Bonfire.UI.Social.LikeActionLive do
   prop object, :any
   prop like_count, :any, default: 0
   prop label, :string
+  prop showing_within, :any
 
   def preload(list_of_assigns), do: Bonfire.Social.Likes.LiveHandler.preload(list_of_assigns)
 

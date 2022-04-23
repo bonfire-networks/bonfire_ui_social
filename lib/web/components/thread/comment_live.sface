@@ -1,21 +1,23 @@
 <div
   id={"comment-"<> e(@comment, :id, "")}
   data-id="comment"
-  x-data="{show_replies: true}"
-  class={"reply thread-level-" <> to_string(@thread_level) <> " flex relative w-full mx-auto" }
+  x-data="{show_replies: false}"
+  class={
+    "hover:bg-base-content hover:bg-opacity-5 reply thread-level-" <> to_string(@thread_level) <> " flex relative w-full mx-auto ",
+    "border-b border-base-300": @thread_level < 2
+  }
   >
   <div class="relative flex-1 w-full">
     <i 
       :if={e(assigns, :thread_mode, nil) !=:flat}
       :class=" !show_replies ? 'bg-primary bottom-[0px]' : 'bg-base-200 bottom-[0px]'"
       @click="show_replies = !show_replies"
-      class="cursor-pointer bg-base-content bg-opacity-20 hover:bg-opacity-80 z-30 left-[30px] w-[2px] top-[50px] absolute"></i>
+      class="cursor-pointer bg-base-content bg-opacity-20 hover:bg-opacity-80 z-30 left-[27px] w-[2px] top-[42px] bottom-[4px] absolute"></i>
     <div 
       x-cloak 
       x-data="{reply: false, show: true}"
       class=""
-      :class={"reply_to_id === '#{e(@comment, :id, "")}' ? 'bg-base-200 ' : ''"}
-    >
+      >
         {#case @comment}
           {#match %{__struct__: Bonfire.Data.Social.Activity, object: object} = activity}
             <Bonfire.UI.Social.ActivityLive
@@ -25,7 +27,7 @@
               thread_object={@thread_object}
               showing_within={:thread}
               thread_mode={e(assigns, :thread_mode, nil)}
-              class="pl-14 showing_within:thread"
+              class="pl-12 showing_within:thread"
             />
 
           {#match %{activity: %{object: object} = activity}}
@@ -36,7 +38,7 @@
               thread_object={@thread_object}
               showing_within={:thread}
               thread_mode={e(assigns, :thread_mode, nil)}
-              class="pl-14 showing_within:thread"
+              class="pl-12 showing_within:thread"
             />
           {#match _}
             <div class="p-3">
@@ -44,7 +46,7 @@
             </div>
         {/case}
     </div>
-
+    
     <div 
       :if={e(assigns, :thread_mode, nil) !=:flat}
       x-show="show_replies" >
