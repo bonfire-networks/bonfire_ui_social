@@ -2,7 +2,7 @@
   <div />
 {#else}
 <div class={
-  "showing_within:thread ml-1": e(assigns, :showing_within, nil) == :thread,
+  "showing_within:thread": e(assigns, :showing_within, nil) == :thread,
   "showing_within:feed": e(assigns, :showing_within, nil) == :feed,
   "showing_within:notifications": e(assigns, :showing_within, nil) == :notifications,
   "showing_within:widget mt-2": e(assigns, :showing_within, nil) == :widget,
