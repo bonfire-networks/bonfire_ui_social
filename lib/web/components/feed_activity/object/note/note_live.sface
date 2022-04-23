@@ -47,7 +47,7 @@
 
     </div>
 
-    <div class="mt-4 mb-2" :if={e(assigns, :viewing_main_object, nil)} >
+    <!-- <div class="mt-4 mb-2" :if={e(assigns, :viewing_main_object, nil)} >
       <Bonfire.UI.Social.Activity.DateAgoLive 
         permalink={@permalink}
         viewing_main_object={e(assigns, :viewing_main_object, nil)}
@@ -56,6 +56,6 @@
         object={@object}
         object_type={@object_type}
         verb_display={@verb_display} />
-    </div>
+    </div> -->
 </div>
 {/if}

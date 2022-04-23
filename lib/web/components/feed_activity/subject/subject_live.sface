@@ -121,9 +121,8 @@
           :if={e(@character, :username, nil)}
           class="ml-1 text-sm font-light truncate ellipsis text-base-content text-opacity-60 subject_username">@{e(@character, :username, "")}</span>
       </div>
-      <span :if={!@viewing_main_object} class="mx-1 text-base-content text-opacity-60">·</span>
+      <span class="mx-1 text-base-content text-opacity-60">·</span>
       <Bonfire.UI.Social.Activity.DateAgoLive 
-        :if={!@viewing_main_object}
         permalink={@permalink}
         date_ago={@date_ago}
         object={@object}
