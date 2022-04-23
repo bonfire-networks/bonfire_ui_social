@@ -16,9 +16,14 @@
       }>
     <div class="flex-1">
       <div 
-        :if={count(e(@activity, :replied, nil)) > 0 and e(assigns, :showing_within, nil) == :thread and e(assigns, :viewing_main_object, nil) != true}
+        :if={
+          count(e(@activity, :replied, nil)) > 0 and 
+          e(assigns, :showing_within, nil) == :thread and 
+          e(assigns, :viewing_main_object, nil) != true and 
+          @object_type not in [Bonfire.Data.Social.Message]
+        }
         @click="show_replies = !show_replies"
-        class="btn btn-xs normal-case text-xs">View {count(e(@activity, :replied, nil))} replies
+        class="btn btn-xs normal-case text-xs">{l "View"} {count(e(@activity, :replied, nil))} {l "replies"}
       </div>
     </div>
     <div class={
