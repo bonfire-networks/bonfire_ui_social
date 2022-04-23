@@ -1,5 +1,8 @@
 <div 
-  class="p-1 dropdown">
+  class={
+    "p-1 dropdown",
+    "dropdown-top": e(assigns, :showing_within, nil) == :message
+    }>
   <input 
     name={:boundary_selected} 
     type="hidden" 

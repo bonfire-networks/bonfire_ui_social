@@ -12,7 +12,7 @@
       :if={e(assigns, :thread_mode, nil) !=:flat}
       :class=" !show_replies ? 'bg-primary bottom-[0px]' : 'bg-base-200 bottom-[0px]'"
       @click="show_replies = !show_replies"
-      class="cursor-pointer bg-base-content bg-opacity-20 hover:bg-opacity-80 z-30 left-[27px] w-[2px] top-[42px] bottom-[4px] absolute"></i>
+      class="cursor-pointer bg-base-content bg-opacity-20 hover:bg-opacity-80 z-10 left-[27px] w-[2px] top-[42px] bottom-[4px] absolute"></i>
     <div 
       x-cloak 
       x-data="{reply: false, show: true}"

@@ -1,11 +1,11 @@
 <main class="flex flex-col md:mx-0 grow">
-  <section class="w-full mx-auto bg-base-100">
-    <Bonfire.UI.Social.PageHeaderLive
-      page_title={@page_title}
-      before={true}
-    />
-    <!-- <Bonfire.UI.Social.BannerPreviousThreadLive activity={@activity} /> -->
-    <Bonfire.UI.Social.ActivityLive
+  <Bonfire.UI.Social.PageHeaderLive
+    page_title={@page_title}
+    before={true}
+  />
+  <!-- <Bonfire.UI.Social.BannerPreviousThreadLive activity={@activity} /> -->   
+  <div class="flex flex-col grow">
+   <Bonfire.UI.Social.ActivityLive
       id={"ta:"<>ulid(@activity)}
       showing_within={:thread}
       thread_mode={e(assigns, :thread_mode, nil)}
@@ -14,9 +14,6 @@
       object={@object}
       class="cursor-default"
     />
-  </section>
-  
-  <div class="flex flex-col grow">
     <Bonfire.UI.Social.ThreadLive 
       id={@thread_id}
       thread_id={@thread_id}
@@ -28,7 +25,6 @@
     />
   </div>
 
-  
   <Bonfire.UI.Social.SmartInputLive
     :if={@show_reply_input && current_user(assigns)}
     current_user={current_user(assigns)}
@@ -40,6 +36,7 @@
     smart_input_text={e(assigns, :smart_input_text, "")}
     textarea_class={@textarea_class}
     smart_input_class={@smart_input_class}
+    showing_within={e(assigns, :showing_within, nil)}
     replied_activity_class={@replied_activity_class}
   />
 

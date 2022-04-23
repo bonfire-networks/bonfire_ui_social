@@ -49,9 +49,10 @@
         url={@url}
         show_reply_input={true}
         reverse_order={true}
+        showing_within={:message}
         textarea_class={"h-8 max-h-16 resize-y max-w-full textarea prose prose-sm bg-base-200"}
-        smart_input_class={"border-t border-base-300 bg-base-200"}
-        replied_activity_class={"relative p-3 py-2 bg-neutral-content bg-opacity-5 showing_within:create_activity_form"}
+        smart_input_class={"border m-3 mt-1 border-base-300 bg-base-200 rounded-md"}
+        replied_activity_class={"relative p-3 py-2 bg-neutral-content bg-opacity-5 m-3 mb-1 rounded-md showing_within:create_activity_form"}
       /> 
 
     {#elseif @tab_id in ["compose", "select_recipients"]}
@@ -86,6 +87,7 @@
           to_circles={e(assigns, :to_circles, [])}
           smart_input_prompt={e(assigns, :smart_input_prompt, "")}
           smart_input_text={e(assigns, :smart_input_text, "")}
+          showing_within={:message}
         />
       {/if}
     </div>

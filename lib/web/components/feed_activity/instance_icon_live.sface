@@ -5,7 +5,7 @@
       href={link}
       target="_blank"
       data-tip={l "Originates from a remote instance"}
-      class="align-bottom tooltip tooltip-bottom">
+      class="align-bottom tooltip tooltip-bottom z-20">
       {#case Bonfire.Files.FaviconStore.favicon_url(link)}
         {#match nil}
           <Solid.ExternalLinkIcon class="w-4 h-4 text-base-content text-opacity-50" />

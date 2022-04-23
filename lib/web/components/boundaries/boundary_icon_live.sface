@@ -2,7 +2,7 @@
 
   <span 
     data-tip={e(@object_primary_boundary, :name, "Public")}
-    class="align-bottom tooltip tooltip-bottom">
+    class="align-bottom tooltip tooltip-bottom z-20">
     <Solid.GlobeIcon class="w-4 h-4 text-opacity-50 text-base-content" />
   </span>
 
@@ -10,7 +10,7 @@
 
   <span 
     data-tip={e(@object_primary_boundary, :name, "Local")}
-    class="align-bottom tooltip tooltip-bottom">
+    class="align-bottom tooltip tooltip-bottom z-20">
     <Solid.HomeIcon 
       class="w-4 h-4 text-opacity-50 text-base-content" 
     />
@@ -20,7 +20,7 @@
 
   <span 
     data-tip={e(@object_primary_boundary, :name, "Custom Boundaries")}
-    class="align-bottom tooltip tooltip-bottom">
+    class="align-bottom tooltip tooltip-bottom z-20">
     <Solid.CogIcon 
       class="w-4 h-4 text-opacity-50 text-base-content" 
     />
