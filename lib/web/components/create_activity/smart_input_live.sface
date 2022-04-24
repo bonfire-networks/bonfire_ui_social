@@ -1,4 +1,6 @@
-  <div class="flex h-full">
+  <div class={
+    "flex h-full",
+    "pt-2 bg-base-100 z-40 sticky bottom-0": e(assigns, :showing_within, nil) == :message}>
     <div class="flex flex-col flex-1 w-full">
       {#if Bonfire.Common.Config.get([:ui, :default_smart_input])}
         <Surface.Components.Dynamic.LiveComponent

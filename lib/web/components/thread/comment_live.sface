@@ -27,7 +27,7 @@
               thread_object={@thread_object}
               showing_within={:thread}
               thread_mode={e(assigns, :thread_mode, nil)}
-              class="pl-12 showing_within:thread"
+              class="pl-12 showing_within:thread border-b border-base-300"
             />
 
           {#match %{activity: %{object: object} = activity}}
@@ -38,7 +38,7 @@
               thread_object={@thread_object}
               showing_within={:thread}
               thread_mode={e(assigns, :thread_mode, nil)}
-              class="pl-12 showing_within:thread"
+              class="pl-12 showing_within:thread border-b border-base-300"
             />
           {#match _}
             <div class="p-3">
