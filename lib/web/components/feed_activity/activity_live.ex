@@ -26,7 +26,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
       activity
       # |> debug("Activity provided")
       |> Map.put(:object, Activities.object_from_activity(assigns))
-      # |> debug("Activity with :object")
+      |> debug("Activity with :object")
 
     verb =
       Activities.verb_maybe_modify(
@@ -398,7 +398,9 @@ defmodule Bonfire.UI.Social.ActivityLive do
     do: [Bonfire.UI.Social.Activity.NoteLive]
 
   def component_for_object_type(type, object) when type in [Bonfire.Data.Identity.User],
-    do: [Bonfire.UI.Social.Activity.CharacterLive]
+    do: [{Bonfire.UI.Social.Activity.CharacterLive, %{
+        object: repo().maybe_preload(object, [:character, :profile])
+      }}]
 
   def component_for_object_type(type, object) when type in [Bonfire.Classify.Category],
     do: [Bonfire.UI.Social.Activity.CategoryLive]
