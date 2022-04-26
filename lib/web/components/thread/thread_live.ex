@@ -29,10 +29,11 @@ defmodule Bonfire.UI.Social.ThreadLive do
   end
 
   def update(%{new_reply: new_reply} = assigns, socket) when is_map(new_reply) do
-    debug(new_reply, "ThreadLive: adding new reply")
+    debug("ThreadLive: adding new reply")
 
     new_reply = new_reply
-      |> Map.put(:path, e(new_reply, :replied, :path, e(new_reply, :activity, :replied, :path, [])))
+      |> Map.put(:path, e(new_reply, :object, :replied, :path, nil) || e(new_reply, :replied, :path, nil) || e(new_reply, :replied, :path, nil) || e(new_reply, :activity, :replied, :path, []))
+      |> dump("new_reply")
 
     replies = [new_reply] ++ e(socket, :assigns, :replies, [])
 

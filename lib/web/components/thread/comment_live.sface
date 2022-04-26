@@ -1,7 +1,7 @@
 <div
   id={"comment-"<> e(@comment, :id, "")}
   data-id="comment"
-  x-data="{show_replies: false}"
+  x-data="{show_replies: true}"
   class={
     "hover:bg-base-content hover:bg-opacity-5 reply thread-level-" <> to_string(@thread_level) <> " flex relative w-full mx-auto ",
     "border-b border-base-300": @thread_level < 2
@@ -78,7 +78,7 @@
                   phx-value-id={e(@comment, :id, nil)} 
                   phx-value-level={@thread_level} 
                   class="flex items-center visible px-2 py-1 ml-4 rounded cursor-pointer group dark:bg-neutral-400 hover:bg-neutral hover:bg-opacity-30 click:invisible">
-                  <span class="text-xs font-semibold text-primary-content-800">Show {@sub_replies_count} more replies</span>
+                  <span class="text-xs font-semibold text-primary-content-800">Load {@sub_replies_count} more replies</span>
                 </div>
               </div>
             {#match _}

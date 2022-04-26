@@ -16,7 +16,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
   # TODO: put in config and/or autogenerate with Verbs genserver
   @reply_verbs ["reply", "respond"]
   @create_verbs ["create"]
-  @react_verbs ["like", "boost", "flag"]
+  @react_verbs ["like", "boost", "flag", "tag"]
   @create_or_reply_verbs @create_verbs ++ @reply_verbs
 
   def render(%{activity: %{} = activity} = assigns) do
@@ -26,7 +26,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
       activity
       # |> debug("Activity provided")
       |> Map.put(:object, Activities.object_from_activity(assigns))
-      |> debug("Activity with :object")
+      # |> debug("Activity with :object")
 
     verb =
       Activities.verb_maybe_modify(
@@ -64,7 +64,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
         c when is_atom(c) -> {c, nil}
         other -> other
       end)
-      # |> debug("ActivityLive: activity_object_components")
+      # |> debug("components")
 
     assigns =
       assigns
@@ -75,15 +75,13 @@ defmodule Bonfire.UI.Social.ActivityLive do
         object_type_readable: object_type_readable,
         date_ago: date_from_now(activity),
         activity: activity |> Map.drop([:object]),
-        activity_object_components: components,
         verb: verb,
         verb_display: verb_display,
         created_verb_display: created_verb_display,
         permalink: permalink
       )
+      # |> dump("all assigns")
       |> Map.new()
-      # |> debug("ActivityLive final assigns")
-
 
 
     ~F"""
@@ -101,7 +99,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
       "main_reply_to mb-2 p-2 mt-2 relative border-l-4 border-l-base-300 border border-base-200 rounded-sm bg-base-300 bg-opacity-50": e(@object, :id, nil) != nil and e(@activity, :replied, :reply_to_id, nil) == nil and e(@activity, :id, nil) == nil and e(assigns, :showing_within, nil) != :widget  and e(assigns, :showing_within, nil) != :search, # showing a quoted reply_to
       "reply py-2": e(@object, :id, nil) != nil and e(@activity, :replied, :reply_to_id, nil) != nil and e(@activity, :id, nil) != nil,
     }>
-      {#for {component, component_assigns} when is_atom(component) <- e(assigns, :activity_object_components, [])}
+      {#for {component, component_assigns} when is_atom(component) <- components}
         <Surface.Components.Dynamic.Component
           module={component}
           id={e(component_assigns, :id, nil)}

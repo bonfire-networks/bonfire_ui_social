@@ -23,7 +23,10 @@
           @object_type not in [Bonfire.Data.Social.Message]
         }
         @click="show_replies = !show_replies"
-        class="btn btn-xs normal-case text-xs">{l "View"} {count(e(@activity, :replied, nil))} {l "replies"}
+        class="btn btn-xs normal-case text-xs">
+          <span x-show="!show_replies">{l "View"}</span>
+          <span x-show="show_replies">{l "Hide"}</span>
+          &nbsp;{count(e(@activity, :replied, nil))} {l "replies"}
       </div>
     </div>
     <div class={
