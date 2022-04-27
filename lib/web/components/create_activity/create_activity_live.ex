@@ -19,9 +19,10 @@ defmodule Bonfire.UI.Social.CreateActivityLive do
   prop with_editor, :boolean, required: false
   prop activity, :any
   prop object, :any
-  
+  prop insert_text, :string
 
-  # Classes to customize the smart input appearance 
+
+  # Classes to customize the smart input appearance
   prop textarea_class, :string
   prop smart_input_class, :string
   prop replied_activity_class, :string

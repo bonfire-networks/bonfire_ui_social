@@ -5,7 +5,6 @@ defmodule Bonfire.UI.Social.Activity.ReplyLive do
   prop object_id, :string, required: true
   prop activity_id, :string
   prop permalink, :string
-  prop reply_smart_input_text, :string
   prop reply_to_text, :any
   prop replied, :any
   prop boost_count, :any

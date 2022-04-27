@@ -43,7 +43,7 @@
 </main>
 
 
-  <!-- {#if current_user(assigns) }
+  {#if current_user(assigns) }
     <Bonfire.UI.Social.WidgetLive 
       widget_title="Participants"
       current_user={current_user(assigns)}
@@ -55,4 +55,4 @@
     </Bonfire.UI.Social.WidgetLive>
   {#else}
     <div />
-  {/if} -->
+  {/if}

@@ -7,7 +7,6 @@ defmodule Bonfire.UI.Social.Activity.FlaggedActionsLive do
   prop object_type, :any
   prop verb, :string
   prop permalink, :string
-  prop reply_smart_input_text, :string
   prop showing_within, :any
   prop hide_reply, :boolean
   prop viewing_main_object, :boolean

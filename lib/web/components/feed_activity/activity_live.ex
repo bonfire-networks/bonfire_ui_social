@@ -124,7 +124,6 @@ defmodule Bonfire.UI.Social.ActivityLive do
           thread_mode={e(assigns, :thread_mode, nil)}
           profile={e(component_assigns, :profile, nil)}
           character={e(component_assigns, :character, nil)}
-          reply_smart_input_text={e(component_assigns, :reply_smart_input_text, nil)}
         />
       {/for}
     </article>
@@ -490,7 +489,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
   def component_show_standard_actions(
         %{subject: %{character: %{username: username}}} = _activity
       ),
-      do: [{Bonfire.UI.Social.Activity.ActionsLive, %{reply_smart_input_text: "@#{username} "}}]
+      do: [Bonfire.UI.Social.Activity.ActionsLive]
 
   def component_show_standard_actions(_activity), do: [Bonfire.UI.Social.Activity.ActionsLive]
 
@@ -532,24 +531,6 @@ defmodule Bonfire.UI.Social.ActivityLive do
   # # TODO: use live_redirect
   # def object_link(text, %{character: %{username: username}}, class \\ "hover:underline font-bold"), do: "<a class='#{class}' href='/user/#{username}'>#{text}</a>"
   # def object_link(text, %{id: id}, class), do: "<a class='#{class}' href='/discussion/#{id}'>#{text}</a>"
-
-  def handle_event("reply", _, socket) do
-    debug("reply!")
-
-    send_update(Bonfire.UI.Social.CreateActivityLive,
-      id: :create_activity_form,
-      # reply to objects, not activities
-      reply_to_id:
-        e(socket, :assigns, :object_id, nil) || e(socket, :assigns, :object, :id, nil) ||
-          e(socket, :assigns, :activity, :object, :id, nil),
-      # thread_id: activity_id,
-      activity: e(socket, :assigns, :activity, nil),
-      object: e(socket, :assigns, :object, nil),
-      activity_inception: "reply_to"
-    )
-
-    {:noreply, socket}
-  end
 
   def handle_event(action, attrs, socket),
     do: Bonfire.Common.LiveHandlers.handle_event(action, attrs, socket, __MODULE__)

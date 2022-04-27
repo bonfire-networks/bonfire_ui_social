@@ -23,16 +23,15 @@ defmodule  Bonfire.UI.Social.ObjectThreadLive do
   prop smart_input_class, :string
   prop replied_activity_class, :string
 
-  # TODO: FIXME! Update no longer works in stateless
   def participants(assigns) do
     if e(assigns, :participants, nil) do
       e(assigns, :participants, [])
-    else
-      thread_id = e(assigns, :thread_id, e(assigns, :object, :id, nil))
-      # participants =
-        Bonfire.Social.Threads.list_participants(thread_id, current_user: current_user(assigns)) |> debug("participants")
-      # participant_tuples = participants |> Map.get(:edges, []) |> Enum.map(&{e(&1, :profile, :name, "someone"), &1.id})
-      # to_circles = e(assigns, :to_circles, []) ++ participant_tuples
+    # else
+    #   thread_id = e(assigns, :thread_id, e(assigns, :object, :id, nil))
+    #   # participants =
+    #     Bonfire.Social.Threads.fetch_participants(thread_id, current_user: current_user(assigns)) |> debug("participants")
+    #   # participant_tuples = participants |> Map.get(:edges, []) |> Enum.map(&{e(&1, :profile, :name, "someone"), &1.id})
+    #   # to_circles = e(assigns, :to_circles, []) ++ participant_tuples
     end
   end
 
