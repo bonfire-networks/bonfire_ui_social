@@ -92,10 +92,10 @@
     </div>
   </div>
 {#elseif e(assigns, :showing_within, nil) == :thread && !@viewing_main_object}
-  <div class={"flex items-center"}>
+  <div class={"flex items-top"}>
     <div class="absolute left-4">
       <div class="align-middle avatar">
-        <div class="w-6 h-6 rounded bg-base-200">
+        <div class="w-10 h-10 rounded bg-base-200">
           <LazyImage 
             class="subject_avatar" 
             src={avatar_url(@profile)} 
