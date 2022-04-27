@@ -163,7 +163,7 @@
               {#match nil}
                 <Solid.ExternalLinkIcon class="w-5 h-5 text-base-content text-opacity-70" />
               {#match image}
-                <img src={image} class="w-4 h-4"/>
+                <img src={image} class="w-4 h-4 text-base-content text-opacity-70"/>
             {/case}
 
             <a href={"#{e(@user, :profile, :website, "")}"} target="blank" class="ml-2 text-sm link">
