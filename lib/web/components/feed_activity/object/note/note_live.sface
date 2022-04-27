@@ -1,5 +1,5 @@
 {#if e(@object, :id, nil) != nil and e(@activity, :replied, :reply_to_id, nil) == nil and e(@activity, :id, nil) == nil and e(assigns, :showing_within, nil) == :widget}
-  <div />
+  <!-- huh? -->
 {#else}
 <div class={
   "main_object p-3 pb-2": e(assigns, :viewing_main_object, nil),
@@ -9,71 +9,48 @@
   "showing_within:widget mt-2": e(assigns, :showing_within, nil) == :widget,
   "reply_to": e(@object, :id, nil) != nil and e(@activity, :replied, :reply_to_id, nil) == nil and e(@activity, :id, nil) == nil,
   "reply_message": e(@activity, :replied, :reply_to_id, nil)
-}
+  }
    x-data="{content_open: false}">
 
-    <div :if={e(post_content(@object), :name, nil)}>
+  <div :if={e(post_content(@object), :name, nil)}>
 
-      <button
-        @click="content_open = true"
-        x-show="content_open == false"
-        class="flex items-center text-left text-md text-base-content ">
-        <span class="mr-2 hover:underline">{ rich e(post_content(@object), :name, "CW")} </span> <div class="font-medium capitalize text-opacity-80 btn btn-xs btn-outline">{l "read post"}</div>
-      </button>
-      <button
-        @click="content_open = false"
-        x-show="content_open"
-        class="flex items-center text-left text-md text-base-content ">
-        <span class="mr-2 hover:underline">{rich e(post_content(@object), :name, "CW")} </span>  <div class="font-medium capitalize text-opacity-80 btn btn-xs btn-outline">{l "hide post"}</div>
-      </button>
+    <button
+      @click="content_open = true"
+      x-show="content_open == false"
+      class="flex items-center text-left text-md text-base-content ">
+      <span class="mr-2 hover:underline">{ rich e(post_content(@object), :name, "CW")} </span> <div class="font-medium capitalize text-opacity-80 btn btn-xs btn-outline">{l "read post"}</div>
+    </button>
+    <button
+      @click="content_open = false"
+      x-show="content_open"
+      class="flex items-center text-left text-md text-base-content ">
+      <span class="mr-2 hover:underline">{rich e(post_content(@object), :name, "CW")} </span>  <div class="font-medium capitalize text-opacity-80 btn btn-xs btn-outline">{l "hide post"}</div>
+    </button>
 
-    </div>
-
-      
-    <div
-      x-show={if e(post_content(@object), :name, nil), do: "content_open"}
-      x-transition.scale.origin.top >
-      <div
-        :if={e(post_content(@object), :summary, nil)}
-        class="font-light prose max-w-prose prose-p:pt-1">
-        {rich e(post_content(@object), :summary, "")}
-      </div>
-
-      <div
-        data-id={"object_body"}
-        :if={e(post_content(@object), :html_body, nil)}
-        class={
-          "prose object_body max-w-none prose",
-          "prose-lg prose-p:pb-4 prose-p:leading-[25px]": e(assigns, :viewing_main_object, nil),
-          "prose-sm prose-p:pt-1": e(assigns, :viewing_main_object, nil) != true
-          }>
-        {rich(e(post_content(@object), :html_body, ""))}
-      </div>
-
-    </div>
-
-    <div 
-      class="flex items-center p-3 rounded-lg bg-base-content bg-opacity-5" 
-      :if={e(assigns, :viewing_main_object, nil)} >
-      <div class="flex items-center flex-1">
-        <Bonfire.UI.Social.Activity.DateAgoLive 
-          permalink={@permalink}
-          viewing_main_object={e(assigns, :viewing_main_object, nil)}
-          showing_within={@showing_within}
-          date_ago={@date_ago}
-          object={@object}
-          object_type={@object_type}
-          verb_display={@verb_display} />
-        <span class="text-sm text-base-content text-opacity-60">·</span>
-        <LivePatch to="#" class="ml-2 text-sm link link-hover text-base-content text-opacity-60"><span class="font-bold">4</span> {l "likes"}</LivePatch>
-        <span class="ml-2 text-sm text-base-content text-opacity-60">·</span>
-        <LivePatch to="#" class="ml-2 text-sm link link-hover text-base-content text-opacity-60"><span class="font-bold">4</span> {l "boosts"}</LivePatch>
-        <span class="ml-2 text-sm text-base-content text-opacity-60">·</span>
-        <LivePatch to="#" class="ml-2 text-sm link link-hover text-base-content text-opacity-60"><span class="font-bold">12</span> {l "participants"}</LivePatch>
-      </div>
-      <div class="pl-2 border-l">
-        <Outline.ChevronDownIcon class="w-5 h-5" />
-      </div>
   </div>
+
+    
+  <div
+    x-show={if e(post_content(@object), :name, nil), do: "content_open"}
+    x-transition.scale.origin.top >
+    <div
+      :if={e(post_content(@object), :summary, nil)}
+      class="font-light prose max-w-prose prose-p:pt-1">
+      {rich e(post_content(@object), :summary, "")}
+    </div>
+
+    <div
+      data-id={"object_body"}
+      :if={e(post_content(@object), :html_body, nil)}
+      class={
+        "prose object_body max-w-none prose",
+        "prose-lg prose-p:pb-4 prose-p:leading-[25px]": e(assigns, :viewing_main_object, nil),
+        "prose-sm prose-p:pt-1": e(assigns, :viewing_main_object, nil) != true
+        }>
+      {rich(e(post_content(@object), :html_body, ""))}
+    </div>
+
+  </div>
+
 </div>
 {/if}

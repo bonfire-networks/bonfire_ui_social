@@ -18,7 +18,7 @@ defmodule  Bonfire.UI.Social.ObjectThreadLive do
   prop url, :string
   prop thread_mode, :any
   prop reverse_order, :any
-  prop participants, :any
+  prop participants, :list
   prop textarea_class, :string
   prop smart_input_class, :string
   prop replied_activity_class, :string

@@ -12,6 +12,7 @@
       viewing_main_object={true}
       activity={@activity}
       object={@object}
+      participants={e(assigns, :participants, nil)}
       class="cursor-default"
     />
     <Bonfire.UI.Social.ThreadLive 

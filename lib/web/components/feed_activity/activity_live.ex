@@ -13,6 +13,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
   prop(hide_reply, :boolean, default: false)
   prop(class, :string, default: "")
   prop(thread_object, :any)
+  prop participants, :list
 
   # TODO: put in config and/or autogenerate with Verbs genserver
   @reply_verbs ["reply", "respond"]
@@ -53,25 +54,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
         do: "#{thread_url}##{activity.object.id}",
         else: "#{path(activity.object)}#"
 
-    # permalink = path(activity.object)
-    components = (
-      component_activity_subject(verb, activity, assigns)
-      ++
-      component_maybe_in_reply_to(verb, activity, e(assigns, :showing_within, nil), e(assigns, :viewing_main_object, nil), e(assigns, :thread_mode, nil))
-      ++
-      component_object(verb, activity, object_type)
-      ++
-      component_actions(verb, activity, assigns)
-      )
-      |> Utils.filter_empty([])
-      |> Enum.map(fn
-        c when is_atom(c) -> {c, nil}
-        other -> other
-      end)
-      # |> debug("components")
-
-    assigns =
-      assigns
+    assigns = assigns
       |> assigns_merge(
         object: activity.object,
         object_id: e(activity.object, :id, nil) || e(activity, :id, "no-object-id"),
@@ -87,6 +70,22 @@ defmodule Bonfire.UI.Social.ActivityLive do
       # |> dump("all assigns")
       |> Map.new()
 
+    # permalink = path(activity.object)
+    components = (
+      component_activity_subject(verb, activity, assigns)
+      ++
+      component_maybe_in_reply_to(verb, activity, assigns)
+      ++
+      component_object(verb, activity, object_type)
+      ++
+      component_actions(verb, activity, assigns)
+      )
+      |> Utils.filter_empty([])
+      |> Enum.map(fn
+        c when is_atom(c) -> {c, nil}
+        other -> other
+      end)
+      # |> debug("components")
 
     ~F"""
     <article
@@ -98,7 +97,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
       tabIndex="0"
       class={
       "p-3 activity relative pl-16 group cursor-pointer " <> @class,
-      "hover:bg-base-content hover:bg-opacity-5": e(@object, :id, nil) == nil or e(@activity, :replied, :reply_to_id, nil) != nil or e(@activity, :id, nil) != nil, # Hover the activity background unless it is a quoted activity 
+      "hover:bg-base-content hover:bg-opacity-5": e(@object, :id, nil) == nil or e(@activity, :replied, :reply_to_id, nil) != nil or e(@activity, :id, nil) != nil, # Hover the activity background unless it is a quoted activity
       "bg-neutral-content bg-opacity-5 border-b border-base-300 p-0 pl-0": e(assigns, :viewing_main_object, nil) == true,
       "main_reply_to mb-2 p-2 py-1 mt-2 relative border-l-4 opacity-60 border-base-content border-opacity-40": e(@object, :id, nil) != nil and e(@activity, :replied, :reply_to_id, nil) == nil and e(@activity, :id, nil) == nil and e(assigns, :showing_within, nil) != :widget and e(assigns, :showing_within, nil) != :notification  and e(assigns, :showing_within, nil) != :search, # showing a quoted reply_to
       "reply": e(@object, :id, nil) != nil and e(@activity, :replied, :reply_to_id, nil) != nil and e(@activity, :id, nil) != nil,
@@ -108,6 +107,10 @@ defmodule Bonfire.UI.Social.ActivityLive do
           module={component}
           id={e(component_assigns, :id, nil)}
           myself={nil}
+          created_verb_display={@created_verb_display}
+          showing_within={e(assigns, :showing_within, :feed)}
+          thread_mode={e(assigns, :thread_mode, nil)}
+          participants={e(assigns, :participants, nil)}
           activity={e(component_assigns, :activity, @activity)}
           object={e(component_assigns, :object, @object)}
           object_id={e(component_assigns, :object_id, @object_id)}
@@ -117,12 +120,9 @@ defmodule Bonfire.UI.Social.ActivityLive do
           verb={e(component_assigns, :verb, @verb)}
           verb_display={e(component_assigns, :verb_display, @verb_display)}
           permalink={e(component_assigns, :permalink, @permalink)}
-          activity_inception={e(component_assigns, :activity_inception, e(assigns, :activity_inception, false))}
+          activity_inception={e(component_assigns, :activity_inception, e(assigns, :activity_inception, nil))}
           viewing_main_object={e(component_assigns, :viewing_main_object, e(assigns, :viewing_main_object, false))}
           hide_reply={e(component_assigns, :hide_reply, e(assigns, :hide_reply, false))}
-          created_verb_display={@created_verb_display}
-          showing_within={e(assigns, :showing_within, :feed)}
-          thread_mode={e(assigns, :thread_mode, nil)}
           profile={e(component_assigns, :profile, nil)}
           character={e(component_assigns, :character, nil)}
         />
@@ -263,9 +263,12 @@ defmodule Bonfire.UI.Social.ActivityLive do
     nil
   end
 
-  def component_maybe_in_reply_to(verb, activity, showing_within \\ nil, viewing_main_object \\ false, thread_mode \\ nil)
-  def component_maybe_in_reply_to(verb, activity, showing_within, false, thread_mode) when showing_within in [:thread] and thread_mode not in [:flat], do: []
-  def component_maybe_in_reply_to(verb, activity, :create_activity_form, _, _), do: []
+  def component_maybe_in_reply_to(verb, activity, %{
+    showing_within: showing_within,
+    viewing_main_object: false,
+    thread_mode: thread_mode})
+  when showing_within in [:thread, :create_activity_form]
+    and thread_mode not in [:flat], do: [] # do not show reply_to
 
   def component_maybe_in_reply_to(
         verb,
@@ -281,7 +284,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
             }
           } = reply_to
         },
-        _, _, _
+        _
       )
       # reply with post_content
       when verb in @reply_verbs,
@@ -314,7 +317,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
               }
             } = replied
         },
-        _, _, _
+        _
       )
       # other kind of reply, with creator
       when verb in @reply_verbs and is_binary(reply_to_id),
@@ -343,7 +346,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
               id: reply_to_id
             } = replied
         },
-        _, _, _
+        _
       )
       # other kind of reply
       when verb in @reply_verbs and is_binary(reply_to_id) do
@@ -362,10 +365,10 @@ defmodule Bonfire.UI.Social.ActivityLive do
     ]
   end
 
-  def component_maybe_in_reply_to(verb, %{replied: %{} = replied}, showing_within, main_object, thread_mode),
-    do: component_maybe_in_reply_to(verb, replied, showing_within, main_object, thread_mode)
+  def component_maybe_in_reply_to(verb, %{replied: %{} = replied}, assigns),
+    do: component_maybe_in_reply_to(verb, replied, assigns)
 
-  def component_maybe_in_reply_to(_, a, _, _, _) do
+  def component_maybe_in_reply_to(_, _a, _) do
     # debug(a, "ActivityLive: no reply_to")
     []
   end
@@ -437,10 +440,14 @@ defmodule Bonfire.UI.Social.ActivityLive do
     [Bonfire.UI.Social.Activity.UnknownLive]
   end
 
+  def component_actions(_, _, %{activity_inception: activity_inception}) when not is_nil(activity_inception), do: [] # don't show any
+
   # WIP: THIS NEEDS TO BE REFACTORED ACCORDING TO actions_for_object_type
   def component_actions("flag", _, _), do: [Bonfire.UI.Social.Activity.FlaggedActionsLive]
 
-  def component_actions(_, _, %{activity_inception: true}), do: []
+  def component_actions(_, activity, %{viewing_main_object: true}) do
+    [Bonfire.UI.Social.Activity.MainObjectInfoLive] ++ component_actions(nil, activity, nil)
+  end
 
   def component_actions(_, %{object: %{}} = activity, _) do
     case Bonfire.Common.Types.object_type(activity.object) do
@@ -449,7 +456,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
 
       _ ->
         # warn("ActivityLive: object NOT recognised: #{object}")
-        [Bonfire.UI.Social.Activity.NoActionsLive]
+        component_show_standard_actions(activity)
     end
   end
 
@@ -481,7 +488,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
   #   do: component_show_process_actions(activity)
 
   def actions_for_object_type(activity, type) do
-    warn(type, "No actions defiend fot this type")
+    debug(type, "No specific actions defiend fot this type")
     component_show_standard_actions(activity)
     # [Bonfire.UI.Social.Activity.NoActionsLive]
   end
