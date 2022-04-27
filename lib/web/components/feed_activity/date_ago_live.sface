@@ -1,12 +1,16 @@
 {#if @viewing_main_object}
-<div class="flex items-center space-x-1 ">
- 
-  <LiveRedirect class="flex items-center space-x-1 subject_timestamp text-base-content text-opacity-80" to={@permalink}> 
+<div class="flex items-center space-x-2 ">
+  <BoundaryIconLive 
+    :if={@object_type not in [Bonfire.Data.Social.Message]}
+    id={ComponentID.new(BoundaryIconLive, @object)} 
+    object={@object} 
+  />
+  <div class="flex items-center space-x-1 subject_timestamp" > 
 
     <span 
       :if={e(@object, :peered, nil) || e(@object, :character, :peered, nil)}
       data-tip={l "Originates from a remote instance"}
-      class="align-bottom tooltip tooltip-bottom z-20">
+      class="z-20 align-bottom tooltip tooltip-bottom">
       {#case Bonfire.Files.FaviconStore.favicon_url(@permalink)}
         {#match nil}
           <Solid.ExternalLinkIcon class="w-4 h-4 text-opacity-50 text-base-content" />
@@ -15,22 +19,18 @@
       {/case}
     </span>
 
-    <span class="mr-2 text-sm text-base-content text-opacity-80">
-      <span class="capitalize">{e(@verb_display, "")}</span>
+    <span class="mr-2 text-sm text-base-content text-opacity-60">
+      <!-- <span class="capitalize">{e(@verb_display, "")}</span> -->
       {@date_ago}
     </span>
 
-    <BoundaryIconLive 
-      :if={@object_type not in [Bonfire.Data.Social.Message]}
-      id={ComponentID.new(BoundaryIconLive, @object)} 
-      object={@object} 
-    />
-  </LiveRedirect>
+    
+  </div>
 </div>
 
 {#else}
 <div class="flex items-center">
-  <div class="relative text-xs text-base-content space-x-1 text-opacity-60 flex items-center">
+  <div class="relative flex items-center space-x-1 text-xs text-base-content text-opacity-60">
     
     <BoundaryIconLive 
         :if={@object_type not in [Bonfire.Data.Social.Message]}

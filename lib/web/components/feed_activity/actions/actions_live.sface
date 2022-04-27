@@ -11,19 +11,21 @@
     :if={e(assigns, :showing_within, nil) != :notifications} 
     class={
       "thread_actions mt-2 flex items-center": e(assigns, :showing_within, nil) == :thread,
+      "mt-4 border-base-content border-opacity-30 py-3 border-t px-3":  e(assigns, :viewing_main_object, nil),
       "feed_actions mt-2": e(assigns, :viewing_main_object, nil) != true,
       "mt-1": e(assigns, :showing_within, nil) == :widget,
       }>
-    <div class="flex-1">
+    <div 
+      :if={
+        count(e(@activity, :replied, nil)) > 0 and 
+        e(assigns, :showing_within, nil) == :thread and 
+        e(assigns, :viewing_main_object, nil) != true and 
+        @object_type not in [Bonfire.Data.Social.Message]
+      }
+      class="flex-1">
       <div 
-        :if={
-          count(e(@activity, :replied, nil)) > 0 and 
-          e(assigns, :showing_within, nil) == :thread and 
-          e(assigns, :viewing_main_object, nil) != true and 
-          @object_type not in [Bonfire.Data.Social.Message]
-        }
         @click="show_replies = !show_replies"
-        class="btn btn-xs normal-case text-xs">
+        class="text-xs normal-case btn btn-xs">
           <span x-show="!show_replies">{l "View"}</span>
           <span x-show="show_replies">{l "Hide"}</span>
           &nbsp;{count(e(@activity, :replied, nil))} {l "replies"}
@@ -31,7 +33,7 @@
     </div>
     <div class={
       "flex items-center",
-      "mt-3": e(assigns, :viewing_main_object, nil),
+      "mt-3 justify-around w-full": e(assigns, :viewing_main_object, nil),
       "justify-end space-x-4 mt-0": e(assigns, :showing_within, nil) == :thread,
       "justify-between": e(assigns, :showing_within, nil) != :thread
       }>

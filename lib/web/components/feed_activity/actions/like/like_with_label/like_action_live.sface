@@ -12,7 +12,7 @@
     "btn-sm": e(assigns, :showing_within, "") != :thread,
   }> 
   <span 
-     class={"text-base-content text-opacity-70", "text-yellow-500 text-opacity-60": e(@my_like, nil)}>
+     class={"text-base-content text-opacity-70", "text-yellow-500 text-opacity-100": e(@my_like, nil)}>
     <Solid.StarIcon 
       :if={e(@my_like, nil)}
       class="w-5 h-5" />

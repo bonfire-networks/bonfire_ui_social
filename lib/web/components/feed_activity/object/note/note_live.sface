@@ -2,6 +2,7 @@
   <div />
 {#else}
 <div class={
+  "main_object p-3": e(assigns, :viewing_main_object, nil),
   "showing_within:thread": e(assigns, :showing_within, nil) == :thread,
   "showing_within:feed": e(assigns, :showing_within, nil) == :feed,
   "showing_within:notifications": e(assigns, :showing_within, nil) == :notifications,
@@ -43,6 +44,7 @@
         :if={e(post_content(@object), :html_body, nil)}
         class={
           "prose object_body max-w-none prose",
+          "prose-lg prose-p:pb-4 prose-p:leading-[25px]": e(assigns, :viewing_main_object, nil),
           "prose-sm prose-p:pt-1": e(assigns, :viewing_main_object, nil) != true
           }>
         {rich(e(post_content(@object), :html_body, ""))}
@@ -50,7 +52,9 @@
 
     </div>
 
-    <!-- <div class="mt-4 mb-2" :if={e(assigns, :viewing_main_object, nil)} >
+    <div 
+      class="flex items-center mb-2" 
+      :if={e(assigns, :viewing_main_object, nil)} >
       <Bonfire.UI.Social.Activity.DateAgoLive 
         permalink={@permalink}
         viewing_main_object={e(assigns, :viewing_main_object, nil)}
@@ -59,6 +63,10 @@
         object={@object}
         object_type={@object_type}
         verb_display={@verb_display} />
-    </div> -->
+      <span class="text-sm text-base-content text-opacity-60">·</span>
+      <LivePatch to="#" class="ml-2 text-sm link link-hover text-base-content text-opacity-60"><span class="font-bold">4</span> {l "likes"}</LivePatch>
+      <span class="ml-2 text-sm text-base-content text-opacity-60">·</span>
+      <LivePatch to="#" class="ml-2 text-sm link link-hover text-base-content text-opacity-60"><span class="font-bold">4</span> {l "boosts"}</LivePatch>
+    </div>
 </div>
 {/if}
