@@ -1,5 +1,5 @@
 <div
-  :if={current_user(assigns)}
+  :if={current_user(assigns) != nil and e(assigns, :showing_within, nil) != :notifications}
   aria-haspopup="true"
   class={"dropdown  feed_activity relative z-20",
   "dropdown-end": e(assigns, :showing_within, nil) != :widget,

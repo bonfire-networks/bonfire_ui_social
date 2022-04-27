@@ -130,7 +130,7 @@
       <!-- LIKE -->
       <div 
         :if={@verb == "like"}
-        class="flex items-center justify-start w-5 h-5">
+        class="flex items-center justify-start">
         <Solid.StarIcon class="w-5 h-5 text-yellow-500" />
         <div class="flex-1 ml-2">
           <div class="text-sm font-medium text-base-content text-opacity-80">
@@ -148,7 +148,7 @@
       <!-- FOLLOW -->
       <div 
         :if={@verb == "follow"}
-        class="flex items-center justify-start w-5 h-5">  
+        class="flex items-center justify-start">  
         <Solid.UserAddIcon  class="flex-shrink-0 w-5 h-5 text-info" />
         <div class="flex-1 ml-2">
           <div class="text-sm font-medium text-base-content text-opacity-80">
@@ -166,7 +166,7 @@
       <!-- BOOST -->
       <div 
         :if={@verb == "boost"}
-        class="flex items-center justify-start w-5 h-5">  
+        class="flex items-center justify-start">  
         <svg 
           viewBox="0 0 24 24" 
           width="24" 
@@ -226,7 +226,7 @@
 
         <div 
         :if={@verb == "flag"}
-        class="flex items-center justify-start w-5 h-5">  
+        class="flex items-center justify-start">  
          <Solid.FlagIcon class="w-4 h-4 text-error" />
           <div class="flex-1 ml-2">
             <div class="text-sm font-medium text-base-content text-opacity-80">

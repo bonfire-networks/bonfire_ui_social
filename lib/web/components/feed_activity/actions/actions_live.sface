@@ -25,12 +25,17 @@
       class="flex-1">
       <div 
         @click="show_replies = !show_replies"
-        class="text-xs normal-case btn btn-xs">
-          <span x-show="!show_replies">{l "View"}</span>
-          <span x-show="show_replies">{l "Hide"}</span>
+        class="text-xs font-medium normal-case link">
+          <span
+            style="display: none" 
+            x-show="!show_replies">{l "View"}</span>
+          <span 
+            style="display: none"
+            x-show="show_replies">{l "Hide"}</span>
           &nbsp;{count(e(@activity, :replied, nil))} {l "replies"}
       </div>
     </div>
+    <div class="flex-1"></div>
     <div class={
       "flex items-center",
       "mt-3 justify-around w-full": e(assigns, :viewing_main_object, nil),
