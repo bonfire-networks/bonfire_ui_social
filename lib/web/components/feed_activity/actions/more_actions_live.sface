@@ -6,7 +6,7 @@
   "dropdown-top dropdown-end showing_within:widget": e(assigns, :showing_within, nil) == :widget
   }>
   <div 
-    phx-click="Bonfire.Social.Posts:open_activity"
+    phx-click="Bonfire.Social.Feeds:open_activity"
     phx-value-ignore={true}
     type="button"
     role="button"

@@ -8,6 +8,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
   prop(object, :any)
   prop(verb_default, :string)
   prop(viewing_main_object, :boolean, default: false)
+  prop(activity_inception, :string)
   prop(showing_within, :any, default: :feed)
   prop(hide_reply, :boolean, default: false)
   prop(class, :string, default: "")
@@ -53,12 +54,15 @@ defmodule Bonfire.UI.Social.ActivityLive do
         else: "#{path(activity.object)}#"
 
     # permalink = path(activity.object)
-    components =
-      (component_activity_subject(verb, activity, assigns) ++
-         (component_maybe_in_reply_to(verb, activity, e(assigns, :showing_within, nil), e(assigns, :viewing_main_object, nil), e(assigns, :thread_mode, nil))
-          |> debug("component_maybe_in_reply_to")) ++
-         component_object(verb, activity, object_type) ++
-         component_actions(verb, activity, assigns))
+    components = (
+      component_activity_subject(verb, activity, assigns)
+      ++
+      component_maybe_in_reply_to(verb, activity, e(assigns, :showing_within, nil), e(assigns, :viewing_main_object, nil), e(assigns, :thread_mode, nil))
+      ++
+      component_object(verb, activity, object_type)
+      ++
+      component_actions(verb, activity, assigns)
+      )
       |> Utils.filter_empty([])
       |> Enum.map(fn
         c when is_atom(c) -> {c, nil}
@@ -86,10 +90,9 @@ defmodule Bonfire.UI.Social.ActivityLive do
 
     ~F"""
     <article
-      phx-click="Bonfire.Social.Posts:open_activity"
-      phx-value-id={@permalink}
-      phx-value-showing_within={e(assigns, :showing_within, :feed)}
-      id={"activity-"<>(e(@activity, :id, nil) || e(@object, :id, "no-id"))}
+      phx-click={if e(assigns, :showing_within, nil) !=:thread || e(assigns, :activity_inception, nil), do: "Bonfire.Social.Feeds:open_activity"}
+      phx-value-permalink={@permalink}
+      id={"activity#{e(assigns, :activity_inception, nil)}-"<>( e(@activity, :id, nil) || e(@object, :id, "no-id") )}
       aria-label="user activity"
       role="article"
       tabIndex="0"
@@ -113,11 +116,12 @@ defmodule Bonfire.UI.Social.ActivityLive do
           verb={e(component_assigns, :verb, @verb)}
           verb_display={e(component_assigns, :verb_display, @verb_display)}
           permalink={e(component_assigns, :permalink, @permalink)}
+          activity_inception={e(component_assigns, :activity_inception, e(assigns, :activity_inception, false))}
           viewing_main_object={e(component_assigns, :viewing_main_object, e(assigns, :viewing_main_object, false))}
           hide_reply={e(component_assigns, :hide_reply, e(assigns, :hide_reply, false))}
           created_verb_display={@created_verb_display}
           showing_within={e(assigns, :showing_within, :feed)}
-          thread_mode={e(assigns, :thread_mode, :feed)}
+          thread_mode={e(assigns, :thread_mode, nil)}
           profile={e(component_assigns, :profile, nil)}
           character={e(component_assigns, :character, nil)}
           reply_smart_input_text={e(component_assigns, :reply_smart_input_text, nil)}
@@ -266,6 +270,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
   def component_maybe_in_reply_to(
         verb,
         %{
+          id: activity_id,
           reply_to: %{
             post_content: %{id: id} = _reply_to_post_content,
             created: %{
@@ -284,7 +289,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
         {Bonfire.UI.Social.ActivityLive,
          %{
            id: "ra:" <> id,
-           activity_inception: true,
+           activity_inception: activity_id,
            viewing_main_object: false,
            object: reply_to,
            activity: %{
@@ -299,6 +304,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
   def component_maybe_in_reply_to(
         verb,
         %{
+          id: activity_id,
           reply_to:
             %{
               id: reply_to_id,
@@ -316,7 +322,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
         {Bonfire.UI.Social.ActivityLive,
          %{
            id: "ra:" <> reply_to_id,
-           activity_inception: true,
+           activity_inception: activity_id,
            viewing_main_object: false,
            object: Activities.load_object(replied),
            activity: %{
@@ -331,6 +337,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
   def component_maybe_in_reply_to(
         verb,
         %{
+          id: activity_id,
           reply_to:
             %{
               id: reply_to_id
@@ -346,7 +353,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
       {Bonfire.UI.Social.ActivityLive,
        %{
          id: "ra:" <> reply_to_id,
-         activity_inception: true,
+         activity_inception: activity_id,
          object: e(reply_to_activity, :object, nil),
          # |> IO.inspect,
          activity: reply_to_activity |> Map.delete(:object),
@@ -397,7 +404,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
 
   def component_for_object_type(type, object) when type in [Bonfire.Data.Identity.User],
     do: [{Bonfire.UI.Social.Activity.CharacterLive, %{
-        object: repo().maybe_preload(object, [:character, :profile])
+        object: repo().maybe_preload(object, [:character, profile: :icon])
       }}]
 
   def component_for_object_type(type, object) when type in [Bonfire.Classify.Category],
@@ -537,7 +544,8 @@ defmodule Bonfire.UI.Social.ActivityLive do
           e(socket, :assigns, :activity, :object, :id, nil),
       # thread_id: activity_id,
       activity: e(socket, :assigns, :activity, nil),
-      object: e(socket, :assigns, :object, nil)
+      object: e(socket, :assigns, :object, nil),
+      activity_inception: "reply_to"
     )
 
     {:noreply, socket}
