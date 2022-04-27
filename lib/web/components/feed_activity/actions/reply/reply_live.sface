@@ -3,7 +3,7 @@
   <div class="flex items-center">
     <div 
       phx-target={if e(assigns, :activity_id, nil), do: "#activity-"<>e(assigns, :activity_id, "")}
-      phx-click="reply">
+      phx-click="Bonfire.Social.Feeds:reply">
       <div class={
         "btn btn-ghost btn-circle",
         "btn-xs ": e(assigns, :showing_within, "") == :thread,

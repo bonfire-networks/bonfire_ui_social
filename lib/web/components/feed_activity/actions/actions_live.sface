@@ -2,7 +2,7 @@
   <div></div>
 {#elseif  e(assigns, :showing_within, nil) == :create_activity_form}
   <span 
-    phx-click="Bonfire.Social.Posts:remove_data"
+    phx-click="Bonfire.Social.Feeds:remove_data"
     class="absolute top-2 right-2 btn btn-ghost btn-xs btn-circle">
     <Outline.XIcon class="w-4 h-4" />
   </span>
@@ -51,7 +51,6 @@
         replied={e(@activity, :replied, nil)}
         showing_within={e(assigns, :showing_within, nil)}
         hide_reply={e(assigns, :hide_reply, nil )}
-        reply_smart_input_text={@reply_smart_input_text}
         reply_to_text={text_only(e(@object, :post_content, :name, nil) || e(@object, :post_content, :summary, nil) || e(@object, :post_content, :html_body, e(@object, :id, "")))}
       />
       <BoostActionLive 

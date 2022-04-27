@@ -10,7 +10,6 @@ defmodule Bonfire.UI.Social.Activity.ActionsLive do
   prop verb, :string
   prop permalink, :string
   prop object_type_readable, :any
-  prop reply_smart_input_text, :string
   prop showing_within, :any
   prop hide_reply, :boolean
   prop viewing_main_object, :boolean

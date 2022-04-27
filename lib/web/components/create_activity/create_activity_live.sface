@@ -50,7 +50,6 @@
       <div class="relative">
         <Inputs for={:post_content}>
           <div
-            phx-update="ignore"
             id="textarea_wrapper"
             class="">
             <div x-show="title_open" x-transition>
@@ -72,6 +71,7 @@
                   textarea_class={@textarea_class}
                   placeholder={e(assigns, :smart_input_prompt, l "Write something...")}
                   content={@smart_input_text}
+                  insert_text={@insert_text}
                 /> 
                 <TextArea
                   :if={!with_editor?(assigns)}
