@@ -109,7 +109,7 @@
             :if={e(assigns, :showing_within, nil) != :message}
             to_circles={e(assigns, :to_circles, [])}
            />
-          <div class="flex items-center justify-between p-2 space-x-2 border-t rounded-b border-slate-300 bg-slate-200 sm:px-3">
+          <div class="flex items-center justify-between p-2 space-x-2 border-t rounded-b-lg border-slate-300 bg-slate-200 sm:px-3">
             <div class="flex items-center flex-1 space-x-3">
               <Bonfire.UI.Social.UploadFilesLive
                 :if={module_enabled?(Bonfire.Files)}
