@@ -51,7 +51,7 @@
         reverse_order={true}
         showing_within={:message}
         textarea_class={"h-8 max-h-16 resize-y max-w-full textarea prose prose-sm bg-base-200"}
-        smart_input_class={"border m-3 mt-1 border-base-300 bg-base-200 rounded-md"}
+        smart_input_class={"border m-3 mt-1 border-base-300 bg-slate-50 rounded-md"}
         replied_activity_class={"relative p-3 py-2 bg-neutral-content bg-opacity-5 m-3 mb-1 rounded-md"}
       /> 
 
