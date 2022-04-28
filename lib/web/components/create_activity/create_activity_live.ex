@@ -44,5 +44,4 @@ defmodule Bonfire.UI.Social.CreateActivityLive do
     else: "#{create_activity_type}"
   end
 
-
 end

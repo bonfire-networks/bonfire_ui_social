@@ -15,38 +15,38 @@
       x-show="boundary_selected == 'public'"
       style="display: none"
       :class="{'bg-primary text-primary-content' : open_boundaries === true }"
-      class="normal-case btn btn-ghost btn-xs" 
+      class="font-normal normal-case btn btn-ghost btn-xs" 
      >
-      <Solid.GlobeIcon class="w-4 h-4 text-base-content text-opacity-70"/>
-      <span class="ml-2 text-sm text-base-content text-opacity-70">{l "Public"}</span>
+      <Solid.GlobeIcon class="w-4 h-4 text-slate-800 text-opacity-70"/>
+      <span class="ml-2 text-sm font-normal text-slate-800 text-opacity-70">{l "Public"}</span>
     </div>
     <div 
       x-show="boundary_selected == 'local'"
       style="display: none"
-      class="normal-case btn btn-ghost btn-xs" >
-      <Solid.HomeIcon class="w-4 h-4 text-base-content text-opacity-70"/>
-      <span class="ml-2 text-sm text-base-content text-opacity-70">{l "Local"}</span>
+      class="font-normal normal-case btn btn-ghost btn-xs" >
+      <Solid.HomeIcon class="w-4 h-4 text-slate-800 text-opacity-70"/>
+      <span class="ml-2 text-sm font-normal text-slate-800 text-opacity-70">{l "Local"}</span>
     </div>
     <div 
       x-show="boundary_selected == 'mentions'"
       style="display: none"
-      class="normal-case btn btn-ghost btn-xs" >
-      <Solid.AtSymbolIcon class="w-4 h-4 text-base-content text-opacity-70"/>
-       <span class="ml-2 text-sm text-base-content text-opacity-70">{l "Mentions"}</span>
+      class="font-normal normal-case btn btn-ghost btn-xs" >
+      <Solid.AtSymbolIcon class="w-4 h-4 text-slate-800 text-opacity-70"/>
+       <span class="ml-2 text-sm font-normal text-slate-800 text-opacity-70">{l "Mentions"}</span>
     </div>
     <div 
       x-show="boundary_selected == 'message'"
       style="display: none"
-      class="normal-case btn btn-ghost btn-xs" >
-      <Solid.ChatAlt2Icon class="w-4 h-4 text-base-content text-opacity-70"/>
-       <span class="ml-2 text-sm text-base-content text-opacity-70">{l "Message"}</span>
+      class="font-normal normal-case btn btn-ghost btn-xs" >
+      <Solid.ChatAlt2Icon class="w-4 h-4 text-slate-800 text-opacity-70"/>
+       <span class="ml-2 text-sm font-normal text-slate-800 text-opacity-70">{l "Message"}</span>
     </div>
     <div 
     x-show="boundary_selected == 'custom'"
     style="display: none"
-    class="normal-case btn btn-ghost btn-xs" >
-      <Solid.CogIcon class="w-4 h-4 text-base-content text-opacity-70"/>
-       <span class="ml-2 text-sm text-base-content text-opacity-70">{l "Custom"}</span>
+    class="font-normal normal-case btn btn-ghost btn-xs" >
+      <Solid.CogIcon class="w-4 h-4 text-slate-800 text-opacity-70"/>
+       <span class="ml-2 text-sm font-normal text-slate-800 text-opacity-70">{l "Custom"}</span>
     </div>
   </label>
   <div
@@ -90,7 +90,7 @@
         <div class="text-sm font-medium text-neutral text-opacity-80">{l "Message"}</div>
         <p class="text-xs text-neutral text-opacity-80">{l "Visible only to people included in this message thread:"} 
         {#for {name, id} <- e(assigns, :to_circles, [])}
-          <span class="badge text-xs">{name}</span>
+          <span class="text-xs badge">{name}</span>
         {/for}
         </p>
         </div>

@@ -65,22 +65,30 @@
               <Field name={:name}>
                 <TextInput
                   opts={placeholder: "Enter a title"}
-                  class="block w-full border-0 pt-2.5 text-lg font-medium placeholder-base-content placeholder-opacity-70 bg-base-100 text-base-content focus:ring-0 border-b border-base-300" 
+                  class="block w-full border-0 pt-2.5 text-lg font-medium placeholder-slate-800 placeholder-opacity-70 bg-slate-100 text-slate-800 border-b border-slate-200 rounded-t-lg" 
                   />
               </Field>
             </div>  
             <label for="description" class="sr-only">{l "Description"}</label>
             <Field 
-              class="h-full min-h-full" name={:html_body}>
+              class="h-full min-h-full min-h-[100px] max-h-[150px] flex flex-col grow" name={:html_body}>
               <!-- <Label :if={@smart_input_text && @smart_input_text !="" && @smart_input_prompt} class="mb-2 alert alert-info">{@smart_input_prompt}</Label> -->    
-              <Bonfire.Editor.Ck.Bubble 
+                <Bonfire.Editor.Quill.Composer 
                   :if={with_editor?(assigns)}
                   field_name="post[post_content][html_body]"
                   textarea_class={@textarea_class}
                   placeholder={e(assigns, :smart_input_prompt, l "Write something...")}
                   content={@smart_input_text}
                   insert_text={@insert_text}
-                /> 
+                />
+                <!-- <Bonfire.Editor.Ck.Bubble 
+                  :if={with_editor?(assigns)}
+                  field_name="post[post_content][html_body]"
+                  textarea_class={@textarea_class}
+                  placeholder={e(assigns, :smart_input_prompt, l "Write something...")}
+                  content={@smart_input_text}
+                  insert_text={@insert_text}
+                />  -->
                 <TextArea
                   :if={!with_editor?(assigns)}
                   opts={
@@ -93,12 +101,15 @@
             </Field>
           </div>
         </Inputs>
+        
+        <!-- UPLOADED MEDIA -->
+        <Bonfire.UI.Social.UploadedMediaLive uploads={@uploads} />
         <div class="">
           <Bonfire.UI.Social.BoundariesLive
             :if={e(assigns, :showing_within, nil) != :message}
             to_circles={e(assigns, :to_circles, [])}
            />
-          <div class="flex items-center justify-between p-2 space-x-2 rounded-b bg-base-100 sm:px-3">
+          <div class="flex items-center justify-between p-2 space-x-2 border-t rounded-b border-slate-300 bg-slate-200 sm:px-3">
             <div class="flex items-center flex-1 space-x-3">
               <Bonfire.UI.Social.UploadFilesLive
                 :if={module_enabled?(Bonfire.Files)}
@@ -112,9 +123,11 @@
                   :if={Bonfire.Common.Config.get([:ui, :smart_input, :cw], []) == true}
                   type="button"
                   @click="title_open = !title_open"
-                  :class="{'text-primary-content bg-primary' : title_open}"
-                  class="btn btn-ghost btn-square btn-sm">
-                  <span class="text-xs font-medium text-base-content text-opacity-70">CW</span>
+                  :class="{'text-primary border-primary' : title_open}"
+                  class="flex items-center btn btn-outline btn-square btn-sm">
+                  <span 
+                    :class="{'text-primary' : title_open}"
+                    class="text-xs font-medium text-slate-800 text-opacity-70">{l "CW"}</span>
                 </button>
               </div>
               <Bonfire.UI.Social.BoundariesLive

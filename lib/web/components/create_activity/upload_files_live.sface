@@ -1,42 +1,10 @@
-<div 
-  data-tip="Upload an image" 
-  class="relative z-20 flex items-center tooltip tooltip-bottom" >
-  <label for={@uploads.files.ref} class="btn btn-ghost btn-square btn-sm tooltip tooltip-bottom">
-    <Solid.PaperClipIcon class="w-4 h-4 mx-auto text-base-content text-opacity-70" />
-    { live_file_input @uploads.files, class: "sr-only" }
-  </label>
-</div>
+  <div 
+    data-tip="Upload an image" 
+    class="relative z-20 tooltip tooltip-bottom" >
+    <label for={@uploads.files.ref} class="flex items-center btn btn-outline btn-square btn-sm">
+      <Solid.PaperClipIcon class="w-4 h-4 mx-auto text-slate-800 text-opacity-70" />
+      { live_file_input @uploads.files, class: "sr-only" }
+    </label>
+  </div>
 
-{#for entry <- @uploads.files.entries}
-  <article class="upload-entry">
-
-    <figure>
-      <!-- Phoenix.LiveView.Helpers.live_img_preview/2 renders a client-side preview -->
-      <span :if={String.starts_with?(entry.client_type, "image")}>
-        { live_img_preview entry }
-      </span>
-      <figcaption>{ entry.client_name }</figcaption>
-    </figure>
-
-    <progress value={entry.progress} max="100"> { entry.progress }% </progress>
-
-    <!-- a regular click event whose handler will invoke Phoenix.LiveView.cancel_upload/3 -->
-    <button 
-    type="button"
-    phx-click="cancel-upload" 
-    phx-target="#smart_input"
-    phx-value-ref={entry.ref} 
-    aria-label="cancel">
-      &times;
-    </button>
-
-    {#for err <- upload_errors(@uploads.files, entry)}
-      <p class="alert alert-danger">{ error_to_string(err) }</p>
-    {/for}
-
-  </article>
-{/for}
-
-{#for err <- upload_errors(@uploads.files)}
-  <p class="alert alert-danger">{ error_to_string(err) }</p>
-{/for}
+  

@@ -1,0 +1,35 @@
+{#for entry <- @uploads.files.entries}
+  <article class="relative m-3 mb-0 upload-entry">
+    <div class="absolute top-0 z-10 w-full rounded-lg l-0 r-0 h-14 bg-gradient-to-b from-gray-900 to-transparent"></div>
+    <figure>
+      <!-- Phoenix.LiveView.Helpers.live_img_preview/2 renders a client-side preview -->
+      <span :if={String.starts_with?(entry.client_type, "image")}>
+        { live_img_preview entry }
+      </span>
+      <figcaption class="sr-only">{ entry.client_name }</figcaption>
+    </figure>
+
+    <progress :if={ 0 < entry.progress < 100} value={entry.progress} max="100"> { entry.progress }% </progress>
+
+    <!-- a regular click event whose handler will invoke Phoenix.LiveView.cancel_upload/3 -->
+    <button 
+      type="button"
+      class="absolute z-20 normal-case btn btn-ghost text-slate-50 btn-xs left-1 top-1"
+      phx-click="cancel-upload" 
+      phx-target="#smart_input"
+      phx-value-ref={entry.ref} 
+      aria-label="cancel">
+      <Solid.XIcon class="w-4 h-4 mr-1" />
+      <span>{l "Delete"}</span>
+    </button>
+
+    {#for err <- upload_errors(@uploads.files, entry)}
+      <p class="alert alert-danger">{ error_to_string(err) }</p>
+    {/for}
+
+  </article>
+{/for}
+
+{#for err <- upload_errors(@uploads.files)}
+  <p class="alert alert-danger">{ error_to_string(err) }</p>
+{/for}
