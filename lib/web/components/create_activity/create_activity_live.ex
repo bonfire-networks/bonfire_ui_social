@@ -1,5 +1,5 @@
 defmodule Bonfire.UI.Social.CreateActivityLive do
-  use Bonfire.Web, :stateful_component
+  use Bonfire.Web, :stateless_component
   use Bonfire.Common.Utils
   alias Surface.Components.Form.TextArea
   alias Surface.Components.Form
@@ -20,35 +20,14 @@ defmodule Bonfire.UI.Social.CreateActivityLive do
   prop activity, :any
   prop object, :any
   prop insert_text, :string
-
+  prop uploads, :any
+  prop uploaded_files, :list
 
   # Classes to customize the smart input appearance
   prop textarea_class, :string
   prop smart_input_class, :string
   prop replied_activity_class, :string
 
-
-
-
-  # def update(%{activity: activity, object: object, reply_to_id: reply_to_id, thread_id: thread_id} = assigns, socket) do
-  #   socket = assign(socket, activity: activity, reply_to_id: reply_to_id, thread_id: thread_id)
-  #   {:ok, socket
-  #   |> assign(assigns)
-  #   }
-  #   # {:ok, assign(socket, activity_id: activity_id)}
-  # end
-
-  # def update(%{activity: activity, object: object} = assigns, socket) do
-  #   socket = assign(socket, activity: activity)
-  #   {:ok, socket
-  #   |> assign(assigns)
-  #   }
-  #   # {:ok, assign(socket, activity_id: activity_id)}
-  # end
-
-  # def update(assigns, socket) do
-  #  {:ok, socket |> assign(assigns)}
-  # end
 
   def with_editor?(assigns) do
     case e(assigns, :with_editor, nil) do
@@ -64,10 +43,6 @@ defmodule Bonfire.UI.Social.CreateActivityLive do
     do: "reply",
     else: "#{create_activity_type}"
   end
-
-  defdelegate handle_params(params, attrs, socket), to: Bonfire.Common.LiveHandlers
-  def handle_event(action, attrs, socket), do: Bonfire.Common.LiveHandlers.handle_event(action, attrs, socket, __MODULE__)
-  def handle_info(info, socket), do: Bonfire.Common.LiveHandlers.handle_info(info, socket, __MODULE__)
 
 
 end

@@ -12,7 +12,7 @@
       viewing_main_object={true}
       activity={@activity}
       object={@object}
-      participants={e(assigns, :participants, nil)}
+      participants={e(assigns, :participants, [])}
       class="cursor-default"
     />
     <Bonfire.UI.Social.ThreadLive 
@@ -27,6 +27,7 @@
   </div>
 
   <Bonfire.UI.Social.SmartInputLive
+    id={:smart_input}
     :if={@show_reply_input && current_user(assigns)}
     current_user={current_user(assigns)}
     reply_to_id={e(assigns, :reply_to_id, "")}

@@ -10,7 +10,8 @@
   <Form 
     for={Bonfire.Social.Posts.LiveHandler.post_changeset(current_user(assigns))} 
     submit={if @create_activity_type==:message, do: "Bonfire.Social.Messages:send", else: "Bonfire.Social.Posts:post"} 
-    opts={ autocomplete: "off"}
+    change="validate"
+    opts={ autocomplete: "off", "phx-target": "#smart_input"}
     class={if with_editor?(assigns), do: "form_with_editor", else: "form_with_textarea"}>
 
     <input type="hidden" 
@@ -30,6 +31,13 @@
       value={if is_tuple(circle), do: elem(circle, 1), else: circle} 
     />
 
+    <input 
+      :for={file <- e(assigns, :uploaded_files, [])} 
+      type="hidden" 
+      name="files[]" 
+      value={ulid(file)} 
+    />
+
     <!-- <div 
       x-show="smart_input_prompt != 'Write something...' && ((reply_to_id && reply_to_id != '') || (smart_input_text && smart_input_text !=''))" 
       x-text= "smart_input_prompt" 
@@ -43,7 +51,7 @@
       activity={@activity}
       object={@object}
       class={@replied_activity_class}
-      showing_within={:create_activity_form}
+      showing_within={:smart_input}
     />
     
     <div class={@smart_input_class}>
@@ -92,15 +100,11 @@
            />
           <div class="flex items-center justify-between p-2 space-x-2 rounded-b bg-base-100 sm:px-3">
             <div class="flex items-center flex-1 space-x-3">
-              <div 
-                data-tip="Upload an image" 
-                class="relative z-20 flex items-center tooltip tooltip-bottom" >
-                <button
-                  type="button"
-                  class="btn btn-ghost btn-square btn-sm tooltip tooltip-bottom">
-                  <Solid.PaperClipIcon class="w-4 h-4 mx-auto text-base-content text-opacity-70" />
-                </button>
-              </div>
+              <Bonfire.UI.Social.UploadFilesLive
+                :if={module_enabled?(Bonfire.Files)}
+                uploads={e(assigns, :uploads, nil)}
+                uploaded_files={e(assigns, :uploaded_files, [])}
+              />
               <div 
                 data-tip="Add a content warning" 
                 class="relative z-20 flex items-center tooltip tooltip-bottom">

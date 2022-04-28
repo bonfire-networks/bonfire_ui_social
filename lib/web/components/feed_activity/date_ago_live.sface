@@ -40,11 +40,11 @@
 
     <LiveRedirect class="subject_timestamp text-base-content text-opacity-60" to={ path(@object) || @permalink}>
 
-      <!-- <span :if={e(assigns, :showing_within, nil) not in [:widget, :create_activity_form]} class="hidden capitalize lg:inline">
+      <!-- <span :if={e(assigns, :showing_within, nil) not in [:widget, :smart_input]} class="hidden capitalize lg:inline">
         {@verb_display}
       </span> -->
 
-      <span :if={e(assigns, :showing_within, nil) not in [:create_activity_form]}>
+      <span :if={e(assigns, :showing_within, nil) not in [:smart_input]}>
         {@date_ago}
       </span>
       

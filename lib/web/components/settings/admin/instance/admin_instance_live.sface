@@ -150,7 +150,7 @@
               <input type="radio" 
               name="Bonfire.UI.Social.WidgetUsersLive[show_guests]" 
               value="false" 
-              checked={if not Bonfire.Me.Settings.get([Bonfire.UI.Social.WidgetUsersLive, :show_guests], true), do: "checked"} 
+              checked={if !Bonfire.Me.Settings.get([Bonfire.UI.Social.WidgetUsersLive, :show_guests], true), do: "checked"} 
               class="radio radio-secondary" aria-labelledby="admin-info-2-label" aria-describedby="admin-info-2-description">
               <div class="flex flex-col ml-3">
                 <!-- Checked: "text-indigo-900", Not Checked: "text-primary-content-900" -->
@@ -235,7 +235,7 @@
                 type="radio"
                 name="invite_only"
                 value="false"
-                checked={if not Bonfire.Me.Settings.get(:invite_only, true), do: "checked"} 
+                checked={if !Bonfire.Me.Settings.get(:invite_only, true), do: "checked"} 
                 class="radio radio-secondary"
                 aria-labelledby="privacy-setting-1-label"
                 aria-describedby="privacy-setting-1-description"

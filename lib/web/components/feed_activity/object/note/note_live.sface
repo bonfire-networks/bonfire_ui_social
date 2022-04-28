@@ -47,7 +47,7 @@
         "prose-lg prose-p:pb-4 prose-p:leading-[25px]": e(assigns, :viewing_main_object, nil),
         "prose-sm prose-p:pt-1": e(assigns, :viewing_main_object, nil) != true
         }>
-      {rich(e(post_content(@object), :html_body, ""))}
+      {rich e(post_content(@object), :html_body, "")}
     </div>
 
   </div>

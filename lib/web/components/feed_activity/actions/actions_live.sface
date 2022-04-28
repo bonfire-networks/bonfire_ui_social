@@ -1,6 +1,6 @@
 {#if e(@object, :id, nil) != nil and e(@activity, :replied, :reply_to_id, nil) == nil and e(@activity, :id, nil) == nil}
   <div></div>
-{#elseif  e(assigns, :showing_within, nil) == :create_activity_form}
+{#elseif  e(assigns, :showing_within, nil) == :smart_input}
   <span 
     phx-click="Bonfire.Social.Feeds:remove_data"
     class="absolute top-2 right-2 btn btn-ghost btn-xs btn-circle">

@@ -1,0 +1,20 @@
+
+{#for entry <- @media}
+  <article class="media-entry">
+
+    <figure>
+    <a href={media_url(entry)} target="_blank">
+      <!-- TODO: better handling of media type? -->
+      {#if String.starts_with?(entry.media_type, "image")}
+        <LazyImage
+          src={image_url(entry)}
+         />
+      {#else}
+        {entry.media_type}
+      {/if}
+      <figcaption>Todo: alt</figcaption>
+    </a>
+    </figure>
+
+  </article>
+{/for}

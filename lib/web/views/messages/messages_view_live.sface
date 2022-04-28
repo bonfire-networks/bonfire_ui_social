@@ -38,7 +38,7 @@
         page_title={@page_title}
         create_activity_type={e(assigns, :create_activity_type, nil)}
         to_circles={e(assigns, :to_circles, [])}
-        participants={e(assigns, :participants, nil)}
+        participants={e(assigns, :participants, [])}
         smart_input_text={@smart_input_text}
         smart_input_prompt={e(assigns, :smart_input_prompt, "")}
         thread_id={@thread_id}
@@ -52,7 +52,7 @@
         showing_within={:message}
         textarea_class={"h-8 max-h-16 resize-y max-w-full textarea prose prose-sm bg-base-200"}
         smart_input_class={"border m-3 mt-1 border-base-300 bg-base-200 rounded-md"}
-        replied_activity_class={"relative p-3 py-2 bg-neutral-content bg-opacity-5 m-3 mb-1 rounded-md showing_within:create_activity_form"}
+        replied_activity_class={"relative p-3 py-2 bg-neutral-content bg-opacity-5 m-3 mb-1 rounded-md"}
       /> 
 
     {#elseif @tab_id in ["compose", "select_recipients"]}
@@ -79,6 +79,7 @@
         </div>
 
         <Bonfire.UI.Social.SmartInputLive
+          id={:smart_input}
           :if={current_user(assigns)}
           current_user={current_user(assigns)}
           reply_to_id={e(assigns, :reply_to_id, "")}

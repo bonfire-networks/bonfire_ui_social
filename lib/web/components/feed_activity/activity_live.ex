@@ -26,6 +26,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
 
     activity =
       activity
+      |> repo().maybe_preload(:media)
       # |> debug("Activity provided")
       |> Map.put(:object, Activities.object_from_activity(assigns))
       # |> debug("Activity with :object")
@@ -78,6 +79,8 @@ defmodule Bonfire.UI.Social.ActivityLive do
       ++
       component_object(verb, activity, object_type)
       ++
+      component_maybe_attachments(activity, assigns)
+      ++
       component_actions(verb, activity, assigns)
       )
       |> Utils.filter_empty([])
@@ -110,7 +113,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
           created_verb_display={@created_verb_display}
           showing_within={e(assigns, :showing_within, :feed)}
           thread_mode={e(assigns, :thread_mode, nil)}
-          participants={e(assigns, :participants, nil)}
+          participants={e(assigns, :participants, [])}
           activity={e(component_assigns, :activity, @activity)}
           object={e(component_assigns, :object, @object)}
           object_id={e(component_assigns, :object_id, @object_id)}
@@ -125,6 +128,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
           hide_reply={e(component_assigns, :hide_reply, e(assigns, :hide_reply, false))}
           profile={e(component_assigns, :profile, nil)}
           character={e(component_assigns, :character, nil)}
+          media={e(component_assigns, :media, nil)}
         />
       {/for}
     </article>
@@ -267,7 +271,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
     showing_within: showing_within,
     viewing_main_object: false,
     thread_mode: thread_mode})
-  when showing_within in [:thread, :create_activity_form]
+  when showing_within in [:thread, :smart_input]
     and thread_mode not in [:flat], do: [] # do not show reply_to
 
   def component_maybe_in_reply_to(
@@ -438,6 +442,13 @@ defmodule Bonfire.UI.Social.ActivityLive do
     )
 
     [Bonfire.UI.Social.Activity.UnknownLive]
+  end
+
+  def component_maybe_attachments(%{media: files}, _assigns) when is_list(files) and length(files)>0 do
+    [{Bonfire.UI.Social.Activity.MediaLive, %{media: files}}]
+  end
+  def component_maybe_attachments(_, _assigns) do
+    []
   end
 
   def component_actions(_, _, %{activity_inception: activity_inception}) when not is_nil(activity_inception), do: [] # don't show any
