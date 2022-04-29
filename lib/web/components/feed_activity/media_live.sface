@@ -1,6 +1,8 @@
 
 {#for entry <- @media}
-  <article class="media-entry">
+  <article class={
+    "media-entry",
+    "showing_within:thread mx-3": e(assigns, :showing_within, nil) == :thread}>
 
     <figure>
     <a href={media_url(entry)} target="_blank">

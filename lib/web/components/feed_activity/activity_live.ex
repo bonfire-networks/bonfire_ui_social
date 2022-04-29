@@ -444,8 +444,8 @@ defmodule Bonfire.UI.Social.ActivityLive do
     [Bonfire.UI.Social.Activity.UnknownLive]
   end
 
-  def component_maybe_attachments(%{media: files}, _assigns) when is_list(files) and length(files)>0 do
-    [{Bonfire.UI.Social.Activity.MediaLive, %{media: files}}]
+  def component_maybe_attachments(%{media: files}, assigns) when is_list(files) and length(files)>0 do
+    [{Bonfire.UI.Social.Activity.MediaLive, %{media: files, showing_within: e(assigns, :showing_within, :feed)}}]
   end
   def component_maybe_attachments(_, _assigns) do
     []
