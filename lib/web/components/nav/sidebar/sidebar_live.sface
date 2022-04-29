@@ -7,10 +7,7 @@
     class="flex-col justify-end mt-0 tablet:flex "
     :class="show_smart_input ? 'w-full' : 'w-72 hidden'"
     >
-    <div 
-      class=""
-      :class="show_smart_input ? 'z-50 bg-base-300 p-3 fixed top-0 bottom-0 w-full' : 'fixed z-50 top-3 lg:top-[67px]  w-72'"
-      >
+    <div class="fixed z-50 top-3 lg:top-[67px]  w-72">
       <div x-show="show_smart_input" class="">
         <div role="banner" class="sticky top-[48px] lg:top-[48px] lg:-mt-[20px] lg:pt-[8px] bg-base-100 z-30 w-full border-b tablet:rounded-t border-base-300">  
           <div class="relative rounded-b-none tablet:rounded">

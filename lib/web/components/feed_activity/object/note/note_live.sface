@@ -19,6 +19,7 @@
       x-show="content_open == false"
       phx-click="Bonfire.Social.Feeds:open_activity"
       phx-value-ignore={true}
+      style="display: none"
       class="flex items-center mt-1 text-left text-md text-base-content">
       <span class="mr-2 hover:underline">{ rich e(post_content(@object), :name, "CW")} </span> <div class="font-medium capitalize text-opacity-80 btn btn-xs btn-outline">{l "read post"}</div>
     </button>
@@ -37,7 +38,6 @@
     
   <div
     x-show={if e(post_content(@object), :name, nil), do: "content_open"}
-    :style={if e(post_content(@object), :name, nil), do: "display: none"}
     x-collapse={if e(post_content(@object), :name, nil), do: true} >
     <div
       :if={e(post_content(@object), :summary, nil)}
@@ -45,16 +45,17 @@
       {rich e(post_content(@object), :summary, "")}
     </div>
 
-      <div
-        data-id={"object_body"}
-        :if={e(post_content(@object), :html_body, nil)}
-        class={
+    <div
+      data-id={"object_body"}
+      :if={e(post_content(@object), :html_body, nil)}
+      class={
         "prose object_body max-w-none prose",
         "prose-lg prose-p:pb-4 prose-p:leading-[25px]": e(assigns, :viewing_main_object, nil),
-        "prose-sm prose-p:pt-1": e(assigns, :viewing_main_object, nil) != true,
+        "prose-sm prose-p:pt-1": e(assigns, :viewing_main_object, nil) != true
         }>
-        {rich e(post_content(@object), :html_body, "")}
-      </div>
+      {rich e(post_content(@object), :html_body, "")}
+    </div>
+
   </div>
 
 </div>
