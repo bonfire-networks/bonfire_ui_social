@@ -1,5 +1,7 @@
 {#for entry <- @uploads.files.entries}
-  <article class="relative m-3 mb-0 upload-entry">
+  <article 
+    x-data="{show_alt: false}"
+    class="relative m-3 mb-0 upload-entry">
     <div class="absolute top-0 z-10 w-full rounded-lg l-0 r-0 h-14 bg-gradient-to-b from-gray-900 to-transparent"></div>
     <figure>
       <!-- Phoenix.LiveView.Helpers.live_img_preview/2 renders a client-side preview -->
@@ -23,10 +25,27 @@
       <span>{l "Delete"}</span>
     </button>
 
+    <button 
+      type="button"
+      class="absolute z-20 normal-case btn btn-ghost text-slate-50 btn-xs right-1 top-1"
+      @click="show_alt = ! show_alt"
+      aria-label="Add description">
+      <Solid.PencilIcon class="w-4 h-4 mr-1" />
+      <span>{l "Add description"}</span>
+    </button>
     {#for err <- upload_errors(@uploads.files, entry)}
       <p class="alert alert-danger">{ error_to_string(err) }</p>
     {/for}
 
+    <div 
+      x-show="show_alt"
+      x-collapse
+      class="w-full max-w-xs form-control">
+      <label class="label">
+        <span class="text-xs label-text text-slate-600">{l "Add a meaningful description"}</span>
+      </label>
+      <input type="text" placeholder="Type here" class="w-full h-8 max-w-xs rounded-sm border-slate-300 text-slate-700 bg-slate-200 input input-bordered">
+    </div>
   </article>
 {/for}
 
