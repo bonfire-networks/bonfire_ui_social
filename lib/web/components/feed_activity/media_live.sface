@@ -1,6 +1,7 @@
 
 {#for entry <- @media}
-  <article class={
+  <article
+   class={
     "media-entry",
     "showing_within:thread mx-3": e(assigns, :showing_within, nil) == :thread}>
 

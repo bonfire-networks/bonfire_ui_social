@@ -19,7 +19,7 @@
       x-show="content_open == false"
       phx-click="Bonfire.Social.Feeds:open_activity"
       phx-value-ignore={true}
-      class="flex items-center text-left text-md text-base-content ">
+      class="flex items-center mt-1 text-left text-md text-base-content">
       <span class="mr-2 hover:underline">{ rich e(post_content(@object), :name, "CW")} </span> <div class="font-medium capitalize text-opacity-80 btn btn-xs btn-outline">{l "read post"}</div>
     </button>
     <button
@@ -28,7 +28,7 @@
       phx-value-ignore={true}
       x-show="content_open"
       style="display: none"
-      class="flex items-center text-left text-md text-base-content ">
+      class="flex items-center mt-1 text-left text-md text-base-content">
       <span class="mr-2 hover:underline">{rich e(post_content(@object), :name, "CW")} </span>  <div class="font-medium capitalize text-opacity-80 btn btn-xs btn-outline">{l "hide post"}</div>
     </button>
 

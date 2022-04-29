@@ -110,7 +110,7 @@
             to_circles={e(assigns, :to_circles, [])}
            />
           <div class="flex items-center justify-between p-2 space-x-2 border-t rounded-b-lg border-slate-300 bg-slate-200 sm:px-3">
-            <div class="flex items-center flex-1 space-x-3">
+            <div class="flex items-center flex-1 space-x-2">
               <Bonfire.UI.Social.UploadFilesLive
                 :if={module_enabled?(Bonfire.Files)}
                 uploads={e(assigns, :uploads, nil)}
@@ -124,7 +124,7 @@
                   type="button"
                   @click="title_open = !title_open"
                   :class="{'text-primary border-primary' : title_open}"
-                  class="flex items-center btn btn-outline btn-square btn-sm">
+                  class="flex items-center btn btn-outline border-slate-800 border-opacity-60 btn-square btn-sm">
                   <span 
                     :class="{'text-primary' : title_open}"
                     class="text-xs font-medium text-slate-800 text-opacity-70">{l "CW"}</span>

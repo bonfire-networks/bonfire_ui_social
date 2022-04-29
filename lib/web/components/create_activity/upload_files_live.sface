@@ -1,7 +1,7 @@
   <div 
     data-tip="Upload an image" 
     class="relative z-20 tooltip tooltip-bottom" >
-    <label for={@uploads.files.ref} class="flex items-center btn btn-outline btn-square btn-sm">
+    <label for={@uploads.files.ref} class="flex items-center btn border-slate-800 border-opacity-60 btn-outline btn-square btn-sm">
       <Solid.PaperClipIcon class="w-4 h-4 mx-auto text-slate-800 text-opacity-70" />
       { live_file_input @uploads.files, class: "sr-only" }
     </label>

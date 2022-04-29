@@ -1,13 +1,15 @@
 <nav
   role="tabpanel"
-  class="flex justify-between w-full mt-2 mb-2 tabs"
+  class="flex justify-between w-full mt-2 mb-2 border-b tabs border-base-content border-opacity-30"
   aria-label="Switch between timeline, posts, boosts, media tabs"
 >
   <LiveRedirect 
     :for={{item, route} <- Bonfire.Common.Config.get([:ui, :profile, :navigation], [timeline: "timeline"])}
     to={"/user/#{e(@user, :character, :username, "")}/#{route}"} 
-    class={"tab flex-1 font-normal tab-bordered capitalize text-base", "tab-active": @selected_tab == Atom.to_string(item)}
-  >
-    {item}
+    class={"hover:bg-base-content hover:bg-opacity-10 flex-1 pt-2 font-normal place-content-center flex capitalize text-base"}
+  > 
+    <div class={"tab tab-bordered", "tab-active": @selected_tab == Atom.to_string(item)}>
+      {item}
+    </div>
   </LiveRedirect>
 </nav>
