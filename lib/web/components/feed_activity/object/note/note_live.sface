@@ -37,25 +37,24 @@
     
   <div
     x-show={if e(post_content(@object), :name, nil), do: "content_open"}
-    style="display: none"
-    x-collapse >
+    :style={if e(post_content(@object), :name, nil), do: "display: none"}
+    x-collapse={if e(post_content(@object), :name, nil), do: true} >
     <div
       :if={e(post_content(@object), :summary, nil)}
       class="font-light prose max-w-prose prose-p:pt-1">
       {rich e(post_content(@object), :summary, "")}
     </div>
 
-    <div
-      data-id={"object_body"}
-      :if={e(post_content(@object), :html_body, nil)}
-      class={
+      <div
+        data-id={"object_body"}
+        :if={e(post_content(@object), :html_body, nil)}
+        class={
         "prose object_body max-w-none prose",
         "prose-lg prose-p:pb-4 prose-p:leading-[25px]": e(assigns, :viewing_main_object, nil),
-        "prose-sm prose-p:pt-1": e(assigns, :viewing_main_object, nil) != true
+        "prose-sm prose-p:pt-1": e(assigns, :viewing_main_object, nil) != true,
         }>
-      {rich e(post_content(@object), :html_body, "")}
-    </div>
-
+        {rich e(post_content(@object), :html_body, "")}
+      </div>
   </div>
 
 </div>

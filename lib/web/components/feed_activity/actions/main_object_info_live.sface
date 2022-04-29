@@ -1,5 +1,5 @@
 <div 
-class="flex items-center p-3 mx-2 rounded-lg bg-base-content bg-opacity-5" 
+class="flex items-center p-3 pb-1 border-t border-base-content border-opacity-20" 
 >
 <div class="flex items-center flex-1">
     <Bonfire.UI.Social.Activity.DateAgoLive 
