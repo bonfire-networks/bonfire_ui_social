@@ -13,7 +13,13 @@
           src={image_url(media)}
          />
       {#else}
-        {media.media_type}
+        {#if media.media_type=="remote" and String.ends_with?(media_url(media), ["jpg", "jpeg", "png", "gif", "webp"])}
+          <img
+            src={media_url(media)}
+          />
+        {#else}
+          {media.media_type}
+        {/if}
       {/if}
       <figcaption>{e(media.metadata, "label", nil)}</figcaption>
     </a>
