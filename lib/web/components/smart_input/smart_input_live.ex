@@ -29,7 +29,7 @@ defmodule Bonfire.UI.Social.SmartInputLive do
         uploaded_files: []
       )
       |> allow_upload(:files,
-        accept: ~w(.jpg .jpeg .png .gif .svg .tiff .webp .pdf .md .rtf), # make configurable
+        accept: ~w(.jpg .jpeg .png .gif .svg .tiff .webp .pdf .md .rtf .mp3 .mp4), # make configurable
         max_file_size: 10_000_000, # make configurable, expecially once we have resizing
         max_entries: 10,
         auto_upload: false,
