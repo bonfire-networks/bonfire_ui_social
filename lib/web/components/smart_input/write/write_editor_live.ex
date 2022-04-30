@@ -1,4 +1,4 @@
-defmodule Bonfire.UI.Social.CreateActivityLive do
+defmodule Bonfire.UI.Social.WriteEditorLive do
   use Bonfire.Web, :stateless_component
   use Bonfire.Common.Utils
   alias Surface.Components.Form.TextArea
@@ -8,32 +8,29 @@ defmodule Bonfire.UI.Social.CreateActivityLive do
   alias Surface.Components.Form.Field
   alias Surface.Components.Form.Inputs
 
-  # prop target_component, :string
-  prop reply_to_id, :string
-  prop thread_id, :string
+  prop field_name, :string, default: "post[post_content][html_body]", required: false
   prop create_activity_type, :any
-  prop to_circles, :list
   prop smart_input_prompt, :string, default: ""
   prop smart_input_text, :string, default: "", required: false
   prop showing_within, :any
-  prop with_editor, :boolean, required: false
-  prop activity, :any
-  prop object, :any
+  prop with_rich_editor, :boolean, default: true, required: false
   prop insert_text, :string
-  prop uploads, :any
-  prop uploaded_files, :list
 
   # Classes to customize the smart input appearance
   prop textarea_class, :string
-  prop smart_input_class, :string
-  prop replied_activity_class, :string
 
 
-  def with_editor?(assigns) do
-    case e(assigns, :with_editor, nil) do
-      nil -> e(assigns, :showing_within, nil) != :thread
-      opt_assigned -> opt_assigned
-    end && module_enabled?(Bonfire.Editor.Ck.Bubble)
+  def use_rich_editor?(assigns) do
+    assigns[:with_rich_editor] !=false && Bonfire.Me.Settings.get(:disable_rich_text_editor, false, assigns) !=true
+  end
+
+  def rich_editor(assigns) do
+    if use_rich_editor?(assigns) do
+      default = Bonfire.Editor.Quill
+      module = Bonfire.Me.Settings.get(:rich_text_editor, default, assigns)
+
+      if module_enabled?(module), do: module, else: error(nil, "#{module} is not available or enabled")
+    end
   end
 
   def activity_type_or_reply(assigns, create_activity_type) do

@@ -1,21 +1,21 @@
 
-{#for entry <- @media}
+{#for media <- @media}
   <article
    class={
     "media-entry",
     "showing_within:thread mx-3": e(assigns, :showing_within, nil) == :thread}>
 
     <figure>
-    <a href={media_url(entry)} target="_blank">
+    <a href={media_url(media)} target="_blank">
       <!-- TODO: better handling of media type? -->
-      {#if String.starts_with?(entry.media_type, "image")}
+      {#if String.starts_with?(media.media_type, "image")}
         <LazyImage
-          src={image_url(entry)}
+          src={image_url(media)}
          />
       {#else}
-        {entry.media_type}
+        {media.media_type}
       {/if}
-      <figcaption>Todo: alt</figcaption>
+      <figcaption>{e(media.metadata, "label", nil)}</figcaption>
     </a>
     </figure>
 

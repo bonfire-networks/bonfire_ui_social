@@ -29,7 +29,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
       |> repo().maybe_preload(:media)
       # |> debug("Activity provided")
       |> Map.put(:object, Activities.object_from_activity(assigns))
-      # |> debug("Activity with :object")
+      |> debug("Activity with :object")
 
     verb =
       Activities.verb_maybe_modify(

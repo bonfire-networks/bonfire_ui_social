@@ -1,4 +1,4 @@
-defmodule Bonfire.UI.Social.UploadedMediaLive do
+defmodule Bonfire.UI.Social.UploadPreviewsLive do
   use Bonfire.Web, :stateless_component
 
   prop uploads, :any

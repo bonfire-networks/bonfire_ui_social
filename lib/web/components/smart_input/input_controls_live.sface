@@ -1,0 +1,78 @@
+
+<Bonfire.UI.Social.UploadPreviewsLive uploads={@uploads} />
+
+<div class="">
+  
+  <Bonfire.UI.Social.BoundariesLive
+    :if={e(assigns, :showing_within, nil) != :message}
+    to_circles={e(assigns, :to_circles, [])}
+    />
+
+  <div class="flex items-center justify-between p-2 space-x-2 border-t rounded-b-lg border-slate-300 bg-slate-200 sm:px-3">
+
+    <div class="flex items-center flex-1 space-x-2">
+
+      <Bonfire.UI.Social.UploadButtonLive
+        :if={module_enabled?(Bonfire.Files)}
+        uploads={e(assigns, :uploads, nil)}
+        uploaded_files={e(assigns, :uploaded_files, [])}
+      />
+
+      <div 
+        data-tip="Add a content warning" 
+        class="relative z-20 flex items-center tooltip tooltip-bottom">
+        <button
+          :if={Bonfire.Common.Config.get([:ui, :smart_input, :cw], []) == true}
+          type="button"
+          @click="title_open = !title_open"
+          :class="{'bg-slate-300' : title_open}"
+          class="flex items-center btn btn-outline border-slate-800 border-opacity-60 btn-square btn-sm">
+          <span 
+            class="text-xs font-medium text-slate-800 text-opacity-70">{l "CW"}</span>
+        </button>
+      </div>
+
+      <Bonfire.UI.Social.BoundariesLive
+        :if={e(assigns, :showing_within, nil) == :message}
+        showing_within={:message}
+        to_circles={e(assigns, :to_circles, [])}
+      />
+
+      <!-- <div 
+        data-tip="Full-screen mode" 
+        :if={@create_activity_type != :message}
+        class="relative z-20 flex items-center tooltip tooltip-bottom">
+        <LivePatch
+          to="/write"
+          class="btn btn-ghost btn-square btn-sm">
+          <Solid.EyeIcon class="w-4 h-4 text-opacity-70 text-base-content" />
+        </LivePatch>
+      </div> -->
+
+    </div>
+
+    <input type="hidden" 
+    name="reply_to[reply_to_id]" 
+    value={@reply_to_id} />
+    <input type="hidden"  
+    name="reply_to[thread_id]" 
+    value={@thread_id} />
+
+    <input type="hidden" 
+    name={:create_activity_type}
+    value={@create_activity_type} />
+
+    <input 
+    :for={circle <- e(assigns, :to_circles, [])} 
+    type="hidden" 
+    name="to_circles[]" 
+    label={if is_tuple(circle), do: elem(circle, 0)} 
+    value={if is_tuple(circle), do: elem(circle, 1), else: circle} 
+    />
+
+    <button type="submit" class="capitalize btn-sm justify-self-end btn btn-primary">
+      <!-- {if e(assigns, :create_activity_type, nil) == :message, do: l "Message", else: l "Post"} -->
+      {l "Post"}
+    </button>
+  </div>
+</div>

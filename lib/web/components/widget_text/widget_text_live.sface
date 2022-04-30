@@ -1,0 +1,3 @@
+<div class="p-3 prose">
+  {rich e(assigns, :text, "need a sample")}
+</div>

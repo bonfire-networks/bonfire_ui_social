@@ -25,7 +25,7 @@
           <div><div>
             <h3 class="mb-3 opacity-70">{l "Terms of Use"} / {l "Code of Conduct"}</h3>
             <div class="prose whitespace-normal">
-              {md Bonfire.Me.Settings.get([:bonfire, :terms, :conduct], "")}
+              {rich Bonfire.Me.Settings.get([:bonfire, :terms, :conduct], "")}
             </div>
           </div></div>
         </div>
@@ -36,7 +36,7 @@
           <div><div>
             <h3 class="mb-3 opacity-70">{l "Privacy Policy"}</h3>
             <div class="prose whitespace-normal">
-              {md Bonfire.Me.Settings.get([:bonfire, :terms, :privacy], "")}
+              {rich Bonfire.Me.Settings.get([:bonfire, :terms, :privacy], "")}
             </div>
           </div></div>
         </div>

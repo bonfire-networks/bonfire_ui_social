@@ -44,7 +44,7 @@
       <label class="label">
         <span class="text-xs label-text text-slate-600">{l "Add a meaningful description"}</span>
       </label>
-      <input type="text" placeholder="Type here" class="w-full h-8 max-w-xs rounded-sm border-slate-300 text-slate-700 bg-slate-200 input input-bordered">
+      <input name={"upload_metadata[#{entry.ref}][label]"} type="text" placeholder="Type here" class="w-full h-8 max-w-xs rounded-sm border-slate-300 text-slate-700 bg-slate-200 input input-bordered">
     </div>
   </article>
 {/for}

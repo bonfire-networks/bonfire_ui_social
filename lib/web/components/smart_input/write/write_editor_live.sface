@@ -1,0 +1,32 @@
+
+
+{#case rich_editor(assigns)}
+  {#match component when is_atom(component) and not is_nil(component)}
+    <noscript>
+      <TextArea
+        opts={
+          value: @smart_input_text,
+          placeholder: @smart_input_prompt,
+          "x-model": "smart_input_text"
+        }
+        class={@textarea_class}
+      />
+    </noscript>
+    <Surface.Components.Dynamic.Component
+      module={component}
+      field_name={@field_name}
+      textarea_class={@textarea_class}
+      placeholder={@smart_input_prompt}
+      content={@smart_input_text}
+      insert_text={@insert_text}
+    />
+  {#match _}
+    <TextArea
+      opts={
+        value: @smart_input_text,
+        placeholder: @smart_input_prompt,
+        "x-model": "smart_input_text"
+      }
+      class={@textarea_class}
+    />
+{/case}

@@ -5,6 +5,17 @@
     "flex h-full",
     "pt-2 bg-base-100 z-40 sticky bottom-0": e(assigns, :showing_within, nil) == :message}>
     <div class="flex flex-col flex-1 w-full">
+
+      <!-- show what we're replying to, if any -->
+      <Bonfire.UI.Social.ActivityLive 
+        :if={@activity}
+        id={"cap:" <> e(assigns, :activity, :id, "")}
+        activity={@activity}
+        object={@object}
+        class={@replied_activity_class}
+        showing_within={:smart_input}
+      />
+    
       {#if Bonfire.Common.Config.get([:ui, :default_smart_input])}
         <Surface.Components.Dynamic.LiveComponent
           module={Bonfire.Common.Config.get([:ui, :default_smart_input])}
@@ -16,8 +27,6 @@
           smart_input_text={@smart_input_text}
           current_user={@current_user}
           showing_within={@showing_within}
-          activity={@activity}
-          object={@object}
           textarea_class={@textarea_class}
           smart_input_class={@smart_input_class}
           replied_activity_class={@replied_activity_class}
@@ -25,7 +34,7 @@
           uploaded_files={e(assigns, :uploaded_files, [])}
         />
       {#else}
-        <Bonfire.UI.Social.CreateActivityLive
+        <Bonfire.UI.Social.WritePostContentLive
           reply_to_id={@reply_to_id}
           thread_id={@thread_id}
           create_activity_type={e(assigns, :create_activity_type, nil)}
@@ -43,5 +52,6 @@
           uploaded_files={e(assigns, :uploaded_files, [])}
         />
       {/if}    
+
     </div>
   </div>
