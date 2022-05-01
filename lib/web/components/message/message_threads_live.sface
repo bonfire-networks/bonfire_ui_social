@@ -13,7 +13,7 @@ class="h-full md:mx-0 text-base-content ">
       <!-- <Bonfire.UI.Social.EmptyFeed/>  -->
     </div>
 
-    <ul :if={length(e(assigns, :feed, []))>0} class="divide-y divide-base-300">
+    <ul :if={length(e(assigns, :feed, []))>0} class="divide-y rounded-b-lg divide-base-300 rounded-b-xl">
       <li class="bg-base-100 hover:bg-base-200" :for={%{activity: activity} <- e(assigns, :feed, [])}>
         <LivePatch to={permalink(e(activity, :replied, :thread_id, nil), e(activity, :object_id, nil))} class="block ">
           <div class={
