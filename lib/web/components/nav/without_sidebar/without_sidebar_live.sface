@@ -1,5 +1,6 @@
 <div class="flex flex-col">
   <Bonfire.UI.Social.HeaderUserLive 
+    page={@page}
     current_account={current_account(assigns)} 
     current_user={current_user(assigns)} />
   <div class="items-start justify-center w-full mt-0 tablet:px-3 lg:mt-3 lg:max-w-screen-xl lg:mx-auto h-body md:flex">
