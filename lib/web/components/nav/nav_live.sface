@@ -31,12 +31,12 @@
         <div class="top-[80px] w-full bottom-[16px]  pointer-events-auto">
           {#if current_user(assigns) }
             <Bonfire.UI.Social.WidgetLive 
-              widget_title="Admins"
+              widget_title="Popular hashtags"
               current_user={current_user(assigns)}
             >
-              <Bonfire.UI.Social.WidgetUsersLive 
+              <Bonfire.UI.Social.WidgetTagsLive 
                 current_user={current_user(assigns)}
-                id="widget_admins"
+                id="widget_tags"
               />
             </Bonfire.UI.Social.WidgetLive>
           {#else}
