@@ -11,7 +11,7 @@
     :if={e(assigns, :showing_within, nil) != :notifications} 
     class={
       "thread_actions mt-2 flex items-center": e(assigns, :showing_within, nil) == :thread,
-      "mt-4 border-base-content border-opacity-20 py-3 border-t px-3":  e(assigns, :viewing_main_object, nil),
+      "mt-4 border-base-content border-opacity-10 py-3 border-t px-3":  e(assigns, :viewing_main_object, nil),
       "feed_actions mt-2": e(assigns, :viewing_main_object, nil) != true,
       "mt-1": e(assigns, :showing_within, nil) == :widget,
       }>
