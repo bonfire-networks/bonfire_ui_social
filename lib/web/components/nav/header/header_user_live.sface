@@ -17,25 +17,25 @@
       {#if current_user(assigns)}
       <div class="items-center hidden w-full tabs tab-boxed lg:flex">
        <div class="flex flex-1 tooltip tooltip-bottom" data-tip={l "Feeds"}>
-          <LivePatch to={"/home"} class={"tab flex-1 text-neutral-content text-opacity-70", "tab-active text-opacity-60 relative lined": @page == "home"}>
+          <LivePatch to={"/home"} class={"tab flex-1 hover:bg-base-content hover:bg-opacity-5 hover:rounded-lg text-neutral-content text-opacity-70", "tab-active text-opacity-60 relative lined": @page == "home"}>
               <Solid.RssIcon class="w-5 h-5 mr-1" />
               <span class="sr-only">{l "Feeds"}</span>
           </LivePatch>
         </div>
         <div class="flex flex-1 tooltip tooltip-bottom" data-tip={l "Notifications"}>
-          <LivePatch to={path(:notifications)} class={"tab flex-1 text-neutral-content text-opacity-70", "tab-active text-opacity-60 relative lined": @page == "notifications"}>
+          <LivePatch to={path(:notifications)} class={"tab flex-1 hover:bg-base-content hover:bg-opacity-5 hover:rounded-lg text-neutral-content text-opacity-70", "tab-active text-opacity-60 relative lined": @page == "notifications"}>
               <Solid.BellIcon class="w-5 h-5 mr-1" />
               <span class="sr-only">{l "Notifications"}</span>
           </LivePatch>
         </div>
         <div class="flex flex-1 tooltip tooltip-bottom" data-tip={l "Messages"}>
-          <LivePatch to={path(Bonfire.Data.Social.Message)} class={"tab flex-1 text-neutral-content text-opacity-70", "tab-active text-opacity-60 relative lined": @page == "messages"}>
+          <LivePatch to={path(Bonfire.Data.Social.Message)} class={"tab flex-1 hover:bg-base-content hover:bg-opacity-5 hover:rounded-lg text-neutral-content text-opacity-70", "tab-active text-opacity-60 relative lined": @page == "messages"}>
               <Solid.MailIcon class="w-5 h-5 mr-1" />
               <span class="sr-only">{l "Messages"}</span>
           </LivePatch>
         </div>
         <div class="flex flex-1 tooltip tooltip-bottom" data-tip={l "Likes / Favourites"}>
-          <LivePatch to={"/my/likes"} class={"tab flex-1 text-neutral-content text-opacity-70", "tab-active text-opacity-60 relative lined": @page == "likes"}>
+          <LivePatch to={"/my/likes"} class={"tab flex-1 hover:bg-base-content hover:bg-opacity-5 hover:rounded-lg text-neutral-content text-opacity-70", "tab-active text-opacity-60 relative lined": @page == "likes"}>
               <Solid.StarIcon class="w-5 h-5 mr-1" />
               <span class="sr-only">{l "Likes / Favourites"}</span>
           </LivePatch>
