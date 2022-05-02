@@ -11,6 +11,8 @@ defmodule Bonfire.UI.Social.Feeds.BoostsActivityTest do
     # Create alice user
     account = fake_account!()
     alice = fake_user!(account)
+
+    if Bonfire.Me.Settings.get(:show_activity_counts, nil, current_user: alice, current_account: account) do
     # Create bob user
     account2 = fake_account!()
     bob = fake_user!(account2)
@@ -36,6 +38,7 @@ defmodule Bonfire.UI.Social.Feeds.BoostsActivityTest do
     ~> Floki.find("[data-id=boost_action]")
     |> Floki.text =~ "Boost (3)"
   end
+  end
 
   test "As a user I want to see if I already boosted an activity" do
     # Create alice user
@@ -58,12 +61,19 @@ defmodule Bonfire.UI.Social.Feeds.BoostsActivityTest do
     assert {:ok, boost} = Boosts.boost(eve, post)
     feed = Bonfire.Social.FeedActivities.my_feed(bob)
     fp = feed.edges |> List.first() #|> IO.inspect
-    assert doc = render_component(Bonfire.UI.Social.ActivityLive, %{id: "activity", activity: fp.activity})
+    assert doc = render_component(Bonfire.UI.Social.ActivityLive, %{id: "activity", activity: fp.activity, __context__: %{current_user: bob}})
 
-    assert doc
-    |> Floki.parse_fragment
-    ~> Floki.find("[data-id=boost_action]")
-    |> Floki.text =~ "Boosted (4)"
+    if Bonfire.Me.Settings.get(:show_activity_counts, nil, current_user: bob, current_account: account2) do
+      assert doc
+      |> Floki.parse_fragment
+      ~> Floki.find("[data-id=boost_action]")
+      |> Floki.text =~ "Boosted (4)"
+    else
+      assert doc
+      |> Floki.parse_fragment
+      ~> Floki.find("[data-id=boost_action]")
+      |> Floki.text =~ "Boosted"
+    end
   end
 
 
@@ -121,7 +131,6 @@ defmodule Bonfire.UI.Social.Feeds.BoostsActivityTest do
 
     assert doc
     |> Floki.parse_fragment
-    |> dump
     ~> Floki.find("[data-id=subject]")
     |> List.first
     |> Floki.text =~ bob.profile.name
@@ -132,9 +141,13 @@ defmodule Bonfire.UI.Social.Feeds.BoostsActivityTest do
     # Create alice user
     account = fake_account!()
     alice = fake_user!(account)
+
     # Create bob user
     account2 = fake_account!()
     bob = fake_user!(account2)
+
+    if Bonfire.Me.Settings.get(:show_activity_counts, nil, current_user: bob, current_account: account2) do
+
     # bob follows alice
     Follows.follow(bob, alice)
     attrs = %{post_content: %{summary: "summary", name: "test post name", html_body: "first post"}}
@@ -153,6 +166,7 @@ defmodule Bonfire.UI.Social.Feeds.BoostsActivityTest do
       ~> Floki.find("[data-id=boost_action]")
       |> Floki.text =~ "Boosted (2)"
   end
+  end
 
   test "As a user, when I unboost an activity, the counter should decrement" do
     # Create alice user
@@ -161,6 +175,9 @@ defmodule Bonfire.UI.Social.Feeds.BoostsActivityTest do
     # Create bob user
     account2 = fake_account!()
     bob = fake_user!(account2)
+
+    if Bonfire.Me.Settings.get(:show_activity_counts, nil, current_user: bob, current_account: account2) do
+
     # bob follows alice
     Follows.follow(bob, alice)
     attrs = %{post_content: %{summary: "summary", name: "test post name", html_body: "first post"}}
@@ -179,6 +196,7 @@ defmodule Bonfire.UI.Social.Feeds.BoostsActivityTest do
       |> Floki.parse_fragment
       ~> Floki.find("[data-id=boost_action]")
       |> Floki.text =~ "Boost (1)"
+  end
   end
 
   test "As a user, when I unboost an activity, the label should change to boost" do

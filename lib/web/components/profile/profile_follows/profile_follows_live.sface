@@ -4,13 +4,19 @@
       to={"/user/#{e(@user, :character, :username, "")}/followers"} 
       class={"tab flex-1 tab-bordered", "tab-active": @selected_tab ==  "followers"}
     >
-      {l "Followers"} ({e(@user, :character, :follow_count, :object_count, 0)})
+      {l "Followers"} 
+      <span :if={Bonfire.Me.Settings.get(:show_activity_counts, nil, assigns)}>
+        ({e(@user, :character, :follow_count, :object_count, 0)})
+      </span>
     </LiveRedirect> 
     <LiveRedirect 
       to={"/user/#{e(@user, :character, :username, "")}/followed"} 
       class={"tab flex-1 tab-bordered", "tab-active": @selected_tab ==  "followed"}
     >
-      {l "Following"} ({e(@user, :character, :follow_count, :subject_count, 0)})
+      {l "Following"} 
+      <span :if={Bonfire.Me.Settings.get(:show_activity_counts, nil, assigns)}>
+        ({e(@user, :character, :follow_count, :subject_count, 0)})
+      </span>
     </LiveRedirect>   
   </div>
 

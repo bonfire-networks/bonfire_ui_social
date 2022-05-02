@@ -30,7 +30,7 @@
 
   <span class={"feed_activity_text sr-only", "font-medium": e(assigns, :my_boost , nil)}>
     {if e(assigns, :my_boost , nil), do: l("Boosted"), else: l("Boost")}
-    <!-- <span :if={e(@boost_count, 0) > 0}>{e(@boost_count, 0)}</span> -->
+    <span :if={e(@boost_count, 0) > 0 and Bonfire.Me.Settings.get(:show_activity_counts, nil, assigns)}>{e(@boost_count, 0)}</span>
   </span>
 
 </button>

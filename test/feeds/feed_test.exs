@@ -119,7 +119,7 @@ defmodule Bonfire.UI.Social.Feeds.FeedTest do
     {view, doc} = floki_live(conn, next)
     assert doc
       |> Floki.find("article")
-      |> length == 7
+      |> length == 6
   end
 
   test "Logged-out Home activities feed shows the instance outbox filtered by public boundary" do

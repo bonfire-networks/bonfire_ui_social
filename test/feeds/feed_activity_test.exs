@@ -15,30 +15,34 @@ defmodule Bonfire.UI.Social.Feeds.FeedActivityTest do
       # Create bob user
       account2 = fake_account!()
       bob = fake_user!(account2)
-      carl = fake_user!(account2)
-      demetrius = fake_user!(account)
-      eve = fake_user!(account)
-      # bob follows alice
-      Follows.follow(bob, alice)
-      attrs = %{post_content: %{summary: "summary", name: "test post name", html_body: "first post"}}
 
-      assert {:ok, post} = Posts.publish(current_user: alice, post_attrs: attrs, boundary: "public")
+      if Bonfire.Me.Settings.get(:show_activity_counts, nil, current_user: bob, current_account: account2) do
+        carl = fake_user!(account2)
+        demetrius = fake_user!(account)
+        eve = fake_user!(account)
+        # bob follows alice
+        Follows.follow(bob, alice)
+        attrs = %{post_content: %{summary: "summary", name: "test post name", html_body: "first post"}}
 
-      # Reply to the original post
-      attrs_reply = %{post_content: %{summary: "summary", name: "name 2", html_body: "reply to post"}, reply_to_id: post.id}
-      assert {:ok, post_reply} = Posts.publish(current_user: bob, post_attrs: attrs_reply, boundary: "public")
-      assert {:ok, post_reply} = Posts.publish(current_user: carl, post_attrs: attrs_reply, boundary: "public")
-      assert {:ok, post_reply} = Posts.publish(current_user: demetrius, post_attrs: attrs_reply, boundary: "public")
-      assert {:ok, post_reply} = Posts.publish(current_user: eve, post_attrs: attrs_reply, boundary: "public")
+        assert {:ok, post} = Posts.publish(current_user: alice, post_attrs: attrs, boundary: "public")
 
-      feed = Bonfire.Social.FeedActivities.my_feed(bob)
-      fp = feed.edges |> List.last() #|> IO.inspect
-       assert doc = render_component(Bonfire.UI.Social.ActivityLive, %{id: "activity", activity: fp.activity})
+        # Reply to the original post
+        attrs_reply = %{post_content: %{summary: "summary", name: "name 2", html_body: "reply to post"}, reply_to_id: post.id}
+        assert {:ok, post_reply} = Posts.publish(current_user: bob, post_attrs: attrs_reply, boundary: "public")
+        assert {:ok, post_reply} = Posts.publish(current_user: carl, post_attrs: attrs_reply, boundary: "public")
+        assert {:ok, post_reply} = Posts.publish(current_user: demetrius, post_attrs: attrs_reply, boundary: "public")
+        assert {:ok, post_reply} = Posts.publish(current_user: eve, post_attrs: attrs_reply, boundary: "public")
 
-      assert doc
-        |> Floki.parse_fragment
-        |> elem(1)
-        |> Floki.text =~ "Reply (4)"
+        feed = Bonfire.Social.FeedActivities.my_feed(bob)
+        fp = feed.edges |> List.last() #|> IO.inspect
+        assert doc = render_component(Bonfire.UI.Social.ActivityLive, %{id: "activity", activity: fp.activity})
+
+        assert doc
+          |> Floki.parse_fragment
+          |> elem(1)
+          |> Floki.text =~ "Reply (4)"
+      end
+
     end
 
     test "As a user, when I create a new post, I want to see my avatar image in the activity subject" do

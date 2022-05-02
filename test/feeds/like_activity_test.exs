@@ -11,6 +11,9 @@ defmodule Bonfire.UI.Social.Feeds.LikeActivityTest do
     # Create alice user
     account = fake_account!()
     alice = fake_user!(account)
+
+    if Bonfire.Me.Settings.get(:show_activity_counts, nil, current_user: alice, current_account: account) do
+
     # Create bob user
     account2 = fake_account!()
     bob = fake_user!(account2)
@@ -28,6 +31,7 @@ defmodule Bonfire.UI.Social.Feeds.LikeActivityTest do
     assert doc
       |> Floki.parse_fragment
       ~> Floki.text =~ "Like (1)"
+    end
   end
 
 
@@ -41,14 +45,15 @@ defmodule Bonfire.UI.Social.Feeds.LikeActivityTest do
     bob = fake_user!(account2)
     # bob follows alice
     Follows.follow(bob, alice)
+
     attrs = %{post_content: %{summary: "summary", name: "test post name", html_body: "first post"}}
 
     assert {:ok, post} = Posts.publish(current_user: alice, post_attrs: attrs, boundary: "public")
     assert {:ok, like} = Likes.like(bob, post)
 
     feed = Bonfire.Social.FeedActivities.my_feed(bob)
-    fp = feed.edges |> List.last() #|> IO.inspect
-    assert doc = render_component(Bonfire.UI.Social.ActivityLive, %{id: "activity", activity: fp.activity})
+    fp = feed.edges |> List.first() #|> IO.inspect
+    assert doc = render_component(Bonfire.UI.Social.ActivityLive, %{id: "activity", activity: fp.activity, __context__: %{current_user: bob}})
 
     assert doc
       |> Floki.parse_fragment
@@ -72,11 +77,17 @@ defmodule Bonfire.UI.Social.Feeds.LikeActivityTest do
 
       feed = Bonfire.Social.FeedActivities.my_feed(bob)
       fp = feed.edges |> List.first() #|> IO.inspect
-      assert doc = render_component(Bonfire.UI.Social.ActivityLive, %{id: "activity", activity: fp.activity})
+      assert doc = render_component(Bonfire.UI.Social.ActivityLive, %{id: "activity", activity: fp.activity, __context__: %{current_user: bob}})
 
-      assert doc
-      |> Floki.parse_fragment
-      ~> Floki.text =~ "Liked (2)"
+      if Bonfire.Me.Settings.get(:show_activity_counts, nil, current_user: bob, current_account: account2) do
+       assert doc
+        |> Floki.parse_fragment
+        ~> Floki.text =~ "Liked (2)"
+      else
+        assert doc
+        |> Floki.parse_fragment
+        ~> Floki.text =~ "Liked"
+      end
 
   end
 
@@ -115,7 +126,7 @@ defmodule Bonfire.UI.Social.Feeds.LikeActivityTest do
 
     feed = Bonfire.Social.FeedActivities.my_feed(bob)
     fp = feed.edges |> List.first() #|> IO.inspect
-    assert doc = render_component(Bonfire.UI.Social.ActivityLive, %{id: "activity", activity: fp.activity})
+    assert doc = render_component(Bonfire.UI.Social.ActivityLive, %{id: "activity", activity: fp.activity, __context__: %{current_user: bob}})
 
     assert doc
     |> Floki.parse_fragment
@@ -126,9 +137,13 @@ defmodule Bonfire.UI.Social.Feeds.LikeActivityTest do
     # Create alice user
     account = fake_account!()
     alice = fake_user!(account)
+
     # Create bob user
     account2 = fake_account!()
     bob = fake_user!(account2)
+
+    if Bonfire.Me.Settings.get(:show_activity_counts, nil, current_user: bob, current_account: account2) do
+
     # bob follows alice
     Follows.follow(bob, alice)
     # Alice posts a message
@@ -145,6 +160,7 @@ defmodule Bonfire.UI.Social.Feeds.LikeActivityTest do
     assert doc
     |> Floki.parse_fragment
     ~> Floki.text =~ "Like (1)"
+  end
   end
 
   test "As a user, when I unlike an activity, the label should change from liked to like" do

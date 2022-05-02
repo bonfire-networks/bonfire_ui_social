@@ -37,12 +37,12 @@
     :if={!e(@my_like, nil)}
     class="sr-only">
       {l "Like"}
-      <!-- <span :if={(e(@like_count, 0)) > 0}>{e(@like_count, 0)}</span> -->
+      <span :if={(e(@like_count, 0)) > 0 and Bonfire.Me.Settings.get(:show_activity_counts, nil, assigns)}>{e(@like_count, 0)}</span>
   </span>
   <span 
     :if={e(@my_like, nil)}
     class="sr-only">
       {l "Liked"}
-      <!-- <span :if={(e(@like_count, 0)) > 0}>{e(@like_count, 0)}</span> -->
+      <span :if={(e(@like_count, 0)) > 0 and Bonfire.Me.Settings.get(:show_activity_counts, nil, assigns)}>{e(@like_count, 0)}</span>
   </span>
 </button>

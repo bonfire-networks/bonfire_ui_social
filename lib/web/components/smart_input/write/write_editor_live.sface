@@ -6,8 +6,7 @@
       <TextArea
         opts={
           value: @smart_input_text,
-          placeholder: @smart_input_prompt,
-          "x-model": "smart_input_text"
+          placeholder: @smart_input_prompt
         }
         class={@textarea_class}
       />
@@ -24,8 +23,7 @@
     <TextArea
       opts={
         value: @smart_input_text,
-        placeholder: @smart_input_prompt,
-        "x-model": "smart_input_text"
+        placeholder: @smart_input_prompt
       }
       class={@textarea_class}
     />

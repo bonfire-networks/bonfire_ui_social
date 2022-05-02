@@ -176,19 +176,19 @@
           <Solid.UsersIcon class="w-5 h-5 text-base-content text-opacity-70" />
           <LiveRedirect to={"/user/#{e(@user, :character, :username, "")}/followers"}>
             <span class="ml-2 mr-2 text-sm text-base-content text-opacity-70 hover:underline">
-              <strong class="text-base-content">
+              <strong :if={Bonfire.Me.Settings.get(:show_activity_counts, nil, assigns)} class="text-base-content">
                 {e(@user, :character, :follow_count, :object_count, 0)}
               </strong>
-              Followers
+              {l "Followers"}
             </span>
           </LiveRedirect>
           <span class="text-base-content text-opacity-70">·</span>
           <LiveRedirect to={"/user/#{e(@user, :character, :username, "")}/followed"}>
             <span class="ml-2 text-sm text-base-content text-opacity-70 hover:underline">
-              <strong class="text-base-content">
+              <strong :if={Bonfire.Me.Settings.get(:show_activity_counts, nil, assigns)} class="text-base-content">
                 {e(@user, :character, :follow_count, :subject_count, 0)}
               </strong>
-              Following
+              {l "Following"}
             </span>
           </LiveRedirect>
         </div>
