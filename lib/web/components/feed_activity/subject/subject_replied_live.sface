@@ -1,3 +1,4 @@
+<div data-id="subject"> 
 {#if e(@object, :id, nil) != nil and e(@activity, :replied, :reply_to_id, nil) == nil and e(@activity, :id, nil) == nil and e(assigns, :showing_within, nil) == :widget}
   <div>
     <span>{l "In reply to"}</span>
@@ -29,3 +30,4 @@
   </div>
 </div>
 {/if}
+</div>

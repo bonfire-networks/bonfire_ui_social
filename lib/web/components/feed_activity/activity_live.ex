@@ -11,7 +11,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
   prop(activity_inception, :string)
   prop(showing_within, :any, default: :feed)
   prop(hide_reply, :boolean, default: false)
-  prop(class, :string, default: "")
+  prop(class, :string, required: false, default: "")
   prop(thread_object, :any)
   prop participants, :list
 
@@ -99,7 +99,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
       role="article"
       tabIndex="0"
       class={
-      "p-3 activity relative pl-16 group cursor-pointer " <> @class,
+      "p-3 activity relative pl-16 group cursor-pointer " <> e(assigns, :class, ""),
       "hover:bg-base-content hover:bg-opacity-5": e(@object, :id, nil) == nil or e(@activity, :replied, :reply_to_id, nil) != nil or e(@activity, :id, nil) != nil, # Hover the activity background unless it is a quoted activity
       "bg-neutral-content bg-opacity-5 hover:bg-neutral-content hover:bg-opacity-5 border-b border-base-300 p-0 pl-0": e(assigns, :viewing_main_object, nil) == true,
       "main_reply_to mb-2 p-2 py-1 mt-2 relative border-l-4 opacity-60 border-base-content border-opacity-40": e(@object, :id, nil) != nil and e(@activity, :replied, :reply_to_id, nil) == nil and e(@activity, :id, nil) == nil and e(assigns, :showing_within, nil) != :widget and e(assigns, :showing_within, nil) != :notification  and e(assigns, :showing_within, nil) != :search, # showing a quoted reply_to

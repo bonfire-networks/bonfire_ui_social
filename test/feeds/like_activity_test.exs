@@ -23,13 +23,11 @@ defmodule Bonfire.UI.Social.Feeds.LikeActivityTest do
 
     feed = Bonfire.Social.FeedActivities.my_feed(alice)
     fp = feed.edges |> List.first() #|> IO.inspect
-    assigns = [activity: fp.activity]
-    assert doc = render_surface(Bonfire.UI.Social.ActivityLive, assigns)
+    assert doc = render_component(Bonfire.UI.Social.ActivityLive, %{id: "activity", activity: fp.activity})
 
     assert doc
       |> Floki.parse_fragment
-      |> elem(1)
-      |> Floki.text =~ "Like (1)"
+      ~> Floki.text =~ "Like (1)"
   end
 
 
@@ -50,13 +48,11 @@ defmodule Bonfire.UI.Social.Feeds.LikeActivityTest do
 
     feed = Bonfire.Social.FeedActivities.my_feed(bob)
     fp = feed.edges |> List.last() #|> IO.inspect
-    assigns = [activity: fp.activity]
-    assert doc = render_surface(Bonfire.UI.Social.ActivityLive, assigns)
+    assert doc = render_component(Bonfire.UI.Social.ActivityLive, %{id: "activity", activity: fp.activity})
 
     assert doc
       |> Floki.parse_fragment
-      |> elem(1)
-      |> Floki.text =~ "Liked"
+      ~> Floki.text =~ "Liked"
   end
 
   test "As a user, when I like an activity the counter should increment" do
@@ -76,13 +72,11 @@ defmodule Bonfire.UI.Social.Feeds.LikeActivityTest do
 
       feed = Bonfire.Social.FeedActivities.my_feed(bob)
       fp = feed.edges |> List.first() #|> IO.inspect
-      assigns = [activity: fp.activity]
-    assert doc = render_surface(Bonfire.UI.Social.ActivityLive, assigns)
+      assert doc = render_component(Bonfire.UI.Social.ActivityLive, %{id: "activity", activity: fp.activity})
 
       assert doc
       |> Floki.parse_fragment
-      |> elem(1)
-      |> Floki.text =~ "Liked (2)"
+      ~> Floki.text =~ "Liked (2)"
 
   end
 
@@ -96,13 +90,11 @@ defmodule Bonfire.UI.Social.Feeds.LikeActivityTest do
     assert {:ok, like} = Likes.like(bob, post)
     feed = Bonfire.Social.FeedActivities.my_feed(alice)
     fp = feed.edges |> List.first() #|> IO.inspect
-    assigns = [activity: fp.activity]
-    assert doc = render_surface(Bonfire.UI.Social.ActivityLive, assigns)
+    assert doc = render_component(Bonfire.UI.Social.ActivityLive, %{id: "activity", activity: fp.activity})
 
     assert doc
     |> Floki.parse_fragment
-    |> elem(1)
-    |> Floki.find("[data-id=subject_name]")
+    ~> Floki.find("[data-id=subject_name]")
     |> Floki.text =~ alice.profile.name
   end
 
@@ -123,13 +115,11 @@ defmodule Bonfire.UI.Social.Feeds.LikeActivityTest do
 
     feed = Bonfire.Social.FeedActivities.my_feed(bob)
     fp = feed.edges |> List.first() #|> IO.inspect
-    assigns = [activity: fp.activity]
-    assert doc = render_surface(Bonfire.UI.Social.ActivityLive, assigns)
+    assert doc = render_component(Bonfire.UI.Social.ActivityLive, %{id: "activity", activity: fp.activity})
 
     assert doc
     |> Floki.parse_fragment
-    |> elem(1)
-    |> Floki.text =~ "Liked"
+    ~> Floki.text =~ "Liked"
   end
 
   test "As a user when I unlike an activity, the counter should decrement" do
@@ -150,13 +140,11 @@ defmodule Bonfire.UI.Social.Feeds.LikeActivityTest do
 
     feed = Bonfire.Social.FeedActivities.my_feed(bob)
     fp = feed.edges |> List.first() #|> IO.inspect
-    assigns = [activity: fp.activity]
-    assert doc = render_surface(Bonfire.UI.Social.ActivityLive, assigns)
+    assert doc = render_component(Bonfire.UI.Social.ActivityLive, %{id: "activity", activity: fp.activity})
 
     assert doc
     |> Floki.parse_fragment
-    |> elem(1)
-    |> Floki.text =~ "Like (1)"
+    ~> Floki.text =~ "Like (1)"
   end
 
   test "As a user, when I unlike an activity, the label should change from liked to like" do
@@ -177,13 +165,11 @@ defmodule Bonfire.UI.Social.Feeds.LikeActivityTest do
 
     feed = Bonfire.Social.FeedActivities.my_feed(bob)
     fp = feed.edges |> List.first() #|> IO.inspect
-    assigns = [activity: fp.activity]
-    assert doc = render_surface(Bonfire.UI.Social.ActivityLive, assigns)
+    assert doc = render_component(Bonfire.UI.Social.ActivityLive, %{id: "activity", activity: fp.activity})
 
     assert doc
     |> Floki.parse_fragment
-    |> elem(1)
-    |> Floki.text =~ "Like"
+    ~> Floki.text =~ "Like"
   end
 
 end

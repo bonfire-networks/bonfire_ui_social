@@ -1,3 +1,4 @@
+<div data-id="subject"> 
 {#case e(assigns, :showing_within, nil)}
   {#match :thread}
     <div class={"flex items-center mb-2"}>
@@ -24,7 +25,7 @@
         <div class="text-xs font-medium text-base-content text-opacity-80">
           <LiveRedirect
             aria-label={e(@activity, :subject, :character, :username, "") <> " profile"}
-            class="font-medium subject_minimal"
+            class="font-medium "
             to={path(e(@activity, :subject, :character, nil)) }>
             {e(@activity, :subject, :profile, :name, "Anonymous")}
           </LiveRedirect>
@@ -58,7 +59,7 @@
         <div class="text-sm font-medium text-base-content text-opacity-80">
           <LiveRedirect
             aria-label={e(@activity, :subject, :character, :username, "") <> " profile"}
-            class="font-medium subject_minimal"
+            class="font-medium "
             to={path(e(@activity, :subject, :character, nil)) }>
             {e(@activity, :subject, :profile, :name, "Anonymous")}
           </LiveRedirect>
@@ -136,7 +137,7 @@
           <div class="text-sm font-medium text-base-content text-opacity-80">
             <LiveRedirect
               aria-label={e(@activity, :subject, :character, :username, "") <> " profile"}
-              class="font-medium subject_minimal"
+              class="font-medium "
               to={path(e(@activity, :subject, :character, nil)) }>
               {e(@activity, :subject, :profile, :name, nil) || e(@activity, :subject, :character, :username, nil)}
             </LiveRedirect>
@@ -154,7 +155,7 @@
           <div class="text-sm font-medium text-base-content text-opacity-80">
             <LiveRedirect
               aria-label={e(@activity, :subject, :character, :username, "") <> " profile"}
-              class="font-medium subject_minimal"
+              class="font-medium "
               to={path(e(@activity, :subject, :character, nil)) }>
               {e(@activity, :subject, :profile, :name, nil) || e(@activity, :subject, :character, :username, nil)}
             </LiveRedirect>
@@ -183,7 +184,7 @@
           <div class="text-sm font-medium text-base-content text-opacity-80">
             <LiveRedirect
               aria-label={e(@activity, :subject, :character, :username, "") <> " profile"}
-              class="font-medium subject_minimal"
+              class="font-medium "
               to={path(e(@activity, :subject, :character, nil)) }>
               {e(@activity, :subject, :profile, :name, nil) || e(@activity, :subject, :character, :username, nil)}
             </LiveRedirect>
@@ -232,7 +233,7 @@
             <div class="text-sm font-medium text-base-content text-opacity-80">
               <LiveRedirect
                 aria-label={e(@activity, :subject, :character, :username, "") <> " profile"}
-                class="font-medium subject_minimal"
+                class="font-medium "
                 to={path(e(@activity, :subject, :character, nil)) }>
                 {e(@activity, :subject, :profile, :name, nil) || e(@activity, :subject, :character, :username, nil)}
               </LiveRedirect>
@@ -242,3 +243,4 @@
         </div>      
     </div>
 {/case}
+</div>

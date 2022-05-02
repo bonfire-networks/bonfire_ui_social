@@ -28,6 +28,8 @@ defmodule Bonfire.UI.Social.ConnCase do
       import Bonfire.UI.Social.Test.ConnHelpers
       import Bonfire.UI.Social.Test.FakeHelpers
       import Bonfire.Me.Fake
+      import Where
+      use Arrows
       # alias Bonfire.UI.Social.Web.Router.Helpers, as: Routes
 
       # The default endpoint for testing

@@ -65,8 +65,7 @@ defmodule Bonfire.UI.Social.Feeds.FeedTest do
     assert doc = render_surface(Bonfire.UI.Social.FeedViewLive, assigns)
     assert doc
       |> Floki.parse_fragment
-      |> elem(1)
-      |> Floki.find("[data-id=load_more]")
+      ~> Floki.find("[data-id=load_more]")
       |> Floki.text() =~ ""
   end
 
@@ -83,8 +82,7 @@ defmodule Bonfire.UI.Social.Feeds.FeedTest do
     assert doc = render_surface(Bonfire.UI.Social.FeedViewLive, assigns)
     assert doc
       |> Floki.parse_fragment
-      |> elem(1)
-      |> Floki.find("[data-id=load_more]")
+      ~> Floki.find("[data-id=load_more]")
       |> Floki.text() =~ "Load more"
   end
 
@@ -121,7 +119,7 @@ defmodule Bonfire.UI.Social.Feeds.FeedTest do
     {view, doc} = floki_live(conn, next)
     assert doc
       |> Floki.find("article")
-      |> length == 6
+      |> length == 7
   end
 
   test "Logged-out Home activities feed shows the instance outbox filtered by public boundary" do
@@ -147,11 +145,12 @@ defmodule Bonfire.UI.Social.Feeds.FeedTest do
     publish_multiple_times(admin_attrs, carl, total_posts, "admins")
     assert {:ok, boost} = Boosts.boost(alice, post)
 
-    next = "/"
+    next = "/local"
+    conn = conn()
     {view, doc} = floki_live(conn, next)
     assert doc
       |> Floki.find("article")
-      |> length == 6
+      |> length == 5
   end
 
   test "Local feed shows the instance outbox filtered by local circle" do

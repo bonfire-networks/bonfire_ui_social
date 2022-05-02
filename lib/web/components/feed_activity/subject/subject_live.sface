@@ -1,3 +1,4 @@
+<div data-id="subject"> 
 {#if  e(@object, :id, nil) != nil and e(@activity, :replied, :reply_to_id, nil) == nil and e(@activity, :id, nil) == nil and e(assigns, :showing_within, nil) == :widget}
   <div class="flex items-center mt-1 space-x-1 text-xs font-medium text-opacity-50 text-base-content">
     <Solid.ReplyIcon class="w-3 h-3" />
@@ -159,3 +160,4 @@
     </div>
   </div>
 {/if}
+</div>

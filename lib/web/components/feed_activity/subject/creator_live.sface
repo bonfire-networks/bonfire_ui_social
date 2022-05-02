@@ -1,4 +1,4 @@
-<div class="flex items-center">
+<div data-id="subject" class="flex items-center">
   <Bonfire.UI.Social.Activity.AvatarLive profile={@profile} />
   <div class="flex justify-between flex-1 ml-2">
     <div class="flex items-center text-base text-primary-content-700 ">

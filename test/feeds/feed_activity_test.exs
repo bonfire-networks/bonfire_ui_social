@@ -33,8 +33,7 @@ defmodule Bonfire.UI.Social.Feeds.FeedActivityTest do
 
       feed = Bonfire.Social.FeedActivities.my_feed(bob)
       fp = feed.edges |> List.last() #|> IO.inspect
-      assigns = [activity: fp.activity]
-      assert doc = render_surface(Bonfire.UI.Social.ActivityLive, assigns)
+       assert doc = render_component(Bonfire.UI.Social.ActivityLive, %{id: "activity", activity: fp.activity})
 
       assert doc
         |> Floki.parse_fragment
@@ -50,8 +49,7 @@ defmodule Bonfire.UI.Social.Feeds.FeedActivityTest do
        assert {:ok, post} = Posts.publish(current_user: alice, post_attrs: attrs, boundary: "public")
        feed = Bonfire.Social.FeedActivities.my_feed(alice)
        fp = feed.edges |> List.first() #|> IO.inspect
-       assigns = [activity: fp.activity]
-      assert doc = render_surface(Bonfire.UI.Social.ActivityLive, assigns)
+        assert doc = render_component(Bonfire.UI.Social.ActivityLive, %{id: "activity", activity: fp.activity})
 
        assert doc
        |> Floki.parse_fragment
@@ -67,13 +65,11 @@ defmodule Bonfire.UI.Social.Feeds.FeedActivityTest do
       assert {:ok, post} = Posts.publish(current_user: alice, post_attrs: attrs, boundary: "public")
       feed = Bonfire.Social.FeedActivities.my_feed(alice)
       fp = feed.edges |> List.first() #|> IO.inspect
-      assigns = [activity: fp.activity]
-      assert doc = render_surface(Bonfire.UI.Social.ActivityLive, assigns)
+       assert doc = render_component(Bonfire.UI.Social.ActivityLive, %{id: "activity", activity: fp.activity})
 
       assert doc
       |> Floki.parse_fragment
-      |> elem(1)
-      |> Floki.find("[data-id=subject_name]")
+      ~> Floki.find("[data-id=subject_name]")
       |> Floki.text() =~ alice.profile.name
     end
 
@@ -84,13 +80,11 @@ defmodule Bonfire.UI.Social.Feeds.FeedActivityTest do
       assert {:ok, post} = Posts.publish(current_user: alice, post_attrs: attrs, boundary: "public")
       feed = Bonfire.Social.FeedActivities.my_feed(alice)
       fp = feed.edges |> List.first() #|> IO.inspect
-      assigns = [activity: fp.activity]
-      assert doc = render_surface(Bonfire.UI.Social.ActivityLive, assigns)
+       assert doc = render_component(Bonfire.UI.Social.ActivityLive, %{id: "activity", activity: fp.activity})
 
       assert doc
       |> Floki.parse_fragment
-      |> elem(1)
-      |> Floki.find("span.subject_username")
+      ~> Floki.find("span.subject_username")
       |> Floki.text() =~ alice.character.username
     end
 
@@ -101,13 +95,11 @@ defmodule Bonfire.UI.Social.Feeds.FeedActivityTest do
       assert {:ok, post} = Posts.publish(current_user: alice, post_attrs: attrs, boundary: "public")
       feed = Bonfire.Social.FeedActivities.my_feed(alice)
       fp = feed.edges |> List.first() #|> IO.inspect
-      assigns = [activity: fp.activity]
-      assert doc = render_surface(Bonfire.UI.Social.ActivityLive, assigns)
+       assert doc = render_component(Bonfire.UI.Social.ActivityLive, %{id: "activity", activity: fp.activity})
 
       assert doc
       |> Floki.parse_fragment
-      |> elem(1)
-      |> Floki.find("div.object_body")
+      ~> Floki.find("div.object_body")
       |> Floki.text() =~ "first post"
     end
 
@@ -119,13 +111,11 @@ defmodule Bonfire.UI.Social.Feeds.FeedActivityTest do
       assert {:ok, post} = Posts.publish(current_user: alice, post_attrs: attrs, boundary: "public")
       feed = Bonfire.Social.FeedActivities.my_feed(alice)
       fp = feed.edges |> List.first() #|> IO.inspect
-      assigns = [activity: fp.activity]
-      assert doc = render_surface(Bonfire.UI.Social.ActivityLive, assigns)
+       assert doc = render_component(Bonfire.UI.Social.ActivityLive, %{id: "activity", activity: fp.activity})
 
       assert doc
       |> Floki.parse_fragment
-      |> elem(1)
-      |> Floki.find("a.subject_timestamp")
+      ~> Floki.find("a.subject_timestamp")
       |> Floki.text() =~ "now"
     end
 

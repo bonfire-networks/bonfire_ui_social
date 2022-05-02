@@ -6,19 +6,21 @@
     <Solid.UserAddIcon class="w-5 h-5 text-info" />      
   </div>
   <div class="flex-1 ml-2">
-    <div class="text-sm font-medium text-base-content text-opacity-80">
-      <LiveRedirect
-        :if={e(@activity, :subject, :id, nil) != e(current_user(assigns), :id, nil)}
-        to={path(e(@activity, :subject, nil))}
-        aria-label={e(@activity, :subject, :character, :username, "") <> " profile"}
-        class="font-medium subject_minimal"
-        >
-        {e(@activity, :subject, :profile, :name, "Anonymous")}
-      </LiveRedirect>
-      <span :if={e(@activity, :subject, :id, nil) == e(current_user(assigns), :id, nil)}>
-        you
+    <div 
+      class="text-sm font-medium text-base-content text-opacity-80">
+      <span data-id="subject">
+        <LiveRedirect
+          :if={e(@activity, :subject, :id, nil) != e(current_user(assigns), :id, nil)}
+          to={path(e(@activity, :subject, nil))}
+          aria-label={e(@activity, :subject, :character, :username, "") <> " profile"}
+          class="font-medium "
+          >
+          {e(@activity, :subject, :profile, :name, "Anonymous")}
+        </LiveRedirect>
+        <span :if={e(@activity, :subject, :id, nil) == e(current_user(assigns), :id, nil)}>
+          you
+        </span>
       </span>
-
       {raw @verb_display}
 
       <!-- then summarise the object -->
@@ -63,7 +65,8 @@
 {#else}
 
 <!-- first show the subject -->
-<div class={"flex items-center mb-3 -ml-7"}\
+<div 
+  class={"flex items-center mb-3 -ml-7"}
   :if={e(assigns, :showing_within, nil) not in [:search]}
 >
   <div 
@@ -71,17 +74,20 @@
     <Solid.UserAddIcon class="w-5 h-5 text-info" />      
   </div>
   <div class="flex-1 ml-2">
-    <div class="text-sm font-medium text-base-content text-opacity-80">
-      <LiveRedirect
-        :if={e(@activity, :subject, :id, nil) != e(current_user(assigns), :id, nil)}
-        to={path(e(@activity, :subject, nil))}
-        aria-label={e(@activity, :subject, :character, :username, "") <> " profile"}
-        class="font-medium subject_minimal"
-        >
-        {e(@activity, :subject, :profile, :name, "Anonymous")}
-      </LiveRedirect>
-      <span :if={e(@activity, :subject, :id, nil) == e(current_user(assigns), :id, nil)}>
-        you
+    <div 
+      class="text-sm font-medium text-base-content text-opacity-80">
+      <span data-id="subject">
+        <LiveRedirect
+          :if={e(@activity, :subject, :id, nil) != e(current_user(assigns), :id, nil)}
+          to={path(e(@activity, :subject, nil))}
+          aria-label={e(@activity, :subject, :character, :username, "") <> " profile"}
+          class="font-medium "
+          >
+          {e(@activity, :subject, :profile, :name, "Anonymous")}
+        </LiveRedirect>
+        <span :if={e(@activity, :subject, :id, nil) == e(current_user(assigns), :id, nil)}>
+          you
+        </span>
       </span>
 
       {raw @verb_display}
