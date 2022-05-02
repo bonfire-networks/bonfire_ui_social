@@ -73,7 +73,7 @@
               </span>
             </Label>
             <div class="relative" x-data="{show: false}">
-              <input name="login_fields[password]" placeholder="Type your password" :type="show ? 'text' : 'password'" required class="w-full input input-bordered" />
+              <input name="login_fields[password]" type="password" placeholder="Type your password" :type="show ? 'text' : 'password'" required class="w-full input input-bordered" />
               <div x-show="show == false" @click="show = true" class="absolute cursor-pointer top-2 right-3 btn btn-ghost btn-circle btn-sm">
                 <Solid.EyeOffIcon class="w-4 h-4" />
               </div>
