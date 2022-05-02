@@ -4,15 +4,15 @@ defmodule Bonfire.UI.Social.ActivityLive do
   alias Bonfire.Social.Activities
   import Where
 
-  prop(activity, :map)
-  prop(object, :any)
-  prop(verb_default, :string)
-  prop(viewing_main_object, :boolean, default: false)
-  prop(activity_inception, :string)
-  prop(showing_within, :any, default: :feed)
-  prop(hide_reply, :boolean, default: false)
-  prop(class, :string, required: false, default: "")
-  prop(thread_object, :any)
+  prop activity, :map
+  prop object, :any
+  prop verb_default, :string
+  prop viewing_main_object, :boolean, default: false
+  prop activity_inception, :string
+  prop showing_within, :any, default: :feed
+  prop hide_reply, :boolean, default: false
+  prop class, :string, required: false, default: ""
+  prop thread_object, :any
   prop participants, :list
 
   # TODO: put in config and/or autogenerate with Verbs genserver
