@@ -42,10 +42,10 @@
               <span class="sr-only">{l "Messages"}</span>
           </LivePatch> -->
         </div>
-        <div class="flex flex-1 tooltip tooltip-bottom" data-tip={l "Likes / Favourites"}>
+        <div class="flex flex-1 tooltip tooltip-bottom" data-tip={l "My Favourites"}>
           <LivePatch to={"/my/likes"} class={"tab flex-1 hover:bg-base-content hover:bg-opacity-5 hover:rounded-lg text-neutral-content text-opacity-70", "tab-active text-opacity-60 relative lined": @page == "likes"}>
               <Solid.StarIcon class="w-5 h-5 mr-1" />
-              <span class="sr-only">{l "Likes / Favourites"}</span>
+              <span class="sr-only">{l "My Favourites"}</span>
           </LivePatch>
         </div>
 

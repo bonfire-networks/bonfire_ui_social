@@ -5,7 +5,7 @@
       class={"tab flex-1 tab-bordered", "tab-active": @selected_tab ==  "followers"}
     >
       {l "Followers"} 
-      <span :if={Bonfire.Me.Settings.get(:show_activity_counts, nil, assigns)}>
+      <span :if={Bonfire.Me.Settings.get([:ui, :show_activity_counts], nil, assigns)}>
         ({e(@user, :character, :follow_count, :object_count, 0)})
       </span>
     </LiveRedirect> 
@@ -14,7 +14,7 @@
       class={"tab flex-1 tab-bordered", "tab-active": @selected_tab ==  "followed"}
     >
       {l "Following"} 
-      <span :if={Bonfire.Me.Settings.get(:show_activity_counts, nil, assigns)}>
+      <span :if={Bonfire.Me.Settings.get([:ui, :show_activity_counts], nil, assigns)}>
         ({e(@user, :character, :follow_count, :subject_count, 0)})
       </span>
     </LiveRedirect>   

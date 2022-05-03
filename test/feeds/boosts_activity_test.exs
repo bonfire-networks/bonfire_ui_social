@@ -12,7 +12,7 @@ defmodule Bonfire.UI.Social.Feeds.BoostsActivityTest do
     account = fake_account!()
     alice = fake_user!(account)
 
-    if Bonfire.Me.Settings.get(:show_activity_counts, nil, current_user: alice, current_account: account) do
+    if Bonfire.Me.Settings.get([:ui, :show_activity_counts], nil, current_user: alice, current_account: account) do
     # Create bob user
     account2 = fake_account!()
     bob = fake_user!(account2)
@@ -63,7 +63,7 @@ defmodule Bonfire.UI.Social.Feeds.BoostsActivityTest do
     fp = feed.edges |> List.first() #|> IO.inspect
     assert doc = render_component(Bonfire.UI.Social.ActivityLive, %{id: "activity", activity: fp.activity, __context__: %{current_user: bob}})
 
-    if Bonfire.Me.Settings.get(:show_activity_counts, nil, current_user: bob, current_account: account2) do
+    if Bonfire.Me.Settings.get([:ui, :show_activity_counts], nil, current_user: bob, current_account: account2) do
       assert doc
       |> Floki.parse_fragment
       ~> Floki.find("[data-id=boost_action]")
@@ -146,7 +146,7 @@ defmodule Bonfire.UI.Social.Feeds.BoostsActivityTest do
     account2 = fake_account!()
     bob = fake_user!(account2)
 
-    if Bonfire.Me.Settings.get(:show_activity_counts, nil, current_user: bob, current_account: account2) do
+    if Bonfire.Me.Settings.get([:ui, :show_activity_counts], nil, current_user: bob, current_account: account2) do
 
     # bob follows alice
     Follows.follow(bob, alice)
@@ -176,7 +176,7 @@ defmodule Bonfire.UI.Social.Feeds.BoostsActivityTest do
     account2 = fake_account!()
     bob = fake_user!(account2)
 
-    if Bonfire.Me.Settings.get(:show_activity_counts, nil, current_user: bob, current_account: account2) do
+    if Bonfire.Me.Settings.get([:ui, :show_activity_counts], nil, current_user: bob, current_account: account2) do
 
     # bob follows alice
     Follows.follow(bob, alice)

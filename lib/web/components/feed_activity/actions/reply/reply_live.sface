@@ -19,7 +19,7 @@
       </div>
     </div>
     <span 
-    :if={Bonfire.Me.Settings.get(:show_activity_counts, nil, assigns)}
+    :if={Bonfire.Me.Settings.get([:ui, :show_activity_counts], nil, assigns)}
     class="ml-1 text-xs text-base-content text-opacity-70">
       {#if count(@replied)>0 }
         {count(@replied)} 

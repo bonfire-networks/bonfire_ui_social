@@ -1,57 +1,16 @@
 <ul class="menu bg-base-100 rounded-b-xl">
+{#for tag <- Bonfire.Tag.Tags.list_trending(Bonfire.Me.Settings.get([:ui, :show_trending_tags_for_last_x_days], nil, assigns), 10)}
   <li class="">
     <div class="flex flex-row items-center">
       <div class="flex flex-col items-start flex-1 gap-0 text-left">
-        <div class="font-bold text-base-content">#eurovision</div>
-        <div class="text-xs font-light text-base-content text-opacity-80">122 post</div>
+        <LivePatch to={path(e(tag, :tag, nil) || e(tag, :tag_id, nil))}>
+          <div class="font-bold text-base-content">{e(tag, :tag, :profile, :name, nil) || e(tag, :tag, :named, :name, nil) || e(tag, :tag, :id, nil)}</div>
+          <div class="text-xs font-light text-base-content text-opacity-80">{e(tag, :count, 0)}</div>
+        </LivePatch>
       </div>
       <div><Outline.DotsHorizontalIcon class="w-5 h-5 text-base-content text-opacity-60" /></div>
     </div>
   </li>
-  <li class="">
-    <div class="flex flex-row items-center">
-      <div class="flex flex-col items-start flex-1 gap-0 text-left">
-        <div class="font-bold text-base-content">#eurovision</div>
-        <div class="text-xs font-light text-base-content text-opacity-80">122 post</div>
-      </div>
-      <div><Outline.DotsHorizontalIcon class="w-5 h-5 text-base-content text-opacity-60" /></div>
-    </div>
-  </li>
-  <li class="">
-    <div class="flex flex-row items-center">
-      <div class="flex flex-col items-start flex-1 gap-0 text-left">
-        <div class="font-bold text-base-content">#eurovision</div>
-        <div class="text-xs font-light text-base-content text-opacity-80">122 post</div>
-      </div>
-      <div><Outline.DotsHorizontalIcon class="w-5 h-5 text-base-content text-opacity-60" /></div>
-    </div>
-  </li>
-  <li class="">
-    <div class="flex flex-row items-center">
-      <div class="flex flex-col items-start flex-1 gap-0 text-left">
-        <div class="font-bold text-base-content">#eurovision</div>
-        <div class="text-xs font-light text-base-content text-opacity-80">122 post</div>
-      </div>
-      <div><Outline.DotsHorizontalIcon class="w-5 h-5 text-base-content text-opacity-60" /></div>
-    </div>
-  </li>
-  <li class="">
-    <div class="flex flex-row items-center">
-      <div class="flex flex-col items-start flex-1 gap-0 text-left">
-        <div class="font-bold text-base-content">#eurovision</div>
-        <div class="text-xs font-light text-base-content text-opacity-80">122 post</div>
-      </div>
-      <div><Outline.DotsHorizontalIcon class="w-5 h-5 text-base-content text-opacity-60" /></div>
-    </div>
-  </li>
-  <li class="">
-    <div class="flex flex-row items-center">
-      <div class="flex flex-col items-start flex-1 gap-0 text-left">
-        <div class="font-bold text-base-content">#eurovision</div>
-        <div class="text-xs font-light text-base-content text-opacity-80">122 post</div>
-      </div>
-      <div><Outline.DotsHorizontalIcon class="w-5 h-5 text-base-content text-opacity-60" /></div>
-    </div>
-  </li>
+{/for}
 </ul>
 

@@ -25,18 +25,19 @@
          <Bonfire.UI.Social.HeaderUserMobileLive 
           page={@page}
           current_user={current_user(assigns)}  />
+
         {@inner_content}
+
       </div>
       <div class="w-[285px] justify-start hidden h-full overflow-hidden pointer-events-none tablet-lg:flex">
         <div class="top-[80px] w-full bottom-[16px]  pointer-events-auto">
-          {#if current_user(assigns) }
+          {#if Bonfire.Me.Settings.get([:ui, :show_trending_tags_for_last_x_days], nil, assigns) }
             <Bonfire.UI.Social.WidgetLive 
-              widget_title="Popular hashtags"
+              widget_title="Trending topics"
               current_user={current_user(assigns)}
             >
               <Bonfire.UI.Social.WidgetTagsLive 
                 current_user={current_user(assigns)}
-                id="widget_tags"
               />
             </Bonfire.UI.Social.WidgetLive>
           {#else}
