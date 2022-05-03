@@ -7,9 +7,8 @@ defmodule Bonfire.UI.Social.ThreadLive do
   alias Bonfire.Me.Web.CreateUserLive
   # import Bonfire.Me.Integration
 
-
-  # prop replies, :any
-  # prop threaded_replies, :any, default: []
+  prop replies, :any
+  prop threaded_replies, :any, default: []
   prop page_info, :any
   prop activity, :any
   prop object, :any
@@ -24,7 +23,7 @@ defmodule Bonfire.UI.Social.ThreadLive do
   prop reverse_order, :any
 
   def update(%{replies: replies, threaded_replies: threaded_replies, page_info: page_info} = assigns, socket) when is_list(replies) and is_list(threaded_replies) and is_map(page_info) do
-    debug("ThreadLive: showing preloaded replies")
+    info("ThreadLive: showing preloaded replies")
     assigns |> assign_thread(socket)
   end
 

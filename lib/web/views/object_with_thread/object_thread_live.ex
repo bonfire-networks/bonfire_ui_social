@@ -22,6 +22,9 @@ defmodule  Bonfire.UI.Social.ObjectThreadLive do
   prop textarea_class, :string
   prop smart_input_class, :string
   prop replied_activity_class, :string
+  prop replies, :any
+  prop threaded_replies, :any, default: []
+  prop page_info, :any
 
   def participants(assigns) do
     if e(assigns, :participants, nil) do

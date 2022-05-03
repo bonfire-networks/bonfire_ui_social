@@ -14,6 +14,7 @@ defmodule Bonfire.UI.Social.SmartInputLive do
   prop with_rich_editor, :boolean, required: false
   prop activity, :any
   prop object, :any
+  prop activity_inception, :any
 
   # Classes to customize the smart input appearance
   prop textarea_class, :string, default: "textarea w-full prose prose-sm bg-slate-50 text-slate-800"

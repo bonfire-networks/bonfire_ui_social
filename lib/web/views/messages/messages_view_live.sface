@@ -39,6 +39,7 @@
         create_activity_type={e(assigns, :create_activity_type, nil)}
         to_circles={e(assigns, :to_circles, [])}
         participants={e(assigns, :participants, [])}
+        replies={e(assigns, :replies, nil)}
         smart_input_text={@smart_input_text}
         smart_input_prompt={e(assigns, :smart_input_prompt, "")}
         thread_id={@thread_id}

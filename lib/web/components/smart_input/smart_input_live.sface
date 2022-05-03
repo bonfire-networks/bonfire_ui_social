@@ -14,6 +14,7 @@
         object={@object}
         class={@replied_activity_class}
         showing_within={:smart_input}
+        activity_inception={e(assigns, :activity_inception, nil)}
       />
     
       {#if Bonfire.Common.Config.get([:ui, :default_smart_input])}

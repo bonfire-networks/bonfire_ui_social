@@ -24,7 +24,7 @@ defmodule Bonfire.UI.Social.Feeds.Notifications.ReplyTest do
       attrs_reply = %{post_content: %{summary: "summary", name: "name 2", html_body: "<p>reply to first post</p>"}, reply_to_id: post.id}
       assert {:ok, post_reply} = Posts.publish(bob, attrs_reply, "public") #|> IO.inspect
 
-      feed = Bonfire.Social.FeedActivities.feed(:notifications, alice)
+      feed = Bonfire.Social.FeedActivities.feed(:notifications, current_user: alice)
       fp = feed.edges
       # |> debug()
       |> List.first()
@@ -58,7 +58,7 @@ defmodule Bonfire.UI.Social.Feeds.Notifications.ReplyTest do
       attrs_reply = %{post_content: %{summary: "summary", name: "name 2", html_body: "reply to first post"}, reply_to_id: post.id}
       assert {:ok, post_reply} = Posts.publish(bob, attrs_reply, "public") #|> IO.inspect
 
-      feed = Bonfire.Social.FeedActivities.feed(:notifications, alice)
+      feed = Bonfire.Social.FeedActivities.feed(:notifications, current_user: alice)
       fp = feed.edges
       # |> debug()
       |> List.first()
@@ -90,7 +90,7 @@ defmodule Bonfire.UI.Social.Feeds.Notifications.ReplyTest do
       attrs_reply = %{post_content: %{summary: "summary", name: "name 2", html_body: "reply to first post"}, reply_to_id: post.id}
       assert {:ok, post_reply} = Posts.publish(bob, attrs_reply, "public") #|> IO.inspect
 
-      feed = Bonfire.Social.FeedActivities.feed(:notifications, alice)
+      feed = Bonfire.Social.FeedActivities.feed(:notifications, current_user: alice)
       fp = feed.edges
       # |> debug()
       |> List.first()
@@ -123,7 +123,7 @@ defmodule Bonfire.UI.Social.Feeds.Notifications.ReplyTest do
       attrs_reply = %{post_content: %{summary: "summary", name: "name 2", html_body: "reply to first post"}, reply_to_id: post.id}
       assert {:ok, post_reply} = Posts.publish(bob, attrs_reply, "public") #|> IO.inspect
 
-      feed = Bonfire.Social.FeedActivities.feed(:notifications, alice)
+      feed = Bonfire.Social.FeedActivities.feed(:notifications, current_user: alice)
       fp = feed.edges
       # |> debug()
       |> List.first()

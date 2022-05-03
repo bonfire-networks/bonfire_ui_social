@@ -7,13 +7,12 @@
   phx-value-context={e(assigns, :context, "")} 
   phx-value-after={e(@page_info, :end_cursor, "")} 
   class="flex justify-center w-full p-3 mx-auto border-t border-base-300"
+  x-data="{show: true}"
 > 
-  <a href={"#"<>e(@page_info, :end_cursor, "unknown")} class="w-full p-2 normal-case btn btn-sm btn-wide ">
+  <a href={"#"<>e(@page_info, :end_cursor, "unknown")} class="w-full p-2 normal-case btn btn-sm btn-wide" style="display: none" x-show="show">
     {l "Load more"}
-    <noscript>
-      <a href={"?#{@live_handler}[after]=" <> e(@page_info, :end_cursor, "unknown")} class="text-underline">
-        {l "(click here)"}
-      </a>
-    </noscript>
+  </a>
+  <a href={"?#{@live_handler}[after]=" <> e(@page_info, :end_cursor, "unknown")} class="text-underline" x-show="!show">
+    {l "Next page"}
   </a>
 </div>

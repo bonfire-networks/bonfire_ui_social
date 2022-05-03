@@ -20,6 +20,9 @@
       thread_id={@thread_id}
       thread_mode={e(assigns, :thread_mode, nil)}
       reverse_order={e(assigns, :reverse_order, nil)}
+      replies={e(assigns, :replies, nil)}
+      threaded_replies={e(assigns, :threaded_replies, [])}
+      page_info={e(assigns, :page_info, [])}
       activity={@activity}
       object={@object}
       url={@url}
