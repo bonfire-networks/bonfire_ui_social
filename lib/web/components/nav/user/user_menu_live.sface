@@ -14,7 +14,7 @@
         alt="current user profile image"
       />
       <div class="flex flex-col items-start flex-1 min-w-0">
-        <div class="text-sm font-semibold w-[140px] truncate text-ellipsis text-neutral-content">{e(assigns, :current_user, :profile, :name, "Unknown")}</div>
+        <div class="text-sm text-left font-semibold w-[140px] truncate text-ellipsis text-neutral-content">{e(assigns, :current_user, :profile, :name, "Unknown")}</div>
         <!-- <span class="-mt-1 text-sm font-light text-neutral-content text-opacity-80">@{e(assigns, :current_user, :character, :username, "Unknown")}</span> -->
       </div>
     </label>
