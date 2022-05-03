@@ -1,6 +1,6 @@
-<div role="banner" class="sticky top-[48px] lg:top-[48px] lg:-mt-[20px] lg:pt-[8px] bg-base-100 z-30 w-full border-b tablet:rounded-t border-base-300">  
+<div role="banner" class="sticky top-[48px] lg:top-[48px] lg:-mt-[20px] lg:pt-[8px] bg-base-100 z-40 w-full tablet:rounded-t-xl">  
   <div class="hidden h-3 tablet:block bg-base-300 "></div>
-  <div class="relative rounded-b-none tablet:rounded">
+  <div class="relative rounded-b-none tablet:rounded-xl">
     <div class="flex items-center p-3">
       <div class="flex items-center flex-1 space-x-2 text-left">
         <a
@@ -22,7 +22,7 @@
         </a>
         
         <#slot>
-          <h1 class="font-medium capitalize text-md">{@page_title}</h1> 
+          <h1 class="text-lg font-bold text-base-content">{@page_title}</h1> 
         </#slot>
       </div>
     </div>

@@ -1,23 +1,27 @@
-<div class="sticky flex-col justify-end hidden w-full mt-3 space-y-4 top-3 tablet:mt-0 tablet:flex tablet:w-72">
-  <Bonfire.UI.Social.HomeBannerLive />
-  <Bonfire.UI.Social.WidgetLive 
-    widget_title="Timelines"
-    current_user={current_user(assigns)}
-  >
-    <Bonfire.UI.Social.WidgetTimelinesLive 
+<nav
+  role="navigation"
+  class="flex-col justify-end mt-0 tablet:flex w-72">
+  <div class="fixed z-50 top-3 lg:top-[67px] w-72 flex flex-col space-y-3">
+    <Bonfire.UI.Social.HomeBannerLive />
+    <Bonfire.UI.Social.WidgetLive 
+      widget_title="Timelines"
       current_user={current_user(assigns)}
-      id="widget_timelines_guest_home"
-    />
-  </Bonfire.UI.Social.WidgetLive>
+    >
+      <Bonfire.UI.Social.WidgetTimelinesLive 
+        current_user={current_user(assigns)}
+        id="widget_timelines_guest_home"
+      />
+    </Bonfire.UI.Social.WidgetLive>
 
-  <Bonfire.UI.Social.WidgetLive 
-    :if={Config.get([Bonfire.UI.Social.WidgetUsersLive, :show_guests], true) |> debug("show_guests?")}
-    widget_title="Admins"
-    current_user={current_user(assigns)}
-  >
-    <Bonfire.UI.Social.WidgetUsersLive 
+    <Bonfire.UI.Social.WidgetLive 
+      :if={Config.get([Bonfire.UI.Social.WidgetUsersLive, :show_guests], true) |> debug("show_guests?")}
+      widget_title="Admins"
       current_user={current_user(assigns)}
-      id="widget_admins_guest_home"
-    />
-  </Bonfire.UI.Social.WidgetLive>
-</div>
+    >
+      <Bonfire.UI.Social.WidgetUsersLive 
+        current_user={current_user(assigns)}
+        id="widget_admins_guest_home"
+      />
+    </Bonfire.UI.Social.WidgetLive>
+  </div>
+</nav>

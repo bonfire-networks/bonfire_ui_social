@@ -31,7 +31,6 @@
 
       {#else}
         <div id="empty-feed">
-
           <Bonfire.UI.Social.EmptyFeed/> 
 
       </div>

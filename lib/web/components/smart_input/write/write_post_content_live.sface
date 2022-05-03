@@ -26,7 +26,10 @@
           <div
             id="textarea_wrapper"
             class="">
-            <div x-show="title_open" x-transition>
+            <div 
+              display="style: none"
+              x-show="title_open" 
+              x-transition>
               <label for="title" class="sr-only">{l "Title"}</label>
               <Field name={:name}>
                 <TextInput

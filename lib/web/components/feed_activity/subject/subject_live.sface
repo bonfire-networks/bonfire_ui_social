@@ -136,8 +136,8 @@
     <div class="absolute left-3">
       <Bonfire.UI.Social.Activity.AvatarLive profile={@profile} />
     </div>
-    <div class="flex items-center justify-between leading-[14px]">
-      <div class="flex items-center flex-1 truncate ellipsis">
+    <div class="flex items-center justify-between leading-[14px] min-w-0">
+      <div class="flex items-center flex-1 truncate">
         <LiveRedirect
           opts={"data-id": "subject_name"}
           aria-label={e(@character, :username, "") <> " profile"}
