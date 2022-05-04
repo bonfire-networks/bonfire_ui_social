@@ -23,7 +23,7 @@ defmodule Bonfire.UI.Social.DataCase do
       import Ecto
       import Ecto.Changeset
       import Ecto.Query
-      import Bonfire.UI.Social.DataCase
+      # import Bonfire.UI.Social.DataCase
     end
   end
 

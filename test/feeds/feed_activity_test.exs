@@ -1,6 +1,6 @@
 defmodule Bonfire.UI.Social.Feeds.FeedActivityTest do
 
-  use Bonfire.UI.Social.ConnCase
+  use Bonfire.UI.Social.ConnCase, async: true
 
   alias Bonfire.Social.Fake
   alias Bonfire.Me.Users
@@ -117,10 +117,13 @@ defmodule Bonfire.UI.Social.Feeds.FeedActivityTest do
       fp = feed.edges |> List.first() #|> IO.inspect
        assert doc = render_component(Bonfire.UI.Social.ActivityLive, %{id: "activity", activity: fp.activity})
 
-      assert doc
+      time = doc
       |> Floki.parse_fragment
       ~> Floki.find("a.subject_timestamp")
-      |> Floki.text() =~ "now"
+      |> Floki.text()
+      |> info()
+
+      assert (time =~ "now" || time =~ "seconds ago")
     end
 
 

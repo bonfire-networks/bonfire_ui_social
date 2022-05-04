@@ -27,10 +27,10 @@ defmodule Bonfire.UI.Social.ConnCase do
 
       import Phoenix.LiveViewTest
       import Surface.LiveViewTest
-      import Bonfire.UI.Social.ConnCase
+      # import Bonfire.UI.Social.ConnCase
       import Bonfire.UI.Social.Test.ConnHelpers
       import Bonfire.UI.Social.Test.FakeHelpers
-      import Bonfire.Me.Fake
+
       import Where
       use Arrows
       # alias Bonfire.UI.Social.Web.Router.Helpers, as: Routes

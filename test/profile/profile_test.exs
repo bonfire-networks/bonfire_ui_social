@@ -1,14 +1,14 @@
 defmodule Bonfire.UI.Social.Profile.ProfileTest do
 
-  use Bonfire.UI.Social.ConnCase
+  use Bonfire.UI.Social.ConnCase, async: true
   # alias Bonfire.Social.Fake
   alias Bonfire.Social.{Boosts, Likes, Follows, Posts}
 
 
   describe "Profile: Check if the profile hero section displays all the information correctly " do
-    
+
     test "As a user I want to see the user background image" do
-    end 
+    end
 
     test "As a user I want to see the user avatar image" do
     end
@@ -36,7 +36,7 @@ defmodule Bonfire.UI.Social.Profile.ProfileTest do
 
     test "As a user I want to see user link" do
     end
-    
+
     test "If I navigate to my own profile, I want to see the settings button" do
     end
 
@@ -51,13 +51,13 @@ defmodule Bonfire.UI.Social.Profile.ProfileTest do
 
     test "If I click to unfollow, I want to see the button label changing from unfollow to follow" do
     end
-    
+
   end
 
   describe "Profile: Navigation" do
-    
+
     test "As a user, when I navigate to a user profile, I should see the timeline tab as the active default" do
-    end 
+    end
 
     test "As a user when I click on Timeline link, I want to see the user outbox" do
     end

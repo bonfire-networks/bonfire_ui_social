@@ -1,6 +1,6 @@
 defmodule Bonfire.UI.Social.Boundaries.BoundaryTest do
 
-  use Bonfire.UI.Social.ConnCase
+  use Bonfire.UI.Social.ConnCase, async: true
 
   alias Bonfire.Social.Fake
   alias Bonfire.Me.Users
