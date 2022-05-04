@@ -123,7 +123,7 @@ defmodule Bonfire.UI.Social.Feeds.FeedActivityTest do
       |> Floki.text()
       |> info()
 
-      assert (time =~ "now" || time =~ "seconds ago")
+      assert (time =~ "now" || time =~ "second ago" || time =~ "seconds ago")
     end
 
 
