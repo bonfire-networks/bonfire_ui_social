@@ -18,7 +18,7 @@
       />
     
       {#if Bonfire.Common.Config.get([:ui, :default_smart_input])}
-        <Surface.Components.Dynamic.LiveComponent
+        <Surface.Components.Dynamic.Component
           module={Bonfire.Common.Config.get([:ui, :default_smart_input])}
           reply_to_id={@reply_to_id}
           thread_id={@thread_id}
