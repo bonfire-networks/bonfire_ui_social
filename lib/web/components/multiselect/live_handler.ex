@@ -1,5 +1,5 @@
 defmodule Bonfire.UI.Social.MultiselectLive.LiveHandler do
-  use Bonfire.Web, :live_handler
+  use Bonfire.UI.Common.Web, :live_handler
 
   def handle_event("select", %{"id" => id, "name"=>name, "field"=>field} = _attrs, socket) when is_binary(id) do
     debug("selected for #{field} : #{name}")

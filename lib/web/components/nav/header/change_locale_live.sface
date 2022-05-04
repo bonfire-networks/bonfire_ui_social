@@ -1,6 +1,6 @@
 <select 
 id="change_locale" 
-name="Bonfire.Web.Cldr[default_locale]"
+name="Bonfire.Common.Localise.Cldr[default_locale]"
 class="w-full max-w-xs select select-bordered" 
 phx-change="locale-changed" 
 phx-hook="ChangeLocaleHook">

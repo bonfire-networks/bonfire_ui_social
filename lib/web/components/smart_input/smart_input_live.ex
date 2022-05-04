@@ -1,5 +1,5 @@
 defmodule Bonfire.UI.Social.SmartInputLive do
-  use Bonfire.Web, :stateful_component
+  use Bonfire.UI.Common.Web, :stateful_component
 
   # prop user_image, :string, required: true
   # prop target_component, :string
@@ -91,10 +91,10 @@ defmodule Bonfire.UI.Social.SmartInputLive do
     {:noreply, cancel_upload(socket, :files, ref)}
   end
 
-  def handle_event(action, attrs, socket), do: Bonfire.Common.LiveHandlers.handle_event(action, attrs, socket, __MODULE__)
+  def handle_event(action, attrs, socket), do: Bonfire.UI.Common.LiveHandlers.handle_event(action, attrs, socket, __MODULE__)
 
-  def handle_info(info, socket), do: Bonfire.Common.LiveHandlers.handle_info(info, socket, __MODULE__)
-  defdelegate handle_params(params, attrs, socket), to: Bonfire.Common.LiveHandlers
+  def handle_info(info, socket), do: Bonfire.UI.Common.LiveHandlers.handle_info(info, socket, __MODULE__)
+  defdelegate handle_params(params, attrs, socket), to: Bonfire.UI.Common.LiveHandlers
 
 
 end

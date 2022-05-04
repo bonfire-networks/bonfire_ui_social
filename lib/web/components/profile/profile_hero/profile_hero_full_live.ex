@@ -1,5 +1,5 @@
 defmodule Bonfire.UI.Social.ProfileHeroFullLive do
-  use Bonfire.Web, :stateless_component
+  use Bonfire.UI.Common.Web, :stateless_component
   import Bonfire.UI.Social.Integration
 
   prop user, :map

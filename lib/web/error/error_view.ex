@@ -1,5 +1,5 @@
 defmodule Bonfire.UI.Social.Web.ErrorView do
-  use Bonfire.Web, {:view, [namespace: Bonfire.UI.Social]}
+  use Bonfire.UI.Common.Web, {:view, [namespace: Bonfire.UI.Social]}
 
   @codes %{
     404=> "Not allowed",

@@ -1,5 +1,5 @@
 defmodule Bonfire.UI.Social.MobileUserMenuLive do
-  use Bonfire.Web, :stateless_component
+  use Bonfire.UI.Common.Web, :stateless_component
   alias Surface.Components.LivePatch
   alias Surface.Components.LiveRedirect
   # prop name, type, options

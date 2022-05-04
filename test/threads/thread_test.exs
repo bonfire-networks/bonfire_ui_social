@@ -5,7 +5,7 @@ defmodule Bonfire.UI.Social.Threads.ThreadTest do
   alias Bonfire.Social.Fake
   alias Bonfire.Me.Users
   alias Bonfire.Social.{Boosts, Likes, Follows, Posts}
-  alias Bonfire.Repo
+  alias Bonfire.Common.Repo
 
   test "When I reply to a thread, the activity appears without refreshing" do
   end

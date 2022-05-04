@@ -1,5 +1,5 @@
 defmodule Bonfire.UI.Social.WidgetNotificationLive do
-  use Bonfire.Web, :stateful_component
+  use Bonfire.UI.Common.Web, :stateful_component
 
   def update(assigns, socket) do
     current_user = current_user(assigns)

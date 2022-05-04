@@ -1,5 +1,5 @@
 
 defmodule  Bonfire.UI.Social.UsersDirectoryViewLive do
-  use Bonfire.Web, :stateless_component
+  use Bonfire.UI.Common.Web, :stateless_component
 
 end

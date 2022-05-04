@@ -1,8 +1,8 @@
 defmodule Bonfire.UI.Social.ThreadLive do
-  use Bonfire.Web, :stateful_component
+  use Bonfire.UI.Common.Web, :stateful_component
   import Where
   alias Bonfire.Fake
-  alias Bonfire.Web.LivePlugs
+  alias Bonfire.Me.Web.LivePlugs
   alias Bonfire.Me.Users
   alias Bonfire.Me.Web.CreateUserLive
   # import Bonfire.Me.Integration
@@ -105,7 +105,7 @@ defmodule Bonfire.UI.Social.ThreadLive do
 
 
 
-  def handle_event(action, attrs, socket), do: Bonfire.Common.LiveHandlers.handle_event(action, attrs, socket, __MODULE__)
-  def handle_info(info, socket), do: Bonfire.Common.LiveHandlers.handle_info(info, socket, __MODULE__)
+  def handle_event(action, attrs, socket), do: Bonfire.UI.Common.LiveHandlers.handle_event(action, attrs, socket, __MODULE__)
+  def handle_info(info, socket), do: Bonfire.UI.Common.LiveHandlers.handle_info(info, socket, __MODULE__)
 
 end

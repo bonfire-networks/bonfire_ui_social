@@ -4,7 +4,7 @@
   <% info = live_flash(@flash, :info) %>
   <% error = live_flash(@flash, :error) %>
     <div id="flash-messages" class="fixed absolute z-50 right-8 top-20">
-      <Bonfire.Common.Web.NotificationLive.render
+      <Bonfire.UI.Common.NotificationLive.render
       id={"notification"} 
       notification={e(assigns, :notification, nil)}
       myself={nil}

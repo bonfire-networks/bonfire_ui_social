@@ -1,5 +1,5 @@
 defmodule Bonfire.UI.Social.SettingsViewsLive.EditProfileLive do
-  use Bonfire.Web, :stateless_component
+  use Bonfire.UI.Common.Web, :stateless_component
 
   prop uploads, :any
   prop selected_tab, :string

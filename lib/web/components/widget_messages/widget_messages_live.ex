@@ -1,5 +1,5 @@
 defmodule Bonfire.UI.Social.WidgetMessagesLive do
-  use Bonfire.Web, :stateful_component
+  use Bonfire.UI.Common.Web, :stateful_component
 
   def update(assigns, socket) do
     pagination = %{

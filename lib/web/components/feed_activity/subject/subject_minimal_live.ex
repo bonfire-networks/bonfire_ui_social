@@ -1,5 +1,5 @@
 defmodule Bonfire.UI.Social.Activity.SubjectMinimalLive do
-  use Bonfire.Web, :stateless_component
+  use Bonfire.UI.Common.Web, :stateless_component
 
 
   prop activity, :map

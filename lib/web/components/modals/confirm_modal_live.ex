@@ -1,5 +1,5 @@
 defmodule Bonfire.UI.Social.ConfirmModalLive do
-  use Bonfire.Web, :stateless_component
+  use Bonfire.UI.Common.Web, :stateless_component
   alias Phoenix.LiveView.JS
   prop title, :string
   prop object_id, :any

@@ -1,6 +1,6 @@
 defmodule Bonfire.UI.Social.ChangeLocaleLive do
-  use Bonfire.Web, :stateless_component
-  alias Bonfire.Web.Localise
+  use Bonfire.UI.Common.Web, :stateless_component
+  alias Bonfire.Common.Localise
 
   prop locale, :any
 

@@ -1,6 +1,6 @@
 defmodule Bonfire.UI.Social.FlagsLive do
-  use Bonfire.Web, :stateful_component
-  alias Bonfire.Web.LivePlugs
+  use Bonfire.UI.Common.Web, :stateful_component
+  alias Bonfire.Me.Web.LivePlugs
 
 
   prop page_title, :string, default: "Flags"
@@ -40,8 +40,8 @@ defmodule Bonfire.UI.Social.FlagsLive do
   #    )}
   # end
 
-  defdelegate handle_params(params, attrs, socket), to: Bonfire.Common.LiveHandlers
-  def handle_event(action, attrs, socket), do: Bonfire.Common.LiveHandlers.handle_event(action, attrs, socket, __MODULE__)
-  def handle_info(info, socket), do: Bonfire.Common.LiveHandlers.handle_info(info, socket, __MODULE__)
+  defdelegate handle_params(params, attrs, socket), to: Bonfire.UI.Common.LiveHandlers
+  def handle_event(action, attrs, socket), do: Bonfire.UI.Common.LiveHandlers.handle_event(action, attrs, socket, __MODULE__)
+  def handle_info(info, socket), do: Bonfire.UI.Common.LiveHandlers.handle_info(info, socket, __MODULE__)
 
 end

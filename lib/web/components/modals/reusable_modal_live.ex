@@ -1,5 +1,5 @@
 defmodule Bonfire.UI.Social.ReusableModalLive do
-  use Bonfire.Web, :stateful_component
+  use Bonfire.UI.Common.Web, :stateful_component
   @moduledoc """
   The classic **modal**
   """

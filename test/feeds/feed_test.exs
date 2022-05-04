@@ -5,7 +5,7 @@ defmodule Bonfire.UI.Social.Feeds.FeedTest do
   alias Bonfire.Social.Fake
   alias Bonfire.Me.Users
   alias Bonfire.Social.{Boosts, Likes, Follows, Posts}
-  alias Bonfire.Repo
+  alias Bonfire.Common.Repo
 
   def publish_multiple_times(msg, user, n, preset \\ "public") when n > 0 do
     {:ok, post} = Posts.publish(current_user: user, post_attrs: msg, boundary: preset)

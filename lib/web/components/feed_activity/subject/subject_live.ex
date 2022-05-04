@@ -1,5 +1,5 @@
 defmodule Bonfire.UI.Social.Activity.SubjectLive do
-  use Bonfire.Web, :stateless_component
+  use Bonfire.UI.Common.Web, :stateless_component
   alias Bonfire.UI.Social.BoundaryIconLive
 
   prop activity, :map

@@ -1,7 +1,7 @@
 defmodule Bonfire.UI.Social.SettingsViewsLive.ExtensionsLive do
-  use Bonfire.Web, :stateless_component
+  use Bonfire.UI.Common.Web, :stateless_component
   import Bonfire.Common.Extensions
-  
+
   prop extensions, :list, default: []
   prop schemas, :any
   prop other_deps, :any

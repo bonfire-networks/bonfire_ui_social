@@ -1,5 +1,5 @@
 defmodule Bonfire.UI.Social.InputControlsLive do
-  use Bonfire.Web, :stateless_component
+  use Bonfire.UI.Common.Web, :stateless_component
   use Bonfire.Common.Utils
   alias Surface.Components.Form.TextArea
   alias Surface.Components.Form

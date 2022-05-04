@@ -2,7 +2,7 @@ defmodule Bonfire.UI.Social.OpenModalLive do
   @moduledoc """
   The classic **modal**
   """
-  use Bonfire.Web, :stateful_component
+  use Bonfire.UI.Common.Web, :stateful_component
   alias Bonfire.UI.Social.ReusableModalLive
 
   @doc "The title of the modal. Only used if no title slot is passed."

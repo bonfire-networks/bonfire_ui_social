@@ -5,7 +5,7 @@ defmodule Bonfire.UI.Social.Boundaries.BoundaryTest do
   alias Bonfire.Social.Fake
   alias Bonfire.Me.Users
   alias Bonfire.Social.{Boosts, Likes, Follows, Posts}
-  alias Bonfire.Repo
+  alias Bonfire.Common.Repo
 
   test "Public: When I create an activity with the public boundary selected, it is visible in the federation, instance, home feed" do
   end
@@ -16,5 +16,5 @@ defmodule Bonfire.UI.Social.Boundaries.BoundaryTest do
   test "Mentions: When I create an activity with the mentions boundary selected,
   it is visible in the mentioned users inbox, mentioned users notification feed,
   mentioned users private feed" do
-  end 
+  end
 end

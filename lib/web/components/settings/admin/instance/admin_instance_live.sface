@@ -114,7 +114,7 @@
       </label>
       <div class="mt-1 sm:mt-0 sm:col-span-2">
         <Bonfire.UI.Social.ChangeLocaleLive
-          locale={Bonfire.Me.Settings.get([Bonfire.Web.Cldr, :default_locale], e(assigns, :locale, nil))}
+          locale={Bonfire.Me.Settings.get([Bonfire.Common.Localise.Cldr, :default_locale], e(assigns, :locale, nil))}
          />
       </div>
     </div>

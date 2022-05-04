@@ -1,5 +1,5 @@
 defmodule  Bonfire.UI.Social.DiffRenderViewLive do
-  use Bonfire.Web, :live_component
+  use Bonfire.UI.Common.Web, :live_component
   def file_header(patch, status) do
     from = patch.from
     to = patch.to

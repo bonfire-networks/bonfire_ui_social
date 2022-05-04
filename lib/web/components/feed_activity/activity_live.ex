@@ -1,5 +1,5 @@
 defmodule Bonfire.UI.Social.ActivityLive do
-  use Bonfire.Web, :stateful_component
+  use Bonfire.UI.Common.Web, :stateful_component
 
   alias Bonfire.Social.Activities
   import Where
@@ -552,5 +552,5 @@ defmodule Bonfire.UI.Social.ActivityLive do
   # def object_link(text, %{id: id}, class), do: "<a class='#{class}' href='/discussion/#{id}'>#{text}</a>"
 
   def handle_event(action, attrs, socket),
-    do: Bonfire.Common.LiveHandlers.handle_event(action, attrs, socket, __MODULE__)
+    do: Bonfire.UI.Common.LiveHandlers.handle_event(action, attrs, socket, __MODULE__)
 end

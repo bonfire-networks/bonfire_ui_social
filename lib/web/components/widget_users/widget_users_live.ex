@@ -1,5 +1,5 @@
 defmodule Bonfire.UI.Social.WidgetUsersLive do
-  use Bonfire.Web, :stateless_component
+  use Bonfire.UI.Common.Web, :stateless_component
 
   prop users, :any
 
@@ -15,7 +15,7 @@ defmodule Bonfire.UI.Social.WidgetUsersLive do
 
   def admins() do
     Bonfire.Me.Users.list_admins()
-    |> Bonfire.Repo.maybe_preload([:character, profile: :icon])
+    |> Bonfire.Common.Repo.maybe_preload([:character, profile: :icon])
   end
 
 end

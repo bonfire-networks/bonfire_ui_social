@@ -1,5 +1,5 @@
 defmodule Bonfire.UI.Social.Activity.EconomicResourceLive do
-  use Bonfire.Web, :stateless_component
+  use Bonfire.UI.Common.Web, :stateless_component
 
 
   prop object, :map

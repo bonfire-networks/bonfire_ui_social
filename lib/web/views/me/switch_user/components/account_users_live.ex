@@ -1,5 +1,5 @@
 defmodule Bonfire.UI.Social.SwitchUserViewLive.AccountUsersLive do
-  use Bonfire.Web, :stateless_component
+  use Bonfire.UI.Common.Web, :stateless_component
   # alias Bonfire.Me.Web.CreateUserLive
 
   prop current_account_users, :any

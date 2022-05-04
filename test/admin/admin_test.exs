@@ -5,7 +5,7 @@ defmodule Bonfire.UI.Social.AdminTest do
   alias Bonfire.Social.Fake
   alias Bonfire.Me.Users
   alias Bonfire.Social.{Boosts, Likes, Follows, Posts}
-  alias Bonfire.Repo
+  alias Bonfire.Common.Repo
 
   test "As an admin I want to create a new link to invite users to join an instance" do
   end
@@ -22,7 +22,7 @@ defmodule Bonfire.UI.Social.AdminTest do
   test "As an admin I want to ignore a flagged activity so that it
   does not show anymore in the flagged activities feed (it may shows
   in an archive feed?)" do
-    
+
   end
-  
+
 end

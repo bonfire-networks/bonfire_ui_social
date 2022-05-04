@@ -1,5 +1,5 @@
 defmodule Bonfire.UI.Social.MultiselectLive.UserSelectorLive do
-  use Bonfire.Web, :stateless_component
+  use Bonfire.UI.Common.Web, :stateless_component
 
   prop form_input_name, :string
   prop label, :string

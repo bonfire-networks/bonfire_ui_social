@@ -5,7 +5,7 @@ defmodule Bonfire.UI.Social.Feeds.LikeActivityTest do
   alias Bonfire.Social.Fake
   alias Bonfire.Me.Users
   alias Bonfire.Social.{Boosts, Likes, Follows, Posts}
-  alias Bonfire.Repo
+  alias Bonfire.Common.Repo
 
   test "As a user I want to see the activity total likes" do
     # Create alice user

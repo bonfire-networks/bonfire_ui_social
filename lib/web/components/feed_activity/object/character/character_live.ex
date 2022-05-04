@@ -1,5 +1,5 @@
 defmodule Bonfire.UI.Social.Activity.CharacterLive do
-  use Bonfire.Web, :stateless_component
+  use Bonfire.UI.Common.Web, :stateless_component
 
   prop object, :any
   prop activity, :any

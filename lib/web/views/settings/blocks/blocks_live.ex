@@ -1,5 +1,5 @@
 defmodule Bonfire.UI.Social.BlocksLive do
-  use Bonfire.Web, :stateful_component
+  use Bonfire.UI.Common.Web, :stateful_component
 
   prop user, :map
   prop selected_tab, :string

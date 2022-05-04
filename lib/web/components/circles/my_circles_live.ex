@@ -1,5 +1,5 @@
 defmodule Bonfire.UI.Social.MyCirclesLive do
-  use Bonfire.Web, :live_component
+  use Bonfire.UI.Common.Web, :live_component
 
   def update(assigns, socket) do
     circles = Bonfire.Boundaries.Circles.list_my(current_user(assigns), false) #|> IO.inspect

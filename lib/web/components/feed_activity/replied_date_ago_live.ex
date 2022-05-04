@@ -1,5 +1,5 @@
 defmodule Bonfire.UI.Social.Activity.RepliedDateAgoLive do
-  use Bonfire.Web, :stateless_component
+  use Bonfire.UI.Common.Web, :stateless_component
 
   alias Bonfire.UI.Social.BoundaryIconLive
 

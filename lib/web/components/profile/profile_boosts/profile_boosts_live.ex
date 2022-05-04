@@ -1,5 +1,5 @@
 defmodule Bonfire.UI.Social.ProfileBoostsLive do
-  use Bonfire.Web, :stateless_component
+  use Bonfire.UI.Common.Web, :stateless_component
 
   prop page_title, :string, required: true
   prop page, :string, required: true

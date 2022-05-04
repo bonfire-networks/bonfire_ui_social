@@ -1,5 +1,5 @@
 defmodule Bonfire.UI.Social.Activity.ProcessReflowLive do
-  use Bonfire.Web, :stateless_component
+  use Bonfire.UI.Common.Web, :stateless_component
   alias Surface.Components.LivePatch
 
   alias Bonfire.Social.{Likes}

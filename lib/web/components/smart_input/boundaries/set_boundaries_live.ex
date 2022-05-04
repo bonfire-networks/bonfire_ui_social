@@ -1,5 +1,5 @@
 defmodule Bonfire.UI.Social.SetBoundariesLive do
-  use Bonfire.Web, {:stateless_component, [module: __MODULE__]}
+  use Bonfire.UI.Common.Web, {:stateless_component, [module: __MODULE__]}
   use Bonfire.Common.Utils
 
   prop label, :string, default: ""
