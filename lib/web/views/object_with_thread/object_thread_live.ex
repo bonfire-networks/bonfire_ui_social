@@ -3,7 +3,6 @@ defmodule  Bonfire.UI.Social.ObjectThreadLive do
 
   prop page, :string
   prop page_title, :string
-  prop has_private_tab, :boolean
   prop show_reply_input, :boolean, default: false
   prop search_placeholder, :string
   prop create_activity_type, :any

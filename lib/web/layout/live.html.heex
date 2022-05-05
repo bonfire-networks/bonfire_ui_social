@@ -15,7 +15,7 @@
           phx-value-key="info"><%= rich info %></div>
       <% end %>
       <%= if error do %>
-        <div class="alert alert-error prose" role="alert"
+        <div class="prose alert alert-error" role="alert"
           phx-click="lv:clear-flash"
           phx-value-key="error"><%= rich error %></div>
       <% end %>
@@ -24,6 +24,7 @@
    <Bonfire.UI.Social.NavLive.render
     __context__={e(assigns, :__context__, %{})}
     current_account={current_account(assigns)}
+    without_sidebar={e(assigns, :without_sidebar, nil)}
     current_user={current_user(assigns)}
     page={e(assigns, :page, "")}
     inner_content={@inner_content}

@@ -1,12 +1,12 @@
 <div 
 class="h-full md:mx-0 text-base-content ">
   <div>
-    <div class="m-3">
+    <div class="p-3 ">
       <LivePatch 
         to={"/messages/compose"}
-        class="flex items-center block w-full normal-case btn btn-sm btn-primary"> 
-        <Solid.PencilAltIcon class="inline-block w-5 h-5 mr-2 text-base-content" />
-        <span class="text-sm text-base-content">{l "New message"}</span>
+        class="flex items-center w-full normal-case btn-wide btn btn-primary"> 
+        <Solid.PencilAltIcon class="inline-block w-5 h-5 mr-2" />
+        <span class="text-sm">{l "New message"}</span>
       </LivePatch>
     </div>
     <div :if={not is_list(e(assigns, :feed, [])) or e(assigns, :feed, []) == []} class="w-full p-4 text-center bg-base-100">
@@ -23,7 +23,7 @@ class="h-full md:mx-0 text-base-content ">
             <div class="flex-1 w-full min-w-0 sm:flex sm:items-center sm:justify-between">
               <div class="w-full truncate">
                 <div class="flex items-center space-x-2">
-                  <p class="flex-1 text-sm font-medium truncate text-base-content">{e(activity, :subject, :profile, :name, nil)}</p>
+                  <p class="flex-1 font-semibold truncate text-base-content">{e(activity, :subject, :profile, :name, nil)}</p>
                   <div class="flex items-center mt-0.5 text-xs text-base-content text-opacity-80">
                     <p><time datetime={"#{date_from_now(activity)}"}>{date_from_now(activity)}</time></p>
                   </div>

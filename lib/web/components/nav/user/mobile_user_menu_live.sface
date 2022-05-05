@@ -1,12 +1,12 @@
 <div 
-  class="flex items-center place-content-center"
+  class="flex items-center tablet-lg:hidden place-content-center " 
   x-data="{ open: false }" 
   @keydown.window.escape="open = false">
   <div
     class="btn btn-ghost btn-circle btn-sm" 
     @click="open = true">
       <LazyImage
-        class="w-6 h-6 rounded-full bg-base-200"
+        class="w-8 h-8 rounded-full bg-base-200"
         src={avatar_url(current_user(assigns))}
         alt="current user profile image"
       />

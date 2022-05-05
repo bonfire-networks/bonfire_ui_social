@@ -6,10 +6,10 @@ class="h-full md:mx-0 text-base-content ">
       <input type="text" placeholder="Search here" class="w-full h-10 max-w-xs input input-bordered">
     </div> -->
     <nav 
-      class="overflow-y-auto border-t bg-base-100 border-base-300" 
+      class="" 
       aria-label="Directory">
       <div
-        class="p-2 font-sm font-medium text-base-content"
+        class="p-2 font-medium font-sm text-base-content"
         :if={length(@users) == 0} 
       > 
       {l "No users found"}
@@ -52,8 +52,8 @@ class="h-full md:mx-0 text-base-content ">
         {/for}
       </ul>
     </nav>
-    <div class="sticky bottom-0 left-0 right-0 z-30 bg-base-200">
-      <div class="flex items-center justify-end p-3 space-x-3">
+    <div class="p-3 bg-base-200">
+      <div class="flex items-center justify-end space-x-3">
         <LivePatch to={path(Bonfire.Data.Social.Message)} class="normal-case btn btn-ghost btn-sm">{l "Cancel"}</LivePatch>
         <!-- <button phx-click="compose_thread" class="normal-case btn btn-ghost btn-sm">{l "Start"}</button> -->
       </div>

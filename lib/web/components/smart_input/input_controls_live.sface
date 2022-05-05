@@ -4,7 +4,6 @@
 <div class="">
   
   <Bonfire.UI.Social.BoundariesLive
-    :if={e(assigns, :showing_within, nil) != :message}
     to_circles={e(assigns, :to_circles, [])}
     />
 
@@ -31,13 +30,6 @@
             class="text-xs font-medium text-slate-800 text-opacity-70">{l "CW"}</span>
         </button>
       </div>
-
-      <Bonfire.UI.Social.BoundariesLive
-        :if={e(assigns, :showing_within, nil) == :message}
-        showing_within={:message}
-        to_circles={e(assigns, :to_circles, [])}
-      />
-
       <!-- <div 
         data-tip="Full-screen mode" 
         :if={@create_activity_type != :message}

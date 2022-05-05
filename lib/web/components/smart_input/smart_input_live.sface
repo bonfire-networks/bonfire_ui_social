@@ -1,11 +1,14 @@
   <div 
     id="smart_input"
     phx-drop-target={@uploads.files.ref}
-    class={
-    "flex h-full",
-    "pt-2 bg-base-100 z-40 sticky bottom-0": e(assigns, :showing_within, nil) == :message}>
+    class={"flex h-full"}>
     <div class="flex flex-col flex-1 w-full">
-
+      <div 
+        :if={e(assigns, :showing_within, nil) == :message}
+        class="mb-2" >
+        <div class="mb-1 text-sm font-semibold">{l "Send a direct message to"}</div>  
+        <span :for={{name, id} <- @to_circles} class="mr-2 badge badge-outline">{name}</span>
+      </div>
       <!-- show what we're replying to, if any -->
       <Bonfire.UI.Social.ActivityLive 
         :if={@activity}

@@ -1,119 +1,94 @@
-<div class="sticky top-0 z-50 hidden w-full lg:block navbar min-h-[48px] bg-neutral text-neutral-content">
-  <div class="flex justify-center flex-shrink-0 w-full max-w-screen-xl mx-auto">
-    <div class="flex-col justify-end hidden lg:flex w-72">
-        <div class="flex items-center space-x-2">
-          <LiveRedirect to={if current_user(assigns), do: path(Bonfire.Common.Config.get(:user_home_page, Bonfire.Social.Web.HomeLive)), else:  path(Bonfire.Common.Config.get(:home_page, Bonfire.Web.HomeLive))}>
+<div class="w-full">
+  {#if current_user(assigns)}
+    <div class="flex-grow w-full py-2 mb-3 rounded-xl shrink-0 bg-base-100">
+      <div class="flex items-center w-full justify-evenly tabs tab-boxed">
+        
+        <!-- MOBILE INSTANCE ICON -->
+        <LiveRedirect 
+          class="flex items-center space-x-2 tablet-lg:hidden"
+          to={if current_user(assigns), do: path(Bonfire.Common.Config.get(:user_home_page, Bonfire.Social.Web.HomeLive)), else:  path(Bonfire.Common.Config.get(:home_page, Bonfire.Web.HomeLive))}>
           <div class="w-8 h-8 bg-center bg-no-repeat bg-contain" style={"background-image: url(#{ Bonfire.Common.Config.get([:ui, :theme, :instance_icon], nil)})"}></div>
-          <!-- <div class="text-lg font-bold text-neutral-content">{Bonfire.Common.Config.get([:ui, :theme, :instance_name], '')}</div> -->
-          </LiveRedirect>
-          <Bonfire.UI.Social.SearchLive />
-        </div>
-    </div>
-    <!-- SEARCH IS ALWAYS PRESENT -->
-    <div class="flex-grow hidden w-full shrink-0 lg:block md:mx-3 md:mr-0 lg:mr-3 max-w-[580px]">
-      <!-- <div class="items-center ">
-        <Bonfire.UI.Social.SearchLive />
-      </div> -->
-      {#if current_user(assigns)}
-      <div class="items-center hidden w-full tabs tab-boxed lg:flex">
-       <div class="flex flex-1 tooltip tooltip-bottom" data-tip={l "Home"}>
-          <LiveRedirect to={"/home"} class={"tab flex-1 hover:bg-base-content hover:bg-opacity-5 hover:rounded-lg text-neutral-content text-opacity-70", "tab-active text-opacity-60 relative lined": @page == "home"}>
-              <Solid.HomeIcon class="w-5 h-5 mr-1" />
+        </LiveRedirect>
+        <!-- / MOBILE INSTANCE ICON -->
+        
+        <!-- MENU -->
+        <div class="relative z-50 hidden tablet-lg:flex tooltip tooltip-bottom" data-tip={l "Home"}>
+          <LiveRedirect to={"/home"} class={"tab flex-1 hover:bg-base-content hover:bg-opacity-5 hover:rounded-lg text-base-content text-opacity-70", "tab-active text-opacity-60 relative lined": @page == "home"}>
+              <Solid.HomeIcon class="w-5 h-5" />
               <span class="sr-only">{l "Feeds"}</span>
           </LiveRedirect>
         </div>
-        <div class="flex flex-1 tooltip tooltip-bottom" data-tip={l "Local timeline"}>
-          <LiveRedirect to={"/home/local"} class={"tab flex-1 hover:bg-base-content hover:bg-opacity-5 hover:rounded-lg text-neutral-content text-opacity-70", "tab-active text-opacity-60 relative lined": @page == "local"}>
-              <Solid.UserGroupIcon class="w-5 h-5 mr-1" />
+        <div class="relative z-50 flex tooltip tooltip-bottom" data-tip={l "Local timeline"}>
+          <LiveRedirect to={"/home/local"} class={"tab flex-1 hover:bg-base-content hover:bg-opacity-5 hover:rounded-lg text-base-content text-opacity-70", "tab-active text-opacity-60 relative lined": @page == "local"}>
+              <Solid.UserGroupIcon class="w-5 h-5" />
               <span class="sr-only">{l "Locals"}</span>
           </LiveRedirect>
-          <!-- <LivePatch to={path(:notifications)} class={"tab flex-1 hover:bg-base-content hover:bg-opacity-5 hover:rounded-lg text-neutral-content text-opacity-70", "tab-active text-opacity-60 relative lined": @page == "notifications"}>
-              <Solid.BellIcon class="w-5 h-5 mr-1" />
-              <span class="sr-only">{l "Notifications"}</span>
-          </LivePatch> -->
         </div>
-        <div class="flex flex-1 tooltip tooltip-bottom" data-tip={l "Federated timeline"}>
-           <LiveRedirect to={"/home/federation"} class={"tab flex-1 hover:bg-base-content hover:bg-opacity-5 hover:rounded-lg text-neutral-content text-opacity-70", "tab-active text-opacity-60 relative lined": @page == "federation"}>
-              <Solid.GlobeIcon class="w-5 h-5 mr-1" />
+        <div class="relative z-50 flex tooltip tooltip-bottom" data-tip={l "Federated timeline"}>
+          <LiveRedirect to={"/home/federation"} class={"tab flex-1 hover:bg-base-content hover:bg-opacity-5 hover:rounded-lg text-base-content text-opacity-70", "tab-active text-opacity-60 relative lined": @page == "federation"}>
+              <Solid.GlobeIcon class="w-5 h-5" />
               <span class="sr-only">{l "Federated timeline"}</span>
           </LiveRedirect>
-          <!-- <LivePatch to={path(Bonfire.Data.Social.Message)} class={"tab flex-1 hover:bg-base-content hover:bg-opacity-5 hover:rounded-lg text-neutral-content text-opacity-70", "tab-active text-opacity-60 relative lined": @page == "messages"}>
-              <Solid.MailIcon class="w-5 h-5 mr-1" />
-              <span class="sr-only">{l "Messages"}</span>
-          </LivePatch> -->
         </div>
-        <div class="flex flex-1 tooltip tooltip-bottom" data-tip={l "My Favourites"}>
-          <LivePatch to={"/my/likes"} class={"tab flex-1 hover:bg-base-content hover:bg-opacity-5 hover:rounded-lg text-neutral-content text-opacity-70", "tab-active text-opacity-60 relative lined": @page == "likes"}>
-              <Solid.StarIcon class="w-5 h-5 mr-1" />
+        <div class="relative z-50 hidden tooltip tooltip-bottom tablet-lg:flex" data-tip={l "My Favourites"}>
+          <LivePatch to={"/my/likes"} class={"tab flex-1 hover:bg-base-content hover:bg-opacity-5 hover:rounded-lg text-base-content text-opacity-70", "tab-active text-opacity-60 relative lined": @page == "likes"}>
+              <Solid.StarIcon class="w-5 h-5" />
               <span class="sr-only">{l "My Favourites"}</span>
           </LivePatch>
         </div>
+        <!-- / MENU -->
 
-      </div>
-      {/if}
-    </div>
-    {#if current_account(assigns) != nil and current_user(assigns) == nil }
-    <div class="xl:w-[285px]  justify-start hidden lg:flex">
-      <span class="inline-flex rounded-md shadow-sm">
-        <Link to={path(:switch_user)} class="normal-case btn btn-secondary btn-sm">
-          {l "Select User"}
-        </Link>
-      </span>
-    </div>
-    {#elseif current_user(assigns)}
-    <div class="w-[285px] justify-end items-center space-x-1 hidden lg:flex">
-      <!-- <div data-tip="feeds" class="flex-none tooltip tooltip-bottom">
-        <LivePatch to={"/home"} class={"btn-sm btn btn-square btn-ghost", "btn-outline text-primary": @page == "home", "btn-ghost text-neutral-content": @page != "home"}>
-            <Solid.RssIcon class="w-5 h-5" />
-        </LivePatch>
-      </div> 
-      <div data-tip="Direct Messages" class="flex-none tooltip tooltip-bottom">
-        <LivePatch to={path(Bonfire.Data.Social.Message)} class={"btn-sm btn btn-square btn-ghost", "btn-outline text-primary": @page == "private", "btn-ghost text-neutral-content": @page != "private"}>
-            <Solid.MailIcon class="w-5 h-5" />
-        </LivePatch>
-      </div> 
-      <div data-tip="Notifications" class="flex-none tooltip tooltip-bottom">
-        <LivePatch to={path(:notifications)} class={"btn-sm btn btn-square btn-ghost", "btn-outline text-primary": @page == "notifications", "btn-ghost text-neutral-content": @page != "notifications"}>
-            <Solid.BellIcon class="w-5 h-5" />
-        </LivePatch>
-      </div>  -->
-      <Bonfire.UI.Social.UserMenuLive  current_user={current_user(assigns)} />
-      <div class="tooltip tooltip-bottom" data-tip={l "Notifications"}>
-        <LivePatch to={path(:notifications)} class={"btn btn-ghost btn-sm", "text-opacity-100 relative lined": @page == "notifications"}>
-            <Solid.BellIcon class={
-              "w-5 h-5",
-              "text-base-content": @page == "notifications"
-              } />
+        <!-- MOBILE MENU -->
+        <div class="relative z-50 tablet-lg:hidden tooltip tooltip-bottom" data-tip={l "Notifications"}>
+          <LiveRedirect to={path(:notifications)} class={"tab flex-1 hover:bg-base-content hover:bg-opacity-5 hover:rounded-lg text-base-content text-opacity-70", "tab-active text-opacity-60 relative lined": @page == "notifications"}>
+            <Solid.BellIcon class={"w-5 h-5"} />
             <span class="sr-only">{l "Notifications"}</span>
-        </LivePatch>
-      </div>
-      <div class="tooltip tooltip-bottom" data-tip={l "Messages"}>
-        <LivePatch to={path(Bonfire.Data.Social.Message)} class={"btn btn-ghost btn-sm", "text-opacity-60 relative lined": @page == "messages"}>
-            <Solid.MailIcon class={
-              "w-5 h-5",
-              "text-base-content": @page == "messages"
-              }
-              />
-            <span class="sr-only">{l "Messages"}</span>
-        </LivePatch>
+          </LiveRedirect>
+        </div>
+
+        <div class="relative z-50 tablet:hidden tooltip tooltip-bottom" data-tip={l "Search"}>
+          <LiveRedirect to={"/search"} class={"tab flex-1 hover:bg-base-content hover:bg-opacity-5 hover:rounded-lg text-base-content text-opacity-70"}>
+            <Solid.SearchIcon class="w-5 h-5" />   
+          </LiveRedirect>
+        </div>
+
+        <Bonfire.UI.Social.MobileUserMenuLive current_user={current_user(assigns)} /> 
+        <!-- / MOBILE MENU -->
       </div>
     </div>
-    {#else}
-    <div class="w-[285px] justify-start hidden lg:flex">
-    
-      <span class="inline-flex ">
-        <Link to={path(:login, :index)} class="normal-case btn btn-sm btn-primary">
-          {l "Login"}
-        </Link>
-      </span>
-      {#if !Bonfire.Me.Accounts.instance_is_invite_only? }
-      <span class="inline-flex ml-3 ">
-        <Link to={path(:signup, :index)} class="normal-case btn btn-sm btn-outline btn-secondary">
-          {l "Signup"}
-        </Link>
-      </span>
-      {/if}
+  {#else}
+    <div class="flex-grow hidden w-full py-2 mb-3 rounded-xl bg-base-100 shrink-0 lg:block">
+      <div class="items-center hidden w-full px-3 lg:flex">
+        <LiveRedirect 
+          class="flex items-center flex-1 space-x-2"
+          to={if current_user(assigns), do: path(Bonfire.Common.Config.get(:user_home_page, Bonfire.Social.Web.HomeLive)), else:  path(Bonfire.Common.Config.get(:home_page, Bonfire.Web.HomeLive))}>
+          <div class="w-8 h-8 bg-center bg-no-repeat bg-contain" style={"background-image: url(#{ Bonfire.Common.Config.get([:ui, :theme, :instance_icon], nil)})"}></div>
+          <div class="text-lg font-bold text-base-content">{Bonfire.Common.Config.get([:ui, :theme, :instance_name], '')}</div>
+        </LiveRedirect>
+
+        <div class="justify-end hidden lg:flex">
+          {#if current_account(assigns) != nil }
+            <span class="inline-flex rounded-md shadow-sm">
+              <Link to={path(:switch_user)} class="normal-case btn btn-secondary btn-sm">
+                {l "Select User"}
+              </Link>
+            </span>
+          {#else}
+            <span class="inline-flex ">
+              <Link to={path(:login, :index)} class="normal-case btn btn-sm btn-primary">
+                {l "Login"}
+              </Link>
+            </span>
+            {#if !Bonfire.Me.Accounts.instance_is_invite_only? }
+              <span class="inline-flex ml-3 ">
+                <Link to={path(:signup, :index)} class="normal-case btn btn-sm btn-outline btn-secondary">
+                  {l "Signup"}
+                </Link>
+              </span>
+            {/if}
+          {/if}
+        </div>
+      </div>
     </div>
-    {/if}
-  </div>
+  {/if}
 </div>

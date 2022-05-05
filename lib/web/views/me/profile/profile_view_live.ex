@@ -5,7 +5,6 @@ defmodule Bonfire.UI.Social.ProfileViewLive do
   prop page, :string, required: true
   prop selected_tab, :string, default: "timeline"
   prop smart_input, :boolean, required: true
-  prop has_private_tab, :boolean, required: true
   prop reply_to_id, :string
   prop thread_id, :string
   prop create_activity_type, :any

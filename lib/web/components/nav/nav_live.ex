@@ -11,4 +11,6 @@ defmodule Bonfire.UI.Social.NavLive do
   prop to_circles, :list
   prop smart_input_prompt, :string, required: false
   prop smart_input_text, :string, required: false
+  prop showing_within, :any
+  prop without_sidebar, :boolean, required: false, default: nil
 end

@@ -4,42 +4,54 @@
 >
   <nav
     role="navigation"
-    class="flex-col justify-end mt-0 tablet:flex w-72"
-    :class="show_smart_input ? 'w-full' : 'hidden'"
+    class=""
+    :class="show_smart_input ? 'w-full' : 'flex-col justify-end w-64 mt-0 tablet-lg:flex xl:w-72 hidden'"
     >
-    <div class="fixed z-50 top-3 lg:top-[67px] w-72">
-      <div 
-        style="display: none"
-        x-show="show_smart_input" 
-        class="">
-        <div role="banner" class="sticky top-[48px] lg:top-[48px] lg:-mt-[20px] lg:pt-[8px] bg-base-100 z-30 w-full border-b tablet:rounded-t border-base-300">  
-          <div class="relative rounded-b-none tablet:rounded">
-            <div class="flex items-center p-3">
-              <div class="flex items-center flex-1 space-x-2 text-left">
-                <button
-                  @click="show_smart_input = false"
-                  type="button"
-                  aria-label="Go back"
-                >
-                  <span class="flex items-center px-1 space-x-1 normal-case btn btn-ghost btn-sm">
-                    <Solid.ChevronLeftIcon />
-                    <div class="">{l "Go back"}</div>
-                  </span>
-                </button>
-              </div>
+    <div 
+      :class="show_smart_input ? 'fixed bottom-0 p-2 w-full z-50' : 'fixed z-50 top-3 w-64 xl:w-72'"
+      class="">
+      <div class="w-full h-full">    
+        <div class="flex flex-col space-y-4">
+          <LiveRedirect 
+            :if={current_user(assigns)}
+            class="flex items-center h-12 space-x-2"
+            to={if current_user(assigns), do: path(Bonfire.Common.Config.get(:user_home_page, Bonfire.Social.Web.HomeLive)), else:  path(Bonfire.Common.Config.get(:home_page, Bonfire.Web.HomeLive))}>
+            <div class="w-8 h-8 bg-center bg-no-repeat bg-contain" style={"background-image: url(#{ Bonfire.Common.Config.get([:ui, :theme, :instance_icon], nil)})"}></div>
+            <div class="text-lg font-bold text-base-content">{Bonfire.Common.Config.get([:ui, :theme, :instance_name], '')}</div>
+          </LiveRedirect>
+
+
+          <!-- IF CURRENT USER -->
+          {#if current_user(assigns)}
+          <div class="items-center justify-end hidden w-full space-x-1 lg:flex">
+            <Bonfire.UI.Social.UserMenuLive  current_user={current_user(assigns)} />
+            <div class="tooltip tooltip-bottom" data-tip={l "Notifications"}>
+              <LivePatch to={path(:notifications)} class={"btn btn-ghost btn-sm", "text-opacity-100 relative lined": @page == "notifications"}>
+                  <Solid.BellIcon class={
+                    "w-5 h-5",
+                    "text-base-content": @page == "notifications"
+                    } />
+                  <span class="sr-only">{l "Notifications"}</span>
+              </LivePatch>
+            </div>
+            <div class="tooltip tooltip-bottom" data-tip={l "Messages"}>
+              <LivePatch to={path(Bonfire.Data.Social.Message)} class={"btn btn-ghost btn-sm", "text-opacity-60 relative lined": @page == "messages"}>
+                  <Solid.MailIcon class={
+                    "w-5 h-5",
+                    "text-base-content": @page == "messages"
+                    }
+                    />
+                  <span class="sr-only">{l "Messages"}</span>
+              </LivePatch>
             </div>
           </div>
-        </div>
-
-      </div>
-      <div class="w-full h-full">
-        <div class="flex flex-col space-y-4">
           <div 
             data-id="smart_input">
             <Bonfire.UI.Social.SmartInputLive
               id={:smart_input}
               :if={current_user(assigns)}
               current_user={current_user(assigns)}
+              showing_within={e(assigns, :showing_within, nil)}
               reply_to_id={e(assigns, :reply_to_id, "")}
               thread_id={@thread_id}
               create_activity_type={e(assigns, :create_activity_type, nil)}
@@ -48,6 +60,32 @@
               smart_input_text={@smart_input_text}
             />
           </div>
+          {#else}
+          <Bonfire.UI.Social.HomeBannerLive />
+          <Bonfire.UI.Social.WidgetLive 
+            widget_title="Timelines"
+            current_user={current_user(assigns)}
+          >
+            <Bonfire.UI.Social.WidgetTimelinesLive 
+              current_user={current_user(assigns)}
+              id="widget_timelines_guest_home"
+            />
+          </Bonfire.UI.Social.WidgetLive>
+
+          <Bonfire.UI.Social.WidgetLive 
+            :if={Config.get([Bonfire.UI.Social.WidgetUsersLive, :show_guests], true) |> debug("show_guests?")}
+            widget_title="Admins"
+            current_user={current_user(assigns)}
+          >
+            <Bonfire.UI.Social.WidgetUsersLive 
+              current_user={current_user(assigns)}
+              id="widget_admins_guest_home"
+            />
+          </Bonfire.UI.Social.WidgetLive>
+          {/if}
+          <!-- ELSE -->
+
+
 
           <!-- <Bonfire.UI.Social.WidgetLive 
             widget_title="Notifications"
@@ -104,12 +142,13 @@
   </nav>
 
 
-  <div class="fixed z-40 tablet:hidden bottom-3 right-3">
+  <div class="fixed bottom-0 z-40 left-3 right-3 bottom-3 tablet-lg:hidden">
     <button 
       @click="show_smart_input = true"
       type="button" 
-      class="btn btn-primary btn-lg btn-circle">
-      <Solid.PencilIcon class="w-8 h-8" />
+      class="flex items-center w-full py-4 rounded-lg text-base-300 place-content-center bg-slate-100">
+      <Solid.PencilIcon class="w-5 h-5 mr-2" />
+      <span>Type a message</span>
     </button>
   </div>
 </div>

@@ -13,7 +13,7 @@
   
 
 {#elseif @viewing_main_object}
-  <div class="flex items-center p-3 pt-6">
+  <div class="flex items-center p-3">
       <Bonfire.UI.Social.Activity.AvatarLive
         viewing_main_object={@viewing_main_object} 
         profile={@profile} />

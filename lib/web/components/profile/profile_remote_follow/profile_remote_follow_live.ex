@@ -5,7 +5,6 @@ defmodule Bonfire.UI.Social.ProfileRemoteFollowLive do
   prop page, :string, required: true
   prop selected_tab, :string, default: "timeline"
   prop smart_input, :boolean, required: true
-  prop has_private_tab, :boolean, required: true
   prop smart_input_prompt, :string
   prop smart_input_text, :string
   prop search_placholder, :string

@@ -17,21 +17,21 @@
       </div>
       <div :if={current_user(assigns)} class="flex items-center place-content-center">
         <LiveRedirect to={"/home"} class="btn btn-ghost btn-sm btn-circle ">
-          <Solid.RssIcon class="w-5 h-5 text-neutral-content text-opacity-80" />   
+          <Solid.RssIcon class="w-5 h-5 text-base-content text-opacity-80" />   
         </LiveRedirect>
       </div> 
       <div :if={current_user(assigns)} class="flex items-center place-content-center">
         <LiveRedirect to={"/search"} class="btn btn-ghost btn-sm btn-circle ">
-          <Solid.SearchIcon class="w-5 h-5 text-neutral-content text-opacity-80" />   
+          <Solid.SearchIcon class="w-5 h-5 text-base-content text-opacity-80" />   
         </LiveRedirect>
       </div>   
       <div :if={current_user(assigns)} class="flex items-center place-content-center">
         <LiveRedirect  to={path(:notifications)} class="btn btn-ghost btn-sm btn-circle ">
-          <Solid.BellIcon class="w-5 h-5 text-neutral-content text-opacity-80" />  
+          <Solid.BellIcon class="w-5 h-5 text-base-content text-opacity-80" />  
         </LiveRedirect>
       </div>
 
-      <div class="flex items-center text-neutral-content lg:hidden">
+      <div class="flex items-center text-base-content lg:hidden">
         {#if current_account(assigns) != nil and current_user(assigns) == nil }
           
           <Link to={path(:switch_user)} class="btn btn-secondary">

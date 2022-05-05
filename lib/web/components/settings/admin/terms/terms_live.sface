@@ -1,9 +1,8 @@
-<Bonfire.UI.Social.SettingsViewLive.SettingsHeaderLive 
-  settings_section_title={l "Instance configuration"}
-  selected_tab={@selected_tab}
-  admin_tab={@admin_tab}
+ <Bonfire.UI.Social.PageHeaderLive
+  page_title={l "Instance configuration"}
+  current_user={current_user(assigns)}
+  before
 />
-
 <!--- 
   - show admins in homepage
   - show number instance users

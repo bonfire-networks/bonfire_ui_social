@@ -10,11 +10,16 @@
       - [ ] Reply to a reported activity, remove or unflag
       - [ ] Reply to a blocked user activity, block or unblock  -->
 {#if Bonfire.Me.Users.is_admin?(current_user(assigns)) }
-  <Bonfire.UI.Social.SettingsViewLive.SettingsHeaderLive 
+      <Bonfire.UI.Social.PageHeaderLive
+      page_title={l "Admin"}
+      current_user={current_user(assigns)}
+      before
+    />
+  <!-- <Bonfire.UI.Social.SettingsViewLive.SettingsHeaderLive 
   settings_section_title={l "Admin"}
   selected_tab={@selected_tab}
   admin_tab={@admin_tab}
-  />
+  /> -->
   <div class="p-4">
     
   </div>

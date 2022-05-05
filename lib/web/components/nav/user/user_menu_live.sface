@@ -1,21 +1,21 @@
 <div 
   class="items-center hidden lg:flex">
-  <div class="dropdown dropdown-end">
+  <div class="dropdown">
     <label
       tabindex="0"
-      class="flex items-center flex-1 w-full gap-2 px-[4px] h-[40px] normal-case cursor-pointer btn btn-ghost btn-sm text-base-content text-opacity-80"
+      class="flex px-0 flex-1 w-full gap-2 h-[44px] mx-0 normal-case cursor-pointer btn btn-ghost btn-sm text-base-content"
       id="user-profile-menu"
       aria-haspopup="true"
       aria-expanded="true"
     >
       <LazyImage
-        class="w-8 h-8 rounded bg-base-100"
+        class="w-10 h-10 rounded bg-base-100"
         src={avatar_url(current_user(assigns))}
         alt="current user profile image"
       />
       <div class="flex flex-col items-start flex-1 min-w-0">
-        <div class="text-sm text-left font-semibold w-[140px] truncate text-ellipsis text-neutral-content">{e(assigns, :current_user, :profile, :name, "Unknown")}</div>
-        <!-- <span class="-mt-1 text-sm font-light text-neutral-content text-opacity-80">@{e(assigns, :current_user, :character, :username, "Unknown")}</span> -->
+        <div class="text-left text-sm font-semibold w-[140px] truncate text-ellipsis text-base-content">{e(assigns, :current_user, :profile, :name, "Unknown")}</div>
+        <span class="-mt-0.5 text-sm font-light text-base-content text-opacity-80">@{e(assigns, :current_user, :character, :username, "Unknown")}</span>
       </div>
     </label>
     <ul

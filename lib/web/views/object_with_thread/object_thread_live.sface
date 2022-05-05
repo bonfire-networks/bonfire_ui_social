@@ -29,7 +29,7 @@
     />
   </div>
 
-  <Bonfire.UI.Social.SmartInputLive
+  <!-- <Bonfire.UI.Social.SmartInputLive
     id={:smart_input}
     :if={@show_reply_input && current_user(assigns)}
     current_user={current_user(assigns)}
@@ -43,7 +43,7 @@
     smart_input_class={@smart_input_class}
     showing_within={e(assigns, :showing_within, nil)}
     replied_activity_class={@replied_activity_class}
-  />
+  /> -->
 
 </main>
 

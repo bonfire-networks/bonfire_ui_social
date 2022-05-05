@@ -10,7 +10,7 @@
       {e(assigns, :search_placeholder, "Search")}
     </span>
     <div class="relative w-full rounded">
-      <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none" aria-hidden="true">
+      <div class="absolute inset-y-0 right-0 flex items-center pl-3 pointer-events-none" aria-hidden="true">
         <Solid.SearchIcon class="w-4 h-4 mr-3 text-base-content text-opacity-80" />
       </div>
       
@@ -22,7 +22,7 @@
         value={e(assigns, :search, "")} 
         placeholder={e(assigns, :search_placeholder, "Search...")} 
         phx-debounce="300" 
-        class="w-full h-10 pl-8 text-base rounded input text-base-content placeholder-base-content placeholder-opacity-80"
+        class="w-full h-12 pr-8 text-base rounded-xl input text-base-content placeholder-base-content placeholder-opacity-80"
       />
       </div>
     </label>

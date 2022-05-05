@@ -1,9 +1,9 @@
 <div class="">
-  <Bonfire.UI.Social.SettingsViewLive.SettingsHeaderLive 
-    settings_section_title={l "Teams"}
-    selected_tab={@selected_tab}
-    admin_tab={@admin_tab}
-  />
+   <Bonfire.UI.Social.PageHeaderLive
+      page_title={l "Teams"}
+      current_user={current_user(assigns)}
+      before
+    />
 
   <form phx-submit="Bonfire.Me.Users:share_user" method="POST">
     <div class="p-3">

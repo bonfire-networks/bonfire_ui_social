@@ -2,35 +2,42 @@
   <div 
     class="flex flex-col">
     <Bonfire.UI.Social.HeaderUserLive 
+      :if={e(assigns, :without_sidebar, nil) && !current_user(assigns) }
       page={@page}
-      current_user={current_user(assigns)}  />
-    <div class="items-start justify-center w-full mt-0 lg:mt-3 lg:max-w-screen-xl lg:mx-auto h-body md:flex ">
-      {#if current_user(assigns) }
+      current_user={current_user(assigns)}  
+    />
+    <div class="items-start justify-center w-full mt-3 lg:max-w-screen-xl lg:mx-auto h-body md:flex ">
       <Bonfire.UI.Social.SidebarLive
+        :if={e(assigns, :without_sidebar, nil) != true}
         current_user={current_user(assigns)}
         page={@page}
         reply_to_id={@reply_to_id}
         thread_id={@thread_id}
+        showing_within={e(assigns, :showing_within, nil)}
         create_activity_type={e(assigns, :create_activity_type, nil)}
         to_circles={e(assigns, :to_circles, [])}
         smart_input_prompt={@smart_input_prompt}
         smart_input_text={@smart_input_text}
       />
-      {#else}
-      <Bonfire.UI.Social.SidebarGuestLive 
-        current_user={current_user(e(assigns, :current_user, nil))}
-      />
-      {/if}
-      <div class="flex-grow w-full tablet-lg:h-full h-body bg-base-100 mx-auto shrink-0 tablet:mx-3 w-center max-w-[580px]">
-         <Bonfire.UI.Social.HeaderUserMobileLive 
+      <div 
+        class={
+          "flex-grow w-full h-body mx-auto rounded-t-xl shrink-0 mx-3 w-center",
+          "max-w-[580px]": e(assigns, :without_sidebar, nil) != true,
+          }>
+        <Bonfire.UI.Social.HeaderUserLive 
+          :if={e(assigns, :without_sidebar, nil) != true or current_user(assigns) }
           page={@page}
-          current_user={current_user(assigns)}  />
-
+          current_user={current_user(assigns)}  
+        />
         {@inner_content}
-
       </div>
-      <div class="w-[285px] justify-start hidden h-full overflow-hidden pointer-events-none tablet-lg:flex">
+      <div
+        :if={e(assigns, :without_sidebar, nil) != true}
+        class="w-[350px] justify-start hidden h-full overflow-hidden pointer-events-none tablet:flex">
         <div class="top-[80px] w-full bottom-[16px]  pointer-events-auto">
+          <div class="mb-3">
+          <Bonfire.UI.Social.SearchLive />
+          </div>
           {#if Bonfire.Me.Settings.get([:ui, :show_trending_tags_for_last_x_days], nil, assigns) }
             <Bonfire.UI.Social.WidgetLive 
               widget_title="Trending topics"

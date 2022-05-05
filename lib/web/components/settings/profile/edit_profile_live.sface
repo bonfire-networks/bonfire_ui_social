@@ -1,8 +1,8 @@
 <form phx-change="Bonfire.Me.Profiles:validate" phx-submit="Bonfire.Me.Profiles:save" method="POST">
-  <Bonfire.UI.Social.SettingsViewLive.SettingsHeaderLive 
-    settings_section_title={l "Edit Profile"}
-    selected_tab={@selected_tab}
-    admin_tab={@admin_tab}
+   <Bonfire.UI.Social.PageHeaderLive
+    page_title={l "Edit profile"}
+    current_user={current_user(assigns)}
+    before
   />
   <div class="p-4">
     <div class="mt-1 sm:mt-0">

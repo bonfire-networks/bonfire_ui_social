@@ -1,9 +1,8 @@
-<Bonfire.UI.Social.SettingsViewLive.SettingsHeaderLive 
-  settings_section_title={l "Preferences"}
-  selected_tab={@selected_tab}
-  admin_tab={@admin_tab}
+ <Bonfire.UI.Social.PageHeaderLive
+  page_title={l "Preferences"}
+  current_user={current_user(assigns)}
+  before
 />
-
 <div class="flex flex-col p-4">
 
 <form name="settings" phx-change="Bonfire.Me.Settings:set">

@@ -1,5 +1,0 @@
-
-<div class="flex flex-col min-h-screen">
-  <Bonfire.UI.Social.HeaderUserLive current_user={@current_user} />
-  {@inner_content}
-</div>

@@ -1,24 +1,15 @@
-<div role="banner" class="sticky top-[48px] lg:top-[48px] lg:-mt-[20px] lg:pt-[8px] bg-base-100 z-40 w-full tablet:rounded-t-xl">  
-  <div class="hidden h-3 tablet:block bg-base-300 "></div>
-  <div class="relative rounded-b-none tablet:rounded-xl">
+
+<div role="banner" class="sticky top-0 z-40 w-full bg-base-100 rounded-t-xl">  
+  <div class="relative">
     <div class="flex items-center p-3">
       <div class="flex items-center flex-1 space-x-2 text-left">
         <a
           :if={e(assigns, :before, nil)}
           aria-label="Navigate to the previous page"
           href="javascript:window.history.back()"
+          class="btn btn-circle btn-ghost btn-sm"
         >
-          <span class="btn btn-circle btn-ghost btn-xs md:btn-sm">
-            <svg
-              class="w-4 h-4 stroke-current"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-              xmlns="http://www.w3.org/2000/svg"
-            >
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
-            </svg>
-          </span>
+          <Outline.ChevronLeftIcon class="w-4 h-4 stroke-current" />
         </a>
         
         <#slot>
