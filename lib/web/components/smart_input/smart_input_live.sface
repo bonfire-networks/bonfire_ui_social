@@ -1,14 +1,37 @@
   <div 
     id="smart_input"
     phx-drop-target={@uploads.files.ref}
-    class={"flex h-full"}>
+    class={"flex h-full"}
+    x-data={"{
+      title_open: false, 
+      open_boundaries: false,
+      boundary_selected: '#{if e(assigns, :create_activity_type, nil) == :message, do: "message", else: ( if length(e(assigns, :to_circles, [])) >0, do: "mentions", else: "public" )}' 
+    }"}
+    >
     <div class="flex flex-col flex-1 w-full">
+
       <div 
         :if={e(assigns, :showing_within, nil) == :message}
         class="mb-2" >
-        <div class="mb-1 text-sm font-semibold">{l "Send a direct message to"}</div>  
+        <div class="mb-1 text-sm font-semibold">
+          {l "Send a direct message"} 
+          <span :if={is_list(@to_circles) and length(@to_circles)>0}>{l "to"} </span>
+        </div>
         <span :for={{name, id} <- @to_circles} class="mr-2 badge badge-outline">{name}</span>
       </div>
+
+      <div 
+        :if={e(assigns, :showing_within, nil) != :message and length(all_smart_input_components())>1}
+        class="dropdown dropdown-hover"
+      >
+        <label tabindex="0" class="btn m-1">{smart_input_name(active_smart_input_component(assigns))}</label>
+        <ul tabindex="0" class="dropdown-content menu p-2 shadow bg-base-100 rounded-box w-52">
+          <li :for={{name, component} <- all_smart_input_components()}>
+            <div phx-click="select_smart_input" phx-target={@myself} phx-value-component={component}>{display_name(name)}</div>
+          </li>
+        </ul>
+      </div>
+
       <!-- show what we're replying to, if any -->
       <Bonfire.UI.Social.ActivityLive 
         :if={@activity}
@@ -20,42 +43,24 @@
         activity_inception={e(assigns, :activity_inception, nil)}
       />
     
-      {#if Bonfire.Common.Config.get([:ui, :default_smart_input])}
-        <Surface.Components.Dynamic.Component
-          module={Bonfire.Common.Config.get([:ui, :default_smart_input])}
+      <Surface.Components.Dynamic.Component
+          module={active_smart_input_component(assigns)}
+          create_activity_type={e(assigns, :create_activity_type, nil)}
           reply_to_id={@reply_to_id}
           thread_id={@thread_id}
-          create_activity_type={e(assigns, :create_activity_type, nil)}
-          to_circles={e(assigns, :to_circles, [])}
-          smart_input_prompt={@smart_input_prompt}
-          smart_input_text={@smart_input_text}
-          current_user={@current_user}
-          showing_within={@showing_within}
-          textarea_class={@textarea_class}
-          smart_input_class={@smart_input_class}
-          replied_activity_class={@replied_activity_class}
-          uploads={@uploads}
-          uploaded_files={e(assigns, :uploaded_files, [])}
-        />
-      {#else}
-        <Bonfire.UI.Social.WritePostContentLive
-          reply_to_id={@reply_to_id}
-          thread_id={@thread_id}
-          create_activity_type={e(assigns, :create_activity_type, nil)}
-          to_circles={e(assigns, :to_circles, [])}
-          smart_input_prompt={@smart_input_prompt}
-          smart_input_text={@smart_input_text}
-          current_user={@current_user}
-          showing_within={@showing_within}
           activity={@activity}
           object={@object}
+          to_circles={e(assigns, :to_circles, [])}
+          smart_input_prompt={@smart_input_prompt}
+          smart_input_text={@smart_input_text}
+          current_user={@current_user}
+          showing_within={@showing_within}
           textarea_class={@textarea_class}
           smart_input_class={@smart_input_class}
           replied_activity_class={@replied_activity_class}
           uploads={@uploads}
           uploaded_files={e(assigns, :uploaded_files, [])}
         />
-      {/if}    
 
     </div>
   </div>

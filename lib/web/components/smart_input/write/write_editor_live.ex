@@ -21,13 +21,13 @@ defmodule Bonfire.UI.Social.WriteEditorLive do
 
 
   def use_rich_editor?(assigns) do
-    assigns[:with_rich_editor] !=false && Bonfire.Me.Settings.get(:disable_rich_text_editor, false, assigns) !=true
+    assigns[:with_rich_editor] !=false && Bonfire.Me.Settings.get([:ui, :disable_rich_text_editor], false, assigns) !=true
   end
 
   def rich_editor(assigns) do
     if use_rich_editor?(assigns) do
       default = Bonfire.Editor.Quill
-      module = Bonfire.Me.Settings.get(:rich_text_editor, default, assigns)
+      module = Bonfire.Me.Settings.get([:ui, :rich_text_editor], default, assigns)
 
       if module_enabled?(module), do: module, else: error(nil, "#{module} is not available or enabled")
     end

@@ -1,11 +1,7 @@
 
 <div
   class="write_post_content"
-  x-data={"{
-    title_open: false, 
-    open_boundaries: false,
-    boundary_selected: '#{if e(assigns, :create_activity_type, nil) == :message, do: "message", else: ( if length(e(assigns, :to_circles, [])) >0, do: "mentions", else: "public" )}' 
-  }"}>
+>
   <Form 
     for={Bonfire.Social.Posts.LiveHandler.post_changeset(current_user(assigns))} 
     submit={if @create_activity_type==:message, do: "Bonfire.Social.Messages:send", else: "Bonfire.Social.Posts:post"} 

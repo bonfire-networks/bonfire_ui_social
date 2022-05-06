@@ -6,6 +6,7 @@ defmodule Bonfire.UI.Social.SmartInputLive do
   prop reply_to_id, :string, default: ""
   prop thread_id, :string, default: "", required: false
   prop create_activity_type, :any
+  prop smart_input_component, :atom
   prop to_circles, :list
   prop smart_input_prompt, :string, required: false
   prop smart_input_text, :string, required: false
@@ -37,6 +38,27 @@ defmodule Bonfire.UI.Social.SmartInputLive do
         # progress: &handle_progress/3
       )
     } # |> IO.inspect
+
+  def all_smart_input_components do
+    Bonfire.Common.Config.get([:ui, :smart_input_components], [post: Bonfire.UI.Social.WritePostContentLive])
+  end
+
+  def active_smart_input_component(assigns) do
+    e(assigns, :smart_input_component, nil) || Bonfire.Common.Config.get([:ui, :default_smart_input]) || Bonfire.UI.Social.WritePostContentLive
+  end
+
+  def smart_input_name(component) do
+    all_smart_input_components()
+    |> Keyword.filter(fn {_key, val} -> val==component end)
+    |> Keyword.keys()
+    |> List.first()
+    |> display_name()
+  end
+
+  defp display_name(name) do
+    name
+    |> maybe_to_string()
+  end
 
   # defp handle_progress(_, entry, socket) do
   #   debug(entry, "progress")
@@ -83,6 +105,11 @@ defmodule Bonfire.UI.Social.SmartInputLive do
   #  {:ok, socket |> assign(assigns)}
   # end
 
+  def handle_event("select_smart_input", %{"component" => component}, socket) do
+    {:noreply, socket
+      |> assign(smart_input_component: maybe_to_module(component))
+    }
+  end
 
   def handle_event("validate", _params, socket) do
     {:noreply, socket}
