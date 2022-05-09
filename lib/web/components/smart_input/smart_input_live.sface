@@ -24,8 +24,8 @@
         :if={e(assigns, :showing_within, nil) != :message and length(all_smart_input_components())>1}
         class="dropdown dropdown-hover"
       >
-        <label tabindex="0" class="btn m-1">{smart_input_name(active_smart_input_component(assigns))}</label>
-        <ul tabindex="0" class="dropdown-content menu p-2 shadow bg-base-100 rounded-box w-52">
+        <label tabindex="0" class="m-1 btn">{smart_input_name(active_smart_input_component(assigns))}</label>
+        <ul tabindex="0" class="p-2 shadow dropdown-content menu bg-base-100 rounded-box w-52">
           <li :for={{name, component} <- all_smart_input_components()}>
             <div phx-click="select_smart_input" phx-target={@myself} phx-value-component={component}>{display_name(name)}</div>
           </li>

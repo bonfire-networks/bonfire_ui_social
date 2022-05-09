@@ -1,11 +1,5 @@
 {#if e(@object, :id, nil) != nil and e(@activity, :replied, :reply_to_id, nil) == nil and e(@activity, :id, nil) == nil}
   <div></div>
-{#elseif  e(assigns, :showing_within, nil) == :smart_input}
-  <span 
-    phx-click="Bonfire.Social.Feeds:remove_data"
-    class="absolute top-2 right-2 btn btn-ghost btn-xs btn-circle">
-    <Outline.XIcon class="w-4 h-4" />
-  </span>
 {#else}
   <div 
     :if={e(assigns, :showing_within, nil) != :notifications} 

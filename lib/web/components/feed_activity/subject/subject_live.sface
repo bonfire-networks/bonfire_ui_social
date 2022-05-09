@@ -13,6 +13,13 @@
   </div>
    -->
 
+  <span 
+  :if={e(assigns, :showing_within, nil) == :smart_input}
+  phx-click="Bonfire.Social.Feeds:remove_data"
+  class="absolute top-2 right-2 btn btn-ghost btn-xs btn-circle">
+  <Outline.XIcon class="w-4 h-4" />
+</span>
+
 {#if @viewing_main_object}
   <div class="flex items-center p-3">
       <Bonfire.UI.Social.Activity.AvatarLive
