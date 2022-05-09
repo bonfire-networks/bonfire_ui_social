@@ -1,5 +1,5 @@
 <main class="flex flex-col md:mx-0 grow">
-  <Bonfire.UI.Social.PageHeaderLive
+  <Bonfire.UI.Common.PageHeaderLive
     page_title={@page_title}
     before={true}
   />

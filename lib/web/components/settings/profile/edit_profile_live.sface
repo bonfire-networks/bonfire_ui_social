@@ -1,5 +1,5 @@
 <form phx-change="Bonfire.Me.Profiles:validate" phx-submit="Bonfire.Me.Profiles:save" method="POST">
-   <Bonfire.UI.Social.PageHeaderLive
+   <Bonfire.UI.Common.PageHeaderLive
     page_title={l "Edit profile"}
     current_user={current_user(assigns)}
     before

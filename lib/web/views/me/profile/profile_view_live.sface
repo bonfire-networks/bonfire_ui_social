@@ -3,7 +3,7 @@
   data-user-id={e(@user, :id, "")}
   class="md:flex md:mx-0">
   <section class="w-full mx-auto bg-base-100 rounded-xl">
-    <Bonfire.UI.Social.PageHeaderLive
+    <Bonfire.UI.Common.PageHeaderLive
       before
       :if={e(current_user(assigns), :id, nil)}
       page_title={@page_title}

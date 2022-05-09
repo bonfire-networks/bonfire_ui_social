@@ -10,7 +10,7 @@
       - [ ] Reply to a reported activity, remove or unflag
       - [ ] Reply to a blocked user activity, block or unblock  -->
 {#if Bonfire.Me.Users.is_admin?(current_user(assigns)) }
-      <Bonfire.UI.Social.PageHeaderLive
+      <Bonfire.UI.Common.PageHeaderLive
       page_title={l "Admin"}
       current_user={current_user(assigns)}
       before

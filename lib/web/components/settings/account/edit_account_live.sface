@@ -1,5 +1,5 @@
 <div class="">
- <Bonfire.UI.Social.PageHeaderLive
+ <Bonfire.UI.Common.PageHeaderLive
   page_title={l "Edit Account"}
   current_user={current_user(assigns)}
   before

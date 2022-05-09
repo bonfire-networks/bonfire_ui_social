@@ -1,5 +1,5 @@
 <div class="">
-   <Bonfire.UI.Social.PageHeaderLive
+   <Bonfire.UI.Common.PageHeaderLive
       page_title={@settings_section_title}
       current_user={current_user(assigns)}
       before

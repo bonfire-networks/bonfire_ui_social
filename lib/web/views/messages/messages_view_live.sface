@@ -76,7 +76,7 @@
 
 
   {#else}
-    <Bonfire.UI.Social.PageHeaderLive page_title={@page_title} />
+    <Bonfire.UI.Common.PageHeaderLive page_title={@page_title} />
 
 
 
