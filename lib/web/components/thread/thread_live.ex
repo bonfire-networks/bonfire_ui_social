@@ -83,9 +83,11 @@ defmodule Bonfire.UI.Social.ThreadLive do
 
     # debug(assigns, "thread assigns")
     current_user = current_user(assigns)
-    thread_id = e(assigns, :thread_id, nil)
     activity = e(assigns, :activity, nil) #|> IO.inspect
     object = e(assigns, :object, e(activity, :object)) #|> IO.inspect
+    thread_id = e(activity, :replied, :thread_id, nil) || e(assigns, :thread_id, nil)
+
+    maybe_subscribe(thread_id, socket)
 
     {:ok,
     assign(socket,
@@ -95,7 +97,7 @@ defmodule Bonfire.UI.Social.ThreadLive do
         activity: activity,
         object: object,
         reply_to_id: e(activity, :object, :id, thread_id),
-        thread_id: e(activity, :replied, :thread_id, thread_id), # TODO: change for thread forking?
+        thread_id: thread_id, # TODO: change for thread forking?
         current_user: current_user,
         page: "thread",
         # participants: participants
@@ -103,6 +105,13 @@ defmodule Bonfire.UI.Social.ThreadLive do
     )}
   end
 
+  def maybe_subscribe(thread_id, socket) do
+    if thread_id do
+      pubsub_subscribe(thread_id, socket)
+    else
+      debug("no thread_id known, not subscribing to live updates")
+    end
+  end
 
 
   def handle_event(action, attrs, socket), do: Bonfire.UI.Common.LiveHandlers.handle_event(action, attrs, socket, __MODULE__)
