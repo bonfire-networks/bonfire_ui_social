@@ -5,6 +5,8 @@
       <Bonfire.UI.Social.FeedLive 
         :if={@feed_id}
         id={@feed_id}
+        feed_id={@feed_id}
+        feed_ids={e(assigns, :feed_ids, nil)}
         feed={@feed}
         page_info={@page_info}
         showing_within={@showing_within}

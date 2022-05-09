@@ -2,6 +2,7 @@
 <div>
 <Bonfire.UI.Social.FeedLive 
     id={@feed_id}
+    feed_id={@feed_id}
     feed={@feed}
     page_info={@page_info}
     showing_within={@showing_within}

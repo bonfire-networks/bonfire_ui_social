@@ -6,6 +6,7 @@ defmodule Bonfire.UI.Social.FeedLive do
   import Where
 
   prop feed_id, :string
+  prop feed_ids, :any
   prop feed, :list
   prop page_info, :map
   prop showing_within, :any
@@ -45,7 +46,7 @@ defmodule Bonfire.UI.Social.FeedLive do
     debug("FeedLive: a feed was provided")
     socket = assign(socket, assigns)
 
-    maybe_subscribe(e(socket.assigns, :feed_id, nil), socket)
+    maybe_subscribe(socket)
 
     {:ok, socket
     |> assign(
@@ -63,8 +64,9 @@ defmodule Bonfire.UI.Social.FeedLive do
 
     assigns = if module_enabled?(Bonfire.Social.Web.Feeds.HomeLive), do: Bonfire.Social.Feeds.LiveHandler.default_feed_assigns(socket),
     else: []
+    socket = assign(socket, assigns)
 
-    maybe_subscribe(e(assigns, :feed_id, nil), socket)
+    maybe_subscribe(socket)
 
     # debug(assigns: assigns)
 
@@ -76,11 +78,10 @@ defmodule Bonfire.UI.Social.FeedLive do
     )}
   end
 
-  def maybe_subscribe(feed_id, socket) do
-    if feed_id do
-      pubsub_subscribe(feed_id, socket)
-    else
-      debug("no feed_id known, not subscribing to live updates")
+  def maybe_subscribe(socket) do
+    case e(socket.assigns, :feed_ids, nil) || e(socket.assigns, :feed_id, nil) do
+      nil -> debug("no feed_id known, not subscribing to live updates")
+      feed_or_feeds -> pubsub_subscribe(feed_or_feeds, socket)
     end
   end
 
