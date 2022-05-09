@@ -33,10 +33,12 @@
       </div>
       <div
         :if={e(assigns, :without_sidebar, nil) != true}
-        class="w-[350px] justify-start hidden h-full overflow-hidden pointer-events-none tablet:flex">
+        class="w-[350px] justify-start hidden h-full  pointer-events-none tablet:flex">
         <div class="top-[80px] w-full bottom-[16px]  pointer-events-auto">
           <div class="mb-3">
-          <Bonfire.UI.Social.SearchLive />
+          <Bonfire.Search.Web.FormLive 
+            search_limit={5}
+          />
           </div>
           {#if Bonfire.Me.Settings.get([:ui, :show_trending_tags_for_last_x_days], nil, assigns) }
             <Bonfire.UI.Social.WidgetLive 

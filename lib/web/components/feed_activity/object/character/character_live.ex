@@ -10,7 +10,7 @@ defmodule Bonfire.UI.Social.Activity.CharacterLive do
 
   def the_other(assigns) do
     me = current_user(assigns)
-    if e(assigns, :object, :id, nil) != e(me, :id, nil) do
+    if e(assigns, :object, :id, nil) != e(me, :id, nil) or is_nil e(assigns, :activity, :subject, nil) do
       e(assigns, :object, nil)
     else
       e(assigns, :activity, :subject, nil)

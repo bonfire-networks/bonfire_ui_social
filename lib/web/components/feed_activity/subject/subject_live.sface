@@ -1,5 +1,6 @@
 <div data-id="subject"> 
-{#if  e(@object, :id, nil) != nil and e(@activity, :replied, :reply_to_id, nil) == nil and e(@activity, :id, nil) == nil and e(assigns, :showing_within, nil) == :widget}
+<!-- We are not using widget anymore atm -->
+<!-- {#if  e(@object, :id, nil) != nil and e(@activity, :replied, :reply_to_id, nil) == nil and e(@activity, :id, nil) == nil and e(assigns, :showing_within, nil) == :widget}
   <div class="flex items-center mt-1 space-x-1 text-xs font-medium text-opacity-50 text-base-content">
     <Solid.ReplyIcon class="w-3 h-3" />
     <span class="">{l "In reply to"}</span>
@@ -10,9 +11,9 @@
       @{e(@profile, :name, "Anonymous")}
     </LiveRedirect>
   </div>
-  
+   -->
 
-{#elseif @viewing_main_object}
+{#if @viewing_main_object}
   <div class="flex items-center p-3">
       <Bonfire.UI.Social.Activity.AvatarLive
         viewing_main_object={@viewing_main_object} 
@@ -39,13 +40,13 @@
         verb_display={@verb_display} /> -->
   </div>
 
-{#elseif e(@object, :id, nil) != nil and e(@activity, :replied, :reply_to_id, nil) == nil and e(@activity, :id, nil) == nil }
+{#elseif e(@object, :id, nil) != nil and e(@activity, :id, nil) == nil and e(assigns, :showing_within, nil) != :search }
   <div class={"flex items-center"}>
     <div class="flex flex-1 space-x-2">
       <div class="flex items-center text-sm font-semibold text-base-content">
         <LiveRedirect
           aria-label={e(@character, :username, "") <> " profile"}
-          class="hover:underline subject_replied text-opacity-70"
+          class="hover:underline text-opacity-70"
           to={path(e(@character, nil))}>
           {e(@profile, :name, "Anonymous")}
         </LiveRedirect>

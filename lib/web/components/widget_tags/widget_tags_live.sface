@@ -1,23 +1,32 @@
 <ul class="menu bg-base-100 rounded-b-xl">
-{#for tag <- Bonfire.Tag.Tags.list_trending(Bonfire.Me.Settings.get([:ui, :show_trending_tags_for_last_x_days], nil, assigns), 10)}
-  <li class="">
-    <div class="flex flex-row items-center">
-      <div class="flex flex-col items-start flex-1 gap-0 text-left">
-        <LivePatch to={path(e(tag, :tag, nil) || e(tag, :tag_id, nil))}>
-          <div class="font-bold text-base-content">
-            {#case e(tag, :tag, nil)}
-              {#match %Bonfire.Tag.Hashtag{} = hashtag}
-                #{hashtag.name}
-              {#match other}
-                {e(other, :name, nil) || e(other, :profile, :name, nil) || e(other, :character, :username, nil) || e(other, :named, :name, nil) || e(other, :id, nil)}
-              {/case}
+  {#for tag <- Bonfire.Tag.Tags.list_trending(Bonfire.Me.Settings.get([:ui, :show_trending_tags_for_last_x_days], nil, assigns), 10)}
+    {#case e(tag, :tag, nil)}
+      {#match %Bonfire.Tag.Hashtag{} = hashtag}
+        <LivePatch to={"/tag/" <> hashtag.name}>
+          <li class="">
+            <div class="flex flex-row items-center">
+              <div class="flex flex-col items-start flex-1 gap-0 text-left">
+                  <div class="font-bold text-base-content">
+                    #{hashtag.name}
+                  </div>
+                <div class="text-xs font-light text-base-content text-opacity-80">{e(tag, :count, 0)} {l "activities"}</div>
+            </div>
+            <!-- <div><Outline.DotsHorizontalIcon class="w-5 h-5 text-base-content text-opacity-60" /></div> -->
           </div>
-          <div class="text-xs font-light text-base-content text-opacity-80">{e(tag, :count, 0)}</div>
+        </li>
         </LivePatch>
-      </div>
-      <div><Outline.DotsHorizontalIcon class="w-5 h-5 text-base-content text-opacity-60" /></div>
-    </div>
-  </li>
-{/for}
+      {#match other}
+      <li class="">
+        <div class="flex flex-row items-center">
+          <div class="flex flex-col items-start flex-1 gap-0 text-left">
+            <div class="font-bold text-base-content">
+            {e(other, :name, nil) || e(other, :profile, :name, nil) || e(other, :character, :username, nil) || e(other, :named, :name, nil) || e(other, :id, nil)}
+            </div>
+            <div class="text-xs font-light text-base-content text-opacity-80">{e(tag, :count, 0)} {l "activities"}</div>
+          </div>
+        </div>
+      </li>
+    {/case}
+  {/for}
 </ul>
 

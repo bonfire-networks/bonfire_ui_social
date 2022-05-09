@@ -113,13 +113,19 @@
     <div class="absolute left-3">
       <Bonfire.UI.Social.Activity.AvatarLive profile={e(@object, :profile, nil)} />
     </div>
-    <div class="items-baseline justify-between flex-1">
-      <p class="text-base font-semibold group-hover:underline text-base-content">
-        {e(the_other(assigns), :profile, :name, "")}
-      </p>
-      <p class="-mt-px text-sm text-base-content text-opacity-70">
-        @{e(the_other(assigns), :character, :username, "anon")} 
-      </p>
+    <div>
+      <div class="items-baseline justify-between flex-1">
+        <p class="text-base font-semibold group-hover:underline text-base-content">
+          {e(the_other(assigns), :profile, :name, "")}
+        </p>
+        <p class="-mt-px text-sm text-base-content text-opacity-70">
+          @{e(the_other(assigns), :character, :username, "anon")} 
+        </p>
+      </div>
+        <!-- SHOW THE BIO IN SEARCH -->
+      <div class="prose-sm prose">
+         {rich e(the_other(assigns), :profile, :summary, "")}
+      </div>
     </div>
   </LiveRedirect>
 
@@ -128,7 +134,7 @@
   :on-click="Bonfire.Social.Follows:accept" 
   phx-value-id={e(@activity, :id, nil)}
   type="button" 
-  class="btn ml-3">
+  class="ml-3 btn">
     Accept
   </button>
 
