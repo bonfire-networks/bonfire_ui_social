@@ -18,8 +18,7 @@ defmodule Bonfire.UI.Social.MixProject do
         {:floki, ">= 0.0.0", only: [:dev, :test]},
         {:bonfire_editor_ck, "https://github.com/bonfire-networks/bonfire_editor_ck#main", optional: true},
         {:bonfire_editor_quill, "https://github.com/bonfire-networks/bonfire_editor_quill#main", optional: true},
-        {:bonfire_tag, "https://github.com/bonfire-networks/bonfire_tag#main", optional: true},
-        {:bonfire_search, "https://github.com/bonfire-networks/bonfire_search#main", optional: true}
+        {:bonfire_tag, "https://github.com/bonfire-networks/bonfire_tag#main", optional: true}
         # {:bonfire_valueflows, "https://github.com/bonfire-networks/bonfire_valueflows#main", optional: true}
         # {:bonfire_ui_valueflows, "https://github.com/bonfire-networks/bonfire_ui_valueflows#main", optional: true}
       ]),

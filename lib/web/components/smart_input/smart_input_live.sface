@@ -33,7 +33,8 @@
       </div>
 
       <!-- show what we're replying to, if any -->
-      <Bonfire.UI.Social.ActivityLive 
+      <Surface.Components.Dynamic.LiveComponent
+        module={Bonfire.UI.Social.ActivityLive}
         :if={@activity}
         id={"cap:" <> e(assigns, :activity, :id, "")}
         activity={@activity}
