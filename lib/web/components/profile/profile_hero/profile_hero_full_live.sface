@@ -36,7 +36,7 @@
         
         <LiveRedirect
           :if={current_user(assigns) && e(current_user(assigns), :id, nil) == maybe_get(@user, :id)}
-          to="/settings/profile"
+          to="/settings/user"
           class="capitalize rounded-full btn btn-sm btn-outline"
         >
           <span class="mr-2">

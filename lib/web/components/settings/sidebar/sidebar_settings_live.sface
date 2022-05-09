@@ -78,6 +78,14 @@
       </li>
       <li>
         <LivePatch 
+          to="/settings/extensions"
+          class={"w-full flex items-center text-sm font-regular text-base-content", "focus:bg-primary hover:bg-primary bg-primary text-primary-content": @selected_tab == "extensions"}>
+        <Outline.CogIcon class="inline-block w-5 h-5 mr-2 stroke-current" />
+        {l "Extensions"}
+        </LivePatch>
+      </li>
+      <li>
+        <LivePatch 
           to="/settings/admin/terms"
           class={"w-full flex items-center text-sm font-regular text-base-content", "focus:bg-primary hover:bg-primary bg-primary text-primary-content": @admin_tab == "terms"}>
         <Outline.ScaleIcon class="inline-block w-5 h-5 mr-2 stroke-current" />

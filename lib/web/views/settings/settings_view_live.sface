@@ -77,6 +77,7 @@
       <Bonfire.UI.Social.SettingsViewsLive.ExtensionsLive
         current_user={current_user(assigns)}
         selected_tab={@selected_tab}
+        data={Bonfire.Common.Extensions.data()}
       />
     {#match "preferences"}
       <Bonfire.UI.Social.SettingsViewsLive.PreferencesLive
