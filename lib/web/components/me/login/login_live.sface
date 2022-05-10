@@ -7,7 +7,7 @@
     </div>
     <div class="rounded shadow-xl bg-base-100 -mt-14">
       <div class="px-6 pt-16 pb-6 mx-auto">
-        <Form for={@form |> dump} action={path(:login, :create)} class="w-full md:ml-0" opts={[id: "login-form"]}>
+        <Form for={@form} action={path(:login, :create)} class="w-full md:ml-0" opts={[id: "login-form"]}>
           <HiddenInput name={:go} value={e(@form, :changes, :go, nil)} />
           <!-- <%= hidden_input f, :go %> -->
 

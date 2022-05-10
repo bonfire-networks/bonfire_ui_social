@@ -22,17 +22,17 @@ defmodule Bonfire.UI.Social.ThreadLive do
   prop thread_mode, :any
   prop reverse_order, :any
 
-  def update(%{replies: replies, threaded_replies: threaded_replies, page_info: page_info} = assigns, socket) when is_list(replies) and is_list(threaded_replies) and is_map(page_info) do
-    info("ThreadLive: showing preloaded replies")
+  def update(%{replies: replies, page_info: page_info} = assigns, socket) when is_list(replies) and is_map(page_info) do
+    info("showing preloaded replies")
     assigns |> assign_thread(socket)
   end
 
   def update(%{new_reply: new_reply} = assigns, socket) when is_map(new_reply) do
-    debug("ThreadLive: adding new reply")
+    debug("adding new reply")
 
     new_reply = new_reply
       |> Map.put(:path, e(new_reply, :object, :replied, :path, nil) || e(new_reply, :replied, :path, nil) || e(new_reply, :replied, :path, nil) || e(new_reply, :activity, :replied, :path, []))
-      |> dump("new_reply")
+      # |> dump("new_reply")
 
     replies = [new_reply] ++ e(socket, :assigns, :replies, [])
 
@@ -54,7 +54,7 @@ defmodule Bonfire.UI.Social.ThreadLive do
     thread_id = e(assigns, :thread_id, e(assigns, :object, :id, nil))
 
     if thread_id do
-      # debug("Thread: loading by thread_id")
+      info("loading by thread_id")
       # debug(assigns)
       current_user = current_user(assigns) #|> IO.inspect
 
