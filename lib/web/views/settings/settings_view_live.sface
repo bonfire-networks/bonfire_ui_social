@@ -7,57 +7,59 @@
   <section class="flex-grow w-full h-full mx-auto bg-base-100 shrink-0 md:mx-3 md:mr-0 lg:mr-3 max-w-[580px]">
   {#case @selected_tab}
     {#match "admin"}
-      {#case @tab_id}
-        {#match "general"}
-          <Bonfire.UI.Social.SettingsViewsLive.AdminLive
-            current_user={current_user(assigns)}
-            selected_tab={@selected_tab}
-          />
-        {#match "instance"}
-          <Bonfire.UI.Social.SettingsViewsLive.AdminInstanceLive
-            current_user={current_user(assigns)}
-            selected_tab={@selected_tab}
-            uploads={@uploads}
-          />
-        {#match "terms"}
-          <Bonfire.UI.Social.SettingsViewsLive.TermsLive
-            current_user={current_user(assigns)}
-            selected_tab={@selected_tab}
-          />
-        {#match "invites"}
-         <Surface.Components.Dynamic.LiveComponent
-            module={Bonfire.Common.Config.get([:ui, :invites_component], Bonfire.Invite.Links.Web.InvitesLive)}
-            id="admin_invites"
-            selected_tab={@selected_tab}
-            current_user={current_user(assigns)}
-          />
-        
-        <!-- {#match "flags"}
-          <Bonfire.UI.Social.SettingsViewsLive.AdminReportsLive
-            current_user={current_user(assigns)}
-          /> -->
-        
-        {#match "silenced"}
-          <Bonfire.UI.Social.BlocksLive
-            scope={:instance_wide}
-            id="blocks"
-            current_user={current_user(assigns)}
-            selected_tab={"silenced"}
-          />
-        {#match "ghosted"}
-          <Bonfire.UI.Social.BlocksLive
-            scope={:instance_wide}
-            id="blocks"
-            current_user={current_user(assigns)}
-            selected_tab={"ghosted"}
-          />
+      {#if is_admin?(current_user(assigns))}
+        {#case @tab_id}
+          {#match "general"}
+            <Bonfire.UI.Social.SettingsViewsLive.AdminLive
+              current_user={current_user(assigns)}
+              selected_tab={@selected_tab}
+            />
+          {#match "instance"}
+            <Bonfire.UI.Social.SettingsViewsLive.AdminInstanceLive
+              current_user={current_user(assigns)}
+              selected_tab={@selected_tab}
+              uploads={@uploads}
+            />
+          {#match "terms"}
+            <Bonfire.UI.Social.SettingsViewsLive.TermsLive
+              current_user={current_user(assigns)}
+              selected_tab={@selected_tab}
+            />
+          {#match "invites"}
+          <Surface.Components.Dynamic.LiveComponent
+              module={Bonfire.Common.Config.get([:ui, :invites_component], Bonfire.Invite.Links.Web.InvitesLive)}
+              id="admin_invites"
+              selected_tab={@selected_tab}
+              current_user={current_user(assigns)}
+            />
+          
+          <!-- {#match "flags"}
+            <Bonfire.UI.Social.SettingsViewsLive.AdminReportsLive
+              current_user={current_user(assigns)}
+            /> -->
+          
+          {#match "silenced"}
+            <Bonfire.UI.Social.BlocksLive
+              scope={:instance_wide}
+              id="blocks"
+              current_user={current_user(assigns)}
+              selected_tab={"silenced"}
+            />
+          {#match "ghosted"}
+            <Bonfire.UI.Social.BlocksLive
+              scope={:instance_wide}
+              id="blocks"
+              current_user={current_user(assigns)}
+              selected_tab={"ghosted"}
+            />
 
-        {#match _}
-          <Bonfire.UI.Social.SettingsViewsLive.AdminLive
-            current_user={current_user(assigns)}
-            selected_tab={@selected_tab}
-          />
-      {/case}
+          {#match _}
+            <Bonfire.UI.Social.SettingsViewsLive.AdminLive
+              current_user={current_user(assigns)}
+              selected_tab={@selected_tab}
+            />
+        {/case}
+      {/if}
     {#match "account"}
       <Bonfire.UI.Social.SettingsViewsLive.EditAccountLive 
       current_account={current_account(assigns)}

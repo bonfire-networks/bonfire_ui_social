@@ -37,7 +37,7 @@
       {/for}
     </div>
 
-      <Bonfire.UI.Social.LoadMoreLive 
+      <Bonfire.UI.Common.LoadMoreLive 
         :if={e(assigns, :hide_load_more, false) != true}
         live_handler={Bonfire.Social.Feeds} 
         page_info={@page_info} 
