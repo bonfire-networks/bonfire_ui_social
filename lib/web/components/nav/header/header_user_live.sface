@@ -81,7 +81,7 @@
             </span>
             {#if !Bonfire.Me.Accounts.instance_is_invite_only? }
               <span class="inline-flex ml-3 ">
-                <Link to={path(:signup, :index)} class="normal-case btn btn-sm btn-outline btn-secondary">
+                <Link to={path(:signup, :index)} class="normal-case btn btn-sm btn-outline btn-primary">
                   {l "Signup"}
                 </Link>
               </span>
