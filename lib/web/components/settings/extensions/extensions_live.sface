@@ -35,7 +35,7 @@
       <div class="p-4">
         <h2 class="text-lg font-medium leading-6 text-base-content">{l "Bonfire Extensions"}</h2>
         <p class="mt-1 text-sm text-base-content text-opacity-70">
-          {l "These are the data schemas currently installed on this instance, which can be shared among multiple apps and extensions."}
+          <!-- {l "These are the data schemas currently installed on this instance, which can be shared among multiple apps and extensions."} -->
         </p>
       </div>
       <div class="flex flex-col lg:flex-row">

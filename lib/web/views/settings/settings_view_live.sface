@@ -9,13 +9,13 @@
     {#match "admin"}
       {#if is_admin?(current_user(assigns))}
         {#case @tab_id}
-          {#match "general"}
+          {#match "config"}
             <Bonfire.UI.Social.SettingsViewsLive.AdminLive
               current_user={current_user(assigns)}
               selected_tab={@selected_tab}
             />
           {#match "instance"}
-            <Bonfire.UI.Social.SettingsViewsLive.AdminInstanceLive
+            <Bonfire.UI.Social.SettingsViewsLive.InstanceInfoLive
               current_user={current_user(assigns)}
               selected_tab={@selected_tab}
               uploads={@uploads}

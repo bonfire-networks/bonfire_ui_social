@@ -1,0 +1,118 @@
+ <Bonfire.UI.Common.PageHeaderLive
+  page_title={l "Instance configuration"}
+  current_user={current_user(assigns)}
+  before
+/>
+<!--- 
+  - show admins in homepage
+  - show number instance users
+  - Switch open / invite only instance
+  - Show default theme -->
+
+<div class="pb-4 space-y-6 sm:space-y-5">
+
+
+<form phx-change="Bonfire.Me.Profiles:validate" name="images">
+  <input name="scope" value={:instance} type="hidden" />
+  
+    <div class="px-4 pb-4 sm:grid sm:grid-cols-3 sm:gap-4 sm:items-center sm:border-t sm:border-base-200 sm:pt-5">
+      <label for="photo" class="block text-sm font-medium text-base-content">
+        {l "Instance icon"}
+      </label>
+      <div 
+      data-id="upload_icon"
+      phx-drop-target={@uploads.icon.ref} 
+      class="mt-1 sm:mt-0 sm:col-span-2">
+        <div class="flex items-center">
+          <span class="w-12 h-12 overflow-hidden rounded-full bg-base-100">
+            <img class="object-contain w-full h-full" src={Bonfire.Me.Settings.get([:bonfire, :ui, :theme, :instance_icon], "")} />
+          </span>
+          <label for={@uploads.icon.ref} class="ml-3 btn btn-secondary">
+            {l "Change"}
+            { live_file_input @uploads.icon, class: "sr-only" }
+          </label>
+        </div>
+      </div>
+    </div>
+
+    <div class="px-4 sm:grid sm:grid-cols-3 sm:gap-4 sm:items-start sm:border-t sm:border-base-200 sm:pt-5">
+      <label for="cover-photo" class="block text-sm font-medium text-base-content sm:mt-px sm:pt-2">
+        {l "Cover image"}
+      </label>
+      <div class="mt-1 sm:mt-0 sm:col-span-2">
+        <div 
+        data-id="upload_image"
+        phx-drop-target={@uploads.image.ref} 
+        class="flex justify-center max-w-lg px-6 pt-5 pb-6 border-2 border-gray-300 border-dashed rounded-md">
+          <div class="space-y-1 text-center">
+            <img class="w-full h-auto mx-auto" src={Bonfire.Me.Settings.get([:bonfire, :ui, :theme, :instance_image], "")} />
+            <div class="flex text-sm text-base-content text-opacity-80">
+              <label for={@uploads.image.ref} class="btn btn-xs btn-secondary">
+                <span>{l "Upload an image"}</span>
+                { live_file_input @uploads.image, class: "sr-only" }
+              </label>
+              <p class="pl-1">{l "or drag and drop"}</p>
+            </div>
+            <p class="text-xs text-base-content text-opacity-70">
+              {#if length(@uploads.image.entries)>0}
+                {#for entry <- @uploads.image.entries }
+                  {entry.client_name} - {entry.progress}%
+                {/for}
+              {#else}
+                {l "PNG, JPG, GIF up to 10MB"}
+              {/if}
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+</form>
+
+<form name="settings" phx-submit="Bonfire.Me.Settings:save">
+  <input name="scope" value={:instance} type="hidden" />
+  
+    <div class="px-4 sm:grid sm:grid-cols-3 sm:gap-4 sm:items-start sm:border-t sm:border-base-200 sm:pt-5">
+      <label for="instance_name" class="block text-sm font-medium text-base-content sm:mt-px sm:pt-2">
+        {l "Instance name"}
+      </label>
+      <div class="mt-1 mb-4 sm:mt-0 sm:col-span-2">
+        <div class="flex max-w-lg ">
+          <input type="text" name="ui[theme][instance_name]" id="instance_name" value={Bonfire.Me.Settings.get([:bonfire, :ui, :theme, :instance_name], "")} class="w-full input input-bordered">
+        </div>
+      </div>
+    </div>
+
+    <div class="px-4 sm:grid sm:grid-cols-3 sm:gap-4 sm:items-start sm:border-t sm:border-base-200 sm:pt-5">
+      <label for="instance_description" class="block text-sm font-medium text-base-content sm:mt-px sm:pt-2">
+        {l "Instance description"}
+        {l "(short summary shown in various places)"}
+      </label>
+      <div class="mt-1 sm:mt-0 sm:col-span-2">
+        <p class="mt-1 text-sm text-base-content text-opacity-80">{l "Write a few sentences about what the instance is about."}</p>
+        <textarea id="instance_description" name="ui[theme][instance_description]" rows="3" class="w-full h-24 textarea textarea-bordered">{Bonfire.Me.Settings.get([:bonfire, :ui, :theme, :instance_description], "")}</textarea>
+      </div>
+    </div>
+
+    <div class="px-4 sm:grid sm:grid-cols-3 sm:gap-4 sm:items-start sm:border-t sm:border-base-200 sm:pt-5">
+      <label for="instance_description" class="block text-sm font-medium text-base-content sm:mt-px sm:pt-2">
+        {l "Instance welcome"}
+        {l "(longer text shown on the homepage)"}
+      </label>
+      <div class="mt-1 sm:mt-0 sm:col-span-2">
+        <p class="mt-1 text-sm text-base-content text-opacity-80">{l "Enter a short title"}</p>
+        <input name="ui[theme][instance_welcome][title]" value={Bonfire.Me.Settings.get([:bonfire, :ui, :theme, :instance_welcome, :title], "")} class="w-full input input-bordered"/>
+
+        <p class="mt-1 text-sm text-base-content text-opacity-80">{l "Write a longer introduction (you can use markdown and/or HTML)"}</p>
+        <textarea id="instance_welcome" name="ui[theme][instance_welcome][description]" rows="6" class="w-full h-48 textarea textarea-bordered">{Bonfire.Me.Settings.get([:bonfire, :ui, :theme, :instance_welcome, :description], "")}</textarea>
+      </div>
+    </div>
+
+  <div class="mt-1">
+    <button type="submit" class="w-full btn btn-primary">
+      {l "Save"}
+    </button>
+  </div>
+
+</form>
+
+</div>

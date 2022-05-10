@@ -45,7 +45,7 @@
         to={"/settings/flags"}
         class={"w-full flex items-center text-sm font-regular text-base-content", "focus:bg-primary hover:bg-primary bg-primary text-primary-content": @selected_tab == "flags"}>
         <Outline.FlagIcon class="inline-block w-4 h-4 mr-2 stroke-current" />
-        {l "Flagged contents"}
+        {l "Flags"}
       </LivePatch>
     </li>
     <li>
@@ -53,7 +53,7 @@
         to={"/settings/ghosted"}
         class={"w-full flex items-center text-sm font-regular text-base-content", "focus:bg-primary hover:bg-primary bg-primary text-primary-content": @selected_tab == "ghosted"}>
         <Outline.MinusCircleIcon class="inline-block w-4 h-4 mr-2 stroke-current" />
-        {l "Ghosted users"}
+        {l "Ghosted"}
       </LivePatch>
     </li>
     <li>
@@ -61,7 +61,7 @@
         to={"/settings/silenced"}
         class={"w-full flex items-center text-sm font-regular text-base-content", "focus:bg-primary hover:bg-primary bg-primary text-primary-content": @selected_tab == "silenced"}>
         <Outline.VolumeOffIcon class="inline-block w-4 h-4 mr-2 stroke-current" />
-        {l "Silenced users"}
+        {l "Silenced"}
       </LivePatch>
     </li>
     <div :if={Bonfire.Me.Users.is_admin?(current_user(assigns))} >
@@ -72,15 +72,23 @@
         <LivePatch 
           to="/settings/admin/instance"
           class={"w-full flex items-center text-sm font-regular text-base-content", "focus:bg-primary hover:bg-primary bg-primary text-primary-content": @admin_tab == "instance"}>
-        <Outline.CogIcon class="inline-block w-5 h-5 mr-2 stroke-current" />
-        {l "Configure instance"}
+        <Outline.FireIcon class="inline-block w-5 h-5 mr-2 stroke-current" />
+        {l "Instance Info"}
+        </LivePatch>
+      </li>
+      <li>
+        <LivePatch 
+          to="/settings/admin/config"
+          class={"w-full flex items-center text-sm font-regular text-base-content", "focus:bg-primary hover:bg-primary bg-primary text-primary-content": @selected_tab == "admin" and (@admin_tab == "config" or !@admin_tab)}>
+        <Outline.AdjustmentsIcon class="inline-block w-5 h-5 mr-2 stroke-current" />
+        {l "Instance Settings"}
         </LivePatch>
       </li>
       <li>
         <LivePatch 
           to="/settings/extensions"
           class={"w-full flex items-center text-sm font-regular text-base-content", "focus:bg-primary hover:bg-primary bg-primary text-primary-content": @selected_tab == "extensions"}>
-        <Outline.CogIcon class="inline-block w-5 h-5 mr-2 stroke-current" />
+        <Outline.BeakerIcon class="inline-block w-5 h-5 mr-2 stroke-current" />
         {l "Extensions"}
         </LivePatch>
       </li>
@@ -109,7 +117,7 @@
           to={"/settings/flags"}
           class={"w-full flex items-center text-sm font-regular text-base-content", "focus:bg-primary hover:bg-primary bg-primary text-primary-content": @selected_tab == "flags"}>
           <Outline.FlagIcon class="inline-block w-4 h-4 mr-2 stroke-current" />
-          {l "Flagged contents"}
+          {l "Flags"}
         </LivePatch>
       </li>
       <li>
@@ -117,7 +125,7 @@
           to={"/settings/admin/ghosted"}
           class={"w-full flex items-center text-sm font-regular text-base-content", "focus:bg-primary hover:bg-primary bg-primary text-primary-content": @selected_tab == "ghosts"}>
           <Outline.MinusCircleIcon class="inline-block w-4 h-4 mr-2 stroke-current" />
-          {l "Ghosted users"}
+          {l "Ghosted"}
         </LivePatch>
       </li>
       <li>
@@ -125,7 +133,7 @@
           to={"/settings/admin/silenced"}
           class={"w-full flex items-center text-sm font-regular text-base-content", "focus:bg-primary hover:bg-primary bg-primary text-primary-content": @selected_tab == "silence"}>
           <Outline.VolumeOffIcon class="inline-block w-4 h-4 mr-2 stroke-current" />
-          {l "Silenced users"}
+          {l "Silenced"}
         </LivePatch>
       </li>
     </div>
