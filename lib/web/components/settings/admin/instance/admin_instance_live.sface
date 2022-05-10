@@ -14,11 +14,11 @@
 <form name="settings" phx-change="Bonfire.Me.Settings:set">
   <input name="scope" value={:instance} type="hidden" />
   
-      <div class="px-4 sm:grid sm:grid-cols-3 sm:gap-4 sm:items-start sm:border-t sm:border-base-200 sm:pt-5">
+    <div class="px-4 sm:grid sm:grid-cols-3 sm:gap-4 sm:items-start sm:border-t sm:border-base-200 sm:pt-5">
       <label for="instance_name" class="block text-sm font-medium text-base-content sm:mt-px sm:pt-2">
         {l "Instance name"}
       </label>
-      <div class="mt-1 sm:mt-0 sm:col-span-2">
+      <div class="mt-1 mb-4 sm:mt-0 sm:col-span-2">
         <div class="flex max-w-lg ">
           <input type="text" name="ui[theme][instance_name]" id="instance_name" value={Bonfire.Me.Settings.get([:bonfire, :ui, :theme, :instance_name], "")} class="w-full input input-bordered">
         </div>
@@ -35,12 +35,27 @@
       </div>
     </div>
 
+    <div class="px-4 sm:grid sm:grid-cols-3 sm:gap-4 sm:items-start sm:border-t sm:border-base-200 sm:pt-5">
+      <label for="instance_theme" class="block text-sm font-medium text-base-content sm:mt-px sm:pt-2">
+        {l "Instance default theme"}
+      </label>
+      <div class="mt-1 mb-4 sm:mt-0 sm:col-span-2">
+        <div class="flex max-w-lg ">
+           <input type="text" name="ui[theme][instance_theme]" id="instance_theme" value={Bonfire.Me.Settings.get([:bonfire, :ui, :theme, :instance_theme], "")} class="w-full input input-bordered">
+
+          <!-- <Bonfire.UI.Social.ChangeThemeLive  /> -->
+          <!-- <input type="text" name="ui[theme][instance_name]" id="instance_name" value={Bonfire.Me.Settings.get([:bonfire, :ui, :theme, :instance_name], "")} class="w-full input input-bordered"> -->
+        </div>
+      </div>
+    </div>
+
+
 </form>
 
 <form phx-change="Bonfire.Me.Profiles:validate" name="images">
   <input name="scope" value={:instance} type="hidden" />
   
-    <div class="px-4 sm:grid sm:grid-cols-3 sm:gap-4 sm:items-center sm:border-t sm:border-base-200 sm:pt-5">
+    <div class="px-4 pb-4 sm:grid sm:grid-cols-3 sm:gap-4 sm:items-center sm:border-t sm:border-base-200 sm:pt-5">
       <label for="photo" class="block text-sm font-medium text-base-content">
         {l "Instance icon"}
       </label>
@@ -50,7 +65,7 @@
       class="mt-1 sm:mt-0 sm:col-span-2">
         <div class="flex items-center">
           <span class="w-12 h-12 overflow-hidden rounded-full bg-base-100">
-            <img class="w-full h-full" src={Bonfire.Me.Settings.get([:bonfire, :ui, :theme, :instance_icon], "")} />
+            <img class="object-contain w-full h-full" src={Bonfire.Me.Settings.get([:bonfire, :ui, :theme, :instance_icon], "")} />
           </span>
           <label for={@uploads.icon.ref} class="ml-3 btn btn-secondary">
             {l "Change"}
@@ -253,10 +268,10 @@
         </fieldset>
       </div>
     </div>
-
-    <Bonfire.UI.Social.SettingsViewsLive.DiscoverableLive
-      label={l "Users and their content should appear in search engines (in Bonfire, the fediverse, and the web in general) by default (this can be overriden by each account and user's settings)"}
-    />
-
+    <div class="p-3">
+      <Bonfire.UI.Social.SettingsViewsLive.DiscoverableLive
+        label={l "Users and their content should appear in search engines (in Bonfire, the fediverse, and the web in general) by default (this can be overriden by each account and user's settings)"}
+      />
+    </div>
 </form>
 </div>
