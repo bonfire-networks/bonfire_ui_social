@@ -1,5 +1,8 @@
-<ul class="menu bg-base-100 rounded-b-xl">
-  {#for tag <- Bonfire.Tag.Tags.list_trending(Bonfire.Me.Settings.get([:ui, :show_trending_tags_for_last_x_days], nil, assigns), 10)}
+<ul 
+  :if={!Bonfire.Me.Settings.get([:ui, :show_trending_tags, :disabled], nil, assigns)}
+  class="menu bg-base-100 rounded-b-xl">
+
+  {#for tag <- Bonfire.Tag.Tags.list_trending(Bonfire.Me.Settings.get([:ui, :show_trending_tags, :for_last_x_days], 30, assigns), nil, Bonfire.Me.Settings.get([:ui, :show_trending_tags, :limit], 10, assigns))}
     {#case e(tag, :tag, nil)}
       {#match %Bonfire.Tag.Hashtag{} = hashtag}
         <LivePatch to={"/tag/" <> hashtag.name}>

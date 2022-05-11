@@ -41,7 +41,7 @@
             search_limit={5}
           />
           </div>
-          {#if Bonfire.Me.Settings.get([:ui, :show_trending_tags_for_last_x_days], nil, assigns) }
+          {#if !Bonfire.Me.Settings.get([:ui, :show_trending_tags, :disabled], nil, assigns) }
             <Bonfire.UI.Social.WidgetLive 
               widget_title="Trending topics"
               current_user={current_user(assigns)}
