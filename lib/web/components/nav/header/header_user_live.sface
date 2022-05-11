@@ -12,20 +12,20 @@
         <!-- / MOBILE INSTANCE ICON -->
         
         <!-- MENU -->
-        <div class="relative z-50 hidden tablet-lg:flex tooltip tooltip-bottom" data-tip={l "Home"}>
-          <LiveRedirect to={"/home"} class={"tab flex-1 hover:bg-base-content hover:bg-opacity-5 hover:rounded-lg text-base-content text-opacity-70", "tab-active text-opacity-60 relative lined": @page == "home"}>
-              <Solid.HomeIcon class="w-5 h-5" />
-              <span class="sr-only">{l "Feeds"}</span>
+        <div class="relative z-50 hidden tablet-lg:flex tooltip tooltip-bottom" data-tip={l "My Feed"}>
+          <LiveRedirect to={"/feed"} class={"tab flex-1 hover:bg-base-content hover:bg-opacity-5 hover:rounded-lg text-base-content text-opacity-70", "tab-active text-opacity-60 relative lined": @page == "home"}>
+              <Solid.RssIcon class="w-5 h-5" />
+              <span class="sr-only">{l "My Feed"}</span>
           </LiveRedirect>
         </div>
         <div class="relative z-50 flex tooltip tooltip-bottom" data-tip={l "Local timeline"}>
-          <LiveRedirect to={"/home/local"} class={"tab flex-1 hover:bg-base-content hover:bg-opacity-5 hover:rounded-lg text-base-content text-opacity-70", "tab-active text-opacity-60 relative lined": @page == "local"}>
+          <LiveRedirect to={"/feed/local"} class={"tab flex-1 hover:bg-base-content hover:bg-opacity-5 hover:rounded-lg text-base-content text-opacity-70", "tab-active text-opacity-60 relative lined": @page == "local"}>
               <Solid.UserGroupIcon class="w-5 h-5" />
               <span class="sr-only">{l "Locals"}</span>
           </LiveRedirect>
         </div>
         <div class="relative z-50 flex tooltip tooltip-bottom" data-tip={l "Federated timeline"}>
-          <LiveRedirect to={"/home/federation"} class={"tab flex-1 hover:bg-base-content hover:bg-opacity-5 hover:rounded-lg text-base-content text-opacity-70", "tab-active text-opacity-60 relative lined": @page == "federation"}>
+          <LiveRedirect to={"/feed/federation"} class={"tab flex-1 hover:bg-base-content hover:bg-opacity-5 hover:rounded-lg text-base-content text-opacity-70", "tab-active text-opacity-60 relative lined": @page == "federation"}>
               <Solid.GlobeIcon class="w-5 h-5" />
               <span class="sr-only">{l "Federated timeline"}</span>
           </LiveRedirect>

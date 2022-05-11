@@ -7,7 +7,7 @@
     submit={if @create_activity_type==:message, do: "Bonfire.Social.Messages:send", else: "Bonfire.Social.Posts:post"} 
     change="validate"
     opts={ autocomplete: "off", "phx-target": "#smart_input"}
-    class={if WriteEditorLive.use_rich_editor?(assigns), do: "form_with_editor", else: "form_with_textarea"}>
+    class={if WriteEditorLive.use_rich_editor?(assigns), do: "with_editor", else: "with_textarea"}>
 
     <!-- <div 
       x-show="smart_input_prompt != 'Write something...' && ((reply_to_id && reply_to_id != '') || (smart_input_text && smart_input_text !=''))" 
@@ -45,6 +45,7 @@
                   smart_input_prompt={e(assigns, :smart_input_prompt, l "Write something...")}
                   smart_input_text={@smart_input_text}
                   insert_text={@insert_text}
+                  with_rich_editor={@with_rich_editor}
                 />
                 
             </Field>

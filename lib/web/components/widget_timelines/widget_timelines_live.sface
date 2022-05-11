@@ -1,8 +1,8 @@
 <div class="p-2 menu bg-base-100 rounded-box">
   <li :if={current_user(@current_user)}>
-    <LiveRedirect to="/home">
+    <LiveRedirect to={path(:feed)}>
       <Solid.RssIcon class="w-4 h-4" />
-      <span class="text-sm truncate ellipsis">{l "Home timeline"}</span>
+      <span class="text-sm truncate ellipsis">{l "My feed"}</span>
     </LiveRedirect> 
   </li>
   <li>

@@ -1,0 +1,10 @@
+<Bonfire.UI.Social.WidgetLive 
+  :if={Config.get([Bonfire.UI.Social.WidgetAdminsLive, :show_guests], true)}
+  widget_title="Admins"
+  current_user={current_user(assigns)}
+>
+  <Bonfire.UI.Social.WidgetUsersLive 
+    current_user={current_user(assigns)}
+    id="widget_admins_guest_home"
+  />
+</Bonfire.UI.Social.WidgetLive>

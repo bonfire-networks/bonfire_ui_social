@@ -115,7 +115,7 @@ defmodule Bonfire.UI.Social.Feeds.FeedTest do
     assert {:ok, boost} = Boosts.boost(alice, post)
 
     conn = conn(user: bob, account: account)
-    next = "/home"
+    next = "/feed"
     {view, doc} = floki_live(conn, next)
     assert doc
       |> Floki.find("article")

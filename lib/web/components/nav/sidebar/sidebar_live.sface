@@ -23,68 +23,52 @@
 
           <!-- IF CURRENT USER -->
           {#if current_user(assigns)}
-          <div class="items-center hidden w-full space-x-1 lg:flex">
-            <Bonfire.UI.Social.UserMenuLive  current_user={current_user(assigns)} />
-            <div class="tooltip tooltip-bottom" data-tip={l "Notifications"}>
-              <LivePatch to={path(:notifications)} class={"px-1 btn btn-ghost btn-sm", "text-opacity-100 relative lined": @page == "notifications"}>
-                  <Solid.BellIcon class={
-                    "w-5 h-5",
-                    "text-base-content": @page == "notifications"
-                    } />
-                  <span class="sr-only">{l "Notifications"}</span>
-              </LivePatch>
+            <div class="items-center hidden w-full space-x-1 lg:flex">
+              <Bonfire.UI.Social.UserMenuLive  current_user={current_user(assigns)} />
+              <div class="tooltip tooltip-bottom" data-tip={l "Notifications"}>
+                <LivePatch to={path(:notifications)} class={"px-1 btn btn-ghost btn-sm", "text-opacity-100 relative lined": @page == "notifications"}>
+                    <Solid.BellIcon class={
+                      "w-5 h-5",
+                      "text-base-content": @page == "notifications"
+                      } />
+                    <span class="sr-only">{l "Notifications"}</span>
+                </LivePatch>
+              </div>
+              <div class="tooltip tooltip-bottom" data-tip={l "Messages"}>
+                <LivePatch to={path(Bonfire.Data.Social.Message)} class={"px-1 btn btn-ghost btn-sm", "text-opacity-60 relative lined": @page == "messages"}>
+                    <Solid.MailIcon class={
+                      "w-5 h-5",
+                      "text-base-content": @page == "messages"
+                      }
+                      />
+                    <span class="sr-only">{l "Messages"}</span>
+                </LivePatch>
+              </div>
             </div>
-            <div class="tooltip tooltip-bottom" data-tip={l "Messages"}>
-              <LivePatch to={path(Bonfire.Data.Social.Message)} class={"px-1 btn btn-ghost btn-sm", "text-opacity-60 relative lined": @page == "messages"}>
-                  <Solid.MailIcon class={
-                    "w-5 h-5",
-                    "text-base-content": @page == "messages"
-                    }
-                    />
-                  <span class="sr-only">{l "Messages"}</span>
-              </LivePatch>
+            <div 
+              data-id="smart_input">
+              <Bonfire.UI.Social.SmartInputLive
+                id={:smart_input}
+                :if={current_user(assigns)}
+                current_user={current_user(assigns)}
+                showing_within={e(assigns, :showing_within, nil)}
+                reply_to_id={e(assigns, :reply_to_id, "")}
+                thread_id={@thread_id}
+                create_activity_type={e(assigns, :create_activity_type, nil)}
+                to_circles={e(assigns, :to_circles, [])}
+                smart_input_prompt={@smart_input_prompt}
+                smart_input_text={@smart_input_text}
+              />
             </div>
-          </div>
-          <div 
-            data-id="smart_input">
-            <Bonfire.UI.Social.SmartInputLive
-              id={:smart_input}
-              :if={current_user(assigns)}
-              current_user={current_user(assigns)}
-              showing_within={e(assigns, :showing_within, nil)}
-              reply_to_id={e(assigns, :reply_to_id, "")}
-              thread_id={@thread_id}
-              create_activity_type={e(assigns, :create_activity_type, nil)}
-              to_circles={e(assigns, :to_circles, [])}
-              smart_input_prompt={@smart_input_prompt}
-              smart_input_text={@smart_input_text}
-            />
-          </div>
-          {#else}
-          <Bonfire.UI.Social.HomeBannerLive />
-          <Bonfire.UI.Social.WidgetLive 
-            widget_title="Timelines"
-            current_user={current_user(assigns)}
-          >
-            <Bonfire.UI.Social.WidgetTimelinesLive 
-              current_user={current_user(assigns)}
-              id="widget_timelines_guest_home"
-            />
-          </Bonfire.UI.Social.WidgetLive>
 
-          <Bonfire.UI.Social.WidgetLive 
-            :if={Config.get([Bonfire.UI.Social.WidgetUsersLive, :show_guests], true) |> debug("show_guests?")}
-            widget_title="Admins"
-            current_user={current_user(assigns)}
-          >
-            <Bonfire.UI.Social.WidgetUsersLive 
-              current_user={current_user(assigns)}
-              id="widget_admins_guest_home"
-            />
-          </Bonfire.UI.Social.WidgetLive>
-          {/if}
-          <!-- ELSE -->
-
+            {#if is_list(@sidebar_widgets[:users][:main])}
+              <Surface.Components.Dynamic.Component
+                :for={{component, component_assigns} <- @sidebar_widgets[:users][:main]}
+                module={component}
+                current_user={current_user(assigns)}
+                {...component_assigns}
+              />
+            {/if}
 
 
           <!-- <Bonfire.UI.Social.WidgetLive 
@@ -116,6 +100,29 @@
               id="widget_direct_messages"
             />
           </Bonfire.UI.Social.WidgetLive> -->
+
+          {#else}
+          <!-- GUESTS -->
+
+           {#if is_list(@sidebar_widgets[:guests][:main])}
+              <Surface.Components.Dynamic.Component
+                :for={{component, component_assigns} <- @sidebar_widgets[:guests][:main]}
+                module={component}
+                {...component_assigns}
+              />
+            {/if}
+
+            <!-- <Bonfire.UI.Social.HomeBannerLive /> -->
+            <Bonfire.UI.Social.WidgetLive 
+              widget_title="Timelines"
+            >
+              <Bonfire.UI.Social.WidgetTimelinesLive 
+                id="widget_timelines_guest_home"
+              />
+            </Bonfire.UI.Social.WidgetLive>
+
+          {/if}
+
               
           <!-- <Bonfire.UI.Social.WidgetLive 
             widget_title="Admins"
@@ -126,6 +133,7 @@
               id="widget_admins"
             />
           </Bonfire.UI.Social.WidgetLive> -->
+
           <!-- <div
             :for={{component, component_assigns} <- Bonfire.Common.Config.get([:ui, :sidebar_components], [])}
           >
@@ -133,6 +141,7 @@
               :if={module_enabled?(component)}
               module={component}
               page={@page}
+              {...component_assigns}
             />
           </div> -->
 

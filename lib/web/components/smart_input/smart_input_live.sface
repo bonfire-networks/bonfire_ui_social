@@ -46,21 +46,7 @@
     
       <Surface.Components.Dynamic.Component
           module={active_smart_input_component(assigns)}
-          create_activity_type={e(assigns, :create_activity_type, nil)}
-          reply_to_id={@reply_to_id}
-          thread_id={@thread_id}
-          activity={@activity}
-          object={@object}
-          to_circles={e(assigns, :to_circles, [])}
-          smart_input_prompt={@smart_input_prompt}
-          smart_input_text={@smart_input_text}
-          current_user={@current_user}
-          showing_within={@showing_within}
-          textarea_class={@textarea_class}
-          smart_input_class={@smart_input_class}
-          replied_activity_class={@replied_activity_class}
-          uploads={@uploads}
-          uploaded_files={e(assigns, :uploaded_files, [])}
+          {...assigns}
         />
 
     </div>

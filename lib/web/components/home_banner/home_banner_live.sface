@@ -10,11 +10,16 @@
         class="mt-1 text-sm text-base-content text-opacity-70">
         { Bonfire.Common.Config.get([:ui, :theme, :instance_description], "")}
       </p>
+
+      <a href="https://bonfirenetworks.org/" class="mt-2 text-xs badge badge-primary">
+        🔥
+        {Bonfire.Application.name()} 
+      </a>
       <div class="mt-2 text-xs badge badge-ghost">
-        {Bonfire.Application.named_version()} 
-      </div>
-      <div class="mt-2 text-xs badge badge-accent" x-data="{msg: 'with JS'}">
-        <span x-text="msg">without JS</span>
+        {Bonfire.Application.version()} 
+        <span class="ml-1" x-data="{msg: 'JS'}">
+          <span x-text="msg">no JS</span>
+        </span>
       </div>
     </div>
   </div>

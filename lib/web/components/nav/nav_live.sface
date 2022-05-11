@@ -18,6 +18,7 @@
         to_circles={e(assigns, :to_circles, [])}
         smart_input_prompt={@smart_input_prompt}
         smart_input_text={@smart_input_text}
+        sidebar_widgets={@sidebar_widgets}
       />
       <div 
         class={

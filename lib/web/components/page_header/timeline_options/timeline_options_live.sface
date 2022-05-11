@@ -2,17 +2,17 @@
   :if={current_user(assigns)}
   class="hidden lg:flex tabs tabs-boxed">
   <div data-tip="My feed" class="tooltip tooltip-bottom">
-    <LiveRedirect to="/home" class={"tab h-[1.7rem]", "tab-active": @selected_tab == "home"}>
+    <LiveRedirect to="/feed" class={"tab h-[1.7rem]", "tab-active": @selected_tab == "home"}>
       <Solid.RssIcon class="inline-block w-4 h-4 stroke-current" />
     </LiveRedirect> 
   </div>
   <div data-tip="Local instance timeline" class="tooltip tooltip-bottom">
-    <LiveRedirect to="/home/local" class={"tab h-[1.7rem]", "tab-active": @selected_tab == "local"}>
+    <LiveRedirect to="/feed/local" class={"tab h-[1.7rem]", "tab-active": @selected_tab == "local"}>
       <Solid.HomeIcon class="inline-block w-4 h-4 stroke-current" />
     </LiveRedirect> 
   </div>
   <div data-tip="Federated timeline" class="tooltip tooltip-bottom">
-    <LiveRedirect to="/home/federation" class={"tab h-[1.7rem]", "tab-active": @selected_tab == "federation"}>
+    <LiveRedirect to="/feed/federation" class={"tab h-[1.7rem]", "tab-active": @selected_tab == "federation"}>
       <Solid.GlobeIcon class="inline-block w-4 h-4 stroke-current" />
     </LiveRedirect>
   </div>
@@ -25,15 +25,15 @@
     </span>
   </label>
   <div tabindex="0" class="w-48 rounded shadow card compact dropdown-content bg-neutral-content">
-    <LiveRedirect to="/home" class={"p-4 hover:bg-neutral hover:bg-opacity-20 flex items-center text-sm text-neutral", "bg-neutral bg-opacity-20": @selected_tab == "home"}>
+    <LiveRedirect to="/feed" class={"p-4 hover:bg-neutral hover:bg-opacity-20 flex items-center text-sm text-neutral", "bg-neutral bg-opacity-20": @selected_tab == "home"}>
       <span class="truncate ellipsis">{l "Home timeline"}</span>
     </LiveRedirect> 
 
-    <LiveRedirect to="/home/local" class={"p-4 hover:bg-neutral hover:bg-opacity-20 flex items-center text-sm text-neutral", "bg-neutral bg-opacity-20": @selected_tab == "local"}>
+    <LiveRedirect to="/feed/local" class={"p-4 hover:bg-neutral hover:bg-opacity-20 flex items-center text-sm text-neutral", "bg-neutral bg-opacity-20": @selected_tab == "local"}>
       <span class="truncate ellipsis">{l "Local timeline"}</span>
     </LiveRedirect> 
 
-    <LiveRedirect to="/home/federation" class={"p-4 hover:bg-neutral hover:bg-opacity-20 flex items-center text-sm text-neutral", "bg-neutral bg-opacity-20": @selected_tab == "federation"}>
+    <LiveRedirect to="/feed/federation" class={"p-4 hover:bg-neutral hover:bg-opacity-20 flex items-center text-sm text-neutral", "bg-neutral bg-opacity-20": @selected_tab == "federation"}>
       <span class="truncate ellipsis">{l "Federated timeline"}</span>
     </LiveRedirect> 
   </div>

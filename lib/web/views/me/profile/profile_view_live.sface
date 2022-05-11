@@ -10,19 +10,7 @@
     />
     <Surface.Components.Dynamic.Component
       module={Bonfire.Common.Config.get([:ui, :profile, :sections, tab(@selected_tab)], Bonfire.UI.Social.ProfileTimelineLive)}
-      user={@user}
-      page_title={@page_title}
-      page={@page}
-      feed={@feed}
-      page_info={@page_info}
-      selected_tab={@selected_tab}
-      smart_input={@smart_input}
-      create_activity_type={e(assigns, :create_activity_type, nil)}
-      to_circles={e(assigns, :to_circles, [])}
-      smart_input_prompt={@smart_input_prompt}
-      smart_input_text={@smart_input_text}
-      search_placholder={@search_placholder}
-      feed_title={@feed_title}
+      {...assigns}
     />
   </section>
 </main>

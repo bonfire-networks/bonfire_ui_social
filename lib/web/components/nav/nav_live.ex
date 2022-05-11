@@ -13,4 +13,5 @@ defmodule Bonfire.UI.Social.NavLive do
   prop smart_input_text, :string, required: false
   prop showing_within, :any
   prop without_sidebar, :boolean, required: false, default: nil
+  prop sidebar_widgets, :list, default: []
 end

@@ -13,11 +13,7 @@
     </noscript>
     <Surface.Components.Dynamic.Component
       module={component}
-      field_name={@field_name}
-      textarea_class={@textarea_class}
-      placeholder={@smart_input_prompt}
-      content={@smart_input_text}
-      insert_text={@insert_text}
+      {...assigns}
     />
   {#match _}
     <TextArea
