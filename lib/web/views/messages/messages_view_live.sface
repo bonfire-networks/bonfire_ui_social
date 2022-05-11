@@ -70,6 +70,7 @@
           smart_input_prompt={e(assigns, :smart_input_prompt, "")}
           smart_input_text={e(assigns, :smart_input_text, "")}
           showing_within={:message}
+          boundary={"message"}
         /> -->
       {/if}
     </div>

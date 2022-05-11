@@ -10,5 +10,6 @@ defmodule Bonfire.UI.Social.Activity.DateAgoLive do
   prop permalink, :string
   prop showing_within, :string, default: :feed
   prop object_type, :any
+  prop object_boundary, :any, default: nil
 
 end

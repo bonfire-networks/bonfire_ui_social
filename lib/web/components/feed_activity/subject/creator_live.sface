@@ -15,7 +15,8 @@
       <BoundaryIconLive 
         :if={@object_type not in [Bonfire.Data.Social.Message]}
         id={ComponentID.new(BoundaryIconLive, @object)} 
-        object={@object} 
+        object={@object}  
+        object_boundary={@object_boundary} 
       />
 
       <span class="text-xs text-primary-content-500 ">

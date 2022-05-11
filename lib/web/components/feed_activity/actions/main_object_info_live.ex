@@ -14,6 +14,7 @@ defmodule Bonfire.UI.Social.Activity.MainObjectInfoLive do
   prop viewing_main_object, :boolean
   prop flagged, :any
   prop participants, :list
+  prop object_boundary, :any, default: nil
 
 
 end

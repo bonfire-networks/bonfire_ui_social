@@ -7,7 +7,7 @@
   </li>
   <li>
     <LiveRedirect to={path(:local)}>
-      <Solid.HomeIcon class="w-4 h-4" />
+      <Solid.LocationMarkerIcon class="w-4 h-4" />
       <span class="text-sm truncate ellipsis">{l "Local timeline"}</span>
     </LiveRedirect> 
   </li>

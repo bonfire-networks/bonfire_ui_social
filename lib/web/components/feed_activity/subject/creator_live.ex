@@ -9,4 +9,6 @@ defmodule Bonfire.UI.Social.Activity.CreatorLive do
   prop date_ago, :string
   prop created_verb_display, :string
   prop object_type, :any
+  prop object_boundary, :any, default: nil
+
 end

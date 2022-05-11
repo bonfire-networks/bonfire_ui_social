@@ -20,7 +20,7 @@
         </div>
         <div class="relative z-50 flex tooltip tooltip-bottom" data-tip={l "Local timeline"}>
           <LiveRedirect to={"/feed/local"} class={"tab flex-1 hover:bg-base-content hover:bg-opacity-5 hover:rounded-lg text-base-content text-opacity-70", "tab-active text-opacity-60 relative lined": @page == "local"}>
-              <Solid.UserGroupIcon class="w-5 h-5" />
+              <Solid.LocationMarkerIcon class="w-5 h-5" />
               <span class="sr-only">{l "Locals"}</span>
           </LiveRedirect>
         </div>

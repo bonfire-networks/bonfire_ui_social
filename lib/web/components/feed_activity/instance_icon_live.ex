@@ -1,8 +1,6 @@
 defmodule Bonfire.UI.Social.Activity.InstanceIconLive do
   use Bonfire.UI.Common.Web, :stateless_component
 
-  alias Bonfire.UI.Social.Activity.DateAgoLive
-
   prop object, :any
   # prop verb_display, :string
 

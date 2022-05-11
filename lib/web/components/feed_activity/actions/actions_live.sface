@@ -46,6 +46,7 @@
       <Bonfire.UI.Social.Activity.ReplyLive 
         object_id={e(@object, :id, "no-object")}
         activity_id={e(assigns, :activity, :id, "no-activity")}
+        object_boundary={@object_boundary} 
         permalink={@permalink} 
         replied={e(@activity, :replied, nil)}
         showing_within={e(assigns, :showing_within, nil)}
@@ -68,9 +69,10 @@
       <Bonfire.UI.Social.Activity.MoreActionsLive
         object={@object} 
         object_type={@object_type} 
+        object_boundary={@object_boundary} 
+        object_type_readable={@object_type_readable}
         activity={@activity} 
         verb={@verb}
-        object_type_readable={@object_type_readable}
         showing_within={e(assigns, :showing_within, nil)}
       />
     </div>

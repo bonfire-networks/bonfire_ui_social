@@ -14,6 +14,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
   prop class, :string, required: false, default: ""
   prop thread_object, :any
   prop participants, :list
+  prop object_boundary, :any, default: nil
 
   # TODO: put in config and/or autogenerate with Verbs genserver
   @reply_verbs ["reply", "respond"]
@@ -117,6 +118,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
           activity={e(component_assigns, :activity, @activity)}
           object={e(component_assigns, :object, @object)}
           object_id={e(component_assigns, :object_id, @object_id)}
+          object_boundary={@object_boundary}
           object_type={e(component_assigns, :object_type, @object_type)}
           object_type_readable={e(component_assigns, :object_type_readable, @object_type_readable)}
           date_ago={e(component_assigns, :date_ago, @date_ago)}
@@ -142,6 +144,12 @@ defmodule Bonfire.UI.Social.ActivityLive do
 
     """
   end
+
+  def preload(list_of_assigns) do
+
+    Bonfire.Boundaries.LiveHandler.preload_boundaries(list_of_assigns)
+  end
+
 
   # don't show subject twice
   def component_activity_subject(_, %{object: %Bonfire.Data.Identity.User{}}, _), do: []

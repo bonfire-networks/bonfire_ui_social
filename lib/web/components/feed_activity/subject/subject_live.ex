@@ -11,4 +11,6 @@ defmodule Bonfire.UI.Social.Activity.SubjectLive do
   prop verb_display, :string
   prop showing_within, :any, default: :feed
   prop object_type, :any
+  prop object_boundary, :any, default: nil
+
 end

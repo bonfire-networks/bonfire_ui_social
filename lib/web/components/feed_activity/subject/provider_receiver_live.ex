@@ -6,6 +6,7 @@ defmodule Bonfire.UI.Social.Activity.ProviderReceiverLive do
   prop object, :any
   prop date_ago, :any
   prop permalink, :string
+  prop object_boundary, :any, default: nil
 
   def provider(%{provider: provider}), do: provider
   def provider(%{object: object}), do: provider(object)

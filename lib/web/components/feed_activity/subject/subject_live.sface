@@ -43,6 +43,7 @@
         date_ago={@date_ago}
         object={@object}
         object_type={@object_type}
+        object_boundary={@object_boundary} 
         showing_within={@showing_within}
         verb_display={@verb_display} /> -->
   </div>
@@ -63,6 +64,7 @@
         date_ago={@date_ago}
         object={@object}
         object_type={@object_type}
+        object_boundary={@object_boundary} 
       />
     </div>
   </div>
@@ -94,6 +96,7 @@
           date_ago={@date_ago}
           object={@object}
           object_type={@object_type}
+          object_boundary={@object_boundary} 
           showing_within={@showing_within}
           verb_display={@verb_display} 
           />
@@ -129,6 +132,7 @@
         :if={@object_type not in [Bonfire.Data.Social.Message]}
         id={ComponentID.new(BoundaryIconLive, @object)} 
         object={@object} 
+        object_boundary={@object_boundary} 
         />
 
         <LivePatch class="ml-1 text-sm font-regular text-base-content text-opacity-60" to={@permalink}>
@@ -163,6 +167,7 @@
         date_ago={@date_ago}
         object={@object}
         object_type={@object_type}
+        object_boundary={@object_boundary} 
         showing_within={@showing_within}
         verb_display={@verb_display} />
     </div>

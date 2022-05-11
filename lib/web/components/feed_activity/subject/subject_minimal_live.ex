@@ -6,4 +6,6 @@ defmodule Bonfire.UI.Social.Activity.SubjectMinimalLive do
   prop verb, :string
   prop verb_display, :string
   prop showing_within, :any
+  prop object_boundary, :any, default: nil
+
 end

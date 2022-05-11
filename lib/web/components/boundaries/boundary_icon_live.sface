@@ -1,29 +1,29 @@
-{#if e(@object_primary_boundary, :id, nil)in [Bonfire.Boundaries.Acls.get_id!(:guests_may_see), Bonfire.Boundaries.Acls.get_id!(:guests_may_read), Bonfire.Boundaries.Acls.get_id!(:guests_may_see_read)]}
-
+{#case Bonfire.Boundaries.preset_boundary_name_from_acl(@object_boundary)}
+{#match "public"}
   <span 
-    data-tip={e(@object_primary_boundary, :name, "Public")}
+    data-tip={e(@object_boundary, :name, "Public")}
     class="align-bottom tooltip tooltip-bottom z-20">
     <Solid.GlobeIcon class="w-4 h-4 text-opacity-50 text-base-content" />
   </span>
 
-{#elseif e(@object_primary_boundary, :id, nil) in [Bonfire.Boundaries.Acls.get_id!(:locals_may_interact), Bonfire.Boundaries.Acls.get_id!(:locals_may_reply)]}
+{#match "local"}
 
   <span 
-    data-tip={e(@object_primary_boundary, :name, "Local")}
+    data-tip={e(@object_boundary, :name, "Local")}
     class="align-bottom tooltip tooltip-bottom z-20">
-    <Solid.HomeIcon 
+    <Solid.LocationMarkerIcon 
       class="w-4 h-4 text-opacity-50 text-base-content" 
     />
   </span>
 
-{#else}
+{#match _}
 
   <span 
-    data-tip={e(@object_primary_boundary, :name, "Custom Boundaries")}
+    data-tip={e(@object_boundary, :name, "Custom Boundaries")}
     class="align-bottom tooltip tooltip-bottom z-20">
     <Solid.CogIcon 
       class="w-4 h-4 text-opacity-50 text-base-content" 
     />
   </span>
 
-{/if}
+{/case}

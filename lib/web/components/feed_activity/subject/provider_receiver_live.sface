@@ -24,7 +24,8 @@
       
       <BoundaryIconLive 
         id={ComponentID.new(BoundaryIconLive, @object)} 
-        object={@object} 
+        object={@object}  
+        object_boundary={@object_boundary} 
       />
 
       <span class="text-xs text-primary-content-500 ">

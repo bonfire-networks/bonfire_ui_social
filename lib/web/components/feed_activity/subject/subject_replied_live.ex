@@ -6,4 +6,6 @@ defmodule Bonfire.UI.Social.Activity.SubjectRepliedLive do
   prop permalink, :string
   prop date_ago, :string
   prop showing_within, :any, default: :feed
+  prop object_boundary, :any, default: nil
+
 end

@@ -9,7 +9,9 @@ class="flex items-center p-3 py-1"
     date_ago={@date_ago}
     object={@object}
     object_type={@object_type}
-    verb_display={@verb_display} />
+    object_boundary={@object_boundary} 
+    verb_display={@verb_display} 
+    />
     
     <!-- <LivePatch to="#" class="ml-2 text-sm link link-hover text-base-content text-opacity-60"><span class="font-bold">4</span> {l "likes"}</LivePatch>
     <span class="ml-2 text-sm text-base-content text-opacity-60">·</span>
