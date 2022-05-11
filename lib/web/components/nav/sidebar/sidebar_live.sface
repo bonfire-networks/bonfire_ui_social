@@ -5,10 +5,10 @@
   <nav
     role="navigation"
     class=""
-    :class="show_smart_input ? 'w-full' : 'flex-col justify-end w-64 mt-0 tablet-lg:flex xl:w-72 hidden'"
+    :class="show_smart_input ? 'w-full' : 'flex-col justify-end mt-0 tablet-lg:flex w-[285px] hidden'"
     >
     <div 
-      :class="show_smart_input ? 'fixed bottom-0 p-2 w-full z-50' : 'fixed z-50 top-3 w-64 xl:w-72'"
+      :class="show_smart_input ? 'fixed bottom-0 p-2 w-full z-50' : 'fixed z-50 top-3 w-[285px]'"
       class="">
       <div class="w-full h-full">    
         <div class="flex flex-col space-y-4">
@@ -25,7 +25,7 @@
           {#if current_user(assigns)}
             <div class="items-center hidden w-full space-x-1 lg:flex">
               <Bonfire.UI.Social.UserMenuLive  current_user={current_user(assigns)} />
-              <div class="tooltip tooltip-bottom" data-tip={l "Notifications"}>
+              <!-- <div class="tooltip tooltip-bottom" data-tip={l "Notifications"}>
                 <LivePatch to={path(:notifications)} class={"px-1 btn btn-ghost btn-sm", "text-opacity-100 relative lined": @page == "notifications"}>
                     <Solid.BellIcon class={
                       "w-5 h-5",
@@ -43,13 +43,13 @@
                       />
                     <span class="sr-only">{l "Messages"}</span>
                 </LivePatch>
-              </div>
+              </div> -->
             </div>
             <div 
+              :if={current_user(assigns) != nil and e(assigns, :showing_within, nil) != :message}
               data-id="smart_input">
               <Bonfire.UI.Social.SmartInputLive
-                id={:smart_input}
-                :if={current_user(assigns)}
+                id={:smart_input} 
                 current_user={current_user(assigns)}
                 showing_within={e(assigns, :showing_within, nil)}
                 reply_to_id={e(assigns, :reply_to_id, "")}

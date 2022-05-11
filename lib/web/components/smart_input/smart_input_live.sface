@@ -10,7 +10,7 @@
     >
     <div class="flex flex-col flex-1 w-full">
 
-      <div 
+      <!-- <div 
         :if={e(assigns, :showing_within, nil) == :message}
         class="mb-2" >
         <div class="mb-1 text-sm font-semibold">
@@ -18,7 +18,7 @@
           <span :if={is_list(@to_circles) and length(@to_circles)>0}>{l "to"} </span>
         </div>
         <span :for={{name, id} <- @to_circles} class="mr-2 badge badge-outline">{name}</span>
-      </div>
+      </div> -->
 
       <div 
         :if={e(assigns, :showing_within, nil) != :message and length(all_smart_input_components())>1}
@@ -39,6 +39,7 @@
         id={"cap:" <> e(assigns, :activity, :id, "")}
         activity={@activity}
         object={@object}
+        thread_mode={:nested}
         class={@replied_activity_class}
         showing_within={:smart_input}
         activity_inception={e(assigns, :activity_inception, nil)}

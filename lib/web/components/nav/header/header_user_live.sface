@@ -18,7 +18,19 @@
               <span class="sr-only">{l "My Feed"}</span>
           </LiveRedirect>
         </div>
-        <div class="relative z-50 flex tooltip tooltip-bottom" data-tip={l "Local timeline"}>
+        <div class="relative z-50 flex tooltip tooltip-bottom" data-tip={l "Notifications"}>
+          <LiveRedirect to={path(:notifications)} class={"tab flex-1 hover:bg-base-content hover:bg-opacity-5 hover:rounded-lg text-base-content text-opacity-70", "tab-active text-opacity-60 relative lined": @page == "notifications"}>
+              <Solid.BellIcon class="w-5 h-5" />
+              <span class="sr-only">{l "Notifications"}</span>
+          </LiveRedirect>
+        </div>
+        <div class="relative z-50 flex tooltip tooltip-bottom" data-tip={l "Messages"}>
+          <LiveRedirect to={path(Bonfire.Data.Social.Message)} class={"tab flex-1 hover:bg-base-content hover:bg-opacity-5 hover:rounded-lg text-base-content text-opacity-70", "tab-active text-opacity-60 relative lined": @page == "messages"}>
+              <Solid.MailIcon class="w-5 h-5" />
+              <span class="sr-only">{l "Messages"}</span>
+          </LiveRedirect>
+        </div>
+        <!-- <div class="relative z-50 flex tooltip tooltip-bottom" data-tip={l "Local timeline"}>
           <LiveRedirect to={"/feed/local"} class={"tab flex-1 hover:bg-base-content hover:bg-opacity-5 hover:rounded-lg text-base-content text-opacity-70", "tab-active text-opacity-60 relative lined": @page == "local"}>
               <Solid.LocationMarkerIcon class="w-5 h-5" />
               <span class="sr-only">{l "Locals"}</span>
@@ -29,7 +41,7 @@
               <Solid.GlobeIcon class="w-5 h-5" />
               <span class="sr-only">{l "Federated timeline"}</span>
           </LiveRedirect>
-        </div>
+        </div> -->
         <div class="relative z-50 hidden tooltip tooltip-bottom tablet-lg:flex" data-tip={l "My Favourites"}>
           <LivePatch to={"/my/likes"} class={"tab flex-1 hover:bg-base-content hover:bg-opacity-5 hover:rounded-lg text-base-content text-opacity-70", "tab-active text-opacity-60 relative lined": @page == "likes"}>
               <Solid.StarIcon class="w-5 h-5" />

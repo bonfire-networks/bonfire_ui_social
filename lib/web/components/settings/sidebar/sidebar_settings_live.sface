@@ -1,6 +1,6 @@
 
 <div class="hidden tablet:block">
-  <ul role="navigation" class="py-3 rounded shadow w-72 menu bg-base-100">
+  <ul role="navigation" class="py-3 rounded shadow w-[285px] menu bg-base-100">
     <li class="uppercase menu-title">
       <span>{l "General settings"}</span>
     </li>

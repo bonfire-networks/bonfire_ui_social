@@ -1,18 +1,10 @@
+
 <main class="h-full">
- {#if @tab_id == "select_recipients"}
-      <Bonfire.UI.Social.SelectRecipientsLive 
-          users={e(assigns, :users, [])}
-          tab_id={e(assigns, :tab_id, nil)}
-          to_circles={e(assigns, :to_circles, [])}
-          limit={10}
-        />
-    {/if}
+
+
   {#if @tab_id in ["compose", "select_recipients", "thread"]}
-
     <div class="flex flex-col h-full grow">
-
     {#if @tab_id=="thread"}
-
       <Bonfire.UI.Social.ObjectThreadLive
         page={@page}
         page_title={@page_title}
@@ -35,9 +27,8 @@
         smart_input_class={"border m-3 mt-1 border-base-300 bg-slate-50 rounded-md"}
         replied_activity_class={"relative p-3 py-2 bg-neutral-content bg-opacity-5 m-3 mb-1 rounded-md"}
       /> 
-
     {#elseif @tab_id in ["compose", "select_recipients"]}
-
+      <div class="p-3 bg-base-100 rounded-box">
         <!-- <div role="banner" class="sticky top-[48px] lg:top-[48px] lg:-mt-[20px] lg:pt-[8px] bg-base-100 z-30 w-full border-b tablet:rounded-t border-base-300">  
           <div class="hidden h-3 tablet:block bg-base-300 "></div>
           <div class="relative rounded-b-none tablet:rounded">
@@ -58,9 +49,37 @@
             </div>
           </div>
         </div> -->
+        <div 
+          class="mb-3"
+          id={Pointers.ULID.generate()}
+          phx-hook="InputOrSelectOne"
+          >
+          <div class="flex items-center space-x-6">
+            <div class="flex items-center w-16 h-10 text-sm font-bold "><span>To</span></div>
+            <input id="tagify" class="flex-1 h-10 border-t-0 border-b-2 border-l-0 border-r-0 border-base-content border-opacity-30" />
+            <select class="hidden">
+              {#for user <- @users}
+                <option value={e(user, :edge, :object, :character, :id, nil)}>{e(user, :edge, :object, :profile, :name, "Anon")}</option>
+              {/for}
+            </select>
+          </div>
 
-        <!-- <Bonfire.UI.Social.SmartInputLive
-          id={:smart_input}
+        </div>
+        <div class="flex items-center mb-3 space-x-6">
+          <div class="flex items-center w-16 h-10 text-sm font-bold"><span>Subject</span></div>
+          <input class="flex-1 h-10 border-t-0 border-b-2 border-l-0 border-r-0 rounded-none input border-base-content border-opacity-30" />
+        </div>
+
+<!-- 
+         <Bonfire.UI.Social.SelectRecipientsLive 
+          users={e(assigns, :users, [])}
+          tab_id={e(assigns, :tab_id, nil)}
+          to_circles={e(assigns, :to_circles, [])}
+          limit={10}
+        /> -->
+
+        <Bonfire.UI.Social.SmartInputLive
+          id={:smart_input_in_message}
           :if={current_user(assigns)}
           current_user={current_user(assigns)}
           reply_to_id={e(assigns, :reply_to_id, "")}
@@ -71,33 +90,22 @@
           smart_input_text={e(assigns, :smart_input_text, "")}
           showing_within={:message}
           boundary={"message"}
-        /> -->
-      {/if}
+        />
     </div>
-
+      {/if}
+  </div>
 
   {#else}
     <Bonfire.UI.Common.PageHeaderLive page_title={@page_title} />
-
-
-
     <div class="md:mx-0 text-base-content lg:mt-0 bg-base-100">
-      <Bonfire.UI.Social.MessageThreadsLive 
-        feed={e(assigns, :feed, [])}
-        tab_id={e(assigns, :tab_id, nil)}
-        thread_id={e(assigns, :thread_id, nil)}
-        to_circles={e(assigns, :to_circles, [])}
-        limit={10}
-      />
-      <!-- <div id="empty-feed">
+      <div id="empty-feed">
         <div class="flex items-center justify-center py-8">
           <div class="badge">
             {l "Select a thread or start a new one..."}
           </div>
         </div>
-      </div> -->
+      </div>
     </div>
-
   {/if}
 
 </main>

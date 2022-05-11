@@ -4,7 +4,8 @@ defmodule Bonfire.UI.Social.MessageThreadsLive do
   prop feed, :list
   prop thread_id, :any
   prop tab_id, :string
-  prop to_circles, :list
+  # prop to_circles, :list
+  prop users, :list
 
   def permalink(thread, object) do
     thread_url = if thread do

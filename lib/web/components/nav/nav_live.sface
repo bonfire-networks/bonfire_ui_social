@@ -34,8 +34,8 @@
       </div>
       <div
         :if={e(assigns, :without_sidebar, nil) != true}
-        class="w-[350px] justify-start hidden h-full  pointer-events-none tablet:flex">
-        <div class="top-[80px] w-full bottom-[16px] space-y-4 pointer-events-auto">
+        class="w-[285px] justify-start hidden h-full  pointer-events-none tablet:flex">
+        <div class="top-[80px] w-full bottom-[16px] space-y-3 pointer-events-auto">
           <div class="mb-3">
             <Bonfire.Search.Web.FormLive 
               search_limit={5}

@@ -3,6 +3,5 @@
   "dependencies": {
     "theme-change": "^2.0.2"
   },
-  "devDependencies": {
-  }
+  "devDependencies": {}
 }
