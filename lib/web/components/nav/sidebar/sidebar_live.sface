@@ -70,69 +70,31 @@
               />
             {/if}
 
-
-          <!-- <Bonfire.UI.Social.WidgetLive 
-            widget_title="Notifications"
-            current_user={current_user(assigns)}
-          >
-            <:action>
-              <LivePatch class="text-xs normal-case btn btn-xs btn-outline" to={path(:notifications)}>
-                {l "View more"}
-              </LivePatch>
-            </:action>
+          <!-- 
             <Bonfire.UI.Social.WidgetNotificationLive 
               current_user={current_user(assigns)}
-              id="widget_notification"
             />
-          </Bonfire.UI.Social.WidgetLive>
 
-          <Bonfire.UI.Social.WidgetLive 
-            widget_title="Direct Messages"
-            current_user={current_user(assigns)}
-          >
-          <:action>
-              <LivePatch class="text-xs normal-case btn btn-xs btn-outline" to={path(Bonfire.Data.Social.Message)}>
-                {l "View more"}
-              </LivePatch>
-            </:action>
             <Bonfire.UI.Social.WidgetMessagesLive 
               current_user={current_user(assigns)}
-              id="widget_direct_messages"
-            />
-          </Bonfire.UI.Social.WidgetLive> -->
+            /> 
+          -->
 
           {#else}
           <!-- GUESTS -->
 
-           {#if is_list(@sidebar_widgets[:guests][:main])}
-              <Surface.Components.Dynamic.Component
-                :for={{component, component_assigns} <- @sidebar_widgets[:guests][:main]}
-                module={component}
-                {...component_assigns}
-              />
-            {/if}
+            <Surface.Components.Dynamic.Component
+              :for={{component, component_assigns} <- @sidebar_widgets[:guests][:main] || [ 
+                {Bonfire.UI.Social.HomeBannerLive, []},
+                {Bonfire.UI.Social.WidgetTimelinesLive, []},
+              ]}
+              module={component}
+              {...component_assigns}
+            />
 
-            <!-- <Bonfire.UI.Social.HomeBannerLive /> -->
-            <Bonfire.UI.Social.WidgetLive 
-              widget_title="Timelines"
-            >
-              <Bonfire.UI.Social.WidgetTimelinesLive 
-                id="widget_timelines_guest_home"
-              />
-            </Bonfire.UI.Social.WidgetLive>
 
           {/if}
 
-              
-          <!-- <Bonfire.UI.Social.WidgetLive 
-            widget_title="Admins"
-            current_user={current_user(assigns)}
-          >
-            <Bonfire.UI.Social.WidgetUsersLive 
-              current_user={current_user(assigns)}
-              id="widget_admins"
-            />
-          </Bonfire.UI.Social.WidgetLive> -->
 
           <!-- <div
             :for={{component, component_assigns} <- Bonfire.Common.Config.get([:ui, :sidebar_components], [])}

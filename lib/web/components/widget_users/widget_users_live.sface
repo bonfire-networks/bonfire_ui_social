@@ -1,11 +1,16 @@
-<div class="grid grid-cols-1 gap-2 pb-2 divide-y divide-base-300">
-  {#for user <- users(@users) }
-    <div class="px-2 pt-2">
-      <Bonfire.UI.Social.ProfileItemLive 
-        character={e(user, :character, nil) || e(user, :activity, :subject, :character, nil)} 
-        profile={e(user, :profile, nil) || e(user, :activity, :subject, :profile, nil)}
-        class={"btn btn-square btn-ghost btn-sm"} 
-      />
-    </div>
-  {/for}
-</div>
+
+<Bonfire.UI.Social.WidgetLive 
+  widget_title={e(assigns, :widget_title, "Users")}
+>
+  <div class="grid grid-cols-1 gap-2 pb-2 divide-y divide-base-300">
+    {#for user <- users(@users) }
+      <div class="px-2 pt-2">
+        <Bonfire.UI.Social.ProfileItemLive 
+          character={e(user, :character, nil) || e(user, :activity, :subject, :character, nil)} 
+          profile={e(user, :profile, nil) || e(user, :activity, :subject, :profile, nil)}
+          class={"btn btn-square btn-ghost btn-sm"} 
+        />
+      </div>
+    {/for}
+  </div>
+</Bonfire.UI.Social.WidgetLive>

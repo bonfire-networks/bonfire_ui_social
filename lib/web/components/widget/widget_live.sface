@@ -1,7 +1,7 @@
 <aside 
   class="relative w-full mx-auto rounded-xl bg-base-100">
   <div class="sticky top-0 z-20 flex items-center p-3 pb-2 rounded-t-xl bg-base-100" role="banner">
-    <div class="flex-1 text-lg font-bold text-base-content">{@widget_title}</div> 
+    <div :if={@widget_title} class="flex-1 text-lg font-bold text-base-content">{@widget_title}</div> 
     <#slot name="action" />
   </div>
     <#slot>

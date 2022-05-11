@@ -1,3 +1,7 @@
-<div class="p-3 prose">
-  {rich e(assigns, :text, "need a sample")}
-</div>
+<Bonfire.UI.Social.WidgetLive 
+  widget_title={e(assigns, :widget_title, nil)}
+>
+  <div class="p-3 prose">
+    {rich e(assigns, :text, "text goes here")}
+  </div>
+</Bonfire.UI.Social.WidgetLive>

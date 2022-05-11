@@ -1,20 +1,24 @@
-<div class="p-2 menu bg-base-100 rounded-box">
-  <li :if={current_user(@current_user)}>
-    <LiveRedirect to={path(:feed)}>
-      <Solid.RssIcon class="w-4 h-4" />
-      <span class="text-sm truncate ellipsis">{l "My feed"}</span>
-    </LiveRedirect> 
-  </li>
-  <li>
-    <LiveRedirect to={path(:local)}>
-      <Solid.LocationMarkerIcon class="w-4 h-4" />
-      <span class="text-sm truncate ellipsis">{l "Local timeline"}</span>
-    </LiveRedirect> 
-  </li>
-  <li :if={current_user(@current_user)}>
-  <LiveRedirect to={path(:federation)}>
-    <Outline.GlobeIcon class="w-4 h-4" />
-    <span class="text-sm truncate ellipsis">{l "Federated timeline"}</span>
-  </LiveRedirect> 
-  </li>
-</div>
+<Bonfire.UI.Social.WidgetLive 
+  widget_title={e(assigns, :widget_title, "Feeds")}
+>
+  <div class="p-2 menu bg-base-100 rounded-box">
+    <li :if={current_user(@current_user)}>
+      <LiveRedirect to={path(:feed)}>
+        <Solid.RssIcon class="w-4 h-4" />
+        <span class="text-sm truncate ellipsis">{l "My feed"}</span>
+      </LiveRedirect> 
+    </li>
+    <li :if={current_user(@current_user) || Settings.get([:bonfire_social, :feeds, :federation, :show_guests], true, assigns)}>
+      <LiveRedirect to={path(:local)}>
+        <Solid.LocationMarkerIcon class="w-4 h-4" />
+        <span class="text-sm truncate ellipsis">{l "Local timeline"}</span>
+      </LiveRedirect> 
+    </li>
+    <li :if={current_user(@current_user) || Settings.get([:bonfire_social, :feeds, :federation, :show_guests], false, assigns)}>
+      <LiveRedirect to={path(:federation)}>
+        <Outline.GlobeIcon class="w-4 h-4" />
+        <span class="text-sm truncate ellipsis">{l "Federated timeline"}</span>
+      </LiveRedirect> 
+    </li>
+  </div>
+</Bonfire.UI.Social.WidgetLive>

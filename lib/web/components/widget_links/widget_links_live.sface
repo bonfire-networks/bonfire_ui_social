@@ -1,3 +1,9 @@
+<Bonfire.UI.Social.WidgetLive 
+  :if={!Bonfire.Me.Settings.get([:ui, :show_instance_links, :disabled], nil, assigns)}
+  widget_title={e(assigns, :widget_title, "Links")}
+  current_user={current_user(assigns)}
+>
+
 <ul class="p-2 menu">
   <li
     :for={{name, link} <- @links} 
@@ -15,3 +21,5 @@
     </a>  
   </li>
 </ul>
+
+</Bonfire.UI.Social.WidgetLive>

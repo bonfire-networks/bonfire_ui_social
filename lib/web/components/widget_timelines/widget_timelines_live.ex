@@ -1,4 +1,5 @@
 defmodule Bonfire.UI.Social.WidgetTimelinesLive do
-  use Bonfire.UI.Common.Web, :stateful_component
+  use Bonfire.UI.Common.Web, :stateless_component
 
+  prop widget_title, :string
 end

@@ -35,24 +35,32 @@
       <div
         :if={e(assigns, :without_sidebar, nil) != true}
         class="w-[350px] justify-start hidden h-full  pointer-events-none tablet:flex">
-        <div class="top-[80px] w-full bottom-[16px]  pointer-events-auto">
+        <div class="top-[80px] w-full bottom-[16px] space-y-4 pointer-events-auto">
           <div class="mb-3">
-          <Bonfire.Search.Web.FormLive 
-            search_limit={5}
-          />
+            <Bonfire.Search.Web.FormLive 
+              search_limit={5}
+            />
           </div>
-          {#if !Bonfire.Me.Settings.get([:ui, :show_trending_tags, :disabled], nil, assigns) }
-            <Bonfire.UI.Social.WidgetLive 
-              widget_title="Trending topics"
-              current_user={current_user(assigns)}
-            >
-              <Bonfire.UI.Social.WidgetTagsLive 
-                current_user={current_user(assigns)}
-              />
-            </Bonfire.UI.Social.WidgetLive>
-          {#else}
-           <div />
-          {/if}
+
+          <Surface.Components.Dynamic.Component
+            :if={current_user(assigns)}
+            :for={{component, component_assigns} <- @sidebar_widgets[:users][:secondary] || [ 
+              {Bonfire.UI.Social.WidgetTagsLive , []},
+            ]}
+            module={component}
+            current_user={current_user(assigns)}
+            {...component_assigns}
+          />
+
+          <Surface.Components.Dynamic.Component
+            :if={!current_user(assigns)}
+            :for={{component, component_assigns} <- @sidebar_widgets[:guests][:secondary] || [ 
+              {Bonfire.UI.Social.WidgetTagsLive , []}
+            ]}
+            module={component}
+            {...component_assigns}
+          />
+
         </div>
       </div>
     </div>
