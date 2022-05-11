@@ -65,10 +65,11 @@
           </div>
 
         </div>
-        <div class="flex items-center mb-3 space-x-6">
+        
+        <!-- <div class="flex items-center mb-3 space-x-6">
           <div class="flex items-center w-16 h-10 text-sm font-bold"><span>Subject</span></div>
           <input class="flex-1 h-10 border-t-0 border-b-2 border-l-0 border-r-0 rounded-none input border-base-content border-opacity-30" />
-        </div>
+        </div> -->
 
 <!-- 
          <Bonfire.UI.Social.SelectRecipientsLive 
@@ -90,6 +91,8 @@
           smart_input_text={e(assigns, :smart_input_text, "")}
           showing_within={:message}
           boundary={"message"}
+          title_open={true}
+          title_prompt={l "Enter an optional subject"}
         />
     </div>
       {/if}

@@ -14,13 +14,14 @@ defmodule Bonfire.UI.Social.WritePostContentLive do
   prop thread_id, :string
   prop create_activity_type, :any
   prop to_circles, :list
-  prop smart_input_prompt, :string, default: ""
-  prop smart_input_text, :string, default: "", required: false
+  prop smart_input_prompt, :string
+  prop smart_input_text, :string, required: false
   prop showing_within, :any
   prop with_rich_editor, :boolean, default: true, required: false
   prop insert_text, :string
   prop uploads, :any
   prop uploaded_files, :list
+  prop title_prompt, :string
 
   # Classes to customize the smart input appearance
   prop textarea_class, :string
