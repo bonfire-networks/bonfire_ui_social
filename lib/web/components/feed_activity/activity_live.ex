@@ -15,6 +15,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
   prop thread_object, :any
   prop participants, :list
   prop object_boundary, :any, default: nil
+  prop check_object_boundary, :boolean, default: false
 
   # TODO: put in config and/or autogenerate with Verbs genserver
   @reply_verbs ["reply", "respond"]
@@ -62,7 +63,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
         object_id: e(activity.object, :id, nil) || e(activity, :id, "no-object-id"),
         object_type: object_type,
         object_type_readable: object_type_readable,
-        date_ago: date_from_now(activity),
+        date_ago: date_from_now(ulid(activity) || ulid(activity.object)),
         activity: activity |> Map.drop([:object]),
         verb: verb,
         verb_display: verb_display,
@@ -146,8 +147,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
   end
 
   def preload(list_of_assigns) do
-
-    Bonfire.Boundaries.LiveHandler.preload_boundaries(list_of_assigns)
+    Bonfire.Boundaries.LiveHandler.maybe_preload(list_of_assigns)
   end
 
 

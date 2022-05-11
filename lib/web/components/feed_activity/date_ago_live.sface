@@ -40,7 +40,7 @@
         object_boundary={@object_boundary} 
       />
 
-    <LiveRedirect class="subject_timestamp text-base-content text-opacity-60" to={ path(@object) || @permalink}>
+    <LiveRedirect class="subject_timestamp ml-2 text-base-content text-opacity-60" to={ path(@object) || @permalink}>
 
       <!-- <span :if={e(assigns, :showing_within, nil) not in [:widget, :smart_input]} class="hidden capitalize lg:inline">
         {@verb_display}
