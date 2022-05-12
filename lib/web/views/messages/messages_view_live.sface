@@ -56,16 +56,16 @@
           >
           <div class="flex items-center space-x-6">
             <div class="flex items-center w-16 h-10 text-sm font-bold "><span>To</span></div>
-            <input id="tagify" class="flex-1 h-10 border-t-0 border-b-2 border-l-0 border-r-0 border-base-content border-opacity-30" />
+            <input id="tagify" name="to_circles[]" class="flex-1 h-10 border-t-0 border-b-2 border-l-0 border-r-0 border-base-content border-opacity-30" />
             <select class="hidden">
               {#for user <- @users}
-                <option value={e(user, :edge, :object, :character, :id, nil)}>{e(user, :edge, :object, :profile, :name, "Anon")}</option>
+                <option value={e(user, :edge, :object, :character, :username, nil)}>{e(user, :edge, :object, :profile, :name, "")} - {e(user, :edge, :object, :character, :username, "")}</option>
               {/for}
             </select>
           </div>
 
         </div>
-        
+
         <!-- <div class="flex items-center mb-3 space-x-6">
           <div class="flex items-center w-16 h-10 text-sm font-bold"><span>Subject</span></div>
           <input class="flex-1 h-10 border-t-0 border-b-2 border-l-0 border-r-0 rounded-none input border-base-content border-opacity-30" />
