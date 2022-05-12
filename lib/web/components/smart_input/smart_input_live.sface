@@ -3,7 +3,7 @@
     phx-drop-target={@uploads.files.ref}
     class={"flex h-full"}
     x-data={"{
-      title_open: #{@title_open}, 
+      title_open: false, 
       open_boundaries: false,
       boundary_selected: '#{if e(assigns, :create_activity_type, nil) == :message, do: "message", else: e(assigns, :preset_boundary, "public")}' 
     }"}

@@ -105,7 +105,8 @@ defmodule Bonfire.UI.Social.SmartInputLive do
   # end
 
   # def update(assigns, socket) do
-  #  {:ok, socket |> assign(assigns)}
+  #   IO.inspect(assigns, label: "HEHO")
+  #   {:ok, socket |> assign(assigns)}
   # end
 
   def handle_event("select_smart_input", %{"component" => component}, socket) do

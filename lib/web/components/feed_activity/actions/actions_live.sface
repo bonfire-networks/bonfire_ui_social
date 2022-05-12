@@ -44,6 +44,7 @@
         />
       {/if}  -->
       <Bonfire.UI.Social.Activity.ReplyLive 
+        :if={!e(assigns, :viewing_main_object, nil)}
         object_id={e(@object, :id, "no-object")}
         activity_id={e(assigns, :activity, :id, "no-activity")}
         object_boundary={@object_boundary} 
