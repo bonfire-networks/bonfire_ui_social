@@ -105,7 +105,6 @@ defmodule Bonfire.UI.Social.SmartInputLive do
   # end
 
   # def update(assigns, socket) do
-  #   IO.inspect(assigns, label: "HEHO")
   #   {:ok, socket |> assign(assigns)}
   # end
 

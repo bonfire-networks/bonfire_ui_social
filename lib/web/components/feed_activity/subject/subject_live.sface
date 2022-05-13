@@ -22,9 +22,15 @@
 
 {#if @viewing_main_object}
   <div class="flex items-center p-3">
+    <LiveRedirect
+      opts={"data-id": "subject_name"}
+      aria-label={e(@character, :username, "") <> " profile"}
+      class="text-lg font-semibold text-base-content hover:underline "
+      to={path(@character)}>
       <Bonfire.UI.Social.Activity.AvatarLive
         viewing_main_object={@viewing_main_object} 
         profile={@profile} />
+    </LiveRedirect>
       <div class="flex flex-col flex-1 ml-2 truncate ellipsis">
         <LiveRedirect
           opts={"data-id": "subject_name"}
@@ -108,10 +114,15 @@
     <div class="absolute left-4">
       <div class="align-middle avatar">
         <div class="w-10 h-10 rounded bg-base-200">
+        <LiveRedirect
+          aria-label={e(@character, :username, "") <> " profile"}
+          class="font-semibold text-base-content hover:underline"
+          to={path(@character)}>
           <LazyImage 
             class="subject_avatar" 
             src={avatar_url(@profile)} 
              />
+        </LiveRedirect>
         </div>
       </div>
     </div>
@@ -146,7 +157,13 @@
 {#else}
   <div class="flex items-top ">
     <div class="absolute left-3">
-      <Bonfire.UI.Social.Activity.AvatarLive profile={@profile} />
+     <LiveRedirect
+        opts={"data-id": "subject_name"}
+        aria-label={e(@character, :username, "") <> " profile"}
+        class="font-semibold text-base-content hover:underline "
+        to={path(@character)}>
+        <Bonfire.UI.Social.Activity.AvatarLive profile={@profile} />
+      </LiveRedirect>
     </div>
     <div class="flex items-center justify-between leading-[14px] min-w-0">
       <div class="flex items-center flex-1 truncate">
