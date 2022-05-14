@@ -165,18 +165,18 @@
         <Bonfire.UI.Social.Activity.AvatarLive profile={@profile} />
       </LiveRedirect>
     </div>
-    <div class="flex items-center justify-between leading-[14px] min-w-0">
-      <div class="flex items-center flex-1 truncate">
+    <div class="flex items-center justify-between leading-[16px] min-w-0 space-x-2">
+      <div class="flex items-center flex-1 leading-[16px]">
         <LiveRedirect
           opts={"data-id": "subject_name"}
           aria-label={e(@character, :username, "") <> " profile"}
-          class="font-semibold text-base-content hover:underline "
+          class="link link-hover font-semibold leading-[16px] font-[16px]"
           to={path(@character)}>
           {e(@profile, :name, "Anonymous")}
         </LiveRedirect>
         <span
           :if={e(@character, :username, nil)}
-          class="ml-1 text-sm truncate ellipsis text-base-content text-opacity-60 subject_username">@{e(@character, :username, "")}</span>
+          class="leading-[16px] font-[16px] ml-1 truncate ellipsis text-base-content text-opacity-60 subject_username">@{e(@character, :username, "")}</span>
       </div>
 
       <Bonfire.UI.Social.Activity.DateAgoLive 

@@ -12,6 +12,7 @@ defmodule Bonfire.UI.Social.SidebarLive do
   prop create_activity_type, :any
   prop showing_within, :any
   prop to_circles, :list
+  prop hide_smart_input, :boolean, default: false
   prop smart_input_prompt, :string, required: false
   prop smart_input_text, :string, required: false
   prop sidebar_widgets, :list, default: []

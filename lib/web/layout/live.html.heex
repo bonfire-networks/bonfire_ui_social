@@ -10,12 +10,12 @@
       myself={nil}
       />
       <%= if info do %>
-        <div class="alert alert-info max-w-md fade-out" role="alert alert-warning"
+        <div class="max-w-md alert alert-info fade-out" role="alert alert-warning"
           phx-click="lv:clear-flash"
           phx-value-key="info"><%= rich info %></div>
       <% end %>
       <%= if error do %>
-        <div class="alert alert-error max-w-md" role="alert"
+        <div class="max-w-md alert alert-error" role="alert"
           phx-click="lv:clear-flash"
           phx-value-key="error"><%= rich error %></div>
       <% end %>
@@ -25,6 +25,7 @@
     __context__={e(assigns, :__context__, %{})}
     current_account={current_account(assigns)}
     without_sidebar={e(assigns, :without_sidebar, nil)}
+    hide_smart_input={e(assigns, :hide_smart_input, nil)}
     current_user={current_user(assigns)}
     page={e(assigns, :page, "")}
     inner_content={@inner_content}

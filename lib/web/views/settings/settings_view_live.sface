@@ -1,10 +1,11 @@
-<div class="items-start justify-center w-full max-w-screen-xl mx-auto tablet:flex ">
+<!-- <div class="items-start justify-center w-full max-w-screen-xl mx-auto tablet:flex ">
   <Bonfire.UI.Social.SettingsViewLive.SidebarSettingsLive 
     selected_tab={@selected_tab}
     admin_tab={@tab_id}
     current_user={current_user(assigns)}
   />
-  <section class="flex-grow w-full h-full mx-auto bg-base-100 shrink-0 md:mx-3 md:mr-0 lg:mr-3 max-w-[580px]">
+  <section class="flex-grow w-full h-full mx-auto bg-base-100 shrink-0 md:mx-3 md:mr-0 lg:mr-3 max-w-[580px]"> -->
+  <section class="mb-3 bg-base-100 rounded-xl">
   {#case @selected_tab}
     {#match "admin"}
       {#if is_admin?(current_user(assigns))}
@@ -130,4 +131,3 @@
       />
   {/case}
   </section>
-</div>

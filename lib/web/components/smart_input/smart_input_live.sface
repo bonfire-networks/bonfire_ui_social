@@ -1,14 +1,16 @@
   <div 
     id="smart_input"
     phx-drop-target={@uploads.files.ref}
-    class={"flex h-full"}
+    class={"flex h-full",
+     "sticky bottom-0": e(assigns, :showing_within, nil) == :message}
     x-data={"{
       title_open: false, 
       open_boundaries: false,
       boundary_selected: '#{if e(assigns, :create_activity_type, nil) == :message, do: "message", else: e(assigns, :preset_boundary, "public")}' 
     }"}
     >
-    <div class="flex flex-col flex-1 w-full">
+    <div class={
+      "flex flex-col flex-1 w-full" }>
 
       <!-- <div 
         :if={e(assigns, :showing_within, nil) == :message}

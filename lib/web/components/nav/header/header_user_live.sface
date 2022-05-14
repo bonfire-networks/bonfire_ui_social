@@ -1,4 +1,4 @@
-<div class="w-full">
+<div class="sticky z-50 w-full top-3 background-invisible">
   {#if current_user(assigns)}
     <div class="flex-grow w-full py-2 mb-3 rounded-xl shrink-0 bg-base-100">
       <div class="flex items-center w-full justify-evenly tabs tab-boxed">
@@ -12,10 +12,10 @@
         <!-- / MOBILE INSTANCE ICON -->
         
         <!-- MENU -->
-        <div class="relative z-50 hidden tablet-lg:flex tooltip tooltip-bottom" data-tip={l "My Feed"}>
+        <div class="relative z-50 hidden tablet-lg:flex tooltip tooltip-bottom" data-tip={l "My home"}>
           <LiveRedirect to={"/feed"} class={"tab flex-1 hover:bg-base-content hover:bg-opacity-5 hover:rounded-lg text-base-content text-opacity-70", "tab-active text-opacity-60 relative lined": @page == "home"}>
-              <Solid.RssIcon class="w-5 h-5" />
-              <span class="sr-only">{l "My Feed"}</span>
+              <Solid.HomeIcon class="w-5 h-5" />
+              <span class="sr-only">{l "Home"}</span>
           </LiveRedirect>
         </div>
         <div class="relative z-50 flex tooltip tooltip-bottom" data-tip={l "Notifications"}>

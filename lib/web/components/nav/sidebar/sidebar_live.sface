@@ -1,7 +1,7 @@
 <div 
   class="flex flex-col h-full"
   x-data="{show_smart_input: false}" 
->
+  >
   <nav
     role="navigation"
     class=""
@@ -19,34 +19,13 @@
             <div class="w-8 h-8 bg-center bg-no-repeat bg-contain" style={"background-image: url(#{ Bonfire.Common.Config.get([:ui, :theme, :instance_icon], nil)})"}></div>
             <div class="text-lg font-bold text-base-content">{Bonfire.Common.Config.get([:ui, :theme, :instance_name], '')}</div>
           </LiveRedirect>
-
-
           <!-- IF CURRENT USER -->
           {#if current_user(assigns)}
             <div class="items-center hidden w-full space-x-1 lg:flex">
               <Bonfire.UI.Social.UserMenuLive  current_user={current_user(assigns)} />
-              <!-- <div class="tooltip tooltip-bottom" data-tip={l "Notifications"}>
-                <LivePatch to={path(:notifications)} class={"px-1 btn btn-ghost btn-sm", "text-opacity-100 relative lined": @page == "notifications"}>
-                    <Solid.BellIcon class={
-                      "w-5 h-5",
-                      "text-base-content": @page == "notifications"
-                      } />
-                    <span class="sr-only">{l "Notifications"}</span>
-                </LivePatch>
-              </div>
-              <div class="tooltip tooltip-bottom" data-tip={l "Messages"}>
-                <LivePatch to={path(Bonfire.Data.Social.Message)} class={"px-1 btn btn-ghost btn-sm", "text-opacity-60 relative lined": @page == "messages"}>
-                    <Solid.MailIcon class={
-                      "w-5 h-5",
-                      "text-base-content": @page == "messages"
-                      }
-                      />
-                    <span class="sr-only">{l "Messages"}</span>
-                </LivePatch>
-              </div> -->
             </div>
             <div 
-              :if={current_user(assigns) != nil and e(assigns, :showing_within, nil) != :message}
+              :if={current_user(assigns) != nil and e(assigns, :showing_within, nil) != :message and e(assigns, :hide_smart_input, nil) != true}
               data-id="smart_input">
               <Bonfire.UI.Social.SmartInputLive
                 id={:smart_input} 
@@ -70,19 +49,8 @@
               />
             {/if}
 
-          <!-- 
-            <Bonfire.UI.Social.WidgetNotificationLive 
-              current_user={current_user(assigns)}
-            />
-
-            <Bonfire.UI.Social.WidgetMessagesLive 
-              current_user={current_user(assigns)}
-            /> 
-          -->
-
           {#else}
           <!-- GUESTS -->
-
             <Surface.Components.Dynamic.Component
               :for={{component, component_assigns} <- @sidebar_widgets[:guests][:main] || [ 
                 {Bonfire.UI.Social.HomeBannerLive, []},
@@ -91,22 +59,7 @@
               module={component}
               {...component_assigns}
             />
-
-
           {/if}
-
-
-          <!-- <div
-            :for={{component, component_assigns} <- Bonfire.Common.Config.get([:ui, :sidebar_components], [])}
-          >
-            <Surface.Components.Dynamic.Component
-              :if={module_enabled?(component)}
-              module={component}
-              page={@page}
-              {...component_assigns}
-            />
-          </div> -->
-
         </div>
       </div>
     </div>
