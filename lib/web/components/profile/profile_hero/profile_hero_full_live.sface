@@ -1,5 +1,5 @@
   <div class="pb-2">
-    <div class="bg-center bg-cover bg-no-repeat bg-base-200 h-[125px] tablet:h-[200px]" style={"background-image: url('#{image_url(@user)}')"}></div>
+    <div class="bg-center bg-cover bg-no-repeat bg-base-200 h-[125px] tablet:h-[200px]" style={"background-image: url('#{banner_url(@user)}')"}></div>
     <div class="flex items-center justify-between">
       <LazyImage
         class={"inline-block object-cover -mt-10 tablet:-mt-16 rounded-full ring-4 ring-base-100 bg-base-200 w-24 h-24 tablet:w-32 tablet:h-32 ml-4 tablet:ml-6"}
