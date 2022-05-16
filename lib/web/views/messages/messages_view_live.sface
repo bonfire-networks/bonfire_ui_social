@@ -100,7 +100,7 @@
 
   {#else}
     <Bonfire.UI.Common.PageHeaderLive page_title={@page_title} />
-    <div class="md:mx-0 text-base-content lg:mt-0 bg-base-100">
+    <div class="rounded-b-xl md:mx-0 text-base-content lg:mt-0 bg-base-100">
       <div id="empty-feed">
         <div class="flex items-center justify-center py-8">
           <div class="badge">
