@@ -1,7 +1,6 @@
-<main class="h-full md:flex md:mx-0">
-  <section class="relative w-full h-full mx-auto">
+<main class="flex flex-col h-body">
     <Bonfire.UI.Common.PageHeaderLive page_title={e(assigns, :feed_title, @page_title)} />
-    <div class="md:mx-0 text-base-content lg:mt-0 bg-base-100 rounded-b-xl">
+    <div class="flex-1 bg-base-100 rounded-b-xl">
       <Bonfire.UI.Social.FeedLive 
         :if={@feed_id}
         id={@feed_id}
@@ -13,5 +12,4 @@
         verb_default={e(assigns, :verb_default, nil)}
       />
     </div>
-  </section>
 </main>

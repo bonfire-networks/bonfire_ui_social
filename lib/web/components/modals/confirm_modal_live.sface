@@ -3,13 +3,13 @@
   class="fixed inset-0 z-50 hidden overflow-y-auto" 
   aria-labelledby="modal-title" aria-modal="true">
   <div 
-    class="flex items-end justify-center min-h-screen px-4 pt-4 pb-20 text-center sm:block sm:p-0">   
+    class="flex items-end justify-center min-h-main px-4 pt-4 pb-20 text-center sm:block sm:p-0">   
     <div
       phx-click={JS.hide(to: "#confirm_modal-#{@object_id}", transition: "fade-out-scale")}
       class="fixed inset-0 transition-opacity bg-base-100 bg-opacity-60" 
       aria-hidden="true">
     </div>
-    <span class="hidden sm:inline-block sm:align-middle sm:h-screen" aria-hidden="true">&ZeroWidthSpace;</span>     
+    <span class="hidden sm:inline-block sm:align-middle sm:h-main" aria-hidden="true">&ZeroWidthSpace;</span>     
     <div 
       class="inline-block px-4 pt-5 pb-4 overflow-hidden text-left align-bottom transition-all transform rounded-lg shadow-xl bg-neutral-content sm:my-8 sm:align-middle sm:max-w-sm sm:w-full sm:p-6">
       <div class="sm:flex sm:items-start">

@@ -6,7 +6,7 @@
       page={@page}
       current_user={current_user(assigns)}  
     />
-    <div class="items-start justify-center w-full lg:max-w-screen-xl lg:mx-auto h-body md:flex ">
+    <div class="items-start justify-center w-full lg:max-w-screen-xl lg:mx-auto h-main md:flex ">
       <Bonfire.UI.Social.SidebarLive
         :if={e(assigns, :without_sidebar, nil) != true}
         current_user={current_user(assigns)}
@@ -23,7 +23,7 @@
       />
       <div 
         class={
-          "flex-grow w-full h-body mx-auto rounded-t-xl shrink-0 mx-3 w-center",
+          "flex-grow w-full flex flex-col h-main mx-auto rounded-t-xl shrink-0 mx-3 w-center",
           "max-w-[580px]": e(assigns, :without_sidebar, nil) != true,
           }>
         <Bonfire.UI.Social.HeaderUserLive 
@@ -31,8 +31,8 @@
           page={@page}
           current_user={current_user(assigns)}  
         />
-        <div class="mt-6">
-        {@inner_content}
+        <div class="flex-1 mt-3">
+          {@inner_content}
         </div>
       </div>
       <div
