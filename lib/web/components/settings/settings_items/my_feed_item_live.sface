@@ -1,0 +1,12 @@
+
+  <div class="form-control mt-2">
+    <label class="label cursor-pointer justify-start">
+      <Checkbox 
+        name={"Bonfire.Social.Feeds[my_feed_includes][#{@key}]"} 
+        value={@force_checked==true or (@force_unchecked !=true and Bonfire.Me.Settings.get([Bonfire.Social.Feeds, :my_feed_includes, @key], true, assigns) |> debug("value: #{@key}") )}
+        opts={disabled: @disabled}
+        class="checkbox" 
+      />
+      <span class="ml-2 label-text">{@label}</span> 
+    </label>
+  </div>

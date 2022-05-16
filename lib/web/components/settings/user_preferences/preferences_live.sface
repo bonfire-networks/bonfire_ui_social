@@ -27,8 +27,13 @@
     </div>
   </div>
 
+  <Bonfire.UI.Social.SettingsViewsLive.MyFeedItemsLive
+    current_user={current_user(assigns)}
+   />
+
   <Bonfire.UI.Social.SettingsViewsLive.DiscoverableLive
     label={l "I want my profile (@%{username}) and content to appear in search engines (in Bonfire, the fediverse, and the web in general)", username: e(current_user(assigns), :character, :username, "")}
+    current_user={current_user(assigns)}
    />
 
 </form>
