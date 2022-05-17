@@ -1,5 +1,7 @@
 <main class="flex flex-col h-body">
-    <Bonfire.UI.Common.PageHeaderLive page_title={e(assigns, :feed_title, @page_title)} />
+    <Bonfire.UI.Common.PageHeaderLive 
+      before
+      page_title={e(assigns, :feed_title, @page_title)} />
     <div class="flex-1 bg-base-100 rounded-b-xl">
       <Bonfire.UI.Social.FeedLive 
         :if={@feed_id}

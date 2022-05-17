@@ -32,13 +32,19 @@
 {#else}
 <div class="flex items-center">
   <div class="relative flex items-center space-x-1 text-[14px] leading-[16px] text-base-content text-opacity-60">
-    
-    <BoundaryIconLive 
+      <Surface.Components.Dynamic.LiveComponent
+        :if={module_enabled?(Bonfire.Boundaries.Web.BoundaryIconLive) and @object_type not in [Bonfire.Data.Social.Message]}
+        module={Bonfire.Boundaries.Web.BoundaryIconLive}
+        object={@object} 
+        id={ComponentID.new(Bonfire.Boundaries.Web.BoundaryIconLive, @object)} 
+        object_boundary={@object_boundary} 
+      />
+    <!-- <BoundaryIconLive 
         :if={@object_type not in [Bonfire.Data.Social.Message]}
         id={ComponentID.new(BoundaryIconLive, @object)} 
         object={@object}  
         object_boundary={@object_boundary} 
-      />
+      /> -->
 
     <LiveRedirect class="ml-2 subject_timestamp text-base-content text-opacity-60" to={ path(@object) || @permalink}>
 

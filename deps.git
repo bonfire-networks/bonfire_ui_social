@@ -1,5 +1,6 @@
 bonfire_common = "https://github.com/bonfire-networks/bonfire_common#main"
 bonfire_ui_common = "https://github.com/bonfire-networks/bonfire_ui_common#main"
+# bonfire_boundaries = "https://github.com/bonfire-networks/bonfire_boundaries#main"
 # bonfire_data_access_control="https://github.com/bonfire-networks/bonfire_data_access_control#main"
 # bonfire_data_activity_pub="https://github.com/bonfire-networks/bonfire_data_activity_pub#main"
 # bonfire_data_identity="https://github.com/bonfire-networks/bonfire_data_identity#main"
