@@ -26,7 +26,7 @@ defmodule Bonfire.UI.Social.Feeds.LikeActivityTest do
 
     feed = Bonfire.Social.FeedActivities.my_feed(alice)
     fp = feed.edges |> List.first() #|> IO.inspect
-    assert doc = render_component(Bonfire.UI.Social.ActivityLive, %{id: "activity", activity: fp.activity})
+    assert doc = render_stateful(Bonfire.UI.Social.ActivityLive, %{id: "activity", activity: fp.activity})
 
     assert doc
       |> Floki.parse_fragment
@@ -53,7 +53,7 @@ defmodule Bonfire.UI.Social.Feeds.LikeActivityTest do
 
     feed = Bonfire.Social.FeedActivities.my_feed(bob)
     fp = feed.edges |> List.first() #|> IO.inspect
-    assert doc = render_component(Bonfire.UI.Social.ActivityLive, %{id: "activity", activity: fp.activity, __context__: %{current_user: bob}})
+    assert doc = render_stateful(Bonfire.UI.Social.ActivityLive, %{id: "activity", activity: fp.activity}, %{current_user: bob})
 
     assert doc
       |> Floki.parse_fragment
@@ -77,7 +77,7 @@ defmodule Bonfire.UI.Social.Feeds.LikeActivityTest do
 
       feed = Bonfire.Social.FeedActivities.my_feed(bob)
       fp = feed.edges |> List.first() #|> IO.inspect
-      assert doc = render_component(Bonfire.UI.Social.ActivityLive, %{id: "activity", activity: fp.activity, __context__: %{current_user: bob}})
+    assert doc = render_stateful(Bonfire.UI.Social.ActivityLive, %{id: "activity", activity: fp.activity}, %{current_user: bob})
 
       if Bonfire.Me.Settings.get([:ui, :show_activity_counts], nil, current_user: bob, current_account: account2) do
        assert doc
@@ -101,7 +101,7 @@ defmodule Bonfire.UI.Social.Feeds.LikeActivityTest do
     assert {:ok, like} = Likes.like(bob, post)
     feed = Bonfire.Social.FeedActivities.my_feed(alice)
     fp = feed.edges |> List.first() #|> IO.inspect
-    assert doc = render_component(Bonfire.UI.Social.ActivityLive, %{id: "activity", activity: fp.activity})
+    assert doc = render_stateful(Bonfire.UI.Social.ActivityLive, %{id: "activity", activity: fp.activity})
 
     assert doc
     |> Floki.parse_fragment
@@ -126,7 +126,7 @@ defmodule Bonfire.UI.Social.Feeds.LikeActivityTest do
 
     feed = Bonfire.Social.FeedActivities.my_feed(bob)
     fp = feed.edges |> List.first() #|> IO.inspect
-    assert doc = render_component(Bonfire.UI.Social.ActivityLive, %{id: "activity", activity: fp.activity, __context__: %{current_user: bob}})
+    assert doc = render_stateful(Bonfire.UI.Social.ActivityLive, %{id: "activity", activity: fp.activity}, %{current_user: bob})
 
     assert doc
     |> Floki.parse_fragment
@@ -155,7 +155,7 @@ defmodule Bonfire.UI.Social.Feeds.LikeActivityTest do
 
     feed = Bonfire.Social.FeedActivities.my_feed(bob)
     fp = feed.edges |> List.first() #|> IO.inspect
-    assert doc = render_component(Bonfire.UI.Social.ActivityLive, %{id: "activity", activity: fp.activity})
+    assert doc = render_stateful(Bonfire.UI.Social.ActivityLive, %{id: "activity", activity: fp.activity})
 
     assert doc
     |> Floki.parse_fragment
@@ -181,7 +181,7 @@ defmodule Bonfire.UI.Social.Feeds.LikeActivityTest do
 
     feed = Bonfire.Social.FeedActivities.my_feed(bob)
     fp = feed.edges |> List.first() #|> IO.inspect
-    assert doc = render_component(Bonfire.UI.Social.ActivityLive, %{id: "activity", activity: fp.activity})
+    assert doc = render_stateful(Bonfire.UI.Social.ActivityLive, %{id: "activity", activity: fp.activity})
 
     assert doc
     |> Floki.parse_fragment

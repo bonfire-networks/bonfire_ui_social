@@ -31,7 +31,7 @@ defmodule Bonfire.UI.Social.Feeds.Notifications.ReplyTest do
       #|> IO.inspect
 
       assigns = [activity: fp.activity, showing_within: :notifications]
-      assert doc = render_surface(Bonfire.UI.Social.ActivityLive, assigns)
+      assert doc = render_stateful(Bonfire.UI.Social.ActivityLive, assigns)
 
       assert doc
       |> Floki.parse_fragment
@@ -64,7 +64,7 @@ defmodule Bonfire.UI.Social.Feeds.Notifications.ReplyTest do
       |> List.first()
 
       assigns = [activity: fp.activity, showing_within: :notifications]
-      assert doc = render_surface(Bonfire.UI.Social.ActivityLive, assigns)
+      assert doc = render_stateful(Bonfire.UI.Social.ActivityLive, assigns)
 
       assert doc
       |> Floki.parse_fragment
@@ -96,7 +96,7 @@ defmodule Bonfire.UI.Social.Feeds.Notifications.ReplyTest do
       |> List.first()
 
       assigns = [activity: fp.activity, showing_within: :notifications]
-      assert doc = render_surface(Bonfire.UI.Social.ActivityLive, assigns)
+      assert doc = render_stateful(Bonfire.UI.Social.ActivityLive, assigns)
 
       assert doc
       |> Floki.parse_fragment
@@ -129,7 +129,7 @@ defmodule Bonfire.UI.Social.Feeds.Notifications.ReplyTest do
       |> List.first()
 
       assigns = [activity: fp.activity, showing_within: :notifications]
-      assert doc = render_surface(Bonfire.UI.Social.ActivityLive, assigns)
+      assert doc = render_stateful(Bonfire.UI.Social.ActivityLive, assigns)
 
       assert doc
       |> Floki.parse_fragment
