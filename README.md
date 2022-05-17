@@ -5,6 +5,8 @@
 
 This extension is meant to be used by other extensions like [Bonfire.Social](https://github.com/bonfire-networks/bonfire_social), which provides logic for the UI to work with/
 
+You can customise it by forking, but we recommend creating an extension which uses this one as a dependency, and defines your custom components, views, and/or routes (you can then comment `Bonfire.UI.Social.Routes` from your top-level Router to use your custom routes and views instead).
+
 
 ### Stack
 
@@ -17,7 +19,8 @@ So far, Bonfire UI extensions are built with the PETALS stack (note that is not 
 - [LiveView](https://github.com/phoenixframework/phoenix_live_view#readme)
 - [Surface](https://surface-ui.org/)
 
-We're currently in the middle of a refactor to convert all components and templates from LiveView to Surface, which is a server-side rendering component library (built on top of Phoenix and LiveView) that inherits a lot of design patterns from popular JS framework like Vue.js and React, while being almost JavaScript-free compared to common SPAs.  
+Surface is a server-side rendering component library (built on top of Phoenix and LiveView) that inherits a lot of design patterns from popular JS framework like Vue.js and React, while being almost JavaScript-free compared to common SPAs.
+
 
 ### Scaffolding
 The relevant folders are:
