@@ -1,0 +1,68 @@
+
+<div
+  class="write_post_content"
+>
+  <Form 
+    for={Bonfire.Social.Posts.LiveHandler.post_changeset(current_user(assigns))} 
+    submit={if @create_activity_type==:message, do: "Bonfire.Social.Messages:send", else: "Bonfire.Social.Posts:post"} 
+    change="validate"
+    opts={ autocomplete: "off", "phx-target": "#smart_input"}
+    class={if WriteEditorLive.use_rich_editor?(assigns), do: "with_editor", else: "with_textarea"}>
+
+    <!-- <div 
+      x-show="smart_input_prompt != 'Write something...' && ((reply_to_id && reply_to_id != '') || (smart_input_text && smart_input_text !=''))" 
+      x-text= "smart_input_prompt" 
+      class="block mb-2 text-sm truncate rounded shadow-lg alert alert-info ellipsis ">
+      {@smart_input_prompt || ""}  
+    </div> -->
+
+    <div class={@smart_input_class}>
+      <div class="relative">
+        <Inputs for={:post_content}>
+          <div
+            id="textarea_wrapper"
+            class="">
+            <div 
+              display="style: none"
+              x-show="title_open" 
+              x-transition>
+              <label for="title" class="sr-only">{l "Title"}</label>
+              <Field name={:name}>
+                <TextInput
+                  opts={placeholder: "Enter a title"}
+                  class="block w-full border-0 pt-2.5 text-lg font-medium placeholder-slate-800 placeholder-opacity-70 bg-slate-100 text-slate-800 border-b border-slate-200 rounded-t-lg" 
+                  />
+              </Field>
+            </div>  
+            <label for="description" class="sr-only">{l "Description"}</label>
+            <Field 
+              class="h-full min-h-full min-h-[100px] max-h-[150px] flex flex-col grow" name={:html_body}>
+              <!-- <Label :if={@smart_input_text && @smart_input_text !="" && @smart_input_prompt} class="mb-2 alert alert-info">{@smart_input_prompt}</Label> -->    
+                <WriteEditorLive
+                  field_name="post[post_content][html_body]"
+                  textarea_class={@textarea_class}
+                  smart_input_prompt={e(assigns, :smart_input_prompt, l "Write something...")}
+                  smart_input_text={@smart_input_text}
+                  insert_text={@insert_text}
+                  with_rich_editor={@with_rich_editor}
+                />
+                
+            </Field>
+          </div>
+        </Inputs>
+        
+        <Bonfire.UI.Common.InputControlsLive
+          reply_to_id={@reply_to_id}
+          thread_id={@thread_id}
+          create_activity_type={e(assigns, :create_activity_type, nil)}
+          to_circles={e(assigns, :to_circles, [])}
+          current_user={@current_user}
+          showing_within={@showing_within}
+          uploads={@uploads}
+          uploaded_files={e(assigns, :uploaded_files, [])}
+        />
+
+      </div>
+    </div>
+  </Form>
+</div>

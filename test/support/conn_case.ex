@@ -33,7 +33,7 @@ defmodule Bonfire.UI.Social.ConnCase do
 
       import Where
       use Arrows
-      # alias Bonfire.UI.Social.Web.Router.Helpers, as: Routes
+      # alias Bonfire.UI.Social.Router.Helpers, as: Routes
 
       # The default endpoint for testing
       @endpoint Bonfire.Common.Config.get!(:endpoint_module)

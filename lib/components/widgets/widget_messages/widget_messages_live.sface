@@ -1,0 +1,37 @@
+{#case feed(assigns)}
+{#match feed when is_list(feed)}
+
+  <Bonfire.UI.Common.WidgetLive 
+    widget_title={e(assigns, :widget_title, "Messages")}
+  >
+    <:action>
+      <LivePatch class="text-xs normal-case btn btn-xs btn-outline" to={path(Bonfire.Data.Social.Message)}>
+        {l "View more"}
+      </LivePatch>
+    </:action>
+
+    <ul class="divide-y menu bg-base-100 divide-base-300">
+      <li :for={%{activity: activity} <- feed}>
+        <LiveRedirect to={"#{path(Bonfire.Data.Social.Message, e(activity, :object_id, nil))}"} class="block ">
+          <div class="flex items-center">
+            <div class="flex-1 min-w-0 sm:flex sm:items-center sm:justify-between">
+              <div class="truncate">
+                <div class="flex items-center space-x-2">
+                  <p class="text-sm font-medium truncate text-base-content text-opacity-80">{e(activity, :subject, :profile, :name, nil)}</p>
+                </div>
+              </div>
+            </div>
+            <div class="flex-shrink-0 ml-5">
+              <div class="">
+                <div class="text-xs text-base-content text-opacity-60">
+                  <p><time datetime={"#{date_from_now(activity)}"}>{date_from_now(activity)}</time></p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </LiveRedirect>
+      </li>
+    </ul>
+
+  </Bonfire.UI.Common.WidgetLive>
+{/case}

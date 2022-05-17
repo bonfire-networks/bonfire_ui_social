@@ -1,0 +1,43 @@
+<Bonfire.UI.Common.WidgetLive 
+  :if={!Bonfire.Me.Settings.get([:ui, :show_trending_tags, :disabled], nil, assigns)}
+  widget_title={e(assigns, :widget_title, "Trending topics")}
+>
+
+<ul 
+  :if={!Bonfire.Me.Settings.get([:ui, :show_trending_tags, :disabled], nil, assigns)}
+  class="menu bg-base-100 rounded-b-xl">
+
+  {#for tag <- Bonfire.Tag.Tags.list_trending(Bonfire.Me.Settings.get([:ui, :show_trending_tags, :for_last_x_days], 30, assigns), Bonfire.Me.Settings.get([:ui, :show_trending_tags, :limit], 10, assigns))}
+    {#case e(tag, :tag, nil)}
+      {#match %Bonfire.Tag.Hashtag{} = hashtag}
+        <LivePatch to={"/tag/" <> hashtag.name}>
+          <li class="">
+            <div class="flex flex-row items-center">
+              <div class="flex flex-col items-start flex-1 gap-0 text-left">
+                  <div class="font-bold text-base-content">
+                    #{hashtag.name}
+                  </div>
+                <div class="text-xs font-light text-base-content text-opacity-80">{e(tag, :count, 0)} {l "activities"}</div>
+            </div>
+            <!-- <div><Outline.DotsHorizontalIcon class="w-5 h-5 text-base-content text-opacity-60" /></div> -->
+          </div>
+        </li>
+        </LivePatch>
+      {#match other}
+        <LivePatch to={path(other)}>
+          <li class="">
+            <div class="flex flex-row items-center">
+              <div class="flex flex-col items-start flex-1 gap-0 text-left">
+                <div class="font-bold text-base-content">
+                {e(other, :name, nil) || e(other, :profile, :name, nil) || e(other, :character, :username, nil) || e(other, :named, :name, nil) || e(other, :id, nil)}
+                </div>
+                <div class="text-xs font-light text-base-content text-opacity-80">{e(tag, :count, 0)} {l "activities"}</div>
+              </div>
+            </div>
+          </li>
+        </LivePatch>
+    {/case}
+  {/for}
+</ul>
+
+</Bonfire.UI.Common.WidgetLive>

@@ -1,0 +1,63 @@
+<main class="flex flex-col md:mx-0 grow">
+  <Bonfire.UI.Common.PageHeaderLive
+    page_title={@page_title}
+    before={true}
+  />
+  <!-- <Bonfire.UI.Social.BannerPreviousThreadLive activity={@activity} /> -->   
+  <div class="flex flex-col grow">
+   <Bonfire.UI.Social.ActivityLive
+      id={"ta:"<>ulid(@activity)}
+      showing_within={:thread}
+      thread_mode={e(assigns, :thread_mode, nil)}
+      viewing_main_object={true}
+      activity={@activity}
+      object={@object}
+      participants={e(assigns, :participants, [])}
+      class="cursor-default"
+    />
+    <Bonfire.UI.Social.ThreadLive 
+      id={@thread_id}
+      thread_id={@thread_id}
+      thread_mode={e(assigns, :thread_mode, nil)}
+      reverse_order={e(assigns, :reverse_order, nil)}
+      replies={e(assigns, :replies, nil)}
+      threaded_replies={e(assigns, :threaded_replies, [])}
+      page_info={e(assigns, :page_info, [])}
+      activity={@activity}
+      object={@object}
+      url={@url}
+    />
+  </div>
+
+   <Bonfire.UI.Common.SmartInputLive
+    id={:smart_input}
+    :if={@show_reply_input && current_user(assigns)}
+    current_user={current_user(assigns)}
+    reply_to_id={e(assigns, :reply_to_id, "")}
+    thread_id={e(assigns, :thread_id, nil)}
+    create_activity_type={e(assigns, :create_activity_type, nil)}
+    to_circles={e(assigns, :to_circles, [])}
+    smart_input_prompt={e(assigns, :smart_input_prompt, "")}
+    smart_input_text={e(assigns, :smart_input_text, "")}
+    textarea_class={@textarea_class}
+    smart_input_class={@smart_input_class}
+    showing_within={e(assigns, :showing_within, nil)}
+    replied_activity_class={@replied_activity_class}
+  />
+
+</main>
+
+
+  <!-- {#if current_user(assigns) }
+    <Bonfire.UI.Common.WidgetLive 
+      widget_title="Participants"
+      current_user={current_user(assigns)}
+    >
+      <Bonfire.UI.Social.WidgetUsersLive 
+        current_user={current_user(assigns)}
+        users={participants(assigns)}
+      />
+    </Bonfire.UI.Common.WidgetLive>
+  {#else}
+    <div />
+  {/if} -->
