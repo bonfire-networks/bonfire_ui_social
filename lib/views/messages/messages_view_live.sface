@@ -49,22 +49,6 @@
             </div>
           </div>
         </div> -->
-        <div 
-          class="mb-3"
-          id={:select_recipients}
-          phx-hook="InputOrSelectOne"
-          >
-          <div class="flex items-center space-x-6">
-            <div class="flex items-center w-16 h-10 text-sm font-bold "><span>To</span></div>
-            <input id="tagify" name="to_circles[]" class="flex-1 h-10 bg-transparent border-t-0 border-b-2 border-l-0 border-r-0 border-base-content border-opacity-30" />
-            <select class="hidden">
-              {#for user <- @users}
-                <option value={e(user, :edge, :object, :id, nil)}>{e(user, :edge, :object, :profile, :name, "")} - {e(user, :edge, :object, :character, :username, "")}</option>
-              {/for}
-            </select>
-          </div>
-
-        </div>
 
         <!-- <div class="flex items-center mb-3 space-x-6">
           <div class="flex items-center w-16 h-10 text-sm font-bold"><span>Subject</span></div>
@@ -93,6 +77,8 @@
           boundary={"message"}
           title_open={true}
           title_prompt={l "Enter an optional subject"}
+          preloaded_recipients={@users}
+          show_select_recipients={true}
         />
     </div>
       {/if}

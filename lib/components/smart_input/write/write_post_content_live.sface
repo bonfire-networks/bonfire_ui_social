@@ -9,12 +9,20 @@
     opts={ autocomplete: "off", "phx-target": "#smart_input"}
     class={if WriteEditorLive.use_rich_editor?(assigns), do: "with_editor", else: "with_textarea"}>
 
+
     <!-- <div 
       x-show="smart_input_prompt != 'Write something...' && ((reply_to_id && reply_to_id != '') || (smart_input_text && smart_input_text !=''))" 
       x-text= "smart_input_prompt" 
       class="block mb-2 text-sm truncate rounded shadow-lg alert alert-info ellipsis ">
       {@smart_input_prompt || ""}  
     </div> -->
+
+    <Bonfire.UI.Common.SelectRecipientsLive
+      :if={@show_select_recipients}
+      showing_within={@showing_within}
+      preloaded_recipients={e(assigns, :preloaded_recipients, [])}
+      to_circles={e(assigns, :to_circles, [])}
+    />
 
     <div class={@smart_input_class}>
       <div class="relative">

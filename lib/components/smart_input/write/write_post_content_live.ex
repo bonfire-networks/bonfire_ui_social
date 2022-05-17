@@ -22,6 +22,7 @@ defmodule Bonfire.UI.Social.WritePostContentLive do
   prop uploads, :any
   prop uploaded_files, :list
   prop title_prompt, :string
+  prop show_select_recipients, :boolean, default: false
 
   # Classes to customize the smart input appearance
   prop textarea_class, :string
