@@ -1,11 +1,17 @@
 import Config
 
-#### Email configuration
+config :bonfire_common,
+  otp_app: :bonfire_ui_social
 
-# You will almost certainly want to change at least some of these
+config :bonfire_ui_social,
+  otp_app: :bonfire_ui_social
 
-# include Phoenix web server boilerplate
-# import_config "bonfire_web_phoenix.exs"
+# Choose password hashing backend
+# Note that this corresponds with our dependencies in mix.exs
+hasher = if config_env() in [:dev, :test], do: Pbkdf2, else: Argon2
+config :bonfire_data_identity, Bonfire.Data.Identity.Credential,
+  hasher_module: hasher
+
 
 # include all used Bonfire extensions
 import_config "bonfire_ui_social.exs"

@@ -16,11 +16,12 @@ defmodule Bonfire.UI.Social.MixProject do
         {:phoenix_live_reload, "~> 1.2", only: :dev},
         {:dbg, "~> 1.0", only: [:dev, :test]},
         {:floki, ">= 0.0.0", only: [:dev, :test]},
-        {:bonfire_editor_ck, "https://github.com/bonfire-networks/bonfire_editor_ck#main", optional: true},
-        {:bonfire_editor_quill, "https://github.com/bonfire-networks/bonfire_editor_quill#main", optional: true},
-        {:bonfire_tag, "https://github.com/bonfire-networks/bonfire_tag#main", optional: true}
-        # {:bonfire_valueflows, "https://github.com/bonfire-networks/bonfire_valueflows#main", optional: true}
-        # {:bonfire_ui_valueflows, "https://github.com/bonfire-networks/bonfire_ui_valueflows#main", optional: true}
+        {:bonfire_editor_ck, git: "https://github.com/bonfire-networks/bonfire_editor_ck", branch: "main", optional: true},
+        {:bonfire_editor_quill, git: "https://github.com/bonfire-networks/bonfire_editor_quill", branch: "main", optional: true},
+        {:bonfire_tag, git: "https://github.com/bonfire-networks/bonfire_tag", branch: "main", optional: true},
+        {:bonfire_boundaries, git: "https://github.com/bonfire-networks/bonfire_boundaries", branch: "main", optional: true}
+        # {:bonfire_valueflows, "https://github.com/bonfire-networks/bonfire_valueflows", branch: "main", optional: true}
+        # {:bonfire_ui_valueflows, "https://github.com/bonfire-networks/bonfire_ui_valueflows", branch: "main", optional: true}
       ]),
       package: [
         licenses: ["AGPL v3"]

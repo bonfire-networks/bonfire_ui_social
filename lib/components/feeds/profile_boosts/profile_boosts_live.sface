@@ -1,0 +1,27 @@
+<div class="rounded-t-none bg-base-100 rounded-box">
+  <Surface.Components.Dynamic.Component 
+    module={Config.get([:ui, :profile, :hero_component], 
+    Bonfire.UI.Me.ProfileHeroFullLive)} 
+    user={@user} 
+    current_user={current_user(assigns)} 
+    follows_me={e(assigns, :follows_me, false)}  />
+  <Bonfire.UI.Common.ProfileNavigationLive 
+    selected_tab={@selected_tab} 
+    user={@user}/>
+
+  <Bonfire.UI.Social.FeedLive
+    id={"feed:profile:boosts"}
+    verb_default="boost"
+    user={@user}
+    page_title={@page_title}
+    page={@page}
+    feed={@feed}
+    page_info={@page_info}
+    selected_tab={@selected_tab}
+    smart_input={@smart_input}
+    smart_input_prompt={@smart_input_prompt}
+    smart_input_text={@smart_input_text}
+    search_placholder={@search_placholder}
+    feed_title={@feed_title}
+  />
+</div>

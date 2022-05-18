@@ -3,8 +3,6 @@ faker = "~> 0.14" # fake data generation
 gettext = "~> 0.11"
 jason = "~> 1.0"
 recase = "~> 0.5" # string recasing
-telemetry_metrics = "~> 0.4"
-telemetry_poller = "~> 0.4"
 # plugins
 # bonfire_data_access_control = "~> 0.1"
 # bonfire_data_activity_pub = "~> 0.1"
@@ -12,3 +10,4 @@ telemetry_poller = "~> 0.4"
 # bonfire_data_social = "~> 0.1"
 # for this extension:
 # surface_heroicons = "~> 0.5"
+telemetry = "~> 1.1.0"
