@@ -15,7 +15,7 @@ defmodule Bonfire.UI.Social.DataCase do
   """
 
   use ExUnit.CaseTemplate
-  import Bonfire.UI.Social.Integration
+  # import Bonfire.UI.Social.Integration
 
   using do
     quote do
