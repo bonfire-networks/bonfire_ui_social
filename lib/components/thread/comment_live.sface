@@ -8,19 +8,19 @@
   >
   <div class="relative flex-1 w-full">
     <div 
+      :if={e(assigns, :thread_mode, nil) !=:flat }
       x-cloak
       x-show="show_replies"
       @click="show_replies = !show_replies"
       class="cursor-pointer group z-10 left-[16px] px-3 top-[54px] bottom-[0px] absolute">
       <i 
-        :if={e(assigns, :thread_mode, nil) !=:flat}
         :class=" !show_replies ? 'bg-primary bottom-[0px]' : 'bg-base-200 bottom-[0px]'"
         class="bg-base-content bg-opacity-20 group-hover:bg-primary group-hover:bg-opacity-100 top-0 bottom-0 z-10 w-[2px] absolute"></i>
     </div>
     <div class="flex items-top">
       <div 
         x-cloak
-        class="p-3 pr-0"
+        class="p-3 pr-0 pl-[21px]"
         @click="show_replies = !show_replies"
         x-show="!show_replies">
         <Outline.ArrowsExpandIcon class="w-4 h-4 cursor-pointer text-primary text-opacity-70 hover:text-opacity hover:text-opacity-100" />
