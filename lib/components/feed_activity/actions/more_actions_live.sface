@@ -41,7 +41,7 @@
     </li> -->
 
     <!-- Follow the author-->
-    <li 
+    <!-- <li 
       :if={e(current_user(assigns), :id, nil) != subject_id(assigns)}
       class=" hover:bg-neutral hover:bg-opacity-20">
       <div>
@@ -53,7 +53,7 @@
           icon_class="w-4 h-4 mr-0 shrink-0 text-neutral text-opacity-70"
         />
       </div>
-    </li>
+    </li> -->
 
     
     <!-- Flag the action -->

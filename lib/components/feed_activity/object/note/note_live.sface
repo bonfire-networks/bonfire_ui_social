@@ -21,7 +21,7 @@
       phx-value-ignore={true}
       style="display: none"
       class="flex items-center mt-1 text-left text-md text-base-content">
-      <span class="mr-2 hover:underline">{ rich e(post_content(@object), :name, "CW")} </span> <div class="font-medium capitalize text-opacity-80 btn btn-xs btn-outline">{l "read post"}</div>
+      <span class="mr-2 hover:underline">{ rich e(post_content(@object), :name, "CW")} </span> <div class="font-medium capitalize text-opacity-80 btn btn-xs btn-outline">{l "Show more"}</div>
     </button>
     <button
       @click="content_open = false"
@@ -30,7 +30,7 @@
       x-show="content_open"
       style="display: none"
       class="flex items-center mt-1 text-left text-md text-base-content">
-      <span class="mr-2 hover:underline">{rich e(post_content(@object), :name, "CW")} </span>  <div class="font-medium capitalize text-opacity-80 btn btn-xs btn-outline">{l "hide post"}</div>
+      <span class="mr-2 hover:underline">{rich e(post_content(@object), :name, "CW")} </span>  <div class="font-medium capitalize text-opacity-80 btn btn-xs btn-outline">{l "Show less"}</div>
     </button>
 
   </div>
@@ -49,7 +49,7 @@
       data-id={"object_body"}
       :if={e(post_content(@object), :html_body, nil)}
       class={
-        "prose object_body max-w-none",
+        "prose object_body max-w-none font-[16px] mt-1 prose-sm prose-p:pt-0 prose-p:my-0 prose-p:leading-[20px]",
         "font-[16px] mt-1 prose-sm prose-p:pt-0 prose-p:my-0 prose-p:leading-[20px]": e(assigns, :showing_within, nil) == :thread,
         "prose-xl mt-0 prose-p:pb-4 prose-p:leading-[26px]": e(assigns, :viewing_main_object, nil),
         "prose-p:pt-1": e(assigns, :showing_within, nil) == :feed
