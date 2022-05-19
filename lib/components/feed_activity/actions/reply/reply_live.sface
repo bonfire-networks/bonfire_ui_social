@@ -5,17 +5,10 @@
       phx-target={if e(assigns, :activity_id, nil), do: "#activity-"<>e(assigns, :activity_id, "")}
       phx-click="Bonfire.Social.Feeds:reply"
     >
-      <div class={
-        "btn btn-ghost btn-circle",
-        "btn-xs ": e(assigns, :showing_within, "") == :thread,
-        "btn-sm": e(assigns, :showing_within, "") != :thread,
-      }> 
+      <div class={"btn btn-ghost btn-circle btn-sm"}> 
         <span class="text-base-content text-opacity-70">
           <Outline.ReplyIcon class="w-4 h-4 stroke-1" />
           <span class="sr-only">{l "Reply"}</span>
-          <!-- <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-            <path stroke-linecap="round" stroke-linejoin="round" d="M3 10h10a8 8 0 018 8v2M3 10l6 6m-6-6l6-6" />
-          </svg> -->
         </span>
       </div>
     </div>

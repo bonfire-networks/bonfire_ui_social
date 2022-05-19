@@ -1,18 +1,4 @@
 <div data-id="subject"> 
-<!-- We are not using widget anymore atm -->
-<!-- {#if  e(@object, :id, nil) != nil and e(@activity, :replied, :reply_to_id, nil) == nil and e(@activity, :id, nil) == nil and e(assigns, :showing_within, nil) == :widget}
-  <div class="flex items-center mt-1 space-x-1 text-xs font-medium text-opacity-50 text-base-content">
-    <Solid.ReplyIcon class="w-3 h-3" />
-    <span class="">{l "In reply to"}</span>
-    <LiveRedirect
-      aria-label={e(@character, :username, "") <> " profile"}
-      class="link-hover subject_replied link"
-      to={path(e(@character, nil))}>
-      @{e(@profile, :name, "Anonymous")}
-    </LiveRedirect>
-  </div>
-   -->
-
   <span 
   :if={e(assigns, :showing_within, nil) == :smart_input}
   phx-click="Bonfire.Social.Feeds:remove_data"
@@ -20,41 +6,8 @@
   <Outline.XIcon class="w-4 h-4" />
 </span>
 
-{#if @viewing_main_object}
-  <div class="flex items-center p-3">
-    <LiveRedirect
-      opts={"data-id": "subject_name"}
-      aria-label={e(@character, :username, "") <> " profile"}
-      class="text-lg font-semibold text-base-content hover:underline "
-      to={path(@character)}>
-      <Bonfire.UI.Common.AvatarLive
-        viewing_main_object={@viewing_main_object} 
-        profile={@profile} />
-    </LiveRedirect>
-      <div class="flex flex-col flex-1 ml-2 truncate ellipsis">
-        <LiveRedirect
-          opts={"data-id": "subject_name"}
-          aria-label={e(@character, :username, "") <> " profile"}
-          class="text-lg font-semibold text-base-content hover:underline "
-          to={path(@character)}>
-          {e(@profile, :name, "Anonymous")}
-        </LiveRedirect>
-        <span
-          :if={e(@character, :username, nil)}
-          class="text-sm truncate ellipsis text-base-content text-opacity-60 subject_username">@{e(@character, :username, "")}</span>
-      </div>
-      <!-- <span class="mx-1 text-sm text-base-content text-opacity-60">·</span>
-      <Bonfire.UI.Social.Activity.DateAgoLive 
-        permalink={@permalink}
-        date_ago={@date_ago}
-        object={@object}
-        object_type={@object_type}
-        object_boundary={@object_boundary} 
-        showing_within={@showing_within}
-        verb_display={@verb_display} /> -->
-  </div>
 
-{#elseif e(@object, :id, nil) != nil and e(@activity, :id, nil) == nil and e(assigns, :showing_within, nil) != :search }
+{#if e(@object, :id, nil) != nil and e(@activity, :id, nil) == nil and e(assigns, :showing_within, nil) != :search }
   <div class={"flex items-center"}>
     <div class="flex flex-1 space-x-2">
       <div class="flex items-center text-sm font-semibold text-base-content">
@@ -107,50 +60,6 @@
           verb_display={@verb_display} 
           />
       </div>
-    </div>
-  </div>
-{#elseif e(assigns, :showing_within, nil) == :thread && !@viewing_main_object}
-  <div class={"flex items-top"}>
-    <div class="absolute left-4">
-      <div class="align-middle avatar">
-        <div class="w-10 h-10 rounded bg-base-200">
-        <LiveRedirect
-          aria-label={e(@character, :username, "") <> " profile"}
-          class="font-semibold text-base-content hover:underline"
-          to={path(@character)}>
-          <LazyImage 
-            class="subject_avatar" 
-            src={avatar_url(@profile)} 
-             />
-        </LiveRedirect>
-        </div>
-      </div>
-    </div>
-    <div class="flex items-center flex-1 space-x-2">
-      <div class="text-sm font-bold text-base-content text-opacity-80">
-        <LiveRedirect
-          aria-label={e(@character, :username, "") <> " profile"}
-          class="font-semibold text-base-content hover:underline"
-          to={path(@character)}>
-          {e(@profile, :name, "Anonymous")}
-          <span class="ml-0.5 text-sm font-regular text-base-content text-opacity-60">
-            @{e(@character, :username, "")}
-          </span>
-        </LiveRedirect>
-      </div>
-      <span class="flex items-center">
-        <BoundaryIconLive 
-        :if={@object_type not in [Bonfire.Data.Social.Message]}
-        id={ComponentID.new(BoundaryIconLive, @object)} 
-        object={@object} 
-        object_boundary={@object_boundary} 
-        />
-
-        <LivePatch class="ml-1 text-sm font-regular text-base-content text-opacity-60" to={@permalink}>
-          {@date_ago}
-        </LivePatch>
-        
-      </span>
     </div>
   </div>
 

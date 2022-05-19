@@ -2,7 +2,7 @@
   <!-- huh? -->
 {#else}
 <div class={
-  "main_object p-3 pb-2": e(assigns, :viewing_main_object, nil),
+  "main_object": e(assigns, :viewing_main_object, nil),
   "showing_within:thread": e(assigns, :showing_within, nil) == :thread,
   "showing_within:feed": e(assigns, :showing_within, nil) == :feed,
   "showing_within:notifications": e(assigns, :showing_within, nil) == :notifications,
@@ -49,9 +49,10 @@
       data-id={"object_body"}
       :if={e(post_content(@object), :html_body, nil)}
       class={
-        "prose object_body max-w-none prose",
-        "prose-lg prose-p:pb-4 prose-p:leading-[25px]": e(assigns, :viewing_main_object, nil),
-        "prose-sm prose-p:pt-1": e(assigns, :viewing_main_object, nil) != true
+        "prose object_body max-w-none",
+        "font-[16px] mt-1 prose-sm prose-p:pt-0 prose-p:my-0 prose-p:leading-[20px]": e(assigns, :showing_within, nil) == :thread,
+        "prose-xl mt-0 prose-p:pb-4 prose-p:leading-[26px]": e(assigns, :viewing_main_object, nil),
+        "prose-p:pt-1": e(assigns, :showing_within, nil) == :feed
         }>
       {rich e(post_content(@object), :html_body, "")}
     </div>

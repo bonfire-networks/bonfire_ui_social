@@ -3,7 +3,7 @@
 
 
   {#if @tab_id in ["compose", "select_recipients", "thread"]}
-    <div class="flex flex-col h-full grow">
+    <div class="flex flex-col flex-1 h-full grow">
     {#if @tab_id=="thread"}
       <Bonfire.UI.Social.ObjectThreadLive
         page={@page}
@@ -24,45 +24,11 @@
         reverse_order={true}
         showing_within={:message}
         textarea_class={"h-8 max-h-16 resize-y max-w-full textarea prose prose-sm bg-base-200"}
-        smart_input_class={"mt-3 bg-slate-50 rounded-xl sticky bottom-0"}
+        smart_input_class={"mt-3 bg-slate-50 h-auto rounded-xl sticky bottom-0"}
         replied_activity_class={"relative p-3 py-2 bg-neutral-content bg-opacity-5 m-3 mb-1 rounded-md"}
       /> 
     {#elseif @tab_id in ["compose", "select_recipients"]}
       <div class="p-3 bg-base-100 rounded-box">
-        <!-- <div role="banner" class="sticky top-[48px] lg:top-[48px] lg:-mt-[20px] lg:pt-[8px] bg-base-100 z-30 w-full border-b tablet:rounded-t border-base-300">  
-          <div class="hidden h-3 tablet:block bg-base-300 "></div>
-          <div class="relative rounded-b-none tablet:rounded">
-            <div class="flex items-center p-3">
-              <div class="flex items-center flex-1 space-x-2 text-left">
-                <h1 class="flex items-center font-medium text-md">
-                  <div>
-                    {l "Start a new conversation"}  
-                    <span :if={e(assigns, :to_circles, nil)}>
-                      {l "with"} 
-                    </span>
-                    </div> 
-                  {#for {name, id} <- e(assigns, :to_circles, [])}
-                    <div class="badge">{name}</div>
-                  {/for}
-                </h1> 
-              </div>
-            </div>
-          </div>
-        </div> -->
-
-        <!-- <div class="flex items-center mb-3 space-x-6">
-          <div class="flex items-center w-16 h-10 text-sm font-bold"><span>Subject</span></div>
-          <input class="flex-1 h-10 border-t-0 border-b-2 border-l-0 border-r-0 rounded-none input border-base-content border-opacity-30" />
-        </div> -->
-
-<!-- 
-         <Bonfire.UI.Social.SelectRecipientsLive 
-          users={e(assigns, :users, [])}
-          tab_id={e(assigns, :tab_id, nil)}
-          to_circles={e(assigns, :to_circles, [])}
-          limit={10}
-        /> -->
-
         <Bonfire.UI.Common.SmartInputLive
           id={:smart_input}
           :if={current_user(assigns)}

@@ -3,49 +3,61 @@
   data-id="comment"
   x-data="{show_replies: true}"
   class={
-    "hover:bg-base-content hover:bg-opacity-5 reply thread-level-" <> to_string(@thread_level) <> " flex relative w-full mx-auto "
+    "reply thread-level-" <> to_string(@thread_level) <> " flex relative w-full mx-auto "
   }
   >
   <div class="relative flex-1 w-full">
-    <i 
-      :if={e(assigns, :thread_mode, nil) !=:flat}
-      :class=" !show_replies ? 'bg-primary bottom-[0px]' : 'bg-base-200 bottom-[0px]'"
-      @click="show_replies = !show_replies"
-      class="cursor-pointer bg-base-content bg-opacity-20 hover:bg-opacity-80 z-10 left-[35px] w-[2px] top-[62px] bottom-[4px] absolute"></i>
     <div 
-      x-cloak 
-      x-data="{reply: false, show: true}"
-      class=""
-      >
-        {#case @comment}
-          {#match %{__struct__: Bonfire.Data.Social.Activity, object: object} = activity}
-            <Bonfire.UI.Social.ActivityLive
-              id={e(@comment, :id, "ca")<>":"<>e(activity, :id, "")}
-              activity={Map.drop(activity, [:object])}
-              object={object}
-              thread_object={@thread_object}
-              showing_within={:thread}
-              thread_mode={e(assigns, :thread_mode, nil)}
-              class="showing_within:thread"
-            />
-
-          {#match %{activity: %{object: object} = activity}}
-            <Bonfire.UI.Social.ActivityLive
-              id={e(@comment, :id, "ca")<>":"<>e(activity, :id, "")}
-              activity={Map.drop(activity, [:object])}
-              object={object}
-              thread_object={@thread_object}
-              showing_within={:thread}
-              thread_mode={e(assigns, :thread_mode, nil)}
-              class="showing_within:thread"
-            />
-          {#match _}
-            <div class="p-3">
-              {l "Comment not loaded"}
-            </div>
-        {/case}
+      x-cloak
+      x-show="show_replies"
+      @click="show_replies = !show_replies"
+      class="cursor-pointer group z-10 left-[16px] px-3 top-[54px] bottom-[0px] absolute">
+      <i 
+        :if={e(assigns, :thread_mode, nil) !=:flat}
+        :class=" !show_replies ? 'bg-primary bottom-[0px]' : 'bg-base-200 bottom-[0px]'"
+        class="bg-base-content bg-opacity-20 group-hover:bg-primary group-hover:bg-opacity-100 top-0 bottom-0 z-10 w-[2px] absolute"></i>
     </div>
-    
+    <div class="flex items-top">
+      <div 
+        x-cloak
+        class="p-3 pr-0"
+        @click="show_replies = !show_replies"
+        x-show="!show_replies">
+        <Outline.ArrowsExpandIcon class="w-4 h-4 cursor-pointer text-primary text-opacity-70 hover:text-opacity hover:text-opacity-100" />
+      </div>
+      <div 
+        x-cloak 
+        x-data="{reply: false, show: true}"
+        >
+          {#case @comment}
+            {#match %{__struct__: Bonfire.Data.Social.Activity, object: object} = activity}
+              <Bonfire.UI.Social.ActivityLive
+                id={e(@comment, :id, "ca")<>":"<>e(activity, :id, "")}
+                activity={Map.drop(activity, [:object])}
+                object={object}
+                thread_object={@thread_object}
+                showing_within={:thread}
+                thread_mode={e(assigns, :thread_mode, nil)}
+                class="showing_within:thread"
+              />
+
+            {#match %{activity: %{object: object} = activity}}
+              <Bonfire.UI.Social.ActivityLive
+                id={e(@comment, :id, "ca")<>":"<>e(activity, :id, "")}
+                activity={Map.drop(activity, [:object])}
+                object={object}
+                thread_object={@thread_object}
+                showing_within={:thread}
+                thread_mode={e(assigns, :thread_mode, nil)}
+                class="showing_within:thread"
+              />
+            {#match _}
+              <div class="p-3">
+                {l "Comment not loaded"}
+              </div>
+          {/case}
+      </div>
+    </div>
     <div 
       :if={e(assigns, :thread_mode, nil) !=:flat}
       x-show="show_replies" >

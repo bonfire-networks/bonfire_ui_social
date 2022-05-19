@@ -11,11 +11,7 @@
     type="button"
     role="button"
     tabindex="0"
-    class={
-    "btn btn-ghost btn-circle",
-    "btn-xs ": e(assigns, :showing_within, "") == :thread,
-    "btn-sm": e(assigns, :showing_within, "") != :thread,
-  }> 
+    class={"btn btn-ghost btn-circle btn-sm"}> 
     <span class="text-base-content text-opacity-70">
       <Solid.DotsHorizontalIcon class="w-4 h-4" />
     </span>

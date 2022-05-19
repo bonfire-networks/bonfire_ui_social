@@ -101,10 +101,11 @@ defmodule Bonfire.UI.Social.ActivityLive do
       role="article"
       tabIndex="0"
       class={
-      "p-3 activity relative pl-16 group cursor-pointer " <> e(assigns, :class, ""),
-      "hover:bg-base-content hover:bg-opacity-5": e(@object, :id, nil) == nil or e(@activity, :replied, :reply_to_id, nil) != nil or e(@activity, :id, nil) != nil, # Hover the activity background unless it is a quoted activity
-      "bg-base-100 hover:bg-base-100 hover:bg-opacity-100 border-b border-base-300 p-0 pl-0": e(assigns, :viewing_main_object, nil) == true,
+      "p-3 activity relative pl-14 group " <> e(assigns, :class, ""),
+      "cursor-pointer hover:bg-base-content hover:bg-opacity-5": e(@object, :id, nil) == nil or e(@activity, :replied, :reply_to_id, nil) != nil or e(@activity, :id, nil) != nil and !e(assigns, :viewing_main_object, nil) and !e(assigns, :showing_within, nil) != :thread, # Hover the activity background unless it is a quoted activity
+      "pt-6 rounded-xl hover:bg-base-200 hover:bg-opacity-100 bg-base-200": e(assigns, :viewing_main_object, nil) == true,
       "main_reply_to mb-2 p-2 py-1 mt-2 relative border-l-4 opacity-60 border-base-content border-opacity-40": e(@object, :id, nil) != nil and e(@activity, :replied, :reply_to_id, nil) == nil and e(@activity, :id, nil) == nil and e(assigns, :showing_within, nil) != :widget and e(assigns, :showing_within, nil) != :notification  and e(assigns, :showing_within, nil) != :search, # showing a quoted reply_to
+      "cursor-text hover:bg-base-100 hover:bg-opacity-100": e(assigns, :showing_within, nil) == :thread,
       "reply": e(@object, :id, nil) != nil and e(@activity, :replied, :reply_to_id, nil) != nil and e(@activity, :id, nil) != nil,
     }>
       {#for {component, component_assigns} when is_atom(component) <- components}
@@ -464,9 +465,9 @@ defmodule Bonfire.UI.Social.ActivityLive do
   # WIP: THIS NEEDS TO BE REFACTORED ACCORDING TO actions_for_object_type
   def component_actions("flag", _, _), do: [Bonfire.UI.Social.FlaggedActionsLive]
 
-  def component_actions(_, activity, %{viewing_main_object: true}) do
-    [Bonfire.UI.Social.Activity.MainObjectInfoLive] ++ component_actions(nil, activity, nil)
-  end
+  # def component_actions(_, activity, %{viewing_main_object: true}) do
+  #   [Bonfire.UI.Social.Activity.MainObjectInfoLive] ++ component_actions(nil, activity, nil)
+  # end
 
   def component_actions(_, %{object: %{}} = activity, _) do
     case Bonfire.Common.Types.object_type(activity.object) do

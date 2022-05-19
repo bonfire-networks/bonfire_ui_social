@@ -2,17 +2,6 @@
 class="flex items-center p-3 py-1" 
 >
 <div class="flex items-center flex-1">
-    <Bonfire.UI.Social.Activity.DateAgoLive 
-    permalink={@permalink}
-    viewing_main_object={e(assigns, :viewing_main_object, nil)}
-    showing_within={@showing_within}
-    date_ago={@date_ago}
-    object={@object}
-    object_type={@object_type}
-    object_boundary={@object_boundary} 
-    verb_display={@verb_display} 
-    />
-    
     <!-- <LivePatch to="#" class="ml-2 text-sm link link-hover text-base-content text-opacity-60"><span class="font-bold">4</span> {l "likes"}</LivePatch>
     <span class="ml-2 text-sm text-base-content text-opacity-60">·</span>
     <LivePatch to="#" class="ml-2 text-sm link link-hover text-base-content text-opacity-60"><span class="font-bold">4</span> {l "boosts"}</LivePatch> 
