@@ -1,7 +1,8 @@
 <div
   :if={current_user(assigns) != nil and e(assigns, :showing_within, nil) not in [:notifications, :search]}
   aria-haspopup="true"
-  class={"dropdown  feed_activity relative z-40",
+  data-tip={l "More"}
+  class={"dropdown tooltip tooltip-bottom feed_activity relative z-40",
   "dropdown-end": e(assigns, :showing_within, nil) != :widget,
   "dropdown-top dropdown-end showing_within:widget": e(assigns, :showing_within, nil) == :widget
   }>

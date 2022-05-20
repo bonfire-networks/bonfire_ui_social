@@ -1,23 +1,27 @@
 
-{#if !@hide_reply }
-  <div class="flex items-center">
-    <div 
-      phx-target={if e(assigns, :activity_id, nil), do: "#activity-"<>e(assigns, :activity_id, "")}
-      phx-click="Bonfire.Social.Feeds:reply"
-    >
-      <div class={"btn btn-ghost btn-circle btn-sm"}> 
-        <span class="text-base-content text-opacity-70">
-          <Outline.ReplyIcon class="w-4 h-4 stroke-1" />
-          <span class="sr-only">{l "Reply"}</span>
-        </span>
-      </div>
+<!-- {#if !@hide_reply } -->
+  
+<div 
+  class="flex items-center tooltip tooltip-bottom" 
+  data-tip={l "Reply"}
+  >
+  <div 
+    phx-target={if e(assigns, :activity_id, nil), do: "#activity-"<>e(assigns, :activity_id, "")}
+    phx-click="Bonfire.Social.Feeds:reply"
+  >
+    <div class={"btn btn-ghost btn-circle btn-sm"}> 
+      <span class="text-base-content text-opacity-70">
+        <Outline.ReplyIcon class="w-4 h-4 stroke-1" />
+        <span class="sr-only">{l "Reply"}</span>
+      </span>
     </div>
-    <span 
-    :if={Bonfire.Me.Settings.get([:ui, :show_activity_counts], nil, assigns)}
-    class="ml-1 text-xs text-base-content text-opacity-70">
-      {#if count(@replied)>0 }
-        {count(@replied)} 
-      {/if}
-    </span>
   </div>
-{/if}
+  <span 
+  :if={Bonfire.Me.Settings.get([:ui, :show_activity_counts], nil, assigns)}
+  class="ml-1 text-xs text-base-content text-opacity-70">
+    {#if count(@replied)>0 }
+      {count(@replied)} 
+    {/if}
+  </span>
+</div>
+<!-- {/if} -->
