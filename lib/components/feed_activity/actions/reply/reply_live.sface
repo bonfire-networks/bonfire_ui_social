@@ -2,7 +2,7 @@
 <!-- {#if !@hide_reply } -->
   
 <div 
-  class="flex items-center tooltip tooltip-bottom" 
+  class="relative z-20 flex items-center tooltip tooltip-bottom" 
   data-tip={l "Reply"}
   >
   <div 

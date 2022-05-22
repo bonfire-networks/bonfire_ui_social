@@ -1,13 +1,11 @@
 
-<div
-  class="write_post_content"
->
+<div class="flex flex-col h-full write_post_content">
   <Form 
     for={Bonfire.Social.Posts.LiveHandler.post_changeset(current_user(assigns))} 
     submit={if @create_activity_type==:message, do: "Bonfire.Social.Messages:send", else: "Bonfire.Social.Posts:post"} 
     change="validate"
     opts={ autocomplete: "off", "phx-target": "#smart_input"}
-    class={if WriteEditorLive.use_rich_editor?(assigns), do: "with_editor", else: "with_textarea"}>
+    class={if WriteEditorLive.use_rich_editor?(assigns), do: "with_editor flex-1", else: "with_textarea flex-1"}>
 
 
     <!-- <div 
@@ -25,11 +23,11 @@
     />
 
     <div class={@smart_input_class}>
-      <div class="relative">
+      <div class="relative flex flex-col flex-1">
         <Inputs for={:post_content}>
           <div
             id="textarea_wrapper"
-            class="">
+            class="flex-1">
             <div 
               display="style: none"
               x-show="title_open" 
@@ -44,7 +42,7 @@
             </div>  
             <label for="description" class="sr-only">{l "Description"}</label>
             <Field 
-              class="h-full min-h-full min-h-[100px] max-h-[150px] flex flex-col grow" name={:html_body}>
+              class="h-full min-h-full min-h-[100px] flex-1 flex flex-col grow" name={:html_body}>
               <!-- <Label :if={@smart_input_text && @smart_input_text !="" && @smart_input_prompt} class="mb-2 alert alert-info">{@smart_input_prompt}</Label> -->    
                 <WriteEditorLive
                   field_name="post[post_content][html_body]"
