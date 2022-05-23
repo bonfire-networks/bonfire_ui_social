@@ -25,7 +25,7 @@
     />
 
     <div class={@smart_input_class}>
-      <div class="relative">
+      <div class="relative w-full">
         <Inputs for={:post_content}>
           <div
             id="textarea_wrapper"
