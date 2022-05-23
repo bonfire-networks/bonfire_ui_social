@@ -7,7 +7,9 @@
       "thread_actions mt-1 -ml-2 flex items-center": e(assigns, :showing_within, nil) == :thread,
       "feed_actions mt-2": e(assigns, :viewing_main_object, nil) != true,
       "mt-1": e(assigns, :showing_within, nil) == :widget,
+      "absolute p-0.5 hidden group-hover:flex rounded-lg top-[-24px] right-[12px] bg-base-300": e(assigns, :thread_mode, nil) == :flat,
       }>
+
     <!-- <div 
       :if={
         count(e(@activity, :replied, nil)) > 0 and 
@@ -35,24 +37,19 @@
       "justify-between": e(assigns, :showing_within, nil) != :thread,
       "justify-between -ml-2": e(assigns, :viewing_main_object, nil) == true,
       }>
-      <!-- {#if e(assigns, :viewing_main_object, nil) != true and e(assigns, :showing_within, nil) != :thread and Bonfire.UI.Social.Activity.ReplyLive.count(e(@activity, :replied, nil)) > 0}
-        <Bonfire.UI.Social.Activity.ViewThreadLive 
-          permalink={@permalink} 
-          replied={e(@activity, :replied, nil)}
-          object_id={e(@object, :id, "no-object")}
-        />
-      {/if}  -->
       <Bonfire.UI.Social.Activity.ReplyLive 
         object_id={e(@object, :id, "no-object")}
         activity_id={e(assigns, :activity, :id, "no-activity")}
         object_boundary={@object_boundary} 
         permalink={@permalink} 
+        thread_mode={e(assigns, :thread_mode, nil)}
         replied={e(@activity, :replied, nil)}
         showing_within={e(assigns, :showing_within, nil)}
         hide_reply={e(assigns, :hide_reply, nil )}
         reply_to_text={text_only(e(@object, :post_content, :name, nil) || e(@object, :post_content, :summary, nil) || e(@object, :post_content, :html_body, e(@object, :id, "")))}
       />
-      <BoostActionLive 
+      <BoostActionLive
+        :if={@object_type not in [Bonfire.Data.Social.Message]} 
         id={ComponentID.new(BoostActionLive, @object)} 
         object={@object} 
         object_type={@object_type}

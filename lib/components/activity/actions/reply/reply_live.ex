@@ -10,6 +10,7 @@ defmodule Bonfire.UI.Social.Activity.ReplyLive do
   prop boost_count, :any
   prop showing_within, :any
   prop hide_reply, :any
+  prop thread_mode, :any
   prop object_boundary, :any, default: nil
 
   def count(replied) do

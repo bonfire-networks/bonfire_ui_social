@@ -17,7 +17,7 @@
         :class=" !show_replies ? 'bg-primary bottom-[0px]' : 'bg-base-200 bottom-[0px]'"
         class="bg-base-content bg-opacity-20 group-hover:bg-primary group-hover:bg-opacity-100 top-0 bottom-0 z-10 w-[2px] absolute"></i>
     </div>
-    <div class="flex items-top">
+    <div class="flex flex-1 w-full items-top">
       <div 
         x-cloak
         class="p-3 pr-0 pl-[21px]"
@@ -26,6 +26,7 @@
         <Outline.ArrowsExpandIcon class="w-4 h-4 cursor-pointer text-primary text-opacity-70 hover:text-opacity hover:text-opacity-100" />
       </div>
       <div 
+        class="flex-1 w-full"
         x-cloak 
         x-data="{reply: false, show: true}"
         >
