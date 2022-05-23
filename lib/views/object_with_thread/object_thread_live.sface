@@ -1,11 +1,11 @@
-<main class="flex flex-col flex-1 md:mx-0 grow">
+<main class="flex flex-col flex-1 md:mx-0 grow bg-base-100 rounded-xl">
   <!-- <Bonfire.UI.Common.PageHeaderLive
     page_title={@page_title}
     before={true}
   /> -->
   <!-- <Bonfire.UI.Social.BannerPreviousThreadLive activity={@activity} /> -->   
   <div class="flex flex-col flex-1 grow">
-   <div class="mb-3">
+   <div class="p-3">
     <Bonfire.UI.Social.ActivityLive
         id={"ta:"<>ulid(@activity)}
         showing_within={:thread}
@@ -29,23 +29,24 @@
       url={@url}
     />
   </div>
-<!-- 
-   <Bonfire.UI.Common.SmartInputLive
-    id={:smart_input}
-    :if={@show_reply_input && current_user(assigns)}
-    current_user={current_user(assigns)}
-    reply_to_id={e(assigns, :reply_to_id, "")}
-    thread_id={e(assigns, :thread_id, nil)}
-    create_activity_type={e(assigns, :create_activity_type, nil)}
-    to_circles={e(assigns, :to_circles, [])}
-    smart_input_prompt={e(assigns, :smart_input_prompt, "")}
-    smart_input_text={e(assigns, :smart_input_text, "")}
-    textarea_class={@textarea_class}
-    smart_input_class={@smart_input_class}
-    showing_within={e(assigns, :showing_within, nil)}
-    replied_activity_class={@replied_activity_class}
-  /> -->
 
+  <div class="sticky bottom-4 relative z-[60] p-3 bg-base-100 pt-0 ">
+    <Bonfire.UI.Common.SmartInputLive
+      id={:smart_input}
+      :if={@show_reply_input && current_user(assigns)}
+      current_user={current_user(assigns)}
+      reply_to_id={e(assigns, :reply_to_id, "")}
+      thread_id={e(assigns, :thread_id, nil)}
+      create_activity_type={e(assigns, :create_activity_type, nil)}
+      to_circles={e(assigns, :to_circles, [])}
+      smart_input_prompt={e(assigns, :smart_input_prompt, "")}
+      smart_input_text={e(assigns, :smart_input_text, "")}
+      textarea_class={@textarea_class}
+      smart_input_class={@smart_input_class}
+      showing_within={e(assigns, :showing_within, nil)}
+      replied_activity_class={@replied_activity_class}
+    />
+  </div>
 </main>
 
 

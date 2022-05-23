@@ -1,5 +1,5 @@
 
-<main class="flex flex-col h-body">
+<main class="flex flex-col flex-1 h-full">
 
 
   {#if @tab_id in ["compose", "select_recipients", "thread"]}
@@ -24,11 +24,11 @@
         reverse_order={true}
         showing_within={:message}
         textarea_class={"h-8 max-h-16 resize-y max-w-full textarea prose prose-sm bg-base-200"}
-        smart_input_class={"mt-3 bg-slate-50 h-auto rounded-xl sticky bottom-0"}
-        replied_activity_class={"relative p-3 py-2 bg-neutral-content bg-opacity-5 m-3 mb-1 rounded-md"}
+        smart_input_class={"bg-slate-50 h-auto rounded-xl sticky bottom-0 messages_smart_input"}
+        replied_activity_class={"relative p-3 py-2 m-3 mb-1 rounded-md"}
       /> 
     {#elseif @tab_id in ["compose", "select_recipients"]}
-      <div class="p-3 bg-base-100 rounded-box">
+      <div class="flex-1 p-3 bg-base-100 rounded-box">
         <Bonfire.UI.Common.SmartInputLive
           id={:smart_input}
           :if={current_user(assigns)}

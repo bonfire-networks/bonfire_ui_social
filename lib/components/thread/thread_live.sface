@@ -1,64 +1,56 @@
 {#if length(e(assigns, :threaded_replies, nil) || @replies) > 0}
   <div class="flex flex-col flex-1 h-full rounded-xl bg-base-100">
-  <!-- <div class="flex items-center px-4 py-3 pb-3 border-t border-b border-base-300 bg-base-100">
-    <div class="flex items-center flex-1 space-x-2">
-      <div class="text-base font-semibold text-base-content">{l "Discussion"}</div>
-    </div>
-  </div> -->
-    <div data-id="replies" class="flex flex-col">
-      
+    <div data-id="replies" class="flex flex-col flex-1">
+    
       <Bonfire.UI.Social.LoadPreviousLive 
         page_info={@page_info}
         target={@myself}
         context={@thread_id}
       />
 
-    {#if e(assigns, :thread_mode, nil) !=:flat and e(assigns, :threaded_replies, nil)}
+        {#if e(assigns, :thread_mode, nil) !=:flat and e(assigns, :threaded_replies, nil)}
+          {#for {reply, child_replies} <- e(assigns, :threaded_replies, nil) }
+            <Bonfire.UI.Social.CommentLive
+              comment={reply}
+              child_replies={child_replies}
+              reply_to_id={e(reply, :id, nil)}
+              thread_id={@thread_id}
+              thread_object={@object}
+              thread_level={1}
+              thread_mode={e(assigns, :thread_mode, nil)}
+              smart_input_text={@smart_input_text}
+              smart_input_prompt={@smart_input_prompt}
+              url={@url}
+            />
+          {/for}
+        {#else}
+          {#for reply <- @replies }
+            <Bonfire.UI.Social.CommentLive
+              comment={reply}
+              reply_to_id={e(reply, :id, nil)}
+              thread_id={@thread_id}
+              thread_object={@object}
+              thread_mode={e(assigns, :thread_mode, nil)}
+              smart_input_text={@smart_input_text}
+              smart_input_prompt={@smart_input_prompt}
+              url={@url}
+            />
+          {/for}
+        {/if}
 
-      {#for {reply, child_replies} <- e(assigns, :threaded_replies, nil) }
-        <Bonfire.UI.Social.CommentLive
-          comment={reply}
-          child_replies={child_replies}
-          reply_to_id={e(reply, :id, nil)}
-          thread_id={@thread_id}
-          thread_object={@object}
-          thread_level={1}
-          thread_mode={e(assigns, :thread_mode, nil)}
-          smart_input_text={@smart_input_text}
-          smart_input_prompt={@smart_input_prompt}
-          url={@url}
+        <Bonfire.UI.Common.LoadMoreLive
+          live_handler={Bonfire.Social.Posts}
+          page_info={@page_info}
+          target={@myself}
+          context={@thread_id}
         />
-      {/for}
-
-    {#else}
-
-      {#for reply <- @replies }
-        <Bonfire.UI.Social.CommentLive
-          comment={reply}
-          reply_to_id={e(reply, :id, nil)}
-          thread_id={@thread_id}
-          thread_object={@object}
-          thread_mode={e(assigns, :thread_mode, nil)}
-          smart_input_text={@smart_input_text}
-          smart_input_prompt={@smart_input_prompt}
-          url={@url}
-        />
-      {/for}
-    {/if}
-
     </div>
 
-  <Bonfire.UI.Common.LoadMoreLive
-    live_handler={Bonfire.Social.Posts}
-    page_info={@page_info}
-    target={@myself}
-    context={@thread_id}
-  />
-</div>
+    
+  </div>
 {#else}
-<div class="flex flex-col items-center w-full h-full bg-base-100 rounded-xl grow place-content-center">
-  <div class="flex w-full py-8 bg-base-100 place-content-center">
-
+  <div class="flex flex-col items-center w-full h-full bg-base-100 rounded-xl grow place-content-center">
+    <div class="flex w-full py-8 bg-base-100 place-content-center">
       <span class="badge">
         {if e(@activity, :subject, :id, nil) !=ulid(current_user(assigns)), do:  l("Be the first to reply..."), else: l "No replies yet..."}
       </span>

@@ -22,6 +22,9 @@ defmodule Bonfire.UI.Social.ThreadLive do
   prop thread_mode, :any
   prop reverse_order, :any
 
+
+
+
   def update(%{replies: replies, page_info: page_info} = assigns, socket) when is_list(replies) and is_map(page_info) do
     info("showing preloaded replies")
     assigns |> assign_thread(socket)

@@ -42,7 +42,12 @@
             </div>  
             <label for="description" class="sr-only">{l "Description"}</label>
             <Field 
-              class="h-full min-h-full min-h-[100px] flex-1 flex flex-col grow" name={:html_body}>
+              class={
+                "h-full min-h-full flex-1 flex flex-col grow",
+                "min-h-[50px]": e(assigns, :showing_within, nil) == :message,
+                "min-h-[100px]": e(assigns, :showing_within, nil) != :message,
+              } 
+              name={:html_body}>
               <!-- <Label :if={@smart_input_text && @smart_input_text !="" && @smart_input_prompt} class="mb-2 alert alert-info">{@smart_input_prompt}</Label> -->    
                 <WriteEditorLive
                   field_name="post[post_content][html_body]"
