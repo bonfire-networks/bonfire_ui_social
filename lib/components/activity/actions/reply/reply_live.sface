@@ -3,11 +3,12 @@
   
 <div 
   class="relative z-20 flex items-center tooltip tooltip-bottom" 
-  data-tip={l "Reply"}
   >
   <div 
-    phx-target={if e(assigns, :activity_id, nil), do: "#activity-"<>e(assigns, :activity_id, "")}
+    data-id="action_reply"
+    data-tip={l "Reply"}
     phx-click="Bonfire.Social.Feeds:reply"
+    phx-target={if e(assigns, :activity_id, nil), do: "#activity-"<>e(assigns, :activity_id, "")}
   >
     <div class={"btn btn-ghost btn-circle btn-sm"}> 
       <span class="text-opacity-50 text-base-content">
