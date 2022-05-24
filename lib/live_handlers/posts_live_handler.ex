@@ -47,24 +47,40 @@ defmodule Bonfire.Social.Posts.LiveHandler do
 
     with %{} <- current_user,
          %{valid?: true} <- post_changeset(attrs, current_user),
-         uploaded_media <- multi_upload(current_user, params["upload_metadata"], socket) |> debug(),
+         uploaded_media <- multi_upload(current_user, params["upload_metadata"], socket),
          {:ok, published} <- Bonfire.Social.Posts.publish(
             current_user: current_user,
             post_attrs: attrs |> Map.put(:uploaded_media, uploaded_media),
             boundary: params["boundary_selected"]) do
-      # debug("published!")
 
-        # uploads_for_object(published, socket)
+      debug(published, "published!")
 
       {:noreply,
         socket
         |> put_flash(:info, "Posted!")
+        # |> push_patch_with_fallback(current_url(socket), path(published)) # so the flash appears - TODO: causes a conflict between the activity coming in via pubsub
 
         # Phoenix.LiveView.assign(socket,
         #   feed: [%{published.activity | object_post: published.post, subject_user: current_user(socket)}] ++ Map.get(socket.assigns, :feed, [])
         # )
       }
+    else e ->
+      error(error_msg(e))
+      {:noreply,
+        socket
+        |> put_flash(:error, "Could not post 😢 (#{error_msg(e)})")
+        |> push_patch_with_fallback(current_url(socket), "/error") # so the flash appears
+      }
     end
+  end
+
+  def push_patch_with_fallback(socket, url, fallback) when is_binary(url) do
+    push_patch(socket, to: url)
+  rescue _e in ArgumentError ->
+    push_patch_with_fallback(socket, nil, fallback)
+  end
+  def push_patch_with_fallback(socket, _, fallback) do
+    push_redirect(socket, to: fallback)
   end
 
   defp multi_upload(current_user, metadata, socket) do

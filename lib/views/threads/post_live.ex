@@ -36,9 +36,9 @@ defmodule Bonfire.UI.Social.PostLive do
     current_user = current_user(socket)
 
     # debug(params, "PARAMS")
-    debug(url, "post url")
+    # debug(url, "post url")
 
-    with {:ok, post} <- Bonfire.Social.Posts.read(id, socket) do
+    with {:ok, post} <- Bonfire.Social.Posts.read(ulid(id), socket) do
 
       {activity, post} = Map.pop(post, :activity)
       activity = Bonfire.Social.Activities.activity_preloads(activity, :all, current_user: current_user)

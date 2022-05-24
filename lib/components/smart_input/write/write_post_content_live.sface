@@ -7,7 +7,6 @@
     opts={ autocomplete: "off", "phx-target": "#smart_input"}
     class={if WriteEditorLive.use_rich_editor?(assigns), do: "with_editor flex-1", else: "with_textarea flex-1"}>
 
-
     <!-- <div 
       x-show="smart_input_prompt != 'Write something...' && ((reply_to_id && reply_to_id != '') || (smart_input_text && smart_input_text !=''))" 
       x-text= "smart_input_prompt" 

@@ -30,10 +30,11 @@
     />
   </div>
 
-  <div class="sticky bottom-4 relative z-[60] p-3 bg-base-100 pt-0 ">
+  <div 
+    :if={@show_reply_input && current_user(assigns)}
+    class="sticky bottom-4 relative z-[60] p-3 bg-base-100 pt-0 ">
     <Bonfire.UI.Common.SmartInputLive
       id={:smart_input}
-      :if={@show_reply_input && current_user(assigns)}
       current_user={current_user(assigns)}
       reply_to_id={e(assigns, :reply_to_id, "")}
       thread_id={e(assigns, :thread_id, nil)}
@@ -47,6 +48,7 @@
       replied_activity_class={@replied_activity_class}
     />
   </div>
+
 </main>
 
 
