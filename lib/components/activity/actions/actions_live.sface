@@ -7,30 +7,9 @@
       "thread_actions mt-1 -ml-2 flex items-center": e(assigns, :showing_within, nil) == :thread,
       "feed_actions mt-2": e(assigns, :viewing_main_object, nil) != true,
       "mt-1": e(assigns, :showing_within, nil) == :widget,
-      "absolute p-0.5 hidden group-hover:flex rounded-lg top-[-24px] right-[12px] bg-base-300": e(assigns, :thread_mode, nil) == :flat,
+      "absolute p-0.5 hidden group-hover:flex rounded-lg top-[-24px] right-[12px] bg-base-300": e(assigns, :thread_mode, nil) == :flat and e(assigns, :viewing_main_object, nil) != true,
       }>
 
-    <!-- <div 
-      :if={
-        count(e(@activity, :replied, nil)) > 0 and 
-        e(assigns, :showing_within, nil) == :thread and 
-        e(assigns, :viewing_main_object, nil) != true and 
-        @object_type not in [Bonfire.Data.Social.Message]
-      }
-      class="flex-1">
-      <div 
-        @click="show_replies = !show_replies"
-        class="text-xs font-medium normal-case link">
-          <span
-            style="display: none" 
-            x-show="!show_replies">{l "View"}</span>
-          <span 
-            style="display: none"
-            x-show="show_replies">{l "Hide"}</span>
-          &nbsp;{count(e(@activity, :replied, nil))} {l "replies"}
-      </div>
-    </div>
-    <div class="flex-1"></div> -->
     <div class={
       "flex items-center flex-1",
       "justify-start space-x-4 mt-0": e(assigns, :showing_within, nil) == :thread,

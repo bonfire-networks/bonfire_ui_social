@@ -22,7 +22,7 @@
     />
 
     <div class={@smart_input_class}>
-      <div class="relative flex flex-col flex-1">
+      <div class="relative flex flex-col flex-1 h-full">
         <Inputs for={:post_content}>
           <div
             id="textarea_wrapper"
@@ -34,7 +34,7 @@
               <label for="title" class="sr-only">{l "Title"}</label>
               <Field name={:name}>
                 <TextInput
-                  opts={placeholder: "Enter a title"}
+                  opts={placeholder: "Enter a content warning"}
                   class="block w-full border-0 pt-2.5 text-lg font-medium placeholder-slate-800 placeholder-opacity-70 bg-slate-100 text-slate-800 border-b border-slate-200 rounded-t-lg" 
                   />
               </Field>
@@ -43,8 +43,8 @@
             <Field 
               class={
                 "h-full min-h-full flex-1 flex flex-col grow",
-                "min-h-[50px]": e(assigns, :showing_within, nil) == :message,
-                "min-h-[100px]": e(assigns, :showing_within, nil) != :message,
+                "min-h-[50px]": e(assigns, :thread_mode, nil) == :flat,
+                "min-h-[100px]": e(assigns, :thread_mode, nil) != :flat,
               } 
               name={:html_body}>
               <!-- <Label :if={@smart_input_text && @smart_input_text !="" && @smart_input_prompt} class="mb-2 alert alert-info">{@smart_input_prompt}</Label> -->    
@@ -62,6 +62,7 @@
         </Inputs>
         
         <Bonfire.UI.Common.InputControlsLive
+          thread_mode={e(assigns, :thread_mode, nil)}
           reply_to_id={@reply_to_id}
           thread_id={@thread_id}
           create_activity_type={e(assigns, :create_activity_type, nil)}

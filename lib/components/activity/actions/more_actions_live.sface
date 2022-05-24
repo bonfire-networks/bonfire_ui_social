@@ -13,7 +13,7 @@
     role="button"
     tabindex="0"
     class={"btn btn-ghost btn-circle btn-sm"}> 
-    <span class="text-base-content text-opacity-70">
+    <span class="text-opacity-50 text-base-content">
       <Solid.DotsHorizontalIcon class="w-4 h-4" />
     </span>
   </div>

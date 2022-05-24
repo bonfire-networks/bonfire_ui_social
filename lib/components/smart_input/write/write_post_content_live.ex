@@ -20,6 +20,7 @@ defmodule Bonfire.UI.Social.WritePostContentLive do
   prop with_rich_editor, :boolean, default: true, required: false
   prop insert_text, :string
   prop uploads, :any
+  prop thread_mode, :string
   prop uploaded_files, :list
   prop title_prompt, :string
   prop show_select_recipients, :boolean, default: false

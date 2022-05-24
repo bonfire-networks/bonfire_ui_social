@@ -10,7 +10,7 @@
     phx-click="Bonfire.Social.Feeds:reply"
   >
     <div class={"btn btn-ghost btn-circle btn-sm"}> 
-      <span class="text-base-content text-opacity-70">
+      <span class="text-opacity-50 text-base-content">
         <Outline.ReplyIcon class="w-4 h-4 stroke-1" />
         <span class="sr-only">{l "Reply"}</span>
       </span>

@@ -1,11 +1,21 @@
-<main class="flex flex-col flex-1 md:mx-0 grow bg-base-100 rounded-xl">
+<main class="flex flex-col flex-1 h-full">
   <!-- <Bonfire.UI.Common.PageHeaderLive
     page_title={@page_title}
     before={true}
   /> -->
   <!-- <Bonfire.UI.Social.BannerPreviousThreadLive activity={@activity} /> -->   
-  <div class="flex flex-col flex-1 grow">
-   <div class="p-3">
+  <div class="flex flex-col flex-1 grow bg-base-100 rounded-t-xl">
+   <div class="mb-3 bg-base-content bg-opacity-5 rounded-t-xl">
+    <div class="flex items-center p-3 pb-2 rounded-t-xl bg-base-100" role="banner">
+      <a
+        aria-label="Navigate to the previous page"
+        href="javascript:window.history.back()"
+        class="btn btn-circle btn-ghost btn-sm"
+      >
+        <Outline.ChevronLeftIcon class="w-4 h-4 stroke-current" />
+      </a>
+      <div class="flex-1 ml-2 font-bold text-base-content">{l "Discussion"}</div> 
+    </div>
     <Bonfire.UI.Social.ActivityLive
         id={"ta:"<>ulid(@activity)}
         showing_within={:thread}
@@ -32,11 +42,12 @@
 
   <div 
     :if={@show_reply_input && current_user(assigns)}
-    class="sticky bottom-4 relative z-[60] p-3 bg-base-100 pt-0 ">
+    class="sticky bottom-4 relative z-[60] p-3 bg-base-100 pt-0 rounded-b-xl sm_background-invisible">
     <Bonfire.UI.Common.SmartInputLive
       id={:smart_input}
       current_user={current_user(assigns)}
       reply_to_id={e(assigns, :reply_to_id, "")}
+      thread_mode={e(assigns, :thread_mode, nil)}
       thread_id={e(assigns, :thread_id, nil)}
       create_activity_type={e(assigns, :create_activity_type, nil)}
       to_circles={e(assigns, :to_circles, [])}

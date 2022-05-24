@@ -5,7 +5,7 @@
   class="border-b rounded-md">
   <Field name={:name}>
     <TextInput
-      opts={placeholder: "Enter a title"}
+      opts={placeholder: "Enter a content warning"}
       class="w-full rounded-none input" 
       />
   </Field>
@@ -18,7 +18,7 @@
         type="button"
         @click="summary_open = !summary_open"
         :class="{'text-primary-content-100 underline' : summary_open === true}"
-        class="text-xs font-semibold tracking-wide text-primary-content-600 focus:outline-none  hover:underline ">{l "Add a summary"}</button>
+        class="text-xs font-semibold tracking-wide text-primary-content-600 focus:outline-none hover:underline ">{l "Add a summary"}</button>
     </div>
 
     <div

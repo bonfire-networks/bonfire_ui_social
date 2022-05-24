@@ -74,7 +74,7 @@
         <Bonfire.UI.Common.AvatarLive profile={@profile} />
       </LiveRedirect>
     </div>
-    <div class="flex items-center justify-between leading-[16px] min-w-0 space-x-2">
+    <div class="flex items-center justify-between leading-[16px] min-w-0 space-x-1">
       <div class="flex items-center flex-1 leading-[16px]">
         <LiveRedirect
           opts={"data-id": "subject_name"}
