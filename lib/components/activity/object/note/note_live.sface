@@ -4,6 +4,7 @@
 <div class={
   "main_object": e(assigns, :viewing_main_object, nil),
   "showing_within:thread": e(assigns, :showing_within, nil) == :thread,
+  "activity_inception:#{e(assigns, :activity_inception, "")}": e(assigns, :activity_inception, nil),
   "showing_within:feed": e(assigns, :showing_within, nil) == :feed,
   "showing_within:notifications": e(assigns, :showing_within, nil) == :notifications,
   "showing_within:widget mt-2": e(assigns, :showing_within, nil) == :widget,

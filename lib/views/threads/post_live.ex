@@ -68,6 +68,7 @@ defmodule Bonfire.UI.Social.PostLive do
         post: post,
         url: url,
         participants: participants,
+        page_title: e(activity, :replied, :thread, :named, :name, l("Post"))
         # following: following || []
       )
       |> assign_global(

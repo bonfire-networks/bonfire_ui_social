@@ -7,6 +7,7 @@ defmodule Bonfire.UI.Social.Activity.NoteLive do
   prop permalink, :string
   prop date_ago, :string
   prop showing_within, :any
+  prop activity_inception, :any
 
   def post_content(object) do
     e(object, :post_content, object)

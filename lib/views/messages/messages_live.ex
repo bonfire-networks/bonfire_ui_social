@@ -151,18 +151,19 @@ defmodule Bonfire.UI.Social.MessagesLive do
 
         to_circles = if length(participants)>0, do: Enum.map(participants, & {e(&1, :character, :username, l "someone"), e(&1, :id, nil)})
 
-        names = if length(participants)>0, do: Enum.map_join(participants, ", ", &e(&1, :profile, :name, e(&1, :character, :username, l "someone else")))
+        names = if length(participants)>0, do: Enum.map_join(participants ++ [current_user], " & ", &e(&1, :profile, :name, e(&1, :character, :username, l "someone else")))
 
         # mentions = if length(participants)>0, do: Enum.map_join(participants, " ", & "@"<>e(&1, :character, :username, ""))<>" "
 
         prompt =  l("Compose a thoughtful response") #  if mentions, do: "for %{people}", people: mentions), else: l "Note to self..."
 
-        title = if names, do: l("Conversation with %{people}", people: names), else: l "Conversation"
+        # l("Conversation between %{people}", people: names)
+        title = if names, do: names, else: l "Conversation"
 
         {:noreply,
         socket
         |> assign(
-          page_title: title,
+          page_title: e(activity, :replied, :thread, :named, :name, title),
           page: "messages",
           tab_id: "thread",
           reply_to_id: reply_to_id,

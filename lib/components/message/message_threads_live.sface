@@ -25,6 +25,13 @@
               }>
               <div class="flex-1 w-full min-w-0 sm:flex sm:items-center sm:justify-between">
                 <div class="w-full truncate">
+                  <div 
+                    :if={e(activity, :replied, :thread, :named, :name, nil)}
+                    class="mb-2">
+                    <p class="text-sm truncate text-base-content text-opacity-80 font-regular">
+                      {text_only( e(activity, :replied, :thread, :named, :name, nil) )}
+                    </p> 
+                  </div>
                   <div class="flex items-center space-x-2">
                     <p class="flex-1 font-semibold truncate text-base-content">{e(activity, :subject, :profile, :name, nil)}</p>
                     <div class="flex items-center mt-0.5 text-xs text-base-content text-opacity-80">
@@ -33,9 +40,8 @@
                   </div>
                   <div class="mt-1">
                     <p class="text-sm truncate text-base-content text-opacity-80 font-regular">
-                      {text_only( e(activity, :object, :name, nil) || e(activity, :object, :post_content, :summary, nil) || e(activity, :object, :post_content, :html_body, nil) )}
+                      {text_only( e(activity, :object, :post_content, :name, nil) || e(activity, :object, :post_content, :summary, nil) || e(activity, :object, :post_content, :html_body, nil) )}
                     </p> 
-                    
                   </div>
                 </div>
               </div>

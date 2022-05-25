@@ -10,14 +10,14 @@ defmodule  Bonfire.UI.Social.ObjectThreadLive do
   prop smart_input_prompt, :string
   prop smart_input_text, :string
   prop reply_to_id, :string
-  prop thread_id, :string
+  prop thread_id, :string, default: nil
   prop activity, :any
   prop showing_within, :any
   prop object, :any
   prop url, :string
   prop thread_mode, :any
   prop reverse_order, :any
-  prop participants, :list
+  prop participants, :any, default: []
   prop textarea_class, :string
   prop smart_input_class, :string
   prop replied_activity_class, :string
@@ -26,7 +26,7 @@ defmodule  Bonfire.UI.Social.ObjectThreadLive do
   prop page_info, :any
 
   def participants(assigns) do
-    if e(assigns, :participants, nil) do
+    # if e(assigns, :participants, nil) do
       e(assigns, :participants, [])
     # else
     #   thread_id = e(assigns, :thread_id, e(assigns, :object, :id, nil))
@@ -34,7 +34,7 @@ defmodule  Bonfire.UI.Social.ObjectThreadLive do
     #     Bonfire.Social.Threads.fetch_participants(thread_id, current_user: current_user(assigns)) |> debug("participants")
     #   # participant_tuples = participants |> Map.get(:edges, []) |> Enum.map(&{e(&1, :profile, :name, "someone"), &1.id})
     #   # to_circles = e(assigns, :to_circles, []) ++ participant_tuples
-    end
+    # end
   end
 
 end

@@ -68,6 +68,7 @@ defmodule Bonfire.UI.Social.DiscussionLive do
         # smart_input_text: mentions,
         # to_circles: to_circles,
         participants: participants,
+        page_title: e(activity, :replied, :thread, :named, :name, l("Post"))
       ) |> assign_global(
         thread_id: e(object, :id, nil),
         # smart_input_prompt: smart_input_prompt,

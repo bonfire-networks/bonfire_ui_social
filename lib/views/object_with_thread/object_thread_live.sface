@@ -15,6 +15,30 @@
         <Outline.ChevronLeftIcon class="w-4 h-4 stroke-current" />
       </a>
       <div class="flex-1 ml-2 font-bold text-base-content">{e(assigns, :page_title, l "Discussion")}</div> 
+
+      <Bonfire.UI.Common.OpenModalLive
+        :if={@thread_id}
+        id={ComponentID.new(Bonfire.UI.Common.OpenModalLive, @object)} 
+        title_text={e(assigns, :label, l "Edit the thread title")}
+        form_opts={%{"phx-submit"=> "Bonfire.Social.Objects:set_name"}}
+      >
+        <Form for={:thread}>
+          <TextInput name="name" value={e(assigns, :page_title, "")} />
+        </Form>
+        <:open_btn>
+          <button class="" data-tip={l "Edit the thread title"} type="button">
+            <Outline.PencilAltIcon class="w-4 h-4 stroke-current" />
+          </button>
+        </:open_btn>
+        <:action_btns>
+          <HiddenInput name="id" value={@thread_id} />
+          <button 
+            class="btn btn-error">
+            {l "Save"}
+          </button>
+        </:action_btns>
+      </Bonfire.UI.Common.OpenModalLive>
+      
     </div>
     <Bonfire.UI.Social.ActivityLive
         id={"ta:"<>ulid(@activity)}
@@ -23,7 +47,7 @@
         viewing_main_object={true}
         activity={@activity}
         object={@object}
-        participants={e(assigns, :participants, [])}
+        participants={participants(assigns)}
       />
     </div>
     <Bonfire.UI.Social.ThreadLive 
