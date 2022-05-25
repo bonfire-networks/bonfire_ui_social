@@ -155,10 +155,10 @@ defmodule Bonfire.Social.Posts.LiveHandler do
   # end
 
 
-  def live_more(thread_id, pagination, socket) do
-    # info(pagination, "paginate thread")
+  def live_more(thread_id, paginate, socket) do
+    # info(paginate, "paginate thread")
     current_user = current_user(socket)
-    with %{edges: replies, page_info: page_info} <- Bonfire.Social.Threads.list_replies(thread_id, current_user: current_user, paginate: pagination) do
+    with %{edges: replies, page_info: page_info} <- Bonfire.Social.Threads.list_replies(thread_id, current_user: current_user, paginate: paginate) do
 
       replies = ( e(socket.assigns, :replies, []) ++ replies )
       |> Enum.uniq()

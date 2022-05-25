@@ -77,7 +77,7 @@
       </Field>
       <input 
         :if={e(assigns, :to_circles, nil) && is_list(e(assigns, :to_circles, nil)) && length(e(assigns, :to_circles, nil))>0}
-        :for={{_name, id} <- e(assigns, :to_circles, []) |> debug} 
+        :for={{_name, id} <- e(assigns, :to_circles, [])} 
         type="hidden" 
         name="to_circles[]" 
         value={id} />

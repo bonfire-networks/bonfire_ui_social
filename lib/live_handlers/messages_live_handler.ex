@@ -1,5 +1,18 @@
 defmodule Bonfire.Social.Messages.LiveHandler do
   use Bonfire.UI.Common.Web, :live_handler
+  alias Bonfire.Social.Messages
+
+  def handle_params(%{"after" => cursor, "context" => context} = attrs, _, socket) do
+    live_more(context, [after: cursor], socket)
+  end
+
+  def handle_params(%{"before" => cursor, "context" => context} = attrs, _, socket) do
+    live_more(context, [before: cursor], socket)
+  end
+
+  def handle_event("load_more", attrs, socket) do
+    live_more(nil, Keyword.new(input_to_atoms(attrs)), socket)
+  end
 
   def handle_event("send", params, socket) do
     send_message(params, socket)
@@ -26,6 +39,33 @@ defmodule Bonfire.Social.Messages.LiveHandler do
     }
   end
 
+  def live_more(context, opts, socket) do
+    debug(opts, "paginate threads")
+    {:noreply, socket
+      |> assign(
+        sidebar_widgets: threads_widget(current_user(socket), context, [tab_id: nil] ++ opts)
+    )}
+  end
+
+  def threads_widget(current_user, user \\ nil, opts \\ []) do
+    [
+      users: [
+        main: [
+          {Bonfire.UI.Social.MessageThreadsLive, [
+              context: ulid(user),
+              threads: list_threads(current_user, user, opts)
+            ] ++ opts
+          }
+        ],
+      ]
+    ]
+  end
+
+  def list_threads(current_user, user \\ nil, opts \\ []) do
+    # TODO: put limit in Settings
+    if current_user, do: Messages.list(current_user, user, [latest_in_threads: true, limit: 8] ++ opts)
+  end
+
 
   def send_message(params, socket) do
     attrs = params
@@ -33,7 +73,7 @@ defmodule Bonfire.Social.Messages.LiveHandler do
     |> input_to_atoms()
     # |> debug
 
-    with {:ok, sent} <- Bonfire.Social.Messages.send(current_user(socket), attrs) do
+    with {:ok, sent} <- Messages.send(current_user(socket), attrs) do
       debug(sent, "sent!")
       {:noreply,
         socket

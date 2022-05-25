@@ -2,6 +2,7 @@ defmodule Bonfire.UI.Social.MessagesLive do
   use Bonfire.UI.Common.Web, :surface_view
   alias Bonfire.UI.Me.LivePlugs
   alias Bonfire.Social.Integration
+  alias Bonfire.Social.Messages.LiveHandler
   import Where
 
   def mount(params, session, socket) do
@@ -32,9 +33,9 @@ defmodule Bonfire.UI.Social.MessagesLive do
           users: [
             main: [
               {Bonfire.UI.Social.MessageThreadsLive, [
-                thread_id: nil,
-                tab_id: "test",
-                feed: [],
+                context: nil,
+                tab_id: nil,
+                threads: []
               ]}
             ],
           ]
@@ -51,6 +52,7 @@ defmodule Bonfire.UI.Social.MessagesLive do
   end
 
   def do_handle_params(%{"username" => username} = params, url, socket) do
+    # view messages excanged with a particular user
 
     current_user = current_user(socket)
     current_username = e(current_user, :character, :username, nil)
@@ -76,14 +78,13 @@ defmodule Bonfire.UI.Social.MessagesLive do
       smart_input_text = if e(current_user, :character, :username, "") == e(user, :character, :username, ""), do:
       "", else: "@"<>e(user, :character, :username, "")<>" "
 
-      feed = list(current_user, ulid(e(socket.assigns, :user, nil)))
       to_circles = [{e(user, :profile, :name, e(user, :character, :username, l "someone")), e(user, :id, nil)}]
 
       {:noreply,
         socket
         |> assign(
           page: "messages",
-          feed: e(feed, :edges, []),
+          # feed: e(feed, :edges, []),
           smart_input: true,
           tab_id: "compose",
           feed_title: l("Messages"),
@@ -93,18 +94,7 @@ defmodule Bonfire.UI.Social.MessagesLive do
           smart_input_prompt: l("Compose a thoughtful message..."),
           # smart_input_text: smart_input_text,
           to_circles: to_circles,
-          sidebar_widgets: [
-            users: [
-              main: [
-                {Bonfire.UI.Social.MessageThreadsLive, [
-                  thread_id: nil,
-                  tab_id: "compose",
-                  feed: e(feed, :edges, []),
-
-                ]}
-              ]
-            ]
-          ]
+          sidebar_widgets: LiveHandler.threads_widget(current_user, ulid(e(socket.assigns, :user, nil)), tab_id: "compose")
         )
       }
     else
@@ -118,8 +108,8 @@ defmodule Bonfire.UI.Social.MessagesLive do
 
   def do_handle_params(%{"id" => "compose" = id} = params, url, socket) do
     current_user = current_user(socket)
-    users = Bonfire.Social.Follows.list_my_followed(current_user) |> debug("USERS")
-    feed = list(current_user, ulid(e(socket.assigns, :user, nil)))
+    users = Bonfire.Social.Follows.list_my_followed(current_user)
+    # |> debug("USERS")
     {:noreply,
     socket
     |> assign(
@@ -129,18 +119,8 @@ defmodule Bonfire.UI.Social.MessagesLive do
       tab_id: "select_recipients",
       reply_to_id: nil,
       thread_id: nil,
-      sidebar_widgets: [
-        users: [
-          main: [
-            {Bonfire.UI.Social.MessageThreadsLive, [
-              thread_id: nil,
-              tab_id: "select_recipients",
-              users: e(users, :edges, []),
-              feed: e(feed, :edges, []),
-            ]}
-          ],
-        ]
-      ]
+      to_circles: nil,
+      sidebar_widgets: LiveHandler.threads_widget(current_user, ulid(e(socket.assigns, :user, nil)), tab_id: "select_recipients")
       )
     }
   end
@@ -179,8 +159,6 @@ defmodule Bonfire.UI.Social.MessagesLive do
 
         title = if names, do: l("Conversation with %{people}", people: names), else: l "Conversation"
 
-        feed = list(current_user, ulid(e(socket.assigns, :user, nil)))
-
         {:noreply,
         socket
         |> assign(
@@ -195,19 +173,9 @@ defmodule Bonfire.UI.Social.MessagesLive do
           participants: participants,
           smart_input_prompt: prompt,
           to_circles: to_circles || [],
-          sidebar_widgets: [
-            users: [
-              main: [
-                {Bonfire.UI.Social.MessageThreadsLive, [
-                  thread_id: e(message, :id, nil),
-                  tab_id: "thread",
-                  feed: e(feed, :edges, []),
-                ]}
-              ],
-            ]
-          ]
+          sidebar_widgets: LiveHandler.threads_widget(current_user, ulid(e(socket.assigns, :user, nil)), tab_id: "thread")
         )
-        |> assign_new(:feed, fn -> list(current_user) |> e(:edges, []) end)
+        # |> assign_new(:messages, fn -> LiveHandler.list_threads(current_user) |> e(:edges, []) end)
       }
 
       else _e ->
@@ -219,34 +187,19 @@ defmodule Bonfire.UI.Social.MessagesLive do
   def do_handle_params(_params, url, socket) do # show all my threads
     current_user = current_user(socket)
 
-    feed = list(current_user)
-
     {:noreply,
     socket
     |> assign(
       page_title: l("Direct Messages"),
       page: "messages",
-      feed: e(feed, :edges, []),
+      # feed: e(feed, :edges, []),
       tab_id: nil,
       reply_to_id: nil,
       thread_id: nil,
-      sidebar_widgets: [
-        users: [
-          main: [
-            {Bonfire.UI.Social.MessageThreadsLive, [
-              thread_id: nil,
-              tab_id: nil,
-              feed: e(feed, :edges, []),
-              to_cicles: []]}
-          ],
-        ]
-      ]
+      to_cicles: [],
+      sidebar_widgets: LiveHandler.threads_widget(current_user)
     ) #|> IO.inspect
   }
-  end
-
-  defp list(current_user, user \\ nil) do
-    if current_user, do: if module_enabled?(Bonfire.Social.Messages), do: Bonfire.Social.Messages.list(current_user, user, latest_in_threads: true, limit: 10)
   end
 
   # def handle_event("compose_thread", _ , socket) do

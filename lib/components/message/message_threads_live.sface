@@ -7,11 +7,17 @@
       <span class="text-sm">{l "New message"}</span>
     </LivePatch>
 
+    {#if length(e(assigns, :threads, :edges, []))>0}
 
+    
+      <Bonfire.UI.Common.LoadPreviousLive
+        live_handler={Bonfire.Social.Messages}
+        page_info={e(assigns, :threads, :page_info, nil)}
+        context={@context}
+      />
 
-    {#if length(e(assigns, :feed, []))>0}
       <ul class="mt-3 divide-y rounded-b-lg divide-base-300 rounded-b-xl">
-        <li class="bg-base-100 hover:bg-base-200" :for={%{activity: activity} <- e(assigns, :feed, [])}>
+        <li class="bg-base-100 hover:bg-base-200" :for={%{activity: activity} <- e(assigns, :threads, :edges, [])}>
           <LivePatch to={permalink(e(activity, :replied, :thread_id, nil), e(activity, :object_id, nil))} class="block ">
             <div class={
               "flex items-center p-3 py-2",
@@ -42,8 +48,15 @@
           </LivePatch>
         </li>
       </ul>
+
+      <Bonfire.UI.Common.LoadMoreLive
+        live_handler={Bonfire.Social.Messages}
+        page_info={e(assigns, :threads, :page_info, nil)}
+        context={@context}
+      />
+
       {#else}
-      <div>You dont have any inbox yet</div>
+      <div>{l "You dont have any messages yet"}</div>
       {/if}
   </div>
 </div>

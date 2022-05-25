@@ -14,7 +14,7 @@
       >
         <Outline.ChevronLeftIcon class="w-4 h-4 stroke-current" />
       </a>
-      <div class="flex-1 ml-2 font-bold text-base-content">{l "Discussion"}</div> 
+      <div class="flex-1 ml-2 font-bold text-base-content">{e(assigns, :page_title, l "Discussion")}</div> 
     </div>
     <Bonfire.UI.Social.ActivityLive
         id={"ta:"<>ulid(@activity)}
