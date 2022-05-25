@@ -51,7 +51,7 @@ defmodule Bonfire.UI.Social.FeedLive do
     {:ok, socket
     |> assign(
       feed: feed
-      #|> debug("FeedLive: feed")
+      # |> dump("FeedLive: feed")
       |> preloads(current_user: current_user(socket), skip_boundary_check: true),
       page_info: page_info
       )}
