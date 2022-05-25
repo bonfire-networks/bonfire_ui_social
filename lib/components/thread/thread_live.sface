@@ -2,11 +2,12 @@
   <div class="flex flex-col flex-1 h-full rounded-t-xl bg-base-100">
     <div data-id="replies" class="flex flex-col flex-1">
     
-      <Bonfire.UI.Social.LoadPreviousLive 
+      <!-- <Bonfire.UI.Social.LoadPreviousLive 
+        live_handler={Bonfire.Social.Posts}
         page_info={@page_info}
         target={@myself}
         context={@thread_id}
-      />
+      /> -->
 
         {#if e(assigns, :thread_mode, nil) !=:flat and e(assigns, :threaded_replies, nil)}
           {#for {reply, child_replies} <- e(assigns, :threaded_replies, nil) }
