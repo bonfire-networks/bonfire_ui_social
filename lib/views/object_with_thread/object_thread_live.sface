@@ -4,9 +4,9 @@
     before={true}
   /> -->
   <!-- <Bonfire.UI.Social.BannerPreviousThreadLive activity={@activity} /> -->   
-  <div class="flex flex-col flex-1 grow bg-base-100 rounded-t-xl">
-   <div class="mb-3 bg-base-content bg-opacity-5 rounded-t-xl">
-    <div class="flex items-center p-3 pb-2 rounded-t-xl bg-base-100" role="banner">
+  <div class="flex flex-col flex-1 grow bg-base-100 rounded-t-md">
+   <div class="rounded-t-md">
+    <div class="flex items-center p-3 pb-2 border-b rounded-t-md bg-base-200 border-base-content border-opacity-10" role="banner">
       <a
         aria-label="Navigate to the previous page"
         href="javascript:window.history.back()"
@@ -14,30 +14,64 @@
       >
         <Outline.ChevronLeftIcon class="w-4 h-4 stroke-current" />
       </a>
-      <div class="flex-1 ml-2 font-bold text-base-content">{e(assigns, :page_title, l "Discussion")}</div> 
-
-      <Bonfire.UI.Common.OpenModalLive
+      <div class="flex flex-col flex-1 ml-2">
+        <div class="font-bold text-base-content">{e(assigns, :page_title, l "Discussion")}</div> 
+        <div class="text-xs text-base-content text-opacity-70">{length(participants(assigns)) + 1 } {l "participants"}</div>
+      </div>
+      <div class="relative z-40 dropdown dropdown-end">
+        <label tabindex="0" class="flex normal-case btn place-content-center btn-circle btn-ghost btn-sm">
+            <Solid.DotsVerticalIcon class="w-5 h-5 text-base-content text-opacity-70" />
+        </label>
+        <ul tabindex="0" class="p-2 shadow dropdown-content menu bg-base-100 rounded-box w-52">
+          <li>
+            <Bonfire.UI.Common.OpenModalLive
+              :if={@thread_id}
+              id={ComponentID.new(Bonfire.UI.Common.OpenModalLive, @object)} 
+              title_text={e(assigns, :label, l "Edit the thread title")}
+              form_opts={%{"phx-submit"=> "Bonfire.Social.Objects:set_name"}}
+              >
+              <Form for={:thread}>
+                <TextInput name="name" class="input input-bordered w-[400px]" value={e(assigns, :page_title, "")} />
+              </Form>
+              <:open_btn>
+                <button>
+                  {l "Edit the thread title"}
+                </button>
+              </:open_btn>
+              <:action_btns>
+                <HiddenInput name="id" value={@thread_id} />
+                <button 
+                  class="btn btn-primary">
+                  {l "Save"}
+                </button>
+              </:action_btns>
+            </Bonfire.UI.Common.OpenModalLive>
+          </li>
+          <li><button>{l "View participants"}</button></li>
+        </ul>
+      </div>
+      <!-- <Bonfire.UI.Common.OpenModalLive
         :if={@thread_id}
         id={ComponentID.new(Bonfire.UI.Common.OpenModalLive, @object)} 
         title_text={e(assigns, :label, l "Edit the thread title")}
         form_opts={%{"phx-submit"=> "Bonfire.Social.Objects:set_name"}}
-      >
+        >
         <Form for={:thread}>
-          <TextInput name="name" value={e(assigns, :page_title, "")} />
+          <TextInput name="name" class="input input-bordered w-[400px]" value={e(assigns, :page_title, "")} />
         </Form>
         <:open_btn>
-          <button class="" data-tip={l "Edit the thread title"} type="button">
-            <Outline.PencilAltIcon class="w-4 h-4 stroke-current" />
+          <button class="btn btn-circle btn-ghost btn-sm" data-tip={l "Edit the thread title"} type="button">
+            <Solid.DotsVerticalIcon class="w-5 h-5 text-base-content text-opacity-70" />
           </button>
         </:open_btn>
         <:action_btns>
           <HiddenInput name="id" value={@thread_id} />
           <button 
-            class="btn btn-error">
+            class="btn btn-primary">
             {l "Save"}
           </button>
         </:action_btns>
-      </Bonfire.UI.Common.OpenModalLive>
+      </Bonfire.UI.Common.OpenModalLive> -->
       
     </div>
     <Bonfire.UI.Social.ActivityLive
@@ -66,7 +100,7 @@
 
   <div 
     :if={@show_reply_input && current_user(assigns)}
-    class="sticky bottom-4 relative z-[60] p-3 bg-base-100 pt-0 rounded-b-xl sm_background-invisible">
+    class="sticky bottom-4 relative z-[60] p-3 bg-base-100 pt-0 rounded-b-md sm_background-invisible">
     <Bonfire.UI.Common.SmartInputLive
       id={:smart_input}
       current_user={current_user(assigns)}

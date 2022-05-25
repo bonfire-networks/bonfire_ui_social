@@ -104,7 +104,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
       class={
       "p-3 activity relative pl-14 group " <> e(assigns, :class, ""),
       "cursor-pointer hover:bg-base-content hover:bg-opacity-5": e(@object, :id, nil) == nil or e(@activity, :replied, :reply_to_id, nil) != nil or e(@activity, :id, nil) != nil and !e(assigns, :viewing_main_object, nil) and !e(assigns, :showing_within, nil) != :thread, # Hover the activity background unless it is a quoted activity
-      "pt-6 hover:!bg-base-content hover:!bg-opacity-5 !bg-base-content border-b border-base-content border-opacity-10 !bg-opacity-5": e(assigns, :viewing_main_object, nil) == true,
+      "pt-6 hover:!bg-base-200 hover:!bg-opacity-100 !bg-base-200 border-b border-base-content border-opacity-10": e(assigns, :viewing_main_object, nil) == true,
       "main_reply_to mb-2 p-2 py-1 mt-2 relative border-l-4 opacity-60 border-base-content border-opacity-40": e(@object, :id, nil) != nil and e(@activity, :replied, :reply_to_id, nil) == nil and e(@activity, :id, nil) == nil and e(assigns, :showing_within, nil) != :widget and e(assigns, :showing_within, nil) != :notification  and e(assigns, :showing_within, nil) != :search, # showing a quoted reply_to
       "cursor-text hover:bg-base-100 hover:bg-opacity-100": e(assigns, :showing_within, nil) == :thread and e(assigns, :thread_mode, nil) != :flat,
       "cursor-text": e(assigns, :thread_mode, nil) == :flat,

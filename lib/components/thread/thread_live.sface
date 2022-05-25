@@ -1,5 +1,5 @@
 {#if length(e(assigns, :threaded_replies, nil) || @replies) > 0}
-  <div class="flex flex-col flex-1 h-full rounded-t-xl bg-base-100">
+  <div class="flex flex-col flex-1 h-full rounded-t-md bg-base-100">
     <div data-id="replies" class="flex flex-col flex-1">
     
       <!-- <Bonfire.UI.Social.LoadPreviousLive 
@@ -50,7 +50,7 @@
     
   </div>
 {#else}
-  <div class="flex flex-col items-center w-full h-full bg-base-100 rounded-t-xl grow place-content-center">
+  <div class="flex flex-col items-center w-full h-full bg-base-100 rounded-t-md grow place-content-center">
     <div class="flex w-full py-8 bg-base-100 place-content-center">
       <span class="badge">
         {if e(@activity, :subject, :id, nil) !=ulid(current_user(assigns)), do:  l("Be the first to reply..."), else: l "No replies yet..."}

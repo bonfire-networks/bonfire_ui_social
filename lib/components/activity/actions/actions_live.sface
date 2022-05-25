@@ -4,8 +4,8 @@
   <div 
     :if={e(assigns, :showing_within, nil) != :notifications} 
     class={
-      "thread_actions mt-1 -ml-2 flex items-center": e(assigns, :showing_within, nil) == :thread,
-      "feed_actions mt-2": e(assigns, :viewing_main_object, nil) != true,
+      "thread_actions mt-1 flex items-center": e(assigns, :showing_within, nil) == :thread,
+      "feed_actions mt-0 -ml-2": e(assigns, :viewing_main_object, nil) != true,
       "mt-1": e(assigns, :showing_within, nil) == :widget,
       "absolute p-0.5 hidden group-hover:flex rounded-lg top-[-24px] right-[12px] bg-base-300": e(assigns, :thread_mode, nil) == :flat and e(assigns, :viewing_main_object, nil) != true,
       }>
