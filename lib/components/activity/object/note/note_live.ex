@@ -1,6 +1,7 @@
 defmodule Bonfire.UI.Social.Activity.NoteLive do
   use Bonfire.UI.Common.Web, :stateless_component
-
+  alias Bonfire.Common.Text
+  
   prop object, :any
   prop activity, :any
   prop viewing_main_object, :boolean

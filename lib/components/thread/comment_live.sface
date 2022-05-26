@@ -39,7 +39,7 @@
                 thread_object={@thread_object}
                 showing_within={:thread}
                 thread_mode={e(assigns, :thread_mode, nil)}
-                class="showing_within:thread"
+                class="showing_within:thread !py-2"
               />
 
             {#match %{activity: %{object: object} = activity}}
@@ -50,7 +50,7 @@
                 thread_object={@thread_object}
                 showing_within={:thread}
                 thread_mode={e(assigns, :thread_mode, nil)}
-                class="showing_within:thread"
+                class="showing_within:thread !py-2"
               />
             {#match _}
               <div class="p-3">

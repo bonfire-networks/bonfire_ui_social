@@ -55,7 +55,7 @@
         "prose-lg mt-3 prose-p:pb-4 prose-p:leading-[26px]": e(assigns, :viewing_main_object, nil),
         "prose-p:pt-1 mt-0.5 !leading-[20px]": e(assigns, :showing_within, nil) == :feed
         }>
-      {rich e(post_content(@object), :html_body, "")}
+      {Text.sentence_truncate(e(post_content(@object), :html_body, ""), 500) |> rich}
     </div>
 
   </div>
