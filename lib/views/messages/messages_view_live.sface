@@ -15,7 +15,7 @@
         smart_input_text={@smart_input_text}
         smart_input_prompt={e(assigns, :smart_input_prompt, "")}
         thread_id={@thread_id}
-        thread_mode={:flat}
+        thread_mode={:thread}
         reply_to_id={e(assigns, :reply_to_id, "")}
         activity={@activity}
         object={@object}

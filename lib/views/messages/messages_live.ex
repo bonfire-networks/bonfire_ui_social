@@ -29,6 +29,7 @@ defmodule Bonfire.UI.Social.MessagesLive do
         object: nil,
         reply_to_id: nil,
         thread_id: nil,
+        hide_smart_input: true,
         sidebar_widgets: [
           users: [
             main: [
@@ -88,6 +89,7 @@ defmodule Bonfire.UI.Social.MessagesLive do
           smart_input: true,
           tab_id: "compose",
           feed_title: l("Messages"),
+          hide_smart_input: true,
           user: user, # the user to display
           reply_to_id: nil,
           thread_id: nil,
@@ -172,9 +174,15 @@ defmodule Bonfire.UI.Social.MessagesLive do
           object: message,
           thread_id: e(message, :id, nil),
           participants: participants,
+          hide_smart_input: false,
           smart_input_prompt: prompt,
           to_circles: to_circles || [],
-          sidebar_widgets: LiveHandler.threads_widget(current_user, ulid(e(socket.assigns, :user, nil)), tab_id: "thread")
+          sidebar_widgets: [
+            users: [
+              main: [],
+            ]
+          ]
+          # sidebar_widgets: LiveHandler.threads_widget(current_user, ulid(e(socket.assigns, :user, nil)), tab_id: "thread")
         )
         # |> assign_new(:messages, fn -> LiveHandler.list_threads(current_user) |> e(:edges, []) end)
       }

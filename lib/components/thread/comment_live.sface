@@ -6,24 +6,24 @@
     "reply thread-level-" <> to_string(@thread_level) <> " flex relative w-full mx-auto "
   }
   >
-  <div class="relative flex-1 w-full">
-    <div 
-      :if={e(assigns, :thread_mode, nil) !=:flat }
-      x-cloak
-      x-show="show_replies"
-      @click="show_replies = !show_replies"
-      class="cursor-pointer group z-10 left-[16px] px-3 top-[54px] bottom-[0px] absolute">
-      <i 
-        :class=" !show_replies ? 'bg-primary bottom-[0px]' : 'bg-base-200 bottom-[0px]'"
-        class="bg-base-content bg-opacity-20 group-hover:bg-primary group-hover:bg-opacity-100 top-0 bottom-0 z-10 w-[2px] absolute"></i>
-    </div>
-    <div class="flex flex-1 w-full items-top">
+  <div class="flex-1 w-full ">
+    <div class="relative flex flex-1 w-full items-top">
+      <div 
+        :if={e(assigns, :thread_mode, nil) !=:flat && length(@child_replies)>0 }
+        x-cloak
+        x-show="show_replies"
+        @click="show_replies = !show_replies"
+        class="cursor-pointer group z-10 left-[16px] px-3 top-[40px] bottom-[0px] absolute">
+        <i 
+          :class=" !show_replies ? 'bg-primary bottom-[0px]' : 'bg-base-content/20 bottom-[0px]'"
+          class="bg-base-content/20 group-hover:bg-primary group-hover:bg-opacity-100 top-0 bottom-0 z-10 w-[2px] absolute"></i>
+      </div>
       <div 
         x-cloak
         class="p-3 pr-0 pl-[21px]"
         @click="show_replies = !show_replies"
         x-show="!show_replies">
-        <Outline.ArrowsExpandIcon class="w-4 h-4 cursor-pointer text-primary text-opacity-70 hover:text-opacity hover:text-opacity-100" />
+        <Outline.ChevronDownIcon class="w-4 h-4 cursor-pointer text-primary text-opacity-70 hover:text-opacity hover:text-opacity-100" />
       </div>
       <div 
         class="flex-1 w-full"
@@ -65,19 +65,25 @@
       <div class={"replies replies-level-" <> to_string(@thread_level+1) <> " ml-8"}>
 
         {#if is_list(@child_replies) and length(@child_replies)>0 }
-          {#for {subreply, sub_child_replies} <- @child_replies }
-            <CommentLive
-              reply_to_id={e(@comment, :id, nil)}
-              thread_id={@thread_id} 
-              comment={subreply}
-              thread_object={@thread_object}
-              child_replies={sub_child_replies}
-              thread_level={@thread_level+1}
-              url={@url}
-            />
+          {#for {{subreply, sub_child_replies}, index} <- Enum.with_index(@child_replies, 1) }
+            <div class="relative">
+              <div class="absolute border-base-content/20 w-5 h-6 border-0 border-b-2 border-l-2 rounded-bl-lg left-[-4px] top-0"></div>
+              <div
+                :if={index < length(@child_replies)}
+                class="absolute border-base-content/20 top-0 bottom-0 border-0  border-l-2 left-[-4px] "></div>
+              <CommentLive
+                reply_to_id={e(@comment, :id, nil)}
+                thread_id={@thread_id} 
+                comment={subreply}
+                thread_object={@thread_object}
+                child_replies={sub_child_replies}
+                thread_level={@thread_level+1}
+                url={@url}
+              />
+            </div>
           {/for}
-
-        {#else}
+        {/if}
+        <!-- {#else}
 
           {#case sub_replies_count(@comment)}
 
@@ -96,7 +102,7 @@
             {#match _}
           {/case}
 
-        {/if}
+        {/if} -->
       </div>
     </div>
   </div>

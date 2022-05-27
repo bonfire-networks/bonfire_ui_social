@@ -98,7 +98,7 @@
     />
   </div>
 
-  <div 
+  <!-- <div 
     :if={@show_reply_input && current_user(assigns)}
     class="sticky bottom-4 relative z-[60] p-3 bg-base-100 pt-0 rounded-b-md sm_background-invisible">
     <Bonfire.UI.Common.SmartInputLive
@@ -116,7 +116,7 @@
       showing_within={e(assigns, :showing_within, nil)}
       replied_activity_class={@replied_activity_class}
     />
-  </div>
+  </div> -->
 
 </main>
 

@@ -9,7 +9,7 @@
         context={@thread_id}
       /> -->
 
-        {#if e(assigns, :thread_mode, nil) !=:flat and e(assigns, :threaded_replies, nil)}
+        {#if e(assigns, :threaded_replies, nil)}
           {#for {reply, child_replies} <- e(assigns, :threaded_replies, nil) }
             <Bonfire.UI.Social.CommentLive
               comment={reply}
