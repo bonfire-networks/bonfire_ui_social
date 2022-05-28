@@ -4,6 +4,7 @@
 <div class={
   "main_object": e(assigns, :viewing_main_object, nil),
   "showing_within:thread": e(assigns, :showing_within, nil) == :thread,
+  "-mt-1 bg-base-content/10 px-2 pb-2 rounded-br-md": e(assigns, :thread_mode, nil) == :flat,
   "activity_inception:#{e(assigns, :activity_inception, "")}": e(assigns, :activity_inception, nil),
   "showing_within:feed": e(assigns, :showing_within, nil) == :feed,
   "showing_within:notifications": e(assigns, :showing_within, nil) == :notifications,
@@ -50,8 +51,8 @@
       data-id={"object_body"}
       :if={e(post_content(@object), :html_body, nil)}
       class={
-        "prose break-words object_body max-w-none font-[16px] mt-1 prose-sm prose-p:pt-0 prose-p:my-0 prose-p:leading-[20px]",
-        "font-[16px] mt-1 prose-sm prose-p:pt-0 prose-p:my-0 prose-p:leading-[20px]": e(assigns, :showing_within, nil) == :thread,
+        "prose break-words object_body max-w-none font-[16px] mt-1 prose-sm prose-p:pt-0 prose-p:my-0 leading-[20px]",
+        "font-[16px] mt-1 prose-sm prose-p:pt-0 prose-p:my-0 !leading-[20px]": e(assigns, :showing_within, nil) == :thread,
         "prose-lg mt-3 prose-p:pb-4 prose-p:leading-[26px]": e(assigns, :viewing_main_object, nil),
         "prose-p:pt-1 mt-0.5 !leading-[20px]": e(assigns, :showing_within, nil) == :feed
         }>

@@ -1,4 +1,8 @@
-<div data-id="subject"> 
+<div 
+  data-id="subject"
+  class={
+    "px-2 bg-base-content/10 pt-1 rounded-t-md": e(assigns, :thread_mode, nil) == :flat
+  }> 
   <span 
     :if={e(assigns, :showing_within, nil) == :smart_input}
     phx-click="Bonfire.Social.Feeds:remove_data"
@@ -27,6 +31,7 @@
         />
       </div>
     </div>
+
   {#elseif e(assigns, :showing_within, nil) == :widget}
     <div class="flex mb-4 items-top">
       <div class="absolute left-0">
@@ -64,8 +69,14 @@
     </div>
 
   {#else}
-    <div class="flex items-top ">
-      <div class="absolute left-3">
+    <div class={
+      "flex items-top",
+      "py-1": e(assigns, :thread_mode, nil) == :flat}>
+      <div class={
+        "absolute left-3",
+        "bottom-2": e(assigns, :thread_mode, nil) == :flat,
+        "bottom-3":  e(assigns, :thread_mode, nil) == :flat and e(assigns, :viewing_main_object, nil) == true
+      }>
       <LiveRedirect
           opts={"data-id": "subject_name"}
           aria-label={e(@character, :username, "") <> " profile"}
@@ -74,20 +85,30 @@
           <Bonfire.UI.Common.AvatarLive profile={@profile} />
         </LiveRedirect>
       </div>
-      <div class="flex items-center justify-between leading-[16px] min-w-0 space-x-1">
+      <div class="flex items-center justify-between leading-[16px] min-w-0 space-x-1 w-full">
+        
         <div class="flex items-center flex-1 leading-[16px]">
-          <LiveRedirect
-            opts={"data-id": "subject_name"}
-            aria-label={e(@character, :username, "") <> " profile"}
-            class="link link-hover font-semibold leading-[16px] font-[16px]"
-            to={path(@character)}>
-            {e(@profile, :name, "Anonymous")}
-          </LiveRedirect>
-          <span
-            :if={e(@character, :username, nil)}
-            class="leading-[16px] font-[16px] ml-1 truncate ellipsis text-base-content text-opacity-60 subject_username">@{e(@character, :username, "")}</span>
+          {#if e(assigns, :thread_mode, nil) == :flat && current_user(assigns) && e(current_user(assigns), :id, nil) == maybe_get(@character, :id) } 
+            <LiveRedirect
+              opts={"data-id": "subject_name"}
+              aria-label={e(@character, :username, "") <> " profile"}
+              class="link link-hover font-semibold leading-[16px] font-[16px]"
+              to={path(@character)}>
+              {l "You"}
+            </LiveRedirect>
+          {#else}
+            <LiveRedirect
+              opts={"data-id": "subject_name"}
+              aria-label={e(@character, :username, "") <> " profile"}
+              class="link link-hover font-semibold leading-[16px] font-[16px]"
+              to={path(@character)}>
+              {e(@profile, :name, "Anonymous")}
+            </LiveRedirect>
+            <span
+              :if={e(@character, :username, nil)}
+              class="leading-[16px] font-[16px] ml-1 truncate ellipsis text-base-content text-opacity-60 subject_username">@{e(@character, :username, "")}</span>
+          {/if}
         </div>
-
         <Bonfire.UI.Social.Activity.DateAgoLive 
           permalink={@permalink}
           date_ago={@date_ago}

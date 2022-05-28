@@ -5,8 +5,7 @@
   /> -->
   <!-- <Bonfire.UI.Social.BannerPreviousThreadLive activity={@activity} /> -->   
   <div class="flex flex-col flex-1 grow bg-base-100 rounded-t-md">
-   <div class="rounded-t-md">
-    <div class="flex items-center p-3 pb-2 border-b rounded-t-md bg-base-200 border-base-content border-opacity-10" role="banner">
+    <div class="sticky top-[72px] bg-base-200 flex z-30 items-center p-3 pb-2 border-b rounded-t-md bg-base-200 border-base-content border-opacity-10" role="banner">
       <a
         aria-label="Navigate to the previous page"
         href="javascript:window.history.back()"
@@ -74,17 +73,17 @@
       </Bonfire.UI.Common.OpenModalLive> -->
       
     </div>
+    <div class="flex-1">
     <Bonfire.UI.Social.ActivityLive
         id={"ta:"<>ulid(@activity)}
         showing_within={:thread}
         thread_mode={e(assigns, :thread_mode, nil)}
-        viewing_main_object={true}
+        viewing_main_object={if e(assigns, :thread_mode, nil) != :flat, do: true, else: false}
         activity={@activity}
         object={@object}
         participants={participants(assigns)}
         object_boundary={if e(assigns, :showing_within, nil)==:messages, do: :skip}
       />
-    </div>
     <Bonfire.UI.Social.ThreadLive 
       id={@thread_id}
       thread_id={@thread_id}
@@ -98,11 +97,12 @@
       url={@url}
       showing_within={e(assigns, :showing_within, nil)}
     />
+    </div>
   </div>
 
-  <!-- <div 
-    :if={@show_reply_input && current_user(assigns)}
-    class="sticky bottom-4 relative z-[60] p-3 bg-base-100 pt-0 rounded-b-md sm_background-invisible">
+  <div 
+    :if={e(assigns, :thread_mode, nil) == :flat && current_user(assigns)}
+    class="sticky bottom-6 relative z-[30] p-3 bg-base-100  rounded-b-md sm_background-invisible">
     <Bonfire.UI.Common.SmartInputLive
       id={:smart_input}
       current_user={current_user(assigns)}
@@ -118,11 +118,11 @@
       showing_within={e(assigns, :showing_within, nil)}
       replied_activity_class={@replied_activity_class}
     />
-  </div> -->
+  </div>
 
 </main>
 
-
+<div class="sticky h-6 bg-base-300 z-[30] bottom-0"></div>
   <!-- {#if current_user(assigns) }
     <Bonfire.UI.Common.WidgetLive 
       widget_title="Participants"
