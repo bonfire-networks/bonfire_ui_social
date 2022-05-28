@@ -76,9 +76,9 @@ defmodule Bonfire.UI.Social.ActivityLive do
 
     # permalink = path(activity.object)
     components = (
-      component_activity_subject(verb, activity, assigns)
-      ++
       component_maybe_in_reply_to(verb, activity, assigns)
+      ++
+      component_activity_subject(verb, activity, assigns)
       ++
       component_object(verb, activity, object_type)
       ++

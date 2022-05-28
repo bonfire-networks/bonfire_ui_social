@@ -82,8 +82,8 @@
               />
             </div>
           {/for}
-        {/if}
-        <!-- {#else}
+
+        {#else}
 
           {#case sub_replies_count(@comment)}
 
@@ -102,7 +102,7 @@
             {#match _}
           {/case}
 
-        {/if} -->
+        {/if}
       </div>
     </div>
   </div>
