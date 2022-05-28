@@ -26,7 +26,7 @@
   </label>
   <div tabindex="0" class="w-48 rounded shadow card compact dropdown-content bg-neutral-content">
     <LiveRedirect to="/feed" class={"p-4 hover:bg-neutral hover:bg-opacity-20 flex items-center text-sm text-neutral", "bg-neutral bg-opacity-20": @selected_tab == "home"}>
-      <span class="truncate ellipsis">{l "Home timeline"}</span>
+      <span class="truncate ellipsis">{l "My feed"}</span>
     </LiveRedirect> 
 
     <LiveRedirect to="/feed/local" class={"p-4 hover:bg-neutral hover:bg-opacity-20 flex items-center text-sm text-neutral", "bg-neutral bg-opacity-20": @selected_tab == "local"}>
