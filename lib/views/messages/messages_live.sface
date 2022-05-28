@@ -22,10 +22,10 @@
         url={@url}
         show_reply_input={true}
         reverse_order={true}
-        showing_within={:message}
+        showing_within={:messages}
         textarea_class={"h-8 max-h-16 resize-y max-w-full textarea prose prose-sm bg-base-200"}
         smart_input_class={"bg-slate-50 h-full flex-1 rounded-md sticky bottom-0 messages_smart_input"}
-        replied_activity_class={"relative p-3 py-2 m-3 mb-1 rounded-md"}
+        replied_activity_class={"relative p-3 py-2 m-3 mb-1 rounded-md !bg-base-content hover:!bg-base-content hover:!bg-opacity-100"}
       /> 
     {#elseif @tab_id in ["compose", "select_recipients"]}
       <div class="flex-1 p-3 bg-base-100 rounded-box">
@@ -39,7 +39,7 @@
           to_circles={e(assigns, :to_circles, [])}
           smart_input_prompt={e(assigns, :smart_input_prompt, "")}
           smart_input_text={e(assigns, :smart_input_text, "")}
-          showing_within={:message}
+          showing_within={:messages}
           boundary={"message"}
           title_open={true}
           title_prompt={l "Enter an optional subject"}

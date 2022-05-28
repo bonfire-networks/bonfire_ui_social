@@ -150,7 +150,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
   end
 
   def preload(list_of_assigns) do
-    Bonfire.Boundaries.LiveHandler.maybe_preload(list_of_assigns)
+    Bonfire.Boundaries.LiveHandler.preload_assigns(list_of_assigns)
   end
 
 
