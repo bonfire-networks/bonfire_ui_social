@@ -45,7 +45,7 @@ defmodule Bonfire.Social.Posts.LiveHandler do
 
     current_user = current_user(socket)
 
-    with %{} <- current_user,
+    with %{} <- current_user || {:error, "You must be logged in"},
          %{valid?: true} <- post_changeset(attrs, current_user),
          uploaded_media <- multi_upload(current_user, params["upload_metadata"], socket),
          {:ok, published} <- Bonfire.Social.Posts.publish(
@@ -57,7 +57,7 @@ defmodule Bonfire.Social.Posts.LiveHandler do
 
       {:noreply,
         socket
-        |> put_flash(:info, "Posted!")
+        |> assign_flash(:info, "Posted!")
         # |> push_patch_with_fallback(current_url(socket), path(published)) # so the flash appears - TODO: causes a conflict between the activity coming in via pubsub
 
         # Phoenix.LiveView.assign(socket,
@@ -68,34 +68,10 @@ defmodule Bonfire.Social.Posts.LiveHandler do
       error(error_msg(e))
       {:noreply,
         socket
-        |> put_flash(:error, "Could not post 😢 (#{error_msg(e)})")
-        |> push_patch_with_fallback(current_url(socket), "/error") # so the flash appears
+        |> assign_flash(:error, "Could not post 😢 (#{error_msg(e)})")
+        |> patch_to(current_url(socket), fallback: "/error") # so the flash appears
       }
     end
-  end
-
-  def push_patch_with_fallback(socket, url, fallback) when is_binary(url) do
-    push_patch(socket, to: url)
-  rescue _e in ArgumentError ->
-    push_patch_with_fallback(socket, nil, fallback)
-  end
-  def push_patch_with_fallback(socket, _, fallback) do
-    push_redirect(socket, to: fallback)
-  end
-
-  defp multi_upload(current_user, metadata, socket) do
-    consume_uploaded_entries(socket, :files, fn %{path: path} = meta, entry ->
-      debug(meta, "consume_uploaded_entries meta")
-      debug(entry, "consume_uploaded_entries entry")
-      with {:ok, uploaded} <- Bonfire.Files.upload(nil, current_user, path, %{client_name: entry.client_name, metadata: metadata[entry.ref]})
-      |> debug("uploaded") do
-        {:ok, uploaded}
-      else e ->
-        error(e, "Could not upload #{entry.client_name}")
-        {:postpone, nil}
-      end
-    end)
-    |> filter_empty([])
   end
 
   def handle_event("load_replies", %{"id" => id, "level" => level}, socket) do
@@ -181,6 +157,21 @@ defmodule Bonfire.Social.Posts.LiveHandler do
     # debug(attrs, "ATTRS")
     Posts.changeset(:create, attrs, creator)
     # |> debug("pc")
+  end
+
+  defp multi_upload(current_user, metadata, socket) do
+    maybe_consume_uploaded_entries(socket, :files, fn %{path: path} = meta, entry ->
+      debug(meta, "consume_uploaded_entries meta")
+      debug(entry, "consume_uploaded_entries entry")
+      with {:ok, uploaded} <- Bonfire.Files.upload(nil, current_user, path, %{client_name: entry.client_name, metadata: metadata[entry.ref]})
+      |> debug("uploaded") do
+        {:ok, uploaded}
+      else e ->
+        error(e, "Could not upload #{entry.client_name}")
+        {:postpone, nil}
+      end
+    end)
+    |> filter_empty([])
   end
 
 

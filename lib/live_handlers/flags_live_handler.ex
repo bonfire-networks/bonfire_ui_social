@@ -8,7 +8,7 @@ defmodule Bonfire.Social.Flags.LiveHandler do
       Bonfire.UI.Common.OpenModalLive.close()
 
       {:noreply, socket
-      |> put_flash(:info, "Flagged!")
+      |> assign_flash(:info, "Flagged!")
       |> assign(
         flagged: Map.get(socket.assigns, :flagged, []) ++ [{id, true}]
       )}
@@ -21,7 +21,7 @@ defmodule Bonfire.Social.Flags.LiveHandler do
 
     with _ <- Bonfire.Social.Flags.unflag(subject, id) do
       {:noreply, socket
-      |> put_flash(:info, "Unflagged!")
+      |> assign_flash(:info, "Unflagged!")
       |> assign(
       flagged: Map.get(socket.assigns, :flagged, []) ++ [{id, false}]
     )}

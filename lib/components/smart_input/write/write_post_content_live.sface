@@ -2,7 +2,8 @@
 <div class="flex flex-col h-full write_post_content">
   <Form 
     for={Bonfire.Social.Posts.LiveHandler.post_changeset(current_user(assigns))} 
-    submit={if @create_activity_type==:message, do: "Bonfire.Social.Messages:send", else: "Bonfire.Social.Posts:post"} 
+    submit={handler(@create_activity_type)} 
+    action={"/LiveHandler/"<>handler(@create_activity_type)} 
     change="validate"
     opts={ autocomplete: "off", "phx-target": "#smart_input"}
     class={if WriteEditorLive.use_rich_editor?(assigns), do: "with_editor flex-1", else: "with_textarea flex-1"}>

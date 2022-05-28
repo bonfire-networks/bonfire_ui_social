@@ -77,14 +77,14 @@ defmodule Bonfire.Social.Messages.LiveHandler do
       debug(sent, "sent!")
       {:noreply,
         socket
-        |> put_flash(:info, "Sent!")
-        |> push_redirect(to: "/messages/#{e(sent, :replied, :thread_id, nil) || ulid(sent)}##{ulid(sent)}") # FIXME: assign or pubsub the new message and patch instead
+        |> assign_flash(:info, "Sent!")
+        |> redirect_to("/messages/#{e(sent, :replied, :thread_id, nil) || ulid(sent)}##{ulid(sent)}") # FIXME: assign or pubsub the new message and patch instead
       }
     # else e ->
     #   debug(message_error: e)
     #   {:noreply,
     #     socket
-    #     |> put_flash(:error, "Could not send...")
+    #     |> assign_flash(:error, "Could not send...")
     #   }
     end
   end

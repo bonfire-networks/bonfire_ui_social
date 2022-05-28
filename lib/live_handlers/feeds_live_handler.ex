@@ -74,7 +74,7 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
 
       {:noreply,
         socket
-        |> put_flash(:info, l("Deleted from %{number} feeds!", number: num))
+        |> assign_flash(:info, l("Deleted from %{number} feeds!", number: num))
       }
     end
   end
@@ -87,7 +87,7 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
     debug("Redirect to the activity page")
     {:noreply,
       socket
-      |> push_redirect(to: permalink)
+      |> redirect_to(permalink)
     }
   end
 

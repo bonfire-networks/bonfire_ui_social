@@ -10,7 +10,7 @@ defmodule Bonfire.Social.Objects.LiveHandler do
       {:noreply,
         socket
         |> assign(page_title: name)
-        |> put_flash(:info, l "Name updated!")
+        |> assign_flash(:info, l "Name updated!")
       }
     end
   end
@@ -21,7 +21,7 @@ defmodule Bonfire.Social.Objects.LiveHandler do
 
       {:noreply,
         socket
-        |> put_flash(:info, l "Deleted!")
+        |> assign_flash(:info, l "Deleted!")
       }
     end
   end
