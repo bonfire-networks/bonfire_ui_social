@@ -44,8 +44,8 @@ defmodule Bonfire.UI.Social.MessagesLive do
         # without_sidebar: true
       )
       |> assign_global(
-        showing_within: :message,
-        search_placeholder: l("Search this discussion"),
+        showing_within: :messages,
+        # search_placeholder: l("Search this discussion"),
         create_activity_type: :message,
         smart_input_prompt: l("Compose a thoughtful message...")
       )

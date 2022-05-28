@@ -22,8 +22,8 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
     paginate_feed(attrs, socket)
   end
 
-  def handle_event("reply", _, socket) do
-    debug("reply!")
+  def handle_event("reply_to_activity", _, socket) do
+    # debug("reply!")
 
     activity = e(socket, :assigns, :activity, nil)
     participants = Bonfire.Social.Threads.list_participants(activity, nil, current_user: current_user(socket))
@@ -32,14 +32,20 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
     mentions = if length(participants)>0, do: Enum.map_join(participants, " ", & "@"<>e(&1, :character, :username, ""))<>" "
     IO.inspect(mentions, label: "PARTS")
 
+    # we reply to objects, not activities
+    reply_to_id =
+      e(socket, :assigns, :object_id, nil)
+      || e(socket, :assigns, :object, :id, nil)
+      || e(activity, :object, :id, nil)
+      || e(activity, :object_id, nil)
+
+    thread_id = e(activity, :replied, :thread_id, nil) || e(socket, :assigns, :object, :replied, :thread_id, nil)
+
     send_update(Bonfire.UI.Common.SmartInputLive,
       id: :smart_input,
-      # reply to objects, not activities
-      reply_to_id:
-        e(socket, :assigns, :object_id, nil)
-          || e(socket, :assigns, :object, :id, nil)
-          || e(activity, :object, :id, nil),
-      # thread_id: activity_id,
+      # we reply to objects, not activities
+      reply_to_id: reply_to_id,
+      thread_id: thread_id,
       activity: activity,
       object: e(socket, :assigns, :object, nil),
       smart_input_text: mentions,
@@ -56,7 +62,8 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
       id: :smart_input,
       activity: nil,
       object: nil,
-      reply_to_id: nil])
+      reply_to_id: e(socket, :assigns, :thread_id, nil) # default to replying to current thread
+    ])
     {:noreply, socket}
   end
 
@@ -179,7 +186,7 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
       current_user: current_user,
       selected_tab: "home",
       page_title: l("Home"),
-      feed_title: l("My Feed"),
+      feed_title: l("My feed"),
       feed_id: feed_id,
       feed_ids: feed_ids,
       feed: e(feed, :edges, []),
