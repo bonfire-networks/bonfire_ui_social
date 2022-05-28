@@ -1,9 +1,4 @@
 <main class="flex flex-col flex-1 h-full">
-  <!-- <Bonfire.UI.Common.PageHeaderLive
-    page_title={@page_title}
-    before={true}
-  /> -->
-  <!-- <Bonfire.UI.Social.BannerPreviousThreadLive activity={@activity} /> -->   
   <div class="flex flex-col flex-1 grow bg-base-100 rounded-t-md">
     <div class="sticky top-[72px] bg-base-200 flex z-30 items-center p-3 pb-2 border-b rounded-t-md bg-base-200 border-base-content border-opacity-10" role="banner">
       <a
@@ -46,31 +41,10 @@
               </:action_btns>
             </Bonfire.UI.Common.OpenModalLive>
           </li>
-          <li><button>{l "View participants"}</button></li>
+          <!-- <li><button>{l "View participants"}</button></li> -->
         </ul>
       </div>
-      <!-- <Bonfire.UI.Common.OpenModalLive
-        :if={@thread_id}
-        id={ComponentID.new(Bonfire.UI.Common.OpenModalLive, @object)} 
-        title_text={e(assigns, :label, l "Edit the thread title")}
-        form_opts={%{"phx-submit"=> "Bonfire.Social.Objects:set_name"}}
-        >
-        <Form for={:thread}>
-          <TextInput name="name" class="input input-bordered w-[400px]" value={e(assigns, :page_title, "")} />
-        </Form>
-        <:open_btn>
-          <button class="btn btn-circle btn-ghost btn-sm" data-tip={l "Edit the thread title"} type="button">
-            <Solid.DotsVerticalIcon class="w-5 h-5 text-base-content text-opacity-70" />
-          </button>
-        </:open_btn>
-        <:action_btns>
-          <HiddenInput name="id" value={@thread_id} />
-          <button 
-            class="btn btn-primary">
-            {l "Save"}
-          </button>
-        </:action_btns>
-      </Bonfire.UI.Common.OpenModalLive> -->
+
       
     </div>
     <div class="flex-1">

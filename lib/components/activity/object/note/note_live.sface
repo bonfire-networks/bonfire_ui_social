@@ -53,7 +53,7 @@
       class={
         "prose break-words object_body max-w-none font-[16px] mt-1 prose-sm prose-p:pt-0 prose-p:my-0 leading-[20px]",
         "font-[16px] mt-1 prose-sm prose-p:pt-0 prose-p:my-0 !leading-[20px]": e(assigns, :showing_within, nil) == :thread,
-        "prose-lg mt-3 prose-p:pb-4 prose-p:leading-[26px]": e(assigns, :viewing_main_object, nil),
+        "prose-lg mt-3 prose-p:pb-4 !leading-[26px] prose-p:leading-[26px]": e(assigns, :viewing_main_object, nil),
         "prose-p:pt-1 mt-0.5 !leading-[20px]": e(assigns, :showing_within, nil) == :feed
         }>
       {rich maybe_truncate(e(post_content(@object), :html_body, ""), assigns)}
