@@ -2,7 +2,12 @@
 
 {#case rich_editor(assigns)}
   {#match component when is_atom(component) and not is_nil(component)}
+    <Surface.Components.Dynamic.Component
+      module={component}
+      {...assigns}
+    />
     <noscript>
+    <!-- fallback if JS is disabled -->
       <TextArea
         opts={
           value: @smart_input_text,
@@ -11,16 +16,12 @@
         class={@textarea_class}
       />
     </noscript>
-    <Surface.Components.Dynamic.Component
-      module={component}
-      {...assigns}
-    />
   {#match _}
     <TextArea
       opts={
         value: @smart_input_text,
         placeholder: @smart_input_prompt
       }
-      class={@textarea_class}
+      class={"#{@textarea_class} h-40"}
     />
 {/case}

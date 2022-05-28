@@ -102,8 +102,8 @@ defmodule Bonfire.UI.Social.MessagesLive do
     else
       {:noreply,
         socket
-        |> put_flash(:error, l("User not found"))
-        |> push_redirect(to: path(:error))
+        |> assign_flash(:error, l("User not found"))
+        |> redirect_to(path(:error))
       }
     end
   end

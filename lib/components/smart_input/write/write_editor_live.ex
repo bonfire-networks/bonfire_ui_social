@@ -21,7 +21,7 @@ defmodule Bonfire.UI.Social.WriteEditorLive do
 
 
   def use_rich_editor?(assigns) do
-    e(assigns, :with_rich_editor, true) && !Bonfire.Me.Settings.get([:ui, :disable_rich_text_editor], false, assigns)
+    e(assigns, :with_rich_editor, true) && !Bonfire.Me.Settings.get([:ui, :rich_text_editor_disabled], false, assigns)
   end
 
   def rich_editor(assigns) do

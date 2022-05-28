@@ -89,7 +89,7 @@ defmodule Bonfire.UI.Social.PostLive do
   def do_handle_params(_params, _url, socket) do
     {:noreply,
       socket
-      |> push_redirect(to: path(:write))
+      |> redirect_to(path(:write))
     }
   end
 

@@ -2,7 +2,7 @@
 <Bonfire.UI.Social.ObjectThreadLive
   page={@page}
   page_title={@page_title}
-  search_placeholder={@search_placeholder}
+  search_placeholder={e(assigns, :search_placeholder, nil)}
   smart_input_prompt={@smart_input_prompt}
   smart_input_text={@smart_input_text}
   create_activity_type={e(assigns, :create_activity_type, nil)}

@@ -39,4 +39,8 @@ defmodule Bonfire.UI.Social.WritePostContentLive do
     else: "#{create_activity_type}"
   end
 
+  def handler(activity_type) do
+    if activity_type==:message, do: "Bonfire.Social.Messages:send", else: "Bonfire.Social.Posts:post"
+  end
+
 end
