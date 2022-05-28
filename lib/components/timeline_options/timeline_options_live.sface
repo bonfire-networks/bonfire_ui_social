@@ -8,7 +8,7 @@
   </div>
   <div data-tip="Local instance timeline" class="tooltip tooltip-bottom">
     <LiveRedirect to="/feed/local" class={"tab h-[1.7rem]", "tab-active": @selected_tab == "local"}>
-      <Solid.HomeIcon class="inline-block w-4 h-4 stroke-current" />
+      <Solid.LocationMarkerIcon class="inline-block w-4 h-4 stroke-current" />
     </LiveRedirect> 
   </div>
   <div data-tip="Federated timeline" class="tooltip tooltip-bottom">

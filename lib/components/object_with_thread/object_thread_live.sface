@@ -82,6 +82,7 @@
         activity={@activity}
         object={@object}
         participants={participants(assigns)}
+        object_boundary={if e(assigns, :showing_within, nil)==:messages, do: :skip}
       />
     </div>
     <Bonfire.UI.Social.ThreadLive 
@@ -95,6 +96,7 @@
       activity={@activity}
       object={@object}
       url={@url}
+      showing_within={e(assigns, :showing_within, nil)}
     />
   </div>
 

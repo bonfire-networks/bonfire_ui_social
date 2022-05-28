@@ -12,6 +12,8 @@ defmodule Bonfire.UI.Social.CommentLive do
   prop sub_replies_count, :integer, default: 0
   prop url, :string
   prop thread_mode, :any
+  prop showing_within, :any
+
 
   def activity(%{__struct__: Bonfire.Data.Social.Activity} = activity) do
     activity

@@ -21,8 +21,7 @@ defmodule Bonfire.UI.Social.ThreadLive do
   prop smart_input_text, :string
   prop thread_mode, :any
   prop reverse_order, :any
-
-
+  prop showing_within, :any
 
 
   def update(%{replies: replies, page_info: page_info} = assigns, socket) when is_list(replies) and is_map(page_info) do

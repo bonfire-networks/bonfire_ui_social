@@ -43,7 +43,7 @@
     <div
       :if={e(post_content(@object), :summary, nil)}
       class="font-light prose max-w-prose prose-p:pt-1">
-      {rich e(post_content(@object), :summary, "")}
+      {rich maybe_truncate(e(post_content(@object), :summary, ""), assigns)}
     </div>
 
     <div
@@ -55,7 +55,7 @@
         "prose-lg mt-3 prose-p:pb-4 prose-p:leading-[26px]": e(assigns, :viewing_main_object, nil),
         "prose-p:pt-1 mt-0.5 !leading-[20px]": e(assigns, :showing_within, nil) == :feed
         }>
-      {rich e(post_content(@object), :html_body, "")}
+      {rich maybe_truncate(e(post_content(@object), :html_body, ""), assigns)}
     </div>
 
   </div>
