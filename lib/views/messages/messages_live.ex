@@ -44,7 +44,7 @@ defmodule Bonfire.UI.Social.MessagesLive do
         # without_sidebar: true
       )
       |> assign_global(
-        showing_within: :messages,
+        showing_within: :message,
         search_placeholder: l("Search this discussion"),
         create_activity_type: :message,
         smart_input_prompt: l("Compose a thoughtful message...")
@@ -89,7 +89,6 @@ defmodule Bonfire.UI.Social.MessagesLive do
           smart_input: true,
           tab_id: "compose",
           feed_title: l("Messages"),
-          hide_smart_input: true,
           user: user, # the user to display
           reply_to_id: nil,
           thread_id: nil,
@@ -174,15 +173,9 @@ defmodule Bonfire.UI.Social.MessagesLive do
           object: message,
           thread_id: e(message, :id, nil),
           participants: participants,
-          hide_smart_input: false,
           smart_input_prompt: prompt,
           to_circles: to_circles || [],
-          sidebar_widgets: [
-            users: [
-              main: [],
-            ]
-          ]
-          # sidebar_widgets: LiveHandler.threads_widget(current_user, ulid(e(socket.assigns, :user, nil)), tab_id: "thread")
+          sidebar_widgets: LiveHandler.threads_widget(current_user, ulid(e(socket.assigns, :user, nil)), tab_id: "thread")
         )
         # |> assign_new(:messages, fn -> LiveHandler.list_threads(current_user) |> e(:edges, []) end)
       }
