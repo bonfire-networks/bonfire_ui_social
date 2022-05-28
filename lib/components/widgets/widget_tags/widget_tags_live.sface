@@ -1,6 +1,6 @@
 <Bonfire.UI.Common.WidgetLive 
   :if={!Bonfire.Me.Settings.get([:ui, :show_trending_tags, :disabled], nil, assigns)}
-  widget_title={e(assigns, :widget_title, "Trending topics")}
+  widget_title={e(assigns, :widget_title, l "Trending topics")}
 >
 
 <ul 

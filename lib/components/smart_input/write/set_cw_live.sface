@@ -5,7 +5,7 @@
   class="border-b rounded-md">
   <Field name={:name}>
     <TextInput
-      opts={placeholder: "Enter a content warning"}
+      opts={placeholder: l "Enter a content warning"}
       class="w-full rounded-none input" 
       />
   </Field>
