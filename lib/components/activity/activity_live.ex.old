@@ -1,4 +1,4 @@
-defmodule Bonfire.UI.Social.ActivityLive do
+defmodule Bonfire.UI.Social.ActivityOLDLive do
   use Bonfire.UI.Common.Web, :stateful_component
 
   alias Bonfire.Social.Activities
@@ -31,7 +31,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
       |> repo().maybe_preload(:media)
       # |> debug("Activity provided")
       |> Map.put(:object, Activities.object_from_activity(assigns))
-      # |> debug("Activity with :object")
+      |> debug("Activity with :object")
 
     verb =
       Activities.verb_maybe_modify(
@@ -148,7 +148,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
   end
 
   def preload(list_of_assigns) do
-    Bonfire.Boundaries.LiveHandler.preload_assigns(list_of_assigns)
+    Bonfire.Boundaries.LiveHandler.maybe_preload_boundaries(list_of_assigns)
   end
 
 
