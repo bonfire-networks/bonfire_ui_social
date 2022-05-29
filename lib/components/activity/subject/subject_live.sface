@@ -1,7 +1,8 @@
 <div 
   data-id="subject"
   class={
-    "px-2 bg-base-content/10 pt-1 rounded-t-md": e(assigns, :thread_mode, nil) == :flat
+    "px-2 bg-base-content/10 pt-1 rounded-t-md": e(assigns, :thread_mode, nil) == :flat,
+    "!bg-transparent pt-0": e(assigns, :activity_inception, nil) != nil and e(assigns, :thread_mode, nil) == :flat,
   }> 
   <span 
     :if={e(assigns, :showing_within, nil) == :smart_input}
@@ -9,7 +10,6 @@
     class="absolute top-2 right-2 btn btn-ghost btn-xs btn-circle">
     <Outline.XIcon class="w-4 h-4" />
   </span>
-
 
   {#if e(@object, :id, nil) != nil and e(@activity, :id, nil) == nil and e(assigns, :showing_within, nil) != :search }
     <div class={"flex items-center"}>
@@ -22,13 +22,13 @@
             {e(@profile, :name, "Anonymous")}
           </LiveRedirect>
         </div>
-        <Bonfire.UI.Social.Activity.RepliedDateAgoLive 
+        <!-- <Bonfire.UI.Social.Activity.RepliedDateAgoLive 
           permalink={@permalink}
           date_ago={@date_ago}
           object={@object}
           object_type={@object_type}
           object_boundary={@object_boundary} 
-        />
+        /> -->
       </div>
     </div>
 

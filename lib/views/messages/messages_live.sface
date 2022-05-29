@@ -51,7 +51,7 @@
   </div>
 
   {#else}
-    <Bonfire.UI.Common.PageHeaderLive page_title={@page_title} />
+    <Bonfire.UI.Common.PageHeaderLive before page_title={@page_title} />
     <div class="flex-1 rounded-b-xl md:mx-0 text-base-content lg:mt-0 bg-base-100">
       <div id="empty-feed">
         <div class="flex items-center justify-center py-8">

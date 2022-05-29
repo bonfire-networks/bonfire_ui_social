@@ -60,6 +60,7 @@ defmodule Bonfire.Social.Messages.LiveHandler do
       ]
     ]
   end
+  
 
   def list_threads(current_user, user \\ nil, opts \\ []) do
     # TODO: put limit in Settings

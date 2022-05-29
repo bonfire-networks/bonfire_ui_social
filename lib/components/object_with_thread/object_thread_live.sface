@@ -1,6 +1,6 @@
 <main class="flex flex-col flex-1 h-full">
   <div class="flex flex-col flex-1 grow bg-base-100 rounded-t-md">
-    <div class="sticky top-[72px] bg-base-200 flex z-30 items-center p-3 pb-2 border-b rounded-t-md bg-base-200 border-base-content border-opacity-10" role="banner">
+    <div class="sticky top-[72px] bg-base-200 flex z-[60] items-center p-3 pb-2 border-b rounded-t-md bg-base-200 border-base-content border-opacity-10" role="banner">
       <a
         aria-label="Navigate to the previous page"
         href="javascript:window.history.back()"
@@ -76,7 +76,7 @@
 
   <div 
     :if={e(assigns, :thread_mode, nil) == :flat && current_user(assigns)}
-    class="sticky bottom-6 relative z-[30] p-3 bg-base-100  rounded-b-md sm_background-invisible">
+    class="sticky bottom-6 relative z-[60] p-3 bg-base-100  rounded-b-md sm_background-invisible">
     <Bonfire.UI.Common.SmartInputLive
       id={:smart_input}
       current_user={current_user(assigns)}
@@ -96,7 +96,7 @@
 
 </main>
 
-<div class="sticky h-6 bg-base-300 z-[30] bottom-0"></div>
+<div class="sticky h-6 bg-base-300 z-[60] bottom-0"></div>
   <!-- {#if current_user(assigns) }
     <Bonfire.UI.Common.WidgetLive 
       widget_title="Participants"

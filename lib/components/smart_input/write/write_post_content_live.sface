@@ -56,6 +56,7 @@
                   smart_input_text={@smart_input_text}
                   insert_text={@insert_text}
                   with_rich_editor={@with_rich_editor}
+                  thread_mode={@thread_mode}
                 />
                 
             </Field>
