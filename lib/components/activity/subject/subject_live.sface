@@ -123,8 +123,8 @@
 </div>
 
 <div 
-  :if={e(@activity, :replied, :thread, :named, :name, nil) && e(assigns, :showing_within, nil) in [:feed]}
-  class="pl-2 mt-3 border-l-4 border-base-content border-opacity-40"
+  :if={e(@activity, :replied, :thread, :named, :name, nil) && String.length(e(@activity, :replied, :thread, :named, :name, nil)) > 0 && e(assigns, :showing_within, nil) in [:feed]}
+  class="flex items-center mt-2 text-sm font-medium"
   >
-  {e(@activity, :replied, :thread, :named, :name, "")}
+  <span class="mr-1">{l "in"}</span> <span class="link">{e(@activity, :replied, :thread, :named, :name, "")}</span>
 </div>
