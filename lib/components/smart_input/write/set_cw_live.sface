@@ -1,5 +1,6 @@
 
 <div
+  x-cloak
   x-show="title_open"
   x-transition
   class="border-b rounded-md">
