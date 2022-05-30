@@ -3,11 +3,11 @@
   {#match :thread}
     <div class={"flex items-center mb-2"}>
       <div class="flex items-center justify-start w-5 h-5">
-        <Solid.StarIcon :if={@verb == "like"} class="w-4 h-4 text-base-content text-opacity-80" />
+        <Solid.StarIcon :if={@verb == "Like"} class="w-4 h-4 text-base-content text-opacity-80" />
         
         <!-- Boost icon -->
         <svg 
-           :if={@verb == "boost"}
+           :if={@verb == "Boost"}
             viewBox="0 0 24 24" 
             width="24" 
             height="24" 
@@ -18,8 +18,8 @@
             stroke-linejoin="round" 
             class="w-4 h-4 text-base-content text-opacity-80">
             <polyline points="17 1 21 5 17 9"></polyline><path d="M3 11V9a4 4 0 0 1 4-4h14"></path><polyline points="7 23 3 19 7 15"></polyline><path d="M21 13v2a4 4 0 0 1-4 4H3"></path></svg>
-        <Solid.PencilIcon :if={@verb == "reply"} class="w-4 h-4 text-base-content text-opacity-80" />
-        <Solid.FlagIcon :if={@verb == "flag"} class="w-4 h-4 text-base-content text-opacity-80" />
+        <Solid.PencilIcon :if={@verb == "Reply"} class="w-4 h-4 text-base-content text-opacity-80" />
+        <Solid.FlagIcon :if={@verb == "Flag"} class="w-4 h-4 text-base-content text-opacity-80" />
       </div>
       <div class="flex-1 ml-2">
         <div class="text-xs font-medium text-base-content text-opacity-80">
@@ -36,11 +36,11 @@
   {#match :widget}
     <div class={"flex items-center mb-3"}>
       <div class="flex items-center justify-start w-5 h-5">
-        <Solid.StarIcon :if={@verb == "like"} class="w-5 h-5 text-yellow-500" />
-        <Solid.UserAddIcon :if={@verb == "follow"} class="flex-shrink-0 w-5 h-5 text-info" />
+        <Solid.StarIcon :if={@verb == "Like"} class="w-5 h-5 text-yellow-500" />
+        <Solid.UserAddIcon :if={@verb == "Follow"} class="flex-shrink-0 w-5 h-5 text-info" />
          <!-- Boost icon -->
          <svg 
-          :if={@verb == "boost"}
+          :if={@verb == "Boost"}
           viewBox="0 0 24 24" 
           width="24" 
           height="24" 
@@ -51,8 +51,8 @@
           stroke-linejoin="round" 
           class="w-4 h-4 text-info">
           <polyline points="17 1 21 5 17 9"></polyline><path d="M3 11V9a4 4 0 0 1 4-4h14"></path><polyline points="7 23 3 19 7 15"></polyline><path d="M21 13v2a4 4 0 0 1-4 4H3"></path></svg>
-        <Solid.PencilIcon :if={@verb == "reply"} class="w-4 h-4 text-info" />
-        <Solid.FlagIcon :if={@verb == "flag"} class="w-4 h-4 text-error" />
+        <Solid.PencilIcon :if={@verb == "Reply"} class="w-4 h-4 text-info" />
+        <Solid.FlagIcon :if={@verb == "Flag"} class="w-4 h-4 text-error" />
          
         </div>
       <div class="flex-1 ml-2">
@@ -70,10 +70,10 @@
   <!-- {#match :notifications}
     <div class="flex w-full activity_notification">
       {#case @verb}
-        {#match "boost"}
+        {#match "Boost"}
          <div class="absolute left-4">
            <svg 
-           :if={@verb == "boost"}
+           :if={@verb == "Boost"}
             viewBox="0 0 24 24" 
             width="24" 
             height="24" 
@@ -85,21 +85,21 @@
             class="flex-shrink-0 w-6 h-6 text-primary">
             <polyline points="17 1 21 5 17 9"></polyline><path d="M3 11V9a4 4 0 0 1 4-4h14"></path><polyline points="7 23 3 19 7 15"></polyline><path d="M21 13v2a4 4 0 0 1-4 4H3"></path></svg>
           </div>
-        {#match "follow"}
+        {#match "Follow"}
          <div class="absolute left-4">
-          <Solid.UserIcon :if={@verb == "follow"} class="flex-shrink-0 w-4 h-4 text-info" />
+          <Solid.UserIcon :if={@verb == "Follow"} class="flex-shrink-0 w-4 h-4 text-info" />
           </div>
-        {#match "like"}
+        {#match "Like"}
          <div class="absolute left-4">
-          <Solid.StarIcon :if={@verb == "like"} class="flex-shrink-0 w-4 h-4 text-info" />
+          <Solid.StarIcon :if={@verb == "Like"} class="flex-shrink-0 w-4 h-4 text-info" />
           </div>
-        {#match "reply"}
+        {#match "Reply"}
          <div class="absolute left-4">
-          <Solid.PencilIcon :if={@verb == "reply"} class="flex-shrink-0 w-4 h-4 text-info" />
+          <Solid.PencilIcon :if={@verb == "Reply"} class="flex-shrink-0 w-4 h-4 text-info" />
           </div>
         {#match "flag"}
          <div class="absolute left-4">
-          <Solid.FlagIcon :if={@verb == "flag"} class="flex-shrink-0 w-4 h-4 text-info" />
+          <Solid.FlagIcon :if={@verb == "Flag"} class="flex-shrink-0 w-4 h-4 text-info" />
           </div>
         {#match _}
          <div class="absolute left-4">
@@ -125,12 +125,12 @@
   {#match _}
     <div class={
       "flex items-center mb-3", 
-      "-ml-7": @verb != "reply"
+      "-ml-7": @verb not in ["Reply", "Respond"]
     }>
 
       <!-- LIKE -->
       <div 
-        :if={@verb == "like"}
+        :if={@verb == "Like"}
         class="flex items-center justify-start">
         <Solid.StarIcon class="w-5 h-5 text-yellow-500" />
         <div class="flex-1 ml-2">
@@ -148,7 +148,7 @@
 
       <!-- FOLLOW -->
       <div 
-        :if={@verb == "follow"}
+        :if={@verb == "Follow"}
         class="flex items-center justify-start">  
         <Solid.UserAddIcon  class="flex-shrink-0 w-5 h-5 text-info" />
         <div class="flex-1 ml-2">
@@ -166,7 +166,7 @@
       
       <!-- BOOST -->
       <div 
-        :if={@verb == "boost"}
+        :if={@verb == "Boost"}
         class="flex items-center justify-start">  
         <svg 
           viewBox="0 0 24 24" 
@@ -194,7 +194,7 @@
       </div>
 
       <!-- REPLY -->
-      <div :if={@verb == "reply"} class="">
+      <div :if={@verb == "Reply"} class="">
         <div class="flex items-top ">
           <div class="absolute left-3">
             <Bonfire.UI.Common.AvatarLive profile={e(@activity, :subject, :profile, nil)} />
@@ -227,7 +227,7 @@
 
 
         <div 
-        :if={@verb == "flag"}
+        :if={@verb == "Flag"}
         class="flex items-center justify-start">  
          <Solid.FlagIcon class="w-4 h-4 text-error" />
           <div class="flex-1 ml-2">

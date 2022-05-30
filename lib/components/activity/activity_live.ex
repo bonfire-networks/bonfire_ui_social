@@ -19,9 +19,9 @@ defmodule Bonfire.UI.Social.ActivityLive do
   prop check_object_boundary, :boolean, default: false
 
   # TODO: put in config and/or autogenerate with Verbs genserver
-  @reply_verbs ["reply", "respond"]
-  @create_verbs ["create"]
-  @react_verbs ["like", "boost", "flag", "tag"]
+  @reply_verbs ["Reply", "Respond"]
+  @create_verbs ["Create"]
+  @react_verbs ["Like", "Boost", "Flag", "Tag"]
   @create_or_reply_verbs @create_verbs ++ @reply_verbs
 
   def render(%{activity: %{} = activity} = assigns) do
@@ -36,13 +36,13 @@ defmodule Bonfire.UI.Social.ActivityLive do
 
     verb =
       Activities.verb_maybe_modify(
-        e(activity, :verb, nil) || e(assigns, :verb_default, "create"),
+        e(activity, :verb, nil) || e(assigns, :verb_default, "Create"),
         activity
       )
       # |> debug("verb modified")
 
     verb_display = Activities.verb_display(verb)
-    created_verb_display = Activities.verb_display("create")
+    created_verb_display = Activities.verb_display("Create")
     object_type = Bonfire.Common.Types.object_type(activity.object) |> debug("object_type")
     # |> String.downcase()
     object_type_readable = module_to_human_readable(object_type)
@@ -54,7 +54,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
     end
 
     permalink =
-      if thread_url && verb in ["reply", "respond"],
+      if thread_url && verb in @reply_verbs,
         do: "#{thread_url}##{activity.object.id}",
         else: "#{path(activity.object)}#"
 
@@ -151,7 +151,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
   end
 
   def preload(list_of_assigns) do
-    Bonfire.Boundaries.LiveHandler.preload_assigns(list_of_assigns)
+    Bonfire.Boundaries.LiveHandler.maybe_preload_and_check_boundaries(list_of_assigns)
   end
 
 

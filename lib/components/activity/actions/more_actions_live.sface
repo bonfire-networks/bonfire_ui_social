@@ -59,7 +59,7 @@
     
     <!-- Flag the action -->
     <li 
-      :if={e(current_user(assigns), :id, nil) != subject_id(assigns) and @verb !="flag"}
+      :if={e(current_user(assigns), :id, nil) != subject_id(assigns) and @verb !="Flag"}
       class=" hover:bg-neutral hover:bg-opacity-20">
       <Bonfire.UI.Common.FlagActionLive 
         object={@object}
@@ -71,7 +71,7 @@
 
     <!-- Flag the author -->
     <li 
-      :if={e(current_user(assigns), :id, nil) != subject_id(assigns) and @verb !="flag"}
+      :if={e(current_user(assigns), :id, nil) != subject_id(assigns) and @verb !="Flag"}
       class=" hover:bg-neutral hover:bg-opacity-20">
       <Bonfire.UI.Common.FlagActionLive 
         object={@object}
@@ -94,7 +94,7 @@
       class=" hover:bg-neutral hover:bg-opacity-20">
       <OpenModalLive
         id={ComponentID.new(OpenModalLive, @object)} 
-        title_text={l("Delete this")<>" "<>(if @verb in ["write", "create"], do: l("from feeds"), else: @verb)}
+        title_text={l("Delete this")<>" "<>(if @verb in ["Write", "Create"], do: l("from feeds"), else: @verb)}
         >
         {l "Deleting from feeds means the %{object} can still be accessed by anyone who has a direct link, but won't be discoverable via this instance's feeds.", object: e(assigns, :object_type_readable, l "object")}
         {l "Remote feeds won't be affected."} 
@@ -102,7 +102,7 @@
           <button class="flex items-center text-sm text-neutral" type="button">
             <Solid.TrashIcon class="w-4 h-4 mr-2 shrink-0 text-neutral text-opacity-70" />
             <span class="truncate ellipsis">
-              {l("Delete this")<>" "<>(if @verb in ["write", "create"], do: l("from feeds"), else: @verb)}
+              {l("Delete this")<>" "<>(if @verb in ["Write", "Create"], do: l("from feeds"), else: @verb)}
             </span>
           </button>
         </:open_btn>
@@ -112,7 +112,7 @@
           phx-value-id={e(@activity, :id, "")}
           class="btn btn-error">
           <Solid.TrashIcon class="w-4 h-4 mr-2 shrink-0 text-neutral text-opacity-70" />
-          <span class="truncate ellipsis">{l("Delete this")<>" "<>(if @verb in ["write", "create"], do: l("from feeds"), else: @verb)}</span> 
+          <span class="truncate ellipsis">{l("Delete this")<>" "<>(if @verb in ["Write", "Create"], do: l("from feeds"), else: @verb)}</span> 
         </button>
         </:action_btns>
       </OpenModalLive>

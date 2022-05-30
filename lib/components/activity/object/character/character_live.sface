@@ -130,7 +130,7 @@
   </LiveRedirect>
 
   <button 
-  :if={@verb=="request to follow"}
+  :if={@verb=="Request to Follow"}
   :on-click="Bonfire.Social.Follows:accept" 
   phx-value-id={e(@activity, :id, nil)}
   type="button" 
