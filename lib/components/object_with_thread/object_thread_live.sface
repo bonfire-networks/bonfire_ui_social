@@ -1,52 +1,12 @@
 <main class="flex flex-col flex-1 h-full">
   <div class="flex flex-col flex-1 grow bg-base-100 rounded-t-md">
-    <div class="sticky top-[72px] bg-base-200 flex z-[60] items-center p-3 pb-2 border-b rounded-t-md bg-base-200 border-base-content border-opacity-10" role="banner">
-      <a
-        aria-label="Navigate to the previous page"
-        href="javascript:window.history.back()"
-        class="btn btn-circle btn-ghost btn-sm"
-      >
-        <Outline.ChevronLeftIcon class="w-4 h-4 stroke-current" />
-      </a>
-      <div class="flex flex-col flex-1 ml-2">
-        <div class="font-bold text-base-content">{e(assigns, :page_title, l "Discussion")}</div> 
-        <div class="text-xs text-base-content text-opacity-70">{length(participants(assigns)) + 1 } {l "participants"}</div>
-      </div>
-      <div class="relative z-40 dropdown dropdown-end">
-        <label tabindex="0" class="flex normal-case btn place-content-center btn-circle btn-ghost btn-sm">
-            <Solid.DotsVerticalIcon class="w-5 h-5 text-base-content text-opacity-70" />
-        </label>
-        <ul tabindex="0" class="p-2 shadow dropdown-content menu bg-base-100 rounded-box w-52">
-          <li>
-            <Bonfire.UI.Common.OpenModalLive
-              :if={@thread_id}
-              id={ComponentID.new(Bonfire.UI.Common.OpenModalLive, @object)} 
-              title_text={e(assigns, :label, l "Edit the thread title")}
-              form_opts={%{"phx-submit"=> "Bonfire.Social.Objects:set_name"}}
-              >
-              <Form for={:thread}>
-                <TextInput name="name" class="input input-bordered w-[400px]" value={e(assigns, :page_title, "")} />
-              </Form>
-              <:open_btn>
-                <button>
-                  {l "Edit the thread title"}
-                </button>
-              </:open_btn>
-              <:action_btns>
-                <HiddenInput name="id" value={@thread_id} />
-                <button 
-                  class="btn btn-primary">
-                  {l "Save"}
-                </button>
-              </:action_btns>
-            </Bonfire.UI.Common.OpenModalLive>
-          </li>
-          <!-- <li><button>{l "View participants"}</button></li> -->
-        </ul>
-      </div>
-
-      
-    </div>
+    <Bonfire.UI.Social.ObjectHeaderLive 
+      page_title={e(assigns, :page_title, "")}
+      participants={participants(assigns)}
+      thread_id={e(assigns, :thread_id, nil)}
+      thread_mode={e(assigns, :thread_mode, nil)}
+      object={e(assigns, :object, nil)}
+    />
     <div class="flex-1">
     <Bonfire.UI.Social.ActivityLive
         id={"ta:"<>ulid(@activity)}
@@ -54,20 +14,20 @@
         thread_mode={e(assigns, :thread_mode, nil)}
         viewing_main_object={if e(assigns, :thread_mode, nil) != :flat, do: true, else: false}
         activity={@activity}
-        object={@object}
+        object={e(assigns, :object, nil)}
         participants={participants(assigns)}
         object_boundary={if e(assigns, :showing_within, nil)==:messages, do: :skip}
       />
     <Bonfire.UI.Social.ThreadLive 
-      id={@thread_id}
-      thread_id={@thread_id}
+      id={e(assigns, :thread_id, nil)}
+      thread_id={e(assigns, :thread_id, nil)}
       thread_mode={e(assigns, :thread_mode, nil)}
       reverse_order={e(assigns, :reverse_order, nil)}
       replies={e(assigns, :replies, nil)}
       threaded_replies={e(assigns, :threaded_replies, [])}
       page_info={e(assigns, :page_info, [])}
       activity={@activity}
-      object={@object}
+      object={e(assigns, :object, nil)}
       url={@url}
       showing_within={e(assigns, :showing_within, nil)}
     />
@@ -78,7 +38,7 @@
     :if={e(assigns, :thread_mode, nil) == :flat && current_user(assigns)}
     class="sticky bottom-6 relative z-[60] p-3 bg-base-100  rounded-b-md sm_background-invisible">
     <Bonfire.UI.Common.SmartInputLive
-      id={:smart_input}
+      id={:flat_smart_input}
       current_user={current_user(assigns)}
       reply_to_id={e(assigns, :reply_to_id, "")}
       thread_mode={e(assigns, :thread_mode, nil)}
@@ -88,7 +48,6 @@
       smart_input_prompt={e(assigns, :smart_input_prompt, "")}
       smart_input_text={e(assigns, :smart_input_text, "")}
       textarea_class={@textarea_class}
-      smart_input_class={@smart_input_class}
       showing_within={e(assigns, :showing_within, nil)}
       replied_activity_class={@replied_activity_class}
     />
@@ -96,7 +55,6 @@
 
 </main>
 
-<div class="sticky h-6 bg-base-300 z-[60] bottom-0"></div>
   <!-- {#if current_user(assigns) }
     <Bonfire.UI.Common.WidgetLive 
       widget_title="Participants"

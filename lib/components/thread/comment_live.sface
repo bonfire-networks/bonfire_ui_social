@@ -87,9 +87,9 @@
             </div>
           {/for}
 
-        {#else}
+        <!-- {#else} -->
 
-          {#case sub_replies_count(@comment)}
+          <!-- {#case sub_replies_count(@comment)}
 
             {#match sub_replies_count when is_integer(sub_replies_count) and sub_replies_count > 0}
               <div class="flex items-center -mx-2 -mt-1">
@@ -104,7 +104,7 @@
                 </div>
               </div>
             {#match _}
-          {/case}
+          {/case} -->
 
         {/if}
       </div>

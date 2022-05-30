@@ -86,6 +86,21 @@ defmodule Bonfire.Social.Posts.LiveHandler do
     )}
   end
 
+  def handle_event("switch_thread_mode", %{"thread_mode" => thread_mode} = _attrs, socket) do
+    IO.inspect(thread_mode, label: "THREAD MODE")
+    if (thread_mode == "flat") do
+      {:noreply,
+        assign(socket,
+        thread_mode: :thread
+      )}
+    else
+      {:noreply,
+        assign(socket,
+        thread_mode: :flat
+      )}
+    end  
+    
+  end
 
   def handle_event("input", %{"circles" => selected_circles} = _attrs, socket) when is_list(selected_circles) and length(selected_circles)>0 do
 

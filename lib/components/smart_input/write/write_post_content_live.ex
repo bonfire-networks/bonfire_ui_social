@@ -27,7 +27,6 @@ defmodule Bonfire.UI.Social.WritePostContentLive do
 
   # Classes to customize the smart input appearance
   prop textarea_class, :string
-  prop smart_input_class, :string
   prop replied_activity_class, :string
 
 

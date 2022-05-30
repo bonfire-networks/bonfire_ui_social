@@ -24,7 +24,6 @@
         reverse_order={true}
         showing_within={:messages}
         textarea_class={"h-8 max-h-16 resize-y max-w-full textarea prose prose-sm bg-base-200"}
-        smart_input_class={"bg-slate-50 h-full flex-1 rounded-md sticky bottom-0 messages_smart_input"}
         replied_activity_class={"relative mb-2 rounded-md bg-base-100 hover:bg-base-100"}
       /> 
     {#elseif @tab_id in ["compose", "select_recipients"]}
