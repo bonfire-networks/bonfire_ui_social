@@ -29,16 +29,16 @@
         hide_reply={e(assigns, :hide_reply, nil )}
         reply_to_text={text_only(e(@object, :post_content, :name, nil) || e(@object, :post_content, :summary, nil) || e(@object, :post_content, :html_body, e(@object, :id, "")))}
       />
-      <BoostActionLive
+      <Bonfire.UI.Common.BoostActionLive
         :if={@object_type not in [Bonfire.Data.Social.Message]} 
-        id={ComponentID.new(BoostActionLive, @object)} 
+        id={ComponentID.new(Bonfire.UI.Common.BoostActionLive, ulid(@object))} 
         object={@object} 
         object_type={@object_type}
         showing_within={e(assigns, :showing_within, nil)}
         boost_count={e(@activity, :boost_count, nil)}
         />
       <Bonfire.UI.Common.LikeActionLive
-        id={ComponentID.new(Bonfire.UI.Common.LikeActionLive, @object)} 
+        id={ComponentID.new(Bonfire.UI.Common.LikeActionLive, ulid(@object))} 
         object={@object} 
         showing_within={e(assigns, :showing_within, nil)}
         like_count={e(@activity, :like_count, nil)} 

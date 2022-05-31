@@ -37,6 +37,7 @@
                 activity={Map.drop(activity, [:object])}
                 object={object}
                 thread_object={@thread_object}
+                feed_id={@feed_id}
                 showing_within={:thread}
                 thread_mode={e(assigns, :thread_mode, nil)}
                 object_boundary={if e(assigns, :showing_within, nil)==:messages, do: :skip}
@@ -49,6 +50,7 @@
                 activity={Map.drop(activity, [:object])}
                 object={object}
                 thread_object={@thread_object}
+                feed_id={@feed_id}
                 showing_within={:thread}
                 thread_mode={e(assigns, :thread_mode, nil)}
                 object_boundary={if e(assigns, :showing_within, nil)==:messages, do: :skip}
@@ -78,6 +80,7 @@
                 thread_id={@thread_id} 
                 comment={subreply}
                 thread_object={@thread_object}
+                feed_id={@feed_id}
                 child_replies={sub_child_replies}
                 thread_level={@thread_level+1}
                 thread_mode={e(assigns, :thread_mode, nil)}

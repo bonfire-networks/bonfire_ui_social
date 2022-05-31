@@ -30,6 +30,7 @@
                   activity={e(entry, :activity, nil) || e(entry, :edge, nil) || entry}
                   showing_within={e(assigns, :showing_within, nil)}
                   verb_default={e(assigns, :verb_default, nil)}
+                  feed_id={e(assigns, :feed_id, nil)}
                   />
               </div>
             {#match _}

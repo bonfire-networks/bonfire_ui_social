@@ -8,6 +8,7 @@
       <Bonfire.UI.Social.ObjectThreadLive
         page={@page}
         page_title={@page_title}
+        feed_id={@feed_id}
         create_activity_type={e(assigns, :create_activity_type, nil)}
         to_circles={e(assigns, :to_circles, [])}
         participants={e(assigns, :participants, [])}

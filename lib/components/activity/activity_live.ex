@@ -7,6 +7,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
   prop activity, :map
   prop object, :any
   prop verb_default, :string
+  prop feed_id, :any, default: nil
   prop viewing_main_object, :boolean, default: false
   prop activity_inception, :string
   prop showing_within, :any, default: :feed
@@ -32,7 +33,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
       |> repo().maybe_preload(:media)
       # |> debug("Activity provided")
       |> Map.put(:object, Activities.object_from_activity(assigns))
-      |> debug("Activity with :object")
+      # |> debug("Activity with :object")
 
     verb =
       Activities.verb_maybe_modify(
@@ -111,13 +112,19 @@ defmodule Bonfire.UI.Social.ActivityLive do
       "cursor-text": e(assigns, :thread_mode, nil) == :flat,
       "reply": e(@object, :id, nil) != nil and e(@activity, :replied, :reply_to_id, nil) != nil and e(@activity, :id, nil) != nil,
     }>
+    <form
+      phx-submit="Bonfire.Social.Feeds:mark_read"
+      phx-target={"#badge_counter_#{@feed_id}"}
+      x-intersect.once={intersect_event(assigns)}>
+      <input type="hidden" name="feed_id" value={@feed_id} />
+      <input type="hidden" name="activity_id" value={e(@activity, :id, nil)} />
       {#for {component, component_assigns} when is_atom(component) <- components}
         <Surface.Components.Dynamic.Component
           module={component}
           id={e(component_assigns, :id, nil)}
           myself={nil}
           created_verb_display={@created_verb_display}
-          showing_within={e(assigns, :showing_within, :feed)}
+          showing_within={@showing_within}
           thread_mode={e(assigns, :thread_mode, nil)}
           participants={e(assigns, :participants, [])}
           activity={e(component_assigns, :activity, @activity)}
@@ -138,6 +145,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
           media={e(component_assigns, :media, nil)}
         />
       {/for}
+    </form>
     </article>
     """
   end
@@ -154,6 +162,8 @@ defmodule Bonfire.UI.Social.ActivityLive do
     Bonfire.Boundaries.LiveHandler.maybe_preload_and_check_boundaries(list_of_assigns)
   end
 
+  defp intersect_event(%{showing_within: showing_within, feed_id: feed_id}) when showing_within in [:messages, :thread, :notifications] and is_binary(feed_id), do: "$el.dispatchEvent( new Event(\"submit\", {bubbles: true, cancelable: true}) )"
+  defp intersect_event(_), do: nil
 
   # don't show subject twice
   def component_activity_subject(_, %{object: %Bonfire.Data.Identity.User{}}, _), do: []

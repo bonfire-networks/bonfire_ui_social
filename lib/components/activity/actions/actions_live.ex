@@ -1,8 +1,6 @@
 defmodule Bonfire.UI.Social.Activity.ActionsLive do
   use Bonfire.UI.Common.Web, :stateless_component
 
-  alias Bonfire.UI.Common.BoostActionLive
-
   prop activity, :map
   prop object, :any
   prop object_type, :any

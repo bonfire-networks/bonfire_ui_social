@@ -11,6 +11,7 @@ defmodule  Bonfire.UI.Social.ObjectThreadLive do
   prop smart_input_text, :string
   prop reply_to_id, :string
   prop thread_id, :string, default: nil
+  prop feed_id, :any, default: nil
   prop activity, :any
   prop showing_within, :any
   prop object, :any

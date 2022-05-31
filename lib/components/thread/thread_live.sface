@@ -18,6 +18,7 @@
               child_replies={child_replies}
               reply_to_id={e(reply, :id, nil)}
               thread_id={@thread_id}
+              feed_id={@feed_id}
               thread_object={@object}
               thread_level={1}
               thread_mode={e(assigns, :thread_mode, nil)}
@@ -33,6 +34,7 @@
               comment={reply}
               reply_to_id={e(reply, :id, nil)}
               thread_id={@thread_id}
+              feed_id={@feed_id}
               thread_object={@object}
               thread_mode={e(assigns, :thread_mode, nil)}
               smart_input_text={@smart_input_text}

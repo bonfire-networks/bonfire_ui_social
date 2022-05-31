@@ -8,7 +8,6 @@ defmodule Bonfire.Social.Activities.CreatePost.Test do
 
   describe "create a post" do
 
-    @tag :fixme
     test "shows a confirmation flash message" do
 
       some_account = fake_account!()
@@ -31,7 +30,7 @@ defmodule Bonfire.Social.Activities.CreatePost.Test do
 
     end
 
-    test "works" do
+    test "shows up on my profile timeline" do
 
       some_account = fake_account!()
       someone = fake_user!(some_account)
@@ -46,9 +45,8 @@ defmodule Bonfire.Social.Activities.CreatePost.Test do
       assert view
       |> form("#smart_input form")
       |> render_submit(%{"boundary_selected" => "public", "post" => %{"post_content" => %{"html_body" => content}}})
-      # |> Floki.text() =~ "Posted"
 
-      # TODO: check if post appears instantly (pubsub)
+      # TODO: check if post appears instantly on home feed as well (with pubsub)
 
       next = "/user"
       {view, doc} = floki_live(conn, next) #|> IO.inspect

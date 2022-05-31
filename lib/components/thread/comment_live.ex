@@ -9,6 +9,7 @@ defmodule Bonfire.UI.Social.CommentLive do
   prop thread_level, :any
   prop child_replies, :any
   prop thread_id, :any
+  prop feed_id, :any, default: nil
   prop sub_replies_count, :integer, default: 0
   prop url, :string
   prop thread_mode, :any

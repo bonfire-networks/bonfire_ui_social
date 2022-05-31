@@ -2,45 +2,41 @@ defmodule Bonfire.Social.Likes.LiveHandler do
   use Bonfire.UI.Common.Web, :live_handler
   import Where
 
-  def handle_event("like", %{"direction"=>"up", "id"=> id} = params, socket) do # like in LV
-    #debug(socket)
+  def handle_event("like", %{"direction"=>"up"} = params, %{assigns: %{object: object}} = socket) do # like in LV stateful
+    do_like(object, params, socket)
+  end
 
+  def handle_event("like", %{"direction"=>"up", "id"=> id} = params, socket) do # like in LV
+    do_like(id, params, socket)
+  end
+
+  def handle_event("like", %{"direction"=>"down", "id"=> id} = params, socket) do # unlike in LV
+    with _ <- Bonfire.Social.Likes.unlike(current_user(socket), id) do
+      like_action(id, false, params, socket)
+    end
+  end
+
+  def do_like(object, params, socket) do
     with %{id: _} = current_user <- current_user(socket),
-         {:ok, like} <- Bonfire.Social.Likes.like(current_user, id) do
-      set_liked(id, like, params, socket)
+         {:ok, _like} <- Bonfire.Social.Likes.like(current_user, object) do
+      like_action(object, true, params, socket)
 
     else {:error, %Ecto.Changeset{errors: [
        liker_id: {"has already been taken",
         _}
      ]}} ->
       debug("previously liked, but UI didn't know")
-      set_liked(id, %{id: true}, params, socket)
+      like_action(object, true, params, socket)
     end
   end
 
-  def set_liked(id, like, params, socket) do
-    set = [
-        my_like: true,
-        # like_count: liker_count(params)+1,
-      ]
-
-      ComponentID.send_assigns(e(params, "component", Bonfire.UI.Common.LikeActionLive), id, set, socket)
-
+  defp like_action(object, liked?, params, socket) do
+    ComponentID.send_assigns(
+      e(params, "component", Bonfire.UI.Common.LikeActionLive),
+      ulid(object),
+      [my_like: liked?],
+      socket)
   end
-
-
-  def handle_event("like", %{"direction"=>"down", "id"=> id} = params, socket) do # unlike in LV
-    with _ <- Bonfire.Social.Likes.unlike(current_user(socket), id) do
-      set = [
-      my_like: false,
-      # like_count: liker_count(params)-1
-      ]
-
-    ComponentID.send_assigns(e(params, "component", Bonfire.UI.Common.LikeActionLive), id, set, socket)
-
-    end
-  end
-
 
   def liker_count(%{"current_count"=> a}), do: a |> String.to_integer
   def liker_count(%{current_count: a}), do: a |> String.to_integer

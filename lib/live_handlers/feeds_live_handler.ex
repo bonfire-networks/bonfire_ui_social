@@ -25,33 +25,35 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
   def handle_event("reply_to_activity", _, socket) do
     # debug("reply!")
 
-    activity = e(socket, :assigns, :activity, nil)
+    activity = e(socket.assigns, :activity, nil)
+
+    # FIXME: don't re-load this here as we already have the list (at least when we're in a thread)
     participants = Bonfire.Social.Threads.list_participants(activity, nil, current_user: current_user(socket))
     to_circles = if length(participants)>0, do: Enum.map(participants, & {e(&1, :character, :username, l "someone"), e(&1, :id, nil)})
-
     mentions = if length(participants)>0, do: Enum.map_join(participants, " ", & "@"<>e(&1, :character, :username, ""))<>" "
-    IO.inspect(mentions, label: "PARTS")
+    # IO.inspect(mentions, label: "PARTS")
 
     # we reply to objects, not activities
     reply_to_id =
-      e(socket, :assigns, :object_id, nil)
-      || e(socket, :assigns, :object, :id, nil)
+      e(socket.assigns, :object_id, nil)
+      || e(socket.assigns, :object, :id, nil)
       || e(activity, :object, :id, nil)
       || e(activity, :object_id, nil)
 
-    thread_id = e(activity, :replied, :thread_id, nil) || e(socket, :assigns, :object, :replied, :thread_id, nil)
+    thread_id = e(activity, :replied, :thread_id, nil) || e(socket.assigns, :object, :replied, :thread_id, nil)
 
+    debug("send activity to smart input")
     send_update(Bonfire.UI.Common.SmartInputLive,
       id: :smart_input,
       # we reply to objects, not activities
       reply_to_id: reply_to_id,
       thread_id: thread_id,
       activity: activity,
-      object: e(socket, :assigns, :object, nil),
+      object: e(socket.assigns, :object, nil),
       smart_input_text: mentions,
       to_circles: to_circles,
       activity_inception: "reply_to",
-      preset_boundary: Bonfire.Boundaries.preset_boundary_name_from_acl(e(socket, :assigns, :object_boundary, nil))
+      preset_boundary: Bonfire.Boundaries.preset_boundary_name_from_acl(e(socket.assigns, :object_boundary, nil))
     )
 
     {:noreply, socket}
@@ -95,6 +97,37 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
     {:noreply, socket}
   end
 
+  # def handle_event("mark_read", _params, %{assigns: %{feed_id: feed_id, activity: %{id: activity_id}}} = socket) when is_binary(feed_id) and is_binary(activity_id) do
+  #   warn("TODO: mark as read: #{activity_id} in #{feed_id}")
+
+  #   # send_update(Bonfire.UI.Common.BadgeCounterLive, id: feed_id, count--)
+
+  #   {:noreply, socket}
+  # end
+
+  def handle_event("mark_read", %{"feed_id"=> feed_id, "activity_id"=> activity_id}, %{assigns: %{count: count}} = socket) when is_binary(feed_id) and is_binary(activity_id) do
+    warn("TODO: mark as read: #{activity_id} in #{feed_id}")
+
+    {:noreply, socket
+    |> assign(
+      count: count-1
+    )}
+  end
+
+  def handle_event("mark_read", params, socket) do
+    # warn(assigns, "mark as read: needed params not found")
+    warn(params, "mark as read: needed params not found")
+    {:noreply, socket}
+  end
+
+  def handle_info({:count_increment, feed_ids}, socket) do
+    warn(feed_ids, "count_increment")
+
+    send_updates(feed_ids, [count_increment: 1], Bonfire.UI.Common.BadgeCounterLive)
+
+    {:noreply, socket}
+  end
+
   def handle_info({:new_activity, data}, socket) do
     debug(data[:feed_ids], "received new_activity for these feed ids")
     # info(data)
@@ -106,22 +139,23 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
       my_home_feed_ids = Bonfire.Social.Feeds.my_home_feed_ids(current_user)
 
       feed_ids = if Enum.any?(data[:feed_ids], fn feed_id -> feed_id in my_home_feed_ids end) do
-        data[:feed_ids] ++ [Bonfire.Social.Feeds.my_feed_id(:inbox, current_user)] # if activity targets any feeds we're following and/or meant to see in home feed, then target the home feed component
+        # if activity targets any feeds we're following and/or meant to see in home feed, then target the home feed component
+        data[:feed_ids] ++ [Bonfire.Social.Feeds.my_feed_id(:inbox, current_user)]
       else
         data[:feed_ids]
       end
 
       debug(feed_ids, "send_update to feeds")
 
-      send_updates(feed_ids, data[:activity])
+      send_updates(feed_ids, new_activity: data[:activity])
     end
     {:noreply, socket}
   end
 
-  def send_updates(feed_ids, activity) do
+  def send_updates(feed_ids, assigns, component \\ Bonfire.UI.Social.FeedLive) do
     for feed_id <- feed_ids do
-      # debug(feed_id, "New activity for feed")
-      send_update(Bonfire.UI.Social.FeedLive, id: feed_id, new_activity: activity)
+      # debug(feed_id, "send_update")
+      send_update(component, [id: feed_id] ++ assigns)
     end
   end
 

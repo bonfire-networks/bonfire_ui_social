@@ -12,17 +12,10 @@ defmodule Bonfire.Social.Feeds.MyFeed.Test do
     test "not logged in, display instance feed instead" do
       conn = conn()
       conn = get(conn, "/feed")
-      feed_id = Bonfire.Social.Feeds.my_feed_id(:inbox, nil)
       assert redirected_to(conn) =~ "/login"
-
-      # doc = floki_response(conn)
-      # # main = Floki.find(doc, "main") |> IO.inspect
-      # assert [] = Floki.find(doc, "[id='#{feed_id}']")
-
       # feed_id = Bonfire.Social.Feeds.named_feed_id(:local)
       # assert [_] = Floki.find(doc, "[id='#{feed_id}']")
     end
-
 
     test "with user" do
       account = fake_account!()

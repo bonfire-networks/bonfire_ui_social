@@ -20,11 +20,15 @@ defmodule Bonfire.UI.Social.MessagesLive do
   end
 
   defp mounted(params, _session, socket) do
+
+    feed_id = Bonfire.Social.Feeds.my_feed_id(:inbox, socket)
+
     {:ok,
       socket
       |> assign(
         page_title: l("Messages"),
         page: "messages",
+        feed_id: feed_id,
         activity: nil,
         object: nil,
         reply_to_id: nil,
