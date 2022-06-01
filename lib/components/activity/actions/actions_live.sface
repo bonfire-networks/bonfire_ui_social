@@ -7,7 +7,7 @@
       "thread_actions mt-1 flex items-center": e(assigns, :showing_within, nil) == :thread,
       "feed_actions mt-0 -ml-2": e(assigns, :viewing_main_object, nil) != true,
       "mt-1": e(assigns, :showing_within, nil) == :widget,
-      "absolute z-40 p-0.5 h-8 hidden group-hover:flex rounded-md top-[-24px] right-[12px] bg-base-100 border border-base-200": e(assigns, :thread_mode, nil) == :flat,
+      "absolute z-50 p-0.5 h-8 hidden group-hover:flex rounded-md top-[-24px] right-[12px] bg-base-100 border border-base-200": e(assigns, :thread_mode, nil) == :flat,
       }>
 
     <div class={

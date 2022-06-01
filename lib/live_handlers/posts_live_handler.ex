@@ -39,9 +39,9 @@ defmodule Bonfire.Social.Posts.LiveHandler do
 
   def handle_event("post", params, socket) do # if not a message, it's a post by default
     attrs = params
-    |> debug("handle_event: post inputs")
+    # |> debug("handle_event: post inputs")
     |> input_to_atoms()
-    |> debug("handle_event: post attrs")
+    # |> debug("handle_event: post attrs")
 
     current_user = current_user(socket)
 

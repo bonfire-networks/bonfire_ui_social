@@ -1,6 +1,4 @@
 
-<!-- {#if !@hide_reply } -->
-  
 <div 
   class="relative z-20 flex items-center tooltip tooltip-bottom" 
   data-tip={l "Reply"}
@@ -25,4 +23,3 @@
     {/if}
   </span>
 </div>
-<!-- {/if} -->

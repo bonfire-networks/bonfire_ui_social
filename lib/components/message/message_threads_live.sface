@@ -63,7 +63,7 @@
       />
 
       {#else}
-      <div>{l "You dont have any messages yet"}</div>
+      <div class="p-3 text-sm rounded-b bg-base-100 text-base-content/80">{l "You dont have any messages yet"}</div>
       {/if}
   </div>
 </div>

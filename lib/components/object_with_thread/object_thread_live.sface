@@ -37,10 +37,10 @@
   </div>
 
   <div 
-    :if={e(assigns, :thread_mode, nil) == :flat && current_user(assigns)}
+    :if={e(assigns, :showing_within, nil) == :messages && current_user(assigns)}
     class="sticky bottom-6 relative z-[60] p-3 bg-base-100  rounded-b-md sm_background-invisible">
     <Bonfire.UI.Common.SmartInputLive
-      id={:flat_smart_input}
+      id={:smart_input}
       current_user={current_user(assigns)}
       reply_to_id={e(assigns, :reply_to_id, "")}
       thread_mode={e(assigns, :thread_mode, nil)}

@@ -12,9 +12,8 @@
         page_info={@page_info} 
         target={@myself} 
       /> -->
-
+      {#if length(@feed) > 0}
       <div 
-        :if={is_list(@feed) or length(@feed) > 0}
         id={"feed:#{e(assigns, :feed_id, @id)}"} 
         data-id="feed" 
         phx-update={e(assigns, :feed_update_mode, "append")} 
@@ -34,19 +33,17 @@
                   />
               </div>
             {#match _}
-              
           {/case}
-
-        {#else}
-          <div id="empty-feed" class="flex items-center mt-12 place-content-center">
-            <Bonfire.UI.Common.EmptyFeed
-              feedback_title={e(assigns, :feedback_title, nil)}
-              feedback_message={e(assigns, :feedback_message, nil)}
-            /> 
-          </div>
         {/for}
       </div>
-
+      {#else}
+        <div id="empty-feed" class="flex items-center my-12 place-content-center">
+          <Bonfire.UI.Common.EmptyFeed
+            feedback_title={e(assigns, :feedback_title, nil)}
+            feedback_message={e(assigns, :feedback_message, nil)}
+          /> 
+        </div>
+      {/if}
       <Bonfire.UI.Common.LoadMoreLive 
         :if={e(assigns, :hide_load_more, false) != true}
         live_handler={Bonfire.Social.Feeds} 
