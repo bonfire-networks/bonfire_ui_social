@@ -238,6 +238,8 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
       page_title: l("Federated activities from remote instances"),
       page: "federation",
       feed_title: l("Activities from around the fediverse"),
+      feedback_title: l("Your fediverse feed is empty"),
+      feedback_message: l("It seems you and your friends do not follow any other users on a different instance"),
       feed_id: feed_id,
       feed: e(feed, :edges, []),
       page_info: e(feed, :page_info, []),

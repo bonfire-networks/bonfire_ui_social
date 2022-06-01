@@ -4,5 +4,7 @@
   feed={@feed}
   feed_id={@feed_id}
   page_info={@page_info}
+  feedback_title={@feedback_title}
+  feedback_message={@feedback_message}
   showing_within={:notifications}
 />

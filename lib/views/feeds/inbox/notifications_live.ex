@@ -26,6 +26,8 @@ defmodule Bonfire.UI.Social.Feeds.NotificationsLive do
       page: "notifications",
       selected_tab: "notifications",
       page_title: l("Notifications"),
+      feedback_title: l("You have no notifications"),
+      feedback_message: l("Did you know you can customise which activities you want to be notified for in your settings ?"),
       current_user: current_user,
       feed_id: feed_id,
       feed: e(feed, :edges, []),

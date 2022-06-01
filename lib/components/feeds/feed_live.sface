@@ -38,8 +38,11 @@
           {/case}
 
         {#else}
-          <div id="empty-feed">
-            <Bonfire.UI.Common.EmptyFeed/> 
+          <div id="empty-feed" class="flex items-center mt-12 place-content-center">
+            <Bonfire.UI.Common.EmptyFeed
+              feedback_title={e(assigns, :feedback_title, nil)}
+              feedback_message={e(assigns, :feedback_message, nil)}
+            /> 
           </div>
         {/for}
       </div>

@@ -7,6 +7,8 @@
         :if={@feed_id}
         id={@feed_id}
         feed_id={@feed_id}
+        feedback_title={e(assigns, :feedback_title, nil)}
+        feedback_message={e(assigns, :feedback_message, nil)}
         feed_ids={e(assigns, :feed_ids, nil)}
         feed={@feed}
         page_info={@page_info}

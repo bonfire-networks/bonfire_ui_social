@@ -39,7 +39,7 @@
           </:action_btns>
         </Bonfire.UI.Common.OpenModalLive>
       </li>
-      <li>
+      <!-- <li>
         <button 
           phx-value-thread_mode={e(assigns, :thread_mode, :thread)} 
           phx-click="Bonfire.Social.Posts:switch_thread_mode">
@@ -49,7 +49,7 @@
           {l "Flat thread mode"}
           {/if}
         </button>
-      </li>
+      </li> -->
     </ul>
   </div>
 </div>

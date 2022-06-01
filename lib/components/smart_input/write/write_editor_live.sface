@@ -6,8 +6,8 @@
       module={component}
       {...assigns}
     />
-    <noscript>
     <!-- fallback if JS is disabled -->
+    <!-- <noscript>
       <TextArea
         opts={
           value: @smart_input_text,
@@ -15,7 +15,7 @@
         }
         class={@textarea_class}
       />
-    </noscript>
+    </noscript> -->
   {#match _}
     <TextArea
       opts={

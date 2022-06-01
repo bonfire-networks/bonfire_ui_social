@@ -8,6 +8,8 @@ defmodule Bonfire.UI.Social.FeedLive do
   prop feed_id, :string
   prop feed_ids, :any
   prop feed, :list
+  prop feedback_title, :string
+  prop feedback_message, :string
   prop page_info, :map
   prop showing_within, :any
   prop feed_update_mode, :string, default: "prepend"
