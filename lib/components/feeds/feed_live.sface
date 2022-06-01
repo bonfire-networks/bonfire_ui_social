@@ -15,12 +15,12 @@
 
       <div 
         :if={is_list(@feed) or length(@feed) > 0}
-        id={"feed:"<>e(assigns, :feed_id, @id)} 
+        id={"feed:#{e(assigns, :feed_id, @id)}"} 
         data-id="feed" 
         phx-update={e(assigns, :feed_update_mode, "append")} 
         class="divide-y divide-base-content divide-opacity-10">
         {#for entry <- @feed}
-          {#case e(assigns, :feed_id, @id)<>"-"<>( e(entry, :id, nil) || e(entry, :activity, :id, nil) || e(entry, :object, :id, nil) || Pointers.ULID.generate())}
+          {#case "#{e(assigns, :feed_id, @id)}-"<>( e(entry, :id, nil) || e(entry, :activity, :id, nil) || e(entry, :object, :id, nil) || Pointers.ULID.generate())}
             {#match cid}
               <div
                 id={cid}

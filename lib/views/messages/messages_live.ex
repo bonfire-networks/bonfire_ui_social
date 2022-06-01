@@ -134,17 +134,19 @@ defmodule Bonfire.UI.Social.MessagesLive do
     if not is_ulid?(id) do
       do_handle_params(%{"username" => id}, url, socket)
     else
+      # show a message thread
+
       current_user = current_user(socket)
 
       with {:ok, message} <- Bonfire.Social.Messages.read(id, current_user: current_user) do
-        # dump(message, "the queried message")
+        # dump(message, "the first message in thread")
 
         {activity, message} = Map.pop(message, :activity)
         {preloaded_object, activity} = Map.pop(activity, :object)
         activity = Bonfire.Social.Activities.activity_preloads(activity, :all, current_user: current_user)
 
         message = Map.merge(message, preloaded_object)
-                |> debug("the message object")
+                # |> debug("the message object")
 
         reply_to_id = e(params, "reply_to_id", id)
         thread_id = e(activity, :replied, :thread_id, id)

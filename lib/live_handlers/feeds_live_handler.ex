@@ -106,7 +106,13 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
   # end
 
   def handle_event("mark_read", %{"feed_id"=> feed_id, "activity_id"=> activity_id}, %{assigns: %{count: count}} = socket) when is_binary(feed_id) and is_binary(activity_id) do
-    warn("TODO: mark as read: #{activity_id} in #{feed_id}")
+    current_user = current_user(socket)
+
+    if current_user, do: Task.async(fn ->
+      # asynchronously simply so the count is updated quicker for the user
+      debug("mark as read: #{activity_id} in #{feed_id}")
+      Bonfire.Social.Seens.mark_seen(current_user, activity_id)
+    end)
 
     {:noreply, socket
     |> assign(

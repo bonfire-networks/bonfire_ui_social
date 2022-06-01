@@ -63,7 +63,14 @@ defmodule Bonfire.UI.Social.ThreadLive do
 
       max_depth =  Config.get(:thread_default_max_depth, 3)
 
-      with %{edges: replies, page_info: page_info} <- Bonfire.Social.Threads.list_replies(thread_id, current_user: current_user, after: e(assigns, :after, nil), max_depth: max_depth, thread_mode: e(assigns, :thread_mode, nil), reverse_order: e(assigns, :reverse_order, nil)) do
+      with %{edges: replies, page_info: page_info} <- Bonfire.Social.Threads.list_replies(thread_id,
+        current_user: current_user,
+        after: e(assigns, :after, nil),
+        max_depth: max_depth,
+        thread_mode: e(assigns, :thread_mode, nil),
+        reverse_order: e(assigns, :reverse_order, nil),
+        showing_within: e(assigns, :showing_within, nil)
+      ) do
         # debug(thread_id, "thread_id")
         debug(replies, "queried replies")
 

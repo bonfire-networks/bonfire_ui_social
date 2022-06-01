@@ -33,7 +33,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
       |> repo().maybe_preload(:media)
       # |> debug("Activity provided")
       |> Map.put(:object, Activities.object_from_activity(assigns))
-      # |> debug("Activity with :object")
+      |> dump("Activity with :object")
 
     verb =
       Activities.verb_maybe_modify(
@@ -111,12 +111,13 @@ defmodule Bonfire.UI.Social.ActivityLive do
       "cursor-text": e(assigns, :showing_within, nil) == :thread and e(assigns, :thread_mode, nil) != :flat,
       "cursor-text": e(assigns, :thread_mode, nil) == :flat,
       "reply": e(@object, :id, nil) != nil and e(@activity, :replied, :reply_to_id, nil) != nil and e(@activity, :id, nil) != nil,
+      "opacity-60": e(@activity, :seen, nil) !=nil
     }>
     <form
       phx-submit="Bonfire.Social.Feeds:mark_read"
       phx-target={"#badge_counter_#{@feed_id}"}
       x-intersect.once={intersect_event(assigns)}>
-      <input type="hidden" name="feed_id" value={@feed_id} />
+      <input :if={@feed_id} type="hidden" name="feed_id" value={@feed_id} />
       <input type="hidden" name="activity_id" value={e(@activity, :id, nil)} />
       {#for {component, component_assigns} when is_atom(component) <- components}
         <Surface.Components.Dynamic.Component
@@ -162,6 +163,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
     Bonfire.Boundaries.LiveHandler.maybe_preload_and_check_boundaries(list_of_assigns)
   end
 
+  defp intersect_event(%{activity: %{seen: %{id: _}}}), do: nil # already seen
   defp intersect_event(%{showing_within: showing_within, feed_id: feed_id}) when showing_within in [:messages, :thread, :notifications] and is_binary(feed_id), do: "$el.dispatchEvent( new Event(\"submit\", {bubbles: true, cancelable: true}) )"
   defp intersect_event(_), do: nil
 

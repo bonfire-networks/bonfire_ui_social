@@ -9,7 +9,6 @@
   <div 
     phx-click="Bonfire.Social.Feeds:open_activity"
     phx-value-ignore={true}
-    type="button"
     role="button"
     tabindex="0"
     class={"btn btn-ghost btn-circle btn-sm"}> 
