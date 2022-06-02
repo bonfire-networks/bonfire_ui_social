@@ -2,7 +2,7 @@
     <Bonfire.UI.Common.PageHeaderLive 
       before
       page_title={e(assigns, :feed_title, @page_title)} />
-    <div class="flex-1 bg-base-100 rounded-b-md">
+    <div class="flex-1 bg-base-100 rounded-b-md ">
       <Bonfire.UI.Social.FeedLive 
         :if={@feed_id}
         id={@feed_id}

@@ -56,7 +56,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
 
     permalink =
       if thread_url && verb in @reply_verbs,
-        do: "#{thread_url}##{activity.object.id}",
+        do: "#{thread_url}#activity-#{activity.object.id}",
         else: "#{path(activity.object)}#"
 
     assigns = assigns
