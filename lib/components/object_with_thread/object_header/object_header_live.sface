@@ -40,17 +40,19 @@
             </:action_btns>
           </Bonfire.UI.Common.OpenModalLive>
         </li>
-         <li>
+         <li
+          :if={module_enabled?(Bonfire.UI.Me.ProfileItemLive)}
+          >
           <Bonfire.UI.Common.OpenModalLive
             :if={e(assigns, :thread_id, nil)}
             id={ComponentID.new(Bonfire.UI.Common.OpenModalLive, e(assigns, :object, nil))} 
             title_text={to_string(length(e(assigns, :participants, []))) <> " " <> l("participants")}
-            
             >
             <div class="flex flex-col divide-y divide-base-content/10 ">
             {#for p <- e(assigns, :participants, [])}
               <div class="py-2">
-                <Bonfire.UI.Me.ProfileItemLive 
+                <Surface.Components.Dynamic.Component
+                  module={Bonfire.UI.Me.ProfileItemLive}
                   character={e(p, :character, nil) || e(p, :activity, :subject, :character, nil)} 
                   profile={e(p, :profile, nil) || e(p, :activity, :subject, :profile, nil)}
                   class={"btn btn-square btn-ghost btn-sm"} 
