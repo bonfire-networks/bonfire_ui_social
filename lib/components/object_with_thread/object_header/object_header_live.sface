@@ -1,4 +1,4 @@
-<div class="sticky top-[72px] bg-base-200 z-40 p-3 pb-2 border-b rounded-t-md bg-base-200 border-base-content border-opacity-10" role="banner">
+<div class="sticky top-0 tablet:top-[72px] bg-base-200 z-40 p-3 pb-2 border-b rounded-t-md bg-base-200 border-base-content/10" role="banner">
   <div class="flex items-center">
     <a
       aria-label="Navigate to the previous page"
