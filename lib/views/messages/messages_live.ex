@@ -21,7 +21,8 @@ defmodule Bonfire.UI.Social.MessagesLive do
 
   defp mounted(params, _session, socket) do
 
-    feed_id = Bonfire.Social.Feeds.my_feed_id(:inbox, socket)
+    feed_id = :inbox
+    # feed_id = Bonfire.Social.Feeds.my_feed_id(feed_id, socket)
 
     {:ok,
       socket

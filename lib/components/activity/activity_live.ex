@@ -25,7 +25,17 @@ defmodule Bonfire.UI.Social.ActivityLive do
   @react_verbs ["Like", "Boost", "Flag", "Tag"]
   @create_or_reply_verbs @create_verbs ++ @reply_verbs
 
-  def render(%{activity: %{} = activity} = assigns) do
+  def preload(list_of_assigns) do
+    Bonfire.Boundaries.LiveHandler.maybe_preload_and_check_boundaries(list_of_assigns)
+  end
+
+  def update(assigns, %{assigns: %{activity_components: _}} = socket) do
+    info("Activity already prepared")
+    {:ok, socket |> assign(assigns)}
+  end
+
+  def update(%{activity: %{} = activity} = assigns, socket) do
+    debug("Preparing Activity")
     # debug(assigns, "ActivityLive initial assigns")
 
     activity =
@@ -33,7 +43,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
       |> repo().maybe_preload(:media)
       # |> debug("Activity provided")
       |> Map.put(:object, Activities.object_from_activity(assigns))
-      |> dump("Activity with :object")
+      # |> dump("Activity with :object")
 
     verb =
       Activities.verb_maybe_modify(
@@ -59,23 +69,8 @@ defmodule Bonfire.UI.Social.ActivityLive do
         do: "#{thread_url}#activity-#{activity.object.id}",
         else: "#{path(activity.object)}#"
 
-    assigns = assigns
-      |> assigns_merge(
-        object: activity.object,
-        object_id: e(activity.object, :id, nil) || e(activity, :id, "no-object-id"),
-        object_type: object_type,
-        object_type_readable: object_type_readable,
-        date_ago: date_from_now(ulid(activity) || ulid(activity.object)),
-        activity: activity |> Map.drop([:object]),
-        verb: verb,
-        verb_display: verb_display,
-        created_verb_display: created_verb_display,
-        permalink: permalink
-      )
-      # |> dump("all assigns")
-      |> Map.new()
-
     # permalink = path(activity.object)
+
     components = (
       component_activity_subject(verb, activity, assigns)
       ++
@@ -94,6 +89,25 @@ defmodule Bonfire.UI.Social.ActivityLive do
       end)
       # |> debug("components")
 
+    {:ok, socket
+      |> assign(assigns)
+      |> assign(
+        activity: activity |> Map.drop([:object]),
+        object: activity.object,
+        object_id: e(activity.object, :id, nil) || e(activity, :id, "no-object-id"),
+        object_type: object_type,
+        object_type_readable: object_type_readable,
+        date_ago: date_from_now(ulid(activity) || ulid(activity.object)),
+        verb: verb,
+        verb_display: verb_display,
+        created_verb_display: created_verb_display,
+        permalink: permalink,
+        activity_components: components
+      )
+    }
+  end
+
+  def render(assigns) do
     ~F"""
     <article
       phx-click={if e(assigns, :showing_within, nil) !=:thread || e(assigns, :activity_inception, nil) ||  e(@object, :id, nil) == nil and e(@activity, :replied, :reply_to_id, nil) != nil and e(@activity, :id, nil) != nil, do: "Bonfire.Social.Feeds:open_activity"}
@@ -114,12 +128,12 @@ defmodule Bonfire.UI.Social.ActivityLive do
       "opacity-60": e(@activity, :seen, nil) !=nil
     }>
     <form
-      phx-submit="Bonfire.Social.Feeds:mark_read"
-      phx-target={"#badge_counter_#{@feed_id}"}
+      phx-submit="Bonfire.Social.Feeds:mark_seen"
+      phx-target={"#badge_counter_#{e(assigns, :feed_id, "missing_feed_id")}"}
       x-intersect.once={intersect_event(assigns)}>
-      <input :if={@feed_id} type="hidden" name="feed_id" value={@feed_id} />
+      <input :if={e(assigns, :feed_id, nil)} type="hidden" name="feed_id" value={e(assigns, :feed_id, nil)} />
       <input type="hidden" name="activity_id" value={e(@activity, :id, nil)} />
-      {#for {component, component_assigns} when is_atom(component) <- components}
+      {#for {component, component_assigns} when is_atom(component) <- e(assigns, :activity_components, [])}
         <Surface.Components.Dynamic.Component
           module={component}
           id={e(component_assigns, :id, nil)}
@@ -157,10 +171,6 @@ defmodule Bonfire.UI.Social.ActivityLive do
     ~F"""
 
     """
-  end
-
-  def preload(list_of_assigns) do
-    Bonfire.Boundaries.LiveHandler.maybe_preload_and_check_boundaries(list_of_assigns)
   end
 
   defp intersect_event(%{activity: %{seen: %{id: _}}}), do: nil # already seen

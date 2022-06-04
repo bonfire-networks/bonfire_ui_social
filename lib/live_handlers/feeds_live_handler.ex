@@ -43,17 +43,18 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
     thread_id = e(activity, :replied, :thread_id, nil) || e(socket.assigns, :object, :replied, :thread_id, nil)
 
     debug("send activity to smart input")
-    send_update(Bonfire.UI.Common.SmartInputLive,
+    send_update(Bonfire.UI.Common.SmartInputLive, # assigns_merge(socket.assigns,
       id: :smart_input,
       # we reply to objects, not activities
       reply_to_id: reply_to_id,
       thread_id: thread_id,
-      activity: activity,
-      object: e(socket.assigns, :object, nil),
       smart_input_text: mentions,
       to_circles: to_circles,
       activity_inception: "reply_to",
-      preset_boundary: Bonfire.Boundaries.preset_boundary_name_from_acl(e(socket.assigns, :object_boundary, nil))
+      preset_boundary: Bonfire.Boundaries.preset_boundary_name_from_acl(e(socket.assigns, :object_boundary, nil)),
+      # TODO: use assigns_merge and send_update to the ActivityLive component within smart_input instead, so that `update/2` isn't triggered again
+      activity: activity,
+      object: e(socket.assigns, :object, nil)
     )
 
     {:noreply, socket}
@@ -97,7 +98,7 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
     {:noreply, socket}
   end
 
-  # def handle_event("mark_read", _params, %{assigns: %{feed_id: feed_id, activity: %{id: activity_id}}} = socket) when is_binary(feed_id) and is_binary(activity_id) do
+  # def handle_event("mark_seen", _params, %{assigns: %{activity: %{id: activity_id}}} = socket) when is_binary(feed_id) and is_binary(activity_id) do
   #   warn("TODO: mark as read: #{activity_id} in #{feed_id}")
 
   #   # send_update(Bonfire.UI.Common.BadgeCounterLive, id: feed_id, count--)
@@ -105,13 +106,29 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
   #   {:noreply, socket}
   # end
 
-  def handle_event("mark_read", %{"feed_id"=> feed_id, "activity_id"=> activity_id}, %{assigns: %{count: count}} = socket) when is_binary(feed_id) and is_binary(activity_id) do
+  def handle_event("mark_seen", %{"scope"=> "all", "feed_id"=> feed_id}, %{assigns: %{count: count}} = socket) when is_binary(feed_id) do
+    current_user = current_user(socket)
+
+    marked = if current_user do
+      #Task.async(fn -> # asynchronously simply so the count is updated quicker for the user
+      debug(feed_id, "mark_seen: all in feed")
+      Bonfire.Social.FeedActivities.mark_all_seen(feed_id, current_user: current_user)
+      # end)
+    end
+
+    {:noreply, socket
+    |> assign(
+      count: count-(marked || 0) # TODO
+    )}
+  end
+
+  def handle_event("mark_seen", %{"activity_id"=> activity_id}, %{assigns: %{count: count}} = socket) when is_binary(activity_id) do
     current_user = current_user(socket)
 
     if current_user, do: Task.async(fn ->
       # asynchronously simply so the count is updated quicker for the user
-      debug("mark as read: #{activity_id} in #{feed_id}")
-      Bonfire.Social.Seens.mark_seen(current_user, activity_id)
+      debug(activity_id, "mark_seen")
+      Bonfire.Social.Seen.mark_seen(current_user, activity_id)
     end)
 
     {:noreply, socket
@@ -120,9 +137,9 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
     )}
   end
 
-  def handle_event("mark_read", params, socket) do
+  def handle_event("mark_seen", params, socket) do
     # warn(assigns, "mark as read: needed params not found")
-    warn(params, "mark as read: needed params not found")
+    warn(params, "mark_seen: needed params not found")
     {:noreply, socket}
   end
 
