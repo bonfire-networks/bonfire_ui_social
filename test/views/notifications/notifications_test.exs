@@ -35,13 +35,13 @@ defmodule Bonfire.Social.Notifications.Test do
       assert redirected_to(conn) =~ "/login"
     end
 
-    test "with account only" do
-      account = fake_account!()
-      conn = conn(account: account)
-      next = "/notifications"
-      {view, doc} = floki_live(conn, next) #|> IO.inspect
-      assert [] = Floki.find(doc, ".feed") # TODO: what to show in this case?
-    end
+    # test "with account only" do
+    #   account = fake_account!()
+    #   conn = conn(account: account)
+    #   next = "/notifications"
+    #   {view, doc} = floki_live(conn, next) #|> IO.inspect
+    #   assert [] = Floki.find(doc, ".feed") # TODO: what to show in this case?
+    # end
 
   end
 end

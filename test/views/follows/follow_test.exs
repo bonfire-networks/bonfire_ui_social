@@ -19,15 +19,19 @@ defmodule Bonfire.Social.Follows.Test do
       next = Bonfire.Common.URIs.path(someone)
       {view, doc} = floki_live(conn, next) #|> IO.inspect
 
-      assert follow = view |> element("[data-id='follow']") |> render_click()
+      assert follow = view
+      |> element("[data-id='follow']")
+      |> render_click()
 
       assert true == Follows.following?(me, someone)
 
-      # FIXME: the html returned by render_click isn't updated to show the change (probably because it uses ComponentID and pubsub) even though this works in the browser
-      # assert follow
-      # |> Floki.parse_fragment()
-      # ~> Floki.find("[data-id=follow]")
-      # |> Floki.text()  =~ "Unfollow"
+      # Note: the html returned by render_click isn't updated to show the change (probably because it uses ComponentID and pubsub) even though this works in the browser, so we wait for after pubsub events are received
+      live_pubsub_wait(view)
+
+      assert view
+      |> render()
+      ~> Floki.find("[data-id=unfollow]")
+      |> Floki.text()  =~ "Unfollow"
     end
 
   end
@@ -51,12 +55,12 @@ defmodule Bonfire.Social.Follows.Test do
       assert unfollow = view |> element("[data-id='unfollow']") |> render_click()
       assert false == Follows.following?(me, someone)
 
-      # FIXME: the html returned by render_click isn't updated to show the change (probably because it uses ComponentID and pubsub) even though this works in the browser
-      # assert unfollow
-      # |> Floki.parse_fragment()
-      # |> info
-      # ~> Floki.find("[data-id=follow]")
-      # |> Floki.text() =~ "Follow"
+      live_pubsub_wait(view)
+
+      assert view
+      |> render()
+      ~> Floki.find("[data-id=follow]")
+      |> Floki.text() =~ "Follow"
     end
   end
 end

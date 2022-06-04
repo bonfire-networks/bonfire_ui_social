@@ -87,8 +87,6 @@ defmodule Bonfire.Social.Threads.LoadMoreTest do
       |> render_click()
       # |> debug()
 
-      # FIXME: the extra activities are being sent via pubsub, need to figure out how to test that
-
       replies = Floki.find(more_doc, "[data-id='replies'] > [data-id='comment']") # |> debug()
       assert Enum.count(replies) == total_posts
     end

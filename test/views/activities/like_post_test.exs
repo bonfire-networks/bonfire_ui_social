@@ -26,8 +26,13 @@ defmodule Bonfire.Social.Activities.LikePost.Test do
       # |> info
       |> render_click()
 
-      # FIXME: the html returned by render_click isn't updated to show the change (probably because it uses ComponentID and pubsub) even though this works in the browser
-      # |> Floki.text() =~ "Liked"
+      # the html returned by render_click isn't updated to show the change (probably because it uses ComponentID and pubsub) even though this works in the browser
+      live_pubsub_wait(view)
+
+      assert view
+      |> render()
+      ~> Floki.find("[data-id=like_action]")
+      |> Floki.text() =~ "Liked"
 
       assert true == Likes.liked?(someone, post)
 

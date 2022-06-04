@@ -79,7 +79,9 @@ defmodule Bonfire.Social.Feeds.LoadMoreTest do
       |> element("[data-id=load_more]")
       |> render_click()
 
-      # TODO: the extra activities are being sent via pubsub, need to figure out how to test that
+      # are extra activities being broadcast via pubsub? if so, wait for them
+      live_pubsub_wait(view)
+
       articles = Floki.find(more_doc, "[data-id=feed] article")
       # |> info("articles")
 
