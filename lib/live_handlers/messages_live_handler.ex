@@ -60,7 +60,7 @@ defmodule Bonfire.Social.Messages.LiveHandler do
       ]
     ]
   end
-  
+
 
   def list_threads(current_user, user \\ nil, opts \\ []) do
     # TODO: put limit in Settings
@@ -79,7 +79,7 @@ defmodule Bonfire.Social.Messages.LiveHandler do
       {:noreply,
         socket
         |> assign_flash(:info, "Sent!")
-        |> redirect_to("/messages/#{e(sent, :replied, :thread_id, nil) || ulid(sent)}##{ulid(sent)}") # FIXME: assign or pubsub the new message and patch instead
+        # |> redirect_to("/messages/#{e(sent, :replied, :thread_id, nil) || ulid(sent)}##{ulid(sent)}") # FIXME: assign or pubsub the new message and patch instead
       }
     # else e ->
     #   debug(message_error: e)

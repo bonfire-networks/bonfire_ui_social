@@ -40,7 +40,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
 
     activity =
       activity
-      |> repo().maybe_preload(:media)
+      |> repo().maybe_preload(:media) # FIXME
       # |> debug("Activity provided")
       |> Map.put(:object, Activities.object_from_activity(assigns))
       # |> dump("Activity with :object")
@@ -139,7 +139,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
           id={e(component_assigns, :id, nil)}
           myself={nil}
           created_verb_display={@created_verb_display}
-          showing_within={@showing_within}
+          showing_within={e(assigns, :showing_within, nil)}
           thread_mode={e(assigns, :thread_mode, nil)}
           participants={e(assigns, :participants, [])}
           activity={e(component_assigns, :activity, @activity)}
@@ -174,7 +174,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
   end
 
   defp intersect_event(%{activity: %{seen: %{id: _}}}), do: nil # already seen
-  defp intersect_event(%{showing_within: showing_within, feed_id: feed_id}) when showing_within in [:messages, :thread, :notifications] and is_binary(feed_id), do: "$el.dispatchEvent( new Event(\"submit\", {bubbles: true, cancelable: true}) )"
+  defp intersect_event(%{showing_within: showing_within, feed_id: feed_id}) when not is_nil(feed_id) when showing_within in [:messages, :thread, :notifications], do: "$el.dispatchEvent( new Event(\"submit\", {bubbles: true, cancelable: true}) )"
   defp intersect_event(_), do: nil
 
   # don't show subject twice

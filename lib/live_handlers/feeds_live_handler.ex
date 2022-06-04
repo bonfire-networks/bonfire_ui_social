@@ -122,7 +122,7 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
     )}
   end
 
-  def handle_event("mark_seen", %{"activity_id"=> activity_id}, %{assigns: %{count: count}} = socket) when is_binary(activity_id) do
+  def handle_event("mark_seen", %{"activity_id"=> activity_id}, %{assigns: %{count: count}} = socket) when is_binary(activity_id) and activity_id !="" do
     current_user = current_user(socket)
 
     if current_user, do: Task.async(fn ->
@@ -146,7 +146,7 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
   def handle_info({:count_increment, feed_ids}, socket) do
     warn(feed_ids, "count_increment")
 
-    send_updates(feed_ids, [count_increment: 1], Bonfire.UI.Common.BadgeCounterLive)
+    send_feed_updates(feed_ids, [count_increment: 1], Bonfire.UI.Common.BadgeCounterLive)
 
     {:noreply, socket}
   end
@@ -170,16 +170,19 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
 
       debug(feed_ids, "send_update to feeds")
 
-      send_updates(feed_ids, new_activity: data[:activity])
+      send_feed_updates(feed_ids, new_activity: data[:activity])
     end
     {:noreply, socket}
   end
 
-  def send_updates(feed_ids, assigns, component \\ Bonfire.UI.Social.FeedLive) do
+  def send_feed_updates(feed_ids, assigns, component \\ Bonfire.UI.Social.FeedLive)
+  def send_feed_updates(feed_ids, assigns, component) when is_list(feed_ids) do
     for feed_id <- feed_ids do
-      # debug(feed_id, "send_update")
-      send_update(component, [id: feed_id] ++ assigns)
+      send_feed_updates(feed_id, assigns, component)
     end
+  end
+  def send_feed_updates(feed_id, assigns, component) do
+    send_update(component, [id: feed_id] ++ assigns)
   end
 
   def paginate_feed(feed_id, attrs, socket) when not is_nil(feed_id) do

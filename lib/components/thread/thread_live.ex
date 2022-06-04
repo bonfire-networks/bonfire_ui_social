@@ -72,7 +72,7 @@ defmodule Bonfire.UI.Social.ThreadLive do
         showing_within: e(assigns, :showing_within, nil)
       ) do
         # debug(thread_id, "thread_id")
-        debug(replies, "queried replies")
+        # debug(replies, "queried replies")
 
         threaded_replies = if e(assigns, :thread_mode, nil) !=:flat and is_list(replies) and length(replies)>0, do: Bonfire.Social.Threads.arrange_replies_tree(replies)
         # debug(threaded_replies, "threaded_replies")

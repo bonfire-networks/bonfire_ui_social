@@ -105,7 +105,7 @@ defmodule Bonfire.UI.Social.FeedLive do
         %{activity: %{id: _}} ->
           feed
           # |> debug("feed of FeedPublish or objects before extra preloads")
-          |> repo().maybe_preload(activity: [:media])
+          |> repo().maybe_preload(activity: [:media]) # FIXME
           |> Bonfire.Common.Pointers.Preload.maybe_preload_nested_pointers([activity: [:object]])
           |> preload_objects([:activity, :object], opts)
           # |> debug("feed with extra preloads")
@@ -120,7 +120,7 @@ defmodule Bonfire.UI.Social.FeedLive do
         %{object: _} ->
           feed
           # |> debug("feed of activities before extra preloads")
-          |> repo().maybe_preload(:media)
+          |> repo().maybe_preload(:media) # FIXME
           |> Bonfire.Common.Pointers.Preload.maybe_preload_nested_pointers([:object])
           |> preload_objects([:object], opts)
           # |> debug("feed with extra preloads")
