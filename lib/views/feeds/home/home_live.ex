@@ -28,7 +28,7 @@ defmodule Bonfire.UI.Social.HomeLive do
         sidebar_widgets: [
           users: [
             main: [
-              {Bonfire.UI.Common.HomeBannerLive, []}
+              {Bonfire.UI.Common.WidgetInstanceInfoLive, []}
             ],
             secondary: [
               {Bonfire.UI.Social.WidgetTimelinesLive, [page: "home"]},

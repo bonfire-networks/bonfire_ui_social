@@ -273,7 +273,7 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
       sidebar_widgets: [
         users: [
           main: [
-            {Bonfire.UI.Common.HomeBannerLive, []}
+            {Bonfire.UI.Common.WidgetInstanceInfoLive, []}
           ],
           secondary: [
             {Bonfire.UI.Social.WidgetTimelinesLive, [page: "federation"]},
@@ -301,7 +301,7 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
       sidebar_widgets: [
         users: [
           main: [
-            {Bonfire.UI.Common.HomeBannerLive, []}
+            {Bonfire.UI.Common.WidgetInstanceInfoLive, []}
           ],
           secondary: [
             {Bonfire.UI.Social.WidgetTimelinesLive, [page: "local"]},
