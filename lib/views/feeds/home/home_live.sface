@@ -1,5 +1,6 @@
 <Bonfire.UI.Social.FeedViewLive 
   page_title={@page_title}
+  page={@page}
   feedback_title={@feedback_title}
   feedback_message={@feedback_message}
   current_user={@current_user}

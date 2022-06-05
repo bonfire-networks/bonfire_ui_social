@@ -1,53 +1,50 @@
 <main class="flex flex-col h-body">
-    <Bonfire.UI.Common.PageHeaderLive before page_title={@page_title}>
+  <Bonfire.UI.Common.PageHeaderLive 
+    page={e(assigns, :page, nil)}
+    page_title={@page_title}>
+    <:left_action>
+      <div 
+        :if={e(assigns, :page, nil) in ["home", "federation",  "local"]}
+        class="flex tablet:hidden">
+        <div
+          @keydown.window.escape="open_drawer = false"
+          class="btn btn-ghost btn-circle btn-sm" 
+          @click="open_drawer = true">
+          <LazyImage
+            class="w-8 h-8 rounded-full bg-base-200"
+            src={avatar_url(current_user(assigns))}
+            alt="current user profile image"
+          />
+        </div>
+      </div>
+    </:left_action>
 
-      <h1 class="flex-1 ml-3 font-bold text-base-content">{@page_title}</h1>
-
-      <!-- <div class="relative z-40 dropdown dropdown-end">
-        <label tabindex="0" class="flex normal-case btn place-content-center btn-circle btn-ghost btn-sm">
-            <Solid.DotsVerticalIcon class="w-5 h-5 text-base-content text-opacity-70" />
-        </label>
-        <ul tabindex="0" class="p-2 shadow dropdown-content menu bg-base-100 rounded-box w-52">
-          <li 
-            :if={e(assigns, :feed_id, nil) in [:notifications]}>
-            <button 
-              phx-click="Bonfire.Social.Feeds:mark_seen"
-              phx-target={"#badge_counter_#{e(assigns, :feed_id, "missing_feed_id")}"}
-              phx-value-feed_id={e(assigns, :feed_id, nil)}
-              phx-value-scope="all"
-              class="text-sm">
-              {l "Mark all as read"}
-            </button>
-          </li>
-        </ul>
-      </div> -->
-      <button 
-        :if={e(assigns, :feed_id, nil) in [:notifications]}
-        phx-click="Bonfire.Social.Feeds:mark_seen"
-        phx-target={"#badge_counter_#{e(assigns, :feed_id, "missing_feed_id")}"}
-        phx-value-feed_id={e(assigns, :feed_id, nil)}
-        phx-value-scope="all"
-        data-tip={l "Mark all as read"}
-        class="flex items-center normal-case place-content-center tooltip tooltip-bottom btn btn-sm btn-ghost btn-square">
-      <Outline.CheckIcon 
-        class="w-5 h-5 text-base-content/80" 
-      />
-      </button>
-
-    </Bonfire.UI.Common.PageHeaderLive>
-
-    <div class="flex-1 bg-base-100 rounded-b-md ">
-      <Bonfire.UI.Social.FeedLive 
-        :if={@feed_id}
-        id={@feed_id}
-        feed_id={@feed_id}
-        feedback_title={e(assigns, :feedback_title, nil)}
-        feedback_message={e(assigns, :feedback_message, nil)}
-        feed_ids={e(assigns, :feed_ids, nil)}
-        feed={@feed}
-        page_info={@page_info}
-        showing_within={@showing_within}
-        verb_default={e(assigns, :verb_default, nil)}
-      />
-    </div>
+    <h1 class="flex-1 ml-3 font-bold text-base-content">{@page_title}</h1>
+    <button 
+      :if={e(assigns, :feed_id, nil) in [:notifications]}
+      phx-click="Bonfire.Social.Feeds:mark_seen"
+      phx-target={"#badge_counter_#{e(assigns, :feed_id, "missing_feed_id")}"}
+      phx-value-feed_id={e(assigns, :feed_id, nil)}
+      phx-value-scope="all"
+      data-tip={l "Mark all as read"}
+      class="flex items-center normal-case place-content-center tooltip tooltip-bottom btn btn-sm btn-ghost btn-square">
+    <Outline.CheckIcon 
+      class="w-5 h-5 text-base-content/80" 
+    />
+    </button>
+  </Bonfire.UI.Common.PageHeaderLive>
+  <div class="flex-1 bg-base-100 rounded-b-md ">
+    <Bonfire.UI.Social.FeedLive 
+      :if={@feed_id}
+      id={@feed_id}
+      feed_id={@feed_id}
+      feedback_title={e(assigns, :feedback_title, nil)}
+      feedback_message={e(assigns, :feedback_message, nil)}
+      feed_ids={e(assigns, :feed_ids, nil)}
+      feed={@feed}
+      page_info={@page_info}
+      showing_within={@showing_within}
+      verb_default={e(assigns, :verb_default, nil)}
+    />
+  </div>
 </main>
