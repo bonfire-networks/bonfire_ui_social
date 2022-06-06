@@ -7,4 +7,5 @@
   feedback_title={@feedback_title}
   feedback_message={@feedback_message}
   showing_within={:notifications}
+  loading={e(assigns, :loading, false)}
 />

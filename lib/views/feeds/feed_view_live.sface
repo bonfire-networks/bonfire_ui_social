@@ -35,8 +35,9 @@
   </Bonfire.UI.Common.PageHeaderLive>
   <div class="flex-1 bg-base-100 tablet:rounded-b-md ">
     <Bonfire.UI.Social.FeedLive 
-      :if={@feed_id}
+      :if={@feed_id || @loading}
       id={@feed_id}
+      loading={@loading}
       feed_id={@feed_id}
       feedback_title={e(assigns, :feedback_title, nil)}
       feedback_message={e(assigns, :feedback_message, nil)}

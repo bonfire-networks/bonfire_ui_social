@@ -37,15 +37,21 @@
         {/for}
       </div>
       {#else}
-        <div id="empty-feed" class="flex items-center my-12 place-content-center">
-          <Bonfire.UI.Common.EmptyFeed
-            feedback_title={e(assigns, :feedback_title, nil)}
-            feedback_message={e(assigns, :feedback_message, nil)}
-          /> 
+        {#if @loading}
+          <div id="empty-feed" class="flex items-center my-12 place-content-center">
+            Loading...
         </div>
+        {#else}
+          <div id="empty-feed" class="flex items-center my-12 place-content-center">
+            <Bonfire.UI.Common.EmptyFeed
+              feedback_title={e(assigns, :feedback_title, nil)}
+              feedback_message={e(assigns, :feedback_message, nil)}
+            /> 
+          </div>
+        {/if}
       {/if}
       <Bonfire.UI.Common.LoadMoreLive 
-        :if={e(assigns, :hide_load_more, false) != true}
+        :if={@page_info && e(assigns, :hide_load_more, false) != true}
         live_handler={Bonfire.Social.Feeds} 
         page_info={@page_info} 
         target={@myself} 

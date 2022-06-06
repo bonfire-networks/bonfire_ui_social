@@ -10,11 +10,12 @@ defmodule Bonfire.UI.Social.FeedLive do
   prop feed, :list
   prop feedback_title, :string
   prop feedback_message, :string
-  prop page_info, :map
+  prop page_info, :any
   prop showing_within, :any
   prop feed_update_mode, :string, default: "prepend"
   prop hide_load_more, :boolean, default: false
   prop verb_default, :string
+  prop loading, :boolean, default: false
 
   def mount(socket) do
     {:ok, socket
@@ -59,24 +60,26 @@ defmodule Bonfire.UI.Social.FeedLive do
   end
 
   def update(assigns, socket) do
-    debug("FeedLive: feed NOT provided, try fetching one via Bonfire.Social")
-    socket = assign(socket, assigns)
-    current_user = current_user(socket)
-
-    assigns = if module_enabled?(Bonfire.UI.Social.Feeds.HomeLive), do: Bonfire.Social.Feeds.LiveHandler.default_feed_assigns(socket),
-    else: []
+    error("FeedLive: feed NOT provided, try fetching one in a parent component")
     socket = assign(socket, assigns)
 
-    maybe_subscribe(socket)
+    # current_user = current_user(socket)
+
+    # assigns = if module_enabled?(Bonfire.UI.Social.Feeds.HomeLive), do: Bonfire.Social.Feeds.LiveHandler.load_feed_assigns(:default, socket),
+    # else: []
+    # socket = assign(socket, assigns)
+
+    # maybe_subscribe(socket)
 
     # debug(assigns: assigns)
 
     {:ok, socket
-    |> assign(
-      feed: e(assigns, :feed, [])
-        # |> debug("FeedLive: feed")
-        |> preloads(current_user: current_user, skip_boundary_check: true)
-    )}
+    # |> assign(
+    #   feed: e(assigns, :feed, [])
+    #     # |> debug("FeedLive: feed")
+    #     |> preloads(current_user: current_user, skip_boundary_check: true)
+    #   )
+    }
   end
 
   def maybe_subscribe(socket) do

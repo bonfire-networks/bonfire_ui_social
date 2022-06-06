@@ -5,4 +5,5 @@
   feed_id="feed:profile:likes"
   page_info={@page_info}
   verb_default="like"
+  loading={e(assigns, :loading, false)}
 />

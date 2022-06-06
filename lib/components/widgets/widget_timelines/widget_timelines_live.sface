@@ -1,7 +1,9 @@
 <Bonfire.UI.Common.WidgetLive 
   widget_title={e(assigns, :widget_title, "Feeds")}
 >
-  <div class="pb-2 rounded-b-box">
+  <div 
+    :if={current_user(@current_user) || Settings.get([:bonfire_social, :feeds, :federation, :show_guests], true, assigns)}
+    class="pb-2 rounded-b-box">
     <div class="menu bg-base-100 ">
       <li :if={current_user(@current_user)}>
         <LiveRedirect 
@@ -12,11 +14,11 @@
           <span class="text-sm truncate ellipsis">{l "My feed"}</span>
         </LiveRedirect> 
       </li>
-      <li :if={current_user(@current_user) || Settings.get([:bonfire_social, :feeds, :federation, :show_guests], true, assigns)}>
+      <li>
         <LiveRedirect 
           class={"ml-1": @page != "local",
             "border-l-4 border-primary bg-base-content bg-opacity-10": @page == "local"} 
-          to={"/feed/local"}>
+          to={if current_user(@current_user), do: "/feed/local", else: "/local"}>
           <Solid.LocationMarkerIcon class="w-4 h-4" />
           <span class="text-sm truncate ellipsis">{l "Local timeline"}</span>
         </LiveRedirect> 

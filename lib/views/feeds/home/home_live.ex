@@ -41,18 +41,18 @@ defmodule Bonfire.UI.Social.HomeLive do
   end
 
   def do_handle_params(%{"tab" => "federation" = tab} = params, _url, socket) do
-    {:noreply, assign(socket, LiveHandler.fediverse_feed_assigns(socket))}
+    {:noreply, assign(socket, LiveHandler.load_feed_assigns(:fediverse, socket))}
   end
 
   def do_handle_params(%{"tab" => "local" = tab} = params, _url, socket) do
 
-    {:noreply, assign(socket, LiveHandler.instance_feed_assigns(socket)) }
+    {:noreply, assign(socket, LiveHandler.load_feed_assigns(:local, socket)) }
   end
 
   def do_handle_params(_params, _url, socket) do
     # debug("param")
 
-    {:noreply, assign(socket, LiveHandler.default_feed_assigns(socket))}
+    {:noreply, assign(socket, LiveHandler.load_feed_assigns(:default, socket))}
   end
 
 

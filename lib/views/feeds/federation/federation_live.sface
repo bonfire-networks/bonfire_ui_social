@@ -4,4 +4,5 @@
     feed={@feed}
     feed_id={@feed_id}
     page_info={@page_info}
+    loading={e(assigns, :loading, false)}
 />

@@ -12,6 +12,7 @@ defmodule Bonfire.UI.Social.FeedViewLive do
   prop page, :string
   prop showing_within, :any, default: nil
   prop verb_default, :string
+  prop loading, :boolean, default: false
 
   slot default
 end

@@ -17,7 +17,7 @@ defmodule Bonfire.UI.Social.Feeds.LocalLive do
 
   defp mounted(params, _session, socket) do
 
-    feed_assigns = Bonfire.Social.Feeds.LiveHandler.instance_feed_assigns(socket)
+    feed_assigns = Bonfire.Social.Feeds.LiveHandler.load_feed_assigns(:local, socket)
 
     {:ok, socket
     |> assign(

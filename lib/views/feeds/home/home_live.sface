@@ -9,4 +9,5 @@
   feed_ids={e(assigns, :feed_ids, nil)}
   feed_title={@feed_title}
   page_info={@page_info}
+  loading={e(assigns, :loading, false)}
 />

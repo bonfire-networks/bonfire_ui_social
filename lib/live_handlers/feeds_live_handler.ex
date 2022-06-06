@@ -175,6 +175,12 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
     {:noreply, socket}
   end
 
+  def handle_info({:load_feed, key}, socket) do
+    {:noreply, socket
+      |> assign(feed_assigns(key, socket))
+    }
+  end
+
   def send_feed_updates(feed_ids, assigns, component \\ Bonfire.UI.Social.FeedLive)
   def send_feed_updates(feed_ids, assigns, component) when is_list(feed_ids) do
     for feed_id <- feed_ids do
@@ -209,7 +215,7 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
     {:noreply, socket
       |> assign(feed_update_mode: "append")
       |> assign(
-        default_feed_assigns(opts)
+        feed_assigns(:default, opts)
       )}
   end
 
@@ -224,51 +230,37 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
   end
 
 
-  def default_feed_assigns(socket_or_opts) do
-    current_user = current_user(socket_or_opts)
-    current_account = current_account(socket_or_opts)
+  def load_feed_assigns(:my, socket_or_opts) do
+    send(self(), {Bonfire.Social.Feeds.LiveHandler, {:load_feed, :my}})
 
-    current = current_user || current_account
-
-    if current do
-      my_feed_assigns(current, socket_or_opts) # my feed
-    else
-      instance_feed_assigns(socket_or_opts) # fallback to showing instance feed
-    end
-  end
-
-  def my_feed_assigns(current_user, socket_or_opts) do
-    # debug(myfeed: feed)
-    feed_id = Bonfire.Social.Feeds.my_feed_id(:inbox, socket_or_opts)
-    feed_ids = Bonfire.Social.Feeds.my_home_feed_ids(socket_or_opts)
-    feed = Bonfire.Social.FeedActivities.my_feed(socket_or_opts, feed_ids)
     [
-      current_user: current_user,
+      loading: true,
+      # current_user: current_user,
       selected_tab: "home",
       page_title: l("Home"),
       feed_title: l("My feed"),
-      feed_id: feed_id,
-      feed_ids: feed_ids,
-      feed: e(feed, :edges, []),
-      page_info: e(feed, :page_info, [])
+      feed_id: :my,
+      # feed_ids: feed_ids,
+      feed: [],
+      page_info: nil
     ]
   end
 
-  def fediverse_feed_assigns(socket_or_opts) do
-    feed_id = Bonfire.Social.Feeds.named_feed_id(:activity_pub)
-    feed = Bonfire.Social.FeedActivities.feed(feed_id, socket_or_opts)
+  def load_feed_assigns(:fediverse, socket_or_opts) do
+    send(self(), {Bonfire.Social.Feeds.LiveHandler, {:load_feed, :fediverse}})
 
     [
-      current_user: current_user(socket_or_opts),
+      loading: true,
+      # current_user: current_user(socket_or_opts),
       selected_tab: "fediverse",
       page_title: l("Federated activities from remote instances"),
       page: "federation",
       feed_title: l("Activities from around the fediverse"),
       feedback_title: l("Your fediverse feed is empty"),
       feedback_message: l("It seems you and your friends do not follow any other users on a different instance"),
-      feed_id: feed_id,
-      feed: e(feed, :edges, []),
-      page_info: e(feed, :page_info, []),
+      feed_id: :fediverse,
+      feed: [],
+      page_info: nil,
       # FIXME: seems too much re-assigning the whole sidebar widgets only to change the page prop?
       sidebar_widgets: [
         users: [
@@ -284,19 +276,18 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
     ]
   end
 
-  def instance_feed_assigns(socket_or_opts) do
-    feed_id = Bonfire.Social.Feeds.named_feed_id(:local)
-    feed = Bonfire.Social.FeedActivities.feed(feed_id, socket_or_opts)
-
+  def load_feed_assigns(:local, socket_or_opts) do
+    send(self(), {Bonfire.Social.Feeds.LiveHandler, {:load_feed, :local}})
     [
-      current_user: current_user(socket_or_opts),
+      loading: true,
+      # current_user: current_user(socket_or_opts),
       selected_tab: "instance",
       page_title: l("Local activities"),
       page: "local",
       feed_title: l("Activities on this instance"),
-      feed_id: feed_id,
-      feed: e(feed, :edges, []),
-      page_info: e(feed, :page_info, []), #|> IO.inspect
+      feed_id: :local,
+      feed: [],
+      page_info: nil, #|> IO.inspect
       # FIXME: seems too much re-assigning the whole sidebar widgets only to change the page prop?
       sidebar_widgets: [
         users: [
@@ -312,5 +303,66 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
     ]
   end
 
+  def load_feed_assigns(_default, socket_or_opts) do
+    current = current_user(socket_or_opts) || current_account(socket_or_opts)
+
+    if current do
+      load_feed_assigns(:my, socket_or_opts) # my feed
+    else
+      load_feed_assigns(:local, socket_or_opts) # fallback to showing instance feed
+    end
+  end
+
+
+  def feed_assigns(:my, socket_or_opts) do
+    # debug(myfeed: feed)
+    feed_id = Bonfire.Social.Feeds.my_feed_id(:inbox, socket_or_opts)
+    feed_ids = Bonfire.Social.Feeds.my_home_feed_ids(socket_or_opts)
+    feed = Bonfire.Social.FeedActivities.my_feed(socket_or_opts, feed_ids)
+    [
+      loading: false,
+      current_user: current_user(socket_or_opts),
+      feed_id: feed_id,
+      feed_ids: feed_ids,
+      feed: e(feed, :edges, []),
+      page_info: e(feed, :page_info, [])
+    ]
+  end
+
+  def feed_assigns(:fediverse, socket_or_opts) do
+    feed_id = Bonfire.Social.Feeds.named_feed_id(:activity_pub)
+    feed = Bonfire.Social.FeedActivities.feed(feed_id, socket_or_opts)
+
+    [
+      loading: false,
+      current_user: current_user(socket_or_opts),
+      feed_id: feed_id,
+      feed: e(feed, :edges, []),
+      page_info: e(feed, :page_info, [])
+    ]
+  end
+
+  def feed_assigns(:local, socket_or_opts) do
+    feed_id = Bonfire.Social.Feeds.named_feed_id(:local)
+    feed = Bonfire.Social.FeedActivities.feed(feed_id, socket_or_opts)
+
+    [
+      loading: false,
+      current_user: current_user(socket_or_opts),
+      feed_id: feed_id,
+      feed: e(feed, :edges, []),
+      page_info: e(feed, :page_info, [])
+    ]
+  end
+
+  def feed_assigns(_default, socket_or_opts) do
+    current = current_user(socket_or_opts) || current_account(socket_or_opts)
+
+    if current do
+      feed_assigns(:my, socket_or_opts) # my feed
+    else
+      feed_assigns(:local, socket_or_opts) # fallback to showing instance feed
+    end
+  end
 
 end
