@@ -1,5 +1,9 @@
 
-<main class="flex flex-col flex-1 h-full">
+<main 
+    x-data="{
+    open_sidebar_drawer: false
+  }" 
+  class="flex flex-col flex-1 h-full">
 
 
   {#if @tab_id in ["compose", "select_recipients", "thread"]}
@@ -28,7 +32,15 @@
         replied_activity_class={"relative mb-2 rounded-md bg-base-100 hover:bg-base-100"}
       /> 
     {#elseif @tab_id in ["compose", "select_recipients"]}
-      <div class="flex-1 p-3 bg-base-100 rounded-box">
+      <Bonfire.UI.Common.PageHeaderLive>
+      
+      <h1 class="flex-1 ml-3 font-bold text-base-content">{@page_title}</h1>
+
+     
+      
+     </Bonfire.UI.Common.PageHeaderLive>
+      <div class="flex-1 p-3 bg-base-100">
+
         <Bonfire.UI.Common.SmartInputLive
           id={:smart_input_message}
           :if={current_user(assigns)}
@@ -51,44 +63,42 @@
   </div>
 
   {#else}
-    <Bonfire.UI.Common.PageHeaderLive before page_title={@page_title}>
+    <Bonfire.UI.Common.PageHeaderLive>
 
       <h1 class="flex-1 ml-3 font-bold text-base-content">{@page_title}</h1>
 
-      <!-- <div class="relative z-40 dropdown dropdown-end">
-        <label tabindex="0" class="flex normal-case btn place-content-center btn-circle btn-ghost btn-sm">
-            <Solid.DotsVerticalIcon class="w-5 h-5 text-base-content text-opacity-70" />
-        </label>
-        <ul tabindex="0" class="p-2 shadow dropdown-content menu bg-base-100 rounded-box w-52">
-          <li> -->
-            <button 
-              phx-click="Bonfire.Social.Feeds:mark_seen"
-              phx-target={"#badge_counter_#{e(assigns, :feed_id, "missing_feed_id")}"}
-              phx-value-feed_id={e(assigns, :feed_id, nil)}
-              phx-value-scope="all"
-              data-tip={l "Mark all as read"}
-              class="flex items-center normal-case place-content-center tooltip tooltip-bottom btn btn-sm btn-ghost btn-square">
-              <Outline.CheckIcon 
-                class="w-5 h-5 text-base-content/80" 
-              />
-            </button>
+     
+      <button 
+        phx-click="Bonfire.Social.Feeds:mark_seen"
+        phx-target={"#badge_counter_#{e(assigns, :feed_id, "missing_feed_id")}"}
+        phx-value-feed_id={e(assigns, :feed_id, nil)}
+        phx-value-scope="all"
+        data-tip={l "Mark all as read"}
+        class="flex items-center normal-case place-content-center tooltip tooltip-bottom btn btn-sm btn-ghost btn-square">
+        <Outline.CheckIcon 
+          class="w-5 h-5 text-base-content/80" 
+        />
+      </button>
 
-            
-            <!-- </button>
-          </li>
-        </ul>
-      </div> -->
-    </Bonfire.UI.Common.PageHeaderLive>
+     </Bonfire.UI.Common.PageHeaderLive>
 
-    <div class="flex-1 rounded-b-xl md:mx-0 text-base-content lg:mt-0 bg-base-100">
-      <div id="empty-feed">
-        <div class="flex items-center justify-center py-8">
-          <div class="badge">
-            {l "Select a thread or start a new one..."}
-          </div>
-        </div>
-      </div>
+    <div class="flex-1 hidden pt-12 tablet-lg:block rounded-b-md md:mx-0 text-base-content bg-base-100">
+      <Bonfire.UI.Common.EmptyFeed
+        feedback_title={e(assigns, :feedback_title, nil)}
+        feedback_message={e(assigns, :feedback_message, nil)}
+      /> 
+    </div>
+    <div class="flex-1 p-3 tablet-lg:hidden rounded-b-md md:mx-0 text-base-content bg-base-100">
+     <Bonfire.UI.Social.MessageThreadsLive
+        context={ulid(current_user(assigns))}
+        threads={@threads}
+      />
     </div>
   {/if}
 
+
+      <Bonfire.UI.Social.SidebarMessagesMobileLive 
+        context={ulid(current_user(assigns))}
+        threads={@threads}
+      />
 </main>

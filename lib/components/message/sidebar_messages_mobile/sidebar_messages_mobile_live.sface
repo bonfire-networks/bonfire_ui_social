@@ -1,0 +1,38 @@
+  <div 
+    x-cloak
+    x-show="open_sidebar_drawer" 
+    class="relative z-[100]" 
+    x-description="Off-canvas menu for mobile, show/hide based on off-canvas menu state." x-ref="dialog" aria-modal="true">
+    <div x-show="open_sidebar_drawer" x-transition:enter="transition-opacity ease-linear duration-300" x-transition:enter-start="opacity-0" x-transition:enter-end="opacity-100" x-transition:leave="transition-opacity ease-linear duration-300" x-transition:leave-start="opacity-100" x-transition:leave-end="opacity-0" x-description="Off-canvas menu backdrop, show/hide based on off-canvas menu state." class="fixed inset-0 h-screen bg-slate-600/60"></div>
+    <div class="fixed inset-0 z-40 flex h-screen">
+      <div x-show="open_sidebar_drawer" x-transition:enter="transition ease-in-out duration-300 transform" x-transition:enter-start="-translate-x-full" x-transition:enter-end="translate-x-0" x-transition:leave="transition ease-in-out duration-300 transform" x-transition:leave-start="translate-x-0" x-transition:leave-end="-translate-x-full" x-description="Off-canvas menu, show/hide based on off-canvas menu state." class="relative flex flex-col flex-1 w-full max-w-md bg-base-300" @click.away="open_sidebar_drawer = false">
+        <div x-show="open_sidebar_drawer" x-transition:enter="ease-in-out duration-300" x-transition:enter-start="opacity-0" x-transition:enter-end="opacity-100" x-transition:leave="ease-in-out duration-300" x-transition:leave-start="opacity-100" x-transition:leave-end="opacity-0" x-description="Close button, show/hide based on off-canvas menu state." class="absolute top-0 right-0 pt-2 -mr-12">
+          <button type="button" class="flex items-center justify-center w-10 h-10 ml-1 rounded-full focus:outline-none focus:ring-2 focus:ring-inset focus:ring-white" @click="open_sidebar_drawer = false">
+            <span class="sr-only">{l "Close menu"}</span>
+            <svg class="w-6 h-6 text-white" x-description="Heroicon name: outline/x" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" aria-hidden="true">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"></path>
+            </svg>
+          </button>
+        </div>
+        <div class="flex flex-col h-full py-6 overflow-y-auto shadow-xl bg-base-100">
+          <div class="px-4 sm:px-6">
+            <div class="flex items-start justify-between">
+              <div class="font-bold text-base-content">
+                {l "Direct Messages"}
+              </div>
+            </div>
+          </div>
+          <div class="relative flex flex-col flex-1 px-4 mt-6 sm:px-6">        
+            <Bonfire.UI.Social.MessageThreadsLive
+              context={@context}
+              threads={@threads}
+            />
+          </div>
+        </div>
+      </div>
+            
+      <div class="flex-shrink-0 w-14">
+        <!-- Force sidebar to shrink to fit close icon -->
+      </div>
+    </div>
+  </div>

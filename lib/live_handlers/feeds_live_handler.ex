@@ -23,7 +23,7 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
   end
 
   def handle_event("reply_to_activity", _, socket) do
-    # debug("reply!")
+    debug("reply!")
 
     activity = e(socket.assigns, :activity, nil)
 

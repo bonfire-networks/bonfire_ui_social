@@ -33,7 +33,7 @@
     />
     </button>
   </Bonfire.UI.Common.PageHeaderLive>
-  <div class="flex-1 bg-base-100 rounded-b-md ">
+  <div class="flex-1 bg-base-100 tablet:rounded-b-md ">
     <Bonfire.UI.Social.FeedLive 
       :if={@feed_id}
       id={@feed_id}
