@@ -27,7 +27,6 @@ defmodule Bonfire.UI.Social.FeedLive do
     ]}
   end
 
-
   def update(%{new_activity: new_activity} = _assigns, socket) when is_map(new_activity) do # adding new feed item
     debug("FeedLive - new_activity (feed is a temporary assign, so only add new activities)")
     {:ok, socket
@@ -35,14 +34,14 @@ defmodule Bonfire.UI.Social.FeedLive do
       feed_update_mode: "prepend",
       feed: [new_activity]
             # |> preloads(current_user: current_user(socket), skip_boundary_check: true)
-    )
+      )
     }
   end
 
-  def update(%{__context__: %{new_activity: new_activity}} = assigns, socket) when is_map(new_activity) do
-    debug("FeedLive: add new activity from component context")
-    update(Map.merge(assigns, %{new_activity: new_activity}), socket)
-  end
+  # def update(%{__context__: %{new_activity: new_activity}} = assigns, socket) when is_map(new_activity) do
+  #   debug("FeedLive: add new activity from component context")
+  #   update(Map.merge(assigns, %{new_activity: new_activity}), socket)
+  # end
 
   def update(%{feed: feed, page_info: page_info} =assigns, socket) when is_list(feed) do
     debug("FeedLive: a feed was provided")
@@ -52,10 +51,10 @@ defmodule Bonfire.UI.Social.FeedLive do
 
     {:ok, socket
     |> assign(
+      page_info: page_info,
       feed: feed
-      # |> dump("FeedLive: feed")
-      |> preloads(current_user: current_user(socket), skip_boundary_check: true),
-      page_info: page_info
+        # |> dump("FeedLive: feed")
+        |> preloads(current_user: current_user(socket), skip_boundary_check: true),
       )}
   end
 
@@ -75,8 +74,8 @@ defmodule Bonfire.UI.Social.FeedLive do
     {:ok, socket
     |> assign(
       feed: e(assigns, :feed, [])
-      # |> debug("FeedLive: feed")
-      |> preloads(current_user: current_user, skip_boundary_check: true)
+        # |> debug("FeedLive: feed")
+        |> preloads(current_user: current_user, skip_boundary_check: true)
     )}
   end
 
@@ -86,7 +85,6 @@ defmodule Bonfire.UI.Social.FeedLive do
       feed_or_feeds -> pubsub_subscribe(feed_or_feeds, socket)
     end
   end
-
 
   # def handle_info({:new_activity, data}, socket) do
   #   debug(feed_live_pubsub_received: data)

@@ -30,12 +30,12 @@ defmodule Bonfire.UI.Social.ActivityLive do
   end
 
   def update(assigns, %{assigns: %{activity_components: _}} = socket) do
-    info("Activity already prepared")
-    {:ok, socket |> assign(assigns)}
+    info("Activity prepared already")
+    {:ok, socket} # |> assign(assigns)}
   end
 
   def update(%{activity: %{} = activity} = assigns, socket) do
-    debug("Preparing Activity")
+    debug("Activity preparation started")
     # debug(assigns, "ActivityLive initial assigns")
 
     activity =
@@ -43,7 +43,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
       |> repo().maybe_preload(:media) # FIXME
       # |> debug("Activity provided")
       |> Map.put(:object, Activities.object_from_activity(assigns))
-      # |> dump("Activity with :object")
+      |> dump("Activity with :object")
 
     verb =
       Activities.verb_maybe_modify(
@@ -112,7 +112,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
     <article
       phx-click={if e(assigns, :showing_within, nil) !=:thread || e(assigns, :activity_inception, nil) ||  e(@object, :id, nil) == nil and e(@activity, :replied, :reply_to_id, nil) != nil and e(@activity, :id, nil) != nil, do: "Bonfire.Social.Feeds:open_activity"}
       phx-value-permalink={@permalink}
-      id={"activity#{e(assigns, :activity_inception, nil)}-"<>( e(@activity, :id, nil) || e(@object, :id, "no-id") )}
+      id={"activity-#{e(assigns, :activity_inception, nil)}-"<>( e(@activity, :id, nil) || e(@object, :id, "no-id") )}
       aria-label="user activity"
       role="article"
       tabIndex="0"
@@ -127,12 +127,15 @@ defmodule Bonfire.UI.Social.ActivityLive do
       "reply": e(@object, :id, nil) != nil and e(@activity, :replied, :reply_to_id, nil) != nil and e(@activity, :id, nil) != nil,
       "border-l-2 border-primary !bg-primary/5": e(@activity, :seen, nil) == nil and e(assigns, :showing_within, nil) == :notifications and e(assigns, :activity_inception, nil) == nil,
     }>
-    <form
-      phx-submit="Bonfire.Social.Feeds:mark_seen"
-      phx-target={"#badge_counter_#{e(assigns, :feed_id, "missing_feed_id")}"}
-      x-intersect.once={intersect_event(assigns)}>
-      <input :if={e(assigns, :feed_id, nil)} type="hidden" name="feed_id" value={e(assigns, :feed_id, nil)} />
-      <input type="hidden" name="activity_id" value={e(@activity, :id, nil)} />
+      <form
+        :if={e(assigns, :feed_id, nil) && e(assigns, :showing_within, nil) in [:messages, :thread, :notifications]}
+        phx-submit="Bonfire.Social.Feeds:mark_seen"
+        phx-target={"#badge_counter_#{e(assigns, :feed_id, "missing_feed_id")}"}
+        x-intersect.once={intersect_event(e(@activity, :seen, nil))}>
+        <input type="hidden" name="feed_id" value={e(assigns, :feed_id, nil)} />
+        <input type="hidden" name="activity_id" value={e(@activity, :id, nil)} />
+      </form>
+
       {#for {component, component_assigns} when is_atom(component) <- e(assigns, :activity_components, [])}
         <Surface.Components.Dynamic.Component
           module={component}
@@ -160,7 +163,6 @@ defmodule Bonfire.UI.Social.ActivityLive do
           media={e(component_assigns, :media, nil)}
         />
       {/for}
-    </form>
     </article>
     """
   end
@@ -173,9 +175,8 @@ defmodule Bonfire.UI.Social.ActivityLive do
     """
   end
 
-  defp intersect_event(%{activity: %{seen: %{id: _}}}), do: nil # already seen
-  defp intersect_event(%{showing_within: showing_within, feed_id: feed_id}) when not is_nil(feed_id) when showing_within in [:messages, :thread, :notifications], do: "$el.dispatchEvent( new Event(\"submit\", {bubbles: true, cancelable: true}) )"
-  defp intersect_event(_), do: nil
+  defp intersect_event(%{id: _}), do: nil # already seen
+  defp intersect_event(_), do: "$el.dispatchEvent( new Event(\"submit\", {bubbles: true, cancelable: true}) )"
 
   # don't show subject twice
   def component_activity_subject(_, %{object: %Bonfire.Data.Identity.User{}}, _), do: []

@@ -69,7 +69,7 @@ defmodule Bonfire.Social.Posts.LiveHandler do
       {:noreply,
         socket
         |> assign_flash(:error, "Could not post 😢 (#{error_msg(e)})")
-        |> patch_to(current_url(socket), fallback: "/error") # so the flash appears
+        # |> patch_to(current_url(socket), fallback: "/error") # so the flash appears
       }
     end
   end
@@ -98,8 +98,8 @@ defmodule Bonfire.Social.Posts.LiveHandler do
         assign(socket,
         thread_mode: :flat
       )}
-    end  
-    
+    end
+
   end
 
   def handle_event("input", %{"circles" => selected_circles} = _attrs, socket) when is_list(selected_circles) and length(selected_circles)>0 do
