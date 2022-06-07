@@ -6,31 +6,31 @@
     class="pb-2 rounded-b-box">
     <div class="menu bg-base-100 ">
       <li :if={current_user(@current_user)}>
-        <LiveRedirect 
+        <LivePatch 
           class={"ml-1": @page != "home",
             "border-l-4 border-primary bg-base-content bg-opacity-10": @page == "home"} 
           to={path(:feed)}>
           <Solid.HomeIcon class="w-4 h-4" />
           <span class="text-sm truncate ellipsis">{l "My feed"}</span>
-        </LiveRedirect> 
+        </LivePatch> 
       </li>
       <li>
-        <LiveRedirect 
+        <LivePatch 
           class={"ml-1": @page != "local",
             "border-l-4 border-primary bg-base-content bg-opacity-10": @page == "local"} 
           to={if current_user(@current_user), do: "/feed/local", else: "/local"}>
           <Solid.LocationMarkerIcon class="w-4 h-4" />
           <span class="text-sm truncate ellipsis">{l "Local timeline"}</span>
-        </LiveRedirect> 
+        </LivePatch> 
       </li>
       <li :if={current_user(@current_user) || Settings.get([:bonfire_social, :feeds, :federation, :show_guests], false, assigns)}>
-        <LiveRedirect 
+        <LivePatch 
           class={"ml-1": @page != "federation",
             "border-l-4 border-primary bg-base-content bg-opacity-10": @page == "federation"} 
           to={"/feed/federation"}>
           <Solid.GlobeIcon class="w-4 h-4" />
           <span class="text-sm truncate ellipsis">{l "Federated timeline"}</span>
-        </LiveRedirect> 
+        </LivePatch> 
       </li>
     </div>
   </div>

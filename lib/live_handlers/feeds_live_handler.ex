@@ -212,10 +212,16 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
   end
 
   def paginate_fetch_assign_default(opts, socket) do
+    feed_assigns = feed_assigns(:default, opts)
+
     {:noreply, socket
       |> assign(feed_update_mode: "append")
       |> assign(
-        feed_assigns(:default, opts)
+        feed_assigns
+        |> Keyword.put(:feed,
+          feed_assigns[:feed]
+          |> preloads(socket)
+        )
       )}
   end
 
@@ -224,41 +230,52 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
 
     {:noreply, socket |> assign(
       feed_update_mode: "append",
-      feed: e(feed, :edges, []),
+      feed: e(feed, :edges, [])
+        |> preloads(socket),
       page_info: e(feed, :page_info, [])
     ) }
   end
 
 
-  def load_feed_assigns(:my, socket_or_opts) do
-    send(self(), {Bonfire.Social.Feeds.LiveHandler, {:load_feed, :my}})
-
-    [
+  def load_feed_assigns(:my = feed_name, socket_or_opts) do
+    assigns = [
       loading: true,
       # current_user: current_user,
-      selected_tab: "home",
+      selected_tab: "home", # FIXME: clean up page vs tab
+      page: "home",
       page_title: l("Home"),
       feed_title: l("My feed"),
-      feed_id: :my,
+      feed_id: feed_name,
       # feed_ids: feed_ids,
       feed: [],
-      page_info: nil
+      page_info: nil,
+      sidebar_widgets: [
+        users: [
+          main: [
+            {Bonfire.UI.Common.WidgetInstanceInfoLive, []}
+          ],
+          secondary: [
+            {Bonfire.UI.Social.WidgetTimelinesLive, [page: "home"]},
+            {Bonfire.UI.Social.WidgetTagsLive , []}
+          ]
+        ]
+      ]
     ]
+
+    feed_assigns_or_load_async(feed_name, assigns, socket_or_opts)
   end
 
-  def load_feed_assigns(:fediverse, socket_or_opts) do
-    send(self(), {Bonfire.Social.Feeds.LiveHandler, {:load_feed, :fediverse}})
-
-    [
+  def load_feed_assigns(:fediverse = feed_name, socket_or_opts) do
+    assigns = [
       loading: true,
       # current_user: current_user(socket_or_opts),
       selected_tab: "fediverse",
+      page: "federation", # FIXME: clean up page vs tab
       page_title: l("Federated activities from remote instances"),
-      page: "federation",
       feed_title: l("Activities from around the fediverse"),
       feedback_title: l("Your fediverse feed is empty"),
       feedback_message: l("It seems you and your friends do not follow any other users on a different instance"),
-      feed_id: :fediverse,
+      feed_id: feed_name,
       feed: [],
       page_info: nil,
       # FIXME: seems too much re-assigning the whole sidebar widgets only to change the page prop?
@@ -274,18 +291,19 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
         ]
       ]
     ]
+
+    feed_assigns_or_load_async(feed_name, assigns, socket_or_opts)
   end
 
-  def load_feed_assigns(:local, socket_or_opts) do
-    send(self(), {Bonfire.Social.Feeds.LiveHandler, {:load_feed, :local}})
-    [
+  def load_feed_assigns(:local = feed_name, socket_or_opts) do
+    assigns = [
       loading: true,
       # current_user: current_user(socket_or_opts),
       selected_tab: "instance",
+      page: "local", # FIXME: clean up page vs tab
       page_title: l("Local activities"),
-      page: "local",
       feed_title: l("Activities on this instance"),
-      feed_id: :local,
+      feed_id: feed_name,
       feed: [],
       page_info: nil, #|> IO.inspect
       # FIXME: seems too much re-assigning the whole sidebar widgets only to change the page prop?
@@ -301,6 +319,8 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
         ]
       ]
     ]
+
+    feed_assigns_or_load_async(feed_name, assigns, socket_or_opts)
   end
 
   def load_feed_assigns(_default, socket_or_opts) do
@@ -313,6 +333,17 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
     end
   end
 
+  defp feed_assigns_or_load_async(feed_name, assigns, %Phoenix.LiveView.Socket{} = socket) do
+    if connected?(socket) and Config.get(:env) != :test do
+      send(self(), {Bonfire.Social.Feeds.LiveHandler, {:load_feed, feed_name}})
+      assigns
+    else
+      assigns ++ feed_assigns(feed_name, socket)
+    end
+  end
+  defp feed_assigns_or_load_async(feed_name, assigns, socket_or_opts) do
+    assigns ++ feed_assigns(feed_name, socket_or_opts)
+  end
 
   def feed_assigns(:my, socket_or_opts) do
     # debug(myfeed: feed)
@@ -364,5 +395,63 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
       feed_assigns(:local, socket_or_opts) # fallback to showing instance feed
     end
   end
+
+  def preloads(feed, socket_or_opts \\ [])
+  def preloads(feed, socket_or_opts) when is_list(feed) and length(feed) > 0 do
+    debug("FeedLive: preload objects")
+
+    opts = [preload: e(socket_or_opts, :assigns, :preload, :feed), current_user: current_user(socket_or_opts), skip_boundary_check: true, with_cache: false]
+
+    case List.first(feed) do
+
+      %{activity: %{id: _}} ->
+        feed
+        # |> debug("feed of FeedPublish or objects before extra preloads")
+        |> Bonfire.Social.Activities.activity_preloads(e(opts, :preload, :feed), opts)
+        # |> Bonfire.Common.Pointers.Preload.maybe_preload_nested_pointers([activity: [:object]])
+        |> preload_objects([:activity, :object], opts)
+        # |> debug("feed with extra preloads")
+
+      %{edge: %{id: _}} ->
+        feed
+        # |> debug("feed of Edge objects before extra preloads")
+        |> Bonfire.Social.Activities.activity_preloads(e(opts, :preload, :feed), opts)
+        # |> Bonfire.Common.Pointers.Preload.maybe_preload_nested_pointers([edge: [:object]])
+        |> preload_objects([:edge, :object], opts)
+        # |> debug("feed with extra preloads")
+
+      %{object: _} ->
+        feed
+        # |> debug("feed of activities before extra preloads")
+        |> Bonfire.Social.Activities.activity_preloads(e(opts, :preload, :feed), opts)
+        # |> Bonfire.Common.Pointers.Preload.maybe_preload_nested_pointers([:object])
+        |> preload_objects([:object], opts)
+        # |> debug("feed with extra preloads")
+
+      _ ->
+        warn("Could not preload feed - the data structure was not recognised")
+        feed
+    end
+  end
+  def preloads(%{edges: feed} = page, socket_or_opts), do: Map.put(page, :feed, preloads(feed, socket_or_opts))
+  def preloads(feed, socket_or_opts), do: feed
+
+  def preload_objects(feed, under, opts) do
+    object_preloads()
+    |> Bonfire.Common.Repo.Preload.maybe_preloads_per_nested_schema(feed, under, ..., opts)
+  end
+
+  def object_preloads do
+    [
+      # {Bonfire.Data.Social.Post, Bonfire.UI.Social.Activity.NoteLive.preloads()},
+      # {Bonfire.Data.Identity.User, Bonfire.UI.Social.Activity.CharacterLive.preloads()},
+      {ValueFlows.EconomicEvent, Bonfire.UI.Social.Activity.EconomicEventLive.preloads()},
+      {ValueFlows.EconomicResource, Bonfire.UI.Social.Activity.EconomicResourceLive.preloads()},
+      {ValueFlows.Planning.Intent, Bonfire.UI.Social.Activity.IntentTaskLive.preloads()},
+      {ValueFlows.Process, Bonfire.UI.Social.Activity.ProcessListLive.preloads()},
+    ]
+    |> debug("preload object data in feed")
+  end
+
 
 end

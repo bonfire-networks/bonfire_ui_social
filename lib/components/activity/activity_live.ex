@@ -40,10 +40,10 @@ defmodule Bonfire.UI.Social.ActivityLive do
 
     activity =
       activity
-      |> repo().maybe_preload(:media) # FIXME
+      # |> repo().maybe_preload(:media) # FIXME
       # |> debug("Activity provided")
       |> Map.put(:object, Activities.object_from_activity(assigns))
-      |> dump("Activity with :object")
+      # |> dump("Activity with :object")
 
     verb =
       Activities.verb_maybe_modify(
@@ -188,7 +188,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
   def component_activity_subject(verb, activity, _) when verb in @react_verbs,
     do: [
       {Bonfire.UI.Social.Activity.SubjectMinimalLive, %{
-        activity: repo().maybe_preload(activity, subject: [:character]),
+        # activity: repo().maybe_preload(activity, subject: [:character]),
         verb: verb
       }},
       component_activity_maybe_creator(activity)
@@ -199,7 +199,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
       when verb in @reply_verbs,
       do: [
         {Bonfire.UI.Social.Activity.SubjectMinimalLive, %{
-          activity: repo().maybe_preload(activity, subject: [:character]),
+          # activity: repo().maybe_preload(activity, subject: [:character]),
           verb: verb
         }}
       ]
@@ -254,21 +254,21 @@ defmodule Bonfire.UI.Social.ActivityLive do
   def component_activity_maybe_creator(%{created: _created} = object),
     do:
       object
-      |> repo().maybe_preload(created: [creator: [:profile, :character]])
+      # |> repo().maybe_preload(created: [creator: [:profile, :character]])
       |> e(:created, :creator, nil)
       |> component_activity_maybe_creator()
 
   def component_activity_maybe_creator(%{creator: _} = object),
     do:
       object
-      |> repo().maybe_preload(creator: [:profile, :character])
+      # |> repo().maybe_preload(creator: [:profile, :character])
       |> e(:creator, nil)
       |> component_activity_maybe_creator()
 
   def component_activity_maybe_creator(%{subject: %{profile: _, character: _}} = object),
     do:
       object
-      |> repo().maybe_preload(subject: [:profile, :character])
+      # |> repo().maybe_preload(subject: [:profile, :character])
       |> e(:subject, nil)
       |> component_activity_maybe_creator()
 
@@ -445,9 +445,10 @@ defmodule Bonfire.UI.Social.ActivityLive do
     do: [Bonfire.UI.Social.Activity.NoteLive]
 
   def component_for_object_type(type, object) when type in [Bonfire.Data.Identity.User],
-    do: [{Bonfire.UI.Social.Activity.CharacterLive, %{
-        object: repo().maybe_preload(object, [:character, profile: :icon])
-      }}]
+    do: [Bonfire.UI.Social.Activity.CharacterLive]
+    # do: [{Bonfire.UI.Social.Activity.CharacterLive, %{
+    #     object: repo().maybe_preload(object, [:character, profile: :icon])
+    #   }}]
 
   def component_for_object_type(type, object) when type in [Bonfire.Classify.Category],
     do: [Bonfire.UI.Social.Activity.CategoryLive]

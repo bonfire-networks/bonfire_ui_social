@@ -37,7 +37,7 @@
     <Bonfire.UI.Social.FeedLive 
       :if={@feed_id || @loading}
       id={@feed_id}
-      loading={@loading}
+      loading={e(assigns, :loading, nil)}
       feed_id={@feed_id}
       feedback_title={e(assigns, :feedback_title, nil)}
       feedback_message={e(assigns, :feedback_message, nil)}

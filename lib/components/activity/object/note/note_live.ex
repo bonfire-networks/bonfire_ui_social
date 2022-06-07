@@ -10,6 +10,10 @@ defmodule Bonfire.UI.Social.Activity.NoteLive do
   prop showing_within, :any
   prop activity_inception, :any
 
+  def preloads(), do: [
+    :post_content
+  ]
+
   def post_content(object) do
     e(object, :post_content, object)
     # |> debug("activity_note_object")

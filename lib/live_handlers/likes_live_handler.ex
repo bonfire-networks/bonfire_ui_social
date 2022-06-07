@@ -53,7 +53,6 @@ defmodule Bonfire.Social.Likes.LiveHandler do
     # debug(list_of_assigns, "list of assign:")
     list_of_objects = list_of_assigns
     |> Enum.map(& e(&1, :object, nil))
-    |> repo().maybe_preload(:like_count)
     # |> debug("list_of_objects")
 
     list_of_ids = list_of_objects
@@ -61,12 +60,16 @@ defmodule Bonfire.Social.Likes.LiveHandler do
     |> filter_empty([])
     # |> debug("list_of_ids")
 
-    my_states = if current_user, do: Bonfire.Social.Likes.get!(current_user, list_of_ids, preload: false) |> Map.new(fn l -> {e(l, :edge, :object_id, nil), true} end), else: %{}
+    my_states = if current_user, do: do_list_my_liked(current_user, list_of_ids), else: %{}
 
     # info(my_states, "my_likes")
 
-    objects_counts = list_of_objects |> Map.new(fn o -> {e(o, :id, nil), e(o, :like_count, :object_count, nil)} end)
-    # |> debug("like_counts")
+    objects_counts = if Bonfire.Me.Settings.get([:ui, :show_activity_counts], nil, current_user: current_user) do
+      list_of_objects
+      |> repo().maybe_preload(:like_count, follow_pointers: false)
+      |> Map.new(fn o -> {e(o, :id, nil), e(o, :like_count, :object_count, nil)} end)
+      # |> debug("like_counts")
+    end
 
     list_of_assigns
     |> Enum.map(fn assigns ->
@@ -80,9 +83,19 @@ defmodule Bonfire.Social.Likes.LiveHandler do
       )
       |> Map.put(
         :like_count,
-        Map.get(objects_counts, object_id)
+        e(objects_counts, object_id, nil)
       )
     end)
   end
+
+  # defp list_my_liked(current_user, objects) when is_list(objects) do
+  #   Cache.cached_preloads_for_objects("my_like:#{ulid(current_user)}:", objects, fn list_of_ids -> do_list_my_liked(current_user, list_of_ids) end)
+  # end
+
+  defp do_list_my_liked(current_user, list_of_ids) when is_list(list_of_ids) and length(list_of_ids) > 0 do
+    Bonfire.Social.Likes.get!(current_user, list_of_ids, preload: false)
+    |> Map.new(fn l -> {e(l, :edge, :object_id, nil), true} end)
+  end
+  defp do_list_my_liked(_, _objects), do: %{}
 
 end
