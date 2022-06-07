@@ -2,7 +2,7 @@
   :if={current_user(assigns) != nil and e(assigns, :showing_within, nil) not in [:notifications, :search]}
   aria-haspopup="true"
   data-tip={l "More"}
-  class={"dropdown tooltip tooltip-bottom relative z-20 feed_activity relative ",
+  class={"dropdown tooltip tooltip-bottom relative z-40 feed_activity relative ",
   "dropdown-end": e(assigns, :showing_within, nil) != :widget,
   "dropdown-top dropdown-end showing_within:widget": e(assigns, :showing_within, nil) == :widget
   }>
@@ -18,44 +18,14 @@
   </div>
   <ul
     tabindex="0"
-    class="w-60 z-40 shadow menu dropdown-content bg-neutral-content rounded dropdown_actions
+    class="w-60 z-[90] shadow menu dropdown-content bg-neutral-content rounded dropdown_actions
     role="menu"
     aria-orientation="vertical"
     aria-labelledby="more-menu">
 
     <#slot name="extra_items" />
 
-    <!-- Copy the activity -->
-    <!-- <li 
-      class=" hover:bg-neutral hover:bg-opacity-20">
-      <div class="">
-        <div class="flex items-center w-full text-sm text-neutral no-padding">
-          <Solid.ClipboardIcon
-          class={"w-4 h-4 mr-2 shrink-0 text-neutral text-opacity-70"} />
-          <span 
-            class={"truncate ellipsis"}>
-            {l "Copy the post"}
-          </span>
-        </div>
-      </div>
-    </li> -->
 
-    <!-- Follow the author-->
-    <!-- <li 
-      :if={e(current_user(assigns), :id, nil) != subject_id(assigns)}
-      class=" hover:bg-neutral hover:bg-opacity-20">
-      <div>
-        <Bonfire.UI.Common.FollowButtonLive
-          object={subject(assigns)}
-          label={name(assigns)}
-          id={ComponentID.new(Bonfire.UI.Common.FollowButtonLive, subject(assigns))}
-          class="flex items-center w-full text-sm text-neutral no-padding"
-          icon_class="w-4 h-4 mr-0 shrink-0 text-neutral text-opacity-70"
-        />
-      </div>
-    </li> -->
-
-    
     <!-- Flag the action -->
     <li 
       :if={e(current_user(assigns), :id, nil) != subject_id(assigns) and @verb !="Flag"}
@@ -86,9 +56,9 @@
       peered={e(@object, :peered, nil)}
     />
 
-    <!-- Delete the activity -->
-
-    <li 
+    <!-- Delete the activity: WIP hiding it for first beta release -->
+    
+    <!-- <li 
       :if={@object_type not in [Bonfire.Data.Social.Message] and e(current_user(assigns), :id, nil) == subject_id(assigns) or Bonfire.Me.Users.is_admin?(current_user(assigns))}
       class=" hover:bg-neutral hover:bg-opacity-20">
       <OpenModalLive
@@ -115,7 +85,7 @@
         </button>
         </:action_btns>
       </OpenModalLive>
-    </li>
+    </li> -->
 
 
     <!-- Delete the object -->

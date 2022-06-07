@@ -117,7 +117,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
       role="article"
       tabIndex="0"
       class={
-      "p-3 activity relative pl-14 group " <> e(assigns, :class, ""),
+      "p-3 activity relative pl-16 group " <> e(assigns, :class, ""),
       "activity_inception bg-base-content/10 !m-0 opacity-100 before:!left-2 before:top-1 before:bottom-1": e(assigns, :activity_inception, nil) != nil and  e(assigns, :thread_mode, nil) == :flat,
       "cursor-pointer hover:bg-base-content/5": e(@object, :id, nil) == nil or e(@activity, :replied, :reply_to_id, nil) != nil or e(@activity, :id, nil) != nil and !e(assigns, :viewing_main_object, nil) and e(assigns, :showing_within, nil) != :thread, # Hover the activity background unless it is a quoted activity
       "pt-6 hover:!bg-base-200/100 !bg-base-200 border-b border-base-content/10": e(assigns, :viewing_main_object, nil) == true,

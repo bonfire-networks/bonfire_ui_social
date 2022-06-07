@@ -12,11 +12,10 @@
         :if={e(assigns, :thread_mode, nil) !=:flat && length(@child_replies)>0 }
         x-cloak
         x-show="show_replies"
-        @click="show_replies = !show_replies"
-        class="cursor-pointer group z-10 left-[16px] px-3 top-[40px] bottom-[0px] absolute">
+        class="group z-10 left-[16px] px-3 top-[40px] bottom-[0px] absolute">
         <i 
           :class=" !show_replies ? 'bg-primary bottom-[0px]' : 'bg-base-content/20 bottom-[0px]'"
-          class="bg-base-content/20 group-hover:bg-primary group-hover:bg-opacity-100 top-0 bottom-0 z-10 w-[2px] absolute"></i>
+          class="bg-base-content/20 top-0 bottom-0 z-10 w-[2px] absolute"></i>
       </div>
       <div 
         x-cloak
