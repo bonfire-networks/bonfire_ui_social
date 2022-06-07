@@ -25,9 +25,9 @@ defmodule Bonfire.Social.Activities.CreatePost.Test do
       |> render_submit(%{"boundary_selected" => "public", "post" => %{"post_content" => %{"html_body" => content}}})
       # |> Floki.text() =~ "Posted"
 
+      live_pubsub_wait(view)
       assert [ok] = find_flash(view)
       assert ok |> Floki.text() =~ "Posted"
-
     end
 
     test "shows up on my profile timeline" do
