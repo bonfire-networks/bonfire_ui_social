@@ -38,9 +38,16 @@
       </div>
       {#else}
         {#if @loading}
-          <div id="empty-feed" class="flex items-center my-12 place-content-center">
+          <div class="flex items-center my-12 place-content-center">
             Loading...
-        </div>
+          </div>
+          {#case maybe_cute_gif()}
+            {#match url when is_binary(url)}
+              <div class="my-12 flex flex-row justify-center items-center">
+                <img src={url} />
+              </div>
+            {#match _}
+          {/case}
         {#else}
           <div id="empty-feed" class="flex items-center my-12 place-content-center">
             <Bonfire.UI.Common.EmptyFeed
