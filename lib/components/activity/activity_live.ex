@@ -22,7 +22,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
   # TODO: put in config and/or autogenerate with Verbs genserver
   @reply_verbs ["Reply", "Respond"]
   @create_verbs ["Create"]
-  @react_verbs ["Like", "Boost", "Flag", "Tag"]
+  @react_verbs ["Like", "Boost", "Flag", "Tag"] #351 - Flag seems to work when lowercase
   @create_or_reply_verbs @create_verbs ++ @reply_verbs
 
   def preload(list_of_assigns) do
@@ -203,7 +203,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
           verb: verb
         }}
       ]
-
+  
   # create (or reply) activities
   def component_activity_subject(
         verb,

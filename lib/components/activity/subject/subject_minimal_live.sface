@@ -123,6 +123,9 @@
     </div> -->
 
   {#match _}
+
+
+
     <div class={
       "flex items-center mb-3", 
       "-ml-7": @verb not in ["Reply", "Respond"]
@@ -225,9 +228,9 @@
         </div>
       </div>
 
-
-        <div 
-        :if={@verb == "Flag"}
+      <!-- FLAG -->
+      <div 
+        :if={@verb == "flag"}
         class="flex items-center justify-start">  
          <Solid.FlagIcon class="w-4 h-4 text-error" />
           <div class="flex-1 ml-2">

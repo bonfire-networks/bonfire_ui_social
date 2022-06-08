@@ -2,6 +2,7 @@ defmodule Bonfire.UI.Social.MessageThreadsLive do
   use Bonfire.UI.Common.Web, :stateless_component
 
   prop threads, :any
+  prop thread_id, :string
   prop tab_id, :string
   prop context, :any, default: nil
   # prop to_circles, :list

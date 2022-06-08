@@ -26,6 +26,7 @@
             <Bonfire.UI.Social.MessageThreadsLive
               context={@context}
               threads={@threads}
+              thread_id={@thread_id}
             />
           </div>
         </div>

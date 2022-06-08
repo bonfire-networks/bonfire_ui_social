@@ -47,13 +47,14 @@ defmodule Bonfire.Social.Messages.LiveHandler do
     )}
   end
 
-  def threads_widget(current_user, user \\ nil, opts \\ []) do
+  def threads_widget(current_user, user \\ nil,  thread_id \\ nil, opts \\ []) do
     [
       users: [
         main: [
           {Bonfire.UI.Social.MessageThreadsLive, [
               context: ulid(user),
-              threads: list_threads(current_user, user, opts)
+              threads: list_threads(current_user, user, opts),
+              thread_id: thread_id
             ] ++ opts
           }
         ],
