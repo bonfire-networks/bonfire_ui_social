@@ -90,7 +90,7 @@
 
     <!-- Delete the object -->
     <li 
-      :if={e(current_user(assigns), :id, nil) == subject_id(assigns) or Bonfire.Me.Users.is_admin?(current_user(assigns))}
+      :if={e(current_user(assigns), :id, nil) == subject_id(assigns) or Bonfire.Me.Users.is_admin?(current_user(assigns) && Bonfire.Common.Types.object_type(@object |> debug("typpee")) |> debug("typpee") !=Bonfire.Data.Identity.User)}
       class=" hover:bg-neutral hover:bg-opacity-20">
       <OpenModalLive
         id={ComponentID.new(OpenModalLive, @object)} 

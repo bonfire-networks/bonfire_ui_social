@@ -162,7 +162,7 @@ defmodule Bonfire.UI.Social.MessagesLive do
 
         to_circles = if length(participants)>0, do: Enum.map(participants, & {e(&1, :character, :username, l "someone"), e(&1, :id, nil)})
 
-        names = if length(participants)>0, do: Enum.map_join(participants ++ [current_user], " & ", &e(&1, :profile, :name, e(&1, :character, :username, l "someone else")))
+        names = if length(participants)>0, do: Enum.map_join(participants, " & ", &e(&1, :profile, :name, e(&1, :character, :username, l "someone else")))
 
         # mentions = if length(participants)>0, do: Enum.map_join(participants, " ", & "@"<>e(&1, :character, :username, ""))<>" "
 

@@ -6,7 +6,7 @@
   <div 
     data-id="action_reply"
     phx-click="Bonfire.Social.Feeds:reply_to_activity"
-    phx-target={if e(assigns, :activity_id, nil), do: "#activity-"<>e(assigns, :activity_id, "")}
+    phx-target={if e(assigns, :activity_id, nil), do: "#activity--"<>e(assigns, :activity_id, "")}
   >
     <div class={"btn btn-ghost btn-circle btn-sm"}> 
       <span class="text-opacity-50 text-base-content">
