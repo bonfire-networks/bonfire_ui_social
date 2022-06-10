@@ -22,7 +22,7 @@ defmodule Bonfire.Social.Boosts.LiveHandler do
 
   defp boost_action(object, boost?, params, socket) do
     ComponentID.send_assigns(
-      e(params, "component", Bonfire.UI.Common.BoostActionLive),
+      Bonfire.UI.Common.BoostActionLive,
       ulid(object),
       [my_boost: boost?],
       socket)

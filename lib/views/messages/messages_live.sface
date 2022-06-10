@@ -39,7 +39,7 @@
      
       
      </Bonfire.UI.Common.PageHeaderLive>
-      <div class="flex-1 p-3 bg-base-100">
+      <div class="flex-1 p-3 bg-base-100 relative z-[90]">
 
         <Bonfire.UI.Common.SmartInputLive
           id={:smart_input_message}

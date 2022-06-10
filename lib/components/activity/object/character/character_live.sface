@@ -86,7 +86,7 @@
           {e(@activity, :subject, :profile, :name, "Anonymous")}
         </LiveRedirect>
         <span :if={e(@activity, :subject, :id, nil) == e(current_user(assigns), :id, nil)}>
-          you
+          {l "you"}
         </span>
       </span>
 
@@ -94,7 +94,7 @@
 
       <!-- then summarise the object -->
       <span :if={e(@object, :id, nil) == e(current_user(assigns), :id, nil)}>
-        you
+        {l "you"}
       </span>
       <LiveRedirect 
         :if={e(@object, :id, nil) !=e(current_user(assigns), :id, nil)} 
