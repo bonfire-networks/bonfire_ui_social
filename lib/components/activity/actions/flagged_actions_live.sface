@@ -14,12 +14,10 @@
     {#if to_string(@object_type) == "Elixir.Bonfire.Data.Identity.User"}
       <button 
 
-        class="normal-case rounded opacity-80 hover:opacity-100 btn btn-error btn-xs">{l "Block "} {e(@object, :profile, :name, "")}</button> 
+        class="normal-case rounded opacity-80 hover:opacity-100 btn btn-error btn-xs">{l "Block"} {e(@object, :profile, :name, "")}</button> 
     {#else}
     <button 
-
-      class="normal-case rounded opacity-80 hover:opacity-100 btn btn-error btn-xs">{l "Delete this post"}</button>
-    
+      class="normal-case rounded opacity-80 hover:opacity-100 btn btn-error btn-xs">{l("Delete this")} {e(assigns, :object_type_readable, l "object")}</button>
     {/if}
     <button 
       phx-click={"Bonfire.Social.Flags:unflag"} 

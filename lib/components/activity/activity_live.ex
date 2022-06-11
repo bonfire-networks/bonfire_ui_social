@@ -54,9 +54,8 @@ defmodule Bonfire.UI.Social.ActivityLive do
 
     verb_display = Activities.verb_display(verb)
     created_verb_display = Activities.verb_display("Create")
-    object_type = Bonfire.Common.Types.object_type(activity.object) |> debug("object_type")
-    # |> String.downcase()
-    object_type_readable = module_to_human_readable(object_type)
+    object_type = Types.object_type(activity.object) |> debug("object_type")
+    object_type_readable = Types.object_type_display(object_type)
 
     thread = e(assigns, :thread_object, nil) || e(activity, :replied, :thread, nil) || e(activity, :replied, :thread_id, nil)
 
@@ -203,7 +202,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
           verb: verb
         }}
       ]
-  
+
   # create (or reply) activities
   def component_activity_subject(
         verb,

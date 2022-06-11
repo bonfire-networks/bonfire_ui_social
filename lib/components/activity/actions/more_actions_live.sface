@@ -90,7 +90,7 @@
 
     <!-- Delete the object -->
     <li 
-      :if={e(current_user(assigns), :id, nil) == subject_id(assigns) or Bonfire.Me.Users.is_admin?(current_user(assigns) && Bonfire.Common.Types.object_type(@object |> debug("typpee")) |> debug("typpee") !=Bonfire.Data.Identity.User)}
+      :if={e(current_user(assigns), :id, nil) == subject_id(assigns) or Bonfire.Me.Users.is_admin?(current_user(assigns) && Types.object_type(@object |> debug("typpee")) |> debug("typpee") !=Bonfire.Data.Identity.User)}
       class=" hover:bg-neutral hover:bg-opacity-20">
       <OpenModalLive
         id={ComponentID.new(OpenModalLive, @object)} 
@@ -102,7 +102,7 @@
           <button class="flex items-center text-sm text-neutral" type="button">
             <Solid.TrashIcon class="w-4 h-4 mr-2 shrink-0 text-neutral text-opacity-70" />
             <span class="truncate ellipsis">
-              {l("Delete this")<>" "<>e(assigns, :object_type_readable, l "object")}
+              {l("Delete this")} {e(assigns, :object_type_readable, l "object")}
             </span>
           </button>
         </:open_btn>
@@ -112,7 +112,7 @@
           phx-value-id={e(@object, :id, "")}
           class="btn btn-error">
           <Solid.TrashIcon class="w-4 h-4 mr-2 shrink-0" />
-          <span class="truncate ellipsis">{l("Delete this")<>" "<>e(assigns, :object_type_readable, l "object")}</span>
+          <span class="truncate ellipsis">{l("Delete this")} {e(assigns, :object_type_readable, l "object")}</span>
         </button>
         </:action_btns>
 
