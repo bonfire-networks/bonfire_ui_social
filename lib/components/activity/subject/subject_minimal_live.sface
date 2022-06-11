@@ -145,6 +145,7 @@
               {e(@activity, :subject, :profile, :name, nil) || e(@activity, :subject, :character, :username, nil)}
             </LiveRedirect>
             {raw @verb_display}
+
           </div>
         </div>
       </div>
@@ -162,7 +163,13 @@
               to={path(e(@activity, :subject, :character, nil)) }>
               {e(@activity, :subject, :profile, :name, nil) || e(@activity, :subject, :character, :username, nil)}
             </LiveRedirect>
+            
             {raw @verb_display}
+
+             <!-- special case when current_user is the one being followed -->
+            <span :if={e(@object, :id, nil) == e(current_user(assigns), :id, nil)}>
+              you
+            </span>
           </div>
         </div>
       </div>
@@ -246,5 +253,6 @@
           </div>
         </div>      
     </div>
-{/case}
+  {/case}
+
 </div>

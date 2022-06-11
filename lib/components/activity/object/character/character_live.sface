@@ -37,10 +37,15 @@
       <div class="items-baseline justify-between flex-1">
         <p class="text-base font-semibold group-hover:underline text-base-content">
           {e(the_other(assigns), :profile, :name, "")}
+          <span
+          :if={e(the_other(assigns), :character, :username, nil)}
+          class="leading-[16px] font-[16px] ml-1 truncate ellipsis text-base-content text-opacity-60 subject_username">
+            @{e(the_other(assigns), :character, :username, "")}
+          </span>
         </p>
-        <p class="-mt-px text-sm text-base-content text-opacity-70">
+        <!-- <p class="-mt-px text-sm text-base-content text-opacity-70">
           @{e(the_other(assigns), :character, :username, "anon")} 
-        </p>
+        </p> -->
       </div>
         <!-- SHOW THE BIO IN SEARCH -->
       <div class="prose-sm prose">
