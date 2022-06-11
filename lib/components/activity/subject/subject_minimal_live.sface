@@ -97,7 +97,7 @@
          <div class="absolute left-4">
           <Solid.PencilIcon :if={@verb == "Reply"} class="flex-shrink-0 w-4 h-4 text-info" />
           </div>
-        {#match "flag"}
+        {#match "Flag"}
          <div class="absolute left-4">
           <Solid.FlagIcon :if={@verb == "Flag"} class="flex-shrink-0 w-4 h-4 text-info" />
           </div>
@@ -230,7 +230,7 @@
 
       <!-- FLAG -->
       <div 
-        :if={@verb == "flag"}
+        :if={@verb == "Flag"}
         class="flex items-center justify-start">  
          <Solid.FlagIcon class="w-4 h-4 text-error" />
           <div class="flex-1 ml-2">

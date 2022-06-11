@@ -11,7 +11,7 @@ defmodule Bonfire.UI.Social.FlagsLive do
   def update(assigns, socket) do
     # current_user = current_user(assigns)
     feed = Bonfire.Social.FeedActivities.feed(:flags, current_user(assigns))
-    edges = for %{edge: %{} = edge} <- e(feed, :edges, []), do: %{activity: edge |> Map.put(:verb, %{verb: "flag"})} #|> debug
+    edges = for %{edge: %{} = edge} <- e(feed, :edges, []), do: %{activity: edge |> Map.put(:verb, %{verb: "Flag"})} #|> debug
 
     {:ok, socket
     |> assign(

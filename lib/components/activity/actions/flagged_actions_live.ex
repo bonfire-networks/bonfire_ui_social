@@ -13,4 +13,10 @@ defmodule Bonfire.UI.Social.FlaggedActionsLive do
   prop object_type_readable, :any
   prop flagged, :any
 
+  def flagged_character(object) do
+    e(object, :created, :creator, :character, nil) || e(object, :character, nil)
+  end
+  def flagged_profile(object) do
+    e(object, :created, :creator, :profile, nil) || e(object, :profile, nil)
+  end
 end

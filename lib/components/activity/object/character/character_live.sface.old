@@ -1,0 +1,147 @@
+{#if e(assigns, :showing_within, nil) == :widget}
+
+<div class={"flex items-center mb-3"}>
+  <div class="flex items-center justify-start w-5 h-5">
+    <Solid.UserAddIcon class="w-5 h-5 text-info" />      
+  </div>
+  <div class="flex-1 ml-2">
+    <div 
+      class="text-sm font-medium text-base-content text-opacity-80">
+
+      <!-- first show the subject -->
+      <span data-id="subject">
+        <LiveRedirect
+          :if={e(@activity, :subject, :id, nil) != e(current_user(assigns), :id, nil)}
+          to={path(e(@activity, :subject, nil))}
+          aria-label={e(@activity, :subject, :character, :username, "") <> " profile"}
+          class="font-medium "
+          >
+          {e(@activity, :subject, :profile, :name, "Anonymous")}
+        </LiveRedirect>
+        <span :if={e(@activity, :subject, :id, nil) == e(current_user(assigns), :id, nil)}>
+          you
+        </span>
+      </span>
+
+      {raw @verb_display}
+
+      <!-- then summarise the object -->
+      <span :if={e(@object, :id, nil) == e(current_user(assigns), :id, nil)}>
+        you
+      </span>
+      <LiveRedirect 
+        :if={e(@object, :id, nil) !=e(current_user(assigns), :id, nil)} 
+        to={path(@object)} 
+        class="font-semibold link link-hover">
+        {e(@object, :profile, :name, "Anonymous")}
+      </LiveRedirect> 
+
+    </div>
+  </div>
+</div>
+
+
+<!-- then show the object or character that isn't me -->
+<div class="flex w-full activity_notification">
+  <LiveRedirect to={path(the_other(assigns))} class="flex profile-item group ">
+    <div class="absolute left-0">
+     <div class="align-middle avatar">
+        <div class="w-6 h-6 teee bg-base-200 rounded-btn">
+          <LazyImage 
+            class="subject_avatar" 
+            src={avatar_url(e(the_other(assigns), :profile, nil))} 
+          />
+        </div>
+      </div>
+    </div>
+    <div class="flex items-center justify-between flex-1 ml-8 space-x-1">
+      <p class="text-base font-semibold group-hover:underline text-base-content">
+        {e(the_other(assigns), :profile, :name, "Anon")}
+      </p>
+      <p class="-mt-px text-sm text-base-content text-opacity-70">
+        @{e(the_other(assigns), :character, :username, "anon")} 
+      </p>
+    </div>
+  </LiveRedirect>
+</div>
+
+{#else}
+
+<div 
+  class={"flex items-center mb-3 -ml-7"}
+  :if={e(assigns, :showing_within, nil) not in [:search]}
+>
+  <!-- <div 
+    class="flex items-center justify-start w-5 h-5">
+    <Solid.UserAddIcon class="w-5 h-5 text-info" />      
+  </div> -->
+  <div class="flex-1 ml-2">
+    <div 
+      class="text-sm font-medium text-base-content text-opacity-80">
+      <!-- first show the subject -->
+      <!--       
+      <span data-id="subject">
+        <LiveRedirect
+          :if={e(@activity, :subject, :id, nil) != e(current_user(assigns), :id, nil)}
+          to={path(e(@activity, :subject, nil))}
+          aria-label={e(@activity, :subject, :character, :username, "") <> " profile"}
+          class="font-medium "
+          >
+          {e(@activity, :subject, :profile, :name, "Anonymous")}
+        </LiveRedirect>
+        <span :if={e(@activity, :subject, :id, nil) == e(current_user(assigns), :id, nil)}>
+          {l "you"}
+        </span>
+      </span>
+
+      {raw @verb_display} -->
+
+      <!-- then summarise the object -->
+      <!-- <span :if={e(@object, :id, nil) == e(current_user(assigns), :id, nil)}>
+        {l "you"}
+      </span>
+      <LiveRedirect 
+        :if={e(@object, :id, nil) !=e(current_user(assigns), :id, nil)} 
+        to={path(@object)} 
+        class="font-semibold link link-hover">
+        {e(@object, :profile, :name, "Anonymous")}
+      </LiveRedirect>  -->
+    </div>
+  </div>
+</div>
+
+<!-- then show the object or character that isn't me -->
+<div class="flex w-full activity_notification">
+
+  <LiveRedirect to={path(the_other(assigns))} class="flex profile-item group ">
+    <div class="absolute left-3">
+      <Bonfire.UI.Common.AvatarLive profile={e(the_other(assigns), :profile, nil)} />
+    </div>
+    <div>
+      <div class="items-baseline justify-between flex-1">
+        <p class="text-base font-semibold group-hover:underline text-base-content">
+          {e(the_other(assigns), :profile, :name, "")}
+        </p>
+        <p class="-mt-px text-sm text-base-content text-opacity-70">
+          @{e(the_other(assigns), :character, :username, "anon")} 
+        </p>
+      </div>
+        <!-- SHOW THE BIO IN SEARCH -->
+      <div class="prose-sm prose">
+         {rich e(the_other(assigns), :profile, :summary, "")}
+      </div>
+    </div>
+  </LiveRedirect>
+
+  <!-- TODO: put in seperate component -->
+  <button 
+  :if={@verb=="Request to Follow"}
+  :on-click="Bonfire.Social.Follows:accept" 
+  phx-value-id={e(@activity, :id, nil)}
+  type="button" 
+  class="ml-3 btn">
+    Accept
+  </button>
+
+</div>
+{/if}

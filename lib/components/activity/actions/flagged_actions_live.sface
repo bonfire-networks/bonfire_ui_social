@@ -1,16 +1,19 @@
 
 <div class="mt-2 feed_actions">
   <div class={"flex items-center space-x-2"}>
+
     <LiveRedirect  
       :if={e(@activity, :subject, :id, nil) && e(current_user(assigns), :id, nil) != e(@activity, :subject, :id, nil)}
       to={path(Bonfire.Data.Social.Message, e(@activity, :subject, :character, :username, ""))} 
       class="normal-case rounded opacity-80 hover:opacity-100 btn btn-outline btn-xs">{l "Message"} {e(@activity, :subject, :profile, :name, "")}
     </LiveRedirect>
+
     <LiveRedirect 
-      :if={@object && e(@object, :id, nil) && e(current_user(assigns), :id, nil) != e(@object, :id, nil) && e(@object, :id, nil) != e(@activity, :subject, :id, nil)}
-      to={path(Bonfire.Data.Social.Message, e(@object, :character, :username, ""))} 
-      class="normal-case rounded opacity-80 hover:opacity-100 btn btn-outline btn-xs">{l "Message"} {e(@object, :profile, :name, "")}
+      :if={@object && e(@object, :id, nil) && e(current_user(assigns), :id, nil) != e(flagged_character(@object), :id, nil) && e(flagged_character(@object), :id, nil) != e(@activity, :subject, :id, nil)}
+      to={path(Bonfire.Data.Social.Message, e(flagged_character(@object), :username, nil))} 
+      class="normal-case rounded opacity-80 hover:opacity-100 btn btn-outline btn-xs">{l "Message"} {e(flagged_profile(@object), :name, "")}
     </LiveRedirect>
+
     {#if to_string(@object_type) == "Elixir.Bonfire.Data.Identity.User"}
       <button 
 
