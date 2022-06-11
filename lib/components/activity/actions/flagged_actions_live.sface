@@ -15,12 +15,47 @@
     </LiveRedirect>
 
     {#if to_string(@object_type) == "Elixir.Bonfire.Data.Identity.User"}
-      <button 
 
-        class="normal-case rounded opacity-80 hover:opacity-100 btn btn-error btn-xs">{l "Block"} {e(@object, :profile, :name, "")}</button> 
+    <Surface.Components.Dynamic.Component
+        :if={module_enabled?(Bonfire.Boundaries.Web.BlockButtonLive) and current_user(assigns) && e(current_user(assigns), :id, nil) != e(@object, :id, nil)}
+        module={Bonfire.Boundaries.Web.BlockButtonLive}
+        object={@object} 
+        label={e(@object, :profile, :name, l "this user")}
+        id={ComponentID.new(Bonfire.Boundaries.Web.BlockButtonLive, @object)} 
+      class="normal-case rounded opacity-80 hover:opacity-100 btn btn-error btn-xs"
+      />
+
+
     {#else}
-    <button 
-      class="normal-case rounded opacity-80 hover:opacity-100 btn btn-error btn-xs">{l("Delete this")} {e(assigns, :object_type_readable, l "object")}</button>
+
+    <OpenModalLive
+        :if={Bonfire.Me.Users.is_admin?(current_user(assigns))}
+        id={ComponentID.new(OpenModalLive, @object)} 
+        title_text={l("Delete this")<>" "<>e(assigns, :object_type_readable, l "object")}
+        >
+        {rich l "You may be able to undo this deletion *in some cases*, but in any case the data will eventually be permanently deleted from this instance."} 
+        {l "Remote instances will be asked to delete it as well."} 
+        <:open_btn>
+          <button 
+            type="button"
+            class="normal-case rounded opacity-80 hover:opacity-100 btn btn-error btn-xs">
+            {l("Delete this")} {e(assigns, :object_type_readable, l "object")}
+          </button>
+        </:open_btn>
+        <:action_btns>
+          <button 
+          phx-click={"Bonfire.Social.Objects:delete"} 
+          phx-value-id={e(@object, :id, "")}
+          class="btn btn-error">
+          <Solid.TrashIcon class="w-4 h-4 mr-2 shrink-0" />
+          <span class="truncate ellipsis">{l("Delete this")} {e(assigns, :object_type_readable, l "object")}</span>
+        </button>
+        </:action_btns>
+
+      </OpenModalLive>
+
+
+   
     {/if}
     <button 
       phx-click={"Bonfire.Social.Flags:unflag"} 

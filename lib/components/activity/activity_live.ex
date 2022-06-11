@@ -543,7 +543,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
   # WIP: Customize actions for each activity type
   def actions_for_object_type(activity, type)
       when type in [Bonfire.Data.Identity.User, Bonfire.Data.Identity.Character],
-      do: [Bonfire.UI.Social.Activity.MoreActionsLive]
+      do: []
 
   def actions_for_object_type(activity, type) when type in [Bonfire.Data.Social.Flag], do: []
 
