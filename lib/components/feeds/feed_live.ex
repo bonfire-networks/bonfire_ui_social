@@ -13,7 +13,7 @@ defmodule Bonfire.UI.Social.FeedLive do
   prop feedback_message, :string
   prop page_info, :any
   prop showing_within, :any
-  prop feed_update_mode, :string, default: "prepend"
+  prop feed_update_mode, :string, default: "append"
   prop hide_load_more, :boolean, default: false
   prop verb_default, :string
   prop loading, :boolean, default: false

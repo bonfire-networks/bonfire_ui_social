@@ -3,7 +3,7 @@ defmodule Bonfire.UI.Social.ProfilePostsLive do
 
   prop page_title, :string, required: true
   prop page, :string, required: true
-  prop selected_tab, :string, default: "timeline"
+  prop selected_tab, :string, default: "posts"
   prop smart_input, :boolean, required: true
   prop smart_input_prompt, :string
   prop smart_input_text, :string

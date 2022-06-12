@@ -191,6 +191,10 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
     send_update(component, [id: feed_id] ++ assigns)
   end
 
+  def paginate_feed("user:"<>selected_tab_and_user_id, attrs, socket) do
+    assign_user_feed(selected_tab_and_user_id, attrs, socket)
+  end
+
   def paginate_feed(feed_id, attrs, socket) when not is_nil(feed_id) do
     current_user = current_user(socket)
     paginate = input_to_atoms(attrs)
@@ -453,5 +457,76 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
     |> debug("preload object data in feed")
   end
 
+  def assign_user_feed(selected_tab_and_user_id, params, socket) do
+    with [selected_tab, user_id] <- String.split(selected_tab_and_user_id, ":") do
+      debug(params, "Load and maybe paginate feed for user: #{selected_tab_and_user_id}")
+      assign_user_feed(selected_tab, user_id, params, socket)
+    end
+  end
+
+  def assign_user_feed("posts" = tab, user, params, socket) do
+    user = user || e(socket, :assigns, :user, nil)
+    feed = if module_enabled?(Bonfire.Social.Posts), do: Bonfire.Social.Posts.list_by(user, pagination: input_to_atoms(params), current_user: current_user(socket))
+    #|> debug("posts")
+
+    {:noreply,
+     assign(socket,
+       selected_tab: tab,
+       feed: e(feed, :edges, []),
+       page_info: e(feed, :page_info, [])
+     )}
+  end
+
+  def assign_user_feed("boosts" = tab, user, params, socket) do
+    user = user || e(socket, :assigns, :user, nil)
+    feed = if module_enabled?(Bonfire.Social.Boosts), do: Bonfire.Social.Boosts.list_by(user, pagination: input_to_atoms(params), current_user: current_user(socket))
+    # |> debug("boosts")
+
+    {:noreply,
+      assign(socket,
+        selected_tab: tab,
+        feed: e(feed, :edges, []),
+        page_info: e(feed, :page_info, [])
+      )}
+  end
+
+  def assign_user_feed("timeline" = tab, user, params, socket) do
+    user = user || e(socket, :assigns, :user, nil)
+    feed_id = if user && module_enabled?(Bonfire.Social.Feeds), do: Bonfire.Social.Feeds.feed_id(:outbox, user)
+    feed = if feed_id && module_enabled?(Bonfire.Social.FeedActivities), do: Bonfire.Social.FeedActivities.feed(feed_id, pagination: input_to_atoms(params), current_user: current_user(socket))
+    #  debug(feed: feed)
+
+    {:noreply,
+      assign(socket,
+      selected_tab: tab,
+      feed_id: feed_id,
+      feed: e(feed, :edges, []),
+      page_info: e(feed, :page_info, [])
+      )}
+  end
+
+  def assign_user_feed("followers" =tab, user, params, socket) do
+    user = user || e(socket, :assigns, :user, nil)
+    followers = Bonfire.Social.Follows.list_followers(user, pagination: input_to_atoms(params), current_user: current_user(socket)) |> debug("followers")
+
+    {:noreply,
+    assign(socket,
+      selected_tab: tab,
+      feed: e(followers, :edges, []),
+      page_info: e(followers, :page_info, [])
+    )}
+  end
+
+  def assign_user_feed("followed" =tab, user, params, socket) do
+    user = user || e(socket, :assigns, :user, nil)
+    followed = Bonfire.Social.Follows.list_followed(user, pagination: input_to_atoms(params), current_user: current_user(socket)) |> debug("followed")
+
+    {:noreply,
+    assign(socket,
+      selected_tab: tab,
+      feed: e(followed, :edges, []),
+      page_info: e(followed, :page_info, [])
+    )}
+  end
 
 end

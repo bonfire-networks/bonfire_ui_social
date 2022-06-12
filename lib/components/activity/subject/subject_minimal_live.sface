@@ -124,46 +124,45 @@
 
   {#match _}
 
-
-
     <div class={
       "flex items-center mb-3", 
       "-ml-7": @verb not in ["Reply", "Respond"]
     }>
 
-      <!-- LIKE -->
       <div 
         :if={@verb == "Like"}
         class="flex items-center justify-start">
+      <!-- LIKE -->
         <Solid.StarIcon class="w-5 h-5 text-yellow-500" />
         <div class="flex-1 ml-2">
           <div class="text-sm font-medium text-base-content text-opacity-80">
             <LiveRedirect
               aria-label={e(@activity, :subject, :character, :username, "") <> " profile"}
-              class="font-medium "
+              class="font-medium link link-hover"
               to={path(e(@activity, :subject, :character, nil)) }>
               {e(@activity, :subject, :profile, :name, nil) || e(@activity, :subject, :character, :username, nil)}
-            </LiveRedirect>
+            </LiveRedirect> 
+            
             {raw @verb_display}
 
           </div>
         </div>
       </div>
 
-      <!-- FOLLOW -->
       <div 
         :if={@verb == "Follow"}
         class="flex items-center justify-start">  
+      <!-- FOLLOW -->
         <Solid.UserAddIcon  class="flex-shrink-0 w-5 h-5 text-info" />
         <div class="flex-1 ml-2">
           <div class="text-sm font-medium text-base-content text-opacity-80">
             <LiveRedirect
               aria-label={e(@activity, :subject, :character, :username, "") <> " profile"}
-              class="font-medium "
+              class="font-medium link link-hover"
               to={path(e(@activity, :subject, :character, nil)) }>
               {e(@activity, :subject, :profile, :name, nil) || e(@activity, :subject, :character, :username, nil)}
-            </LiveRedirect>
-            
+            </LiveRedirect> 
+
             {raw @verb_display}
 
              <!-- special case when current_user is the one being followed -->
@@ -174,10 +173,10 @@
         </div>
       </div>
       
-      <!-- BOOST -->
       <div 
         :if={@verb == "Boost"}
         class="flex items-center justify-start">  
+      <!-- BOOST -->
         <svg 
           viewBox="0 0 24 24" 
           width="24" 
@@ -194,60 +193,58 @@
           <div class="text-sm font-medium text-base-content text-opacity-80">
             <LiveRedirect
               aria-label={e(@activity, :subject, :character, :username, "") <> " profile"}
-              class="font-medium "
+              class="font-medium link link-hover"
               to={path(e(@activity, :subject, :character, nil)) }>
               {e(@activity, :subject, :profile, :name, nil) || e(@activity, :subject, :character, :username, nil)}
-            </LiveRedirect>
+            </LiveRedirect> 
             {raw @verb_display}
           </div>
         </div>
       </div>
 
+      <div :if={@verb == "Reply"} class="flex items-top w-full">
       <!-- REPLY -->
-      <div :if={@verb == "Reply"} class="">
-        <div class="flex items-top ">
-          <div class="absolute left-3">
-            <Bonfire.UI.Common.AvatarLive profile={e(@activity, :subject, :profile, nil)} />
+        <div class="absolute left-3">
+          <Bonfire.UI.Common.AvatarLive profile={e(@activity, :subject, :profile, nil)} />
+        </div>
+        <div class="flex items-center justify-between min-w-0 space-x-1 w-full leading-[18px]">
+          <div class="flex items-center flex-1 truncate ellipsis">
+            <LiveRedirect
+              opts={"data-id": "subject_name"}
+              aria-label={e(@activity, :subject, :character, :username, nil) <> " profile"}
+              class="font-semibold text-base-content link link-hover"
+              to={path(e(@activity, :subject, :character, nil))}>
+              {e(@activity, :subject, :profile, :name, nil)}
+            </LiveRedirect> 
+            <span
+              :if={e(@character, :username, nil)}
+              class="ml-1 text-sm truncate ellipsis text-base-content text-opacity-60 subject_username">@{e(@character, :username, "")}</span>
           </div>
-          <div class="flex items-center justify-between leading-[14px]">
-            <div class="flex items-center flex-1 truncate ellipsis">
-              <LiveRedirect
-                opts={"data-id": "subject_name"}
-                aria-label={e(@activity, :subject, :character, :username, nil) <> " profile"}
-                class="font-semibold text-base-content hover:underline "
-                to={path(e(@activity, :subject, :character, nil))}>
-                {e(@activity, :subject, :profile, :name, nil)}
-              </LiveRedirect>
-              <span
-                :if={e(@character, :username, nil)}
-                class="ml-1 text-sm truncate ellipsis text-base-content text-opacity-60 subject_username">@{e(@character, :username, "")}</span>
-            </div>
 
-            <Bonfire.UI.Social.Activity.DateAgoLive 
-              permalink={@permalink}
-              date_ago={@date_ago}
-              object={@object}
-              object_type={@object_type}
-              object_boundary={@object_boundary} 
-              showing_within={@showing_within}
-              verb_display={@verb_display} />
-          </div>
+          <Bonfire.UI.Social.Activity.DateAgoLive 
+            permalink={@permalink}
+            date_ago={@date_ago}
+            object={@object}
+            object_type={@object_type}
+            object_boundary={@object_boundary} 
+            showing_within={@showing_within}
+            verb_display={@verb_display} />
         </div>
       </div>
 
-      <!-- FLAG -->
       <div 
         :if={@verb == "Flag"}
         class="flex items-center justify-start">  
+      <!-- FLAG -->
          <Solid.FlagIcon class="w-4 h-4 text-error" />
           <div class="flex-1 ml-2">
             <div class="text-sm font-medium text-base-content text-opacity-80">
               <LiveRedirect
                 aria-label={e(@activity, :subject, :character, :username, "") <> " profile"}
-                class="font-medium "
+                class="font-medium link link-hover"
                 to={path(e(@activity, :subject, :character, nil)) }>
                 {e(@activity, :subject, :profile, :name, nil) || e(@activity, :subject, :character, :username, nil)}
-              </LiveRedirect>
+              </LiveRedirect> 
               {raw @verb_display}
             </div>
           </div>

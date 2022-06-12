@@ -1,6 +1,6 @@
 {#if e(assigns, :showing_within, nil) == :widget}
 
-<!-- then show the object or character that isn't me -->
+<!-- show the object or character that isn't me -->
 <div class="flex w-full activity_widget">
   <LiveRedirect to={path(the_other(assigns))} class="flex profile-item group ">
     <div class="absolute left-0">
@@ -26,7 +26,7 @@
 
 {#else}
 
-<!-- then show the object or character that isn't me -->
+<!-- show the object or character that isn't me -->
 <div class="flex w-full activity_notification">
 
   <LiveRedirect to={path(the_other(assigns))} class="flex profile-item group ">
@@ -40,7 +40,7 @@
         </p>
         <span
         :if={e(the_other(assigns), :character, :username, nil)}
-        class="leading-[16px] font-normal font-[16px] truncate ellipsis text-base-content text-opacity-60 subject_username">
+        class="font-normal text-sm truncate ellipsis text-base-content text-opacity-60 subject_username">
           @{e(the_other(assigns), :character, :username, "")}
         </span>
         <!-- <p class="-mt-px text-sm text-base-content text-opacity-70">

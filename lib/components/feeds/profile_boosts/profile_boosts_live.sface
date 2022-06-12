@@ -11,11 +11,12 @@
 
   <Bonfire.UI.Social.FeedLive
     id={"feed:profile:boosts"}
+    feed_id={"user:#{@selected_tab}:#{ulid(@user)}"}
+    feed={@feed}
     verb_default="boost"
     user={@user}
     page_title={@page_title}
     page={@page}
-    feed={@feed}
     page_info={@page_info}
     selected_tab={@selected_tab}
     smart_input={@smart_input}

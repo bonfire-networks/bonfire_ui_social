@@ -100,12 +100,12 @@
             <LiveRedirect
               opts={"data-id": "subject_name"}
               aria-label={e(@character, :username, "") <> " profile"}
-              class="link link-hover font-semibold leading-[16px] font-[16px]"
+              class="leading-[16px] "
               to={path(@character)}>
-              {e(@profile, :name, "Anonymous")}
+              <span class="link link-hover font-[16px] font-semibold">{e(@profile, :name, "Anonymous")}</span>
               <span
               :if={e(@character, :username, nil)}
-              class="leading-[16px] font-normal font-[16px] ml-1 truncate ellipsis text-base-content text-opacity-60 subject_username">
+              class="font-normal text-sm ml-1 truncate ellipsis text-base-content text-opacity-60 no-underline  subject_username">
                 @{e(@character, :username, "")}
               </span>
             </LiveRedirect>
