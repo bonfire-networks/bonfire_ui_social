@@ -24,6 +24,7 @@ defmodule Bonfire.UI.Social.PostLive do
       page: "discussion",
       smart_input_prompt: l("Reply to this thread"),
       activity: nil,
+      showing_within: :thread,
       post: nil,
       thread_id: nil,
       replies: []

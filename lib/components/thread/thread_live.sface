@@ -25,7 +25,7 @@
               smart_input_text={@smart_input_text}
               smart_input_prompt={@smart_input_prompt}
               url={@url}
-              showing_within={e(assigns, :showing_within, nil)}
+              showing_within={e(assigns, :showing_within, :thread)}
             />
           {/for}
         {#else}
@@ -40,7 +40,7 @@
               smart_input_text={@smart_input_text}
               smart_input_prompt={@smart_input_prompt}
               url={@url}
-              showing_within={e(assigns, :showing_within, nil)}
+              showing_within={e(assigns, :showing_within, :thread)}
             />
           {/for}
         {/if}

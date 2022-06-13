@@ -42,7 +42,8 @@ defmodule Bonfire.Social.Posts.LiveHandler do
     # |> debug("handle_event: post inputs")
     |> input_to_atoms()
     # |> debug("handle_event: post attrs")
-
+    
+    debug(e(socket.assigns, :showing_within, nil), "SHOWING")
     current_user = current_user(socket)
 
     with %{} <- current_user || {:error, "You must be logged in"},
@@ -58,6 +59,8 @@ defmodule Bonfire.Social.Posts.LiveHandler do
       {:noreply,
         socket
         |> assign_flash(:info, "Posted!")
+        |> push_event("reset_body", %{})
+        |> reset_smart_input()
         # |> push_patch_with_fallback(current_url(socket), path(published)) # so the flash appears - TODO: causes a conflict between the activity coming in via pubsub
 
         # Phoenix.LiveView.assign(socket,
@@ -189,5 +192,35 @@ defmodule Bonfire.Social.Posts.LiveHandler do
     |> filter_empty([])
   end
 
+
+  def reset_smart_input(%{assigns: %{showing_within: :thread}} = socket) do
+    debug("THREad")
+    socket |> assign(
+      activity: nil,
+      to_circles: nil,
+      reply_to_id: e(socket.assigns, :thread_id, nil),
+    )
+  end
+
+  def reset_smart_input(%{assigns: %{showing_within: :messages}} = socket) do
+    debug("messages")
+
+    socket |> assign(
+      activity: nil,
+      smart_input_text: nil
+    )
+  end
+
+  def reset_smart_input(socket) do
+    debug("VOID")
+
+    socket |> assign(
+      reply_to_id: nil,
+      thread_id: nil,
+      to_circles: nil,
+      activity: nil,
+      smart_input_text: nil
+    )
+  end
 
 end

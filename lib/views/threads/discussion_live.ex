@@ -21,6 +21,7 @@ defmodule Bonfire.UI.Social.DiscussionLive do
     |> assign(
       page_title: l("Discussion"),
       page: "discussion",
+      showing_within: :thread,
       # search_placeholder: l("Search this discussion"),
       smart_input_prompt: l("Reply to this discussion"),
     )}

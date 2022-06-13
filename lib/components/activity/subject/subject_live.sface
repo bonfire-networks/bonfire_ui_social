@@ -108,7 +108,7 @@
               <span class="link link-hover font-[16px] font-semibold">{e(@profile, :name, "Anonymous")}</span>
               <span
               :if={e(@character, :username, nil)}
-              class="font-normal text-sm ml-1 truncate ellipsis text-base-content text-opacity-60 no-underline  subject_username">
+              class="ml-1 text-sm font-normal no-underline truncate ellipsis text-base-content text-opacity-60 subject_username">
                 @{e(@character, :username, "")}
               </span>
             </LiveRedirect>
