@@ -17,7 +17,7 @@
         object={e(assigns, :object, nil)}
         feed_id={@feed_id}
         participants={participants(assigns)}
-        object_boundary={if e(assigns, :showing_within, nil)==:messages, do: :skip}
+        object_boundary={if e(assigns, :showing_within, :thread)==:messages, do: :skip}
       />
     <Bonfire.UI.Social.ThreadLive 
       id={e(assigns, :thread_id, nil)}
@@ -31,7 +31,7 @@
       activity={@activity}
       object={e(assigns, :object, nil)}
       url={@url}
-      showing_within={e(assigns, :showing_within, nil)}
+      showing_within={e(assigns, :showing_within, :thread)}
     />
     </div>
   </div>
@@ -50,7 +50,7 @@
       smart_input_prompt={e(assigns, :smart_input_prompt, "")}
       smart_input_text={e(assigns, :smart_input_text, "")}
       textarea_class={@textarea_class}
-      showing_within={e(assigns, :showing_within, nil)}
+      showing_within={e(assigns, :showing_within, :thread)}
       replied_activity_class={@replied_activity_class}
     />
   </div>
