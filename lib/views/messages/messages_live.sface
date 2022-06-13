@@ -1,13 +1,8 @@
 
 <main 
-    x-data="{
-    open_sidebar_drawer: false
-  }" 
-  class="flex flex-col flex-1 h-full">
-
-
+  class="flex flex-col h-body">
   {#if @tab_id in ["compose", "select_recipients", "thread"]}
-    <div class="flex flex-col flex-1 h-full grow">
+    <div class="flex flex-col">
     {#if @tab_id=="thread"}
       <Bonfire.UI.Social.ObjectThreadLive
         page={@page}
@@ -93,10 +88,10 @@
       />
     </div>
   {/if}
-
+<!-- 
 
       <Bonfire.UI.Social.SidebarMessagesMobileLive 
         context={ulid(current_user(assigns))}
         threads={@threads}
-      />
+      /> -->
 </main>

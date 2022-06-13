@@ -8,7 +8,7 @@
       object={e(assigns, :object, nil)}
     />
     <div class="flex-1">
-    <Bonfire.UI.Social.ActivityLive
+      <Bonfire.UI.Social.ActivityLive
         id={"ta:"<>ulid(@activity)}
         showing_within={:thread}
         thread_mode={e(assigns, :thread_mode, nil)}
@@ -19,41 +19,44 @@
         participants={participants(assigns)}
         object_boundary={if e(assigns, :showing_within, :thread)==:messages, do: :skip}
       />
-    <Bonfire.UI.Social.ThreadLive 
-      id={e(assigns, :thread_id, nil)}
-      thread_id={e(assigns, :thread_id, nil)}
-      feed_id={@feed_id}
-      thread_mode={e(assigns, :thread_mode, nil)}
-      reverse_order={e(assigns, :reverse_order, nil)}
-      replies={e(assigns, :replies, nil)}
-      threaded_replies={e(assigns, :threaded_replies, [])}
-      page_info={e(assigns, :page_info, [])}
-      activity={@activity}
-      object={e(assigns, :object, nil)}
-      url={@url}
-      showing_within={e(assigns, :showing_within, :thread)}
-    />
+      <Bonfire.UI.Social.ThreadLive 
+        id={e(assigns, :thread_id, nil)}
+        thread_id={e(assigns, :thread_id, nil)}
+        feed_id={@feed_id}
+        thread_mode={e(assigns, :thread_mode, nil)}
+        reverse_order={e(assigns, :reverse_order, nil)}
+        replies={e(assigns, :replies, nil)}
+        threaded_replies={e(assigns, :threaded_replies, [])}
+        page_info={e(assigns, :page_info, [])}
+        activity={@activity}
+        object={e(assigns, :object, nil)}
+        url={@url}
+        showing_within={e(assigns, :showing_within, :thread)}
+      />
     </div>
+
+    <div 
+    :if={e(assigns, :showing_within, nil) == :messages && current_user(assigns)}
+    class="relative z-[90] p-2 tablet:p-3 bg-base-100  rounded-b-md sm_background-invisible">
+      <Bonfire.UI.Common.SmartInputLive
+        id={:smart_input}
+        current_user={current_user(assigns)}
+        reply_to_id={e(assigns, :reply_to_id, "")}
+        thread_mode={e(assigns, :thread_mode, nil)}
+        thread_id={e(assigns, :thread_id, nil)}
+        create_activity_type={e(assigns, :create_activity_type, nil)}
+        to_circles={e(assigns, :to_circles, [])}
+        smart_input_prompt={e(assigns, :smart_input_prompt, "")}
+        smart_input_text={e(assigns, :smart_input_text, "")}
+        textarea_class={@textarea_class}
+        showing_within={e(assigns, :showing_within, :thread)}
+        replied_activity_class={@replied_activity_class}
+      />
+    </div>
+  
   </div>
 
-  <div 
-    :if={e(assigns, :showing_within, nil) == :messages && current_user(assigns)}
-    class="sticky bottom-6 relative z-[90] p-3 bg-base-100  rounded-b-md sm_background-invisible">
-    <Bonfire.UI.Common.SmartInputLive
-      id={:smart_input}
-      current_user={current_user(assigns)}
-      reply_to_id={e(assigns, :reply_to_id, "")}
-      thread_mode={e(assigns, :thread_mode, nil)}
-      thread_id={e(assigns, :thread_id, nil)}
-      create_activity_type={e(assigns, :create_activity_type, nil)}
-      to_circles={e(assigns, :to_circles, [])}
-      smart_input_prompt={e(assigns, :smart_input_prompt, "")}
-      smart_input_text={e(assigns, :smart_input_text, "")}
-      textarea_class={@textarea_class}
-      showing_within={e(assigns, :showing_within, :thread)}
-      replied_activity_class={@replied_activity_class}
-    />
-  </div>
+  
 
 </main>
 

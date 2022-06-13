@@ -2,7 +2,7 @@
   <div></div>
 {#else}
   <div 
-    :if={e(assigns, :showing_within, nil) != :notifications} 
+    :if={e(assigns, :showing_within, nil) != :notifications and e(assigns, :thread_mode, nil) != :flat} 
     class={
       "thread_actions mt-1 flex items-center": e(assigns, :showing_within, nil) == :thread,
       "feed_actions mt-0 -ml-2": e(assigns, :viewing_main_object, nil) != true,
