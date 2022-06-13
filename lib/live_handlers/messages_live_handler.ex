@@ -71,17 +71,13 @@ defmodule Bonfire.Social.Messages.LiveHandler do
 
   def send_message(params, socket) do
     attrs = params
-    |> debug("attrs")
+    # |> debug("attrs")
     |> input_to_atoms()
     # |> debug
 
     with {:ok, sent} <- Messages.send(current_user(socket), attrs) do
-      debug(sent, "sent!")
-      {:noreply,
-        socket
-        |> assign_flash(:info, "Sent!")
-        # |> redirect_to("/messages/#{e(sent, :replied, :thread_id, nil) || ulid(sent)}##{ulid(sent)}") # FIXME: assign or pubsub the new message and patch instead
-      }
+      # debug(sent, "sent!")
+      message_sent(sent, attrs, socket)
     # else e ->
     #   debug(message_error: e)
     #   {:noreply,
@@ -89,5 +85,20 @@ defmodule Bonfire.Social.Messages.LiveHandler do
     #     |> assign_flash(:error, "Could not send...")
     #   }
     end
+  end
+
+  defp message_sent(_sent, %{reply_to: %{thread_id: thread_id}} = _attrs, socket) when is_binary(thread_id) and thread_id !="" do
+    # FIXME: assign or pubsub the new message and patch instead
+    {:noreply,
+      socket
+      |> assign_flash(:info, l "Sent!")
+    }
+  end
+  defp message_sent(sent, _attrs, socket) do
+    {:noreply,
+      socket
+      |> assign_flash(:info, l "Sent!")
+      |> redirect_to("/messages/#{e(sent, :replied, :thread_id, nil) || ulid(sent)}##{ulid(sent)}")
+    }
   end
 end

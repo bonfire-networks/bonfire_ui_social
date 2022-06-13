@@ -144,7 +144,7 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
   end
 
   def handle_info({:count_increment, feed_ids}, socket) do
-    warn(feed_ids, "count_increment")
+    debug(feed_ids, "count_increment")
 
     send_feed_updates(feed_ids, [count_increment: 1], Bonfire.UI.Common.BadgeCounterLive)
 
@@ -337,15 +337,23 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
     end
   end
 
+  # defp feed_assigns_or_load_async(feed_name, assigns, %{assigns: %{loading: false}} = socket) do
+  #   debug("Skip loading feed...")
+  #   []
+  # end
   defp feed_assigns_or_load_async(feed_name, assigns, %Phoenix.LiveView.Socket{} = socket) do
     if connected?(socket) and Config.get(:env) != :test do
+      # dump(socket.assigns, "connected")
       send(self(), {Bonfire.Social.Feeds.LiveHandler, {:load_feed, feed_name}})
       assigns
     else
+      # dump(socket.assigns, "disconnected")
+      # for dead mounts
       assigns ++ feed_assigns(feed_name, socket)
     end
   end
   defp feed_assigns_or_load_async(feed_name, assigns, socket_or_opts) do
+    # dump(e(socket_or_opts, :assigns, nil), "not socket")
     assigns ++ feed_assigns(feed_name, socket_or_opts)
   end
 

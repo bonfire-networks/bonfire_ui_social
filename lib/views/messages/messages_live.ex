@@ -38,6 +38,8 @@ defmodule Bonfire.UI.Social.MessagesLive do
         feedback_title: l("Your direct messages"),
         feedback_message: l("Select a thread or start a new one..."),
         threads: LiveHandler.list_threads(current_user(socket), socket),
+        smart_input_prompt: l("Compose a thoughtful message..."),
+        showing_within: :messages,
         sidebar_widgets: [
           users: [
             main: [
@@ -51,12 +53,6 @@ defmodule Bonfire.UI.Social.MessagesLive do
           ]
         ]
         # without_sidebar: true
-      )
-      |> assign_global(
-        showing_within: :messages,
-        # search_placeholder: l("Search this discussion"),
-        create_activity_type: :message,
-        smart_input_prompt: l("Compose a thoughtful message...")
       )
     }
   end
@@ -129,7 +125,7 @@ defmodule Bonfire.UI.Social.MessagesLive do
       tab_id: "select_recipients",
       reply_to_id: nil,
       thread_id: nil,
-      to_circles: nil,
+      to_circles: [],
       sidebar_widgets: LiveHandler.threads_widget(current_user, ulid(e(socket.assigns, :user, nil)), thread_id: nil, tab_id: "select_recipients")
       )
     }
@@ -153,7 +149,7 @@ defmodule Bonfire.UI.Social.MessagesLive do
         message = Map.merge(message, preloaded_object)
                 # |> debug("the message object")
 
-        reply_to_id = e(params, "reply_to_id", id)
+        reply_to_id = e(params, "reply_to_id", nil)
         thread_id = e(activity, :replied, :thread_id, id)
 
         # debug(activity, "activity")

@@ -15,6 +15,7 @@ defmodule Bonfire.UI.Social.Activity.CharacterLive do
     else
       e(assigns, :activity, :subject, nil)
     end
+    |> debug()
   end
 
   def preloads(), do: [

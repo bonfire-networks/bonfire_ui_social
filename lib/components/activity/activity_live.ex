@@ -21,7 +21,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
 
   # TODO: put in config and/or autogenerate with Verbs genserver
   @reply_verbs ["Reply", "Respond"]
-  @create_verbs ["Create"]
+  @create_verbs ["Create", "Write"]
   @react_verbs ["Like", "Boost", "Flag", "Tag"]
   @create_or_reply_verbs @create_verbs ++ @reply_verbs
 
@@ -50,7 +50,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
       # |> repo().maybe_preload(:media) # FIXME
       # |> debug("Activity provided")
       |> Map.put(:object, Activities.object_from_activity(assigns))
-      # |> dump("Activity with :object")
+      |> dump("Activity with :object")
 
     verb =
       Activities.verb_maybe_modify(
@@ -107,7 +107,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
         c when is_atom(c) -> {c, nil}
         other -> other
       end)
-      # |> debug("components")
+      |> debug("components")
 
     assigns_merge(assigns, activity_components: components)
     # |> dump("assigns")
@@ -243,12 +243,10 @@ defmodule Bonfire.UI.Social.ActivityLive do
 
   # other
   def component_activity_subject(verb, activity, assigns),
-      do: [component_activity_maybe_creator(activity, assigns)]
+      do: component_activity_maybe_creator(activity, assigns)
 
-  def component_activity_subject(_, _, _), do: []
+  def component_activity_maybe_creator(_, %{object_type: object_type}) when object_type in [Bonfire.Data.Identity.User], do: []
 
-
-  def component_activity_maybe_creator(_, %{object_type: object_type}) when object_type in [Bonfire.Data.Identity.User], do: nil
   def component_activity_maybe_creator(%{object: %{id: _} = object} = activity, _),
     do: component_maybe_creator(object) |> debug("object")
      || component_maybe_creator(activity) |> debug("activity")
@@ -269,16 +267,16 @@ defmodule Bonfire.UI.Social.ActivityLive do
           character: %{id: _} = character
         } = _creator
       ),
-      do: {Bonfire.UI.Social.Activity.SubjectLive, %{profile: profile, character: character}}
+      do: [{Bonfire.UI.Social.Activity.SubjectLive, %{profile: profile, character: character}}]
 
   def component_maybe_creator(%{provider: %{id: _}}),
-    do: Bonfire.UI.Social.Activity.ProviderReceiverLive
+    do: [Bonfire.UI.Social.Activity.ProviderReceiverLive]
 
   def component_maybe_creator(%{primary_accountable: %{id: _} = primary_accountable}),
-    do: {Bonfire.UI.Social.Activity.ProviderReceiverLive, %{provider: primary_accountable}}
+    do: [{Bonfire.UI.Social.Activity.ProviderReceiverLive, %{provider: primary_accountable}}]
 
   def component_maybe_creator(%{receiver: %{id: _}}),
-    do: Bonfire.UI.Social.Activity.ProviderReceiverLive
+    do: [Bonfire.UI.Social.Activity.ProviderReceiverLive]
 
   def component_maybe_creator(%{created: %{creator: %{id: _}}} = object),
     do:
@@ -325,10 +323,9 @@ defmodule Bonfire.UI.Social.ActivityLive do
       |> repo().maybe_preload(primary_accountable: [:profile, :character])
       |> component_maybe_creator()
 
-
   def component_maybe_creator(activity) do
     error(activity, "ActivityLive: could not find the creator")
-    nil
+    []
   end
 
   def component_maybe_in_reply_to(verb, activity, %{

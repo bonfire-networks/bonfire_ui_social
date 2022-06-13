@@ -12,6 +12,7 @@
   </span>
 
   {#if e(@object, :id, nil) != nil and e(@activity, :id, nil) == nil and e(assigns, :showing_within, nil) != :search }
+
     <div class={"flex items-center"}>
       <div class="flex flex-1 space-x-2">
         <div class="flex items-center text-sm font-semibold text-base-content">
@@ -33,6 +34,7 @@
     </div>
 
   {#elseif e(assigns, :showing_within, nil) == :widget}
+
     <div class="flex mb-4 items-top">
       <div class="absolute left-0">
         <div class="align-middle avatar">
@@ -69,6 +71,7 @@
     </div>
 
   {#else}
+  
     <div class={
       "flex items-top",
       "py-1": e(assigns, :thread_mode, nil) == :flat}>

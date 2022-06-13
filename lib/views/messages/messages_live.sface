@@ -13,7 +13,7 @@
         page={@page}
         page_title={@page_title}
         feed_id={@feed_id}
-        create_activity_type={e(assigns, :create_activity_type, nil)}
+        create_activity_type={:message}
         to_circles={e(assigns, :to_circles, [])}
         participants={e(assigns, :participants, [])}
         replies={e(assigns, :replies, nil)}
@@ -35,8 +35,6 @@
       <Bonfire.UI.Common.PageHeaderLive>
       
       <h1 class="flex-1 ml-3 font-bold text-base-content">{@page_title}</h1>
-
-     
       
      </Bonfire.UI.Common.PageHeaderLive>
       <div class="flex-1 p-3 bg-base-100 relative z-[90]">
@@ -47,13 +45,13 @@
           current_user={current_user(assigns)}
           reply_to_id={e(assigns, :reply_to_id, "")}
           thread_id={e(assigns, :thread_id, nil)}
-          create_activity_type={e(assigns, :create_activity_type, nil)}
           to_circles={e(assigns, :to_circles, [])}
-          smart_input_prompt={e(assigns, :smart_input_prompt, "")}
-          smart_input_text={e(assigns, :smart_input_text, "")}
+          create_activity_type={:message}
           showing_within={:messages}
           boundary={"message"}
           title_open={true}
+          smart_input_prompt={e(assigns, :smart_input_prompt, "")}
+          smart_input_text={e(assigns, :smart_input_text, "")}
           title_prompt={l "Enter an optional subject"}
           preloaded_recipients={e(assigns, :users, [])}
           show_select_recipients={true}
