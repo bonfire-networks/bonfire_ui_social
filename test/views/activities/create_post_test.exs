@@ -20,13 +20,13 @@ defmodule Bonfire.Social.Activities.CreatePost.Test do
       next = "/feed"
       {view, doc} = floki_live(conn, next) #|> IO.inspect
 
-      assert view = view
+      assert posted = view
       |> form("#smart_input form")
       |> render_submit(%{"boundary_selected" => "public", "post" => %{"post_content" => %{"html_body" => content}}})
       # |> Floki.text() =~ "Posted"
 
       live_pubsub_wait(view)
-      assert [ok] = find_flash(view)
+      assert [ok] = find_flash(posted)
       assert ok |> Floki.text() =~ "Posted"
     end
 

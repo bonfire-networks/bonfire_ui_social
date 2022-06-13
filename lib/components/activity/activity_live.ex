@@ -30,7 +30,8 @@ defmodule Bonfire.UI.Social.ActivityLive do
   end
 
   def update(assigns, %{assigns: %{activity_components: activity_components}} = socket) do
-    dump(activity_components, "Activity prepared already")
+    debug("Activity prepared already")
+    # debug(activity_components)
     {:ok, socket |> assign(assigns)}
   end
 
@@ -49,7 +50,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
       # |> repo().maybe_preload(:media) # FIXME
       # |> debug("Activity provided")
       |> Map.put(:object, Activities.object_from_activity(assigns))
-      |> dump("Activity with :object")
+      # |> dump("Activity with :object")
 
     verb =
       Activities.verb_maybe_modify(
