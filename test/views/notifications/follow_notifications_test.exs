@@ -19,7 +19,7 @@ defmodule Bonfire.Social.Notifications.Follows.Test do
       conn = conn(user: someone, account: some_account)
       next = "/notifications"
       {view, doc} = floki_live(conn, next) #|> IO.inspect
-      assert [feed] = Floki.find(doc, ".feed")
+      assert feed = Floki.find(doc, ".feed")
       assert Floki.text(feed) =~ me.profile.name
       assert Floki.text(feed) =~ "followed" # FIXME
     end
@@ -39,7 +39,7 @@ defmodule Bonfire.Social.Notifications.Follows.Test do
       conn = conn(user: someone, account: some_account)
       next = "/notifications"
       {view, doc} = floki_live(conn, next) #|> IO.inspect
-      assert [feed] = Floki.find(doc, ".feed")
+      assert feed = Floki.find(doc, ".feed")
       refute Floki.text(feed) =~ me.profile.name
     end
   end

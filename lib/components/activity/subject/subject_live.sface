@@ -85,7 +85,7 @@
           aria-label={e(@character, :username, "") <> " profile"}
           class="font-semibold text-base-content hover:underline "
           to={path(@character)}>
-          <Bonfire.UI.Common.AvatarLive profile={@profile} />
+          <Bonfire.UI.Common.AvatarLive profile={@profile} comment={e(assigns, :showing_within, nil) == :thread && e(assigns, :viewing_main_object, nil) != true} />
         </LiveRedirect>
       </div>
       <div class="flex items-center justify-between leading-[16px] min-w-0 space-x-1 w-full">
@@ -128,7 +128,7 @@
 </div>
 
 <div 
-  :if={e(@activity, :replied, :thread, :named, :name, nil) && (e(assigns, :showing_within, nil) |> debug("dssdds")) in [:feed]}
+  :if={e(@activity, :replied, :thread, :named, :name, nil) && (e(assigns, :showing_within, nil)) in [:feed]}
   class="flex items-center mt-2 text-sm font-medium"
   >
   <span class="mr-1">{l "in"}</span> <span class="link">{e(@activity, :replied, :thread, :named, :name, "")}</span>

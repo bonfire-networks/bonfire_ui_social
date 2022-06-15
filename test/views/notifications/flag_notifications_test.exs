@@ -25,7 +25,7 @@ defmodule Bonfire.Social.Notifications.Flag.Test do
       conn = conn(user: someone, account: some_account)
       next = "/notifications"
       {view, doc} = floki_live(conn, next) #|> IO.inspect
-      assert [feed] = Floki.find(doc, ".feed")
+      assert feed = Floki.find(doc, ".feed")
       text = Floki.text(feed)
       assert text =~ "epic html post"
       assert text =~ flagger.profile.name
@@ -47,7 +47,7 @@ defmodule Bonfire.Social.Notifications.Flag.Test do
       conn = conn(user: alice, account: alice_account)
       next = "/notifications"
       {view, doc} = floki_live(conn, next) #|> IO.inspect
-      assert [feed] = Floki.find(doc, ".feed")
+      assert feed = Floki.find(doc, ".feed")
       text = Floki.text(feed)
       assert text =~ "epic html post"
       assert text =~ flagger.profile.name

@@ -5,6 +5,7 @@
   >
   <div 
     data-id="action_reply"
+    @click="{show_mobile_composer = (window.innerWidth > 1200) ? false : show_mobile_composer}"
     phx-click="Bonfire.Social.Feeds:reply_to_activity"
     phx-target={if e(assigns, :activity_id, nil), do: "#activity--"<>e(assigns, :activity_id, "")}
   >

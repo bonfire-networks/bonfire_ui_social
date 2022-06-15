@@ -40,6 +40,11 @@ defmodule Bonfire.UI.Social.MessagesLive do
         threads: LiveHandler.list_threads(current_user(socket), socket),
         smart_input_prompt: l("Compose a thoughtful message..."),
         showing_within: :messages,
+        page_header_aside: [
+          {Bonfire.UI.Social.HeaderAsideNotificationsSeenLive, [
+            feed_id: feed_id
+          ]}
+        ],
         sidebar_widgets: [
           users: [
             main: [

@@ -1,5 +1,4 @@
-<div  class="flex-1 w-full h-full md:mx-0 text-base-content">
-  <div>
+<div>
     <LivePatch 
       to={"/messages/compose"}
       class="items-center hidden w-full mb-3 normal-case tablet:flex btn-wide btn btn-primary"> 
@@ -14,10 +13,8 @@
       <Outline.MailIcon class="inline-block w-6 h-6" />
     </LivePatch>
 
-    <div class="flex hidden w-full p-3 mx-auto text-sm font-semibold border-b tablet:block border-base-content border-opacity-10 bg-base-200 rounded-t-md">{l "Your direct messages"}</div>
-    {#if length(e(assigns, :threads, :edges, []))>0}
-
-
+    <div class="flex flex-1 hidden w-full p-3 mx-auto font-bold border-b tablet:block border-base-content border-opacity-10 bg-base-100 text-base-content rounded-t-md">{l "Your direct messages"}</div>
+      {#if length(e(assigns, :threads, :edges, []))>0}
       <Bonfire.UI.Common.LoadPreviousLive
         live_handler={Bonfire.Social.Messages}
         page_info={e(assigns, :threads, :page_info, nil)}
@@ -46,7 +43,7 @@
                     </div>
                   </div>
                   <div class="mt-1">
-                    <p class="text-sm truncate text-base-content text-opacity-80 font-regular">
+                    <p class="text-sm max-w-[250px] truncate text-base-content text-opacity-80 font-regular">
                       {text_only( e(activity, :object, :post_content, :name, nil) || e(activity, :object, :post_content, :summary, nil) || e(activity, :object, :post_content, :html_body, nil) )}
                     </p> 
                   </div>
@@ -71,5 +68,4 @@
       {#else}
       <div class="p-3 text-sm rounded-b bg-base-100 text-base-content/80">{l "You dont have any messages yet"}</div>
       {/if}
-  </div>
 </div>

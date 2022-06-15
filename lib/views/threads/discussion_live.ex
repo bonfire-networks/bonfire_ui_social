@@ -24,7 +24,15 @@ defmodule Bonfire.UI.Social.DiscussionLive do
       showing_within: :thread,
       # search_placeholder: l("Search this discussion"),
       smart_input_prompt: l("Reply to this discussion"),
-    )}
+      page_header_aside: 
+        [{Bonfire.UI.Social.ObjectHeaderAsideLive, [
+          page_title: l("Discussion"),
+          participants: [],
+          thread_id: nil,
+          object: nil,
+        ]}]
+      )
+    }
   end
 
   def do_handle_params(%{"id" => id} = params, url, socket) do

@@ -26,10 +26,10 @@
     />
 
     <div 
-      :class="{'!rounded-t-none' : show_smart_input}"
+      :class="{'!rounded-t-none' : show_mobile_composer}"
       class={
         "rounded-md shadow bg-base-100 flex h-full flex-1": e(assigns, :thread_mode, nil) != :flat,
-        "bg-slate-50 h-full flex-1 rounded-md sticky bottom-0 messages_smart_input": e(assigns, :thread_mode, nil) == :flat
+        "bg-slate-50 h-full flex-1 sticky bottom-0 messages_smart_input": e(assigns, :thread_mode, nil) == :flat
       }>
       <div class="relative flex flex-col flex-1 h-full">
         <Inputs for={:post_content}>

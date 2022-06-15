@@ -23,7 +23,7 @@ defmodule Bonfire.Social.Notifications.Boosts.Test do
       conn = conn(user: someone, account: some_account)
       next = "/notifications"
       {view, doc} = floki_live(conn, next) #|> IO.inspect
-      assert [feed] = Floki.find(doc, ".feed")
+      assert feed = Floki.find(doc, ".feed")
       assert Floki.text(feed) =~ "epic html post"
       assert Floki.text(feed) =~ booster.profile.name
       assert Floki.text(feed) =~ "boosted"
