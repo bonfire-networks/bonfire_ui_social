@@ -27,7 +27,15 @@ defmodule Bonfire.UI.Social.PostLive do
       showing_within: :thread,
       post: nil,
       thread_id: nil,
-      replies: []
+      replies: [],
+      page_header_aside: [
+        {Bonfire.UI.Social.ObjectHeaderAsideLive, [
+          page_title: l("Post"),
+          participants: [],
+          thread_id: nil,
+          object: nil,
+        ]}
+      ]
     )
   }
   end
@@ -61,6 +69,7 @@ defmodule Bonfire.UI.Social.PostLive do
       # names = if length(participants)>0, do: Enum.map_join(participants, ", ", &e(&1, :profile, :name, e(&1, :character, :username, l "someone else")))
 
       mentions = if length(participants)>0, do: Enum.map_join(participants, " ", & "@"<>e(&1, :character, :username, ""))<>" "
+      page_title = e(activity, :replied, :thread, :named, :name, l("Post"))
 
       {:noreply,
       socket
@@ -69,13 +78,21 @@ defmodule Bonfire.UI.Social.PostLive do
         post: post,
         url: url,
         participants: participants,
-        page_title: e(activity, :replied, :thread, :named, :name, l("Post"))
+        page_header_aside: [
+          {Bonfire.UI.Social.ObjectHeaderAsideLive, [
+            page_title: page_title,
+            participants: participants,
+            thread_id: thread_id,
+            object: activity,
+          ]}
+        ]
         # following: following || []
       )
       |> assign_global(
         thread_id: e(post, :id, nil),
         # smart_input_prompt: smart_input_prompt,
         reply_to_id: reply_to_id,
+        page_title: page_title,
         smart_input_text: mentions,
         to_circles: to_circles,
       )

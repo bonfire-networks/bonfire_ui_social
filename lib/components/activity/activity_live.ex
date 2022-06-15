@@ -50,7 +50,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
       # |> repo().maybe_preload(:media) # FIXME
       # |> debug("Activity provided")
       |> Map.put(:object, Activities.object_from_activity(assigns))
-      |> dump("Activity with :object")
+      # |> dump("Activity with :object")
 
     verb =
       Activities.verb_maybe_modify(
@@ -115,61 +115,62 @@ defmodule Bonfire.UI.Social.ActivityLive do
 
   def render(%{activity: _, activity_components: _} = assigns) do
     ~F"""
-    <article
-      phx-click={if e(assigns, :showing_within, nil) !=:thread || e(assigns, :activity_inception, nil) ||  e(@object, :id, nil) == nil and e(@activity, :replied, :reply_to_id, nil) != nil and e(@activity, :id, nil) != nil, do: "Bonfire.Social.Feeds:open_activity"}
-      phx-value-permalink={@permalink}
-      id={"activity-#{e(assigns, :activity_inception, nil)}-"<>( e(@activity, :id, nil) || e(@object, :id, "no-id") )}
-      aria-label="user activity"
-      role="article"
-      tabIndex="0"
-      class={
-      "p-3 activity relative pl-16 group " <> e(assigns, :class, ""),
-      "activity_inception bg-base-content/10 !m-0 opacity-100 before:!left-2 before:top-1 before:bottom-1": e(assigns, :activity_inception, nil) != nil and  e(assigns, :thread_mode, nil) == :flat,
-      "cursor-pointer hover:bg-base-content/5": e(@object, :id, nil) == nil or e(@activity, :replied, :reply_to_id, nil) != nil or e(@activity, :id, nil) != nil and !e(assigns, :viewing_main_object, nil) and e(assigns, :showing_within, nil) != :thread, # Hover the activity background unless it is a quoted activity
-      "pt-6 hover:!bg-base-200/100 !bg-base-200 border-b border-base-content/10": e(assigns, :viewing_main_object, nil) == true,
-      "main_reply_to mb-2 p-2 py-1 mt-2 relative before:absolute before:content-[''] before:w-1 before:bg-base-content/40 before:left-0 before:top-0 before:bottom-0 opacity-60": e(@object, :id, nil) != nil and e(@activity, :replied, :reply_to_id, nil) == nil and e(@activity, :id, nil) == nil and e(assigns, :showing_within, nil) != :widget and e(assigns, :showing_within, nil) != :search, # showing a quoted reply_to
-      "cursor-text": e(assigns, :showing_within, nil) == :thread and e(assigns, :thread_mode, nil) != :flat,
-      "cursor-text": e(assigns, :thread_mode, nil) == :flat,
-      "reply": e(@object, :id, nil) != nil and e(@activity, :replied, :reply_to_id, nil) != nil and e(@activity, :id, nil) != nil,
-      "border-l-2 border-primary !bg-primary/5": e(@activity, :seen, nil) == nil and e(assigns, :showing_within, nil) == :notifications and e(assigns, :activity_inception, nil) == nil,
-    }>
-      <form
-        :if={e(assigns, :feed_id, nil) && e(assigns, :showing_within, nil) in [:messages, :thread, :notifications]}
-        phx-submit="Bonfire.Social.Feeds:mark_seen"
-        phx-target={"#badge_counter_#{e(assigns, :feed_id, "missing_feed_id")}"}
-        x-intersect.once={intersect_event(e(@activity, :seen, nil))}>
-        <input type="hidden" name="feed_id" value={e(assigns, :feed_id, nil)} />
-        <input type="hidden" name="activity_id" value={e(@activity, :id, nil)} />
-      </form>
+      <article
+        phx-click={if e(assigns, :showing_within, nil) !=:thread || e(assigns, :activity_inception, nil) ||  e(@object, :id, nil) == nil and e(@activity, :replied, :reply_to_id, nil) != nil and e(@activity, :id, nil) != nil, do: "Bonfire.Social.Feeds:open_activity"}
+        phx-value-permalink={@permalink}
+        id={"activity-#{e(assigns, :activity_inception, nil)}-"<>( e(@activity, :id, nil) || e(@object, :id, "no-id") )}
+        aria-label="user activity"
+        role="article"
+        tabIndex="0"
+        class={
+        "p-3 activity relative pl-16 group " <> e(assigns, :class, ""),
+        "activity_inception bg-base-content/10 !m-0 opacity-100 before:!left-2 before:top-1 before:bottom-1": e(assigns, :activity_inception, nil) != nil and  e(assigns, :thread_mode, nil) == :flat,
+        "cursor-pointer hover:bg-base-content/5": e(@object, :id, nil) == nil or e(@activity, :replied, :reply_to_id, nil) != nil or e(@activity, :id, nil) != nil and !e(assigns, :viewing_main_object, nil) and e(assigns, :showing_within, nil) != :thread, # Hover the activity background unless it is a quoted activity
+        "pt-6 hover:!bg-base-content/5 !bg-base-content/5 border-b border-base-content/10": e(assigns, :viewing_main_object, nil) == true,
+        "main_reply_to mb-2 p-2 py-1 mt-2 relative before:absolute before:content-[''] before:w-1 before:bg-base-content/40 before:left-0 before:top-0 before:bottom-0 opacity-60": e(@object, :id, nil) != nil and e(@activity, :replied, :reply_to_id, nil) == nil and e(@activity, :id, nil) == nil and e(assigns, :showing_within, nil) != :widget and e(assigns, :showing_within, nil) != :search, # showing a quoted reply_to
+        "cursor-text": e(assigns, :showing_within, nil) == :thread and e(assigns, :thread_mode, nil) != :flat,
+        "cursor-text": e(assigns, :thread_mode, nil) == :flat,
+        "!pl-14": e(assigns, :showing_within, nil) == :thread && e(assigns, :viewing_main_object, nil) != true,
+        "reply": e(@object, :id, nil) != nil and e(@activity, :replied, :reply_to_id, nil) != nil and e(@activity, :id, nil) != nil,
+        "border-l-2 border-primary !bg-primary/5": e(@activity, :seen, nil) == nil and e(assigns, :showing_within, nil) == :notifications and e(assigns, :activity_inception, nil) == nil,
+        }>
+        <form
+          :if={e(assigns, :feed_id, nil) && e(assigns, :showing_within, nil) in [:messages, :thread, :notifications]}
+          phx-submit="Bonfire.Social.Feeds:mark_seen"
+          phx-target={"#badge_counter_#{e(assigns, :feed_id, "missing_feed_id")}"}
+          x-intersect.once={intersect_event(e(@activity, :seen, nil))}>
+          <input type="hidden" name="feed_id" value={e(assigns, :feed_id, nil)} />
+          <input type="hidden" name="activity_id" value={e(@activity, :id, nil)} />
+        </form>
 
-      {#for {component, component_assigns} when is_atom(component) <- e(assigns, :activity_components, [])}
-        <Surface.Components.Dynamic.Component
-          module={component}
-          id={e(component_assigns, :id, nil)}
-          myself={nil}
-          created_verb_display={@created_verb_display}
-          showing_within={e(assigns, :showing_within, :feed)}
-          thread_mode={e(assigns, :thread_mode, nil)}
-          participants={e(assigns, :participants, [])}
-          activity={e(component_assigns, :activity, @activity)}
-          object={e(component_assigns, :object, @object)}
-          object_id={e(component_assigns, :object_id, @object_id)}
-          object_boundary={@object_boundary}
-          object_type={e(component_assigns, :object_type, @object_type)}
-          object_type_readable={e(component_assigns, :object_type_readable, @object_type_readable)}
-          date_ago={e(component_assigns, :date_ago, @date_ago)}
-          verb={e(component_assigns, :verb, @verb)}
-          verb_display={e(component_assigns, :verb_display, @verb_display)}
-          permalink={e(component_assigns, :permalink, @permalink)}
-          activity_inception={e(component_assigns, :activity_inception, e(assigns, :activity_inception, nil))}
-          viewing_main_object={e(component_assigns, :viewing_main_object, e(assigns, :viewing_main_object, false))}
-          hide_reply={e(component_assigns, :hide_reply, e(assigns, :hide_reply, false))}
-          profile={e(component_assigns, :profile, nil)}
-          character={e(component_assigns, :character, nil)}
-          media={e(component_assigns, :media, nil)}
-        />
-      {/for}
-    </article>
+        {#for {component, component_assigns} when is_atom(component) <- e(assigns, :activity_components, [])}
+          <Surface.Components.Dynamic.Component
+            module={component}
+            id={e(component_assigns, :id, nil)}
+            myself={nil}
+            created_verb_display={@created_verb_display}
+            showing_within={e(assigns, :showing_within, :feed)}
+            thread_mode={e(assigns, :thread_mode, nil)}
+            participants={e(assigns, :participants, [])}
+            activity={e(component_assigns, :activity, @activity)}
+            object={e(component_assigns, :object, @object)}
+            object_id={e(component_assigns, :object_id, @object_id)}
+            object_boundary={@object_boundary}
+            object_type={e(component_assigns, :object_type, @object_type)}
+            object_type_readable={e(component_assigns, :object_type_readable, @object_type_readable)}
+            date_ago={e(component_assigns, :date_ago, @date_ago)}
+            verb={e(component_assigns, :verb, @verb)}
+            verb_display={e(component_assigns, :verb_display, @verb_display)}
+            permalink={e(component_assigns, :permalink, @permalink)}
+            activity_inception={e(component_assigns, :activity_inception, e(assigns, :activity_inception, nil))}
+            viewing_main_object={e(component_assigns, :viewing_main_object, e(assigns, :viewing_main_object, false))}
+            hide_reply={e(component_assigns, :hide_reply, e(assigns, :hide_reply, false))}
+            profile={e(component_assigns, :profile, nil)}
+            character={e(component_assigns, :character, nil)}
+            media={e(component_assigns, :media, nil)}
+          />
+        {/for}
+      </article>
     """
   end
 

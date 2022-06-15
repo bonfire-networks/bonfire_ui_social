@@ -23,6 +23,7 @@ defmodule Bonfire.UI.Social.HomeLive do
         selected_tab: "home",
         page: "home",
         page_title: l("Home"),
+        page_header_drawer: true,
         feedback_title: l("Your home feed is empty"),
         feedback_message: l("You can start by following some people or by writing a new post.")
       ])

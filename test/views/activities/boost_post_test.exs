@@ -30,7 +30,7 @@ defmodule Bonfire.Social.Activities.BoostPost.Test do
 
       next = "/user"
       {view, doc} = floki_live(conn, next) #|> IO.inspect
-      assert [feed] = Floki.find(doc, ".feed")
+      assert feed = Floki.find(doc, ".feed")
       assert Floki.text(feed) =~ content
     end
 
@@ -68,7 +68,7 @@ defmodule Bonfire.Social.Activities.BoostPost.Test do
 
       next = "/user"
       {view, doc} = floki_live(conn, next) #|> IO.inspect
-      assert [feed] = Floki.find(doc, ".feed")
+      assert feed = Floki.find(doc, ".feed")
       refute Floki.text(feed) =~ content
 
     end

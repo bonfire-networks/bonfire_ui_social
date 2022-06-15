@@ -31,7 +31,12 @@ defmodule Bonfire.UI.Social.Feeds.NotificationsLive do
       current_user: current_user,
       feed_id: :notifications,
       feed: e(feed, :edges, []),
-      page_info: e(feed, :page_info, [])
+      page_info: e(feed, :page_info, []),
+      page_header_aside: [
+        {Bonfire.UI.Social.HeaderAsideNotificationsSeenLive, [
+          feed_id: :notifications
+        ]}
+      ]
       )}
 
   end

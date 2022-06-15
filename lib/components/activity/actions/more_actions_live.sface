@@ -110,7 +110,7 @@
           <button 
           phx-click={"Bonfire.Social.Objects:delete"} 
           phx-value-id={e(@object, :id, "")}
-          class="btn btn-error">
+          class="normal-case btn btn-error btn-sm">
           <Solid.TrashIcon class="w-4 h-4 mr-2 shrink-0" />
           <span class="truncate ellipsis">{l("Delete this")} {e(assigns, :object_type_readable, l "object")}</span>
         </button>

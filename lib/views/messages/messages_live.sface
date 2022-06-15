@@ -1,8 +1,7 @@
 
-<main 
-  class="flex flex-col h-body">
+<main class="">
   {#if @tab_id in ["compose", "select_recipients", "thread"]}
-    <div class="flex flex-col">
+    <div class="flex flex-col ">
     {#if @tab_id=="thread"}
       <Bonfire.UI.Social.ObjectThreadLive
         page={@page}
@@ -27,11 +26,6 @@
         replied_activity_class={"relative mb-2 rounded-md bg-base-100 hover:bg-base-100"}
       /> 
     {#elseif @tab_id in ["compose", "select_recipients"]}
-      <Bonfire.UI.Common.PageHeaderLive>
-      
-      <h1 class="flex-1 ml-3 font-bold text-base-content">{@page_title}</h1>
-      
-     </Bonfire.UI.Common.PageHeaderLive>
       <div class="flex-1 p-3 bg-base-100 relative z-[90]">
 
         <Bonfire.UI.Common.SmartInputLive
@@ -56,25 +50,6 @@
   </div>
 
   {#else}
-    <Bonfire.UI.Common.PageHeaderLive>
-
-      <h1 class="flex-1 ml-3 font-bold text-base-content">{@page_title}</h1>
-
-     
-      <button 
-        phx-click="Bonfire.Social.Feeds:mark_seen"
-        phx-target={"#badge_counter_#{e(assigns, :feed_id, "missing_feed_id")}"}
-        phx-value-feed_id={e(assigns, :feed_id, nil)}
-        phx-value-scope="all"
-        data-tip={l "Mark all as read"}
-        class="flex items-center normal-case place-content-center tooltip tooltip-bottom btn btn-sm btn-ghost btn-square">
-        <Outline.CheckIcon 
-          class="w-5 h-5 text-base-content/80" 
-        />
-      </button>
-
-     </Bonfire.UI.Common.PageHeaderLive>
-
     <div class="flex-1 hidden pt-12 tablet-lg:block rounded-b-md md:mx-0 text-base-content bg-base-100">
       <Bonfire.UI.Common.EmptyFeed
         feedback_title={e(assigns, :feedback_title, nil)}

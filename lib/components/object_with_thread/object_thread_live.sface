@@ -1,12 +1,4 @@
-<main class="flex flex-col flex-1 h-full">
-  <div class="flex flex-col flex-1 grow bg-base-100 rounded-t-md">
-    <Bonfire.UI.Social.ObjectHeaderLive 
-      page_title={e(assigns, :page_title, "")}
-      participants={participants(assigns)}
-      thread_id={e(assigns, :thread_id, nil)}
-      thread_mode={e(assigns, :thread_mode, nil)}
-      object={e(assigns, :object, nil)}
-    />
+  <div class="flex flex-col flex-1 ">
     <div class="flex-1">
       <Bonfire.UI.Social.ActivityLive
         id={"ta:"<>ulid(@activity)}
@@ -19,6 +11,7 @@
         participants={participants(assigns)}
         object_boundary={if e(assigns, :showing_within, :thread)==:messages, do: :skip}
       />
+      <div class="p-2 px-3 text-sm font-medium tracking-wide border-b bg-base-content/5 border-base-content/10 text-base-content">{l "Discussion"}</div>
       <Bonfire.UI.Social.ThreadLive 
         id={e(assigns, :thread_id, nil)}
         thread_id={e(assigns, :thread_id, nil)}
@@ -36,9 +29,9 @@
     </div>
 
     <div 
-    :if={e(assigns, :showing_within, nil) == :messages && current_user(assigns)}
-    class="relative z-[90] p-2 tablet:p-3 bg-base-100  rounded-b-md sm_background-invisible">
-      <Bonfire.UI.Common.SmartInputLive
+      class="sticky bottom-0"
+      :if={e(assigns, :showing_within, nil) == :messages && current_user(assigns)}>      
+        <Bonfire.UI.Common.SmartInputLive
         id={:smart_input}
         current_user={current_user(assigns)}
         reply_to_id={e(assigns, :reply_to_id, "")}
@@ -55,21 +48,3 @@
     </div>
   
   </div>
-
-  
-
-</main>
-
-  <!-- {#if current_user(assigns) }
-    <Bonfire.UI.Common.WidgetLive 
-      widget_title="Participants"
-      current_user={current_user(assigns)}
-    >
-      <Bonfire.UI.Social.WidgetUsersLive 
-        current_user={current_user(assigns)}
-        users={participants(assigns)}
-      />
-    </Bonfire.UI.Common.WidgetLive>
-  {#else}
-    <div />
-  {/if} -->
