@@ -1,29 +1,58 @@
 
-{#for media <- @media}
-  <article
-   class={
-    "media-entry",
-    "showing_within:thread mx-3": e(assigns, :showing_within, nil) == :thread}>
+<div class={
+  "grid w-full h-[270px] my-3",
+  "grid-cols-1": length(@media) == 1,
+  "grid-cols-2 gap-2": length(@media) == 2 or length(@media) == 4,
+  "grid-rows-[repeat(4,_1fr)] grid-cols-[repeat(4,_1fr)] gap-2": length(@media) == 3
+  }>
+  {#for {media, counter} <- Enum.with_index(@media)}
+    <article class={
+      "media-entry h-full w-full",
+      "col-start-1 col-end-3 row-start-1 row-end-5": length(@media) == 3 && counter == 0,
+      "col-start-3 col-end-5 row-start-1 row-end-3": length(@media) == 3 && counter == 1,
+      "col-start-3 col-end-5 row-start-3 row-end-5": length(@media) == 3 && counter == 2,
+      "max-h-[127px]": length(@media) == 4
+    }>
+      <figure class="h-full">
+        <Bonfire.UI.Common.OpenModalLive
+          id={ComponentID.new(Bonfire.UI.Common.OpenModalLive, e(assigns, :object, nil))} 
+          title_text={e(assigns, :label, l "View media")}
+          no_actions
+        >
+          <div class="mt-2">
+            <img
+              alt={e(media.metadata, "label", nil)}
+              src={media_url(media)}
+            />
+            <div class="mt-2">{e(media.metadata, "label", nil)}</div>
+          </div>
+          <:open_btn>
+          <!-- TODO: better handling of media type? -->
+          {#if String.starts_with?(media.media_type, "image")}
+            <LazyImage
+              class="w-full h-full cursor-pointer"
+              alt={e(media.metadata, "label", nil)}
+              src={image_url(media)}
+            />
+          {#else}
+            {#if media.media_type=="remote" and String.ends_with?(media_url(media), ["jpg", "jpeg", "png", "gif", "webp"])}
+              <img
+                class="w-full h-full cursor-pointer"
+                alt={e(media.metadata, "label", nil)}
+                src={media_url(media)}
+              />
+            {#else}
+              {media.media_type}
+            {/if}
+          {/if}
+          <figcaption class="sr-only">{e(media.metadata, "label", nil)}</figcaption>
+          </:open_btn>
+        </Bonfire.UI.Common.OpenModalLive>
 
-    <figure>
-    <a href={media_url(media)} target="_blank">
-      <!-- TODO: better handling of media type? -->
-      {#if String.starts_with?(media.media_type, "image")}
-        <LazyImage
-          src={image_url(media)}
-         />
-      {#else}
-        {#if media.media_type=="remote" and String.ends_with?(media_url(media), ["jpg", "jpeg", "png", "gif", "webp"])}
-          <img
-            src={media_url(media)}
-          />
-        {#else}
-          {media.media_type}
-        {/if}
-      {/if}
-      <figcaption>{e(media.metadata, "label", nil)}</figcaption>
-    </a>
-    </figure>
-
-  </article>
-{/for}
+        <!-- <a href={media_url(media)} target="_blank">
+          
+        </a> -->
+      </figure>
+    </article>
+  {/for}
+</div>

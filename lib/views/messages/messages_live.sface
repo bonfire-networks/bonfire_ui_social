@@ -1,7 +1,7 @@
 
-<main class="">
+<main class="h-full">
   {#if @tab_id in ["compose", "select_recipients", "thread"]}
-    <div class="flex flex-col ">
+    <div class="flex flex-col h-full">
     {#if @tab_id=="thread"}
       <Bonfire.UI.Social.ObjectThreadLive
         page={@page}
