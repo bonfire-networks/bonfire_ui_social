@@ -32,7 +32,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
   def update(assigns, %{assigns: %{activity_components: activity_components}} = socket) do
     debug("Activity prepared already")
     # debug(activity_components)
-    {:ok, socket |> assign(assigns)}
+    {:ok, socket } #|> assign(assigns)} # FYI: assigning blindly here causes problems
   end
 
   def update(assigns, socket) do

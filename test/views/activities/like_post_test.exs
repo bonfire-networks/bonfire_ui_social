@@ -31,8 +31,9 @@ defmodule Bonfire.Social.Activities.LikePost.Test do
 
       assert view
       |> render()
+      |> dump()
       ~> Floki.find("[data-id=like_action]")
-      |> Floki.text() =~ "Liked"
+      |> Floki.text()  =~ "Liked"
 
       assert true == Likes.liked?(someone, post)
 
