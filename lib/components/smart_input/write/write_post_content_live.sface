@@ -29,7 +29,7 @@
       :class="{'!rounded-t-none' : show_mobile_composer}"
       class={
         "rounded-md shadow bg-base-100 flex h-full flex-1": e(assigns, :thread_mode, nil) != :flat,
-        "bg-slate-50 h-full flex-1 sticky bottom-0 messages_smart_input": e(assigns, :thread_mode, nil) == :flat
+        "bg-base-100 border-t border-base-content/10 p-3 h-full flex-1 sticky bottom-0 messages_smart_input": e(assigns, :thread_mode, nil) == :flat
       }>
       <div class="relative flex flex-col flex-1 h-full">
         <Inputs for={:post_content}>
@@ -44,7 +44,10 @@
               <Field name={:name}>
                 <TextInput
                   opts={placeholder: l "Enter a content warning"}
-                  class="block w-full border-0 pt-2.5 text-lg font-medium placeholder-slate-800 placeholder-opacity-70 bg-slate-100 text-slate-800 border-b border-slate-200 rounded-t-lg" 
+                  class={
+                    "block w-full border-0 pt-2.5 text-lg font-medium placeholder-base-content/70 bg-base-100 text-base-content border-b border-base-content/10 rounded-t-lg",
+                    "!border !border-base-content/30 !rounded-[24px] mb-2": e(assigns, :thread_mode, nil) == :flat
+                  } 
                   />
               </Field>
             </div>  

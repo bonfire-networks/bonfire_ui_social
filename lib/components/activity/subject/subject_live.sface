@@ -131,5 +131,6 @@
   :if={e(@activity, :replied, :thread, :named, :name, nil) && (e(assigns, :showing_within, nil)) in [:feed]}
   class="flex items-center mt-2 text-sm font-medium"
   >
-  <span class="mr-1">{l "in"}</span> <span class="link">{e(@activity, :replied, :thread, :named, :name, "")}</span>
+  <Outline.ArrowRightIcon class="w-4 h-4 text-base-content/80" />
+  <span class="mx-1">{l "in"}</span> <span class="link">{e(@activity, :replied, :thread, :named, :name, "")}</span>
 </div>
