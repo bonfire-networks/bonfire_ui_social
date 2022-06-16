@@ -26,7 +26,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
   @create_or_reply_verbs @create_verbs ++ @reply_verbs
 
   def preload(list_of_assigns) do
-    Bonfire.Boundaries.LiveHandler.maybe_preload_and_check_boundaries(list_of_assigns)
+    Bonfire.Boundaries.LiveHandler.maybe_preload_and_check_boundaries(list_of_assigns, __MODULE__)
   end
 
   def update(assigns, %{assigns: %{activity_components: activity_components}} = socket) do

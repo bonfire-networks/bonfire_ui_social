@@ -39,20 +39,22 @@ defmodule Bonfire.Social.Posts.LiveHandler do
 
   def handle_event("post", params, socket) do # if not a message, it's a post by default
     attrs = params
-    # |> debug("handle_event: post inputs")
+    |> debug("post params")
     |> input_to_atoms()
-    # |> debug("handle_event: post attrs")
-    
-    debug(e(socket.assigns, :showing_within, nil), "SHOWING")
+    # |> debug("post attrs")
+
+    # debug(e(socket.assigns, :showing_within, nil), "SHOWING")
     current_user = current_user(socket)
 
     with %{} <- current_user || {:error, "You must be logged in"},
          %{valid?: true} <- post_changeset(attrs, current_user),
          uploaded_media <- multi_upload(current_user, params["upload_metadata"], socket),
-         {:ok, published} <- Bonfire.Social.Posts.publish(
+         opts <- [
             current_user: current_user,
             post_attrs: attrs |> Map.put(:uploaded_media, uploaded_media),
-            boundary: params["boundary_selected"]) do
+            boundary: e(params, "boundary_selected", "mentions")
+          ] |> debug("opts"),
+         {:ok, published} <- Bonfire.Social.Posts.publish(opts) do
 
       debug(published, "published!")
 
@@ -172,9 +174,9 @@ defmodule Bonfire.Social.Posts.LiveHandler do
 
 
   def post_changeset(attrs \\ %{}, creator) do
-    debug(attrs, "ATTRS")
+    # debug(attrs, "ATTRS")
     Posts.changeset(:create, attrs, creator)
-    |> debug("pc")
+    # |> debug("pc")
   end
 
   defp multi_upload(current_user, metadata, socket) do
