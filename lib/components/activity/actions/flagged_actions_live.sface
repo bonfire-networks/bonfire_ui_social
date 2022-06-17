@@ -33,8 +33,7 @@
         id={ComponentID.new(OpenModalLive, @object)} 
         title_text={l("Delete this")<>" "<>e(assigns, :object_type_readable, l "object")}
         >
-        {rich l "You may be able to undo this deletion *in some cases*, but in any case the data will eventually be permanently deleted from this instance."} 
-        {l "Remote instances will be asked to delete it as well."} 
+        {l "A request will be sent to remote instances to delete it as well."} 
         <:open_btn>
           <button 
             type="button"
