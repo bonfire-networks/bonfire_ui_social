@@ -59,7 +59,7 @@
               />
             {#match _}
               <div class="p-3">
-                {l "Comment not loaded"}
+                {l "A comment was deleted."}
               </div>
           {/case}
       </div>

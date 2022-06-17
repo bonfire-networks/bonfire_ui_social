@@ -61,7 +61,6 @@ defmodule Bonfire.Social.Posts.LiveHandler do
       {:noreply,
         socket
         |> assign_flash(:info, "Posted!")
-        |> push_event("reset_body", %{})
         |> reset_smart_input()
         # |> push_patch_with_fallback(current_url(socket), path(published)) # so the flash appears - TODO: causes a conflict between the activity coming in via pubsub
 
@@ -77,6 +76,27 @@ defmodule Bonfire.Social.Posts.LiveHandler do
         # |> patch_to(current_url(socket), fallback: "/error") # so the flash appears
       }
     end
+  end
+
+  def handle_event("post_error", _, socket) do
+    default_template = "I encountered this issue while using Bonfire: \n```\n%{error_message}\n```\n@admins @bonfire_builders #bonfire_feedback \n%{error_link}"
+
+
+    link = case maybe_last_sentry_event_id() do
+      id when is_binary(id) ->
+        org = Settings.get(:sentry_org, "bonfire-networks")
+        "https://sentry.io/organizations/#{org}/issues/?query=#{id}"
+      _ -> nil
+    end
+
+    text = Settings.get([:ui, :feedback_post_template], default_template, socket)
+    |> String.replace("%{error_message}", e(socket.assigns, :error, nil) || live_flash(e(socket.assigns, :root_flash, nil) || e(socket.assigns, :flash, nil), :error))
+    |> String.replace("%{error_link}", link)
+
+    {:noreply,
+      socket
+      |> set_smart_input_text(text)
+    }
   end
 
   def handle_event("load_replies", %{"id" => id, "level" => level}, socket) do
@@ -197,9 +217,16 @@ defmodule Bonfire.Social.Posts.LiveHandler do
   end
 
 
+  def set_smart_input_text(socket, text \\ "\n") do
+    socket
+    |> push_event("smart_input:set_body", %{text: text})
+  end
+
   def reset_smart_input(%{assigns: %{showing_within: :thread}} = socket) do
-    debug("THREad")
-    socket |> assign(
+    # debug("THREad")
+    socket
+    |> set_smart_input_text()
+    |> assign(
       activity: nil,
       to_circles: nil,
       reply_to_id: e(socket.assigns, :thread_id, nil),
@@ -207,18 +234,22 @@ defmodule Bonfire.Social.Posts.LiveHandler do
   end
 
   def reset_smart_input(%{assigns: %{showing_within: :messages}} = socket) do
-    debug("messages")
+    # debug("messages")
 
-    socket |> assign(
+    socket
+    |> set_smart_input_text()
+    |> assign(
       activity: nil,
       smart_input_text: nil
     )
   end
 
   def reset_smart_input(socket) do
-    debug("VOID")
+    # debug("VOID")
 
-    socket |> assign(
+    socket
+    |> set_smart_input_text()
+    |> assign(
       reply_to_id: nil,
       thread_id: nil,
       to_circles: nil,
