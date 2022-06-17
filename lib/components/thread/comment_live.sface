@@ -58,9 +58,32 @@
                 class="showing_within:thread !py-2"
               />
             {#match _}
-              <div class="p-3">
-                {l "A comment was deleted."}
+
+            <div class="mx-4 my-2">
+              <div class="p-4 rounded-md bg-info/10">
+                <div class="flex">
+                  <div class="flex-shrink-0">
+                    <Solid.InformationCircleIcon class="w-5 h-5 text-info" />
+                  </div>
+                  <div class="flex-1 ml-3 md:flex md:justify-between">
+                    <p class="text-sm text-info">{l "This comment was deleted."}</p>
+                  </div>
+                </div>
               </div>
+            </div>
+
+
+            <!-- <div class="mx-3 my-2">
+              <div class="shadow-lg alert alert-warning">
+                <div>
+                  <svg xmlns="http://www.w3.org/2000/svg" class="flex-shrink-0 w-6 h-6 stroke-current" fill="none" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" /></svg>
+                  <span>{l "A comment was deleted."}</span>
+                </div>
+              </div>
+            </div> -->
+              <!-- <div class="p-3">
+                {l "A comment was deleted."}
+              </div> -->
           {/case}
       </div>
     </div>

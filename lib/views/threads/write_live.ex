@@ -22,11 +22,18 @@ defmodule Bonfire.UI.Social.WriteLive do
     |> assign(
       page_title: l("Write"),
       page: "write",
+      hide_smart_input: true,
       create_activity_type: "",
       smart_input_text: "",
-      without_sidebar: true,
       reply_to_id: nil,
       thread_id: nil,
+      sidebar_widgets: [
+        users: [
+          main: [
+            {Bonfire.UI.Common.WidgetInstanceInfoLive, [display_banner: false]},
+          ]
+        ]
+      ]
     )}
   end
 

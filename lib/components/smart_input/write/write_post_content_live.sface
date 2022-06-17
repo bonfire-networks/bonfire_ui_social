@@ -52,25 +52,32 @@
               </Field>
             </div>  
             <label for="description" class="sr-only">{l "Description"}</label>
-            <Field 
+            <div 
               class={
-                "h-full min-h-full flex-1 flex flex-col grow",
-                "min-h-[50px]": e(assigns, :thread_mode, nil) == :flat,
-                "min-h-[100px]": e(assigns, :thread_mode, nil) != :flat,
-              } 
-              name={:html_body}>
-              <!-- <Label :if={@smart_input_text && @smart_input_text !="" && @smart_input_prompt} class="mb-2 alert alert-info">{@smart_input_prompt}</Label> -->    
-                <WriteEditorLive
-                  field_name="post[post_content][html_body]"
-                  textarea_class={@textarea_class}
-                  smart_input_prompt={e(assigns, :smart_input_prompt, l "Write something...")}
-                  smart_input_text={@smart_input_text}
-                  insert_text={@insert_text}
-                  with_rich_editor={@with_rich_editor}
-                  thread_mode={@thread_mode}
-                />
-                
-            </Field>
+                "h-full",
+                "!h-full": e(assigns, :showing_within, nil) != :page}
+              :class="{'h-[calc(100%_-_60px)]':title_open}">
+              <Field 
+                class={
+                  "h-full min-h-full flex-1 flex flex-col grow",
+                  "min-h-[50px]": e(assigns, :thread_mode, nil) == :flat,
+                  "min-h-[100px]": e(assigns, :thread_mode, nil) != :flat,
+                } 
+                name={:html_body}>
+                <!-- <Label :if={@smart_input_text && @smart_input_text !="" && @smart_input_prompt} class="mb-2 alert alert-info">{@smart_input_prompt}</Label> -->    
+                  <WriteEditorLive
+                    field_name="post[post_content][html_body]"
+                    textarea_class={@textarea_class}
+                    smart_input_prompt={e(assigns, :smart_input_prompt, l "Write something...")}
+                    smart_input_text={@smart_input_text}
+                    insert_text={@insert_text}
+                    with_rich_editor={@with_rich_editor}
+                    thread_mode={@thread_mode}
+                    showing_within={@showing_within}
+                  />
+                  
+              </Field>
+            </div>
           </div>
         </Inputs>
         

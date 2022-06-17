@@ -257,10 +257,6 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
         users: [
           main: [
             {Bonfire.UI.Common.WidgetInstanceInfoLive, []}
-          ],
-          secondary: [
-            {Bonfire.UI.Social.WidgetTimelinesLive, [page: "home"]},
-            {Bonfire.UI.Social.WidgetTagsLive , []}
           ]
         ]
       ]
@@ -287,10 +283,6 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
         users: [
           main: [
             {Bonfire.UI.Common.WidgetInstanceInfoLive, []}
-          ],
-          secondary: [
-            {Bonfire.UI.Social.WidgetTimelinesLive, [page: "federation"]},
-            {Bonfire.UI.Social.WidgetTagsLive , []}
           ]
         ]
       ]
@@ -315,10 +307,6 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
         users: [
           main: [
             {Bonfire.UI.Common.WidgetInstanceInfoLive, []}
-          ],
-          secondary: [
-            {Bonfire.UI.Social.WidgetTimelinesLive, [page: "local"]},
-            {Bonfire.UI.Social.WidgetTagsLive , []}
           ]
         ]
       ]

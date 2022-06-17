@@ -189,6 +189,14 @@ defmodule Bonfire.UI.Social.MessagesLive do
           participants: participants,
           smart_input_prompt: prompt,
           to_circles: to_circles || [],
+          page_header_aside: [
+            {Bonfire.UI.Social.ObjectHeaderAsideLive, [
+              page_title: e(activity, :replied, :thread, :named, :name, title),
+              participants: participants,
+              thread_id: e(message, :id, nil),
+              object: activity,
+            ]}
+          ],
           sidebar_widgets: LiveHandler.threads_widget(current_user, ulid(e(socket.assigns, :user, nil)), e(message, :id, nil), tab_id: "thread")
         )
         # |> assign_new(:messages, fn -> LiveHandler.list_threads(current_user) |> e(:edges, []) end)

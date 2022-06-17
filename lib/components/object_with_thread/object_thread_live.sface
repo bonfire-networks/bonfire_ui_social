@@ -31,7 +31,7 @@
     </div>
 
     <div 
-      class="sticky bottom-0"
+      class="sticky bottom-0 z-50"
       :if={e(assigns, :showing_within, nil) == :messages && current_user(assigns)}>      
         <Bonfire.UI.Common.SmartInputLive
         id={:smart_input}

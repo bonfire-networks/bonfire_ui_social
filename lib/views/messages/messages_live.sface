@@ -36,7 +36,8 @@
           thread_id={e(assigns, :thread_id, nil)}
           to_circles={e(assigns, :to_circles, [])}
           create_activity_type={:message}
-          showing_within={:messages}
+          showing_within={:page}
+          thread_mode={:flat}
           boundary={"message"}
           title_open={true}
           smart_input_prompt={e(assigns, :smart_input_prompt, "")}

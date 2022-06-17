@@ -79,7 +79,7 @@ defmodule Bonfire.Social.Posts.LiveHandler do
   end
 
   def handle_event("post_error", _, socket) do
-    default_template = "I encountered this issue while using Bonfire: \n```\n%{error_message}\n```\n@admins @bonfire_builders #bonfire_feedback \n%{error_link}"
+    default_template = "I encountered this issue while using Bonfire: \n%{error_message}\n@admins @bonfire_builders #bonfire_feedback \n%{error_link}"
 
     link = case maybe_last_sentry_event_id() do
       id when is_binary(id) ->
