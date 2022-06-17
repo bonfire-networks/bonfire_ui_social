@@ -22,10 +22,17 @@
       />
 
       <ul class="divide-y rounded-b-lg divide-base-content divide-opacity-10 rounded-b-md">
-        <li class="bg-base-100 hover:bg-base-200" :for={%{activity: activity} <- e(assigns, :threads, :edges, [])}>
-          <LivePatch to={permalink(e(activity, :replied, :thread_id, nil), e(activity, :object_id, nil))} class="block ">
+        <li 
+          class="mr-4 bg-base-100 hover:bg-base-200" 
+          :for={%{activity: activity} <- e(assigns, :threads, :edges, [])}>
+          <LivePatch to={permalink(e(activity, :replied, :thread_id, nil), e(activity, :object_id, nil))} class="block">
+          <div class="indicator w-full">
+            <span 
+              :if={!e(activity, :seen, nil)}
+              class="indicator-item badge badge-secondary">
+            </span> 
             <div class={
-              "flex items-center p-3 py-2",
+              "flex items-center p-3 py-2 w-full",
               "bg-base-content bg-opacity-5 border-l-2 border-primary": e(assigns, :thread_id, nil) == (e(activity, :replied, :thread_id, nil) || e(activity, :object_id, nil))
               }>
               <div class="flex-1 w-full min-w-0 sm:flex sm:items-center sm:justify-between">
@@ -39,7 +46,7 @@
                       <div class="flex-1 font-semibold truncate text-base-content">{e(activity, :subject, :profile, :name, nil)}</div>
                     {/if}
                     <div class="flex items-center mt-0.5 text-xs text-base-content text-opacity-80">
-                      <p><time datetime={"#{date_from_now(activity)}"}>{date_from_now(activity)}</time></p>
+                      <p><time datetime={"#{date_from_pointer(activity)}"}>{date_from_now(activity)}</time></p>
                     </div>
                   </div>
                   <div class="mt-1">
@@ -51,9 +58,10 @@
               </div>
               <!-- <div class="flex-shrink-0 ml-5">
                 <div class="flex items-center mt-1 text-xs text-base-content text-opacity-80">
-                  <p><time datetime={"#{date_from_now(activity)}"}>{date_from_now(activity)}</time></p>
+                  <p><time datetime={"#{date_from_pointer(activity)}"}>{date_from_now(activity)}</time></p>
                 </div>
               </div> -->
+            </div>
             </div>
           </LivePatch>
         </li>

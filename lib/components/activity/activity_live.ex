@@ -135,7 +135,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
         "border-l-2 border-primary !bg-primary/5": e(@activity, :seen, nil) == nil and e(assigns, :showing_within, nil) == :notifications and e(assigns, :activity_inception, nil) == nil,
         }>
         <form
-          :if={e(assigns, :feed_id, nil) && e(assigns, :showing_within, nil) in [:messages, :thread, :notifications]}
+          :if={not is_nil(e(assigns, :feed_id, nil)) and e(assigns, :showing_within, nil) in [:messages, :thread, :notifications] and e(assigns, :activity, :subject, :id, nil) != ulid(current_user(assigns)) and e(assigns, :activity, :object, :created, :creator_id, nil) != ulid(current_user(assigns)) }
           phx-submit="Bonfire.Social.Feeds:mark_seen"
           phx-target={"#badge_counter_#{e(assigns, :feed_id, "missing_feed_id")}"}
           x-intersect.once={intersect_event(e(@activity, :seen, nil))}>

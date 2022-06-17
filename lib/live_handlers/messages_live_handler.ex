@@ -65,7 +65,7 @@ defmodule Bonfire.Social.Messages.LiveHandler do
 
   def list_threads(current_user, user \\ nil, opts \\ []) do
     # TODO: put limit in Settings
-    if current_user, do: Messages.list(current_user, user, [preload: :posts, latest_in_threads: true, limit: 8] ++ opts)
+    if current_user, do: Messages.list(current_user, user, [latest_in_threads: true, limit: 8] ++ opts) |> dump()
   end
 
 

@@ -149,7 +149,9 @@ defmodule Bonfire.UI.Social.MessagesLive do
 
         {activity, message} = Map.pop(message, :activity)
         {preloaded_object, activity} = Map.pop(activity, :object)
+
         activity = Bonfire.Social.Activities.activity_preloads(activity, :all, current_user: current_user)
+        |> debug("preloaded")
 
         message = Map.merge(message, preloaded_object)
                 # |> debug("the message object")

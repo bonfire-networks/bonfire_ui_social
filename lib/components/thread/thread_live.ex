@@ -34,16 +34,31 @@ defmodule Bonfire.UI.Social.ThreadLive do
     debug("adding new reply")
 
     new_reply = new_reply
-      |> Map.put(:path, e(new_reply, :object, :replied, :path, nil) || e(new_reply, :replied, :path, nil) || e(new_reply, :replied, :path, nil) || e(new_reply, :activity, :replied, :path, []))
+      |> Map.put(:path, e(new_reply, :object, :replied, :path, nil) || e(new_reply, :replied, :path, nil) || e(new_reply, :activity, :replied, :path, []))
       # |> dump("new_reply")
 
-    replies = [new_reply] ++ e(socket, :assigns, :replies, [])
+    thread_id = e(assigns, :activity, :replied, :thread_id, nil) || e(assigns, :thread_id, nil) # TODO: change for thread forking?
 
-    {:ok, assign(socket, assigns |> assigns_merge(
-      replies: replies,
-      threaded_replies: Bonfire.Social.Threads.arrange_replies_tree(replies),
-      thread_id: e(assigns, :activity, :replied, :thread_id, nil) || e(assigns, :thread_id, nil), # TODO: change for thread forking?
-    )) }
+    if e(socket.assigns, :thread_mode, nil) == :flat do
+      replies = e(socket, :assigns, :replies, []) ++ [new_reply]
+
+      {:ok, assign(socket, assigns
+        |> assigns_merge(
+          replies: replies,
+          thread_id: thread_id
+        ))
+      }
+    else
+      replies = [new_reply] ++ e(socket, :assigns, :replies, [])
+
+      {:ok, assign(socket, assigns
+        |> assigns_merge(
+          replies: replies,
+          threaded_replies: Bonfire.Social.Threads.arrange_replies_tree(replies),
+          thread_id: thread_id
+        ))
+      }
+    end
   end
 
   def update(%{__context__: %{new_reply: new_reply}} = assigns, socket) do
