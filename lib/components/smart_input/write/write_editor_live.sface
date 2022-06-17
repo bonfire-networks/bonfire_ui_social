@@ -1,5 +1,6 @@
 
 
+
 {#case rich_editor(assigns)}
   {#match component when is_atom(component) and not is_nil(component)}
     <Surface.Components.Dynamic.Component

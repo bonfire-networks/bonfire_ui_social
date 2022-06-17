@@ -11,25 +11,21 @@
     }
     class={if WriteEditorLive.use_rich_editor?(assigns), do: "with_editor flex-1", else: "with_textarea flex-1"}>
 
-    <!-- <div 
-      x-show="smart_input_prompt != 'Write something...' && ((reply_to_id && reply_to_id != '') || (smart_input_text && smart_input_text !=''))" 
-      x-text= "smart_input_prompt" 
-      class="block mb-2 text-sm truncate rounded shadow-lg alert alert-info ellipsis ">
-      {@smart_input_prompt || ""}  
-    </div> -->
-
-    <Bonfire.UI.Common.SelectRecipientsLive
+    <div 
       :if={@show_select_recipients}
+      class="p-3 pb-0">
+    <Bonfire.UI.Common.SelectRecipientsLive
       showing_within={@showing_within}
       preloaded_recipients={e(assigns, :preloaded_recipients, [])}
       to_circles={e(assigns, :to_circles, [])}
     />
-
+    </div>
     <div 
       :class="{'!rounded-t-none' : show_mobile_composer}"
       class={
         "rounded-md shadow bg-base-100 flex h-full flex-1": e(assigns, :thread_mode, nil) != :flat,
-        "bg-base-100 border-t border-base-content/10 p-3 h-full flex-1 sticky bottom-0 messages_smart_input": e(assigns, :thread_mode, nil) == :flat
+        "bg-base-100 border-t border-base-content/10 p-3 h-full flex-1 sticky bottom-0 messages_smart_input": e(assigns, :thread_mode, nil) == :flat,
+        "!relative border-none h-[calc(100%_-_50px)]": e(assigns, :showing_within, nil) == :page,
       }>
       <div class="relative flex flex-col flex-1 h-full">
         <Inputs for={:post_content}>

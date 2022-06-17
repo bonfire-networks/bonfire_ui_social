@@ -16,7 +16,7 @@ defmodule Bonfire.UI.Social.WritePostContentLive do
   prop to_circles, :list
   prop smart_input_prompt, :string
   prop smart_input_text, :string, required: false
-  prop showing_within, :any
+  prop showing_within, :string
   prop with_rich_editor, :boolean, default: true, required: false
   prop insert_text, :string
   prop uploads, :any

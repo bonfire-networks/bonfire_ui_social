@@ -12,7 +12,7 @@ defmodule Bonfire.UI.Social.WriteEditorLive do
   prop create_activity_type, :any
   prop smart_input_prompt, :string, default: ""
   prop smart_input_text, :string, default: "", required: false
-  prop showing_within, :any
+  prop showing_within, :string
   prop with_rich_editor, :boolean, default: true, required: false
   prop insert_text, :string
   prop thread_mode, :string
