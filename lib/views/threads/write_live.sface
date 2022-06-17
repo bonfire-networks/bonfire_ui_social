@@ -9,6 +9,6 @@
   thread_mode={:flat}
   title_open={true}
   to_circles={e(assigns, :to_circles, [])}
-  smart_input_prompt={"Share a feedback"}
+  smart_input_prompt={l "Write something..."}
   smart_input_text={e(assigns, :smart_input_text, "")}
 />

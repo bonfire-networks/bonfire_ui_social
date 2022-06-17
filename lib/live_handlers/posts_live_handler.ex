@@ -78,30 +78,16 @@ defmodule Bonfire.Social.Posts.LiveHandler do
     end
   end
 
-  def handle_event("post_error", _, socket) do
-    default_template = "I encountered this issue while using Bonfire: \n%{error_message}\n@admins @bonfire_builders #bonfire_feedback \n%{error_link}"
 
-    link = case maybe_last_sentry_event_id() do
-      id when is_binary(id) ->
-        org = Settings.get(:sentry_org, "bonfire-networks")
-        "https://sentry.io/organizations/#{org}/issues/?query=#{id}"
-      _ -> nil
-    end
-
-    # dump(socket.assigns)
-    error = e(socket.assigns, :error, nil) || live_flash((e(socket.assigns, :root_flash, nil) || e(socket.assigns, :flash, nil) || %{}), :error)
-    # debug(error)
-
-    text = Settings.get([:ui, :feedback_post_template], default_template, socket)
-    |> String.replace("%{error_message}", error || "")
-    |> String.replace("%{error_link}", link || "")
-    # |> debug()
-
-    {:noreply,
-      socket
-      |> set_smart_input_text(text)
-    }
+  def handle_event("write_error", _, socket) do
+    Bonfire.UI.Common.NotificationLive.error_template(socket.assigns)
+    |> write_feedback(socket)
   end
+
+  def handle_event("write_feedback", _, socket) do
+    write_feedback(Settings.get([:ui, :feedback_post_template], "I have a suggestion about Bonfire: \n\n@admins @bonfire_builders #bonfire_feedback", socket), socket)
+  end
+
 
   def handle_event("load_replies", %{"id" => id, "level" => level}, socket) do
     info("load extra replies")
@@ -176,6 +162,12 @@ defmodule Bonfire.Social.Posts.LiveHandler do
   #   {:noreply, socket}
   # end
 
+  def write_feedback(text, socket) do
+    {:noreply,
+      socket
+      |> set_smart_input_text(text)
+    }
+  end
 
   def live_more(thread_id, paginate, socket) do
     # info(paginate, "paginate thread")

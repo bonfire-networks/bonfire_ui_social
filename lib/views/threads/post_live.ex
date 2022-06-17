@@ -7,7 +7,7 @@ defmodule Bonfire.UI.Social.PostLive do
     live_plug(params, session, socket, [
       LivePlugs.LoadCurrentAccount,
       LivePlugs.LoadCurrentUser,
-      LivePlugs.LoadCurrentUserCircles,
+      # LivePlugs.LoadCurrentUserCircles,
       # LivePlugs.LoadCurrentAccountUsers,
       Bonfire.UI.Common.LivePlugs.StaticChanged,
       Bonfire.UI.Common.LivePlugs.Csrf,

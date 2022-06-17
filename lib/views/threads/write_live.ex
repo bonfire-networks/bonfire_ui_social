@@ -7,7 +7,7 @@ defmodule Bonfire.UI.Social.WriteLive do
       LivePlugs.LoadCurrentAccount,
       LivePlugs.LoadCurrentUser,
       LivePlugs.UserRequired,
-      LivePlugs.LoadCurrentUserCircles,
+      # LivePlugs.LoadCurrentUserCircles,
       # LivePlugs.LoadCurrentAccountUsers,
       Bonfire.UI.Common.LivePlugs.StaticChanged,
       Bonfire.UI.Common.LivePlugs.Csrf,
@@ -16,7 +16,7 @@ defmodule Bonfire.UI.Social.WriteLive do
     ])
   end
 
-  defp mounted(params, _session, socket) do
+  defp mounted(params, session, socket) do
     {:ok,
     socket
     |> assign(
@@ -24,7 +24,7 @@ defmodule Bonfire.UI.Social.WriteLive do
       page: "write",
       hide_smart_input: true,
       create_activity_type: "",
-      smart_input_text: "",
+      smart_input_text: e(session, "smart_input_text", ""),
       reply_to_id: nil,
       thread_id: nil,
       sidebar_widgets: [
