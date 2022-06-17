@@ -88,14 +88,14 @@ defmodule Bonfire.Social.Posts.LiveHandler do
       _ -> nil
     end
 
-    dump(socket.assigns)
+    # dump(socket.assigns)
     error = e(socket.assigns, :error, nil) || live_flash((e(socket.assigns, :root_flash, nil) || e(socket.assigns, :flash, nil) || %{}), :error)
-    debug(error)
+    # debug(error)
 
     text = Settings.get([:ui, :feedback_post_template], default_template, socket)
     |> String.replace("%{error_message}", error || "")
     |> String.replace("%{error_link}", link || "")
-    |> debug()
+    # |> debug()
 
     {:noreply,
       socket
