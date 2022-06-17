@@ -81,7 +81,6 @@ defmodule Bonfire.Social.Posts.LiveHandler do
   def handle_event("post_error", _, socket) do
     default_template = "I encountered this issue while using Bonfire: \n```\n%{error_message}\n```\n@admins @bonfire_builders #bonfire_feedback \n%{error_link}"
 
-
     link = case maybe_last_sentry_event_id() do
       id when is_binary(id) ->
         org = Settings.get(:sentry_org, "bonfire-networks")
@@ -89,9 +88,14 @@ defmodule Bonfire.Social.Posts.LiveHandler do
       _ -> nil
     end
 
+    dump(socket.assigns)
+    error = e(socket.assigns, :error, nil) || live_flash((e(socket.assigns, :root_flash, nil) || e(socket.assigns, :flash, nil) || %{}), :error)
+    debug(error)
+
     text = Settings.get([:ui, :feedback_post_template], default_template, socket)
-    |> String.replace("%{error_message}", e(socket.assigns, :error, nil) || live_flash(e(socket.assigns, :root_flash, nil) || e(socket.assigns, :flash, nil), :error))
-    |> String.replace("%{error_link}", link)
+    |> String.replace("%{error_message}", error || "")
+    |> String.replace("%{error_link}", link || "")
+    |> debug()
 
     {:noreply,
       socket
