@@ -82,6 +82,8 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
     end
   end
 
+ 
+
   def handle_event("open_activity", %{"ignore" => "true"} = _params, socket) do
     {:noreply, socket}
   end

@@ -13,7 +13,7 @@
       />
       <div
       :if={e(assigns, :thread_mode, :thread) != :flat}   
-      class="p-2 px-3 text-sm font-medium tracking-wide border-b bg-base-content/5 border-base-content/10 text-base-content">{l "Discussion"}</div>
+      class="p-3 text-sm font-medium tracking-wide border-b bg-base-content/5 border-base-content/10 text-base-content">{l "Discussion"}</div>
       <Bonfire.UI.Social.ThreadLive 
         id={e(assigns, :thread_id, nil)}
         thread_id={e(assigns, :thread_id, nil)}

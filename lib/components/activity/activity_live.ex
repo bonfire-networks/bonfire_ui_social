@@ -116,8 +116,9 @@ defmodule Bonfire.UI.Social.ActivityLive do
   def render(%{activity: _, activity_components: _} = assigns) do
     ~F"""
       <article
-        phx-click={if e(assigns, :showing_within, nil) !=:thread || e(assigns, :activity_inception, nil) ||  e(@object, :id, nil) == nil and e(@activity, :replied, :reply_to_id, nil) != nil and e(@activity, :id, nil) != nil, do: "Bonfire.Social.Feeds:open_activity"}
-        phx-value-permalink={@permalink}
+        phx-hook="OpenActivity"
+        data-permalink={@permalink}
+        data-navigate_to_thread={if e(assigns, :showing_within, nil) !=:thread || e(assigns, :activity_inception, nil) ||  e(@object, :id, nil) == nil and e(@activity, :replied, :reply_to_id, nil) != nil and e(@activity, :id, nil) != nil, do: "true"}
         id={"activity-#{e(assigns, :activity_inception, nil)}-"<>( e(@activity, :id, nil) || e(@object, :id, "no-id") )}
         aria-label="user activity"
         role="article"
