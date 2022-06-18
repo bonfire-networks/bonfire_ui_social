@@ -85,7 +85,7 @@ defmodule Bonfire.Social.Posts.LiveHandler do
   end
 
   def handle_event("write_feedback", _, socket) do
-    write_feedback(Settings.get([:ui, :feedback_post_template], "I have a suggestion about Bonfire: \n\n@admins @bonfire_builders #bonfire_feedback", socket), socket)
+    write_feedback(Settings.get([:ui, :feedback_post_template], "I have a suggestion for Bonfire: \n\n@admins @bonfire_builders #bonfire_feedback", socket), socket)
   end
 
 

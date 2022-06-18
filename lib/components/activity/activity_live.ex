@@ -286,6 +286,18 @@ defmodule Bonfire.UI.Social.ActivityLive do
       |> e(:created, :creator, nil)
       |> component_maybe_creator()
 
+  def component_maybe_creator(%{created: %{creator: %{profile: _}}} = object),
+    do:
+      object
+      |> e(:created, :creator, nil)
+      |> component_maybe_creator()
+
+  def component_maybe_creator(%{created: %{creator: %{character: _}}} = object),
+    do:
+      object
+      |> e(:created, :creator, nil)
+      |> component_maybe_creator()
+
   def component_maybe_creator(%{creator: %{id: _}} = object),
     do:
       object
