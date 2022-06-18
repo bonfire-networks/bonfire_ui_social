@@ -45,7 +45,10 @@ defmodule Bonfire.UI.Social.DiscussionLive do
 
       {activity, object} = Map.pop(object, :activity)
       {preloaded_object, activity} = Map.pop(activity, :object)
+
       activity = Bonfire.Social.Activities.activity_preloads(activity, :all, current_user: current_user)
+
+      author = ( e(activity, :subject, nil) || e(activity, :created, :creator, nil) || e(activity, :object, :created, :creator, nil) ) #|> debug("object author")
 
       thread_id = e(activity, :replied, :thread_id, id)
 
@@ -77,13 +80,15 @@ defmodule Bonfire.UI.Social.DiscussionLive do
         # smart_input_text: mentions,
         # to_circles: to_circles,
         participants: participants,
-        page_title: e(activity, :replied, :thread, :named, :name, l("Post"))
-      ) |> assign_global(
+        page_title: e(activity, :replied, :thread, :named, :name, l("Post")),
+        no_index: !Bonfire.Me.Settings.get([Bonfire.Me.Users, :discoverable], true, current_user: author)
+      )
+      |> assign_global(
         thread_id: e(object, :id, nil),
         # smart_input_prompt: smart_input_prompt,
         reply_to_id: reply_to_id,
         smart_input_text: mentions,
-        to_circles: to_circles,
+        to_circles: to_circles
       ) }
 
     else _e ->

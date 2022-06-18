@@ -55,8 +55,9 @@ defmodule Bonfire.UI.Social.PostLive do
       # debug(activity, "the activity")
       # following = if current_user && module_enabled?(Bonfire.Social.Follows) && Bonfire.Social.Follows.following?(current_user, post), do: [post.id]
 
-      thread_id = e(activity, :replied, :thread_id, id)
+      author = ( e(activity, :subject, nil) || e(activity, :created, :creator, nil) || e(activity, :object, :created, :creator, nil) ) #|> debug("object author")
 
+      thread_id = e(activity, :replied, :thread_id, id)
       reply_to_id = e(params, "reply_to_id", id) #|> debug("reply_to_id")
 
       # smart_input_prompt = l("Reply to post:")<>" "<>text_only(e(post, :post_content, :name, e(post, :post_content, :summary, e(post, :post_content, :html_body, reply_to_id))))
@@ -78,6 +79,7 @@ defmodule Bonfire.UI.Social.PostLive do
         post: post,
         url: url,
         participants: participants,
+        no_index: !Bonfire.Me.Settings.get([Bonfire.Me.Users, :discoverable], true, current_user: author),
         page_header_aside: [
           {Bonfire.UI.Social.ObjectHeaderAsideLive, [
             page_title: page_title,

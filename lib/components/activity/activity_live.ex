@@ -211,9 +211,8 @@ defmodule Bonfire.UI.Social.ActivityLive do
       {Bonfire.UI.Social.Activity.SubjectMinimalLive, %{
         # activity: repo().maybe_preload(activity, subject: [:character]),
         verb: verb
-      }},
-      component_activity_maybe_creator(activity, assigns)
-    ]
+      }}
+    ] ++ component_activity_maybe_creator(activity, assigns)
 
   # replies (when shown in notifications)
   def component_activity_subject(verb, activity, %{showing_within: :notifications})

@@ -33,13 +33,10 @@ defmodule Bonfire.UI.Social.ThreadLive do
   def update(%{new_reply: new_reply} = assigns, socket) when is_map(new_reply) do
     debug("adding new reply")
 
-    new_reply = new_reply
-      |> Map.put(:path, e(new_reply, :object, :replied, :path, nil) || e(new_reply, :replied, :path, nil) || e(new_reply, :activity, :replied, :path, []))
-      # |> dump("new_reply")
-
     thread_id = e(assigns, :activity, :replied, :thread_id, nil) || e(assigns, :thread_id, nil) # TODO: change for thread forking?
 
     if e(socket.assigns, :thread_mode, nil) == :flat do
+      debug("flat thread")
       replies = e(socket, :assigns, :replies, []) ++ [new_reply]
 
       {:ok, assign(socket, assigns
@@ -49,12 +46,23 @@ defmodule Bonfire.UI.Social.ThreadLive do
         ))
       }
     else
-      replies = [new_reply] ++ e(socket, :assigns, :replies, [])
+      debug("nested thread")
+
+      path = (
+        e(new_reply, :object, :replied, :path, nil)
+        || e(new_reply, :replied, :path, nil)
+        || e(new_reply, :activity, :replied, :path, [])
+      ) |> dump("path")
+
+      replies = [
+        new_reply
+        |> Map.put(:path, path )
+      ] ++ e(socket, :assigns, :replies, [])
 
       {:ok, assign(socket, assigns
         |> assigns_merge(
           replies: replies,
-          threaded_replies: Bonfire.Social.Threads.arrange_replies_tree(replies),
+          threaded_replies: Bonfire.Social.Threads.arrange_replies_tree(replies) |> dump(),
           thread_id: thread_id
         ))
       }
