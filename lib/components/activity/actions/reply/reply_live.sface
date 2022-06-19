@@ -10,6 +10,8 @@
   <div 
     x-cloak
     x-show="width < 1200"
+    phx-click="Bonfire.Social.Feeds:reply_to_activity"
+    phx-target={if e(assigns, :activity_id, nil), do: "#activity--"<>e(assigns, :activity_id, "")}
     @click="show_mobile_composer = true">
     <div class={"btn btn-ghost btn-circle btn-sm"}> 
       <span class="text-opacity-50 text-base-content">
