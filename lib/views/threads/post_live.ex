@@ -46,7 +46,6 @@ defmodule Bonfire.UI.Social.PostLive do
 
     # debug(params, "PARAMS")
     # debug(url, "post url")
-
     with {:ok, post} <- Bonfire.Social.Posts.read(ulid(id), socket) do
 
       {activity, post} = Map.pop(post, :activity)
@@ -69,7 +68,8 @@ defmodule Bonfire.UI.Social.PostLive do
 
       # names = if length(participants)>0, do: Enum.map_join(participants, ", ", &e(&1, :profile, :name, e(&1, :character, :username, l "someone else")))
 
-      mentions = if length(participants)>0, do: Enum.map_join(participants, " ", & "@"<>e(&1, :character, :username, ""))<>" "
+      mentions = if length(participants)>0, do: Enum.map_join(participants |> Enum.reject(&( e(&1, :character, :id, nil) == e(current_user, :id, nil) )), " ", & "@"<>e(&1, :character, :username, ""))<>" "
+
       page_title = e(activity, :replied, :thread, :named, :name, l("Post"))
 
       {:noreply,

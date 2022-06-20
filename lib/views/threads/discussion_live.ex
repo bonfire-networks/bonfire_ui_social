@@ -40,7 +40,6 @@ defmodule Bonfire.UI.Social.DiscussionLive do
 
     current_user = current_user(socket)
     # debug(params, "PARAMS")
-
     with {:ok, object} <- Bonfire.Social.Objects.read(id, socket) do
 
       {activity, object} = Map.pop(object, :activity)
@@ -65,8 +64,7 @@ defmodule Bonfire.UI.Social.DiscussionLive do
       to_circles = if length(participants)>0, do: Enum.map(participants, & {e(&1, :character, :username, l "someone"), e(&1, :id, nil)})
 
       # names = if length(participants)>0, do: Enum.map_join(participants, ", ", &e(&1, :profile, :name, e(&1, :character, :username, l "someone else")))
-
-      mentions = if length(participants)>0, do: Enum.map_join(participants, " ", & "@"<>e(&1, :character, :username, ""))<>" "
+      mentions = if length(participants)>0, do: Enum.map_join(participants |> Enum.reject(&( e(&1, :character, :id, nil) == e(current_user, :id, nil) )), " ", & "@"<>e(&1, :character, :username, ""))<>" "
 
       {:noreply,
       socket

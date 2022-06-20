@@ -14,6 +14,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
   prop hide_reply, :boolean, default: false
   prop class, :string, required: false, default: ""
   prop thread_object, :any
+  prop url, :string
   prop thread_mode, :any
   prop participants, :list
   prop object_boundary, :any, default: nil
@@ -134,6 +135,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
         "!pl-14": e(assigns, :showing_within, nil) == :thread && e(assigns, :viewing_main_object, nil) != true,
         "reply": e(@object, :id, nil) != nil and e(@activity, :replied, :reply_to_id, nil) != nil and e(@activity, :id, nil) != nil,
         "border-l-2 border-primary !bg-primary/5": e(@activity, :seen, nil) == nil and e(assigns, :showing_within, nil) == :notifications and e(assigns, :activity_inception, nil) == nil,
+        "border-l-2 border-primary !bg-primary/5 -ml-[4px]": String.contains?(e(assigns, :url, ""), @permalink)
         }>
         <form
           :if={not is_nil(e(assigns, :feed_id, nil)) and e(assigns, :showing_within, nil) in [:messages, :thread, :notifications] and e(assigns, :activity, :subject, :id, nil) != ulid(current_user(assigns)) and e(assigns, :activity, :object, :created, :creator_id, nil) != ulid(current_user(assigns)) }
@@ -143,7 +145,6 @@ defmodule Bonfire.UI.Social.ActivityLive do
           <input type="hidden" name="feed_id" value={e(assigns, :feed_id, nil)} />
           <input type="hidden" name="activity_id" value={e(@activity, :id, nil)} />
         </form>
-
         {#for {component, component_assigns} when is_atom(component) <- e(assigns, :activity_components, [])}
           <Surface.Components.Dynamic.Component
             module={component}
@@ -629,6 +630,9 @@ defmodule Bonfire.UI.Social.ActivityLive do
   # def object_link(text, %{character: %{username: username}}, class \\ "hover:underline font-bold"), do: "<a class='#{class}' href='/user/#{username}'>#{text}</a>"
   # def object_link(text, %{id: id}, class), do: "<a class='#{class}' href='/discussion/#{id}'>#{text}</a>"
 
+
+  defdelegate handle_params(params, attrs, socket), to: Bonfire.UI.Common.LiveHandlers
   def handle_event(action, attrs, socket),
     do: Bonfire.UI.Common.LiveHandlers.handle_event(action, attrs, socket, __MODULE__)
+
 end

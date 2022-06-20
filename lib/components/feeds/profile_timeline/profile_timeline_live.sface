@@ -25,6 +25,7 @@
     :if={e(@user, :character, :peered, :canonical_uri, nil)}
     href={e(@user, :character, :peered, :canonical_uri, "#")}
     target="_blank"
+    rel="noopener noreferrer"
     class="block m-10"
   >
     Visit the <u>remote profile</u> if you don't want to miss any of their older activities.
