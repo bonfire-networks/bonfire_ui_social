@@ -100,14 +100,6 @@ defmodule Bonfire.UI.Social.FeedLive do
   #   {:noreply, socket}
   # end
 
-  def maybe_cute_gif do
-    num_gifs = 67 # TODO: detect
-    dir = "data/uploads/cute-gifs/"
-    if File.exists?(dir) do
-      "/#{dir}#{Enum.random(1..num_gifs)}.gif"
-    end
-  end
-
   def handle_event(action, attrs, socket), do: Bonfire.UI.Common.LiveHandlers.handle_event(action, attrs, socket, __MODULE__)
   def handle_info(info, socket), do: Bonfire.UI.Common.LiveHandlers.handle_info(info, socket, __MODULE__)
 
