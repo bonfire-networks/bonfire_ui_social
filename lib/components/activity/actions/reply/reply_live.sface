@@ -7,7 +7,7 @@
   class="relative z-20 flex items-center tooltip tooltip-bottom" 
   data-tip={l "Reply"}
   >
-  <div 
+  <button 
     x-cloak
     x-show="width < 1200"
     phx-click="Bonfire.Social.Feeds:reply_to_activity"
@@ -19,8 +19,8 @@
         <span class="sr-only">{l "Reply"}</span>
       </span>
     </div>
-  </div>
-  <div
+  </button>
+  <button
     x-show="width > 1200"
     data-id="action_reply"
     phx-click="Bonfire.Social.Feeds:reply_to_activity"
@@ -32,7 +32,7 @@
         <span class="sr-only">{l "Reply"}</span>
       </span>
     </div>
-  </div>
+  </button>
   <span 
   :if={Bonfire.Me.Settings.get([:ui, :show_activity_counts], nil, assigns)}
   class="ml-1 text-xs text-base-content text-opacity-70">

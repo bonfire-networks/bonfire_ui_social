@@ -82,7 +82,7 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
     end
   end
 
- 
+
 
   def handle_event("open_activity", %{"ignore" => "true"} = _params, socket) do
     {:noreply, socket}
@@ -246,7 +246,7 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
   def load_feed_assigns(:my = feed_name, socket_or_opts) do
     assigns = [
       loading: true,
-      # current_user: current_user,
+      current_user: current_user(socket_or_opts),
       selected_tab: "home", # FIXME: clean up page vs tab
       page: "home",
       page_title: l("Home"),
@@ -270,7 +270,7 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
   def load_feed_assigns(:fediverse = feed_name, socket_or_opts) do
     assigns = [
       loading: true,
-      # current_user: current_user(socket_or_opts),
+      current_user: current_user(socket_or_opts),
       selected_tab: "fediverse",
       page: "federation", # FIXME: clean up page vs tab
       page_title: l("Federated activities from remote instances"),
@@ -296,7 +296,7 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
   def load_feed_assigns(:local = feed_name, socket_or_opts) do
     assigns = [
       loading: true,
-      # current_user: current_user(socket_or_opts),
+      current_user: current_user(socket_or_opts),
       selected_tab: "instance",
       page: "local", # FIXME: clean up page vs tab
       page_title: l("Local activities"),
@@ -354,7 +354,6 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
     feed = Bonfire.Social.FeedActivities.my_feed(socket_or_opts, feed_ids)
     [
       loading: false,
-      current_user: current_user(socket_or_opts),
       feed_id: feed_id,
       feed_ids: feed_ids,
       feed: e(feed, :edges, []),
@@ -368,7 +367,6 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
 
     [
       loading: false,
-      current_user: current_user(socket_or_opts),
       feed_id: feed_id,
       feed: e(feed, :edges, []),
       page_info: e(feed, :page_info, [])
@@ -381,7 +379,6 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
 
     [
       loading: false,
-      current_user: current_user(socket_or_opts),
       feed_id: feed_id,
       feed: e(feed, :edges, []),
       page_info: e(feed, :page_info, [])

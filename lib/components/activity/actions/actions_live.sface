@@ -11,7 +11,7 @@
       }>
 
     <div class={
-      "flex items-center flex-1",
+      "feed-clickable flex items-center flex-1",
       "justify-end space-x-4 mt-0": e(assigns, :showing_within, nil) == :thread,
       "justify-between": e(assigns, :showing_within, nil) != :thread,
       "-ml-2": e(assigns, :viewing_main_object, nil) == true,

@@ -90,7 +90,7 @@
       </div>
       <div class="flex items-center justify-between leading-[16px] min-w-0 space-x-1 w-full">
         
-        <div class="flex items-center flex-1 leading-[16px]">
+        <div class="feed-clickable flex items-center flex-1 leading-[16px]">
           {#if e(assigns, :thread_mode, nil) == :flat && current_user(assigns) && e(current_user(assigns), :id, nil) == maybe_get(@character, :id) } 
             <LiveRedirect
               opts={"data-id": "subject_name"}

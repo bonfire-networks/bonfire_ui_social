@@ -35,11 +35,10 @@
         >
         {l "A request will be sent to remote instances to delete it as well."} 
         <:open_btn>
-          <button 
-            type="button"
+          <div 
             class="normal-case rounded opacity-80 hover:opacity-100 btn btn-error btn-xs">
             {l("Delete this")} {e(assigns, :object_type_readable, l "object")}
-          </button>
+          </div>
         </:open_btn>
         <:action_btns>
           <button 

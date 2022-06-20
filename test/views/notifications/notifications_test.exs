@@ -22,7 +22,7 @@ defmodule Bonfire.Social.Notifications.Test do
       conn = conn(user: user, account: account)
       next = "/notifications"
       {view, doc} = floki_live(conn, next) #|> IO.inspect
-      assert _ = Floki.find(doc, ".feed")
+      refute [] == Floki.find(doc, ".feed")
     end
 
   end
@@ -40,7 +40,7 @@ defmodule Bonfire.Social.Notifications.Test do
     #   conn = conn(account: account)
     #   next = "/notifications"
     #   {view, doc} = floki_live(conn, next) #|> IO.inspect
-    #   assert [] = Floki.find(doc, ".feed") # TODO: what to show in this case?
+    #   assert [] == Floki.find(doc, ".feed") # TODO: what to show in this case?
     # end
 
   end

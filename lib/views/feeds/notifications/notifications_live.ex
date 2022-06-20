@@ -18,6 +18,7 @@ defmodule Bonfire.UI.Social.Feeds.NotificationsLive do
   defp mounted(params, _session, socket) do
 
     current_user = current_user(socket)
+    |> info("current_user")
     # feed_id = Bonfire.Social.Feeds.my_feed_id(:notifications, socket)
     feed = Bonfire.Social.FeedActivities.feed(:notifications, current_user: current_user) # TODO: avoid two queries for feed_id?
 

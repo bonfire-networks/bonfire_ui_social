@@ -14,9 +14,9 @@
           <TextInput name="name" class="w-full input input-bordered" value={e(assigns, :page_title, "")} />
         </Form>
         <:open_btn>
-          <button class="text-sm">
+          <div class="text-sm">
             {l "Edit the thread title"}
-          </button>
+          </div>
         </:open_btn>
         <:action_btns>
           <HiddenInput name="id" value={e(assigns, :thread_id, nil)} />
@@ -48,9 +48,9 @@
         {/for}
         </div>
           <:open_btn>
-          <button class="text-sm">
+          <div class="text-sm">
             {l "View participants"}
-          </button>
+          </div>
         </:open_btn>
       </Bonfire.UI.Common.OpenModalLive>
     </li>
