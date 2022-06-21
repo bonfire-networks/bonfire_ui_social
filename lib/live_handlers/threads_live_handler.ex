@@ -86,7 +86,6 @@ defmodule Bonfire.Social.Threads.LiveHandler do
     end
   end
 
-
   def maybe_subscribe(thread_id, socket) do
     if thread_id do
       pubsub_subscribe(thread_id, socket)

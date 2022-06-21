@@ -8,8 +8,8 @@ defmodule Bonfire.UI.Social.ThreadLive do
   alias Bonfire.Social.Threads.LiveHandler
   # import Bonfire.Me.Integration
 
-  prop replies, :any
-  prop threaded_replies, :any, default: []
+  prop replies, :any, default: nil
+  prop threaded_replies, :any, default: nil
   prop page_info, :any
   prop activity, :any
   prop object, :any
