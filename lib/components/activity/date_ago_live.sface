@@ -39,7 +39,7 @@
         id={ComponentID.new(Bonfire.Boundaries.Web.BoundaryIconLive, @object)} 
         object_boundary={@object_boundary} 
       />
-    <LiveRedirect class="text-xs subject_timestamp text-base-content text-opacity-60" to={ path(@object) || @permalink}>
+    <LiveRedirect class="text-xs subject_timestamp text-base-content text-opacity-60" to={@permalink}>
 
       <!-- <span :if={e(assigns, :showing_within, nil) not in [:widget, :smart_input]} class="hidden capitalize lg:inline">
         {@verb_display}

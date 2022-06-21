@@ -66,17 +66,18 @@ defmodule Bonfire.UI.Social.ActivityLive do
     object_type_readable = Types.object_type_display(object_type)
 
     thread = e(assigns, :thread_object, nil) || e(activity, :replied, :thread, nil) || e(activity, :replied, :thread_id, nil)
-
+    debug(thread, "thread")
     thread_url = if thread do
       if is_struct(thread), do: path(thread), else: "/discussion/#{ulid(thread)}"
     end
 
+    # permalink = path(activity.object)
     permalink =
-      if thread_url && verb in @reply_verbs,
+      if thread_url && ulid(thread) !=activity.object.id,
         do: "#{thread_url}#activity-#{activity.object.id}",
         else: "#{path(activity.object)}#"
+    debug(permalink, "permalink")
 
-    # permalink = path(activity.object)
     assigns = assigns
     |> assigns_merge(
       activity: activity |> Map.drop([:object]),

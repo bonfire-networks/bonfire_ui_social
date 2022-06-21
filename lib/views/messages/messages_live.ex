@@ -197,7 +197,7 @@ defmodule Bonfire.UI.Social.MessagesLive do
               object: activity,
             ]}
           ],
-          sidebar_widgets: LiveHandler.threads_widget(current_user, ulid(e(socket.assigns, :user, nil)), e(message, :id, nil), tab_id: "thread")
+          sidebar_widgets: LiveHandler.threads_widget(current_user, ulid(e(socket.assigns, :user, nil)), thread_id: e(message, :id, nil), tab_id: "thread")
         )
         # |> assign_new(:messages, fn -> LiveHandler.list_threads(current_user) |> e(:edges, []) end)
       }

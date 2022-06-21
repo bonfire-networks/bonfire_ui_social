@@ -43,18 +43,18 @@ defmodule Bonfire.Social.Messages.LiveHandler do
     debug(opts, "paginate threads")
     {:noreply, socket
       |> assign(
-        sidebar_widgets: threads_widget(current_user(socket), context, [tab_id: nil] ++ opts)
+        sidebar_widgets: threads_widget(current_user(socket), context, [tab_id: nil, thread_id: e(socket.assigns, :thread_id, nil)] ++ opts)
     )}
   end
 
-  def threads_widget(current_user, user \\ nil,  thread_id \\ nil, opts \\ []) do
+  def threads_widget(current_user, user \\ nil, opts \\ []) do
     [
       users: [
         main: [
           {Bonfire.UI.Social.MessageThreadsLive, [
               context: ulid(user),
               threads: list_threads(current_user, user, opts),
-              thread_id: thread_id
+              thread_id: opts[:thread_id]
             ] ++ opts
           }
         ],
