@@ -14,6 +14,7 @@
       "max-h-[127px]": length(@media) == 4
     }>
       <figure class="h-full">
+      {#if String.starts_with?(media.media_type, "image")}
         <Bonfire.UI.Common.OpenModalLive
           id={ComponentID.new(Bonfire.UI.Common.OpenModalLive, e(assigns, :object, nil))} 
           title_text={e(assigns, :label, l "View media")}
@@ -28,30 +29,31 @@
           </div>
           <:open_btn>
           <!-- TODO: better handling of media type? -->
-          {#if String.starts_with?(media.media_type, "image")}
             <LazyImage
               class="w-full h-full cursor-pointer"
               alt={e(media.metadata, "label", nil)}
               src={image_url(media)}
             />
-          {#else}
-            {#if media.media_type=="remote" and String.ends_with?(media_url(media), ["jpg", "jpeg", "png", "gif", "webp"])}
-              <img
-                class="w-full h-full cursor-pointer"
-                alt={e(media.metadata, "label", nil)}
-                src={media_url(media)}
-              />
-            {#else}
-              {media.media_type}
-            {/if}
-          {/if}
+          
           <figcaption class="sr-only">{e(media.metadata, "label", nil)}</figcaption>
           </:open_btn>
         </Bonfire.UI.Common.OpenModalLive>
+        
+        {#else}
 
-        <!-- <a href={media_url(media)} target="_blank">
+        <a href={media_url(media)} target="_blank">
+          {#if media.media_type=="remote" and String.ends_with?(media_url(media), ["jpg", "jpeg", "png", "gif", "webp"])}
+            <img
+              class="w-full h-full cursor-pointer"
+              alt={e(media.metadata, "label", nil)}
+              src={media_url(media)}
+            />
+          {#else}
+            {media.media_type}
+          {/if}
+          </a>
           
-        </a> -->
+        {/if}
       </figure>
     </article>
   {/for}
