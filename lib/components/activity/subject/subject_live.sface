@@ -75,6 +75,13 @@
     <div class={
       "flex items-top",
       "py-1": e(assigns, :thread_mode, nil) == :flat}>
+      <div 
+        :if={e(assigns, :showing_within, nil) !=:thread  ||  e(@object, :id, nil) == nil and e(@activity, :replied, :reply_to_id, nil) != nil and e(@activity, :id, nil) != nil}
+        id={"subject-#{e(assigns, :activity_inception, nil)}-"<>( e(@activity, :id, nil) || e(@object, :id, "no-id") )}
+        phx-hook="OpenActivity"
+        data-permalink={@permalink}
+        data-navigate_to_thread={ "true"}
+        class="absolute top-0 bottom-0 left-0 w-16"></div>
       <div class={
         "absolute left-3",
         "bottom-2": e(assigns, :thread_mode, nil) == :flat,

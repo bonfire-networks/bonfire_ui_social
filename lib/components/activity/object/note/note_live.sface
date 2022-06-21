@@ -12,7 +12,11 @@
   "reply_to": e(@object, :id, nil) != nil and e(@activity, :replied, :reply_to_id, nil) == nil and e(@activity, :id, nil) == nil,
   "reply_message": e(@activity, :replied, :reply_to_id, nil)
   }
-   x-data="{content_open: false}">
+  id={"note-#{e(assigns, :activity_inception, nil)}-"<>( e(@activity, :id, nil) || e(@object, :id, "no-id") )}
+  phx-hook="OpenActivity"
+  data-permalink={@permalink}
+  data-navigate_to_thread={if e(assigns, :showing_within, nil) !=:thread || e(assigns, :activity_inception, nil) ||  e(@object, :id, nil) == nil and e(@activity, :replied, :reply_to_id, nil) != nil and e(@activity, :id, nil) != nil, do: "true"}
+  x-data="{content_open: false}">
 
   <div :if={e(post_content(@object), :name, nil)}>
 

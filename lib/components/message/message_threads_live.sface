@@ -9,7 +9,7 @@
 
     <LivePatch 
       to={"/messages/compose"}
-      class="fixed items-center tablet:hidden btn btn-circle btn-primary btn-lg place-content-center z-[90] right-3 bottom-16 tablet:bottom-3"> 
+      class="fixed items-center tablet:hidden btn btn-circle btn-primary btn-lg place-content-center z-[90] right-3 bottom-3 tablet:bottom-3"> 
       <Outline.MailIcon class="inline-block w-6 h-6" />
     </LivePatch>
 
