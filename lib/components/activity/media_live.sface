@@ -11,7 +11,7 @@
       "col-start-1 col-end-3 row-start-1 row-end-5": length(@media) == 3 && counter == 0,
       "col-start-3 col-end-5 row-start-1 row-end-3": length(@media) == 3 && counter == 1,
       "col-start-3 col-end-5 row-start-3 row-end-5": length(@media) == 3 && counter == 2,
-      "max-h-[127px]": length(@media) == 4
+      "max-h-[130px]": length(@media) == 4
     }>
       <figure class="h-full">
       {#if String.starts_with?(media.media_type, "image")}
@@ -30,7 +30,7 @@
           <:open_btn>
           <!-- TODO: better handling of media type? -->
             <LazyImage
-              class="w-full h-full cursor-pointer"
+              class={"w-full h-full cursor-pointer"}
               alt={e(media.metadata, "label", nil)}
               src={image_url(media)}
             />

@@ -206,7 +206,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
       {Bonfire.UI.Social.Activity.SubjectMinimalLive, %{
         verb: verb
       }}
-    ] |> debug("dssdfdsdfs")
+    ] 
 
   # reactions should show the reactor + original creator
   def component_activity_subject(verb, activity, assigns) when verb in @react_verbs,

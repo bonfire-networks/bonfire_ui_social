@@ -16,8 +16,8 @@
         x-show="show_replies"
         class="group z-10 left-[16px] px-3 top-[40px] bottom-[0px] absolute">
         <i 
-          :class=" !show_replies ? 'bg-primary bottom-[0px]' : 'bg-base-content/20 bottom-[0px]'"
-          class="bg-base-content/20 top-0 bottom-0 z-10 w-[2px] absolute"></i>
+          :class=" !show_replies ? 'bg-primary bottom-[0px]' : 'bottom-[0px]'"
+          class="bg-base-300 top-0 bottom-0 z-10 w-[2px] absolute"></i>
       </div>
       <div 
         x-cloak
@@ -96,10 +96,10 @@
         {#if is_list(@child_replies) and length(@child_replies)>0 }
           {#for {{subreply, sub_child_replies}, index} <- Enum.with_index(@child_replies, 1) }
             <div class="relative">
-              <div class="absolute border-base-content/20 w-5 h-6 border-0 border-b-2 border-l-2 rounded-bl-lg left-[-4px] top-0"></div>
+              <div class="absolute border-base-300 w-5 h-6 border-0 border-b-2 border-l-2 rounded-bl-lg left-[-4px] top-0"></div>
               <div
                 :if={index < length(@child_replies)}
-                class="absolute border-base-content/20 top-0 bottom-0 border-0  border-l-2 left-[-4px] "></div>
+                class="absolute border-base-300 top-0 bottom-0 border-0  border-l-2 left-[-4px] "></div>
               <CommentLive
                 reply_to_id={e(@comment, :id, nil)}
                 thread_id={@thread_id} 
