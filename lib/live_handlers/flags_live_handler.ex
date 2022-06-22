@@ -3,7 +3,8 @@ defmodule Bonfire.Social.Flags.LiveHandler do
 
   def handle_event("flag", %{"id"=> id}, socket) do # flag in LV
     #debug(socket)
-    with {:ok, _flag} <- Bonfire.Social.Flags.flag(current_user(socket), id) do
+    current_user = current_user(socket)
+    with {:ok, _flag} <- Bonfire.Social.Flags.flag(current_user, id) do
 
       Bonfire.UI.Common.OpenModalLive.close()
 

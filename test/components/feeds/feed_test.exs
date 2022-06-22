@@ -17,7 +17,7 @@ defmodule Bonfire.UI.Social.Feeds.FeedTest do
     publish_multiple_times(attrs, bob, total_posts)
     feed = Bonfire.Social.FeedActivities.my_feed(bob)
     assigns = [feed: feed.edges, feed_id: "Bob's feed", page_title: "test", page_info: [], showing_within: nil]
-    assert doc = render_stateless(Bonfire.UI.Social.FeedLive, assigns)
+    assert doc = render_stateful(Bonfire.UI.Social.FeedLive, assigns)
     assert doc
        |> Floki.parse_fragment
        |> elem(1)
@@ -35,7 +35,7 @@ defmodule Bonfire.UI.Social.Feeds.FeedTest do
     publish_multiple_times(attrs, bob, total_posts)
     feed = Bonfire.Social.FeedActivities.my_feed(bob)
     assigns = [feed: feed.edges, feed_id: "Bob's feed", page_title: "test", page_info: [], showing_within: nil]
-    assert doc = render_stateless(Bonfire.UI.Social.FeedLive, assigns)
+    assert doc = render_stateful(Bonfire.UI.Social.FeedLive, assigns)
     assert doc
        |> Floki.parse_fragment
        |> elem(1)
@@ -53,7 +53,7 @@ defmodule Bonfire.UI.Social.Feeds.FeedTest do
     publish_multiple_times(attrs, bob, total_posts)
     feed = Bonfire.Social.FeedActivities.my_feed(bob)
     assigns = [feed: feed.edges, feed_id: "Bob's feed", page_title: "test", page_info: feed.page_info, showing_within: nil]
-    assert doc = render_stateless(Bonfire.UI.Social.FeedLive, assigns)
+    assert doc = render_stateful(Bonfire.UI.Social.FeedLive, assigns)
     assert doc
       |> Floki.parse_fragment
       ~> Floki.find("[data-id=load_more]")
@@ -70,7 +70,7 @@ defmodule Bonfire.UI.Social.Feeds.FeedTest do
     publish_multiple_times(attrs, bob, total_posts)
     feed = Bonfire.Social.FeedActivities.my_feed(bob)
     assigns = [feed: feed.edges, feed_id: "Bob's feed", page_title: "test", page_info: feed.page_info, showing_within: nil]
-    assert doc = render_stateless(Bonfire.UI.Social.FeedLive, assigns)
+    assert doc = render_stateful(Bonfire.UI.Social.FeedLive, assigns)
     assert doc
       |> Floki.parse_fragment
       ~> Floki.find("[data-id=load_more]")
