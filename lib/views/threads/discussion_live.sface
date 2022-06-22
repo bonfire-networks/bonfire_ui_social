@@ -8,13 +8,14 @@
   create_activity_type={e(assigns, :create_activity_type, nil)}
   to_circles={e(assigns, :to_circles, [])}
   reply_to_id={@reply_to_id}
-  activity={@activity}
   thread_mode={e(assigns, :thread_mode, nil)}
+  activity={@activity}
   object={@object}
   url={@url}
   thread_id={@thread_id}
   participants={e(assigns, :participants, [])}
   replies={e(assigns, :replies, nil)}
-  threaded_replies={e(assigns, :threaded_replies, [])}
+  threaded_replies={e(assigns, :threaded_replies, nil)}
   page_info={e(assigns, :page_info, [])}
+  loading={e(assigns, :loading, false)}
 />

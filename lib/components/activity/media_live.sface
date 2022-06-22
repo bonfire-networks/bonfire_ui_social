@@ -1,6 +1,6 @@
 
 <div class={
-  "grid w-full h-[270px] my-3",
+  "grid w-full max-h-[270px] my-3",
   "grid-cols-1": length(@media) == 1,
   "grid-cols-2 gap-2": length(@media) == 2 or length(@media) == 4,
   "grid-rows-[repeat(4,_1fr)] grid-cols-[repeat(4,_1fr)] gap-2": length(@media) == 3
@@ -52,7 +52,7 @@
             {media.media_type}
           {/if}
           </a>
-          
+
         {/if}
       </figure>
     </article>

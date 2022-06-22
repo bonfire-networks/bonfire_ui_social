@@ -96,20 +96,18 @@ defmodule Bonfire.UI.Social.Feeds.BoostsActivityTest do
   end
 
   test "As a user, when I boosts a post, I want to see the activity boosted object" do
-    account = fake_account!()
-    alice = fake_user!(account)
-    account2 = fake_account!()
-    bob = fake_user!(account2)
+    alice = fake_user!()
+    bob = fake_user!()
     attrs = %{post_content: %{summary: "summary", name: "test post name", html_body: "first post"}}
     assert {:ok, post} = Posts.publish(current_user: alice, post_attrs: attrs, boundary: "public")
     assert {:ok, boost} = Boosts.boost(bob, post)
-    feed = Bonfire.Social.FeedActivities.my_feed(alice)
+    feed = Bonfire.Social.FeedActivities.my_feed(bob)
     fp = feed.edges |> List.first() #|> IO.inspect
     assert doc = render_stateful(Bonfire.UI.Social.ActivityLive, %{id: "activity", activity: fp.activity})
 
     assert doc
-    |> Floki.parse_fragment
-    ~> Floki.find("div.object_body")
+    # |> Floki.parse_fragment
+    # ~> Floki.find("div.object_body")
     |> Floki.text =~ "first post"
   end
 

@@ -19,7 +19,7 @@ defmodule Bonfire.UI.Social.Feeds.LikesLive do
     current_user = current_user(socket)
 
     %{edges: feed, page_info: page_info} = Bonfire.Social.Likes.list_my(current_user: current_user)
-    |> debug()
+    # |> debug()
 
     {:ok, socket
     |> assign(

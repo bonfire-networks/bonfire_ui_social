@@ -194,7 +194,10 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
   end
 
   def paginate_feed("user:"<>selected_tab_and_user_id, attrs, socket) do
-    assign_user_feed(selected_tab_and_user_id, attrs, socket)
+
+    {:noreply, socket
+      |> assign(load_user_feed_assigns(selected_tab_and_user_id, attrs, socket))
+    }
   end
 
   def paginate_feed(feed_id, attrs, socket) when not is_nil(feed_id) do
@@ -243,15 +246,20 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
   end
 
 
-  def load_feed_assigns(:my = feed_name, socket_or_opts) do
+  def feed_assigns_maybe_async(:my = feed_name, socket) do
+    feed_id = Bonfire.Social.Feeds.my_feed_id(:inbox, socket)
+    feed_ids = Bonfire.Social.Feeds.my_home_feed_ids(socket)
+
     assigns = [
       loading: true,
-      current_user: current_user(socket_or_opts),
+      feed_id: feed_id,
+      feed_ids: feed_ids,
+      current_user: current_user(socket),
       selected_tab: "home", # FIXME: clean up page vs tab
       page: "home",
       page_title: l("Home"),
       feed_title: l("My feed"),
-      feed_id: feed_name,
+      # feed_id: feed_name,
       # feed_ids: feed_ids,
       feed: [],
       page_info: nil,
@@ -264,20 +272,23 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
       ]
     ]
 
-    feed_assigns_or_load_async(feed_name, assigns, socket_or_opts)
+    feed_assigns_maybe_async_load({feed_id, feed_ids}, assigns, socket)
   end
 
-  def load_feed_assigns(:fediverse = feed_name, socket_or_opts) do
+  def feed_assigns_maybe_async(:fediverse = feed_name, socket) do
+    feed_id = Bonfire.Social.Feeds.named_feed_id(:activity_pub)
+
     assigns = [
       loading: true,
-      current_user: current_user(socket_or_opts),
+      feed_id: feed_id,
+      current_user: current_user(socket),
       selected_tab: "fediverse",
       page: "federation", # FIXME: clean up page vs tab
       page_title: l("Federated activities from remote instances"),
       feed_title: l("Activities from around the fediverse"),
       feedback_title: l("Your fediverse feed is empty"),
       feedback_message: l("It seems you and your friends do not follow any other users on a different instance"),
-      feed_id: feed_name,
+      # feed_id: feed_name,
       feed: [],
       page_info: nil,
       # FIXME: seems too much re-assigning the whole sidebar widgets only to change the page prop?
@@ -290,18 +301,20 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
       ]
     ]
 
-    feed_assigns_or_load_async(feed_name, assigns, socket_or_opts)
+    feed_assigns_maybe_async_load(feed_id, assigns, socket)
   end
 
-  def load_feed_assigns(:local = feed_name, socket_or_opts) do
+  def feed_assigns_maybe_async(:local = feed_name, socket) do
+    feed_id = Bonfire.Social.Feeds.named_feed_id(:local)
     assigns = [
       loading: true,
-      current_user: current_user(socket_or_opts),
+      feed_id: feed_id,
+      current_user: current_user(socket),
       selected_tab: "instance",
       page: "local", # FIXME: clean up page vs tab
       page_title: l("Local activities"),
       feed_title: l("Activities on this instance"),
-      feed_id: feed_name,
+      # feed_id: feed_name,
       feed: [],
       page_info: nil, #|> IO.inspect
       # FIXME: seems too much re-assigning the whole sidebar widgets only to change the page prop?
@@ -314,92 +327,73 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
       ]
     ]
 
-    feed_assigns_or_load_async(feed_name, assigns, socket_or_opts)
+    feed_assigns_maybe_async_load(feed_id, assigns, socket)
   end
 
-  def load_feed_assigns(_default, socket_or_opts) do
-    current = current_user(socket_or_opts) || current_account(socket_or_opts)
+  def feed_assigns_maybe_async(_default, socket) do
+    current = current_user(socket) || current_account(socket)
 
     if current do
-      load_feed_assigns(:my, socket_or_opts) # my feed
+      feed_assigns_maybe_async(:my, socket) # my feed
     else
-      load_feed_assigns(:local, socket_or_opts) # fallback to showing instance feed
+      feed_assigns_maybe_async(:local, socket) # fallback to showing instance feed
     end
   end
 
-  # defp feed_assigns_or_load_async(feed_name, assigns, %{assigns: %{loading: false}} = socket) do
+  # defp feed_assigns_maybe_async_load(feed_name, assigns, %{assigns: %{loading: false}} = socket) do
   #   debug("Skip loading feed...")
   #   []
   # end
-  defp feed_assigns_or_load_async(feed_name, assigns, %Phoenix.LiveView.Socket{} = socket) do
+  defp feed_assigns_maybe_async_load(feed_id_or_tuple, assigns, %Phoenix.LiveView.Socket{} = socket) do
     if connected?(socket) and Config.get(:env) != :test do
       # dump(socket.assigns, "connected")
-      send(self(), {Bonfire.Social.Feeds.LiveHandler, {:load_feed, feed_name}})
-      assigns
+      # send(self(), {Bonfire.Social.Feeds.LiveHandler, {:load_feed, feed_name}})
+      pid = self()
+      Task.async(fn ->
+        # Query activities asynchronously
+        send_update(pid, Bonfire.UI.Social.FeedLive, feed_assigns(feed_id_or_tuple, socket) ++ [id: feed_id_only(feed_id_or_tuple)])
+      end)
+
+      assigns # return temporary assigns in the meantime
+
     else
       # dump(socket.assigns, "disconnected")
       # for dead mounts
-      assigns ++ feed_assigns(feed_name, socket)
+      assigns ++ feed_assigns(feed_id_or_tuple, socket)
     end
   end
-  defp feed_assigns_or_load_async(feed_name, assigns, socket_or_opts) do
-    # dump(e(socket_or_opts, :assigns, nil), "not socket")
-    assigns ++ feed_assigns(feed_name, socket_or_opts)
+  defp feed_assigns_maybe_async_load(feed_id, assigns, socket) do
+    # dump(e(socket, :assigns, nil), "not socket")
+    assigns ++ feed_assigns(feed_id, socket)
   end
 
-  def feed_assigns(:my, socket_or_opts) do
+  defp feed_id_only({feed_id, _feed_ids}), do: feed_id
+  defp feed_id_only(feed_id), do: feed_id
+
+  defp feed_assigns({_feed_id, feed_ids}, socket) do
     # debug(myfeed: feed)
-    feed_id = Bonfire.Social.Feeds.my_feed_id(:inbox, socket_or_opts)
-    feed_ids = Bonfire.Social.Feeds.my_home_feed_ids(socket_or_opts)
-    feed = Bonfire.Social.FeedActivities.my_feed(socket_or_opts, feed_ids)
+    feed = Bonfire.Social.FeedActivities.my_feed(socket, feed_ids)
     [
       loading: false,
-      feed_id: feed_id,
-      feed_ids: feed_ids,
       feed: e(feed, :edges, []),
       page_info: e(feed, :page_info, [])
     ]
   end
 
-  def feed_assigns(:fediverse, socket_or_opts) do
-    feed_id = Bonfire.Social.Feeds.named_feed_id(:activity_pub)
-    feed = Bonfire.Social.FeedActivities.feed(feed_id, socket_or_opts)
-
+  defp feed_assigns(feed_id, socket) when is_binary(feed_id) do
+    feed = Bonfire.Social.FeedActivities.feed(feed_id, socket)
     [
       loading: false,
-      feed_id: feed_id,
       feed: e(feed, :edges, []),
       page_info: e(feed, :page_info, [])
     ]
   end
 
-  def feed_assigns(:local, socket_or_opts) do
-    feed_id = Bonfire.Social.Feeds.named_feed_id(:local)
-    feed = Bonfire.Social.FeedActivities.feed(feed_id, socket_or_opts)
-
-    [
-      loading: false,
-      feed_id: feed_id,
-      feed: e(feed, :edges, []),
-      page_info: e(feed, :page_info, [])
-    ]
-  end
-
-  def feed_assigns(_default, socket_or_opts) do
-    current = current_user(socket_or_opts) || current_account(socket_or_opts)
-
-    if current do
-      feed_assigns(:my, socket_or_opts) # my feed
-    else
-      feed_assigns(:local, socket_or_opts) # fallback to showing instance feed
-    end
-  end
-
-  def preloads(feed, socket_or_opts \\ [])
-  def preloads(feed, socket_or_opts) when is_list(feed) and length(feed) > 0 do
+  def preloads(feed, socket \\ [])
+  def preloads(feed, socket) when is_list(feed) and length(feed) > 0 do
     debug("FeedLive: preload objects")
 
-    opts = [preload: e(socket_or_opts, :assigns, :preload, :feed), current_user: current_user(socket_or_opts), skip_boundary_check: true, with_cache: false]
+    opts = [preload: e(socket, :assigns, :preload, :feed), current_user: current_user(socket), skip_boundary_check: true, with_cache: false]
 
     case List.first(feed) do
 
@@ -432,8 +426,8 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
         feed
     end
   end
-  def preloads(%{edges: feed} = page, socket_or_opts), do: Map.put(page, :feed, preloads(feed, socket_or_opts))
-  def preloads(feed, socket_or_opts), do: feed
+  def preloads(%{edges: feed} = page, socket), do: Map.put(page, :feed, preloads(feed, socket))
+  def preloads(feed, socket), do: feed
 
   def preload_objects(feed, under, opts) do
     object_preloads()
@@ -452,76 +446,111 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
     |> debug("preload object data in feed")
   end
 
-  def assign_user_feed(selected_tab_and_user_id, params, socket) do
-    with [selected_tab, user_id] <- String.split(selected_tab_and_user_id, ":") do
-      debug(params, "Load and maybe paginate feed for user: #{selected_tab_and_user_id}")
-      assign_user_feed(selected_tab, user_id, params, socket)
+  def user_feed_assign_or_load_async(tab, user, params, %Phoenix.LiveView.Socket{} = socket) do
+    if connected?(socket) and Config.get(:env) != :test do
+      # dump(socket.assigns, "connected")
+      pid = self()
+      Task.async(fn ->
+        # Query activities asynchronously
+        send_update(pid, Bonfire.UI.Social.FeedLive, load_user_feed_assigns(tab, user, params, socket) ++ [id: "feed:profile:#{tab}"])
+      end)
+
+      # return temporary assigns in the meantime
+      {:noreply,
+      assign(socket,
+        loading: true,
+        selected_tab: tab
+      )}
+
+    else
+      # dump(socket.assigns, "disconnected")
+      # for dead mounts
+      {:noreply,
+        assign(socket,
+          load_user_feed_assigns(tab, user, params, socket)
+        )}
     end
   end
 
-  def assign_user_feed("posts" = tab, user, params, socket) do
+  def user_feed_assign_or_load_async(tab, user, params, socket) do
+    # dump(e(socket, :assigns, nil), "not socket")
+    {:noreply,
+      assign(socket,
+        load_user_feed_assigns(tab, user, params, socket)
+    )}
+  end
+
+
+  def load_user_feed_assigns(selected_tab_and_user_id, params, socket) do # note the 3 arity
+    with [selected_tab, user_id] <- String.split(selected_tab_and_user_id, ":") do
+      debug(params, "Load and maybe paginate feed for user: #{selected_tab_and_user_id}")
+      load_user_feed_assigns(selected_tab, user_id, params, socket)
+    end
+  end
+
+  def load_user_feed_assigns("posts" = tab, user, params, socket) do # note the 4 arity
     user = user || e(socket, :assigns, :user, nil)
     feed = if module_enabled?(Bonfire.Social.Posts), do: Bonfire.Social.Posts.list_by(user, pagination: input_to_atoms(params), current_user: current_user(socket))
     #|> debug("posts")
 
-    {:noreply,
-     assign(socket,
+    [
+       loading: false,
        selected_tab: tab,
        feed: e(feed, :edges, []),
        page_info: e(feed, :page_info, [])
-     )}
+    ]
   end
 
-  def assign_user_feed("boosts" = tab, user, params, socket) do
+  def load_user_feed_assigns("boosts" = tab, user, params, socket) do
     user = user || e(socket, :assigns, :user, nil)
     feed = if module_enabled?(Bonfire.Social.Boosts), do: Bonfire.Social.Boosts.list_by(user, pagination: input_to_atoms(params), current_user: current_user(socket))
     # |> debug("boosts")
 
-    {:noreply,
-      assign(socket,
-        selected_tab: tab,
-        feed: e(feed, :edges, []),
-        page_info: e(feed, :page_info, [])
-      )}
+    [
+      loading: false,
+      selected_tab: tab,
+      feed: e(feed, :edges, []),
+      page_info: e(feed, :page_info, [])
+    ]
   end
 
-  def assign_user_feed("timeline" = tab, user, params, socket) do
+  def load_user_feed_assigns("timeline" = tab, user, params, socket) do
     user = user || e(socket, :assigns, :user, nil)
     feed_id = if user && module_enabled?(Bonfire.Social.Feeds), do: Bonfire.Social.Feeds.feed_id(:outbox, user)
     feed = if feed_id && module_enabled?(Bonfire.Social.FeedActivities), do: Bonfire.Social.FeedActivities.feed(feed_id, pagination: input_to_atoms(params), current_user: current_user(socket))
     #  debug(feed: feed)
 
-    {:noreply,
-      assign(socket,
+    [
+      loading: false,
       selected_tab: tab,
       feed_id: feed_id,
       feed: e(feed, :edges, []),
       page_info: e(feed, :page_info, [])
-      )}
+    ]
   end
 
-  def assign_user_feed("followers" =tab, user, params, socket) do
+  def load_user_feed_assigns("followers" =tab, user, params, socket) do
     user = user || e(socket, :assigns, :user, nil)
     followers = Bonfire.Social.Follows.list_followers(user, pagination: input_to_atoms(params), current_user: current_user(socket)) |> debug("followers")
 
-    {:noreply,
-    assign(socket,
+    [
+      loading: false,
       selected_tab: tab,
       feed: e(followers, :edges, []),
       page_info: e(followers, :page_info, [])
-    )}
+    ]
   end
 
-  def assign_user_feed("followed" =tab, user, params, socket) do
+  def load_user_feed_assigns("followed" =tab, user, params, socket) do
     user = user || e(socket, :assigns, :user, nil)
     followed = Bonfire.Social.Follows.list_followed(user, pagination: input_to_atoms(params), current_user: current_user(socket)) |> debug("followed")
 
-    {:noreply,
-    assign(socket,
+    [
+      loading: false,
       selected_tab: tab,
       feed: e(followed, :edges, []),
       page_info: e(followed, :page_info, [])
-    )}
+    ]
   end
 
 end

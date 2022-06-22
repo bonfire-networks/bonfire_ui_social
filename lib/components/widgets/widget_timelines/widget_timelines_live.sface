@@ -11,7 +11,7 @@
             "border-l-4 border-primary bg-base-content bg-opacity-10": @page == "home"} 
           to={path(:feed)}>
           <Solid.HomeIcon class="w-4 h-4" />
-          <span class="text-sm truncate ellipsis">{l "My feed"}</span>
+          <span class="text-sm truncate ellipsis">{l "Home"}</span>
         </LivePatch> 
       </li>
       <li>
@@ -20,7 +20,7 @@
             "border-l-4 border-primary bg-base-content bg-opacity-10": @page == "local"} 
           to={if current_user(@current_user), do: "/feed/local", else: "/local"}>
           <Solid.LocationMarkerIcon class="w-4 h-4" />
-          <span class="text-sm truncate ellipsis">{l "Local timeline"}</span>
+          <span class="text-sm truncate ellipsis">{l "Local"}</span>
         </LivePatch> 
       </li>
       <li :if={current_user(@current_user) || Settings.get([:bonfire_social, :feeds, :federation, :show_guests], false, assigns)}>
@@ -29,7 +29,7 @@
             "border-l-4 border-primary bg-base-content bg-opacity-10": @page == "federation"} 
           to={"/feed/federation"}>
           <Solid.GlobeIcon class="w-4 h-4" />
-          <span class="text-sm truncate ellipsis">{l "Federated timeline"}</span>
+          <span class="text-sm truncate ellipsis">{l "Federated"}</span>
         </LivePatch> 
       </li>
     </div>

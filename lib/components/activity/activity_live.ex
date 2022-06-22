@@ -15,6 +15,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
   prop class, :string, required: false, default: ""
   prop thread_object, :any
   prop url, :string
+  prop thread_url, :string
   prop thread_mode, :any
   prop participants, :list
   prop object_boundary, :any, default: nil
@@ -68,7 +69,13 @@ defmodule Bonfire.UI.Social.ActivityLive do
     thread = e(assigns, :thread_object, nil) || e(activity, :replied, :thread, nil) || e(activity, :replied, :thread_id, nil)
     debug(thread, "thread")
     thread_url = if thread do
-      if is_struct(thread), do: path(thread), else: "/discussion/#{ulid(thread)}"
+      if is_struct(thread) do
+        path(thread)
+      else
+        "/discussion/#{ulid(thread)}"
+      end
+    else
+      e(assigns, :thread_url, nil)
     end
 
     # permalink = path(activity.object)
@@ -89,7 +96,8 @@ defmodule Bonfire.UI.Social.ActivityLive do
       verb: verb,
       verb_display: verb_display,
       created_verb_display: created_verb_display,
-      permalink: permalink
+      permalink: permalink,
+      thread_url: thread_url
     )
     |> Map.new()
 
@@ -162,6 +170,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
             verb={e(component_assigns, :verb, @verb)}
             verb_display={e(component_assigns, :verb_display, @verb_display)}
             permalink={e(component_assigns, :permalink, @permalink)}
+            thread_url={e(assigns, :thread_url, nil)}
             activity_inception={e(component_assigns, :activity_inception, e(assigns, :activity_inception, nil))}
             viewing_main_object={e(component_assigns, :viewing_main_object, e(assigns, :viewing_main_object, false))}
             hide_reply={e(component_assigns, :hide_reply, e(assigns, :hide_reply, false))}
@@ -203,7 +212,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
       {Bonfire.UI.Social.Activity.SubjectMinimalLive, %{
         verb: verb
       }}
-    ] 
+    ]
 
   # reactions should show the reactor + original creator
   def component_activity_subject(verb, activity, assigns) when verb in @react_verbs,

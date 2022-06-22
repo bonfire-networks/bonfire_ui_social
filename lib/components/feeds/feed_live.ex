@@ -9,15 +9,18 @@ defmodule Bonfire.UI.Social.FeedLive do
   prop feed_id, :string
   prop feed_ids, :any
   prop feed, :list
+  prop page_info, :any
   prop feedback_title, :string
   prop feedback_message, :string
-  prop page_info, :any
-  prop showing_within, :any
+  prop showing_within, :any, default: nil
   prop feed_update_mode, :string, default: "append"
   prop hide_load_more, :boolean, default: false
   prop verb_default, :string
   prop loading, :boolean, default: false
   prop preload, :atom, default: :feed
+  prop page, :string
+  prop page_title, :string, required: true
+  prop feed_title, :string
 
   def mount(socket) do
     {:ok, socket
@@ -63,12 +66,12 @@ defmodule Bonfire.UI.Social.FeedLive do
   end
 
   def update(assigns, socket) do
-    error("FeedLive: feed NOT provided, try fetching one in a parent component")
+    error("FeedLive: a feed was NOT provided, try fetching one in a parent component")
     socket = assign(socket, assigns)
 
     # current_user = current_user(socket)
 
-    # assigns = if module_enabled?(Bonfire.UI.Social.Feeds.HomeLive), do: Bonfire.Social.Feeds.LiveHandler.load_feed_assigns(:default, socket),
+    # assigns = if module_enabled?(Bonfire.UI.Social.Feeds.HomeLive), do: Bonfire.Social.Feeds.LiveHandler.feed_assigns_maybe_async(:default, socket),
     # else: []
     # socket = assign(socket, assigns)
 

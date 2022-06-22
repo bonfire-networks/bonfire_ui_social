@@ -1,16 +1,20 @@
 <Bonfire.UI.Social.ObjectThreadLive
   page={@page}
   page_title={@page_title}
+  search_placeholder={e(assigns, :search_placeholder, nil)}
   smart_input_prompt={@smart_input_prompt}
   smart_input_text={@smart_input_text}
+  create_activity_type={e(assigns, :create_activity_type, nil)}
+  to_circles={e(assigns, :to_circles, [])}
   reply_to_id={@reply_to_id}
   thread_mode={e(assigns, :thread_mode, nil)}
   activity={@activity}
   object={@post}
-  thread_id={@thread_id}
   url={@url}
+  thread_id={@thread_id}
   participants={e(assigns, :participants, [])}
   replies={e(assigns, :replies, nil)}
-  threaded_replies={e(assigns, :threaded_replies, [])}
+  threaded_replies={e(assigns, :threaded_replies, nil)}
   page_info={e(assigns, :page_info, [])}
+  loading={e(assigns, :loading, false)}
 />

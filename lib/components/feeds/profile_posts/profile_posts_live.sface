@@ -9,17 +9,18 @@
   
   <Bonfire.UI.Social.FeedLive
     id={"feed:profile:posts"}
+    feed_id={"user:#{@selected_tab}:#{ulid(@user)}"}
     page_title={@page_title}
     page={@page}
     feed={@feed}
-    feed_id={"user:#{@selected_tab}:#{ulid(@user)}"}
     page_info={@page_info}
     selected_tab={@selected_tab}
     smart_input={@smart_input}
     smart_input_prompt={@smart_input_prompt}
     smart_input_text={@smart_input_text}
-    search_placholder={@search_placholder}
+    search_placeholder={@search_placeholder}
     feed_title={@feed_title}
+    loading={e(assigns, :loading, false)}
   />
 
   <a

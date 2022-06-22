@@ -21,8 +21,8 @@ defmodule  Bonfire.UI.Social.ObjectThreadLive do
   prop participants, :any, default: []
   prop textarea_class, :string
   prop replied_activity_class, :string
-  prop replies, :any
-  prop threaded_replies, :any, default: []
+  prop replies, :any, default: nil
+  prop threaded_replies, :any, default: nil
   prop page_info, :any
 
   def participants(assigns) do

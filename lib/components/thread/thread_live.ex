@@ -24,13 +24,14 @@ defmodule Bonfire.UI.Social.ThreadLive do
   prop thread_mode, :any
   prop reverse_order, :any
   prop showing_within, :any, default: :thread
-
+  prop loading, :boolean, default: false
 
   def update(%{replies: replies, page_info: page_info} = assigns, socket) when is_list(replies) and is_map(page_info) do
     info("showing preloaded replies")
-    {:ok, assign(socket,
-      LiveHandler.initial_thread_assigns(assigns, socket)
-    )}
+    {:ok, socket
+      |> assign(assigns)
+      |> LiveHandler.thread_init()
+    }
   end
 
   def update(%{new_reply: new_reply} = assigns, socket) when is_map(new_reply) do
@@ -78,12 +79,14 @@ defmodule Bonfire.UI.Social.ThreadLive do
   end
 
   def update(assigns, socket) do
+    debug("Load comments")
     # debug(assigns, "Thread: assigns")
 
-    {:ok, assign(socket,
-      LiveHandler.initial_thread_assigns(assigns, socket)
-      |> LiveHandler.thread_assigns_or_load_async(socket)
-    )}
+    {:ok, socket
+    |> assign(assigns)
+    |> LiveHandler.thread_init()
+    |> LiveHandler.load_thread_maybe_async()
+    }
   end
 
 

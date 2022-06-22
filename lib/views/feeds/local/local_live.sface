@@ -1,8 +1,9 @@
-<Bonfire.UI.Social.FeedViewLive 
+<Bonfire.UI.Social.FeedLive 
+  id={e(assigns, :feed_id, :local)}
+  feed_id={e(assigns, :feed_id, nil)}
   page_title={@page_title}
   current_user={@current_user}
   feed={@feed}
-  feed_id={@feed_id}
   page_info={@page_info}
   loading={e(assigns, :loading, false)}
 />

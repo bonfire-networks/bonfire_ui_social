@@ -22,7 +22,8 @@
     smart_input={@smart_input}
     smart_input_prompt={@smart_input_prompt}
     smart_input_text={@smart_input_text}
-    search_placholder={@search_placholder}
+    search_placeholder={@search_placeholder}
     feed_title={@feed_title}
+    loading={e(assigns, :loading, false)}
   />
 </div>

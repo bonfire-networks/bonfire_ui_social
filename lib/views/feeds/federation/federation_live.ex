@@ -16,7 +16,7 @@ defmodule Bonfire.UI.Social.Feeds.FederationLive do
 
   defp mounted(params, _session, socket) do
 
-    feed_assigns = Bonfire.Social.Feeds.LiveHandler.load_feed_assigns(:fediverse, socket)
+    feed_assigns = Bonfire.Social.Feeds.LiveHandler.feed_assigns_maybe_async(:fediverse, socket)
 
     {:ok, socket
     |> assign(
