@@ -2,23 +2,23 @@
   <div></div>
 {#else}
   <div 
-    :if={e(assigns, :showing_within, nil) != :notifications and e(assigns, :thread_mode, nil) != :flat} 
+    :if={e(assigns, :thread_mode, nil) != :flat} 
     class={
       "thread_actions mt-1 flex items-center": e(assigns, :showing_within, nil) == :thread,
-      "feed_actions mt-0 -ml-2": e(assigns, :viewing_main_object, nil) != true,
+      "feed_actions mt-1 -ml-2": e(assigns, :viewing_main_object, nil) != true,
       "mt-1": e(assigns, :showing_within, nil) == :widget,
       "absolute z-50 p-0.5 h-8 hidden group-hover:flex rounded-md top-[-24px] right-[12px] bg-base-100 border border-base-200": e(assigns, :thread_mode, nil) == :flat,
       }>
 
     <div class={
       "feed-clickable flex items-center flex-1",
+      "justify-between mt-2": e(assigns, :showing_within, nil) == :thread && e(assigns, :viewing_main_object, nil) == true,
       "justify-end space-x-4 mt-0": e(assigns, :showing_within, nil) == :thread,
       "justify-between": e(assigns, :showing_within, nil) != :thread,
       "-ml-2": e(assigns, :viewing_main_object, nil) == true,
       "!space-x-2": e(assigns, :thread_mode, nil) == :flat
       }>
       <Bonfire.UI.Social.Activity.ReplyLive 
-        :if={e(assigns, :viewing_main_object, nil) != true}
         object_id={e(@object, :id, "no-object")}
         activity_id={e(assigns, :activity, :id, "no-activity")}
         object_boundary={@object_boundary} 

@@ -39,7 +39,6 @@
           showing_within={:page}
           thread_mode={:flat}
           boundary={"message"}
-          title_open={true}
           smart_input_prompt={e(assigns, :smart_input_prompt, "")}
           smart_input_text={e(assigns, :smart_input_text, "")}
           title_prompt={l "Enter an optional subject"}

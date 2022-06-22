@@ -24,15 +24,15 @@
       @click="content_open = true"
       x-show="content_open == false"
       style="display: none"
-      class="relative z-50 flex items-center mt-1 text-left text-md text-base-content">
-      <span class="mr-2 hover:underline">{ rich e(post_content(@object), :name, "CW")} </span> <div class="font-medium capitalize text-opacity-80 btn btn-xs btn-outline">{l "Show more"}</div>
+      class="relative z-50 mt-1 text-sm font-semibold text-left text-base-content link link-hover">
+      { rich e(post_content(@object), :name, "CW")} ({l "Show more"})
     </button>
     <button
       @click="content_open = false"
       x-show="content_open"
       style="display: none"
-      class="relative z-50 flex items-center mt-1 text-left text-md text-base-content">
-      <span class="mr-2 hover:underline">{rich e(post_content(@object), :name, "CW")} </span>  <div class="font-medium capitalize text-opacity-80 btn btn-xs btn-outline">{l "Show less"}</div>
+      class="relative z-50 mt-1 text-sm font-semibold text-left text-base-content">
+      {rich e(post_content(@object), :name, "CW")} ({l "Show less"})
     </button>
 
   </div>

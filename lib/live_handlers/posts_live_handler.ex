@@ -57,10 +57,27 @@ defmodule Bonfire.Social.Posts.LiveHandler do
          {:ok, published} <- Bonfire.Social.Posts.publish(opts) do
 
       debug(published, "published!")
+      
+      activity = e(published, :activity, nil)
+      thread = e(activity, :replied, :thread, nil) || e(activity, :replied, :thread_id, nil)
+      thread_url = if thread do
+        if is_struct(thread) do
+          path(thread)
+        else
+          "/discussion/#{ulid(thread)}"
+        end
+      else
+        nil
+      end
+      permalink =
+      if thread_url && ulid(thread) !=activity.object.id,
+        do: "#{thread_url}#activity-#{activity.object.id}",
+        else: "#{path(activity.object)}#"
+      debug(permalink, "permalink")
 
       {:noreply,
         socket
-        |> assign_flash(:info, "Posted!")
+        |> assign_flash(:info, "#{l "Posted!"} <a href='#{permalink}' class='mx-1 text-sm text-gray-500 capitalize link'>Show</a>")
         |> reset_smart_input()
         # |> push_patch_with_fallback(current_url(socket), path(published)) # so the flash appears - TODO: causes a conflict between the activity coming in via pubsub
 

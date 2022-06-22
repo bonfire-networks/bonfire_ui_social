@@ -134,10 +134,11 @@
   {/if}
 </div>
 
-<div 
+<LiveRedirect 
+  to={@permalink}
   :if={e(@activity, :replied, :thread, :named, :name, nil) && (e(assigns, :showing_within, nil)) in [:feed]}
   class="flex items-center mt-2 text-sm font-medium"
   >
   <Outline.ArrowRightIcon class="w-4 h-4 text-base-content/80" />
   <span class="mx-1">{l "in"}</span> <span class="link">{e(@activity, :replied, :thread, :named, :name, "")}</span>
-</div>
+</LiveRedirect>

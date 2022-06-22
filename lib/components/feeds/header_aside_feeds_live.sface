@@ -1,0 +1,41 @@
+<div 
+  class="relative z-40 tablet:hidden dropdown dropdown-end">
+  <label tabindex="0" class="flex normal-case btn place-content-center btn-circle btn-ghost btn-sm">
+    <Solid.DotsVerticalIcon class="w-5 h-5 text-base-content text-opacity-70" />
+  </label>
+  <ul tabindex="0" class="p-2 shadow dropdown-content menu bg-base-100 rounded-box w-52">
+    <div 
+      :if={current_user(@current_user) || Settings.get([:bonfire_social, :feeds, :federation, :show_guests], true, assigns)}
+      class="pb-2 rounded-b-box">
+      <div class="menu bg-base-100 ">
+        <li :if={current_user(@current_user)}>
+          <LivePatch 
+            class={"ml-1": @page != "home",
+              "bg-primary/10": @page == "home"} 
+            to={path(:feed)}>
+            <Solid.HomeIcon class="w-4 h-4" />
+            <span class="text-sm truncate ellipsis">{l "Home"}</span>
+          </LivePatch> 
+        </li>
+        <li>
+          <LivePatch 
+            class={"ml-1": @page != "local",
+              "bg-primary/10": @page == "local"} 
+            to={if current_user(@current_user), do: "/feed/local", else: "/local"}>
+            <Solid.LocationMarkerIcon class="w-4 h-4" />
+            <span class="text-sm truncate ellipsis">{l "Local"}</span>
+          </LivePatch> 
+        </li>
+        <li :if={current_user(@current_user) || Settings.get([:bonfire_social, :feeds, :federation, :show_guests], false, assigns)}>
+          <LivePatch 
+            class={"ml-1": @page != "federation",
+              "bg-primary/10": @page == "federation"} 
+            to={"/feed/federation"}>
+            <Solid.GlobeIcon class="w-4 h-4" />
+            <span class="text-sm truncate ellipsis">{l "Federated"}</span>
+          </LivePatch> 
+        </li>
+      </div>
+    </div>
+  </ul>
+</div>

@@ -263,13 +263,7 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
       # feed_ids: feed_ids,
       feed: [],
       page_info: nil,
-      sidebar_widgets: [
-        users: [
-          main: [
-            {Bonfire.UI.Common.WidgetInstanceInfoLive, []}
-          ]
-        ]
-      ]
+      
     ]
 
     feed_assigns_maybe_async_load({feed_id, feed_ids}, assigns, socket)
@@ -292,13 +286,13 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
       feed: [],
       page_info: nil,
       # FIXME: seems too much re-assigning the whole sidebar widgets only to change the page prop?
-      sidebar_widgets: [
-        users: [
-          main: [
-            {Bonfire.UI.Common.WidgetInstanceInfoLive, []}
-          ]
-        ]
-      ]
+      # sidebar_widgets: [
+      #   users: [
+      #     main: [
+      #       {Bonfire.UI.Common.WidgetInstanceInfoLive, []}
+      #     ]
+      #   ]
+      # ]
     ]
 
     feed_assigns_maybe_async_load(feed_id, assigns, socket)
@@ -318,13 +312,13 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
       feed: [],
       page_info: nil, #|> IO.inspect
       # FIXME: seems too much re-assigning the whole sidebar widgets only to change the page prop?
-      sidebar_widgets: [
-        users: [
-          main: [
-            {Bonfire.UI.Common.WidgetInstanceInfoLive, []}
-          ]
-        ]
-      ]
+      # sidebar_widgets: [
+      #   users: [
+      #     main: [
+      #       {Bonfire.UI.Common.WidgetInstanceInfoLive, []}
+      #     ]
+      #   ]
+      # ]
     ]
 
     feed_assigns_maybe_async_load(feed_id, assigns, socket)

@@ -26,13 +26,18 @@ defmodule Bonfire.UI.Social.HomeLive do
         page_header_drawer: true,
         feedback_title: l("Your home feed is empty"),
         feedback_message: l("You can start by following some people or by writing a new post."),
-        # page_header_aside:
-        # [{Bonfire.UI.Social.ObjectHeaderAsideLive, [
-        #   page_title: l("Discussion"),
-        #   participants: [],
-        #   thread_id: nil,
-        #   object: nil,
-        # ]}]
+        sidebar_widgets: [
+          users: [
+            main: [
+              {Bonfire.UI.Common.WidgetInstanceInfoLive, []}
+            ]
+          ]
+        ],
+        page_header_aside:
+        [{Bonfire.UI.Social.HeaderAsideFeedsLive, [
+          page_title: l("Discussion"),
+          page: "home",
+        ]}]
       ])
     }
   end

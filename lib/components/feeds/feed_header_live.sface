@@ -1,7 +1,0 @@
-<div class="p-3 border-b rounded-t-lg border-base-200">
-  <div class="flex flex-wrap items-center justify-between sm:flex-no-wrap">
-    <h3 class="flex-1 text-base font-regular">
-      {@feed_title}
-    </h3>
-  </div>
-</div>

@@ -5,13 +5,6 @@
   aria-atomic="true"
   class="feed">
     <div class="flex flex-col mx-auto">
-
-      <!-- <Bonfire.UI.Common.LoadPreviousLive 
-        :if={e(assigns, :hide_load_more, false) != true}
-        live_handler={Bonfire.Social.Feeds} 
-        page_info={@page_info} 
-        target={@myself} 
-      /> -->
       {#if length(@feed) > 0}
       <div 
         id={"feed:#{e(assigns, :feed_id, nil) || e(assigns, :id, nil)}"} 
@@ -21,9 +14,7 @@
         {#for entry <- @feed}
           {#case "#{e(assigns, :feed_id, nil) || e(assigns, :id, nil)}-"<>( e(entry, :id, nil) || e(entry, :activity, :id, nil) || e(entry, :object, :id, nil) || Pointers.ULID.generate())}
             {#match cid}
-              <div
-                id={cid}
-                >
+              <div id={cid}>
                 <ActivityLive 
                   id={cid}
                   activity={e(entry, :activity, nil) || e(entry, :edge, nil) || entry}
