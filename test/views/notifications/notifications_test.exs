@@ -1,10 +1,9 @@
-defmodule Bonfire.Social.Notifications.Test do
+defmodule Bonfire.UI.Social.Notifications.Test do
 
   use Bonfire.UI.Social.ConnCase, async: true
   alias Bonfire.Social.Fake
   alias Bonfire.Social.Posts
   alias Bonfire.Social.Follows
-
 
   describe "show" do
 
@@ -16,6 +15,7 @@ defmodule Bonfire.Social.Notifications.Test do
     #   assert [_] = Floki.find(doc, ".feed")
     # end
 
+    @tag :skip_ci
     test "with user" do
       account = fake_account!()
       user = fake_user!(account)

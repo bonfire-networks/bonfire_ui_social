@@ -8,6 +8,7 @@ defmodule Bonfire.Social.Notifications.Threads.Test do
 
   describe "show" do
 
+    @tag :skip_ci
     test "replies I'm allowed to see (even from people I'm not following) in my notifications" do
 
       some_account = fake_account!()

@@ -59,6 +59,7 @@ defmodule Bonfire.Social.Threads.LoadMoreTest do
       assert Floki.find(doc, "[data-id=load_more]") != []
     end
 
+    @tag :skip_ci
     test "As a user when I click on load more I want to see next replies below the others (using LiveView websocket)" do
       total_posts = 15
       # Create alice user

@@ -8,6 +8,7 @@ defmodule Bonfire.Social.Notifications.Likes.Test do
 
   describe "show" do
 
+    @tag :skip_ci
     test "likes on my posts (even from people I'm not following) in my notifications" do
 
       some_account = fake_account!()
