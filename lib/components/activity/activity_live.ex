@@ -459,7 +459,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
     []
   end
 
-  def component_object(_, %{object: %{post_content: %Bonfire.Data.Social.PostContent{}}}, _),
+  def component_object(_, %{object: %{post_content: %{html_body: _}}}, _),
     do: [Bonfire.UI.Social.Activity.NoteLive]
 
   # def component_object(_, %{object: %{profile: _}}), do: [Bonfire.UI.Social.Activity.CharacterLive]
@@ -482,35 +482,38 @@ defmodule Bonfire.UI.Social.ActivityLive do
     [Bonfire.UI.Social.Activity.UnknownLive]
   end
 
+  def component_for_object_type(type, %{post_content: %{html_body: _}}) when type in [Bonfire.Data.Social.Post],
+    do: [Bonfire.UI.Social.Activity.NoteLive]
+
   def component_for_object_type(type, object) when type in [Bonfire.Data.Social.Post],
+    do: [] # for posts with no text content (eg. only with attachments)
+
+  def component_for_object_type(type, _) when type in [Bonfire.Data.Social.Message],
     do: [Bonfire.UI.Social.Activity.NoteLive]
 
-  def component_for_object_type(type, object) when type in [Bonfire.Data.Social.Message],
+  def component_for_object_type(type, _) when type in [Bonfire.Data.Social.PostContent],
     do: [Bonfire.UI.Social.Activity.NoteLive]
 
-  def component_for_object_type(type, object) when type in [Bonfire.Data.Social.PostContent],
-    do: [Bonfire.UI.Social.Activity.NoteLive]
-
-  def component_for_object_type(type, object) when type in [Bonfire.Data.Identity.User],
+  def component_for_object_type(type, _) when type in [Bonfire.Data.Identity.User],
     do: [Bonfire.UI.Social.Activity.CharacterLive]
     # do: [{Bonfire.UI.Social.Activity.CharacterLive, %{
     #     object: repo().maybe_preload(object, [:character, profile: :icon])
     #   }}]
 
-  def component_for_object_type(type, object) when type in [Bonfire.Data.Social.Follow],
+  def component_for_object_type(type, _) when type in [Bonfire.Data.Social.Follow],
     do: [Bonfire.UI.Social.Activity.CharacterLive]
 
-  def component_for_object_type(type, object) when type in [Bonfire.Classify.Category],
+  def component_for_object_type(type, _) when type in [Bonfire.Classify.Category],
     do: [Bonfire.UI.Social.Activity.CategoryLive]
 
   def component_for_object_type(type, object) when type in [ValueFlows.EconomicEvent],
     do: [Bonfire.UI.Social.Activity.EconomicEventLive.activity_component(object)]
 
-  def component_for_object_type(type, object) when type in [ValueFlows.EconomicResource],
+  def component_for_object_type(type, _) when type in [ValueFlows.EconomicResource],
     do: [Bonfire.UI.Social.Activity.EconomicResourceLive]
 
   # TODO: choose between Task and other Intent types
-  def component_for_object_type(type, object) when type in [ValueFlows.Planning.Intent],
+  def component_for_object_type(type, _) when type in [ValueFlows.Planning.Intent],
     do: [Bonfire.UI.Social.Activity.IntentTaskLive]
 
   # def component_for_object_type(type, object) when type in [ValueFlows.Process], do: [Bonfire.UI.Social.Activity.ProcessListLive.activity_component(object)] # TODO: choose between Task and other Intent types

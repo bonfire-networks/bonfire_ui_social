@@ -167,7 +167,7 @@
 
              <!-- special case when current_user is the one being followed -->
             <span :if={e(@object, :id, nil) == e(current_user(assigns), :id, nil)}>
-              you
+              {l "you"}
             </span>
           </div>
         </div>
@@ -192,7 +192,7 @@
         <div class="flex-1 ml-2">
           <div class="text-sm font-medium text-base-content text-opacity-80">
             <LiveRedirect
-              aria-label={e(@activity, :subject, :character, :username, "") <> " profile"}
+              aria-label={e(@activity, :subject, :character, :username, "") <>" "<> l "profile"}
               class="font-medium link link-hover"
               to={path(e(@activity, :subject, :character, nil)) }>
               {e(@activity, :subject, :profile, :name, nil) || e(@activity, :subject, :character, :username, nil)}
@@ -211,7 +211,7 @@
           <div class="flex items-center flex-1 truncate ellipsis">
             <LiveRedirect
               opts={"data-id": "subject_name"}
-              aria-label={e(@activity, :subject, :character, :username, nil) <> " profile"}
+              aria-label={e(@activity, :subject, :character, :username, nil) <>" "<> l "profile"}
               class="font-semibold text-base-content link link-hover"
               to={path(e(@activity, :subject, :character, nil))}>
               {e(@activity, :subject, :profile, :name, nil)}
@@ -240,7 +240,7 @@
           <div class="flex-1 ml-2">
             <div class="text-sm font-medium text-base-content text-opacity-80">
               <LiveRedirect
-                aria-label={e(@activity, :subject, :character, :username, "") <> " profile"}
+                aria-label={e(@activity, :subject, :character, :username, "") <>" "<> l "profile"}
                 class="font-medium link link-hover"
                 to={path(e(@activity, :subject, :character, nil)) }>
                 {e(@activity, :subject, :profile, :name, nil) || e(@activity, :subject, :character, :username, nil)}
