@@ -48,7 +48,7 @@
       {rich e(post_content(@object), :summary, "")}
     </p>
 
-    <p
+    <div
       data-id={"object_body"}
       class={
         "prose break-words text-opacity-100 object_body max-w-none font-[16px] mt-1 prose-sm prose-p:pt-0 prose-p:my-0 leading-[20px]",
@@ -57,7 +57,7 @@
         "prose-p:pt-1 mt-0.5 !leading-[20px]": e(assigns, :showing_within, nil) == :feed
         }>
       {rich e(post_content(@object), :html_body, l "This post has been deleted.")}
-    </p>
+    </div>
 
   </div>
 
