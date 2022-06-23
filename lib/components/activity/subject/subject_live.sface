@@ -2,6 +2,7 @@
   data-id="subject"
   class={
     "px-2 bg-base-content/10 pt-1 rounded-t-md": e(assigns, :thread_mode, nil) == :flat,
+    "!bg-info/40": e(assigns, :thread_mode, nil) == :flat && e(current_user(assigns), :id, nil) == maybe_get(@character, :id),
     "!bg-transparent pt-0": e(assigns, :activity_inception, nil) != nil and e(assigns, :thread_mode, nil) == :flat,
   }> 
   <span 
@@ -82,10 +83,11 @@
         data-permalink={@permalink}
         data-navigate_to_thread={ "true"}
         class="absolute top-0 bottom-0 left-0 w-16"></div>
-      <div class={
+      <div 
+        :if={e(current_user(assigns), :id, nil) != maybe_get(@character, :id) || e(assigns, :thread_mode, nil) != :flat}
+        class={
         "absolute left-3",
         "bottom-2": e(assigns, :thread_mode, nil) == :flat,
-        "bottom-3":  e(assigns, :thread_mode, nil) == :flat and e(assigns, :viewing_main_object, nil) == true
       }>
       <LiveRedirect
           opts={"data-id": "subject_name"}
@@ -102,7 +104,7 @@
             <LiveRedirect
               opts={"data-id": "subject_name"}
               aria-label={e(@character, :username, "") <> " profile"}
-              class="link link-hover font-semibold leading-[16px] font-[16px]"
+              class={"link link-hover font-semibold leading-[16px] text-sm"}
               to={path(@character)}>
               {l "You"}
             </LiveRedirect>
@@ -112,7 +114,7 @@
               aria-label={e(@character, :username, "") <> " profile"}
               class="leading-[16px] "
               to={path(@character)}>
-              <span class="link link-hover font-[16px] font-semibold">{e(@profile, :name, "Anonymous")}</span>
+              <span class="text-sm font-semibold link link-hover">{e(@profile, :name, "Anonymous")}</span>
               <span
               :if={e(@character, :username, nil)}
               class="ml-1 text-sm font-normal no-underline truncate ellipsis text-base-content text-opacity-60 subject_username">

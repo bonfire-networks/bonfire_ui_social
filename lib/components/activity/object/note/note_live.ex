@@ -7,8 +7,9 @@ defmodule Bonfire.UI.Social.Activity.NoteLive do
   prop viewing_main_object, :boolean
   prop permalink, :string
   prop date_ago, :string
-  prop showing_within, :any
+  prop showing_within, :string
   prop activity_inception, :any
+
 
   def preloads(), do: [
     :post_content
