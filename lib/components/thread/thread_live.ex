@@ -26,6 +26,13 @@ defmodule Bonfire.UI.Social.ThreadLive do
   prop showing_within, :any, default: :thread
   prop loading, :boolean, default: false
 
+  def update(%{replies: replies, page_info: page_info, loaded_async: true} = assigns, socket) when is_list(replies) and is_map(page_info) do
+    info("showing async-loaded replies")
+    {:ok, socket
+      |> assign(assigns)
+    }
+  end
+
   def update(%{replies: replies, page_info: page_info} = assigns, socket) when is_list(replies) and is_map(page_info) do
     info("showing preloaded replies")
     {:ok, socket
@@ -34,42 +41,67 @@ defmodule Bonfire.UI.Social.ThreadLive do
     }
   end
 
-  def update(%{new_reply: new_reply} = assigns, socket) when is_map(new_reply) do
+  def update(%{new_reply: new_reply}, socket) when is_map(new_reply) do
     debug("adding new reply")
 
-    thread_id = e(assigns, :activity, :replied, :thread_id, nil) || e(assigns, :thread_id, nil) # TODO: change for thread forking?
+    thread_id = e(socket.assigns, :thread_id, nil)
 
     if e(socket.assigns, :thread_mode, nil) == :flat do
-      debug("flat thread")
-      replies = e(socket, :assigns, :replies, []) ++ [new_reply]
+        debug("flat thread")
 
-      {:ok, assign(socket, assigns
-        |> assigns_merge(
-          replies: replies,
-          thread_id: thread_id
-        ))
-      }
+      object_id = e(new_reply, :object, :id, nil) || e(new_reply, :activity, :object, :id, nil) || e(new_reply, :id, nil)
+      permitted? = object_id && Bonfire.Common.Pointers.exists?([id: object_id], current_user: current_user(socket)) |> debug("double check boundary upon receiving a LivePush") # Note: doing this hear temporarily while not using pushed comment for nested threads
+
+      if permitted? do
+        replies = e(socket.assigns, :replies, []) ++ [new_reply]
+
+        {:ok, socket
+        |> assign(
+            replies: replies
+          )
+        }
+      else
+        {:ok, socket}
+      end
+
     else
       debug("nested thread")
 
-      path = (
-        e(new_reply, :object, :replied, :path, nil)
-        || e(new_reply, :replied, :path, nil)
-        || e(new_reply, :activity, :replied, :path, [])
-      ) |> dump("path")
+      # temporary
+      activity_id = e(new_reply, :activity, :id, nil) || e(new_reply, :id, nil)
 
-      replies = [
-        new_reply
-        |> Map.put(:path, path )
-      ] ++ e(socket, :assigns, :replies, [])
+      thread_url =
+          if is_struct(e(socket.assigns, :object, nil)) do
+            path(e(socket.assigns, :object, nil))
+          else
+            "/discussion/#{thread_id}"
+          end
 
-      {:ok, assign(socket, assigns
-        |> assigns_merge(
-          replies: replies,
-          threaded_replies: Bonfire.Social.Threads.arrange_replies_tree(replies) |> dump(),
-          thread_id: thread_id
-        ))
+      permalink = "#{thread_url}#activity-#{activity_id}"
+      {:ok, socket
+        |> patch_to(permalink)
+        # |> LiveHandler.load_thread()
       }
+
+      # FIMXE: nesting gets messed up when replying to a reply that was added to the thread this way
+      # path = (
+      #   e(new_reply, :object, :replied, :path, nil)
+      #   || e(new_reply, :replied, :path, nil)
+      #   || e(new_reply, :activity, :replied, :path, [])
+      # )
+      # |> debug("path")
+
+      # replies = [
+      #   new_reply
+      #   |> Map.put(:path, path)
+      # ] ++ e(socket.assigns, :replies, [])
+
+      # {:ok, socket
+      #   |> assign(
+      #     replies: replies,
+      #     threaded_replies: Bonfire.Social.Threads.arrange_replies_tree(replies) |> dump()
+      #   )
+      # }
     end
   end
 

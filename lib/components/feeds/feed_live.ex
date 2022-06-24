@@ -49,6 +49,11 @@ defmodule Bonfire.UI.Social.FeedLive do
   #   update(Map.merge(assigns, %{new_activity: new_activity}), socket)
   # end
 
+  def update(assigns, %{assigns: %{feed_pubsub_subscribed: true}} = socket) do
+    debug("FeedLive: already loaded and subscribed")
+    {:ok, assign(socket, assigns)}
+  end
+
   def update(%{feed: feed, page_info: page_info} =assigns, socket) when is_list(feed) do
     debug("FeedLive: a feed was provided")
     # TODO: why do this in update rather than LV's preload?
@@ -58,6 +63,7 @@ defmodule Bonfire.UI.Social.FeedLive do
 
     {:ok, socket
     |> assign(
+      feed_pubsub_subscribed: true,
       page_info: page_info,
       feed: feed
         # |> dump("FeedLive: feed")
@@ -67,7 +73,6 @@ defmodule Bonfire.UI.Social.FeedLive do
 
   def update(assigns, socket) do
     error("FeedLive: a feed was NOT provided, try fetching one in a parent component")
-    socket = assign(socket, assigns)
 
     # current_user = current_user(socket)
 
@@ -79,13 +84,12 @@ defmodule Bonfire.UI.Social.FeedLive do
 
     # debug(assigns: assigns)
 
-    {:ok, socket
+    {:ok, assign(socket, assigns)}
     # |> assign(
     #   feed: e(assigns, :feed, [])
     #     # |> debug("FeedLive: feed")
     #     |> LiveHandler.preloads(socket)
     #   )
-    }
   end
 
   def maybe_subscribe(socket) do

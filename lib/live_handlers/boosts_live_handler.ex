@@ -21,11 +21,13 @@ defmodule Bonfire.Social.Boosts.LiveHandler do
   end
 
   defp boost_action(object, boost?, params, socket) do
-    ComponentID.send_assigns(
+    ComponentID.send_updates(
       Bonfire.UI.Common.BoostActionLive,
       ulid(object),
-      [my_boost: boost?],
-      socket)
+      [my_boost: boost?]
+    )
+
+    {:noreply, socket}
   end
 
   def preload(list_of_assigns) do

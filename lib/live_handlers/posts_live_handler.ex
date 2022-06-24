@@ -57,7 +57,7 @@ defmodule Bonfire.Social.Posts.LiveHandler do
          {:ok, published} <- Bonfire.Social.Posts.publish(opts) do
 
       debug(published, "published!")
-      
+
       activity = e(published, :activity, nil)
       thread = e(activity, :replied, :thread, nil) || e(activity, :replied, :thread_id, nil)
       thread_url = if thread do
@@ -77,7 +77,7 @@ defmodule Bonfire.Social.Posts.LiveHandler do
 
       {:noreply,
         socket
-        |> assign_flash(:info, "#{l "Posted!"} <a href='#{permalink}' class='mx-1 text-sm text-gray-500 capitalize link'>Show</a>")
+        |> assign_flash(:info, "#{l "Posted!"} <a href='#{permalink}' class='mx-1 text-sm text-gray-500 capitalize link'>#{l "Show"}</a>")
         |> reset_smart_input()
         # |> push_patch_with_fallback(current_url(socket), path(published)) # so the flash appears - TODO: causes a conflict between the activity coming in via pubsub
 
@@ -157,21 +157,6 @@ defmodule Bonfire.Social.Posts.LiveHandler do
     }
   end
 
-  def handle_info({:new_reply, {thread_id, data}}, socket) do
-
-    debug("received :new_reply")
-
-    # debug(replies: Utils.e(socket.assigns, :replies, []))
-    # replies = [data] ++ Utils.e(socket.assigns, :replies, [])
-
-    id = e(data, :object, :id, nil) || e(data, :id, nil)
-
-    permitted? = id && Bonfire.Common.Pointers.exists?([id: id], current_user: current_user(socket)) |> debug("double check boundary upon receiving a LivePush")
-
-    if permitted?, do: send_update(Bonfire.UI.Social.ThreadLive, id: thread_id, new_reply: data)
-
-    {:noreply, socket}
-  end
 
   # def handle_event("add_data", %{"activity" => activity_id}, socket) do
   #   IO.inspect("TEST")

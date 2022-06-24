@@ -20,6 +20,7 @@ defmodule Bonfire.Social.Likes.LiveHandler do
     with %{id: _} = current_user <- current_user(socket),
          {:ok, _like} <- Bonfire.Social.Likes.like(current_user, object) do
       like_action(object, true, params, socket)
+      |> debug("liked")
 
     else {:error, %Ecto.Changeset{errors: [
        liker_id: {"has already been taken",
@@ -31,11 +32,12 @@ defmodule Bonfire.Social.Likes.LiveHandler do
   end
 
   defp like_action(object, liked?, params, socket) do
-    ComponentID.send_assigns(
+    ComponentID.send_updates(
       e(params, "component", Bonfire.UI.Common.LikeActionLive),
       ulid(object),
-      [my_like: liked?],
-      socket)
+      [my_like: liked?]
+    )
+    {:noreply, socket}
   end
 
   def liker_count(%{"current_count"=> a}), do: a |> String.to_integer

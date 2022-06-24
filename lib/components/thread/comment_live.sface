@@ -32,11 +32,10 @@
         x-data="{reply: false, show: true}"
         >
           {#case @comment}
-            {#match %{__struct__: Bonfire.Data.Social.Activity, object: object} = activity}
+            {#match %{__struct__: Bonfire.Data.Social.Activity, object: %{}} = activity}
               <Bonfire.UI.Social.ActivityLive
                 id={e(@comment, :id, "ca")<>":"<>e(activity, :id, "")}
-                activity={Map.drop(activity, [:object])}
-                object={object}
+                activity={activity}
                 thread_object={@thread_object}
                 feed_id={@feed_id}
                 showing_within={:thread}
@@ -45,11 +44,10 @@
                 class="showing_within:thread !py-2"
               />
 
-            {#match %{activity: %{object: object} = activity}}
+            {#match %{activity: %{object: %{}} = activity}}
               <Bonfire.UI.Social.ActivityLive
                 id={e(@comment, :id, "ca")<>":"<>e(activity, :id, "")}
-                activity={Map.drop(activity, [:object])}
-                object={object}
+                activity={activity}
                 thread_object={@thread_object}
                 feed_id={@feed_id}
                 showing_within={:thread}

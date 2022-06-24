@@ -7,15 +7,26 @@ defmodule Bonfire.Social.Threads.LiveHandler do
     {:noreply, load_thread(socket)}
   end
 
+  def handle_info({:new_reply, {thread_id, data}}, socket) do
+    debug("received :new_reply")
+
+    # id = e(data, :object, :id, nil) || e(data, :id, nil)
+    # permitted? = id && Bonfire.Common.Pointers.exists?([id: id], current_user: current_user(socket)) |> debug("double check boundary upon receiving a LivePush")
+
+    # if permitted?, do: # Note: now checking permission in ThreadLive
+    send_update(Bonfire.UI.Social.ThreadLive, id: thread_id, new_reply: data)
+
+    {:noreply, socket}
+  end
+
   def thread_init(socket) do
     # debug(assigns, "thread assigns")
     current_user = current_user(socket)
     object = e(socket.assigns, :object, nil) || e(socket.assigns, :activity, :object)
     thread_id = e(socket.assigns, :thread_id, nil) || e(socket.assigns, :activity, :replied, :thread_id, nil) || e(object, :replied, :thread_id, nil)
 
-    maybe_subscribe(thread_id, socket)
-
     socket
+    |> maybe_subscribe(thread_id)
     |> assign(
       # activity: activity,
       # object: object,
@@ -36,7 +47,7 @@ defmodule Bonfire.Social.Threads.LiveHandler do
       Task.async(fn ->
         thread_id = e(socket.assigns, :thread_id, e(socket.assigns, :object, :id, nil))
         # Query comments asynchronously
-        send_update(pid, Bonfire.UI.Social.ThreadLive, load_thread_assigns(socket) ++ [id: e(socket.assigns, :id, thread_id)])
+        send_update(pid, Bonfire.UI.Social.ThreadLive, load_thread_assigns(socket) ++ [id: e(socket.assigns, :id, thread_id), loaded_async: true])
       end)
 
       socket
@@ -92,10 +103,10 @@ defmodule Bonfire.Social.Threads.LiveHandler do
         showing_within: e(socket.assigns, :showing_within, nil)
       ) do
         # debug(replies, "queried replies")
-        # debug(thread_id, "loaded #{length(replies)} comments for thread")
+        debug(thread_id, "loaded #{length(replies)} comments for thread")
 
         threaded_replies = if e(socket.assigns, :thread_mode, nil) !=:flat and is_list(replies) and length(replies)>0, do: Bonfire.Social.Threads.arrange_replies_tree(replies)
-        # debug(threaded_replies, "threaded_replies")
+        dump(threaded_replies, "threaded_replies")
 
         [
           loading: false,
@@ -108,11 +119,15 @@ defmodule Bonfire.Social.Threads.LiveHandler do
     end
   end
 
-  def maybe_subscribe(thread_id, socket) do
-    if thread_id do
+  def maybe_subscribe(socket, thread_id) do
+    if thread_id && !e(socket.assigns, :pubsub_subscribed, nil) do
+      debug(thread_id, "subscribing to live thread updates")
       pubsub_subscribe(thread_id, socket)
+      socket
+      |> assign(:pubsub_subscribed, true)
     else
-      debug("no thread_id known, not subscribing to live updates")
+      debug(thread_id, "no thread_id known, or already subscribed not subscribing to live thread updates")
+      socket
     end
   end
 
