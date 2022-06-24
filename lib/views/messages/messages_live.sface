@@ -43,6 +43,7 @@
           create_activity_type={:message}
           thread_mode={:flat}
           boundary={"message"}
+          showing_within={:compose}
           smart_input_prompt={e(assigns, :smart_input_prompt, "")}
           smart_input_text={e(assigns, :smart_input_text, "")}
           title_prompt={l "Enter an optional subject"}

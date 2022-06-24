@@ -25,9 +25,13 @@
       class={
         "rounded-md shadow bg-base-100 flex h-full flex-1": e(assigns, :thread_mode, nil) != :flat,
         "bg-base-100 border-t border-base-content/10 p-3 h-full flex-1 sticky bottom-0 messages_smart_input": e(assigns, :thread_mode, nil) == :flat,
+        "!border-0": e(assigns, :showing_within, nil) == :compose,
         "!relative border-none h-[calc(100%_-_50px)]": e(assigns, :showing_within, nil) == :page,
       }>
-      <div class="relative flex flex-col flex-1 h-full">
+      <div class={
+        "relative flex flex-col flex-1 h-full",
+        "h-auto": e(assigns, :showing_within, nil) == :compose
+      }>
         <Inputs for={:post_content}>
           <div
             id="textarea_wrapper"

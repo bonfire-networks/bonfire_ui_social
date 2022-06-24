@@ -22,7 +22,7 @@
               </div>
             </div>
           </div>
-          <div class="relative flex flex-col flex-1 px-4 mt-6 sm:px-6">        
+          <div class="relative flex flex-col flex-1 p-4 sm:px-6">        
             <Bonfire.UI.Social.MessageThreadsLive
               context={@context}
               threads={@threads}
