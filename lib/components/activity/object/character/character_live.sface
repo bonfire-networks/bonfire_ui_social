@@ -49,7 +49,7 @@
       </div>
         <!-- SHOW THE BIO IN SEARCH -->
       <div class="prose-sm prose">
-         {rich e(the_other(assigns), :profile, :summary, "")}
+         {markdown e(the_other(assigns), :profile, :summary, "")}
       </div>
     </div>
   </LiveRedirect>

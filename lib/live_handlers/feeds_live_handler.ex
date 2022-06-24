@@ -221,7 +221,18 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
   end
 
   def paginate_fetch_assign_default(opts, socket) do
-    feed_assigns = feed_assigns(:default, opts)
+
+    current = current_user(socket) || current_account(socket)
+
+    feed_or_tuple = if current do
+      feed_id = Bonfire.Social.Feeds.my_feed_id(:inbox, socket)
+      feed_ids = Bonfire.Social.Feeds.my_home_feed_ids(socket)
+      {feed_id, feed_ids}
+    else
+      Bonfire.Social.Feeds.named_feed_id(:local) # fallback to showing instance feed
+    end
+
+    feed_assigns = feed_assigns(feed_or_tuple, opts)
 
     {:noreply, socket
       |> assign(feed_update_mode: "append")
@@ -263,7 +274,7 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
       # feed_ids: feed_ids,
       feed: [],
       page_info: nil,
-      
+
     ]
 
     feed_assigns_maybe_async_load({feed_id, feed_ids}, assigns, socket)
@@ -382,6 +393,17 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
       page_info: e(feed, :page_info, [])
     ]
   end
+
+  # defp feed_assigns(feed_id, socket) when is_atom(feed_id) do
+  #   feed_id = Bonfire.Social.Feeds.named_feed_id(feed_id)
+  #   feed = Bonfire.Social.FeedActivities.feed(feed_id, socket)
+  #   [
+  #     loading: false,
+  #     feed_id: feed_id,
+  #     feed: e(feed, :edges, []),
+  #     page_info: e(feed, :page_info, [])
+  #   ]
+  # end
 
   def preloads(feed, socket \\ [])
   def preloads(feed, socket) when is_list(feed) and length(feed) > 0 do
