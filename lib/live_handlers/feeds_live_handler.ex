@@ -380,7 +380,7 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
     feed = Bonfire.Social.FeedActivities.my_feed(socket, feed_ids)
     [
       loading: false,
-      feed: e(feed, :edges, []),
+      feed: e(feed, :edges, []) |> preloads(socket),
       page_info: e(feed, :page_info, [])
     ]
   end
@@ -389,7 +389,7 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
     feed = Bonfire.Social.FeedActivities.feed(feed_id, socket)
     [
       loading: false,
-      feed: e(feed, :edges, []),
+      feed: e(feed, :edges, []) |> preloads(socket),
       page_info: e(feed, :page_info, [])
     ]
   end
@@ -400,7 +400,7 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
   #   [
   #     loading: false,
   #     feed_id: feed_id,
-  #     feed: e(feed, :edges, []),
+  #     feed: e(feed, :edges, []) |> preloads(socket),
   #     page_info: e(feed, :page_info, [])
   #   ]
   # end
@@ -442,7 +442,7 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
         feed
     end
   end
-  def preloads(%{edges: feed} = page, socket), do: Map.put(page, :feed, preloads(feed, socket))
+  def preloads(%{edges: feed} = page, socket), do: Map.put(page, :edges, preloads(feed, socket))
   def preloads(feed, socket), do: feed
 
   def preload_objects(feed, under, opts) do
@@ -512,7 +512,7 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
     [
        loading: false,
        selected_tab: tab,
-       feed: e(feed, :edges, []),
+       feed: e(feed, :edges, []) |> preloads(socket),
        page_info: e(feed, :page_info, [])
     ]
   end
@@ -525,7 +525,7 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
     [
       loading: false,
       selected_tab: tab,
-      feed: e(feed, :edges, []),
+      feed: e(feed, :edges, []) |> preloads(socket),
       page_info: e(feed, :page_info, [])
     ]
   end
@@ -540,7 +540,7 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
       loading: false,
       selected_tab: tab,
       feed_id: feed_id,
-      feed: e(feed, :edges, []),
+      feed: e(feed, :edges, []) |> preloads(socket),
       page_info: e(feed, :page_info, [])
     ]
   end

@@ -67,7 +67,7 @@ defmodule Bonfire.UI.Social.FeedLive do
       page_info: page_info,
       feed: feed
         # |> dump("FeedLive: feed")
-        |> LiveHandler.preloads(socket),
+        # |> LiveHandler.preloads(socket),
       )}
   end
 

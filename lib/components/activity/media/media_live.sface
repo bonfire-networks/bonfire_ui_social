@@ -1,0 +1,100 @@
+
+<div class={
+  "grid w-full max-h-[270px] my-3",
+  "grid-cols-1 media-single": length(@media) == 1,
+  "grid-cols-2 media-multiple gap-2": length(@media) == 2 or length(@media) == 4,
+  "media-multiple grid-rows-[repeat(4,_1fr)] grid-cols-[repeat(4,_1fr)] gap-2": length(@media) == 3,
+  "!grid-cols-1 !grid-rows-1": e(assigns, :showing_within, nil) == :smart_input
+  }>
+  {#for {media, counter} <- Enum.with_index(@media)}
+    {#if e(assigns, :showing_within, nil) != :smart_input}
+    <article class={
+      "media-entry h-full w-full",
+      "col-start-1 col-end-3 row-start-1 row-end-5": length(@media) == 3 && counter == 0,
+      "col-start-3 col-end-5 row-start-1 row-end-3": length(@media) == 3 && counter == 1,
+      "col-start-3 col-end-5 row-start-3 row-end-5": length(@media) == 3 && counter == 2,
+      "max-h-[130px]": length(@media) == 4
+    }>
+      <figure class="h-full">
+        {#if String.starts_with?(media.media_type, ["image", "video", "embed", "audio", "song", "photo", "rich"])}
+        <Bonfire.UI.Common.OpenModalLive
+          id={ComponentID.new(Bonfire.UI.Common.OpenModalLive, e(assigns, :object, nil))} 
+          title_text={e(assigns, :label, l "View media")}
+          no_actions
+        >
+          <div class="mt-2 relative" style="min-width: 90vw; min-height: 90vh">
+            
+            {#if String.contains?(media_img(media), [".jpg", ".jpeg", ".png", ".gif", ".webp"])}
+              <img
+                alt={media_label(media)}
+                src={media_img(media)}
+              />
+            {#else}
+              {#case e(media.metadata, "facebook", "og:video:url", nil) || e(media.metadata, "twitter", "twitter:player", nil) || e(media.metadata, "facebook", "og:video", nil)}
+              {#match nil}
+                {#case e(media.metadata, "ombed", "html", nil)}
+                {#match nil}
+                  <a href={media_url(media)} target="_blank">{l "View the media"} ({media.media_type})</a>
+                {#match embed}
+                  {raw embed}
+                {/case}
+              {#match url}
+                <iframe width="800" height="500" src={url |> String.replace("youtube.com", "yewtu.be")} frameborder="0" allow="accelerometer; encrypted-media; gyroscope; picture-in-picture" allowfullscreen="allowfullscreen" class="w-full max-h-screen" style="height:900px" ></iframe>
+              {/case}
+            {/if}
+
+            <div class="mt-2">
+              {media_label(media)}
+              
+              <p class="text-sm">{e(media.metadata, "description", nil) || e(media.metadata, "facebook", "og:description", nil) || e(media.metadata, "twitter", "twitter:description", nil) || e(media.metadata, "other", "description", nil)}</p>
+            </div>
+          </div>
+
+          <:open_btn>
+            {#if String.contains?(preview_img(media), [".jpg", ".jpeg", ".png", ".gif", ".webp"])}
+              <LazyImage
+                class={"w-full h-full cursor-pointer media-image"}
+                alt={media_label(media)}
+                src={preview_img(media)}
+              />
+            {#else}
+              View details ({media.media_type})
+            {/if}
+          
+          <figcaption class="sr-only">{media_label(media)}</figcaption>
+          </:open_btn>
+        </Bonfire.UI.Common.OpenModalLive>
+
+        {#else}
+        
+        <a href={media_url(media)} target="_blank" class="tooltip tooltip-bottom" data-tip={media_label(media)}>
+          {#if String.contains?(preview_img(media), [".jpg", ".jpeg", ".png", ".gif", ".webp"])}
+            <img
+              class="w-full h-full cursor-pointer media-image"
+              alt={media_label(media)}
+              src={preview_img(media)}
+            />
+          {#else}
+
+            {#case e(media.metadata, "favicon", nil) || Bonfire.Files.FaviconStore.favicon_url(media_url(media))}
+              {#match nil}
+                <Solid.ExternalLinkIcon class="w-5 h-5 text-base-content text-opacity-70" />
+              {#match image}
+                <img src={image} class="w-4 h-4 inline-block"/>
+            {/case}
+
+            {media_label(media) || l "View media"} ({media.media_type})
+          {/if}
+          </a>
+
+        {/if}
+      </figure>
+    </article>
+    {#else}
+      <div class="flex items-center space-x-1 text-xs font-semibold text-base-content/60">
+        <Outline.LinkIcon class="w-4 h-4"/>
+        <span class="flex-1">...{String.slice(media_url(media), -20..-1)}</span>
+      </div>
+    {/if}
+  {/for}
+</div>
