@@ -5,7 +5,7 @@ defmodule Bonfire.UI.Social.Activity.MediaLive do
   prop showing_within, :any
 
   def preview_img(media) do
-    e(media.metadata, "oembed", "thumbnail_url", nil) || e(media.metadata, "facebook", "og:image", nil) || media_img(media)
+    e(media.metadata, "facebook", "og:image", nil) || e(media.metadata, "twitter", "twitter:image", nil) || e(media.metadata, "oembed", "thumbnail_url", nil) || media_img(media)
   end
 
   def media_img(media) do
