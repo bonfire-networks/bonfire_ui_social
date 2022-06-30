@@ -3,8 +3,8 @@ defmodule Bonfire.UI.Social.ViewCircleLive do
 
   def update(assigns, socket) do
     # FIXME: what's the difference with EditCircleLive?
-
-      with {:ok, circle} <- Bonfire.Boundaries.Circles.get(assigns.id, current_user(assigns)) |> repo().maybe_preload(encircles: [subject: [:profile, :character]]) do
+      
+      with {_, circle} <- Bonfire.Boundaries.Circles.get(assigns.id, current_user(assigns)) |> repo().maybe_preload(encircles: [subject: [:profile, :character]]) do
         debug(circle)
 
       # TODO: paginate?
