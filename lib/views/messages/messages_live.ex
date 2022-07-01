@@ -119,14 +119,14 @@ defmodule Bonfire.UI.Social.MessagesLive do
 
   def do_handle_params(%{"id" => "compose" = id} = params, url, socket) do
     current_user = current_user(socket)
-    users = Bonfire.Social.Follows.list_my_followed(current_user)
+    users = Bonfire.Social.Follows.list_my_followed(current_user, paginate: false)
     # |> debug("USERS")
     {:noreply,
     socket
     |> assign(
       page_title: l("Direct Messages"),
       page: "messages",
-      users: e(users, :edges, []),
+      users: users,
       tab_id: "select_recipients",
       reply_to_id: nil,
       thread_id: nil,
