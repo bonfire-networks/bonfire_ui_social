@@ -28,7 +28,7 @@
       </Bonfire.UI.Common.OpenModalLive>
     </li>
       <li
-      :if={module_enabled?(Bonfire.UI.Me.ProfileItemLive)}
+      :if={module_enabled?(Bonfire.UI.Common.ProfileItemLive)}
       >
       <Bonfire.UI.Common.OpenModalLive
         :if={e(assigns, :thread_id, nil)}
@@ -39,7 +39,7 @@
         {#for p <- e(assigns, :participants, [])}
           <div class="py-2">
             <Surface.Components.Dynamic.Component
-              module={Bonfire.UI.Me.ProfileItemLive}
+              module={Bonfire.UI.Common.ProfileItemLive}
               character={e(p, :character, nil) || e(p, :activity, :subject, :character, nil)} 
               profile={e(p, :profile, nil) || e(p, :activity, :subject, :profile, nil)}
               class={"btn btn-square btn-ghost btn-sm"} 
