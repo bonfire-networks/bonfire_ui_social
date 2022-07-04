@@ -34,7 +34,7 @@ defmodule Bonfire.UI.Social.FeedLive do
   end
 
   def update(%{new_activity: new_activity} = _assigns, socket) when is_map(new_activity) do # adding new feed item
-    debug("FeedLive - new_activity (feed is a temporary assign, so only add new activities)")
+    debug("FeedLive.update - new_activity (feed is a temporary assign, so only add new activities)")
     {:ok, socket
     |> assign(
       feed_update_mode: "prepend",
@@ -49,13 +49,19 @@ defmodule Bonfire.UI.Social.FeedLive do
   #   update(Map.merge(assigns, %{new_activity: new_activity}), socket)
   # end
 
-  def update(assigns, %{assigns: %{feed_pubsub_subscribed: true}} = socket) do
-    debug("FeedLive: already loaded and subscribed")
+  def update(%{feed: feed, page_info: _page_info} =assigns, %{assigns: %{feed_pubsub_subscribed: true}} = socket) when is_list(feed) and length(feed)>0 do
+    debug("FeedLive.update - assigning feed (already subscribed)")
+    # dump(assigns)
     {:ok, assign(socket, assigns)}
   end
 
+  def update(assigns, %{assigns: %{feed_pubsub_subscribed: true}} = socket) do
+    debug("FeedLive.update - already loaded and subscribed")
+    {:ok, socket}
+  end
+
   def update(%{feed: feed, page_info: page_info} =assigns, socket) when is_list(feed) do
-    debug("FeedLive: a feed was provided")
+    debug("FeedLive.update - an initial feed was provided via assigns")
     # TODO: why do this in update rather than LV's preload?
     socket = assign(socket, assigns)
 
@@ -72,7 +78,7 @@ defmodule Bonfire.UI.Social.FeedLive do
   end
 
   def update(assigns, socket) do
-    error("FeedLive: a feed was NOT provided, try fetching one in a parent component")
+    error("FeedLive.update - a feed was NOT provided, try fetching one in a parent component")
 
     # current_user = current_user(socket)
 
