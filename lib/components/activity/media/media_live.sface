@@ -24,7 +24,7 @@
         >
           <div 
             class="mt-2 relative" 
-            style={if String.starts_with?(media.media_type, ["video"]), do: "min-width: 90vw; min-height: 90vh", else: ""}">
+            style={if String.starts_with?(media.media_type, ["video"]), do: "min-width: 90vw; min-height: 90vh", else: ""}>
             
             {#if String.contains?(media_img(media), [".jpg", ".jpeg", ".png", ".gif", ".webp"])}
               <img
