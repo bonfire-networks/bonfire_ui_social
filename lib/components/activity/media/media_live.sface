@@ -6,7 +6,7 @@
   "media-multiple grid-rows-[repeat(4,_1fr)] grid-cols-[repeat(4,_1fr)] gap-2": length(@media) == 3,
   "!grid-cols-1 !grid-rows-1": e(assigns, :showing_within, nil) == :smart_input
   }>
-  {#for {media, counter} <- Enum.with_index(@media)}
+  {#for {media, counter} <- Enum.with_index(@media) |> dump()}
     {#if e(assigns, :showing_within, nil) != :smart_input}
     <article class={
       "media-entry h-full w-full",
@@ -22,7 +22,9 @@
           title_text={e(assigns, :label, l "View media")}
           no_actions
         >
-          <div class="mt-2 relative" style="min-width: 90vw; min-height: 90vh">
+          <div 
+            class="mt-2 relative" 
+            style={if String.starts_with?(media.media_type, ["video"]), do: "min-width: 90vw; min-height: 90vh", else: ""}">
             
             {#if String.contains?(media_img(media), [".jpg", ".jpeg", ".png", ".gif", ".webp"])}
               <img
@@ -39,7 +41,9 @@
                   {raw embed}
                 {/case}
               {#match url}
-                <iframe width="800" height="500" src={url |> String.replace("youtube.com", "yewtu.be")} frameborder="0" allow="accelerometer; encrypted-media; gyroscope; picture-in-picture" allowfullscreen="allowfullscreen" class="w-full max-h-screen" style="height:900px" ></iframe>
+                <iframe width={e(media.metadata, "facebook", "og:video:width", nil) || e(media.metadata, "other", "video_width", nil) || "800"} height={e(media.metadata, "facebook", "og:video:height", nil) || e(media.metadata, "other", "video_height", nil) || "500"} src={url |> String.replace("youtube.com", "yewtu.be")} frameborder="0" allow="accelerometer; encrypted-media; gyroscope; picture-in-picture" allowfullscreen="allowfullscreen" 
+                class={"",
+                  "w-full max-h-screen": String.starts_with?(media.media_type, ["video"])} style={if String.starts_with?(media.media_type, ["video"]), do: "height:900px", else: ""} ></iframe>
               {/case}
             {/if}
 
