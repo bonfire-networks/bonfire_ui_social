@@ -3,7 +3,7 @@
   <div class="flex justify-between flex-1">
 
     <div class="absolute left-3">
-      <Bonfire.UI.Common.AvatarLive profile={profile(provider(assigns))} />
+      <Bonfire.UI.Common.AvatarLive user={provider(assigns)} />
     </div>
 
     <div :if={provider(assigns)} class="flex items-center text-sm text-primary-content-700 vf_provider ">
@@ -56,7 +56,7 @@
         
         <!-- <span class="text-sm text-primary-content-500 subject_username  text-light">{e(character(@object, :receiver), [:username, :display_username], "")}</span> -->
 
-        <Bonfire.UI.Common.AvatarLive profile={e(profile(receiver(assigns) ), nil)} />
+        <Bonfire.UI.Common.AvatarLive user={receiver(assigns)} />
 
       </LiveRedirect>
 

@@ -4,14 +4,10 @@
 <div class="flex w-full activity_widget">
   <LiveRedirect to={path(the_other(assigns))} class="flex profile-item group ">
     <div class="absolute left-0">
-     <div class="align-middle avatar">
-        <div class="w-6 h-6 teee bg-base-200 rounded-btn">
-          <LazyImage 
-            class="subject_avatar" 
-            src={avatar_url(e(the_other(assigns), :profile, nil))} 
-          />
-        </div>
-      </div>
+      <Bonfire.UI.Common.AvatarLive 
+        class="w-6 h-6 teee bg-base-200 rounded-btn" 
+        user={the_other(assigns)} 
+      />
     </div>
     <div class="flex items-center justify-between flex-1 ml-8 space-x-1">
       <p class="text-base font-semibold group-hover:underline text-base-content">
@@ -31,7 +27,7 @@
 
   <LiveRedirect to={path(the_other(assigns))} class="flex profile-item group ">
     <div class="absolute left-3">
-      <Bonfire.UI.Common.AvatarLive profile={e(the_other(assigns), :profile, nil)} />
+      <Bonfire.UI.Common.AvatarLive user={the_other(assigns)} />
     </div>
     <div>
       <div class="items-baseline justify-between flex-1">

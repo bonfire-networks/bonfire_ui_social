@@ -38,14 +38,10 @@
 
     <div class="flex mb-4 items-top">
       <div class="absolute left-0">
-        <div class="align-middle avatar">
-          <div class="w-6 h-6 bg-base-200 rounded-btn">
-            <LazyImage 
-              class="subject_avatar" 
-              src={avatar_url(@profile)} 
-              />
-          </div>
-        </div>
+        <Bonfire.UI.Common.AvatarLive  
+          class="w-6 h-6 bg-base-200 rounded-btn" 
+          user={@profile} 
+          />
       </div>
       <div class="flex ml-8 grow items-baseline justify-between flex-1 w-[calc(100%_-_4rem)]">
         <div class="items-baseline flex-1 text-sm truncate grow ellipsis">
@@ -94,7 +90,7 @@
           aria-label={e(@character, :username, "") <> " profile"}
           class="font-semibold text-base-content hover:underline "
           to={path(@character)}>
-          <Bonfire.UI.Common.AvatarLive profile={@profile} comment={e(assigns, :showing_within, nil) == :thread && e(assigns, :viewing_main_object, nil) != true} />
+          <Bonfire.UI.Common.AvatarLive user={@profile} comment={e(assigns, :showing_within, nil) == :thread && e(assigns, :viewing_main_object, nil) != true} />
         </LiveRedirect>
       </div>
       <div class="flex items-center justify-between leading-[16px] min-w-0 space-x-1 w-full">

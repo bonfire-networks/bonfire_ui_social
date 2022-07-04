@@ -205,7 +205,7 @@
       <div :if={@verb == "Reply"} class="flex items-top w-full">
       <!-- REPLY -->
         <div class="absolute left-3">
-          <Bonfire.UI.Common.AvatarLive profile={e(@activity, :subject, :profile, nil)} />
+          <Bonfire.UI.Common.AvatarLive user={e(@activity, :subject, nil)} />
         </div>
         <div class="flex items-center justify-between min-w-0 space-x-1 w-full leading-[18px]">
           <div class="flex items-center flex-1 truncate ellipsis">

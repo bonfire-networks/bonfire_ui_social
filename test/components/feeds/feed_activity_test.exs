@@ -60,7 +60,7 @@ defmodule Bonfire.UI.Social.Feeds.FeedActivityTest do
        assert doc
        |> Floki.parse_fragment
        |> elem(1)
-       |> Floki.find("img.subject_avatar")
+       |> Floki.find("img.avatar")
       #  |> Floki.attribute("alt") == [alice.profile.name <> " profile image"]
     end
 
