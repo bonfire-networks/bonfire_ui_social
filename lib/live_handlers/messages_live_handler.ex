@@ -92,7 +92,7 @@ defmodule Bonfire.Social.Messages.LiveHandler do
     {:noreply,
       socket
       |> assign_flash(:info, l "Sent!")
-      |> Bonfire.Social.Posts.LiveHandler.reset_smart_input()
+      |> Bonfire.UI.Common.SmartInputLive.reset_input()
     }
   end
 

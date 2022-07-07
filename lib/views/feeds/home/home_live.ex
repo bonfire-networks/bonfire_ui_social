@@ -28,8 +28,10 @@ defmodule Bonfire.UI.Social.HomeLive do
         feedback_message: l("You can start by following some people or by writing a new post."),
         sidebar_widgets: [
           users: [
-            main: [
-              {Bonfire.UI.Common.WidgetInstanceInfoLive, []}
+            secondary: [
+              {Bonfire.UI.Social.WidgetTagsLive, []},
+              {Bonfire.UI.Common.WidgetInstanceInfoLive, []},
+              {Bonfire.UI.Common.WidgetFeedbackLive, []}
             ]
           ]
         ],

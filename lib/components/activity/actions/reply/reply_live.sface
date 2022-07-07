@@ -12,7 +12,7 @@
     x-show="width < 1200"
     phx-click="Bonfire.Social.Feeds:reply_to_activity"
     phx-target={if e(assigns, :activity_id, nil), do: "#activity--"<>e(assigns, :activity_id, "")}
-    @click="show_mobile_composer = true">
+    @click="show_smart_input_fullscreen = true">
     <div class={"btn btn-ghost btn-circle btn-sm"}> 
       <span class="text-opacity-50 text-base-content">
         <Outline.ReplyIcon class="w-4 h-4 stroke-1" />

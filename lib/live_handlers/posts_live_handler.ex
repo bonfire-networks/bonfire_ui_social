@@ -78,7 +78,7 @@ defmodule Bonfire.Social.Posts.LiveHandler do
       {:noreply,
         socket
         |> assign_flash(:info, "#{l "Posted!"} <a href='#{permalink}' class='mx-1 text-sm text-gray-500 capitalize link'>#{l "Show"}</a>")
-        |> reset_smart_input()
+        |> Bonfire.UI.Common.SmartInputLive.reset_input()
         # |> push_patch_with_fallback(current_url(socket), path(published)) # so the flash appears - TODO: causes a conflict between the activity coming in via pubsub
 
         # Phoenix.LiveView.assign(socket,
@@ -167,7 +167,7 @@ defmodule Bonfire.Social.Posts.LiveHandler do
   def write_feedback(text, socket) do
     {:noreply,
       socket
-      |> set_smart_input_text(text)
+      |> Bonfire.UI.Common.SmartInputLive.set_smart_input_text(text)
     }
   end
 
@@ -215,45 +215,6 @@ defmodule Bonfire.Social.Posts.LiveHandler do
   end
 
 
-  def set_smart_input_text(socket, text \\ "\n") do
-    socket
-    |> push_event("smart_input:set_body", %{text: text})
-  end
 
-  def reset_smart_input(%{assigns: %{showing_within: :thread}} = socket) do
-    # debug("THREad")
-    socket
-    |> set_smart_input_text()
-    |> assign(
-      activity: nil,
-      to_circles: nil,
-      reply_to_id: e(socket.assigns, :thread_id, nil),
-    )
-  end
-
-  def reset_smart_input(%{assigns: %{showing_within: :messages}} = socket) do
-    # debug("messages")
-
-    socket
-    |> set_smart_input_text()
-    |> assign(
-      activity: nil,
-      smart_input_text: nil
-    )
-  end
-
-  def reset_smart_input(socket) do
-    # debug("VOID")
-
-    socket
-    |> set_smart_input_text()
-    |> assign(
-      reply_to_id: nil,
-      thread_id: nil,
-      to_circles: nil,
-      activity: nil,
-      smart_input_text: nil
-    )
-  end
 
 end
