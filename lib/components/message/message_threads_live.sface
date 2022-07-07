@@ -33,7 +33,7 @@
                   <div class="flex items-center space-x-2">
                     {#if e(activity, :replied, :thread, :named, :name, nil)}
                       <div class="flex-1 font-semibold truncate text-base-content">
-                        {text_only( e(activity, :replied, :thread, :named, :name, nil) )}
+                        {Text.text_only( e(activity, :replied, :thread, :named, :name, nil) )}
                       </div> 
                     {#else}
                       <div class="flex-1 font-semibold truncate text-base-content">{e(activity, :subject, :profile, :name, nil)}</div>
@@ -44,7 +44,7 @@
                   </div>
                   <div class="mt-1">
                     <p class="text-sm max-w-[240px] truncate text-base-content text-opacity-80 font-regular">
-                      {text_only( e(activity, :object, :post_content, :name, nil) || e(activity, :object, :post_content, :summary, nil) || e(activity, :object, :post_content, :html_body, nil) )}
+                      {Text.text_only( e(activity, :object, :post_content, :name, nil) || e(activity, :object, :post_content, :summary, nil) || e(activity, :object, :post_content, :html_body, nil) )}
                     </p> 
                   </div>
                 </div>

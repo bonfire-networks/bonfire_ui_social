@@ -160,7 +160,7 @@ defmodule Bonfire.UI.Social.MessagesLive do
         thread_id = e(activity, :replied, :thread_id, id)
 
         # debug(activity, "activity")
-        smart_input_prompt = l("Reply to message:")<>" "<>text_only(e(message, :post_content, :name, e(message, :post_content, :summary, e(message, :post_content, :html_body, reply_to_id))))
+        smart_input_prompt = l("Reply to message:")<>" "<>Text.text_only(e(message, :post_content, :name, e(message, :post_content, :summary, e(message, :post_content, :html_body, reply_to_id))))
 
         participants = Bonfire.Social.Threads.list_participants(activity, thread_id, current_user: current_user)
 

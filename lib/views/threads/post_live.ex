@@ -59,7 +59,7 @@ defmodule Bonfire.UI.Social.PostLive do
       thread_id = e(activity, :replied, :thread_id, id)
       reply_to_id = e(params, "reply_to_id", id) #|> debug("reply_to_id")
 
-      # smart_input_prompt = l("Reply to post:")<>" "<>text_only(e(post, :post_content, :name, e(post, :post_content, :summary, e(post, :post_content, :html_body, reply_to_id))))
+      # smart_input_prompt = l("Reply to post:")<>" "<>Text.text_only(e(post, :post_content, :name, e(post, :post_content, :summary, e(post, :post_content, :html_body, reply_to_id))))
       smart_input_prompt = l("Reply")
 
       participants = Bonfire.Social.Threads.list_participants(activity, thread_id, current_user: current_user)

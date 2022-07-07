@@ -27,7 +27,7 @@
         replied={e(@activity, :replied, nil)}
         showing_within={e(assigns, :showing_within, nil)}
         hide_reply={e(assigns, :hide_reply, nil )}
-        reply_to_text={text_only(e(@object, :post_content, :name, nil) || e(@object, :post_content, :summary, nil) || e(@object, :post_content, :html_body, e(@object, :id, "")))}
+        reply_to_text={Text.text_only(e(@object, :post_content, :name, nil) || e(@object, :post_content, :summary, nil) || e(@object, :post_content, :html_body, e(@object, :id, "")))}
       />
       <Bonfire.UI.Common.BoostActionLive
         :if={@object_type not in [Bonfire.Data.Social.Message]} 
