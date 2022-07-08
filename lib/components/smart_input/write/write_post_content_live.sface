@@ -14,7 +14,7 @@
     <div 
       :class="{'!rounded-t-none' : show_smart_input_fullscreen}"
       class={
-        "rounded-md shadow bg-base-100 flex h-full flex-1": e(assigns, :thread_mode, nil) != :flat,
+        "bg-base-100 flex h-full flex-1": e(assigns, :thread_mode, nil) != :flat,
         "bg-base-100 border-t border-base-content/10 p-3 h-full flex-1 sticky bottom-0 messages_smart_input": e(assigns, :thread_mode, nil) == :flat,
         "!border-0": e(assigns, :showing_within, nil) == :compose,
         "!relative border-none h-[calc(100%_-_50px)]": e(assigns, :showing_within, nil) == :page,
@@ -50,7 +50,7 @@
                     "x-model": "title_text"
                   }
                   class={
-                    "block w-full border-0 pt-2.5 text-lg font-medium placeholder-base-content/70 bg-base-100 text-base-content border-b border-base-content/10 rounded-t-lg",
+                    "block w-full border-0 pt-2.5 text-lg font-medium placeholder-base-content/70 bg-base-100 text-base-content border-b border-base-content/10",
                     "!border !border-base-content/30 !rounded-[24px] mb-2": e(assigns, :thread_mode, nil) == :flat
                   } 
                   />
@@ -86,19 +86,20 @@
           </div>
         </Inputs>
         
-        <Bonfire.UI.Common.InputControlsLive
-          thread_mode={e(assigns, :thread_mode, nil)}
-          reply_to_id={@reply_to_id}
-          thread_id={@thread_id}
-          create_activity_type={e(assigns, :create_activity_type, nil)}
-          to_boundaries={e(assigns, :to_boundaries, [])}
-          to_circles={e(assigns, :to_circles, [])}
-          current_user={@current_user}
-          showing_within={@showing_within}
-          uploads={@uploads}
-          uploaded_files={e(assigns, :uploaded_files, [])}
-        />
-
+        <div x-show="!open_boundaries">
+          <Bonfire.UI.Common.InputControlsLive
+            thread_mode={e(assigns, :thread_mode, nil)}
+            reply_to_id={@reply_to_id}
+            thread_id={@thread_id}
+            create_activity_type={e(assigns, :create_activity_type, nil)}
+            to_boundaries={e(assigns, :to_boundaries, [])}
+            to_circles={e(assigns, :to_circles, [])}
+            current_user={@current_user}
+            showing_within={@showing_within}
+            uploads={@uploads}
+            uploaded_files={e(assigns, :uploaded_files, [])}
+          />
+        </div>
       </div>
     </div>
   </Form>
