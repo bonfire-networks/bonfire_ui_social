@@ -6,7 +6,10 @@
   class="border-b rounded-md">
   <Field name={:name}>
     <TextInput
-      opts={placeholder: l "Enter a content warning"}
+      opts={
+        placeholder: l("Enter a content warning"), 
+        "x-model": "title_text"
+      }
       class="w-full rounded-none input" 
       />
   </Field>
