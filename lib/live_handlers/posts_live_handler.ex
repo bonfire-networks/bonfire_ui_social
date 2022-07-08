@@ -52,7 +52,7 @@ defmodule Bonfire.Social.Posts.LiveHandler do
          opts <- [
             current_user: current_user,
             post_attrs: attrs |> Map.put(:uploaded_media, uploaded_media),
-            boundary: e(params, "boundary_selected", "mentions")
+            boundary: e(params, "to_boundaries", "mentions")
           ] |> debug("opts"),
          {:ok, published} <- Bonfire.Social.Posts.publish(opts) do
 

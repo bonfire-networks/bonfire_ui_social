@@ -17,6 +17,7 @@ defmodule Bonfire.UI.Social.ThreadLive do
   prop thread_id, :any
   prop feed_id, :any, default: nil
   prop create_activity_type, :any
+  prop to_boundaries, :list
   prop to_circles, :list
   prop url, :string
   prop smart_input_prompt, :string

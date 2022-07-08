@@ -5,6 +5,7 @@ defmodule Bonfire.UI.Social.MessageThreadsLive do
   prop thread_id, :string
   prop tab_id, :string
   prop context, :any, default: nil
+  # prop to_boundaries, :list
   # prop to_circles, :list
   prop users, :list
 

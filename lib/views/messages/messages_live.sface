@@ -8,6 +8,7 @@
         page_title={@page_title}
         feed_id={@feed_id}
         create_activity_type={:message}
+        to_boundaries={e(assigns, :to_boundaries, [])}
         to_circles={e(assigns, :to_circles, [])}
         participants={e(assigns, :participants, [])}
         replies={e(assigns, :replies, nil)}
@@ -39,6 +40,7 @@
           current_user={current_user(assigns)}
           reply_to_id={e(assigns, :reply_to_id, "")}
           thread_id={e(assigns, :thread_id, nil)}
+          to_boundaries={e(assigns, :to_boundaries, [])}
           to_circles={e(assigns, :to_circles, [])}
           create_activity_type={:message}
           thread_mode={:flat}

@@ -12,15 +12,6 @@
     class={if WriteEditorLive.use_rich_editor?(assigns), do: "with_editor flex-1", else: "with_textarea flex-1"}>
 
     <div 
-      :if={@show_select_recipients}
-      class="p-3 pb-0">
-    <Bonfire.UI.Common.SelectRecipientsLive
-      showing_within={@showing_within}
-      preloaded_recipients={e(assigns, :preloaded_recipients, [])}
-      to_circles={e(assigns, :to_circles, [])}
-    />
-    </div>
-    <div 
       :class="{'!rounded-t-none' : show_smart_input_fullscreen}"
       class={
         "rounded-md shadow bg-base-100 flex h-full flex-1": e(assigns, :thread_mode, nil) != :flat,
@@ -32,15 +23,20 @@
         "relative flex flex-col flex-1 h-full",
         "h-auto": e(assigns, :showing_within, nil) == :compose
       }>
-        <Surface.Components.Dynamic.Component
-          :if={module_enabled?(Bonfire.Boundaries.Web.BoundariesLive) && e(assigns, :thread_mode, nil) != :flat}
-          module={Bonfire.Boundaries.Web.BoundariesLive}
-          to_circles={e(assigns, :to_circles, [])}
+
+        <Bonfire.UI.Common.InputBoundariesLive
           thread_mode={e(assigns, :thread_mode, nil)}
+          create_activity_type={e(assigns, :create_activity_type, nil)}
+          to_boundaries={e(assigns, :to_boundaries, [])}
+          to_circles={e(assigns, :to_circles, [])}
+          current_user={@current_user}
+          showing_within={@showing_within}
+          open_boundaries={e(assigns, :open_boundaries, nil)}
         />
+
         <Inputs for={:post_content}>
           <div
-            id="textarea_wrapper"
+            x-show="!open_boundaries"
             class="flex-1">
             <div 
               display="style: none"
@@ -70,7 +66,7 @@
                 class={
                   "h-full min-h-full flex-1 flex flex-col grow",
                   "min-h-[50px]": e(assigns, :thread_mode, nil) == :flat,
-                  "min-h-[250px]": e(assigns, :thread_mode, nil) != :flat and Settings.get([:ui, :smart_input_as], nil, assigns) != :sidebar,
+                  "min-h-[calc(50vh-50px)]": e(assigns, :thread_mode, nil) != :flat and Settings.get([:ui, :smart_input_as], nil, assigns) != :sidebar,
                 } 
                 name={:html_body}>
                 <!-- <Label :if={@smart_input_text && @smart_input_text !="" && @smart_input_prompt} class="mb-2 alert alert-info">{@smart_input_prompt}</Label> -->    
@@ -95,6 +91,7 @@
           reply_to_id={@reply_to_id}
           thread_id={@thread_id}
           create_activity_type={e(assigns, :create_activity_type, nil)}
+          to_boundaries={e(assigns, :to_boundaries, [])}
           to_circles={e(assigns, :to_circles, [])}
           current_user={@current_user}
           showing_within={@showing_within}

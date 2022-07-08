@@ -13,6 +13,7 @@ defmodule Bonfire.UI.Social.WritePostContentLive do
   prop reply_to_id, :string
   prop thread_id, :string
   prop create_activity_type, :any
+  prop to_boundaries, :list
   prop to_circles, :list
   prop smart_input_prompt, :string
   prop smart_input_text, :string, required: false
@@ -24,19 +25,12 @@ defmodule Bonfire.UI.Social.WritePostContentLive do
   prop uploaded_files, :list
   prop title_prompt, :string
   prop show_select_recipients, :boolean, default: false
+  prop open_boundaries, :boolean, default: false
 
   # Classes to customize the smart input appearance
   prop textarea_class, :string
   prop replied_activity_class, :string
 
-
-  def activity_type_or_reply(assigns, create_activity_type) do
-    debug(e(assigns, :reply_to_id, ""), "reply to id")
-    debug(e(assigns, :thread_id, ""), "thread_id")
-    if e(assigns, :reply_to_id, "") !="" or e(assigns, :thread_id, "") !="",
-    do: "reply",
-    else: "#{create_activity_type}"
-  end
 
   def handler(activity_type) do
     if activity_type==:message, do: "Bonfire.Social.Messages:send", else: "Bonfire.Social.Posts:post"

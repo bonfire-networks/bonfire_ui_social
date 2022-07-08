@@ -22,7 +22,7 @@ defmodule Bonfire.Social.Activities.CreatePost.Test do
 
       assert posted = view
       |> form("#smart_input form")
-      |> render_submit(%{"boundary_selected" => "public", "post" => %{"post_content" => %{"html_body" => content}}})
+      |> render_submit(%{"to_boundaries" => "public", "post" => %{"post_content" => %{"html_body" => content}}})
       # |> Floki.text() =~ "Posted"
 
       live_pubsub_wait(view)
@@ -44,7 +44,7 @@ defmodule Bonfire.Social.Activities.CreatePost.Test do
 
       assert view
       |> form("#smart_input form")
-      |> render_submit(%{"boundary_selected" => "public", "post" => %{"post_content" => %{"html_body" => content}}})
+      |> render_submit(%{"to_boundaries" => "public", "post" => %{"post_content" => %{"html_body" => content}}})
 
       next = "/user"
       {view, doc} = floki_live(conn, next) #|> IO.inspect
@@ -66,7 +66,7 @@ defmodule Bonfire.Social.Activities.CreatePost.Test do
 
       assert view
       |> form("#smart_input form")
-      |> render_submit(%{"boundary_selected" => "public", "post" => %{"post_content" => %{"html_body" => content}}})
+      |> render_submit(%{"to_boundaries" => "public", "post" => %{"post_content" => %{"html_body" => content}}})
 
       # check if post appears instantly on home feed (with pubsub)
       live_pubsub_wait(view)

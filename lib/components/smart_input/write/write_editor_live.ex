@@ -33,12 +33,4 @@ defmodule Bonfire.UI.Social.WriteEditorLive do
     end
   end
 
-  def activity_type_or_reply(assigns, create_activity_type) do
-    debug(e(assigns, :reply_to_id, ""), "reply to id")
-    debug(e(assigns, :thread_id, ""), "thread_id")
-    if e(assigns, :reply_to_id, "") !="" or e(assigns, :thread_id, "") !="",
-    do: "reply",
-    else: "#{create_activity_type}"
-  end
-
 end
