@@ -29,7 +29,7 @@ defmodule Bonfire.UI.Social.MessagesLive do
       |> assign(
         create_activity_type: :message,
         showing_within: :messages,
-        to_boundaries: [{"Message", "message"}],
+        to_boundaries: [{"message", "Message"}],
         page_title: l("Messages"),
         page: "messages",
         feed_id: feed_id,
