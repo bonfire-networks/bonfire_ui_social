@@ -7,7 +7,7 @@
         page={@page}
         page_title={@page_title}
         feed_id={@feed_id}
-        create_activity_type={:message}
+        create_activity_type={@create_activity_type}
         to_boundaries={e(assigns, :to_boundaries, [])}
         to_circles={e(assigns, :to_circles, [])}
         participants={e(assigns, :participants, [])}
@@ -42,7 +42,7 @@
           thread_id={e(assigns, :thread_id, nil)}
           to_boundaries={e(assigns, :to_boundaries, [])}
           to_circles={e(assigns, :to_circles, [])}
-          create_activity_type={:message}
+          create_activity_type={@create_activity_type}
           thread_mode={:flat}
           boundary={"message"}
           showing_within={:compose}

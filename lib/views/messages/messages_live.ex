@@ -27,6 +27,7 @@ defmodule Bonfire.UI.Social.MessagesLive do
     {:ok,
       socket
       |> assign(
+        create_activity_type: :message,
         page_title: l("Messages"),
         page: "messages",
         feed_id: feed_id,
