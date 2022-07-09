@@ -28,6 +28,8 @@ defmodule Bonfire.UI.Social.MessagesLive do
       socket
       |> assign(
         create_activity_type: :message,
+        showing_within: :messages,
+        to_boundaries: [{"Message", "message"}],
         page_title: l("Messages"),
         page: "messages",
         feed_id: feed_id,
@@ -40,7 +42,6 @@ defmodule Bonfire.UI.Social.MessagesLive do
         feedback_message: l("Select a thread or start a new one..."),
         threads: LiveHandler.list_threads(current_user(socket), socket),
         smart_input_prompt: l("Compose a thoughtful message..."),
-        showing_within: :messages,
         page_header_aside: [
           {Bonfire.UI.Social.HeaderAsideNotificationsSeenLive, [
             feed_id: feed_id
