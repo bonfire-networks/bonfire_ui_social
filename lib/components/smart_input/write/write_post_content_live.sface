@@ -38,6 +38,7 @@
         <Inputs for={:post_content}>
           <div
             x-show="!open_boundaries"
+            :class="{'order-last' : show_smart_input_fullscreen}"
             class="flex-1">
             <div 
               display="style: none"
