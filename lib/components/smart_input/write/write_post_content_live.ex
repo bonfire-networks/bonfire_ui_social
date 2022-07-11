@@ -28,8 +28,8 @@ defmodule Bonfire.UI.Social.WritePostContentLive do
   prop open_boundaries, :boolean, default: false
 
   # Classes to customize the smart input appearance
-  prop textarea_class, :string
-  prop replied_activity_class, :string
+  prop textarea_class, :css_class
+  prop replied_activity_class, :css_class
 
 
   def handler(activity_type) do

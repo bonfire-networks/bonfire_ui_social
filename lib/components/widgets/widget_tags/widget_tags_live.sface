@@ -42,7 +42,10 @@
 
    {#else}
     <div class="flex flex-col items-center p-3 space-y-2 place-content-center">
-      <img src={Config.get([:ui, :theme, :instance_icon], nil)} class="w-12 h-full grayscale" />
+      <img
+        :if={!Settings.get([:ui, :compact], false, assigns)}
+        src={Config.get([:ui, :theme, :instance_icon], nil)} 
+        class="w-12 h-full grayscale" />
       <span class="text-sm text-base-content text-opacity-70">{l "No trending tags found"}</span>
     </div>
   {/if}

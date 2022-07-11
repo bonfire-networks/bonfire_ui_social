@@ -1,6 +1,7 @@
 <div 
   data-id="subject"
   class={
+    "mb-1",
     "px-2 bg-base-content/10 pt-1 rounded-t-md": e(assigns, :thread_mode, nil) == :flat,
     "!bg-info/40": e(assigns, :thread_mode, nil) == :flat && e(current_user(assigns), :id, nil) == maybe_get(@character, :id),
     "!bg-transparent pt-0": e(assigns, :activity_inception, nil) != nil and e(assigns, :thread_mode, nil) == :flat,

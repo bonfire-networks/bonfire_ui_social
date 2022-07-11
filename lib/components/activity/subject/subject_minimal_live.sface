@@ -34,7 +34,7 @@
       </div>
     </div>
   {#match :widget}
-    <div class={"flex items-center mb-3"}>
+    <div class={"flex items-center mb-2"}>
       <div class="flex items-center justify-start w-5 h-5">
         <Solid.StarIcon :if={@verb == "Like"} class="w-5 h-5 text-yellow-500" />
         <Solid.UserAddIcon :if={@verb == "Follow"} class="flex-shrink-0 w-5 h-5 text-info" />
@@ -125,7 +125,7 @@
   {#match _}
 
     <div class={
-      "flex items-center mb-3", 
+      "flex items-center mb-2", 
       "-ml-7": @verb not in ["Reply", "Respond"]
     }>
 

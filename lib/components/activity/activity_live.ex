@@ -131,6 +131,9 @@ defmodule Bonfire.UI.Social.ActivityLive do
         aria-label="user activity"
         role="article"
         tabIndex="0"
+        x-data="{ activity_active: false }"
+        @mouseenter="activity_active = true"
+        @mouseleave="activity_active = false"
         class={
         "p-3 activity relative pl-16 group " <> e(assigns, :class, ""),
         "activity_inception bg-base-content/10 !m-0 opacity-100 before:!left-2 before:top-1 before:bottom-1": e(assigns, :activity_inception, nil) != nil and  e(assigns, :thread_mode, nil) == :flat,

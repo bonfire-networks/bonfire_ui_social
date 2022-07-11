@@ -53,7 +53,7 @@
                   }
                   class={
                     "block w-full border-0 pt-2.5 text-lg font-medium placeholder-base-content/70 bg-base-100 text-base-content border-b border-base-content/10",
-                    "!border !border-base-content/30 !rounded-[24px] mb-2": e(assigns, :thread_mode, nil) == :flat
+                    "!border !border-base-content/30 rounded-lg mb-2": e(assigns, :thread_mode, nil) == :flat
                   } 
                   />
               </Field>

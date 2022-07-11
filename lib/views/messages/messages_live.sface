@@ -23,7 +23,6 @@
         show_reply_input={true}
         reverse_order={true}
         showing_within={:messages}
-        textarea_class={"h-8 max-h-16 resize-y max-w-full textarea prose prose-sm bg-base-200"}
         replied_activity_class={"relative mb-2 rounded-md bg-base-100 hover:bg-base-100"}
       /> 
     {#elseif @tab_id in ["compose", "select_recipients"]}

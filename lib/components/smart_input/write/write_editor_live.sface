@@ -23,6 +23,6 @@
         value: @smart_input_text,
         placeholder: @smart_input_prompt
       }
-      class={"#{@textarea_class} h-40"}
+      class={@textarea_class}
     />
 {/case}

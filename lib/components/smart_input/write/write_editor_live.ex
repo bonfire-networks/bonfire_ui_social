@@ -17,7 +17,7 @@ defmodule Bonfire.UI.Social.WriteEditorLive do
   prop insert_text, :string
   prop thread_mode, :string
   # Classes to customize the smart input appearance
-  prop textarea_class, :string
+  prop textarea_class, :css_class
 
 
   def use_rich_editor?(assigns) do
