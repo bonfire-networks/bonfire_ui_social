@@ -1,6 +1,6 @@
 
 <div class={
-  "grid w-full max-h-[270px] my-3",
+  "grid w-full my-3",
   "grid-cols-1 media-single": length(@media) == 1,
   "grid-cols-2 media-multiple gap-2": length(@media) == 2 or length(@media) == 4,
   "media-multiple grid-rows-[repeat(4,_1fr)] grid-cols-[repeat(4,_1fr)] gap-2": length(@media) == 3,
@@ -23,7 +23,7 @@
           no_actions
         >
           <div 
-            class="mt-2 relative" 
+            class="relative mt-2" 
             style={if String.starts_with?(media.media_type, ["video"]), do: "min-width: 90vw; min-height: 90vh", else: ""}>
             
             {#if String.contains?(media_img(media), [".jpg", ".jpeg", ".png", ".gif", ".webp"])}
@@ -56,11 +56,19 @@
 
           <:open_btn>
             {#if String.contains?(preview_img(media), [".jpg", ".jpeg", ".png", ".gif", ".webp"])}
+              {#if length(@media) > 1}
               <LazyImage
-                class={"w-full h-full cursor-pointer media-image"}
+                class={"w-full !object-cover h-full max-h-[270px] cursor-pointer media-image"}
                 alt={media_label(media)}
                 src={preview_img(media)}
               />
+              {#else}
+              <LazyImage
+                class={"object-contain h-full max-h-[270px] cursor-pointer media-image"}
+                alt={media_label(media)}
+                src={preview_img(media)}
+              />
+              {/if}
             {#else}
               View details ({media.media_type})
             {/if}
@@ -71,26 +79,61 @@
 
         {#else}
         
-        <a href={media_url(media)} target="_blank" class="tooltip tooltip-bottom" data-tip={media_label(media)}>
+        <a href={media_url(media)} target="_blank" class="flex w-full border rounded bg-base-200 hover:bg-base-content/5 border-base-content/30 tooltip tooltip-bottom" data-tip={media_label(media)}>
           {#if String.contains?(preview_img(media), [".jpg", ".jpeg", ".png", ".gif", ".webp"])}
-            <img
-              class="w-full h-full cursor-pointer media-image"
-              alt={media_label(media)}
-              src={preview_img(media)}
-            />
+            <div>
+              <img
+                class="rounded-none cursor-pointer media-image"
+                alt={media_label(media)}
+                src={preview_img(media)}
+              />
+              <div class="flex flex-col p-3 space-y-1 text-sm text-left">
+                <div 
+                  class=" text-base-content/60"
+                  :if={provider(media)}>
+                  {provider(media)}
+                </div>
+                <div class="flex-1 ">
+                  {media_label(media) || l "View media"} ({media.media_type})
+                </div>
+                <div 
+                  class="break-words text-base-content/60"
+                  :if={description(media)}>
+                  {description(media)}
+                </div>
+              </div>
+            </div>
           {#else}
-
-            {#case e(media.metadata, "favicon", nil) || Bonfire.Files.FaviconStore.favicon_url(media_url(media))}
-              {#match nil}
-                <Solid.ExternalLinkIcon class="w-5 h-5 text-base-content text-opacity-70" />
-              {#match image}
-                <img src={image} class="w-4 h-4 inline-block"/>
-            {/case}
-
-            {media_label(media) || l "View media"} ({media.media_type})
+          <div class="w-full">
+            <div class="flex items-center border-r bg-base-200 bg-base-content/5 place-content-center">
+              {#case preview_img(media) || e(media.metadata, "favicon", nil) || Bonfire.Files.FaviconStore.favicon_url(media_url(media))}
+                {#match nil}
+                  <Solid.ExternalLinkIcon class="w-8 h-8 text-base-content/70" />
+                {#match image}
+                  <img 
+                    src={image} 
+                    class="rounded-none cursor-pointer media-image"
+                  />
+              {/case}
+            </div>
+            <div class="flex flex-col flex-1 p-3 space-y-1 text-sm text-left">
+              <div 
+                class=" text-base-content/60"
+                :if={provider(media)}>
+                {provider(media)}
+              </div>
+              <div class="flex-1 ">
+                {media_label(media) || l "View media"} ({media.media_type})
+              </div>
+              <div 
+                class="break-words text-base-content/60"
+                :if={description(media)}>
+                {description(media)}
+              </div>
+            </div>
+          </div>
           {/if}
           </a>
-
         {/if}
       </figure>
     </article>

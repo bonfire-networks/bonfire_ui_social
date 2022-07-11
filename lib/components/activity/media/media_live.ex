@@ -4,6 +4,17 @@ defmodule Bonfire.UI.Social.Activity.MediaLive do
   prop media, :list, default: []
   prop showing_within, :any
 
+
+  def provider(media) do
+    (e(media.metadata, "facebook", "og:site_name", nil) || e(media.metadata, "oembed", "provider_url", nil))
+    |> as_string()
+  end
+
+  def description(media) do
+    (e(media.metadata, "facebook", "og:description", nil) || e(media.metadata, "twitter", "twitter:description") || e(media.metadata, "other", "description", nil))
+    |> as_string()
+  end
+
   def preview_img(media) do
     ( e(media.metadata, "facebook", "og:image", nil) || e(media.metadata, "twitter", "twitter:image", nil) || e(media.metadata, "oembed", "thumbnail_url", nil) || media_img(media) )
     |> as_string()

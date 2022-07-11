@@ -7,6 +7,7 @@
   class="relative z-20 flex items-center tooltip tooltip-bottom" 
   data-tip={l "Reply"}
   >
+  {#if Settings.get([:ui, :smart_input_as], nil, assigns)==:sidebar and e(assigns, :thread_mode, nil) != :flat}
   <button 
     x-cloak
     x-show="width < 1200"
@@ -33,6 +34,35 @@
       </span>
     </div>
   </button>
+  {#else}
+  <button 
+    x-cloak
+    x-show="width < 1200"
+    phx-click="Bonfire.Social.Feeds:reply_to_activity"
+    phx-target={if e(assigns, :activity_id, nil), do: "#activity--"<>e(assigns, :activity_id, "")}
+    @click="show_smart_input_fullscreen = true">
+    <div class={"btn btn-ghost btn-circle btn-sm"}> 
+      <span class="text-opacity-50 text-base-content">
+        <Outline.ReplyIcon class="w-4 h-4 stroke-1" />
+        <span class="sr-only">{l "Reply"}</span>
+      </span>
+    </div>
+  </button>
+  <button
+    x-show="width > 1200"
+    data-id="action_reply"
+    phx-click="Bonfire.Social.Feeds:reply_to_activity"
+    @click="show_smart_input_modal = true"
+    phx-target={if e(assigns, :activity_id, nil), do: "#activity--"<>e(assigns, :activity_id, "")}
+  >
+    <div class={"btn btn-ghost btn-circle btn-sm"}> 
+      <span class="text-opacity-50 text-base-content">
+        <Outline.ReplyIcon class="w-4 h-4 stroke-1" />
+        <span class="sr-only">{l "Reply"}</span>
+      </span>
+    </div>
+  </button>
+  {/if}
   <span 
   :if={Bonfire.Me.Settings.get([:ui, :show_activity_counts], nil, assigns)}
   class="ml-1 text-xs text-base-content text-opacity-70">
