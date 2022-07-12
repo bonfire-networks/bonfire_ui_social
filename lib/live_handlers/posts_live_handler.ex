@@ -207,7 +207,7 @@ defmodule Bonfire.Social.Posts.LiveHandler do
       |> debug("uploaded") do
         {:ok, uploaded}
       else e ->
-        error(e, "Could not upload #{entry.client_name}")
+        error(e, "Did not upload #{entry.client_name}")
         {:postpone, nil}
       end
     end)
