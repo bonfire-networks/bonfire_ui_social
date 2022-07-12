@@ -33,6 +33,7 @@
             <span>{l "You can search for people you follow. If you want to message someone else, you can do some via their profile page."}</span>
           </div>
         </div>
+
         <Bonfire.UI.Common.SmartInputLive
           id={:smart_input_message}
           :if={current_user(assigns)}

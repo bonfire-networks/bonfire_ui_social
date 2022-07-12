@@ -30,6 +30,7 @@
           to_boundaries={e(assigns, :to_boundaries, [])}
           to_circles={e(assigns, :to_circles, [])}
           current_user={@current_user}
+          preloaded_recipients={e(assigns, :preloaded_recipients, [])}
           showing_within={@showing_within}
           open_boundaries={@open_boundaries}
           show_select_recipients={@show_select_recipients}

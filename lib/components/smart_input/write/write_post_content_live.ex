@@ -20,6 +20,7 @@ defmodule Bonfire.UI.Social.WritePostContentLive do
   prop showing_within, :string
   prop with_rich_editor, :boolean, default: true, required: false
   prop insert_text, :string
+  prop preloaded_recipients, :any
   prop uploads, :any
   prop thread_mode, :string
   prop uploaded_files, :list
