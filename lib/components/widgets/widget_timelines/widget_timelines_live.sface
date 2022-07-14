@@ -1,5 +1,5 @@
 <Bonfire.UI.Common.WidgetLive 
-  widget_title={e(assigns, :widget_title, "Feeds")}
+  widget_title={e(assigns, :widget_title, "Menu")}
 >
   <div 
     :if={current_user(@current_user) || Settings.get([:bonfire_social, :feeds, :federation, :show_guests], true, assigns)}
@@ -14,13 +14,40 @@
           <span class="text-sm truncate ellipsis">{l "Home"}</span>
         </LivePatch> 
       </li>
+      <li :if={!current_user(@current_user)}>
+        <LivePatch 
+          class={
+          "border-l-4 border-primary bg-base-content bg-opacity-10": @page == "login"} 
+          to={path(:login)}>
+          <Solid.LoginIcon class="w-4 h-4" />
+          <span class="text-sm truncate ellipsis">{l "Login"}</span>
+        </LivePatch> 
+      </li>
+       <li :if={!current_user(@current_user)}>
+        <LivePatch 
+          class={
+          "border-l-4 border-primary bg-base-content bg-opacity-10": @page == "signup"} 
+          to={path(:signup)}>
+          <Solid.HomeIcon class="w-4 h-4" />
+          <span class="text-sm truncate ellipsis">{l "Signup"}</span>
+        </LivePatch> 
+      </li>
       <li>
         <LivePatch 
-          class={"ml-1": @page != "local",
+          class={
             "border-l-4 border-primary bg-base-content bg-opacity-10": @page == "local"} 
-          to={if current_user(@current_user), do: "/feed/local", else: "/local"}>
+            to={if current_user(@current_user), do: "/feed/local", else: "/local"}>
           <Solid.LocationMarkerIcon class="w-4 h-4" />
           <span class="text-sm truncate ellipsis">{l "Local"}</span>
+        </LivePatch> 
+      </li>
+      <li>
+        <LivePatch 
+          class={
+            "border-l-4 border-primary bg-base-content bg-opacity-10": @page == "directory"} 
+            to={"/directory"}>
+          <Solid.UserGroupIcon class="w-4 h-4" />
+          <span class="text-sm truncate ellipsis">{l "Users directory"}</span>
         </LivePatch> 
       </li>
       <li :if={current_user(@current_user) || Settings.get([:bonfire_social, :feeds, :federation, :show_guests], false, assigns)}>
