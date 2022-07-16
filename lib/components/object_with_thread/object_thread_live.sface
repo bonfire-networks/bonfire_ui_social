@@ -9,7 +9,7 @@
         object={e(assigns, :object, nil)}
         feed_id={@feed_id}
         participants={participants(assigns)}
-        object_boundary={if e(assigns, :showing_within, :thread)==:messages, do: :skip}
+        object_boundary={if is_messaging?(assigns), do: :skip}
       />
       <div
       :if={e(assigns, :thread_mode, :thread) != :flat}   
@@ -32,7 +32,7 @@
 
     <div 
       class="sticky bottom-0 z-50"
-      :if={e(assigns, :showing_within, nil) == :messages && current_user(assigns)}>      
+      :if={is_messaging?(assigns) && current_user(assigns)}>      
         <Bonfire.UI.Common.SmartInputLive
         id={:smart_input}
         current_user={current_user(assigns)}

@@ -40,7 +40,7 @@
                 feed_id={@feed_id}
                 showing_within={:thread}
                 thread_mode={e(assigns, :thread_mode, nil)}
-                object_boundary={if e(assigns, :showing_within, nil)==:messages, do: :skip}
+                object_boundary={if is_messaging?(assigns), do: :skip}
                 class="showing_within:thread !py-2"
               />
 
@@ -53,7 +53,7 @@
                 showing_within={:thread}
                 url={@url}
                 thread_mode={e(assigns, :thread_mode, nil)}
-                object_boundary={if e(assigns, :showing_within, nil)==:messages, do: :skip}
+                object_boundary={if is_messaging?(assigns), do: :skip}
                 class="showing_within:thread !py-2"
               />
             {#match _}

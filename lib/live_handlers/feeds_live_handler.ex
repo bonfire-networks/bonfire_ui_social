@@ -25,39 +25,49 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
   def handle_event("reply_to_activity", _, socket) do
     debug("reply!")
 
+    current_user = current_user(socket)
+
     activity = e(socket.assigns, :activity, nil)
 
-    # FIXME: don't re-load this here as we already have the list (at least when we're in a thread)
-    participants = Bonfire.Social.Threads.list_participants(activity, nil, current_user: current_user(socket))
-    to_circles = if length(participants)>0, do: Enum.map(participants, & {e(&1, :character, :username, l "someone"), e(&1, :id, nil)})
-    mentions = if length(participants)>0, do: Enum.map_join(participants, " ", & "@"<>e(&1, :character, :username, ""))<>" "
-    # IO.inspect(mentions, label: "PARTS")
-
-    # we reply to objects, not activities
+    # Note: we reply to objects, not activities
     reply_to_id =
       e(socket.assigns, :object_id, nil)
       || e(socket.assigns, :object, :id, nil)
       || e(activity, :object, :id, nil)
       || e(activity, :object_id, nil)
 
-    thread_id = e(activity, :replied, :thread_id, nil) || e(socket.assigns, :object, :replied, :thread_id, nil)
+    case Bonfire.Boundaries.load_pointers(reply_to_id, current_user: current_user, verbs: [:reply], ids_only: true) do
+      %{id: reply_to_id} ->
 
-    debug("send activity to smart input")
-    send_update(Bonfire.UI.Common.SmartInputLive, # assigns_merge(socket.assigns,
-      id: :smart_input,
-      # we reply to objects, not activities
-      reply_to_id: reply_to_id,
-      thread_id: thread_id,
-      smart_input_text: mentions,
-      to_circles: to_circles,
-      activity_inception: "reply_to",
-      preset_boundary: Bonfire.Boundaries.preset_boundary_name_from_acl(e(socket.assigns, :object_boundary, nil)),
-      # TODO: use assigns_merge and send_update to the ActivityLive component within smart_input instead, so that `update/2` isn't triggered again
-      activity: activity,
-      object: e(socket.assigns, :object, nil)
-    )
+        # FIXME: don't re-load this here as we already have the list (at least when we're in a thread)
+        participants = Bonfire.Social.Threads.list_participants(activity, nil, current_user: current_user)
+        to_circles = if length(participants)>0, do: Enum.map(participants, & {e(&1, :character, :username, l "someone"), e(&1, :id, nil)})
+        mentions = if length(participants)>0, do: Enum.map_join(participants, " ", & "@"<>e(&1, :character, :username, ""))<>" "
+        # IO.inspect(mentions, label: "PARTS")
 
-    {:noreply, socket}
+        thread_id = e(activity, :replied, :thread_id, nil) || e(socket.assigns, :object, :replied, :thread_id, nil)
+
+        debug("send activity to smart input")
+        send_update(Bonfire.UI.Common.SmartInputLive, # assigns_merge(socket.assigns,
+          id: :smart_input,
+          # we reply to objects, not activities
+          reply_to_id: reply_to_id,
+          thread_id: thread_id,
+          smart_input_text: mentions,
+          to_circles: to_circles,
+          activity_inception: "reply_to",
+          preset_boundary: Bonfire.Boundaries.preset_boundary_name_from_acl(e(socket.assigns, :object_boundary, nil)),
+          # TODO: use assigns_merge and send_update to the ActivityLive component within smart_input instead, so that `update/2` isn't triggered again
+          activity: activity,
+          object: e(socket.assigns, :object, nil)
+        )
+
+        {:noreply, socket}
+
+      other ->
+        debug(other)
+        error(l "Sorry, you cannot reply to this")
+    end
   end
 
   def handle_event("remove_data", _params, socket) do

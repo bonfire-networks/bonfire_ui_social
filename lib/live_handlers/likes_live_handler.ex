@@ -22,12 +22,16 @@ defmodule Bonfire.Social.Likes.LiveHandler do
       like_action(object, true, params, socket)
       |> debug("liked")
 
-    else {:error, %Ecto.Changeset{errors: [
+    else
+      {:error, %Ecto.Changeset{errors: [
        liker_id: {"has already been taken",
         _}
      ]}} ->
       debug("previously liked, but UI didn't know")
       like_action(object, true, params, socket)
+
+      {:error, e} ->
+        error(e)
     end
   end
 

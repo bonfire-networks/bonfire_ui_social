@@ -8,7 +8,7 @@
   create_activity_type={e(assigns, :create_activity_type, nil)}
   thread_mode={:flat}
   title_open={true}
-  to_boundaries={e(assigns, :to_boundaries, [])}
+  to_boundaries={default_boundaries(e(assigns, :to_boundaries, nil)) |> debug("default_boundaries")}
   to_circles={e(assigns, :to_circles, [])}
   smart_input_prompt={l "Write something..."}
   smart_input_text={e(assigns, :smart_input_text, "")}

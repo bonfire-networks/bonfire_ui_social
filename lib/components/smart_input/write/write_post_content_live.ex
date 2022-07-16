@@ -13,7 +13,7 @@ defmodule Bonfire.UI.Social.WritePostContentLive do
   prop reply_to_id, :string
   prop thread_id, :string
   prop create_activity_type, :any
-  prop to_boundaries, :list
+  prop to_boundaries, :list, default: []
   prop to_circles, :list
   prop smart_input_prompt, :string
   prop smart_input_text, :string, required: false
@@ -33,8 +33,8 @@ defmodule Bonfire.UI.Social.WritePostContentLive do
   prop replied_activity_class, :css_class
 
 
-  def handler(activity_type) do
-    if activity_type==:message, do: "Bonfire.Social.Messages:send", else: "Bonfire.Social.Posts:post"
+  def handler(assigns) do
+    if is_messaging?(assigns), do: "Bonfire.Social.Messages:send", else: "Bonfire.Social.Posts:post"
   end
 
 end
