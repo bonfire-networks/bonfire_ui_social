@@ -276,9 +276,9 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
       feed_id: feed_id,
       feed_ids: feed_ids,
       current_user: current_user(socket),
-      selected_tab: "home", # FIXME: clean up page vs tab
-      page: "home",
-      page_title: l("Home"),
+      selected_tab: "feed", # FIXME: clean up page vs tab
+      page: "feed",
+      page_title: l("My feed"),
       feed_title: l("My feed"),
       # feed_id: feed_name,
       # feed_ids: feed_ids,
