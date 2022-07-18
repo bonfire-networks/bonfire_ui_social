@@ -47,6 +47,7 @@ defmodule Bonfire.UI.Social.MessagesLive do
             feed_id: feed_id
           ]}
         ],
+        show_less_menu_items: true,
         sidebar_widgets: [
           users: [
             main: [

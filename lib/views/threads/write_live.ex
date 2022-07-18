@@ -27,13 +27,13 @@ defmodule Bonfire.UI.Social.WriteLive do
       smart_input_text: e(session, "smart_input_text", ""),
       reply_to_id: nil,
       thread_id: nil,
-      sidebar_widgets: [
-        users: [
-          main: [
-            {Bonfire.UI.Common.WidgetInstanceInfoLive, [display_banner: false]},
-          ]
-        ]
-      ]
+      # sidebar_widgets: [
+      #   users: [
+      #     main: [
+      #       {Bonfire.UI.Common.WidgetInstanceInfoLive, [display_banner: false]},
+      #     ]
+      #   ]
+      # ]
     )}
   end
 
