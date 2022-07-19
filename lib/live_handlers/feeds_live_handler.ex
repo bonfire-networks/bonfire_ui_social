@@ -55,8 +55,8 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
           thread_id: thread_id,
           smart_input_text: mentions,
           to_circles: to_circles,
+          to_boundaries: Bonfire.Boundaries.preset_boundary_tuple_from_acl(e(socket.assigns, :object_boundary, nil)),
           activity_inception: "reply_to",
-          preset_boundary: Bonfire.Boundaries.preset_boundary_name_from_acl(e(socket.assigns, :object_boundary, nil)),
           # TODO: use assigns_merge and send_update to the ActivityLive component within smart_input instead, so that `update/2` isn't triggered again
           activity: activity,
           object: e(socket.assigns, :object, nil)
