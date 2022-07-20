@@ -1,9 +1,11 @@
-<Bonfire.UI.Social.FeedLive 
-  id={e(assigns, :feed_id, :flags)}
-  feed_id={e(assigns, :feed_id, nil)}
-  page_title={@page_title}
-  current_user={e(assigns, :current_user, nil)}
-  feed={@feed}
-  page_info={@page_info}
-  showing_within={:flags}
-/>
+<div>
+  <Bonfire.UI.Social.FeedLive 
+    id={e(assigns, :feed_id, :flags)}
+    feed_id={e(assigns, :feed_id, nil)}
+    page_title={@page_title}
+    current_user={e(assigns, :current_user, nil)}
+    feed={@feed}
+    page_info={@page_info}
+    showing_within={:flags}
+  />
+</div>
