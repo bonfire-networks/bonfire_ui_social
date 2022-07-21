@@ -65,6 +65,7 @@
     </div>
     <div class="flex-1 p-3 tablet-lg:hidden rounded-b-md md:mx-0 text-base-content bg-base-100">
      <Bonfire.UI.Social.MessageThreadsLive
+        showing_within="messages"
         context={ulid(current_user(assigns))}
         threads={@threads}
       />

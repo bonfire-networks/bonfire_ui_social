@@ -53,6 +53,7 @@ defmodule Bonfire.Social.Messages.LiveHandler do
         main: [
           {Bonfire.UI.Social.MessageThreadsLive, [
               context: ulid(user),
+              showing_within: :messages,
               threads: list_threads(current_user, user, opts),
               thread_id: opts[:thread_id]
             ] ++ opts

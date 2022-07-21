@@ -55,6 +55,7 @@ defmodule Bonfire.UI.Social.MessagesLive do
                 context: nil,
                 thread_id: nil,
                 tab_id: nil,
+                showing_within: :messages,
                 threads: []
               ]}
             ],

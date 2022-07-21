@@ -8,12 +8,13 @@
 
 
     <LivePatch 
+      :if={e(assigns, :showing_within, nil) != :compose}
       to={"/messages/compose"}
-      class="fixed items-center tablet:hidden btn btn-circle btn-primary btn-lg place-content-center z-[90] right-3 bottom-3 tablet:bottom-3"> 
+      class="fixed items-center tablet:hidden btn btn-circle btn-primary btn-lg place-content-center z-[90] right-3 bottom-12 md:bottom-3"> 
       <Outline.ChatAltIcon class="inline-block w-6 h-6" />
     </LivePatch>
 
-    <div class="flex flex-1 hidden w-full p-3 mx-auto border-b tablet:block border-base-content border-opacity-10 bg-base-100 text-base-content rounded-t-md text-sm">{l "Message threads"}</div>
+    <div class="flex flex-1 hidden w-full p-3 mx-auto text-sm border-b tablet:block border-base-content border-opacity-10 bg-base-100 text-base-content rounded-t-md">{l "Message threads"}</div>
       {#if length(e(assigns, :threads, :edges, []))>0}
       <Bonfire.UI.Common.LoadPreviousLive
         live_handler={Bonfire.Social.Messages}
