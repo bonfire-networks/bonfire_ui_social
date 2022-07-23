@@ -79,25 +79,25 @@
 
         {#else}
         
-        <a href={media_url(media)} target="_blank" class="flex w-full border rounded bg-base-200 hover:bg-base-content/5 border-base-content/30 tooltip tooltip-bottom" data-tip={media_label(media)}>
+        <a href={media_url(media)} target="_blank" class="flex w-full border rounded media_container bg-base-200 hover:bg-base-content/5 border-base-content/30 tooltip tooltip-bottom" data-tip={media_label(media)}>
           {#if String.contains?(preview_img(media), [".jpg", ".jpeg", ".png", ".gif", ".webp"])}
-            <div>
+            <div class="flex">
               <img
                 class="rounded-none cursor-pointer media-image"
                 alt={media_label(media)}
                 src={preview_img(media)}
               />
-              <div class="flex flex-col p-3 space-y-1 text-sm text-left">
+              <div class="flex flex-col items-start content-start justify-start p-3 space-y-1 text-sm text-left">
                 <div 
                   class=" text-base-content/60"
                   :if={provider(media)}>
                   {provider(media)}
                 </div>
-                <div class="flex-1 ">
+                <div class="line-clamp-3">
                   {media_label(media) || l "View media"} ({media.media_type})
                 </div>
                 <div 
-                  class="break-words text-base-content/60"
+                  class="break-words line-clamp-2 text-base-content/60"
                   :if={description(media)}>
                   {description(media)}
                 </div>
