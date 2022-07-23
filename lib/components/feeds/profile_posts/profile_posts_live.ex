@@ -15,4 +15,6 @@ defmodule Bonfire.UI.Social.ProfilePostsLive do
   prop follows_me, :boolean, default: false
   prop loading, :boolean, default: false
 
+  slot header
+
 end

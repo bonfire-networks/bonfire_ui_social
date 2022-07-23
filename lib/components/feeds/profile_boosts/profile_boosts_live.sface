@@ -1,13 +1,6 @@
 <div class="rounded-t-none bg-base-100 rounded-box">
-  <Surface.Components.Dynamic.Component 
-    module={Config.get([:ui, :profile, :hero_component], 
-    Bonfire.UI.Me.ProfileHeroFullLive)} 
-    user={@user} 
-    current_user={current_user(assigns)} 
-    follows_me={e(assigns, :follows_me, false)}  />
-  <Bonfire.UI.Common.ProfileNavigationLive 
-    selected_tab={@selected_tab} 
-    user={@user}/>
+
+  <#slot name="header" />
 
   <Bonfire.UI.Social.FeedLive
     id={"feed:profile:boosts"}

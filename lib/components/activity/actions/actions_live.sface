@@ -3,7 +3,7 @@
 {#else}
   <div 
     :if={e(assigns, :thread_mode, nil) != :flat} 
-    :class={if e(assigns, :viewing_main_object, nil) != true and Settings.get([:ui, :compact], false, assigns), do: "activity_active ? '' : 'hidden'"}
+    :class={if e(assigns, :viewing_main_object, nil) != true and Settings.get([:ui, :compact], false, assigns), do: "activity_active ? '' : '[@media(any-hover:hover)]:hidden'"}
     class={
       "thread_actions mt-1 flex items-center": e(assigns, :showing_within, nil) == :thread or Settings.get([:ui, :compact], false, assigns),
       "feed_actions mt-1 -ml-2": e(assigns, :viewing_main_object, nil) != true,
