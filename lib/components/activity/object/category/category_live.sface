@@ -1,21 +1,23 @@
 
-<div class="py-2">
-    <div class="mb-2 text-sm font-medium text-primary-content-800 ">
-    
-      {l "Topic"}: 
-
-      {rich crumbs(e(@object, :parent, nil))}
-
-      <LiveRedirect to={"/+#{e(@object, :character, :username, nil) || ulid(@object)}"} class="text-md">
-        {rich name(@object)}
-      </LiveRedirect>
-
+<LiveRedirect to={"/+#{e(@object, :character, :username, nil) || ulid(@object)}"} class="relative min-h-[5rem] flex items-center mt-2 border rounded-lg grow bg-base-content/5 border-base-content/30">
+  <div class="absolute top-0 bottom-0 left-0 flex items-center w-20 h-full bg-base-content/10 place-content-center">
+    <Solid.CollectionIcon class="w-10 h-10 text-base-content/80" />
+  </div>
+  <div class="flex flex-col flex-1 py-3 ml-24 text-sm font-medium text-primary-content-800 ">
+    <div
+      class="text-sm" 
+      :if={e(@object, :parent, nil)}>
+      {l "in "} <span class="link">{rich crumbs(e(@object, :parent, nil))}</span>
     </div>
+    <div class="text-base font-semibold ">  
+      {rich name(@object)}
+    </div>
+    <!-- <div class="text-sm font-normal text-base-content/70">{Bonfire.Me.Characters.display_username(e(@object, :character, :username, nil), true)}</div> -->
+    <div 
+      :if={e(@object, :summary, e(@object, :profile, :summary, nil))} 
+      class="font-light prose-sm text-base-content/70">
+      {rich e(@object, :summary, e(@object, :profile, :summary, ""))}
+    </div>
+  </div>
+</LiveRedirect>
 
-  {#if e(@object, :summary, e(@object, :profile, :summary, nil))}
-    <h3 class="text-xs tracking-wider text-primary-content-600 uppercase">Summary</h3>
-    <div class="mb-2 prose-sm prose text-primary-content-700  max-w-prose">{rich e(@object, :summary, e(@object, :profile, :summary, ""))}</div>
-  {/if}
-
-
-</div>
