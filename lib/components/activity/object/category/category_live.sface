@@ -1,13 +1,17 @@
 
-<LiveRedirect to={"/+#{e(@object, :character, :username, nil) || ulid(@object)}"} class="relative min-h-[5rem] flex items-center mt-2 border rounded-lg grow bg-base-content/5 border-base-content/30">
+<LiveRedirect 
+  to={"/+#{e(@object, :character, :username, nil) || ulid(@object)}"} 
+  class="relative min-h-[5rem] flex items-center mt-2 border rounded-lg grow bg-base-content/5 hover:bg-base-content/10 border-base-content/30">
   <div class="absolute top-0 bottom-0 left-0 flex items-center w-20 h-full bg-base-content/10 place-content-center">
     <Solid.CollectionIcon class="w-10 h-10 text-base-content/80" />
   </div>
   <div class="flex flex-col flex-1 p-3 ml-20 text-sm font-medium text-primary-content-800 ">
     <div
       class="text-sm" 
-      :if={e(@object, :parent, nil)}>
-      {l "in "} <span class="link">{rich crumbs(e(@object, :parent, nil))}</span>
+      :if={e(@object, :parent_category,  nil)}>
+      {l "in "} <span class="link">
+       { e(@object, :parent_category_id, "") }
+      </span>
     </div>
     <div class="text-base font-semibold ">  
       {rich name(@object)}

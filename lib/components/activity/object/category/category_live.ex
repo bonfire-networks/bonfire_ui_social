@@ -1,6 +1,8 @@
 defmodule Bonfire.UI.Social.Activity.CategoryLive do
   use Bonfire.UI.Common.Web, :stateless_component
 
+  prop object, :any
+
   def preloads(), do: [
     :character,
     :profile
