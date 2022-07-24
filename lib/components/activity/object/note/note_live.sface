@@ -5,7 +5,7 @@
   "main_object": e(assigns, :viewing_main_object, nil),
   "showing_within:thread": e(assigns, :showing_within, nil) == :thread,
   "-mt-1 bg-base-content/10 px-2 pb-2 rounded-br-md": e(assigns, :thread_mode, nil) == :flat,
-  "!bg-info/40 rounded-bl-md !rounded-br-none": e(assigns, :thread_mode, nil) == :flat && e(assigns, :activity, :subject, :id, nil) == ulid(current_user(assigns)),
+  "!bg-info/40 rounded-bl-md !rounded-br-none": e(assigns, :thread_mode, nil) == :flat && e(assigns, :activity, :subject, :id, nil) == ulid(current_user(@__context__)),
   "activity_inception:#{e(assigns, :activity_inception, '')} !bg-transparent pb-0": e(assigns, :activity_inception, nil) != nil and e(assigns, :thread_mode, nil) == :flat,
   "showing_within:feed": e(assigns, :showing_within, nil) == :feed,
   "showing_within:notifications": e(assigns, :showing_within, nil) == :notifications,

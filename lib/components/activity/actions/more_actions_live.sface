@@ -1,5 +1,5 @@
 <div
-  :if={current_user(assigns) != nil and e(assigns, :showing_within, nil) not in [:notifications, :search]}
+  :if={current_user(@__context__) != nil and e(assigns, :showing_within, nil) not in [:notifications, :search]}
   aria-haspopup="true"
   data-tip={l "More"}
   class={"dropdown tooltip tooltip-bottom relative z-40 feed_activity relative ",
@@ -27,7 +27,7 @@
 
     <!-- Flag the action -->
     <li 
-      :if={e(current_user(assigns), :id, nil) != subject_id(assigns) and @verb !="Flag"}
+      :if={e(current_user(@__context__), :id, nil) != subject_id(assigns) and @verb !="Flag"}
       class=" hover:bg-neutral hover:bg-opacity-20">
       <Bonfire.UI.Common.FlagActionLive 
         object={@object}
@@ -39,7 +39,7 @@
 
     <!-- Flag the author -->
     <li 
-      :if={e(current_user(assigns), :id, nil) != subject_id(assigns) and @verb !="Flag"}
+      :if={e(current_user(@__context__), :id, nil) != subject_id(assigns) and @verb !="Flag"}
       class=" hover:bg-neutral hover:bg-opacity-20">
       <Bonfire.UI.Common.FlagActionLive 
         object={@object}
@@ -58,7 +58,7 @@
     <!-- Delete the activity: WIP hiding it for first beta release -->
     
     <!-- <li 
-      :if={@object_type not in [Bonfire.Data.Social.Message] and e(current_user(assigns), :id, nil) == subject_id(assigns) or Bonfire.Me.Users.is_admin?(current_user(assigns))}
+      :if={@object_type not in [Bonfire.Data.Social.Message] and e(current_user(@__context__), :id, nil) == subject_id(assigns) or Bonfire.Me.Users.is_admin?(current_user(@__context__))}
       class=" hover:bg-neutral hover:bg-opacity-20">
       <OpenModalLive
         id={ComponentID.new(OpenModalLive, @object)} 
@@ -89,7 +89,7 @@
 
     <!-- Delete the object -->
     <li 
-      :if={e(current_user(assigns), :id, nil) == subject_id(assigns) or Bonfire.Me.Users.is_admin?(current_user(assigns) && Types.object_type(@object) !=Bonfire.Data.Identity.User)}
+      :if={e(current_user(@__context__), :id, nil) == subject_id(assigns) or Bonfire.Me.Users.is_admin?(current_user(@__context__) && Types.object_type(@object) !=Bonfire.Data.Identity.User)}
       class=" hover:bg-neutral hover:bg-opacity-20">
       <OpenModalLive
         id={ComponentID.new(OpenModalLive, @object)} 

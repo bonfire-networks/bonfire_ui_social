@@ -166,7 +166,7 @@
             {raw @verb_display}
 
              <!-- special case when current_user is the one being followed -->
-            <span :if={e(@object, :id, nil) == e(current_user(assigns), :id, nil)}>
+            <span :if={e(@object, :id, nil) == e(current_user(@__context__), :id, nil)}>
               {l "you"}
             </span>
           </div>

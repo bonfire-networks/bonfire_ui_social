@@ -1,15 +1,15 @@
 <Bonfire.UI.Common.SmartInputLive
   id={:smart_input_page} 
   hide_smart_input={false}
-  current_user={current_user(assigns)}
+  current_user={current_user(@__context__)}
   showing_within={:page}
   reply_to_id={""}
   thread_id={""}
-  create_activity_type={e(assigns, :create_activity_type, nil)}
+  create_activity_type={e(@create_activity_type, nil)}
   thread_mode={:flat}
   title_open={true}
-  to_boundaries={boundaries_or_default(e(assigns, :to_boundaries, nil), assigns) |> debug("default_boundaries")}
-  to_circles={e(assigns, :to_circles, [])}
+  to_boundaries={boundaries_or_default(@to_boundaries, assigns) |> debug("default_boundaries")}
+  to_circles={e(@to_circles, [])}
   smart_input_prompt={l "Write something..."}
-  smart_input_text={e(assigns, :smart_input_text, "")}
+  smart_input_text={e(@smart_input_text, "")}
 />

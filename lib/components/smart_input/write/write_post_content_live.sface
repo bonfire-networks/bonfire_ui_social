@@ -1,7 +1,7 @@
 
 <div class="flex flex-col h-full write_post_content">
   <Form 
-    for={Bonfire.Social.Posts.LiveHandler.post_changeset(current_user(assigns))} 
+    for={Bonfire.Social.Posts.LiveHandler.post_changeset(current_user(@__context__))} 
     submit={handler(assigns)} 
     action={"/LiveHandler/"<>handler(assigns)} 
     change="validate"
@@ -14,23 +14,23 @@
     <div 
       :class="{'!rounded-t-none' : show_smart_input_fullscreen}"
       class={
-        "bg-base-100 flex h-full flex-1": e(assigns, :thread_mode, nil) != :flat,
-        "bg-base-100 border-t border-base-content/10 p-3 h-full flex-1 sticky bottom-0 messages_smart_input": e(assigns, :thread_mode, nil) == :flat,
-        "!border-0": e(assigns, :showing_within, nil) == :compose,
-        "!relative border-none !h-auto !relative": e(assigns, :showing_within, nil) == :page,
+        "bg-base-100 flex h-full flex-1": e(@thread_mode, nil) != :flat,
+        "bg-base-100 border-t border-base-content/10 p-3 h-full flex-1 sticky bottom-0 messages_smart_input": e(@thread_mode, nil) == :flat,
+        "!border-0": e(@showing_within, nil) == :compose,
+        "!relative border-none !h-auto !relative": e(@showing_within, nil) == :page,
       }>
       <div class={
         "relative flex flex-col flex-1 h-full",
-        "h-auto": e(assigns, :showing_within, nil) == :compose
+        "h-auto": e(@showing_within, nil) == :compose
       }>
 
         <Bonfire.UI.Common.InputBoundariesLive
-          thread_mode={e(assigns, :thread_mode, nil)}
-          create_activity_type={e(assigns, :create_activity_type, nil)}
+          thread_mode={e(@thread_mode, nil)}
+          create_activity_type={e(@create_activity_type, nil)}
           to_boundaries={@to_boundaries}
-          to_circles={e(assigns, :to_circles, [])}
+          to_circles={e(@to_circles, [])}
           current_user={@current_user}
-          preloaded_recipients={e(assigns, :preloaded_recipients, [])}
+          preloaded_recipients={e(@preloaded_recipients, [])}
           showing_within={@showing_within}
           open_boundaries={@open_boundaries}
           show_select_recipients={@show_select_recipients}
@@ -54,7 +54,7 @@
                   }
                   class={
                     "block w-full border-0 pt-2.5 text-lg font-medium placeholder-base-content/70 bg-base-100 text-base-content border-b border-base-content/10",
-                    "!border !border-base-content/30 rounded-lg mb-2": e(assigns, :thread_mode, nil) == :flat
+                    "!border !border-base-content/30 rounded-lg mb-2": e(@thread_mode, nil) == :flat
                   } 
                   />
               </Field>
@@ -64,15 +64,15 @@
               <Field 
                 class={
                   "h-full min-h-full flex-1 flex flex-col grow",
-                  "min-h-[50px]": e(assigns, :thread_mode, nil) == :flat,
-                  "min-h-[calc(50vh-50px)]": e(assigns, :thread_mode, nil) != :flat and Settings.get([:ui, :smart_input_as], nil, assigns) != :sidebar,
+                  "min-h-[50px]": e(@thread_mode, nil) == :flat,
+                  "min-h-[calc(50vh-50px)]": e(@thread_mode, nil) != :flat and Settings.get([:ui, :smart_input_as], nil, assigns) != :sidebar,
                 } 
                 name={:html_body}>
                 <!-- <Label :if={@smart_input_text && @smart_input_text !="" && @smart_input_prompt} class="mb-2 alert alert-info">{@smart_input_prompt}</Label> -->    
                   <WriteEditorLive
                     field_name="post[post_content][html_body]"
                     textarea_class={@textarea_class}
-                    smart_input_prompt={e(assigns, :smart_input_prompt, l "Write something...")}
+                    smart_input_prompt={e(@smart_input_prompt, l "Write something...")}
                     smart_input_text={@smart_input_text}
                     insert_text={@insert_text}
                     with_rich_editor={@with_rich_editor}
@@ -86,16 +86,16 @@
         </Inputs>
         
         <Bonfire.UI.Common.InputControlsLive
-          thread_mode={e(assigns, :thread_mode, nil)}
+          thread_mode={e(@thread_mode, nil)}
           reply_to_id={@reply_to_id}
           thread_id={@thread_id}
-          create_activity_type={e(assigns, :create_activity_type, nil)}
+          create_activity_type={e(@create_activity_type, nil)}
           to_boundaries={@to_boundaries}
-          to_circles={e(assigns, :to_circles, [])}
+          to_circles={e(@to_circles, [])}
           current_user={@current_user}
           showing_within={@showing_within}
           uploads={@uploads}
-          uploaded_files={e(assigns, :uploaded_files, [])}
+          uploaded_files={e(@uploaded_files, [])}
         />
       </div>
     </div>

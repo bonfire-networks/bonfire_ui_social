@@ -11,7 +11,7 @@
   <div class="flex-1 w-full ">
     <div class="relative flex flex-1 w-full items-top">
       <div 
-        :if={e(assigns, :thread_mode, nil) !=:flat && length(@child_replies)>0 }
+        :if={e(@thread_mode, nil) !=:flat && length(@child_replies)>0 }
         x-cloak
         x-show="show_replies"
         class="group z-10 left-[16px] px-3 top-[40px] bottom-[0px] absolute">
@@ -39,7 +39,7 @@
                 thread_object={@thread_object}
                 feed_id={@feed_id}
                 showing_within={:thread}
-                thread_mode={e(assigns, :thread_mode, nil)}
+                thread_mode={e(@thread_mode, nil)}
                 object_boundary={if is_messaging?(assigns), do: :skip}
                 class="showing_within:thread !py-2"
               />
@@ -52,7 +52,7 @@
                 feed_id={@feed_id}
                 showing_within={:thread}
                 url={@url}
-                thread_mode={e(assigns, :thread_mode, nil)}
+                thread_mode={e(@thread_mode, nil)}
                 object_boundary={if is_messaging?(assigns), do: :skip}
                 class="showing_within:thread !py-2"
               />
@@ -87,7 +87,7 @@
       </div>
     </div>
     <div 
-      :if={e(assigns, :thread_mode, nil) !=:flat}
+      :if={e(@thread_mode, nil) !=:flat}
       x-show="show_replies" >
       <div class={"replies replies-level-" <> to_string(@thread_level+1) <> " ml-8"}>
 
@@ -106,8 +106,8 @@
                 feed_id={@feed_id}
                 child_replies={sub_child_replies}
                 thread_level={@thread_level+1}
-                thread_mode={e(assigns, :thread_mode, nil)}
-                showing_within={e(assigns, :showing_within, nil)}
+                thread_mode={e(@thread_mode, nil)}
+                showing_within={e(@showing_within, nil)}
                 url={@url}
               />
             </div>

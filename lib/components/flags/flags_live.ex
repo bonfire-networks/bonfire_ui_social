@@ -8,8 +8,8 @@ defmodule Bonfire.UI.Social.FlagsLive do
   prop test, :string
 
   def update(assigns, socket) do
-    # current_user = current_user(assigns)
-    feed = Bonfire.Social.FeedActivities.feed(:flags, current_user(assigns))
+    current_user = current_user(assigns)
+    feed = Bonfire.Social.FeedActivities.feed(:flags, current_user)
     edges = for %{edge: %{} = edge} <- e(feed, :edges, []), do: %{activity: edge |> Map.put(:verb, %{verb: "Flag"})} #|> debug
 
     {:ok, socket
@@ -17,7 +17,7 @@ defmodule Bonfire.UI.Social.FlagsLive do
       page: "flags",
       # selected_tab: "flags",
       page_title: "Flags",
-      current_user: current_user(assigns),
+      current_user: current_user,
       feed_id: :flags,
       feed: edges,
       page_info: e(feed, :page_info, [])

@@ -11,14 +11,14 @@
       <!-- first show the subject -->
       <span data-id="subject">
         <LiveRedirect
-          :if={e(@activity, :subject, :id, nil) != e(current_user(assigns), :id, nil)}
+          :if={e(@activity, :subject, :id, nil) != e(current_user(@__context__), :id, nil)}
           to={path(e(@activity, :subject, nil))}
           aria-label={e(@activity, :subject, :character, :username, "") <> " profile"}
           class="font-medium "
           >
           {e(@activity, :subject, :profile, :name, "Anonymous")}
         </LiveRedirect>
-        <span :if={e(@activity, :subject, :id, nil) == e(current_user(assigns), :id, nil)}>
+        <span :if={e(@activity, :subject, :id, nil) == e(current_user(@__context__), :id, nil)}>
           you
         </span>
       </span>
@@ -26,11 +26,11 @@
       {raw @verb_display}
 
       <!-- then summarise the object -->
-      <span :if={e(@object, :id, nil) == e(current_user(assigns), :id, nil)}>
+      <span :if={e(@object, :id, nil) == e(current_user(@__context__), :id, nil)}>
         you
       </span>
       <LiveRedirect 
-        :if={e(@object, :id, nil) !=e(current_user(assigns), :id, nil)} 
+        :if={e(@object, :id, nil) !=e(current_user(@__context__), :id, nil)} 
         to={path(@object)} 
         class="font-semibold link link-hover">
         {e(@object, :profile, :name, "Anonymous")}
@@ -82,14 +82,14 @@
       <!--       
       <span data-id="subject">
         <LiveRedirect
-          :if={e(@activity, :subject, :id, nil) != e(current_user(assigns), :id, nil)}
+          :if={e(@activity, :subject, :id, nil) != e(current_user(@__context__), :id, nil)}
           to={path(e(@activity, :subject, nil))}
           aria-label={e(@activity, :subject, :character, :username, "") <> " profile"}
           class="font-medium "
           >
           {e(@activity, :subject, :profile, :name, "Anonymous")}
         </LiveRedirect>
-        <span :if={e(@activity, :subject, :id, nil) == e(current_user(assigns), :id, nil)}>
+        <span :if={e(@activity, :subject, :id, nil) == e(current_user(@__context__), :id, nil)}>
           {l "you"}
         </span>
       </span>
@@ -97,11 +97,11 @@
       {raw @verb_display} -->
 
       <!-- then summarise the object -->
-      <!-- <span :if={e(@object, :id, nil) == e(current_user(assigns), :id, nil)}>
+      <!-- <span :if={e(@object, :id, nil) == e(current_user(@__context__), :id, nil)}>
         {l "you"}
       </span>
       <LiveRedirect 
-        :if={e(@object, :id, nil) !=e(current_user(assigns), :id, nil)} 
+        :if={e(@object, :id, nil) !=e(current_user(@__context__), :id, nil)} 
         to={path(@object)} 
         class="font-semibold link link-hover">
         {e(@object, :profile, :name, "Anonymous")}
