@@ -2,12 +2,13 @@
 <div class="py-2">
     <div class="mb-2 text-sm font-medium text-primary-content-800 ">
     
-    {rich crumbs(e(@object, :parent, nil))}
+      {l "Topic"}: 
 
+      {rich crumbs(e(@object, :parent, nil))}
 
-  <LiveRedirect to={"?s=#{name(@object)}"} class="text-md">
-    {rich name(@object)}
-  </LiveRedirect>
+      <LiveRedirect to={"/+#{e(@object, :character, :username, nil) || ulid(@object)}"} class="text-md">
+        {rich name(@object)}
+      </LiveRedirect>
 
     </div>
 

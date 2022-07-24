@@ -29,7 +29,6 @@
           create_activity_type={e(@create_activity_type, nil)}
           to_boundaries={@to_boundaries}
           to_circles={e(@to_circles, [])}
-          current_user={@current_user}
           preloaded_recipients={e(@preloaded_recipients, [])}
           showing_within={@showing_within}
           open_boundaries={@open_boundaries}
@@ -92,7 +91,6 @@
           create_activity_type={e(@create_activity_type, nil)}
           to_boundaries={@to_boundaries}
           to_circles={e(@to_circles, [])}
-          current_user={@current_user}
           showing_within={@showing_within}
           uploads={@uploads}
           uploaded_files={e(@uploaded_files, [])}
