@@ -125,7 +125,6 @@ defmodule Bonfire.UI.Social.MessagesLive do
   def do_handle_params(%{"id" => "compose" = id} = params, url, socket) do
     current_user = current_user(socket)
     users = Bonfire.Social.Follows.list_my_followed(current_user, paginate: false)
-    |> debug("USERS")
     {:noreply,
     socket
     |> assign(
