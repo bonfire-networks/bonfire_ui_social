@@ -1,5 +1,5 @@
 <Bonfire.UI.Common.WidgetLive 
-  widget_title={e(assigns, :widget_title, "Notifications")}
+  widget_title={e(@widget_title, "Notifications")}
   >
     <:action>
       <LivePatch class="text-xs normal-case btn btn-xs btn-outline" to={path(:notifications)}>
@@ -9,6 +9,6 @@
     
     <Bonfire.UI.Social.FeedLive 
       class="pl-0 showing_within:widget"
-      {...load(assigns)}
+      {...load(current_user(@__context__))}
     />
 </Bonfire.UI.Common.WidgetLive>

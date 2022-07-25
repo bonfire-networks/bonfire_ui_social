@@ -1,5 +1,5 @@
 defmodule Bonfire.UI.Social.PostLive do
-  use Bonfire.UI.Common.Web, :surface_view
+  use Bonfire.UI.Common.Web, :surface_live_view
   alias Bonfire.UI.Me.LivePlugs
   import Where
 
@@ -68,7 +68,7 @@ defmodule Bonfire.UI.Social.PostLive do
 
       # names = if length(participants)>0, do: Enum.map_join(participants, ", ", &e(&1, :profile, :name, e(&1, :character, :username, l "someone else")))
 
-      mentions = if length(participants)>0, do: Enum.map_join(participants |> Enum.reject(&( e(&1, :character, :id, nil) == e(current_user, :id, nil) )), " ", & "@"<>e(&1, :character, :username, ""))<>" "
+      mentions = if length(participants)>0, do: Enum.map_join(participants |> Enum.reject(&( e(&1, :character, :id, nil) == ulid(current_user) )), " ", & "@"<>e(&1, :character, :username, ""))<>" "
 
       page_title = e(activity, :replied, :thread, :named, :name, l("Post"))
 

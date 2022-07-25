@@ -1,5 +1,5 @@
 defmodule Bonfire.UI.Social.DiscussionLive do
-  use Bonfire.UI.Common.Web, :surface_view
+  use Bonfire.UI.Common.Web, :surface_live_view
   alias Bonfire.UI.Me.LivePlugs
 
   def mount(params, session, socket) do
@@ -64,7 +64,7 @@ defmodule Bonfire.UI.Social.DiscussionLive do
       to_circles = if length(participants)>0, do: Enum.map(participants, & {e(&1, :character, :username, l "someone"), e(&1, :id, nil)})
 
       # names = if length(participants)>0, do: Enum.map_join(participants, ", ", &e(&1, :profile, :name, e(&1, :character, :username, l "someone else")))
-      mentions = if length(participants)>0, do: Enum.map_join(participants |> Enum.reject(&( e(&1, :character, :id, nil) == e(current_user, :id, nil) )), " ", & "@"<>e(&1, :character, :username, ""))<>" "
+      mentions = if length(participants)>0, do: Enum.map_join(participants |> Enum.reject(&( e(&1, :character, :id, nil) == ulid(current_user) )), " ", & "@"<>e(&1, :character, :username, ""))<>" "
 
       {:noreply,
       socket
@@ -73,7 +73,7 @@ defmodule Bonfire.UI.Social.DiscussionLive do
         activity: activity,
         url: url,
         object: Map.merge(object, preloaded_object || %{}),
-        # thread_id: e(object, :id, nil),
+        # thread_id: ulid(object),
         # smart_input_prompt: "Reply to #{reply_to_id}",
         # smart_input_text: mentions,
         # to_circles: to_circles,
@@ -82,7 +82,7 @@ defmodule Bonfire.UI.Social.DiscussionLive do
         no_index: !Bonfire.Me.Settings.get([Bonfire.Me.Users, :discoverable], true, current_user: author)
       )
       |> assign_global(
-        thread_id: e(object, :id, nil),
+        thread_id: ulid(object),
         # smart_input_prompt: smart_input_prompt,
         reply_to_id: reply_to_id,
         smart_input_text: mentions,

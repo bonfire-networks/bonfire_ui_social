@@ -5,7 +5,7 @@
   </label>
   <ul tabindex="0" class="p-2 shadow dropdown-content menu bg-base-100 rounded-box w-52">
     <div 
-      :if={current_user(@current_user) || Settings.get([:bonfire_social, :feeds, :federation, :show_guests], true, assigns)}
+      :if={current_user(@current_user) || Settings.get([:bonfire_social, :feeds, :federation, :show_guests], true, @__context__)}
       class="pb-2 rounded-b-box">
       <div class="menu bg-base-100 ">
         <li :if={current_user(@current_user)}>
@@ -26,7 +26,7 @@
             <span class="text-sm truncate ellipsis">{l "Local"}</span>
           </LivePatch> 
         </li>
-        <li :if={current_user(@current_user) || Settings.get([:bonfire_social, :feeds, :federation, :show_guests], false, assigns)}>
+        <li :if={current_user(@current_user) || Settings.get([:bonfire_social, :feeds, :federation, :show_guests], false, @__context__)}>
           <LivePatch 
             class={"ml-1": @page != "federation",
               "bg-primary/10": @page == "federation"} 

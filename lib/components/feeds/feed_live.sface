@@ -1,5 +1,5 @@
 <div
-  id={e(assigns, :id, nil) || e(assigns, :feed_id, nil)}
+  id={e(@id, nil) || e(@feed_id, nil)}
   role="feed"
   aria-live="assertive"
   aria-atomic="true"
@@ -7,20 +7,20 @@
     <div class="flex flex-col mx-auto">
       {#if length(@feed) > 0}
       <div 
-        id={"feed:#{e(assigns, :feed_id, nil) || e(assigns, :id, nil)}"} 
+        id={"feed:#{e(@feed_id, nil) || e(@id, nil)}"} 
         data-id="feed" 
-        phx-update={e(assigns, :feed_update_mode, "append")} 
+        phx-update={e(@feed_update_mode, "append")} 
         class="divide-y divide-base-content divide-opacity-10">
         {#for entry <- @feed}
-          {#case "#{e(assigns, :feed_id, nil) || e(assigns, :id, nil)}-"<>( e(entry, :id, nil) || e(entry, :activity, :id, nil) || e(entry, :object, :id, nil) || Pointers.ULID.generate())}
+          {#case "#{e(@feed_id, nil) || e(@id, nil)}-"<>( e(entry, :id, nil) || e(entry, :activity, :id, nil) || e(entry, :object, :id, nil) || Pointers.ULID.generate())}
             {#match cid}
               <div id={cid}>
                 <ActivityLive 
                   id={cid}
                   activity={e(entry, :activity, nil) || e(entry, :edge, nil) || entry}
-                  showing_within={e(assigns, :showing_within, nil)}
-                  verb_default={e(assigns, :verb_default, nil)}
-                  feed_id={e(assigns, :feed_id, nil)}
+                  showing_within={e(@showing_within, nil)}
+                  verb_default={e(@verb_default, nil)}
+                  feed_id={e(@feed_id, nil)}
                   />
               </div>
             {#match _}
@@ -42,14 +42,14 @@
         {#else}
           <div id="empty-feed" class="flex items-center my-12 place-content-center">
             <Bonfire.UI.Common.EmptyFeed
-              feedback_title={e(assigns, :feedback_title, nil)}
-              feedback_message={e(assigns, :feedback_message, nil)}
+              feedback_title={e(@feedback_title, nil)}
+              feedback_message={e(@feedback_message, nil)}
             /> 
           </div>
         {/if}
       {/if}
       <Bonfire.UI.Common.LoadMoreLive 
-        :if={@page_info && e(assigns, :hide_load_more, false) != true}
+        :if={@page_info && e(@hide_load_more, false) != true}
         live_handler={Bonfire.Social.Feeds} 
         page_info={@page_info} 
         target={@myself} 

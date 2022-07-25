@@ -15,19 +15,19 @@ defmodule Bonfire.UI.Social.WriteEditorLive do
   prop showing_within, :string
   prop with_rich_editor, :boolean, default: true, required: false
   prop insert_text, :string
-  prop thread_mode, :string
+  prop thread_mode, :atom
   # Classes to customize the smart input appearance
   prop textarea_class, :css_class
 
 
-  def use_rich_editor?(assigns) do
-    e(assigns, :with_rich_editor, true) && !Bonfire.Me.Settings.get([:ui, :rich_text_editor_disabled], false, assigns)
+  def use_rich_editor?(with_rich_editor, context) do
+    with_rich_editor |> debug !=false && !Bonfire.Me.Settings.get([:ui, :rich_text_editor_disabled], false, context)
   end
 
-  def rich_editor(assigns) do
-    if use_rich_editor?(assigns) do
+  def rich_editor_module(with_rich_editor, context) do
+    if use_rich_editor?(with_rich_editor, context) |> debug do
       default = Bonfire.Editor.Quill
-      module = Bonfire.Me.Settings.get([:ui, :rich_text_editor], default, assigns)
+      module = Bonfire.Me.Settings.get([:ui, :rich_text_editor], default, context)
 
       if module_enabled?(module), do: module, else: error(nil, "#{module} is not available or enabled")
     end

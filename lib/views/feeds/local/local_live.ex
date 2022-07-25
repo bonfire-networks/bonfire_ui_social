@@ -1,6 +1,6 @@
 
 defmodule Bonfire.UI.Social.Feeds.LocalLive do
-  use Bonfire.UI.Common.Web, :surface_view
+  use Bonfire.UI.Common.Web, :surface_live_view
   alias Bonfire.UI.Me.LivePlugs
 
   def mount(params, session, socket) do

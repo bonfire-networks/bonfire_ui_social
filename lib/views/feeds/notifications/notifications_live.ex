@@ -1,5 +1,5 @@
 defmodule Bonfire.UI.Social.Feeds.NotificationsLive do
-  use Bonfire.UI.Common.Web, :surface_view
+  use Bonfire.UI.Common.Web, :surface_live_view
   alias Bonfire.UI.Me.LivePlugs
 
   def mount(params, session, socket) do
@@ -33,12 +33,13 @@ defmodule Bonfire.UI.Social.Feeds.NotificationsLive do
       feed_id: :notifications,
       feed: e(feed, :edges, []),
       page_info: e(feed, :page_info, []),
+      loading: false,
       page_header_aside: [
         {Bonfire.UI.Social.HeaderAsideNotificationsSeenLive, [
           feed_id: :notifications
         ]}
       ]
-      )}
+    )}
 
   end
 

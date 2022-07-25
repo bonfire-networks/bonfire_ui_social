@@ -1,5 +1,5 @@
 defmodule Bonfire.UI.Social.MessagesLive do
-  use Bonfire.UI.Common.Web, :surface_view
+  use Bonfire.UI.Common.Web, :surface_live_view
   alias Bonfire.UI.Me.LivePlugs
   alias Bonfire.Social.Integration
   alias Bonfire.Social.Messages.LiveHandler
@@ -38,6 +38,7 @@ defmodule Bonfire.UI.Social.MessagesLive do
         reply_to_id: nil,
         thread_id: nil,
         hide_smart_input: true,
+        smart_input_text: nil,
         feedback_title: l("Your direct messages"),
         feedback_message: l("Select a thread or start a new one..."),
         threads: LiveHandler.list_threads(current_user(socket), socket),
@@ -93,7 +94,7 @@ defmodule Bonfire.UI.Social.MessagesLive do
       smart_input_text = if e(current_user, :character, :username, "") == e(user, :character, :username, ""), do:
       "", else: "@"<>e(user, :character, :username, "")<>" "
 
-      to_circles = [{e(user, :profile, :name, e(user, :character, :username, l "someone")), e(user, :id, nil)}]
+      to_circles = [{e(user, :profile, :name, e(user, :character, :username, l "someone")), ulid(user)}]
 
       {:noreply,
         socket

@@ -1,11 +1,11 @@
-{#if e(@object, :id, nil) != nil and e(@activity, :replied, :reply_to_id, nil) == nil and e(@activity, :id, nil) == nil}
+{#if ulid(@object) != nil and e(@activity, :replied, :reply_to_id, nil) == nil and ulid(@activity) == nil}
   <div></div>
 {#else}
   <div 
     :if={e(@thread_mode, nil) != :flat} 
-    :class={if e(@viewing_main_object, nil) != true and Settings.get([:ui, :compact], false, assigns), do: "activity_active ? '' : '[@media(any-hover:hover)]:hidden'"}
+    :class={if e(@viewing_main_object, nil) != true and Settings.get([:ui, :compact], false, @__context__), do: "activity_active ? '' : '[@media(any-hover:hover)]:hidden'"}
     class={
-      "thread_actions mt-1 flex items-center": e(@showing_within, nil) == :thread or Settings.get([:ui, :compact], false, assigns),
+      "thread_actions mt-1 flex items-center": e(@showing_within, nil) == :thread or Settings.get([:ui, :compact], false, @__context__),
       "feed_actions mt-1 -ml-2": e(@viewing_main_object, nil) != true,
       "mt-1": e(@showing_within, nil) == :widget,
       "absolute z-50 p-0.5 h-8 hidden group-hover:flex rounded-md top-[-24px] right-[12px] bg-base-100 border border-base-200": e(@thread_mode, nil) == :flat,

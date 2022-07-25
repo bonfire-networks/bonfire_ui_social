@@ -32,7 +32,7 @@
         
         <LiveRedirect to={@permalink}>
 
-          <span :if={e(assigns, :verb_display, nil) !="created"} class="capitalize">{e(assigns, :verb_display, "")}</span>
+          <span :if={e(@verb_display, nil) !="created"} class="capitalize">{e(@verb_display, "")}</span>
 
           {@date_ago}
 

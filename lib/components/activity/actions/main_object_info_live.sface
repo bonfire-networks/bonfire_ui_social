@@ -6,9 +6,9 @@ class="flex items-center p-3 py-1"
     <span class="ml-2 text-sm text-base-content text-opacity-60">·</span>
     <LivePatch to="#" class="ml-2 text-sm link link-hover text-base-content text-opacity-60"><span class="font-bold">4</span> {l "boosts"}</LivePatch> 
     <span class="ml-2 text-sm text-base-content text-opacity-60">·</span> -->
-    <div :if={length(e(assigns, :participants, [])) > 1}>
+    <div :if={length(e(@participants, [])) > 1}>
         <span class="text-sm text-base-content text-opacity-60">·</span>
-        <LivePatch :if={length(e(assigns, :participants, [])) > 1} to="#" class="ml-2 text-sm link link-hover text-base-content text-opacity-60"><span class="font-bold">{length(e(assigns, :participants, []))}</span> {l "participants"}</LivePatch> 
+        <LivePatch :if={length(e(@participants, [])) > 1} to="#" class="ml-2 text-sm link link-hover text-base-content text-opacity-60"><span class="font-bold">{length(e(@participants, []))}</span> {l "participants"}</LivePatch> 
     </div>
 </div>
 <!-- <div class="pl-2 border-l">

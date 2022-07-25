@@ -1,7 +1,7 @@
 <Bonfire.UI.Social.FeedLive 
-  id={e(assigns, :feed_id, :my)}
-  feed_id={e(assigns, :feed_id, nil)}
-  feed_ids={e(assigns, :feed_ids, nil)}
+  id={e(@feed_id, :my)}
+  feed_id={@feed_id}
+  feed_ids={@feed_ids}
   page_title={@page_title}
   page={@page}
   feedback_title={@feedback_title}
@@ -10,5 +10,5 @@
   feed={@feed}
   feed_title={@feed_title}
   page_info={@page_info}
-  loading={e(assigns, :loading, false)}
+  loading={e(@loading, false)}
 />
