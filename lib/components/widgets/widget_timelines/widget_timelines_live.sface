@@ -45,7 +45,7 @@
         <LivePatch 
           class={
             "border-l-4 border-primary bg-base-content bg-opacity-10": @page == "directory"} 
-            to={"/directory"}>
+            to={"/users"}>
           <Solid.UserGroupIcon class="w-4 h-4" />
           <span class="text-sm truncate ellipsis">{l "Users directory"}</span>
         </LivePatch> 

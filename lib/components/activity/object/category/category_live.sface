@@ -1,7 +1,7 @@
 
 <LiveRedirect 
   to={"/+#{e(@object, :character, :username, nil) || ulid(@object)}"} 
-  class="relative min-h-[5rem] flex items-center mt-2 border rounded-lg grow bg-base-content/5 hover:bg-base-content/10 border-base-content/30">
+  class="relative min-h-[5rem] flex items-center mt-2 border rounded-lg grow bg-base-content/5 hover:bg-base-content/10 border-base-content/10">
   <div class="absolute top-0 bottom-0 left-0 flex items-center w-20 h-full bg-base-content/10 place-content-center">
     <Solid.CollectionIcon class="w-10 h-10 text-base-content/80" />
   </div>
