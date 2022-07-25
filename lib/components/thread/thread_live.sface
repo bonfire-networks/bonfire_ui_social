@@ -1,8 +1,8 @@
-{#if length(e(assigns, :threaded_replies, nil) || @replies || []) > 0}
+{#if length(e(@threaded_replies, nil) || @replies || []) > 0}
   <div class="flex flex-col flex-1 rounded-md bg-base-100">
     <div data-id="replies" class={
       "flex flex-col flex-1 ",
-      "!pt-0": e(assigns, :thread_mode, nil) == :flat}>
+      "!pt-0": e(@thread_mode, nil) == :flat}>
     
       <!-- <Bonfire.UI.Social.LoadPreviousLive 
         live_handler={Bonfire.Social.Posts}
@@ -11,8 +11,8 @@
         context={@thread_id}
       /> -->
 
-        {#if e(assigns, :threaded_replies, nil)}
-          {#for {reply, child_replies} <- e(assigns, :threaded_replies, nil) }
+        {#if e(@threaded_replies, nil)}
+          {#for {reply, child_replies} <- e(@threaded_replies, nil) }
             <Bonfire.UI.Social.CommentLive
               comment={reply}
               child_replies={child_replies}
@@ -21,11 +21,11 @@
               feed_id={@feed_id}
               thread_object={@object}
               thread_level={1}
-              thread_mode={e(assigns, :thread_mode, nil)}
+              thread_mode={e(@thread_mode, nil)}
               smart_input_text={@smart_input_text}
               smart_input_prompt={@smart_input_prompt}
               url={@url}
-              showing_within={e(assigns, :showing_within, :thread)}
+              showing_within={e(@showing_within, :thread)}
             />
           {/for}
         {#else}
@@ -36,11 +36,11 @@
               thread_id={@thread_id}
               feed_id={@feed_id}
               thread_object={@object}
-              thread_mode={e(assigns, :thread_mode, nil)}
+              thread_mode={e(@thread_mode, nil)}
               smart_input_text={@smart_input_text}
               smart_input_prompt={@smart_input_prompt}
               url={@url}
-              showing_within={e(assigns, :showing_within, :thread)}
+              showing_within={e(@showing_within, :thread)}
             />
           {/for}
         {/if}

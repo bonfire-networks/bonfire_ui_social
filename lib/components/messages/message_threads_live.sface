@@ -8,24 +8,24 @@
 
 
     <LivePatch 
-      :if={e(assigns, :showing_within, nil) != :compose}
+      :if={e(@showing_within, nil) != :compose}
       to={"/messages/compose"}
       class="fixed items-center tablet:hidden btn btn-circle btn-primary btn-lg place-content-center z-[90] right-3 bottom-12 md:bottom-3"> 
       <Outline.ChatAltIcon class="inline-block w-6 h-6" />
     </LivePatch>
 
     <div class="flex flex-1 hidden w-full p-3 mx-auto text-sm border-b tablet:block border-base-content border-opacity-10 bg-base-100 text-base-content rounded-t-md">{l "Message threads"}</div>
-      {#if length(e(assigns, :threads, :edges, []))>0}
+      {#if length(e(@threads, :edges, []))>0}
       <Bonfire.UI.Common.LoadPreviousLive
         live_handler={Bonfire.Social.Messages}
-        page_info={e(assigns, :threads, :page_info, nil)}
+        page_info={e(@threads, :page_info, nil)}
         context={@context}
       />
 
       <ul class="divide-y rounded-b-lg divide-base-content divide-opacity-10 rounded-b-md">
         <li 
           class="bg-base-100 hover:bg-base-200" 
-          :for={%{activity: activity} <- e(assigns, :threads, :edges, [])}>
+          :for={%{activity: activity} <- e(@threads, :edges, [])}>
           <LivePatch to={permalink(e(activity, :replied, :thread_id, nil), e(activity, :object_id, nil))} class="block">
           <div class="relative w-full indicator">
             <span 
@@ -34,7 +34,7 @@
             </span> 
             <div class={
               "flex items-center p-3 py-2 w-full",
-              "bg-base-content bg-opacity-5 border-l-2 border-primary": e(assigns, :thread_id, nil) == (e(activity, :replied, :thread_id, nil) || e(activity, :object_id, nil))
+              "bg-base-content bg-opacity-5 border-l-2 border-primary": e(@thread_id, nil) == (e(activity, :replied, :thread_id, nil) || e(activity, :object_id, nil))
               }>
               <div class="flex-1 w-full min-w-0 sm:flex sm:items-center sm:justify-between">
                 <div class="w-full truncate">
@@ -70,7 +70,7 @@
 
       <Bonfire.UI.Common.LoadMoreLive
         live_handler={Bonfire.Social.Messages}
-        page_info={e(assigns, :threads, :page_info, nil)}
+        page_info={e(@threads, :page_info, nil)}
         context={@context}
       />
 

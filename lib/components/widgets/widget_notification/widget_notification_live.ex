@@ -3,8 +3,7 @@ defmodule Bonfire.UI.Social.WidgetNotificationLive do
 
   prop widget_title, :string
 
-  def load(assigns) do
-    current_user = current_user(assigns)
+  def load(current_user) do
     paginate = %{
         limit: 3
       }

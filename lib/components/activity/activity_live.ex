@@ -127,7 +127,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
   def render(%{activity: _, activity_components: _} = assigns) do
     ~F"""
       <article
-        id={"activity-#{e(assigns, :activity_inception, nil)}-"<>( e(@activity, :id, nil) || e(@object, :id, "no-id") )}
+        id={"activity-#{e(assigns, :activity_inception, nil)}-"<>( ulid(@activity) || e(@object, :id, "no-id") )}
         aria-label="user activity"
         role="article"
         tabIndex="0"
@@ -139,13 +139,13 @@ defmodule Bonfire.UI.Social.ActivityLive do
         class={
         "p-3 activity relative pl-16 group " <> e(assigns, :class, ""),
         "activity_inception bg-base-content/10 !m-0 opacity-100 before:!left-2 before:top-1 before:bottom-1": e(assigns, :activity_inception, nil) != nil and  e(assigns, :thread_mode, nil) == :flat,
-        "cursor-pointer hover:bg-base-content/5": e(@object, :id, nil) == nil or e(@activity, :replied, :reply_to_id, nil) != nil or e(@activity, :id, nil) != nil and !e(assigns, :viewing_main_object, nil) and e(assigns, :showing_within, nil) != :thread, # Hover the activity background unless it is a quoted activity
+        "cursor-pointer hover:bg-base-content/5": ulid(@object) == nil or e(@activity, :replied, :reply_to_id, nil) != nil or ulid(@activity) != nil and !e(assigns, :viewing_main_object, nil) and e(assigns, :showing_within, nil) != :thread, # Hover the activity background unless it is a quoted activity
         "pt-6 hover:!bg-base-content/5 !bg-base-content/5 border-b border-base-content/10": e(assigns, :viewing_main_object, nil) == true,
-        "main_reply_to mb-2 p-2 py-1 mt-2 relative before:absolute before:content-[''] before:w-1 before:bg-base-content/40 before:left-0 before:top-0 before:bottom-0 opacity-60": e(@object, :id, nil) != nil and e(@activity, :replied, :reply_to_id, nil) == nil and e(@activity, :id, nil) == nil and e(assigns, :showing_within, nil) != :widget and e(assigns, :showing_within, nil) != :search, # showing a quoted reply_to
+        "main_reply_to mb-2 p-2 py-1 mt-2 relative before:absolute before:content-[''] before:w-1 before:bg-base-content/40 before:left-0 before:top-0 before:bottom-0 opacity-60": ulid(@object) != nil and e(@activity, :replied, :reply_to_id, nil) == nil and ulid(@activity) == nil and e(assigns, :showing_within, nil) != :widget and e(assigns, :showing_within, nil) != :search, # showing a quoted reply_to
         "cursor-text": e(assigns, :showing_within, nil) == :thread and e(assigns, :thread_mode, nil) != :flat,
         "cursor-text": e(assigns, :thread_mode, nil) == :flat,
         "!pl-14": e(assigns, :showing_within, nil) == :thread && e(assigns, :viewing_main_object, nil) != true,
-        "reply": e(@object, :id, nil) != nil and e(@activity, :replied, :reply_to_id, nil) != nil and e(@activity, :id, nil) != nil,
+        "reply": ulid(@object) != nil and e(@activity, :replied, :reply_to_id, nil) != nil and ulid(@activity) != nil,
         "border-l-2 border-primary !bg-primary/5": e(@activity, :seen, nil) == nil and e(assigns, :showing_within, nil) == :notifications and e(assigns, :activity_inception, nil) == nil,
         "border-l-2 border-primary !bg-primary/5 -ml-[4px]": String.contains?(e(assigns, :url, ""), @permalink)
         }>
@@ -159,7 +159,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
           phx-target={"#badge_counter_#{e(assigns, :feed_id, "missing_feed_id")}"}
           x-intersect.once={intersect_event(e(@activity, :seen, nil))}>
           <input type="hidden" name="feed_id" value={e(assigns, :feed_id, nil)} />
-          <input type="hidden" name="activity_id" value={e(@activity, :id, nil)} />
+          <input type="hidden" name="activity_id" value={ulid(@activity)} />
         </form>
         {#for {component, component_assigns} when is_atom(component) <- e(assigns, :activity_components, [])}
           <Surface.Components.Dynamic.Component

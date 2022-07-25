@@ -1,20 +1,20 @@
-{#if e(assigns, :showing_within, nil) == :widget}
+{#if e(@showing_within, nil) == :widget}
 
 <!-- show the object or character that isn't me -->
 <div class="flex w-full activity_widget">
-  <LiveRedirect to={path(the_other(assigns))} class="flex profile-item group ">
+  <LiveRedirect to={path(the_other(@activity, @object, @__context__))} class="flex profile-item group ">
     <div class="absolute left-0">
       <Bonfire.UI.Common.AvatarLive 
         class="w-6 h-6 teee bg-base-200 rounded-btn" 
-        user={the_other(assigns)} 
+        user={the_other(@activity, @object, @__context__)} 
       />
     </div>
     <div class="flex items-center justify-between flex-1 ml-8 space-x-1">
       <p class="text-base font-semibold group-hover:underline text-base-content">
-        {e(the_other(assigns), :profile, :name, "Anon")}
+        {e(the_other(@activity, @object, @__context__), :profile, :name, "Anon")}
       </p>
       <p class="-mt-px text-sm text-base-content text-opacity-70">
-        @{e(the_other(assigns), :character, :username, "anon")} 
+        @{e(the_other(@activity, @object, @__context__), :character, :username, "anon")} 
       </p>
     </div>
   </LiveRedirect>
@@ -25,27 +25,27 @@
 <!-- show the object or character that isn't me -->
 <div class="flex w-full activity_notification">
 
-  <LiveRedirect to={path(the_other(assigns))} class="flex profile-item group ">
+  <LiveRedirect to={path(the_other(@activity, @object, @__context__))} class="flex profile-item group ">
     <div class="absolute left-3">
-      <Bonfire.UI.Common.AvatarLive user={the_other(assigns)} />
+      <Bonfire.UI.Common.AvatarLive user={the_other(@activity, @object, @__context__)} />
     </div>
     <div>
       <div class="items-baseline justify-between flex-1">
         <p class="text-base font-semibold group-hover:underline text-base-content">
-          {e(the_other(assigns), :profile, :name, "")}
+          {e(the_other(@activity, @object, @__context__), :profile, :name, "")}
         </p>
         <span
-        :if={e(the_other(assigns), :character, :username, nil)}
+        :if={e(the_other(@activity, @object, @__context__), :character, :username, nil)}
         class="text-sm font-normal truncate ellipsis text-base-content text-opacity-60 subject_username">
-          @{e(the_other(assigns), :character, :username, "")}
+          @{e(the_other(@activity, @object, @__context__), :character, :username, "")}
         </span>
         <!-- <p class="-mt-px text-sm text-base-content text-opacity-70">
-          @{e(the_other(assigns), :character, :username, "anon")} 
+          @{e(the_other(@activity, @object, @__context__), :character, :username, "anon")} 
         </p> -->
       </div>
         <!-- SHOW THE BIO IN SEARCH -->
       <div class="prose-sm prose">
-         {markdown e(the_other(assigns), :profile, :summary, "")}
+         {markdown e(the_other(@activity, @object, @__context__), :profile, :summary, "")}
       </div>
     </div>
   </LiveRedirect>
@@ -54,7 +54,7 @@
   <button 
   :if={@verb=="Request to Follow"}
   :on-click="Bonfire.Social.Follows:accept" 
-  phx-value-id={e(@activity, :id, nil)}
+  phx-value-id={ulid(@activity)}
   type="button" 
   class="ml-3 btn">
     Accept

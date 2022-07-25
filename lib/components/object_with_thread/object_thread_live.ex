@@ -26,16 +26,16 @@ defmodule  Bonfire.UI.Social.ObjectThreadLive do
   prop threaded_replies, :any, default: nil
   prop page_info, :any
 
-  def participants(assigns) do
-    # if e(assigns, :participants, nil) do
-      e(assigns, :participants, [])
-    # else
-    #   thread_id = e(assigns, :thread_id, e(assigns, :object, :id, nil))
-    #   # participants =
-    #     Bonfire.Social.Threads.fetch_participants(thread_id, current_user: current_user(assigns)) |> debug("participants")
-    #   # participant_tuples = participants |> Map.get(:edges, []) |> Enum.map(&{e(&1, :profile, :name, "someone"), &1.id})
-    #   # to_circles = e(assigns, :to_circles, []) ++ participant_tuples
-    # end
-  end
+  # def participants(assigns) do
+  #   # if e(assigns, :participants, nil) do
+  #     e(assigns, :participants, [])
+  #   # else
+  #   #   thread_id = e(assigns, :thread_id, e(assigns, :object, :id, nil))
+  #   #   # participants =
+  #   #     Bonfire.Social.Threads.fetch_participants(thread_id, current_user: current_user(assigns)) |> debug("participants")
+  #   #   # participant_tuples = participants |> Map.get(:edges, []) |> Enum.map(&{e(&1, :profile, :name, "someone"), &1.id})
+  #   #   # to_circles = e(assigns, :to_circles, []) ++ participant_tuples
+  #   # end
+  # end
 
 end

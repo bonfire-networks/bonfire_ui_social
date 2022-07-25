@@ -1,8 +1,8 @@
 <Bonfire.UI.Common.WidgetLive 
-  widget_title={e(assigns, :widget_title, "Menu")}
+  widget_title={e(@widget_title, "Menu")}
 >
   <div 
-    :if={current_user(@current_user) || Settings.get([:bonfire_social, :feeds, :federation, :show_guests], true, assigns)}
+    :if={current_user(@current_user) || Settings.get([:bonfire_social, :feeds, :federation, :show_guests], true, @__context__)}
     class="pb-2 rounded-b-box">
     <div class="menu bg-base-100 ">
       <li :if={current_user(@current_user)}>
@@ -50,7 +50,7 @@
           <span class="text-sm truncate ellipsis">{l "Users directory"}</span>
         </LivePatch> 
       </li>
-      <li :if={current_user(@current_user) || Settings.get([:bonfire_social, :feeds, :federation, :show_guests], false, assigns)}>
+      <li :if={current_user(@current_user) || Settings.get([:bonfire_social, :feeds, :federation, :show_guests], false, @__context__)}>
         <LivePatch 
           class={"ml-1": @page != "federation",
             "border-l-4 border-primary bg-base-content bg-opacity-10": @page == "federation"} 

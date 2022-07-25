@@ -1,22 +1,22 @@
-{#if e(@object, :id, nil) != nil and e(@activity, :replied, :reply_to_id, nil) == nil and e(@activity, :id, nil) == nil and e(assigns, :showing_within, nil) == :widget}
+{#if ulid(@object) != nil and e(@activity, :replied, :reply_to_id, nil) == nil and ulid(@activity) == nil and e(@showing_within, nil) == :widget}
   <!-- huh? -->
 {#else}
 <div class={
-  "main_object": e(assigns, :viewing_main_object, nil),
-  "showing_within:thread": e(assigns, :showing_within, nil) == :thread,
-  "-mt-1 bg-base-content/10 px-2 pb-2 rounded-br-md": e(assigns, :thread_mode, nil) == :flat,
-  "!bg-info/40 rounded-bl-md !rounded-br-none": e(assigns, :thread_mode, nil) == :flat && e(assigns, :activity, :subject, :id, nil) == ulid(current_user(@__context__)),
-  "activity_inception:#{e(assigns, :activity_inception, '')} !bg-transparent pb-0": e(assigns, :activity_inception, nil) != nil and e(assigns, :thread_mode, nil) == :flat,
-  "showing_within:feed": e(assigns, :showing_within, nil) == :feed,
-  "showing_within:notifications": e(assigns, :showing_within, nil) == :notifications,
-  "showing_within:widget mt-2": e(assigns, :showing_within, nil) == :widget,
-  "reply_to": e(@object, :id, nil) != nil and e(@activity, :replied, :reply_to_id, nil) == nil and e(@activity, :id, nil) == nil,
+  "main_object": e(@viewing_main_object, nil),
+  "showing_within:thread": e(@showing_within, nil) == :thread,
+  "-mt-1 bg-base-content/10 px-2 pb-2 rounded-br-md": e(@thread_mode, nil) == :flat,
+  "!bg-info/40 rounded-bl-md !rounded-br-none": e(@thread_mode, nil) == :flat && e(@activity, :subject, :id, nil) == ulid(current_user(@__context__)),
+  "activity_inception:#{e(@activity_inception, '')} !bg-transparent pb-0": e(@activity_inception, nil) != nil and e(@thread_mode, nil) == :flat,
+  "showing_within:feed": e(@showing_within, nil) == :feed,
+  "showing_within:notifications": e(@showing_within, nil) == :notifications,
+  "showing_within:widget mt-2": e(@showing_within, nil) == :widget,
+  "reply_to": ulid(@object) != nil and e(@activity, :replied, :reply_to_id, nil) == nil and ulid(@activity) == nil,
   "reply_message": e(@activity, :replied, :reply_to_id, nil)
   }
-  id={"note-#{e(assigns, :activity_inception, nil)}-"<>( e(@activity, :id, nil) || e(@object, :id, "no-id") )}
+  id={"note-#{e(@activity_inception, nil)}-"<>( ulid(@activity) || e(@object, :id, "no-id") )}
   phx-hook="OpenActivity"
   data-permalink={@permalink}
-  data-navigate_to_thread={if e(assigns, :showing_within, nil) !=:thread || e(assigns, :activity_inception, nil) ||  e(@object, :id, nil) == nil and e(@activity, :replied, :reply_to_id, nil) != nil and e(@activity, :id, nil) != nil, do: "true"}
+  data-navigate_to_thread={if e(@showing_within, nil) !=:thread || e(@activity_inception, nil) ||  ulid(@object) == nil and e(@activity, :replied, :reply_to_id, nil) != nil and ulid(@activity) != nil, do: "true"}
   x-data="{content_open: false}">
 
   <div :if={e(post_content(@object), :name, nil)}>
@@ -53,9 +53,9 @@
       data-id={"object_body"}
       class={
         "prose break-words text-opacity-100 object_body max-w-none font-[16px] mt-1 prose-sm prose-p:pt-0 prose-p:my-0 leading-[20px]",
-        "font-[16px] mt-1 prose-sm prose-p:pt-0 prose-p:my-0 !leading-[20px]": e(assigns, :showing_within, nil) == :thread,
-        "prose-lg mt-3 prose-p:pb-4 !leading-[26px] prose-p:leading-[26px]": e(assigns, :viewing_main_object, nil),
-        "prose-p:pt-1 mt-0.5 !leading-[20px]": e(assigns, :showing_within, nil) == :feed
+        "font-[16px] mt-1 prose-sm prose-p:pt-0 prose-p:my-0 !leading-[20px]": e(@showing_within, nil) == :thread,
+        "prose-lg mt-3 prose-p:pb-4 !leading-[26px] prose-p:leading-[26px]": e(@viewing_main_object, nil),
+        "prose-p:pt-1 mt-0.5 !leading-[20px]": e(@showing_within, nil) == :feed
         }>
       {rich e(post_content(@object), :html_body, l "This post has been deleted.")}
     </div>

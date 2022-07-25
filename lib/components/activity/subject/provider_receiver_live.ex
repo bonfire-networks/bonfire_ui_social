@@ -18,11 +18,11 @@ defmodule Bonfire.UI.Social.Activity.ProviderReceiverLive do
   def receiver(%{activity: activity}), do: receiver(activity)
   def receiver(_), do: nil
 
-  def profile(object, field), do: e(object, field, nil) |> profile
+  def profile(object, field), do: e(object, field, nil) |> profile()
   def profile(%{profile: %{name: _} = profile}), do: profile
   def profile(profile), do: profile
 
-  def character(object, field), do: e(object, field, nil) |> character
+  def character(object, field), do: e(object, field, nil) |> character()
   def character(%{character: %{username: _} = character}), do: character
   def character(character), do: character
 end

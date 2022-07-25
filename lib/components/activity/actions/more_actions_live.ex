@@ -13,13 +13,13 @@ defmodule Bonfire.UI.Social.Activity.MoreActionsLive do
   slot admin_items, required: false
   prop showing_within, :any, default: :feed
 
-  def subject(assigns) do
-    e(assigns, :activity, :subject, nil) || e(assigns, :object, :created, :creator, nil)
+  def subject(activity, object) do
+    e(activity, :subject, nil) || e(object, :created, :creator, nil)
   end
-  def subject_id(assigns) do
-    e(subject(assigns), :id, nil)
+  def subject_id(activity, object) do
+    ulid(subject(activity, object))
   end
-  def name(assigns) do
-    e(subject(assigns), :profile, :name, l("this user"))
+  def name(activity, object) do
+    e(subject(activity, object), :profile, :name, l("this user"))
   end
 end

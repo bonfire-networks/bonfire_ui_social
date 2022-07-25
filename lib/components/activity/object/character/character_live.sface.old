@@ -1,4 +1,4 @@
-{#if e(assigns, :showing_within, nil) == :widget}
+{#if e(@showing_within, nil) == :widget}
 
 <div class={"flex items-center mb-3"}>
   <div class="flex items-center justify-start w-5 h-5">
@@ -11,14 +11,14 @@
       <!-- first show the subject -->
       <span data-id="subject">
         <LiveRedirect
-          :if={e(@activity, :subject, :id, nil) != e(current_user(@__context__), :id, nil)}
+          :if={e(@activity, :subject, :id, nil) != ulid(current_user(@__context__))}
           to={path(e(@activity, :subject, nil))}
           aria-label={e(@activity, :subject, :character, :username, "") <> " profile"}
           class="font-medium "
           >
           {e(@activity, :subject, :profile, :name, "Anonymous")}
         </LiveRedirect>
-        <span :if={e(@activity, :subject, :id, nil) == e(current_user(@__context__), :id, nil)}>
+        <span :if={e(@activity, :subject, :id, nil) == ulid(current_user(@__context__))}>
           you
         </span>
       </span>
@@ -26,11 +26,11 @@
       {raw @verb_display}
 
       <!-- then summarise the object -->
-      <span :if={e(@object, :id, nil) == e(current_user(@__context__), :id, nil)}>
+      <span :if={ulid(@object) == ulid(current_user(@__context__))}>
         you
       </span>
       <LiveRedirect 
-        :if={e(@object, :id, nil) !=e(current_user(@__context__), :id, nil)} 
+        :if={ulid(@object) !=ulid(current_user(@__context__))} 
         to={path(@object)} 
         class="font-semibold link link-hover">
         {e(@object, :profile, :name, "Anonymous")}
@@ -69,7 +69,7 @@
 
 <div 
   class={"flex items-center mb-3 -ml-7"}
-  :if={e(assigns, :showing_within, nil) not in [:search]}
+  :if={e(@showing_within, nil) not in [:search]}
 >
   <!-- <div 
     class="flex items-center justify-start w-5 h-5">
@@ -82,14 +82,14 @@
       <!--       
       <span data-id="subject">
         <LiveRedirect
-          :if={e(@activity, :subject, :id, nil) != e(current_user(@__context__), :id, nil)}
+          :if={e(@activity, :subject, :id, nil) != ulid(current_user(@__context__))}
           to={path(e(@activity, :subject, nil))}
           aria-label={e(@activity, :subject, :character, :username, "") <> " profile"}
           class="font-medium "
           >
           {e(@activity, :subject, :profile, :name, "Anonymous")}
         </LiveRedirect>
-        <span :if={e(@activity, :subject, :id, nil) == e(current_user(@__context__), :id, nil)}>
+        <span :if={e(@activity, :subject, :id, nil) == ulid(current_user(@__context__))}>
           {l "you"}
         </span>
       </span>
@@ -97,11 +97,11 @@
       {raw @verb_display} -->
 
       <!-- then summarise the object -->
-      <!-- <span :if={e(@object, :id, nil) == e(current_user(@__context__), :id, nil)}>
+      <!-- <span :if={ulid(@object) == ulid(current_user(@__context__))}>
         {l "you"}
       </span>
       <LiveRedirect 
-        :if={e(@object, :id, nil) !=e(current_user(@__context__), :id, nil)} 
+        :if={ulid(@object) !=ulid(current_user(@__context__))} 
         to={path(@object)} 
         class="font-semibold link link-hover">
         {e(@object, :profile, :name, "Anonymous")}
@@ -137,7 +137,7 @@
   <button 
   :if={@verb=="Request to Follow"}
   :on-click="Bonfire.Social.Follows:accept" 
-  phx-value-id={e(@activity, :id, nil)}
+  phx-value-id={ulid(@activity)}
   type="button" 
   class="ml-3 btn">
     Accept

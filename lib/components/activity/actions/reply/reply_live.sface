@@ -7,12 +7,12 @@
   class="relative z-20 flex items-center tooltip tooltip-bottom" 
   data-tip={l "Reply"}
   >
-  {#if Settings.get([:ui, :smart_input_as], nil, assigns)==:sidebar and e(assigns, :thread_mode, nil) != :flat}
+  {#if Settings.get([:ui, :smart_input_as], nil, @__context__)==:sidebar and e(@thread_mode, nil) != :flat}
   <button 
     x-cloak
     x-show="width < 1200"
     phx-click="Bonfire.Social.Feeds:reply_to_activity"
-    phx-target={if e(assigns, :activity_id, nil), do: "#activity--"<>e(assigns, :activity_id, "")}
+    phx-target={if e(@activity_id, nil), do: "#activity--"<>e(@activity_id, "")}
     @click="show_smart_input_fullscreen = true">
     <div class={"btn btn-ghost btn-circle btn-sm"}> 
       <span class="text-opacity-50 text-base-content">
@@ -25,7 +25,7 @@
     x-show="width > 1200"
     data-id="action_reply"
     phx-click="Bonfire.Social.Feeds:reply_to_activity"
-    phx-target={if e(assigns, :activity_id, nil), do: "#activity--"<>e(assigns, :activity_id, "")}
+    phx-target={if e(@activity_id, nil), do: "#activity--"<>e(@activity_id, "")}
   >
     <div class={"btn btn-ghost btn-circle btn-sm"}> 
       <span class="text-opacity-50 text-base-content">
@@ -39,7 +39,7 @@
     x-cloak
     x-show="width < 1200"
     phx-click="Bonfire.Social.Feeds:reply_to_activity"
-    phx-target={if e(assigns, :activity_id, nil), do: "#activity--"<>e(assigns, :activity_id, "")}
+    phx-target={if e(@activity_id, nil), do: "#activity--"<>e(@activity_id, "")}
     @click="show_smart_input_fullscreen = true">
     <div class={"btn btn-ghost btn-circle btn-sm"}> 
       <span class="text-opacity-50 text-base-content">
@@ -53,7 +53,7 @@
     data-id="action_reply"
     phx-click="Bonfire.Social.Feeds:reply_to_activity"
     @click="show_smart_input_modal = true"
-    phx-target={if e(assigns, :activity_id, nil), do: "#activity--"<>e(assigns, :activity_id, "")}
+    phx-target={if e(@activity_id, nil), do: "#activity--"<>e(@activity_id, "")}
   >
     <div class={"btn btn-ghost btn-circle btn-sm"}> 
       <span class="text-opacity-50 text-base-content">
@@ -64,7 +64,7 @@
   </button>
   {/if}
   <span 
-  :if={Bonfire.Me.Settings.get([:ui, :show_activity_counts], nil, assigns)}
+  :if={Bonfire.Me.Settings.get([:ui, :show_activity_counts], nil, @__context__)}
   class="ml-1 text-xs text-base-content text-opacity-70">
     {#if count(@replied)>0 }
       {count(@replied)} 

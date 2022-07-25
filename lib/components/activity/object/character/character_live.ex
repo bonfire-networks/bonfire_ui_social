@@ -8,12 +8,12 @@ defmodule Bonfire.UI.Social.Activity.CharacterLive do
   prop date_ago, :string
   prop showing_within, :any
 
-  def the_other(assigns) do
-    me = current_user(assigns)
-    if e(assigns, :object, :id, nil) != e(me, :id, nil) or is_nil(e(assigns, :activity, :subject, :profile, nil)) do
-      e(assigns, :object, nil)
+  def the_other(activity, object, context) do
+    current_user = current_user(context)
+    if ulid(object) != ulid(current_user) or !e(activity, :subject, :profile, nil) do
+      object
     else
-      e(assigns, :activity, :subject, nil)
+      e(activity, :subject, nil)
     end
   end
 

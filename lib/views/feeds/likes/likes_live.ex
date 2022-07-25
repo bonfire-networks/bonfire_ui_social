@@ -1,5 +1,5 @@
 defmodule Bonfire.UI.Social.Feeds.LikesLive do
-  use Bonfire.UI.Common.Web, :surface_view
+  use Bonfire.UI.Common.Web, :surface_live_view
   alias Bonfire.UI.Me.LivePlugs
 
   def mount(params, session, socket) do
@@ -25,10 +25,11 @@ defmodule Bonfire.UI.Social.Feeds.LikesLive do
     |> assign(
       feed: feed,
       page_info: page_info,
+      loading: false,
       page: "likes",
       page_title: l("My Favourites"),
       )
-      }
+    }
 
   end
 

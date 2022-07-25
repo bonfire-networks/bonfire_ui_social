@@ -1,8 +1,8 @@
-{#case feed(assigns)}
+{#case feed(current_user(@__context__))}
 {#match feed when is_list(feed)}
 
   <Bonfire.UI.Common.WidgetLive 
-    widget_title={e(assigns, :widget_title, "Messages")}
+    widget_title={e(@widget_title, "Messages")}
   >
     <:action>
       <LivePatch class="text-xs normal-case btn btn-xs btn-outline" to={path(Bonfire.Data.Social.Message)}>

@@ -1,7 +1,7 @@
 
 
 
-{#case rich_editor(assigns)}
+{#case rich_editor_module(@with_rich_editor, @__context__) |> debug()}
   {#match component when is_atom(component) and not is_nil(component)}
     <Surface.Components.Dynamic.Component
       module={component}

@@ -1,5 +1,5 @@
 defmodule Bonfire.UI.Social.HomeLive do
-  use Bonfire.UI.Common.Web, :surface_view
+  use Bonfire.UI.Common.Web, :surface_live_view
   alias Bonfire.UI.Me.LivePlugs
   alias Bonfire.Social.Feeds.LiveHandler
 
@@ -24,6 +24,8 @@ defmodule Bonfire.UI.Social.HomeLive do
         page: "feed",
         page_title: l("My feed"),
         page_header_drawer: true,
+        feed_id: nil,
+        feed_ids: nil,
         feedback_title: l("Your home feed is empty"),
         feedback_message: l("You can start by following some people or by writing a new post."),
         sidebar_widgets: [

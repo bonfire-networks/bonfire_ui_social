@@ -1,5 +1,5 @@
 <div data-id="subject"> 
-{#case e(assigns, :showing_within, nil)}
+{#case e(@showing_within, nil)}
   {#match :thread}
     <div class={"flex items-center mb-2"}>
       <div class="flex items-center justify-start w-5 h-5">
@@ -166,7 +166,7 @@
             {raw @verb_display}
 
              <!-- special case when current_user is the one being followed -->
-            <span :if={e(@object, :id, nil) == e(current_user(@__context__), :id, nil)}>
+            <span :if={ulid(@object) == ulid(current_user(@__context__))}>
               {l "you"}
             </span>
           </div>
