@@ -4,7 +4,6 @@
   search_placeholder={e(@search_placeholder, nil)}
   smart_input_prompt={@smart_input_prompt}
   smart_input_text={@smart_input_text}
-  create_activity_type={e(@create_activity_type, nil)}
   to_boundaries={e(@to_boundaries, [])}
   to_circles={e(@to_circles, [])}
   reply_to_id={@reply_to_id}
@@ -14,8 +13,5 @@
   url={@url}
   thread_id={@thread_id}
   participants={e(@participants, [])}
-  replies={e(@replies, nil)}
-  threaded_replies={e(@threaded_replies, nil)}
-  page_info={e(@page_info, [])}
   loading={e(@loading, false)}
 />

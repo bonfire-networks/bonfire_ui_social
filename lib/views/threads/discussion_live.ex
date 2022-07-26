@@ -24,6 +24,12 @@ defmodule Bonfire.UI.Social.DiscussionLive do
       showing_within: :thread,
       # search_placeholder: l("Search this discussion"),
       smart_input_prompt: l("Reply to this discussion"),
+      activity: nil,
+      post: nil,
+      thread_id: nil,
+      thread_mode: nil,
+      search_placeholder: nil,
+      to_boundaries: nil,
       page_header_aside:
         [{Bonfire.UI.Social.ObjectHeaderAsideLive, [
           page_title: l("Discussion"),

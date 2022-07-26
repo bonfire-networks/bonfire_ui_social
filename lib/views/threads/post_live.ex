@@ -27,7 +27,9 @@ defmodule Bonfire.UI.Social.PostLive do
       showing_within: :thread,
       post: nil,
       thread_id: nil,
-      replies: [],
+      thread_mode: nil,
+      search_placeholder: nil,
+      to_boundaries: nil,
       page_header_aside: [
         {Bonfire.UI.Social.ObjectHeaderAsideLive, [
           page_title: l("Post"),
