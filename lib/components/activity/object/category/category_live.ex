@@ -5,7 +5,8 @@ defmodule Bonfire.UI.Social.Activity.CategoryLive do
 
   def preloads(), do: [
     :character,
-    :profile
+    :profile,
+    parent_category: [:profile, :character]
   ]
 
   def name(object) do

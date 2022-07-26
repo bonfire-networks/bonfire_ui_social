@@ -74,7 +74,7 @@
       "flex items-top",
       "py-1": e(@thread_mode, nil) == :flat}>
       <div 
-        :if={e(@showing_within, nil) !=:thread  ||  ulid(@object) == nil and e(@activity, :replied, :reply_to_id, nil) != nil and ulid(@activity) != nil}
+        :if={e(@showing_within, nil) !=:thread  || ulid(@object) == nil and e(@activity, :replied, :reply_to_id, nil) != nil and ulid(@activity) != nil}
         id={"subject-#{e(@activity_inception, nil)}-"<>( ulid(@activity) || e(@object, :id, "no-id") )}
         phx-hook="OpenActivity"
         data-permalink={@permalink}
