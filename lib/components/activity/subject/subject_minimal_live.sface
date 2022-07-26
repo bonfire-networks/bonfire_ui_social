@@ -173,9 +173,28 @@
         </div>
       </div>
       
+      
       <div 
-        :if={@verb == "Boost"}
-        class="flex items-center justify-start">  
+        :if={@verb == "Boost" and e(@activity, :subject, :table_id, nil)=="2AGSCANBECATEG0RY0RHASHTAG"}
+        class="flex items-center justify-start"> 
+      <!-- Something published in a Category / Topic -->
+        <Solid.CollectionIcon class={"w-4 h-4 text-base-content/80"} />
+        <div class="flex-1 ml-2">
+          <div class="text-sm font-medium text-base-content text-opacity-80">
+            {l "Published in"} 
+            <LiveRedirect
+              aria-label={e(@activity, :subject, :character, :username, "") <>" "<> l "profile"}
+              class="font-medium link link-hover"
+              to={path(e(@activity, :subject, :character, nil)) }>
+              {e(@activity, :subject, :profile, :name, nil) || e(@activity, :subject, :character, :username, nil)}
+            </LiveRedirect> 
+          </div>
+        </div>
+      </div>
+
+      <div 
+        :if={@verb == "Boost" and e(@activity, :subject, :table_id, nil) !="2AGSCANBECATEG0RY0RHASHTAG"}
+        class="flex items-center justify-start"> 
       <!-- BOOST -->
         <svg 
           viewBox="0 0 24 24" 

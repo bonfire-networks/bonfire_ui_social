@@ -36,7 +36,7 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
       || e(activity, :object, :id, nil)
       || e(activity, :object_id, nil)
 
-    case Bonfire.Boundaries.load_pointers(reply_to_id, current_user: current_user, verbs: [:reply], ids_only: true) do
+    case Bonfire.Boundaries.load_pointer(reply_to_id, current_user: current_user, verbs: [:reply], ids_only: true) do
       %{id: reply_to_id} ->
 
         # FIXME: don't re-load this here as we already have the list (at least when we're in a thread)
@@ -82,7 +82,7 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
 
   def handle_event("delete", %{"id"=> id} = params, socket) do
     # TODO: check permission
-    with num when is_integer(num) <- Bonfire.Social.FeedActivities.delete(id) do
+    with num when is_integer(num) <- Bonfire.Social.FeedActivities.delete(id, :id) do
       Bonfire.UI.Common.OpenModalLive.close()
 
       {:noreply,
@@ -542,10 +542,11 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
     ]
   end
 
-  def load_user_feed_assigns(tab, feed_id, params, socket) when is_binary(tab) and is_binary(feed_id) do
+  def load_user_feed_assigns(tab, feed_id, attrs, socket) when is_binary(tab) and is_binary(feed_id) do
+    params = input_to_atoms(attrs)
     # for custom feeds
     feed_id = ulid!(feed_id)
-    feed = if module_enabled?(Bonfire.Social.FeedActivities), do: Bonfire.Social.FeedActivities.feed(feed_id, pagination: input_to_atoms(params), current_user: current_user(socket))
+    feed = if module_enabled?(Bonfire.Social.FeedActivities), do: Bonfire.Social.FeedActivities.feed(feed_id, pagination: params, exclude_feed_ids: e(params, :exclude_feed_ids, []), current_user: current_user(socket))
     #  debug(feed: feed)
 
     [
