@@ -584,6 +584,10 @@ defmodule Bonfire.UI.Social.ActivityLive do
       when type in [Bonfire.Data.Social.Post, Bonfire.Data.Social.PostContent],
       do: component_show_standard_actions(activity)
 
+  def actions_for_object_type(activity, type)
+      when type in [Bonfire.Classify.Category],
+      do: component_show_category_actions(activity)
+
   # def actions_for_object_type(activity, type) when type in [ValueFlows.EconomicEvent],
   #   do: component_show_event_actions(activity)
 
@@ -612,8 +616,12 @@ defmodule Bonfire.UI.Social.ActivityLive do
 
   def component_show_standard_actions(_activity), do: [Bonfire.UI.Social.Activity.ActionsLive]
 
+  def component_show_category_actions(_activity),
+    do: [Bonfire.UI.Social.Activity.CategoryActionsLive]
+    
   def component_show_process_actions(_activity),
     do: [Bonfire.UI.Social.Activity.ProcessActionsLive]
+
 
   def component_show_event_actions(activity) do
     [

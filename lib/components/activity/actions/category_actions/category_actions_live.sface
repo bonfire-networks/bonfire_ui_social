@@ -1,0 +1,40 @@
+
+  <div 
+    :class={if e(@viewing_main_object, nil) != true and Settings.get([:ui, :compact], false, @__context__), do: "activity_active ? '' : '[@media(any-hover:hover)]:hidden'"}
+    class={"feed_actions mt-1 -ml-2"}>
+
+    <div class={
+      "feed-clickable flex items-center flex-1 justify-end space-x-4 mt-0"
+      }>
+      <Bonfire.UI.Common.FollowButtonLive 
+        id={ComponentID.new(Bonfire.UI.Common.FollowButtonLive, e(@object, :id, "no-object"))}
+        object={@object} 
+        hide_text
+        class=""
+        current_user={current_user(@__context__)} 
+       />
+      <Bonfire.UI.Common.BoostActionLive
+        :if={@object_type not in [Bonfire.Data.Social.Message]} 
+        id={ComponentID.new(Bonfire.UI.Common.BoostActionLive, ulid(@object))} 
+        object={@object} 
+        object_type={@object_type}
+        showing_within={e(@showing_within, nil)}
+        boost_count={e(@activity, :boost_count, nil)}
+        />
+      <Bonfire.UI.Common.LikeActionLive
+        id={ComponentID.new(Bonfire.UI.Common.LikeActionLive, ulid(@object))} 
+        object={@object} 
+        showing_within={e(@showing_within, nil)}
+        like_count={e(@activity, :like_count, nil)} 
+      />
+      <Bonfire.UI.Social.Activity.MoreActionsLive
+        object={@object} 
+        object_type={@object_type} 
+        object_boundary={@object_boundary} 
+        object_type_readable={@object_type_readable}
+        activity={@activity} 
+        verb={@verb}
+        showing_within={e(@showing_within, nil)}
+      />
+    </div>
+  </div>
