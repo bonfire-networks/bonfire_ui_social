@@ -574,7 +574,7 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
 
   def load_user_feed_assigns("followers" =tab, user, params, socket) do
     user = user || e(socket, :assigns, :user, nil)
-    followers = Bonfire.Social.Follows.list_followers(user, pagination: input_to_atoms(params), current_user: current_user(socket)) |> debug("followers")
+    followers = Bonfire.Social.Follows.list_followers(user, pagination: input_to_atoms(params), current_user: current_user(socket)) #|> debug("followers")
 
     [
       loading: false,
@@ -586,7 +586,7 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
 
   def load_user_feed_assigns("followed" =tab, user, params, socket) do
     user = user || e(socket, :assigns, :user, nil)
-    followed = Bonfire.Social.Follows.list_followed(user, pagination: input_to_atoms(params), current_user: current_user(socket)) |> debug("followed")
+    followed = Bonfire.Social.Follows.list_followed(user, pagination: input_to_atoms(params), current_user: current_user(socket)) #|> dump("followed")
 
     [
       loading: false,
