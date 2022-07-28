@@ -1,20 +1,21 @@
 
-<LiveRedirect to={"/+#{e(@object, :character, :username, nil) || ulid(@object)}"}
-  class="relative min-h-[5rem] flex items-center mt-2 rounded-lg grow bg-base-content/5 hover:bg-base-content/10">
+<div class="relative min-h-[5rem] flex items-center mt-2 rounded-lg grow bg-base-content/5">
   <div class="absolute top-0 bottom-0 left-0 flex items-center w-20 h-full rounded-l-lg bg-base-content/5 place-content-center">
     <Solid.CollectionIcon class="w-10 h-10 text-base-content/80" />
   </div>
   <div class="flex flex-col flex-1 p-3 ml-20 text-sm font-medium text-primary-content-800 ">
-    <div class="text-base font-medium ">  
+    <LiveRedirect 
+      to={"/+#{e(@object, :character, :username, nil) || ulid(@object)}"}
+      class="text-base font-medium link link-hover">  
       {rich name(@object)}
-    </div>
+    </LiveRedirect>
     <div
-      class="text-sm" 
+      class="text-sm italic" 
       :if={e(@object, :parent_category,  nil)}>
       {l "in "} 
-      <!-- <LiveRedirect to={"/+#{e(@object, :parent_category, :character, :username, nil) || ulid(@object)}"} class="link"> -->
+      <LiveRedirect to={"/+#{e(@object, :parent_category, :character, :username, nil) || ulid(@object)}"} class="link">
        { name(e(@object, :parent_category, nil))}
-      <!-- </LiveRedirect> -->
+      </LiveRedirect>
     </div>
     <!-- <div class="text-sm font-normal text-base-content/70">{Bonfire.Me.Characters.display_username(e(@object, :character, :username, nil), true)}</div> -->
     <div 
@@ -23,5 +24,14 @@
       {rich e(@object, :summary, e(@object, :profile, :summary, ""))}
     </div>
   </div>
-</LiveRedirect>
+  <div class="mr-4">
+    <Bonfire.UI.Common.FollowButtonLive 
+      id={ComponentID.new(Bonfire.UI.Common.FollowButtonLive, @object)}
+      object={@object}
+      hide_icon 
+      class="normal-case btn btn-outline btn-sm"
+      current_user={current_user(@__context__)} 
+    />
+  </div>
+</div>
 

@@ -6,13 +6,6 @@
     <div class={
       "feed-clickable flex items-center flex-1 justify-end space-x-4 mt-0"
       }>
-      <Bonfire.UI.Common.FollowButtonLive 
-        id={ComponentID.new(Bonfire.UI.Common.FollowButtonLive, e(@object, :id, "no-object"))}
-        object={@object} 
-        hide_text
-        class=""
-        current_user={current_user(@__context__)} 
-       />
       <Bonfire.UI.Common.BoostActionLive
         :if={@object_type not in [Bonfire.Data.Social.Message]} 
         id={ComponentID.new(Bonfire.UI.Common.BoostActionLive, ulid(@object))} 
