@@ -16,7 +16,7 @@
 
 
     <!-- <div
-      :if={Bonfire.Common.Config.get([:ui, :smart_input, :summary], []) == true}
+      :if={Config.get([:ui, :smart_input, :summary], []) == true}
       class="flex mt-2 mb-3 space-x-4">
       <button
         type="button"
@@ -28,7 +28,7 @@
     <div
       x-show="summary_open"
       x-transition
-      :if={Bonfire.Common.Config.get([:ui, :smart_input, :summary], []) == true}
+      :if={Config.get([:ui, :smart_input, :summary], []) == true}
       >
       <Field name={:summary}>
           <TextArea

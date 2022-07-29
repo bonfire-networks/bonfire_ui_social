@@ -439,7 +439,7 @@ defmodule Bonfire.UI.Social.ActivityOLDLive do
   # def component_for_object_type(type, object) when type in [ValueFlows.Process], do: [Bonfire.UI.Social.Activity.ProcessListLive.activity_component(object)] # TODO: choose between Task and other Intent types
   def component_for_object_type(type, object) when type in [ValueFlows.Process],
     do: [
-      {Bonfire.Common.Config.get(
+      {Config.get(
          [:ui, :default_instance_feed_previews, :process],
          Bonfire.UI.Social.Activity.ProcessListLive
        ), object: Bonfire.UI.Social.Activity.ProcessListLive.prepare(object)}
