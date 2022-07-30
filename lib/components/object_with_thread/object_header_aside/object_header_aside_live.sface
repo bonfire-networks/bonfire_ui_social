@@ -34,15 +34,7 @@
         form_opts={%{"phx-submit"=> "Bonfire.Social.Objects:tag"}}
         :let={autocomplete: autocomplete}
         >
-        <div
-          class="flex-1"
-          id={:tag_topics}
-          phx-hook="InputOrSelectOne"
-          > 
-          <input 
-            name="tags" 
-            class="w-full input input-bordered tagify " />
-          <select 
+        <select 
             data-phx-autocomplete="Bonfire.Classify:autocomplete"
             class="hidden tagify">
             {#for cat <- autocomplete || []}
@@ -51,6 +43,18 @@
                 value={ulid(cat)}>{e(cat, :profile, :name, nil)}</option>
             {/for}
           </select>
+        <div
+          class="flex-1"
+          id={:tag_topics}
+          phx-hook="InputOrSelectOne"
+          > 
+          <div
+            phx-update="ignore"
+            > 
+            <input 
+              name="tags" 
+              class="w-full input input-bordered tagify " />
+          </div>
         </div>
         <:open_btn>
           <div class="text-sm">
