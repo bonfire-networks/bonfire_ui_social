@@ -28,7 +28,7 @@
         class=" hover:bg-neutral hover:bg-opacity-20">
         <Bonfire.UI.Common.OpenModalLive
           id={ComponentID.new(Bonfire.UI.Common.OpenModalLive, @object)} 
-          title_text={l "Publish in topic(s)"}
+          title_text={l "Tag with topic(s)"}
           form_opts={%{"phx-submit"=> "Bonfire.Social.Objects:tag"}}
           :let={autocomplete: autocomplete}
           >
@@ -56,8 +56,11 @@
           </div>
         </div>
         <:open_btn>
-          <div class="text-sm">
-            {l "Publish in topic(s)"}
+          <div class="flex items-center gap-0">
+            <Solid.CollectionIcon class="w-4 h-4 mr-2 shrink-0 text-neutral text-opacity-70" />
+            <div class="text-sm text-neutral">
+              {l "Tag with topic(s)"}
+            </div>
           </div>
         </:open_btn>
         <:action_btns>
