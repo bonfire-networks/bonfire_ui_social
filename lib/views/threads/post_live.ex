@@ -25,7 +25,7 @@ defmodule Bonfire.UI.Social.PostLive do
       smart_input_prompt: l("Reply to this thread"),
       activity: nil,
       showing_within: :thread,
-      post: nil,
+      object: nil,
       thread_id: nil,
       thread_mode: nil,
       search_placeholder: nil,
@@ -78,7 +78,7 @@ defmodule Bonfire.UI.Social.PostLive do
       socket
       |> assign(
         activity: activity,
-        post: post,
+        object: post,
         url: url,
         participants: participants,
         no_index: !Bonfire.Me.Settings.get([Bonfire.Me.Users, :discoverable], true, current_user: author),

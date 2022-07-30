@@ -9,7 +9,7 @@
   reply_to_id={@reply_to_id}
   thread_mode={e(@thread_mode, nil)}
   activity={@activity}
-  object={@post}
+  object={@object}
   url={@url}
   thread_id={@thread_id}
   participants={e(@participants, [])}
