@@ -27,48 +27,7 @@
         </:action_btns>
       </Bonfire.UI.Common.OpenModalLive>
     </li>
-    <li>
-      <Bonfire.UI.Common.OpenModalLive
-        id={ComponentID.new(Bonfire.UI.Common.OpenModalLive, e(@object, nil))} 
-        title_text={e(@label, l "Tag this with topic(s)")}
-        form_opts={%{"phx-submit"=> "Bonfire.Social.Objects:tag"}}
-        :let={autocomplete: autocomplete}
-        >
-        <select 
-            data-phx-autocomplete="Bonfire.Classify:autocomplete"
-            class="hidden tagify">
-            {#for cat <- autocomplete || []}
-              <option 
-                class="" 
-                value={ulid(cat)}>{e(cat, :profile, :name, nil)}</option>
-            {/for}
-          </select>
-        <div
-          class="flex-1"
-          id={:tag_topics}
-          phx-hook="InputOrSelectOne"
-          > 
-          <div
-            phx-update="ignore"
-            > 
-            <input 
-              name="tags" 
-              class="w-full input input-bordered tagify " />
-          </div>
-        </div>
-        <:open_btn>
-          <div class="text-sm">
-            {l "Tag this with topic(s)"}
-          </div>
-        </:open_btn>
-        <:action_btns>
-          <button 
-            class="normal-case btn-sm btn btn-primary">
-            {l "Tag"}
-          </button>
-        </:action_btns>
-      </Bonfire.UI.Common.OpenModalLive>
-    </li>
+    
     <li
       :if={module_enabled?(Bonfire.UI.Common.ProfileItemLive)}
       >

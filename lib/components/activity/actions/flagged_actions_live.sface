@@ -55,6 +55,7 @@
 
    
     {/if}
+    
     <button 
       phx-click={"Bonfire.Social.Flags:unflag"} 
       phx-value-id={e(@object, :id, "")}
