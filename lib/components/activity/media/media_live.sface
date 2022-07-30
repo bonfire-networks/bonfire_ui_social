@@ -18,7 +18,7 @@
       <figure class="h-full">
         {#if String.starts_with?(media.media_type, ["image", "video", "embed", "audio", "song", "photo", "rich"])}
         <Bonfire.UI.Common.OpenModalLive
-          id={ComponentID.new(Bonfire.UI.Common.OpenModalLive, e(@object, nil))} 
+          id={ComponentID.new(Bonfire.UI.Common.OpenModalLive, e(@media, nil))} 
           title_text={e(@label, l "View media")}
           no_actions
         >
