@@ -131,11 +131,9 @@ defmodule Bonfire.UI.Social.ActivityLive do
         aria-label="user activity"
         role="article"
         tabIndex="0"
-        x-data={"{ activity_active: false, expanded: #{if e(assigns, :activity_inception, nil), do: false, else: true} }"}
+        x-data="{activity_active: false}"
         @mouseenter="activity_active = true"
         @mouseleave="activity_active = false"
-        x-show="expanded"
-        x-collapse.min.100px
         class={
         "p-3 activity relative pl-16 group " <> e(assigns, :class, ""),
         "activity_inception bg-base-content/10 !m-0 opacity-100 before:!left-2 before:top-1 before:bottom-1": e(assigns, :activity_inception, nil) != nil and  e(assigns, :thread_mode, nil) == :flat,
@@ -149,10 +147,6 @@ defmodule Bonfire.UI.Social.ActivityLive do
         "border-l-2 border-primary !bg-primary/5": e(@activity, :seen, nil) == nil and e(assigns, :showing_within, nil) == :notifications and e(assigns, :activity_inception, nil) == nil,
         "border-l-2 border-primary !bg-primary/5 -ml-[4px]": String.contains?(e(assigns, :url, ""), @permalink)
         }>
-        <button 
-        class="mb-1 normal-case btn btn-xs btn-outline"
-        :if={e(assigns, :activity_inception, nil)}  
-        @click="expanded = ! expanded">{l "Toggle content"}</button>
         <form
           :if={not is_nil(e(assigns, :feed_id, nil)) and e(assigns, :showing_within, nil) in [:messages, :thread, :notifications] and e(assigns, :activity, :subject, :id, nil) != ulid(current_user(assigns)) and e(assigns, :activity, :object, :created, :creator_id, nil) != ulid(current_user(assigns)) }
           phx-submit="Bonfire.Social.Feeds:mark_seen"
