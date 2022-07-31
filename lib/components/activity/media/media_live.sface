@@ -1,5 +1,7 @@
 
-<div class={
+<div 
+  :if={@showing_within != :smart_input}
+  class={
   "grid w-full my-3",
   "grid-cols-1 media-single": length(@media) == 1,
   "grid-cols-2 media-multiple gap-2": length(@media) == 2 or length(@media) == 4,
@@ -7,7 +9,6 @@
   "!grid-cols-1 !grid-rows-1": e(@showing_within, nil) == :smart_input
   }>
   {#for {media, counter} <- Enum.with_index(@media) |> dump()}
-    {#if e(@showing_within, nil) != :smart_input}
     <article class={
       "media-entry h-full w-full",
       "col-start-1 col-end-3 row-start-1 row-end-5": length(@media) == 3 && counter == 0,
@@ -16,9 +17,9 @@
       "max-h-[130px]": length(@media) == 4
     }>
       <figure class="h-full">
-        {#if String.starts_with?(media.media_type, ["image", "video", "embed", "audio", "song", "photo", "rich"])}
+        {#if String.starts_with?(e(media, :media_type, ""), ["image", "video", "embed", "audio", "song", "photo", "rich"])}
         <Bonfire.UI.Common.OpenModalLive
-          id={ComponentID.new(Bonfire.UI.Common.OpenModalLive, e(@media, nil))} 
+          id={ComponentID.new(Bonfire.UI.Common.OpenModalLive, media)} 
           title_text={e(@label, l "View media")}
           no_actions
         >
@@ -137,11 +138,11 @@
         {/if}
       </figure>
     </article>
-    {#else}
+    <!-- {#else}
       <div class="flex items-center space-x-1 text-xs font-semibold text-base-content/60">
         <Outline.LinkIcon class="w-4 h-4"/>
         <span class="flex-1">...{String.slice(media_url(media), -20..-1)}</span>
       </div>
-    {/if}
+    {/if} -->
   {/for}
 </div>

@@ -32,7 +32,9 @@ defmodule Bonfire.UI.Social.Activity.MediaLive do
   end
 
   def as_string(list) when is_list(list) do
-    List.first(list) |> as_string()
+    List.first(list)
+    # |> debug()
+    |> as_string()
   end
   def as_string(other) do
     to_string(other)
