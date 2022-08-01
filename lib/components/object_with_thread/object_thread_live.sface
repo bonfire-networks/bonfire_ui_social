@@ -1,5 +1,6 @@
   <div class="flex flex-col flex-1 ">
     <div class="flex-1">
+      
       <Bonfire.UI.Social.ActivityLive
         id={"ta:"<>ulid(@activity)}
         showing_within={:thread}
@@ -13,7 +14,7 @@
       />
       <div
       :if={e(@thread_mode, :thread) != :flat}   
-      class="p-3 text-sm font-medium tracking-wide border-b bg-base-content/5 border-base-content/10 text-base-content">{l "Discussion"}</div>
+      class="py-3 text-sm font-medium tracking-wide text-base-content/70">{l "Discussion"}</div>
       <Bonfire.UI.Social.ThreadLive 
         id={e(@thread_id, nil)}
         thread_id={e(@thread_id, nil)}

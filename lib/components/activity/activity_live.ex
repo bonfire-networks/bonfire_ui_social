@@ -135,17 +135,18 @@ defmodule Bonfire.UI.Social.ActivityLive do
         @mouseenter="activity_active = true"
         @mouseleave="activity_active = false"
         class={
-        "p-3 activity relative pl-16 group " <> e(assigns, :class, ""),
+        "p-3 activity relative pl-16 group bg-base-100" <> e(assigns, :class, ""),
         "activity_inception bg-base-content/10 !m-0 opacity-100 before:!left-2 before:top-1 before:bottom-1": e(assigns, :activity_inception, nil) != nil and  e(assigns, :thread_mode, nil) == :flat,
         "cursor-pointer hover:bg-base-content/5": ulid(@object) == nil or e(@activity, :replied, :reply_to_id, nil) != nil or ulid(@activity) != nil and !e(assigns, :viewing_main_object, nil) and e(assigns, :showing_within, nil) != :thread, # Hover the activity background unless it is a quoted activity
-        "pt-6 hover:!bg-base-content/5 !bg-base-content/5 border-b border-base-content/10": e(assigns, :viewing_main_object, nil) == true,
-        "main_reply_to mb-2 p-2 py-1 mt-2 relative before:absolute before:content-[''] before:w-1 before:bg-base-content/40 before:left-0 before:top-0 before:bottom-0 opacity-60": ulid(@object) != nil and e(@activity, :replied, :reply_to_id, nil) == nil and ulid(@activity) == nil and e(assigns, :showing_within, nil) != :widget and e(assigns, :showing_within, nil) != :search, # showing a quoted reply_to
+        "!p-3 pt-6 rounded-b-md": e(assigns, :viewing_main_object, nil) == true,
+        "main_reply_to !rounded-none !shadow-none mb-2 p-2 py-1 mt-2 relative before:absolute before:content-[''] before:w-1 before:bg-base-content/40 before:left-0 before:top-0 before:bottom-0 opacity-60": ulid(@object) != nil and e(@activity, :replied, :reply_to_id, nil) == nil and ulid(@activity) == nil and e(assigns, :showing_within, nil) != :widget and e(assigns, :showing_within, nil) != :search, # showing a quoted reply_to
         "cursor-text": e(assigns, :showing_within, nil) == :thread and e(assigns, :thread_mode, nil) != :flat,
+        "rounded-md shadow": e(assigns, :showing_within, nil) != :thread and e(assigns, :thread_mode, nil) != :flat,
         "cursor-text": e(assigns, :thread_mode, nil) == :flat,
         "!pl-14": e(assigns, :showing_within, nil) == :thread && e(assigns, :viewing_main_object, nil) != true,
         "reply": ulid(@object) != nil and e(@activity, :replied, :reply_to_id, nil) != nil and ulid(@activity) != nil,
         "border-l-2 border-primary !bg-primary/5": e(@activity, :seen, nil) == nil and e(assigns, :showing_within, nil) == :notifications and e(assigns, :activity_inception, nil) == nil,
-        "border-l-2 border-primary !bg-primary/5 -ml-[4px]": String.contains?(e(assigns, :url, ""), @permalink)
+        "!bg-primary/5": String.contains?(e(assigns, :url, ""), @permalink)
         }>
         <form
           :if={not is_nil(e(assigns, :feed_id, nil)) and e(assigns, :showing_within, nil) in [:messages, :thread, :notifications] and e(assigns, :activity, :subject, :id, nil) != ulid(current_user(assigns)) and e(assigns, :activity, :object, :created, :creator_id, nil) != ulid(current_user(assigns)) }
