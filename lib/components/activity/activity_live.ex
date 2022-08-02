@@ -28,7 +28,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
   @create_or_reply_verbs @create_verbs ++ @reply_verbs
 
   def preload(list_of_assigns) do
-    Bonfire.Boundaries.LiveHandler.maybe_preload_and_check_boundaries(list_of_assigns, __MODULE__)
+    Bonfire.Boundaries.LiveHandler.maybe_preload_and_check_boundaries(list_of_assigns, verbs: [:read], caller_module: __MODULE__)
   end
 
   def update(assigns, %{assigns: %{activity_components: activity_components}} = socket) do
@@ -613,7 +613,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
 
   def component_show_category_actions(_activity),
     do: [Bonfire.UI.Social.Activity.CategoryActionsLive]
-    
+
   def component_show_process_actions(_activity),
     do: [Bonfire.UI.Social.Activity.ProcessActionsLive]
 
