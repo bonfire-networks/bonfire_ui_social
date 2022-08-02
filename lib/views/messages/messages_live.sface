@@ -57,7 +57,7 @@
   </div>
 
   {#else}
-    <div class="flex-1 hidden pt-12 tablet-lg:block rounded-b-md md:mx-0 text-base-content bg-base-100">
+    <div class="flex-1 hidden py-12 tablet-lg:block rounded-b-md md:mx-0 text-base-content bg-base-100">
       <Bonfire.UI.Common.EmptyFeed
         feedback_title={e(@feedback_title, nil)}
         feedback_message={e(@feedback_message, nil)}

@@ -143,10 +143,10 @@ defmodule Bonfire.UI.Social.ActivityLive do
         "cursor-text": e(assigns, :showing_within, nil) == :thread and e(assigns, :thread_mode, nil) != :flat,
         "rounded-md shadow": e(assigns, :showing_within, nil) != :thread and e(assigns, :thread_mode, nil) != :flat,
         "cursor-text": e(assigns, :thread_mode, nil) == :flat,
-        "!pl-14": e(assigns, :showing_within, nil) == :thread && e(assigns, :viewing_main_object, nil) != true,
+        "!pl-14 hover:!bg-base-100": e(assigns, :showing_within, nil) == :thread && e(assigns, :viewing_main_object, nil) != true,
         "reply": ulid(@object) != nil and e(@activity, :replied, :reply_to_id, nil) != nil and ulid(@activity) != nil,
         "border-l-2 border-primary !bg-primary/5": e(@activity, :seen, nil) == nil and e(assigns, :showing_within, nil) == :notifications and e(assigns, :activity_inception, nil) == nil,
-        "!bg-primary/5": String.contains?(e(assigns, :url, ""), @permalink)
+        "border-r-2 border-primary": String.contains?(e(assigns, :url, ""), @permalink)
         }>
         <form
           :if={not is_nil(e(assigns, :feed_id, nil)) and e(assigns, :showing_within, nil) in [:messages, :thread, :notifications] and e(assigns, :activity, :subject, :id, nil) != ulid(current_user(assigns)) and e(assigns, :activity, :object, :created, :creator_id, nil) != ulid(current_user(assigns)) }

@@ -1,4 +1,4 @@
-<div class="rounded-t-none bg-base-100 rounded-box">
+<div>
 
   <#slot name="header" />
 
