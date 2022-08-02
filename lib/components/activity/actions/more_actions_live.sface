@@ -136,7 +136,10 @@
 
     <!-- Delete the object -->
     <li 
-      :if={ulid(current_user(@__context__)) == subject_id(@activity, @object) or Bonfire.Me.Users.is_admin?(current_user(@__context__) && Types.object_type(@object) !=Bonfire.Data.Identity.User)}
+      :if={ulid(current_user(@__context__)) == subject_id(@activity, @object) 
+        or ( Bonfire.Me.Users.is_admin?(current_user(@__context__)) 
+            || Bonfire.Boundaries.can?(@__context__, :delete, :instance) )
+          && Types.object_type(@object) !=Bonfire.Data.Identity.User }
       class=" hover:bg-neutral hover:bg-opacity-20">
       <OpenModalLive
         id={ComponentID.new(OpenModalLive, @object)} 

@@ -29,7 +29,7 @@
     {#else}
 
     <OpenModalLive
-        :if={Bonfire.Me.Users.is_admin?(current_user(@__context__)) || Bonfire.Boundaries.can?(@__context__, :mediate, :instance)}
+        :if={Bonfire.Me.Users.is_admin?(current_user(@__context__)) || Bonfire.Boundaries.can?(@__context__, :delete, :instance)}
         id={ComponentID.new(OpenModalLive, @object)} 
         title_text={l("Delete this")<>" "<>e(@object_type_readable, l "object")}
         >
