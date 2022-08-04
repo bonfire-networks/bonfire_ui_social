@@ -136,14 +136,11 @@ defmodule Bonfire.UI.Social.ActivityLive do
         @mouseleave="activity_active = false"
         class={
         "p-3 activity relative pl-16 group bg-base-100" <> e(assigns, :class, ""),
+        "!pl-3":  e(assigns, :showing_within, :feed) == :feed,
         "activity_inception bg-base-content/10 !m-0 opacity-100 before:!left-2 before:top-1 before:bottom-1": e(assigns, :activity_inception, nil) != nil and  e(assigns, :thread_mode, nil) == :flat,
-        "cursor-pointer hover:bg-base-content/5": ulid(@object) == nil or e(@activity, :replied, :reply_to_id, nil) != nil or ulid(@activity) != nil and !e(assigns, :viewing_main_object, nil) and e(assigns, :showing_within, nil) != :thread, # Hover the activity background unless it is a quoted activity
         "!p-3 pt-6 rounded-b-md": e(assigns, :viewing_main_object, nil) == true,
         "main_reply_to !rounded-none !shadow-none mb-2 p-2 py-1 mt-2 relative before:absolute before:content-[''] before:w-1 before:bg-base-content/40 before:left-0 before:top-0 before:bottom-0 opacity-60": ulid(@object) != nil and e(@activity, :replied, :reply_to_id, nil) == nil and ulid(@activity) == nil and e(assigns, :showing_within, nil) != :widget and e(assigns, :showing_within, nil) != :search, # showing a quoted reply_to
-        "cursor-text": e(assigns, :showing_within, nil) == :thread and e(assigns, :thread_mode, nil) != :flat,
         "rounded-md shadow": e(assigns, :showing_within, nil) != :thread and e(assigns, :thread_mode, nil) != :flat,
-        "cursor-text": e(assigns, :thread_mode, nil) == :flat,
-        "!pl-14 hover:!bg-base-100": e(assigns, :showing_within, nil) == :thread && e(assigns, :viewing_main_object, nil) != true,
         "reply": ulid(@object) != nil and e(@activity, :replied, :reply_to_id, nil) != nil and ulid(@activity) != nil,
         "border-l-2 border-primary !bg-primary/5": e(@activity, :seen, nil) == nil and e(assigns, :showing_within, nil) == :notifications and e(assigns, :activity_inception, nil) == nil,
         "border-r-2 border-primary": String.contains?(e(assigns, :url, ""), @permalink)

@@ -55,7 +55,7 @@
         "prose break-words object_body max-w-none font-[16px] mt-1 prose-sm prose-p:pt-0 prose-p:my-0",
         "font-[16px] mt-1 prose-sm prose-p:pt-0 prose-p:my-0 !leading-[22px]": e(@showing_within, nil) == :thread,
         "prose-lg mt-3 prose-p:pb-4 !leading-[26px] prose-p:leading-[26px]": e(@viewing_main_object, nil),
-        "prose-p:pt-1 mt-0.5 !leading-[20px]": e(@showing_within, nil) == :feed
+        "prose-p:pt-1 my-3 !leading-[20px]": e(@showing_within, nil) == :feed
         }>
       {rich e(post_content(@object), :html_body, l "This post has been deleted.")}
     </div>

@@ -1,5 +1,5 @@
 
-<div class="relative min-h-[5rem] flex items-center mt-2 rounded-lg grow bg-base-content/5">
+<div class="relative min-h-[5rem] flex items-center my-3 rounded-lg grow bg-base-content/5">
   <div class="absolute top-0 bottom-0 left-0 flex items-center w-20 h-full rounded-l-lg bg-base-content/5 place-content-center">
     <Solid.CollectionIcon class="w-10 h-10 text-base-content/80" />
   </div>

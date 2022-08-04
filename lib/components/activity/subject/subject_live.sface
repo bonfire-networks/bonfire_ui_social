@@ -74,18 +74,19 @@
       "flex items-top",
       "space-x-3":  e(assigns, :viewing_main_object, nil) == true,
       "py-1": e(@thread_mode, nil) == :flat}>
-      <div 
+      <!-- <div 
         :if={e(@showing_within, nil) !=:thread  || ulid(@object) == nil and e(@activity, :replied, :reply_to_id, nil) != nil and ulid(@activity) != nil}
         id={"subject-#{e(@activity_inception, nil)}-"<>( ulid(@activity) || e(@object, :id, "no-id") )}
         phx-hook="OpenActivity"
         data-permalink={@permalink}
         data-navigate_to_thread={ "true"}
-        class="absolute top-0 bottom-0 left-0 w-16"></div>
+        class="absolute top-0 bottom-0 left-0 w-16"></div> -->
       <div 
         :if={ulid(current_user(@__context__)) != maybe_get(@character, :id) || e(@thread_mode, nil) != :flat}
         class={
         "absolute left-3",
         "!relative !left-0": e(assigns, :viewing_main_object, nil) == true,
+        "!static mr-3": e(@showing_within, :feed) == :feed,
         "bottom-2": e(@thread_mode, nil) == :flat,
       }>
       <LiveRedirect

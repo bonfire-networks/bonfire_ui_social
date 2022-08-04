@@ -6,11 +6,18 @@
     :class={if e(@viewing_main_object, nil) != true and Settings.get([:ui, :compact], false, @__context__), do: "activity_active ? '' : '[@media(any-hover:hover)]:hidden'"}
     class={
       "thread_actions mt-1 flex items-center": e(@showing_within, nil) == :thread or Settings.get([:ui, :compact], false, @__context__),
-      "feed_actions mt-1 -ml-2": e(@viewing_main_object, nil) != true,
+      "feed_actions items-center flex mt-1": e(@viewing_main_object, nil) != true,
+      "border-t border-base-content/10 pt-2": e(@showing_within, :feed) == :feed,
       "mt-1": e(@showing_within, nil) == :widget,
       "absolute z-50 p-0.5 h-8 hidden group-hover:flex rounded-md top-[-24px] right-[12px] bg-base-100 border border-base-200": e(@thread_mode, nil) == :flat,
       }>
 
+    <LiveRedirect 
+      :if={e(@showing_within, :feed) == :feed}
+      to={e(@permalink, nil)} 
+      class="px-1 font-normal normal-case btn btn-sm btn-ghost">
+      {l "View discussion"}
+    </LiveRedirect>
     <div class={
       "feed-clickable flex items-center flex-1 justify-end space-x-4 mt-0",
       "-ml-2": e(@viewing_main_object, nil) == true,
