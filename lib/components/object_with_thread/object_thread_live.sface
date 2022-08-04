@@ -45,7 +45,6 @@
         to_circles={e(@to_circles, [])}
         smart_input_prompt={e(@smart_input_prompt, "")}
         smart_input_text={e(@smart_input_text, "")}
-        textarea_class={@textarea_class}
         showing_within={e(@showing_within, :thread)}
         replied_activity_class={@replied_activity_class}
       />
