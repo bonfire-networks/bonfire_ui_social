@@ -39,7 +39,7 @@ defmodule Bonfire.UI.Social.MessagesLive do
         thread_id: nil,
         hide_smart_input: true,
         smart_input_text: nil,
-        feedback_title: l("Your direct messages"),
+        feedback_title: l("No messages"),
         feedback_message: l("Select a thread or start a new one..."),
         threads: LiveHandler.list_threads(current_user(socket), socket),
         smart_input_prompt: l("Compose a thoughtful message..."),

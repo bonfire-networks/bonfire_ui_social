@@ -14,7 +14,7 @@ defmodule Bonfire.Social.Follows.LiveHandler do
       ComponentID.send_assigns(e(params, "component", Bonfire.UI.Common.FollowButtonLive), id, set, socket)
     else e ->
       debug(e)
-      {:error, "Maybe you had already followed"}
+      {:error, "Could not follow"}
     end
   end
 
@@ -35,7 +35,7 @@ defmodule Bonfire.Social.Follows.LiveHandler do
       {:noreply, socket}
     else e ->
       debug(e)
-      {:error, "Maybe you had already followed"}
+      {:error, "Could not unfollow"}
     end
   end
 
@@ -53,7 +53,7 @@ defmodule Bonfire.Social.Follows.LiveHandler do
     |> filter_empty([])
     # |> debug("list_of_ids")
 
-    my_states = if current_user, do: Bonfire.Social.Follows.get!(current_user, list_of_ids, preload: false) |> Map.new(fn l -> {e(l, :edge, :object_id, nil), true} end), else: %{}
+    my_states = if current_user, do: Bonfire.Social.Follows.get!(current_user, list_of_ids, preload: false, skip_boundary_check: true) |> Map.new(fn l -> {e(l, :edge, :object_id, nil), true} end), else: %{}
 
     # debug(my_states, "my_follows")
 
