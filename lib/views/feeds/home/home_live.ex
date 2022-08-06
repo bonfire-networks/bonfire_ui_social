@@ -32,7 +32,6 @@ defmodule Bonfire.UI.Social.HomeLive do
           users: [
             secondary: [
               {Bonfire.UI.Social.WidgetTagsLive, []},
-              {Bonfire.UI.Common.WidgetInstanceInfoLive, []},
               {Bonfire.UI.Common.WidgetFeedbackLive, []}
             ]
           ]
