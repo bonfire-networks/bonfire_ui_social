@@ -2,7 +2,7 @@
     <LivePatch 
       to={"/messages/compose"}
       class="items-center hidden w-full mb-3 normal-case tablet:flex btn-wide btn btn-primary"> 
-      <Outline.ChatAltIcon class="inline-block w-5 h-5 mr-2" />
+      <Icon outline="ChatAlt" class="inline-block w-5 h-5 mr-2" />
       <span class="text-sm">{l "New message"}</span>
     </LivePatch>
 
@@ -11,7 +11,7 @@
       :if={e(@showing_within, nil) != :compose}
       to={"/messages/compose"}
       class="fixed items-center tablet:hidden btn btn-circle btn-primary btn-lg place-content-center z-[90] right-3 bottom-12 md:bottom-3"> 
-      <Outline.ChatAltIcon class="inline-block w-6 h-6" />
+      <Icon outline="ChatAlt" class="inline-block w-6 h-6" />
     </LivePatch>
 
     <div class="flex flex-1 hidden w-full p-3 mx-auto text-sm border-b tablet:block border-base-content border-opacity-10 bg-base-100 text-base-content rounded-t-md">{l "Message threads"}</div>

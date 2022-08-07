@@ -10,7 +10,7 @@
           class={"ml-1": @page != "home",
             "border-l-4 border-primary bg-base-content bg-opacity-10": @page == "home"} 
           to={path(:feed)}>
-          <Solid.HomeIcon class="w-4 h-4" />
+          <Icon solid="Home" class="w-4 h-4" />
           <span class="text-sm truncate ellipsis">{l "Home"}</span>
         </LivePatch> 
       </li>
@@ -19,7 +19,7 @@
           class={
           "border-l-4 border-primary bg-base-content bg-opacity-10": @page == "login"} 
           to={path(:login)}>
-          <Solid.LoginIcon class="w-4 h-4" />
+          <Icon solid="Login" class="w-4 h-4" />
           <span class="text-sm truncate ellipsis">{l "Login"}</span>
         </LivePatch> 
       </li>
@@ -28,7 +28,7 @@
           class={
           "border-l-4 border-primary bg-base-content bg-opacity-10": @page == "signup"} 
           to={path(:signup)}>
-          <Solid.HomeIcon class="w-4 h-4" />
+          <Icon solid="Home" class="w-4 h-4" />
           <span class="text-sm truncate ellipsis">{l "Signup"}</span>
         </LivePatch> 
       </li>
@@ -37,7 +37,7 @@
           class={
             "border-l-4 border-primary bg-base-content bg-opacity-10": @page == "local"} 
             to={if current_user(@current_user), do: "/feed/local", else: "/local"}>
-          <Solid.LocationMarkerIcon class="w-4 h-4" />
+          <Icon solid="LocationMarker" class="w-4 h-4" />
           <span class="text-sm truncate ellipsis">{l "Local"}</span>
         </LivePatch> 
       </li>
@@ -46,7 +46,7 @@
           class={
             "border-l-4 border-primary bg-base-content bg-opacity-10": @page == "directory"} 
             to={"/users"}>
-          <Solid.UserGroupIcon class="w-4 h-4" />
+          <Icon solid="UserGroup" class="w-4 h-4" />
           <span class="text-sm truncate ellipsis">{l "Users directory"}</span>
         </LivePatch> 
       </li>
@@ -55,7 +55,7 @@
           class={"ml-1": @page != "federation",
             "border-l-4 border-primary bg-base-content bg-opacity-10": @page == "federation"} 
           to={"/feed/federation"}>
-          <Solid.GlobeIcon class="w-4 h-4" />
+          <Icon solid="Globe" class="w-4 h-4" />
           <span class="text-sm truncate ellipsis">{l "Federated"}</span>
         </LivePatch> 
       </li>

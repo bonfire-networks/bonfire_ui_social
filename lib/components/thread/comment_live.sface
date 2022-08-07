@@ -24,7 +24,7 @@
         class="p-3 pr-0 pl-[21px]"
         @click="show_replies = !show_replies"
         x-show="!show_replies">
-        <Outline.ChevronDownIcon class="w-4 h-4 cursor-pointer text-primary text-opacity-70 hover:text-opacity hover:text-opacity-100" />
+        <Icon outline="ChevronDown" class="w-4 h-4 cursor-pointer text-primary text-opacity-70 hover:text-opacity hover:text-opacity-100" />
       </div>
       <div 
         class="flex-1 w-full"
@@ -62,7 +62,7 @@
               <div class="p-4 rounded-md bg-info/10">
                 <div class="flex">
                   <div class="flex-shrink-0">
-                    <Solid.InformationCircleIcon class="w-5 h-5 text-info" />
+                    <Icon solid="InformationCircle" class="w-5 h-5 text-info" />
                   </div>
                   <div class="flex-1 ml-3 md:flex md:justify-between">
                     <p class="text-sm text-info">{l "This comment was deleted."}</p>

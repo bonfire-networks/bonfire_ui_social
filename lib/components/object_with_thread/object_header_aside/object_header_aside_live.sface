@@ -1,6 +1,6 @@
 <div class="relative z-40 dropdown dropdown-end">
   <label tabindex="0" class="flex normal-case btn place-content-center btn-circle btn-ghost btn-sm">
-      <Solid.DotsVerticalIcon class="w-5 h-5 text-base-content text-opacity-70" />
+      <Icon solid="DotsVertical" class="w-5 h-5 text-base-content text-opacity-70" />
   </label>
   <ul tabindex="0" class="p-2 shadow dropdown-content menu bg-base-100 rounded-box w-52">
     <li>

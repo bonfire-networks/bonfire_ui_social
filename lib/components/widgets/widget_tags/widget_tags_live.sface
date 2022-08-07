@@ -20,7 +20,7 @@
                     </div>
                   <div class="text-xs font-light text-base-content text-opacity-80">{e(tag, :count, 0)} {l "activities"}</div>
               </div>
-              <!-- <div><Outline.DotsHorizontalIcon class="w-5 h-5 text-base-content text-opacity-60" /></div> -->
+              <!-- <div><Icon outline="DotsHorizontal" class="w-5 h-5 text-base-content text-opacity-60" /></div> -->
             </div>
           </li>
           </LivePatch>

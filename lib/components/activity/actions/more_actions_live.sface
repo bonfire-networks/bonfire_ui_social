@@ -12,7 +12,7 @@
     tabindex="0"
     class={"btn btn-ghost btn-circle btn-sm"}> 
     <span class="text-opacity-50 text-base-content">
-      <Solid.DotsHorizontalIcon class="w-4 h-4" />
+      <Icon solid="DotsHorizontal" class="w-4 h-4" />
     </span>
   </button>
   <ul
@@ -57,7 +57,7 @@
         </div>
         <:open_btn>
           <div class="flex items-center gap-0">
-            <Solid.CollectionIcon class="w-4 h-4 mr-2 shrink-0 text-neutral text-opacity-70" />
+            <Icon solid="Collection" class="w-4 h-4 mr-2 shrink-0 text-neutral text-opacity-70" />
             <div class="text-sm text-neutral">
               {l "Tag with topic(s)"}
             </div>
@@ -115,7 +115,7 @@
         {l "Remote feeds won't be affected."} 
         <:open_btn>
           <div class="flex items-center text-sm text-neutral">
-            <Solid.TrashIcon class="w-4 h-4 mr-2 shrink-0 text-neutral text-opacity-70" />
+            <Icon solid="Trash" class="w-4 h-4 mr-2 shrink-0 text-neutral text-opacity-70" />
             <span class="truncate ellipsis">
               {l("Delete this")<>" "<>(if @verb in ["Write", "Create"], do: l("from feeds"), else: @verb)}
             </span>
@@ -126,7 +126,7 @@
           phx-click={"Bonfire.Social.Feeds:delete"} 
           phx-value-id={e(@activity, :id, "")}
           class="btn btn-error">
-          <Solid.TrashIcon class="w-4 h-4 mr-2 shrink-0 text-neutral text-opacity-70" />
+          <Icon solid="Trash" class="w-4 h-4 mr-2 shrink-0 text-neutral text-opacity-70" />
           <span class="truncate ellipsis">{l("Delete this")<>" "<>(if @verb in ["Write", "Create"], do: l("from feeds"), else: @verb)}</span> 
         </button>
         </:action_btns>
@@ -149,7 +149,7 @@
         {l "A request will be sent to remote instances to delete it as well."} 
         <:open_btn>
           <div class="flex items-center text-sm text-neutral">
-            <Solid.TrashIcon class="w-4 h-4 mr-2 shrink-0 text-neutral text-opacity-70" />
+            <Icon solid="Trash" class="w-4 h-4 mr-2 shrink-0 text-neutral text-opacity-70" />
             <span class="truncate ellipsis">
               {l("Delete this")} {e(@object_type_readable, l "object")}
             </span>
@@ -160,7 +160,7 @@
           phx-click={"Bonfire.Social.Objects:delete"} 
           phx-value-id={e(@object, :id, "")}
           class="normal-case btn btn-error btn-sm">
-          <Solid.TrashIcon class="w-4 h-4 mr-2 shrink-0" />
+          <Icon solid="Trash" class="w-4 h-4 mr-2 shrink-0" />
           <span class="truncate ellipsis">{l("Delete this")} {e(@object_type_readable, l "object")}</span>
         </button>
         </:action_btns>

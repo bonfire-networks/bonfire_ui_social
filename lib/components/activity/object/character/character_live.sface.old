@@ -2,7 +2,7 @@
 
 <div class={"flex items-center mb-3"}>
   <div class="flex items-center justify-start w-5 h-5">
-    <Solid.UserAddIcon class="w-5 h-5 text-info" />      
+    <Icon solid="UserAdd" class="w-5 h-5 text-info" />      
   </div>
   <div class="flex-1 ml-2">
     <div 
@@ -73,7 +73,7 @@
 >
   <!-- <div 
     class="flex items-center justify-start w-5 h-5">
-    <Solid.UserAddIcon class="w-5 h-5 text-info" />      
+    <Icon solid="UserAdd" class="w-5 h-5 text-info" />      
   </div> -->
   <div class="flex-1 ml-2">
     <div 

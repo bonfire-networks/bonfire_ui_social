@@ -14,7 +14,7 @@
       class="z-20 align-bottom tooltip tooltip-bottom">
       {#case Bonfire.Files.FaviconStore.favicon_url(@permalink)}
         {#match nil}
-          <Solid.ExternalLinkIcon class="w-4 h-4 text-opacity-50 text-base-content" />
+          <Icon solid="ExternalLink" class="w-4 h-4 text-opacity-50 text-base-content" />
         {#match image}
           <img src={image} class="w-4 h-4"/>
       {/case}

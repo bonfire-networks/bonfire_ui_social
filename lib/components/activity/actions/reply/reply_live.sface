@@ -16,7 +16,7 @@
     @click="show_smart_input_fullscreen = true">
     <div class={"btn btn-ghost btn-circle btn-sm"}> 
       <span class="text-opacity-50 text-base-content">
-        <Outline.ReplyIcon class="w-4 h-4 stroke-1" />
+        <Icon outline="Reply" class="w-4 h-4 stroke-1" />
         <span class="sr-only">{l "Reply"}</span>
       </span>
     </div>
@@ -29,7 +29,7 @@
   >
     <div class={"btn btn-ghost btn-circle btn-sm"}> 
       <span class="text-opacity-50 text-base-content">
-        <Outline.ReplyIcon class="w-4 h-4 stroke-1" />
+        <Icon outline="Reply" class="w-4 h-4 stroke-1" />
         <span class="sr-only">{l "Reply"}</span>
       </span>
     </div>
@@ -43,7 +43,7 @@
     @click="show_smart_input_fullscreen = true">
     <div class={"btn btn-ghost btn-circle btn-sm"}> 
       <span class="text-opacity-50 text-base-content">
-        <Outline.ReplyIcon class="w-4 h-4 stroke-1" />
+        <Icon outline="Reply" class="w-4 h-4 stroke-1" />
         <span class="sr-only">{l "Reply"}</span>
       </span>
     </div>
@@ -57,7 +57,7 @@
   >
     <div class={"btn btn-ghost btn-circle btn-sm"}> 
       <span class="text-opacity-50 text-base-content">
-        <Outline.ReplyIcon class="w-4 h-4 stroke-1" />
+        <Icon outline="Reply" class="w-4 h-4 stroke-1" />
         <span class="sr-only">{l "Reply"}</span>
       </span>
     </div>

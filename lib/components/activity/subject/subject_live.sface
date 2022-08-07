@@ -10,7 +10,7 @@
     :if={e(@showing_within, nil) == :smart_input}
     phx-click="Bonfire.Social.Feeds:remove_data"
     class="absolute top-2 right-2 btn btn-ghost btn-xs btn-circle">
-    <Outline.XIcon class="w-4 h-4" />
+    <Icon outline="X" class="w-4 h-4" />
   </span>
 
   {#if ulid(@object) != nil and ulid(@activity) == nil and e(@showing_within, nil) != :search }
@@ -141,6 +141,6 @@
   :if={e(@activity, :replied, :thread, :named, :name, nil) && (e(@showing_within, nil)) in [:feed]}
   class="flex items-center mt-2 text-sm font-medium"
   >
-  <Outline.ArrowRightIcon class="w-4 h-4 text-base-content/80" />
+  <Icon outline="ArrowRight" class="w-4 h-4 text-base-content/80" />
   <span class="mx-1">{l "in"}</span> <span class="link">{e(@activity, :replied, :thread, :named, :name, "")}</span>
 </LiveRedirect>

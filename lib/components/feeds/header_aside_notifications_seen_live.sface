@@ -5,7 +5,7 @@
   phx-value-scope="all"
   data-tip={l "Mark all as read"}
   class="flex items-center normal-case place-content-center tooltip tooltip-bottom btn btn-sm btn-ghost btn-square">
-  <Outline.CheckIcon 
+  <Icon outline="Check" 
     class="w-5 h-5 text-base-content/80" 
   />
 </button>

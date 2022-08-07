@@ -12,6 +12,6 @@ class="flex items-center p-3 py-1"
     </div>
 </div>
 <!-- <div class="pl-2 border-l">
-    <Outline.ChevronDownIcon class="w-5 h-5" />
+    <Icon outline="ChevronDown" class="w-5 h-5" />
 </div> -->
 </div>
