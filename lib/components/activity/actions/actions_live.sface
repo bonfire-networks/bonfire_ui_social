@@ -7,7 +7,7 @@
     class={
       "thread_actions mt-1 flex items-center": @showing_within == :thread or Settings.get([:ui, :compact], false, @__context__),
       "feed_actions items-center flex mt-1": @viewing_main_object != true,
-      "border-t border-base-content/10 pt-2": e(@showing_within, :feed) == :feed,
+      "border-t border-base-content/10 pt-2": e(@showing_within, :feed) == :feed || e(@showing_within, :feed) == :notifications,
       "mt-1": @showing_within == :widget,
       "absolute z-50 p-0.5 h-8 hidden group-hover:flex rounded-md top-[-24px] right-[12px] bg-base-100 border border-base-200": @thread_mode == :flat,
       }>

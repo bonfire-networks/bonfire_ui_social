@@ -169,10 +169,10 @@
 
       <div :if={@verb == "Reply"} class="flex w-full items-top">
       <!-- REPLY -->
-        <div class="absolute left-3">
+        <div class="">
           <Bonfire.UI.Common.AvatarLive user={e(@activity, :subject, nil)} />
         </div>
-        <div class="flex items-center justify-between min-w-0 space-x-1 w-full leading-[18px]">
+        <div class="flex ml-3 items-center justify-between min-w-0 space-x-1 w-full leading-[18px]">
           <div class="flex items-center flex-1 truncate ellipsis">
             <LiveRedirect
               opts={"data-id": "subject_name"}
