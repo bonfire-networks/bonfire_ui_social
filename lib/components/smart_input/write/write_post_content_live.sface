@@ -52,8 +52,13 @@
                     "x-model": "title_text"
                   }
                   class={
+<<<<<<< HEAD
                     "block w-full border-0 pt-2.5 text-lg font-medium placeholder-base-content/70 bg-base-100 text-base-content border-b border-base-content/10",
                     "!border !border-base-content/30 rounded-lg mb-2": @thread_mode == :flat
+=======
+                    "block w-full border-0 p-2 text-lg font-medium placeholder-base-content/70 bg-base-100 text-base-content border-b border-base-content/10",
+                    "!border !border-base-content/30 rounded-lg mb-2": e(@thread_mode, nil) == :flat
+>>>>>>> 09edd76 (actions)
                   } 
                   />
               </Field>

@@ -26,17 +26,21 @@
 <div class="flex w-full activity_notification">
 
   <LiveRedirect to={path(the_other(@activity, @object, @__context__))} class="flex profile-item group ">
+<<<<<<< HEAD
     <div class="left-3">
+=======
+    <div class="">
+>>>>>>> 09edd76 (actions)
       <Bonfire.UI.Common.AvatarLive user={the_other(@activity, @object, @__context__)} />
     </div>
     <div>
-      <div class="items-baseline justify-between flex-1">
+      <div class="items-baseline justify-between flex-1 ml-3">
         <p class="text-base font-semibold group-hover:underline text-base-content">
           {e(the_other(@activity, @object, @__context__), :profile, :name, "")}
         </p>
         <span
         :if={e(the_other(@activity, @object, @__context__), :character, :username, nil)}
-        class="text-sm font-normal truncate ellipsis text-base-content text-opacity-60 subject_username">
+        class="-mt-1 text-sm font-normal truncate ellipsis text-base-content text-opacity-60 subject_username">
           @{e(the_other(@activity, @object, @__context__), :character, :username, "")}
         </span>
         <!-- <p class="-mt-px text-sm text-base-content text-opacity-70">
@@ -44,7 +48,7 @@
         </p> -->
       </div>
         <!-- SHOW THE BIO IN SEARCH -->
-      <div class="prose-sm prose">
+      <div class="ml-3 prose-sm prose">
          {markdown e(the_other(@activity, @object, @__context__), :profile, :summary, "")}
       </div>
     </div>

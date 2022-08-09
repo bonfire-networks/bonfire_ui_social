@@ -13,8 +13,13 @@
       }>
 
     <LiveRedirect 
+<<<<<<< HEAD
       :if={e(@showing_within, :feed) == :feed}
       to={@permalink} 
+=======
+      :if={e(@showing_within, :feed) == :feed || e(@showing_within, :feed) == :notifications}
+      to={e(@permalink, nil)} 
+>>>>>>> 09edd76 (actions)
       class="px-1 font-normal normal-case btn btn-sm btn-ghost">
       {l "View discussion"}
     </LiveRedirect>
