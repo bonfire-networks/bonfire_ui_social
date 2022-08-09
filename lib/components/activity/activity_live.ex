@@ -135,21 +135,12 @@ defmodule Bonfire.UI.Social.ActivityLive do
         @mouseenter="activity_active = true"
         @mouseleave="activity_active = false"
         class={
-<<<<<<< HEAD
-        "p-3 activity relative pl-16 group bg-base-100" <> (@class || ""),
-        "!pl-3": @showing_within == :feed,
-        "activity_inception bg-base-content/10 !m-0 opacity-100 before:!left-2 before:top-1 before:bottom-1": @activity_inception != nil and @thread_mode == :flat,
-        "!p-3 pt-6 rounded-b-md": @viewing_main_object == true,
-        "main_reply_to !rounded-none !shadow-none mb-2 p-2 py-1 mt-2 relative before:absolute before:content-[''] before:w-1 before:bg-base-content/40 before:left-0 before:top-0 before:bottom-0 opacity-60": ulid(@object) != nil and e(@activity, :replied, :reply_to_id, nil) == nil and ulid(@activity) == nil and @showing_within != :widget and @showing_within != :search, # showing a quoted reply_to
-        "rounded-md shadow": @showing_within != :thread and @thread_mode != :flat,
-=======
         "p-3 activity relative pl-16 group bg-base-100" <> e(assigns, :class, ""),
         "!pl-3":  e(assigns, :showing_within, :feed) == :feed || e(assigns, :showing_within, nil) == :notifications ,
         "activity_inception bg-base-content/10 !m-0 opacity-100 before:!left-2 before:top-1 before:bottom-1": e(assigns, :activity_inception, nil) != nil and  e(assigns, :thread_mode, nil) == :flat,
         "!p-3 pt-6 rounded-b-md": e(assigns, :viewing_main_object, nil) == true,
         "main_reply_to !rounded-none !shadow-none mb-2 p-2 py-1 mt-2 relative before:absolute before:content-[''] before:w-1 before:bg-base-content/40 before:left-0 before:top-0 before:bottom-0 opacity-60": ulid(@object) != nil and e(@activity, :replied, :reply_to_id, nil) == nil and ulid(@activity) == nil and e(assigns, :showing_within, nil) != :widget and e(assigns, :showing_within, nil) != :search, # showing a quoted reply_to
         "rounded-md shadow": e(assigns, :showing_within, nil) != :thread and e(assigns, :thread_mode, nil) != :flat,
->>>>>>> 09edd76 (actions)
         "reply": ulid(@object) != nil and e(@activity, :replied, :reply_to_id, nil) != nil and ulid(@activity) != nil,
         "border-l-2 border-primary !bg-primary/5": e(@activity, :seen, nil) == nil and @showing_within == :notifications and @activity_inception == nil,
         "border-r-2 border-primary": String.contains?(@url || "", @permalink)

@@ -84,17 +84,10 @@
       <div 
         :if={ulid(current_user(@__context__)) != maybe_get(@character, :id) || @thread_mode != :flat}
         class={
-<<<<<<< HEAD
-        "left-3",
-        "!static mr-3": @showing_within == :feed,
-        "!relative !left-0": @viewing_main_object == true,
-        "absolute bottom-2": @thread_mode == :flat,
-=======
         "absolute left-3",
         "!relative !left-0": e(assigns, :viewing_main_object, nil) == true,
         "!static mr-3": e(@showing_within, :feed) == :feed ||  e(@showing_within, :feed) == :notifications,
         "bottom-2": e(@thread_mode, nil) == :flat,
->>>>>>> 09edd76 (actions)
       }>
         <LiveRedirect
           opts={"data-id": "subject_name"}

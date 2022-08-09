@@ -26,11 +26,7 @@
 <div class="flex w-full activity_notification">
 
   <LiveRedirect to={path(the_other(@activity, @object, @__context__))} class="flex profile-item group ">
-<<<<<<< HEAD
-    <div class="left-3">
-=======
     <div class="">
->>>>>>> 09edd76 (actions)
       <Bonfire.UI.Common.AvatarLive user={the_other(@activity, @object, @__context__)} />
     </div>
     <div>
