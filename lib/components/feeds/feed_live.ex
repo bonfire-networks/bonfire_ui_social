@@ -6,21 +6,21 @@ defmodule Bonfire.UI.Social.FeedLive do
 
   import Where
 
-  prop feed_id, :string
-  prop feed_ids, :any
+  prop feed_id, :string, default: nil
+  prop feed_ids, :any, default: nil
   prop feed, :list
   prop page_info, :any
-  prop feedback_title, :string
-  prop feedback_message, :string
-  prop showing_within, :any, default: nil
+  prop feedback_title, :string, default: nil
+  prop feedback_message, :string, default: nil
+  prop showing_within, :any, default: :feed
   prop feed_update_mode, :string, default: "append"
   prop hide_load_more, :boolean, default: false
-  prop verb_default, :string
+  prop verb_default, :string, default: nil
   prop loading, :boolean, default: false
   prop preload, :atom, default: :feed
-  prop page, :string
+  prop page, :string, default: nil
   prop page_title, :string, required: true
-  prop feed_title, :string
+  prop feed_title, :string, default: nil
 
   def mount(socket) do
     {:ok, socket

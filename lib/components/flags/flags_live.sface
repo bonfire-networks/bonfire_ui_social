@@ -1,7 +1,7 @@
 <div>
   <Bonfire.UI.Social.FeedLive 
     id={e(@feed_id, :flags)}
-    feed_id={e(@feed_id, nil)}
+    feed_id={@feed_id}
     page_title={@page_title}
     current_user={e(current_user(@__context__), nil)}
     feed={@feed}

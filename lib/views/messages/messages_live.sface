@@ -38,7 +38,7 @@
           :if={current_user(@__context__)}
           current_user={current_user(@__context__)}
           reply_to_id={e(@reply_to_id, "")}
-          thread_id={e(@thread_id, nil)}
+          thread_id={@thread_id}
           to_boundaries={e(@to_boundaries, [])}
           to_circles={e(@to_circles, [])}
           create_activity_type={@create_activity_type}
@@ -58,8 +58,8 @@
   {#else}
     <div class="flex-1 hidden py-12 tablet-lg:block rounded-b-md md:mx-0 text-base-content bg-base-100">
       <Bonfire.UI.Common.EmptyFeed
-        feedback_title={e(@feedback_title, nil)}
-        feedback_message={e(@feedback_message, nil)}
+        feedback_title={@feedback_title}
+        feedback_message={@feedback_message}
       /> 
     </div>
     <div class="flex-1 p-3 tablet-lg:hidden rounded-b-md md:mx-0 text-base-content bg-base-100">

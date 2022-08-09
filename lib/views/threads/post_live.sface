@@ -1,13 +1,13 @@
 <Bonfire.UI.Social.ObjectThreadLive
   page={@page}
   page_title={@page_title}
-  search_placeholder={e(@search_placeholder, nil)}
+  search_placeholder={@search_placeholder}
   smart_input_prompt={@smart_input_prompt}
   smart_input_text={@smart_input_text}
   to_boundaries={e(@to_boundaries, [])}
   to_circles={e(@to_circles, [])}
   reply_to_id={@reply_to_id}
-  thread_mode={e(@thread_mode, nil)}
+  thread_mode={@thread_mode}
   activity={@activity}
   object={@object}
   url={@url}

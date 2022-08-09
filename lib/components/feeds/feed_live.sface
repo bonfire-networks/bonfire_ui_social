@@ -1,5 +1,5 @@
 <div
-  id={e(@id, nil) || e(@feed_id, nil)}
+  id={@id || @feed_id}
   role="feed"
   aria-live="assertive"
   aria-atomic="true"
@@ -7,20 +7,20 @@
     <div class="flex flex-col mx-auto mt-3">
       {#if length(@feed) > 0}
       <div 
-        id={"feed:#{e(@feed_id, nil) || e(@id, nil)}"} 
+        id={"feed:#{@feed_id || @id}"} 
         data-id="feed" 
         phx-update={e(@feed_update_mode, "append")} 
         class="flex flex-col space-y-3">
         {#for entry <- @feed}
-          {#case "#{e(@feed_id, nil) || e(@id, nil)}-"<>( e(entry, :id, nil) || e(entry, :activity, :id, nil) || e(entry, :object, :id, nil) || Pointers.ULID.generate())}
+          {#case "#{@feed_id || @id}-"<>( e(entry, :id, nil) || e(entry, :activity, :id, nil) || e(entry, :object, :id, nil) || Pointers.ULID.generate())}
             {#match cid}
               <div id={cid}>
                 <ActivityLive 
                   id={cid}
                   activity={e(entry, :activity, nil) || e(entry, :edge, nil) || entry}
-                  showing_within={e(@showing_within, nil)}
-                  verb_default={e(@verb_default, nil)}
-                  feed_id={e(@feed_id, nil)}
+                  showing_within={@showing_within}
+                  verb_default={@verb_default}
+                  feed_id={@feed_id}
                   />
               </div>
             {#match _}
@@ -42,8 +42,8 @@
         {#else}
           <div id="empty-feed" class="flex items-center my-12 place-content-center">
             <Bonfire.UI.Common.EmptyFeed
-              feedback_title={e(@feedback_title, nil)}
-              feedback_message={e(@feedback_message, nil)}
+              feedback_title={@feedback_title}
+              feedback_message={@feedback_message}
             /> 
           </div>
         {/if}

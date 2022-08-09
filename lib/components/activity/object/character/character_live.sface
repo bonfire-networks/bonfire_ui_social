@@ -1,4 +1,4 @@
-{#if e(@showing_within, nil) == :widget}
+{#if @showing_within == :widget}
 
 <!-- show the object or character that isn't me -->
 <div class="flex w-full activity_widget">
@@ -26,7 +26,7 @@
 <div class="flex w-full activity_notification">
 
   <LiveRedirect to={path(the_other(@activity, @object, @__context__))} class="flex profile-item group ">
-    <div class="absolute left-3">
+    <div class="left-3">
       <Bonfire.UI.Common.AvatarLive user={the_other(@activity, @object, @__context__)} />
     </div>
     <div>
@@ -52,7 +52,7 @@
 
   <!-- TODO: put in seperate component -->
   <button 
-  :if={@verb=="Request to Follow"}
+  :if={@verb =="Request to Follow" and @showing_within==:notifications}
   :on-click="Bonfire.Social.Follows:accept" 
   phx-value-id={ulid(@activity)}
   type="button" 

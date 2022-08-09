@@ -1,6 +1,6 @@
 <Bonfire.UI.Social.FeedLive 
   id={e(@feed_id, :local)}
-  feed_id={e(@feed_id, nil)}
+  feed_id={@feed_id}
   page_title={@page_title}
   current_user={@current_user}
   feed={@feed}

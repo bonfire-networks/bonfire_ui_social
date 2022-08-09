@@ -5,8 +5,8 @@
   <ul tabindex="0" class="p-2 shadow dropdown-content menu bg-base-100 rounded-box w-52">
     <li>
       <Bonfire.UI.Common.OpenModalLive
-        :if={e(@thread_id, nil)}
-        id={ComponentID.new(Bonfire.UI.Common.OpenModalLive, e(@object, nil))} 
+        :if={@thread_id}
+        id={ComponentID.new(Bonfire.UI.Common.OpenModalLive, @object)} 
         title_text={e(@label, l "Edit the thread title")}
         form_opts={%{"phx-submit"=> "Bonfire.Social.Objects:set_name"}}
         >
@@ -19,7 +19,7 @@
           </div>
         </:open_btn>
         <:action_btns>
-          <HiddenInput name="id" value={e(@thread_id, nil)} />
+          <HiddenInput name="id" value={@thread_id} />
           <button 
             class="normal-case btn-sm btn btn-primary">
             {l "Save"}
@@ -32,8 +32,8 @@
       :if={module_enabled?(Bonfire.UI.Common.ProfileItemLive)}
       >
       <Bonfire.UI.Common.OpenModalLive
-        :if={e(@thread_id, nil)}
-        id={ComponentID.new(Bonfire.UI.Common.OpenModalLive, e(@object, nil))} 
+        :if={@thread_id}
+        id={ComponentID.new(Bonfire.UI.Common.OpenModalLive, @object)} 
         title_text={to_string(length(e(@participants, []))) <> " " <> l("participants")}
         >
         <div class="flex flex-col divide-y divide-base-content/10 ">

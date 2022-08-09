@@ -1,5 +1,5 @@
 <div data-id="subject"> 
-{#case e(@showing_within, nil)}
+{#case @showing_within}
   {#match :thread}
     <div class={"flex items-center mb-2"}>
       <div class="flex items-center justify-start w-5 h-5">

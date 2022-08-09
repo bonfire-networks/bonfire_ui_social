@@ -1,4 +1,4 @@
-{#if e(@showing_within, nil) == :widget}
+{#if @showing_within == :widget}
 
 <div class={"flex items-center mb-3"}>
   <div class="flex items-center justify-start w-5 h-5">
@@ -69,7 +69,7 @@
 
 <div 
   class={"flex items-center mb-3 -ml-7"}
-  :if={e(@showing_within, nil) not in [:search]}
+  :if={@showing_within not in [:search]}
 >
   <!-- <div 
     class="flex items-center justify-start w-5 h-5">

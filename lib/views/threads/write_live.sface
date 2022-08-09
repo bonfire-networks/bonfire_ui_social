@@ -5,7 +5,7 @@
   showing_within={:page}
   reply_to_id={""}
   thread_id={""}
-  create_activity_type={e(@create_activity_type, nil)}
+  create_activity_type={@create_activity_type}
   thread_mode={:flat}
   title_open={true}
   to_boundaries={boundaries_or_default(@to_boundaries, @__context__) |> debug("default_boundaries")}

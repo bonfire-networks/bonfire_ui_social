@@ -1,10 +1,10 @@
 <div
-  :if={current_user(@__context__) != nil and e(@showing_within, nil) not in [:notifications, :search]}
+  :if={current_user(@__context__) != nil and @showing_within not in [:notifications, :search]}
   aria-haspopup="true"
   data-tip={l "More"}
   class={"dropdown tooltip tooltip-bottom relative z-40 feed_activity relative ",
-  "dropdown-end": e(@showing_within, nil) != :widget,
-  "dropdown-top dropdown-end showing_within:widget": e(@showing_within, nil) == :widget
+  "dropdown-end": @showing_within != :widget,
+  "dropdown-top dropdown-end showing_within:widget": @showing_within == :widget
   }>
   <button 
     phx-click="Bonfire.Social.Feeds:open_activity"

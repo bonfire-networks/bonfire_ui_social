@@ -21,7 +21,7 @@
     </span>
 
     <span class="mr-2 text-sm text-base-content text-opacity-60">
-      <!-- <span class="capitalize">{e(@verb_display, "")}</span> -->
+      <!-- <span class="capitalize">{@verb_display}</span> -->
       {@date_ago}
     </span>
 
@@ -41,11 +41,11 @@
       />
     <LiveRedirect class="text-xs subject_timestamp text-base-content text-opacity-60" to={@permalink}>
 
-      <!-- <span :if={e(@showing_within, nil) not in [:widget, :smart_input]} class="hidden capitalize lg:inline">
+      <!-- <span :if={@showing_within not in [:widget, :smart_input]} class="hidden capitalize lg:inline">
         {@verb_display}
       </span> -->
 
-      <span :if={e(@showing_within, nil) not in [:smart_input]}>
+      <span :if={@showing_within not in [:smart_input]}>
         {@date_ago}
       </span>
       

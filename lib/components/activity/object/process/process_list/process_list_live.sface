@@ -7,7 +7,7 @@
         object={@object}
         current_user={current_user(@__context__)}
         />
-        <LivePatch to={if e(@process_url, nil), do: ( e(@process_url, "/list/")<>e(@object, :id,"") ), else: path(@object)}>
+        <LivePatch to={if @process_url, do: ( e(@process_url, "/list/")<>e(@object, :id,"") ), else: path(@object)}>
           <div class="text-base font-medium text-primary-content-700  hover:underline hover:text-primary-content-800">{@object.name}</div>
         </LivePatch>
       </div>

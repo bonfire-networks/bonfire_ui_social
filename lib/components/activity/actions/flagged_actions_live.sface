@@ -78,7 +78,7 @@
       activity={@activity} 
       verb={@verb}
       object_type_readable={@object_type_readable}
-      showing_within={e(@showing_within, nil)}
+      showing_within={@showing_within}
     >
 
       <:extra_items>

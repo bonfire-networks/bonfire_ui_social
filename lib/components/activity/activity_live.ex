@@ -4,20 +4,20 @@ defmodule Bonfire.UI.Social.ActivityLive do
   alias Bonfire.Social.Activities
   import Where
 
-  prop activity, :map
-  prop object, :any
-  prop verb_default, :string
+  prop activity, :map, default: nil
+  prop object, :any, default: nil
+  prop verb_default, :string, default: nil
   prop feed_id, :any, default: nil
   prop viewing_main_object, :boolean, default: false
-  prop activity_inception, :string
+  prop activity_inception, :string, default: nil
   prop showing_within, :any, default: :feed
   prop hide_reply, :boolean, default: false
   prop class, :string, required: false, default: ""
-  prop thread_object, :any
-  prop url, :string
-  prop thread_url, :string
-  prop thread_mode, :any
-  prop participants, :list
+  prop thread_object, :any, default: nil
+  prop url, :string, default: nil
+  prop thread_url, :string, default: nil
+  prop thread_mode, :any, default: nil
+  prop participants, :list, default: []
   prop object_boundary, :any, default: nil
   prop check_object_boundary, :boolean, default: false
 
@@ -127,7 +127,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
   def render(%{activity: _, activity_components: _} = assigns) do
     ~F"""
       <article
-        id={"activity-#{e(assigns, :activity_inception, nil)}-"<>( ulid(@activity) || e(@object, :id, "no-id") )}
+        id={"activity-#{@activity_inception}-"<>( ulid(@activity) || e(@object, :id, "no-id") )}
         aria-label="user activity"
         role="article"
         tabIndex="0"
@@ -135,33 +135,33 @@ defmodule Bonfire.UI.Social.ActivityLive do
         @mouseenter="activity_active = true"
         @mouseleave="activity_active = false"
         class={
-        "p-3 activity relative pl-16 group bg-base-100" <> e(assigns, :class, ""),
-        "!pl-3":  e(assigns, :showing_within, :feed) == :feed,
-        "activity_inception bg-base-content/10 !m-0 opacity-100 before:!left-2 before:top-1 before:bottom-1": e(assigns, :activity_inception, nil) != nil and  e(assigns, :thread_mode, nil) == :flat,
-        "!p-3 pt-6 rounded-b-md": e(assigns, :viewing_main_object, nil) == true,
-        "main_reply_to !rounded-none !shadow-none mb-2 p-2 py-1 mt-2 relative before:absolute before:content-[''] before:w-1 before:bg-base-content/40 before:left-0 before:top-0 before:bottom-0 opacity-60": ulid(@object) != nil and e(@activity, :replied, :reply_to_id, nil) == nil and ulid(@activity) == nil and e(assigns, :showing_within, nil) != :widget and e(assigns, :showing_within, nil) != :search, # showing a quoted reply_to
-        "rounded-md shadow": e(assigns, :showing_within, nil) != :thread and e(assigns, :thread_mode, nil) != :flat,
+        "p-3 activity relative pl-16 group bg-base-100" <> (@class || ""),
+        "!pl-3": @showing_within == :feed,
+        "activity_inception bg-base-content/10 !m-0 opacity-100 before:!left-2 before:top-1 before:bottom-1": @activity_inception != nil and @thread_mode == :flat,
+        "!p-3 pt-6 rounded-b-md": @viewing_main_object == true,
+        "main_reply_to !rounded-none !shadow-none mb-2 p-2 py-1 mt-2 relative before:absolute before:content-[''] before:w-1 before:bg-base-content/40 before:left-0 before:top-0 before:bottom-0 opacity-60": ulid(@object) != nil and e(@activity, :replied, :reply_to_id, nil) == nil and ulid(@activity) == nil and @showing_within != :widget and @showing_within != :search, # showing a quoted reply_to
+        "rounded-md shadow": @showing_within != :thread and @thread_mode != :flat,
         "reply": ulid(@object) != nil and e(@activity, :replied, :reply_to_id, nil) != nil and ulid(@activity) != nil,
-        "border-l-2 border-primary !bg-primary/5": e(@activity, :seen, nil) == nil and e(assigns, :showing_within, nil) == :notifications and e(assigns, :activity_inception, nil) == nil,
-        "border-r-2 border-primary": String.contains?(e(assigns, :url, ""), @permalink)
+        "border-l-2 border-primary !bg-primary/5": e(@activity, :seen, nil) == nil and @showing_within == :notifications and @activity_inception == nil,
+        "border-r-2 border-primary": String.contains?(@url || "", @permalink)
         }>
         <form
-          :if={not is_nil(e(assigns, :feed_id, nil)) and e(assigns, :showing_within, nil) in [:messages, :thread, :notifications] and e(assigns, :activity, :subject, :id, nil) != ulid(current_user(assigns)) and e(assigns, :activity, :object, :created, :creator_id, nil) != ulid(current_user(assigns)) }
+          :if={not is_nil(@feed_id) and @showing_within in [:messages, :thread, :notifications] and e(@activity, :subject, :id, nil) != ulid(current_user(assigns)) and e(@activity, :object, :created, :creator_id, nil) != ulid(current_user(assigns)) }
           phx-submit="Bonfire.Social.Feeds:mark_seen"
-          phx-target={"#badge_counter_#{e(assigns, :feed_id, "missing_feed_id")}"}
+          phx-target={"#badge_counter_#{@feed_id || "missing_feed_id"}"}
           x-intersect.once={intersect_event(e(@activity, :seen, nil))}>
-          <input type="hidden" name="feed_id" value={e(assigns, :feed_id, nil)} />
+          <input type="hidden" name="feed_id" value={@feed_id} />
           <input type="hidden" name="activity_id" value={ulid(@activity)} />
         </form>
-        {#for {component, component_assigns} when is_atom(component) <- e(assigns, :activity_components, [])}
+        {#for {component, component_assigns} when is_atom(component) <- @activity_components || []}
           <Surface.Components.Dynamic.Component
             module={component}
             id={e(component_assigns, :id, nil)}
             myself={nil}
             created_verb_display={@created_verb_display}
-            showing_within={e(assigns, :showing_within, :feed)}
-            thread_mode={e(assigns, :thread_mode, nil)}
-            participants={e(assigns, :participants, [])}
+            showing_within={@showing_within}
+            thread_mode={@thread_mode}
+            participants={@participants || []}
             activity={e(component_assigns, :activity, @activity)}
             object={e(component_assigns, :object, @object)}
             object_id={e(component_assigns, :object_id, @object_id)}
@@ -172,10 +172,10 @@ defmodule Bonfire.UI.Social.ActivityLive do
             verb={e(component_assigns, :verb, @verb)}
             verb_display={e(component_assigns, :verb_display, @verb_display)}
             permalink={e(component_assigns, :permalink, @permalink)}
-            thread_url={e(assigns, :thread_url, nil)}
-            activity_inception={e(component_assigns, :activity_inception, e(assigns, :activity_inception, nil))}
-            viewing_main_object={e(component_assigns, :viewing_main_object, e(assigns, :viewing_main_object, false))}
-            hide_reply={e(component_assigns, :hide_reply, e(assigns, :hide_reply, false))}
+            thread_url={@thread_url}
+            activity_inception={e(component_assigns, :activity_inception, @activity_inception)}
+            viewing_main_object={e(component_assigns, :viewing_main_object, @viewing_main_object)}
+            hide_reply={e(component_assigns, :hide_reply, @hide_reply)}
             profile={e(component_assigns, :profile, nil)}
             character={e(component_assigns, :character, nil)}
             media={e(component_assigns, :media, nil)}

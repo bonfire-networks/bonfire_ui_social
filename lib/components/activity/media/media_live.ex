@@ -12,7 +12,7 @@ defmodule Bonfire.UI.Social.Activity.MediaLive do
   end
 
   def description(media) do
-    (e(media.metadata, "facebook", "og:description", nil) || e(media.metadata, "twitter", "twitter:description") || e(media.metadata, "other", "description", nil))
+    (e(media.metadata, "facebook", "og:description", nil) || e(media.metadata, "twitter", "twitter:description", nil) || e(media.metadata, "other", "description", nil))
     |> as_string()
   end
 

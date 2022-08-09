@@ -1,13 +1,13 @@
 
   <div 
-    :class={if e(@viewing_main_object, nil) != true and Settings.get([:ui, :compact], false, @__context__), do: "activity_active ? '' : '[@media(any-hover:hover)]:hidden'"}
+    :class={if @viewing_main_object != true and Settings.get([:ui, :compact], false, @__context__), do: "activity_active ? '' : '[@media(any-hover:hover)]:hidden'"}
     class={
       "feed_actions flex items-center mt-1",
       "border-t border-base-content/10 pt-2": e(@showing_within, :feed) == :feed
     }>
     <LiveRedirect 
       :if={e(@showing_within, :feed) == :feed}
-      to={e(@permalink, nil)} 
+      to={@permalink} 
       class="px-1 font-normal normal-case btn btn-sm btn-ghost">
       {l "View topic"}
     </LiveRedirect>
@@ -19,13 +19,13 @@
         id={ComponentID.new(Bonfire.UI.Common.BoostActionLive, ulid(@object))} 
         object={@object} 
         object_type={@object_type}
-        showing_within={e(@showing_within, nil)}
+        showing_within={@showing_within}
         boost_count={e(@activity, :boost_count, nil)}
         />
       <Bonfire.UI.Common.LikeActionLive
         id={ComponentID.new(Bonfire.UI.Common.LikeActionLive, ulid(@object))} 
         object={@object} 
-        showing_within={e(@showing_within, nil)}
+        showing_within={@showing_within}
         like_count={e(@activity, :like_count, nil)} 
       />
       <Bonfire.UI.Social.Activity.MoreActionsLive
@@ -35,7 +35,7 @@
         object_type_readable={@object_type_readable}
         activity={@activity} 
         verb={@verb}
-        showing_within={e(@showing_within, nil)}
+        showing_within={@showing_within}
       />
     </div>
   </div>
