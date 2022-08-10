@@ -8,9 +8,10 @@
   {#for {media, counter} <- Enum.filter(@media, fn(x) -> e(x, :metadata, :canonical_url, false) == false end) |> Enum.with_index |> dump()}
     <article 
       class={
-      "media-entry h-full w-full row-span-4 h-[270px] object-cover",
-      "!row-span-2 !h-auto": Enum.filter(@media, fn(x) -> e(x, :metadata, :canonical_url, false) == false end) |> length == 3 && counter != 0,
-      "!row-span-2 !col-span-2 !h-auto": Enum.filter(@media, fn(x) -> e(x, :metadata, :canonical_url, false) == false end) |> length == 4
+      "media-entry h-full w-full row-span-4 object-cover",
+      "h-[270px]": Enum.filter(@media, fn(x) -> e(x, :metadata, :canonical_url, false) != false end) |> length() > 0,
+      "!row-span-2 !h-auto": Enum.filter(@media, fn(x) -> e(x, :metadata, :canonical_url, false) == false end) |> length() == 3 && counter != 0,
+      "!row-span-2 !col-span-2 !h-auto": Enum.filter(@media, fn(x) -> e(x, :metadata, :canonical_url, false) == false end) |> length() == 4
       }>
       <figure 
         class="h-full">
@@ -65,10 +66,10 @@
 
         {#else}
         
-        <!-- <a href={media_url(media)} target="_blank" class="flex w-full border rounded media_container bg-base-200 hover:bg-base-content/5 border-base-content/30 tooltip tooltip-bottom" data-tip={media_label(media)}>
+          <a href={media_url(media)} target="_blank" class="flex w-full border rounded media_container bg-base-200 hover:bg-base-content/5 border-base-content/30 tooltip tooltip-bottom" data-tip={media_label(media)}>
 
           <div class="flex">
-            <div class="flex items-center border-r bg-base-200 bg-base-content/5 place-content-center">
+            <div class="flex items-center w-[160px] h-[160px] bg-base-200 bg-base-content/5 place-content-center"> 
               {#case preview_img(media) || e(media.metadata, "favicon", nil) || Bonfire.Files.FaviconStore.favicon_url(media_url(media))}
                 {#match nil}
                   <Icon solid="ExternalLink" class="w-8 h-8 text-base-content/70" />
@@ -95,7 +96,7 @@
               </div>
             </div>
           </div>
-          </a> -->
+          </a>
         {/if}
       </figure>
     </article>
@@ -108,6 +109,7 @@
   {/for}
   
 </div>
+
 <div class="flex flex-col gap-2">
   {#for link <- Enum.filter(@media, fn(x) -> e(x, :metadata, :canonical_url, nil) end)}
     <a href={media_url(link)} target="_blank" class="flex w-full mb-2 border rounded media_container bg-base-200 hover:bg-base-content/5 border-base-300">
