@@ -50,6 +50,8 @@
     </p>
 
     <div
+      x-collapse.min.50px
+      x-show="!collapsed"
       data-id={"object_body"}
       class={
         "prose break-words object_body max-w-none font-[16px] mt-1 prose-sm prose-p:pt-0 prose-p:my-0",

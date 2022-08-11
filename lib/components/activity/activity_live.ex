@@ -127,11 +127,14 @@ defmodule Bonfire.UI.Social.ActivityLive do
   def render(%{activity: _, activity_components: _} = assigns) do
     ~F"""
       <article
+        x-data={"{
+          activity_active: false,
+          collapsed: #{String.length(e(@object, :post_content, :html_body, "")) > 150 && ulid(@object) != nil and e(@activity, :replied, :reply_to_id, nil) == nil and ulid(@activity) == nil and e(assigns, :showing_within, nil) != :widget and e(assigns, :showing_within, nil) != :search}}"
+        }
         id={"activity-#{@activity_inception}-"<>( ulid(@activity) || e(@object, :id, "no-id") )}
         aria-label="user activity"
         role="article"
         tabIndex="0"
-        x-data="{activity_active: false}"
         @mouseenter="activity_active = true"
         @mouseleave="activity_active = false"
         class={
@@ -181,7 +184,13 @@ defmodule Bonfire.UI.Social.ActivityLive do
             media={e(component_assigns, :media, nil)}
           />
         {/for}
-
+        <button 
+          :if={ String.length(e(@object, :post_content, :html_body, l "")) > 150 && ulid(@object) != nil and e(@activity, :replied, :reply_to_id, nil) == nil and ulid(@activity) == nil and e(assigns, :showing_within, nil) != :widget and e(assigns, :showing_within, nil) != :search}
+          @click="collapsed = ! collapsed"
+          class="normal-case btn btn-outline btn-sm">
+          <span x-show="collapsed">{l "Expand"}</span>
+          <span x-show="!collapsed">{l "Minimize"}</span>
+        </button>
       </article>
     """
   end
