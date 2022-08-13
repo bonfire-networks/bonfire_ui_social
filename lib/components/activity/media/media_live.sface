@@ -68,7 +68,7 @@
         
           <a href={media_url(media)} target="_blank" class="flex w-full border rounded media_container bg-base-200 hover:bg-base-content/5 border-base-content/30 tooltip tooltip-bottom" data-tip={media_label(media)}>
 
-          <div class="flex">
+          <div class="md:flex">
             <div class="flex items-center w-[160px] h-[160px] bg-base-200 bg-base-content/5 place-content-center"> 
               {#case preview_img(media) || e(media.metadata, "favicon", nil) || Bonfire.Files.FaviconStore.favicon_url(media_url(media))}
                 {#match nil}
@@ -113,7 +113,7 @@
 <div class="flex flex-col gap-2">
   {#for link <- Enum.filter(@media, fn(x) -> e(x, :metadata, :canonical_url, nil) end)}
     <a href={media_url(link)} target="_blank" class="flex w-full mb-2 border rounded media_container bg-base-200 hover:bg-base-content/5 border-base-300">
-      <div class="flex">
+      <div class="md:flex">
         <div class="flex items-center w-[160px] h-[160px] bg-base-200 bg-base-content/5 place-content-center">
           {#case preview_img(link) || e(link.metadata, "favicon", nil) || Bonfire.Files.FaviconStore.favicon_url(media_url(link))}
             {#match nil}

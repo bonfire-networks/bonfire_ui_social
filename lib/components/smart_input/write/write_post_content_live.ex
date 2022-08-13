@@ -27,6 +27,7 @@ defmodule Bonfire.UI.Social.WritePostContentLive do
   prop title_prompt, :string
   prop show_select_recipients, :boolean, default: false
   prop open_boundaries, :boolean, default: false
+  prop boundaries_modal_id, :string, default: :sidebar_composer
 
   # Classes to customize the smart input appearance
   prop textarea_class, :css_class

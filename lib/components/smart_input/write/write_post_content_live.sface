@@ -12,7 +12,6 @@
     class={if WriteEditorLive.use_rich_editor?(@with_rich_editor, @__context__), do: "with_editor flex-1", else: "with_textarea flex-1"}>
 
     <div 
-      :class="{'!rounded-t-none' : show_smart_input_fullscreen}"
       class={
         "bg-base-100 flex h-full flex-1": @thread_mode != :flat,
         "bg-base-100 border-t border-base-content/10 p-3 h-full flex-1 sticky bottom-0 messages_smart_input": @thread_mode == :flat,
@@ -29,16 +28,17 @@
           create_activity_type={@create_activity_type}
           to_boundaries={@to_boundaries}
           to_circles={e(@to_circles, [])}
+          
           preloaded_recipients={e(@preloaded_recipients, [])}
           showing_within={@showing_within}
           open_boundaries={@open_boundaries}
           show_select_recipients={@show_select_recipients}
+          boundaries_modal_id={@boundaries_modal_id}
         />
 
         <Inputs for={:post_content}>
           <div
             x-show="!open_boundaries"
-            :class="{'order-last' : show_smart_input_fullscreen}"
             class="flex-1">
             <div 
               display="style: none"

@@ -1,5 +1,8 @@
 {#if ulid(@object) != nil and e(@activity, :replied, :reply_to_id, nil) == nil and ulid(@activity) == nil and @showing_within == :widget}
   <!-- huh? -->
+  <!-- phx-hook="OpenActivity"
+  data-permalink={@permalink}
+  data-navigate_to_thread={if @showing_within !=:thread || @activity_inception ||  ulid(@object) == nil and e(@activity, :replied, :reply_to_id, nil) != nil and ulid(@activity) != nil, do: "true"} -->
 {#else}
 <div class={
   "main_object": @viewing_main_object,
@@ -13,10 +16,7 @@
   "reply_to": ulid(@object) != nil and e(@activity, :replied, :reply_to_id, nil) == nil and ulid(@activity) == nil,
   "reply_message": e(@activity, :replied, :reply_to_id, nil)
   }
-  id={"note-#{@activity_inception}-"<>( ulid(@activity) || e(@object, :id, "no-id") )}
-  phx-hook="OpenActivity"
-  data-permalink={@permalink}
-  data-navigate_to_thread={if @showing_within !=:thread || @activity_inception ||  ulid(@object) == nil and e(@activity, :replied, :reply_to_id, nil) != nil and ulid(@activity) != nil, do: "true"}
+  id={"note-#{@activity_inception}-"<>( ulid(@activity) || e(@object, :id, "no-id") )}  
   x-data="{content_open: false}">
 
   <div :if={e(post_content(@object), :name, nil)}>
