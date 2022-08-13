@@ -94,7 +94,7 @@
         {#if is_list(@child_replies) and length(@child_replies)>0 }
           {#for {{subreply, sub_child_replies}, index} <- Enum.with_index(@child_replies, 1) }
             <div class="relative">
-              <div class="absolute border-neutral w-5 h-6 border-0 border-b-2 border-l-2 rounded-bl-lg left-[-4px] top-0"></div>
+              <div class="z-40 absolute border-neutral w-5 h-6 border-0 border-b-2 border-l-2 rounded-bl-lg left-[-4px] top-0"></div>
               <div
                 :if={index < length(@child_replies)}
                 class="absolute border-neutral top-0 bottom-0 border-0  border-l-2 left-[-4px] "></div>
