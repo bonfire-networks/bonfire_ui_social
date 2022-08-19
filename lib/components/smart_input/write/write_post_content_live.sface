@@ -49,7 +49,7 @@
                 <TextInput
                   opts={
                     placeholder: l("Enter a content warning"), 
-                    "x-model": "title_text"
+                    "x-model": "smart_input_title_text"
                   }
                   class={
                     "block w-full border-0 p-2 text-lg font-medium placeholder-base-content/70 bg-base-100 text-base-content border-b border-base-content/10",
@@ -59,15 +59,13 @@
               </Field>
             </div>  
             <label for="description" class="sr-only">{l "Description"}</label>
-            <div>
               <Field 
-                class={
-                  "h-full min-h-full flex-1 flex flex-col grow",
-                  "min-h-[50px]": @thread_mode == :flat,
-                  "min-h-[calc(50vh-50px)]": @thread_mode != :flat and Settings.get([:ui, :smart_input_as], nil, @__context__) != :sidebar,
-                } 
-                name={:html_body}>
+                name={:html_body}
+                >
                 <!-- <Label :if={@smart_input_text && @smart_input_text !="" && @smart_input_prompt} class="mb-2 alert alert-info">{@smart_input_prompt}</Label> -->    
+                <div 
+                  class={@textarea_container_class}
+                  :class={@textarea_container_class_alpine}>
                   <WriteEditorLive
                     field_name="post[post_content][html_body]"
                     textarea_class={@textarea_class}
@@ -78,9 +76,9 @@
                     thread_mode={@thread_mode}
                     showing_within={@showing_within}
                   />
+              </div>
                   
-              </Field>
-            </div>
+            </Field>
           </div>
         </Inputs>
         

@@ -8,7 +8,7 @@
     <TextInput
       opts={
         placeholder: l("Enter a content warning"), 
-        "x-model": "title_text"
+        "x-model": "smart_input_title_text"
       }
       class="w-full rounded-none input" 
       />

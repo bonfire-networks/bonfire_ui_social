@@ -13,7 +13,7 @@
     x-show="width < 1200"
     phx-click="Bonfire.Social.Feeds:reply_to_activity"
     phx-target={if @activity_id, do: "#activity--"<>e(@activity_id, "")}
-    @click="show_smart_input_fullscreen = true">
+    @click="smart_input_title_text = '#{l "Reply"}'; smart_input_fullscreen = true; show_smart_input();">
     <div class={"btn btn-ghost btn-circle btn-sm"}> 
       <span class="text-opacity-50 text-base-content">
         <Icon outline="Reply" class="w-4 h-4 stroke-1" />
@@ -40,7 +40,7 @@
     x-show="width < 768"
     phx-click="Bonfire.Social.Feeds:reply_to_activity"
     phx-target={if @activity_id, do: "#activity--"<>e(@activity_id, "")}
-    @click="open_sm_modal = true">
+    @click="show_smart_input()">
     <div class={"btn btn-ghost btn-circle btn-sm"}> 
       <span class="text-opacity-50 text-base-content">
         <Icon outline="Reply" class="w-4 h-4 stroke-1" />
@@ -51,7 +51,7 @@
   <button
     data-id="action_reply"
     phx-click="Bonfire.Social.Feeds:reply_to_activity"
-    @click={"width > 768 ? #{if Settings.get([:ui, :smart_input_as], nil, @__context__)==:modal, do: "open_sm_modal = true", else: "show_smart_input_modal = true"} : open_sm_modal = true"}
+    @click={"show_smart_input(); smart_input_title_text = '#{l "Reply"}'"}
     phx-target={if @activity_id, do: "#activity--"<>e(@activity_id, "")}
   >
     <div class={"btn btn-ghost btn-circle btn-sm"}> 
