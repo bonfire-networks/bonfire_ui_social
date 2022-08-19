@@ -48,8 +48,7 @@
               <Field name={:name}>
                 <TextInput
                   opts={
-                    placeholder: l("Enter a content warning"), 
-                    "x-model": "smart_input_title_text"
+                    placeholder: l("Enter a content warning")
                   }
                   class={
                     "block w-full border-0 p-2 text-lg font-medium placeholder-base-content/70 bg-base-100 text-base-content border-b border-base-content/10",

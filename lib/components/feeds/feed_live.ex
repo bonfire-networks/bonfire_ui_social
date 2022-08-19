@@ -49,27 +49,23 @@ defmodule Bonfire.UI.Social.FeedLive do
   #   update(Map.merge(assigns, %{new_activity: new_activity}), socket)
   # end
 
-  def update(%{feed: feed, page_info: _page_info} =assigns, %{assigns: %{feed_pubsub_subscribed: true}} = socket) when is_list(feed) and length(feed)>0 do
-    debug("FeedLive.update - assigning feed (already subscribed)")
-    # dump(assigns)
-    {:ok, assign(socket, assigns)}
-  end
-
-  def update(assigns, %{assigns: %{feed_pubsub_subscribed: true}} = socket) do
-    debug("FeedLive.update - already loaded and subscribed")
-    {:ok, socket}
-  end
-
-  def update(%{feed: feed, page_info: page_info} =assigns, socket) when is_list(feed) do
+  def update(%{feed: feed, page_info: page_info} = assigns, socket) when is_list(feed) do
     debug("FeedLive.update - an initial feed was provided via assigns")
     # TODO: why do this in update rather than LV's preload?
     socket = assign(socket, assigns)
 
-    maybe_subscribe(socket)
+    feed_id_or_ids = e(socket.assigns, :feed_ids, nil) || e(socket.assigns, :feed_id, nil)
+    already_pubsub_subscribed = e(socket.assigns, :feed_pubsub_subscribed, nil)
+
+    if already_pubsub_subscribed == feed_id_or_ids do
+      debug(already_pubsub_subscribed, "already subscribed to this via pubsub")
+    else
+      maybe_subscribe(socket)
+    end
 
     {:ok, socket
     |> assign(
-      feed_pubsub_subscribed: true,
+      feed_pubsub_subscribed: feed_id_or_ids,
       page_info: page_info,
       feed: feed
         # |> dump("FeedLive: feed")

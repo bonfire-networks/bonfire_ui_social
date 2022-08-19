@@ -39,16 +39,21 @@ defmodule Bonfire.Social.Threads.LiveHandler do
   end
 
   def load_thread_maybe_async(%Phoenix.LiveView.Socket{} = socket) do
-    if connected?(socket) and Config.get(:env) != :test do
-      # dump(socket.assigns, "connected")
+    socket_connected = connected?(socket)
 
-      # send(self(), {Bonfire.Social.Threads.LiveHandler, :load_thread})
-      pid = self()
-      Task.async(fn ->
-        thread_id = e(socket.assigns, :thread_id, e(socket.assigns, :object, :id, nil))
-        # Query comments asynchronously
-        send_update(pid, Bonfire.UI.Social.ThreadLive, load_thread_assigns(socket) ++ [id: e(socket.assigns, :id, thread_id), loaded_async: true])
-      end)
+    if (socket_connected || current_user(socket)) && Config.get(:env) != :test do
+
+      if socket_connected do
+        debug("socket connected, so load async")
+        pid = self()
+        Task.async(fn ->
+          thread_id = e(socket.assigns, :thread_id, e(socket.assigns, :object, :id, nil))
+          # Query comments asynchronously
+          send_update(pid, Bonfire.UI.Social.ThreadLive, load_thread_assigns(socket) ++ [id: e(socket.assigns, :id, thread_id), loaded_async: true])
+        end)
+      else
+        debug("socket NOT connected, but logged in, so no need to load for SEO")
+      end
 
       socket
       |> assign(
@@ -56,8 +61,7 @@ defmodule Bonfire.Social.Threads.LiveHandler do
       )
 
     else
-      # dump(socket.assigns, "disconnected")
-      # for dead mounts
+      debug("socket not connected or not logged in, just load feed")
       load_thread(socket)
     end
   end

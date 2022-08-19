@@ -7,8 +7,7 @@
   <Field name={:name}>
     <TextInput
       opts={
-        placeholder: l("Enter a content warning"), 
-        "x-model": "smart_input_title_text"
+        placeholder: l("Enter a content warning")
       }
       class="w-full rounded-none input" 
       />

@@ -5,7 +5,7 @@
   "my-3": Enum.filter(@media, fn(x) -> e(x, :metadata, :canonical_url, false) == false end) |> length > 0,
   "!grid-cols-1 !grid-rows-1": @showing_within == :smart_input
   }>
-  {#for {media, counter} <- Enum.filter(@media, fn(x) -> e(x, :metadata, :canonical_url, false) == false end) |> Enum.with_index |> dump()}
+  {#for {media, counter} <- Enum.filter(@media, fn(x) -> e(x, :metadata, :canonical_url, false) == false end) |> Enum.with_index}
     <article 
       class={
       "media-entry h-full w-full row-span-4 object-cover",
@@ -15,7 +15,7 @@
       }>
       <figure 
         class="h-full">
-        {#if String.starts_with?(e(media, :media_type, ""), ["image", "video", "embed", "audio", "song", "photo", "rich"])}
+        {#if String.starts_with?(e(media, :media_type, ""), ["image", "video", "embed", "audio", "song", "photo", "rich"]) or String.contains?(media_url(media), [".jpg", ".jpeg", ".png", ".gif", ".webp"])}
           <Bonfire.UI.Common.OpenModalLive
             id={ComponentID.new(Bonfire.UI.Common.OpenModalLive, media)} 
             title_text={e(@label, l "View media")}

@@ -56,24 +56,21 @@
   </div>
 {#else}
   <div class="flex flex-col items-center w-full bg-base-100 rounded-t-md place-content-center">
-    <div class="flex w-full py-8 bg-base-100 place-content-center">
-
-      {#if @loading |> debug("loading") }
-          <div class="flex items-center my-12 place-content-center">
-            Loading...
+    {#if @loading  }
+      <div class="flex items-center my-12 place-content-center">
+        Loading...
+      </div>
+      {#case maybe_cute_gif()}
+        {#match url when is_binary(url)}
+          <div class="flex flex-row items-center justify-center my-12">
+            <img src={url} />
           </div>
-          {#case maybe_cute_gif()}
-            {#match url when is_binary(url)}
-              <div class="flex flex-row items-center justify-center my-12">
-                <img src={url} />
-              </div>
-            {#match _}
-          {/case}
-        {#else}
-          <span class="badge">
-            {if e(@activity, :subject, :id, nil) !=ulid(current_user(@__context__)), do:  l("Be the first to reply..."), else: l "No replies yet..."}
-          </span>
-        {/if}
-    </div>
+        {#match _}
+      {/case}
+    {#else}
+      <span class="badge my-12">
+        {if e(@activity, :subject, :id, nil) !=ulid(current_user(@__context__)), do:  l("Be the first to reply..."), else: l "No replies yet..."}
+      </span>
+    {/if}
   </div>
 {/if}

@@ -29,7 +29,7 @@
       </div>
       {#else}
         {#if @loading}
-          <div class="flex items-center py-12 rounded-md shadow bg-base-100 place-content-center">
+          <div class="flex items-center py-12 place-content-center">
             Loading...
           </div>
           {#case maybe_cute_gif()}

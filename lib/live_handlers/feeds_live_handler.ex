@@ -358,20 +358,25 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
   #   []
   # end
   defp feed_assigns_maybe_async_load(feed_id_or_tuple, assigns, %Phoenix.LiveView.Socket{} = socket) do
-    if connected?(socket) and Config.get(:env) != :test do
-      # dump(socket.assigns, "connected")
-      # send(self(), {Bonfire.Social.Feeds.LiveHandler, {:load_feed, feed_name}})
-      pid = self()
-      Task.async(fn ->
-        # Query activities asynchronously
-        send_update(pid, Bonfire.UI.Social.FeedLive, feed_assigns(feed_id_or_tuple, socket) ++ [id: feed_id_only(feed_id_or_tuple)])
-      end)
+    socket_connected = connected?(socket)
+
+    if (socket_connected || current_user(socket)) && Config.get(:env) != :test do
+
+      if socket_connected do
+        debug("socket connected, so load async")
+        pid = self()
+        Task.async(fn ->
+          # Query activities asynchronously
+          send_update(pid, Bonfire.UI.Social.FeedLive, feed_assigns(feed_id_or_tuple, socket) ++ [id: feed_id_only(feed_id_or_tuple)])
+        end)
+      else
+        debug("socket NOT connected, but logged in, so no need to load for SEO")
+      end
 
       assigns # return temporary assigns in the meantime
 
     else
-      # dump(socket.assigns, "disconnected")
-      # for dead mounts
+      debug("socket not connected or not logged in, just load feed")
       assigns ++ feed_assigns(feed_id_or_tuple, socket)
     end
   end
@@ -472,13 +477,20 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
   end
 
   def user_feed_assign_or_load_async(tab, user_or_feed, params, %Phoenix.LiveView.Socket{} = socket) do
-    if connected?(socket) and Config.get(:env) != :test do
-      # dump(socket.assigns, "connected")
-      pid = self()
-      Task.async(fn ->
-        # Query activities asynchronously
-        send_update(pid, Bonfire.UI.Social.FeedLive, load_user_feed_assigns(tab, user_or_feed, params, socket) ++ [id: "feed:profile:#{tab}"])
-      end)
+    socket_connected = connected?(socket)
+
+    if (socket_connected || current_user(socket)) && Config.get(:env) != :test do
+
+      if socket_connected do
+        debug(tab, "socket connected, so load async")
+        pid = self()
+        Task.async(fn ->
+          # Query activities asynchronously
+          send_update(pid, Bonfire.UI.Social.FeedLive, load_user_feed_assigns(tab, user_or_feed, params, socket) ++ [id: "feed:profile:#{tab}"])
+        end)
+      else
+        debug(tab, "socket NOT connected, but logged in, so no need to load for SEO")
+      end
 
       # return temporary assigns in the meantime
       {:noreply,
@@ -489,7 +501,7 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
       )}
 
     else
-      # dump(socket.assigns, "disconnected")
+      debug(tab, "socket not connected or not logged in, just load feed")
       # for dead mounts
       {:noreply,
         assign(socket,
@@ -499,7 +511,7 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
   end
 
   def user_feed_assign_or_load_async(tab, user_or_feed, params, socket) do
-    # dump(e(socket, :assigns, nil), "not socket")
+    debug(tab, "not a socket, just load feed")
     {:noreply,
       assign(socket,
         load_user_feed_assigns(tab, user_or_feed, params, socket)
@@ -530,7 +542,7 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
   def load_user_feed_assigns("boosts" = tab, user, params, socket) do
     user = user || e(socket, :assigns, :user, nil)
     feed = if module_enabled?(Bonfire.Social.Boosts), do: Bonfire.Social.Boosts.list_by(user, pagination: input_to_atoms(params), current_user: current_user(socket))
-    # |> debug("boosts")
+    |> debug("boosts")
 
     [
       loading: false,
