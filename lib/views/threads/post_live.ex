@@ -22,6 +22,9 @@ defmodule Bonfire.UI.Social.PostLive do
     |> assign(
       page_title: l("Post"),
       page: "discussion",
+      to_circles: nil,
+      participants: nil,
+      smart_input_text: nil,
       smart_input_prompt: l("Reply to this thread"),
       activity: nil,
       showing_within: :thread,
@@ -29,83 +32,21 @@ defmodule Bonfire.UI.Social.PostLive do
       thread_id: nil,
       thread_mode: nil,
       search_placeholder: nil,
-      to_boundaries: nil,
-      page_header_aside: [
-        {Bonfire.UI.Social.ObjectHeaderAsideLive, [
-          page_title: l("Post"),
-          participants: [],
-          thread_id: nil,
-          object: nil,
-        ]}
-      ]
+      to_boundaries: nil
     )
   }
   end
 
   def do_handle_params(%{"id" => id} = params, url, socket) do
-
-    current_user = current_user(socket)
-
-    # debug(params, "PARAMS")
-    # debug(url, "post url")
-    with {:ok, post} <- Bonfire.Social.Posts.read(ulid(id), socket) do
-
-      {activity, post} = Map.pop(post, :activity)
-      activity = Bonfire.Social.Activities.activity_preloads(activity, :all, current_user: current_user)
-      # debug(post, "the post")
-      # debug(activity, "the activity")
-      # following = if current_user && module_enabled?(Bonfire.Social.Follows) && Bonfire.Social.Follows.following?(current_user, post), do: [post.id]
-
-      author = ( e(activity, :subject, nil) || e(activity, :created, :creator, nil) || e(activity, :object, :created, :creator, nil) ) #|> debug("object author")
-
-      thread_id = e(activity, :replied, :thread_id, id)
-      reply_to_id = e(params, "reply_to_id", id) #|> debug("reply_to_id")
-
-      # smart_input_prompt = l("Reply to post:")<>" "<>Text.text_only(e(post, :post_content, :name, e(post, :post_content, :summary, e(post, :post_content, :html_body, reply_to_id))))
-      smart_input_prompt = l("Reply")
-
-      participants = Bonfire.Social.Threads.list_participants(activity, thread_id, current_user: current_user)
-
-      to_circles = if length(participants)>0, do: Enum.map(participants, & {e(&1, :character, :username, l "someone"), e(&1, :id, nil)})
-
-      # names = if length(participants)>0, do: Enum.map_join(participants, ", ", &e(&1, :profile, :name, e(&1, :character, :username, l "someone else")))
-
-      mentions = if length(participants)>0, do: Enum.map_join(participants |> Enum.reject(&( e(&1, :character, :id, nil) == ulid(current_user) )), " ", & "@"<>e(&1, :character, :username, ""))<>" "
-
-      page_title = e(activity, :replied, :thread, :named, :name, l("Post"))
-
-      {:noreply,
+    {:noreply,
       socket
       |> assign(
-        activity: activity,
-        object: post,
+        post_id: id,
         url: url,
-        participants: participants,
-        no_index: !Bonfire.Me.Settings.get([Bonfire.Me.Users, :discoverable], true, current_user: author),
-        page_header_aside: [
-          {Bonfire.UI.Social.ObjectHeaderAsideLive, [
-            page_title: page_title,
-            participants: participants,
-            thread_id: thread_id,
-            object: activity,
-          ]}
-        ]
-        # following: following || []
+        reply_to_id: e(params, "reply_to_id", id)
       )
-      |> assign_global(
-        thread_id: e(post, :id, nil),
-        # smart_input_prompt: smart_input_prompt,
-        reply_to_id: reply_to_id,
-        page_title: page_title,
-        smart_input_text: mentions,
-        to_circles: to_circles,
-      )
-      }
-
-    else _e ->
-      {:error, "Not found"}
-    end
-
+      |> Bonfire.Social.Objects.LiveHandler.load_object()
+    }
   end
 
   def do_handle_params(_params, _url, socket) do

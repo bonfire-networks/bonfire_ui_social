@@ -9,22 +9,22 @@ defmodule Bonfire.UI.Social.WritePostContentLive do
   alias Surface.Components.Form.Inputs
   alias Bonfire.UI.Social.WriteEditorLive
 
-  # prop target_component, :string
-  prop reply_to_id, :string
-  prop thread_id, :string
-  prop create_activity_type, :atom
+  # prop target_component, :string, default: nil
+  prop reply_to_id, :string, default: nil
+  prop thread_id, :string, default: nil
+  prop create_activity_type, :atom, default: nil
   prop to_boundaries, :list, default: []
-  prop to_circles, :list
-  prop smart_input_prompt, :string
+  prop to_circles, :list, default: nil
+  prop smart_input_prompt, :string, default: nil
   prop smart_input_text, :string, required: false
-  prop showing_within, :string
+  prop showing_within, :string, default: nil
   prop with_rich_editor, :boolean, default: true, required: false
-  prop insert_text, :string
-  prop preloaded_recipients, :any
-  prop uploads, :any
-  prop thread_mode, :atom
-  prop uploaded_files, :list
-  prop title_prompt, :string
+  prop insert_text, :string, default: nil
+  prop preloaded_recipients, :any, default: nil
+  prop uploads, :any, default: nil
+  prop thread_mode, :atom, default: nil
+  prop uploaded_files, :list, default: nil
+  prop title_prompt, :string, default: nil
   prop show_select_recipients, :boolean, default: false
   prop open_boundaries, :boolean, default: false
   prop boundaries_modal_id, :string, default: :sidebar_composer

@@ -2,7 +2,8 @@
     <div class="flex-1">
       
       <Bonfire.UI.Social.ActivityLive
-        id={"ta:"<>ulid(@activity)}
+        :if={@activity}
+        id={"ta:"<>(ulid(@activity) || ulid(@object) || "none")}
         showing_within={:thread}
         thread_mode={@thread_mode}
         viewing_main_object={if @thread_mode != :flat, do: true, else: false}

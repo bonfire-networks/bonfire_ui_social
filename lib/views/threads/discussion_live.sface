@@ -11,8 +11,9 @@
   thread_mode={@thread_mode}
   activity={@activity}
   object={@object}
+  object_id={@object_id}
   url={@url}
   thread_id={@thread_id}
   participants={e(@participants, [])}
-  loading={e(@loading, false)}
+  loading={@loading}
 />

@@ -10,5 +10,5 @@
   feed={@feed}
   feed_title={@feed_title}
   page_info={@page_info}
-  loading={e(@loading, false)}
+  loading={@loading}
 />

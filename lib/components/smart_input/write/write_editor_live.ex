@@ -9,15 +9,15 @@ defmodule Bonfire.UI.Social.WriteEditorLive do
   alias Surface.Components.Form.Inputs
 
   prop field_name, :string, default: "post[post_content][html_body]", required: false
-  prop create_activity_type, :atom
+  prop create_activity_type, :atom, default: nil
   prop smart_input_prompt, :string, default: ""
   prop smart_input_text, :string, default: "", required: false
-  prop showing_within, :string
+  prop showing_within, :string, default: nil
   prop with_rich_editor, :boolean, default: true, required: false
-  prop insert_text, :string
-  prop thread_mode, :atom
+  prop insert_text, :string, default: nil
+  prop thread_mode, :atom, default: nil
   # Classes to customize the smart input appearance
-  prop textarea_class, :css_class
+  prop textarea_class, :css_class, default: nil
   prop boundaries_modal_id, :string, default: :sidebar_composer
 
 

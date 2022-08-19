@@ -49,10 +49,24 @@ defmodule Bonfire.UI.Social.FeedLive do
   #   update(Map.merge(assigns, %{new_activity: new_activity}), socket)
   # end
 
+  def update(_assigns, %{assigns: %{loading: false}} = socket) do
+    debug("skip replacing already loaded feed")
+    {:ok, socket}
+  end
+
+  def update(_assigns, %{assigns: %{feed: existing_feed}} = socket) when is_list(existing_feed) and length(existing_feed)>0 do
+    # FIXME: doesn't work because of temporary assigns?
+    debug("skip replacing already provided feed")
+    {:ok, socket}
+  end
+
   def update(%{feed: feed, page_info: page_info} = assigns, socket) when is_list(feed) do
     debug("FeedLive.update - an initial feed was provided via assigns")
-    # TODO: why do this in update rather than LV's preload?
+
+    # dump(socket.assigns, "socket assigns")
+    # dump(assigns)
     socket = assign(socket, assigns)
+    # dump(socket)
 
     feed_id_or_ids = e(socket.assigns, :feed_ids, nil) || e(socket.assigns, :feed_id, nil)
     already_pubsub_subscribed = e(socket.assigns, :feed_pubsub_subscribed, nil)
@@ -64,13 +78,13 @@ defmodule Bonfire.UI.Social.FeedLive do
     end
 
     {:ok, socket
-    |> assign(
-      feed_pubsub_subscribed: feed_id_or_ids,
-      page_info: page_info,
-      feed: feed
-        # |> dump("FeedLive: feed")
-        # |> LiveHandler.preloads(socket),
-      )}
+      |> assign(
+        feed_pubsub_subscribed: feed_id_or_ids,
+        # page_info: page_info,
+        # feed: feed
+          # |> dump("FeedLive: feed")
+          # |> LiveHandler.preloads(socket),
+    )}
   end
 
   def update(assigns, socket) do

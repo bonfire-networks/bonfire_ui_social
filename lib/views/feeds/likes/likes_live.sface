@@ -6,5 +6,5 @@
   feed={@feed}
   page_info={@page_info}
   verb_default="like"
-  loading={e(@loading, false)}
+  loading={@loading}
 />

@@ -5,5 +5,5 @@
     current_user={@current_user}
     feed={@feed}
     page_info={@page_info}
-    loading={e(@loading, false)}
+    loading={@loading}
 />

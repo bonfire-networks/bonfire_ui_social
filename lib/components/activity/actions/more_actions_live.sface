@@ -7,8 +7,6 @@
   "dropdown-top dropdown-end showing_within:widget": @showing_within == :widget
   }>
   <button 
-    phx-click="Bonfire.Social.Feeds:open_activity"
-    phx-value-ignore={true}
     tabindex="0"
     class={"btn btn-ghost btn-circle btn-sm"}> 
     <span class="text-opacity-50 text-base-content">
