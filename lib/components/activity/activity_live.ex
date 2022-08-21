@@ -138,7 +138,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
         @mouseenter="activity_active = true"
         @mouseleave="activity_active = false"
         class={
-        "p-3 activity relative pl-16 group bg-base-100 border border-base-content/20 md:border-none " <> e(assigns, :class, ""),
+        "p-3 activity relative pl-16 group bg-base-100 " <> e(assigns, :class, ""),
         "!pl-3":  e(assigns, :showing_within, :feed) == :feed || e(assigns, :showing_within, nil) == :notifications ,
         "activity_inception bg-base-content/10 !m-0 opacity-100 before:!left-2 before:top-1 before:bottom-1": e(assigns, :activity_inception, nil) != nil and  e(assigns, :thread_mode, nil) == :flat,
         "!p-3 pt-6 rounded-b-md": e(assigns, :viewing_main_object, nil) == true,
@@ -184,7 +184,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
             media={e(component_assigns, :media, nil)}
           />
         {/for}
-        <button 
+        <button
           :if={ String.length(e(@object, :post_content, :html_body, l "")) > 150 && ulid(@object) != nil and e(@activity, :replied, :reply_to_id, nil) == nil and ulid(@activity) == nil and e(assigns, :showing_within, nil) != :widget and e(assigns, :showing_within, nil) != :search}
           @click="collapsed = ! collapsed"
           class="normal-case btn btn-outline btn-sm">
