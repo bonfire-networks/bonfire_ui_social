@@ -57,7 +57,7 @@
 {#else}
   <div class="flex flex-col items-center w-full bg-base-100 rounded-t-md place-content-center">
     {#if @loading  }
-      <div class="flex items-center my-12 place-content-center">
+      <div class="flex items-center place-content-center">
         Loading...
       </div>
       {#case maybe_cute_gif()}

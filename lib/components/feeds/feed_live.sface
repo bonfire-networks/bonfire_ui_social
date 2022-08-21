@@ -40,7 +40,7 @@
             {#match _}
           {/case}
         {#else}
-          <div id="empty-feed" class="flex items-center my-12 place-content-center">
+          <div id="empty-feed" class="flex items-center place-content-center">
             <Bonfire.UI.Common.EmptyFeed
               feedback_title={@feedback_title}
               feedback_message={@feedback_message}
