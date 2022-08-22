@@ -84,7 +84,7 @@
       <div 
         :if={ulid(current_user(@__context__)) != maybe_get(@character, :id) || @thread_mode != :flat}
         class={
-        "absolute left-3",
+        "absolute left-4",
         "!relative !left-0": e(assigns, :viewing_main_object, nil) == true,
         "!static mr-3": e(@showing_within, :feed) == :feed ||  e(@showing_within, :feed) == :notifications,
         "bottom-2": e(@thread_mode, nil) == :flat,
