@@ -13,7 +13,7 @@
     x-show="width < 1200"
     phx-click="Bonfire.Social.Feeds:reply_to_activity"
     phx-target={if @activity_id, do: "#activity--"<>e(@activity_id, "")}
-    @click="smart_input_title_text = '#{l "Reply"}'; smart_input_fullscreen = true; show_smart_input();">
+    @click={"smart_input_title_text = '#{l "Reply"}'; smart_input_fullscreen = true; show_smart_input();"}>
     <div class={"btn btn-ghost btn-circle btn-sm"}> 
       <span class="text-opacity-50 text-base-content">
         <Icon outline="Reply" class="w-4 h-4 stroke-1" />
