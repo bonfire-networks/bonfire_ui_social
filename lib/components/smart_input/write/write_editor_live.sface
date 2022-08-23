@@ -1,22 +1,24 @@
-
-
-
 {#case rich_editor_module(@with_rich_editor, @__context__) |> debug()}
   {#match component when is_atom(component) and not is_nil(component)}
+
+    <!-- editor component from user's preferred extension -->
     <Surface.Components.Dynamic.Component
       module={component}
       {...assigns}
     />
+
     <!-- fallback if JS is disabled -->
-    <!-- <noscript>
+    <noscript>
       <TextArea
+        name={"fallback_#{@field_name}"}
         opts={
           value: @smart_input_text,
           placeholder: @smart_input_prompt
         }
         class={@textarea_class}
       />
-    </noscript> -->
+    </noscript> 
+
   {#match _}
     <TextArea
       opts={

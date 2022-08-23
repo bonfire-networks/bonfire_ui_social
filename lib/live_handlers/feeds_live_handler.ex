@@ -68,6 +68,8 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
     else
       false ->
         error(l "Sorry, you cannot reply to this")
+      other ->
+        other # for remote interaction redirect
     end
   end
 

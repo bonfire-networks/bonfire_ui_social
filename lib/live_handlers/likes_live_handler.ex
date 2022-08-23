@@ -33,6 +33,8 @@ defmodule Bonfire.Social.Likes.LiveHandler do
 
       {:error, e} ->
         error(e)
+      other ->
+        other
     end
   end
 

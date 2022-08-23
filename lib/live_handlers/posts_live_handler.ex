@@ -39,7 +39,7 @@ defmodule Bonfire.Social.Posts.LiveHandler do
 
   def handle_event("post", params, socket) do # if not a message, it's a post by default
     attrs = params
-    |> debug("post params")
+    # |> debug("post params")
     |> input_to_atoms()
     # |> debug("post attrs")
 
@@ -51,7 +51,7 @@ defmodule Bonfire.Social.Posts.LiveHandler do
          uploaded_media <- multi_upload(current_user, params["upload_metadata"], socket),
          opts <- [
             current_user: current_user,
-            post_attrs: attrs |> Map.put(:uploaded_media, uploaded_media),
+            post_attrs: Bonfire.Social.Posts.prepare_post_attrs(attrs) |> Map.put(:uploaded_media, uploaded_media),
             boundary: e(params, "to_boundaries", "mentions")
           ] |> debug("opts"),
          {:ok, published} <- Bonfire.Social.Posts.publish(opts) do
