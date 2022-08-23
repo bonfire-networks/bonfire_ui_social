@@ -13,23 +13,34 @@
       }>
 
     {#if e(@showing_within, :feed) == :feed || e(@showing_within, :feed) == :notifications}
-      <!-- {#if String.starts_with?(@permalink, ["/post/", "/discussion/"])}
-        <a 
+      {#if String.starts_with?(@permalink, ["/post/", "/discussion/"])}
+        <!-- <a 
           href={@permalink} 
-          id={"open-#{ulid(@object)}"}
+          id={"open-#{ulid(@activity)}"}
           phx-hook="PreviewActivity"
-          data-id={ulid(@object)}
+          data-id={@thread_id}
           data-permalink={@permalink}
           class="px-1 font-normal normal-case btn btn-sm btn-ghost">
             {l "View discussion"}
-        </a>
-      {#else} -->
+        </a> -->
+        <Bonfire.UI.Common.OpenModalLive
+          id={ComponentID.new(Bonfire.UI.Common.OpenModalLive, @thread_id)} 
+          reusable_modal_component={Bonfire.UI.Common.PreviewContentLive}
+          reusable_modal_id="preview_content"
+          open_btn_hook="PreviewActivity"
+          open_btn_opts={"data-permalink": @permalink}
+          href={@permalink}
+          open_btn_text={l "View thread"}
+          open_btn_class="px-1 font-normal normal-case btn btn-sm btn-ghost"
+          modal_assigns={object_id: @thread_id, preview_component: Bonfire.UI.Social.ViewObjectThreadLive}
+        />
+      {#else}
         <LiveRedirect 
           to={@permalink} 
           class="px-1 font-normal normal-case btn btn-sm btn-ghost">
           {l "View"}
         </LiveRedirect>
-      <!-- {/if} -->
+      {/if}
     {/if}
     <div class={
       "feed-clickable flex items-center flex-1 justify-end space-x-4 mt-0",

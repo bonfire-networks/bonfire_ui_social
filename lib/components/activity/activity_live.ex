@@ -67,12 +67,13 @@ defmodule Bonfire.UI.Social.ActivityLive do
     object_type_readable = Types.object_type_display(object_type)
 
     thread = e(assigns, :thread_object, nil) || e(activity, :replied, :thread, nil) || e(activity, :replied, :thread_id, nil)
+    thread_id = ulid(thread)
     # debug(thread, "thread")
     thread_url = if thread do
       if is_struct(thread) do
         path(thread)
       else
-        "/discussion/#{ulid(thread)}"
+        "/discussion/#{thread_id}"
       end
     else
       e(assigns, :thread_url, nil)
@@ -98,7 +99,8 @@ defmodule Bonfire.UI.Social.ActivityLive do
       verb_display: verb_display,
       created_verb_display: created_verb_display,
       permalink: permalink,
-      thread_url: thread_url
+      thread_url: thread_url,
+      thread_id: thread_id
     )
     |> Map.new()
 
@@ -176,6 +178,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
             verb_display={e(component_assigns, :verb_display, @verb_display)}
             permalink={e(component_assigns, :permalink, @permalink)}
             thread_url={@thread_url}
+            thread_id={@thread_id}
             activity_inception={e(component_assigns, :activity_inception, @activity_inception)}
             viewing_main_object={e(component_assigns, :viewing_main_object, @viewing_main_object)}
             hide_reply={e(component_assigns, :hide_reply, @hide_reply)}

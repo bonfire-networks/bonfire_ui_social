@@ -37,9 +37,10 @@ defmodule Bonfire.Social.Objects.LiveHandler do
     end
   end
 
-  def load_object(socket), do: load_object(socket.assigns, socket)
+  def load_object_assigns(%{assigns: assigns} = socket), do: load_object_assigns(assigns, socket)
+  def load_object_assigns(%{} = assigns), do: load_object_assigns(assigns, assigns)
 
-  def load_object(%{post_id: id} = assigns, socket) when is_binary(id) do
+  def load_object_assigns(%{post_id: id} = assigns, socket) when is_binary(id) do
     current_user = current_user(socket)
 
     # debug(params, "PARAMS")
@@ -71,7 +72,7 @@ defmodule Bonfire.Social.Objects.LiveHandler do
       page_title = e(activity, :replied, :thread, :named, :name, l("Post"))
 
       socket
-      |> assign(
+      |> assign_generic(
         object_id: id,
         object_loaded: true,
         activity: activity,
@@ -99,12 +100,12 @@ defmodule Bonfire.Social.Objects.LiveHandler do
     end
   end
 
-  def load_object(%{object_id: id} = assigns, socket) when is_binary(id) do
+  def load_object_assigns(%{object_id: id} = assigns, socket) when is_binary(id) do
     # FIXME: consolidate common code
 
     current_user = current_user(socket)
     # debug(params, "PARAMS")
-    with {:ok, object} <- Bonfire.Social.Objects.read(ulid(id), socket) do
+    with {:ok, object} <- Bonfire.Social.Objects.read(ulid(id), current_user: current_user) do
 
       {activity, object} = Map.pop(object, :activity)
       {preloaded_object, activity} = Map.pop(activity, :object)
@@ -133,7 +134,7 @@ defmodule Bonfire.Social.Objects.LiveHandler do
       page_title = e(activity, :replied, :thread, :named, :name, nil)
 
       socket
-      |> assign(
+      |> assign_generic(
         object_id: id,
         object_loaded: true,
         activity: activity,

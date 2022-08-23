@@ -6,6 +6,7 @@ defmodule Bonfire.UI.Social.Activity.ActionsLive do
   prop object_type, :any
   prop verb, :string
   prop permalink, :string
+  prop thread_id, :string
   prop object_type_readable, :any
   prop showing_within, :any
   prop hide_reply, :boolean

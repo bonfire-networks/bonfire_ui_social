@@ -45,7 +45,7 @@ defmodule Bonfire.UI.Social.DiscussionLive do
         url: url,
         reply_to_id: e(params, "reply_to_id", id)
       )
-      |> Bonfire.Social.Objects.LiveHandler.load_object()
+      |> Bonfire.Social.Objects.LiveHandler.load_object_assigns()
     }
   end
 

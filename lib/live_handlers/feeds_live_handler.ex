@@ -100,27 +100,11 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
   end
 
   def handle_event("open_activity", %{"permalink" => "/post/"<>_, "id"=>id}, socket) when is_binary(id) and id !="" do
-    debug(id, "open_activity: load the post & thread for preview")
-    {:noreply,
-      socket
-      |> assign(
-        preview_module: Bonfire.UI.Social.ObjectThreadLive,
-        post_id: id
-      )
-      |> Bonfire.Social.Objects.LiveHandler.load_object()
-    }
+    preview_thread(socket, %{post_id: id})
   end
 
   def handle_event("open_activity", %{"id"=>id}, socket) when is_binary(id) and id !="" do
-    debug(id, "open_activity: load the object & thread for preview")
-    {:noreply,
-      socket
-      |> assign(
-        preview_module: Bonfire.UI.Social.ObjectThreadLive,
-        object_id: id
-      )
-      |> Bonfire.Social.Objects.LiveHandler.load_object()
-    }
+    preview_thread(socket, %{object_id: id})
   end
 
   def handle_event("open_activity", %{"permalink" => permalink} = _params, socket) when is_binary(permalink) and permalink !="" do
@@ -216,6 +200,18 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
   def handle_info({:load_feed, key}, socket) do
     {:noreply, socket
       |> assign(feed_assigns(key, socket))
+    }
+  end
+
+  def preview_thread(socket, assigns) do
+    debug(assigns, "open_activity: load the object & thread for preview")
+    {:noreply,
+      socket
+      |> assign(assigns)
+      |> assign(
+        preview_module: Bonfire.UI.Social.ObjectThreadLive,
+        preview_assigns: Bonfire.Social.Objects.LiveHandler.load_object_assigns(assigns)
+      )
     }
   end
 

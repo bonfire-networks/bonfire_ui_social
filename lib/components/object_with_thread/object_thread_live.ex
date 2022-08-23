@@ -41,7 +41,7 @@ defmodule  Bonfire.UI.Social.ObjectThreadLive do
   #   debug("load object")
   #   {:ok, socket
   #     |> assign(assigns)
-  #     |> Bonfire.Social.Objects.LiveHandler.load_object()
+  #     |> Bonfire.Social.Objects.LiveHandler.load_object_assigns()
   #   }
   # end
 
