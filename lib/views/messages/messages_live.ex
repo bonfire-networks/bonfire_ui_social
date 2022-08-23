@@ -37,6 +37,7 @@ defmodule Bonfire.UI.Social.MessagesLive do
         object: nil,
         reply_to_id: nil,
         thread_id: nil,
+        users: [],
         hide_smart_input: true,
         smart_input_text: nil,
         feedback_title: l("No messages"),

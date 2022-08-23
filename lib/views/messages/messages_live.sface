@@ -48,7 +48,7 @@
           smart_input_prompt={e(@smart_input_prompt, "")}
           smart_input_text={e(@smart_input_text, "")}
           title_prompt={l "Enter an optional subject"}
-          preloaded_recipients={e(@users, [])}
+          preloaded_recipients={@users}
           show_select_recipients={true}
         />
     </div>
