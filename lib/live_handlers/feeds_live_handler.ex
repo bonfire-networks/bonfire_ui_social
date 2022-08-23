@@ -22,21 +22,23 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
     paginate_feed(attrs, socket)
   end
 
-  def handle_event("reply_to_activity", _, socket) do
-    debug("reply!")
-
-    current_user = current_user(socket)
+  def handle_event("reply_to_activity", params, socket) do
+    # debug("reply!")
 
     activity = e(socket.assigns, :activity, nil)
 
     # Note: we reply to objects, not activities
-    reply_to_id =
-      e(socket.assigns, :object_id, nil)
-      || e(socket.assigns, :object, :id, nil)
-      || e(activity, :object, :id, nil)
+    reply_to =
+      e(params, "id", nil)
+      || e(socket.assigns, :object, nil)
+      || e(activity, :object, nil)
+      || e(socket.assigns, :object_id, nil)
       || e(activity, :object_id, nil)
 
-    if Bonfire.Boundaries.can?(current_user, :reply, reply_to_id) do
+    reply_to_id = ulid(reply_to)
+
+    with {:ok, current_user} <- current_user_or_remote_interaction(socket, l("reply"), reply_to),
+      true <- Bonfire.Boundaries.can?(current_user, :reply, reply_to_id) do
 
       # FIXME: don't re-load this here as we already have the list (at least when we're in a thread)
       participants = Bonfire.Social.Threads.list_participants(activity, nil, current_user: current_user)
@@ -64,7 +66,8 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
       {:noreply, socket}
 
     else
-      error(l "Sorry, you cannot reply to this")
+      false ->
+        error(l "Sorry, you cannot reply to this")
     end
   end
 

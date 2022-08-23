@@ -17,8 +17,9 @@ defmodule Bonfire.Social.Likes.LiveHandler do
   end
 
   def do_like(object, params, socket) do
-    with %{id: _} = current_user <- current_user(socket),
+    with {:ok, current_user} <- current_user_or_remote_interaction(socket, l("like"), object),
          {:ok, _like} <- Bonfire.Social.Likes.like(current_user, object) do
+
       like_action(object, true, params, socket)
       |> debug("liked")
 

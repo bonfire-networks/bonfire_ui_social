@@ -3,20 +3,23 @@ defmodule Bonfire.Social.Boosts.LiveHandler do
   import Where
 
   def handle_event("boost", params, %{assigns: %{object: object}} = socket) do # boost in LV stateful component
-    with {:ok, boost} <- Bonfire.Social.Boosts.boost(current_user(socket), object) do
-      boost_action(object, true, params, socket)
-    end
+    do_boost(object, params, socket)
   end
 
   def handle_event("boost", %{"id"=> id} = params, socket) do # boost in LV
-    with {:ok, boost} <- Bonfire.Social.Boosts.boost(current_user(socket), id) do
-      boost_action(id, true, params, socket)
-    end
+    do_boost(id, params, socket)
   end
 
   def handle_event("undo", %{"id"=> id} = params, socket) do # unboost in LV
     with {:ok, unboost} <- Bonfire.Social.Boosts.unboost(current_user(socket), id) do
       boost_action(id, false, params, socket)
+    end
+  end
+
+  def do_boost(object, params, socket) do # boost in LV
+    with {:ok, current_user} <- current_user_or_remote_interaction(socket, l("boost"), object),
+      {:ok, boost} <- Bonfire.Social.Boosts.boost(current_user, object) do
+      boost_action(object, true, params, socket)
     end
   end
 

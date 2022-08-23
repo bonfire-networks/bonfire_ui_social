@@ -12,6 +12,7 @@
     x-cloak
     x-show="width < 1200"
     phx-click="Bonfire.Social.Feeds:reply_to_activity"
+    phx-value-id={@object_id}
     phx-target={if @activity_id, do: "#activity--"<>e(@activity_id, "")}
     @click={"smart_input_title_text = '#{l "Reply"}'; smart_input_fullscreen = true; show_smart_input();"}>
     <div class={"btn btn-ghost btn-circle btn-sm"}> 
@@ -25,6 +26,7 @@
     x-show="width > 1200"
     data-id="action_reply"
     phx-click="Bonfire.Social.Feeds:reply_to_activity"
+    phx-value-id={@object_id}
     phx-target={if @activity_id, do: "#activity--"<>e(@activity_id, "")}
   >
     <div class={"btn btn-ghost btn-circle btn-sm"}> 
@@ -39,6 +41,7 @@
     x-cloak
     x-show="width < 768"
     phx-click="Bonfire.Social.Feeds:reply_to_activity"
+    phx-value-id={@object_id}
     phx-target={if @activity_id, do: "#activity--"<>e(@activity_id, "")}
     @click="show_smart_input()">
     <div class={"btn btn-ghost btn-circle btn-sm"}> 
@@ -51,6 +54,7 @@
   <button
     data-id="action_reply"
     phx-click="Bonfire.Social.Feeds:reply_to_activity"
+    phx-value-id={@object_id}
     @click={"show_smart_input(); smart_input_title_text = '#{l "Reply"}'"}
     phx-target={if @activity_id, do: "#activity--"<>e(@activity_id, "")}
   >
