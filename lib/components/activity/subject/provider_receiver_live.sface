@@ -25,6 +25,7 @@
       <BoundaryIconLive 
         id={ComponentID.new(BoundaryIconLive, @object)} 
         object={@object}  
+        with_icon
         object_boundary={@object_boundary} 
       />
 

@@ -4,6 +4,7 @@
     :if={@object_type not in [Bonfire.Data.Social.Message]}
     id={ComponentID.new(BoundaryIconLive, @object)} 
     object={@object}  
+    with_icon
     object_boundary={@object_boundary} 
   />
   <LiveRedirect class="replied_timestamp text-base-content text-opacity-60" to={@permalink}>
