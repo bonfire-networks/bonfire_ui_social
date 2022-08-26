@@ -30,7 +30,7 @@
 
     <OpenModalLive
         :if={Bonfire.Me.Users.is_admin?(current_user(@__context__)) || Bonfire.Boundaries.can?(@__context__, :delete, :instance)}
-        id={ComponentID.new(OpenModalLive, @object)} 
+        id={Pointers.ULID.generate()} 
         title_text={l("Delete this")<>" "<>e(@object_type_readable, l "object")}
         >
         {l "A request will be sent to remote instances to delete it as well."} 

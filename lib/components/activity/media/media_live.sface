@@ -17,7 +17,7 @@
         class="h-full">
         {#if String.starts_with?(e(media, :media_type, ""), ["image", "video", "embed", "audio", "song", "photo", "rich"]) or String.contains?(media_url(media), [".jpg", ".jpeg", ".png", ".gif", ".webp"])}
           <Bonfire.UI.Common.OpenModalLive
-            id={ComponentID.new(Bonfire.UI.Common.OpenModalLive, media)} 
+            id={Pointers.ULID.generate()} 
             title_text={e(@label, l "View media")}
             no_actions
             open_btn_class="w-full"

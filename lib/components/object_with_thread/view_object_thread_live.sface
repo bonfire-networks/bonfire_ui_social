@@ -10,6 +10,7 @@
   thread_mode={@thread_mode}
   activity={@activity}
   object={@object}
+  object_id={@object_id}
   post_id={@post_id}
   url={@url}
   thread_id={@thread_id}

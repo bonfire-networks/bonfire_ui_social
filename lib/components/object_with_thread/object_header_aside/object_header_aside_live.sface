@@ -6,7 +6,7 @@
     <li>
       <Bonfire.UI.Common.OpenModalLive
         :if={@thread_id}
-        id={ComponentID.new(Bonfire.UI.Common.OpenModalLive, @object)} 
+        id={Pointers.ULID.generate()} 
         title_text={e(@label, l "Edit the thread title")}
         form_opts={%{"phx-submit"=> "Bonfire.Social.Objects:set_name"}}
         >
@@ -33,7 +33,7 @@
       >
       <Bonfire.UI.Common.OpenModalLive
         :if={@thread_id}
-        id={ComponentID.new(Bonfire.UI.Common.OpenModalLive, @object)} 
+        id={Pointers.ULID.generate()} 
         title_text={to_string(length(e(@participants, []))) <> " " <> l("participants")}
         >
         <div class="flex flex-col divide-y divide-base-content/10 ">

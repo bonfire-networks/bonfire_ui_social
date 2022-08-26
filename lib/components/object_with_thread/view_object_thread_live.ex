@@ -28,13 +28,13 @@ defmodule  Bonfire.UI.Social.ViewObjectThreadLive do
   prop threaded_replies, :any, default: nil
   prop page_info, :any, default: nil
 
-  def update(%{object_id: id} = assigns, %{assigns: %{object_id: previously_loaded, object: %{}}} = socket) when is_binary(id) and id==previously_loaded do
-    debug("object previously_loaded")
-    {:noreply, assign(socket, assigns)}
+  def update(%{object_id: id} = assigns, %{assigns: %{object: %{id: previously_loaded}}} = socket) when is_binary(id) and id==previously_loaded do
+    debug(previously_loaded, "object previously_loaded")
+    {:ok, assign(socket, assigns)}
   end
-  def update(%{post_id: id} = assigns, %{assigns: %{object_id: previously_loaded, object: %{}}} = socket) when is_binary(id) and id==previously_loaded do
-    debug("post previously_loaded")
-    {:noreply, assign(socket, assigns)}
+  def update(%{post_id: id} = assigns, %{assigns: %{object: %{id: previously_loaded}}} = socket) when is_binary(id) and id==previously_loaded do
+    debug(previously_loaded, "post previously_loaded")
+    {:ok, assign(socket, assigns)}
   end
 
   def update(assigns, socket) do

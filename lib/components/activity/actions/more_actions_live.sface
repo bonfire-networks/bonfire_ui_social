@@ -25,7 +25,7 @@
       <li
         class=" hover:bg-neutral hover:bg-opacity-20">
         <Bonfire.UI.Common.OpenModalLive
-          id={ComponentID.new(Bonfire.UI.Common.OpenModalLive, @object)} 
+          id={Pointers.ULID.generate()} 
           title_text={l "Tag with topic(s)"}
           form_opts={%{"phx-submit"=> "Bonfire.Social.Objects:tag"}}
           :let={autocomplete: autocomplete}
@@ -106,7 +106,7 @@
       :if={@object_type not in [Bonfire.Data.Social.Message] and ulid(current_user(@__context__)) == subject_id(@activity, @object) or Bonfire.Me.Users.is_admin?(current_user(@__context__))}
       class=" hover:bg-neutral hover:bg-opacity-20">
       <OpenModalLive
-        id={ComponentID.new(OpenModalLive, @object)} 
+        id={Pointers.ULID.generate()} 
         title_text={l("Delete this")<>" "<>(if @verb in ["Write", "Create"], do: l("from feeds"), else: @verb)}
         >
         {l "Deleting from feeds means the %{object} can still be accessed by anyone who has a direct link, but won't be discoverable via this instance's feeds.", object: e(@object_type_readable, l "object")}
@@ -140,7 +140,7 @@
           && Types.object_type(@object) !=Bonfire.Data.Identity.User }
       class=" hover:bg-neutral hover:bg-opacity-20">
       <OpenModalLive
-        id={ComponentID.new(OpenModalLive, @object)} 
+        id={Pointers.ULID.generate()} 
         title_text={l("Delete this")<>" "<>e(@object_type_readable, l "object")}
         >
         <!-- {rich l "You may be able to undo this deletion *in some cases*, but in any case the data will eventually be permanently deleted from this instance."}  -->
