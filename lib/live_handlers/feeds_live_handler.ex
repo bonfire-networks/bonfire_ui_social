@@ -324,7 +324,7 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
       page_title: l("Federated activities from remote instances"),
       feed_title: l("Activities from around the fediverse"),
       feedback_title: l("Your fediverse feed is empty"),
-      feedback_message: l("It seems you and your friends do not follow any other users on a different instance"),
+      feedback_message: l("It seems you and other local users do not follow anyone on a different federated instance"),
       # feed_id: feed_name,
       feed: [],
       page_info: nil,
@@ -351,7 +351,8 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
       page: "local", # FIXME: clean up page vs tab
       page_title: l("Local activities"),
       feed_title: l("Activities on this instance"),
-      # feed_id: feed_name,
+      feedback_title: l("Your local feed is empty"),
+      feedback_message: l("It seems like the paint is still fresh on this instance..."),      # feed_id: feed_name,
       feed: [],
       page_info: nil, #|> IO.inspect
       # FIXME: seems too much re-assigning the whole sidebar widgets only to change the page prop?

@@ -26,8 +26,8 @@ defmodule Bonfire.UI.Social.HomeLive do
         page_header_drawer: true,
         feed_id: nil,
         feed_ids: nil,
-        feedback_title: l("Your home feed is empty"),
-        feedback_message: l("You can start by following some people or by writing a new post."),
+        feedback_title: l("Your feed is empty"),
+        feedback_message: l("You can start by following some people, or writing a new post yourself."),
         sidebar_widgets: [
           users: [
             secondary: [
