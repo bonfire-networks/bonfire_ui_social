@@ -49,8 +49,7 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
       thread_id = e(activity, :replied, :thread_id, nil) || e(socket.assigns, :object, :replied, :thread_id, nil)
 
       debug("send activity to smart input")
-      send_update(Bonfire.UI.Common.SmartInputLive, # assigns_merge(socket.assigns,
-        id: :smart_input,
+      Bonfire.UI.Common.SmartInputLive.set(
         # we reply to objects, not activities
         reply_to_id: reply_to_id,
         thread_id: thread_id,
@@ -74,12 +73,12 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
   end
 
   def handle_event("remove_data", _params, socket) do
-    send_update(Bonfire.UI.Common.SmartInputLive, [
-      id: :smart_input,
+    Bonfire.UI.Common.SmartInputLive.set(
       activity: nil,
       object: nil,
       reply_to_id: e(socket, :assigns, :thread_id, nil) # default to replying to current thread
-    ])
+    )
+
     {:noreply, socket}
   end
 
