@@ -188,7 +188,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
           />
         {/for}
         <button
-          :if={ String.length(e(@object, :post_content, :html_body, l "")) > 150 && ulid(@object) != nil and e(@activity, :replied, :reply_to_id, nil) == nil and ulid(@activity) == nil and e(assigns, :showing_within, nil) != :widget and e(assigns, :showing_within, nil) != :search}
+          :if={ String.length(e(@object, :post_content, :html_body, "")) > 150 && ulid(@object) != nil and e(@activity, :replied, :reply_to_id, nil) == nil and ulid(@activity) == nil and e(assigns, :showing_within, nil) != :widget and e(assigns, :showing_within, nil) != :search}
           @click="collapsed = ! collapsed"
           class="normal-case btn btn-outline btn-sm">
           <span x-show="collapsed">{l "Expand"}</span>
