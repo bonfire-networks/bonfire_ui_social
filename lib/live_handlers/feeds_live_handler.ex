@@ -368,6 +368,32 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
     feed_assigns_maybe_async_load(feed_id, assigns, socket)
   end
 
+  def feed_assigns_maybe_async({feed_id, %Ecto.Query{} = custom_query}, socket) do
+
+    assigns = [
+      loading: true,
+      feed_id: feed_id,
+      current_user: current_user(socket),
+      feed: [],
+      page_info: nil
+    ]
+
+    feed_assigns_maybe_async_load({feed_id, custom_query}, assigns, socket)
+  end
+
+  def feed_assigns_maybe_async({feed_id, feeds}, socket) when is_list(feeds) or is_binary(feeds) do
+
+    assigns = [
+      loading: true,
+      feed_id: feed_id,
+      current_user: current_user(socket),
+      feed: [],
+      page_info: nil
+    ]
+
+    feed_assigns_maybe_async_load({feed_id, feeds}, assigns, socket)
+  end
+
   def feed_assigns_maybe_async(_default, socket) do
     current = current_user(socket) || current_account(socket)
 
@@ -412,6 +438,19 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
 
   defp feed_id_only({feed_id, _feed_ids}), do: feed_id
   defp feed_id_only(feed_id), do: feed_id
+
+  defp feed_assigns({_feed_id, %Ecto.Query{} = custom_query}, socket) do
+    feed = custom_query
+    |> debug("query")
+    |> Bonfire.Social.FeedActivities.feed(socket)
+    |> debug("queried")
+
+    [
+      loading: false,
+      feed: e(feed, :edges, []) |> preloads(socket),
+      page_info: e(feed, :page_info, [])
+    ]
+  end
 
   defp feed_assigns({_feed_id, feed_ids}, socket) do
     # debug(myfeed: feed)

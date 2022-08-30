@@ -11,7 +11,7 @@
     {#for tag <- Bonfire.Tag.Tags.list_trending(Bonfire.Me.Settings.get([:ui, :show_trending_tags, :for_last_x_days], 30, @__context__), Bonfire.Me.Settings.get([:ui, :show_trending_tags, :limit], 10, @__context__))}
       {#case e(tag, :tag, nil)}
         {#match %Bonfire.Tag.Hashtag{} = hashtag}
-          <LivePatch to={"/tag/" <> hashtag.name}>
+          <LiveRedirect to={"/hashtag/" <> hashtag.name}>
             <li class="">
               <div class="flex flex-row items-center">
                 <div class="flex flex-col items-start flex-1 gap-0 text-left">
@@ -23,9 +23,9 @@
               <!-- <div><Icon outline="DotsHorizontal" class="w-5 h-5 text-base-content text-opacity-60" /></div> -->
             </div>
           </li>
-          </LivePatch>
+          </LiveRedirect>
         {#match other}
-          <LivePatch to={path(other)}>
+          <LiveRedirect to={path(other)}>
             <li class="">
               <div class="flex flex-row items-center">
                 <div class="flex flex-col items-start flex-1 gap-0 text-left">
@@ -36,7 +36,7 @@
                 </div>
               </div>
             </li>
-          </LivePatch>
+          </LiveRedirect>
       {/case}
     {/for}
 
