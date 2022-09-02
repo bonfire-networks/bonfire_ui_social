@@ -52,7 +52,7 @@
     <!-- <div :if={{@show_likes}} class="flex items-center text-xs text-primary-content-700 text-medium">
       {{ live_component(@socket, Bonfire.UI.Common.LikeActionLive,
         object_id: @object.id,
-        current_user: current_user(@__context__),
+        current_user: @current_user,
         my_like: nil,
         like_count: nil
       ) }}

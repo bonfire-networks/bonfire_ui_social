@@ -9,49 +9,49 @@
     disabled={true}
     force_checked={true}
     scope={@scope}
-    current_user={current_user(@__context__)}
+    
    />
 
   <!-- <Bonfire.UI.Social.Settings.MyFeedItemLive
     label={l "Topics I follow"}
     key={:followed_topics}
     scope={@scope}
-    current_user={current_user(@__context__)}
+    
    /> -->
 
   <Bonfire.UI.Social.Settings.MyFeedItemLive
     label={l "Boosts"}
     key={:boost}
     scope={@scope}
-    current_user={current_user(@__context__)}
+    
    />
 
   <Bonfire.UI.Social.Settings.MyFeedItemLive
     label={l "Replies"}
     key={:reply} 
     scope={@scope}
-    current_user={current_user(@__context__)}
+    
    />
 
   <Bonfire.UI.Social.Settings.MyFeedItemLive
     label={l "Follows"}
     key={:follow}
     scope={@scope}
-    current_user={current_user(@__context__)}
+    
    />
 
   <Bonfire.UI.Social.Settings.MyFeedItemLive
-    label={if current_user(@__context__), do: l "My own activities", else: l "User's own activities"}
+    label={if @current_user, do: l "My own activities", else: l "User's own activities"}
     key={:outbox}
     scope={@scope}
-    current_user={current_user(@__context__)}
+    
    />
 
   <Bonfire.UI.Social.Settings.MyFeedItemLive
     label={l "Notifications"}
     key={:notifications}
     scope={@scope}
-    current_user={current_user(@__context__)}
+    
    />
 
   <Bonfire.UI.Social.Settings.MyFeedItemLive
@@ -60,5 +60,5 @@
     disabled={true}
     force_unchecked={true}
     scope={@scope}
-    current_user={current_user(@__context__)}
+    
    />

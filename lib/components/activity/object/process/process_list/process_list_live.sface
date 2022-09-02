@@ -5,7 +5,7 @@
         <Bonfire.UI.Common.LikeActionWithoutLabelLive
           id={ComponentID.new(Bonfire.UI.Common.LikeActionWithoutLabelLive, @object)} 
         object={@object}
-        current_user={current_user(@__context__)}
+        
         />
         <LivePatch to={if @process_url, do: ( e(@process_url, "/list/")<>e(@object, :id,"") ), else: path(@object)}>
           <div class="text-base font-medium text-primary-content-700  hover:underline hover:text-primary-content-800">{e(@object, :name, nil)}</div>

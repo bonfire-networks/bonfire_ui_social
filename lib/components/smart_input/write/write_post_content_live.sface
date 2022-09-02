@@ -1,7 +1,7 @@
 
 <div class="flex flex-col h-full write_post_content">
   <Form 
-    for={Bonfire.Social.Posts.LiveHandler.post_changeset(current_user(@__context__))} 
+    for={Bonfire.Social.Posts.LiveHandler.post_changeset(@current_user)} 
     submit={handler(%{page: @page, showing_within: @showing_within, create_activity_type: @create_activity_type})} 
     action={"/LiveHandler/"<>handler(%{page: @page, showing_within: @showing_within, create_activity_type: @create_activity_type})} 
     change="validate"

@@ -9,6 +9,6 @@
     
     <Bonfire.UI.Social.FeedLive 
       class="pl-0 showing_within:widget"
-      {...load(current_user(@__context__))}
+      {...load(@current_user)}
     />
 </Bonfire.UI.Common.WidgetLive>

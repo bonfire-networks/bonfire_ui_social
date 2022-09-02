@@ -69,7 +69,7 @@
       {/case}
     {#else}
       <span class="badge my-12">
-        {if e(@activity, :subject, :id, nil) !=ulid(current_user(@__context__)), do:  l("Be the first to reply..."), else: l "No replies yet..."}
+        {if e(@activity, :subject, :id, nil) !=ulid(@current_user), do:  l("Be the first to reply..."), else: l "No replies yet..."}
       </span>
     {/if}
   </div>

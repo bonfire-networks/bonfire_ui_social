@@ -1,5 +1,5 @@
 <div
-  :if={current_user(@__context__) != nil and @showing_within not in [:notifications, :search]}
+  :if={@current_user != nil and @showing_within not in [:notifications, :search]}
   aria-haspopup="true"
   data-tip={l "More"}
   class={"dropdown tooltip tooltip-bottom relative z-40 feed_activity relative ",
@@ -72,7 +72,7 @@
 
     <!-- Flag the action -->
     <li 
-      :if={ulid(current_user(@__context__)) != subject_id(@activity, @object) and @verb !="Flag"}
+      :if={ulid(@current_user) != subject_id(@activity, @object) and @verb !="Flag"}
       class=" hover:bg-neutral hover:bg-opacity-20">
       <Bonfire.UI.Common.FlagActionLive 
         object={@object}
@@ -84,7 +84,7 @@
 
     <!-- Flag the author -->
     <li 
-      :if={ulid(current_user(@__context__)) != subject_id(@activity, @object) and @verb !="Flag"}
+      :if={ulid(@current_user) != subject_id(@activity, @object) and @verb !="Flag"}
       class=" hover:bg-neutral hover:bg-opacity-20">
       <Bonfire.UI.Common.FlagActionLive 
         object={@object}
@@ -103,7 +103,7 @@
     <!-- Delete the activity: WIP hiding it for first beta release -->
     
     <!-- <li 
-      :if={@object_type not in [Bonfire.Data.Social.Message] and ulid(current_user(@__context__)) == subject_id(@activity, @object) or Bonfire.Me.Users.is_admin?(current_user(@__context__))}
+      :if={@object_type not in [Bonfire.Data.Social.Message] and ulid(@current_user) == subject_id(@activity, @object) or Bonfire.Me.Users.is_admin?(@current_user)}
       class=" hover:bg-neutral hover:bg-opacity-20">
       <OpenModalLive
         id={Pointers.ULID.generate()} 
@@ -134,8 +134,8 @@
 
     <!-- Delete the object -->
     <li 
-      :if={ulid(current_user(@__context__)) == subject_id(@activity, @object) 
-        or ( Bonfire.Me.Users.is_admin?(current_user(@__context__)) 
+      :if={ulid(@current_user) == subject_id(@activity, @object) 
+        or ( Bonfire.Me.Users.is_admin?(@current_user) 
             || Bonfire.Boundaries.can?(@__context__, :delete, :instance) )
           && Types.object_type(@object) !=Bonfire.Data.Identity.User }
       class=" hover:bg-neutral hover:bg-opacity-20">

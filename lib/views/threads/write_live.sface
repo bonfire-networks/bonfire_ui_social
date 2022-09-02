@@ -1,7 +1,7 @@
 <Bonfire.UI.Common.SmartInputLive
   id={:smart_input_page} 
   hide_smart_input={false}
-  current_user={current_user(@__context__)}
+  
   showing_within={:page}
   reply_to_id={""}
   thread_id={""}

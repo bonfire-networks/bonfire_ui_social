@@ -45,7 +45,7 @@
       <Bonfire.UI.Common.LikeActionWithoutLabelLive
         id={ComponentID.new(Bonfire.UI.Common.LikeActionWithoutLabelLive, @object)} 
         object={@object}
-        current_user={current_user(@__context__)}
+        
       />
         <LivePatch to={"/process/"<>e(@object, :id,"")}>
           <div class="text-lg font-bold text-primary-content-700  hover:underline hover:text-primary-content-800">{@object.name}</div>

@@ -34,10 +34,10 @@
 
     <div 
       class="sticky bottom-0 z-50"
-      :if={is_messaging?(%{page: @page, showing_within: @showing_within, create_activity_type: @create_activity_type}) && current_user(@__context__)}>      
+      :if={is_messaging?(%{page: @page, showing_within: @showing_within, create_activity_type: @create_activity_type}) && @current_user}>      
         <Bonfire.UI.Common.SmartInputLive
         id={:smart_input}
-        current_user={current_user(@__context__)}
+        
         reply_to_id={e(@reply_to_id, "")}
         thread_mode={@thread_mode}
         thread_id={@thread_id}

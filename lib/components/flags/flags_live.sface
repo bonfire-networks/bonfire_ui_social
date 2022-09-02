@@ -3,7 +3,7 @@
     id={e(@feed_id, :flags)}
     feed_id={@feed_id}
     page_title={@page_title}
-    current_user={e(current_user(@__context__), nil)}
+    current_user={e(@current_user, nil)}
     feed={@feed}
     page_info={@page_info}
     showing_within={:flags}

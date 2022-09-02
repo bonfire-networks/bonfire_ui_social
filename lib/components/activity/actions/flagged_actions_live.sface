@@ -3,13 +3,13 @@
   <div class={"flex items-center space-x-2"}>
 
     <LiveRedirect  
-      :if={e(@activity, :subject, :id, nil) && ulid(current_user(@__context__)) != e(@activity, :subject, :id, nil)}
+      :if={e(@activity, :subject, :id, nil) && ulid(@current_user) != e(@activity, :subject, :id, nil)}
       to={path(Bonfire.Data.Social.Message, e(@activity, :subject, :character, :username, ""))} 
       class="normal-case rounded opacity-80 hover:opacity-100 btn btn-outline btn-xs">{l "Message"} {e(@activity, :subject, :profile, :name, "")}
     </LiveRedirect>
 
     <LiveRedirect 
-      :if={@object && ulid(@object) && ulid(current_user(@__context__)) != e(flagged_character(@object), :id, nil) && e(flagged_character(@object), :id, nil) != e(@activity, :subject, :id, nil)}
+      :if={@object && ulid(@object) && ulid(@current_user) != e(flagged_character(@object), :id, nil) && e(flagged_character(@object), :id, nil) != e(@activity, :subject, :id, nil)}
       to={path(Bonfire.Data.Social.Message, e(flagged_character(@object), :username, nil))} 
       class="normal-case rounded opacity-80 hover:opacity-100 btn btn-outline btn-xs">{l "Message"} {e(flagged_profile(@object), :name, "")}
     </LiveRedirect>
@@ -17,7 +17,7 @@
     {#if to_string(@object_type) == "Elixir.Bonfire.Data.Identity.User"}
 
     <Surface.Components.Dynamic.Component
-        :if={module_enabled?(Bonfire.Boundaries.Web.BlockButtonLive) and current_user(@__context__) && ulid(current_user(@__context__)) != ulid(@object)}
+        :if={module_enabled?(Bonfire.Boundaries.Web.BlockButtonLive) and @current_user && ulid(@current_user) != ulid(@object)}
         module={Bonfire.Boundaries.Web.BlockButtonLive}
         object={@object} 
         label={e(@object, :profile, :name, l "this user")}
@@ -29,7 +29,7 @@
     {#else}
 
     <OpenModalLive
-        :if={Bonfire.Me.Users.is_admin?(current_user(@__context__)) || Bonfire.Boundaries.can?(@__context__, :delete, :instance)}
+        :if={Bonfire.Me.Users.is_admin?(@current_user) || Bonfire.Boundaries.can?(@__context__, :delete, :instance)}
         id={Pointers.ULID.generate()} 
         title_text={l("Delete this")<>" "<>e(@object_type_readable, l "object")}
         >

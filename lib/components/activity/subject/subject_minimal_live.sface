@@ -112,7 +112,7 @@
             {raw @verb_display}
 
              <!-- special case when current_user is the one being followed -->
-            <span :if={ulid(@object) == ulid(current_user(@__context__))}>
+            <span :if={ulid(@object) == ulid(@current_user)}>
               {l "you"}
             </span>
           </div>

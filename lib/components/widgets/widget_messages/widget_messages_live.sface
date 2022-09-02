@@ -1,4 +1,4 @@
-{#case feed(current_user(@__context__))}
+{#case feed(@current_user)}
 {#match feed when is_list(feed)}
 
   <Bonfire.UI.Common.WidgetLive 

@@ -30,7 +30,7 @@
       object={@object}
       hide_icon 
       class="normal-case btn btn-outline btn-sm"
-      current_user={current_user(@__context__)} 
+       
     />
   </div>
 </div>

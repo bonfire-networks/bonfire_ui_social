@@ -6,7 +6,7 @@
   page={@page}
   feedback_title={@feedback_title}
   feedback_message={@feedback_message}
-  current_user={@current_user}
+  
   feed={@feed}
   feed_title={@feed_title}
   page_info={@page_info}

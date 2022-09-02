@@ -8,7 +8,7 @@
   "main_object": @viewing_main_object,
   "showing_within:thread": @showing_within == :thread,
   "-mt-1 bg-base-content/10 px-2 pb-2 rounded-br-md": @thread_mode == :flat,
-  "!bg-info/40 rounded-bl-md !rounded-br-none": @thread_mode == :flat && e(@activity, :subject, :id, nil) == ulid(current_user(@__context__)),
+  "!bg-info/40 rounded-bl-md !rounded-br-none": @thread_mode == :flat && e(@activity, :subject, :id, nil) == ulid(@current_user),
   "activity_inception:#{e(@activity_inception, '')} !bg-transparent pb-0": @activity_inception != nil and @thread_mode == :flat,
   "showing_within:feed": @showing_within == :feed,
   "showing_within:notifications": @showing_within == :notifications,

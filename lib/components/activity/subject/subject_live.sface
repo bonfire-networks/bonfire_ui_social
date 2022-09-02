@@ -3,7 +3,7 @@
   class={
     "mb-1",
     "px-2 bg-base-content/10 pt-1 rounded-t-md": @thread_mode == :flat,
-    "!bg-info/40": @thread_mode == :flat && ulid(current_user(@__context__)) == maybe_get(@character, :id),
+    "!bg-info/40": @thread_mode == :flat && ulid(@current_user) == maybe_get(@character, :id),
     "!bg-transparent pt-0": @activity_inception != nil and @thread_mode == :flat,
   }> 
   <span 
@@ -82,7 +82,7 @@
         data-navigate_to_thread={ "true"}
         class="absolute top-0 bottom-0 left-0 w-16"></div> -->
       <div 
-        :if={ulid(current_user(@__context__)) != maybe_get(@character, :id) || @thread_mode != :flat}
+        :if={ulid(@current_user) != maybe_get(@character, :id) || @thread_mode != :flat}
         class={
         "absolute left-4",
         "!relative !left-0": e(assigns, :viewing_main_object, nil) == true,
@@ -100,7 +100,7 @@
       <div class="flex items-center justify-between leading-[16px] min-w-0 space-x-1 w-full">
         
         <div class="feed-clickable flex items-center flex-1 leading-[16px]">
-          {#if @thread_mode == :flat && current_user(@__context__) && ulid(current_user(@__context__)) == maybe_get(@character, :id) } 
+          {#if @thread_mode == :flat && @current_user && ulid(@current_user) == maybe_get(@character, :id) } 
             <LiveRedirect
               opts={"data-id": "subject_name"}
               aria-label={e(@character, :username, "") <> " profile"}
