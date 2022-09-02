@@ -1,6 +1,6 @@
 <div>
 
-  <#slot name="header" />
+  <#slot {@header} />
 
   <Bonfire.UI.Social.FeedLive
     id={"feed:profile:posts"}

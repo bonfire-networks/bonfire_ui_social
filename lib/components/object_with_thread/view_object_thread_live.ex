@@ -27,6 +27,7 @@ defmodule  Bonfire.UI.Social.ViewObjectThreadLive do
   prop replies, :any, default: nil
   prop threaded_replies, :any, default: nil
   prop page_info, :any, default: nil
+  prop loading, :boolean, default: false
 
   def update(%{object_id: id} = assigns, %{assigns: %{object: %{id: previously_loaded}}} = socket) when is_binary(id) and id==previously_loaded do
     debug(previously_loaded, "object previously_loaded")

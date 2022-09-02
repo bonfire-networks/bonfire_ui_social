@@ -32,7 +32,8 @@ defmodule Bonfire.UI.Social.DiscussionLive do
       thread_id: nil,
       thread_mode: nil,
       search_placeholder: nil,
-      to_boundaries: nil
+      to_boundaries: nil,
+      loading: false
       )
     }
   end

@@ -20,7 +20,7 @@
     aria-orientation="vertical"
     aria-labelledby="more-menu">
 
-    <#slot name="extra_items" />
+    <#slot {@extra_items} />
 
       <li
         class=" hover:bg-neutral hover:bg-opacity-20">
@@ -166,7 +166,7 @@
       </OpenModalLive>
     </li>
 
-    <#slot name="admin_items" />
+    <#slot {@admin_items} />
 
   </ul>
 </div>

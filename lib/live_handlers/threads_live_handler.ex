@@ -14,7 +14,7 @@ defmodule Bonfire.Social.Threads.LiveHandler do
     # permitted? = id && Bonfire.Common.Pointers.exists?([id: id], current_user: current_user(socket)) |> debug("double check boundary upon receiving a LivePush")
 
     # if permitted?, do: # Note: now checking permission in ThreadLive
-    send_update(Bonfire.UI.Social.ThreadLive, id: thread_id, new_reply: data)
+    maybe_send_update(Bonfire.UI.Social.ThreadLive, thread_id, new_reply: data)
 
     {:noreply, socket}
   end
@@ -49,7 +49,7 @@ defmodule Bonfire.Social.Threads.LiveHandler do
         Task.async(fn ->
           thread_id = e(socket.assigns, :thread_id, e(socket.assigns, :object, :id, nil))
           # Query comments asynchronously
-          send_update(pid, Bonfire.UI.Social.ThreadLive, load_thread_assigns(socket) ++ [id: e(socket.assigns, :id, thread_id), loaded_async: true])
+          maybe_send_update(pid, Bonfire.UI.Social.ThreadLive, e(socket.assigns, :id, thread_id), load_thread_assigns(socket) ++ [loaded_async: true])
         end)
       else
         debug("socket NOT connected, but logged in, so no need to load for SEO")

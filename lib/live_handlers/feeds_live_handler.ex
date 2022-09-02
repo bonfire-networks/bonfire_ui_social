@@ -122,7 +122,7 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
   # def handle_event("mark_seen", _params, %{assigns: %{activity: %{id: activity_id}}} = socket) when is_binary(feed_id) and is_binary(activity_id) do
   #   warn("TODO: mark as read: #{activity_id} in #{feed_id}")
 
-  #   # send_update(Bonfire.UI.Common.BadgeCounterLive, id: feed_id, count--)
+  #   # maybe_send_update(Bonfire.UI.Common.BadgeCounterLive, feed_id, count--)
 
   #   {:noreply, socket}
   # end
@@ -221,7 +221,7 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
     end
   end
   def send_feed_updates(feed_id, assigns, component) do
-    send_update(component, [id: feed_id] ++ assigns)
+    maybe_send_update(component, feed_id, assigns)
   end
 
   def paginate_feed("user:"<>selected_tab_and_user_id, attrs, socket) do
@@ -417,7 +417,7 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
         pid = self()
         Task.async(fn ->
           # Query activities asynchronously
-          send_update(pid, Bonfire.UI.Social.FeedLive, feed_assigns(feed_id_or_tuple, socket) ++ [id: feed_id_only(feed_id_or_tuple)])
+          maybe_send_update(pid, Bonfire.UI.Social.FeedLive, feed_id_only(feed_id_or_tuple), feed_assigns(feed_id_or_tuple, socket))
         end)
       else
         debug("socket NOT connected, but logged in, so no need to load for SEO")
@@ -549,7 +549,7 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
         pid = self()
         Task.async(fn ->
           # Query activities asynchronously
-          send_update(pid, Bonfire.UI.Social.FeedLive, load_user_feed_assigns(tab, user_or_feed, params, socket) ++ [id: "feed:profile:#{tab}"])
+          maybe_send_update(pid, Bonfire.UI.Social.FeedLive, "feed:profile:#{tab}", load_user_feed_assigns(tab, user_or_feed, params, socket))
         end)
       else
         debug(tab, "socket NOT connected, but logged in, so no need to load for SEO")

@@ -118,7 +118,7 @@ defmodule Bonfire.UI.Social.FeedLive do
   # def handle_info({:new_activity, data}, socket) do
   #   debug(feed_live_pubsub_received: data)
 
-  #   # send_update(Bonfire.UI.Social.FeedLive, id: "feed", new_activity: data)
+  #   # maybe_send_update(Bonfire.UI.Social.FeedLive, "feed", new_activity: data)
 
   #   {:noreply, socket}
   # end

@@ -160,7 +160,7 @@ defmodule Bonfire.Social.Posts.LiveHandler do
 
   # def handle_event("add_data", %{"activity" => activity_id}, socket) do
   #   IO.inspect("TEST")
-  #   send_update(Bonfire.UI.Social.ActivityLive, id: "activity_component_" <> activity_id, activity_id: activity_id)
+  #   maybe_send_update(Bonfire.UI.Social.ActivityLive, "activity_component_" <> activity_id, activity_id: activity_id)
   #   {:noreply, socket}
   # end
 
