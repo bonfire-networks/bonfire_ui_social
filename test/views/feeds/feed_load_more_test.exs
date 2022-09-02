@@ -3,7 +3,7 @@ defmodule Bonfire.Social.Feeds.LoadMoreTest do
   use Bonfire.UI.Social.ConnCase, async: true
   alias Bonfire.Social.Fake
   alias Bonfire.Social.{Boosts, Likes, Follows, Posts}
-  import Where
+  import Untangle
 
 
   describe "Load More in Feeds" do

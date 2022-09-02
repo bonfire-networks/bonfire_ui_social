@@ -1,6 +1,6 @@
 defmodule Bonfire.Social.Feeds.LiveHandler do
   use Bonfire.UI.Common.Web, :live_handler
-  import Where
+  import Untangle
 
   def handle_params(%{"after" => _cursor_after} = attrs, _, %{assigns: %{feed_id: feed_id}} = socket) when not is_nil(feed_id) do
     paginate_feed(feed_id, attrs, socket)

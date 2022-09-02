@@ -1,6 +1,6 @@
 defmodule Bonfire.Social.Threads.LiveHandler do
   use Bonfire.UI.Common.Web, :live_handler
-  import Where
+  import Untangle
 
   def handle_info(:load_thread, socket) do
     debug("async loading")

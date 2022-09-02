@@ -3,7 +3,7 @@ defmodule Bonfire.UI.Social.MessagesLive do
   alias Bonfire.UI.Me.LivePlugs
   alias Bonfire.Social.Integration
   alias Bonfire.Social.Messages.LiveHandler
-  import Where
+  import Untangle
 
   def mount(params, session, socket) do
     live_plug(params, session, socket, [

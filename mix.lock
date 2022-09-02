@@ -83,5 +83,5 @@
   "tzdata": {:hex, :tzdata, "1.1.1", "20c8043476dfda8504952d00adac41c6eda23912278add38edc140ae0c5bcc46", [:mix], [{:hackney, "~> 1.17", [hex: :hackney, repo: "hexpm", optional: false]}], "hexpm", "a69cec8352eafcd2e198dea28a34113b60fdc6cb57eb5ad65c10292a6ba89787"},
   "unicode_util_compat": {:hex, :unicode_util_compat, "0.7.0", "bc84380c9ab48177092f43ac89e4dfa2c6d62b40b8bd132b1059ecc7232f9a78", [:rebar3], [], "hexpm", "25eee6d67df61960cf6a794239566599b09e17e668d3700247bc498638152521"},
   "verbs": {:git, "https://github.com/shannonwells/verbs_ex", "4b27067385390d4d2063ec1a09f9d96b97ed9a73", []},
-  "where": {:git, "https://github.com/bonfire-networks/where", "231049bfcab1d41470a3e77d31ef333ca6b8e932", [branch: "main"]},
+  "where": {:git, "https://github.com/bonfire-networks/untangle", "231049bfcab1d41470a3e77d31ef333ca6b8e932", [branch: "main"]},
 }

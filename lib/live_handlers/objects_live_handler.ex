@@ -1,6 +1,6 @@
 defmodule Bonfire.Social.Objects.LiveHandler do
   use Bonfire.UI.Common.Web, :live_handler
-  import Where
+  import Untangle
   alias Bonfire.Social.Objects
 
   def handle_event("set_name", %{"id" => id, "name" => name} = params, socket) do

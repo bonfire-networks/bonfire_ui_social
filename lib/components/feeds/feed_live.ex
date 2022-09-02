@@ -4,7 +4,7 @@ defmodule Bonfire.UI.Social.FeedLive do
   alias Bonfire.UI.Social.ActivityLive
   alias Bonfire.Social.Feeds.LiveHandler
 
-  import Where
+  import Untangle
 
   prop feed_id, :string, default: nil
   prop feed_ids, :any, default: nil

@@ -31,7 +31,7 @@ defmodule Bonfire.UI.Social.ConnCase do
       import Bonfire.UI.Social.Test.ConnHelpers
       import Bonfire.UI.Social.Test.FakeHelpers
 
-      import Where
+      import Untangle
       use Arrows
       # alias Bonfire.UI.Social.Router.Helpers, as: Routes
 

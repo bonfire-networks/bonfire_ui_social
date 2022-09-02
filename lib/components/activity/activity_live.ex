@@ -2,7 +2,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
   use Bonfire.UI.Common.Web, :stateful_component
 
   alias Bonfire.Social.Activities
-  import Where
+  import Untangle
 
   prop activity, :map, default: nil
   prop object, :any, default: nil

@@ -1,6 +1,6 @@
 defmodule Bonfire.Social.Posts.LiveHandler do
   use Bonfire.UI.Common.Web, :live_handler
-  import Where
+  import Untangle
 
   alias Bonfire.Social.Posts
   alias Bonfire.Social.PostContents

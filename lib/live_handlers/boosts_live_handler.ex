@@ -1,6 +1,6 @@
 defmodule Bonfire.Social.Boosts.LiveHandler do
   use Bonfire.UI.Common.Web, :live_handler
-  import Where
+  import Untangle
 
   def handle_event("boost", params, %{assigns: %{object: object}} = socket) do # boost in LV stateful component
     do_boost(object, params, socket)
