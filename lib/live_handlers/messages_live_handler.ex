@@ -58,8 +58,7 @@ defmodule Bonfire.Social.Messages.LiveHandler do
               thread_id: opts[:thread_id]
             ] ++ opts
           }
-        ],
-      ]
+        ]      ]
     ]
   end
 

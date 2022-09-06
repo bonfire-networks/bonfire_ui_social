@@ -5,7 +5,7 @@
 
 <ul 
   :if={!Bonfire.Me.Settings.get([:ui, :show_trending_tags, :disabled], nil, @__context__)}
-  class="p-2 menu bg-base-100 rounded-b-md">
+  class="menu rounded-b-md">
   {#if length(Bonfire.Tag.Tags.list_trending(Bonfire.Me.Settings.get([:ui, :show_trending_tags, :for_last_x_days], 30, @__context__), Bonfire.Me.Settings.get([:ui, :show_trending_tags, :limit], 10, @__context__))) > 0}
     
     {#for tag <- Bonfire.Tag.Tags.list_trending(Bonfire.Me.Settings.get([:ui, :show_trending_tags, :for_last_x_days], 30, @__context__), Bonfire.Me.Settings.get([:ui, :show_trending_tags, :limit], 10, @__context__))}

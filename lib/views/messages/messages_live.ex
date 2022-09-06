@@ -61,6 +61,7 @@ defmodule Bonfire.UI.Social.MessagesLive do
                 threads: []
               ]}
             ],
+            secondary: []
           ]
         ]
         # without_sidebar: true

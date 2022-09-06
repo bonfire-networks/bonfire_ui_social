@@ -28,6 +28,19 @@ defmodule Bonfire.UI.Social.Feeds.LikesLive do
       loading: false,
       page: "likes",
       page_title: l("My Favourites"),
+      sidebar_widgets: [
+        users: [
+          main: [
+            {Bonfire.UI.Common.SidebarNavigationLive, [
+              page: "feed"
+            ]}
+          ],
+          secondary: [
+            {Bonfire.UI.Social.WidgetTagsLive, []},
+            {Bonfire.UI.Common.WidgetFeedbackLive, []}
+          ]
+        ]
+      ],
       )
     }
 
