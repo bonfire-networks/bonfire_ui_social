@@ -274,8 +274,8 @@ defmodule Bonfire.UI.Social.ActivityLive do
   def component_activity_maybe_creator(_, %{object_type: object_type}) when object_type in [Bonfire.Data.Identity.User], do: []
 
   def component_activity_maybe_creator(%{object: %{id: _} = object} = activity, _),
-    do: object |> dump("object") |> component_maybe_creator() |> debug("based on object")
-     || component_maybe_creator(activity) |> debug("activity")
+    do: object |> component_maybe_creator() #|> debug("based on object")
+     || component_maybe_creator(activity) #|> debug("activity")
 
   def component_activity_maybe_creator(activity, _) do
     component_maybe_creator(activity)

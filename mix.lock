@@ -6,8 +6,6 @@
   "bonfire_data_activity_pub": {:git, "https://github.com/bonfire-networks/bonfire_data_activity_pub", "9e8113bfb1a07a381f911e350f2ad11922679ad9", [branch: "main"]},
   "bonfire_data_identity": {:git, "https://github.com/bonfire-networks/bonfire_data_identity", "88c7224ac3394696f91936aea5f2a1503a5c7e2c", [branch: "main"]},
   "bonfire_data_social": {:git, "https://github.com/bonfire-networks/bonfire_data_social", "71299067dbb30cd8f936532d2b27d9ddf619b949", [branch: "main"]},
-  "bonfire_editor_ck": {:git, "https://github.com/bonfire-networks/bonfire_editor_ck", "bac3329a5679cd990a98bf6923fcbb1daa89ab2b", [branch: "main"]},
-  "bonfire_editor_quill": {:git, "https://github.com/bonfire-networks/bonfire_editor_quill", "31db3c8efd31062027df34d5d2eed19d3db938e5", [branch: "main"]},
   "bonfire_tag": {:git, "https://github.com/bonfire-networks/bonfire_tag", "ee02c6290a132a5b8da7d7c7e80cca1fe516ebbe", [branch: "main"]},
   "bonfire_ui_common": {:git, "https://github.com/bonfire-networks/bonfire_ui_common", "a152b6ce90be9350602ba53f3e472ffa0e30a107", [branch: "main"]},
   "certifi": {:hex, :certifi, "2.9.0", "6f2a475689dd47f19fb74334859d460a2dc4e3252a3324bd2111b8f0429e7e21", [:rebar3], [], "hexpm", "266da46bdb06d6c6d35fde799bcb28d36d985d424ad7c08b5bb48f5b5cdd4641"},
