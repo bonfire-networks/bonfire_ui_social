@@ -129,7 +129,11 @@ defmodule Bonfire.Social.Objects.LiveHandler do
       init_object_assigns(Map.merge(object, preloaded_object || %{}), activity, assigns, socket, l("Discussion"))
 
     else _e ->
-      {:error, l("Not found (or you don't have permission to view this)")}
+      case Bonfire.Common.Types.object_type_display(id) do
+        type when is_binary(type) -> {:error, l("Sorry, you don't have permission to view this %{thing}", thing: type)}
+        _ -> {:error, l("Not found")}
+      end
+
     end
   end
 

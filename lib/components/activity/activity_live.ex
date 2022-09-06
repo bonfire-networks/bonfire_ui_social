@@ -267,12 +267,14 @@ defmodule Bonfire.UI.Social.ActivityLive do
 
   # other
   def component_activity_subject(verb, activity, assigns),
-      do: component_activity_maybe_creator(activity, assigns)
+      do: activity
+      # |> debug("activity")
+      |> component_activity_maybe_creator(assigns)
 
   def component_activity_maybe_creator(_, %{object_type: object_type}) when object_type in [Bonfire.Data.Identity.User], do: []
 
   def component_activity_maybe_creator(%{object: %{id: _} = object} = activity, _),
-    do: component_maybe_creator(object) |> debug("object")
+    do: object |> dump("object") |> component_maybe_creator() |> debug("based on object")
      || component_maybe_creator(activity) |> debug("activity")
 
   def component_activity_maybe_creator(activity, _) do
@@ -284,14 +286,6 @@ defmodule Bonfire.UI.Social.ActivityLive do
         creator_character: %{id: _} = character
       }),
       do: component_maybe_creator(%{profile: profile, character: character})
-
-  def component_maybe_creator(
-        %{
-          profile: %{id: _} = profile,
-          character: %{id: _} = character
-        } = _creator
-      ),
-      do: [{Bonfire.UI.Social.Activity.SubjectLive, %{profile: profile, character: character}}]
 
   def component_maybe_creator(%{provider: %{id: _}}),
     do: [Bonfire.UI.Social.Activity.ProviderReceiverLive]
@@ -334,6 +328,14 @@ defmodule Bonfire.UI.Social.ActivityLive do
   #     # |> repo().maybe_preload(subject: [:profile, :character])
   #     |> e(:subject, nil)
   #     |> component_maybe_creator()
+
+  def component_maybe_creator(
+      %{
+        profile: %{id: _} = profile,
+        character: %{id: _} = character
+      } = _creator
+    ),
+    do: [{Bonfire.UI.Social.Activity.SubjectLive, %{profile: profile, character: character}}]
 
   def component_maybe_creator(%{provider: %Ecto.Association.NotLoaded{}, receiver: %Ecto.Association.NotLoaded{}} = object),
     do:
