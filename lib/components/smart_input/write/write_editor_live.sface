@@ -2,7 +2,7 @@
   {#match component when is_atom(component) and not is_nil(component)}
 
     <!-- editor component from user's preferred extension -->
-    <Surface.Components.Dynamic.Component
+    <Dynamic.Component
       module={component}
       {...assigns}
     />

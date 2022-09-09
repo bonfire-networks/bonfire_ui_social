@@ -16,7 +16,7 @@
 
     {#if to_string(@object_type) == "Elixir.Bonfire.Data.Identity.User"}
 
-    <Surface.Components.Dynamic.Component
+    <Dynamic.Component
         :if={module_enabled?(Bonfire.Boundaries.Web.BlockButtonLive) and @current_user && ulid(@current_user) != ulid(@object)}
         module={Bonfire.Boundaries.Web.BlockButtonLive}
         object={@object} 

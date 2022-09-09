@@ -39,7 +39,7 @@
         <div class="flex flex-col divide-y divide-base-content/10 ">
         {#for p <- e(@participants, [])}
           <div class="py-2">
-            <Surface.Components.Dynamic.Component
+            <Dynamic.Component
               module={Bonfire.UI.Common.ProfileItemLive}
               character={e(p, :character, nil) || e(p, :activity, :subject, :character, nil)} 
               profile={e(p, :profile, nil) || e(p, :activity, :subject, :profile, nil)}

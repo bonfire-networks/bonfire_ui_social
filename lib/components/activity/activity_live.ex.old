@@ -109,7 +109,7 @@ defmodule Bonfire.UI.Social.ActivityOLDLive do
       "reply": ulid(@object) != nil and e(@activity, :replied, :reply_to_id, nil) != nil and ulid(@activity) != nil,
     }>
       {#for {component, component_assigns} when is_atom(component) <- components}
-        <Surface.Components.Dynamic.Component
+        <Dynamic.Component
           module={component}
           id={e(component_assigns, :id, nil)}
           myself={nil}

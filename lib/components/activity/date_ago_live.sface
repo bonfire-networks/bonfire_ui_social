@@ -32,7 +32,7 @@
 {#else}
 <div class="flex items-center">
   <div class="relative flex items-center space-x-1 text-[14px] leading-[16px] text-base-content text-opacity-60">
-      <Surface.Components.Dynamic.LiveComponent
+      <Dynamic.LiveComponent
         :if={module_enabled?(Bonfire.Boundaries.Web.BoundaryIconLive) and @object_type not in [Bonfire.Data.Social.Message]}
         module={Bonfire.Boundaries.Web.BoundaryIconLive}
         object={@object} 

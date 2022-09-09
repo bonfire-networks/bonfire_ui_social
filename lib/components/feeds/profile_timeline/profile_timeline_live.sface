@@ -2,22 +2,26 @@
   
   <#slot {@header} />
   <div class="grid items-start grid-cols-[680px_320px] gap-5">
-  <Bonfire.UI.Social.FeedLive
-    id={"feed:profile:timeline"}
-    feed_id={"user:#{@selected_tab}:#{ulid(@user)}"}
-    page_title={@page_title}
-    page={@page}
-    feed={@feed}
-    page_info={@page_info}
-    selected_tab={@selected_tab}
-    smart_input={@smart_input}
-    smart_input_prompt={@smart_input_prompt}
-    smart_input_text={@smart_input_text}
-    search_placeholder={@search_placeholder}
-    feed_title={@feed_title}
-    loading={@loading}
-  />
-  <Bonfire.UI.Me.WidgetProfileLive user={@user} />
+    <Bonfire.UI.Social.FeedLive
+      id={"feed:profile:timeline"}
+      feed_id={"user:#{@selected_tab}:#{ulid(@user)}"}
+      page_title={@page_title}
+      page={@page}
+      feed={@feed}
+      page_info={@page_info}
+      selected_tab={@selected_tab}
+      smart_input={@smart_input}
+      smart_input_prompt={@smart_input_prompt}
+      smart_input_text={@smart_input_text}
+      search_placeholder={@search_placeholder}
+      feed_title={@feed_title}
+      loading={@loading}
+    />
+    <Dynamic.Component 
+      :if={module_enabled?(Bonfire.UI.Me.WidgetProfileLive)}
+      module={Bonfire.UI.Me.WidgetProfileLive} 
+      user={@user} 
+    />
   </div>
   <a
     :if={e(@user, :character, :peered, :canonical_uri, nil)}

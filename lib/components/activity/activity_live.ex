@@ -159,7 +159,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
           <input type="hidden" name="activity_id" value={ulid(@activity)} />
         </form>
         {#for {component, component_assigns} when is_atom(component) <- @activity_components || []}
-          <Surface.Components.Dynamic.Component
+          <Dynamic.Component
             module={component}
             id={e(component_assigns, :id, nil)}
             myself={nil}
