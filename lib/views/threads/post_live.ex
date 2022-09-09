@@ -29,6 +29,7 @@ defmodule Bonfire.UI.Social.PostLive do
       activity: nil,
       showing_within: :thread,
       object: nil,
+      without_sidebar: true,
       thread_id: nil,
       thread_mode: nil,
       search_placeholder: nil,

@@ -1,7 +1,7 @@
 <div>
   
   <#slot {@header} />
-
+  <div class="grid items-start grid-cols-[680px_320px] gap-5">
   <Bonfire.UI.Social.FeedLive
     id={"feed:profile:timeline"}
     feed_id={"user:#{@selected_tab}:#{ulid(@user)}"}
@@ -17,7 +17,8 @@
     feed_title={@feed_title}
     loading={@loading}
   />
-
+  <Bonfire.UI.Me.WidgetProfileLive user={@user} />
+  </div>
   <a
     :if={e(@user, :character, :peered, :canonical_uri, nil)}
     href={e(@user, :character, :peered, :canonical_uri, "#")}
