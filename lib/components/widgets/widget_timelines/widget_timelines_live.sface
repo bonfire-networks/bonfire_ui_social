@@ -1,4 +1,4 @@
-<Bonfire.UI.Common.WidgetLive 
+<Bonfire.UI.Common.WidgetBlockLive 
   widget_title={e(@widget_title, "Menu")}
 >
   <div 
@@ -61,4 +61,4 @@
       </li>
     </div>
   </div>
-</Bonfire.UI.Common.WidgetLive>
+</Bonfire.UI.Common.WidgetBlockLive>

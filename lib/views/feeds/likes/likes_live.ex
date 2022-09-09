@@ -2,6 +2,9 @@ defmodule Bonfire.UI.Social.Feeds.LikesLive do
   use Bonfire.UI.Common.Web, :surface_live_view
   alias Bonfire.UI.Me.LivePlugs
 
+
+  declare_nav_link(l("Favourites"), icon: "bi:stars")
+
   def mount(params, session, socket) do
     live_plug params, session, socket, [
       LivePlugs.LoadCurrentAccount,
@@ -27,22 +30,8 @@ defmodule Bonfire.UI.Social.Feeds.LikesLive do
       page_info: page_info,
       loading: false,
       page: "likes",
-      page_title: l("My Favourites"),
-      sidebar_widgets: [
-        users: [
-          main: [
-            {Bonfire.UI.Common.SidebarNavigationLive, [
-              page: "feed"
-            ]}
-          ],
-          secondary: [
-            {Bonfire.UI.Social.WidgetTagsLive, []},
-            {Bonfire.UI.Common.WidgetFeedbackLive, []}
-          ]
-        ]
-      ],
-      )
-    }
+      page_title: l("My Favourites")
+    )}
 
   end
 

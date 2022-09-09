@@ -3,4 +3,7 @@ defmodule Bonfire.UI.Social.WidgetTimelinesLive do
 
   prop widget_title, :string
   prop page, :string
+
+
+  declare_widget("Links to main social feeds")
 end

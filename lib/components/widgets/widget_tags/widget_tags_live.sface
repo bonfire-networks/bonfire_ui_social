@@ -1,4 +1,4 @@
-<Bonfire.UI.Common.WidgetLive 
+<Bonfire.UI.Common.WidgetBlockLive 
   :if={!Bonfire.Me.Settings.get([:ui, :show_trending_tags, :disabled], nil, @__context__)}
   widget_title={e(@widget_title, l "Trending topics")}
 >
@@ -52,4 +52,4 @@
   
 </ul>
 
-</Bonfire.UI.Common.WidgetLive>
+</Bonfire.UI.Common.WidgetBlockLive>

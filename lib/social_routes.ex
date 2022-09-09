@@ -22,8 +22,8 @@ defmodule Bonfire.UI.Social.Routes do
       scope "/", Bonfire.UI.Social do
         pipe_through :browser
         pipe_through :account_required
-        live "/feed", HomeLive, as: :feed
-        live "/feed/:tab", HomeLive, as: :feed
+        live "/feed", FeedsLive, as: :feed
+        live "/feed/:tab", FeedsLive, as: :feed
         live "/notifications", Feeds.NotificationsLive, as: :notifications
         # live "/flags", FlagsLive, as: :flags
 

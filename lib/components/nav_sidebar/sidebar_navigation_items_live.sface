@@ -1,0 +1,47 @@
+<li>
+  <LiveRedirect 
+    to={path(Config.get(:user_home_page, Bonfire.UI.Social.FeedsLive))} 
+    class={"flex items-center rounded-md",  "bg-base-content/10": @page == "feed"}
+  >
+    <!-- <span class="mr-4 text-2xl">📰</span> -->
+    <Icon iconify="twemoji:newspaper" class="mr-2 w-4 h-4 text-base-content/80" />
+    <span :if={@page == "feed"} class="sr-only">{l "Current Page:"} </span>
+    {l "My feed"}
+  </LiveRedirect>
+</li>
+
+<li>
+  <LiveRedirect 
+    class={
+    "flex items-center rounded-md",  "bg-base-content/10": @page == "local"} 
+    to={"/feed/local"}>
+    <Icon iconify="material-symbols:camping-rounded" class="mr-2 w-4 h-4 text-base-content/80" />
+    <!-- <span class="mr-4 text-2xl">🏡</span> -->
+    <span :if={@page == "local"} class="sr-only">{l "Current Page:"} </span>
+    <span class="truncate ellipsis">{l "Local"}</span>
+  </LiveRedirect> 
+</li>
+
+<li>
+  <LiveRedirect 
+    class={
+      "flex items-center rounded-md",  "bg-base-content/10": @page == "federation"} 
+    to={"/feed/federation"}>
+    <!-- <span class="mr-4 text-2xl">🌍</span> -->
+    <Icon iconify="el:network" class="mr-2 w-4 h-4 text-base-content/80" />
+    <span :if={@page == "federation"} class="sr-only">{l "Current Page:"} </span>
+    <span class="truncate ellipsis">{l "Federated"}</span>
+  </LiveRedirect> 
+</li>
+
+<li>
+  <LiveRedirect 
+    to={"/my/likes"} 
+    class={
+      "flex items-center rounded-md",  "bg-base-content/10": @page == "likes"}>
+      <Icon iconify="bi:stars" class="mr-2 w-4 h-4 text-base-content/80" />
+      <!-- <span class="mr-4 text-2xl">🌟</span> -->
+      <span :if={@page == "likes"} class="sr-only">{l "Current Page:"} </span>
+      {l "Favourites"}
+  </LiveRedirect>
+</li>

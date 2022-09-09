@@ -1,6 +1,10 @@
 defmodule Bonfire.UI.Social.Feeds.FederationLive do
   use Bonfire.UI.Common.Web, :surface_live_view
   alias Bonfire.UI.Me.LivePlugs
+  alias Bonfire.Social.Feeds.LiveHandler
+
+
+  declare_nav_link(l("Remote activities"), href: "/feed/federation", icon: "el:network")
 
   def mount(params, session, socket) do
     live_plug params, session, socket, [
@@ -16,15 +20,13 @@ defmodule Bonfire.UI.Social.Feeds.FederationLive do
 
   defp mounted(params, _session, socket) do
 
-    feed_assigns = Bonfire.Social.Feeds.LiveHandler.feed_assigns_maybe_async(:fediverse, socket)
-
     {:ok, socket
+    |> assign(LiveHandler.feed_assigns_maybe_async(:fediverse, socket))
     |> assign(
-      feed_assigns ++ [
       page: "federation",
       page_title: l("Federation"),
-      ])
-      }
+      )
+    }
 
   end
 

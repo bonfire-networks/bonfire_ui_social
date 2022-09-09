@@ -35,7 +35,7 @@
 
         <Bonfire.UI.Common.SmartInputLive
           id={:smart_input_message}
-          :if={@current_user}
+          :if={ulid(@current_user)}
           
           reply_to_id={e(@reply_to_id, "")}
           thread_id={@thread_id}

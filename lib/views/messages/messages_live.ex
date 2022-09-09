@@ -5,6 +5,9 @@ defmodule Bonfire.UI.Social.MessagesLive do
   alias Bonfire.Social.Messages.LiveHandler
   import Untangle
 
+
+  declare_nav_link(l("Messages"), icon: "heroicons-solid:envelope", exclude_from_nav: true)
+
   def mount(params, session, socket) do
     live_plug(params, session, socket, [
       LivePlugs.LoadCurrentAccount,
@@ -60,11 +63,10 @@ defmodule Bonfire.UI.Social.MessagesLive do
                 showing_within: :messages,
                 threads: []
               ]}
-            ],
-            secondary: []
+            ]
           ]
-        ]
-        # without_sidebar: true
+        ],
+        nav_items: []
       )
     }
   end

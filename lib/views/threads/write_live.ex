@@ -2,8 +2,8 @@ defmodule Bonfire.UI.Social.WriteLive do
   use Bonfire.UI.Common.Web, :surface_live_view
   alias Bonfire.UI.Me.LivePlugs
 
-  import Bonfire.Common.Modularity.DeclareExtensions
-  declare_nav_link("Link to compose page", text: l("Compose"), icon: "solid:PencilAlt")
+
+  declare_nav_link("Link to compose page", text: l("Compose"), icon: "heroicons-solid:PencilAlt", exclude_from_nav: true)
 
   def mount(params, session, socket) do
     live_plug(params, session, socket, [
@@ -31,14 +31,7 @@ defmodule Bonfire.UI.Social.WriteLive do
       reply_to_id: nil,
       thread_id: nil,
       to_boundaries: nil,
-      to_circles: nil,
-      # sidebar_widgets: [
-      #   users: [
-      #     main: [
-      #       {Bonfire.UI.Common.WidgetInstanceInfoLive, [display_banner: false]},
-      #     ]
-      #   ]
-      # ]
+      to_circles: nil
     )}
   end
 

@@ -1,7 +1,7 @@
 {#case feed(@current_user)}
 {#match feed when is_list(feed)}
 
-  <Bonfire.UI.Common.WidgetLive 
+  <Bonfire.UI.Common.WidgetBlockLive 
     widget_title={e(@widget_title, "Messages")}
   >
     <:action>
@@ -33,5 +33,5 @@
       </li>
     </ul>
 
-  </Bonfire.UI.Common.WidgetLive>
+  </Bonfire.UI.Common.WidgetBlockLive>
 {/case}

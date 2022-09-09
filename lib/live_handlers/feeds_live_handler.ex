@@ -326,15 +326,7 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
       feedback_message: l("It seems you and other local users do not follow anyone on a different federated instance"),
       # feed_id: feed_name,
       feed: [],
-      page_info: nil,
-      # FIXME: seems too much re-assigning the whole sidebar widgets only to change the page prop?
-      # sidebar_widgets: [
-      #   users: [
-      #     main: [
-      #       {Bonfire.UI.Common.WidgetInstanceInfoLive, []}
-      #     ]
-      #   ]
-      # ]
+      page_info: nil
     ]
 
     feed_assigns_maybe_async_load(feed_id, assigns, socket)
@@ -353,15 +345,7 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
       feedback_title: l("Your local feed is empty"),
       feedback_message: l("It seems like the paint is still fresh on this instance..."),      # feed_id: feed_name,
       feed: [],
-      page_info: nil, #|> IO.inspect
-      # FIXME: seems too much re-assigning the whole sidebar widgets only to change the page prop?
-      # sidebar_widgets: [
-      #   users: [
-      #     main: [
-      #       {Bonfire.UI.Common.WidgetInstanceInfoLive, []}
-      #     ]
-      #   ]
-      # ]
+      page_info: nil
     ]
 
     feed_assigns_maybe_async_load(feed_id, assigns, socket)
