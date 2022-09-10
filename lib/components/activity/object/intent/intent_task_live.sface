@@ -1,9 +1,9 @@
-<div class="flex flex-col p-3 my-2 border rounded   bg-base-100 bg-opacity-30">
+<div class="flex flex-col p-3 my-4 border border-base-content/30 rounded-xl bg-base-200">
   <div class="flex items-center flex-1 mb-3">
 
     <span :if={length(e(@object, :context, []))>0}>
       <span :for={scope <- e(@object, :context, [])}>
-        <LivePatch :if={e(scope, :id, nil)} to={path(scope)} class="flex items-center text-sm text-primary-content-500 cursor-pointer  font-regular hover:underline">
+        <LivePatch :if={e(scope, :id, nil)} to={path(scope)} class="flex items-center text-sm cursor-pointer text-primary-content-500 font-regular hover:underline">
           {e(scope, :name, "")}
           <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 mx-1 text-primary-content-500 " viewBox="0 0 20 20" fill="currentColor">
             <path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd" />
@@ -12,7 +12,7 @@
       </span>
     </span>
 
-    <LivePatch to={path(@object)} class="text-sm font-medium text-primary-content-800 cursor-pointer  hover:underline">{e(@object, :name, e(@object, :note, "Untitled task"))}
+    <LivePatch to={path(@object)} class="text-sm font-medium cursor-pointer text-primary-content-800 hover:underline">{e(@object, :name, e(@object, :note, "Untitled task"))}
     </LivePatch>
   </div>
 
@@ -36,12 +36,12 @@
       <LivePatch
         :if={e(@object, :provider, :id, nil)}
         to={path(e(@object, :provider, nil))}
-        class="flex items-center text-xs text-primary-content-700  text-medium">
-        <Bonfire.UI.Common.AvatarLive class="inline-block w-6 h-6 bg-base-100 rounded-full" user={@object.provider} alt=""/>
+        class="flex items-center text-xs text-primary-content-700 text-medium">
+        <Bonfire.UI.Common.AvatarLive class="inline-block w-6 h-6 rounded-full bg-base-100" user={@object.provider} alt=""/>
       </LivePatch>
 
 
-      <div :if={e(@object, :due, nil)} class="flex items-center text-xs text-primary-content-700  text-medium">
+      <div :if={e(@object, :due, nil)} class="flex items-center text-xs text-primary-content-700 text-medium">
         <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 mr-1 text-primary-content-500" viewBox="0 0 20 20" fill="currentColor">
           <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-12a1 1 0 10-2 0v4a1 1 0 00.293.707l2.828 2.829a1 1 0 101.415-1.415L11 9.586V6z" clip-rule="evenodd" />
         </svg>
@@ -64,7 +64,7 @@
     class="flex items-center text-sm text-primary-content-600 ">
     in <LivePatch
         to={"/list/"<>e(@object, :output_of, :id, "")}
-        class="flex items-center ml-2 text-sm text-primary-content-600 underline cursor-pointer  hover:font-medium">
+        class="flex items-center ml-2 text-sm underline cursor-pointer text-primary-content-600 hover:font-medium">
         {e(@object, :output_of, :name, "Unknown")}
       </LivePatch>
   </div>
