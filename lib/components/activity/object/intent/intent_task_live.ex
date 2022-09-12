@@ -2,14 +2,13 @@ defmodule Bonfire.UI.Social.Activity.IntentTaskLive do
   use Bonfire.UI.Common.Web, :stateless_component
   alias Surface.Components.LivePatch
 
-
   prop object, :map, required: true
 
-
-  def preloads(), do: [
-    :output_of,
-    provider: [:character, profile: [:icon]]
-  ]
+  def preloads(),
+    do: [
+      :output_of,
+      provider: [:character, profile: [:icon]]
+    ]
 
   defp preload(object) do
     object

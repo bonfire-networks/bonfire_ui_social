@@ -1,9 +1,8 @@
 <div>
-  
   <#slot {@header} />
   <div class="grid items-start grid-cols-[680px_320px] gap-5">
     <Bonfire.UI.Social.FeedLive
-      id={"feed:profile:timeline"}
+      id="feed:profile:timeline"
       feed_id={"user:#{@selected_tab}:#{ulid(@user)}"}
       page_title={@page_title}
       page={@page}
@@ -17,10 +16,10 @@
       feed_title={@feed_title}
       loading={@loading}
     />
-    <Dynamic.Component 
+    <Dynamic.Component
       :if={module_enabled?(Bonfire.UI.Me.WidgetProfileLive)}
-      module={Bonfire.UI.Me.WidgetProfileLive} 
-      user={@user} 
+      module={Bonfire.UI.Me.WidgetProfileLive}
+      user={@user}
     />
   </div>
   <a
@@ -31,6 +30,5 @@
     class="block m-10"
   >
     Visit the <u>remote profile</u> if you don't want to miss any of their older activities.
-  </a> 
-
+  </a>
 </div>

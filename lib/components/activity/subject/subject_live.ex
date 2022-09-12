@@ -14,5 +14,4 @@ defmodule Bonfire.UI.Social.Activity.SubjectLive do
   prop object_boundary, :any, default: nil
   prop activity_inception, :any, default: nil
   prop viewing_main_object, :boolean, default: false
-
 end

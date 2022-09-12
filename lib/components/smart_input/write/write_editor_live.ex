@@ -20,18 +20,19 @@ defmodule Bonfire.UI.Social.WriteEditorLive do
   prop textarea_class, :css_class, default: nil
   prop boundaries_modal_id, :string, default: :sidebar_composer
 
-
   def use_rich_editor?(with_rich_editor, context) do
-    with_rich_editor |> debug !=false && !Bonfire.Me.Settings.get([:ui, :rich_text_editor_disabled], false, context)
+    with_rich_editor |> debug() != false &&
+      !Bonfire.Me.Settings.get([:ui, :rich_text_editor_disabled], false, context)
   end
 
   def rich_editor_module(with_rich_editor, context) do
-    if use_rich_editor?(with_rich_editor, context) |> debug do
+    if use_rich_editor?(with_rich_editor, context) |> debug() do
       default = Bonfire.Editor.Quill
       module = Bonfire.Me.Settings.get([:ui, :rich_text_editor], default, context)
 
-      if module_enabled?(module), do: module, else: error(nil, "#{module} is not available or enabled")
+      if module_enabled?(module),
+        do: module,
+        else: error(nil, "#{module} is not available or enabled")
     end
   end
-
 end

@@ -70,7 +70,7 @@ defmodule Bonfire.UI.Social.ActivityOLDLive do
         created_verb_display: created_verb_display,
         permalink: permalink
       )
-      # |> dump("all assigns")
+      # |> debug("all assigns")
       |> Map.new()
 
     # permalink = path(activity.object)

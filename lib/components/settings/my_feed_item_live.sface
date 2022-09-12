@@ -1,12 +1,17 @@
-
-  <div class="mt-2 form-control">
-    <label class="justify-start cursor-pointer label">
-      <Checkbox 
-        name={"Bonfire.Social.Feeds[my_feed_includes][#{@key}]"} 
-        value={@force_checked==true or (@force_unchecked !=true and Bonfire.Me.Settings.get([Bonfire.Social.Feeds, :my_feed_includes, @key], true, @scope || assigns))}
-        opts={disabled: @disabled}
-        class="toggle toggle-primary" 
-      />
-      <span class="ml-2 label-text">{@label}</span> 
-    </label>
-  </div>
+<div class="mt-2 form-control">
+  <label class="justify-start cursor-pointer label">
+    <Checkbox
+      name={"Bonfire.Social.Feeds[my_feed_includes][#{@key}]"}
+      value={@force_checked == true or
+        (@force_unchecked != true and
+           Bonfire.Me.Settings.get(
+             [Bonfire.Social.Feeds, :my_feed_includes, @key],
+             true,
+             @scope || assigns
+           ))}
+      opts={disabled: @disabled}
+      class="toggle toggle-primary"
+    />
+    <span class="ml-2 label-text">{@label}</span>
+  </label>
+</div>

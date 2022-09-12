@@ -3,7 +3,5 @@ defmodule Bonfire.UI.Social.SidebarNavigationLive do
 
   prop page, :string, required: true
 
-
   declare_nav_component("Links to main activities feeds")
-
 end

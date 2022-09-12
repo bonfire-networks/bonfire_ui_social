@@ -2,11 +2,10 @@ defmodule Bonfire.UI.Social.Feeds.LikesLive do
   use Bonfire.UI.Common.Web, :surface_live_view
   alias Bonfire.UI.Me.LivePlugs
 
-
   declare_nav_link(l("Favourites"), icon: "bi:stars")
 
   def mount(params, session, socket) do
-    live_plug params, session, socket, [
+    live_plug(params, session, socket, [
       LivePlugs.LoadCurrentAccount,
       LivePlugs.LoadCurrentUser,
       LivePlugs.UserRequired,
@@ -14,27 +13,28 @@ defmodule Bonfire.UI.Social.Feeds.LikesLive do
       Bonfire.UI.Common.LivePlugs.StaticChanged,
       Bonfire.UI.Common.LivePlugs.Csrf,
       Bonfire.UI.Common.LivePlugs.Locale,
-      &mounted/3,
-    ]
+      &mounted/3
+    ])
   end
 
   defp mounted(params, _session, socket) do
     current_user = current_user(socket)
 
-    %{edges: feed, page_info: page_info} = Bonfire.Social.Likes.list_my(current_user: current_user)
+    %{edges: feed, page_info: page_info} =
+      Bonfire.Social.Likes.list_my(current_user: current_user)
+
     # |> debug()
 
-    {:ok, socket
-    |> assign(
-      feed: feed,
-      page_info: page_info,
-      loading: false,
-      page: "likes",
-      page_title: l("My Favourites")
-    )}
-
+    {:ok,
+     socket
+     |> assign(
+       feed: feed,
+       page_info: page_info,
+       loading: false,
+       page: "likes",
+       page_title: l("My Favourites")
+     )}
   end
-
 
   # def handle_params(%{"tab" => tab} = _params, _url, socket) do
   #   {:noreply,
@@ -51,7 +51,10 @@ defmodule Bonfire.UI.Social.Feeds.LikesLive do
   # end
 
   defdelegate handle_params(params, attrs, socket), to: Bonfire.UI.Common.LiveHandlers
-  def handle_event(action, attrs, socket), do: Bonfire.UI.Common.LiveHandlers.handle_event(action, attrs, socket, __MODULE__)
-  def handle_info(info, socket), do: Bonfire.UI.Common.LiveHandlers.handle_info(info, socket, __MODULE__)
 
+  def handle_event(action, attrs, socket),
+    do: Bonfire.UI.Common.LiveHandlers.handle_event(action, attrs, socket, __MODULE__)
+
+  def handle_info(info, socket),
+    do: Bonfire.UI.Common.LiveHandlers.handle_info(info, socket, __MODULE__)
 end

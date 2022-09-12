@@ -1,54 +1,62 @@
-  <div class="flex flex-col flex-1 ">
-    <div class="flex-1">
-      
-      <Bonfire.UI.Social.ActivityLive
-        :if={@activity}
-        id={"ta:"<>(ulid(@activity) || ulid(@object) || "no-ID")}
-        showing_within={:thread}
-        thread_mode={@thread_mode}
-        viewing_main_object={if @thread_mode != :flat, do: true, else: false}
-        activity={@activity}
-        object={@object}
-        feed_id={@feed_id}
-        participants={@participants}
-        object_boundary={if is_messaging?(%{page: @page, showing_within: @showing_within, create_activity_type: @create_activity_type}), do: :skip}
-      />
-      <div
-      :if={e(@thread_mode, :thread) != :flat}   
-      class="py-3 text-sm font-medium tracking-wide text-base-content/70">{l "Discussion"}</div>
-      <Bonfire.UI.Social.ThreadLive 
-        id={@thread_id}
-        thread_id={@thread_id}
-        feed_id={@feed_id}
-        thread_mode={@thread_mode}
-        reverse_order={@reverse_order}
-        replies={@replies}
-        threaded_replies={@threaded_replies}
-        page_info={e(@page_info, [])}
-        activity={@activity}
-        object={@object}
-        url={@url}
-        showing_within={e(@showing_within, :thread)}
-      />
-    </div>
-
-    <div 
-      class="sticky bottom-0 z-50"
-      :if={is_messaging?(%{page: @page, showing_within: @showing_within, create_activity_type: @create_activity_type}) && @current_user}>      
-        <Bonfire.UI.Common.SmartInputLive
-        id={:smart_input}
-        
-        reply_to_id={e(@reply_to_id, "")}
-        thread_mode={@thread_mode}
-        thread_id={@thread_id}
-        create_activity_type={@create_activity_type}
-        to_boundaries={e(@to_boundaries, [])}
-        to_circles={e(@to_circles, [])}
-        smart_input_prompt={e(@smart_input_prompt, "")}
-        smart_input_text={e(@smart_input_text, "")}
-        showing_within={e(@showing_within, :thread)}
-        replied_activity_class={@replied_activity_class}
-      />
-    </div>
-  
+<div class="flex flex-col flex-1">
+  <div class="flex-1">
+    <Bonfire.UI.Social.ActivityLive
+      :if={@activity}
+      id={"ta:" <> (ulid(@activity) || ulid(@object) || "no-ID")}
+      showing_within={:thread}
+      thread_mode={@thread_mode}
+      viewing_main_object={if @thread_mode != :flat, do: true, else: false}
+      activity={@activity}
+      object={@object}
+      feed_id={@feed_id}
+      participants={@participants}
+      object_boundary={if is_messaging?(%{
+           page: @page,
+           showing_within: @showing_within,
+           create_activity_type: @create_activity_type
+         }),
+         do: :skip}
+    />
+    <div
+      :if={e(@thread_mode, :thread) != :flat}
+      class="py-3 text-sm font-medium tracking-wide text-base-content/70"
+    >{l("Discussion")}</div>
+    <Bonfire.UI.Social.ThreadLive
+      id={@thread_id}
+      thread_id={@thread_id}
+      feed_id={@feed_id}
+      thread_mode={@thread_mode}
+      reverse_order={@reverse_order}
+      replies={@replies}
+      threaded_replies={@threaded_replies}
+      page_info={e(@page_info, [])}
+      activity={@activity}
+      object={@object}
+      url={@url}
+      showing_within={e(@showing_within, :thread)}
+    />
   </div>
+
+  <div
+    class="sticky bottom-0 z-50"
+    :if={is_messaging?(%{
+      page: @page,
+      showing_within: @showing_within,
+      create_activity_type: @create_activity_type
+    }) && @current_user}
+  >
+    <Bonfire.UI.Common.SmartInputLive
+      id={:smart_input}
+      reply_to_id={e(@reply_to_id, "")}
+      thread_mode={@thread_mode}
+      thread_id={@thread_id}
+      create_activity_type={@create_activity_type}
+      to_boundaries={e(@to_boundaries, [])}
+      to_circles={e(@to_circles, [])}
+      smart_input_prompt={e(@smart_input_prompt, "")}
+      smart_input_text={e(@smart_input_text, "")}
+      showing_within={e(@showing_within, :thread)}
+      replied_activity_class={@replied_activity_class}
+    />
+  </div>
+</div>

@@ -16,5 +16,4 @@ defmodule Bonfire.UI.Social.ProfileTimelineLive do
   prop loading, :boolean, default: false
 
   slot header
-
 end

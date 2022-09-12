@@ -1,56 +1,84 @@
-<div 
+<div
   :if={@showing_within != :smart_input}
   class={
-  "grid w-full grid-flow-col grid-with-ratio grid-rows-4 gap-1 max-h-[270px]",
-  "my-3": Enum.filter(@media, fn(x) -> e(x, :metadata, :canonical_url, false) == false end) |> length > 0,
-  "!grid-cols-1 !grid-rows-1": @showing_within == :smart_input
-  }>
-  {#for {media, counter} <- Enum.filter(@media, fn(x) -> e(x, :metadata, :canonical_url, false) == false end) |> Enum.with_index}
-    <article 
-      class={
+    "grid w-full grid-flow-col grid-with-ratio grid-rows-4 gap-1 max-h-[270px]",
+    "my-3":
+      Enum.filter(@media, fn x -> e(x, :metadata, :canonical_url, false) == false end) |> length > 0,
+    "!grid-cols-1 !grid-rows-1": @showing_within == :smart_input
+  }
+>
+  {#for {media, counter} <-
+      Enum.filter(@media, fn x -> e(x, :metadata, :canonical_url, false) == false end)
+      |> Enum.with_index()}
+    <article class={
       "media-entry h-full w-full row-span-4 object-cover",
-      "h-[270px]": Enum.filter(@media, fn(x) -> e(x, :metadata, :canonical_url, false) != false end) |> length() > 0,
-      "!row-span-2 !h-auto": Enum.filter(@media, fn(x) -> e(x, :metadata, :canonical_url, false) == false end) |> length() == 3 && counter != 0,
-      "!row-span-2 !col-span-2 !h-auto": Enum.filter(@media, fn(x) -> e(x, :metadata, :canonical_url, false) == false end) |> length() == 4
-      }>
-      <figure 
-        class="h-full">
-        {#if String.starts_with?(e(media, :media_type, ""), ["image", "video", "embed", "audio", "song", "photo", "rich"]) or String.contains?(media_url(media), [".jpg", ".jpeg", ".png", ".gif", ".webp"])}
+      "h-[270px]":
+        Enum.filter(@media, fn x -> e(x, :metadata, :canonical_url, false) != false end) |> length() >
+          0,
+      "!row-span-2 !h-auto":
+        Enum.filter(@media, fn x -> e(x, :metadata, :canonical_url, false) == false end) |> length() ==
+          3 && counter != 0,
+      "!row-span-2 !col-span-2 !h-auto":
+        Enum.filter(@media, fn x -> e(x, :metadata, :canonical_url, false) == false end) |> length() ==
+          4
+    }>
+      <figure class="h-full">
+        {#if String.starts_with?(e(media, :media_type, ""), [
+            "image",
+            "video",
+            "embed",
+            "audio",
+            "song",
+            "photo",
+            "rich"
+          ]) or String.contains?(media_url(media), [".jpg", ".jpeg", ".png", ".gif", ".webp"])}
           <Bonfire.UI.Common.OpenModalLive
-            id={Pointers.ULID.generate()} 
-            title_text={e(@label, l "View media")}
+            id={Pointers.ULID.generate()}
+            title_text={e(@label, l("View media"))}
             no_actions
             open_btn_class="w-full"
           >
-            <div 
-              class="relative mt-2" 
-              style={if String.starts_with?(media.media_type, ["video"]), do: "min-width: 90vw; min-height: 90vh", else: ""}>
-              
+            <div
+              class="relative mt-2"
+              style={if String.starts_with?(media.media_type, ["video"]),
+                do: "min-width: 90vw; min-height: 90vh",
+                else: ""}
+            >
               {#if String.contains?(media_img(media), [".jpg", ".jpeg", ".png", ".gif", ".webp"])}
-                <img
-                  alt={media_label(media)}
-                  src={media_img(media)}
-                />
+                <img alt={media_label(media)} src={media_img(media)}>
               {#else}
-                {#case e(media.metadata, "facebook", "og:video:url", nil) || e(media.metadata, "twitter", "twitter:player", nil) || e(media.metadata, "facebook", "og:video", nil)}
-                {#match nil}
-                  {#case e(media.metadata, "ombed", "html", nil)}
+                {#case e(media.metadata, "facebook", "og:video:url", nil) ||
+                    e(media.metadata, "twitter", "twitter:player", nil) ||
+                    e(media.metadata, "facebook", "og:video", nil)}
                   {#match nil}
-                    <a href={media_url(media)} target="_blank">{l "View the media"} ({media.media_type})</a>
-                  {#match embed}
-                    {raw embed}
-                  {/case}
-                {#match url}
-                  <iframe width={e(media.metadata, "facebook", "og:video:width", nil) || e(media.metadata, "other", "video_width", nil) || "800"} height={e(media.metadata, "facebook", "og:video:height", nil) || e(media.metadata, "other", "video_height", nil) || "500"} src={url |> String.replace("youtube.com", "yewtu.be")} frameborder="0" allow="accelerometer; encrypted-media; gyroscope; picture-in-picture" allowfullscreen="allowfullscreen" 
-                  class={"",
-                    "w-full max-h-screen": String.starts_with?(media.media_type, ["video"])} style={if String.starts_with?(media.media_type, ["video"]), do: "height:900px", else: ""} ></iframe>
+                    {#case e(media.metadata, "ombed", "html", nil)}
+                      {#match nil}
+                        <a href={media_url(media)} target="_blank">{l("View the media")} ({media.media_type})</a>
+                      {#match embed}
+                        {raw(embed)}
+                    {/case}
+                  {#match url}
+                    <iframe
+                      width={e(media.metadata, "facebook", "og:video:width", nil) ||
+                        e(media.metadata, "other", "video_width", nil) || "800"}
+                      height={e(media.metadata, "facebook", "og:video:height", nil) ||
+                        e(media.metadata, "other", "video_height", nil) || "500"}
+                      src={url |> String.replace("youtube.com", "yewtu.be")}
+                      frameborder="0"
+                      allow="accelerometer; encrypted-media; gyroscope; picture-in-picture"
+                      allowfullscreen="allowfullscreen"
+                      class={"", "w-full max-h-screen": String.starts_with?(media.media_type, ["video"])}
+                      style={if String.starts_with?(media.media_type, ["video"]), do: "height:900px", else: ""}
+                    />
                 {/case}
               {/if}
 
               <div class="mt-2">
                 {media_label(media)}
-                
-                <p class="text-sm">{e(media.metadata, "description", nil) || e(media.metadata, "facebook", "og:description", nil) || e(media.metadata, "twitter", "twitter:description", nil) || e(media.metadata, "other", "description", nil)}</p>
+
+                <p class="text-sm">{e(media.metadata, "description", nil) || e(media.metadata, "facebook", "og:description", nil) ||
+                    e(media.metadata, "twitter", "twitter:description", nil) ||
+                    e(media.metadata, "other", "description", nil)}</p>
               </div>
             </div>
 
@@ -63,39 +91,39 @@
               <figcaption class="sr-only">{media_label(media)}</figcaption>
             </:open_btn>
           </Bonfire.UI.Common.OpenModalLive>
-
         {#else}
-        
-          <a href={media_url(media)} target="_blank" class="flex w-full border rounded media_container bg-base-200 hover:bg-base-content/5 border-base-content/10 tooltip tooltip-bottom" data-tip={media_label(media)}>
-
-          <div class="md:flex">
-            <div class="flex items-center w-[160px] h-[160px] bg-base-200 bg-base-content/5 place-content-center"> 
-              {#case preview_img(media) || e(media.metadata, "favicon", nil) || Bonfire.Files.FaviconStore.favicon_url(media_url(media))}
-                {#match nil}
-                  <Icon solid="ExternalLink" class="w-8 h-8 text-base-content/70" />
-                {#match image}
-                  <img
-                    class="rounded-none cursor-pointer media-image"
-                    alt={media_label(media)}
-                    src={preview_img(media)} />
-              {/case}
+          <a
+            href={media_url(media)}
+            target="_blank"
+            class="flex w-full border rounded media_container bg-base-200 hover:bg-base-content/5 border-base-content/10 tooltip tooltip-bottom"
+            data-tip={media_label(media)}
+          >
+            <div class="md:flex">
+              <div class="flex items-center w-[160px] h-[160px] bg-base-200 bg-base-content/5 place-content-center">
+                {#case preview_img(media) || e(media.metadata, "favicon", nil) ||
+                    Bonfire.Files.FaviconStore.favicon_url(media_url(media))}
+                  {#match nil}
+                    <Icon solid="ExternalLink" class="w-8 h-8 text-base-content/70" />
+                  {#match image}
+                    <img
+                      class="rounded-none cursor-pointer media-image"
+                      alt={media_label(media)}
+                      src={preview_img(media)}
+                    />
+                {/case}
+              </div>
+              <div class="flex flex-col items-start content-start justify-start p-3 space-y-1 text-sm text-left">
+                <div class="text-base-content/60" :if={provider(media)}>
+                  {provider(media)}
+                </div>
+                <div class="line-clamp-3">
+                  {media_label(media) || l("View media")} ({media.media_type})
+                </div>
+                <div class="break-words line-clamp-2 text-base-content/60" :if={description(media)}>
+                  {description(media)}
+                </div>
+              </div>
             </div>
-            <div class="flex flex-col items-start content-start justify-start p-3 space-y-1 text-sm text-left">
-              <div 
-                class=" text-base-content/60"
-                :if={provider(media)}>
-                {provider(media)}
-              </div>
-              <div class="line-clamp-3">
-                {media_label(media) || l "View media"} ({media.media_type})
-              </div>
-              <div 
-                class="break-words line-clamp-2 text-base-content/60"
-                :if={description(media)}>
-                {description(media)}
-              </div>
-            </div>
-          </div>
           </a>
         {/if}
       </figure>
@@ -107,36 +135,37 @@
       </div>
     {/if} -->
   {/for}
-  
 </div>
 
 <div class="flex flex-col gap-2">
-  {#for link <- Enum.filter(@media, fn(x) -> e(x, :metadata, :canonical_url, nil) end)}
-    <a href={media_url(link)} target="_blank" class="flex w-full mb-2 border rounded media_container bg-base-200 hover:bg-base-content/5 border-base-300">
+  {#for link <- Enum.filter(@media, fn x -> e(x, :metadata, :canonical_url, nil) end)}
+    <a
+      href={media_url(link)}
+      target="_blank"
+      class="flex w-full mb-2 border rounded media_container bg-base-200 hover:bg-base-content/5 border-base-300"
+    >
       <div class="md:flex">
         <div class="flex items-center w-[160px] h-[160px] bg-base-200 bg-base-content/5 place-content-center">
-          {#case preview_img(link) || e(link.metadata, "favicon", nil) || Bonfire.Files.FaviconStore.favicon_url(media_url(link))}
+          {#case preview_img(link) || e(link.metadata, "favicon", nil) ||
+              Bonfire.Files.FaviconStore.favicon_url(media_url(link))}
             {#match nil}
               <Icon solid="ExternalLink" class="w-8 h-8 text-base-content/70" />
             {#match image}
               <img
                 class="object-cover w-full h-full rounded-none cursor-pointer media-image"
                 alt={media_label(link)}
-                src={preview_img(link)} />
+                src={preview_img(link)}
+              />
           {/case}
         </div>
         <div class="flex flex-col items-start content-start justify-start flex-1 p-3 space-y-1 text-sm text-left">
-          <div 
-            class=" text-base-content/60"
-            :if={provider(link)}>
+          <div class="text-base-content/60" :if={provider(link)}>
             {provider(link)}
           </div>
           <div class="line-clamp-5">
-            {media_label(link) || l "View media"} ({link.media_type})
+            {media_label(link) || l("View media")} ({link.media_type})
           </div>
-          <div 
-            class="break-words line-clamp-2 text-base-content/60"
-            :if={description(link)}>
+          <div class="break-words line-clamp-2 text-base-content/60" :if={description(link)}>
             {description(link)}
           </div>
         </div>

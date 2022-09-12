@@ -1,11 +1,7 @@
 {#case rich_editor_module(@with_rich_editor, @__context__) |> debug()}
   {#match component when is_atom(component) and not is_nil(component)}
-
     <!-- editor component from user's preferred extension -->
-    <Dynamic.Component
-      module={component}
-      {...assigns}
-    />
+    <Dynamic.Component module={component} {...assigns} />
 
     <!-- fallback if JS is disabled -->
     <noscript>
@@ -17,8 +13,7 @@
         }
         class={@textarea_class}
       />
-    </noscript> 
-
+    </noscript>
   {#match _}
     <TextArea
       opts={

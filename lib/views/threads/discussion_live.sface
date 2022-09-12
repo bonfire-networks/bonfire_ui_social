@@ -1,4 +1,3 @@
-
 <Bonfire.UI.Social.ObjectThreadLive
   page={@page}
   page_title={@page_title}

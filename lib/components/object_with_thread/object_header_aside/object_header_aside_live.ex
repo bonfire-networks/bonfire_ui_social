@@ -1,4 +1,4 @@
-defmodule  Bonfire.UI.Social.ObjectHeaderAsideLive do
+defmodule Bonfire.UI.Social.ObjectHeaderAsideLive do
   use Bonfire.UI.Common.Web, :stateless_component
 
   prop page_title, :string, default: nil
@@ -7,6 +7,4 @@ defmodule  Bonfire.UI.Social.ObjectHeaderAsideLive do
   prop label, :string, default: nil
   prop object, :any
   prop category_suggestions, :list, default: []
-
-
 end

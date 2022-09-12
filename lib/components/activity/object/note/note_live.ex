@@ -10,10 +10,10 @@ defmodule Bonfire.UI.Social.Activity.NoteLive do
   prop showing_within, :string
   prop activity_inception, :any
 
-
-  def preloads(), do: [
-    :post_content
-  ]
+  def preloads(),
+    do: [
+      :post_content
+    ]
 
   def post_content(object) do
     e(object, :post_content, object)
@@ -21,6 +21,8 @@ defmodule Bonfire.UI.Social.Activity.NoteLive do
   end
 
   def maybe_truncate(input, assigns, length \\ 100) do
-    if e(assigns, :activity_inception, nil), do: Text.sentence_truncate(input, length, "..."), else: input
+    if e(assigns, :activity_inception, nil),
+      do: Text.sentence_truncate(input, length, "..."),
+      else: input
   end
 end

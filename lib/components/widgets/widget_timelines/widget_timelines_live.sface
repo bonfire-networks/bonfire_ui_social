@@ -1,63 +1,78 @@
-<Bonfire.UI.Common.WidgetBlockLive 
-  widget_title={e(@widget_title, "Menu")}
->
-  <div 
-    :if={current_user(@current_user) || Settings.get([:bonfire_social, :feeds, :federation, :show_guests], true, @__context__)}
-    class="pb-2 rounded-b-box">
-    <div class="menu bg-base-100 ">
+<Bonfire.UI.Common.WidgetBlockLive widget_title={e(@widget_title, "Menu")}>
+  <div
+    :if={current_user(@current_user) ||
+      Settings.get([:bonfire_social, :feeds, :federation, :show_guests], true, @__context__)}
+    class="pb-2 rounded-b-box"
+  >
+    <div class="menu bg-base-100">
       <li :if={current_user(@current_user)}>
-        <LivePatch 
-          class={"ml-1": @page != "home",
-            "border-l-4 border-primary bg-base-content bg-opacity-10": @page == "home"} 
-          to={path(:feed)}>
+        <LivePatch
+          class={
+            "ml-1": @page != "home",
+            "border-l-4 border-primary bg-base-content bg-opacity-10": @page == "home"
+          }
+          to={path(:feed)}
+        >
           <Icon solid="Home" class="w-4 h-4" />
-          <span class="text-sm truncate ellipsis">{l "Home"}</span>
-        </LivePatch> 
+          <span class="text-sm truncate ellipsis">{l("Home")}</span>
+        </LivePatch>
       </li>
       <li :if={!current_user(@current_user)}>
-        <LivePatch 
+        <LivePatch
           class={
-          "border-l-4 border-primary bg-base-content bg-opacity-10": @page == "login"} 
-          to={path(:login)}>
+            "border-l-4 border-primary bg-base-content bg-opacity-10": @page == "login"
+          }
+          to={path(:login)}
+        >
           <Icon solid="Login" class="w-4 h-4" />
-          <span class="text-sm truncate ellipsis">{l "Login"}</span>
-        </LivePatch> 
+          <span class="text-sm truncate ellipsis">{l("Login")}</span>
+        </LivePatch>
       </li>
-       <li :if={!current_user(@current_user)}>
-        <LivePatch 
+      <li :if={!current_user(@current_user)}>
+        <LivePatch
           class={
-          "border-l-4 border-primary bg-base-content bg-opacity-10": @page == "signup"} 
-          to={path(:signup)}>
+            "border-l-4 border-primary bg-base-content bg-opacity-10": @page == "signup"
+          }
+          to={path(:signup)}
+        >
           <Icon solid="Home" class="w-4 h-4" />
-          <span class="text-sm truncate ellipsis">{l "Signup"}</span>
-        </LivePatch> 
+          <span class="text-sm truncate ellipsis">{l("Signup")}</span>
+        </LivePatch>
       </li>
       <li>
-        <LivePatch 
+        <LivePatch
           class={
-            "border-l-4 border-primary bg-base-content bg-opacity-10": @page == "local"} 
-            to={if current_user(@current_user), do: "/feed/local", else: "/local"}>
+            "border-l-4 border-primary bg-base-content bg-opacity-10": @page == "local"
+          }
+          to={if current_user(@current_user), do: "/feed/local", else: "/local"}
+        >
           <Icon solid="LocationMarker" class="w-4 h-4" />
-          <span class="text-sm truncate ellipsis">{l "Local"}</span>
-        </LivePatch> 
+          <span class="text-sm truncate ellipsis">{l("Local")}</span>
+        </LivePatch>
       </li>
       <li>
-        <LivePatch 
+        <LivePatch
           class={
-            "border-l-4 border-primary bg-base-content bg-opacity-10": @page == "directory"} 
-            to={"/users"}>
+            "border-l-4 border-primary bg-base-content bg-opacity-10": @page == "directory"
+          }
+          to="/users"
+        >
           <Icon solid="UserGroup" class="w-4 h-4" />
-          <span class="text-sm truncate ellipsis">{l "Users directory"}</span>
-        </LivePatch> 
+          <span class="text-sm truncate ellipsis">{l("Users directory")}</span>
+        </LivePatch>
       </li>
-      <li :if={current_user(@current_user) || Settings.get([:bonfire_social, :feeds, :federation, :show_guests], false, @__context__)}>
-        <LivePatch 
-          class={"ml-1": @page != "federation",
-            "border-l-4 border-primary bg-base-content bg-opacity-10": @page == "federation"} 
-          to={"/feed/federation"}>
+      <li :if={current_user(@current_user) ||
+        Settings.get([:bonfire_social, :feeds, :federation, :show_guests], false, @__context__)}>
+        <LivePatch
+          class={
+            "ml-1": @page != "federation",
+            "border-l-4 border-primary bg-base-content bg-opacity-10": @page == "federation"
+          }
+          to="/feed/federation"
+        >
           <Icon solid="Globe" class="w-4 h-4" />
-          <span class="text-sm truncate ellipsis">{l "Federated"}</span>
-        </LivePatch> 
+          <span class="text-sm truncate ellipsis">{l("Federated")}</span>
+        </LivePatch>
       </li>
     </div>
   </div>

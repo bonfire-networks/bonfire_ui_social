@@ -1,8 +1,7 @@
-<Bonfire.UI.Social.FeedLive 
-  id={"feed:profile:likes"}
-  feed_id={"feed:profile:likes"}
+<Bonfire.UI.Social.FeedLive
+  id="feed:profile:likes"
+  feed_id="feed:profile:likes"
   page_title={@page_title}
-  
   feed={@feed}
   page_info={@page_info}
   verb_default="like"

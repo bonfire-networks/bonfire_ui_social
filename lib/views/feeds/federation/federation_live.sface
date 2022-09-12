@@ -1,9 +1,8 @@
-<Bonfire.UI.Social.FeedLive 
-    id={e(@feed_id, :fediverse)}
-    feed_id={@feed_id}
-    page_title={@page_title}
-    
-    feed={@feed}
-    page_info={@page_info}
-    loading={@loading}
+<Bonfire.UI.Social.FeedLive
+  id={e(@feed_id, :fediverse)}
+  feed_id={@feed_id}
+  page_title={@page_title}
+  feed={@feed}
+  page_info={@page_info}
+  loading={@loading}
 />

@@ -1,22 +1,37 @@
-<div class={"block bg-base-100 ", "rounded-lg my-4 shadow border-base-content/10 border": @showing_within == :feed}>
-  <div class={"grid justify-between p-3", "grid-cols-2 gap-8": @showing_within != :feed, "py-0 grid-cols-1 gap-0": @showing_within == :feed}>
+<div class={
+  "block bg-base-100 ",
+  "rounded-lg my-4 shadow border-base-content/10 border": @showing_within == :feed
+}>
+  <div class={
+    "grid justify-between p-3",
+    "grid-cols-2 gap-8": @showing_within != :feed,
+    "py-0 grid-cols-1 gap-0": @showing_within == :feed
+  }>
     <div class={"order-last": @showing_within == :feed}>
       <div class={"flex items-center space-x-2", "mt-2": @showing_within == :feed}>
         <Bonfire.UI.Common.LikeActionWithoutLabelLive
-          id={ComponentID.new(Bonfire.UI.Common.LikeActionWithoutLabelLive, @object)} 
-        object={@object}
-        
+          id={ComponentID.new(Bonfire.UI.Common.LikeActionWithoutLabelLive, @object)}
+          object={@object}
         />
-        <LivePatch to={if @process_url, do: ( e(@process_url, "/list/")<>e(@object, :id,"") ), else: path(@object)}>
+        <LivePatch to={if @process_url, do: e(@process_url, "/list/") <> e(@object, :id, ""), else: path(@object)}>
           <div class="text-lg font-medium text-base-content hover:underline">{e(@object, :name, nil)}</div>
         </LivePatch>
       </div>
 
-      <!-- DUE DATE  -->
+      <!-- DUE DATE -->
       <div :if={e(@object, :due, nil)} class="flex items-center mt-1 space-x-4">
         <div class="flex items-center text-xs text-base-content text-medium">
-          <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 mr-1 text-base-content" viewBox="0 0 20 20" fill="currentColor">
-            <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-12a1 1 0 10-2 0v4a1 1 0 00.293.707l2.828 2.829a1 1 0 101.415-1.415L11 9.586V6z" clip-rule="evenodd" />
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            class="w-4 h-4 mr-1 text-base-content"
+            viewBox="0 0 20 20"
+            fill="currentColor"
+          >
+            <path
+              fill-rule="evenodd"
+              d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-12a1 1 0 10-2 0v4a1 1 0 00.293.707l2.828 2.829a1 1 0 101.415-1.415L11 9.586V6z"
+              clip-rule="evenodd"
+            />
           </svg>
           <span>{e(@object, :due, "No due date")}</span>
         </div>
@@ -24,30 +39,38 @@
 
       <!-- NOTE -->
       <div class="mt-1 text-sm text-base-content/70 line-clamp-2">{e(@object, :note, "")}</div>
-      
+
       <!-- PROGRESS -->
-      <div :if={@showing_within == :feed} class="flex items-center p-3 mt-2 -mx-3 space-x-4 text-sm rounded-b-lg text-base-content bg-neutral/40">
-        <div><span class="font-bold text-base-content ">{e(@object, :percentage, "0")}%</span> {l "complete"}</div>
+      <div
+        :if={@showing_within == :feed}
+        class="flex items-center p-3 mt-2 -mx-3 space-x-4 text-sm rounded-b-lg text-base-content bg-neutral/40"
+      >
+        <div><span class="font-bold text-base-content">{e(@object, :percentage, "0")}%</span> {l("complete")}</div>
         <div>
-          <span class="font-bold text-base-content ">{e(@object, :tasks_completed, "0")}</span> {l "of"}
-          <span class="font-bold text-base-content ">{e(@object, :tasks_total, "0")}</span> {l "tasks"}
+          <span class="font-bold text-base-content">{e(@object, :tasks_completed, "0")}</span> {l("of")}
+          <span class="font-bold text-base-content">{e(@object, :tasks_total, "0")}</span> {l("tasks")}
         </div>
       </div>
-
-
     </div>
     <div>
-      <div :if={e(@object, :tasks_total, 0)>0} class="relative mt-4">
-        <div class={"flex mb-2 overflow-hidden text-xs bg-pink-100 rounded", "h-3": @showing_within != :feed, "h-2": @showing_within == :feed}>
-          <div style={"width:#{e(@object, :percentage, "0")}%"} class="flex flex-col justify-center text-center text-white bg-pink-500 shadow-none whitespace-nowrap"></div>
+      <div :if={e(@object, :tasks_total, 0) > 0} class="relative mt-4">
+        <div class={
+          "flex mb-2 overflow-hidden text-xs bg-pink-100 rounded",
+          "h-3": @showing_within != :feed,
+          "h-2": @showing_within == :feed
+        }>
+          <div
+            style={"width:#{e(@object, :percentage, "0")}%"}
+            class="flex flex-col justify-center text-center text-white bg-pink-500 shadow-none whitespace-nowrap"
+          />
         </div>
       </div>
 
       <div :if={@showing_within != :feed} class="flex items-center space-x-4 text-sm text-base-content">
-        <div :if={e(@object, :tasks_total, 0)>0}><span class="font-bold text-base-content ">{e(@object, :percentage, "0")}%</span> complete</div>
-        <div :if={e(@object, :tasks_completed, 0)>0}>
-          <span class="font-bold text-base-content ">{e(@object, :tasks_completed, "0")}</span>
-         of <span class="font-bold text-base-content ">{e(@object, :tasks_total, "0")}</span> tasks
+        <div :if={e(@object, :tasks_total, 0) > 0}><span class="font-bold text-base-content">{e(@object, :percentage, "0")}%</span> complete</div>
+        <div :if={e(@object, :tasks_completed, 0) > 0}>
+          <span class="font-bold text-base-content">{e(@object, :tasks_completed, "0")}</span>
+          of <span class="font-bold text-base-content">{e(@object, :tasks_total, "0")}</span> tasks
         </div>
       </div>
     </div>

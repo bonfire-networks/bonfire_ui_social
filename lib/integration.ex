@@ -1,5 +1,4 @@
 defmodule Bonfire.UI.Social.Integration do
-
   def repo, do: Bonfire.Common.Config.get!(:repo_module)
   def mailer, do: Bonfire.Common.Config.get!(:mailer_module)
 
@@ -7,7 +6,8 @@ defmodule Bonfire.UI.Social.Integration do
     if Map.get(user, :instance_admin) do
       Map.get(user.instance_admin, :is_instance_admin)
     else
-      false # FIXME
+      # FIXME
+      false
     end
   end
 end

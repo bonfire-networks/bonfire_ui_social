@@ -1,19 +1,18 @@
-<LiveRedirect 
-  to={@permalink} 
-  class="redirect_to_discussion_page">
-  <div class="feed_activity_action"> 
+<LiveRedirect to={@permalink} class="redirect_to_discussion_page">
+  <div class="feed_activity_action">
     <span class="feed_activity_icon">
-      <svg 
-        viewBox="0 0 24 24" 
-        width="24" 
-        height="24" 
-        stroke="currentColor" 
-        stroke-width="1" 
-        fill="none" 
-        stroke-linecap="round" 
-        stroke-linejoin="round" 
-        class="w-4 h-4">
-        <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
+      <svg
+        viewBox="0 0 24 24"
+        width="24"
+        height="24"
+        stroke="currentColor"
+        stroke-width="1"
+        fill="none"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+        class="w-4 h-4"
+      >
+        <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
       </svg>
       <!-- <svg 
         class="w-4 h-4"
@@ -22,7 +21,7 @@
       </svg> -->
     </span>
     <span class="sr-only feed_activity_text">
-      {l "See discussion"}
+      {l("See discussion")}
       <!-- {#if Bonfire.UI.Social.Activity.ReplyLive.count(@replied) > 0 }
         {Bonfire.UI.Social.Activity.ReplyLive.count(@replied)}
       {/if} -->

@@ -2,8 +2,11 @@ defmodule Bonfire.UI.Social.WriteLive do
   use Bonfire.UI.Common.Web, :surface_live_view
   alias Bonfire.UI.Me.LivePlugs
 
-
-  declare_nav_link("Link to compose page", text: l("Compose"), icon: "heroicons-solid:PencilAlt", exclude_from_nav: true)
+  declare_nav_link("Link to compose page",
+    text: l("Compose"),
+    icon: "heroicons-solid:PencilAlt",
+    exclude_from_nav: true
+  )
 
   def mount(params, session, socket) do
     live_plug(params, session, socket, [
@@ -21,22 +24,23 @@ defmodule Bonfire.UI.Social.WriteLive do
 
   defp mounted(params, session, socket) do
     {:ok,
-    socket
-    |> assign(
-      page_title: l("Write"),
-      page: "write",
-      hide_smart_input: true,
-      create_activity_type: nil,
-      smart_input_text: e(session, "smart_input_text", ""),
-      reply_to_id: nil,
-      thread_id: nil,
-      to_boundaries: nil,
-      to_circles: nil
-    )}
+     socket
+     |> assign(
+       page_title: l("Write"),
+       page: "write",
+       hide_smart_input: true,
+       create_activity_type: nil,
+       smart_input_text: e(session, "smart_input_text", ""),
+       reply_to_id: nil,
+       thread_id: nil,
+       to_boundaries: nil,
+       to_circles: nil
+     )}
   end
 
+  def handle_event(action, attrs, socket),
+    do: Bonfire.UI.Common.LiveHandlers.handle_event(action, attrs, socket, __MODULE__)
 
-  def handle_event(action, attrs, socket), do: Bonfire.UI.Common.LiveHandlers.handle_event(action, attrs, socket, __MODULE__)
-  def handle_info(info, socket), do: Bonfire.UI.Common.LiveHandlers.handle_info(info, socket, __MODULE__)
-
+  def handle_info(info, socket),
+    do: Bonfire.UI.Common.LiveHandlers.handle_info(info, socket, __MODULE__)
 end

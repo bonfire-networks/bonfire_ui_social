@@ -5,10 +5,17 @@ defmodule Bonfire.UI.Social.WidgetMessagesLive do
 
   def feed(current_user) do
     paginate = %{
-        limit: 3
-      }
-    feed = if current_user, do: if module_enabled?(Bonfire.Social.Messages), do: Bonfire.Social.Messages.list(current_user, nil, paginate: paginate) #|> IO.inspect
+      limit: 3
+    }
+
+    # |> IO.inspect
+    feed =
+      if current_user,
+        do:
+          if(module_enabled?(Bonfire.Social.Messages),
+            do: Bonfire.Social.Messages.list(current_user, nil, paginate: paginate)
+          )
+
     e(feed, :edges, nil)
   end
-
 end

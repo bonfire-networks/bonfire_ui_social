@@ -1,5 +1,4 @@
 defmodule Bonfire.UI.Social.Test.ConnHelpers do
-
   # import ExUnit.Assertions
   # import Plug.Conn
   # import Phoenix.ConnTest
@@ -12,8 +11,4 @@ defmodule Bonfire.UI.Social.Test.ConnHelpers do
   # alias Bonfire.Data.Identity.User
 
   # @endpoint Application.compile_env!(:bonfire, :endpoint_module)
-
-
-
-
 end

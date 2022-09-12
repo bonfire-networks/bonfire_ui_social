@@ -5,10 +5,17 @@ defmodule Bonfire.UI.Social.WidgetNotificationLive do
 
   def load(current_user) do
     paginate = %{
-        limit: 3
-      }
+      limit: 3
+    }
+
     feed_id = Bonfire.Social.Feeds.my_feed_id(:notifications, current_user: current_user)
-    feed = Bonfire.Social.FeedActivities.feed(:notifications, current_user: current_user, paginate: paginate)
+
+    feed =
+      Bonfire.Social.FeedActivities.feed(:notifications,
+        current_user: current_user,
+        paginate: paginate
+      )
+
     [
       id: :widget_notifications,
       feed: e(feed, :edges, []),
@@ -20,5 +27,4 @@ defmodule Bonfire.UI.Social.WidgetNotificationLive do
       hide_load_more: true
     ]
   end
-
 end

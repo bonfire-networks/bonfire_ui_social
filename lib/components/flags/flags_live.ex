@@ -10,20 +10,23 @@ defmodule Bonfire.UI.Social.FlagsLive do
   def update(assigns, socket) do
     current_user = current_user(assigns)
     feed = Bonfire.Social.FeedActivities.feed(:flags, current_user)
-    edges = for %{edge: %{} = edge} <- e(feed, :edges, []), do: %{activity: edge |> Map.put(:verb, %{verb: "Flag"})} #|> debug
+    # |> debug
+    edges =
+      for %{edge: %{} = edge} <- e(feed, :edges, []),
+          do: %{activity: edge |> Map.put(:verb, %{verb: "Flag"})}
 
-    {:ok, socket
-    |> assign(
-      page: "flags",
-      # selected_tab: "flags",
-      page_title: "Flags",
-      current_user: current_user,
-      feed_id: :flags,
-      feed: edges,
-      page_info: e(feed, :page_info, [])
-      )}
+    {:ok,
+     socket
+     |> assign(
+       page: "flags",
+       # selected_tab: "flags",
+       page_title: "Flags",
+       current_user: current_user,
+       feed_id: :flags,
+       feed: edges,
+       page_info: e(feed, :page_info, [])
+     )}
   end
-
 
   # def handle_params(%{"tab" => tab} = _params, _url, socket) do
   #   {:noreply,
@@ -40,7 +43,10 @@ defmodule Bonfire.UI.Social.FlagsLive do
   # end
 
   defdelegate handle_params(params, attrs, socket), to: Bonfire.UI.Common.LiveHandlers
-  def handle_event(action, attrs, socket), do: Bonfire.UI.Common.LiveHandlers.handle_event(action, attrs, socket, __MODULE__)
-  def handle_info(info, socket), do: Bonfire.UI.Common.LiveHandlers.handle_info(info, socket, __MODULE__)
 
+  def handle_event(action, attrs, socket),
+    do: Bonfire.UI.Common.LiveHandlers.handle_event(action, attrs, socket, __MODULE__)
+
+  def handle_info(info, socket),
+    do: Bonfire.UI.Common.LiveHandlers.handle_info(info, socket, __MODULE__)
 end

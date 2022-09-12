@@ -1,9 +1,8 @@
 <div>
-
   <#slot {@header} />
 
   <Bonfire.UI.Social.FeedLive
-    id={"feed:profile:boosts"}
+    id="feed:profile:boosts"
     feed_id={"user:#{@selected_tab}:#{ulid(@user)}"}
     feed={@feed}
     verb_default="boost"

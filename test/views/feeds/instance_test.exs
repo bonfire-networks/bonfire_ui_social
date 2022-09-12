@@ -1,5 +1,4 @@
 defmodule Bonfire.Social.Feeds.Instance.Test do
-
   use Bonfire.UI.Social.ConnCase, async: true
   alias Bonfire.Social.Fake
   alias Bonfire.Social.Posts
@@ -7,14 +6,14 @@ defmodule Bonfire.Social.Feeds.Instance.Test do
   alias Bonfire.Social.Boosts
 
   describe "show" do
-
     test "not logged in" do
       conn = conn()
       conn = get(conn, "/local")
       feed_id = Bonfire.Social.Feeds.named_feed_id(:local)
 
       doc = floki_response(conn)
-      main = Floki.find(doc, "main") # |> IO.inspect
+      # |> IO.inspect
+      main = Floki.find(doc, "main")
       # assert redirected_to(conn) =~ "/login"
       assert [_] = Floki.find(doc, "[id='#{feed_id}']")
     end
@@ -26,7 +25,8 @@ defmodule Bonfire.Social.Feeds.Instance.Test do
       next = "/local"
       feed_id = Bonfire.Social.Feeds.named_feed_id(:local)
 
-      {view, doc} = floki_live(conn, next) #|> IO.inspect
+      # |> IO.inspect
+      {view, doc} = floki_live(conn, next)
       assert [_] = Floki.find(doc, "[id='#{feed_id}']")
     end
 
@@ -37,15 +37,22 @@ defmodule Bonfire.Social.Feeds.Instance.Test do
       next = "/local"
       feed_id = Bonfire.Social.Feeds.named_feed_id(:local)
 
-      {view, doc} = floki_live(conn, next) #|> IO.inspect
+      # |> IO.inspect
+      {view, doc} = floki_live(conn, next)
       assert [_] = Floki.find(doc, "[id='#{feed_id}']")
     end
-
 
     test "my own posts in instance feed (with local preset selected)" do
       account = fake_account!()
       user = fake_user!(account)
-      attrs = %{post_content: %{summary: "summary", name: "test post name", html_body: "<p>epic html message</p>"}}
+
+      attrs = %{
+        post_content: %{
+          summary: "summary",
+          name: "test post name",
+          html_body: "<p>epic html message</p>"
+        }
+      }
 
       assert {:ok, post} = Posts.publish(current_user: user, post_attrs: attrs, boundary: "local")
       assert post.post_content.name =~ "test post name"
@@ -53,14 +60,22 @@ defmodule Bonfire.Social.Feeds.Instance.Test do
       conn = conn(user: user, account: account)
       next = "/local"
       feed_id = Bonfire.Social.Feeds.named_feed_id(:local)
-      {view, doc} = floki_live(conn, next) #|> IO.inspect
+      # |> IO.inspect
+      {view, doc} = floki_live(conn, next)
       assert [feed] = Floki.find(doc, "[id='#{feed_id}']")
       assert Floki.text(feed) =~ "test post name"
     end
 
     test "local posts from people I am not following in instance feed (if local preset selected)" do
       user = fake_user!()
-      attrs = %{post_content: %{summary: "summary", name: "test post name", html_body: "<p>epic html message</p>"}}
+
+      attrs = %{
+        post_content: %{
+          summary: "summary",
+          name: "test post name",
+          html_body: "<p>epic html message</p>"
+        }
+      }
 
       assert {:ok, post} = Posts.publish(current_user: user, post_attrs: attrs, boundary: "local")
       assert post.post_content.name =~ "test post name"
@@ -71,16 +86,14 @@ defmodule Bonfire.Social.Feeds.Instance.Test do
       next = "/local"
       feed_id = Bonfire.Social.Feeds.named_feed_id(:local)
 
-      {view, doc} = floki_live(conn, next) #|> IO.inspect
+      # |> IO.inspect
+      {view, doc} = floki_live(conn, next)
       assert [feed] = Floki.find(doc, "[id='#{feed_id}']")
       assert Floki.text(feed) =~ "test post name"
-
     end
-
   end
 
   describe "DO NOT show" do
-
     test "posts I'm NOT allowed to see in instance feed" do
       account = fake_account!()
       user = fake_user!(account)
@@ -89,7 +102,13 @@ defmodule Bonfire.Social.Feeds.Instance.Test do
       user2 = fake_user!(account2)
       Follows.follow(user2, user)
 
-      attrs = %{post_content: %{summary: "summary", name: "test post name", html_body: "<p>epic html message</p>"}}
+      attrs = %{
+        post_content: %{
+          summary: "summary",
+          name: "test post name",
+          html_body: "<p>epic html message</p>"
+        }
+      }
 
       assert {:ok, post} = Posts.publish(current_user: user, post_attrs: attrs)
       assert post.post_content.name =~ "test post name"
@@ -98,12 +117,12 @@ defmodule Bonfire.Social.Feeds.Instance.Test do
       next = "/local"
       feed_id = Bonfire.Social.Feeds.named_feed_id(:local)
 
-      {view, doc} = floki_live(conn, next) #|> IO.inspect
+      # |> IO.inspect
+      {view, doc} = floki_live(conn, next)
       assert [feed] = Floki.find(doc, "[id='#{feed_id}']")
       refute Floki.text(feed) =~ "test post name"
     end
   end
-
 
   test "Logged-out Home activities feed shows the instance outbox filtered by public boundary" do
     account = fake_account!()
@@ -115,9 +134,17 @@ defmodule Bonfire.Social.Feeds.Instance.Test do
     account3 = fake_account!()
     carl = fake_user!(account3)
 
-    guest_attrs = %{post_content: %{summary: "summary", name: "test post name", html_body: "first post"}}
-    local_attrs = %{post_content: %{summary: "summary", name: "test post name", html_body: "first post"}}
-    admin_attrs = %{post_content: %{summary: "summary", name: "test post name", html_body: "first post"}}
+    guest_attrs = %{
+      post_content: %{summary: "summary", name: "test post name", html_body: "first post"}
+    }
+
+    local_attrs = %{
+      post_content: %{summary: "summary", name: "test post name", html_body: "first post"}
+    }
+
+    admin_attrs = %{
+      post_content: %{summary: "summary", name: "test post name", html_body: "first post"}
+    }
 
     # bob follows alice
     Follows.follow(bob, alice)
@@ -131,8 +158,9 @@ defmodule Bonfire.Social.Feeds.Instance.Test do
     next = "/local"
     conn = conn()
     {view, doc} = floki_live(conn, next)
+
     assert doc
-      |> Floki.find("article")
-      |> length == 5
+           |> Floki.find("article")
+           |> length() == 5
   end
 end

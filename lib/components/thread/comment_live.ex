@@ -27,7 +27,8 @@ defmodule Bonfire.UI.Social.CommentLive do
 
   def sub_replies_count(comment) do
     activity = activity(comment)
-    e(activity, :replied, :nested_replies_count, 0) + e(activity, :replied, :direct_replies_count, 0)
-  end
 
+    e(activity, :replied, :nested_replies_count, 0) +
+      e(activity, :replied, :direct_replies_count, 0)
+  end
 end

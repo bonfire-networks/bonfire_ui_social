@@ -1,10 +1,13 @@
 defmodule Bonfire.UI.Social.Boundaries.BoundaryTest do
-
   use Bonfire.UI.Social.ConnCase, async: true
 
   alias Bonfire.Social.Fake
   alias Bonfire.Me.Users
-  alias Bonfire.Social.{Boosts, Likes, Follows, Posts}
+  alias Bonfire.Social.Boosts
+  alias Bonfire.Social.Likes
+  alias Bonfire.Social.Follows
+  alias Bonfire.Social.Posts
+
   alias Bonfire.Common.Repo
 
   test "Public: When I create an activity with the public boundary selected, it is visible in the federation, instance, home feed" do

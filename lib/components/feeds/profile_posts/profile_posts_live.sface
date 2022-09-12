@@ -1,9 +1,8 @@
 <div>
-
   <#slot {@header} />
 
   <Bonfire.UI.Social.FeedLive
-    id={"feed:profile:posts"}
+    id="feed:profile:posts"
     feed_id={"user:#{@selected_tab}:#{ulid(@user)}"}
     page_title={@page_title}
     page={@page}
@@ -26,5 +25,5 @@
     class="block m-10"
   >
     Visit the <u>remote profile</u> if you don't want to miss any of their older posts.
-  </a> 
+  </a>
 </div>

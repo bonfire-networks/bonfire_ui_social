@@ -1,20 +1,14 @@
-
-<div
-  x-cloak
-  x-show="title_open"
-  x-transition
-  class="border-b rounded-md">
+<div x-cloak x-show="title_open" x-transition class="border-b rounded-md">
   <Field name={:name}>
     <TextInput
       opts={
         placeholder: l("Enter a content warning")
       }
-      class="w-full rounded-none input" 
-      />
+      class="w-full rounded-none input"
+    />
   </Field>
 
-
-    <!-- <div
+  <!-- <div
       :if={Config.get([:ui, :smart_input, :summary], []) == true}
       class="flex mt-2 mb-3 space-x-4">
       <button

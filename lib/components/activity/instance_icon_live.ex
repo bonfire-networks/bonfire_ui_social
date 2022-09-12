@@ -10,6 +10,7 @@ defmodule Bonfire.UI.Social.Activity.InstanceIconLive do
 
   def permalink(%{peered: _} = object) do
     warn("FIXME: Peered should already come preloaded in object")
+
     object
     |> repo().maybe_preload(:peered)
     |> e(:peered, :canonical_uri, nil)
@@ -19,5 +20,4 @@ defmodule Bonfire.UI.Social.Activity.InstanceIconLive do
     warn(object, "object does not have a :peered assoc")
     Bonfire.Federate.ActivityPub.Peered.get_canonical_uri(object)
   end
-
 end

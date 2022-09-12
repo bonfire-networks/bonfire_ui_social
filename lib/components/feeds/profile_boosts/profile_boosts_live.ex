@@ -16,5 +16,4 @@ defmodule Bonfire.UI.Social.ProfileBoostsLive do
   prop loading, :boolean, default: false
 
   slot header
-
 end

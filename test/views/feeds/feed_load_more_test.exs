@@ -1,13 +1,14 @@
 defmodule Bonfire.Social.Feeds.LoadMoreTest do
-
   use Bonfire.UI.Social.ConnCase, async: true
   alias Bonfire.Social.Fake
-  alias Bonfire.Social.{Boosts, Likes, Follows, Posts}
+  alias Bonfire.Social.Boosts
+  alias Bonfire.Social.Likes
+  alias Bonfire.Social.Follows
+  alias Bonfire.Social.Posts
+
   import Untangle
 
-
   describe "Load More in Feeds" do
-
     test "As a user I dont want to see the load more button if there are less than 11 activities" do
       total_posts = 10
       # Create alice user
@@ -18,10 +19,18 @@ defmodule Bonfire.Social.Feeds.LoadMoreTest do
       bob = fake_user!(account2)
       # bob follows alice
       Follows.follow(bob, alice)
-      attrs = %{post_content: %{summary: "summary", name: "test post name", html_body: "<p>epic html message</p>"}}
+
+      attrs = %{
+        post_content: %{
+          summary: "summary",
+          name: "test post name",
+          html_body: "<p>epic html message</p>"
+        }
+      }
 
       for n <- 1..total_posts do
-        assert {:ok, post} = Posts.publish(current_user: alice, post_attrs: attrs, boundary: "public")
+        assert {:ok, post} =
+                 Posts.publish(current_user: alice, post_attrs: attrs, boundary: "public")
       end
 
       conn = conn(user: bob, account: account2)
@@ -41,10 +50,18 @@ defmodule Bonfire.Social.Feeds.LoadMoreTest do
       bob = fake_user!(account2)
       # bob follows alice
       Follows.follow(bob, alice)
-      attrs = %{post_content: %{summary: "summary", name: "test post name", html_body: "<p>epic html message</p>"}}
+
+      attrs = %{
+        post_content: %{
+          summary: "summary",
+          name: "test post name",
+          html_body: "<p>epic html message</p>"
+        }
+      }
 
       for n <- 1..total_posts do
-        assert {:ok, post} = Posts.publish(current_user: alice, post_attrs: attrs, boundary: "public")
+        assert {:ok, post} =
+                 Posts.publish(current_user: alice, post_attrs: attrs, boundary: "public")
       end
 
       conn = conn(user: bob, account: account2)
@@ -65,7 +82,18 @@ defmodule Bonfire.Social.Feeds.LoadMoreTest do
       Follows.follow(bob, alice)
 
       for n <- 1..total_posts do
-        assert {:ok, post} = Posts.publish(current_user: alice, post_attrs: %{post_content: %{summary: "summary", name: "#{n} - test post name", html_body: "<p>epic html message</p>"}}, boundary: "public")
+        assert {:ok, post} =
+                 Posts.publish(
+                   current_user: alice,
+                   post_attrs: %{
+                     post_content: %{
+                       summary: "summary",
+                       name: "#{n} - test post name",
+                       html_body: "<p>epic html message</p>"
+                     }
+                   },
+                   boundary: "public"
+                 )
       end
 
       conn = conn(user: bob, account: account2)
@@ -75,14 +103,16 @@ defmodule Bonfire.Social.Feeds.LoadMoreTest do
       # articles = Floki.find(doc, "[data-id=feed] article")
       # |> info("articles")
 
-      more_doc = view
-      |> element("[data-id=load_more]")
-      |> render_click()
+      more_doc =
+        view
+        |> element("[data-id=load_more]")
+        |> render_click()
 
       # are extra activities being broadcast via pubsub? if so, wait for them
       live_pubsub_wait(view)
 
       articles = Floki.find(more_doc, "[data-id=feed] article")
+
       # |> info("articles")
 
       assert Enum.count(articles) == 5
@@ -100,7 +130,8 @@ defmodule Bonfire.Social.Feeds.LoadMoreTest do
       Follows.follow(bob, alice)
 
       for n <- 1..total_posts do
-        assert {:ok, post} = Posts.publish(current_user: alice, post_attrs: post_attrs(n), boundary: "public")
+        assert {:ok, post} =
+                 Posts.publish(current_user: alice, post_attrs: post_attrs(n), boundary: "public")
       end
 
       conn = conn(user: bob, account: account2)
@@ -108,16 +139,12 @@ defmodule Bonfire.Social.Feeds.LoadMoreTest do
       {view, doc} = floki_live(conn, next)
       assert [_, load_more_query_string] = Floki.attribute(doc, "[data-id=load_more] a", "href")
 
-      url = "/local"<>load_more_query_string
+      url = "/local" <> load_more_query_string
       info(url, "pagination URL")
       conn = get(conn, url)
-      more_doc = floki_response(conn) #|> IO.inspect
+      # |> IO.inspect
+      more_doc = floki_response(conn)
       assert Enum.count(Floki.find(more_doc, "[data-id=feed] article")) == 5
-
     end
-
-
   end
-
-
 end

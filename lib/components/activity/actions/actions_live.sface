@@ -1,49 +1,52 @@
-{#if ulid(@object) != nil and e(@activity, :replied, :reply_to_id, nil) == nil and ulid(@activity) == nil}
-  <div></div>
+{#if ulid(@object) != nil and e(@activity, :replied, :reply_to_id, nil) == nil and
+    ulid(@activity) == nil}
+  <div />
 {#else}
-  <div 
-    :if={@thread_mode != :flat} 
-    :class={if @viewing_main_object != true and Settings.get([:ui, :compact], false, @__context__), do: "activity_active ? '' : '[@media(any-hover:hover)]:hidden'"}
+  <div
+    :if={@thread_mode != :flat}
+    :class={if @viewing_main_object != true and Settings.get([:ui, :compact], false, @__context__),
+      do: "activity_active ? '' : '[@media(any-hover:hover)]:hidden'"}
     class={
-      "thread_actions mt-1 flex items-center": @showing_within == :thread or Settings.get([:ui, :compact], false, @__context__),
+      "thread_actions mt-1 flex items-center":
+        @showing_within == :thread or Settings.get([:ui, :compact], false, @__context__),
       "feed_actions items-center flex mt-1": @viewing_main_object != true,
-      "border-t border-base-content/10 pt-2": e(@showing_within, :feed) == :feed || e(@showing_within, :feed) == :notifications,
+      "border-t border-base-content/10 pt-2":
+        e(@showing_within, :feed) == :feed || e(@showing_within, :feed) == :notifications,
       "mt-1": @showing_within == :widget,
-      "absolute z-50 p-0.5 h-8 hidden group-hover:flex rounded-md top-[-24px] right-[12px] bg-base-100 border border-base-200": @thread_mode == :flat,
-      }>
-
+      "absolute z-50 p-0.5 h-8 hidden group-hover:flex rounded-md top-[-24px] right-[12px] bg-base-100 border border-base-200":
+        @thread_mode == :flat
+    }
+  >
     {#if e(@showing_within, :feed) == :feed || e(@showing_within, :feed) == :notifications}
       {#if String.starts_with?(@permalink, ["/post/"])}
         <Bonfire.UI.Common.OpenPreviewLive
           href={@permalink}
-          open_btn_text={l "Read discussion"}
-          title_text={e(@object, :post_content, :name, nil) || l "Post"}
+          open_btn_text={l("Read discussion")}
+          title_text={e(@object, :post_content, :name, nil) || l("Post")}
           open_btn_class="px-1 font-normal normal-case btn btn-sm btn-ghost"
           modal_assigns={
-            post_id: @thread_id, 
-            object: (if @thread_id==ulid(@object), do: @object), 
-            activity: (if @thread_id==ulid(@object), do: @activity), 
+            post_id: @thread_id,
+            object: if(@thread_id == ulid(@object), do: @object),
+            activity: if(@thread_id == ulid(@object), do: @activity),
             preview_component: Bonfire.UI.Social.ViewObjectThreadLive
           }
         />
       {#elseif String.starts_with?(@permalink, ["/discussion/"])}
         <Bonfire.UI.Common.OpenPreviewLive
           href={@permalink}
-          open_btn_text={l "Read discussion"}
-          title_text={e(@object, :name, nil) || e(@object, :post_content, :name, nil) || l "Discussion"}
+          open_btn_text={l("Read discussion")}
+          title_text={e(@object, :name, nil) || e(@object, :post_content, :name, nil) || l("Discussion")}
           open_btn_class="px-1 font-normal normal-case btn btn-sm btn-ghost"
           modal_assigns={
-            object_id: @thread_id, 
-            object: (if @thread_id==ulid(@object), do: @object), 
-            activity: (if @thread_id==ulid(@object), do: @activity), 
+            object_id: @thread_id,
+            object: if(@thread_id == ulid(@object), do: @object),
+            activity: if(@thread_id == ulid(@object), do: @activity),
             preview_component: Bonfire.UI.Social.ViewObjectThreadLive
           }
         />
       {#else}
-        <LiveRedirect 
-          to={@permalink} 
-          class="px-1 font-normal normal-case btn btn-sm btn-ghost">
-          {l "View"}
+        <LiveRedirect to={@permalink} class="px-1 font-normal normal-case btn btn-sm btn-ghost">
+          {l("View")}
         </LiveRedirect>
       {/if}
     {/if}
@@ -51,38 +54,41 @@
       "feed-clickable flex items-center flex-1 justify-end space-x-4 mt-0",
       "-ml-2": @viewing_main_object == true,
       "!space-x-2": @thread_mode == :flat
-      }>
-      <Bonfire.UI.Social.Activity.ReplyLive 
+    }>
+      <Bonfire.UI.Social.Activity.ReplyLive
         object_id={e(@object, :id, "no-object")}
         activity_id={e(@activity, :id, "no-activity")}
-        object_boundary={@object_boundary} 
-        permalink={@permalink} 
+        object_boundary={@object_boundary}
+        permalink={@permalink}
         thread_mode={@thread_mode}
         replied={e(@activity, :replied, nil)}
         showing_within={@showing_within}
-        hide_reply={e(@hide_reply, nil )}
-        reply_to_text={Text.text_only(e(@object, :post_content, :name, nil) || e(@object, :post_content, :summary, nil) || e(@object, :post_content, :html_body, e(@object, :id, "")))}
+        hide_reply={e(@hide_reply, nil)}
+        reply_to_text={Text.text_only(
+          e(@object, :post_content, :name, nil) || e(@object, :post_content, :summary, nil) ||
+            e(@object, :post_content, :html_body, e(@object, :id, ""))
+        )}
       />
       <Bonfire.UI.Common.BoostActionLive
-        :if={@object_type not in [Bonfire.Data.Social.Message]} 
-        id={ComponentID.new(Bonfire.UI.Common.BoostActionLive, ulid(@object))} 
-        object={@object} 
+        :if={@object_type not in [Bonfire.Data.Social.Message]}
+        id={ComponentID.new(Bonfire.UI.Common.BoostActionLive, ulid(@object))}
+        object={@object}
         object_type={@object_type}
         showing_within={@showing_within}
         boost_count={e(@activity, :boost_count, nil)}
-        />
+      />
       <Bonfire.UI.Common.LikeActionLive
-        id={ComponentID.new(Bonfire.UI.Common.LikeActionLive, ulid(@object))} 
-        object={@object} 
+        id={ComponentID.new(Bonfire.UI.Common.LikeActionLive, ulid(@object))}
+        object={@object}
         showing_within={@showing_within}
-        like_count={e(@activity, :like_count, nil)} 
+        like_count={e(@activity, :like_count, nil)}
       />
       <Bonfire.UI.Social.Activity.MoreActionsLive
-        object={@object} 
-        object_type={@object_type} 
-        object_boundary={@object_boundary} 
+        object={@object}
+        object_type={@object_type}
+        object_boundary={@object_boundary}
         object_type_readable={@object_type_readable}
-        activity={@activity} 
+        activity={@activity}
         verb={@verb}
         showing_within={@showing_within}
       />

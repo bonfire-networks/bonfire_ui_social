@@ -1,10 +1,13 @@
 defmodule Bonfire.Social.Threads.RepliesTest do
-
   use Bonfire.UI.Social.ConnCase, async: true
   alias Bonfire.Social.Fake
-  alias Bonfire.Social.{Boosts, Likes, Follows, Posts}
+  alias Bonfire.Social.Boosts
+  alias Bonfire.Social.Likes
+  alias Bonfire.Social.Follows
+  alias Bonfire.Social.Posts
 
-  @tag :todo # when we enable counts
+  # when we enable counts
+  @tag :todo
   test "As a user I want to see the activity total replies" do
     # Create alice user
     account = fake_account!()
@@ -13,12 +16,20 @@ defmodule Bonfire.Social.Threads.RepliesTest do
     account2 = fake_account!()
     bob = fake_user!(account2)
 
-    attrs = %{post_content: %{summary: "summary", name: "test post name", html_body: "<p>first post</p>"}}
+    attrs = %{
+      post_content: %{summary: "summary", name: "test post name", html_body: "<p>first post</p>"}
+    }
+
     assert {:ok, op} = Posts.publish(current_user: alice, post_attrs: attrs, boundary: "public")
 
     # Reply to the original post
-    attrs_reply = %{post_content: %{summary: "summary", name: "name 2", html_body: "<p>reply to first post</p>"}, reply_to_id: op.id}
-    assert {:ok, post_reply} = Posts.publish(current_user: bob, post_attrs: attrs_reply, boundary: "public")
+    attrs_reply = %{
+      post_content: %{summary: "summary", name: "name 2", html_body: "<p>reply to first post</p>"},
+      reply_to_id: op.id
+    }
+
+    assert {:ok, post_reply} =
+             Posts.publish(current_user: bob, post_attrs: attrs_reply, boundary: "public")
 
     # bob follows alice
     Follows.follow(bob, alice)
@@ -26,10 +37,11 @@ defmodule Bonfire.Social.Threads.RepliesTest do
     conn = conn(user: bob, account: account2)
     next = "/feed"
     {view, doc} = floki_live(conn, next)
+
     assert doc
-      # |> info
-      |> Floki.find("[data-id=feed] article")
-      |> List.last
-      |> Floki.text =~ "Reply"
+           # |> info
+           |> Floki.find("[data-id=feed] article")
+           |> List.last()
+           |> Floki.text() =~ "Reply"
   end
 end

@@ -1,64 +1,67 @@
 {#if @showing_within == :widget}
-
-<!-- show the object or character that isn't me -->
-<div class="flex w-full activity_widget">
-  <LiveRedirect to={path(the_other(@activity, @object, @__context__))} class="flex profile-item group ">
-    <div class="absolute left-0">
-      <Bonfire.UI.Common.AvatarLive 
-        class="w-6 h-6 teee bg-base-200 rounded-btn" 
-        user={the_other(@activity, @object, @__context__)} 
-      />
-    </div>
-    <div class="flex items-center justify-between flex-1 ml-8 space-x-1">
-      <p class="text-base font-semibold group-hover:underline text-base-content">
-        {e(the_other(@activity, @object, @__context__), :profile, :name, "Anon")}
-      </p>
-      <p class="-mt-px text-sm text-base-content text-opacity-70">
-        @{e(the_other(@activity, @object, @__context__), :character, :username, "anon")} 
-      </p>
-    </div>
-  </LiveRedirect>
-</div>
-
-{#else}
-
-<!-- show the object or character that isn't me -->
-<div class="flex w-full activity_notification">
-
-  <LiveRedirect to={path(the_other(@activity, @object, @__context__))} class="flex profile-item group ">
-    <div class="">
-      <Bonfire.UI.Common.AvatarLive user={the_other(@activity, @object, @__context__)} />
-    </div>
-    <div>
-      <div class="items-baseline justify-between flex-1 ml-3">
+  <!-- show the object or character that isn't me -->
+  <div class="flex w-full activity_widget">
+    <LiveRedirect
+      to={path(the_other(@activity, @object, @__context__))}
+      class="flex profile-item group"
+    >
+      <div class="absolute left-0">
+        <Bonfire.UI.Common.AvatarLive
+          class="w-6 h-6 teee bg-base-200 rounded-btn"
+          user={the_other(@activity, @object, @__context__)}
+        />
+      </div>
+      <div class="flex items-center justify-between flex-1 ml-8 space-x-1">
         <p class="text-base font-semibold group-hover:underline text-base-content">
-          {e(the_other(@activity, @object, @__context__), :profile, :name, "")}
+          {e(the_other(@activity, @object, @__context__), :profile, :name, "Anon")}
         </p>
-        <span
-        :if={e(the_other(@activity, @object, @__context__), :character, :username, nil)}
-        class="-mt-1 text-sm font-normal truncate ellipsis text-base-content text-opacity-60 subject_username">
-          @{e(the_other(@activity, @object, @__context__), :character, :username, "")}
-        </span>
-        <!-- <p class="-mt-px text-sm text-base-content text-opacity-70">
+        <p class="-mt-px text-sm text-base-content text-opacity-70">
+          @{e(the_other(@activity, @object, @__context__), :character, :username, "anon")}
+        </p>
+      </div>
+    </LiveRedirect>
+  </div>
+{#else}
+  <!-- show the object or character that isn't me -->
+  <div class="flex w-full activity_notification">
+    <LiveRedirect
+      to={path(the_other(@activity, @object, @__context__))}
+      class="flex profile-item group"
+    >
+      <div class="">
+        <Bonfire.UI.Common.AvatarLive user={the_other(@activity, @object, @__context__)} />
+      </div>
+      <div>
+        <div class="items-baseline justify-between flex-1 ml-3">
+          <p class="text-base font-semibold group-hover:underline text-base-content">
+            {e(the_other(@activity, @object, @__context__), :profile, :name, "")}
+          </p>
+          <span
+            :if={e(the_other(@activity, @object, @__context__), :character, :username, nil)}
+            class="-mt-1 text-sm font-normal truncate ellipsis text-base-content text-opacity-60 subject_username"
+          >
+            @{e(the_other(@activity, @object, @__context__), :character, :username, "")}
+          </span>
+          <!-- <p class="-mt-px text-sm text-base-content text-opacity-70">
           @{e(the_other(@activity, @object, @__context__), :character, :username, "anon")} 
         </p> -->
-      </div>
+        </div>
         <!-- SHOW THE BIO IN SEARCH -->
-      <div class="ml-3 prose-sm prose">
-         {markdown e(the_other(@activity, @object, @__context__), :profile, :summary, "")}
+        <div class="ml-3 prose-sm prose">
+          {markdown(e(the_other(@activity, @object, @__context__), :profile, :summary, ""))}
+        </div>
       </div>
-    </div>
-  </LiveRedirect>
+    </LiveRedirect>
 
-  <!-- TODO: put in seperate component -->
-  <button 
-  :if={@verb =="Request to Follow" and @showing_within==:notifications}
-  :on-click="Bonfire.Social.Follows:accept" 
-  phx-value-id={ulid(@activity)}
-  type="button" 
-  class="ml-3 btn">
-    Accept
-  </button>
-
-</div>
+    <!-- TODO: put in seperate component -->
+    <button
+      :if={@verb == "Request to Follow" and @showing_within == :notifications}
+      :on-click="Bonfire.Social.Follows:accept"
+      phx-value-id={ulid(@activity)}
+      type="button"
+      class="ml-3 btn"
+    >
+      Accept
+    </button>
+  </div>
 {/if}

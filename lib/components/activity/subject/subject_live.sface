@@ -1,27 +1,29 @@
-<div 
+<div
   data-id="subject"
   class={
     "mb-1",
     "px-2 bg-base-content/10 pt-1 rounded-t-md": @thread_mode == :flat,
     "!bg-info/40": @thread_mode == :flat && ulid(@current_user) == maybe_get(@character, :id),
-    "!bg-transparent pt-0": @activity_inception != nil and @thread_mode == :flat,
-  }> 
-  <span 
+    "!bg-transparent pt-0": @activity_inception != nil and @thread_mode == :flat
+  }
+>
+  <span
     :if={@showing_within == :smart_input}
     phx-click="Bonfire.Social.Feeds:remove_data"
-    class="absolute top-2 right-2 btn btn-ghost btn-xs btn-circle">
+    class="absolute top-2 right-2 btn btn-ghost btn-xs btn-circle"
+  >
     <Icon outline="X" class="w-4 h-4" />
   </span>
 
-  {#if ulid(@object) != nil and ulid(@activity) == nil and @showing_within != :search }
-
-    <div class={"flex items-center"}>
+  {#if ulid(@object) != nil and ulid(@activity) == nil and @showing_within != :search}
+    <div class="flex items-center">
       <div class="flex flex-1 space-x-2">
         <div class="flex items-center text-sm font-semibold text-base-content">
           <LiveRedirect
             aria-label={e(@character, :username, "") <> " profile"}
             class="hover:underline text-opacity-70"
-            to={path(@character)}>
+            to={path(@character)}
+          >
             {e(@profile, :name, "Anonymous")}
           </LiveRedirect>
         </div>
@@ -34,46 +36,41 @@
         /> -->
       </div>
     </div>
-
   {#elseif @showing_within == :widget}
-
     <div class="flex mb-4 items-top">
       <div class="absolute left-0">
-        <Bonfire.UI.Common.AvatarLive  
-          class="w-6 h-6 bg-base-200 rounded-btn" 
-          user={@profile} 
-          />
+        <Bonfire.UI.Common.AvatarLive class="w-6 h-6 bg-base-200 rounded-btn" user={@profile} />
       </div>
       <div class="flex ml-8 grow items-baseline justify-between flex-1 w-[calc(100%_-_4rem)]">
         <div class="items-baseline flex-1 text-sm truncate grow ellipsis">
           <LiveRedirect
             opts={"data-id": "subject_name"}
             aria-label={e(@character, :username, "") <> " profile"}
-            class="flex-1 font-semibold text-base-content hover:underline "
-            to={path(@character)}>
+            class="flex-1 font-semibold text-base-content hover:underline"
+            to={path(@character)}
+          >
             {e(@profile, :name, "Anonymous")}
           </LiveRedirect>
         </div>
         <div class="items-baseline flex-0">
-          <Bonfire.UI.Social.Activity.DateAgoLive 
+          <Bonfire.UI.Social.Activity.DateAgoLive
             permalink={@permalink}
             date_ago={@date_ago}
             object={@object}
             object_type={@object_type}
-            object_boundary={@object_boundary} 
+            object_boundary={@object_boundary}
             showing_within={@showing_within}
-            verb_display={@verb_display} 
-            />
+            verb_display={@verb_display}
+          />
         </div>
       </div>
     </div>
-
   {#else}
-  
     <div class={
       "flex items-top",
-      "space-x-3":  @viewing_main_object == true,
-      "py-1": @thread_mode == :flat}>
+      "space-x-3": @viewing_main_object == true,
+      "py-1": @thread_mode == :flat
+    }>
       <!-- <div 
         :if={@showing_within !=:thread  || ulid(@object) == nil and e(@activity, :replied, :reply_to_id, nil) != nil and ulid(@activity) != nil}
         id={"subject-#{@activity_inception}-"<>( ulid(@activity) || e(@object, :id, "no-id") )}
@@ -81,66 +78,75 @@
         data-permalink={@permalink}
         data-navigate_to_thread={ "true"}
         class="absolute top-0 bottom-0 left-0 w-16"></div> -->
-      <div 
+      <div
         :if={ulid(@current_user) != maybe_get(@character, :id) || @thread_mode != :flat}
         class={
-        "absolute left-4",
-        "!relative !left-0": e(assigns, :viewing_main_object, nil) == true,
-        "!static mr-3": e(@showing_within, :feed) == :feed ||  e(@showing_within, :feed) == :notifications,
-        "bottom-2": e(@thread_mode, nil) == :flat,
-      }>
+          "absolute left-4",
+          "!relative !left-0": e(assigns, :viewing_main_object, nil) == true,
+          "!static mr-3":
+            e(@showing_within, :feed) == :feed || e(@showing_within, :feed) == :notifications,
+          "bottom-2": e(@thread_mode, nil) == :flat
+        }
+      >
         <LiveRedirect
           opts={"data-id": "subject_name"}
           aria-label={e(@character, :username, "") <> " profile"}
-          class="font-semibold text-base-content hover:underline "
-          to={path(@character)}>
-          <Bonfire.UI.Common.AvatarLive user={@profile} comment={@showing_within == :thread && @viewing_main_object != true} />
+          class="font-semibold text-base-content hover:underline"
+          to={path(@character)}
+        >
+          <Bonfire.UI.Common.AvatarLive
+            user={@profile}
+            comment={@showing_within == :thread && @viewing_main_object != true}
+          />
         </LiveRedirect>
       </div>
       <div class="flex items-center justify-between leading-[16px] min-w-0 space-x-1 w-full">
-        
         <div class="feed-clickable flex items-center flex-1 leading-[16px]">
-          {#if @thread_mode == :flat && @current_user && ulid(@current_user) == maybe_get(@character, :id) } 
+          {#if @thread_mode == :flat && @current_user && ulid(@current_user) == maybe_get(@character, :id)}
             <LiveRedirect
               opts={"data-id": "subject_name"}
               aria-label={e(@character, :username, "") <> " profile"}
-              class={"link link-hover font-semibold leading-[16px] text-sm"}
-              to={path(@character)}>
-              {l "You"}
+              class="link link-hover font-semibold leading-[16px] text-sm"
+              to={path(@character)}
+            >
+              {l("You")}
             </LiveRedirect>
           {#else}
             <LiveRedirect
               opts={"data-id": "subject_name"}
               aria-label={e(@character, :username, "") <> " profile"}
-              class="leading-[16px] "
-              to={path(@character)}>
+              class="leading-[16px]"
+              to={path(@character)}
+            >
               <span class="text-sm font-semibold link link-hover">{e(@profile, :name, "Anonymous")}</span>
               <span
-              :if={e(@character, :username, nil)}
-              class="ml-1 text-sm font-normal no-underline truncate ellipsis text-base-content text-opacity-60 subject_username">
+                :if={e(@character, :username, nil)}
+                class="ml-1 text-sm font-normal no-underline truncate ellipsis text-base-content text-opacity-60 subject_username"
+              >
                 @{e(@character, :username, "")}
               </span>
             </LiveRedirect>
           {/if}
         </div>
-        <Bonfire.UI.Social.Activity.DateAgoLive 
+        <Bonfire.UI.Social.Activity.DateAgoLive
           permalink={@permalink}
           date_ago={@date_ago}
           object={@object}
           object_type={@object_type}
-          object_boundary={@object_boundary} 
+          object_boundary={@object_boundary}
           showing_within={@showing_within}
-          verb_display={@verb_display} />
+          verb_display={@verb_display}
+        />
       </div>
     </div>
   {/if}
 </div>
 
-<LiveRedirect 
+<LiveRedirect
   to={@permalink}
   :if={e(@activity, :replied, :thread, :named, :name, nil) && @showing_within in [:feed]}
   class="flex items-center mt-2 text-sm font-medium"
-  >
+>
   <Icon outline="ArrowRight" class="w-4 h-4 text-base-content/80" />
-  <span class="mx-1">{l "in"}</span> <span class="link">{e(@activity, :replied, :thread, :named, :name, "")}</span>
+  <span class="mx-1">{l("in")}</span> <span class="link">{e(@activity, :replied, :thread, :named, :name, "")}</span>
 </LiveRedirect>

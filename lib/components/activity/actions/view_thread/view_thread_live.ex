@@ -5,5 +5,4 @@ defmodule Bonfire.UI.Social.Activity.ViewThreadLive do
   prop object_id, :string
   prop permalink, :string
   prop replied, :any
-
 end

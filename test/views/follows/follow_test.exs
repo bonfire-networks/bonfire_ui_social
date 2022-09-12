@@ -1,13 +1,10 @@
 defmodule Bonfire.Social.Follows.Test do
-
   use Bonfire.UI.Social.ConnCase, async: true
   alias Bonfire.Social.Fake
   alias Bonfire.Social.Posts
   alias Bonfire.Social.Follows
 
-
   describe "follow" do
-
     test "when I click follow on someone's profile" do
       some_account = fake_account!()
       someone = fake_user!(some_account)
@@ -17,11 +14,13 @@ defmodule Bonfire.Social.Follows.Test do
 
       conn = conn(user: me, account: my_account)
       next = Bonfire.Common.URIs.path(someone)
-      {view, doc} = floki_live(conn, next) #|> IO.inspect
+      # |> IO.inspect
+      {view, doc} = floki_live(conn, next)
 
-      assert follow = view
-      |> element("[data-id='follow']")
-      |> render_click()
+      assert follow =
+               view
+               |> element("[data-id='follow']")
+               |> render_click()
 
       assert true == Follows.following?(me, someone)
 
@@ -29,15 +28,13 @@ defmodule Bonfire.Social.Follows.Test do
       live_pubsub_wait(view)
 
       assert view
-      |> render()
-      ~> Floki.find("[data-id=unfollow]")
-      |> Floki.text()  =~ "Unfollow"
+             |> render()
+             ~> Floki.find("[data-id=unfollow]")
+             |> Floki.text() =~ "Unfollow"
     end
-
   end
 
   describe "unfollow" do
-
     test "when I click unfollow on someone's profile" do
       some_account = fake_account!()
       someone = fake_user!(some_account)
@@ -50,7 +47,8 @@ defmodule Bonfire.Social.Follows.Test do
 
       conn = conn(user: me, account: my_account)
       next = Bonfire.Common.URIs.path(someone) |> info("path")
-      {view, doc} = floki_live(conn, next) #|> IO.inspect
+      # |> IO.inspect
+      {view, doc} = floki_live(conn, next)
 
       assert unfollow = view |> element("[data-id='unfollow']") |> render_click()
       assert false == Follows.following?(me, someone)
@@ -58,9 +56,9 @@ defmodule Bonfire.Social.Follows.Test do
       live_pubsub_wait(view)
 
       assert view
-      |> render()
-      ~> Floki.find("[data-id=follow]")
-      |> Floki.text() =~ "Follow"
+             |> render()
+             ~> Floki.find("[data-id=follow]")
+             |> Floki.text() =~ "Follow"
     end
   end
 end

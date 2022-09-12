@@ -28,19 +28,23 @@ defmodule Bonfire.UI.Social.ThreadLive do
   prop showing_within, :any, default: :thread
   prop loading, :boolean, default: false
 
-  def update(%{replies: replies, page_info: page_info, loaded_async: true} = assigns, socket) when is_list(replies) and is_map(page_info) do
+  def update(%{replies: replies, page_info: page_info, loaded_async: true} = assigns, socket)
+      when is_list(replies) and is_map(page_info) do
     info("showing async-loaded replies")
-    {:ok, socket
-      |> assign(assigns)
-    }
+
+    {:ok,
+     socket
+     |> assign(assigns)}
   end
 
-  def update(%{replies: replies, page_info: page_info} = assigns, socket) when is_list(replies) and is_map(page_info) do
+  def update(%{replies: replies, page_info: page_info} = assigns, socket)
+      when is_list(replies) and is_map(page_info) do
     info("showing preloaded replies")
-    {:ok, socket
-      |> assign(assigns)
-      |> LiveHandler.thread_init()
-    }
+
+    {:ok,
+     socket
+     |> assign(assigns)
+     |> LiveHandler.thread_init()}
   end
 
   def update(%{new_reply: new_reply}, socket) when is_map(new_reply) do
@@ -49,23 +53,27 @@ defmodule Bonfire.UI.Social.ThreadLive do
     thread_id = e(socket.assigns, :thread_id, nil)
 
     if e(socket.assigns, :thread_mode, nil) == :flat do
-        debug("flat thread")
+      debug("flat thread")
 
-      object_id = e(new_reply, :object, :id, nil) || e(new_reply, :activity, :object, :id, nil) || e(new_reply, :id, nil)
-      permitted? = object_id && Bonfire.Common.Pointers.exists?([id: object_id], current_user: current_user(socket)) |> debug("double check boundary upon receiving a LivePush") # Note: doing this hear temporarily while not using pushed comment for nested threads
+      object_id =
+        e(new_reply, :object, :id, nil) || e(new_reply, :activity, :object, :id, nil) ||
+          e(new_reply, :id, nil)
+
+      # Note: doing this hear temporarily while not using pushed comment for nested threads
+      permitted? =
+        object_id &&
+          Bonfire.Common.Pointers.exists?([id: object_id], current_user: current_user(socket))
+          |> debug("double check boundary upon receiving a LivePush")
 
       if permitted? do
         replies = e(socket.assigns, :replies, []) ++ [new_reply]
 
-        {:ok, socket
-        |> assign(
-            replies: replies
-          )
-        }
+        {:ok,
+         socket
+         |> assign(replies: replies)}
       else
         {:ok, socket}
       end
-
     else
       debug("nested thread")
 
@@ -73,14 +81,17 @@ defmodule Bonfire.UI.Social.ThreadLive do
       activity_id = e(new_reply, :activity, :id, nil) || e(new_reply, :id, nil)
 
       thread_url =
-          if is_struct(e(socket.assigns, :object, nil)) do
-            path(e(socket.assigns, :object, nil))
-          else
-            "/discussion/#{thread_id}"
-          end
+        if is_struct(e(socket.assigns, :object, nil)) do
+          path(e(socket.assigns, :object, nil))
+        else
+          "/discussion/#{thread_id}"
+        end
 
       permalink = "#{thread_url}#activity-#{activity_id}"
-      {:ok, socket
+
+      {
+        :ok,
+        socket
         |> patch_to(permalink)
         # |> LiveHandler.load_thread()
       }
@@ -101,7 +112,7 @@ defmodule Bonfire.UI.Social.ThreadLive do
       # {:ok, socket
       #   |> assign(
       #     replies: replies,
-      #     threaded_replies: Bonfire.Social.Threads.arrange_replies_tree(replies) |> dump()
+      #     threaded_replies: Bonfire.Social.Threads.arrange_replies_tree(replies) |> debug()
       #   )
       # }
     end
@@ -116,16 +127,16 @@ defmodule Bonfire.UI.Social.ThreadLive do
     debug("Load comments")
     # debug(assigns, "Thread: assigns")
 
-    {:ok, socket
-    |> assign(assigns)
-    |> LiveHandler.thread_init()
-    |> LiveHandler.load_thread_maybe_async()
-    }
+    {:ok,
+     socket
+     |> assign(assigns)
+     |> LiveHandler.thread_init()
+     |> LiveHandler.load_thread_maybe_async()}
   end
 
+  def handle_event(action, attrs, socket),
+    do: Bonfire.UI.Common.LiveHandlers.handle_event(action, attrs, socket, __MODULE__)
 
-  def handle_event(action, attrs, socket), do: Bonfire.UI.Common.LiveHandlers.handle_event(action, attrs, socket, __MODULE__)
-
-  def handle_info(info, socket), do: Bonfire.UI.Common.LiveHandlers.handle_info(info, socket, __MODULE__)
-
+  def handle_info(info, socket),
+    do: Bonfire.UI.Common.LiveHandlers.handle_info(info, socket, __MODULE__)
 end

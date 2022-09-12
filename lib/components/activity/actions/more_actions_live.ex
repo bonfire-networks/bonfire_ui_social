@@ -16,9 +16,11 @@ defmodule Bonfire.UI.Social.Activity.MoreActionsLive do
   def subject(activity, object) do
     e(activity, :subject, nil) || e(object, :created, :creator, nil)
   end
+
   def subject_id(activity, object) do
     ulid(subject(activity, object))
   end
+
   def name(activity, object) do
     e(subject(activity, object), :profile, :name, l("this user"))
   end

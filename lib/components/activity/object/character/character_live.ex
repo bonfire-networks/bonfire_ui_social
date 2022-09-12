@@ -13,16 +13,17 @@ defmodule Bonfire.UI.Social.Activity.CharacterLive do
   def the_other(activity, object, context) do
     current_user = current_user(context)
 
-    if e(activity, :verb, :verb, nil) in ["Follow"] and ulid(object)==ulid(current_user) and e(activity, :subject, :profile, nil) do
+    if e(activity, :verb, :verb, nil) in ["Follow"] and ulid(object) == ulid(current_user) and
+         e(activity, :subject, :profile, nil) do
       e(activity, :subject, nil)
     else
       object
     end
   end
 
-  def preloads(), do: [
-    :character,
-    profile: [:icon],
-  ]
-
+  def preloads(),
+    do: [
+      :character,
+      profile: [:icon]
+    ]
 end

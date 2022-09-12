@@ -9,5 +9,4 @@ defmodule Bonfire.UI.Social.Activity.RepliedDateAgoLive do
   prop permalink, :string
   prop object_type, :any
   prop object_boundary, :any, default: nil
-
 end

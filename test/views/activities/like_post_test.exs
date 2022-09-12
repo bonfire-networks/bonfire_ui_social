@@ -1,42 +1,42 @@
 defmodule Bonfire.Social.Activities.LikePost.Test do
-
   use Bonfire.UI.Social.ConnCase, async: true
   alias Bonfire.Social.Fake
   alias Bonfire.Social.Posts
   alias Bonfire.Social.Likes
   alias Bonfire.Social.Follows
 
-
   describe "like a post" do
-
     test "works" do
       poster = fake_user!()
       content = "here is an epic html post"
       attrs = %{post_content: %{html_body: content}}
-      assert {:ok, post} = Posts.publish(current_user: poster, post_attrs: attrs, boundary: "local")
+
+      assert {:ok, post} =
+               Posts.publish(current_user: poster, post_attrs: attrs, boundary: "local")
 
       some_account = fake_account!()
       someone = fake_user!(some_account)
       conn = conn(user: someone, account: some_account)
 
       next = "/local"
-      {view, doc} = floki_live(conn, next) #|> IO.inspect
+      # |> IO.inspect
+      {view, doc} = floki_live(conn, next)
+
       assert view
-      |> element("[data-id='like_action']")
-      # |> info
-      |> render_click()
+             |> element("[data-id='like_action']")
+             # |> info
+             |> render_click()
 
       # the html returned by render_click isn't updated to show the change (probably because it uses ComponentID and pubsub) even though this works in the browser
       live_pubsub_wait(view)
 
       assert view
-      |> render()
-      |> dump()
-      ~> Floki.find("[data-id=like_action]")
-      |> Floki.text()  =~ "Liked"
+             |> render()
+             |> debug()
+             ~> Floki.find("[data-id=like_action]")
+             |> Floki.text() =~ "Liked"
 
       assert true == Likes.liked?(someone, post)
-
     end
 
     # test "shows the right number of likes" do
@@ -69,16 +69,16 @@ defmodule Bonfire.Social.Activities.LikePost.Test do
     #   assert true == Likes.liked?(someone, post)
 
     # end
-
   end
 
   describe "unlike a post" do
-
     test "works" do
       poster = fake_user!()
       content = "here is an epic html post"
       attrs = %{post_content: %{html_body: content}}
-      assert {:ok, post} = Posts.publish(current_user: poster, post_attrs: attrs, boundary: "local")
+
+      assert {:ok, post} =
+               Posts.publish(current_user: poster, post_attrs: attrs, boundary: "local")
 
       some_account = fake_account!()
       someone = fake_user!(some_account)
@@ -88,16 +88,16 @@ defmodule Bonfire.Social.Activities.LikePost.Test do
       assert true == Likes.liked?(someone, post)
 
       next = "/local"
-      {view, doc} = floki_live(conn, next) #|> IO.inspect
+      # |> IO.inspect
+      {view, doc} = floki_live(conn, next)
+
       assert view
-      |> element(".feed button.like")
-      |> render_click()
-      |> Floki.text() =~ "Like"
+             |> element(".feed button.like")
+             |> render_click()
+             |> Floki.text() =~ "Like"
 
       assert false == Likes.liked?(someone, post)
-
     end
-
   end
 
   # test "As a user I want to see the activity total likes" do
@@ -125,5 +125,4 @@ defmodule Bonfire.Social.Activities.LikePost.Test do
   #     |> List.last
   #     |> Floki.text =~ "Like (1)"
   # end
-
 end

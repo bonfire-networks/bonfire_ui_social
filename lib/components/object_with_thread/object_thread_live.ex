@@ -1,4 +1,4 @@
-defmodule  Bonfire.UI.Social.ObjectThreadLive do
+defmodule Bonfire.UI.Social.ObjectThreadLive do
   use Bonfire.UI.Common.Web, :stateless_component
 
   prop object_id, :string, default: nil
@@ -45,7 +45,6 @@ defmodule  Bonfire.UI.Social.ObjectThreadLive do
   #   }
   # end
 
-
   # def participants(assigns) do
   #   # if e(assigns, :participants, nil) do
   #     e(assigns, :participants, [])
@@ -57,5 +56,4 @@ defmodule  Bonfire.UI.Social.ObjectThreadLive do
   #   #   # to_circles = e(assigns, :to_circles, []) ++ participant_tuples
   #   # end
   # end
-
 end

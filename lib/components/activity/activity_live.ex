@@ -28,19 +28,23 @@ defmodule Bonfire.UI.Social.ActivityLive do
   @create_or_reply_verbs @create_verbs ++ @reply_verbs
 
   def preload(list_of_assigns) do
-    Bonfire.Boundaries.LiveHandler.maybe_preload_and_check_boundaries(list_of_assigns, verbs: [:read], caller_module: __MODULE__)
+    Bonfire.Boundaries.LiveHandler.maybe_preload_and_check_boundaries(list_of_assigns,
+      verbs: [:read],
+      caller_module: __MODULE__
+    )
   end
 
   def update(assigns, %{assigns: %{activity_components: activity_components}} = socket) do
     debug("Activity prepared already")
     # debug(activity_components)
-    {:ok, socket } #|> assign(assigns)} # FYI: assigning blindly here causes problems
+    # |> assign(assigns)} # FYI: assigning blindly here causes problems
+    {:ok, socket}
   end
 
   def update(assigns, socket) do
-    {:ok, socket
-          |> assign(prepare(assigns))
-    }
+    {:ok,
+     socket
+     |> assign(prepare(assigns))}
   end
 
   def prepare(%{activity: %{} = activity} = assigns) do
@@ -52,7 +56,8 @@ defmodule Bonfire.UI.Social.ActivityLive do
       # |> repo().maybe_preload(:media) # FIXME
       # |> debug("Activity provided")
       |> Map.put(:object, Activities.object_from_activity(assigns))
-      # |> dump("Activity with :object")
+
+    # |> debug("Activity with :object")
 
     verb =
       Activities.verb_maybe_modify(
@@ -66,55 +71,56 @@ defmodule Bonfire.UI.Social.ActivityLive do
     object_type = Types.object_type(activity.object) |> debug("object_type")
     object_type_readable = Types.object_type_display(object_type)
 
-    thread = e(assigns, :thread_object, nil) || e(activity, :replied, :thread, nil) || e(activity, :replied, :thread_id, nil)
+    thread =
+      e(assigns, :thread_object, nil) || e(activity, :replied, :thread, nil) ||
+        e(activity, :replied, :thread_id, nil)
+
     thread_id = ulid(thread)
     # debug(thread, "thread")
-    thread_url = if thread do
-      if is_struct(thread) do
-        path(thread)
+    thread_url =
+      if thread do
+        if is_struct(thread) do
+          path(thread)
+        else
+          "/discussion/#{thread_id}"
+        end
       else
-        "/discussion/#{thread_id}"
+        e(assigns, :thread_url, nil)
       end
-    else
-      e(assigns, :thread_url, nil)
-    end
 
     comment_id = ulid(activity) || ulid(activity.object)
     # permalink = path(activity.object)
     permalink =
-      if thread_url && ulid(thread) !=comment_id,
+      if thread_url && ulid(thread) != comment_id,
         do: "#{thread_url}#activity-#{comment_id}",
         else: "#{path(activity.object)}#"
+
     # debug(permalink, "permalink")
 
-    assigns = assigns
-    |> assigns_merge(
-      activity: activity |> Map.drop([:object]),
-      object: activity.object,
-      object_id: e(activity.object, :id, nil) || e(activity, :id, "no-object-id"),
-      object_type: object_type,
-      object_type_readable: object_type_readable,
-      date_ago: date_from_now(ulid(activity) || ulid(activity.object)),
-      verb: verb,
-      verb_display: verb_display,
-      created_verb_display: created_verb_display,
-      permalink: permalink,
-      thread_url: thread_url,
-      thread_id: thread_id
-    )
-    |> Map.new()
-
-    components = (
-      component_activity_subject(verb, activity, assigns)
-      ++
-      component_maybe_in_reply_to(verb, activity, assigns)
-      ++
-      component_object(verb, activity, object_type)
-      ++
-      component_maybe_attachments(activity, assigns)
-      ++
-      component_actions(verb, activity, assigns)
+    assigns =
+      assigns
+      |> assigns_merge(
+        activity: activity |> Map.drop([:object]),
+        object: activity.object,
+        object_id: e(activity.object, :id, nil) || e(activity, :id, "no-object-id"),
+        object_type: object_type,
+        object_type_readable: object_type_readable,
+        date_ago: date_from_now(ulid(activity) || ulid(activity.object)),
+        verb: verb,
+        verb_display: verb_display,
+        created_verb_display: created_verb_display,
+        permalink: permalink,
+        thread_url: thread_url,
+        thread_id: thread_id
       )
+      |> Map.new()
+
+    components =
+      (component_activity_subject(verb, activity, assigns) ++
+         component_maybe_in_reply_to(verb, activity, assigns) ++
+         component_object(verb, activity, object_type) ++
+         component_maybe_attachments(activity, assigns) ++
+         component_actions(verb, activity, assigns))
       |> Utils.filter_empty([])
       |> Enum.map(fn
         c when is_atom(c) -> {c, nil}
@@ -123,83 +129,102 @@ defmodule Bonfire.UI.Social.ActivityLive do
       |> debug("components")
 
     assigns_merge(assigns, activity_components: components)
-    # |> dump("assigns")
+    # |> debug("assigns")
   end
 
   def render(%{activity: _, activity_components: _} = assigns) do
     ~F"""
-      <article
-        x-data={"{
+    <article
+      x-data={"{
           activity_active: false,
-          collapsed: #{String.length(e(@object, :post_content, :html_body, "")) > 150 && ulid(@object) != nil and e(@activity, :replied, :reply_to_id, nil) == nil and ulid(@activity) == nil and e(assigns, :showing_within, nil) != :widget and e(assigns, :showing_within, nil) != :search}}"
-        }
-        id={"activity-#{@activity_inception}-"<>( ulid(@activity) || e(@object, :id, "no-id") )}
-        aria-label="user activity"
-        role="article"
-        tabIndex="0"
-        @mouseenter="activity_active = true"
-        @mouseleave="activity_active = false"
-        class={
+          collapsed: #{String.length(e(@object, :post_content, :html_body, "")) > 150 && ulid(@object) != nil and e(@activity, :replied, :reply_to_id, nil) == nil and ulid(@activity) == nil and e(assigns, :showing_within, nil) != :widget and e(assigns, :showing_within, nil) != :search}}"}
+      id={"activity-#{@activity_inception}-" <> (ulid(@activity) || e(@object, :id, "no-id"))}
+      aria-label="user activity"
+      role="article"
+      tabIndex="0"
+      @mouseenter="activity_active = true"
+      @mouseleave="activity_active = false"
+      class={
         "p-3 activity relative pl-16 group bg-base-100 " <> e(assigns, :class, ""),
-        "!pl-3":  e(assigns, :showing_within, :feed) == :feed || e(assigns, :showing_within, nil) == :notifications ,
-        "activity_inception bg-base-content/10 !m-0 opacity-100 before:!left-2 before:top-1 before:bottom-1": e(assigns, :activity_inception, nil) != nil and  e(assigns, :thread_mode, nil) == :flat,
+        "!pl-3":
+          e(assigns, :showing_within, :feed) == :feed ||
+            e(assigns, :showing_within, nil) == :notifications,
+        "activity_inception bg-base-content/10 !m-0 opacity-100 before:!left-2 before:top-1 before:bottom-1":
+          e(assigns, :activity_inception, nil) != nil and e(assigns, :thread_mode, nil) == :flat,
         "!p-3 mt-3 pt-6 rounded-md shadow": e(assigns, :viewing_main_object, nil) == true,
-        "main_reply_to !rounded-none !shadow-none mb-2 p-2 py-1 mt-2 relative before:absolute before:content-[''] before:w-1 before:bg-base-content/40 before:left-0 before:top-0 before:bottom-0 opacity-60 !border-none": ulid(@object) != nil and e(@activity, :replied, :reply_to_id, nil) == nil and ulid(@activity) == nil and e(assigns, :showing_within, nil) != :widget and e(assigns, :showing_within, nil) != :search, # showing a quoted reply_to
-        "rounded-md shadow": e(assigns, :showing_within, nil) != :thread and e(assigns, :thread_mode, nil) != :flat,
-        "reply": ulid(@object) != nil and e(@activity, :replied, :reply_to_id, nil) != nil and ulid(@activity) != nil,
-        "border-l-2 border-primary !bg-primary/5": e(@activity, :seen, nil) == nil and @showing_within == :notifications and @activity_inception == nil,
+        # showing a quoted reply_to
+        "main_reply_to !rounded-none !shadow-none mb-2 p-2 py-1 mt-2 relative before:absolute before:content-[''] before:w-1 before:bg-base-content/40 before:left-0 before:top-0 before:bottom-0 opacity-60 !border-none":
+          ulid(@object) != nil and e(@activity, :replied, :reply_to_id, nil) == nil and
+            ulid(@activity) == nil and e(assigns, :showing_within, nil) != :widget and
+            e(assigns, :showing_within, nil) != :search,
+        "rounded-md shadow":
+          e(assigns, :showing_within, nil) != :thread and e(assigns, :thread_mode, nil) != :flat,
+        reply:
+          ulid(@object) != nil and e(@activity, :replied, :reply_to_id, nil) != nil and
+            ulid(@activity) != nil,
+        "border-l-2 border-primary !bg-primary/5":
+          e(@activity, :seen, nil) == nil and @showing_within == :notifications and
+            @activity_inception == nil,
         "border-r-2 border-primary": String.contains?(@url || "", @permalink)
-        }>
-        <form
-          :if={not is_nil(@feed_id) and @showing_within in [:messages, :thread, :notifications] and e(@activity, :subject, :id, nil) != ulid(current_user(assigns)) and e(@activity, :object, :created, :creator_id, nil) != ulid(current_user(assigns)) }
-          phx-submit="Bonfire.Social.Feeds:mark_seen"
-          phx-target={"#badge_counter_#{@feed_id || "missing_feed_id"}"}
-          x-intersect.once={intersect_event(e(@activity, :seen, nil))}>
-          <input type="hidden" name="feed_id" value={@feed_id} />
-          <input type="hidden" name="activity_id" value={ulid(@activity)} />
-        </form>
-        {#for {component, component_assigns} when is_atom(component) <- @activity_components || []}
-          <Dynamic.Component
-            module={component}
-            id={e(component_assigns, :id, nil)}
-            myself={nil}
-            created_verb_display={@created_verb_display}
-            showing_within={@showing_within}
-            thread_mode={@thread_mode}
-            participants={@participants || []}
-            activity={e(component_assigns, :activity, @activity)}
-            object={e(component_assigns, :object, @object)}
-            object_id={e(component_assigns, :object_id, @object_id)}
-            object_boundary={@object_boundary}
-            object_type={e(component_assigns, :object_type, @object_type)}
-            object_type_readable={e(component_assigns, :object_type_readable, @object_type_readable)}
-            date_ago={e(component_assigns, :date_ago, @date_ago)}
-            verb={e(component_assigns, :verb, @verb)}
-            verb_display={e(component_assigns, :verb_display, @verb_display)}
-            permalink={e(component_assigns, :permalink, @permalink)}
-            thread_url={@thread_url}
-            thread_id={@thread_id}
-            activity_inception={e(component_assigns, :activity_inception, @activity_inception)}
-            viewing_main_object={e(component_assigns, :viewing_main_object, @viewing_main_object)}
-            hide_reply={e(component_assigns, :hide_reply, @hide_reply)}
-            profile={e(component_assigns, :profile, nil)}
-            character={e(component_assigns, :character, nil)}
-            media={e(component_assigns, :media, nil)}
-          />
-        {/for}
-        <button
-          :if={ String.length(e(@object, :post_content, :html_body, "")) > 150 && ulid(@object) != nil and e(@activity, :replied, :reply_to_id, nil) == nil and ulid(@activity) == nil and e(assigns, :showing_within, nil) != :widget and e(assigns, :showing_within, nil) != :search}
-          @click="collapsed = ! collapsed"
-          class="normal-case btn btn-outline btn-sm">
-          <span x-show="collapsed">{l "Expand"}</span>
-          <span x-show="!collapsed">{l "Minimize"}</span>
-        </button>
-      </article>
+      }
+    >
+      <form
+        :if={not is_nil(@feed_id) and @showing_within in [:messages, :thread, :notifications] and
+          e(@activity, :subject, :id, nil) != ulid(current_user(assigns)) and
+          e(@activity, :object, :created, :creator_id, nil) != ulid(current_user(assigns))}
+        phx-submit="Bonfire.Social.Feeds:mark_seen"
+        phx-target={"#badge_counter_#{@feed_id || "missing_feed_id"}"}
+        x-intersect.once={intersect_event(e(@activity, :seen, nil))}
+      >
+        <input type="hidden" name="feed_id" value={@feed_id}>
+        <input type="hidden" name="activity_id" value={ulid(@activity)}>
+      </form>
+      {#for {component, component_assigns} when is_atom(component) <- @activity_components || []}
+        <Dynamic.Component
+          module={component}
+          id={e(component_assigns, :id, nil)}
+          myself={nil}
+          created_verb_display={@created_verb_display}
+          showing_within={@showing_within}
+          thread_mode={@thread_mode}
+          participants={@participants || []}
+          activity={e(component_assigns, :activity, @activity)}
+          object={e(component_assigns, :object, @object)}
+          object_id={e(component_assigns, :object_id, @object_id)}
+          object_boundary={@object_boundary}
+          object_type={e(component_assigns, :object_type, @object_type)}
+          object_type_readable={e(component_assigns, :object_type_readable, @object_type_readable)}
+          date_ago={e(component_assigns, :date_ago, @date_ago)}
+          verb={e(component_assigns, :verb, @verb)}
+          verb_display={e(component_assigns, :verb_display, @verb_display)}
+          permalink={e(component_assigns, :permalink, @permalink)}
+          thread_url={@thread_url}
+          thread_id={@thread_id}
+          activity_inception={e(component_assigns, :activity_inception, @activity_inception)}
+          viewing_main_object={e(component_assigns, :viewing_main_object, @viewing_main_object)}
+          hide_reply={e(component_assigns, :hide_reply, @hide_reply)}
+          profile={e(component_assigns, :profile, nil)}
+          character={e(component_assigns, :character, nil)}
+          media={e(component_assigns, :media, nil)}
+        />
+      {/for}
+      <button
+        :if={String.length(e(@object, :post_content, :html_body, "")) > 150 && ulid(@object) != nil and
+          e(@activity, :replied, :reply_to_id, nil) == nil and ulid(@activity) == nil and
+          e(assigns, :showing_within, nil) != :widget and e(assigns, :showing_within, nil) != :search}
+        @click="collapsed = ! collapsed"
+        class="normal-case btn btn-outline btn-sm"
+      >
+        <span x-show="collapsed">{l("Expand")}</span>
+        <span x-show="!collapsed">{l("Minimize")}</span>
+      </button>
+    </article>
     """
   end
 
   def render(%{activity: _} = assigns) do
     warn("ActivityLive: do preparation in render/1")
+
     prepare(assigns)
     |> Map.new()
     |> render()
@@ -209,43 +234,51 @@ defmodule Bonfire.UI.Social.ActivityLive do
     warn("ActivityLive: No activity provided")
 
     ~F"""
-
     """
   end
 
-  defp intersect_event(%{id: _}), do: nil # already seen
-  defp intersect_event(_), do: "$el.dispatchEvent( new Event(\"submit\", {bubbles: true, cancelable: true}) )"
+  # already seen
+  defp intersect_event(%{id: _}), do: nil
+
+  defp intersect_event(_),
+    do: "$el.dispatchEvent( new Event(\"submit\", {bubbles: true, cancelable: true}) )"
 
   # don't show subject twice
-  def component_activity_subject(_, _, %{object_type: Bonfire.Data.Identity.User}), do: [Bonfire.UI.Social.Activity.SubjectMinimalLive]
+  def component_activity_subject(_, _, %{object_type: Bonfire.Data.Identity.User}),
+    do: [Bonfire.UI.Social.Activity.SubjectMinimalLive]
 
   # quoting a reply_to <-- this is handled by the Bonfire.UI.Social.Activity.SubjectLive internally
   # def component_activity_subject(_, _, %{activity_inception: true}), do: [Bonfire.UI.Social.Activity.SubjectRepliedLive]
 
-  def component_activity_subject(verb, activity, %{object_type: object_type}) when verb in @react_verbs and object_type in [Bonfire.Data.Identity.User],
-    do: [
-      {Bonfire.UI.Social.Activity.SubjectMinimalLive, %{
-        verb: verb
-      }}
-    ]
+  def component_activity_subject(verb, activity, %{object_type: object_type})
+      when verb in @react_verbs and object_type in [Bonfire.Data.Identity.User],
+      do: [
+        {Bonfire.UI.Social.Activity.SubjectMinimalLive,
+         %{
+           verb: verb
+         }}
+      ]
 
   # reactions should show the reactor + original creator
   def component_activity_subject(verb, activity, assigns) when verb in @react_verbs,
-    do: [
-      {Bonfire.UI.Social.Activity.SubjectMinimalLive, %{
-        # activity: repo().maybe_preload(activity, subject: [:character]),
-        verb: verb
-      }}
-    ] ++ component_activity_maybe_creator(activity, assigns)
+    do:
+      [
+        {Bonfire.UI.Social.Activity.SubjectMinimalLive,
+         %{
+           # activity: repo().maybe_preload(activity, subject: [:character]),
+           verb: verb
+         }}
+      ] ++ component_activity_maybe_creator(activity, assigns)
 
   # replies (when shown in notifications)
   def component_activity_subject(verb, activity, %{showing_within: :notifications})
       when verb in @reply_verbs,
       do: [
-        {Bonfire.UI.Social.Activity.SubjectMinimalLive, %{
-          # activity: repo().maybe_preload(activity, subject: [:character]),
-          verb: verb
-        }}
+        {Bonfire.UI.Social.Activity.SubjectMinimalLive,
+         %{
+           # activity: repo().maybe_preload(activity, subject: [:character]),
+           verb: verb
+         }}
       ]
 
   # create (or reply) activities
@@ -267,15 +300,21 @@ defmodule Bonfire.UI.Social.ActivityLive do
 
   # other
   def component_activity_subject(verb, activity, assigns),
-      do: activity
+    do:
+      activity
       # |> debug("activity")
       |> component_activity_maybe_creator(assigns)
 
-  def component_activity_maybe_creator(_, %{object_type: object_type}) when object_type in [Bonfire.Data.Identity.User], do: []
+  def component_activity_maybe_creator(_, %{object_type: object_type})
+      when object_type in [Bonfire.Data.Identity.User],
+      do: []
 
   def component_activity_maybe_creator(%{object: %{id: _} = object} = activity, _),
-    do: object |> component_maybe_creator() #|> debug("based on object")
-     || component_maybe_creator(activity) #|> debug("activity")
+    # |> debug("based on object")
+    # |> debug("activity")
+    do:
+      object |> component_maybe_creator() ||
+        component_maybe_creator(activity)
 
   def component_activity_maybe_creator(activity, _) do
     component_maybe_creator(activity)
@@ -330,18 +369,24 @@ defmodule Bonfire.UI.Social.ActivityLive do
   #     |> component_maybe_creator()
 
   def component_maybe_creator(
-      %{
-        profile: %{id: _} = profile,
-        character: %{id: _} = character
-      } = _creator
-    ),
-    do: [{Bonfire.UI.Social.Activity.SubjectLive, %{profile: profile, character: character}}]
+        %{
+          profile: %{id: _} = profile,
+          character: %{id: _} = character
+        } = _creator
+      ),
+      do: [{Bonfire.UI.Social.Activity.SubjectLive, %{profile: profile, character: character}}]
 
-  def component_maybe_creator(%{provider: %Ecto.Association.NotLoaded{}, receiver: %Ecto.Association.NotLoaded{}} = object),
-    do:
-      object
-      |> repo().maybe_preload(provider: [:profile, :character], receiver: [:profile, :character])
-      |> component_maybe_creator()
+  def component_maybe_creator(
+        %{provider: %Ecto.Association.NotLoaded{}, receiver: %Ecto.Association.NotLoaded{}} =
+          object
+      ),
+      do:
+        object
+        |> repo().maybe_preload(
+          provider: [:profile, :character],
+          receiver: [:profile, :character]
+        )
+        |> component_maybe_creator()
 
   def component_maybe_creator(%{provider: %Ecto.Association.NotLoaded{}} = object),
     do:
@@ -367,25 +412,29 @@ defmodule Bonfire.UI.Social.ActivityLive do
   end
 
   def component_maybe_in_reply_to(verb, activity, %{
-    showing_within: showing_within,
-    viewing_main_object: false,
-    thread_mode: thread_mode})
-  when showing_within in [:thread, :smart_input]
-    and thread_mode not in [:flat], do: [] # do not show reply_to
+        showing_within: showing_within,
+        viewing_main_object: false,
+        thread_mode: thread_mode
+      })
+      # do not show reply_to
+      when showing_within in [:thread, :smart_input] and
+             thread_mode not in [:flat],
+      do: []
 
   def component_maybe_in_reply_to(
         verb,
         %{
           id: activity_id,
-          reply_to: %{
-            post_content: %{id: id} = _reply_to_post_content,
-            created: %{
-              creator: %{
-                character: %{id: _} = subject_character,
-                profile: %{id: _} = subject_profile
+          reply_to:
+            %{
+              post_content: %{id: id} = _reply_to_post_content,
+              created: %{
+                creator: %{
+                  character: %{id: _} = subject_character,
+                  profile: %{id: _} = subject_profile
+                }
               }
-            }
-          } = reply_to
+            } = reply_to
         },
         _
       )
@@ -499,11 +548,13 @@ defmodule Bonfire.UI.Social.ActivityLive do
     [Bonfire.UI.Social.Activity.UnknownLive]
   end
 
-  def component_for_object_type(type, %{post_content: %{html_body: _}}) when type in [Bonfire.Data.Social.Post],
-    do: [Bonfire.UI.Social.Activity.NoteLive]
+  def component_for_object_type(type, %{post_content: %{html_body: _}})
+      when type in [Bonfire.Data.Social.Post],
+      do: [Bonfire.UI.Social.Activity.NoteLive]
 
   def component_for_object_type(type, object) when type in [Bonfire.Data.Social.Post],
-    do: [] # for posts with no text content (eg. only with attachments)
+    # for posts with no text content (eg. only with attachments)
+    do: []
 
   def component_for_object_type(type, _) when type in [Bonfire.Data.Social.Message],
     do: [Bonfire.UI.Social.Activity.NoteLive]
@@ -513,9 +564,10 @@ defmodule Bonfire.UI.Social.ActivityLive do
 
   def component_for_object_type(type, _) when type in [Bonfire.Data.Identity.User],
     do: [Bonfire.UI.Social.Activity.CharacterLive]
-    # do: [{Bonfire.UI.Social.Activity.CharacterLive, %{
-    #     object: repo().maybe_preload(object, [:character, profile: :icon])
-    #   }}]
+
+  # do: [{Bonfire.UI.Social.Activity.CharacterLive, %{
+  #     object: repo().maybe_preload(object, [:character, profile: :icon])
+  #   }}]
 
   def component_for_object_type(type, _) when type in [Bonfire.Data.Social.Follow],
     do: [Bonfire.UI.Social.Activity.CharacterLive]
@@ -550,14 +602,22 @@ defmodule Bonfire.UI.Social.ActivityLive do
     [Bonfire.UI.Social.Activity.UnknownLive]
   end
 
-  def component_maybe_attachments(%{media: files}, assigns) when is_list(files) and length(files)>0 do
-    [{Bonfire.UI.Social.Activity.MediaLive, %{media: files, showing_within: e(assigns, :showing_within, :feed)}}]
+  def component_maybe_attachments(%{media: files}, assigns)
+      when is_list(files) and length(files) > 0 do
+    [
+      {Bonfire.UI.Social.Activity.MediaLive,
+       %{media: files, showing_within: e(assigns, :showing_within, :feed)}}
+    ]
   end
+
   def component_maybe_attachments(_, _assigns) do
     []
   end
 
-  def component_actions(_, _, %{activity_inception: activity_inception}) when not is_nil(activity_inception), do: [] # don't show any
+  # don't show any
+  def component_actions(_, _, %{activity_inception: activity_inception})
+      when not is_nil(activity_inception),
+      do: []
 
   # WIP: THIS NEEDS TO BE REFACTORED ACCORDING TO actions_for_object_type
   def component_actions("Flag", _, _), do: [Bonfire.UI.Social.FlaggedActionsLive]
@@ -628,7 +688,6 @@ defmodule Bonfire.UI.Social.ActivityLive do
   def component_show_process_actions(_activity),
     do: [Bonfire.UI.Social.Activity.ProcessActionsLive]
 
-
   def component_show_event_actions(activity) do
     [
       {Bonfire.UI.Social.Activity.EventActionsLive,
@@ -665,9 +724,8 @@ defmodule Bonfire.UI.Social.ActivityLive do
   # def object_link(text, %{character: %{username: username}}, class \\ "hover:underline font-bold"), do: "<a class='#{class}' href='/user/#{username}'>#{text}</a>"
   # def object_link(text, %{id: id}, class), do: "<a class='#{class}' href='/discussion/#{id}'>#{text}</a>"
 
-
   defdelegate handle_params(params, attrs, socket), to: Bonfire.UI.Common.LiveHandlers
+
   def handle_event(action, attrs, socket),
     do: Bonfire.UI.Common.LiveHandlers.handle_event(action, attrs, socket, __MODULE__)
-
 end

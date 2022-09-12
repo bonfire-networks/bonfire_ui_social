@@ -4,7 +4,12 @@ defmodule Bonfire.UI.Social.Activity.EconomicEventLive do
   prop activity, :map
   prop object, :map
 
-  @resource_preloads [:image, :current_location, onhand_quantity: [:unit], accounting_quantity: [:unit]]
+  @resource_preloads [
+    :image,
+    :current_location,
+    onhand_quantity: [:unit],
+    accounting_quantity: [:unit]
+  ]
 
   def preloads() do
     resource_preloads = Bonfire.UI.Social.Activity.EconomicResourceLive.preloads()
@@ -17,20 +22,22 @@ defmodule Bonfire.UI.Social.Activity.EconomicEventLive do
       resource_quantity: [:unit],
       effort_quantity: [:unit],
       resource_inventoried_as: resource_preloads,
-      to_resource_inventoried_as: resource_preloads,
+      to_resource_inventoried_as: resource_preloads
     ]
   end
 
   def activity_component(object) do
     object = prepare(object)
-    {__MODULE__,
-      [
-        object: object,
-        verb_display: Bonfire.Social.Activities.verb_display(e(object, :action, :label, e(object, :action_id, "")))
-      ]
-    }
-  end
 
+    {__MODULE__,
+     [
+       object: object,
+       verb_display:
+         Bonfire.Social.Activities.verb_display(
+           e(object, :action, :label, e(object, :action_id, ""))
+         )
+     ]}
+  end
 
   def prepare(object) do
     object
@@ -47,8 +54,8 @@ defmodule Bonfire.UI.Social.Activity.EconomicEventLive do
   end
 
   def maybe_preload_action(object) do
-    if module_enabled?(ValueFlows.EconomicEvent.EconomicEvents), do: ValueFlows.EconomicEvent.EconomicEvents.preload_action(object),
-    else: object
+    if module_enabled?(ValueFlows.EconomicEvent.EconomicEvents),
+      do: ValueFlows.EconomicEvent.EconomicEvents.preload_action(object),
+      else: object
   end
-
 end

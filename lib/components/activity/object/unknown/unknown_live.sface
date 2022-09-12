@@ -1,20 +1,35 @@
-
 <div class="py-2">
   <LiveRedirect to={@permalink}>
-    <div class="mb-2 text-sm font-medium text-base-content text-opacity-80 ">
-      <span :if={@object_type_readable && @object_type_readable !=""}>
+    <div class="mb-2 text-sm font-medium text-base-content text-opacity-80">
+      <span :if={@object_type_readable && @object_type_readable != ""}>
         {@object_type_readable}:
       </span>
-      {rich e(@object |> debug, :name, e(@object, :profile, :name, e(@object, :post_content, :name, e(@object, :name, e(@object, :title, l "Unsupported type or deleted object")))))}
+      {rich(
+        e(
+          @object |> debug,
+          :name,
+          e(
+            @object,
+            :profile,
+            :name,
+            e(
+              @object,
+              :post_content,
+              :name,
+              e(@object, :name, e(@object, :title, l("Unsupported type or deleted object")))
+            )
+          )
+        )
+      )}
     </div>
   </LiveRedirect>
 
   {#if e(@object, :summary, e(@object, :profile, :summary, nil))}
     <h3 class="text-xs tracking-wider text-primary-content-600 uppercase">Summary</h3>
-    <div class="mb-2 prose-sm prose text-primary-content-700 max-w-prose">{rich e(@object, :summary, e(@object, :profile, :summary, ""))}</div>
+    <div class="mb-2 prose-sm prose text-primary-content-700 max-w-prose">{rich(e(@object, :summary, e(@object, :profile, :summary, "")))}</div>
   {/if}
 
-  <article class='prose-sm prose max-w-prose'>
-    {rich e(@object, :html_body, e(@object, :note, e(@object, :html_body, "")))}
+  <article class="prose-sm prose max-w-prose">
+    {rich(e(@object, :html_body, e(@object, :note, e(@object, :html_body, ""))))}
   </article>
 </div>

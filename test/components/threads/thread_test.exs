@@ -1,10 +1,13 @@
 defmodule Bonfire.UI.Social.Threads.ThreadTest do
-
   use Bonfire.UI.Social.ConnCase, async: true
 
   alias Bonfire.Social.Fake
   alias Bonfire.Me.Users
-  alias Bonfire.Social.{Boosts, Likes, Follows, Posts}
+  alias Bonfire.Social.Boosts
+  alias Bonfire.Social.Likes
+  alias Bonfire.Social.Follows
+  alias Bonfire.Social.Posts
+
   alias Bonfire.Common.Repo
 
   test "When I reply to a thread, the activity appears without refreshing" do
@@ -12,5 +15,4 @@ defmodule Bonfire.UI.Social.Threads.ThreadTest do
 
   test "If I reply to a reply, the activity appears without refreshing" do
   end
-
 end

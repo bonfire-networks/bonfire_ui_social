@@ -1,8 +1,7 @@
-<Bonfire.UI.Social.FeedLive 
+<Bonfire.UI.Social.FeedLive
   id={e(@feed_id, :notifications)}
   feed_id={@feed_id}
   page_title={@page_title}
-  
   feed={@feed}
   page_info={@page_info}
   feedback_title={@feedback_title}

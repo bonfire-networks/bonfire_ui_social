@@ -1,12 +1,10 @@
 defmodule Bonfire.UI.Social.Notifications.Test do
-
   use Bonfire.UI.Social.ConnCase, async: true
   alias Bonfire.Social.Fake
   alias Bonfire.Social.Posts
   alias Bonfire.Social.Follows
 
   describe "show" do
-
     # test "with account" do
     #   account = fake_account!()
     #   conn = conn(account: account)
@@ -21,14 +19,13 @@ defmodule Bonfire.UI.Social.Notifications.Test do
       user = fake_user!(account)
       conn = conn(user: user, account: account)
       next = "/notifications"
-      {view, doc} = floki_live(conn, next) #|> IO.inspect
+      # |> IO.inspect
+      {view, doc} = floki_live(conn, next)
       refute [] == Floki.find(doc, ".feed")
     end
-
   end
 
   describe "DO NOT show" do
-
     test "when not logged in" do
       conn = conn()
       conn = get(conn, "/notifications")
@@ -42,6 +39,5 @@ defmodule Bonfire.UI.Social.Notifications.Test do
     #   {view, doc} = floki_live(conn, next) #|> IO.inspect
     #   assert [] == Floki.find(doc, ".feed") # TODO: what to show in this case?
     # end
-
   end
 end

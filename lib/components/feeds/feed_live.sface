@@ -1,59 +1,56 @@
-<div
-  id={@id || @feed_id}
-  role="feed"
-  aria-live="assertive"
-  aria-atomic="true"
-  class="feed">
-    <div class="flex flex-col mx-auto">
-      {#if length(@feed) > 0}
-      <div 
-        id={"feed:#{@feed_id || @id}"} 
-        data-id="feed" 
-        phx-update={e(@feed_update_mode, "append")} 
-        class="flex flex-col space-y-3">
+<div id={@id || @feed_id} role="feed" aria-live="assertive" aria-atomic="true" class="feed">
+  <div class="flex flex-col mx-auto">
+    {#if length(@feed) > 0}
+      <div
+        id={"feed:#{@feed_id || @id}"}
+        data-id="feed"
+        phx-update={e(@feed_update_mode, "append")}
+        class="flex flex-col space-y-3"
+      >
         {#for entry <- @feed}
-          {#case "#{@feed_id || @id}-"<>( e(entry, :id, nil) || e(entry, :activity, :id, nil) || e(entry, :object, :id, nil) || Pointers.ULID.generate())}
+          {#case "#{@feed_id || @id}-" <>
+              (e(entry, :id, nil) || e(entry, :activity, :id, nil) || e(entry, :object, :id, nil) ||
+                 Pointers.ULID.generate())}
             {#match cid}
               <div id={cid}>
-                <ActivityLive 
+                <ActivityLive
                   id={cid}
                   activity={e(entry, :activity, nil) || e(entry, :edge, nil) || entry}
                   showing_within={@showing_within}
                   verb_default={@verb_default}
                   feed_id={@feed_id}
-                  />
+                />
               </div>
             {#match _}
           {/case}
         {/for}
       </div>
+    {#else}
+      {#if @loading}
+        <div class="flex items-center py-12 place-content-center">
+          Loading...
+        </div>
+        {#case maybe_cute_gif()}
+          {#match url when is_binary(url)}
+            <div class="flex flex-row items-center justify-center my-12">
+              <img src={url}>
+            </div>
+          {#match _}
+        {/case}
       {#else}
-        {#if @loading}
-          <div class="flex items-center py-12 place-content-center">
-            Loading...
-          </div>
-          {#case maybe_cute_gif()}
-            {#match url when is_binary(url)}
-              <div class="flex flex-row items-center justify-center my-12">
-                <img src={url} />
-              </div>
-            {#match _}
-          {/case}
-        {#else}
-          <div id="empty-feed" class="flex items-center place-content-center">
-            <Bonfire.UI.Common.EmptyFeed
-              feedback_title={@feedback_title}
-              feedback_message={@feedback_message}
-            /> 
-          </div>
-        {/if}
+        <div id="empty-feed" class="flex items-center place-content-center">
+          <Bonfire.UI.Common.EmptyFeed
+            feedback_title={@feedback_title}
+            feedback_message={@feedback_message}
+          />
+        </div>
       {/if}
-      <Bonfire.UI.Common.LoadMoreLive 
-        :if={@page_info && e(@hide_load_more, false) != true}
-        live_handler={Bonfire.Social.Feeds} 
-        page_info={@page_info} 
-        target={@myself} 
-      />
-
-    </div>
+    {/if}
+    <Bonfire.UI.Common.LoadMoreLive
+      :if={@page_info && e(@hide_load_more, false) != true}
+      live_handler={Bonfire.Social.Feeds}
+      page_info={@page_info}
+      target={@myself}
+    />
+  </div>
 </div>

@@ -1,14 +1,14 @@
 <div
   :if={@current_user != nil and @showing_within not in [:notifications, :search]}
   aria-haspopup="true"
-  data-tip={l "More"}
-  class={"dropdown tooltip tooltip-bottom relative z-40 feed_activity relative ",
-  "dropdown-end": @showing_within != :widget,
-  "dropdown-top dropdown-end showing_within:widget": @showing_within == :widget
-  }>
-  <button 
-    tabindex="0"
-    class={"btn btn-ghost btn-circle btn-sm"}> 
+  data-tip={l("More")}
+  class={
+    "dropdown tooltip tooltip-bottom relative z-40 feed_activity relative ",
+    "dropdown-end": @showing_within != :widget,
+    "dropdown-top dropdown-end showing_within:widget": @showing_within == :widget
+  }
+>
+  <button tabindex="0" class="btn btn-ghost btn-circle btn-sm">
     <span class="text-opacity-50 text-base-content">
       <Icon solid="DotsHorizontal" class="w-4 h-4" />
     </span>
@@ -16,92 +16,81 @@
   <ul
     tabindex="0"
     class="w-60 z-[90] shadow menu dropdown-content bg-neutral-content rounded dropdown_actions
-    role="menu"
+    role="
+    menu"
     aria-orientation="vertical"
-    aria-labelledby="more-menu">
-
+    aria-labelledby="more-menu"
+  >
     <#slot {@extra_items} />
 
-      <li
-        class=" hover:bg-neutral hover:bg-opacity-20">
-        <Bonfire.UI.Common.OpenModalLive
-          id={Pointers.ULID.generate()} 
-          title_text={l "Tag with topic(s)"}
-          form_opts={%{"phx-submit"=> "Bonfire.Social.Objects:tag"}}
-          :let={autocomplete: autocomplete}
-          >
-          <input type="hidden" name="id" value={ulid(@object)} />
-          <select 
-            data-phx-autocomplete="Bonfire.Classify:autocomplete"
-            class="hidden tagify">
-            {#for cat <- autocomplete || []}
-              <option 
-                class="" 
-                value={ulid(cat)}>{e(cat, :profile, :name, nil)}</option>
-            {/for}
-          </select>
-        <div
-          class="flex-1"
-          id={:tag_topics}
-          phx-hook="InputOrSelectOne"
-          > 
-          <div
-            phx-update="ignore"
-            > 
-            <input 
-              name="tags" 
-              class="w-full input input-bordered tagify " />
+    <li class="hover:bg-neutral hover:bg-opacity-20">
+      <Bonfire.UI.Common.OpenModalLive
+        id={Pointers.ULID.generate()}
+        title_text={l("Tag with topic(s)")}
+        form_opts={%{"phx-submit" => "Bonfire.Social.Objects:tag"}}
+        :let={autocomplete: autocomplete}
+      >
+        <input type="hidden" name="id" value={ulid(@object)}>
+        <select data-phx-autocomplete="Bonfire.Classify:autocomplete" class="hidden tagify">
+          {#for cat <- autocomplete || []}
+            <option class="" value={ulid(cat)}>{e(cat, :profile, :name, nil)}</option>
+          {/for}
+        </select>
+        <div class="flex-1" id={:tag_topics} phx-hook="InputOrSelectOne">
+          <div phx-update="ignore">
+            <input name="tags" class="w-full input input-bordered tagify">
           </div>
         </div>
         <:open_btn>
           <div class="flex items-center gap-0">
             <Icon solid="Collection" class="w-4 h-4 mr-2 shrink-0 text-neutral text-opacity-70" />
             <div class="text-sm text-neutral">
-              {l "Tag with topic(s)"}
+              {l("Tag with topic(s)")}
             </div>
           </div>
         </:open_btn>
         <:action_btns>
-          <button 
-            class="normal-case btn-sm btn btn-primary">
-            {l "Tag"}
+          <button class="normal-case btn-sm btn btn-primary">
+            {l("Tag")}
           </button>
         </:action_btns>
       </Bonfire.UI.Common.OpenModalLive>
     </li>
 
     <!-- Flag the action -->
-    <li 
-      :if={ulid(@current_user) != subject_id(@activity, @object) and @verb !="Flag"}
-      class=" hover:bg-neutral hover:bg-opacity-20">
-      <Bonfire.UI.Common.FlagActionLive 
+    <li
+      :if={ulid(@current_user) != subject_id(@activity, @object) and @verb != "Flag"}
+      class="hover:bg-neutral hover:bg-opacity-20"
+    >
+      <Bonfire.UI.Common.FlagActionLive
         object={@object}
         flagged={@flagged}
-        label={l("Flag this")<>" "<>e(@object_type_readable, l "object")}
+        label={l("Flag this") <> " " <> e(@object_type_readable, l("object"))}
         class="flex items-center py-2 text-sm text-neutral"
       />
     </li>
 
     <!-- Flag the author -->
-    <li 
-      :if={ulid(@current_user) != subject_id(@activity, @object) and @verb !="Flag"}
-      class=" hover:bg-neutral hover:bg-opacity-20">
-      <Bonfire.UI.Common.FlagActionLive 
+    <li
+      :if={ulid(@current_user) != subject_id(@activity, @object) and @verb != "Flag"}
+      class="hover:bg-neutral hover:bg-opacity-20"
+    >
+      <Bonfire.UI.Common.FlagActionLive
         object={@object}
         flagged={@flagged}
-        label={l("Flag ")<>" "<>name(@activity, @object)}
+        label={l("Flag ") <> " " <> name(@activity, @object)}
         class="flex items-center py-2 text-sm text-neutral"
       />
     </li>
 
-    <!-- Block the author & Block the author instance wide-->
+    <!-- Block the author & Block the author instance wide -->
     <Bonfire.Boundaries.Web.BlockMenuButtonsLive
       object={subject(@activity, @object)}
       peered={e(@object, :peered, nil)}
     />
 
     <!-- Delete the activity: WIP hiding it for first beta release -->
-    
+
     <!-- <li 
       :if={@object_type not in [Bonfire.Data.Social.Message] and ulid(@current_user) == subject_id(@activity, @object) or Bonfire.Me.Users.is_admin?(@current_user)}
       class=" hover:bg-neutral hover:bg-opacity-20">
@@ -131,42 +120,41 @@
       </OpenModalLive>
     </li> -->
 
-
     <!-- Delete the object -->
-    <li 
-      :if={ulid(@current_user) == subject_id(@activity, @object) 
-        or ( Bonfire.Me.Users.is_admin?(@current_user) 
-            || Bonfire.Boundaries.can?(@__context__, :delete, :instance) )
-          && Types.object_type(@object) !=Bonfire.Data.Identity.User }
-      class=" hover:bg-neutral hover:bg-opacity-20">
+    <li
+      :if={ulid(@current_user) == subject_id(@activity, @object) or
+        ((Bonfire.Me.Users.is_admin?(@current_user) ||
+            Bonfire.Boundaries.can?(@__context__, :delete, :instance)) &&
+           Types.object_type(@object) != Bonfire.Data.Identity.User)}
+      class="hover:bg-neutral hover:bg-opacity-20"
+    >
       <OpenModalLive
-        id={Pointers.ULID.generate()} 
-        title_text={l("Delete this")<>" "<>e(@object_type_readable, l "object")}
-        >
-        <!-- {rich l "You may be able to undo this deletion *in some cases*, but in any case the data will eventually be permanently deleted from this instance."}  -->
-        {l "A request will be sent to remote instances to delete it as well."} 
+        id={Pointers.ULID.generate()}
+        title_text={l("Delete this") <> " " <> e(@object_type_readable, l("object"))}
+      >
+        <!-- {rich l "You may be able to undo this deletion *in some cases*, but in any case the data will eventually be permanently deleted from this instance."} -->
+        {l("A request will be sent to remote instances to delete it as well.")}
         <:open_btn>
           <div class="flex items-center text-sm text-neutral">
             <Icon solid="Trash" class="w-4 h-4 mr-2 shrink-0 text-neutral text-opacity-70" />
             <span class="truncate ellipsis">
-              {l("Delete this")} {e(@object_type_readable, l "object")}
+              {l("Delete this")} {e(@object_type_readable, l("object"))}
             </span>
           </div>
         </:open_btn>
         <:action_btns>
-          <button 
-          phx-click={"Bonfire.Social.Objects:delete"} 
-          phx-value-id={e(@object, :id, "")}
-          class="normal-case btn btn-error btn-sm">
-          <Icon solid="Trash" class="w-4 h-4 mr-2 shrink-0" />
-          <span class="truncate ellipsis">{l("Delete this")} {e(@object_type_readable, l "object")}</span>
-        </button>
+          <button
+            phx-click="Bonfire.Social.Objects:delete"
+            phx-value-id={e(@object, :id, "")}
+            class="normal-case btn btn-error btn-sm"
+          >
+            <Icon solid="Trash" class="w-4 h-4 mr-2 shrink-0" />
+            <span class="truncate ellipsis">{l("Delete this")} {e(@object_type_readable, l("object"))}</span>
+          </button>
         </:action_btns>
-
       </OpenModalLive>
     </li>
 
     <#slot {@admin_items} />
-
   </ul>
 </div>

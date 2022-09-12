@@ -1,43 +1,43 @@
-
-<div 
+<div
   x-data="{
     width: window.innerWidth 
   }"
   @resize.window.debounce.100="width = window.innerWidth"
-  class="relative z-20 flex items-center tooltip tooltip-bottom" 
-  data-tip={l "Reply"}
-  >
-  {#if Settings.get([:ui, :smart_input_as], nil, @__context__)==:sidebar and @thread_mode != :flat}
-  <button 
-    x-cloak
-    x-show="width < 1200"
-    phx-click="Bonfire.Social.Feeds:reply_to_activity"
-    phx-value-id={@object_id}
-    phx-target={if @activity_id, do: "#activity--"<>e(@activity_id, "")}
-    @click={"smart_input_title_text = '#{l "Reply"}'; smart_input_fullscreen = true; show_smart_input();"}>
-    <div class={"btn btn-ghost btn-circle btn-sm"}> 
-      <span class="text-opacity-50 text-base-content">
-        <Icon outline="Reply" class="w-4 h-4 stroke-1" />
-        <span class="sr-only">{l "Reply"}</span>
-      </span>
-    </div>
-  </button>
-  <button
-    x-show="width > 1200"
-    data-id="action_reply"
-    phx-click="Bonfire.Social.Feeds:reply_to_activity"
-    phx-value-id={@object_id}
-    phx-target={if @activity_id, do: "#activity--"<>e(@activity_id, "")}
-  >
-    <div class={"btn btn-ghost btn-circle btn-sm"}> 
-      <span class="text-opacity-50 text-base-content">
-        <Icon outline="Reply" class="w-4 h-4 stroke-1" />
-        <span class="sr-only">{l "Reply"}</span>
-      </span>
-    </div>
-  </button>
+  class="relative z-20 flex items-center tooltip tooltip-bottom"
+  data-tip={l("Reply")}
+>
+  {#if Settings.get([:ui, :smart_input_as], nil, @__context__) == :sidebar and @thread_mode != :flat}
+    <button
+      x-cloak
+      x-show="width < 1200"
+      phx-click="Bonfire.Social.Feeds:reply_to_activity"
+      phx-value-id={@object_id}
+      phx-target={if @activity_id, do: "#activity--" <> e(@activity_id, "")}
+      @click={"smart_input_title_text = '#{l("Reply")}'; smart_input_fullscreen = true; show_smart_input();"}
+    >
+      <div class="btn btn-ghost btn-circle btn-sm">
+        <span class="text-opacity-50 text-base-content">
+          <Icon outline="Reply" class="w-4 h-4 stroke-1" />
+          <span class="sr-only">{l("Reply")}</span>
+        </span>
+      </div>
+    </button>
+    <button
+      x-show="width > 1200"
+      data-id="action_reply"
+      phx-click="Bonfire.Social.Feeds:reply_to_activity"
+      phx-value-id={@object_id}
+      phx-target={if @activity_id, do: "#activity--" <> e(@activity_id, "")}
+    >
+      <div class="btn btn-ghost btn-circle btn-sm">
+        <span class="text-opacity-50 text-base-content">
+          <Icon outline="Reply" class="w-4 h-4 stroke-1" />
+          <span class="sr-only">{l("Reply")}</span>
+        </span>
+      </div>
+    </button>
   {#else}
-  <!-- <button 
+    <!-- <button 
     x-cloak
     x-show="width < 768"
     phx-click="Bonfire.Social.Feeds:reply_to_activity"
@@ -51,26 +51,27 @@
       </span>
     </div>
   </button> -->
-  <button
-    data-id="action_reply"
-    phx-click="Bonfire.Social.Feeds:reply_to_activity"
-    phx-value-id={@object_id}
-    @click={"show_smart_input(); smart_input_title_text = '#{l "Reply"}'"}
-    phx-target={if @activity_id, do: "#activity--"<>e(@activity_id, "")}
-  >
-    <div class={"btn btn-ghost btn-circle btn-sm"}> 
-      <span class="text-opacity-50 text-base-content">
-        <Icon outline="Reply" class="w-4 h-4 stroke-1" />
-        <span class="sr-only">{l "Reply"}</span>
-      </span>
-    </div>
-  </button>
+    <button
+      data-id="action_reply"
+      phx-click="Bonfire.Social.Feeds:reply_to_activity"
+      phx-value-id={@object_id}
+      @click={"show_smart_input(); smart_input_title_text = '#{l("Reply")}'"}
+      phx-target={if @activity_id, do: "#activity--" <> e(@activity_id, "")}
+    >
+      <div class="btn btn-ghost btn-circle btn-sm">
+        <span class="text-opacity-50 text-base-content">
+          <Icon outline="Reply" class="w-4 h-4 stroke-1" />
+          <span class="sr-only">{l("Reply")}</span>
+        </span>
+      </div>
+    </button>
   {/if}
-  <span 
-  :if={Bonfire.Me.Settings.get([:ui, :show_activity_counts], nil, @__context__)}
-  class="ml-1 text-xs text-base-content text-opacity-70">
-    {#if count(@replied)>0 }
-      {count(@replied)} 
+  <span
+    :if={Bonfire.Me.Settings.get([:ui, :show_activity_counts], nil, @__context__)}
+    class="ml-1 text-xs text-base-content text-opacity-70"
+  >
+    {#if count(@replied) > 0}
+      {count(@replied)}
     {/if}
   </span>
 </div>

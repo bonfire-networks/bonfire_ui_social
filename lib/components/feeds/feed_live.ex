@@ -23,25 +23,29 @@ defmodule Bonfire.UI.Social.FeedLive do
   prop feed_title, :string, default: nil
 
   def mount(socket) do
-    {:ok, socket
-    |> assign(
-      feed: []
-    ),
-    temporary_assigns: [
-      feed: [],
-      # feed_future: []
-    ]}
+    {:ok,
+     socket
+     |> assign(feed: []),
+     temporary_assigns: [
+       feed: []
+       # feed_future: []
+     ]}
   end
 
-  def update(%{new_activity: new_activity} = _assigns, socket) when is_map(new_activity) do # adding new feed item
-    debug("FeedLive.update - new_activity (feed is a temporary assign, so only add new activities)")
-    {:ok, socket
-    |> assign(
-      feed_update_mode: "prepend",
-      feed: [new_activity]
-            |> LiveHandler.preloads(socket)
-      )
-    }
+  # adding new feed item
+  def update(%{new_activity: new_activity} = _assigns, socket) when is_map(new_activity) do
+    debug(
+      "FeedLive.update - new_activity (feed is a temporary assign, so only add new activities)"
+    )
+
+    {:ok,
+     socket
+     |> assign(
+       feed_update_mode: "prepend",
+       feed:
+         [new_activity]
+         |> LiveHandler.preloads(socket)
+     )}
   end
 
   # def update(%{__context__: %{new_activity: new_activity}} = assigns, socket) when is_map(new_activity) do
@@ -54,7 +58,8 @@ defmodule Bonfire.UI.Social.FeedLive do
     {:ok, socket}
   end
 
-  def update(_assigns, %{assigns: %{feed: existing_feed}} = socket) when is_list(existing_feed) and length(existing_feed)>0 do
+  def update(_assigns, %{assigns: %{feed: existing_feed}} = socket)
+      when is_list(existing_feed) and length(existing_feed) > 0 do
     # FIXME: doesn't work because of temporary assigns?
     debug("skip replacing already provided feed")
     {:ok, socket}
@@ -63,10 +68,10 @@ defmodule Bonfire.UI.Social.FeedLive do
   def update(%{feed: feed, page_info: page_info} = assigns, socket) when is_list(feed) do
     debug("FeedLive.update - an initial feed was provided via assigns")
 
-    # dump(socket.assigns, "socket assigns")
-    # dump(assigns)
+    # debug(socket.assigns, "socket assigns")
+    # debug(assigns)
     socket = assign(socket, assigns)
-    # dump(socket)
+    # debug(socket)
 
     feed_id_or_ids = e(socket.assigns, :feed_ids, nil) || e(socket.assigns, :feed_id, nil)
     already_pubsub_subscribed = e(socket.assigns, :feed_pubsub_subscribed, nil)
@@ -77,14 +82,15 @@ defmodule Bonfire.UI.Social.FeedLive do
       maybe_subscribe(socket)
     end
 
-    {:ok, socket
-      |> assign(
-        feed_pubsub_subscribed: feed_id_or_ids,
-        # page_info: page_info,
-        # feed: feed
-          # |> dump("FeedLive: feed")
-          # |> LiveHandler.preloads(socket),
-    )}
+    {:ok,
+     socket
+     |> assign(
+       feed_pubsub_subscribed: feed_id_or_ids
+       # page_info: page_info,
+       # feed: feed
+       # |> debug("FeedLive: feed")
+       # |> LiveHandler.preloads(socket),
+     )}
   end
 
   def update(assigns, socket) do
@@ -123,7 +129,9 @@ defmodule Bonfire.UI.Social.FeedLive do
   #   {:noreply, socket}
   # end
 
-  def handle_event(action, attrs, socket), do: Bonfire.UI.Common.LiveHandlers.handle_event(action, attrs, socket, __MODULE__)
-  def handle_info(info, socket), do: Bonfire.UI.Common.LiveHandlers.handle_info(info, socket, __MODULE__)
+  def handle_event(action, attrs, socket),
+    do: Bonfire.UI.Common.LiveHandlers.handle_event(action, attrs, socket, __MODULE__)
 
+  def handle_info(info, socket),
+    do: Bonfire.UI.Common.LiveHandlers.handle_info(info, socket, __MODULE__)
 end

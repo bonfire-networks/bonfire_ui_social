@@ -1,9 +1,12 @@
 {#if length(@threaded_replies || @replies || []) > 0}
   <div class="flex flex-col flex-1">
-    <div data-id="replies" class={
-      "flex flex-col flex-1 space-y-3",
-      "!pt-0": @thread_mode == :flat}>
-    
+    <div
+      data-id="replies"
+      class={
+        "flex flex-col flex-1 space-y-3",
+        "!pt-0": @thread_mode == :flat
+      }
+    >
       <!-- <Bonfire.UI.Social.LoadPreviousLive 
         live_handler={Bonfire.Social.Posts}
         page_info={@page_info}
@@ -11,65 +14,66 @@
         context={@thread_id}
       /> -->
 
-        {#if @threaded_replies}
-          {#for {reply, child_replies} <- @threaded_replies }
-            <Bonfire.UI.Social.CommentLive
-              comment={reply}
-              child_replies={child_replies}
-              reply_to_id={e(reply, :id, nil)}
-              thread_id={@thread_id}
-              feed_id={@feed_id}
-              thread_object={@object}
-              thread_level={1}
-              thread_mode={@thread_mode}
-              smart_input_text={@smart_input_text}
-              smart_input_prompt={@smart_input_prompt}
-              url={@url}
-              showing_within={e(@showing_within, :thread)}
-            />
-          {/for}
-        {#else}
-          {#for reply <- @replies }
-            <Bonfire.UI.Social.CommentLive
-              comment={reply}
-              reply_to_id={e(reply, :id, nil)}
-              thread_id={@thread_id}
-              feed_id={@feed_id}
-              thread_object={@object}
-              thread_mode={@thread_mode}
-              smart_input_text={@smart_input_text}
-              smart_input_prompt={@smart_input_prompt}
-              url={@url}
-              showing_within={e(@showing_within, :thread)}
-            />
-          {/for}
-        {/if}
+      {#if @threaded_replies}
+        {#for {reply, child_replies} <- @threaded_replies}
+          <Bonfire.UI.Social.CommentLive
+            comment={reply}
+            child_replies={child_replies}
+            reply_to_id={e(reply, :id, nil)}
+            thread_id={@thread_id}
+            feed_id={@feed_id}
+            thread_object={@object}
+            thread_level={1}
+            thread_mode={@thread_mode}
+            smart_input_text={@smart_input_text}
+            smart_input_prompt={@smart_input_prompt}
+            url={@url}
+            showing_within={e(@showing_within, :thread)}
+          />
+        {/for}
+      {#else}
+        {#for reply <- @replies}
+          <Bonfire.UI.Social.CommentLive
+            comment={reply}
+            reply_to_id={e(reply, :id, nil)}
+            thread_id={@thread_id}
+            feed_id={@feed_id}
+            thread_object={@object}
+            thread_mode={@thread_mode}
+            smart_input_text={@smart_input_text}
+            smart_input_prompt={@smart_input_prompt}
+            url={@url}
+            showing_within={e(@showing_within, :thread)}
+          />
+        {/for}
+      {/if}
 
-        <Bonfire.UI.Common.LoadMoreLive
-          live_handler={Bonfire.Social.Posts}
-          page_info={@page_info}
-          target={@myself}
-          context={@thread_id}
-        />
+      <Bonfire.UI.Common.LoadMoreLive
+        live_handler={Bonfire.Social.Posts}
+        page_info={@page_info}
+        target={@myself}
+        context={@thread_id}
+      />
     </div>
-
   </div>
 {#else}
   <div class="flex flex-col items-center w-full h-full rounded-md bg-base-100 place-content-center">
-    {#if @loading  }
+    {#if @loading}
       <div class="flex items-center place-content-center">
         Loading...
       </div>
       {#case maybe_cute_gif()}
         {#match url when is_binary(url)}
           <div class="flex flex-row items-center justify-center my-12">
-            <img src={url} />
+            <img src={url}>
           </div>
         {#match _}
       {/case}
     {#else}
       <span class="my-12 badge">
-        {if e(@activity, :subject, :id, nil) !=ulid(@current_user), do:  l("Be the first to reply..."), else: l "No replies yet..."}
+        {if e(@activity, :subject, :id, nil) != ulid(@current_user),
+          do: l("Be the first to reply..."),
+          else: l("No replies yet...")}
       </span>
     {/if}
   </div>

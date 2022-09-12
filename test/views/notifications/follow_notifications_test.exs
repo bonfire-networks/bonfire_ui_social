@@ -1,13 +1,10 @@
 defmodule Bonfire.Social.Notifications.Follows.Test do
-
   use Bonfire.UI.Social.ConnCase, async: true
   alias Bonfire.Social.Fake
   alias Bonfire.Social.Posts
   alias Bonfire.Social.Follows
 
-
   describe "show" do
-
     test "when someone follows me in my notifications" do
       some_account = fake_account!()
       someone = fake_user!(some_account)
@@ -18,16 +15,16 @@ defmodule Bonfire.Social.Notifications.Follows.Test do
 
       conn = conn(user: someone, account: some_account)
       next = "/notifications"
-      {view, doc} = floki_live(conn, next) #|> IO.inspect
+      # |> IO.inspect
+      {view, doc} = floki_live(conn, next)
       assert feed = Floki.find(doc, ".feed")
       assert Floki.text(feed) =~ me.profile.name
-      assert Floki.text(feed) =~ "followed" # FIXME
+      # FIXME
+      assert Floki.text(feed) =~ "followed"
     end
-
   end
 
   describe "DO NOT show" do
-
     test "when I follow someone in my notifications" do
       some_account = fake_account!()
       someone = fake_user!(some_account)
@@ -38,7 +35,8 @@ defmodule Bonfire.Social.Notifications.Follows.Test do
 
       conn = conn(user: someone, account: some_account)
       next = "/notifications"
-      {view, doc} = floki_live(conn, next) #|> IO.inspect
+      # |> IO.inspect
+      {view, doc} = floki_live(conn, next)
       assert feed = Floki.find(doc, ".feed")
       refute Floki.text(feed) =~ me.profile.name
     end

@@ -11,9 +11,10 @@ defmodule Bonfire.UI.Social.MessageThreadsLive do
   prop users, :list
 
   def permalink(thread, object) do
-    thread_url = if thread do
-      "/messages/#{ulid(thread)}"
-    end
+    thread_url =
+      if thread do
+        "/messages/#{ulid(thread)}"
+      end
 
     if thread_url && ulid(thread) != ulid(object) do
       "#{thread_url}#comment-#{ulid(object)}"

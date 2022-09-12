@@ -1,63 +1,54 @@
 {#if @viewing_main_object}
-<div class="flex items-center space-x-2 ">
-  <BoundaryIconLive 
-    :if={@object_type not in [Bonfire.Data.Social.Message]}
-    id={ComponentID.new(BoundaryIconLive, @object)} 
-    object={@object} 
-    object_boundary={@object_boundary} 
-  />
-  <div class="flex items-center space-x-1 subject_timestamp" > 
+  <div class="flex items-center space-x-2">
+    <BoundaryIconLive
+      :if={@object_type not in [Bonfire.Data.Social.Message]}
+      id={ComponentID.new(BoundaryIconLive, @object)}
+      object={@object}
+      object_boundary={@object_boundary}
+    />
+    <div class="flex items-center space-x-1 subject_timestamp">
+      <span
+        :if={e(@object, :peered, nil) || e(@object, :character, :peered, nil)}
+        data-tip={l("Originates from a remote instance")}
+        class="z-20 align-bottom tooltip tooltip-bottom"
+      >
+        {#case Bonfire.Files.FaviconStore.favicon_url(@permalink)}
+          {#match nil}
+            <Icon solid="ExternalLink" class="w-4 h-4 text-opacity-50 text-base-content" />
+          {#match image}
+            <img src={image} class="w-4 h-4">
+        {/case}
+      </span>
 
-    <span 
-      :if={e(@object, :peered, nil) || e(@object, :character, :peered, nil)}
-      data-tip={l "Originates from a remote instance"}
-      class="z-20 align-bottom tooltip tooltip-bottom">
-      {#case Bonfire.Files.FaviconStore.favicon_url(@permalink)}
-        {#match nil}
-          <Icon solid="ExternalLink" class="w-4 h-4 text-opacity-50 text-base-content" />
-        {#match image}
-          <img src={image} class="w-4 h-4"/>
-      {/case}
-    </span>
-
-    <span class="mr-2 text-sm text-base-content text-opacity-60">
-      <!-- <span class="capitalize">{@verb_display}</span> -->
-      {@date_ago}
-    </span>
-
-    
+      <span class="mr-2 text-sm text-base-content text-opacity-60">
+        <!-- <span class="capitalize">{@verb_display}</span> -->
+        {@date_ago}
+      </span>
+    </div>
   </div>
-</div>
-
 {#else}
-<div class="flex items-center">
-  <div class="relative flex items-center space-x-1 text-[14px] leading-[16px] text-base-content text-opacity-60">
+  <div class="flex items-center">
+    <div class="relative flex items-center space-x-1 text-[14px] leading-[16px] text-base-content text-opacity-60">
       <Dynamic.LiveComponent
-        :if={module_enabled?(Bonfire.Boundaries.Web.BoundaryIconLive) and @object_type not in [Bonfire.Data.Social.Message]}
+        :if={module_enabled?(Bonfire.Boundaries.Web.BoundaryIconLive) and
+          @object_type not in [Bonfire.Data.Social.Message]}
         module={Bonfire.Boundaries.Web.BoundaryIconLive}
-        object={@object} 
+        object={@object}
         with_icon
-        id={ComponentID.new(Bonfire.Boundaries.Web.BoundaryIconLive, @object)} 
-        object_boundary={@object_boundary} 
+        id={ComponentID.new(Bonfire.Boundaries.Web.BoundaryIconLive, @object)}
+        object_boundary={@object_boundary}
       />
-    <LiveRedirect class="text-xs subject_timestamp text-base-content text-opacity-60" to={@permalink}>
-
-      <!-- <span :if={@showing_within not in [:widget, :smart_input]} class="hidden capitalize lg:inline">
+      <LiveRedirect class="text-xs subject_timestamp text-base-content text-opacity-60" to={@permalink}>
+        <!-- <span :if={@showing_within not in [:widget, :smart_input]} class="hidden capitalize lg:inline">
         {@verb_display}
       </span> -->
 
-      <span :if={@showing_within not in [:smart_input]}>
-        {@date_ago}
-      </span>
-      
-    </LiveRedirect>
+        <span :if={@showing_within not in [:smart_input]}>
+          {@date_ago}
+        </span>
+      </LiveRedirect>
 
-    <Bonfire.UI.Social.Activity.InstanceIconLive
-        object={@object} 
-      />
-
+      <Bonfire.UI.Social.Activity.InstanceIconLive object={@object} />
+    </div>
   </div>
-
-</div>
 {/if}
-

@@ -2,23 +2,27 @@ defmodule Bonfire.Social.Boosts.LiveHandler do
   use Bonfire.UI.Common.Web, :live_handler
   import Untangle
 
-  def handle_event("boost", params, %{assigns: %{object: object}} = socket) do # boost in LV stateful component
+  # boost in LV stateful component
+  def handle_event("boost", params, %{assigns: %{object: object}} = socket) do
     do_boost(object, params, socket)
   end
 
-  def handle_event("boost", %{"id"=> id} = params, socket) do # boost in LV
+  # boost in LV
+  def handle_event("boost", %{"id" => id} = params, socket) do
     do_boost(id, params, socket)
   end
 
-  def handle_event("undo", %{"id"=> id} = params, socket) do # unboost in LV
+  # unboost in LV
+  def handle_event("undo", %{"id" => id} = params, socket) do
     with {:ok, unboost} <- Bonfire.Social.Boosts.unboost(current_user(socket), id) do
       boost_action(id, false, params, socket)
     end
   end
 
-  def do_boost(object, params, socket) do # boost in LV
+  # boost in LV
+  def do_boost(object, params, socket) do
     with {:ok, current_user} <- current_user_or_remote_interaction(socket, l("boost"), object),
-      {:ok, boost} <- Bonfire.Social.Boosts.boost(current_user, object) do
+         {:ok, boost} <- Bonfire.Social.Boosts.boost(current_user, object) do
       boost_action(object, true, params, socket)
     end
   end
@@ -27,7 +31,7 @@ defmodule Bonfire.Social.Boosts.LiveHandler do
     ComponentID.send_updates(
       Bonfire.UI.Common.BoostActionLive,
       ulid(object),
-      [my_boost: boost?]
+      my_boost: boost?
     )
 
     {:noreply, socket}
@@ -37,24 +41,34 @@ defmodule Bonfire.Social.Boosts.LiveHandler do
     current_user = current_user(List.first(list_of_assigns))
     # |> debug("current_user")
 
-    list_of_objects = list_of_assigns
-    |> Enum.map(& e(&1, :object, nil))
+    list_of_objects =
+      list_of_assigns
+      |> Enum.map(&e(&1, :object, nil))
+
     # |> debug("list_of_objects")
 
-    list_of_ids = list_of_objects
-    |> Enum.map(& e(&1, :id, nil))
-    |> filter_empty([])
-    |> debug("list_of_ids")
+    list_of_ids =
+      list_of_objects
+      |> Enum.map(&e(&1, :id, nil))
+      |> filter_empty([])
+      |> debug("list_of_ids")
 
-    my_states = if current_user, do: Bonfire.Social.Boosts.get!(current_user, list_of_ids, preload: false) |> Map.new(fn l -> {e(l, :edge, :object_id, nil), true} end), else: %{}
+    my_states =
+      if current_user,
+        do:
+          Bonfire.Social.Boosts.get!(current_user, list_of_ids, preload: false)
+          |> Map.new(fn l -> {e(l, :edge, :object_id, nil), true} end),
+        else: %{}
+
     debug(my_states, "my_boosts")
 
-    objects_counts = if Bonfire.Me.Settings.get([:ui, :show_activity_counts], nil, current_user: current_user) do
-      list_of_objects
-      |> repo().maybe_preload(:boost_count, follow_pointers: false)
-      |> Map.new(fn o -> {e(o, :id, nil), e(o, :boost_count, :object_count, nil)} end)
-      |> debug("boost_counts")
-    end
+    objects_counts =
+      if Bonfire.Me.Settings.get([:ui, :show_activity_counts], nil, current_user: current_user) do
+        list_of_objects
+        |> repo().maybe_preload(:boost_count, follow_pointers: false)
+        |> Map.new(fn o -> {e(o, :id, nil), e(o, :boost_count, :object_count, nil)} end)
+        |> debug("boost_counts")
+      end
 
     list_of_assigns
     |> Enum.map(fn assigns ->
@@ -71,5 +85,4 @@ defmodule Bonfire.Social.Boosts.LiveHandler do
       )
     end)
   end
-
 end
