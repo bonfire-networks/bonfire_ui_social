@@ -1,6 +1,6 @@
 <div class={
-  "block bg-base-100 ",
-  "rounded-lg my-4 shadow border-base-content/10 border": @showing_within == :feed
+  "",
+  "rounded-lg bg-base-100 my-4 shadow border-base-content/10 border": @showing_within == :feed
 }>
   <div class={
     "grid justify-between p-3",
