@@ -552,21 +552,21 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
     ]
 
     case List.first(feed) do
-      %{activity: %{id: _}} ->
-        feed
-        # |> debug("feed of FeedPublish or objects before extra preloads")
-        |> Bonfire.Social.Activities.activity_preloads(e(opts, :preload, :feed), opts)
-        # |> Bonfire.Common.Pointers.Preload.maybe_preload_nested_pointers([activity: [:object]])
-        |> preload_objects([:activity, :object], opts)
-
-      # |> debug("feed with extra preloads")
-
       %{edge: %{id: _}} ->
         feed
         # |> debug("feed of Edge objects before extra preloads")
         |> Bonfire.Social.Activities.activity_preloads(e(opts, :preload, :feed), opts)
         # |> Bonfire.Common.Pointers.Preload.maybe_preload_nested_pointers([edge: [:object]])
         |> preload_objects([:edge, :object], opts)
+
+      # |> debug("feed with extra preloads")
+
+      %{activity: %{id: _}} ->
+        feed
+        # |> debug("feed of FeedPublish or objects before extra preloads")
+        |> Bonfire.Social.Activities.activity_preloads(e(opts, :preload, :feed), opts)
+        # |> Bonfire.Common.Pointers.Preload.maybe_preload_nested_pointers([activity: [:object]])
+        |> preload_objects([:activity, :object], opts)
 
       # |> debug("feed with extra preloads")
 

@@ -7,6 +7,7 @@ defmodule Bonfire.UI.Social.Activity.IntentTaskLive do
   def preloads(),
     do: [
       :output_of,
+      creator: [:character, profile: [:icon]],
       provider: [:character, profile: [:icon]]
     ]
 

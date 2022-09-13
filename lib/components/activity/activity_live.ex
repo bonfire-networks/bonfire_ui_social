@@ -25,6 +25,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
   @reply_verbs ["Reply", "Respond"]
   @create_verbs ["Create", "Write"]
   @react_verbs ["Like", "Boost", "Flag", "Tag"]
+  @react_or_simple_verbs @react_verbs ++ ["Assign", "Label", "Schedule"]
   @create_or_reply_verbs @create_verbs ++ @reply_verbs
 
   def preload(list_of_assigns) do
@@ -251,7 +252,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
   # def component_activity_subject(_, _, %{activity_inception: true}), do: [Bonfire.UI.Social.Activity.SubjectRepliedLive]
 
   def component_activity_subject(verb, activity, %{object_type: object_type})
-      when verb in @react_verbs and object_type in [Bonfire.Data.Identity.User],
+      when verb in @react_or_simple_verbs and object_type in [Bonfire.Data.Identity.User],
       do: [
         {Bonfire.UI.Social.Activity.SubjectMinimalLive,
          %{
@@ -260,7 +261,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
       ]
 
   # reactions should show the reactor + original creator
-  def component_activity_subject(verb, activity, assigns) when verb in @react_verbs,
+  def component_activity_subject(verb, activity, assigns) when verb in @react_or_simple_verbs,
     do:
       [
         {Bonfire.UI.Social.Activity.SubjectMinimalLive,

@@ -30,6 +30,7 @@ defmodule Bonfire.UI.Social.Activity.ProcessListLive do
     |> Map.put(:tasks_total, tasks_total)
     |> Map.put(:tasks_completed, tasks_completed)
     |> Map.put(:percentage, percentage)
+    |> debug()
   end
 
   def preloads(),

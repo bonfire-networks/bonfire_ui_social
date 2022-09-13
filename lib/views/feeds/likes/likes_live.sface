@@ -4,6 +4,7 @@
   page_title={@page_title}
   feed={@feed}
   page_info={@page_info}
+  showing_within={@showing_within}
   verb_default="like"
   loading={@loading}
 />

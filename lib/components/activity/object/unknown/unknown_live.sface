@@ -6,7 +6,7 @@
       </span>
       {rich(
         e(
-          @object |> debug,
+          @object |> debug("Unsupported type or deleted object"),
           :name,
           e(
             @object,

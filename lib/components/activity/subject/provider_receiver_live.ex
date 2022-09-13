@@ -8,14 +8,14 @@ defmodule Bonfire.UI.Social.Activity.ProviderReceiverLive do
   prop permalink, :string
   prop object_boundary, :any, default: nil
 
-  def provider(%{provider: provider}), do: provider
-  def provider(%{object: object}), do: provider(object)
-  def provider(%{activity: activity}), do: provider(activity)
+  def provider(%{provider: %{id: _} = provider}), do: provider
+  def provider(%{object: %{id: _} = object}), do: provider(object)
+  def provider(%{activity: %{id: _} = activity}), do: provider(activity)
   def provider(_), do: nil
 
-  def receiver(%{receiver: receiver}), do: receiver
-  def receiver(%{object: object}), do: receiver(object)
-  def receiver(%{activity: activity}), do: receiver(activity)
+  def receiver(%{receiver: %{id: _} = receiver}), do: receiver
+  def receiver(%{object: %{id: _} = object}), do: receiver(object)
+  def receiver(%{activity: %{id: _} = activity}), do: receiver(activity)
   def receiver(_), do: nil
 
   def profile(object, field), do: e(object, field, nil) |> profile()

@@ -32,6 +32,13 @@ defmodule Bonfire.UI.Social.FeedLive do
      ]}
   end
 
+  defp get_activity(%{activity: %{} = activity, edge: %{} = edge}),
+    do: merge_structs_as_map(activity, edge)
+
+  defp get_activity(%{activity: %{} = activity}), do: activity
+  defp get_activity(%{edge: %{} = activity}), do: activity
+  defp get_activity(activity), do: activity
+
   # adding new feed item
   def update(%{new_activity: new_activity} = _assigns, socket) when is_map(new_activity) do
     debug(
@@ -44,7 +51,7 @@ defmodule Bonfire.UI.Social.FeedLive do
        feed_update_mode: "prepend",
        feed:
          [new_activity]
-         |> LiveHandler.preloads(socket)
+         |> Bonfire.Social.Feeds.LiveHandler.preloads(socket)
      )}
   end
 

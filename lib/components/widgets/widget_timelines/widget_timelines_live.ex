@@ -4,5 +4,6 @@ defmodule Bonfire.UI.Social.WidgetTimelinesLive do
   prop widget_title, :string
   prop page, :string
 
-  declare_widget("Links to main social feeds")
+  # declare_widget("Links to main social feeds")
+  declare_nav_component("Links to main social feeds")
 end

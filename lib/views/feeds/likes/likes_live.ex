@@ -28,8 +28,9 @@ defmodule Bonfire.UI.Social.Feeds.LikesLive do
     {:ok,
      socket
      |> assign(
-       feed: feed,
+       feed: Bonfire.Social.Feeds.LiveHandler.preloads(feed, socket),
        page_info: page_info,
+       showing_within: :likes,
        loading: false,
        page: "likes",
        page_title: l("My Favourites")

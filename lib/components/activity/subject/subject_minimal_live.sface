@@ -75,7 +75,7 @@
         "flex items-center mb-2 pb-2 border-b border-base-content/10",
         "": @verb not in ["Reply", "Respond"]
       }>
-        <div :if={@verb == "Like"} class="flex items-center justify-start">
+        <div :if={@verb == "Like" and @showing_within != :likes} class="flex items-center justify-start">
           <!-- LIKE -->
           <Icon solid="Star" class="w-5 h-5 text-yellow-500" />
           <div class="flex-1 ml-2">
@@ -214,6 +214,40 @@
                 {e(@activity, :subject, :profile, :name, nil) || e(@activity, :subject, :character, :username, nil)}
               </LiveRedirect>
               {raw(@verb_display)}
+            </div>
+          </div>
+        </div>
+
+        <div
+          :if={@verb not in ["Flag", "Reply", "Boost", "Like"]}
+          class="flex items-center justify-start"
+        >
+          <!-- OTHER -->
+          <Icon iconify={Bonfire.Boundaries.Verbs.get(@verb)[:icon]} class="w-4 h-4 text-error" />
+          <div class="flex-1 ml-2">
+            <div class="text-sm font-medium text-base-content text-opacity-80">
+              <LiveRedirect
+                aria-label={e(@activity, :subject, :character, :username, "") <> " " <> l("profile")}
+                class="font-medium link link-hover"
+                to={path(e(@activity, :subject, :character, nil))}
+              >
+                {e(@activity, :subject, :profile, :name, nil) || e(@activity, :subject, :character, :username, nil)}
+              </LiveRedirect>
+              {#if @verb == "Schedule" and e(@object, :due, nil)}
+                {l("scheduled for %{date}", date: date_from_now(e(@object, :due, nil)))}
+              {#elseif @verb == "Label" and e(@object, :finished, nil) == true}
+                {l("completed")}
+              {#elseif @verb == "Label" and e(@object, :finished, nil) == false}
+                {l("re-opened")}
+              {#elseif @verb in ["Assign", "Appoint"] and e(@object, :provider, nil)}
+                {l("assigned to %{name}",
+                  name:
+                    e(@object, :provider, :profile, :name, nil) ||
+                      e(@object, :provider, :character, :username, nil)
+                )}
+              {#else}
+                {raw(@verb_display)}
+              {/if}
             </div>
           </div>
         </div>

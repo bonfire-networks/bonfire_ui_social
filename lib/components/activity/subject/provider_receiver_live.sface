@@ -1,23 +1,23 @@
 <div data-id="subject" class="flex items-center mb-2 text-sm">
   <div class="flex justify-between flex-1">
-    <div class="absolute left-3">
+    <div class="left-3">
       <Bonfire.UI.Common.AvatarLive user={provider(assigns)} />
-    </div>
 
-    <div
-      :if={provider(assigns)}
-      class="flex items-center text-sm text-primary-content-700 vf_provider"
-    >
-      <LiveRedirect
-        to={path(provider(assigns))}
-        opts={"data-id": "subject_name"}
-        aria-label={"#{e(character(provider(assigns)), [:username, :display_username], "")} profile"}
-        class="font-semibold text-primary-content-800  hover:underline"
+      <div
+        :if={provider(assigns)}
+        class="flex items-center text-sm text-primary-content-700 vf_provider"
       >
-        {e(profile(provider(assigns)), :name, "Anonymous")}
+        <LiveRedirect
+          to={path(provider(assigns))}
+          opts={"data-id": "subject_name"}
+          aria-label={"#{e(character(provider(assigns)), [:username, :display_username], "")} profile"}
+          class="font-semibold text-primary-content-800  hover:underline"
+        >
+          {e(profile(provider(assigns)), :name, "Anonymous")}
 
-        <!-- <span class="ml-2 text-sm text-primary-content-500 subject_username  text-light">{e(character(provider(assigns)), [:username, :display_username], "")}</span> -->
-      </LiveRedirect>
+          <!-- <span class="ml-2 text-sm text-primary-content-500 subject_username  text-light">{e(character(provider(assigns)), [:username, :display_username], "")}</span> -->
+        </LiveRedirect>
+      </div>
     </div>
 
     <div class="flex items-center">
