@@ -1,8 +1,7 @@
 <div data-id="subject" class="flex items-center mb-2 text-sm">
   <div class="flex justify-between flex-1">
-    <div class="left-3">
+    <div class="flex items-center gap-3">
       <Bonfire.UI.Common.AvatarLive user={provider(assigns)} />
-
       <div
         :if={provider(assigns)}
         class="flex items-center text-sm text-primary-content-700 vf_provider"
@@ -11,16 +10,16 @@
           to={path(provider(assigns))}
           opts={"data-id": "subject_name"}
           aria-label={"#{e(character(provider(assigns)), [:username, :display_username], "")} profile"}
-          class="font-semibold text-primary-content-800  hover:underline"
+          class="font-semibold text-primary-content-800 hover:underline"
         >
           {e(profile(provider(assigns)), :name, "Anonymous")}
 
-          <!-- <span class="ml-2 text-sm text-primary-content-500 subject_username  text-light">{e(character(provider(assigns)), [:username, :display_username], "")}</span> -->
+          <span class="ml-1 text-sm font-normal no-underline truncate ellipsis text-base-content text-opacity-60 subject_username">@{e(character(provider(assigns)), [:username, :display_username], "")}</span>
         </LiveRedirect>
       </div>
     </div>
 
-    <div class="flex items-center">
+    <!-- <div class="flex items-center">
       <BoundaryIconLive
         id={ComponentID.new(BoundaryIconLive, @object)}
         object={@object}
@@ -37,7 +36,16 @@
 
         <Bonfire.UI.Social.Activity.InstanceIconLive object={@object} />
       </span>
-    </div>
+    </div> -->
+    <Bonfire.UI.Social.Activity.DateAgoLive
+        permalink={@permalink}
+        date_ago={@date_ago}
+        object={@object}
+        object_type={@object_type}
+        object_boundary={@object_boundary}
+        showing_within={@showing_within}
+        verb_display={@verb_display}
+      />
 
     <div
       :if={receiver(assigns) && receiver(assigns) != e(provider(assigns), nil)}
@@ -47,11 +55,11 @@
         to={path(character(@object, :receiver))}
         opts={"data-id": "subject_name"}
         aria-label={"#{e(character(@object, :receiver), [:username, :display_username], "")} profile"}
-        class="font-semibold text-primary-content-800  hover:underline"
+        class="font-semibold text-primary-content-800 hover:underline"
       >
         {e(profile(receiver(assigns)), :name, "Anonymous")}
 
-        <!-- <span class="text-sm text-primary-content-500 subject_username  text-light">{e(character(@object, :receiver), [:username, :display_username], "")}</span> -->
+        <!-- <span class="text-sm text-primary-content-500 subject_username text-light">{e(character(@object, :receiver), [:username, :display_username], "")}</span> -->
 
         <Bonfire.UI.Common.AvatarLive user={receiver(assigns)} />
       </LiveRedirect>

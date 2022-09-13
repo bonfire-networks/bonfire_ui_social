@@ -84,7 +84,7 @@
           "absolute left-4",
           "!relative !left-0": e(assigns, :viewing_main_object, nil) == true,
           "!static mr-3":
-            e(@showing_within, :feed) == :feed || e(@showing_within, :feed) == :notifications,
+            e(@showing_within, :feed) == :feed || e(@showing_within, :feed) == :notifications || e(@showing_within, :feed) == :likes,
           "bottom-2": e(@thread_mode, nil) == :flat
         }
       >

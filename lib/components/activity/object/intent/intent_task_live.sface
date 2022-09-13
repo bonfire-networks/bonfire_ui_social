@@ -1,4 +1,4 @@
-<div class="flex flex-col p-3 my-4 border border-base-content/30 rounded-xl bg-base-200">
+<div class="flex flex-col p-3 my-4 border rounded-md border-base-content/10 bg-base-300/30">
   <div class="flex items-center flex-1 mb-3">
     <span :if={length(e(@object, :context, [])) > 0}>
       <span :for={scope <- e(@object, :context, [])}>

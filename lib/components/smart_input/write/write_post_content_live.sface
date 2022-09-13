@@ -32,17 +32,7 @@
         "relative flex flex-col flex-1 h-full",
         "h-auto": @showing_within == :compose
       }>
-        <Bonfire.UI.Common.InputBoundariesLive
-          thread_mode={@thread_mode}
-          create_activity_type={@create_activity_type}
-          to_boundaries={@to_boundaries}
-          to_circles={e(@to_circles, [])}
-          preloaded_recipients={e(@preloaded_recipients, [])}
-          showing_within={@showing_within}
-          open_boundaries={@open_boundaries}
-          show_select_recipients={@show_select_recipients}
-          boundaries_modal_id={@boundaries_modal_id}
-        />
+        
 
         <Inputs for={:post_content}>
           <div x-show="!open_boundaries" class="flex-1">
@@ -78,6 +68,18 @@
             </Field>
           </div>
         </Inputs>
+        
+        <Bonfire.UI.Common.InputBoundariesLive
+          thread_mode={@thread_mode}
+          create_activity_type={@create_activity_type}
+          to_boundaries={@to_boundaries}
+          to_circles={e(@to_circles, [])}
+          preloaded_recipients={e(@preloaded_recipients, [])}
+          showing_within={@showing_within}
+          open_boundaries={@open_boundaries}
+          show_select_recipients={@show_select_recipients}
+          boundaries_modal_id={@boundaries_modal_id}
+        />
 
         <Bonfire.UI.Common.InputControlsLive
           thread_mode={@thread_mode}

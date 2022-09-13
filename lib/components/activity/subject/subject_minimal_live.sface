@@ -75,7 +75,7 @@
         "flex items-center mb-2 pb-2 border-b border-base-content/10",
         "": @verb not in ["Reply", "Respond"]
       }>
-        <div :if={@verb == "Like" and @showing_within != :likes} class="flex items-center justify-start">
+        <div :if={@verb == "Like"} class="flex items-center justify-start">
           <!-- LIKE -->
           <Icon solid="Star" class="w-5 h-5 text-yellow-500" />
           <div class="flex-1 ml-2">
@@ -119,7 +119,7 @@
         <div
           :if={@verb == "Boost" and e(@activity, :subject, :table_id, nil) == "2AGSCANBECATEG0RY0RHASHTAG"}
           class="flex items-center justify-start"
-        >
+          >
           <!-- Something published in a Category / Topic -->
           <Icon solid="Collection" class="w-4 h-4 text-base-content/80" />
           <div class="flex-1 ml-2">
@@ -139,7 +139,7 @@
         <div
           :if={@verb == "Boost" and e(@activity, :subject, :table_id, nil) != "2AGSCANBECATEG0RY0RHASHTAG"}
           class="flex items-center justify-start"
-        >
+          >
           <!-- BOOST -->
           <svg
             viewBox="0 0 24 24"
