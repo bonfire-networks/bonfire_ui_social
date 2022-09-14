@@ -32,8 +32,6 @@
         "relative flex flex-col flex-1 h-full",
         "h-auto": @showing_within == :compose
       }>
-        
-
         <Inputs for={:post_content}>
           <div x-show="!open_boundaries" class="flex-1">
             <div display="style: none" x-show="title_open" x-transition>
@@ -68,7 +66,7 @@
             </Field>
           </div>
         </Inputs>
-        
+
         <Bonfire.UI.Common.InputBoundariesLive
           thread_mode={@thread_mode}
           create_activity_type={@create_activity_type}

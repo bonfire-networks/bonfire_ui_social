@@ -38,14 +38,14 @@
       </span>
     </div> -->
     <Bonfire.UI.Social.Activity.DateAgoLive
-        permalink={@permalink}
-        date_ago={@date_ago}
-        object={@object}
-        object_type={@object_type}
-        object_boundary={@object_boundary}
-        showing_within={@showing_within}
-        verb_display={@verb_display}
-      />
+      permalink={@permalink}
+      date_ago={@date_ago}
+      object={@object}
+      object_type={@object_type}
+      object_boundary={@object_boundary}
+      showing_within={@showing_within}
+      verb_display={@verb_display}
+    />
 
     <div
       :if={receiver(assigns) && receiver(assigns) != e(provider(assigns), nil)}

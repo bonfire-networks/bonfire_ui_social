@@ -119,7 +119,7 @@
         <div
           :if={@verb == "Boost" and e(@activity, :subject, :table_id, nil) == "2AGSCANBECATEG0RY0RHASHTAG"}
           class="flex items-center justify-start"
-          >
+        >
           <!-- Something published in a Category / Topic -->
           <Icon solid="Collection" class="w-4 h-4 text-base-content/80" />
           <div class="flex-1 ml-2">
@@ -139,7 +139,7 @@
         <div
           :if={@verb == "Boost" and e(@activity, :subject, :table_id, nil) != "2AGSCANBECATEG0RY0RHASHTAG"}
           class="flex items-center justify-start"
-          >
+        >
           <!-- BOOST -->
           <svg
             viewBox="0 0 24 24"

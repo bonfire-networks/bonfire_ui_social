@@ -1,14 +1,18 @@
 <div class={
   "",
-  "rounded-lg bg-base-100 my-4 shadow border-base-content/10 border": @showing_within == :feed || @showing_within == :notifications || @showing_within == :likes
+  "rounded-lg bg-base-100 my-4 shadow border-base-content/10 border":
+    e(@showing_within, :feed) in [:feed, :notifications, :likes]
 }>
   <div class={
     "grid justify-between p-3",
     "grid-cols-2 gap-8": @showing_within != :feed,
-    "py-0 !grid-cols-1 !gap-0": @showing_within == :feed || @showing_within == :notifications || @showing_within == :likes
+    "py-0 !grid-cols-1 !gap-0": e(@showing_within, :feed) in [:feed, :notifications, :likes]
   }>
-    <div class={"order-last": @showing_within == :feed || @showing_within == :notifications || @showing_within == :likes}>
-      <div class={"flex items-center space-x-2", "mt-2": @showing_within == :feed || @showing_within == :notifications || @showing_within == :likes}>
+    <div class={"order-last": e(@showing_within, :feed) in [:feed, :notifications, :likes]}>
+      <div class={
+        "flex items-center space-x-2",
+        "mt-2": e(@showing_within, :feed) in [:feed, :notifications, :likes]
+      }>
         <Bonfire.UI.Common.LikeActionWithoutLabelLive
           id={ComponentID.new(Bonfire.UI.Common.LikeActionWithoutLabelLive, @object)}
           object={@object}
@@ -31,9 +35,9 @@
 
       <!-- PROGRESS -->
       <div
-        :if={@showing_within == :feed || @showing_within == :notifications || @showing_within == :likes}
+        :if={e(@showing_within, :feed) in [:feed, :notifications, :likes]}
         class="flex items-center p-3 mt-2 -mx-3 space-x-4 text-sm rounded-b-lg text-base-content bg-neutral/40"
-        >
+      >
         <div><span class="font-bold text-base-content">{e(@object, :percentage, "0")}%</span> {l("complete")}</div>
         <div>
           <span class="font-bold text-base-content">{e(@object, :tasks_completed, "0")}</span> {l("of")}
@@ -46,7 +50,7 @@
         <div class={
           "flex mb-2 overflow-hidden text-xs bg-base-content/30 rounded-full",
           "h-3": @showing_within != :feed,
-          "!h-2": @showing_within == :feed || @showing_within == :notifications || @showing_within == :likes
+          "!h-2": e(@showing_within, :feed) in [:feed, :notifications, :likes]
         }>
           <div
             style={"width:#{e(@object, :percentage, "0")}%"}
@@ -55,7 +59,10 @@
         </div>
       </div>
 
-      <div :if={@showing_within != :feed and @showing_within != :notifications and @showing_within != :likes} class="flex items-center space-x-4 text-sm text-base-content">
+      <div
+        :if={e(@showing_within, :feed) not in [:feed, :notifications, :likes]}
+        class="flex items-center space-x-4 text-sm text-base-content"
+      >
         <div><span class="font-bold text-base-content">{e(@object, :percentage, "0")}%</span> complete</div>
         <div>
           <span class="font-bold text-base-content">{e(@object, :tasks_completed, "0")}</span>
