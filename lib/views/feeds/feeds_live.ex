@@ -4,7 +4,7 @@ defmodule Bonfire.UI.Social.FeedsLive do
   alias Bonfire.Social.Feeds.LiveHandler
 
   declare_extension("Social",
-    icon: "heroicons-solid:newspaper",
+    icon: "noto:rolled-up-newspaper",
     exclude_from_nav: true,
     default_nav: [
       Bonfire.UI.Social.FeedsLive,
@@ -14,7 +14,7 @@ defmodule Bonfire.UI.Social.FeedsLive do
     ]
   )
 
-  declare_nav_link(l("Recent activities"), icon: "heroicons-solid:newspaper")
+  declare_nav_link(l("Recent"), icon: "heroicons-solid:newspaper")
 
   def mount(params, session, socket) do
     live_plug(params, session, socket, [
@@ -42,13 +42,18 @@ defmodule Bonfire.UI.Social.FeedsLive do
        feedback_title: l("Your feed is empty"),
        feedback_message:
          l("You can start by following some people, or writing a new post yourself."),
-       page_header_aside: [
-         {Bonfire.UI.Social.HeaderAsideFeedsLive,
-          [
-            page_title: l("Discussion"),
-            page: "feed"
-          ]}
-       ]
+       sidebar_widgets: [
+        users: [
+          secondary: [
+            {Bonfire.UI.Social.WidgetTagsLive, []}
+          ]
+        ],
+        guests: [
+          secondary: [
+            {Bonfire.UI.Social.WidgetTagsLive, []}
+          ]
+        ]
+      ],
      )}
   end
 

@@ -399,7 +399,7 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
       selected_tab: "instance",
       # FIXME: clean up page vs tab
       page: "local",
-      page_title: l("Local activities"),
+      page_title: l("Local"),
       feed_title: l("Activities on this instance"),
       feedback_title: l("Your local feed is empty"),
       # feed_id: feed_name,

@@ -36,7 +36,7 @@
       <!-- PROGRESS -->
       <div
         :if={e(@showing_within, :feed) in [:feed, :notifications, :likes]}
-        class="flex items-center p-3 mt-2 -mx-3 space-x-4 text-sm rounded-b-lg text-base-content bg-neutral/40"
+        class="flex items-center p-3 mt-2 -mx-3 space-x-4 text-sm rounded-b-lg text-base-content bg-base-content/10"
       >
         <div><span class="font-bold text-base-content">{e(@object, :percentage, "0")}%</span> {l("complete")}</div>
         <div>

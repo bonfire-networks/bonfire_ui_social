@@ -3,7 +3,7 @@ defmodule Bonfire.UI.Social.Feeds.LocalLive do
   alias Bonfire.UI.Me.LivePlugs
   alias Bonfire.Social.Feeds.LiveHandler
 
-  declare_nav_link(l("Local activities"),
+  declare_nav_link(l("Local"),
     href: "/feed/local",
     icon: "material-symbols:camping-rounded"
   )

@@ -3,7 +3,7 @@ defmodule Bonfire.UI.Social.Feeds.FederationLive do
   alias Bonfire.UI.Me.LivePlugs
   alias Bonfire.Social.Feeds.LiveHandler
 
-  declare_nav_link(l("Remote activities"), href: "/feed/federation", icon: "el:network")
+  declare_nav_link(l("Remote"), href: "/feed/federation", icon: "el:network")
 
   def mount(params, session, socket) do
     live_plug(params, session, socket, [
@@ -26,20 +26,6 @@ defmodule Bonfire.UI.Social.Feeds.FederationLive do
        page_title: l("Federation")
      )}
   end
-
-  # def handle_params(%{"tab" => tab} = _params, _url, socket) do
-  #   {:noreply,
-  #    assign(socket,
-  #      selected_tab: tab
-  #    )}
-  # end
-
-  # def handle_params(%{} = _params, _url, socket) do
-  #   {:noreply,
-  #    assign(socket,
-  #      current_user: Fake.user_live()
-  #    )}
-  # end
 
   defdelegate handle_params(params, attrs, socket), to: Bonfire.UI.Common.LiveHandlers
 
