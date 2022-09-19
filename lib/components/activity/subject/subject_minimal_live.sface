@@ -70,6 +70,8 @@
           </div>
         </div>
       </div>
+    {#match :search}
+      <div></div>
     {#match _}
       <div class={
         "flex items-center mb-2 pb-2 border-b border-base-content/10",

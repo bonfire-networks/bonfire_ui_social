@@ -147,7 +147,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
       @mouseleave="activity_active = false"
       class={
         "p-3 activity relative pl-16 group bg-base-100 " <> e(assigns, :class, ""),
-        "!pl-3": e(assigns, :showing_within, :feed) in [:feed, :notifications, :likes],
+        "!pl-3": e(assigns, :showing_within, :feed) in [:feed, :notifications, :likes, :search],
         "activity_inception bg-base-content/10 !m-0 opacity-100 before:!left-2 before:top-1 before:bottom-1":
           e(assigns, :activity_inception, nil) != nil and e(assigns, :thread_mode, nil) == :flat,
         "!p-3 mt-3 pt-6 rounded-md shadow": e(assigns, :viewing_main_object, nil) == true,
