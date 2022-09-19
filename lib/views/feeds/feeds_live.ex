@@ -4,7 +4,7 @@ defmodule Bonfire.UI.Social.FeedsLive do
   alias Bonfire.Social.Feeds.LiveHandler
 
   declare_extension("Social",
-    icon: "noto:rolled-up-newspaper",
+    icon: "noto:newspaper",
     exclude_from_nav: true,
     default_nav: [
       Bonfire.UI.Social.FeedsLive,
@@ -43,17 +43,17 @@ defmodule Bonfire.UI.Social.FeedsLive do
        feedback_message:
          l("You can start by following some people, or writing a new post yourself."),
        sidebar_widgets: [
-        users: [
-          secondary: [
-            {Bonfire.UI.Social.WidgetTagsLive, []}
-          ]
-        ],
-        guests: [
-          secondary: [
-            {Bonfire.UI.Social.WidgetTagsLive, []}
-          ]
-        ]
-      ],
+         users: [
+           secondary: [
+             {Bonfire.UI.Social.WidgetTagsLive, []}
+           ]
+         ],
+         guests: [
+           secondary: [
+             {Bonfire.UI.Social.WidgetTagsLive, []}
+           ]
+         ]
+       ]
      )}
   end
 
