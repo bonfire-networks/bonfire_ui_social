@@ -32,11 +32,11 @@ defmodule Bonfire.Social.Posts.LiveHandler do
     live_more(thread_id, input_to_atoms(attrs), socket)
   end
 
-  def handle_event("post", %{"create_activity_type" => "message"} = params, socket) do
+  def handle_event("post", %{"create_object_type" => "message"} = params, socket) do
     Bonfire.Social.Messages.LiveHandler.send_message(params, socket)
   end
 
-  def handle_event("post", %{"post" => %{"create_activity_type" => "message"}} = params, socket) do
+  def handle_event("post", %{"post" => %{"create_object_type" => "message"}} = params, socket) do
     Bonfire.Social.Messages.LiveHandler.send_message(params, socket)
   end
 

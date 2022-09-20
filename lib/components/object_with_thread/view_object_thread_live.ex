@@ -8,7 +8,7 @@ defmodule Bonfire.UI.Social.ViewObjectThreadLive do
   prop page_title, :string, default: nil
   prop show_reply_input, :boolean, default: false
   prop search_placeholder, :string, default: nil
-  prop create_activity_type, :atom, default: nil
+  prop create_object_type, :atom, default: nil
   prop to_boundaries, :list, default: nil
   prop to_circles, :list, default: nil
   prop smart_input_prompt, :string, default: nil
@@ -29,15 +29,15 @@ defmodule Bonfire.UI.Social.ViewObjectThreadLive do
   prop page_info, :any, default: nil
   prop loading, :boolean, default: false
 
-  def update(%{object_id: id} = assigns, %{assigns: %{object: %{id: previously_loaded}}} = socket)
-      when is_binary(id) and id == previously_loaded do
-    debug(previously_loaded, "object previously_loaded")
-    {:ok, assign(socket, assigns)}
-  end
-
   def update(%{post_id: id} = assigns, %{assigns: %{object: %{id: previously_loaded}}} = socket)
       when is_binary(id) and id == previously_loaded do
     debug(previously_loaded, "post previously_loaded")
+    {:ok, assign(socket, assigns)}
+  end
+
+  def update(%{object_id: id} = assigns, %{assigns: %{object: %{id: previously_loaded}}} = socket)
+      when is_binary(id) and id == previously_loaded do
+    debug(previously_loaded, "object previously_loaded")
     {:ok, assign(socket, assigns)}
   end
 

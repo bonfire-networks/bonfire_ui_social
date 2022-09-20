@@ -9,7 +9,7 @@ defmodule Bonfire.UI.Social.WriteEditorLive do
   alias Surface.Components.Form.Inputs
 
   prop field_name, :string, default: "post[post_content][html_body]", required: false
-  prop create_activity_type, :atom, default: nil
+  prop create_object_type, :atom, default: nil
   prop smart_input_prompt, :string, default: ""
   prop smart_input_text, :string, default: "", required: false
   prop showing_within, :string, default: nil

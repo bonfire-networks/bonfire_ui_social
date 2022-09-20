@@ -15,7 +15,7 @@ defmodule Bonfire.UI.Social.CommentLive do
   prop thread_mode, :any
   prop showing_within, :any, default: :thread
   prop page, :any, default: "thread"
-  prop create_activity_type, :atom, default: nil
+  prop create_object_type, :atom, default: nil
 
   def activity(%{__struct__: Bonfire.Data.Social.Activity} = activity) do
     activity

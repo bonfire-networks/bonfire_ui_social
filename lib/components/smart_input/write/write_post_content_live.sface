@@ -4,13 +4,13 @@
     submit={handler(%{
       page: @page,
       showing_within: @showing_within,
-      create_activity_type: @create_activity_type
+      create_object_type: @create_object_type
     })}
     action={"/LiveHandler/" <>
       handler(%{
         page: @page,
         showing_within: @showing_within,
-        create_activity_type: @create_activity_type
+        create_object_type: @create_object_type
       })}
     change="validate"
     opts={
@@ -69,7 +69,7 @@
 
         <Bonfire.UI.Common.InputBoundariesLive
           thread_mode={@thread_mode}
-          create_activity_type={@create_activity_type}
+          create_object_type={@create_object_type}
           to_boundaries={@to_boundaries}
           to_circles={e(@to_circles, [])}
           preloaded_recipients={e(@preloaded_recipients, [])}
@@ -82,8 +82,8 @@
         <Bonfire.UI.Common.InputControlsLive
           thread_mode={@thread_mode}
           reply_to_id={@reply_to_id}
-          thread_id={@thread_id}
-          create_activity_type={@create_activity_type}
+          context_id={@context_id}
+          create_object_type={@create_object_type}
           to_boundaries={@to_boundaries}
           to_circles={e(@to_circles, [])}
           showing_within={@showing_within}

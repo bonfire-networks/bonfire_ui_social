@@ -44,7 +44,7 @@
               object_boundary={if is_messaging?(%{
                    page: @page,
                    showing_within: @showing_within,
-                   create_activity_type: @create_activity_type
+                   create_object_type: @create_object_type
                  }),
                  do: :skip}
               class="showing_within:thread !py-2"
@@ -61,7 +61,7 @@
               object_boundary={if is_messaging?(%{
                    page: @page,
                    showing_within: @showing_within,
-                   create_activity_type: @create_activity_type
+                   create_object_type: @create_object_type
                  }),
                  do: :skip}
               class="showing_within:thread !py-2"

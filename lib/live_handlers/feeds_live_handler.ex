@@ -45,7 +45,7 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
 
     with {:ok, current_user} <- current_user_or_remote_interaction(socket, l("reply"), reply_to),
          true <- Bonfire.Boundaries.can?(current_user, :reply, reply_to_id) do
-      # FIXME: don't re-load this here as we already have the list (at least when we're in a thread)
+      # TODO: don't re-load this here as we already have the list (at least when we're in a thread)
       participants =
         Bonfire.Social.Threads.list_participants(activity, nil, current_user: current_user)
 
@@ -120,14 +120,14 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
     {:noreply, socket}
   end
 
-  def handle_event("open_activity", %{"permalink" => "/post/" <> _, "id" => id}, socket)
-      when is_binary(id) and id != "" do
-    preview_thread(socket, %{post_id: id})
-  end
+  # def handle_event("open_activity", %{"permalink" => "/post/" <> _, "id" => id}, socket)
+  #     when is_binary(id) and id != "" do
+  #   preview_thread(socket, %{post_id: id})
+  # end
 
-  def handle_event("open_activity", %{"id" => id}, socket) when is_binary(id) and id != "" do
-    preview_thread(socket, %{object_id: id})
-  end
+  # def handle_event("open_activity", %{"id" => id}, socket) when is_binary(id) and id != "" do
+  #   preview_thread(socket, %{object_id: id})
+  # end
 
   def handle_event("open_activity", %{"permalink" => permalink} = _params, socket)
       when is_binary(permalink) and permalink != "" do
@@ -246,17 +246,17 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
      |> assign(feed_assigns(key, socket))}
   end
 
-  def preview_thread(socket, assigns) do
-    debug(assigns, "open_activity: load the object & thread for preview")
+  # def preview_thread(socket, assigns) do
+  #   debug(assigns, "open_activity: load the object & thread for preview")
 
-    {:noreply,
-     socket
-     |> assign(assigns)
-     |> assign(
-       preview_module: Bonfire.UI.Social.ObjectThreadLive,
-       preview_assigns: Bonfire.Social.Objects.LiveHandler.load_object_assigns(assigns)
-     )}
-  end
+  #   {:noreply,
+  #    socket
+  #    |> assign(assigns)
+  #    |> assign(
+  #      preview_module: Bonfire.UI.Social.ObjectThreadLive,
+  #      preview_assigns: Bonfire.Social.Objects.LiveHandler.load_object_assigns(assigns)
+  #    )}
+  # end
 
   def send_feed_updates(feed_ids, assigns, component \\ Bonfire.UI.Social.FeedLive)
 

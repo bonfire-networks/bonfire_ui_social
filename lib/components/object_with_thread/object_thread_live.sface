@@ -13,7 +13,7 @@
       object_boundary={if is_messaging?(%{
            page: @page,
            showing_within: @showing_within,
-           create_activity_type: @create_activity_type
+           create_object_type: @create_object_type
          }),
          do: :skip}
     />
@@ -42,7 +42,7 @@
     :if={is_messaging?(%{
       page: @page,
       showing_within: @showing_within,
-      create_activity_type: @create_activity_type
+      create_object_type: @create_object_type
     }) && @current_user}
   >
     <Bonfire.UI.Common.SmartInputLive
@@ -50,7 +50,7 @@
       reply_to_id={e(@reply_to_id, "")}
       thread_mode={@thread_mode}
       thread_id={@thread_id}
-      create_activity_type={@create_activity_type}
+      create_object_type={@create_object_type}
       to_boundaries={e(@to_boundaries, [])}
       to_circles={e(@to_circles, [])}
       smart_input_prompt={e(@smart_input_prompt, "")}

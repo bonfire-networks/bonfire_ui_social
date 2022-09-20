@@ -6,7 +6,7 @@
           page={@page}
           page_title={@page_title}
           feed_id={@feed_id}
-          create_activity_type={@create_activity_type}
+          create_object_type={@create_object_type}
           to_boundaries={e(@to_boundaries, [])}
           to_circles={e(@to_circles, [])}
           participants={e(@participants, [])}
@@ -51,7 +51,7 @@
             thread_id={@thread_id}
             to_boundaries={e(@to_boundaries, [])}
             to_circles={e(@to_circles, [])}
-            create_activity_type={@create_activity_type}
+            create_object_type={@create_object_type}
             thread_mode={:flat}
             boundary="message"
             showing_within={:compose}

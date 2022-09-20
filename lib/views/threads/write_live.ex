@@ -29,7 +29,7 @@ defmodule Bonfire.UI.Social.WriteLive do
        page_title: l("Write"),
        page: "write",
        hide_smart_input: true,
-       create_activity_type: nil,
+       create_object_type: nil,
        smart_input_text: e(session, "smart_input_text", ""),
        reply_to_id: nil,
        thread_id: nil,

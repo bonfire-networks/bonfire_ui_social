@@ -14,7 +14,7 @@ defmodule Bonfire.UI.Social.FeedsLive do
     ]
   )
 
-  declare_nav_link(l("Recent"), icon: "heroicons-solid:newspaper")
+  declare_nav_link(l("My feed"), icon: "heroicons-solid:newspaper")
 
   def mount(params, session, socket) do
     live_plug(params, session, socket, [
