@@ -14,10 +14,12 @@
         "mt-2": e(@showing_within, :feed) in [:feed, :notifications, :likes]
       }>
         <Bonfire.UI.Common.LikeActionWithoutLabelLive
+          :if={e(@showing_within, :feed) not in [:feed, :likes, :notifications]}
           id={ComponentID.new(Bonfire.UI.Common.LikeActionWithoutLabelLive, @object)}
           object={@object}
         />
-        <LivePatch to={if @process_url, do: e(@process_url, "/list/") <> e(@object, :id, ""), else: path(@object)}>
+        <!-- <LivePatch to={if @process_url, do: e(@process_url, "/list/") <> e(@object, :id, ""), else: path(@object)}> -->
+        <LivePatch to={"/coordination/list/" <> e(@object, :id, "")}>
           <div class="text-lg font-medium text-base-content hover:underline">{e(@object, :name, nil)}</div>
         </LivePatch>
       </div>

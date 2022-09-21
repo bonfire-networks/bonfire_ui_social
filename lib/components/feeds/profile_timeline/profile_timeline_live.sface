@@ -1,6 +1,9 @@
 <div>
   <#slot {@header} />
-  <div class="grid items-start grid-cols-1 lg:grid-cols-[680px_320px] gap-5">
+  <div class={
+    "grid items-start grid-cols-1",
+    "lg:grid-cols-[680px_320px] gap-5": @widget != nil 
+    }>
     <Bonfire.UI.Social.FeedLive
       id="feed:profile:timeline"
       feed_id={"user:#{@selected_tab}:#{ulid(@user)}"}
@@ -16,11 +19,7 @@
       feed_title={@feed_title}
       loading={@loading}
     />
-    <Dynamic.Component
-      :if={module_enabled?(Bonfire.UI.Me.WidgetProfileLive)}
-      module={Bonfire.UI.Me.WidgetProfileLive}
-      user={@user}
-    />
+    <#slot {@widget} />
   </div>
   <a
     :if={e(@user, :character, :peered, :canonical_uri, nil)}
