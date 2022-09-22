@@ -2,12 +2,12 @@
   {#match feed when is_list(feed)}
     <Bonfire.UI.Common.WidgetBlockLive widget_title={e(@widget_title, "Messages")}>
       <:action>
-        <LivePatch
+        <LiveRedirect
           class="text-xs normal-case btn btn-xs btn-outline"
           to={path(Bonfire.Data.Social.Message)}
         >
           {l("View more")}
-        </LivePatch>
+        </LiveRedirect>
       </:action>
 
       <ul class="divide-y menu bg-base-100 divide-base-300">

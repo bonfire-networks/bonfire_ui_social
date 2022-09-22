@@ -2,7 +2,7 @@
   <div class="flex items-center flex-1 mb-3">
     <span :if={length(e(@object, :context, [])) > 0}>
       <span :for={scope <- e(@object, :context, [])}>
-        <LivePatch
+        <LiveRedirect
           :if={e(scope, :id, nil)}
           to={path(scope)}
           class="flex items-center text-sm cursor-pointer text-primary-content-500 font-regular hover:underline"
@@ -20,15 +20,15 @@
               clip-rule="evenodd"
             />
           </svg>
-        </LivePatch>
+        </LiveRedirect>
       </span>
     </span>
 
-    <LivePatch
+    <LiveRedirect
       to={path(@object)}
       class="text-sm font-medium cursor-pointer text-primary-content-800 hover:underline"
     >{e(@object, :name, e(@object, :note, l("Untitled task")))}
-    </LivePatch>
+    </LiveRedirect>
   </div>
 
   <div class="flex items-center space-between">
@@ -67,7 +67,7 @@
         <span class="text-sm text-primary-content-600">{l("Completed")}</span>
       </div>
 
-      <LivePatch
+      <LiveRedirect
         :if={e(@object, :provider, :id, nil)}
         to={path(e(@object, :provider, nil))}
         class="flex items-center text-xs text-primary-content-700 text-medium"
@@ -77,7 +77,7 @@
           user={@object.provider}
           alt=""
         />
-      </LivePatch>
+      </LiveRedirect>
 
       <div
         :if={e(@object, :due, nil)}
@@ -111,12 +111,12 @@
       :if={e(@object, :output_of, :id, nil)}
       class="flex items-center text-sm text-primary-content-600"
     >
-      in <LivePatch
+      in <LiveRedirect
         to={"/list/" <> e(@object, :output_of, :id, "")}
         class="flex items-center ml-2 text-sm underline cursor-pointer text-primary-content-600 hover:font-medium"
       >
         {e(@object, :output_of, :name, "Unknown")}
-      </LivePatch>
+      </LiveRedirect>
     </div>
   </div>
 </div>

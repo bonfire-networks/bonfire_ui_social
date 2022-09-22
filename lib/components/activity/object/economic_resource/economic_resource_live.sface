@@ -6,9 +6,9 @@
   />
   <div class="px-2">
     <div class="text-primary-content-700 text-base font-semibold">
-      <LivePatch to={"/resource/" <> @object.id}>
+      <LiveRedirect to={"/resource/" <> @object.id}>
         {@object.name}
-      </LivePatch>
+      </LiveRedirect>
     </div>
     <div class="text-primary-content-800 text-sm font-regular">{@object.note}</div>
     <div class="items-center flex space-x-4">

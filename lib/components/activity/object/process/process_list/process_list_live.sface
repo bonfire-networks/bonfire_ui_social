@@ -19,9 +19,9 @@
           object={@object}
         />
         <!-- <LivePatch to={if @process_url, do: e(@process_url, "/list/") <> e(@object, :id, ""), else: path(@object)}> -->
-        <LivePatch to={"/coordination/list/" <> e(@object, :id, "")}>
+        <LiveRedirect to={"/coordination/list/" <> e(@object, :id, "")}>
           <div class="text-lg font-medium text-base-content hover:underline">{e(@object, :name, nil)}</div>
-        </LivePatch>
+        </LiveRedirect>
       </div>
 
       <!-- DUE DATE -->

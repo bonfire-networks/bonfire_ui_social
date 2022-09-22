@@ -6,7 +6,7 @@
   >
     <div class="menu bg-base-100">
       <li :if={current_user(@current_user)}>
-        <LivePatch
+        <LiveRedirect
           class={
             "ml-1": @page != "home",
             "border-l-4 border-primary bg-base-content bg-opacity-10": @page == "home"
@@ -15,10 +15,10 @@
         >
           <Icon solid="Home" class="w-4 h-4" />
           <span class="text-sm truncate ellipsis">{l("Home")}</span>
-        </LivePatch>
+        </LiveRedirect>
       </li>
       <li :if={!current_user(@current_user)}>
-        <LivePatch
+        <LiveRedirect
           class={
             "border-l-4 border-primary bg-base-content bg-opacity-10": @page == "login"
           }
@@ -26,10 +26,10 @@
         >
           <Icon solid="Login" class="w-4 h-4" />
           <span class="text-sm truncate ellipsis">{l("Login")}</span>
-        </LivePatch>
+        </LiveRedirect>
       </li>
       <li :if={!current_user(@current_user)}>
-        <LivePatch
+        <LiveRedirect
           class={
             "border-l-4 border-primary bg-base-content bg-opacity-10": @page == "signup"
           }
@@ -37,10 +37,10 @@
         >
           <Icon solid="Home" class="w-4 h-4" />
           <span class="text-sm truncate ellipsis">{l("Signup")}</span>
-        </LivePatch>
+        </LiveRedirect>
       </li>
       <li>
-        <LivePatch
+        <LiveRedirect
           class={
             "border-l-4 border-primary bg-base-content bg-opacity-10": @page == "local"
           }
@@ -48,10 +48,10 @@
         >
           <Icon solid="LocationMarker" class="w-4 h-4" />
           <span class="text-sm truncate ellipsis">{l("Local")}</span>
-        </LivePatch>
+        </LiveRedirect>
       </li>
       <li>
-        <LivePatch
+        <LiveRedirect
           class={
             "border-l-4 border-primary bg-base-content bg-opacity-10": @page == "directory"
           }
@@ -59,11 +59,11 @@
         >
           <Icon solid="UserGroup" class="w-4 h-4" />
           <span class="text-sm truncate ellipsis">{l("Users directory")}</span>
-        </LivePatch>
+        </LiveRedirect>
       </li>
       <li :if={current_user(@current_user) ||
         Settings.get([:bonfire_social, :feeds, :federation, :show_guests], false, @__context__)}>
-        <LivePatch
+        <LiveRedirect
           class={
             "ml-1": @page != "federation",
             "border-l-4 border-primary bg-base-content bg-opacity-10": @page == "federation"
@@ -72,7 +72,7 @@
         >
           <Icon solid="Globe" class="w-4 h-4" />
           <span class="text-sm truncate ellipsis">{l("Federated")}</span>
-        </LivePatch>
+        </LiveRedirect>
       </li>
     </div>
   </div>
