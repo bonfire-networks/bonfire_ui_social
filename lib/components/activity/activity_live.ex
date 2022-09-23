@@ -523,8 +523,13 @@ defmodule Bonfire.UI.Social.ActivityLive do
   def component_maybe_in_reply_to(verb, %{replied: %{} = replied}, assigns),
     do: component_maybe_in_reply_to(verb, replied, assigns)
 
-  def component_maybe_in_reply_to(verb, %{thread: %{id: id} = thread}, assigns),
-    do: maybe_load_in_reply_to(thread, id)
+  def component_maybe_in_reply_to(
+        verb,
+        %{id: object_id, thread: %{id: thread_id} = thread},
+        assigns
+      )
+      when object_id != thread_id,
+      do: maybe_load_in_reply_to(thread, thread_id)
 
   def component_maybe_in_reply_to(_, a, _) do
     debug(a, "ActivityLive: no reply_to")

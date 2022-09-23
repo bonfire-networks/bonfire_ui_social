@@ -112,7 +112,7 @@
       class="flex items-center text-sm text-primary-content-600"
     >
       in <LiveRedirect
-        to={"/list/" <> e(@object, :output_of, :id, "")}
+        to={path(e(@object, :output_of, nil))}
         class="flex items-center ml-2 text-sm underline cursor-pointer text-primary-content-600 hover:font-medium"
       >
         {e(@object, :output_of, :name, "Unknown")}
