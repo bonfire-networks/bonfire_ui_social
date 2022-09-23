@@ -27,7 +27,7 @@ defmodule Bonfire.UI.Social.Feeds.LocalLive do
      |> assign(
        page: "local",
        page_title: l("Local"),
-       selected_tab: "local",
+       selected_tab: "local"
      )}
   end
 

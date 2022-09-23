@@ -17,5 +17,4 @@ defmodule Bonfire.UI.Social.ProfileTimelineLive do
 
   slot header
   slot widget
-
 end

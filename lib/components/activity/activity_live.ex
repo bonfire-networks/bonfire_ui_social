@@ -56,7 +56,11 @@ defmodule Bonfire.UI.Social.ActivityLive do
       activity
       # |> repo().maybe_preload(:media) # FIXME
       # |> debug("Activity provided")
-      |> Map.put(:object, Activities.object_from_activity(assigns))
+      |> Map.put(
+        :object,
+        Activities.object_from_activity(assigns)
+        |> debug("object")
+      )
 
     # |> debug("Activity with :object")
 
@@ -312,7 +316,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
     # |> debug("based on object")
     # |> debug("activity")
     do:
-      object |> component_maybe_creator() ||
+      component_maybe_creator(object) ||
         component_maybe_creator(activity)
 
   def component_activity_maybe_creator(activity, _) do
@@ -325,14 +329,14 @@ defmodule Bonfire.UI.Social.ActivityLive do
       }),
       do: component_maybe_creator(%{profile: profile, character: character})
 
-  def component_maybe_creator(%{provider: %{id: _}}),
-    do: [Bonfire.UI.Social.Activity.ProviderReceiverLive]
+  def component_maybe_creator(%{provider: %{id: _} = provider} = object),
+    do: [{Bonfire.UI.Social.Activity.ProviderReceiverLive, %{object: object}}]
 
-  def component_maybe_creator(%{primary_accountable: %{id: _} = primary_accountable}),
-    do: [{Bonfire.UI.Social.Activity.ProviderReceiverLive, %{provider: primary_accountable}}]
+  def component_maybe_creator(%{primary_accountable: %{id: _} = primary_accountable} = object),
+    do: [{Bonfire.UI.Social.Activity.ProviderReceiverLive, %{object: object}}]
 
-  def component_maybe_creator(%{receiver: %{id: _}}),
-    do: [Bonfire.UI.Social.Activity.ProviderReceiverLive]
+  def component_maybe_creator(%{receiver: %{id: _} = receiver} = object),
+    do: [{Bonfire.UI.Social.Activity.ProviderReceiverLive, %{object: object}}]
 
   def component_maybe_creator(%{created: %{creator: %{id: _}}} = object),
     do:
@@ -390,19 +394,31 @@ defmodule Bonfire.UI.Social.ActivityLive do
   def component_maybe_creator(%{provider: %Ecto.Association.NotLoaded{}} = object),
     do:
       object
-      |> repo().maybe_preload(provider: [:profile, :character])
+      |> repo().maybe_preload(
+        provider: [:profile, :character],
+        receiver: [:profile, :character],
+        primary_accountable: [:profile, :character]
+      )
       |> component_maybe_creator()
 
   def component_maybe_creator(%{receiver: %Ecto.Association.NotLoaded{}} = object),
     do:
       object
-      |> repo().maybe_preload(receiver: [:profile, :character])
+      |> repo().maybe_preload(
+        provider: [:profile, :character],
+        receiver: [:profile, :character],
+        primary_accountable: [:profile, :character]
+      )
       |> component_maybe_creator()
 
   def component_maybe_creator(%{primary_accountable: %Ecto.Association.NotLoaded{}} = object),
     do:
       object
-      |> repo().maybe_preload(primary_accountable: [:profile, :character])
+      |> repo().maybe_preload(
+        provider: [:profile, :character],
+        receiver: [:profile, :character],
+        primary_accountable: [:profile, :character]
+      )
       |> component_maybe_creator()
 
   def component_maybe_creator(activity) do
@@ -501,27 +517,40 @@ defmodule Bonfire.UI.Social.ActivityLive do
       )
       # other kind of reply
       when verb in @reply_verbs and is_binary(reply_to_id) do
+    maybe_load_in_reply_to(replied, activity_id)
+  end
+
+  def component_maybe_in_reply_to(verb, %{replied: %{} = replied}, assigns),
+    do: component_maybe_in_reply_to(verb, replied, assigns)
+
+  def component_maybe_in_reply_to(verb, %{thread: %{id: id} = thread}, assigns),
+    do: maybe_load_in_reply_to(thread, id)
+
+  def component_maybe_in_reply_to(_, a, _) do
+    debug(a, "ActivityLive: no reply_to")
+    []
+  end
+
+  def maybe_load_in_reply_to(
+        %{
+          id: reply_to_id
+        } = replied,
+        activity_inception
+      ) do
+    # FIXME: avoid n+1 and preload at feed level
     reply_to_activity = load_reply_to(e(replied, reply_to_id))
 
     [
       {Bonfire.UI.Social.ActivityLive,
        %{
          id: "ra:" <> reply_to_id,
-         activity_inception: activity_id,
+         activity_inception: activity_inception,
          object: e(reply_to_activity, :object, nil),
          # |> IO.inspect,
          activity: reply_to_activity |> Map.delete(:object),
          viewing_main_object: false
        }}
     ]
-  end
-
-  def component_maybe_in_reply_to(verb, %{replied: %{} = replied}, assigns),
-    do: component_maybe_in_reply_to(verb, replied, assigns)
-
-  def component_maybe_in_reply_to(_, _a, _) do
-    # debug(a, "ActivityLive: no reply_to")
-    []
   end
 
   def component_object(_, %{object: %{post_content: %{html_body: _}}}, _),

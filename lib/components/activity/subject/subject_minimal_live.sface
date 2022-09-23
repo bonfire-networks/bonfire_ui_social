@@ -73,186 +73,176 @@
     {#match :search}
       <div />
     {#match _}
-      <div class={
-        "flex items-center mb-2 pb-2 border-b border-base-content/10",
-        "": @verb not in ["Reply", "Respond"]
-      }>
-        <div :if={@verb == "Like"} class="flex items-center justify-start">
-          <!-- LIKE -->
-          <Icon solid="Star" class="w-5 h-5 text-yellow-500" />
-          <div class="flex-1 ml-2">
-            <div class="text-sm font-medium text-base-content text-opacity-80">
-              <LiveRedirect
-                aria-label={e(@activity, :subject, :character, :username, "") <> " profile"}
-                class="font-medium link link-hover"
-                to={path(e(@activity, :subject, :character, nil))}
-              >
-                {e(@activity, :subject, :profile, :name, nil) || e(@activity, :subject, :character, :username, nil)}
-              </LiveRedirect>
+      <div class="flex items-center mb-2 pb-2 border-b border-base-content/10">
+        {#if @verb == "Like"}
+          <div class="flex items-center justify-start">
+            <!-- LIKE -->
+            <Icon solid="Star" class="w-5 h-5 text-yellow-500" />
+            <div class="flex-1 ml-2">
+              <div class="text-sm font-medium text-base-content text-opacity-80">
+                <LiveRedirect
+                  aria-label={e(@activity, :subject, :character, :username, "") <> " profile"}
+                  class="font-medium link link-hover"
+                  to={path(e(@activity, :subject, :character, nil))}
+                >
+                  {e(@activity, :subject, :profile, :name, nil) || e(@activity, :subject, :character, :username, nil)}
+                </LiveRedirect>
 
-              {raw(@verb_display)}
-            </div>
-          </div>
-        </div>
-
-        <div :if={@verb == "Follow"} class="flex items-center justify-start">
-          <!-- FOLLOW -->
-          <Icon solid="UserAdd" class="flex-shrink-0 w-5 h-5 text-info" />
-          <div class="flex-1 ml-2">
-            <div class="text-sm font-medium text-base-content text-opacity-80">
-              <LiveRedirect
-                aria-label={e(@activity, :subject, :character, :username, "") <> " profile"}
-                class="font-medium link link-hover"
-                to={path(e(@activity, :subject, :character, nil))}
-              >
-                {e(@activity, :subject, :profile, :name, nil) || e(@activity, :subject, :character, :username, nil)}
-              </LiveRedirect>
-
-              {raw(@verb_display)}
-
-              <!-- special case when current_user is the one being followed -->
-              <span :if={ulid(@object) == ulid(@current_user)}>
-                {l("you")}
-              </span>
-            </div>
-          </div>
-        </div>
-
-        <div
-          :if={@verb == "Boost" and e(@activity, :subject, :table_id, nil) == "2AGSCANBECATEG0RY0RHASHTAG"}
-          class="flex items-center justify-start"
-        >
-          <!-- Something published in a Category / Topic -->
-          <Icon solid="Collection" class="w-4 h-4 text-base-content/80" />
-          <div class="flex-1 ml-2">
-            <div class="text-sm font-medium text-base-content text-opacity-80">
-              {l("Published in")}
-              <LiveRedirect
-                aria-label={e(@activity, :subject, :character, :username, "") <> " " <> l("profile")}
-                class="font-medium link link-hover"
-                to={path(e(@activity, :subject, :character, nil))}
-              >
-                {e(@activity, :subject, :profile, :name, nil) || e(@activity, :subject, :character, :username, nil)}
-              </LiveRedirect>
-            </div>
-          </div>
-        </div>
-
-        <div
-          :if={@verb == "Boost" and e(@activity, :subject, :table_id, nil) != "2AGSCANBECATEG0RY0RHASHTAG"}
-          class="flex items-center justify-start"
-        >
-          <!-- BOOST -->
-          <svg
-            viewBox="0 0 24 24"
-            width="24"
-            height="24"
-            stroke="currentColor"
-            stroke-width="2"
-            fill="none"
-            stroke-linecap="round"
-            stroke-linejoin="round"
-            class="w-4 h-4 text-info"
-          >
-            <polyline points="17 1 21 5 17 9" /><path d="M3 11V9a4 4 0 0 1 4-4h14" /><polyline points="7 23 3 19 7 15" /><path d="M21 13v2a4 4 0 0 1-4 4H3" />
-          </svg>
-          <div class="flex-1 ml-2">
-            <div class="text-sm font-medium text-base-content text-opacity-80">
-              <LiveRedirect
-                aria-label={e(@activity, :subject, :character, :username, "") <> " " <> l("profile")}
-                class="font-medium link link-hover"
-                to={path(e(@activity, :subject, :character, nil))}
-              >
-                {e(@activity, :subject, :profile, :name, nil) || e(@activity, :subject, :character, :username, nil)}
-              </LiveRedirect>
-              {raw(@verb_display)}
-            </div>
-          </div>
-        </div>
-
-        <div :if={@verb == "Reply"} class="flex w-full items-top">
-          <!-- REPLY -->
-          <div class="">
-            <Bonfire.UI.Common.AvatarLive user={e(@activity, :subject, nil)} />
-          </div>
-          <div class="flex ml-3 items-center justify-between min-w-0 space-x-1 w-full leading-[18px]">
-            <div class="flex items-center flex-1 truncate ellipsis">
-              <LiveRedirect
-                opts={"data-id": "subject_name"}
-                aria-label={e(@activity, :subject, :character, :username, nil) <> " " <> l("profile")}
-                class="font-semibold text-base-content link link-hover"
-                to={path(e(@activity, :subject, :character, nil))}
-              >
-                {e(@activity, :subject, :profile, :name, nil)}
-              </LiveRedirect>
-              <span
-                :if={e(@character, :username, nil)}
-                class="ml-1 text-sm truncate ellipsis text-base-content text-opacity-60 subject_username"
-              >@{e(@character, :username, "")}</span>
-            </div>
-
-            <Bonfire.UI.Social.Activity.DateAgoLive
-              permalink={@permalink}
-              date_ago={@date_ago}
-              object={@object}
-              object_type={@object_type}
-              object_boundary={@object_boundary}
-              showing_within={@showing_within}
-              verb_display={@verb_display}
-            />
-          </div>
-        </div>
-
-        <div :if={@verb == "Flag"} class="flex items-center justify-start">
-          <!-- FLAG -->
-          <Icon solid="Flag" class="w-4 h-4 text-error" />
-          <div class="flex-1 ml-2">
-            <div class="text-sm font-medium text-base-content text-opacity-80">
-              <LiveRedirect
-                aria-label={e(@activity, :subject, :character, :username, "") <> " " <> l("profile")}
-                class="font-medium link link-hover"
-                to={path(e(@activity, :subject, :character, nil))}
-              >
-                {e(@activity, :subject, :profile, :name, nil) || e(@activity, :subject, :character, :username, nil)}
-              </LiveRedirect>
-              {raw(@verb_display)}
-            </div>
-          </div>
-        </div>
-
-        <div
-          :if={@verb not in ["Flag", "Reply", "Boost", "Like"]}
-          class="flex items-center justify-start"
-        >
-          <!-- OTHER -->
-          <Icon iconify={Bonfire.Boundaries.Verbs.get(@verb)[:icon]} class="w-4 h-4 text-error" />
-          <div class="flex-1 ml-2">
-            <div class="text-sm font-medium text-base-content text-opacity-80">
-              <LiveRedirect
-                aria-label={e(@activity, :subject, :character, :username, "") <> " " <> l("profile")}
-                class="font-medium link link-hover"
-                to={path(e(@activity, :subject, :character, nil))}
-              >
-                {e(@activity, :subject, :profile, :name, nil) || e(@activity, :subject, :character, :username, nil)}
-              </LiveRedirect>
-              {#if @verb == "Schedule" and e(@object, :due, nil)}
-                {l("scheduled for %{date}", date: date_from_now(e(@object, :due, nil)))}
-              {#elseif @verb == "Label" and e(@object, :finished, nil) == true}
-                {l("completed")}
-              {#elseif @verb == "Label" and e(@object, :finished, nil) == false}
-                {l("re-opened")}
-              {#elseif @verb in ["Assign", "Appoint"] and e(@object, :provider, nil)}
-                {l("assigned to %{name}",
-                  name:
-                    e(@object, :provider, :profile, :name, nil) ||
-                      e(@object, :provider, :character, :username, nil)
-                )}
-              {#else}
                 {raw(@verb_display)}
-              {/if}
+              </div>
             </div>
           </div>
-        </div>
+        {#elseif @verb == "Follow"}
+          <div class="flex items-center justify-start">
+            <!-- FOLLOW -->
+            <Icon solid="UserAdd" class="flex-shrink-0 w-5 h-5 text-info" />
+            <div class="flex-1 ml-2">
+              <div class="text-sm font-medium text-base-content text-opacity-80">
+                <LiveRedirect
+                  aria-label={e(@activity, :subject, :character, :username, "") <> " profile"}
+                  class="font-medium link link-hover"
+                  to={path(e(@activity, :subject, :character, nil))}
+                >
+                  {e(@activity, :subject, :profile, :name, nil) || e(@activity, :subject, :character, :username, nil)}
+                </LiveRedirect>
+
+                {raw(@verb_display)}
+
+                <!-- special case when current_user is the one being followed -->
+                <span :if={ulid(@object) == ulid(@current_user)}>
+                  {l("you")}
+                </span>
+              </div>
+            </div>
+          </div>
+        {#elseif @verb == "Boost" and e(@activity, :subject, :table_id, nil) == "2AGSCANBECATEG0RY0RHASHTAG"}
+          <div class="flex items-center justify-start">
+            <!-- Something published in a Category / Topic -->
+            <Icon solid="Collection" class="w-4 h-4 text-base-content/80" />
+            <div class="flex-1 ml-2">
+              <div class="text-sm font-medium text-base-content text-opacity-80">
+                {l("Published in")}
+                <LiveRedirect
+                  aria-label={e(@activity, :subject, :character, :username, "") <> " " <> l("profile")}
+                  class="font-medium link link-hover"
+                  to={path(e(@activity, :subject, :character, nil))}
+                >
+                  {e(@activity, :subject, :profile, :name, nil) || e(@activity, :subject, :character, :username, nil)}
+                </LiveRedirect>
+              </div>
+            </div>
+          </div>
+        {#elseif @verb == "Boost" and e(@activity, :subject, :table_id, nil) != "2AGSCANBECATEG0RY0RHASHTAG"}
+          <div class="flex items-center justify-start">
+            <!-- BOOST -->
+            <svg
+              viewBox="0 0 24 24"
+              width="24"
+              height="24"
+              stroke="currentColor"
+              stroke-width="2"
+              fill="none"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              class="w-4 h-4 text-info"
+            >
+              <polyline points="17 1 21 5 17 9" /><path d="M3 11V9a4 4 0 0 1 4-4h14" /><polyline points="7 23 3 19 7 15" /><path d="M21 13v2a4 4 0 0 1-4 4H3" />
+            </svg>
+            <div class="flex-1 ml-2">
+              <div class="text-sm font-medium text-base-content text-opacity-80">
+                <LiveRedirect
+                  aria-label={e(@activity, :subject, :character, :username, "") <> " " <> l("profile")}
+                  class="font-medium link link-hover"
+                  to={path(e(@activity, :subject, :character, nil))}
+                >
+                  {e(@activity, :subject, :profile, :name, nil) || e(@activity, :subject, :character, :username, nil)}
+                </LiveRedirect>
+                {raw(@verb_display)}
+              </div>
+            </div>
+          </div>
+        {#elseif @verb in ["Reply", "Respond"]}
+          <div class="flex w-full items-top">
+            <!-- REPLY -->
+            <div class="">
+              <Bonfire.UI.Common.AvatarLive user={e(@activity, :subject, nil)} />
+            </div>
+            <div class="flex ml-3 items-center justify-between min-w-0 space-x-1 w-full leading-[18px]">
+              <div class="flex items-center flex-1 truncate ellipsis">
+                <LiveRedirect
+                  opts={"data-id": "subject_name"}
+                  aria-label={e(@activity, :subject, :character, :username, nil) <> " " <> l("profile")}
+                  class="font-semibold text-base-content link link-hover"
+                  to={path(e(@activity, :subject, :character, nil))}
+                >
+                  {e(@activity, :subject, :profile, :name, nil)}
+                </LiveRedirect>
+                <span
+                  :if={e(@character, :username, nil)}
+                  class="ml-1 text-sm truncate ellipsis text-base-content text-opacity-60 subject_username"
+                >@{e(@character, :username, "")}</span>
+              </div>
+
+              <Bonfire.UI.Social.Activity.DateAgoLive
+                permalink={@permalink}
+                date_ago={@date_ago}
+                object={@object}
+                object_type={@object_type}
+                object_boundary={@object_boundary}
+                showing_within={@showing_within}
+                verb_display={@verb_display}
+              />
+            </div>
+          </div>
+        {#elseif @verb == "Flag"}
+          <div class="flex items-center justify-start">
+            <!-- FLAG -->
+            <Icon solid="Flag" class="w-4 h-4 text-error" />
+            <div class="flex-1 ml-2">
+              <div class="text-sm font-medium text-base-content text-opacity-80">
+                <LiveRedirect
+                  aria-label={e(@activity, :subject, :character, :username, "") <> " " <> l("profile")}
+                  class="font-medium link link-hover"
+                  to={path(e(@activity, :subject, :character, nil))}
+                >
+                  {e(@activity, :subject, :profile, :name, nil) || e(@activity, :subject, :character, :username, nil)}
+                </LiveRedirect>
+                {raw(@verb_display)}
+              </div>
+            </div>
+          </div>
+        {#else}
+          <div class="flex items-center justify-start">
+            <!-- OTHER -->
+            <Icon iconify={Bonfire.Boundaries.Verbs.get(@verb)[:icon]} class="w-4 h-4 text-error" />
+            <div class="flex-1 ml-2">
+              <div class="text-sm font-medium text-base-content text-opacity-80">
+                <LiveRedirect
+                  aria-label={e(@activity, :subject, :character, :username, "") <> " " <> l("profile")}
+                  class="font-medium link link-hover"
+                  to={path(e(@activity, :subject, :character, nil))}
+                >
+                  {e(@activity, :subject, :profile, :name, nil) || e(@activity, :subject, :character, :username, nil)}
+                </LiveRedirect>
+                {#if @verb == "Schedule" and e(@object, :due, nil)}
+                  {l("scheduled for %{date}", date: date_from_now(e(@object, :due, nil)))}
+                {#elseif @verb == "Label" and e(@object, :finished, nil) == true}
+                  {l("completed")}
+                {#elseif @verb == "Label" and e(@object, :finished, nil) == false}
+                  {l("re-opened")}
+                {#elseif @verb in ["Assign", "Appoint"] and e(@object, :provider, nil)}
+                  {l("assigned to %{name}",
+                    name:
+                      e(@object, :provider, :profile, :name, nil) ||
+                        e(@object, :provider, :character, :username, nil)
+                  )}
+                {#else}
+                  {raw(@verb_display)}
+                {/if}
+              </div>
+            </div>
+          </div>
+        {/if}
       </div>
   {/case}
 </div>

@@ -2,8 +2,8 @@
   <#slot {@header} />
   <div class={
     "grid items-start grid-cols-1",
-    "lg:grid-cols-[680px_320px] gap-5": @widget != nil 
-    }>
+    "lg:grid-cols-[680px_320px] gap-5": @widget != nil
+  }>
     <Bonfire.UI.Social.FeedLive
       id="feed:profile:timeline"
       feed_id={"user:#{@selected_tab}:#{ulid(@user)}"}
