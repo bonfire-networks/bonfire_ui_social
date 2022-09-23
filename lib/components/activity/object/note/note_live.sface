@@ -59,9 +59,10 @@
         data-id="object_body"
         class={
           "prose break-words object_body max-w-none font-[16px] mt-1 prose-sm prose-p:pt-0 prose-p:my-0",
-          "line-clamp-2": ulid(@object) != nil and
-          e(@activity, :replied, :reply_to_id, nil) == nil and ulid(@activity) == nil and
-          e(assigns, :showing_within, nil) != :widget and e(assigns, :showing_within, nil) != :search,
+          "line-clamp-2":
+            ulid(@object) != nil and
+              e(@activity, :replied, :reply_to_id, nil) == nil and ulid(@activity) == nil and
+              e(assigns, :showing_within, nil) != :widget and e(assigns, :showing_within, nil) != :search,
           "font-[16px] mt-1 prose-sm prose-p:pt-0 prose-p:my-0 !leading-[22px]":
             e(@showing_within, nil) == :thread,
           "prose-lg mt-3 prose-p:pb-4 !leading-[26px] prose-p:leading-[26px]":

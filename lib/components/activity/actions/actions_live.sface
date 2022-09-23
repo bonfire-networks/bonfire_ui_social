@@ -38,7 +38,7 @@
           }
         />
         <!-- TODO: derive the view from object_type? and compute object_type not just based on schema, but also with some logic looking at fields (eg. action=="work") -->
-        {#elseif String.starts_with?(@permalink, ["/coordination/task/"])}
+      {#elseif String.starts_with?(@permalink, ["/coordination/task/"])}
         <Bonfire.UI.Common.OpenPreviewLive
           href={@permalink}
           open_btn_text={l("View task")}
@@ -48,7 +48,7 @@
             id: @thread_id || ulid(@object),
             preview_view: Bonfire.UI.Coordination.TaskLive
           }
-        /> 
+        />
       {#else}
         <LiveRedirect to={@permalink} class="px-1 font-normal normal-case btn btn-sm btn-ghost">
           {l("View")}

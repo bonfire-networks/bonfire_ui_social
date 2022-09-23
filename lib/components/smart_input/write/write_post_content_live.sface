@@ -85,10 +85,10 @@
           context_id={@context_id}
           create_object_type={@create_object_type}
           to_boundaries={@to_boundaries}
-          to_circles={e(@to_circles, [])}
+          to_circles={@to_circles}
           showing_within={@showing_within}
           uploads={@uploads}
-          uploaded_files={e(@uploaded_files, [])}
+          uploaded_files={@uploaded_files}
         />
       </div>
     </div>
