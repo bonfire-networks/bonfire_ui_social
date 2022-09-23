@@ -69,7 +69,7 @@
             </div>
           </div>
         </div>
-        <div class="relative flex flex-col flex-1 p-4 sm:px-6">
+        <div class="relative flex-col flex-1 hidden p-4 tablet-lg:flex sm:px-6">
           <Bonfire.UI.Social.MessageThreadsLive
             context={@context}
             threads={@threads}
