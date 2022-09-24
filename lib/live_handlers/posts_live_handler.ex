@@ -98,7 +98,7 @@ defmodule Bonfire.Social.Posts.LiveHandler do
         |> Bonfire.UI.Common.SmartInputLive.reset_input()
         # |> push_patch_with_fallback(current_url(socket), path(published)) # so the flash appears - TODO: causes a conflict between the activity coming in via pubsub
 
-        # Phoenix.LiveView.assign(socket,
+        # assign_generic(socket,
         #   feed: [%{published.activity | object_post: published.post, subject_user: current_user(socket)}] ++ Map.get(socket.assigns, :feed, [])
         # )
       }
