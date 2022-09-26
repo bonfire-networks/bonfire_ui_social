@@ -8,7 +8,7 @@ defmodule Bonfire.UI.Social.Activity.NoteLive do
   prop permalink, :string
   prop date_ago, :string
   prop showing_within, :string
-  prop activity_inception, :any
+  prop activity_inception, :any, default: nil
 
   def preloads(),
     do: [
@@ -20,8 +20,8 @@ defmodule Bonfire.UI.Social.Activity.NoteLive do
     # |> debug("activity_note_object")
   end
 
-  def maybe_truncate(input, assigns, length \\ 100) do
-    if e(assigns, :activity_inception, nil),
+  def maybe_truncate(input, activity_inception, length \\ 100) do
+    if activity_inception,
       do: Text.sentence_truncate(input, length, "..."),
       else: input
   end

@@ -14,7 +14,7 @@ defmodule Bonfire.UI.Social.WritePostContentLive do
   prop context_id, :string, default: nil
   prop create_object_type, :atom, default: nil
   prop to_boundaries, :list, default: []
-  prop to_circles, :list, default: nil
+  prop to_circles, :list, default: []
   prop smart_input_prompt, :string, default: nil
   prop smart_input_text, :string, required: false
   prop showing_within, :string, default: nil

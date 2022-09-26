@@ -23,7 +23,7 @@ defmodule Bonfire.UI.Social.DiscussionLive do
        page: "discussion",
        showing_within: :thread,
        # search_placeholder: l("Search this discussion"),
-       to_circles: nil,
+       to_circles: [],
        participants: nil,
        smart_input_text: nil,
        smart_input_prompt: l("Reply to this discussion"),

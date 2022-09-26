@@ -71,7 +71,7 @@
           thread_mode={@thread_mode}
           create_object_type={@create_object_type}
           to_boundaries={@to_boundaries}
-          to_circles={e(@to_circles, [])}
+          to_circles={@to_circles}
           preloaded_recipients={e(@preloaded_recipients, [])}
           showing_within={@showing_within}
           open_boundaries={@open_boundaries}

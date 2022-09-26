@@ -5,7 +5,7 @@
   smart_input_prompt={@smart_input_prompt}
   smart_input_text={@smart_input_text}
   to_boundaries={e(@to_boundaries, [])}
-  to_circles={e(@to_circles, [])}
+  to_circles={@to_circles}
   reply_to_id={@reply_to_id}
   thread_mode={@thread_mode}
   activity={@activity}

@@ -235,6 +235,8 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
       debug(feed_ids, "send_update to feeds")
 
       send_feed_updates(feed_ids, new_activity: data[:activity])
+    else
+      debug("I not have permission to view this new activity")
     end
 
     {:noreply, socket}
@@ -258,15 +260,16 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
   #    )}
   # end
 
-  def send_feed_updates(feed_ids, assigns, component \\ Bonfire.UI.Social.FeedLive)
+  defp send_feed_updates(feed_ids, assigns, component \\ Bonfire.UI.Social.FeedLive)
 
-  def send_feed_updates(feed_ids, assigns, component) when is_list(feed_ids) do
+  defp send_feed_updates(feed_ids, assigns, component) when is_list(feed_ids) do
     for feed_id <- feed_ids do
       send_feed_updates(feed_id, assigns, component)
     end
   end
 
-  def send_feed_updates(feed_id, assigns, component) do
+  defp send_feed_updates(feed_id, assigns, component) do
+    debug(feed_id, "Sending feed update to")
     maybe_send_update(component, feed_id, assigns)
   end
 
@@ -461,16 +464,19 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
 
     if (socket_connected || current_user(socket)) && Config.get(:env) != :test do
       if socket_connected do
-        debug("socket connected, so load async")
+        debug("socket connected, so load feed async")
         pid = self()
 
         Task.async(fn ->
-          # Query activities asynchronously
-          maybe_send_update(
+          debug(feed_id_or_tuple, "Query activities asynchronously")
+
+          feed_assigns(feed_id_or_tuple, socket)
+          # |> debug("feed_assigns")
+          |> maybe_send_update(
             pid,
             Bonfire.UI.Social.FeedLive,
             feed_id_only(feed_id_or_tuple),
-            feed_assigns(feed_id_or_tuple, socket)
+            ...
           )
         end)
       else
@@ -496,9 +502,10 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
   defp feed_assigns({_feed_id, %Ecto.Query{} = custom_query}, socket) do
     feed =
       custom_query
-      |> debug("query")
+      |> debug("custom_query")
       |> Bonfire.Social.FeedActivities.feed(socket)
-      |> debug("queried")
+
+    # |> debug("queried")
 
     [
       loading: false,
@@ -508,8 +515,12 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
   end
 
   defp feed_assigns({_feed_id, feed_ids}, socket) do
-    # debug(myfeed: feed)
-    feed = Bonfire.Social.FeedActivities.my_feed(socket, feed_ids)
+    feed =
+      feed_ids
+      |> debug("my feed_ids")
+      |> Bonfire.Social.FeedActivities.my_feed(socket, ...)
+
+    # |> debug("queried")
 
     [
       loading: false,
@@ -519,7 +530,12 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
   end
 
   defp feed_assigns(feed_id, socket) when is_binary(feed_id) do
-    feed = Bonfire.Social.FeedActivities.feed(feed_id, socket)
+    feed =
+      feed_id
+      |> debug("feed_id")
+      |> Bonfire.Social.FeedActivities.feed(..., socket)
+
+    # |> debug("queried")
 
     [
       loading: false,
@@ -620,12 +636,14 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
         pid = self()
 
         Task.async(fn ->
-          # Query activities asynchronously
-          maybe_send_update(
+          debug("Query user activities asynchronously")
+
+          load_user_feed_assigns(tab, user_or_feed, params, socket)
+          |> maybe_send_update(
             pid,
             Bonfire.UI.Social.FeedLive,
             "feed:profile:#{tab}",
-            load_user_feed_assigns(tab, user_or_feed, params, socket)
+            ...
           )
         end)
       else

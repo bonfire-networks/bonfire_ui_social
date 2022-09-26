@@ -29,12 +29,12 @@ defmodule Bonfire.UI.Social.WriteLive do
        page_title: l("Write"),
        page: "write",
        hide_smart_input: true,
-       create_object_type: nil,
-       smart_input_text: e(session, "smart_input_text", ""),
-       reply_to_id: nil,
-       thread_id: nil,
+       create_object_type: maybe_to_atom(e(session, "create_object_type", nil)),
+       smart_input_text: e(session, "smart_input_text", nil),
+       reply_to_id: e(session, "reply_to_id", nil),
+       context_id: e(session, "context_id", nil),
        to_boundaries: nil,
-       to_circles: nil
+       to_circles: []
      )}
   end
 

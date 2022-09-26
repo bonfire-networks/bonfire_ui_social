@@ -10,21 +10,21 @@ defmodule Bonfire.UI.Social.ThreadLive do
 
   prop replies, :any, default: nil
   prop threaded_replies, :any, default: nil
-  prop page_info, :any
-  prop activity, :any
-  prop object, :any
-  prop reply_to_id, :any
-  prop thread_id, :any
+  prop page_info, :any, default: nil
+  prop activity, :any, default: nil
+  prop object, :any, default: nil
+  prop reply_to_id, :any, default: nil
+  prop thread_id, :any, default: nil
   prop page, :any, default: "thread"
   prop feed_id, :any, default: nil
   prop create_object_type, :atom, default: nil
-  prop to_boundaries, :list
-  prop to_circles, :list
-  prop url, :string
-  prop smart_input_prompt, :string
-  prop smart_input_text, :string
-  prop thread_mode, :any
-  prop reverse_order, :any
+  prop to_boundaries, :list, default: []
+  prop to_circles, :list, default: []
+  prop url, :string, default: nil
+  prop smart_input_prompt, :string, default: nil
+  prop smart_input_text, :string, default: nil
+  prop thread_mode, :any, default: nil
+  prop reverse_order, :any, default: nil
   prop showing_within, :any, default: :thread
   prop loading, :boolean, default: false
 

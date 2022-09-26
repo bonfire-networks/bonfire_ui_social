@@ -52,7 +52,7 @@
       thread_id={@thread_id}
       create_object_type={@create_object_type}
       to_boundaries={e(@to_boundaries, [])}
-      to_circles={e(@to_circles, [])}
+      to_circles={@to_circles}
       smart_input_prompt={e(@smart_input_prompt, "")}
       smart_input_text={e(@smart_input_text, "")}
       showing_within={e(@showing_within, :thread)}

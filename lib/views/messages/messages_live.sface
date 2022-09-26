@@ -8,7 +8,7 @@
           feed_id={@feed_id}
           create_object_type={@create_object_type}
           to_boundaries={e(@to_boundaries, [])}
-          to_circles={e(@to_circles, [])}
+          to_circles={@to_circles}
           participants={e(@participants, [])}
           smart_input_text={e(@smart_input_text, "")}
           smart_input_prompt={e(@smart_input_prompt, "")}
@@ -50,7 +50,7 @@
             reply_to_id={e(@reply_to_id, "")}
             thread_id={@thread_id}
             to_boundaries={e(@to_boundaries, [])}
-            to_circles={e(@to_circles, [])}
+            to_circles={@to_circles}
             create_object_type={@create_object_type}
             thread_mode={:flat}
             boundary="message"

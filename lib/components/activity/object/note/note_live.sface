@@ -52,7 +52,7 @@
         :if={e(post_content(@object), :summary, nil)}
         class="font-light prose max-w-prose prose-p:pt-1"
       >
-        {rich(e(post_content(@object), :summary, ""))}
+        {rich(e(post_content(@object), :summary, nil))}
       </p>
 
       <div
@@ -70,7 +70,12 @@
           "prose-p:pt-1 !my-3 !leading-[20px]": e(@showing_within, nil) == :feed
         }
       >
-        {rich(e(post_content(@object), :html_body, l("This post has been deleted.")))}
+        {rich(
+          maybe_truncate(
+            e(post_content(@object), :html_body, l("This post has been deleted.")),
+            @activity_inception
+          )
+        )}
       </div>
     </div>
   </div>

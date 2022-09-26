@@ -10,7 +10,7 @@ defmodule Bonfire.UI.Social.ViewObjectThreadLive do
   prop search_placeholder, :string, default: nil
   prop create_object_type, :atom, default: nil
   prop to_boundaries, :list, default: nil
-  prop to_circles, :list, default: nil
+  prop to_circles, :list, default: []
   prop smart_input_prompt, :string, default: nil
   prop smart_input_text, :string, default: nil
   prop reply_to_id, :string, default: nil

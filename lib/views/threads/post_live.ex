@@ -22,7 +22,7 @@ defmodule Bonfire.UI.Social.PostLive do
      |> assign(
        page_title: l("Post"),
        page: "discussion",
-       to_circles: nil,
+       to_circles: [],
        participants: nil,
        smart_input_text: nil,
        smart_input_prompt: l("Reply to this thread"),

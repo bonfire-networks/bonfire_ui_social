@@ -1,9 +1,9 @@
 defmodule Bonfire.UI.Social.MessageThreadsLive do
   use Bonfire.UI.Common.Web, :stateless_component
 
-  prop threads, :any
-  prop thread_id, :string
-  prop tab_id, :string
+  prop threads, :any, default: nil
+  prop thread_id, :string, default: nil
+  prop tab_id, :string, default: nil
   prop context, :any, default: nil
   prop showing_within, :string, default: nil
   # prop to_boundaries, :list
