@@ -4,7 +4,7 @@
 >
   <ul
     :if={!Bonfire.Me.Settings.get([:ui, :show_trending_tags, :disabled], nil, @__context__)}
-    class="menu rounded-b-md"
+    class="menu rounded-b-xl"
   >
     {#if length(
         Bonfire.Tag.Tags.list_trending(
@@ -19,33 +19,33 @@
           )}
         {#case e(tag, :tag, nil)}
           {#match %Bonfire.Tag.Hashtag{} = hashtag}
-            <LiveRedirect to={"/hashtag/" <> hashtag.name}>
-              <li class="">
+            <li class="">
+              <LiveRedirect to={"/hashtag/" <> hashtag.name}>
                 <div class="flex flex-row items-center">
                   <div class="flex flex-col items-start flex-1 gap-0 text-left">
-                    <div class="font-bold text-base-content">
+                    <div class="text-sm font-bold text-base-content">
                       #{hashtag.name}
                     </div>
                     <div class="text-xs font-light text-base-content text-opacity-80">{e(tag, :count, 0)} {l("activities")}</div>
                   </div>
                   <!-- <div><Icon outline="DotsHorizontal" class="w-5 h-5 text-base-content text-opacity-60" /></div> -->
                 </div>
-              </li>
-            </LiveRedirect>
+              </LiveRedirect>
+            </li>
           {#match other}
-            <LiveRedirect to={path(other)}>
-              <li class="">
+            <li class="">
+              <LiveRedirect to={path(other)}>
                 <div class="flex flex-row items-center">
                   <div class="flex flex-col items-start flex-1 gap-0 text-left">
-                    <div class="font-bold text-base-content">
+                    <div class="text-sm font-bold text-base-content">
                       {e(other, :name, nil) || e(other, :profile, :name, nil) || e(other, :character, :username, nil) ||
                         e(other, :named, :name, nil) || e(other, :id, nil)}
                     </div>
                     <div class="text-xs font-light text-base-content text-opacity-80">{e(tag, :count, 0)} {l("activities")}</div>
                   </div>
                 </div>
-              </li>
-            </LiveRedirect>
+              </LiveRedirect>
+            </li>
         {/case}
       {/for}
     {#else}
