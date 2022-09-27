@@ -1,5 +1,5 @@
 <div id={@id || @feed_id} role="feed" aria-live="assertive" aria-atomic="true" class="feed">
-  <div class="flex flex-col mx-auto">
+  <div class="flex flex-col p-3 mx-auto md:p-0">
     {#if length(@feed) > 0}
       <div
         id={"feed:#{@feed_id || @id}"}

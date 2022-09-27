@@ -19,7 +19,9 @@
       feed_title={@feed_title}
       loading={@loading}
     />
-    <#slot {@widget} />
+    <div class="hidden lg:flex">
+      <#slot {@widget} />
+    </div>
   </div>
   <a
     :if={e(@user, :character, :peered, :canonical_uri, nil)}

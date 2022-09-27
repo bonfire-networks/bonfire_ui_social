@@ -20,7 +20,7 @@
         />
         <!-- <LivePatch to={if @process_url, do: e(@process_url, "/list/") <> e(@object, :id, ""), else: path(@object)}> -->
         <LiveRedirect to={"/coordination/list/" <> e(@object, :id, "")}>
-          <div class="text-lg font-medium text-base-content hover:underline">{e(@object, :name, nil)}</div>
+          <div class="text-base font-medium text-base-content hover:underline">{e(@object, :name, nil)}</div>
         </LiveRedirect>
       </div>
 
