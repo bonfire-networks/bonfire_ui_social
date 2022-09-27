@@ -7,7 +7,7 @@ defmodule Bonfire.UI.Social.WritePostContentLive do
   alias Surface.Components.Form.TextInput
   alias Surface.Components.Form.Field
   alias Surface.Components.Form.Inputs
-  alias Bonfire.UI.Social.WriteEditorLive
+  alias Bonfire.UI.Common.WriteEditorLive
 
   # prop target_component, :string, default: nil
   prop reply_to_id, :string, default: nil

@@ -96,7 +96,7 @@ defmodule Bonfire.Social.Posts.LiveHandler do
           "#{l("Posted!")} <a href='#{permalink}' class='mx-1 text-sm text-gray-500 capitalize link'>#{l("Show")}</a>"
         )
         |> Bonfire.UI.Common.SmartInputLive.reset_input()
-        # |> push_patch_with_fallback(current_url(socket), path(published)) # so the flash appears - TODO: causes a conflict between the activity coming in via pubsub
+        # |> patch_to(current_url(socket), fallback: path(published)) # so the flash appears - TODO: causes a conflict between the activity coming in via pubsub
 
         # assign_generic(socket,
         #   feed: [%{published.activity | object_post: published.post, subject_user: current_user(socket)}] ++ Map.get(socket.assigns, :feed, [])
@@ -233,7 +233,7 @@ defmodule Bonfire.Social.Posts.LiveHandler do
     # |> debug("pc")
   end
 
-  defp multi_upload(current_user, metadata, socket) do
+  def multi_upload(current_user, metadata, socket) do
     maybe_consume_uploaded_entries(socket, :files, fn %{path: path} = meta, entry ->
       debug(meta, "consume_uploaded_entries meta")
       debug(entry, "consume_uploaded_entries entry")
