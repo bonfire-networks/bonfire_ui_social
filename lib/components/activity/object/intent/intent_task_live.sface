@@ -38,7 +38,7 @@
       <div
         :if={!e(@object, :finished, nil) and !e(@object, :provider, nil)}
         class="flex items-center p-1 px-2 rounded-lg bg-base-content/10"
-        >
+      >
         <svg class="mr-2" width="14" height="14" viewBox="0 0 14 14" fill="none"><rect x="1" y="1" width="12" height="12" rx="6" stroke="#e2e2e2" stroke-width="2" fill="none" /><path
             fill="#e2e2e2"
             stroke="none"
@@ -50,7 +50,7 @@
       <div
         :if={!e(@object, :finished, nil) and e(@object, :provider, nil)}
         class="flex items-center p-1 px-2 rounded-lg bg-base-content/10"
-        >
+      >
         <svg width="14" height="14" class="mr-2" viewBox="0 0 14 14" fill="none"><rect x="1" y="1" width="12" height="12" rx="6" stroke="#f2c94c" stroke-width="2" fill="none" /><path
             fill="#f2c94c"
             stroke="none"
@@ -75,7 +75,7 @@
       <div
         :if={e(@object, :finished, nil)}
         class="flex items-center p-1 px-2 rounded-lg bg-base-content/10"
-        >
+      >
         <svg
           xmlns="http://www.w3.org/2000/svg"
           class="w-4 h-4 mr-2 text-green-500"
@@ -93,7 +93,7 @@
       <div
         :if={e(@object, :due, nil)}
         class="flex items-center gap-2 text-sm text-base-content/70 text-medium"
-        >
+      >
         <Icon solid="Calendar" class="w-4 h-4 text-base-content/70" />
         <span>{date_from_now(e(@object, :due, nil)) || l("No due date")}</span>
       </div>
@@ -101,7 +101,7 @@
     <div
       :if={e(@object, :output_of, :id, nil)}
       class="flex items-center text-sm text-primary-content-600"
-      >
+    >
       in <LiveRedirect
         to={path(e(@object, :output_of, nil))}
         class="flex items-center ml-2 text-sm underline cursor-pointer text-primary-content-600 hover:font-medium"
@@ -110,8 +110,6 @@
       </LiveRedirect>
     </div>
   </div>
-
-  
 </div>
 
 <!--
