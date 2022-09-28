@@ -18,7 +18,7 @@ defmodule Bonfire.Social.Likes.LiveHandler do
 
   # unlike in LV
   def handle_event("like", %{"direction" => "down", "id" => id} = params, socket) do
-    with _ <- Bonfire.Social.Likes.unlike(current_user(socket), id) do
+    with _ <- Bonfire.Social.Likes.unlike(current_user_required(socket), id) do
       like_action(id, false, params, socket)
     end
   end

@@ -25,7 +25,7 @@ defmodule Bonfire.Social.Follows.LiveHandler do
   end
 
   def handle_event("unfollow", %{"id" => id} = params, socket) do
-    with _ <- Bonfire.Social.Follows.unfollow(current_user(socket), id) do
+    with _ <- Bonfire.Social.Follows.unfollow(current_user_required(socket), id) do
       set = [
         my_follow: false
       ]
@@ -44,7 +44,8 @@ defmodule Bonfire.Social.Follows.LiveHandler do
   def handle_event("accept", %{"id" => id} = params, socket) do
     # debug(socket)
 
-    with {:ok, _follow} <- Bonfire.Social.Follows.accept(id, current_user: current_user(socket)) do
+    with {:ok, _follow} <-
+           Bonfire.Social.Follows.accept(id, current_user: current_user_required(socket)) do
       {:noreply, socket}
     else
       e ->

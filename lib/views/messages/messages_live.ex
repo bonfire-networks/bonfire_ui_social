@@ -43,7 +43,7 @@ defmodule Bonfire.UI.Social.MessagesLive do
        smart_input_text: nil,
        feedback_title: l("No messages"),
        feedback_message: l("Select a thread or start a new one..."),
-       threads: LiveHandler.list_threads(current_user(socket), socket),
+       threads: LiveHandler.list_threads(current_user_required(socket), socket),
        smart_input_prompt: l("Compose a thoughtful message..."),
        page_header_aside: [
          {Bonfire.UI.Social.HeaderAsideNotificationsSeenLive,
@@ -73,7 +73,7 @@ defmodule Bonfire.UI.Social.MessagesLive do
   def do_handle_params(%{"username" => username} = params, url, socket) do
     # view messages excanged with a particular user
 
-    current_user = current_user(socket)
+    current_user = current_user_required(socket)
     current_username = e(current_user, :character, :username, nil)
 
     user =
@@ -135,7 +135,7 @@ defmodule Bonfire.UI.Social.MessagesLive do
   end
 
   def do_handle_params(%{"id" => "compose" = id} = params, url, socket) do
-    current_user = current_user(socket)
+    current_user = current_user_required(socket)
     users = Bonfire.Social.Follows.list_my_followed(current_user, paginate: false)
 
     {:noreply,
@@ -162,7 +162,7 @@ defmodule Bonfire.UI.Social.MessagesLive do
     else
       # show a message thread
 
-      current_user = current_user(socket)
+      current_user = current_user_required(socket)
 
       with {:ok, message} <- Bonfire.Social.Messages.read(id, current_user: current_user) do
         # debug(message, "the first message in thread")
@@ -267,7 +267,7 @@ defmodule Bonfire.UI.Social.MessagesLive do
 
   # show all my threads
   def do_handle_params(_params, url, socket) do
-    current_user = current_user(socket)
+    current_user = current_user_required(socket)
 
     {
       :noreply,

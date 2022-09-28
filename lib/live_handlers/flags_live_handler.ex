@@ -17,7 +17,7 @@ defmodule Bonfire.Social.Flags.LiveHandler do
 
   # unflag in LV
   def handle_event("unflag", %{"id" => id} = attrs, socket) do
-    current_user = current_user(socket)
+    current_user = current_user_required(socket)
 
     subject =
       if attrs["subject"] && Bonfire.Me.Users.is_admin?(current_user),

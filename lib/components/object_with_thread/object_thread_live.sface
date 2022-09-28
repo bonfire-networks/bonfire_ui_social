@@ -1,34 +1,29 @@
 <div class="flex flex-col flex-1">
   <div class="flex-1">
-
-
-  <div class="flex z-50  items-start justify-between h-[56px]">
-    <div class="flex items-center gap-3">
-      <a
-        aria-label="Navigate to the previous page"
-        href="javascript:window.history.back()"
-        class="btn btn-ghost btn-sm btn-circle"
-      >
-        <Icon outline="ArrowLeft" class="w-4 h-4 text-base-content" />
-      </a>
-      <span class="text-base capitalize text-base-content/80">{l("Discussion")}</span>
+    <div class="flex z-50  items-start justify-between h-[56px]">
+      <div class="flex items-center gap-3">
+        <a
+          aria-label="Navigate to the previous page"
+          href="javascript:window.history.back()"
+          class="btn btn-ghost btn-sm btn-circle"
+        >
+          <Icon outline="ArrowLeft" class="w-4 h-4 text-base-content" />
+        </a>
+        <span class="text-base capitalize text-base-content/80">{l("Discussion")}</span>
+      </div>
+      <div class="flex items-center gap-4">
+        <Bonfire.UI.Common.LikeActionWithoutLabelLive
+          id={ComponentID.new(Bonfire.UI.Common.LikeActionWithoutLabelLive, @activity)}
+          object={@activity}
+        />
+        <Bonfire.UI.Social.Activity.InstanceIconLive object={@activity} />
+        <Bonfire.Boundaries.Web.BoundaryIconLive
+          with_label
+          id={ComponentID.new(Bonfire.Boundaries.Web.BoundaryIconLive, @activity)}
+          object={@activity}
+        />
+      </div>
     </div>
-    <div class="flex items-center gap-4">
-      <Bonfire.UI.Common.LikeActionWithoutLabelLive
-        id={ComponentID.new(Bonfire.UI.Common.LikeActionWithoutLabelLive, @activity)}
-        object={@activity}
-      />
-      <Bonfire.UI.Social.Activity.InstanceIconLive object={@activity} />
-      <Bonfire.Boundaries.Web.BoundaryIconLive
-        with_label
-        id={ComponentID.new(Bonfire.Boundaries.Web.BoundaryIconLive, @activity)}
-        object={@activity}
-      />
-
-     
-    </div>
-  </div>
-
 
     <Bonfire.UI.Social.ActivityLive
       :if={@activity}

@@ -24,7 +24,6 @@
         </LiveRedirect>
       </div>
 
-    
       <!-- NOTE -->
       <div class="mt-1 text-sm text-base-content/70 line-clamp-2">{e(@object, :note, "")}</div>
 
@@ -40,7 +39,7 @@
         <div
           :if={e(@showing_within, :feed) in [:feed, :notifications, :likes]}
           class="flex items-center gap-3"
-          >
+        >
           <div class="text-sm text-base-content/70"><span class="text-sm text-base-content">{e(@object, :percentage, "0")}%</span> {l("complete")}</div>
           <div class="text-sm text-base-content/70">
             <span class="text-sm text-base-content">{e(@object, :tasks_completed, "0")}</span> {l("of")}
@@ -48,7 +47,6 @@
           </div>
         </div>
       </div>
-     
     </div>
     <div>
       <div class="relative mt-4">

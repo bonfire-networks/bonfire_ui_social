@@ -29,7 +29,6 @@ defmodule Bonfire.UI.Social.Feeds.LocalLive do
        without_sidebar: true,
        page_title: l("Local"),
        selected_tab: "local"
-
      )}
   end
 
