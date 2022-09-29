@@ -99,16 +99,7 @@ defmodule Bonfire.Social.Objects.LiveHandler do
       reply_to_id: reply_to_id,
       page_title: page_title,
       smart_input_text: mentions,
-      to_circles: to_circles,
-      page_header_aside: [
-        {Bonfire.UI.Social.ObjectHeaderAsideLive,
-         [
-           page_title: page_title,
-           participants: participants,
-           thread_id: thread_id,
-           object: activity
-         ]}
-      ]
+      to_circles: to_circles
     )
   end
 

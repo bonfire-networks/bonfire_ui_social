@@ -33,6 +33,7 @@
               ),
             object_id: @thread_id || ulid(@object),
             object: if(@thread_id == ulid(@object), do: @object),
+            show: {false},
             activity: if(@thread_id == ulid(@object), do: @activity),
             preview_component: Bonfire.UI.Social.ViewObjectThreadLive
           }

@@ -1,65 +1,53 @@
 <div class="flex flex-col flex-1">
   <div class="flex-1">
-    <div class="flex z-50  items-start justify-between h-[56px]">
-      <div class="flex items-center gap-3">
-        <a
-          aria-label="Navigate to the previous page"
-          href="javascript:window.history.back()"
-          class="btn btn-ghost btn-sm btn-circle"
-        >
-          <Icon outline="ArrowLeft" class="w-4 h-4 text-base-content" />
-        </a>
-        <span class="text-base capitalize text-base-content/80">{l("Discussion")}</span>
-      </div>
-      <div class="flex items-center gap-4">
-        <Bonfire.UI.Common.LikeActionWithoutLabelLive
-          id={ComponentID.new(Bonfire.UI.Common.LikeActionWithoutLabelLive, @activity)}
-          object={@activity}
-        />
-        <Bonfire.UI.Social.Activity.InstanceIconLive object={@activity} />
-        <Bonfire.Boundaries.Web.BoundaryIconLive
-          with_label
-          id={ComponentID.new(Bonfire.Boundaries.Web.BoundaryIconLive, @activity)}
-          object={@activity}
-        />
-      </div>
-    </div>
+    <!-- INITIAL POST -->
 
-    <Bonfire.UI.Social.ActivityLive
-      :if={@activity}
-      id={"ta:" <> (ulid(@activity) || ulid(@object) || "no-ID")}
-      showing_within={:thread}
-      thread_mode={@thread_mode}
-      viewing_main_object={if @thread_mode != :flat, do: true, else: false}
-      activity={@activity}
-      object={@object}
-      feed_id={@feed_id}
-      participants={@participants}
-      object_boundary={if is_messaging?(%{
-           page: @page,
-           showing_within: @showing_within,
-           create_object_type: @create_object_type
-         }),
-         do: :skip}
-    />
-    <div
-      :if={e(@thread_mode, :thread) != :flat}
-      class="py-3 text-sm font-medium tracking-wide text-base-content/70"
-    >{l("Discussion")}</div>
-    <Bonfire.UI.Social.ThreadLive
-      id={@thread_id}
-      thread_id={@thread_id}
-      feed_id={@feed_id}
-      thread_mode={@thread_mode}
-      reverse_order={@reverse_order}
-      replies={@replies}
-      threaded_replies={@threaded_replies}
-      page_info={e(@page_info, [])}
-      activity={@activity}
-      object={@object}
-      url={@url}
-      showing_within={e(@showing_within, :thread)}
-    />
+    <div class="relative p-4 pb-0 mb-6 shadow bg-base-100 md:rounded-xl">
+
+      <Bonfire.UI.Social.ObjectHeaderAsideLive
+        page_title={@page_title}
+        participants={@participants || []}
+        thread_id={@thread_id}
+        activity={@activity}
+      />
+      
+      <Bonfire.UI.Social.ActivityLive
+        :if={@activity}
+        id={"ta:" <> (ulid(@activity) || ulid(@object) || "no-ID")}
+        showing_within={:thread}
+        thread_mode={@thread_mode}
+        viewing_main_object={if @thread_mode != :flat, do: true, else: false}
+        activity={@activity}
+        object={@object}
+        feed_id={@feed_id}
+        participants={@participants}
+        object_boundary={if is_messaging?(%{
+            page: @page,
+            showing_within: @showing_within,
+            create_object_type: @create_object_type
+          }),
+          do: :skip}
+      />
+    </div>
+    <div class="p-3 md:p-0">
+      <div
+        :if={e(@thread_mode, :thread) != :flat}
+        class="py-3 text-sm font-medium tracking-wide text-base-content/70">{l("Discussion")}</div>
+      <Bonfire.UI.Social.ThreadLive
+        id={@thread_id}
+        thread_id={@thread_id}
+        feed_id={@feed_id}
+        thread_mode={@thread_mode}
+        reverse_order={@reverse_order}
+        replies={@replies}
+        threaded_replies={@threaded_replies}
+        page_info={e(@page_info, [])}
+        activity={@activity}
+        object={@object}
+        url={@url}
+        showing_within={e(@showing_within, :thread)}
+      />
+    </div>
   </div>
 
   <div
@@ -69,7 +57,7 @@
       showing_within: @showing_within,
       create_object_type: @create_object_type
     }) && @current_user}
-  >
+    >
     <Bonfire.UI.Common.SmartInputLive
       id={:smart_input}
       reply_to_id={e(@reply_to_id, "")}

@@ -22,6 +22,7 @@ defmodule Bonfire.UI.Social.DiscussionLive do
        page_title: l("Discussion"),
        page: "discussion",
        showing_within: :thread,
+       without_mobile_logged_header: true,
        # search_placeholder: l("Search this discussion"),
        to_circles: [],
        participants: nil,

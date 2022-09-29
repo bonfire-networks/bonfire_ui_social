@@ -20,7 +20,6 @@ defmodule Bonfire.UI.Social.ActivityLive do
   prop participants, :list, default: []
   prop object_boundary, :any, default: nil
   prop check_object_boundary, :boolean, default: false
-
   # TODO: put in config and/or autogenerate with Verbs genserver
   @reply_verbs ["Reply", "Respond"]
   @create_verbs ["Create", "Write"]
@@ -154,7 +153,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
         "!pl-3": e(assigns, :showing_within, :feed) in [:feed, :notifications, :likes, :search],
         "activity_inception bg-base-content/10 !m-0 opacity-100 before:!left-2 before:top-1 before:bottom-1":
           e(assigns, :activity_inception, nil) != nil and e(assigns, :thread_mode, nil) == :flat,
-        "!p-3 mt-3 pt-6 rounded-md shadow": e(assigns, :viewing_main_object, nil) == true,
+        "!p-3": e(assigns, :viewing_main_object, nil) == true,
         # showing a quoted reply_to
         "main_reply_to !rounded-none !shadow-none mb-2 p-2 py-1 mt-2 relative before:absolute before:content-[''] before:w-1 before:bg-base-content/40 before:left-0 before:top-0 before:bottom-0 opacity-60 !border-none":
           ulid(@object) != nil and e(@activity, :replied, :reply_to_id, nil) == nil and
@@ -182,6 +181,13 @@ defmodule Bonfire.UI.Social.ActivityLive do
         <input type="hidden" name="feed_id" value={@feed_id}>
         <input type="hidden" name="activity_id" value={ulid(@activity)}>
       </form>
+
+
+
+      
+      
+
+
       {#for {component, component_assigns} when is_atom(component) <- @activity_components || []}
         <Dynamic.Component
           module={component}
