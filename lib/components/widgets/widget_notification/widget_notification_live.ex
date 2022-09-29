@@ -1,7 +1,7 @@
 defmodule Bonfire.UI.Social.WidgetNotificationLive do
   use Bonfire.UI.Common.Web, :stateless_component
 
-  prop widget_title, :string
+  prop widget_title, :string, default: nil
 
   def load(current_user) do
     paginate = %{
