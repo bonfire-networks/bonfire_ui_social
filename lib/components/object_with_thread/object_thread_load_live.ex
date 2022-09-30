@@ -1,4 +1,4 @@
-defmodule Bonfire.UI.Social.ViewObjectThreadLive do
+defmodule Bonfire.UI.Social.ObjectThreadLoadLive do
   use Bonfire.UI.Common.Web, :stateful_component
 
   prop object_id, :string, default: nil

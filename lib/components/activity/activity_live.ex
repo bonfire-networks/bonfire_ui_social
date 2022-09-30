@@ -4,22 +4,22 @@ defmodule Bonfire.UI.Social.ActivityLive do
   alias Bonfire.Social.Activities
   import Untangle
 
-  prop activity, :map, default: nil
-  prop object, :any, default: nil
-  prop verb_default, :string, default: nil
-  prop feed_id, :any, default: nil
-  prop viewing_main_object, :boolean, default: false
-  prop activity_inception, :string, default: nil
-  prop showing_within, :any, default: :feed
-  prop hide_reply, :boolean, default: false
-  prop class, :string, required: false, default: ""
-  prop thread_object, :any, default: nil
-  prop url, :string, default: nil
-  prop thread_url, :string, default: nil
-  prop thread_mode, :any, default: nil
-  prop participants, :list, default: []
-  prop object_boundary, :any, default: nil
-  prop check_object_boundary, :boolean, default: false
+  prop(activity, :map, default: nil)
+  prop(object, :any, default: nil)
+  prop(verb_default, :string, default: nil)
+  prop(feed_id, :any, default: nil)
+  prop(viewing_main_object, :boolean, default: false)
+  prop(activity_inception, :string, default: nil)
+  prop(showing_within, :any, default: :feed)
+  prop(hide_reply, :boolean, default: false)
+  prop(class, :string, required: false, default: "")
+  prop(thread_object, :any, default: nil)
+  prop(url, :string, default: nil)
+  prop(thread_url, :string, default: nil)
+  prop(thread_mode, :any, default: nil)
+  prop(participants, :list, default: [])
+  prop(object_boundary, :any, default: nil)
+  prop(check_object_boundary, :boolean, default: false)
   # TODO: put in config and/or autogenerate with Verbs genserver
   @reply_verbs ["Reply", "Respond"]
   @create_verbs ["Create", "Write"]
@@ -82,7 +82,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
     thread_id = ulid(thread)
     # debug(thread, "thread")
     thread_url =
-      if thread do
+      if object_type in [:post] and not is_nil(thread) do
         if is_struct(thread) do
           path(thread)
         else
@@ -181,12 +181,6 @@ defmodule Bonfire.UI.Social.ActivityLive do
         <input type="hidden" name="feed_id" value={@feed_id}>
         <input type="hidden" name="activity_id" value={ulid(@activity)}>
       </form>
-
-
-
-      
-      
-
 
       {#for {component, component_assigns} when is_atom(component) <- @activity_components || []}
         <Dynamic.Component

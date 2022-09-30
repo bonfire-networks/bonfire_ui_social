@@ -1,26 +1,6 @@
 <div class="flex z-50  bg-base-100 items-start justify-between h-[56px]">
   <div class="flex items-center gap-3">
-
-    <!-- <button
-      :if={@show}
-      id={"close-#{@id}"}
-      phx-click="close"
-      phx-hook="ClosePreview"
-      phx-target={"#close-#{@id}"}
-      type="button"
-      class="btn btn-ghost btn-sm btn-circle"
-    >
-      <Icon outline="ArrowLeft" class="w-4 h-4 text-base-content" />
-    </button> -->
-
-
-    <a
-      aria-label="Navigate to the previous page"
-      href="javascript:window.history.back()"
-      class="btn btn-ghost btn-sm btn-circle"
-    >
-      <Icon outline="ArrowLeft" class="w-4 h-4 text-base-content" />
-    </a>
+    <Bonfire.UI.Common.BackButtonLive showing_within={@showing_within} />
     <span class="text-base capitalize text-base-content/80">{@page_title}</span>
   </div>
   <div class="flex items-center gap-4">
@@ -34,7 +14,6 @@
       id={ComponentID.new(Bonfire.Boundaries.Web.BoundaryIconLive, @activity)}
       object={@activity}
     />
-
 
     <div class="relative z-40 dropdown dropdown-end">
       <label tabindex="0" class="flex normal-case btn place-content-center btn-circle btn-ghost btn-sm">
@@ -92,10 +71,5 @@
         </li>
       </ul>
     </div>
-
   </div>
 </div>
-
-
-
-

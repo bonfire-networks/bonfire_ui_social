@@ -16,4 +16,5 @@
   thread_id={@thread_id}
   participants={e(@participants, [])}
   loading={@loading}
+  showing_within={@showing_within}
 />

@@ -35,7 +35,7 @@
             object: if(@thread_id == ulid(@object), do: @object),
             show: {false},
             activity: if(@thread_id == ulid(@object), do: @activity),
-            preview_component: Bonfire.UI.Social.ViewObjectThreadLive
+            preview_component: Bonfire.UI.Social.ObjectThreadLoadLive
           }
         />
         <!-- TODO: derive the view from object_type? and compute object_type not just based on schema, but also with some logic looking at fields (eg. action=="work") -->

@@ -5,5 +5,5 @@ defmodule Bonfire.UI.Social.ObjectHeaderAsideLive do
   prop participants, :any, default: []
   prop thread_id, :string, default: nil
   prop activity, :any, default: %{}
-
+  prop showing_within, :any, default: nil
 end
