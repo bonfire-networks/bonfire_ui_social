@@ -45,12 +45,12 @@ defmodule Bonfire.UI.Social.FeedsLive do
        sidebar_widgets: [
          users: [
            secondary: [
-             {Bonfire.UI.Social.WidgetTagsLive, []}
+             {Bonfire.Tag.Web.WidgetTagsLive, []}
            ]
          ],
          guests: [
            secondary: [
-             {Bonfire.UI.Social.WidgetTagsLive, []}
+             {Bonfire.Tag.Web.WidgetTagsLive, []}
            ]
          ]
        ]
