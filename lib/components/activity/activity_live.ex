@@ -153,7 +153,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
         "!pl-3": e(assigns, :showing_within, :feed) in [:feed, :notifications, :likes, :search],
         "activity_inception bg-base-content/10 !m-0 opacity-100 before:!left-2 before:top-1 before:bottom-1":
           e(assigns, :activity_inception, nil) != nil and e(assigns, :thread_mode, nil) == :flat,
-        "!p-3": e(assigns, :viewing_main_object, nil) == true,
+        "!p-3 !shadow-none !rounded-none": e(assigns, :viewing_main_object, nil) == true,
         # showing a quoted reply_to
         "main_reply_to !rounded-none !shadow-none mb-2 p-2 py-1 mt-2 relative before:absolute before:content-[''] before:w-1 before:bg-base-content/40 before:left-0 before:top-0 before:bottom-0 opacity-60 !border-none":
           ulid(@object) != nil and e(@activity, :replied, :reply_to_id, nil) == nil and
