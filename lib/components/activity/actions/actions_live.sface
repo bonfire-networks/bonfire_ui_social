@@ -50,13 +50,19 @@
             preview_view: Bonfire.UI.Coordination.TaskLive
           }
         />
+      {#elseif String.starts_with?(@permalink, ["/coordination/list/"])}
+        <LiveRedirect to={@permalink} class="px-1 font-normal normal-case btn btn-sm btn-ghost">
+          {l("View list")}
+        </LiveRedirect>
       {#else}
         <LiveRedirect to={@permalink} class="px-1 font-normal normal-case btn btn-sm btn-ghost">
           {l("View")}
         </LiveRedirect>
       {/if}
     {/if}
-    <div class={
+    <div 
+      :if={String.starts_with?(@permalink, ["/post/", "/discussion/"])}
+      class={
       "feed-clickable flex items-center flex-1 justify-end space-x-4 mt-0",
       "-ml-2": @viewing_main_object == true,
       "!space-x-2": @thread_mode == :flat
