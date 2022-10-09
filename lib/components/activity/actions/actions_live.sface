@@ -60,13 +60,14 @@
         </LiveRedirect>
       {/if}
     {/if}
-    <div 
+    <div
       :if={String.starts_with?(@permalink, ["/post/", "/discussion/"])}
       class={
-      "feed-clickable flex items-center flex-1 justify-end space-x-4 mt-0",
-      "-ml-2": @viewing_main_object == true,
-      "!space-x-2": @thread_mode == :flat
-    }>
+        "feed-clickable flex items-center flex-1 justify-end space-x-4 mt-0",
+        "-ml-2": @viewing_main_object == true,
+        "!space-x-2": @thread_mode == :flat
+      }
+    >
       <Bonfire.UI.Social.Activity.ReplyLive
         object_id={e(@object, :id, "no-object")}
         activity_id={e(@activity, :id, "no-activity")}
