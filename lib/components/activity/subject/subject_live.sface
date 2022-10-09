@@ -100,7 +100,7 @@
         </LiveRedirect>
       </div>
       <div class="flex items-center justify-between leading-[16px] min-w-0 space-x-1 w-full">
-        <div class="feed-clickable flex items-center flex-1 leading-[16px]">
+        <div class="feed-clickable flex flex-col flex-1 leading-[16px]">
           {#if @thread_mode == :flat && @current_user && ulid(@current_user) == maybe_get(@character, :id)}
             <LiveRedirect
               opts={"data-id": "subject_name"}
@@ -116,26 +116,29 @@
               aria-label={e(@character, :username, "") <> " profile"}
               class="leading-[16px]"
               to={path(@character)}
-            >
-              <span class="text-sm font-semibold link link-hover">{e(@profile, :name, "Anonymous")}</span>
-              <span
-                :if={e(@character, :username, nil)}
-                class="ml-1 text-sm font-normal no-underline truncate ellipsis text-base-content text-opacity-60 subject_username"
               >
-                @{e(@character, :username, "")}
-              </span>
+              <span class="text-base font-semibold link link-hover">{e(@profile, :name, "Anonymous")}</span>
             </LiveRedirect>
+            <div class="flex items-center gap-1">
+              <div
+                :if={e(@character, :username, nil)}
+                class="text-sm font-normal no-underline truncate ellipsis text-base-content text-opacity-60 subject_username"
+                > 
+                @{e(@character, :username, "")}
+              </div>
+              <span>·</span>
+              <Bonfire.UI.Social.Activity.DateAgoLive
+                permalink={@permalink}
+                date_ago={@date_ago}
+                object={@object}
+                object_type={@object_type}
+                object_boundary={@object_boundary}
+                showing_within={@showing_within}
+                verb_display={@verb_display}
+              />
+            </div>
           {/if}
         </div>
-        <Bonfire.UI.Social.Activity.DateAgoLive
-          permalink={@permalink}
-          date_ago={@date_ago}
-          object={@object}
-          object_type={@object_type}
-          object_boundary={@object_boundary}
-          showing_within={@showing_within}
-          verb_display={@verb_display}
-        />
       </div>
     </div>
   {/if}

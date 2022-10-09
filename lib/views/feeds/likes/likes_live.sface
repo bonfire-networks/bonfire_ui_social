@@ -1,3 +1,4 @@
+<Bonfire.UI.Common.PageTitleLive page_title={@page_title} />
 <Bonfire.UI.Social.FeedLive
   id="feed:profile:likes"
   feed_id="feed:profile:likes"

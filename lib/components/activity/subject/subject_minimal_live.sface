@@ -73,7 +73,7 @@
     {#match :search}
       <div />
     {#match _}
-      <div class="flex items-center mb-2 pb-2 border-b border-base-content/10">
+      <div class="flex items-center pb-2 mb-2">
         {#if @verb == "Like"}
           <div class="flex items-center justify-start">
             <!-- LIKE -->
