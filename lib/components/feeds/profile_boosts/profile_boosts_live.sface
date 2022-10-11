@@ -13,7 +13,7 @@
     selected_tab={@selected_tab}
     smart_input={@smart_input}
     smart_input_prompt={@smart_input_prompt}
-    smart_input_text={@smart_input_text}
+    smart_input_opts={@smart_input_opts}
     search_placeholder={@search_placeholder}
     feed_title={@feed_title}
     loading={@loading}

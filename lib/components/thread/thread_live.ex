@@ -22,7 +22,7 @@ defmodule Bonfire.UI.Social.ThreadLive do
   prop to_circles, :list, default: []
   prop url, :string, default: nil
   prop smart_input_prompt, :string, default: nil
-  prop smart_input_text, :string, default: nil
+  prop smart_input_opts, :any, default: nil
   prop thread_mode, :any, default: nil
   prop reverse_order, :any, default: nil
   prop showing_within, :any, default: :thread

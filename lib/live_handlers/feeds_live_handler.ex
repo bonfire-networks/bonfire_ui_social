@@ -70,7 +70,7 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
         # we reply to objects, not activities
         reply_to_id: reply_to_id,
         thread_id: thread_id,
-        smart_input_text: mentions,
+        smart_input_opts: [text: mentions],
         to_circles: to_circles,
         to_boundaries: [
           Bonfire.Boundaries.preset_boundary_tuple_from_acl(

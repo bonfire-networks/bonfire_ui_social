@@ -10,5 +10,5 @@
   to_boundaries={boundaries_or_default(@to_boundaries, @__context__)}
   to_circles={@to_circles}
   smart_input_prompt={l("Write something...")}
-  smart_input_text={@smart_input_text}
+  smart_input_opts={@smart_input_opts}
 />

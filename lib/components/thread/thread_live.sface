@@ -25,7 +25,7 @@
             thread_object={@object}
             thread_level={1}
             thread_mode={@thread_mode}
-            smart_input_text={@smart_input_text}
+            smart_input_opts={@smart_input_opts}
             smart_input_prompt={@smart_input_prompt}
             url={@url}
             showing_within={e(@showing_within, :thread)}
@@ -40,7 +40,7 @@
             feed_id={@feed_id}
             thread_object={@object}
             thread_mode={@thread_mode}
-            smart_input_text={@smart_input_text}
+            smart_input_opts={@smart_input_opts}
             smart_input_prompt={@smart_input_prompt}
             url={@url}
             showing_within={e(@showing_within, :thread)}

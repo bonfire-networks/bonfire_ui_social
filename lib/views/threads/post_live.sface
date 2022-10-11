@@ -3,7 +3,7 @@
   page_title={@page_title}
   search_placeholder={@search_placeholder}
   smart_input_prompt={@smart_input_prompt}
-  smart_input_text={@smart_input_text}
+  smart_input_opts={@smart_input_opts}
   to_boundaries={e(@to_boundaries, [])}
   to_circles={@to_circles}
   reply_to_id={@reply_to_id}

@@ -26,7 +26,6 @@ defmodule Bonfire.UI.Social.DiscussionLive do
        # search_placeholder: l("Search this discussion"),
        to_circles: [],
        participants: nil,
-       smart_input_text: nil,
        smart_input_prompt: l("Reply to this discussion"),
        without_sidebar: true,
        activity: nil,

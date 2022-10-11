@@ -50,13 +50,12 @@
             </div>
             <label for="description" class="sr-only">{l("Description")}</label>
             <Field name={:html_body}>
-              <!-- <Label :if={@smart_input_text && @smart_input_text !="" && @smart_input_prompt} class="mb-2 alert alert-info">{@smart_input_prompt}</Label> -->
               <div class={@textarea_container_class} :class={@textarea_container_class_alpine}>
                 <WriteEditorLive
                   field_name="post[post_content][html_body]"
                   textarea_class={@textarea_class}
                   smart_input_prompt={e(@smart_input_prompt, l("Write something..."))}
-                  smart_input_text={@smart_input_text}
+                  smart_input_opts={@smart_input_opts}
                   insert_text={@insert_text}
                   with_rich_editor={@with_rich_editor}
                   thread_mode={@thread_mode}
@@ -80,6 +79,7 @@
         />
 
         <Bonfire.UI.Common.InputControlsLive
+          smart_input_opts={@smart_input_opts}
           thread_mode={@thread_mode}
           reply_to_id={@reply_to_id}
           context_id={@context_id}

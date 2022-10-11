@@ -68,7 +68,7 @@
       to_boundaries={e(@to_boundaries, [])}
       to_circles={@to_circles}
       smart_input_prompt={e(@smart_input_prompt, "")}
-      smart_input_text={e(@smart_input_text, "")}
+      smart_input_opts={@smart_input_opts}
       showing_within={@showing_within || :thread}
       replied_activity_class={@replied_activity_class}
     />

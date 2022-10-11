@@ -40,7 +40,6 @@ defmodule Bonfire.UI.Social.MessagesLive do
        thread_id: nil,
        users: [],
        hide_smart_input: true,
-       smart_input_text: nil,
        feedback_title: l("No messages"),
        feedback_message: l("Select a thread or start a new one..."),
        threads: LiveHandler.list_threads(current_user_required(socket), socket),
@@ -96,10 +95,10 @@ defmodule Bonfire.UI.Social.MessagesLive do
     # debug(user: user)
 
     if user do
-      smart_input_text =
-        if e(current_user, :character, :username, "") == e(user, :character, :username, ""),
-          do: "",
-          else: "@" <> e(user, :character, :username, "") <> " "
+      # smart_input_text =
+      #   if e(current_user, :character, :username, "") == e(user, :character, :username, ""),
+      #     do: "",
+      #     else: "@" <> e(user, :character, :username, "") <> " "
 
       to_circles = [
         {e(user, :profile, :name, e(user, :character, :username, l("someone"))), ulid(user)}
@@ -118,7 +117,7 @@ defmodule Bonfire.UI.Social.MessagesLive do
          reply_to_id: nil,
          thread_id: nil,
          smart_input_prompt: l("Compose a thoughtful message..."),
-         # smart_input_text: smart_input_text,
+         # smart_input_opts: [text: smart_input_text],
          to_circles: to_circles,
          sidebar_widgets:
            LiveHandler.threads_widget(current_user, ulid(e(socket.assigns, :user, nil)),
