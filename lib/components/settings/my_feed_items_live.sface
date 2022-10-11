@@ -1,7 +1,3 @@
-<div class="font-bold text-xs uppercase text-base-content text-opacity-80 border-b mt-8 border-base-content border-opacity-30 pb-2">
-  {@title}
-</div>
-
 <Bonfire.UI.Social.Settings.MyFeedItemLive
   label={l("Posts and other activities from followed people")}
   key={:followed_users}
