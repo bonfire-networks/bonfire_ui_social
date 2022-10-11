@@ -8,7 +8,7 @@ defmodule Bonfire.UI.Social.ObjectThreadLoadLive do
   prop page_title, :string, default: nil
   prop show_reply_input, :boolean, default: false
   prop search_placeholder, :string, default: nil
-  prop create_object_type, :atom, default: nil
+  prop create_object_type, :any, default: nil
   prop to_boundaries, :list, default: nil
   prop to_circles, :list, default: []
   prop smart_input_prompt, :string, default: nil

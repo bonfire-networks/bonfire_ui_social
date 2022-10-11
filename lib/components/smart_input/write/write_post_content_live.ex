@@ -12,7 +12,7 @@ defmodule Bonfire.UI.Social.WritePostContentLive do
   # prop target_component, :string, default: nil
   prop reply_to_id, :string, default: nil
   prop context_id, :string, default: nil
-  prop create_object_type, :atom, default: nil
+  prop create_object_type, :any, default: nil
   prop to_boundaries, :list, default: []
   prop to_circles, :list, default: []
   prop smart_input_prompt, :string, default: nil

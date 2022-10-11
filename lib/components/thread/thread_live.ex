@@ -17,7 +17,7 @@ defmodule Bonfire.UI.Social.ThreadLive do
   prop thread_id, :any, default: nil
   prop page, :any, default: "thread"
   prop feed_id, :any, default: nil
-  prop create_object_type, :atom, default: nil
+  prop create_object_type, :any, default: nil
   prop to_boundaries, :list, default: []
   prop to_circles, :list, default: []
   prop url, :string, default: nil

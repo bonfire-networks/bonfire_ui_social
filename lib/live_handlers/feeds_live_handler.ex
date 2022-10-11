@@ -442,7 +442,7 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
   def feed_assigns_maybe_async(_default, socket) do
     current = current_user(socket) || current_account(socket)
 
-    if current do
+    if not is_nil(ulid(current)) do
       # my feed
       feed_assigns_maybe_async(:my, socket)
     else

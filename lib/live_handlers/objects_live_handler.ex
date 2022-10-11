@@ -129,7 +129,7 @@ defmodule Bonfire.Social.Objects.LiveHandler do
 
     # debug(params, "PARAMS")
     # debug(url, "post url")
-    with {:ok, object} <- Bonfire.Social.Posts.read(ulid(id), socket) do
+    with {:ok, object} <- Bonfire.Social.Posts.read(ulid!(id), socket) do
       {activity, object} = Map.pop(object, :activity)
 
       init_object_assigns(object, activity, assigns, socket, l("Post"))
@@ -142,7 +142,7 @@ defmodule Bonfire.Social.Objects.LiveHandler do
   def load_object_assigns(%{object_id: id} = assigns, socket) when is_binary(id) do
     current_user = current_user(socket)
     # debug(params, "PARAMS")
-    with {:ok, object} <- Bonfire.Social.Objects.read(ulid(id), current_user: current_user) do
+    with {:ok, object} <- Bonfire.Social.Objects.read(ulid!(id), current_user: current_user) do
       {activity, object} = Map.pop(object, :activity)
       {preloaded_object, activity} = Map.pop(activity, :object)
 
