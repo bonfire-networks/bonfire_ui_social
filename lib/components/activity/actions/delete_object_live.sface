@@ -18,7 +18,7 @@
 
     <:open_btn>
       <div class={@open_btn_class}>
-        <Icon solid="Trash" class="w-4 h-4 mr-2 shrink-0 text-neutral text-opacity-70" />
+        <Icon solid="Trash" class="w-4 h-4 mr-1 shrink-0" />
         <span class="truncate ellipsis">
           {l("Delete this")} {e(@object_type_readable, l("object"))}
         </span>
