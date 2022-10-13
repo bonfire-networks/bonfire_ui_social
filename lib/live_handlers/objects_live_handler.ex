@@ -38,7 +38,11 @@ defmodule Bonfire.Social.Objects.LiveHandler do
 
       {:noreply,
        socket
-       |> assign_flash(:info, l("Deleted!"))}
+       |> assign_flash(:info, l("Deleted!"))
+       |> redirect_to(
+         e(params, "redirect_after", nil),
+         fallback: current_url(socket)
+       )}
     end
   end
 

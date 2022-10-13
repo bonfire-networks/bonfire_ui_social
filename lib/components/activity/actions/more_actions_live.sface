@@ -89,70 +89,34 @@
       peered={e(@object, :peered, nil)}
     />
 
-    <!-- Delete the activity: WIP hiding it for first beta release -->
-
-    <!-- <li 
-      :if={@object_type not in [Bonfire.Data.Social.Message] and ulid(@current_user) == subject_id(@activity, @object) or Bonfire.Me.Users.is_admin?(@current_user)}
-      class=" hover:bg-neutral hover:bg-opacity-20">
-      <OpenModalLive
-        id={Pointers.ULID.generate()} 
-        title_text={l("Delete this")<>" "<>(if @verb in ["Write", "Create"], do: l("from feeds"), else: @verb)}
-        >
-        {l "Deleting from feeds means the %{object} can still be accessed by anyone who has a direct link, but won't be discoverable via this instance's feeds.", object: e(@object_type_readable, l "object")}
-        {l "Remote feeds won't be affected."} 
-        <:open_btn>
-          <div class="flex items-center text-sm text-neutral">
-            <Icon solid="Trash" class="w-4 h-4 mr-2 shrink-0 text-neutral text-opacity-70" />
-            <span class="truncate ellipsis">
-              {l("Delete this")<>" "<>(if @verb in ["Write", "Create"], do: l("from feeds"), else: @verb)}
-            </span>
-          </div>
-        </:open_btn>
-        <:action_btns>
-          <button 
-          phx-click={"Bonfire.Social.Feeds:delete"} 
-          phx-value-id={e(@activity, :id, "")}
-          class="btn btn-error">
-          <Icon solid="Trash" class="w-4 h-4 mr-2 shrink-0 text-neutral text-opacity-70" />
-          <span class="truncate ellipsis">{l("Delete this")<>" "<>(if @verb in ["Write", "Create"], do: l("from feeds"), else: @verb)}</span> 
-        </button>
-        </:action_btns>
-      </OpenModalLive>
-    </li> -->
-
     <!-- Delete the object -->
+    <li class="hover:bg-neutral hover:bg-opacity-20">
+      <Bonfire.UI.Social.Activity.DeleteObjectLive
+        object={@object}
+        creator_id={subject_id(@activity, @object)}
+        object_type_readable={@object_type_readable}
+      />
+    </li>
+
+    <!-- Delete the activity -->
     <li
-      :if={ulid(@current_user) == subject_id(@activity, @object) or
-        ((Bonfire.Me.Users.is_admin?(@current_user) ||
-            Bonfire.Boundaries.can?(@__context__, :delete, :instance)) &&
-           Types.object_type(@object) != Bonfire.Data.Identity.User)}
+      :if={@object_type not in [Bonfire.Data.Social.Message]}
       class="hover:bg-neutral hover:bg-opacity-20"
     >
-      <OpenModalLive
-        id={Pointers.ULID.generate()}
-        title_text={l("Delete this") <> " " <> e(@object_type_readable, l("object"))}
-      >
-        <!-- {rich l "You may be able to undo this deletion *in some cases*, but in any case the data will eventually be permanently deleted from this instance."} -->
-        {l("A request will be sent to remote instances to delete it as well.")}
-        <:open_btn>
-          <div class="flex items-center text-sm text-neutral">
-            <Icon solid="Trash" class="w-4 h-4 mr-2 shrink-0 text-neutral text-opacity-70" />
-            <span class="truncate ellipsis">
-              {l("Delete this")} {e(@object_type_readable, l("object"))}
-            </span>
-          </div>
-        </:open_btn>
-        <:action_btns>
-          <button
-            phx-click="Bonfire.Social.Objects:delete"
-            phx-value-id={e(@object, :id, "")}
-            class="normal-case btn btn-error btn-sm"
-          >
-            <Icon solid="Trash" class="w-4 h-4 mr-2 shrink-0" />
-            <span class="truncate ellipsis">{l("Delete this")} {e(@object_type_readable, l("object"))}</span>
-          </button>
-        </:action_btns>
-      </OpenModalLive>
+      <Bonfire.UI.Social.Activity.DeleteObjectLive
+        action="Bonfire.Social.Feeds:delete"
+        object={@activity}
+        creator_id={subject_id(@activity, @object)}
+        object_type_readable={if @verb in ["Write", "Create"],
+          do: l("activity from feeds"),
+          else: l("%{activity_verb} from feeds", activity_verb: @verb)}
+        creator_id={subject_id(@activity, @object)}
+        explanation={l(
+          "Deleting from feeds means this %{verb} and this %{object} still exist, but this activity won't be discoverable via the local instance's feeds. Remote feeds won't be affected.",
+          object: e(@object_type_readable, l("object")),
+          verb: @verb
+        )}
+      />
     </li>
 
     <#slot {@admin_items} />

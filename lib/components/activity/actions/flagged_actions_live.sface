@@ -26,29 +26,12 @@
         class="normal-case rounded opacity-80 hover:opacity-100 btn btn-error btn-xs"
       />
     {#else}
-      <OpenModalLive
-        :if={Bonfire.Me.Users.is_admin?(@current_user) ||
-          Bonfire.Boundaries.can?(@__context__, :delete, :instance)}
-        id={Pointers.ULID.generate()}
-        title_text={l("Delete this") <> " " <> e(@object_type_readable, l("object"))}
-      >
-        {l("A request will be sent to remote instances to delete it as well.")}
-        <:open_btn>
-          <div class="normal-case rounded opacity-80 hover:opacity-100 btn btn-error btn-xs">
-            {l("Delete this")} {e(@object_type_readable, l("object"))}
-          </div>
-        </:open_btn>
-        <:action_btns>
-          <button
-            phx-click="Bonfire.Social.Objects:delete"
-            phx-value-id={e(@object, :id, "")}
-            class="btn btn-error"
-          >
-            <Icon solid="Trash" class="w-4 h-4 mr-2 shrink-0" />
-            <span class="truncate ellipsis">{l("Delete this")} {e(@object_type_readable, l("object"))}</span>
-          </button>
-        </:action_btns>
-      </OpenModalLive>
+      <Bonfire.UI.Social.Activity.DeleteObjectLive
+        object={@object}
+        creator_id={Bonfire.UI.Social.Activity.MoreActionsLive.subject_id(@activity, @object)}
+        object_type_readable={@object_type_readable}
+        open_btn_class="normal-case rounded opacity-80 hover:opacity-100 btn btn-error btn-xs"
+      />
     {/if}
 
     <button
