@@ -57,6 +57,13 @@
       </Bonfire.UI.Common.OpenModalLive>
     </li>
 
+    <li class="hover:bg-neutral hover:bg-opacity-20">
+      <Bonfire.UI.Social.PinActionLive
+        object={@object}
+        class="flex items-center py-2 text-sm text-neutral"
+      />
+    </li>
+
     <!-- Flag the action -->
     <li
       :if={ulid(@current_user) != subject_id(@activity, @object) and @verb != "Flag"}

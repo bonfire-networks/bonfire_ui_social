@@ -46,8 +46,8 @@
   <div class="grid justify-between p-3 grid-cols-1 gap-0">
     <div class={"order-last": @showing_within == :feed}>
       <div class={"flex items-center space-x-2", "mt-2": @showing_within == :feed}>
-        <Bonfire.UI.Common.LikeActionWithoutLabelLive
-          id={ComponentID.new(Bonfire.UI.Common.LikeActionWithoutLabelLive, @object)}
+        <Bonfire.UI.Common.LikeActionLive
+          id={ComponentID.new(Bonfire.UI.Common.LikeActionLive, @object)}
           object={@object}
         />
         <LiveRedirect to={"/process/" <> e(@object, :id, "")}>

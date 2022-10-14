@@ -4,8 +4,8 @@
     <span class="text-base capitalize text-base-content/80">{@page_title}</span>
   </div>
   <div class="flex items-center gap-4">
-    <Bonfire.UI.Common.LikeActionWithoutLabelLive
-      id={ComponentID.new(Bonfire.UI.Common.LikeActionWithoutLabelLive, @activity)}
+    <Bonfire.UI.Common.LikeActionLive
+      id={ComponentID.new(Bonfire.UI.Common.LikeActionLive, @activity)}
       object={@activity}
     />
     <Bonfire.UI.Social.Activity.InstanceIconLive object={@activity} />

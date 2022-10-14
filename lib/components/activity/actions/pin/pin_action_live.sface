@@ -1,0 +1,16 @@
+<div class="relative z-20 tooltip tooltip-bottom" data-tip={l("Pin this post")}>
+  <button
+    :if={@object}
+    data-id="pin_action"
+    phx-click="Bonfire.Social.Pins:pin"
+    phx-value-direction="up"
+    phx-value-id={ulid(@object)}
+    phx-value-component={__MODULE__}
+    class={@class}
+  >
+    <span class="text-base-content text-opacity-50">
+      <Icon iconify="akar-icons:schedule" class="w-5 h-5" />
+    </span>
+    {l("Pin")}
+  </button>
+</div>
