@@ -25,28 +25,34 @@
     id={"note-#{@activity_inception}-" <> (ulid(@activity) || e(@object, :id, "no-id"))}
     x-data="{content_open: false}"
   >
-    <div :if={e(post_content(@object), :name, nil)}>
-      <button
-        @click="content_open = true"
-        x-show="content_open == false"
-        style="display: none"
-        class="relative z-50 mt-1 text-sm font-semibold text-left text-base-content link link-hover"
-      >
-        {rich(e(post_content(@object), :name, "CW"))} ({l("Show more")})
-      </button>
-      <button
-        @click="content_open = false"
-        x-show="content_open"
-        style="display: none"
-        class="relative z-50 mt-1 text-sm font-semibold text-left text-base-content"
-      >
-        {rich(e(post_content(@object), :name, "CW"))} ({l("Show less")})
-      </button>
-    </div>
+    {#if e(post_content(@object), :name, nil) != nil and @showing_within != :blog}
+      {#if @viewing_main_object}
+        <div class="w-full max-w-full text-3xl font-bold bg-base-300 input input-lg">
+          {e(@object, :post_content, :name, nil)}
+        </div>
+      {#else}
+        <button
+          @click="content_open = true"
+          x-show="content_open == false"
+          style="display: none"
+          class="relative z-50 mt-1 text-sm font-semibold text-left text-base-content link link-hover"
+        >
+          {rich(e(post_content(@object), :name, "CW"))} ({l("Show more")})
+        </button>
+        <button
+          @click="content_open = false"
+          x-show="content_open"
+          style="display: none"
+          class="relative z-50 mt-1 text-sm font-semibold text-left text-base-content"
+        >
+          {rich(e(post_content(@object), :name, "CW"))} ({l("Show less")})
+        </button>
+      {/if}
+    {/if}
 
     <div
-      x-show={if e(post_content(@object), :name, nil), do: "content_open"}
-      x-collapse={if e(post_content(@object), :name, nil), do: true}
+      x-show={if @viewing_main_object != true and e(post_content(@object), :name, nil), do: "content_open"}
+      x-collapse={if @viewing_main_object != true and e(post_content(@object), :name, nil), do: true}
     >
       <p
         :if={e(post_content(@object), :summary, nil)}
@@ -60,14 +66,13 @@
         class={
           "prose break-words object_body max-w-none font-[16px] mt-1 prose-sm prose-p:pt-0 prose-p:my-0",
           "line-clamp-2":
-            ulid(@object) != nil and
+            @viewing_main_object != true and ulid(@object) != nil and
               e(@activity, :replied, :reply_to_id, nil) == nil and ulid(@activity) == nil and
-              e(assigns, :showing_within, nil) != :widget and e(assigns, :showing_within, nil) != :search,
+              @showing_within != :widget and @showing_within != :search,
           "font-[16px] mt-1 prose-sm prose-p:pt-0 prose-p:my-0 !leading-[22px]":
-            e(@showing_within, nil) == :thread,
-          "prose-lg mt-3 prose-p:pb-4 !leading-[26px] prose-p:leading-[26px]":
-            e(@viewing_main_object, nil),
-          "prose-p:pt-1 !my-3 !leading-[20px]": e(@showing_within, nil) == :feed
+            @showing_within == :thread,
+          "prose-lg mt-3 prose-p:pb-4 !leading-[26px] prose-p:leading-[26px]": @viewing_main_object,
+          "prose-p:pt-1 !my-3 !leading-[20px]": @showing_within == :feed
         }
       >
         {rich(

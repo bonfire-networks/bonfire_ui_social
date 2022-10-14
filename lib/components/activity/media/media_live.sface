@@ -1,10 +1,11 @@
 <div
-  :if={@showing_within != :smart_input}
+  :if={@showing_within != :smart_input and is_list(@media) and @media != []}
   class={
-    "grid w-full grid-flow-col grid-with-ratio grid-rows-4 gap-1 max-h-[270px]",
+    "grid w-full grid-flow-col grid-with-ratio grid-rows-4 gap-1 ",
     "my-3":
       Enum.filter(@media, fn x -> e(x, :metadata, :canonical_url, false) == false end) |> length > 0,
-    "!grid-cols-1 !grid-rows-1": @showing_within == :smart_input
+    "!grid-cols-1 !grid-rows-1": @showing_within == :smart_input,
+    "max-h-[270px] overflow-clip": @viewing_main_object != true
   }
 >
   {#for {media, counter} <-
@@ -32,65 +33,42 @@
             "photo",
             "rich"
           ]) or String.contains?(media_url(media), [".jpg", ".jpeg", ".png", ".gif", ".webp"])}
-          <Bonfire.UI.Common.OpenModalLive
-            id={Pointers.ULID.generate()}
-            title_text={e(@label, l("View media"))}
-            no_actions
-            open_btn_class="w-full"
-          >
-            <div
-              class="relative mt-2"
-              style={if String.starts_with?(media.media_type, ["video"]),
-                do: "min-width: 90vw; min-height: 90vh",
-                else: ""}
+          {#if @viewing_main_object}
+            <Bonfire.UI.Social.Activity.RemoteMediaLive media={media} />
+          {#else}
+            <Bonfire.UI.Common.OpenModalLive
+              id={Pointers.ULID.generate()}
+              title_text={e(@label, l("View media"))}
+              no_actions
+              open_btn_class="w-full"
             >
-              {#if String.contains?(media_img(media), [".jpg", ".jpeg", ".png", ".gif", ".webp"])}
-                <img alt={media_label(media)} src={media_img(media)}>
-              {#else}
-                {#case e(media.metadata, "facebook", "og:video:url", nil) ||
-                    e(media.metadata, "twitter", "twitter:player", nil) ||
-                    e(media.metadata, "facebook", "og:video", nil)}
-                  {#match nil}
-                    {#case e(media.metadata, "ombed", "html", nil)}
-                      {#match nil}
-                        <a href={media_url(media)} target="_blank">{l("View the media")} ({media.media_type})</a>
-                      {#match embed}
-                        {raw(embed)}
-                    {/case}
-                  {#match url}
-                    <iframe
-                      width={e(media.metadata, "facebook", "og:video:width", nil) ||
-                        e(media.metadata, "other", "video_width", nil) || "800"}
-                      height={e(media.metadata, "facebook", "og:video:height", nil) ||
-                        e(media.metadata, "other", "video_height", nil) || "500"}
-                      src={url |> String.replace("youtube.com", "yewtu.be")}
-                      frameborder="0"
-                      allow="accelerometer; encrypted-media; gyroscope; picture-in-picture"
-                      allowfullscreen="allowfullscreen"
-                      class={"", "w-full max-h-screen": String.starts_with?(media.media_type, ["video"])}
-                      style={if String.starts_with?(media.media_type, ["video"]), do: "height:900px", else: ""}
-                    />
-                {/case}
-              {/if}
+              <div
+                class="relative mt-2"
+                style={if String.starts_with?(media.media_type, ["video"]),
+                  do: "min-width: 90vw; min-height: 90vh",
+                  else: ""}
+              >
+                <Bonfire.UI.Social.Activity.RemoteMediaLive media={@media} />
 
-              <div class="mt-2">
-                {media_label(media)}
+                <div class="mt-2">
+                  {media_label(media)}
 
-                <p class="text-sm">{e(media.metadata, "description", nil) || e(media.metadata, "facebook", "og:description", nil) ||
-                    e(media.metadata, "twitter", "twitter:description", nil) ||
-                    e(media.metadata, "other", "description", nil)}</p>
+                  <p class="text-sm">{e(media.metadata, "description", nil) || e(media.metadata, "facebook", "og:description", nil) ||
+                      e(media.metadata, "twitter", "twitter:description", nil) ||
+                      e(media.metadata, "other", "description", nil)}</p>
+                </div>
               </div>
-            </div>
 
-            <:open_btn>
-              <LazyImage
-                class="w-full max-h-[270px] !object-cover media-image h-full cursor-pointer obj-center rounded-md"
-                alt={media_label(media)}
-                src={preview_img(media)}
-              />
-              <figcaption class="sr-only">{media_label(media)}</figcaption>
-            </:open_btn>
-          </Bonfire.UI.Common.OpenModalLive>
+              <:open_btn>
+                <LazyImage
+                  class="w-full max-h-[270px] !object-cover media-image h-full cursor-pointer obj-center rounded-md"
+                  alt={media_label(media)}
+                  src={preview_img(media)}
+                />
+                <figcaption class="sr-only">{media_label(media)}</figcaption>
+              </:open_btn>
+            </Bonfire.UI.Common.OpenModalLive>
+          {/if}
         {#else}
           <a
             href={media_url(media)}

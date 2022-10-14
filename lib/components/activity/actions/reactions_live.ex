@@ -1,18 +1,13 @@
-defmodule Bonfire.UI.Social.Activity.ActionsLive do
+defmodule Bonfire.UI.Social.Activity.ReactionsLive do
   use Bonfire.UI.Common.Web, :stateless_component
 
   prop activity, :map, required: true
   prop object, :any, required: true
-  prop thread_id, :string, required: true
   prop object_type, :any, required: true
-  prop object_type_readable, :any, required: true
-  prop verb, :string, required: true
   prop permalink, :string, required: true
 
   prop showing_within, :any, default: nil
   prop hide_reply, :boolean, default: false
-  prop viewing_main_object, :boolean, default: false
-  prop flagged, :any, default: nil
   prop thread_mode, :any, default: nil
   prop object_boundary, :any, default: nil
 

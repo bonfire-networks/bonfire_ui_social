@@ -141,7 +141,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
     <article
       x-data={"{
           activity_active: false,
-          collapsed: #{String.length(e(@object, :post_content, :html_body, "")) > 150 && ulid(@object) != nil and e(@activity, :replied, :reply_to_id, nil) == nil and ulid(@activity) == nil and e(assigns, :showing_within, nil) != :widget and e(assigns, :showing_within, nil) != :search}}"}
+          collapsed: #{String.length(e(@object, :post_content, :html_body, "")) > 150 && ulid(@object) != nil and e(@activity, :replied, :reply_to_id, nil) == nil and ulid(@activity) == nil and @showing_within != :widget and @showing_within != :search}}"}
       id={"activity-#{@activity_inception}-" <> (ulid(@activity) || e(@object, :id, "no-id"))}
       aria-label="user activity"
       role="article"
@@ -157,10 +157,9 @@ defmodule Bonfire.UI.Social.ActivityLive do
         # showing a quoted reply_to
         "main_reply_to !rounded-none !shadow-none mb-2 p-2 py-1 mt-2 relative before:absolute before:content-[''] before:w-1 before:bg-base-content/40 before:left-0 before:top-0 before:bottom-0 opacity-60 !border-none":
           ulid(@object) != nil and e(@activity, :replied, :reply_to_id, nil) == nil and
-            ulid(@activity) == nil and e(assigns, :showing_within, nil) != :widget and
-            e(assigns, :showing_within, nil) != :search,
-        "rounded-md shadow":
-          e(assigns, :showing_within, nil) != :thread and e(assigns, :thread_mode, nil) != :flat,
+            ulid(@activity) == nil and @showing_within != :widget and
+            @showing_within != :search,
+        "rounded-md shadow": @showing_within != :thread and e(assigns, :thread_mode, nil) != :flat,
         reply:
           ulid(@object) != nil and e(@activity, :replied, :reply_to_id, nil) != nil and
             ulid(@activity) != nil,

@@ -1,0 +1,30 @@
+<Bonfire.UI.Social.Activity.ReplyLive
+  object_id={e(@object, :id, "no-object")}
+  activity_id={e(@activity, :id, "no-activity")}
+  object_boundary={@object_boundary}
+  permalink={@permalink}
+  thread_mode={@thread_mode}
+  replied={e(@activity, :replied, nil)}
+  showing_within={@showing_within}
+  hide_reply={@hide_reply}
+  reply_to_text={Text.text_only(
+    e(@object, :post_content, :name, nil) || e(@object, :post_content, :summary, nil) ||
+      e(@object, :post_content, :html_body, e(@object, :id, ""))
+  )}
+/>
+
+<Bonfire.UI.Common.BoostActionLive
+  :if={@object_type not in [Bonfire.Data.Social.Message]}
+  id={ComponentID.new(Bonfire.UI.Common.BoostActionLive, ulid(@object))}
+  object={@object}
+  object_type={@object_type}
+  showing_within={@showing_within}
+  boost_count={e(@activity, :boost_count, nil)}
+/>
+
+<Bonfire.UI.Common.LikeActionLive
+  id={ComponentID.new(Bonfire.UI.Common.LikeActionLive, ulid(@object))}
+  object={@object}
+  showing_within={@showing_within}
+  like_count={e(@activity, :like_count, nil)}
+/>

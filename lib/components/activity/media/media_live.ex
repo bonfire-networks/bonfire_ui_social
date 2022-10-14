@@ -1,8 +1,9 @@
 defmodule Bonfire.UI.Social.Activity.MediaLive do
   use Bonfire.UI.Common.Web, :stateless_component
 
-  prop media, :list, default: []
+  prop media, :list, default: nil
   prop showing_within, :any, default: nil
+  prop viewing_main_object, :boolean, default: false
   prop label, :string, default: nil
 
   def provider(media) do
@@ -19,9 +20,10 @@ defmodule Bonfire.UI.Social.Activity.MediaLive do
   end
 
   def preview_img(media) do
-    (e(media.metadata, "facebook", "og:image", nil) ||
+    (e(media.metadata, "oembed", "thumbnail_url", nil) ||
+       e(media.metadata, "facebook", "og:image", nil) ||
        e(media.metadata, "twitter", "twitter:image", nil) ||
-       e(media.metadata, "oembed", "thumbnail_url", nil) || media_img(media))
+       media_img(media))
     |> as_string()
   end
 
