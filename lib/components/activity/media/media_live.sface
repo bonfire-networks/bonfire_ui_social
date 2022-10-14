@@ -48,7 +48,7 @@
                   do: "min-width: 90vw; min-height: 90vh",
                   else: ""}
               >
-                <Bonfire.UI.Social.Activity.RemoteMediaLive media={@media} />
+                <Bonfire.UI.Social.Activity.RemoteMediaLive media={media} />
 
                 <div class="mt-2">
                   {media_label(media)}
@@ -63,7 +63,7 @@
                 <LazyImage
                   class="w-full max-h-[270px] !object-cover media-image h-full cursor-pointer obj-center rounded-md"
                   alt={media_label(media)}
-                  src={preview_img(media)}
+                  src={preview_img(media) || media_url(media)}
                 />
                 <figcaption class="sr-only">{media_label(media)}</figcaption>
               </:open_btn>
@@ -71,7 +71,7 @@
           {/if}
         {#else}
           <a
-            href={media_url(media)}
+            href={media_url(media) || preview_img(media)}
             target="_blank"
             class="flex w-full border rounded media_container bg-base-200 hover:bg-base-content/5 border-base-content/10 tooltip tooltip-bottom"
             data-tip={media_label(media)}
