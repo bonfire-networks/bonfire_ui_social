@@ -691,7 +691,7 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
     user = user || e(socket, :assigns, :user, nil)
 
     feed =
-      if module_enabled?(Bonfire.Social.Posts),
+      if module_enabled?(Bonfire.Social.Posts, user),
         do:
           Bonfire.Social.Posts.list_by(user,
             pagination: input_to_atoms(params),
@@ -712,7 +712,7 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
     user = user || e(socket, :assigns, :user, nil)
 
     feed =
-      if module_enabled?(Bonfire.Social.Boosts),
+      if module_enabled?(Bonfire.Social.Boosts, user),
         do:
           Bonfire.Social.Boosts.list_by(user,
             pagination: input_to_atoms(params),
@@ -735,7 +735,7 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
     feed_id = ulid!(feed_id)
 
     feed =
-      if module_enabled?(Bonfire.Social.FeedActivities),
+      if module_enabled?(Bonfire.Social.FeedActivities, socket),
         do:
           Bonfire.Social.FeedActivities.feed(feed_id,
             pagination: params,
@@ -758,11 +758,11 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
     user = user || e(socket, :assigns, :user, nil)
 
     feed_id =
-      if user && module_enabled?(Bonfire.Social.Feeds),
+      if user && module_enabled?(Bonfire.Social.Feeds, user),
         do: Bonfire.Social.Feeds.feed_id(:outbox, user)
 
     feed =
-      if feed_id && module_enabled?(Bonfire.Social.FeedActivities),
+      if feed_id && module_enabled?(Bonfire.Social.FeedActivities, user),
         do:
           Bonfire.Social.FeedActivities.feed(feed_id,
             pagination: input_to_atoms(params),

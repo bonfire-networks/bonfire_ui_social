@@ -55,7 +55,7 @@ defmodule Bonfire.Social.Objects.LiveHandler do
 
     # debug(object, "the object")
     # debug(activity, "the activity")
-    # following = if current_user && module_enabled?(Bonfire.Social.Follows) && Bonfire.Social.Follows.following?(current_user, object), do: [object.id]
+    # following = if current_user && module_enabled?(Bonfire.Social.Follows, user) && Bonfire.Social.Follows.following?(current_user, object), do: [object.id]
 
     # |> debug("object author")
     author =
