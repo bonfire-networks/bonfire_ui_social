@@ -1,3 +1,4 @@
+<Bonfire.UI.Common.PageTitleLive page_title={@page_title} />
 <Bonfire.UI.Social.FeedLive
   id={e(@feed_id, :notifications)}
   feed_id={@feed_id}
