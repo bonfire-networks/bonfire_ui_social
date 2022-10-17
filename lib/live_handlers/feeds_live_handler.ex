@@ -276,7 +276,7 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
   def paginate_feed("user:" <> selected_tab_and_user_id, attrs, socket) do
     {:noreply,
      socket
-     |> assign(load_user_feed_assigns(selected_tab_and_user_id, attrs, socket))}
+     |> assign_generic(load_user_feed_assigns(selected_tab_and_user_id, attrs, socket))}
   end
 
   def paginate_feed(feed_id, attrs, socket) when not is_nil(feed_id) do
@@ -319,8 +319,8 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
 
     {:noreply,
      socket
-     |> assign(feed_update_mode: "append")
-     |> assign(
+     |> assign_generic(feed_update_mode: "append")
+     |> assign_generic(
        feed_assigns
        |> Keyword.put(
          :feed,
@@ -335,7 +335,7 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
 
     {:noreply,
      socket
-     |> assign(
+     |> assign_generic(
        feed_update_mode: "append",
        feed:
          e(feed, :edges, [])
@@ -555,16 +555,19 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
   #   ]
   # end
 
-  def preloads(feed, socket \\ [])
+  def preloads(feed, socket_or_opts \\ [])
 
-  def preloads(feed, socket) when is_list(feed) and length(feed) > 0 do
+  def preloads(feed, socket_or_opts) when is_list(feed) and length(feed) > 0 do
     debug("FeedLive: preload objects")
 
+    opts = e(socket_or_opts, :assigns, []) || socket_or_opts
+
     opts = [
-      preload: e(socket, :assigns, :preload, :feed),
-      current_user: current_user(socket),
-      skip_boundary_check: true,
-      with_cache: false
+      preload: e(opts, :preload, :feed),
+      with_cache: e(opts, :with_cache, false),
+      current_user: current_user(opts),
+      # because it should already be check it the initial query
+      skip_boundary_check: true
     ]
 
     case List.first(feed) do

@@ -4,8 +4,12 @@ defmodule Bonfire.UI.Social.Routes do
       # pages anyone can view
       scope "/", Bonfire.UI.Social do
         pipe_through(:browser)
+
         live("/local", Feeds.LocalLive, as: :local)
+        # todo
+        live("/local/:type", Feeds.LocalLive, as: :local)
         live("/federation", Feeds.FederationLive, as: :federation)
+        live("/federation/:type", Feeds.FederationLive, as: :federation)
 
         live("/write", WriteLive, as: :write)
 
@@ -19,8 +23,12 @@ defmodule Bonfire.UI.Social.Routes do
       scope "/", Bonfire.UI.Social do
         pipe_through(:browser)
         pipe_through(:account_required)
+
         live("/feed", FeedsLive, as: :feed)
         live("/feed/:tab", FeedsLive, as: :feed)
+        # todo
+        live("/feed/:tab/:type", FeedsLive, as: :feed)
+
         live("/notifications", Feeds.NotificationsLive, as: :notifications)
         # live "/flags", FlagsLive, as: :flags
       end

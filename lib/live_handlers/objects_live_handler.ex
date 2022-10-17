@@ -47,7 +47,7 @@ defmodule Bonfire.Social.Objects.LiveHandler do
   end
 
   def init_object_assigns(object, activity, assigns, socket, page_title \\ nil) do
-    current_user = current_user_required(socket)
+    current_user = current_user(socket)
     id = ulid(object)
 
     activity =
