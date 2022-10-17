@@ -29,9 +29,12 @@ defmodule Bonfire.Social.Pins.LiveHandler do
   end
 
   def do_pin(object, params, socket) do
+    scope = maybe_to_atom(e(params, "scope", nil))
+    |> debug()
+
     with {:ok, current_user} <- current_user_or_remote_interaction(socket, l("pin"), object),
          {:ok, _pin} <-
-           Bonfire.Social.Pins.pin(current_user, object, maybe_to_atom(e(params, "scope", nil))) do
+           Bonfire.Social.Pins.pin(current_user, object, scope) do
       pin_action(object, true, params, socket)
     else
       {:error,

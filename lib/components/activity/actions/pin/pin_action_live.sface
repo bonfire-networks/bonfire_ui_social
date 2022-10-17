@@ -5,12 +5,13 @@
     phx-click="Bonfire.Social.Pins:pin"
     phx-value-direction="up"
     phx-value-id={ulid(@object)}
+    phx-value-scope={@scope}
     phx-value-component={__MODULE__}
     class={@class}
   >
     <span class="text-base-content text-opacity-50">
       <Icon iconify="akar-icons:schedule" class="w-5 h-5" />
     </span>
-    {l("Pin")}
+    {if @scope==:instance, do: l("Pin to instance"), else: l("Pin")}
   </button>
 </div>
