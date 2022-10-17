@@ -1,12 +1,19 @@
-<Bonfire.UI.Common.PageTitleLive page_title={@page_title} />
-<Bonfire.UI.Social.FeedLive
-  id={e(@feed_id, :notifications)}
-  feed_id={@feed_id}
-  page_title={@page_title}
-  feed={@feed}
-  page_info={@page_info}
-  feedback_title={@feedback_title}
-  feedback_message={@feedback_message}
-  showing_within={:notifications}
-  loading={@loading}
-/>
+<div class="max-w-[680px] mx-auto">
+  <Bonfire.UI.Common.PageTitleLive page_title={@page_title} />
+  <!-- <div class="mb-4 -mt-2 tabs tabs-boxed bg-base-300">
+    <a class="tab">Tab 1</a> 
+    <a class="!rounded-full tab tab-active">Tab 2</a> 
+    <a class="tab">Tab 3</a>
+  </div> -->
+  <Bonfire.UI.Social.FeedLive
+    id={e(@feed_id, :notifications)}
+    feed_id={@feed_id}
+    page_title={@page_title}
+    feed={@feed}
+    page_info={@page_info}
+    feedback_title={@feedback_title}
+    feedback_message={@feedback_message}
+    showing_within={:notifications}
+    loading={@loading}
+  />
+</div>
