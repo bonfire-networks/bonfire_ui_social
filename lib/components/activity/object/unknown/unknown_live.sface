@@ -2,7 +2,7 @@
   <LiveRedirect to={@permalink}>
     <div class="mb-2 text-sm font-medium text-base-content text-opacity-80">
       <span :if={@object_type_readable && @object_type_readable != ""}>
-        {@object_type_readable}:
+        {String.capitalize(@object_type_readable || "Unknown")}:
       </span>
       {rich(
         e(
@@ -16,7 +16,7 @@
               @object,
               :post_content,
               :name,
-              e(@object, :name, e(@object, :title, l("Unsupported type or deleted object")))
+              e(@object, :title, e(@object, :label, l("Unsupported type or deleted object")))
             )
           )
         )
@@ -24,12 +24,17 @@
     </div>
   </LiveRedirect>
 
-  {#if e(@object, :summary, e(@object, :profile, :summary, nil))}
+  {#if e(@object, :post_content, :summary, e(@object, :profile, :summary, e(@object, :summary, nil)))}
     <h3 class="text-xs tracking-wider text-primary-content-600 uppercase">Summary</h3>
-    <div class="mb-2 prose-sm prose text-primary-content-700 max-w-prose">{rich(e(@object, :summary, e(@object, :profile, :summary, "")))}</div>
+    <div class="mb-2 prose-sm prose text-primary-content-700 max-w-prose">{rich(
+        e(@object, :post_content, :summary, e(@object, :profile, :summary, e(@object, :summary, nil)))
+      )}</div>
   {/if}
 
-  <article class="prose-sm prose max-w-prose">
-    {rich(e(@object, :html_body, e(@object, :note, e(@object, :html_body, ""))))}
+  <article
+    :if={e(@object, :post_content, :html_body, e(@object, :html_body, e(@object, :note, nil)))}
+    class="prose-sm prose max-w-prose"
+  >
+    {rich(e(@object, :post_content, :html_body, e(@object, :html_body, e(@object, :note, nil))))}
   </article>
 </div>
