@@ -18,16 +18,21 @@ defmodule Bonfire.Social.Pins.LiveHandler do
 
   # unpin in LV
   def handle_event("pin", %{"direction" => "down", "id" => id} = params, socket) do
-    with _ <- Bonfire.Social.Pins.unpin(current_user_required(socket), id) do
+    with _ <-
+           Bonfire.Social.Pins.unpin(
+             current_user_required(socket),
+             id,
+             maybe_to_atom(e(params, "scope", nil))
+           ) do
       pin_action(id, false, params, socket)
     end
   end
 
   def do_pin(object, params, socket) do
     with {:ok, current_user} <- current_user_or_remote_interaction(socket, l("pin"), object),
-         {:ok, _pin} <- Bonfire.Social.Pins.pin(current_user, object) do
+         {:ok, _pin} <-
+           Bonfire.Social.Pins.pin(current_user, object, maybe_to_atom(e(params, "scope", nil))) do
       pin_action(object, true, params, socket)
-      |> debug("pinned")
     else
       {:error,
        %Ecto.Changeset{
@@ -42,6 +47,7 @@ defmodule Bonfire.Social.Pins.LiveHandler do
         error(e)
 
       other ->
+        debug(other)
         other
     end
   end
@@ -53,7 +59,9 @@ defmodule Bonfire.Social.Pins.LiveHandler do
       my_pin: pinned?
     )
 
-    {:noreply, socket}
+    {:noreply,
+     socket
+     |> assign_flash(:info, if(pinned?, do: l("Pinned!"), else: l("Unpinned")))}
   end
 
   # defp list_my_pinned(current_user, objects) when is_list(objects) do
