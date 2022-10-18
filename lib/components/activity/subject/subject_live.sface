@@ -100,7 +100,7 @@
         </LiveRedirect>
       </div>
       <div class="flex items-center justify-between leading-[16px] min-w-0 space-x-1 w-full">
-        <div class="feed-clickable flex gap-1 flex-1 leading-[16px]">
+        <div class="flex flex-col flex-1 feed-clickable">
           {#if @thread_mode == :flat && @current_user && ulid(@current_user) == maybe_get(@character, :id)}
             <LiveRedirect
               opts={"data-id": "subject_name"}
@@ -122,12 +122,16 @@
             <div class="flex items-center gap-1">
               <div
                 :if={e(@character, :username, nil)}
-                class="text-sm font-normal no-underline truncate ellipsis text-base-content text-opacity-60 subject_username"
+                class="text-[13px] font-normal no-underline truncate ellipsis text-base-content/60 subject_username"
               >
                 @{e(@character, :username, "")}
               </div>
               <span>·</span>
-              <Bonfire.UI.Social.Activity.DateAgoLive
+              <LiveRedirect :if={@showing_within not in [:smart_input]} class="subject_timestamp text-[13px] font-normal no-underline truncate ellipsis text-base-content/60" to={@permalink}>
+                {@date_ago}
+              </LiveRedirect>
+
+              <!-- <Bonfire.UI.Social.Activity.DateAgoLive
                 permalink={@permalink}
                 date_ago={@date_ago}
                 object={@object}
@@ -135,10 +139,20 @@
                 object_boundary={@object_boundary}
                 showing_within={@showing_within}
                 verb_display={@verb_display}
-              />
+              /> -->
             </div>
           {/if}
         </div>
+        <Bonfire.UI.Social.Activity.InstanceIconLive object={@object} />
+        <Dynamic.LiveComponent
+          :if={module_enabled?(Bonfire.Boundaries.Web.BoundaryIconLive) and
+            @object_type not in [Bonfire.Data.Social.Message]}
+          module={Bonfire.Boundaries.Web.BoundaryIconLive}
+          object={@object}
+          with_icon
+          id={ComponentID.new(Bonfire.Boundaries.Web.BoundaryIconLive, @object)}
+          object_boundary={@object_boundary}
+        />
       </div>
     </div>
   {/if}
