@@ -1,17 +1,27 @@
-<div class="relative z-20 tooltip tooltip-bottom" data-tip={l("Pin this post")}>
-  <button
-    :if={@object}
-    data-id="pin_action"
-    phx-click="Bonfire.Social.Pins:pin"
-    phx-value-direction="up"
-    phx-value-id={ulid(@object)}
-    phx-value-scope={@scope}
-    phx-value-component={__MODULE__}
-    class={@class}
-  >
-    <span class="text-base-content text-opacity-50">
-      <Icon iconify="akar-icons:schedule" class="w-5 h-5" />
-    </span>
-    {if @scope == :instance, do: l("Pin to instance"), else: l("Pin")}
-  </button>
+<div
+  :if={@object}
+  data-id="pin_action"
+  phx-click="Bonfire.Social.Pins:pin"
+  phx-value-direction="up"
+  phx-value-id={ulid(@object)}
+  phx-value-scope={@scope}
+  phx-value-component={__MODULE__}
+  class={@class}
+>
+  <Icon iconify="bi:pin-angle-fill" class="w-5 h-5" />
+  {if @scope == :instance, do: l("Pin to instance"), else: l("Pin")}
+</div>
+
+<div
+  :if={@object}
+  data-id="pin_action"
+  phx-click="Bonfire.Social.Pins:pin"
+  phx-value-direction="down"
+  phx-value-id={ulid(@object)}
+  phx-value-scope={@scope}
+  phx-value-component={__MODULE__}
+  class={@class}
+>
+  <Icon iconify="bi:pin-angle-fill" class="w-5 h-5" />
+  {if @scope == :instance, do: l("Unpin from instance"), else: l("Unpin")}
 </div>

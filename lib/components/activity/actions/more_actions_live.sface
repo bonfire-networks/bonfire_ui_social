@@ -29,7 +29,7 @@
         title_text={l("Tag with topic(s)")}
         form_opts={%{"phx-submit" => "Bonfire.Social.Objects:tag"}}
         :let={autocomplete: autocomplete}
-      >
+        >
         <input type="hidden" name="id" value={ulid(@object)}>
         <select data-phx-autocomplete="Bonfire.Classify:autocomplete" class="hidden tagify">
           {#for cat <- autocomplete || []}
@@ -57,12 +57,12 @@
       </Bonfire.UI.Common.OpenModalLive>
     </li>
 
-    <li class="hover:bg-neutral hover:bg-opacity-20">
+    <!-- <li class="hover:bg-neutral hover:bg-opacity-20">
       <Bonfire.UI.Social.PinActionLive
         object={@object}
         class="flex items-center py-2 text-sm text-neutral"
       />
-    </li>
+    </li> -->
 
     <li
       :if={Integration.is_admin?(@current_user) or Bonfire.Boundaries.can?(@current_user, :pin, :instance)}

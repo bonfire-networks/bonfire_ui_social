@@ -28,8 +28,8 @@
   </div>
 {#else}
   <div class="flex items-center">
-    <LiveRedirect class="subject_timestamp text-base-content text-opacity-60" to={@permalink}>
-      <span :if={@showing_within not in [:smart_input]}>
+    <LiveRedirect class="subject_timestamp text-base-content/60" to={@permalink}>
+      <span>
         {@date_ago}
       </span>
     </LiveRedirect>
