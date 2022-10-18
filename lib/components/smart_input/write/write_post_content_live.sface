@@ -41,7 +41,7 @@
                   opts={
                     placeholder: l("Enter a content warning")
                   }
-                  class={"input input-bordered w-full"}
+                  class="input input-bordered w-full"
                 />
               </Field>
             </div>

@@ -27,7 +27,7 @@
   >
     {#if e(post_content(@object), :name, nil) != nil and @showing_within != :blog}
       {#if @viewing_main_object}
-        <div class="w-full h-auto max-w-full p-0 m-0 mt-6 text-3xl font-bold ">
+        <div class="w-full h-auto max-w-full p-0 m-0 mt-6 text-3xl font-bold">
           {e(@object, :post_content, :name, nil)}
         </div>
       {#else}

@@ -127,7 +127,11 @@
                 @{e(@character, :username, "")}
               </div>
               <span>·</span>
-              <LiveRedirect :if={@showing_within not in [:smart_input]} class="subject_timestamp text-[13px] font-normal no-underline truncate ellipsis text-base-content/60" to={@permalink}>
+              <LiveRedirect
+                :if={@showing_within not in [:smart_input]}
+                class="subject_timestamp text-[13px] font-normal no-underline truncate ellipsis text-base-content/60"
+                to={@permalink}
+              >
                 {@date_ago}
               </LiveRedirect>
 
