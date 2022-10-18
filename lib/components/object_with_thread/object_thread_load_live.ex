@@ -13,7 +13,7 @@ defmodule Bonfire.UI.Social.ObjectThreadLoadLive do
   prop to_circles, :list, default: []
   prop smart_input_prompt, :string, default: nil
   prop smart_input_opts, :any, default: nil
-  prop reply_to_id, :string, default: nil
+  prop reply_to_id, :any, default: nil
   prop thread_id, :string, default: nil
   prop feed_id, :any, default: nil
   prop activity, :any, default: nil

@@ -4,7 +4,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
   alias Bonfire.Social.Activities
   import Untangle
 
-  prop(activity, :map, default: nil)
+  prop(activity, :any, default: nil)
   prop(object, :any, default: nil)
   prop(verb_default, :string, default: nil)
   prop(feed_id, :any, default: nil)
@@ -134,6 +134,20 @@ defmodule Bonfire.UI.Social.ActivityLive do
 
     assigns_merge(assigns, activity_components: components)
     # |> debug("assigns")
+  end
+
+  def prepare(%{object: %{} = _object} = assigns) do
+    prepare(
+      Map.put(
+        assigns,
+        :activity,
+        e(assigns.object, :activity, nil) ||
+          %{
+            subject:
+              e(assigns.object, :created, :creator, nil) || e(assigns.object, :creator, nil)
+          }
+      )
+    )
   end
 
   def render(%{activity: _, activity_components: _} = assigns) do

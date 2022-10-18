@@ -10,7 +10,7 @@ defmodule Bonfire.UI.Social.WritePostContentLive do
   alias Bonfire.UI.Common.WriteEditorLive
 
   # prop target_component, :string, default: nil
-  prop reply_to_id, :string, default: nil
+  prop reply_to_id, :any, default: nil
   prop context_id, :string, default: nil
   prop create_object_type, :any, default: nil
   prop to_boundaries, :list, default: []

@@ -78,7 +78,7 @@
         <Bonfire.UI.Common.InputControlsLive
           smart_input_opts={@smart_input_opts}
           thread_mode={@thread_mode}
-          reply_to_id={@reply_to_id}
+          reply_to_id={ulid(@reply_to_id)}
           context_id={@context_id}
           create_object_type={@create_object_type}
           to_boundaries={@to_boundaries}

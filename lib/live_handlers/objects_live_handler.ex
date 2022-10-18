@@ -100,7 +100,7 @@ defmodule Bonfire.Social.Objects.LiveHandler do
       no_index:
         !Bonfire.Me.Settings.get([Bonfire.Me.Users, :discoverable], true, current_user: author),
       thread_id: thread_id,
-      reply_to_id: reply_to_id,
+      reply_to_id: object,
       page_title: page_title,
       smart_input_opts: [text: mentions],
       to_circles: to_circles
