@@ -1,5 +1,6 @@
 <!-- <Bonfire.UI.Common.PageTitleLive page_title={@page_title} /> -->
 <Bonfire.UI.Common.InstancePinnedLive
+  :if={@selected_tab == "feed"}
   object_types={Bonfire.Data.Social.Post}
   title={l("Pinned discussions")}
 />
