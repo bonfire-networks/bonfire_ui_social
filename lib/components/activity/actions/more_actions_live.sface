@@ -64,7 +64,10 @@
       />
     </li>
 
-    <li :if={Integration.is_admin?(@current_user) or Bonfire.Boundaries.can?(@current_user, :pin, :instance) } class="hover:bg-neutral hover:bg-opacity-20">
+    <li
+      :if={Integration.is_admin?(@current_user) or Bonfire.Boundaries.can?(@current_user, :pin, :instance)}
+      class="hover:bg-neutral hover:bg-opacity-20"
+    >
       <Bonfire.UI.Social.PinActionLive
         object={@object}
         class="flex items-center py-2 text-sm text-neutral"

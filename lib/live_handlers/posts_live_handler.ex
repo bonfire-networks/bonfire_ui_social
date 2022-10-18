@@ -54,7 +54,7 @@ defmodule Bonfire.Social.Posts.LiveHandler do
 
     with %{} <- current_user || {:error, "You must be logged in"},
          %{valid?: true} <- post_changeset(attrs, current_user),
-         uploaded_media <- multi_upload(current_user, params["upload_metadata"], socket),
+         uploaded_media <- live_upload_files(current_user, params["upload_metadata"], socket),
          opts <-
            [
              current_user: current_user,
@@ -231,26 +231,5 @@ defmodule Bonfire.Social.Posts.LiveHandler do
     # debug(attrs, "ATTRS")
     Posts.changeset(:create, attrs, creator)
     # |> debug("pc")
-  end
-
-  def multi_upload(current_user, metadata, socket) do
-    maybe_consume_uploaded_entries(socket, :files, fn %{path: path} = meta, entry ->
-      debug(meta, "consume_uploaded_entries meta")
-      debug(entry, "consume_uploaded_entries entry")
-
-      with {:ok, uploaded} <-
-             Bonfire.Files.upload(nil, current_user, path, %{
-               client_name: entry.client_name,
-               metadata: metadata[entry.ref]
-             })
-             |> debug("uploaded") do
-        {:ok, uploaded}
-      else
-        e ->
-          error(e, "Did not upload #{entry.client_name}")
-          {:postpone, nil}
-      end
-    end)
-    |> filter_empty([])
   end
 end

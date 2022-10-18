@@ -89,6 +89,7 @@
           showing_within={@showing_within}
           uploads={@uploads}
           uploaded_files={@uploaded_files}
+          show_cw_toggle
         />
       </div>
     </div>
