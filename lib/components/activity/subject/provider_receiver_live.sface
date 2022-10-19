@@ -1,25 +1,48 @@
 <div data-id="subject" class="flex items-center mb-2 text-sm">
-  <div class="flex justify-between flex-1">
+  <div class="flex flex-1">
     <div
       :if={provider(@provider, @primary_accountable, @object |> dump) |> dump}
-      class="flex items-center gap-3"
+      class="flex w-full gap-3"
     >
       <Bonfire.UI.Common.AvatarLive user={provider(@provider, @primary_accountable, @object)} />
-      <div class="flex items-center text-sm text-primary-content-700 vf_provider">
-        <LiveRedirect
-          to={path(provider(@provider, @primary_accountable, @object))}
-          opts={"data-id": "subject_name"}
-          aria-label={"#{e(character(provider(@provider, @primary_accountable, @object)), [:username, :display_username], "")} profile"}
-          class="font-semibold text-primary-content-800 hover:underline"
-        >
-          {e(profile(provider(@provider, @primary_accountable, @object)), :name, "Anonymous")}
+      <div class="flex items-start justify-between w-full">
+        <div class="flex flex-col flex-1 feed-clickable">
+          
+            <LiveRedirect
+              opts={"data-id": "subject_name"}
+              class="leading-[16px]"
+              to={path(provider(@provider, @primary_accountable, @object))}
+            >
+              <span class="flex-1 text-base font-semibold link link-hover">{e(profile(provider(@provider, @primary_accountable, @object)), :name, "Anonymous")}</span>
+            </LiveRedirect>
+            <div class="flex items-center gap-1">
+              <div
+                :if={e(@character, :username, nil)}
+                class="text-[13px] font-normal no-underline truncate ellipsis text-base-content/60 subject_username"
+              >
+               @{e(character(provider(@provider, @primary_accountable, @object)), [:username, :display_username], "")}
+              </div>
+              <span>·</span>
+              <LiveRedirect
+                :if={@showing_within not in [:smart_input]}
+                class="subject_timestamp text-[13px] font-normal no-underline truncate ellipsis text-base-content/60"
+                to={@permalink}
+              >
+                {@date_ago}
+              </LiveRedirect>
 
-          <span class="ml-1 text-sm font-normal no-underline truncate ellipsis text-base-content text-opacity-60 subject_username">@{e(
-              character(provider(@provider, @primary_accountable, @object)),
-              [:username, :display_username],
-              ""
-            )}</span>
-        </LiveRedirect>
+            </div>
+        </div>
+        <Bonfire.UI.Social.Activity.InstanceIconLive object={@object} />
+        <Dynamic.LiveComponent
+          :if={module_enabled?(Bonfire.Boundaries.Web.BoundaryIconLive) and
+            @object_type not in [Bonfire.Data.Social.Message]}
+          module={Bonfire.Boundaries.Web.BoundaryIconLive}
+          object={@object}
+          with_icon
+          id={ComponentID.new(Bonfire.Boundaries.Web.BoundaryIconLive, @object)}
+          object_boundary={@object_boundary}
+        />
       </div>
     </div>
 
@@ -41,7 +64,7 @@
         <Bonfire.UI.Social.Activity.InstanceIconLive object={@object} />
       </span>
     </div> -->
-    <Bonfire.UI.Social.Activity.DateAgoLive
+    <!-- <Bonfire.UI.Social.Activity.DateAgoLive
       permalink={@permalink}
       date_ago={@date_ago}
       object={@object}
@@ -49,25 +72,23 @@
       object_boundary={@object_boundary}
       showing_within={@showing_within}
       verb_display={@verb_display}
-    />
-
+    /> -->
+<!-- 
     <div
       :if={receiver(@receiver, @object) |> dump &&
         receiver(@receiver, @object) != provider(@provider, @primary_accountable, @object)}
       class="flex items-center text-sm text-primary-content-700 vf_receiver"
-    >
+      >
       <LiveRedirect
         to={path(character(@object, :receiver))}
         opts={"data-id": "subject_name"}
         aria-label={"#{e(character(@object, :receiver), [:username, :display_username], "")} profile"}
         class="font-semibold text-primary-content-800 hover:underline"
-      >
+        >
         {e(profile(receiver(@receiver, @object)), :name, "Anonymous")}
-
-        <!-- <span class="text-sm text-primary-content-500 subject_username text-light">{e(character(@object, :receiver), [:username, :display_username], "")}</span> -->
 
         <Bonfire.UI.Common.AvatarLive user={receiver(@receiver, @object)} />
       </LiveRedirect>
-    </div>
+    </div> -->
   </div>
 </div>
