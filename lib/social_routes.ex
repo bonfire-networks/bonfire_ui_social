@@ -1,4 +1,6 @@
 defmodule Bonfire.UI.Social.Routes do
+  def declare_routes, do: nil
+
   defmacro __using__(_) do
     quote do
       # pages anyone can view
