@@ -7,31 +7,33 @@
       <Bonfire.UI.Common.AvatarLive user={provider(@provider, @primary_accountable, @object)} />
       <div class="flex items-start justify-between w-full">
         <div class="flex flex-col flex-1 feed-clickable">
-          
-            <LiveRedirect
-              opts={"data-id": "subject_name"}
-              class="leading-[16px]"
-              to={path(provider(@provider, @primary_accountable, @object))}
+          <LiveRedirect
+            opts={"data-id": "subject_name"}
+            class="leading-[16px]"
+            to={path(provider(@provider, @primary_accountable, @object))}
+          >
+            <span class="flex-1 text-base font-semibold link link-hover">{e(profile(provider(@provider, @primary_accountable, @object)), :name, "Anonymous")}</span>
+          </LiveRedirect>
+          <div class="flex items-center gap-1">
+            <div
+              :if={e(@character, :username, nil)}
+              class="text-[13px] font-normal no-underline truncate ellipsis text-base-content/60 subject_username"
             >
-              <span class="flex-1 text-base font-semibold link link-hover">{e(profile(provider(@provider, @primary_accountable, @object)), :name, "Anonymous")}</span>
-            </LiveRedirect>
-            <div class="flex items-center gap-1">
-              <div
-                :if={e(@character, :username, nil)}
-                class="text-[13px] font-normal no-underline truncate ellipsis text-base-content/60 subject_username"
-              >
-               @{e(character(provider(@provider, @primary_accountable, @object)), [:username, :display_username], "")}
-              </div>
-              <span>·</span>
-              <LiveRedirect
-                :if={@showing_within not in [:smart_input]}
-                class="subject_timestamp text-[13px] font-normal no-underline truncate ellipsis text-base-content/60"
-                to={@permalink}
-              >
-                {@date_ago}
-              </LiveRedirect>
-
+              @{e(
+                character(provider(@provider, @primary_accountable, @object)),
+                [:username, :display_username],
+                ""
+              )}
             </div>
+            <span>·</span>
+            <LiveRedirect
+              :if={@showing_within not in [:smart_input]}
+              class="subject_timestamp text-[13px] font-normal no-underline truncate ellipsis text-base-content/60"
+              to={@permalink}
+            >
+              {@date_ago}
+            </LiveRedirect>
+          </div>
         </div>
         <Bonfire.UI.Social.Activity.InstanceIconLive object={@object} />
         <Dynamic.LiveComponent
@@ -73,7 +75,7 @@
       showing_within={@showing_within}
       verb_display={@verb_display}
     /> -->
-<!-- 
+    <!-- 
     <div
       :if={receiver(@receiver, @object) |> dump &&
         receiver(@receiver, @object) != provider(@provider, @primary_accountable, @object)}
