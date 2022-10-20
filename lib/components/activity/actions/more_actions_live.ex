@@ -4,15 +4,17 @@ defmodule Bonfire.UI.Social.Activity.MoreActionsLive do
   alias Bonfire.UI.Common.OpenModalLive
   alias Bonfire.UI.Social.Integration
 
-  prop activity, :any
-  prop object, :any
-  prop object_type, :any
-  prop verb, :string
+  prop activity, :any, default: nil
+  prop object, :any, required: true
+  prop object_type, :any, default: nil
+  prop verb, :string, default: nil
   prop object_type_readable, :any
-  prop flagged, :any
+  prop flagged, :any, default: nil
+
+  prop showing_within, :any, default: :feed
+
   slot extra_items, required: false
   slot admin_items, required: false
-  prop showing_within, :any, default: :feed
 
   def subject(activity, object) do
     e(activity, :subject, nil) || e(object, :created, :creator, nil)

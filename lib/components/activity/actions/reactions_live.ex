@@ -1,7 +1,7 @@
 defmodule Bonfire.UI.Social.Activity.ReactionsLive do
   use Bonfire.UI.Common.Web, :stateless_component
 
-  prop activity, :map, required: true
+  prop activity, :any, default: nil
   prop object, :any, required: true
   prop object_type, :any, required: true
   prop permalink, :string, required: true

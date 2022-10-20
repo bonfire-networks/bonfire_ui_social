@@ -1,22 +1,23 @@
-{#if ulid(@object) != nil and e(@activity, :replied, :reply_to_id, nil) == nil and
+<!-- {#if ulid(@object) != nil and e(the_activity(@activity, @object), :replied, :reply_to_id, nil) == nil and
     ulid(@activity) == nil}
   <div />
-{#else}
-  <div
-    :if={@thread_mode != :flat}
-    :class={if @viewing_main_object != true and Settings.get([:ui, :compact], false, @__context__),
-      do: "activity_active ? '' : '[@media(any-hover:hover)]:hidden'"}
-    class={
-      "thread_actions mt-1 flex items-center":
-        @showing_within == :thread or Settings.get([:ui, :compact], false, @__context__),
-      "feed_actions items-center flex mt-1": @viewing_main_object != true,
-      "border-t border-base-content/10 pt-2":
-        e(@showing_within, :feed) == :feed || e(@showing_within, :feed) == :notifications,
-      "mt-1": @showing_within == :widget,
-      "absolute z-50 p-0.5 h-8 hidden group-hover:flex rounded-md top-[-24px] right-[12px] bg-base-100 border border-base-200":
-        @thread_mode == :flat
-    }
-  >
+{#else} -->
+<div
+  :if={@thread_mode != :flat}
+  :class={if @viewing_main_object != true and Settings.get([:ui, :compact], false, @__context__),
+    do: "activity_active ? '' : '[@media(any-hover:hover)]:hidden'"}
+  class={
+    "thread_actions mt-1 flex items-center":
+      @showing_within == :thread or Settings.get([:ui, :compact], false, @__context__),
+    "feed_actions items-center flex mt-1": @viewing_main_object != true,
+    "border-t border-base-content/10 pt-2":
+      e(@showing_within, :feed) == :feed || e(@showing_within, :feed) == :notifications,
+    "mt-1": @showing_within == :widget,
+    "absolute z-50 p-0.5 h-8 hidden group-hover:flex rounded-md top-[-24px] right-[12px] bg-base-100 border border-base-200":
+      @thread_mode == :flat
+  }
+>
+  {#if @viewing_main_object != true}
     {#if e(@showing_within, :feed) == :feed || e(@showing_within, :feed) == :notifications}
       {#if String.starts_with?(@permalink, ["/post/", "/discussion/"])}
         <Bonfire.UI.Common.OpenPreviewLive
@@ -60,34 +61,35 @@
         </LiveRedirect>
       {/if}
     {/if}
+  {/if}
 
-    <!-- :if={String.starts_with?(@permalink || "", ["/post/", "/discussion/"])} 
+  <!-- :if={String.starts_with?(@permalink || "", ["/post/", "/discussion/"])} 
     TODO: specifically exclude some @object_type instead
      -->
-    <div class={
-      "feed-clickable flex items-center flex-1 justify-end space-x-4 mt-0",
-      "-ml-2": @viewing_main_object == true,
-      "!space-x-2": @thread_mode == :flat
-    }>
-      <Bonfire.UI.Social.Activity.ReactionsLive
-        object={@object}
-        activity={@activity}
-        object_type={@object_type}
-        object_boundary={@object_boundary}
-        permalink={@permalink}
-        thread_mode={@thread_mode}
-        showing_within={@showing_within}
-        hide_reply={@hide_reply}
-      />
-      <Bonfire.UI.Social.Activity.MoreActionsLive
-        object={@object}
-        activity={@activity}
-        object_type={@object_type}
-        object_boundary={@object_boundary}
-        object_type_readable={@object_type_readable}
-        verb={@verb}
-        showing_within={@showing_within}
-      />
-    </div>
+  <div class={
+    "feed-clickable flex items-center flex-1 justify-end space-x-4 mt-0",
+    "-ml-2": @viewing_main_object == true,
+    "!space-x-2": @thread_mode == :flat
+  }>
+    <Bonfire.UI.Social.Activity.ReactionsLive
+      object={@object}
+      activity={@activity}
+      object_type={@object_type}
+      object_boundary={@object_boundary}
+      permalink={@permalink}
+      thread_mode={@thread_mode}
+      showing_within={@showing_within}
+      hide_reply={@hide_reply}
+    />
+    <Bonfire.UI.Social.Activity.MoreActionsLive
+      object={@object}
+      activity={@activity}
+      object_type={@object_type}
+      object_boundary={@object_boundary}
+      object_type_readable={@object_type_readable}
+      verb={@verb}
+      showing_within={@showing_within}
+    />
   </div>
-{/if}
+</div>
+<!-- {/if} -->

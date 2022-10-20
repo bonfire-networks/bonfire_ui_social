@@ -118,7 +118,7 @@
 
     <!-- Delete the activity -->
     <li
-      :if={@object_type not in [Bonfire.Data.Social.Message]}
+      :if={@object_type not in [Bonfire.Data.Social.Message] and ulid(@activity)}
       class="hover:bg-neutral hover:bg-opacity-20"
     >
       <Bonfire.UI.Social.Activity.DeleteObjectLive
