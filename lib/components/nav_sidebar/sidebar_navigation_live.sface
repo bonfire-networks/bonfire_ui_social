@@ -1,9 +1,0 @@
-<nav role="navigation" aria-label={l("Social navigation")}>
-  <!-- <div class="flex items-center gap-2 mb-4 text-base font-light">
-    <span class="text-2xl">👋</span>
-    <span>{l "Feeds"}</span>
-  </div> -->
-  <ul class="menu">
-    <Bonfire.UI.Social.SidebarNavigationItemsLive page={@page} />
-  </ul>
-</nav>

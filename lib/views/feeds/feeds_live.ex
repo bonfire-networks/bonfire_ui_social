@@ -10,7 +10,8 @@ defmodule Bonfire.UI.Social.FeedsLive do
       Bonfire.UI.Social.FeedsLive,
       Bonfire.UI.Social.Feeds.LocalLive,
       Bonfire.UI.Social.Feeds.FederationLive,
-      Bonfire.UI.Social.Feeds.LikesLive
+      Bonfire.UI.Social.Feeds.LikesLive,
+      Bonfire.Classify.Web.CategoriesNavLive
     ]
   )
 
@@ -45,7 +46,8 @@ defmodule Bonfire.UI.Social.FeedsLive do
        sidebar_widgets: [
          users: [
            secondary: [
-             {Bonfire.Tag.Web.WidgetTagsLive, []}
+             {Bonfire.UI.Coordination.UpcomingTaskLive, []},
+             {Bonfire.Tag.Web.WidgetTagsLive, []},
            ]
          ],
          guests: [
