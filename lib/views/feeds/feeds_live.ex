@@ -47,7 +47,7 @@ defmodule Bonfire.UI.Social.FeedsLive do
          users: [
            secondary: [
              {Bonfire.UI.Coordination.UpcomingTaskLive, []},
-             {Bonfire.Tag.Web.WidgetTagsLive, []},
+             {Bonfire.Tag.Web.WidgetTagsLive, []}
            ]
          ],
          guests: [

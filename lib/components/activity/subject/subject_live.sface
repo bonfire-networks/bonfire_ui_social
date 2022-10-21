@@ -63,7 +63,7 @@
       "flex items-top",
       "space-x-3": @viewing_main_object == true,
       "py-1": @thread_mode == :flat
-      }>
+    }>
       <div
         :if={ulid(@current_user) != maybe_get(@character, :id) || @thread_mode != :flat}
         class={
@@ -98,15 +98,15 @@
             </LiveRedirect>
           {#else}
             <div class="flex items-baseline">
-            <LiveRedirect
-              opts={"data-id": "subject_name"}
-              aria-label={e(@character, :username, "") <> " profile"}
-              class="leading-[16px] text-base font-semibold link link-hover"
-              to={path(@character)}
-            >
-            {e(@profile, :name, "Anonymous")}
-            </LiveRedirect>
-            <!-- <span class="ml-2 text-[15px] text-base-content/70">replied to <b class="font-bold text-base-content link">title topic</b></span> -->
+              <LiveRedirect
+                opts={"data-id": "subject_name"}
+                aria-label={e(@character, :username, "") <> " profile"}
+                class="leading-[16px] text-base font-semibold link link-hover"
+                to={path(@character)}
+              >
+                {e(@profile, :name, "Anonymous")}
+              </LiveRedirect>
+              <!-- <span class="ml-2 text-[15px] text-base-content/70">replied to <b class="font-bold text-base-content link">title topic</b></span> -->
             </div>
             <div class="flex items-center gap-1">
               <div
