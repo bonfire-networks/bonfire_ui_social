@@ -8,8 +8,6 @@ defmodule Bonfire.UI.Social.Feeds.BoostsActivityTest do
   alias Bonfire.Social.Follows
   alias Bonfire.Social.Posts
 
-  alias Bonfire.Common.Repo
-
   test "As a user I want to see the activity total boosts" do
     # Create alice user
     account = fake_account!()

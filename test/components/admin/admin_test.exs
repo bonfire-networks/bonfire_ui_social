@@ -8,8 +8,6 @@ defmodule Bonfire.UI.Social.AdminTest do
   alias Bonfire.Social.Follows
   alias Bonfire.Social.Posts
 
-  alias Bonfire.Common.Repo
-
   test "As an admin I want to create a new link to invite users to join an instance" do
   end
 

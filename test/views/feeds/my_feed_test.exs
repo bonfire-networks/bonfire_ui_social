@@ -4,7 +4,6 @@ defmodule Bonfire.Social.Feeds.MyFeed.Test do
   alias Bonfire.Social.Posts
   alias Bonfire.Social.Follows
   alias Bonfire.Social.Boosts
-  alias Bonfire.Common.Repo
 
   describe "show" do
     test "not logged in, display instance feed instead" do

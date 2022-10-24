@@ -8,8 +8,6 @@ defmodule Bonfire.UI.Social.Feeds.FeedTest do
   alias Bonfire.Social.Follows
   alias Bonfire.Social.Posts
 
-  alias Bonfire.Common.Repo
-
   test "As a user I want to see the whole amount of activities if they are less than 10" do
     # Create bob user
     account2 = fake_account!()

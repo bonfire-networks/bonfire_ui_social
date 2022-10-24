@@ -8,8 +8,6 @@ defmodule Bonfire.UI.Social.Boundaries.BoundaryTest do
   alias Bonfire.Social.Follows
   alias Bonfire.Social.Posts
 
-  alias Bonfire.Common.Repo
-
   test "Public: When I create an activity with the public boundary selected, it is visible in the federation, instance, home feed" do
   end
 
