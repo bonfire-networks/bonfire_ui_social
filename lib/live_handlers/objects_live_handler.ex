@@ -98,7 +98,7 @@ defmodule Bonfire.Social.Objects.LiveHandler do
       # url: url,
       participants: participants,
       no_index:
-        !Bonfire.Me.Settings.get([Bonfire.Me.Users, :discoverable], true, current_user: author),
+        Bonfire.Me.Settings.get([Bonfire.Me.Users, :undiscoverable], true, current_user: author),
       thread_id: thread_id,
       reply_to_id: object,
       page_title: page_title,
