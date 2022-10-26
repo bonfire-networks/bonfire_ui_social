@@ -20,7 +20,7 @@ defmodule Bonfire.Social.Pins.LiveHandler do
   def handle_event("pin", %{"direction" => "down", "id" => id} = params, socket) do
     with _ <-
            Bonfire.Social.Pins.unpin(
-             current_user_required(socket),
+             current_user_required!(socket),
              id,
              maybe_to_atom(e(params, "scope", nil))
            ) do

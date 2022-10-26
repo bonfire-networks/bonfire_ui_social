@@ -6,7 +6,7 @@ defmodule Bonfire.Social.Objects.LiveHandler do
   def handle_event("set_name", %{"id" => id, "name" => name} = params, socket) do
     with {:ok, _} <-
            Objects.set_name(e(params, "id") || e(socket.assigns, :object, nil), name,
-             current_user: current_user_required(socket)
+             current_user: current_user_required!(socket)
            ) do
       Bonfire.UI.Common.OpenModalLive.close()
 
@@ -20,7 +20,7 @@ defmodule Bonfire.Social.Objects.LiveHandler do
   def handle_event("tag", %{"tags" => tags} = params, socket) do
     with {:ok, _} <-
            Bonfire.Social.Tags.maybe_tag(
-             current_user_required(socket),
+             current_user_required!(socket),
              e(params, "id", nil) || e(socket.assigns, :object, nil),
              tags
            ) do
@@ -33,7 +33,7 @@ defmodule Bonfire.Social.Objects.LiveHandler do
   end
 
   def handle_event("delete", %{"id" => id} = params, socket) do
-    with {:ok, _} <- Objects.delete(id, current_user: current_user_required(socket)) do
+    with {:ok, _} <- Objects.delete(id, current_user: current_user_required!(socket)) do
       Bonfire.UI.Common.OpenModalLive.close()
 
       {:noreply,

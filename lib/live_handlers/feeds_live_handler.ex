@@ -157,7 +157,7 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
         %{assigns: %{count: count}} = socket
       )
       when is_binary(feed_id) do
-    current_user = current_user_required(socket)
+    current_user = current_user_required!(socket)
 
     marked =
       if current_user do
@@ -181,7 +181,7 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
         %{assigns: %{count: count}} = socket
       )
       when is_binary(activity_id) and activity_id != "" do
-    current_user = current_user_required(socket)
+    current_user = current_user_required!(socket)
 
     if current_user,
       do:

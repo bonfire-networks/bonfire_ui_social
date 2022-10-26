@@ -86,7 +86,7 @@ defmodule Bonfire.Social.Messages.LiveHandler do
 
     # |> debug
 
-    with {:ok, sent} <- Messages.send(current_user_required(socket), attrs) do
+    with {:ok, sent} <- Messages.send(current_user_required!(socket), attrs) do
       # debug(sent, "sent!")
       message_sent(sent, attrs, socket)
       # else e ->

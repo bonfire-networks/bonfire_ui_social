@@ -50,7 +50,7 @@ defmodule Bonfire.Social.Posts.LiveHandler do
     # |> debug("post attrs")
 
     # debug(e(socket.assigns, :showing_within, nil), "SHOWING")
-    current_user = current_user_required(socket)
+    current_user = current_user_required!(socket)
 
     with %{} <- current_user || {:error, "You must be logged in"},
          %{valid?: true} <- post_changeset(attrs, current_user),
@@ -99,7 +99,7 @@ defmodule Bonfire.Social.Posts.LiveHandler do
         # |> patch_to(current_url(socket), fallback: path(published)) # so the flash appears - TODO: causes a conflict between the activity coming in via pubsub
 
         # assign_generic(socket,
-        #   feed: [%{published.activity | object_post: published.post, subject_user: current_user_required(socket)}] ++ Map.get(socket.assigns, :feed, [])
+        #   feed: [%{published.activity | object_post: published.post, subject_user: current_user_required!(socket)}] ++ Map.get(socket.assigns, :feed, [])
         # )
       }
     else

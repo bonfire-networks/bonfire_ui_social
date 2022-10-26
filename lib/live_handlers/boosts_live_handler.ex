@@ -14,7 +14,7 @@ defmodule Bonfire.Social.Boosts.LiveHandler do
 
   # unboost in LV
   def handle_event("undo", %{"id" => id} = params, socket) do
-    with {:ok, unboost} <- Bonfire.Social.Boosts.unboost(current_user_required(socket), id) do
+    with {:ok, unboost} <- Bonfire.Social.Boosts.unboost(current_user_required!(socket), id) do
       boost_action(id, false, params, socket)
     end
   end
