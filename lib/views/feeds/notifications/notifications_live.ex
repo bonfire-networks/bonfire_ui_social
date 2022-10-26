@@ -29,7 +29,7 @@ defmodule Bonfire.UI.Social.Feeds.NotificationsLive do
      |> assign(
        page: "notifications",
        selected_tab: "notifications",
-       without_sidebar: true,
+      #  without_sidebar: true,
        page_title: l("Notifications"),
        feedback_title: l("You have no notifications"),
        feedback_message:
@@ -41,6 +41,18 @@ defmodule Bonfire.UI.Social.Feeds.NotificationsLive do
        feed: e(feed, :edges, []),
        page_info: e(feed, :page_info, []),
        loading: false,
+       sidebar_widgets: [
+        users: [
+          secondary: [
+            {Bonfire.Tag.Web.WidgetTagsLive, []}
+          ]
+        ],
+        guests: [
+          secondary: [
+            {Bonfire.Tag.Web.WidgetTagsLive, []}
+          ]
+        ]
+      ],
        page_header_aside: [
          {Bonfire.UI.Social.HeaderAsideNotificationsSeenLive,
           [
