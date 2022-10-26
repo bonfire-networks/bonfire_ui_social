@@ -2,11 +2,11 @@ defmodule Bonfire.UI.Social.WriteLive do
   use Bonfire.UI.Common.Web, :surface_live_view
   alias Bonfire.UI.Me.LivePlugs
 
-  declare_nav_link("Link to compose page",
-    text: l("Compose"),
-    icon: "heroicons-solid:PencilAlt",
-    exclude_from_nav: true
-  )
+  # declare_nav_link("Link to compose page",
+  #   text: l("Compose"),
+  #   icon: "heroicons-solid:PencilAlt",
+  #   exclude_from_nav: true
+  # )
 
   def mount(params, session, socket) do
     live_plug(params, session, socket, [

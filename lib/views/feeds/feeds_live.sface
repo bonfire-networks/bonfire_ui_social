@@ -1,20 +1,24 @@
-<!-- <Bonfire.UI.Common.PageTitleLive page_title={@page_title} /> -->
-<Bonfire.UI.Common.InstancePinnedLive
-  :if={@selected_tab == "feed"}
-  object_types={Bonfire.Data.Social.Post}
-  title={l("Pinned discussions")}
-/>
-<div class="mt-6 mb-3 text-[15px] font-semibold tracking-wide text-base-content">{@page_title}</div>
-<Bonfire.UI.Social.FeedLive
-  id={e(@feed_id, :my)}
-  feed_id={@feed_id}
-  feed_ids={@feed_ids}
-  page_title={@page_title}
-  page={@page}
-  feedback_title={@feedback_title}
-  feedback_message={@feedback_message}
-  feed={@feed}
-  feed_title={@feed_title}
-  page_info={@page_info}
-  loading={@loading}
-/>
+<!-- <Bonfire.Classify.Web.TopicsNavLive id={:my_fav_topics} /> -->
+
+<div class="w-[680px] flex flex-col mt-6 gap-3  mx-auto">
+  <Bonfire.UI.Common.InstancePinnedLive
+    :if={@selected_tab == "feed"}
+    title="Pinned posts"
+    object_types={Bonfire.Data.Social.Post}
+  />
+  <Bonfire.UI.Common.PageTitleLive page_title={@page_title} />
+
+  <Bonfire.UI.Social.FeedLive
+    id={e(@feed_id, :my)}
+    feed_id={@feed_id}
+    feed_ids={@feed_ids}
+    page_title={@page_title}
+    page={@page}
+    feedback_title={@feedback_title}
+    feedback_message={@feedback_message}
+    feed={@feed}
+    feed_title={@feed_title}
+    page_info={@page_info}
+    loading={@loading}
+  />
+</div>

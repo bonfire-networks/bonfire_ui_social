@@ -1,11 +1,14 @@
-<Bonfire.UI.Common.PageTitleLive page_title={@page_title} />
-<Bonfire.UI.Social.FeedLive
-  id="feed:profile:likes"
-  feed_id="feed:profile:likes"
-  page_title={@page_title}
-  feed={@feed}
-  page_info={@page_info}
-  showing_within={@showing_within}
-  verb_default="like"
-  loading={@loading}
-/>
+<div class="w-[680px] flex flex-col gap-3 mt-6 mx-auto">
+  <Bonfire.UI.Common.PageTitleLive page_title={@page_title} />
+
+  <Bonfire.UI.Social.FeedLive
+    id="feed:profile:likes"
+    feed_id="feed:profile:likes"
+    page_title={@page_title}
+    feed={@feed}
+    page_info={@page_info}
+    showing_within={@showing_within}
+    verb_default="like"
+    loading={@loading}
+  />
+</div>
