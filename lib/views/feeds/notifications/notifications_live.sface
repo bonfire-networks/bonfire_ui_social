@@ -5,7 +5,7 @@
     <a class="!rounded-full tab tab-active">Tab 2</a> 
     <a class="tab">Tab 3</a>
   </div> -->
-  
+
   <Bonfire.UI.Social.FeedLive
     id={e(@feed_id, :notifications)}
     feed_id={@feed_id}

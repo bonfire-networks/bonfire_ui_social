@@ -27,7 +27,7 @@ defmodule Bonfire.UI.Social.Feeds.LocalLive do
      |> assign(LiveHandler.feed_assigns_maybe_async(:local, socket))
      |> assign(
        page: "local",
-       without_sidebar: true,
+       #  without_sidebar: true,
        page_title: l("Local"),
        selected_tab: "local"
      )}

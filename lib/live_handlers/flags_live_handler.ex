@@ -21,7 +21,8 @@ defmodule Bonfire.Social.Flags.LiveHandler do
 
     subject =
       if attrs["subject"] && Bonfire.Me.Users.is_admin?(current_user),
-        do: Bonfire.Me.Users.by_id(attrs["subject"], current_user: current_user) |> ok_unwrap(nil),
+        do:
+          Bonfire.Me.Users.by_id(attrs["subject"], current_user: current_user) |> ok_unwrap(nil),
         else: current_user
 
     with _ <- Bonfire.Social.Flags.unflag(subject, id) do
