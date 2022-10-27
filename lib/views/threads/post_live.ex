@@ -29,7 +29,19 @@ defmodule Bonfire.UI.Social.PostLive do
        showing_within: :thread,
        without_mobile_logged_header: true,
        object: nil,
-       without_sidebar: true,
+       sidebar_widgets: [
+         users: [
+           secondary: [
+             {Bonfire.Tag.Web.WidgetTagsLive, []}
+           ]
+         ],
+         guests: [
+           secondary: [
+             {Bonfire.Tag.Web.WidgetTagsLive, []}
+           ]
+         ]
+       ],
+       #  without_sidebar: true,
        thread_id: nil,
        thread_mode: nil,
        search_placeholder: nil,

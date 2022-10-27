@@ -26,7 +26,7 @@ defmodule Bonfire.UI.Social.WriteLive do
     {:ok,
      socket
      |> assign(
-       page_title: l("Write"),
+       page_title: l("Share a feedback"),
        page: "write",
        hide_smart_input: true,
        create_object_type: maybe_to_atom(e(session, "create_object_type", nil)),
@@ -34,7 +34,19 @@ defmodule Bonfire.UI.Social.WriteLive do
        reply_to_id: e(session, "reply_to_id", nil),
        context_id: e(session, "context_id", nil),
        to_boundaries: nil,
-       to_circles: []
+       to_circles: [],
+       sidebar_widgets: [
+         users: [
+           secondary: [
+             {Bonfire.Tag.Web.WidgetTagsLive, []}
+           ]
+         ],
+         guests: [
+           secondary: [
+             {Bonfire.Tag.Web.WidgetTagsLive, []}
+           ]
+         ]
+       ]
      )}
   end
 

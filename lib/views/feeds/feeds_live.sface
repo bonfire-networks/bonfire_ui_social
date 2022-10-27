@@ -6,8 +6,8 @@
     title="Pinned posts"
     object_types={Bonfire.Data.Social.Post}
   />
-  <Bonfire.UI.Common.PageTitleLive page_title={@page_title} />
-
+  <!-- <Bonfire.UI.Common.PageTitleLive page_title={@page_title} /> -->
+  <div class="mt-4 mb-2 text-sm font-medium tracking-wide text-base-content/60">{@page_title}</div>
   <Bonfire.UI.Social.FeedLive
     id={e(@feed_id, :my)}
     feed_id={@feed_id}

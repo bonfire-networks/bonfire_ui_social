@@ -1,14 +1,17 @@
-<Bonfire.UI.Common.SmartInputLive
-  id={:smart_input_page}
-  hide_smart_input={false}
-  showing_within={:page}
-  reply_to_id={@reply_to_id}
-  context_id={@context_id}
-  create_object_type={@create_object_type}
-  thread_mode={:flat}
-  title_open
-  to_boundaries={boundaries_or_default(@to_boundaries, @__context__)}
-  to_circles={@to_circles}
-  smart_input_prompt={l("Write something...")}
-  smart_input_opts={@smart_input_opts}
-/>
+<div class="p-1 mt-6 rounded-lg shadow bg-base-100">
+  <div class="px-4 mt-4 mb-2 text-sm font-medium tracking-wide text-base-content/60">{@page_title}</div>
+  <Bonfire.UI.Common.SmartInputLive
+    id={:smart_input_page}
+    hide_smart_input={false}
+    showing_within={:page}
+    reply_to_id={@reply_to_id}
+    context_id={@context_id}
+    create_object_type={@create_object_type}
+    thread_mode={:flat}
+    title_open
+    to_boundaries={boundaries_or_default(@to_boundaries, @__context__)}
+    to_circles={@to_circles}
+    smart_input_prompt={l("Write something...")}
+    smart_input_opts={@smart_input_opts}
+  />
+</div>

@@ -27,7 +27,7 @@
   >
     {#if e(post_content(@object), :name, nil) != nil and @showing_within != :blog}
       {#if @viewing_main_object}
-        <div class="w-full h-auto max-w-full p-0 m-0 mt-6 text-3xl font-bold">
+        <div class="w-full h-auto max-w-full p-0 m-0 mt-6 text-2xl font-bold">
           {e(@object, :post_content, :name, nil)}
         </div>
       {#else}
@@ -71,7 +71,7 @@
               @showing_within != :widget and @showing_within != :search,
           "font-[16px] mt-1 prose-sm prose-p:pt-0 prose-p:my-0 !leading-[22px]":
             @showing_within == :thread,
-          "prose-lg mt-3 prose-p:pb-4 !leading-[26px] prose-p:leading-[26px]": @viewing_main_object,
+          "mt-3 prose-p:pb-4": @viewing_main_object,
           "prose-p:pt-1 !my-3 !leading-[20px]": @showing_within == :feed
         }
       >
