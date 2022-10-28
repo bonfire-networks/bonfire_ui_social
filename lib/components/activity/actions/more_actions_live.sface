@@ -1,9 +1,8 @@
 <div
   :if={@current_user != nil and @showing_within not in [:notifications, :search]}
   aria-haspopup="true"
-  data-tip={l("More")}
   class={
-    "dropdown tooltip tooltip-bottom relative z-40 feed_activity relative ",
+    "dropdown feed_activity relative z-[900]",
     "dropdown-end": @showing_within != :widget,
     "dropdown-top dropdown-end showing_within:widget": @showing_within == :widget
   }
@@ -15,21 +14,20 @@
   </button>
   <ul
     tabindex="0"
-    class="w-60 z-[90] shadow menu dropdown-content bg-neutral-content rounded dropdown_actions
-    role="
-    menu"
+    class="w-60 z-[110] shadow menu menu-compact dropdown-content bg-neutral rounded dropdown_actions"
+    role="menu"
     aria-orientation="vertical"
     aria-labelledby="more-menu"
   >
     <#slot {@extra_items} />
 
-    <li class="hover:bg-neutral hover:bg-opacity-20">
+    <li>
       <Bonfire.UI.Common.OpenModalLive
         id={Pointers.ULID.generate()}
         title_text={l("Tag with topic(s)")}
         form_opts={%{"phx-submit" => "Bonfire.Social.Objects:tag"}}
         :let={autocomplete: autocomplete}
-      >
+        >
         <input type="hidden" name="id" value={ulid(@object)}>
         <select data-phx-autocomplete="Bonfire.Classify:autocomplete" class="hidden tagify">
           {#for cat <- autocomplete || []}
@@ -42,9 +40,9 @@
           </div>
         </div>
         <:open_btn>
-          <div class="flex items-center gap-0">
-            <Icon solid="Collection" class="w-4 h-4 mr-2 shrink-0 text-neutral text-opacity-70" />
-            <div class="text-sm text-neutral">
+          <div class="flex items-center gap-2">
+            <Icon solid="Collection" class="w-4 h-4 shrink-0 text-neutral-content/80" />
+            <div class="text-sm text-neutral-content/80">
               {l("Tag with topic(s)")}
             </div>
           </div>
@@ -57,20 +55,17 @@
       </Bonfire.UI.Common.OpenModalLive>
     </li>
 
-    <!-- <li class="hover:bg-neutral hover:bg-opacity-20">
+    <li class="hover:bg-neutral hover:bg-opacity-20">
       <Bonfire.UI.Social.PinActionLive
         object={@object}
-        class="flex items-center py-2 text-sm text-neutral"
+        class="flex items-center px-2 text-sm text-neutral-content/80"
       />
-    </li> -->
+    </li>
 
-    <li
-      :if={Integration.is_admin?(@current_user) or Bonfire.Boundaries.can?(@current_user, :pin, :instance)}
-      class="hover:bg-neutral hover:bg-opacity-20"
-    >
+    <li :if={Integration.is_admin?(@current_user) or Bonfire.Boundaries.can?(@current_user, :pin, :instance)}>
       <Bonfire.UI.Social.PinActionLive
         object={@object}
-        class="flex items-center py-2 text-sm text-neutral"
+        class="flex items-center px-2 text-sm text-neutral-content/80"
         scope={:instance}
       />
     </li>
@@ -78,26 +73,24 @@
     <!-- Flag the action -->
     <li
       :if={ulid(@current_user) != subject_id(@activity, @object) and @verb != "Flag"}
-      class="hover:bg-neutral hover:bg-opacity-20"
     >
       <Bonfire.UI.Common.FlagActionLive
         object={@object}
         flagged={@flagged}
         label={l("Flag this") <> " " <> e(@object_type_readable, l("object"))}
-        class="flex items-center py-2 text-sm text-neutral"
+        class="flex items-center text-sm text-neutral-content/80"
       />
     </li>
 
     <!-- Flag the author -->
     <li
       :if={ulid(@current_user) != subject_id(@activity, @object) and @verb != "Flag"}
-      class="hover:bg-neutral hover:bg-opacity-20"
     >
       <Bonfire.UI.Common.FlagActionLive
         object={@object}
         flagged={@flagged}
         label={l("Flag ") <> " " <> name(@activity, @object)}
-        class="flex items-center py-2 text-sm text-neutral"
+        class="flex items-center py-2 text-sm text-neutral-content/80"
       />
     </li>
 
@@ -108,7 +101,7 @@
     />
 
     <!-- Delete the object -->
-    <li class="hover:bg-neutral hover:bg-opacity-20">
+    <li>
       <Bonfire.UI.Social.Activity.DeleteObjectLive
         object={@object}
         creator_id={subject_id(@activity, @object)}
@@ -119,8 +112,7 @@
     <!-- Delete the activity -->
     <li
       :if={@object_type not in [Bonfire.Data.Social.Message] and ulid(@activity)}
-      class="hover:bg-neutral hover:bg-opacity-20"
-    >
+      >
       <Bonfire.UI.Social.Activity.DeleteObjectLive
         action="Bonfire.Social.Feeds:delete"
         object={@activity}

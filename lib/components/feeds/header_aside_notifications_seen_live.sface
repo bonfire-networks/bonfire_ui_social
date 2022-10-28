@@ -4,7 +4,7 @@
   phx-value-feed_id={@feed_id}
   phx-value-scope="all"
   data-tip={l("Mark all as read")}
-  class="flex items-center normal-case place-content-center tooltip tooltip-bottom btn btn-sm btn-ghost btn-square"
+  class="z-50 flex items-center font-normal normal-case place-content-center tooltip tooltip-bottom btn btn-sm btn-ghost btn-square"
 >
   <Icon outline="Check" class="w-5 h-5 text-base-content/80" />
 </button>

@@ -43,7 +43,7 @@
           @click="content_open = false"
           x-show="content_open"
           style="display: none"
-          class="relative z-50 mt-1 text-sm font-semibold text-left text-base-content"
+          class="relative z-50 my-2 text-sm font-medium text-left text-base-content link link-hover"
         >
           {rich(e(post_content(@object), :name, "CW"))} ({l("Show less")})
         </button>

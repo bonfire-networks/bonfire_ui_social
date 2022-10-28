@@ -3,11 +3,11 @@ defmodule Bonfire.UI.Social.Feeds.LocalLive do
   alias Bonfire.UI.Me.LivePlugs
   alias Bonfire.Social.Feeds.LiveHandler
 
-  # declare_nav_link(l("Local"),
-  #   href: "/feed/local",
-  #   page: "local",
-  #   icon: "material-symbols:camping-rounded"
-  # )
+  declare_nav_link(l("Local"),
+    href: "/feed/local",
+    page: "local",
+    icon: "material-symbols:camping-rounded"
+  )
 
   def mount(params, session, socket) do
     live_plug(params, session, socket, [

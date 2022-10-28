@@ -1,3 +1,62 @@
+<!-- <Bonfire.UI.Common.OpenModalLive
+  id={Pointers.ULID.generate()}
+  no_actions
+  title_text={l("Pin")}
+  form_opts={%{"phx-submit" => "Bonfire.Social.Objects:tag"}}
+  :let={autocomplete: autocomplete}
+  >
+  <div>
+    <div class="grid grid-cols-2 gap-2 mt-2">
+      <span 
+        data-id="pin_action"
+        phx-click="Bonfire.Social.Pins:pin"
+        phx-value-direction="up"
+        phx-value-id={ulid(@object)}
+        phx-value-component={__MODULE__}
+        class="flex items-center gap-2 p-3 border rounded cursor-pointer hover:bg-base-content/5 place-content-center border-base-content/30">
+        <Icon solid="UserCircle" class="w-5 h-5 text-base-content/80"" />
+        <span class="font-medium tracking-wider capitalize">{l "Profile"}</span>
+      </span>
+
+      <span
+        data-id="pin_action"
+        phx-click="Bonfire.Social.Pins:pin"
+        phx-value-direction="up"
+        phx-value-id={ulid(@object)}
+        phx-value-scope={:instance}
+        phx-value-component={__MODULE__} 
+        :if={@object && Bonfire.Me.Users.is_admin?(@current_user) || Bonfire.Boundaries.can?(@__context__, :pin, :instance)} class="flex items-center gap-2 p-3 border rounded cursor-pointer hover:bg-base-content/5 place-content-center border-base-content/30">
+        <Icon iconify="material-symbols:camping-rounded" class="w-5 h-5 text-base-content/80" />
+        <span class="font-medium tracking-wider capitalize">{l "Istance"}</span>
+      </span>
+    </div>
+  </div>
+  <:open_btn>
+    <div class="flex items-center gap-2 text-neutral-content/80">
+      <Icon iconify="bi:pin-angle-fill" class="w-4 h-4" />
+      <div class="text-sm">
+        {l("Pin")}
+      </div>
+    </div>
+  </:open_btn>
+</Bonfire.UI.Common.OpenModalLive>
+ -->
+
+
+<button
+  :if={@object}
+  data-id="pin_action"
+  phx-click="Bonfire.Social.Pins:pin"
+  phx-value-direction="up"
+  phx-value-id={ulid(@object)}
+  phx-value-scope={@scope}
+  phx-value-component={__MODULE__}
+  class={@class}
+>
+  <Icon iconify="bi:pin-angle-fill" class="w-4 h-4" />
+  {if @scope == :instance, do: l("Pin to instance"), else: l("Pin to your profile")}
+</button>
+<!-- 
 <div
   :if={@object}
   data-id="pin_action"
@@ -24,4 +83,4 @@
 >
   <Icon iconify="bi:pin-angle-fill" class="w-5 h-5" />
   {if @scope == :instance, do: l("Unpin from instance"), else: l("Unpin")}
-</div>
+</div> -->

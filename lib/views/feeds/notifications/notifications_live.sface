@@ -1,11 +1,19 @@
 <div class="max-w-[680px] mt-6 mx-auto flex flex-col gap-3">
-  <Bonfire.UI.Common.PageTitleLive page_title={@page_title} />
+  <!-- <Bonfire.UI.Common.PageTitleLive page_title={@page_title} /> -->
   <!-- <div class="mb-4 -mt-2 tabs tabs-boxed bg-base-300">
     <a class="tab">Tab 1</a> 
     <a class="!rounded-full tab tab-active">Tab 2</a> 
     <a class="tab">Tab 3</a>
   </div> -->
-
+  <div class="flex items-center justify-between p-3 rounded-lg shadow bg-base-100">
+    <div class="flex items-center gap-3">
+      <Icon solid="Bell" class="w-4 h-4 text-base-content/70" />
+      <span>{l "Notifications"}</span>
+    </div>
+    <div class="flex items-center gap-2">
+      <Bonfire.UI.Social.HeaderAsideNotificationsSeenLive  feed_id={:notifications} />
+    </div>
+  </div>
   <Bonfire.UI.Social.FeedLive
     id={e(@feed_id, :notifications)}
     feed_id={@feed_id}

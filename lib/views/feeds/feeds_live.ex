@@ -5,16 +5,16 @@ defmodule Bonfire.UI.Social.FeedsLive do
 
   declare_extension("Social",
     icon: "noto:newspaper",
-    exclude_from_nav: true
-    # default_nav: [
-    #   Bonfire.UI.Social.FeedsLive,
-    #   Bonfire.UI.Social.Feeds.LocalLive,
-    #   Bonfire.UI.Social.Feeds.FederationLive,
-    #   Bonfire.UI.Social.Feeds.LikesLive    
-    # ]
+    # exclude_from_nav: true
+    default_nav: [
+      Bonfire.UI.Social.FeedsLive,
+      Bonfire.UI.Social.Feeds.LocalLive,
+      Bonfire.UI.Social.Feeds.FederationLive,
+      Bonfire.UI.Social.Feeds.LikesLive    
+    ]
   )
 
-  # declare_nav_link(l("My feed"), page: "feed", icon: "heroicons-solid:newspaper")
+  declare_nav_link(l("My feed"), page: "feed", icon: "heroicons-solid:newspaper")
 
   def mount(params, session, socket) do
     live_plug(params, session, socket, [
