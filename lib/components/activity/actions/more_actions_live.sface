@@ -58,14 +58,14 @@
     <li class="hover:bg-neutral hover:bg-opacity-20">
       <Bonfire.UI.Social.PinActionLive
         object={@object}
-        class="flex items-center px-2 text-sm text-neutral-content/80"
+        class="flex items-center px-4 text-sm text-neutral-content/80"
       />
     </li>
 
     <li :if={Integration.is_admin?(@current_user) or Bonfire.Boundaries.can?(@current_user, :pin, :instance)}>
       <Bonfire.UI.Social.PinActionLive
         object={@object}
-        class="flex items-center px-2 text-sm text-neutral-content/80"
+        class="flex items-center px-4 text-sm text-neutral-content/80"
         scope={:instance}
       />
     </li>
