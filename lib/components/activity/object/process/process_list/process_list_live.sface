@@ -1,13 +1,17 @@
 <div class={
-  "",
-  "rounded-md bg-base-100 my-4 border-base-content/10 border":
+  "rounded-md bg-base-100 shadow",
+  " my-4 border-base-content/10 border":
     e(@showing_within, :feed) in [:feed, :notifications, :likes]
 }>
   <div class={
     "grid justify-between p-3",
-    "grid-cols-2 gap-8": @showing_within != :feed,
+    "grid-cols-1 gap-2": @showing_within != :feed,
     "py-0 !grid-cols-1 !gap-0": e(@showing_within, :feed) in [:feed, :notifications, :likes]
   }>
+    <progress 
+      :if={e(@showing_within, :feed) not in [:feed, :notifications, :likes]}
+      class="w-full mt-2 progress progress-info" value={e(@object, :percentage, "0")} max="100">
+    </progress>
     <div class={"order-last": e(@showing_within, :feed) in [:feed, :notifications, :likes]}>
       <div class={
         "flex items-center space-x-2",
@@ -23,55 +27,22 @@
           <div class="text-base font-medium text-base-content hover:underline">{e(@object, :name, nil)}</div>
         </LiveRedirect>
       </div>
+      
+      <div class="flex items-center my-2 space-x-4">
+        <div class="flex items-center gap-2 text-sm text-base-content/70 text-medium">
+          <Icon solid="Calendar" class="w-4 h-4 text-base-content/70" />
+          <span>{e(@object, :due, "No due date")}</span>
+        </div>
+      </div>
 
+
+
+      
       <!-- NOTE -->
-      <div :if={e(@object, :note, nil)} class="mt-1 text-sm text-base-content/70 line-clamp-2">{e(@object, :note, "")}</div>
+      <div :if={e(@object, :note, nil)} class="mt-1 text-sm text-base-content/90 line-clamp-2">{e(@object, :note, "")}</div>
 
-      <div class="flex items-center gap-3 mt-2 mb-3 ml-2">
-        <!-- DUE DATE -->
-        <div class="flex items-center mt-1 space-x-4">
-          <div class="flex items-center gap-2 text-sm text-base-content/70 text-medium">
-            <Icon solid="Calendar" class="w-4 h-4 text-base-content/70" />
-            <span>{e(@object, :due, "No due date")}</span>
-          </div>
-        </div>
-        <!-- PROGRESS -->
-        <div
-          :if={e(@showing_within, :feed) in [:feed, :notifications, :likes]}
-          class="flex items-center gap-3"
-        >
-          <div class="text-sm text-base-content/70"><span class="text-sm text-base-content">{e(@object, :percentage, "0")}%</span> {l("complete")}</div>
-          <div class="text-sm text-base-content/70">
-            <span class="text-sm text-base-content">{e(@object, :tasks_completed, "0")}</span> {l("of")}
-            <span class="text-sm text-base-content">{e(@object, :tasks_total, "0")}</span> {l("tasks")}
-          </div>
-        </div>
-      </div>
-    </div>
-    <div>
-      <div class="relative mt-4">
-        <div class={
-          "flex mb-2 overflow-hidden text-xs bg-base-content/10 rounded-full",
-          "h-3": @showing_within != :feed,
-          "!h-2": e(@showing_within, :feed) in [:feed, :notifications, :likes]
-        }>
-          <div
-            style={"width:#{e(@object, :percentage, "0")}%"}
-            class="flex flex-col justify-center text-center text-white shadow-none bg-success whitespace-nowrap"
-          />
-        </div>
-      </div>
 
-      <div
-        :if={e(@showing_within, :feed) not in [:feed, :notifications, :likes]}
-        class="flex items-center space-x-4 text-sm text-base-content"
-      >
-        <div><span class="font-bold text-base-content">{e(@object, :percentage, "0")}%</span> complete</div>
-        <div>
-          <span class="font-bold text-base-content">{e(@object, :tasks_completed, "0")}</span>
-          of <span class="font-bold text-base-content">{e(@object, :tasks_total, "0")}</span> tasks
-        </div>
-      </div>
     </div>
+   
   </div>
 </div>

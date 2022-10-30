@@ -1,11 +1,11 @@
 <!-- <Bonfire.Classify.Web.TopicsNavLive id={:my_fav_topics} /> -->
 
 <div class="max-w-[680px] w-full flex flex-col mt-6 gap-3  mx-auto">
-  <Bonfire.UI.Common.InstancePinnedLive
+  <!-- <Bonfire.UI.Common.InstancePinnedLive
     :if={@selected_tab == "feed"}
     title="Pinned"
     object_types={Bonfire.Data.Social.Post}
-  />
+  /> -->
   <!-- <Bonfire.UI.Common.PageTitleLive page_title={@page_title} /> -->
   <div class="mx-3 text-sm font-medium tracking-wide md:mx-0 text-base-content/60">{@page_title}</div>
   <Bonfire.UI.Social.FeedLive
