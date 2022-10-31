@@ -75,8 +75,9 @@
               </div>
             </div>
           </div>
-          <Bonfire.UI.Coordination.TaskActionsMenuLive
+          <Dynamic.Component
             :if={module_enabled?(Bonfire.UI.Coordination.TaskActionsMenuLive)}
+            module={Bonfire.UI.Coordination.TaskActionsMenuLive}
             task={@object}
           />
         </div>
