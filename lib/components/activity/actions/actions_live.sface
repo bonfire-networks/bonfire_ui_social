@@ -81,15 +81,7 @@
       showing_within={@showing_within}
       hide_reply={@hide_reply}
     />
-    <Bonfire.UI.Social.Activity.MoreActionsLive
-      object={@object}
-      activity={@activity}
-      object_type={@object_type}
-      object_boundary={@object_boundary}
-      object_type_readable={@object_type_readable}
-      verb={@verb}
-      showing_within={@showing_within}
-    />
+    
   </div>
 </div>
 <!-- {/if} -->

@@ -2,19 +2,17 @@
   :if={@current_user != nil and @showing_within not in [:notifications, :search]}
   aria-haspopup="true"
   class={
-    "dropdown feed_activity relative z-[900]",
+    "dropdown feed_activity relative",
     "dropdown-end": @showing_within != :widget,
     "dropdown-top dropdown-end showing_within:widget": @showing_within == :widget
   }
 >
-  <button tabindex="0" class="btn btn-ghost btn-circle btn-sm">
-    <span class="text-opacity-50 text-base-content">
-      <Icon solid="DotsHorizontal" class="w-4 h-4" />
-    </span>
+  <button tabindex="0" class="btn btn-ghost btn-square btn-xs">
+    <Icon solid="DotsHorizontal" class="w-4 h-4 text-base-content/70" />
   </button>
   <ul
     tabindex="0"
-    class="w-60 z-[110] shadow menu menu-compact dropdown-content bg-neutral rounded dropdown_actions"
+    class="w-60 z-[910] relative shadow menu menu-compact dropdown-content bg-neutral rounded dropdown_actions"
     role="menu"
     aria-orientation="vertical"
     aria-labelledby="more-menu"

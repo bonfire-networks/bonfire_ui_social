@@ -45,7 +45,7 @@
             {e(@profile, :name, "Anonymous")}
           </LiveRedirect>
         </div>
-        <div class="items-baseline flex-0">
+        <div class="flex items-baseline gap-2 flex-0">
           <Bonfire.UI.Social.Activity.DateAgoLive
             permalink={@permalink}
             date_ago={@date_ago}
@@ -54,6 +54,15 @@
             object_boundary={@object_boundary}
             showing_within={@showing_within}
             verb_display={@verb_display}
+          />
+          <Bonfire.UI.Social.Activity.MoreActionsLive
+            object={@object}
+            activity={@activity}
+            object_type={@object_type}
+            object_boundary={@object_boundary}
+            object_type_readable={@object_type_readable}
+            verb={@verb}
+            showing_within={@showing_within}
           />
         </div>
       </div>
@@ -136,6 +145,7 @@
             </div>
           {/if}
         </div>
+        <div class="flex items-center gap-2">
         <Bonfire.UI.Social.Activity.InstanceIconLive object={@object} />
         <Dynamic.LiveComponent
           :if={module_enabled?(Bonfire.Boundaries.Web.BoundaryIconLive) and
@@ -146,6 +156,16 @@
           id={ComponentID.new(Bonfire.Boundaries.Web.BoundaryIconLive, @object)}
           object_boundary={@object_boundary}
         />
+        <Bonfire.UI.Social.Activity.MoreActionsLive
+          object={@object}
+          activity={@activity}
+          object_type={@object_type}
+          object_boundary={@object_boundary}
+          object_type_readable={@object_type_readable}
+          verb={@verb}
+          showing_within={@showing_within}
+        />
+        </div>
       </div>
     </div>
   {/if}

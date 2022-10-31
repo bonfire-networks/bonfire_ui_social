@@ -332,14 +332,14 @@ defmodule Bonfire.UI.Social.ActivityLive do
       }),
       do: component_maybe_creator(%{profile: profile, character: character})
 
-  def component_maybe_creator(%{provider: %{id: _} = provider} = object),
-    do: [{Bonfire.UI.Social.Activity.ProviderReceiverLive, %{object: object}}]
+  # def component_maybe_creator(%{provider: %{id: _} = provider} = object),
+  #   do: [{Bonfire.UI.Social.Activity.ProviderReceiverLive, %{object: object}}]
 
-  def component_maybe_creator(%{primary_accountable: %{id: _} = primary_accountable} = object),
-    do: [{Bonfire.UI.Social.Activity.ProviderReceiverLive, %{object: object}}]
+  # def component_maybe_creator(%{primary_accountable: %{id: _} = primary_accountable} = object),
+  #   do: [{Bonfire.UI.Social.Activity.ProviderReceiverLive, %{object: object}}]
 
-  def component_maybe_creator(%{receiver: %{id: _} = receiver} = object),
-    do: [{Bonfire.UI.Social.Activity.ProviderReceiverLive, %{object: object}}]
+  # def component_maybe_creator(%{receiver: %{id: _} = receiver} = object),
+  #   do: [{Bonfire.UI.Social.Activity.ProviderReceiverLive, %{object: object}}]
 
   def component_maybe_creator(%{created: %{creator: %{id: _}}} = object),
     do:
