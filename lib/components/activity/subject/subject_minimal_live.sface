@@ -28,7 +28,8 @@
               aria-label={e(@activity, :subject, :character, :username, "") <> " profile"}
               class="font-medium"
               to={path(e(@activity, :subject, :character, nil))}
-            >
+              >
+
               {e(@activity, :subject, :profile, :name, "Anonymous")}
             </LiveRedirect>
             {raw(@verb_display)}
@@ -84,8 +85,12 @@
                   aria-label={e(@activity, :subject, :character, :username, "") <> " profile"}
                   class="font-medium link link-hover"
                   to={path(e(@activity, :subject, :character, nil))}
-                >
-                  {e(@activity, :subject, :profile, :name, nil) || e(@activity, :subject, :character, :username, nil)}
+                >  
+                  {#if ulid(@object) == ulid(@current_user)}
+                      {l("You")}
+                  {#else}
+                      {e(@activity, :subject, :profile, :name, nil) || e(@activity, :subject, :character, :username, nil)}
+                  {/if}
                 </LiveRedirect>
 
                 {raw(@verb_display)}
