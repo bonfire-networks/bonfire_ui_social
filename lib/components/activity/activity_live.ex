@@ -696,13 +696,13 @@ defmodule Bonfire.UI.Social.ActivityLive do
   # def actions_for_object_type(activity, type) when type in [ValueFlows.EconomicResource],
   #   do: component_show_process_actions(activity)
 
-  # # TODO: choose between Task and other Intent types
-  # def actions_for_object_type(activity, type) when type in [ValueFlows.Planning.Intent],
-  #   do: component_show_process_actions(activity)
+  # TODO: choose between Task and other Intent types
+  def actions_for_object_type(activity, type) when type in [ValueFlows.Planning.Intent],
+    do: []
 
-  # # TODO: choose between Task and other Intent types
-  # def actions_for_object_type(activity, type) when type in [ValueFlows.Process],
-  #   do: component_show_process_actions(activity)
+  # TODO: choose between Task and other Intent types
+  def actions_for_object_type(activity, type) when type in [ValueFlows.Process],
+    do: []
 
   def actions_for_object_type(activity, type) do
     debug(type, "No specific actions defiend fot this type")

@@ -1,118 +1,86 @@
-<div class="flex flex-col p-3 my-4 border rounded-md border-base-content/10">
-  <div class="flex items-center flex-1 mb-1">
-    <span :if={length(e(@object, :context, [])) > 0}>
-      <span :for={scope <- e(@object, :context, [])}>
-        <LiveRedirect
-          :if={e(scope, :id, nil)}
-          to={path(scope)}
-          class="flex items-center text-sm cursor-pointer text-primary-content-500 font-regular hover:underline"
-        >
-          {e(scope, :name, "")}
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            class="w-4 h-4 mx-1 text-primary-content-500"
-            viewBox="0 0 20 20"
-            fill="currentColor"
-          >
-            <path
-              fill-rule="evenodd"
-              d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z"
-              clip-rule="evenodd"
+<div class={
+  "px-3 rounded shadow bg-base-100",
+  "border-success/30 bg-success/10": e(@object, :finished, nil),
+  "!bg-base-content/5 mt-2": e(@showing_within, :feed)
+}>
+  <div class="flex flex-col items-start py-2">
+    <div class="flex items-center flex-1 w-full">
+      <div class="flex flex-col flex-1">
+        <div class="flex gap-2">
+          <div class="flex items-center flex-1 gap-2">
+            <Icon 
+              :if={e(@object, :finished, nil)}
+              iconify="carbon:checkmark-filled"
+              class="w-4 h-4 text-success"
             />
-          </svg>
-        </LiveRedirect>
-      </span>
-    </span>
+            <Icon 
+              :if={!e(@object, :finished, nil) and e(@object, :provider, nil)}
+              iconify="carbon:in-progress" 
+              class="w-4 h-4 text-warning" />
+            <Icon 
+              :if={!e(@object, :finished, nil) and !e(@object, :provider, nil)}
+              iconify="carbon:software-resource" 
+              class="w-4 h-4 text-info" />
+            
+            <LiveRedirect
+              to={"/coordination/task/#{e(@object, :id, "")}"}
+              class="flex-1 text-base font-medium cursor-pointer link link-hover"
+            >{e(@object, :name, e(@object, :note, l("Untitled task")))}
+            </LiveRedirect>
+            <span class="mr-2 badge badge-outline badge-success" :if={e(@object, :finished, nil)}>
+              {l("Completed")}
+            </span>
 
-    <LiveRedirect
-      to={path(@object)}
-      class="text-sm font-medium cursor-pointer text-primary-content-800 hover:underline"
-    >{e(@object, :name, e(@object, :note, l("Untitled task")))}
-    </LiveRedirect>
-  </div>
-  <div :if={e(@object, :note, nil)} class="max-w-full mb-2 text-sm prose-sm prose opacity-70">
-    {markdown(Text.sentence_truncate(e(@object, :note, nil), 280, "..."))}
-  </div>
-  <div class="flex items-center justify-between">
-    <div class="flex items-center gap-3">
-      <div
-        :if={!e(@object, :finished, nil) and !e(@object, :provider, nil)}
-        class="flex items-center p-1 px-2 rounded-lg bg-base-content/10"
-      >
-        <svg class="mr-2" width="14" height="14" viewBox="0 0 14 14" fill="none"><rect x="1" y="1" width="12" height="12" rx="6" stroke="#e2e2e2" stroke-width="2" fill="none" /><path
-            fill="#e2e2e2"
-            stroke="none"
-            d="M 3.5,3.5 L3.5,0 A3.5,3.5 0 0,1 3.5, 0 z"
-            transform="translate(3.5,3.5)"
-          /></svg>
-        <span class="text-sm text-base-content opacity-60">{l("Open")}</span>
-      </div>
-      <div
-        :if={!e(@object, :finished, nil) and e(@object, :provider, nil)}
-        class="flex items-center p-1 px-2 rounded-lg bg-base-content/10"
-      >
-        <svg width="14" height="14" class="mr-2" viewBox="0 0 14 14" fill="none"><rect x="1" y="1" width="12" height="12" rx="6" stroke="#f2c94c" stroke-width="2" fill="none" /><path
-            fill="#f2c94c"
-            stroke="none"
-            d="M 3.5,3.5 L3.5,0 A3.5,3.5 0 0,1 3.5, 7 z"
-            transform="translate(3.5,3.5)"
-          /></svg>
-        <div class="flex items-center gap-2 text-sm text-base-content opacity-60">
-          <span>{l("Assigned to")}</span>
-          <LiveRedirect
-            :if={e(@object, :provider, :id, nil)}
-            to={path(e(@object, :provider, nil))}
-            class="flex items-center text-xs text-base-content opacity-70 text-medium"
-          >
-            <Bonfire.UI.Common.AvatarLive
-              class="inline-block w-6 h-6 rounded-full bg-base-100"
-              user={@object.provider}
-            />
-            <span class="ml-2 text-sm link">{e(@object, :provider, :name, nil)}</span>
-          </LiveRedirect>
+            
+          </div>
+          <div class="flex items-center gap-4">
+            <span :if={length(e(@object, :context, [])) > 0}>
+              {l("in")}
+              <span :for={scope <- e(@object, :context, [])}>
+                <LiveRedirect
+                  :if={e(scope, :id, nil)}
+                  to={"/coordination/task/#{e(scope, :id, "")}"}
+                  class="flex items-center text-sm cursor-pointer text-base-content/60 font-regular hover:underline"
+                >
+                  {e(scope, :name, "")}
+                </LiveRedirect>
+              </span>
+            </span>
+            <div class="flex items-center gap-3">
+              <Bonfire.UI.Common.LikeActionLive
+                id={ComponentID.new(Bonfire.UI.Common.LikeActionLive, @object)}
+                object={@object}
+              />
+              <div 
+                class="tooltip"
+                :if={e(@object, :provider, :id, nil)}
+                data-tip={e(@object, :provider, :name, nil)}>
+                <LiveRedirect
+                  to={path(e(@object, :provider, nil))}
+                  class="flex items-center text-xs text-base-content opacity-70 text-medium"
+                  >
+                  <Bonfire.UI.Common.AvatarLive
+                    class="inline-block w-6 h-6 rounded-full bg-base-content/5"
+                    user={@object.provider}
+                  />
+                </LiveRedirect>
+              </div>
+              <div :if={e(@object, :due, nil)} class="flex items-center gap-2 text-xs text-base-content/70 text-medium">
+                <Icon solid="Calendar" class="w-4 h-4 text-base-content/70" />
+                <span>{date_from_now(e(@object, :due, nil)) || l("No due date")}</span>
+              </div>
+
+              <div :if={e(@object, :note, nil)}>
+                <Icon outline="Document" class="w-5 h-5 text-base-content/70" />
+              </div>
+            </div>
+          </div>
+          <Bonfire.UI.Coordination.TaskActionsMenuLive
+            :if={module_enabled?(Bonfire.UI.Coordination.TaskActionsMenuLive)}
+            task={@object}
+          />
         </div>
       </div>
-      <div
-        :if={e(@object, :finished, nil)}
-        class="flex items-center p-1 px-2 rounded-lg bg-base-content/10"
-      >
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          class="w-4 h-4 mr-2 text-green-500"
-          viewBox="0 0 20 20"
-          fill="currentColor"
-        >
-          <path
-            fill-rule="evenodd"
-            d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
-            clip-rule="evenodd"
-          />
-        </svg>
-        <span class="text-sm text-base-content opacity-60">{l("Completed")}</span>
-      </div>
-      <div
-        :if={e(@object, :due, nil)}
-        class="flex items-center gap-2 text-sm text-base-content/70 text-medium"
-      >
-        <Icon solid="Calendar" class="w-4 h-4 text-base-content/70" />
-        <span>{date_from_now(e(@object, :due, nil)) || l("No due date")}</span>
-      </div>
-    </div>
-    <div
-      :if={e(@object, :output_of, :id, nil)}
-      class="flex items-center text-sm text-primary-content-600"
-    >
-      in <LiveRedirect
-        to={path(e(@object, :output_of, nil))}
-        class="flex items-center ml-2 text-sm underline cursor-pointer text-primary-content-600 hover:font-medium"
-      >
-        {e(@object, :output_of, :name, "Unknown")}
-      </LiveRedirect>
     </div>
   </div>
 </div>
-
-<!--
-<svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 text-primary-content-500" viewBox="0 0 20 20" fill="currentColor">
-        <path fill-rule="evenodd" d="M3 5a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zM3 10a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zM3 15a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1z" clip-rule="evenodd" />
-      </svg> -->
