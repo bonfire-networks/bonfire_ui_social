@@ -7,7 +7,7 @@
     object_types={Bonfire.Data.Social.Post}
   /> -->
   <!-- <Bonfire.UI.Common.PageTitleLive page_title={@page_title} /> -->
-  <div class="mx-3 text-sm font-medium tracking-wide md:mx-0 text-base-content/60">{@page_title}</div>
+  <!-- <div class="mx-3 text-sm font-medium tracking-wide md:mx-0 text-base-content/60">{@page_title}</div> -->
   <Bonfire.UI.Social.FeedLive
     id={e(@feed_id, :my)}
     feed_id={@feed_id}

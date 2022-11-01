@@ -3,8 +3,8 @@
   phx-target={"#badge_counter_#{e(@feed_id, "missing_feed_id")}"}
   phx-value-feed_id={@feed_id}
   phx-value-scope="all"
-  data-tip={l("Mark all as read")}
-  class="z-50 flex items-center font-normal normal-case place-content-center tooltip tooltip-bottom btn btn-sm btn-ghost btn-square"
+  class="z-50 flex items-center gap-2 font-normal normal-case btn btn-sm"
 >
-  <Icon outline="Check" class="w-5 h-5 text-base-content/80" />
+  <Icon outline="Check" class="w-5 h-5" />
+  <span>{l("Mark all as read")}</span>
 </button>

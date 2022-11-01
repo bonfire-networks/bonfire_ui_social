@@ -72,7 +72,7 @@
       "flex items-top",
       "space-x-3": @viewing_main_object == true,
       "py-1": @thread_mode == :flat
-    }>
+      }>
       <div
         :if={ulid(@current_user) != maybe_get(@character, :id) || @thread_mode != :flat}
         class={
@@ -115,6 +115,29 @@
               >
                 {e(@profile, :name, "Anonymous")}
               </LiveRedirect>
+              <div class="ml-1 text-sm lowercase text-base-content/80">
+
+              <!-- {@verb} {@object_type} -->
+                {#if @verb == "Create" and @object_type in [Bonfire.Classify.Category]}
+                 <div> <span>{l("created a new")}</span> <LiveRedirect class="font-medium link link-hover" to={"/+#{e(@object, :character, :username, nil) || ulid(@object)}"}>{l "topic"}</LiveRedirect></div>
+                {#elseif @verb == "Reply"}
+                  {l("replied")}
+                {#elseif @verb == "Pin"}
+                  {l("pinned")}
+                {#elseif @verb == "Schedule" and e(@object, :due, nil)}
+                  {l("scheduled a task %{date}", date: date_from_now(e(@object, :due, nil)))}
+                {#elseif @verb == "Label" and e(@object, :finished, nil) == true}
+                  {l("completed a task")}
+                {#elseif @verb == "Label" and e(@object, :finished, nil) == false}
+                  {l("re-opened a task")}
+                {#elseif @verb in ["Assign", "Appoint"] and e(@object, :provider, nil)}
+                  {l("assigned a task to %{name}",
+                    name:
+                      e(@object, :provider, :profile, :name, nil) ||
+                        e(@object, :provider, :character, :username, nil)
+                  )}
+                {/if}
+              </div>
               <!-- <span class="ml-2 text-[15px] text-base-content/70">replied to <b class="font-bold text-base-content link">title topic</b></span> -->
             </div>
             <div class="flex items-center gap-1">

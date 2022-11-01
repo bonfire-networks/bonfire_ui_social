@@ -1,6 +1,12 @@
-<div class="w-[680px] flex flex-col gap-3 mt-6 mx-auto">
-  <Bonfire.UI.Common.PageTitleLive page_title={@page_title} />
-
+<div class="w-[680px] flex flex-col mx-auto">
+  <!-- <Bonfire.UI.Common.PageTitleLive page_title={@page_title} /> -->
+  <div class="relative flex items-center px-3 mt-6 mb-6 md:px-0">
+    <div class="flex items-center flex-1 gap-5 text-xl font-semibold text-base-content">
+      <Icon iconify="noto:star" class="w-5 h-5" />
+      <span>{@page_title}</span>
+    </div>
+    <!-- <Bonfire.UI.Social.HeaderAsideNotificationsSeenLive  feed_id={:notifications} /> -->
+  </div>
   <Bonfire.UI.Social.FeedLive
     id="feed:profile:likes"
     feed_id="feed:profile:likes"

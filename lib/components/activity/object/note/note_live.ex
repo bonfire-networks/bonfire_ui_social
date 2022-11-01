@@ -21,7 +21,7 @@ defmodule Bonfire.UI.Social.Activity.NoteLive do
     # |> debug("activity_note_object")
   end
 
-  def maybe_truncate(input, activity_inception, length \\ 100) do
+  def maybe_truncate(input, activity_inception, length \\ 250) do
     if activity_inception,
       do: Text.sentence_truncate(input, length, "..."),
       else: input

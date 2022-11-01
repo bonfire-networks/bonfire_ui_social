@@ -1,15 +1,17 @@
-<div class="relative min-h-[5rem] flex items-center my-3 rounded-lg grow bg-base-content/5">
-  <div class="absolute top-0 bottom-0 left-0 flex items-center w-20 h-full rounded-l-lg bg-base-content/5 place-content-center">
-    <Icon solid="Collection" class="w-10 h-10 text-base-content/80" />
-  </div>
-  <div class="flex flex-col flex-1 p-3 ml-20 text-sm font-medium text-primary-content-800">
+<div class="relative flex items-center p-2 mt-3 rounded-md shadow bg-base-content/5">
+  <div class="w-6 h-6 mr-3 rounded bg-info"></div>
+  <div class="flex flex-col flex-1 font-medium text-base-content">
     <LiveRedirect
       to={"/+#{e(@object, :character, :username, nil) || ulid(@object)}"}
-      class="text-base font-medium link link-hover"
+      class="text-sm font-medium link link-hover"
     >
       {rich(name(@object))}
     </LiveRedirect>
-    <div class="text-sm italic" :if={e(@object, :parent_category, nil)}>
+   
+    <!-- <div class="text-sm font-normal text-base-content/70">{Bonfire.Me.Characters.display_username(e(@object, :character, :username, nil), true)}</div> -->
+  </div>
+  <div class="flex items-center gap-2">
+    <div class="text-xs" :if={e(@object, :parent_category, nil)}>
       {l("in ")}
       <LiveRedirect
         to={"/+#{e(@object, :parent_category, :character, :username, nil) || ulid(@object)}"}
@@ -18,20 +20,6 @@
         {name(e(@object, :parent_category, nil))}
       </LiveRedirect>
     </div>
-    <!-- <div class="text-sm font-normal text-base-content/70">{Bonfire.Me.Characters.display_username(e(@object, :character, :username, nil), true)}</div> -->
-    <div
-      :if={e(@object, :summary, e(@object, :profile, :summary, nil))}
-      class="font-light prose-sm line-clamp-3 text-base-content/70 leading-[20px] mt-1"
-    >
-      {rich(e(@object, :summary, e(@object, :profile, :summary, "")))}
-    </div>
-  </div>
-  <div class="mr-4">
-    <Bonfire.UI.Common.FollowButtonLive
-      id={ComponentID.new(Bonfire.UI.Common.FollowButtonLive, @object)}
-      object={@object}
-      hide_icon
-      class="normal-case btn btn-outline btn-sm"
-    />
+    <Bonfire.UI.Social.Activity.CategoryActionsLive object={@object} />
   </div>
 </div>

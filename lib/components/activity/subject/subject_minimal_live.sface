@@ -74,9 +74,9 @@
     {#match :search}
       <div />
     {#match _}
-      <div class="flex items-center pb-2 mb-2">
+      <div class="flex items-center">
         {#if @verb == "Like"}
-          <div class="flex items-center justify-start">
+          <div class="flex items-center justify-start pb-2 mb-2">
             <!-- LIKE -->
             <Icon solid="Star" class="w-5 h-5 text-yellow-500" />
             <div class="flex-1 ml-2">
@@ -98,7 +98,7 @@
             </div>
           </div>
         {#elseif @verb == "Follow"}
-          <div class="flex items-center justify-start">
+          <div class="flex items-center justify-start pb-2 mb-2">
             <!-- FOLLOW -->
             <Icon solid="UserAdd" class="flex-shrink-0 w-5 h-5 text-info" />
             <div class="flex-1 ml-2">
@@ -121,7 +121,7 @@
             </div>
           </div>
         {#elseif @verb == "Boost" and e(@activity, :subject, :table_id, nil) == "2AGSCANBECATEG0RY0RHASHTAG"}
-          <div class="flex items-center justify-start">
+          <div class="flex items-center justify-start pb-2 mb-2">
             <!-- Something published in a Category / Topic -->
             <Icon solid="Collection" class="w-4 h-4 text-base-content/80" />
             <div class="flex-1 ml-2">
@@ -138,7 +138,7 @@
             </div>
           </div>
         {#elseif @verb == "Boost" and e(@activity, :subject, :table_id, nil) != "2AGSCANBECATEG0RY0RHASHTAG"}
-          <div class="flex items-center justify-start">
+          <div class="flex items-center justify-start pb-2 mb-2">
             <!-- BOOST -->
             <svg
               viewBox="0 0 24 24"
@@ -167,7 +167,7 @@
             </div>
           </div>
         {#elseif @verb in ["Reply", "Respond"]}
-          <div class="flex w-full items-top">
+          <div class="flex w-full pb-2 mb-2 items-top">
             <!-- REPLY -->
             <div class="">
               <Bonfire.UI.Common.AvatarLive user={e(@activity, :subject, nil)} />
@@ -200,7 +200,7 @@
             </div>
           </div>
         {#elseif @verb == "Flag"}
-          <div class="flex items-center justify-start">
+          <div class="flex items-center justify-start pb-2 mb-2">
             <!-- FLAG -->
             <Icon solid="Flag" class="w-4 h-4 text-error" />
             <div class="flex-1 ml-2">
@@ -216,9 +216,8 @@
               </div>
             </div>
           </div>
-        {#else}
+        <!-- {#else}
           <div class="flex items-center justify-start">
-            <!-- OTHER -->
             <Icon iconify={Bonfire.Boundaries.Verbs.get(@verb)[:icon]} class="w-4 h-4 text-error" />
             <div class="flex-1 ml-2">
               <div class="text-sm font-medium text-base-content text-opacity-80">
@@ -240,13 +239,13 @@
                     name:
                       e(@object, :provider, :profile, :name, nil) ||
                         e(@object, :provider, :character, :username, nil)
-                  )}
+                  )} 
                 {#else}
                   {raw(@verb_display)}
                 {/if}
               </div>
             </div>
-          </div>
+          </div> -->
         {/if}
       </div>
   {/case}

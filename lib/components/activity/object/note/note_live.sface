@@ -65,7 +65,7 @@
         data-id="object_body"
         class={
           "prose break-words object_body max-w-none font-[16px] mt-1 prose-sm prose-p:pt-0 prose-p:my-0",
-          "line-clamp-2":
+          "!my-0":
             @viewing_main_object != true and ulid(@object) != nil and
               e(@activity, :replied, :reply_to_id, nil) == nil and ulid(@activity) == nil and
               @showing_within != :widget and @showing_within != :search,

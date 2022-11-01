@@ -153,9 +153,9 @@ defmodule Bonfire.UI.Social.ActivityLive do
   def render(%{activity: _, activity_components: _} = assigns) do
     ~F"""
     <article
-      x-data={"{
-          activity_active: false,
-          collapsed: #{String.length(e(@object, :post_content, :html_body, "")) > 150 && ulid(@object) != nil and e(@activity, :replied, :reply_to_id, nil) == nil and ulid(@activity) == nil and @showing_within != :widget and @showing_within != :search}}"}
+      x-data="{
+        activity_active: false
+      }"
       id={"activity-#{@activity_inception}-" <> (ulid(@activity) || e(@object, :id, "no-id"))}
       aria-label="user activity"
       role="article"
@@ -180,7 +180,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
         "border-l-2 border-primary !bg-primary/5":
           e(@activity, :seen, nil) == nil and @showing_within == :notifications and
             @activity_inception == nil,
-        "border-r-2 border-primary": String.contains?(@url || "", @permalink)
+        "active-comment": String.contains?(@url || "", @permalink)
       }
     >
       <form
@@ -686,10 +686,12 @@ defmodule Bonfire.UI.Social.ActivityLive do
       when type in [Bonfire.Data.Social.Post, Bonfire.Data.Social.PostContent],
       do: component_show_standard_actions(activity)
 
+  # def actions_for_object_type(activity, type)
+  #     when type in [Bonfire.Classify.Category],
+  #     do: component_show_category_actions(activity)
   def actions_for_object_type(activity, type)
       when type in [Bonfire.Classify.Category],
-      do: component_show_category_actions(activity)
-
+      do: []
   # def actions_for_object_type(activity, type) when type in [ValueFlows.EconomicEvent],
   #   do: component_show_event_actions(activity)
 
