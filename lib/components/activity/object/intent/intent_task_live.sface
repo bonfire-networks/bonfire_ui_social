@@ -6,7 +6,7 @@
   <div class="flex flex-col items-start py-2">
     <div class="flex items-center flex-1 w-full">
       <div class="flex flex-col flex-1">
-        <div class="flex items-center gap-2">
+        <div class="flex flex-col gap-2 md:items-center md:flex-row">
           <div class="flex items-center flex-1 gap-2">
             <Icon 
               :if={e(@object, :finished, nil)}
@@ -33,7 +33,7 @@
 
             
           </div>
-          <div class="flex items-center gap-4">
+          <div class="flex items-center gap-4 -ml-1.5 md:ml-0">
             <span :if={length(e(@object, :context, [])) > 0}>
               {l("in")}
               <span :for={scope <- e(@object, :context, [])}>
@@ -65,21 +65,27 @@
                   />
                 </LiveRedirect>
               </div>
-              <div :if={e(@object, :due, nil)} class="flex items-center gap-2 text-xs text-base-content/70 text-medium">
-                <Icon solid="Calendar" class="w-4 h-4 text-base-content/70" />
+              <div 
+                :if={e(@object, :due, nil)} 
+                class={
+                  "flex items-center bg-neutral gap-1 text-xs p-2 py-1 rounded text-medium",
+                  "bg-warning text-warning-content":  Date.diff(e(@object, :due, nil), Date.utc_today()) in Enum.to_list(0..3),
+                  "bg-error text-error-content":  Date.diff(e(@object, :due, nil), Date.utc_today()) < 0,
+                }>
+                <Icon solid="Calendar" class="w-4 h-4" />
                 <span>{date_from_now(e(@object, :due, nil)) || l("No due date")}</span>
               </div>
 
               <div :if={e(@object, :note, nil)}>
-                <Icon outline="Document" class="w-5 h-5 text-base-content/70" />
+                <Icon iconify="carbon:document" class="w-5 h-5 text-base-content/70" />
               </div>
+              <Dynamic.Component
+                :if={module_enabled?(Bonfire.UI.Coordination.TaskActionsMenuLive, @__context__)}
+                module={Bonfire.UI.Coordination.TaskActionsMenuLive}
+                task={@object}
+              />
             </div>
           </div>
-          <Dynamic.Component
-            :if={module_enabled?(Bonfire.UI.Coordination.TaskActionsMenuLive, @__context__)}
-            module={Bonfire.UI.Coordination.TaskActionsMenuLive}
-            task={@object}
-          />
         </div>
       </div>
     </div>
