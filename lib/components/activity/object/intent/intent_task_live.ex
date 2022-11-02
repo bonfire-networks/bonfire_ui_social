@@ -4,7 +4,7 @@ defmodule Bonfire.UI.Social.Activity.IntentTaskLive do
 
   prop object, :map, required: true
   prop showing_within, :atom, default: nil
-  
+
   def preloads(),
     do: [
       :output_of,

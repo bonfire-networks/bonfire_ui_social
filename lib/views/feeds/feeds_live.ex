@@ -10,11 +10,20 @@ defmodule Bonfire.UI.Social.FeedsLive do
       Bonfire.UI.Social.FeedsLive,
       Bonfire.UI.Social.Feeds.LocalLive,
       Bonfire.UI.Social.Feeds.FederationLive,
-      Bonfire.UI.Social.Feeds.LikesLive    
+      Bonfire.UI.Social.Feeds.LikesLive
     ]
   )
 
-  declare_nav_link(l("My feed"), page: "feed", icon: "heroicons-solid:newspaper")
+  # declare_nav_link(l("My feed"), page: "feed", icon: "heroicons-solid:newspaper")
+  declare_nav_link(l("Feeds"), page: "feed", icon: "heroicons-solid:newspaper")
+
+  # TODO
+  declare_nav_link(l("Posts"), href: "/feed/posts", icon: "game-icons:quill-ink")
+
+  declare_nav_link(l("Discussions"),
+    href: "/feed/discussions",
+    icon: "octicon:comment-discussion-16"
+  )
 
   def mount(params, session, socket) do
     live_plug(params, session, socket, [
@@ -58,6 +67,14 @@ defmodule Bonfire.UI.Social.FeedsLive do
   end
 
   def do_handle_params(%{"tab" => "federation" = tab} = params, _url, socket) do
+    {:noreply, assign(socket, LiveHandler.feed_assigns_maybe_async(:fediverse, socket))}
+  end
+
+  def do_handle_params(%{"tab" => "fediverse" = tab} = params, _url, socket) do
+    {:noreply, assign(socket, LiveHandler.feed_assigns_maybe_async(:fediverse, socket))}
+  end
+
+  def do_handle_params(%{"tab" => "remote" = tab} = params, _url, socket) do
     {:noreply, assign(socket, LiveHandler.feed_assigns_maybe_async(:fediverse, socket))}
   end
 

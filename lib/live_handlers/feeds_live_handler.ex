@@ -346,7 +346,10 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
 
   def feed_assigns_maybe_async(:my = feed_name, socket) do
     feed_id = Bonfire.Social.Feeds.my_feed_id(:inbox, socket)
-    feed_ids = Bonfire.Social.Feeds.my_home_feed_ids(socket)
+
+    feed_ids =
+      Bonfire.Social.Feeds.my_home_feed_ids(socket)
+      |> debug(feed_name)
 
     assigns = [
       loading: true,
@@ -354,13 +357,13 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
       feed_ids: feed_ids,
       current_user: current_user(socket),
       # FIXME: clean up page vs tab
-      selected_tab: "feed",
+      selected_tab: nil,
       page: "feed",
       page_title: l("My feed"),
       feed_title: l("My feed"),
       # feed_id: feed_name,
       # feed_ids: feed_ids,
-      feed: [],
+      feed: nil,
       page_info: nil
     ]
 
@@ -368,13 +371,15 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
   end
 
   def feed_assigns_maybe_async(:fediverse = feed_name, socket) do
-    feed_id = Bonfire.Social.Feeds.named_feed_id(:activity_pub)
+    feed_id =
+      Bonfire.Social.Feeds.named_feed_id(:activity_pub)
+      |> debug(feed_name)
 
     assigns = [
       loading: true,
       feed_id: feed_id,
       current_user: current_user(socket),
-      selected_tab: "fediverse",
+      selected_tab: :fediverse,
       # FIXME: clean up page vs tab
       page: "federation",
       page_title: l("Federated activities from remote instances"),
@@ -385,7 +390,7 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
           "It seems you and other local users do not follow anyone on a different federated instance"
         ),
       # feed_id: feed_name,
-      feed: [],
+      feed: nil,
       page_info: nil
     ]
 
@@ -393,13 +398,15 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
   end
 
   def feed_assigns_maybe_async(:local = feed_name, socket) do
-    feed_id = Bonfire.Social.Feeds.named_feed_id(:local)
+    feed_id =
+      Bonfire.Social.Feeds.named_feed_id(:local)
+      |> debug(feed_name)
 
     assigns = [
       loading: true,
       feed_id: feed_id,
       current_user: current_user(socket),
-      selected_tab: "instance",
+      selected_tab: :local,
       # FIXME: clean up page vs tab
       page: "local",
       page_title: l("Local"),
@@ -407,19 +414,43 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
       feedback_title: l("Your local feed is empty"),
       # feed_id: feed_name,
       feedback_message: l("It seems like the paint is still fresh on this instance..."),
-      feed: [],
+      feed: nil,
       page_info: nil
     ]
 
     feed_assigns_maybe_async_load(feed_id, assigns, socket)
   end
 
+  def feed_assigns_maybe_async(:likes = feed_name, socket) do
+    debug(feed_name)
+
+    assigns = [
+      loading: true,
+      feed_id: feed_name,
+      current_user: current_user(socket),
+      selected_tab: "likes",
+      # FIXME: clean up page vs tab
+      page: "local",
+      page_title: l("Favourites"),
+      feed_title: l("My favourites"),
+      feedback_title: l("You have no favourites yet"),
+      # feed_id: feed_name,
+      # feedback_message: l("It seems like the paint is still fresh on this instance..."),
+      feed: nil,
+      page_info: nil
+    ]
+
+    feed_assigns_maybe_async_load(feed_name, assigns, socket)
+  end
+
   def feed_assigns_maybe_async({feed_id, %Ecto.Query{} = custom_query}, socket) do
+    debug(custom_query, feed_id)
+
     assigns = [
       loading: true,
       feed_id: feed_id,
       current_user: current_user(socket),
-      feed: [],
+      feed: nil,
       page_info: nil
     ]
 
@@ -428,11 +459,13 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
 
   def feed_assigns_maybe_async({feed_id, feeds}, socket)
       when is_list(feeds) or is_binary(feeds) do
+    debug(feeds, feed_id)
+
     assigns = [
       loading: true,
       feed_id: feed_id,
       current_user: current_user(socket),
-      feed: [],
+      feed: nil,
       page_info: nil
     ]
 
@@ -440,6 +473,8 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
   end
 
   def feed_assigns_maybe_async(_default, socket) do
+    debug("load default feed")
+
     current = current_user(socket) || current_account(socket)
 
     if not is_nil(ulid(current)) do
@@ -470,12 +505,16 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
         Task.async(fn ->
           debug(feed_id_or_tuple, "Query activities asynchronously")
 
+          component_id =
+            (e(socket.assigns, :feed_component_id, nil) || feed_id_only(feed_id_or_tuple))
+            |> debug("feed_component_id")
+
           feed_assigns(feed_id_or_tuple, socket)
           # |> debug("feed_assigns")
           |> maybe_send_update(
             pid,
             Bonfire.UI.Social.FeedLive,
-            feed_id_only(feed_id_or_tuple),
+            component_id,
             ...
           )
         end)
@@ -544,16 +583,28 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
     ]
   end
 
-  # defp feed_assigns(feed_id, socket) when is_atom(feed_id) do
-  #   feed_id = Bonfire.Social.Feeds.named_feed_id(feed_id)
-  #   feed = Bonfire.Social.FeedActivities.feed(feed_id, socket)
-  #   [
-  #     loading: false,
-  #     feed_id: feed_id,
-  #     feed: e(feed, :edges, []) |> preloads(socket),
-  #     page_info: e(feed, :page_info, [])
-  #   ]
-  # end
+  defp feed_assigns(:likes = feed_id, socket) when is_atom(feed_id) do
+    feed = Bonfire.Social.Likes.list_my(socket)
+
+    [
+      loading: false,
+      feed_id: feed_id,
+      feed: e(feed, :edges, []) |> preloads(socket),
+      page_info: e(feed, :page_info, [])
+    ]
+  end
+
+  defp feed_assigns(feed_id, socket) when is_atom(feed_id) do
+    feed_id = Bonfire.Social.Feeds.named_feed_id(feed_id, socket)
+    feed = Bonfire.Social.FeedActivities.feed(feed_id, socket)
+
+    [
+      loading: false,
+      feed_id: feed_id,
+      feed: e(feed, :edges, []) |> preloads(socket),
+      page_info: e(feed, :page_info, [])
+    ]
+  end
 
   def preloads(feed, socket_or_opts \\ [])
 
@@ -657,7 +708,7 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
       {:noreply,
        assign(socket,
          loading: true,
-         feed: [],
+         feed: nil,
          selected_tab: tab
        )}
     else

@@ -42,7 +42,6 @@
 </Bonfire.UI.Common.OpenModalLive>
  -->
 
-
 <button
   :if={@object}
   data-id="pin_action"

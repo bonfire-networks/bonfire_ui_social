@@ -20,5 +20,6 @@
     feed_title={@feed_title}
     page_info={@page_info}
     loading={@loading}
+    tab_path_prefix="/feed/"
   />
 </div>

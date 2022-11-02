@@ -18,6 +18,7 @@
       search_placeholder={@search_placeholder}
       feed_title={@feed_title}
       loading={@loading}
+      hide_tabs
     />
     <div class="hidden lg:flex">
       <#slot {@widget} />

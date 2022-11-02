@@ -28,8 +28,7 @@
               aria-label={e(@activity, :subject, :character, :username, "") <> " profile"}
               class="font-medium"
               to={path(e(@activity, :subject, :character, nil))}
-              >
-
+            >
               {e(@activity, :subject, :profile, :name, "Anonymous")}
             </LiveRedirect>
             {raw(@verb_display)}
@@ -85,11 +84,11 @@
                   aria-label={e(@activity, :subject, :character, :username, "") <> " profile"}
                   class="font-medium link link-hover"
                   to={path(e(@activity, :subject, :character, nil))}
-                >  
+                >
                   {#if ulid(@object) == ulid(@current_user)}
-                      {l("You")}
+                    {l("You")}
                   {#else}
-                      {e(@activity, :subject, :profile, :name, nil) || e(@activity, :subject, :character, :username, nil)}
+                    {e(@activity, :subject, :profile, :name, nil) || e(@activity, :subject, :character, :username, nil)}
                   {/if}
                 </LiveRedirect>
 
@@ -216,7 +215,7 @@
               </div>
             </div>
           </div>
-        <!-- {#else}
+          <!-- {#else}
           <div class="flex items-center justify-start">
             <Icon iconify={Bonfire.Boundaries.Verbs.get(@verb)[:icon]} class="w-4 h-4 text-error" />
             <div class="flex-1 ml-2">

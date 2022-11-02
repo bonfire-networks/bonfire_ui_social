@@ -21,6 +21,18 @@ defmodule Bonfire.UI.Social.Routes do
         live("/discussion/:id/reply/:reply_to_id", DiscussionLive, as: Pointers.Pointer)
       end
 
+      # pages you need to view as a user
+      scope "/", Bonfire.UI.Social do
+        pipe_through(:browser)
+        pipe_through(:user_required)
+
+        live("/feed/likes/", Feeds.LikesLive, as: Bonfire.Data.Social.Like)
+        live("/messages/:id", MessagesLive, as: Bonfire.Data.Social.Message)
+        live("/messages/:id/reply/:reply_to_id", MessagesLive, as: Bonfire.Data.Social.Message)
+        live("/messages/@:username", MessagesLive, as: Bonfire.Data.Social.Message)
+        live("/messages", MessagesLive, as: Bonfire.Data.Social.Message)
+      end
+
       # pages you need an account to view
       scope "/", Bonfire.UI.Social do
         pipe_through(:browser)
@@ -33,18 +45,6 @@ defmodule Bonfire.UI.Social.Routes do
 
         live("/notifications", Feeds.NotificationsLive, as: :notifications)
         # live "/flags", FlagsLive, as: :flags
-      end
-
-      # pages you need to view as a user
-      scope "/", Bonfire.UI.Social do
-        pipe_through(:browser)
-        pipe_through(:user_required)
-
-        live("/my/likes/", Feeds.LikesLive, as: Bonfire.Data.Social.Like)
-        live("/messages/:id", MessagesLive, as: Bonfire.Data.Social.Message)
-        live("/messages/:id/reply/:reply_to_id", MessagesLive, as: Bonfire.Data.Social.Message)
-        live("/messages/@:username", MessagesLive, as: Bonfire.Data.Social.Message)
-        live("/messages", MessagesLive, as: Bonfire.Data.Social.Message)
       end
     end
   end

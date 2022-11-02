@@ -81,7 +81,6 @@
       showing_within={@showing_within}
       hide_reply={@hide_reply}
     />
-    
   </div>
 </div>
 <!-- {/if} -->

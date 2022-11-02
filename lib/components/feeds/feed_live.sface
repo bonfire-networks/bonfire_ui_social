@@ -1,6 +1,15 @@
-<div id={@id || @feed_id} role="feed" aria-live="assertive" aria-atomic="true" class="feed">
+<div id={@feed_id || @id} role="feed" aria-live="assertive" aria-atomic="true" class="feed">
+  <Bonfire.UI.Common.TabsLive
+    :if={@hide_tabs != true}
+    selected_tab={@selected_tab || @feed_id}
+    tabs={[nil: l("My feed"), local: l("Local"), fediverse: l("Remote"), likes: l("Favourites")]}
+    event_handler={@event_handler}
+    event_target={@myself}
+    path_prefix={@tab_path_prefix}
+  />
+
   <div class="flex flex-col p-3 pt-0 mx-auto md:p-0">
-    {#if length(@feed) > 0}
+    {#if is_list(@feed) and @feed != []}
       <div
         id={"feed:#{@feed_id || @id}"}
         data-id="feed"

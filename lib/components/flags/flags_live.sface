@@ -7,4 +7,5 @@
   feed={@feed}
   page_info={@page_info}
   showing_within={:flags}
+  hide_tabs
 />

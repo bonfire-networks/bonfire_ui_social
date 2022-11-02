@@ -2,11 +2,11 @@
   id={ComponentID.new(Bonfire.UI.Common.BoostActionLive, ulid(@object))}
   object={@object}
   showing_within={:feed}
-  />
+/>
 <Bonfire.UI.Common.LikeActionLive
   id={ComponentID.new(Bonfire.UI.Common.LikeActionLive, ulid(@object))}
   object={@object}
-  />
+/>
 <Bonfire.UI.Common.FollowButtonLive
   id={ComponentID.new(Bonfire.UI.Common.FollowButtonLive, @object)}
   object={@object}

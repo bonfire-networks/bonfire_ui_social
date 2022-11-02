@@ -9,6 +9,9 @@ defmodule Bonfire.UI.Social.Activity.DeleteObjectLive do
   prop object_type_readable, :any
   prop action, :string, default: "Bonfire.Social.Objects:delete"
   prop explanation, :string, default: nil
-  prop open_btn_class, :css_class, default: "flex items-center gap-2 text-sm text-neutral-content/80"
+
+  prop open_btn_class, :css_class,
+    default: "flex items-center gap-2 text-sm text-neutral-content/80"
+
   prop redirect_after, :any, default: nil
 end

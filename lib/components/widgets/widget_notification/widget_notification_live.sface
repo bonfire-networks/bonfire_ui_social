@@ -5,5 +5,9 @@
     </LiveRedirect>
   </:action>
 
-  <Bonfire.UI.Social.FeedLive class="pl-0 showing_within:widget" {...load(@current_user)} />
+  <Bonfire.UI.Social.FeedLive
+    class="pl-0 showing_within:widget"
+    hide_tabs
+    {...load(@current_user)}
+  />
 </Bonfire.UI.Common.WidgetBlockLive>

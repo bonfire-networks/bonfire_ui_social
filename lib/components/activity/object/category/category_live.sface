@@ -1,5 +1,5 @@
 <div class="relative flex items-center p-2 mt-3 rounded-md shadow bg-base-content/5">
-  <div class="w-6 h-6 mr-3 rounded bg-info"></div>
+  <div class="w-6 h-6 mr-3 rounded bg-info" />
   <div class="flex flex-col flex-1 font-medium text-base-content">
     <LiveRedirect
       to={"/+#{e(@object, :character, :username, nil) || ulid(@object)}"}
@@ -7,7 +7,7 @@
     >
       {rich(name(@object))}
     </LiveRedirect>
-   
+
     <!-- <div class="text-sm font-normal text-base-content/70">{Bonfire.Me.Characters.display_username(e(@object, :character, :username, nil), true)}</div> -->
   </div>
   <div class="flex items-center gap-2">

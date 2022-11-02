@@ -692,6 +692,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
   def actions_for_object_type(activity, type)
       when type in [Bonfire.Classify.Category],
       do: []
+
   # def actions_for_object_type(activity, type) when type in [ValueFlows.EconomicEvent],
   #   do: component_show_event_actions(activity)
 

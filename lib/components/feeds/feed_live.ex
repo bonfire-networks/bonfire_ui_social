@@ -8,7 +8,7 @@ defmodule Bonfire.UI.Social.FeedLive do
 
   prop feed_id, :string, default: nil
   prop feed_ids, :any, default: nil
-  prop feed, :list
+  prop feed, :any, default: nil
   prop page_info, :any
   prop feedback_title, :string, default: nil
   prop feedback_message, :string, default: nil
@@ -22,10 +22,17 @@ defmodule Bonfire.UI.Social.FeedLive do
   prop page_title, :string, required: true
   prop feed_title, :string, default: nil
 
+  @doc "What LiveHandler and/or event name to send the patch event to for tabs navigation (if any)"
+  prop event_handler, :string, default: "select_tab"
+
+  prop tab_path_prefix, :string, default: "?tab="
+  prop hide_tabs, :boolean, default: false
+  prop selected_tab, :any, default: nil
+
   def mount(socket) do
     {:ok,
      socket
-     |> assign(feed: []),
+     |> assign(feed: nil),
      temporary_assigns: [
        feed: []
        # feed_future: []
@@ -62,14 +69,14 @@ defmodule Bonfire.UI.Social.FeedLive do
 
   def update(_assigns, %{assigns: %{loading: false}} = socket) do
     debug("skip replacing already loaded feed")
-    {:ok, socket}
+    ok_socket(socket)
   end
 
   def update(_assigns, %{assigns: %{feed: existing_feed}} = socket)
       when is_list(existing_feed) and length(existing_feed) > 0 do
     # FIXME: doesn't work because of temporary assigns?
     debug("skip replacing already provided feed")
-    {:ok, socket}
+    ok_socket(socket)
   end
 
   def update(%{feed: feed, page_info: page_info} = assigns, socket) when is_list(feed) do
@@ -90,15 +97,16 @@ defmodule Bonfire.UI.Social.FeedLive do
       maybe_subscribe(socket)
     end
 
-    {:ok,
-     socket
-     |> assign(
-       feed_pubsub_subscribed: feed_id_or_ids
-       # page_info: page_info,
-       # feed: feed
-       # |> debug("FeedLive: feed")
-       # |> LiveHandler.preloads(socket),
-     )}
+    ok_socket(
+      socket
+      |> assign(
+        feed_pubsub_subscribed: feed_id_or_ids
+        # page_info: page_info,
+        # feed: feed
+        # |> debug("FeedLive: feed")
+        # |> LiveHandler.preloads(socket),
+      )
+    )
   end
 
   def update(assigns, socket) do
@@ -106,20 +114,32 @@ defmodule Bonfire.UI.Social.FeedLive do
 
     # current_user = current_user(socket)
 
-    # assigns = if module_enabled?(Bonfire.UI.Social.Feeds.HomeLive), do: Bonfire.Social.Feeds.LiveHandler.feed_assigns_maybe_async(:default, socket),
-    # else: []
-    # socket = assign(socket, assigns)
+    socket =
+      socket
+      |> assign(assigns)
 
-    # maybe_subscribe(socket)
+    socket =
+      socket
+      |> assign(feed_component_id: socket.assigns.id)
+      |> Bonfire.Social.Feeds.LiveHandler.feed_assigns_maybe_async(:default, ...)
+      |> assign(socket, ...)
+
+    maybe_subscribe(socket)
 
     # debug(assigns: assigns)
 
-    {:ok, assign(socket, assigns)}
+    {:ok, socket}
     # |> assign(
     #   feed: e(assigns, :feed, [])
     #     # |> debug("FeedLive: feed")
     #     |> LiveHandler.preloads(socket)
     #   )
+  end
+
+  defp ok_socket(socket) do
+    {:ok,
+     socket
+     |> assign(feed_component_id: socket.assigns.id)}
   end
 
   def maybe_subscribe(socket) do
@@ -137,8 +157,28 @@ defmodule Bonfire.UI.Social.FeedLive do
   #   {:noreply, socket}
   # end
 
-  def handle_event(action, attrs, socket),
-    do: Bonfire.UI.Common.LiveHandlers.handle_event(action, attrs, socket, __MODULE__)
+  def do_handle_event("select_tab", attrs, socket) do
+    tab = maybe_to_atom(e(attrs, "name", nil))
+
+    debug(attrs, tab)
+
+    {:noreply,
+     socket
+     |> assign(selected_tab: tab)
+     |> assign(LiveHandler.feed_assigns_maybe_async(tab, socket))}
+  end
+
+  def do_handle_event(action, attrs, socket) do
+    debug(attrs, action)
+    # poor man's hook I guess
+    Bonfire.UI.Common.LiveHandlers.handle_event(action, attrs, socket, __MODULE__)
+  end
+
+  def handle_event(action, attrs, socket) do
+    undead_params(socket, fn ->
+      do_handle_event(action, attrs, socket)
+    end)
+  end
 
   def handle_info(info, socket),
     do: Bonfire.UI.Common.LiveHandlers.handle_info(info, socket, __MODULE__)

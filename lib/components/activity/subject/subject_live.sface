@@ -72,7 +72,7 @@
       "flex items-top",
       "space-x-3": @viewing_main_object == true,
       "py-1": @thread_mode == :flat
-      }>
+    }>
       <div
         :if={ulid(@current_user) != maybe_get(@character, :id) || @thread_mode != :flat}
         class={
@@ -116,10 +116,13 @@
                 {e(@profile, :name, "Anonymous")}
               </LiveRedirect>
               <div class="ml-1 text-sm lowercase text-base-content/80">
-
-              <!-- {@verb} {@object_type} -->
+                <!-- {@verb} {@object_type} -->
                 {#if @verb == "Create" and @object_type in [Bonfire.Classify.Category]}
-                 <div> <span>{l("created a new")}</span> <LiveRedirect class="font-medium link link-hover" to={"/+#{e(@object, :character, :username, nil) || ulid(@object)}"}>{l "topic"}</LiveRedirect></div>
+                  <div>
+                    <span>{l("created a new")}</span> <LiveRedirect
+                      class="font-medium link link-hover"
+                      to={"/+#{e(@object, :character, :username, nil) || ulid(@object)}"}
+                    >{l("topic")}</LiveRedirect></div>
                 {#elseif @verb == "Reply"}
                   {l("replied")}
                 {#elseif @verb == "Pin"}
@@ -169,25 +172,25 @@
           {/if}
         </div>
         <div class="flex items-center gap-2">
-        <Bonfire.UI.Social.Activity.InstanceIconLive object={@object} />
-        <Dynamic.LiveComponent
-          :if={module_enabled?(Bonfire.Boundaries.Web.BoundaryIconLive) and
-            @object_type not in [Bonfire.Data.Social.Message]}
-          module={Bonfire.Boundaries.Web.BoundaryIconLive}
-          object={@object}
-          with_icon
-          id={ComponentID.new(Bonfire.Boundaries.Web.BoundaryIconLive, @object)}
-          object_boundary={@object_boundary}
-        />
-        <Bonfire.UI.Social.Activity.MoreActionsLive
-          object={@object}
-          activity={@activity}
-          object_type={@object_type}
-          object_boundary={@object_boundary}
-          object_type_readable={@object_type_readable}
-          verb={@verb}
-          showing_within={@showing_within}
-        />
+          <Bonfire.UI.Social.Activity.InstanceIconLive object={@object} />
+          <Dynamic.LiveComponent
+            :if={module_enabled?(Bonfire.Boundaries.Web.BoundaryIconLive) and
+              @object_type not in [Bonfire.Data.Social.Message]}
+            module={Bonfire.Boundaries.Web.BoundaryIconLive}
+            object={@object}
+            with_icon
+            id={ComponentID.new(Bonfire.Boundaries.Web.BoundaryIconLive, @object)}
+            object_boundary={@object_boundary}
+          />
+          <Bonfire.UI.Social.Activity.MoreActionsLive
+            object={@object}
+            activity={@activity}
+            object_type={@object_type}
+            object_boundary={@object_boundary}
+            object_type_readable={@object_type_readable}
+            verb={@verb}
+            showing_within={@showing_within}
+          />
         </div>
       </div>
     </div>
