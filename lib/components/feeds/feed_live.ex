@@ -22,14 +22,15 @@ defmodule Bonfire.UI.Social.FeedLive do
   prop page_title, :string, required: true
   prop feed_title, :string, default: nil
 
-
   @doc "What LiveHandler and/or event name to send the patch event to for tabs navigation (if any)"
   prop event_handler, :string, default: "select_tab"
 
   prop tab_path_prefix, :string, default: "?tab="
   prop hide_tabs, :boolean, default: false
   prop selected_tab, :any, default: nil
-  prop tabs_class, :css_class, default: "flex justify-start gap-3 p-4 mb-3 rounded-md shadow tabs-boxed tabs bg-base-100"
+
+  prop tabs_class, :css_class,
+    default: "flex justify-start gap-3 p-4 mb-3 rounded-md shadow tabs-boxed tabs bg-base-100"
 
   def mount(socket) do
     {:ok,

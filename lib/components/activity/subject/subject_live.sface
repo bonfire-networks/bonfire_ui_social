@@ -107,42 +107,42 @@
             </LiveRedirect>
           {#else}
             <!-- <div class="flex items-baseline"> -->
-              
-              <div class="text-sm lowercase line-clamp-1 text-base-content/80">
-                <!-- {@verb} {@object_type} -->
-                <LiveRedirect
-                  opts={"data-id": "subject_name"}
-                  aria-label={e(@character, :username, "") <> " profile"}
-                  class="leading-[16px] text-base font-semibold link link-hover"
-                  to={path(@character)}
-                >
+
+            <div class="text-sm lowercase line-clamp-1 text-base-content/80">
+              <!-- {@verb} {@object_type} -->
+              <LiveRedirect
+                opts={"data-id": "subject_name"}
+                aria-label={e(@character, :username, "") <> " profile"}
+                class="leading-[16px] text-base font-semibold link link-hover"
+                to={path(@character)}
+              >
                 {e(@profile, :name, "Anonymous")}
               </LiveRedirect>
-                {#if @verb == "Create" and @object_type in [Bonfire.Classify.Category]}
-                  <div>
-                    <span>{l("created a new")}</span> <LiveRedirect
-                      class="font-medium link link-hover"
-                      to={"/+#{e(@object, :character, :username, nil) || ulid(@object)}"}
-                    >{l("topic")}</LiveRedirect></div>
-                {#elseif @verb == "Reply"}
-                  {l("replied")}
-                {#elseif @verb == "Pin"}
-                  {l("pinned")}
-                {#elseif @verb == "Schedule" and e(@object, :due, nil)}
-                  {l("scheduled a task %{date}", date: date_from_now(e(@object, :due, nil)))}
-                {#elseif @verb == "Label" and e(@object, :finished, nil) == true}
-                  {l("completed a task")}
-                {#elseif @verb == "Label" and e(@object, :finished, nil) == false}
-                  {l("re-opened a task")}
-                {#elseif @verb in ["Assign", "Appoint"] and e(@object, :provider, nil)}
-                  {l("assigned a task to %{name}",
-                    name:
-                      e(@object, :provider, :profile, :name, nil) ||
-                        e(@object, :provider, :character, :username, nil)
-                  )}
-                {/if}
-              </div>
-              <!-- <span class="ml-2 text-[15px] text-base-content/70">replied to <b class="font-bold text-base-content link">title topic</b></span> -->
+              {#if @verb == "Create" and @object_type in [Bonfire.Classify.Category]}
+                <div>
+                  <span>{l("created a new")}</span> <LiveRedirect
+                    class="font-medium link link-hover"
+                    to={"/+#{e(@object, :character, :username, nil) || ulid(@object)}"}
+                  >{l("topic")}</LiveRedirect></div>
+              {#elseif @verb == "Reply"}
+                {l("replied")}
+              {#elseif @verb == "Pin"}
+                {l("pinned")}
+              {#elseif @verb == "Schedule" and e(@object, :due, nil)}
+                {l("scheduled a task %{date}", date: date_from_now(e(@object, :due, nil)))}
+              {#elseif @verb == "Label" and e(@object, :finished, nil) == true}
+                {l("completed a task")}
+              {#elseif @verb == "Label" and e(@object, :finished, nil) == false}
+                {l("re-opened a task")}
+              {#elseif @verb in ["Assign", "Appoint"] and e(@object, :provider, nil)}
+                {l("assigned a task to %{name}",
+                  name:
+                    e(@object, :provider, :profile, :name, nil) ||
+                      e(@object, :provider, :character, :username, nil)
+                )}
+              {/if}
+            </div>
+            <!-- <span class="ml-2 text-[15px] text-base-content/70">replied to <b class="font-bold text-base-content link">title topic</b></span> -->
             <!-- </div> -->
             <div class="flex items-center gap-1">
               <div
@@ -152,7 +152,7 @@
                 @{e(@character, :username, "")}
               </div>
               <span>·</span>
-               <Bonfire.UI.Social.Activity.InstanceIconLive object={@object} />
+              <Bonfire.UI.Social.Activity.InstanceIconLive object={@object} />
               <Dynamic.LiveComponent
                 :if={module_enabled?(Bonfire.Boundaries.Web.BoundaryIconLive) and
                   @object_type not in [Bonfire.Data.Social.Message]}
@@ -183,7 +183,6 @@
           {/if}
         </div>
         <div class="flex items-center gap-2">
-         
           <Bonfire.UI.Social.Activity.MoreActionsLive
             object={@object}
             activity={@activity}
