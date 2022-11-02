@@ -1,6 +1,7 @@
-<div class="relative flex items-center p-2 mt-3 rounded-md shadow bg-base-content/5">
-  <div class="w-6 h-6 mr-3 rounded bg-info" />
-  <div class="flex flex-col flex-1 font-medium text-base-content">
+<div class="relative flex flex-col gap-1 p-2 mt-3 rounded-md shadow md:flex-row md:gap-0 md:items-center bg-base-content/5">
+  
+  <div class="flex flex-1 font-medium text-base-content">
+    <div class="w-1 h-6 mr-2 rounded bg-info" />
     <LiveRedirect
       to={"/+#{e(@object, :character, :username, nil) || ulid(@object)}"}
       class="text-sm font-medium link link-hover"
@@ -10,8 +11,8 @@
 
     <!-- <div class="text-sm font-normal text-base-content/70">{Bonfire.Me.Characters.display_username(e(@object, :character, :username, nil), true)}</div> -->
   </div>
-  <div class="flex items-center gap-2">
-    <div class="text-xs" :if={e(@object, :parent_category, nil)}>
+  <div class="flex items-center gap-1 md:gap-2">
+    <div class="hidden text-xs md:block" :if={e(@object, :parent_category, nil)}>
       {l("in ")}
       <LiveRedirect
         to={"/+#{e(@object, :parent_category, :character, :username, nil) || ulid(@object)}"}

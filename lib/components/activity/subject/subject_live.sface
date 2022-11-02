@@ -106,17 +106,18 @@
               {l("You")}
             </LiveRedirect>
           {#else}
-            <div class="flex items-baseline">
-              <LiveRedirect
-                opts={"data-id": "subject_name"}
-                aria-label={e(@character, :username, "") <> " profile"}
-                class="leading-[16px] text-base font-semibold link link-hover"
-                to={path(@character)}
-              >
+            <!-- <div class="flex items-baseline"> -->
+              
+              <div class="text-sm lowercase line-clamp-1 text-base-content/80">
+                <!-- {@verb} {@object_type} -->
+                <LiveRedirect
+                  opts={"data-id": "subject_name"}
+                  aria-label={e(@character, :username, "") <> " profile"}
+                  class="leading-[16px] text-base font-semibold link link-hover"
+                  to={path(@character)}
+                >
                 {e(@profile, :name, "Anonymous")}
               </LiveRedirect>
-              <div class="ml-1 text-sm lowercase text-base-content/80">
-                <!-- {@verb} {@object_type} -->
                 {#if @verb == "Create" and @object_type in [Bonfire.Classify.Category]}
                   <div>
                     <span>{l("created a new")}</span> <LiveRedirect
@@ -142,7 +143,7 @@
                 {/if}
               </div>
               <!-- <span class="ml-2 text-[15px] text-base-content/70">replied to <b class="font-bold text-base-content link">title topic</b></span> -->
-            </div>
+            <!-- </div> -->
             <div class="flex items-center gap-1">
               <div
                 :if={e(@character, :username, nil)}
@@ -151,6 +152,16 @@
                 @{e(@character, :username, "")}
               </div>
               <span>·</span>
+               <Bonfire.UI.Social.Activity.InstanceIconLive object={@object} />
+              <Dynamic.LiveComponent
+                :if={module_enabled?(Bonfire.Boundaries.Web.BoundaryIconLive) and
+                  @object_type not in [Bonfire.Data.Social.Message]}
+                module={Bonfire.Boundaries.Web.BoundaryIconLive}
+                object={@object}
+                with_icon
+                id={ComponentID.new(Bonfire.Boundaries.Web.BoundaryIconLive, @object)}
+                object_boundary={@object_boundary}
+              />
               <LiveRedirect
                 :if={@showing_within not in [:smart_input]}
                 class="subject_timestamp text-[13px] font-normal no-underline truncate ellipsis text-base-content/60"
@@ -172,16 +183,7 @@
           {/if}
         </div>
         <div class="flex items-center gap-2">
-          <Bonfire.UI.Social.Activity.InstanceIconLive object={@object} />
-          <Dynamic.LiveComponent
-            :if={module_enabled?(Bonfire.Boundaries.Web.BoundaryIconLive) and
-              @object_type not in [Bonfire.Data.Social.Message]}
-            module={Bonfire.Boundaries.Web.BoundaryIconLive}
-            object={@object}
-            with_icon
-            id={ComponentID.new(Bonfire.Boundaries.Web.BoundaryIconLive, @object)}
-            object_boundary={@object_boundary}
-          />
+         
           <Bonfire.UI.Social.Activity.MoreActionsLive
             object={@object}
             activity={@activity}

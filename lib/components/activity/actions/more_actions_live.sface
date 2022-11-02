@@ -8,7 +8,7 @@
   }
 >
   <button tabindex="0" class="btn btn-ghost btn-square btn-xs">
-    <Icon solid="DotsHorizontal" class="w-4 h-4 text-base-content/70" />
+    <Icon solid="DotsVertical" class="w-4 h-4 text-base-content/70" />
   </button>
   <ul
     tabindex="0"
