@@ -1,9 +1,6 @@
 <div>
   <#slot {@header} />
-  <div class={
-    "grid items-start grid-cols-1",
-    "lg:grid-cols-[1fr_320px] gap-3": @widget != nil
-  }>
+  <div class="grid items-start grid-cols-1">
     <Bonfire.UI.Social.FeedLive
       id="feed:profile:timeline"
       feed_id={"user:#{@selected_tab}:#{ulid(@user)}"}
@@ -11,6 +8,7 @@
       page={@page}
       feed={@feed}
       page_info={@page_info}
+      tabs_class="px-2 tabs_nav mt-5 w-full border-b mb-6 border-b border-base-content/10 tabs"
       selected_tab={@selected_tab}
       smart_input={@smart_input}
       smart_input_prompt={@smart_input_prompt}
@@ -20,16 +18,16 @@
       loading={@loading}
       hide_tabs
     />
-    <div class="hidden lg:flex">
+    <!-- <div class="hidden lg:flex">
       <#slot {@widget} />
-    </div>
+    </div> -->
   </div>
   <a
     :if={e(@user, :character, :peered, :canonical_uri, nil)}
     href={e(@user, :character, :peered, :canonical_uri, "#")}
     target="_blank"
     rel="noopener noreferrer"
-    class="block m-10"
+    class=""
   >
     Visit the <u>remote profile</u> if you don't want to miss any of their older activities.
   </a>
