@@ -245,7 +245,7 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
   def handle_info({:load_feed, key}, socket) do
     {:noreply,
      socket
-     |> assign(feed_assigns(key, socket))}
+     |> assign_generic(feed_assigns(key, socket))}
   end
 
   # def preview_thread(socket, assigns) do
@@ -344,18 +344,43 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
      )}
   end
 
-  def feed_assigns_maybe_async(:my = feed_name, socket) do
+  def feed_assigns_maybe_async({feed_name, filters_or_custom_query_or_feed_id_or_ids}, socket) do
+    feed_name = feed_name(feed_name, socket)
+    debug(filters_or_custom_query_or_feed_id_or_ids, feed_name)
+
+    assigns = feed_default_assigns(feed_name, socket)
+
+    feed_assigns_maybe_async_load(
+      {feed_name, filters_or_custom_query_or_feed_id_or_ids},
+      assigns,
+      socket
+    )
+  end
+
+  def feed_assigns_maybe_async(other, socket) do
+    feed_name = feed_name(other, socket)
+    # debug(other, feed_name)
+
+    assigns = feed_default_assigns(feed_name, socket)
+
+    feed_assigns_maybe_async_load(
+      {feed_name, assigns[:feed_ids] || assigns[:feed_id]},
+      assigns,
+      socket
+    )
+  end
+
+  defp feed_default_assigns(:my = feed_name, socket) do
     feed_id = Bonfire.Social.Feeds.my_feed_id(:inbox, socket)
 
     feed_ids =
       Bonfire.Social.Feeds.my_home_feed_ids(socket)
       |> debug(feed_name)
 
-    assigns = [
+    [
       loading: true,
       feed_id: feed_id,
       feed_ids: feed_ids,
-      current_user: current_user(socket),
       # FIXME: clean up page vs tab
       selected_tab: nil,
       page: "feed",
@@ -363,22 +388,19 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
       feed_title: l("My feed"),
       # feed_id: feed_name,
       # feed_ids: feed_ids,
-      feed: nil,
+      feed: :loading,
       page_info: nil
     ]
-
-    feed_assigns_maybe_async_load({feed_id, feed_ids}, assigns, socket)
   end
 
-  def feed_assigns_maybe_async(:fediverse = feed_name, socket) do
+  defp feed_default_assigns(:fediverse = feed_name, socket) do
     feed_id =
       Bonfire.Social.Feeds.named_feed_id(:activity_pub)
       |> debug(feed_name)
 
-    assigns = [
+    [
       loading: true,
       feed_id: feed_id,
-      current_user: current_user(socket),
       selected_tab: :fediverse,
       # FIXME: clean up page vs tab
       page: "federation",
@@ -390,19 +412,17 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
           "It seems you and other local users do not follow anyone on a different federated instance"
         ),
       # feed_id: feed_name,
-      feed: nil,
+      feed: :loading,
       page_info: nil
     ]
-
-    feed_assigns_maybe_async_load(feed_id, assigns, socket)
   end
 
-  def feed_assigns_maybe_async(:local = feed_name, socket) do
+  defp feed_default_assigns(:local = feed_name, socket) do
     feed_id =
       Bonfire.Social.Feeds.named_feed_id(:local)
       |> debug(feed_name)
 
-    assigns = [
+    [
       loading: true,
       feed_id: feed_id,
       current_user: current_user(socket),
@@ -414,20 +434,17 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
       feedback_title: l("Your local feed is empty"),
       # feed_id: feed_name,
       feedback_message: l("It seems like the paint is still fresh on this instance..."),
-      feed: nil,
+      feed: :loading,
       page_info: nil
     ]
-
-    feed_assigns_maybe_async_load(feed_id, assigns, socket)
   end
 
-  def feed_assigns_maybe_async(:likes = feed_name, socket) do
+  defp feed_default_assigns(:likes = feed_name, socket) do
     debug(feed_name)
 
-    assigns = [
+    [
       loading: true,
       feed_id: feed_name,
-      current_user: current_user(socket),
       selected_tab: "likes",
       # FIXME: clean up page vs tab
       page: "local",
@@ -436,54 +453,54 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
       feedback_title: l("You have no favourites yet"),
       # feed_id: feed_name,
       # feedback_message: l("It seems like the paint is still fresh on this instance..."),
-      feed: nil,
+      feed: :loading,
       page_info: nil
     ]
-
-    feed_assigns_maybe_async_load(feed_name, assigns, socket)
   end
 
-  def feed_assigns_maybe_async({feed_id, %Ecto.Query{} = custom_query}, socket) do
-    debug(custom_query, feed_id)
+  defp feed_default_assigns({feed_name, filters_or_custom_query_or_feed_id_or_ids}, socket)
+       when is_atom(feed_name) do
+    debug(filters_or_custom_query_or_feed_id_or_ids, feed_name)
 
-    assigns = [
+    feed_default_assigns(feed_name, socket)
+  end
+
+  defp feed_default_assigns(feed_name, socket) when is_atom(feed_name) do
+    debug(feed_name)
+
+    [
       loading: true,
-      feed_id: feed_id,
-      current_user: current_user(socket),
-      feed: nil,
+      feed_id: feed_name,
+      feed: :loading,
       page_info: nil
     ]
-
-    feed_assigns_maybe_async_load({feed_id, custom_query}, assigns, socket)
   end
 
-  def feed_assigns_maybe_async({feed_id, feeds}, socket)
-      when is_list(feeds) or is_binary(feeds) do
-    debug(feeds, feed_id)
+  defp feed_default_assigns(other, socket) do
+    debug(other)
 
-    assigns = [
+    [
       loading: true,
-      feed_id: feed_id,
-      current_user: current_user(socket),
-      feed: nil,
+      feed: :loading,
       page_info: nil
     ]
-
-    feed_assigns_maybe_async_load({feed_id, feeds}, assigns, socket)
   end
 
-  def feed_assigns_maybe_async(_default, socket) do
-    debug("load default feed")
-
+  defp feed_name(name, socket) when is_nil(name) or name == :default do
     current = current_user(socket) || current_account(socket)
 
     if not is_nil(ulid(current)) do
       # my feed
-      feed_assigns_maybe_async(:my, socket)
+      :my
     else
       # fallback to showing instance feed
-      feed_assigns_maybe_async(:local, socket)
+      :local
     end
+    |> debug("default feed to load:")
+  end
+
+  defp feed_name(name, _socket) do
+    name
   end
 
   # defp feed_assigns_maybe_async_load(feed_name, assigns, %{assigns: %{loading: false}} = socket) do
@@ -526,7 +543,11 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
       assigns
     else
       debug("socket not connected or not logged in, just load feed")
-      assigns ++ feed_assigns(feed_id_or_tuple, socket)
+
+      case feed_assigns(feed_id_or_tuple, socket) do
+        fa when is_list(fa) -> assigns ++ fa
+        e -> e
+      end
     end
   end
 
@@ -538,72 +559,93 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
   defp feed_id_only({feed_id, _feed_ids}), do: feed_id
   defp feed_id_only(feed_id), do: feed_id
 
-  defp feed_assigns({_feed_id, %Ecto.Query{} = custom_query}, socket) do
-    feed =
-      custom_query
-      |> debug("custom_query")
-      |> Bonfire.Social.FeedActivities.feed(socket)
-
-    # |> debug("queried")
-
-    [
-      loading: false,
-      feed: e(feed, :edges, []) |> preloads(socket),
-      page_info: e(feed, :page_info, [])
-    ]
+  defp feed_assigns({feed_id, feed_id_or_ids}, socket)
+       when feed_id == :my or is_list(feed_id_or_ids) do
+    # My Feed
+    with %{edges: feed, page_info: page_info} <-
+           feed_id_or_ids
+           |> debug("feed_id_or_ids")
+           |> Bonfire.Social.FeedActivities.my_feed(socket, ...) do
+      [
+        loading: false,
+        feed: feed |> preloads(socket),
+        page_info: page_info
+      ]
+    end
   end
 
-  defp feed_assigns({_feed_id, feed_ids}, socket) do
-    feed =
-      feed_ids
-      |> debug("my feed_ids")
-      |> Bonfire.Social.FeedActivities.my_feed(socket, ...)
-
-    # |> debug("queried")
-
-    [
-      loading: false,
-      feed: e(feed, :edges, []) |> preloads(socket),
-      page_info: e(feed, :page_info, [])
-    ]
+  defp feed_assigns({feed_id, %{} = filters}, socket) when filters != %{} do
+    with %{edges: feed, page_info: page_info} <-
+           {feed_id, filters}
+           |> debug("filters")
+           |> Bonfire.Social.FeedActivities.feed(socket) do
+      [
+        loading: false,
+        feed: feed |> preloads(socket),
+        page_info: page_info
+      ]
+    end
   end
 
   defp feed_assigns(feed_id, socket) when is_binary(feed_id) do
-    feed =
-      feed_id
-      |> debug("feed_id")
-      |> Bonfire.Social.FeedActivities.feed(..., socket)
-
-    # |> debug("queried")
-
-    [
-      loading: false,
-      feed: e(feed, :edges, []) |> preloads(socket),
-      page_info: e(feed, :page_info, [])
-    ]
+    with %{edges: feed, page_info: page_info} <-
+           feed_id
+           |> debug("feed_id")
+           |> Bonfire.Social.FeedActivities.feed(..., socket) do
+      [
+        loading: false,
+        feed: feed |> preloads(socket),
+        page_info: page_info
+      ]
+    end
   end
 
   defp feed_assigns(:likes = feed_id, socket) when is_atom(feed_id) do
-    feed = Bonfire.Social.Likes.list_my(socket)
+    with %{edges: feed, page_info: page_info} <-
+           Bonfire.Social.Likes.list_my(socket) do
+      [
+        loading: false,
+        feed: feed |> preloads(socket),
+        page_info: page_info
+      ]
+    end
+  end
 
-    [
-      loading: false,
-      feed_id: feed_id,
-      feed: e(feed, :edges, []) |> preloads(socket),
-      page_info: e(feed, :page_info, [])
-    ]
+  defp feed_assigns(%Ecto.Query{} = custom_query, socket) do
+    with %{edges: feed, page_info: page_info} <-
+           custom_query
+           |> debug("custom_query")
+           |> Bonfire.Social.FeedActivities.feed(socket) do
+      [
+        loading: false,
+        feed: feed |> preloads(socket),
+        page_info: page_info
+      ]
+    end
   end
 
   defp feed_assigns(feed_id, socket) when is_atom(feed_id) do
     feed_id = Bonfire.Social.Feeds.named_feed_id(feed_id, socket)
-    feed = Bonfire.Social.FeedActivities.feed(feed_id, socket)
 
-    [
-      loading: false,
-      feed_id: feed_id,
-      feed: e(feed, :edges, []) |> preloads(socket),
-      page_info: e(feed, :page_info, [])
-    ]
+    with %{edges: feed, page_info: page_info} <-
+           Bonfire.Social.FeedActivities.feed(feed_id, socket) do
+      [
+        loading: false,
+        feed_id: feed_id,
+        feed: feed |> preloads(socket),
+        page_info: page_info
+      ]
+    end
+  end
+
+  defp feed_assigns({feed_id, other}, socket) do
+    warn(feed_id, "unrecognised feed_id")
+    warn(other, "unrecognised param")
+    feed_assigns(feed_id || other, socket)
+  end
+
+  defp feed_assigns(feed_id, socket) do
+    error(feed_id, "Unrecognised feed")
   end
 
   def preloads(feed, socket_or_opts \\ [])
@@ -708,7 +750,7 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
       {:noreply,
        assign(socket,
          loading: true,
-         feed: nil,
+         feed: :loading,
          selected_tab: tab
        )}
     else

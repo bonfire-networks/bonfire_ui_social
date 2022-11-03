@@ -15,21 +15,17 @@ defmodule Bonfire.UI.Social.FeedsLive do
   )
 
   # declare_nav_link(l("My feed"), page: "feed", icon: "heroicons-solid:newspaper")
-  declare_nav_link(l("Feeds"), page: "feed", icon: "heroicons-solid:newspaper")
-
-  # TODO
-  declare_nav_link(l("Posts"), href: "/feed/posts", icon: "game-icons:quill-ink")
-
-  declare_nav_link(l("Discussions"),
-    href: "/feed/discussions",
-    icon: "octicon:comment-discussion-16"
-  )
+  declare_nav_link([
+    {l("Feeds"), page: "feed", icon: "heroicons-solid:newspaper"},
+    {l("Posts"), href: "/feed/filter/posts", icon: "game-icons:quill-ink"},
+    {l("Discussions"), href: "/feed/filter/discussions", icon: "octicon:comment-discussion-16"}
+  ])
 
   def mount(params, session, socket) do
     live_plug(params, session, socket, [
       LivePlugs.LoadCurrentAccount,
       LivePlugs.LoadCurrentUser,
-      LivePlugs.UserRequired,
+      # LivePlugs.UserRequired,
       # LivePlugs.LoadCurrentAccountUsers,
       Bonfire.UI.Common.LivePlugs.StaticChanged,
       Bonfire.UI.Common.LivePlugs.Csrf,
@@ -48,6 +44,7 @@ defmodule Bonfire.UI.Social.FeedsLive do
        page_header_drawer: true,
        feed_id: nil,
        feed_ids: nil,
+       feed_component_id: "feeds",
        feedback_title: l("Your feed is empty"),
        feedback_message:
          l("You can start by following some people, or writing a new post yourself."),
@@ -66,26 +63,22 @@ defmodule Bonfire.UI.Social.FeedsLive do
      )}
   end
 
-  def do_handle_params(%{"tab" => "federation" = tab} = params, _url, socket) do
-    {:noreply, assign(socket, LiveHandler.feed_assigns_maybe_async(:fediverse, socket))}
-  end
+  # defp from_socket do
+  #   to_options(socket) ++ [feed_filters: %{object_type: params["type"]}]
+  # end
 
-  def do_handle_params(%{"tab" => "fediverse" = tab} = params, _url, socket) do
-    {:noreply, assign(socket, LiveHandler.feed_assigns_maybe_async(:fediverse, socket))}
-  end
-
-  def do_handle_params(%{"tab" => "remote" = tab} = params, _url, socket) do
-    {:noreply, assign(socket, LiveHandler.feed_assigns_maybe_async(:fediverse, socket))}
+  def do_handle_params(%{"tab" => "fediverse" = tab} = params, _url, socket)
+      when tab in ["federation", "fediverse", "remote"] do
+    {:noreply, assign(socket, LiveHandler.feed_assigns_maybe_async({:fediverse, params}, socket))}
   end
 
   def do_handle_params(%{"tab" => "local" = tab} = params, _url, socket) do
-    {:noreply, assign(socket, LiveHandler.feed_assigns_maybe_async(:local, socket))}
+    {:noreply, assign(socket, LiveHandler.feed_assigns_maybe_async({:local, params}, socket))}
   end
 
-  def do_handle_params(_params, _url, socket) do
+  def do_handle_params(params, _url, socket) do
     # debug("param")
-
-    {:noreply, assign(socket, LiveHandler.feed_assigns_maybe_async(:default, socket))}
+    {:noreply, assign(socket, LiveHandler.feed_assigns_maybe_async({:default, params}, socket))}
   end
 
   # defdelegate handle_params(params, attrs, socket), to: Bonfire.UI.Common.LiveHandlers

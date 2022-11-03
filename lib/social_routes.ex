@@ -7,11 +7,14 @@ defmodule Bonfire.UI.Social.Routes do
       scope "/", Bonfire.UI.Social do
         pipe_through(:browser)
 
-        live("/local", Feeds.LocalLive, as: :local)
-        # todo
-        live("/local/:type", Feeds.LocalLive, as: :local)
-        live("/federation", Feeds.FederationLive, as: :federation)
-        live("/federation/:type", Feeds.FederationLive, as: :federation)
+        # live("/local", Feeds.LocalLive, as: :local)
+        # live("/federation", Feeds.FederationLive, as: :federation)
+        # live("/federation/:type", Feeds.FederationLive, as: :federation)
+
+        live("/feed", FeedsLive, as: :feed)
+        live("/feed/:tab", FeedsLive, as: :feed)
+        # TODO:
+        live("/feed/:tab/:object_type", FeedsLive, as: :feed)
 
         live("/write", WriteLive, as: :write)
 
@@ -26,7 +29,7 @@ defmodule Bonfire.UI.Social.Routes do
         pipe_through(:browser)
         pipe_through(:user_required)
 
-        live("/feed/likes/", Feeds.LikesLive, as: Bonfire.Data.Social.Like)
+        # live("/feed/likes/", Feeds.LikesLive, as: Bonfire.Data.Social.Like)
         live("/messages/:id", MessagesLive, as: Bonfire.Data.Social.Message)
         live("/messages/:id/reply/:reply_to_id", MessagesLive, as: Bonfire.Data.Social.Message)
         live("/messages/@:username", MessagesLive, as: Bonfire.Data.Social.Message)
@@ -37,11 +40,6 @@ defmodule Bonfire.UI.Social.Routes do
       scope "/", Bonfire.UI.Social do
         pipe_through(:browser)
         pipe_through(:account_required)
-
-        live("/feed", FeedsLive, as: :feed)
-        live("/feed/:tab", FeedsLive, as: :feed)
-        # todo
-        live("/feed/:tab/:type", FeedsLive, as: :feed)
 
         live("/notifications", Feeds.NotificationsLive, as: :notifications)
         # live "/flags", FlagsLive, as: :flags

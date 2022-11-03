@@ -6,18 +6,21 @@ defmodule Bonfire.UI.Social.FeedLive do
 
   import Untangle
 
-  prop feed_id, :string, default: nil
+  prop feed_id, :any, default: nil
   prop feed_ids, :any, default: nil
+  prop feed_filters, :any, default: []
   prop feed, :any, default: nil
-  prop page_info, :any
+  prop page_info, :any, default: nil
+  prop loading, :boolean, default: false
+  prop preload, :atom, default: :feed
+
   prop feedback_title, :string, default: nil
   prop feedback_message, :string, default: nil
   prop showing_within, :any, default: :feed
   prop feed_update_mode, :string, default: "append"
   prop hide_load_more, :boolean, default: false
   prop verb_default, :string, default: nil
-  prop loading, :boolean, default: false
-  prop preload, :atom, default: :feed
+
   prop page, :string, default: nil
   prop page_title, :string, required: true
   prop feed_title, :string, default: nil
@@ -112,31 +115,30 @@ defmodule Bonfire.UI.Social.FeedLive do
     )
   end
 
-  def update(assigns, socket) do
-    error("FeedLive.update - a feed was NOT provided, try fetching one in a parent component")
+  def update(%{feed: nil} = assigns, socket) do
+    debug("FeedLive.update - a feed was NOT provided, fetching one now")
 
-    # current_user = current_user(socket)
-
-    socket =
-      socket
-      |> assign(assigns)
+    socket = assign(socket, assigns)
 
     socket =
       socket
       |> assign(feed_component_id: socket.assigns.id)
       |> Bonfire.Social.Feeds.LiveHandler.feed_assigns_maybe_async(:default, ...)
-      |> assign(socket, ...)
+      |> assign_generic(socket, ...)
 
     maybe_subscribe(socket)
 
-    # debug(assigns: assigns)
-
     {:ok, socket}
-    # |> assign(
-    #   feed: e(assigns, :feed, [])
-    #     # |> debug("FeedLive: feed")
-    #     |> LiveHandler.preloads(socket)
-    #   )
+  end
+
+  def update(%{feed: :loading} = assigns, socket) do
+    debug("FeedLive.update - a feed is being loaded async")
+
+    ok_socket(assign(socket, assigns))
+  end
+
+  def update(assigns, socket) do
+    error("No feed loaded")
   end
 
   defp ok_socket(socket) do
@@ -168,7 +170,7 @@ defmodule Bonfire.UI.Social.FeedLive do
     {:noreply,
      socket
      |> assign(selected_tab: tab)
-     |> assign(LiveHandler.feed_assigns_maybe_async(tab, socket))}
+     |> assign_generic(LiveHandler.feed_assigns_maybe_async(tab, socket))}
   end
 
   def do_handle_event(action, attrs, socket) do
