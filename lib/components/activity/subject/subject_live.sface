@@ -94,7 +94,7 @@
           />
         </LiveRedirect>
       </div>
-      <div class="flex items-center justify-between leading-[16px] min-w-0 space-x-1 w-full">
+      <div class="flex items-start justify-between leading-[16px] min-w-0 space-x-1 w-full">
         <div class="flex flex-col flex-1 gap-1 feed-clickable">
           {#if @thread_mode == :flat && @current_user && ulid(@current_user) == maybe_get(@character, :id)}
             <LiveRedirect

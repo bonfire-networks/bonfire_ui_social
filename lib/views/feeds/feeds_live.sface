@@ -18,6 +18,7 @@
     feedback_title={@feedback_title}
     feedback_message={@feedback_message}
     feed={@feed}
+    selected_tab={@selected_tab}
     feed_title={@feed_title}
     tabs_class="flex justify-start gap-3 p-4 mb-3 !rounded-t-none rounded-md shadow tabs-boxed tabs bg-base-100"
     page_info={@page_info}
