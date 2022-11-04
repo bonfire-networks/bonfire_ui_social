@@ -180,7 +180,8 @@ defmodule Bonfire.UI.Social.ActivityLive do
         "border-l-2 border-primary !bg-primary/5":
           e(@activity, :seen, nil) == nil and @showing_within == :notifications and
             @activity_inception == nil,
-        "active-comment": String.contains?(@url || "", @permalink)
+        "active-comment": String.contains?(@url || "", @permalink),
+        "!bg-base-300": @viewing_main_object
       }
     >
       <form
@@ -654,6 +655,10 @@ defmodule Bonfire.UI.Social.ActivityLive do
   def component_actions(_, _, %{activity_inception: activity_inception})
       when not is_nil(activity_inception),
       do: []
+  
+  def component_actions(_, _, %{showing_within: showing_within})
+    when showing_within == :smart_input,
+    do: []
 
   # WIP: THIS NEEDS TO BE REFACTORED ACCORDING TO actions_for_object_type
   def component_actions("Flag", _, _), do: [Bonfire.UI.Social.FlaggedActionsLive]

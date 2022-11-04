@@ -4,7 +4,8 @@
     "mb-1",
     "px-2 bg-base-content/10 pt-1 rounded-t-md": @thread_mode == :flat,
     "!bg-info/40": @thread_mode == :flat && ulid(@current_user) == maybe_get(@character, :id),
-    "!bg-transparent pt-0": @activity_inception != nil and @thread_mode == :flat
+    "!bg-transparent pt-0": @activity_inception != nil and @thread_mode == :flat,
+    "!my-3 !mb-3": @viewing_main_object == true,
   }
 >
   <span
@@ -108,12 +109,12 @@
           {#else}
             <!-- <div class="flex items-baseline"> -->
 
-            <div class="text-sm lowercase line-clamp-1 text-base-content/80">
+            <div class="text-sm lowercase line-clamp-1 text-base-content/70">
               <!-- {@verb} {@object_type} -->
               <LiveRedirect
                 opts={"data-id": "subject_name"}
                 aria-label={e(@character, :username, "") <> " profile"}
-                class="leading-[16px] text-base font-semibold link link-hover"
+                class="font-medium link link-hover"
                 to={path(@character)}
               >
                 {e(@profile, :name, "Anonymous")}

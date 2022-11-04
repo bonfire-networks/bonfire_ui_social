@@ -12,7 +12,7 @@
     path_prefix={@tab_path_prefix}
   />
 
-  <div class="flex flex-col max-w-screen-md p-3 pt-0 mx-auto lg:p-0">
+  <div class="flex flex-col overflow-y-hidden max-w-screen-md p-3 mx-auto overflow-x-hidden md:p-6 !pt-0 desktop-lg:p-0">
     {#if is_list(@feed) and @feed != []}
       <div
         id={"feed:#{@feed_id || @id}"}

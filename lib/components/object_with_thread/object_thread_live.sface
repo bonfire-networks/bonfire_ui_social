@@ -1,8 +1,8 @@
-<div class="flex flex-col flex-1">
+<div class="flex flex-col flex-1 overflow-x-hidden">
   <div class="flex-1">
     <!-- INITIAL POST -->
 
-    <div class="relative p-4 pb-0 mt-0 mb-6 shadow md:mt-6 bg-base-100 md:rounded-xl">
+    <div class="relative mb-6">
       <Bonfire.UI.Social.ObjectHeaderAsideLive
         page_title={@page_title}
         participants={@participants || []}
@@ -10,47 +10,49 @@
         activity={@activity}
         showing_within={@showing_within || :thread}
       />
-
-      <Bonfire.UI.Social.ActivityLive
-        :if={@activity}
-        id={"ta:" <> (ulid(@activity) || ulid(@object) || "no-ID")}
-        showing_within={@showing_within || :thread}
-        thread_mode={@thread_mode}
-        viewing_main_object={if @thread_mode != :flat, do: true, else: false}
-        activity={@activity}
-        object={@object}
-        feed_id={@feed_id}
-        participants={@participants}
-        object_boundary={if is_messaging?(%{
-             page: @page,
-             showing_within: @showing_within || :thread,
-             create_object_type: @create_object_type
-           }),
-           do: :skip}
-      />
-
-      <div class="p-3 border-t md:p-0 border-base-content/20">
-        <div
-          :if={e(@thread_mode, :thread) != :flat}
-          class="pt-3 text-sm font-medium tracking-wide md:px-0 text-base-content/60"
-        >{l("Discussion")}</div>
-        <Bonfire.UI.Social.ThreadLive
-          id={@thread_id}
-          thread_id={@thread_id}
-          feed_id={@feed_id}
+      <div class="max-w-screen-md mx-auto">
+        <Bonfire.UI.Social.ActivityLive
+          :if={@activity}
+          id={"ta:" <> (ulid(@activity) || ulid(@object) || "no-ID")}
+          showing_within={@showing_within || :thread}
           thread_mode={@thread_mode}
-          reverse_order={@reverse_order}
-          replies={@replies}
-          threaded_replies={@threaded_replies}
-          page_info={e(@page_info, [])}
+          viewing_main_object={if @thread_mode != :flat, do: true, else: false}
           activity={@activity}
           object={@object}
-          url={@url}
-          showing_within={:thread}
+          feed_id={@feed_id}
+          participants={@participants}
+          object_boundary={if is_messaging?(%{
+              page: @page,
+              showing_within: @showing_within || :thread,
+              create_object_type: @create_object_type
+            }),
+            do: :skip}
         />
       </div>
-    </div>
+      <div class="p-3 border-t md:p-0 border-base-content/10">
+        <div class="max-w-screen-md mx-auto">
+          <div
+            :if={e(@thread_mode, :thread) != :flat}
+            class="py-3 text-sm font-medium tracking-wide md:px-0 text-base-content/60"
+          >{l("Discussion")}</div>
+          <Bonfire.UI.Social.ThreadLive
+            id={@thread_id}
+            thread_id={@thread_id}
+            feed_id={@feed_id}
+            thread_mode={@thread_mode}
+            reverse_order={@reverse_order}
+            replies={@replies}
+            threaded_replies={@threaded_replies}
+            page_info={e(@page_info, [])}
+            activity={@activity}
+            object={@object}
+            url={@url}
+            showing_within={:thread}
+          />
+        </div>
+      </div>
   </div>
+</div>
 
   <div
     class="sticky bottom-0 z-50"
