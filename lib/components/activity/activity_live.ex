@@ -655,10 +655,10 @@ defmodule Bonfire.UI.Social.ActivityLive do
   def component_actions(_, _, %{activity_inception: activity_inception})
       when not is_nil(activity_inception),
       do: []
-  
+
   def component_actions(_, _, %{showing_within: showing_within})
-    when showing_within == :smart_input,
-    do: []
+      when showing_within == :smart_input,
+      do: []
 
   # WIP: THIS NEEDS TO BE REFACTORED ACCORDING TO actions_for_object_type
   def component_actions("Flag", _, _), do: [Bonfire.UI.Social.FlaggedActionsLive]
