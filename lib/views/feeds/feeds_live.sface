@@ -1,20 +1,18 @@
-<Bonfire.UI.Social.FeedLive
-  id={@feed_component_id}
-  feed_id={@feed_id}
-  feed_ids={@feed_ids}
-  page_title={@page_title}
-  page={@page}
-  feedback_title={@feedback_title}
-  feedback_message={@feedback_message}
-  feed={@feed}
-  selected_tab={@selected_tab}
-  feed_title={@feed_title}
-  tabs_class="px-2 tabs_nav mt-5 w-full border-b mb-6 border-b border-base-content/10 tabs"
-  page_info={@page_info}
-  loading={@loading}
-  tab_path_prefix="/feed/"
->
-  <:hero>
-    <Bonfire.UI.Social.HeroLive page_title={@page_title} />
-  </:hero>
-</Bonfire.UI.Social.FeedLive>
+<div class="mt-6">
+  <Bonfire.UI.Social.FeedLive
+    id={@feed_component_id}
+    feed_id={@feed_id}
+    feed_ids={@feed_ids}
+    page_title={@page_title}
+    page={@page}
+    feedback_title={@feedback_title}
+    feedback_message={@feedback_message}
+    feed={@feed}
+    selected_tab={@selected_tab}
+    feed_title={@feed_title}
+    tabs_class="tabs_nav tabs bg-base-100 rounded-md gap-3 shadow mb-3"
+    page_info={@page_info}
+    loading={@loading}
+    tab_path_prefix="/feed/"
+  />
+</div>

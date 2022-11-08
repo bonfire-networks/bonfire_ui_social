@@ -1,4 +1,4 @@
-<main class="h-full bg-base-100">
+<main class="h-full ">
   {#if @tab_id in ["compose", "select_recipients", "thread"]}
     <div class="flex flex-col h-full">
       {#if @tab_id == "thread"}
@@ -24,7 +24,7 @@
           replied_activity_class="relative mb-2 rounded-md bg-base-100 hover:bg-base-100"
         />
       {#elseif @tab_id in ["compose", "select_recipients"]}
-        <div class="flex-1 p-3 bg-base-100 relative z-[90]">
+        <div class="flex-1 p-3  relative z-[90]">
           <div class="shadow-lg alert alert-info">
             <div>
               <svg
@@ -43,7 +43,7 @@
                 )}</span>
             </div>
           </div>
-
+        
           <Bonfire.UI.Common.SmartInputLive
             id={:smart_input_message}
             :if={ulid(@current_user)}
@@ -65,18 +65,18 @@
       {/if}
     </div>
   {#else}
-    <div class="flex-1 hidden py-12 tablet-lg:block rounded-b-md md:mx-0 text-base-content bg-base-100">
+    <div class="flex-1 hidden p-6 tablet-lg:block rounded-b-md md:mx-0 text-base-content ">
       <Bonfire.UI.Common.EmptyFeed
         feedback_title={@feedback_title}
         feedback_message={@feedback_message}
       />
     </div>
     <div class="flex-1 p-3 tablet-lg:hidden rounded-b-md md:mx-0 text-base-content bg-base-100">
-      <Bonfire.UI.Social.MessageThreadsLive
+      <!-- <Bonfire.UI.Social.MessageThreadsLive
         showing_within="messages"
         context={ulid(@current_user)}
         threads={@threads}
-      />
+      /> -->
     </div>
   {/if}
   <!-- 

@@ -65,8 +65,11 @@ defmodule Bonfire.Social.Messages.LiveHandler do
              threads: list_threads(current_user, user, opts),
              thread_id: opts[:thread_id]
            ] ++ opts}
+        ],
+        secondary: [
+          {Bonfire.Tag.Web.WidgetTagsLive, []}
         ]
-      ]
+      ],
     ]
   end
 

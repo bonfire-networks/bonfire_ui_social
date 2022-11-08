@@ -40,6 +40,7 @@ defmodule Bonfire.UI.Social.MessagesLive do
        thread_id: nil,
        users: [],
        hide_smart_input: true,
+       smart_input_opts: [],
        feedback_title: l("No messages"),
        feedback_message: l("Select a thread or start a new one..."),
        threads: LiveHandler.list_threads(current_user_required!(socket), socket),
@@ -50,21 +51,32 @@ defmodule Bonfire.UI.Social.MessagesLive do
             feed_id: feed_id
           ]}
        ],
-       show_less_menu_items: true,
        sidebar_widgets: [
-         users: [
-           main: [
-             {Bonfire.UI.Social.MessageThreadsLive,
-              [
-                context: nil,
-                thread_id: nil,
-                tab_id: nil,
-                showing_within: :messages,
-                threads: []
-              ]}
-           ]
-         ]
-       ],
+        users: [
+          secondary: [
+            {Bonfire.Tag.Web.WidgetTagsLive, []}
+          ]
+        ],
+        guests: [
+          secondary: [
+            {Bonfire.Tag.Web.WidgetTagsLive, []}
+          ]
+        ]
+      ],
+      #  sidebar_widgets: [
+      #    users: [
+      #      main: [
+      #        {Bonfire.UI.Social.MessageThreadsLive,
+      #         [
+      #           context: nil,
+      #           thread_id: nil,
+      #           tab_id: nil,
+      #           showing_within: :messages,
+      #           threads: []
+      #         ]}
+      #      ]
+      #    ]
+      #  ],
        nav_items: []
      )}
   end

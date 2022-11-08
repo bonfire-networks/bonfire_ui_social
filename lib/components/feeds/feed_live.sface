@@ -1,18 +1,16 @@
 <div id={@feed_id || @id} role="feed" aria-live="assertive" aria-atomic="true" class="feed">
-  <#slot {@hero} />
-  <Bonfire.UI.Common.TabsLive
-    :if={@hide_tabs != true}
-    selected_tab={@selected_tab || @feed_id}
-    class={@tabs_class}
-    tabs={if not is_nil(@current_user),
-      do: [nil: l("My feed"), local: l("Local"), fediverse: l("Remote"), likes: l("Favourites")],
-      else: [local: l("Local"), fediverse: l("Remote")]}
-    event_handler={@event_handler}
-    event_target={@myself}
-    path_prefix={@tab_path_prefix}
-  />
-
   <div class="flex flex-col overflow-y-hidden max-w-screen-md p-3 mx-auto overflow-x-hidden md:p-6 !pt-0 desktop-lg:p-0">
+    <Bonfire.UI.Common.TabsLive
+      :if={@hide_tabs != true}
+      selected_tab={@selected_tab || @feed_id}
+      class={@tabs_class}
+      tabs={if not is_nil(@current_user),
+        do: [nil: l("My feed"), local: l("Local"), fediverse: l("Remote"), likes: l("Favourites")],
+        else: [local: l("Local"), fediverse: l("Remote")]}
+      event_handler={@event_handler}
+      event_target={@myself}
+      path_prefix={@tab_path_prefix}
+    />
     {#if is_list(@feed) and @feed != []}
       <div
         id={"feed:#{@feed_id || @id}"}

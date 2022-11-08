@@ -35,7 +35,7 @@ defmodule Bonfire.UI.Social.FeedLive do
   prop tabs_class, :css_class,
     default: "flex justify-start gap-3 p-4 mb-3 rounded-md shadow tabs-boxed tabs bg-base-100"
 
-  slot hero
+  # slot hero
 
   def mount(socket) do
     {:ok,

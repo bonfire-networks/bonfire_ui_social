@@ -1,11 +1,13 @@
-<div>
-  <LivePatch
-    to="/messages/compose"
-    class="items-center hidden w-full mb-3 normal-case tablet:flex btn-wide btn btn-primary"
-  >
-    <Icon outline="ChatAlt" class="inline-block w-5 h-5 mr-2" />
-    <span class="text-sm">{l("New message")}</span>
-  </LivePatch>
+<div class="flex-1">
+  <div class="flex items-center justify-between p-4">
+    <div class="text-2xl font-semibold">{l "Chats"}</div>
+    <LivePatch
+      to="/messages/compose"
+      class="btn btn-circle btn-sm"
+    >
+      <Icon iconify="fluent:mail-edit-20-filled" class="inline-block w-5 h-5" />
+    </LivePatch>
+  </div>
 
   <LivePatch
     :if={@showing_within != :compose}
@@ -15,7 +17,6 @@
     <Icon outline="ChatAlt" class="inline-block w-6 h-6" />
   </LivePatch>
 
-  <div class="flex flex-1 hidden w-full p-3 mx-auto text-sm border-b tablet:block border-base-content border-opacity-10 bg-base-100 text-base-content rounded-t-md">{l("Message threads")}</div>
   {#if length(e(@threads, :edges, [])) > 0}
     <Bonfire.UI.Common.LoadPreviousLive
       live_handler={Bonfire.Social.Messages}
@@ -23,8 +24,8 @@
       context={@context}
     />
 
-    <ul class="divide-y rounded-b-lg divide-base-content divide-opacity-10 rounded-b-md">
-      <li class="bg-base-100 hover:bg-base-200" :for={%{activity: activity} <- e(@threads, :edges, [])}>
+    <ul class="">
+      <li class="hover:bg-base-content/5" :for={%{activity: activity} <- e(@threads, :edges, [])}>
         <LivePatch
           to={permalink(e(activity, :replied, :thread_id, nil), e(activity, :object_id, nil))}
           class="block"
@@ -32,11 +33,11 @@
           <div class="relative w-full indicator">
             <span
               :if={!e(activity, :seen, nil)}
-              class="indicator-item badge badge-sm badge-secondary right-4 bottom-0.5 top-[auto]"
+              class="indicator-item badge badge-xs badge-secondary right-6 bottom-1 top-[auto]"
             >
             </span>
             <div class={
-              "flex items-center p-3 py-2 w-full",
+              "flex items-center p-4 py-2 w-full",
               "bg-base-content bg-opacity-5 border-l-2 border-primary":
                 @thread_id == (e(activity, :replied, :thread_id, nil) || e(activity, :object_id, nil))
             }>
