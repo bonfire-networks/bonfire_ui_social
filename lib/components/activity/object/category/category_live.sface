@@ -1,6 +1,5 @@
 <div class="relative flex flex-col gap-1 p-2 mt-3 rounded-md shadow md:flex-row md:gap-0 md:items-center bg-base-content/5">
   <div class="flex flex-1 font-medium text-base-content">
-    <div class="w-1 h-6 mr-2 rounded bg-info" />
     <LiveRedirect
       to={"/+#{e(@object, :character, :username, nil) || ulid(@object)}"}
       class="text-sm font-medium link link-hover"

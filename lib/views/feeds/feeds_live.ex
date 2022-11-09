@@ -18,9 +18,9 @@ defmodule Bonfire.UI.Social.FeedsLive do
   # declare_nav_link(l("My feed"), page: "feed", icon: "heroicons-solid:newspaper")
   declare_nav_link([
     {l("Feeds"), page: "feed", icon: "heroicons-solid:newspaper"},
-    {l("Posts"), page: "posts", href: "/feed/filter/posts", icon: "game-icons:quill-ink"},
+    {l("Posts"), page: "posts", href: "/feed/filter/posts", icon: "heroicons:pencil-square-20-solid"},
     {l("Discussions"),
-     page: "discussions", href: "/feed/filter/discussions", icon: "octicon:comment-discussion-16"}
+     page: "discussions", href: "/feed/filter/discussions", icon: "heroicons:chat-bubble-left-right-20-solid"}
   ])
 
   def mount(params, session, socket) do
