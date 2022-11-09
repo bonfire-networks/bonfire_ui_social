@@ -130,7 +130,7 @@ defmodule Bonfire.UI.Social.MessagesLive do
          thread_id: nil,
          smart_input_prompt: l("Compose a thoughtful message..."),
          # smart_input_opts: [text: smart_input_text],
-         to_circles: to_circles,
+         to_circles: to_circles || [],
          sidebar_widgets:
            LiveHandler.threads_widget(current_user, ulid(e(socket.assigns, :user, nil)),
              thread_id: nil,

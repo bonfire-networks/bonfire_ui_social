@@ -173,7 +173,7 @@ defmodule Bonfire.Social.Posts.LiveHandler do
 
     {:noreply,
      socket
-     |> assign(to_circles: new_circles)}
+     |> assign(to_circles: new_circles || [])}
   end
 
   # no circle

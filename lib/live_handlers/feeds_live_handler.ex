@@ -71,7 +71,7 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
         reply_to_id: reply_to_id,
         context_id: thread_id,
         smart_input_opts: [text: mentions],
-        to_circles: to_circles,
+        to_circles: to_circles || [],
         to_boundaries: [
           Bonfire.Boundaries.preset_boundary_tuple_from_acl(
             e(socket.assigns, :object_boundary, nil)

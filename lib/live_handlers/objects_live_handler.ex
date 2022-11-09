@@ -103,7 +103,7 @@ defmodule Bonfire.Social.Objects.LiveHandler do
       reply_to_id: object,
       page_title: page_title,
       smart_input_opts: [text: mentions],
-      to_circles: to_circles
+      to_circles: to_circles || []
     )
   end
 
