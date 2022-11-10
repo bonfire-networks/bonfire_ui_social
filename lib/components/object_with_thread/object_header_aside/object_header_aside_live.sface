@@ -1,19 +1,14 @@
-<div class="flex top-[56px] bg-base-300 border-t border-b border-base-content/10 z-[900] p-3 items-start justify-between h-[56px]">
-  <div class="flex items-center gap-3">
-    <Bonfire.UI.Common.BackButtonLive showing_within={@showing_within} />
-    <span class="font-medium tracking-wide">{@page_title}</span>
-  </div>
   <div class="flex items-center gap-4">
-    <Bonfire.UI.Common.LikeActionLive
+    <!-- <Bonfire.UI.Common.LikeActionLive
       id={ComponentID.new(Bonfire.UI.Common.LikeActionLive, @activity)}
       object={@activity}
-    />
+    /> -->
     <Bonfire.UI.Social.Activity.InstanceIconLive object={@activity} />
-    <Bonfire.Boundaries.Web.BoundaryIconLive
+    <!-- <Bonfire.Boundaries.Web.BoundaryIconLive
       with_label
       id={ComponentID.new(Bonfire.Boundaries.Web.BoundaryIconLive, @activity)}
       object={@activity}
-    />
+    /> -->
 
     <div class="relative z-40 dropdown dropdown-end">
       <label tabindex="0" class="flex normal-case btn place-content-center btn-circle btn-ghost btn-sm">
@@ -72,4 +67,4 @@
       </ul>
     </div>
   </div>
-</div>
+

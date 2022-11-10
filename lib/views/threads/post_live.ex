@@ -27,7 +27,14 @@ defmodule Bonfire.UI.Social.PostLive do
        smart_input_prompt: l("Reply to this thread"),
        activity: nil,
        showing_within: :thread,
-       #  without_mobile_logged_header: true,
+       page_header_aside: [
+        {Bonfire.UI.Social.ObjectHeaderAsideLive,
+        [
+          participants: [],
+          thread_id: nil,
+          activity: nil ]
+        }
+       ],
        object: nil,
        sidebar_widgets: [
          users: [
