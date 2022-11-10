@@ -69,7 +69,7 @@ defmodule Bonfire.Social.Messages.LiveHandler do
         secondary: [
           {Bonfire.Tag.Web.WidgetTagsLive, []}
         ]
-      ],
+      ]
     ]
   end
 

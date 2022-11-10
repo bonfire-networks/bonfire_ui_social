@@ -1,70 +1,69 @@
-  <div class="flex items-center gap-4">
-    <!-- <Bonfire.UI.Common.LikeActionLive
+<div class="flex items-center gap-4">
+  <!-- <Bonfire.UI.Common.LikeActionLive
       id={ComponentID.new(Bonfire.UI.Common.LikeActionLive, @activity)}
       object={@activity}
     /> -->
-    <Bonfire.UI.Social.Activity.InstanceIconLive object={@activity} />
-    <!-- <Bonfire.Boundaries.Web.BoundaryIconLive
+  <Bonfire.UI.Social.Activity.InstanceIconLive object={@activity} />
+  <!-- <Bonfire.Boundaries.Web.BoundaryIconLive
       with_label
       id={ComponentID.new(Bonfire.Boundaries.Web.BoundaryIconLive, @activity)}
       object={@activity}
     /> -->
 
-    <div class="relative z-40 dropdown dropdown-end">
-      <label tabindex="0" class="flex normal-case btn place-content-center btn-circle btn-ghost btn-sm">
-        <Icon solid="DotsVertical" class="w-5 h-5 text-base-content text-opacity-70" />
-      </label>
-      <ul tabindex="0" class="p-2 shadow dropdown-content menu bg-base-100 rounded-box w-52">
-        <li>
-          <Bonfire.UI.Common.OpenModalLive
-            :if={@thread_id}
-            id={Pointers.ULID.generate()}
-            title_text={l("Edit the thread title")}
-            form_opts={%{"phx-submit" => "Bonfire.Social.Objects:set_name"}}
-          >
-            <Field for={:thread}>
-              <TextInput name="name" class="w-full input input-bordered" value={e(@page_title, "")} />
-            </Field>
-            <:open_btn>
-              <div class="text-sm">
-                {l("Edit the thread title")}
-              </div>
-            </:open_btn>
-            <:action_btns>
-              <HiddenInput name="id" value={@thread_id} />
-              <button class="normal-case btn-sm btn btn-primary">
-                {l("Save")}
-              </button>
-            </:action_btns>
-          </Bonfire.UI.Common.OpenModalLive>
-        </li>
-
-        <li :if={module_enabled?(Bonfire.UI.Common.ProfileItemLive)}>
-          <Bonfire.UI.Common.OpenModalLive
-            :if={@thread_id}
-            id={Pointers.ULID.generate()}
-            title_text={to_string(length(e(@participants, []))) <> " " <> l("participants")}
-          >
-            <div class="flex flex-col divide-y divide-base-content/10">
-              {#for p <- e(@participants, [])}
-                <div class="py-2">
-                  <Dynamic.Component
-                    module={Bonfire.UI.Common.ProfileItemLive}
-                    character={e(p, :character, nil) || e(p, :activity, :subject, :character, nil)}
-                    profile={e(p, :profile, nil) || e(p, :activity, :subject, :profile, nil)}
-                    class="btn btn-square btn-ghost btn-sm"
-                  />
-                </div>
-              {/for}
+  <div class="relative z-40 dropdown dropdown-end">
+    <label tabindex="0" class="flex normal-case btn place-content-center btn-circle btn-ghost btn-sm">
+      <Icon solid="DotsVertical" class="w-5 h-5 text-base-content text-opacity-70" />
+    </label>
+    <ul tabindex="0" class="p-2 shadow dropdown-content menu bg-base-100 rounded-box w-52">
+      <li>
+        <Bonfire.UI.Common.OpenModalLive
+          :if={@thread_id}
+          id={Pointers.ULID.generate()}
+          title_text={l("Edit the thread title")}
+          form_opts={%{"phx-submit" => "Bonfire.Social.Objects:set_name"}}
+        >
+          <Field for={:thread}>
+            <TextInput name="name" class="w-full input input-bordered" value={e(@page_title, "")} />
+          </Field>
+          <:open_btn>
+            <div class="text-sm">
+              {l("Edit the thread title")}
             </div>
-            <:open_btn>
-              <div class="text-sm">
-                {l("View participants")}
-              </div>
-            </:open_btn>
-          </Bonfire.UI.Common.OpenModalLive>
-        </li>
-      </ul>
-    </div>
-  </div>
+          </:open_btn>
+          <:action_btns>
+            <HiddenInput name="id" value={@thread_id} />
+            <button class="normal-case btn-sm btn btn-primary">
+              {l("Save")}
+            </button>
+          </:action_btns>
+        </Bonfire.UI.Common.OpenModalLive>
+      </li>
 
+      <li :if={module_enabled?(Bonfire.UI.Common.ProfileItemLive)}>
+        <Bonfire.UI.Common.OpenModalLive
+          :if={@thread_id}
+          id={Pointers.ULID.generate()}
+          title_text={to_string(length(e(@participants, []))) <> " " <> l("participants")}
+        >
+          <div class="flex flex-col divide-y divide-base-content/10">
+            {#for p <- e(@participants, [])}
+              <div class="py-2">
+                <Dynamic.Component
+                  module={Bonfire.UI.Common.ProfileItemLive}
+                  character={e(p, :character, nil) || e(p, :activity, :subject, :character, nil)}
+                  profile={e(p, :profile, nil) || e(p, :activity, :subject, :profile, nil)}
+                  class="btn btn-square btn-ghost btn-sm"
+                />
+              </div>
+            {/for}
+          </div>
+          <:open_btn>
+            <div class="text-sm">
+              {l("View participants")}
+            </div>
+          </:open_btn>
+        </Bonfire.UI.Common.OpenModalLive>
+      </li>
+    </ul>
+  </div>
+</div>

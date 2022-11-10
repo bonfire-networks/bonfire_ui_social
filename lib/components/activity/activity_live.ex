@@ -179,7 +179,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
         "border-l-2 border-primary !bg-primary/5":
           e(@activity, :seen, nil) == nil and @showing_within == :notifications and
             @activity_inception == nil,
-        "active-comment": String.contains?(@url || "", @permalink),
+        "active-comment": String.contains?(@url || "", @permalink)
       }
     >
       <form

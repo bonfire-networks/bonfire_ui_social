@@ -52,31 +52,31 @@ defmodule Bonfire.UI.Social.MessagesLive do
           ]}
        ],
        sidebar_widgets: [
-        users: [
-          secondary: [
-            {Bonfire.Tag.Web.WidgetTagsLive, []}
-          ]
-        ],
-        guests: [
-          secondary: [
-            {Bonfire.Tag.Web.WidgetTagsLive, []}
-          ]
-        ]
-      ],
-      #  sidebar_widgets: [
-      #    users: [
-      #      main: [
-      #        {Bonfire.UI.Social.MessageThreadsLive,
-      #         [
-      #           context: nil,
-      #           thread_id: nil,
-      #           tab_id: nil,
-      #           showing_within: :messages,
-      #           threads: []
-      #         ]}
-      #      ]
-      #    ]
-      #  ],
+         users: [
+           secondary: [
+             {Bonfire.Tag.Web.WidgetTagsLive, []}
+           ]
+         ],
+         guests: [
+           secondary: [
+             {Bonfire.Tag.Web.WidgetTagsLive, []}
+           ]
+         ]
+       ],
+       #  sidebar_widgets: [
+       #    users: [
+       #      main: [
+       #        {Bonfire.UI.Social.MessageThreadsLive,
+       #         [
+       #           context: nil,
+       #           thread_id: nil,
+       #           tab_id: nil,
+       #           showing_within: :messages,
+       #           threads: []
+       #         ]}
+       #      ]
+       #    ]
+       #  ],
        nav_items: []
      )}
   end

@@ -1,10 +1,7 @@
 <div class="flex-1">
   <div class="flex items-center justify-between p-4">
-    <div class="text-2xl font-semibold">{l "Chats"}</div>
-    <LivePatch
-      to="/messages/compose"
-      class="btn btn-circle btn-sm"
-    >
+    <div class="text-2xl font-semibold">{l("Chats")}</div>
+    <LivePatch to="/messages/compose" class="btn btn-circle btn-sm">
       <Icon iconify="fluent:mail-edit-20-filled" class="inline-block w-5 h-5" />
     </LivePatch>
   </div>

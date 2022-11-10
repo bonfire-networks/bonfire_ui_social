@@ -1,4 +1,4 @@
-<main class="h-full ">
+<main class="h-full">
   {#if @tab_id in ["compose", "select_recipients", "thread"]}
     <div class="flex flex-col h-full">
       {#if @tab_id == "thread"}
@@ -43,7 +43,7 @@
                 )}</span>
             </div>
           </div>
-        
+
           <Bonfire.UI.Common.SmartInputLive
             id={:smart_input_message}
             :if={ulid(@current_user)}
@@ -65,7 +65,7 @@
       {/if}
     </div>
   {#else}
-    <div class="flex-1 hidden p-6 tablet-lg:block rounded-b-md md:mx-0 text-base-content ">
+    <div class="flex-1 hidden p-6 tablet-lg:block rounded-b-md md:mx-0 text-base-content">
       <Bonfire.UI.Common.EmptyFeed
         feedback_title={@feedback_title}
         feedback_message={@feedback_message}

@@ -28,12 +28,12 @@ defmodule Bonfire.UI.Social.PostLive do
        activity: nil,
        showing_within: :thread,
        page_header_aside: [
-        {Bonfire.UI.Social.ObjectHeaderAsideLive,
-        [
-          participants: [],
-          thread_id: nil,
-          activity: nil ]
-        }
+         {Bonfire.UI.Social.ObjectHeaderAsideLive,
+          [
+            participants: [],
+            thread_id: nil,
+            activity: nil
+          ]}
        ],
        object: nil,
        sidebar_widgets: [

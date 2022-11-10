@@ -24,11 +24,11 @@
             feed_id={@feed_id}
             participants={@participants}
             object_boundary={if is_messaging?(%{
-                page: @page,
-                showing_within: @showing_within || :thread,
-                create_object_type: @create_object_type
-              }),
-              do: :skip}
+                 page: @page,
+                 showing_within: @showing_within || :thread,
+                 create_object_type: @create_object_type
+               }),
+               do: :skip}
           />
         </div>
       </div>
