@@ -15,10 +15,10 @@
       max="100"
     >
     </progress>
-    <div class={"order-last": e(@showing_within, :feed) in [:feed, :notifications, :likes]}>
+    <div class={"gap-2", "order-last": e(@showing_within, :feed) in [:feed, :notifications, :likes]}>
       <div class={
-        "flex items-center space-x-2",
-        "mt-2": e(@showing_within, :feed) in [:feed, :notifications, :likes]
+        "flex items-center space-x-2 mx-2",
+        "mt-2 !mx-0": e(@showing_within, :feed) in [:feed, :notifications, :likes]
       }>
         <Bonfire.UI.Common.LikeActionLive
           :if={e(@showing_within, :feed) not in [:feed, :likes, :notifications]}
@@ -31,7 +31,7 @@
         </LiveRedirect>
       </div>
 
-      <div class="flex items-center mx-2 mt-2 mb-1 space-x-4">
+      <div class="flex items-center mt-2 mb-1 space-x-4">
         <div class="flex items-center gap-2 text-sm text-base-content/70 text-medium">
           <Icon solid="Calendar" class="w-4 h-4 text-base-content/70" />
           <span>{e(@object, :due, "No due date")}</span>

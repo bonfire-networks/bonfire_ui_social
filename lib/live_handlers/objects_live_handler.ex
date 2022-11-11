@@ -96,16 +96,16 @@ defmodule Bonfire.Social.Objects.LiveHandler do
       activity: activity,
       object: object,
       # url: url,
-      page_header_aside: [
-        {
-          Bonfire.UI.Social.ObjectHeaderAsideLive,
-          [
-            participants: participants,
-            thread_id: thread_id,
-            activity: activity
-          ]
-        }
-      ],
+      # page_header_aside: [
+      #   {
+      #     Bonfire.UI.Social.ObjectHeaderAsideLive,
+      #     [
+      #       participants: participants,
+      #       thread_id: thread_id,
+      #       activity: activity
+      #     ]
+      #   }
+      # ],
       participants: participants,
       no_index:
         Bonfire.Me.Settings.get([Bonfire.Me.Users, :undiscoverable], true, current_user: author),

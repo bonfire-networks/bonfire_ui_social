@@ -4,7 +4,7 @@
   x-data="{show_replies: true}"
   class={
     "reply thread-level-" <> to_string(@thread_level) <> " flex relative  w-full mx-auto",
-    "py-2 bg-base-100 rounded-md shadow": @thread_level == 1
+    "py-2 bg-base-100 ": @thread_level == 1
   }
 >
   <div class="flex-1 w-full">

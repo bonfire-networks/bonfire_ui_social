@@ -1,5 +1,5 @@
 <div id={@feed_id || @id} role="feed" aria-live="assertive" aria-atomic="true" class="feed">
-  <div class="flex flex-col max-w-screen-md p-3 mx-auto overflow-x-hidden overflow-y-hidden">
+  <div class="flex flex-col max-w-screen-md mx-auto overflow-x-hidden overflow-y-hidden">
     <Bonfire.UI.Common.TabsLive
       :if={@hide_tabs != true}
       selected_tab={@selected_tab || @feed_id}

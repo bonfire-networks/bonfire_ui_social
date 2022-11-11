@@ -3,7 +3,7 @@
     <div
       data-id="replies"
       class={
-        "flex flex-col flex-1 space-y-3",
+        "flex flex-col flex-1",
         "!pt-0": @thread_mode == :flat
       }
     >

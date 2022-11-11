@@ -34,14 +34,14 @@
       }>
         <Inputs for={:post_content}>
           <div x-show="!open_boundaries" class="flex-1">
-            <div class="relative p-2 bg-base-100" display="style: none" x-show="title_open" x-transition>
+            <div class="relative p-2 border-b bg-base-100 border-base-content/10" display="style: none" x-show="title_open" x-transition>
               <label for="title" class="sr-only">{l("Title")}</label>
               <Field name={:name}>
                 <TextInput
                   opts={
                     placeholder: l("Enter a content warning")
                   }
-                  class="input input-bordered w-full"
+                  class="w-full input input-bordered"
                 />
               </Field>
             </div>
