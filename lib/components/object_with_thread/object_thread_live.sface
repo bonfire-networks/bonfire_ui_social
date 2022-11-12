@@ -22,26 +22,26 @@
         feed_id={@feed_id}
         participants={@participants}
         object_boundary={if is_messaging?(%{
-              page: @page,
-              showing_within: @showing_within || :thread,
-              create_object_type: @create_object_type
-            }),
-            do: :skip}
+             page: @page,
+             showing_within: @showing_within || :thread,
+             create_object_type: @create_object_type
+           }),
+           do: :skip}
       />
-        <Bonfire.UI.Social.ThreadLive
-          id={@thread_id}
-          thread_id={@thread_id}
-          feed_id={@feed_id}
-          thread_mode={@thread_mode}
-          reverse_order={@reverse_order}
-          replies={@replies}
-          threaded_replies={@threaded_replies}
-          page_info={e(@page_info, [])}
-          activity={@activity}
-          object={@object}
-          url={@url}
-          showing_within={:thread}
-        />
+      <Bonfire.UI.Social.ThreadLive
+        id={@thread_id}
+        thread_id={@thread_id}
+        feed_id={@feed_id}
+        thread_mode={@thread_mode}
+        reverse_order={@reverse_order}
+        replies={@replies}
+        threaded_replies={@threaded_replies}
+        page_info={e(@page_info, [])}
+        activity={@activity}
+        object={@object}
+        url={@url}
+        showing_within={:thread}
+      />
     </div>
   </div>
 
