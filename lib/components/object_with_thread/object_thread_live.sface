@@ -2,17 +2,17 @@
   <div class="flex-1">
     <!-- INITIAL POST -->
 
-    <div class="relative max-w-screen-md p-3 mx-auto mb-6">
-      <Bonfire.UI.Social.ObjectHeaderAsideLive
+    <div class="relative max-w-screen-md mx-auto mb-6">
+      <!-- <Bonfire.UI.Social.ObjectHeaderAsideLive
         page_title={@page_title}
         participants={@participants || []}
         thread_id={@thread_id}
         activity={@activity}
         showing_within={@showing_within || :thread}
-      />
+      /> -->
       <Bonfire.UI.Social.ActivityLive
         :if={@activity}
-        class="!p-3 !bg-base-content/5 !rounded-none"
+        class="!p-3 !bg-transparent !shadow-none !rounded-none main_thread border-b border-base-content/20"
         id={"ta:" <> (ulid(@activity) || ulid(@object) || "no-ID")}
         showing_within={@showing_within || :thread}
         thread_mode={@thread_mode}
@@ -28,20 +28,22 @@
            }),
            do: :skip}
       />
-      <Bonfire.UI.Social.ThreadLive
-        id={@thread_id}
-        thread_id={@thread_id}
-        feed_id={@feed_id}
-        thread_mode={@thread_mode}
-        reverse_order={@reverse_order}
-        replies={@replies}
-        threaded_replies={@threaded_replies}
-        page_info={e(@page_info, [])}
-        activity={@activity}
-        object={@object}
-        url={@url}
-        showing_within={:thread}
-      />
+      <div class="mt-3">
+        <Bonfire.UI.Social.ThreadLive
+          id={@thread_id}
+          thread_id={@thread_id}
+          feed_id={@feed_id}
+          thread_mode={@thread_mode}
+          reverse_order={@reverse_order}
+          replies={@replies}
+          threaded_replies={@threaded_replies}
+          page_info={e(@page_info, [])}
+          activity={@activity}
+          object={@object}
+          url={@url}
+          showing_within={:thread}
+        />
+      </div>
     </div>
   </div>
 

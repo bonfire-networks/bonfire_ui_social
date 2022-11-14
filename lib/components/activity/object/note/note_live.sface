@@ -7,7 +7,7 @@
 {#else}
   <div
     class={
-      main_object: @viewing_main_object,
+      "main_object": @viewing_main_object,
       "showing_within:thread": @showing_within == :thread,
       "-mt-1 bg-base-content/10 px-2 pb-2 rounded-br-md": @thread_mode == :flat,
       "!bg-info/40 rounded-bl-md !rounded-br-none":
@@ -71,7 +71,7 @@
               @showing_within != :widget and @showing_within != :search,
           "font-[16px] mt-1 prose-sm prose-p:pt-0 prose-p:my-0 !leading-[22px]":
             @showing_within == :thread,
-          "mt-3 prose-p:pb-4": @viewing_main_object,
+          "mt-3 !prose-base prose-p:pb-4": @viewing_main_object,
           "prose-p:pt-1 !my-3 !leading-[20px]": @showing_within == :feed
         }
       >

@@ -4,7 +4,7 @@
   x-data="{show_replies: true}"
   class={
     "reply thread-level-" <> to_string(@thread_level) <> " flex relative  w-full mx-auto",
-    "py-2 bg-base-100 ": @thread_level == 1
+    "py-4 border-b border-base-content/10 ": @thread_level == 1
   }
 >
   <div class="flex-1 w-full">
@@ -38,6 +38,7 @@
               id={e(@comment, :id, "ca") <> ":" <> e(activity, :id, "")}
               activity={activity}
               thread_object={@thread_object}
+              class="showing_within:thread !py-2 !bg-transparent !shadow-none !rounded-none"
               feed_id={@feed_id}
               showing_within={:thread}
               thread_mode={@thread_mode}
@@ -47,7 +48,7 @@
                    create_object_type: @create_object_type
                  }),
                  do: :skip}
-              class="showing_within:thread !py-2"
+              class=""
             />
           {#match %{activity: %{object: %{}} = activity}}
             <Bonfire.UI.Social.ActivityLive
@@ -55,6 +56,7 @@
               activity={activity}
               thread_object={@thread_object}
               feed_id={@feed_id}
+              class="!p-3 !bg-transparent !shadow-none !rounded-none"
               showing_within={:thread}
               url={@url}
               thread_mode={@thread_mode}
@@ -64,7 +66,7 @@
                    create_object_type: @create_object_type
                  }),
                  do: :skip}
-              class="showing_within:thread !py-2"
+              class="showing_within:thread !py-2 !bg-transparent !shadow-none !rounded-none"
             />
           {#match _}
             <div class="mx-4 my-2">

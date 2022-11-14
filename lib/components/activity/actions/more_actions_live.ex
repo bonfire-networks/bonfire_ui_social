@@ -8,7 +8,7 @@ defmodule Bonfire.UI.Social.Activity.MoreActionsLive do
   prop object, :any, required: true
   prop object_type, :any, default: nil
   prop verb, :string, default: nil
-  prop object_type_readable, :any
+  prop object_type_readable, :any, default: nil
   prop flagged, :any, default: nil
 
   prop showing_within, :any, default: :feed
