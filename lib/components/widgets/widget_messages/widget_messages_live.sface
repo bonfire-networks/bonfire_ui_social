@@ -13,7 +13,7 @@
       <ul class="divide-y menu bg-base-100 divide-base-300">
         <li :for={%{activity: activity} <- feed}>
           <LiveRedirect
-            to={"#{path(Bonfire.Data.Social.Message, e(activity, :object_id, nil))}"}
+            to={~p"#{path(Bonfire.Data.Social.Message, e(activity, :object_id, nil))}"}
             class="block"
           >
             <div class="flex items-center">

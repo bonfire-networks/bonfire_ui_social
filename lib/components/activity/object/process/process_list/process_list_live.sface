@@ -26,15 +26,15 @@
           object={@object}
         />
         <!-- <LivePatch to={if @process_url, do: e(@process_url, "/list/") <> e(@object, :id, ""), else: path(@object)}> -->
-        <LiveRedirect to={"/coordination/list/" <> e(@object, :id, "")}>
+        <LiveRedirect to={~p"/coordination/list/" <> e(@object, :id, "")}>
           <div class="text-base font-semibold text-base-content hover:underline">{e(@object, :name, nil)}</div>
         </LiveRedirect>
       </div>
 
       <div class={
         "flex items-center mt-2 mb-1 space-x-4 mx-4",
-        "!mx-0":  e(@showing_within, :feed) in [:feed, :notifications, :likes]
-        }>
+        "!mx-0": e(@showing_within, :feed) in [:feed, :notifications, :likes]
+      }>
         <div class="flex items-center gap-2 text-sm text-base-content/70 text-medium">
           <Icon solid="Calendar" class="w-4 h-4 text-base-content/70" />
           <span>{e(@object, :due, "No due date")}</span>
@@ -42,10 +42,13 @@
       </div>
 
       <!-- NOTE -->
-      <div :if={e(@object, :note, nil)} class={
-        "mx-4 text-sm mt-2 text-base-content/70 line-clamp-2",
-        "!mx-0": e(@showing_within, :feed) in [:feed, :notifications, :likes]
-      }>{e(@object, :note, "")}</div>
+      <div
+        :if={e(@object, :note, nil)}
+        class={
+          "mx-4 text-sm mt-2 text-base-content/70 line-clamp-2",
+          "!mx-0": e(@showing_within, :feed) in [:feed, :notifications, :likes]
+        }
+      >{e(@object, :note, "")}</div>
     </div>
   </div>
 </div>

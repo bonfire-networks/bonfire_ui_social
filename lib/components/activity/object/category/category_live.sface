@@ -1,7 +1,7 @@
 <div class="relative flex flex-col gap-1 p-2 mt-3 rounded-md shadow md:flex-row md:gap-0 md:items-center bg-base-content/5">
   <div class="flex flex-1 font-medium text-base-content">
     <LiveRedirect
-      to={"/+#{e(@object, :character, :username, nil) || ulid(@object)}"}
+      to={~p"/+#{e(@object, :character, :username, nil) || ulid(@object)}"}
       class="text-sm font-medium link link-hover"
     >
       {rich(name(@object))}
@@ -13,7 +13,7 @@
     <div class="hidden text-xs md:block" :if={e(@object, :parent_category, nil)}>
       {l("in ")}
       <LiveRedirect
-        to={"/+#{e(@object, :parent_category, :character, :username, nil) || ulid(@object)}"}
+        to={~p"/+#{e(@object, :parent_category, :character, :username, nil) || ulid(@object)}"}
         class="link"
       >
         {name(e(@object, :parent_category, nil))}

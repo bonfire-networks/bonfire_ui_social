@@ -25,7 +25,7 @@
             />
 
             <LiveRedirect
-              to={"/coordination/task/#{e(@object, :id, "")}"}
+              to={~p"/coordination/task/#{e(@object, :id, "")}"}
               class="flex-1 text-sm font-medium cursor-pointer link link-hover"
             >{e(@object, :name, e(@object, :note, l("Untitled task")))}
             </LiveRedirect>
@@ -39,7 +39,7 @@
               <span :for={scope <- e(@object, :context, [])}>
                 <LiveRedirect
                   :if={e(scope, :id, nil)}
-                  to={"/coordination/task/#{e(scope, :id, "")}"}
+                  to={~p"/coordination/task/#{e(scope, :id, "")}"}
                   class="flex items-center text-sm cursor-pointer text-base-content/60 font-regular hover:underline"
                 >
                   {e(scope, :name, "")}

@@ -28,7 +28,7 @@
           Settings.get([:bonfire_social, :feeds, :federation, :show_guests], false, @__context__)}>
           <LiveRedirect
             class={"ml-1": @page != "federation", "bg-primary/10": @page == "federation"}
-            to="/feed/federation"
+            to={~p"/feed/federation"}
           >
             <Icon solid="Globe" class="w-4 h-4" />
             <span class="text-sm truncate ellipsis">{l("Federated")}</span>

@@ -6,7 +6,7 @@
   />
   <div class="px-2">
     <div class="text-primary-content-700 text-base font-semibold">
-      <LiveRedirect to={"/resource/" <> @object.id}>
+      <LiveRedirect to={~p"/resource/" <> @object.id}>
         {@object.name}
       </LiveRedirect>
     </div>

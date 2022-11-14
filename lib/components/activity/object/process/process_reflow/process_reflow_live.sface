@@ -3,7 +3,7 @@
     <div class="grid justify-between p-3 py-0 grid-cols-1 gap-0">
       <div class="order-last">
         <div class="flex items-center space-x-2 mt-2">
-          <LiveRedirect to={"/process/" <> e(@object, :id, "")}>
+          <LiveRedirect to={~p"/process/" <> e(@object, :id, "")}>
             <div class="text-lg font-bold text-primary-content-700 hover:underline hover:text-primary-content-800">{e(@object, :name, "Untitled")}</div>
           </LiveRedirect>
         </div>
@@ -50,7 +50,7 @@
           id={ComponentID.new(Bonfire.UI.Common.LikeActionLive, @object)}
           object={@object}
         />
-        <LiveRedirect to={"/process/" <> e(@object, :id, "")}>
+        <LiveRedirect to={~p"/process/" <> e(@object, :id, "")}>
           <div class="text-lg font-bold text-primary-content-700  hover:underline hover:text-primary-content-800">{@object.name}</div>
         </LiveRedirect>
       </div>
