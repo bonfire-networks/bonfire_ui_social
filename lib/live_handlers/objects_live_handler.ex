@@ -149,7 +149,21 @@ defmodule Bonfire.Social.Objects.LiveHandler do
       init_object_assigns(object, activity, assigns, socket, l("Post"))
     else
       _e ->
-        {:error, "Not found"}
+        case Bonfire.Common.URIs.canonical_url(id) do
+          url when is_binary(url) ->
+            socket
+            |> redirect(external: url)
+
+          _ ->
+            case Bonfire.Common.Types.object_type_display(id) do
+              type when is_binary(type) ->
+                {:error,
+                 l("Sorry, you don't have permission to view this %{thing}", thing: l("post"))}
+
+              _ ->
+                {:error, l("Not found")}
+            end
+        end
     end
   end
 
@@ -169,12 +183,19 @@ defmodule Bonfire.Social.Objects.LiveHandler do
       )
     else
       _e ->
-        case Bonfire.Common.Types.object_type_display(id) do
-          type when is_binary(type) ->
-            {:error, l("Sorry, you don't have permission to view this %{thing}", thing: type)}
+        case Bonfire.Common.URIs.canonical_url(id) do
+          url when is_binary(url) ->
+            socket
+            |> redirect(external: url)
 
           _ ->
-            {:error, l("Not found")}
+            case Bonfire.Common.Types.object_type_display(id) do
+              type when is_binary(type) ->
+                {:error, l("Sorry, you don't have permission to view this %{thing}", thing: type)}
+
+              _ ->
+                {:error, l("Not found")}
+            end
         end
     end
   end
