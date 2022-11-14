@@ -6,5 +6,5 @@
   class="z-50 flex items-center gap-2 font-normal normal-case btn btn-sm"
 >
   <Icon outline="Check" class="w-5 h-5" />
-  <span>{l("Mark all as read")}</span>
+  <span class="hidden md:block">{l("Mark all as read")}</span>
 </button>
