@@ -6,6 +6,7 @@ defmodule Bonfire.UI.Social.Activity.ProcessListLive do
   prop showing_within, :any
   prop process_url, :string
 
+
   def activity_component(object) do
     {__MODULE__,
      [
@@ -30,7 +31,7 @@ defmodule Bonfire.UI.Social.Activity.ProcessListLive do
     |> Map.put(:tasks_total, tasks_total)
     |> Map.put(:tasks_completed, tasks_completed)
     |> Map.put(:percentage, percentage)
-    |> debug()
+    |> debug("qui")
   end
 
   def preloads(),
