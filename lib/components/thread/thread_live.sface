@@ -70,11 +70,19 @@
         {#match _}
       {/case}
     {#else}
-      <span class="my-12 badge">
-        {if e(@activity, :subject, :id, nil) != ulid(@current_user),
-          do: l("Be the first to reply..."),
-          else: l("No replies yet...")}
-      </span>
+      {#if not is_nil(@current_user)}
+        <Bonfire.UI.Common.SmartInputButtonLive
+          component={Bonfire.Common.Config.get([:ui, :default_smart_input]) ||
+            Bonfire.UI.Social.WritePostContentLive}
+          smart_input_prompt={l("Be the first to reply")}
+          class="my-12 h-[40px] flex items-center gap-2 normal-case btn-sm btn"
+          icon="heroicons-outline:reply"
+        />
+      {#else}
+        <span class="my-12 badge">
+          {l("No replies yet...")}
+        </span>
+      {/if}
     {/if}
   </div>
 {/if}

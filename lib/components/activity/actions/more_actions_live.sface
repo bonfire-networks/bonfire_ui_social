@@ -20,37 +20,7 @@
     <#slot {@extra_items} />
 
     <li>
-      <Bonfire.UI.Common.OpenModalLive
-        id={Pointers.ULID.generate()}
-        title_text={l("Tag with topic(s)")}
-        form_opts={%{"phx-submit" => "Bonfire.Social.Objects:tag"}}
-        :let={autocomplete: autocomplete}
-      >
-        <input type="hidden" name="id" value={ulid(@object)}>
-        <select data-phx-autocomplete="Bonfire.Classify:autocomplete" class="hidden tagify">
-          {#for cat <- autocomplete || []}
-            <option class="" value={ulid(cat)}>{e(cat, :profile, :name, nil)}</option>
-          {/for}
-        </select>
-        <div class="flex-1" id={:tag_topics} phx-hook="InputOrSelectOne">
-          <div phx-update="ignore">
-            <input name="tags" class="w-full input input-bordered tagify">
-          </div>
-        </div>
-        <:open_btn>
-          <div class="flex items-center gap-2">
-            <Icon solid="Collection" class="w-4 h-4 shrink-0 text-neutral-content/80" />
-            <div class="text-sm text-neutral-content/80">
-              {l("Tag with topic(s)")}
-            </div>
-          </div>
-        </:open_btn>
-        <:action_btns>
-          <button class="normal-case btn-sm btn btn-primary">
-            {l("Tag")}
-          </button>
-        </:action_btns>
-      </Bonfire.UI.Common.OpenModalLive>
+      <Bonfire.Classify.Web.TagModalLive object={@object} />
     </li>
 
     <li class="hover:bg-neutral hover:bg-opacity-20">

@@ -68,8 +68,7 @@
      -->
   <div class={
     "feed-clickable flex items-center flex-1 justify-end space-x-4 mt-0",
-    "-mx-3 !p-3 !pb-0 !mt-4":
-      @viewing_main_object == true,
+    "-mx-3 !p-3 !pb-0 !mt-4": @viewing_main_object == true,
     "!space-x-2": @thread_mode == :flat
   }>
     <Bonfire.UI.Social.Activity.ReactionsLive
@@ -84,16 +83,16 @@
       hide_reply={@hide_reply}
     />
 
-     <Bonfire.UI.Social.Activity.MoreActionsLive
-        :if={@showing_within != :feed}
-        object={@object}
-        activity={@activity}
-        object_type={@object_type}
-        object_boundary={@object_boundary}
-        object_type_readable={@object_type_readable}
-        verb={@verb}
-        showing_within={@showing_within}
-      />
+    <Bonfire.UI.Social.Activity.MoreActionsLive
+      :if={@showing_within != :feed}
+      object={@object}
+      activity={@activity}
+      object_type={@object_type}
+      object_boundary={@object_boundary}
+      object_type_readable={@object_type_readable}
+      verb={@verb}
+      showing_within={@showing_within}
+    />
   </div>
 </div>
 <!-- {/if} -->

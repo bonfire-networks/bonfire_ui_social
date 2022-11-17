@@ -86,6 +86,7 @@
                 :if={module_enabled?(Bonfire.UI.Coordination.TaskActionsMenuLive, @__context__)}
                 module={Bonfire.UI.Coordination.TaskActionsMenuLive}
                 task={@object}
+                is_editable?
               />
             </div>
           </div>

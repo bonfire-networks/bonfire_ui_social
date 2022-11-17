@@ -56,7 +56,6 @@
             showing_within={@showing_within}
             verb_display={@verb_display}
           />
-          
         </div>
       </div>
     </div>
@@ -105,7 +104,7 @@
             <div class={
               "text-sm font-medium  lowercase line-clamp-1 text-base-content/70",
               "!text-base !font-semibold": @viewing_main_object
-              }>
+            }>
               <!-- {@verb} {@object_type} -->
               <LiveRedirect
                 opts={"data-id": "subject_name"}
