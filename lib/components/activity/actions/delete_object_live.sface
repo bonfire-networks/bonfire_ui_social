@@ -15,8 +15,8 @@
 
   <:open_btn>
     <div class={@open_btn_class}>
-      <Icon solid="Trash" class="w-4 h-4 shrink-0" />
-      <span class="truncate ellipsis">
+      <Icon if={!@hide_icon} solid="Trash" class="w-4 h-4 shrink-0" />
+      <span :if={!@hide_text} class="truncate ellipsis">
         {l("Delete this")} {e(@object_type_readable, l("object"))}
       </span>
     </div>
@@ -29,7 +29,7 @@
       phx-value-redirect_after={@redirect_after}
       class="normal-case btn btn-error btn-sm"
     >
-      <Icon solid="Trash" class="w-4 h-4 mr-2 shrink-0" />
+      <Icon :solid="Trash" class="w-4 h-4 mr-2 shrink-0" />
       <span class="truncate ellipsis">{l("Delete this")} {e(@object_type_readable, l("object"))}</span>
     </button>
   </:action_btns>

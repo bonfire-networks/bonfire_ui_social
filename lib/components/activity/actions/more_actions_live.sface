@@ -20,7 +20,11 @@
     <#slot {@extra_items} />
 
     <li>
-      <Dynamic.Component :if={module_enabled?(Bonfire.Classify.Web.TagModalLive)} module={Bonfire.Classify.Web.TagModalLive} object={@object} />
+      <Dynamic.Component
+        :if={module_enabled?(Bonfire.Classify.Web.TagModalLive)}
+        module={Bonfire.Classify.Web.TagModalLive}
+        object={@object}
+      />
     </li>
 
     <li class="hover:bg-neutral hover:bg-opacity-20">

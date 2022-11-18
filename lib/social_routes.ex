@@ -21,6 +21,7 @@ defmodule Bonfire.UI.Social.Routes do
         # live "/post", PostLive, as: Bonfire.Data.Social.Post
         live("/post/:id", PostLive, as: Bonfire.Data.Social.Post)
         live("/discussion/:id", DiscussionLive, as: Pointers.Pointer)
+        live("/discussion/:type/:id", DiscussionLive, as: Pointers.Pointer)
         live("/discussion/:id/reply/:reply_to_id", DiscussionLive, as: Pointers.Pointer)
       end
 

@@ -1,13 +1,14 @@
-<Bonfire.UI.Common.BoostActionLive
+<!-- <Bonfire.UI.Common.BoostActionLive
   id={ComponentID.new(Bonfire.UI.Common.BoostActionLive, ulid(@object))}
   object={@object}
   showing_within={:feed}
-/>
+/> -->
 <Bonfire.UI.Common.LikeActionLive
   id={ComponentID.new(Bonfire.UI.Common.LikeActionLive, ulid(@object))}
   object={@object}
 />
 <Bonfire.UI.Common.FollowButtonLive
+  :if={e(@object, :character, nil)}
   id={ComponentID.new(Bonfire.UI.Common.FollowButtonLive, @object)}
   object={@object}
   hide_icon
