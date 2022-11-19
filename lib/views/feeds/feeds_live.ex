@@ -72,7 +72,7 @@ defmodule Bonfire.UI.Social.FeedsLive do
   #   to_options(socket) ++ [feed_filters: %{object_type: params["type"]}]
   # end
 
-  def do_handle_params(%{"tab" => "fediverse" = tab} = params, _url, socket)
+  def do_handle_params(%{"tab" => tab} = params, _url, socket)
       when tab in ["federation", "fediverse", "remote"] do
     {:noreply, assign(socket, LiveHandler.feed_assigns_maybe_async({:fediverse, params}, socket))}
   end

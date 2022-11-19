@@ -17,7 +17,7 @@ defmodule Bonfire.Social.Feeds.Fediverse.Test do
       account = fake_account!()
       user = fake_user!(account)
       conn = conn(account: account)
-      next = "/federation"
+      next = "/feed/federation"
       feed_id = Bonfire.Social.Feeds.named_feed_id(:activity_pub)
 
       # |> IO.inspect
@@ -29,7 +29,7 @@ defmodule Bonfire.Social.Feeds.Fediverse.Test do
       account = fake_account!()
       user = fake_user!(account)
       conn = conn(user: user, account: account)
-      next = "/federation"
+      next = "/feed/federation"
       feed_id = Bonfire.Social.Feeds.named_feed_id(:activity_pub)
 
       # |> IO.inspect
@@ -101,7 +101,7 @@ defmodule Bonfire.Social.Feeds.Fediverse.Test do
       assert post.post_content.name =~ "test post name"
 
       conn = conn(user: user2, account: account2)
-      next = "/federation"
+      next = "/feed/federation"
       # |> IO.inspect
       {view, doc} = floki_live(conn, next)
       assert [] = Floki.find(doc, "#feed:federation")

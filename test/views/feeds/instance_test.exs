@@ -8,7 +8,7 @@ defmodule Bonfire.Social.Feeds.Instance.Test do
   describe "show" do
     test "not logged in" do
       conn = conn()
-      conn = get(conn, "/local")
+      conn = get(conn, "/feed/local")
       feed_id = Bonfire.Social.Feeds.named_feed_id(:local)
 
       doc = floki_response(conn)
@@ -22,7 +22,7 @@ defmodule Bonfire.Social.Feeds.Instance.Test do
       account = fake_account!()
       user = fake_user!(account)
       conn = conn(account: account)
-      next = "/local"
+      next = "/feed/local"
       feed_id = Bonfire.Social.Feeds.named_feed_id(:local)
 
       # |> IO.inspect
@@ -34,7 +34,7 @@ defmodule Bonfire.Social.Feeds.Instance.Test do
       account = fake_account!()
       user = fake_user!(account)
       conn = conn(user: user, account: account)
-      next = "/local"
+      next = "/feed/local"
       feed_id = Bonfire.Social.Feeds.named_feed_id(:local)
 
       # |> IO.inspect
@@ -58,7 +58,7 @@ defmodule Bonfire.Social.Feeds.Instance.Test do
       assert post.post_content.name =~ "test post name"
 
       conn = conn(user: user, account: account)
-      next = "/local"
+      next = "/feed/local"
       feed_id = Bonfire.Social.Feeds.named_feed_id(:local)
       # |> IO.inspect
       {view, doc} = floki_live(conn, next)
@@ -83,7 +83,7 @@ defmodule Bonfire.Social.Feeds.Instance.Test do
       account = fake_account!()
       user = fake_user!(account)
       conn = conn(user: user, account: account)
-      next = "/local"
+      next = "/feed/local"
       feed_id = Bonfire.Social.Feeds.named_feed_id(:local)
 
       # |> IO.inspect
@@ -114,7 +114,7 @@ defmodule Bonfire.Social.Feeds.Instance.Test do
       assert post.post_content.name =~ "test post name"
 
       conn = conn(user: user2, account: account2)
-      next = "/local"
+      next = "/feed/local"
       feed_id = Bonfire.Social.Feeds.named_feed_id(:local)
 
       # |> IO.inspect
@@ -155,7 +155,7 @@ defmodule Bonfire.Social.Feeds.Instance.Test do
     publish_multiple_times(admin_attrs, carl, total_posts, "admins")
     assert {:ok, boost} = Boosts.boost(alice, post)
 
-    next = "/local"
+    next = "/feed/local"
     conn = conn()
     {view, doc} = floki_live(conn, next)
 
