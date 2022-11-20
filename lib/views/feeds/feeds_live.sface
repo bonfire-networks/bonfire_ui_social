@@ -10,7 +10,7 @@
     feed={@feed}
     selected_tab={@selected_tab}
     feed_title={@feed_title}
-    tabs_class="tabs_nav tabs bg-base-100 rounded-md gap-3 shadow mb-3"
+    tabs_class="mb-3 flex items-center gap-3"
     page_info={@page_info}
     loading={@loading}
     tab_path_prefix="/feed/"

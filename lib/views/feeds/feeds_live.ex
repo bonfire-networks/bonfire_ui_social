@@ -60,9 +60,7 @@ defmodule Bonfire.UI.Social.FeedsLive do
            ]
          ],
          guests: [
-           secondary: [
-             {Bonfire.Tag.Web.WidgetTagsLive, []}
-           ]
+           secondary: nil
          ]
        ]
      )}

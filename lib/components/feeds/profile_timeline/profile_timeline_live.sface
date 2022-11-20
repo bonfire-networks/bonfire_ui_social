@@ -8,7 +8,7 @@
       page={@page}
       feed={@feed}
       page_info={@page_info}
-      tabs_class="tabs_nav tabs bg-base-100 rounded-md gap-3 shadow mb-3"
+      tabs_class="mb-3 flex items-center gap-3"
       selected_tab={@selected_tab}
       smart_input={@smart_input}
       smart_input_prompt={@smart_input_prompt}

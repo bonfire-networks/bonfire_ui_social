@@ -2,7 +2,7 @@
   <div class="flex-1">
     <!-- INITIAL POST -->
 
-    <div class="relative max-w-screen-md mx-auto mb-6">
+    <div class="relative">
       <!-- <Bonfire.UI.Social.ObjectHeaderAsideLive
         page_title={@page_title}
         participants={@participants || []}
@@ -10,9 +10,11 @@
         activity={@activity}
         showing_within={@showing_within || :thread}
       /> -->
+      <!-- <Bonfire.UI.Common.BackButtonLive showing_within={@showing_within || :thread} /> -->
+      <div class="border-b border-base-content/10">
       <Bonfire.UI.Social.ActivityLive
         :if={@activity}
-        class="!p-3 !bg-transparent !shadow-none !rounded-none main_thread border-b border-base-content/20"
+        class="mt-0 !bg-transparent !p-6 !shadow-none main_thread"
         id={"ta:" <> (ulid(@activity) || ulid(@object) || "no-ID")}
         showing_within={@showing_within || :thread}
         thread_mode={@thread_mode}
@@ -28,6 +30,7 @@
            }),
            do: :skip}
       />
+      </div>
       <div class="mt-3">
         <Bonfire.UI.Social.ThreadLive
           id={@thread_id}

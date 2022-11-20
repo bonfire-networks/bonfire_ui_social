@@ -5,7 +5,7 @@
     "px-2 bg-base-content/10 pt-1 rounded-t-md": @thread_mode == :flat,
     "!bg-info/40": @thread_mode == :flat && ulid(@current_user) == maybe_get(@character, :id),
     "!bg-transparent pt-0": @activity_inception != nil and @thread_mode == :flat,
-    "!my-3 !mb-3": @viewing_main_object == true
+    "!mb-3": @viewing_main_object == true
   }
 >
   <span
@@ -62,7 +62,7 @@
   {#else}
     <div class={
       "flex items-top",
-      "space-x-3 my-6": @viewing_main_object == true,
+      "space-x-3": @viewing_main_object == true,
       "py-1": @thread_mode == :flat
     }>
       <div
@@ -83,7 +83,6 @@
           <Bonfire.UI.Common.AvatarLive
             user={@profile}
             viewing_main_object={@viewing_main_object}
-            comment={@showing_within == :thread && @viewing_main_object != true}
           />
         </LiveRedirect>
       </div>
