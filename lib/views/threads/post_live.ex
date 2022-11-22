@@ -43,9 +43,7 @@ defmodule Bonfire.UI.Social.PostLive do
            ]
          ],
          guests: [
-           secondary: [
-             {Bonfire.Tag.Web.WidgetTagsLive, []}
-           ]
+           secondary: nil
          ]
        ],
        #  without_sidebar: true,

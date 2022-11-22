@@ -71,7 +71,7 @@
               @showing_within != :widget and @showing_within != :search,
           "font-[16px] mt-1 prose-sm prose-p:pt-0 prose-p:my-0 !leading-[22px]":
             @showing_within == :thread,
-          "mt-3 !prose-lg pl-16 prose-p:pb-4": @viewing_main_object,
+          "mt-3 !prose-xl pl-16 prose-p:pb-4": @viewing_main_object,
           "prose-p:pt-1 !my-3 !leading-[20px]": @showing_within == :feed
         }
       >

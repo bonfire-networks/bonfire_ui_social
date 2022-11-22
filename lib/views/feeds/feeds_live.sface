@@ -1,4 +1,4 @@
-<div class="mt-6">
+<div class="mt-6 mx-3">
   <Bonfire.UI.Social.FeedLive
     id={@feed_component_id}
     feed_id={@feed_id}
