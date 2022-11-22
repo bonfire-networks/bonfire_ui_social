@@ -116,11 +116,6 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
     end
   end
 
-  def handle_event("push_header_info", _params, socket) do
-    send_self(socket, page_title: "TETETE")
-    {:noreply, socket}
-  end
-
 
   def handle_event("open_activity", %{"ignore" => "true"} = _params, socket) do
     {:noreply, socket}
