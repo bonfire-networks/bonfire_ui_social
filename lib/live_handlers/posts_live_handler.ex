@@ -192,7 +192,7 @@ defmodule Bonfire.Social.Posts.LiveHandler do
   def write_feedback(text, socket) do
     {:noreply,
      socket
-     |> Bonfire.UI.Common.SmartInputLive.set_smart_input_text(text)}
+     |> Bonfire.UI.Common.SmartInputLive.set_smart_input_text(socket.assigns[:__context__], text)}
   end
 
   def live_more(thread_id, paginate, socket) do

@@ -49,11 +49,10 @@
             :if={ulid(@current_user)}
             reply_to_id={e(@reply_to_id, "")}
             thread_id={@thread_id}
-            to_boundaries={e(@to_boundaries, [])}
+            to_boundaries={@to_boundaries}
             to_circles={@to_circles}
             create_object_type={@create_object_type}
             thread_mode={:flat}
-            boundary="message"
             showing_within={:compose}
             smart_input_prompt={e(@smart_input_prompt, "")}
             smart_input_opts={@smart_input_opts}

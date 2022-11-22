@@ -12,24 +12,24 @@
       /> -->
       <!-- <Bonfire.UI.Common.BackButtonLive showing_within={@showing_within || :thread} /> -->
       <div class="border-b border-base-content/10">
-      <Bonfire.UI.Social.ActivityLive
-        :if={@activity}
-        class="mt-0 !bg-transparent !p-6 !shadow-none main_thread"
-        id={"ta:" <> (ulid(@activity) || ulid(@object) || "no-ID")}
-        showing_within={@showing_within || :thread}
-        thread_mode={@thread_mode}
-        viewing_main_object={if @thread_mode != :flat, do: true, else: false}
-        activity={@activity}
-        object={@object}
-        feed_id={@feed_id}
-        participants={@participants}
-        object_boundary={if is_messaging?(%{
-             page: @page,
-             showing_within: @showing_within || :thread,
-             create_object_type: @create_object_type
-           }),
-           do: :skip}
-      />
+        <Bonfire.UI.Social.ActivityLive
+          :if={@activity}
+          class="mt-0 !bg-transparent !p-6 !shadow-none main_thread"
+          id={"ta:" <> (ulid(@activity) || ulid(@object) || "no-ID")}
+          showing_within={@showing_within || :thread}
+          thread_mode={@thread_mode}
+          viewing_main_object={if @thread_mode != :flat, do: true, else: false}
+          activity={@activity}
+          object={@object}
+          feed_id={@feed_id}
+          participants={@participants}
+          object_boundary={if is_messaging?(%{
+               page: @page,
+               showing_within: @showing_within || :thread,
+               create_object_type: @create_object_type
+             }),
+             do: :skip}
+        />
       </div>
       <div class="mt-3">
         <Bonfire.UI.Social.ThreadLive

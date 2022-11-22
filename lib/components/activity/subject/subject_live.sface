@@ -80,10 +80,7 @@
           class="font-semibold text-base-content hover:underline"
           to={path(@character)}
         >
-          <Bonfire.UI.Common.AvatarLive
-            user={@profile}
-            viewing_main_object={@viewing_main_object}
-          />
+          <Bonfire.UI.Common.AvatarLive user={@profile} viewing_main_object={@viewing_main_object} />
         </LiveRedirect>
       </div>
       <div class="flex items-start justify-between leading-[16px] min-w-0 space-x-1 w-full">

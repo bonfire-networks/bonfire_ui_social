@@ -12,7 +12,7 @@ defmodule Bonfire.UI.Social.Activity.CategoryLive do
 
   def name(object) do
     e(
-      object |> debug(),
+      object,
       :name,
       e(
         object,

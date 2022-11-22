@@ -58,7 +58,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
       |> Map.put(
         :object,
         Activities.object_from_activity(assigns)
-        |> debug("object")
+        # |> debug("object")
       )
 
     # |> debug("Activity with :object")
@@ -130,7 +130,8 @@ defmodule Bonfire.UI.Social.ActivityLive do
         c when is_atom(c) -> {c, nil}
         other -> other
       end)
-      |> debug("components")
+
+    # |> debug("components")
 
     assigns_merge(assigns, activity_components: components)
     # |> debug("assigns")
@@ -534,7 +535,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
       do: maybe_load_in_reply_to(thread, thread_id)
 
   def component_maybe_in_reply_to(_, a, _) do
-    debug(a, "ActivityLive: no reply_to")
+    # debug(a, "ActivityLive: no reply_to")
     []
   end
 
