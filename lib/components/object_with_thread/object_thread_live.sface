@@ -14,7 +14,7 @@
       <div class="border-b border-base-content/10">
         <Bonfire.UI.Social.ActivityLive
           :if={@activity}
-          class="mt-0 !bg-transparent !p-6 !shadow-none main_thread"
+          class="mt-2 rounded-xl !bg-base-100 !p-6 !shadow m-3 main_thread"
           id={"ta:" <> (ulid(@activity) || ulid(@object) || "no-ID")}
           showing_within={@showing_within || :thread}
           thread_mode={@thread_mode}
