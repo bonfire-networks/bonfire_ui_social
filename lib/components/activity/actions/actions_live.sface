@@ -24,7 +24,7 @@
           href={@permalink || path(@object)}
           open_btn_text={l("Read discussion")}
           title_text={e(@object, :name, nil) || e(@object, :post_content, :name, nil) || l("Discussion")}
-          open_btn_class="px-1 font-normal normal-case btn btn-sm btn-ghost"
+          open_btn_class="px-1 normal-case btn btn-sm btn-ghost text-base-content/60"
           modal_assigns={
             post_id:
               if(
@@ -48,7 +48,7 @@
           href={@permalink}
           open_btn_text={l("View task")}
           title_text={e(@object, :name, nil) || l("Task")}
-          open_btn_class="px-1 font-normal normal-case btn btn-sm btn-ghost"
+          open_btn_class="px-1 normal-case btn btn-sm btn-ghost text-base-content/60"
           modal_assigns={
             id: @thread_id || ulid(@object),
             preview_view: Bonfire.UI.Coordination.TaskLive
@@ -58,11 +58,11 @@
           }
         />
       {#elseif String.starts_with?(@permalink || "", ["/coordination/list/"])}
-        <LiveRedirect to={@permalink} class="px-1 font-normal normal-case btn btn-sm btn-ghost">
+        <LiveRedirect to={@permalink} class="px-1 normal-case btn btn-sm btn-ghost text-base-content/60">
           {l("View list")}
         </LiveRedirect>
       {#else}
-        <LiveRedirect to={@permalink} class="px-1 font-normal normal-case btn btn-sm btn-ghost">
+        <LiveRedirect to={@permalink} class="px-1 normal-case btn btn-sm btn-ghost text-base-content/60">
           {l("View")}
         </LiveRedirect>
       {/if}
