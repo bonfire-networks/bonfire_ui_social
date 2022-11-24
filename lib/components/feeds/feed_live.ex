@@ -175,17 +175,19 @@ defmodule Bonfire.UI.Social.FeedLive do
      |> assign_generic(LiveHandler.feed_assigns_maybe_async(tab, socket))}
   end
 
-  def do_handle_event(action, attrs, socket) do
-    debug(attrs, action)
-    # poor man's hook I guess
-    Bonfire.UI.Common.LiveHandlers.handle_event(action, attrs, socket, __MODULE__)
-  end
-
-  def handle_event(action, attrs, socket) do
-    undead_params(socket, fn ->
-      do_handle_event(action, attrs, socket)
-    end)
-  end
+  def handle_event(
+        action,
+        attrs,
+        socket
+      ),
+      do:
+        Bonfire.UI.Common.LiveHandlers.handle_event(
+          action,
+          attrs,
+          socket,
+          __MODULE__
+          # &do_handle_event/3
+        )
 
   def handle_info(info, socket),
     do: Bonfire.UI.Common.LiveHandlers.handle_info(info, socket, __MODULE__)

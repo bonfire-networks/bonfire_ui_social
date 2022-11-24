@@ -58,8 +58,8 @@
       create_object_type: @create_object_type
     }) && @current_user}
   >
-    <Bonfire.UI.Common.SmartInputLive
-      id={:smart_input_reply}
+    <Bonfire.UI.Common.SmartInputInlineLive
+      id={:smart_input}
       reply_to_id={e(@reply_to_id, "")}
       thread_mode={@thread_mode}
       thread_id={@thread_id}
@@ -67,7 +67,6 @@
       to_boundaries={e(@to_boundaries, [])}
       to_circles={@to_circles}
       title_open={false}
-      smart_input_prompt={e(@smart_input_prompt, "")}
       smart_input_opts={@smart_input_opts}
       showing_within={@showing_within || :thread}
       replied_activity_class={@replied_activity_class}

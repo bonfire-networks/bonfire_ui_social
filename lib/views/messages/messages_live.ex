@@ -39,12 +39,11 @@ defmodule Bonfire.UI.Social.MessagesLive do
        reply_to_id: nil,
        thread_id: nil,
        users: [],
-       hide_smart_input: true,
-       smart_input_opts: [],
+       smart_input_opts: [inline_only: true],
        feedback_title: l("No messages"),
        feedback_message: l("Select a thread or start a new one..."),
        threads: LiveHandler.list_threads(current_user_required!(socket), socket),
-       smart_input_prompt: l("Compose a thoughtful message..."),
+       smart_input_opts: [prompt: l("Compose a thoughtful message...")],
        page_header_aside: [
          {Bonfire.UI.Social.HeaderAsideNotificationsSeenLive,
           [
@@ -128,7 +127,7 @@ defmodule Bonfire.UI.Social.MessagesLive do
          user: user,
          reply_to_id: nil,
          thread_id: nil,
-         smart_input_prompt: l("Compose a thoughtful message..."),
+         smart_input_opts: [prompt: l("Compose a thoughtful message...")],
          # smart_input_opts: [text: smart_input_text],
          to_circles: to_circles || [],
          sidebar_widgets:
@@ -192,22 +191,22 @@ defmodule Bonfire.UI.Social.MessagesLive do
         thread_id = e(activity, :replied, :thread_id, id)
 
         # debug(activity, "activity")
-        smart_input_prompt =
-          l("Reply to message:") <>
-            " " <>
-            Text.text_only(
-              e(
-                message,
-                :post_content,
-                :name,
-                e(
-                  message,
-                  :post_content,
-                  :summary,
-                  e(message, :post_content, :html_body, reply_to_id)
-                )
-              )
-            )
+        # smart_input_prompt =
+        #   l("Reply to message:") <>
+        #     " " <>
+        #     Text.text_only(
+        #       e(
+        #         message,
+        #         :post_content,
+        #         :name,
+        #         e(
+        #           message,
+        #           :post_content,
+        #           :summary,
+        #           e(message, :post_content, :html_body, reply_to_id)
+        #         )
+        #       )
+        #     )
 
         participants =
           Bonfire.Social.Threads.list_participants(activity, thread_id, current_user: current_user)
@@ -250,7 +249,7 @@ defmodule Bonfire.UI.Social.MessagesLive do
             object: message,
             thread_id: e(message, :id, nil),
             participants: participants,
-            smart_input_prompt: prompt,
+            smart_input_opts: [prompt: prompt],
             to_circles: to_circles || [],
             sidebar_widgets:
               LiveHandler.threads_widget(current_user, ulid(e(socket.assigns, :user, nil)),
@@ -289,25 +288,36 @@ defmodule Bonfire.UI.Social.MessagesLive do
     }
   end
 
-  # def handle_event("compose_thread", _ , socket) do
+  # def do_handle_event("compose_thread", _ , socket) do
   #   debug("start a thread")
   #   debug(e(socket, :to_circles, []))
   #   {:noreply, assign(socket, tab_id: "select_recipients")}
   # end
 
-  def handle_params(params, uri, socket) do
-    # debug(params, "params")
-    # poor man's hook I guess
-    with {_, socket} <- Bonfire.UI.Common.LiveHandlers.handle_params(params, uri, socket) do
-      undead_params(socket, fn ->
-        do_handle_params(params, uri, socket)
-      end)
-    end
-  end
-
-  def handle_event(action, attrs, socket),
-    do: Bonfire.UI.Common.LiveHandlers.handle_event(action, attrs, socket, __MODULE__)
+  def handle_params(params, uri, socket),
+    do:
+      Bonfire.UI.Common.LiveHandlers.handle_params(
+        params,
+        uri,
+        socket,
+        __MODULE__,
+        &do_handle_params/3
+      )
 
   def handle_info(info, socket),
     do: Bonfire.UI.Common.LiveHandlers.handle_info(info, socket, __MODULE__)
+
+  def handle_event(
+        action,
+        attrs,
+        socket
+      ),
+      do:
+        Bonfire.UI.Common.LiveHandlers.handle_event(
+          action,
+          attrs,
+          socket,
+          __MODULE__
+          # &do_handle_event/3
+        )
 end

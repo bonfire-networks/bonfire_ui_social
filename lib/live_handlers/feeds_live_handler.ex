@@ -66,7 +66,7 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
 
       debug("send activity to smart input")
 
-      Bonfire.UI.Common.SmartInputLive.set(socket.assigns[:__context__],
+      Bonfire.UI.Common.SmartInputLive.open(socket.assigns[:__context__],
         # we reply to objects, not activities
         reply_to_id: reply_to_id,
         context_id: thread_id,
@@ -95,7 +95,7 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
   end
 
   def handle_event("remove_data", _params, socket) do
-    Bonfire.UI.Common.SmartInputLive.set(socket.assigns[:__context__],
+    Bonfire.UI.Common.SmartInputLive.open(socket.assigns[:__context__],
       activity: nil,
       object: nil,
       # default to replying to current thread
@@ -116,7 +116,6 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
     end
   end
 
-
   def handle_event("open_activity", %{"ignore" => "true"} = _params, socket) do
     {:noreply, socket}
   end
@@ -129,7 +128,6 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
   # def handle_event("open_activity", %{"id" => id}, socket) when is_binary(id) and id != "" do
   #   preview_thread(socket, %{object_id: id})
   # end
-
 
   def handle_event("open_activity", %{"permalink" => permalink} = _params, socket)
       when is_binary(permalink) and permalink != "" do
@@ -249,18 +247,6 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
      socket
      |> assign_generic(feed_assigns(key, socket))}
   end
-
-  # def preview_thread(socket, assigns) do
-  #   debug(assigns, "open_activity: load the object & thread for preview")
-
-  #   {:noreply,
-  #    socket
-  #    |> assign(assigns)
-  #    |> assign(
-  #      preview_module: Bonfire.UI.Social.ObjectThreadLive,
-  #      preview_assigns: Bonfire.Social.Objects.LiveHandler.load_object_assigns(assigns)
-  #    )}
-  # end
 
   defp send_feed_updates(feed_ids, assigns, component \\ Bonfire.UI.Social.FeedLive)
 
@@ -638,6 +624,11 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
         page_info: page_info
       ]
     end
+  end
+
+  defp feed_assigns({feed_id, other}, socket) when is_atom(feed_id) and not is_nil(feed_id) do
+    warn(other, "ignoring param")
+    feed_assigns(feed_id, socket)
   end
 
   defp feed_assigns({feed_id, other}, socket) do

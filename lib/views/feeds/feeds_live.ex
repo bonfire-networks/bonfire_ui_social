@@ -46,8 +46,10 @@ defmodule Bonfire.UI.Social.FeedsLive do
        selected_tab: "feed",
        page: "feed",
        page_title: l("My feed"),
-       page_header_drawer: true,
+       feed: nil,
+       page_info: nil,
        feed_id: nil,
+       feed_title: nil,
        feed_ids: nil,
        feed_component_id: "feeds",
        feedback_title: l("Your feed is empty"),
@@ -84,19 +86,30 @@ defmodule Bonfire.UI.Social.FeedsLive do
     {:noreply, assign(socket, LiveHandler.feed_assigns_maybe_async({:default, params}, socket))}
   end
 
-  # defdelegate handle_params(params, attrs, socket), to: Bonfire.UI.Common.LiveHandlers
-  def handle_params(params, uri, socket) do
-    # poor man's hook I guess
-    with {_, socket} <- Bonfire.UI.Common.LiveHandlers.handle_params(params, uri, socket) do
-      undead_params(socket, fn ->
-        do_handle_params(params, uri, socket)
-      end)
-    end
-  end
-
-  def handle_event(action, attrs, socket),
-    do: Bonfire.UI.Common.LiveHandlers.handle_event(action, attrs, socket, __MODULE__)
+  def handle_params(params, uri, socket),
+    do:
+      Bonfire.UI.Common.LiveHandlers.handle_params(
+        params,
+        uri,
+        socket,
+        __MODULE__,
+        &do_handle_params/3
+      )
 
   def handle_info(info, socket),
     do: Bonfire.UI.Common.LiveHandlers.handle_info(info, socket, __MODULE__)
+
+  def handle_event(
+        action,
+        attrs,
+        socket
+      ),
+      do:
+        Bonfire.UI.Common.LiveHandlers.handle_event(
+          action,
+          attrs,
+          socket,
+          __MODULE__
+          # &do_handle_event/3
+        )
 end

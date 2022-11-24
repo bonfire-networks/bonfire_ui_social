@@ -28,9 +28,8 @@ defmodule Bonfire.UI.Social.WriteLive do
      |> assign(
        page_title: l("Share a feedback"),
        page: "write",
-       hide_smart_input: true,
        create_object_type: maybe_to_atom(e(session, "create_object_type", nil)),
-       smart_input_opts: [text: e(session, "smart_input_text", nil)],
+       smart_input_opts: [inline_only: true, text: e(session, "smart_input_text", nil)],
        reply_to_id: e(session, "reply_to_id", nil),
        context_id: e(session, "context_id", nil),
        to_boundaries: nil,
@@ -50,9 +49,29 @@ defmodule Bonfire.UI.Social.WriteLive do
      )}
   end
 
-  def handle_event(action, attrs, socket),
-    do: Bonfire.UI.Common.LiveHandlers.handle_event(action, attrs, socket, __MODULE__)
+  def handle_params(params, uri, socket),
+    do:
+      Bonfire.UI.Common.LiveHandlers.handle_params(
+        params,
+        uri,
+        socket,
+        __MODULE__
+      )
 
   def handle_info(info, socket),
     do: Bonfire.UI.Common.LiveHandlers.handle_info(info, socket, __MODULE__)
+
+  def handle_event(
+        action,
+        attrs,
+        socket
+      ),
+      do:
+        Bonfire.UI.Common.LiveHandlers.handle_event(
+          action,
+          attrs,
+          socket,
+          __MODULE__
+          # &do_handle_event/3
+        )
 end

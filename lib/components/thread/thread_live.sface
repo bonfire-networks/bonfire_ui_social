@@ -26,7 +26,6 @@
             thread_level={1}
             thread_mode={@thread_mode}
             smart_input_opts={@smart_input_opts}
-            smart_input_prompt={@smart_input_prompt}
             url={@url}
             showing_within={e(@showing_within, :thread)}
           />
@@ -41,7 +40,6 @@
             thread_object={@object}
             thread_mode={@thread_mode}
             smart_input_opts={@smart_input_opts}
-            smart_input_prompt={@smart_input_prompt}
             url={@url}
             showing_within={e(@showing_within, :thread)}
           />
@@ -74,7 +72,7 @@
         <Bonfire.UI.Common.SmartInputButtonLive
           component={Bonfire.Common.Config.get([:ui, :default_smart_input]) ||
             Bonfire.UI.Social.WritePostContentLive}
-          smart_input_prompt={l("Be the first to reply")}
+          smart_input_opts={[prompt: l("Be the first to reply")]}
           class="my-12 h-[40px] flex items-center gap-2 normal-case btn-sm btn"
           icon="heroicons-outline:reply"
         />

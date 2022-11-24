@@ -5,7 +5,6 @@ defmodule Bonfire.UI.Social.ProfileTimelineLive do
   prop page, :string, required: true
   prop selected_tab, :string, default: "timeline"
   prop smart_input, :boolean, required: true
-  prop smart_input_prompt, :string
   prop smart_input_opts, :any
   prop search_placeholder, :string
   prop feed_title, :string

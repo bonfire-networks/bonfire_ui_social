@@ -24,7 +24,7 @@ defmodule Bonfire.UI.Social.PostLive do
        page: "discussion",
        to_circles: [],
        participants: nil,
-       smart_input_prompt: l("Reply to this thread"),
+       smart_input_opts: [prompt: l("Reply to this thread")],
        activity: nil,
        showing_within: :thread,
        #  page_header_aside: [
@@ -72,18 +72,30 @@ defmodule Bonfire.UI.Social.PostLive do
      |> redirect_to(path(:write))}
   end
 
-  def handle_params(params, uri, socket) do
-    # poor man's hook I guess
-    with {_, socket} <- Bonfire.UI.Common.LiveHandlers.handle_params(params, uri, socket) do
-      undead_params(socket, fn ->
-        do_handle_params(params, uri, socket)
-      end)
-    end
-  end
-
-  def handle_event(action, attrs, socket),
-    do: Bonfire.UI.Common.LiveHandlers.handle_event(action, attrs, socket, __MODULE__)
+  def handle_params(params, uri, socket),
+    do:
+      Bonfire.UI.Common.LiveHandlers.handle_params(
+        params,
+        uri,
+        socket,
+        __MODULE__,
+        &do_handle_params/3
+      )
 
   def handle_info(info, socket),
     do: Bonfire.UI.Common.LiveHandlers.handle_info(info, socket, __MODULE__)
+
+  def handle_event(
+        action,
+        attrs,
+        socket
+      ),
+      do:
+        Bonfire.UI.Common.LiveHandlers.handle_event(
+          action,
+          attrs,
+          socket,
+          __MODULE__
+          # &do_handle_event/3
+        )
 end

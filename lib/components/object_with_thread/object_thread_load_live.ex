@@ -11,7 +11,6 @@ defmodule Bonfire.UI.Social.ObjectThreadLoadLive do
   prop create_object_type, :any, default: nil
   prop to_boundaries, :list, default: nil
   prop to_circles, :list, default: []
-  prop smart_input_prompt, :string, default: nil
   prop smart_input_opts, :any, default: nil
   prop reply_to_id, :any, default: nil
   prop thread_id, :string, default: nil
@@ -49,4 +48,18 @@ defmodule Bonfire.UI.Social.ObjectThreadLoadLive do
      |> assign(assigns)
      |> Bonfire.Social.Objects.LiveHandler.load_object_assigns()}
   end
+
+  def handle_event(
+        action,
+        attrs,
+        socket
+      ),
+      do:
+        Bonfire.UI.Common.LiveHandlers.handle_event(
+          action,
+          attrs,
+          socket,
+          __MODULE__
+          # &do_handle_event/3
+        )
 end

@@ -39,7 +39,7 @@
             preview_component: Bonfire.UI.Social.ObjectThreadLoadLive
           }
           root_assigns={
-            page_title: l "Discussion"
+            page_title: l("Discussion")
           }
         />
         <!-- TODO: derive the view from object_type? and compute object_type not just based on schema, but also with some logic looking at fields (eg. action=="work") -->
@@ -54,7 +54,7 @@
             preview_view: Bonfire.UI.Coordination.TaskLive
           }
           root_assigns={
-            page_title: l "Task"
+            page_title: l("Task")
           }
         />
       {#elseif String.starts_with?(@permalink || "", ["/coordination/list/"])}

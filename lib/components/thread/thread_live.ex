@@ -21,7 +21,6 @@ defmodule Bonfire.UI.Social.ThreadLive do
   prop to_boundaries, :list, default: []
   prop to_circles, :list, default: []
   prop url, :string, default: nil
-  prop smart_input_prompt, :string, default: nil
   prop smart_input_opts, :any, default: nil
   prop thread_mode, :any, default: nil
   prop reverse_order, :any, default: nil
@@ -134,8 +133,19 @@ defmodule Bonfire.UI.Social.ThreadLive do
      |> LiveHandler.load_thread_maybe_async()}
   end
 
-  def handle_event(action, attrs, socket),
-    do: Bonfire.UI.Common.LiveHandlers.handle_event(action, attrs, socket, __MODULE__)
+  def handle_event(
+        action,
+        attrs,
+        socket
+      ),
+      do:
+        Bonfire.UI.Common.LiveHandlers.handle_event(
+          action,
+          attrs,
+          socket,
+          __MODULE__
+          # &do_handle_event/3
+        )
 
   def handle_info(info, socket),
     do: Bonfire.UI.Common.LiveHandlers.handle_info(info, socket, __MODULE__)
