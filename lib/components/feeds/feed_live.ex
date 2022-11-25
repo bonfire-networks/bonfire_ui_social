@@ -89,7 +89,7 @@ defmodule Bonfire.UI.Social.FeedLive do
 
   def update(%{feed: feed, page_info: page_info} = assigns, socket) when is_list(feed) do
     debug("FeedLive.update - an initial feed was provided via assigns")
-    debug(feed)
+    # debug(feed)
 
     # debug(socket.assigns, "socket assigns")
     # debug(assigns)
