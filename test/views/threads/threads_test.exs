@@ -5,6 +5,4 @@ defmodule Bonfire.Social.Threads.ThreadsTest do
   alias Bonfire.Social.Likes
   alias Bonfire.Social.Follows
   alias Bonfire.Social.Posts
-
-
 end
