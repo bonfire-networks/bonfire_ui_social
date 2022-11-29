@@ -15,7 +15,7 @@
 
   <:open_btn>
     <div class={@open_btn_class}>
-      <Icon if={!@hide_icon} solid="Trash" class="w-4 h-4 shrink-0" />
+      <Icon :if={!@hide_icon} solid="Trash" class="w-4 h-4 shrink-0" />
       <span :if={!@hide_text} class="truncate ellipsis">
         {l("Delete this")} {e(@object_type_readable, l("object"))}
       </span>
