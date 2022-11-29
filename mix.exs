@@ -1,9 +1,20 @@
-Code.eval_file("mess.exs")
+Code.eval_file("mess.exs", (if File.exists?("../../lib/mix/mess.exs"), do: "../../lib/mix/"))
 defmodule Bonfire.UI.Social.MixProject do
 
   use Mix.Project
 
   def project do
+    if File.exists?("../../.is_umbrella.exs") do
+      [
+        build_path: "../../_build",
+        config_path: "../../config/config.exs",
+        deps_path: "../../deps",
+        lockfile: "../../mix.lock"
+      ]
+    else
+      []
+    end
+    ++
     [
       app: :bonfire_ui_social,
       version: "0.1.0",
@@ -14,7 +25,6 @@ defmodule Bonfire.UI.Social.MixProject do
       aliases: aliases(),
       deps: Mess.deps([
         {:phoenix_live_reload, "~> 1.2", only: :dev},
-        {:dbg, "~> 1.0", only: [:dev, :test]},
         {:floki, ">= 0.0.0", only: [:dev, :test]},
         {:bonfire_editor_ck, git: "https://github.com/bonfire-networks/bonfire_editor_ck", branch: "main", optional: true},
         {:bonfire_editor_quill, git: "https://github.com/bonfire-networks/bonfire_editor_quill", branch: "main", optional: true},

@@ -1,0 +1,163 @@
+digraph "xref graph" {
+  "lib/components/activity/actions/actions_live.ex"
+  "lib/components/activity/actions/actions_live.ex" -> "lib/components/activity/actions/more_actions_live.ex" [label="(export)"]
+  "lib/components/activity/actions/more_actions_live.ex" -> "lib/components/activity/actions/delete_object_live.ex" [label="(export)"]
+  "lib/components/activity/actions/delete_object_live.ex" -> "lib/integration.ex" [label="(export)"]
+  "lib/components/activity/actions/more_actions_live.ex" -> "lib/components/activity/actions/pin/pin_action_live.ex" [label="(export)"]
+  "lib/components/activity/actions/more_actions_live.ex" -> "lib/integration.ex" [label="(export)"]
+  "lib/components/activity/actions/actions_live.ex" -> "lib/components/activity/actions/reactions_live.ex" [label="(export)"]
+  "lib/components/activity/actions/reactions_live.ex" -> "lib/components/activity/actions/actions_live.ex"
+  "lib/components/activity/actions/reactions_live.ex" -> "lib/components/activity/actions/reply/reply_live.ex" [label="(export)"]
+  "lib/components/activity/actions/actions_live.ex" -> "lib/components/object_with_thread/object_thread_load_live.ex"
+  "lib/components/object_with_thread/object_thread_load_live.ex" -> "lib/components/object_with_thread/object_thread_live.ex" [label="(export)"]
+  "lib/components/object_with_thread/object_thread_live.ex" -> "lib/components/activity/activity_live.ex" [label="(export)"]
+  "lib/components/activity/activity_live.ex" -> "lib/components/activity/actions/actions_live.ex"
+  "lib/components/activity/activity_live.ex" -> "lib/components/activity/actions/category_actions/category_actions_live.ex"
+  "lib/components/activity/activity_live.ex" -> "lib/components/activity/actions/event_actions/event_actions_live.ex"
+  "lib/components/activity/activity_live.ex" -> "lib/components/activity/actions/flagged_actions_live.ex"
+  "lib/components/activity/actions/flagged_actions_live.ex" -> "lib/components/activity/actions/delete_object_live.ex" [label="(export)"]
+  "lib/components/activity/actions/flagged_actions_live.ex" -> "lib/components/activity/actions/more_actions_live.ex"
+  "lib/components/activity/activity_live.ex" -> "lib/components/activity/actions/process_actions/process_actions_live.ex"
+  "lib/components/activity/activity_live.ex" -> "lib/components/activity/media/media_live.ex"
+  "lib/components/activity/media/media_live.ex" -> "lib/components/activity/media/remote_media_live.ex" [label="(export)"]
+  "lib/components/activity/media/remote_media_live.ex" -> "lib/components/activity/media/media_live.ex"
+  "lib/components/activity/activity_live.ex" -> "lib/components/activity/object/category/category_live.ex"
+  "lib/components/activity/object/category/category_live.ex" -> "lib/components/activity/actions/category_actions/category_actions_live.ex" [label="(export)"]
+  "lib/components/activity/activity_live.ex" -> "lib/components/activity/object/character/character_live.ex"
+  "lib/components/activity/activity_live.ex" -> "lib/components/activity/object/economic_event/economic_event_live.ex"
+  "lib/components/activity/object/economic_event/economic_event_live.ex" -> "lib/components/activity/object/economic_resource/economic_resource_live.ex"
+  "lib/components/activity/activity_live.ex" -> "lib/components/activity/object/economic_resource/economic_resource_live.ex"
+  "lib/components/activity/activity_live.ex" -> "lib/components/activity/object/intent/intent_task_live.ex"
+  "lib/components/activity/activity_live.ex" -> "lib/components/activity/object/note/note_live.ex"
+  "lib/components/activity/activity_live.ex" -> "lib/components/activity/object/process/process_list/process_list_live.ex"
+  "lib/components/activity/activity_live.ex" -> "lib/components/activity/object/unknown/unknown_live.ex"
+  "lib/components/activity/activity_live.ex" -> "lib/components/activity/subject/subject_live.ex"
+  "lib/components/activity/subject/subject_live.ex" -> "lib/components/activity/actions/more_actions_live.ex" [label="(export)"]
+  "lib/components/activity/subject/subject_live.ex" -> "lib/components/activity/date_ago_live.ex" [label="(export)"]
+  "lib/components/activity/date_ago_live.ex" -> "lib/components/activity/instance_icon_live.ex" [label="(export)"]
+  "lib/components/activity/subject/subject_live.ex" -> "lib/components/activity/instance_icon_live.ex" [label="(export)"]
+  "lib/components/activity/activity_live.ex" -> "lib/components/activity/subject/subject_minimal_live.ex"
+  "lib/components/activity/subject/subject_minimal_live.ex" -> "lib/components/activity/date_ago_live.ex" [label="(export)"]
+  "lib/components/object_with_thread/object_thread_live.ex" -> "lib/components/thread/thread_live.ex" [label="(export)"]
+  "lib/components/thread/thread_live.ex" -> "lib/components/smart_input/write/write_post_content_live.ex"
+  "lib/components/smart_input/write/write_post_content_live.ex" -> "lib/live_handlers/posts_live_handler.ex"
+  "lib/live_handlers/posts_live_handler.ex" -> "lib/live_handlers/messages_live_handler.ex"
+  "lib/live_handlers/messages_live_handler.ex" -> "lib/components/messages/message_threads_live.ex"
+  "lib/components/thread/thread_live.ex" -> "lib/components/thread/comment_live.ex" [label="(export)"]
+  "lib/components/thread/comment_live.ex" -> "lib/components/activity/activity_live.ex" [label="(export)"]
+  "lib/components/thread/thread_live.ex" -> "lib/live_handlers/threads_live_handler.ex"
+  "lib/live_handlers/threads_live_handler.ex" -> "lib/components/thread/thread_live.ex"
+  "lib/components/object_with_thread/object_thread_load_live.ex" -> "lib/live_handlers/objects_live_handler.ex"
+  "lib/components/activity/actions/category_actions/category_actions_live.ex"
+  "lib/components/activity/actions/delete_object_live.ex"
+  "lib/components/activity/actions/event_actions/event_actions_live.ex"
+  "lib/components/activity/actions/flagged_actions_live.ex"
+  "lib/components/activity/actions/main_object_info_live.ex"
+  "lib/components/activity/actions/more_actions_live.ex"
+  "lib/components/activity/actions/no_actions_live.ex"
+  "lib/components/activity/actions/pin/pin_action_live.ex"
+  "lib/components/activity/actions/process_actions/process_actions_live.ex"
+  "lib/components/activity/actions/reactions_live.ex"
+  "lib/components/activity/actions/reply/reply_live.ex"
+  "lib/components/activity/actions/view_thread/view_thread_live.ex"
+  "lib/components/activity/activity_live.ex"
+  "lib/components/activity/date_ago_live.ex"
+  "lib/components/activity/instance_icon_live.ex"
+  "lib/components/activity/media/media_live.ex"
+  "lib/components/activity/media/remote_media_live.ex"
+  "lib/components/activity/object/category/category_live.ex"
+  "lib/components/activity/object/character/character_live.ex"
+  "lib/components/activity/object/economic_event/economic_event_live.ex"
+  "lib/components/activity/object/economic_resource/economic_resource_live.ex"
+  "lib/components/activity/object/intent/intent_task_live.ex"
+  "lib/components/activity/object/note/note_live.ex"
+  "lib/components/activity/object/process/process_list/process_list_live.ex"
+  "lib/components/activity/object/process/process_reflow/process_reflow_live.ex"
+  "lib/components/activity/object/unknown/unknown_live.ex"
+  "lib/components/activity/replied_date_ago_live.ex"
+  "lib/components/activity/replied_date_ago_live.ex" -> "lib/components/activity/instance_icon_live.ex" [label="(export)"]
+  "lib/components/activity/subject/provider_receiver_live.ex"
+  "lib/components/activity/subject/provider_receiver_live.ex" -> "lib/components/activity/instance_icon_live.ex" [label="(export)"]
+  "lib/components/activity/subject/subject_live.ex"
+  "lib/components/activity/subject/subject_minimal_live.ex"
+  "lib/components/feeds/feed_live.ex"
+  "lib/components/feeds/feed_live.ex" -> "lib/components/activity/activity_live.ex" [label="(export)"]
+  "lib/components/feeds/feed_live.ex" -> "lib/live_handlers/feeds_live_handler.ex"
+  "lib/live_handlers/feeds_live_handler.ex" -> "lib/components/activity/object/category/category_live.ex"
+  "lib/live_handlers/feeds_live_handler.ex" -> "lib/components/activity/object/character/character_live.ex"
+  "lib/live_handlers/feeds_live_handler.ex" -> "lib/components/activity/object/economic_event/economic_event_live.ex"
+  "lib/live_handlers/feeds_live_handler.ex" -> "lib/components/activity/object/economic_resource/economic_resource_live.ex"
+  "lib/live_handlers/feeds_live_handler.ex" -> "lib/components/activity/object/intent/intent_task_live.ex"
+  "lib/live_handlers/feeds_live_handler.ex" -> "lib/components/activity/object/process/process_list/process_list_live.ex"
+  "lib/live_handlers/feeds_live_handler.ex" -> "lib/components/feeds/feed_live.ex"
+  "lib/components/feeds/header_aside_feeds_live.ex"
+  "lib/components/feeds/header_aside_notifications_seen_live.ex"
+  "lib/components/feeds/profile_boosts/profile_boosts_live.ex"
+  "lib/components/feeds/profile_boosts/profile_boosts_live.ex" -> "lib/components/feeds/feed_live.ex" [label="(export)"]
+  "lib/components/feeds/profile_posts/profile_posts_live.ex"
+  "lib/components/feeds/profile_posts/profile_posts_live.ex" -> "lib/components/feeds/feed_live.ex" [label="(export)"]
+  "lib/components/feeds/profile_timeline/profile_timeline_live.ex"
+  "lib/components/feeds/profile_timeline/profile_timeline_live.ex" -> "lib/components/feeds/feed_live.ex" [label="(export)"]
+  "lib/components/flags/flags_live.ex"
+  "lib/components/flags/flags_live.ex" -> "lib/components/feeds/feed_live.ex" [label="(export)"]
+  "lib/components/hero/hero_live.ex"
+  "lib/components/messages/message_threads_live.ex"
+  "lib/components/messages/sidebar_messages_mobile_live.ex"
+  "lib/components/messages/sidebar_messages_mobile_live.ex" -> "lib/components/messages/message_threads_live.ex" [label="(export)"]
+  "lib/components/object_with_thread/banner_previous_thread/banner_previous_thread_live.ex"
+  "lib/components/object_with_thread/object_header_aside/object_header_aside_live.ex"
+  "lib/components/object_with_thread/object_thread_live.ex"
+  "lib/components/object_with_thread/object_thread_load_live.ex"
+  "lib/components/settings/my_feed_item_live.ex"
+  "lib/components/settings/my_feed_items_live.ex"
+  "lib/components/settings/my_feed_items_live.ex" -> "lib/components/settings/my_feed_item_live.ex" [label="(export)"]
+  "lib/components/smart_input/write/old/set_cw_live.ex"
+  "lib/components/smart_input/write/write_post_content_live.ex"
+  "lib/components/thread/comment_live.ex"
+  "lib/components/thread/load_previous_live.ex"
+  "lib/components/thread/thread_live.ex"
+  "lib/components/widgets/widget_messages/widget_messages_live.ex"
+  "lib/components/widgets/widget_notification/widget_notification_live.ex"
+  "lib/components/widgets/widget_notification/widget_notification_live.ex" -> "lib/components/feeds/feed_live.ex" [label="(export)"]
+  "lib/integration.ex"
+  "lib/live_handlers/boosts_live_handler.ex"
+  "lib/live_handlers/feeds_live_handler.ex"
+  "lib/live_handlers/flags_live_handler.ex"
+  "lib/live_handlers/follows_live_handler.ex"
+  "lib/live_handlers/likes_live_handler.ex"
+  "lib/live_handlers/messages_live_handler.ex"
+  "lib/live_handlers/objects_live_handler.ex"
+  "lib/live_handlers/pins_live_handler.ex"
+  "lib/live_handlers/posts_live_handler.ex"
+  "lib/live_handlers/threads_live_handler.ex"
+  "lib/social_routes.ex"
+  "lib/views/_deprecated/federation/federation_live.ex"
+  "lib/views/_deprecated/federation/federation_live.ex" -> "lib/components/feeds/feed_live.ex" [label="(export)"]
+  "lib/views/_deprecated/federation/federation_live.ex" -> "lib/live_handlers/feeds_live_handler.ex"
+  "lib/views/_deprecated/likes/likes_live.ex"
+  "lib/views/_deprecated/likes/likes_live.ex" -> "lib/components/feeds/feed_live.ex" [label="(export)"]
+  "lib/views/_deprecated/likes/likes_live.ex" -> "lib/live_handlers/feeds_live_handler.ex"
+  "lib/views/_deprecated/local/local_live.ex"
+  "lib/views/_deprecated/local/local_live.ex" -> "lib/components/feeds/feed_live.ex" [label="(export)"]
+  "lib/views/_deprecated/local/local_live.ex" -> "lib/live_handlers/feeds_live_handler.ex"
+  "lib/views/feeds/feeds_live.ex"
+  "lib/views/feeds/feeds_live.ex" -> "lib/components/feeds/feed_live.ex" [label="(export)"]
+  "lib/views/feeds/feeds_live.ex" -> "lib/live_handlers/feeds_live_handler.ex"
+  "lib/views/feeds/feeds_live.ex" -> "lib/views/_deprecated/federation/federation_live.ex"
+  "lib/views/feeds/feeds_live.ex" -> "lib/views/_deprecated/likes/likes_live.ex"
+  "lib/views/feeds/feeds_live.ex" -> "lib/views/_deprecated/local/local_live.ex"
+  "lib/views/feeds/notifications/notifications_live.ex"
+  "lib/views/feeds/notifications/notifications_live.ex" -> "lib/components/feeds/feed_live.ex" [label="(export)"]
+  "lib/views/feeds/notifications/notifications_live.ex" -> "lib/components/feeds/header_aside_notifications_seen_live.ex"
+  "lib/views/messages/messages_live.ex"
+  "lib/views/messages/messages_live.ex" -> "lib/components/feeds/header_aside_notifications_seen_live.ex"
+  "lib/views/messages/messages_live.ex" -> "lib/components/object_with_thread/object_thread_live.ex" [label="(export)"]
+  "lib/views/messages/messages_live.ex" -> "lib/live_handlers/messages_live_handler.ex"
+  "lib/views/threads/discussion_live.ex"
+  "lib/views/threads/discussion_live.ex" -> "lib/components/object_with_thread/object_thread_live.ex" [label="(export)"]
+  "lib/views/threads/discussion_live.ex" -> "lib/live_handlers/objects_live_handler.ex"
+  "lib/views/threads/post_live.ex"
+  "lib/views/threads/post_live.ex" -> "lib/components/object_with_thread/object_thread_live.ex" [label="(export)"]
+  "lib/views/threads/post_live.ex" -> "lib/live_handlers/objects_live_handler.ex"
+  "lib/views/threads/write_live.ex"
+}
