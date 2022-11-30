@@ -1,3 +1,4 @@
+IO.inspect(File.cwd!(), label: "mixx")
 Code.eval_file("mess.exs", (if File.exists?("../../lib/mix/mess.exs"), do: "../../lib/mix/"))
 defmodule Bonfire.UI.Social.MixProject do
 
