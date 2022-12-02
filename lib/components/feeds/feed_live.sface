@@ -1,5 +1,5 @@
 <div id={@feed_id || @id} role="feed" aria-live="assertive" aria-atomic="true" class="feed">
-  <div class="flex flex-col max-w-[680px] mx-auto overflow-x-hidden overflow-y-hidden">
+  <div class="flex flex-col max-w-[680px] mx-auto">
     <Bonfire.UI.Common.TabsLive
       :if={@hide_tabs != true}
       selected_tab={@selected_tab || @feed_id}
@@ -18,7 +18,7 @@
         id={"feed:#{@feed_id || @id}"}
         data-id="feed"
         phx-update={e(@feed_update_mode, "append")}
-        class="flex flex-col space-y-3"
+        class="flex flex-col divide-y divide-base-content/10"
       >
         {#for entry <- @feed}
           {#case "#{@feed_id || @id}-" <>
@@ -40,7 +40,7 @@
       </div>
     {#else}
       {#if @loading}
-        <div class="flex flex-col items-center gap-3 py-12 rounded-md shadow bg-base-100 place-content-center">
+        <div class="flex flex-col items-center gap-3 py-12 bg-base-100 place-content-center">
           <svg
             xmlns="http://www.w3.org/2000/svg"
             xmlns:xlink="http://www.w3.org/1999/xlink"
@@ -49,7 +49,7 @@
             height="80px"
             viewBox="0 0 100 100"
             preserveAspectRatio="xMidYMid"
-          >
+            >
             <defs>
               <filter
                 id="ldio-jnr8zvselw-filter"

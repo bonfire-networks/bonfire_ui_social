@@ -169,11 +169,11 @@ defmodule Bonfire.UI.Social.ActivityLive do
         "activity_inception bg-base-content/10 !m-0 opacity-100 before:!left-2 before:top-1 before:bottom-1":
           e(assigns, :activity_inception, nil) != nil and e(assigns, :thread_mode, nil) == :flat,
         # showing a quoted reply_to
-        "main_reply_to !rounded-none !shadow-none mb-2 p-2 py-1 mt-2 relative before:absolute before:content-[''] before:w-1 before:bg-base-content/40 before:left-0 before:top-0 before:bottom-0 opacity-60 !border-none":
+        "main_reply_to !rounded-none !shadow-none mb-2 p-2 py-0 mt-2 relative before:absolute before:content-[''] before:w-1 before:bg-base-content/40 before:left-0 before:top-0 before:bottom-0 opacity-60 !border-none":
           ulid(@object) != nil and e(@activity, :replied, :reply_to_id, nil) == nil and
             ulid(@activity) == nil and @showing_within != :widget and
             @showing_within != :search,
-        "rounded-md shadow": @showing_within != :thread and e(assigns, :thread_mode, nil) != :flat,
+        "": @showing_within != :thread and e(assigns, :thread_mode, nil) != :flat,
         reply:
           ulid(@object) != nil and e(@activity, :replied, :reply_to_id, nil) != nil and
             ulid(@activity) != nil,

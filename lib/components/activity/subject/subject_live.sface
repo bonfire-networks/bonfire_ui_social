@@ -64,7 +64,7 @@
       "flex items-top",
       "space-x-3": @viewing_main_object == true,
       "py-1": @thread_mode == :flat
-    }>
+      }>
       <div
         :if={ulid(@current_user) != maybe_get(@character, :id) || @thread_mode != :flat}
         class={
@@ -80,11 +80,11 @@
           class="font-semibold text-base-content hover:underline"
           to={path(@character)}
         >
-          <Bonfire.UI.Common.AvatarLive user={@profile} viewing_main_object={@viewing_main_object} />
+          <Bonfire.UI.Common.AvatarLive user={@profile} comment={e(@showing_within, :feed) in [:thread] && !@viewing_main_object} viewing_main_object={@viewing_main_object} />
         </LiveRedirect>
       </div>
       <div class="flex items-start justify-between leading-[16px] min-w-0 space-x-1 w-full">
-        <div class="flex flex-col flex-1 gap-1 feed-clickable">
+        <div class="flex flex-col flex-1 gap-0.5 feed-clickable">
           {#if @thread_mode == :flat && @current_user && ulid(@current_user) == maybe_get(@character, :id)}
             <LiveRedirect
               opts={"data-id": "subject_name"}

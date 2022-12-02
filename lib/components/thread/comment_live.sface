@@ -4,7 +4,7 @@
   x-data="{show_replies: true}"
   class={
     "reply thread-level-" <> to_string(@thread_level) <> " flex relative  w-full mx-auto",
-    "p-3 border-b border-base-content/10": @thread_level == 1
+    "py-2 border-b border-base-content/10": @thread_level == 1
   }
 >
   <div class="flex-1 w-full">
@@ -38,7 +38,7 @@
               id={e(@comment, :id, "ca") <> ":" <> e(activity, :id, "")}
               activity={activity}
               thread_object={@thread_object}
-              class="showing_within:thread !py-2 !bg-transparent !shadow-none !rounded-none"
+              class="showing_within:thread !py-0 !bg-transparent !shadow-none !rounded-none"
               feed_id={@feed_id}
               showing_within={:thread}
               thread_mode={@thread_mode}
@@ -66,7 +66,7 @@
                    create_object_type: @create_object_type
                  }),
                  do: :skip}
-              class="showing_within:thread !py-2 !bg-transparent !shadow-none !rounded-none"
+              class="showing_within:thread !py-0 !bg-transparent !shadow-none !rounded-none"
             />
           {#match _}
             <div class="mx-4 my-2">
