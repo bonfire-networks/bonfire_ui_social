@@ -29,8 +29,13 @@ defmodule Bonfire.UI.Social.DiscussionLive do
        without_sidebar: true,
        activity: nil,
        post: nil,
+       object: nil,
+       object_id: nil,
+       post_id: nil,
        thread_id: nil,
+       reply_to_id: nil,
        thread_mode: nil,
+       url: nil,
        search_placeholder: nil,
        to_boundaries: nil,
        loading: false

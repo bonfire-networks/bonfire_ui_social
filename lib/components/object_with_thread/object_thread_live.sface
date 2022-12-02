@@ -33,6 +33,7 @@
       </div>
       <div class="mt-3">
         <Bonfire.UI.Social.ThreadLive
+          :if={@thread_id}
           id={@thread_id}
           thread_id={@thread_id}
           feed_id={@feed_id}

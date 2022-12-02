@@ -188,8 +188,8 @@ defmodule Bonfire.UI.Social.FeedLive do
           action,
           attrs,
           socket,
-          __MODULE__
-          # &do_handle_event/3
+          __MODULE__,
+          &do_handle_event/3
         )
 
   def handle_info(info, socket),
