@@ -8,7 +8,7 @@
     create_object_type={@create_object_type}
     thread_mode={:flat}
     title_open
-    to_boundaries={boundaries_or_default(@to_boundaries, @__context__)}
+    to_boundaries={@to_boundaries}
     to_circles={@to_circles}
     smart_input_opts={@smart_input_opts}
   />
