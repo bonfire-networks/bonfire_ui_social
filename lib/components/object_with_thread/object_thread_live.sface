@@ -65,7 +65,7 @@
       thread_mode={@thread_mode}
       thread_id={@thread_id}
       create_object_type={@create_object_type}
-      to_boundaries={e(@to_boundaries, [])}
+      to_boundaries={@to_boundaries}
       to_circles={@to_circles}
       title_open={false}
       smart_input_opts={@smart_input_opts}

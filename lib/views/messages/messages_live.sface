@@ -7,7 +7,7 @@
           page_title={@page_title}
           feed_id={@feed_id}
           create_object_type={@create_object_type}
-          to_boundaries={e(@to_boundaries, [])}
+          to_boundaries={@to_boundaries}
           to_circles={@to_circles}
           participants={e(@participants, [])}
           smart_input_opts={@smart_input_opts}
