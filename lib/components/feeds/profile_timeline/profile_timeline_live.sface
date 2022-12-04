@@ -1,6 +1,6 @@
 <div>
   <#slot {@header} />
-  <div class="grid items-start grid-cols-1 mx-3 mt-4">
+  <div class="grid items-start grid-cols-1 mt-4">
     <Bonfire.UI.Social.FeedLive
       id="feed:profile:timeline"
       feed_id={"user:#{@selected_tab}:#{ulid(@user)}"}
