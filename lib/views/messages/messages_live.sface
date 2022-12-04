@@ -1,28 +1,27 @@
 <main class="h-full">
-  {#if @tab_id in ["compose", "select_recipients", "thread"]}
+  {#if @tab_id == "thread"}
     <div class="flex flex-col h-full">
-      {#if @tab_id == "thread"}
-        <Bonfire.UI.Social.ObjectThreadLive
-          page={@page}
-          page_title={@page_title}
-          feed_id={@feed_id}
-          create_object_type={@create_object_type}
-          to_boundaries={@to_boundaries}
-          to_circles={@to_circles}
-          participants={e(@participants, [])}
-          smart_input_opts={@smart_input_opts}
-          thread_id={@thread_id}
-          thread_mode={:flat}
-          reply_to_id={e(@reply_to_id, "")}
-          activity={@activity}
-          object={@object}
-          url={@url}
-          show_reply_input
-          reverse_order
-          showing_within={:messages}
-          replied_activity_class="relative mb-2 rounded-md bg-base-100 hover:bg-base-100"
-        />
-      {#elseif @tab_id in ["compose", "select_recipients"]}
+      <Bonfire.UI.Social.ObjectThreadLive
+        page={@page}
+        page_title={@page_title}
+        feed_id={@feed_id}
+        create_object_type={@create_object_type}
+        to_boundaries={@to_boundaries}
+        to_circles={@to_circles}
+        participants={e(@participants, [])}
+        smart_input_opts={@smart_input_opts}
+        thread_id={@thread_id}
+        thread_mode={:flat}
+        reply_to_id={e(@reply_to_id, "")}
+        activity={@activity}
+        object={@object}
+        url={@url}
+        show_reply_input
+        reverse_order
+        showing_within={:messages}
+        replied_activity_class="relative mb-2 rounded-md bg-base-100 hover:bg-base-100"
+      />
+      <!-- {#elseif @tab_id in ["compose", "select_recipients"]}
         <div class="flex-1 p-3  relative z-[90]">
           <div class="shadow-lg alert alert-info">
             <div>
@@ -59,22 +58,24 @@
             show_select_recipients
           />
         </div>
-      {/if}
+      {/if} -->
     </div>
   {#else}
-    <div class="flex-1 hidden p-6 tablet-lg:block rounded-b-md md:mx-0 text-base-content">
+    <Bonfire.UI.Social.MessageThreadsLive
+      showing_within="messages"
+      context={ulid(@current_user)}
+      threads={@threads}
+    />
+  
+    <!-- <div class="flex-1 hidden p-6 tablet-lg:block rounded-b-md md:mx-0 text-base-content">
       <Bonfire.UI.Common.EmptyFeed
         feedback_title={@feedback_title}
         feedback_message={@feedback_message}
       />
     </div>
     <div class="flex-1 p-3 tablet-lg:hidden rounded-b-md md:mx-0 text-base-content bg-base-100">
-      <!-- <Bonfire.UI.Social.MessageThreadsLive
-        showing_within="messages"
-        context={ulid(@current_user)}
-        threads={@threads}
-      /> -->
-    </div>
+      
+    </div> -->
   {/if}
   <!-- 
 

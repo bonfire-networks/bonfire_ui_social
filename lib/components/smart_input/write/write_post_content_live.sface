@@ -35,7 +35,7 @@
         <Inputs for={:post_content}>
           <div x-show="!open_boundaries" class="flex-1">
             <div
-              class="relative p-2 border-b bg-base-100 border-base-content/10"
+              class="relative p-2 border-b bg-base-200 border-base-content/10"
               display="style: none"
               x-show="title_open"
               x-transition
@@ -46,7 +46,7 @@
                   opts={
                     placeholder: l("Enter a content warning")
                   }
-                  class="w-full input input-bordered"
+                  class="bg-transparent rounded w-full input h-8 text-sm"
                 />
               </Field>
             </div>
