@@ -9,9 +9,9 @@ defmodule Bonfire.UI.Social.FeedLive do
   prop feed_id, :any, default: nil
   prop feed_ids, :any, default: nil
   prop feed_filters, :any, default: []
-  prop feed, :any, default: nil
+  prop feed, :any, default: :loading
   prop page_info, :any, default: nil
-  prop loading, :boolean, default: false
+  prop loading, :boolean, default: true
   prop preload, :atom, default: :feed
 
   prop feedback_title, :string, default: nil
@@ -26,7 +26,10 @@ defmodule Bonfire.UI.Social.FeedLive do
   prop feed_title, :string, default: nil
 
   @doc "What LiveHandler and/or event name to send the patch event to for tabs navigation (if any)"
-  prop event_handler, :string, default: "select_tab"
+  # "select_tab"
+  prop event_handler, :string, default: nil
+  # FIXME: should optimise by LinkPatchLive but currently not working
+  prop tab_link_component, :atom, default: LinkLive
 
   prop tab_path_prefix, :string, default: "?tab="
   prop hide_tabs, :boolean, default: false
@@ -78,15 +81,16 @@ defmodule Bonfire.UI.Social.FeedLive do
   #   update(Map.merge(assigns, %{new_activity: new_activity}), socket)
   # end
 
-  def update(_assigns, %{assigns: %{loading: false}} = socket) do
-    debug("skip replacing already loaded feed")
+  def update(_assigns, %{assigns: %{loading: loading?, feed: feed}} = socket)
+      when loading? == false and feed != :loading do
+    debug("skip replacing feed unless it was loading")
     ok_socket(socket)
   end
 
   def update(_assigns, %{assigns: %{feed: existing_feed}} = socket)
       when is_list(existing_feed) and length(existing_feed) > 0 do
     # FIXME: doesn't work because of temporary assigns?
-    debug("skip replacing already provided feed")
+    debug("skip replacing already loaded feed")
     ok_socket(socket)
   end
 

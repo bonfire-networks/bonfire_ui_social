@@ -336,7 +336,9 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
     feed_name = feed_name(feed_name, socket)
     debug(filters_or_custom_query_or_feed_id_or_ids, feed_name)
 
-    assigns = feed_default_assigns(feed_name, socket)
+    assigns =
+      feed_default_assigns(feed_name, socket)
+      |> debug("start by setting feed_default_assigns")
 
     feed_assigns_maybe_async_load(
       {feed_name, filters_or_custom_query_or_feed_id_or_ids},
@@ -349,7 +351,9 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
     feed_name = feed_name(other, socket)
     # debug(other, feed_name)
 
-    assigns = feed_default_assigns(feed_name, socket)
+    assigns =
+      feed_default_assigns(feed_name, socket)
+      |> debug("start by setting feed_default_assigns")
 
     feed_assigns_maybe_async_load(
       {feed_name, assigns[:feed_ids] || assigns[:feed_id]},
@@ -373,7 +377,7 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
       selected_tab: nil,
       page: "feed",
       page_title: l("My feed"),
-      feed_title: l("My feed"),
+      # feed_title: l("My feed"),
       # feed_id: feed_name,
       # feed_ids: feed_ids,
       feed: :loading,
@@ -393,7 +397,7 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
       # FIXME: clean up page vs tab
       page: "federation",
       page_title: l("Federated activities from remote instances"),
-      feed_title: l("Activities from around the fediverse"),
+      # feed_title: l("Activities from around the fediverse"),
       feedback_title: l("Your fediverse feed is empty"),
       feedback_message:
         l(
@@ -413,12 +417,10 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
     [
       loading: true,
       feed_id: feed_id,
-      current_user: current_user(socket),
       selected_tab: :local,
       # FIXME: clean up page vs tab
       page: "local",
-      page_title: l("Local"),
-      feed_title: l("Activities on this instance"),
+      page_title: l("Activities from members of the local instance"),
       feedback_title: l("Your local feed is empty"),
       # feed_id: feed_name,
       feedback_message: l("It seems like the paint is still fresh on this instance..."),
@@ -436,7 +438,7 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
       selected_tab: "likes",
       # FIXME: clean up page vs tab
       page: "local",
-      page_title: l("Favourites"),
+      page_title: l("My favourites"),
       feed_title: l("My favourites"),
       feedback_title: l("You have no favourites yet"),
       # feed_id: feed_name,
@@ -547,6 +549,11 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
   defp feed_id_only({feed_id, _feed_ids}), do: feed_id
   defp feed_id_only(feed_id), do: feed_id
 
+  defp feed_assigns({:likes, _filters}, socket) do
+    # NOTE: we don't support extra filter on likes for now
+    feed_assigns(:likes, socket)
+  end
+
   defp feed_assigns({feed_id, feed_id_or_ids}, socket)
        when feed_id == :my or is_list(feed_id_or_ids) do
     # My Feed
@@ -588,7 +595,7 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
     end
   end
 
-  defp feed_assigns(:likes = feed_id, socket) when is_atom(feed_id) do
+  defp feed_assigns(:likes = _feed_id, socket) do
     with %{edges: feed, page_info: page_info} <-
            Bonfire.Social.Likes.list_my(socket) do
       [

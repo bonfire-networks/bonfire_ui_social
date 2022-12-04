@@ -49,10 +49,11 @@ defmodule Bonfire.UI.Social.FeedsLive do
        page_title: l("My feed"),
        feed: nil,
        page_info: nil,
+       loading: true,
        feed_id: nil,
        feed_title: nil,
        feed_ids: nil,
-       feed_component_id: "feeds",
+       feed_component_id: :feeds,
        feedback_title: l("Your feed is empty"),
        feedback_message:
          l("You can start by following some people, or writing a new post yourself."),
@@ -80,6 +81,10 @@ defmodule Bonfire.UI.Social.FeedsLive do
 
   def do_handle_params(%{"tab" => "local" = tab} = params, _url, socket) do
     {:noreply, assign(socket, LiveHandler.feed_assigns_maybe_async({:local, params}, socket))}
+  end
+
+  def do_handle_params(%{"tab" => "likes" = tab} = params, _url, socket) do
+    {:noreply, assign(socket, LiveHandler.feed_assigns_maybe_async({:likes, params}, socket))}
   end
 
   def do_handle_params(params, _url, socket) do
