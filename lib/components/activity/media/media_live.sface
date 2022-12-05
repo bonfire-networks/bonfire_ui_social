@@ -1,11 +1,14 @@
 <div
   :if={@showing_within != :smart_input and is_list(@media) and @media != []}
   class={
-    "grid w-full grid-flow-col grid-with-ratio grid-rows-4 gap-1 ",
+    "grid w-full grid-flow-col grid-with-ratio grid-rows-4 gap-1",
     "my-3":
       Enum.filter(@media, fn x -> e(x, :metadata, :canonical_url, false) == false end) |> length > 0,
     "!grid-cols-1 !grid-rows-1": @showing_within == :smart_input,
-    "max-h-[270px] overflow-clip": @viewing_main_object != true
+    "max-h-[270px] overflow-clip": @viewing_main_object != true,
+     "grid-cols-1":  @media |> length() == 1,
+     "grid-cols-2":  @media |> length() == 2,
+     "grid-cols-4": @media |> length() == 4
   }
 >
   {#for {media, counter} <-
@@ -33,21 +36,22 @@
             "photo",
             "rich"
           ]) or String.contains?(media_url(media), [".jpg", ".jpeg", ".png", ".gif", ".webp"])}
-          {#if @viewing_main_object}
+          <!-- {#if @viewing_main_object}
             <Bonfire.UI.Social.Activity.RemoteMediaLive media={media} />
-          {#else}
+          {#else} -->
             <Bonfire.UI.Common.OpenModalLive
               id={Pointers.ULID.generate()}
               title_text={e(@label, l("View media"))}
               no_actions
               open_btn_class="w-full"
+              open_btn_wrapper_class="w-full h-full"
             >
               <div
                 class="relative mt-2"
                 style={if String.starts_with?(media.media_type, ["video"]),
                   do: "min-width: 90vw; min-height: 90vh",
                   else: ""}
-              >
+                >
                 <Bonfire.UI.Social.Activity.RemoteMediaLive media={media} />
 
                 <div class="mt-2">
@@ -61,14 +65,18 @@
 
               <:open_btn>
                 <LazyImage
-                  class="w-full max-h-[270px] !object-cover media-image h-full cursor-pointer obj-center rounded-md"
+                  class={
+                    "w-full !object-cover media-image h-full cursor-pointer obj-center rounded-md",
+                    "max-h-[270px]": @media |> length() < 4,
+                    "max-h-[135px]": @media |> length() > 3
+                  }
                   alt={media_label(media)}
                   src={preview_img(media) || media_url(media)}
                 />
                 <figcaption class="sr-only">{media_label(media)}</figcaption>
               </:open_btn>
             </Bonfire.UI.Common.OpenModalLive>
-          {/if}
+          <!-- {/if} -->
         {#else}
           <a
             href={media_url(media) || preview_img(media)}

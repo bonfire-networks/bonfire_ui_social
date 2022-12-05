@@ -11,8 +11,7 @@ defmodule Bonfire.UI.Social.FeedsLive do
       Bonfire.UI.Me.ProfileLive,
       Bonfire.UI.Social.Feeds.LocalLive,
       Bonfire.UI.Social.Feeds.FederationLive,
-      Bonfire.UI.Social.Feeds.LikesLive,
-      Bonfire.Classify.Web.CategoriesLive
+      Bonfire.UI.Social.Feeds.LikesLive
     ]
   )
 
