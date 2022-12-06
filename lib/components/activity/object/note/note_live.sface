@@ -23,65 +23,65 @@
       reply_message: e(@activity, :replied, :reply_to_id, nil)
     }
     id={"note-#{@activity_inception}-" <> (ulid(@activity) || e(@object, :id, "no-id"))}
-    x-data="{content_open: false}"
   >
-    {#if e(post_content(@object), :name, nil) != nil and @showing_within != :blog}
-      {#if @viewing_main_object}
-        <div class="w-full h-auto max-w-full p-0 m-0 mt-6 text-2xl font-bold">
-          {e(@object, :post_content, :name, nil)}
-        </div>
-      {#else}
-        <button
-          @click="content_open = true"
-          x-show="content_open == false"
-          style="display: none"
-          class="relative z-50 my-2 text-sm font-medium text-left text-base-content link link-hover"
-        >
-          {rich(e(post_content(@object), :name, "CW"))} ({l("Show more")})
-        </button>
-        <button
-          @click="content_open = false"
-          x-show="content_open"
-          style="display: none"
-          class="relative z-50 my-2 text-sm font-medium text-left text-base-content link link-hover"
-        >
-          {rich(e(post_content(@object), :name, "CW"))} ({l("Show less")})
-        </button>
-      {/if}
-    {/if}
+    {#case e(post_content(@object), :name, nil)}
+      {#match name}
+        {#case @cw == true or (is_nil(@cw) and not is_nil(name))}
+          {#match cw?}
+            {#if cw?}
+              <button
+                @click="content_open = true"
+                x-show="content_open == false"
+                style="display: none"
+                class="relative z-50 my-2 text-sm font-medium text-left text-base-content link link-hover"
+              >
+                {rich(name || l("CW"))} ({l("Show more")})
+              </button>
+              <button
+                @click="content_open = false"
+                x-show="content_open"
+                style="display: none"
+                class="relative z-50 my-2 text-sm font-medium text-left text-base-content link link-hover"
+              >
+                {rich(name || l("CW"))} ({l("Show less")})
+              </button>
+            {#else}
+              <div :if={name} class="w-full h-auto max-w-full p-0 m-0 mt-6 text-2xl font-bold">
+                {rich(name)}
+              </div>
+            {/if}
 
-    <div
-      x-show={if @viewing_main_object != true and e(post_content(@object), :name, nil), do: "content_open"}
-      x-collapse={if @viewing_main_object != true and e(post_content(@object), :name, nil), do: true}
-    >
-      <p
-        :if={e(post_content(@object), :summary, nil)}
-        class="font-light prose max-w-prose prose-p:pt-1"
-      >
-        {rich(e(post_content(@object), :summary, nil))}
-      </p>
+            <div x-show={if cw?, do: "content_open"} x-collapse={cw?}>
+              <p
+                :if={e(post_content(@object), :summary, nil)}
+                class="font-light prose max-w-prose prose-p:pt-1"
+              >
+                {rich(e(post_content(@object), :summary, nil))}
+              </p>
 
-      <div
-        data-id="object_body"
-        class={
-          "prose break-words object_body max-w-none font-[16px] mt-1 prose-sm prose-p:pt-0 prose-p:my-0",
-          "!my-0":
-            @viewing_main_object != true and ulid(@object) != nil and
-              e(@activity, :replied, :reply_to_id, nil) == nil and ulid(@activity) == nil and
-              @showing_within != :widget and @showing_within != :search,
-          "font-[16px] mt-1 prose-sm prose-p:pt-0 prose-p:my-0 !leading-[22px]":
-            @showing_within == :thread,
-          "mt-3 !prose-lg pl-0 prose-p:pb-4": @viewing_main_object,
-          "prose-p:pt-1 !my-3 !leading-[20px]": @showing_within == :feed
-        }
-      >
-        {rich(
-          maybe_truncate(
-            e(post_content(@object), :html_body, l("This post has been deleted.")),
-            @activity_inception
-          )
-        )}
-      </div>
-    </div>
+              <div
+                data-id="object_body"
+                class={
+                  "prose break-words object_body max-w-none font-[16px] mt-1 prose-sm prose-p:pt-0 prose-p:my-0",
+                  "!my-0":
+                    @viewing_main_object != true and ulid(@object) != nil and
+                      e(@activity, :replied, :reply_to_id, nil) == nil and ulid(@activity) == nil and
+                      @showing_within != :widget and @showing_within != :search,
+                  "font-[16px] mt-1 prose-sm prose-p:pt-0 prose-p:my-0 !leading-[22px]":
+                    @showing_within == :thread,
+                  "mt-3 !prose-lg pl-0 prose-p:pb-4": @viewing_main_object,
+                  "prose-p:pt-1 !my-3 !leading-[20px]": @showing_within == :feed
+                }
+              >
+                {rich(
+                  maybe_truncate(
+                    e(post_content(@object), :html_body, l("This post has been deleted.")),
+                    @activity_inception
+                  )
+                )}
+              </div>
+            </div>
+        {/case}
+    {/case}
   </div>
 {/if}

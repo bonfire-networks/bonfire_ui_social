@@ -43,7 +43,7 @@ defmodule Bonfire.UI.Social.FeedsLive do
     {:ok,
      socket
      |> assign(
-       selected_tab: "feed",
+       selected_tab: nil,
        page: "feed",
        page_title: l("My feed"),
        feed: nil,

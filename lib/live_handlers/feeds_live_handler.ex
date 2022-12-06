@@ -435,7 +435,7 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
     [
       loading: true,
       feed_id: feed_name,
-      selected_tab: "likes",
+      selected_tab: :likes,
       # FIXME: clean up page vs tab
       page: "local",
       page_title: l("My favourites"),

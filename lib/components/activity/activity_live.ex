@@ -115,7 +115,8 @@ defmodule Bonfire.UI.Social.ActivityLive do
         created_verb_display: created_verb_display,
         permalink: permalink,
         thread_url: thread_url,
-        thread_id: thread_id
+        thread_id: thread_id,
+        cw: e(activity.object, :post_content, :name, nil) != nil
       )
       |> Map.new()
 
@@ -155,8 +156,12 @@ defmodule Bonfire.UI.Social.ActivityLive do
     ~F"""
     <article
       x-data="{
-        activity_active: false
+        activity_active: false,
+        content_open: false
       }"
+      x-init={"{
+        content_open = #{!@cw}
+      }"}
       id={"activity-#{@activity_inception}-" <> (ulid(@activity) || e(@object, :id, "no-id"))}
       aria-label="user activity"
       role="article"

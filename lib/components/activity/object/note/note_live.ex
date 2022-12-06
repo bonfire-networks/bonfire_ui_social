@@ -10,6 +10,7 @@ defmodule Bonfire.UI.Social.Activity.NoteLive do
   prop date_ago, :string, default: nil
   prop showing_within, :string, default: nil
   prop activity_inception, :any, default: nil
+  prop cw, :boolean, default: nil
 
   def preloads(),
     do: [

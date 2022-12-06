@@ -1,5 +1,6 @@
 <div
   :if={@showing_within != :smart_input and is_list(@media) and @media != []}
+  x-show="content_open == true"
   class={
     "grid w-full grid-flow-col grid-with-ratio grid-rows-4 gap-1",
     "my-3":
