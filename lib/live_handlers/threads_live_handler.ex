@@ -138,7 +138,7 @@ defmodule Bonfire.Social.Threads.LiveHandler do
   def maybe_subscribe(socket, thread_id) do
     if thread_id && !e(socket.assigns, :pubsub_subscribed, nil) do
       debug(thread_id, "subscribing to live thread updates")
-      pubsub_subscribe(thread_id, socket)
+      PubSub.subscribe(thread_id, socket)
 
       socket
       |> assign(:pubsub_subscribed, true)

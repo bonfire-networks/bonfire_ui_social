@@ -66,7 +66,7 @@
       context={ulid(@current_user)}
       threads={@threads}
     />
-  
+
     <!-- <div class="flex-1 hidden p-6 tablet-lg:block rounded-b-md md:mx-0 text-base-content">
       <Bonfire.UI.Common.EmptyFeed
         feedback_title={@feedback_title}

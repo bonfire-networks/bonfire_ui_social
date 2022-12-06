@@ -159,7 +159,7 @@ defmodule Bonfire.UI.Social.FeedLive do
   def maybe_subscribe(socket) do
     case e(socket.assigns, :feed_ids, nil) || e(socket.assigns, :feed_id, nil) do
       nil -> debug("no feed_id known, not subscribing to live updates")
-      feed_or_feeds -> pubsub_subscribe(feed_or_feeds, socket)
+      feed_or_feeds -> PubSub.subscribe(feed_or_feeds, socket)
     end
   end
 
