@@ -76,24 +76,27 @@ defmodule Bonfire.UI.Social.ThreadLive do
     else
       debug("nested thread")
 
+      #  cannot redirect in `update` so we trigger another update instead
+      update(%{}, socket)
+
       # temporary
-      activity_id = e(new_reply, :activity, :id, nil) || e(new_reply, :id, nil)
+      # activity_id = e(new_reply, :activity, :id, nil) || e(new_reply, :id, nil)
 
-      thread_url =
-        if is_struct(e(socket.assigns, :object, nil)) do
-          path(e(socket.assigns, :object, nil))
-        else
-          "/discussion/#{thread_id}"
-        end
+      # thread_url =
+      #   if is_struct(e(socket.assigns, :object, nil)) do
+      #     path(e(socket.assigns, :object, nil))
+      #   else
+      #     "/discussion/#{thread_id}"
+      #   end
 
-      permalink = "#{thread_url}#activity-#{activity_id}"
+      # permalink = "#{thread_url}#activity-#{activity_id}"
 
-      {
-        :ok,
-        socket
-        |> patch_to(permalink)
-        # |> LiveHandler.load_thread()
-      }
+      # {
+      #   :ok,
+      #   socket
+      #   |> patch_to(permalink)
+      #   # |> LiveHandler.load_thread()
+      # }
 
       # FIMXE: nesting gets messed up when replying to a reply that was added to the thread this way
       # path = (
