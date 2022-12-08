@@ -23,7 +23,7 @@
           href={@permalink || path(@object)}
           open_btn_text={l("Read discussion")}
           title_text={e(@object, :name, nil) || e(@object, :post_content, :name, nil) || l("Discussion")}
-          open_btn_class="px-1 normal-case btn btn-sm btn-ghost text-base-content/60"
+          open_btn_class="link link-hover text-[13px] text-base-content/80"
           modal_assigns={
             post_id:
               if(

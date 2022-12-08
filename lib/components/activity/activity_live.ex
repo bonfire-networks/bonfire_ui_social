@@ -159,9 +159,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
         activity_active: false,
         content_open: false
       }"
-      x-init={"{
-        content_open = #{!@cw}
-      }"}
+      x-init={"content_open = #{!@cw}"}
       id={"activity-#{@activity_inception}-" <> (ulid(@activity) || e(@object, :id, "no-id"))}
       aria-label="user activity"
       role="article"
