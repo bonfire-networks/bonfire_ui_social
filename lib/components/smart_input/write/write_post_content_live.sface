@@ -76,6 +76,7 @@
           open_boundaries={@open_boundaries}
           show_select_recipients={@show_select_recipients}
           boundaries_modal_id={@boundaries_modal_id}
+          context_id={@context_id}
         />
 
         <Bonfire.UI.Common.InputControlsLive

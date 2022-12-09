@@ -21,44 +21,43 @@
         showing_within={:messages}
         replied_activity_class="relative mb-2 rounded-md bg-base-100 hover:bg-base-100"
       />
-      <!-- {#elseif @tab_id in ["compose", "select_recipients"]}
-        <div class="flex-1 p-3  relative z-[90]">
-          <div class="shadow-lg alert alert-info">
-            <div>
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                fill="none"
-                viewBox="0 0 24 24"
-                class="flex-shrink-0 w-6 h-6 stroke-current"
-              ><path
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  stroke-width="2"
-                  d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
-                /></svg>
-              <span>{l(
-                  "You can search for people you follow. If you want to message someone else, you can do some via their profile page."
-                )}</span>
-            </div>
-          </div>
-
-          <Bonfire.UI.Common.SmartInputInlineLive
-            id={:smart_input}
-            :if={ulid(@current_user)}
-            reply_to_id={e(@reply_to_id, "")}
-            thread_id={@thread_id}
-            to_boundaries={@to_boundaries}
-            to_circles={@to_circles}
-            create_object_type={@create_object_type}
-            thread_mode={:flat}
-            showing_within={:compose}
-            smart_input_opts={@smart_input_opts}
-            title_prompt={l("Enter an optional subject")}
-            preloaded_recipients={@users}
-            show_select_recipients
-          />
+    </div>
+  {#elseif @tab_id in ["compose", "select_recipients"]}
+    <div class="flex-1 p-3  relative z-[90]">
+      <div class="shadow-lg alert alert-info">
+        <div>
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 24 24"
+            class="flex-shrink-0 w-6 h-6 stroke-current"
+          ><path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+            /></svg>
+          <span>{l(
+              "You can search for people you follow. If you want to message someone else, you can do some via their profile page."
+            )}</span>
         </div>
-      {/if} -->
+      </div>
+
+      <Bonfire.UI.Common.SmartInputInlineLive
+        id={:smart_input}
+        :if={ulid(@current_user)}
+        reply_to_id={e(@reply_to_id, "")}
+        thread_id={@thread_id}
+        to_boundaries={@to_boundaries}
+        to_circles={@to_circles}
+        create_object_type={@create_object_type}
+        thread_mode={:flat}
+        showing_within={:compose}
+        smart_input_opts={@smart_input_opts}
+        title_prompt={l("Enter an optional subject")}
+        preloaded_recipients={@users}
+        show_select_recipients
+      />
     </div>
   {#else}
     <Bonfire.UI.Social.MessageThreadsLive
