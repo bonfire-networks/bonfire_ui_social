@@ -92,8 +92,9 @@
           to={path(@character)}
         >
           <Bonfire.UI.Common.AvatarLive
+            :if={@showing_within != :messages}
             user={@profile}
-            comment={e(@showing_within, :feed) in [:thread] && !@viewing_main_object}
+            comment={@showing_within in [:thread, :messages] && !@viewing_main_object}
             viewing_main_object={@viewing_main_object}
           />
         </LiveRedirect>

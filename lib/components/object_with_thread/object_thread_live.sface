@@ -45,7 +45,7 @@
           activity={@activity}
           object={@object}
           url={@url}
-          showing_within={:thread}
+          showing_within={@showing_within || :thread}
         />
       </div>
     </div>

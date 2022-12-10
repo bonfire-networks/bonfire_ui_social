@@ -186,12 +186,13 @@ defmodule Bonfire.UI.Social.ActivityLive do
       }
     >
       <form
-        :if={not is_nil(@feed_id) and @showing_within in [:messages, :thread, :notifications] and
+        :if={!ulid(e(@activity, :seen, nil)) and not is_nil(@feed_id) and
+          @showing_within in [:messages, :thread, :notifications] and
           e(@activity, :subject, :id, nil) != ulid(current_user(assigns)) and
           e(@activity, :object, :created, :creator_id, nil) != ulid(current_user(assigns))}
         phx-submit="Bonfire.Social.Feeds:mark_seen"
         phx-target={"#badge_counter_#{@feed_id || "missing_feed_id"}"}
-        x-intersect.once={intersect_event(e(@activity, :seen, nil))}
+        x-intersect.once="$el.dispatchEvent(new Event('submit', {bubbles: true, cancelable: true})); $el.parentNode.classList.remove('unread-activity');"
       >
         <input type="hidden" name="feed_id" value={@feed_id}>
         <input type="hidden" name="activity_id" value={ulid(@activity)}>
@@ -244,12 +245,6 @@ defmodule Bonfire.UI.Social.ActivityLive do
     ~F"""
     """
   end
-
-  # already seen
-  defp intersect_event(%{id: _}), do: nil
-
-  defp intersect_event(_),
-    do: "$el.dispatchEvent( new Event(\"submit\", {bubbles: true, cancelable: true}) )"
 
   # don't show subject twice
   def component_activity_subject(_, _, %{object_type: Bonfire.Data.Identity.User}),

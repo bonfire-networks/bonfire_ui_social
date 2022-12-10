@@ -30,7 +30,7 @@
           <div class="relative w-full indicator">
             <span
               :if={!e(activity, :seen, nil)}
-              class="indicator-item badge badge-xs badge-secondary right-6 bottom-1 top-[auto]"
+              class="indicator-item badge badge-xs badge-secondary right-6 bottom-1 top-[auto] invisible unread-activity"
             >
             </span>
             <div class={
