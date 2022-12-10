@@ -66,7 +66,7 @@
           </div>
         </Inputs>
 
-          <div x-show="open_boundaries" class="p-6 bg-base-100">
+          <div x-show="open_boundaries" class="p-3 bg-base-100">
             <Bonfire.Boundaries.Web.BoundariesListLive
               to_boundaries={@to_boundaries}
               to_boundaries_ids={to_boundaries_ids(@to_boundaries)}
