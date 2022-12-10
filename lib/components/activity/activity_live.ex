@@ -82,21 +82,20 @@ defmodule Bonfire.UI.Social.ActivityLive do
     thread_id = ulid(thread)
     # debug(thread, "thread")
     thread_url =
-      if object_type in [:post] and not is_nil(thread) do
-        if is_struct(thread) do
-          path(thread)
-        else
-          "/discussion/#{thread_id}"
+      e(assigns, :thread_url, nil) ||
+        if not is_nil(thread) do
+          if is_struct(thread) do
+            path(thread)
+          else
+            "/discussion/#{thread_id}"
+          end
         end
-      else
-        e(assigns, :thread_url, nil)
-      end
 
-    comment_id = ulid(activity) || ulid(activity.object)
+    reply_id = ulid(activity) || ulid(activity.object)
     # permalink = path(activity.object)
     permalink =
-      if thread_url && ulid(thread) != comment_id,
-        do: "#{thread_url}#activity-#{comment_id}",
+      if thread_url && thread_id != reply_id,
+        do: "#{thread_url}#activity-#{reply_id}",
         else: "#{path(activity.object)}#"
 
     # debug(permalink, "permalink")

@@ -19,7 +19,7 @@
   {#if ulid(@object) != nil and ulid(@activity) == nil and @showing_within != :search}
     <div class="flex items-center">
       <div class="flex flex-1 space-x-2">
-        <div class="flex items-center text-sm font-semibold text-base-content">
+        <div class="flex grow items-center text-sm font-semibold text-base-content">
           <LiveRedirect
             aria-label={e(@character, :username, "") <> " profile"}
             class="hover:underline text-opacity-70"
@@ -27,6 +27,17 @@
           >
             {e(@profile, :name, "Anonymous")}
           </LiveRedirect>
+        </div>
+        <div class="flex items-baseline gap-2 flex-0">
+          <Bonfire.UI.Social.Activity.RepliedDateAgoLive
+            permalink={@permalink}
+            date_ago={@date_ago}
+            object={@object}
+            object_type={@object_type}
+            object_boundary={@object_boundary}
+            showing_within={@showing_within}
+            verb_display={@verb_display}
+          />
         </div>
       </div>
     </div>
