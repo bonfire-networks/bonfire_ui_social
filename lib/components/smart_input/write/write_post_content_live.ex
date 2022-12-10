@@ -38,4 +38,9 @@ defmodule Bonfire.UI.Social.WritePostContentLive do
       do: "Bonfire.Social.Messages:send",
       else: "Bonfire.Social.Posts:post"
   end
+
+  def to_boundaries_ids(to_boundaries) do
+    Enum.map(to_boundaries || [], fn b -> elem(b, 0) end)
+    # |> debug("to_boundaries_ids")
+  end
 end
