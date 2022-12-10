@@ -597,7 +597,10 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
 
   defp feed_assigns(:likes = _feed_id, socket) do
     with %{edges: feed, page_info: page_info} <-
-           Bonfire.Social.Likes.list_my(socket) do
+           Bonfire.Social.Likes.list_my(current_user: current_user_required!(socket)) do
+      feed
+      |> debug("likes")
+
       [
         loading: false,
         feed: feed |> preloads(socket),
@@ -814,7 +817,8 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
             pagination: input_to_atoms(params),
             current_user: current_user(socket)
           )
-          |> debug("boosts")
+
+    # |> debug("boosts")
 
     [
       loading: false,
