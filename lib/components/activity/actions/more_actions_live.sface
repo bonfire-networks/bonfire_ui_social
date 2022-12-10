@@ -1,5 +1,5 @@
 <div
-  :if={@current_user != nil and @showing_within not in [:notifications, :search]}
+  :if={@current_user != nil}
   aria-haspopup="true"
   class={
     "dropdown feed_activity relative",
@@ -47,7 +47,7 @@
       <Bonfire.UI.Common.FlagActionLive
         object={@object}
         flagged={@flagged}
-        label={l("Flag this") <> " " <> e(@object_type_readable, l("object"))}
+        label={l("Flag this %{object}", object: e(@object_type_readable, l("object")))}
         class="flex items-center text-sm text-neutral-content/80"
       />
     </li>
@@ -57,7 +57,7 @@
       <Bonfire.UI.Common.FlagActionLive
         object={@object}
         flagged={@flagged}
-        label={l("Flag ") <> " " <> name(@activity, @object)}
+        label={l("Flag %{name}", name: name(@activity, @object))}
         class="flex items-center py-2 text-sm text-neutral-content/80"
       />
     </li>

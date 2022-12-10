@@ -3,7 +3,6 @@
   <div />
 {#else} -->
 <div
-  :if={@thread_mode != :flat}
   :class={if @viewing_main_object != true and Settings.get([:ui, :compact], false, @__context__),
     do: "activity_active ? '' : '[@media(any-hover:hover)]:hidden'"}
   class={
@@ -16,7 +15,7 @@
       @thread_mode == :flat
   }
 >
-  {#if @viewing_main_object != true}
+  {#if @viewing_main_object != true and @thread_mode != :flat}
     {#if e(@showing_within, :feed) == :feed || e(@showing_within, :feed) == :notifications}
       {#if String.starts_with?(@permalink, ["/post/", "/discussion/"])}
         <Bonfire.UI.Common.OpenPreviewLive
