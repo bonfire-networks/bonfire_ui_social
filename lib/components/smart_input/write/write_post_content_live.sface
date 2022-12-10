@@ -91,6 +91,7 @@
           showing_within={@showing_within}
           uploads={@uploads}
           uploaded_files={@uploaded_files}
+          show_select_recipients={@show_select_recipients}
           show_cw_toggle
         />
       </div>
