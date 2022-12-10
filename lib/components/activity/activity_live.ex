@@ -179,10 +179,10 @@ defmodule Bonfire.UI.Social.ActivityLive do
         reply:
           ulid(@object) != nil and e(@activity, :replied, :reply_to_id, nil) != nil and
             ulid(@activity) != nil,
-        "border-l-2 border-primary !bg-primary/5":
+        "unread-activity":
           e(@activity, :seen, nil) == nil and @showing_within == :notifications and
             @activity_inception == nil,
-        "active-comment": String.contains?(@url || "", @permalink)
+        "active-activity": String.contains?(@url || "", @permalink)
       }
     >
       <form
