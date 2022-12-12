@@ -32,25 +32,23 @@
         "relative flex flex-col flex-1 h-full",
         "h-auto": @showing_within == :compose
       }>
-
-      <div
-        :if={@show_select_recipients ||
-          is_messaging?(%{
-            page: @page,
-            showing_within: @showing_within,
-            create_object_type: @create_object_type
-          })}
-        class="p-3 bg-base-200"
-      >
-        <Bonfire.UI.Common.SelectRecipientsLive
-          preloaded_recipients={e(@preloaded_recipients, [])}
-          to_boundaries={@to_boundaries}
-          to_circles={@to_circles}
-          open_boundaries={@open_boundaries}
-          context_id={@context_id}
-        />
-      </div>
-
+        <div
+          :if={@show_select_recipients ||
+            is_messaging?(%{
+              page: @page,
+              showing_within: @showing_within,
+              create_object_type: @create_object_type
+            })}
+          class="p-3 bg-base-200"
+        >
+          <Bonfire.UI.Common.SelectRecipientsLive
+            preloaded_recipients={e(@preloaded_recipients, [])}
+            to_boundaries={@to_boundaries}
+            to_circles={@to_circles}
+            open_boundaries={@open_boundaries}
+            context_id={@context_id}
+          />
+        </div>
 
         <Inputs for={:post_content}>
           <div x-show="!open_boundaries" class="flex-1">
@@ -87,18 +85,18 @@
           </div>
         </Inputs>
 
-          <div x-show="open_boundaries" class="p-3 bg-base-100">
-            <Bonfire.Boundaries.Web.BoundariesListLive
-              to_boundaries={@to_boundaries}
-              to_boundaries_ids={to_boundaries_ids(@to_boundaries)}
-              to_circles={@to_circles}
-              open_boundaries={@open_boundaries}
-              hide_breakdown
-              setting_boundaries
-              click_override
-            />
-          </div>
-          
+        <div x-show="open_boundaries" class="p-3 bg-base-100">
+          <Bonfire.Boundaries.Web.BoundariesListLive
+            to_boundaries={@to_boundaries}
+            to_boundaries_ids={to_boundaries_ids(@to_boundaries)}
+            to_circles={@to_circles}
+            open_boundaries={@open_boundaries}
+            hide_breakdown
+            setting_boundaries
+            click_override
+          />
+        </div>
+
         <!-- <Bonfire.UI.Common.InputBoundariesLive
           thread_mode={@thread_mode}
           create_object_type={@create_object_type}

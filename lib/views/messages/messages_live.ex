@@ -275,8 +275,8 @@ defmodule Bonfire.UI.Social.MessagesLive do
         showing_within: :messages,
         to_boundaries: [{"message", "Message"}],
         # feed: e(feed, :edges, []),
-        tab_id: nil,
-        )
+        tab_id: nil
+      )
 
       # |> IO.inspect
     }

@@ -1,5 +1,4 @@
 <div class="flex-1">
-
   {#if length(e(@threads, :edges, [])) > 0}
     <Bonfire.UI.Common.LoadPreviousLive
       live_handler={Bonfire.Social.Messages}
