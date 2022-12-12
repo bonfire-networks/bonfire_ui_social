@@ -43,7 +43,7 @@ defmodule Bonfire.UI.Social.MessagesLive do
        feedback_title: l("No messages"),
        feedback_message: l("Select a thread or start a new one..."),
        threads: LiveHandler.list_threads(current_user_required!(socket), socket),
-       smart_input_opts: [prompt: l("Compose a thoughtful message...")],
+       smart_input_opts: [prompt: l("Compose a popopo message...")],
        page_header_aside: [
          {Bonfire.UI.Social.HeaderAsideNotificationsSeenLive,
           [
@@ -139,27 +139,27 @@ defmodule Bonfire.UI.Social.MessagesLive do
     end
   end
 
-  def do_handle_params(%{"id" => "compose" = id} = params, url, socket) do
-    current_user = current_user_required!(socket)
-    users = Bonfire.Social.Follows.list_my_followed(current_user, paginate: false)
+  # def do_handle_params(%{"id" => "compose" = id} = params, url, socket) do
+  #   current_user = current_user_required!(socket)
+  #   users = Bonfire.Social.Follows.list_my_followed(current_user, paginate: false)
 
-    {:noreply,
-     socket
-     |> assign(
-       page_title: l("Direct Messages"),
-       page: "messages",
-       users: users,
-       tab_id: "select_recipients",
-       reply_to_id: nil,
-       thread_id: nil,
-       to_circles: []
-       #  sidebar_widgets:
-       #    LiveHandler.threads_widget(current_user, ulid(e(socket.assigns, :user, nil)),
-       #      thread_id: nil,
-       #      tab_id: "select_recipients"
-       #    )
-     )}
-  end
+  #   {:noreply,
+  #    socket
+  #    |> assign(
+  #      page_title: l("Direct Messages"),
+  #      page: "messages",
+  #      users: users,
+  #      tab_id: "select_recipients",
+  #      reply_to_id: nil,
+  #      thread_id: nil,
+  #      to_circles: []
+  #      #  sidebar_widgets:
+  #      #    LiveHandler.threads_widget(current_user, ulid(e(socket.assigns, :user, nil)),
+  #      #      thread_id: nil,
+  #      #      tab_id: "select_recipients"
+  #      #    )
+  #    )}
+  # end
 
   def do_handle_params(%{"id" => id} = params, url, socket) do
     if not is_ulid?(id) do
@@ -263,6 +263,7 @@ defmodule Bonfire.UI.Social.MessagesLive do
 
   # show all my threads
   def do_handle_params(_params, url, socket) do
+    IO.inspect("TETETE")
     current_user = current_user_required!(socket)
 
     {
@@ -270,14 +271,12 @@ defmodule Bonfire.UI.Social.MessagesLive do
       socket
       |> assign(
         page_title: l("Direct Messages"),
-        page: "messages",
+        create_object_type: :message,
+        showing_within: :messages,
+        to_boundaries: [{"message", "Message"}],
         # feed: e(feed, :edges, []),
         tab_id: nil,
-        reply_to_id: nil,
-        thread_id: nil,
-        to_cicles: []
-        # sidebar_widgets: LiveHandler.threads_widget(current_user)
-      )
+        )
 
       # |> IO.inspect
     }

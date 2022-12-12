@@ -1,4 +1,5 @@
 <main class="h-full">
+{@create_object_type}
   {#if @tab_id == "thread"}
     <div class="flex flex-col h-full">
       <Bonfire.UI.Social.ObjectThreadLive
@@ -22,8 +23,8 @@
         replied_activity_class="relative mb-2 rounded-md bg-base-100 hover:bg-base-100"
       />
     </div>
-  {#elseif @tab_id in ["compose", "select_recipients"]}
-    <div class="flex-1 p-3  relative z-[90]">
+  <!-- {#elseif @tab_id in ["compose", "select_recipients"]} -->
+    <!-- <div class="flex-1 p-3  relative z-[90]">
       <div class="shadow-lg alert alert-info">
         <div>
           <svg
@@ -58,7 +59,7 @@
         preloaded_recipients={@users}
         show_select_recipients
       />
-    </div>
+    </div> -->
   {#else}
     <Bonfire.UI.Social.MessageThreadsLive
       showing_within="messages"

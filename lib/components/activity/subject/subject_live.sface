@@ -11,8 +11,9 @@
   <span
     :if={@showing_within == :smart_input}
     phx-click="Bonfire.Social.Feeds:remove_data"
-    class="absolute top-2 right-2 btn btn-ghost btn-xs btn-circle"
+    class="absolute top-2 right-2 normal-case btn flex items-center gap-2 btn-xs"
   >
+    <span>{l "Close"}</span>
     <Icon outline="X" class="w-4 h-4" />
   </span>
 
