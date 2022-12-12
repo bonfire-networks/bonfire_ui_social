@@ -162,15 +162,7 @@
               </div>
               <span>·</span>
               <Bonfire.UI.Social.Activity.InstanceIconLive object={@object} />
-              <Dynamic.LiveComponent
-                :if={module_enabled?(Bonfire.Boundaries.Web.BoundaryIconLive) and
-                  @object_type not in [Bonfire.Data.Social.Message]}
-                module={Bonfire.Boundaries.Web.BoundaryIconLive}
-                object={@object}
-                with_icon
-                id={ComponentID.new(Bonfire.Boundaries.Web.BoundaryIconLive, @object)}
-                object_boundary={@object_boundary}
-              />
+              
               <LiveRedirect
                 :if={@showing_within not in [:smart_input]}
                 class="subject_timestamp text-[13px] font-normal no-underline truncate ellipsis text-base-content/60"
@@ -191,7 +183,18 @@
             </div>
           {/if}
         </div>
-        <div class="flex items-center gap-2">
+        <div class="flex items-center gap-1">
+          <Dynamic.LiveComponent
+            :if={module_enabled?(Bonfire.Boundaries.Web.BoundaryIconLive) and
+              @object_type not in [Bonfire.Data.Social.Message]}
+            module={Bonfire.Boundaries.Web.BoundaryIconLive}
+            object={@object}
+            with_icon
+            with_label
+            class="btn btn-xs rounded-full flex items-center gap-2 font-medium"
+            id={ComponentID.new(Bonfire.Boundaries.Web.BoundaryIconLive, @object)}
+            object_boundary={@object_boundary}
+          />
           <Bonfire.UI.Social.Activity.MoreActionsLive
             :if={@showing_within == :feed}
             object={@object}
