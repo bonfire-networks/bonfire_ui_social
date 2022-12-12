@@ -68,7 +68,7 @@
         {#match _}
       {/case}
     {#else}
-      {#if not is_nil(@current_user)}
+      {#if not is_nil(@current_user) and @showing_within != :messages}
         <Bonfire.UI.Common.SmartInputButtonLive
           component={Bonfire.Common.Config.get([:ui, :default_smart_input]) ||
             Bonfire.UI.Social.WritePostContentLive}

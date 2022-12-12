@@ -64,7 +64,8 @@
               <Field name={:name}>
                 <TextInput
                   opts={
-                    placeholder: l("Enter a content warning")
+                    placeholder: l("Enter a content warning"),
+                    "phx-debounce": "blur"
                   }
                   class="bg-transparent rounded w-full input h-8 text-sm"
                 />
@@ -126,6 +127,7 @@
           showing_within={@showing_within}
           uploads={@uploads}
           uploaded_files={@uploaded_files}
+          show_select_recipients={@show_select_recipients}
           show_cw_toggle
         />
       </div>

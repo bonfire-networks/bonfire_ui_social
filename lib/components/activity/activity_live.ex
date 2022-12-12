@@ -82,21 +82,20 @@ defmodule Bonfire.UI.Social.ActivityLive do
     thread_id = ulid(thread)
     # debug(thread, "thread")
     thread_url =
-      if object_type in [:post] and not is_nil(thread) do
-        if is_struct(thread) do
-          path(thread)
-        else
-          "/discussion/#{thread_id}"
+      e(assigns, :thread_url, nil) ||
+        if not is_nil(thread) do
+          if is_struct(thread) do
+            path(thread)
+          else
+            "/discussion/#{thread_id}"
+          end
         end
-      else
-        e(assigns, :thread_url, nil)
-      end
 
-    comment_id = ulid(activity) || ulid(activity.object)
+    reply_id = ulid(activity) || ulid(activity.object)
     # permalink = path(activity.object)
     permalink =
-      if thread_url && ulid(thread) != comment_id,
-        do: "#{thread_url}#activity-#{comment_id}",
+      if thread_url && thread_id != reply_id,
+        do: "#{thread_url}#activity-#{reply_id}",
         else: "#{path(activity.object)}#"
 
     # debug(permalink, "permalink")
@@ -180,19 +179,20 @@ defmodule Bonfire.UI.Social.ActivityLive do
         reply:
           ulid(@object) != nil and e(@activity, :replied, :reply_to_id, nil) != nil and
             ulid(@activity) != nil,
-        "border-l-2 border-primary !bg-primary/5":
+        "unread-activity":
           e(@activity, :seen, nil) == nil and @showing_within == :notifications and
             @activity_inception == nil,
-        "active-comment": String.contains?(@url || "", @permalink)
+        "active-activity": String.contains?(@url || "", @permalink)
       }
     >
       <form
-        :if={not is_nil(@feed_id) and @showing_within in [:messages, :thread, :notifications] and
+        :if={!ulid(e(@activity, :seen, nil)) and not is_nil(@feed_id) and
+          @showing_within in [:messages, :thread, :notifications] and
           e(@activity, :subject, :id, nil) != ulid(current_user(assigns)) and
           e(@activity, :object, :created, :creator_id, nil) != ulid(current_user(assigns))}
         phx-submit="Bonfire.Social.Feeds:mark_seen"
         phx-target={"#badge_counter_#{@feed_id || "missing_feed_id"}"}
-        x-intersect.once={intersect_event(e(@activity, :seen, nil))}
+        x-intersect.once="$el.dispatchEvent(new Event('submit', {bubbles: true, cancelable: true})); $el.parentNode.classList.remove('unread-activity');"
       >
         <input type="hidden" name="feed_id" value={@feed_id}>
         <input type="hidden" name="activity_id" value={ulid(@activity)}>
@@ -245,12 +245,6 @@ defmodule Bonfire.UI.Social.ActivityLive do
     ~F"""
     """
   end
-
-  # already seen
-  defp intersect_event(%{id: _}), do: nil
-
-  defp intersect_event(_),
-    do: "$el.dispatchEvent( new Event(\"submit\", {bubbles: true, cancelable: true}) )"
 
   # don't show subject twice
   def component_activity_subject(_, _, %{object_type: Bonfire.Data.Identity.User}),

@@ -62,7 +62,7 @@
     </div> -->
   {#else}
     <Bonfire.UI.Social.MessageThreadsLive
-      showing_within="messages"
+      showing_within={:messages}
       context={ulid(@current_user)}
       threads={@threads}
     />
