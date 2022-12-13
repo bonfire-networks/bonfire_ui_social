@@ -54,24 +54,22 @@ defmodule Bonfire.Social.Follows.LiveHandler do
     end
   end
 
-  def preload(list_of_assigns) do
-    current_user = current_user(List.first(list_of_assigns))
-    # |> debug("current_user")
+  def preload(list_of_assigns, opts \\ []) do
+    preload_assigns_async(list_of_assigns, &assigns_to_params/1, &do_preload/3, opts)
+  end
 
-    list_of_objects =
-      list_of_assigns
-      |> Enum.map(&e(&1, :object, nil))
+  defp assigns_to_params(assigns) do
+    object = e(assigns, :object, nil)
 
-    # |> repo().maybe_preload(:like_count)
-    # |> debug("list_of_objects")
+    %{
+      component_id: assigns.id,
+      object: object,
+      object_id: ulid(object),
+      previous_value: e(assigns, :my_follow, nil)
+    }
+  end
 
-    list_of_ids =
-      list_of_objects
-      |> Enum.map(&e(&1, :id, nil))
-      |> filter_empty([])
-
-    # |> debug("list_of_ids")
-
+  defp do_preload(list_of_components, list_of_ids, current_user) do
     my_states =
       if current_user,
         do:
@@ -82,30 +80,14 @@ defmodule Bonfire.Social.Follows.LiveHandler do
           |> Map.new(fn l -> {e(l, :edge, :object_id, nil), true} end),
         else: %{}
 
-    # debug(my_states, "my_follows")
+    debug(my_states, "my_follows")
 
-    # objects_counts = list_of_objects |> Map.new(fn o -> {e(o, :id, nil), e(o, :like_count, :object_count, nil)} end)
-    # |> debug("follow_counts")
-
-    list_of_assigns
-    |> Enum.map(fn assigns ->
-      object_id = e(assigns, :object, :id, nil)
-      # debug(object_id, "object_id")
-      value =
-        if current_user,
-          do: Map.get(my_states, object_id),
-          else: Map.get(List.first(list_of_assigns), :my_follow)
-
-      assigns
-      |> Map.put(
-        :my_follow,
-        value
-      )
-
-      # |> Map.put(
-      #   :like_count,
-      #   Map.get(objects_counts, object_id)
-      # )
+    list_of_components
+    |> Map.new(fn component ->
+      {component.component_id,
+       %{
+         my_follow: Map.get(my_states, component.object_id) || component.previous_value || false
+       }}
     end)
   end
 end

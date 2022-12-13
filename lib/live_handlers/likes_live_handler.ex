@@ -64,55 +64,47 @@ defmodule Bonfire.Social.Likes.LiveHandler do
   # def liker_count(liker_count) when is_integer(liker_count), do: liker_count
   def liker_count(_), do: 0
 
-  def preload(list_of_assigns) do
-    current_user = current_user(List.first(list_of_assigns))
-    # |> info("current_user")
+  def preload(list_of_assigns, opts \\ []) do
+    preload_assigns_async(list_of_assigns, &assigns_to_params/1, &do_preload/3, opts)
+  end
 
-    # debug(list_of_assigns, "list of assign:")
-    list_of_objects =
-      list_of_assigns
-      |> Enum.map(&e(&1, :object, nil))
+  defp assigns_to_params(assigns) do
+    object = e(assigns, :object, nil)
 
-    # |> debug("list_of_objects")
+    %{
+      component_id: assigns.id,
+      object: object,
+      object_id: ulid(object),
+      previous_value: e(assigns, :my_like, nil)
+    }
+  end
 
-    list_of_ids =
-      list_of_objects
-      |> Enum.map(&e(&1, :id, nil))
-      |> filter_empty([])
-
-    # |> debug("list_of_ids")
-
+  defp do_preload(list_of_components, list_of_ids, current_user) do
     my_states = if current_user, do: do_list_my_liked(current_user, list_of_ids), else: %{}
 
-    # info(my_states, "my_likes")
+    info(my_states, "my_likes")
 
     objects_counts =
       if Bonfire.Me.Settings.get([:ui, :show_activity_counts], nil, current_user: current_user) do
-        list_of_objects
+        list_of_components
+        |> Enum.map(fn %{object: object} ->
+          object
+        end)
+        |> filter_empty([])
+        |> debug("list_of_objects")
         |> repo().maybe_preload(:like_count, follow_pointers: false)
         |> Map.new(fn o -> {e(o, :id, nil), e(o, :like_count, :object_count, nil)} end)
 
         # |> debug("like_counts")
       end
 
-    list_of_assigns
-    |> Enum.map(fn assigns ->
-      object_id = e(assigns, :object, :id, nil)
-
-      value =
-        if current_user,
-          do: Map.get(my_states, object_id),
-          else: Map.get(List.first(list_of_assigns), :my_like)
-
-      assigns
-      |> Map.put(
-        :my_like,
-        value
-      )
-      |> Map.put(
-        :like_count,
-        e(objects_counts, object_id, nil)
-      )
+    list_of_components
+    |> Map.new(fn component ->
+      {component.component_id,
+       %{
+         my_like: Map.get(my_states, component.object_id) || component.previous_value || false,
+         like_count: e(objects_counts, component.object_id, nil)
+       }}
     end)
   end
 
@@ -122,7 +114,8 @@ defmodule Bonfire.Social.Likes.LiveHandler do
 
   defp do_list_my_liked(current_user, list_of_ids)
        when is_list(list_of_ids) and length(list_of_ids) > 0 do
-    Bonfire.Social.Likes.get!(current_user, list_of_ids, preload: false)
+    Bonfire.Social.Likes.get!(current_user, list_of_ids, preload: false, skip_boundary_check: true)
+    |> debug()
     |> Map.new(fn l -> {e(l, :edge, :object_id, nil), true} end)
   end
 

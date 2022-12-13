@@ -37,26 +37,29 @@ defmodule Bonfire.Social.Boosts.LiveHandler do
     {:noreply, socket}
   end
 
-  def preload(list_of_assigns) do
-    current_user = current_user(List.first(list_of_assigns))
-    # |> debug("current_user")
+  def preload(list_of_assigns, opts \\ []) do
+    preload_assigns_async(list_of_assigns, &assigns_to_params/1, &do_preload/3, opts)
+  end
 
-    list_of_objects =
-      list_of_assigns
-      |> Enum.map(&e(&1, :object, nil))
+  defp assigns_to_params(assigns) do
+    object = e(assigns, :object, nil)
 
-    # |> debug("list_of_objects")
+    %{
+      component_id: assigns.id,
+      object: object,
+      object_id: ulid(object),
+      previous_value: e(assigns, :my_boost, nil)
+    }
+  end
 
-    list_of_ids =
-      list_of_objects
-      |> Enum.map(&e(&1, :id, nil))
-      |> filter_empty([])
-      |> debug("list_of_ids")
-
+  defp do_preload(list_of_components, list_of_ids, current_user) do
     my_states =
       if current_user,
         do:
-          Bonfire.Social.Boosts.get!(current_user, list_of_ids, preload: false)
+          Bonfire.Social.Boosts.get!(current_user, list_of_ids,
+            preload: false,
+            skip_boundary_check: true
+          )
           |> Map.new(fn l -> {e(l, :edge, :object_id, nil), true} end),
         else: %{}
 
@@ -64,25 +67,23 @@ defmodule Bonfire.Social.Boosts.LiveHandler do
 
     objects_counts =
       if Bonfire.Me.Settings.get([:ui, :show_activity_counts], nil, current_user: current_user) do
-        list_of_objects
+        list_of_components
+        |> Enum.map(fn %{object: object} ->
+          object
+        end)
+        |> filter_empty([])
         |> repo().maybe_preload(:boost_count, follow_pointers: false)
         |> Map.new(fn o -> {e(o, :id, nil), e(o, :boost_count, :object_count, nil)} end)
         |> debug("boost_counts")
       end
 
-    list_of_assigns
-    |> Enum.map(fn assigns ->
-      object_id = e(assigns, :object, :id, nil)
-
-      assigns
-      |> Map.put(
-        :my_boost,
-        e(my_states, object_id, nil)
-      )
-      |> Map.put(
-        :boost_count,
-        e(objects_counts, object_id, nil)
-      )
+    list_of_components
+    |> Map.new(fn component ->
+      {component.component_id,
+       %{
+         my_boost: Map.get(my_states, component.object_id) || component.previous_value || false,
+         boost_count: e(objects_counts, component.object_id, nil)
+       }}
     end)
   end
 end
