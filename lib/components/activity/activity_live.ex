@@ -151,6 +151,8 @@ defmodule Bonfire.UI.Social.ActivityLive do
     )
   end
 
+  def prepare(assigns), do: assigns
+
   def render(%{activity: _, activity_components: _} = assigns) do
     ~F"""
     <article
