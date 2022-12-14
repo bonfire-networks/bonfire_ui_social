@@ -11,7 +11,7 @@
   <span
     :if={@showing_within == :smart_input}
     phx-click="Bonfire.Social.Feeds:remove_data"
-    class="absolute top-2 right-2 normal-case btn flex items-center gap-2 btn-xs"
+    class="absolute flex items-center gap-2 normal-case top-2 right-2 btn btn-xs"
   >
     <span>{l("Close")}</span>
     <Icon outline="X" class="w-4 h-4" />
@@ -20,7 +20,7 @@
   {#if ulid(@object) != nil and ulid(@activity) == nil and @showing_within != :search}
     <div class="flex items-center">
       <div class="flex flex-1 space-x-2">
-        <div class="flex grow items-center text-sm font-semibold text-base-content">
+        <div class="flex items-center text-sm font-semibold grow text-base-content">
           <LiveRedirect
             aria-label={e(@character, :username, "") <> " profile"}
             class="hover:underline text-opacity-70"
@@ -191,7 +191,7 @@
             object={@object}
             with_icon
             with_label
-            class="btn btn-xs rounded-full flex items-center gap-2 font-medium"
+            class=""
             id={ComponentID.new(Bonfire.Boundaries.Web.BoundaryIconLive, @object)}
             object_boundary={@object_boundary}
           />

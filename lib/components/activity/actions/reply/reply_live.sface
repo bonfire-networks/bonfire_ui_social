@@ -3,8 +3,8 @@
     width: window.innerWidth 
   }"
   @resize.window.debounce.100="width = window.innerWidth"
-  class="relative z-20 flex items-center tooltip tooltip-bottom"
-  data-tip={l("Reply")}
+  class="relative z-20 flex items-center"
+  title={l("Reply")}
 >
   <!-- {#if Settings.get([:ui, :smart_input_as], nil, @__context__) == :sidebar and @thread_mode != :flat}
     <button
