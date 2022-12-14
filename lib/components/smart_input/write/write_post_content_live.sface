@@ -85,31 +85,6 @@
           </div>
         </Inputs>
 
-        <div x-show="open_boundaries" class="p-3 bg-base-100">
-          <Bonfire.Boundaries.Web.BoundariesListLive
-            to_boundaries={@to_boundaries}
-            to_boundaries_ids={to_boundaries_ids(@to_boundaries)}
-            to_circles={@to_circles}
-            open_boundaries={@open_boundaries}
-            hide_breakdown
-            setting_boundaries
-            click_override
-          />
-        </div>
-
-        <!-- <Bonfire.UI.Common.InputBoundariesLive
-          thread_mode={@thread_mode}
-          create_object_type={@create_object_type}
-          to_boundaries={@to_boundaries}
-          to_circles={@to_circles}
-          preloaded_recipients={e(@preloaded_recipients, [])}
-          showing_within={@showing_within}
-          open_boundaries={@open_boundaries}
-          show_select_recipients={@show_select_recipients}
-          boundaries_modal_id={@boundaries_modal_id}
-          context_id={@context_id}
-        / -->
-
         <Bonfire.UI.Common.InputControlsLive
           preloaded_recipients={e(@preloaded_recipients, [])}
           open_boundaries={@open_boundaries}

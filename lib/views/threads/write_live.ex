@@ -29,7 +29,11 @@ defmodule Bonfire.UI.Social.WriteLive do
        page_title: l("Share a feedback"),
        page: "write",
        create_object_type: maybe_to_atom(e(session, "create_object_type", nil)),
-       smart_input_opts: [inline_only: true, text: e(session, "smart_input_text", nil)],
+       smart_input_opts: [
+         inline_only: true,
+         hide_buttons: true,
+         text: e(session, "smart_input_text", nil)
+       ],
        reply_to_id: e(session, "reply_to_id", nil),
        context_id: e(session, "context_id", nil),
        to_boundaries: nil,

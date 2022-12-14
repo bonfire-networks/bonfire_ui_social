@@ -60,7 +60,8 @@ defmodule Bonfire.Social.Posts.LiveHandler do
              post_attrs:
                Bonfire.Social.Posts.prepare_post_attrs(attrs)
                |> Map.put(:uploaded_media, uploaded_media),
-             boundary: e(params, "to_boundaries", "mentions")
+             boundary: e(params, "to_boundaries", "mentions"),
+             to_circles: e(params, "to_circles", [])
            ]
            |> debug("publish opts"),
          {:ok, published} <- Bonfire.Social.Posts.publish(opts) do
