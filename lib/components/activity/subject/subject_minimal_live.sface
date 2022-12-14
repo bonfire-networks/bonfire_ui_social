@@ -166,7 +166,9 @@
             </div>
           </div>
         {#elseif @verb in ["Reply", "Respond"]}
-          <div class="flex w-full pb-2 mb-2 items-top">
+
+
+          <div class="flex w-full items-top">
             <!-- REPLY -->
             <div class="">
               <Bonfire.UI.Common.AvatarLive user={e(@activity, :subject, nil)} />
@@ -182,22 +184,20 @@
                   {e(@activity, :subject, :profile, :name, nil)}
                 </LiveRedirect>
                 <span
-                  :if={e(@character, :username, nil)}
+                  :if={e(@activity, :subject, :username, nil)}
                   class="ml-1 text-sm truncate ellipsis text-base-content text-opacity-60 subject_username"
-                >@{e(@character, :username, "")}</span>
+                >@{e(@activity, :subject, :character, :username, "")}</span>
               </div>
 
-              <Bonfire.UI.Social.Activity.DateAgoLive
-                permalink={@permalink}
-                date_ago={@date_ago}
-                object={@object}
-                object_type={@object_type}
-                object_boundary={@object_boundary}
-                showing_within={@showing_within}
-                verb_display={@verb_display}
-              />
+              <LiveRedirect
+                class="subject_timestamp text-[13px] font-normal no-underline truncate ellipsis text-base-content/60"
+                to={@permalink}
+              >
+                {@date_ago}
+              </LiveRedirect>
             </div>
           </div>
+
         {#elseif @verb == "Flag"}
           <div class="flex items-center justify-start pb-2 mb-2">
             <!-- FLAG -->

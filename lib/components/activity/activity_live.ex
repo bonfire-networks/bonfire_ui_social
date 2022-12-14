@@ -281,7 +281,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
       do: [
         {Bonfire.UI.Social.Activity.SubjectMinimalLive,
          %{
-           # activity: repo().maybe_preload(activity, subject: [:character]),
+           activity: repo().maybe_preload(activity, subject: [:character]),
            verb: verb
          }}
       ]
