@@ -166,8 +166,6 @@
             </div>
           </div>
         {#elseif @verb in ["Reply", "Respond"]}
-
-
           <div class="flex w-full items-top">
             <!-- REPLY -->
             <div class="">
@@ -197,7 +195,6 @@
               </LiveRedirect>
             </div>
           </div>
-
         {#elseif @verb == "Flag"}
           <div class="flex items-center justify-start pb-2 mb-2">
             <!-- FLAG -->
