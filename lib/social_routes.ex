@@ -16,7 +16,7 @@ defmodule Bonfire.UI.Social.Routes do
         # TODO:
         live("/feed/:tab/:object_type", FeedsLive, as: :feed)
 
-        # live("/write", WriteLive, as: :write)
+        live("/write", WriteLive, as: :write)
 
         # live "/post", PostLive, as: Bonfire.Data.Social.Post
         live("/post/:id", PostLive, as: Bonfire.Data.Social.Post)
