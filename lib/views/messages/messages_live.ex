@@ -30,7 +30,7 @@ defmodule Bonfire.UI.Social.MessagesLive do
      |> assign(
        create_object_type: :message,
        showing_within: :messages,
-       smart_input_opts: [prompt: l("Compose a message...")],
+       smart_input_opts: [prompt: l("Message"), icon: "heroicons-solid:envelope"],
        #  smart_input_opts: [inline_only: true],
        to_boundaries: [{"message", "Message"}],
        page_title: l("Messages"),

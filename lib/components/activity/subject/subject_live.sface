@@ -156,16 +156,16 @@
             <div class="flex items-center gap-1">
               <div
                 :if={e(@character, :username, nil)}
-                class="text-[13px] font-normal no-underline truncate ellipsis text-base-content/60 subject_username"
+                class="text-[13px] font-normal no-underline truncate ellipsis text-base-content/50 subject_username"
               >
                 @{e(@character, :username, "")}
               </div>
-              <span>·</span>
+              <span class="text-base-content/50">·</span>
               <Bonfire.UI.Social.Activity.InstanceIconLive object={@object} />
 
               <LiveRedirect
                 :if={@showing_within not in [:smart_input]}
-                class="subject_timestamp text-[13px] font-normal no-underline truncate ellipsis text-base-content/60"
+                class="subject_timestamp text-[13px] font-normal no-underline truncate ellipsis text-base-content/50"
                 to={@permalink}
               >
                 {@date_ago}

@@ -36,12 +36,12 @@
           <p class="text-base font-semibold group-hover:underline text-base-content">
             {e(the_other(@activity, @object, @__context__), :profile, :name, "")}
           </p>
-          <span
+          <div
             :if={e(the_other(@activity, @object, @__context__), :character, :username, nil)}
             class="-mt-1 text-sm font-normal truncate ellipsis text-base-content text-opacity-60 subject_username"
           >
             @{e(the_other(@activity, @object, @__context__), :character, :username, "")}
-          </span>
+          </div>
           <!-- <p class="-mt-px text-sm text-base-content text-opacity-70">
           @{e(the_other(@activity, @object, @__context__), :character, :username, "anon")} 
         </p> -->
