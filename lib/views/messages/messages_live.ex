@@ -30,6 +30,8 @@ defmodule Bonfire.UI.Social.MessagesLive do
      |> assign(
        create_object_type: :message,
        showing_within: :messages,
+       smart_input_opts: [prompt: l("Compose a message...")],
+       #  smart_input_opts: [inline_only: true],
        to_boundaries: [{"message", "Message"}],
        page_title: l("Messages"),
        page: "messages",
@@ -39,11 +41,9 @@ defmodule Bonfire.UI.Social.MessagesLive do
        reply_to_id: nil,
        thread_id: nil,
        users: [],
-       #  smart_input_opts: [inline_only: true],
        feedback_title: l("No messages"),
        feedback_message: l("Select a thread or start a new one..."),
        threads: LiveHandler.list_threads(current_user_required!(socket), socket),
-       smart_input_opts: [prompt: l("Compose a popopo message...")],
        page_header_aside: [
          {Bonfire.UI.Social.HeaderAsideNotificationsSeenLive,
           [
@@ -263,7 +263,7 @@ defmodule Bonfire.UI.Social.MessagesLive do
 
   # show all my threads
   def do_handle_params(_params, url, socket) do
-    IO.inspect("TETETE")
+    # IO.inspect("TETETE")
     current_user = current_user_required!(socket)
 
     {
@@ -271,7 +271,6 @@ defmodule Bonfire.UI.Social.MessagesLive do
       socket
       |> assign(
         page_title: l("Direct Messages"),
-        create_object_type: :message,
         showing_within: :messages,
         to_boundaries: [{"message", "Message"}],
         # feed: e(feed, :edges, []),

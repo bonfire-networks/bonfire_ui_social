@@ -1,6 +1,6 @@
 <!-- <Bonfire.UI.Common.OpenModalLive
   id={Pointers.ULID.generate()}
-  no_actions
+  no_actions={true}
   title_text={l("Pin")}
   form_opts={%{"phx-submit" => "Bonfire.Social.Objects:tag"}}
   :let={autocomplete: autocomplete}

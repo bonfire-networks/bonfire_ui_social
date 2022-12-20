@@ -30,7 +30,7 @@
           {#match cw?}
             {#if cw?}
               <button
-                @click="content_open = true"
+                x-on:click="content_open = true"
                 x-show="content_open == false"
                 style="display: none"
                 class="relative z-50 my-2 text-sm font-medium text-left text-base-content link link-hover"
@@ -38,7 +38,7 @@
                 {rich(name || l("CW"))} ({l("Show more")})
               </button>
               <button
-                @click="content_open = false"
+                x-on:click="content_open = false"
                 x-show="content_open"
                 style="display: none"
                 class="relative z-50 my-2 text-sm font-medium text-left text-base-content link link-hover"

@@ -28,7 +28,7 @@
       x-transition:leave-end="-translate-x-full"
       x-description="Off-canvas menu, show/hide based on off-canvas menu state."
       class="relative flex flex-col flex-1 w-full max-w-md bg-base-300"
-      @click.away="open_sidebar_drawer = false"
+      x-on:click.away="open_sidebar_drawer = false"
     >
       <div
         x-show="open_sidebar_drawer"
@@ -44,7 +44,7 @@
         <button
           type="button"
           class="flex items-center justify-center w-10 h-10 ml-1 rounded-full focus:outline-none focus:ring-2 focus:ring-inset focus:ring-white"
-          @click="open_sidebar_drawer = false"
+          x-on:click="open_sidebar_drawer = false"
         >
           <span class="sr-only">{l("Close menu")}</span>
           <svg

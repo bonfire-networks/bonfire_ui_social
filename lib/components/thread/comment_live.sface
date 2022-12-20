@@ -23,7 +23,7 @@
       <div
         x-cloak
         class="p-3 pr-0 pl-[21px]"
-        @click="show_replies = !show_replies"
+        x-on:click="show_replies = !show_replies"
         x-show="!show_replies"
       >
         <Icon
@@ -128,7 +128,7 @@
             {#match sub_replies_count when is_integer(sub_replies_count) and sub_replies_count > 0}
               <div class="flex items-center -mx-2 -mt-1">
                 <div 
-                  @click="show = true" 
+                  x-on:click="show = true" 
                   x-show="show" 
                   phx-click="Bonfire.Social.Posts:load_replies" 
                   phx-value-id={e(@comment, :id, nil)} 

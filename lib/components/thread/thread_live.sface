@@ -72,7 +72,8 @@
         <Bonfire.UI.Common.SmartInputButtonLive
           component={Bonfire.Common.Config.get([:ui, :default_smart_input]) ||
             Bonfire.UI.Social.WritePostContentLive}
-          smart_input_opts={[prompt: l("Be the first to reply"), reply_to_id: @thread_id, thread_id: @thread_id]}
+          smart_input_opts={[reply_to_id: @thread_id, thread_id: @thread_id]}
+          prompt={l("Be the first to reply")}
           class="my-12 h-[40px] flex items-center gap-2 normal-case btn-sm btn"
           icon="heroicons-outline:reply"
         />
