@@ -1,4 +1,4 @@
-<div class="flex flex-col h-full write_post_content overflow-hidden">
+<div class="flex flex-col h-full overflow-hidden write_post_content">
   <Form
     for={Bonfire.Social.Posts.LiveHandler.post_changeset(@current_user)}
     submit={handler(%{
@@ -65,7 +65,7 @@
                     placeholder: l("Enter a content warning"),
                     "phx-debounce": "blur"
                   }
-                  class="bg-transparent rounded w-full input h-8 text-sm"
+                  class="w-full h-8 text-sm bg-transparent rounded input"
                 />
               </Field>
             </div>
