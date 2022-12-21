@@ -184,15 +184,15 @@
           {/if}
         </div>
         <div class="flex items-center gap-1">
-          <Dynamic.LiveComponent
-            :if={module_enabled?(Bonfire.Boundaries.Web.BoundaryIconLive) and
+          <Dynamic.Component
+            :if={module_enabled?(Bonfire.Boundaries.Web.BoundaryIconStatelessLive) and
               @object_type not in [Bonfire.Data.Social.Message]}
-            module={Bonfire.Boundaries.Web.BoundaryIconLive}
+            module={Bonfire.Boundaries.Web.BoundaryIconStatelessLive}
             object={@object}
             with_icon
             with_label
             class=""
-            id={ComponentID.new(Bonfire.Boundaries.Web.BoundaryIconLive, @object)}
+            id={ComponentID.new(Bonfire.Boundaries.Web.BoundaryIconStatelessLive, @object)}
             object_boundary={@object_boundary}
           />
           <Bonfire.UI.Social.Activity.MoreActionsLive

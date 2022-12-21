@@ -19,6 +19,9 @@
         {name(e(@object, :parent_category, nil))}
       </LiveRedirect>
     </div>
-    <Bonfire.UI.Social.Activity.CategoryActionsLive object={@object} />
+    <Bonfire.UI.Social.Activity.CategoryActionsLive
+      object={@object}
+      object_boundary={@object_boundary}
+    />
   </div>
 </div>

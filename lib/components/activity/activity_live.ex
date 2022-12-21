@@ -34,6 +34,18 @@ defmodule Bonfire.UI.Social.ActivityLive do
     )
   end
 
+  def update(
+        %{object_boundary: object_boundary} = assigns,
+        %{assigns: %{activity_components: activity_components}} = socket
+      )
+      when not is_nil(object_boundary) do
+    debug("Activity prepared already, just assign object_boundary")
+
+    {:ok,
+     socket
+     |> assign(object_boundary: object_boundary)}
+  end
+
   def update(assigns, %{assigns: %{activity_components: activity_components}} = socket) do
     debug("Activity prepared already")
     # debug(activity_components)
