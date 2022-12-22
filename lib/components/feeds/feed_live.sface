@@ -1,4 +1,10 @@
-<div id={@feed_id || @id} role="feed" aria-live="assertive" aria-atomic="true" class="feed max-w-[680px] mx-auto w-full">
+<div
+  id={@feed_id || @id}
+  role="feed"
+  aria-live="assertive"
+  aria-atomic="true"
+  class="feed max-w-[680px] mx-auto w-full"
+>
   <div class="">
     <Bonfire.UI.Common.TabsLive
       :if={@hide_tabs != true}

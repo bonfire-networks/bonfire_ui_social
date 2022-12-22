@@ -39,7 +39,12 @@
           root_assigns={
             page_title: l("Discussion")
           }
-        />
+        >
+          <:open_btn>
+            <!-- placeholder for wrapping this around the entire ActivityLive -->
+            <button type="button" class="link link-hover text-[13px] text-base-content/80">{l("Read discussion")}</button>
+          </:open_btn>
+        </Bonfire.UI.Common.OpenPreviewLive>
         <!-- TODO: derive the view from object_type? and compute object_type not just based on schema, but also with some logic looking at fields (eg. action=="work") -->
       {#elseif String.starts_with?(@permalink || "", ["/coordination/task/"])}
         <Bonfire.UI.Common.OpenPreviewLive
