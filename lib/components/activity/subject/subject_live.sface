@@ -73,7 +73,7 @@
     </div>
   {#else}
     <div class={
-      "flex items-top",
+      "flex items-center",
       "space-x-3": @viewing_main_object == true,
       "py-1": @thread_mode == :flat
     }>
@@ -101,12 +101,12 @@
         </LiveRedirect>
       </div>
       <div class="flex items-start justify-between leading-[16px] min-w-0 space-x-1 w-full">
-        <div class="flex flex-col flex-1 gap-0 feed-clickable">
+        <div class="flex flex-col flex-1 gap-1 feed-clickable">
           {#if @thread_mode == :flat && @current_user && ulid(@current_user) == maybe_get(@character, :id)}
             <LiveRedirect
               opts={"data-id": "subject_name"}
               aria-label={e(@character, :username, "") <> " profile"}
-              class="link link-hover font-semibold leading-[16px] text-sm"
+              class="link link-hover font-semibold leading-[16px] text-[15px]"
               to={path(@character)}
             >
               {l("You")}
@@ -115,7 +115,7 @@
             <!-- <div class="flex items-baseline"> -->
 
             <div class={
-              "text-sm font-medium  lowercase line-clamp-1 text-base-content/70",
+              "text-[15px] font-medium  lowercase line-clamp-1 text-base-content/70",
               "!text-base !font-semibold": @viewing_main_object
             }>
               <!-- {@verb} {@object_type} -->
@@ -156,7 +156,7 @@
             <div class="flex items-center gap-1">
               <div
                 :if={e(@character, :username, nil)}
-                class="text-[13px] font-normal no-underline truncate ellipsis text-base-content/50 subject_username"
+                class="text-[14px] font-normal no-underline truncate ellipsis text-base-content/50 subject_username"
               >
                 @{e(@character, :username, "")}
               </div>
@@ -165,7 +165,7 @@
 
               <LiveRedirect
                 :if={@showing_within not in [:smart_input]}
-                class="subject_timestamp text-[13px] font-normal no-underline truncate ellipsis text-base-content/50"
+                class="subject_timestamp text-[14px] font-normal no-underline truncate ellipsis text-base-content/50"
                 to={@permalink}
               >
                 {@date_ago}

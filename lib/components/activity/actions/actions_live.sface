@@ -9,7 +9,7 @@
     "thread_actions mt-1 flex items-center":
       @showing_within == :thread or Settings.get([:ui, :compact], false, @__context__),
     "feed_actions items-center flex": @viewing_main_object != true,
-    "mt-2": e(@showing_within, :feed) == :feed || e(@showing_within, :feed) == :notifications,
+    "mt-4": e(@showing_within, :feed) == :feed || e(@showing_within, :feed) == :notifications,
     "mt-1": @showing_within == :widget,
     "absolute z-50 p-0.5 h-8 hidden group-hover:flex rounded-md top-[-24px] right-[12px] bg-base-100 border border-base-200":
       @thread_mode == :flat
@@ -20,7 +20,7 @@
       {#if String.starts_with?(@permalink, ["/post/", "/discussion/"])}
         <Bonfire.UI.Common.OpenPreviewLive
           href={@permalink || path(@object)}
-          open_btn_text={l("Read discussion")}
+          open_btn_text={""}
           title_text={e(@object, :name, nil) || e(@object, :post_content, :name, nil) || l("Discussion")}
           open_btn_class="link link-hover text-[13px] text-base-content/80"
           modal_assigns={
@@ -42,7 +42,7 @@
         >
           <:open_btn>
             <!-- placeholder for wrapping this around the entire ActivityLive -->
-            <button type="button" class="link link-hover text-[13px] text-base-content/80">{l("Read discussion")}</button>
+            <button type="button" class="w-0 h-0"></button>
           </:open_btn>
         </Bonfire.UI.Common.OpenPreviewLive>
         <!-- TODO: derive the view from object_type? and compute object_type not just based on schema, but also with some logic looking at fields (eg. action=="work") -->
