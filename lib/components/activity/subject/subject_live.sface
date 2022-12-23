@@ -205,16 +205,6 @@
             id={ComponentID.new(Bonfire.Boundaries.Web.BoundaryIconStatelessLive, @object)}
             object_boundary={@object_boundary}
           />
-          <Bonfire.UI.Social.Activity.MoreActionsLive
-            :if={@showing_within == :feed}
-            object={@object}
-            activity={@activity}
-            object_type={@object_type}
-            object_boundary={@object_boundary}
-            object_type_readable={@object_type_readable}
-            verb={@verb}
-            showing_within={@showing_within}
-          />
         </div>
       </div>
     </div>

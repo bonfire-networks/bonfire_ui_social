@@ -67,9 +67,9 @@
                     @viewing_main_object != true and ulid(@object) != nil and
                       e(@activity, :replied, :reply_to_id, nil) == nil and ulid(@activity) == nil and
                       @showing_within != :widget and @showing_within != :search,
-                  "font-[16px] mt-1 prose-sm prose-p:pt-0 prose-p:my-0 !leading-[22px]":
+                  "font-[16px] mt-1 prose-sm prose-p:pt-0 prose-p:my-0 leading-[22px]":
                     @showing_within == :thread,
-                  "mt-3 !prose-lg pl-0 prose-p:pb-4": @viewing_main_object,
+                  "!mt-6 !prose-lg pl-0 prose-p:pb-4 !leading-[26px]": @viewing_main_object,
                   "prose-p:pt-1 !my-3 !leading-[23px]": @showing_within == :feed
                 }
               >

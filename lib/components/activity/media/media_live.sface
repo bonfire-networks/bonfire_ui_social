@@ -85,8 +85,8 @@
             class="flex w-full border rounded media_container bg-base-200 hover:bg-base-content/5 border-base-content/10 tooltip tooltip-bottom"
             data-tip={media_label(media)}
           >
-            <div class="md:flex">
-              <div class="flex items-center w-[160px] h-[160px] bg-base-200 bg-base-content/5 place-content-center">
+            <div class="items-center gap-3 md:flex">
+              <div class="flex items-center w-[80px] h-[80px] bg-base-200 bg-base-content/5 place-content-center">
                 {#case preview_img(media) || e(media.metadata, "favicon", nil) ||
                     Bonfire.Files.FaviconStore.favicon_url(media_url(media))}
                   {#match nil}
@@ -100,15 +100,15 @@
                 {/case}
               </div>
               <div class="flex flex-col items-start content-start justify-start p-3 space-y-1 text-sm text-left">
-                <div class="text-base-content/60" :if={provider(media)}>
-                  {provider(media)}
-                </div>
-                <div class="line-clamp-3">
+                <div class="text-base font-medium line-clamp-3">
                   {media_label(media) || l("View media")} ({media.media_type})
                 </div>
-                <div class="break-words line-clamp-2 text-base-content/60" :if={description(media)}>
-                  {description(media)}
+                <div class="text-sm text-base-content/60" :if={provider(media)}>
+                  {provider(media)}
                 </div>
+                <!-- <div class="break-words line-clamp-2 text-base-content/60" :if={description(media)}>
+                  {description(media)}
+                </div> -->
               </div>
             </div>
           </a>
@@ -129,32 +129,32 @@
     <a
       href={media_url(link)}
       target="_blank"
-      class="flex w-full mb-2 border rounded media_container bg-base-200 hover:bg-base-content/5 border-base-300"
+      class="flex w-full mb-2 border rounded-md media_container border-base-content/5 hover:bg-base-content/5"
     >
-      <div class="md:flex">
-        <div class="flex items-center w-[160px] h-[160px] bg-base-200 bg-base-content/5 place-content-center">
+      <div class="items-center gap-2 md:flex">
+        <div class="flex items-center w-[80px] h-[80px] bg-base-200 bg-base-content/5 place-content-center">
           {#case preview_img(link) || e(link.metadata, "favicon", nil) ||
               Bonfire.Files.FaviconStore.favicon_url(media_url(link))}
             {#match nil}
               <Icon solid="ExternalLink" class="w-8 h-8 text-base-content/70" />
             {#match image}
               <img
-                class="object-cover w-full h-full rounded-none cursor-pointer media-image"
+                class="object-cover w-full h-full rounded-none cursor-pointer rounded-l-md media-image"
                 alt={media_label(link)}
                 src={preview_img(link)}
               />
           {/case}
         </div>
         <div class="flex flex-col items-start content-start justify-start flex-1 p-3 space-y-1 text-sm text-left">
-          <div class="text-base-content/60" :if={provider(link)}>
-            {provider(link)}
-          </div>
-          <div class="line-clamp-5">
+          <div class="font-medium line-clamp-1">
             {media_label(link) || l("View media")} ({link.media_type})
           </div>
-          <div class="break-words line-clamp-2 text-base-content/60" :if={description(link)}>
-            {description(link)}
+          <div class="text-sm text-base-content/60" :if={provider(link)}>
+            {provider(link)}
           </div>
+          <!-- <div class="break-words line-clamp-2 text-base-content/60" :if={description(link)}>
+            {description(link)}
+          </div> -->
         </div>
       </div>
     </a>
