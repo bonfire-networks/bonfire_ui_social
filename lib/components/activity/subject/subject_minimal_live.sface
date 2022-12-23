@@ -187,12 +187,18 @@
                 >@{e(@activity, :subject, :character, :username, "")}</span>
               </div>
 
-              <LiveRedirect
-                class="subject_timestamp text-[13px] font-normal no-underline truncate ellipsis text-base-content/60"
-                to={@permalink}
+              <Bonfire.UI.Social.Activity.LinkToActivityLive
+                :if={@showing_within not in [:smart_input]}
+                object={@object}
+                activity={@activity}
+                object_type={@object_type}
+                permalink={@permalink}
+                thread_id={@thread_id}
               >
-                {@date_ago}
-              </LiveRedirect>
+                <span class="subject_timestamp text-[13px] font-normal no-underline truncate ellipsis text-base-content/60">
+                  {@date_ago}
+                </span>
+              </Bonfire.UI.Social.Activity.LinkToActivityLive>
             </div>
           </div>
         {#elseif @verb == "Flag"}

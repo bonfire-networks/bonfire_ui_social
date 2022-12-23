@@ -28,11 +28,17 @@
   </div>
 {#else}
   <div class="flex items-center">
-    <LiveRedirect class="subject_timestamp text-base-content/60" to={@permalink}>
-      <span>
+    <Bonfire.UI.Social.Activity.LinkToActivityLive
+      object={@object}
+      activity={@activity}
+      object_type={@object_type}
+      permalink={@permalink}
+      thread_id={@thread_id}
+    >
+      <span class="subject_timestamp text-base-content/60">
         {@date_ago}
       </span>
-    </LiveRedirect>
+    </Bonfire.UI.Social.Activity.LinkToActivityLive>
 
     <Bonfire.UI.Social.Activity.InstanceIconLive object={@object} />
   </div>

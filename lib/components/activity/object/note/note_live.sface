@@ -22,7 +22,8 @@
           ulid(@activity) == nil,
       reply_message: e(@activity, :replied, :reply_to_id, nil)
     }
-    id={"note-#{@activity_inception}-" <> (ulid(@activity) <> "-#{e(assigns, :viewing_main_object, false)}" || e(@object, :id, "no-id"))}
+    id={"note-#{@activity_inception}-" <>
+      (ulid(@activity) <> "-#{e(assigns, :viewing_main_object, false)}" || e(@object, :id, "no-id"))}
   >
     {#case e(post_content(@object), :name, nil)}
       {#match name}

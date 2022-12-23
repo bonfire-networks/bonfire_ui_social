@@ -1,43 +1,50 @@
-{#if Bonfire.Boundaries.can?(@__context__, :reply, @object_boundary)}
-  <div title={l("Reply")} class="relative z-20 flex items-center">
-    <button
-      class="btn btn-ghost btn-circle btn-sm"
-      data-id="action_reply"
-      phx-click="Bonfire.Social.Feeds:reply_to_activity"
-      phx-value-id={@object_id}
-      phx-target={if @activity_id, do: "#activity--" <> e(@activity_id, "")}
-    >
-      <!-- x-on:click={"show_smart_input('#{l("Reply")}')"} -->
-      <span class="text-opacity-50 text-base-content">
-        <Icon outline="Reply" class="w-4 h-4 stroke-1" />
-        <span class="sr-only">{l("Reply")}</span>
+{#case Bonfire.Boundaries.can?(@__context__, :reply, @object_boundary)}
+  {#match nil}
+  {#match true}
+    <div title={l("Reply")} class="relative z-20 flex items-center">
+      <button
+        class="btn btn-ghost btn-circle btn-sm"
+        data-id="action_reply"
+        phx-click="Bonfire.Social.Feeds:reply_to_activity"
+        phx-value-id={@object_id}
+        phx-target={if @activity_id, do: "#activity--" <> e(@activity_id, "")}
+      >
+        <!-- x-on:click={"show_smart_input('#{l("Reply")}')"} -->
+        <span class="text-opacity-50 text-base-content">
+          <Icon outline="Reply" class="w-4 h-4 stroke-1" />
+          <span class="sr-only">{l("Reply")}</span>
+        </span>
+      </button>
+      <!-- {/if} -->
+      <span
+        :if={Bonfire.Me.Settings.get([:ui, :show_activity_counts], nil, @__context__)}
+        class="ml-1 text-xs text-base-content text-opacity-70"
+      >
+        {#if count(@replied) > 0}
+          {count(@replied)}
+        {/if}
       </span>
-    </button>
-    <!-- {/if} -->
-    <span
-      :if={Bonfire.Me.Settings.get([:ui, :show_activity_counts], nil, @__context__)}
-      class="ml-1 text-xs text-base-content text-opacity-70"
-    >
-      {#if count(@replied) > 0}
-        {count(@replied)}
-      {/if}
-    </span>
-  </div>
-{#else}
-  <div title={l("You can't reply to this activity")} class="relative z-20 flex items-center">
-    <button class="btn btn-circle btn-sm btn-disabled" data-id="action_reply" disabled>
-      <span class="text-opacity-50 text-base-content">
-        <Icon outline="Reply" class="w-4 h-4 stroke-1" />
+    </div>
+  {#match false}
+    <div class="relative z-20 flex items-center">
+      <button
+        type="button"
+        class="btn btn-circle btn-sm btn-ghost cursor-not-allowed"
+        data-id="action_reply"
+        title={l("You can't reply to this activity")}
+      >
+        <span class="text-opacity-20 text-base-content">
+          <Icon outline="Reply" class="w-4 h-4 stroke-1" />
+        </span>
         <span class="sr-only">{l("Cannot Reply")}</span>
+      </button>
+      <span
+        :if={Bonfire.Me.Settings.get([:ui, :show_activity_counts], nil, @__context__)}
+        class="ml-1 text-xs text-base-content text-opacity-70"
+      >
+        {#if count(@replied) > 0}
+          {count(@replied)}
+        {/if}
       </span>
-    </button>
-    <span
-      :if={Bonfire.Me.Settings.get([:ui, :show_activity_counts], nil, @__context__)}
-      class="ml-1 text-xs text-base-content text-opacity-70"
-    >
-      {#if count(@replied) > 0}
-        {count(@replied)}
-      {/if}
-    </span>
-  </div>
-{/if}
+    </div>
+{/case}

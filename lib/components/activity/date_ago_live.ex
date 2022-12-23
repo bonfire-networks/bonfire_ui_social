@@ -11,4 +11,5 @@ defmodule Bonfire.UI.Social.Activity.DateAgoLive do
   prop showing_within, :string, default: :feed
   prop object_type, :any
   prop object_boundary, :any, default: nil
+  prop thread_id, :string, default: nil
 end

@@ -26,13 +26,18 @@
               )}
             </div>
             <span>·</span>
-            <LiveRedirect
+            <Bonfire.UI.Social.Activity.LinkToActivityLive
               :if={@showing_within not in [:smart_input]}
-              class="subject_timestamp text-[13px] font-normal no-underline truncate ellipsis text-base-content/60"
-              to={@permalink}
+              object={@object}
+              activity={@activity}
+              object_type={@object_type}
+              permalink={@permalink}
+              thread_id={@thread_id}
             >
-              {@date_ago}
-            </LiveRedirect>
+              <span class="subject_timestamp text-[13px] font-normal no-underline truncate ellipsis text-base-content/60">
+                {@date_ago}
+              </span>
+            </Bonfire.UI.Social.Activity.LinkToActivityLive>
           </div>
         </div>
         <Bonfire.UI.Social.Activity.InstanceIconLive object={@object} />
@@ -70,6 +75,7 @@
       permalink={@permalink}
       date_ago={@date_ago}
       object={@object}
+      thread_id={@thread_id}
       object_type={@object_type}
       object_boundary={@object_boundary}
       showing_within={@showing_within}
