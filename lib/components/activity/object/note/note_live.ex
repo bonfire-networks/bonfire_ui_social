@@ -23,7 +23,7 @@ defmodule Bonfire.UI.Social.Activity.NoteLive do
   end
 
   def maybe_truncate(input, activity_inception, length \\ 250) do
-    if activity_inception,
+    if activity_inception != false and is_binary(input) and input != "",
       do: Text.sentence_truncate(input, length, "..."),
       else: input
   end

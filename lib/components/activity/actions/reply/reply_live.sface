@@ -1,19 +1,20 @@
-{#case Bonfire.Boundaries.can?(@__context__, :reply, @object_boundary)}
-  {#match nil}
-  {#match true}
-    <div title={l("Reply")} class="relative z-20 flex items-center">
+<div class="relative z-20 flex items-center">
+  {#case Bonfire.Boundaries.can?(@__context__, :reply, @object_boundary)}
+    {#match nil}
+    {#match true}
       <button
-        class="btn btn-ghost btn-circle btn-sm"
+        class={@class}
         data-id="action_reply"
         phx-click="Bonfire.Social.Feeds:reply_to_activity"
         phx-value-id={@object_id}
         phx-target={if @activity_id, do: "#activity--" <> e(@activity_id, "")}
+        title={l("Reply")}
       >
         <!-- x-on:click={"show_smart_input('#{l("Reply")}')"} -->
         <span class="text-opacity-50 text-base-content">
           <Icon outline="Reply" class="w-4 h-4 stroke-1" />
-          <span class="sr-only">{l("Reply")}</span>
         </span>
+        <span class={if !@reply_btn_text, do: "sr-only"}>{@reply_btn_text || l("Reply")}</span>
       </button>
       <!-- {/if} -->
       <span
@@ -24,19 +25,17 @@
           {count(@replied)}
         {/if}
       </span>
-    </div>
-  {#match false}
-    <div class="relative z-20 flex items-center">
+    {#match false}
       <button
         type="button"
-        class="btn btn-circle btn-sm btn-ghost cursor-not-allowed"
+        class={@class, " cursor-not-allowed"}
         data-id="action_reply"
         title={l("You can't reply to this activity")}
       >
         <span class="text-opacity-20 text-base-content">
           <Icon outline="Reply" class="w-4 h-4 stroke-1" />
         </span>
-        <span class="sr-only">{l("Cannot Reply")}</span>
+        <span class={if !@cannot_reply_text, do: "sr-only"}>{@cannot_reply_text || l("Cannot Reply")}</span>
       </button>
       <span
         :if={Bonfire.Me.Settings.get([:ui, :show_activity_counts], nil, @__context__)}
@@ -46,5 +45,5 @@
           {count(@replied)}
         {/if}
       </span>
-    </div>
-{/case}
+  {/case}
+</div>

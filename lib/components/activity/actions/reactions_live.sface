@@ -7,10 +7,6 @@
   replied={e(Bonfire.UI.Social.Activity.ActionsLive.the_activity(@activity, @object), :replied, nil)}
   showing_within={@showing_within}
   hide_reply={@hide_reply}
-  reply_to_text={Text.text_only(
-    e(@object, :post_content, :name, nil) || e(@object, :post_content, :summary, nil) ||
-      e(@object, :post_content, :html_body, e(@object, :id, ""))
-  )}
 />
 
 <Bonfire.UI.Common.BoostActionLive
