@@ -11,10 +11,11 @@
   <span
     :if={@showing_within == :smart_input}
     phx-click="Bonfire.Social.Feeds:remove_data"
-    class="absolute flex items-center gap-2 normal-case top-2 right-2 btn btn-xs"
+    class="absolute flex items-center gap-2 normal-case top-2 right-2 btn btn-xs btn-ghost"
+    title={l("Cancel Reply")}
   >
-    <span>{l("Close")}</span>
-    <Icon outline="X" class="w-4 h-4" />
+    <span class="sr-only">{l("Cancel Reply")}</span>
+    <Icon iconify="akar-icons:chat-remove" class="w-full h-full" />
   </span>
 
   <!-- {#if ulid(@object) != nil and ulid(@activity) == nil and @showing_within != :search}

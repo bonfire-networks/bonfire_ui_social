@@ -174,7 +174,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
       aria-label="user activity"
       role="article"
       tabIndex="0"
-      phx-hook="PreviewActivity"
+      phx-hook={if !@viewing_main_object, do: "PreviewActivity"}
       class={
         "p-4 activity relative pl-18 group bg-base-100 " <> e(assigns, :class, ""),
         "!pl-4 cursor-pointer":
