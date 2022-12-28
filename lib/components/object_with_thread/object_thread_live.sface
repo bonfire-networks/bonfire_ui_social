@@ -2,7 +2,7 @@
   <div class="flex-1">
     <!-- INITIAL POST -->
 
-    <div class="relative bg-base-100 ">
+    <div class="relative bg-base-100">
       <!-- <Bonfire.UI.Social.ObjectHeaderAsideLive
         page_title={@page_title}
         participants={@participants || []}
