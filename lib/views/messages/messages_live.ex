@@ -5,7 +5,7 @@ defmodule Bonfire.UI.Social.MessagesLive do
   alias Bonfire.Social.Messages.LiveHandler
   import Untangle
 
-  declare_nav_link(l("Messages"), icon: "heroicons-solid:envelope", exclude_from_nav: true)
+  declare_nav_link(l("Direct Messages"), icon: "heroicons-solid:envelope")
 
   def mount(params, session, socket) do
     live_plug(params, session, socket, [
