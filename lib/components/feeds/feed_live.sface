@@ -3,7 +3,7 @@
   role="feed"
   aria-live="assertive"
   aria-atomic="true"
-  class="feed max-w-[680px] mx-auto w-full"
+  class="w-full feed"
 >
   <div class="">
     <Bonfire.UI.Common.TabsLive

@@ -1,6 +1,9 @@
 <div>
   <#slot {@header} />
-  <div class="grid items-start grid-cols-1">
+  <div class={
+    "grid items-start grid-cols-1",
+    'max-w-[680px] mx-auto': !@current_user
+  }>
     <Bonfire.UI.Social.FeedLive
       id="feed:profile:timeline"
       feed_id={"user:#{@selected_tab}:#{ulid(@user)}"}
