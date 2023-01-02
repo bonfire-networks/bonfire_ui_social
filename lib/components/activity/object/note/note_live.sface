@@ -77,7 +77,8 @@
                 {rich(
                   maybe_truncate(
                     e(post_content(@object), :html_body, l("This post has been deleted.")),
-                    @activity_inception
+                    @activity_inception,
+                    @viewing_main_object
                   )
                 )}
               </div>
