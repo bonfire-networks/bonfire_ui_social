@@ -1,23 +1,42 @@
 <div
   data-id="subject"
   class={
-    "mb-1 subject",
+    "subject",
     "px-2 bg-base-content/10 pt-1 rounded-t-md": @thread_mode == :flat,
     "!bg-info/40": @thread_mode == :flat && ulid(@current_user) == maybe_get(@character, :id),
     "!bg-transparent pt-0": @activity_inception != nil and @thread_mode == :flat,
     "!mb-3": @viewing_main_object == true
   }
 >
-  <span
-    :if={@showing_within == :smart_input}
-    phx-click="Bonfire.Social.Feeds:remove_data"
-    class="absolute flex items-center gap-2 normal-case top-2 right-2 btn btn-xs btn-ghost"
-    title={l("Cancel Reply")}
-  >
-    <span class="sr-only">{l("Cancel Reply")}</span>
-    <Icon iconify="akar-icons:chat-remove" class="w-full h-full" />
-  </span>
 
+    <div 
+      :if={@showing_within == :smart_input}
+      class="absolute pl-3 ml-3 border-l right-2 border-base-content/10">
+      <span
+        phx-click="Bonfire.Social.Feeds:remove_data"
+        class="btn btn-xs btn-circle"
+        title={l("Cancel Reply")}
+      >
+        <span class="sr-only">{l("Cancel Reply")}</span>
+        <Icon solid="X" class="w-3 h-3" />
+      </span>
+    </div>
+  {#if  @showing_within == :smart_input or ulid(@object) != nil and e(@activity, :replied, :reply_to_id, nil) == nil and ulid(@activity) == nil}
+    <LiveRedirect
+      opts={"data-id": "subject_name"}
+      aria-label={l("%{name}'s profile", name: e(@profile, :name, ""))}
+      class="flex flex-1 items-center gap-1.5 mr-1"
+      to={path(@character)}
+      >
+      <Bonfire.UI.Common.AvatarLive
+        user={@profile}
+        title={e(@profile, :name, "Anonymous")}
+        comment={@showing_within in [:thread, :messages] && !@viewing_main_object}
+        class="w-6 h-6"
+      />
+      <div class="text-sm font-normal truncate link-primary link link-hover">{e(@profile, :name, "Anonymous")}</div>
+    </LiveRedirect>
+    
   <!-- {#if ulid(@object) != nil and ulid(@activity) == nil and @showing_within != :search}
     <div class="flex items-center">
       <div class="flex flex-1 space-x-2">
@@ -74,12 +93,13 @@
       </div>
     </div>
   {#else} -->
+  {#else}
   <div class={
     "flex items-center",
     "space-x-3": @viewing_main_object == true
   }>
     <div class={
-      "absolute left-4",
+      "absolute left-4 top-0",
       "!relative !left-0": e(assigns, :viewing_main_object, nil) == true,
       "!static mr-3": e(@showing_within, :feed) in [:feed, :notifications, :likes, :search],
       "bottom-2": e(@thread_mode, nil) == :flat
@@ -202,7 +222,7 @@
       </div>
     </div>
   </div>
-  <!-- {/if} -->
+  {/if}
 </div>
 
 <LiveRedirect

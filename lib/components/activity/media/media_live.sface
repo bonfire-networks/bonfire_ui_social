@@ -124,7 +124,9 @@
   {/for}
 </div>
 
-<div class="flex flex-col gap-2">
+<div 
+  :if={@showing_within != :smart_input}
+  class="flex flex-col gap-2">
   {#for link <- Enum.filter(@media, fn x -> e(x, :metadata, :canonical_url, nil) end)}
     <a
       href={media_url(link)}

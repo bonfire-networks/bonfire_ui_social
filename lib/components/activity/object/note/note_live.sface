@@ -62,15 +62,16 @@
               <div
                 data-id="object_body"
                 class={
-                  "prose break-words object_body max-w-none font-[16px] mt-1 prose-sm prose-p:pt-0 prose-p:my-0",
-                  "!my-0":
+                  "prose break-words object_body max-w-none font-[16px] prose-sm prose-p:pt-0 prose-p:my-0",
+                  "!my-0 !text-sm !font-normal line-clamp-1":
                     @viewing_main_object != true and ulid(@object) != nil and
                       e(@activity, :replied, :reply_to_id, nil) == nil and ulid(@activity) == nil and
                       @showing_within != :widget and @showing_within != :search,
+                  "!my-0 !text-sm !font-normal line-clamp-1": @showing_within == :smart_input,
                   "font-[16px] mt-1 prose-sm prose-p:pt-0 prose-p:my-0 leading-[22px]":
                     @showing_within == :thread,
-                  "!mt-6 !prose-lg pl-0 prose-p:pb-4 !leading-[26px]": @viewing_main_object,
-                  "prose-p:pt-1 !my-3 !leading-[23px]": @showing_within == :feed
+                  "!mt-3 !prose-lg pl-0 prose-p:pb-4 !leading-[26px]": @viewing_main_object,
+                  "prose-p:pt-1 my-3 !leading-[23px]": @showing_within == :feed
                 }
               >
                 {rich(
