@@ -7,7 +7,7 @@
            Bonfire.Me.Settings.get(
              [Bonfire.Social.Feeds, :my_feed_includes, @key],
              true,
-             @scope || assigns
+             @scope || @__context__
            ))}
       opts={disabled: @disabled}
       class="toggle toggle-primary"

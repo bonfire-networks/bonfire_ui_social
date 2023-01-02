@@ -4,7 +4,6 @@ defmodule Bonfire.UI.Social.Feeds.NotificationsLive do
 
   declare_nav_link(l("Notifications"), icon: "heroicons-solid:Bell")
 
-
   def mount(params, session, socket) do
     live_plug(params, session, socket, [
       LivePlugs.LoadCurrentAccount,

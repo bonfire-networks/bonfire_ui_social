@@ -104,12 +104,13 @@ defmodule Bonfire.Social.Posts.LiveHandler do
       }
     else
       e ->
-        error(error_msg(e))
+        error = error_msg(e)
+        error(error)
 
         {
           :noreply,
           socket
-          |> assign_flash(:error, "Could not post 😢 (#{error_msg(e)})")
+          |> assign_flash(:error, "Could not post 😢 (#{error})")
           # |> patch_to(current_url(socket), fallback: "/error") # so the flash appears
         }
     end
