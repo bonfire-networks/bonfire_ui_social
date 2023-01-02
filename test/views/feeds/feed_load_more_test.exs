@@ -34,7 +34,7 @@ defmodule Bonfire.Social.Feeds.LoadMoreTest do
       end
 
       conn = conn(user: bob, account: account2)
-      next = "/local"
+      next = "/feed/local"
       {view, doc} = floki_live(conn, next)
       assert Floki.find(doc, "[data-id=load_more]") == []
       assert Enum.count(Floki.find(doc, "[data-id=feed] article")) == total_posts
@@ -65,7 +65,7 @@ defmodule Bonfire.Social.Feeds.LoadMoreTest do
       end
 
       conn = conn(user: bob, account: account2)
-      next = "/local"
+      next = "/feed/local"
       {view, doc} = floki_live(conn, next)
       assert Floki.find(doc, "[data-id=load_more]") != []
     end
@@ -76,10 +76,10 @@ defmodule Bonfire.Social.Feeds.LoadMoreTest do
       account = fake_account!()
       alice = fake_user!(account)
       # Create bob user
-      account2 = fake_account!()
-      bob = fake_user!(account2)
+      # account2 = fake_account!()
+      # bob = fake_user!(account2)
       # bob follows alice
-      Follows.follow(bob, alice)
+      # Follows.follow(bob, alice)
 
       for n <- 1..total_posts do
         assert {:ok, post} =
@@ -96,12 +96,14 @@ defmodule Bonfire.Social.Feeds.LoadMoreTest do
                  )
       end
 
-      conn = conn(user: bob, account: account2)
-      next = "/local"
+      conn = conn(user: alice, account: account)
+      next = "/feed/local"
       {view, doc} = floki_live(conn, next)
 
-      # articles = Floki.find(doc, "[data-id=feed] article")
+      articles = Floki.find(doc, "[data-id=feed] article")
       # |> info("articles")
+
+      assert Enum.count(articles) == 10
 
       more_doc =
         view
@@ -115,7 +117,7 @@ defmodule Bonfire.Social.Feeds.LoadMoreTest do
 
       # |> info("articles")
 
-      assert Enum.count(articles) == 5
+      assert Enum.count(articles) == 15
     end
 
     test "As a user when I click on load more I want to see next activities even without JavaScript (using HTTP)" do
@@ -135,16 +137,18 @@ defmodule Bonfire.Social.Feeds.LoadMoreTest do
       end
 
       conn = conn(user: bob, account: account2)
-      next = "/local"
+      next = "/feed/local"
       {view, doc} = floki_live(conn, next)
       assert [_, load_more_query_string] = Floki.attribute(doc, "[data-id=load_more] a", "href")
 
-      url = "/local" <> load_more_query_string
+      url = "/feed/local" <> load_more_query_string
       info(url, "pagination URL")
       conn = get(conn, url)
       # |> IO.inspect
       more_doc = floki_response(conn)
-      assert Enum.count(Floki.find(more_doc, "[data-id=feed] article")) == 5
+      entries = Floki.find(more_doc, "[data-id=feed] article")
+      # dump(entries, "entries")
+      assert Enum.count(entries) == 5
     end
   end
 end

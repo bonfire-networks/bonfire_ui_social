@@ -8,11 +8,22 @@ defmodule Bonfire.Social.Feeds.MyFeed.Test do
   describe "show" do
     test "not logged in, display instance feed instead" do
       conn = conn()
-      conn = get(conn, "/feed")
-      assert redirected_to(conn) =~ "/login"
+      {view, doc} = floki_live(conn, "/feed")
+      # assert redirected_to(conn) =~ "/login"
 
-      # feed_id = Bonfire.Social.Feeds.named_feed_id(:local)
-      # assert [_] = Floki.find(doc, "[id='#{feed_id}']")
+      feed_id = Bonfire.Social.Feeds.named_feed_id(:local)
+      assert [_] = Floki.find(doc, "[id='#{feed_id}']")
+    end
+
+    test "account only, display instance feed instead" do
+      account = fake_account!()
+      # |> debug
+      conn = conn(account: account)
+      {view, doc} = floki_live(conn, "/feed")
+      # assert redirected_to(conn) =~ "/login"
+
+      feed_id = Bonfire.Social.Feeds.named_feed_id(:local)
+      assert [_] = Floki.find(doc, "[id='#{feed_id}']")
     end
 
     test "with user" do
@@ -93,17 +104,17 @@ defmodule Bonfire.Social.Feeds.MyFeed.Test do
   end
 
   describe "DO NOT show" do
-    test "with account only" do
-      account = fake_account!()
-      # |> debug
-      conn = conn(account: account)
-      next = "/feed"
-      assert floki_redirect(conn, next) =~ "/switch-user"
+    # test "with account only" do
+    #   account = fake_account!()
+    #   # |> debug
+    #   conn = conn(account: account)
+    #   next = "/feed"
+    #   assert floki_redirect(conn, next) =~ "/switch-user"
 
-      # {view, doc} = floki_live(conn, next)
-      # main = Floki.find(doc, "main") #|> IO.inspect
-      # assert [] = Floki.find(doc, "article")
-    end
+    #   # {view, doc} = floki_live(conn, next)
+    #   # main = Floki.find(doc, "main") #|> IO.inspect
+    #   # assert [] = Floki.find(doc, "article")
+    # end
 
     test "posts from people I am not following in my feed" do
       user = fake_user!()
@@ -175,19 +186,19 @@ defmodule Bonfire.Social.Feeds.MyFeed.Test do
     carl = fake_user!(account3)
 
     attrs = %{
-      post_content: %{summary: "summary", name: "test post name", html_body: "first post"}
+      post_content: %{summary: "summary", name: "test post name", html_body: "public post"}
     }
 
     guest_attrs = %{
-      post_content: %{summary: "summary", name: "test post name", html_body: "first post"}
+      post_content: %{summary: "summary", name: "test post name", html_body: "guest_attrs post"}
     }
 
     local_attrs = %{
-      post_content: %{summary: "summary", name: "test post name", html_body: "first post"}
+      post_content: %{summary: "summary", name: "test post name", html_body: "local_attrs post"}
     }
 
     admin_attrs = %{
-      post_content: %{summary: "summary", name: "test post name", html_body: "first post"}
+      post_content: %{summary: "summary", name: "test post name", html_body: "admin_attrs post"}
     }
 
     {:ok, post0} = Posts.publish(current_user: alice, post_attrs: attrs, boundary: "public")

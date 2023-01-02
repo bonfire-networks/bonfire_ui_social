@@ -18,7 +18,7 @@
         <li>
           <LiveRedirect
             class={"ml-1": @page != "local", "bg-primary/10": @page == "local"}
-            to={if current_user(@current_user), do: "/feed/local", else: "/local"}
+            to={~p"/feed/local"}
           >
             <Icon solid="LocationMarker" class="w-4 h-4" />
             <span class="text-sm truncate ellipsis">{l("Local")}</span>

@@ -7,7 +7,7 @@ defmodule Bonfire.Social.Feeds.Fediverse.Test do
   describe "show" do
     # test "not logged in" do
     #   conn = conn()
-    #   conn = get(conn, "/federation")
+    #   conn = get(conn, "/feed/federation")
     #   doc = floki_response(conn) #|> debug()
     #   # assert redirected_to(conn) =~ "/login"
     #   assert [_] = Floki.find(doc, "<h1>Federation")
@@ -46,7 +46,7 @@ defmodule Bonfire.Social.Feeds.Fediverse.Test do
     #   assert post.post_content.name =~ "test post name"
 
     #   conn = conn(user: user, account: account)
-    #   next = "/federation"
+    #   next = "/feed/federation"
     #   {view, doc} = floki_live(conn, next) #|> IO.inspect
     #   assert [feed] = Floki.find(doc, "#feed:federation")
     #   assert Floki.text(feed) =~ "test post name"
@@ -64,7 +64,7 @@ defmodule Bonfire.Social.Feeds.Fediverse.Test do
     #   assert post.post_content.name =~ "test post name"
 
     #   conn = conn(user: user2, account: account)
-    #   next = "/federation"
+    #   next = "/feed/federation"
     #   {view, doc} = floki_live(conn, next) #|> IO.inspect
     #   assert [feed] = Floki.find(doc, "#feed:federation")
     #   assert Floki.text(feed) =~ "test post name"
@@ -75,7 +75,7 @@ defmodule Bonfire.Social.Feeds.Fediverse.Test do
   describe "DO NOT show" do
     # test "not logged in: fallback to instance feed" do
     #   conn = conn()
-    #   conn = get(conn, "/federation")
+    #   conn = get(conn, "/feed/federation")
     #   doc = floki_response(conn) #|> debug()
     #   # assert redirected_to(conn) =~ "/login"
     #   assert [_] = Floki.find(doc, "[id='feed:home']")

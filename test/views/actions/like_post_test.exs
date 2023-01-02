@@ -18,7 +18,7 @@ defmodule Bonfire.Social.Activities.LikePost.Test do
       someone = fake_user!(some_account)
       conn = conn(user: someone, account: some_account)
 
-      next = "/local"
+      next = "/feed/local"
       # |> IO.inspect
       {view, doc} = floki_live(conn, next)
 
@@ -52,7 +52,7 @@ defmodule Bonfire.Social.Activities.LikePost.Test do
     #   someone = fake_user!(some_account)
     #   conn = conn(user: someone, account: some_account)
 
-    #   next = "/local"
+    #   next = "/feed/local"
     #   {view, doc} = floki_live(conn, next) #|> IO.inspect
 
     #   assert view
@@ -87,7 +87,7 @@ defmodule Bonfire.Social.Activities.LikePost.Test do
       assert {:ok, like} = Likes.like(someone, post)
       assert true == Likes.liked?(someone, post)
 
-      next = "/local"
+      next = "/feed/local"
       # |> IO.inspect
       {view, doc} = floki_live(conn, next)
 

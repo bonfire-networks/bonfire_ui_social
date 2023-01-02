@@ -135,32 +135,35 @@ defmodule Bonfire.Social.Feeds.Instance.Test do
     carl = fake_user!(account3)
 
     guest_attrs = %{
-      post_content: %{summary: "summary", name: "test post name", html_body: "first post"}
+      post_content: %{html_body: "post with guest_attrs"}
     }
 
     local_attrs = %{
-      post_content: %{summary: "summary", name: "test post name", html_body: "first post"}
+      post_content: %{html_body: "post with local_attrs"}
     }
 
     admin_attrs = %{
-      post_content: %{summary: "summary", name: "test post name", html_body: "first post"}
+      post_content: %{html_body: "post with admin_attrs"}
     }
 
-    # bob follows alice
-    Follows.follow(bob, alice)
-
     total_posts = 3
-    {:ok, post} = Posts.publish(current_user: alice, post_attrs: guest_attrs, boundary: "public")
+
+    {:ok, public_post} =
+      Posts.publish(current_user: alice, post_attrs: guest_attrs, boundary: "public")
+
     publish_multiple_times(local_attrs, bob, total_posts, "local")
     publish_multiple_times(admin_attrs, carl, total_posts, "admins")
-    assert {:ok, boost} = Boosts.boost(alice, post)
+    assert {:ok, boost} = Boosts.boost(alice, public_post)
 
     next = "/feed/local"
     conn = conn()
     {view, doc} = floki_live(conn, next)
 
-    assert doc
-           |> Floki.find("article")
-           |> length() == 5
+    entries =
+      doc
+      |> Floki.find("article")
+
+    dump(entries, "entries")
+    assert length(entries) == 5
   end
 end

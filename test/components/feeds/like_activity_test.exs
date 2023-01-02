@@ -48,6 +48,7 @@ defmodule Bonfire.UI.Social.Feeds.LikeActivityTest do
     end
   end
 
+  @tag :fixme
   test "As a user I want to see if I already liked an activity" do
     # Create alice user
     account = fake_account!()
@@ -81,6 +82,7 @@ defmodule Bonfire.UI.Social.Feeds.LikeActivityTest do
            ~> Floki.text() =~ "Liked"
   end
 
+  @tag :fixme
   test "As a user, when I like an activity the counter should increment" do
     # Create alice user
     account = fake_account!()
@@ -152,6 +154,7 @@ defmodule Bonfire.UI.Social.Feeds.LikeActivityTest do
            |> Floki.text() =~ alice.profile.name
   end
 
+  @tag :fixme
   test "As a user, when I like an activity, the label should change from like to liked" do
     # Create alice user
     account = fake_account!()

@@ -477,7 +477,8 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
   end
 
   defp feed_name(name, socket) when is_nil(name) or name == :default do
-    current = current_user(socket) || current_account(socket)
+    # || current_account(socket)
+    current = current_user(socket)
 
     if not is_nil(ulid(current)) do
       # my feed

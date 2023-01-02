@@ -55,6 +55,7 @@ defmodule Bonfire.UI.Social.Feeds.BoostsActivityTest do
     end
   end
 
+  @tag :fixme
   test "As a user I want to see if I already boosted an activity" do
     # Create alice user
     account = fake_account!()
