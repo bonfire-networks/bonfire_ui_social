@@ -6,7 +6,7 @@
       context={@context}
     />
 
-    <ul class="">
+    <ul class="divide-y divide-base-content/10">
       <li class="hover:bg-base-content/5" :for={%{activity: activity} <- e(@threads, :edges, [])}>
         <LivePatch
           to={permalink(e(activity, :replied, :thread_id, nil), e(activity, :object_id, nil))}

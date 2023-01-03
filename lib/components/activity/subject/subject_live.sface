@@ -5,12 +5,13 @@
     "px-2 bg-base-content/10 pt-1 rounded-t-md": @thread_mode == :flat,
     "!bg-info/40": @thread_mode == :flat && ulid(@current_user) == maybe_get(@character, :id),
     "!bg-transparent pt-0": @activity_inception != nil and @thread_mode == :flat,
-    "!mb-3": @viewing_main_object == true
+    "!mb-3": @viewing_main_object == true,
+    "flex items-center gap-2": @showing_within == :smart_input,
   }
 >
   <div
     :if={@showing_within == :smart_input}
-    class="absolute pl-3 ml-3 border-l right-2 border-base-content/10"
+    class="absolute pl-3 ml-3 border-l right-[-30px] border-base-content/10"
   >
     <span
       phx-click="Bonfire.Social.Feeds:remove_data"
@@ -23,7 +24,8 @@
   </div>
   {#if @showing_within == :smart_input or
       (ulid(@object) != nil and e(@activity, :replied, :reply_to_id, nil) == nil and
-         ulid(@activity) == nil)}
+         ulid(@activity) == nil) and @showing_within != :search}
+    <Icon :if={@showing_within == :smart_input} iconify="ic:round-reply" class="w-5 h-5 text-info" />
     <LiveRedirect
       opts={"data-id": "subject_name"}
       aria-label={l("%{name}'s profile", name: e(@profile, :name, ""))}
@@ -122,17 +124,6 @@
       </div>
       <div class="flex items-start justify-between leading-[16px] min-w-0 space-x-1 w-full">
         <div class="flex flex-col flex-1 gap-1 feed-clickable">
-          {#if @thread_mode == :flat && @current_user && ulid(@current_user) == maybe_get(@character, :id)}
-            <LiveRedirect
-              opts={"data-id": "subject_name"}
-              aria-label={e(@character, :username, "") <> " profile"}
-              class="link link-hover font-semibold leading-[16px] text-[15px]"
-              to={path(@character)}
-            >
-              {l("You")}
-            </LiveRedirect>
-          {#else}
-            <!-- <div class="flex items-baseline"> -->
 
             <div class={
               "text-[15px] font-medium  lowercase line-clamp-1 text-base-content/70",
@@ -207,7 +198,6 @@
                 </span>
               </Bonfire.UI.Social.Activity.LinkToActivityLive>
             </div>
-          {/if}
         </div>
         <div class="flex items-center gap-1">
           <Dynamic.Component

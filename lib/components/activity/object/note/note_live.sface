@@ -71,7 +71,7 @@
                   "font-[16px] mt-1 prose-sm prose-p:pt-0 prose-p:my-0 leading-[22px]":
                     @showing_within == :thread,
                   "!mt-3 !prose-lg pl-0 prose-p:pb-4 !leading-[26px]": @viewing_main_object,
-                  "prose-p:pt-1 my-3 !leading-[23px]": @showing_within == :feed
+                  "prose-p:pt-1 my-3 !leading-[23px]": @showing_within in [:feed, :search] 
                 }
               >
                 {rich(

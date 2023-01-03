@@ -16,16 +16,15 @@
           :if={@activity}
           class="rounded-none !bg-base-content/5 !shadow-none !p-4 !px-8 mt-0 main_object_in_thread"
           id={"ta:" <> (ulid(@activity) || ulid(@object) || "no-ID")}
-          showing_within={@showing_within || :thread}
-          thread_mode={@thread_mode}
-          viewing_main_object={if @thread_mode != :flat, do: true, else: false}
+          showing_within={:thread}
+          viewing_main_object
           activity={@activity}
           object={@object}
           feed_id={@feed_id}
           participants={@participants}
           object_boundary={if is_messaging?(%{
                page: @page,
-               showing_within: @showing_within || :thread,
+               showing_within: :thread,
                create_object_type: @create_object_type
              }),
              do: :skip}
@@ -37,8 +36,6 @@
           id={@thread_id}
           thread_id={@thread_id}
           feed_id={@feed_id}
-          thread_mode={@thread_mode}
-          reverse_order={@reverse_order}
           replies={@replies}
           threaded_replies={@threaded_replies}
           page_info={e(@page_info, [])}
@@ -51,7 +48,7 @@
     </div>
   </div>
 
-  <div
+  <!-- <div
     class="sticky bottom-0 z-50"
     :if={is_messaging?(%{
       page: @page,
@@ -72,5 +69,5 @@
       showing_within={@showing_within || :thread}
       replied_activity_class={@replied_activity_class}
     />
-  </div>
+  </div> -->
 </div>

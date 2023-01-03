@@ -1,5 +1,4 @@
 <main class="h-full">
-  {@create_object_type}
   {#if @tab_id == "thread"}
     <div class="flex flex-col h-full">
       <Bonfire.UI.Social.ObjectThreadLive
@@ -12,14 +11,11 @@
         participants={e(@participants, [])}
         smart_input_opts={@smart_input_opts}
         thread_id={@thread_id}
-        thread_mode={:flat}
         reply_to_id={e(@reply_to_id, "")}
         activity={@activity}
         object={@object}
         url={@url}
         show_reply_input
-        reverse_order
-        showing_within={:messages}
         replied_activity_class="relative mb-2 rounded-md bg-base-100 hover:bg-base-100"
       />
     </div>

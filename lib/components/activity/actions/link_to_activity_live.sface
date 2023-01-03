@@ -31,7 +31,7 @@
     href={@permalink}
     open_btn_text={l("View task")}
     title_text={e(@object, :name, nil) || l("Task")}
-    open_btn_class="px-1 normal-case btn btn-sm btn-ghost text-base-content/60"
+    open_btn_class="px-1 normal-case link link-hover text-base-content/60"
     modal_assigns={
       id: @thread_id || ulid(@object),
       preview_view: Bonfire.UI.Coordination.TaskLive
@@ -41,7 +41,7 @@
     }
   />
 {#else}
-  <LiveRedirect to={@permalink} class="px-1 normal-case btn btn-sm btn-ghost text-base-content/60">
+  <LiveRedirect to={@permalink} class="px-1 normal-case link link-hover text-base-content/60">
     <#slot />
   </LiveRedirect>
 {/if}
