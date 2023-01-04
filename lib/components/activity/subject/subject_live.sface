@@ -6,7 +6,7 @@
     "!bg-info/40": @thread_mode == :flat && ulid(@current_user) == maybe_get(@character, :id),
     "!bg-transparent pt-0": @activity_inception != nil and @thread_mode == :flat,
     "!mb-3": @viewing_main_object == true,
-    "flex items-center gap-2": @showing_within == :smart_input,
+    "flex items-center gap-2": @showing_within == :smart_input
   }
 >
   <div
@@ -24,7 +24,7 @@
   </div>
   {#if @showing_within == :smart_input or
       (ulid(@object) != nil and e(@activity, :replied, :reply_to_id, nil) == nil and
-         ulid(@activity) == nil) and @showing_within != :search}
+         ulid(@activity) == nil and @showing_within != :search)}
     <Icon :if={@showing_within == :smart_input} iconify="ic:round-reply" class="w-5 h-5 text-info" />
     <LiveRedirect
       opts={"data-id": "subject_name"}
@@ -124,80 +124,79 @@
       </div>
       <div class="flex items-start justify-between leading-[16px] min-w-0 space-x-1 w-full">
         <div class="flex flex-col flex-1 gap-1 feed-clickable">
+          <div class={
+            "text-[15px] font-medium  lowercase line-clamp-1 text-base-content/70",
+            "!text-base !font-semibold": @viewing_main_object
+          }>
+            <!-- {@verb} {@object_type} -->
+            <LiveRedirect
+              opts={"data-id": "subject_name"}
+              aria-label={l("%{name}'s profile", name: e(@profile, :name, ""))}
+              class="link link-hover"
+              to={path(@character)}
+            >
+              {e(@profile, :name, "Anonymous")}
+            </LiveRedirect>
+            {#if @verb == "Create" and @object_type in [Bonfire.Classify.Category]}
+              <div>
+                <span>{l("created a new")}</span> <LiveRedirect
+                  class="font-medium link link-hover"
+                  to={~p"/+#{e(@object, :character, :username, nil) || ulid(@object)}"}
+                >{l("topic")}</LiveRedirect></div>
+            {#elseif @verb == "Reply"}
+              {l("replied")}
+            {#elseif @verb == "Pin"}
+              {l("pinned")}
+            {#elseif @verb == "Schedule" and e(@object, :due, nil)}
+              {l("scheduled a task %{date}", date: date_from_now(e(@object, :due, nil)))}
+            {#elseif @verb == "Label" and e(@object, :finished, nil) == true}
+              {l("completed a task")}
+            {#elseif @verb == "Label" and e(@object, :finished, nil) == false}
+              {l("re-opened a task")}
+            {#elseif @verb in ["Assign", "Appoint"] and e(@object, :provider, nil)}
+              {l("assigned a task to %{name}",
+                name:
+                  e(@object, :provider, :profile, :name, nil) ||
+                    e(@object, :provider, :character, :username, nil)
+              )}
+            {/if}
+          </div>
+          <!-- <span class="ml-2 text-[15px] text-base-content/70">replied to <b class="font-bold text-base-content link">title topic</b></span> -->
+          <!-- </div> -->
+          <div class="flex items-center gap-1">
+            <LiveRedirect
+              :if={e(@character, :username, nil)}
+              opts={"data-id": "subject_username"}
+              aria-label={l("%{name}'s profile", name: e(@profile, :name, ""))}
+              class="link link-hover text-[14px] font-normal truncate ellipsis text-base-content/50 subject_username"
+              to={path(@character)}
+            >
+              @{e(@character, :username, "")}
+            </LiveRedirect>
+            <span class="text-base-content/50">·</span>
+            <Bonfire.UI.Social.Activity.InstanceIconLive object={@object} />
 
-            <div class={
-              "text-[15px] font-medium  lowercase line-clamp-1 text-base-content/70",
-              "!text-base !font-semibold": @viewing_main_object
-            }>
-              <!-- {@verb} {@object_type} -->
-              <LiveRedirect
-                opts={"data-id": "subject_name"}
-                aria-label={l("%{name}'s profile", name: e(@profile, :name, ""))}
-                class="link link-hover"
-                to={path(@character)}
-              >
-                {e(@profile, :name, "Anonymous")}
-              </LiveRedirect>
-              {#if @verb == "Create" and @object_type in [Bonfire.Classify.Category]}
-                <div>
-                  <span>{l("created a new")}</span> <LiveRedirect
-                    class="font-medium link link-hover"
-                    to={~p"/+#{e(@object, :character, :username, nil) || ulid(@object)}"}
-                  >{l("topic")}</LiveRedirect></div>
-              {#elseif @verb == "Reply"}
-                {l("replied")}
-              {#elseif @verb == "Pin"}
-                {l("pinned")}
-              {#elseif @verb == "Schedule" and e(@object, :due, nil)}
-                {l("scheduled a task %{date}", date: date_from_now(e(@object, :due, nil)))}
-              {#elseif @verb == "Label" and e(@object, :finished, nil) == true}
-                {l("completed a task")}
-              {#elseif @verb == "Label" and e(@object, :finished, nil) == false}
-                {l("re-opened a task")}
-              {#elseif @verb in ["Assign", "Appoint"] and e(@object, :provider, nil)}
-                {l("assigned a task to %{name}",
-                  name:
-                    e(@object, :provider, :profile, :name, nil) ||
-                      e(@object, :provider, :character, :username, nil)
-                )}
-              {/if}
-            </div>
-            <!-- <span class="ml-2 text-[15px] text-base-content/70">replied to <b class="font-bold text-base-content link">title topic</b></span> -->
-            <!-- </div> -->
-            <div class="flex items-center gap-1">
-              <LiveRedirect
-                :if={e(@character, :username, nil)}
-                opts={"data-id": "subject_username"}
-                aria-label={l("%{name}'s profile", name: e(@profile, :name, ""))}
-                class="link link-hover text-[14px] font-normal truncate ellipsis text-base-content/50 subject_username"
-                to={path(@character)}
-              >
-                @{e(@character, :username, "")}
-              </LiveRedirect>
-              <span class="text-base-content/50">·</span>
-              <Bonfire.UI.Social.Activity.InstanceIconLive object={@object} />
-
-              <Dynamic.Component
-                :if={module_enabled?(Bonfire.Boundaries.Web.ActivityVisibilityIconLive) and
-                  @object_type not in [Bonfire.Data.Social.Message]}
-                module={Bonfire.Boundaries.Web.ActivityVisibilityIconLive}
-                object={@object}
-                with_icon
-                object_boundary={@object_boundary}
-              />
-              <Bonfire.UI.Social.Activity.LinkToActivityLive
-                :if={@showing_within not in [:smart_input]}
-                object={@object}
-                activity={@activity}
-                object_type={@object_type}
-                permalink={@permalink}
-                thread_id={@thread_id}
-              >
-                <span class="subject_timestamp text-[13px] font-normal no-underline truncate ellipsis text-base-content/50">
-                  {@date_ago}
-                </span>
-              </Bonfire.UI.Social.Activity.LinkToActivityLive>
-            </div>
+            <Dynamic.Component
+              :if={module_enabled?(Bonfire.Boundaries.Web.ActivityVisibilityIconLive) and
+                @object_type not in [Bonfire.Data.Social.Message]}
+              module={Bonfire.Boundaries.Web.ActivityVisibilityIconLive}
+              object={@object}
+              with_icon
+              object_boundary={@object_boundary}
+            />
+            <Bonfire.UI.Social.Activity.LinkToActivityLive
+              :if={@showing_within not in [:smart_input]}
+              object={@object}
+              activity={@activity}
+              object_type={@object_type}
+              permalink={@permalink}
+              thread_id={@thread_id}
+            >
+              <span class="subject_timestamp text-[13px] font-normal no-underline truncate ellipsis text-base-content/50">
+                {@date_ago}
+              </span>
+            </Bonfire.UI.Social.Activity.LinkToActivityLive>
+          </div>
         </div>
         <div class="flex items-center gap-1">
           <Dynamic.Component
