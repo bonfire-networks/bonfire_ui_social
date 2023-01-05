@@ -176,16 +176,16 @@ defmodule Bonfire.UI.Social.ActivityLive do
       tabIndex="0"
       phx-hook={if !@viewing_main_object, do: "PreviewActivity"}
       class={
-        "p-4 activity relative pl-16 group bg-base-100 flex flex-col " <> e(assigns, :class, ""),
+        "p-4 activity relative group bg-base-100 flex flex-col " <> e(assigns, :class, ""),
         "!pl-16":
           e(assigns, :showing_within, :feed) == :thread and
             e(assigns, :viewing_main_object, false) == false,
-        "!pl-4 cursor-pointer":
+        "cursor-pointer":
           e(assigns, :showing_within, :feed) in [:feed, :notifications, :likes, :search],
-        "activity_inception bg-base-content/10 !m-0 opacity-100 before:!left-2 before:top-1 before:bottom-1":
-          e(assigns, :activity_inception, nil) != nil and e(assigns, :thread_mode, nil) == :flat,
+        # "activity_inception bg-base-content/10 !m-0 opacity-100 before:!left-2 before:top-1 before:bottom-1":
+        #   e(assigns, :activity_inception, nil) != nil and e(assigns, :thread_mode, nil) == :flat,
         # showing a quoted reply_to
-        "main_reply_to !mb-1 items-center !flex-row order-first opacity-70 !p-0 !ml-[52px] !pl-2 before:border-neutral-content/80":
+        "main_reply_to !mb-1 items-center !flex-row order-first opacity-60 !p-0 !pb-2":
           ulid(@object) != nil and e(@activity, :replied, :reply_to_id, nil) == nil and
             ulid(@activity) == nil and @showing_within != :widget and
             @showing_within != :search,

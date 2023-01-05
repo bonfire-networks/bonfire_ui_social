@@ -3,21 +3,21 @@
   data-id="comment"
   x-data="{show_replies: true}"
   class={
-    "reply mt-3 thread-level-" <> to_string(@thread_level) <> " flex relative  w-full mx-auto",
-    "py-2 border-b border-base-content/10": @thread_level == 1
+    "reply thread-level-" <> to_string(@thread_level) <> " flex relative  w-full mx-auto",
+    "py-2": @thread_level == 1
   }
 >
-  <div class="flex-1 w-full">
-    <div class="relative flex flex-1 w-full items-top">
+  <div class="relative flex-1 w-full">
+    <div class="flex flex-1 w-full items-top">
       <div
-        :if={@thread_mode != :flat && length(@child_replies) > 0}
         x-cloak
         x-show="show_replies"
         class="group z-10 left-[18px] px-3 top-[32px] -bottom-[6px] absolute"
       >
+        <span class="absolute top-[-28px] left-[3px] block w-5 h-5 rounded-full bg-base-content/10" />
         <i
           :class="!show_replies ? 'bg-primary bottom-[0px]' : 'bottom-[0px]'"
-          class="bg-neutral top-0 bottom-0 z-10 w-[2px] absolute"
+          class="bg-base-content/10 top-1 bottom-0 z-10 w-[2px] absolute"
         />
       </div>
       <div
@@ -101,7 +101,7 @@
         {#if is_list(@child_replies) and length(@child_replies) > 0}
           {#for {{subreply, sub_child_replies}, index} <- Enum.with_index(@child_replies, 1)}
             <div class="relative">
-              <div class="z-40 absolute border-neutral w-5 h-6 border-0 border-b-2 border-l-2 rounded-bl-lg left-[-2px] top-[-6px]" />
+              <!-- <div class="z-40 absolute border-neutral w-5 h-6 border-0 border-b-2 border-l-2 rounded-bl-lg left-[-2px] top-[-6px]" /> -->
               <div
                 :if={index < length(@child_replies)}
                 class="absolute border-neutral top-0 bottom-0 border-0  border-l-2 left-[-2px]"

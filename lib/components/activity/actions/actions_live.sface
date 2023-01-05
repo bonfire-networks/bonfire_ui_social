@@ -6,7 +6,7 @@
   :class={if @viewing_main_object != true and Settings.get([:ui, :compact], false, @__context__),
     do: "activity_active ? '' : '[@media(any-hover:hover)]:hidden'"}
   class={
-    "thread_actions mt-1 flex items-center":
+    "thread_actions mt-3 flex items-center":
       @showing_within == :thread or Settings.get([:ui, :compact], false, @__context__),
     "feed_actions items-center flex": @viewing_main_object != true,
     "mt-0": e(@showing_within, :feed) == :feed || e(@showing_within, :feed) == :notifications,
