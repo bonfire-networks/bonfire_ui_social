@@ -6,7 +6,7 @@ defmodule Bonfire.UI.Social.Feeds.NotificationsLive do
     icon: "heroicons-solid:Bell",
     badge: [
       id: :notifications,
-      feed_id: e(@current_user, :character, :notifications_id, nil)
+      feed_key: :notifications_id
     ]
   )
 

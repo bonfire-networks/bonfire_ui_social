@@ -9,7 +9,7 @@ defmodule Bonfire.UI.Social.MessagesLive do
     icon: "heroicons-solid:envelope",
     badge: [
       id: :inbox,
-      feed_id: e(@current_user, :character, :inbox_id, nil)
+      feed_key: :inbox_id
     ])
 
   def mount(params, session, socket) do
