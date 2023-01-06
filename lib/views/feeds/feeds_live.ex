@@ -11,9 +11,9 @@ defmodule Bonfire.UI.Social.FeedsLive do
       # Bonfire.UI.Me.ProfileLive,
       Bonfire.UI.Social.Feeds.LocalLive,
       Bonfire.UI.Social.Feeds.FederationLive,
-      Bonfire.UI.Social.Feeds.LikesLive
-      # Bonfire.UI.Social.MessagesLive,
-      # Bonfire.UI.Social.Feeds.NotificationsLive,
+      Bonfire.UI.Social.Feeds.LikesLive,
+      Bonfire.UI.Social.MessagesLive,
+      Bonfire.UI.Social.Feeds.NotificationsLive,
     ]
   )
 

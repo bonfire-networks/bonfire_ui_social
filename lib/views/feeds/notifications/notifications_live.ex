@@ -2,7 +2,13 @@ defmodule Bonfire.UI.Social.Feeds.NotificationsLive do
   use Bonfire.UI.Common.Web, :surface_live_view
   alias Bonfire.UI.Me.LivePlugs
 
-  declare_nav_link(l("Notifications"), icon: "heroicons-solid:Bell")
+  declare_nav_link(l("Notifications"), 
+    icon: "heroicons-solid:Bell",
+    badge: [
+      id: :notifications,
+      feed_id: e(@current_user, :character, :notifications_id, nil)
+    ]
+  )
 
   def mount(params, session, socket) do
     live_plug(params, session, socket, [
