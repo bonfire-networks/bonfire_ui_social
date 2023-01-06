@@ -37,65 +37,9 @@
         comment={@showing_within in [:thread, :messages] && !@viewing_main_object}
         class="w-6 h-6"
       />
-      <div class="text-sm font-semibold truncate link link-hover">{e(@profile, :name, "Anonymous")}</div>
+      <div class="!text-[13px] font-medium truncate link link-hover">{e(@profile, :name, "Anonymous")}</div>
     </LiveRedirect>
 
-    <!-- {#if ulid(@object) != nil and ulid(@activity) == nil and @showing_within != :search}
-    <div class="flex items-center">
-      <div class="flex flex-1 space-x-2">
-        <div class="flex items-center text-sm font-semibold grow text-base-content">
-          <LiveRedirect
-            aria-label={e(@character, :username, "") <> " profile"}
-            class="hover:underline text-opacity-70"
-            to={path(@character)}
-          >
-            {e(@profile, :name, "Anonymous")}
-          </LiveRedirect>
-        </div>
-        <div class="flex items-baseline gap-2 flex-0">
-          <Bonfire.UI.Social.Activity.RepliedDateAgoLive
-            permalink={@permalink}
-            date_ago={@date_ago}
-            object={@object}
-            object_type={@object_type}
-            object_boundary={@object_boundary}
-            showing_within={@showing_within}
-            verb_display={@verb_display}
-          />
-        </div>
-      </div>
-    </div>
-  {#elseif @showing_within == :widget}
-    <div class="flex mb-4 items-top">
-      <div class="absolute left-0">
-        <Bonfire.UI.Common.AvatarLive class="w-6 h-6 bg-base-200 rounded-btn" user={@profile} />
-      </div>
-      <div class="flex ml-8 grow items-baseline justify-between flex-1 w-[calc(100%_-_4rem)]">
-        <div class="items-baseline flex-1 text-sm truncate grow ellipsis">
-          <LiveRedirect
-            opts={"data-id": "subject_name"}
-            aria-label={e(@character, :username, "") <> " profile"}
-            class="flex-1 font-semibold text-base-content hover:underline"
-            to={path(@character)}
-          >
-            {e(@profile, :name, "Anonymous")}
-          </LiveRedirect>
-        </div>
-        <div class="flex items-baseline gap-2 flex-0">
-          <Bonfire.UI.Social.Activity.DateAgoLive
-            permalink={@permalink}
-            date_ago={@date_ago}
-            object={@object}
-            object_type={@object_type}
-            object_boundary={@object_boundary}
-            showing_within={@showing_within}
-            verb_display={@verb_display}
-            thread_id={@thread_id}
-          />
-        </div>
-      </div>
-    </div>
-  {#else} -->
   {#else}
     <div class={"flex items-center"}>
       <div class={

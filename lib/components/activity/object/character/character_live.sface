@@ -22,8 +22,24 @@
     </LiveRedirect>
   </div>
 {#else}
+  <div class="flex-1">
+    <Bonfire.UI.Common.ProfileItemLive
+      show_controls={[]}
+      profile={e(the_other(@activity, @object, @__context__), :profile, nil)}
+      character={e(the_other(@activity, @object, @__context__), :character, nil)}
+    />
+  </div>
+  <button
+    :if={@verb == "Request to Follow" and @showing_within == :notifications}
+    :on-click="Bonfire.Social.Follows:accept"
+    phx-value-id={ulid(@activity)}
+    type="button"
+    class="rounded btn btn-sm btn-primary"
+  >
+    {l "Accept"}
+  </button>
   <!-- show the object or character that isn't me -->
-  <div class="flex w-full activity_notification">
+  <!-- <div class="flex w-full activity_notification">
     <LiveRedirect
       to={path(the_other(@activity, @object, @__context__))}
       class="flex profile-item group"
@@ -42,26 +58,8 @@
           >
             @{e(the_other(@activity, @object, @__context__), :character, :username, "")}
           </div>
-          <!-- <p class="-mt-px text-sm text-base-content text-opacity-70">
-          @{e(the_other(@activity, @object, @__context__), :character, :username, "anon")} 
-        </p> -->
-        </div>
-        <!-- SHOW THE BIO IN SEARCH -->
-        <div class="ml-3 prose-sm prose">
-          {markdown(e(the_other(@activity, @object, @__context__), :profile, :summary, ""))}
         </div>
       </div>
-    </LiveRedirect>
-
-    <!-- TODO: put in seperate component -->
-    <button
-      :if={@verb == "Request to Follow" and @showing_within == :notifications}
-      :on-click="Bonfire.Social.Follows:accept"
-      phx-value-id={ulid(@activity)}
-      type="button"
-      class="ml-3 btn"
-    >
-      Accept
-    </button>
-  </div>
+    </LiveRedirect>    
+  </div> -->
 {/if}

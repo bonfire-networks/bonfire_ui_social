@@ -27,7 +27,7 @@
         id={"feed:#{@feed_id || @id}"}
         data-id="feed"
         phx-update={e(@feed_update_mode, "append")}
-        class="flex flex-col divide-y divide-base-content/10"
+        class="flex flex-col divide-y divide-base-content/10 bg-base-100"
       >
         {#for entry <- @feed}
           {#case "#{@feed_id || @id}-" <>

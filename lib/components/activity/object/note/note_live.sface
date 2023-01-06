@@ -63,7 +63,7 @@
                 data-id="object_body"
                 class={
                   "prose break-words object_body max-w-none font-[16px] prose-sm prose-p:pt-0 prose-p:my-0",
-                  "!my-0 !text-sm !font-normal line-clamp-1":
+                  "!my-0 !text-[13px] !leading-normal !font-normal line-clamp-1 opacity-70":
                     @viewing_main_object != true and ulid(@object) != nil and
                       e(@activity, :replied, :reply_to_id, nil) == nil and ulid(@activity) == nil and
                       @showing_within != :widget and @showing_within != :search,
@@ -71,7 +71,7 @@
                   "mt-3 prose-sm prose-p:pt-0 prose-p:my-0 leading-[23px]":
                     @showing_within == :thread,
                   "!text-[16px] prose-p:pb-4": @viewing_main_object,
-                  "prose-p:pt-1 my-3 !leading-[23px]": @showing_within in [:feed, :search]
+                  "prose-p:pt-1 my-3 !leading-[23px]": @showing_within in [:feed, :search, :notifications]
                 }
               >
                 {rich(

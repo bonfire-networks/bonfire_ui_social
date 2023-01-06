@@ -58,7 +58,7 @@
           <Icon solid="Flag" :if={@verb == "Flag"} class="w-4 h-4 text-error" />
         </div>
         <div class="flex-1 ml-2">
-          <div class="text-sm font-medium text-base-content text-opacity-80">
+          <div class="text-[13px] font-medium text-base-content text-opacity-80">
             <LiveRedirect
               aria-label={e(@activity, :subject, :character, :username, "") <> " profile"}
               class="font-medium"
@@ -75,13 +75,13 @@
     {#match :search}
       <div />
     {#match _}
-      <div class="flex items-center">
+      <div class="flex items-center w-full">
         {#if @verb == "Like"}
           <div class="flex items-center justify-start pb-2 mb-2">
             <!-- LIKE -->
             <Icon solid="Star" class="w-5 h-5 text-yellow-500" />
             <div class="flex-1 ml-2">
-              <div class="text-sm font-medium text-base-content text-opacity-80">
+              <div class="text-[13px] font-medium text-base-content text-opacity-80">
                 <LiveRedirect
                   aria-label={e(@activity, :subject, :character, :username, "") <> " profile"}
                   class="font-medium link link-hover"
@@ -103,7 +103,7 @@
             <!-- FOLLOW -->
             <Icon solid="UserAdd" class="flex-shrink-0 w-5 h-5 text-info" />
             <div class="flex-1 ml-2">
-              <div class="text-sm font-medium text-base-content text-opacity-80">
+              <div class="text-[13px] font-medium text-base-content text-opacity-80">
                 <LiveRedirect
                   aria-label={e(@activity, :subject, :character, :username, "") <> " profile"}
                   class="font-medium link link-hover"
@@ -126,7 +126,7 @@
             <!-- Something published in a Category / Topic -->
             <Icon solid="Collection" class="w-4 h-4 text-base-content/80" />
             <div class="flex-1 ml-2">
-              <div class="text-sm font-medium text-base-content text-opacity-80">
+              <div class="text-[13px] font-medium text-base-content text-opacity-80">
                 {l("Published in")}
                 <LiveRedirect
                   aria-label={e(@activity, :subject, :character, :username, "") <> " " <> l("profile")}
@@ -155,7 +155,7 @@
               <polyline points="17 1 21 5 17 9" /><path d="M3 11V9a4 4 0 0 1 4-4h14" /><polyline points="7 23 3 19 7 15" /><path d="M21 13v2a4 4 0 0 1-4 4H3" />
             </svg>
             <div class="flex-1 ml-2">
-              <div class="text-sm font-medium text-base-content text-opacity-80">
+              <div class="text-[13px] font-medium text-base-content text-opacity-80">
                 <LiveRedirect
                   aria-label={e(@activity, :subject, :character, :username, "") <> " " <> l("profile")}
                   class="font-medium link link-hover"
@@ -168,8 +168,88 @@
             </div>
           </div>
         {#elseif @verb in ["Reply", "Respond"]}
-          <div class="flex w-full items-top">
-            <!-- REPLY -->
+        <div class={"flex items-center w-full"}>
+          <div class={"mr-3"}>
+            <LiveRedirect
+              opts={"data-id": "subject_name"}
+              aria-label={e(@activity, :subject, :character, :username, "") <> " profile"}
+              class="font-semibold text-base-content hover:underline"
+              to={path(e(@activity, :subject, :character, nil))}
+            >
+              <Bonfire.UI.Common.AvatarLive
+                user={e(@activity, :subject, nil)}
+                title={e(@activity, :subject, :profile, :name, "Anonymous")}
+              />
+            </LiveRedirect>
+          </div>
+      <div class="flex items-start justify-between leading-[16px] min-w-0 space-x-1 w-full">
+        <div class="flex flex-col flex-1 gap-1 feed-clickable">
+          <div class={
+            "text-[15px] font-medium  lowercase line-clamp-1 text-base-content/70"
+          }>
+            <!-- {@verb} {@object_type} -->
+            <LiveRedirect
+              opts={"data-id": "subject_name"}
+              aria-label={l("%{name}'s profile", name: e(@profile, :name, ""))}
+              class="link link-hover"
+              to={path(e(@activity, :subject, :character, nil))}
+            >
+              {e(@activity, :subject, :profile, :name, "Anonymous")}
+            </LiveRedirect>
+          </div>
+          <!-- <span class="ml-2 text-[15px] text-base-content/70">replied to <b class="font-bold text-base-content link">title topic</b></span> -->
+          <!-- </div> -->
+          <div class="flex items-center gap-1">
+            <LiveRedirect
+              :if={e(@activity, :subject, :character, :username, nil)}
+              opts={"data-id": "subject_username"}
+              aria-label={l("%{name}'s profile", name: e(@activity, :subject, :profile, :name, ""))}
+              class="link link-hover text-[14px] font-normal truncate ellipsis text-base-content/50 subject_username"
+              to={path(e(@activity, :subject, nil))}
+            >
+              @{e(@activity, :subject, :character, :username, "")}
+            </LiveRedirect>
+            <span class="text-base-content/50">·</span>
+            <Bonfire.UI.Social.Activity.InstanceIconLive object={@object} />
+
+            <Dynamic.Component
+              :if={module_enabled?(Bonfire.Boundaries.Web.ActivityVisibilityIconLive) and
+                @object_type not in [Bonfire.Data.Social.Message]}
+              module={Bonfire.Boundaries.Web.ActivityVisibilityIconLive}
+              object={@object}
+              with_icon
+              object_boundary={@object_boundary}
+            />
+            <Bonfire.UI.Social.Activity.LinkToActivityLive
+              :if={@showing_within not in [:smart_input]}
+              object={@object}
+              activity={@activity}
+              object_type={@object_type}
+              permalink={@permalink}
+              thread_id={@thread_id}
+            >
+              <span class="subject_timestamp text-[13px] font-normal no-underline truncate ellipsis text-base-content/50">
+                {@date_ago}
+              </span>
+            </Bonfire.UI.Social.Activity.LinkToActivityLive>
+          </div>
+        </div>
+        <div class="flex items-center gap-1">
+          <Dynamic.Component
+            :if={module_enabled?(Bonfire.Boundaries.Web.PermissionsIconLive) and
+              @object_type not in [Bonfire.Data.Social.Message]}
+            module={Bonfire.Boundaries.Web.PermissionsIconLive}
+            object={@object}
+            with_icon
+            with_label
+            class=""
+            id={ComponentID.new(Bonfire.Boundaries.Web.PermissionsIconLive, @object)}
+            object_boundary={@object_boundary}
+          />
+        </div>
+      </div>
+    </div>
+          <!--div class="flex w-full items-top">
             <div class="">
               <Bonfire.UI.Common.AvatarLive user={e(@activity, :subject, nil)} />
             </div>
@@ -202,13 +282,13 @@
                 </span>
               </Bonfire.UI.Social.Activity.LinkToActivityLive>
             </div>
-          </div>
+          </div> -->
         {#elseif @verb == "Flag"}
           <div class="flex items-center justify-start pb-2 mb-2">
             <!-- FLAG -->
             <Icon solid="Flag" class="w-4 h-4 text-error" />
             <div class="flex-1 ml-2">
-              <div class="text-sm font-medium text-base-content text-opacity-80">
+              <div class="text-[13px] font-medium text-base-content text-opacity-80">
                 <LiveRedirect
                   aria-label={e(@activity, :subject, :character, :username, "") <> " " <> l("profile")}
                   class="font-medium link link-hover"
@@ -224,7 +304,7 @@
           <div class="flex items-center justify-start">
             <Icon iconify={Bonfire.Boundaries.Verbs.get(@verb)[:icon]} class="w-4 h-4 text-error" />
             <div class="flex-1 ml-2">
-              <div class="text-sm font-medium text-base-content text-opacity-80">
+              <div class="text-[13px] font-medium text-base-content text-opacity-80">
                 <LiveRedirect
                   aria-label={e(@activity, :subject, :character, :username, "") <> " " <> l("profile")}
                   class="font-medium link link-hover"
