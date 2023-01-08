@@ -36,7 +36,7 @@
     type="button"
     class="rounded btn btn-sm btn-primary"
   >
-    {l "Accept"}
+    {l("Accept")}
   </button>
   <!-- show the object or character that isn't me -->
   <!-- <div class="flex w-full activity_notification">

@@ -5,7 +5,8 @@
   aria-atomic="true"
   class={
     "w-full feed",
-    "!max-w-[680px] mx-auto": !@current_user}
+    "!max-w-[680px] mx-auto": !@current_user
+  }
 >
   <div class="">
     <Bonfire.UI.Common.TabsLive

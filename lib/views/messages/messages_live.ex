@@ -5,12 +5,13 @@ defmodule Bonfire.UI.Social.MessagesLive do
   alias Bonfire.Social.Messages.LiveHandler
   import Untangle
 
-  declare_nav_link(l("Direct Messages"), 
+  declare_nav_link(l("Direct Messages"),
     icon: "heroicons-solid:envelope",
     badge: [
       id: :inbox,
       feed_key: :inbox_id
-    ])
+    ]
+  )
 
   def mount(params, session, socket) do
     live_plug(params, session, socket, [
@@ -247,7 +248,9 @@ defmodule Bonfire.UI.Social.MessagesLive do
             url: url,
             activity: activity,
             object: message,
-            thread_id: e(message, :id, nil),
+            context_id: thread_id,
+            thread_id: thread_id,
+            reply_to_id: thread_id,
             participants: participants,
             smart_input_opts: [prompt: prompt],
             to_circles: to_circles || []

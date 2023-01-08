@@ -3,8 +3,10 @@
   class={
     "subject",
     "!mb-3": @viewing_main_object == true,
-    "flex items-center gap-2": @showing_within == :smart_input or (ulid(@object) != nil and e(@activity, :replied, :reply_to_id, nil) == nil and
-         ulid(@activity) == nil and @showing_within != :search)
+    "flex items-center gap-2":
+      @showing_within == :smart_input or
+        (ulid(@object) != nil and e(@activity, :replied, :reply_to_id, nil) == nil and
+           ulid(@activity) == nil and @showing_within != :search)
   }
 >
   <div
@@ -39,13 +41,12 @@
       />
       <div class="!text-[13px] font-medium truncate link link-hover">{e(@profile, :name, "Anonymous")}</div>
     </LiveRedirect>
-
   {#else}
-    <div class={"flex items-center"}>
+    <div class="flex items-center">
       <div class={
         "mr-3",
         "": e(assigns, :viewing_main_object, nil) == true
-        }>
+      }>
         <LiveRedirect
           opts={"data-id": "subject_name"}
           aria-label={e(@character, :username, "") <> " profile"}
