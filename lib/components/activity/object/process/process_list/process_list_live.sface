@@ -15,8 +15,8 @@
       }>
         <Bonfire.UI.Common.LikeActionLive
           :if={e(@showing_within, :feed) not in [:feed, :likes, :notifications]}
-          id={ComponentID.new(Bonfire.UI.Common.LikeActionLive, @object)}
-          object={@object}
+          id={ComponentID.new(Bonfire.UI.Common.LikeActionLive, ulid(@object))}
+          object_id={ulid(@object)}
         />
         <!-- <LivePatch to={if @process_url, do: e(@process_url, "/list/") <> e(@object, :id, ""), else: path(@object)}> -->
         <LiveRedirect to={~p"/coordination/list/" <> e(@object, :id, "")}>

@@ -48,8 +48,8 @@
             </span>
             <div class="flex items-center gap-3">
               <Bonfire.UI.Common.LikeActionLive
-                id={ComponentID.new(Bonfire.UI.Common.LikeActionLive, @object)}
-                object={@object}
+                id={ComponentID.new(Bonfire.UI.Common.LikeActionLive, ulid(@object))}
+                object_id={ulid(@object)}
               />
               <div
                 class="tooltip"

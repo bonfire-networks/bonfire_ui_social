@@ -1,6 +1,6 @@
 <div class="relative z-20 flex items-center">
-  {#case @current_user == nil or Bonfire.Boundaries.can?(@__context__, :reply, @object_boundary)}
-    {#match nil}
+  {#case @current_user == nil or @object_type in [Bonfire.Data.Social.Message] or
+      Bonfire.Boundaries.can?(@__context__, :reply, @object_boundary)}
     {#match true}
       <button
         class={@class}
@@ -45,5 +45,6 @@
           {count(@replied)}
         {/if}
       </span>
+    {#match _}
   {/case}
 </div>

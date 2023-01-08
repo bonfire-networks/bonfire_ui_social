@@ -215,10 +215,9 @@ defmodule Bonfire.UI.Social.MessagesLive do
         to_circles =
           if length(participants) > 0,
             do:
-              Enum.map(
-                participants,
-                &{e(&1, :character, :username, l("someone")), e(&1, :id, nil)}
-              )
+              participants
+              |> Enum.reject(&(&1.id == current_user.id))
+              |> Enum.map(&{e(&1, :character, :username, l("someone")), e(&1, :id, nil)})
 
         names =
           if length(participants) > 0,
@@ -279,7 +278,6 @@ defmodule Bonfire.UI.Social.MessagesLive do
       socket
       |> assign(
         page_title: l("Direct Messages"),
-        showing_within: :messages,
         to_boundaries: [{"message", "Message"}],
         # feed: e(feed, :edges, []),
         tab_id: nil

@@ -47,8 +47,8 @@
     <div class={"order-last": @showing_within == :feed}>
       <div class={"flex items-center space-x-2", "mt-2": @showing_within == :feed}>
         <Bonfire.UI.Common.LikeActionLive
-          id={ComponentID.new(Bonfire.UI.Common.LikeActionLive, @object)}
-          object={@object}
+          id={ComponentID.new(Bonfire.UI.Common.LikeActionLive, ulid(@object))}
+          object_id={ulid(@object)}
         />
         <LiveRedirect to={~p"/process/" <> e(@object, :id, "")}>
           <div class="text-lg font-bold text-primary-content-700  hover:underline hover:text-primary-content-800">{@object.name}</div>

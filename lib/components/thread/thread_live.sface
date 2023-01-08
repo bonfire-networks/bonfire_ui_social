@@ -27,7 +27,7 @@
             thread_mode={@thread_mode}
             smart_input_opts={@smart_input_opts}
             url={@url}
-            showing_within={e(@showing_within, :thread)}
+            showing_within={@showing_within || :thread}
           />
         {/for}
       {#else}
@@ -41,7 +41,7 @@
             thread_mode={@thread_mode}
             smart_input_opts={@smart_input_opts}
             url={@url}
-            showing_within={e(@showing_within, :thread)}
+            showing_within={@showing_within || :thread}
           />
         {/for}
       {/if}

@@ -46,8 +46,8 @@ defmodule Bonfire.Social.Boosts.LiveHandler do
 
     %{
       component_id: assigns.id,
-      object: object,
-      object_id: ulid(object),
+      object: object || e(assigns, :object_id, nil),
+      object_id: e(assigns, :object_id, nil) || ulid(object),
       previous_value: e(assigns, :my_boost, nil)
     }
   end
