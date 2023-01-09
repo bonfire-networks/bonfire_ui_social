@@ -27,7 +27,7 @@
       />
     </li>
 
-    <li class="hover:bg-neutral hover:bg-opacity-20">
+    <!-- <li class="hover:bg-neutral hover:bg-opacity-20">
       <Bonfire.UI.Social.PinActionLive
         object={@object}
         class="flex items-center px-4 text-sm text-neutral-content/80"
@@ -40,7 +40,7 @@
         class="flex items-center px-4 text-sm text-neutral-content/80"
         scope={:instance}
       />
-    </li>
+    </li> -->
 
     <!-- Flag the action -->
     <li :if={ulid(@current_user) != subject_id(@activity, @object) and @verb != "Flag"}>
@@ -57,7 +57,7 @@
       <Bonfire.UI.Common.FlagActionLive
         object={@object}
         flagged={@flagged}
-        label={l("Flag %{name}", name: name(@activity, @object))}
+        label={l("Report %{name}", name: name(@activity, @object))}
         class="flex items-center py-2 text-sm text-neutral-content/80"
       />
     </li>
@@ -83,9 +83,7 @@
         action="Bonfire.Social.Feeds:delete"
         object={@activity}
         creator_id={subject_id(@activity, @object)}
-        object_type_readable={if @verb in ["Write", "Create"],
-          do: l("activity from feeds"),
-          else: l("%{activity_verb} from feeds", activity_verb: @verb)}
+        object_type_readable={l("from feeds")}
         creator_id={subject_id(@activity, @object)}
         explanation={l(
           "Deleting from feeds means this %{verb} and this %{object} still exist, but this activity won't be discoverable via the local instance's feeds. Remote feeds won't be affected.",

@@ -12,7 +12,7 @@ defmodule Bonfire.Social.Flags.LiveHandler do
         :noreply,
         socket
         |> assign_flash(:info, "Flagged!")
-        #  |> assign(flagged: Map.get(socket.assigns, :flagged, []) ++ [{id, true}])
+        |> assign(flagged: Map.get(socket.assigns, :flagged, []) ++ [{id, true}])
       }
     end
   end

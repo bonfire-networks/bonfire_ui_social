@@ -252,7 +252,7 @@ defmodule Bonfire.UI.Social.MessagesLive do
             reply_to_id: thread_id,
             participants: participants,
             smart_input_opts: [prompt: prompt],
-            to_circles: to_circles || []
+            to_circles: to_circles || [],
             # sidebar_widgets:
             #   LiveHandler.threads_widget(current_user, ulid(e(socket.assigns, :user, nil)),
             #     thread_id: e(message, :id, nil),

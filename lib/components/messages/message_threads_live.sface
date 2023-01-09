@@ -6,7 +6,7 @@
       context={@context}
     />
 
-    <ul class="divide-y divide-base-content/10">
+    <ul class="divide-y divide-base-300">
       <li class="hover:bg-base-content/5" :for={%{activity: activity} <- e(@threads, :edges, [])}>
         <LivePatch
           to={permalink(e(activity, :replied, :thread_id, nil), e(activity, :object_id, nil))}
@@ -15,7 +15,7 @@
           <div class="relative w-full indicator">
             <span
               :if={!e(activity, :seen, nil)}
-              class="indicator-item badge badge-xs badge-secondary right-6 bottom-1 top-[auto] invisible unread-activity"
+              class="indicator-item badge badge-xs badge-info right-6 bottom-1 top-[auto] invisible unread-activity"
             >
             </span>
             <div class={

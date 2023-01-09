@@ -10,14 +10,15 @@
   id={Pointers.ULID.generate()}
   title_text={l("Delete this") <> " " <> e(@object_type_readable, l("object"))}
 >
-  <!-- {rich l "You may be able to undo this deletion *in some cases*, but in any case the data will eventually be permanently deleted from this instance."} -->
-  {@explanation || l("A request will be sent to remote instances to delete it as well.")}
-
+  <div class="prose-sm prose">
+    <!-- {rich l "You may be able to undo this deletion *in some cases*, but in any case the data will eventually be permanently deleted from this instance."} -->
+    <p>{@explanation || l("A request will be sent to remote instances to delete it as well.")}</p>
+  </div>
   <:open_btn>
     <div class={@open_btn_class}>
       <Icon :if={!@hide_icon} solid="Trash" class="w-4 h-4 shrink-0" />
       <span :if={!@hide_text} class="truncate ellipsis">
-        {l("Delete this")} {e(@object_type_readable, l("object"))}
+        {l("Delete")} {e(@object_type_readable, l("object"))}
       </span>
     </div>
   </:open_btn>
@@ -27,10 +28,9 @@
       phx-click={@action}
       phx-value-id={ulid(@object)}
       phx-value-redirect_after={@redirect_after}
-      class="normal-case btn btn-error btn-sm"
+      class="normal-case rounded btn btn-error btn-sm"
     >
-      <Icon :solid="Trash" class="w-4 h-4 mr-2 shrink-0" />
-      <span class="truncate ellipsis">{l("Delete this")} {e(@object_type_readable, l("object"))}</span>
+      <span class="truncate ellipsis">{l("Delete")} {e(@object_type_readable, l("object"))}</span>
     </button>
   </:action_btns>
 </OpenModalLive>

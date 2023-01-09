@@ -27,8 +27,7 @@
          ulid(@activity) == nil and @showing_within != :search)}
     <Icon iconify="ic:round-reply" class="w-5 h-5 text-info" />
     <LiveRedirect
-      opts={"data-id": "subject_name"}
-      aria-label={l("%{name}'s profile", name: e(@profile, :name, ""))}
+      opts={"data-id": "subject_name", "aria-label": l("%{name}'s profile", name: e(@profile, :name, ""))}
       class="flex flex-1 items-center gap-1.5 mr-1.5"
       to={path(@character)}
     >
