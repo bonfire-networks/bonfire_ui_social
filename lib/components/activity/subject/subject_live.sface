@@ -136,7 +136,7 @@
             </Bonfire.UI.Social.Activity.LinkToActivityLive>
           </div>
         </div>
-        <div class="flex items-center gap-1">
+        <!-- <div class="flex items-center gap-1">
           <Dynamic.Component
             :if={module_enabled?(Bonfire.Boundaries.Web.PermissionsIconLive) and
               @object_type not in [Bonfire.Data.Social.Message]}
@@ -148,7 +148,7 @@
             id={ComponentID.new(Bonfire.Boundaries.Web.PermissionsIconLive, @object)}
             object_boundary={@object_boundary}
           />
-        </div>
+        </div> -->
       </div>
     </div>
   {/if}

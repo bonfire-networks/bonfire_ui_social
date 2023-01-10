@@ -12,13 +12,21 @@
   </button>
   <ul
     tabindex="0"
-    class="!block w-60 z-[910] relative shadow menu menu-compact dropdown-content bg-neutral rounded dropdown_actions"
+    class="!block w-48 z-[910] relative shadow menu menu-compact dropdown-content bg-neutral rounded dropdown_actions"
     role="menu"
     aria-orientation="vertical"
     aria-labelledby="more-menu"
   >
     <#slot {@extra_items} />
-
+    <Dynamic.Component
+      :if={module_enabled?(Bonfire.Boundaries.Web.PermissionsIconLive) and
+        @object_type not in [Bonfire.Data.Social.Message]}
+      module={Bonfire.Boundaries.Web.PermissionsIconLive}
+      object={@object}
+      with_label
+      id={ComponentID.new(Bonfire.Boundaries.Web.PermissionsIconLive, @object)}
+      object_boundary={@object_boundary}
+    />
     <li>
       <Dynamic.Component
         :if={module_enabled?(Bonfire.Classify.Web.TagModalLive)}
