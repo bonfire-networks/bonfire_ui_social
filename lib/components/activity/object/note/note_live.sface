@@ -33,7 +33,7 @@
                 x-on:click="content_open = true"
                 x-show="content_open == false"
                 style="display: none"
-                class="relative z-50 my-2 text-sm font-medium text-left text-base-content link link-hover"
+                class="relative z-50 mt-3 text-sm font-medium text-left text-base-content link link-hover"
               >
                 {rich(name || l("CW"))} ({l("Show more")})
               </button>
@@ -41,7 +41,7 @@
                 x-on:click="content_open = false"
                 x-show="content_open"
                 style="display: none"
-                class="relative z-50 my-2 text-sm font-medium text-left text-base-content link link-hover"
+                class="relative z-50 mt-3 text-sm font-medium text-left text-base-content link link-hover"
               >
                 {rich(name || l("CW"))} ({l("Show less")})
               </button>
