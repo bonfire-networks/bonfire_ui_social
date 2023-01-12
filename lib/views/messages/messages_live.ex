@@ -31,8 +31,6 @@ defmodule Bonfire.UI.Social.MessagesLive do
     feed_id = :inbox
     # feed_id = Bonfire.Social.Feeds.my_feed_id(feed_id, socket)
     threads = LiveHandler.list_threads(current_user_required!(socket), socket)
-    IO.inspect(threads, label: "ECCO")
-
     {:ok,
      socket
      |> assign(
