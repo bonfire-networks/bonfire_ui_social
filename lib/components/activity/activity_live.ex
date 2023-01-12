@@ -177,7 +177,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
       phx-hook={if !@viewing_main_object, do: "PreviewActivity"}
       class={
         "p-4 activity relative group flex flex-col " <> e(assigns, :class, ""),
-        "!pl-16":
+        "!pl-12":
           e(assigns, :showing_within, :feed) == :thread and
             e(assigns, :viewing_main_object, false) == false,
         "cursor-pointer":

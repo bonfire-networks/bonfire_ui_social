@@ -39,7 +39,7 @@
               showing_within: @showing_within,
               create_object_type: @create_object_type
             })}
-          class="p-3 border-y bg-base-300 border-base-content/10"
+          class="p-3 bg-base-300"
         >
           <Bonfire.UI.Common.SelectRecipientsLive
             preloaded_recipients={e(@preloaded_recipients, [])}
