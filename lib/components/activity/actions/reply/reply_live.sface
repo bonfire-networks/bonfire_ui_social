@@ -6,14 +6,13 @@
         class={@class}
         data-id="action_reply"
         phx-click="Bonfire.Social.Feeds:reply_to_activity"
-        x-on:click="smart_input_open = true"
         phx-value-id={@object_id}
         phx-target={if @activity_id, do: "#activity--" <> e(@activity_id, "")}
         title={l("Reply")}
       >
         <!-- x-on:click={"show_smart_input('#{l("Reply")}')"} -->
         <span class="text-opacity-50 text-base-content">
-          <Icon outline="Reply" class="w-4 h-4 stroke-1" />
+          <Icon outline="Reply" class="w-5 h-5 stroke-1 md:w-4 md:h-4" />
         </span>
         <span class={if !@reply_btn_text, do: "sr-only"}>{@reply_btn_text || l("Reply")}</span>
       </button>
@@ -34,7 +33,7 @@
         title={l("You can't reply to this activity")}
       >
         <span class="text-opacity-20 text-base-content">
-          <Icon outline="Reply" class="w-4 h-4 stroke-1" />
+          <Icon outline="Reply" class="w-5 h-5 stroke-1 md:w-4 md:h-4" />
         </span>
         <span class={if !@cannot_reply_text, do: "sr-only"}>{@cannot_reply_text || l("Cannot Reply")}</span>
       </button>

@@ -57,10 +57,11 @@
             title={e(@profile, :name, "Anonymous")}
             comment={@showing_within in [:thread, :messages] && !@viewing_main_object}
             viewing_main_object={@viewing_main_object}
+            class="w-8 h-8 md:h-10 md:w-10"
           />
         </LiveRedirect>
       </div>
-      <div class="flex items-start justify-between leading-[16px] min-w-0 space-x-1 w-full">
+      <div class="flex items-start justify-between w-full min-w-0 space-x-1 leading-4">
         <div class="flex flex-col flex-1 gap-1 feed-clickable">
           <div class={
             "text-[15px] font-medium  lowercase line-clamp-1 text-base-content/70",

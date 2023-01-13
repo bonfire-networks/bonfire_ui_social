@@ -172,14 +172,14 @@ defmodule Bonfire.UI.Social.ActivityLive do
       x-init={"content_open = #{!@cw}"}
       id={"activity-#{@activity_inception}-" <> (ulid(@activity) || e(@object, :id, "no-id"))}
       aria-label="user activity"
+      phx-hook={if !@viewing_main_object and e(assigns, :showing_within, :feed) != :thread, do: "PreviewActivity"}
       role="article"
       tabIndex="0"
-      phx-hook={if !@viewing_main_object, do: "PreviewActivity"}
       class={
         "p-4 activity relative group flex flex-col " <> e(assigns, :class, ""),
-        "!pl-12":
-          e(assigns, :showing_within, :feed) == :thread and
-            e(assigns, :viewing_main_object, false) == false,
+        # "!pl-12":
+        #   e(assigns, :showing_within, :feed) == :thread and
+        #     e(assigns, :viewing_main_object, false) == false,
         "cursor-pointer":
           e(assigns, :showing_within, :feed) in [:feed, :notifications, :likes, :search],
         # "activity_inception bg-base-content/10 !m-0 opacity-100 before:!left-2 before:top-1 before:bottom-1":

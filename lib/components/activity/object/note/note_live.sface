@@ -1,27 +1,9 @@
-{#if ulid(@object) != nil and e(@activity, :replied, :reply_to_id, nil) == nil and
-    ulid(@activity) == nil and @showing_within == :widget}
-  <!-- huh? -->
-  <!-- phx-hook="OpenActivity"
-  data-permalink={@permalink}
-  data-navigate_to_thread={if @showing_within !=:thread || @activity_inception ||  ulid(@object) == nil and e(@activity, :replied, :reply_to_id, nil) != nil and ulid(@activity) != nil, do: "true"} -->
-{#else}
+
   <div
     class={
-      main_object: @viewing_main_object,
-      "showing_within:thread": @showing_within == :thread,
-      "-mt-1 bg-base-content/10 px-2 pb-2 rounded-br-md": @thread_mode == :flat,
-      "!bg-info/40 rounded-bl-md !rounded-br-none":
-        @thread_mode == :flat && e(@activity, :subject, :id, nil) == ulid(@current_user),
-      "activity_inception:#{e(@activity_inception, '')} !bg-transparent pb-0":
-        @activity_inception != nil and @thread_mode == :flat,
-      "showing_within:feed": @showing_within == :feed,
-      "showing_within:notifications": @showing_within == :notifications,
-      "showing_within:widget mt-2": @showing_within == :widget,
-      reply_to:
-        ulid(@object) != nil and e(@activity, :replied, :reply_to_id, nil) == nil and
-          ulid(@activity) == nil,
-      reply_message: e(@activity, :replied, :reply_to_id, nil)
-    }
+      "note my-3",
+      "!my-0": ulid(@object) != nil and e(@activity, :replied, :reply_to_id, nil) == nil and ulid(@activity) == nil,
+      "!mt-2": @showing_within == :widget}
     id={"note-#{@activity_inception}-#{ulid(@activity) || ulid(@object) || "no-id"}-#{e(assigns, :viewing_main_object, false)}"}
   >
     {#case e(post_content(@object), :name, nil)}
@@ -33,7 +15,7 @@
                 x-on:click="content_open = true"
                 x-show="content_open == false"
                 style="display: none"
-                class="relative z-50 mt-3 text-sm font-medium text-left text-base-content link link-hover"
+                class="relative z-50 mb-2 text-sm font-medium text-left text-base-content link link-hover"
               >
                 {rich(name || l("CW"))} ({l("Show more")})
               </button>
@@ -41,7 +23,7 @@
                 x-on:click="content_open = false"
                 x-show="content_open"
                 style="display: none"
-                class="relative z-50 mt-3 text-sm font-medium text-left text-base-content link link-hover"
+                class="relative z-50 mb-2 text-sm font-medium text-left text-base-content link link-hover"
               >
                 {rich(name || l("CW"))} ({l("Show less")})
               </button>
@@ -62,15 +44,12 @@
               <div
                 data-id="object_body"
                 class={
-                  "prose break-words object_body max-w-none font-[16px] prose-sm prose-p:pt-0 prose-p:my-0",
-                  "!my-0 !text-[13px] !leading-normal !font-normal line-clamp-1 opacity-70":
-                    @viewing_main_object != true and ulid(@object) != nil and
-                      e(@activity, :replied, :reply_to_id, nil) == nil and ulid(@activity) == nil and
-                      @showing_within != :widget and @showing_within != :search,
+                  "prose break-words object_body max-w-none text-base md:prose-sm prose-p:pt-0 prose-p:my-0",
+                  "!text-[13px] line-clamp-1 !text-base-content/80": ulid(@object) != nil and e(@activity, :replied, :reply_to_id, nil) == nil and ulid(@activity) == nil,
                   "!my-0 !text-sm !font-normal line-clamp-1": @showing_within == :smart_input,
-                  "mt-3 prose-sm prose-p:pt-0 prose-p:my-0 leading-[23px]": @showing_within == :thread,
-                  "!text-[16px] prose-p:pb-4": @viewing_main_object,
-                  "prose-p:pt-1 my-3 !leading-[23px]": @showing_within in [:feed, :search, :notifications]
+                  "prose-sm prose-p:pt-0 prose-p:my-0 leading-[23px]": @showing_within == :thread,
+                  "!text-base prose-p:pb-4": @viewing_main_object,
+                  "prose-p:pt-1 !leading-6": @showing_within in [:feed, :search, :notifications]
                 }
               >
                 {rich(
@@ -85,4 +64,3 @@
         {/case}
     {/case}
   </div>
-{/if}

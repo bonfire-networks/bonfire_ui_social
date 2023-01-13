@@ -4,12 +4,13 @@
   x-data="{show_replies: true}"
   class={
     "reply thread-level-" <> to_string(@thread_level) <> " flex relative  w-full mx-auto",
-    "py-2": @thread_level == 1
+    "py-4 border-b border-base-300": @thread_level == 1
   }
 >
   <div class="relative flex-1 w-full">
     <div class="flex flex-1 w-full items-top">
-      <div
+      <!-- <div
+        :if={@thread_level > 1}
         x-cloak
         x-show="show_replies"
         class="group z-10 left-[18px] px-3 top-0 -bottom-[16px] absolute"
@@ -18,8 +19,8 @@
           :class="!show_replies ? 'bg-primary bottom-[0px]' : 'bottom-[0px]'"
           class="bg-base-content/10 top-0 bottom-0 z-10 w-[2px] absolute"
         />
-      </div>
-      <div
+      </div> -->
+      <!-- <div
         x-cloak
         class="p-3 pr-0 pl-[21px]"
         x-on:click="show_replies = !show_replies"
@@ -29,7 +30,7 @@
           outline="ChevronDown"
           class="w-4 h-4 cursor-pointer text-primary text-opacity-70 hover:text-opacity hover:text-opacity-100"
         />
-      </div>
+      </div> -->
       <div class="flex-1 w-full" x-cloak x-data="{reply: false, show: true}">
         {#case @comment}
           {#match %{__struct__: Bonfire.Data.Social.Activity, object: %{}} = activity}
@@ -95,9 +96,10 @@
         {/case}
       </div>
     </div>
-    <div :if={@thread_mode != :flat} x-show="show_replies">
-      <div class={"replies replies-level-" <> to_string(@thread_level + 1) <> " ml-4"}>
+    <div x-show="show_replies">
+      <div :if={is_list(@child_replies) and length(@child_replies) > 0} class="mt-2 ml-4 text-sm font-medium link link-primary link-hover">{length(@child_replies)} {l "reply"}</div>
         {#if is_list(@child_replies) and length(@child_replies) > 0}
+        <div class={"replies replies-level-" <> to_string(@thread_level + 1) <> " ml-4 mt-6"}>
           {#for {{subreply, sub_child_replies}, index} <- Enum.with_index(@child_replies, 1)}
             <div class="relative">
               <!-- <div class="z-40 absolute border-neutral w-5 h-6 border-0 border-b-2 border-l-2 rounded-bl-lg left-[-2px] top-[-6px]" /> -->
@@ -138,8 +140,8 @@
               </div>
             {#match _}
           {/case} -->
-        {/if}
       </div>
+        {/if}
     </div>
   </div>
 </div>

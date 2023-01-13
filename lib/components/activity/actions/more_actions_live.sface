@@ -8,11 +8,11 @@
   }
 >
   <button tabindex="0" class="btn btn-ghost btn-circle btn-sm">
-    <Icon solid="DotsVertical" class="w-4 h-4 text-base-content/60" />
+    <Icon solid="DotsVertical" class="w-5 h-5 md:w-4 md:h-4 text-base-content/60" />
   </button>
   <ul
     tabindex="0"
-    class="!block w-48 z-[910] relative shadow menu menu-compact dropdown-content bg-neutral rounded dropdown_actions"
+    class="!block w-60 md:w-48 z-[910] relative shadow menu md:menu-compact dropdown-content bg-neutral rounded dropdown_actions"
     role="menu"
     aria-orientation="vertical"
     aria-labelledby="more-menu"
