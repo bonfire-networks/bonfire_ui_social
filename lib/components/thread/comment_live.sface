@@ -96,16 +96,35 @@
         {/case}
       </div>
     </div>
-    <div x-show="show_replies">
-      <div :if={is_list(@child_replies) and length(@child_replies) > 0} class="mt-2 ml-4 text-sm font-medium link link-primary link-hover">{length(@child_replies)} {l "reply"}</div>
+    <div x-show="show_replies relative">
+        <div
+          :if={is_list(@child_replies) and length(@child_replies) > 0}
+          x-cloak
+          x-show="show_replies"
+          class="group z-10 left-[18px] px-3 top-[44px] bottom-[14px] absolute"
+        >
+        <i
+          :class="!show_replies ? 'bg-primary bottom-[0px]' : 'bottom-[0px]'"
+          class="bg-base-content/10 top-0 bottom-0 z-10 w-[2px] absolute"
+        />
+      </div>
+      <!-- <div class="-mt-[26px]  z-[50] ml-10" :if={is_list(@child_replies) and length(@child_replies) > 0}>
+        <button class="relative flex items-center gap-2 text-sm normal-case btn btn-ghost btn-info btn-xs">
+          <Icon iconify="ic:outline-arrow-drop-down" class="w-5 h-5" />
+          <span>{length(@child_replies)} {l "reply"}</span>
+        </button>
+      </div> -->
+        
         {#if is_list(@child_replies) and length(@child_replies) > 0}
-        <div class={"replies replies-level-" <> to_string(@thread_level + 1) <> " ml-4 mt-6"}>
+        <div class={"replies replies-level-" <> to_string(@thread_level + 1) <> " ml-6 mt-6"}>
           {#for {{subreply, sub_child_replies}, index} <- Enum.with_index(@child_replies, 1)}
             <div class="relative">
-              <!-- <div class="z-40 absolute border-neutral w-5 h-6 border-0 border-b-2 border-l-2 rounded-bl-lg left-[-2px] top-[-6px]" /> -->
+              <!-- <div 
+                :if={index == length(@child_replies)}
+                class="w-3 bg-base-100 absolute left-[-10px] top-[10px] z-30 bottom-0" /> -->
+              <!-- <div class="z-40 absolute border-base-content/10 w-6 h-6 border-0 border-b-2 border-l-2 rounded-bl-lg left-[-10px] top-[-6px]" /> -->
               <div
                 :if={index < length(@child_replies)}
-                class="absolute border-neutral top-0 bottom-0 border-0  border-l-2 left-[-2px]"
               />
               <CommentLive
                 reply_to_id={e(@comment, :id, nil)}

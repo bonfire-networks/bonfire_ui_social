@@ -14,7 +14,8 @@
   }
 >
   <div class={
-    "feed-clickable flex items-center flex-1 justify-between md:justify-end space-x-4 mt-0",
+    "feed-clickable flex items-center flex-1 justify-between md:justify-end gap-4 mt-0",
+    "!justify-end": @showing_within == :thread && @viewing_main_object != true,
     "-mx-4 !justify-between border-t border-base-300 !p-3 !pb-0 !mt-6":
       @viewing_main_object == true
   }>

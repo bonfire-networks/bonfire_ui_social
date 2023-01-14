@@ -3,7 +3,8 @@
     class={
       "note my-3",
       "!my-0": ulid(@object) != nil and e(@activity, :replied, :reply_to_id, nil) == nil and ulid(@activity) == nil,
-      "!mt-2": @showing_within == :widget}
+      "!mt-2": @showing_within == :widget,
+      "!mt-0 ml-10": @showing_within == :thread && !@viewing_main_object}
     id={"note-#{@activity_inception}-#{ulid(@activity) || ulid(@object) || "no-id"}-#{e(assigns, :viewing_main_object, false)}"}
   >
     {#case e(post_content(@object), :name, nil)}
