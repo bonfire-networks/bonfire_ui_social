@@ -184,7 +184,7 @@
             </div>
             <div class="flex items-start justify-between leading-[16px] min-w-0 space-x-1 w-full">
               <div class="flex flex-col flex-1 gap-1 feed-clickable">
-                <div class="text-[15px] font-medium  lowercase line-clamp-1 text-base-content/70">
+                <div class="text-sm font-medium lowercase line-clamp-1 text-base-content/70">
                   <!-- {@verb} {@object_type} -->
                   <LiveRedirect
                     opts={"data-id": "subject_name"}

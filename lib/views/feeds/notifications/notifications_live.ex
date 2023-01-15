@@ -3,7 +3,7 @@ defmodule Bonfire.UI.Social.Feeds.NotificationsLive do
   alias Bonfire.UI.Me.LivePlugs
 
   declare_nav_link(l("Notifications"),
-    icon: "heroicons-solid:Bell",
+    icon: "mdi:bell-outline",
     badge: [
       id: :notifications,
       feed_key: :notifications_id

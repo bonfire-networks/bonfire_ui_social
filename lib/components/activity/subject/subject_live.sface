@@ -66,7 +66,7 @@
           "!flex-row !gap-2": @showing_within in [:thread, :messages] && !@viewing_main_object
           }>
           <div class={
-            "text-[15px] font-medium  lowercase line-clamp-1 text-base-content/70",
+            "text-sm font-medium  lowercase line-clamp-1 text-base-content/70",
             "!text-base !font-semibold": @viewing_main_object,
             "!text-sm": @showing_within in [:thread, :messages] && !@viewing_main_object
           }>
@@ -88,7 +88,7 @@
                   to={~p"/+#{e(@object, :character, :username, nil) || ulid(@object)}"}
                 >{l("topic")}</LiveRedirect></div>
             {#elseif @verb == "Reply"}
-              {l("replied")}
+              <!-- {l("replied")} -->
             {#elseif @verb == "Pin"}
               {l("pinned")}
             {#elseif @verb == "Schedule" and e(@object, :due, nil)}

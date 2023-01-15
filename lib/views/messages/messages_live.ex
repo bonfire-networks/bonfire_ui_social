@@ -6,7 +6,7 @@ defmodule Bonfire.UI.Social.MessagesLive do
   import Untangle
 
   declare_nav_link(l("Direct Messages"),
-    icon: "heroicons-solid:envelope",
+    icon: "mdi:email-outline",
     badge: [
       id: :inbox,
       feed_key: :inbox_id
