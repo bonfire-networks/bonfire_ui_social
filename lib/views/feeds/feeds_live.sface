@@ -9,8 +9,8 @@
   feed={@feed}
   selected_tab={@selected_tab}
   feed_title={@feed_title}
-  tabs_class="flex items-center gap-8 border-b border-base-300 bg-base-200 justify-evenly"
-  tab_class="feed_tab text-sm cursor-pointer hover:bg-base-content/5 font-medium tracking-wide text-base-content/60 p-4"
+  tabs_class="flex gap-3 p-3 px-4 bg-base-100"
+  tab_class="feed_tab badge rounded h-7"
   page_info={@page_info}
   loading={@loading}
   tab_path_prefix="/feed/"

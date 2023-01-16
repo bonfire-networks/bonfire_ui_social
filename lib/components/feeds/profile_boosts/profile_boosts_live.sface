@@ -1,6 +1,12 @@
 <div>
   <#slot {@header} />
-
+  <Bonfire.UI.Common.TabsLive
+    selected_tab={@selected_tab}
+    class={"flex gap-3 p-4 bg-base-100"}
+    tab_class="feed_tab badge rounded h-7"
+    path_prefix={"/@#{e(@user, :character, :username, "")}/"}
+    tabs={Config.get([:ui, :profile, :navigation], timeline: l("Timeline"))}
+  />
   <Bonfire.UI.Social.FeedLive
     id="feed:profile:boosts"
     feed_id={"user:#{@selected_tab}:#{ulid(@user)}"}

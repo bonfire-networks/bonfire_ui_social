@@ -4,6 +4,13 @@
     "grid items-start grid-cols-1",
     "max-w-[680px] mx-auto": !@current_user
   }>
+    <Bonfire.UI.Common.TabsLive
+      selected_tab={@selected_tab}
+      class={"flex gap-3 p-4 bg-base-100"}
+      tab_class="feed_tab badge rounded h-7"
+      path_prefix={"/@#{e(@user, :character, :username, "")}/"}
+      tabs={Config.get([:ui, :profile, :navigation], timeline: l("Timeline"))}
+    />
     <Bonfire.UI.Social.FeedLive
       id="feed:profile:timeline"
       feed_id={"user:#{@selected_tab}:#{ulid(@user)}"}
@@ -11,11 +18,9 @@
       page={@page}
       feed={@feed}
       page_info={@page_info}
-      tabs_class="mb-3 flex items-center gap-3"
+      tabs_class="flex gap-3 p-4"
+      tab_class="feed_tab badge rounded h-7"
       selected_tab={@selected_tab}
-      smart_input={@smart_input}
-      smart_input_opts={@smart_input_opts}
-      search_placeholder={@search_placeholder}
       feed_title={@feed_title}
       loading={@loading}
       hide_tabs
