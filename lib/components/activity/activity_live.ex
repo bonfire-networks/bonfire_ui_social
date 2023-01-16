@@ -1,8 +1,8 @@
 defmodule Bonfire.UI.Social.ActivityLive do
   use Bonfire.UI.Common.Web, :stateful_component
+  use Untangle
 
   alias Bonfire.Social.Activities
-  import Untangle
 
   prop(activity, :any, default: nil)
   prop(object, :any, default: nil)
@@ -26,7 +26,9 @@ defmodule Bonfire.UI.Social.ActivityLive do
   @react_verbs ["Like", "Boost", "Flag", "Tag"]
   @react_or_simple_verbs @react_verbs ++ ["Assign", "Label", "Schedule"]
   @create_or_reply_verbs @create_verbs ++ @reply_verbs
+  @created_verb_display Activities.verb_display("Create")
 
+  @decorate time()
   def preload(list_of_assigns) do
     Bonfire.Boundaries.LiveHandler.maybe_preload_and_check_boundaries(list_of_assigns,
       verbs: [:read],
@@ -59,6 +61,9 @@ defmodule Bonfire.UI.Social.ActivityLive do
      |> assign(prepare(assigns))}
   end
 
+  @decorate time()
+  def prepare(assigns)
+
   def prepare(%{activity: %{} = activity} = assigns) do
     debug("Activity preparation started")
     # debug(assigns, "ActivityLive initial assigns")
@@ -83,7 +88,6 @@ defmodule Bonfire.UI.Social.ActivityLive do
       |> debug("verb (modified)")
 
     verb_display = Activities.verb_display(verb)
-    created_verb_display = Activities.verb_display("Create")
     object_type = Types.object_type(activity.object) |> debug("object_type")
     object_type_readable = Types.object_type_display(object_type)
 
@@ -103,33 +107,32 @@ defmodule Bonfire.UI.Social.ActivityLive do
           end
         end
 
-    reply_id = ulid(activity) || ulid(activity.object)
+    id = ulid(activity) || ulid(activity.object)
     # permalink = path(activity.object)
     permalink =
-      if thread_url && thread_id != reply_id,
-        do: "#{thread_url}#activity-#{reply_id}",
+      if thread_url && thread_id != id,
+        do: "#{thread_url}#activity-#{id}",
         else: "#{path(activity.object)}#"
 
     # debug(permalink, "permalink")
 
     assigns =
       assigns
-      |> assigns_merge(
+      |> Map.merge(%{
         activity: activity |> Map.drop([:object]),
         object: activity.object,
         object_id: e(activity.object, :id, nil) || e(activity, :id, "no-object-id"),
         object_type: object_type,
         object_type_readable: object_type_readable,
-        date_ago: date_from_now(ulid(activity) || ulid(activity.object)),
+        date_ago: date_from_now(id),
         verb: verb,
         verb_display: verb_display,
-        created_verb_display: created_verb_display,
+        created_verb_display: @created_verb_display,
         permalink: permalink,
         thread_url: thread_url,
         thread_id: thread_id,
         cw: e(activity.object, :post_content, :name, nil) != nil
-      )
-      |> Map.new()
+      })
 
     components =
       (component_activity_subject(verb, activity, assigns) ++
@@ -145,7 +148,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
 
     # |> debug("components")
 
-    assigns_merge(assigns, activity_components: components)
+    Map.put(assigns, :activity_components, components)
     # |> debug("assigns")
   end
 
@@ -165,6 +168,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
 
   def prepare(assigns), do: assigns
 
+  @decorate time()
   def render(%{activity: _, activity_components: _} = assigns) do
     ~F"""
     <article
@@ -260,6 +264,9 @@ defmodule Bonfire.UI.Social.ActivityLive do
     """
   end
 
+  @decorate time()
+  def component_activity_subject(verb, activity, assigns)
+
   # don't show subject twice
   def component_activity_subject(_, _, %{object_type: Bonfire.Data.Identity.User}),
     do: [Bonfire.UI.Social.Activity.SubjectMinimalLive]
@@ -321,6 +328,9 @@ defmodule Bonfire.UI.Social.ActivityLive do
       activity
       # |> debug("activity")
       |> component_activity_maybe_creator(assigns)
+
+  @decorate time()
+  def component_activity_maybe_creator(activity, assigns)
 
   def component_activity_maybe_creator(_, %{object_type: object_type})
       when object_type in [Bonfire.Data.Identity.User],
@@ -440,6 +450,9 @@ defmodule Bonfire.UI.Social.ActivityLive do
     []
   end
 
+  @decorate time()
+  def component_maybe_in_reply_to(verb, activity, assigns)
+
   def component_maybe_in_reply_to(verb, activity, %{
         showing_within: showing_within,
         viewing_main_object: false,
@@ -550,6 +563,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
     []
   end
 
+  @decorate time()
   def maybe_load_in_reply_to(
         %{
           id: reply_to_id
@@ -571,6 +585,9 @@ defmodule Bonfire.UI.Social.ActivityLive do
        }}
     ]
   end
+
+  @decorate time()
+  def component_object(verb, activity, assigns)
 
   def component_object(_, %{object: %{post_content: %{html_body: _}}}, _),
     do: [Bonfire.UI.Social.Activity.NoteLive]
@@ -661,6 +678,9 @@ defmodule Bonfire.UI.Social.ActivityLive do
     []
   end
 
+  @decorate time()
+  def component_actions(verb, activity, assigns)
+
   # don't show any
   def component_actions(_, _, %{activity_inception: activity_inception})
       when not is_nil(activity_inception),
@@ -749,6 +769,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
     ]
   end
 
+  @decorate time()
   def load_reply_to(reply_to) do
     reply_to = Activities.load_object(reply_to)
 

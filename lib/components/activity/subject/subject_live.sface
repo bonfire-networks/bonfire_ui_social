@@ -64,7 +64,7 @@
         <div class={
           "flex flex-col flex-1 gap-1 feed-clickable",
           "!flex-row !gap-2": @showing_within in [:thread, :messages] && !@viewing_main_object
-          }>
+        }>
           <div class={
             "text-sm font-medium  lowercase line-clamp-1 text-base-content/70",
             "!text-base !font-semibold": @viewing_main_object,
@@ -76,7 +76,8 @@
               aria-label={l("%{name}'s profile", name: e(@profile, :name, ""))}
               class={
                 "link link-hover",
-                "text-base-content/90": @showing_within in [:thread, :messages] && !@viewing_main_object}
+                "text-base-content/90": @showing_within in [:thread, :messages] && !@viewing_main_object
+              }
               to={path(@character)}
             >
               {e(@profile, :name, "Anonymous")}

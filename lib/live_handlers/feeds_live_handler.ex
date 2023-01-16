@@ -1,6 +1,6 @@
 defmodule Bonfire.Social.Feeds.LiveHandler do
   use Bonfire.UI.Common.Web, :live_handler
-  import Untangle
+  use Untangle
 
   def handle_params(
         %{"after" => _cursor_after} = attrs,
@@ -332,6 +332,7 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
      )}
   end
 
+  @decorate time()
   def feed_assigns_maybe_async({feed_name, filters_or_custom_query_or_feed_id_or_ids}, socket) do
     feed_name = feed_name(feed_name, socket)
     debug(filters_or_custom_query_or_feed_id_or_ids, feed_name)
@@ -517,8 +518,8 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
             (e(socket.assigns, :feed_component_id, nil) || feed_id_only(feed_id_or_tuple))
             |> debug("feed_component_id")
 
-          # feed_assigns(feed_id_or_tuple, socket)
-          Bonfire.Common.Benchmark.apply_timed(&feed_assigns/2, [feed_id_or_tuple, socket])
+          feed_assigns(feed_id_or_tuple, socket)
+          # Bonfire.Common.Benchmark.apply_timed(&feed_assigns/2, [feed_id_or_tuple, socket])
           # |> debug("feed_assigns")
           |> maybe_send_update(
             pid,
@@ -550,6 +551,9 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
 
   defp feed_id_only({feed_id, _feed_ids}), do: feed_id
   defp feed_id_only(feed_id), do: feed_id
+
+  @decorate time()
+  defp feed_assigns(feed, socket)
 
   defp feed_assigns({:likes, _filters}, socket) do
     # NOTE: we don't support extra filter on likes for now
@@ -653,8 +657,10 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
     error(feed_id, "Unrecognised feed")
   end
 
+  @decorate time()
   def preloads(feed, socket_or_opts \\ []) do
-    Bonfire.Common.Benchmark.apply_timed(&do_preloads/2, [feed, socket_or_opts])
+    # Bonfire.Common.Benchmark.apply_timed(&do_preloads/2, [feed, socket_or_opts])
+    do_preloads(feed, socket_or_opts)
   end
 
   defp do_preloads(feed, socket_or_opts \\ [])
@@ -706,7 +712,9 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
     end
   end
 
-  defp do_preloads(%{edges: feed} = page, socket), do: Map.put(page, :edges, do_preloads(feed, socket))
+  defp do_preloads(%{edges: feed} = page, socket),
+    do: Map.put(page, :edges, do_preloads(feed, socket))
+
   defp do_preloads(feed, socket), do: feed
 
   def preload_objects(feed, under, opts) do
