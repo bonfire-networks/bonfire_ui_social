@@ -517,7 +517,8 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
             (e(socket.assigns, :feed_component_id, nil) || feed_id_only(feed_id_or_tuple))
             |> debug("feed_component_id")
 
-          feed_assigns(feed_id_or_tuple, socket)
+          # feed_assigns(feed_id_or_tuple, socket)
+          Bonfire.Common.Benchmark.apply_timed(&feed_assigns/2, [feed_id_or_tuple, socket])
           # |> debug("feed_assigns")
           |> maybe_send_update(
             pid,
@@ -533,7 +534,7 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
       # return temporary assigns in the meantime
       assigns
     else
-      debug("socket not connected or not logged in, just load feed")
+      debug("socket not connected or not logged in, load feed synchronously")
 
       case feed_assigns(feed_id_or_tuple, socket) do
         fa when is_list(fa) -> assigns ++ fa
@@ -652,9 +653,13 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
     error(feed_id, "Unrecognised feed")
   end
 
-  def preloads(feed, socket_or_opts \\ [])
+  def preloads(feed, socket_or_opts \\ []) do
+    Bonfire.Common.Benchmark.apply_timed(&do_preloads/2, [feed, socket_or_opts])
+  end
 
-  def preloads(feed, socket_or_opts) when is_list(feed) and length(feed) > 0 do
+  defp do_preloads(feed, socket_or_opts \\ [])
+
+  defp do_preloads(feed, socket_or_opts) when is_list(feed) and length(feed) > 0 do
     debug("FeedLive: preload objects")
 
     opts = e(socket_or_opts, :assigns, []) || socket_or_opts
@@ -701,8 +706,8 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
     end
   end
 
-  def preloads(%{edges: feed} = page, socket), do: Map.put(page, :edges, preloads(feed, socket))
-  def preloads(feed, socket), do: feed
+  defp do_preloads(%{edges: feed} = page, socket), do: Map.put(page, :edges, do_preloads(feed, socket))
+  defp do_preloads(feed, socket), do: feed
 
   def preload_objects(feed, under, opts) do
     object_preloads()
@@ -710,6 +715,7 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
   end
 
   def object_preloads do
+    # TODO: collect these from the code on startup
     [
       # {Bonfire.Data.Social.Post, Bonfire.UI.Social.Activity.NoteLive.preloads()}, # only needed if we no longer preload PostContent by default
       {Bonfire.Data.Identity.User, Bonfire.UI.Social.Activity.CharacterLive.preloads()},
