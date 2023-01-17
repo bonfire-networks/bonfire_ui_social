@@ -406,7 +406,8 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
       selected_tab: :fediverse,
       # FIXME: clean up page vs tab
       page: "federation",
-      feed_title: l("Federated activities from remote instances"),
+      page_header_icon: "ri:home-line",
+      # page_title: l("Federated activities from remote instances"),
       # feed_title: l("Activities from around the fediverse"),
       feedback_title: l("Your fediverse feed is empty"),
       feedback_message:
@@ -430,7 +431,7 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
       selected_tab: :local,
       # FIXME: clean up page vs tab
       page: "local",
-      feed_title: l("Activities from members of the local instance"),
+      # page_title: l("Activities from members of the local instance"),
       feedback_title: l("Your local feed is empty"),
       # feed_id: feed_name,
       feedback_message: l("It seems like the paint is still fresh on this instance..."),

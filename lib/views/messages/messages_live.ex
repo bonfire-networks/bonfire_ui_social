@@ -42,6 +42,7 @@ defmodule Bonfire.UI.Social.MessagesLive do
        to_boundaries: [{"message", "Message"}],
        page_title: l("Messages"),
        page: "messages",
+       page_header_icon: "mdi:email-outline",
        feed_id: feed_id,
        activity: nil,
        object: nil,

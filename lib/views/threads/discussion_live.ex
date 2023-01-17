@@ -33,6 +33,7 @@ defmodule Bonfire.UI.Social.DiscussionLive do
        object_id: nil,
        post_id: nil,
        thread_id: nil,
+       back: true,
        reply_to_id: nil,
        thread_mode: nil,
        url: nil,

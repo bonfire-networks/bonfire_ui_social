@@ -49,8 +49,8 @@ defmodule Bonfire.UI.Social.FeedsLive do
      |> assign(
        selected_tab: nil,
        page: "feed",
-       page_title: l("Feeds"),
-       tab_path_suffix: nil,
+       page_title: l("My feed"),
+       page_header_icon: "ri:home-line",
        feed: nil,
        page_info: nil,
        loading: true,
@@ -68,7 +68,7 @@ defmodule Bonfire.UI.Social.FeedsLive do
            ]
          ],
          guests: [
-           secondary: {Bonfire.Tag.Web.WidgetTagsLive, []}
+           secondary: [{Bonfire.Tag.Web.WidgetTagsLive, []}]
          ]
        ]
      )}

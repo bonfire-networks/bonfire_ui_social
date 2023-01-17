@@ -26,6 +26,7 @@ defmodule Bonfire.UI.Social.PostLive do
        participants: nil,
        smart_input_opts: [prompt: l("Reply")],
        activity: nil,
+       back: true,
        showing_within: :thread,
        #  page_header_aside: [
        #    {Bonfire.UI.Social.ObjectHeaderAsideLive,
