@@ -82,7 +82,7 @@ defmodule Bonfire.Social.Likes.LiveHandler do
   defp do_preload(list_of_components, list_of_ids, current_user) do
     my_states = if current_user, do: do_list_my_liked(current_user, list_of_ids), else: %{}
 
-    info(my_states, "my_likes")
+    # debug(my_states, "my_likes")
 
     objects_counts =
       if Bonfire.Me.Settings.get([:ui, :show_activity_counts], nil, current_user: current_user) do

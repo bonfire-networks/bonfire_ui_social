@@ -29,7 +29,7 @@ defmodule Bonfire.UI.Social.ThreadLive do
 
   def update(%{replies: replies, page_info: page_info, loaded_async: true} = assigns, socket)
       when is_list(replies) and is_map(page_info) do
-    info("showing async-loaded replies")
+    debug("showing async-loaded replies")
 
     {:ok,
      socket
@@ -38,7 +38,7 @@ defmodule Bonfire.UI.Social.ThreadLive do
 
   def update(%{replies: replies, page_info: page_info} = assigns, socket)
       when is_list(replies) and is_map(page_info) do
-    info("showing preloaded replies")
+    debug("showing preloaded replies")
 
     {:ok,
      socket

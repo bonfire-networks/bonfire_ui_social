@@ -133,7 +133,7 @@ defmodule Bonfire.Social.Posts.LiveHandler do
   end
 
   def handle_event("load_replies", %{"id" => id, "level" => level}, socket) do
-    info("load extra replies")
+    debug("load extra replies")
     {level, _} = Integer.parse(level)
 
     %{edges: replies} =
@@ -197,7 +197,7 @@ defmodule Bonfire.Social.Posts.LiveHandler do
   end
 
   def live_more(thread_id, paginate, socket) do
-    # info(paginate, "paginate thread")
+    # debug(paginate, "paginate thread")
     current_user = current_user(socket)
 
     with %{edges: replies, page_info: page_info} <-
@@ -209,7 +209,7 @@ defmodule Bonfire.Social.Posts.LiveHandler do
         (e(socket.assigns, :replies, []) ++ replies)
         |> Enum.uniq()
 
-      # |> info("REPLIES")
+      # |> debug("REPLIES")
 
       threaded_replies =
         if is_list(replies) and length(replies) > 0,

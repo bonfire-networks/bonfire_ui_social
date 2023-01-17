@@ -99,7 +99,7 @@ defmodule Bonfire.Social.Threads.LiveHandler do
     thread_id = e(socket.assigns, :thread_id, e(socket.assigns, :object, :id, nil))
 
     if thread_id do
-      info("loading by thread_id")
+      debug("loading by thread_id")
       # debug(assigns)
       current_user = current_user(socket)
 

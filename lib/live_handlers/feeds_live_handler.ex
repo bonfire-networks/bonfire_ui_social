@@ -212,7 +212,7 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
 
   def handle_info({:new_activity, data}, socket) do
     debug(data[:feed_ids], "received new_activity for these feed ids")
-    # info(data)
+    # dump(data)
     current_user = current_user(socket)
 
     permitted? =
