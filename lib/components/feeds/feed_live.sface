@@ -22,6 +22,7 @@
       event_handler={@event_handler}
       event_target={@myself}
       path_prefix={@tab_path_prefix}
+      path_suffix={@tab_path_suffix}
     />
     {#if is_list(@feed) and @feed != []}
       <div

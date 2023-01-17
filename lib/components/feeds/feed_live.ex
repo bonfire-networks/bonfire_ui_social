@@ -32,6 +32,7 @@ defmodule Bonfire.UI.Social.FeedLive do
   prop tab_link_component, :atom, default: LinkLive
 
   prop tab_path_prefix, :string, default: "?tab="
+  prop tab_path_suffix, :string, default: nil
   prop hide_tabs, :boolean, default: false
   prop selected_tab, :any, default: nil
 
@@ -46,7 +47,10 @@ defmodule Bonfire.UI.Social.FeedLive do
   def mount(socket) do
     {:ok,
      socket
-     |> assign(feed: nil),
+     |> assign(
+       feed: nil,
+       hide_activities?: false
+     ),
      temporary_assigns: [
        feed: []
        # feed_future: []

@@ -20,10 +20,15 @@ defmodule Bonfire.UI.Social.FeedsLive do
   # declare_nav_link(l("My feed"), page: "feed", icon: "heroicons-solid:newspaper")
   declare_nav_link([
     {l("Feeds"), page: "feed", icon: "ri:home-line"},
-    {l("Posts"), page: "posts", href: "/feed/filter/posts", icon: "ri:file-text-line"},
-    {l("Discussions"),
-     page: "discussions", href: "/feed/filter/discussions", icon: "ri:chat-1-line"}
+    {l("Posts"), page: "posts", href: &nav_link_posts/1, icon: "ri:file-text-line"},
+    {l("Discussions"), page: "discussions", href: &nav_link_discussions/1, icon: "ri:chat-1-line"}
   ])
+
+  def nav_link_posts(%{"tab" => tab}) when not is_nil(tab), do: "/feed/#{tab}/posts"
+  def nav_link_posts(_), do: "/feed/filter/posts"
+
+  def nav_link_discussions(%{"tab" => tab}) when not is_nil(tab), do: "/feed/#{tab}/discussions"
+  def nav_link_discussions(_), do: "/feed/filter/discussions"
 
   def mount(params, session, socket) do
     live_plug(params, session, socket, [
@@ -44,7 +49,8 @@ defmodule Bonfire.UI.Social.FeedsLive do
      |> assign(
        selected_tab: nil,
        page: "feed",
-       page_title: l("My feed"),
+       page_title: l("Feeds"),
+       tab_path_suffix: nil,
        feed: nil,
        page_info: nil,
        loading: true,

@@ -332,13 +332,22 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
      )}
   end
 
+  defp feed_page_title(%{"object_type" => "discussions" = filter}),
+    do: [tab_path_suffix: "/#{filter}", page_title: l("Discussions")]
+
+  defp feed_page_title(%{"object_type" => "posts" = filter}),
+    do: [tab_path_suffix: "/#{filter}", page_title: l("Posts")]
+
+  defp feed_page_title(_), do: [tab_path_suffix: nil, page_title: l("Feeds")]
+
   @decorate time()
   def feed_assigns_maybe_async({feed_name, filters_or_custom_query_or_feed_id_or_ids}, socket) do
     feed_name = feed_name(feed_name, socket)
     debug(filters_or_custom_query_or_feed_id_or_ids, feed_name)
 
     assigns =
-      feed_default_assigns(feed_name, socket)
+      (feed_default_assigns(feed_name, socket) ++
+         feed_page_title(filters_or_custom_query_or_feed_id_or_ids))
       |> debug("start by setting feed_default_assigns")
 
     feed_assigns_maybe_async_load(
@@ -377,8 +386,8 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
       # FIXME: clean up page vs tab
       selected_tab: nil,
       page: "feed",
-      page_title: l("My feed"),
-      # feed_title: l("My feed"),
+      # page_title: l("My feed"),
+      feed_title: l("My feed"),
       # feed_id: feed_name,
       # feed_ids: feed_ids,
       feed: :loading,
@@ -397,7 +406,7 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
       selected_tab: :fediverse,
       # FIXME: clean up page vs tab
       page: "federation",
-      page_title: l("Federated activities from remote instances"),
+      feed_title: l("Federated activities from remote instances"),
       # feed_title: l("Activities from around the fediverse"),
       feedback_title: l("Your fediverse feed is empty"),
       feedback_message:
@@ -421,7 +430,7 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
       selected_tab: :local,
       # FIXME: clean up page vs tab
       page: "local",
-      page_title: l("Activities from members of the local instance"),
+      feed_title: l("Activities from members of the local instance"),
       feedback_title: l("Your local feed is empty"),
       # feed_id: feed_name,
       feedback_message: l("It seems like the paint is still fresh on this instance..."),
@@ -439,7 +448,7 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
       selected_tab: :likes,
       # FIXME: clean up page vs tab
       page: "local",
-      page_title: l("My favourites"),
+      # page_title: l("My favourites"),
       feed_title: l("My favourites"),
       feedback_title: l("You have no favourites yet"),
       # feed_id: feed_name,
