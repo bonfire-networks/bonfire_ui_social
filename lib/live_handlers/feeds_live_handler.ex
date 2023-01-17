@@ -332,13 +332,22 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
      )}
   end
 
-  defp feed_page_title(%{"object_type" => "discussions" = filter}),
-    do: [tab_path_suffix: "/#{filter}", page_title: l("Discussions")]
+  defp feed_filter_assigns(%{"object_type" => "discussions" = filter}),
+    do: [
+      tab_path_suffix: "/#{filter}",
+      page_title: l("Discussions"),
+      page_header_icon: "ri:chat-1-line"
+    ]
 
-  defp feed_page_title(%{"object_type" => "posts" = filter}),
-    do: [tab_path_suffix: "/#{filter}", page_title: l("Posts")]
+  defp feed_filter_assigns(%{"object_type" => "posts" = filter}),
+    do: [
+      tab_path_suffix: "/#{filter}",
+      page_title: l("Posts"),
+      page_header_icon: "ri:file-text-line"
+    ]
 
-  defp feed_page_title(_), do: [tab_path_suffix: nil, page_title: l("Feeds")]
+  defp feed_filter_assigns(_),
+    do: [tab_path_suffix: nil, page_title: l("Activities"), page_header_icon: "ri:home-line"]
 
   @decorate time()
   def feed_assigns_maybe_async({feed_name, filters_or_custom_query_or_feed_id_or_ids}, socket) do
@@ -347,7 +356,7 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
 
     assigns =
       (feed_default_assigns(feed_name, socket) ++
-         feed_page_title(filters_or_custom_query_or_feed_id_or_ids))
+         feed_filter_assigns(filters_or_custom_query_or_feed_id_or_ids))
       |> debug("start by setting feed_default_assigns")
 
     feed_assigns_maybe_async_load(
@@ -387,7 +396,7 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
       selected_tab: nil,
       page: "feed",
       # page_title: l("My feed"),
-      feed_title: l("My feed"),
+      # feed_title: l("My feed"),
       # feed_id: feed_name,
       # feed_ids: feed_ids,
       feed: :loading,
@@ -450,7 +459,7 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
       # FIXME: clean up page vs tab
       page: "local",
       # page_title: l("My favourites"),
-      feed_title: l("My favourites"),
+      # feed_title: l("My favourites"),
       feedback_title: l("You have no favourites yet"),
       # feed_id: feed_name,
       # feedback_message: l("It seems like the paint is still fresh on this instance..."),

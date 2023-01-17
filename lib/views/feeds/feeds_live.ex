@@ -19,7 +19,7 @@ defmodule Bonfire.UI.Social.FeedsLive do
 
   # declare_nav_link(l("My feed"), page: "feed", icon: "heroicons-solid:newspaper")
   declare_nav_link([
-    {l("Feeds"), page: "feed", icon: "ri:home-line"},
+    {l("Activities"), page: "feed", icon: "ri:home-line"},
     {l("Posts"), page: "posts", href: &nav_link_posts/1, icon: "ri:file-text-line"},
     {l("Discussions"), page: "discussions", href: &nav_link_discussions/1, icon: "ri:chat-1-line"}
   ])
@@ -49,7 +49,7 @@ defmodule Bonfire.UI.Social.FeedsLive do
      |> assign(
        selected_tab: nil,
        page: "feed",
-       page_title: l("My feed"),
+       page_title: l("Activities"),
        page_header_icon: "ri:home-line",
        feed: nil,
        page_info: nil,
