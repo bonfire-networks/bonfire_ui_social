@@ -17,7 +17,11 @@
       tab_primary_class={@tab_primary_class}
       link_component={@tab_link_component}
       tabs={if not is_nil(@current_user),
-        do: [nil: l("My feed"), local: l("Local"), fediverse: l("Remote"), likes: l("Liked")],
+        do:
+          if(@__context__[:current_params]["object_type"] in ["discussions", "posts"],
+            do: [nil: l("My feed"), local: l("Local"), fediverse: l("Remote")],
+            else: [nil: l("My feed"), local: l("Local"), fediverse: l("Remote"), likes: l("Liked")]
+          ),
         else: [local: l("Local"), fediverse: l("Remote")]}
       event_handler={@event_handler}
       event_target={@myself}

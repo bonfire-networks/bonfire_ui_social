@@ -20,7 +20,8 @@ defmodule Bonfire.UI.Social.ActivityLive do
   prop(participants, :list, default: [])
   prop(object_boundary, :any, default: nil)
   prop(check_object_boundary, :boolean, default: false)
-  # TODO: put in config and/or autogenerate with Verbs genserver
+
+  # TODO: put verbs in config and/or autogenerate with Verbs genserver
   @reply_verbs ["Reply", "Respond"]
   @create_verbs ["Create", "Write"]
   @react_verbs ["Like", "Boost", "Flag", "Tag"]
@@ -145,8 +146,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
         c when is_atom(c) -> {c, nil}
         other -> other
       end)
-
-    # |> debug("components")
+      |> debug("components")
 
     Map.put(assigns, :activity_components, components)
     # |> debug("assigns")
@@ -166,9 +166,11 @@ defmodule Bonfire.UI.Social.ActivityLive do
     )
   end
 
-  def prepare(assigns), do: assigns
+  def prepare(assigns), do: Map.put(assigns, :activity_components, [])
 
   @decorate time()
+  def render(assigns)
+
   def render(%{activity: _, activity_components: _} = assigns) do
     ~F"""
     <article
@@ -249,16 +251,16 @@ defmodule Bonfire.UI.Social.ActivityLive do
     """
   end
 
-  def render(%{activity: _} = assigns) do
-    warn("ActivityLive: do preparation in render/1")
+  # def render(%{activity: _} = assigns) do
+  #   debug(assigns, "attempt preparation in render/1")
 
-    prepare(assigns)
-    |> Map.new()
-    |> render()
-  end
+  #   prepare(assigns)
+  #   |> render()
+  # end
 
   def render(assigns) do
-    warn("ActivityLive: No activity provided")
+    warn("No activity provided")
+    debug(assigns)
 
     ~F"""
     """
