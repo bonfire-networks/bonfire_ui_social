@@ -3,7 +3,7 @@
   class={
     "subject",
     "!mb-3": @viewing_main_object == true,
-    "flex items-center gap-2":
+    "flex items-center gap-1":
       @showing_within == :smart_input or
         (ulid(@object) != nil and e(@activity, :replied, :reply_to_id, nil) == nil and
            ulid(@activity) == nil and @showing_within != :search)
@@ -25,21 +25,41 @@
   {#if @showing_within == :smart_input or
       (ulid(@object) != nil and e(@activity, :replied, :reply_to_id, nil) == nil and
          ulid(@activity) == nil and @showing_within != :search)}
-    <Icon iconify="ic:round-reply" class="w-5 h-5 text-info" />
+    <Icon iconify="ic:round-reply" class="w-5 h-5 text-base-content/70" />
     <LiveRedirect
+      :if={@showing_within == :smart_input}
       opts={"data-id": "subject_name", "aria-label": l("%{name}'s profile", name: e(@profile, :name, ""))}
       class="flex flex-1 items-center gap-1.5 mr-1.5"
       to={path(@character)}
     >
       <Bonfire.UI.Common.AvatarLive
         user={@profile}
-        :if={@showing_within == :smart_input}
         title={e(@profile, :name, "Anonymous")}
         comment={@showing_within in [:thread, :messages] && !@viewing_main_object}
         class="w-6 h-6"
       />
-      <div class="!text-[13px] font-medium truncate link link-hover">{e(@profile, :name, "Anonymous")}</div>
     </LiveRedirect>
+
+      <div class="font-medium prose-sm prose truncate !text-[13px] !text-base-content/70 prose-a:text-base-content/70 prose-a:no-underline">
+        <LiveRedirect
+          opts={"data-id": "subject_name", "aria-label": l("%{name}'s profile", name: e(@profile, :name, ""))}
+          class="no-underline hover:underline !text-base-content/70"
+          to={path(@character)}
+        >{e(@profile, :name, "Anonymous")}  </LiveRedirect>:
+        {#if @cw == true or (is_nil(@cw) and not is_nil( e(post_content(@object), :name, nil)))}
+          {rich( e(post_content(@object), :name, nil))}
+        {#else}
+          {rich(
+            maybe_truncate(
+              e(post_content(@object), :html_body, l("This post has been deleted.")),
+              nil,
+              @viewing_main_object
+            )
+          )}
+          {/if}
+
+      </div>
+
   {#else}
     <div class="flex items-center">
       <div class={
@@ -62,7 +82,7 @@
       </div>
       <div class="flex items-start justify-between w-full min-w-0 space-x-1 leading-4">
         <div class={
-          "flex flex-col flex-1 gap-1 feed-clickable",
+          "flex flex-col flex-1 feed-clickable",
           "!flex-row !gap-2": @showing_within in [:thread, :messages] && !@viewing_main_object
         }>
           <div class={
@@ -75,7 +95,7 @@
               opts={"data-id": "subject_name"}
               aria-label={l("%{name}'s profile", name: e(@profile, :name, ""))}
               class={
-                "link link-hover",
+                "link link-hover text-[15px] font-semibold",
                 "text-base-content/90": @showing_within in [:thread, :messages] && !@viewing_main_object
               }
               to={path(@character)}

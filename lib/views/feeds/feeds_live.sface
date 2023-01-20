@@ -10,7 +10,7 @@
   selected_tab={@selected_tab}
   feed_title={@feed_title}
   tabs_class="flex gap-3 p-3 px-4 bg-base-100"
-  tab_class="feed_tab badge rounded h-7"
+  tab_class="btn btn-sm rounded normal-case bg-base-content/10 feed_tab border-none"
   page_info={@page_info}
   loading={@loading}
   tab_path_prefix="/feed/"

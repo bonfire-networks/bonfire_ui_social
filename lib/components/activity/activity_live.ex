@@ -186,7 +186,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
         # "!pl-12":
         #   e(assigns, :showing_within, :feed) == :thread and
         #     e(assigns, :viewing_main_object, false) == false,
-        "cursor-pointer":
+        "":
           e(assigns, :showing_within, :feed) in [:feed, :notifications, :likes, :search],
         # "activity_inception bg-base-content/10 !m-0 opacity-100 before:!left-2 before:top-1 before:bottom-1":
         #   e(assigns, :activity_inception, nil) != nil and e(assigns, :thread_mode, nil) == :flat,
@@ -240,6 +240,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
               viewing_main_object={e(component_assigns, :viewing_main_object, @viewing_main_object)}
               showing_within={@showing_within}
               thread_id={@thread_id}
+              cw={@cw}
             />
           {#match Bonfire.UI.Social.Activity.MediaLive}
             <Bonfire.UI.Social.Activity.MediaLive

@@ -4,7 +4,7 @@
   x-data="{show_replies: true}"
   class={
     "reply thread-level-" <> to_string(@thread_level) <> " flex relative  w-full mx-auto",
-    "py-4 border-b border-base-300": @thread_level == 1
+    "": @thread_level == 1
   }
 >
   <div class="relative flex-1 w-full">
@@ -98,7 +98,6 @@
     </div>
     <div x-show="show_replies relative">
       <div
-        :if={is_list(@child_replies) and length(@child_replies) > 0}
         x-cloak
         x-show="show_replies"
         class="group z-10 left-[18px] px-3 top-[44px] bottom-[14px] absolute"
