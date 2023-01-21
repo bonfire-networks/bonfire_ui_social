@@ -40,26 +40,25 @@
       />
     </LiveRedirect>
 
-      <div class="font-medium prose-sm prose truncate !text-[13px] !text-base-content/70 prose-a:text-base-content/70 prose-a:no-underline">
-        <LiveRedirect
-          opts={"data-id": "subject_name", "aria-label": l("%{name}'s profile", name: e(@profile, :name, ""))}
-          class="no-underline hover:underline !text-base-content/70"
-          to={path(@character)}
-        >{e(@profile, :name, "Anonymous")}  </LiveRedirect>:
-        {#if @cw == true or (is_nil(@cw) and not is_nil( e(post_content(@object), :name, nil)))}
-          {rich( e(post_content(@object), :name, nil))}
-        {#else}
-          {rich(
-            maybe_truncate(
-              e(post_content(@object), :html_body, l("This post has been deleted.")),
-              nil,
-              @viewing_main_object
-            )
-          )}
-          {/if}
-
-      </div>
-
+    <div class="font-medium prose-sm prose truncate !text-[13px] !text-base-content/70 prose-a:text-base-content/70 prose-a:no-underline">
+      <LiveRedirect
+        opts={"data-id": "subject_name", "aria-label": l("%{name}'s profile", name: e(@profile, :name, ""))}
+        class="no-underline hover:underline !text-base-content/70"
+        to={path(@character)}
+      >{e(@profile, :name, "Anonymous")}
+      </LiveRedirect>:
+      {#if @cw == true or (is_nil(@cw) and not is_nil(e(post_content(@object), :name, nil)))}
+        {rich(e(post_content(@object), :name, nil))}
+      {#else}
+        {rich(
+          maybe_truncate(
+            e(post_content(@object), :html_body, l("This post has been deleted.")),
+            nil,
+            @viewing_main_object
+          )
+        )}
+      {/if}
+    </div>
   {#else}
     <div class="flex items-center">
       <div class={

@@ -15,7 +15,7 @@ defmodule Bonfire.UI.Social.Activity.SubjectLive do
   prop thread_id, :string, default: nil
   prop cw, :boolean, default: nil
 
-    def preloads(),
+  def preloads(),
     do: [
       :post_content
     ]

@@ -186,8 +186,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
         # "!pl-12":
         #   e(assigns, :showing_within, :feed) == :thread and
         #     e(assigns, :viewing_main_object, false) == false,
-        "":
-          e(assigns, :showing_within, :feed) in [:feed, :notifications, :likes, :search],
+        "": e(assigns, :showing_within, :feed) in [:feed, :notifications, :likes, :search],
         # "activity_inception bg-base-content/10 !m-0 opacity-100 before:!left-2 before:top-1 before:bottom-1":
         #   e(assigns, :activity_inception, nil) != nil and e(assigns, :thread_mode, nil) == :flat,
         # showing a quoted reply_to
