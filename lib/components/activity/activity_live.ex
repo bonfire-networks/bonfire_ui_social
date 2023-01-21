@@ -20,6 +20,8 @@ defmodule Bonfire.UI.Social.ActivityLive do
   prop(participants, :list, default: [])
   prop(object_boundary, :any, default: nil)
   prop(check_object_boundary, :boolean, default: false)
+  prop(hide_activities, :any, default: nil)
+  prop(i, :integer, default: nil)
 
   # TODO: put verbs in config and/or autogenerate with Verbs genserver
   @reply_verbs ["Reply", "Respond"]
@@ -37,12 +39,16 @@ defmodule Bonfire.UI.Social.ActivityLive do
     )
   end
 
+  defp debug_i(i, activity_inception), do: i || "inception-from-#{activity_inception}"
+
   def update(
         %{object_boundary: object_boundary} = assigns,
         %{assigns: %{activity_components: activity_components}} = socket
       )
       when not is_nil(object_boundary) do
-    debug("Activity prepared already, just assign object_boundary")
+    debug(
+      "Activity ##{debug_i(assigns[:i] || socket.assigns[:i], assigns[:activity_inception] || socket.assigns[:activity_inception])} prepared already, just assign object_boundary"
+    )
 
     {:ok,
      socket
@@ -50,7 +56,10 @@ defmodule Bonfire.UI.Social.ActivityLive do
   end
 
   def update(assigns, %{assigns: %{activity_components: activity_components}} = socket) do
-    debug("Activity prepared already")
+    debug(
+      "Activity ##{debug_i(assigns[:i] || socket.assigns[:i], assigns[:activity_inception] || socket.assigns[:activity_inception])} prepared already"
+    )
+
     # debug(activity_components)
     # |> assign(assigns)} # FYI: assigning blindly here causes problems
     {:ok, socket}
@@ -66,7 +75,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
   def prepare(assigns)
 
   def prepare(%{activity: %{} = activity} = assigns) do
-    debug("Activity preparation started")
+    debug("Activity ##{debug_i(assigns[:i], assigns[:activity_inception])} preparation started")
     # debug(assigns, "ActivityLive initial assigns")
 
     activity =
@@ -143,7 +152,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
          component_actions(verb, activity, assigns))
       |> Utils.filter_empty([])
       |> Enum.map(fn
-        c when is_atom(c) -> {c, nil}
+        c when is_atom(c) and not is_nil(c) -> {c, nil}
         other -> other
       end)
       |> debug("components")
@@ -168,10 +177,35 @@ defmodule Bonfire.UI.Social.ActivityLive do
 
   def prepare(assigns), do: Map.put(assigns, :activity_components, [])
 
-  @decorate time()
-  def render(assigns)
-
   def render(%{activity: _, activity_components: _} = assigns) do
+    do_render(assigns)
+  end
+
+  def render(%{activity: _} = assigns) do
+    debug(
+      assigns,
+      "Activity ##{debug_i(assigns[:i], assigns[:activity_inception])} attempt preparation in render/1"
+    )
+
+    # needed to activity inception (eg. show reply_to)
+
+    prepare(assigns)
+    |> debug(
+      "Activity ##{debug_i(assigns[:i], assigns[:activity_inception])} done with preparation in render"
+    )
+    |> do_render()
+  end
+
+  def render(assigns) do
+    warn("No activity provided")
+    debug(assigns)
+
+    ~F"""
+    """
+  end
+
+  @decorate time()
+  defp do_render(%{activity: _, activity_components: _} = assigns) do
     ~F"""
     <article
       x-data="{content_open: false}"
@@ -217,109 +251,106 @@ defmodule Bonfire.UI.Social.ActivityLive do
         <input type="hidden" name="activity_id" value={ulid(@activity)}>
       </form>
 
-      {#for {component, component_assigns} when is_atom(component) <- @activity_components || []}
-        {#case component}
-          {#match _
-            when component in [
-                   Bonfire.UI.Social.Activity.SubjectLive,
-                   Bonfire.UI.Social.Activity.SubjectMinimalLive
-                 ]}
-            <Dynamic.Component
-              module={component}
-              profile={e(component_assigns, :profile, nil)}
-              character={e(component_assigns, :character, nil)}
-              verb={e(component_assigns, :verb, @verb)}
-              verb_display={e(component_assigns, :verb_display, @verb_display)}
-              activity={e(component_assigns, :activity, @activity)}
-              object={e(component_assigns, :object, @object)}
-              object_boundary={@object_boundary}
-              object_type={e(component_assigns, :object_type, @object_type)}
-              date_ago={e(component_assigns, :date_ago, @date_ago)}
-              permalink={e(component_assigns, :permalink, @permalink)}
-              viewing_main_object={e(component_assigns, :viewing_main_object, @viewing_main_object)}
-              showing_within={@showing_within}
-              thread_id={@thread_id}
-              cw={@cw}
-            />
-          {#match Bonfire.UI.Social.Activity.MediaLive}
-            <Bonfire.UI.Social.Activity.MediaLive
-              showing_within={@showing_within}
-              viewing_main_object={e(component_assigns, :viewing_main_object, @viewing_main_object)}
-              media={e(component_assigns, :media, nil)}
-            />
-          {#match _ when component in [Bonfire.UI.Social.Activity.ActionsLive, Bonfire.UI.Social.FlaggedActionsLive]}
-            <Dynamic.Component
-              module={component}
-              showing_within={@showing_within}
-              thread_mode={@thread_mode}
-              activity={e(component_assigns, :activity, @activity)}
-              object={e(component_assigns, :object, @object)}
-              object_boundary={@object_boundary}
-              object_type={e(component_assigns, :object_type, @object_type)}
-              object_type_readable={e(component_assigns, :object_type_readable, @object_type_readable)}
-              date_ago={e(component_assigns, :date_ago, @date_ago)}
-              verb={e(component_assigns, :verb, @verb)}
-              permalink={e(component_assigns, :permalink, @permalink)}
-              activity_inception={e(component_assigns, :activity_inception, @activity_inception)}
-              viewing_main_object={e(component_assigns, :viewing_main_object, @viewing_main_object)}
-            />
-          {#match Bonfire.UI.Social.Activity.NoteLive}
-            <Bonfire.UI.Social.Activity.NoteLive
-              showing_within={@showing_within}
-              activity={e(component_assigns, :activity, @activity)}
-              object={e(component_assigns, :object, @object)}
-              activity_inception={e(component_assigns, :activity_inception, @activity_inception)}
-              viewing_main_object={e(component_assigns, :viewing_main_object, @viewing_main_object)}
-              cw={@cw}
-            />
-          {#match _}
-            <Dynamic.Component
-              module={component}
-              id={e(component_assigns, :id, nil)}
-              myself={nil}
-              created_verb_display={@created_verb_display}
-              showing_within={@showing_within}
-              thread_mode={@thread_mode}
-              participants={@participants || []}
-              activity={e(component_assigns, :activity, @activity)}
-              object={e(component_assigns, :object, @object)}
-              object_id={e(component_assigns, :object_id, @object_id)}
-              object_boundary={@object_boundary}
-              object_type={e(component_assigns, :object_type, @object_type)}
-              object_type_readable={e(component_assigns, :object_type_readable, @object_type_readable)}
-              date_ago={e(component_assigns, :date_ago, @date_ago)}
-              verb={e(component_assigns, :verb, @verb)}
-              verb_display={e(component_assigns, :verb_display, @verb_display)}
-              permalink={e(component_assigns, :permalink, @permalink)}
-              thread_url={@thread_url}
-              thread_id={@thread_id}
-              activity_inception={e(component_assigns, :activity_inception, @activity_inception)}
-              viewing_main_object={e(component_assigns, :viewing_main_object, @viewing_main_object)}
-              hide_reply={e(component_assigns, :hide_reply, @hide_reply)}
-              profile={e(component_assigns, :profile, nil)}
-              character={e(component_assigns, :character, nil)}
-              media={e(component_assigns, :media, nil)}
-            />
-        {/case}
-      {/for}
+      {#if @hide_activities != "all"}
+        {#for {component, component_assigns} when is_atom(component) <- @activity_components || []}
+          {#case component}
+            {#match _
+              when component in [
+                     Bonfire.UI.Social.Activity.SubjectLive,
+                     Bonfire.UI.Social.Activity.SubjectMinimalLive
+                   ]}
+              <Dynamic.Component
+                :if={@hide_activities != "subject"}
+                module={component}
+                profile={e(component_assigns, :profile, nil)}
+                character={e(component_assigns, :character, nil)}
+                verb={e(component_assigns, :verb, @verb)}
+                verb_display={e(component_assigns, :verb_display, @verb_display)}
+                activity={e(component_assigns, :activity, @activity)}
+                object={e(component_assigns, :object, @object)}
+                object_boundary={@object_boundary}
+                object_type={e(component_assigns, :object_type, @object_type)}
+                date_ago={e(component_assigns, :date_ago, @date_ago)}
+                permalink={e(component_assigns, :permalink, @permalink)}
+                viewing_main_object={e(component_assigns, :viewing_main_object, @viewing_main_object)}
+                showing_within={@showing_within}
+                thread_id={@thread_id}
+                cw={@cw}
+              />
+            {#match Bonfire.UI.Social.Activity.MediaLive}
+              <Bonfire.UI.Social.Activity.MediaLive
+                :if={@hide_activities != "media"}
+                showing_within={@showing_within}
+                viewing_main_object={e(component_assigns, :viewing_main_object, @viewing_main_object)}
+                media={e(component_assigns, :media, nil)}
+              />
+            {#match _ when component in [Bonfire.UI.Social.Activity.ActionsLive, Bonfire.UI.Social.FlaggedActionsLive]}
+              <Dynamic.Component
+                :if={@hide_activities != "actions"}
+                module={component}
+                showing_within={@showing_within}
+                thread_mode={@thread_mode}
+                activity={e(component_assigns, :activity, @activity)}
+                object={e(component_assigns, :object, @object)}
+                object_boundary={@object_boundary}
+                object_type={e(component_assigns, :object_type, @object_type)}
+                object_type_readable={e(component_assigns, :object_type_readable, @object_type_readable)}
+                date_ago={e(component_assigns, :date_ago, @date_ago)}
+                verb={e(component_assigns, :verb, @verb)}
+                permalink={e(component_assigns, :permalink, @permalink)}
+                activity_inception={e(component_assigns, :activity_inception, @activity_inception)}
+                viewing_main_object={e(component_assigns, :viewing_main_object, @viewing_main_object)}
+              />
+            {#match Bonfire.UI.Social.Activity.NoteLive}
+              <Bonfire.UI.Social.Activity.NoteLive
+                :if={@hide_activities != "note" and !show_minimal_reply?(@object, @activity, @showing_within)}
+                showing_within={@showing_within}
+                activity={e(component_assigns, :activity, @activity)}
+                object={e(component_assigns, :object, @object)}
+                activity_inception={e(component_assigns, :activity_inception, @activity_inception)}
+                viewing_main_object={e(component_assigns, :viewing_main_object, @viewing_main_object)}
+                cw={@cw}
+              />
+            {#match _}
+              <Dynamic.Component
+                :if={@hide_activities != "dynamic"}
+                module={component}
+                id={e(component_assigns, :id, nil)}
+                myself={nil}
+                created_verb_display={@created_verb_display}
+                showing_within={@showing_within}
+                thread_mode={@thread_mode}
+                participants={@participants || []}
+                activity={e(component_assigns, :activity, @activity)}
+                object={e(component_assigns, :object, @object)}
+                object_id={e(component_assigns, :object_id, @object_id)}
+                object_boundary={@object_boundary}
+                object_type={e(component_assigns, :object_type, @object_type)}
+                object_type_readable={e(component_assigns, :object_type_readable, @object_type_readable)}
+                date_ago={e(component_assigns, :date_ago, @date_ago)}
+                verb={e(component_assigns, :verb, @verb)}
+                verb_display={e(component_assigns, :verb_display, @verb_display)}
+                permalink={e(component_assigns, :permalink, @permalink)}
+                thread_url={@thread_url}
+                thread_id={@thread_id}
+                activity_inception={e(component_assigns, :activity_inception, @activity_inception)}
+                viewing_main_object={e(component_assigns, :viewing_main_object, @viewing_main_object)}
+                hide_reply={e(component_assigns, :hide_reply, @hide_reply)}
+                profile={e(component_assigns, :profile, nil)}
+                character={e(component_assigns, :character, nil)}
+                media={e(component_assigns, :media, nil)}
+              />
+          {/case}
+        {/for}
+      {/if}
     </article>
     """
   end
 
-  def render(%{activity: _} = assigns) do
-    debug(assigns, "attempt preparation in render/1")
-    # needed to activity inception (eg. show reply_to)
-
-    prepare(assigns)
-    |> render()
-  end
-
-  def render(assigns) do
-    warn("No activity provided")
-    debug(assigns)
-
-    ~F"""
-    """
+  def show_minimal_reply?(object, activity, showing_within) do
+    (e(object, :post_content, nil) != nil and showing_within == :smart_input) or
+      (id(object) != nil and e(activity, :replied, :reply_to_id, nil) == nil and
+         id(activity) == nil and showing_within != :search)
   end
 
   @decorate time()
@@ -512,13 +543,15 @@ defmodule Bonfire.UI.Social.ActivityLive do
   def component_maybe_in_reply_to(verb, activity, assigns)
 
   def component_maybe_in_reply_to(verb, activity, %{
+        activity_inception: activity_inception,
         showing_within: showing_within,
-        viewing_main_object: false,
+        viewing_main_object: viewing_main_object,
         thread_mode: thread_mode
       })
       # do not show reply_to
-      when showing_within in [:thread, :smart_input] and
-             thread_mode not in [:flat],
+      when not is_nil(activity_inception) or
+             (viewing_main_object != true and showing_within in [:thread, :smart_input] and
+                thread_mode not in [:flat]),
       do: []
 
   def component_maybe_in_reply_to(
@@ -536,25 +569,27 @@ defmodule Bonfire.UI.Social.ActivityLive do
               }
             } = reply_to
         },
-        _
+        assigns
       )
-      # reply with post_content
-      when verb in @reply_verbs,
-      do: [
-        {Bonfire.UI.Social.ActivityLive,
-         %{
-           id: "ra:" <> id,
-           activity_inception: activity_id,
-           viewing_main_object: false,
-           object: reply_to,
-           activity: %{
-             subject: %{
-               profile: subject_profile,
-               character: subject_character
-             }
+      when verb in @reply_verbs do
+    debug("we have a reply_to with post_content")
+
+    [
+      {Bonfire.UI.Social.ActivityLive,
+       %{
+         id: "ra:" <> id,
+         activity_inception: assigns[:i] || activity_id,
+         viewing_main_object: false,
+         object: reply_to,
+         activity: %{
+           subject: %{
+             profile: subject_profile,
+             character: subject_character
            }
-         }}
-      ]
+         }
+       }}
+    ]
+  end
 
   def component_maybe_in_reply_to(
         verb,
@@ -569,25 +604,27 @@ defmodule Bonfire.UI.Social.ActivityLive do
               }
             } = replied
         },
-        _
+        assigns
       )
-      # other kind of reply, with creator
-      when verb in @reply_verbs and is_binary(reply_to_id),
-      do: [
-        {Bonfire.UI.Social.ActivityLive,
-         %{
-           id: "ra:" <> reply_to_id,
-           activity_inception: activity_id,
-           viewing_main_object: false,
-           object: Activities.load_object(replied),
-           activity: %{
-             subject: %{
-               profile: subject_profile,
-               character: subject_character
-             }
+      when verb in @reply_verbs and is_binary(reply_to_id) do
+    debug("we have another kind of reply, with creator")
+
+    [
+      {Bonfire.UI.Social.ActivityLive,
+       %{
+         id: "ra:" <> reply_to_id,
+         activity_inception: assigns[:i] || activity_id,
+         viewing_main_object: false,
+         object: Activities.load_object(replied),
+         activity: %{
+           subject: %{
+             profile: subject_profile,
+             character: subject_character
            }
-         }}
-      ]
+         }
+       }}
+    ]
+  end
 
   def component_maybe_in_reply_to(
         verb,
@@ -598,11 +635,11 @@ defmodule Bonfire.UI.Social.ActivityLive do
               id: reply_to_id
             } = replied
         },
-        _
+        assigns
       )
       # other kind of reply
       when verb in @reply_verbs and is_binary(reply_to_id) do
-    maybe_load_in_reply_to(replied, activity_id)
+    maybe_load_in_reply_to(replied, assigns[:i] || activity_id)
   end
 
   def component_maybe_in_reply_to(verb, %{replied: %{} = replied}, assigns),
@@ -614,7 +651,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
         assigns
       )
       when object_id != thread_id,
-      do: maybe_load_in_reply_to(thread, thread_id)
+      do: maybe_load_in_reply_to(thread, assigns[:i] || thread_id)
 
   def component_maybe_in_reply_to(_, a, _) do
     # debug(a, "ActivityLive: no reply_to")
@@ -628,7 +665,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
         } = replied,
         activity_inception
       ) do
-    # FIXME: avoid n+1 and preload at feed level
+    warn("FIXME: avoid n+1 and preload at feed level")
     reply_to_activity = load_reply_to(e(replied, reply_to_id))
 
     [
@@ -655,12 +692,15 @@ defmodule Bonfire.UI.Social.ActivityLive do
 
   def component_object(_, %{object: %{} = object}, object_type) do
     case object_type do
-      type when is_atom(type) ->
+      type when is_atom(type) and not is_nil(type) ->
         debug("ActivityLive: component object_type recognised: #{inspect(type)}")
         component_for_object_type(type, object)
 
       _ ->
-        warn("ActivityLive: component object_type NOT detected: #{inspect(object)}")
+        warn(
+          "ActivityLive: use UnknownLive because component object_type NOT detected: #{inspect(object)}"
+        )
+
         [Bonfire.UI.Social.Activity.UnknownLive]
     end
   end
@@ -829,7 +869,9 @@ defmodule Bonfire.UI.Social.ActivityLive do
 
   @decorate time()
   def load_reply_to(reply_to) do
-    reply_to = Activities.load_object(reply_to)
+    reply_to =
+      Activities.load_object(reply_to)
+      |> debug()
 
     %{
       object: reply_to,

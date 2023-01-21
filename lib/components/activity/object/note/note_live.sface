@@ -1,74 +1,69 @@
-{#if ulid(@object) != nil and @showing_within != :smart_input and
-    e(@activity, :replied, :reply_to_id, nil) == nil and ulid(@activity) == nil}
-  <!-- If it is a reply do not show anything because the preview will be added on the subject component -->
-{#else}
-  <div
-    class={
-      "note my-3 cursor-pointer",
-      "!mt-2": @showing_within == :widget,
-      "!my-0": @showing_within == :smart_input,
-      "!mt-0 ml-10 cursor-default": @showing_within == :thread && !@viewing_main_object
-    }
-    id={"note-#{@activity_inception}-#{ulid(@activity) || ulid(@object) || "no-id"}-#{e(assigns, :viewing_main_object, false)}"}
-  >
-    {#case e(post_content(@object), :name, nil)}
-      {#match name}
-        {#case @cw == true or (is_nil(@cw) and not is_nil(name))}
-          {#match cw?}
-            {#if cw?}
-              <button
-                x-on:click="content_open = true"
-                x-show="content_open == false"
-                style="display: none"
-                class="relative z-50 mb-2 text-sm font-medium text-left text-base-content link link-hover"
-              >
-                {rich(name || l("CW"))} ({l("Show more")})
-              </button>
-              <button
-                x-on:click="content_open = false"
-                x-show="content_open"
-                style="display: none"
-                class="relative z-50 mb-2 text-sm font-medium text-left text-base-content link link-hover"
-              >
-                {rich(name || l("CW"))} ({l("Show less")})
-              </button>
-            {#else}
-              <div :if={name} class="w-full h-auto max-w-full p-0 m-0 mt-6 text-2xl font-bold">
-                {rich(name)}
-              </div>
-            {/if}
-
-            <div x-show={if cw?, do: "content_open"} x-collapse={cw?}>
-              <p
-                :if={e(post_content(@object), :summary, nil)}
-                class="font-light prose max-w-prose prose-p:pt-1"
-              >
-                {rich(e(post_content(@object), :summary, nil))}
-              </p>
-
-              <div
-                data-id="object_body"
-                class={
-                  "prose break-words object_body max-w-none text-base md:prose-sm prose-p:pt-0 prose-p:my-0 prose-a:text-accent prose-a:no-underline prose-a:hover:underline",
-                  "!text-[13px] line-clamp-1 !text-base-content/80":
-                    ulid(@object) != nil and e(@activity, :replied, :reply_to_id, nil) == nil and
-                      ulid(@activity) == nil,
-                  "!my-0 !text-sm !font-normal line-clamp-1": @showing_within == :smart_input,
-                  "prose-sm prose-p:pt-0 prose-p:my-0 leading-[23px]": @showing_within == :thread,
-                  "!text-base prose-p:pb-4": @viewing_main_object,
-                  "prose-p:pt-1 !leading-6": @showing_within in [:feed, :search, :notifications]
-                }
-              >
-                {rich(
-                  maybe_truncate(
-                    e(post_content(@object), :html_body, l("This post has been deleted.")),
-                    @activity_inception,
-                    @viewing_main_object
-                  )
-                )}
-              </div>
+<div
+  class={
+    "note my-3 cursor-pointer",
+    "!mt-2": @showing_within == :widget,
+    "!my-0": @showing_within == :smart_input,
+    "!mt-0 ml-10 cursor-default": @showing_within == :thread && !@viewing_main_object
+  }
+  id={"note-#{@activity_inception}-#{ulid(@activity) || ulid(@object) || "no-id"}-#{e(assigns, :viewing_main_object, false)}"}
+>
+  {#case e(post_content(@object), :name, nil)}
+    {#match name}
+      {#case @cw == true or (is_nil(@cw) and not is_nil(name))}
+        {#match cw?}
+          {#if cw?}
+            <button
+              x-on:click="content_open = true"
+              x-show="content_open == false"
+              style="display: none"
+              class="relative z-50 mb-2 text-sm font-medium text-left text-base-content link link-hover"
+            >
+              {rich(name || l("CW"))} ({l("Show more")})
+            </button>
+            <button
+              x-on:click="content_open = false"
+              x-show="content_open"
+              style="display: none"
+              class="relative z-50 mb-2 text-sm font-medium text-left text-base-content link link-hover"
+            >
+              {rich(name || l("CW"))} ({l("Show less")})
+            </button>
+          {#else}
+            <div :if={name} class="w-full h-auto max-w-full p-0 m-0 mt-6 text-2xl font-bold">
+              {rich(name)}
             </div>
-        {/case}
-    {/case}
-  </div>
-{/if}
+          {/if}
+
+          <div x-show={if cw?, do: "content_open"} x-collapse={cw?}>
+            <p
+              :if={e(post_content(@object), :summary, nil)}
+              class="font-light prose max-w-prose prose-p:pt-1"
+            >
+              {rich(e(post_content(@object), :summary, nil))}
+            </p>
+
+            <div
+              data-id="object_body"
+              class={
+                "prose break-words object_body max-w-none text-base md:prose-sm prose-p:pt-0 prose-p:my-0 prose-a:text-accent prose-a:no-underline prose-a:hover:underline",
+                "!text-[13px] line-clamp-1 !text-base-content/80":
+                  ulid(@object) != nil and e(@activity, :replied, :reply_to_id, nil) == nil and
+                    ulid(@activity) == nil,
+                "!my-0 !text-sm !font-normal line-clamp-1": @showing_within == :smart_input,
+                "prose-sm prose-p:pt-0 prose-p:my-0 leading-[23px]": @showing_within == :thread,
+                "!text-base prose-p:pb-4": @viewing_main_object,
+                "prose-p:pt-1 !leading-6": @showing_within in [:feed, :search, :notifications]
+              }
+            >
+              {rich(
+                maybe_truncate(
+                  e(post_content(@object), :html_body, l("This post has been deleted.")),
+                  @activity_inception,
+                  @viewing_main_object
+                )
+              )}
+            </div>
+          </div>
+      {/case}
+  {/case}
+</div>

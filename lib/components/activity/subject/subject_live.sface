@@ -3,10 +3,7 @@
   class={
     "subject",
     "!mb-3": @viewing_main_object == true,
-    "flex items-center gap-1":
-      @showing_within == :smart_input or
-        (ulid(@object) != nil and e(@activity, :replied, :reply_to_id, nil) == nil and
-           ulid(@activity) == nil and @showing_within != :search)
+    "flex items-center gap-1": ActivityLive.show_minimal_reply?(@object, @activity, @showing_within)
   }
 >
   <div
@@ -22,9 +19,7 @@
       <Icon solid="X" class="w-3 h-3" />
     </span>
   </div>
-  {#if @showing_within == :smart_input or
-      (ulid(@object) != nil and e(@activity, :replied, :reply_to_id, nil) == nil and
-         ulid(@activity) == nil and @showing_within != :search)}
+  {#if ActivityLive.show_minimal_reply?(@object, @activity, @showing_within)}
     <Icon iconify="ic:round-reply" class="w-5 h-5 text-base-content/70" />
     <LiveRedirect
       :if={@showing_within == :smart_input}
@@ -53,7 +48,6 @@
         {rich(
           maybe_truncate(
             e(post_content(@object), :html_body, l("This post has been deleted.")),
-            nil,
             @viewing_main_object
           )
         )}
@@ -63,7 +57,7 @@
     <div class="flex items-center">
       <div class={
         "mr-3",
-        "": e(assigns, :viewing_main_object, nil) == true
+        "": @viewing_main_object == true
       }>
         <LiveRedirect
           opts={"data-id": "subject_name"}

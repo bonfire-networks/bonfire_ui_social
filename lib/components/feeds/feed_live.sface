@@ -35,18 +35,20 @@
         phx-update={e(@feed_update_mode, "append")}
         class="flex flex-col divide-y divide-base-300 bg-base-100"
       >
-        {#for entry <- @feed}
+        {#for {entry, i} <- Enum.with_index(@feed)}
           {#case "#{@feed_id || @id}-" <>
               (e(entry, :id, nil) || e(entry, :activity, :id, nil) || e(entry, :object, :id, nil) ||
                  Pointers.ULID.generate())}
             {#match cid}
-              <div id={cid} :if={@hide_activities? != true}>
+              <div id={cid} data-i={i} :if={@hide_activities != "component"}>
                 <ActivityLive
                   id={cid}
+                  i={i}
                   activity={get_activity(entry)}
                   showing_within={@showing_within}
                   verb_default={@verb_default}
                   feed_id={@feed_id}
+                  hide_activities={@hide_activities}
                 />
               </div>
             {#match _}

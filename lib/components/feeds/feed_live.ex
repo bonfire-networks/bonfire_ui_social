@@ -49,7 +49,7 @@ defmodule Bonfire.UI.Social.FeedLive do
      socket
      |> assign(
        feed: nil,
-       hide_activities?: false
+       hide_activities: nil
      ),
      temporary_assigns: [
        feed: []
@@ -161,8 +161,7 @@ defmodule Bonfire.UI.Social.FeedLive do
      socket
      |> assign(
        feed_component_id: socket.assigns.id,
-       hide_activities?:
-         not is_nil(socket.assigns[:__context__][:current_params]["hide_activities"])
+       hide_activities: socket.assigns[:__context__][:current_params]["hide_activities"]
      )}
   end
 

@@ -85,13 +85,13 @@ defmodule Bonfire.UI.Social.Benchmark do
         "fetch feed page with 10 activities" => fn -> get(conn, "/feed/local?limit=10") end,
         "fetch feed page with 20 activities" => fn -> get(conn, "/feed/local?limit=20") end,
         "fetch feed page with 1 (hidden) activity" => fn ->
-          get(conn, "/feed/local?limit=1&hide_activities=1")
+          get(conn, "/feed/local?limit=1&hide_activities=all")
         end,
         "fetch feed page with 10 (hidden) activities" => fn ->
-          get(conn, "/feed/local?limit=10&hide_activities=1")
+          get(conn, "/feed/local?limit=10&hide_activities=all")
         end,
         "fetch feed page with 20 (hidden) activities" => fn ->
-          get(conn, "/feed/local?limit=20&hide_activities=1")
+          get(conn, "/feed/local?limit=20&hide_activities=all")
         end
       },
       parallel: 1,

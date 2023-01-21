@@ -1,6 +1,7 @@
 defmodule Bonfire.UI.Social.Activity.SubjectLive do
   use Bonfire.UI.Common.Web, :stateless_component
   alias Bonfire.Common.Text
+  alias Bonfire.UI.Social.ActivityLive
 
   prop activity, :map, default: nil
   prop object, :any, default: nil
@@ -25,8 +26,8 @@ defmodule Bonfire.UI.Social.Activity.SubjectLive do
     # |> debug("activity_note_object")
   end
 
-  def maybe_truncate(input, activity_inception, viewing_main_object, length \\ 250) do
-    if viewing_main_object != true and activity_inception == true and is_binary(input) and
+  def maybe_truncate(input, viewing_main_object, length \\ 250) do
+    if viewing_main_object != true and is_binary(input) and
          input != "",
        do: Text.sentence_truncate(input, length, "..."),
        else: input
