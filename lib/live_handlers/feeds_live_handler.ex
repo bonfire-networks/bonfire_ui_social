@@ -733,8 +733,18 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
   defp preloads(feed, socket), do: feed
 
   def preload_objects(feed, under, opts) do
-    object_preloads()
-    |> Bonfire.Common.Repo.Preload.maybe_preloads_per_nested_schema(feed, under, ..., opts)
+    if Bonfire.Common.Config.get([:ui, :disable_feed_object_preloads]) != true do
+      feed
+      |> Bonfire.Social.Activities.activity_preloads(opts[:preload], opts)
+      |> Bonfire.Common.Repo.Preload.maybe_preloads_per_nested_schema(
+        under,
+        object_preloads(),
+        opts
+      )
+    else
+      feed
+      |> Bonfire.Social.Activities.activity_preloads(opts[:preload], opts)
+    end
   end
 
   def object_preloads do

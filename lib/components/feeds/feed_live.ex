@@ -64,6 +64,16 @@ defmodule Bonfire.UI.Social.FeedLive do
   defp get_activity(%{edge: %{} = activity}), do: activity
   defp get_activity(activity), do: activity
 
+  def tabs(current_user, object_type) do
+    if not is_nil(current_user) do
+      if object_type in ["discussions", "posts"],
+        do: [nil: l("My feed"), local: l("Local"), fediverse: l("Remote")],
+        else: [nil: l("My feed"), local: l("Local"), fediverse: l("Remote"), likes: l("Liked")]
+    else
+      [local: l("Local"), fediverse: l("Remote")]
+    end
+  end
+
   # adding new feed item
   def update(%{new_activity: new_activity} = _assigns, socket) when is_map(new_activity) do
     debug(

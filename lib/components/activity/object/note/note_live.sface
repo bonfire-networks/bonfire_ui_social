@@ -50,9 +50,9 @@
                   ulid(@object) != nil and e(@activity, :replied, :reply_to_id, nil) == nil and
                     ulid(@activity) == nil,
                 "!my-0 !text-sm !font-normal line-clamp-1": @showing_within == :smart_input,
-                "prose-sm prose-p:pt-0 prose-p:my-0 leading-[23px]": @showing_within == :thread,
+                "prose-sm prose-p:pb-2 leading-[23px]": @showing_within == :thread and !@viewing_main_object,
                 "!text-base prose-p:pb-4": @viewing_main_object,
-                "prose-p:pt-1 !leading-6": @showing_within in [:feed, :search, :notifications]
+                "prose-p:pb-2 !leading-6": @showing_within in [:feed, :search, :notifications]
               }
             >
               {rich(
