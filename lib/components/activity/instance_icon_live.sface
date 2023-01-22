@@ -1,4 +1,4 @@
-{#case permalink(@object)}
+{#case permalink(@peered || @object)}
   {#match link when is_binary(link)}
     <a
       href={link}

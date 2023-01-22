@@ -677,23 +677,19 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
   end
 
   @decorate time()
-  def preloads(feed, socket_or_opts \\ []) do
-    # Bonfire.Common.Benchmark.apply_timed(&do_preloads/2, [feed, socket_or_opts])
-    do_preloads(feed, socket_or_opts)
-  end
+  defp preloads(feed, socket_or_opts \\ [])
 
-  defp do_preloads(feed, socket_or_opts \\ [])
-
-  defp do_preloads(feed, socket_or_opts) when is_list(feed) and length(feed) > 0 do
-    debug("FeedLive: preload objects")
-
+  defp preloads(feed, socket_or_opts) when is_list(feed) and length(feed) > 0 do
     opts = e(socket_or_opts, :assigns, []) || socket_or_opts
 
+    preloads = e(opts, :preload, :feed)
+    debug(preloads, "FeedLive: run through preloads")
+
     opts = [
-      preload: e(opts, :preload, :feed),
+      preload: preloads,
       with_cache: e(opts, :with_cache, false),
       current_user: current_user(opts),
-      # because it should already be check it the initial query
+      # skip boundary because it should already be check it the initial query
       skip_boundary_check: true
     ]
 
@@ -701,7 +697,7 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
       %{edge: %{id: _}} ->
         feed
         # |> debug("feed of Edge objects before extra preloads")
-        |> Bonfire.Social.Activities.activity_preloads(e(opts, :preload, :feed), opts)
+        |> Bonfire.Social.Activities.activity_preloads(preloads, opts)
         # |> Bonfire.Common.Pointers.Preload.maybe_preload_nested_pointers([edge: [:object]])
         |> preload_objects([:edge, :object], opts)
 
@@ -710,7 +706,7 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
       %{activity: %{id: _}} ->
         feed
         # |> debug("feed of FeedPublish or objects before extra preloads")
-        |> Bonfire.Social.Activities.activity_preloads(e(opts, :preload, :feed), opts)
+        |> Bonfire.Social.Activities.activity_preloads(preloads, opts)
         # |> Bonfire.Common.Pointers.Preload.maybe_preload_nested_pointers([activity: [:object]])
         |> preload_objects([:activity, :object], opts)
 
@@ -719,7 +715,7 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
       %{object: _} ->
         feed
         # |> debug("feed of activities before extra preloads")
-        |> Bonfire.Social.Activities.activity_preloads(e(opts, :preload, :feed), opts)
+        |> Bonfire.Social.Activities.activity_preloads(preloads, opts)
         # |> Bonfire.Common.Pointers.Preload.maybe_preload_nested_pointers([:object])
         |> preload_objects([:object], opts)
 
@@ -731,10 +727,10 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
     end
   end
 
-  defp do_preloads(%{edges: feed} = page, socket),
-    do: Map.put(page, :edges, do_preloads(feed, socket))
+  defp preloads(%{edges: feed} = page, socket),
+    do: Map.put(page, :edges, preloads(feed, socket))
 
-  defp do_preloads(feed, socket), do: feed
+  defp preloads(feed, socket), do: feed
 
   def preload_objects(feed, under, opts) do
     object_preloads()

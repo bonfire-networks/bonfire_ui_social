@@ -1,10 +1,15 @@
 defmodule Bonfire.UI.Social.Activity.InstanceIconLive do
   use Bonfire.UI.Common.Web, :stateless_component
 
-  prop object, :any, required: true
+  prop object, :any, default: nil
+  prop peered, :any, default: :not_loaded
   # prop verb_display, :string
 
   def permalink(%{peered: %{canonical_uri: permalink}}) when is_binary(permalink) do
+    permalink
+  end
+
+  def permalink(%{canonical_uri: permalink}) when is_binary(permalink) do
     permalink
   end
 
@@ -16,8 +21,13 @@ defmodule Bonfire.UI.Social.Activity.InstanceIconLive do
     |> e(:peered, :canonical_uri, nil)
   end
 
-  def permalink(object) do
-    warn(object, "object does not have a :peered assoc")
+  def permalink(object) when is_map(object) or is_binary(object) do
+    warn(object, "FIXME: object does not have a :peered assoc, query it instead")
     Bonfire.Federate.ActivityPub.Peered.get_canonical_uri(object)
+  end
+
+  def permalink(_) do
+    debug("seems to be a local object")
+    nil
   end
 end

@@ -208,7 +208,7 @@
                     @{e(@activity, :subject, :character, :username, "")}
                   </LiveRedirect>
                   <span class="text-base-content/50">·</span>
-                  <Bonfire.UI.Social.Activity.InstanceIconLive object={@object} />
+                  <Bonfire.UI.Social.Activity.InstanceIconLive peered={e(@activity, :peered, nil)} />
 
                   <Dynamic.Component
                     :if={module_enabled?(Bonfire.Boundaries.Web.ActivityVisibilityIconLive) and

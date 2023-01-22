@@ -572,7 +572,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
         assigns
       )
       when verb in @reply_verbs do
-    debug("we have a reply_to with post_content")
+    debug("we have a reply_to, preloaded with post_content")
 
     [
       {Bonfire.UI.Social.ActivityLive,
@@ -607,7 +607,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
         assigns
       )
       when verb in @reply_verbs and is_binary(reply_to_id) do
-    debug("we have another kind of reply, with creator")
+    debug("we have another kind of reply_to, preloaded with creator")
 
     [
       {Bonfire.UI.Social.ActivityLive,
@@ -615,7 +615,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
          id: "ra:" <> reply_to_id,
          activity_inception: assigns[:i] || activity_id,
          viewing_main_object: false,
-         object: Activities.load_object(replied),
+         object: Activities.load_object(replied, skip_boundary_check: true),
          activity: %{
            subject: %{
              profile: subject_profile,
@@ -626,60 +626,75 @@ defmodule Bonfire.UI.Social.ActivityLive do
     ]
   end
 
-  def component_maybe_in_reply_to(
-        verb,
-        %{
-          id: activity_id,
-          reply_to:
-            %{
-              id: reply_to_id
-            } = replied
-        },
-        assigns
-      )
-      # other kind of reply
-      when verb in @reply_verbs and is_binary(reply_to_id) do
-    maybe_load_in_reply_to(replied, assigns[:i] || activity_id)
-  end
+  # def component_maybe_in_reply_to(
+  #       verb,
+  #       %{
+  #         id: activity_id,
+  #         reply_to:
+  #           %{
+  #             id: reply_to_id
+  #           } = replied
+  #       },
+  #       assigns
+  #     )
+  #     # other kind of reply
+  #     when verb in @reply_verbs and is_binary(reply_to_id) do
+  #   maybe_load_in_reply_to(replied, assigns[:i] || activity_id, current_user: current_user(assigns))
+  # end
 
   def component_maybe_in_reply_to(verb, %{replied: %{} = replied}, assigns),
     do: component_maybe_in_reply_to(verb, replied, assigns)
 
-  def component_maybe_in_reply_to(
-        verb,
-        %{id: object_id, thread: %{id: thread_id} = thread},
-        assigns
-      )
-      when object_id != thread_id,
-      do: maybe_load_in_reply_to(thread, assigns[:i] || thread_id)
+  # def component_maybe_in_reply_to(
+  #       verb,
+  #       %{id: object_id, thread: %{id: thread_id} = thread},
+  #       assigns
+  #     )
+  #     when object_id != thread_id,
+  #     do: maybe_load_in_reply_to(thread, assigns[:i] || thread_id, current_user: current_user(assigns))
 
   def component_maybe_in_reply_to(_, a, _) do
     # debug(a, "ActivityLive: no reply_to")
     []
   end
 
-  @decorate time()
-  def maybe_load_in_reply_to(
-        %{
-          id: reply_to_id
-        } = replied,
-        activity_inception
-      ) do
-    warn("FIXME: avoid n+1 and preload at feed level")
-    reply_to_activity = load_reply_to(e(replied, reply_to_id))
+  # @decorate time()
+  # def maybe_load_in_reply_to(
+  #       %{
+  #         id: reply_to_id
+  #       } = replied,
+  #       activity_inception,
+  #       opts
+  #     ) do
+  #   warn("FIXME: avoid n+1 and preload at feed level")
+  #   reply_to_activity = load_reply_to(replied, opts)
 
-    [
-      {Bonfire.UI.Social.ActivityLive,
-       %{
-         id: "ra:" <> reply_to_id,
-         activity_inception: activity_inception,
-         object: e(reply_to_activity, :object, nil),
-         # |> IO.inspect,
-         activity: reply_to_activity |> Map.delete(:object),
-         viewing_main_object: false
-       }}
-    ]
-  end
+  #   [
+  #     {Bonfire.UI.Social.ActivityLive,
+  #      %{
+  #        id: "ra:" <> reply_to_id,
+  #        activity_inception: activity_inception,
+  #        object: e(reply_to_activity, :object, nil),
+  #        # |> IO.inspect,
+  #        activity: reply_to_activity |> Map.delete(:object),
+  #        viewing_main_object: false
+  #      }}
+  #   ]
+  # end
+
+  # def load_reply_to(reply_to, opts) do
+  #   reply_to =
+  #     Activities.load_object(reply_to, opts)
+  #     # |> debug()
+
+  #   %{
+  #     object: reply_to,
+  #     subject: %{
+  #       profile: e(reply_to, :created, :creator_profile, nil),
+  #       character: e(reply_to, :created, :creator_character, nil)
+  #     }
+  #   }
+  # end
 
   @decorate time()
   def component_object(verb, activity, assigns)
@@ -865,21 +880,6 @@ defmodule Bonfire.UI.Social.ActivityLive do
       {Bonfire.UI.Social.Activity.EventActionsLive,
        %{object: e(activity, :object, :resource_inventoried_as, nil) || e(activity, :object, nil)}}
     ]
-  end
-
-  @decorate time()
-  def load_reply_to(reply_to) do
-    reply_to =
-      Activities.load_object(reply_to)
-      |> debug()
-
-    %{
-      object: reply_to,
-      subject: %{
-        profile: e(reply_to, :created, :creator_profile, nil),
-        character: e(reply_to, :created, :creator_character, nil)
-      }
-    }
   end
 
   # def reply_to_display(%Pointers.Pointer{} = reply_to) do

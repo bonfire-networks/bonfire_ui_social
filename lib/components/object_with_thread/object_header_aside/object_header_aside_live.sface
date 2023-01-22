@@ -8,7 +8,7 @@
       id={ComponentID.new(Bonfire.UI.Common.LikeActionLive, @activity)}
       object={@activity}
     />
-    <Bonfire.UI.Social.Activity.InstanceIconLive object={@activity} />
+    <Bonfire.UI.Social.Activity.InstanceIconLive peered={e(@activity, :peered, nil)} />
     <Bonfire.Boundaries.Web.BoundaryIconLive
       with_label
       id={ComponentID.new(Bonfire.Boundaries.Web.BoundaryIconLive, @activity)}
