@@ -114,7 +114,7 @@ defmodule Bonfire.UI.Social.MessagesLive do
       #     else: "@" <> e(user, :character, :username, "") <> " "
 
       to_circles = [
-        {e(user, :profile, :name, e(user, :character, :username, l("someone"))), ulid(user)}
+        {e(user, :profile, :name, nil) || e(user, :character, :username, l("someone")), id(user)}
       ]
 
       {:noreply,
