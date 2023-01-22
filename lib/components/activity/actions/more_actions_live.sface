@@ -1,5 +1,4 @@
 <div
-  :if={@current_user != nil}
   aria-haspopup="true"
   class={
     "dropdown feed_activity relative",
@@ -51,7 +50,7 @@
     </li> -->
 
     <!-- Flag the action -->
-    <li :if={ulid(@current_user) != subject_id(@activity, @object) and @verb != "Flag"}>
+    <li :if={id(@current_user) != subject_id(@activity, @object) and @verb != "Flag"}>
       <Bonfire.UI.Common.FlagActionLive
         object={@object}
         flagged={@flagged}
@@ -61,7 +60,7 @@
     </li>
 
     <!-- Flag the author -->
-    <li :if={ulid(@current_user) != subject_id(@activity, @object) and @verb != "Flag"}>
+    <li :if={id(@current_user) != subject_id(@activity, @object) and @verb != "Flag"}>
       <Bonfire.UI.Common.FlagActionLive
         object={@object}
         flagged={@flagged}

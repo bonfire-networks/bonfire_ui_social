@@ -288,6 +288,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
               <Dynamic.Component
                 :if={@hide_activities != "actions"}
                 module={component}
+                __context__={@__context__}
                 showing_within={@showing_within}
                 thread_mode={@thread_mode}
                 activity={e(component_assigns, :activity, @activity)}
