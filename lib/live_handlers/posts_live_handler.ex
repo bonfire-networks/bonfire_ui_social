@@ -93,7 +93,7 @@ defmodule Bonfire.Social.Posts.LiveHandler do
         socket
         |> assign_flash(
           :info,
-          "#{l("Posted!")} <a href='#{permalink}' class='mx-1 text-sm text-gray-500 capitalize link'>#{l("Show")}</a>"
+          "#{l("Posted!")} <a href='#{permalink}' class='mx-1 text-sm !text-info-content capitalize link'>#{l("Show")}</a>"
         )
         |> Bonfire.UI.Common.SmartInputLive.reset_input()
         # |> patch_to(current_url(socket), fallback: path(published)) # so the flash appears - TODO: causes a conflict between the activity coming in via pubsub

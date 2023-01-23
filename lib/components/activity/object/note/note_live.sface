@@ -12,22 +12,19 @@
       {#case @cw == true or (is_nil(@cw) and not is_nil(name))}
         {#match cw?}
           {#if cw?}
-            <button
-              x-on:click="content_open = true"
-              x-show="content_open == false"
-              style="display: none"
-              class="relative z-50 mb-2 text-sm font-medium text-left text-base-content link link-hover"
-            >
-              {rich(name || l("CW"))} ({l("Show more")})
-            </button>
-            <button
-              x-on:click="content_open = false"
-              x-show="content_open"
-              style="display: none"
-              class="relative z-50 mb-2 text-sm font-medium text-left text-base-content link link-hover"
-            >
-              {rich(name || l("CW"))} ({l("Show less")})
-            </button>
+            <div class="flex items-baseline gap-2 mb-2">
+              <div class="text-base font-semibold text-base-content">
+                {rich(name || l("CW"))} 
+              </div>
+              <button
+                x-on:click="content_open = ! content_open"
+                x-text={"content_open ? '#{l("Show less")}' : '#{l("Show more")}'"}
+                class="normal-case rounded btn btn-xs"
+              >
+                {l("Show more")}
+              </button>
+            </div>
+            
           {#else}
             <div :if={name} class="w-full h-auto max-w-full p-0 m-0 mt-6 text-2xl font-bold">
               {rich(name)}
