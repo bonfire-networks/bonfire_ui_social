@@ -1,6 +1,7 @@
 defmodule Bonfire.Social.Feeds.LiveHandler do
   use Bonfire.UI.Common.Web, :live_handler
   use Untangle
+  alias Bonfire.Data.Social.Activity
 
   def handle_params(
         %{"after" => _cursor_after} = attrs,
@@ -676,63 +677,109 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
     error(feed_id, "Unrecognised feed")
   end
 
-  @decorate time()
-  defp preloads(feed, socket_or_opts \\ [])
+  def preload(list_of_assigns, opts) do
+    list_of_assigns
+    |> Bonfire.Boundaries.LiveHandler.maybe_preload_and_check_boundaries(opts ++ [verbs: [:read]])
+    # |> preloads(opts) # NOTE: we preload most activity assocs after querying rather than here so as to not mix different ways they're loaded (eg. Edges vs FeedPublish)
+    |> preload_assigns_async(
+      &assigns_to_params/1,
+      &do_preload_extras/3,
+      opts ++ [preload_status_key: :preloaded_async_activities]
+    )
+  end
 
-  defp preloads(feed, socket_or_opts) when is_list(feed) and length(feed) > 0 do
-    opts = e(socket_or_opts, :assigns, []) || socket_or_opts
+  defp assigns_to_params(assigns) do
+    activity = e(assigns, :activity, nil)
+    object = e(assigns, :object, nil)
+
+    %{
+      component_id: assigns.id,
+      activity: activity,
+      object: object,
+      object_id: id(activity) || id(object)
+    }
+  end
+
+  @decorate time()
+  defp do_preload_extras(list_of_components, _list_of_ids, current_user) do
+    list_of_activities =
+      list_of_components
+      |> Enum.map(fn
+        %{activity: %{__struct__: _} = activity} ->
+          activity
+
+        %{object: %{__struct__: _} = object} ->
+          %Activity{object: object}
+
+        other ->
+          warn(other, "cannot preload")
+          nil
+      end)
+      |> filter_empty([])
+      |> Bonfire.Social.Activities.activity_preloads([:with_reply_to, :with_media],
+        current_user: current_user
+      )
+      |> Map.new(fn activity -> {id(activity) || id(activity[:object]), activity} end)
+      |> debug()
+
+    list_of_components
+    # |> debug()
+    |> Map.new(fn component ->
+      {component.component_id,
+       %{activity: list_of_activities[component.object_id] || component[:activity]}}
+    end)
+  end
+
+  @decorate time()
+  def preloads(feed, socket_or_opts \\ [])
+
+  def preloads(feed, socket_or_opts) when is_list(feed) and feed != [] do
+    opts = e(socket_or_opts, :assigns, nil) || socket_or_opts
 
     preloads = e(opts, :preload, :feed)
-    debug(preloads, "FeedLive: run through preloads")
+    debug(preloads, "Feed: preload assocs")
 
     opts = [
       preload: preloads,
       with_cache: e(opts, :with_cache, false),
-      current_user: current_user(opts),
+      current_user: current_user(opts) || current_user(feed),
       # skip boundary because it should already be check it the initial query
       skip_boundary_check: true
     ]
 
-    case List.first(feed) do
-      %{edge: %{id: _}} ->
+    case feed do
+      # Edges (eg. likes, follows)
+      [%{edge: %{id: _}} | _] ->
         feed
-        # |> debug("feed of Edge objects before extra preloads")
-        |> Bonfire.Social.Activities.activity_preloads(preloads, opts)
-        # |> Bonfire.Common.Pointers.Preload.maybe_preload_nested_pointers([edge: [:object]])
-        |> preload_objects([:edge, :object], opts)
+        |> preload_activity_and_object_assocs([:edge, :object], opts)
 
-      # |> debug("feed with extra preloads")
-
-      %{activity: %{id: _}} ->
+      # Feed with activities
+      [%{activity: %{id: _}} | _] ->
         feed
-        # |> debug("feed of FeedPublish or objects before extra preloads")
-        |> Bonfire.Social.Activities.activity_preloads(preloads, opts)
-        # |> Bonfire.Common.Pointers.Preload.maybe_preload_nested_pointers([activity: [:object]])
-        |> preload_objects([:activity, :object], opts)
+        |> preload_activity_and_object_assocs([:activity, :object], opts)
 
-      # |> debug("feed with extra preloads")
-
-      %{object: _} ->
+      # Objects without activity
+      [%{object: %{id: _}} | _] ->
         feed
-        # |> debug("feed of activities before extra preloads")
-        |> Bonfire.Social.Activities.activity_preloads(preloads, opts)
-        # |> Bonfire.Common.Pointers.Preload.maybe_preload_nested_pointers([:object])
-        |> preload_objects([:object], opts)
-
-      # |> debug("feed with extra preloads")
+        |> preload_activity_and_object_assocs([:object], opts)
 
       _ ->
-        warn("Could not preload feed - the data structure was not recognised")
+        warn("Could not preload activities - feed data structure was not recognised")
+        debug(feed)
         feed
     end
   end
 
-  defp preloads(%{edges: feed} = page, socket),
+  def preloads(%{edges: feed} = page, socket),
     do: Map.put(page, :edges, preloads(feed, socket))
 
-  defp preloads(feed, socket), do: feed
+  def preloads(feed, socket) do
+    warn("Could not preload activities - provided data structure was not recognised")
+    debug(feed)
+    feed
+  end
 
-  def preload_objects(feed, under, opts) do
+  def preload_activity_and_object_assocs(feed, under, opts) do
     if Bonfire.Common.Config.get([:ui, :disable_feed_object_preloads]) != true do
       feed
       |> Bonfire.Social.Activities.activity_preloads(opts[:preload], opts)

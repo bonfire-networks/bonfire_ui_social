@@ -3,10 +3,15 @@ defmodule Bonfire.UI.Social.ActivityLive do
   use Untangle
 
   alias Bonfire.Social.Activities
+  alias Bonfire.Social.Feeds.LiveHandler
 
   prop(activity, :any, default: nil)
   prop(object, :any, default: nil)
+  prop(verb, :string, default: nil)
   prop(verb_default, :string, default: nil)
+  prop(verb_display, :string, default: nil)
+  prop(object_type, :any, default: nil)
+  prop(date_ago, :any, default: nil)
   prop(feed_id, :any, default: nil)
   prop(viewing_main_object, :boolean, default: false)
   prop(activity_inception, :string, default: nil)
@@ -15,6 +20,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
   prop(class, :string, required: false, default: "")
   prop(thread_object, :any, default: nil)
   prop(url, :string, default: nil)
+  prop(permalink, :string, default: nil)
   prop(thread_url, :string, default: nil)
   prop(thread_mode, :any, default: nil)
   prop(participants, :list, default: [])
@@ -24,17 +30,17 @@ defmodule Bonfire.UI.Social.ActivityLive do
   prop(i, :integer, default: nil)
 
   # TODO: put verbs in config and/or autogenerate with Verbs genserver
-  @reply_verbs ["Reply", "Respond"]
-  @create_verbs ["Create", "Write"]
-  @react_verbs ["Like", "Boost", "Flag", "Tag"]
-  @react_or_simple_verbs @react_verbs ++ ["Assign", "Label", "Schedule"]
+  @reply_verbs Application.compile_env(:bonfire, [:verb_families, :reply])
+  @create_verbs Application.compile_env(:bonfire, [:verb_families, :create])
+  @react_verbs Application.compile_env(:bonfire, [:verb_families, :react])
+  @simple_verbs Application.compile_env(:bonfire, [:verb_families, :simple_action])
+  @react_or_simple_verbs @react_verbs ++ @simple_verbs
   @create_or_reply_verbs @create_verbs ++ @reply_verbs
   @created_verb_display Activities.verb_display("Create")
 
   @decorate time()
   def preload(list_of_assigns) do
-    Bonfire.Boundaries.LiveHandler.maybe_preload_and_check_boundaries(list_of_assigns,
-      verbs: [:read],
+    LiveHandler.preload(list_of_assigns,
       caller_module: __MODULE__
     )
   end
@@ -42,12 +48,34 @@ defmodule Bonfire.UI.Social.ActivityLive do
   defp debug_i(i, activity_inception), do: i || "inception-from-#{activity_inception}"
 
   def update(
-        %{object_boundary: object_boundary} = assigns,
-        %{assigns: %{activity_components: activity_components}} = socket
+        %{preloaded_async_activities: preloaded_async_activities, activity: activity} = _assigns,
+        %{assigns: %{activity_components: _activity_components}} = socket
+      )
+      when preloaded_async_activities == true do
+    debug(
+      "Activity ##{debug_i(socket.assigns[:i], socket.assigns[:activity_inception])} prepared already, just assign updated activity"
+    )
+
+    {:ok,
+     assign(
+       socket,
+       socket.assigns
+       |> assigns_clean()
+       |> Enum.into(%{
+         activity: activity |> Map.drop([:object]),
+         object: e(activity, :object, nil)
+       })
+       |> activity_components(activity, ...)
+     )}
+  end
+
+  def update(
+        %{object_boundary: object_boundary} = _assigns,
+        %{assigns: %{activity_components: _activity_components}} = socket
       )
       when not is_nil(object_boundary) do
     debug(
-      "Activity ##{debug_i(assigns[:i] || socket.assigns[:i], assigns[:activity_inception] || socket.assigns[:activity_inception])} prepared already, just assign object_boundary"
+      "Activity ##{debug_i(socket.assigns[:i], socket.assigns[:activity_inception])} prepared already, just assign object_boundary"
     )
 
     {:ok,
@@ -71,6 +99,34 @@ defmodule Bonfire.UI.Social.ActivityLive do
      |> assign(prepare(assigns))}
   end
 
+  defp activity_with_object(activity, assigns) do
+    activity
+    # |> repo().maybe_preload(:media) # FIXME
+    # |> debug("Activity provided")
+    |> Map.put(
+      :object,
+      Activities.object_from_activity(assigns)
+      # |> debug("object")
+    )
+
+    # |> debug("Activity with :object")
+  end
+
+  defp activity_components(activity, %{verb: verb, object_type: object_type} = assigns) do
+    (component_activity_subject(verb, activity, assigns) ++
+       component_maybe_in_reply_to(verb, activity, assigns) ++
+       component_object(verb, activity, object_type) ++
+       component_maybe_attachments(activity, assigns) ++
+       component_actions(verb, activity, assigns))
+    |> Utils.filter_empty([])
+    |> Enum.map(fn
+      c when is_atom(c) and not is_nil(c) -> {c, nil}
+      other -> other
+    end)
+    |> debug("components")
+    |> Map.put(assigns, :activity_components, ...)
+  end
+
   @decorate time()
   def prepare(assigns)
 
@@ -78,17 +134,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
     debug("Activity ##{debug_i(assigns[:i], assigns[:activity_inception])} preparation started")
     # debug(assigns, "ActivityLive initial assigns")
 
-    activity =
-      activity
-      # |> repo().maybe_preload(:media) # FIXME
-      # |> debug("Activity provided")
-      |> Map.put(
-        :object,
-        Activities.object_from_activity(assigns)
-        # |> debug("object")
-      )
-
-    # |> debug("Activity with :object")
+    activity = activity_with_object(activity, assigns)
 
     verb =
       Activities.verb_maybe_modify(
@@ -126,39 +172,23 @@ defmodule Bonfire.UI.Social.ActivityLive do
 
     # debug(permalink, "permalink")
 
-    assigns =
-      assigns
-      |> Map.merge(%{
-        activity: activity |> Map.drop([:object]),
-        object: activity.object,
-        object_id: e(activity.object, :id, nil) || e(activity, :id, "no-object-id"),
-        object_type: object_type,
-        object_type_readable: object_type_readable,
-        date_ago: date_from_now(id),
-        verb: verb,
-        verb_display: verb_display,
-        created_verb_display: @created_verb_display,
-        permalink: permalink,
-        thread_url: thread_url,
-        thread_id: thread_id,
-        cw: e(activity.object, :post_content, :name, nil) != nil
-      })
-
-    components =
-      (component_activity_subject(verb, activity, assigns) ++
-         component_maybe_in_reply_to(verb, activity, assigns) ++
-         component_object(verb, activity, object_type) ++
-         component_maybe_attachments(activity, assigns) ++
-         component_actions(verb, activity, assigns))
-      |> Utils.filter_empty([])
-      |> Enum.map(fn
-        c when is_atom(c) and not is_nil(c) -> {c, nil}
-        other -> other
-      end)
-      |> debug("components")
-
-    Map.put(assigns, :activity_components, components)
-    # |> debug("assigns")
+    assigns
+    |> Map.merge(%{
+      activity: activity |> Map.drop([:object]),
+      object: e(activity, :object, nil),
+      object_id: e(activity.object, :id, nil) || e(activity, :id, "no-object-id"),
+      object_type: object_type,
+      object_type_readable: object_type_readable,
+      date_ago: date_from_now(id),
+      verb: verb,
+      verb_display: verb_display,
+      created_verb_display: @created_verb_display,
+      permalink: permalink,
+      thread_url: thread_url,
+      thread_id: thread_id,
+      cw: e(activity.object, :post_content, :name, nil) != nil
+    })
+    |> activity_components(activity, ...)
   end
 
   def prepare(%{object: %{} = _object} = assigns) do
@@ -390,7 +420,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
       do: [
         {Bonfire.UI.Social.Activity.SubjectMinimalLive,
          %{
-           activity: repo().maybe_preload(activity, subject: [:character]),
+           #  activity: repo().maybe_preload(activity, subject: [:character]),
            verb: verb
          }}
       ]
@@ -493,47 +523,47 @@ defmodule Bonfire.UI.Social.ActivityLive do
       ),
       do: [{Bonfire.UI.Social.Activity.SubjectLive, %{profile: profile, character: character}}]
 
-  def component_maybe_creator(
-        %{provider: %Ecto.Association.NotLoaded{}, receiver: %Ecto.Association.NotLoaded{}} =
-          object
-      ),
-      do:
-        object
-        |> repo().maybe_preload(
-          provider: [:profile, :character],
-          receiver: [:profile, :character]
-        )
-        |> component_maybe_creator()
+  # def component_maybe_creator(
+  #       %{provider: %Ecto.Association.NotLoaded{}, receiver: %Ecto.Association.NotLoaded{}} =
+  #         object
+  #     ),
+  #     do:
+  #       object
+  #       |> repo().maybe_preload(
+  #         provider: [:profile, :character],
+  #         receiver: [:profile, :character]
+  #       )
+  #       |> component_maybe_creator()
 
-  def component_maybe_creator(%{provider: %Ecto.Association.NotLoaded{}} = object),
-    do:
-      object
-      |> repo().maybe_preload(
-        provider: [:profile, :character],
-        receiver: [:profile, :character],
-        primary_accountable: [:profile, :character]
-      )
-      |> component_maybe_creator()
+  # def component_maybe_creator(%{provider: %Ecto.Association.NotLoaded{}} = object),
+  #   do:
+  #     object
+  #     |> repo().maybe_preload(
+  #       provider: [:profile, :character],
+  #       receiver: [:profile, :character],
+  #       primary_accountable: [:profile, :character]
+  #     )
+  #     |> component_maybe_creator()
 
-  def component_maybe_creator(%{receiver: %Ecto.Association.NotLoaded{}} = object),
-    do:
-      object
-      |> repo().maybe_preload(
-        provider: [:profile, :character],
-        receiver: [:profile, :character],
-        primary_accountable: [:profile, :character]
-      )
-      |> component_maybe_creator()
+  # def component_maybe_creator(%{receiver: %Ecto.Association.NotLoaded{}} = object),
+  #   do:
+  #     object
+  #     |> repo().maybe_preload(
+  #       provider: [:profile, :character],
+  #       receiver: [:profile, :character],
+  #       primary_accountable: [:profile, :character]
+  #     )
+  #     |> component_maybe_creator()
 
-  def component_maybe_creator(%{primary_accountable: %Ecto.Association.NotLoaded{}} = object),
-    do:
-      object
-      |> repo().maybe_preload(
-        provider: [:profile, :character],
-        receiver: [:profile, :character],
-        primary_accountable: [:profile, :character]
-      )
-      |> component_maybe_creator()
+  # def component_maybe_creator(%{primary_accountable: %Ecto.Association.NotLoaded{}} = object),
+  #   do:
+  #     object
+  #     |> repo().maybe_preload(
+  #       provider: [:profile, :character],
+  #       receiver: [:profile, :character],
+  #       primary_accountable: [:profile, :character]
+  #     )
+  #     |> component_maybe_creator()
 
   def component_maybe_creator(activity) do
     error(activity, "ActivityLive: could not find the creator")

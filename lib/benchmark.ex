@@ -84,13 +84,22 @@ defmodule Bonfire.UI.Social.Benchmark do
         "fetch feed page with 1 activity" => fn -> get(conn, "/feed/local?limit=1") end,
         "fetch feed page with 10 activities" => fn -> get(conn, "/feed/local?limit=10") end,
         "fetch feed page with 20 activities" => fn -> get(conn, "/feed/local?limit=20") end,
-        "fetch feed page with 1 (hidden) activity" => fn ->
+        "fetch feed page with 1 (skipped) activity" => fn ->
+          get(conn, "/feed/local?limit=1&hide_activities=component")
+        end,
+        "fetch feed page with 10 (skipped) activities" => fn ->
+          get(conn, "/feed/local?limit=10&hide_activities=component")
+        end,
+        "fetch feed page with 20 (skipped) activities" => fn ->
+          get(conn, "/feed/local?limit=20&hide_activities=component")
+        end,
+        "fetch feed page with 1 (not rendered) activity" => fn ->
           get(conn, "/feed/local?limit=1&hide_activities=all")
         end,
-        "fetch feed page with 10 (hidden) activities" => fn ->
+        "fetch feed page with 10 (not rendered) activities" => fn ->
           get(conn, "/feed/local?limit=10&hide_activities=all")
         end,
-        "fetch feed page with 20 (hidden) activities" => fn ->
+        "fetch feed page with 20 (not rendered) activities" => fn ->
           get(conn, "/feed/local?limit=20&hide_activities=all")
         end
       },

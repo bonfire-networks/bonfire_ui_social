@@ -29,7 +29,7 @@ defmodule Bonfire.UI.Social.Activity.SubjectLive do
   def maybe_truncate(input, viewing_main_object, length \\ 250) do
     if viewing_main_object != true and is_binary(input) and
          input != "",
-       do: Text.sentence_truncate(input, length, "..."),
+       do: input |> String.replace("\n", " ") |> Text.sentence_truncate(length, "..."),
        else: input
   end
 end

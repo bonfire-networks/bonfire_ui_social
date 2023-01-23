@@ -35,7 +35,7 @@
       />
     </LiveRedirect>
 
-    <div class="font-medium prose-sm prose truncate !text-[13px] !text-base-content/70 prose-a:text-base-content/70 prose-a:no-underline">
+    <div class="font-medium prose-sm prose truncate !text-[13px] !text-base-content/70 prose-a:text-base-content/70 prose-a:no-underline prose-p:inline-block">
       <LiveRedirect
         opts={"data-id": "subject_name", "aria-label": l("%{name}'s profile", name: e(@profile, :name, ""))}
         class="no-underline hover:underline !text-base-content/70"
@@ -134,14 +134,6 @@
             <span class="text-base-content/50">·</span>
             <Bonfire.UI.Social.Activity.InstanceIconLive peered={e(@activity, :peered, nil)} />
 
-            <Dynamic.Component
-              :if={module_enabled?(Bonfire.Boundaries.Web.ActivityVisibilityIconLive) and
-                @object_type not in [Bonfire.Data.Social.Message]}
-              module={Bonfire.Boundaries.Web.ActivityVisibilityIconLive}
-              object={@object}
-              with_icon
-              object_boundary={@object_boundary}
-            />
             <Bonfire.UI.Social.Activity.LinkToActivityLive
               :if={@showing_within not in [:smart_input]}
               object={@object}
@@ -154,6 +146,15 @@
                 {@date_ago}
               </span>
             </Bonfire.UI.Social.Activity.LinkToActivityLive>
+
+            <Dynamic.Component
+              :if={module_enabled?(Bonfire.Boundaries.Web.ActivityVisibilityIconLive) and
+                @object_type not in [Bonfire.Data.Social.Message]}
+              module={Bonfire.Boundaries.Web.ActivityVisibilityIconLive}
+              object={@object}
+              with_icon
+              object_boundary={@object_boundary}
+            />
           </div>
         </div>
         <!-- <div class="flex items-center gap-1">

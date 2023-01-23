@@ -208,16 +208,9 @@
                     @{e(@activity, :subject, :character, :username, "")}
                   </LiveRedirect>
                   <span class="text-base-content/50">·</span>
+
                   <Bonfire.UI.Social.Activity.InstanceIconLive peered={e(@activity, :peered, nil)} />
 
-                  <Dynamic.Component
-                    :if={module_enabled?(Bonfire.Boundaries.Web.ActivityVisibilityIconLive) and
-                      @object_type not in [Bonfire.Data.Social.Message]}
-                    module={Bonfire.Boundaries.Web.ActivityVisibilityIconLive}
-                    object={@object}
-                    with_icon
-                    object_boundary={@object_boundary}
-                  />
                   <Bonfire.UI.Social.Activity.LinkToActivityLive
                     :if={@showing_within not in [:smart_input]}
                     object={@object}
@@ -230,6 +223,15 @@
                       {@date_ago}
                     </span>
                   </Bonfire.UI.Social.Activity.LinkToActivityLive>
+
+                  <Dynamic.Component
+                    :if={module_enabled?(Bonfire.Boundaries.Web.ActivityVisibilityIconLive) and
+                      @object_type not in [Bonfire.Data.Social.Message]}
+                    module={Bonfire.Boundaries.Web.ActivityVisibilityIconLive}
+                    object={@object}
+                    with_icon
+                    object_boundary={@object_boundary}
+                  />
                 </div>
               </div>
             </div>
