@@ -312,6 +312,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
             {#match Bonfire.UI.Social.Activity.MediaLive}
               <Bonfire.UI.Social.Activity.MediaLive
                 :if={@hide_activities != "media"}
+                __context__={@__context__}
                 showing_within={@showing_within}
                 viewing_main_object={e(component_assigns, :viewing_main_object, @viewing_main_object)}
                 media={e(component_assigns, :media, nil)}

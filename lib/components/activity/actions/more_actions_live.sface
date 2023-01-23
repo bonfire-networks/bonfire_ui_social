@@ -62,7 +62,7 @@
       <Bonfire.UI.Common.FlagActionLive
         object={@object}
         flagged={@flagged}
-        label={l("Report %{name}", name: name(@activity, @object))}
+        label={l("Flag %{name}", name: name(@activity, @object))}
         class="flex items-center py-2 text-sm text-neutral-content/80"
       />
     </li>

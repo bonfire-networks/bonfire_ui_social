@@ -44,6 +44,9 @@
             id={Pointers.ULID.generate()}
             title_text={e(@label, l("View media"))}
             no_actions
+            enable_fallback
+            modal_class="modal modal-bottom sm:modal-middle max-h-[100%]"
+            wrapper_class="w-10/12 max-w-[100%]"
             open_btn_class="w-full"
             open_btn_wrapper_class="w-full h-full"
           >
