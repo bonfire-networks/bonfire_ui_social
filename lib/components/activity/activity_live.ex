@@ -242,7 +242,9 @@ defmodule Bonfire.UI.Social.ActivityLive do
       x-init={"content_open = #{!@cw}"}
       id={"activity-#{@activity_inception}-" <> (ulid(@activity) || e(@object, :id, "no-id"))}
       aria-label="user activity"
-      phx-hook={if !@viewing_main_object and e(assigns, :showing_within, :feed) != :thread, do: "PreviewActivity"}
+      phx-hook={if !@viewing_main_object and current_user(@__context__) != nil and
+           e(assigns, :showing_within, :feed) != :thread,
+         do: "PreviewActivity"}
       role="article"
       tabIndex="0"
       class={

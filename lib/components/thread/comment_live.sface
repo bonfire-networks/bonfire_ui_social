@@ -96,7 +96,7 @@
         {/case}
       </div>
     </div>
-    <div x-show="show_replies relative">
+    <div x-show="show_replies">
       <div
         x-cloak
         x-show="show_replies"

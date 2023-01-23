@@ -17,8 +17,9 @@
     aria-labelledby="more-menu"
   >
     <#slot {@extra_items} />
+
     <Dynamic.Component
-      :if={module_enabled?(Bonfire.Boundaries.Web.PermissionsIconLive) and
+      :if={@object_boundary && module_enabled?(Bonfire.Boundaries.Web.PermissionsIconLive) &&
         @object_type not in [Bonfire.Data.Social.Message]}
       module={Bonfire.Boundaries.Web.PermissionsIconLive}
       object={@object}
@@ -26,12 +27,9 @@
       id={ComponentID.new(Bonfire.Boundaries.Web.PermissionsIconLive, @object)}
       object_boundary={@object_boundary}
     />
-    <li>
-      <Dynamic.Component
-        :if={module_enabled?(Bonfire.Classify.Web.TagModalLive)}
-        module={Bonfire.Classify.Web.TagModalLive}
-        object={@object}
-      />
+
+    <li :if={module_enabled?(Bonfire.Classify.Web.TagModalLive)}>
+      <Dynamic.Component module={Bonfire.Classify.Web.TagModalLive} object={@object} />
     </li>
 
     <!-- <li class="hover:bg-neutral hover:bg-opacity-20">
@@ -60,7 +58,7 @@
     </li>
 
     <!-- Flag the author -->
-    <li :if={id(@current_user) != subject_id(@activity, @object) and @verb != "Flag"}>
+    <li :if={(@verb != "Flag" and is_nil(@current_user)) or id(@current_user) != subject_id(@activity, @object)}>
       <Bonfire.UI.Common.FlagActionLive
         object={@object}
         flagged={@flagged}
@@ -76,19 +74,21 @@
     />
 
     <!-- Delete the object -->
-    <li>
+    <li :if={@object_boundary}>
       <Bonfire.UI.Social.Activity.DeleteObjectLive
         object={@object}
         creator_id={subject_id(@activity, @object)}
         object_type_readable={@object_type_readable}
+        object_boundary={@object_boundary}
       />
     </li>
 
     <!-- Delete the activity -->
-    <li :if={@object_type not in [Bonfire.Data.Social.Message] and ulid(@activity)}>
+    <li :if={@object_boundary && @object_type not in [Bonfire.Data.Social.Message] && id(@activity)}>
       <Bonfire.UI.Social.Activity.DeleteObjectLive
         action="Bonfire.Social.Feeds:delete"
         object={@activity}
+        object_boundary={@object_boundary}
         creator_id={subject_id(@activity, @object)}
         object_type_readable={l("from feeds")}
         creator_id={subject_id(@activity, @object)}

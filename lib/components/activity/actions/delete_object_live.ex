@@ -5,6 +5,7 @@ defmodule Bonfire.UI.Social.Activity.DeleteObjectLive do
 
   prop creator_id, :string, default: nil
   prop object, :any
+  prop object_boundary, :any, default: nil
   prop object_type, :any
   prop object_type_readable, :any
   prop action, :string, default: "Bonfire.Social.Objects:delete"

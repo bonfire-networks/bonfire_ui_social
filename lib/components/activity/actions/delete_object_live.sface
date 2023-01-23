@@ -1,11 +1,13 @@
-<!-- Delete the object -->
+<!-- Delete the object 
+TODO: use preloaded boundaries for can? when available
+-->
 <OpenModalLive
-  :if={ulid(@current_user) ==
+  :if={id(@current_user) ==
     (@creator_id || e(@object, :created, :creator_id, nil) ||
        e(@object, :created, :creator, :id, nil)) or
     ((Bonfire.Me.Users.is_admin?(@current_user) ||
-        Bonfire.Boundaries.can?(@__context__, :delete, :instance) ||
-        Bonfire.Boundaries.can?(@__context__, :delete, @object)) &&
+        Bonfire.Boundaries.can?(@__context__, :delete, @object_boundary || @object) ||
+        Bonfire.Boundaries.can?(@__context__, :delete, :instance)) &&
        Types.object_type(@object) != Bonfire.Data.Identity.User)}
   id={Pointers.ULID.generate()}
   title_text={l("Delete this") <> " " <> e(@object_type_readable, l("object"))}
