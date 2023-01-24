@@ -46,8 +46,8 @@
             no_header
             image_preview
             enable_fallback
-            modal_class="modal modal-bottom sm:modal-middle max-h-[100%]"
-            wrapper_class="w-10/12 !p-0 max-w-[100%] !bg-transparent shadow-none rounded-none"
+            modal_class="modal !modal-middle max-h-[100%]"
+            wrapper_class="!w-full md:w-10/12 !p-0 max-w-[100%] !bg-transparent shadow-none rounded-none"
             open_btn_class="w-full"
             open_btn_wrapper_class="w-full h-full"
           >
