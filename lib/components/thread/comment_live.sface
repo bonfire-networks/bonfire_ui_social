@@ -71,7 +71,7 @@
     </div>
 
 
-    <div x-show="show_replies">
+    <div x-show="show_replies" x-transition>
       <div
         x-cloak
         x-show="show_replies"
@@ -89,7 +89,7 @@
         </button>
       </div> -->
 
-      {#if is_list(@child_replies) and length(@child_replies) > 0}
+      {#if is_list(@child_replies) and @child_replies !=[]}
         <div class={"replies replies-level-" <> to_string(@thread_level + 1) <> " ml-3 mt-3"}>
           {#for {{subreply, sub_child_replies}, index} <- Enum.with_index(@child_replies, 1)}
             <div class="relative">

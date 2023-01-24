@@ -5,6 +5,8 @@
     "!my-0": @showing_within == :smart_input,
     "!mt-1 cursor-default": @showing_within == :thread && !@viewing_main_object
   }
+  x-show={if @showing_within == :thread && !@viewing_main_object, do: "show_replies"}
+  x-transition
   id={"note-#{@activity_inception}-#{ulid(@activity) || ulid(@object) || "no-id"}-#{e(assigns, :viewing_main_object, false)}"}
 >
   {#case e(post_content(@object), :name, nil)}

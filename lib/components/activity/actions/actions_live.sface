@@ -3,8 +3,6 @@
   <div />
 {#else} -->
 <div
-  :class={if @viewing_main_object != true and Settings.get([:ui, :compact], false, @__context__),
-    do: "activity_active ? '' : '[@media(any-hover:hover)]:hidden'"}
   class={
     "thread_actions flex items-center":
       @showing_within == :thread or Settings.get([:ui, :compact], false, @__context__),
@@ -12,6 +10,8 @@
     "mt-0": e(@showing_within, :feed) == :feed || e(@showing_within, :feed) == :notifications,
     "mt-1": @showing_within == :widget
   }
+  :class={if @viewing_main_object != true and Settings.get([:ui, :compact], false, @__context__),
+    do: "activity_active ? '' : '[@media(any-hover:hover)]:hidden'"}
 >
   <div class={
     "feed-clickable flex items-center flex-1 justify-between md:justify-end gap-4 mt-0",
