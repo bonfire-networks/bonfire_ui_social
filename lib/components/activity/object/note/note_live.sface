@@ -3,7 +3,7 @@
     "note mt-3 cursor-pointer",
     "!mt-2": @showing_within == :widget,
     "!my-0": @showing_within == :smart_input,
-    "!mt-0 ml-10 cursor-default": @showing_within == :thread && !@viewing_main_object
+    "!mt-1 cursor-default": @showing_within == :thread && !@viewing_main_object
   }
   id={"note-#{@activity_inception}-#{ulid(@activity) || ulid(@object) || "no-id"}-#{e(assigns, :viewing_main_object, false)}"}
 >
@@ -41,12 +41,12 @@
             <div
               data-id="object_body"
               class={
-                "prose break-words object_body max-w-none text-base md:prose-sm prose-p:pt-0 prose-p:my-0 prose-a:text-accent prose-a:no-underline prose-a:hover:underline",
+                "prose break-words object_body max-w-none md:prose-sm prose-p:pt-0 prose-p:my-0 prose-a:text-accent prose-a:no-underline prose-a:hover:underline",
                 "!text-[13px] line-clamp-1 !text-base-content/80":
                   ulid(@object) != nil and e(@activity, :replied, :reply_to_id, nil) == nil and
                     ulid(@activity) == nil,
                 "!my-0 !text-sm !font-normal line-clamp-1": @showing_within == :smart_input,
-                "prose-sm prose-p:pb-2 leading-[23px]": @showing_within == :thread and !@viewing_main_object,
+                "prose-p:pb-2": @showing_within == :thread and !@viewing_main_object,
                 "!text-base prose-p:pb-4": @viewing_main_object,
                 "prose-p:pb-2 !leading-6": @showing_within in [:feed, :search, :notifications]
               }

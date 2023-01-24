@@ -53,6 +53,54 @@
         )}
       {/if}
     </div>
+  {#elseif @showing_within in [:thread, :messages] && !@viewing_main_object}
+    <div class="flex items-center gap-2">
+        <LiveRedirect
+          class="h-4"
+          opts={"data-id": "subject_name"}
+          aria-label={e(@character, :username, "") <> " profile"}
+          to={path(@character)}
+        >
+          <Bonfire.UI.Common.AvatarLive
+            user={@profile}
+            title={e(@profile, :name, "Anonymous")}
+            class="w-4 h-4 rounded"
+          />
+        </LiveRedirect>
+        <div class="flex items-baseline gap-1">
+          <LiveRedirect
+            opts={"data-id": "subject_name"}
+            aria-label={l("%{name}'s profile", name: e(@profile, :name, ""))}
+            class={"link link-hover text-[13px] text-base-content/70"}
+            to={path(@character)}
+          >
+            {e(@profile, :name, "Anonymous")}
+          </LiveRedirect>
+          <span class="text-base-content/70"> · </span>
+          <Bonfire.UI.Social.Activity.LinkToActivityLive
+            :if={@showing_within not in [:smart_input]}
+            object={@object}
+            activity={@activity}
+            object_type={@object_type}
+            permalink={@permalink || path(@object) ||
+              path(e(@activity, :object, nil))}
+            thread_id={@thread_id}
+          >
+            <span class="text-[13px] font-normal no-underline subject_timestamp text-base-content/70">
+              {@date_ago || date_from_now(@activity) || date_from_now(@object) ||
+                date_from_now(e(@activity, :object, nil))}
+            </span>
+          </Bonfire.UI.Social.Activity.LinkToActivityLive>
+          <Dynamic.Component
+            :if={module_enabled?(Bonfire.Boundaries.Web.ActivityVisibilityIconLive) and
+              @object_type not in [Bonfire.Data.Social.Message]}
+            module={Bonfire.Boundaries.Web.ActivityVisibilityIconLive}
+            object={@object}
+            with_icon
+            object_boundary={@object_boundary}
+          />
+        </div>
+    </div>
   {#else}
     <div class="flex items-center">
       <div class={
@@ -68,28 +116,24 @@
           <Bonfire.UI.Common.AvatarLive
             user={@profile}
             title={e(@profile, :name, "Anonymous")}
-            comment={@showing_within in [:thread, :messages] && !@viewing_main_object}
             viewing_main_object={@viewing_main_object}
           />
         </LiveRedirect>
       </div>
       <div class="flex items-start justify-between w-full min-w-0 space-x-1 leading-4">
         <div class={
-          "flex flex-col flex-1 feed-clickable",
-          "!flex-row !gap-2": @showing_within in [:thread, :messages] && !@viewing_main_object
+          "flex flex-col flex-1 feed-clickable"
         }>
           <div class={
             "text-sm font-medium  lowercase line-clamp-1 text-base-content/70",
-            "!text-base !font-semibold": @viewing_main_object,
-            "!text-sm": @showing_within in [:thread, :messages] && !@viewing_main_object
+            "!text-base !font-semibold": @viewing_main_object
           }>
             <!-- {@verb} {@object_type} -->
             <LiveRedirect
               opts={"data-id": "subject_name"}
               aria-label={l("%{name}'s profile", name: e(@profile, :name, ""))}
               class={
-                "link link-hover text-[15px] font-semibold",
-                "text-base-content/90": @showing_within in [:thread, :messages] && !@viewing_main_object
+                "link link-hover text-[15px] font-semibold"
               }
               to={path(@character)}
             >

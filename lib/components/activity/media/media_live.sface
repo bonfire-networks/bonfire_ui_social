@@ -6,7 +6,7 @@
     "my-3":
       Enum.filter(@media, fn x -> e(x, :metadata, :canonical_url, false) == false end) |> length > 0,
     "!grid-cols-1 !grid-rows-1": @showing_within == :smart_input,
-    "max-h-[270px] overflow-clip": @viewing_main_object != true,
+    "overflow-clip": @viewing_main_object != true,
     "grid-cols-1": @media |> length() == 1,
     "grid-cols-2": @media |> length() == 2,
     "grid-cols-4": @media |> length() == 4
@@ -17,7 +17,7 @@
       |> Enum.with_index()}
     <article class={
       "media-entry h-full w-full row-span-4 object-cover",
-      "h-[270px]":
+      "":
         Enum.filter(@media, fn x -> e(x, :metadata, :canonical_url, false) != false end) |> length() >
           0,
       "!row-span-2 !h-auto":
@@ -42,25 +42,25 @@
           {#else} -->
           <Bonfire.UI.Common.OpenModalLive
             id={Pointers.ULID.generate()}
-            title_text={e(@label, l("View media"))}
             no_actions
+            no_header
+            image_preview
             enable_fallback
             modal_class="modal modal-bottom sm:modal-middle max-h-[100%]"
-            wrapper_class="w-10/12 max-w-[100%]"
+            wrapper_class="w-10/12 !p-0 max-w-[100%] !bg-transparent shadow-none rounded-none"
             open_btn_class="w-full"
             open_btn_wrapper_class="w-full h-full"
           >
             <div
-              class="relative mt-2"
+              class="relative"
               style={if String.starts_with?(media.media_type, ["video"]),
                 do: "min-width: 90vw; min-height: 90vh",
                 else: ""}
             >
               <Bonfire.UI.Social.Activity.RemoteMediaLive media={media} />
 
-              <div class="mt-2">
-                {media_label(media)}
-
+              <div class="mt-4">
+                <div class="prose text-center prose-sm px-2 py-1.5 rounded-full">{media_label(media)}</div>
                 <p class="text-sm">{e(media.metadata, "description", nil) || e(media.metadata, "facebook", "og:description", nil) ||
                     e(media.metadata, "twitter", "twitter:description", nil) ||
                     e(media.metadata, "other", "description", nil)}</p>
@@ -68,16 +68,27 @@
             </div>
 
             <:open_btn>
-              <LazyImage
-                class={
-                  "w-full !object-cover media-image h-full cursor-pointer obj-center rounded-md",
-                  "max-h-[270px]": @media |> length() < 4,
-                  "max-h-[135px]": @media |> length() > 3
-                }
-                alt={media_label(media)}
-                src={preview_img(media) || media_url(media)}
-              />
-              <figcaption class="sr-only">{media_label(media)}</figcaption>
+              <div class="relative">
+                <LazyImage
+                  class={
+                    "w-full !object-cover media-image h-full cursor-pointer object-top aspect-video rounded-md",
+                    "!max-h-[337px] !h-[337px]": counter == 0 && @media |> length() == 3,
+                    "max-h-[270px]": @media |> length() < 4,
+                    "max-h-[135px]": @media |> length() > 3
+                  }
+                  alt={media_label(media)}
+                  src={preview_img(media) || media_url(media)}
+                />
+                <div 
+                  :if={String.length(media_label(media)) > 0} 
+                  class="absolute z-50 bottom-3 left-3 dropdown dropdown-top">
+                  <label tabindex="0" class="text-white border-none rounded btn btn-xs bg-black/60">alt</label>
+                  <div tabindex="0" class="p-2 rounded shadow dropdown-content bg-neutral w-52">
+                    <div class="prose-sm prose text-neutral-content">{media_label(media)}</div>
+                  </div>
+                </div>
+                <figcaption class="sr-only">{media_label(media)}</figcaption>
+              </div>
             </:open_btn>
           </Bonfire.UI.Common.OpenModalLive>
           <!-- {/if} -->

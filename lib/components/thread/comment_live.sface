@@ -3,7 +3,7 @@
   data-id="comment"
   x-data="{show_replies: true}"
   class={
-    "reply thread-level-" <> to_string(@thread_level) <> " flex relative  w-full mx-auto",
+    "reply thread-level-" <> to_string(@thread_level) <> " flex relative  w-full mx-auto pl-4",
     "": @thread_level == 1
   }
 >
@@ -20,17 +20,7 @@
           class="bg-base-content/10 top-0 bottom-0 z-10 w-[2px] absolute"
         />
       </div> -->
-      <!-- <div
-        x-cloak
-        class="p-3 pr-0 pl-[21px]"
-        x-on:click="show_replies = !show_replies"
-        x-show="!show_replies"
-      >
-        <Icon
-          outline="ChevronDown"
-          class="w-4 h-4 cursor-pointer text-primary text-opacity-70 hover:text-opacity hover:text-opacity-100"
-        />
-      </div> -->
+      
       <div class="flex-1 w-full" x-cloak x-data="{reply: false, show: true}">
         {#case get_activity(@comment)}
           {#match nil}
@@ -66,15 +56,30 @@
         {/case}
       </div>
     </div>
+
+    <div 
+      class="absolute left-[-10px] cursor-pointer top-[-1px] z-30 " 
+      x-on:click="show_replies = ! show_replies">
+      <div x-cloak x-show="show_replies">
+        <!-- <Icon iconify="mdi:arrow-collapse" class="w-5 h-5 text-base-content/50" /> -->
+        <span class="text-xs text-base-content/50">[-]</span>
+      </div>
+      <div x-cloak x-show="!show_replies">
+        <span class="text-xs text-accent">[+]</span>
+        <!-- <Icon iconify="mdi:arrow-expand" class="w-5 h-5 text-base-content/50" /> -->
+      </div>
+    </div>
+
+
     <div x-show="show_replies">
       <div
         x-cloak
         x-show="show_replies"
-        class="group z-10 left-[18px] px-3 top-[44px] bottom-[14px] absolute"
+        class="group z-10 left-[-15px] px-3 top-[30px] bottom-[0px] absolute"
       >
         <i
           :class="!show_replies ? 'bg-primary bottom-[0px]' : 'bottom-[0px]'"
-          class="bg-base-content/10 top-0 bottom-0 z-10 w-[2px] absolute"
+          class="absolute top-0 bottom-0 z-10 border-l border-dotted border-base-content/10"
         />
       </div>
       <!-- <div class="-mt-[26px]  z-[50] ml-10" :if={is_list(@child_replies) and length(@child_replies) > 0}>
@@ -85,7 +90,7 @@
       </div> -->
 
       {#if is_list(@child_replies) and length(@child_replies) > 0}
-        <div class={"replies replies-level-" <> to_string(@thread_level + 1) <> " ml-6 mt-6"}>
+        <div class={"replies replies-level-" <> to_string(@thread_level + 1) <> " ml-3 mt-3"}>
           {#for {{subreply, sub_child_replies}, index} <- Enum.with_index(@child_replies, 1)}
             <div class="relative">
               <!-- <div 
