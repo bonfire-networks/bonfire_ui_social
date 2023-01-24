@@ -15,6 +15,7 @@ defmodule Bonfire.UI.Social.Activity.SubjectLive do
   prop viewing_main_object, :boolean, default: false
   prop thread_id, :string, default: nil
   prop cw, :boolean, default: nil
+  prop show_minimal_subject_and_note, :boolean, default: false
 
   def preloads(),
     do: [

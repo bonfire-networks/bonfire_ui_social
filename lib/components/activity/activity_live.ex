@@ -3,6 +3,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
   use Untangle
 
   alias Bonfire.Social.Activities
+  alias Bonfire.Data.Social.Activity
   alias Bonfire.Social.Feeds.LiveHandler
 
   prop(activity, :any, default: nil)
@@ -25,7 +26,9 @@ defmodule Bonfire.UI.Social.ActivityLive do
   prop(thread_mode, :any, default: nil)
   prop(participants, :list, default: [])
   prop(object_boundary, :any, default: nil)
+  prop(cw, :any, default: nil)
   prop(check_object_boundary, :boolean, default: false)
+  prop(show_minimal_subject_and_note, :boolean, default: false)
   prop(hide_activities, :any, default: nil)
   prop(i, :integer, default: nil)
 
@@ -99,52 +102,51 @@ defmodule Bonfire.UI.Social.ActivityLive do
      |> assign(prepare(assigns))}
   end
 
-  defp activity_with_object(activity, assigns) do
-    activity
-    # |> repo().maybe_preload(:media) # FIXME
-    # |> debug("Activity provided")
-    |> Map.put(
-      :object,
-      Activities.object_from_activity(assigns)
-      # |> debug("object")
-    )
-
-    # |> debug("Activity with :object")
+  def maybe_prepare(%{activity: _, activity_components: _} = assigns) do
+    assigns
   end
 
-  defp activity_components(activity, %{verb: verb, object_type: object_type} = assigns) do
-    (component_activity_subject(verb, activity, assigns) ++
-       component_maybe_in_reply_to(verb, activity, assigns) ++
-       component_object(verb, activity, object_type) ++
-       component_maybe_attachments(activity, assigns) ++
-       component_actions(verb, activity, assigns))
-    |> Utils.filter_empty([])
-    |> Enum.map(fn
-      c when is_atom(c) and not is_nil(c) -> {c, nil}
-      other -> other
-    end)
-    |> debug("components")
-    |> Map.put(assigns, :activity_components, ...)
+  def maybe_prepare(%{activity: _} = assigns) do
+    debug(
+      "Activity ##{debug_i(assigns[:i], assigns[:activity_inception])} prepare activity inception (eg. show reply_to)"
+    )
+
+    prepare(assigns)
   end
 
   @decorate time()
   def prepare(assigns)
 
-  def prepare(%{activity: %{} = activity} = assigns) do
+  def prepare(%{activity: %{object: %{id: _}} = activity} = assigns) do
+    do_prepare(assigns)
+  end
+
+  def prepare(%{activity: %{}} = assigns) do
+    Activities.assigns_with_object_under_activity(assigns)
+    |> do_prepare()
+  end
+
+  def prepare(%{object: %{}} = assigns) do
+    Activities.assigns_with_object_under_activity(assigns)
+    |> do_prepare()
+  end
+
+  def prepare(assigns), do: Map.put(assigns, :activity_components, [])
+
+  defp do_prepare(%{activity: %{object: %{id: _}} = activity} = assigns) do
     debug("Activity ##{debug_i(assigns[:i], assigns[:activity_inception])} preparation started")
     # debug(assigns, "ActivityLive initial assigns")
-
-    activity = activity_with_object(activity, assigns)
 
     verb =
       Activities.verb_maybe_modify(
         e(activity, :verb, nil) || e(assigns, :verb_default, "Create"),
         activity
       )
-      |> debug("verb (modified)")
+
+    # |> debug("verb (modified)")
 
     verb_display = Activities.verb_display(verb)
-    object_type = Types.object_type(activity.object) |> debug("object_type")
+    object_type = Types.object_type(e(activity, :object, nil)) |> debug("object_type")
     object_type_readable = Types.object_type_display(object_type)
 
     thread =
@@ -163,7 +165,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
           end
         end
 
-    id = ulid(activity) || ulid(activity.object)
+    id = ulid(activity) || ulid(e(activity, :object, nil))
     # permalink = path(activity.object)
     permalink =
       if thread_url && thread_id != id,
@@ -176,7 +178,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
     |> Map.merge(%{
       activity: activity |> Map.drop([:object]),
       object: e(activity, :object, nil),
-      object_id: e(activity.object, :id, nil) || e(activity, :id, "no-object-id"),
+      object_id: e(activity, :object, :id, nil) || e(activity, :id, "no-object-id"),
       object_type: object_type,
       object_type_readable: object_type_readable,
       date_ago: date_from_now(id),
@@ -189,63 +191,40 @@ defmodule Bonfire.UI.Social.ActivityLive do
       cw: e(activity.object, :post_content, :name, nil) != nil
     })
     |> activity_components(activity, ...)
+    |> debug("Activity preparation done")
   end
 
-  def prepare(%{object: %{} = _object} = assigns) do
-    prepare(
-      Map.put(
-        assigns,
-        :activity,
-        e(assigns.object, :activity, nil) ||
-          %{
-            subject:
-              e(assigns.object, :created, :creator, nil) || e(assigns.object, :creator, nil)
-          }
-      )
-    )
-  end
+  defp do_prepare(assigns), do: Map.put(assigns, :activity_components, [])
 
-  def prepare(assigns), do: Map.put(assigns, :activity_components, [])
-
-  def render(%{activity: _, activity_components: _} = assigns) do
-    do_render(assigns)
+  defp activity_components(activity, %{verb: verb, object_type: object_type} = assigns) do
+    (component_activity_subject(verb, activity, assigns) ++
+       component_maybe_in_reply_to(verb, activity, assigns) ++
+       component_object(verb, activity, object_type) ++
+       component_maybe_attachments(activity, assigns) ++
+       component_actions(verb, activity, assigns))
+    |> Utils.filter_empty([])
+    |> Enum.map(fn
+      c when is_atom(c) and not is_nil(c) -> {c, nil}
+      other -> other
+    end)
+    |> debug("components")
+    |> Map.put(assigns, :activity_components, ...)
   end
 
   def render(%{activity: _} = assigns) do
-    debug(
-      assigns,
-      "Activity ##{debug_i(assigns[:i], assigns[:activity_inception])} attempt preparation in render/1"
-    )
+    assigns = maybe_prepare(assigns)
 
-    # needed to activity inception (eg. show reply_to)
-
-    prepare(assigns)
-    |> debug(
-      "Activity ##{debug_i(assigns[:i], assigns[:activity_inception])} done with preparation in render"
-    )
-    |> do_render()
-  end
-
-  def render(assigns) do
-    warn("No activity provided")
-    debug(assigns)
-
-    ~F"""
-    """
-  end
-
-  @decorate time()
-  defp do_render(%{activity: _, activity_components: _} = assigns) do
     ~F"""
     <article
       x-data="{content_open: false}"
       x-init={"content_open = #{!@cw}"}
       id={"activity-#{@activity_inception}-" <> (ulid(@activity) || e(@object, :id, "no-id"))}
-      aria-label="user activity"
-      phx-hook={if !@viewing_main_object and current_user(@__context__) != nil and
+      data-href={@permalink}
+      phx-hook={if !@viewing_main_object and !@show_minimal_subject_and_note and
            e(assigns, :showing_within, :feed) != :thread,
          do: "PreviewActivity"}
       role="article"
+      aria-label="user activity"
       tabIndex="0"
       class={
         "p-4 activity relative group flex flex-col " <> e(assigns, :class, ""),
@@ -304,9 +283,20 @@ defmodule Bonfire.UI.Social.ActivityLive do
                 object_type={e(component_assigns, :object_type, @object_type)}
                 date_ago={e(component_assigns, :date_ago, @date_ago)}
                 permalink={e(component_assigns, :permalink, @permalink)}
+                show_minimal_subject_and_note={e(component_assigns, :show_minimal_subject_and_note, @show_minimal_subject_and_note)}
                 viewing_main_object={e(component_assigns, :viewing_main_object, @viewing_main_object)}
                 showing_within={@showing_within}
                 thread_id={@thread_id}
+                cw={@cw}
+              />
+            {#match Bonfire.UI.Social.Activity.NoteLive}
+              <Bonfire.UI.Social.Activity.NoteLive
+                :if={@hide_activities != "note" and !@show_minimal_subject_and_note}
+                showing_within={@showing_within}
+                activity={e(component_assigns, :activity, @activity)}
+                object={e(component_assigns, :object, @object)}
+                activity_inception={e(component_assigns, :activity_inception, @activity_inception)}
+                viewing_main_object={e(component_assigns, :viewing_main_object, @viewing_main_object)}
                 cw={@cw}
               />
             {#match Bonfire.UI.Social.Activity.MediaLive}
@@ -335,16 +325,6 @@ defmodule Bonfire.UI.Social.ActivityLive do
                 activity_inception={e(component_assigns, :activity_inception, @activity_inception)}
                 viewing_main_object={e(component_assigns, :viewing_main_object, @viewing_main_object)}
               />
-            {#match Bonfire.UI.Social.Activity.NoteLive}
-              <Bonfire.UI.Social.Activity.NoteLive
-                :if={@hide_activities != "note" and !show_minimal_reply?(@object, @activity, @showing_within)}
-                showing_within={@showing_within}
-                activity={e(component_assigns, :activity, @activity)}
-                object={e(component_assigns, :object, @object)}
-                activity_inception={e(component_assigns, :activity_inception, @activity_inception)}
-                viewing_main_object={e(component_assigns, :viewing_main_object, @viewing_main_object)}
-                cw={@cw}
-              />
             {#match _}
               <Dynamic.Component
                 :if={@hide_activities != "dynamic"}
@@ -369,6 +349,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
                 thread_id={@thread_id}
                 activity_inception={e(component_assigns, :activity_inception, @activity_inception)}
                 viewing_main_object={e(component_assigns, :viewing_main_object, @viewing_main_object)}
+                show_minimal_subject_and_note={e(component_assigns, :show_minimal_subject_and_note, @show_minimal_subject_and_note)}
                 hide_reply={e(component_assigns, :hide_reply, @hide_reply)}
                 profile={e(component_assigns, :profile, nil)}
                 character={e(component_assigns, :character, nil)}
@@ -381,11 +362,19 @@ defmodule Bonfire.UI.Social.ActivityLive do
     """
   end
 
-  def show_minimal_reply?(object, activity, showing_within) do
-    (e(object, :post_content, nil) != nil and showing_within == :smart_input) or
-      (id(object) != nil and e(activity, :replied, :reply_to_id, nil) == nil and
-         id(activity) == nil and showing_within != :search)
+  def render(assigns) do
+    warn("No activity provided")
+    debug(assigns)
+
+    ~F"""
+    """
   end
+
+  # def show_minimal_reply?(object, activity, showing_within) do
+  #   (e(object, :post_content, nil) != nil and showing_within == :smart_input) or
+  #     (id(object) != nil and e(activity, :replied, :reply_to_id, nil) == nil and
+  #        id(activity) == nil and showing_within != :search)
+  # end
 
   @decorate time()
   def component_activity_subject(verb, activity, assigns)
@@ -594,7 +583,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
           id: activity_id,
           reply_to:
             %{
-              post_content: %{id: id} = _reply_to_post_content,
+              post_content: %{id: id} = reply_to_post_content,
               created: %{
                 creator: %{
                   character: %{id: _} = subject_character,
@@ -613,9 +602,10 @@ defmodule Bonfire.UI.Social.ActivityLive do
        %{
          id: "ra:" <> id,
          activity_inception: assigns[:i] || activity_id,
+         show_minimal_subject_and_note: true,
          viewing_main_object: false,
-         object: reply_to,
          activity: %{
+           object: reply_to_post_content,
            subject: %{
              profile: subject_profile,
              character: subject_character
@@ -648,9 +638,11 @@ defmodule Bonfire.UI.Social.ActivityLive do
        %{
          id: "ra:" <> reply_to_id,
          activity_inception: assigns[:i] || activity_id,
+         show_minimal_subject_and_note: true,
          viewing_main_object: false,
-         object: Activities.load_object(replied, skip_boundary_check: true),
          activity: %{
+           # Activities.load_object(replied, skip_boundary_check: true),
+           object: replied,
            subject: %{
              profile: subject_profile,
              character: subject_character
@@ -708,6 +700,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
   #      %{
   #        id: "ra:" <> reply_to_id,
   #        activity_inception: activity_inception,
+  #  show_minimal_subject_and_note: true,
   #        object: e(reply_to_activity, :object, nil),
   #        # |> IO.inspect,
   #        activity: reply_to_activity |> Map.delete(:object),

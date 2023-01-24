@@ -17,16 +17,18 @@ defmodule Bonfire.UI.Social.CommentLive do
   prop page, :any, default: "thread"
   prop create_object_type, :any, default: nil
 
-  def activity(%{__struct__: Bonfire.Data.Social.Activity} = activity) do
+  def get_activity(%{__struct__: Bonfire.Data.Social.Activity, object: %{}} = activity) do
     activity
   end
 
-  def activity(%{activity: activity}) do
+  def get_activity(%{activity: %{object: %{}} = activity}) do
     activity
   end
+
+  def get_activity(_), do: nil
 
   def sub_replies_count(comment) do
-    activity = activity(comment)
+    activity = get_activity(comment)
 
     e(activity, :replied, :nested_replies_count, 0) +
       e(activity, :replied, :direct_replies_count, 0)

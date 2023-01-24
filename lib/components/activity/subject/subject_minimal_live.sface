@@ -216,11 +216,12 @@
                     object={@object}
                     activity={@activity}
                     object_type={@object_type}
-                    permalink={@permalink}
+                    permalink={@permalink || path(@object) || path(e(@activity, :object, nil))}
                     thread_id={@thread_id}
                   >
                     <span class="subject_timestamp text-[13px] font-normal no-underline truncate ellipsis text-base-content/50">
-                      {@date_ago}
+                      {@date_ago || date_from_now(@activity) || date_from_now(@object) ||
+                        date_from_now(e(@activity, :object, nil))}
                     </span>
                   </Bonfire.UI.Social.Activity.LinkToActivityLive>
 

@@ -3,6 +3,7 @@
     href={@permalink || path(@object)}
     open_btn_text=""
     title_text={e(@object, :name, nil) || e(@object, :post_content, :name, nil) || l("Discussion")}
+    open_btn_wrapper_class="open_preview_link"
     open_btn_class="link link-hover text-[13px] text-base-content/80"
     modal_assigns={
       post_id:
@@ -31,6 +32,7 @@
     href={@permalink}
     open_btn_text={l("View task")}
     title_text={e(@object, :name, nil) || l("Task")}
+    open_btn_wrapper_class="open_preview_link"
     open_btn_class="px-1 normal-case link link-hover text-base-content/60"
     modal_assigns={
       id: @thread_id || ulid(@object),
@@ -41,7 +43,10 @@
     }
   />
 {#else}
-  <LiveRedirect to={@permalink} class="px-1 normal-case link link-hover text-base-content/60">
+  <LiveRedirect
+    to={@permalink}
+    class="open_preview_link px-1 normal-case link link-hover text-base-content/60"
+  >
     <#slot />
   </LiveRedirect>
 {/if}

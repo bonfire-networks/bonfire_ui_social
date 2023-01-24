@@ -32,43 +32,8 @@
         />
       </div> -->
       <div class="flex-1 w-full" x-cloak x-data="{reply: false, show: true}">
-        {#case @comment}
-          {#match %{__struct__: Bonfire.Data.Social.Activity, object: %{}} = activity}
-            <Bonfire.UI.Social.ActivityLive
-              id={e(@comment, :id, "ca") <> ":" <> e(activity, :id, "")}
-              activity={activity}
-              thread_object={@thread_object}
-              class="showing_within:thread !py-0 !bg-transparent !shadow-none !rounded-none"
-              feed_id={@feed_id}
-              showing_within={:thread}
-              thread_mode={@thread_mode}
-              object_boundary={if is_messaging?(%{
-                   page: @page,
-                   showing_within: @showing_within,
-                   create_object_type: @create_object_type
-                 }),
-                 do: :skip}
-              class=""
-            />
-          {#match %{activity: %{object: %{}} = activity}}
-            <Bonfire.UI.Social.ActivityLive
-              id={e(@comment, :id, "ca") <> ":" <> e(activity, :id, "")}
-              activity={activity}
-              thread_object={@thread_object}
-              feed_id={@feed_id}
-              class="!p-3 !bg-transparent !shadow-none !rounded-none"
-              showing_within={:thread}
-              url={@url}
-              thread_mode={@thread_mode}
-              object_boundary={if is_messaging?(%{
-                   page: @page,
-                   showing_within: @showing_within,
-                   create_object_type: @create_object_type
-                 }),
-                 do: :skip}
-              class="showing_within:thread !py-0 !bg-transparent !shadow-none !rounded-none"
-            />
-          {#match _}
+        {#case get_activity(@comment)}
+          {#match nil}
             <div class="mx-4 my-2">
               <div class="p-4 rounded-md bg-info/10">
                 <div class="flex">
@@ -81,18 +46,23 @@
                 </div>
               </div>
             </div>
-
-            <!-- <div class="mx-3 my-2">
-              <div class="shadow-lg alert alert-warning">
-                <div>
-                  <svg xmlns="http://www.w3.org/2000/svg" class="flex-shrink-0 w-6 h-6 stroke-current" fill="none" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" /></svg>
-                  <span>{l "A comment was deleted."}</span>
-                </div>
-              </div>
-            </div> -->
-            <!-- <div class="p-3">
-                {l "A comment was deleted."}
-              </div> -->
+          {#match activity}
+            <Bonfire.UI.Social.ActivityLive
+              id={e(@comment, :id, "ca") <> ":" <> e(activity, :id, "")}
+              activity={activity}
+              thread_object={@thread_object}
+              class="showing_within:thread !py-0 !p-3 !bg-transparent !shadow-none !rounded-none"
+              feed_id={@feed_id}
+              showing_within={:thread}
+              thread_mode={@thread_mode}
+              url={@url}
+              object_boundary={if is_messaging?(%{
+                   page: @page,
+                   showing_within: @showing_within,
+                   create_object_type: @create_object_type
+                 }),
+                 do: :skip}
+            />
         {/case}
       </div>
     </div>

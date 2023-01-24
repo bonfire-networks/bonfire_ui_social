@@ -1,6 +1,7 @@
 defmodule Bonfire.Social.Feeds.LiveHandler do
   use Bonfire.UI.Common.Web, :live_handler
   use Untangle
+  alias Bonfire.Social.Activities
   alias Bonfire.Data.Social.Activity
 
   def handle_params(
@@ -314,7 +315,6 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
        |> Keyword.put(
          :feed,
          feed_assigns[:feed]
-         |> preloads(socket)
        )
      )}
   end
@@ -326,9 +326,7 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
      socket
      |> assign_generic(
        feed_update_mode: "append",
-       feed:
-         e(feed, :edges, [])
-         |> preloads(socket),
+       feed: e(feed, :edges, []),
        page_info: e(feed, :page_info, [])
      )}
   end
@@ -589,7 +587,7 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
            |> Bonfire.Social.FeedActivities.my_feed(socket, ...) do
       [
         loading: false,
-        feed: feed |> preloads(socket),
+        feed: feed,
         page_info: page_info
       ]
     end
@@ -602,7 +600,7 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
            |> Bonfire.Social.FeedActivities.feed(socket) do
       [
         loading: false,
-        feed: feed |> preloads(socket),
+        feed: feed,
         page_info: page_info
       ]
     end
@@ -615,7 +613,7 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
            |> Bonfire.Social.FeedActivities.feed(..., socket) do
       [
         loading: false,
-        feed: feed |> preloads(socket),
+        feed: feed,
         page_info: page_info
       ]
     end
@@ -629,7 +627,7 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
 
       [
         loading: false,
-        feed: feed |> preloads(socket),
+        feed: feed,
         page_info: page_info
       ]
     end
@@ -642,7 +640,7 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
            |> Bonfire.Social.FeedActivities.feed(socket) do
       [
         loading: false,
-        feed: feed |> preloads(socket),
+        feed: feed,
         page_info: page_info
       ]
     end
@@ -656,7 +654,7 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
       [
         loading: false,
         feed_id: feed_id,
-        feed: feed |> preloads(socket),
+        feed: feed,
         page_info: page_info
       ]
     end
@@ -681,11 +679,14 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
     list_of_assigns
     |> Bonfire.Boundaries.LiveHandler.maybe_preload_and_check_boundaries(opts ++ [verbs: [:read]])
     # |> preloads(opts) # NOTE: we preload most activity assocs after querying rather than here so as to not mix different ways they're loaded (eg. Edges vs FeedPublish)
+    |> Enum.map(&Activities.assigns_with_object_under_activity/1)
     |> preload_assigns_async(
       &assigns_to_params/1,
-      &do_preload_extras/3,
+      &preload_extras/3,
       opts ++ [preload_status_key: :preloaded_async_activities]
     )
+
+    # |> debug
   end
 
   defp assigns_to_params(assigns) do
@@ -701,12 +702,26 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
   end
 
   @decorate time()
-  defp do_preload_extras(list_of_components, _list_of_ids, current_user) do
+  defp preload_extras(list_of_components, _list_of_ids, current_user) do
+    preloads = [:feed, :with_reply_to, :with_media]
+
+    opts = [
+      preload: preloads,
+      with_cache: false,
+      current_user: current_user,
+      # skip boundary because it should already be checked it the initial query
+      skip_boundary_check: true
+    ]
+
     list_of_activities =
       list_of_components
       |> Enum.map(fn
         %{activity: %{__struct__: _} = activity} ->
+          debug(activity, "struct")
           activity
+
+        %{activity: %{} = activity} ->
+          struct(Activity, activity)
 
         %{object: %{__struct__: _} = object} ->
           %Activity{object: object}
@@ -716,71 +731,70 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
           nil
       end)
       |> filter_empty([])
-      |> Bonfire.Social.Activities.activity_preloads([:with_reply_to, :with_media],
-        current_user: current_user
-      )
+      |> preload_activity_and_object_assocs([:object], opts)
       |> Map.new(fn activity -> {id(activity) || id(activity[:object]), activity} end)
-      |> debug()
+
+    # |> debug()
 
     list_of_components
     # |> debug()
     |> Map.new(fn component ->
       {component.component_id,
-       %{activity: list_of_activities[component.object_id] || component[:activity]}}
+       %{activity: list_of_activities[component.object_id] || component.activity}}
     end)
   end
 
-  @decorate time()
-  def preloads(feed, socket_or_opts \\ [])
+  # @decorate time()
+  # def preloads(feed, socket_or_opts \\ [])
 
-  def preloads(feed, socket_or_opts) when is_list(feed) and feed != [] do
-    opts = e(socket_or_opts, :assigns, nil) || socket_or_opts
+  # def preloads(feed, socket_or_opts) when is_list(feed) and feed != [] do
+  #   opts = e(socket_or_opts, :assigns, nil) || socket_or_opts
 
-    preloads = e(opts, :preload, :feed)
-    debug(preloads, "Feed: preload assocs")
+  #   preloads = e(opts, :preload, :feed)
+  #   debug(preloads, "Feed: preload assocs")
 
-    opts = [
-      preload: preloads,
-      with_cache: e(opts, :with_cache, false),
-      current_user: current_user(opts) || current_user(feed),
-      # skip boundary because it should already be check it the initial query
-      skip_boundary_check: true
-    ]
+  #   opts = [
+  #     preload: preloads,
+  #     with_cache: e(opts, :with_cache, false),
+  #     current_user: current_user(opts) || current_user(feed),
+  #     # skip boundary because it should already be check it the initial query
+  #     skip_boundary_check: true
+  #   ]
 
-    case feed do
-      # Edges (eg. likes, follows)
-      [%{edge: %{id: _}} | _] ->
-        feed
-        |> preload_activity_and_object_assocs([:edge, :object], opts)
+  #   case feed do
+  #     # Edges (eg. likes, follows)
+  #     [%{edge: %{id: _}} | _] ->
+  #       feed
+  #       |> preload_activity_and_object_assocs([:edge, :object], opts)
 
-      # Feed with activities
-      [%{activity: %{id: _}} | _] ->
-        feed
-        |> preload_activity_and_object_assocs([:activity, :object], opts)
+  #     # Feed with activities
+  #     [%{activity: %{id: _}} | _] ->
+  #       feed
+  #       |> preload_activity_and_object_assocs([:activity, :object], opts)
 
-      # Objects without activity
-      [%{object: %{id: _}} | _] ->
-        feed
-        |> preload_activity_and_object_assocs([:object], opts)
+  #     # Objects without activity
+  #     [%{object: %{id: _}} | _] ->
+  #       feed
+  #       |> preload_activity_and_object_assocs([:object], opts)
 
-      _ ->
-        warn("Could not preload activities - feed data structure was not recognised")
-        debug(feed)
-        feed
-    end
-  end
+  #     _ ->
+  #       warn("Could not preload activities - feed data structure was not recognised")
+  #       debug(feed)
+  #       feed
+  #   end
+  # end
 
-  def preloads(%{edges: feed} = page, socket),
-    do: Map.put(page, :edges, preloads(feed, socket))
+  # def preloads(%{edges: feed} = page, socket),
+  #   do: Map.put(page, :edges, preloads(feed, socket))
 
-  def preloads(feed, socket) do
-    warn("Could not preload activities - provided data structure was not recognised")
-    debug(feed)
-    feed
-  end
+  # def preloads(feed, socket) do
+  #   warn("Could not preload activities - provided data structure was not recognised")
+  #   debug(feed)
+  #   feed
+  # end
 
   def preload_activity_and_object_assocs(feed, under, opts) do
-    if Bonfire.Common.Config.get([:ui, :disable_feed_object_preloads]) != true do
+    if Bonfire.Common.Config.get([:ui, :feed_object_extension_preloads_disabled]) != true do
       feed
       |> Bonfire.Social.Activities.activity_preloads(opts[:preload], opts)
       |> Bonfire.Common.Repo.Preload.maybe_preloads_per_nested_schema(
@@ -889,7 +903,7 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
     [
       loading: false,
       selected_tab: tab,
-      feed: e(feed, :edges, []) |> preloads(socket),
+      feed: e(feed, :edges, []),
       page_info: e(feed, :page_info, [])
     ]
   end
@@ -910,7 +924,7 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
     [
       loading: false,
       selected_tab: tab,
-      feed: e(feed, :edges, []) |> preloads(socket),
+      feed: e(feed, :edges, []),
       page_info: e(feed, :page_info, [])
     ]
   end
@@ -936,7 +950,7 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
       loading: false,
       selected_tab: tab,
       feed_id: feed_id,
-      feed: e(feed, :edges, []) |> preloads(socket),
+      feed: e(feed, :edges, []),
       page_info: e(feed, :page_info, [])
     ]
   end
@@ -962,7 +976,7 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
       loading: false,
       selected_tab: tab,
       feed_id: feed_id,
-      feed: e(feed, :edges, []) |> preloads(socket),
+      feed: e(feed, :edges, []),
       page_info: e(feed, :page_info, [])
     ]
   end

@@ -60,6 +60,7 @@ defmodule Bonfire.UI.Social.FeedLive do
   defp get_activity(%{activity: %{} = activity, edge: %{} = edge}),
     do: merge_structs_as_map(activity, edge)
 
+  # consolidate different kinds of lists/feeds into Activity
   defp get_activity(%{activity: %{} = activity}), do: activity
   defp get_activity(%{edge: %{} = activity}), do: activity
   defp get_activity(activity), do: activity
@@ -84,9 +85,7 @@ defmodule Bonfire.UI.Social.FeedLive do
      socket
      |> assign(
        feed_update_mode: "prepend",
-       feed:
-         [new_activity]
-         |> Bonfire.Social.Feeds.LiveHandler.preloads(socket)
+       feed: [new_activity]
      )}
   end
 
@@ -110,7 +109,7 @@ defmodule Bonfire.UI.Social.FeedLive do
 
   def update(%{feed: feed, page_info: page_info} = assigns, socket) when is_list(feed) do
     debug("FeedLive.update - an initial feed was provided via assigns")
-    debug(feed)
+    debug(assigns)
 
     # debug(socket.assigns, "socket assigns")
     # debug(assigns)
@@ -133,7 +132,6 @@ defmodule Bonfire.UI.Social.FeedLive do
         # page_info: page_info,
         # feed: feed
         # |> debug("FeedLive: feed")
-        # |> LiveHandler.preloads(socket),
       )
     )
   end

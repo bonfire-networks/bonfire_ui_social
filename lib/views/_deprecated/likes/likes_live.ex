@@ -31,7 +31,7 @@ defmodule Bonfire.UI.Social.Feeds.LikesLive do
     {:ok,
      socket
      |> assign(
-       feed: Bonfire.Social.Feeds.LiveHandler.preloads(feed, socket),
+       feed: feed,
        page_info: page_info,
        showing_within: :likes,
        loading: false,

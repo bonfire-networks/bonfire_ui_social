@@ -3,7 +3,7 @@
   class={
     "subject",
     "!mb-3": @viewing_main_object == true,
-    "flex items-center gap-1": ActivityLive.show_minimal_reply?(@object, @activity, @showing_within)
+    "flex items-center gap-1": @show_minimal_subject_and_note
   }
 >
   <div
@@ -19,7 +19,7 @@
       <Icon solid="X" class="w-3 h-3" />
     </span>
   </div>
-  {#if ActivityLive.show_minimal_reply?(@object, @activity, @showing_within)}
+  {#if @show_minimal_subject_and_note}
     <Icon iconify="ic:round-reply" class="w-5 h-5 text-base-content/70" />
     <LiveRedirect
       :if={@showing_within == :smart_input}
@@ -40,8 +40,8 @@
         opts={"data-id": "subject_name", "aria-label": l("%{name}'s profile", name: e(@profile, :name, ""))}
         class="no-underline hover:underline !text-base-content/70"
         to={path(@character)}
-      >{e(@profile, :name, "Anonymous")}
-      </LiveRedirect>:
+      >{e(@profile, :name, "Anonymous")}:
+      </LiveRedirect>
       {#if @cw == true or (is_nil(@cw) and not is_nil(e(post_content(@object), :name, nil)))}
         {rich(e(post_content(@object), :name, nil))}
       {#else}
@@ -139,11 +139,13 @@
               object={@object}
               activity={@activity}
               object_type={@object_type}
-              permalink={@permalink}
+              permalink={@permalink |> debug("ppp") || path(@object |> debug("ooo")) ||
+                path(e(@activity |> debug("aaa"), :object, nil))}
               thread_id={@thread_id}
             >
               <span class="subject_timestamp text-[13px] font-normal no-underline truncate ellipsis text-base-content/50">
-                {@date_ago}
+                {@date_ago || date_from_now(@activity) || date_from_now(@object) ||
+                  date_from_now(e(@activity, :object, nil))}
               </span>
             </Bonfire.UI.Social.Activity.LinkToActivityLive>
 
