@@ -181,7 +181,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
       object_id: e(activity, :object, :id, nil) || e(activity, :id, "no-object-id"),
       object_type: object_type,
       object_type_readable: object_type_readable,
-      date_ago: date_from_now(id),
+      date_ago: DatesTimes.date_from_now(id),
       verb: verb,
       verb_display: verb_display,
       created_verb_display: @created_verb_display,
@@ -202,7 +202,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
        component_object(verb, activity, object_type) ++
        component_maybe_attachments(activity, assigns) ++
        component_actions(verb, activity, assigns))
-    |> Utils.filter_empty([])
+    |> Enums.filter_empty([])
     |> Enum.map(fn
       c when is_atom(c) and not is_nil(c) -> {c, nil}
       other -> other

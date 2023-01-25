@@ -57,6 +57,7 @@ defmodule Bonfire.UI.Social.FeedsLive do
        feed_id: nil,
        feed_title: nil,
        feed_ids: nil,
+       tab_path_suffix: nil,
        feed_component_id: :feeds,
        feedback_title: l("Your feed is empty"),
        feedback_message:

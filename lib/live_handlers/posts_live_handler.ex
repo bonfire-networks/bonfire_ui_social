@@ -104,7 +104,7 @@ defmodule Bonfire.Social.Posts.LiveHandler do
       }
     else
       e ->
-        error = error_msg(e)
+        error = Errors.error_msg(e)
         error(error)
 
         {

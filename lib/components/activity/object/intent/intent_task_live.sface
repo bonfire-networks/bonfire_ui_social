@@ -76,7 +76,7 @@
                 }
               >
                 <Icon solid="Calendar" class="w-4 h-4" />
-                <span>{date_from_now(e(@object, :due, nil)) || l("No due date")}</span>
+                <span>{DatesTimes.date_from_now(e(@object, :due, nil)) || l("No due date")}</span>
               </div>
 
               <div :if={e(@object, :note, nil)}>

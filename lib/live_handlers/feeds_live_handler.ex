@@ -697,12 +697,14 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
       component_id: assigns.id,
       activity: activity,
       object: object,
-      object_id: id(activity) || id(object)
+      object_id: id(activity) || id(object),
+      showing_within: e(assigns, :showing_within, nil)
     }
   end
 
   @decorate time()
   defp preload_extras(list_of_components, _list_of_ids, current_user) do
+    # TODO: less preloads if not in a feed
     preloads = [:feed, :with_reply_to, :with_media]
 
     opts = [
@@ -732,7 +734,7 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
       end)
       |> filter_empty([])
       |> preload_activity_and_object_assocs([:object], opts)
-      |> Map.new(fn activity -> {id(activity) || id(activity[:object]), activity} end)
+      |> Map.new(fn activity -> {id(activity) || id(e(activity, :object, nil)), activity} end)
 
     # |> debug()
 

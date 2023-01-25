@@ -16,7 +16,7 @@
           <div class="flex items-center space-x-1">
           <%= for p <- e(@participants, :edges, [])  do %>
             <%= live_redirect to: "/user/"<>e(p, :activity, :subject, :character, :username, "404") do %>
-              <img title="<%=e(p, :activity, :subject, :profile, :name, "")%>" class="object-cover w-6 h-6 rounded-full" src="<%=avatar_url(e(p, :activity, :subject, :profile, nil))%>" />
+              <img title="<%=e(p, :activity, :subject, :profile, :name, "")%>" class="object-cover w-6 h-6 rounded-full" src="<%=Media.avatar_url(e(p, :activity, :subject, :profile, nil))%>" />
             <% end %>
           <% end %>
 

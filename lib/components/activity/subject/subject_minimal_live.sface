@@ -220,8 +220,8 @@
                     thread_id={@thread_id}
                   >
                     <span class="subject_timestamp text-[13px] font-normal no-underline truncate ellipsis text-base-content/50">
-                      {@date_ago || date_from_now(@activity) || date_from_now(@object) ||
-                        date_from_now(e(@activity, :object, nil))}
+                      {@date_ago || DatesTimes.date_from_now(@activity) || DatesTimes.date_from_now(@object) ||
+                        DatesTimes.date_from_now(e(@activity, :object, nil))}
                     </span>
                   </Bonfire.UI.Social.Activity.LinkToActivityLive>
 
@@ -301,7 +301,7 @@
                   {e(@activity, :subject, :profile, :name, nil) || e(@activity, :subject, :character, :username, nil)}
                 </LiveRedirect>
                 {#if @verb == "Schedule" and e(@object, :due, nil)}
-                  {l("scheduled for %{date}", date: date_from_now(e(@object, :due, nil)))}
+                  {l("scheduled for %{date}", date: DatesTimes.date_from_now(e(@object, :due, nil)))}
                 {#elseif @verb == "Label" and e(@object, :finished, nil) == true}
                   {l("completed")}
                 {#elseif @verb == "Label" and e(@object, :finished, nil) == false}

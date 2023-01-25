@@ -20,7 +20,7 @@
           class="bg-base-content/10 top-0 bottom-0 z-10 w-[2px] absolute"
         />
       </div> -->
-      
+
       <div class="flex-1 w-full" x-cloak x-data="{reply: false, show: true}">
         {#case get_activity(@comment)}
           {#match nil}
@@ -57,9 +57,10 @@
       </div>
     </div>
 
-    <div 
-      class="absolute left-[-10px] cursor-pointer top-[-1px] z-30 " 
-      x-on:click="show_replies = ! show_replies">
+    <div
+      class="absolute left-[-10px] cursor-pointer top-[-1px] z-30"
+      x-on:click="show_replies = ! show_replies"
+    >
       <div x-cloak x-show="show_replies">
         <!-- <Icon iconify="mdi:arrow-collapse" class="w-5 h-5 text-base-content/50" /> -->
         <span class="text-xs text-base-content/50">[-]</span>
@@ -69,7 +70,6 @@
         <!-- <Icon iconify="mdi:arrow-expand" class="w-5 h-5 text-base-content/50" /> -->
       </div>
     </div>
-
 
     <div x-show="show_replies" x-transition>
       <div
@@ -89,7 +89,7 @@
         </button>
       </div> -->
 
-      {#if is_list(@child_replies) and @child_replies !=[]}
+      {#if is_list(@child_replies) and @child_replies != []}
         <div class={"replies replies-level-" <> to_string(@thread_level + 1) <> " ml-3 mt-3"}>
           {#for {{subreply, sub_child_replies}, index} <- Enum.with_index(@child_replies, 1)}
             <div class="relative">

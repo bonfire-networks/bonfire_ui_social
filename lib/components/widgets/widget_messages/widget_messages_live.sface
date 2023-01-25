@@ -24,7 +24,7 @@
               <div class="flex-shrink-0 ml-5">
                 <div class="">
                   <div class="text-xs text-base-content text-opacity-60">
-                    <p><time datetime={"#{date_from_pointer(activity)}"}>{date_from_now(activity)}</time></p>
+                    <p><time datetime={DatesTimes.date_from_pointer(activity)}>{DatesTimes.date_from_now(activity)}</time></p>
                   </div>
                 </div>
               </div>

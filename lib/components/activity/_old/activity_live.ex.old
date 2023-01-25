@@ -63,7 +63,7 @@ defmodule Bonfire.UI.Social.ActivityOLDLive do
         object_id: e(activity.object, :id, nil) || e(activity, :id, "no-object-id"),
         object_type: object_type,
         object_type_readable: object_type_readable,
-        date_ago: date_from_now(ulid(activity) || ulid(activity.object)),
+        date_ago: DatesTimes.date_from_now(ulid(activity) || ulid(activity.object)),
         activity: activity |> Map.drop([:object]),
         verb: verb,
         verb_display: verb_display,
@@ -85,7 +85,7 @@ defmodule Bonfire.UI.Social.ActivityOLDLive do
       ++
       component_actions(verb, activity, assigns)
       )
-      |> Utils.filter_empty([])
+      |> Enums.filter_empty([])
       |> Enum.map(fn
         c when is_atom(c) -> {c, nil}
         other -> other

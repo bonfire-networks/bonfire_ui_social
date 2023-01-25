@@ -28,7 +28,7 @@ defmodule Bonfire.UI.Social.Activity.MediaLive do
   end
 
   def media_img(media) do
-    (e(media.metadata, "oembed", "url", nil) || media_url(media))
+    (e(media.metadata, "oembed", "url", nil) || Media.media_url(media))
     |> as_string()
   end
 

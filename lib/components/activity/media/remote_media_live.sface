@@ -7,7 +7,7 @@
     {#match nil}
       {#case e(@media.metadata, "oembed", "html", nil)}
         {#match nil}
-          <a href={media_url(@media)} target="_blank">{l("View the %{media}", media: @media.media_type || l("media"))}</a>
+          <a href={Media.media_url(@media)} target="_blank">{l("View the %{media}", media: @media.media_type || l("media"))}</a>
         {#match embed}
           {raw(embed)}
       {/case}

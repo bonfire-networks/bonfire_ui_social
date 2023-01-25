@@ -49,7 +49,7 @@
         <div class="w-6 h-6 teee bg-base-200 rounded-btn">
           <LazyImage 
             class="avatar" 
-            src={avatar_url(e(the_other(assigns), :profile, nil))} 
+            src={Media.avatar_url(e(the_other(assigns), :profile, nil))} 
           />
         </div>
       </div>
