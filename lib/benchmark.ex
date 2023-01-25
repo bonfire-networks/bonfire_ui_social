@@ -83,33 +83,37 @@ defmodule Bonfire.UI.Social.Benchmark do
     Benchee.run(
       %{
         # "fetch feed page with 1 activity" => fn -> get(conn, "/feed/local?limit=1") end,
-        "fetch feed page with 10 activities" => fn -> get(conn, "/feed/local?limit=10") end,
+        # "fetch feed page with 10 activities" => fn -> get(conn, "/feed/local?limit=10") end,
         "fetch feed page with 20 activities" => fn -> get(conn, "/feed/local?limit=20") end,
-        "render feed component with 10 activities" => fn -> live_feed(limit: 10) end,
-        "render feed component with 20 activities" => fn -> live_feed(limit: 20) end,
+
+        # "render feed component with 10 activities (not incl. async preloads)" => fn -> live_feed(limit: 10, enable_async_preloads: true) end,
+        "render feed component with 20 activities (not incl. async preloads)" => fn -> live_feed(limit: 20, enable_async_preloads: true) end,
+
+        # "render feed component with 10 activities  (incl. preloads)" => fn -> live_feed(limit: 10, enable_async_preloads: false) end,
+        "render feed component with 20 activities (incl. preloads)" => fn -> live_feed(limit: 20, enable_async_preloads: false) end,
 
         # "fetch feed page with 1 (skipped) activity" => fn ->
         #   get(conn, "/feed/local?limit=1&hide_activities=component")
         # end,
-        "fetch feed page with 10 (skipped) activities" => fn ->
-          get(conn, "/feed/local?limit=10&hide_activities=component")
-        end,
+        # "fetch feed page with 10 (skipped) activities" => fn ->
+        #   get(conn, "/feed/local?limit=10&hide_activities=component")
+        # end,
         "fetch feed page with 20 (skipped) activities" => fn ->
           get(conn, "/feed/local?limit=20&hide_activities=component")
         end,
         # "fetch feed page with 1 (not rendered) activity" => fn ->
         #   get(conn, "/feed/local?limit=1&hide_activities=all")
         # end,
-        "fetch feed page with 10 (not rendered) activities" => fn ->
-          get(conn, "/feed/local?limit=10&hide_activities=all")
-        end,
+        # "fetch feed page with 10 (not rendered) activities" => fn ->
+        #   get(conn, "/feed/local?limit=10&hide_activities=all")
+        # end,
         "fetch feed page with 20 (not rendered) activities" => fn ->
           get(conn, "/feed/local?limit=20&hide_activities=all")
         end
       },
       parallel: 1,
       warmup: 2,
-      time: 15,
+      time: 25,
       memory_time: 2,
       reduction_time: 2,
       profile_after: true,
@@ -123,7 +127,7 @@ defmodule Bonfire.UI.Social.Benchmark do
   end
 
   def live_feed(opts \\ []) do
-    Process.put(:enable_async_preloads, true)
+    Process.put(:enable_async_preloads, opts[:enable_async_preloads] || true)
     feed = Bonfire.Social.FeedActivities.feed(:local, opts)
 
     Bonfire.UI.Common.Testing.Helpers.render_stateful(Bonfire.UI.Social.FeedLive, %{
