@@ -15,7 +15,7 @@
         {#match cw?}
           {#if cw?}
             <div class="flex items-baseline gap-2 mb-2">
-              <p class="text-base font-semibold text-base-content">
+              <p class="text-base font-medium leading-5 text-base-content">
                 <span>{name || l("CW")}</span>
                 <button
                   x-on:click="content_open = ! content_open"
