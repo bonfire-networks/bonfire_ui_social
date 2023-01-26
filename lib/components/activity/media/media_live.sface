@@ -47,12 +47,12 @@
             image_preview
             enable_fallback
             modal_class="modal !modal-middle max-h-[100%]"
-            wrapper_class="!w-full md:w-10/12 !p-0 max-w-[100%] !bg-transparent shadow-none rounded-none"
+            wrapper_class="max-h-full !w-full md:w-10/12 !p-0 max-w-[100%] !bg-transparent shadow-none rounded-none"
             open_btn_class="w-full"
             open_btn_wrapper_class="w-full h-full"
           >
             <div
-              class="relative"
+              class="relative h-full"
               style={if String.starts_with?(media.media_type, ["video"]),
                 do: "min-width: 90vw; min-height: 90vh",
                 else: ""}
@@ -68,14 +68,9 @@
             </div>
 
             <:open_btn>
-              <div class="relative">
+              <div class="relative h-full">
                 <LazyImage
-                  class={
-                    "w-full !object-cover media-image h-full cursor-pointer object-top aspect-video rounded-md",
-                    "!max-h-[337px] !h-[337px]": counter == 0 && @media |> length() == 3,
-                    "max-h-[270px]": @media |> length() < 4,
-                    "max-h-[135px]": @media |> length() > 3
-                  }
+                  class={"w-full !object-cover media-image h-full cursor-pointer object-top aspect-video rounded-md"}
                   alt={media_label(media)}
                   src={preview_img(media) || Media.media_url(media)}
                 />

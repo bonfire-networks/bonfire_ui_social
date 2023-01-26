@@ -25,6 +25,7 @@
   <div class="flex-1">
     <Bonfire.UI.Common.ProfileItemLive
       show_controls={[]}
+      lg
       profile={e(the_other(@activity, @object, @__context__), :profile, nil)}
       character={e(the_other(@activity, @object, @__context__), :character, nil)}
     />
@@ -34,7 +35,7 @@
     :on-click="Bonfire.Social.Follows:accept"
     phx-value-id={ulid(@activity)}
     type="button"
-    class="rounded btn btn-sm btn-primary"
+    class="normal-case rounded btn btn-sm btn-primary"
   >
     {l("Accept")}
   </button>

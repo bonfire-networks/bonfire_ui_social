@@ -9,7 +9,7 @@
   feed={@feed}
   selected_tab={@selected_tab}
   feed_title={@feed_title}
-  tabs_class="flex gap-3 p-3 px-4 bg-base-100"
+  tabs_class="flex gap-3 pt-1 md:pt-3 p-3 px-4 bg-base-100"
   tab_class="btn btn-sm rounded-full font-normal normal-case bg-base-content/10 feed_tab text-base-content/80 border-none"
   page_info={@page_info}
   loading={@loading}

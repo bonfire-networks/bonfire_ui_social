@@ -21,7 +21,7 @@
       do: "h-[calc(var(--visual-viewport-height)_-_110px) with_editor flex-1",
       else: "with_textarea flex-1"}
   >
-    <div
+    <!-- <div
       x-cloak
       x-on:click="smart_input_minimized = !smart_input_minimized; smart_input_fullscreen = false"
       x-show="!open_boundaries"
@@ -38,7 +38,7 @@
       >
         {l("Post")}
       </button>
-    </div>
+    </div> -->
     <div class={
       "bg-base-100 flex h-full flex-1": @thread_mode != :flat,
       "bg-base-100 border-t border-base-content/10 p-3 h-full flex-1 sticky bottom-0 messages_smart_input":

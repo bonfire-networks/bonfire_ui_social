@@ -15,16 +15,16 @@
         {#match cw?}
           {#if cw?}
             <div class="flex items-baseline gap-2 mb-2">
-              <div class="text-base font-semibold text-base-content">
-                {rich(name || l("CW"))}
-              </div>
-              <button
-                x-on:click="content_open = ! content_open"
-                x-text={"content_open ? '#{l("Show less")}' : '#{l("Show more")}'"}
-                class="normal-case rounded btn btn-xs"
-              >
-                {l("Show more")}
-              </button>
+              <p class="text-base font-semibold text-base-content">
+                <span>{name || l("CW")}</span>
+                <button
+                  x-on:click="content_open = ! content_open"
+                  x-text={"content_open ? '#{l("Show less")}' : '#{l("Show more")}'"}
+                  class="ml-1 normal-case rounded btn btn-xs"
+                >
+                  {l("Show more")}
+                </button>
+              </p>
             </div>
           {#else}
             <div :if={name} class="w-full h-auto max-w-full p-0 m-0 mt-6 text-2xl font-bold">
@@ -44,10 +44,10 @@
               data-id="object_body"
               class={
                 "prose break-words object_body max-w-none md:prose-sm prose-p:pt-0 prose-p:my-0 prose-a:text-accent prose-a:no-underline prose-a:hover:underline",
-                "!text-[13px] line-clamp-1 !text-base-content/80":
+                "!text-[13px]  !text-base-content/80":
                   ulid(@object) != nil and e(@activity, :replied, :reply_to_id, nil) == nil and
                     ulid(@activity) == nil,
-                "!my-0 !text-sm !font-normal line-clamp-1": @showing_within == :smart_input,
+                "!my-0 !text-sm !font-normal ": @showing_within == :smart_input,
                 "prose-p:pb-2": @showing_within == :thread and !@viewing_main_object,
                 "!text-base prose-p:pb-4": @viewing_main_object,
                 "prose-p:pb-2 !leading-6": @showing_within in [:feed, :search, :notifications]
