@@ -1,5 +1,4 @@
 <div class="flex flex-col h-full overflow-hidden write_post_content">
-  
   <Form
     for={Bonfire.Social.Posts.LiveHandler.post_changeset(@current_user)}
     submit={handler(%{
@@ -22,24 +21,22 @@
       do: "h-[calc(var(--visual-viewport-height)_-_110px) with_editor flex-1",
       else: "with_textarea flex-1"}
   >
-
-    <div 
+    <div
       x-cloak
       x-on:click="smart_input_minimized = !smart_input_minimized; smart_input_fullscreen = false"
       x-show="!open_boundaries"
-      class="flex items-center justify-between p-2 px-4 border-b md:hidden border-base-300">
-     <div class="">
+      class="flex items-center justify-between p-2 px-4 border-b md:hidden border-base-300"
+    >
+      <div class="">
         <Icon iconify="heroicons-solid:arrow-left" class="w-5 h-5 stroke-1 text-neutral-content" />
-     </div>
-     <button
+      </div>
+      <button
         type="submit"
         @click="$dispatch('submit')"
-        phx-disable-with={"Posting..."}
+        phx-disable-with="Posting..."
         class="h-8 px-10 capitalize rounded min-h-8 justify-self-end btn btn-primary"
       >
-       
-          {l("Post")}
-
+        {l("Post")}
       </button>
     </div>
     <div class={
@@ -91,7 +88,6 @@
               </Field>
             </div>
 
-
             <div class="flex gap-3 m-5 mb-0 md:hidden">
               <Bonfire.UI.Common.AvatarLive
                 class="inline-block object-cover w-10 h-10 rounded cursor-pointer bg-base-300"
@@ -105,7 +101,7 @@
                 </div>
               </div>
             </div>
-            
+
             <label for="description" class="sr-only">{l("Description")}</label>
             <Field class="flex-1 h-full grow" name={:html_body}>
               <div class={@textarea_container_class} :class={@textarea_container_class_alpine}>

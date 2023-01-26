@@ -87,10 +87,14 @@ defmodule Bonfire.UI.Social.Benchmark do
         "fetch feed page with 20 activities" => fn -> get(conn, "/feed/local?limit=20") end,
 
         # "render feed component with 10 activities (not incl. async preloads)" => fn -> live_feed(limit: 10, enable_async_preloads: true) end,
-        "render feed component with 20 activities (not incl. async preloads)" => fn -> live_feed(limit: 20, enable_async_preloads: true) end,
+        "render feed component with 20 activities (not incl. async preloads)" => fn ->
+          live_feed(limit: 20, enable_async_preloads: true)
+        end,
 
         # "render feed component with 10 activities  (incl. preloads)" => fn -> live_feed(limit: 10, enable_async_preloads: false) end,
-        "render feed component with 20 activities (incl. preloads)" => fn -> live_feed(limit: 20, enable_async_preloads: false) end,
+        "render feed component with 20 activities (incl. preloads)" => fn ->
+          live_feed(limit: 20, enable_async_preloads: false)
+        end,
 
         # "fetch feed page with 1 (skipped) activity" => fn ->
         #   get(conn, "/feed/local?limit=1&hide_activities=component")
