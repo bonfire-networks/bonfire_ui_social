@@ -3,7 +3,7 @@
   data-id="comment"
   x-data="{show_replies: true}"
   class={
-    "reply thread-level-" <> to_string(@thread_level) <> " flex relative  w-full mx-auto pl-4 pt-1",
+    "reply thread-level-" <> to_string(@thread_level) <> " flex relative  w-full mx-auto pl-4 pt-3",
     "": @thread_level == 1
   }
 >
@@ -75,7 +75,7 @@
       <div
         x-cloak
         x-show="show_replies"
-        class="group z-10 left-[-15px] px-3 top-[30px] bottom-[0px] absolute"
+        class="group z-10 left-[-15px] px-3 top-[30px] bottom-[-4px] absolute"
       >
         <i
           :class="!show_replies ? 'bg-primary bottom-[0px]' : 'bottom-[0px]'"
