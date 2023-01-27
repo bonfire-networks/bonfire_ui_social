@@ -23,19 +23,20 @@
     <div class="flex-shrink-0">
       <Icon iconify="ic:round-reply" class="w-5 h-5 text-base-content/70" />
     </div>
-    <div 
-      class="flex items-top"
-      x-on:click="expanded = ! expanded"
-      x-data="{expanded: false}" >
-      <div 
+    <div class="flex items-top" x-on:click="expanded = ! expanded" x-data="{expanded: false}">
+      <div
         x-show="expanded"
         :class="{'minimal_subject_and_note': !expanded}"
         x-collapse.min.20px
-        class="font-medium cursor-pointer w-full  max-w-full flex items-baseline relative gap-1  prose prose-sm !text-[13px] !text-base-content/70 prose-a:text-base-content/70 prose-a:no-underline prose-p:inline-block">
+        class="font-medium cursor-pointer w-full  max-w-full flex items-baseline relative gap-1  prose prose-sm !text-[13px] !text-base-content/70 prose-a:text-base-content/70 prose-a:no-underline prose-p:inline-block"
+      >
         {#if @cw == true or (is_nil(@cw) and not is_nil(e(post_content(@object), :name, nil)))}
           {rich(e(@profile, :name, "Anonymous") <> ": " <> e(post_content(@object), :name, nil))}
         {#else}
-          {rich(e(@profile, :name, "Anonymous") <> ": " <> e(post_content(@object), :html_body, l("This post has been deleted.")))}
+          {rich(
+            e(@profile, :name, "Anonymous") <>
+              ": " <> e(post_content(@object), :html_body, l("This post has been deleted."))
+          )}
         {/if}
       </div>
     </div>

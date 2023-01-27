@@ -70,7 +70,7 @@
             <:open_btn>
               <div class="relative h-full">
                 <LazyImage
-                  class={"w-full !object-cover media-image h-full cursor-pointer object-top aspect-video rounded-md"}
+                  class="w-full !object-cover media-image h-full cursor-pointer object-top aspect-video rounded-md"
                   alt={media_label(media)}
                   src={preview_img(media) || Media.media_url(media)}
                 />
