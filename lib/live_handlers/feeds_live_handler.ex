@@ -1003,6 +1003,7 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
   def load_user_feed_assigns("followed" = tab, user, params, socket) do
     user = user || e(socket, :assigns, :user, nil)
     # |> debug("followed")
+
     followed =
       Bonfire.Social.Follows.list_followed(user,
         pagination: input_to_atoms(params),
@@ -1020,13 +1021,36 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
   def load_user_feed_assigns("requested" = tab, user, params, socket) do
     user = user || e(socket, :assigns, :user, nil)
 
+    # TODO: apply boundaries to Requests and then be able to view someone's requests/requested that involve me
     # TODO: pagination
+    # user, 
     requested =
-      Bonfire.Social.Requests.list_requested(user,
+      Bonfire.Social.Requests.list_my_requested(
         pagination: input_to_atoms(params),
         current_user: current_user(socket)
       )
       |> debug("requested")
+
+    [
+      loading: false,
+      selected_tab: tab,
+      feed: requested
+      # feed: e(requested, :edges, []),
+      # page_info: e(requested, :page_info, [])
+    ]
+  end
+
+  def load_user_feed_assigns("requests" = tab, user, params, socket) do
+    user = user || e(socket, :assigns, :user, nil)
+
+    # TODO: pagination
+    # user, 
+    requested =
+      Bonfire.Social.Requests.list_my_requesters(
+        pagination: input_to_atoms(params),
+        current_user: current_user(socket)
+      )
+      |> debug("requests")
 
     [
       loading: false,

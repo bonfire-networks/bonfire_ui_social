@@ -163,32 +163,31 @@
             </LiveRedirect>
             <Bonfire.UI.Social.Activity.InstanceIconLive peered={e(@activity, :peered, nil)} />
           </div>
-
         </div>
-          <div class="flex items-center gap-1">
-            <Dynamic.Component
-              :if={module_enabled?(Bonfire.Boundaries.Web.ActivityVisibilityIconLive) and
-                @object_type not in [Bonfire.Data.Social.Message]}
-              module={Bonfire.Boundaries.Web.ActivityVisibilityIconLive}
-              object={@object}
-              with_icon
-              object_boundary={@object_boundary}
-            />
-            <Bonfire.UI.Social.Activity.LinkToActivityLive
-              :if={@showing_within not in [:smart_input]}
-              object={@object}
-              activity={@activity}
-              object_type={@object_type}
-              permalink={@permalink |> debug("ppp") || path(@object |> debug("ooo")) ||
-                path(e(@activity |> debug("aaa"), :object, nil))}
-              thread_id={@thread_id}
-            >
-              <span class="subject_timestamp text-[13px] font-normal no-underline truncate ellipsis text-base-content/50">
-                {@date_ago || DatesTimes.date_from_now(@activity) || DatesTimes.date_from_now(@object) ||
-                  DatesTimes.date_from_now(e(@activity, :object, nil))}
-              </span>
-            </Bonfire.UI.Social.Activity.LinkToActivityLive>
-          </div>
+        <div class="flex items-center gap-1">
+          <Dynamic.Component
+            :if={module_enabled?(Bonfire.Boundaries.Web.ActivityVisibilityIconLive) and
+              @object_type not in [Bonfire.Data.Social.Message]}
+            module={Bonfire.Boundaries.Web.ActivityVisibilityIconLive}
+            object={@object}
+            with_icon
+            object_boundary={@object_boundary}
+          />
+          <Bonfire.UI.Social.Activity.LinkToActivityLive
+            :if={@showing_within not in [:smart_input]}
+            object={@object}
+            activity={@activity}
+            object_type={@object_type}
+            permalink={@permalink |> debug("ppp") || path(@object |> debug("ooo")) ||
+              path(e(@activity |> debug("aaa"), :object, nil))}
+            thread_id={@thread_id}
+          >
+            <span class="subject_timestamp text-[13px] font-normal no-underline truncate ellipsis text-base-content/50">
+              {@date_ago || DatesTimes.date_from_now(@activity) || DatesTimes.date_from_now(@object) ||
+                DatesTimes.date_from_now(e(@activity, :object, nil))}
+            </span>
+          </Bonfire.UI.Social.Activity.LinkToActivityLive>
+        </div>
         <!-- <div class="flex items-center gap-1">
           <Dynamic.Component
             :if={module_enabled?(Bonfire.Boundaries.Web.PermissionsIconLive) and
