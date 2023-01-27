@@ -1016,4 +1016,24 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
       page_info: e(followed, :page_info, [])
     ]
   end
+
+  def load_user_feed_assigns("requested" = tab, user, params, socket) do
+    user = user || e(socket, :assigns, :user, nil)
+
+    # TODO: pagination
+    requested =
+      Bonfire.Social.Requests.list_requested(user,
+        pagination: input_to_atoms(params),
+        current_user: current_user(socket)
+      )
+      |> debug("requested")
+
+    [
+      loading: false,
+      selected_tab: tab,
+      feed: requested
+      # feed: e(requested, :edges, []),
+      # page_info: e(requested, :page_info, [])
+    ]
+  end
 end
