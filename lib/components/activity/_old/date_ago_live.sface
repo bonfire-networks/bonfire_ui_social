@@ -10,7 +10,7 @@
       <span
         :if={e(@object, :peered, nil) || e(@object, :character, :peered, nil)}
         data-tip={l("Originates from a remote instance")}
-        class="z-20 align-bottom tooltip tooltip-bottom"
+        class="z-20 tooltip tooltip-bottom"
       >
         {#case Bonfire.Files.FaviconStore.favicon_url(@permalink)}
           {#match nil}

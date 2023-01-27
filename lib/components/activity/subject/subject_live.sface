@@ -41,31 +41,40 @@
       </div>
     </div>
   {#elseif @showing_within in [:thread, :messages] && !@viewing_main_object}
-    <div class="flex items-center gap-2">
-      <LiveRedirect
-        class="h-4"
-        opts={"data-id": "subject_name"}
-        aria-label={e(@character, :username, "") <> " profile"}
-        to={path(@character)}
-      >
-        <Bonfire.UI.Common.AvatarLive
-          user={@profile}
-          title={e(@profile, :name, "Anonymous")}
-          class="w-4 h-4 rounded"
-        />
-      </LiveRedirect>
-      <div class="flex items-baseline gap-1">
+    <div class="flex justify-between">
+      <div class="flex items-center gap-2">
         <LiveRedirect
+          class="h-4"
           opts={"data-id": "subject_name"}
-          aria-label={l("%{name}'s profile", name: e(@profile, :name, ""))}
-          class="link link-hover text-[13px] text-base-content/70"
+          aria-label={e(@character, :username, "") <> " profile"}
           to={path(@character)}
         >
-          {e(@profile, :name, "Anonymous")}
+          <Bonfire.UI.Common.AvatarLive
+            user={@profile}
+            title={e(@profile, :name, "Anonymous")}
+            class="w-4 h-4 rounded"
+          />
         </LiveRedirect>
-        <span class="text-base-content/70">
-          ·
-        </span>
+        <div class="flex items-baseline gap-1">
+          <LiveRedirect
+            opts={"data-id": "subject_name"}
+            aria-label={l("%{name}'s profile", name: e(@profile, :name, ""))}
+            class="link link-hover text-[13px] text-base-content/70"
+            to={path(@character)}
+          >
+            {e(@profile, :name, "Anonymous")}
+          </LiveRedirect>
+        </div>
+      </div>
+      <div class="flex items-center gap-1">
+        <Dynamic.Component
+          :if={module_enabled?(Bonfire.Boundaries.Web.ActivityVisibilityIconLive) and
+            @object_type not in [Bonfire.Data.Social.Message]}
+          module={Bonfire.Boundaries.Web.ActivityVisibilityIconLive}
+          object={@object}
+          with_icon
+          object_boundary={@object_boundary}
+        />
         <Bonfire.UI.Social.Activity.LinkToActivityLive
           :if={@showing_within not in [:smart_input]}
           object={@object}
@@ -80,14 +89,6 @@
               DatesTimes.date_from_now(e(@activity, :object, nil))}
           </span>
         </Bonfire.UI.Social.Activity.LinkToActivityLive>
-        <Dynamic.Component
-          :if={module_enabled?(Bonfire.Boundaries.Web.ActivityVisibilityIconLive) and
-            @object_type not in [Bonfire.Data.Social.Message]}
-          module={Bonfire.Boundaries.Web.ActivityVisibilityIconLive}
-          object={@object}
-          with_icon
-          object_boundary={@object_boundary}
-        />
       </div>
     </div>
   {#else}
@@ -160,9 +161,19 @@
             >
               @{e(@character, :username, "")}
             </LiveRedirect>
-            <span class="text-base-content/50">·</span>
             <Bonfire.UI.Social.Activity.InstanceIconLive peered={e(@activity, :peered, nil)} />
+          </div>
 
+        </div>
+          <div class="flex items-center gap-1">
+            <Dynamic.Component
+              :if={module_enabled?(Bonfire.Boundaries.Web.ActivityVisibilityIconLive) and
+                @object_type not in [Bonfire.Data.Social.Message]}
+              module={Bonfire.Boundaries.Web.ActivityVisibilityIconLive}
+              object={@object}
+              with_icon
+              object_boundary={@object_boundary}
+            />
             <Bonfire.UI.Social.Activity.LinkToActivityLive
               :if={@showing_within not in [:smart_input]}
               object={@object}
@@ -177,17 +188,7 @@
                   DatesTimes.date_from_now(e(@activity, :object, nil))}
               </span>
             </Bonfire.UI.Social.Activity.LinkToActivityLive>
-
-            <Dynamic.Component
-              :if={module_enabled?(Bonfire.Boundaries.Web.ActivityVisibilityIconLive) and
-                @object_type not in [Bonfire.Data.Social.Message]}
-              module={Bonfire.Boundaries.Web.ActivityVisibilityIconLive}
-              object={@object}
-              with_icon
-              object_boundary={@object_boundary}
-            />
           </div>
-        </div>
         <!-- <div class="flex items-center gap-1">
           <Dynamic.Component
             :if={module_enabled?(Bonfire.Boundaries.Web.PermissionsIconLive) and
