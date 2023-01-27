@@ -3,6 +3,8 @@
   <div />
 {#else} -->
 <div
+  x-show={if @showing_within == :thread && !@viewing_main_object, do: "show_replies"}
+  x-transition
   class={
     "thread_actions flex items-center":
       @showing_within == :thread or Settings.get([:ui, :compact], false, @__context__),
