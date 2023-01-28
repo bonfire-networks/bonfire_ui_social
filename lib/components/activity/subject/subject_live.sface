@@ -129,7 +129,7 @@
               <div>
                 <span>{l("created a new")}</span> <LiveRedirect
                   class="font-medium link link-hover"
-                  to={~p"/+#{e(@object, :character, :username, nil) || ulid(@object)}"}
+                  to={~p"/+#{e(@object, :character, :username, nil) || id(@object)}"}
                 >{l("topic")}</LiveRedirect></div>
             {#elseif @verb == "Reply"}
               <!-- {l("replied")} -->

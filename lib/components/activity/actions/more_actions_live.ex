@@ -22,7 +22,7 @@ defmodule Bonfire.UI.Social.Activity.MoreActionsLive do
   end
 
   def subject_id(activity, object) do
-    ulid(subject(activity, object))
+    id(subject(activity, object))
   end
 
   def name(activity, object) do

@@ -148,19 +148,21 @@ defmodule Bonfire.UI.Social.ActivityLive do
           end
         end
 
-    id = id(activity) || id(object)
-    # permalink = path(activity.object)
+    object_id = id(object)
+    id = id(activity) || object_id
+    # permalink = path(object)
     permalink =
       if thread_url && thread_id != id,
         do: "#{thread_url}#activity-#{id}",
-        else: "#{path(activity.object)}#"
+        else: "#{path(object)}#"
 
     # debug(permalink, "permalink")
 
     assigns
     |> Map.merge(%{
       activity_prepared: true,
-      object_id: e(activity, :object, :id, nil) || e(activity, :id, "no-object-id"),
+      activity_id: id || "no-activity-id",
+      object_id: object_id || "no-object-id",
       object_type: object_type,
       object_type_readable: object_type_readable,
       date_ago: DatesTimes.date_from_now(id),
@@ -170,7 +172,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
       permalink: permalink,
       thread_url: thread_url,
       thread_id: thread_id,
-      cw: e(activity.object, :post_content, :name, nil) != nil
+      cw: e(object, :post_content, :name, nil) != nil
     })
     |> debug("Activity preparation done")
   end
@@ -187,21 +189,21 @@ defmodule Bonfire.UI.Social.ActivityLive do
          viewing_main_object,
          thread_mode
        ) do
-    (component_activity_subject(
+    (component_maybe_in_reply_to(
        verb,
        activity,
-       object,
-       object_type,
        showing_within,
-       activity_inception
+       activity_inception,
+       viewing_main_object,
+       thread_mode
      ) ++
-       component_maybe_in_reply_to(
+       component_activity_subject(
          verb,
          activity,
+         object,
+         object_type,
          showing_within,
-         activity_inception,
-         viewing_main_object,
-         thread_mode
+         activity_inception
        ) ++
        component_object(verb, activity, object, object_type) ++
        component_maybe_attachments(e(activity, :files, nil) || e(object, :files, nil)) ++
@@ -236,7 +238,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
     <article
       x-data="{content_open: false}"
       x-init={"content_open = #{!@cw}"}
-      id={"activity-#{@activity_inception}-" <> (ulid(@activity) || e(@object, :id, "no-id"))}
+      id={"activity-#{@activity_inception}-" <> @activity_id}
       data-href={@permalink}
       phx-hook={if !@viewing_main_object and !@show_minimal_subject_and_note and
            e(assigns, :showing_within, :feed) != :thread,
@@ -254,13 +256,13 @@ defmodule Bonfire.UI.Social.ActivityLive do
         #   e(assigns, :activity_inception, nil) != nil and e(assigns, :thread_mode, nil) == :flat,
         # showing a quoted reply_to
         "main_reply_to !mb-1 items-center !flex-row order-first !p-0 !pb-2":
-          ulid(@object) != nil and e(@activity, :replied, :reply_to_id, nil) == nil and
-            ulid(@activity) == nil and @showing_within != :widget and
+          @object_id != nil and e(@activity, :replied, :reply_to_id, nil) == nil and
+            @activity_id == nil and @showing_within != :widget and
             @showing_within != :search,
         "": @showing_within != :thread and e(assigns, :thread_mode, nil) != :flat,
         reply:
-          ulid(@object) != nil and e(@activity, :replied, :reply_to_id, nil) != nil and
-            ulid(@activity) != nil,
+          @object_id != nil and e(@activity, :replied, :reply_to_id, nil) != nil and
+            @activity_id != nil,
         "unread-activity":
           e(@activity, :seen, nil) == nil and @showing_within == :notifications and
             @activity_inception == nil,
@@ -268,16 +270,17 @@ defmodule Bonfire.UI.Social.ActivityLive do
       }
     >
       <form
-        :if={!ulid(e(@activity, :seen, nil)) and not is_nil(@feed_id) and
+        :if={!id(e(@activity, :seen, nil)) and not is_nil(@feed_id) and
           @showing_within in [:messages, :thread, :notifications] and
-          e(@activity, :subject, :id, nil) != ulid(current_user(assigns)) and
-          e(@activity, :object, :created, :creator_id, nil) != ulid(current_user(assigns))}
+          e(@activity, :subject, :id, nil) != current_user_id(@__context__) and
+          e(@object, :created, :creator_id, nil) != current_user_id(@__context__) and
+          e(@object, :created, :creator_id, nil) != current_user_id(@__context__)}
         phx-submit="Bonfire.Social.Feeds:mark_seen"
         phx-target={"#badge_counter_#{@feed_id || "missing_feed_id"}"}
         x-intersect.once="$el.dispatchEvent(new Event('submit', {bubbles: true, cancelable: true})); $el.parentNode.classList.remove('unread-activity');"
       >
         <input type="hidden" name="feed_id" value={@feed_id}>
-        <input type="hidden" name="activity_id" value={ulid(@activity)}>
+        <input type="hidden" name="activity_id" value={@activity_id}>
       </form>
 
       {#if @hide_activities != "all"}
@@ -311,7 +314,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
                 object_type={e(component_assigns, :object_type, @object_type)}
                 date_ago={e(component_assigns, :date_ago, @date_ago)}
                 permalink={e(component_assigns, :permalink, @permalink)}
-                show_minimal_subject_and_note={e(component_assigns, :show_minimal_subject_and_note, @show_minimal_subject_and_note)}
+                show_minimal_subject_and_note={@show_minimal_subject_and_note}
                 viewing_main_object={e(component_assigns, :viewing_main_object, @viewing_main_object)}
                 showing_within={@showing_within}
                 thread_id={@thread_id}
@@ -649,8 +652,8 @@ defmodule Bonfire.UI.Social.ActivityLive do
          activity_inception: activity_id,
          show_minimal_subject_and_note: true,
          viewing_main_object: false,
+         object: reply_to_post_content,
          activity: %{
-           object: reply_to_post_content,
            subject: %{
              profile: subject_profile,
              character: subject_character
@@ -688,9 +691,9 @@ defmodule Bonfire.UI.Social.ActivityLive do
          activity_inception: activity_id,
          show_minimal_subject_and_note: true,
          viewing_main_object: false,
+         object: replied,
          activity: %{
            # Activities.load_object(replied, skip_boundary_check: true),
-           object: replied,
            subject: %{
              profile: subject_profile,
              character: subject_character

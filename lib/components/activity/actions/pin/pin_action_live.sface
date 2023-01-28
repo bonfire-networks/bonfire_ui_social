@@ -47,7 +47,7 @@
   data-id="pin_action"
   phx-click="Bonfire.Social.Pins:pin"
   phx-value-direction="up"
-  phx-value-id={ulid(@object)}
+  phx-value-id={id(@object)}
   phx-value-scope={@scope}
   phx-value-component={__MODULE__}
   class={@class}

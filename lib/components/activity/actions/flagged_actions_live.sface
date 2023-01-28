@@ -1,14 +1,15 @@
 <div class="mt-2 feed_actions">
   <div class="flex items-center space-x-2">
     <LiveRedirect
-      :if={e(@activity, :subject, :id, nil) && ulid(@current_user) != e(@activity, :subject, :id, nil)}
+      :if={e(@activity, :subject, :id, nil) &&
+        current_user_id(@__context__) != e(@activity, :subject, :id, nil)}
       to={path(Bonfire.Data.Social.Message, e(@activity, :subject, :character, :username, ""))}
       class="normal-case rounded opacity-80 hover:opacity-100 btn btn-outline btn-xs"
     >{l("Message")} {e(@activity, :subject, :profile, :name, "")}
     </LiveRedirect>
 
     <LiveRedirect
-      :if={@object && ulid(@object) && ulid(@current_user) != e(flagged_character(@object), :id, nil) &&
+      :if={@object && id(@object) && current_user_id(@__context__) != e(flagged_character(@object), :id, nil) &&
         e(flagged_character(@object), :id, nil) != e(@activity, :subject, :id, nil)}
       to={path(Bonfire.Data.Social.Message, e(flagged_character(@object), :username, nil))}
       class="normal-case rounded opacity-80 hover:opacity-100 btn btn-outline btn-xs"
@@ -18,7 +19,7 @@
     {#if to_string(@object_type) == "Elixir.Bonfire.Data.Identity.User"}
       <Dynamic.Component
         :if={module_enabled?(Bonfire.Boundaries.Web.BlockButtonLive) and @current_user &&
-          ulid(@current_user) != ulid(@object)}
+          current_user_id(@__context__) != id(@object)}
         module={Bonfire.Boundaries.Web.BlockButtonLive}
         object={@object}
         label={e(@object, :profile, :name, l("this user"))}

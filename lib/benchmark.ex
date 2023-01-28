@@ -80,6 +80,8 @@ defmodule Bonfire.UI.Social.Benchmark do
     Logger.configure(level: :info)
     conn = build_conn()
 
+    feed = Bonfire.Social.FeedActivities.feed(:local, limit: 20)
+
     Benchee.run(
       %{
         # "fetch feed page with 1 activity" => fn -> get(conn, "/feed/local?limit=1") end,
@@ -87,14 +89,21 @@ defmodule Bonfire.UI.Social.Benchmark do
         "fetch feed page with 20 activities" => fn -> get(conn, "/feed/local?limit=20") end,
 
         # "render feed component with 10 activities (not incl. async preloads)" => fn -> live_feed(limit: 10, enable_async_preloads: true) end,
-        "render feed component with 20 activities (not incl. async preloads)" => fn ->
+        "query & render feed component with 20 activities (not incl. async preloads)" => fn ->
           live_feed(limit: 20, enable_async_preloads: true)
         end,
 
         # "render feed component with 10 activities  (incl. preloads)" => fn -> live_feed(limit: 10, enable_async_preloads: false) end,
-        "render feed component with 20 activities (incl. preloads)" => fn ->
+        "query & render feed component with 20 activities (incl. preloads)" => fn ->
           live_feed(limit: 20, enable_async_preloads: false)
         end,
+        "render feed component with 20 already queried activities (incl. preloads)" => fn ->
+          render_feed(feed.edges, enable_async_preloads: false)
+        end,
+        "render feed component with 20 already queried activities (not incl. async preloads)" =>
+          fn ->
+            render_feed(feed.edges, enable_async_preloads: true)
+          end,
 
         # "fetch feed page with 1 (skipped) activity" => fn ->
         #   get(conn, "/feed/local?limit=1&hide_activities=component")
@@ -131,11 +140,16 @@ defmodule Bonfire.UI.Social.Benchmark do
   end
 
   def live_feed(opts \\ []) do
-    Process.put(:enable_async_preloads, opts[:enable_async_preloads] || true)
     feed = Bonfire.Social.FeedActivities.feed(:local, opts)
 
+    render_feed(feed.edges, opts)
+  end
+
+  def render_feed(feed, opts \\ []) do
+    Process.put(:enable_async_preloads, opts[:enable_async_preloads] || true)
+
     Bonfire.UI.Common.Testing.Helpers.render_stateful(Bonfire.UI.Social.FeedLive, %{
-      feed: feed.edges
+      feed: feed
     })
   end
 end

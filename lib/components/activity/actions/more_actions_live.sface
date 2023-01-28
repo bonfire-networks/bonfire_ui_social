@@ -48,7 +48,7 @@
     </li> -->
 
     <!-- Flag the action -->
-    <li :if={id(@current_user) != subject_id(@activity, @object) and @verb != "Flag"}>
+    <li :if={current_user_id(@__context__) != subject_id(@activity, @object) and @verb != "Flag"}>
       <Bonfire.UI.Common.FlagActionLive
         object={@object}
         flagged={@flagged}
@@ -58,7 +58,8 @@
     </li>
 
     <!-- Flag the author -->
-    <li :if={(@verb != "Flag" and is_nil(@current_user)) or id(@current_user) != subject_id(@activity, @object)}>
+    <li :if={(@verb != "Flag" and is_nil(@current_user)) or
+      current_user_id(@__context__) != subject_id(@activity, @object)}>
       <Bonfire.UI.Common.FlagActionLive
         object={@object}
         flagged={@flagged}

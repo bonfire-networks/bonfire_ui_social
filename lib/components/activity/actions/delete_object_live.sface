@@ -2,7 +2,7 @@
 TODO: use preloaded boundaries for can? when available
 -->
 <OpenModalLive
-  :if={id(@current_user) ==
+  :if={current_user_id(@__context__) ==
     (@creator_id || e(@object, :created, :creator_id, nil) ||
        e(@object, :created, :creator, :id, nil)) or
     ((Bonfire.Me.Users.is_admin?(@current_user) ||
@@ -28,7 +28,7 @@ TODO: use preloaded boundaries for can? when available
   <:action_btns>
     <button
       phx-click={@action}
-      phx-value-id={ulid(@object)}
+      phx-value-id={id(@object)}
       phx-value-redirect_after={@redirect_after}
       class="normal-case rounded btn btn-error btn-sm"
     >

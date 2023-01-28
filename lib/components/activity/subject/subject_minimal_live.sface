@@ -87,7 +87,7 @@
                   class="font-medium link link-hover"
                   to={path(e(@activity, :subject, :character, nil))}
                 >
-                  {#if ulid(@object) == ulid(@current_user)}
+                  {#if id(@object) == current_user_id(@__context__)}
                     {l("You")}
                   {#else}
                     {e(@activity, :subject, :profile, :name, nil) || e(@activity, :subject, :character, :username, nil)}
@@ -115,7 +115,7 @@
                 {raw(@verb_display)}
 
                 <!-- special case when current_user is the one being followed -->
-                <span :if={ulid(@object) == ulid(@current_user)}>
+                <span :if={id(@object) == current_user_id(@__context__)}>
                   {l("you")}
                 </span>
               </div>

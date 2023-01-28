@@ -13,7 +13,7 @@
     />
     <Bonfire.UI.Social.FeedLive
       id="feed:profile:timeline"
-      feed_id={"user:#{@selected_tab}:#{ulid(@user)}"}
+      feed_id={"user:#{@selected_tab}:#{id(@user)}"}
       page_title={@page_title}
       page={@page}
       feed={@feed}

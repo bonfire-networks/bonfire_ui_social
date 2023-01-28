@@ -1,17 +1,17 @@
 <!-- <Bonfire.UI.Common.BoostActionLive
-  id={ComponentID.new(Bonfire.UI.Common.BoostActionLive, ulid(@object))}
-  object_id={ulid(@object)}
+  id={ComponentID.new(Bonfire.UI.Common.BoostActionLive, id(@object))}
+  object_id={id(@object)}
   showing_within={:feed}
 /> -->
 <Bonfire.UI.Common.LikeActionLive
-  id={ComponentID.new(Bonfire.UI.Common.LikeActionLive, ulid(@object))}
-  object_id={ulid(@object)}
+  id={ComponentID.new(Bonfire.UI.Common.LikeActionLive, id(@object))}
+  object_id={id(@object)}
   object_boundary={@object_boundary}
 />
 <Bonfire.UI.Common.FollowButtonLive
   :if={e(@object, :character, nil)}
-  id={ComponentID.new(Bonfire.UI.Common.FollowButtonLive, ulid(@object))}
-  object_id={ulid(@object)}
+  id={ComponentID.new(Bonfire.UI.Common.FollowButtonLive, id(@object))}
+  object_id={id(@object)}
   path={path(@object)}
   object_boundary={@object_boundary}
   hide_icon

@@ -45,7 +45,7 @@
 
       <Bonfire.UI.Common.SmartInputInlineLive
         id={:smart_input}
-        :if={ulid(@current_user)}
+        :if={current_user_id(@__context__)}
         reply_to_id={e(@reply_to_id, "")}
         thread_id={@thread_id}
         to_boundaries={@to_boundaries}
@@ -62,7 +62,7 @@
   {#else}
     <Bonfire.UI.Social.MessageThreadsLive
       showing_within={:messages}
-      context={ulid(@current_user)}
+      context={current_user_id(@__context__)}
       threads={@threads}
     />
 
@@ -79,7 +79,7 @@
   <!-- 
 
       <Bonfire.UI.Social.SidebarMessagesMobileLive 
-        context={ulid(@current_user)}
+        context={current_user_id(@__context__)}
         threads={@threads}
       /> -->
 </main>

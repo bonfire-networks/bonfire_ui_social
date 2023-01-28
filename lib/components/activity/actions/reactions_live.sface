@@ -1,7 +1,7 @@
 <Bonfire.UI.Social.Activity.ReplyLive
-  object_id={ulid(@object)}
+  object_id={id(@object)}
   object_type={@object_type}
-  activity_id={ulid(Bonfire.UI.Social.Activity.ActionsLive.the_activity(@activity, @object))}
+  activity_id={id(Bonfire.UI.Social.Activity.ActionsLive.the_activity(@activity, @object))}
   object_boundary={@object_boundary}
   permalink={@permalink}
   thread_mode={@thread_mode}
@@ -12,8 +12,8 @@
 
 <Bonfire.UI.Common.BoostActionLive
   :if={@object_type not in [Bonfire.Data.Social.Message]}
-  id={ComponentID.new(Bonfire.UI.Common.BoostActionLive, ulid(@object))}
-  object_id={ulid(@object)}
+  id={ComponentID.new(Bonfire.UI.Common.BoostActionLive, id(@object))}
+  object_id={id(@object)}
   object_type={@object_type}
   object_boundary={@object_boundary}
   showing_within={@showing_within}
@@ -21,8 +21,8 @@
 />
 
 <Bonfire.UI.Common.LikeActionLive
-  id={ComponentID.new(Bonfire.UI.Common.LikeActionLive, ulid(@object))}
-  object_id={ulid(@object)}
+  id={ComponentID.new(Bonfire.UI.Common.LikeActionLive, id(@object))}
+  object_id={id(@object)}
   object_boundary={@object_boundary}
   showing_within={@showing_within}
   like_count={e(Bonfire.UI.Social.Activity.ActionsLive.the_activity(@activity, @object), :like_count, nil)}

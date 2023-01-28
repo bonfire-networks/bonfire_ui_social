@@ -10,12 +10,12 @@
         if(
           @object_type == :post or
             String.starts_with?(@permalink || "", ["/post/"]),
-          do: @thread_id || ulid(@object)
+          do: @thread_id || id(@object)
         ),
-      object_id: @thread_id || ulid(@object),
-      object: if(@thread_id == ulid(@object), do: @object),
+      object_id: @thread_id || id(@object),
+      object: if(@thread_id == id(@object), do: @object),
       show: {false},
-      activity: if(@thread_id == ulid(@object), do: @activity),
+      activity: if(@thread_id == id(@object), do: @activity),
       preview_component: Bonfire.UI.Social.ObjectThreadLoadLive
     }
     root_assigns={
@@ -35,7 +35,7 @@
     open_btn_wrapper_class="open_preview_link"
     open_btn_class="px-1 normal-case link link-hover text-base-content/60"
     modal_assigns={
-      id: @thread_id || ulid(@object),
+      id: @thread_id || id(@object),
       preview_view: Bonfire.UI.Coordination.TaskLive
     }
     root_assigns={

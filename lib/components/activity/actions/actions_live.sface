@@ -1,5 +1,5 @@
-<!-- {#if ulid(@object) != nil and e(the_activity(@activity, @object), :replied, :reply_to_id, nil) == nil and
-    ulid(@activity) == nil}
+<!-- {#if id(@object) != nil and e(the_activity(@activity, @object), :replied, :reply_to_id, nil) == nil and
+    id(@activity) == nil}
   <div />
 {#else} -->
 <div

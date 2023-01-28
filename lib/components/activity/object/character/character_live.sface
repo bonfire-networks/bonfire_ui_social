@@ -33,7 +33,7 @@
   <button
     :if={@verb == "Request to Follow" and @showing_within == :notifications}
     :on-click="Bonfire.Social.Follows:accept"
-    phx-value-id={ulid(@activity)}
+    phx-value-id={id(@activity)}
     type="button"
     class="normal-case rounded btn btn-sm btn-primary"
   >
