@@ -7,7 +7,8 @@
     >
       <div class="absolute left-0">
         <Bonfire.UI.Common.AvatarLive
-          class="w-6 h-6 teee bg-base-200 rounded-btn"
+          class="w-6 h-6 teee"
+          bg_class="bg-base-200 rounded-btn"
           user={the_other(@activity, @object, @__context__)}
         />
       </div>

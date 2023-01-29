@@ -52,7 +52,8 @@
           <Bonfire.UI.Common.AvatarLive
             user={@profile}
             title={e(@profile, :name, "Anonymous")}
-            class="w-4 h-4 rounded"
+            class="w-4 h-4"
+            bg_class="rounded"
           />
         </LiveRedirect>
         <div class="flex items-baseline gap-1">

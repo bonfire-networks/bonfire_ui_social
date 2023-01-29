@@ -90,7 +90,8 @@
 
             <div class="flex gap-3 m-5 mb-0 md:hidden">
               <Bonfire.UI.Common.AvatarLive
-                class="inline-block object-cover w-10 h-10 rounded cursor-pointer bg-base-300"
+                class="inline-block object-cover w-10 h-10 cursor-pointer"
+                bg_class="bg-base-300 rounded"
                 size="32"
                 user={@current_user}
               />
