@@ -49,8 +49,7 @@ defmodule Bonfire.Social.Follows.LiveHandler do
       {:noreply, socket}
     else
       e ->
-        debug(e)
-        {:error, "Could not unfollow"}
+        error(e, l "There was an error when trying to accept the request")
     end
   end
 
