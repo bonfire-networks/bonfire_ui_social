@@ -2632,15 +2632,15 @@
           </svg>
           <div class="sr-only text-base-content">{l("Loading...")}</div>
         </div>
-        {#case maybe_cute_gif()}
+        <!-- {#case maybe_cute_gif()}
           {#match url when is_binary(url)}
             <div class="flex flex-row items-center justify-center my-12">
               <img src={url}>
             </div>
           {#match _}
-        {/case}
+        {/case} -->
       {#else}
-        <div id="empty-feed" class="flex items-center place-content-center">
+        <div id="empty-feed" data-id="feed" class="flex items-center place-content-center">
           <Bonfire.UI.Common.EmptyFeed
             feedback_title={@feedback_title}
             feedback_message={@feedback_message}

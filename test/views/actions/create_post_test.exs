@@ -62,7 +62,7 @@ defmodule Bonfire.Social.Activities.CreatePost.Test do
       some_account = fake_account!()
       someone = fake_user!(some_account)
 
-      content = "here is an epic html post"
+      content = "here is a post to test pubsub"
 
       conn = conn(user: someone, account: some_account)
 
@@ -82,7 +82,10 @@ defmodule Bonfire.Social.Activities.CreatePost.Test do
 
       assert view
              |> render()
+             |> Floki.parse_document()
+             #  |> debug("doc")
              ~> Floki.find("[data-id=feed]")
+             |> debug("feed contents")
              |> Floki.text() =~ content
     end
   end
