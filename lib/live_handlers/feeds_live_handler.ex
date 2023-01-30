@@ -221,7 +221,7 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
       Bonfire.Common.Pointers.exists?([id: e(data, :activity, :object, :id, nil)],
         current_user: current_user
       )
-      |> debug("checked boundary upon receiving a LivePush")
+      |> debug("checked boundary upon receiving a LivePush - permitted?")
 
     if permitted? && is_list(data[:feed_ids]) do
       my_home_feed_ids = Bonfire.Social.Feeds.my_home_feed_ids(current_user)
@@ -391,6 +391,7 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
       loading: true,
       feed_id: feed_id,
       feed_ids: feed_ids,
+      feed_component_id: component_id(feed_id, socket.assigns),
       # FIXME: clean up page vs tab
       selected_tab: nil,
       page: "feed",
@@ -411,6 +412,7 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
     [
       loading: true,
       feed_id: feed_id,
+      feed_component_id: component_id(feed_id, socket.assigns),
       selected_tab: :fediverse,
       # FIXME: clean up page vs tab
       page: "federation",
@@ -436,6 +438,7 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
     [
       loading: true,
       feed_id: feed_id,
+      feed_component_id: component_id(feed_id, socket.assigns),
       selected_tab: :local,
       # FIXME: clean up page vs tab
       page: "local",
@@ -449,11 +452,12 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
   end
 
   defp feed_default_assigns(:likes = feed_name, socket) do
-    debug(feed_name)
+    # debug(feed_name)
 
     [
       loading: true,
       feed_id: feed_name,
+      feed_component_id: component_id(feed_name, socket.assigns),
       selected_tab: :likes,
       # FIXME: clean up page vs tab
       page: "local",
@@ -480,6 +484,7 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
     [
       loading: true,
       feed_id: feed_name,
+      feed_component_id: component_id(feed_name, socket.assigns),
       feed: :loading,
       page_info: nil
     ]
@@ -490,6 +495,7 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
 
     [
       loading: true,
+      feed_component_id: component_id(other, socket.assigns),
       feed: :loading,
       page_info: nil
     ]
@@ -513,6 +519,11 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
     name
   end
 
+  defp component_id(feed_id_or_tuple, assigns),
+    do:
+      (e(assigns, :feed_component_id, nil) || feed_id_only(feed_id_or_tuple) || :feeds)
+      |> debug()
+
   # defp feed_assigns_maybe_async_load(feed_name, assigns, %{assigns: %{loading: false}} = socket) do
   #   debug("Skip loading feed...")
   #   []
@@ -532,17 +543,13 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
         Task.async(fn ->
           debug(feed_id_or_tuple, "Query activities asynchronously")
 
-          component_id =
-            (e(socket.assigns, :feed_component_id, nil) || feed_id_only(feed_id_or_tuple))
-            |> debug("feed_component_id")
-
           feed_assigns(feed_id_or_tuple, socket)
           # Bonfire.Common.Benchmark.apply_timed(&feed_assigns/2, [feed_id_or_tuple, socket])
           # |> debug("feed_assigns")
           |> maybe_send_update(
             pid,
             Bonfire.UI.Social.FeedLive,
-            component_id,
+            assigns[:feed_component_id] || :feeds,
             ...
           )
         end)

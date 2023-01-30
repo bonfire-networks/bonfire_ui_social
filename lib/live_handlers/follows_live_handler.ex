@@ -49,7 +49,7 @@ defmodule Bonfire.Social.Follows.LiveHandler do
       {:noreply, socket}
     else
       e ->
-        error(e, l "There was an error when trying to accept the request")
+        error(e, l("There was an error when trying to accept the request"))
     end
   end
 

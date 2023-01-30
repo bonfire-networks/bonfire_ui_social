@@ -1,4 +1,5 @@
 <Bonfire.UI.Social.FeedLive
+  :if={@feed_component_id}
   id={@feed_component_id}
   feed_id={@feed_id}
   feed_ids={@feed_ids}
