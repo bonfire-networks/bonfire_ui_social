@@ -8,10 +8,11 @@ defmodule Bonfire.UI.Social.ActivityLive do
 
   prop(activity, :any, default: nil)
   prop(object, :any, default: nil)
+  prop(object_id, :string, default: nil)
+  prop(object_type, :any, default: nil)
   prop(verb, :string, default: nil)
   prop(verb_default, :string, default: nil)
   prop(verb_display, :string, default: nil)
-  prop(object_type, :any, default: nil)
   prop(date_ago, :any, default: nil)
   prop(feed_id, :any, default: nil)
   prop(viewing_main_object, :boolean, default: false)

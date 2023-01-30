@@ -70,7 +70,7 @@ defmodule Bonfire.Social.Follows.LiveHandler do
   end
 
   defp do_preload(list_of_components, list_of_ids, current_user) do
-    my_states =
+    my_follows =
       if current_user,
         do:
           Bonfire.Social.Follows.get!(current_user, list_of_ids,
@@ -80,13 +80,33 @@ defmodule Bonfire.Social.Follows.LiveHandler do
           |> Map.new(fn l -> {e(l, :edge, :object_id, nil), true} end),
         else: %{}
 
-    debug(my_states, "my_follows")
+    debug(my_follows, "my_follows")
+
+    followed_ids = Map.keys(my_follows)
+
+    remaining_ids =
+      Enum.reject(list_of_ids, &(&1 in followed_ids))
+      |> debug("remaining_ids")
+
+    my_requests =
+      if current_user,
+        do:
+          Bonfire.Social.Requests.get!(current_user, Bonfire.Data.Social.Follow, remaining_ids,
+            preload: false,
+            skip_boundary_check: true
+          )
+          |> Map.new(fn l -> {e(l, :edge, :object_id, nil), true} end),
+        else: %{}
+
+    debug(my_requests, "my_requests")
 
     list_of_components
     |> Map.new(fn component ->
       {component.component_id,
        %{
-         my_follow: Map.get(my_states, component.object_id) || component.previous_value || false
+         my_follow:
+           if(Map.get(my_requests, component.object_id), do: :requested) ||
+             Map.get(my_follows, component.object_id) || component.previous_value || false
        }}
     end)
   end
