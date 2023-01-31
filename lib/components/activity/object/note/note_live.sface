@@ -1,6 +1,6 @@
 <div
   class={
-    "note mt-3 cursor-pointer",
+    "note mt-3 cursor-pointer max-w-[594px] overflow-x-hidden",
     "!mt-2": @showing_within == :widget,
     "!my-0": @showing_within == :smart_input,
     "!mt-1 cursor-default": @showing_within == :thread && !@viewing_main_object

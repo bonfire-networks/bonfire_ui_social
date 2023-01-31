@@ -2,7 +2,7 @@
   <#slot {@header} />
   <Bonfire.UI.Common.TabsLive
     selected_tab={@selected_tab}
-    class="flex gap-3 p-4 bg-base-100"
+    class="flex gap-3 p-4 bg-base-100 scrollable"
     tab_class="btn btn-sm  rounded-full font-normal normal-case bg-base-content/10 text-neutral-content/80 feed_tab border-none"
     path_prefix={"/@#{e(@user, :character, :username, "")}/"}
     tabs={Config.get([:ui, :profile, :navigation], timeline: l("Timeline"))}

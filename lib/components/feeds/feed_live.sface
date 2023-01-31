@@ -5,7 +5,7 @@
   aria-live="assertive"
   aria-atomic="true"
   class={
-    "w-full feed overflow-x-hidden",
+    "w-full feed  flex-1 h-full grow",
     "!max-w-[680px] mx-auto": !current_user(@__context__)
   }
 >
