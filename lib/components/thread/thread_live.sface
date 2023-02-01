@@ -3,16 +3,10 @@
     <div
       data-id="replies"
       class={
-        "flex flex-col flex-1 mt-4",
+        "flex flex-col flex-1 mt-4 pb-4",
         "!pt-0": @thread_mode == :flat
       }
     >
-      <!-- <Bonfire.UI.Social.LoadPreviousLive 
-        live_handler={Bonfire.Social.Posts}
-        page_info={@page_info}
-        target={@myself}
-        context={@thread_id}
-      /> -->
 
       {#if @threaded_replies}
         {#for {reply, child_replies} <- @threaded_replies}
