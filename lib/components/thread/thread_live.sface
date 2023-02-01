@@ -7,7 +7,6 @@
         "!pt-0": @thread_mode == :flat
       }
     >
-
       {#if @threaded_replies}
         {#for {reply, child_replies} <- @threaded_replies}
           <Bonfire.UI.Social.CommentLive
