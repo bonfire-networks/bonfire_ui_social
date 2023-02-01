@@ -207,7 +207,10 @@ defmodule Bonfire.UI.Social.ActivityLive do
          activity_inception
        ) ++
        component_object(verb, activity, object, object_type) ++
-       component_maybe_attachments(e(activity, :files, nil) || e(object, :files, nil)) ++
+       component_maybe_attachments(
+         e(activity, :files, nil) || e(object, :files, nil) || e(activity, :media, nil) ||
+           e(object, :media, nil)
+       ) ++
        component_actions(
          verb,
          activity,
@@ -332,7 +335,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
                 __context__={@__context__}
                 showing_within={@showing_within}
                 viewing_main_object={e(component_assigns, :viewing_main_object, @viewing_main_object)}
-                media={e(component_assigns, :media, nil)}
+                media={List.wrap(e(component_assigns, :media, []))}
               />
             {#match _ when component in [Bonfire.UI.Social.Activity.ActionsLive, Bonfire.UI.Social.FlaggedActionsLive]}
               <Dynamic.Component
@@ -869,13 +872,16 @@ defmodule Bonfire.UI.Social.ActivityLive do
   end
 
   def component_maybe_attachments(files)
-      when is_list(files) and length(files) > 0 do
+      when is_list(files) and files != [] do
+    debug(files, "has files")
+
     [
       {Bonfire.UI.Social.Activity.MediaLive, %{media: files}}
     ]
   end
 
-  def component_maybe_attachments(_) do
+  def component_maybe_attachments(other) do
+    debug(other, "no files")
     []
   end
 

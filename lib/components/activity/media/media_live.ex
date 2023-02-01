@@ -6,6 +6,14 @@ defmodule Bonfire.UI.Social.Activity.MediaLive do
   prop viewing_main_object, :boolean, default: false
   prop label, :string, default: nil
 
+  def the_media(%{media: media}) do
+    media
+  end
+
+  def the_media(media) do
+    media
+  end
+
   def provider(media) do
     (e(media.metadata, "facebook", "og:site_name", nil) ||
        e(media.metadata, "oembed", "provider_url", nil))
