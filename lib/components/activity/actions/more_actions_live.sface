@@ -6,7 +6,7 @@
     "dropdown-top dropdown-end showing_within:widget": @showing_within == :widget
   }
 >
-  <button tabindex="0" class="btn btn-ghost btn-circle btn-sm">
+  <button tabindex="0" class="rounded btn btn-ghost btn-square btn-sm">
     <Icon solid="DotsVertical" class="w-[18px] h-[18px] md:w-4 md:h-4 text-base-content/60" />
   </button>
   <ul

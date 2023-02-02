@@ -12,7 +12,7 @@ defmodule Bonfire.UI.Social.Activity.ReplyLive do
   prop hide_reply, :any
   prop thread_mode, :any
   prop object_boundary, :any, default: nil
-  prop class, :css_class, default: "flex btn btn-ghost btn-circle btn-sm"
+  prop class, :css_class, default: "flex btn btn-ghost btn-square rounded btn-sm"
   prop reply_btn_text, :string, default: nil
   prop cannot_reply_text, :string, default: nil
 
