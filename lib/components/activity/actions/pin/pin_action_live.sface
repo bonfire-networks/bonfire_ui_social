@@ -2,7 +2,7 @@
   id={Pointers.ULID.generate()}
   no_actions={true}
   title_text={l("Pin")}
-  form_opts={%{"phx-submit" => "Bonfire.Social.Objects:tag"}}
+  form_opts={"phx-submit": "Bonfire.Social.Objects:tag"}
   :let={autocomplete: autocomplete}
   >
   <div>
