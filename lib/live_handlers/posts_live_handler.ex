@@ -61,7 +61,8 @@ defmodule Bonfire.Social.Posts.LiveHandler do
                Bonfire.Social.Posts.prepare_post_attrs(attrs)
                |> Map.put(:uploaded_media, uploaded_media),
              boundary: e(params, "to_boundaries", "mentions"),
-             to_circles: e(params, "to_circles", [])
+             to_circles: e(params, "to_circles", []),
+             return_epic_on_error: true
            ]
            |> debug("publish opts"),
          {:ok, published} <- Bonfire.Social.Posts.publish(opts) do
@@ -102,17 +103,23 @@ defmodule Bonfire.Social.Posts.LiveHandler do
         #   feed: [%{published.activity | object_post: published.post, subject_user: current_user_required!(socket)}] ++ Map.get(socket.assigns, :feed, [])
         # )
       }
-    else
-      e ->
-        error = Errors.error_msg(e)
-        error(error)
 
-        {
-          :noreply,
-          socket
-          |> assign_flash(:error, "Could not post 😢 (#{error})")
-          # |> patch_to(current_url(socket), fallback: "/error") # so the flash appears
-        }
+      # else
+      #   {:error, error} ->
+      #     {
+      #       :noreply,
+      #       socket
+      #       |> assign_error(error)
+      #     }
+      #   e ->
+      #     error = Errors.error_msg(e)
+      #     error(error)
+
+      #     {
+      #       :noreply,
+      #       socket
+      #       |> assign_error("Could not post 😢 (#{error})")
+      #     }
     end
   end
 

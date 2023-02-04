@@ -178,7 +178,8 @@ defmodule Bonfire.Social.Objects.LiveHandler do
   def load_object_assigns(%{object_id: id} = assigns, socket) when is_binary(id) do
     current_user = current_user(socket)
     # debug(params, "PARAMS")
-    with {:ok, object} <- Bonfire.Social.Objects.read(ulid!(id), current_user: current_user) do
+    with id when is_binary(id) <- ulid(id),
+         {:ok, object} <- Bonfire.Social.Objects.read(id, current_user: current_user) do
       {activity, object} = Map.pop(object, :activity)
       {preloaded_object, activity} = Map.pop(activity, :object)
 
@@ -191,7 +192,7 @@ defmodule Bonfire.Social.Objects.LiveHandler do
       )
     else
       _e ->
-        case Bonfire.Common.URIs.canonical_url(id) do
+        case is_ulid?(id) and Bonfire.Common.URIs.canonical_url(id) do
           url when is_binary(url) ->
             socket
             |> redirect(external: url)

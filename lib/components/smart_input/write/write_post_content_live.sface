@@ -106,7 +106,6 @@
             <div class="block md:hidden">
               <Bonfire.UI.Social.UploadPreviewsLive uploads={@uploads} />
             </div>
-            
 
             <label for="description" class="sr-only">{l("Description")}</label>
             <Field class="flex-1 h-full grow" name={:html_body}>
