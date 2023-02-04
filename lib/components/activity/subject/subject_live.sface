@@ -28,7 +28,7 @@
         x-show="expanded"
         :class="{'minimal_subject_and_note': !expanded}"
         x-collapse.min.20px
-        class="font-medium cursor-pointer w-full  max-w-full flex items-baseline relative gap-1  prose prose-sm !text-sm !text-neutral-content/70 prose-a:text-neutral-content/70 prose-a:no-underline prose-p:inline-block"
+        class="font-medium cursor-pointer w-full  max-w-full  relative gap-1  prose prose-sm !text-sm !text-neutral-content/70 prose-a:text-neutral-content/70 prose-a:no-underline prose-p:inline-block"
       >
         {#if @cw == true or (is_nil(@cw) and not is_nil(e(post_content(@object), :name, nil)))}
           {rich(e(@profile, :name, "Anonymous") <> ": " <> e(post_content(@object), :name, nil))}
@@ -44,7 +44,7 @@
     <div class="flex justify-between">
       <div class="flex items-center gap-2">
         <LiveRedirect
-          class="h-4"
+          class="h-8"
           opts={"data-id": "subject_name"}
           aria-label={e(@character, :username, "") <> " profile"}
           to={path(@character)}
@@ -52,15 +52,15 @@
           <Bonfire.UI.Common.AvatarLive
             user={@profile}
             title={e(@profile, :name, "Anonymous")}
-            class="w-4 h-4"
-            bg_class="rounded"
+            class="w-8 h-8 rounded-lg bg-base-content/5"
+            bg_class="rounded bg-base-content/5"
           />
         </LiveRedirect>
         <div class="flex items-baseline gap-1">
           <LiveRedirect
             opts={"data-id": "subject_name"}
             aria-label={l("%{name}'s profile", name: e(@profile, :name, ""))}
-            class="link link-hover text-[13px] text-base-content/70"
+            class="text-sm font-semibold link link-hover text-base-content/90"
             to={path(@character)}
           >
             {e(@profile, :name, "Anonymous")}
