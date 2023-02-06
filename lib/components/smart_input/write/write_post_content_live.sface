@@ -103,11 +103,11 @@
               </div>
             </div>
 
-            <div class="block md:hidden">
+            <!-- <div class="block md:hidden">
               <Bonfire.UI.Social.UploadPreviewsLive uploads={@uploads} />
-            </div>
+            </div> -->
 
-            <label for="description" class="sr-only">{l("Description")}</label>
+            <label for="description" class="sr-only">{l("Text")}</label>
             <Field class="flex-1 h-full grow" name={:html_body}>
               <div class={@textarea_container_class} :class={@textarea_container_class_alpine}>
                 <WriteEditorLive
