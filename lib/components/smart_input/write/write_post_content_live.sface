@@ -69,7 +69,7 @@
         </div>
 
         <Inputs for={:post_content}>
-          <div x-show="!open_boundaries" class="flex-1">
+          <div x-show="!open_boundaries" class="flex-1" phx-update="ignore">
             <div
               class="relative p-2 border-b bg-base-200 border-base-content/10"
               display="style: none"
