@@ -50,6 +50,7 @@ defmodule Bonfire.Social.Objects.LiveHandler do
     current_user = current_user(socket)
     id = ulid(object)
 
+    # FIXME: is this re-preloading the object we already have?
     activity =
       Bonfire.Social.Activities.activity_preloads(activity, :all, current_user: current_user)
 
@@ -70,7 +71,9 @@ defmodule Bonfire.Social.Objects.LiveHandler do
     smart_input_prompt = l("Reply")
 
     participants =
-      Bonfire.Social.Threads.list_participants(activity, thread_id, current_user: current_user)
+      Bonfire.Social.Threads.list_participants(Map.put(activity, :object, object), thread_id,
+        current_user: current_user
+      )
 
     to_circles =
       if length(participants) > 0,

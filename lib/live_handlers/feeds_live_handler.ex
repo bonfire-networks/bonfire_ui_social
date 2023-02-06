@@ -37,30 +37,32 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
 
     # Note: we reply to objects, not activities
     reply_to =
-      e(params, "id", nil) ||
-        e(socket.assigns, :object, nil) ||
+      e(socket.assigns, :object, nil) ||
         e(activity, :object, nil) ||
         e(socket.assigns, :object_id, nil) ||
         e(activity, :object_id, nil)
 
-    reply_to_id = ulid(reply_to)
+    reply_to_id = e(params, "id", nil) || ulid(reply_to)
 
     with {:ok, current_user} <- current_user_or_remote_interaction(socket, l("reply"), reply_to),
          true <- Bonfire.Boundaries.can?(current_user, :reply, reply_to_id) do
       # TODO: don't re-load this here as we already have the list (at least when we're in a thread)
       participants =
-        Bonfire.Social.Threads.list_participants(activity, nil, current_user: current_user)
+        Bonfire.Social.Threads.list_participants(Map.put(activity, :object, reply_to), nil,
+          current_user: current_user
+        )
+        |> Enum.reject(&(e(&1, :character, :id, nil) == id(current_user)))
 
       to_circles =
-        if length(participants) > 0,
+        if participants != [],
           do:
             Enum.map(participants, &{e(&1, :character, :username, l("someone")), e(&1, :id, nil)})
 
       mentions =
-        if length(participants) > 0,
+        if participants != [],
           do: Enum.map_join(participants, " ", &("@" <> e(&1, :character, :username, ""))) <> " "
 
-      # IO.inspect(mentions, label: "PARTS")
+      # debug(mentions, "PARTS")
 
       thread_id =
         e(activity, :replied, :thread_id, nil) ||
@@ -82,7 +84,7 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
         activity_inception: "reply_to",
         # TODO: use assigns_merge and send_update to the ActivityLive component within smart_input instead, so that `update/2` isn't triggered again
         activity: activity,
-        object: e(socket.assigns, :object, nil)
+        object: reply_to
       )
 
       {:noreply, socket}

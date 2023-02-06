@@ -179,15 +179,14 @@ defmodule Bonfire.UI.Social.MessagesLive do
       with {:ok, message} <- Bonfire.Social.Messages.read(id, current_user: current_user) do
         # debug(message, "the first message in thread")
 
+        # TODO: clean up the following
         {activity, message} = Map.pop(message, :activity)
         {preloaded_object, activity} = Map.pop(activity, :object)
+        message = Map.merge(message, preloaded_object)
 
         activity =
           Bonfire.Social.Activities.activity_preloads(activity, :all, current_user: current_user)
           |> debug("preloaded")
-
-        message = Map.merge(message, preloaded_object)
-        # |> debug("the message object")
 
         reply_to_id = e(params, "reply_to_id", nil)
         thread_id = e(activity, :replied, :thread_id, id)
@@ -211,7 +210,9 @@ defmodule Bonfire.UI.Social.MessagesLive do
         #     )
 
         participants =
-          Bonfire.Social.Threads.list_participants(activity, thread_id, current_user: current_user)
+          Bonfire.Social.Threads.list_participants(Map.put(activity, :object, message), thread_id,
+            current_user: current_user
+          )
 
         to_circles =
           if length(participants) > 0,
