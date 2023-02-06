@@ -72,18 +72,24 @@ defmodule Bonfire.UI.Social.FeedLive do
         if not is_nil(current_user) do
           if object_type in ["discussions", "posts"],
             do: [nil: l("My feed"), local: l("Local"), fediverse: l("Remote")],
-            else: [nil: l("My feed"), local: l("Local"), fediverse: l("Remote"), likes: l("Liked")]
+            else: [
+              nil: l("My feed"),
+              local: l("Local"),
+              fediverse: l("Remote"),
+              likes: l("Liked")
+            ]
         else
           [local: l("Local"), fediverse: l("Remote")]
         end
+
       _ ->
-      if not is_nil(current_user) do
-        if object_type in ["discussions", "posts"],
-          do: [nil: l("My feed"), local: l("Local")],
-          else: [nil: l("My feed"), local: l("Local"), likes: l("Liked")]
-      else
-        [local: l("Local")]
-      end
+        if not is_nil(current_user) do
+          if object_type in ["discussions", "posts"],
+            do: [nil: l("My feed"), local: l("Local")],
+            else: [nil: l("My feed"), local: l("Local"), likes: l("Liked")]
+        else
+          [local: l("Local")]
+        end
     end
   end
 
