@@ -15,7 +15,7 @@ defmodule Bonfire.UI.Social.WritePostContentLive do
   prop create_object_type, :any, default: nil
   prop to_boundaries, :any, default: nil
   prop to_circles, :list, default: []
-  prop smart_input_opts, :any, required: false
+  prop smart_input_opts, :list, default: []
   prop showing_within, :string, default: nil
   prop insert_text, :string, default: nil
   prop preloaded_recipients, :any, default: nil
@@ -26,6 +26,7 @@ defmodule Bonfire.UI.Social.WritePostContentLive do
   prop show_select_recipients, :boolean, default: false
   prop open_boundaries, :boolean, default: false
   prop boundaries_modal_id, :string, default: :sidebar_composer
+  prop reset_smart_input, :boolean, default: false
 
   # Classes to customize the smart input appearance
   prop textarea_container_class, :css_class

@@ -70,21 +70,26 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
 
       debug("send activity to smart input")
 
-      Bonfire.UI.Common.SmartInputLive.open(socket.assigns[:__context__],
-        # we reply to objects, not activities
-        reply_to_id: reply_to_id,
-        context_id: thread_id,
-        smart_input_opts: [text: mentions],
-        to_circles: to_circles || [],
-        to_boundaries: [
-          Bonfire.Boundaries.preset_boundary_tuple_from_acl(
-            e(socket.assigns, :object_boundary, nil)
-          )
+      Bonfire.UI.Common.SmartInputLive.open_smart_input_with_text_suggestion(
+        mentions,
+        # we reply to objects, not 
+        [
+          # reset_smart_input: false, # avoid double-reset
+          # smart_input_opts: [open: true, text_suggestion: mentions],
+          reply_to_id: reply_to_id,
+          context_id: thread_id,
+          to_circles: to_circles || [],
+          to_boundaries: [
+            Bonfire.Boundaries.preset_boundary_tuple_from_acl(
+              e(socket.assigns, :object_boundary, nil)
+            )
+          ],
+          activity_inception: "reply_to",
+          # TODO: use assigns_merge and send_update to the ActivityLive component within smart_input instead, so that `update/2` isn't triggered again
+          activity: activity,
+          object: reply_to
         ],
-        activity_inception: "reply_to",
-        # TODO: use assigns_merge and send_update to the ActivityLive component within smart_input instead, so that `update/2` isn't triggered again
-        activity: activity,
-        object: reply_to
+        socket.assigns[:__context__]
       )
 
       {:noreply, socket}
