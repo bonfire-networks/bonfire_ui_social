@@ -67,12 +67,23 @@ defmodule Bonfire.UI.Social.FeedLive do
   defp get_activity(activity), do: activity
 
   def tabs(current_user, object_type) do
-    if not is_nil(current_user) do
-      if object_type in ["discussions", "posts"],
-        do: [nil: l("My feed"), local: l("Local"), fediverse: l("Remote")],
-        else: [nil: l("My feed"), local: l("Local"), fediverse: l("Remote"), likes: l("Liked")]
-    else
-      [local: l("Local"), fediverse: l("Remote")]
+    case Bonfire.Me.Settings.get([:activity_pub, :instance, :federating], true, :instance) do
+      true ->
+        if not is_nil(current_user) do
+          if object_type in ["discussions", "posts"],
+            do: [nil: l("My feed"), local: l("Local"), fediverse: l("Remote")],
+            else: [nil: l("My feed"), local: l("Local"), fediverse: l("Remote"), likes: l("Liked")]
+        else
+          [local: l("Local"), fediverse: l("Remote")]
+        end
+      _ ->
+      if not is_nil(current_user) do
+        if object_type in ["discussions", "posts"],
+          do: [nil: l("My feed"), local: l("Local")],
+          else: [nil: l("My feed"), local: l("Local"), likes: l("Liked")]
+      else
+        [local: l("Local")]
+      end
     end
   end
 

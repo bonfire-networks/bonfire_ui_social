@@ -10,6 +10,7 @@
   }
 >
   <div class="">
+
     <Bonfire.UI.Common.TabsLive
       :if={@hide_tabs != true}
       selected_tab={@selected_tab}
