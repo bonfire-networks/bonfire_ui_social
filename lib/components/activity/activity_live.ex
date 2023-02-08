@@ -6,7 +6,17 @@ defmodule Bonfire.UI.Social.ActivityLive do
   alias Bonfire.Data.Social.Activity
   alias Bonfire.Social.Feeds.LiveHandler
 
+  # TODO: put verbs in config and/or autogenerate with Verbs genserver
+  @reply_verbs Application.compile_env(:bonfire, [:verb_families, :reply])
+  @create_verbs Application.compile_env(:bonfire, [:verb_families, :create])
+  @react_verbs Application.compile_env(:bonfire, [:verb_families, :react])
+  @simple_verbs Application.compile_env(:bonfire, [:verb_families, :simple_action])
+  @react_or_simple_verbs @react_verbs ++ @simple_verbs
+  @create_or_reply_verbs @create_verbs ++ @reply_verbs
+  @created_verb_display Activities.verb_display("Create")
+
   prop(activity, :any, default: nil)
+  prop(activity_id, :string, default: nil)
   prop(object, :any, default: nil)
   prop(object_id, :string, default: nil)
   prop(object_type, :any, default: nil)
@@ -20,11 +30,12 @@ defmodule Bonfire.UI.Social.ActivityLive do
   prop(showing_within, :any, default: :feed)
   prop(hide_reply, :boolean, default: false)
   prop(class, :string, required: false, default: "")
+  prop(thread_id, :string, default: nil)
   prop(thread_object, :any, default: nil)
-  prop(url, :string, default: nil)
-  prop(permalink, :string, default: nil)
   prop(thread_url, :string, default: nil)
   prop(thread_mode, :any, default: nil)
+  prop(url, :string, default: nil)
+  prop(permalink, :string, default: nil)
   prop(participants, :list, default: [])
   prop(object_boundary, :any, default: nil)
   prop(cw, :any, default: nil)
@@ -32,15 +43,8 @@ defmodule Bonfire.UI.Social.ActivityLive do
   prop(show_minimal_subject_and_note, :boolean, default: false)
   prop(hide_activities, :any, default: nil)
   prop(i, :integer, default: nil)
-
-  # TODO: put verbs in config and/or autogenerate with Verbs genserver
-  @reply_verbs Application.compile_env(:bonfire, [:verb_families, :reply])
-  @create_verbs Application.compile_env(:bonfire, [:verb_families, :create])
-  @react_verbs Application.compile_env(:bonfire, [:verb_families, :react])
-  @simple_verbs Application.compile_env(:bonfire, [:verb_families, :simple_action])
-  @react_or_simple_verbs @react_verbs ++ @simple_verbs
-  @create_or_reply_verbs @create_verbs ++ @reply_verbs
-  @created_verb_display Activities.verb_display("Create")
+  prop(created_verb_display, :string, default: @created_verb_display)
+  prop(object_type_readable, :string, default: nil)
 
   @decorate time()
   def preload(list_of_assigns) do
@@ -242,7 +246,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
     <article
       x-data="{content_open: false}"
       x-init={"content_open = #{!@cw}"}
-      id={"activity-#{@activity_inception}-" <> @activity_id}
+      id={"activity-#{@activity_inception}-#{@activity_id || "no-activity-id"}"}
       data-href={@permalink}
       phx-hook={if !@viewing_main_object and !@show_minimal_subject_and_note and
            e(assigns, :showing_within, :feed) != :thread,

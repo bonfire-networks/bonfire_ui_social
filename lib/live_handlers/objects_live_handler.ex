@@ -115,7 +115,7 @@ defmodule Bonfire.Social.Objects.LiveHandler do
       thread_id: thread_id,
       reply_to_id: object,
       page_title: page_title,
-      smart_input_opts: [text: mentions, prompt: smart_input_prompt],
+      smart_input_opts: %{text: mentions, prompt: smart_input_prompt},
       to_circles: to_circles || []
     )
   end

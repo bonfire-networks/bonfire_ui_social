@@ -33,7 +33,7 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
   def handle_event("reply_to_activity", params, socket) do
     # debug("reply!")
 
-    activity = e(socket.assigns, :activity, nil)
+    activity = e(socket.assigns, :activity, %{})
 
     # Note: we reply to objects, not activities
     reply_to =
@@ -47,10 +47,11 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
     with {:ok, current_user} <- current_user_or_remote_interaction(socket, l("reply"), reply_to),
          true <- Bonfire.Boundaries.can?(current_user, :reply, reply_to_id) do
       # TODO: don't re-load this here as we already have the list (at least when we're in a thread)
+      # TODO: include thread_id in list_participants/3 call
       participants =
-        Bonfire.Social.Threads.list_participants(Map.put(activity, :object, reply_to), nil,
-          current_user: current_user
-        )
+        (Bonfire.Social.Threads.list_participants(Map.put(activity, :object, reply_to), nil,
+           current_user: current_user
+         ) || [])
         |> Enum.reject(&(e(&1, :character, :id, nil) == id(current_user)))
 
       to_circles =
@@ -75,7 +76,7 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
         # we reply to objects, not 
         [
           # reset_smart_input: false, # avoid double-reset
-          # smart_input_opts: [open: true, text_suggestion: mentions],
+          # smart_input_opts: %{open: true, text_suggestion: mentions},
           reply_to_id: reply_to_id,
           context_id: thread_id,
           to_circles: to_circles || [],
