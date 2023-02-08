@@ -13,7 +13,7 @@ defmodule Bonfire.UI.Social.ProfileTimelineLive do
   prop page_info, :any
   prop follows_me, :boolean, default: false
   prop loading, :boolean, default: false
-
+  prop hide_tabs, :boolean, default: false
   slot header
   slot widget
 end
