@@ -51,15 +51,15 @@
                     open_btn_wrapper_class="w-full h-full"
                   >
                     <div
-                      class="relative h-full"
+                      class="h-full "
                       style={if String.starts_with?(media.media_type, ["video"]),
                         do: "min-width: 90vw; min-height: 90vh",
                         else: ""}
                     >
                       <Bonfire.UI.Social.Activity.RemoteMediaLive media={media} />
 
-                      <div class="mt-4">
-                        <div class="prose text-center prose-sm px-2 py-1.5 rounded-full">{media_label(media)}</div>
+                      <div class="absolute z-20 pt-4 bottom-2 left-2 right-2 md:relative">
+                        <div class="prose text-center prose-sm px-4 bg-black/30 py-1.5 rounded-full mx-auto">{media_label(media)}</div>
                         <p class="text-sm">{e(media.metadata, "description", nil) || e(media.metadata, "facebook", "og:description", nil) ||
                             e(media.metadata, "twitter", "twitter:description", nil) ||
                             e(media.metadata, "other", "description", nil)}</p>
