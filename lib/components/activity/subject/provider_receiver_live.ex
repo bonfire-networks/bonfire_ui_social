@@ -1,6 +1,6 @@
 defmodule Bonfire.UI.Social.Activity.ProviderReceiverLive do
   use Bonfire.UI.Common.Web, :stateless_component
-  alias Bonfire.Boundaries.Web.BoundaryIconStatelessLive
+  # alias Bonfire.Boundaries.Web.BoundaryIconStatelessLive
 
   # prop activity, :map
   prop object, :any, default: nil
@@ -14,7 +14,7 @@ defmodule Bonfire.UI.Social.Activity.ProviderReceiverLive do
   prop object_boundary, :any, default: nil
 
   def provider(%{id: _} = provider, _primary_accountable, _object), do: provider
-  def provider(provider, %{id: _} = primary_accountable, _object), do: primary_accountable
+  def provider(_provider, %{id: _} = primary_accountable, _object), do: primary_accountable
   def provider(_provider, _primary_accountable, %{id: _} = object), do: provider(object)
   def provider(_, _, _), do: nil
 

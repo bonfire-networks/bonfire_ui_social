@@ -25,13 +25,13 @@ defmodule Bonfire.UI.Social.Activity.CategoryLive do
   end
 
   # TODO: preload?
-  defp crumbs(%{name: name, parent: grandparent} = _parent) do
-    crumbs(grandparent) <> crumb_link(name)
-  end
+  # defp crumbs(%{name: name, parent: grandparent} = _parent) do
+  #   crumbs(grandparent) <> crumb_link(name)
+  # end
 
-  defp crumbs(%{name: name}) do
-    crumb_link(name)
-  end
+  # defp crumbs(%{name: name}) do
+  #   crumb_link(name)
+  # end
 
   defp crumbs(_) do
     ""

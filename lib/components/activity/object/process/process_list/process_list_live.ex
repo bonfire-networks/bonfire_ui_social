@@ -1,6 +1,6 @@
 defmodule Bonfire.UI.Social.Activity.ProcessListLive do
   use Bonfire.UI.Common.Web, :stateless_component
-  alias Surface.Components.LivePatch
+  # alias Surface.Components.LivePatch
 
   prop object, :any, required: true
   prop showing_within, :any
@@ -39,10 +39,10 @@ defmodule Bonfire.UI.Social.Activity.ProcessListLive do
       creator: [:character, profile: [:icon]]
     ]
 
-  defp preload(object) do
-    object
-    |> repo().maybe_preload(preloads())
+  # defp preload(object) do
+  #   object
+  #   |> repo().maybe_preload(preloads())
 
-    # |> repo().maybe_preload([:context])
-  end
+  #   # |> repo().maybe_preload([:context])
+  # end
 end

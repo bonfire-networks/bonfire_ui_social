@@ -20,7 +20,7 @@ defmodule Bonfire.UI.Social.Feeds.FederationLive do
     ])
   end
 
-  defp mounted(params, _session, socket) do
+  defp mounted(_params, _session, socket) do
     {:ok,
      socket
      |> assign(LiveHandler.feed_assigns_maybe_async(:fediverse, socket))

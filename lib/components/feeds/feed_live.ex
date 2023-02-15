@@ -125,7 +125,7 @@ defmodule Bonfire.UI.Social.FeedLive do
     ok_socket(socket)
   end
 
-  def update(%{feed: feed, page_info: page_info} = assigns, socket) when is_list(feed) do
+  def update(%{feed: feed, page_info: _page_info} = assigns, socket) when is_list(feed) do
     debug("FeedLive.update - an initial feed was provided via assigns")
     debug(assigns)
 
@@ -176,7 +176,7 @@ defmodule Bonfire.UI.Social.FeedLive do
     ok_socket(assign(socket, assigns))
   end
 
-  def update(assigns, socket) do
+  def update(_assigns, _socket) do
     error("No feed loaded")
   end
 

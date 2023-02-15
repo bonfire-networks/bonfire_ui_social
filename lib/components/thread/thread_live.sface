@@ -1,3 +1,4 @@
+<div>
 {#if length(@threaded_replies || @replies || []) > 0}
   <div class="flex flex-col flex-1">
     <div
@@ -2668,3 +2669,4 @@
     {/if}
   </div>
 {/if}
+</div>

@@ -2,11 +2,11 @@ defmodule Bonfire.Social.Messages.LiveHandler do
   use Bonfire.UI.Common.Web, :live_handler
   alias Bonfire.Social.Messages
 
-  def handle_params(%{"after" => cursor, "context" => context} = attrs, _, socket) do
+  def handle_params(%{"after" => cursor, "context" => context} = _attrs, _, socket) do
     live_more(context, [after: cursor], socket)
   end
 
-  def handle_params(%{"before" => cursor, "context" => context} = attrs, _, socket) do
+  def handle_params(%{"before" => cursor, "context" => context} = _attrs, _, socket) do
     live_more(context, [before: cursor], socket)
   end
 

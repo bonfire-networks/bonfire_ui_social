@@ -73,7 +73,7 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
 
       Bonfire.UI.Common.SmartInputLive.open_smart_input_with_text_suggestion(
         mentions,
-        # we reply to objects, not 
+        # we reply to objects, not
         [
           # reset_smart_input: false, # avoid double-reset
           # smart_input_opts: %{open: true, text_suggestion: mentions},
@@ -115,7 +115,7 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
     {:noreply, socket}
   end
 
-  def handle_event("delete", %{"id" => id} = params, socket) do
+  def handle_event("delete", %{"id" => id} = _params, socket) do
     # TODO: check permission
     with num when is_integer(num) <- Bonfire.Social.FeedActivities.delete(id, :id) do
       Bonfire.UI.Common.OpenModalLive.close()
@@ -686,7 +686,7 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
     feed_assigns(feed_id || other, socket)
   end
 
-  defp feed_assigns(feed_id, socket) do
+  defp feed_assigns(feed_id, _socket) do
     error(feed_id, "Unrecognised feed")
   end
 
@@ -1049,7 +1049,7 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
   defp list_requested(current_user, pagination) do
     # TODO: apply boundaries to Requests and then be able to view someone's requests/requested that involve me
     # TODO: pagination
-    # user, 
+    # user,
     Bonfire.Social.Requests.list_my_requested(
       pagination: pagination,
       current_user: current_user
@@ -1057,7 +1057,7 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
     |> debug("requested")
   end
 
-  def load_user_feed_assigns("requested" = tab, user, params, socket) do
+  def load_user_feed_assigns("requested" = tab, _user, params, socket) do
     requested = list_requested(current_user(socket), input_to_atoms(params))
 
     [
@@ -1072,7 +1072,7 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
   defp list_requests(current_user, pagination) do
     # TODO: apply boundaries to Requests and then be able to view someone's requests/requested that involve me
     # TODO: pagination
-    # user, 
+    # user,
     Bonfire.Social.Requests.list_my_requesters(
       pagination: pagination,
       current_user: current_user
@@ -1080,7 +1080,7 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
     |> debug("requests")
   end
 
-  def load_user_feed_assigns("requests" = tab, user, params, socket) do
+  def load_user_feed_assigns("requests" = tab, _user, params, socket) do
     requested = list_requests(current_user(socket), input_to_atoms(params))
 
     [

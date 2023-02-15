@@ -22,7 +22,7 @@ defmodule Bonfire.UI.Social.WriteLive do
     ])
   end
 
-  defp mounted(params, session, socket) do
+  defp mounted(_params, session, socket) do
     {:ok,
      socket
      |> assign(

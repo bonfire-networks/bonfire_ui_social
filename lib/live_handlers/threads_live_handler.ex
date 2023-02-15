@@ -75,7 +75,7 @@ defmodule Bonfire.Social.Threads.LiveHandler do
     end
   end
 
-  def load_thread_maybe_async(thread_id, assigns, socket_or_opts) do
+  def load_thread_maybe_async(_thread_id, _assigns, socket_or_opts) do
     # debug(e(socket_or_opts, :assigns, nil), "not socket")
     load_thread(socket_or_opts)
   end

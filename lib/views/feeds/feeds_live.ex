@@ -43,7 +43,7 @@ defmodule Bonfire.UI.Social.FeedsLive do
     ])
   end
 
-  defp mounted(params, _session, socket) do
+  defp mounted(_params, _session, socket) do
     {:ok,
      socket
      |> assign(
@@ -84,11 +84,11 @@ defmodule Bonfire.UI.Social.FeedsLive do
     {:noreply, assign(socket, LiveHandler.feed_assigns_maybe_async({:fediverse, params}, socket))}
   end
 
-  def do_handle_params(%{"tab" => "local" = tab} = params, _url, socket) do
+  def do_handle_params(%{"tab" => "local" = _tab} = params, _url, socket) do
     {:noreply, assign(socket, LiveHandler.feed_assigns_maybe_async({:local, params}, socket))}
   end
 
-  def do_handle_params(%{"tab" => "likes" = tab} = params, _url, socket) do
+  def do_handle_params(%{"tab" => "likes" = _tab} = params, _url, socket) do
     {:noreply, assign(socket, LiveHandler.feed_assigns_maybe_async({:likes, params}, socket))}
   end
 

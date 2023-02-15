@@ -23,7 +23,7 @@ defmodule Bonfire.UI.Social.Feeds.NotificationsLive do
     ])
   end
 
-  defp mounted(params, _session, socket) do
+  defp mounted(_params, _session, socket) do
     current_user = current_user_required!(socket)
     # |> debug("current_user")
 

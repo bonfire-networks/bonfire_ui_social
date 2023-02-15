@@ -3,7 +3,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
   use Untangle
 
   alias Bonfire.Social.Activities
-  alias Bonfire.Data.Social.Activity
+  # alias Bonfire.Data.Social.Activity
   alias Bonfire.Social.Feeds.LiveHandler
 
   # TODO: put verbs in config and/or autogenerate with Verbs genserver
@@ -401,6 +401,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
     debug(assigns)
 
     ~F"""
+    <div></div>
     """
   end
 
@@ -427,7 +428,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
   # quoting a reply_to <-- this is handled by the Bonfire.UI.Social.Activity.SubjectLive internally
   # def component_activity_subject(_, _, %{activity_inception: true}), do: [Bonfire.UI.Social.Activity.SubjectRepliedLive]
 
-  def component_activity_subject(verb, activity, _, object_type, _, _)
+  def component_activity_subject(verb, _activity, _, object_type, _, _)
       when verb in @react_or_simple_verbs and object_type in [Bonfire.Data.Identity.User],
       do: [
         {Bonfire.UI.Social.Activity.SubjectMinimalLive,
@@ -449,7 +450,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
         ] ++ component_activity_maybe_creator(activity, object, object_type)
 
   # replies (when shown in notifications)
-  def component_activity_subject(verb, activity, _, _, :notifications, _)
+  def component_activity_subject(verb, _activity, _, _, :notifications, _)
       when verb in @reply_verbs,
       do: [
         {Bonfire.UI.Social.Activity.SubjectMinimalLive,
@@ -480,7 +481,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
       do: [{Bonfire.UI.Social.Activity.SubjectLive, %{profile: nil, character: character}}]
 
   # other
-  def component_activity_subject(verb, activity, object, object_type, _, _),
+  def component_activity_subject(_verb, activity, object, object_type, _, _),
     do:
       activity
       # |> debug("activity")
@@ -612,8 +613,8 @@ defmodule Bonfire.UI.Social.ActivityLive do
       )
 
   def component_maybe_in_reply_to(
-        verb,
-        activity,
+        _verb,
+        _activity,
         showing_within,
         activity_inception,
         viewing_main_object,
@@ -638,7 +639,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
                   profile: %{id: _} = subject_profile
                 }
               }
-            } = reply_to
+            } = _reply_to
         },
         _,
         _,
@@ -748,7 +749,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
   #     when object_id != thread_id,
   #     do: maybe_load_in_reply_to(thread, thread_id, current_user: current_user(assigns))
 
-  def component_maybe_in_reply_to(_, a, _, _, _, _) do
+  def component_maybe_in_reply_to(_, _a, _, _, _, _) do
     # debug(a, "ActivityLive: no reply_to")
     []
   end
@@ -825,7 +826,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
       when type in [Bonfire.Data.Social.Post],
       do: [Bonfire.UI.Social.Activity.NoteLive]
 
-  def component_for_object_type(type, object) when type in [Bonfire.Data.Social.Post],
+  def component_for_object_type(type, _object) when type in [Bonfire.Data.Social.Post],
     # for posts with no text content (eg. only with attachments)
     do: []
 
@@ -922,11 +923,11 @@ defmodule Bonfire.UI.Social.ActivityLive do
   def component_actions(_, _, _, _, _, _), do: []
 
   # WIP: Customize actions for each activity type
-  def actions_for_object_type(activity, type)
+  def actions_for_object_type(_activity, type)
       when type in [Bonfire.Data.Identity.User, Bonfire.Data.Identity.Character],
       do: []
 
-  def actions_for_object_type(activity, type) when type in [Bonfire.Data.Social.Flag], do: []
+  def actions_for_object_type(_activity, type) when type in [Bonfire.Data.Social.Flag], do: []
 
   def actions_for_object_type(activity, type)
       when type in [Bonfire.Data.Social.Post, Bonfire.Data.Social.PostContent],
@@ -935,7 +936,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
   # def actions_for_object_type(activity, type)
   #     when type in [Bonfire.Classify.Category],
   #     do: component_show_category_actions(activity)
-  def actions_for_object_type(activity, type)
+  def actions_for_object_type(_activity, type)
       when type in [Bonfire.Classify.Category],
       do: []
 
@@ -946,11 +947,11 @@ defmodule Bonfire.UI.Social.ActivityLive do
   #   do: component_show_process_actions(activity)
 
   # TODO: choose between Task and other Intent types
-  def actions_for_object_type(activity, type) when type in [ValueFlows.Planning.Intent],
+  def actions_for_object_type(_activity, type) when type in [ValueFlows.Planning.Intent],
     do: []
 
   # TODO: choose between Task and other Intent types
-  def actions_for_object_type(activity, type) when type in [ValueFlows.Process],
+  def actions_for_object_type(_activity, type) when type in [ValueFlows.Process],
     do: []
 
   def actions_for_object_type(activity, type) do
@@ -961,7 +962,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
 
   # |> debug
   def component_show_standard_actions(
-        %{subject: %{character: %{username: username}}} = _activity
+        %{subject: %{character: %{username: _username}}} = _activity
       ),
       do: [Bonfire.UI.Social.Activity.ActionsLive]
 

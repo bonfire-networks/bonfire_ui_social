@@ -100,7 +100,7 @@
                             Bonfire.Files.FaviconStore.favicon_url(Media.media_url(media))}
                           {#match nil}
                             <Icon solid="ExternalLink" class="w-8 h-8 text-base-content/70" />
-                          {#match image}
+                          {#match _image}
                             <img
                               class="rounded-none cursor-pointer media-image"
                               alt={media_label(media)}
@@ -155,7 +155,7 @@
                   Bonfire.Files.FaviconStore.favicon_url(Media.media_url(link))}
                 {#match nil}
                   <Icon solid="ExternalLink" class="w-8 h-8 text-base-content/70" />
-                {#match image}
+                {#match _image}
                   <img
                     class="object-cover w-full h-full rounded-none cursor-pointer rounded-l-md media-image"
                     alt={media_label(link)}

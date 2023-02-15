@@ -1,10 +1,10 @@
 defmodule Bonfire.UI.Social.ThreadLive do
   use Bonfire.UI.Common.Web, :stateful_component
   import Untangle
-  alias Bonfire.Fake
-  alias Bonfire.UI.Me.LivePlugs
-  alias Bonfire.Me.Users
-  alias Bonfire.UI.Me.CreateUserLive
+  # alias Bonfire.Fake
+  # alias Bonfire.UI.Me.LivePlugs
+  # alias Bonfire.Me.Users
+  # alias Bonfire.UI.Me.CreateUserLive
   alias Bonfire.Social.Threads.LiveHandler
   # import Bonfire.Me.Integration
 
@@ -14,7 +14,7 @@ defmodule Bonfire.UI.Social.ThreadLive do
   prop activity, :any, default: nil
   prop object, :any, default: nil
   prop reply_to_id, :any, default: nil
-  prop thread_id, :any, default: nil
+  # prop thread_id, :any, default: nil
   prop page, :any, default: "thread"
   prop feed_id, :any, default: nil
   prop create_object_type, :any, default: nil
@@ -86,7 +86,7 @@ defmodule Bonfire.UI.Social.ThreadLive do
       #   if is_struct(e(socket.assigns, :object, nil)) do
       #     path(e(socket.assigns, :object, nil))
       #   else
-      #     "/discussion/#{thread_id}"
+          "/discussion/#{thread_id}"
       #   end
 
       # permalink = "#{thread_url}#activity-#{activity_id}"

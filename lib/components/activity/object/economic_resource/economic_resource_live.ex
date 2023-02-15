@@ -12,8 +12,8 @@ defmodule Bonfire.UI.Social.Activity.EconomicResourceLive do
       accounting_quantity: [:unit]
     ]
 
-  defp preload(object) do
-    object
-    |> repo().maybe_preload(preloads())
-  end
+  # defp preload(object) do
+  #   object
+  #   |> repo().maybe_preload(preloads())
+  # end
 end

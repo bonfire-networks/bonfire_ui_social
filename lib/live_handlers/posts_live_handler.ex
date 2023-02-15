@@ -3,16 +3,16 @@ defmodule Bonfire.Social.Posts.LiveHandler do
   import Untangle
 
   alias Bonfire.Social.Posts
-  alias Bonfire.Social.PostContents
-  alias Bonfire.Data.Social.PostContent
-  alias Bonfire.Data.Social.Post
-  alias Ecto.Changeset
+  # alias Bonfire.Social.PostContents
+  # alias Bonfire.Data.Social.PostContent
+  # alias Bonfire.Data.Social.Post
+  # alias Ecto.Changeset
 
-  def handle_params(%{"after" => cursor} = attrs, _, %{assigns: %{thread_id: thread_id}} = socket) do
+  def handle_params(%{"after" => cursor} = _attrs, _, %{assigns: %{thread_id: thread_id}} = socket) do
     live_more(thread_id, [after: cursor], socket)
   end
 
-  def handle_params(%{"after" => cursor, "context" => thread_id} = attrs, _, socket) do
+  def handle_params(%{"after" => cursor, "context" => thread_id} = _attrs, _, socket) do
     live_more(thread_id, [after: cursor], socket)
   end
 
@@ -26,7 +26,7 @@ defmodule Bonfire.Social.Posts.LiveHandler do
 
   def handle_event(
         "load_more",
-        %{"after" => cursor} = attrs,
+        %{"after" => _cursor} = attrs,
         %{assigns: %{thread_id: thread_id}} = socket
       ) do
     live_more(thread_id, input_to_atoms(attrs), socket)

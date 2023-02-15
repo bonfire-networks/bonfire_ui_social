@@ -3,7 +3,7 @@ defmodule Bonfire.Social.Objects.LiveHandler do
   import Untangle
   alias Bonfire.Social.Objects
 
-  def handle_event("set_name", %{"id" => id, "name" => name} = params, socket) do
+  def handle_event("set_name", %{"id" => _id, "name" => name} = params, socket) do
     with {:ok, _} <-
            Objects.set_name(e(params, "id") || e(socket.assigns, :object, nil), name,
              current_user: current_user_required!(socket)
@@ -46,7 +46,7 @@ defmodule Bonfire.Social.Objects.LiveHandler do
     end
   end
 
-  def init_object_assigns(object, activity, assigns, socket, page_title \\ nil) do
+  def init_object_assigns(object, activity, _assigns, socket, page_title \\ nil) do
     current_user = current_user(socket)
     id = ulid(object)
 
@@ -65,7 +65,7 @@ defmodule Bonfire.Social.Objects.LiveHandler do
 
     thread_id = e(activity, :replied, :thread_id, id)
     # |> debug("reply_to_id")
-    reply_to_id = e(assigns, :reply_to_id, id)
+    # reply_to_id = e(assigns, :reply_to_id, id)
 
     # smart_input_prompt = l("Reply to object:")<>" "<>Text.text_only(e(object, :post_content, :name, e(object, :post_content, :summary, e(object, :post_content, :html_body, reply_to_id))))
     smart_input_prompt = l("Reply")

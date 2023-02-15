@@ -1,6 +1,6 @@
 defmodule Bonfire.UI.Social.Activity.DeleteObjectLive do
   use Bonfire.UI.Common.Web, :stateless_component
-  import Bonfire.UI.Social.Integration
+  # import Bonfire.UI.Social.Integration
   alias Bonfire.UI.Common.OpenModalLive
 
   prop creator_id, :string, default: nil

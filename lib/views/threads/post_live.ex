@@ -1,7 +1,7 @@
 defmodule Bonfire.UI.Social.PostLive do
   use Bonfire.UI.Common.Web, :surface_live_view
   alias Bonfire.UI.Me.LivePlugs
-  import Untangle
+  # import Untangle
 
   def mount(params, session, socket) do
     live_plug(params, session, socket, [
@@ -16,7 +16,7 @@ defmodule Bonfire.UI.Social.PostLive do
     ])
   end
 
-  defp mounted(params, _session, socket) do
+  defp mounted(_params, _session, socket) do
     {:ok,
      socket
      |> assign(

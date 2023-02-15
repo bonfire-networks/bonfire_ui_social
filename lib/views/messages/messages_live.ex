@@ -1,7 +1,7 @@
 defmodule Bonfire.UI.Social.MessagesLive do
   use Bonfire.UI.Common.Web, :surface_live_view
   alias Bonfire.UI.Me.LivePlugs
-  alias Bonfire.Social.Integration
+  # alias Bonfire.Social.Integration
   alias Bonfire.Social.Messages.LiveHandler
   import Untangle
 
@@ -27,7 +27,7 @@ defmodule Bonfire.UI.Social.MessagesLive do
     ])
   end
 
-  defp mounted(params, _session, socket) do
+  defp mounted(_params, _session, socket) do
     feed_id = :inbox
     # feed_id = Bonfire.Social.Feeds.my_feed_id(feed_id, socket)
     threads = LiveHandler.list_threads(current_user_required!(socket), socket)
@@ -82,7 +82,7 @@ defmodule Bonfire.UI.Social.MessagesLive do
      )}
   end
 
-  def do_handle_params(%{"username" => username} = params, url, socket) do
+  def do_handle_params(%{"username" => username} = _params, _url, socket) do
     # view messages excanged with a particular user
 
     current_user = current_user_required!(socket)
@@ -272,8 +272,8 @@ defmodule Bonfire.UI.Social.MessagesLive do
   end
 
   # show all my threads
-  def do_handle_params(_params, url, socket) do
-    current_user = current_user_required!(socket)
+  def do_handle_params(_params, _url, socket) do
+    # current_user = current_user_required!(socket)
 
     {
       :noreply,

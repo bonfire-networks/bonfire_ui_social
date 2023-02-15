@@ -1,6 +1,6 @@
 defmodule Bonfire.UI.Social.FlagsLive do
   use Bonfire.UI.Common.Web, :stateful_component
-  alias Bonfire.UI.Me.LivePlugs
+  # alias Bonfire.UI.Me.LivePlugs
 
   prop page_title, :string, default: "Flags"
   prop feed, :list, default: []

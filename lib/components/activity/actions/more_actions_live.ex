@@ -1,8 +1,8 @@
 defmodule Bonfire.UI.Social.Activity.MoreActionsLive do
   use Bonfire.UI.Common.Web, :stateless_component
-  import Bonfire.UI.Social.Integration
-  alias Bonfire.UI.Common.OpenModalLive
-  alias Bonfire.UI.Social.Integration
+  # import Bonfire.UI.Social.Integration
+  # alias Bonfire.UI.Common.OpenModalLive
+  # alias Bonfire.UI.Social.Integration
 
   prop activity, :any, default: nil
   prop object, :any, required: true

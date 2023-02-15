@@ -41,7 +41,7 @@ defmodule Bonfire.Social.Follows.LiveHandler do
     end
   end
 
-  def handle_event("accept", %{"id" => id} = params, socket) do
+  def handle_event("accept", %{"id" => id} = _params, socket) do
     # debug(socket)
 
     with {:ok, _follow} <-

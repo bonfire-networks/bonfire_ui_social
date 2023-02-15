@@ -15,7 +15,7 @@ defmodule Bonfire.UI.Social.DiscussionLive do
     ])
   end
 
-  defp mounted(params, _session, socket) do
+  defp mounted(_params, _session, socket) do
     {:ok,
      socket
      |> assign(
