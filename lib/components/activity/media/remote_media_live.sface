@@ -1,5 +1,9 @@
 {#if String.contains?(MediaLive.media_img(@media), [".jpg", ".jpeg", ".png", ".gif", ".webp"])}
-  <img class="relative mx-auto" alt={MediaLive.media_label(@media)} src={MediaLive.media_img(@media)}>
+  <img
+    class="relative mx-auto"
+    alt={MediaLive.media_label(@media)}
+    src={MediaLive.media_img(@media)}
+  />
 {#else}
   {#case e(@media.metadata, "facebook", "og:video:url", nil) ||
       e(@media.metadata, "twitter", "twitter:player", nil) ||

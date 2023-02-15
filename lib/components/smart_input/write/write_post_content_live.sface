@@ -93,8 +93,6 @@
               </Field>
             </div>
 
-            
-
             <!-- <div class="block md:hidden">
               <Bonfire.UI.Social.UploadPreviewsLive uploads={@uploads} />
             </div> -->
