@@ -45,8 +45,7 @@
       <div class="flex items-center gap-2">
         <LiveRedirect
           class="h-8"
-          opts={"data-id": "subject_name"}
-          aria-label={e(@character, :username, "") <> " profile"}
+          opts={"data-id": "subject_name", "aria-label": e(@character, :username, "") <> " profile"}
           to={path(@character)}
         >
           <Bonfire.UI.Common.AvatarLive
@@ -58,8 +57,7 @@
         </LiveRedirect>
         <div class="flex items-baseline gap-1">
           <LiveRedirect
-            opts={"data-id": "subject_name"}
-            aria-label={l("%{name}'s profile", name: e(@profile, :name, ""))}
+            opts={"data-id": "subject_name", "aria-label": l("%{name}'s profile", name: e(@profile, :name, ""))}
             class="text-sm font-semibold link link-hover text-base-content/90"
             to={path(@character)}
           >
@@ -99,8 +97,7 @@
         "": @viewing_main_object == true
       }>
         <LiveRedirect
-          opts={"data-id": "subject_name"}
-          aria-label={e(@character, :username, "") <> " profile"}
+          opts={"data-id": "subject_name", "aria-label": e(@character, :username, "") <> " profile"}
           class="font-semibold text-base-content hover:underline"
           to={path(@character)}
         >
@@ -119,8 +116,7 @@
           }>
             <!-- {@verb} {@object_type} -->
             <LiveRedirect
-              opts={"data-id": "subject_name"}
-              aria-label={l("%{name}'s profile", name: e(@profile, :name, ""))}
+              opts={"data-id": "subject_name", "aria-label": l("%{name}'s profile", name: e(@profile, :name, ""))}
               class="link link-hover text-[15px] font-semibold"
               to={path(@character)}
             >
@@ -155,8 +151,7 @@
           <div class="flex items-center gap-1">
             <LiveRedirect
               :if={e(@character, :username, nil)}
-              opts={"data-id": "subject_username"}
-              aria-label={l("%{name}'s profile", name: e(@profile, :name, ""))}
+              opts={"data-id": "subject_username", "aria-label": l("%{name}'s profile", name: e(@profile, :name, ""))}
               class="text-sm font-normal truncate link link-hover ellipsis text-base-content/50 subject_username"
               to={path(@character)}
             >
@@ -170,7 +165,6 @@
             :if={module_enabled?(Bonfire.Boundaries.Web.ActivityVisibilityIconLive) and
               @object_type not in [Bonfire.Data.Social.Message]}
             module={Bonfire.Boundaries.Web.ActivityVisibilityIconLive}
-            object={@object}
             with_icon
             object_boundary={@object_boundary}
           />

@@ -353,10 +353,8 @@ defmodule Bonfire.UI.Social.ActivityLive do
                 object_boundary={@object_boundary}
                 object_type={e(component_assigns, :object_type, @object_type)}
                 object_type_readable={e(component_assigns, :object_type_readable, @object_type_readable)}
-                date_ago={e(component_assigns, :date_ago, @date_ago)}
                 verb={e(component_assigns, :verb, @verb)}
                 permalink={e(component_assigns, :permalink, @permalink)}
-                activity_inception={e(component_assigns, :activity_inception, @activity_inception)}
                 viewing_main_object={e(component_assigns, :viewing_main_object, @viewing_main_object)}
               />
             {#match _}

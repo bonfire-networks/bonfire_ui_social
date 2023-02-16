@@ -1,7 +1,7 @@
 defmodule Bonfire.UI.Social.Benchmark do
   @endpoint Bonfire.Web.Endpoint
   import Phoenix.ConnTest
-  import Untangle
+  # import Untangle
 
   def feed_query_methods do
     # NOTE: make sure you populate your local with seeds first, and then copy paste this in iex

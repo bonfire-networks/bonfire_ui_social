@@ -24,6 +24,5 @@
   id={ComponentID.new(Bonfire.UI.Common.LikeActionLive, id(@object))}
   object_id={id(@object)}
   object_boundary={@object_boundary}
-  showing_within={@showing_within}
   like_count={e(Bonfire.UI.Social.Activity.ActionsLive.the_activity(@activity, @object), :like_count, nil)}
 />

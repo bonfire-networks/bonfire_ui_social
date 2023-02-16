@@ -22,9 +22,7 @@
       :if={@object_boundary && module_enabled?(Bonfire.Boundaries.Web.PermissionsIconLive) &&
         @object_type not in [Bonfire.Data.Social.Message]}
       module={Bonfire.Boundaries.Web.PermissionsIconLive}
-      object={@object}
       with_label
-      id={ComponentID.new(Bonfire.Boundaries.Web.PermissionsIconLive, @object)}
       object_boundary={@object_boundary}
     />
 
@@ -53,7 +51,6 @@
         object={@object}
         flagged={@flagged}
         label={l("Flag this %{object}", object: e(@object_type_readable, l("object")))}
-        class="flex items-center text-sm text-neutral-content/80"
       />
     </li>
 
@@ -64,7 +61,6 @@
         object={@object}
         flagged={@flagged}
         label={l("Flag %{name}", name: name(@activity, @object))}
-        class="flex items-center py-2 text-sm text-neutral-content/80"
       />
     </li>
 
@@ -90,7 +86,6 @@
         action="Bonfire.Social.Feeds:delete"
         object={@activity}
         object_boundary={@object_boundary}
-        creator_id={subject_id(@activity, @object)}
         object_type_readable={l("from feeds")}
         creator_id={subject_id(@activity, @object)}
         explanation={l(
