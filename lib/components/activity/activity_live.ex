@@ -401,7 +401,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
     debug(assigns)
 
     ~F"""
-    <div></div>
+    <div />
     """
   end
 

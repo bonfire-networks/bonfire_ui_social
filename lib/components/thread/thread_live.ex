@@ -86,7 +86,7 @@ defmodule Bonfire.UI.Social.ThreadLive do
       #   if is_struct(e(socket.assigns, :object, nil)) do
       #     path(e(socket.assigns, :object, nil))
       #   else
-          "/discussion/#{thread_id}"
+      "/discussion/#{thread_id}"
       #   end
 
       # permalink = "#{thread_url}#activity-#{activity_id}"

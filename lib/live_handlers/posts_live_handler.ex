@@ -8,7 +8,11 @@ defmodule Bonfire.Social.Posts.LiveHandler do
   # alias Bonfire.Data.Social.Post
   # alias Ecto.Changeset
 
-  def handle_params(%{"after" => cursor} = _attrs, _, %{assigns: %{thread_id: thread_id}} = socket) do
+  def handle_params(
+        %{"after" => cursor} = _attrs,
+        _,
+        %{assigns: %{thread_id: thread_id}} = socket
+      ) do
     live_more(thread_id, [after: cursor], socket)
   end
 
