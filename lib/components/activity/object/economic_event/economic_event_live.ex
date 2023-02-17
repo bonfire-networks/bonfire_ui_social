@@ -4,12 +4,12 @@ defmodule Bonfire.UI.Social.Activity.EconomicEventLive do
   prop activity, :map
   prop object, :map
 
-  @resource_preloads [
-    :image,
-    :current_location,
-    onhand_quantity: [:unit],
-    accounting_quantity: [:unit]
-  ]
+  # @resource_preloads [
+  #   :image,
+  #   :current_location,
+  #   onhand_quantity: [:unit],
+  #   accounting_quantity: [:unit]
+  # ]
 
   def preloads() do
     resource_preloads = Bonfire.UI.Social.Activity.EconomicResourceLive.preloads()

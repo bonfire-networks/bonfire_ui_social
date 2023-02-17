@@ -1046,17 +1046,6 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
     ]
   end
 
-  defp list_requested(current_user, pagination) do
-    # TODO: apply boundaries to Requests and then be able to view someone's requests/requested that involve me
-    # TODO: pagination
-    # user,
-    Bonfire.Social.Requests.list_my_requested(
-      pagination: pagination,
-      current_user: current_user
-    )
-    |> debug("requested")
-  end
-
   def load_user_feed_assigns("requested" = tab, _user, params, socket) do
     requested = list_requested(current_user(socket), input_to_atoms(params))
 
@@ -1069,17 +1058,6 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
     ]
   end
 
-  defp list_requests(current_user, pagination) do
-    # TODO: apply boundaries to Requests and then be able to view someone's requests/requested that involve me
-    # TODO: pagination
-    # user,
-    Bonfire.Social.Requests.list_my_requesters(
-      pagination: pagination,
-      current_user: current_user
-    )
-    |> debug("requests")
-  end
-
   def load_user_feed_assigns("requests" = tab, _user, params, socket) do
     requested = list_requests(current_user(socket), input_to_atoms(params))
 
@@ -1090,5 +1068,27 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
       # feed: e(requested, :edges, []),
       # page_info: e(requested, :page_info, [])
     ]
+  end
+
+  defp list_requested(current_user, pagination) do
+    # TODO: apply boundaries to Requests and then be able to view someone's requests/requested that involve me
+    # TODO: pagination
+    # user,
+    Bonfire.Social.Requests.list_my_requested(
+      pagination: pagination,
+      current_user: current_user
+    )
+    |> debug("requested")
+  end
+
+  defp list_requests(current_user, pagination) do
+    # TODO: apply boundaries to Requests and then be able to view someone's requests/requested that involve me
+    # TODO: pagination
+    # user,
+    Bonfire.Social.Requests.list_my_requesters(
+      pagination: pagination,
+      current_user: current_user
+    )
+    |> debug("requests")
   end
 end

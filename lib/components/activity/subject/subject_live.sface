@@ -151,7 +151,10 @@
           <div class="flex items-center gap-1">
             <LiveRedirect
               :if={e(@character, :username, nil)}
-              opts={"data-id": "subject_username", "aria-label": l("%{name}'s profile", name: e(@profile, :name, ""))}
+              opts={
+                "data-id": "subject_username",
+                "aria-label": l("%{name}'s profile", name: e(@profile, :name, ""))
+              }
               class="text-sm font-normal truncate link link-hover ellipsis text-base-content/50 subject_username"
               to={path(@character)}
             >
