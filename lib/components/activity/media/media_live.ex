@@ -17,14 +17,14 @@ defmodule Bonfire.UI.Social.Activity.MediaLive do
   def provider(media) do
     (e(media.metadata, "facebook", "og:site_name", nil) ||
        e(media.metadata, "oembed", "provider_url", nil))
-    |> as_string()
+    |> unwrap()
   end
 
   def description(media) do
     (e(media.metadata, "facebook", "og:description", nil) ||
        e(media.metadata, "twitter", "twitter:description", nil) ||
        e(media.metadata, "other", "description", nil))
-    |> as_string()
+    |> unwrap()
   end
 
   def preview_img(media) do
@@ -32,12 +32,12 @@ defmodule Bonfire.UI.Social.Activity.MediaLive do
        e(media.metadata, "facebook", "og:image", nil) ||
        e(media.metadata, "twitter", "twitter:image", nil) ||
        media_img(media))
-    |> as_string()
+    |> unwrap()
   end
 
   def media_img(media) do
-    (e(media.metadata, "oembed", "url", nil) || Media.media_url(media))
-    |> as_string()
+    (e(media.metadata, "oembed", "url", nil) || Media.image_url(media))
+    |> unwrap()
   end
 
   def media_label(media) do
@@ -45,16 +45,16 @@ defmodule Bonfire.UI.Social.Activity.MediaLive do
        e(media.metadata, "facebook", "og:title", nil) ||
        e(media.metadata, "twitter", "twitter:title", nil) ||
        e(media.metadata, "other", "title", nil))
-    |> as_string()
+    |> unwrap()
   end
 
-  def as_string(list) when is_list(list) do
+  def unwrap(list) when is_list(list) do
     List.first(list)
-    # |> debug()
-    |> as_string()
+    # |> unwrap()
   end
 
-  def as_string(other) do
-    to_string(other)
+  def unwrap(other) do
+    other
+    # |> to_string()
   end
 end
