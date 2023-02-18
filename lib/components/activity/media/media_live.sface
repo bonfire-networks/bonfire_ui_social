@@ -17,116 +17,116 @@
       {#for {media, counter} <- Enum.with_index(medias)}
         {#case the_media(media |> debug("mmm")) |> debug("tmm")}
           {#match %{} = media}
-            <article class={
-              "media-entry h-full w-full row-span-4 object-cover",
-              "!row-span-2 !h-auto":
-                medias |> length() ==
-                  3 && counter != 0,
-              "!row-span-2 !col-span-2 !h-auto":
-                medias |> length() ==
-                  4
-            }>
-              <figure class="h-full">
-                {#if String.starts_with?(e(media, :media_type, ""), [
-                    "image",
-                    "video",
-                    "embed",
-                    "audio",
-                    "song",
-                    "photo",
-                    "rich"
-                  ]) or String.contains?(Media.media_url(media), [".jpg", ".jpeg", ".png", ".gif", ".webp"])}
-                  <!-- {#if @viewing_main_object}
+            {#case media_label(media) || l("Sorry, no caption provided by author")}
+              {#match media_label}
+                <article class={
+                  "media-entry h-full w-full row-span-4 object-cover",
+                  "!row-span-2 !h-auto":
+                    medias |> length() ==
+                      3 && counter != 0,
+                  "!row-span-2 !col-span-2 !h-auto":
+                    medias |> length() ==
+                      4
+                }>
+                  <figure class="h-full">
+                    {#if String.starts_with?(e(media, :media_type, ""), [
+                        "image",
+                        "video",
+                        "embed",
+                        "audio",
+                        "song",
+                        "photo",
+                        "rich"
+                      ]) or String.contains?(Media.media_url(media), [".jpg", ".jpeg", ".png", ".gif", ".webp"])}
+                      <!-- {#if @viewing_main_object}
             <Bonfire.UI.Social.Activity.RemoteMediaLive media={media} />
           {#else} -->
-                  <Bonfire.UI.Common.OpenModalLive
-                    id={Pointers.ULID.generate()}
-                    no_actions
-                    no_header
-                    image_preview
-                    enable_fallback
-                    modal_class="modal !modal-middle max-h-[100%]"
-                    wrapper_class="max-h-full !w-full md:w-10/12 !p-0 max-w-[100%] !bg-transparent shadow-none rounded-none"
-                    open_btn_class="w-full"
-                    open_btn_wrapper_class="w-full h-full"
-                  >
-                    <div
-                      class="h-full"
-                      style={if String.starts_with?(media.media_type, ["video"]),
-                        do: "min-width: 90vw; min-height: 90vh",
-                        else: ""}
-                    >
-                      <Bonfire.UI.Social.Activity.RemoteMediaLive media={media} />
-
-                      <div class="absolute z-20 pt-4 bottom-2 left-2 right-2 md:relative">
-                        <div class="prose text-center prose-sm px-4 bg-black/30 py-1.5 rounded-full mx-auto">{media_label(media)}</div>
-                        <p class="text-sm">{e(media.metadata, "description", nil) || e(media.metadata, "facebook", "og:description", nil) ||
-                            e(media.metadata, "twitter", "twitter:description", nil) ||
-                            e(media.metadata, "other", "description", nil)}</p>
-                      </div>
-                    </div>
-
-                    <:open_btn>
-                      <div class="relative h-full">
-                        <LazyImage
-                          class="w-full !object-cover media-image h-full cursor-pointer object-top aspect-video rounded-md"
-                          alt={media_label(media)}
-                          src={preview_img(media) || Media.media_url(media)}
-                        />
-                        <div
-                          :if={String.length(media_label(media)) > 0}
-                          class="absolute z-50 bottom-3 left-3 dropdown dropdown-hover dropdown-top"
-                        >
-                          <label tabindex="0" class="text-white border-none rounded btn btn-xs bg-black/60">alt</label>
-                          <div tabindex="0" class="p-2 rounded shadow dropdown-content bg-neutral w-52">
-                            <div class="prose-sm prose text-neutral-content">{media_label(media)}</div>
-                          </div>
-                        </div>
-                        <figcaption class="sr-only">{media_label(media)}</figcaption>
-                      </div>
-                    </:open_btn>
-                  </Bonfire.UI.Common.OpenModalLive>
-                  <!-- {/if} -->
-                {#else}
-                  {#case Media.media_url(media)}
-                    {#match nil}
-                    {#match media_url}
-                      <a
-                        href={media_url || preview_img(media)}
-                        target="_blank"
-                        class="flex w-full border rounded media_container bg-base-200 hover:bg-base-content/5 border-base-content/10 tooltip tooltip-bottom"
-                        data-tip={media_label(media)}
+                      <Bonfire.UI.Common.OpenModalLive
+                        id={Pointers.ULID.generate()}
+                        no_actions
+                        no_header
+                        image_preview
+                        enable_fallback
+                        modal_class="modal !modal-middle max-h-[100%]"
+                        wrapper_class="max-h-full !w-full md:w-10/12 !p-0 max-w-[100%] !bg-transparent shadow-none rounded-none"
+                        open_btn_class="w-full"
+                        open_btn_wrapper_class="w-full h-full"
                       >
-                        <div class="items-center gap-3 md:flex">
-                          <div class="flex items-center w-[80px] h-[80px] bg-base-200 bg-base-content/5 place-content-center">
-                            {#case preview_img(media) || e(media.metadata, "favicon", nil) ||
-                                Bonfire.Files.FaviconStore.favicon_url(media_url)}
-                              {#match nil}
-                                <Icon solid="ExternalLink" class="w-8 h-8 text-base-content/70" />
-                              {#match preview_img}
-                                <img class="rounded-none cursor-pointer media-image" alt={media_label(media)} src={preview_img}>
-                            {/case}
-                          </div>
-                          <div class="flex flex-col items-start content-start justify-start p-3 space-y-1 text-sm text-left">
-                            <div class="text-base font-medium line-clamp-3">
-                              {media_label(media) || l("View media")} ({media.media_type})
-                            </div>
-                            <div class="break-words line-clamp-2 text-sm text-base-content/60" :if={provider(media)}>
-                              {description(media) || provider(media)}
-                            </div>
+                        <div
+                          class="h-full"
+                          style={if String.starts_with?(media.media_type, ["video"]),
+                            do: "min-width: 90vw; min-height: 90vh",
+                            else: ""}
+                        >
+                          <Bonfire.UI.Social.Activity.RemoteMediaLive media={media} />
+
+                          <div class="absolute z-20 pt-4 bottom-2 left-2 right-2 md:relative">
+                            <div class="prose text-center prose-sm px-4 bg-black/30 py-1.5 rounded-full mx-auto">{media_label}</div>
+                            <p class="text-sm">{e(media.metadata, "description", nil) || e(media.metadata, "facebook", "og:description", nil) ||
+                                e(media.metadata, "twitter", "twitter:description", nil) ||
+                                e(media.metadata, "other", "description", nil)}</p>
                           </div>
                         </div>
-                      </a>
-                  {/case}
-                {/if}
-              </figure>
-            </article>
-            <!-- {#else}
+
+                        <:open_btn>
+                          <div class="relative h-full">
+                            <LazyImage
+                              class="w-full !object-cover media-image h-full cursor-pointer object-top aspect-video rounded-md"
+                              alt={media_label}
+                              src={preview_img(media) || Media.media_url(media)}
+                            />
+                            <div class="absolute z-50 bottom-3 left-3 dropdown dropdown-hover dropdown-top">
+                              <label tabindex="0" class="text-white border-none rounded btn btn-xs bg-black/60">alt</label>
+                              <div tabindex="0" class="p-2 rounded shadow dropdown-content bg-neutral w-52">
+                                <div class="prose-sm prose text-neutral-content">{media_label}</div>
+                              </div>
+                            </div>
+                            <figcaption class="sr-only">{media_label}</figcaption>
+                          </div>
+                        </:open_btn>
+                      </Bonfire.UI.Common.OpenModalLive>
+                      <!-- {/if} -->
+                    {#else}
+                      {#case Media.media_url(media)}
+                        {#match nil}
+                        {#match media_url}
+                          <a
+                            href={media_url || preview_img(media)}
+                            target="_blank"
+                            class="flex w-full border rounded media_container bg-base-200 hover:bg-base-content/5 border-base-content/10 tooltip tooltip-bottom"
+                            data-tip={media_label}
+                          >
+                            <div class="items-center gap-3 md:flex">
+                              <div class="flex items-center w-[80px] h-[80px] bg-base-200 bg-base-content/5 place-content-center">
+                                {#case preview_img(media) || e(media.metadata, "favicon", nil) ||
+                                    Bonfire.Files.FaviconStore.favicon_url(media_url)}
+                                  {#match nil}
+                                    <Icon solid="ExternalLink" class="w-8 h-8 text-base-content/70" />
+                                  {#match preview_img}
+                                    <img class="rounded-none cursor-pointer media-image" alt={media_label} src={preview_img}>
+                                {/case}
+                              </div>
+                              <div class="flex flex-col items-start content-start justify-start p-3 space-y-1 text-sm text-left">
+                                <div class="text-base font-medium line-clamp-3">
+                                  {media_label(media) || l("View media")} ({media.media_type})
+                                </div>
+                                <div class="break-words line-clamp-2 text-sm text-base-content/60" :if={provider(media)}>
+                                  {description(media) || provider(media)}
+                                </div>
+                              </div>
+                            </div>
+                          </a>
+                      {/case}
+                    {/if}
+                  </figure>
+                </article>
+                <!-- {#else}
       <div class="flex items-center space-x-1 text-xs font-semibold text-base-content/60">
         <Icon outline="Link" class="w-4 h-4"/>
         <span class="flex-1">...{String.slice(Media.media_url(media), -20..-1)}</span>
       </div>
     {/if} -->
+            {/case}
           {#match _}
         {/case}
       {/for}

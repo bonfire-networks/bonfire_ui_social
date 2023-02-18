@@ -43,7 +43,7 @@ defmodule Bonfire.UI.Social.FeedLive do
   prop tab_class, :css_class, default: nil
   prop tab_primary_class, :css_class, default: nil
 
-  # slot hero
+  slot bottom_or_empty_feed
 
   def mount(socket) do
     {:ok,

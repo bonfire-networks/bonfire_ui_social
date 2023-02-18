@@ -49,6 +49,11 @@
           {/case}
         {/for}
       </div>
+
+      <div :if={@bottom_or_empty_feed} class="mt-1 mb-2 text-center text-base-content">
+        <#slot {@bottom_or_empty_feed}>
+        </#slot>
+      </div>
     {#else}
       {#if @loading}
         <div class="flex flex-col items-center gap-3 py-12 bg-base-100 place-content-center">
@@ -2644,10 +2649,12 @@
           <Bonfire.UI.Common.EmptyFeed
             feedback_title={@feedback_title}
             feedback_message={@feedback_message}
+            empty_feed={@bottom_or_empty_feed}
           />
         </div>
       {/if}
     {/if}
+
     <Bonfire.UI.Common.LoadMoreLive
       :if={@page_info && e(@hide_load_more, false) != true}
       live_handler={Bonfire.Social.Feeds}

@@ -25,18 +25,24 @@
       feed_title={@feed_title}
       loading={@loading}
       hide_tabs
-    />
+    >
+      <:bottom_or_empty_feed>
+        <a
+          :if={e(@user, :character, :peered, :canonical_uri, nil)}
+          href={e(@user, :character, :peered, :canonical_uri, nil)}
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          {markdown(
+            l(
+              "Please visit the **remote profile** if you don't want to miss any of their older activities."
+            )
+          )}
+        </a>
+      </:bottom_or_empty_feed>
+    </Bonfire.UI.Social.FeedLive>
     <!-- <div class="hidden lg:flex">
       <#slot {@widget} />
     </div> -->
   </div>
-  <a
-    :if={e(@user, :character, :peered, :canonical_uri, nil)}
-    href={e(@user, :character, :peered, :canonical_uri, "#")}
-    target="_blank"
-    rel="noopener noreferrer"
-    class=""
-  >
-    Visit the <u>remote profile</u> if you don't want to miss any of their older activities.
-  </a>
 </div>
