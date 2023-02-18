@@ -180,8 +180,7 @@ defmodule Bonfire.Social.Posts.LiveHandler do
     # |> Enum.uniq()
     previous_circles = e(socket, :assigns, :to_circles, [])
 
-    new_circles =
-      Bonfire.UI.Me.LiveHandlers.Boundaries.set_circles(selected_circles, previous_circles)
+    new_circles = Bonfire.Boundaries.LiveHandler.set_circles(selected_circles, previous_circles)
 
     {:noreply,
      socket
