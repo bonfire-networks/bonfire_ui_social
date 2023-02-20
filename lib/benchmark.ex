@@ -32,7 +32,7 @@ defmodule Bonfire.UI.Social.Benchmark do
         "full join/preloads, without boundaries applied" => fn ->
           Bonfire.Social.FeedActivities.feed(:local, skip_boundary_check: true, preloads: :feed)
         end
-        # "AP:shared_outbox" => fn -> ActivityPubWeb.ObjectView.render("outbox.json", %{outbox: :shared_outbox}) end
+        # "AP:shared_outbox" => fn -> ActivityPub.Web.ObjectView.render("outbox.json", %{outbox: :shared_outbox}) end
       },
       parallel: 1,
       warmup: 2,
