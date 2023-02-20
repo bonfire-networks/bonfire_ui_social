@@ -107,10 +107,10 @@
                                 {/case}
                               </div>
                               <div class="flex flex-col items-start content-start justify-start p-3 space-y-1 text-sm text-left">
-                                <div class="text-base font-medium line-clamp-3">
+                                <div class="text-base font-medium line-clamp-1">
                                   {media_label(media) || l("View media")} ({media.media_type})
                                 </div>
-                                <div class="break-words line-clamp-2 text-sm text-base-content/60" :if={provider(media)}>
+                                <div class="text-sm break-words line-clamp-1 text-base-content/60" :if={provider(media)}>
                                   {description(media) || provider(media)}
                                 </div>
                               </div>

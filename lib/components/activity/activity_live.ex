@@ -256,7 +256,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
       tabIndex="0"
       class={
         "p-4 activity relative group flex flex-col " <> e(assigns, :class, ""),
-        "!p-0 !pb-4": e(@show_minimal_subject_and_note, false),
+        "!p-0 !pb-2": e(@show_minimal_subject_and_note, false),
         "": e(assigns, :showing_within, :feed) in [:feed, :notifications, :likes, :search],
         "main_reply_to !mb-1 items-center !flex-row order-first !p-0 !pb-2":
           @object_id != nil and e(@activity, :replied, :reply_to_id, nil) == nil and
