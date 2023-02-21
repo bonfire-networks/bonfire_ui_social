@@ -21,14 +21,14 @@
   </div>
   {#if @show_minimal_subject_and_note}
     <div class="flex-shrink-0">
-      <Icon iconify="ic:round-reply" class="w-5 h-5 text-secondary-content/70" />
+      <Icon iconify="ic:round-reply" class="w-5 h-5 text-base-content/50" />
     </div>
     <div class="flex items-top" x-on:click="expanded = ! expanded" x-data="{expanded: false}">
       <div
         x-show="expanded"
         :class="{'minimal_subject_and_note': !expanded}"
         x-collapse.min.20px
-        class="font-medium cursor-pointer w-full  max-w-full  relative gap-1  prose prose-sm !text-[13px] !text-secondary-content/70 prose-a:text-secondary-content/70 prose-a:no-underline prose-p:inline-block"
+        class="font-medium cursor-pointer w-full  max-w-full  relative gap-1  prose prose-sm !text-sm !text-base-content/50 prose-a:text-base-content/50 prose-a:no-underline prose-p:inline-block"
       >
         {#if @cw == true or (is_nil(@cw) and not is_nil(e(post_content(@object), :name, nil)))}
           {rich(e(@profile, :name, "Anonymous") <> ": " <> e(post_content(@object), :name, nil))}
