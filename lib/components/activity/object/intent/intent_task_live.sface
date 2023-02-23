@@ -40,7 +40,7 @@
                 <LiveRedirect
                   :if={e(scope, :id, nil)}
                   to={~p"/coordination/task/#{e(scope, :id, "")}"}
-                  class="flex items-center text-sm cursor-pointer text-base-content/60 font-regular hover:underline"
+                  class="flex items-center text-sm cursor-pointer text-base-content/70 font-regular hover:underline"
                 >
                   {e(scope, :name, "")}
                 </LiveRedirect>

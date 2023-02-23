@@ -17,7 +17,7 @@
           <div class="flex items-center gap-1">
             <div
               :if={e(@character, :username, nil)}
-              class="text-[13px] font-normal no-underline truncate ellipsis text-base-content/60 subject_username"
+              class="text-[13px] font-normal no-underline truncate ellipsis text-base-content/70 subject_username"
             >
               @{e(
                 character(provider(@provider, @primary_accountable, @object)),
@@ -34,7 +34,7 @@
               permalink={@permalink}
               thread_id={@thread_id}
             >
-              <span class="subject_timestamp text-[13px] font-normal no-underline truncate ellipsis text-base-content/60">
+              <span class="subject_timestamp text-[13px] font-normal no-underline truncate ellipsis text-base-content/70">
                 {@date_ago}
               </span>
             </Bonfire.UI.Social.Activity.LinkToActivityLive>

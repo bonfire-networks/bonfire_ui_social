@@ -2657,7 +2657,7 @@
             thread_mode={@thread_mode}
             replied={e(Bonfire.UI.Social.Activity.ActionsLive.the_activity(@activity, @object), :replied, nil)}
             showing_within={@showing_within}
-            class="my-12 h-[40px] flex items-center gap-2 normal-case btn-sm btn"
+            class="my-12 h-[40px] flex items-center gap-2 normal-case btn-sm btn reply_in_thread"
             reply_btn_text={l("Be the first to reply")}
             cannot_reply_text={l("No replies yet...")}
           />

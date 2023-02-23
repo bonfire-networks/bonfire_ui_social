@@ -1,5 +1,5 @@
 <div class="p-1 mt-6 rounded-lg shadow bg-base-100">
-  <div class="px-4 mt-4 mb-2 text-sm font-medium tracking-wide text-base-content/60">{@page_title}</div>
+  <div class="px-4 mt-4 mb-2 text-sm font-medium tracking-wide text-base-content/70">{@page_title}</div>
   <Bonfire.UI.Common.SmartInputInlineLive
     id={:smart_input}
     showing_within={:page}

@@ -35,7 +35,7 @@
       permalink={@permalink}
       thread_id={@thread_id}
     >
-      <span class="subject_timestamp text-base-content/60">
+      <span class="subject_timestamp text-base-content/70">
         {@date_ago}
       </span>
     </Bonfire.UI.Social.Activity.LinkToActivityLive>

@@ -110,7 +110,7 @@
                                 <div class="text-base font-medium line-clamp-1">
                                   {media_label(media) || l("View media")} ({media.media_type})
                                 </div>
-                                <div class="text-sm break-words line-clamp-1 text-base-content/60" :if={provider(media)}>
+                                <div class="text-sm break-words line-clamp-1 text-base-content/70" :if={provider(media)}>
                                   {description(media) || provider(media)}
                                 </div>
                               </div>
@@ -121,7 +121,7 @@
                   </figure>
                 </article>
                 <!-- {#else}
-      <div class="flex items-center space-x-1 text-xs font-semibold text-base-content/60">
+      <div class="flex items-center space-x-1 text-xs font-semibold text-base-content/70">
         <Icon outline="Link" class="w-4 h-4"/>
         <span class="flex-1">...{String.slice(Media.media_url(media), -20..-1)}</span>
       </div>
@@ -164,10 +164,10 @@
               <div class="font-medium line-clamp-1">
                 {media_label(link) || l("View media")} ({link.media_type})
               </div>
-              <div class="text-sm text-base-content/60" :if={provider(link)}>
+              <div class="text-sm text-base-content/70" :if={provider(link)}>
                 {provider(link)}
               </div>
-              <!-- <div class="break-words line-clamp-2 text-base-content/60" :if={description(link)}>
+              <!-- <div class="break-words line-clamp-2 text-base-content/70" :if={description(link)}>
             {description(link)}
           </div> -->
             </div>

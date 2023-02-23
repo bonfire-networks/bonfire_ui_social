@@ -79,12 +79,12 @@
         {#if @verb == "Like"}
           <div class="flex items-center justify-start pb-2 mb-2">
             <!-- LIKE -->
-            <Icon solid="Star" class="w-5 h-5 text-base-content/50" />
+            <Icon solid="Star" class="w-5 h-5 text-base-content/70" />
             <div class="flex-1 ml-2">
-              <div class="text-sm font-medium text-base-content/50">
+              <div class="text-sm font-medium text-base-content/70">
                 <LiveRedirect
                   aria-label={e(@activity, :subject, :character, :username, "") <> " profile"}
-                  class="font-medium link link-hover text-base-content/50"
+                  class="font-medium link link-hover text-base-content/70"
                   to={path(e(@activity, :subject, :character, nil))}
                 >
                   {#if id(@object) == current_user_id(@__context__)}
@@ -101,12 +101,12 @@
         {#elseif @verb == "Follow"}
           <div class="flex items-center justify-start pb-2 mb-2">
             <!-- FOLLOW -->
-            <Icon solid="UserAdd" class="flex-shrink-0 w-5 h-5 text-base-content/50" />
+            <Icon solid="UserAdd" class="flex-shrink-0 w-5 h-5 text-base-content/70" />
             <div class="flex-1 ml-2">
-              <div class="text-sm font-medium text-base-content/50">
+              <div class="text-sm font-medium text-base-content/70">
                 <LiveRedirect
                   aria-label={e(@activity, :subject, :character, :username, "") <> " profile"}
-                  class="font-medium link link-hover text-base-content/50"
+                  class="font-medium link link-hover text-base-content/70"
                   to={path(e(@activity, :subject, :character, nil))}
                 >
                   {e(@activity, :subject, :profile, :name, nil) || e(@activity, :subject, :character, :username, nil)}
@@ -124,13 +124,13 @@
         {#elseif @verb == "Boost" and e(@activity, :subject, :table_id, nil) == "2AGSCANBECATEG0RY0RHASHTAG"}
           <div class="flex items-center justify-start pb-2 mb-2">
             <!-- Something published in a Category / Topic -->
-            <Icon solid="Collection" class="w-4 h-4 text-base-content/50" />
+            <Icon solid="Collection" class="w-4 h-4 text-base-content/70" />
             <div class="flex-1 ml-2">
-              <div class="text-sm font-medium text-base-content/50">
+              <div class="text-sm font-medium text-base-content/70">
                 {l("Published in")}
                 <LiveRedirect
                   aria-label={e(@activity, :subject, :character, :username, "") <> " " <> l("profile")}
-                  class="font-medium link link-hover text-base-content/50"
+                  class="font-medium link link-hover text-base-content/70"
                   to={path(e(@activity, :subject, :character, nil))}
                 >
                   {e(@activity, :subject, :profile, :name, nil) || e(@activity, :subject, :character, :username, nil)}
@@ -150,15 +150,15 @@
               fill="none"
               stroke-linecap="round"
               stroke-linejoin="round"
-              class="w-4 h-4 text-base-content/50"
+              class="w-4 h-4 text-base-content/70"
             >
               <polyline points="17 1 21 5 17 9" /><path d="M3 11V9a4 4 0 0 1 4-4h14" /><polyline points="7 23 3 19 7 15" /><path d="M21 13v2a4 4 0 0 1-4 4H3" />
             </svg>
             <div class="flex-1 ml-2">
-              <div class="text-sm font-medium text-base-content/50">
+              <div class="text-sm font-medium text-base-content/70">
                 <LiveRedirect
                   aria-label={e(@activity, :subject, :character, :username, "") <> " " <> l("profile")}
-                  class="font-medium link link-hover text-base-content/50"
+                  class="font-medium link link-hover text-base-content/70"
                   to={path(e(@activity, :subject, :character, nil))}
                 >
                   {e(@activity, :subject, :profile, :name, nil) || e(@activity, :subject, :character, :username, nil)}
@@ -184,7 +184,7 @@
             </div>
             <div class="flex items-start justify-between leading-[16px] min-w-0 space-x-1 w-full">
               <div class="flex flex-col flex-1 gap-1 feed-clickable">
-                <div class="text-sm font-medium lowercase line-clamp-1 text-base-content/50">
+                <div class="text-sm font-medium lowercase line-clamp-1 text-base-content/70">
                   <!-- {@verb} {@object_type} -->
                   <LiveRedirect
                     opts={"data-id": "subject_name"}
@@ -202,12 +202,12 @@
                     :if={e(@activity, :subject, :character, :username, nil)}
                     opts={"data-id": "subject_username"}
                     aria-label={l("%{name}'s profile", name: e(@activity, :subject, :profile, :name, ""))}
-                    class="link link-hover text-[14px] font-normal truncate ellipsis text-base-content/50 subject_username"
+                    class="link link-hover text-[14px] font-normal truncate ellipsis text-base-content/70 subject_username"
                     to={path(e(@activity, :subject, nil))}
                   >
                     @{e(@activity, :subject, :character, :username, "")}
                   </LiveRedirect>
-                  <span class="text-base-content/50">·</span>
+                  <span class="text-base-content/70">·</span>
 
                   <Bonfire.UI.Social.Activity.InstanceIconLive peered={e(@activity, :peered, nil)} />
 
@@ -219,7 +219,7 @@
                     permalink={@permalink || path(@object) || path(e(@activity, :object, nil))}
                     thread_id={@thread_id}
                   >
-                    <span class="subject_timestamp text-[13px] font-normal no-underline truncate ellipsis text-base-content/50">
+                    <span class="subject_timestamp text-[13px] font-normal no-underline truncate ellipsis text-base-content/70">
                       {@date_ago || DatesTimes.date_from_now(@activity) || DatesTimes.date_from_now(@object) ||
                         DatesTimes.date_from_now(e(@activity, :object, nil))}
                     </span>
@@ -265,7 +265,7 @@
                 permalink={@permalink}
                 thread_id={@thread_id}
               >
-                <span class="subject_timestamp text-[13px] font-normal no-underline truncate ellipsis text-base-content/60">
+                <span class="subject_timestamp text-[13px] font-normal no-underline truncate ellipsis text-base-content/70">
                   {@date_ago}
                 </span>
               </Bonfire.UI.Social.Activity.LinkToActivityLive>

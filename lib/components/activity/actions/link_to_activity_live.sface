@@ -33,7 +33,7 @@
     open_btn_text={l("View task")}
     title_text={e(@object, :name, nil) || l("Task")}
     open_btn_wrapper_class="open_preview_link"
-    open_btn_class="px-1 normal-case link link-hover text-base-content/60"
+    open_btn_class="px-1 normal-case link link-hover text-base-content/70"
     modal_assigns={
       id: @thread_id || id(@object),
       preview_view: Bonfire.UI.Coordination.TaskLive
@@ -45,7 +45,7 @@
 {#else}
   <LiveRedirect
     to={@permalink}
-    class="open_preview_link px-1 normal-case link link-hover text-base-content/60"
+    class="open_preview_link px-1 normal-case link link-hover text-base-content/70"
   >
     <#slot />
   </LiveRedirect>

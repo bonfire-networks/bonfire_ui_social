@@ -62,9 +62,9 @@
       x-on:click="show_replies = ! show_replies"
     >
       <div x-cloak x-show="show_replies">
-        <!-- <Icon iconify="mdi:arrow-collapse" class="w-5 h-5 text-base-content/50" /> -->
+        <!-- <Icon iconify="mdi:arrow-collapse" class="w-5 h-5 text-base-content/70" /> -->
         <Icon iconify="fluent:triangle-down-12-filled" class="w-3 h-3 text-base-content/20" />
-        <!-- <span class="text-xs text-base-content/50">[-]</span> -->
+        <!-- <span class="text-xs text-base-content/70">[-]</span> -->
       </div>
       <div x-cloak x-show="!show_replies">
         <!-- <span class="text-xs text-accent">[+]</span> -->
