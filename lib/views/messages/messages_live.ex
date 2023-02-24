@@ -5,13 +5,13 @@ defmodule Bonfire.UI.Social.MessagesLive do
   alias Bonfire.Social.Messages.LiveHandler
   import Untangle
 
-  declare_nav_link(l("Direct Messages"),
-    icon: "mdi:email-outline",
-    badge: [
-      id: :inbox,
-      feed_key: :inbox_id
-    ]
-  )
+  # declare_nav_link(l("Direct Messages"),
+  #   icon: "mdi:inbox",
+  #   badge: [
+  #     id: :inbox,
+  #     feed_key: :inbox_id
+  #   ]
+  # )
 
   def mount(params, session, socket) do
     live_plug(params, session, socket, [
@@ -37,12 +37,12 @@ defmodule Bonfire.UI.Social.MessagesLive do
      |> assign(
        create_object_type: :message,
        showing_within: :messages,
-       smart_input_opts: %{prompt: l("Message"), icon: "heroicons-solid:envelope"},
+       smart_input_opts: %{prompt: l("Message"), icon: "mdi:inbox"},
        #  smart_input_opts: [inline_only: true],
        to_boundaries: [{"message", "Message"}],
        page_title: l("Messages"),
        page: "messages",
-       page_header_icon: "mdi:email-outline",
+       page_header_icon: "mdi:inbox",
        feed_id: feed_id,
        activity: nil,
        object: nil,

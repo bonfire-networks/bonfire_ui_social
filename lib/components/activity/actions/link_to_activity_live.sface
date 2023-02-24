@@ -4,7 +4,7 @@
     open_btn_text=""
     title_text={e(@object, :name, nil) || e(@object, :post_content, :name, nil) || l("Discussion")}
     open_btn_wrapper_class="open_preview_link"
-    open_btn_class="link link-hover text-[13px] text-base-content/80"
+    open_btn_class="link link-hover text-[13px] text-base-content/70"
     modal_assigns={
       post_id:
         if(

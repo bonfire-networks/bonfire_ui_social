@@ -8,7 +8,7 @@
       :if={!@hide_tabs}
       selected_tab={@selected_tab}
       class="flex gap-3 p-4 bg-base-100 scrollable"
-      tab_class="btn btn-sm !max-h-[1.75rem] !min-h-[1.75rem] !h-[1.75rem] rounded-full font-normal capitalize bg-base-content/10 text-base-content/80 feed_tab border-none"
+      tab_class="btn btn-sm !max-h-[1.75rem] !min-h-[1.75rem] !h-[1.75rem] rounded-full font-normal capitalize bg-base-content/10 text-base-content/70 feed_tab border-none"
       path_prefix={"/@#{e(@user, :character, :username, "")}/"}
       tabs={Config.get([:ui, :profile, :navigation], timeline: l("Timeline"))}
     />
@@ -20,7 +20,7 @@
       feed={@feed}
       page_info={@page_info}
       tabs_class="flex gap-3 p-4"
-      tab_class="btn btn-sm !max-h-[1.75rem] !min-h-[1.75rem] !h-[1.75rem] rounded-full font-normal capitalize bg-base-content/10 text-base-content/80 feed_tab border-none"
+      tab_class="btn btn-sm !max-h-[1.75rem] !min-h-[1.75rem] !h-[1.75rem] rounded-full font-normal capitalize bg-base-content/10 text-base-content/70 feed_tab border-none"
       selected_tab={@selected_tab}
       feed_title={@feed_title}
       loading={@loading}
