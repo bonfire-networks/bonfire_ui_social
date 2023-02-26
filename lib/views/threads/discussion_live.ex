@@ -26,7 +26,7 @@ defmodule Bonfire.UI.Social.DiscussionLive do
        to_circles: [],
        participants: nil,
        smart_input_opts: %{prompt: l("Reply to this discussion")},
-       without_sidebar: true,
+       #  without_sidebar: true,
        activity: nil,
        post: nil,
        object: nil,
