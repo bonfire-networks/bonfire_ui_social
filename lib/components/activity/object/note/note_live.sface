@@ -12,8 +12,8 @@
   {#case e(post_content(@object), :name, nil)}
     {#match name}
       {#case @cw == true or (is_nil(@cw) and not is_nil(name))}
-        {#match cw?}
-          {#if cw?}
+        {#match cw}
+          {#if cw}
             <div class="flex items-baseline gap-2 mb-2">
               <p class="text-base font-medium leading-5 text-base-content">
                 <span>{name || l("CW")}</span>
@@ -32,7 +32,7 @@
             </div>
           {/if}
 
-          <div x-show={if cw?, do: "content_open"} x-collapse={cw?}>
+          <div x-show={if cw, do: "content_open"} x-cloak={cw == true} x-collapse={cw == true}>
             <p
               :if={e(post_content(@object), :summary, nil)}
               class="font-light prose max-w-prose prose-p:pt-1"
@@ -56,7 +56,7 @@
               {rich(
                 maybe_truncate(
                   e(post_content(@object), :html_body, l("This post has been deleted.")),
-                  @viewing_main_object
+                  @viewing_main_object || @showing_within not in [:feed, :search, :notifications]
                 )
               )}
             </div>

@@ -19,10 +19,11 @@ defmodule Bonfire.UI.Social.Activity.NoteLive do
     # |> debug("activity_note_object")
   end
 
-  def maybe_truncate(input, viewing_main_object, length \\ 800) do
-    if viewing_main_object != true and is_binary(input) and
-         input != "",
-       do: Text.sentence_truncate(input, length, "..."),
-       else: input
+  def maybe_truncate(input, skip \\ false, length \\ 800)
+
+  def maybe_truncate(input, skip, length) when skip != true and is_binary(input) do
+    Text.sentence_truncate(input, length, "...")
   end
+
+  def maybe_truncate(input, _skip, _length), do: input
 end

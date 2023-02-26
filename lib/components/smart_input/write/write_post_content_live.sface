@@ -32,7 +32,7 @@
       </div>
       <button
         type="submit"
-        @click="$dispatch('submit')"
+        x-on:click="$dispatch('submit')"
         phx-disable-with="Posting..."
         class="h-8 px-10 capitalize rounded min-h-8 justify-self-end btn btn-primary"
       >

@@ -35,7 +35,10 @@
         {#else}
           {rich(
             e(@profile, :name, "Anonymous") <>
-              ": " <> e(post_content(@object), :html_body, l("This post has been deleted."))
+              ": " <>
+              Bonfire.UI.Social.Activity.NoteLive.maybe_truncate(
+                e(post_content(@object), :html_body, l("This post has been deleted."))
+              )
           )}
         {/if}
       </div>
