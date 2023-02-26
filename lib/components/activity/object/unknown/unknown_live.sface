@@ -1,25 +1,30 @@
 <div class="py-2">
   <LiveRedirect to={@permalink}>
     <div class="mb-2 text-sm font-medium text-base-content text-opacity-80">
-      <span :if={@object_type_readable && @object_type_readable != ""}>
+      <span :if={@object_type_readable && @object_type_readable != "" && @object_type_readable != "apactivity"}>
         {String.capitalize(@object_type_readable || "Unknown")}:
       </span>
       {rich(
         e(
           @object |> debug("Unsupported type or deleted object"),
           :name,
+          nil
+        ) ||
           e(
             @object,
             :profile,
             :name,
-            e(
-              @object,
-              :post_content,
-              :name,
-              e(@object, :title, e(@object, :label, l("Unsupported type or deleted object")))
-            )
-          )
-        )
+            nil
+          ) ||
+          e(
+            @object,
+            :post_content,
+            :name,
+            nil
+          ) || e(@object, :title, nil) || e(@object, :label, nil) ||
+          e(@object, :json, "object", "name", nil) || e(@object, :json, "object", "summary", nil) ||
+          e(@object, :json, "object", "content", nil) || e(@object, :json, "name", nil) ||
+          e(@object, :json, "content", nil) || l("Unsupported type or deleted object")
       )}
     </div>
   </LiveRedirect>

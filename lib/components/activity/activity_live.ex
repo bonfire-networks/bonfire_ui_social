@@ -40,6 +40,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
   prop(object_boundary, :any, default: nil)
   prop(cw, :any, default: nil)
   prop(check_object_boundary, :boolean, default: false)
+  prop(is_remote, :boolean, default: false)
   prop(show_minimal_subject_and_note, :boolean, default: false)
   prop(hide_activities, :any, default: nil)
   prop(i, :integer, default: nil)
@@ -177,7 +178,8 @@ defmodule Bonfire.UI.Social.ActivityLive do
       permalink: permalink,
       thread_url: thread_url,
       thread_id: thread_id,
-      cw: e(object, :post_content, :name, nil) != nil
+      cw: e(object, :post_content, :name, nil) != nil,
+      is_remote: e(activity, :peered, nil) != nil or e(object, :peered, nil) != nil
     })
     |> debug("Activity preparation done")
   end
@@ -332,6 +334,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
                 activity_inception={e(component_assigns, :activity_inception, @activity_inception)}
                 viewing_main_object={e(component_assigns, :viewing_main_object, @viewing_main_object)}
                 cw={@cw}
+                is_remote={@is_remote}
               />
             {#match Bonfire.UI.Social.Activity.MediaLive}
               <Bonfire.UI.Social.Activity.MediaLive

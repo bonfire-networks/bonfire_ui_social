@@ -57,7 +57,8 @@
                 maybe_truncate(
                   e(post_content(@object), :html_body, l("This post has been deleted.")),
                   @viewing_main_object || @showing_within not in [:feed, :search, :notifications]
-                )
+                ),
+                skip_markdown: @is_remote
               )}
             </div>
           </div>

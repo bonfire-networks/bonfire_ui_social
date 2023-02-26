@@ -8,6 +8,7 @@ defmodule Bonfire.UI.Social.Activity.NoteLive do
   prop showing_within, :string, default: nil
   prop activity_inception, :any, default: nil
   prop cw, :boolean, default: nil
+  prop is_remote, :boolean, default: false
 
   def preloads(),
     do: [

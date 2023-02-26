@@ -163,7 +163,7 @@
             >
               @{e(@character, :username, "")}
             </LiveRedirect>
-            <Bonfire.UI.Social.Activity.InstanceIconLive peered={e(@activity, :peered, nil)} />
+            <Bonfire.UI.Social.Activity.InstanceIconLive peered={e(@activity, :peered, nil) || e(@object, :peered, nil)} />
           </div>
         </div>
         <div class="flex items-center gap-1">
