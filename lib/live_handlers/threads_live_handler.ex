@@ -53,7 +53,7 @@ defmodule Bonfire.Social.Threads.LiveHandler do
         debug("socket connected, so load async")
         pid = self()
 
-        Task.async(fn ->
+        async_task(fn ->
           thread_id = e(socket.assigns, :thread_id, e(socket.assigns, :object, :id, nil))
           # Query comments asynchronously
           maybe_send_update(

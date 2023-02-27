@@ -195,7 +195,7 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
 
     if current_user,
       do:
-        Task.async(fn ->
+        async_task(fn ->
           # asynchronously simply so the count is updated quicker for the user
           debug(activity_id, "mark_seen")
           Bonfire.Social.Seen.mark_seen(current_user, activity_id)
@@ -548,7 +548,7 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
         debug("socket connected, so load feed async")
         pid = self()
 
-        Task.async(fn ->
+        async_task(fn ->
           debug(feed_id_or_tuple, "Query activities asynchronously")
 
           feed_assigns(feed_id_or_tuple, socket)
@@ -852,7 +852,7 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
         debug(tab, "socket connected, so load async")
         pid = self()
 
-        Task.async(fn ->
+        async_task(fn ->
           debug("Query user activities asynchronously")
 
           load_user_feed_assigns(tab, user_or_feed, params, socket)
