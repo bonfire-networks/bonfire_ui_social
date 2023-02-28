@@ -48,7 +48,7 @@ defmodule Bonfire.Social.Threads.LiveHandler do
   def load_thread_maybe_async(%Phoenix.LiveView.Socket{} = socket) do
     socket_connected = connected?(socket)
 
-    if (socket_connected || current_user(socket)) && Config.get(:env) != :test do
+    if (socket_connected || current_user(socket)) && Config.env() != :test do
       if socket_connected do
         debug("socket connected, so load async")
         pid = self()

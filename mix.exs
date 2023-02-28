@@ -1,5 +1,4 @@
-IO.inspect(File.cwd!(), label: "mixx")
-Code.eval_file("mess.exs", (if File.exists?("#{File.cwd!()}/../../lib/mix/mess.exs"), do: "#{File.cwd!()}/../../lib/mix/") |> IO.inspect(label: "mess path"))
+Code.eval_file("mess.exs", (if File.exists?("#{File.cwd!()}/../../lib/mix/mess.exs"), do: "#{File.cwd!()}/../../lib/mix/"))
 defmodule Bonfire.UI.Social.MixProject do
 
   use Mix.Project

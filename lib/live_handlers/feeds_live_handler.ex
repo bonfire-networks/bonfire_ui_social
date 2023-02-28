@@ -543,7 +543,7 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
        ) do
     socket_connected = connected?(socket)
 
-    if (socket_connected || current_user(socket)) && Config.get(:env) != :test do
+    if (socket_connected || current_user(socket)) && Config.env() != :test do
       if socket_connected do
         debug("socket connected, so load feed async")
         pid = self()
@@ -847,7 +847,7 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
       ) do
     socket_connected = connected?(socket)
 
-    if (socket_connected || current_user(socket)) && Config.get(:env) != :test do
+    if (socket_connected || current_user(socket)) && Config.env() != :test do
       if socket_connected do
         debug(tab, "socket connected, so load async")
         pid = self()
