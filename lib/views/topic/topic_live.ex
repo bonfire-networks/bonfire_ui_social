@@ -1,7 +1,6 @@
 defmodule Bonfire.UI.Social.TopicLive do
   use Bonfire.UI.Common.Web, :surface_live_view
 
-
   alias Bonfire.UI.Me.LivePlugs
 
   def mount(params, session, socket) do
@@ -17,31 +16,38 @@ defmodule Bonfire.UI.Social.TopicLive do
   end
 
   defp mounted(params, _session, socket) do
-
-      {:ok,
-       assign(
-         socket,
-         page: "topics",
-         object_type: nil,
-         feed: nil,
-         back: true,
-         selected_tab: :timeline,
-         tab_id: nil,
-         page_title: l("Topic"),
-         interaction_type: l("follow"),
-         sidebar_widgets: [
-           users: [
-            secondary: [
-              {Bonfire.UI.Topic.WidgetAboutLive, [title: "About topic x", group: "Welcome", group_link: "/welcome", about: "A sub for ALL parents, step parents, parents-to-be, guardians, caretakers, and anyone else who prefers to base their parenting choices on actual, evidence-backed scientific research.", date: "16 Feb"]},
-              {Bonfire.UI.Groups.WidgetMembersLive, [mods: [], members: []]}
-            ]
-           ],
-           guests: [
-             secondary: nil
+    {:ok,
+     assign(
+       socket,
+       page: "topics",
+       object_type: nil,
+       feed: nil,
+       back: true,
+       selected_tab: :timeline,
+       tab_id: nil,
+       page_title: l("Topic"),
+       interaction_type: l("follow"),
+       sidebar_widgets: [
+         users: [
+           secondary: [
+             {Bonfire.UI.Topic.WidgetAboutLive,
+              [
+                title: "About topic x",
+                group: "Welcome",
+                group_link: "/welcome",
+                about:
+                  "A sub for ALL parents, step parents, parents-to-be, guardians, caretakers, and anyone else who prefers to base their parenting choices on actual, evidence-backed scientific research.",
+                date: "16 Feb"
+              ]},
+             {Bonfire.UI.Groups.WidgetMembersLive, [mods: [], members: []]}
            ]
+         ],
+         guests: [
+           secondary: nil
          ]
-       )}
-    end
+       ]
+     )}
+  end
 
   def tab(selected_tab) do
     case maybe_to_atom(selected_tab) do
