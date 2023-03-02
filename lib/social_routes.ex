@@ -11,13 +11,6 @@ defmodule Bonfire.UI.Social.Routes do
         # live("/federation", Feeds.FederationLive, as: :federation)
         # live("/federation/:type", Feeds.FederationLive, as: :federation)
 
-        # WIP: TEMP ROUTES to be moved to Bonfire.UI.Topics and Bonfire.UI.Groups
-        live("/topic", TopicLive)
-        live("/group", GroupLive)
-        live("/group/:tab", GroupLive)
-        live("/group/:tab/:tab_id", GroupLive)
-
-
         live("/feed", FeedsLive, as: :feed)
         live("/feed/:tab", FeedsLive, as: :feed)
         # TODO:
