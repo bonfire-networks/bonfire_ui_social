@@ -14,7 +14,7 @@
         showing_within={@showing_within || :thread}
       /> -->
       <!-- <Bonfire.UI.Common.BackButtonLive showing_within={@showing_within || :thread} /> -->
-      <div class="border-t border-b border-base-300">
+      <div class="border-t-base-content/10 border-b-base-300">
         <Bonfire.UI.Social.ActivityLive
           :if={@activity}
           class="rounded-none !shadow-none !p-4 mt-0 main_object_in_thread"
