@@ -1,0 +1,41 @@
+
+<div class="flex flex-col gap-2">
+  {#for link <- links}
+    {#case the_media(link)}
+      {#match %{} = link}
+        <a
+          href={Media.media_url(link)}
+          target="_blank"
+          class="flex w-full mb-2 border rounded-md media_container border-base-content/5 hover:bg-base-content/5"
+        >
+          <div class="items-center gap-2 md:flex">
+            <div class="flex items-center w-[80px] h-[80px] bg-base-200 bg-base-content/5 place-content-center">
+              {#case preview_img(link) || e(link.metadata, "favicon", nil) ||
+                  Bonfire.Files.FaviconStore.favicon_url(Media.media_url(link))}
+                {#match nil}
+                  <Icon solid="ExternalLink" class="w-8 h-8 text-base-content/70" />
+                {#match _image}
+                  <img
+                    class="object-cover w-full h-full rounded-none cursor-pointer rounded-l-md media-image"
+                    alt={media_label(link)}
+                    src={preview_img(link)}
+                  />
+              {/case}
+            </div>
+            <div class="flex flex-col items-start content-start justify-start flex-1 p-3 space-y-1 text-sm text-left">
+              <div class="font-medium line-clamp-1">
+                {media_label(link) || l("View media")} ({link.media_type})
+              </div>
+              <div class="text-sm text-base-content/70" :if={provider(link)}>
+                {provider(link)}
+              </div>
+              <!-- <div class="break-words line-clamp-2 text-base-content/70" :if={description(link)}>
+            {description(link)}
+          </div> -->
+            </div>
+          </div>
+        </a>
+      {#match _}
+    {/case}
+  {/for}
+</div>
