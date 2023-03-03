@@ -3,11 +3,11 @@
   object_id={id(@object)}
   showing_within={:feed}
 /> -->
-<Bonfire.UI.Common.LikeActionLive
+<!-- <Bonfire.UI.Common.LikeActionLive
   id={ComponentID.new(Bonfire.UI.Common.LikeActionLive, id(@object))}
   object_id={id(@object)}
   object_boundary={@object_boundary}
-/>
+/> -->
 <Bonfire.UI.Common.FollowButtonLive
   :if={e(@object, :character, nil)}
   id={ComponentID.new(Bonfire.UI.Common.FollowButtonLive, id(@object))}
@@ -15,5 +15,5 @@
   path={path(@object)}
   object_boundary={@object_boundary}
   hide_icon
-  class="font-normal normal-case btn btn-ghost text-base-content/70 btn-sm"
+  class="font-normal normal-case btn btn-outline !border-base-content/70 text-base-content/70 btn-sm"
 />
