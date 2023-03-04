@@ -124,6 +124,8 @@ defmodule Bonfire.UI.Social.ActivityLive do
     debug("Activity ##{debug_i(assigns[:i], assigns[:activity_inception])} preparation started")
     # debug(assigns, "ActivityLive initial assigns")
 
+    debug(object, "ActivityLive object")
+
     verb =
       Activities.verb_maybe_modify(
         e(activity, :verb, nil) || e(assigns, :verb_default, "Create"),
@@ -133,8 +135,8 @@ defmodule Bonfire.UI.Social.ActivityLive do
     # |> debug("verb (modified)")
 
     verb_display = Activities.verb_display(verb)
-    # |> debug("object_type")
     object_type = Types.object_type(object)
+    # |> debug("object_type")
     object_type_readable = Types.object_type_display(object_type)
 
     thread =
@@ -804,14 +806,15 @@ defmodule Bonfire.UI.Social.ActivityLive do
   # def component_object(_, %{object: %{character: _}}), do: [Bonfire.UI.Social.Activity.CharacterLive]
 
   def component_object(_, _, %{} = object, object_type) do
-    case object_type do
+    case object_type || Types.object_type(object) do
       type when is_atom(type) and not is_nil(type) ->
-        debug("ActivityLive: component object_type recognised: #{inspect(type)}")
+        debug(type, "ActivityLive: component object_type recognised")
         component_for_object_type(type, object)
 
       _ ->
         warn(
-          "ActivityLive: use UnknownLive because component object_type NOT detected: #{inspect(object)}"
+          object_type || object,
+          "ActivityLive: use UnknownLive because component object_type NOT detected"
         )
 
         [Bonfire.UI.Social.Activity.UnknownLive]
@@ -847,7 +850,10 @@ defmodule Bonfire.UI.Social.ActivityLive do
   def component_for_object_type(type, _) when type in [Bonfire.Data.Social.Follow],
     do: [Bonfire.UI.Social.Activity.CharacterLive]
 
-  def component_for_object_type(type, _) when type in [Bonfire.Classify.Category],
+  def component_for_object_type(type, _) when type in [:group],
+    do: [Bonfire.UI.Social.Activity.GroupLive]
+
+  def component_for_object_type(type, _) when type in [:topic, Bonfire.Classify.Category],
     do: [Bonfire.UI.Social.Activity.CategoryLive]
 
   def component_for_object_type(type, object) when type in [ValueFlows.EconomicEvent],

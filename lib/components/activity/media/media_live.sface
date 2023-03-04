@@ -1,5 +1,5 @@
 {#if @showing_within != :smart_input}
-  {#case Enum.count(@media)}
+  {#case Enum.count(List.wrap(@media))}
     {#match num_medias}
       <div
         x-show="content_open == true"
@@ -12,7 +12,7 @@
           "grid-cols-4": num_medias == 4
         }
       >
-        {#for {m, counter} <- Enum.with_index(@media)}
+        {#for {%{} = m, counter} <- Enum.with_index(List.wrap(@media))}
           {#case the_media(m |> debug("mmm")) |> debug("tmm")}
             {#match %{} = m}
               {#case media_label(m) || l("Sorry, no caption provided by author")}
@@ -38,7 +38,7 @@
                         ]) or String.contains?(Media.media_url(m), [".jpg", ".jpeg", ".png", ".gif", ".webp"])}
                         <!-- Image or embed -->
                         <!-- {#if @viewing_main_object}
-                        <Bonfire.UI.Social.Activity.RemoteMediaLive m={m} />
+                        <Bonfire.UI.Social.Activity.RemoteMediaLive media={m} />
                       {#else} -->
                         <Bonfire.UI.Common.OpenModalLive
                           id={Pointers.ULID.generate()}
@@ -57,7 +57,7 @@
                               do: "min-width: 90vw; min-height: 90vh",
                               else: ""}
                           >
-                            <Bonfire.UI.Social.Activity.RemoteMediaLive m={m} />
+                            <Bonfire.UI.Social.Activity.RemoteMediaLive media={m} />
 
                             <div class="absolute z-20 pt-4 bottom-2 left-2 right-2 md:relative">
                               <div class="prose text-center prose-sm px-4 bg-black/30 py-1.5 rounded-full mx-auto">{media_label}</div>

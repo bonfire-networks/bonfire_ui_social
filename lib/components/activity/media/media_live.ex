@@ -14,20 +14,20 @@ defmodule Bonfire.UI.Social.Activity.MediaLive do
     media
   end
 
-  def provider(media) do
+  def provider(%{} = media) do
     (e(media.metadata, "facebook", "og:site_name", nil) ||
        e(media.metadata, "oembed", "provider_url", nil))
     |> unwrap()
   end
 
-  def description(media) do
+  def description(%{} = media) do
     (e(media.metadata, "facebook", "og:description", nil) ||
        e(media.metadata, "twitter", "twitter:description", nil) ||
        e(media.metadata, "other", "description", nil))
     |> unwrap()
   end
 
-  def preview_img(media) do
+  def preview_img(%{} = media) do
     (e(media.metadata, "oembed", "thumbnail_url", nil) ||
        e(media.metadata, "facebook", "og:image", nil) ||
        e(media.metadata, "twitter", "twitter:image", nil) ||
@@ -35,12 +35,14 @@ defmodule Bonfire.UI.Social.Activity.MediaLive do
     |> unwrap()
   end
 
-  def media_img(media) do
+  def media_img(%{} = media) do
     (e(media.metadata, "oembed", "url", nil) || Media.image_url(media))
     |> unwrap()
   end
 
-  def media_label(media) do
+  def media_img(_), do: nil
+
+  def media_label(%{} = media) do
     (e(media.metadata, "label", nil) || e(media.metadata, "oembed", "title", nil) ||
        e(media.metadata, "facebook", "og:title", nil) ||
        e(media.metadata, "twitter", "twitter:title", nil) ||

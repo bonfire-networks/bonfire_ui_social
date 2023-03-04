@@ -713,7 +713,8 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
       activity: activity,
       object: object,
       object_id: id(activity) || id(object),
-      showing_within: e(assigns, :showing_within, nil)
+      showing_within: e(assigns, :showing_within, nil),
+      object_type: e(assigns, :object_type, nil)
     }
   end
 
@@ -757,7 +758,10 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
     # |> debug()
     |> Map.new(fn component ->
       {component.component_id,
-       %{activity: list_of_activities[component.object_id] || component.activity}}
+       %{
+         activity: list_of_activities[component.object_id] || component.activity
+         # object_type: Types.object_type(list_of_activities[component.object_id]) || component.object_type
+       }}
     end)
   end
 

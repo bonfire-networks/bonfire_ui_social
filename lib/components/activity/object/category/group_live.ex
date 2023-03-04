@@ -1,9 +1,8 @@
-defmodule Bonfire.UI.Social.Activity.CategoryLive do
+defmodule Bonfire.UI.Social.Activity.GroupLive do
   use Bonfire.UI.Common.Web, :stateless_component
 
   prop object, :any
   prop object_boundary, :any, default: nil
-  prop permalink, :string, default: nil
 
   def preloads(),
     do: [
