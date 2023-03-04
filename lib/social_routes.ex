@@ -12,6 +12,9 @@ defmodule Bonfire.UI.Social.Routes do
         # live("/federation/:type", Feeds.FederationLive, as: :federation)
 
         live("/feed", FeedsLive, as: :feed)
+        live("/feed/local", FeedsLive, :local, as: :feed)
+        live("/feed/fediverse", FeedsLive, :fediverse, as: :feed)
+        live("/feed/likes", FeedsLive, :likes, as: :feed)
         live("/feed/:tab", FeedsLive, as: :feed)
         # TODO:
         live("/feed/:tab/:object_type", FeedsLive, as: :feed)

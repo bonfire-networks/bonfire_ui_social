@@ -94,8 +94,7 @@ defmodule Bonfire.UI.Social.FeedsLive do
   end
 
   def do_handle_params(params, _url, socket) do
-    # debug("param")
-    {:noreply, assign(socket, LiveHandler.feed_assigns_maybe_async({:default, params}, socket))}
+    {:noreply, assign(socket, LiveHandler.feed_assigns_maybe_async({e(socket, :assigns, :live_action, :default), params}, socket))}
   end
 
   def handle_params(params, uri, socket),
