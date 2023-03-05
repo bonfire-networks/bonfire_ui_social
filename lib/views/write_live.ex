@@ -33,7 +33,7 @@ defmodule Bonfire.UI.Social.WriteLive do
          open: true,
          as: :modal,
          hide_buttons: false,
-         text: e(session, "smart_input_text", nil)
+         text_suggestion: e(session, "smart_input_text", nil)
        },
        reply_to_id: e(session, "reply_to_id", nil),
        context_id: e(session, "context_id", nil),

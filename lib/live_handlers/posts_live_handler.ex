@@ -66,6 +66,7 @@ defmodule Bonfire.Social.Posts.LiveHandler do
                |> Map.put(:uploaded_media, uploaded_media),
              boundary: e(params, "to_boundaries", "mentions"),
              to_circles: e(params, "to_circles", []),
+             context_id: e(params, "context_id", nil),
              return_epic_on_error: true
            ]
            |> debug("publish opts"),
