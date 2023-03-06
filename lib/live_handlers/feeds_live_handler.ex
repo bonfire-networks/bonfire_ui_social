@@ -1002,7 +1002,7 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
     ]
   end
 
-  def load_user_feed_assigns("followers" = tab, user, params, socket) do
+  def load_user_feed_assigns(tab, user, params, socket) when tab in ["followers", "members"] do
     user = user || e(socket, :assigns, :user, nil)
     current_user = current_user(socket)
     pagination = input_to_atoms(params)
