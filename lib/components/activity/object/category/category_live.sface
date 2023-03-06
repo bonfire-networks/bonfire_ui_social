@@ -1,16 +1,12 @@
 <div class="flex items-center justify-between gap-6 mt-3">
   <div class="flex items-center flex-1 gap-4 font-medium text-base-content">
-    {#case Media.avatar_url(@object)}
-      {#match "/images/avatar.png"}
-      {#match url}
-        <span class="rounded w-14 h-14 shrink-0 bg-base-content/10">
-          <LazyImage src={url} />
-        </span>
-    {/case}
-
+    <span class="rounded w-14 h-14 shrink-0 bg-base-content/10">
+    </span>
     <div class="flex flex-col">
-      <LiveRedirect to={@permalink || path(@object)} class="font-semibold link link-hover">
-        <!-- to={~p"/+#{e(@object, :character, :username, nil) || ulid(@object)}"} -->
+      <LiveRedirect
+        to={~p"/+#{e(@object, :character, :username, nil) || ulid(@object)}"}
+        class="font-semibold link link-hover"
+      >
         {rich(name(@object))}
       </LiveRedirect>
       <div class="max-w-full prose-sm prose line-clamp-2 !text-base-content/70 !text-xs">{e(@object, :profile, :summary, "")}</div>

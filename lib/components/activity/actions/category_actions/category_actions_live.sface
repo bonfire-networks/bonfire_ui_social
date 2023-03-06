@@ -15,5 +15,5 @@
   path={path(@object)}
   object_boundary={@object_boundary}
   hide_icon
-  class="font-normal normal-case btn btn-secondary !border-base-content/70 text-base-content/70 btn-sm"
+  class="font-normal normal-case btn btn-outline rounded !border-base-content/70 text-base-content/70 btn-sm"
 />
