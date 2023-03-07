@@ -104,7 +104,7 @@
                                     {#match nil}
                                       <Icon solid="ExternalLink" class="w-8 h-8 text-base-content/70" />
                                     {#match preview_img}
-                                      <img class="rounded-none cursor-pointer m-image" alt={media_label} src={preview_img}>
+                                      <img class="w-[80px] h-[80px] object-none rounded-none cursor-pointer m-image" alt={media_label} src={preview_img}>
                                   {/case}
                                 </div>
                                 <div class="flex flex-col items-start content-start justify-start p-3 space-y-1 text-sm text-left">

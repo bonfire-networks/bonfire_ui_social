@@ -12,6 +12,7 @@ defmodule Bonfire.UI.Social.Activity.DeleteObjectLive do
   prop explanation, :string, default: nil
 
   prop hide_icon, :boolean, default: false
+  prop icon_class, :css_class, default: nil
   prop hide_text, :boolean, default: false
 
   prop open_btn_class, :css_class,

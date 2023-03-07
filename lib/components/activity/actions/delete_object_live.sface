@@ -17,8 +17,10 @@ TODO: use preloaded boundaries for can? when available
     <p>{@explanation || l("A request will be sent to remote instances to delete it as well.")}</p>
   </div>
   <:open_btn>
-    <div class={@open_btn_class}>
-      <Icon :if={!@hide_icon} solid="Trash" class="w-4 h-4 shrink-0" />
+    <div 
+      title={l("Delete this object")}
+      class={@open_btn_class}>
+      <Icon :if={!@hide_icon} solid="Trash" class={e(@icon_class, "w-4 h-4 shrink-0 text-neutral-content/80")} />
       <span :if={!@hide_text} class="truncate ellipsis">
         {l("Delete")} {e(@object_type_readable, l("object"))}
       </span>

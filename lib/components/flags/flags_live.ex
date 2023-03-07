@@ -5,7 +5,6 @@ defmodule Bonfire.UI.Social.FlagsLive do
   prop page_title, :string, default: "Flags"
   prop feed, :list, default: []
   prop page_info, :list, default: []
-  prop test, :string
 
   def update(assigns, socket) do
     current_user = current_user(assigns) || current_user(socket.assigns)
@@ -13,7 +12,6 @@ defmodule Bonfire.UI.Social.FlagsLive do
 
     feed =
       Bonfire.Social.FeedActivities.feed(:flags, scope: scope, current_user: current_user)
-      |> debug("fflags")
 
     edges =
       for %{edge: %{} = edge} <- e(feed, :edges, []),

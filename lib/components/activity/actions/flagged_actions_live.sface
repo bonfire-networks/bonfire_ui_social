@@ -1,46 +1,72 @@
-<div class="mt-2 feed_actions">
-  <div class="flex items-center space-x-2">
+<div class="flex items-center mt-0 feed_actions">
+  <div class="flex items-center justify-between flex-1 gap-4 mt-3 feed-clickable md:justify-end">
     <LiveRedirect
       :if={e(@activity, :subject, :id, nil) &&
         current_user_id(@__context__) != e(@activity, :subject, :id, nil)}
       to={path(Bonfire.Data.Social.Message, e(@activity, :subject, :character, :username, ""))}
-      class="normal-case rounded opacity-80 hover:opacity-100 btn btn-outline btn-xs"
-    >{l("Message")} {e(@activity, :subject, :profile, :name, "")}
+      class="flex rounded btn btn-ghost btn-square btn-sm"
+    >
+      <span 
+        title={l("Message ") <> e(@activity, :subject, :profile, :name, "")}
+        class="text-base-content/70">
+        <Icon iconify="mdi:inbox" class="w-5 h-5 stroke-1" />
+      </span>
+      <span class="sr-only">{l("Message ")} {e(@activity, :subject, :profile, :name, "")}</span>   
     </LiveRedirect>
 
     <LiveRedirect
       :if={@object && id(@object) && current_user_id(@__context__) != e(flagged_character(@object), :id, nil) &&
         e(flagged_character(@object), :id, nil) != e(@activity, :subject, :id, nil)}
       to={path(Bonfire.Data.Social.Message, e(flagged_character(@object), :username, nil))}
-      class="normal-case rounded opacity-80 hover:opacity-100 btn btn-outline btn-xs"
-    >{l("Message")} {e(flagged_profile(@object), :name, "")}
+      class="flex rounded btn btn-ghost btn-square btn-sm">
+      <span 
+        title={l("Message ") <> e(flagged_profile(@object), :name, "")}
+        class="text-base-content/70">
+        <Icon iconify="mdi:inbox" class="w-5 h-5 stroke-1" />
+      </span>
+      <span class="sr-only">{l("Message ")} {e(flagged_profile(@object), :name, "")}</span>
     </LiveRedirect>
 
     {#if to_string(@object_type) == "Elixir.Bonfire.Data.Identity.User"}
+    <div>
       <Dynamic.Component
         :if={module_enabled?(Bonfire.Boundaries.Web.BlockButtonLive) and @current_user &&
           current_user_id(@__context__) != id(@object)}
         module={Bonfire.Boundaries.Web.BlockButtonLive}
         object={@object}
+        hide_text
+        with_icon
+        icon_class="w-5 h-5 stroke-1 text-base-content/70"
         label={e(@object, :profile, :name, l("this user"))}
         id={ComponentID.new(Bonfire.Boundaries.Web.BlockButtonLive, @object)}
-        class="normal-case rounded opacity-80 hover:opacity-100 btn btn-error btn-xs"
+        class="flex rounded btn btn-ghost btn-square btn-sm"
       />
+    </div>
     {#else}
+    <div>
       <Bonfire.UI.Social.Activity.DeleteObjectLive
         object={@object}
+        hide_text
+        icon_class="w-5 h-5 stroke-1 text-base-content/70"
         creator_id={Bonfire.UI.Social.Activity.MoreActionsLive.subject_id(@activity, @object)}
         object_type_readable={@object_type_readable}
-        open_btn_class="normal-case rounded opacity-80 hover:opacity-100 btn btn-error btn-xs"
+        open_btn_class="flex rounded btn btn-ghost btn-square btn-sm"
       />
+    </div>
     {/if}
 
     <button
       phx-click="Bonfire.Social.Flags:unflag"
       phx-value-id={e(@object, :id, "")}
+      title={l("Unflag")}
       phx-value-subject={e(@activity, :subject, :id, "")}
-      class="normal-case rounded opacity-80 hover:opacity-100 btn btn-outline btn-xs"
-    >{l("Unflag this")}</button>
+      class="flex rounded btn btn-ghost btn-square btn-sm"
+    >
+      <span class="text-base-content/70">
+        <Icon iconify="fluent:flag-off-16-filled" class="w-5 h-5 stroke-1" />
+      </span>
+      <span class="sr-only">{l("Unflag")}</span>
+    </button>
 
     <!-- <LiveRedirect 
       to={@permalink}
