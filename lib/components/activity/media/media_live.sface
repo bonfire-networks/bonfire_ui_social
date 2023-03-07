@@ -94,11 +94,10 @@
                             <a
                               href={media_url || preview_img(m)}
                               target="_blank"
-                              class="flex w-full border rounded media_container bg-base-200 hover:bg-base-content/5 border-base-content/10 tooltip tooltip-bottom"
-                              data-tip={media_label}
+                              class="flex w-full border rounded media_container bg-base-200 hover:bg-base-content/5 border-base-content/10"
                             >
                               <div class="items-center gap-3 md:flex">
-                                <div class="flex items-center w-[80px] h-[80px] bg-base-200 bg-base-content/5 place-content-center">
+                                <div class="flex items-center shrink-0 w-[80px] h-[80px] bg-base-200 bg-base-content/5 place-content-center">
                                   {#case preview_img(m) || e(m.metadata, "favicon", nil) ||
                                       Bonfire.Files.FaviconStore.favicon_url(media_url)}
                                     {#match nil}
