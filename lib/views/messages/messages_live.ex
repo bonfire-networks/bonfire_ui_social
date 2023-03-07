@@ -37,7 +37,7 @@ defmodule Bonfire.UI.Social.MessagesLive do
      |> assign(
        create_object_type: :message,
        showing_within: :messages,
-      #  smart_input_opts: %{prompt: l("Message"), icon: "mdi:inbox"},
+       #  smart_input_opts: %{prompt: l("Message"), icon: "mdi:inbox"},
        #  smart_input_opts: [inline_only: true],
        to_boundaries: [{"message", "Message"}],
        page_title: l("Messages"),

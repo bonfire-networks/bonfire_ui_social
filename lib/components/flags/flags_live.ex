@@ -10,8 +10,7 @@ defmodule Bonfire.UI.Social.FlagsLive do
     current_user = current_user(assigns) || current_user(socket.assigns)
     scope = assigns[:scope] || socket.assigns[:scope]
 
-    feed =
-      Bonfire.Social.FeedActivities.feed(:flags, scope: scope, current_user: current_user)
+    feed = Bonfire.Social.FeedActivities.feed(:flags, scope: scope, current_user: current_user)
 
     edges =
       for %{edge: %{} = edge} <- e(feed, :edges, []),
