@@ -76,11 +76,12 @@
             phx-update={if @reset_smart_input |> debug("reset_smart_input?"), do: "replace", else: "ignore"}
           >
             <div
-              class="relative p-2 border-b bg-base-200 border-base-content/10"
+              class="relative p-2 border-b bg-base-100 border-base-content/10"
               display="style: none"
               x-show="title_open"
               x-transition
             >
+              <Icon iconify="fluent:chat-warning-24-regular" class="absolute w-5 h-5 stroke-1 top-[14px] left-3 text-base-content/70" />
               <label for="title" class="sr-only">{l("Title")}</label>
               <Field name={:name}>
                 <TextInput
@@ -88,7 +89,7 @@
                     placeholder: l("Enter a content warning"),
                     "phx-debounce": "blur"
                   }
-                  class="w-full h-8 text-sm bg-transparent rounded input"
+                  class="w-full h-8 text-sm bg-transparent rounded pl-7 input"
                 />
               </Field>
             </div>
