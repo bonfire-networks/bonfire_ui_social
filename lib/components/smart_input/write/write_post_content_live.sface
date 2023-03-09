@@ -40,9 +40,7 @@
       </button>
     </div> -->
     <div class={
-      "bg-base-100 flex h-full flex-1": @thread_mode != :flat,
-      "bg-base-100 border-t border-base-content/10 p-3 h-full flex-1 sticky bottom-0 messages_smart_input":
-        @thread_mode == :flat,
+      "bg-base-100  h-full flex-1": @thread_mode != :flat,
       "!border-0": @showing_within == :compose,
       "!relative border-none !h-auto": @showing_within == :page
     }>
@@ -50,70 +48,91 @@
         "relative flex flex-col flex-1 h-full",
         "h-auto": @showing_within == :compose
       }>
-        <div
-          :if={@show_select_recipients ||
-            is_messaging?(%{
-              page: @page,
-              showing_within: @showing_within,
-              create_object_type: @create_object_type
-            })}
-          class="p-3 bg-base-300"
-        >
-          <Bonfire.UI.Common.SelectRecipientsLive
-            preloaded_recipients={e(@preloaded_recipients, [])}
-            to_boundaries={@to_boundaries}
-            to_circles={@to_circles}
-            open_boundaries={@open_boundaries}
-            context_id={@context_id}
-          />
-        </div>
 
-        <Inputs for={:post_content}>
-          <div
-            id="write_post_content_fields"
-            x-show="!open_boundaries"
-            class="flex-1"
-            phx-update={if @reset_smart_input |> debug("reset_smart_input?"), do: "replace", else: "ignore"}
+        <div 
+          class={
+            "md:h-full flex flex-col md:min-h-[240px] h-[calc(var(--visual-viewport-height)_-_164px)] overflow-y-auto"
+          }
+          :class="{'h-[calc(var(--visual-viewport-height)_-_114px)]': !title_open}"
           >
-            <div
-              class="relative p-2 border-b bg-base-100 border-base-content/10"
-              display="style: none"
-              x-show="title_open"
-              x-transition
+          <!-- DM RECIPIENTS -->
+          <div
+            :if={@show_select_recipients ||
+              is_messaging?(%{
+                page: @page,
+                showing_within: @showing_within,
+                create_object_type: @create_object_type
+              })}
+            class="relative p-2 border-b bg-base-100 border-base-content/10"
             >
-              <Icon iconify="fluent:chat-warning-24-regular" class="absolute w-5 h-5 stroke-1 top-[14px] left-3 text-base-content/70" />
-              <label for="title" class="sr-only">{l("Title")}</label>
-              <Field name={:name}>
-                <TextInput
-                  opts={
-                    placeholder: l("Enter a content warning"),
-                    "phx-debounce": "blur"
-                  }
-                  class="w-full h-8 text-sm bg-transparent rounded pl-7 input"
-                />
-              </Field>
+            <Bonfire.UI.Common.SelectRecipientsLive
+              preloaded_recipients={e(@preloaded_recipients, [])}
+              to_boundaries={@to_boundaries}
+              to_circles={@to_circles}
+              open_boundaries={@open_boundaries}
+              context_id={@context_id}
+            />
+          </div>
+
+            <!-- CW -->
+            <div
+              id="write_post_title_field"
+              x-show="!open_boundaries"
+              class=""
+              phx-update={if @reset_smart_input |> debug("reset_smart_input?"), do: "replace", else: "ignore"}
+            >
+            <Inputs for={:post_content}>
+              <div
+                class="relative p-2 border-b bg-base-100 border-base-content/10"
+                display="style: none"
+                x-show="title_open"
+                x-transition
+                >
+                <Icon iconify="fluent:chat-warning-24-regular" class="absolute w-5 h-5 stroke-1 top-[14px] left-3 text-base-content/70" />
+                <label for="title" class="sr-only">{l("Title")}</label>
+                <Field name={:name}>
+                  <TextInput
+                    opts={
+                      placeholder: l("Enter a content warning"),
+                      "phx-debounce": "blur"
+                    }
+                    class="w-full h-8 pl-12 text-sm bg-transparent rounded input"
+                  />
+                </Field>
+              </div>
+            </Inputs>
             </div>
 
-            <!-- <div class="block md:hidden">
+            <!-- UPLOADS PREVIEWS -->
+            <div class={"p-2 border-b border-base-content/10 uploads_preview": @uploads.files.entries != []}>
               <Bonfire.UI.Social.UploadPreviewsLive uploads={@uploads} />
-            </div> -->
+            </div>
 
-            <label for="description" class="sr-only">{l("Text")}</label>
-            <Field class="flex-1 h-full grow" name={:html_body}>
-              <div class={@textarea_container_class} :class={@textarea_container_class_alpine}>
-                <WriteEditorLive
-                  field_name="post[post_content][html_body]"
-                  textarea_class={@textarea_class}
-                  smart_input_opts={@smart_input_opts}
-                  insert_text={@insert_text}
-                  thread_mode={@thread_mode}
-                  showing_within={@showing_within}
-                />
-              </div>
-            </Field>
-          </div>
-        </Inputs>
-
+            <!-- BODY -->
+            <div
+              id="write_post_body_field"
+              x-show="!open_boundaries"
+              class="flex-1"
+              phx-update={if @reset_smart_input |> debug("reset_smart_input?"), do: "replace", else: "ignore"}
+            >
+              <Inputs for={:post_content}>
+              
+                <label for="description" class="sr-only">{l("Text")}</label>
+                <Field class="flex-1 h-full grow" name={:html_body}>
+                  <!-- <div class={@textarea_container_class} :class={@textarea_container_class_alpine}> -->
+                    <WriteEditorLive
+                      field_name="post[post_content][html_body]"
+                      textarea_class={@textarea_class}
+                      smart_input_opts={@smart_input_opts}
+                      insert_text={@insert_text}
+                      thread_mode={@thread_mode}
+                      showing_within={@showing_within}
+                    />
+                  <!-- </div> -->
+                </Field>
+              </Inputs>
+            </div>
+        </div>
         <Bonfire.UI.Common.InputControlsLive
           preloaded_recipients={e(@preloaded_recipients, [])}
           open_boundaries={@open_boundaries}
