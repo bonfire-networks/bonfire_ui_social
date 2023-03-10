@@ -31,7 +31,7 @@ defmodule Bonfire.UI.Social.WriteLive do
        create_object_type: maybe_to_atom(e(session, "create_object_type", nil)),
        smart_input_opts: %{
          open: true,
-         as: :modal,
+         as: :focused,
          hide_buttons: false,
          text_suggestion: e(session, "smart_input_text", nil)
        },
