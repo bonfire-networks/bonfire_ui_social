@@ -9,7 +9,7 @@ defmodule Bonfire.UI.Social.Activity.SubjectLive do
   prop character, :any, default: nil
   prop date_ago, :any, default: nil
   prop permalink, :string, default: nil
-  prop showing_within, :any, default: :feed
+  prop showing_within, :atom, default: nil
   prop object_type, :any, default: nil
   prop object_boundary, :any, default: nil
   prop viewing_main_object, :boolean, default: false

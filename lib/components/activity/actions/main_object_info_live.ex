@@ -7,7 +7,7 @@ defmodule Bonfire.UI.Social.Activity.MainObjectInfoLive do
   prop verb, :string
   prop permalink, :string
   prop object_type_readable, :any
-  prop showing_within, :any
+  prop showing_within, :atom, default: nil
   prop hide_reply, :boolean
   prop viewing_main_object, :boolean
   prop flagged, :any

@@ -8,7 +8,7 @@ defmodule Bonfire.UI.Social.Activity.ReplyLive do
   prop permalink, :string
   prop replied, :any
   prop boost_count, :any
-  prop showing_within, :any
+  prop showing_within, :atom, default: nil
   prop hide_reply, :any
   prop thread_mode, :any
   prop object_boundary, :any, default: nil

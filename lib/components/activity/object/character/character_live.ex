@@ -8,7 +8,7 @@ defmodule Bonfire.UI.Social.Activity.CharacterLive do
   prop verb_display, :string, default: nil
   prop permalink, :string, default: nil
   prop date_ago, :string, default: nil
-  prop showing_within, :any, default: nil
+  prop showing_within, :atom, default: nil
 
   def the_other(activity, object, context) do
     current_user = current_user(context)

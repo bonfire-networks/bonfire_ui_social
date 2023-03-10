@@ -27,7 +27,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
   prop(feed_id, :any, default: nil)
   prop(viewing_main_object, :boolean, default: false)
   prop(activity_inception, :string, default: nil)
-  prop(showing_within, :any, default: :feed)
+  prop(showing_within, :any, default: nil)
   prop(hide_reply, :boolean, default: false)
   prop(class, :string, required: false, default: "")
   prop(thread_id, :string, default: nil)
@@ -253,20 +253,19 @@ defmodule Bonfire.UI.Social.ActivityLive do
       id={"activity-#{@activity_inception}-#{@activity_id || "no-activity-id"}"}
       data-href={@permalink}
       phx-hook={if !@viewing_main_object and !@show_minimal_subject_and_note and
-           e(assigns, :showing_within, :feed) != :thread,
+           @showing_within != :thread,
          do: "PreviewActivity"}
       role="article"
       aria-label="user activity"
       tabIndex="0"
       class={
-        "p-4 activity relative group flex flex-col " <> e(assigns, :class, ""),
+        "p-4 activity relative group flex flex-col #{@class}",
         "!p-0 !pb-4": e(@show_minimal_subject_and_note, false),
-        "": e(assigns, :showing_within, :feed) in [:feed, :notifications, :likes, :search],
         "main_reply_to !mb-1 items-center !flex-row order-first !p-0 !pb-2":
           @object_id != nil and e(@activity, :replied, :reply_to_id, nil) == nil and
             @activity_id == nil and @showing_within != :widget and
             @showing_within != :search,
-        "": @showing_within != :thread and e(assigns, :thread_mode, nil) != :flat,
+        "": @showing_within != :thread and @thread_mode != :flat,
         reply:
           @object_id != nil and e(@activity, :replied, :reply_to_id, nil) != nil and
             @activity_id != nil,

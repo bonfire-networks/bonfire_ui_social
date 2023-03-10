@@ -2,7 +2,7 @@ defmodule Bonfire.UI.Social.Activity.MediaLive do
   use Bonfire.UI.Common.Web, :stateless_component
 
   prop media, :list, default: nil
-  prop showing_within, :any, default: nil
+  prop showing_within, :atom, default: nil
   prop viewing_main_object, :boolean, default: false
   prop label, :string, default: nil
 

@@ -5,7 +5,7 @@
   <div class="flex items-center flex-1 gap-4 font-medium text-base-content">
     <div class="flex flex-col">
       <LiveRedirect
-        to={~p"/group/#{e(@object, :character, :username, nil) || ulid(@object)}"}
+        to={~p"/&#{e(@object, :character, :username, nil) || ulid(@object)}"}
         class="font-semibold link link-hover"
       >
         {rich(name(@object))}

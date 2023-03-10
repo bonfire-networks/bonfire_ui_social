@@ -27,19 +27,18 @@ defmodule Bonfire.UI.Social.RuntimeConfig do
           requests: Bonfire.UI.Social.ProfileFollowsLive
         ],
         navigation: [
-          timeline: "Timeline",
-          posts: "Posts",
-          boosts: "Boosts"
-          # private: "private",
+          timeline: l("Timeline"),
+          posts: l("Posts"),
+          boosts: l("Boosts")
         ],
         network: [
-          followers: "Followers",
-          followed: "Followed"
+          followers: l("Followers"),
+          followed: l("Followed")
         ],
         my_network: [
-          followers: "Followers",
+          followers: l("Followers"),
           # requests: "Follower requests",
-          followed: "Followed"
+          followed: l("Followed")
           # requested: "Pending"
         ],
         widgets: []

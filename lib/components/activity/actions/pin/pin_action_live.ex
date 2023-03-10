@@ -4,5 +4,5 @@ defmodule Bonfire.UI.Social.PinActionLive do
   prop object, :any
   prop class, :css_class, default: "btn btn-ghost btn-circle btn-sm"
   prop scope, :atom, default: nil
-  # prop showing_within, :any, default: nil
+  # prop showing_within, :atom, default: nil
 end

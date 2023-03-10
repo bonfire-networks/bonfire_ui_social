@@ -11,6 +11,7 @@ defmodule Bonfire.UI.Social.ProfileTimelineLive do
   prop user, :map
   prop feed, :list
   prop page_info, :any
+  prop showing_within, :atom, default: nil
   prop follows_me, :boolean, default: false
   prop loading, :boolean, default: false
   prop hide_tabs, :boolean, default: false

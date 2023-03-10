@@ -20,6 +20,7 @@
       selected_tab={@selected_tab}
       feed_title={@feed_title}
       loading={@loading}
+      showing_within={@showing_within}
       hide_tabs
     >
       <:bottom_or_empty_feed>
@@ -29,11 +30,7 @@
           target="_blank"
           rel="noopener noreferrer"
         >
-          {markdown(
-            l(
-              "Please visit the **remote profile** if you don't want to miss any of their older activities."
-            )
-          )}
+          {markdown(l("Please visit the **remote profile** if you don't want to miss any older activities."))}
         </a>
       </:bottom_or_empty_feed>
     </Bonfire.UI.Social.FeedLive>

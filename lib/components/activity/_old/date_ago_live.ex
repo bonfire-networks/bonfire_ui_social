@@ -8,7 +8,7 @@ defmodule Bonfire.UI.Social.Activity.DateAgoLive do
   prop date_ago, :any
   prop viewing_main_object, :boolean
   prop permalink, :string
-  prop showing_within, :string, default: :feed
+  prop showing_within, :atom, default: nil
   prop object_type, :any
   prop object_boundary, :any, default: nil
   prop thread_id, :string, default: nil

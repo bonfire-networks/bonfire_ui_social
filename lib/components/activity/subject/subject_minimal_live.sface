@@ -122,7 +122,10 @@
             </div>
           </div>
         {#elseif @verb == "Boost" and e(@activity, :subject, :table_id, nil) == "2AGSCANBECATEG0RY0RHASHTAG"}
-          <div class="flex items-center justify-start pb-2 mb-2">
+          <div
+            :if={@showing_within not in [:group, :topic]}
+            class="flex items-center justify-start pb-2 mb-2"
+          >
             <!-- Something published in a Category / Topic -->
             <Icon solid="Collection" class="w-4 h-4 text-base-content/70" />
             <div class="flex-1 ml-2">
@@ -138,7 +141,7 @@
               </div>
             </div>
           </div>
-        {#elseif @verb == "Boost" and e(@activity, :subject, :table_id, nil) != "2AGSCANBECATEG0RY0RHASHTAG"}
+        {#elseif @verb == "Boost"}
           <div class="flex items-center justify-start pb-2 mb-2">
             <!-- BOOST -->
             <svg

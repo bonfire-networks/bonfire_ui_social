@@ -9,7 +9,7 @@ defmodule Bonfire.UI.Social.Activity.ActionsLive do
   prop verb, :string, required: true
   prop permalink, :string, required: true
 
-  prop showing_within, :any, default: nil
+  prop showing_within, :atom, default: nil
   prop hide_reply, :boolean, default: false
   prop viewing_main_object, :boolean, default: false
   prop flagged, :any, default: nil

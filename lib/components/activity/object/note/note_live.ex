@@ -5,7 +5,7 @@ defmodule Bonfire.UI.Social.Activity.NoteLive do
   prop object, :any
   prop activity, :any, default: nil
   prop viewing_main_object, :boolean, default: false
-  prop showing_within, :string, default: nil
+  prop showing_within, :atom, default: nil
   prop activity_inception, :any, default: nil
   prop cw, :boolean, default: nil
   prop is_remote, :boolean, default: false

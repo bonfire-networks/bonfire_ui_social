@@ -209,7 +209,7 @@
 
 <LiveRedirect
   to={@permalink}
-  :if={e(@activity, :replied, :thread, :named, :name, nil) && @showing_within in [:feed]}
+  :if={e(@activity, :replied, :thread, :named, :name, nil) && @showing_within in [nil, :feed]}
   class="flex items-center mt-2 text-sm font-medium"
 >
   <Icon outline="ArrowRight" class="w-4 h-4 text-base-content/70" />

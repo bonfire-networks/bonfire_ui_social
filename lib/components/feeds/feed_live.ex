@@ -16,7 +16,7 @@ defmodule Bonfire.UI.Social.FeedLive do
 
   prop feedback_title, :string, default: nil
   prop feedback_message, :string, default: nil
-  prop showing_within, :any, default: :feed
+  prop showing_within, :atom, default: nil
   prop feed_update_mode, :string, default: "append"
   prop hide_load_more, :boolean, default: false
   prop verb_default, :string, default: nil

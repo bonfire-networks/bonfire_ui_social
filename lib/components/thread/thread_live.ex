@@ -24,7 +24,7 @@ defmodule Bonfire.UI.Social.ThreadLive do
   prop smart_input_opts, :map, default: %{}
   prop thread_mode, :any, default: nil
   prop reverse_order, :any, default: nil
-  prop showing_within, :any, default: :thread
+  prop showing_within, :atom, default: :thread
   prop loading, :boolean, default: false
 
   def update(%{replies: replies, page_info: page_info, loaded_async: true} = assigns, socket)

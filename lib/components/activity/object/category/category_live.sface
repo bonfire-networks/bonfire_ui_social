@@ -1,7 +1,7 @@
 <div class="flex items-center justify-between gap-6 p-3 mt-3 bg-base-content/5 rounded-xl">
   <div class="flex items-center flex-1 gap-4 font-medium text-base-content">
     <span class="flex items-center rounded place-content-center w-14 h-14 shrink-0 bg-base-content/10">
-      <Icon iconify="mingcute:hashtag-fill" class="w-7 h-7 text-base-content/70" />
+      <Icon iconify="mdi:comment-plus" class="w-7 h-7 text-base-content/70" />
     </span>
     <div class="flex flex-col">
       <LiveRedirect

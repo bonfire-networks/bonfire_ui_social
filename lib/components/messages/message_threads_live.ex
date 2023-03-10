@@ -5,7 +5,7 @@ defmodule Bonfire.UI.Social.MessageThreadsLive do
   prop thread_id, :string, default: nil
   prop tab_id, :string, default: nil
   prop context, :any, default: nil
-  prop showing_within, :string, default: nil
+  prop showing_within, :atom, default: nil
 
   def permalink(thread, object) do
     thread_url =
