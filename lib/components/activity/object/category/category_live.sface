@@ -1,23 +1,35 @@
-<div class="flex items-center justify-between gap-6 p-3 mt-3 bg-base-content/5 rounded-xl">
-  <div class="flex items-center flex-1 gap-4 font-medium text-base-content">
-    <span class="flex items-center rounded place-content-center w-14 h-14 shrink-0 bg-base-content/10">
-      <Icon iconify="mdi:comment-plus" class="w-7 h-7 text-base-content/70" />
-    </span>
-    <div class="flex flex-col">
-      <LiveRedirect
-        to={~p"/+#{e(@object, :character, :username, nil) || ulid(@object)}"}
-        class="font-semibold link link-hover"
-      >
-        {rich(name(@object))}
-      </LiveRedirect>
-      <div class="max-w-full prose-sm prose line-clamp-2 !text-base-content/70 !text-xs">{e(@object, :profile, :summary, "")}</div>
-    </div>
-    <!-- <div class="text-sm font-normal text-base-content/70">{Bonfire.Me.Characters.display_username(e(@object, :character, :username, nil), true)}</div> -->
-  </div>
-  <div class="flex items-center gap-1 md:gap-2">
-    <Bonfire.UI.Social.Activity.CategoryActionsLive
+{#case e(@object, :type, nil)}
+  {#match :group}
+    <Bonfire.UI.Social.Activity.GroupLive
       object={@object}
       object_boundary={@object_boundary}
+      permalink={@permalink}
     />
-  </div>
-</div>
+  {#match _}
+    <div class="flex items-center justify-between gap-6 p-3 mt-3 bg-base-content/5 rounded-xl">
+      <div class="flex items-center flex-1 gap-4 font-medium text-base-content">
+        {#case Media.avatar_url(@object)}
+          {#match "/images/avatar.png"}
+            <span class="flex items-center rounded place-content-center w-14 h-14 shrink-0 bg-base-content/10">
+              <Icon iconify="mdi:comment-plus" class="w-7 h-7 text-base-content/70" />
+            </span>
+          {#match url}
+            <LazyImage src={url} class="rounded w-14 h-14 shrink-0 bg-base-content/10" />
+        {/case}
+
+        <div class="flex flex-col">
+          <LiveRedirect to={@permalink} class="font-semibold link link-hover">
+            {rich(name(@object))}
+          </LiveRedirect>
+          <div class="max-w-full prose-sm prose line-clamp-2 !text-base-content/70 !text-xs">{e(@object, :profile, :summary, "")}</div>
+        </div>
+        <!-- <div class="text-sm font-normal text-base-content/70">{Bonfire.Me.Characters.display_username(e(@object, :character, :username, nil), true)}</div> -->
+      </div>
+      <div class="flex items-center gap-1 md:gap-2">
+        <Bonfire.UI.Social.Activity.CategoryActionsLive
+          object={@object}
+          object_boundary={@object_boundary}
+        />
+      </div>
+    </div>
+{/case}

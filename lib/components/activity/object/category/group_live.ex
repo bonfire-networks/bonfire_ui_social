@@ -3,6 +3,7 @@ defmodule Bonfire.UI.Social.Activity.GroupLive do
 
   prop object, :any
   prop object_boundary, :any, default: nil
+  prop permalink, :string, default: nil
 
   def preloads(),
     do: [

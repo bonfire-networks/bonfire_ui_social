@@ -76,7 +76,9 @@ defmodule Bonfire.UI.Social.ThreadLive do
     else
       debug("nested thread")
 
-      #  cannot redirect in `update` so we trigger another update instead
+      # FIXME: we should inject the reply rather than reloading
+
+      # cannot redirect in `update` so we trigger a reload of the thread instead
       update(%{}, socket)
 
       # temporary
@@ -86,7 +88,7 @@ defmodule Bonfire.UI.Social.ThreadLive do
       #   if is_struct(e(socket.assigns, :object, nil)) do
       #     path(e(socket.assigns, :object, nil))
       #   else
-      "/discussion/#{thread_id}"
+      # "/discussion/#{thread_id}"
       #   end
 
       # permalink = "#{thread_url}#activity-#{activity_id}"

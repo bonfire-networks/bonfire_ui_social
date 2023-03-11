@@ -13,6 +13,9 @@
   id={ComponentID.new(Bonfire.UI.Common.FollowButtonLive, id(@object))}
   object_id={id(@object)}
   path={path(@object)}
+  verb={if @type == :group, do: l("Join")}
+  verb_undo={if @type == :group, do: l("Leave")}
+  verb_already={if @type == :group, do: l("Joined")}
   object_boundary={@object_boundary}
   hide_icon
   class="font-normal normal-case btn btn-outline rounded !border-base-content/70 text-base-content/70 btn-sm"
