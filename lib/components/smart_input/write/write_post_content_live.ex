@@ -39,4 +39,11 @@ defmodule Bonfire.UI.Social.WritePostContentLive do
       do: "Bonfire.Social.Messages:send",
       else: "Bonfire.Social.Posts:post"
   end
+
+  def clone_context(to_boundaries) do
+    case to_boundaries do
+      [{:clone_context, boundary_name}] -> boundary_name
+      _ -> false
+    end
+  end
 end

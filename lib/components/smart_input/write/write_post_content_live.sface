@@ -49,19 +49,18 @@
         "h-auto": @showing_within == :compose
       }>
         <div
+          x-show="!open_boundaries"
           class="md:h-full flex flex-col md:min-h-[240px] h-[calc(var(--visual-viewport-height)_-_164px)] overflow-y-auto"
           :class="{'h-[calc(var(--visual-viewport-height)_-_114px)]': !title_open}"
         >
           <!-- DM RECIPIENTS -->
-          <div
-            :if={@show_select_recipients ||
-              is_messaging?(%{
-                page: @page,
-                showing_within: @showing_within,
-                create_object_type: @create_object_type
-              })}
-            class="relative p-2 border-b bg-base-100 border-base-content/10"
-          >
+          <div  class="relative p-2 border-b bg-base-100 border-base-content/10">
+          {#if @show_select_recipients ||
+            is_messaging?(%{
+              page: @page,
+              showing_within: @showing_within,
+              create_object_type: @create_object_type
+          })}
             <Bonfire.UI.Common.SelectRecipientsLive
               preloaded_recipients={e(@preloaded_recipients, [])}
               to_boundaries={@to_boundaries}
@@ -69,8 +68,33 @@
               open_boundaries={@open_boundaries}
               context_id={@context_id}
             />
+          {#else}
+            <div class="flex items-center w-full gap-2">
+              <span class="px-1 text-xs font-medium uppercase text-base-content/70">{l("To")}</span>
+              {#case clone_context(@to_boundaries)}
+                {#match false}
+                  <Dynamic.Component
+                    :if={module_enabled?(Bonfire.Boundaries.Web.SetBoundariesButtonLive)}
+                    module={Bonfire.Boundaries.Web.SetBoundariesButtonLive}
+                    preset_boundary={Bonfire.Boundaries.Web.SetBoundariesLive.boundaries_to_preset(
+                      @to_boundaries
+                      |> debug("to_boundaries")
+                    )
+                    |> debug("preset_boundary")}
+                  />
+                {#match boundary_name}
+                  <div class="flex items-center gap-2 mx">
+                    <button
+                      type="button"
+                      class="flex items-center gap-2 normal-case rounded-full btn-ghost btn-sm btn opacity-90"
+                    >
+                      <span>{boundary_name}</span>
+                    </button>
+                  </div>
+              {/case}
+            </div>
+          {/if}
           </div>
-
           <!-- CW -->
           <div
             id="write_post_title_field"
