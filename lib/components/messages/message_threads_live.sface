@@ -18,7 +18,7 @@
               class="indicator-item badge badge-xs badge-info right-6 bottom-1 top-[auto] invisible unread-activity"
             >
             </span>
-            <div class="flex items-center p-4 py-2 w-full">
+            <div class="flex items-center w-full p-4 py-2">
               <div class="flex-1 w-full min-w-0 sm:flex sm:items-center sm:justify-between">
                 <div class="w-full truncate">
                   <div class="flex items-center justify-between">
@@ -27,17 +27,17 @@
                         {Text.text_only(e(activity, :replied, :thread, :named, :name, nil))}
                       </div>
                     {#else}
-                      <div class="flex-1 text-sm font-semibold truncate text-base-content">
+                      <div class="flex-1 text-sm font-semibold truncate text-base-content/70">
                         {l("Untitled thread")}
                       </div>
                     {/if}
-                    <div class="flex items-center mt-0.5 text-xs text-base-content text-opacity-80">
+                    <div class="flex items-center mt-0.5 text-xs text-base-content/70">
                       <p><time datetime={DatesTimes.date_from_pointer(activity)}>{DatesTimes.date_from_now(activity)}</time></p>
                     </div>
                   </div>
                   <div class="mt-1">
-                    <p class="text-sm max-w-[240px] truncate text-base-content text-opacity-80 font-regular">
-                      <span class="text-info">{e(activity, :subject, :profile, :name, nil)}:
+                    <p class="text-sm max-w-[240px] truncate text-base-content/70 font-regular">
+                      <span class="font-medium text-base-content">{e(activity, :subject, :profile, :name, nil)}:
                       </span>
                       {Text.text_only(
                         e(activity, :object, :post_content, :name, nil) ||
@@ -49,7 +49,7 @@
                 </div>
               </div>
               <!-- <div class="flex-shrink-0 ml-5">
-                <div class="flex items-center mt-1 text-xs text-base-content text-opacity-80">
+                <div class="flex items-center mt-1 text-xs text-base-content/70">
                   <p><time datetime={"#{date_from_pointer(activity)}"}>{DatesTimes.date_from_now(activity)}</time></p>
                 </div>
               </div> -->
