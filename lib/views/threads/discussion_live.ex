@@ -47,6 +47,7 @@ defmodule Bonfire.UI.Social.DiscussionLive do
     {:noreply,
      socket
      |> assign(
+       params: params,
        object_id: id,
        url: url,
        reply_to_id: e(params, "reply_to_id", id)

@@ -152,29 +152,7 @@ defmodule Bonfire.Social.Objects.LiveHandler do
       init_object_assigns(object, activity, assigns, socket, l("Post"))
     else
       _e ->
-        case Bonfire.Common.URIs.remote_canonical_url(id) do
-          url when is_binary(url) ->
-            socket
-            |> redirect(external: url)
-
-          _ ->
-            case Bonfire.Common.Types.object_type_display(id) do
-              type when is_binary(type) ->
-                if current_user do
-                  {:error,
-                   l("Sorry, you can't view this %{thing}",
-                     thing: type || l("post")
-                   )}
-                else
-                  socket
-                  # |> set_go_after()
-                  |> redirect_to(path(:login))
-                end
-
-              _ ->
-                {:error, l("Not found")}
-            end
-        end
+        not_found_fallback(id, e(assigns, :params, nil), socket)
     end
   end
 
@@ -195,19 +173,38 @@ defmodule Bonfire.Social.Objects.LiveHandler do
       )
     else
       _e ->
-        case is_ulid?(id) and Bonfire.Common.URIs.canonical_url(id) do
-          url when is_binary(url) ->
-            socket
-            |> redirect(external: url)
+        not_found_fallback(id, e(assigns, :params, nil), socket)
+    end
+  end
+
+  def not_found_fallback(id, params, socket) do
+    case Bonfire.Common.URIs.remote_canonical_url(id) do
+      url when is_binary(url) ->
+        socket
+        |> redirect(external: url)
+
+      _ ->
+        case Bonfire.Common.Types.object_type_display(
+               maybe_to_atom(e(params, "type", nil) |> debug) |> debug || id
+             )
+             |> debug do
+          type when is_binary(type) ->
+            msg =
+              l("Sorry, you can't view this %{thing}",
+                thing: type || l("post")
+              )
+
+            if current_user_id(socket) do
+              {:error, msg}
+            else
+              socket
+              |> assign_error(msg)
+              # |> set_go_after()
+              |> redirect_to(path(:login))
+            end
 
           _ ->
-            case Bonfire.Common.Types.object_type_display(id) do
-              type when is_binary(type) ->
-                {:error, l("Sorry, you can't view this %{thing}", thing: type)}
-
-              _ ->
-                {:error, l("Not found")}
-            end
+            {:error, :not_found}
         end
     end
   end
