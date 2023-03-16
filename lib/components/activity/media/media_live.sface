@@ -94,23 +94,24 @@
                             <a
                               href={media_url || preview_img(m)}
                               target="_blank"
-                              class="flex w-full border rounded media_container bg-base-200 hover:bg-base-content/5 border-base-content/10"
+                              class="flex w-full border rounded media_container bg-base-200 hover:bg-base-content/5 border-base-content/5"
                             >
                               <div class="items-center gap-3 md:flex">
-                                <div class="flex items-center shrink-0 w-[80px] h-[80px] bg-base-200 bg-base-content/5 place-content-center">
+                                <div class="flex items-center shrink-0 w-[90px] max-h-[120px] place-content-center">
                                   {#case preview_img(m) || e(m.metadata, "favicon", nil) ||
                                       Bonfire.Files.FaviconStore.favicon_url(media_url)}
                                     {#match nil}
                                       <Icon solid="ExternalLink" class="w-8 h-8 text-base-content/70" />
                                     {#match preview_img}
-                                      <img
-                                        class="w-[80px] h-[80px] object-none rounded-none cursor-pointer m-image"
-                                        alt={media_label}
-                                        src={preview_img}
-                                      />
+                                      {#case String.ends_with?(preview_img, ".ico")}
+                                        {#match true}
+                                          <img class="rounded-none cursor-pointer m-image" src={preview_img}>
+                                        {#match _}
+                                          <img class="rounded-none cursor-pointer m-image w-[90px] max-h-[120px]" src={preview_img}>
+                                      {/case}
                                   {/case}
                                 </div>
-                                <div class="flex flex-col items-start content-start justify-start p-3 space-y-1 text-sm text-left">
+                                <div class="flex flex-col items-start content-start justify-start p-2 space-y-1 text-sm text-left">
                                   <div class="text-base font-medium line-clamp-1">
                                     {media_label(m) || l("View m")} ({m.media_type || l("link")})
                                   </div>
