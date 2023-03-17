@@ -26,7 +26,6 @@
                       num_medias ==
                         4
                   }>
-                    <figure class="h-full">
                       {#if String.starts_with?(e(m, :media_type, nil), [
                           "image",
                           "video",
@@ -40,6 +39,7 @@
                         <!-- {#if @viewing_main_object}
                         <Bonfire.UI.Social.Activity.RemoteMediaLive media={m} />
                       {#else} -->
+                    <figure class="h-full">
                         <Bonfire.UI.Common.OpenModalLive
                           id={Pointers.ULID.generate()}
                           no_actions
@@ -86,6 +86,7 @@
                           </:open_btn>
                         </Bonfire.UI.Common.OpenModalLive>
                         <!-- {/if} -->
+                    </figure>
                       {#else}
                         <!-- just a link preview -->
                         {#case Media.media_url(m)}
@@ -123,7 +124,6 @@
                             </a>
                         {/case}
                       {/if}
-                    </figure>
                   </article>
                   <!-- {#else}
       <div class="flex items-center space-x-1 text-xs font-semibold text-base-content/70">

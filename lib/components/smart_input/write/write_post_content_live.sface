@@ -21,35 +21,10 @@
       do: "h-[calc(var(--visual-viewport-height)_-_110px) with_editor flex-1",
       else: "with_textarea flex-1"}
   >
-    <!-- <div
-      x-cloak
-      x-on:click="smart_input_minimized = !smart_input_minimized; smart_input_fullscreen = false"
-      x-show="!open_boundaries"
-      class="flex items-center justify-between p-2 px-4 border-b md:hidden border-base-300"
-    >
-      <div class="">
-        <Icon iconify="heroicons-solid:arrow-left" class="w-5 h-5 stroke-1 text-neutral-content" />
-      </div>
-      <button
-        type="submit"
-        x-on:click="$dispatch('submit')"
-        phx-disable-with="Posting..."
-        class="h-8 px-10 capitalize rounded min-h-8 justify-self-end btn btn-primary"
-      >
-        {l("Post")}
-      </button>
-    </div> -->
-    <div class={
-      "bg-base-100  h-full flex-1": @thread_mode != :flat,
-      "!border-0": @showing_within == :compose,
-      "!relative border-none !h-auto": @showing_within == :page
-    }>
+    <div class={"bg-base-100 h-full flex-1"}>
       <div class={
-        "relative flex flex-col flex-1 h-full",
-        "h-auto": @showing_within == :compose
-      }>
+        "relative flex flex-col flex-1 h-full"}>
         <div
-          x-show="!open_boundaries"
           class="md:h-full flex flex-col md:min-h-[240px] h-[calc(var(--visual-viewport-height)_-_164px)] overflow-y-auto"
           :class="{'h-[calc(var(--visual-viewport-height)_-_114px)]': !title_open}"
         >
@@ -73,15 +48,21 @@
                 <span class="px-1 text-xs font-medium uppercase text-base-content/70">{l("To")}</span>
                 {#case clone_context(@to_boundaries)}
                   {#match false}
+                  <div class="flex items-center flex-1 gap-2">
                     <Dynamic.Component
                       :if={module_enabled?(Bonfire.Boundaries.Web.SetBoundariesButtonLive)}
                       module={Bonfire.Boundaries.Web.SetBoundariesButtonLive}
+                      to_boundaries={@to_boundaries}
                       preset_boundary={Bonfire.Boundaries.Web.SetBoundariesLive.boundaries_to_preset(
                         @to_boundaries
                         |> debug("to_boundaries")
                       )
                       |> debug("preset_boundary")}
                     />
+                    <button type="button" phx-click={JS.toggle(to: "#boundary_picker", in: "fade-in-scale", out: "fade-out-scale")} class="rounded btn btn-ghost btn-sm btn-square">
+                      <Icon iconify="carbon:subnet-acl-rules" class="w-5 h-5 text-base-content/70" />
+                    </button>
+                  </div>
                   {#match boundary_name}
                     <div class="flex items-center gap-2 mx">
                       <button
@@ -94,12 +75,40 @@
                 {/case}
               </div>
             {/if}
+
+            <div id="boundary_picker" class="hidden transition">
+              <div class="flex items-center w-full gap-2 pt-2 mt-2 border-t border-base-content/10">
+                <Icon iconify="carbon:subnet-acl-rules" class="w-5 h-5 mx-1 shrink-0 text-base-content/70" />
+                  {#case is_messaging?(%{
+                  page: @page,
+                  showing_within: @showing_within,
+                  create_object_type: @create_object_type
+                })}
+                {#match is_messaging?}
+                <Dynamic.Component
+                  :if={!is_messaging? and clone_context(@to_boundaries) == false and
+                    module_enabled?(Bonfire.Boundaries.Web.SetBoundariesLive)}
+                  module={Bonfire.Boundaries.Web.SetBoundariesLive}
+                  to_boundaries={@to_boundaries}
+                  preset_boundary={Bonfire.Boundaries.Web.SetBoundariesLive.boundaries_to_preset(@to_boundaries)}
+                  to_circles={@to_circles}
+                  open_boundaries={@open_boundaries}
+                  showing_within={@showing_within}
+                  create_object_type={@create_object_type}
+                  thread_mode={@thread_mode}
+                  boundaries_modal_id={@boundaries_modal_id}
+                  context_id={@context_id}
+                  hide_breakdown
+                  setting_boundaries
+                  click_override
+                />
+                {/case}
+              </div>
+            </div>
           </div>
           <!-- CW -->
           <div
             id="write_post_title_field"
-            x-show="!open_boundaries"
-            class=""
             phx-update={if @reset_smart_input |> debug("reset_smart_input?"), do: "replace", else: "ignore"}
           >
             <Inputs for={:post_content}>
@@ -135,7 +144,6 @@
           <!-- BODY -->
           <div
             id="write_post_body_field"
-            x-show="!open_boundaries"
             class="flex-1"
             phx-update={if @reset_smart_input |> debug("reset_smart_input?"), do: "replace", else: "ignore"}
           >
