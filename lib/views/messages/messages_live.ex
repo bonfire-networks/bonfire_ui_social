@@ -52,10 +52,7 @@ defmodule Bonfire.UI.Social.MessagesLive do
        feedback_title: l("No messages"),
        feedback_message: l("Select a thread or start a new one..."),
        page_header_aside: [
-         {Bonfire.UI.Social.HeaderAsideNotificationsSeenLive,
-          [
-            feed_id: feed_id
-          ]}
+        {Bonfire.UI.Social.HeaderAsideNotificationsSeenLive, [feed_id: feed_id]}
        ],
        sidebar_widgets: [
          users: [

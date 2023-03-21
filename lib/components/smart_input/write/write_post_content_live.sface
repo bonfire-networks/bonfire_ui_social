@@ -41,7 +41,6 @@
                 preloaded_recipients={e(@preloaded_recipients, [])}
                 to_boundaries={@to_boundaries}
                 to_circles={@to_circles}
-                class="w-full h-10 text-sm bg-transparent rounded input liveselect"
                 open_boundaries={@open_boundaries}
                 context_id={@context_id}
               />

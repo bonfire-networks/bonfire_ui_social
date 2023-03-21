@@ -2,7 +2,7 @@
   <Field name={:name}>
     <TextInput
       opts={
-        placeholder: l("Enter a content warning")
+        placeholder: l("Enter an optional content warning")
       }
       class="w-full rounded-none input"
     />
