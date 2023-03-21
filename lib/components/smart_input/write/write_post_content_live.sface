@@ -24,6 +24,7 @@
     <div class={"bg-base-100 h-full flex-1"}>
       <div class={
         "relative flex flex-col flex-1 h-full"}>
+        <Icon iconify="eos-icons:loading" class="loader absolute z-[99999999999999999999999999999] w-20 h-20 left-1/2 top-1/2 mt-[-5rem] ml-[-2.5rem] stroke-1 text-base-content/90 hidden" />
         <div
           class="md:h-full flex flex-col md:min-h-[240px] h-[calc(var(--visual-viewport-height)_-_164px)] overflow-y-auto"
           :class="{'h-[calc(var(--visual-viewport-height)_-_114px)]': !title_open}"
@@ -40,6 +41,7 @@
                 preloaded_recipients={e(@preloaded_recipients, [])}
                 to_boundaries={@to_boundaries}
                 to_circles={@to_circles}
+                class="w-full h-10 text-sm bg-transparent rounded input liveselect"
                 open_boundaries={@open_boundaries}
                 context_id={@context_id}
               />
@@ -77,33 +79,31 @@
             {/if}
 
             <div id="boundary_picker" class="hidden transition">
-              <div class="flex items-center w-full gap-2 pt-2 mt-2 border-t border-base-content/10">
-                <Icon iconify="carbon:subnet-acl-rules" class="w-5 h-5 mx-1 shrink-0 text-base-content/70" />
-                  {#case is_messaging?(%{
-                  page: @page,
-                  showing_within: @showing_within,
-                  create_object_type: @create_object_type
-                })}
-                {#match is_messaging?}
-                <Dynamic.Component
-                  :if={!is_messaging? and clone_context(@to_boundaries) == false and
-                    module_enabled?(Bonfire.Boundaries.Web.SetBoundariesLive)}
-                  module={Bonfire.Boundaries.Web.SetBoundariesLive}
-                  to_boundaries={@to_boundaries}
-                  preset_boundary={Bonfire.Boundaries.Web.SetBoundariesLive.boundaries_to_preset(@to_boundaries)}
-                  to_circles={@to_circles}
-                  open_boundaries={@open_boundaries}
-                  showing_within={@showing_within}
-                  create_object_type={@create_object_type}
-                  thread_mode={@thread_mode}
-                  boundaries_modal_id={@boundaries_modal_id}
-                  context_id={@context_id}
-                  hide_breakdown
-                  setting_boundaries
-                  click_override
-                />
-                {/case}
-              </div>
+              
+              {#case is_messaging?(%{
+                page: @page,
+                showing_within: @showing_within,
+                create_object_type: @create_object_type
+              })}
+              {#match is_messaging?}
+              <Dynamic.Component
+                :if={!is_messaging? and clone_context(@to_boundaries) == false and
+                  module_enabled?(Bonfire.Boundaries.Web.SetBoundariesLive)}
+                module={Bonfire.Boundaries.Web.SetBoundariesLive}
+                to_boundaries={@to_boundaries}
+                preset_boundary={Bonfire.Boundaries.Web.SetBoundariesLive.boundaries_to_preset(@to_boundaries)}
+                to_circles={@to_circles}
+                open_boundaries={@open_boundaries}
+                showing_within={@showing_within}
+                create_object_type={@create_object_type}
+                thread_mode={@thread_mode}
+                boundaries_modal_id={@boundaries_modal_id}
+                context_id={@context_id}
+                hide_breakdown
+                setting_boundaries
+                click_override
+              />
+              {/case}
             </div>
           </div>
           <!-- CW -->
