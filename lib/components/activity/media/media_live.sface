@@ -41,7 +41,7 @@
                       {#else} -->
                       <figure class="h-full">
                         <Bonfire.UI.Common.OpenModalLive
-                          id={Pointers.ULID.generate()}
+                          id={"media-modal-#{Text.hash(id(m))}"}
                           no_actions
                           no_header
                           image_preview

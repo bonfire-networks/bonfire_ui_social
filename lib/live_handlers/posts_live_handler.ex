@@ -133,7 +133,6 @@ defmodule Bonfire.Social.Posts.LiveHandler do
   #   |> JS.toggle(to: ".minimizable", in: "fade-in-scale", out: "fade-out-scale")
   # end
 
-
   def handle_event("write_error", _, socket) do
     Bonfire.UI.Common.NotificationLive.error_template(socket.assigns)
     |> write_feedback(socket)

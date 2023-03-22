@@ -165,6 +165,7 @@
                 to={path(e(@activity, :subject, :character, nil))}
               >
                 <Bonfire.UI.Common.AvatarLive
+                  parent_id={id(@activity)}
                   user={e(@activity, :subject, nil)}
                   title={e(@activity, :subject, :profile, :name, "Anonymous")}
                 />
@@ -227,7 +228,7 @@
           </div>
           <!--div class="flex w-full items-top">
             <div class="">
-              <Bonfire.UI.Common.AvatarLive user={e(@activity, :subject, nil)} />
+              <Bonfire.UI.Common.AvatarLive parent_id={id(@activity)} user={e(@activity, :subject, nil)} />
             </div>
             <div class="flex ml-3 items-center justify-between min-w-0 space-x-1 w-full leading-[18px]">
               <div class="flex items-center flex-1 truncate ellipsis">

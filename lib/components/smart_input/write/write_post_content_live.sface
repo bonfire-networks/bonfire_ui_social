@@ -109,7 +109,7 @@
               {/case}
             </div>
           </div>
-          
+
           <!-- CW -->
           <div
             :if={Config.get([:ui, :smart_input, :cw], []) == true}
@@ -117,8 +117,7 @@
             phx-update={if @reset_smart_input |> debug("reset_smart_input?"), do: "replace", else: "ignore"}
           >
             <Inputs for={:post_content}>
-              <div
-                class="relative p-2 border-b toggle_cw bg-base-100 border-base-content/10">
+              <div class="relative p-2 border-b toggle_cw bg-base-100 border-base-content/10">
                 <Icon
                   iconify="fluent:chat-warning-24-regular"
                   class="absolute w-5 h-5 stroke-1 top-[14px] left-3 text-base-content/70"

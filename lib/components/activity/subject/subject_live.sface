@@ -52,6 +52,7 @@
           to={path(@character)}
         >
           <Bonfire.UI.Common.AvatarLive
+            parent_id={id(@activity)}
             user={@profile}
             title={e(@profile, :name, "Anonymous")}
             class="w-8 h-8 rounded-lg bg-base-content/5"
@@ -105,6 +106,7 @@
           to={path(@character)}
         >
           <Bonfire.UI.Common.AvatarLive
+            parent_id={id(@activity)}
             user={@profile}
             title={e(@profile, :name, "Anonymous")}
             viewing_main_object={@viewing_main_object}

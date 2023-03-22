@@ -22,13 +22,11 @@
         showing_within={@showing_within}
       />
     </div>
-
   {#else}
     <Bonfire.UI.Social.MessageThreadsLive
       showing_within={:messages}
       context={current_user_id(@__context__)}
       threads={@threads}
     />
-
   {/if}
 </main>
