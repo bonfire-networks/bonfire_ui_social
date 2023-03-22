@@ -3,6 +3,7 @@
   phx-click="select_smart_input"
   phx-target="#smart_input"
   phx-value-create_object_type="message"
-  class="btn btn-ghost btn-sm btn-square roundded">
+  class="btn btn-ghost btn-sm btn-square roundded"
+>
   <Icon iconify="tabler:mail-plus" class="w-5 h-5 text-base-content/70" />
 </button>

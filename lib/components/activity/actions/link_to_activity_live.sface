@@ -1,4 +1,4 @@
-{#if String.starts_with?(@permalink, ["/post/", "/discussion/"])}
+{#if String.starts_with?(@permalink || "", ["/post/", "/discussion/"])}
   <Bonfire.UI.Common.OpenPreviewLive
     href={@permalink || path(@object)}
     open_btn_text=""
@@ -43,10 +43,10 @@
     }
   />
 {#else}
-  <LiveRedirect
+  <LinkLive
     to={@permalink}
     class="open_preview_link px-1 normal-case link link-hover text-base-content/70"
   >
     <#slot />
-  </LiveRedirect>
+  </LinkLive>
 {/if}
