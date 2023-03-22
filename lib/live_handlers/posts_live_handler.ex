@@ -55,6 +55,7 @@ defmodule Bonfire.Social.Posts.LiveHandler do
 
     # debug(e(socket.assigns, :showing_within, nil), "SHOWING")
     current_user = current_user_required!(socket)
+
     with %{valid?: true} <- post_changeset(attrs, current_user),
          uploaded_media <- live_upload_files(current_user, params["upload_metadata"], socket),
          opts <-
