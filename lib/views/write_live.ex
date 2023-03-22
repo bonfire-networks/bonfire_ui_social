@@ -1,6 +1,6 @@
 defmodule Bonfire.UI.Social.WriteLive do
   use Bonfire.UI.Common.Web, :surface_live_view
-  alias Bonfire.UI.Me.LivePlugs
+  alias Bonfire.UI.Common.LivePlugs
 
   # declare_nav_link("Link to compose page",
   #   text: l("Compose"),
@@ -8,21 +8,9 @@ defmodule Bonfire.UI.Social.WriteLive do
   #   exclude_from_nav: true
   # )
 
-  def mount(params, session, socket) do
-    live_plug(params, session, socket, [
-      LivePlugs.LoadCurrentAccount,
-      LivePlugs.LoadCurrentUser,
-      LivePlugs.UserRequired,
-      # LivePlugs.LoadCurrentUserCircles,
-      # LivePlugs.LoadCurrentAccountUsers,
-      Bonfire.UI.Common.LivePlugs.StaticChanged,
-      Bonfire.UI.Common.LivePlugs.Csrf,
-      Bonfire.UI.Common.LivePlugs.Locale,
-      &mounted/3
-    ])
-  end
+  on_mount {LivePlugs, [Bonfire.UI.Me.LivePlugs.UserRequired]}
 
-  defp mounted(_params, session, socket) do
+  def mount(_params, session, socket) do
     {:ok,
      socket
      |> assign(

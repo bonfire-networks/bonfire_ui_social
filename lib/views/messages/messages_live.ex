@@ -1,6 +1,6 @@
 defmodule Bonfire.UI.Social.MessagesLive do
   use Bonfire.UI.Common.Web, :surface_live_view
-  alias Bonfire.UI.Me.LivePlugs
+
   # alias Bonfire.Social.Integration
   alias Bonfire.Social.Messages.LiveHandler
   import Untangle
@@ -13,21 +13,9 @@ defmodule Bonfire.UI.Social.MessagesLive do
   #   ]
   # )
 
-  def mount(params, session, socket) do
-    live_plug(params, session, socket, [
-      LivePlugs.LoadCurrentAccount,
-      LivePlugs.LoadCurrentUser,
-      LivePlugs.UserRequired,
-      # LivePlugs.LoadCurrentUserCircles,
-      # LivePlugs.LoadCurrentAccountUsers,
-      Bonfire.UI.Common.LivePlugs.StaticChanged,
-      Bonfire.UI.Common.LivePlugs.Csrf,
-      Bonfire.UI.Common.LivePlugs.Locale,
-      &mounted/3
-    ])
-  end
+  on_mount {LivePlugs, [Bonfire.UI.Me.LivePlugs.UserRequired]}
 
-  defp mounted(_params, _session, socket) do
+  def mount(_params, _session, socket) do
     feed_id = :inbox
     # feed_id = Bonfire.Social.Feeds.my_feed_id(feed_id, socket)
     threads = LiveHandler.list_threads(current_user_required!(socket), socket)
@@ -139,7 +127,7 @@ defmodule Bonfire.UI.Social.MessagesLive do
       {:noreply,
        socket
        |> assign_flash(:error, l("User %{username} not found", username: username))
-       |> redirect_to(path(:error))}
+       |> redirect_to(path(:error, :not_found))}
     end
   end
 

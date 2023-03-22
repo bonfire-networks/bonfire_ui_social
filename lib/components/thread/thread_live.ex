@@ -2,7 +2,7 @@ defmodule Bonfire.UI.Social.ThreadLive do
   use Bonfire.UI.Common.Web, :stateful_component
   import Untangle
   # alias Bonfire.Fake
-  # alias Bonfire.UI.Me.LivePlugs
+  # 
   # alias Bonfire.Me.Users
   # alias Bonfire.UI.Me.CreateUserLive
   alias Bonfire.Social.Threads.LiveHandler
