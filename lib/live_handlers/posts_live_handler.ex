@@ -101,7 +101,7 @@ defmodule Bonfire.Social.Posts.LiveHandler do
           :info,
           "#{l("Posted!")} <a href='#{permalink}' class='mx-1 text-sm !text-info-content capitalize link'>#{l("Show")}</a>"
         )
-        |> Bonfire.UI.Common.SmartInputLive.reset_input()
+        |> Bonfire.UI.Common.SmartInput.LiveHandler.reset_input()
         # |> patch_to(current_url(socket), fallback: path(published)) # so the flash appears - TODO: causes a conflict between the activity coming in via pubsub
 
         # assign_generic(socket,
@@ -209,7 +209,7 @@ defmodule Bonfire.Social.Posts.LiveHandler do
   def write_feedback(text, socket) do
     {:noreply,
      socket
-     |> Bonfire.UI.Common.SmartInputLive.set_smart_input_text(text)}
+     |> Bonfire.UI.Common.SmartInput.LiveHandler.set_smart_input_text(text)}
   end
 
   def live_more(thread_id, paginate, socket) do

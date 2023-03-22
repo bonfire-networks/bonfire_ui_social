@@ -71,7 +71,7 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
 
       debug("send activity to smart input")
 
-      Bonfire.UI.Common.SmartInputLive.open_smart_input_with_text_suggestion(
+      Bonfire.UI.Common.SmartInput.LiveHandler.open_smart_input_with_text_suggestion(
         mentions,
         # we reply to objects, not
         [
@@ -105,7 +105,7 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
   end
 
   def handle_event("remove_data", _params, socket) do
-    Bonfire.UI.Common.SmartInputLive.open(socket.assigns[:__context__],
+    Bonfire.UI.Common.SmartInput.LiveHandler.open(socket.assigns[:__context__],
       activity: nil,
       object: nil,
       # default to replying to current thread

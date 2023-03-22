@@ -1,6 +1,6 @@
 <button
   type="button"
-  phx-click="select_smart_input"
+  phx-click="Bonfire.UI.Common.SmartInput:select_smart_input"
   phx-target="#smart_input"
   phx-value-create_object_type="message"
   class="btn btn-ghost btn-sm btn-square roundded"
