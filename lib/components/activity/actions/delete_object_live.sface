@@ -9,7 +9,7 @@ TODO: use preloaded boundaries for can? when available
         Bonfire.Boundaries.can?(@__context__, :delete, @object_boundary || @object) ||
         Bonfire.Boundaries.can?(@__context__, :delete, :instance)) &&
        Types.object_type(@object) != Bonfire.Data.Identity.User)}
-  id={Pointers.ULID.generate()}
+  id={"delete_object-#{@parent_id || id(@object)}"}
   title_text={l("Delete this") <> " " <> e(@object_type_readable, l("object"))}
 >
   <div class="prose-sm prose">

@@ -12,7 +12,7 @@
 
 <Bonfire.UI.Common.BoostActionLive
   :if={@object_type not in [Bonfire.Data.Social.Message]}
-  id={ComponentID.new(Bonfire.UI.Common.BoostActionLive, id(@object))}
+  id={ComponentID.new(Bonfire.UI.Common.BoostActionLive, id(@object), id(@activity))}
   object_id={id(@object)}
   object_type={@object_type}
   object_boundary={@object_boundary}
@@ -21,7 +21,7 @@
 />
 
 <Bonfire.UI.Common.LikeActionLive
-  id={ComponentID.new(Bonfire.UI.Common.LikeActionLive, id(@object))}
+  id={ComponentID.new(Bonfire.UI.Common.LikeActionLive, id(@object), id(@activity))}
   object_id={id(@object)}
   object_boundary={@object_boundary}
   like_count={e(Bonfire.UI.Social.Activity.ActionsLive.the_activity(@activity, @object), :like_count, nil)}

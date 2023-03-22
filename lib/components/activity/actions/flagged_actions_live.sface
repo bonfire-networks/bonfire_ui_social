@@ -30,7 +30,7 @@
       <span class="sr-only">{l("Message ")} {e(flagged_profile(@object), :name, "")}</span>
     </LiveRedirect>
 
-    {#if to_string(@object_type) == "Elixir.Bonfire.Data.Identity.User"}
+    {#if @object_type == Bonfire.Data.Identity.User}
       <div>
         <Dynamic.Component
           :if={module_enabled?(Bonfire.Boundaries.Web.BlockButtonLive) and @current_user &&
@@ -41,7 +41,7 @@
           with_icon
           icon_class="w-5 h-5 stroke-1 text-base-content/70"
           label={e(@object, :profile, :name, l("this user"))}
-          id={ComponentID.new(Bonfire.Boundaries.Web.BlockButtonLive, @object)}
+          parent_id={id(@activity)}
           class="flex rounded btn btn-ghost btn-square btn-sm"
         />
       </div>
@@ -53,6 +53,7 @@
           icon_class="w-5 h-5 stroke-1 text-base-content/70"
           creator_id={Bonfire.UI.Social.Activity.MoreActionsLive.subject_id(@activity, @object)}
           object_type_readable={@object_type_readable}
+          parent_id={id(@activity)}
           open_btn_class="flex rounded btn btn-ghost btn-square btn-sm"
         />
       </div>
@@ -80,7 +81,6 @@
       </button>
     </LiveRedirect> -->
     <!-- <Bonfire.UI.Social.Activity.MoreActionsLive
-      id={ComponentID.new(Bonfire.UI.Common.LikeActionLive, @object)} 
       object={@object} 
       object_type={@object_type} 
       activity={@activity} 

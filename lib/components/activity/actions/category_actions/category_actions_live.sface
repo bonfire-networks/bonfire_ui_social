@@ -10,7 +10,7 @@
 /> -->
 <Bonfire.UI.Common.FollowButtonLive
   :if={e(@object, :character, nil)}
-  id={ComponentID.new(Bonfire.UI.Common.FollowButtonLive, id(@object))}
+  id={ComponentID.new(Bonfire.UI.Common.FollowButtonLive, id(@object), @activity_id)}
   object_id={id(@object)}
   path={path(@object)}
   verb={if @type == :group, do: l("Join")}

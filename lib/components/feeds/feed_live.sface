@@ -31,7 +31,8 @@
       >
         {#for {entry, i} <- Enum.with_index(@feed)}
           {#case "#{@feed_id || @id}-" <>
-              (e(entry, :id, nil) || e(entry, :activity, :id, nil) || e(entry, :object, :id, nil) ||
+              (id(entry) || e(entry, :activity, :id, nil) || e(entry, :object, :id, nil) ||
+                 e(entry, :edge, :id, nil) ||
                  Pointers.ULID.generate())}
             {#match cid}
               <div id={cid} data-i={i} :if={@hide_activities != "component"}>

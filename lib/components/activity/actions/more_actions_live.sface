@@ -24,10 +24,15 @@
       module={Bonfire.Boundaries.Web.PermissionsIconLive}
       with_label
       object_boundary={@object_boundary}
+      parent_id={id(@activity)}
     />
 
     <li :if={module_enabled?(Bonfire.Classify.Web.TagModalLive)}>
-      <Dynamic.Component module={Bonfire.Classify.Web.TagModalLive} object={@object} />
+      <Dynamic.Component
+        module={Bonfire.Classify.Web.TagModalLive}
+        object={@object}
+        parent_id={id(@activity)}
+      />
     </li>
 
     <!-- <li class="hover:bg-neutral hover:bg-opacity-20">
@@ -45,11 +50,12 @@
       />
     </li> -->
 
-    <!-- Flag the action -->
+    <!-- Flag the object -->
     <li :if={current_user_id(@__context__) != subject_id(@activity, @object) and @verb != "Flag"}>
       <Bonfire.UI.Common.FlagActionLive
         object={@object}
         flagged={@flagged}
+        parent_id={"object-#{id(@activity)}"}
         label={l("Flag this %{object}", object: e(@object_type_readable, l("object")))}
       />
     </li>
@@ -60,12 +66,14 @@
       <Bonfire.UI.Common.FlagActionLive
         object={@object}
         flagged={@flagged}
+        parent_id={"user-#{id(@activity)}"}
         label={l("Flag %{name}", name: name(@activity, @object))}
       />
     </li>
 
     <!-- Block the author & Block the author instance wide -->
     <Bonfire.Boundaries.Web.BlockMenuButtonsLive
+      parent_id={id(@activity)}
       object={subject(@activity, @object)}
       peered={e(@object, :peered, nil)}
     />
@@ -77,6 +85,7 @@
         creator_id={subject_id(@activity, @object)}
         object_type_readable={@object_type_readable}
         object_boundary={@object_boundary}
+        parent_id={"object-#{id(@activity)}"}
       />
     </li>
 
@@ -88,6 +97,7 @@
         object_boundary={@object_boundary}
         object_type_readable={l("from feeds")}
         creator_id={subject_id(@activity, @object)}
+        parent_id={"activity-#{id(@activity)}"}
         explanation={l(
           "Deleting from feeds means this %{verb} and this %{object} still exist, but this activity won't be discoverable via the local instance's feeds. Remote feeds won't be affected.",
           object: e(@object_type_readable, l("object")),

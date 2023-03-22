@@ -2,6 +2,7 @@ defmodule Bonfire.UI.Social.Activity.CategoryLive do
   use Bonfire.UI.Common.Web, :stateless_component
 
   prop object, :any
+  prop activity, :any, default: nil
   prop object_boundary, :any, default: nil
   prop permalink, :string, default: nil
 

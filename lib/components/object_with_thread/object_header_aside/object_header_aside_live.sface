@@ -5,13 +5,13 @@
   </div>
   <div class="flex items-center gap-4">
     <!-- <Bonfire.UI.Common.LikeActionLive
-      id={ComponentID.new(Bonfire.UI.Common.LikeActionLive, @activity)}
+      id={ComponentID.new(Bonfire.UI.Common.LikeActionLive, id(@activity), __MODULE__)}
       object={@activity}
     />
     <Bonfire.UI.Social.Activity.InstanceIconLive peered={e(@activity, :peered, nil)} />
     <Bonfire.Boundaries.Web.BoundaryIconLive
       with_label
-      id={ComponentID.new(Bonfire.Boundaries.Web.BoundaryIconLive, @activity)}
+      id={ComponentID.new(Bonfire.Boundaries.Web.BoundaryIconLive, id(@activity), __MODULE__)}
       object={@activity}
     /> -->
 
@@ -23,7 +23,7 @@
         <li>
           <Bonfire.UI.Common.OpenModalLive
             :if={@thread_id}
-            id={Pointers.ULID.generate()}
+            id="object_header_thread_title"
             title_text={l("Edit the thread title")}
             form_opts={"phx-submit": "Bonfire.Social.Objects:set_name"}
           >
@@ -47,7 +47,7 @@
         <li :if={module_enabled?(Bonfire.UI.Common.ProfileItemLive)}>
           <Bonfire.UI.Common.OpenModalLive
             :if={@thread_id}
-            id={Pointers.ULID.generate()}
+            id="object_header_participants"
             title_text={to_string(length(e(@participants, []))) <> " " <> l("participants")}
           >
             <div class="flex flex-col divide-y divide-base-300">

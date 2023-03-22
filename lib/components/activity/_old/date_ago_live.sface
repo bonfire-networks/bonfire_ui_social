@@ -2,7 +2,6 @@
   <div class="flex items-center space-x-2">
     <BoundaryIconStatelessLive
       :if={@object_type not in [Bonfire.Data.Social.Message]}
-      id={ComponentID.new(BoundaryIconStatelessLive, @object)}
       object={@object}
       object_boundary={@object_boundary}
     />

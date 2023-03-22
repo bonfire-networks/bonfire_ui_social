@@ -200,8 +200,9 @@
             with_icon
             with_label
             class=""
-            id={ComponentID.new(Bonfire.Boundaries.Web.PermissionsIconLive, @object)}
+            id={ComponentID.new(Bonfire.Boundaries.Web.PermissionsIconLive, id(@object), id(@activity))}
             object_boundary={@object_boundary}
+            parent_id={id(@activity)}
           />
         </div> -->
       </div>

@@ -5,5 +5,6 @@ defmodule Bonfire.UI.Social.Activity.ProcessReflowLive do
   # alias Bonfire.Social.Likes
 
   prop object, :any, required: true
+  prop activity, :any, default: nil
   prop showing_within, :atom, default: nil
 end

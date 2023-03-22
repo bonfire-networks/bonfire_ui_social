@@ -1,6 +1,7 @@
 {#if String.starts_with?(@permalink || "", ["/post/", "/discussion/"])}
   <Bonfire.UI.Common.OpenPreviewLive
     href={@permalink || path(@object)}
+    parent_id={id(@activity)}
     open_btn_text=""
     title_text={e(@object, :name, nil) || e(@object, :post_content, :name, nil) || l("Discussion")}
     open_btn_wrapper_class="open_preview_link"
@@ -30,6 +31,7 @@
 {#elseif String.starts_with?(@permalink || "", ["/coordination/task/"])}
   <Bonfire.UI.Common.OpenPreviewLive
     href={@permalink}
+    parent_id={id(@activity)}
     open_btn_text={l("View task")}
     title_text={e(@object, :name, nil) || l("Task")}
     open_btn_wrapper_class="open_preview_link"

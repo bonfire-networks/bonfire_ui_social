@@ -14,6 +14,7 @@
   <div class="flex items-center gap-1 md:gap-2">
     <Bonfire.UI.Social.Activity.CategoryActionsLive
       object={@object}
+      activity_id={id(@activity)}
       object_boundary={@object_boundary}
       type={:group}
     />

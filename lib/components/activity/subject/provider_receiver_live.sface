@@ -4,7 +4,10 @@
       :if={provider(@provider, @primary_accountable, @object |> dump) |> dump}
       class="flex w-full gap-3"
     >
-      <Bonfire.UI.Common.AvatarLive user={provider(@provider, @primary_accountable, @object)} />
+      <Bonfire.UI.Common.AvatarLive
+        parent_id={"provider-#{id(@card)}"}
+        user={provider(@provider, @primary_accountable, @object)}
+      />
       <div class="flex items-start justify-between w-full">
         <div class="flex flex-col flex-1 feed-clickable">
           <LiveRedirect
@@ -47,7 +50,7 @@
           module={Bonfire.Boundaries.Web.BoundaryIconStatelessLive}
           object={@object}
           with_icon
-          id={ComponentID.new(Bonfire.Boundaries.Web.BoundaryIconStatelessLive, @object)}
+          id={ComponentID.new(Bonfire.Boundaries.Web.BoundaryIconStatelessLive, id(@object), id(@activity))}
           object_boundary={@object_boundary}
         />
       </div>
@@ -55,7 +58,7 @@
 
     <!-- <div class="flex items-center">
       <BoundaryIconStatelessLive
-        id={ComponentID.new(BoundaryIconStatelessLive, @object)}
+        id={ComponentID.new(BoundaryIconStatelessLive, id(@object), id(@activity))}
         object={@object}
         with_icon
         object_boundary={@object_boundary}
@@ -95,7 +98,7 @@
         >
         {e(profile(receiver(@receiver, @object)), :name, "Anonymous")}
 
-        <Bonfire.UI.Common.AvatarLive user={receiver(@receiver, @object)} />
+        <Bonfire.UI.Common.AvatarLive parent_id={"receiver-#{id(@card)}"} user={receiver(@receiver, @object)} />
       </LiveRedirect>
     </div> -->
   </div>

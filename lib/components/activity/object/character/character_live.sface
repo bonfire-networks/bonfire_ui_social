@@ -7,6 +7,7 @@
     >
       <div class="absolute left-0">
         <Bonfire.UI.Common.AvatarLive
+          parent_id={id(@activity)}
           class="w-6 h-6 teee"
           bg_class="bg-base-200 rounded-btn"
           user={the_other(@activity, @object, @__context__)}
@@ -47,7 +48,7 @@
       class="flex profile-item group"
     >
       <div class="">
-        <Bonfire.UI.Common.AvatarLive user={the_other(@activity, @object, @__context__)} />
+        <Bonfire.UI.Common.AvatarLive parent_id={id(@activity)} user={the_other(@activity, @object, @__context__)} />
       </div>
       <div>
         <div class="items-baseline justify-between flex-1 ml-3">
