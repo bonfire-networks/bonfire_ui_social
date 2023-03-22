@@ -20,7 +20,6 @@ defmodule Bonfire.UI.Social.WritePostContentLive do
   prop insert_text, :string, default: nil
   prop preloaded_recipients, :any, default: nil
   prop uploads, :any, default: nil
-  prop thread_mode, :atom, default: nil
   prop uploaded_files, :list, default: nil
   prop title_prompt, :string, default: nil
   prop show_select_recipients, :boolean, default: false

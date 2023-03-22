@@ -21,7 +21,7 @@
       do: "h-[calc(var(--visual-viewport-height)_-_110px) with_editor flex-1",
       else: "with_textarea flex-1"}
   >
-    <div class="bg-base-100 h-full flex-1">
+    <div class="flex-1 h-full bg-base-100">
       <div class="relative flex flex-col flex-1 h-full">
         <Icon
           iconify="eos-icons:loading"
@@ -100,7 +100,6 @@
                     open_boundaries={@open_boundaries}
                     showing_within={@showing_within}
                     create_object_type={@create_object_type}
-                    thread_mode={@thread_mode}
                     boundaries_modal_id={@boundaries_modal_id}
                     context_id={@context_id}
                     hide_breakdown
@@ -110,18 +109,16 @@
               {/case}
             </div>
           </div>
+          
           <!-- CW -->
           <div
+            :if={Config.get([:ui, :smart_input, :cw], []) == true}
             id="write_post_title_field"
             phx-update={if @reset_smart_input |> debug("reset_smart_input?"), do: "replace", else: "ignore"}
           >
             <Inputs for={:post_content}>
               <div
-                class="relative p-2 border-b bg-base-100 border-base-content/10"
-                display="style: none"
-                x-show="title_open"
-                x-transition
-              >
+                class="relative p-2 border-b toggle_cw bg-base-100 border-base-content/10">
                 <Icon
                   iconify="fluent:chat-warning-24-regular"
                   class="absolute w-5 h-5 stroke-1 top-[14px] left-3 text-base-content/70"
@@ -160,7 +157,6 @@
                   textarea_class={@textarea_class}
                   smart_input_opts={@smart_input_opts}
                   insert_text={@insert_text}
-                  thread_mode={@thread_mode}
                   showing_within={@showing_within}
                 />
                 <!-- </div> -->
@@ -174,7 +170,6 @@
           show_select_recipients={@show_select_recipients}
           boundaries_modal_id={@boundaries_modal_id}
           smart_input_opts={@smart_input_opts}
-          thread_mode={@thread_mode}
           reply_to_id={id(@reply_to_id)}
           context_id={@context_id}
           create_object_type={@create_object_type}

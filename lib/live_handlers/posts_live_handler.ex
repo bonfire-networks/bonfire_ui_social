@@ -1,7 +1,7 @@
 defmodule Bonfire.Social.Posts.LiveHandler do
   use Bonfire.UI.Common.Web, :live_handler
   import Untangle
-
+  use Bonfire.Common.Utils
   alias Bonfire.Social.Posts
   # alias Bonfire.Social.PostContents
   # alias Bonfire.Data.Social.PostContent
@@ -128,6 +128,12 @@ defmodule Bonfire.Social.Posts.LiveHandler do
     end
   end
 
+  # def toggle_minimized_composer(js \\ %JS{}) do
+  #   js
+  #   |> JS.toggle(to: ".minimizable", in: "fade-in-scale", out: "fade-out-scale")
+  # end
+
+
   def handle_event("write_error", _, socket) do
     Bonfire.UI.Common.NotificationLive.error_template(socket.assigns)
     |> write_feedback(socket)
@@ -160,21 +166,21 @@ defmodule Bonfire.Social.Posts.LiveHandler do
      )}
   end
 
-  def handle_event("switch_thread_mode", %{"thread_mode" => thread_mode} = _attrs, socket) do
-    IO.inspect(thread_mode, label: "THREAD MODE")
+  # def handle_event("switch_thread_mode", %{"thread_mode" => thread_mode} = _attrs, socket) do
+  #   IO.inspect(thread_mode, label: "THREAD MODE")
 
-    if thread_mode == "flat" do
-      {:noreply,
-       assign(socket,
-         thread_mode: :thread
-       )}
-    else
-      {:noreply,
-       assign(socket,
-         thread_mode: :flat
-       )}
-    end
-  end
+  #   if thread_mode == "flat" do
+  #     {:noreply,
+  #      assign(socket,
+  #        thread_mode: :thread
+  #      )}
+  #   else
+  #     {:noreply,
+  #      assign(socket,
+  #        thread_mode: :flat
+  #      )}
+  #   end
+  # end
 
   def handle_event("input", %{"circles" => selected_circles} = _attrs, socket)
       when is_list(selected_circles) and length(selected_circles) > 0 do
