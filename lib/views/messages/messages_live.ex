@@ -23,7 +23,6 @@ defmodule Bonfire.UI.Social.MessagesLive do
     {:ok,
      socket
      |> assign(
-       create_object_type: :message,
        showing_within: :messages,
        #  smart_input_opts: %{prompt: l("Message"), icon: "mdi:inbox"},
        #  smart_input_opts: [inline_only: true],
@@ -115,7 +114,6 @@ defmodule Bonfire.UI.Social.MessagesLive do
          reply_to_id: nil,
          thread_id: nil,
          #  smart_input_opts: [prompt: l("Compose a thoughtful message...")],
-         smart_input_opts: %{open: true},
          to_circles: to_circles || []
          #  sidebar_widgets:
          #    LiveHandler.threads_widget(current_user, ulid(e(socket.assigns, :user, nil)),
@@ -239,7 +237,6 @@ defmodule Bonfire.UI.Social.MessagesLive do
             thread_id: thread_id,
             reply_to_id: thread_id,
             participants: participants,
-            smart_input_opts: %{open: true},
             to_circles: to_circles || [],
             page_header_aside: []
             # sidebar_widgets:

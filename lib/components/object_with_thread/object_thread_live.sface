@@ -32,8 +32,7 @@
           participants={@participants}
           object_boundary={if is_messaging?(%{
                page: @page,
-               showing_within: :thread,
-               create_object_type: @create_object_type
+               showing_within: @showing_within
              }),
              do: :skip}
         />

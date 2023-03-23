@@ -48,8 +48,7 @@
               url={@url}
               object_boundary={if is_messaging?(%{
                    page: @page,
-                   showing_within: @showing_within,
-                   create_object_type: @create_object_type
+                   showing_within: @showing_within
                  }),
                  do: :skip}
             />
