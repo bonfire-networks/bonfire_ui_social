@@ -3,6 +3,12 @@ defmodule Bonfire.UI.Social.WidgetMessagesLive do
 
   prop widget_title, :string, default: nil
 
+  def render(assigns) do
+    assigns
+    |> assign_new(:feed, fn -> feed(current_user(assigns)) end)
+    |> render_sface()
+  end
+
   def feed(current_user) do
     paginate = %{
       limit: 3

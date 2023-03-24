@@ -15,11 +15,15 @@
       /> -->
       <!-- <Bonfire.UI.Common.BackButtonLive showing_within={@showing_within || :thread} /> -->
       <div class="border-t-base-content/10 border-b-base-300">
-        <Bonfire.UI.Social.Activity.PublishedInLive
-          context={e(@activity, :tree, :parent, nil)}
-          showing_within={@showing_within}
-          class="flex items-center justify-start pt-2 ml-2"
-        />
+        {#case e(@activity, :tree, :parent, nil)}
+          {#match nil}
+          {#match parent}
+            <Bonfire.UI.Social.Activity.PublishedInLive
+              context={parent}
+              showing_within={@showing_within}
+              class="flex items-center justify-start pt-2 ml-2"
+            />
+        {/case}
         <Bonfire.UI.Social.ActivityLive
           :if={@activity}
           class="rounded-none !shadow-none !p-4 mt-0 main_object_in_thread"
@@ -30,11 +34,7 @@
           object={@object}
           feed_id={@feed_id}
           participants={@participants}
-          object_boundary={if is_messaging?(%{
-               page: @page,
-               showing_within: @showing_within
-             }),
-             do: :skip}
+          object_boundary={if @showing_within == :messages, do: :skip}
         />
       </div>
       <div class="">

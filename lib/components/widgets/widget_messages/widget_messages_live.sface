@@ -1,36 +1,36 @@
-{#case feed(@current_user)}
-  {#match feed when is_list(feed)}
-    <Bonfire.UI.Common.WidgetBlockLive widget_title={e(@widget_title, "Messages")}>
-      <:action>
-        <LiveRedirect
-          class="text-xs normal-case btn btn-xs btn-outline"
-          to={path(Bonfire.Data.Social.Message)}
-        >
-          {l("View more")}
-        </LiveRedirect>
-      </:action>
+<Bonfire.UI.Common.WidgetBlockLive
+  :if={is_list(@feed) and @feed != []}
+  widget_title={e(@widget_title, "Messages")}
+>
+  <:action>
+    <LiveRedirect
+      class="text-xs normal-case btn btn-xs btn-outline"
+      to={path(Bonfire.Data.Social.Message)}
+    >
+      {l("View more")}
+    </LiveRedirect>
+  </:action>
 
-      <ul class="divide-y menu bg-base-100 divide-base-300">
-        <li :for={%{activity: activity} <- feed}>
-          <LiveRedirect to={path(Bonfire.Data.Social.Message, e(activity, :object_id, nil))} class="block">
-            <div class="flex items-center">
-              <div class="flex-1 min-w-0 sm:flex sm:items-center sm:justify-between">
-                <div class="truncate">
-                  <div class="flex items-center space-x-2">
-                    <p class="text-sm font-medium truncate text-base-content text-opacity-80">{e(activity, :subject, :profile, :name, nil)}</p>
-                  </div>
-                </div>
-              </div>
-              <div class="flex-shrink-0 ml-5">
-                <div class="">
-                  <div class="text-xs text-base-content text-opacity-60">
-                    <p><time datetime={DatesTimes.date_from_pointer(activity)}>{DatesTimes.date_from_now(activity)}</time></p>
-                  </div>
-                </div>
+  <ul class="divide-y menu bg-base-100 divide-base-300">
+    <li :for={%{activity: activity} <- @feed}>
+      <LiveRedirect to={path(Bonfire.Data.Social.Message, e(activity, :object_id, nil))} class="block">
+        <div class="flex items-center">
+          <div class="flex-1 min-w-0 sm:flex sm:items-center sm:justify-between">
+            <div class="truncate">
+              <div class="flex items-center space-x-2">
+                <p class="text-sm font-medium truncate text-base-content text-opacity-80">{e(activity, :subject, :profile, :name, nil)}</p>
               </div>
             </div>
-          </LiveRedirect>
-        </li>
-      </ul>
-    </Bonfire.UI.Common.WidgetBlockLive>
-{/case}
+          </div>
+          <div class="flex-shrink-0 ml-5">
+            <div class="">
+              <div class="text-xs text-base-content text-opacity-60">
+                <p><time datetime={DatesTimes.date_from_pointer(activity)}>{DatesTimes.date_from_now(activity)}</time></p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </LiveRedirect>
+    </li>
+  </ul>
+</Bonfire.UI.Common.WidgetBlockLive>

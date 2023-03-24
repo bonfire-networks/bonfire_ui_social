@@ -10,5 +10,5 @@
     <Icon iconify="ic:round-check" class="w-5 h-5 text-base-content/70" />
     <span class="sr-only">{l("Mark all as read")}</span>
   </button>
-  <!-- <Bonfire.UI.Social.NewDmLive /> -->
+  <Bonfire.UI.Social.NewDmLive />
 </div>

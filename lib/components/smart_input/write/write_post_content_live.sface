@@ -1,17 +1,8 @@
 <div class="flex flex-col h-full overflow-hidden write_post_content">
   <Form
     for={Bonfire.Social.Posts.LiveHandler.post_changeset(@current_user)}
-    submit={handler(%{
-      page: @page,
-      showing_within: @showing_within,
-      create_object_type: @create_object_type
-    })}
-    action={"/LiveHandler/" <>
-      handler(%{
-        page: @page,
-        showing_within: @showing_within,
-        create_object_type: @create_object_type
-      })}
+    submit={handler(@create_object_type)}
+    action={"/LiveHandler/" <> handler(@create_object_type)}
     change="validate"
     opts={
       autocomplete: "off",
@@ -33,12 +24,7 @@
         >
           <!-- DM RECIPIENTS -->
           <div class="relative py-2 border-b bg-base-100 border-base-content/10">
-            {#if @show_select_recipients ||
-                is_messaging?(%{
-                  page: @page,
-                  showing_within: @showing_within,
-                  create_object_type: @create_object_type
-                })}
+            {#if @show_select_recipients || @create_object_type == :message}
               <Bonfire.UI.Common.SelectRecipientsLive
                 preloaded_recipients={e(@preloaded_recipients, [])}
                 to_boundaries={@to_boundaries}
@@ -64,7 +50,11 @@
                       />
                       <button
                         type="button"
-                        phx-click={Bonfire.UI.Common.SmartInput.LiveHandler.toggle_expanded("#boundary_picker", ".btn_boundary_toggle", "btn-active")}
+                        phx-click={Bonfire.UI.Common.SmartInput.LiveHandler.toggle_expanded(
+                          "#boundary_picker",
+                          ".btn_boundary_toggle",
+                          "btn-active"
+                        )}
                         class="rounded btn_boundary_toggle btn btn-ghost btn-sm btn-square"
                       >
                         <Icon iconify="carbon:subnet-acl-rules" class="w-5 h-5 text-base-content/70" />
@@ -84,29 +74,22 @@
             {/if}
 
             <div id="boundary_picker" class="hidden transition">
-              {#case is_messaging?(%{
-                  page: @page,
-                  showing_within: @showing_within,
-                  create_object_type: @create_object_type
-                })}
-                {#match is_messaging?}
-                  <Dynamic.Component
-                    :if={!is_messaging? and clone_context(@to_boundaries) == false and
-                      module_enabled?(Bonfire.Boundaries.Web.SetBoundariesLive)}
-                    module={Bonfire.Boundaries.Web.SetBoundariesLive}
-                    to_boundaries={@to_boundaries}
-                    preset_boundary={Bonfire.Boundaries.Web.SetBoundariesLive.boundaries_to_preset(@to_boundaries)}
-                    to_circles={@to_circles}
-                    open_boundaries={@open_boundaries}
-                    showing_within={@showing_within}
-                    create_object_type={@create_object_type}
-                    boundaries_modal_id={@boundaries_modal_id}
-                    context_id={@context_id}
-                    hide_breakdown
-                    setting_boundaries
-                    click_override
-                  />
-              {/case}
+              <Dynamic.Component
+                :if={@create_object_type != :message and clone_context(@to_boundaries) == false and
+                  module_enabled?(Bonfire.Boundaries.Web.SetBoundariesLive)}
+                module={Bonfire.Boundaries.Web.SetBoundariesLive}
+                to_boundaries={@to_boundaries}
+                preset_boundary={Bonfire.Boundaries.Web.SetBoundariesLive.boundaries_to_preset(@to_boundaries)}
+                to_circles={@to_circles}
+                open_boundaries={@open_boundaries}
+                showing_within={@showing_within}
+                create_object_type={@create_object_type}
+                boundaries_modal_id={@boundaries_modal_id}
+                context_id={@context_id}
+                hide_breakdown
+                setting_boundaries
+                click_override
+              />
             </div>
           </div>
 

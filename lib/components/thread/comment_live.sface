@@ -46,11 +46,7 @@
               showing_within={:thread}
               thread_mode={@thread_mode}
               url={@url}
-              object_boundary={if is_messaging?(%{
-                   page: @page,
-                   showing_within: @showing_within
-                 }),
-                 do: :skip}
+              object_boundary={@showing_within == :messages, do: :skip}
             />
         {/case}
       </div>
