@@ -16,12 +16,12 @@
       title={l("Cancel Reply")}
     >
       <span class="sr-only">{l("Cancel Reply")}</span>
-      <Icon solid="X" class="w-3 h-3" />
+      <#Icon solid="X" class="w-3 h-3" />
     </span>
   </div>
   {#if @show_minimal_subject_and_note}
     <div class="flex-shrink-0">
-      <Icon iconify="ic:round-reply" class="w-5 h-5 text-base-content/70" />
+      <#Icon iconify="ic:round-reply" class="w-5 h-5 text-base-content/70" />
     </div>
     <div class="flex items-top" x-on:click="expanded = ! expanded" x-data="{expanded: false}">
       <div
@@ -215,6 +215,6 @@
   :if={e(@activity, :replied, :thread, :named, :name, nil) && @showing_within in [nil, :feed]}
   class="flex items-center mt-2 text-sm font-medium"
 >
-  <Icon outline="ArrowRight" class="w-4 h-4 text-base-content/70" />
+  <#Icon outline="ArrowRight" class="w-4 h-4 text-base-content/70" />
   <span class="mx-1">{l("in")}</span> <span class="link">{e(@activity, :replied, :thread, :named, :name, "")}</span>
 </LiveRedirect>

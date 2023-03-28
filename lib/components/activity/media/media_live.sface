@@ -102,7 +102,7 @@
                                 {#case preview_img(m) || e(m.metadata, "favicon", nil) ||
                                     Bonfire.Files.FaviconStore.favicon_url(media_url)}
                                   {#match nil}
-                                    <Icon solid="ExternalLink" class="w-8 h-8 text-base-content/70" />
+                                    <#Icon solid="ExternalLink" class="w-8 h-8 text-base-content/70" />
                                   {#match preview_img}
                                     {#case String.ends_with?(preview_img, ".ico")}
                                       {#match true}
@@ -127,7 +127,7 @@
                   </article>
                   <!-- {#else}
       <div class="flex items-center space-x-1 text-xs font-semibold text-base-content/70">
-        <Icon outline="Link" class="w-4 h-4"/>
+        <#Icon outline="Link" class="w-4 h-4"/>
         <span class="flex-1">...{String.slice(Media.media_url(m), -20..-1)}</span>
       </div>
     {/if} -->

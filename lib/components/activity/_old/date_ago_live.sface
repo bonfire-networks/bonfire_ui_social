@@ -13,7 +13,7 @@
       >
         {#case Bonfire.Files.FaviconStore.favicon_url(@permalink)}
           {#match nil}
-            <Icon solid="ExternalLink" class="w-4 h-4 text-base-content/70" />
+            <#Icon solid="ExternalLink" class="w-4 h-4 text-base-content/70" />
           {#match image}
             <img src={image} class="w-4 h-4">
         {/case}

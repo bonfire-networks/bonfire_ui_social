@@ -11,7 +11,7 @@
         {#case Media.avatar_url(@object)}
           {#match "/images/avatar.png"}
             <span class="flex items-center rounded place-content-center w-14 h-14 shrink-0 bg-base-content/10">
-              <Icon iconify="mdi:comment-plus" class="w-7 h-7 text-base-content/70" />
+              <#Icon iconify="mdi:comment-plus" class="w-7 h-7 text-base-content/70" />
             </span>
           {#match url}
             <LazyImage src={url} class="rounded w-14 h-14 shrink-0 bg-base-content/10" />

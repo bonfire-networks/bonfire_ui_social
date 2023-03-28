@@ -1,6 +1,6 @@
 <div class="relative z-40 tablet:hidden dropdown dropdown-end">
   <label tabindex="0" class="flex normal-case btn place-content-center btn-circle btn-ghost btn-sm">
-    <Icon solid="DotsVertical" class="w-5 h-5 text-base-content text-opacity-70" />
+    <#Icon solid="DotsVertical" class="w-5 h-5 text-base-content text-opacity-70" />
   </label>
   <ul tabindex="0" class="p-2 shadow dropdown-content menu bg-base-100 rounded-box w-52">
     <div
@@ -14,7 +14,7 @@
             class={"ml-1": @selected_tab != "home", "bg-primary/10": @selected_tab == "home"}
             to={path(:feed)}
           >
-            <Icon solid="Home" class="w-4 h-4" />
+            <#Icon solid="Home" class="w-4 h-4" />
             <span class="text-sm truncate ellipsis">{l("Home")}</span>
           </LiveRedirect>
         </li>
@@ -23,7 +23,7 @@
             class={"ml-1": @selected_tab != "local", "bg-primary/10": @selected_tab == "local"}
             to={path(:local, :feed)}
           >
-            <Icon solid="LocationMarker" class="w-4 h-4" />
+            <#Icon solid="LocationMarker" class="w-4 h-4" />
             <span class="text-sm truncate ellipsis">{l("Local")}</span>
           </LiveRedirect>
         </li>
@@ -33,7 +33,7 @@
             class={"ml-1": @selected_tab != "fediverse", "bg-primary/10": @selected_tab == "fediverse"}
             to={path(:local, :fediverse)}
           >
-            <Icon solid="Globe" class="w-4 h-4" />
+            <#Icon solid="Globe" class="w-4 h-4" />
             <span class="text-sm truncate ellipsis">{l("Federated")}</span>
           </LiveRedirect>
         </li>

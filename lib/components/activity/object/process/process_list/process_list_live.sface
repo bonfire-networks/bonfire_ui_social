@@ -29,7 +29,7 @@
         "!mx-0": e(@showing_within, :feed) in [:feed, :notifications, :likes]
       }>
         <div class="flex items-center gap-2 text-sm text-base-content/70 text-medium">
-          <Icon solid="Calendar" class="w-4 h-4 text-base-content/70" />
+          <#Icon solid="Calendar" class="w-4 h-4 text-base-content/70" />
           <span>{e(@object, :due, "No due date")}</span>
         </div>
       </div>

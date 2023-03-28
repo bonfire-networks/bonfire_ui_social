@@ -3,7 +3,11 @@
     {#match :thread}
       <div class="flex items-center mb-2">
         <div class="flex items-center justify-start w-5 h-5">
-          <Icon solid="Star" :if={@verb == "Like"} class="w-4 h-4 text-base-content text-opacity-80" />
+          <#Icon
+            iconify="material-symbols:star-rate-rounded"
+            :if={@verb == "Like"}
+            class="w-4 h-4 text-base-content text-opacity-80"
+          />
 
           <!-- Boost icon -->
           <svg
@@ -19,8 +23,8 @@
             class="w-4 h-4 text-base-content text-opacity-80"
           >
             <polyline points="17 1 21 5 17 9" /><path d="M3 11V9a4 4 0 0 1 4-4h14" /><polyline points="7 23 3 19 7 15" /><path d="M21 13v2a4 4 0 0 1-4 4H3" /></svg>
-          <Icon solid="Pencil" :if={@verb == "Reply"} class="w-4 h-4 text-base-content text-opacity-80" />
-          <Icon solid="Flag" :if={@verb == "Flag"} class="w-4 h-4 text-base-content text-opacity-80" />
+          <#Icon solid="Pencil" :if={@verb == "Reply"} class="w-4 h-4 text-base-content text-opacity-80" />
+          <#Icon solid="Flag" :if={@verb == "Flag"} class="w-4 h-4 text-base-content text-opacity-80" />
         </div>
         <div class="flex-1 ml-2">
           <div class="text-xs font-medium text-base-content text-opacity-80">
@@ -38,8 +42,12 @@
     {#match :widget}
       <div class="flex items-center mb-2">
         <div class="flex items-center justify-start w-5 h-5">
-          <Icon solid="Star" :if={@verb == "Like"} class="w-5 h-5 text-yellow-500" />
-          <Icon solid="UserAdd" :if={@verb == "Follow"} class="flex-shrink-0 w-5 h-5 text-info" />
+          <#Icon
+            iconify="material-symbols:star-rate-rounded"
+            :if={@verb == "Like"}
+            class="w-5 h-5 text-yellow-500"
+          />
+          <#Icon solid="UserAdd" :if={@verb == "Follow"} class="flex-shrink-0 w-5 h-5 text-info" />
           <!-- Boost icon -->
           <svg
             :if={@verb == "Boost"}
@@ -54,8 +62,8 @@
             class="w-4 h-4 text-info"
           >
             <polyline points="17 1 21 5 17 9" /><path d="M3 11V9a4 4 0 0 1 4-4h14" /><polyline points="7 23 3 19 7 15" /><path d="M21 13v2a4 4 0 0 1-4 4H3" /></svg>
-          <Icon solid="Pencil" :if={@verb == "Reply"} class="w-4 h-4 text-info" />
-          <Icon solid="Flag" :if={@verb == "Flag"} class="w-4 h-4 text-error" />
+          <#Icon solid="Pencil" :if={@verb == "Reply"} class="w-4 h-4 text-info" />
+          <#Icon solid="Flag" :if={@verb == "Flag"} class="w-4 h-4 text-error" />
         </div>
         <div class="flex-1 ml-2">
           <div class="text-sm font-medium text-base-content/70">
@@ -79,7 +87,7 @@
         {#if @verb == "Like"}
           <div class="flex items-center justify-start pb-2 mb-2">
             <!-- LIKE -->
-            <Icon solid="Star" class="w-5 h-5 text-base-content/70" />
+            <#Icon iconify="material-symbols:star-rate-rounded" class="w-5 h-5 text-base-content/70" />
             <div class="flex-1 ml-2">
               <div class="text-sm font-medium text-base-content/70">
                 <LiveRedirect
@@ -101,7 +109,7 @@
         {#elseif @verb == "Follow"}
           <div class="flex items-center justify-start pb-2 mb-2">
             <!-- FOLLOW -->
-            <Icon solid="UserAdd" class="flex-shrink-0 w-5 h-5 text-base-content/70" />
+            <#Icon solid="UserAdd" class="flex-shrink-0 w-5 h-5 text-base-content/70" />
             <div class="flex-1 ml-2">
               <div class="text-sm font-medium text-base-content/70">
                 <LiveRedirect
@@ -263,7 +271,7 @@
         {#elseif @verb == "Flag"}
           <div class="flex items-center justify-start pb-2 mb-2">
             <!-- FLAG -->
-            <Icon solid="Flag" class="w-4 h-4 text-error" />
+            <#Icon solid="Flag" class="w-4 h-4 text-error" />
             <div class="flex-1 ml-2">
               <div class="text-sm font-medium text-base-content/70">
                 <LiveRedirect
@@ -279,7 +287,9 @@
           </div>
           <!-- {#else}
           <div class="flex items-center justify-start">
-            <Icon iconify={Bonfire.Boundaries.Verbs.get(@verb)[:icon]} class="w-4 h-4 text-error" />
+            <Iconify.iconify
+                icon={Bonfire.Boundaries.Verbs.get(@verb)[:icon]} 
+                class="w-4 h-4 text-error" />
             <div class="flex-1 ml-2">
               <div class="text-sm font-medium text-base-content/70">
                 <LiveRedirect

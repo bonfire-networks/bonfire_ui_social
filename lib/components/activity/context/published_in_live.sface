@@ -1,6 +1,6 @@
 <div :if={@showing_within not in [:group, :topic] and not is_nil(@context)} class={@class}>
   <!-- Something published in a Category / Topic -->
-  <Icon solid="Collection" class="w-4 h-4 text-base-content/70" />
+  <#Icon solid="Collection" class="w-4 h-4 text-base-content/70" />
   <div class="flex-1 ml-2">
     <div class="text-sm font-medium text-base-content/70">
       {l("Published in")}

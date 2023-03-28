@@ -14,7 +14,7 @@
   >
     <div class="flex-1 h-full bg-base-100">
       <div class="relative flex flex-col flex-1 h-full">
-        <Icon
+        <#Icon
           iconify="eos-icons:loading"
           class="loader absolute z-[99999999999999999999999999999] w-20 h-20 left-1/2 top-1/2 mt-[-5rem] ml-[-2.5rem] stroke-1 text-base-content/90 hidden"
         />
@@ -57,7 +57,7 @@
                         )}
                         class="rounded btn_boundary_toggle btn btn-ghost btn-sm btn-square"
                       >
-                        <Icon iconify="carbon:subnet-acl-rules" class="w-5 h-5 text-base-content/70" />
+                        <#Icon iconify="carbon:subnet-acl-rules" class="w-5 h-5 text-base-content/70" />
                       </button>
                     </div>
                   {#match boundary_name}
@@ -101,7 +101,7 @@
           >
             <Inputs for={:post_content}>
               <div class="relative p-2 border-b bg-base-100 border-base-content/10">
-                <Icon
+                <#Icon
                   iconify="fluent:chat-warning-24-regular"
                   class="absolute w-5 h-5 stroke-1 top-[14px] left-3 text-base-content/70"
                 />
