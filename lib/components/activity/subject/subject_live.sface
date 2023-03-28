@@ -11,7 +11,7 @@
     class="absolute pl-3 ml-3 border-l right-[-30px] border-base-content/10"
   >
     <span
-      phx-click="Bonfire.Social.Feeds:remove_data"
+      phx-click="Bonfire.UI.Common.SmartInput:remove_data"
       class="btn btn-xs btn-circle"
       title={l("Cancel Reply")}
     >

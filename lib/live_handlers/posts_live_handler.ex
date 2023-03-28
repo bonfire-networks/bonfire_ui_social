@@ -130,7 +130,7 @@ defmodule Bonfire.Social.Posts.LiveHandler do
 
   # def toggle_minimized_composer(js \\ %JS{}) do
   #   js
-  #   |> JS.toggle(to: ".minimizable", in: "fade-in-scale", out: "fade-out-scale")
+  #   |> JS.toggle(to: ".smart_input_show_on_minimize", in: "fade-in-scale", out: "fade-out-scale")
   # end
 
   def handle_event("write_error", _, socket) do

@@ -5,12 +5,3 @@
   icon="tabler:mail-plus"
   prompt={nil}
 />
-<!-- <button
-  type="button"
-  phx-click="Bonfire.UI.Common.SmartInput:select_smart_input"
-  phx-target="#smart_input"
-  phx-value-create_object_type="message"
-  class="btn btn-ghost btn-sm btn-square rounded"
->
-  <Icon iconify="tabler:mail-plus" class="w-5 h-5 text-base-content/70" />
-</button> -->
