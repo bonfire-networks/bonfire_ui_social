@@ -8,21 +8,7 @@
             :if={@verb == "Like"}
             class="w-4 h-4 text-base-content text-opacity-80"
           />
-
-          <!-- Boost icon -->
-          <svg
-            :if={@verb == "Boost"}
-            viewBox="0 0 24 24"
-            width="24"
-            height="24"
-            stroke="currentColor"
-            stroke-width="1"
-            fill="none"
-            stroke-linecap="round"
-            stroke-linejoin="round"
-            class="w-4 h-4 text-base-content text-opacity-80"
-          >
-            <polyline points="17 1 21 5 17 9" /><path d="M3 11V9a4 4 0 0 1 4-4h14" /><polyline points="7 23 3 19 7 15" /><path d="M21 13v2a4 4 0 0 1-4 4H3" /></svg>
+          <#Icon iconify="el:retweet" class="w-4 h-4 text-base-content/80" />
           <#Icon solid="Pencil" :if={@verb == "Reply"} class="w-4 h-4 text-base-content text-opacity-80" />
           <#Icon solid="Flag" :if={@verb == "Flag"} class="w-4 h-4 text-base-content text-opacity-80" />
         </div>
@@ -137,19 +123,7 @@
         {#elseif @verb == "Boost"}
           <div class="flex items-center justify-start pb-2 mb-2">
             <!-- BOOST -->
-            <svg
-              viewBox="0 0 24 24"
-              width="24"
-              height="24"
-              stroke="currentColor"
-              stroke-width="2"
-              fill="none"
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              class="w-4 h-4 text-base-content/70"
-            >
-              <polyline points="17 1 21 5 17 9" /><path d="M3 11V9a4 4 0 0 1 4-4h14" /><polyline points="7 23 3 19 7 15" /><path d="M21 13v2a4 4 0 0 1-4 4H3" />
-            </svg>
+            <#Icon iconify="el:retweet" class="w-4 h-4 text-base-content/70" />
             <div class="flex-1 ml-2">
               <div class="text-sm font-medium text-base-content/70">
                 <LiveRedirect

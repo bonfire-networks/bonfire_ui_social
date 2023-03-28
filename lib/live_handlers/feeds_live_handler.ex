@@ -31,7 +31,7 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
   end
 
   def handle_event("reply_to_activity", params, socket) do
-    # debug("reply!")
+    debug("reply!")
 
     activity = e(socket.assigns, :activity, %{})
 
@@ -41,9 +41,9 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
         e(activity, :object, nil) ||
         e(socket.assigns, :object_id, nil) ||
         e(activity, :object_id, nil)
-
+    debug(reply_to, "reply_to")
     reply_to_id = e(params, "id", nil) || ulid(reply_to)
-
+    debug(reply_to_id, "reply_to_id")
     with {:ok, current_user} <- current_user_or_remote_interaction(socket, l("reply"), reply_to),
          true <- Bonfire.Boundaries.can?(current_user, :reply, reply_to_id) do
       # TODO: don't re-load this here as we already have the list (at least when we're in a thread)

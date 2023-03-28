@@ -5,13 +5,13 @@ defmodule Bonfire.UI.Social.MessagesLive do
   alias Bonfire.Social.Messages.LiveHandler
   import Untangle
 
-  # declare_nav_link(l("Direct Messages"),
-  #   icon: "mdi:inbox",
-  #   badge: [
-  #     id: :inbox,
-  #     feed_key: :inbox_id
-  #   ]
-  # )
+  declare_nav_link(l("Direct Messages"),
+    icon: "mdi:inbox",
+    badge: [
+      id: :inbox,
+      feed_key: :inbox_id
+    ]
+  )
 
   on_mount {LivePlugs, [Bonfire.UI.Me.LivePlugs.UserRequired]}
 
@@ -267,6 +267,15 @@ defmodule Bonfire.UI.Social.MessagesLive do
         tab_id: nil
       )
     }
+  end
+
+  def do_handle_event("remove", %{data: %{"field" => field, "id" => id}}, socket) do
+    {:noreply,
+     socket
+     |> update(maybe_to_atom(field) |> debug("f"), fn current_to_circles ->
+       (List.wrap(current_to_circles) -- [{id}])
+       |> debug("v")
+     end)}
   end
 
   def handle_params(params, uri, socket),

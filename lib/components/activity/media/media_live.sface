@@ -97,7 +97,7 @@
                             target="_blank"
                             class="flex w-full border rounded media_container bg-base-200 hover:bg-base-content/5 border-base-content/5"
                           >
-                            <div class="items-center gap-3 md:flex">
+                            <div class="flex items-center gap-3">
                               <div class="flex items-center shrink-0 w-[90px] max-h-[120px] place-content-center">
                                 {#case preview_img(m) || e(m.metadata, "favicon", nil) ||
                                     Bonfire.Files.FaviconStore.favicon_url(media_url)}
