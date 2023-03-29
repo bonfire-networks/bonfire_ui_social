@@ -2,7 +2,7 @@ defmodule Bonfire.UI.Social.Feeds.NotificationsLive do
   use Bonfire.UI.Common.Web, :surface_live_view
 
   # declare_nav_link(l("Notifications"),
-  #   icon: "mdi:bell-outline",
+  #   icon: "ph:bell",
   #   badge: [
   #     id: :notifications,
   #     feed_key: :notifications_id
@@ -26,7 +26,7 @@ defmodule Bonfire.UI.Social.Feeds.NotificationsLive do
        page: "notifications",
        selected_tab: "notifications",
        #  without_sidebar: true,
-       page_header_icon: "mdi:bell-outline",
+       page_header_icon: "ph:bell",
        page_title: l("Notifications"),
        feedback_title: l("You have no notifications"),
        feedback_message:

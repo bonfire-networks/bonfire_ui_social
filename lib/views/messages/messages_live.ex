@@ -24,9 +24,9 @@ defmodule Bonfire.UI.Social.MessagesLive do
      socket
      |> assign(
        showing_within: :messages,
-       #  smart_input_opts: %{prompt: l("Message"), icon: "mdi:inbox"},
-       #  smart_input_opts: [inline_only: true],
-       to_boundaries: [{"message", "Message"}],
+        #  smart_input_opts: %{prompt: l("Message"), icon: "mdi:inbox"},
+        #  smart_input_opts: [inline_only: true],
+        # to_boundaries: [{"message", "Message"}],
        page_title: l("Messages"),
        page: "messages",
        page_header_icon: "mdi:inbox",
@@ -39,7 +39,7 @@ defmodule Bonfire.UI.Social.MessagesLive do
        feedback_title: l("No messages"),
        feedback_message: l("Select a thread or start a new one..."),
        page_header_aside: [
-         {Bonfire.UI.Social.HeaderAsideNotificationsSeenLive, [feed_id: feed_id]}
+         {Bonfire.UI.Social.HeaderAsideDmLive, [feed_id: feed_id]}
        ],
        sidebar_widgets: [
          users: [
@@ -263,7 +263,7 @@ defmodule Bonfire.UI.Social.MessagesLive do
       socket
       |> assign(
         page_title: l("Direct Messages"),
-        to_boundaries: [{"message", "Message"}],
+        # to_boundaries: [{"message", "Message"}],
         tab_id: nil
       )
     }

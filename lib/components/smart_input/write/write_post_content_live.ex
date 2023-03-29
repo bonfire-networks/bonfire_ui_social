@@ -34,7 +34,7 @@ defmodule Bonfire.UI.Social.WritePostContentLive do
   prop replied_activity_class, :css_class
 
   def handler(create_object_type) do
-    if create_object_type == :messages,
+    if create_object_type == :message,
       do: "Bonfire.Social.Messages:send",
       else: "Bonfire.Social.Posts:post"
   end

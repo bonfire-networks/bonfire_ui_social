@@ -1,0 +1,4 @@
+<div class="flex items-center gap-2">
+  <Bonfire.UI.Social.HeaderAsideNotificationsSeenLive />
+  <Bonfire.UI.Social.NewDmLive />
+</div>

@@ -68,7 +68,7 @@ defmodule Bonfire.Social.Objects.LiveHandler do
     # reply_to_id = e(assigns, :reply_to_id, id)
 
     # smart_input_prompt = l("Reply to object:")<>" "<>Text.text_only(e(object, :post_content, :name, e(object, :post_content, :summary, e(object, :post_content, :html_body, reply_to_id))))
-    smart_input_prompt = l("Reply")
+    # smart_input_prompt = l("Reply")
 
     participants =
       Bonfire.Social.Threads.list_participants(Map.put(activity, :object, object), thread_id,
@@ -81,14 +81,14 @@ defmodule Bonfire.Social.Objects.LiveHandler do
 
     # names = if length(participants)>0, do: Enum.map_join(participants, ", ", &e(&1, :profile, :name, e(&1, :character, :username, l "someone else")))
 
-    mentions =
-      if length(participants) > 0,
-        do:
-          Enum.map_join(
-            participants |> Enum.reject(&(e(&1, :character, :id, nil) == ulid(current_user))),
-            " ",
-            &("@" <> e(&1, :character, :username, ""))
-          ) <> " "
+    # mentions =
+    #   if length(participants) > 0,
+    #     do:
+    #       Enum.map_join(
+    #         participants |> Enum.reject(&(e(&1, :character, :id, nil) == ulid(current_user))),
+    #         " ",
+    #         &("@" <> e(&1, :character, :username, ""))
+    #       ) <> " "
 
     page_title = e(activity, :replied, :thread, :named, :name, page_title)
 
@@ -115,7 +115,7 @@ defmodule Bonfire.Social.Objects.LiveHandler do
       thread_id: thread_id,
       reply_to_id: object,
       page_title: page_title,
-      smart_input_opts: %{text_suggestion: mentions, prompt: smart_input_prompt},
+      # smart_input_opts: %{text_suggestion: mentions, prompt: smart_input_prompt},
       to_circles: to_circles || []
     )
   end

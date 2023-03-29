@@ -5,9 +5,7 @@
       <button
         class={@class}
         data-id="action_reply"
-        phx-click="Bonfire.Social.Feeds:reply_to_activity"
-        phx-value-id={@object_id}
-        phx-target={if @activity_id, do: "#activity--" <> e(@activity_id, "")}
+        phx-click={Bonfire.Social.Feeds.LiveHandler.reply_to_activity(@object_id, @activity_id)}
         title={l("Reply")}
       >
         <!-- x-on:click={"show_smart_input('#{l("Reply")}')"} -->

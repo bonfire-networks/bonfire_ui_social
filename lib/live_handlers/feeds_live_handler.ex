@@ -30,6 +30,15 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
     paginate_feed(attrs, socket)
   end
 
+  def reply_to_activity(object_id, activity_id, js \\ %JS{}) do
+    js
+    |> Bonfire.UI.Common.SmartInput.LiveHandler.maximize()
+    |> JS.push(
+      "Bonfire.Social.Feeds:reply_to_activity",
+      value: %{"id" => object_id, "activity_id" => activity_id},
+      target: (if activity_id, do: "#activity--" <> e(activity_id, "")))
+  end
+
   def handle_event("reply_to_activity", params, socket) do
     debug("reply!")
 
@@ -41,9 +50,8 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
         e(activity, :object, nil) ||
         e(socket.assigns, :object_id, nil) ||
         e(activity, :object_id, nil)
-    debug(reply_to, "reply_to")
+
     reply_to_id = e(params, "id", nil) || ulid(reply_to)
-    debug(reply_to_id, "reply_to_id")
     with {:ok, current_user} <- current_user_or_remote_interaction(socket, l("reply"), reply_to),
          true <- Bonfire.Boundaries.can?(current_user, :reply, reply_to_id) do
       # TODO: don't re-load this here as we already have the list (at least when we're in a thread)
