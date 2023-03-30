@@ -18,7 +18,7 @@
   <div class={
     "feed-clickable flex items-center flex-1 justify-between md:justify-end gap-4 mt-3",
     "!justify-end mt-1": @showing_within == :thread && @viewing_main_object != true,
-    "-mx-4 border-t border-base-300 !p-3 !pb-0 !mt-6": @viewing_main_object == true
+    "-mx-4 border-t !justify-between border-base-300 !p-3 !pb-0 !mt-6": @viewing_main_object == true
   }>
     <Bonfire.UI.Social.Activity.ReactionsLive
       object={@object}
