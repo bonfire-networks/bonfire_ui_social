@@ -158,13 +158,15 @@ defmodule Bonfire.UI.Social.ActivityLive do
 
     object_id = id(object)
     id = id(activity) || object_id
+
     # permalink = path(object)
     permalink =
       if(thread_url && thread_id != id,
         do: "#{thread_url}#activity-#{id}",
         else: "#{path(object)}#"
       )
-      |> String.trim_leading(current_url(assigns) || "##")
+      |> String.trim_leading("#{current_url(assigns) || "#"}#")
+      |> debug()
 
     assigns
     |> Map.merge(%{

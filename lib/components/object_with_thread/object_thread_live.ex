@@ -12,7 +12,6 @@ defmodule Bonfire.UI.Social.ObjectThreadLive do
   prop to_boundaries, :any, default: nil
   prop to_circles, :list, default: []
   prop smart_input_opts, :map, default: %{}
-  prop reply_to_id, :any, default: nil
   prop thread_id, :string, default: nil
   prop feed_id, :any, default: nil
   prop activity, :any, default: nil

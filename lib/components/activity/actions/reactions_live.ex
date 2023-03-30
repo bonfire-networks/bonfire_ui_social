@@ -11,6 +11,7 @@ defmodule Bonfire.UI.Social.Activity.ReactionsLive do
   prop thread_mode, :any, default: nil
   prop object_boundary, :any, default: nil
   prop object_type_readable, :any, default: nil
+  prop viewing_main_object, :boolean, default: false
 
   def count(replied) do
     # debug(replied)

@@ -6,12 +6,9 @@
         page={@page}
         page_title={@page_title}
         feed_id={@feed_id}
-        to_boundaries={@to_boundaries}
-        to_circles={@to_circles}
         participants={e(@participants, [])}
         object_id={@thread_id}
         thread_id={@thread_id}
-        reply_to_id={@reply_to_id}
         activity={@activity}
         object={@object}
         url={@url}

@@ -32,11 +32,12 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
 
   def reply_to_activity(object_id, activity_id, js \\ %JS{}) do
     js
-    |> Bonfire.UI.Common.SmartInput.LiveHandler.maximize()
     |> JS.push(
       "Bonfire.Social.Feeds:reply_to_activity",
       value: %{"id" => object_id, "activity_id" => activity_id},
-      target: (if activity_id, do: "#activity--" <> e(activity_id, "")))
+      target: if(activity_id, do: "#activity--" <> e(activity_id, ""))
+    )
+    |> Bonfire.UI.Common.SmartInput.LiveHandler.maximize()
   end
 
   def handle_event("reply_to_activity", params, socket) do
@@ -52,6 +53,7 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
         e(activity, :object_id, nil)
 
     reply_to_id = e(params, "id", nil) || ulid(reply_to)
+
     with {:ok, current_user} <- current_user_or_remote_interaction(socket, l("reply"), reply_to),
          true <- Bonfire.Boundaries.can?(current_user, :reply, reply_to_id) do
       # TODO: don't re-load this here as we already have the list (at least when we're in a thread)
@@ -71,20 +73,17 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
         if participants != [],
           do: Enum.map_join(participants, " ", &("@" <> e(&1, :character, :username, ""))) <> " "
 
-      # debug(mentions, "PARTS")
-
       thread_id =
         e(activity, :replied, :thread_id, nil) ||
           e(socket.assigns, :object, :replied, :thread_id, nil)
 
-      debug("send activity to smart input")
+      debug(mentions, "send activity to smart input")
 
       Bonfire.UI.Common.SmartInput.LiveHandler.open_with_text_suggestion(
         mentions,
         # we reply to objects, not
         [
           # reset_smart_input: false, # avoid double-reset
-          # smart_input_opts: %{open: true, text_suggestion: mentions},
           reply_to_id: reply_to_id,
           context_id: thread_id,
           to_circles: to_circles || [],

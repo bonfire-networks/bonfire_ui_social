@@ -11,22 +11,22 @@ defmodule Bonfire.UI.Social.DiscussionLive do
        page: "discussion",
        showing_within: :thread,
        # search_placeholder: l("Search this discussion"),
-       to_circles: [],
+       #  to_circles: [],
        participants: nil,
-      #  smart_input_opts: %{prompt: l("Reply to this discussion")},
+       #  smart_input_opts: %{prompt: l("Reply to this discussion")},
        #  without_sidebar: true,
        activity: nil,
        post: nil,
        object: nil,
        object_id: nil,
        post_id: nil,
-       thread_id: nil,
+       #  thread_id: nil,
        back: true,
-       reply_to_id: nil,
+       #  reply_to_id: nil,
        thread_mode: nil,
        url: nil,
        search_placeholder: nil,
-       to_boundaries: nil,
+       #  to_boundaries: nil,
        loading: false
      )}
   end
@@ -37,8 +37,8 @@ defmodule Bonfire.UI.Social.DiscussionLive do
      |> assign(
        params: params,
        object_id: id,
-       url: url,
-       reply_to_id: e(params, "reply_to_id", id)
+       url: url
+       #  reply_to_id: e(params, "reply_to_id", id)
      )
      |> Bonfire.Social.Objects.LiveHandler.load_object_assigns()}
   end

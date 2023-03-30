@@ -65,7 +65,6 @@
   >
     <Bonfire.UI.Common.SmartInputInlineLive
       id={:smart_input}
-      reply_to_id={e(@reply_to_id, "")}
       thread_mode={@thread_mode}
       thread_id={@thread_id}
       create_object_type={@create_object_type}

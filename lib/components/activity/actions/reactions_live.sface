@@ -8,6 +8,14 @@
   replied={e(Bonfire.UI.Social.Activity.ActionsLive.the_activity(@activity, @object), :replied, nil)}
   showing_within={@showing_within}
   hide_reply={@hide_reply}
+  viewing_main_object={@viewing_main_object}
+  reply_btn_text={if @viewing_main_object, do: l("Reply")}
+  class={
+    "flex btn btn-sm",
+    "btn-ghost btn-square rounded text-base-content/70": @viewing_main_object != true,
+    "flex-1 btn-primary rounded-xl md:rounded shadow items-center gap-2 normal-case":
+      @viewing_main_object == true
+  }
 />
 
 <Bonfire.UI.Common.BoostActionLive

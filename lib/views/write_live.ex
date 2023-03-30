@@ -18,8 +18,8 @@ defmodule Bonfire.UI.Social.WriteLive do
        page: "write",
        reply_to_id: e(session, "reply_to_id", nil),
        context_id: e(session, "context_id", nil),
-       to_boundaries: nil,
-       to_circles: [],
+       #  to_boundaries: nil,
+       #  to_circles: [],
        sidebar_widgets: [
          users: [
            secondary: [

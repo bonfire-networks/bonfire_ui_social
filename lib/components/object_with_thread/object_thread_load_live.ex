@@ -8,9 +8,6 @@ defmodule Bonfire.UI.Social.ObjectThreadLoadLive do
   prop page_title, :string, default: nil
   prop show_reply_input, :boolean, default: false
   prop search_placeholder, :string, default: nil
-  prop to_boundaries, :any, default: nil
-  prop to_circles, :list, default: []
-  prop reply_to_id, :any, default: nil
   prop thread_id, :string, default: nil
   prop feed_id, :any, default: nil
   prop activity, :any, default: nil
@@ -19,6 +16,7 @@ defmodule Bonfire.UI.Social.ObjectThreadLoadLive do
   prop thread_mode, :any, default: nil
   prop reverse_order, :any, default: nil
   prop participants, :any, default: []
+  prop smart_input_opts, :map, default: %{}
   prop textarea_class, :css_class, default: nil
   prop replied_activity_class, :css_class, default: nil
   prop replies, :any, default: nil

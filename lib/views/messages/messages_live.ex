@@ -24,17 +24,17 @@ defmodule Bonfire.UI.Social.MessagesLive do
      socket
      |> assign(
        showing_within: :messages,
-        #  smart_input_opts: %{prompt: l("Message"), icon: "mdi:inbox"},
-        #  smart_input_opts: [inline_only: true],
-        # to_boundaries: [{"message", "Message"}],
+       #  smart_input_opts: %{prompt: l("Message"), icon: "mdi:inbox"},
+       #  smart_input_opts: [inline_only: true],
+       # to_boundaries: [{"message", "Message"}],
        page_title: l("Messages"),
        page: "messages",
        page_header_icon: "mdi:inbox",
        feed_id: feed_id,
        activity: nil,
        object: nil,
-       reply_to_id: nil,
-       thread_id: nil,
+       #  reply_to_id: nil,
+       #  thread_id: nil,
        threads: threads,
        feedback_title: l("No messages"),
        feedback_message: l("Select a thread or start a new one..."),
@@ -97,9 +97,9 @@ defmodule Bonfire.UI.Social.MessagesLive do
       #     do: "",
       #     else: "@" <> e(user, :character, :username, "") <> " "
 
-      to_circles = [
-        {e(user, :profile, :name, nil) || e(user, :character, :username, l("someone")), id(user)}
-      ]
+      # to_circles = [
+      #   {e(user, :profile, :name, nil) || e(user, :character, :username, l("someone")), id(user)}
+      # ]
 
       {:noreply,
        socket
@@ -110,11 +110,11 @@ defmodule Bonfire.UI.Social.MessagesLive do
          tab_id: "compose",
          feed_title: l("Messages"),
          # the user to display
-         user: user,
-         reply_to_id: nil,
-         thread_id: nil,
+         user: user
+         #  reply_to_id: nil,
+         #  thread_id: nil,
          #  smart_input_opts: [prompt: l("Compose a thoughtful message...")],
-         to_circles: to_circles || []
+         #  to_circles: to_circles || []
          #  sidebar_widgets:
          #    LiveHandler.threads_widget(current_user, ulid(e(socket.assigns, :user, nil)),
          #      thread_id: nil,
@@ -197,12 +197,12 @@ defmodule Bonfire.UI.Social.MessagesLive do
             current_user: current_user
           )
 
-        to_circles =
-          if length(participants) > 0,
-            do:
-              participants
-              |> Enum.reject(&(&1.id == current_user.id))
-              |> Enum.map(&{e(&1, :character, :username, l("someone")), e(&1, :id, nil)})
+        # to_circles =
+        #   if length(participants) > 0,
+        #     do:
+        #       participants
+        #       |> Enum.reject(&(&1.id == current_user.id))
+        #       |> Enum.map(&{e(&1, :character, :username, l("someone")), e(&1, :id, nil)})
 
         names =
           if length(participants) > 0,
@@ -228,16 +228,16 @@ defmodule Bonfire.UI.Social.MessagesLive do
             page_title: e(activity, :replied, :thread, :named, :name, title),
             page: "messages",
             tab_id: "thread",
-            reply_to_id: reply_to_id,
+            # reply_to_id: reply_to_id,
             url: url,
             back: true,
             activity: activity,
             object: message,
             context_id: thread_id,
             thread_id: thread_id,
-            reply_to_id: thread_id,
+            # reply_to_id: thread_id,
             participants: participants,
-            to_circles: to_circles || [],
+            # to_circles: to_circles || [],
             page_header_aside: []
             # sidebar_widgets:
             #   LiveHandler.threads_widget(current_user, ulid(e(socket.assigns, :user, nil)),

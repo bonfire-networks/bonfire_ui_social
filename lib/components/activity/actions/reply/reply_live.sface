@@ -9,9 +9,7 @@
         title={l("Reply")}
       >
         <!-- x-on:click={"show_smart_input('#{l("Reply")}')"} -->
-        <span class="text-base-content/70">
-          <#Icon iconify="ic:round-reply" class="w-5 h-5 stroke-1" />
-        </span>
+        <#Icon iconify="ic:round-reply" class="w-5 h-5 stroke-1" />
         <span class={if !@reply_btn_text, do: "sr-only"}>{@reply_btn_text || l("Reply")}</span>
       </button>
       <!-- {/if} -->

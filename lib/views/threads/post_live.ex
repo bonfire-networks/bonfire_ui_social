@@ -11,7 +11,7 @@ defmodule Bonfire.UI.Social.PostLive do
      |> assign(
        page_title: l("Post"),
        page: "discussion",
-       to_circles: [],
+       #  to_circles: [],
        participants: nil,
        #  smart_input_opts: %{prompt: l("Reply")},
        activity: nil,
@@ -39,11 +39,11 @@ defmodule Bonfire.UI.Social.PostLive do
        #  without_sidebar: true,
        url: nil,
        post_id: nil,
-       thread_id: nil,
-       reply_to_id: nil,
+       #  thread_id: nil,
+       #  reply_to_id: nil,
        thread_mode: nil,
        search_placeholder: nil,
-       to_boundaries: nil,
+       #  to_boundaries: nil,
        loading: false
      )}
   end
@@ -53,8 +53,8 @@ defmodule Bonfire.UI.Social.PostLive do
      socket
      |> assign(
        post_id: id,
-       url: url,
-       reply_to_id: e(params, "reply_to_id", id)
+       url: url
+       #  reply_to_id: e(params, "reply_to_id", id)
      )
      |> Bonfire.Social.Objects.LiveHandler.load_object_assigns()}
   end

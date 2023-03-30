@@ -2,9 +2,6 @@
   page={@page}
   page_title={@page_title}
   search_placeholder={@search_placeholder}
-  to_boundaries={@to_boundaries}
-  to_circles={@to_circles}
-  reply_to_id={@reply_to_id}
   thread_mode={@thread_mode}
   activity={@activity}
   object={@object}

@@ -70,14 +70,14 @@ defmodule Bonfire.Social.Objects.LiveHandler do
     # smart_input_prompt = l("Reply to object:")<>" "<>Text.text_only(e(object, :post_content, :name, e(object, :post_content, :summary, e(object, :post_content, :html_body, reply_to_id))))
     # smart_input_prompt = l("Reply")
 
-    participants =
-      Bonfire.Social.Threads.list_participants(Map.put(activity, :object, object), thread_id,
-        current_user: current_user
-      )
+    # participants =
+    #   Bonfire.Social.Threads.list_participants(Map.put(activity, :object, object), thread_id,
+    #     current_user: current_user
+    #   )
 
-    to_circles =
-      if length(participants) > 0,
-        do: Enum.map(participants, &{e(&1, :character, :username, l("someone")), e(&1, :id, nil)})
+    # to_circles =
+    #   if length(participants) > 0,
+    #     do: Enum.map(participants, &{e(&1, :character, :username, l("someone")), e(&1, :id, nil)})
 
     # names = if length(participants)>0, do: Enum.map_join(participants, ", ", &e(&1, :profile, :name, e(&1, :character, :username, l "someone else")))
 
@@ -109,14 +109,14 @@ defmodule Bonfire.Social.Objects.LiveHandler do
       #     ]
       #   }
       # ],
-      participants: participants,
+      # participants: participants,
       no_index:
         Bonfire.Me.Settings.get([Bonfire.Me.Users, :undiscoverable], true, current_user: author),
       thread_id: thread_id,
-      reply_to_id: object,
-      page_title: page_title,
+      # reply_to_id: object,
       # smart_input_opts: %{text_suggestion: mentions, prompt: smart_input_prompt},
-      to_circles: to_circles || []
+      # to_circles: to_circles || []
+      page_title: page_title
     )
   end
 

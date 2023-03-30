@@ -34,7 +34,7 @@ defmodule Bonfire.Social.Threads.LiveHandler do
     |> assign(
       # activity: activity,
       # object: object,
-      reply_to_id: e(object, :id, thread_id),
+      # reply_to_id: e(object, :id, thread_id),
       # TODO: change for thread forking?
       thread_id: thread_id,
       current_user: current_user,
