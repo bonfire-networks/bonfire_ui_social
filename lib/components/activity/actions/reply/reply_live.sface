@@ -21,7 +21,7 @@
           {count(@replied)}
         {/if}
       </span>
-    {#match false}
+    {#match _}
       <button
         type="button"
         class={@class, " cursor-not-allowed"}
@@ -41,6 +41,5 @@
           {count(@replied)}
         {/if}
       </span>
-    {#match _}
   {/case}
 </div>

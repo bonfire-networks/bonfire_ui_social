@@ -1,5 +1,125 @@
 {#if @showing_within != :smart_input}
-  {#case Enum.count(List.wrap(@media))}
+
+  {#case Enum.count(media_list(@media))}
+    {#match num_medias}
+      <div
+        x-show="content_open == true"
+        class={
+          "grid w-full grid-flow-col grid-with-ratio grid-rows-4 gap-1 my-3",
+          "!grid-cols-1 !grid-rows-1": @showing_within == :smart_input,
+          "overflow-clip": @viewing_main_object != true,
+          "grid-cols-1": num_medias == 1,
+          "grid-cols-2": num_medias == 2,
+          "grid-cols-4": num_medias == 4
+        }
+      >
+        {#for {%{} = m, counter} <- Enum.with_index(media_list(@media))}
+          {#case media_label(m) || l("Sorry, no caption provided by author")}
+            {#match media_label}
+              <article class={
+                "m-entry h-full w-full row-span-4 object-cover",
+                "!row-span-2 !h-auto":
+                  num_medias ==
+                    3 && counter != 0,
+                "!row-span-2 !col-span-2 !h-auto":
+                  num_medias ==
+                    4
+              }>
+                <figure class="h-full">
+                  <Bonfire.UI.Common.OpenModalLive
+                    id={"media-modal-#{id(m)}"}
+                    no_actions
+                    no_header
+                    image_preview
+                    enable_fallback
+                    modal_class="modal !modal-middle max-h-[100%]"
+                    wrapper_class="max-h-full !w-full md:w-10/12 !p-0 max-w-[100%] !bg-transparent shadow-none rounded-none"
+                    open_btn_class="w-full"
+                    open_btn_wrapper_class="w-full h-full"
+                  >
+                    <div
+                      class="h-full"
+                      style={if String.starts_with?(m.media_type, ["video"]),
+                        do: "min-width: 90vw; min-height: 90vh",
+                        else: ""}
+                    >
+                      <Bonfire.UI.Social.Activity.RemoteMediaLive media={m} />
+
+                      <div class="absolute z-20 pt-4 bottom-2 left-2 right-2 md:relative">
+                        <div class="prose text-center prose-sm px-4 bg-black/30 py-1.5 rounded-full mx-auto">{media_label}</div>
+                        <p class="text-sm">{e(m.metadata, "description", nil) || e(m.metadata, "facebook", "og:description", nil) ||
+                            e(m.metadata, "twitter", "twitter:description", nil) ||
+                            e(m.metadata, "other", "description", nil)}</p>
+                      </div>
+                    </div>
+
+                    <:open_btn>
+                      <div class="relative h-full">
+                        <LazyImage
+                          class="w-full !object-cover m-image h-full cursor-pointer aspect-video rounded-md"
+                          m={m}
+                          alt={media_label}
+                          src={preview_img(m) || Media.media_url(m)}
+                        />
+                        <div class="absolute z-50 bottom-3 left-3 dropdown dropdown-hover dropdown-top">
+                          <label tabindex="0" class="text-white border-none rounded btn btn-xs bg-black/60">alt</label>
+                          <div tabindex="0" class="p-2 rounded shadow dropdown-content bg-neutral w-52">
+                            <div class="prose-sm prose text-neutral-content">{media_label}</div>
+                          </div>
+                        </div>
+                        <figcaption class="sr-only">{media_label}</figcaption>
+                      </div>
+                    </:open_btn>
+                  </Bonfire.UI.Common.OpenModalLive>
+                  <!-- {/if} -->
+                </figure>
+              </article>
+          {/case}
+        {/for}
+      </div>
+  {/case}
+
+  <div class="flex flex-col gap-2">
+    {#for m <- link_list(@media)}
+      {#case Media.media_url(m)}
+        {#match nil}
+        {#match media_url}
+          <a
+            href={media_url || preview_img(m)}
+            target="_blank"
+            class="flex w-full border rounded-lg media_container bg-base-200 hover:bg-base-content/5 border-base-content/5"
+            >
+            <div class="flex items-center gap-3">
+              <div class="flex items-center rounded-l-lg shrink-0 w-[120px] h-[120px] bg-base-content/10 place-content-center">
+                {#case preview_img(m) || e(m.metadata, "favicon", nil) ||
+                    Bonfire.Files.FaviconStore.favicon_url(media_url)}
+                  {#match nil}
+                    <#Icon solid="ExternalLink" class="w-9 h-9 text-base-content/70" />
+                  {#match preview_img}
+                    {#case String.ends_with?(preview_img, ".ico")}
+                      {#match true}
+                        <img class="rounded-none object-cover rounded-l-lg  cursor-pointer m-image w-[120px] h-[120px]" src={preview_img}>
+                      {#match _}
+                        <img class="rounded-none object-cover rounded-l-lg  cursor-pointer m-image w-[120px] h-[120px]" src={preview_img}>
+                    {/case}
+                {/case}
+              </div>
+              <div class="flex flex-col items-start content-start justify-start p-2 space-y-1 text-sm text-left">
+                <div class="text-base font-medium line-clamp-1">
+                  {media_label(m) || l("View m")} ({m.media_type || l("link")})
+                </div>
+                <div class="text-sm break-words line-clamp-1 text-base-content/70">
+                  {description(m) || provider(m)}
+                </div>
+              </div>
+            </div>
+          </a>
+      {/case}
+    {/for}
+  </div>
+
+
+  <!-- {#case Enum.count(List.wrap(@media))}
     {#match num_medias}
       <div
         x-show="content_open == true"
@@ -35,10 +155,6 @@
                         "photo",
                         "rich"
                       ]) or String.contains?(Media.media_url(m), [".jpg", ".jpeg", ".png", ".gif", ".webp"])}
-                      <!-- Image or embed -->
-                      <!-- {#if @viewing_main_object}
-                        <Bonfire.UI.Social.Activity.RemoteMediaLive media={m} />
-                      {#else} -->
                       <figure class="h-full">
                         <Bonfire.UI.Common.OpenModalLive
                           id={"media-modal-#{id(m)}"}
@@ -85,10 +201,8 @@
                             </div>
                           </:open_btn>
                         </Bonfire.UI.Common.OpenModalLive>
-                        <!-- {/if} -->
                       </figure>
                     {#else}
-                      <!-- just a link preview -->
                       {#case Media.media_url(m)}
                         {#match nil}
                         {#match media_url}
@@ -125,16 +239,10 @@
                       {/case}
                     {/if}
                   </article>
-                  <!-- {#else}
-      <div class="flex items-center space-x-1 text-xs font-semibold text-base-content/70">
-        <#Icon outline="Link" class="w-4 h-4"/>
-        <span class="flex-1">...{String.slice(Media.media_url(m), -20..-1)}</span>
-      </div>
-    {/if} -->
               {/case}
             {#match _}
           {/case}
         {/for}
       </div>
-  {/case}
+  {/case} -->
 {/if}

@@ -6,6 +6,23 @@ defmodule Bonfire.UI.Social.Activity.MediaLive do
   prop viewing_main_object, :boolean, default: false
   prop label, :string, default: nil
 
+
+  def media_list(media) do
+    Enum.filter(List.wrap(media), fn m ->
+      m_type = m |> the_media() |> e(:media_type, nil)
+      String.starts_with?(m_type, ["image", "video", "embed", "audio", "song", "photo", "rich"]) or
+      String.contains?(Media.media_url(m), [".jpg", ".jpeg", ".png", ".gif", ".webp"])
+    end)
+  end
+
+  def link_list(media) do
+    Enum.reject(List.wrap(media), fn m ->
+      m_type = m |> the_media() |> e(:media_type, nil)
+      String.starts_with?(m_type, ["image", "video", "embed", "audio", "song", "photo", "rich"]) or
+      String.contains?(Media.media_url(m), [".jpg", ".jpeg", ".png", ".gif", ".webp"])
+    end)
+  end
+
   def the_media(%{media: media}) do
     media
   end

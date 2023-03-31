@@ -1,7 +1,8 @@
 <Bonfire.UI.Common.SmartInputButtonLive
-  class="btn btn-ghost btn-sm btn-square rounded"
+  class="rounded btn btn-ghost btn-sm btn-square"
   showing_within={:messages}
   create_object_type={:message}
+  as_icon
   icon="tabler:mail-plus"
   prompt={nil}
 />

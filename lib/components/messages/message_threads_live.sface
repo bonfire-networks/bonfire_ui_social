@@ -65,6 +65,19 @@
       context={@context}
     />
   {#else}
-    <div class="p-3 text-sm rounded-b bg-base-100 text-base-content/70">{l("You dont have any messages yet")}</div>
+  <div class="flex flex-col items-center gap-2 mt-8 place-content-center">
+    <div class="text-xl font-bold">{l "Welcome to your inbox"}</div>
+    <div class="px-6 text-base text-center text-base-content/70">
+      {l "Drop a line, write a direct message with other users in the fediverse. Be aware that DMs are not encrypted (yet)."} 
+    </div>
+    <Bonfire.UI.Common.SmartInputButtonLive
+      class="gap-2 mt-3 normal-case rounded btn btn-sm btn-primary"
+      showing_within={:messages}
+      create_object_type={:message}
+      icon="tabler:mail-plus"
+      prompt={"#{l("Send a message")}..."}
+    />
+
+  </div>
   {/if}
 </div>
