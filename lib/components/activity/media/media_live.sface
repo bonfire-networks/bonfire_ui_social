@@ -1,5 +1,4 @@
 {#if @showing_within != :smart_input}
-
   {#case Enum.count(media_list(@media))}
     {#match num_medias}
       <div
@@ -88,7 +87,7 @@
             href={media_url || preview_img(m)}
             target="_blank"
             class="flex w-full border rounded-lg media_container bg-base-200 hover:bg-base-content/5 border-base-content/5"
-            >
+          >
             <div class="flex items-center gap-3">
               <div class="flex items-center rounded-l-lg shrink-0 w-[120px] h-[120px] bg-base-content/10 place-content-center">
                 {#case preview_img(m) || e(m.metadata, "favicon", nil) ||
@@ -98,9 +97,15 @@
                   {#match preview_img}
                     {#case String.ends_with?(preview_img, ".ico")}
                       {#match true}
-                        <img class="rounded-none object-cover rounded-l-lg  cursor-pointer m-image w-[120px] h-[120px]" src={preview_img}>
+                        <img
+                          class="rounded-none object-cover rounded-l-lg  cursor-pointer m-image w-[120px] h-[120px]"
+                          src={preview_img}
+                        />
                       {#match _}
-                        <img class="rounded-none object-cover rounded-l-lg  cursor-pointer m-image w-[120px] h-[120px]" src={preview_img}>
+                        <img
+                          class="rounded-none object-cover rounded-l-lg  cursor-pointer m-image w-[120px] h-[120px]"
+                          src={preview_img}
+                        />
                     {/case}
                 {/case}
               </div>
@@ -117,7 +122,6 @@
       {/case}
     {/for}
   </div>
-
 
   <!-- {#case Enum.count(List.wrap(@media))}
     {#match num_medias}
