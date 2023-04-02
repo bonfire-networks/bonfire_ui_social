@@ -7,8 +7,8 @@
   }
   x-show={if @showing_within == :thread && !@viewing_main_object, do: "show_replies"}
   x-transition
-  id={"note-#{@activity_inception}-#{id(@activity) || id(@object) || "no-id"}-#{e(assigns, :viewing_main_object, false)}"}
 >
+  <!-- id={"note-#{@activity_inception}-#{id(@activity) || id(@object) || "no-id"}-#{e(assigns, :viewing_main_object, false)}"} -->
   {#case e(post_content(@object), :name, nil)}
     {#match name}
       {#case @cw == true or (is_nil(@cw) and not is_nil(name))}

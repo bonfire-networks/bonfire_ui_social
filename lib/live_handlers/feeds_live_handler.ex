@@ -30,17 +30,7 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
     paginate_feed(attrs, socket)
   end
 
-  def reply_to_activity(object_id, activity_id, js \\ %JS{}) do
-    js
-    |> JS.push(
-      "Bonfire.Social.Feeds:reply_to_activity",
-      value: %{"id" => object_id, "activity_id" => activity_id},
-      target: if(activity_id, do: "#activity--" <> e(activity_id, ""))
-    )
-    |> Bonfire.UI.Common.SmartInput.LiveHandler.maximize()
-  end
-
-  def handle_event("reply_to_activity", params, socket) do
+  def handle_event("reply_to_activity", _params, socket) do
     debug("reply!")
 
     activity = e(socket.assigns, :activity, %{})
@@ -52,11 +42,12 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
         e(socket.assigns, :object_id, nil) ||
         e(activity, :object_id, nil)
 
-    reply_to_id = e(params, "id", nil) || ulid(reply_to)
+    reply_to_id = Enums.id(reply_to)
 
     with {:ok, current_user} <- current_user_or_remote_interaction(socket, l("reply"), reply_to),
+         # TODO: can we use the preloaded object_boundaries rather than making an extra query
          true <- Bonfire.Boundaries.can?(current_user, :reply, reply_to_id) do
-      # TODO: don't re-load this here as we already have the list (at least when we're in a thread)
+      # TODO: don't re-load participants here as we already have the list (at least when we're in a thread)
       # TODO: include thread_id in list_participants/3 call
       participants =
         (Bonfire.Social.Threads.list_participants(Map.put(activity, :object, reply_to), nil,
@@ -254,6 +245,15 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
     {:noreply,
      socket
      |> assign_generic(feed_assigns(key, socket))}
+  end
+
+  def reply_to_activity(js \\ %JS{}, activity_component_id) do
+    js
+    |> JS.push(
+      "Bonfire.Social.Feeds:reply_to_activity",
+      target: "##{activity_component_id}"
+    )
+    |> Bonfire.UI.Common.SmartInput.LiveHandler.maximize()
   end
 
   defp send_feed_updates(feed_ids, assigns, component \\ Bonfire.UI.Social.FeedLive)

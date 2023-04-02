@@ -11,6 +11,7 @@ defmodule Bonfire.UI.Social.Activity.MoreActionsLive do
   prop verb, :string, default: nil
   prop object_type_readable, :any, default: nil
   prop flagged, :any, default: nil
+  prop activity_component_id, :string, default: nil
 
   prop showing_within, :atom, default: nil
 

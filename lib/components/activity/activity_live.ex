@@ -122,9 +122,9 @@ defmodule Bonfire.UI.Social.ActivityLive do
 
   defp do_prepare(%{activity: activity, object: object} = assigns) when not is_nil(object) do
     debug("Activity ##{debug_i(assigns[:i], assigns[:activity_inception])} preparation started")
-    # debug(assigns, "ActivityLive initial assigns")
+    # debug(assigns, "initial assigns")
 
-    debug(object, "ActivityLive object")
+    debug(object, "object")
 
     verb =
       Activities.verb_maybe_modify(
@@ -173,6 +173,8 @@ defmodule Bonfire.UI.Social.ActivityLive do
       activity_prepared: true,
       activity_id: id || "no-activity-id",
       object_id: object_id || "no-object-id",
+      activity_component_id:
+        Enums.id(assigns) || "activity-#{@activity_inception}-#{@activity_id || "no-activity-id"}",
       object_type: object_type,
       object_type_readable: object_type_readable,
       date_ago: DatesTimes.date_from_now(id),
@@ -198,7 +200,8 @@ defmodule Bonfire.UI.Social.ActivityLive do
          activity_inception,
          showing_within,
          viewing_main_object,
-         thread_mode
+         thread_mode,
+         activity_component_id
        ) do
     (component_maybe_in_reply_to(
        verb,
@@ -206,7 +209,8 @@ defmodule Bonfire.UI.Social.ActivityLive do
        showing_within,
        activity_inception,
        viewing_main_object,
-       thread_mode
+       thread_mode,
+       activity_component_id
      ) ++
        component_activity_subject(
          verb,
@@ -252,7 +256,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
     <article
       x-data="{content_open: false}"
       x-init={"content_open = #{!@cw}"}
-      id={"activity-#{@activity_inception}-#{@activity_id || "no-activity-id"}"}
+      id={@activity_component_id}
       data-href={@permalink}
       phx-hook={if !@viewing_main_object and !@show_minimal_subject_and_note and
            @showing_within != :thread,
@@ -301,7 +305,8 @@ defmodule Bonfire.UI.Social.ActivityLive do
               @activity_inception,
               @showing_within,
               @viewing_main_object,
-              @thread_mode
+              @thread_mode,
+              @activity_component_id
             ) || []}
           {#case component}
             {#match _
@@ -324,6 +329,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
                 permalink={e(component_assigns, :permalink, @permalink)}
                 show_minimal_subject_and_note={@show_minimal_subject_and_note}
                 viewing_main_object={e(component_assigns, :viewing_main_object, @viewing_main_object)}
+                activity_component_id={e(component_assigns, :activity_component_id, @activity_component_id)}
                 showing_within={@showing_within}
                 thread_id={@thread_id}
                 cw={@cw}
@@ -362,6 +368,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
                 verb={e(component_assigns, :verb, @verb)}
                 permalink={e(component_assigns, :permalink, @permalink)}
                 viewing_main_object={e(component_assigns, :viewing_main_object, @viewing_main_object)}
+                activity_component_id={e(component_assigns, :activity_component_id, @activity_component_id)}
               />
             {#match _}
               <Dynamic.Component
@@ -392,6 +399,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
                 profile={e(component_assigns, :profile, nil)}
                 character={e(component_assigns, :character, nil)}
                 media={e(component_assigns, :media, nil)}
+                activity_component_id={e(component_assigns, :activity_component_id, @activity_component_id)}
               />
           {/case}
         {/for}
@@ -415,7 +423,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
   #        id(activity) == nil and showing_within != :search)
   # end
 
-  @decorate time()
+  # @decorate time()
   def component_activity_subject(
         verb,
         activity,
@@ -491,7 +499,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
       # |> debug("activity")
       |> component_activity_maybe_creator(object, object_type)
 
-  @decorate time()
+  # @decorate time()
   def component_activity_maybe_creator(activity, object, object_type)
 
   def component_activity_maybe_creator(_, _, object_type)
@@ -602,18 +610,19 @@ defmodule Bonfire.UI.Social.ActivityLive do
   #     |> component_maybe_creator()
 
   def component_maybe_creator(activity) do
-    warn(activity, "ActivityLive: could not find a creator")
+    warn(activity, "could not find a creator")
     nil
   end
 
-  @decorate time()
+  # @decorate time()
   def component_maybe_in_reply_to(
         verb,
         activity,
         showing_within,
         activity_inception,
         viewing_main_object,
-        thread_mode
+        thread_mode,
+        activity_component_id
       )
 
   def component_maybe_in_reply_to(
@@ -622,9 +631,10 @@ defmodule Bonfire.UI.Social.ActivityLive do
         showing_within,
         activity_inception,
         viewing_main_object,
-        thread_mode
+        thread_mode,
+        _activity_component_id
       )
-      # do not show reply_to
+      # cases where we do not show reply_to
       when not is_nil(activity_inception) or
              (viewing_main_object != true and showing_within in [:thread, :smart_input] and
                 thread_mode not in [:flat]),
@@ -648,7 +658,8 @@ defmodule Bonfire.UI.Social.ActivityLive do
         _,
         _,
         _,
-        _
+        _,
+        activity_component_id
       )
       when verb in @reply_verbs do
     debug("we have a reply_to, preloaded with post_content")
@@ -656,7 +667,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
     [
       {Bonfire.UI.Social.ActivityLive,
        %{
-         id: "ra:" <> id,
+         id: "reply_to:#{activity_component_id}:#{id}",
          activity_inception: activity_id,
          show_minimal_subject_and_note: true,
          viewing_main_object: false,
@@ -687,7 +698,8 @@ defmodule Bonfire.UI.Social.ActivityLive do
         _,
         _,
         _,
-        _
+        _,
+        activity_component_id
       )
       when verb in @reply_verbs and is_binary(reply_to_id) do
     debug("we have another kind of reply_to, preloaded with creator")
@@ -695,7 +707,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
     [
       {Bonfire.UI.Social.ActivityLive,
        %{
-         id: "ra:" <> reply_to_id,
+         id: "reply_to:#{activity_component_id}:#{reply_to_id}",
          activity_inception: activity_id,
          show_minimal_subject_and_note: true,
          viewing_main_object: false,
@@ -711,6 +723,40 @@ defmodule Bonfire.UI.Social.ActivityLive do
     ]
   end
 
+  def component_maybe_in_reply_to(
+        verb,
+        %{
+          id: activity_id,
+          reply_to:
+            %{
+              id: reply_to_id
+            } = replied
+        },
+        _,
+        _,
+        _,
+        _,
+        activity_component_id
+      )
+      when verb in @reply_verbs and is_binary(reply_to_id) do
+    debug("we have another kind of reply_to, but no creator")
+
+    [
+      {Bonfire.UI.Social.ActivityLive,
+       %{
+         id: "reply_to:#{activity_component_id}:#{reply_to_id}",
+         activity_inception: activity_id,
+         show_minimal_subject_and_note: true,
+         viewing_main_object: false,
+         object: replied,
+         activity: %{
+           # Activities.load_object(replied, skip_boundary_check: true),
+           subject: nil
+         }
+       }}
+    ]
+  end
+
   # def component_maybe_in_reply_to(
   #       verb,
   #       %{
@@ -720,7 +766,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
   #             id: reply_to_id
   #           } = replied
   #       },
-  #       _, _, _, _
+  #       _, _, _, _, _
   #     )
   #     # other kind of reply
   #     when verb in @reply_verbs and is_binary(reply_to_id) do
@@ -733,7 +779,8 @@ defmodule Bonfire.UI.Social.ActivityLive do
         showing_within,
         activity_inception,
         viewing_main_object,
-        thread_mode
+        thread_mode,
+        activity_component_id
       ),
       do:
         component_maybe_in_reply_to(
@@ -742,7 +789,8 @@ defmodule Bonfire.UI.Social.ActivityLive do
           showing_within,
           activity_inception,
           viewing_main_object,
-          thread_mode
+          thread_mode,
+          activity_component_id
         )
 
   # def component_maybe_in_reply_to(
@@ -753,8 +801,8 @@ defmodule Bonfire.UI.Social.ActivityLive do
   #     when object_id != thread_id,
   #     do: maybe_load_in_reply_to(thread, thread_id, current_user: current_user(assigns))
 
-  def component_maybe_in_reply_to(_, _a, _, _, _, _) do
-    # debug(a, "ActivityLive: no reply_to")
+  def component_maybe_in_reply_to(_, a, _, _, _, _, _) do
+    debug(a, "no reply_to")
     []
   end
 
@@ -797,7 +845,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
   #   }
   # end
 
-  @decorate time()
+  # @decorate time()
   def component_object(verb, activity, object, object_type)
 
   def component_object(_, _, %{post_content: %{html_body: _}}, _),
@@ -809,13 +857,13 @@ defmodule Bonfire.UI.Social.ActivityLive do
   def component_object(_, _, %{} = object, object_type) do
     case object_type || Types.object_type(object) do
       type when is_atom(type) and not is_nil(type) ->
-        debug(type, "ActivityLive: component object_type recognised")
+        debug(type, "component object_type recognised")
         component_for_object_type(type, object)
 
       _ ->
         warn(
           object_type || object,
-          "ActivityLive: use UnknownLive because component object_type NOT detected"
+          "use UnknownLive because component object_type NOT detected"
         )
 
         [Bonfire.UI.Social.Activity.UnknownLive]
@@ -823,7 +871,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
   end
 
   def component_object(_, _, _, _) do
-    debug("ActivityLive: activity has no object")
+    debug("activity has no object")
     [Bonfire.UI.Social.Activity.UnknownLive]
   end
 
@@ -877,9 +925,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
     ]
 
   def component_for_object_type(type, _object) do
-    warn(
-      "ActivityLive: no component set up for object_type: #{inspect(type)}, fallback to UnknownLive"
-    )
+    warn("no component set up for object_type: #{inspect(type)}, fallback to UnknownLive")
 
     [Bonfire.UI.Social.Activity.UnknownLive]
   end
@@ -898,7 +944,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
     []
   end
 
-  @decorate time()
+  # @decorate time()
   def component_actions(
         verb,
         activity,

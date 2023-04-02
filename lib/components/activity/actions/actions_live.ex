@@ -8,6 +8,7 @@ defmodule Bonfire.UI.Social.Activity.ActionsLive do
   prop object_type_readable, :any, required: true
   prop verb, :string, required: true
   prop permalink, :string, required: true
+  prop activity_component_id, :string, default: nil
 
   prop showing_within, :atom, default: nil
   prop hide_reply, :boolean, default: false

@@ -11,6 +11,7 @@ defmodule Bonfire.UI.Social.Activity.ReplyLive do
   prop showing_within, :atom, default: nil
   prop hide_reply, :any
   prop object_boundary, :any, default: nil
+  prop activity_component_id, :string, default: nil
 
   prop class, :css_class,
     default: "flex btn btn-ghost btn-square rounded btn-sm text-base-content/70"

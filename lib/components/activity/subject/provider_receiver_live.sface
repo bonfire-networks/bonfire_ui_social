@@ -5,7 +5,7 @@
       class="flex w-full gap-3"
     >
       <Bonfire.UI.Common.AvatarLive
-        parent_id={"provider-#{id(@card)}"}
+        parent_id={"provider-#{id(@activity_component_id || @card)}"}
         user={provider(@provider, @primary_accountable, @object)}
       />
       <div class="flex items-start justify-between w-full">
@@ -98,7 +98,7 @@
         >
         {e(profile(receiver(@receiver, @object)), :name, "Anonymous")}
 
-        <Bonfire.UI.Common.AvatarLive parent_id={"receiver-#{id(@card)}"} user={receiver(@receiver, @object)} />
+        <Bonfire.UI.Common.AvatarLive parent_id={"receiver-#{@activity_component_id || id(@card)}"} user={receiver(@receiver, @object)} />
       </LiveRedirect>
     </div> -->
   </div>

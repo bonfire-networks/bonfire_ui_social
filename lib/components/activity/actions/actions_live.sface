@@ -31,6 +31,7 @@
       object_type_readable={@object_type_readable}
       hide_reply={@hide_reply}
       viewing_main_object={@viewing_main_object}
+      activity_component_id={@activity_component_id}
     />
 
     <Bonfire.UI.Social.Activity.MoreActionsLive
@@ -41,6 +42,7 @@
       object_type_readable={@object_type_readable}
       verb={@verb}
       showing_within={@showing_within}
+      activity_component_id={@activity_component_id}
     />
   </div>
 </div>

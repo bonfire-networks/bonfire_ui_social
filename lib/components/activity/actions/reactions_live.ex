@@ -5,6 +5,7 @@ defmodule Bonfire.UI.Social.Activity.ReactionsLive do
   prop object, :any, required: true
   prop object_type, :any, required: true
   prop permalink, :string, required: true
+  prop activity_component_id, :string, default: nil
 
   prop showing_within, :atom, default: nil
   prop hide_reply, :boolean, default: false
