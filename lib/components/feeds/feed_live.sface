@@ -35,7 +35,7 @@
                  e(entry, :edge, :id, nil) ||
                  Pointers.ULID.generate())}
             {#match cid}
-              <div data-i={i} :if={@hide_activities != "component"}>
+              <div id={cid} data-i={i} :if={@hide_activities != "component"}>
                 <ActivityLive
                   id={cid}
                   i={i}

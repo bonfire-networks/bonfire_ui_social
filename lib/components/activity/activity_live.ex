@@ -174,7 +174,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
       activity_id: id || "no-activity-id",
       object_id: object_id || "no-object-id",
       activity_component_id:
-        Enums.id(assigns) || "activity-#{@activity_inception}-#{@activity_id || "no-activity-id"}",
+      "activity-#{Enums.id(assigns)}" || "activity-#{@activity_inception}-#{@activity_id || "no-activity-id"}",
       object_type: object_type,
       object_type_readable: object_type_readable,
       date_ago: DatesTimes.date_from_now(id),
