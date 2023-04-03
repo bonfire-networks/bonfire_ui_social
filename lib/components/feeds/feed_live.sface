@@ -30,12 +30,9 @@
         class="flex flex-col divide-y divide-base-content/10 bg-base-100"
       >
         {#for {entry, i} <- Enum.with_index(@feed)}
-          {#case "#{@feed_id || @id}-" <>
-              (id(entry) || e(entry, :activity, :id, nil) || e(entry, :object, :id, nil) ||
-                 e(entry, :edge, :id, nil) ||
-                 Pointers.ULID.generate())}
+          {#case "activity-#{@feed_id || @id}-#{id(entry) || e(entry, :activity, :id, nil) || e(entry, :object, :id, nil) || e(entry, :edge, :id, nil) || Pointers.ULID.generate()}"}
             {#match cid}
-              <div id={cid} data-i={i} :if={@hide_activities != "component"}>
+              <div id={"f-#{@feed_id || @id}-a-#{i}"} data-i={i} :if={@hide_activities != "component"}>
                 <ActivityLive
                   id={cid}
                   i={i}

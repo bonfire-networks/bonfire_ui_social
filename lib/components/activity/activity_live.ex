@@ -174,7 +174,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
       activity_id: id || "no-activity-id",
       object_id: object_id || "no-object-id",
       activity_component_id:
-      "activity-#{Enums.id(assigns)}" || "activity-#{@activity_inception}-#{@activity_id || "no-activity-id"}",
+        Enums.id(assigns) || "activity-#{@activity_inception}-#{@activity_id || "no-activity-id"}",
       object_type: object_type,
       object_type_readable: object_type_readable,
       date_ago: DatesTimes.date_from_now(id),
@@ -667,7 +667,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
     [
       {Bonfire.UI.Social.ActivityLive,
        %{
-         id: "reply_to:#{activity_component_id}:#{id}",
+         id: "reply_to-#{activity_component_id}-#{id}",
          activity_inception: activity_id,
          show_minimal_subject_and_note: true,
          viewing_main_object: false,
@@ -707,7 +707,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
     [
       {Bonfire.UI.Social.ActivityLive,
        %{
-         id: "reply_to:#{activity_component_id}:#{reply_to_id}",
+         id: "reply_to-#{activity_component_id}-#{reply_to_id}",
          activity_inception: activity_id,
          show_minimal_subject_and_note: true,
          viewing_main_object: false,
@@ -744,7 +744,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
     [
       {Bonfire.UI.Social.ActivityLive,
        %{
-         id: "reply_to:#{activity_component_id}:#{reply_to_id}",
+         id: "reply_to-#{activity_component_id}-#{reply_to_id}",
          activity_inception: activity_id,
          show_minimal_subject_and_note: true,
          viewing_main_object: false,

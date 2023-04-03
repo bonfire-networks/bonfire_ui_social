@@ -27,7 +27,7 @@
         <Bonfire.UI.Social.ActivityLive
           :if={@activity}
           class="rounded-none !shadow-none !p-4 mt-0 main_object_in_thread"
-          id={"ta:" <> (id(@activity) || id(@object) || "no-ID")}
+          id={"ot:" <> (id(@activity) || id(@object) || "no-ID")}
           showing_within={:thread}
           viewing_main_object
           activity={@activity}
