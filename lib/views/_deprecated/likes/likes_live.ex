@@ -23,7 +23,7 @@ defmodule Bonfire.UI.Social.Feeds.LikesLive do
        page_info: page_info,
        showing_within: :likes,
        loading: false,
-       page: "likes",
+       page: "favourites",
        sidebar_widgets: [
          users: [
            secondary: [

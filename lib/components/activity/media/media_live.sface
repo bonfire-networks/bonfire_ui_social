@@ -4,12 +4,13 @@
       <div
         x-show="content_open == true"
         class={
-          "grid w-full grid-flow-col grid-with-ratio grid-rows-4 gap-1 my-3",
+          "grid w-full grid-flow-col grid-with-ratio grid-rows-4 gap-1",
+          "my-3": num_medias > 0,
           "!grid-cols-1 !grid-rows-1": @showing_within == :smart_input,
           "overflow-clip": @viewing_main_object != true,
           "grid-cols-1": num_medias == 1,
           "grid-cols-2": num_medias == 2,
-          "grid-cols-4": num_medias == 4
+          "grid-cols-4": num_medias > 3
         }
       >
         {#for {%{} = m, counter} <- Enum.with_index(media_list(@media))}
@@ -88,7 +89,7 @@
             target="_blank"
             class="flex w-full border rounded-lg media_container bg-base-200 hover:bg-base-content/5 border-base-content/5"
           >
-            <div class="flex items-center gap-3">
+            <div class="flex items-center gap-3 overflow-hidden">
               <div class="flex items-center rounded-l-lg shrink-0 w-[120px] h-[120px] bg-base-content/10 place-content-center">
                 {#case preview_img(m) || e(m.metadata, "favicon", nil) ||
                     Bonfire.Files.FaviconStore.favicon_url(media_url)}
@@ -109,8 +110,8 @@
                     {/case}
                 {/case}
               </div>
-              <div class="flex flex-col items-start content-start justify-start p-2 space-y-1 text-sm text-left">
-                <div class="text-base font-medium line-clamp-1">
+              <div class="block items-start content-start justify-start p-2 space-y-1 text-sm text-left truncate max-w-[350px] lg:max-w-[430px]">
+                <div class="text-base font-medium truncate">
                   {media_label(m) || l("View m")} ({m.media_type || l("link")})
                 </div>
                 <div class="text-sm break-words line-clamp-1 text-base-content/70">
