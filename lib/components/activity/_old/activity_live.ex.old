@@ -304,7 +304,7 @@ defmodule Bonfire.UI.Social.ActivityOLDLive do
       do: [
         {Bonfire.UI.Social.ActivityLive,
          %{
-           id: "ra:" <> id,
+           id: "ra-" <> id,
            activity_inception: activity_id,
            viewing_main_object: false,
            object: reply_to,
@@ -337,7 +337,7 @@ defmodule Bonfire.UI.Social.ActivityOLDLive do
       do: [
         {Bonfire.UI.Social.ActivityLive,
          %{
-           id: "ra:" <> reply_to_id,
+           id: "ra-" <> reply_to_id,
            activity_inception: activity_id,
            viewing_main_object: false,
            object: Activities.load_object(replied),
@@ -368,7 +368,7 @@ defmodule Bonfire.UI.Social.ActivityOLDLive do
     [
       {Bonfire.UI.Social.ActivityLive,
        %{
-         id: "ra:" <> reply_to_id,
+         id: "ra-" <> reply_to_id,
          activity_inception: activity_id,
          object: e(reply_to_activity, :object, nil),
          # |> IO.inspect,

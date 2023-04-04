@@ -820,7 +820,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
   #   [
   #     {Bonfire.UI.Social.ActivityLive,
   #      %{
-  #        id: "ra:" <> reply_to_id,
+  #        id: "ra-" <> reply_to_id,
   #        activity_inception: activity_inception,
   #  show_minimal_subject_and_note: true,
   #        object: e(reply_to_activity, :object, nil),
