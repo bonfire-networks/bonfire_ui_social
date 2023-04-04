@@ -9,9 +9,13 @@
     >
       {#case Bonfire.Files.FaviconStore.favicon_url(link)}
         {#match nil}
-          <#Icon solid="ExternalLink" class="w-4 h-4 text-base-content/70" />
+          <#Icon iconify="heroicons-solid:external-link" class="w-4 h-4 text-base-content/70" />
         {#match image}
-          <img src={image} class="w-4 h-4">
+          <img
+            src={image}
+            class="w-4 h-4"
+            onerror="this.classList.add('iconify'); this.setAttribute('iconify','heroicons-solid:external-link')"
+          />
       {/case}
     </a>
   {#match _}
