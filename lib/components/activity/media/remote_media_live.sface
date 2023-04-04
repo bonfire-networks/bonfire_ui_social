@@ -3,7 +3,7 @@
     {#if String.starts_with?(e(@media, :media_type, ""), ["image"]) or
         (is_binary(maybe_media_img) and
            String.contains?(maybe_media_img, [".jpg", ".jpeg", ".png", ".gif", ".webp"]))}
-      <img class="relative mx-auto" alt={MediaLive.media_label(@media)} src={maybe_media_img}>
+      <LazyImage class="relative mx-auto" alt={MediaLive.media_label(@media)} src={maybe_media_img} />
     {#else}
       {#case e(@media.metadata, "facebook", "og:video:url", nil) ||
           e(@media.metadata, "twitter", "twitter:player", nil) ||
