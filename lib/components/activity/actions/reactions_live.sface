@@ -20,7 +20,6 @@
 />
 
 <Bonfire.UI.Common.BoostActionLive
-  :if={@object_type not in [Bonfire.Data.Social.Message]}
   id={ComponentID.new(
     Bonfire.UI.Common.BoostActionLive,
     id(@object),

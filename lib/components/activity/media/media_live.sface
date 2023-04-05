@@ -110,11 +110,11 @@
                     {/case}
                 {/case}
               </div>
-              <div class="block items-start content-start justify-start p-2 space-y-1 text-sm text-left truncate max-w-[350px] lg:max-w-[430px]">
-                <div class="text-base font-medium truncate">
+              <div class="">
+                <div class="text-base font-medium line-clamp-2">
                   {media_label(m) || l("View m")} ({m.media_type || l("link")})
                 </div>
-                <div class="text-sm break-words line-clamp-1 text-base-content/70">
+                <div class="text-sm break-words line-clamp-2 text-base-content/70">
                   {description(m) || provider(m)}
                 </div>
               </div>

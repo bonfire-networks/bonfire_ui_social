@@ -114,7 +114,7 @@
         </LiveRedirect>
       </div>
       <div class="flex items-start justify-between w-full min-w-0 space-x-1 leading-4">
-        <div class="flex flex-col flex-1 feed-clickable">
+        <div class="flex flex-col flex-1 min-w-0 truncate feed-clickable">
           <div class={
             "text-sm font-medium line-clamp-1 text-base-content/70",
             "!text-base !font-semibold": @viewing_main_object
