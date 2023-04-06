@@ -44,10 +44,10 @@
       </div>
     </div>
   {#elseif @showing_within in [:thread, :messages] && !@viewing_main_object}
-    <div class="flex justify-between">
+    <div class="flex justify-between mb-2">
       <div class="flex items-center gap-2">
         <LiveRedirect
-          class="h-8"
+          class="h-10"
           opts={"data-id": "subject_name", "aria-label": e(@character, :username, "") <> " profile"}
           to={path(@character)}
         >
@@ -55,8 +55,7 @@
             parent_id={@activity_component_id || id(@activity)}
             user={@profile}
             title={e(@profile, :name, "Anonymous")}
-            class="w-8 h-8 rounded-lg bg-base-content/5"
-            bg_class="rounded bg-base-content/5"
+            class="w-10 h-10 rounded bg-base-100"
           />
         </LiveRedirect>
         <div class="flex items-baseline gap-1">
@@ -67,6 +66,17 @@
           >
             {e(@profile, :name, "Anonymous")}
           </LiveRedirect>
+          <LiveRedirect
+              :if={e(@character, :username, nil)}
+              opts={
+                "data-id": "subject_username",
+                "aria-label": l("%{name}'s profile", name: e(@profile, :name, ""))
+              }
+              class="text-sm font-normal truncate link link-hover ellipsis text-base-content/70 subject_username"
+              to={path(@character)}
+            >
+              @{e(@character, :username, "")}
+            </LiveRedirect>
         </div>
       </div>
       <div class="flex items-center gap-1">
@@ -117,12 +127,15 @@
         <div class="flex flex-col flex-1 min-w-0 truncate feed-clickable">
           <div class={
             "text-sm font-medium line-clamp-1 text-base-content/70",
-            "!text-base !font-semibold": @viewing_main_object
+            "!text-lg !font-semibold": @viewing_main_object
           }>
             <!-- {@verb} {@object_type} -->
             <LiveRedirect
               opts={"data-id": "subject_name", "aria-label": l("%{name}'s profile", name: e(@profile, :name, ""))}
-              class="link link-hover text-[15px] font-semibold"
+              class={
+                "link link-hover text-[15px] font-semibold",
+                "!text-lg !font-semibold": @viewing_main_object
+              }
               to={path(@character)}
             >
               {e(@profile, :name, "Anonymous")}

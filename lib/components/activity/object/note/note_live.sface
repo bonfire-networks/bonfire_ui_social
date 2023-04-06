@@ -48,7 +48,7 @@
                   id(@object) != nil and e(@activity, :replied, :reply_to_id, nil) == nil and
                     id(@activity) == nil,
                 "!my-0 !text-sm !font-normal ": @showing_within == :smart_input,
-                "prose-p:pb-2": @showing_within == :thread and !@viewing_main_object,
+                "prose-p:pb-2 md:!prose": @showing_within == :thread and !@viewing_main_object,
                 "!text-base prose-p:pb-4": @viewing_main_object,
                 "prose-p:pb-2 !leading-6": @showing_within in [nil, :feed, :search, :notifications]
               }

@@ -58,12 +58,12 @@
     >
       <div x-cloak x-show="show_replies">
         <!-- <#Icon iconify="mdi:arrow-collapse" class="w-5 h-5 text-base-content/70" /> -->
-        <#Icon iconify="fluent:triangle-down-12-filled" class="w-3 h-3 text-base-content/20" />
+        <#Icon iconify="fluent:triangle-down-12-filled" class="w-3 h-3 text-base-content/50" />
         <!-- <span class="text-xs text-base-content/70">[-]</span> -->
       </div>
       <div x-cloak x-show="!show_replies">
         <!-- <span class="text-xs text-accent">[+]</span> -->
-        <#Icon iconify="fluent:triangle-right-12-filled" class="w-3 h-3 text-base-content/40" />
+        <#Icon iconify="fluent:triangle-right-12-filled" class="w-3 h-3 text-primary" />
       </div>
     </div>
 
@@ -71,7 +71,7 @@
       <div
         x-cloak
         x-show="show_replies"
-        class="group z-10 left-[-17px] px-3 top-[21px] bottom-[-4px] absolute"
+        class="group z-10 left-[-17px] px-3 top-[30px] bottom-[-4px] absolute"
       >
         <i
           :class="!show_replies ? 'bg-primary bottom-[0px]' : 'bottom-[0px]'"

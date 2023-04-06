@@ -50,7 +50,7 @@
             id="object_header_participants"
             title_text={to_string(length(e(@participants, []))) <> " " <> l("participants")}
           >
-            <div class="flex flex-col divide-y divide-base-300">
+            <div class="flex flex-col divide-y divide-base-content/10">
               {#for p <- e(@participants, [])}
                 <div class="py-2">
                   <Dynamic.Component

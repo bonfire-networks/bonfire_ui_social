@@ -27,7 +27,7 @@
       <div
         id={"feed-#{@feed_id || @id}"}
         phx-update={e(@feed_update_mode, "append")}
-        class="flex flex-col divide-y divide-base-content/10 bg-base-100"
+        class="flex flex-col divide-y divide-base-content/10"
       >
         {#for {entry, i} <- Enum.with_index(@feed)}
           {#case "activity-#{@feed_id || @id}-#{id(entry) || e(entry, :activity, :id, nil) || e(entry, :object, :id, nil) || e(entry, :edge, :id, nil) || Pointers.ULID.generate()}"}
@@ -54,7 +54,7 @@
       </div>
     {#else}
       {#if @loading}
-        <div class="flex flex-col items-center gap-3 py-12 bg-base-100 place-content-center">
+        <div class="flex flex-col items-center gap-3 py-12 place-content-center">
           <svg
             xmlns="http://www.w3.org/2000/svg"
             xmlns:xlink="http://www.w3.org/1999/xlink"

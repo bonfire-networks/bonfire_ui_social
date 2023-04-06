@@ -5,7 +5,7 @@
   <div class="flex-1">
     <!-- INITIAL POST -->
 
-    <div class="relative bg-base-100">
+    <div class="relative">
       <!-- <Bonfire.UI.Social.ObjectHeaderAsideLive
         page_title={@page_title}
         participants={@participants || []}
@@ -14,7 +14,7 @@
         showing_within={@showing_within || :thread}
       /> -->
       <!-- <Bonfire.UI.Common.BackButtonLive showing_within={@showing_within || :thread} /> -->
-      <div class="border-t-base-content/10 border-b-base-300 bg-base-content/5">
+      <div class="border-b border-base-content/10 bg-base-content/5">
         {#case e(@activity, :tree, :parent, nil)}
           {#match nil}
           {#match parent}
@@ -54,26 +54,4 @@
       </div>
     </div>
   </div>
-
-  <!-- <div
-    class="sticky bottom-0 z-50"
-    :if={is_messaging?(%{
-      page: @page,
-      showing_within: @showing_within || :thread,
-      create_object_type: @create_object_type
-    }) && @current_user}
-  >
-    <Bonfire.UI.Common.SmartInputInlineLive
-      id={:smart_input}
-      thread_mode={@thread_mode}
-      thread_id={@thread_id}
-      create_object_type={@create_object_type}
-      to_boundaries={@to_boundaries}
-      to_circles={@to_circles}
-      title_open={false}
-      smart_input_opts={@smart_input_opts}
-      showing_within={@showing_within || :thread}
-      replied_activity_class={@replied_activity_class}
-    />
-  </div> -->
 </div>
