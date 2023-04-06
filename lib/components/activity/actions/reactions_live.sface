@@ -14,8 +14,7 @@
   class={
     "flex btn btn-sm",
     "btn-ghost btn-square rounded text-base-content/70": @viewing_main_object != true,
-    "flex-1 btn-primary rounded shadow items-center gap-2 normal-case":
-      @viewing_main_object == true
+    "flex-1 btn-primary rounded shadow items-center gap-2 normal-case": @viewing_main_object == true
   }
 />
 

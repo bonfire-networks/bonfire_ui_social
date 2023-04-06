@@ -67,16 +67,16 @@
             {e(@profile, :name, "Anonymous")}
           </LiveRedirect>
           <LiveRedirect
-              :if={e(@character, :username, nil)}
-              opts={
-                "data-id": "subject_username",
-                "aria-label": l("%{name}'s profile", name: e(@profile, :name, ""))
-              }
-              class="text-sm font-normal truncate link link-hover ellipsis text-base-content/70 subject_username"
-              to={path(@character)}
-            >
-              @{e(@character, :username, "")}
-            </LiveRedirect>
+            :if={e(@character, :username, nil)}
+            opts={
+              "data-id": "subject_username",
+              "aria-label": l("%{name}'s profile", name: e(@profile, :name, ""))
+            }
+            class="text-sm font-normal truncate link link-hover ellipsis text-base-content/70 subject_username"
+            to={path(@character)}
+          >
+            @{e(@character, :username, "")}
+          </LiveRedirect>
         </div>
       </div>
       <div class="flex items-center gap-1">
