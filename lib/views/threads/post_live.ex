@@ -39,7 +39,7 @@ defmodule Bonfire.UI.Social.PostLive do
        #  without_sidebar: true,
        url: nil,
        post_id: nil,
-       #  thread_id: nil,
+       thread_id: nil,
        #  reply_to_id: nil,
        thread_mode: nil,
        search_placeholder: nil,

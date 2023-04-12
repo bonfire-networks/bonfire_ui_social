@@ -17,7 +17,9 @@ TODO: use preloaded boundaries for can? when available
     <p>{@explanation || l("A request will be sent to remote instances to delete it as well.")}</p>
   </div>
   <:open_btn>
-    <div title={l("Delete this object")} class={@open_btn_class}>
+    <div 
+      data-role="delete-object-btn"
+      title={l("Delete this object")} class={@open_btn_class}>
       <#Icon
         :if={!@hide_icon}
         solid="Trash"

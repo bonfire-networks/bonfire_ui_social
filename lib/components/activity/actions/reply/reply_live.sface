@@ -3,6 +3,7 @@
       Bonfire.Boundaries.can?(@__context__, :reply, @object_boundary)}
     {#match true}
       <button
+        data-role="reply_enabled"
         class={@class}
         data-id="action_reply"
         phx-click={Bonfire.Social.Feeds.LiveHandler.reply_to_activity(@activity_component_id)}
@@ -24,6 +25,7 @@
     {#match _}
       <button
         type="button"
+        data-role="reply_disabled"
         class={@class, " cursor-not-allowed"}
         data-id="action_reply"
         title={l("You can't reply to this activity")}

@@ -4,6 +4,7 @@ defmodule Bonfire.Social.Activities.BoostPost.Test do
   alias Bonfire.Social.Posts
   alias Bonfire.Social.Boosts
   alias Bonfire.Social.Follows
+  import Bonfire.Common.Enums
 
   describe "boost a post" do
     test "and it appears on my feed" do
