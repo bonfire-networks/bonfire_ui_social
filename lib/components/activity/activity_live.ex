@@ -281,6 +281,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
         "active-activity": String.contains?(@url || "", @permalink)
       }
     >
+    {@url}
       <form
         :if={!id(e(@activity, :seen, nil)) and not is_nil(@feed_id) and
           @showing_within in [:messages, :thread, :notifications] and
