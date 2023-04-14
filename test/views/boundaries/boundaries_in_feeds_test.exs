@@ -110,10 +110,10 @@ defmodule Bonfire.Social.Activities.BoundariesInFeedsTest do
   end
 
   test "post with custom boundaries should appear in my feed for users who can see it" do
-    feed_id = Bonfire.Social.Feeds.my_feed_id(:inbox, user)
     # create a bunch of users
     account = fake_account!()
     me = fake_user!(account)
+    feed_id = Bonfire.Social.Feeds.my_feed_id(:inbox, me)
     alice = fake_user!(account)
     bob = fake_user!(account)
     carl = fake_user!(account)
