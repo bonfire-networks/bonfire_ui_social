@@ -109,6 +109,50 @@ defmodule Bonfire.Social.Activities.BoundariesInFeedsTest do
     refute has_element?(activity)
   end
 
+  test "post with custom boundaries should appear in my feed for users who can see it" do
+    feed_id = Bonfire.Social.Feeds.my_feed_id(:inbox, user)
+    # create a bunch of users
+    account = fake_account!()
+    me = fake_user!(account)
+    alice = fake_user!(account)
+    bob = fake_user!(account)
+    carl = fake_user!(account)
+    # create a circle with alice and bob
+    {:ok, circle} = Circles.create(me, %{named: %{name: "family"}})
+    {:ok, circle} = Circles.add_to_circles(alice, circle)
+    {:ok, circle} = Circles.add_to_circles(bob, circle)
+
+    # create a post with custom boundary and add family to to_circle
+    html_body = "epic html message"
+    attrs = %{post_content: %{html_body: html_body}}
+
+    {:ok, post} =
+      Posts.publish(
+        current_user: me,
+        post_attrs: attrs,
+        boundary: "custom",
+        to_circles: %{circle.id => "interact"}
+      )
+
+    # login as alice and verify that she can see the post
+    conn = conn(user: alice, account: account)
+    {:ok, view, _html} = live(conn, "/feed")
+    activity = element(view, "#activity-#{feed_id}-#{id(post)}")
+    assert has_element?(activity)
+
+    # login as bob and verify that he can see the post
+    conn = conn(user: alice, account: account)
+    {:ok, view, _html} = live(conn, "/feed")
+    activity = element(view, "#activity-#{feed_id}-#{id(post)}")
+    assert has_element?(activity)
+
+    # login as carl and verify that he cannot see the post
+    conn = conn(user: carl, account: account)
+    {:ok, view, _html} = live(conn, "/feed")
+    activity = element(view, "#activity-#{feed_id}-#{id(post)}")
+    refute has_element?(activity)
+  end
+
   test "Test adding a user with a 'read' role and verify that the user can see the post but not interact with it." do
     # create a post with public boundary and give alice only see permissions
     feed_id = Bonfire.Social.Feeds.named_feed_id(:local)
