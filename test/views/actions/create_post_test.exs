@@ -3,6 +3,12 @@ defmodule Bonfire.Social.Activities.CreatePost.Test do
   alias Bonfire.Social.Fake
   alias Bonfire.Social.Posts
   alias Bonfire.Social.Follows
+  alias Bonfire.Files.Test
+  # FIXME: path
+  @icon_file %{
+    path: Path.expand("fixtures/150.png", __DIR__),
+    filename: "150.png"
+  }
 
   describe "create a post" do
     test "shows a confirmation flash message" do
@@ -125,5 +131,27 @@ defmodule Bonfire.Social.Activities.CreatePost.Test do
       view |> open_browser()
       # not sure why the reply is not showingup even after refreshing the page, maybe the reply_to is not in the right place?
     end
+
+    test "images/attachments aren't hidden behind CW when the initial activity appears via pubsub" do
+      # create a bunch of users
+      account = fake_account!()
+      me = fake_user!(account)
+      feed_id = Bonfire.Social.Feeds.named_feed_id(:local)
+      # then I log in and go to my local feed
+      conn = conn(user: me, account: account)
+      {:ok, view, _html} = live(conn, "/feed/local")
+      # and create a post
+      html_body = "epic html message"
+      attrs = %{
+        # uploaded_media: [], WIP: Not sure how to add a fake media
+        post_content: %{html_body: html_body}}
+      {:ok, post} = Posts.publish(current_user: me, post_attrs: attrs, boundary: "public")
+      {:ok, view, _html} = live(conn, "/feed/local")
+      live_pubsub_wait(view)
+      # we wait a bit more
+      view |> open_browser()
+
+    end
+
   end
 end
