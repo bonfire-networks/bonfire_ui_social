@@ -6,7 +6,7 @@ TODO: use preloaded boundaries for can? when available
     (@creator_id || e(@object, :created, :creator_id, nil) ||
        e(@object, :created, :creator, :id, nil)) or
     ((Bonfire.Me.Users.is_admin?(@current_user) ||
-        Bonfire.Boundaries.can?(@__context__, :delete, @object_boundary || @object) ||
+        Bonfire.Boundaries.can?(@__context__, :delete, @object_boundary) ||
         Bonfire.Boundaries.can?(@__context__, :delete, :instance)) &&
        Types.object_type(@object) != Bonfire.Data.Identity.User)}
   id={"delete_object-#{@parent_id || id(@object)}"}
@@ -17,7 +17,7 @@ TODO: use preloaded boundaries for can? when available
     <p>{@explanation || l("A request will be sent to remote instances to delete it as well.")}</p>
   </div>
   <:open_btn>
-    <div data-role="delete-object-btn" title={l("Delete this object")} class={@open_btn_class}>
+    <div role="delete" title={l("Delete this object")} class={@open_btn_class}>
       <#Icon
         :if={!@hide_icon}
         solid="Trash"

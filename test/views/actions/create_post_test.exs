@@ -95,7 +95,6 @@ defmodule Bonfire.Social.Activities.CreatePost.Test do
              |> Floki.text() =~ content
     end
 
-
     test "replies that appear via pubsub should show the reply_to" do
       # create a bunch of users
       account = fake_account!()
@@ -109,6 +108,7 @@ defmodule Bonfire.Social.Activities.CreatePost.Test do
       attrs = %{post_content: %{html_body: html_body}}
       {:ok, post} = Posts.publish(current_user: alice, post_attrs: attrs, boundary: "public")
       reply_to = %{reply_to_id: post.id, thread_id: post.id}
+
       attrs_reply = %{
         post_content: %{
           summary: "summary",
@@ -117,26 +117,29 @@ defmodule Bonfire.Social.Activities.CreatePost.Test do
         },
         reply_to_id: post.id
       }
-      {:ok, post} = Posts.publish(current_user: alice, post_attrs: attrs_reply, boundary: "public")
+
+      {:ok, post} =
+        Posts.publish(current_user: alice, post_attrs: attrs_reply, boundary: "public")
+
       # then I log in and reply to it
       # assert view
       # |> form("#smart_input form")
       # |> render_submit(%{
-        #   "to_boundaries" => "public",
-        #   "reply_to" => %{"reply_to_id" => post.id},
-        #   "post" => %{
-          #   "post_content" => %{"html_body" => "reply to alice"}}
-          # })
+      #   "to_boundaries" => "public",
+      #   "reply_to" => %{"reply_to_id" => post.id},
+      #   "post" => %{
+      #   "post_content" => %{"html_body" => "reply to alice"}}
+      # })
 
-
-          # im not sure if lvie_pubsub_wait is enough to wait for asyync loading of the reply
-          # so we wait a bit more
+      # im not sure if lvie_pubsub_wait is enough to wait for asyync loading of the reply
+      # so we wait a bit more
       conn = conn(user: me, account: account)
       {:ok, view, _html} = live(conn, "/feed/local")
       live_pubsub_wait(view)
 
       # we wait a bit more
       view |> open_browser()
+
       # not sure why the reply is not showingup even after refreshing the page, maybe the reply_to is not in the right place?
     end
 
@@ -150,16 +153,17 @@ defmodule Bonfire.Social.Activities.CreatePost.Test do
       {:ok, view, _html} = live(conn, "/feed/local")
       # and create a post
       html_body = "epic html message"
+
       attrs = %{
         # uploaded_media: [], WIP: Not sure how to add a fake media
-        post_content: %{html_body: html_body}}
+        post_content: %{html_body: html_body}
+      }
+
       {:ok, post} = Posts.publish(current_user: me, post_attrs: attrs, boundary: "public")
       {:ok, view, _html} = live(conn, "/feed/local")
       live_pubsub_wait(view)
       # we wait a bit more
       view |> open_browser()
-
     end
-
   end
 end

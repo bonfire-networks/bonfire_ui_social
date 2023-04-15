@@ -65,62 +65,20 @@ defmodule Bonfire.Social.Activities.BoundariesInFeedsTest do
     refute has_element?(activity)
   end
 
-  test "Test creating a post with a 'custom' boundary and verify that only users that belong to the circle selected can read the post." do
-    feed_id = Bonfire.Social.Feeds.named_feed_id(:local)
+  test "post with custom boundaries should appear in feed for users who can see it if they follow me" do
     # create a bunch of users
     account = fake_account!()
     me = fake_user!(account)
     alice = fake_user!(account)
     bob = fake_user!(account)
     carl = fake_user!(account)
+
+    {:ok, _} = Follows.follow(alice, me)
+
     # create a circle with alice and bob
     {:ok, circle} = Circles.create(me, %{named: %{name: "family"}})
-    {:ok, circle} = Circles.add_to_circles(alice, circle)
-    {:ok, circle} = Circles.add_to_circles(bob, circle)
-
-    # create a post with custom boundary and add family to to_circle
-    html_body = "epic html message"
-    attrs = %{post_content: %{html_body: html_body}}
-
-    {:ok, post} =
-      Posts.publish(
-        current_user: me,
-        post_attrs: attrs,
-        boundary: "custom",
-        to_circles: %{circle.id => "read"}
-      )
-
-    # login as alice and verify that she can see the post
-    conn = conn(user: alice, account: account)
-    {:ok, view, _html} = live(conn, "/post/#{post.id}")
-    activity = element(view, "#ot-#{id(post)}")
-    assert has_element?(activity)
-
-    # login as bob and verify that he can see the post
-    conn = conn(user: alice, account: account)
-    {:ok, view, _html} = live(conn, "/post/#{post.id}")
-    activity = element(view, "#ot-#{id(post)}")
-    assert has_element?(activity)
-
-    # login as carl and verify that he cannot see the post
-    conn = conn(user: carl, account: account)
-    {:ok, view, _html} = live(conn, "/post/#{post.id}")
-    activity = element(view, "#ot-#{id(post)}")
-    refute has_element?(activity)
-  end
-
-  test "post with custom boundaries should appear in my feed for users who can see it" do
-    # create a bunch of users
-    account = fake_account!()
-    me = fake_user!(account)
-    feed_id = Bonfire.Social.Feeds.my_feed_id(:inbox, me)
-    alice = fake_user!(account)
-    bob = fake_user!(account)
-    carl = fake_user!(account)
-    # create a circle with alice and bob
-    {:ok, circle} = Circles.create(me, %{named: %{name: "family"}})
-    {:ok, circle} = Circles.add_to_circles(alice, circle)
-    {:ok, circle} = Circles.add_to_circles(bob, circle)
+    {:ok, _} = Circles.add_to_circles(alice, circle)
+    {:ok, _} = Circles.add_to_circles(bob, circle)
 
     # create a post with custom boundary and add family to to_circle
     html_body = "epic html message"
@@ -134,23 +92,34 @@ defmodule Bonfire.Social.Activities.BoundariesInFeedsTest do
         to_circles: %{circle.id => "interact"}
       )
 
+    # login as myself and verify that I can see the post
+    conn = conn(user: me, account: account)
+    {:ok, view, _html} = live(conn, "/feed")
+    feed_id = Bonfire.Social.Feeds.my_feed_id(:inbox, me)
+    assert has_element?(view, "#activity-#{feed_id}-#{id(post)}")
+
     # login as alice and verify that she can see the post
     conn = conn(user: alice, account: account)
     {:ok, view, _html} = live(conn, "/feed")
-    activity = element(view, "#activity-#{feed_id}-#{id(post)}")
-    assert has_element?(activity)
+    element(view, "[role=feed]") |> render |> debug
+    feed_id = Bonfire.Social.Feeds.my_feed_id(:inbox, alice)
+    assert has_element?(view, "#activity-#{feed_id}-#{id(post)}")
 
-    # login as bob and verify that he can see the post
-    conn = conn(user: alice, account: account)
+    # login as bob and verify that the post is not in my feed
+    conn = conn(user: bob, account: account)
     {:ok, view, _html} = live(conn, "/feed")
-    activity = element(view, "#activity-#{feed_id}-#{id(post)}")
-    assert has_element?(activity)
+    feed_id = Bonfire.Social.Feeds.my_feed_id(:inbox, bob)
+    refute has_element?(view, "#activity-#{feed_id}-#{id(post)}")
+    # but it is in the local feed
+    {:ok, view, _html} = live(conn, "/feed/local")
+    feed_id = Bonfire.Social.Feeds.named_feed_id(:local)
+    assert has_element?(view, "#activity-#{feed_id}-#{id(post)}")
 
     # login as carl and verify that he cannot see the post
     conn = conn(user: carl, account: account)
-    {:ok, view, _html} = live(conn, "/feed")
-    activity = element(view, "#activity-#{feed_id}-#{id(post)}")
-    refute has_element?(activity)
+    {:ok, view, _html} = live(conn, "/feed/local")
+    feed_id = Bonfire.Social.Feeds.my_feed_id(:inbox, carl)
+    refute has_element?(view, "#activity-#{feed_id}-#{id(post)}")
   end
 
   test "Test adding a user with a 'read' role and verify that the user can see the post but not interact with it." do
@@ -170,8 +139,8 @@ defmodule Bonfire.Social.Activities.BoundariesInFeedsTest do
       Posts.publish(
         current_user: me,
         post_attrs: attrs,
-        boundary: "local",
-        to_circles: %{alice.id => "read"}
+        boundary: "custom",
+        to_circles: %{alice.id => "read", bob.id => "interact"}
       )
 
     # login as alice and verify that she can see the post
@@ -211,8 +180,9 @@ defmodule Bonfire.Social.Activities.BoundariesInFeedsTest do
       Posts.publish(
         current_user: me,
         post_attrs: attrs,
-        boundary: "local",
-        to_circles: %{alice.id => "interact"}
+        # note: need to use custom here, because public or local would still grant users the ability to reply
+        boundary: "custom",
+        to_circles: %{alice.id => "interact", bob.id => "participate"}
       )
 
     # login as alice and verify that she can see the post
@@ -249,44 +219,6 @@ defmodule Bonfire.Social.Activities.BoundariesInFeedsTest do
     assert has_element?(
              element(view, "#activity-#{feed_id}-#{id(post)} button[data-role=reply_enabled]")
            )
-  end
-
-  test "adding a user with a 'participate' role and verify that the user can engage in the post's activities and discussions." do
-    # create a bunch of users
-    account = fake_account!()
-    me = fake_user!(account)
-    alice = fake_user!(account)
-    bob = fake_user!(account)
-
-    # create a post with local boundary and add Alice as participate
-    html_body = "epic html message"
-    attrs = %{post_content: %{html_body: html_body}}
-
-    {:ok, post} =
-      Posts.publish(
-        current_user: me,
-        post_attrs: attrs,
-        boundary: "custom",
-        to_circles: %{alice.id => "participate"}
-      )
-
-    # login as alice and verify that she can see the post
-    conn = conn(user: alice, account: account)
-    {:ok, view, _html} = live(conn, "/post/#{post.id}")
-    activity = element(view, "#ot-#{id(post)}")
-    assert has_element?(activity)
-
-    # ...can like and boost but cannot reply
-    assert has_element?(element(view, "#ot-#{id(post)} button[data-role=like_enabled]"))
-    assert has_element?(element(view, "#ot-#{id(post)} button[data-role=boost_enabled]"))
-    assert has_element?(element(view, "#ot-#{id(post)} button[data-role=reply_enabled]"))
-
-    # login as bob and verify that he cannot see, like, boost and reply
-    conn = conn(user: bob, account: account)
-    {:ok, view, _html} = live(conn, "/post/#{post.id}")
-    refute has_element?(element(view, "#ot-#{id(post)} button[data-role=like_enabled]"))
-    refute has_element?(element(view, "#ot-#{id(post)} button[data-role=boost_enabled]"))
-    refute has_element?(element(view, "#ot-#{id(post)} button[data-role=reply_enabled]"))
   end
 
   test "adding a user with a 'caretaker' role and verify that the user can delete the post" do
@@ -329,9 +261,7 @@ defmodule Bonfire.Social.Activities.BoundariesInFeedsTest do
            )
 
     # ...can delete the post
-    assert has_element?(
-             element(view, "#activity-#{feed_id}-#{id(post)} [data-role=delete-object-btn]")
-           )
+    assert has_element?(element(view, "#activity-#{feed_id}-#{id(post)} [role=delete]"))
 
     # login as bob and verify that he can like, boost and reply
     conn = conn(user: bob, account: account)
@@ -350,9 +280,7 @@ defmodule Bonfire.Social.Activities.BoundariesInFeedsTest do
            )
 
     # but cannot delete the post
-    refute has_element?(
-             element(view, "#activity-#{feed_id}-#{id(post)} [data-role=delete-object-btn]")
-           )
+    refute has_element?(element(view, "#activity-#{feed_id}-#{id(post)} [role=delete]"))
   end
 
   test "adding a user with a 'none' role and verify that the user cannot see or interact with the post in any way." do
@@ -361,7 +289,7 @@ defmodule Bonfire.Social.Activities.BoundariesInFeedsTest do
     account = fake_account!()
     me = fake_user!(account)
     alice = fake_user!(account)
-    bob = fake_user!(account)
+    # bob = fake_user!(account)
 
     # create a post with local boundary and add Alice as caretaker
     html_body = "epic html message"
@@ -371,7 +299,7 @@ defmodule Bonfire.Social.Activities.BoundariesInFeedsTest do
       Posts.publish(
         current_user: me,
         post_attrs: attrs,
-        boundary: "local",
+        boundary: "custom",
         to_circles: %{alice.id => "none"}
       )
 
@@ -394,25 +322,24 @@ defmodule Bonfire.Social.Activities.BoundariesInFeedsTest do
              element(view, "#activity-#{feed_id}-#{id(post)} button[data-role=reply_enabled]")
            )
 
+    # NOTE: 'none' doesn't block alice, it only doesn't assign anything extra, so 'custom' boundary means she (and bob) can't read, but 'local' boundary means they both can
+
     # login as bob and verify that he can see, like, boost and reply
-    conn = conn(user: bob, account: account)
-    {:ok, view, _html} = live(conn, "/feed/local")
-    activity = element(view, "#activity-#{feed_id}-#{id(post)}")
-    assert has_element?(activity)
+    # conn = conn(user: bob, account: account)
+    # {:ok, view, _html} = live(conn, "/feed/local")
+    # activity = element(view, "#activity-#{feed_id}-#{id(post)}")
+    # assert has_element?(activity)
 
-    assert has_element?(
-             element(view, "#activity-#{feed_id}-#{id(post)} button[data-role=like_enabled]")
-           )
+    # assert has_element?(
+    #          element(view, "#activity-#{feed_id}-#{id(post)} button[data-role=like_enabled]")
+    #        )
 
-    assert has_element?(
-             element(view, "#activity-#{feed_id}-#{id(post)} button[data-role=boost_enabled]")
-           )
+    # assert has_element?(
+    #          element(view, "#activity-#{feed_id}-#{id(post)} button[data-role=boost_enabled]")
+    #        )
 
-    assert has_element?(
-             element(view, "#activity-#{feed_id}-#{id(post)} button[data-role=reply_enabled]")
-           )
-  end
-
-  test "creating a post with a custom boundary, and verify that only users within the boundary can access the post according to their assigned roles." do
+    # assert has_element?(
+    #          element(view, "#activity-#{feed_id}-#{id(post)} button[data-role=reply_enabled]")
+    #        )
   end
 end

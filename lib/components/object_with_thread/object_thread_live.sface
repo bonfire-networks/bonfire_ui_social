@@ -34,7 +34,7 @@
           object={@object}
           feed_id={@feed_id}
           participants={@participants}
-          object_boundary={if @showing_within == :messages, do: :skip}
+          object_boundary={if @showing_within == :messages, do: :skip_boundary_check}
         />
       </div>
       <div class="">

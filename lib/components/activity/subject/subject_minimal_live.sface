@@ -71,9 +71,7 @@
     {#match _}
       <div class="flex items-center w-full">
         {#if @verb == "Like"}
-          <div 
-            data-role="liked_by"
-            class="flex items-center justify-start pb-2 mb-2">
+          <div data-role="liked_by" class="flex items-center justify-start pb-2 mb-2">
             <!-- LIKE -->
             <#Icon iconify="material-symbols:star-rate-rounded" class="w-5 h-5 text-base-content/70" />
             <div class="flex-1 ml-2">
