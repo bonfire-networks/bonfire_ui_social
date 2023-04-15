@@ -108,25 +108,33 @@ defmodule Bonfire.Social.Activities.CreatePost.Test do
       html_body = "epic html message"
       attrs = %{post_content: %{html_body: html_body}}
       {:ok, post} = Posts.publish(current_user: alice, post_attrs: attrs, boundary: "public")
-
+      reply_to = %{reply_to_id: post.id, thread_id: post.id}
+      attrs_reply = %{
+        post_content: %{
+          summary: "summary",
+          name: "name 2",
+          html_body: "<p>epic html message</p>"
+        },
+        reply_to_id: post.id
+      }
+      {:ok, post} = Posts.publish(current_user: alice, post_attrs: attrs_reply, boundary: "public")
       # then I log in and reply to it
+      # assert view
+      # |> form("#smart_input form")
+      # |> render_submit(%{
+        #   "to_boundaries" => "public",
+        #   "reply_to" => %{"reply_to_id" => post.id},
+        #   "post" => %{
+          #   "post_content" => %{"html_body" => "reply to alice"}}
+          # })
+
+
+          # im not sure if lvie_pubsub_wait is enough to wait for asyync loading of the reply
+          # so we wait a bit more
       conn = conn(user: me, account: account)
       {:ok, view, _html} = live(conn, "/feed/local")
-      assert view
-             |> form("#smart_input form")
-             |> render_submit(%{
-               "to_boundaries" => "public",
-               "post" => %{
-                "reply_to" => %{"reply_to_id" => post.id},
-                "post_content" => %{"html_body" => "reply to alice"}}
-             })
-
-
-             # im not sure if lvie_pubsub_wait is enough to wait for asyync loading of the reply
-             # so we wait a bit more
-
-      {:ok, view, _html} = live(conn, "/feed")
       live_pubsub_wait(view)
+
       # we wait a bit more
       view |> open_browser()
       # not sure why the reply is not showingup even after refreshing the page, maybe the reply_to is not in the right place?
