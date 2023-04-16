@@ -156,6 +156,9 @@ defmodule Bonfire.Social.Activities.CreatePost.Test do
       {:ok, post} = Posts.publish(current_user: me, post_attrs: attrs, boundary: "public")
       {:ok, view, _html} = live(conn, "/feed/local")
       live_pubsub_wait(view)
+
+      # TODO!
+
       # we wait a bit more
       view |> open_browser()
     end
