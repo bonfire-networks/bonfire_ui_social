@@ -269,7 +269,7 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
     maybe_send_update(component, feed_id, assigns)
   end
 
-  def paginate_feed("user:" <> selected_tab_and_user_id, attrs, socket) do
+  def paginate_feed("user-" <> selected_tab_and_user_id, attrs, socket) do
     {:noreply,
      socket
      |> assign_generic(load_user_feed_assigns(selected_tab_and_user_id, attrs, socket))}

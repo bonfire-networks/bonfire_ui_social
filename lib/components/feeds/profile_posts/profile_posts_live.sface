@@ -7,7 +7,7 @@
   />
   <Bonfire.UI.Social.FeedLive
     id="feed:profile:posts"
-    feed_id={"user:#{@selected_tab}:#{id(@user)}"}
+    feed_id={"user-#{@selected_tab}-#{id(@user)}"}
     page_title={@page_title}
     page={@page}
     feed={@feed}
