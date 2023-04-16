@@ -60,8 +60,7 @@ defmodule Bonfire.Social.Activities.CreatePost.Test do
       next = "/user"
       # |> IO.inspect
       {view, doc} = floki_live(conn, next)
-      assert [feed] = Floki.find(doc, "[data-id=feed]")
-      assert Floki.text(feed) =~ content
+      assert has_element?(view, "[data-id=feed]", content)
     end
 
     test "shows up right away" do
@@ -86,13 +85,7 @@ defmodule Bonfire.Social.Activities.CreatePost.Test do
       # check if post appears instantly on home feed (with pubsub)
       live_pubsub_wait(view)
 
-      assert view
-             |> render()
-             |> Floki.parse_document()
-             #  |> debug("doc")
-             ~> Floki.find("[data-id=feed]")
-             |> debug("feed contents")
-             |> Floki.text() =~ content
+      assert has_element?(view, "[data-id=feed]", content)
     end
 
     test "replies that appear via pubsub should show the reply_to" do
@@ -107,13 +100,15 @@ defmodule Bonfire.Social.Activities.CreatePost.Test do
       html_body = "epic html message"
       attrs = %{post_content: %{html_body: html_body}}
       {:ok, post} = Posts.publish(current_user: alice, post_attrs: attrs, boundary: "public")
-      reply_to = %{reply_to_id: post.id, thread_id: post.id}
+      # reply_to = %{reply_to_id: post.id, thread_id: post.id}
+
+      reply_content = "this is reply 112"
 
       attrs_reply = %{
         post_content: %{
           summary: "summary",
-          name: "name 2",
-          html_body: "<p>epic html message</p>"
+          name: reply_content,
+          html_body: html_body
         },
         reply_to_id: post.id
       }
@@ -131,19 +126,18 @@ defmodule Bonfire.Social.Activities.CreatePost.Test do
       #   "post_content" => %{"html_body" => "reply to alice"}}
       # })
 
-      # im not sure if lvie_pubsub_wait is enough to wait for asyync loading of the reply
+      # im not sure if live_pubsub_wait is enough to wait for asyync loading of the reply
       # so we wait a bit more
       conn = conn(user: me, account: account)
       {:ok, view, _html} = live(conn, "/feed/local")
       live_pubsub_wait(view)
 
-      # we wait a bit more
-      view |> open_browser()
+      assert has_element?(view, "[data-id=feed]", reply_content)
 
-      # not sure why the reply is not showingup even after refreshing the page, maybe the reply_to is not in the right place?
+      # view |> open_browser()
     end
 
-    test "images/attachments aren't hidden behind CW when the initial activity appears via pubsub" do
+    test "images/attachments should be hidden behind CW even when the initial activity appears via pubsub" do
       # create a bunch of users
       account = fake_account!()
       me = fake_user!(account)

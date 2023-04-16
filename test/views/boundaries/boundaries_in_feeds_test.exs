@@ -22,21 +22,23 @@ defmodule Bonfire.Social.Activities.BoundariesInFeedsTest do
     {:ok, view, _html} = live(conn, "/feed/local")
 
     # Then I should see the post in my feed
-    activity = element(view, "#activity-#{feed_id}-#{id(post)}", html_body)
-    assert has_element?(activity)
+    assert has_element?(view, "#activity-#{feed_id}-#{id(post)}", html_body)
     # Then I should boost the post
     assert has_element?(
-             element(view, "#activity-#{feed_id}-#{id(post)} button[data-role=boost_enabled]")
+             view,
+             "#activity-#{feed_id}-#{id(post)} button[data-role=boost_enabled]"
            )
 
     # Then I should comment on the post
     assert has_element?(
-             element(view, "#activity-#{feed_id}-#{id(post)} button[data-role=reply_enabled]")
+             view,
+             "#activity-#{feed_id}-#{id(post)} button[data-role=reply_enabled]"
            )
 
     # Then I should like the post
     assert has_element?(
-             element(view, "#activity-#{feed_id}-#{id(post)} button[data-role=like_enabled]")
+             view,
+             "#activity-#{feed_id}-#{id(post)} button[data-role=like_enabled]"
            )
   end
 
@@ -54,15 +56,13 @@ defmodule Bonfire.Social.Activities.BoundariesInFeedsTest do
     {:ok, view, _html} = live(conn, "/feed/local")
 
     # Then I should see the post in my feed
-    activity = element(view, "#activity-#{feed_id}-#{id(post)}")
-    assert has_element?(activity)
+    assert has_element?(view, "#activity-#{feed_id}-#{id(post)}")
 
     # When I login as alice
     conn = conn(user: alice, account: account)
     {:ok, view, _html} = live(conn, "/feed/local")
     # Then I should not see the post in my feed
-    activity = element(view, "#activity-#{feed_id}-#{id(post)}")
-    refute has_element?(activity)
+    refute has_element?(view, "#activity-#{feed_id}-#{id(post)}")
   end
 
   test "post with custom boundaries should appear in feed for users who can see it if they follow me" do
@@ -101,7 +101,7 @@ defmodule Bonfire.Social.Activities.BoundariesInFeedsTest do
     # login as alice and verify that she can see the post
     conn = conn(user: alice, account: account)
     {:ok, view, _html} = live(conn, "/feed")
-    element(view, "[role=feed]") |> render |> debug
+    # element(view, "[role=feed]") |> render |> debug
     feed_id = Bonfire.Social.Feeds.my_feed_id(:inbox, alice)
     assert has_element?(view, "#activity-#{feed_id}-#{id(post)}")
 
@@ -146,12 +146,12 @@ defmodule Bonfire.Social.Activities.BoundariesInFeedsTest do
     # login as alice and verify that she can see the post
     conn = conn(user: alice, account: account)
     {:ok, view, _html} = live(conn, "/feed/local")
-    activity = element(view, "#activity-#{feed_id}-#{id(post)}")
-    assert has_element?(activity)
+    assert has_element?(view, "#activity-#{feed_id}-#{id(post)}")
 
     # ...but cannot like
     refute has_element?(
-             element(view, "#activity-#{feed_id}-#{id(post)} button[data-role=like_enabled]")
+             view,
+             "#activity-#{feed_id}-#{id(post)} button[data-role=like_enabled]"
            )
 
     # login as bob and verify that he can like the post
@@ -159,7 +159,8 @@ defmodule Bonfire.Social.Activities.BoundariesInFeedsTest do
     {:ok, view, _html} = live(conn, "/feed/local")
 
     assert has_element?(
-             element(view, "#activity-#{feed_id}-#{id(post)} button[data-role=like_enabled]")
+             view,
+             "#activity-#{feed_id}-#{id(post)} button[data-role=like_enabled]"
            )
   end
 
@@ -188,20 +189,22 @@ defmodule Bonfire.Social.Activities.BoundariesInFeedsTest do
     # login as alice and verify that she can see the post
     conn = conn(user: alice, account: account)
     {:ok, view, _html} = live(conn, "/feed/local")
-    activity = element(view, "#activity-#{feed_id}-#{id(post)}")
-    assert has_element?(activity)
+    assert has_element?(view, "#activity-#{feed_id}-#{id(post)}")
 
     # ...can like and boost but cannot reply
     assert has_element?(
-             element(view, "#activity-#{feed_id}-#{id(post)} button[data-role=like_enabled]")
+             view,
+             "#activity-#{feed_id}-#{id(post)} button[data-role=like_enabled]"
            )
 
     assert has_element?(
-             element(view, "#activity-#{feed_id}-#{id(post)} button[data-role=boost_enabled]")
+             view,
+             "#activity-#{feed_id}-#{id(post)} button[data-role=boost_enabled]"
            )
 
     refute has_element?(
-             element(view, "#activity-#{feed_id}-#{id(post)} button[data-role=reply_enabled]")
+             view,
+             "#activity-#{feed_id}-#{id(post)} button[data-role=reply_enabled]"
            )
 
     # login as bob and verify that he can like, boost and reply
@@ -209,15 +212,18 @@ defmodule Bonfire.Social.Activities.BoundariesInFeedsTest do
     {:ok, view, _html} = live(conn, "/feed/local")
 
     assert has_element?(
-             element(view, "#activity-#{feed_id}-#{id(post)} button[data-role=like_enabled]")
+             view,
+             "#activity-#{feed_id}-#{id(post)} button[data-role=like_enabled]"
            )
 
     assert has_element?(
-             element(view, "#activity-#{feed_id}-#{id(post)} button[data-role=boost_enabled]")
+             view,
+             "#activity-#{feed_id}-#{id(post)} button[data-role=boost_enabled]"
            )
 
     assert has_element?(
-             element(view, "#activity-#{feed_id}-#{id(post)} button[data-role=reply_enabled]")
+             view,
+             "#activity-#{feed_id}-#{id(post)} button[data-role=reply_enabled]"
            )
   end
 
@@ -244,43 +250,48 @@ defmodule Bonfire.Social.Activities.BoundariesInFeedsTest do
     # login as alice and verify that she can see the post
     conn = conn(user: alice, account: account)
     {:ok, view, _html} = live(conn, "/feed/local")
-    activity = element(view, "#activity-#{feed_id}-#{id(post)}")
-    assert has_element?(activity)
+    assert has_element?(view, "#activity-#{feed_id}-#{id(post)}")
 
     # ...can like, boost and reply
     assert has_element?(
-             element(view, "#activity-#{feed_id}-#{id(post)} button[data-role=like_enabled]")
+             view,
+             "#activity-#{feed_id}-#{id(post)} button[data-role=like_enabled]"
            )
 
     assert has_element?(
-             element(view, "#activity-#{feed_id}-#{id(post)} button[data-role=boost_enabled]")
+             view,
+             "#activity-#{feed_id}-#{id(post)} button[data-role=boost_enabled]"
            )
 
     assert has_element?(
-             element(view, "#activity-#{feed_id}-#{id(post)} button[data-role=reply_enabled]")
+             view,
+             "#activity-#{feed_id}-#{id(post)} button[data-role=reply_enabled]"
            )
 
     # ...can delete the post
-    assert has_element?(element(view, "#activity-#{feed_id}-#{id(post)} [role=delete]"))
+    assert has_element?(view, "#activity-#{feed_id}-#{id(post)} [role=delete]")
 
     # login as bob and verify that he can like, boost and reply
     conn = conn(user: bob, account: account)
     {:ok, view, _html} = live(conn, "/feed/local")
 
     assert has_element?(
-             element(view, "#activity-#{feed_id}-#{id(post)} button[data-role=like_enabled]")
+             view,
+             "#activity-#{feed_id}-#{id(post)} button[data-role=like_enabled]"
            )
 
     assert has_element?(
-             element(view, "#activity-#{feed_id}-#{id(post)} button[data-role=boost_enabled]")
+             view,
+             "#activity-#{feed_id}-#{id(post)} button[data-role=boost_enabled]"
            )
 
     assert has_element?(
-             element(view, "#activity-#{feed_id}-#{id(post)} button[data-role=reply_enabled]")
+             view,
+             "#activity-#{feed_id}-#{id(post)} button[data-role=reply_enabled]"
            )
 
     # but cannot delete the post
-    refute has_element?(element(view, "#activity-#{feed_id}-#{id(post)} [role=delete]"))
+    refute has_element?(view, "#activity-#{feed_id}-#{id(post)} [role=delete]")
   end
 
   test "adding a user with a 'none' role and verify that the user cannot see or interact with the post in any way." do
@@ -306,20 +317,19 @@ defmodule Bonfire.Social.Activities.BoundariesInFeedsTest do
     # login as alice and verify that she cannot see the post
     conn = conn(user: alice, account: account)
     {:ok, view, _html} = live(conn, "/feed/local")
-    activity = element(view, "#activity-#{feed_id}-#{id(post)}")
-    refute has_element?(activity)
+    refute has_element?(view, "#activity-#{feed_id}-#{id(post)}")
 
     # ...cannot like, boost and reply
     refute has_element?(
-             element(view, "#activity-#{feed_id}-#{id(post)} button[data-role=like_enabled]")
+             view,
+             "#activity-#{feed_id}-#{id(post)} button[data-role=like_enabled]"
            )
 
-    refute has_element?(
-             element(view, "#activity-#{feed_id}-#{id(post)} button[data-role=boost_enabled]")
-           )
+    refute has_element?(view, "#activity-#{feed_id}-#{id(post)} button[data-role=boost_enabled]")
 
     refute has_element?(
-             element(view, "#activity-#{feed_id}-#{id(post)} button[data-role=reply_enabled]")
+             view,
+             "#activity-#{feed_id}-#{id(post)} button[data-role=reply_enabled]"
            )
 
     # NOTE: 'none' doesn't block alice, it only doesn't assign anything extra, so 'custom' boundary means she (and bob) can't read, but 'local' boundary means they both can

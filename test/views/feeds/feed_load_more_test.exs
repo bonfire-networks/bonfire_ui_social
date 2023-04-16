@@ -29,8 +29,7 @@ defmodule Bonfire.Social.Feeds.LoadMoreTest do
       conn = conn(user: me, account: account)
       next = "/feed/local"
       {:ok, view, doc} = live(conn, "/feed/local")
-      load_more = view |> element("[data-id=load_more]")
-      assert load_more
+      assert has_element?(view, "[data-id=load_more]")
       # option_count = length(list_of_options)
       # assert view |> element("[data-id=feed] article:nth-of-type(#{option_count})") |> has_element?()
       # refute view |> element("[data-id=feed] article:nth-of-type(#{option_count + 1})") |> has_element?()

@@ -109,9 +109,8 @@ defmodule Bonfire.Social.Activities.LikePost.Test do
     conn = conn(user: me, account: account)
     # And visit the local feed
     {:ok, view, _html} = live(conn, "/feed/local")
-    liked = element(view, "[data-role=liked_by]")
     # view |> open_browser()
-    refute has_element?(liked)
+    refute has_element?(view, "[data-role=liked_by]")
   end
 
   test "when a reply is liked, the like activity should still show the reply_to " do
@@ -128,9 +127,8 @@ defmodule Bonfire.Social.Activities.LikePost.Test do
     conn = conn(user: me, account: account)
     # And visit the local feed
     {:ok, view, _html} = live(conn, "/feed/likes")
-    liked = element(view, "[data-role=liked_by]")
     # view |> open_browser()
-    assert has_element?(liked)
+    assert has_element?(view, "[data-role=liked_by]")
   end
 
   # test "As a user I want to see the activity total likes" do

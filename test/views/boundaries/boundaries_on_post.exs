@@ -35,26 +35,22 @@ defmodule Bonfire.Social.Activities.BoundariesInFeedsTest do
     # login as myself and verify that I can see the post
     conn = conn(user: me, account: account)
     {:ok, view, _html} = live(conn, "/post/#{post.id}")
-    activity = element(view, "#ot-#{id(post)}")
-    assert has_element?(activity)
+    assert has_element?(view, "#ot-#{id(post)}")
 
     # login as alice and verify that she can see the post too
     conn = conn(user: alice, account: account)
     {:ok, view, _html} = live(conn, "/post/#{post.id}")
-    activity = element(view, "#ot-#{id(post)}")
-    assert has_element?(activity)
+    assert has_element?(view, "#ot-#{id(post)}")
 
     # login as bob and verify that he can see the post too
     conn = conn(user: bob, account: account)
     {:ok, view, _html} = live(conn, "/post/#{post.id}")
-    activity = element(view, "#ot-#{id(post)}")
-    assert has_element?(activity)
+    assert has_element?(view, "#ot-#{id(post)}")
 
     # login as carl and verify that he cannot see the post
     conn = conn(user: carl, account: account)
     {:ok, view, _html} = live(conn, "/post/#{post.id}")
-    activity = element(view, "#ot-#{id(post)}")
-    refute has_element?(activity)
+    refute has_element?(view, "#ot-#{id(post)}")
   end
 
   test "adding a user with a 'participate' role and verify that the user can engage in the post's activities and discussions." do
@@ -80,7 +76,7 @@ defmodule Bonfire.Social.Activities.BoundariesInFeedsTest do
     conn = conn(user: me, account: account)
     {:ok, view, _html} = live(conn, "/post/#{post.id}")
     assert has_element?(view, "#ot-#{id(post)}")
-    element(view, "#ot-#{id(post)}") |> render() |> debug
+    # element(view, "#ot-#{id(post)}") |> render() |> debug
 
     # ...and can like and boost and reply
     assert has_element?(view, "#ot-#{id(post)} button[data-role=like_enabled]")
@@ -90,8 +86,7 @@ defmodule Bonfire.Social.Activities.BoundariesInFeedsTest do
     # login as alice and verify that she can see the post
     conn = conn(user: alice, account: account)
     {:ok, view, _html} = live(conn, "/post/#{post.id}")
-    activity = element(view, "#ot-#{id(post)}")
-    assert has_element?(activity)
+    assert has_element?(view, "#ot-#{id(post)}")
 
     # ...and can like and boost and reply
     assert has_element?(view, "#ot-#{id(post)} button[data-role=like_enabled]")
