@@ -227,7 +227,7 @@ defmodule Bonfire.Social.Activities.BoundariesInFeedsTest do
            )
   end
 
-  test "adding a user with a 'caretaker' role and verify that the user can delete the post" do
+  test "adding a user with a 'administer' role and verify that the user can delete the post" do
     feed_id = Bonfire.Social.Feeds.named_feed_id(:local)
     # create a bunch of users
     account = fake_account!()
@@ -235,7 +235,7 @@ defmodule Bonfire.Social.Activities.BoundariesInFeedsTest do
     alice = fake_user!(account)
     bob = fake_user!(account)
 
-    # create a post with local boundary and add Alice as caretaker
+    # create a post with local boundary and add Alice as administer
     html_body = "epic html message"
     attrs = %{post_content: %{html_body: html_body}}
 
@@ -244,7 +244,7 @@ defmodule Bonfire.Social.Activities.BoundariesInFeedsTest do
         current_user: me,
         post_attrs: attrs,
         boundary: "local",
-        to_circles: %{alice.id => "caretaker"}
+        to_circles: %{alice.id => "administer"}
       )
 
     # login as alice and verify that she can see the post
@@ -302,7 +302,7 @@ defmodule Bonfire.Social.Activities.BoundariesInFeedsTest do
     alice = fake_user!(account)
     # bob = fake_user!(account)
 
-    # create a post with local boundary and add Alice as caretaker
+    # create a post with local boundary and add Alice as administer
     html_body = "epic html message"
     attrs = %{post_content: %{html_body: html_body}}
 
