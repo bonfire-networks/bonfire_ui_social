@@ -88,9 +88,9 @@ defmodule Bonfire.Social.Activities.NegativeBoundariesTest do
            )
 
     refute has_element?(
-          view,
-          "#activity-#{feed_id}-#{id(post)} button[data-role=boost_enabled]"
-        )
+             view,
+             "#activity-#{feed_id}-#{id(post)} button[data-role=boost_enabled]"
+           )
 
     # login as bob and verify that he can like the post
     conn = conn(user: bob, account: account)
@@ -135,15 +135,15 @@ defmodule Bonfire.Social.Activities.NegativeBoundariesTest do
            )
 
     assert has_element?(
-      view,
-      "#activity-#{feed_id}-#{id(post)} button[data-role=boost_enabled]"
-    )
+             view,
+             "#activity-#{feed_id}-#{id(post)} button[data-role=boost_enabled]"
+           )
 
     # ...but cannot reply
     refute has_element?(
-      view,
-      "#activity-#{feed_id}-#{id(post)} button[data-role=reply_enabled]"
-    )
+             view,
+             "#activity-#{feed_id}-#{id(post)} button[data-role=reply_enabled]"
+           )
 
     # login as bob and verify that he can reply
     conn = conn(user: bob, account: account)
