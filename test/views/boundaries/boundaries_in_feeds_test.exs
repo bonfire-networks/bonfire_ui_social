@@ -5,7 +5,7 @@ defmodule Bonfire.Social.Activities.BoundariesInFeedsTest do
   alias Bonfire.Social.Boosts
   alias Bonfire.Social.Follows
   import Bonfire.Common.Enums
-  alias Bonfire.Boundaries.Circles
+  alias Bonfire.Boundaries.{Circles, Acls, Grants}
 
   test "creating a post with boundaries public and verify that all users can see and interact with it" do
     feed_id = Bonfire.Social.Feeds.named_feed_id(:local)
@@ -292,6 +292,101 @@ defmodule Bonfire.Social.Activities.BoundariesInFeedsTest do
 
     # but cannot delete the post
     refute has_element?(view, "#activity-#{feed_id}-#{id(post)} [role=delete]")
+  end
+
+  test "create a boundary in settings and used in a post works as expected" do
+    feed_id = Bonfire.Social.Feeds.named_feed_id(:local)
+    # create a bunch of users
+    account = fake_account!()
+    me = fake_user!(account)
+    alice = fake_user!(account)
+    bob = fake_user!(account)
+
+    # create a circle and add it to a new friends boundary
+    {:ok, circle} = Circles.create(me, %{named: %{name: "family"}})
+    {:ok, _} = Circles.add_to_circles(alice, circle)
+
+    {:ok, friends} = Acls.create(%{name: "friends", description: "test boundary"}, current_user: me)
+    # Add family circle and bob to this boundary with different roles
+    Grants.grant_role(bob.id, friends.id, "interact", current_user: me)
+    Grants.grant_role(circle.id, friends.id, "participate", current_user: me)
+
+
+    # create a post with local boundary and add the friends boundary
+    html_body = "epic html message"
+    attrs = %{post_content: %{html_body: html_body}}
+
+    assert {:ok, post} =
+      Posts.publish(
+        current_user: me,
+        post_attrs: attrs,
+        boundary: friends.id
+      )
+
+    # login as bob and verify that he can see and interact with the post but not reply
+    conn = conn(user: bob, account: account)
+    {:ok, view, _html} = live(conn, "/feed/local")
+
+    assert has_element?(view, "#activity-#{feed_id}-#{id(post)}")
+
+    # ...can like, boost
+    assert has_element?(
+             view,
+             "#activity-#{feed_id}-#{id(post)} button[data-role=like_enabled]"
+           )
+
+    assert has_element?(view, "#activity-#{feed_id}-#{id(post)} button[data-role=boost_enabled]")
+
+    # ...but cannot reply
+    refute has_element?(
+             view,
+             "#activity-#{feed_id}-#{id(post)} button[data-role=reply_enabled]"
+           )
+
+
+    # login as alice and verify that she can see and reply to the post as part of the family circle
+    conn = conn(user: alice, account: account)
+    {:ok, view, _html} = live(conn, "/feed/local")
+
+    assert has_element?(view, "#activity-#{feed_id}-#{id(post)}")
+
+    # ...can like, boost
+    assert has_element?(
+             view,
+             "#activity-#{feed_id}-#{id(post)} button[data-role=like_enabled]"
+           )
+
+    assert has_element?(view, "#activity-#{feed_id}-#{id(post)} button[data-role=boost_enabled]")
+
+    # ...and reply
+    assert has_element?(
+             view,
+             "#activity-#{feed_id}-#{id(post)} button[data-role=reply_enabled]"
+           )
+
+    # login as me and verify that I can admin the post
+    conn = conn(user: me, account: account)
+    {:ok, view, _html} = live(conn, "/feed/local")
+
+    assert has_element?(view, "#activity-#{feed_id}-#{id(post)}")
+
+    # ...can like, boost
+    assert has_element?(
+             view,
+             "#activity-#{feed_id}-#{id(post)} button[data-role=like_enabled]"
+           )
+
+    assert has_element?(view, "#activity-#{feed_id}-#{id(post)} button[data-role=boost_enabled]")
+
+    # ... reply
+    assert has_element?(
+             view,
+             "#activity-#{feed_id}-#{id(post)} button[data-role=reply_enabled]"
+           )
+
+    # ... delete
+    assert has_element?(view, "#activity-#{feed_id}-#{id(post)} [role=delete]")
+
   end
 
   test "adding a user with a 'none' role and verify that the user cannot see or interact with the post in any way." do
