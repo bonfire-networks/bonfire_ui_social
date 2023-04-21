@@ -55,7 +55,7 @@
             parent_id={@activity_component_id || id(@activity)}
             user={@profile}
             title={e(@profile, :name, "Anonymous")}
-            class="w-10 h-10 rounded bg-base-100"
+            class="w-12 h-12 rounded-full bg-base-100"
           />
         </LiveRedirect>
         <div class="flex items-baseline gap-1">
