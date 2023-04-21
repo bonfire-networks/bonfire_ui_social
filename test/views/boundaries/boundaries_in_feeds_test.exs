@@ -306,22 +306,23 @@ defmodule Bonfire.Social.Activities.BoundariesInFeedsTest do
     {:ok, circle} = Circles.create(me, %{named: %{name: "family"}})
     {:ok, _} = Circles.add_to_circles(alice, circle)
 
-    {:ok, friends} = Acls.create(%{name: "friends", description: "test boundary"}, current_user: me)
+    {:ok, friends} =
+      Acls.create(%{name: "friends", description: "test boundary"}, current_user: me)
+
     # Add family circle and bob to this boundary with different roles
     Grants.grant_role(bob.id, friends.id, "interact", current_user: me)
     Grants.grant_role(circle.id, friends.id, "participate", current_user: me)
-
 
     # create a post with local boundary and add the friends boundary
     html_body = "epic html message"
     attrs = %{post_content: %{html_body: html_body}}
 
     assert {:ok, post} =
-      Posts.publish(
-        current_user: me,
-        post_attrs: attrs,
-        boundary: friends.id
-      )
+             Posts.publish(
+               current_user: me,
+               post_attrs: attrs,
+               boundary: friends.id
+             )
 
     # login as bob and verify that he can see and interact with the post but not reply
     conn = conn(user: bob, account: account)
@@ -342,7 +343,6 @@ defmodule Bonfire.Social.Activities.BoundariesInFeedsTest do
              view,
              "#activity-#{feed_id}-#{id(post)} button[data-role=reply_enabled]"
            )
-
 
     # login as alice and verify that she can see and reply to the post as part of the family circle
     conn = conn(user: alice, account: account)
@@ -386,7 +386,6 @@ defmodule Bonfire.Social.Activities.BoundariesInFeedsTest do
 
     # ... delete
     assert has_element?(view, "#activity-#{feed_id}-#{id(post)} [role=delete]")
-
   end
 
   test "adding a user with a 'none' role and verify that the user cannot see or interact with the post in any way." do

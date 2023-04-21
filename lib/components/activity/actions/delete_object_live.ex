@@ -17,7 +17,8 @@ defmodule Bonfire.UI.Social.Activity.DeleteObjectLive do
   prop hide_text, :boolean, default: false
 
   prop open_btn_class, :css_class,
-    default: "flex items-center gap-2 text-base md:text-sm text-neutral-content/80 truncate max-w-max"
+    default:
+      "flex items-center gap-2 text-base md:text-sm text-neutral-content/80 truncate max-w-max"
 
   prop redirect_after, :any, default: nil
 end
