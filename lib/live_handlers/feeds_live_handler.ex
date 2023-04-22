@@ -352,7 +352,7 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
     ]
 
   defp feed_filter_assigns(_),
-    do: [tab_path_suffix: nil, page_title: l("Activities"), page_header_icon: "ri:home-fill"]
+    do: [tab_path_suffix: nil, page_title: l("Activities"), page_header_icon: "ri:home-line"]
 
   @decorate time()
   def feed_assigns_maybe_async({feed_name, filters_or_custom_query_or_feed_id_or_ids}, socket) do

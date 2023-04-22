@@ -40,7 +40,7 @@ defmodule Bonfire.UI.Social.FeedsLive do
        selected_tab: nil,
        page: "feed",
        page_title: l("Activities"),
-       page_header_icon: "ri:home-fill",
+       page_header_icon: "ri:home-line",
        feed: nil,
        page_info: nil,
        loading: true,

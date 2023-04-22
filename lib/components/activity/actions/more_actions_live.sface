@@ -11,7 +11,7 @@
   </button>
   <ul
     tabindex="0"
-    class="!block w-60 md:w-48 z-[910] relative shadow menu md:menu-compact dropdown-content bg-neutral rounded dropdown_actions"
+    class="!block w-60 z-[910] relative shadow menu md:menu-compact dropdown-content text-base-content bg-base-100 rounded dropdown_actions"
     role="menu"
     aria-orientation="vertical"
     aria-labelledby="more-menu"
