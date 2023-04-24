@@ -46,7 +46,7 @@
                       <Bonfire.UI.Social.Activity.RemoteMediaLive media={m} />
 
                       <div class="absolute z-20 pt-4 bottom-2 left-2 right-2 md:relative">
-                        <div class="prose text-center prose-sm px-4 bg-black/30 py-1.5 rounded-full mx-auto">{media_label}</div>
+                        <div class="prose  line-clamp-2 text-center prose-sm px-4 bg-black/30 text-white py-1.5 rounded-full mx-auto">{media_label}</div>
                         <p class="text-sm">{e(m.metadata, "description", nil) || e(m.metadata, "facebook", "og:description", nil) ||
                             e(m.metadata, "twitter", "twitter:description", nil) ||
                             e(m.metadata, "other", "description", nil)}</p>

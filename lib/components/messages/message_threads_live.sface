@@ -15,7 +15,7 @@
           <div class="relative w-full indicator">
             <span
               :if={!e(activity, :seen, nil)}
-              class="indicator-item badge badge-xs badge-info right-6 bottom-1 top-[auto] invisible unread-activity"
+              class="indicator-item badge badge-xs ring-2 ring-base-300 right-6 bottom-1 top-[auto] invisible unread-activity"
             >
             </span>
             <div class="flex items-center w-full p-4">

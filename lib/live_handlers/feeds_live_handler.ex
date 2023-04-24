@@ -341,14 +341,14 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
     do: [
       tab_path_suffix: "/#{filter}",
       page_title: l("Discussions"),
-      page_header_icon: "ri:chat-1-line"
+      page_header_icon: "ri:chat-2-line"
     ]
 
   defp feed_filter_assigns(%{"object_type" => "posts" = filter}),
     do: [
       tab_path_suffix: "/#{filter}",
       page_title: l("Posts"),
-      page_header_icon: "ri:file-text-line"
+      page_header_icon: "ri:chat-2-line"
     ]
 
   defp feed_filter_assigns(_),

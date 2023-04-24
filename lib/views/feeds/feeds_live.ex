@@ -21,8 +21,8 @@ defmodule Bonfire.UI.Social.FeedsLive do
   # declare_nav_link(l("My feed"), page: "feed", icon: "heroicons-solid:newspaper")
   declare_nav_link([
     {l("Activities"), page: "feed", icon: "ri:home-line"},
-    {l("Posts"), page: "posts", href: &nav_link_posts/1, icon: "ri:file-text-line"},
-    {l("Discussions"), page: "discussions", href: &nav_link_discussions/1, icon: "ri:chat-1-line"}
+    {l("Posts"), page: "posts", href: &nav_link_posts/1, icon: "ri-chat-2-line"},
+    {l("Discussions"), page: "discussions", href: &nav_link_discussions/1, icon: "ri-discuss-line"}
   ])
 
   def nav_link_posts(%{"tab" => tab}) when not is_nil(tab), do: "/feed/#{tab}/posts"
