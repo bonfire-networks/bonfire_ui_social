@@ -63,8 +63,8 @@
                         />
                         <div class="absolute z-50 bottom-3 left-3 dropdown dropdown-hover dropdown-top">
                           <label tabindex="0" class="text-white border-none rounded btn btn-xs bg-black/60">alt</label>
-                          <div tabindex="0" class="p-2 rounded shadow dropdown-content bg-neutral w-52">
-                            <div class="prose-sm prose text-neutral-content">{media_label}</div>
+                          <div tabindex="0" class="p-2 rounded shadow dropdown-content bg-base-100 w-52">
+                            <div class="prose-sm prose text-base-content">{media_label}</div>
                           </div>
                         </div>
                         <figcaption class="sr-only">{media_label}</figcaption>
