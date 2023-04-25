@@ -306,8 +306,7 @@ defmodule Bonfire.Social.Activities.BoundariesInFeedsTest do
     {:ok, circle} = Circles.create(me, %{named: %{name: "family"}})
     {:ok, _} = Circles.add_to_circles(alice, circle)
 
-    {:ok, friends} =
-      Acls.create(%{name: "friends", description: "test boundary"}, current_user: me)
+    {:ok, friends} = Acls.simple_create(me, "friends")
 
     # Add family circle and bob to this boundary with different roles
     Grants.grant_role(bob.id, friends.id, "interact", current_user: me)

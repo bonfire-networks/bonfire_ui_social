@@ -26,6 +26,7 @@
     {#if is_list(@feed) and @feed != []}
       <div
         id={"feed-#{@feed_id || @id}"}
+        data-id="feed_activity_list"
         phx-update={e(@feed_update_mode, "append")}
         class="flex flex-col divide-y divide-base-content/10"
       >
