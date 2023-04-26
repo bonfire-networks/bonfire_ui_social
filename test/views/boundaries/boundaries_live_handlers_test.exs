@@ -15,54 +15,38 @@ defmodule Bonfire.Social.Activities.BoundariesLiveHandlerTest do
       conn = conn(user: me, account: account)
 
       next = "/boundaries/circles"
-
-
-
-      end
+    end
 
     test "Add a user to a circle works" do
-
     end
 
     test "Remove a user from a circle works" do
-
     end
 
     test "Edit Settings to a circle works" do
-
     end
-
   end
 
   describe "Basic Boundaries actions" do
     test "Create a boundary works" do
-
     end
 
     test "Add a user and assign a role to a boundary works" do
-
     end
 
     test "Remove a user from a boundary works" do
-
     end
 
     test "Add a circle and assign a role to a boundary works" do
-
     end
 
     test "Remove a circle from a boundary works" do
-
     end
 
     test "Edit a role in a boundary works" do
-
     end
 
     test "Edit Settings to a boundary works" do
-
     end
   end
-
-
 end
