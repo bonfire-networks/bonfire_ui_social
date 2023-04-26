@@ -1,6 +1,5 @@
 defmodule Bonfire.UI.Social.Activity.ActionsLive do
   use Bonfire.UI.Common.Web, :stateless_component
-
   prop activity, :any, default: nil
   prop object, :any, required: true
   prop thread_id, :string, required: true
