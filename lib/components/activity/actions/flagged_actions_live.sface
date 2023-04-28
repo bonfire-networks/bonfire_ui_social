@@ -62,12 +62,13 @@
     <button
       phx-click="Bonfire.Social.Flags:unflag"
       phx-value-id={e(@object, :id, "")}
+      data-role="unflag"
       title={l("Unflag")}
       phx-value-subject={e(@activity, :subject, :id, "")}
       class="flex rounded btn btn-ghost btn-square btn-sm"
     >
       <span class="text-base-content/70">
-        <#Icon iconify="fluent:flag-off-16-filled" class="w-5 h-5 stroke-1" />
+        <#Icon iconify="fluent:flag-off-16-filled" class="w-5 h-5 text-primary stroke-1" />
       </span>
       <span class="sr-only">{l("Unflag")}</span>
     </button>
