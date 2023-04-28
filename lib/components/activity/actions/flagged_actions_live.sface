@@ -1,34 +1,48 @@
 <div class="flex items-center mt-0 feed_actions">
   <div class="flex items-center justify-between flex-1 gap-4 mt-3 feed-clickable md:justify-end">
-    <LiveRedirect
-      :if={e(@activity, :subject, :id, nil) &&
-        current_user_id(@__context__) != e(@activity, :subject, :id, nil)}
-      to={path(Bonfire.Data.Social.Message, e(@activity, :subject, :character, :username, ""))}
-      class="flex rounded btn btn-ghost btn-square btn-sm"
+   
+    <div
+      aria-haspopup="true"
+      class={"dropdown dropdown-end feed_activity relative"}
     >
-      <span
-        title={l("Message ") <> e(@activity, :subject, :profile, :name, "")}
-        class="text-base-content/70"
-      >
-        <#Icon iconify="ri:mail-line" class="w-5 h-5 stroke-1" />
-      </span>
-      <span class="sr-only">{l("Message ")} {e(@activity, :subject, :profile, :name, "")}</span>
-    </LiveRedirect>
+    <button tabindex="0" class="rounded gap-2 text-base-content/70 btn bg-primary/10 hover:bg-primary/30 text-primary btn-ghost normal-case btn-sm">
+     <#Icon iconify="ri:mail-line" class="w-5 h-5 stroke-1" /> 
+     <span>{l("Mediate")}</span>
+    </button>
+    <ul
+      tabindex="0"
+      class="!block w-60 z-[910] relative shadow menu md:menu-compact dropdown-content text-base-content bg-base-100 rounded dropdown_actions"
+      role="menu"
+      aria-orientation="vertical"
+      aria-labelledby="more-menu"
+    >
 
-    <LiveRedirect
-      :if={@object && id(@object) && current_user_id(@__context__) != e(flagged_character(@object), :id, nil) &&
-        e(flagged_character(@object), :id, nil) != e(@activity, :subject, :id, nil)}
-      to={path(Bonfire.Data.Social.Message, e(flagged_character(@object), :username, nil))}
-      class="flex rounded btn btn-ghost btn-square btn-sm"
-    >
-      <span
-        title={l("Message ") <> e(flagged_profile(@object), :name, "")}
-        class="text-base-content/70"
+    <li :if={e(@activity, :subject, :id, nil) &&
+          current_user_id(@__context__) != e(@activity, :subject, :id, nil)}>
+      <LiveRedirect
+        to={path(Bonfire.Data.Social.Message, e(@activity, :subject, :character, :username, ""))}
+        class=""
       >
-        <#Icon iconify="ri:mail-line" class="w-5 h-5 stroke-1" />
-      </span>
-      <span class="sr-only">{l("Message ")} {e(flagged_profile(@object), :name, "")}</span>
+      <!-- {e(@activity, :subject, :profile, :name, "")} -->
+      <span class="">{l("Message the author of the flag")}</span>
     </LiveRedirect>
+    </li>
+
+    <li :if={@object && id(@object) && current_user_id(@__context__) != e(flagged_character(@object), :id, nil) &&
+        e(flagged_character(@object), :id, nil) != e(@activity, :subject, :id, nil)}>
+      <LiveRedirect
+      to={path(Bonfire.Data.Social.Message, e(flagged_character(@object), :username, nil))}
+      class=""
+    >
+    <!-- {e(flagged_profile(@object), :name, "")} -->
+      <span class="">{l("Message the flagged user")} </span>
+    </LiveRedirect>
+    </li>
+
+    </ul>
+
+    </div>
+   
 
     {#if @object_type == Bonfire.Data.Identity.User}
       <div>
@@ -37,24 +51,22 @@
             current_user_id(@__context__) != id(@object)}
           module={Bonfire.Boundaries.Web.BlockButtonLive}
           object={@object}
-          hide_text
           with_icon
-          icon_class="w-5 h-5 stroke-1 text-base-content/70"
+          icon_class="w-5 h-5 stroke-1 text-error"
           label={e(@object, :profile, :name, l("this user"))}
           parent_id={id(@activity)}
-          class="flex rounded btn btn-ghost btn-square btn-sm"
+          class="flex rounded btn btn-ghost hover:bg-error/30 bg-error/20 normal-case btn-sm gap-2 text-error text-xs"
         />
       </div>
     {#else}
       <div>
         <Bonfire.UI.Social.Activity.DeleteObjectLive
           object={@object}
-          hide_text
-          icon_class="w-5 h-5 stroke-1 text-base-content/70"
+          icon_class="w-5 h-5 stroke-1 text-error"
           creator_id={Bonfire.UI.Social.Activity.MoreActionsLive.subject_id(@activity, @object)}
           object_type_readable={@object_type_readable}
           parent_id={id(@activity)}
-          open_btn_class="flex rounded btn btn-ghost btn-square btn-sm"
+          open_btn_class="flex rounded btn btn-ghost hover:bg-error/30 bg-error/20 normal-case btn-sm gap-2 text-error text-xs"
         />
       </div>
     {/if}
@@ -65,7 +77,7 @@
       data-role="unflag"
       title={l("Unflag")}
       phx-value-subject={e(@activity, :subject, :id, "")}
-      class="flex rounded btn btn-ghost btn-square btn-sm"
+      class="flex rounded btn bg-primary/20 hover:bg-primary/30 btn-ghost btn-square btn-sm"
     >
       <span class="text-base-content/70">
         <#Icon iconify="fluent:flag-off-16-filled" class="w-5 h-5 text-primary stroke-1" />
