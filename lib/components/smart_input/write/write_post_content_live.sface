@@ -82,7 +82,7 @@
                         )}
                         class="rounded btn_boundary_toggle btn btn-ghost btn-sm btn-square"
                       >
-                        <#Icon iconify="carbon:subnet-acl-rules" class="w-5 h-5 text-base-content/70" />
+                        <#Icon iconify="carbon:subnet-acl-rules" class="w-5 h-5 text-primary" />
                       </button>
                     </div>
                   {#match boundary_name}
