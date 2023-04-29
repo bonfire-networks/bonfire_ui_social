@@ -15,8 +15,7 @@ defmodule Bonfire.Social.Moderation.FlagTest do
     # alice creates a post
     content = "here is an epic html post"
     attrs = %{post_content: %{html_body: content}}
-    assert {:ok, post} =
-              Posts.publish(current_user: alice, post_attrs: attrs, boundary: "local")
+    assert {:ok, post} = Posts.publish(current_user: alice, post_attrs: attrs, boundary: "local")
     # login as me
     conn = conn(user: me, account: account)
     # navigate to local feed
@@ -25,8 +24,10 @@ defmodule Bonfire.Social.Moderation.FlagTest do
     assert has_element?(view, "#activity-#{feed_id}-#{id(post)}", content)
     # then I flag the post
     view
-      |> element("#activity-#{feed_id}-#{id(post)} li[data-role=flag_object] div[data-role=open_modal]")
-      |> render_click()
+    |> element(
+      "#activity-#{feed_id}-#{id(post)} li[data-role=flag_object] div[data-role=open_modal]"
+    )
+    |> render_click()
 
     view |> element("button[data-role=submit_flag]") |> render_click()
 
@@ -43,8 +44,7 @@ defmodule Bonfire.Social.Moderation.FlagTest do
     # alice creates a post
     content = "here is an epic html post"
     attrs = %{post_content: %{html_body: content}}
-    assert {:ok, post} =
-    Posts.publish(current_user: alice, post_attrs: attrs, boundary: "local")
+    assert {:ok, post} = Posts.publish(current_user: alice, post_attrs: attrs, boundary: "local")
     {:ok, _flag} = Bonfire.Social.Flags.flag(me, post.id)
     # login as me
     conn = conn(user: me, account: account)
@@ -66,8 +66,7 @@ defmodule Bonfire.Social.Moderation.FlagTest do
     # alice creates a post
     content = "here is an epic html post"
     attrs = %{post_content: %{html_body: content}}
-    assert {:ok, post} =
-    Posts.publish(current_user: alice, post_attrs: attrs, boundary: "local")
+    assert {:ok, post} = Posts.publish(current_user: alice, post_attrs: attrs, boundary: "local")
     {:ok, _flag} = Bonfire.Social.Flags.flag(me, post.id)
     # login as bob
     conn = conn(user: bob, account: account)
@@ -87,8 +86,7 @@ defmodule Bonfire.Social.Moderation.FlagTest do
     # alice creates a post
     content = "here is an epic html post"
     attrs = %{post_content: %{html_body: content}}
-    assert {:ok, post} =
-    Posts.publish(current_user: alice, post_attrs: attrs, boundary: "local")
+    assert {:ok, post} = Posts.publish(current_user: alice, post_attrs: attrs, boundary: "local")
     {:ok, _flag} = Bonfire.Social.Flags.flag(me, post.id)
     # login as me
     conn = conn(user: me, account: account)
@@ -100,7 +98,6 @@ defmodule Bonfire.Social.Moderation.FlagTest do
     assert render(view) =~ "Already flagged"
   end
 
-
   test "Flagging a user works" do
     feed_id = Bonfire.Social.Feeds.named_feed_id(:local)
     # create a bunch of users
@@ -110,8 +107,7 @@ defmodule Bonfire.Social.Moderation.FlagTest do
     # alice creates a post
     content = "here is an epic html post"
     attrs = %{post_content: %{html_body: content}}
-    assert {:ok, post} =
-              Posts.publish(current_user: alice, post_attrs: attrs, boundary: "local")
+    assert {:ok, post} = Posts.publish(current_user: alice, post_attrs: attrs, boundary: "local")
     # login as me
     conn = conn(user: me, account: account)
     # navigate to local feed
@@ -120,14 +116,15 @@ defmodule Bonfire.Social.Moderation.FlagTest do
     assert has_element?(view, "#activity-#{feed_id}-#{id(post)}", content)
     # then I flag the post
     view
-      |> element("#activity-#{feed_id}-#{id(post)} li[data-role=flag_author] div[data-role=open_modal]")
-      |> render_click()
+    |> element(
+      "#activity-#{feed_id}-#{id(post)} li[data-role=flag_author] div[data-role=open_modal]"
+    )
+    |> render_click()
 
     view |> element("button[data-role=submit_flag]") |> render_click()
 
     assert render(view) =~ "Flagged!"
   end
-
 
   test "When I flag an activity, I want to see the flag in my flags feed in settings" do
     # feed_id = Bonfire.Social.Feeds.named_feed_id(:local)
@@ -138,8 +135,7 @@ defmodule Bonfire.Social.Moderation.FlagTest do
     # alice creates a post
     content = "here is an epic html post"
     attrs = %{post_content: %{html_body: content}}
-    assert {:ok, post} =
-    Posts.publish(current_user: alice, post_attrs: attrs, boundary: "local")
+    assert {:ok, post} = Posts.publish(current_user: alice, post_attrs: attrs, boundary: "local")
     {:ok, flag} = Bonfire.Social.Flags.flag(me, post.id)
     # login as me
     conn = conn(user: me, account: account)
@@ -157,8 +153,7 @@ defmodule Bonfire.Social.Moderation.FlagTest do
     # alice creates a post
     content = "here is an epic html post"
     attrs = %{post_content: %{html_body: content}}
-    assert {:ok, post} =
-    Posts.publish(current_user: alice, post_attrs: attrs, boundary: "local")
+    assert {:ok, post} = Posts.publish(current_user: alice, post_attrs: attrs, boundary: "local")
     {:ok, flag} = Bonfire.Social.Flags.flag(me, post.id)
     # login as me
     conn = conn(user: me, account: account)
@@ -172,7 +167,6 @@ defmodule Bonfire.Social.Moderation.FlagTest do
     assert render(view) =~ "Unflagged!"
     # WIP instantly update the flag feed
     refute has_element?(view, "#activity-flags-#{id(flag)}", content)
-
   end
 
   test "Unflag a user works" do
@@ -193,7 +187,6 @@ defmodule Bonfire.Social.Moderation.FlagTest do
     assert render(view) =~ "Unflagged!"
     # WIP instantly update the flag feed
     refute has_element?(view, "#activity-flags-#{id(flag)}")
-
   end
 
   test "As an admin, When a user flags an activity I want to see the activity in flags feed in admin settings" do
@@ -207,8 +200,7 @@ defmodule Bonfire.Social.Moderation.FlagTest do
     # alice creates a post
     content = "here is an epic html post"
     attrs = %{post_content: %{html_body: content}}
-    assert {:ok, post} =
-    Posts.publish(current_user: alice, post_attrs: attrs, boundary: "local")
+    assert {:ok, post} = Posts.publish(current_user: alice, post_attrs: attrs, boundary: "local")
     {:ok, flag} = Bonfire.Social.Flags.flag(bob, post.id)
     # login as me
     conn = conn(user: me, account: account)
@@ -240,8 +232,4 @@ defmodule Bonfire.Social.Moderation.FlagTest do
   # test "If I have the right instance permission, as a user I want to see and act upon the flags feed in admin settings" do
 
   # end
-
-
-
-
 end

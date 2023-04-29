@@ -1,48 +1,44 @@
 <div class="flex items-center mt-0 feed_actions">
   <div class="flex items-center justify-between flex-1 gap-4 mt-3 feed-clickable md:justify-end">
-   
-    <div
-      aria-haspopup="true"
-      class={"dropdown dropdown-end feed_activity relative"}
-    >
-    <button tabindex="0" class="rounded gap-2 text-base-content/70 btn bg-primary/10 hover:bg-primary/30 text-primary btn-ghost normal-case btn-sm">
-     <#Icon iconify="ri:mail-line" class="w-5 h-5 stroke-1" /> 
-     <span>{l("Mediate")}</span>
-    </button>
-    <ul
-      tabindex="0"
-      class="!block w-60 z-[910] relative shadow menu md:menu-compact dropdown-content text-base-content bg-base-100 rounded dropdown_actions"
-      role="menu"
-      aria-orientation="vertical"
-      aria-labelledby="more-menu"
-    >
-
-    <li :if={e(@activity, :subject, :id, nil) &&
-          current_user_id(@__context__) != e(@activity, :subject, :id, nil)}>
-      <LiveRedirect
-        to={path(Bonfire.Data.Social.Message, e(@activity, :subject, :character, :username, ""))}
-        class=""
+    <div aria-haspopup="true" class="dropdown dropdown-end feed_activity relative">
+      <button
+        tabindex="0"
+        class="rounded gap-2 text-base-content/70 btn bg-primary/10 hover:bg-primary/30 text-primary btn-ghost normal-case btn-sm"
       >
-      <!-- {e(@activity, :subject, :profile, :name, "")} -->
-      <span class="">{l("Message the author of the flag")}</span>
-    </LiveRedirect>
-    </li>
+        <#Icon iconify="ri:mail-line" class="w-5 h-5 stroke-1" />
+        <span>{l("Mediate")}</span>
+      </button>
+      <ul
+        tabindex="0"
+        class="!block w-60 z-[910] relative shadow menu md:menu-compact dropdown-content text-base-content bg-base-100 rounded dropdown_actions"
+        role="menu"
+        aria-orientation="vertical"
+        aria-labelledby="more-menu"
+      >
+        <li :if={e(@activity, :subject, :id, nil) &&
+          current_user_id(@__context__) != e(@activity, :subject, :id, nil)}>
+          <LiveRedirect
+            to={path(Bonfire.Data.Social.Message, e(@activity, :subject, :character, :username, ""))}
+            class=""
+          >
+            <!-- {e(@activity, :subject, :profile, :name, "")} -->
+            <span class="">{l("Message the author of the flag")}</span>
+          </LiveRedirect>
+        </li>
 
-    <li :if={@object && id(@object) && current_user_id(@__context__) != e(flagged_character(@object), :id, nil) &&
-        e(flagged_character(@object), :id, nil) != e(@activity, :subject, :id, nil)}>
-      <LiveRedirect
-      to={path(Bonfire.Data.Social.Message, e(flagged_character(@object), :username, nil))}
-      class=""
-    >
-    <!-- {e(flagged_profile(@object), :name, "")} -->
-      <span class="">{l("Message the flagged user")} </span>
-    </LiveRedirect>
-    </li>
-
-    </ul>
-
+        <li :if={@object && id(@object) && current_user_id(@__context__) != e(flagged_character(@object), :id, nil) &&
+          e(flagged_character(@object), :id, nil) != e(@activity, :subject, :id, nil)}>
+          <LiveRedirect
+            to={path(Bonfire.Data.Social.Message, e(flagged_character(@object), :username, nil))}
+            class=""
+          >
+            <!-- {e(flagged_profile(@object), :name, "")} -->
+            <span class="">{l("Message the flagged user")}
+            </span>
+          </LiveRedirect>
+        </li>
+      </ul>
     </div>
-   
 
     {#if @object_type == Bonfire.Data.Identity.User}
       <div>
