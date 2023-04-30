@@ -3,6 +3,7 @@ defmodule Bonfire.Social.Moderation.FlagTest do
   alias Bonfire.Social.Fake
   alias Bonfire.Social.Posts
   alias Bonfire.Social.Follows
+  alias Bonfire.Me.Users
   alias Bonfire.Files.Test
   import Bonfire.Common.Enums
 
@@ -34,29 +35,62 @@ defmodule Bonfire.Social.Moderation.FlagTest do
     assert render(view) =~ "flagged!"
   end
 
-  # WIP: this test is failing in the browser, but passing in the terminal
-  test "My flags should not appear on local feed" do
+  test "My flags should not appear on local feed, unless I'm an admin" do
     feed_id = Bonfire.Social.Feeds.named_feed_id(:local)
     # create a bunch of users
     account = fake_account!()
     me = fake_user!(account)
     alice = fake_user!(account)
+    admin = fake_admin!()
+
+    refute Users.is_admin?(me)
+    refute Users.is_admin?(alice)
+    assert Users.is_admin?(admin)
+
     # alice creates a post
     content = "here is an epic html post"
     attrs = %{post_content: %{html_body: content}}
     assert {:ok, post} = Posts.publish(current_user: alice, post_attrs: attrs, boundary: "local")
     {:ok, _flag} = Bonfire.Social.Flags.flag(me, post.id)
-    # login as me
+
+    # login as myself (non-admin)
     conn = conn(user: me, account: account)
     # navigate to local feed
     {:ok, view, _html} = live(conn, "/feed/local")
-    # I should not see my flag on the feed
     # open_browser(view)
     refute has_element?(view, "div[data-role=flagged_by]")
+
+    # login as alice (non-admin & author of flagged post)
+    conn = conn(user: alice, account: account)
+    # navigate to local feed
+    {:ok, view, _html} = live(conn, "/feed/local")
+    # I should not see the flag on the feed
+    # open_browser(view)
+    refute has_element?(view, "div[data-role=flagged_by]")
+
+    # navigate to local feed as admin
+    conn = conn(user: admin, account: account)
+    {:ok, view, _html} = live(conn, "/feed/local")
+    # I should see the flag on the feed
+    # open_browser(view)
+    refute has_element?(view, "div[data-role=flagged_by]")
+
+    # navigate to flags feed as myself
+    conn = conn(user: me, account: account)
+    {:ok, view, _html} = live(conn, "/settings/flags")
+    # I should see the flag on the feed
+    # open_browser(view)
+    assert has_element?(view, "div[data-role=flagged_by]")
+
+    # navigate to flags feed as admin
+    conn = conn(user: admin, account: account)
+    {:ok, view, _html} = live(conn, "/settings/instance/flags")
+    # I should see the flag on the feed
+    # open_browser(view)
+    assert has_element?(view, "div[data-role=flagged_by]")
   end
 
-  # WIP: this test is failing in the browser, but passing in the terminal
-  test "Flags from other users should not appear on local feed" do
+  test "Flags from other users should not appear " do
     feed_id = Bonfire.Social.Feeds.named_feed_id(:local)
     # create a bunch of users
     account = fake_account!()
@@ -68,11 +102,41 @@ defmodule Bonfire.Social.Moderation.FlagTest do
     attrs = %{post_content: %{html_body: content}}
     assert {:ok, post} = Posts.publish(current_user: alice, post_attrs: attrs, boundary: "local")
     {:ok, _flag} = Bonfire.Social.Flags.flag(me, post.id)
+
+    # login as myself
+    conn = conn(user: alice, account: account)
+    # navigate to local feed
+    {:ok, view, _html} = live(conn, "/feed/local")
+    # I should not see my flag on the feed
+    # open_browser(view)
+    refute has_element?(view, "div[data-role=flagged_by]")
+
+    {:ok, view, _html} = live(conn, "/settings/flags")
+    # I should see my flag on the list
+    # open_browser(view)
+    assert has_element?(view, "div[data-role=flagged_by]")
+
+    # login as alice
+    conn = conn(user: alice, account: account)
+    # navigate to local feed
+    {:ok, view, _html} = live(conn, "/feed/local")
+    # I should not see my flag on the feed
+    # open_browser(view)
+    refute has_element?(view, "div[data-role=flagged_by]")
+    {:ok, view, _html} = live(conn, "/settings/flags")
+    # I should not see my flag on the list
+    # open_browser(view)
+    refute has_element?(view, "div[data-role=flagged_by]")
+
     # login as bob
     conn = conn(user: bob, account: account)
     # navigate to local feed
     {:ok, view, _html} = live(conn, "/feed/local")
     # I should not see my flag on the feed
+    # open_browser(view)
+    refute has_element?(view, "div[data-role=flagged_by]")
+    {:ok, view, _html} = live(conn, "/settings/flags")
+    # I should not see my flag on the list
     # open_browser(view)
     refute has_element?(view, "div[data-role=flagged_by]")
   end
