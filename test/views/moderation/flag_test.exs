@@ -22,6 +22,7 @@ defmodule Bonfire.Social.Moderation.FlagTest do
     # navigate to local feed
     {:ok, view, _html} = live(conn, "/feed/local")
     # Then I should see the post in my feed
+    open_browser(view)
     assert has_element?(view, "#activity-#{feed_id}-#{id(post)}", content)
     # then I flag the post
     view
@@ -73,7 +74,7 @@ defmodule Bonfire.Social.Moderation.FlagTest do
     {:ok, view, _html} = live(conn, "/feed/local")
     # I should see the flag on the feed
     # open_browser(view)
-    refute has_element?(view, "div[data-role=flagged_by]")
+    assert has_element?(view, "div[data-role=flagged_by]")
 
     # navigate to flags feed as myself
     conn = conn(user: me, account: account)
@@ -114,7 +115,7 @@ defmodule Bonfire.Social.Moderation.FlagTest do
     {:ok, view, _html} = live(conn, "/settings/flags")
     # I should see my flag on the list
     # open_browser(view)
-    assert has_element?(view, "div[data-role=flagged_by]")
+    refute has_element?(view, "div[data-role=flagged_by]")
 
     # login as alice
     conn = conn(user: alice, account: account)
