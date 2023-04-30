@@ -70,11 +70,21 @@ defmodule Bonfire.UI.Social.FeedLive do
     if not is_nil(current_user) do
       if object_type in ["discussions", "posts"],
         do: [nil: l("My feed"), local: l("Local"), fediverse: l("Remote")],
-        else: [
+        else:
+        if !Bonfire.Me.Users.is_admin?(current_user),
+        do: [
           nil: l("My feed"),
           local: l("Local"),
           fediverse: l("Remote"),
           likes: l("Liked")
+        ],
+        else:
+        [
+          nil: l("My feed"),
+          local: l("Local"),
+          fediverse: l("Remote"),
+          likes: l("Liked"),
+          flags: l("Flags")
         ]
     else
       [local: l("Local"), fediverse: l("Remote")]
