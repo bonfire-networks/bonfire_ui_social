@@ -10,32 +10,64 @@
       </button>
       <ul
         tabindex="0"
-        class="!block w-60 z-[910] relative shadow menu md:menu-compact dropdown-content text-base-content bg-base-100 rounded dropdown_actions"
+        class="!block w-72 z-[910] relative shadow menu md:menu-compact dropdown-content text-base-content bg-base-100 rounded dropdown_actions"
         role="menu"
         aria-orientation="vertical"
         aria-labelledby="more-menu"
       >
         <li :if={e(@activity, :subject, :id, nil) &&
           current_user_id(@__context__) != e(@activity, :subject, :id, nil)}>
-          <LiveRedirect
+
+          <Bonfire.UI.Common.SmartInputButtonLive
+            create_object_type={:message}
+            smart_input_opts={%{
+              to_circles: [
+                %{
+                  e(@activity, :subject, :character, :username, "") =>
+                    id(e(@activity, :subject, :character, :id, nil))
+                }
+              ]
+            }}
+            prompt={l("Message the author of the flag")}
+            icon="heroicons-solid:mail"
+            class="flex items-center gap-2 text-base md:text-sm text-base-content/80"
+          />
+          
+          
+          
+          <!-- <LiveRedirect
             to={path(Bonfire.Data.Social.Message, e(@activity, :subject, :character, :username, ""))}
             class=""
-          >
+          > -->
             <!-- {e(@activity, :subject, :profile, :name, "")} -->
-            <span class="">{l("Message the author of the flag")}</span>
-          </LiveRedirect>
+            <!-- <span class="">{l("Message the author of the flag")}</span>
+          </LiveRedirect> -->
         </li>
 
         <li :if={@object && id(@object) && current_user_id(@__context__) != e(flagged_character(@object), :id, nil) &&
           e(flagged_character(@object), :id, nil) != e(@activity, :subject, :id, nil)}>
-          <LiveRedirect
+         
+         <Bonfire.UI.Common.SmartInputButtonLive
+            create_object_type={:message}
+            smart_input_opts={%{
+              to_circles: [
+                %{
+                  e(flagged_character(@object), :username, nil) =>
+                    id(e(flagged_character(@object), nil))
+                }
+              ]
+            }}
+            prompt={l("Message the flagged user")}
+            icon="heroicons-solid:mail"
+            class="flex items-center gap-2 text-base md:text-sm text-base-content/80"
+          />
+          <!-- <LiveRedirect
             to={path(Bonfire.Data.Social.Message, e(flagged_character(@object), :username, nil))}
             class=""
           >
-            <!-- {e(flagged_profile(@object), :name, "")} -->
             <span class="">{l("Message the flagged user")}
             </span>
-          </LiveRedirect>
+          </LiveRedirect> -->
         </li>
       </ul>
     </div>
