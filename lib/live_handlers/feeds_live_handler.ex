@@ -373,7 +373,7 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
 
   def feed_assigns_maybe_async(other, socket) do
     feed_name = feed_name(other, socket)
-    # debug(other, feed_name)
+    debug(other, feed_name)
 
     assigns =
       feed_default_assigns(feed_name, socket)
@@ -478,23 +478,23 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
   end
 
   # WIP
-  # defp feed_default_assigns(:flags = feed_name, socket) do
-  #   [
-  #     loading: true,
-  #     feed_id: feed_name,
-  #     feed_component_id: component_id(feed_name, socket.assigns),
-  #     selected_tab: :flags,
-  #     # FIXME: clean up page vs tab
-  #     page: "flags",
-  #     # page_title: l("My favourites"),
-  #     # feed_title: l("My favourites"),
-  #     feedback_title: l("You have no flagged activities..."),
-  #     # feed_id: feed_name,
-  #     # feedback_message: l("It seems like the paint is still fresh on this instance..."),
-  #     feed: :loading,
-  #     page_info: nil
-  #   ]
-  # end
+  defp feed_default_assigns(:flags = feed_name, socket) do
+    [
+      loading: true,
+      feed_id: feed_name,
+      feed_component_id: component_id(feed_name, socket.assigns),
+      selected_tab: :flags,
+      # FIXME: clean up page vs tab
+      page: "flags",
+      # page_title: l("My favourites"),
+      # feed_title: l("My favourites"),
+      feedback_title: l("You have no flagged activities..."),
+      # feed_id: feed_name,
+      # feedback_message: l("It seems like the paint is still fresh on this instance..."),
+      feed: :loading,
+      page_info: nil
+    ]
+  end
 
   defp feed_default_assigns({feed_name, filters_or_custom_query_or_feed_id_or_ids}, socket)
        when is_atom(feed_name) do
@@ -664,7 +664,6 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
       ]
     end
   end
-
 
   defp feed_assigns(%Ecto.Query{} = custom_query, socket) do
     with %{edges: feed, page_info: page_info} <-

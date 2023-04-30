@@ -2,6 +2,7 @@ defmodule Bonfire.UI.Social.FlaggedActionsLive do
   use Bonfire.UI.Common.Web, :stateless_component
   # alias Bonfire.UI.Common.OpenModalLive
   import Bonfire.UI.Me.Integration
+
   # def handle_event(action, attrs, socket), do: Bonfire.UI.Common.LiveHandlers.handle_event(action, attrs, socket, __MODULE__)
   prop activity, :map
   prop object, :any

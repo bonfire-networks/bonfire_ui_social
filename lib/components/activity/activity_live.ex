@@ -6,7 +6,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
   # alias Bonfire.Data.Social.Activity
   alias Bonfire.Social.Feeds.LiveHandler
 
-  # TODO: put verbs in config and/or autogenerate with Verbs genserver
+  # TODO: autogenerate with Verbs genserver?
   @reply_verbs Application.compile_env(:bonfire, [:verb_families, :reply])
   @create_verbs Application.compile_env(:bonfire, [:verb_families, :create])
   @react_verbs Application.compile_env(:bonfire, [:verb_families, :react])
@@ -141,7 +141,8 @@ defmodule Bonfire.UI.Social.ActivityLive do
 
     verb =
       Activities.verb_maybe_modify(
-        e(activity, :verb, nil) || e(assigns, :verb_default, "Create"),
+        e(activity, :verb, nil) || e(activity, :verb_id, nil) ||
+          e(assigns, :verb_default, "Create"),
         activity
       )
 

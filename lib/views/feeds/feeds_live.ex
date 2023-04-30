@@ -83,6 +83,10 @@ defmodule Bonfire.UI.Social.FeedsLive do
     {:noreply, assign(socket, LiveHandler.feed_assigns_maybe_async({:likes, params}, socket))}
   end
 
+  def do_handle_params(%{"tab" => "flags" = _tab} = params, _url, socket) do
+    {:noreply, assign(socket, LiveHandler.feed_assigns_maybe_async({:flags, params}, socket))}
+  end
+
   def do_handle_params(params, _url, socket) do
     {:noreply,
      assign(
