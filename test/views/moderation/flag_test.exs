@@ -22,7 +22,7 @@ defmodule Bonfire.Social.Moderation.FlagTest do
     # navigate to local feed
     {:ok, view, _html} = live(conn, "/feed/local")
     # Then I should see the post in my feed
-    open_browser(view)
+    # open_browser(view)
     assert has_element?(view, "#activity-#{feed_id}-#{id(post)}", content)
     # then I flag the post
     view
@@ -204,7 +204,7 @@ defmodule Bonfire.Social.Moderation.FlagTest do
     assert_flash(view, :info, "flagged!")
 
     {:ok, view, _html} = live(conn, "/settings/flags")
-    open_browser(view)
+    # open_browser(view)
     list = element(view, "#flags_list")
     assert render(list) =~ alice.profile.name
     refute render(list) =~ content, "oops, did we flag the post rather than the user?"
