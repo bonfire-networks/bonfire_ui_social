@@ -2,7 +2,7 @@ defmodule Bonfire.Social.Flags.LiveHandler do
   use Bonfire.UI.Common.Web, :live_handler
 
   # flag in LV
-  def handle_event("flag", %{"id" => id}, socket) do
+  def handle_event("flag", %{"id" => id} = params, socket) do
     # debug(socket)
     with {:ok, current_user} <- current_user_or_remote_interaction(socket, l("flag"), id),
          {:ok, _flag} <- Bonfire.Social.Flags.flag(current_user, id) do
@@ -11,7 +11,7 @@ defmodule Bonfire.Social.Flags.LiveHandler do
       {
         :noreply,
         socket
-        |> assign_flash(:info, "Flagged!")
+        |> assign_flash(:info, l("%{user_or_thing} flagged!", user_or_thing: params["type"]))
         |> assign(flagged: Map.get(socket.assigns, :flagged, []) ++ [{id, true}])
       }
     end
@@ -30,8 +30,9 @@ defmodule Bonfire.Social.Flags.LiveHandler do
     with _ <- Bonfire.Social.Flags.unflag(subject, id) do
       {:noreply,
        socket
-       |> assign_flash(:info, "Unflagged!")
-       |> assign(flagged: Map.get(socket.assigns, :flagged, []) ++ [{id, false}])}
+       |> assign_flash(:info, l("Unflagged!"))
+       #  |> assign(flagged: Map.get(socket.assigns, :flagged, []) ++ [{id, false}])
+       |> Bonfire.UI.Social.ActivityLive.remove()}
     end
   end
 end

@@ -18,15 +18,28 @@ defmodule Bonfire.UI.Social.Activity.MoreActionsLive do
   slot extra_items, required: false
   slot admin_items, required: false
 
+  def render(assigns) do
+    subject = subject(assigns.activity, assigns.object)
+
+    assigns
+    |> assign(
+      subject: subject,
+      subject_id: subject_id(assigns.activity, assigns.object, subject),
+      name: name(assigns.activity, assigns.object, subject)
+    )
+    |> render_sface()
+  end
+
   def subject(activity, object) do
     e(activity, :subject, nil) || e(object, :created, :creator, nil)
   end
 
-  def subject_id(activity, object) do
-    id(subject(activity, object))
+  def subject_id(activity, object, subject \\ nil) do
+    id(subject || subject(activity, object)) || e(activity, :subject_id, nil) ||
+      e(object, :created, :creator_id, nil) || e(object, :creator_id, nil)
   end
 
-  def name(activity, object) do
-    e(subject(activity, object), :profile, :name, l("this user"))
+  def name(activity, object, subject \\ nil) do
+    e(subject || subject(activity, object), :profile, :name, l("this user"))
   end
 end

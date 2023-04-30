@@ -53,12 +53,13 @@
     <!-- Flag the object -->
     <li
       data-role="flag_object"
-      :if={current_user_id(@__context__) != subject_id(@activity, @object) and @verb != "Flag"}
+      :if={current_user_id(@__context__) != @subject_id and @verb != "Flag"}
     >
       <Bonfire.UI.Common.FlagActionLive
         object={@object}
         flagged={@flagged}
         parent_id={"object-#{id(@activity_component_id || @activity)}"}
+        object_type={e(@object_type_readable, l("object"))}
         label={l("Flag this %{object}", object: e(@object_type_readable, l("object")))}
       />
     </li>
@@ -66,21 +67,21 @@
     <!-- Flag the author -->
     <li
       data-role="flag_author"
-      :if={(@verb != "Flag" and is_nil(@current_user)) or
-        current_user_id(@__context__) != subject_id(@activity, @object)}
+      :if={(not is_nil(@subject_id) and (@verb != "Flag" and is_nil(@current_user))) or
+        current_user_id(@__context__) != @subject_id}
     >
       <Bonfire.UI.Common.FlagActionLive
-        object={@object}
+        object={@subject_id}
         flagged={@flagged}
         parent_id={"user-#{id(@activity_component_id || @activity)}"}
-        label={l("Flag %{name}", name: name(@activity, @object))}
+        object_type={@name || l("user")}
       />
     </li>
 
     <!-- Block the author & Block the author instance wide -->
     <Bonfire.Boundaries.Web.BlockMenuButtonsLive
       parent_id={@activity_component_id || id(@activity)}
-      object={subject(@activity, @object)}
+      object={@subject}
       peered={e(@object, :peered, nil)}
     />
 
@@ -88,7 +89,7 @@
     <li :if={@object_boundary}>
       <Bonfire.UI.Social.Activity.DeleteObjectLive
         object={@object}
-        creator_id={subject_id(@activity, @object)}
+        creator_id={@subject_id}
         object_type_readable={@object_type_readable}
         object_boundary={@object_boundary}
         parent_id={"object-#{id(@activity_component_id || @activity)}"}
@@ -102,7 +103,7 @@
         object={@activity}
         object_boundary={@object_boundary}
         object_type_readable={l("from feeds")}
-        creator_id={subject_id(@activity, @object)}
+        creator_id={@subject_id}
         parent_id={"activity-#{id(@activity_component_id || @activity)}"}
         explanation={l(
           "Deleting from feeds means this %{verb} and this %{object} still exist, but this activity won't be discoverable via the local instance's feeds. Remote feeds won't be affected.",

@@ -41,7 +41,7 @@
                   showing_within={@showing_within}
                   verb_default={@verb_default}
                   feed_id={@feed_id}
-                  hide_activities={@hide_activities}
+                  hide_activity={@hide_activities}
                 />
               </div>
             {#match _}

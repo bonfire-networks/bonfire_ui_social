@@ -69,6 +69,7 @@
 
     <button
       phx-click="Bonfire.Social.Flags:unflag"
+      phx-target={"##{@activity_component_id || "root"}"}
       phx-value-id={e(@object, :id, "")}
       data-role="unflag"
       title={l("Unflag")}

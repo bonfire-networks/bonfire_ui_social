@@ -1,4 +1,4 @@
-<div>
+<div id="flags_list">
   <!-- <Bonfire.UI.Common.PageTitleLive page_title={@page_title} /> -->
   <Bonfire.UI.Social.FeedLive
     id={e(@feed_id, :flags)}

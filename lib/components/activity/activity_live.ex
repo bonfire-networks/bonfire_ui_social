@@ -42,7 +42,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
   prop(check_object_boundary, :boolean, default: false)
   prop(is_remote, :boolean, default: false)
   prop(show_minimal_subject_and_note, :boolean, default: false)
-  prop(hide_activities, :any, default: nil)
+  prop(hide_activity, :any, default: nil)
   prop(i, :integer, default: nil)
   prop(created_verb_display, :string, default: @created_verb_display)
   prop(object_type_readable, :string, default: nil)
@@ -55,6 +55,10 @@ defmodule Bonfire.UI.Social.ActivityLive do
   end
 
   defp debug_i(i, activity_inception), do: i || "inception-from-#{activity_inception}"
+
+  def update(%{activity_remove: true}, socket) do
+    {:ok, remove(socket)}
+  end
 
   def update(
         %{preloaded_async_activities: preloaded_async_activities, activity: activity} = _assigns,
@@ -100,6 +104,15 @@ defmodule Bonfire.UI.Social.ActivityLive do
     {:ok,
      socket
      |> assign(prepare(assigns))}
+  end
+
+  def remove(socket) do
+    assign(
+      socket,
+      hide_activity: "all",
+      activity: %{},
+      object: %{}
+    )
   end
 
   @decorate time()
@@ -295,7 +308,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
         <input type="hidden" name="activity_id" value={@activity_id}>
       </form>
 
-      {#if @hide_activities != "all"}
+      {#if @hide_activity != "all"}
         {#for {component, component_assigns} when is_atom(component) <-
             activity_components(
               @activity,
@@ -315,7 +328,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
                      Bonfire.UI.Social.Activity.SubjectMinimalLive
                    ]}
               <Dynamic.Component
-                :if={@hide_activities != "subject"}
+                :if={@hide_activity != "subject"}
                 module={component}
                 profile={e(component_assigns, :profile, nil)}
                 character={e(component_assigns, :character, nil)}
@@ -336,7 +349,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
               />
             {#match Bonfire.UI.Social.Activity.NoteLive}
               <Bonfire.UI.Social.Activity.NoteLive
-                :if={@hide_activities != "note" and !@show_minimal_subject_and_note}
+                :if={@hide_activity != "note" and !@show_minimal_subject_and_note}
                 showing_within={@showing_within}
                 activity={e(component_assigns, :activity, @activity)}
                 object={e(component_assigns, :object, @object)}
@@ -347,7 +360,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
               />
             {#match Bonfire.UI.Social.Activity.MediaLive}
               <Bonfire.UI.Social.Activity.MediaLive
-                :if={@hide_activities != "media" and @showing_within != :smart_input}
+                :if={@hide_activity != "media" and @showing_within != :smart_input}
                 __context__={@__context__}
                 showing_within={@showing_within}
                 viewing_main_object={e(component_assigns, :viewing_main_object, @viewing_main_object)}
@@ -355,7 +368,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
               />
             {#match _ when component in [Bonfire.UI.Social.Activity.ActionsLive, Bonfire.UI.Social.FlaggedActionsLive]}
               <Dynamic.Component
-                :if={@hide_activities != "actions"}
+                :if={@hide_activity != "actions"}
                 module={component}
                 __context__={@__context__}
                 showing_within={@showing_within}
@@ -372,7 +385,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
               />
             {#match _}
               <Dynamic.Component
-                :if={@hide_activities != "dynamic"}
+                :if={@hide_activity != "dynamic"}
                 module={component}
                 id={e(component_assigns, :id, nil)}
                 myself={nil}
