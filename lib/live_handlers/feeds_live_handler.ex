@@ -484,6 +484,7 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
       feed_id: feed_name,
       feed_component_id: component_id(feed_name, socket.assigns),
       selected_tab: :flags,
+      scope: :instance,
       # FIXME: clean up page vs tab
       page: "flags",
       # page_title: l("My favourites"),
