@@ -160,7 +160,7 @@ defmodule Bonfire.Social.Activities.CreatePost.Test do
       # TODO!
 
       # we wait a bit more
-      view |> open_browser()
+      # view |> open_browser()
     end
   end
 end
