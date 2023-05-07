@@ -8,7 +8,6 @@ defmodule Bonfire.Social.Moderation.BlockTest do
   import Bonfire.Common.Enums
   import Bonfire.UI.Me.Integration
 
-
   test "Block a user works" do
     # create a bunch of users
     account = fake_account!()
@@ -21,10 +20,9 @@ defmodule Bonfire.Social.Moderation.BlockTest do
     # open the block modal
 
     view
-    |> element(
-      "li[data-role=block_modal] div[data-role=open_modal]"
-    )
+    |> element("li[data-role=block_modal] div[data-role=open_modal]")
     |> render_click()
+
     # block alice
     view
     |> form("#modal_box")
@@ -91,9 +89,7 @@ defmodule Bonfire.Social.Moderation.BlockTest do
     assert render(view) =~ alice.profile.name
     # remove from the ghosted list
     view
-    |> element(
-      "button[data-role=remove_user]"
-    )
+    |> element("button[data-role=remove_user]")
     |> render_click()
 
     assert render(view) =~ "Unblocked!"
@@ -116,9 +112,7 @@ defmodule Bonfire.Social.Moderation.BlockTest do
     assert render(view) =~ alice.profile.name
     # remove from the ghosted list
     view
-    |> element(
-      "button[data-role=remove_user]"
-    )
+    |> element("button[data-role=remove_user]")
     |> render_click()
 
     assert render(view) =~ "Unblocked!"
@@ -154,7 +148,6 @@ defmodule Bonfire.Social.Moderation.BlockTest do
   end
 
   describe "if I silenced a user i will not receive any update from it" do
-
     test "i'll not see anything they publish in feeds" do
       # create a bunch of users
       account = fake_account!()
@@ -166,12 +159,14 @@ defmodule Bonfire.Social.Moderation.BlockTest do
       # write a post
       html_body = "epic html message"
       attrs = %{post_content: %{html_body: html_body}}
+
       {:ok, post} =
         Posts.publish(
           current_user: alice,
           post_attrs: attrs,
-          boundary: "local",
+          boundary: "local"
         )
+
       # login as me
       conn = conn(user: me, account: account)
       {:ok, view, _html} = live(conn, "/feed/local")
@@ -190,12 +185,14 @@ defmodule Bonfire.Social.Moderation.BlockTest do
       # write a post
       html_body = "epic html message"
       attrs = %{post_content: %{html_body: html_body}}
+
       {:ok, post} =
         Posts.publish(
           current_user: alice,
           post_attrs: attrs,
-          boundary: "local",
+          boundary: "local"
         )
+
       # login as me
       conn = conn(user: me, account: account)
       {:ok, view, _html} = live(conn, "/feed/local")
@@ -208,7 +205,6 @@ defmodule Bonfire.Social.Moderation.BlockTest do
 
       # view the post previously created
       assert render(thread) =~ html_body
-
     end
 
     test "i'll not see any @ mentions from them" do
@@ -222,12 +218,14 @@ defmodule Bonfire.Social.Moderation.BlockTest do
       # write a post as alice and mention me
       html_body = "@#{me.character.username} epic html message"
       attrs = %{post_content: %{html_body: html_body}}
+
       {:ok, post} =
         Posts.publish(
           current_user: alice,
           post_attrs: attrs,
-          boundary: "mention",
+          boundary: "mention"
         )
+
       # login as me
       conn = conn(user: me, account: account)
       {:ok, view, _html} = live(conn, "/notifications")
@@ -249,13 +247,15 @@ defmodule Bonfire.Social.Moderation.BlockTest do
       # write a post as alice and mention me
       html_body = "@#{alice.character.username} epic html message"
       attrs = %{post_content: %{html_body: html_body}}
+
       {:ok, post} =
         Posts.publish(
           current_user: alice,
           post_attrs: attrs,
           boundary: "message",
-          to_circles: [me.character.id],
+          to_circles: [me.character.id]
         )
+
       # login as me
       conn = conn(user: me, account: account)
       {:ok, view, _html} = live(conn, "/messages")
@@ -272,11 +272,11 @@ defmodule Bonfire.Social.Moderation.BlockTest do
       assert {:ok, _silenced} = Bonfire.Boundaries.Blocks.block(alice, :silence, current_user: me)
       conn = conn(user: me, account: account)
       {:ok, view, _html} = live(conn, "/@#{alice.character.username}")
+
       view
-      |> element(
-        "div[data-role=follow_wrapper] a[data-id=follow]"
-      )
+      |> element("div[data-role=follow_wrapper] a[data-id=follow]")
       |> render_click()
+
       assert has_element?(view, "div[data-role=follow_wrapper] a[data-id=follow]")
     end
   end
@@ -293,12 +293,14 @@ defmodule Bonfire.Social.Moderation.BlockTest do
       # write a post
       html_body = "epic html message"
       attrs = %{post_content: %{html_body: html_body}}
+
       {:ok, post} =
         Posts.publish(
           current_user: me,
           post_attrs: attrs,
-          boundary: "local",
+          boundary: "local"
         )
+
       # login as alice
       conn = conn(user: alice, account: account)
       {:ok, view, _html} = live(conn, "/feed/local")
@@ -307,27 +309,29 @@ defmodule Bonfire.Social.Moderation.BlockTest do
     end
 
     test "They will still be able to see things I post publicly. " do
-       # create a bunch of users
-       account = fake_account!()
-       me = fake_user!(account)
-       alice = fake_user!(account)
-       assert {:ok, _ghosted} = Bonfire.Boundaries.Blocks.block(alice, :ghost, current_user: me)
-       conn = conn(user: me, account: account)
-       {:ok, view, _html} = live(conn, "/")
-       # write a post
-       html_body = "epic html message"
-       attrs = %{post_content: %{html_body: html_body}}
-       {:ok, post} =
-         Posts.publish(
-           current_user: me,
-           post_attrs: attrs,
-           boundary: "public",
-         )
-       # login as alice
-       conn = conn()
-       {:ok, view, _html} = live(conn, "/")
-       # check that the post is not there
-       assert render(view) =~ html_body
+      # create a bunch of users
+      account = fake_account!()
+      me = fake_user!(account)
+      alice = fake_user!(account)
+      assert {:ok, _ghosted} = Bonfire.Boundaries.Blocks.block(alice, :ghost, current_user: me)
+      conn = conn(user: me, account: account)
+      {:ok, view, _html} = live(conn, "/")
+      # write a post
+      html_body = "epic html message"
+      attrs = %{post_content: %{html_body: html_body}}
+
+      {:ok, post} =
+        Posts.publish(
+          current_user: me,
+          post_attrs: attrs,
+          boundary: "public"
+        )
+
+      # login as alice
+      conn = conn()
+      {:ok, view, _html} = live(conn, "/")
+      # check that the post is not there
+      assert render(view) =~ html_body
     end
 
     test "I won't be able to @ mention them. " do
@@ -341,12 +345,14 @@ defmodule Bonfire.Social.Moderation.BlockTest do
       # write a post and mention alice
       html_body = "@#{alice.character.username} epic html message"
       attrs = %{post_content: %{html_body: html_body}}
+
       {:ok, post} =
         Posts.publish(
           current_user: me,
           post_attrs: attrs,
-          boundary: "mention",
+          boundary: "mention"
         )
+
       # login as alice
       conn = conn(user: alice, account: account)
       {:ok, view, _html} = live(conn, "/notifications")
@@ -358,48 +364,48 @@ defmodule Bonfire.Social.Moderation.BlockTest do
     end
 
     test "I won't be able to DM them. " do
-       # create a bunch of users
-       account = fake_account!()
-       me = fake_user!(account)
-       alice = fake_user!(account)
-       assert {:ok, _ghosted} = Bonfire.Boundaries.Blocks.block(alice, :ghost, current_user: me)
-       conn = conn(user: me, account: account)
-       {:ok, view, _html} = live(conn, "/")
-       # write a post and DM alice
-       html_body = "epic html message"
-       attrs = %{post_content: %{html_body: html_body}}
-       {:ok, post} =
-         Posts.publish(
-           current_user: me,
-           post_attrs: attrs,
-           boundary: "message",
-           to_circles: [alice.character.id],
-         )
-       # login as alice
-       conn = conn(user: alice, account: account)
-       {:ok, view, _html} = live(conn, "/messages")
-       # check that the post is not there
-       refute render(view) =~ html_body
+      # create a bunch of users
+      account = fake_account!()
+      me = fake_user!(account)
+      alice = fake_user!(account)
+      assert {:ok, _ghosted} = Bonfire.Boundaries.Blocks.block(alice, :ghost, current_user: me)
+      conn = conn(user: me, account: account)
+      {:ok, view, _html} = live(conn, "/")
+      # write a post and DM alice
+      html_body = "epic html message"
+      attrs = %{post_content: %{html_body: html_body}}
+
+      {:ok, post} =
+        Posts.publish(
+          current_user: me,
+          post_attrs: attrs,
+          boundary: "message",
+          to_circles: [alice.character.id]
+        )
+
+      # login as alice
+      conn = conn(user: alice, account: account)
+      {:ok, view, _html} = live(conn, "/messages")
+      # check that the post is not there
+      refute render(view) =~ html_body
     end
 
     # WIP: This test is failing, but im not sure this is the right behavior
     test "they won't be able to follow me" do
-       # create a bunch of users
-       account = fake_account!()
-       me = fake_user!(account)
-       alice = fake_user!(account)
-       assert {:ok, _ghosted} = Bonfire.Boundaries.Blocks.block(alice, :ghost, current_user: me)
-       conn = conn(user: alice, account: account)
-       {:ok, view, _html} = live(conn, "/@#{me.character.username}")
-       view
-       |> element(
-         "div[data-role=follow_wrapper] a[data-id=follow]"
-       )
-       |> render_click()
-       assert has_element?(view, "div[data-role=follow_wrapper] a[data-id=follow]")
+      # create a bunch of users
+      account = fake_account!()
+      me = fake_user!(account)
+      alice = fake_user!(account)
+      assert {:ok, _ghosted} = Bonfire.Boundaries.Blocks.block(alice, :ghost, current_user: me)
+      conn = conn(user: alice, account: account)
+      {:ok, view, _html} = live(conn, "/@#{me.character.username}")
+
+      view
+      |> element("div[data-role=follow_wrapper] a[data-id=follow]")
+      |> render_click()
+
+      assert has_element?(view, "div[data-role=follow_wrapper] a[data-id=follow]")
     end
-
-
   end
 
   describe "Admin" do
@@ -418,12 +424,14 @@ defmodule Bonfire.Social.Moderation.BlockTest do
       # write a post
       html_body = "epic html message"
       attrs = %{post_content: %{html_body: html_body}}
+
       {:ok, post} =
         Posts.publish(
           current_user: bob,
           post_attrs: attrs,
-          boundary: "local",
+          boundary: "local"
         )
+
       # login as alice
       conn = conn(user: alice, account: account)
       {:ok, view, _html} = live(conn, "/feed/local")
@@ -446,12 +454,14 @@ defmodule Bonfire.Social.Moderation.BlockTest do
       # write a post
       html_body = "epic html message"
       attrs = %{post_content: %{html_body: html_body}}
+
       {:ok, post} =
         Posts.publish(
           current_user: alice,
           post_attrs: attrs,
-          boundary: "local",
+          boundary: "local"
         )
+
       # login as bob
       conn = conn(user: bob, account: account)
       {:ok, view, _html} = live(conn, "/feed/local")
@@ -460,7 +470,7 @@ defmodule Bonfire.Social.Moderation.BlockTest do
     end
 
     test "As an admin I can see a list of instance-wide ghosted users" do
-       # create a bunch of users
+      # create a bunch of users
       account = fake_account!()
       me = fake_user!(account)
       alice = fake_user!(account)
@@ -519,9 +529,7 @@ defmodule Bonfire.Social.Moderation.BlockTest do
       assert render(view) =~ alice.profile.name
       # remove from the ghosted list
       view
-      |> element(
-        "button[data-role=remove_user]"
-      )
+      |> element("button[data-role=remove_user]")
       |> render_click()
 
       assert render(view) =~ "Unblocked!"
@@ -529,28 +537,26 @@ defmodule Bonfire.Social.Moderation.BlockTest do
     end
 
     test "As an admin I can unsilence a previously silenced user instance-wide" do
-       # create a bunch of users
-       account = fake_account!()
-       me = fake_user!(account)
-       alice = fake_user!(account)
-       bob = fake_user!(account)
-       carl = fake_user!(account)
-       # ghost alice and bob
-       assert {:ok, _ghost} = Bonfire.Boundaries.Blocks.block(alice, :silence, :instance_wide)
-       # login as me and navigate to ghosted page in settings
-       conn = conn(user: me, account: account)
-       {:ok, view, _html} = live(conn, "/boundaries/instance_silenced")
-       # check that alice is there
-       assert render(view) =~ alice.profile.name
-       # remove from the ghosted list
-       view
-       |> element(
-         "button[data-role=remove_user]"
-       )
-       |> render_click()
+      # create a bunch of users
+      account = fake_account!()
+      me = fake_user!(account)
+      alice = fake_user!(account)
+      bob = fake_user!(account)
+      carl = fake_user!(account)
+      # ghost alice and bob
+      assert {:ok, _ghost} = Bonfire.Boundaries.Blocks.block(alice, :silence, :instance_wide)
+      # login as me and navigate to ghosted page in settings
+      conn = conn(user: me, account: account)
+      {:ok, view, _html} = live(conn, "/boundaries/instance_silenced")
+      # check that alice is there
+      assert render(view) =~ alice.profile.name
+      # remove from the ghosted list
+      view
+      |> element("button[data-role=remove_user]")
+      |> render_click()
 
-       assert render(view) =~ "Unblocked!"
-       refute render(view) =~ alice.profile.name
+      assert render(view) =~ "Unblocked!"
+      refute render(view) =~ alice.profile.name
     end
   end
 end
