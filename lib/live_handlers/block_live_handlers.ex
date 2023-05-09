@@ -9,7 +9,7 @@ def handle_event("unblock", %{"id" => id} = _params, socket) do
    {:ok, _} <- Bonfire.Boundaries.Blocks.unblock(id, :silence, current_user: current_user(socket)) do
 
     ComponentID.send_assigns(
-      Bonfire.UI.Common.BlockButtonLive,
+      Bonfire.UI.Common.BlockButtonProfileLive,
       id,
       [ghosted?: false, silenced?: false, skip_preload: true],
       socket
@@ -24,11 +24,30 @@ def handle_event("unblock", %{"id" => id} = _params, socket) do
   end
 end
 
+def handle_event("unghost_in_modal", %{"id" => id} = _params, socket) do
+  with {:ok, _} <- Bonfire.Boundaries.Blocks.unblock(id, :ghost, current_user: current_user(socket)) do
+    Bonfire.UI.Common.OpenModalLive.close()
+    ComponentID.send_assigns(
+      Bonfire.UI.Common.BlockButtonProfileLive,
+      id,
+      [ghosted?: false, skip_preload: true],
+      socket
+    )
+    {:noreply, assign_flash(socket, :info, l("You have successfully unghosted this user"))}
+  else
+    # This block will be executed if either of the unblock operations fails
+    # You can handle errors here
+    error ->
+      IO.inspect(error, label: "Error")
+      {:noreply, assign_flash(socket, :error, l("Could not unghost"))}
+  end
+end
+
 def handle_event("unghost", %{"id" => id} = _params, socket) do
   with {:ok, _} <- Bonfire.Boundaries.Blocks.unblock(id, :ghost, current_user: current_user(socket)) do
 
     ComponentID.send_assigns(
-      Bonfire.UI.Common.BlockButtonLive,
+      Bonfire.UI.Common.BlockButtonProfileLive,
       id,
       [ghosted?: false, skip_preload: true],
       socket
@@ -47,7 +66,26 @@ def handle_event("ghost", %{"id" => id} = _params, socket) do
   with {:ok, _} <- Bonfire.Boundaries.Blocks.block(id, :ghost, current_user: current_user(socket)) do
 
     ComponentID.send_assigns(
-      Bonfire.UI.Common.BlockButtonLive,
+      Bonfire.UI.Common.BlockButtonProfileLive,
+      id,
+      [ghosted?: true, skip_preload: true],
+      socket
+    )
+    {:noreply, assign_flash(socket, :info, l("You have successfully ghosted this user"))}
+  else
+    # This block will be executed if either of the unblock operations fails
+    # You can handle errors here
+    error ->
+      IO.inspect(error, label: "Error")
+      {:noreply, assign_flash(socket, :error, l("Could not unghost"))}
+  end
+end
+
+def handle_event("ghost_in_modal", %{"id" => id} = _params, socket) do
+  with {:ok, _} <- Bonfire.Boundaries.Blocks.block(id, :ghost, current_user: current_user(socket)) do
+    Bonfire.UI.Common.OpenModalLive.close()
+    ComponentID.send_assigns(
+      Bonfire.UI.Common.BlockButtonProfileLive,
       id,
       [ghosted?: true, skip_preload: true],
       socket
@@ -66,7 +104,7 @@ def handle_event("ghost_instance_wide", %{"id" => id} = _params, socket) do
   with {:ok, _} <- Bonfire.Boundaries.Blocks.block(id, :ghost, :instance_wide) do
 
     ComponentID.send_assigns(
-      Bonfire.UI.Common.BlockButtonLive,
+      Bonfire.UI.Common.BlockButtonProfileLive,
       id,
       [ghosted_instance_wide?: true, skip_preload: true],
       socket
@@ -85,7 +123,7 @@ def handle_event("unghost_instance_wide", %{"id" => id} = _params, socket) do
   with {:ok, _} <- Bonfire.Boundaries.Blocks.unblock(id, :ghost, :instance_wide) do
 
     ComponentID.send_assigns(
-      Bonfire.UI.Common.BlockButtonLive,
+      Bonfire.UI.Common.BlockButtonProfileLive,
       id,
       [ghosted_instance_wide?: false, skip_preload: true],
       socket
@@ -99,11 +137,30 @@ def handle_event("unghost_instance_wide", %{"id" => id} = _params, socket) do
       {:noreply, assign_flash(socket, :error, l("Could not unghost"))}
   end
 end
+def handle_event("unsilence_in_modal", %{"id" => id} = _params, socket) do
+  with {:ok, _} <- Bonfire.Boundaries.Blocks.unblock(id, :silence, current_user: current_user(socket)) do
+    Bonfire.UI.Common.OpenModalLive.close()
+
+    ComponentID.send_assigns(
+      Bonfire.UI.Common.BlockButtonProfileLive,
+      id,
+      [silenced?: false, skip_preload: true],
+      socket
+    )
+    {:noreply, assign_flash(socket, :info, l("You have successfully unsilenced this user"))}
+    else
+    # This block will be executed if either of the unblock operations fails
+    # You can handle errors here
+    error ->
+      IO.inspect(error, label: "Error")
+      {:noreply, assign_flash(socket, :error, l("Could not unblock"))}
+  end
+end
 
 def handle_event("unsilence", %{"id" => id} = _params, socket) do
   with {:ok, _} <- Bonfire.Boundaries.Blocks.unblock(id, :silence, current_user: current_user(socket)) do
     ComponentID.send_assigns(
-      Bonfire.UI.Common.BlockButtonLive,
+      Bonfire.UI.Common.BlockButtonProfileLive,
       id,
       [silenced?: false, skip_preload: true],
       socket
@@ -121,7 +178,27 @@ end
 def handle_event("silence", %{"id" => id} = _params, socket) do
   with {:ok, _} <- Bonfire.Boundaries.Blocks.block(id, :silence, current_user: current_user(socket)) do
     ComponentID.send_assigns(
-      Bonfire.UI.Common.BlockButtonLive,
+      Bonfire.UI.Common.BlockButtonProfileLive,
+      id,
+      [silenced?: true, skip_preload: true],
+      socket
+    )
+    {:noreply, assign_flash(socket, :info, l("You have successfully silenced this user"))}
+    else
+    # This block will be executed if either of the unblock operations fails
+    # You can handle errors here
+    error ->
+      IO.inspect(error, label: "Error")
+      {:noreply, assign_flash(socket, :error, l("Could not unblock"))}
+  end
+end
+
+def handle_event("silence_in_modal", %{"id" => id} = _params, socket) do
+  with {:ok, _} <- Bonfire.Boundaries.Blocks.block(id, :silence, current_user: current_user(socket)) do
+    Bonfire.UI.Common.OpenModalLive.close()
+
+    ComponentID.send_assigns(
+      Bonfire.UI.Common.BlockButtonProfileLive,
       id,
       [silenced?: true, skip_preload: true],
       socket
@@ -139,7 +216,7 @@ end
 def handle_event("silence_instance_wide", %{"id" => id} = _params, socket) do
   with {:ok, _} <- Bonfire.Boundaries.Blocks.block(id, :silence, :instance_wide) do
     ComponentID.send_assigns(
-      Bonfire.UI.Common.BlockButtonLive,
+      Bonfire.UI.Common.BlockButtonProfileLive,
       id,
       [silenced_instance_wide?: true, skip_preload: true],
       socket
@@ -157,7 +234,7 @@ end
 def handle_event("unsilence_instance_wide", %{"id" => id} = _params, socket) do
   with {:ok, _} <- Bonfire.Boundaries.Blocks.unblock(id, :silence, :instance_wide) do
     ComponentID.send_assigns(
-      Bonfire.UI.Common.BlockButtonLive,
+      Bonfire.UI.Common.BlockButtonProfileLive,
       id,
       [silenced_instance_wide?: false, skip_preload: true],
       socket
