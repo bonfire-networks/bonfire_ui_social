@@ -1,0 +1,21 @@
+<div class="flex flex-col max-w-screen-md mx-auto">
+  <Bonfire.UI.Common.TabsLive
+    selected_tab={@selected_tab}
+    path_prefix={"/explore/"}
+    tabs={if id(@current_user),
+      do: Config.get([:ui, :explore, :navigation], hashtags: l("Hashtags")),
+      else: Config.get([:ui, :explore, :navigation], hashtags: l("Hashtags"))}
+  />
+  <Bonfire.UI.Social.FeedLive
+    id={e(@feed_id, :notifications)}
+    feed_id={@feed_id}
+    page_title={@page_title}
+    feed={@feed}
+    page_info={@page_info}
+    feedback_title={@feedback_title}
+    feedback_message={@feedback_message}
+    showing_within={:notifications}
+    loading={@loading}
+    hide_tabs
+  />
+</div>

@@ -14,6 +14,20 @@ defmodule Bonfire.UI.Social.RuntimeConfig do
       disabled: false
 
     config :bonfire, :ui,
+      explore: [
+        sections: [
+          hashtags: Bonfire.UI.Social.FeedsLive,
+          users: Bonfire.UI.Social.FeedsLive,
+          posts: Bonfire.UI.Social.FeedsLive,
+          groups: Bonfire.UI.Social.FeedsLive
+        ],
+        navigation: [
+          hashtags: l("Hashtags"),
+          users: l("Users"),
+          posts: l("Posts"),
+          groups: l("Groups")
+        ],
+      ],
       profile: [
         # TODO: make dynamic based on active extensions
         sections: [
