@@ -37,7 +37,7 @@ defmodule Bonfire.UI.Social.Routes do
         live("/messages/:id/reply/:reply_to_id", MessagesLive, as: Bonfire.Data.Social.Message)
         live("/messages/@:username", MessagesLive, as: Bonfire.Data.Social.Message)
         live("/messages", MessagesLive, as: Bonfire.Data.Social.Message)
-        live("/explore", ExploreLive, as: :explore)
+        # live("/explore", ExploreLive, as: :explore)
         # live("/write", WriteLive, as: :write)
       end
 

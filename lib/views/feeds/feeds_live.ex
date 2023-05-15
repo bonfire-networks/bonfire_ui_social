@@ -8,7 +8,7 @@ defmodule Bonfire.UI.Social.FeedsLive do
     # exclude_from_nav: true
     default_nav: [
       Bonfire.UI.Social.FeedsLive,
-      Bonfire.UI.Social.ExploreLive,
+      # Bonfire.UI.Social.ExploreLive,
       # Bonfire.UI.Me.ProfileLive,
       Bonfire.UI.Social.Feeds.LocalLive,
       Bonfire.UI.Social.Feeds.FederationLive,

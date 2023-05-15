@@ -7,12 +7,12 @@
   x-transition
   class={
     "thread_actions flex items-center":
-      @showing_within == :thread or Settings.get([:ui, :compact], false, @__context__),
+      @showing_within == :thread,
     "feed_actions items-center flex": @viewing_main_object != true,
     "mt-0": e(@showing_within, :feed) == :feed || @showing_within == :notifications,
     "mt-1": @showing_within == :widget
   }
-  :class={if @viewing_main_object != true and Settings.get([:ui, :compact], false, @__context__),
+  :class={if @viewing_main_object != true,
     do: "activity_active ? '' : '[@media(any-hover:hover)]:hidden'"}
 >
   <div class={
