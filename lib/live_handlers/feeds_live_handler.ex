@@ -1033,7 +1033,7 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
         pagination: pagination,
         current_user: current_user
       )
-      |> debug("followers")
+      |> debug("followers in feeed")
 
     [
       loading: false,

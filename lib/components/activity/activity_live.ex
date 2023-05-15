@@ -25,6 +25,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
   prop(verb_display, :string, default: nil)
   prop(date_ago, :any, default: nil)
   prop(feed_id, :any, default: nil)
+  prop(activity_component_id, :any, default: nil)
   prop(viewing_main_object, :boolean, default: false)
   prop(activity_inception, :string, default: nil)
   prop(showing_within, :any, default: nil)
