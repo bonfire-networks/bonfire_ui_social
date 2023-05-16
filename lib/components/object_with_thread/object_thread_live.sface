@@ -14,7 +14,7 @@
         showing_within={@showing_within || :thread}
       /> -->
       <!-- <Bonfire.UI.Common.BackButtonLive showing_within={@showing_within || :thread} /> -->
-      <div class="border-b border-base-content/10 bg-base-content/5">
+      <div class="border-b border-base-content/10">
         {#case e(@activity, :tree, :parent, nil)}
           {#match nil}
           {#match parent}

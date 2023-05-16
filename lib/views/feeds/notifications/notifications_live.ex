@@ -1,13 +1,13 @@
 defmodule Bonfire.UI.Social.Feeds.NotificationsLive do
   use Bonfire.UI.Common.Web, :surface_live_view
 
-  # declare_nav_link(l("Notifications"),
-  #   icon: "ph:bell",
-  #   badge: [
-  #     id: :notifications,
-  #     feed_key: :notifications_id
-  #   ]
-  # )
+  declare_nav_link(l("Notifications"),
+    icon: "ri:notification-2-line",
+    badge: [
+      id: :notifications,
+      feed_key: :notifications_id
+    ]
+  )
 
   on_mount {LivePlugs,
             [Bonfire.UI.Me.LivePlugs.LoadCurrentUser, Bonfire.UI.Me.LivePlugs.AccountRequired]}
@@ -26,7 +26,7 @@ defmodule Bonfire.UI.Social.Feeds.NotificationsLive do
        page: "notifications",
        selected_tab: "notifications",
        #  without_sidebar: true,
-       page_header_icon: "ph:bell",
+       page_header_icon: "ri:notification-2-line",
        page_title: l("Notifications"),
        feedback_title: l("You have no notifications"),
        feedback_message:
