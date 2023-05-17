@@ -98,6 +98,17 @@ defmodule Bonfire.Social.Objects.LiveHandler do
       object_loaded: true,
       activity: activity,
       object: object,
+      sidebar_widgets: [
+        users: [
+          secondary: [
+            # {Bonfire.AI.Web.SummaryLive, [text: e(object, :post_content, :html_body, nil)]},
+            {Bonfire.Tag.Web.WidgetTagsLive, []}
+          ]
+        ],
+        guests: [
+          secondary: nil
+        ]
+      ],
       # url: url,
       # page_header_aside: [
       #   {
