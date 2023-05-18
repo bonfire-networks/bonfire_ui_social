@@ -58,6 +58,7 @@
                 context_id={@context_id}
               />
             {#else}
+              <div>
               <div class="flex items-center w-full gap-2 px-2">
                 <span class="px-1 text-xs font-medium uppercase text-base-content/70">{l("To")}</span>
                 {#case clone_context(@to_boundaries)}
@@ -96,6 +97,33 @@
                     </div>
                 {/case}
               </div>
+              
+              <div id="custom_boundaries" class="hidden flex px-2 mt-2 items-center gap-2">
+                {#for acl <-
+                  Bonfire.Boundaries.Acls.list_my(current_user(@__context__))
+                  |> Enum.map(fn
+                    %Bonfire.Data.AccessControl.Acl{} = acl ->
+                      %{
+                        id: e(acl, :id, nil),
+                        field: :to_boundaries,
+                        description: e(acl, :extra_info, :summary, nil),
+                        name: e(acl, :named, :name, nil) || e(acl, :sterotyped, :named, :name, nil)
+                      }
+                  end)
+                  |> Enum.filter(fn acl -> acl[:name] != nil end)}
+                  <button 
+                    type="button"
+                    phx-click={JS.push("Bonfire.Boundaries:select_boundary",
+                      value: %{id: e(acl, :id, nil), name: e(acl, :name, nil)},
+                      target: "#smart_input"
+                    )}
+                    class={
+                      "badge !h-[1.5rem] badge-outline border-base-content/50",
+                      "badge-primary": e(acl, :name, "") in @to_boundaries 
+                    }>{e(acl, :name, nil)}</button>
+              {/for}
+              </div>
+              </div>
             {/if}
 
             <div id="boundary_picker" class="hidden transition">
@@ -120,6 +148,8 @@
 
           <!-- CW -->
           <div
+            x-show="title_open"
+            x-cloak
             :if={Config.get([:ui, :smart_input, :cw], []) == true}
             id="write_post_title_field"
             phx-update={if @reset_smart_input |> debug("reset_smart_input?"), do: "replace", else: "ignore"}

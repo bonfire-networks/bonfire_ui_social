@@ -10,7 +10,8 @@ defmodule Bonfire.UI.Social.Activity.MediaLive do
     Enum.filter(List.wrap(media), fn m ->
       m_type = m |> the_media() |> e(:media_type, nil)
 
-      String.starts_with?(m_type, ["image", "video", "embed", "audio", "song", "photo", "rich"]) or
+      # String.starts_with?(m_type, ["image", "video", "embed", "audio", "song", "photo", "rich"]) or
+        String.starts_with?(m_type, ["image", "photo", "rich"]) or
         String.contains?(Media.media_url(m), [".jpg", ".jpeg", ".png", ".gif", ".webp"])
     end)
   end
@@ -19,7 +20,7 @@ defmodule Bonfire.UI.Social.Activity.MediaLive do
     Enum.reject(List.wrap(media), fn m ->
       m_type = m |> the_media() |> e(:media_type, nil)
 
-      String.starts_with?(m_type, ["image", "video", "embed", "audio", "song", "photo", "rich"]) or
+      String.starts_with?(m_type, ["image", "photo", "rich"]) or
         String.contains?(Media.media_url(m), [".jpg", ".jpeg", ".png", ".gif", ".webp"])
     end)
   end

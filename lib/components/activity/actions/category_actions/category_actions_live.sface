@@ -9,7 +9,7 @@
   object_boundary={@object_boundary}
 /> -->
 <div class="flex flex-col w-full h-full">
-<div class="px-3 flex-1 flex h-full w-full place-content-center items-center">
+<div class="px-1 flex-1 flex h-full w-full place-content-center items-center">
 <Bonfire.UI.Common.FollowButtonLive
     :if={e(@object, :character, nil)}
     id={ComponentID.new(Bonfire.UI.Common.FollowButtonLive, id(@object), @activity_id)}
@@ -23,7 +23,7 @@
     class="font-semibold normal-case w-full btn btn-ghost rounded text-primary"
   />
 </div>
-<div class="px-3 flex-1 flex h-full w-full place-content-center items-center border-t border-t">
+<div class="px-1 flex-1 flex h-full w-full place-content-center items-center border-t border-t">
   <Bonfire.UI.Social.Activity.MoreActionsLive
     object={@object}
     object_type={@object_type}

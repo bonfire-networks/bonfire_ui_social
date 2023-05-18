@@ -1,4 +1,5 @@
 <div x-cloak x-show="title_open" x-transition class="border-b rounded-md">
+  te<div x-text="title_open"></div>
   <Field name={:name}>
     <TextInput
       opts={
