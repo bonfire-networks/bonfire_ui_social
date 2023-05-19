@@ -117,7 +117,7 @@
                 <div class="text-sm font-medium line-clamp-1">
                   {media_label(m) || l("View m")} ({m.media_type || l("link")})
                 </div>
-                <div class="text-sm mt-0.5 break-words line-clamp-2 text-base-content/70">
+                <div class="max-w-[420px] text-sm mt-0.5 break-words line-clamp-2 text-base-content/70">
                   {description(m)}
                 </div>
               </div>
