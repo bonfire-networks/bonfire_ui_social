@@ -8,7 +8,7 @@
 >
   <div
     :if={@showing_within == :smart_input}
-    class="absolute pl-3 ml-3 border-l right-[-30px] border-base-content/10"
+    class="absolute pl-3 ml-3  right-[-30px]"
   >
     <span
       phx-click="Bonfire.UI.Common.SmartInput:remove_data"

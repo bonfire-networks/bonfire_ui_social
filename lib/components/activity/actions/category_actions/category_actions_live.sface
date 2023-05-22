@@ -23,7 +23,7 @@
     class="font-semibold normal-case w-full btn btn-ghost rounded text-primary"
   />
 </div>
-<div class="px-1 flex-1 flex h-full w-full place-content-center items-center border-t border-t">
+<div class="px-1 flex-1 flex h-full w-full place-content-center items-center border-t border-base-content/10">
   <Bonfire.UI.Social.Activity.MoreActionsLive
     object={@object}
     object_type={@object_type}

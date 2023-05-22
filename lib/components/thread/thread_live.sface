@@ -2632,15 +2632,8 @@
           {#match _}
         {/case}
       {#else}
-        {#if not is_nil(current_user_id(@__context__)) and @showing_within != :messages}
-          <!-- <Bonfire.UI.Common.SmartInputButtonLive
-          component={Bonfire.Common.Config.get([:ui, :default_smart_input]) ||
-            Bonfire.UI.Social.WritePostContentLive}
-          smart_input_opts={%{reply_to_id: @thread_id, thread_id: @thread_id}}
-          prompt={l("Be the first to reply")}
-          class="my-12 h-[40px] flex items-center gap-2 normal-case btn-sm btn"
-          icon="heroicons-outline:reply"
-        /> -->
+        <!-- {#if not is_nil(current_user_id(@__context__)) and @showing_within != :messages}
+        
 
           <Bonfire.UI.Social.Activity.ReplyLive
             object_id={id(@object)}
@@ -2652,11 +2645,11 @@
             reply_btn_text={l("Be the first to reply")}
             cannot_reply_text={l("No replies yet...")}
           />
-        {#else}
+        {#else} -->
           <span class="my-12 badge">
             {l("No replies yet...")}
           </span>
-        {/if}
+        <!-- {/if} -->
       {/if}
     </div>
   {/if}

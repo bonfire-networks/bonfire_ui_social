@@ -57,6 +57,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
 
   defp debug_i(i, activity_inception), do: i || "inception-from-#{activity_inception}"
 
+  @spec update(map, any) :: {:ok, any}
   def update(%{activity_remove: true}, socket) do
     {:ok, remove(socket)}
   end
@@ -293,7 +294,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
         "unread-activity":
           e(@activity, :seen, nil) == nil and @showing_within == :notifications and
             @activity_inception == nil,
-        "active-activity": String.contains?(@url || "", @permalink)
+        "active-activity": String.contains?(@url || "", @permalink) and @showing_within != :smart_input
       }
     >
       <form
@@ -338,7 +339,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
                 verb_display={e(component_assigns, :verb_display, @verb_display)}
                 activity={e(component_assigns, :activity, @activity)}
                 object={e(component_assigns, :object, @object)}
-                object_boundary={@object_boundary}
+                object_boundary={@object_boundary |> debug("TEST2")}
                 object_type={e(component_assigns, :object_type, @object_type)}
                 date_ago={e(component_assigns, :date_ago, @date_ago)}
                 permalink={e(component_assigns, :permalink, @permalink)}
@@ -360,6 +361,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
                 cw={@cw}
                 is_remote={@is_remote}
               />
+
             {#match Bonfire.UI.Social.Activity.MediaLive}
               <Bonfire.UI.Social.Activity.MediaLive
                 :if={@hide_activity != "media" and @showing_within != :smart_input}

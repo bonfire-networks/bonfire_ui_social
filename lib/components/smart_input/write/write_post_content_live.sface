@@ -1,3 +1,4 @@
+
 <div class="flex flex-col h-full overflow-hidden write_post_content">
   <Form
     for={Bonfire.Social.Posts.LiveHandler.post_changeset(@current_user)}
@@ -12,8 +13,9 @@
       do: "h-[calc(var(--visual-viewport-height)_-_110px) with_editor flex-1",
       else: "with_textarea flex-1"}
   >
-    <div class="flex-1 h-full bg-base-100">
-      <div class="relative flex flex-col flex-1 h-full">
+    <div class="flex-1 h-full bg-base-300">
+      <div id="write_post_content_wrapper">
+      <div class="relative !flex flex-col flex-1 h-full">
         <span>
           <svg
             class="loader absolute z-[99999999999999999999999999999] w-20 h-20 left-1/2 top-1/2 mt-[-5rem] ml-[-2.5rem] stroke-1 text-base-content/90 hidden"
@@ -48,7 +50,7 @@
           :class="{'h-[calc(var(--visual-viewport-height)_-_114px)]': !title_open}"
         >
           <!-- DM RECIPIENTS -->
-          <div class="relative py-2 border-b bg-base-100 border-base-content/10">
+          <div class="relative bg-base-300">
             {#if @show_select_recipients || @create_object_type == :message}
               <Bonfire.UI.Common.SelectRecipientsLive
                 preloaded_recipients={e(@preloaded_recipients, [])}
@@ -59,44 +61,52 @@
               />
             {#else}
               <div>
-              <div class="flex items-center w-full gap-2 px-2">
-                <span class="px-1 text-xs font-medium uppercase text-base-content/70">{l("To")}</span>
-                {#case clone_context(@to_boundaries)}
-                  {#match false}
-                    <div class="flex items-center flex-1 gap-2">
-                      <Dynamic.Component
-                        :if={module_enabled?(Bonfire.Boundaries.Web.SetBoundariesButtonLive)}
-                        module={Bonfire.Boundaries.Web.SetBoundariesButtonLive}
-                        to_boundaries={@to_boundaries}
-                        preset_boundary={Bonfire.Boundaries.Web.SetBoundariesLive.boundaries_to_preset(
-                          @to_boundaries
-                          |> debug("to_boundaries")
-                        )
-                        |> debug("preset_boundary")}
-                      />
-                      <button
-                        type="button"
-                        phx-click={Bonfire.UI.Common.SmartInput.LiveHandler.toggle_expanded(
-                          "#boundary_picker",
-                          ".btn_boundary_toggle",
-                          "btn-active"
-                        )}
-                        class="rounded btn_boundary_toggle btn btn-ghost btn-sm btn-square"
-                      >
-                        <#Icon iconify="carbon:subnet-acl-rules" class="w-5 h-5 text-primary" />
-                      </button>
-                    </div>
-                  {#match boundary_name}
-                    <div class="flex items-center gap-2 mx">
-                      <button
-                        type="button"
-                        class="flex items-center gap-2 normal-case rounded-full btn-ghost btn-sm btn opacity-90"
-                      >
-                        <span>{boundary_name}</span>
-                      </button>
-                    </div>
-                {/case}
+              <div class="flex items-center px-2 gap-3 text-base md:text-sm text-base-content/80">
+                <Bonfire.UI.Common.AvatarLive
+                  :if={is_map(current_user(@__context__))}
+                  parent_id="nav_sidebar"
+                  class="inline-block object-cover w-10 h-10 rounded-full cursor-pointer bg-base-100"
+                  bg_class="rounded"
+                  size="40"
+                  user={current_user(@__context__)}
+                />
+                <div class="flex items-center w-full">
+                  <!-- <span class="px-1 text-xs font-medium uppercase text-base-content/70">{l("To")}</span> -->
+                  {#case clone_context(@to_boundaries)}
+                    {#match false}
+                      <div class="flex items-center flex-1 gap-2">
+                        <Dynamic.Component
+                          :if={module_enabled?(Bonfire.Boundaries.Web.SetBoundariesButtonLive)}
+                          module={Bonfire.Boundaries.Web.SetBoundariesButtonLive}
+                          to_boundaries={@to_boundaries}
+                          preset_boundary={Bonfire.Boundaries.Web.SetBoundariesLive.boundaries_to_preset(
+                            @to_boundaries
+                            |> debug("to_boundaries")
+                          )
+                          |> debug("preset_boundary")}
+                        />
+                        
+                      </div>
+                    {#match boundary_name}
+                      <div class="flex items-center gap-2 mx">
+                        <button
+                          type="button"
+                          class="flex items-center gap-2 normal-case rounded-full btn-ghost btn-sm btn opacity-90"
+                        >
+                          <span>{boundary_name}</span>
+                        </button>
+                      </div>
+                  {/case}
+                </div>
+                <!-- <div class="flex flex-col items-start">
+                  <div class="text-sm font-semibold truncate max-w-[180px] text-base-content">{e(current_user(@__context__), :profile, :name, l("Me"))}</div>
+                  <div
+                    :if={e(current_user(@__context__), :character, :username, nil)}
+                    class="-mt-0.5 text-[13px] font-normal truncate text-base-content/70"
+                  >@{e(current_user(@__context__), :character, :username, nil)}</div>
+                </div> -->
               </div>
+              
               
               <div id="custom_boundaries" class="hidden flex px-2 mt-2 items-center gap-2">
                 {#for acl <-
@@ -121,29 +131,12 @@
                       "badge !h-[1.5rem] badge-outline border-base-content/50",
                       "badge-primary": e(acl, :name, "") in @to_boundaries 
                     }>{e(acl, :name, nil)}</button>
-              {/for}
+                {/for}
               </div>
-              </div>
+            </div>
             {/if}
 
-            <div id="boundary_picker" class="hidden transition">
-              <Dynamic.Component
-                :if={@create_object_type != :message and clone_context(@to_boundaries) == false and
-                  module_enabled?(Bonfire.Boundaries.Web.SetBoundariesLive)}
-                module={Bonfire.Boundaries.Web.SetBoundariesLive}
-                to_boundaries={@to_boundaries}
-                preset_boundary={Bonfire.Boundaries.Web.SetBoundariesLive.boundaries_to_preset(@to_boundaries)}
-                to_circles={@to_circles}
-                open_boundaries={@open_boundaries}
-                showing_within={@showing_within}
-                create_object_type={@create_object_type}
-                boundaries_modal_id={@boundaries_modal_id}
-                context_id={@context_id}
-                hide_breakdown
-                setting_boundaries
-                click_override
-              />
-            </div>
+            
           </div>
 
           <!-- CW -->
@@ -155,9 +148,9 @@
             phx-update={if @reset_smart_input |> debug("reset_smart_input?"), do: "replace", else: "ignore"}
           >
             <Inputs for={:post_content}>
-              <div class="relative p-2 border-b bg-base-100 border-base-content/10">
+              <div class="relative p-2 border-b bg-base-300 border-base-content/10">
                 <#Icon
-                  iconify="fluent:chat-warning-24-regular"
+                  iconify="ri:alarm-warning-line"
                   class="absolute w-5 h-5 stroke-1 top-[14px] left-3 text-base-content/70"
                 />
                 <label for="title" class="sr-only">{l("Title")}</label>
@@ -218,6 +211,29 @@
           show_cw_toggle
         />
       </div>
+    </div>
+    <div class="hidden" id="extra_boundaries">
+      <div class=" flex flex-col h-full overflow-hidden">
+        <!-- <div id="boundary_picker" class="hidden transition"> -->
+        <Dynamic.Component
+          :if={@create_object_type != :message and clone_context(@to_boundaries) == false and
+            module_enabled?(Bonfire.Boundaries.Web.SetBoundariesLive)}
+          module={Bonfire.Boundaries.Web.SetBoundariesLive}
+          to_boundaries={@to_boundaries}
+          preset_boundary={Bonfire.Boundaries.Web.SetBoundariesLive.boundaries_to_preset(@to_boundaries)}
+          to_circles={@to_circles}
+          open_boundaries={@open_boundaries}
+          showing_within={@showing_within}
+          create_object_type={@create_object_type}
+          boundaries_modal_id={@boundaries_modal_id}
+          context_id={@context_id}
+          hide_breakdown
+          setting_boundaries
+          click_override
+        />
+                  <!-- </div> -->
+      </div>
+    </div> 
     </div>
   </Form>
 </div>
