@@ -26,7 +26,7 @@ defmodule Bonfire.UI.Social.RuntimeConfig do
           users: l("Users"),
           posts: l("Posts"),
           groups: l("Groups")
-        ],
+        ]
       ],
       profile: [
         # TODO: make dynamic based on active extensions

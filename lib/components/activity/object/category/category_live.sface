@@ -7,16 +7,22 @@
     />
   {#match _}
     <div class="flex w-full mt-2 border rounded-lg media_container  border-base-content/10">
-      <LiveRedirect to={@permalink} class="flex hover:bg-base-content/5 items-center flex-1 gap-4 font-medium text-base-content">
+      <LiveRedirect
+        to={@permalink}
+        class="flex hover:bg-base-content/5 items-center flex-1 gap-4 font-medium text-base-content"
+      >
         {#case Media.avatar_url(@object)}
           {#match "/images/avatar.png"}
             <span class="rounded-none object-cover flex border-r border-base-content/10 place-content-center items-center rounded-l-lg  cursor-pointer m-image w-[120px] h-[120px]">
               <#Icon iconify="mdi:account-group" class="w-9 h-9 text-base-content/70" />
             </span>
           {#match url}
-          <div class="flex items-center rounded-l-lg shrink-0 w-[120px] h-[120px] bg-base-content/10 place-content-center">
-            <LazyImage src={url} class="rounded-none object-cover rounded-l-lg  cursor-pointer m-image w-[120px] h-[120px]" />
-          </div>
+            <div class="flex items-center rounded-l-lg shrink-0 w-[120px] h-[120px] bg-base-content/10 place-content-center">
+              <LazyImage
+                src={url}
+                class="rounded-none object-cover rounded-l-lg  cursor-pointer m-image w-[120px] h-[120px]"
+              />
+            </div>
         {/case}
 
         <div class="flex flex-col">

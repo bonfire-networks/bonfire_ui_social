@@ -1,7 +1,7 @@
 <div class="flex flex-col max-w-screen-md mx-auto">
   <Bonfire.UI.Common.TabsLive
     selected_tab={@selected_tab}
-    path_prefix={"/explore/"}
+    path_prefix="/explore/"
     tabs={if id(@current_user),
       do: Config.get([:ui, :explore, :navigation], hashtags: l("Hashtags")),
       else: Config.get([:ui, :explore, :navigation], hashtags: l("Hashtags"))}

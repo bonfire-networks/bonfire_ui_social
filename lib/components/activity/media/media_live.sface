@@ -111,9 +111,7 @@
                 {/case}
               </div>
               <div class="px-2">
-                <div 
-                  class="text-sm text-base-content/70" 
-                  :if={provider(m)}>{provider(m)}</div>
+                <div class="text-sm text-base-content/70" :if={provider(m)}>{provider(m)}</div>
                 <div class="text-sm font-medium line-clamp-1">
                   {media_label(m) || l("View m")} ({m.media_type || l("link")})
                 </div>

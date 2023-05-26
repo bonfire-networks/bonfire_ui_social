@@ -26,16 +26,16 @@ defmodule Bonfire.UI.Social.PostLive do
        #     ]}
        #  ],
        object: nil,
-      #  sidebar_widgets: [
-      #    users: [
-      #      secondary: [
-      #       {Bonfire.Tag.Web.WidgetTagsLive, []}
-      #      ]
-      #    ],
-      #    guests: [
-      #      secondary: nil
-      #    ]
-      #  ],
+       #  sidebar_widgets: [
+       #    users: [
+       #      secondary: [
+       #       {Bonfire.Tag.Web.WidgetTagsLive, []}
+       #      ]
+       #    ],
+       #    guests: [
+       #      secondary: nil
+       #    ]
+       #  ],
        #  without_sidebar: true,
        url: nil,
        post_id: nil,

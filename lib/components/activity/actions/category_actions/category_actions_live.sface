@@ -9,27 +9,27 @@
   object_boundary={@object_boundary}
 /> -->
 <div class="flex flex-col w-full h-full">
-<div class="px-1 flex-1 flex h-full w-full place-content-center items-center">
-<Bonfire.UI.Common.FollowButtonLive
-    :if={e(@object, :character, nil)}
-    id={ComponentID.new(Bonfire.UI.Common.FollowButtonLive, id(@object), @activity_id)}
-    object_id={id(@object)}
-    path={path(@object)}
-    verb={if @type == :group, do: l("Join")}
-    verb_undo={if @type == :group, do: l("Leave")}
-    verb_already={if @type == :group, do: l("Joined")}
-    object_boundary={@object_boundary}
-    hide_icon
-    class="font-semibold normal-case w-full btn btn-ghost rounded text-primary"
-  />
-</div>
-<div class="px-1 flex-1 flex h-full w-full place-content-center items-center border-t border-base-content/10">
-  <Bonfire.UI.Social.Activity.MoreActionsLive
-    object={@object}
-    object_type={@object_type}
-    verb={if @type == :group, do: l("Join")}
-    object_boundary={@object_boundary}
-    activity_component_id={@activity_id}
-  />
-</div>
+  <div class="px-1 flex-1 flex h-full w-full place-content-center items-center">
+    <Bonfire.UI.Common.FollowButtonLive
+      :if={e(@object, :character, nil)}
+      id={ComponentID.new(Bonfire.UI.Common.FollowButtonLive, id(@object), @activity_id)}
+      object_id={id(@object)}
+      path={path(@object)}
+      verb={if @type == :group, do: l("Join")}
+      verb_undo={if @type == :group, do: l("Leave")}
+      verb_already={if @type == :group, do: l("Joined")}
+      object_boundary={@object_boundary}
+      hide_icon
+      class="font-semibold normal-case w-full btn btn-ghost rounded text-primary"
+    />
+  </div>
+  <div class="px-1 flex-1 flex h-full w-full place-content-center items-center border-t border-base-content/10">
+    <Bonfire.UI.Social.Activity.MoreActionsLive
+      object={@object}
+      object_type={@object_type}
+      verb={if @type == :group, do: l("Join")}
+      object_boundary={@object_boundary}
+      activity_component_id={@activity_id}
+    />
+  </div>
 </div>

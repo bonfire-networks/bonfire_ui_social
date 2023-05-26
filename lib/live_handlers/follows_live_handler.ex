@@ -3,8 +3,6 @@ defmodule Bonfire.Social.Follows.LiveHandler do
   import Untangle
   alias Bonfire.Boundaries.Circles
 
-
-
   def handle_event("follow", %{"id" => id} = params, socket) do
     # debug(socket)
 
@@ -72,7 +70,6 @@ defmodule Bonfire.Social.Follows.LiveHandler do
   end
 
   defp do_preload(list_of_components, list_of_ids, current_user) do
-
     # # Here we're checking if the user is ghosted / silenced by user or instance
     # ghosted? = Bonfire.Boundaries.Blocks.is_blocked?(List.first(list_of_ids), :ghost, current_user: current_user) |> debug("ghosted?")
     # ghosted_instance_wide? = Bonfire.Boundaries.Blocks.is_blocked?(List.first(list_of_ids), :ghost, :instance_wide) |> debug("ghosted_instance_wide?")
@@ -115,11 +112,11 @@ defmodule Bonfire.Social.Follows.LiveHandler do
        %{
          my_follow:
            if(Map.get(my_requests, component.object_id), do: :requested) ||
-             Map.get(my_follows, component.object_id) || component.previous_value || false,
-          # ghosted?: ghosted?,
-          # ghosted_instance_wide?: ghosted_instance_wide?,
-          # silenced?: silenced?,
-          # silenced_instance_wide?: silenced_instance_wide?
+             Map.get(my_follows, component.object_id) || component.previous_value || false
+         # ghosted?: ghosted?,
+         # ghosted_instance_wide?: ghosted_instance_wide?,
+         # silenced?: silenced?,
+         # silenced_instance_wide?: silenced_instance_wide?
        }}
     end)
   end

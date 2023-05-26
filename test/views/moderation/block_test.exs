@@ -32,7 +32,6 @@ defmodule Bonfire.Social.Moderation.BlockTest do
     assert render(view) =~ "unghost"
   end
 
-
   test "Silence a user works" do
     # create a bunch of users
     account = fake_account!()

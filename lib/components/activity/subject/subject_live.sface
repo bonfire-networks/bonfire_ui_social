@@ -6,10 +6,7 @@
     "flex items-top gap-2 w-full": @show_minimal_subject_and_note
   }
 >
-  <div
-    :if={@showing_within == :smart_input}
-    class="absolute pl-3 ml-3  right-[-30px]"
-  >
+  <div :if={@showing_within == :smart_input} class="absolute pl-3 ml-3  right-[-30px]">
     <span
       phx-click="Bonfire.UI.Common.SmartInput:remove_data"
       class="btn btn-xs btn-circle btn-ghost"

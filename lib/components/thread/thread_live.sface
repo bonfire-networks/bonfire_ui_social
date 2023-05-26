@@ -2646,9 +2646,9 @@
             cannot_reply_text={l("No replies yet...")}
           />
         {#else} -->
-          <span class="my-12 badge">
-            {l("No replies yet...")}
-          </span>
+        <span class="my-12 badge">
+          {l("No replies yet...")}
+        </span>
         <!-- {/if} -->
       {/if}
     </div>

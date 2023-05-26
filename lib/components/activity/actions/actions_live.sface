@@ -6,8 +6,7 @@
   x-show={if @showing_within == :thread && !@viewing_main_object, do: "show_replies"}
   x-transition
   class={
-    "thread_actions flex items-center":
-      @showing_within == :thread,
+    "thread_actions flex items-center": @showing_within == :thread,
     "feed_actions items-center flex": @viewing_main_object != true,
     "mt-0": e(@showing_within, :feed) == :feed || @showing_within == :notifications,
     "mt-1": @showing_within == :widget

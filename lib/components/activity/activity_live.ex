@@ -361,7 +361,6 @@ defmodule Bonfire.UI.Social.ActivityLive do
                 cw={@cw}
                 is_remote={@is_remote}
               />
-
             {#match Bonfire.UI.Social.Activity.MediaLive}
               <Bonfire.UI.Social.Activity.MediaLive
                 :if={@hide_activity != "media" and @showing_within != :smart_input}

@@ -11,7 +11,7 @@ defmodule Bonfire.UI.Social.Activity.MediaLive do
       m_type = m |> the_media() |> e(:media_type, nil)
 
       # String.starts_with?(m_type, ["image", "video", "embed", "audio", "song", "photo", "rich"]) or
-        String.starts_with?(m_type, ["image", "photo", "rich"]) or
+      String.starts_with?(m_type, ["image", "photo", "rich"]) or
         String.contains?(Media.media_url(m), [".jpg", ".jpeg", ".png", ".gif", ".webp"])
     end)
   end
