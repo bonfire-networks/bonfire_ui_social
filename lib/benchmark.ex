@@ -3,8 +3,9 @@ defmodule Bonfire.UI.Social.Benchmark do
   import Phoenix.ConnTest
   # import Untangle
 
+  # NOTE: make sure you populate your local with seeds first, and then call these functions in iex
+
   def feed_query_methods do
-    # NOTE: make sure you populate your local with seeds first, and then copy paste this in iex
     Logger.configure(level: :info)
 
     Benchee.run(
@@ -48,7 +49,6 @@ defmodule Bonfire.UI.Social.Benchmark do
   end
 
   def feed_queries do
-    # NOTE: make sure you populate your local with seeds first, and then copy paste this in iex
     Logger.configure(level: :info)
 
     Benchee.run(
