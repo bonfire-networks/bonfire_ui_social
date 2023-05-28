@@ -9,7 +9,7 @@ defmodule Bonfire.UI.Social.FeedLive do
   prop feed_id, :any, default: nil
   prop feed_ids, :any, default: nil
   prop feed_filters, :any, default: []
-  prop feed, :any, default: :loading
+  prop feed, :any, default: []
   prop page_info, :any, default: nil
   prop loading, :boolean, default: true
   prop preload, :atom, default: :feed
@@ -43,23 +43,32 @@ defmodule Bonfire.UI.Social.FeedLive do
   slot bottom_or_empty_feed
 
   def mount(socket) do
-    {:ok,
-     socket
-     |> assign(
-       feed: nil,
-       hide_activities: nil
-     ),
-     temporary_assigns: [
-       feed: []
-       # feed_future: []
-     ]}
+    feed_id = e(socket.assigns, :feed_id, nil) || e(socket.assigns, :id, nil)
+
+    {
+      :ok,
+      socket
+      |> stream(:feed, [], dom_id: &component_id(feed_id, &1))
+      |> assign(
+        feed: nil,
+        hide_activities: nil,
+        feed_count: nil
+      )
+      #  temporary_assigns: [
+      #    feed: []
+      #  ]
+    }
   end
 
+  defp component_id(feed_id, entry) do
+    "#{feed_id}-#{id(entry) || e(entry, :activity, :id, nil) || e(entry, :object, :id, nil) || e(entry, :edge, :id, nil) || Pointers.ULID.generate()}"
+  end
+
+  # consolidate different kinds of lists/feeds into Activity
   defp get_activity(%{activity: %{} = activity, edge: %{} = edge}),
     do: merge_structs_as_map(activity, edge)
 
-  # consolidate different kinds of lists/feeds into Activity
-  defp get_activity(%{activity: %{} = activity}), do: activity
+  defp get_activity(%{activity: %{id: _} = activity}), do: activity
   defp get_activity(%{edge: %{} = activity}), do: activity
   defp get_activity(activity), do: activity
 
@@ -101,11 +110,18 @@ defmodule Bonfire.UI.Social.FeedLive do
     # end
   end
 
+  def update(%{insert_stream: %{feed: entries}} = assigns, socket) do
+    debug("feed stream is being poured into")
+
+    socket
+    |> assign(Map.drop(assigns, [:insert_stream]))
+    |> LiveHandler.insert_feed(entries)
+    |> ok_socket()
+  end
+
   # adding new feed item
   def update(%{new_activity: new_activity} = _assigns, socket) when is_map(new_activity) do
-    debug(
-      "FeedLive.update - new_activity (feed is a temporary assign, so only add new activities)"
-    )
+    debug("new_activity (feed is a temporary assign, so only add new activities)")
 
     {:ok,
      socket
@@ -134,7 +150,7 @@ defmodule Bonfire.UI.Social.FeedLive do
   end
 
   def update(%{feed: feed, page_info: _page_info} = assigns, socket) when is_list(feed) do
-    debug("FeedLive.update - an initial feed was provided via assigns")
+    debug("an initial feed was provided via assigns")
     debug(assigns)
 
     # debug(socket.assigns, "socket assigns")
@@ -163,15 +179,15 @@ defmodule Bonfire.UI.Social.FeedLive do
   end
 
   def update(%{feed: nil} = assigns, socket) do
-    debug("FeedLive.update - a feed was NOT provided, fetching one now")
+    debug("a feed was NOT provided, fetching one now")
 
     socket = assign(socket, assigns)
 
     socket =
       socket
       |> assign(feed_component_id: socket.assigns.id)
-      |> Bonfire.Social.Feeds.LiveHandler.feed_assigns_maybe_async(:default, ...)
-      |> assign_generic(socket, ...)
+      |> LiveHandler.feed_assigns_maybe_async(assigns[:feed_id] || assigns[:id] || :default, ...)
+      |> LiveHandler.insert_feed(socket, ...)
 
     maybe_subscribe(socket)
 
@@ -179,13 +195,20 @@ defmodule Bonfire.UI.Social.FeedLive do
   end
 
   def update(%{feed: :loading} = assigns, socket) do
-    debug("FeedLive.update - a feed is being loaded async")
+    debug("a feed is being loaded async")
 
     ok_socket(assign(socket, assigns))
   end
 
-  def update(_assigns, _socket) do
-    error("No feed loaded")
+  def update(%{loading: true} = assigns, socket) do
+    debug("a feed is being loaded async")
+
+    ok_socket(assign(socket, assigns))
+  end
+
+  def update(_assigns, socket) do
+    warn("No feed loaded")
+    {:ok, socket}
   end
 
   defp ok_socket(socket) do
@@ -222,7 +245,9 @@ defmodule Bonfire.UI.Social.FeedLive do
     {:noreply,
      socket
      |> assign(selected_tab: tab)
-     |> assign_generic(LiveHandler.feed_assigns_maybe_async(tab, socket))}
+     |> Bonfire.Social.Feeds.LiveHandler.insert_feed(
+       LiveHandler.feed_assigns_maybe_async(tab, socket)
+     )}
   end
 
   def handle_event(

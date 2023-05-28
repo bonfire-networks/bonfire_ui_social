@@ -13,7 +13,7 @@ defmodule Bonfire.UI.Social.Feeds.FederationLive do
   def mount(_params, _session, socket) do
     {:ok,
      socket
-     |> assign(LiveHandler.feed_assigns_maybe_async(:fediverse, socket))
+     |> assign(LiveHandler.feed_default_assigns(:fediverse, socket))
      |> assign(
        page: "federation",
        page_title: l("Federation")

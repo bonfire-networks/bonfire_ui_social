@@ -11,9 +11,9 @@
     "mt-0": e(@showing_within, :feed) == :feed || @showing_within == :notifications,
     "mt-1": @showing_within == :widget
   }
-  :class={if @viewing_main_object != true,
-    do: "activity_active ? '' : '[@media(any-hover:hover)]:hidden'"}
 >
+  <!-- :class={if @viewing_main_object != true, do: "activity_active ? '' : '[@media(any-hover:hover)]:hidden'"} -->
+
   <div class={
     "feed-clickable flex items-center flex-1 justify-between md:justify-end gap-4 mt-3",
     "!justify-end mt-1": @showing_within == :thread && @viewing_main_object != true,

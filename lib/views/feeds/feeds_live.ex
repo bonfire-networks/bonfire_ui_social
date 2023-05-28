@@ -73,26 +73,26 @@ defmodule Bonfire.UI.Social.FeedsLive do
 
   def do_handle_params(%{"tab" => tab} = params, _url, socket)
       when tab in ["federation", "fediverse", "remote"] do
-    {:noreply, assign(socket, LiveHandler.feed_assigns_maybe_async({:fediverse, params}, socket))}
+    {:noreply, assign(socket, LiveHandler.feed_default_assigns({:fediverse, params}, socket))}
   end
 
   def do_handle_params(%{"tab" => "local" = _tab} = params, _url, socket) do
-    {:noreply, assign(socket, LiveHandler.feed_assigns_maybe_async({:local, params}, socket))}
+    {:noreply, assign(socket, LiveHandler.feed_default_assigns({:local, params}, socket))}
   end
 
   def do_handle_params(%{"tab" => "likes" = _tab} = params, _url, socket) do
-    {:noreply, assign(socket, LiveHandler.feed_assigns_maybe_async({:likes, params}, socket))}
+    {:noreply, assign(socket, LiveHandler.feed_default_assigns({:likes, params}, socket))}
   end
 
   def do_handle_params(%{"tab" => "flags" = _tab} = params, _url, socket) do
-    {:noreply, assign(socket, LiveHandler.feed_assigns_maybe_async({:flags, params}, socket))}
+    {:noreply, assign(socket, LiveHandler.feed_default_assigns({:flags, params}, socket))}
   end
 
   def do_handle_params(params, _url, socket) do
     {:noreply,
      assign(
        socket,
-       LiveHandler.feed_assigns_maybe_async(
+       LiveHandler.feed_default_assigns(
          {e(socket, :assigns, :live_action, :default), params},
          socket
        )

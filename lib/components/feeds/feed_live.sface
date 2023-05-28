@@ -23,29 +23,31 @@
       path_prefix={@tab_path_prefix}
       path_suffix={@tab_path_suffix}
     />
-    {#if is_list(@feed) and @feed != []}
+    {#if @feed_count || e(@streams, :feed, :inserts, nil) != [] || (is_list(@feed) and @feed != [])}
       <div
         id={"feed-#{@feed_id || @id}"}
         data-id="feed_activity_list"
-        phx-update={e(@feed_update_mode, "append")}
+        phx-update="stream"
         class="flex flex-col divide-y divide-base-content/10"
       >
-        {#for {entry, i} <- Enum.with_index(@feed)}
-          {#case "activity-#{@feed_id || @id}-#{id(entry) || e(entry, :activity, :id, nil) || e(entry, :object, :id, nil) || e(entry, :edge, :id, nil) || Pointers.ULID.generate()}"}
-            {#match cid}
-              <div id={"f-#{@feed_id || @id}-a-#{i}"} data-i={i} :if={@hide_activities != "component"}>
-                <ActivityLive
-                  id={cid}
-                  i={i}
-                  activity={get_activity(entry)}
-                  showing_within={@showing_within}
-                  verb_default={@verb_default}
-                  feed_id={@feed_id}
-                  hide_activity={@hide_activities}
-                />
-              </div>
-            {#match _}
-          {/case}
+        <!-- phx-update={e(@feed_update_mode, "append")} -->
+        {#for {entry_id, entry} <- @streams.feed || @feed || []}
+          <!-- id={"f-#{@feed_id || @id}-a-#{i}"} -->
+          <div
+            id={entry_id}
+            :if={@hide_activities != "component"}
+            class={if @hide_activities == "infinite_scroll", do: "infinite_scroll_hidden hidden"}
+          >
+            <!-- id={"activity-#{component_id(@feed_id || @id, entry)}"} -->
+            <ActivityLive
+              id={"activity-#{entry_id}"}
+              activity={get_activity(entry) |> debug("aaaaa")}
+              showing_within={@showing_within}
+              verb_default={@verb_default}
+              feed_id={@feed_id}
+              hide_activity={@hide_activities}
+            />
+          </div>
         {/for}
       </div>
 
@@ -2659,6 +2661,9 @@
       live_handler={Bonfire.Social.Feeds}
       page_info={@page_info}
       target={@myself}
+      infinite_load
+      context={@id}
+      entry_count={@feed_count}
     />
   </div>
 </div>
