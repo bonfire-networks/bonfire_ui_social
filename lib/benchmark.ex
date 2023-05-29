@@ -11,12 +11,12 @@ defmodule Bonfire.UI.Social.Benchmark do
     Benchee.run(
       %{
         "minimal join/preloads, with boundaries applied" => fn ->
-          Bonfire.Social.FeedActivities.feed(:local, preloads: :with_object)
+          Bonfire.Social.FeedActivities.feed(:local, preload: :with_object)
         end,
         "minimal join/preloads, without boundaries applied" => fn ->
           Bonfire.Social.FeedActivities.feed(:local,
             skip_boundary_check: true,
-            preloads: :with_object
+            preload: :with_object
           )
         end,
         # "caching preloads, with boundaries applied" => fn ->
@@ -28,10 +28,10 @@ defmodule Bonfire.UI.Social.Benchmark do
         #   |> Bonfire.Social.Feeds.LiveHandler.preloads(with_cache: true)
         # end,
         "full join/preloads, with boundaries applied" => fn ->
-          Bonfire.Social.FeedActivities.feed(:local, preloads: :feed)
+          Bonfire.Social.FeedActivities.feed(:local, preload: :feed)
         end,
         "full join/preloads, without boundaries applied" => fn ->
-          Bonfire.Social.FeedActivities.feed(:local, skip_boundary_check: true, preloads: :feed)
+          Bonfire.Social.FeedActivities.feed(:local, skip_boundary_check: true, preload: :feed)
         end
         # "AP:shared_outbox" => fn -> ActivityPub.Web.ObjectView.render("outbox.json", %{outbox: :shared_outbox}) end
       },
@@ -51,13 +51,13 @@ defmodule Bonfire.UI.Social.Benchmark do
   defp some_feed_queries do
     %{
       "query 1 activity" => fn ->
-        Bonfire.Social.FeedActivities.feed(:local, preloads: :feed, limit: 1)
+        Bonfire.Social.FeedActivities.feed(:local, limit: 1)
       end,
       "query 10 activities" => fn ->
-        Bonfire.Social.FeedActivities.feed(:local, preloads: :feed, limit: 10)
+        Bonfire.Social.FeedActivities.feed(:local, limit: 10)
       end,
       "query 20 activities" => fn ->
-        Bonfire.Social.FeedActivities.feed(:local, preloads: :feed, limit: 20)
+        Bonfire.Social.FeedActivities.feed(:local, limit: 20)
       end
     }
   end
