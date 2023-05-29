@@ -48,21 +48,25 @@ defmodule Bonfire.UI.Social.Benchmark do
     )
   end
 
+  defp some_feed_queries do
+    %{
+      "query 1 activity" => fn ->
+        Bonfire.Social.FeedActivities.feed(:local, preloads: :feed, limit: 1)
+      end,
+      "query 10 activities" => fn ->
+        Bonfire.Social.FeedActivities.feed(:local, preloads: :feed, limit: 10)
+      end,
+      "query 20 activities" => fn ->
+        Bonfire.Social.FeedActivities.feed(:local, preloads: :feed, limit: 20)
+      end
+    }
+  end
+
   def feed_queries do
     Logger.configure(level: :info)
 
     Benchee.run(
-      %{
-        "query 1 activity" => fn ->
-          Bonfire.Social.FeedActivities.feed(:local, preloads: :feed, limit: 1)
-        end,
-        "query 10 activities" => fn ->
-          Bonfire.Social.FeedActivities.feed(:local, preloads: :feed, limit: 10)
-        end,
-        "query 20 activities" => fn ->
-          Bonfire.Social.FeedActivities.feed(:local, preloads: :feed, limit: 20)
-        end
-      },
+      some_feed_queries(),
       parallel: 1,
       warmup: 2,
       time: 5,
@@ -70,10 +74,27 @@ defmodule Bonfire.UI.Social.Benchmark do
       reduction_time: 2,
       profile_after: true,
       formatters: [
-        {Benchee.Formatters.HTML, file: "benchmarks/output/feed_queries.html"},
+        # {Benchee.Formatters.HTML, file: "benchmarks/output/feed_queries.html"},
         Benchee.Formatters.Console
       ]
     )
+  end
+
+  def feed_queries_without_benchee do
+    Logger.configure(level: :error)
+
+    Enum.each(
+      some_feed_queries(),
+      fn {name, fun} ->
+        IO.inspect(name)
+
+        for _ <- 0..10 do
+          Bonfire.Common.Benchmark.apply_timed(fun)
+        end
+      end
+    )
+
+    Logger.configure(level: :info)
   end
 
   def feed_page do
