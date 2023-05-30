@@ -46,7 +46,7 @@ defmodule Bonfire.UI.Social.Routes do
         pipe_through(:browser)
         pipe_through(:account_required)
 
-        live("/notifications", Feeds.NotificationsLive, as: :notifications)
+        live("/notifications", NotificationsFeedLive, as: :notifications)
         # live "/flags", FlagsLive, as: :flags
       end
     end

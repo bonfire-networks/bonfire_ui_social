@@ -280,7 +280,7 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
 
   defp send_feed_updates(pid \\ nil, feed_ids, assigns, component \\ Bonfire.UI.Social.FeedLive)
 
-  defp send_feed_updates(pid, feed_ids, {entries, assigns}, component) do
+  defp send_feed_updates(pid, feed_ids, {entries, assigns}, component) when is_list(assigns) do
     send_feed_updates(pid, feed_ids, assigns ++ [insert_stream: %{feed: entries}], component)
   end
 
@@ -290,17 +290,25 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
     end
   end
 
-  defp send_feed_updates(pid, feed_id, assigns, component) do
+  defp send_feed_updates(pid, feed_id, assigns, component)
+       when is_list(assigns) or is_map(assigns) do
     debug(feed_id, "Sending feed update to")
     maybe_send_update(pid, component, feed_id, assigns)
+  end
+
+  defp send_feed_updates(pid, feed_id, {:error, e}, _component) do
+    debug(feed_id, "Returning error instead of feed")
+    assign_error(%{}, e, pid)
   end
 
   def paginate_feed(feed_id, attrs, socket, opts \\ [])
 
   def paginate_feed("user-" <> selected_tab_and_user_id, attrs, socket, _opts) do
+    debug(selected_tab_and_user_id, "paginate user feed")
+
     {:noreply,
      socket
-     |> assign_generic(load_user_feed_assigns(selected_tab_and_user_id, attrs, socket))}
+     |> insert_feed(load_user_feed_assigns(selected_tab_and_user_id, attrs, socket))}
   end
 
   def paginate_feed(feed_id, attrs, socket, opts) when not is_nil(feed_id) do
@@ -767,7 +775,7 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
   end
 
   defp feed_assigns({feed_id, other}, socket) when is_atom(feed_id) and not is_nil(feed_id) do
-    warn(other, "ignoring param")
+    warn(other, "ignoring unsupported param, for feed #{inspect(feed_id)}")
     feed_assigns(feed_id, socket)
   end
 

@@ -74,7 +74,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
     {:ok,
      assign(
        socket,
-       activity: activity |> Map.drop([:object]),
+       activity: if(is_map(activity), do: Map.drop(activity, [:object])),
        object: e(activity, :object, nil)
      )}
   end

@@ -1,4 +1,4 @@
-defmodule Bonfire.UI.Social.Feeds.NotificationsLive do
+defmodule Bonfire.UI.Social.NotificationsFeedLive do
   use Bonfire.UI.Common.Web, :surface_live_view
 
   declare_nav_link(l("Notifications"),
@@ -18,7 +18,7 @@ defmodule Bonfire.UI.Social.Feeds.NotificationsLive do
 
     # feed_id = Bonfire.Social.Feeds.my_feed_id(:notifications, socket)
     # TODO: avoid two queries for feed_id?
-    feed = Bonfire.Social.FeedActivities.feed(:notifications, current_user: current_user)
+    # feed = Bonfire.Social.FeedActivities.feed(:notifications, current_user: current_user)
 
     {:ok,
      socket
@@ -35,8 +35,10 @@ defmodule Bonfire.UI.Social.Feeds.NotificationsLive do
          ),
        current_user: current_user,
        feed_id: :notifications,
-       feed: e(feed, :edges, []),
-       page_info: e(feed, :page_info, []),
+       feed: nil,
+       page_info: nil,
+       #  feed: e(feed, :edges, []),
+       #  page_info: e(feed, :page_info, []),
        loading: false,
        sidebar_widgets: [
          users: [
