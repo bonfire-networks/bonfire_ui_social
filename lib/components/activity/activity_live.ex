@@ -203,6 +203,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
       cw: e(object, :post_content, :name, nil) != nil,
       is_remote: e(activity, :peered, nil) != nil or e(object, :peered, nil) != nil
     })
+
     # |> debug("Activity preparation done")
   end
 

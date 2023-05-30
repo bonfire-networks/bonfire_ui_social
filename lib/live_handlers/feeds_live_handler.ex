@@ -1108,12 +1108,12 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
       )
       |> debug("followers in feeed")
 
-    {requests ++ e(followers, :edges, []),
-     [
-       loading: false,
-       selected_tab: tab,
-       page_info: e(followers, :page_info, [])
-     ]}
+    [
+      loading: false,
+      selected_tab: tab,
+      feed: requests ++ e(followers, :edges, []),
+      page_info: e(followers, :page_info, [])
+    ]
   end
 
   def load_user_feed_assigns("followed" = tab, user, params, socket) do
@@ -1132,34 +1132,35 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
 
     # |> debug("followed")
 
-    {requested ++ e(followed, :edges, []),
-     [
-       loading: false,
-       selected_tab: tab,
-       page_info: e(followed, :page_info, [])
-     ]}
+    [
+      loading: false,
+      selected_tab: tab,
+      feed: requested ++ e(followed, :edges, []),
+      page_info: e(followed, :page_info, [])
+    ]
   end
 
   def load_user_feed_assigns("requested" = tab, _user, params, socket) do
     requested = list_requested(current_user(socket), input_to_atoms(params))
 
-    {requested,
-     [
-       loading: false,
-       selected_tab: tab
-       # page_info: e(requested, :page_info, [])
-     ]}
+    [
+      loading: false,
+      selected_tab: tab,
+      feed: requested
+      # TODO: pagination
+      # page_info: e(requested, :page_info, [])
+    ]
   end
 
   def load_user_feed_assigns("requests" = tab, _user, params, socket) do
     requests = list_requests(current_user(socket), input_to_atoms(params))
 
-    {requests,
-     [
-       loading: false,
-       selected_tab: tab
-       # page_info: e(requested, :page_info, [])
-     ]}
+    [
+      loading: false,
+      selected_tab: tab,
+      feed: requests
+      # page_info: e(requested, :page_info, [])
+    ]
   end
 
   defp list_requested(current_user, pagination) do
