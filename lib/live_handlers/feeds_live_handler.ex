@@ -400,7 +400,7 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
       socket
       |> assign_generic(feed_edges)
     else
-      debug(feed_edges, "insert feed into stream")
+      # debug(feed_edges, "insert feed into stream")
       stream_insert_many(socket, :feed, feed_edges || [], opts)
     end
   end
@@ -826,7 +826,7 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
       list_of_components
       |> Enum.map(fn
         %{activity: %{__struct__: _} = activity} ->
-          debug(activity, "struct")
+          # debug(activity, "struct")
           activity
 
         %{activity: %{} = activity} ->

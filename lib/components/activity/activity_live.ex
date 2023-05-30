@@ -136,10 +136,10 @@ defmodule Bonfire.UI.Social.ActivityLive do
   def prepare(assigns), do: Map.put(assigns, :activity_prepared, :skipped)
 
   defp do_prepare(%{activity: activity, object: object} = assigns) when not is_nil(object) do
-    debug("Activity ##{debug_i(assigns[:i], assigns[:activity_inception])} preparation started")
+    # debug("Activity ##{debug_i(assigns[:i], assigns[:activity_inception])} preparation started")
     # debug(assigns, "initial assigns")
 
-    debug(object, "object")
+    # debug(object, "object")
 
     verb =
       Activities.verb_maybe_modify(
@@ -203,7 +203,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
       cw: e(object, :post_content, :name, nil) != nil,
       is_remote: e(activity, :peered, nil) != nil or e(object, :peered, nil) != nil
     })
-    |> debug("Activity preparation done")
+    # |> debug("Activity preparation done")
   end
 
   defp do_prepare(assigns), do: Map.put(assigns, :activity_prepared, :skipped)

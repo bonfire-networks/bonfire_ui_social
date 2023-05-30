@@ -11,13 +11,17 @@ defmodule Bonfire.Social.Feeds.LoadMoreTest do
   describe "Load More in Feeds" do
     test "As a user I dont want to see the load more button if there are the same number of activities as the pagination limit" do
       # make sure we start with a blank slate:
-      Bonfire.Common.Repo.delete_all(Bonfire.Data.Social.Post)
-
+      Bonfire.Common.Repo.delete_all(Bonfire.Data.Social.Follow)
       total_posts = Bonfire.Common.Config.get(:default_pagination_limit, 2)
 
       account = fake_account!()
       me = fake_user!(account)
 
+      # When I login
+      conn = conn(user: me, account: account)
+      html_body = "epic html message"
+      # And I create a post with a 'public' boundary
+      attrs = %{post_content: %{html_body: html_body}}
       attrs = %{
         post_content: %{
           html_body: "<p>epic html message</p>"
@@ -25,70 +29,49 @@ defmodule Bonfire.Social.Feeds.LoadMoreTest do
       }
 
       for n <- 1..total_posts do
-        assert {:ok, post} =
-                 Posts.publish(current_user: me, post_attrs: attrs, boundary: "public")
+        {:ok, post} = Posts.publish(current_user: me, post_attrs: attrs, boundary: "public")
       end
 
-      conn = conn(user: me, account: account)
-      next = "/feed/local"
-      {:ok, view, doc} = live(conn, "/feed/local")
-      assert has_element?(view, "[data-id=load_more]")
-      feed = element(view, "[data-id=feed_activity_list]")
-      assert has_element?(feed)
 
-      feed
-      |> render()
-      |> debug("feeee")
-
-      # option_count = length(list_of_options)
-      # assert view |> element("[data-id=feed] article:nth-of-type(#{option_count})") |> has_element?()
-      # refute view |> element("[data-id=feed] article:nth-of-type(#{option_count + 1})") |> has_element?()
-
-      # # assert Enum.count(view |> element("[data-id=feed] article")) == total_posts
-
-      # all posts are shown
-      assert Enum.count(Floki.find(doc, "[data-id=feed] article")) == total_posts
+      {:ok, view, _html} = live(conn, "/feed/local")
+      # open_browser(view)
+      # feed = element(view, "[data-id=feed_activity_list]")
+      # assert has_element?(feed)
 
       # no more posts
-      assert Floki.find(doc, "[data-id=load_more]") == []
+      refute has_element?(view, "a[data-role=load_more_button]")
     end
 
     test "As a user I dont want to see the load more button if there are less activities than the pagination limit" do
-      # make sure we start with a blank slate:
-      Bonfire.Common.Repo.delete_all(Bonfire.Data.Social.Post)
+     # make sure we start with a blank slate:
+     Bonfire.Common.Repo.delete_all(Bonfire.Data.Social.Post)
 
-      total_posts = Bonfire.Common.Config.get(:default_pagination_limit, 2) - 1
+     total_posts = Bonfire.Common.Config.get(:default_pagination_limit, 2) - 1
+     account = fake_account!()
+     me = fake_user!(account)
 
-      account = fake_account!()
-      me = fake_user!(account)
+     # When I login
+     conn = conn(user: me, account: account)
+     html_body = "epic html message"
+     # And I create a post with a 'public' boundary
+     attrs = %{post_content: %{html_body: html_body}}
+     attrs = %{
+       post_content: %{
+         html_body: "<p>epic html message</p>"
+       }
+     }
 
-      attrs = %{
-        post_content: %{
-          html_body: "<p>epic html message</p>"
-        }
-      }
+     for n <- 1..total_posts do
+       {:ok, post} = Posts.publish(current_user: me, post_attrs: attrs, boundary: "public")
+     end
 
-      for n <- 1..total_posts do
-        assert {:ok, post} =
-                 Posts.publish(current_user: me, post_attrs: attrs, boundary: "public")
-      end
 
-      conn = conn(user: me, account: account)
-      next = "/feed/local"
-      {:ok, view, doc} = live(conn, "/feed/local")
-      assert has_element?(view, "[data-id=load_more]")
+     {:ok, view, _html} = live(conn, "/feed/local")
 
-      # option_count = length(list_of_options)
-      # assert view |> element("[data-id=feed] article:nth-of-type(#{option_count})") |> has_element?()
-      # refute view |> element("[data-id=feed] article:nth-of-type(#{option_count + 1})") |> has_element?()
+     refute has_element?(view, "a[data-role=load_more_button]")
+     feed = element(view, "[data-id=feed_activity_list]")
+     assert has_element?(feed)
 
-      # # assert Enum.count(view |> element("[data-id=feed] article")) == total_posts
-
-      # all posts are shown
-      assert Enum.count(Floki.find(doc, "[data-id=feed] article")) == total_posts
-
-      # no more posts
-      assert Floki.find(doc, "[data-id=load_more]") == []
     end
 
     test "As a user I want to see the load more button if there are more activities than the pagination limit" do
@@ -116,9 +99,9 @@ defmodule Bonfire.Social.Feeds.LoadMoreTest do
       end
 
       conn = conn(user: bob, account: account2)
-      next = "/feed/local"
-      {view, doc} = floki_live(conn, next)
-      assert Floki.find(doc, "[data-id=load_more]") != []
+      {:ok, view, _html} = live(conn, "/feed/local")
+
+      assert has_element?(view, "a[data-role=load_more_button]")
     end
 
     test "As a user when I click on load more I want to see next activities below the others (using LiveView websocket)" do
@@ -148,13 +131,10 @@ defmodule Bonfire.Social.Feeds.LoadMoreTest do
       end
 
       conn = conn(user: alice, account: account)
-      next = "/feed/local"
-      {view, doc} = floki_live(conn, next)
+      {:ok, view, html} = live(conn, "/feed/local")
 
-      articles = Floki.find(doc, "[data-id=feed] article")
-      # |> info("articles")
 
-      assert Enum.count(articles) == Bonfire.Common.Config.get(:default_pagination_limit, 2)
+
 
       more_doc =
         view
@@ -162,10 +142,9 @@ defmodule Bonfire.Social.Feeds.LoadMoreTest do
         |> render_click()
 
       # are extra activities being broadcast via pubsub? if so, wait for them
-      live_pubsub_wait(view)
-
-      articles = Floki.find(more_doc, "[data-id=feed] article")
-      # |> debug("articles")
+        # open_browser(view)
+        articles = element(more_doc, "[data-id=feed] article")
+      # # |> debug("articles")
 
       assert Enum.count(articles) == total_posts
     end

@@ -41,7 +41,7 @@
             <!-- id={"activity-#{component_id(@feed_id || @id, entry)}"} -->
             <ActivityLive
               id={"activity-#{entry_id}"}
-              activity={get_activity(entry) |> debug("aaaaa")}
+              activity={get_activity(entry)}
               showing_within={@showing_within}
               verb_default={@verb_default}
               feed_id={@feed_id}
