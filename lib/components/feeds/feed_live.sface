@@ -23,7 +23,7 @@
       path_prefix={@tab_path_prefix}
       path_suffix={@tab_path_suffix}
     />
-    {#if @feed_count || e(@streams, :feed, :inserts, []) != [] || (is_list(@feed) and @feed != [])}
+    {#if @feed_count || e(@streams, :feed, :inserts, []) != []}
       <div
         id={"feed-#{@feed_id || @id}"}
         data-id="feed_activity_list"
@@ -31,7 +31,7 @@
         class="flex flex-col divide-y divide-base-content/10"
       >
         <!-- phx-update={e(@feed_update_mode, "append")} -->
-        {#for {entry_id, entry} <- @streams.feed || @feed || []}
+        {#for {entry_id, entry} <- @streams.feed}
           <!-- id={"f-#{@feed_id || @id}-a-#{i}"} -->
           <div
             id={entry_id}
@@ -41,6 +41,33 @@
             <!-- id={"activity-#{component_id(@feed_id || @id, entry)}"} -->
             <ActivityLive
               id={"activity-#{entry_id}"}
+              activity={get_activity(entry)}
+              showing_within={@showing_within}
+              verb_default={@verb_default}
+              feed_id={@feed_id}
+              hide_activity={@hide_activities}
+            />
+          </div>
+        {/for}
+      </div>
+
+      <div :if={@bottom_or_empty_feed} class="mt-1 mb-2 text-center text-base-content">
+        <#slot {@bottom_or_empty_feed}>
+        </#slot>
+      </div>
+    {#elseif is_list(@feed) and @feed != []}
+      <div
+        id={"feed-#{@feed_id || @id}"}
+        data-id="feed_activity_list"
+        phx-update="append"
+        class="flex flex-col divide-y divide-base-content/10"
+      >
+        <!-- phx-update={e(@feed_update_mode, "append")} -->
+        {#for {entry, i} <- Enum.with_index(@feed)}
+          <!-- id={"f-#{@feed_id || @id}-a-#{i}"} -->
+          <div id={"f-#{@feed_id || @id}-a-#{i}"} :if={@hide_activities != "component"}>
+            <ActivityLive
+              id={"activity-#{component_id(@feed_id || @id, entry)}"}
               activity={get_activity(entry)}
               showing_within={@showing_within}
               verb_default={@verb_default}
