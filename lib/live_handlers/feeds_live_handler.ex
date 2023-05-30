@@ -223,7 +223,7 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
   def handle_info({:count_increment, feed_ids}, socket) do
     debug(feed_ids, "count_increment")
 
-    send_feed_updates(feed_ids, [count_increment: 1], Bonfire.UI.Common.BadgeCounterLive)
+    maybe_send_update(Bonfire.UI.Common.BadgeCounterLive, feed_ids, count_increment: 1)
 
     {:noreply, socket}
   end
