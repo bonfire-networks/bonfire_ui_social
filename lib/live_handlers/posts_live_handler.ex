@@ -99,7 +99,7 @@ defmodule Bonfire.Social.Posts.LiveHandler do
         socket
         |> assign_flash(
           :info,
-          "#{l("Posted!")} <a href='#{permalink}' class='mx-1 text-sm !text-info-content capitalize link'>#{l("Show")}</a>"
+          "<div class='flex justify-between items-center'> <span>#{l("Posted!")} </span><a href='#{permalink}' class='btn-outline btn btn-xs normal-case font-medium text-info-content rounded'>#{l("Show")}</a></div>"
         )
         # |> Bonfire.UI.Common.SmartInput.LiveHandler.close_smart_input()
         |> Bonfire.UI.Common.SmartInput.LiveHandler.reset_input()

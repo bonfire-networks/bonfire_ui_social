@@ -35,6 +35,15 @@
       />
     </li>
 
+    <li :if={current_user_id(@__context__) != @subject_id}>
+      <Dynamic.LiveComponent
+        :if={module_enabled?(Bonfire.Boundaries.Web.AddToCircleLive) and @current_user}
+        module={Bonfire.Boundaries.Web.AddToCircleLive}
+        user_id={@subject_id}
+        id={"object-#{id(@activity_component_id || @activity)}-add-to-circle"}
+      />
+      </li>
+
     <!-- <li class="hover:bg-neutral hover:bg-opacity-20">
       <Bonfire.UI.Social.PinActionLive
         object={@object}
