@@ -61,14 +61,14 @@
               {#else}
                 <div>
                   <div class="flex items-center px-2 gap-3 text-base md:text-sm text-base-content/80">
-                    <Bonfire.UI.Common.AvatarLive
+                    <!-- <Bonfire.UI.Common.AvatarLive
                       :if={is_map(current_user(@__context__))}
                       parent_id="nav_sidebar"
                       class="inline-block object-cover w-10 h-10 rounded-full cursor-pointer bg-base-100"
                       bg_class="rounded"
                       size="40"
                       user={current_user(@__context__)}
-                    />
+                    /> -->
                     <div class="flex items-center w-full">
                       <!-- <span class="px-1 text-xs font-medium uppercase text-base-content/70">{l("To")}</span> -->
                       {#case clone_context(@to_boundaries)}
