@@ -29,7 +29,7 @@
             }}
             prompt={l("Message the author of the flag")}
             icon="heroicons-solid:mail"
-            class="flex items-center gap-2 text-base md:text-sm text-base-content/80"
+            class="flex items-center gap-2 text-sm text-base-content/80"
           />
 
           <!-- <LiveRedirect
@@ -54,7 +54,7 @@
             }}
             prompt={l("Message the flagged user")}
             icon="heroicons-solid:mail"
-            class="flex items-center gap-2 text-base md:text-sm text-base-content/80"
+            class="flex items-center gap-2 text-sm text-base-content/80"
           />
           <!-- <LiveRedirect
             to={path(Bonfire.Data.Social.Message, e(flagged_character(@object), :username, nil))}
