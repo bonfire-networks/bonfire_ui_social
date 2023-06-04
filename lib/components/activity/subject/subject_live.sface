@@ -211,6 +211,7 @@
             with_label
             class=""
             id={ComponentID.new(Bonfire.Boundaries.Web.PermissionsIconLive, id(@object), id(@activity))}
+            object_id={id(@object)}
             object_boundary={@object_boundary}
             parent_id={@activity_component_id || id(@activity)}
           />
