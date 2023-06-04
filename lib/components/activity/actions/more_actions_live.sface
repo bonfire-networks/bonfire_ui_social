@@ -116,7 +116,7 @@
         object_boundary={@object_boundary}
         object_type_readable={l("from feeds")}
         creator_id={@subject_id}
-        parent_id={"activity-#{id(@activity_component_id || @activity)}"}
+        parent_id={"delete-activity-#{id(@activity_component_id || @activity)}"}
         explanation={l(
           "Deleting from feeds means this %{verb} and this %{object} still exist, but this activity won't be discoverable via the local instance's feeds. Remote feeds won't be affected.",
           object: e(@object_type_readable, l("object")),

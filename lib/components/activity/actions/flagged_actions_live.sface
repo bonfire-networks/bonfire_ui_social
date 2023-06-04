@@ -1,6 +1,6 @@
 <div class="flex items-center mt-0 feed_actions">
   <div class="flex items-center justify-between flex-1 gap-4 mt-3 feed-clickable md:justify-end">
-    <div aria-haspopup="true" class="dropdown dropdown-end feed_activity relative">
+    <div aria-haspopup="true" class="dropdown dropdown-with-list dropdown-end feed_activity relative">
       <button
         tabindex="0"
         class="rounded gap-2 text-base-content/70 btn bg-primary/10 hover:bg-primary/30 text-primary btn-ghost normal-case btn-sm"
@@ -20,6 +20,7 @@
           <Bonfire.UI.Common.SmartInputButtonLive
             create_object_type={:message}
             smart_input_opts={%{
+              create_object_type: :message,
               to_circles: [
                 %{
                   e(@activity, :subject, :character, :username, "") =>
@@ -27,42 +28,29 @@
                 }
               ]
             }}
-            prompt={l("Message the author of the flag")}
+            prompt={l("Message the flagger")}
             icon="heroicons-solid:mail"
             class="flex items-center gap-2 text-sm text-base-content/80"
           />
-
-          <!-- <LiveRedirect
-            to={path(Bonfire.Data.Social.Message, e(@activity, :subject, :character, :username, ""))}
-            class=""
-          > -->
-          <!-- {e(@activity, :subject, :profile, :name, "")} -->
-          <!-- <span class="">{l("Message the author of the flag")}</span>
-          </LiveRedirect> -->
         </li>
 
-        <li :if={@object && id(@object) && current_user_id(@__context__) != e(flagged_character(@object), :id, nil) &&
-          e(flagged_character(@object), :id, nil) != e(@activity, :subject, :id, nil)}>
+        <li :if={current_user_id(@__context__) != id(flagged_character(@object || @activity)) &&
+          e(flagged_character(@object || @activity), :id, nil) != e(@activity, :subject, :id, nil)}>
           <Bonfire.UI.Common.SmartInputButtonLive
             create_object_type={:message}
             smart_input_opts={%{
+              create_object_type: :message,
               to_circles: [
                 %{
-                  e(flagged_character(@object), :username, nil) => id(e(flagged_character(@object), nil))
+                  e(flagged_character(@object || @activity), :username, nil) =>
+                    id(e(flagged_character(@object), nil))
                 }
               ]
             }}
-            prompt={l("Message the flagged user")}
+            prompt={l("Message the original author")}
             icon="heroicons-solid:mail"
             class="flex items-center gap-2 text-sm text-base-content/80"
           />
-          <!-- <LiveRedirect
-            to={path(Bonfire.Data.Social.Message, e(flagged_character(@object), :username, nil))}
-            class=""
-          >
-            <span class="">{l("Message the flagged user")}
-            </span>
-          </LiveRedirect> -->
         </li>
       </ul>
     </div>
@@ -70,18 +58,45 @@
     {#if @object_type == Bonfire.Data.Identity.User}
       <div>
         <Dynamic.Component
-          :if={module_enabled?(Bonfire.Boundaries.Web.BlockButtonLive) and @current_user &&
+          :if={module_enabled?(Bonfire.Boundaries.Web.BlockButtonLive) and
             current_user_id(@__context__) != id(@object)}
           module={Bonfire.Boundaries.Web.BlockButtonLive}
           object={@object}
           with_icon
           icon_class="w-5 h-5 stroke-1 text-error"
-          label={e(@object, :profile, :name, l("this user"))}
-          parent_id={id(@activity)}
+          label={l("Block %{user}", user: e(@object, :profile, :name, "this user"))}
+          parent_id={"#{id(@activity)}-#{id(@object)}"}
           class="flex rounded btn btn-ghost hover:bg-error/30 bg-error/20 normal-case btn-sm gap-2 text-error text-xs"
         />
       </div>
     {#else}
+      <div>
+        <Dynamic.Component
+          :if={module_enabled?(Bonfire.Boundaries.Web.BlockButtonLive) and
+            id(flagged_character(@object || @activity)) &&
+            current_user_id(@__context__) != id(flagged_character(@object || @activity))}
+          module={Bonfire.Boundaries.Web.BlockButtonLive}
+          object={flagged_character(@object || @activity)}
+          with_icon
+          icon_class="w-5 h-5 stroke-1 text-error"
+          label={l("Block %{user}", user: e(flagged_character(@object || @activity), :profile, :name, "the author"))}
+          parent_id={"#{id(@activity)}-#{id(flagged_character(@object || @activity))}"}
+          class="flex rounded btn btn-ghost hover:bg-error/30 bg-error/20 normal-case btn-sm gap-2 text-error text-xs"
+        />
+      </div>
+
+      <button
+        :if={e(@activity, :tree, :parent_id, nil)}
+        phx-click="Bonfire.Social.Feeds:publish"
+        phx-target={"##{@activity_component_id || "root"}"}
+        phx-value-to="instance_moderators"
+        phx-value-id={id(@activity)}
+        tabindex="0"
+        class="rounded gap-2 text-base-content/70 btn bg-primary/10 hover:bg-primary/30 text-primary btn-ghost normal-case btn-sm"
+      >
+        <span>{l("Escalate to instance moderators")}</span>
+      </button>
+
       <div>
         <Bonfire.UI.Social.Activity.DeleteObjectLive
           object={@object}

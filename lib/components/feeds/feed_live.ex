@@ -6,6 +6,7 @@ defmodule Bonfire.UI.Social.FeedLive do
 
   import Untangle
 
+  prop feed_name, :atom, default: nil
   prop feed_id, :any, default: nil
   prop feed_ids, :any, default: nil
   prop feed_filters, :any, default: []
@@ -43,7 +44,9 @@ defmodule Bonfire.UI.Social.FeedLive do
   slot bottom_or_empty_feed
 
   def mount(socket) do
-    feed_id = e(socket.assigns, :feed_id, nil) || e(socket.assigns, :id, nil)
+    feed_id =
+      e(socket.assigns, :feed_name, nil) || e(socket.assigns, :feed_id, nil) ||
+        e(socket.assigns, :id, nil)
 
     {
       :ok,

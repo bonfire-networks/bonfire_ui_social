@@ -40,7 +40,7 @@
           >
             <!-- id={"activity-#{component_id(@feed_id || @id, entry)}"} -->
             <ActivityLive
-              id={"activity-#{entry_id}"}
+              id={"s-activity-#{entry_id}"}
               activity={get_activity(entry)}
               showing_within={@showing_within}
               verb_default={@verb_default}
@@ -57,7 +57,7 @@
       </div>
     {#elseif is_list(@feed) and @feed != []}
       <div
-        id={"feed-#{@feed_id || @id}"}
+        id={"feed-#{@feed_name || @feed_id || @id}"}
         data-id="feed_activity_list"
         phx-update="append"
         class="flex flex-col divide-y divide-base-content/10"
@@ -67,7 +67,7 @@
           <!-- id={"f-#{@feed_id || @id}-a-#{i}"} -->
           <div id={"f-#{@feed_id || @id}-a-#{i}"} :if={@hide_activities != "component"}>
             <ActivityLive
-              id={"activity-#{component_id(@feed_id || @id, entry)}"}
+              id={"f-activity-#{component_id(@feed_name || @feed_id || @id, entry)}"}
               activity={get_activity(entry)}
               showing_within={@showing_within}
               verb_default={@verb_default}
@@ -98,6 +98,7 @@
       {#else}
         <div data-id="empty-feed" class="flex items-center place-content-center">
           <Bonfire.UI.Common.EmptyFeed
+            feed_name={@feed_name}
             feedback_title={@feedback_title}
             feedback_message={@feedback_message}
             empty_feed={@bottom_or_empty_feed}
