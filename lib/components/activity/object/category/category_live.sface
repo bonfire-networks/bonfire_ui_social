@@ -36,7 +36,6 @@
       <div class="flex items-center border-l border-base-content/10 w-[120px] gap-1 md:gap-2">
         <Bonfire.UI.Social.Activity.CategoryActionsLive
           object={@object}
-          type={:group}
           activity_id={id(@activity)}
           object_boundary={@object_boundary}
           object_type={e(@object, :type, nil)}

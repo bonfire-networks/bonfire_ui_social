@@ -15,6 +15,7 @@ defmodule Bonfire.UI.Social.WritePostContentLive do
   prop create_object_type, :any, default: nil
   prop to_boundaries, :any, default: nil
   prop to_circles, :list, default: []
+  prop mentions, :list, default: []
   prop smart_input_opts, :map, default: %{}
   prop showing_within, :atom, default: nil
   prop insert_text, :string, default: nil
@@ -42,6 +43,7 @@ defmodule Bonfire.UI.Social.WritePostContentLive do
   def clone_context(to_boundaries) do
     case to_boundaries do
       [{:clone_context, boundary_name}] -> boundary_name
+      [{"clone_context", boundary_name}] -> boundary_name
       _ -> false
     end
   end

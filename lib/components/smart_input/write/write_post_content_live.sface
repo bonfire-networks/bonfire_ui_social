@@ -201,6 +201,7 @@
             create_object_type={@create_object_type}
             to_boundaries={@to_boundaries}
             to_circles={@to_circles}
+            mentions={@mentions}
             showing_within={@showing_within}
             uploads={@uploads}
             uploaded_files={@uploaded_files}

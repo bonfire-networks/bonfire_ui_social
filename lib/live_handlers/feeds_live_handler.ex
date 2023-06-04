@@ -413,6 +413,18 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
     end
   end
 
+  def assign_feed(socket, assigns, opts \\ [])
+
+  def assign_feed(socket, {_feed_edges, assigns}, opts) do
+    socket
+    |> assign_generic(assigns)
+  end
+
+  def assign_feed(socket, assigns, opts) do
+    socket
+    |> assign_generic(assigns)
+  end
+
   defp feed_filter_assigns(%{"object_type" => "discussions" = filter}),
     do: [
       tab_path_suffix: "/#{filter}",
@@ -981,7 +993,7 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
       debug(tab, "socket not connected or not logged in, just load feed")
       # for dead mounts
       {:noreply,
-       assign(
+       assign_feed(
          socket,
          load_user_feed_assigns(tab, user_or_feed, params, socket)
        )}
@@ -992,7 +1004,7 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
     debug(tab, "not a socket, just load feed")
 
     {:noreply,
-     assign(
+     assign_feed(
        socket,
        load_user_feed_assigns(tab, user_or_feed, params, socket)
      )}

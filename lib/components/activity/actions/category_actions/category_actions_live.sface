@@ -15,9 +15,9 @@
       id={ComponentID.new(Bonfire.UI.Common.FollowButtonLive, id(@object), @activity_id)}
       object_id={id(@object)}
       path={path(@object)}
-      verb={if @type == :group, do: l("Join")}
-      verb_undo={if @type == :group, do: l("Leave")}
-      verb_already={if @type == :group, do: l("Joined")}
+      verb={if @object_type == :group, do: l("Join")}
+      verb_undo={if @object_type == :group, do: l("Leave")}
+      verb_already={if @object_type == :group, do: l("Joined")}
       object_boundary={@object_boundary}
       hide_icon
       class="font-semibold normal-case w-full btn btn-ghost rounded text-primary"
@@ -27,7 +27,7 @@
     <Bonfire.UI.Social.Activity.MoreActionsLive
       object={@object}
       object_type={@object_type}
-      verb={if @type == :group, do: l("Join")}
+      verb={if @object_type == :group, do: l("Join")}
       object_boundary={@object_boundary}
       activity_component_id={@activity_id}
     />

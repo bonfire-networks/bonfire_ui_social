@@ -16,7 +16,7 @@
       object={@object}
       activity_id={id(@activity)}
       object_boundary={@object_boundary}
-      type={:group}
+      object_type={:group}
     />
   </div>
 </div>
