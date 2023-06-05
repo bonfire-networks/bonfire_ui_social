@@ -16,6 +16,10 @@ defmodule Bonfire.UI.Social.FlaggedActionsLive do
   prop flagged, :any
   prop activity_component_id, :string, default: nil
 
+  def flagged_subject(object) do
+    e(object, :created, :creator, nil) || object
+  end
+
   def flagged_character(object) do
     e(object, :created, :creator, :character, nil) || e(object, :character, nil)
   end

@@ -1,11 +1,11 @@
 <div class="flex items-center mt-0 feed_actions">
   <div class="flex items-center justify-between flex-1 gap-4 mt-3 feed-clickable md:justify-end">
-    <div aria-haspopup="true" class="dropdown dropdown-with-list dropdown-end feed_activity relative">
+    <div aria-haspopup="true" class="dropdown dropdown-hover dropdown-end feed_activity relative">
       <button
         tabindex="0"
         class="rounded gap-2 text-base-content/70 btn bg-primary/10 hover:bg-primary/30 text-primary btn-ghost normal-case btn-sm"
       >
-        <#Icon iconify="ri:mail-line" class="w-5 h-5 stroke-1" />
+        <#Icon iconify="game-icons:heart-plus" class="w-5 h-5 stroke-1" />
         <span>{l("Mediate")}</span>
       </button>
       <ul
@@ -52,77 +52,78 @@
             class="flex items-center gap-2 text-sm text-base-content/80"
           />
         </li>
+
+        <!-- Block the author -->
+        <Dynamic.Component
+          :if={module_enabled?(Bonfire.Boundaries.Web.BlockButtonLive)}
+          module={Bonfire.Boundaries.Web.BlockButtonLive}
+          parent_id={@activity_component_id || id(@activity)}
+          object={flagged_subject(@object || @activity)}
+          peered={e(flagged_subject(@object || @activity), :peered, nil)}
+          scope={e(@activity, :tree, :parent, nil) || e(@activity, :tree, :parent_id, nil)}
+          label={l("the original author")}
+          type="block"
+          class="flex items-center w-full gap-2 text-sm text-base-content/80"
+          with_icon
+        />
+
+        <!-- Block the flagger -->
+        <Dynamic.Component
+          :if={module_enabled?(Bonfire.Boundaries.Web.BlockButtonLive)}
+          module={Bonfire.Boundaries.Web.BlockButtonLive}
+          parent_id={@activity_component_id || id(@activity)}
+          object={e(@activity, :subject, nil)}
+          peered={e(@activity, :subject, :peered, nil)}
+          scope={e(@activity, :tree, :parent, nil) || e(@activity, :tree, :parent_id, nil)}
+          label={l("the flagger")}
+          type="block"
+          class="flex items-center w-full gap-2 text-sm text-base-content/80"
+          with_icon
+        />
+
+        <li>
+          <button
+            :if={e(@activity, :tree, :parent_id, nil)}
+            phx-click="Bonfire.Social.Feeds:publish"
+            phx-target={"##{@activity_component_id || "root"}"}
+            phx-value-to="instance_moderators"
+            phx-value-id={id(@activity)}
+            tabindex="0"
+            class="rounded gap-2 text-base-content/70 btn bg-primary/10 hover:bg-primary/30 text-primary btn-ghost normal-case btn-sm"
+          >
+            <span>{l("Escalate to instance moderators")}</span>
+          </button>
+        </li>
+        {#if @object_type != Bonfire.Data.Identity.User}
+          <li>
+            <Bonfire.UI.Social.Activity.DeleteObjectLive
+              object={@object}
+              icon_class="w-5 h-5 stroke-1 text-error"
+              creator_id={Bonfire.UI.Social.Activity.MoreActionsLive.subject_id(@activity, @object)}
+              object_type_readable={@object_type_readable}
+              parent_id={id(@activity)}
+              open_btn_class="flex rounded btn btn-ghost hover:bg-error/30 bg-error/20 normal-case btn-sm gap-2 text-error text-xs"
+            />
+          </li>
+        {/if}
+        <li>
+          <button
+            phx-click="Bonfire.Social.Flags:unflag"
+            phx-target={"##{@activity_component_id || "root"}"}
+            phx-value-id={e(@object, :id, "")}
+            data-role="unflag"
+            title={l("Unflag")}
+            phx-value-subject={e(@activity, :subject, :id, "")}
+            class="flex rounded btn bg-primary/20 hover:bg-primary/30 btn-ghost btn-square btn-sm"
+          >
+            <span class="text-base-content/70">
+              <#Icon iconify="fluent:flag-off-16-filled" class="w-5 h-5 text-primary stroke-1" />
+            </span>
+            <span class="sr-only">{l("Unflag")}</span>
+          </button>
+        </li>
       </ul>
     </div>
-
-    {#if @object_type == Bonfire.Data.Identity.User}
-      <div>
-        <Dynamic.Component
-          :if={module_enabled?(Bonfire.Boundaries.Web.BlockButtonLive) and
-            current_user_id(@__context__) != id(@object)}
-          module={Bonfire.Boundaries.Web.BlockButtonLive}
-          object={@object}
-          with_icon
-          icon_class="w-5 h-5 stroke-1 text-error"
-          label={l("Block %{user}", user: e(@object, :profile, :name, "this user"))}
-          parent_id={"#{id(@activity)}-#{id(@object)}"}
-          class="flex rounded btn btn-ghost hover:bg-error/30 bg-error/20 normal-case btn-sm gap-2 text-error text-xs"
-        />
-      </div>
-    {#else}
-      <div>
-        <Dynamic.Component
-          :if={module_enabled?(Bonfire.Boundaries.Web.BlockButtonLive) and
-            id(flagged_character(@object || @activity)) &&
-            current_user_id(@__context__) != id(flagged_character(@object || @activity))}
-          module={Bonfire.Boundaries.Web.BlockButtonLive}
-          object={flagged_character(@object || @activity)}
-          with_icon
-          icon_class="w-5 h-5 stroke-1 text-error"
-          label={l("Block %{user}", user: e(flagged_character(@object || @activity), :profile, :name, "the author"))}
-          parent_id={"#{id(@activity)}-#{id(flagged_character(@object || @activity))}"}
-          class="flex rounded btn btn-ghost hover:bg-error/30 bg-error/20 normal-case btn-sm gap-2 text-error text-xs"
-        />
-      </div>
-
-      <button
-        :if={e(@activity, :tree, :parent_id, nil)}
-        phx-click="Bonfire.Social.Feeds:publish"
-        phx-target={"##{@activity_component_id || "root"}"}
-        phx-value-to="instance_moderators"
-        phx-value-id={id(@activity)}
-        tabindex="0"
-        class="rounded gap-2 text-base-content/70 btn bg-primary/10 hover:bg-primary/30 text-primary btn-ghost normal-case btn-sm"
-      >
-        <span>{l("Escalate to instance moderators")}</span>
-      </button>
-
-      <div>
-        <Bonfire.UI.Social.Activity.DeleteObjectLive
-          object={@object}
-          icon_class="w-5 h-5 stroke-1 text-error"
-          creator_id={Bonfire.UI.Social.Activity.MoreActionsLive.subject_id(@activity, @object)}
-          object_type_readable={@object_type_readable}
-          parent_id={id(@activity)}
-          open_btn_class="flex rounded btn btn-ghost hover:bg-error/30 bg-error/20 normal-case btn-sm gap-2 text-error text-xs"
-        />
-      </div>
-    {/if}
-
-    <button
-      phx-click="Bonfire.Social.Flags:unflag"
-      phx-target={"##{@activity_component_id || "root"}"}
-      phx-value-id={e(@object, :id, "")}
-      data-role="unflag"
-      title={l("Unflag")}
-      phx-value-subject={e(@activity, :subject, :id, "")}
-      class="flex rounded btn bg-primary/20 hover:bg-primary/30 btn-ghost btn-square btn-sm"
-    >
-      <span class="text-base-content/70">
-        <#Icon iconify="fluent:flag-off-16-filled" class="w-5 h-5 text-primary stroke-1" />
-      </span>
-      <span class="sr-only">{l("Unflag")}</span>
-    </button>
 
     <!-- <LiveRedirect 
       to={@permalink}
