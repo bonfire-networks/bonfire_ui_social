@@ -89,7 +89,7 @@
                           <div class="flex items-center gap-2 mx">
                             <button
                               type="button"
-                              class="flex items-center gap-2 normal-case rounded-full btn-ghost btn-sm btn opacity-90"
+                              class="flex items-center gap-2 normal-case rounded-full btn-active btn-ghost btn-sm btn opacity-90"
                             >
                               <span>{boundary_name}</span>
                             </button>

@@ -1,12 +1,12 @@
-<div :if={@showing_within not in [:group, :topic] and not is_nil(@context)} class={@class}>
+<div :if={@showing_within not in [:group, :topic, :thread] and not is_nil(@context)} class={@class}>
   <!-- Something published in a Category / Topic -->
-  <#Icon solid="Collection" class="w-4 h-4 text-base-content/70" />
+  <#Icon iconify="ri:group-fill" class="w-4 h-4 text-base-content/70" />
   <div class="flex-1 ml-2">
     <div class="text-sm font-medium text-base-content/70">
       {l("Published in")}
       <LiveRedirect
         aria-label={e(@context, :character, :username, "") <> " " <> l("profile")}
-        class="font-medium link link-hover text-base-content/70"
+        class="font-medium link text-base-content/70"
         to={path(@context)}
       >
         {e(@context, :profile, :name, nil) || e(@context, :character, :username, nil)}
