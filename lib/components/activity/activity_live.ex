@@ -340,7 +340,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
                 verb_display={e(component_assigns, :verb_display, @verb_display)}
                 activity={e(component_assigns, :activity, @activity)}
                 object={e(component_assigns, :object, @object)}
-                object_boundary={@object_boundary |> debug("TEST2")}
+                object_boundary={@object_boundary}
                 object_type={e(component_assigns, :object_type, @object_type)}
                 date_ago={e(component_assigns, :date_ago, @date_ago)}
                 permalink={e(component_assigns, :permalink, @permalink)}
