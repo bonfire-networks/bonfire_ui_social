@@ -81,19 +81,41 @@
           with_icon
         />
 
-        <li>
-          <button
-            :if={e(@activity, :tree, :parent_id, nil)}
-            phx-click="Bonfire.Social.Feeds:publish"
-            phx-target={"##{@activity_component_id || "root"}"}
-            phx-value-to="instance_moderators"
-            phx-value-id={id(@activity)}
-            tabindex="0"
-            class="rounded gap-2 text-base-content/70 btn bg-primary/10 hover:bg-primary/30 text-primary btn-ghost normal-case btn-sm"
-          >
-            <span>{l("Escalate to instance moderators")}</span>
-          </button>
-        </li>
+        {#case e(@activity, :tree, :parent_id, nil)}
+          {#match nil}
+          {#match context_id}
+            <li>
+              <button
+                phx-click="Bonfire.Social.Flags:unpublish"
+                phx-target={"##{@activity_component_id || "root"}"}
+                phx-value-id={e(@object, :id, "")}
+                phx-value-context={context_id}
+                phx-value-subject={e(@activity, :subject, :id, "")}
+                data-role="unpublish"
+                title={l("Remove this post from the group")}
+                class="flex rounded btn bg-primary/20 hover:bg-primary/30 btn-ghost btn-square btn-sm"
+              >
+                <span class="text-base-content/70">
+                  <#Icon iconify="material-symbols:delete" class="w-5 h-5 text-primary stroke-1" />
+                </span>
+                <span>{l("Remove this post from the group")}</span>
+              </button>
+            </li>
+
+            <li>
+              <button
+                phx-click="Bonfire.Social.Feeds:publish"
+                phx-target={"##{@activity_component_id || "root"}"}
+                phx-value-to="instance_moderators"
+                phx-value-id={id(@activity)}
+                tabindex="0"
+                class="rounded gap-2 text-base-content/70 btn bg-primary/10 hover:bg-primary/30 text-primary btn-ghost normal-case btn-sm"
+              >
+                <span>{l("Escalate to instance moderators")}</span>
+              </button>
+            </li>
+        {/case}
+
         {#if @object_type != Bonfire.Data.Identity.User}
           <li>
             <Bonfire.UI.Social.Activity.DeleteObjectLive
@@ -111,6 +133,7 @@
             phx-click="Bonfire.Social.Flags:unflag"
             phx-target={"##{@activity_component_id || "root"}"}
             phx-value-id={e(@object, :id, "")}
+            phx-value-context={e(@activity, :tree, :parent_id, nil)}
             data-role="unflag"
             title={l("Unflag")}
             phx-value-subject={e(@activity, :subject, :id, "")}
@@ -119,7 +142,7 @@
             <span class="text-base-content/70">
               <#Icon iconify="fluent:flag-off-16-filled" class="w-5 h-5 text-primary stroke-1" />
             </span>
-            <span class="sr-only">{l("Unflag")}</span>
+            <span>{l("Unflag")}</span>
           </button>
         </li>
       </ul>

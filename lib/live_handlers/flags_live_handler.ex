@@ -22,15 +22,38 @@ defmodule Bonfire.Social.Flags.LiveHandler do
     current_user = current_user_required!(socket)
 
     subject =
-      if attrs["subject"] && Bonfire.Me.Users.is_admin?(current_user),
-        do:
-          Bonfire.Me.Users.by_id(attrs["subject"], current_user: current_user) |> ok_unwrap(nil),
-        else: current_user
+      if attrs["subject"] &&
+           (Bonfire.Me.Users.is_admin?(current_user) or
+              Bonfire.Boundaries.can?(current_user, :mediate, attrs["context"])),
+         do:
+           Bonfire.Me.Users.by_id(attrs["subject"], current_user: current_user) |> ok_unwrap(nil),
+         else: current_user
 
     with _ <- Bonfire.Social.Flags.unflag(subject, id) do
       {:noreply,
        socket
        |> assign_flash(:info, l("Unflagged!"))
+       #  |> assign(flagged: Map.get(socket.assigns, :flagged, []) ++ [{id, false}])
+       |> Bonfire.UI.Social.ActivityLive.remove()}
+    end
+  end
+
+  def handle_event("unpublish", %{"id" => id, "context" => context} = attrs, socket) do
+    current_user = current_user_required!(socket)
+
+    subject =
+      if attrs["subject"] &&
+           (Bonfire.Me.Users.is_admin?(current_user) or
+              Bonfire.Boundaries.can?(current_user, :mediate, context)),
+         do:
+           Bonfire.Me.Users.by_id(attrs["subject"], current_user: current_user) |> ok_unwrap(nil),
+         else: current_user
+
+    with {:ok, _} <- Bonfire.Social.Boosts.unboost(context, id),
+         _ <- Bonfire.Social.Flags.unflag(subject, id) do
+      {:noreply,
+       socket
+       |> assign_flash(:info, l("Unpublished!"))
        #  |> assign(flagged: Map.get(socket.assigns, :flagged, []) ++ [{id, false}])
        |> Bonfire.UI.Social.ActivityLive.remove()}
     end
