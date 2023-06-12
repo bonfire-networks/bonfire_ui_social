@@ -5,7 +5,7 @@ defmodule Bonfire.Social.Objects.LiveHandler do
 
   def handle_event("set_name", %{"id" => _id, "name" => name} = params, socket) do
     with {:ok, _} <-
-           Objects.set_name(e(params, "id") || e(socket.assigns, :object, nil), name,
+           Objects.set_name(e(params, "id", nil) || e(socket.assigns, :object, nil), name,
              current_user: current_user_required!(socket)
            ) do
       Bonfire.UI.Common.OpenModalLive.close()
@@ -14,6 +14,20 @@ defmodule Bonfire.Social.Objects.LiveHandler do
        socket
        |> assign(page_title: name)
        |> assign_flash(:info, l("Name updated!"))}
+    end
+  end
+
+  def handle_event("reset_preset_boundary", params, socket) do
+    with {:ok, _} <-
+           Objects.reset_preset_boundary(
+             current_user_required!(socket),
+             e(params, "id", nil) || e(socket.assigns, :object, nil),
+             e(socket.assigns, :boundary_preset, nil) || e(params, "boundary_preset", nil),
+             params
+           ) do
+      {:noreply,
+       socket
+       |> assign_flash(:info, l("Boundary updated!"))}
     end
   end
 

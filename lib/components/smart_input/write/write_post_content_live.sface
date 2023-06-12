@@ -71,30 +71,17 @@
                     /> -->
                     <div class="flex items-center w-full">
                       <!-- <span class="px-1 text-xs font-medium uppercase text-base-content/70">{l("To")}</span> -->
-                      {#case clone_context(@to_boundaries)}
-                        {#match false}
-                          <div class="flex items-center flex-1 gap-2">
-                            <Dynamic.Component
-                              :if={module_enabled?(Bonfire.Boundaries.Web.SetBoundariesButtonLive)}
-                              module={Bonfire.Boundaries.Web.SetBoundariesButtonLive}
-                              to_boundaries={@to_boundaries}
-                              preset_boundary={Bonfire.Boundaries.Web.SetBoundariesLive.boundaries_to_preset(
-                                @to_boundaries
-                                |> debug("to_boundaries")
-                              )
-                              |> debug("preset_boundary")}
-                            />
-                          </div>
-                        {#match boundary_name}
-                          <div class="flex items-center gap-2 mx">
-                            <button
-                              type="button"
-                              class="flex items-center gap-2 normal-case rounded-full btn-active btn-ghost btn-sm btn opacity-90"
-                            >
-                              <span>{boundary_name}</span>
-                            </button>
-                          </div>
-                      {/case}
+
+                      <Dynamic.Component
+                        :if={module_enabled?(Bonfire.Boundaries.Web.SetBoundariesButtonLive)}
+                        module={Bonfire.Boundaries.Web.SetBoundariesButtonLive}
+                        to_boundaries={@to_boundaries}
+                        preset_boundary={Bonfire.Boundaries.Web.SetBoundariesLive.boundaries_to_preset(
+                          @to_boundaries
+                          |> debug("to_boundaries")
+                        )
+                        |> debug("preset_boundary")}
+                      />
                     </div>
                     <!-- <div class="flex flex-col items-start">
                   <div class="text-sm font-semibold truncate max-w-[180px] text-base-content">{e(current_user(@__context__), :profile, :name, l("Me"))}</div>
@@ -213,7 +200,8 @@
         <div class="flex flex-col h-full overflow-hidden">
           <!-- <div id="boundary_picker" class="hidden transition"> -->
           <Dynamic.Component
-            :if={@create_object_type != :message and clone_context(@to_boundaries) == false and
+            :if={@create_object_type != :message and
+              Bonfire.Boundaries.Web.SetBoundariesButtonLive.clone_context(@to_boundaries) == false and
               module_enabled?(Bonfire.Boundaries.Web.SetBoundariesLive)}
             module={Bonfire.Boundaries.Web.SetBoundariesLive}
             to_boundaries={@to_boundaries}
