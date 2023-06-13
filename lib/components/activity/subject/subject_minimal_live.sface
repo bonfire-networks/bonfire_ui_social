@@ -79,7 +79,7 @@
         {#if @verb == "Like"}
           <div data-role="liked_by" class="flex items-center justify-start pb-2 mb-2">
             <!-- LIKE -->
-            <#Icon iconify="material-symbols:star-rate-rounded" class="w-5 h-5 text-base-content/70" />
+            <#Icon iconify="material-symbols:star-rate-rounded" class="w-5 h-5 text-yellow-500" />
             <div class="flex-1 ml-2">
               <div class="text-sm font-medium text-base-content/70">
                 <LiveRedirect
@@ -129,7 +129,7 @@
         {#elseif @verb == "Boost"}
           <div class="flex items-center justify-start pb-2 mb-2">
             <!-- BOOST -->
-            <#Icon iconify="el:retweet" class="w-4 h-4 text-base-content/70" />
+            <#Icon iconify="el:retweet" class="w-5 h-5 text-info" />
             <div class="flex-1 ml-2">
               <div class="text-sm font-medium text-base-content/70">
                 <LiveRedirect
