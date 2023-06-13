@@ -66,13 +66,16 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
     with {:ok, current_user} <- current_user_or_remote_interaction(socket, l("reply"), reply_to),
          # TODO: can we use the preloaded object_boundaries rather than making an extra query
          true <- Bonfire.Boundaries.can?(current_user, :reply, reply_to_id) do
+      published_in = e(socket.assigns, :published_in, nil)
+      published_in_id = id(published_in)
+
       # TODO: don't re-load participants here as we already have the list (at least when we're in a thread)
       # TODO: include thread_id in list_participants/3 call
       participants =
         (Bonfire.Social.Threads.list_participants(Map.put(activity, :object, reply_to), nil,
            current_user: current_user
          ) || [])
-        |> Enum.reject(&(e(&1, :character, :id, nil) == id(current_user)))
+        |> Enum.reject(&(e(&1, :character, :id, nil) in [id(current_user), published_in_id]))
 
       to_circles =
         if participants != [],
@@ -97,11 +100,19 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
           reply_to_id: reply_to_id,
           context_id: thread_id,
           to_circles: to_circles || [],
+          mentions: if(published_in_id, do: [published_in_id]),
           create_object_type:
             if(e(socket.assigns, :object_type, nil) == Bonfire.Data.Social.Message, do: :message),
           to_boundaries: [
-            Bonfire.Boundaries.preset_boundary_tuple_from_acl(
-              e(socket.assigns, :object_boundary, nil)
+            if(published_in_id,
+              do:
+                {:clone_context,
+                 e(published_in, :profile, :name, nil) || e(published_in, :named, :name, nil) ||
+                   e(published_in, :name, nil)},
+              else:
+                Bonfire.Boundaries.preset_boundary_tuple_from_acl(
+                  e(socket.assigns, :object_boundary, nil)
+                )
             )
           ],
           activity_inception: "reply_to",
@@ -863,7 +874,7 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
   @decorate time()
   defp preload_extras(list_of_components, _list_of_ids, current_user) do
     # TODO: less preloads if not in a feed
-    preloads = [:feed, :with_reply_to, :with_media]
+    preloads = [:feed, :with_reply_to, :with_media, :with_parent]
 
     opts = [
       preload: preloads,
@@ -875,6 +886,7 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
 
     list_of_activities =
       list_of_components
+      # |> debug("list_of_components")
       |> Enum.map(fn
         %{activity: %{__struct__: _} = activity} ->
           # debug(activity, "struct")
@@ -894,7 +906,7 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
       |> preload_activity_and_object_assocs([:object], opts)
       |> Map.new(fn activity -> {id(activity) || id(e(activity, :object, nil)), activity} end)
 
-    # |> debug()
+    # |> debug("list_of_activities")
 
     list_of_components
     # |> debug()

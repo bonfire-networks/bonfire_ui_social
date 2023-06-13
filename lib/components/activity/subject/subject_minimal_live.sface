@@ -2,28 +2,34 @@
   {#case @showing_within}
     {#match :thread}
       <div class="flex items-center mb-2">
-        <div class="flex items-center justify-start w-5 h-5">
-          <#Icon
-            iconify="material-symbols:star-rate-rounded"
-            :if={@verb == "Like"}
-            class="w-4 h-4 text-base-content text-opacity-80"
-          />
-          <#Icon iconify="el:retweet" class="w-4 h-4 text-base-content/80" />
-          <#Icon solid="Pencil" :if={@verb == "Reply"} class="w-4 h-4 text-base-content text-opacity-80" />
-          <#Icon solid="Flag" :if={@verb == "Flag"} class="w-4 h-4 text-base-content text-opacity-80" />
-        </div>
-        <div class="flex-1 ml-2">
-          <div class="text-xs font-medium text-base-content text-opacity-80">
-            <LiveRedirect
-              aria-label={e(@activity, :subject, :character, :username, "") <> " profile"}
-              class="font-medium"
-              to={path(e(@activity, :subject, :character, nil))}
-            >
-              {e(@activity, :subject, :profile, :name, "Anonymous")}
-            </LiveRedirect>
-            {raw(@verb_display)}
+        {#if @published_in}
+          <!-- <Bonfire.UI.Social.Activity.PublishedInLive
+            context={@published_in}
+          /> -->
+        {#else}
+          <div class="flex items-center justify-start w-5 h-5">
+            <#Icon
+              iconify="material-symbols:star-rate-rounded"
+              :if={@verb == "Like"}
+              class="w-4 h-4 text-base-content text-opacity-80"
+            />
+            <#Icon iconify="el:retweet" :if={@verb == "Boost"} class="w-4 h-4 text-base-content/80" />
+            <#Icon solid="Pencil" :if={@verb == "Reply"} class="w-4 h-4 text-base-content text-opacity-80" />
+            <#Icon solid="Flag" :if={@verb == "Flag"} class="w-4 h-4 text-base-content text-opacity-80" />
           </div>
-        </div>
+          <div class="flex-1 ml-2">
+            <div class="text-xs font-medium text-base-content text-opacity-80">
+              <LiveRedirect
+                aria-label={e(@activity, :subject, :character, :username, "") <> " profile"}
+                class="font-medium"
+                to={path(e(@activity, :subject, :character, nil))}
+              >
+                {e(@activity, :subject, :profile, :name, "Anonymous")}
+              </LiveRedirect>
+              {raw(@verb_display)}
+            </div>
+          </div>
+        {/if}
       </div>
     {#match :widget}
       <div class="flex items-center mb-2">
@@ -115,11 +121,11 @@
               </div>
             </div>
           </div>
-        {#elseif @verb == "Boost" and e(@activity, :subject, :table_id, nil) == "2AGSCANBECATEG0RY0RHASHTAG"}
-          <Bonfire.UI.Social.Activity.PublishedInLive
-            context={e(@activity, :subject, nil)}
+        {#elseif @published_in}
+          <!-- <Bonfire.UI.Social.Activity.PublishedInLive
+            context={@published_in}
             showing_within={@showing_within}
-          />
+          /> -->
         {#elseif @verb == "Boost"}
           <div class="flex items-center justify-start pb-2 mb-2">
             <!-- BOOST -->

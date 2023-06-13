@@ -75,7 +75,8 @@ defmodule Bonfire.UI.Social.ActivityLive do
      assign(
        socket,
        activity: if(is_map(activity), do: Map.drop(activity, [:object])),
-       object: e(activity, :object, nil)
+       object: e(activity, :object, nil),
+       published_in: maybe_published_in(activity, nil)
      )}
   end
 
@@ -200,6 +201,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
       permalink: permalink,
       thread_url: thread_url,
       thread_id: thread_id,
+      published_in: maybe_published_in(activity, verb),
       cw: e(object, :post_content, :name, nil) != nil,
       is_remote: e(activity, :peered, nil) != nil or e(object, :peered, nil) != nil
     })
@@ -208,6 +210,22 @@ defmodule Bonfire.UI.Social.ActivityLive do
   end
 
   defp do_prepare(assigns), do: Map.put(assigns, :activity_prepared, :skipped)
+
+  def maybe_published_in(%{subject: %{table_id: "2AGSCANBECATEG0RY0RHASHTAG"} = subject}, "Boost") do
+    subject
+  end
+
+  def maybe_published_in(%{tree: %{parent: %{id: _} = parent}}, _) do
+    parent
+  end
+
+  def maybe_published_in(%{tree: %{parent_id: parent_id}}, _) do
+    parent_id
+  end
+
+  def maybe_published_in(_, _) do
+    nil
+  end
 
   defp activity_components(
          activity,
@@ -350,6 +368,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
                 showing_within={@showing_within}
                 thread_id={@thread_id}
                 cw={@cw}
+                published_in={@published_in}
               />
             {#match Bonfire.UI.Social.Activity.NoteLive}
               <Bonfire.UI.Social.Activity.NoteLive

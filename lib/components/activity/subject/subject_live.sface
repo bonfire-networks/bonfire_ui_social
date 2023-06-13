@@ -1,3 +1,8 @@
+<Bonfire.UI.Social.Activity.PublishedInLive
+  :if={@published_in && @showing_within != :smart_input}
+  context={@published_in}
+/>
+
 <div
   data-id="subject"
   class={

@@ -15,15 +15,6 @@
       /> -->
       <!-- <Bonfire.UI.Common.BackButtonLive showing_within={@showing_within || :thread} /> -->
       <div class="border-b border-base-content/10">
-        {#case e(@activity, :tree, :parent, nil)}
-          {#match nil}
-          {#match parent}
-            <Bonfire.UI.Social.Activity.PublishedInLive
-              context={parent}
-              showing_within={@showing_within}
-              class="flex items-center justify-start pt-2 ml-2"
-            />
-        {/case}
         <Bonfire.UI.Social.ActivityLive
           :if={@activity}
           class="rounded-none !shadow-none !p-4 mt-0 main_object_in_thread"
