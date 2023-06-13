@@ -25,7 +25,7 @@ defmodule Bonfire.Social.Activities.NegativeBoundariesTest do
         current_user: me,
         post_attrs: attrs,
         boundary: "public",
-        to_circles: %{alice.id => "negative_read"}
+        to_circles: %{alice.id => "cannot_read"}
       )
 
     # login as alice and verify that she cannot see the post
@@ -73,7 +73,7 @@ defmodule Bonfire.Social.Activities.NegativeBoundariesTest do
         current_user: me,
         post_attrs: attrs,
         boundary: "public",
-        to_circles: %{alice.id => "negative_interact"}
+        to_circles: %{alice.id => "cannot_interact"}
       )
 
     # login as alice and verify that she can see the post
@@ -120,7 +120,7 @@ defmodule Bonfire.Social.Activities.NegativeBoundariesTest do
         current_user: me,
         post_attrs: attrs,
         boundary: "public",
-        to_circles: %{alice.id => "negative_participate"}
+        to_circles: %{alice.id => "cannot_participate"}
       )
 
     # login as alice and verify that she can see the post
