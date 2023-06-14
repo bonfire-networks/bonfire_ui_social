@@ -4,6 +4,7 @@
   feed_id={@feed_id}
   feed_ids={@feed_ids}
   page_title={@page_title}
+  tabs_class="flex gap-3 pb-3 px-4 scrollable"
   page={@page}
   feedback_title={@feedback_title}
   feedback_message={@feedback_message}
