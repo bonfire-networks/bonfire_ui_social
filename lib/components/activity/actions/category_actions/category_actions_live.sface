@@ -23,12 +23,12 @@
   />
   <!-- </div>
   <div class="px-1 flex-1 flex h-full w-full place-content-center items-center border-t border-base-content/10"> -->
-  <Bonfire.UI.Social.Activity.MoreActionsLive
+  <!-- <Bonfire.UI.Social.Activity.MoreActionsLive
     object={@object}
     object_type={@object_type}
     verb={if @object_type == :group, do: l("Join")}
     object_boundary={@object_boundary}
     activity_component_id={@activity_id}
-  />
+  /> -->
   <!-- </div> -->
 </div>
