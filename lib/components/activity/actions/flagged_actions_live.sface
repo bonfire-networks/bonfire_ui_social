@@ -37,21 +37,21 @@
         <li :if={current_user_id(@__context__) != id(flagged_character(@object || @activity)) &&
           e(flagged_character(@object || @activity), :id, nil) != e(@activity, :subject, :id, nil)}>
           <div class="">
-          <Bonfire.UI.Common.SmartInputButtonLive
-            create_object_type={:message}
-            smart_input_opts={%{
-              create_object_type: :message,
-              to_circles: [
-                %{
-                  e(flagged_character(@object || @activity), :username, nil) =>
-                    id(e(flagged_character(@object), nil))
-                }
-              ]
-            }}
-            prompt={l("Message the original author")}
-            icon="heroicons-solid:mail"
-            class="!flex items-center gap-2 text-sm text-base-content/80"
-          />
+            <Bonfire.UI.Common.SmartInputButtonLive
+              create_object_type={:message}
+              smart_input_opts={%{
+                create_object_type: :message,
+                to_circles: [
+                  %{
+                    e(flagged_character(@object || @activity), :username, nil) =>
+                      id(e(flagged_character(@object), nil))
+                  }
+                ]
+              }}
+              prompt={l("Message the original author")}
+              icon="heroicons-solid:mail"
+              class="!flex items-center gap-2 text-sm text-base-content/80"
+            />
           </div>
         </li>
 
@@ -86,25 +86,25 @@
         {#case e(@activity, :tree, :parent_id, nil)}
           {#match nil}
           {#match context_id}
-            <li class=""></li>
+            <li class="" />
             <li>
-
               <Bonfire.UI.Common.OpenModalLive id={"remove_post-#{e(@object, :id, "")}"} no_actions>
                 <div>
-                 <h3 class="font-bold text-center text-lg">{l "Confirm you want to remove this post from the group"}!</h3>
-                  <button  
+                  <h3 class="font-bold text-center text-lg">{l("Confirm you want to remove this post from the group")}!</h3>
+                  <button
                     phx-click="Bonfire.Social.Flags:unpublish"
                     phx-target={"##{@activity_component_id || "root"}"}
                     phx-value-id={e(@object, :id, "")}
                     phx-value-context={context_id}
                     phx-value-subject={e(@activity, :subject, :id, "")}
                     data-role="unpublish"
-                    class="btn w-full btn-error rounded-full normal-case mt-3">{l "Remove"}</button>
+                    class="btn w-full btn-error rounded-full normal-case mt-3"
+                  >{l("Remove")}</button>
                 </div>
 
                 <:open_btn>
                   <div class="py-1">
-                   {l("Remove this post from the group")}
+                    {l("Remove this post from the group")}
                   </div>
                 </:open_btn>
               </Bonfire.UI.Common.OpenModalLive>
@@ -113,26 +113,25 @@
             <li>
               <Bonfire.UI.Common.OpenModalLive id={"excalate-#{e(@object, :id, "")}"} no_actions>
                 <div>
-                 <h3 class="font-bold text-center text-lg">{l "Confirm you want to remove this post from the group"}!</h3>
-                  <button  
+                  <h3 class="font-bold text-center text-lg">{l("Confirm you want to remove this post from the group")}!</h3>
+                  <button
                     phx-click="Bonfire.Social.Feeds:publish"
                     phx-target={"##{@activity_component_id || "root"}"}
                     phx-value-to="instance_moderators"
                     phx-value-id={id(@activity)}
                     data-role="escalate"
-                    class="btn w-full btn-info rounded-full normal-case mt-3">{l "Escalate to instance moderators"}</button>
+                    class="btn w-full btn-info rounded-full normal-case mt-3"
+                  >{l("Escalate to instance moderators")}</button>
                 </div>
 
                 <:open_btn>
                   <div class="py-1">
-                   {l("Escalate to instance moderators")}
+                    {l("Escalate to instance moderators")}
                   </div>
                 </:open_btn>
               </Bonfire.UI.Common.OpenModalLive>
-             
             </li>
         {/case}
-
       </ul>
     </div>
     {#if @object_type != Bonfire.Data.Identity.User}
@@ -147,19 +146,19 @@
         />
       </div>
     {/if}
-      <button
-        phx-click="Bonfire.Social.Flags:unflag"
-        phx-target={"##{@activity_component_id || "root"}"}
-        phx-value-id={e(@object, :id, "")}
-        phx-value-context={e(@activity, :tree, :parent_id, nil)}
-        data-role="unflag"
-        title={l("Unflag")}
-        phx-value-subject={e(@activity, :subject, :id, "")}
-        class="flex rounded btn bg-primary/20 text-primary text-xs hover:bg-primary/30 btn-ghost normal-case btn-sm"
-      >
-          <#Icon iconify="fluent:flag-off-16-filled" class="w-5 h-5 text-primary stroke-1" />
-        <span>{l("Unflag")}</span>
-      </button>
+    <button
+      phx-click="Bonfire.Social.Flags:unflag"
+      phx-target={"##{@activity_component_id || "root"}"}
+      phx-value-id={e(@object, :id, "")}
+      phx-value-context={e(@activity, :tree, :parent_id, nil)}
+      data-role="unflag"
+      title={l("Unflag")}
+      phx-value-subject={e(@activity, :subject, :id, "")}
+      class="flex rounded btn bg-primary/20 text-primary text-xs hover:bg-primary/30 btn-ghost normal-case btn-sm"
+    >
+      <#Icon iconify="fluent:flag-off-16-filled" class="w-5 h-5 text-primary stroke-1" />
+      <span>{l("Unflag")}</span>
+    </button>
 
     <!-- <LiveRedirect 
       to={@permalink}
