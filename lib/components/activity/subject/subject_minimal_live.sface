@@ -8,8 +8,7 @@
           /> -->
         {#else}
           <div class="flex items-center justify-start w-5 h-5">
-            <#Icon
-              iconify="material-symbols:star-rate-rounded"
+            <Iconify.Bonfire.LikeFire.render
               :if={@verb == "Like"}
               class="w-4 h-4 text-base-content text-opacity-80"
             />
@@ -34,11 +33,7 @@
     {#match :widget}
       <div class="flex items-center mb-2">
         <div class="flex items-center justify-start w-5 h-5">
-          <#Icon
-            iconify="material-symbols:star-rate-rounded"
-            :if={@verb == "Like"}
-            class="w-5 h-5 text-yellow-500"
-          />
+          <Iconify.Bonfire.LikeFire.render :if={@verb == "Like"} class="w-5 h-5 text-yellow-500" />
           <#Icon solid="UserAdd" :if={@verb == "Follow"} class="flex-shrink-0 w-5 h-5 text-info" />
           <!-- Boost icon -->
           <svg
@@ -79,7 +74,7 @@
         {#if @verb == "Like"}
           <div data-role="liked_by" class="flex items-center justify-start pb-2 mb-2">
             <!-- LIKE -->
-            <#Icon iconify="material-symbols:star-rate-rounded" class="w-5 h-5 text-yellow-500" />
+            <Iconify.Bonfire.LikeFire.render class="w-5 h-5 text-yellow-500" />
             <div class="flex-1 ml-2">
               <div class="text-sm font-medium text-base-content/70">
                 <LiveRedirect
