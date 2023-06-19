@@ -1,14 +1,14 @@
 <Bonfire.UI.Social.ObjectThreadLive
-  page={@page}
-  page_title={@page_title}
-  search_placeholder={@search_placeholder}
-  smart_input_opts={@smart_input_opts}
-  thread_mode={@thread_mode}
   activity={@activity}
   object={@object}
   object_id={@object_id}
   url={@url}
   thread_id={@thread_id}
-  participants={e(@participants, [])}
-  loading={@loading}
 />
+  <!-- smart_input_opts={@smart_input_opts} -->
+  <!-- participants={e(@participants, [])}
+  loading={@loading}
+  search_placeholder={@search_placeholder}
+  page={@page}
+  page_title={@page_title}
+  thread_mode={@thread_mode} -->

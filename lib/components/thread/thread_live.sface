@@ -1,7 +1,7 @@
 <div>
   {#if length(@threaded_replies || @replies || []) > 0}
     <div class="flex flex-col flex-1">
-      <div data-id="replies" class="flex flex-col flex-1 pb-2 mt-4">
+      <div data-id="replies" class="flex flex-col flex-1 py-4">
         {#if @threaded_replies}
           {#for {reply, child_replies} <- @threaded_replies}
             <Bonfire.UI.Social.CommentLive
@@ -12,7 +12,6 @@
               feed_id={@feed_id}
               thread_object={@object}
               thread_level={1}
-              smart_input_opts={@smart_input_opts}
               url={@url}
               showing_within={@showing_within || :thread}
             />
@@ -25,7 +24,6 @@
               thread_id={@thread_id}
               feed_id={@feed_id}
               thread_object={@object}
-              smart_input_opts={@smart_input_opts}
               url={@url}
               showing_within={@showing_within || :thread}
             />
@@ -47,32 +45,10 @@
           <img src={Bonfire.Web.Endpoint.static_path("/images/loading.svg")}>
           <span class="sr-only">Loading...</span>
         </div>
-        <!-- {#case maybe_cute_gif()}
-          {#match url when is_binary(url)}
-            <div class="flex flex-row items-center justify-center my-12">
-              <img src={url}>
-            </div>
-          {#match _}
-        {/case} -->
       {#else}
-        <!-- {#if not is_nil(current_user_id(@__context__)) and @showing_within != :messages}
-        
-
-          <Bonfire.UI.Social.Activity.ReplyLive
-            object_id={id(@object)}
-            activity_id={id(Bonfire.UI.Social.Activity.ActionsLive.the_activity(@activity, @object))}
-            object_boundary={@object}
-            replied={e(Bonfire.UI.Social.Activity.ActionsLive.the_activity(@activity, @object), :replied, nil)}
-            showing_within={@showing_within}
-            class="my-12 h-[40px] flex items-center gap-2 normal-case btn-sm btn reply_in_thread"
-            reply_btn_text={l("Be the first to reply")}
-            cannot_reply_text={l("No replies yet...")}
-          />
-        {#else} -->
         <span class="my-12 badge">
           {l("No replies yet...")}
         </span>
-        <!-- {/if} -->
       {/if}
     </div>
   {/if}

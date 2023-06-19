@@ -3,8 +3,8 @@
   data-id="comment"
   x-data="{show_replies: true}"
   class={
-    "reply thread-level-" <> to_string(@thread_level) <> " flex relative  w-full mx-auto pl-4 pt-3",
-    "": @thread_level == 1
+    "reply thread-level-" <> to_string(@thread_level) <> " flex relative  w-full mx-auto pl-2 pt-3",
+    "px-4 pb-4 border-b border-base-content/10": @thread_level == 1
   }
 >
   <div class="relative flex-1 w-full">
@@ -53,6 +53,7 @@
     </div>
 
     <div
+      :if={@thread_level > 1}
       class="absolute left-[-10px] cursor-pointer top-[10px] z-30"
       x-on:click="show_replies = ! show_replies"
     >
@@ -69,6 +70,7 @@
 
     <div x-show="show_replies" x-transition>
       <div
+        :if={@thread_level > 1}
         x-cloak
         x-show="show_replies"
         class="group z-10 left-[-17px] px-3 top-[30px] bottom-[-4px] absolute"
@@ -86,7 +88,7 @@
       </div> -->
 
       {#if is_list(@child_replies) and @child_replies != []}
-        <div class={"replies replies-level-" <> to_string(@thread_level + 1) <> " ml-3"}>
+        <div class={"replies replies-level-" <> to_string(@thread_level + 1) <> " my-4 ml-3"}>
           {#for {{subreply, sub_child_replies}, index} <- Enum.with_index(@child_replies, 1)}
             <div class="relative">
               <!-- <div 
@@ -102,9 +104,7 @@
                 feed_id={@feed_id}
                 child_replies={sub_child_replies}
                 thread_level={@thread_level + 1}
-                thread_mode={@thread_mode}
                 showing_within={@showing_within}
-                url={@url}
               />
             </div>
           {/for}

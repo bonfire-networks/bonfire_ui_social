@@ -47,9 +47,9 @@
     </div>
   {#elseif @showing_within in [:thread, :messages] && !@viewing_main_object}
     <div class="flex justify-between mb-2">
-      <div class="flex items-center gap-2">
+      <div class="flex items-center gap-3">
         <LiveRedirect
-          class="h-10"
+          class="h-8"
           opts={"data-id": "subject_name", "aria-label": e(@character, :username, "") <> " profile"}
           to={path(@character)}
         >
@@ -57,7 +57,7 @@
             parent_id={@activity_component_id || id(@activity)}
             user={@profile}
             title={e(@profile, :name, "Anonymous")}
-            class="w-12 h-12 rounded-full bg-base-100"
+            class="w-8 h-8 rounded-full bg-base-100"
           />
         </LiveRedirect>
         <div class="flex items-baseline gap-1">

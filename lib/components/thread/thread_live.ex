@@ -2,7 +2,7 @@ defmodule Bonfire.UI.Social.ThreadLive do
   use Bonfire.UI.Common.Web, :stateful_component
   import Untangle
   # alias Bonfire.Fake
-  # 
+  #
   # alias Bonfire.Me.Users
   # alias Bonfire.UI.Me.CreateUserLive
   alias Bonfire.Social.Threads.LiveHandler
@@ -15,17 +15,17 @@ defmodule Bonfire.UI.Social.ThreadLive do
   prop object, :any, default: nil
   prop reply_to_id, :any, default: nil
   # prop thread_id, :any, default: nil
-  prop page, :any, default: "thread"
+  # prop page, :any, default: "thread"
   prop feed_id, :any, default: nil
-  prop create_object_type, :any, default: nil
-  prop to_boundaries, :any, default: nil
-  prop to_circles, :list, default: []
+  # prop create_object_type, :any, default: nil
+  # prop to_boundaries, :any, default: nil
+  # prop to_circles, :list, default: []
   prop url, :string, default: nil
-  prop smart_input_opts, :map, default: %{}
-  prop thread_mode, :any, default: nil
-  prop reverse_order, :any, default: nil
+  # prop smart_input_opts, :map, default: %{}
+  # prop thread_mode, :any, default: nil
+  # prop reverse_order, :any, default: nil
   prop showing_within, :atom, default: :thread
-  prop loading, :boolean, default: false
+  # prop loading, :boolean, default: false
 
   def update(%{replies: replies, page_info: page_info, loaded_async: true} = assigns, socket)
       when is_list(replies) and is_map(page_info) do

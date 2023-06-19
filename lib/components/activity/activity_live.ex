@@ -37,7 +37,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
   prop(thread_mode, :any, default: nil)
   prop(url, :string, default: nil)
   prop(permalink, :string, default: nil)
-  prop(participants, :list, default: [])
+  # prop(participants, :list, default: [])
   prop(object_boundary, :any, default: nil)
   prop(cw, :any, default: nil)
   prop(check_object_boundary, :boolean, default: false)
@@ -415,7 +415,6 @@ defmodule Bonfire.UI.Social.ActivityLive do
                 created_verb_display={@created_verb_display}
                 showing_within={@showing_within}
                 thread_mode={@thread_mode}
-                participants={@participants || []}
                 activity={e(component_assigns, :activity, @activity)}
                 object={e(component_assigns, :object, @object)}
                 object_id={e(component_assigns, :object_id, @object_id)}
