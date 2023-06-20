@@ -1,4 +1,3 @@
-
 <div class="flex items-center gap-4">
   <!-- <Bonfire.UI.Common.LikeActionLive
     id={ComponentID.new(Bonfire.UI.Common.LikeActionLive, id(@activity), __MODULE__)}
@@ -12,10 +11,16 @@
   /> -->
 
   <div class="relative z-40 dropdown dropdown-end">
-    <label tabindex="0" class="flex normal-case btn btn-square place-content-center rounded btn-ghost btn-sm">
+    <label
+      tabindex="0"
+      class="flex normal-case btn btn-square place-content-center rounded btn-ghost btn-sm"
+    >
       <#Icon iconify="heroicons-solid:dots-vertical" class="w-4 h-4 text-base-content/70" />
     </label>
-    <ul tabindex="0" class="!block w-64 z-[910] relative shadow menu md:menu-compact dropdown-content text-base-content bg-base-200 rounded-lg">
+    <ul
+      tabindex="0"
+      class="!block w-64 z-[910] relative shadow menu md:menu-compact dropdown-content text-base-content bg-base-200 rounded-lg"
+    >
       <li>
         <Bonfire.UI.Common.OpenModalLive
           :if={@thread_id}
@@ -25,7 +30,12 @@
           form_opts={"phx-submit": "Bonfire.Social.Objects:set_name"}
         >
           <Field for={:thread} class="my-4">
-            <TextInput placeholder="Set a name for the thread..." name="name" class="w-full bg-base-content/10 input input-bordered" value={e(@page_title, "")} />
+            <TextInput
+              placeholder="Set a name for the thread..."
+              name="name"
+              class="w-full bg-base-content/10 input input-bordered"
+              value={e(@page_title, "")}
+            />
             <HiddenInput name="id" value={@thread_id} />
             <button class="normal-case w-full rounded-full btn-outline btn btn-primary mt-3">
               {l("Save")}

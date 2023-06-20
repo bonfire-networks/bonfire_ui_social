@@ -1,3 +1,13 @@
+<LiveRedirect
+  to={@permalink}
+  :if={e(@activity, :replied, :reply_to_id, nil) == nil and @showing_within in [nil, :feed] and
+    @thread_title}
+  class="flex items-center mb-3 font-bold gap-2 text-lg"
+>
+  <!-- <#Icon iconify="subway:title" class="w-4 h-4 text-info" /> -->
+  <span class="link link-hover">{@thread_title}</span>
+</LiveRedirect>
+
 <Bonfire.UI.Social.Activity.PublishedInLive
   :if={@published_in && @showing_within != :smart_input}
   context={@published_in}
@@ -21,6 +31,7 @@
       <#Icon solid="X" class="w-4 h-4" />
     </span>
   </div>
+
   {#if @show_minimal_subject_and_note}
     <div class="flex-shrink-0">
       <#Icon iconify="ic:round-reply" class="w-5 h-5 text-base-content/70" />
@@ -33,13 +44,19 @@
         class="font-medium cursor-pointer w-full  max-w-full  relative gap-1  prose prose-sm !text-sm !text-base-content/70 prose-a:text-base-content/70 prose-a:no-underline prose-p:inline-block"
       >
         {#if @cw == true or (is_nil(@cw) and not is_nil(e(post_content(@object), :name, nil)))}
-          {rich(e(@profile, :name, "Anonymous") <> ": " <> e(post_content(@object), :name, nil))}
+          {rich(
+            e(@profile, :name, "Anonymous") <>
+              if(@thread_title, do: l("in %{thread_title}:", thread_title: @thread_title), else: ":") <>
+              " " <> e(post_content(@object), :name, nil)
+          )}
         {#else}
           {rich(
             e(@profile, :name, "Anonymous") <>
-              ": " <>
+              if(@thread_title, do: l("in %{thread_title}:", thread_title: @thread_title), else: ":") <>
+              " " <>
               Bonfire.UI.Social.Activity.NoteLive.maybe_truncate(
-                e(post_content(@object), :html_body, l("This post has been deleted."))
+                e(post_content(@object), :summary, nil) ||
+                  e(post_content(@object), :html_body, l("This content is not available."))
               )
           )}
         {/if}
@@ -225,12 +242,3 @@
     </div>
   {/if}
 </div>
-
-<LiveRedirect
-  to={@permalink}
-  :if={e(@activity, :replied, :thread, :named, :name, nil) && @showing_within in [nil, :feed]}
-  class="flex items-center mt-4 font-bold gap-2"
->
-  <#Icon iconify="subway:title" class="w-4 h-4 text-info" />
-  <span class="link link-hover">{e(@activity, :replied, :thread, :named, :name, "")}</span>
-</LiveRedirect>

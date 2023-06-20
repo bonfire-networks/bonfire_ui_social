@@ -12,7 +12,10 @@
               :if={@verb == "Like"}
               class="w-4 h-4 text-base-content text-opacity-80"
             />
-            <Iconify.Bonfire.Boost.render :if={@verb == "Boost"} class="w-4 h-4 stroke-1 fill-base-content/80" />
+            <Iconify.Bonfire.Boost.render
+              :if={@verb == "Boost"}
+              class="w-4 h-4 stroke-1 fill-base-content/80"
+            />
             <#Icon solid="Pencil" :if={@verb == "Reply"} class="w-4 h-4 text-base-content text-opacity-80" />
             <#Icon solid="Flag" :if={@verb == "Flag"} class="w-4 h-4 text-base-content text-opacity-80" />
           </div>
@@ -25,6 +28,7 @@
               >
                 {e(@activity, :subject, :profile, :name, "Anonymous")}
               </LiveRedirect>
+
               {raw(@verb_display)}
             </div>
           </div>

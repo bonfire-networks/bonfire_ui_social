@@ -13,6 +13,7 @@ defmodule Bonfire.UI.Social.Activity.SubjectLive do
   prop object_boundary, :any, default: nil
   prop viewing_main_object, :boolean, default: false
   prop thread_id, :string, default: nil
+  prop thread_title, :any, default: nil
   prop cw, :boolean, default: nil
   prop show_minimal_subject_and_note, :boolean, default: false
   prop published_in, :any, default: nil

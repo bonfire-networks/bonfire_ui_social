@@ -34,6 +34,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
   prop(thread_id, :string, default: nil)
   prop(thread_object, :any, default: nil)
   prop(thread_url, :string, default: nil)
+  prop(thread_title, :string, default: nil)
   prop(thread_mode, :any, default: nil)
   prop(url, :string, default: nil)
   prop(permalink, :string, default: nil)
@@ -201,6 +202,8 @@ defmodule Bonfire.UI.Social.ActivityLive do
       permalink: permalink,
       thread_url: thread_url,
       thread_id: thread_id,
+      thread_title:
+        e(assigns, :thread_title, nil) || e(activity, :replied, :thread, :named, :name, nil),
       published_in: maybe_published_in(activity, verb),
       cw: e(object, :post_content, :name, nil) != nil,
       is_remote: e(activity, :peered, nil) != nil or e(object, :peered, nil) != nil
@@ -236,6 +239,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
          showing_within,
          viewing_main_object,
          thread_mode,
+         thread_title,
          activity_component_id
        ) do
     (component_maybe_in_reply_to(
@@ -245,6 +249,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
        activity_inception,
        viewing_main_object,
        thread_mode,
+       thread_title,
        activity_component_id
      ) ++
        component_activity_subject(
@@ -341,6 +346,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
               @showing_within,
               @viewing_main_object,
               @thread_mode,
+              @thread_title,
               @activity_component_id
             ) || []}
           {#case component}
@@ -369,6 +375,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
                 thread_id={@thread_id}
                 cw={@cw}
                 published_in={@published_in}
+                thread_title={e(component_assigns, :thread_title, @thread_title)}
               />
             {#match Bonfire.UI.Social.Activity.NoteLive}
               <Bonfire.UI.Social.Activity.NoteLive
@@ -402,6 +409,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
                 object_type={e(component_assigns, :object_type, @object_type)}
                 object_type_readable={e(component_assigns, :object_type_readable, @object_type_readable)}
                 verb={e(component_assigns, :verb, @verb)}
+                thread_id={@thread_id}
                 permalink={e(component_assigns, :permalink, @permalink)}
                 viewing_main_object={e(component_assigns, :viewing_main_object, @viewing_main_object)}
                 activity_component_id={e(component_assigns, :activity_component_id, @activity_component_id)}
@@ -657,6 +665,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
         activity_inception,
         viewing_main_object,
         thread_mode,
+        thread_title,
         activity_component_id
       )
 
@@ -667,6 +676,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
         activity_inception,
         viewing_main_object,
         thread_mode,
+        thread_title,
         _activity_component_id
       )
       # cases where we do not show reply_to
@@ -694,6 +704,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
         _,
         _,
         _,
+        thread_title,
         activity_component_id
       )
       when verb in @reply_verbs do
@@ -706,6 +717,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
          activity_inception: activity_id,
          show_minimal_subject_and_note: true,
          viewing_main_object: false,
+         thread_title: thread_title,
          object: reply_to_post_content,
          activity: %{
            subject: %{
@@ -734,6 +746,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
         _,
         _,
         _,
+        thread_title,
         activity_component_id
       )
       when verb in @reply_verbs and is_binary(reply_to_id) do
@@ -746,6 +759,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
          activity_inception: activity_id,
          show_minimal_subject_and_note: true,
          viewing_main_object: false,
+         thread_title: thread_title,
          object: replied,
          activity: %{
            # Activities.load_object(replied, skip_boundary_check: true),
@@ -771,6 +785,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
         _,
         _,
         _,
+        thread_title,
         activity_component_id
       )
       when verb in @reply_verbs and is_binary(reply_to_id) do
@@ -783,6 +798,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
          activity_inception: activity_id,
          show_minimal_subject_and_note: true,
          viewing_main_object: false,
+         thread_title: thread_title,
          object: replied,
          activity: %{
            # Activities.load_object(replied, skip_boundary_check: true),
@@ -801,7 +817,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
   #             id: reply_to_id
   #           } = replied
   #       },
-  #       _, _, _, _, _
+  #       _, _, _, _, _, _
   #     )
   #     # other kind of reply
   #     when verb in @reply_verbs and is_binary(reply_to_id) do
@@ -815,6 +831,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
         activity_inception,
         viewing_main_object,
         thread_mode,
+        thread_title,
         activity_component_id
       ),
       do:
@@ -825,6 +842,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
           activity_inception,
           viewing_main_object,
           thread_mode,
+          thread_title,
           activity_component_id
         )
 
@@ -836,7 +854,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
   #     when object_id != thread_id,
   #     do: maybe_load_in_reply_to(thread, thread_id, current_user: current_user(assigns))
 
-  def component_maybe_in_reply_to(_, a, _, _, _, _, _) do
+  def component_maybe_in_reply_to(_, a, _, _, _, _, _, _) do
     debug(a, "no reply_to")
     []
   end
@@ -858,6 +876,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
   #        id: "ra-" <> reply_to_id,
   #        activity_inception: activity_inception,
   #  show_minimal_subject_and_note: true,
+  #        thread_title: thread_title,
   #        object: e(reply_to_activity, :object, nil),
   #        # |> IO.inspect,
   #        activity: reply_to_activity |> Map.delete(:object),

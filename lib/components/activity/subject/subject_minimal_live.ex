@@ -12,5 +12,6 @@ defmodule Bonfire.UI.Social.Activity.SubjectMinimalLive do
   prop object_type, :any, default: nil
   prop object_boundary, :any, default: nil
   prop thread_id, :string, default: nil
+  prop thread_title, :any, default: nil
   prop published_in, :any, default: nil
 end

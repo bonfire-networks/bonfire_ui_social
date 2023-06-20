@@ -41,7 +41,9 @@
       object_boundary={@object_boundary}
       object_type_readable={@object_type_readable}
       verb={@verb}
+      thread_id={@thread_id}
       showing_within={@showing_within}
+      viewing_main_object={@viewing_main_object}
       activity_component_id={@activity_component_id}
     />
   </div>

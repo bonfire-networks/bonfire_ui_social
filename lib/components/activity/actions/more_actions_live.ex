@@ -12,8 +12,10 @@ defmodule Bonfire.UI.Social.Activity.MoreActionsLive do
   prop object_type_readable, :any, default: nil
   prop flagged, :any, default: nil
   prop activity_component_id, :string, default: nil
+  prop thread_id, :string, required: true
 
   prop showing_within, :atom, default: nil
+  prop viewing_main_object, :boolean, default: false
 
   slot extra_items, required: false
   slot admin_items, required: false
