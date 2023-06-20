@@ -13,7 +13,7 @@ defmodule Bonfire.UI.Social.PostLive do
        page: "discussion",
        #  to_circles: [],
        participants: nil,
-       smart_input_opts: %{prompt: l("Reply")},
+       #  smart_input_opts: %{prompt: l("Reply")},
        activity: nil,
        back: true,
        showing_within: :thread,

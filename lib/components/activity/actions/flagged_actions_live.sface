@@ -88,7 +88,7 @@
           {#match context_id}
             <li class="" />
             <li>
-              <Bonfire.UI.Common.OpenModalLive id={"remove_post-#{e(@object, :id, "")}"} no_actions>
+              <Bonfire.UI.Common.OpenModalLive id={"remove_post_#{e(@object, :id, "")}"} no_actions>
                 <div>
                   <h3 class="font-bold text-center text-lg">{l("Confirm you want to remove this post from the group")}!</h3>
                   <button
@@ -111,7 +111,7 @@
             </li>
 
             <li>
-              <Bonfire.UI.Common.OpenModalLive id={"excalate-#{e(@object, :id, "")}"} no_actions>
+              <Bonfire.UI.Common.OpenModalLive id={"escalate_#{e(@object, :id, "")}"} no_actions>
                 <div>
                   <h3 class="font-bold text-center text-lg">{l("Confirm you want to remove this post from the group")}!</h3>
                   <button

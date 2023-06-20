@@ -27,7 +27,7 @@
               }>
                 <figure class="h-full">
                   <Bonfire.UI.Common.OpenModalLive
-                    id={"media-modal-#{id(m)}"}
+                    id={"media_modal_#{id(m)}"}
                     no_actions
                     no_header
                     image_preview
@@ -163,7 +163,7 @@
                       ]) or String.contains?(Media.media_url(m), [".jpg", ".jpeg", ".png", ".gif", ".webp"])}
                       <figure class="h-full">
                         <Bonfire.UI.Common.OpenModalLive
-                          id={"media-modal-#{id(m)}"}
+                          id={"media_modal_#{id(m)}"}
                           no_actions
                           no_header
                           image_preview
