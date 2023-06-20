@@ -104,7 +104,7 @@ defmodule Bonfire.Social.Objects.LiveHandler do
     #         &("@" <> e(&1, :character, :username, ""))
     #       ) <> " "
 
-    page_title = e(activity, :replied, :thread, :named, :name, page_title)
+    # page_title = e(activity, :replied, :thread, :named, :name, page_title)
 
     socket
     |> assign_generic(
@@ -124,16 +124,16 @@ defmodule Bonfire.Social.Objects.LiveHandler do
         ]
       ],
       # url: url,
-      # page_header_aside: [
-      #   {
-      #     Bonfire.UI.Social.ObjectHeaderAsideLive,
-      #     [
-      #       participants: participants,
-      #       thread_id: thread_id,
-      #       activity: activity
-      #     ]
-      #   }
-      # ],
+      page_header_aside: [
+        {
+          Bonfire.UI.Social.ObjectHeaderAsideLive,
+          [
+            participants: [],
+            thread_id: thread_id,
+            activity: activity
+          ]
+        }
+      ],
       # participants: participants,
       no_index:
         Bonfire.Me.Settings.get([Bonfire.Me.Users, :undiscoverable], true, current_user: author),
@@ -141,7 +141,7 @@ defmodule Bonfire.Social.Objects.LiveHandler do
       # reply_to_id: object,
       # smart_input_opts: %{text_suggestion: mentions, prompt: smart_input_prompt},
       # to_circles: to_circles || []
-      page_title: page_title
+      # page_title: page_title
     )
   end
 

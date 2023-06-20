@@ -229,8 +229,8 @@
 <LiveRedirect
   to={@permalink}
   :if={e(@activity, :replied, :thread, :named, :name, nil) && @showing_within in [nil, :feed]}
-  class="flex items-center mt-2 text-sm font-medium"
+  class="flex items-center mt-4 font-bold gap-2"
 >
-  <#Icon outline="ArrowRight" class="w-4 h-4 text-base-content/70" />
-  <span class="mx-1">{l("in")}</span> <span class="link">{e(@activity, :replied, :thread, :named, :name, "")}</span>
+  <#Icon iconify="subway:title" class="w-4 h-4 text-info" />
+  <span class="link link-hover">{e(@activity, :replied, :thread, :named, :name, "")}</span>
 </LiveRedirect>
