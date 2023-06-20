@@ -10,17 +10,12 @@
         title={l("Reply")}
       >
         <!-- x-on:click={"show_smart_input('#{l("Reply")}')"} -->
-        <#Icon iconify="ic:round-reply" class="w-5 h-5 stroke-1" />
+        <Iconify.Bonfire.Reply.render class={"w-5 h-5 stroke-1 fill-base-content/70", "!fill-primary-content": @reply_btn_text} />
         <span class={if !@reply_btn_text, do: "sr-only"}>{@reply_btn_text || l("Reply")}</span>
       </button>
       <!-- {/if} -->
-      <span
-        :if={Bonfire.Me.Settings.get([:ui, :show_activity_counts], nil, @__context__)}
-        class="ml-1 text-xs text-base-content text-opacity-70"
-      >
-        {#if count(@replied) > 0}
+      <span :if={!@reply_btn_text} class="ml-1 text-[13px] text-base-content/80">
           {count(@replied)}
-        {/if}
       </span>
     {#match _}
       <button
@@ -31,7 +26,7 @@
         title={l("You can't reply to this activity")}
       >
         <span class="text-opacity-20 text-base-content">
-          <#Icon iconify="ic:round-reply" class="w-5 h-5 stroke-1" />
+          <Iconify.Bonfire.Reply.render class="w-5 h-5 stroke-1 fill-base-content/20" />
         </span>
         <span class={if !@cannot_reply_text, do: "sr-only"}>{@cannot_reply_text || l("Cannot Reply")}</span>
       </button>

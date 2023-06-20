@@ -92,40 +92,72 @@
     </li>
 
     <!-- Block the author & Block the author instance wide -->
-    <Bonfire.Boundaries.Web.BlockMenuButtonsLive
-      parent_id={@activity_component_id || id(@activity)}
-      object={@subject}
-      peered={e(@object, :peered, nil)}
-    />
+    <li>
+      <details>
+        <summary>
+        <div class="flex items-center w-full gap-2 text-sm text-base-content/80">
+          <#Icon iconify="heroicons-solid:ban" class="w-4 h-4 shrink-0" />
+          <span class="truncate ellipsis">{l "Block"}</span>
+        </div>
+        </summary>
+        <ul>
+        <Bonfire.Boundaries.Web.BlockMenuButtonsLive
+          parent_id={@activity_component_id || id(@activity)}
+          object={@subject}
+          peered={e(@object, :peered, nil)}
+        />
+      </ul>
+    </details>
+  </li>
+    {#if @object_boundary && @object_type not in [Bonfire.Data.Social.Message] && id(@activity)}
+    <li>
+       <details>
+        <summary>
+        <div class="flex items-center w-full gap-2 text-sm text-error/80">
+          <#Icon solid="Trash" class="w-4 h-4 shrink-0" />
+          <span class="truncate ellipsis">{l "Delete"}</span>
+        </div>
+        </summary>
+        <ul>
+          <li>
+            <Bonfire.UI.Social.Activity.DeleteObjectLive
+              object={@object}
+              creator_id={@subject_id}
+              object_type_readable={@object_type_readable}
+              object_boundary={@object_boundary}
+              parent_id={"object-#{id(@activity_component_id || @activity)}"}
+            />
+          </li>
 
+          <!-- Delete the activity -->
+          <li>
+            <Bonfire.UI.Social.Activity.DeleteObjectLive
+              action="Bonfire.Social.Feeds:delete"
+              object={@activity}
+              object_boundary={@object_boundary}
+              object_type_readable={l("from feeds")}
+              creator_id={@subject_id}
+              parent_id={"delete-activity-#{id(@activity_component_id || @activity)}"}
+              explanation={l(
+                "Deleting from feeds means this %{verb} and this %{object} still exist, but this activity won't be discoverable via the local instance's feeds. Remote feeds won't be affected.",
+                object: e(@object_type_readable, l("object")),
+                verb: @verb
+              )}
+            />
+          </li>
+        </ul>
+    </details>
+    </li>
     <!-- Delete the object -->
-    <li :if={@object_boundary}>
-      <Bonfire.UI.Social.Activity.DeleteObjectLive
+    {#elseif @object_boundary && @object_type in [Bonfire.Data.Social.Message] && id(@activity)}
+    <Bonfire.UI.Social.Activity.DeleteObjectLive
         object={@object}
         creator_id={@subject_id}
         object_type_readable={@object_type_readable}
         object_boundary={@object_boundary}
         parent_id={"object-#{id(@activity_component_id || @activity)}"}
       />
-    </li>
-
-    <!-- Delete the activity -->
-    <li :if={@object_boundary && @object_type not in [Bonfire.Data.Social.Message] && id(@activity)}>
-      <Bonfire.UI.Social.Activity.DeleteObjectLive
-        action="Bonfire.Social.Feeds:delete"
-        object={@activity}
-        object_boundary={@object_boundary}
-        object_type_readable={l("from feeds")}
-        creator_id={@subject_id}
-        parent_id={"delete-activity-#{id(@activity_component_id || @activity)}"}
-        explanation={l(
-          "Deleting from feeds means this %{verb} and this %{object} still exist, but this activity won't be discoverable via the local instance's feeds. Remote feeds won't be affected.",
-          object: e(@object_type_readable, l("object")),
-          verb: @verb
-        )}
-      />
-    </li>
-
+    {/if}
     <#slot {@admin_items} />
   </ul>
 </div>
