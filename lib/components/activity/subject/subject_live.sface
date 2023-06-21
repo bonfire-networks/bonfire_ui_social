@@ -1,13 +1,3 @@
-<LiveRedirect
-  to={@permalink}
-  :if={e(@activity, :replied, :reply_to_id, nil) == nil and @showing_within in [nil, :feed] and
-    @thread_title}
-  class="flex items-center mb-3 font-bold gap-2 text-lg"
->
-  <!-- <#Icon iconify="subway:title" class="w-4 h-4 text-info" /> -->
-  <span class="link link-hover">{@thread_title}</span>
-</LiveRedirect>
-
 <Bonfire.UI.Social.Activity.PublishedInLive
   :if={@published_in && @showing_within != :smart_input}
   context={@published_in}
@@ -242,3 +232,13 @@
     </div>
   {/if}
 </div>
+
+<LiveRedirect
+  to={@permalink}
+  :if={e(@activity, :replied, :reply_to_id, nil) == nil and @showing_within in [nil, :feed] and
+    @thread_title}
+  class="flex items-center mt-3 font-bold gap-2 text-lg"
+>
+  <!-- <#Icon iconify="subway:title" class="w-4 h-4 text-info" /> -->
+  <span class="link link-hover">{@thread_title}</span>
+</LiveRedirect>
