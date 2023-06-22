@@ -21,7 +21,7 @@
   >
     <!-- <#Icon iconify="subway:title" class="w-4 h-4 text-info" /> -->
     <span class="font-normal">{l "In"}</span>
-    <span class="link link-hover text-base-content/90">{@thread_title}</span>
+    <span class="link break-all link-hover text-base-content/90">{@thread_title}</span>
   </LiveRedirect>
   <div class={
     "feed-clickable flex items-center flex-1 justify-between md:justify-end gap-6",

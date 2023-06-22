@@ -44,12 +44,9 @@
               </path>
             </svg>
           </span>
-          <div
-            class="md:h-full flex flex-col md:min-h-[240px] h-[calc(var(--visual-viewport-height)_-_164px)] md:overflow-y-hidden overflow-y-auto"
-            :class="{'h-[calc(var(--visual-viewport-height)_-_114px)]': !title_open}"
-          >
+          <div class="md:h-full flex flex-col md:min-h-[240px]  overflow-y-hidden">
             <!-- DM RECIPIENTS -->
-            <div class="relative bg-base-300 pt-1">
+            <div class="relative bg-base-300">
               {#if @show_select_recipients || @create_object_type == :message}
                 <Bonfire.UI.Common.SelectRecipientsLive
                   preloaded_recipients={e(@preloaded_recipients, [])}
@@ -150,9 +147,10 @@
 
 
             <!-- CW -->
+              <!-- x-show="title_open"
+              x-cloak -->
             <div
-              x-show="title_open"
-              x-cloak
+              class="hidden"
               :if={Config.get([:ui, :smart_input, :cw], []) == true}
               id="write_post_title_field"
               phx-update={if @reset_smart_input |> debug("reset_smart_input?"), do: "replace", else: "ignore"}
@@ -185,7 +183,7 @@
             <!-- BODY -->
             <div
               id="write_post_body_field"
-              class="flex-1 md:max-h-[240px] break-words"
+              class="flex-1 max-h-[240px] break-words"
               phx-update={if @reset_smart_input |> debug("reset_smart_input?"), do: "replace", else: "ignore"}
             >
               <Inputs for={:post_content}>
