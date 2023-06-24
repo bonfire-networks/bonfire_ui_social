@@ -10,7 +10,7 @@
   <!-- phx-viewport-bottom={JS.add_class("!dropdown-top", to: "#more-menu-#{id(@activity_component_id || @activity)}")} -->
 
   <button tabindex="0" class="rounded btn btn-ghost btn-square btn-sm">
-    <#Icon solid="DotsVertical" class="w-[18px] h-[18px] md:w-4 md:h-4 text-base-content/70" />
+    <#Icon solid="DotsVertical" class="w-[18px] h-[18px] md:w-4 md:h-4 text-base-content/50" />
   </button>
   <ul
     tabindex="0"
