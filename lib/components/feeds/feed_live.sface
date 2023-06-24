@@ -25,7 +25,7 @@
     />
     {#if @feed_count || e(@streams, :feed, :inserts, []) != []}
       <div
-        id={"feed-#{@feed_id || @id}"}
+        id={"feed_#{@feed_id || @id}"}
         data-id="feed_activity_list"
         phx-update="stream"
         class="flex flex-col divide-y divide-base-content/10"
@@ -40,7 +40,7 @@
           >
             <!-- id={"activity-#{component_id(@feed_id || @id, entry)}"} -->
             <ActivityLive
-              id={"s-activity-#{entry_id}"}
+              id={"s_activity_#{entry_id}"}
               activity={get_activity(entry)}
               showing_within={@showing_within}
               verb_default={@verb_default}
@@ -57,7 +57,7 @@
       </div>
     {#elseif is_list(@feed) and @feed != []}
       <div
-        id={"feed-#{@feed_name || @feed_id || @id}"}
+        id={"feed_#{@feed_name || @feed_id || @id}"}
         data-id="feed_activity_list"
         phx-update="append"
         class="flex flex-col divide-y divide-base-content/10"
@@ -65,9 +65,9 @@
         <!-- phx-update={e(@feed_update_mode, "append")} -->
         {#for {entry, i} <- Enum.with_index(@feed)}
           <!-- id={"f-#{@feed_id || @id}-a-#{i}"} -->
-          <div id={"f-#{@feed_id || @id}-a-#{i}"} :if={@hide_activities != "component"}>
+          <div id={"f_#{@feed_id || @id}_a_#{i}"} :if={@hide_activities != "component"}>
             <ActivityLive
-              id={"f-activity-#{component_id(@feed_name || @feed_id || @id, entry)}"}
+              id={"f_activity_#{component_id(@feed_name || @feed_id || @id, entry)}"}
               activity={get_activity(entry)}
               showing_within={@showing_within}
               verb_default={@verb_default}

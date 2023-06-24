@@ -51,7 +51,8 @@ defmodule Bonfire.UI.Social.FeedLive do
     {
       :ok,
       socket
-      |> stream(:feed, [], dom_id: &component_id(feed_id, &1))
+      |> stream_configure(:feed, dom_id: &component_id(feed_id, &1))
+      |> stream(:feed, [])
       |> assign(
         feed: nil,
         hide_activities: nil,
@@ -64,7 +65,7 @@ defmodule Bonfire.UI.Social.FeedLive do
   end
 
   defp component_id(feed_id, entry) do
-    "#{feed_id}-#{id(entry) || e(entry, :activity, :id, nil) || e(entry, :object, :id, nil) || e(entry, :edge, :id, nil) || Pointers.ULID.generate()}"
+    "#{feed_id}_#{id(entry) || e(entry, :activity, :id, nil) || e(entry, :object, :id, nil) || e(entry, :edge, :id, nil) || Pointers.ULID.generate()}"
   end
 
   # consolidate different kinds of lists/feeds into Activity
@@ -179,6 +180,22 @@ defmodule Bonfire.UI.Social.FeedLive do
         # |> debug("FeedLive: feed")
       )
     )
+  end
+
+  def update(%{feed_id: "user_timeline_"} = assigns, socket) do
+    debug("a user feed was NOT provided, fetching one now")
+
+    socket = assign(socket, assigns)
+
+    socket =
+      socket
+      |> assign(feed_component_id: socket.assigns.id)
+      |> LiveHandler.feed_assigns_maybe_async(assigns[:id] || :default, ...)
+      |> LiveHandler.insert_feed(socket, ...)
+
+    maybe_subscribe(socket)
+
+    {:ok, socket}
   end
 
   def update(%{feed: nil} = assigns, socket) do

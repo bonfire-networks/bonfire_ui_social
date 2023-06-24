@@ -11,8 +11,9 @@
       tabs={Config.get([:ui, :profile, :navigation], timeline: l("Timeline"))}
     />
     <Bonfire.UI.Social.FeedLive
-      id="feed:profile:timeline"
-      feed_id={"user-#{@selected_tab}-#{id(@user)}"}
+      id="feed_profile_timeline"
+      feed_id={"user_#{@selected_tab}_#{id(@user)}"}
+      feed_filters={@feed_filters}
       page_title={@page_title}
       page={@page}
       feed={@feed}
