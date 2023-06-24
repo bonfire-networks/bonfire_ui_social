@@ -13,14 +13,14 @@
   }
 >
   <!-- :class={if @viewing_main_object != true, do: "activity_active ? '' : '[@media(any-hover:hover)]:hidden'"} -->
-    <LiveRedirect
+  <LiveRedirect
     to={@permalink}
     :if={@showing_within in [nil, :feed] &&
       @thread_title && e(@activity, :replied, :reply_to_id, nil) != nil}
     class="flex items-center line-clamp-1 text-base-content/70 font-medium text-[13px] gap-1 bg-base-100 px-2 py-1 rounded"
   >
     <!-- <#Icon iconify="subway:title" class="w-4 h-4 text-info" /> -->
-    <span class="font-normal">{l "In"}</span>
+    <span class="font-normal">{l("In")}</span>
     <span class="link break-all link-hover text-base-content/90">{@thread_title}</span>
   </LiveRedirect>
   <div class={
