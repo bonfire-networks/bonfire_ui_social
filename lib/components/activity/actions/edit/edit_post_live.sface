@@ -7,12 +7,13 @@
   <input type="hidden" name="id" value={id(@object)}>
 
   <div class="flex-1 mt-4">
-    {#for {%{user: editor, item_changes: item_changes, inserted_at: inserted_at}, i} <-
-        PaperTrail.get_versions(Bonfire.UI.Social.Activity.NoteLive.post_content(@object))
-        |> repo().maybe_preload(user: [:profile, :character])
-        |> Enum.with_index()
-        |> debug("vvv")}
-      <div class="collapse collapse-arrow  border border-base-content/20 rounded-none ">
+    {#for {%{user: editor, item_changes: current_version, meta: previous_version, inserted_at: inserted_at},
+       i} <-
+        Bonfire.Social.PostContents.get_versions(
+          Bonfire.UI.Social.Activity.NoteLive.post_content(@object)
+        )
+        |> Enum.with_index()}
+      <div class="collapse collapse-arrow  border border-base-content/20 rounded-none">
         <input type="checkbox" phx-update="ignore">
         <div class="collapse-title w-full flex items-center text-sm text-base-content/70 gap-1">
           <Bonfire.UI.Common.ProfileItemLive
@@ -22,12 +23,14 @@
             profile={e(editor, :profile, nil)}
             character={e(editor, :character, nil)}
           />
-          {if i == 0, do: l("created ") <> DatesTimes.date_from_now(inserted_at), else: l("edited ") <> DatesTimes.date_from_now(inserted_at)}
-        </div> 
-        <div class="collapse-content"> 
-            {rich(e(item_changes, :name, nil))}
-            {rich(e(item_changes, :summary, nil))}
-            {rich(e(item_changes, :html_body, nil))}
+          {if i == 0,
+            do: l("created ") <> DatesTimes.date_from_now(id(@object)),
+            else: l("edited ") <> DatesTimes.date_from_now(inserted_at)}
+        </div>
+        <div class="collapse-content">
+          {rich(diff(e(previous_version, :name, ""), e(current_version, :name, "")))}
+          {rich(e(current_version, :summary, nil))}
+          {rich(e(current_version, :html_body, nil))}
         </div>
       </div>
     {#else}

@@ -29,7 +29,7 @@
         <Bonfire.UI.Common.AvatarLive
           :for={p <- @participants |> Enum.take(4)}
           parent_id="thread_stats"
-          class={"w-7 h-7 rounded-full bg-base-100"}
+          class="w-7 h-7 rounded-full bg-base-100"
           user={e(p, :subject, nil) || p}
           src={e(p, :subject, "icon", nil)}
         />
@@ -42,14 +42,14 @@
     </div>
     <div class="border-t border-base-content/20 collapse-content">
       <div class="pt-3">
-      <Bonfire.UI.Common.ProfileItemLive
-        :for={p <- @participants}
-        show_controls={[]}
-        only_img={true}
-        avatar_class="w-12 h-12 rounded-full bg-base-100"
-        profile={e(p, :profile, nil)}
-        character={e(p, :character, nil)}
-      />
+        <Bonfire.UI.Common.ProfileItemLive
+          :for={p <- @participants}
+          show_controls={[]}
+          only_img
+          avatar_class="w-12 h-12 rounded-full bg-base-100"
+          profile={e(p, :profile, nil)}
+          character={e(p, :character, nil)}
+        />
       </div>
     </div>
   </div>
