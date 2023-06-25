@@ -14,6 +14,7 @@ defmodule Bonfire.UI.Social.ThreadLive do
   prop activity, :any, default: nil
   prop object, :any, default: nil
   prop reply_to_id, :any, default: nil
+  prop main_object_component_id, :any, default: nil
   # prop thread_id, :any, default: nil
   # prop page, :any, default: "thread"
   prop feed_id, :any, default: nil
@@ -77,8 +78,7 @@ defmodule Bonfire.UI.Social.ThreadLive do
       debug("nested thread")
 
       # FIXME: we should inject the reply rather than reloading
-
-      # cannot redirect in `update` so we trigger a reload of the thread instead
+      # cannot redirect in `update` so we trigger a re-query of the thread instead
       update(%{}, socket)
 
       # temporary

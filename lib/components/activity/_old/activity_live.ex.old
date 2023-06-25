@@ -4,7 +4,7 @@ defmodule Bonfire.UI.Social.ActivityOLDLive do
   alias Bonfire.Social.Activities
   import Untangle
 
-  prop activity, :map
+  prop activity, :any, default: nil
   prop object, :any
   prop verb_default, :string
   prop viewing_main_object, :boolean, default: false

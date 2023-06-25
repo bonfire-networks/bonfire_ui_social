@@ -6,6 +6,7 @@ defmodule Bonfire.UI.Social.Activity.ActionsLive do
   prop object_type, :any, required: true
   prop object_type_readable, :any, required: true
   prop verb, :string, required: true
+  prop reply_count, :any, default: nil
   prop permalink, :string, required: true
   prop activity_component_id, :string, default: nil
   prop thread_title, :any, default: nil

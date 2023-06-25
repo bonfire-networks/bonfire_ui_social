@@ -3,8 +3,8 @@ defmodule Bonfire.UI.Social.CommentLive do
   alias Bonfire.UI.Social.CommentLive
 
   prop comment, :map
-  prop activity, :map, default: %{}
-  prop object, :any, default: %{}
+  prop activity, :any, default: nil
+  prop object, :any, default: nil
   prop thread_object, :any
   prop thread_level, :any
   prop child_replies, :any

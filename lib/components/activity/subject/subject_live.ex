@@ -2,7 +2,7 @@ defmodule Bonfire.UI.Social.Activity.SubjectLive do
   use Bonfire.UI.Common.Web, :stateless_component
   alias Bonfire.Common.Text
 
-  prop activity, :map, default: nil
+  prop activity, :any, default: nil
   prop object, :any, default: nil
   prop profile, :any, default: nil
   prop character, :any, default: nil

@@ -25,4 +25,13 @@ defmodule Bonfire.UI.Social.ObjectThreadLive do
   prop replies, :any, default: nil
   prop threaded_replies, :any, default: nil
   prop page_info, :any, default: nil
+
+  def render(assigns) do
+    assigns
+    |> assign_new(:main_object_component_id, fn ->
+      "main_object_" <>
+        (assigns[:thread_id] || id(assigns[:activity]) || id(assigns[:object]) || "no_ID")
+    end)
+    |> render_sface()
+  end
 end

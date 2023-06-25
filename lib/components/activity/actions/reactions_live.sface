@@ -5,7 +5,11 @@
   object_boundary={@object_boundary}
   permalink={@permalink}
   thread_mode={@thread_mode}
-  replied={e(Bonfire.UI.Social.Activity.ActionsLive.the_activity(@activity, @object), :replied, nil)}
+  reply_count={if @showing_within == :thread,
+    do:
+      e(@activity, :replied, :direct_replies_count, nil) ||
+        e(@object, :replied, :direct_replies_count, 0),
+    else: @reply_count}
   showing_within={@showing_within}
   hide_reply={@hide_reply}
   viewing_main_object={@viewing_main_object}

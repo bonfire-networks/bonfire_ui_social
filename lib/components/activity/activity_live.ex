@@ -48,6 +48,10 @@ defmodule Bonfire.UI.Social.ActivityLive do
   prop(i, :integer, default: nil)
   prop(created_verb_display, :string, default: @created_verb_display)
   prop(object_type_readable, :string, default: nil)
+  prop(reply_count, :any, default: nil)
+  prop(thread_boost_count, :any, default: nil)
+  prop(participant_count, :any, default: nil)
+  prop(last_reply_id, :any, default: nil)
 
   @decorate time()
   def preload(list_of_assigns) do
@@ -79,6 +83,17 @@ defmodule Bonfire.UI.Social.ActivityLive do
        object: e(activity, :object, nil),
        published_in: maybe_published_in(activity, nil)
      )}
+  end
+
+  def update(
+        %{update_activity: true} = assigns,
+        socket
+      ) do
+    debug("Activity - assigns with `update_activity` so we update them")
+
+    {:ok,
+     socket
+     |> assign(assigns)}
   end
 
   def update(
@@ -157,10 +172,10 @@ defmodule Bonfire.UI.Social.ActivityLive do
     # |> debug("object_type")
     object_type_readable = Types.object_type_display(object_type)
 
+    replied = e(activity, :replied, nil) || e(object, :replied, nil)
+
     thread =
-      e(assigns, :thread_object, nil) || e(activity, :replied, :thread, nil) ||
-        e(object, :replied, :thread, nil) || e(activity, :replied, :thread_id, nil) ||
-        e(object, :replied, :thread_id, nil)
+      e(assigns, :thread_object, nil) || e(replied, :thread, nil) || e(replied, :thread_id, nil)
 
     thread_id = id(thread)
     # debug(thread, "thread")
@@ -202,11 +217,11 @@ defmodule Bonfire.UI.Social.ActivityLive do
       permalink: permalink,
       thread_url: thread_url,
       thread_id: thread_id,
-      thread_title:
-        e(assigns, :thread_title, nil) || e(activity, :replied, :thread, :named, :name, nil),
+      thread_title: e(assigns, :thread_title, nil) || e(thread, :named, :name, nil),
       published_in: maybe_published_in(activity, verb),
       cw: e(object, :post_content, :name, nil) != nil,
-      is_remote: e(activity, :peered, nil) != nil or e(object, :peered, nil) != nil
+      is_remote: e(activity, :peered, nil) != nil or e(object, :peered, nil) != nil,
+      reply_count: e(replied, :nested_replies_count, 0) + e(replied, :direct_replies_count, 0)
     })
 
     # |> debug("Activity preparation done")
@@ -266,8 +281,8 @@ defmodule Bonfire.UI.Social.ActivityLive do
            e(object, :media, nil)
        ) ++
        component_stats(
-        showing_within,
-        viewing_main_object
+         showing_within,
+         viewing_main_object
        ) ++
        component_actions(
          verb,
@@ -418,6 +433,15 @@ defmodule Bonfire.UI.Social.ActivityLive do
                 permalink={e(component_assigns, :permalink, @permalink)}
                 viewing_main_object={e(component_assigns, :viewing_main_object, @viewing_main_object)}
                 activity_component_id={e(component_assigns, :activity_component_id, @activity_component_id)}
+                reply_count={@reply_count}
+              />
+            {#match Bonfire.UI.Social.Activity.ThreadStatsLive}
+              <Bonfire.UI.Social.Activity.ThreadStatsLive
+                __context__={@__context__}
+                reply_count={@reply_count}
+                participant_count={@participant_count}
+                last_reply_id={@last_reply_id}
+                thread_boost_count={@thread_boost_count}
               />
             {#match _}
               <Dynamic.Component
@@ -1004,19 +1028,21 @@ defmodule Bonfire.UI.Social.ActivityLive do
   end
 
   defp component_stats(
-        showing_within,
-        viewing_main_object
+         showing_within,
+         viewing_main_object
        )
-  defp component_stats(
-        :thread,
-        true
-       ), do: [Bonfire.UI.Social.Activity.ThreadStatsLive]
 
   defp component_stats(
-        _,
-        _
+         :thread,
+         true
        ),
-      do: []
+       do: [Bonfire.UI.Social.Activity.ThreadStatsLive]
+
+  defp component_stats(
+         _,
+         _
+       ),
+       do: []
 
   # @decorate time()
   def component_actions(

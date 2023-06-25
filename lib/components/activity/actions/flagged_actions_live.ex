@@ -4,7 +4,7 @@ defmodule Bonfire.UI.Social.FlaggedActionsLive do
   import Bonfire.UI.Social.Integration
 
   # def handle_event(action, attrs, socket), do: Bonfire.UI.Common.LiveHandlers.handle_event(action, attrs, socket, __MODULE__)
-  prop activity, :map
+  prop activity, :any, default: nil
   prop object, :any
   prop object_type, :any
   prop verb, :string

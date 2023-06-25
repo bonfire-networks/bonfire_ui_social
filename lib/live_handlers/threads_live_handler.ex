@@ -2,6 +2,8 @@ defmodule Bonfire.Social.Threads.LiveHandler do
   use Bonfire.UI.Common.Web, :live_handler
   import Untangle
 
+  alias Bonfire.Social.Threads
+
   def handle_info(:load_thread, socket) do
     debug("async loading")
     {:noreply, load_thread(socket)}
@@ -47,20 +49,56 @@ defmodule Bonfire.Social.Threads.LiveHandler do
 
   def load_thread_maybe_async(%Phoenix.LiveView.Socket{} = socket) do
     socket_connected = connected?(socket)
+    current_user = current_user(socket)
 
-    if (socket_connected || current_user(socket)) && Config.env() != :test do
+    if (socket_connected || current_user != nil) && Config.env() != :test do
       if socket_connected do
         debug("socket connected, so load async")
         pid = self()
 
+        thread_id = e(socket.assigns, :thread_id, nil) || e(socket.assigns, :object, :id, nil)
+
         async_task(fn ->
-          thread_id = e(socket.assigns, :thread_id, e(socket.assigns, :object, :id, nil))
+          # compute & send stats
+          maybe_send_update(
+            pid,
+            Bonfire.UI.Social.ActivityLive,
+            e(socket.assigns, :main_object_component_id, nil),
+            %{
+              update_activity: true,
+              participant_count:
+                Threads.count_participants(thread_id, current_user: current_user),
+              thread_boost_count:
+                Bonfire.Social.Boosts.count([in_thread: thread_id], current_user: current_user)
+            }
+          )
+        end)
+
+        async_task(fn ->
           # Query comments asynchronously
+          assigns = load_thread_assigns(socket) ++ [loaded_async: true]
+
+          # send comments 
           maybe_send_update(
             pid,
             Bonfire.UI.Social.ThreadLive,
-            e(socket.assigns, :id, thread_id),
-            load_thread_assigns(socket) ++ [loaded_async: true]
+            e(socket.assigns, :id, nil) || thread_id,
+            assigns
+          )
+
+          last_reply = List.last(assigns[:replies])
+
+          # send stats that depend on the comment list
+          maybe_send_update(
+            pid,
+            Bonfire.UI.Social.ActivityLive,
+            e(socket.assigns, :main_object_component_id, nil),
+            %{
+              update_activity: true,
+              last_reply_id: id(last_reply)
+              # last_reply_path: path(last_reply),
+              # reply_count: assigns[:reply_count]
+            }
           )
         end)
       else
@@ -106,7 +144,7 @@ defmodule Bonfire.Social.Threads.LiveHandler do
       max_depth = Config.get(:thread_default_max_depth, 3)
 
       with %{edges: replies, page_info: page_info} <-
-             Bonfire.Social.Threads.list_replies(thread_id,
+             Threads.list_replies(thread_id,
                current_user: current_user,
                after: e(socket.assigns, :after, nil),
                max_depth: max_depth,
@@ -114,22 +152,26 @@ defmodule Bonfire.Social.Threads.LiveHandler do
                reverse_order: e(socket.assigns, :reverse_order, nil),
                showing_within: e(socket.assigns, :showing_within, nil)
              ) do
+        reply_count = length(replies)
+
         # debug(replies, "queried replies")
-        debug(thread_id, "loaded #{length(replies)} comments for thread")
+        debug(thread_id, "loaded #{reply_count} comments for thread")
 
         threaded_replies =
           if e(socket.assigns, :thread_mode, nil) != :flat and is_list(replies) and
-               length(replies) > 0,
-             do: Bonfire.Social.Threads.arrange_replies_tree(replies)
+               reply_count > 0,
+             do: Threads.arrange_replies_tree(replies)
 
         debug(threaded_replies, "threaded_replies")
 
         [
           loading: false,
+          # FIXME: do not assign both threaded and flat (depending on which layout is being used)
           replies: replies,
           threaded_replies: threaded_replies,
           page_info: page_info,
-          thread_id: thread_id
+          thread_id: thread_id,
+          reply_count: reply_count
         ]
       end
     end

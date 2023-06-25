@@ -41,6 +41,7 @@
       hide_reply={@hide_reply}
       viewing_main_object={@viewing_main_object}
       activity_component_id={@activity_component_id}
+      reply_count={@reply_count}
     />
 
     <Bonfire.UI.Social.Activity.MoreActionsLive

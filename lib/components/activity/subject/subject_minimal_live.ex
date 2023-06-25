@@ -1,7 +1,7 @@
 defmodule Bonfire.UI.Social.Activity.SubjectMinimalLive do
   use Bonfire.UI.Common.Web, :stateless_component
 
-  prop activity, :map
+  prop activity, :any, default: nil
   prop object, :any
   prop profile, :any, default: nil
   prop character, :any, default: nil

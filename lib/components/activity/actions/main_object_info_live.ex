@@ -1,7 +1,7 @@
 defmodule Bonfire.UI.Social.Activity.MainObjectInfoLive do
   use Bonfire.UI.Common.Web, :stateless_component
 
-  prop activity, :map
+  prop activity, :any, default: nil
   prop object, :any
   prop object_type, :any
   prop verb, :string
