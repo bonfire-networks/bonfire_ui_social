@@ -4,6 +4,32 @@ defmodule Bonfire.Social.Threads.LiveHandler do
 
   alias Bonfire.Social.Threads
 
+  def handle_event(
+        "list_participants",
+        _attrs,
+        %{assigns: %{already_loaded_participants: true}} = socket
+      ) do
+    {:noreply, socket}
+  end
+
+  def handle_event(
+        "list_participants",
+        _attrs,
+        socket
+      ) do
+    {:noreply,
+     assign(socket,
+       participants:
+         Threads.list_participants(
+           e(socket.assigns, :activity, nil) || e(socket.assigns, :object, nil),
+           e(socket.assigns, :thread_id, nil),
+           limit: 50,
+           current_user: current_user(socket)
+         ),
+       already_loaded_participants: true
+     )}
+  end
+
   def handle_info(:load_thread, socket) do
     debug("async loading")
     {:noreply, load_thread(socket)}
@@ -65,7 +91,10 @@ defmodule Bonfire.Social.Threads.LiveHandler do
           limit = 4
 
           participants =
-            Threads.list_participants(object, thread_id, limit: limit, current_user: current_user)
+            Threads.list_participants(e(socket.assigns, :activity, nil) || object, thread_id,
+              limit: limit,
+              current_user: current_user
+            )
 
           participant_count = Enum.count(participants)
 

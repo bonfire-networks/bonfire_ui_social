@@ -438,6 +438,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
             {#match Bonfire.UI.Social.Activity.ThreadStatsLive}
               <Bonfire.UI.Social.Activity.ThreadStatsLive
                 __context__={@__context__}
+                activity_component_id={@activity_component_id}
                 reply_count={@reply_count}
                 participant_count={@participant_count}
                 participants={@participants}
