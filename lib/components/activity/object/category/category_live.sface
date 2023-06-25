@@ -6,14 +6,14 @@
       permalink={@permalink}
     />
   {#match _}
-    <div class="flex w-full mt-2 border rounded-lg media_container  border-base-content/10">
+    <div class="flex w-full mt-2 border rounded-lg media_container  border-base-content/20">
       <LiveRedirect
         to={@permalink}
         class="flex hover:bg-base-content/5 items-center flex-1 gap-4 font-medium text-base-content"
       >
         {#case Media.avatar_url(@object)}
           {#match "/images/avatar.png"}
-            <span class="rounded-none object-cover flex border-r border-base-content/10 place-content-center items-center rounded-l-lg  cursor-pointer m-image w-[120px] h-[120px]">
+            <span class="rounded-none object-cover flex border-r border-base-content/20 place-content-center items-center rounded-l-lg  cursor-pointer m-image w-[120px] h-[120px]">
               <#Icon iconify="mdi:account-group" class="w-9 h-9 text-base-content/70" />
             </span>
           {#match url}
@@ -33,7 +33,7 @@
         </div>
         <!-- <div class="text-sm font-normal text-base-content/70">{Bonfire.Me.Characters.display_username(e(@object, :character, :username, nil), true)}</div> -->
       </LiveRedirect>
-      <div class="flex items-center border-l border-base-content/10 w-[120px] gap-1 md:gap-2">
+      <div class="flex items-center border-l border-base-content/20 w-[120px] gap-1 md:gap-2">
         <Bonfire.UI.Social.Activity.CategoryActionsLive
           object={@object}
           activity_id={id(@activity)}

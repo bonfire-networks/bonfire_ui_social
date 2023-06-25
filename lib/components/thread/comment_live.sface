@@ -4,7 +4,7 @@
   x-data="{show_replies: true}"
   class={
     "reply thread-level-" <> to_string(@thread_level) <> " flex relative  w-full mx-auto pl-2 pt-3",
-    "px-4 pb-4 border-b border-base-content/10": @thread_level == 1
+    "px-4 pb-4 border-b border-base-content/20": @thread_level == 1
   }
 >
   <div class="relative flex-1 w-full">
@@ -94,7 +94,7 @@
               <!-- <div 
                 :if={index == length(@child_replies)}
                 class="w-3 bg-base-100 absolute left-[-10px] top-[10px] z-30 bottom-0" /> -->
-              <!-- <div class="z-40 absolute border-base-content/10 w-6 h-6 border-0 border-b-2 border-l-2 rounded-bl-lg left-[-10px] top-[-6px]" /> -->
+              <!-- <div class="z-40 absolute border-base-content/20 w-6 h-6 border-0 border-b-2 border-l-2 rounded-bl-lg left-[-10px] top-[-6px]" /> -->
               <div :if={index < length(@child_replies)} />
               <CommentLive
                 reply_to_id={e(@comment, :id, nil)}

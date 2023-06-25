@@ -38,7 +38,7 @@
         phx-update={if @reset_smart_input, do: "replace", else: "ignore"}
       >
         <Inputs for={:post_content}>
-          <div class="relative p-2 border-b bg-base-300 border-base-content/10">
+          <div class="relative p-2 border-b bg-base-300 border-base-content/20">
             <#Icon
               iconify="ri:alarm-warning-line"
               class="absolute w-5 h-5 stroke-1 top-[14px] left-3 text-base-content/70"

@@ -1,6 +1,6 @@
 <div class={
   "": e(@showing_within, :feed) not in [:feed, :notifications, :likes],
-  "rounded-md bg-base-100 shadow my-4 border-base-content/10 border":
+  "rounded-md bg-base-100 shadow my-4 border-base-content/20 border":
     e(@showing_within, :feed) in [:feed, :notifications, :likes]
 }>
   <div class={
