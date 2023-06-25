@@ -86,7 +86,8 @@ defmodule Bonfire.Social.Threads.LiveHandler do
             assigns
           )
 
-          last_reply = List.last(assigns[:replies])
+          # TODO: use first or last depending on order
+          last_reply = List.first(assigns[:replies])
 
           # send stats that depend on the comment list
           maybe_send_update(
