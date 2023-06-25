@@ -3,7 +3,7 @@
     "note mt-3 cursor-pointer max-w-[594px] overflow-x-hidden",
     "!mt-2": @showing_within == :widget,
     "!my-0": @showing_within == :smart_input,
-    "!mt-1 cursor-default": @showing_within == :thread && !@viewing_main_object
+    "!mt-1 cursor-default": @showing_within == :thread
   }
   x-show={if @showing_within == :thread && !@viewing_main_object, do: "show_replies"}
   x-transition
@@ -43,14 +43,14 @@
             <div
               data-id="object_body"
               class={
-                "prose break-words object_body max-w-none md:prose-sm prose-p:pt-0 prose-p:my-0 prose-a:text-primary prose-a:no-underline",
+                "prose break-words object_body max-w-none prose-p:pt-0 prose-p:my-0 prose-a:text-primary prose-a:no-underline",
                 "!text-[13px]  !text-base-content/70":
                   id(@object) != nil and e(@activity, :replied, :reply_to_id, nil) == nil and
                     id(@activity) == nil,
                 "!my-0 !text-sm !font-normal ": @showing_within == :smart_input,
                 "prose-p:pb-2 md:!prose-sm": @showing_within == :thread and !@viewing_main_object,
-                "prose-p:pb-4": @viewing_main_object,
-                "prose-p:pb-2 !leading-6": @showing_within in [nil, :feed, :search, :notifications]
+                "prose-p:pb-4 md:prose-base !prose-p-[16px] !prose-p-leading-[26px]": @viewing_main_object,
+                "prose-p:pb-2 !leading-6 md:prose-sm": @showing_within in [nil, :feed, :search, :notifications]
               }
             >
               {rich(
