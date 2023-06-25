@@ -1,0 +1,75 @@
+<Bonfire.UI.Common.OpenModalLive
+  id={ComponentID.new(Bonfire.UI.Common.OpenModalLive, @parent_id, __MODULE__)}
+  title_text={l("Version history")}
+  form_opts={"phx-submit": "Bonfire.Social.Posts:edit"}
+  :let={autocomplete: autocomplete}
+>
+  <input type="hidden" name="id" value={id(@object)}>
+
+  <div class="flex-1">
+    {#for {%{user: editor, item_changes: item_changes, inserted_at: inserted_at}, i} <-
+        PaperTrail.get_versions(Bonfire.UI.Social.Activity.NoteLive.post_content(@object))
+        |> repo().maybe_preload(user: [:profile, :character])
+        |> Enum.with_index()
+        |> debug("vvv")}
+      <div class="border-b">
+        <Bonfire.UI.Common.ProfileItemLive
+          :if={id(editor) != current_user_id(@__context__)}
+          show_controls={[]}
+          lg
+          avatar_class="w-12 h-12 rounded-full bg-base-100"
+          profile={e(editor, :profile, nil)}
+          character={e(editor, :character, nil)}
+        />
+        {if i == 0, do: l("Original:"), else: DatesTimes.date_from_now(inserted_at)}
+        {rich(e(item_changes, :name, nil))}
+        {rich(e(item_changes, :summary, nil))}
+        {rich(e(item_changes, :html_body, nil))}
+      </div>
+    {#else}
+      {l("Not edited")}
+    {/for}
+
+    <div
+      :if={Bonfire.Boundaries.can?(@__context__, :edit, @object_boundary || @object)}
+      phx-update="ignore"
+    >
+      <h3 class="font-bold text-base flex-1">
+        {l("Edit")}
+      </h3>
+
+      <input
+        name="name"
+        class="w-full input input-bordered"
+        autocomplete="off"
+        placeholder={l("CW")}
+        value={e(Bonfire.UI.Social.Activity.NoteLive.post_content(@object), :name, nil)}
+      />
+
+      <!-- <input name="summary" class="w-full input input-bordered" autocomplete="off" placeholder={l "Summary"}> -->
+
+      <textarea
+        name="html_body"
+        class="w-full input input-bordered"
+        autocomplete="off"
+        placeholder={l("Text")}
+      >{e(Bonfire.UI.Social.Activity.NoteLive.post_content(@object), :html_body, nil)}</textarea>
+    </div>
+  </div>
+
+  <:open_btn>
+    <#slot>
+      <div class="flex items-center gap-2">
+        <#Icon iconify="ic:round-history-edu" class="w-4 h-4 shrink-0 text-base-content/80" />
+        <div class="text-sm text-base-content/80">
+          {l("Edit / history")}
+        </div>
+      </div>
+    </#slot>
+  </:open_btn>
+  <:action_btns>
+    <button class="normal-case btn-sm btn btn-primary">
+      {l("Done")}
+    </button>
+  </:action_btns>
+</Bonfire.UI.Common.OpenModalLive>

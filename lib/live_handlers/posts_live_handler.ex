@@ -3,7 +3,7 @@ defmodule Bonfire.Social.Posts.LiveHandler do
   import Untangle
   use Bonfire.Common.Utils
   alias Bonfire.Social.Posts
-  # alias Bonfire.Social.PostContents
+  alias Bonfire.Social.PostContents
   # alias Bonfire.Data.Social.PostContent
   # alias Bonfire.Data.Social.Post
   # alias Ecto.Changeset
@@ -126,6 +126,23 @@ defmodule Bonfire.Social.Posts.LiveHandler do
       #       socket
       #       |> assign_error("Could not post 😢 (#{error})")
       #     }
+    end
+  end
+
+  def handle_event("edit", %{"id" => id} = attrs, socket) do
+    current_user = current_user_required!(socket)
+
+    with {:ok, _} <- PostContents.edit(current_user, id, attrs) do
+      # TODO: update activity assigns with edits
+      Bonfire.UI.Common.OpenModalLive.close()
+
+      {:noreply,
+       socket
+       |> assign_flash(:info, l("Edited!"))}
+    else
+      nil ->
+        Bonfire.UI.Common.OpenModalLive.close()
+        {:noreply, socket}
     end
   end
 

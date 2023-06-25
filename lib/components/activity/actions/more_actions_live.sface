@@ -62,6 +62,15 @@
       </Bonfire.UI.Common.OpenModalLive>
     </li>
 
+    <li :if={@object_type in [Bonfire.Data.Social.Post] and module_enabled?(Bonfire.UI.Social.EditPostLive)}>
+      <Dynamic.Component
+        module={Bonfire.UI.Social.EditPostLive}
+        object={@object}
+        object_boundary={@object_boundary}
+        parent_id={@activity_component_id || id(@activity)}
+      />
+    </li>
+
     <!-- <li class="hover:bg-neutral hover:bg-opacity-20">
       <Bonfire.UI.Social.PinActionLive
         object={@object}
