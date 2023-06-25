@@ -64,4 +64,57 @@
           </div>
       {/case}
   {/case}
+  
+  <div 
+    :if={@showing_within == :thread and @viewing_main_object}
+    class="flex items-center border border-base-content/30">
+    <div class="p-5 flex items-center flex-1 justify-between">
+      <div class="flex flex-col gap-2">
+        <div class="uppercase font-light text-xs tracking-wide text-base-content/70 text-center">{l "Last Reply"}</div>
+        <div class="text-sm font-semibold text-base-content/70 text-center">2h</div>
+      </div>
+      <div class="flex flex-col gap-2">
+        <div class="uppercase font-light text-xs tracking-wide text-base-content/70 text-center">{l "Replies"}</div>
+        <div class="text-sm font-semibold text-base-content/70 text-center">12</div>
+      </div>
+      <div class="flex flex-col gap-2">
+        <div class="uppercase font-light text-xs tracking-wide text-base-content/70 text-center">{l "Participants"}</div>
+        <div class="text-sm font-semibold text-base-content/70 text-center">2</div>
+      </div>
+      <div class="flex flex-col gap-2">
+        <div class="uppercase font-light text-xs tracking-wide text-base-content/70 text-center">{l "Links"}</div>
+        <div class="text-sm font-semibold text-base-content/70 text-center">56</div>
+      </div>
+      <div class="flex flex-col gap-2">
+        <div class="uppercase font-light text-xs tracking-wide text-base-content/70 text-center">{l "Boosts"}</div>
+        <div class="text-sm font-semibold text-base-content/70 text-center">441</div>
+      </div>
+      <div class="avatar-group -space-x-6">
+        <div class="avatar">
+          <div class="w-8">
+            <img src="https://picsum.photos/200" />
+          </div>
+        </div>
+        <div class="avatar">
+          <div class="w-8">
+            <img src="https://picsum.photos/200" />
+          </div>
+        </div>
+        <div class="avatar">
+          <div class="w-8">
+            <img src="https://picsum.photos/200" />
+          </div>
+        </div>
+        <div class="avatar placeholder">
+          <div class="w-8 bg-neutral-focus text-sm text-neutral-content">
+            <span>+99</span>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="border-l flex w-full w-[86px] h-[86px] border-base-content/30 cursor-pointer place-content-center items-center">
+      <#Icon iconify="mdi:chevron-down" class="w-7 h-7 text-base-content/70" />
+    </div>
+  </div>
+
 </div>

@@ -15,6 +15,7 @@
       selected_tab={@selected_tab}
       class={@tabs_class}
       tab_class={@tab_class}
+      item_class={@item_class}
       tab_primary_class={@tab_primary_class}
       link_component={@tab_link_component}
       tabs={tabs(current_user(@__context__), @__context__[:current_params]["object_type"])}

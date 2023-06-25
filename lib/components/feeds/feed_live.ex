@@ -39,6 +39,7 @@ defmodule Bonfire.UI.Social.FeedLive do
 
   prop tabs_class, :css_class
   prop tab_class, :css_class
+  prop item_class, :css_class, default: ""
   prop tab_primary_class, :css_class, default: nil
 
   slot bottom_or_empty_feed
