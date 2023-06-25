@@ -1,108 +1,56 @@
-<<<<<<< HEAD
 <form
   phx-change="Bonfire.Social.Threads:list_participants"
   phx-target={"##{@activity_component_id}"}
 >
-  <div class="collapse collapse-arrow  border border-base-content/10 rounded-none -mx-4  w-auto">
+  <div class="collapse collapse-arrow -mx-4 mt-4 border-t border-base-content/20 rounded-none w-auto bg-base-content/5">
     <input type="checkbox" phx-update="ignore">
     <div class="collapse-title p-5  flex items-center flex-1 justify-between">
-      <div class="flex flex-col gap-2">
-        <div class="lowercase font-light text-xs tracking-wide text-base-content/70 text-center">{l("Last Reply")}</div>
+      <div :if={@last_reply_id} class="flex flex-col gap-2">
+        <div class="font-light text-sm tracking-wide text-base-content/70 text-center">{l("Last Reply")}</div>
         <div class="text-sm font-semibold text-base-content/70 text-center">{DatesTimes.date_from_now(@last_reply_id, format: :narrow)}</div>
       </div>
-      <div class="flex flex-col">
+      <div class="flex flex-col gap-2">
+        <div class="font-light text-sm tracking-wide text-base-content/70 text-center">{l("Replies")}</div>
         <div class="text-lg font-semibold text-base-content/70 text-center">{@reply_count || 0}</div>
-        <div class="lowercase font-light text-xs tracking-wide text-base-content/70 text-center">{l("Replies")}</div>
       </div>
       <!-- <div class="flex flex-col">
         <div class="text-lg font-semibold text-base-content/70 text-center">56</div>
-        <div class="lowercase font-light text-xs tracking-wide text-base-content/70 text-center">{l "Links"}</div>
+        <div class="font-light text-sm tracking-wide text-base-content/70 text-center">{l "Links"}</div>
       </div> -->
-      <div class="flex flex-col">
-        <div class="text-lg font-semibold text-base-content/70 text-center">{@thread_boost_count}</div>
-        <div class="lowercase font-light text-xs tracking-wide text-base-content/70 text-center">{l("Boosts")}</div>
+      <div class="flex flex-col gap-2">
+        <div class="font-light text-sm tracking-wide text-base-content/70 text-center">{l("Boosts")}</div>
+        <div class="text-lg font-semibold text-base-content/70 text-center">{@thread_boost_count || 0}</div>
       </div>
-      <!-- <div class="flex flex-col">
-        <div class="text-lg font-semibold text-base-content/70 text-center">{@participant_count}</div>
-        <div class="lowercase font-light text-xs tracking-wide text-base-content/70 text-center">{l("Participants")}</div>
-      </div> -->
+      <div class="flex flex-col gap-2">
+        <div class="font-light text-sm tracking-wide text-base-content/70 text-center">{l("Participants")}</div>
+        <div class="text-lg font-semibold text-base-content/70 text-center">{@participant_count || 0}</div>
+      </div>
       <div class="avatar-group -space-x-4 mr-10">
         <Bonfire.UI.Common.AvatarLive
           :for={p <- @participants |> Enum.take(4)}
           parent_id="thread_stats"
-          user={p}
-          class="avatar w-10 h-10"
-          bg_class="fill-base-content/5 bg-base-content/5 rounded-xl"
+          class={"w-7 h-7 rounded-full bg-base-100"}
+          user={e(p, :subject, nil) || p}
+          src={e(p, :subject, "icon", nil)}
         />
-        <div class="avatar placeholder">
+        <div :if={Enum.count(@participants) > 4} class="avatar placeholder">
           <div class="w-8 bg-neutral-focus text-sm text-neutral-content">
             <span>{@participant_count}</span>
           </div>
-=======
-
-<div 
-  class="flex items-center border border-base-content/30 relative mb-4">
-  <div class="p-5 flex items-center flex-1 justify-between">
-    <div class="flex flex-col gap-2">
-      <div class="uppercase font-light text-xs tracking-wide text-base-content/70 text-center">{l "Last Reply"}</div>
-      <div class="text-sm font-semibold text-base-content/70 text-center">2h</div>
-    </div>
-    <div class="flex flex-col gap-2">
-      <div class="uppercase font-light text-xs tracking-wide text-base-content/70 text-center">{l "Replies"}</div>
-      <div class="text-sm font-semibold text-base-content/70 text-center">12</div>
-    </div>
-    <div class="border-l border-base-content/30 h-[40px]"></div>
-    <div class="flex flex-col gap-2 active">
-      <div class="uppercase font-light text-xs tracking-wide text-base-content/70 text-center">{l "Participants"}</div>
-      <div class="text-sm font-semibold text-base-content/70 text-center">2</div>
-    </div>
-    <div class="flex flex-col gap-2">
-      <div class="uppercase font-light text-xs tracking-wide text-base-content/70 text-center">{l "Links"}</div>
-      <div class="text-sm font-semibold text-base-content/70 text-center">56</div>
-    </div>
-    <div class="flex flex-col gap-2">
-      <div class="uppercase font-light text-xs tracking-wide text-base-content/70 text-center">{l "Boosts"}</div>
-      <div class="text-sm font-semibold text-base-content/70 text-center">441</div>
-    </div>
-    <div class="avatar-group -space-x-6">
-      <div class="avatar">
-        <div class="w-8">
-          <img src="https://picsum.photos/200" />
-        </div>
-      </div>
-      <div class="avatar">
-        <div class="w-8">
-          <img src="https://picsum.photos/200" />
-        </div>
-      </div>
-      <div class="avatar">
-        <div class="w-8">
-          <img src="https://picsum.photos/200" />
-        </div>
-      </div>
-      <div class="avatar placeholder">
-        <div class="w-8 bg-neutral-focus text-sm text-neutral-content">
-          <span>+99</span>
->>>>>>> 82f126fa (ui)
         </div>
       </div>
     </div>
-    <div class="collapse-content">
+    <div class="border-t border-base-content/20 collapse-content">
+      <div class="pt-3">
       <Bonfire.UI.Common.ProfileItemLive
         :for={p <- @participants}
         show_controls={[]}
-        lg
+        only_img={true}
         avatar_class="w-12 h-12 rounded-full bg-base-100"
         profile={e(p, :profile, nil)}
         character={e(p, :character, nil)}
       />
+      </div>
     </div>
   </div>
-<<<<<<< HEAD
 </form>
-=======
-  <!-- <div class="border-l flex w-full w-[86px] h-[86px] border-base-content/30 cursor-pointer place-content-center items-center">
-    <#Icon iconify="mdi:chevron-down" class="w-7 h-7 text-base-content/70" />
-  </div> -->
-</div>
->>>>>>> 82f126fa (ui)

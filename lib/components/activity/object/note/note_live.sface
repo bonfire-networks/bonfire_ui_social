@@ -44,9 +44,7 @@
               data-id="object_body"
               class={
                 "prose break-words object_body max-w-none prose-p:pt-0 prose-p:my-0 prose-a:text-primary prose-a:no-underline",
-                "!text-[13px]  !text-base-content/70":
-                  id(@object) != nil and e(@activity, :replied, :reply_to_id, nil) == nil and
-                    id(@activity) == nil,
+                
                 "!my-0 !text-sm !font-normal ": @showing_within == :smart_input,
                 "prose-p:pb-2 md:!prose-sm": @showing_within == :thread and !@viewing_main_object,
                 "prose-p:pb-4 md:prose-base !prose-p-[16px] !prose-p-leading-[26px]": @viewing_main_object,
