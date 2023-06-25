@@ -265,6 +265,10 @@ defmodule Bonfire.UI.Social.ActivityLive do
          e(activity, :files, nil) || e(object, :files, nil) || e(activity, :media, nil) ||
            e(object, :media, nil)
        ) ++
+       component_stats(
+        showing_within,
+        viewing_main_object
+       ) ++
        component_actions(
          verb,
          activity,
@@ -998,6 +1002,21 @@ defmodule Bonfire.UI.Social.ActivityLive do
     debug(other, "no files")
     []
   end
+
+  defp component_stats(
+        showing_within,
+        viewing_main_object
+       )
+  defp component_stats(
+        :thread,
+        true
+       ), do: [Bonfire.UI.Social.Activity.ThreadStatsLive]
+
+  defp component_stats(
+        _,
+        _
+       ),
+      do: []
 
   # @decorate time()
   def component_actions(
