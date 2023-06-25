@@ -56,18 +56,32 @@ defmodule Bonfire.Social.Threads.LiveHandler do
         debug("socket connected, so load async")
         pid = self()
 
-        thread_id = e(socket.assigns, :thread_id, nil) || e(socket.assigns, :object, :id, nil)
+        object = e(socket.assigns, :object, nil)
+        thread_id = e(socket.assigns, :thread_id, nil) || id(object)
 
         async_task(fn ->
           # compute & send stats
+
+          limit = 4
+
+          participants =
+            Threads.list_participants(object, thread_id, limit: limit, current_user: current_user)
+
+          participant_count = Enum.count(participants)
+
+          participant_count =
+            if participant_count == limit,
+              do: Threads.count_participants(thread_id, current_user: current_user),
+              else: participant_count
+
           maybe_send_update(
             pid,
             Bonfire.UI.Social.ActivityLive,
             e(socket.assigns, :main_object_component_id, nil),
             %{
               update_activity: true,
-              participant_count:
-                Threads.count_participants(thread_id, current_user: current_user),
+              participants: participants,
+              participant_count: participant_count,
               thread_boost_count:
                 Bonfire.Social.Boosts.count([in_thread: thread_id], current_user: current_user)
             }

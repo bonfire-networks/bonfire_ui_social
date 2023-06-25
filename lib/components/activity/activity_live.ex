@@ -38,7 +38,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
   prop(thread_mode, :any, default: nil)
   prop(url, :string, default: nil)
   prop(permalink, :string, default: nil)
-  # prop(participants, :list, default: [])
+  prop(participants, :list, default: [])
   prop(object_boundary, :any, default: nil)
   prop(cw, :any, default: nil)
   prop(check_object_boundary, :boolean, default: false)
@@ -440,6 +440,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
                 __context__={@__context__}
                 reply_count={@reply_count}
                 participant_count={@participant_count}
+                participants={@participants}
                 last_reply_id={@last_reply_id}
                 thread_boost_count={@thread_boost_count}
               />

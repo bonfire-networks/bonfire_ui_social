@@ -6,6 +6,7 @@ defmodule Bonfire.UI.Social.Activity.ThreadStatsLive do
   # prop activity, :any, default: nil
   prop is_remote, :boolean, default: false
   prop reply_count, :any, default: nil
+  prop(participants, :list, default: [])
   prop participant_count, :any, default: nil
   prop thread_boost_count, :any, default: nil
 
