@@ -1,4 +1,5 @@
 <form
+  :if={@current_user}
   phx-change="Bonfire.Social.Threads:list_participants"
   phx-target={"##{@activity_component_id}"}
 >
