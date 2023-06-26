@@ -1251,6 +1251,7 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
 
     [
       loading: false,
+      back: "/@#{e(user, :character, :username, nil)}",
       selected_tab: tab,
       feed: requests ++ e(followers, :edges, []),
       page_info: e(followers, :page_info, [])
@@ -1275,6 +1276,7 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
 
     [
       loading: false,
+      back: "/@#{e(user, :character, :username, nil)}",
       selected_tab: tab,
       feed: requested ++ e(followed, :edges, []),
       page_info: e(followed, :page_info, [])
@@ -1287,6 +1289,7 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
     [
       loading: false,
       selected_tab: tab,
+      back: "/@#{e(current_user(socket), :character, :username, nil)}",
       feed: requested
       # TODO: pagination
       # page_info: e(requested, :page_info, [])
@@ -1298,6 +1301,7 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
 
     [
       loading: false,
+      back: "/@#{e(current_user(socket), :character, :username, nil)}",
       selected_tab: tab,
       feed: requests
       # page_info: e(requested, :page_info, [])
