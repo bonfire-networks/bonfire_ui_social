@@ -1,7 +1,7 @@
 <Bonfire.UI.Common.OpenModalLive
   id={ComponentID.new(Bonfire.UI.Common.OpenModalLive, @parent_id, __MODULE__)}
   title_text={l("Version history")}
-  modal_class={"modal_wide"}
+  modal_class="modal_wide"
   form_opts={"phx-submit": "Bonfire.Social.Posts:edit", "phx-target": "##{@activity_component_id}"}
   :let={autocomplete: autocomplete}
 >
@@ -45,29 +45,29 @@
       <h3 class="font-bold mt-5 text-base flex-1">
         {l("Edit")}
       </h3>
-    <div class="flex flex-col gap-2 mt-4 border rounded border-base-content/20">
-      <div class="relative border-b border-base-content/20">
-      <#Icon
-        iconify="ri:alarm-warning-line"
-        class="absolute w-5 h-5 stroke-1 top-[14px] left-3 text-base-content/70"
-      />
-      <input
-        name="name"
-        class="w-full pl-12 input"
-        autocomplete="off"
-        placeholder={l("CW")}
-        value={e(Bonfire.UI.Social.Activity.NoteLive.post_content(@object), :name, nil)}
-      />
-      </div>
-      <!-- <input name="summary" class="w-full input input-bordered" autocomplete="off" placeholder={l "Summary"}> -->
+      <div class="flex flex-col gap-2 mt-4 border rounded border-base-content/20">
+        <div class="relative border-b border-base-content/20">
+          <#Icon
+            iconify="ri:alarm-warning-line"
+            class="absolute w-5 h-5 stroke-1 top-[14px] left-3 text-base-content/70"
+          />
+          <input
+            name="name"
+            class="w-full pl-12 input"
+            autocomplete="off"
+            placeholder={l("CW")}
+            value={e(Bonfire.UI.Social.Activity.NoteLive.post_content(@object), :name, nil)}
+          />
+        </div>
+        <!-- <input name="summary" class="w-full input input-bordered" autocomplete="off" placeholder={l "Summary"}> -->
 
-      <textarea
-        name="html_body"
-        class="w-full h-32 textarea"
-        autocomplete="off"
-        placeholder={l("Text")}
-      >{e(Bonfire.UI.Social.Activity.NoteLive.post_content(@object), :html_body, nil)}</textarea>
-    </div>
+        <textarea
+          name="html_body"
+          class="w-full h-32 textarea"
+          autocomplete="off"
+          placeholder={l("Text")}
+        >{e(Bonfire.UI.Social.Activity.NoteLive.post_content(@object), :html_body, nil)}</textarea>
+      </div>
     </div>
   </div>
 

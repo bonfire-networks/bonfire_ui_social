@@ -8,7 +8,8 @@
   class={
     "thread_actions flex items-center": @showing_within == :thread,
     "feed_actions items-center flex": @viewing_main_object != true,
-    "mt-3 gap-4 flex-col md:flex-row": e(@showing_within, :feed) == :feed || @showing_within == :notifications,
+    "mt-3 gap-4 flex-col md:flex-row":
+      e(@showing_within, :feed) == :feed || @showing_within == :notifications,
     "mt-1": @showing_within == :widget
   }
 >

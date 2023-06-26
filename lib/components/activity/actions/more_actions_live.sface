@@ -113,7 +113,7 @@
           </div>
         </summary>
         <ul>
-        <!-- Flag the object -->
+          <!-- Flag the object -->
           <li data-role="flag_object">
             <Bonfire.UI.Common.FlagActionLive
               object={@object}
@@ -124,11 +124,8 @@
             />
           </li>
 
-        <!-- Flag the author -->
-          <li
-            data-role="flag_author"
-            :if={(not is_nil(@subject_id) and not is_nil(@current_user))}
-          >
+          <!-- Flag the author -->
+          <li data-role="flag_author" :if={not is_nil(@subject_id) and not is_nil(@current_user)}>
             <Bonfire.UI.Common.FlagActionLive
               object={@subject_id}
               flagged={@flagged}
