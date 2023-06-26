@@ -67,6 +67,7 @@
         module={Bonfire.UI.Social.EditPostLive}
         object={@object}
         object_boundary={@object_boundary}
+        activity_component_id={@activity_component_id}
         parent_id={@activity_component_id || id(@activity)}
       />
     </li>

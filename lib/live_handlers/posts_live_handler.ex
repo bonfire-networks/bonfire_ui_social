@@ -132,12 +132,14 @@ defmodule Bonfire.Social.Posts.LiveHandler do
   def handle_event("edit", %{"id" => id} = attrs, socket) do
     current_user = current_user_required!(socket)
 
-    with {:ok, _} <- PostContents.edit(current_user, id, attrs) do
+    with {:ok, %{model: updated}} <- PostContents.edit(current_user, id, attrs) do
+      debug(updated, "vverr")
       # TODO: update activity assigns with edits
       Bonfire.UI.Common.OpenModalLive.close()
 
       {:noreply,
        socket
+       |> update(:object, &Map.put(&1, :post_content, updated))
        |> assign_flash(:info, l("Edited!"))}
     else
       nil ->

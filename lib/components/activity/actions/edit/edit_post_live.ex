@@ -7,6 +7,7 @@ defmodule Bonfire.UI.Social.EditPostLive do
   prop object_boundary, :any, default: nil
 
   prop parent_id, :string, default: nil
+  prop activity_component_id, :string, default: nil
 
   def diff(previous_version, current_version) do
     # KinoDiff.new(previous_version, current_version, layout: :inline)
