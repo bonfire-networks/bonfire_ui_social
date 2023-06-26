@@ -114,7 +114,10 @@ defmodule Bonfire.Social.Likes.LiveHandler do
 
   defp do_list_my_liked(current_user, list_of_ids)
        when is_list(list_of_ids) and length(list_of_ids) > 0 do
-    Bonfire.Social.Likes.get!(current_user, list_of_ids, preload: false, skip_boundary_check: true)
+    Bonfire.Social.Likes.get!(current_user, list_of_ids,
+      preload: false,
+      skip_boundary_check: true
+    )
     |> debug()
     |> Map.new(fn l -> {e(l, :edge, :object_id, nil), true} end)
   end
