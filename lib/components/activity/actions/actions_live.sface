@@ -8,7 +8,7 @@
   class={
     "thread_actions flex items-center": @showing_within == :thread,
     "feed_actions items-center flex": @viewing_main_object != true,
-    "mt-3 gap-4": e(@showing_within, :feed) == :feed || @showing_within == :notifications,
+    "mt-3 gap-4 flex-col md:flex-row": e(@showing_within, :feed) == :feed || @showing_within == :notifications,
     "mt-1": @showing_within == :widget
   }
 >
@@ -17,14 +17,14 @@
     to={@permalink}
     :if={@showing_within in [nil, :feed] &&
       @thread_title && e(@activity, :replied, :reply_to_id, nil) != nil}
-    class="flex items-center line-clamp-1 text-base-content/70 font-medium text-[13px] gap-1 bg-base-100 px-2 py-1 rounded"
+    class="flex w-full md:w-auto items-center line-clamp-1 text-base-content/70 font-medium text-[13px] gap-1 bg-base-100 px-2 py-1 rounded"
   >
     <!-- <#Icon iconify="subway:title" class="w-4 h-4 text-info" /> -->
     <span class="font-normal">{l("In")}</span>
     <span class="link break-all link-hover text-base-content/90">{@thread_title}</span>
   </LiveRedirect>
   <div class={
-    "feed-clickable flex items-center flex-1 justify-between md:justify-end gap-6",
+    "feed-clickable w-full md:w-auto flex items-center flex-1 justify-between md:justify-end gap-6",
     "!justify-end mt-1": @showing_within == :thread && @viewing_main_object != true,
     "-mx-4 border-t !justify-between border-base-content/20 !p-3 !pb-0":
       @viewing_main_object == true
