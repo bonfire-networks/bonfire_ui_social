@@ -1,4 +1,5 @@
-<div :if={@object_boundary} class="relative z-20 flex items-center">
+{#if @object_boundary}
+<div class="relative z-20 flex items-center">
   {#case @current_user == nil or @object_type in [Bonfire.Data.Social.Message] or
       Bonfire.Boundaries.can?(@__context__, :reply, @object_boundary)}
     {#match true}
@@ -38,3 +39,6 @@
       </span>
   {/case}
 </div>
+{#else}
+<span class="loading loading-spinner loading-sm text-base-content/50"></span>
+{/if}

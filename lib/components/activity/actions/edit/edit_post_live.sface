@@ -1,6 +1,7 @@
 <Bonfire.UI.Common.OpenModalLive
   id={ComponentID.new(Bonfire.UI.Common.OpenModalLive, @parent_id, __MODULE__)}
   title_text={l("Version history")}
+  modal_class={"modal_wide"}
   form_opts={"phx-submit": "Bonfire.Social.Posts:edit"}
   :let={autocomplete: autocomplete}
 >

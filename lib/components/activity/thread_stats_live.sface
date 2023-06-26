@@ -5,11 +5,15 @@
   <div class="collapse collapse-arrow -mx-4 mt-4 border-t border-base-content/20 rounded-none w-auto bg-base-content/5">
     <input type="checkbox" phx-update="ignore">
     <div class="collapse-title p-5  flex items-center flex-1 justify-between">
-      <div :if={@last_reply_id} class="flex flex-col gap-2">
+      <div class="flex flex-col items-center gap-2">
         <div class="font-light text-sm tracking-wide text-base-content/70 text-center">{l("Last Reply")}</div>
-        <div class="text-sm font-semibold text-base-content/70 text-center">{DatesTimes.date_from_now(@last_reply_id, format: :narrow)}</div>
+        {#if @last_reply_id}
+           <div class="text-sm font-semibold text-base-content/70 text-center">{DatesTimes.date_from_now(@last_reply_id, format: :narrow)}</div>
+        {#else}
+          <span class="loading loading-spinner loading-sm text-base-content/70"></span>
+        {/if}
       </div>
-      <div class="flex flex-col gap-2">
+      <div class="flex flex-col items-center gap-2">
         <div class="font-light text-sm tracking-wide text-base-content/70 text-center">{l("Replies")}</div>
         <div class="text-lg font-semibold text-base-content/70 text-center">{@reply_count || 0}</div>
       </div>
@@ -17,13 +21,21 @@
         <div class="text-lg font-semibold text-base-content/70 text-center">56</div>
         <div class="font-light text-sm tracking-wide text-base-content/70 text-center">{l "Links"}</div>
       </div> -->
-      <div class="flex flex-col gap-2">
+      <div class="flex flex-col items-center gap-2">
         <div class="font-light text-sm tracking-wide text-base-content/70 text-center">{l("Boosts")}</div>
-        <div class="text-lg font-semibold text-base-content/70 text-center">{@thread_boost_count || 0}</div>
+        {#if @thread_boost_count}
+          <div class="text-lg font-semibold text-base-content/70 text-center">{@thread_boost_count || 0}</div>
+        {#else}
+          <span class="loading loading-spinner loading-sm text-base-content/70"></span>
+        {/if}
       </div>
-      <div class="flex flex-col gap-2">
+      <div class="flex flex-col items-center gap-2">
         <div class="font-light text-sm tracking-wide text-base-content/70 text-center">{l("Participants")}</div>
-        <div class="text-lg font-semibold text-base-content/70 text-center">{@participant_count || 0}</div>
+        {#if @participant_count}
+          <div class="text-lg font-semibold text-base-content/70 text-center">{@participant_count || 0}</div>
+        {#else}
+          <span class="loading loading-spinner loading-sm text-base-content/70"></span>
+        {/if}
       </div>
       <div class="avatar-group -space-x-4 mr-10">
         <Bonfire.UI.Common.AvatarLive
@@ -41,12 +53,12 @@
       </div>
     </div>
     <div class="border-t border-base-content/20 collapse-content">
-      <div class="pt-3">
+      <div class="pt-4">
         <Bonfire.UI.Common.ProfileItemLive
           :for={p <- @participants}
           show_controls={[]}
           only_img
-          avatar_class="w-12 h-12 rounded-full bg-base-100"
+          avatar_class="w-9 h-9 rounded-full bg-base-100"
           profile={e(p, :profile, nil)}
           character={e(p, :character, nil)}
         />
