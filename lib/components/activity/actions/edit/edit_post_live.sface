@@ -82,7 +82,7 @@
     </#slot>
   </:open_btn>
   <:action_btns>
-    <button class="normal-case btn-sm btn btn-primary">
+    <button class="normal-case btn-sm rounded-full btn btn-primary">
       {l("Done")}
     </button>
   </:action_btns>

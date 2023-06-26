@@ -103,34 +103,41 @@
       />
     </li>
 
-    <!-- Flag the object -->
-    <li
-      data-role="flag_object"
-      :if={current_user_id(@__context__) != @subject_id and @verb != "Flag"}
-    >
-      <Bonfire.UI.Common.FlagActionLive
-        object={@object}
-        flagged={@flagged}
-        parent_id={"object-#{id(@activity_component_id || @activity)}"}
-        object_type={e(@object_type_readable, l("object"))}
-        label={l("Flag this %{object}", object: e(@object_type_readable, l("object")))}
-      />
-    </li>
+    <li :if={current_user_id(@__context__) != @subject_id and @verb != "Flag"}>
+      <details>
+        <summary>
+          <div class="flex items-center w-full gap-2 text-sm text-base-content/80">
+            <#Icon solid="Flag" class="w-4 h-4 shrink-0" />
+            <span class="truncate ellipsis">{l("Flag")}</span>
+          </div>
+        </summary>
+        <ul>
+        <!-- Flag the object -->
+          <li data-role="flag_object">
+            <Bonfire.UI.Common.FlagActionLive
+              object={@object}
+              flagged={@flagged}
+              parent_id={"object-#{id(@activity_component_id || @activity)}"}
+              object_type={e(@object_type_readable, l("object"))}
+              label={l("Flag this %{object}", object: e(@object_type_readable, l("object")))}
+            />
+          </li>
 
-    <!-- Flag the author -->
-    <li
-      data-role="flag_author"
-      :if={(not is_nil(@subject_id) and (@verb != "Flag" and is_nil(@current_user))) or
-        current_user_id(@__context__) != @subject_id}
-    >
-      <Bonfire.UI.Common.FlagActionLive
-        object={@subject_id}
-        flagged={@flagged}
-        parent_id={"user-#{id(@activity_component_id || @activity)}"}
-        object_type={@name || l("user")}
-      />
+        <!-- Flag the author -->
+          <li
+            data-role="flag_author"
+            :if={(not is_nil(@subject_id) and not is_nil(@current_user))}
+          >
+            <Bonfire.UI.Common.FlagActionLive
+              object={@subject_id}
+              flagged={@flagged}
+              parent_id={"user-#{id(@activity_component_id || @activity)}"}
+              object_type={@name || l("user")}
+            />
+          </li>
+        </ul>
+      </details>
     </li>
-
     <!-- Block the author, etc -->
     <Bonfire.Boundaries.Web.BlockMenuButtonsLive
       parent_id={@activity_component_id || id(@activity)}
