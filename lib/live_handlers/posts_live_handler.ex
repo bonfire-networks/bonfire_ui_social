@@ -142,6 +142,10 @@ defmodule Bonfire.Social.Posts.LiveHandler do
        |> update(:object, &Map.put(&1, :post_content, updated))
        |> assign_flash(:info, l("Edited!"))}
     else
+      {:ok, :no_changes} ->
+        Bonfire.UI.Common.OpenModalLive.close()
+        {:noreply, socket}
+        
       nil ->
         Bonfire.UI.Common.OpenModalLive.close()
         {:noreply, socket}
