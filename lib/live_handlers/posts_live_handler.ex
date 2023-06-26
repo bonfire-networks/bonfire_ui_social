@@ -145,7 +145,7 @@ defmodule Bonfire.Social.Posts.LiveHandler do
       {:ok, :no_changes} ->
         Bonfire.UI.Common.OpenModalLive.close()
         {:noreply, socket}
-        
+
       nil ->
         Bonfire.UI.Common.OpenModalLive.close()
         {:noreply, socket}

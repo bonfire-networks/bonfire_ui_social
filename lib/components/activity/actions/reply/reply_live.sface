@@ -1,27 +1,27 @@
-{#if @object_boundary}
-  <div class="relative z-20 flex items-center">
-    {#case @current_user == nil or @object_type in [Bonfire.Data.Social.Message] or
-        Bonfire.Boundaries.can?(@__context__, :reply, @object_boundary)}
-      {#match true}
-        <button
-          data-role="reply_enabled"
-          class={@class}
-          data-id="action_reply"
-          phx-click={Bonfire.Social.Feeds.LiveHandler.reply_to_activity(@activity_component_id)}
-          title={l("Reply")}
-        >
-          <!-- x-on:click={"show_smart_input('#{l("Reply")}')"} -->
-          <Iconify.Bonfire.Reply.render class={"w-5 h-5 stroke-1 fill-base-content/50", "!fill-primary": @reply_btn_text} />
-          <span class={if !@reply_btn_text, do: "sr-only"}>{@reply_btn_text || l("Reply")}</span>
-          <!-- <span :if={@reply_btn_text} class="text-primary/80">
+<div class="relative z-20 flex items-center">
+  {#case @current_user == nil or @object_type in [Bonfire.Data.Social.Message] or
+      (@object_boundary && Bonfire.Boundaries.can?(@__context__, :reply, @object_boundary))}
+    {#match true}
+      <button
+        data-role="reply_enabled"
+        class={@class}
+        data-id="action_reply"
+        phx-click={Bonfire.Social.Feeds.LiveHandler.reply_to_activity(@activity_component_id)}
+        title={l("Reply")}
+      >
+        <!-- x-on:click={"show_smart_input('#{l("Reply")}')"} -->
+        <Iconify.Bonfire.Reply.render class={"w-5 h-5 stroke-1 fill-base-content/50", "!fill-primary": @reply_btn_text} />
+        <span class={if !@reply_btn_text, do: "sr-only"}>{@reply_btn_text || l("Reply")}</span>
+        <!-- <span :if={@reply_btn_text} class="text-primary/80">
           ({@reply_count})
         </span> -->
-        </button>
-        <!-- {/if} -->
-        <span :if={!@reply_btn_text} class="ml-1 text-[13px] text-base-content/50">
-          {@reply_count}
-        </span>
-      {#match _}
+      </button>
+      <!-- {/if} -->
+      <span :if={!@reply_btn_text} class="ml-1 text-[13px] text-base-content/50">
+        {@reply_count}
+      </span>
+    {#match _}
+      {#if @object_boundary}
         <button
           type="button"
           data-role="reply_disabled"
@@ -37,8 +37,8 @@
         <span class="ml-1 text-xs text-base-content text-opacity-70">
           {@reply_count}
         </span>
-    {/case}
-  </div>
-{#else}
-  <span class="loading loading-spinner loading-sm text-base-content/50" />
-{/if}
+      {#else}
+        <span class="loading loading-spinner loading-sm text-base-content/50" />
+      {/if}
+  {/case}
+</div>

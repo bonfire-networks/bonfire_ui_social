@@ -139,7 +139,7 @@ defmodule Bonfire.Social.Threads.LiveHandler do
             e(socket.assigns, :main_object_component_id, nil),
             %{
               update_activity: true,
-              last_reply_id: id(last_reply)
+              last_reply_id: id(last_reply) || false
               # last_reply_path: path(last_reply),
               # reply_count: assigns[:reply_count]
             }

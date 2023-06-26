@@ -1,5 +1,4 @@
 <form
-  :if={@current_user}
   phx-change="Bonfire.Social.Threads:list_participants"
   phx-target={"##{@activity_component_id}"}
 >
@@ -7,12 +6,16 @@
     <input type="checkbox" phx-update="ignore">
     <div class="collapse-title p-5  flex items-center flex-1 justify-between">
       <div class="flex flex-col items-center gap-2">
-        <div class="font-light text-sm tracking-wide text-base-content/70 text-center">{l("Last Reply")}</div>
-        {#if @last_reply_id}
-          <div class="text-sm font-semibold text-base-content/70 text-center">{DatesTimes.date_from_now(@last_reply_id, format: :narrow)}</div>
-        {#else}
-          <span class="loading loading-spinner loading-sm text-base-content/70" />
-        {/if}
+        {#case @last_reply_id}
+          {#match nil}
+            <div class="font-light text-sm tracking-wide text-base-content/70 text-center">{l("Last Reply")}</div>
+            <span class="loading loading-spinner loading-sm text-base-content/70" />
+          {#match false}
+            <div class="font-light text-sm tracking-wide text-base-content/70 text-center">{l("No Replies")}</div>
+          {#match _}
+            <div class="font-light text-sm tracking-wide text-base-content/70 text-center">{l("Last Reply")}</div>
+            <div class="text-sm font-semibold text-base-content/70 text-center">{DatesTimes.date_from_now(@last_reply_id, format: :narrow)}</div>
+        {/case}
       </div>
       <div class="flex flex-col items-center gap-2">
         <div class="font-light text-sm tracking-wide text-base-content/70 text-center">{l("Replies")}</div>

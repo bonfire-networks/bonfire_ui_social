@@ -62,7 +62,8 @@
       </Bonfire.UI.Common.OpenModalLive>
     </li>
 
-    <li :if={@object_type in [Bonfire.Data.Social.Post] and module_enabled?(Bonfire.UI.Social.EditPostLive) && current_user_id(@__context__)}>
+    <li :if={@object_type in [Bonfire.Data.Social.Post] and module_enabled?(Bonfire.UI.Social.EditPostLive) &&
+      current_user_id(@__context__)}>
       <Dynamic.Component
         module={Bonfire.UI.Social.EditPostLive}
         object={@object}
