@@ -57,9 +57,10 @@
       </div>
     </div>
     <div class="border-t border-base-content/20 collapse-content">
-      <div class="pt-4">
+      <div class="pt-4 flex flex-wrap items-center gap-5">
         <Bonfire.UI.Common.ProfileItemLive
           :for={p <- @participants}
+          wrapper_class="flex items-center p-2 px-3 rounded-full bg-base-content/10"
           show_controls={[]}
           avatar_class="w-9 h-9 rounded-full bg-base-100"
           profile={e(p, :profile, nil)}

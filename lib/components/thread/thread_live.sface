@@ -4,6 +4,8 @@
       <div data-id="replies" class="flex flex-col flex-1 py-4">
         {#if @threaded_replies}
           {#for {reply, child_replies} <- @threaded_replies}
+            id: {e(reply, :id, nil)}
+            url: {@url}
             <Bonfire.UI.Social.CommentLive
               comment={reply}
               child_replies={child_replies}

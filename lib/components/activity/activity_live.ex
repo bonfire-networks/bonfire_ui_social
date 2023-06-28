@@ -195,7 +195,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
     # permalink = path(object)
     permalink =
       if(thread_url && thread_id != id,
-        do: "#{thread_url}#activity-#{id}",
+        do: "#{thread_url}#comment-#{id}",
         else: "#{path(object)}#"
       )
       |> String.trim_leading("#{current_url(assigns) || "#"}#")
