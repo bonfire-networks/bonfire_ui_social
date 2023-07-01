@@ -1314,7 +1314,8 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
     # user,
     Bonfire.Social.Requests.list_my_requested(
       pagination: pagination,
-      current_user: current_user
+      current_user: current_user,
+      type: Bonfire.Data.Social.Follow
     )
     |> debug("requested")
   end
