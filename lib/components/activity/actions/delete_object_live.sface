@@ -5,11 +5,26 @@ TODO: use preloaded boundaries for can? when available
   :if={@skip_permission_check == true or can_delete?(@__context__, @object, @object_boundary)}
   id={ComponentID.new(Bonfire.UI.Common.OpenModalLive, id(@object), __MODULE__)}
   title_text={l("Delete this") <> " " <> e(@object_type_readable, l("object"))}
+  form_opts={@form_opts}
 >
   <div class="prose-sm prose">
     <!-- {rich l "You may be able to undo this deletion *in some cases*, but in any case the data will eventually be permanently deleted from this instance."} -->
     <p>{@explanation || l("A request will be sent to remote instances to delete it as well.")}</p>
   </div>
+
+  {#if @with_password_prompt}
+    <div class="text-base mt-5 font-medium">{l("Enter password to confirm")}</div>
+    <label class="label">
+      <span class="label-text">{l("For security purposes please enter the password of your account")}</span>
+    </label>
+    <input
+      name="password"
+      type="password"
+      placeholder="Type here"
+      class="input input-bordered w-full"
+    />
+  {/if}
+
   <:open_btn>
     <div role="delete" title={l("Delete this object")} class={@open_btn_class}>
       <#Icon
@@ -25,7 +40,7 @@ TODO: use preloaded boundaries for can? when available
 
   <:action_btns>
     <button
-      phx-click={@action}
+      phx-click={@action || if @form_opts == [], do: "Bonfire.Social.Objects:delete"}
       phx-value-id={id(@object)}
       phx-value-redirect_after={@redirect_after}
       class="normal-case rounded btn btn-error btn-sm"
