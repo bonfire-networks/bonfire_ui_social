@@ -27,7 +27,7 @@
               }>
                 <figure class="h-full">
                   <Bonfire.UI.Common.OpenModalLive
-                    id={"media_modal_#{id(m)}"}
+                    id={"media_modal_#{id(m)}#{Text.random_string()}"}
                     no_actions
                     no_header
                     image_preview

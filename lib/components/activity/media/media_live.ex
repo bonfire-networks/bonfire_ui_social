@@ -88,4 +88,5 @@ defmodule Bonfire.UI.Social.Activity.MediaLive do
     other
     # |> to_string()
   end
+
 end
