@@ -14,7 +14,7 @@
             <div class="font-light text-sm tracking-wide text-base-content/70 text-center">{l("No Replies")}</div>
           {#match _}
             <div class="font-light text-sm tracking-wide text-base-content/70 text-center">{l("Last Reply")}</div>
-            <div class="text-sm font-semibold text-base-content/70 text-center">{DatesTimes.date_from_now(@last_reply_id, format: :narrow)}</div>
+            <div class="font-semibold text-base-content/70 text-center">{DatesTimes.date_from_now(@last_reply_id, format: :narrow)}</div>
         {/case}
       </div>
       <div class="flex flex-col items-center gap-2">
