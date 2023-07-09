@@ -734,7 +734,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
   def component_maybe_in_reply_to(
         verb,
         %{reply_to: %{id: reply_to_id}},
-        _,
+        showing_within,
         _,
         _,
         thread_mode,
@@ -742,7 +742,8 @@ defmodule Bonfire.UI.Social.ActivityLive do
         _,
         _
       )
-      when thread_mode == :flat and reply_to_id == thread_id,
+      when thread_mode == :flat and reply_to_id == thread_id and
+             showing_within in [:thread, :messages],
       do: []
 
   def component_maybe_in_reply_to(
