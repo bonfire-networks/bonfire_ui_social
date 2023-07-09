@@ -13,10 +13,16 @@
             String.starts_with?(@permalink || "", ["/post/"]),
           do: @thread_id || id(@object)
         ),
+      thread_id: @thread_id,
       object_id: @thread_id || id(@object),
-      object: if(@thread_id == id(@object), do: @object),
+      current_url: @permalink,
       show: {false},
+      object: if(@thread_id == id(@object), do: @object),
       activity: if(@thread_id == id(@object), do: @activity),
+      replies:
+        if(@thread_id != id(@object),
+          do: [%{id: "preview-comment", activity: Map.put(@activity, :object, @object)}]
+        ),
       preview_component: Bonfire.UI.Social.ObjectThreadLoadLive
     }
     root_assigns={
@@ -38,6 +44,7 @@
     open_btn_class="px-1 normal-case link link-hover text-base-content/70"
     modal_assigns={
       id: @thread_id || id(@object),
+      current_url: @permalink,
       preview_view: Bonfire.UI.Coordination.TaskLive
     }
     root_assigns={

@@ -21,7 +21,7 @@ defmodule Bonfire.UI.Social.ThreadLive do
   # prop create_object_type, :any, default: nil
   # prop to_boundaries, :any, default: nil
   # prop to_circles, :list, default: []
-  prop url, :string, default: nil
+  prop current_url, :string, default: nil
   # prop smart_input_opts, :map, default: %{}
   # prop thread_mode, :any, default: nil
   # prop reverse_order, :any, default: nil
@@ -123,7 +123,7 @@ defmodule Bonfire.UI.Social.ThreadLive do
   end
 
   def update(%{__context__: %{new_reply: new_reply}} = assigns, socket) do
-    # debug(context_reply: new_reply)
+    debug(new_reply, "context_reply")
     update(Map.merge(assigns, %{new_reply: new_reply}), socket)
   end
 

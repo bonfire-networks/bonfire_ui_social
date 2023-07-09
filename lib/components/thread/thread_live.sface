@@ -4,17 +4,16 @@
       <div data-id="replies" class="flex flex-col flex-1 py-4">
         {#if @threaded_replies}
           {#for {reply, child_replies} <- @threaded_replies}
-            <!-- id: {e(reply, :id, nil)}
-            url: {@url} -->
+            <!-- id: {e(reply, :id, nil)} -->
             <Bonfire.UI.Social.CommentLive
               comment={reply}
               child_replies={child_replies}
               reply_to_id={e(reply, :id, nil)}
               thread_id={@thread_id}
               feed_id={@feed_id}
+              current_url={@current_url}
               thread_object={@object}
               thread_level={1}
-              url={@url}
               showing_within={@showing_within || :thread}
             />
           {/for}
@@ -25,8 +24,8 @@
               reply_to_id={e(reply, :id, nil)}
               thread_id={@thread_id}
               feed_id={@feed_id}
+              current_url={@current_url}
               thread_object={@object}
-              url={@url}
               showing_within={@showing_within || :thread}
             />
           {/for}

@@ -38,6 +38,7 @@
           :if={@thread_id}
           id={@thread_id}
           thread_id={@thread_id}
+          current_url={@current_url}
           main_object_component_id={@main_object_component_id}
           feed_id={@feed_id}
           replies={@replies}
@@ -45,7 +46,6 @@
           page_info={e(@page_info, [])}
           activity={@activity}
           object={@object}
-          url={@url}
           showing_within={@showing_within || :thread}
         />
       </div>

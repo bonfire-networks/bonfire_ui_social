@@ -1,5 +1,4 @@
 <div
-  id={"comment-" <> e(@comment, :id, "")}
   data-id="comment"
   x-data="{show_replies: true}"
   class={
@@ -7,6 +6,7 @@
     "px-4 pb-4 border-b border-base-content/20": @thread_level == 1
   }
 >
+  <!-- id={"comment-" <> e(@comment, :id, "")} -->
   <div class="relative flex-1 w-full">
     <div class="flex flex-1 w-full items-top">
       <!-- <div
@@ -38,14 +38,14 @@
             </div>
           {#match activity}
             <Bonfire.UI.Social.ActivityLive
-              id={"comment-#{id(@comment)}#{id(activity)}"}
+              id={"comment-#{id(activity)}"}
               activity={activity}
               thread_object={@thread_object}
-              class="showing_within:thread !py-0 !p-3 !bg-transparent !shadow-none !rounded-none"
+              class="showing_within:thread !py-0 !p-3 !shadow-none !rounded-none"
               feed_id={@feed_id}
+              current_url={@current_url || current_url(@__context__)}
               showing_within={:thread}
               thread_mode={@thread_mode}
-              url={@url}
               object_boundary={if @showing_within == :messages, do: :skip_boundary_check}
               viewing_main_object={false}
             />
@@ -106,6 +106,7 @@
                 child_replies={sub_child_replies}
                 thread_level={@thread_level + 1}
                 showing_within={@showing_within}
+                current_url={@current_url || current_url(@__context__)}
               />
             </div>
           {/for}

@@ -36,7 +36,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
   prop(thread_url, :string, default: nil)
   prop(thread_title, :string, default: nil)
   prop(thread_mode, :any, default: nil)
-  prop(url, :string, default: nil)
+  prop(current_url, :string, default: nil)
   prop(permalink, :string, default: nil)
   prop(participants, :list, default: [])
   prop(object_boundary, :any, default: nil)
@@ -192,14 +192,19 @@ defmodule Bonfire.UI.Social.ActivityLive do
     object_id = id(object)
     id = id(activity) || object_id
 
+    current_url =
+      (assigns[:current_url] || current_url(assigns[:__context__]))
+      |> debug("activity_current_url")
+
     # permalink = path(object)
     permalink =
       if(thread_url && thread_id != id,
         do: "#{thread_url}#comment-#{id}",
         else: "#{path(object)}#"
       )
-      |> String.trim_leading("#{current_url(assigns) || "#"}#")
-      |> debug()
+      |> String.trim_leading("#{current_url || "#"}#")
+
+    # |> debug()
 
     assigns
     |> Map.merge(%{
@@ -216,6 +221,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
       created_verb_display: @created_verb_display,
       permalink: permalink,
       thread_url: thread_url,
+      current_url: current_url,
       thread_id: thread_id,
       thread_title: e(assigns, :thread_title, nil) || e(thread, :named, :name, nil),
       published_in: maybe_published_in(activity, verb),
@@ -337,7 +343,8 @@ defmodule Bonfire.UI.Social.ActivityLive do
         "unread-activity":
           e(@activity, :seen, nil) == nil and @showing_within == :notifications and
             @activity_inception == nil,
-        "active-activity": String.contains?(@url || "", @permalink) and @showing_within != :smart_input
+        "active-activity":
+          String.contains?(@current_url || "", @permalink) and @showing_within != :smart_input
       }
     >
       <form

@@ -25,20 +25,20 @@ defmodule Bonfire.UI.Social.DiscussionLive do
        #  reply_to_id: nil,
        thread_id: nil,
        thread_mode: nil,
-       url: nil,
+       #  url: nil,
        search_placeholder: nil,
        #  to_boundaries: nil,
        loading: false
      )}
   end
 
-  def do_handle_params(%{"id" => id} = params, url, socket) when is_binary(id) do
+  def do_handle_params(%{"id" => id} = params, _url, socket) when is_binary(id) do
     {:noreply,
      socket
      |> assign(
        params: params,
-       object_id: id,
-       url: url
+       object_id: id
+       #  url: url
        #  reply_to_id: e(params, "reply_to_id", id)
      )
      |> Bonfire.Social.Objects.LiveHandler.load_object_assigns()}

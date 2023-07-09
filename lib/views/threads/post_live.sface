@@ -6,7 +6,6 @@
   activity={@activity}
   object={@object}
   post_id={@post_id}
-  url={@url}
   thread_id={e(@thread_id, nil)}
   participants={e(@participants, [])}
   loading={@loading}

@@ -29,7 +29,6 @@ defmodule Bonfire.UI.Social.PostLive do
        #    ]
        #  ],
        #  without_sidebar: true,
-       url: nil,
        post_id: nil,
        thread_id: nil,
        #  reply_to_id: nil,
@@ -40,12 +39,12 @@ defmodule Bonfire.UI.Social.PostLive do
      )}
   end
 
-  def do_handle_params(%{"id" => id} = params, url, socket) do
+  def do_handle_params(%{"id" => id} = params, _url, socket) do
     {:noreply,
      socket
      |> assign(
-       post_id: id,
-       url: url
+       post_id: id
+       #  url: url
        #  reply_to_id: e(params, "reply_to_id", id)
      )
      |> Bonfire.Social.Objects.LiveHandler.load_object_assigns()}

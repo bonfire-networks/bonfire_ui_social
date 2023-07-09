@@ -12,14 +12,14 @@ defmodule Bonfire.UI.Social.ObjectThreadLoadLive do
   # prop feed_id, :any, default: nil
   prop activity, :any, default: nil
   prop showing_within, :atom, default: :thread
-  prop url, :string, default: nil
+  prop current_url, :string, default: nil
   # prop thread_mode, :any, default: nil
   # prop reverse_order, :any, default: nil
   # prop participants, :any, default: []
   # prop smart_input_opts, :map, default: %{}
   # prop textarea_class, :css_class, default: nil
   # prop replied_activity_class, :css_class, default: nil
-  # prop replies, :any, default: nil
+  prop replies, :any, default: nil
   prop threaded_replies, :any, default: nil
   # prop page_info, :any, default: nil
   # prop loading, :boolean, default: false
@@ -37,7 +37,7 @@ defmodule Bonfire.UI.Social.ObjectThreadLoadLive do
   end
 
   def update(assigns, socket) do
-    debug("load object")
+    debug(assigns, "load object")
 
     {:ok,
      socket

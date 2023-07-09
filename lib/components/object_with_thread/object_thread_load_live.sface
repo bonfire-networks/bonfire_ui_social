@@ -2,6 +2,8 @@
   activity={@activity}
   object={@object}
   object_id={@object_id}
-  url={@url}
   thread_id={@thread_id}
+  current_url={@current_url}
+  replies={@replies}
+  threaded_replies={@threaded_replies}
 />
