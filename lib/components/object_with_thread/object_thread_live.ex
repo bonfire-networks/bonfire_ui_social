@@ -17,7 +17,7 @@ defmodule Bonfire.UI.Social.ObjectThreadLive do
   prop activity, :any, default: nil
   prop showing_within, :atom, default: :thread
   prop current_url, :string, default: nil
-  # prop thread_mode, :any, default: nil
+  prop thread_mode, :any, default: nil
   # prop reverse_order, :any, default: nil
   # prop participants, :any, default: []
   # prop textarea_class, :css_class, default: nil

@@ -3,7 +3,7 @@ defmodule Bonfire.UI.Social.DiscussionLive do
 
   on_mount {LivePlugs, [Bonfire.UI.Me.LivePlugs.LoadCurrentUser]}
 
-  def mount(_params, _session, socket) do
+  def mount(params, _session, socket) do
     {:ok,
      socket
      |> assign(
@@ -24,7 +24,7 @@ defmodule Bonfire.UI.Social.DiscussionLive do
        back: true,
        #  reply_to_id: nil,
        thread_id: nil,
-       thread_mode: nil,
+       thread_mode: maybe_to_atom(e(params, "mode", nil)),
        #  url: nil,
        search_placeholder: nil,
        #  to_boundaries: nil,

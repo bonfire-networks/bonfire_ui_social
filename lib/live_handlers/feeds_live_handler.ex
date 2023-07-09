@@ -72,9 +72,10 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
       # TODO: don't re-load participants here as we already have the list (at least when we're in a thread)
       # TODO: include thread_id in list_participants/3 call
       participants =
-        (Bonfire.Social.Threads.list_participants(Map.put(activity, :object, reply_to), nil,
-           current_user: current_user
-         ) || [])
+        (e(socket.assigns, :participants, nil) ||
+           Bonfire.Social.Threads.list_participants(Map.put(activity, :object, reply_to), nil,
+             current_user: current_user
+           ) || [])
         |> Enum.reject(&(e(&1, :character, :id, nil) in [id(current_user), published_in_id]))
 
       to_circles =

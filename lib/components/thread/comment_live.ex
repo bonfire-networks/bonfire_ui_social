@@ -11,7 +11,7 @@ defmodule Bonfire.UI.Social.CommentLive do
   prop thread_id, :any
   prop feed_id, :any, default: nil
   prop sub_replies_count, :integer, default: 0
-  prop thread_mode, :any
+  prop thread_mode, :any, default: nil
   prop showing_within, :atom, default: :thread
   # prop page, :any, default: "thread"
   # prop create_object_type, :any, default: nil

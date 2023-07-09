@@ -24,6 +24,7 @@
 />
 
 <Bonfire.UI.Common.BoostActionLive
+  :if={@object_type != Bonfire.Data.Social.Message}
   id={ComponentID.new(
     Bonfire.UI.Common.BoostActionLive,
     id(@object),

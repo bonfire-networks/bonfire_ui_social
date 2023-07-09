@@ -13,6 +13,7 @@ defmodule Bonfire.UI.Social.Activity.MoreActionsLive do
   prop flagged, :any, default: nil
   prop activity_component_id, :string, default: nil
   prop thread_id, :string, required: true
+  prop thread_mode, :any, default: nil
 
   prop showing_within, :atom, default: nil
   prop viewing_main_object, :boolean, default: false

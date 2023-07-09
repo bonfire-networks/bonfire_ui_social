@@ -31,6 +31,37 @@
       parent_id={@activity_component_id || id(@activity)}
     />
 
+    {#if @showing_within == :thread and @viewing_main_object}
+      <li><div data-role="thread_mode" class="px-4 py-2 w-full">
+          {#if @thread_mode == :flat}
+            <div
+              phx-click="assign"
+              phx-target={"##{@activity_component_id}"}
+              phx-value-send_self="true"
+              phx-value-input_to_atoms="true"
+              phx-value-thread_mode="nested"
+              class="flex items-center w-full gap-2 text-sm text-base-content/80"
+            >
+              <#Icon iconify="clarity:tree-view-solid" class="w-4 h-4 shrink-0" />
+              {l("View as nested discussion")}
+            </div>
+          {#else}
+            <div
+              phx-click="assign"
+              phx-target={"##{@activity_component_id}"}
+              phx-value-send_self="true"
+              phx-value-input_to_atoms="true"
+              phx-value-thread_mode="flat"
+              class="flex items-center w-full gap-2 text-sm text-base-content/80"
+            >
+              <#Icon iconify="fa-solid:list" class="w-4 h-4 shrink-0" />
+              {l("View as flat discussion")}
+            </div>
+          {/if}
+        </div>
+      </li>
+    {/if}
+
     <li :if={@viewing_main_object && @thread_id &&
       Bonfire.Boundaries.can?(@__context__, :describe, @object_boundary || @thread_id)}>
       <Bonfire.UI.Common.OpenModalLive

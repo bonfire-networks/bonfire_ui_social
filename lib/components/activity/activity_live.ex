@@ -260,6 +260,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
          showing_within,
          viewing_main_object,
          thread_mode,
+         thread_id,
          thread_title,
          activity_component_id
        ) do
@@ -270,6 +271,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
        activity_inception,
        viewing_main_object,
        thread_mode,
+       thread_id,
        thread_title,
        activity_component_id
      ) ++
@@ -319,8 +321,10 @@ defmodule Bonfire.UI.Social.ActivityLive do
 
     ~F"""
     <article
-      x-data="{content_open: false}"
-      x-init={"content_open = #{!@cw}"}
+      x-data="{content_open: false, show_actions: false}"
+      x-init={"content_open = #{!@cw}; show_actions = (#{@viewing_main_object} || ('ontouchstart' in window) || (navigator.maxTouchPoints > 0) || (navigator.msMaxTouchPoints > 0)); "}
+      x-on:mouseover={if !@viewing_main_object, do: "show_actions=true"}
+      x-on:mouseover.away={if !@viewing_main_object, do: "show_actions=false"}
       id={@activity_component_id}
       data-href={@permalink}
       phx-hook={if !@viewing_main_object and !@show_minimal_subject_and_note and
@@ -330,7 +334,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
       aria-label="user activity"
       tabIndex="0"
       class={
-        "p-4 activity relative group flex flex-col #{@class}",
+        "p-4 pb-2 activity relative group flex flex-col #{@class}",
         "!p-0 !pb-4": e(@show_minimal_subject_and_note, false),
         "main_reply_to !mb-1 items-center !flex-row order-first !p-0 !pb-2":
           @object_id != nil and e(@activity, :replied, :reply_to_id, nil) == nil and
@@ -372,6 +376,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
               @showing_within,
               @viewing_main_object,
               @thread_mode,
+              @thread_id,
               @thread_title,
               @activity_component_id
             ) || []}
@@ -704,6 +709,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
         activity_inception,
         viewing_main_object,
         thread_mode,
+        thread_id,
         thread_title,
         activity_component_id
       )
@@ -715,13 +721,28 @@ defmodule Bonfire.UI.Social.ActivityLive do
         activity_inception,
         viewing_main_object,
         thread_mode,
+        thread_id,
         thread_title,
         _activity_component_id
       )
       # cases where we do not show reply_to
       when not is_nil(activity_inception) or
              (viewing_main_object != true and showing_within in [:thread, :smart_input] and
-                thread_mode not in [:flat]),
+                thread_mode != :flat),
+      do: []
+
+  def component_maybe_in_reply_to(
+        verb,
+        %{reply_to: %{id: reply_to_id}},
+        _,
+        _,
+        _,
+        thread_mode,
+        thread_id,
+        _,
+        _
+      )
+      when thread_mode == :flat and reply_to_id == thread_id,
       do: []
 
   def component_maybe_in_reply_to(
@@ -743,6 +764,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
         _,
         _,
         _,
+        _thread_id,
         thread_title,
         activity_component_id
       )
@@ -785,6 +807,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
         _,
         _,
         _,
+        _thread_id,
         thread_title,
         activity_component_id
       )
@@ -824,6 +847,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
         _,
         _,
         _,
+        _thread_id,
         thread_title,
         activity_component_id
       )
@@ -856,7 +880,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
   #             id: reply_to_id
   #           } = replied
   #       },
-  #       _, _, _, _, _, _
+  #       _, _, _, _, _, _, _
   #     )
   #     # other kind of reply
   #     when verb in @reply_verbs and is_binary(reply_to_id) do
@@ -870,6 +894,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
         activity_inception,
         viewing_main_object,
         thread_mode,
+        thread_id,
         thread_title,
         activity_component_id
       ),
@@ -881,6 +906,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
           activity_inception,
           viewing_main_object,
           thread_mode,
+          thread_id,
           thread_title,
           activity_component_id
         )
@@ -888,12 +914,12 @@ defmodule Bonfire.UI.Social.ActivityLive do
   # def component_maybe_in_reply_to(
   #       verb,
   #       %{id: object_id, thread: %{id: thread_id} = thread},
-  #       _, _, _, _
+  #       _, _, _, _, _
   #     )
   #     when object_id != thread_id,
   #     do: maybe_load_in_reply_to(thread, thread_id, current_user: current_user(assigns))
 
-  def component_maybe_in_reply_to(_, a, _, _, _, _, _, _) do
+  def component_maybe_in_reply_to(_, a, _, _, _, _, _, _, _) do
     debug(a, "no reply_to")
     []
   end

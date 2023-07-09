@@ -26,6 +26,7 @@
           class="rounded-none !shadow-none !p-4 mt-0 main_object_in_thread"
           id={@main_object_component_id}
           showing_within={:thread}
+          thread_mode={@thread_mode}
           viewing_main_object
           activity={@activity}
           object={@object}
@@ -43,6 +44,7 @@
           feed_id={@feed_id}
           replies={@replies}
           threaded_replies={@threaded_replies}
+          thread_mode={@thread_mode}
           page_info={e(@page_info, [])}
           activity={@activity}
           object={@object}

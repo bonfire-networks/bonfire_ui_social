@@ -5,7 +5,7 @@ defmodule Bonfire.UI.Social.PostLive do
 
   on_mount {LivePlugs, [Bonfire.UI.Me.LivePlugs.LoadCurrentUser]}
 
-  def mount(_params, _session, socket) do
+  def mount(params, _session, socket) do
     {:ok,
      socket
      |> assign(
@@ -32,7 +32,7 @@ defmodule Bonfire.UI.Social.PostLive do
        post_id: nil,
        thread_id: nil,
        #  reply_to_id: nil,
-       thread_mode: nil,
+       thread_mode: maybe_to_atom(e(params, "mode", nil)),
        search_placeholder: nil,
        #  to_boundaries: nil,
        loading: false

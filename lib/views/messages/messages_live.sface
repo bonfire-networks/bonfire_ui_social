@@ -1,7 +1,7 @@
 <main class="h-full">
   {#if @tab_id == "thread"}
     <div class="flex flex-col h-full">
-      <Bonfire.UI.Social.ObjectThreadLoadLive
+      <Bonfire.UI.Social.ObjectThreadLive
         id={:thread}
         page={@page}
         page_title={@page_title}
@@ -12,6 +12,7 @@
         activity={@activity}
         object={@object}
         url={@url}
+        thread_mode={@thread_mode}
         show_reply_input
         replied_activity_class="relative mb-2 rounded-md bg-base-100 hover:bg-base-100"
         showing_within={@showing_within}
