@@ -39,10 +39,19 @@ defmodule Bonfire.UI.Social.ObjectThreadLoadLive do
   def update(assigns, socket) do
     debug(assigns, "load object")
 
-    {:ok,
-     socket
-     |> assign(assigns)
-     |> Bonfire.Social.Objects.LiveHandler.load_object_assigns()}
+    socket = socket |> assign(assigns)
+
+    with %Phoenix.LiveView.Socket{} = socket <-
+           Bonfire.Social.Objects.LiveHandler.load_object_assigns(socket) do
+      {:ok, socket}
+    else
+      {:error, e} ->
+        {:ok, assign_error(socket, e)}
+
+      other ->
+        error(other)
+        {:ok, socket}
+    end
   end
 
   def handle_event(

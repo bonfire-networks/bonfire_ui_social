@@ -33,15 +33,27 @@ defmodule Bonfire.UI.Social.DiscussionLive do
   end
 
   def do_handle_params(%{"id" => id} = params, _url, socket) when is_binary(id) do
-    {:noreply,
-     socket
-     |> assign(
-       params: params,
-       object_id: id
-       #  url: url
-       #  reply_to_id: e(params, "reply_to_id", id)
-     )
-     |> Bonfire.Social.Objects.LiveHandler.load_object_assigns()}
+    socket =
+      socket
+      |> assign(
+        params: params,
+        object_id: id,
+        thread_id: id
+        #  url: url
+        #  reply_to_id: e(params, "reply_to_id", id)
+      )
+
+    with %Phoenix.LiveView.Socket{} = socket <-
+           Bonfire.Social.Objects.LiveHandler.load_object_assigns(socket) do
+      {:noreply, socket}
+    else
+      {:error, e} ->
+        {:noreply, assign_error(socket, e)}
+
+      other ->
+        error(other)
+        {:noreply, socket}
+    end
   end
 
   def handle_params(params, uri, socket),
