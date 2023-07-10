@@ -455,7 +455,7 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
       |> assign_generic(feed_edges)
     else
       # debug(feed_edges, "insert feed into stream")
-      stream_insert_many(socket, :feed, feed_edges || [], opts)
+      maybe_stream_insert(socket, :feed, feed_edges || [], opts)
     end
   end
 

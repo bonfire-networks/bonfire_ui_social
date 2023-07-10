@@ -23,7 +23,6 @@ defmodule Bonfire.UI.Social.ObjectThreadLive do
   # prop textarea_class, :css_class, default: nil
   # prop replied_activity_class, :css_class, default: nil
   prop replies, :any, default: nil
-  prop threaded_replies, :any, default: nil
   prop page_info, :any, default: nil
   prop(ui_compact, :boolean, default: false)
 

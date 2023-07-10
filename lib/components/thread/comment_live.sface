@@ -1,15 +1,5 @@
-<div
-  data-id="comment"
-  x-data="{show_replies: true}"
-  class={
-    "reply thread-level-" <> to_string(@thread_level) <> " flex relative  w-full mx-auto pl-2 pt-3",
-    "px-4 pb-4 border-b border-base-content/20": @thread_level == 1
-  }
->
-  <!-- id={"comment-" <> e(@comment, :id, "")} -->
-  <div class="relative flex-1 w-full">
-    <div class="flex flex-1 w-full items-top">
-      <!-- <div
+<div data-id="comment" class="flex flex-1 w-full items-top">
+  <!-- <div
         :if={@thread_level > 1}
         x-cloak
         x-show="show_replies"
@@ -21,118 +11,35 @@
         />
       </div> -->
 
-      <div class="flex-1 w-full" x-cloak x-data="{reply: false, show: true}">
-        {#case get_activity(@comment)}
-          {#match nil}
-            <div class="mx-4 my-2">
-              <div class="p-4 rounded-md bg-info/10">
-                <div class="flex">
-                  <div class="flex-shrink-0">
-                    <#Icon solid="InformationCircle" class="w-5 h-5 text-info" />
-                  </div>
-                  <div class="flex-1 ml-3 md:flex md:justify-between">
-                    <p class="text-sm text-info">{l("This comment was deleted.")}</p>
-                  </div>
-                </div>
+  <div class="flex-1 w-full" x-cloak x-data="{reply: false, show: true}">
+    {#case get_activity(@comment)}
+      {#match nil}
+        <div class="mx-4 my-2">
+          <div class="p-4 rounded-md bg-info/10">
+            <div class="flex">
+              <div class="flex-shrink-0">
+                <#Icon solid="InformationCircle" class="w-5 h-5 text-info" />
+              </div>
+              <div class="flex-1 ml-3 md:flex md:justify-between">
+                <p class="text-sm text-info">{l("This comment was deleted.")}</p>
               </div>
             </div>
-          {#match activity}
-            <Bonfire.UI.Social.ActivityLive
-              id={"comment-#{id(activity)}"}
-              activity={activity}
-              thread_object={@thread_object}
-              class="showing_within:thread !py-0 !p-3 !shadow-none !rounded-none"
-              feed_id={@feed_id}
-              current_url={@current_url || current_url(@__context__)}
-              showing_within={:thread}
-              thread_mode={@thread_mode}
-              object_boundary={if @showing_within == :messages, do: :skip_boundary_check}
-              viewing_main_object={false}
-              ui_compact={@ui_compact}
-            />
-        {/case}
-      </div>
-    </div>
-
-    <div
-      :if={@thread_level > 1}
-      class="absolute left-[-10px] cursor-pointer top-[10px] z-30"
-      x-on:click="show_replies = ! show_replies"
-    >
-      <div x-cloak x-show="show_replies">
-        <!-- <#Icon iconify="mdi:arrow-collapse" class="w-5 h-5 text-base-content/70" /> -->
-        <#Icon iconify="fluent:triangle-down-12-filled" class="w-3 h-3 text-base-content/50" />
-        <!-- <span class="text-xs text-base-content/70">[-]</span> -->
-      </div>
-      <div x-cloak x-show="!show_replies">
-        <!-- <span class="text-xs text-accent">[+]</span> -->
-        <#Icon iconify="fluent:triangle-right-12-filled" class="w-3 h-3 text-primary" />
-      </div>
-    </div>
-
-    <div x-show="show_replies" x-transition>
-      <div
-        :if={@thread_level > 1}
-        x-cloak
-        x-show="show_replies"
-        class="group z-10 left-[-17px] px-3 top-[30px] bottom-[-4px] absolute"
-      >
-        <i
-          :class="!show_replies ? 'bg-primary bottom-[0px]' : 'bottom-[0px]'"
-          class="absolute top-0 bottom-0 z-10 border-l-[2px] border-base-content/5"
-        />
-      </div>
-      <!-- <div class="-mt-[26px]  z-[50] ml-10" :if={is_list(@child_replies) and length(@child_replies) > 0}>
-        <button class="relative flex items-center gap-2 text-sm normal-case btn btn-ghost btn-info btn-xs">
-          <#Icon iconify="ic:outline-arrow-drop-down" class="w-5 h-5" />
-          <span>{length(@child_replies)} {l "reply"}</span>
-        </button>
-      </div> -->
-
-      {#if is_list(@child_replies) and @child_replies != []}
-        <div class={"replies replies-level-" <> to_string(@thread_level + 1) <> " my-4 ml-3"}>
-          {#for {{subreply, sub_child_replies}, index} <- Enum.with_index(@child_replies, 1)}
-            <div class="relative">
-              <!-- <div 
-                :if={index == length(@child_replies)}
-                class="w-3 bg-base-100 absolute left-[-10px] top-[10px] z-30 bottom-0" /> -->
-              <!-- <div class="z-40 absolute border-base-content/20 w-6 h-6 border-0 border-b-2 border-l-2 rounded-bl-lg left-[-10px] top-[-6px]" /> -->
-              <div :if={index < length(@child_replies)} />
-              <CommentLive
-                reply_to_id={e(@comment, :id, nil)}
-                thread_id={@thread_id}
-                comment={subreply}
-                thread_object={@thread_object}
-                feed_id={@feed_id}
-                child_replies={sub_child_replies}
-                thread_level={@thread_level + 1}
-                showing_within={@showing_within}
-                current_url={@current_url || current_url(@__context__)}
-                ui_compact
-              />
-            </div>
-          {/for}
-
-          <!-- {#else} -->
-
-          <!-- {#case sub_replies_count(@comment)}
-
-            {#match sub_replies_count when is_integer(sub_replies_count) and sub_replies_count > 0}
-              <div class="flex items-center -mx-2 -mt-1">
-                <div 
-                  x-on:click="show = true" 
-                  x-show="show" 
-                  phx-click="Bonfire.Social.Posts:load_replies" 
-                  phx-value-id={e(@comment, :id, nil)} 
-                  phx-value-level={@thread_level} 
-                  class="flex items-center visible px-2 py-1 ml-4 rounded cursor-pointer group dark:bg-neutral-400 hover:bg-neutral hover:bg-opacity-30 click:invisible">
-                  <span class="text-xs font-semibold text-primary-content-800">Load {@sub_replies_count} more replies</span>
-                </div>
-              </div>
-            {#match _}
-          {/case} -->
+          </div>
         </div>
-      {/if}
-    </div>
+      {#match activity}
+        <Bonfire.UI.Social.ActivityLive
+          id={"comment-#{id(activity)}"}
+          activity={activity}
+          thread_object={@thread_object}
+          class="showing_within:thread !py-0 !p-3 !shadow-none !rounded-none"
+          feed_id={@feed_id}
+          current_url={@current_url || current_url(@__context__)}
+          showing_within={:thread}
+          thread_mode={@thread_mode}
+          object_boundary={if @showing_within == :messages, do: :skip_boundary_check}
+          viewing_main_object={false}
+          ui_compact={@ui_compact}
+        />
+    {/case}
   </div>
 </div>

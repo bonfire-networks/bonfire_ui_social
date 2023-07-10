@@ -6,11 +6,9 @@ defmodule Bonfire.UI.Social.CommentLive do
   prop activity, :any, default: nil
   # prop object, :any, default: nil
   prop thread_object, :any
-  prop thread_level, :any
-  prop child_replies, :any
+  prop thread_level, :number, default: 0
   prop thread_id, :any
   prop feed_id, :any, default: nil
-  prop sub_replies_count, :integer, default: 0
   prop thread_mode, :any, default: nil
   prop showing_within, :atom, default: :thread
   # prop page, :any, default: "thread"
@@ -27,11 +25,4 @@ defmodule Bonfire.UI.Social.CommentLive do
   end
 
   def get_activity(_), do: nil
-
-  def sub_replies_count(comment) do
-    activity = get_activity(comment)
-
-    e(activity, :replied, :nested_replies_count, 0) +
-      e(activity, :replied, :direct_replies_count, 0)
-  end
 end

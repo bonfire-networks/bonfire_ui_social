@@ -8,34 +8,6 @@ defmodule Bonfire.Social.Posts.LiveHandler do
   # alias Bonfire.Data.Social.Post
   # alias Ecto.Changeset
 
-  def handle_params(
-        %{"after" => cursor} = _attrs,
-        _,
-        %{assigns: %{thread_id: thread_id}} = socket
-      ) do
-    live_more(thread_id, [after: cursor], socket)
-  end
-
-  def handle_params(%{"after" => cursor, "context" => thread_id} = _attrs, _, socket) do
-    live_more(thread_id, [after: cursor], socket)
-  end
-
-  # workaround for a weird issue appearing in tests
-  def handle_params(attrs, uri, socket) do
-    case URI.parse(uri) do
-      %{path: "/discussion/" <> thread_id} -> live_more(thread_id, input_to_atoms(attrs), socket)
-      %{path: "/post/" <> thread_id} -> live_more(thread_id, input_to_atoms(attrs), socket)
-    end
-  end
-
-  def handle_event(
-        "load_more",
-        %{"after" => _cursor} = attrs,
-        %{assigns: %{thread_id: thread_id}} = socket
-      ) do
-    live_more(thread_id, input_to_atoms(attrs), socket)
-  end
-
   def handle_event("post", %{"create_object_type" => "message"} = params, socket) do
     Bonfire.Social.Messages.LiveHandler.send_message(params, socket)
   end
@@ -173,22 +145,6 @@ defmodule Bonfire.Social.Posts.LiveHandler do
     )
   end
 
-  def handle_event("load_replies", %{"id" => id, "level" => level}, socket) do
-    debug("load extra replies")
-    {level, _} = Integer.parse(level)
-
-    %{edges: replies} =
-      Bonfire.Social.Threads.list_replies(id, socket: socket, max_depth: level + 1)
-
-    replies = replies ++ Utils.e(socket.assigns, :replies, [])
-
-    {:noreply,
-     assign(socket,
-       replies: replies
-       # threaded_replies: Bonfire.Social.Threads.arrange_replies_tree(replies) || []
-     )}
-  end
-
   # def handle_event("switch_thread_mode", %{"thread_mode" => thread_mode} = _attrs, socket) do
   #   IO.inspect(thread_mode, label: "THREAD MODE")
 
@@ -234,38 +190,6 @@ defmodule Bonfire.Social.Posts.LiveHandler do
     {:noreply,
      socket
      |> Bonfire.UI.Common.SmartInput.LiveHandler.set_smart_input_text(text)}
-  end
-
-  def live_more(thread_id, paginate, socket) do
-    # debug(paginate, "paginate thread")
-    current_user = current_user(socket)
-
-    with %{edges: replies, page_info: page_info} <-
-           Bonfire.Social.Threads.list_replies(thread_id,
-             current_user: current_user,
-             paginate: paginate
-           ) do
-      replies =
-        (e(socket.assigns, :replies, []) ++ replies)
-        |> Enum.uniq()
-
-      # |> debug("REPLIES")
-
-      threaded_replies =
-        if is_list(replies) and length(replies) > 0,
-          do: Bonfire.Social.Threads.arrange_replies_tree(replies),
-          else: []
-
-      # debug(threaded_replies, "REPLIES threaded")
-
-      {:noreply,
-       socket
-       |> assign(
-         replies: replies,
-         threaded_replies: threaded_replies,
-         page_info: page_info
-       )}
-    end
   end
 
   def post_changeset(attrs \\ %{}, creator) do

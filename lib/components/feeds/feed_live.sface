@@ -24,7 +24,7 @@
       path_prefix={@tab_path_prefix}
       path_suffix={@tab_path_suffix}
     />
-    {#if @feed_count || e(@streams, :feed, :inserts, []) != []}
+    {#if @feed_count || e(@streams.feed, :inserts, []) != []}
       <div
         id={"feed_#{@feed_id || @id}"}
         data-id="feed_activity_list"

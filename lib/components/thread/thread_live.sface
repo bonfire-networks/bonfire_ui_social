@@ -1,43 +1,49 @@
 <div>
-  {#if (@threaded_replies || @replies || []) != []}
+  {#if (@replies || e(@streams.threaded_replies, :inserts, [])) != []}
     <div class="flex flex-col flex-1">
       <div data-id="replies" class="flex flex-col flex-1 py-4">
-        {#if @thread_mode != :flat and is_list(@threaded_replies)}
-          {#for {reply, child_replies} <- @threaded_replies}
-            <!-- id: {e(reply, :id, nil)} -->
-            <Bonfire.UI.Social.CommentLive
+        <Bonfire.UI.Common.LoadPreviousLive
+          live_handler={Bonfire.Social.Threads}
+          page_info={@page_info}
+          target={@myself}
+          context={@thread_id}
+        />
+
+        {#if @thread_mode != :flat and e(@streams.threaded_replies, :inserts, []) != []}
+          {#for {entry_id, {reply, child_replies}} <- @streams.threaded_replies}
+            <Bonfire.UI.Social.ThreadBranchLive
+              id={entry_id}
               comment={reply}
-              child_replies={child_replies}
-              reply_to_id={e(reply, :id, nil)}
+              threaded_replies={child_replies}
               thread_id={@thread_id}
               feed_id={@feed_id}
               current_url={@current_url}
               thread_object={@object}
-              thread_level={1}
               thread_mode={@thread_mode}
               showing_within={@showing_within || :thread}
               ui_compact={@ui_compact}
             />
           {/for}
         {#else}
+          <!-- flat mode -->
           {#for reply <- @replies}
-            <Bonfire.UI.Social.CommentLive
-              comment={reply}
-              reply_to_id={e(reply, :id, nil)}
-              thread_id={@thread_id}
-              feed_id={@feed_id}
-              current_url={@current_url}
-              thread_object={@object}
-              thread_level={0}
-              thread_mode={@thread_mode}
-              showing_within={@showing_within || :thread}
-              ui_compact={@ui_compact}
-            />
+            <div class="reply flex relative w-full mx-auto pl-2 pt-3">
+              <Bonfire.UI.Social.CommentLive
+                comment={reply}
+                thread_id={@thread_id}
+                feed_id={@feed_id}
+                current_url={@current_url}
+                thread_object={@object}
+                thread_mode={@thread_mode}
+                showing_within={@showing_within || :thread}
+                ui_compact={@ui_compact}
+              />
+            </div>
           {/for}
         {/if}
 
         <Bonfire.UI.Common.LoadMoreLive
-          live_handler={Bonfire.Social.Posts}
+          live_handler={Bonfire.Social.Threads}
           page_info={@page_info}
           target={@myself}
           context={@thread_id}

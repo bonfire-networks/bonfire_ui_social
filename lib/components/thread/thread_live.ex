@@ -9,7 +9,6 @@ defmodule Bonfire.UI.Social.ThreadLive do
   # import Bonfire.Me.Integration
 
   prop replies, :any, default: nil
-  prop threaded_replies, :any, default: nil
   prop page_info, :any, default: nil
   prop activity, :any, default: nil
   prop object, :any, default: nil
@@ -27,11 +26,47 @@ defmodule Bonfire.UI.Social.ThreadLive do
   # prop reverse_order, :any, default: nil
   prop showing_within, :atom, default: :thread
   # prop loading, :boolean, default: false
-  prop(ui_compact, :boolean, default: false)
+  prop ui_compact, :boolean, default: false
+  prop order_by, :any, default: :id
+
+  def mount(socket) do
+    object = e(socket.assigns, :object, nil) || e(socket.assigns, :activity, :object)
+
+    thread_id =
+      e(socket.assigns, :thread_id, nil) ||
+        e(socket.assigns, :activity, :replied, :thread_id, nil) ||
+        e(object, :replied, :thread_id, nil)
+
+    {
+      :ok,
+      socket
+      |> stream_configure(:replies, dom_id: &component_id(thread_id, &1))
+      |> stream(:replies, [])
+      |> stream_configure(:threaded_replies, dom_id: &component_id(thread_id, &1))
+      |> stream(:threaded_replies, [])
+    }
+  end
+
+  defp component_id(thread_id, {entry, _children}) do
+    component_id(thread_id, entry)
+  end
+
+  defp component_id(thread_id, entry) do
+    "#{thread_id}_#{id(entry) || e(entry, :activity, :id, nil) || e(entry, :object, :id, nil) || e(entry, :edge, :id, nil) || Pointers.ULID.generate()}"
+  end
+
+  def update(%{insert_stream: entries} = assigns, socket) do
+    debug("comments stream is being poured into")
+
+    {:ok,
+     socket
+     |> assign(Map.drop(assigns, [:insert_stream]))
+     |> LiveHandler.insert_comments(entries)}
+  end
 
   def update(%{replies: replies, page_info: page_info, loaded_async: true} = assigns, socket)
       when is_list(replies) and is_map(page_info) do
-    debug("showing async-loaded replies")
+    debug("loading async-loaded replies")
 
     {:ok,
      socket
@@ -40,7 +75,7 @@ defmodule Bonfire.UI.Social.ThreadLive do
 
   def update(%{replies: replies, page_info: page_info} = assigns, socket)
       when is_list(replies) and is_map(page_info) do
-    debug("showing preloaded replies")
+    debug("showing passed-down replies")
 
     {:ok,
      socket
@@ -53,73 +88,76 @@ defmodule Bonfire.UI.Social.ThreadLive do
 
     thread_id = e(socket.assigns, :thread_id, nil)
 
-    if e(socket.assigns, :thread_mode, nil) == :flat do
-      debug("flat thread")
+    object_id =
+      e(new_reply, :object, :id, nil) || e(new_reply, :activity, :object, :id, nil) ||
+        e(new_reply, :id, nil)
 
-      object_id =
-        e(new_reply, :object, :id, nil) || e(new_reply, :activity, :object, :id, nil) ||
-          e(new_reply, :id, nil)
+    # Note: doing this here temporarily while not using pushed comment for nested threads
+    permitted? =
+      object_id &&
+        Bonfire.Common.Pointers.exists?([id: object_id], current_user: current_user(socket))
+        |> debug("double check boundary upon receiving a LivePush")
 
-      # Note: doing this hear temporarily while not using pushed comment for nested threads
-      permitted? =
-        object_id &&
-          Bonfire.Common.Pointers.exists?([id: object_id], current_user: current_user(socket))
-          |> debug("double check boundary upon receiving a LivePush")
+    if permitted? do
+      # {:ok,
+      #  socket
+      #  |> LiveHandler.insert_comments(new_reply)
+      # }
 
-      if permitted? do
-        replies = e(socket.assigns, :replies, []) ++ [new_reply]
+      if e(socket.assigns, :thread_mode, nil) == :flat do
+        debug("flat thread")
 
         {:ok,
          socket
-         |> assign(replies: replies)}
+         |> LiveHandler.insert_comments(new_reply)}
       else
-        {:ok, socket}
+        debug("nested thread")
+
+        # FIXME: we should inject the reply rather than reloading
+        load_comments(socket, false)
+        # ^ cannot redirect in `update` so we trigger a re-query of the thread instead
+
+        # temporary
+        # activity_id = e(new_reply, :activity, :id, nil) || e(new_reply, :id, nil)
+
+        # thread_url =
+        #   if is_struct(e(socket.assigns, :object, nil)) do
+        #     path(e(socket.assigns, :object, nil))
+        #   else
+        # "/discussion/#{thread_id}"
+        #   end
+
+        # permalink = "#{thread_url}#activity-#{activity_id}"
+
+        # {
+        #   :ok,
+        #   socket
+        #   |> patch_to(permalink)
+        #   # |> LiveHandler.load_thread()
+        # }
+
+        # FIMXE: nesting gets messed up when replying to a reply that was added to the thread this way
+        # path = (
+        #   e(new_reply, :object, :replied, :path, nil)
+        #   || e(new_reply, :replied, :path, nil)
+        #   || e(new_reply, :activity, :replied, :path, [])
+        # )
+        # |> debug("path")
+
+        # replies = [
+        #   new_reply
+        #   |> Map.put(:path, path)
+        # ] ++ e(socket.assigns, :replies, [])
+
+        # {:ok, socket
+        #   |> assign(
+        #     replies: replies,
+        #     threaded_replies: Bonfire.Social.Threads.arrange_replies_tree(replies) |> debug()
+        #   )
+        # }
       end
     else
-      debug("nested thread")
-
-      # FIXME: we should inject the reply rather than reloading
-      # cannot redirect in `update` so we trigger a re-query of the thread instead
-      update(%{}, socket)
-
-      # temporary
-      # activity_id = e(new_reply, :activity, :id, nil) || e(new_reply, :id, nil)
-
-      # thread_url =
-      #   if is_struct(e(socket.assigns, :object, nil)) do
-      #     path(e(socket.assigns, :object, nil))
-      #   else
-      # "/discussion/#{thread_id}"
-      #   end
-
-      # permalink = "#{thread_url}#activity-#{activity_id}"
-
-      # {
-      #   :ok,
-      #   socket
-      #   |> patch_to(permalink)
-      #   # |> LiveHandler.load_thread()
-      # }
-
-      # FIMXE: nesting gets messed up when replying to a reply that was added to the thread this way
-      # path = (
-      #   e(new_reply, :object, :replied, :path, nil)
-      #   || e(new_reply, :replied, :path, nil)
-      #   || e(new_reply, :activity, :replied, :path, [])
-      # )
-      # |> debug("path")
-
-      # replies = [
-      #   new_reply
-      #   |> Map.put(:path, path)
-      # ] ++ e(socket.assigns, :replies, [])
-
-      # {:ok, socket
-      #   |> assign(
-      #     replies: replies,
-      #     threaded_replies: Bonfire.Social.Threads.arrange_replies_tree(replies) |> debug()
-      #   )
-      # }
+      {:ok, socket}
     end
   end
 
@@ -128,15 +166,30 @@ defmodule Bonfire.UI.Social.ThreadLive do
     update(Map.merge(assigns, %{new_reply: new_reply}), socket)
   end
 
-  def update(assigns, socket) do
-    debug("Load comments")
-    # debug(assigns, "Thread: assigns")
+  def update(assigns, %{assigns: %{loaded_async: true}} = socket) do
+    debug("showing previously async-loaded replies")
 
     {:ok,
      socket
-     |> assign(assigns)
+     |> assign(assigns)}
+  end
+
+  def update(assigns, socket) do
+    debug("Loading comments")
+    # debug(assigns, "Thread: assigns")
+
+    socket
+    |> assign(assigns)
+    |> load_comments()
+  end
+
+  def load_comments(socket, show_loading? \\ true) do
+    debug("Loading comments")
+
+    {:ok,
+     socket
      |> LiveHandler.thread_init()
-     |> LiveHandler.load_thread_maybe_async()}
+     |> LiveHandler.load_thread_maybe_async(show_loading?)}
   end
 
   def handle_event(
