@@ -32,6 +32,7 @@
           object={@object}
           feed_id={@feed_id}
           object_boundary={if @showing_within == :messages, do: :skip_boundary_check}
+          ui_compact={@ui_compact}
         />
       </div>
       <div class="">
@@ -49,6 +50,7 @@
           activity={@activity}
           object={@object}
           showing_within={@showing_within || :thread}
+          ui_compact={@ui_compact}
         />
       </div>
     </div>

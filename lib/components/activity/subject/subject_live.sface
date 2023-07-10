@@ -49,7 +49,7 @@
       <div class="flex items-center gap-3">
         <LiveRedirect
           :if={!Settings.get([Bonfire.UI.Common.AvatarLive, :hide_avatars], false, @__context__)}
-          class="h-8"
+          class="h-6"
           opts={"data-id": "subject_name", "aria-label": e(@character, :username, "") <> " profile"}
           to={path(@character)}
         >
@@ -57,7 +57,7 @@
             parent_id={@activity_component_id || id(@activity)}
             user={@profile}
             title={e(@profile, :name, "Anonymous")}
-            class="w-8 h-8 rounded-full bg-base-100"
+            class="w-6 h-6 rounded-full bg-base-100"
           />
         </LiveRedirect>
         <div class="flex items-baseline gap-1">
@@ -74,7 +74,7 @@
               "data-id": "subject_username",
               "aria-label": l("%{name}'s profile", name: e(@profile, :name, ""))
             }
-            class="text-sm font-normal truncate link link-hover ellipsis text-base-content/70 subject_username"
+            class="text-sm font-normal truncate link link-hover ellipsis text-base-content/30 subject_username"
             to={path(@character)}
           >
             @{e(@character, :username, "")}
@@ -110,10 +110,7 @@
     <div class="flex items-center">
       <div
         :if={!Settings.get([Bonfire.UI.Common.AvatarLive, :hide_avatars], false, @__context__)}
-        class={
-          "mr-3",
-          "": @viewing_main_object == true
-        }
+        class="mr-3"
       >
         <LiveRedirect
           opts={"data-id": "subject_name", "aria-label": e(@character, :username, "") <> " profile"}
@@ -125,6 +122,7 @@
             user={@profile}
             title={e(@profile, :name, "Anonymous")}
             viewing_main_object={@viewing_main_object}
+            class={" rounded-full bg-base-100", "w-12 h-12": !@ui_compact, "w-6 h-6": @ui_compact}
           />
         </LiveRedirect>
       </div>
@@ -146,6 +144,18 @@
             >
               {e(@profile, :name, "Anonymous")}
             </LiveRedirect>
+            <LiveRedirect
+              :if={e(@character, :username, nil) && @ui_compact}
+              opts={
+                "data-id": "subject_username",
+                "aria-label": l("%{name}'s profile", name: e(@profile, :name, ""))
+              }
+              class="text-sm font-normal truncate link link-hover ellipsis text-base-content/30 subject_username"
+              to={path(@character)}
+            >
+              @{e(@character, :username, "")}
+            </LiveRedirect>
+
             {#if @verb == "Create" and @object_type in [Bonfire.Classify.Category]}
               <div>
                 <span>{l("created a new")}</span> <LiveRedirect
@@ -172,19 +182,18 @@
           </div>
           <!-- <span class="ml-2 text-[15px] text-base-content/70">replied to <b class="font-bold text-base-content link">title topic</b></span> -->
           <!-- </div> -->
-          <div class="flex items-center gap-1">
+          <div class="flex items-center gap-1" :if={!@ui_compact}>
             <LiveRedirect
               :if={e(@character, :username, nil)}
               opts={
                 "data-id": "subject_username",
                 "aria-label": l("%{name}'s profile", name: e(@profile, :name, ""))
               }
-              class="text-sm font-normal truncate link link-hover ellipsis text-base-content/70 subject_username"
+              class="text-sm font-normal truncate link link-hover ellipsis text-base-content/50 subject_username"
               to={path(@character)}
             >
               @{e(@character, :username, "")}
             </LiveRedirect>
-            <Bonfire.UI.Social.Activity.InstanceIconLive peered={e(@activity, :peered, nil) || e(@object, :peered, nil)} />
           </div>
         </div>
         <div class="flex items-center gap-1">
@@ -209,6 +218,7 @@
                 DatesTimes.date_from_now(e(@activity, :object, nil))}
             </span>
           </Bonfire.UI.Social.Activity.LinkToActivityLive>
+          <Bonfire.UI.Social.Activity.InstanceIconLive peered={e(@activity, :peered, nil) || e(@object, :peered, nil)} />
         </div>
         <!-- <div class="flex items-center gap-1">
           <Dynamic.Component

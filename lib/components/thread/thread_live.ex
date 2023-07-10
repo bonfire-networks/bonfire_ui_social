@@ -27,6 +27,7 @@ defmodule Bonfire.UI.Social.ThreadLive do
   # prop reverse_order, :any, default: nil
   prop showing_within, :atom, default: :thread
   # prop loading, :boolean, default: false
+  prop(ui_compact, :boolean, default: false)
 
   def update(%{replies: replies, page_info: page_info, loaded_async: true} = assigns, socket)
       when is_list(replies) and is_map(page_info) do

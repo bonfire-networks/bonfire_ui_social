@@ -25,6 +25,7 @@ defmodule Bonfire.UI.Social.ObjectThreadLive do
   prop replies, :any, default: nil
   prop threaded_replies, :any, default: nil
   prop page_info, :any, default: nil
+  prop(ui_compact, :boolean, default: false)
 
   def render(assigns) do
     assigns

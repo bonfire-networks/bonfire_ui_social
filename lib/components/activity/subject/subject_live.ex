@@ -17,6 +17,7 @@ defmodule Bonfire.UI.Social.Activity.SubjectLive do
   prop cw, :boolean, default: nil
   prop show_minimal_subject_and_note, :boolean, default: false
   prop published_in, :any, default: nil
+  prop(ui_compact, :boolean, default: false)
 
   def preloads(),
     do: [

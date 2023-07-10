@@ -48,6 +48,7 @@
               thread_mode={@thread_mode}
               object_boundary={if @showing_within == :messages, do: :skip_boundary_check}
               viewing_main_object={false}
+              ui_compact={@ui_compact}
             />
         {/case}
       </div>
@@ -107,6 +108,7 @@
                 thread_level={@thread_level + 1}
                 showing_within={@showing_within}
                 current_url={@current_url || current_url(@__context__)}
+                ui_compact
               />
             </div>
           {/for}

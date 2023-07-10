@@ -52,6 +52,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
   prop(thread_boost_count, :any, default: nil)
   prop(participant_count, :any, default: nil)
   prop(last_reply_id, :any, default: nil)
+  prop(ui_compact, :boolean, default: false)
   prop(hide_actions_until_hovered, :boolean, default: false)
 
   @decorate time()
@@ -213,13 +214,14 @@ defmodule Bonfire.UI.Social.ActivityLive do
       activity_id: id || "no-activity-id",
       object_id: object_id || "no-object-id",
       activity_component_id:
-        Enums.id(assigns) || "activity-#{@activity_inception}-#{@activity_id || "no-activity-id"}",
+        Enums.id(assigns) ||
+          "activity-#{e(assigns, :activity_inception, nil)}-#{id || "no-activity-id"}",
       object_type: object_type,
       object_type_readable: object_type_readable,
       date_ago: DatesTimes.date_from_now(id),
       verb: verb,
       verb_display: verb_display,
-      created_verb_display: @created_verb_display,
+      created_verb_display: e(assigns, :created_verb_display, nil),
       permalink: permalink,
       thread_url: thread_url,
       current_url: current_url,
@@ -229,8 +231,9 @@ defmodule Bonfire.UI.Social.ActivityLive do
       cw: e(object, :post_content, :name, nil) != nil,
       is_remote: e(activity, :peered, nil) != nil or e(object, :peered, nil) != nil,
       reply_count: e(replied, :nested_replies_count, 0) + e(replied, :direct_replies_count, 0),
+      ui_compact: Settings.get([:ui, :compact], false, assigns),
       hide_actions_until_hovered:
-        !@viewing_main_object and
+        !e(assigns, :viewing_main_object, nil) and
           Settings.get(
             [
               Bonfire.UI.Social.Activity.ActionsLive,
@@ -238,7 +241,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
               :hide_until_hovered
             ],
             nil,
-            @__context__
+            assigns
           )
     })
 
@@ -419,6 +422,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
                 cw={@cw}
                 published_in={@published_in}
                 thread_title={e(component_assigns, :thread_title, @thread_title)}
+                ui_compact={@ui_compact}
               />
             {#match Bonfire.UI.Social.Activity.NoteLive}
               <Bonfire.UI.Social.Activity.NoteLive

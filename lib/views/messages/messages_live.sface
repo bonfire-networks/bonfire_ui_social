@@ -16,6 +16,7 @@
         show_reply_input
         replied_activity_class="relative mb-2 rounded-md bg-base-100 hover:bg-base-100"
         showing_within={@showing_within}
+        ui_compact
       />
     </div>
   {#else}

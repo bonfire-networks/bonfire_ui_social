@@ -16,6 +16,7 @@
               thread_level={1}
               thread_mode={@thread_mode}
               showing_within={@showing_within || :thread}
+              ui_compact={@ui_compact}
             />
           {/for}
         {#else}
@@ -30,6 +31,7 @@
               thread_level={0}
               thread_mode={@thread_mode}
               showing_within={@showing_within || :thread}
+              ui_compact={@ui_compact}
             />
           {/for}
         {/if}
