@@ -52,6 +52,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
   prop(thread_boost_count, :any, default: nil)
   prop(participant_count, :any, default: nil)
   prop(last_reply_id, :any, default: nil)
+  prop(hide_actions_until_hovered, :boolean, default: false)
 
   @decorate time()
   def preload(list_of_assigns) do
@@ -227,7 +228,18 @@ defmodule Bonfire.UI.Social.ActivityLive do
       published_in: maybe_published_in(activity, verb),
       cw: e(object, :post_content, :name, nil) != nil,
       is_remote: e(activity, :peered, nil) != nil or e(object, :peered, nil) != nil,
-      reply_count: e(replied, :nested_replies_count, 0) + e(replied, :direct_replies_count, 0)
+      reply_count: e(replied, :nested_replies_count, 0) + e(replied, :direct_replies_count, 0),
+      hide_actions_until_hovered:
+        !@viewing_main_object and
+          Settings.get(
+            [
+              Bonfire.UI.Social.Activity.ActionsLive,
+              e(assigns, :showing_within, nil) || :feed,
+              :hide_until_hovered
+            ],
+            nil,
+            @__context__
+          )
     })
 
     # |> debug("Activity preparation done")
@@ -322,9 +334,9 @@ defmodule Bonfire.UI.Social.ActivityLive do
     ~F"""
     <article
       x-data="{content_open: false, show_actions: false}"
-      x-init={"content_open = #{!@cw}; show_actions = (#{@viewing_main_object} || ('ontouchstart' in window) || (navigator.maxTouchPoints > 0) || (navigator.msMaxTouchPoints > 0)); "}
-      x-on:mouseover={if !@viewing_main_object, do: "show_actions=true"}
-      x-on:mouseover.away={if !@viewing_main_object, do: "show_actions=false"}
+      x-init={"content_open = #{!@cw}; show_actions = #{if @hide_actions_until_hovered, do: "('ontouchstart' in window) || (navigator.maxTouchPoints > 0) || (navigator.msMaxTouchPoints > 0)", else: true}"}
+      x-on:mouseover={if @hide_actions_until_hovered, do: "show_actions=true"}
+      x-on:mouseover.away={if @hide_actions_until_hovered, do: "show_actions=false"}
       id={@activity_component_id}
       data-href={@permalink}
       phx-hook={if !@viewing_main_object and !@show_minimal_subject_and_note and

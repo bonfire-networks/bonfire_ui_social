@@ -48,6 +48,7 @@
     <div class="flex justify-between mb-2">
       <div class="flex items-center gap-3">
         <LiveRedirect
+          :if={!Settings.get([Bonfire.UI.Common.AvatarLive, :hide_avatars], false, @__context__)}
           class="h-8"
           opts={"data-id": "subject_name", "aria-label": e(@character, :username, "") <> " profile"}
           to={path(@character)}
@@ -107,10 +108,13 @@
     </div>
   {#else}
     <div class="flex items-center">
-      <div class={
-        "mr-3",
-        "": @viewing_main_object == true
-      }>
+      <div
+        :if={!Settings.get([Bonfire.UI.Common.AvatarLive, :hide_avatars], false, @__context__)}
+        class={
+          "mr-3",
+          "": @viewing_main_object == true
+        }
+      >
         <LiveRedirect
           opts={"data-id": "subject_name", "aria-label": e(@character, :username, "") <> " profile"}
           class="font-semibold text-base-content hover:underline"
@@ -132,6 +136,7 @@
           }>
             <!-- {@verb} {@object_type} -->
             <LiveRedirect
+              :if={!Settings.get([Bonfire.UI.Common.AvatarLive, :hide_avatars], false, @__context__)}
               opts={"data-id": "subject_name", "aria-label": l("%{name}'s profile", name: e(@profile, :name, ""))}
               class={
                 "link link-hover text-[15px] font-semibold",
