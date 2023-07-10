@@ -6,13 +6,13 @@
   x-show={if @showing_within == :thread and !@viewing_main_object, do: "show_replies"}
   x-transition
   class={
+    "h-[32px]",
     "thread_actions flex items-center": @showing_within == :thread,
     "feed_actions items-center flex": @viewing_main_object != true,
     "mt-3 gap-4 flex-col md:flex-row":
       e(@showing_within, :feed) == :feed || @showing_within == :notifications,
     "mt-1": @showing_within == :widget
   }
-  :class="show_actions ? '' : 'invisible'"
 >
   <!-- :class={if @viewing_main_object != true, do: "activity_active ? '' : '[@media(any-hover:hover)]:hidden'"} -->
   <LiveRedirect
@@ -25,12 +25,17 @@
     <span class="font-normal">{l("In")}</span>
     <span class="link break-all link-hover text-base-content/90">{@thread_title}</span>
   </LiveRedirect>
-  <div class={
-    "feed-clickable w-full md:w-auto flex items-center flex-1 justify-between md:justify-end gap-6",
-    "!justify-end mt-1": @showing_within == :thread && @viewing_main_object != true,
-    "-mx-4 border-t !justify-between border-base-content/20 !p-3 !pb-0":
-      @viewing_main_object == true
-  }>
+
+  <div
+    class={
+      "feed-clickable w-full md:w-auto  items-center flex-1 justify-between md:justify-end gap-6",
+      "!justify-end mt-1": @showing_within == :thread && @viewing_main_object != true,
+      "-mx-4 border-t !justify-between border-base-content/20 !p-3 !pb-0":
+        @viewing_main_object == true
+    }
+    :class="show_actions ? 'flex' : ''"
+    x-bind:hidden="show_actions ? false : 'until-found'"
+  >
     <Bonfire.UI.Social.Activity.ReactionsLive
       object={@object}
       activity={@activity}
