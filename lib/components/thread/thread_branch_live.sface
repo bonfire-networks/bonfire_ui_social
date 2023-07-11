@@ -40,7 +40,8 @@
         <div
           x-cloak
           x-show="show_replies"
-          class="group z-10 left-[-17px] px-3 top-[30px] bottom-[-4px] absolute"
+          x-on:click="show_replies = ! show_replies"
+          class="group z-10 left-[-17px] px-3 top-[30px] bottom-[-4px] absolute cursor-pointer"
         >
           <i
             :class="!show_replies ? 'bg-primary bottom-[0px]' : 'bottom-[0px]'"
