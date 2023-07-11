@@ -55,7 +55,7 @@
       <div class="flex items-center gap-3">
         <LiveRedirect
           :if={!Settings.get([Bonfire.UI.Common.AvatarLive, :hide_avatars], false, @__context__)}
-          class="h-6"
+          class="h-8"
           opts={"data-id": "subject_name", "aria-label": e(@character, :username, "") <> " profile"}
           to={path(@character)}
         >
@@ -63,7 +63,7 @@
             parent_id={@activity_component_id || id(@activity)}
             user={@profile}
             title={e(@profile, :name, "Anonymous")}
-            class="w-6 h-6 rounded-full bg-base-100"
+            class="w-8 h-8 rounded-full bg-base-100"
           />
         </LiveRedirect>
         <div class="flex items-baseline gap-1">
