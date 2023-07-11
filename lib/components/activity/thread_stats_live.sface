@@ -2,7 +2,7 @@
   phx-change="Bonfire.Social.Threads:list_participants"
   phx-target={"##{@activity_component_id}"}
 >
-  <div class="collapse collapse-arrow -mx-4 mt-4 border-t border-base-content/20 rounded-none w-auto bg-base-content/5">
+  <div class="collapse mb-1 collapse-arrow -mx-4 mt-4 border-t border-base-content/20 rounded-none w-auto bg-base-content/5">
     <input type="checkbox" phx-update="ignore">
     <div class="collapse-title p-5  flex items-center flex-1 justify-between">
       <div class="flex flex-col items-center gap-2">

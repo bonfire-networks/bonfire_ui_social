@@ -31,7 +31,7 @@
           id={"comment_#{id(activity)}"}
           activity={activity}
           thread_object={@thread_object}
-          class="showing_within:thread !py-0 !p-3 !shadow-none !rounded-none"
+          class="showing_within:thread !p-3 !shadow-none !rounded-none"
           feed_id={@feed_id}
           current_url={@current_url || current_url(@__context__)}
           showing_within={:thread}
