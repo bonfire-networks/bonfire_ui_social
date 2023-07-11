@@ -272,7 +272,7 @@ defmodule Bonfire.Social.Threads.LiveHandler do
       Config.get(:thread_default_max_depth, 3) *
         if(
           ui_compact || e(context, :ui_compact, nil) ||
-            Settings.get([:ui, :compact], false, context),
+            e(context, :__context__, :ui_compact, nil),
           do: 2,
           else: 1
         )

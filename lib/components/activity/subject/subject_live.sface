@@ -128,7 +128,7 @@
             user={@profile}
             title={e(@profile, :name, "Anonymous")}
             viewing_main_object={@viewing_main_object}
-            class={" rounded-full bg-base-100", "w-12 h-12": !@ui_compact, "w-6 h-6": @ui_compact}
+            class={" rounded-full bg-base-100", "w-12 h-12": @ui_compact != true, "w-6 h-6": @ui_compact}
           />
         </LiveRedirect>
       </div>
@@ -188,7 +188,7 @@
           </div>
           <!-- <span class="ml-2 text-[15px] text-base-content/70">replied to <b class="font-bold text-base-content link">title topic</b></span> -->
           <!-- </div> -->
-          <div class="flex items-center gap-1" :if={!@ui_compact}>
+          <div class="flex items-center gap-1" :if={@ui_compact != true}>
             <LiveRedirect
               :if={e(@character, :username, nil)}
               opts={

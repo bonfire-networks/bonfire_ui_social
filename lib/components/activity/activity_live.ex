@@ -235,7 +235,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
       cw: e(object, :post_content, :name, nil) != nil,
       is_remote: e(activity, :peered, nil) != nil or e(object, :peered, nil) != nil,
       reply_count: e(replied, :nested_replies_count, 0) + e(replied, :direct_replies_count, 0),
-      ui_compact: e(assigns, :ui_compact, nil) || Settings.get([:ui, :compact], false, assigns),
+      ui_compact: e(assigns, :ui_compact, nil) || e(assigns, :__context__, :ui_compact, nil),
       hide_actions_until_hovered:
         !e(assigns, :viewing_main_object, nil) and
           Settings.get(
