@@ -43,7 +43,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
   prop(cw, :any, default: nil)
   prop(check_object_boundary, :boolean, default: false)
   prop(is_remote, :boolean, default: false)
-  prop(show_minimal_subject_and_note, :boolean, default: false)
+  prop(show_minimal_subject_and_note, :any, default: false)
   prop(hide_activity, :any, default: nil)
   prop(i, :integer, default: nil)
   prop(created_verb_display, :string, default: @created_verb_display)
@@ -201,7 +201,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
     # permalink = path(object)
     permalink =
       if(thread_url && thread_id != id,
-        do: "#{thread_url}#comment-#{id}",
+        do: "#{thread_url}#comment_#{id}",
         else: "#{path(object)}#"
       )
       |> String.trim_leading("#{current_url || "#"}#")
@@ -218,7 +218,11 @@ defmodule Bonfire.UI.Social.ActivityLive do
           "activity-#{e(assigns, :activity_inception, nil)}-#{id || "no-activity-id"}",
       object_type: object_type,
       object_type_readable: object_type_readable,
-      date_ago: DatesTimes.date_from_now(id),
+      date_ago:
+        if(e(assigns, :ui_compact, nil),
+          do: DatesTimes.date_from_now(id, format: :narrow),
+          else: DatesTimes.date_from_now(id)
+        ),
       verb: verb,
       verb_display: verb_display,
       created_verb_display: e(assigns, :created_verb_display, nil),
@@ -231,7 +235,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
       cw: e(object, :post_content, :name, nil) != nil,
       is_remote: e(activity, :peered, nil) != nil or e(object, :peered, nil) != nil,
       reply_count: e(replied, :nested_replies_count, 0) + e(replied, :direct_replies_count, 0),
-      ui_compact: Settings.get([:ui, :compact], false, assigns),
+      ui_compact: e(assigns, :ui_compact, nil) || Settings.get([:ui, :compact], false, assigns),
       hide_actions_until_hovered:
         !e(assigns, :viewing_main_object, nil) and
           Settings.get(
@@ -793,7 +797,9 @@ defmodule Bonfire.UI.Social.ActivityLive do
        %{
          id: "reply_to-#{activity_component_id}-#{id}",
          activity_inception: activity_id,
-         show_minimal_subject_and_note: true,
+         show_minimal_subject_and_note:
+           e(reply_to_post_content, :name, nil) || e(reply_to_post_content, :summary, nil) ||
+             e(reply_to_post_content, :html_body, nil) || true,
          viewing_main_object: false,
          thread_title: thread_title,
          object: reply_to_post_content,
@@ -836,7 +842,10 @@ defmodule Bonfire.UI.Social.ActivityLive do
        %{
          id: "reply_to-#{activity_component_id}-#{reply_to_id}",
          activity_inception: activity_id,
-         show_minimal_subject_and_note: true,
+         show_minimal_subject_and_note:
+           e(replied, :post_content, :name, nil) || e(replied, :post_content, :summary, nil) ||
+             e(replied, :post_content, :html_body, nil) || e(replied, :name, nil) ||
+             e(replied, :summary, nil) || e(replied, :html_body, nil) || true,
          viewing_main_object: false,
          thread_title: thread_title,
          object: replied,
@@ -876,7 +885,10 @@ defmodule Bonfire.UI.Social.ActivityLive do
        %{
          id: "reply_to-#{activity_component_id}-#{reply_to_id}",
          activity_inception: activity_id,
-         show_minimal_subject_and_note: true,
+         show_minimal_subject_and_note:
+           e(replied, :post_content, :name, nil) || e(replied, :post_content, :summary, nil) ||
+             e(replied, :post_content, :html_body, nil) || e(replied, :name, nil) ||
+             e(replied, :summary, nil) || e(replied, :html_body, nil) || true,
          viewing_main_object: false,
          thread_title: thread_title,
          object: replied,

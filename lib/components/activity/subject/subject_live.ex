@@ -15,7 +15,7 @@ defmodule Bonfire.UI.Social.Activity.SubjectLive do
   prop thread_id, :string, default: nil
   prop thread_title, :any, default: nil
   prop cw, :boolean, default: nil
-  prop show_minimal_subject_and_note, :boolean, default: false
+  prop show_minimal_subject_and_note, :any, default: false
   prop published_in, :any, default: nil
   prop(ui_compact, :boolean, default: false)
 

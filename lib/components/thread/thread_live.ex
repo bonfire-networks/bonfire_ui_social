@@ -5,6 +5,8 @@ defmodule Bonfire.UI.Social.ThreadLive do
   #
   # alias Bonfire.Me.Users
   # alias Bonfire.UI.Me.CreateUserLive
+  alias Bonfire.UI.Social.ThreadBranchLive
+  alias Bonfire.UI.Social.CommentLive
   alias Bonfire.Social.Threads.LiveHandler
   # import Bonfire.Me.Integration
 
@@ -23,36 +25,29 @@ defmodule Bonfire.UI.Social.ThreadLive do
   prop current_url, :string, default: nil
   # prop smart_input_opts, :map, default: %{}
   prop thread_mode, :any, default: nil
+  prop ui_compact, :boolean, default: false
   # prop reverse_order, :any, default: nil
   prop showing_within, :atom, default: :thread
   # prop loading, :boolean, default: false
-  prop ui_compact, :boolean, default: false
   prop order_by, :any, default: :id
 
   def mount(socket) do
-    object = e(socket.assigns, :object, nil) || e(socket.assigns, :activity, :object)
-
-    thread_id =
-      e(socket.assigns, :thread_id, nil) ||
-        e(socket.assigns, :activity, :replied, :thread_id, nil) ||
-        e(object, :replied, :thread_id, nil)
-
     {
       :ok,
       socket
-      |> stream_configure(:replies, dom_id: &component_id(thread_id, &1))
+      |> stream_configure(:replies, dom_id: &component_id(&1))
       |> stream(:replies, [])
-      |> stream_configure(:threaded_replies, dom_id: &component_id(thread_id, &1))
+      |> stream_configure(:threaded_replies, dom_id: &component_id(&1))
       |> stream(:threaded_replies, [])
     }
   end
 
-  defp component_id(thread_id, {entry, _children}) do
-    component_id(thread_id, entry)
+  defp component_id({entry, _children}) do
+    id(entry)
   end
 
-  defp component_id(thread_id, entry) do
-    "#{thread_id}_#{id(entry) || e(entry, :activity, :id, nil) || e(entry, :object, :id, nil) || e(entry, :edge, :id, nil) || Pointers.ULID.generate()}"
+  defp component_id(entry) do
+    id(entry)
   end
 
   def update(%{insert_stream: entries} = assigns, socket) do
@@ -92,6 +87,13 @@ defmodule Bonfire.UI.Social.ThreadLive do
       e(new_reply, :object, :id, nil) || e(new_reply, :activity, :object, :id, nil) ||
         e(new_reply, :id, nil)
 
+    reply_to_id =
+      e(new_reply, :replied, :reply_to_id, nil) ||
+        e(new_reply, :activity, :replied, :reply_to_id, nil) ||
+        e(new_reply, :reply_to_id, nil)
+
+    debug(reply_to_id, "reply_to_idd")
+
     # Note: doing this here temporarily while not using pushed comment for nested threads
     permitted? =
       object_id &&
@@ -109,12 +111,33 @@ defmodule Bonfire.UI.Social.ThreadLive do
 
         {:ok,
          socket
-         |> LiveHandler.insert_comments(new_reply)}
+         |> LiveHandler.insert_comments({:replies, [new_reply]}, at: 0)}
       else
         debug("nested thread")
 
+        insert = {:threaded_replies, [{new_reply, []}], 0}
+
+        if is_nil(reply_to_id) or reply_to_id == thread_id do
+          debug("top level reply")
+
+          {:ok,
+           socket
+           |> LiveHandler.insert_comments(insert)}
+        else
+          debug("send to branch")
+
+          LiveHandler.send_thread_updates(
+            self(),
+            reply_to_id,
+            [insert_stream: insert],
+            ThreadBranchLive
+          )
+
+          {:ok, socket}
+        end
+
         # FIXME: we should inject the reply rather than reloading
-        load_comments(socket, false)
+        # load_comments(socket, false)
         # ^ cannot redirect in `update` so we trigger a re-query of the thread instead
 
         # temporary
@@ -166,6 +189,18 @@ defmodule Bonfire.UI.Social.ThreadLive do
     update(Map.merge(assigns, %{new_reply: new_reply}), socket)
   end
 
+  def update(
+        %{thread_mode: new_thread_mode} = assigns,
+        %{assigns: %{thread_mode: thread_mode}} = socket
+      )
+      when new_thread_mode != thread_mode do
+    debug("(re)load comments because changing thread mode")
+
+    socket
+    |> assign(assigns)
+    |> load_comments(true)
+  end
+
   def update(assigns, %{assigns: %{loaded_async: true}} = socket) do
     debug("showing previously async-loaded replies")
 
@@ -175,9 +210,6 @@ defmodule Bonfire.UI.Social.ThreadLive do
   end
 
   def update(assigns, socket) do
-    debug("Loading comments")
-    # debug(assigns, "Thread: assigns")
-
     socket
     |> assign(assigns)
     |> load_comments()

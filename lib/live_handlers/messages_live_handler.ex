@@ -111,9 +111,11 @@ defmodule Bonfire.Social.Messages.LiveHandler do
   end
 
   defp message_sent(sent, _attrs, socket) do
-    {:noreply,
-     socket
-     |> assign_flash(:info, l("Sent!"))
-     |> redirect_to("/messages/#{e(sent, :replied, :thread_id, nil) || ulid(sent)}##{ulid(sent)}")}
+    {
+      :noreply,
+      socket
+      |> assign_flash(:info, l("Sent!"))
+      #  |> redirect_to("/messages/#{e(sent, :replied, :thread_id, nil) || ulid(sent)}##{ulid(sent)}")
+    }
   end
 end

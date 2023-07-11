@@ -2,7 +2,6 @@
   {#if @tab_id == "thread"}
     <div class="flex flex-col h-full">
       <Bonfire.UI.Social.ObjectThreadLive
-        id={:thread}
         page={@page}
         page_title={@page_title}
         feed_id={@feed_id}

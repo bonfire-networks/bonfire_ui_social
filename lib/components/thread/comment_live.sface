@@ -11,7 +11,7 @@
         />
       </div> -->
 
-  <div class="flex-1 w-full" x-cloak x-data="{reply: false, show: true}">
+  <div class="flex-1 w-full" x-data="{reply: false, show: true}">
     {#case get_activity(@comment)}
       {#match nil}
         <div class="mx-4 my-2">
@@ -28,7 +28,7 @@
         </div>
       {#match activity}
         <Bonfire.UI.Social.ActivityLive
-          id={"comment-#{id(activity)}"}
+          id={"comment_#{id(activity)}"}
           activity={activity}
           thread_object={@thread_object}
           class="showing_within:thread !py-0 !p-3 !shadow-none !rounded-none"

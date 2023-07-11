@@ -1,5 +1,6 @@
-<div>
-  {#if (@replies || e(@streams.threaded_replies, :inserts, [])) != []}
+<div data-role="thread" id={@id} x-data="{show_replies: true}">
+  {#if (@replies || e(@streams.threaded_replies, :inserts, nil) || e(@streams.replies, :inserts, [])) !=
+      []}
     <div class="flex flex-col flex-1">
       <div data-id="replies" class="flex flex-col flex-1 py-4">
         <Bonfire.UI.Common.LoadPreviousLive
@@ -10,25 +11,27 @@
         />
 
         {#if @thread_mode != :flat and e(@streams.threaded_replies, :inserts, []) != []}
-          {#for {entry_id, {reply, child_replies}} <- @streams.threaded_replies}
-            <Bonfire.UI.Social.ThreadBranchLive
-              id={entry_id}
-              comment={reply}
-              threaded_replies={child_replies}
-              thread_id={@thread_id}
-              feed_id={@feed_id}
-              current_url={@current_url}
-              thread_object={@object}
-              thread_mode={@thread_mode}
-              showing_within={@showing_within || :thread}
-              ui_compact={@ui_compact}
-            />
-          {/for}
+          <div id={"stream_#{@id}"} phx-update="stream">
+            {#for {entry_id, {reply, child_replies}} <- @streams.threaded_replies}
+              <ThreadBranchLive
+                id={entry_id}
+                comment={reply}
+                threaded_replies={child_replies}
+                thread_id={@thread_id}
+                feed_id={@feed_id}
+                current_url={@current_url}
+                thread_object={@object}
+                thread_mode={@thread_mode}
+                showing_within={@showing_within || :thread}
+                ui_compact={@ui_compact}
+              />
+            {/for}
+          </div>
         {#else}
-          <!-- flat mode -->
-          {#for reply <- @replies}
+          <!-- flat mode simple list -->
+          {#for reply <- @replies || []}
             <div class="reply flex relative w-full mx-auto pl-2 pt-3">
-              <Bonfire.UI.Social.CommentLive
+              <CommentLive
                 comment={reply}
                 thread_id={@thread_id}
                 feed_id={@feed_id}
@@ -40,6 +43,23 @@
               />
             </div>
           {/for}
+          <!-- flat mode stream -->
+          <div id={"stream_#{@id}"} phx-update="stream">
+            {#for {entry_id, reply} <- @streams.replies}
+              <div id={entry_id} class="reply flex relative w-full mx-auto pl-2 pt-3">
+                <CommentLive
+                  comment={reply}
+                  thread_id={@thread_id}
+                  feed_id={@feed_id}
+                  current_url={@current_url}
+                  thread_object={@object}
+                  thread_mode={@thread_mode}
+                  showing_within={@showing_within || :thread}
+                  ui_compact={@ui_compact}
+                />
+              </div>
+            {/for}
+          </div>
         {/if}
 
         <Bonfire.UI.Common.LoadMoreLive

@@ -1,4 +1,5 @@
 <div
+  id={@id}
   data-id="branch"
   x-data="{show_replies: true}"
   class={
@@ -6,7 +7,6 @@
     "px-4 pb-4 border-b border-base-content/20": @thread_level == 1
   }
 >
-  <!-- id={"comment-" <> e(@comment, :id, "")} -->
   <div class="relative flex-1 w-full">
     <Bonfire.UI.Social.CommentLive
       comment={@comment}
@@ -17,7 +17,7 @@
       thread_level={@thread_level}
       thread_mode={@thread_mode}
       showing_within={@showing_within || :thread}
-      ui_compact={@ui_compact}
+      ui_compact={@ui_compact || @thread_level >= LiveHandler.max_depth(@__context__, @ui_compact) / 2}
     />
 
     {#if is_list(@threaded_replies) and @threaded_replies != []}
@@ -64,7 +64,7 @@
               <!-- <div :if={index < length(@threaded_replies)} /> -->
               <Dynamic.LiveComponent
                 module={Bonfire.UI.Social.ThreadBranchLive}
-                id={"thread-#{@thread_level}-#{index}" |> debug("idddd")}
+                id={id(subreply)}
                 comment={subreply}
                 thread_id={@thread_id}
                 thread_object={@thread_object}
