@@ -206,7 +206,7 @@
 
                   <Dynamic.Component
                     :if={module_enabled?(Bonfire.Boundaries.Web.ActivityVisibilityIconLive) and
-                    @object_type not in [Bonfire.Data.Social.Message]}
+                      @object_type not in [Bonfire.Data.Social.Message]}
                     module={Bonfire.Boundaries.Web.ActivityVisibilityIconLive}
                     object={@object}
                     with_icon

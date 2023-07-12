@@ -112,7 +112,7 @@
           </div>
         </div>
       </div>
-    </div>  
+    </div>
   {#else}
     <div class="flex items-center">
       <div
@@ -206,7 +206,7 @@
         <div class="flex items-center gap-1">
           <Dynamic.Component
             :if={module_enabled?(Bonfire.Boundaries.Web.ActivityVisibilityIconLive) and
-            @object_type not in [Bonfire.Data.Social.Message]}
+              @object_type not in [Bonfire.Data.Social.Message]}
             module={Bonfire.Boundaries.Web.ActivityVisibilityIconLive}
             object={@object}
             with_icon

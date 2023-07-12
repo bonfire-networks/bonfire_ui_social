@@ -1,39 +1,39 @@
 {#if current_user_id(@__context__) && String.starts_with?(@permalink || "", ["/post/", "/discussion/"])}
   <div class="text-xs">
-  <Bonfire.UI.Common.OpenPreviewLive
-    href={@permalink || path(@object)}
-    parent_id={id(@activity) || id(@object)}
-    open_btn_text=""
-    title_text={e(@object, :name, nil) || e(@object, :post_content, :name, nil) || l("Discussion")}
-    open_btn_wrapper_class="open_preview_link"
-    open_btn_class="link link-hover text-[13px] text-base-content/70"
-    modal_assigns={
-      post_id:
-        if(
-          @object_type == :post or
-            String.starts_with?(@permalink || "", ["/post/"]),
-          do: @thread_id || id(@object)
-        ),
-      thread_id: @thread_id,
-      object_id: @thread_id || id(@object),
-      current_url: @permalink,
-      show: {false},
-      object: if(@thread_id == id(@object), do: @object),
-      activity: if(@thread_id == id(@object), do: @activity),
-      replies:
-        if(@thread_id != id(@object),
-          do: [%{id: "preview-comment", activity: Map.put(@activity, :object, @object)}]
-        ),
-      preview_component: Bonfire.UI.Social.ObjectThreadLoadLive
-    }
-    root_assigns={
-      page_title: l("Discussion")
-    }
-  >
-    <:open_btn>
-      <#slot />
-    </:open_btn>
-  </Bonfire.UI.Common.OpenPreviewLive>
+    <Bonfire.UI.Common.OpenPreviewLive
+      href={@permalink || path(@object)}
+      parent_id={id(@activity) || id(@object)}
+      open_btn_text=""
+      title_text={e(@object, :name, nil) || e(@object, :post_content, :name, nil) || l("Discussion")}
+      open_btn_wrapper_class="open_preview_link"
+      open_btn_class="link link-hover text-[13px] text-base-content/70"
+      modal_assigns={
+        post_id:
+          if(
+            @object_type == :post or
+              String.starts_with?(@permalink || "", ["/post/"]),
+            do: @thread_id || id(@object)
+          ),
+        thread_id: @thread_id,
+        object_id: @thread_id || id(@object),
+        current_url: @permalink,
+        show: {false},
+        object: if(@thread_id == id(@object), do: @object),
+        activity: if(@thread_id == id(@object), do: @activity),
+        replies:
+          if(@thread_id != id(@object),
+            do: [%{id: "preview-comment", activity: Map.put(@activity, :object, @object)}]
+          ),
+        preview_component: Bonfire.UI.Social.ObjectThreadLoadLive
+      }
+      root_assigns={
+        page_title: l("Discussion")
+      }
+    >
+      <:open_btn>
+        <#slot />
+      </:open_btn>
+    </Bonfire.UI.Common.OpenPreviewLive>
   </div>
   <!-- TODO: derive the view from object_type? and compute object_type not just based on schema, but also with some logic looking at fields (eg. action=="work") -->
 {#elseif current_user_id(@__context__) && String.starts_with?(@permalink || "", ["/coordination/task/"])}

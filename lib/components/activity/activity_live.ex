@@ -219,10 +219,10 @@ defmodule Bonfire.UI.Social.ActivityLive do
       object_type: object_type,
       object_type_readable: object_type_readable,
       date_ago: DatesTimes.date_from_now(id, format: :narrow),
-        # if(e(assigns, :ui_compact, nil),
-        #   do: DatesTimes.date_from_now(id, format: :narrow),
-        #   else: DatesTimes.date_from_now(id)
-        # ),
+      # if(e(assigns, :ui_compact, nil),
+      #   do: DatesTimes.date_from_now(id, format: :narrow),
+      #   else: DatesTimes.date_from_now(id)
+      # ),
       verb: verb,
       verb_display: verb_display,
       created_verb_display: e(assigns, :created_verb_display, nil),
@@ -360,7 +360,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
             @activity_id == nil and @showing_within != :widget and
             @showing_within != :search,
         "": @showing_within != :thread and @thread_mode != :flat,
-        "reply":
+        reply:
           @object_id != nil and e(@activity, :replied, :reply_to_id, nil) != nil and
             @activity_id != nil,
         "unread-activity":
