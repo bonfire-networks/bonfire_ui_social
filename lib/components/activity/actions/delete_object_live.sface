@@ -30,7 +30,7 @@ TODO: use preloaded boundaries for can? when available
       <#Icon
         :if={!@hide_icon}
         solid="Trash"
-        class={e(@icon_class, "w-4 h-4 shrink-0 text-base-content/80")}
+        class={e(@icon_class, "w-4 h-4 shrink-0 text-base-content/70")}
       />
       <span :if={!@hide_text} class="truncate ellipsis">
         {l("Delete")} {e(@object_type_readable, l("object"))}

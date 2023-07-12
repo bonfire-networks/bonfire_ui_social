@@ -1,4 +1,5 @@
 {#if current_user_id(@__context__) && String.starts_with?(@permalink || "", ["/post/", "/discussion/"])}
+  <div class="text-xs">
   <Bonfire.UI.Common.OpenPreviewLive
     href={@permalink || path(@object)}
     parent_id={id(@activity) || id(@object)}
@@ -33,6 +34,7 @@
       <#slot />
     </:open_btn>
   </Bonfire.UI.Common.OpenPreviewLive>
+  </div>
   <!-- TODO: derive the view from object_type? and compute object_type not just based on schema, but also with some logic looking at fields (eg. action=="work") -->
 {#elseif current_user_id(@__context__) && String.starts_with?(@permalink || "", ["/coordination/task/"])}
   <Bonfire.UI.Common.OpenPreviewLive
@@ -54,7 +56,7 @@
 {#else}
   <LinkLive
     to={@permalink}
-    class="open_preview_link px-1 normal-case link link-hover text-base-content/70"
+    class="open_preview_link px-1 text-xs normal-case link link-hover text-base-content/70"
   >
     <#slot />
   </LinkLive>

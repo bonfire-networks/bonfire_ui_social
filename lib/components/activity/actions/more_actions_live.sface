@@ -9,7 +9,7 @@
 >
   <!-- phx-viewport-bottom={JS.add_class("!dropdown-top", to: "#more-menu-#{id(@activity_component_id || @activity)}")} -->
 
-  <button tabindex="0" class="rounded btn btn-ghost btn-square btn-sm">
+  <button tabindex="0" class="btn btn-ghost btn-circle btn-sm">
     <#Icon solid="DotsVertical" class="w-[18px] h-[18px] md:w-4 md:h-4 text-base-content/50" />
   </button>
   <ul
@@ -21,16 +21,6 @@
   >
     <#slot {@extra_items} />
 
-    <Dynamic.Component
-      :if={@object_boundary && module_enabled?(Bonfire.Boundaries.Web.PermissionsIconLive) &&
-        @object_type not in [Bonfire.Data.Social.Message]}
-      module={Bonfire.Boundaries.Web.PermissionsIconLive}
-      with_label
-      object_id={id(@object)}
-      object_boundary={@object_boundary}
-      parent_id={@activity_component_id || id(@activity)}
-    />
-
     {#if @showing_within == :thread and @viewing_main_object}
       <li><div data-role="thread_mode" class="px-4 py-2 w-full">
           {#if @thread_mode == :flat}
@@ -40,7 +30,7 @@
               phx-value-send_self="true"
               phx-value-input_to_atoms="true"
               phx-value-thread_mode="nested"
-              class="flex items-center w-full gap-2 text-sm text-base-content/80"
+              class="flex items-center w-full gap-2 text-sm text-base-content/70"
             >
               <#Icon iconify="clarity:tree-view-solid" class="w-4 h-4 shrink-0" />
               {l("View as nested discussion")}
@@ -52,7 +42,7 @@
               phx-value-send_self="true"
               phx-value-input_to_atoms="true"
               phx-value-thread_mode="flat"
-              class="flex items-center w-full gap-2 text-sm text-base-content/80"
+              class="flex items-center w-full gap-2 text-sm text-base-content/70"
             >
               <#Icon iconify="fa-solid:list" class="w-4 h-4 shrink-0" />
               {l("View as flat discussion")}
@@ -85,7 +75,7 @@
           </button>
         </Field>
         <:open_btn>
-          <div class="flex items-center w-full gap-2 text-sm text-base-content/80">
+          <div class="flex items-center w-full gap-2 text-sm text-base-content/70">
             <#Icon iconify="subway:title" class="w-4 h-4 shrink-0" />
             {l("Edit discussion title")}
           </div>
@@ -139,7 +129,7 @@
     <li :if={current_user_id(@__context__) != @subject_id and @verb != "Flag"}>
       <details>
         <summary>
-          <div class="flex items-center w-full gap-2 text-sm text-base-content/80">
+          <div class="flex items-center w-full gap-2 text-sm text-base-content/70">
             <#Icon solid="Flag" class="w-4 h-4 shrink-0" />
             <span class="truncate ellipsis">{l("Flag")}</span>
           </div>

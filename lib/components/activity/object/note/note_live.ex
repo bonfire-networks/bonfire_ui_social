@@ -9,6 +9,7 @@ defmodule Bonfire.UI.Social.Activity.NoteLive do
   prop activity_inception, :any, default: nil
   prop cw, :boolean, default: nil
   prop is_remote, :boolean, default: false
+  prop thread_mode, :atom, default: nil
 
   def preloads(),
     do: [

@@ -13,7 +13,7 @@ defmodule Bonfire.UI.Social.Activity.ReplyLive do
   prop activity_component_id, :string, default: nil
 
   prop class, :css_class,
-    default: "flex btn btn-ghost btn-square rounded btn-sm text-base-content/70"
+    default: "flex btn btn-ghost btn-circle btn-sm text-base-content/70"
 
   prop reply_btn_text, :string, default: nil
   prop cannot_reply_text, :string, default: nil

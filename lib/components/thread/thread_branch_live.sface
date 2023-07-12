@@ -2,9 +2,11 @@
   id={@id}
   data-id="branch"
   x-data="{show_replies: true}"
+  :class="{'collapsed': !show_replies}"
   class={
     "reply thread-level-" <> to_string(@thread_level) <> " flex relative  w-full mx-auto",
-    "border-b border-base-content/20": @thread_level == 1
+    "border-b border-base-content/20": @thread_mode == :flat,
+    "pl-2": @thread_level > 1,
   }
 >
   <div class="relative flex-1 w-full">
@@ -20,19 +22,18 @@
       ui_compact={@ui_compact || @thread_level >= LiveHandler.max_depth(@__context__, @ui_compact) / 2}
     />
 
-    {#if is_list(@threaded_replies) and @threaded_replies != []}
+    <!-- {#if is_list(@threaded_replies) and @threaded_replies != []} -->
+    {#if @thread_mode != :flat}
       <div
-        class="absolute left-[2px] cursor-pointer top-[10px] z-30"
+        class="absolute left-[12px] cursor-pointer top-[24px] z-30"
         x-on:click="show_replies = ! show_replies"
       >
-        <div x-cloak x-show="show_replies">
-          <!-- <#Icon iconify="mdi:arrow-collapse" class="w-5 h-5 text-base-content/70" /> -->
+        <!-- <div x-cloak x-show="show_replies">
           <#Icon iconify="fluent:triangle-down-12-filled" class="w-3 h-3 text-base-content/50" />
-          <!-- <span class="text-xs text-base-content/70">[-]</span> -->
-        </div>
+        </div> -->
         <div x-cloak x-show="!show_replies">
           <!-- <span class="text-xs text-accent">[+]</span> -->
-          <#Icon iconify="fluent:triangle-right-12-filled" class="w-3 h-3 text-primary" />
+          <#Icon iconify="eva:expand-fill" class="w-4 h-4 text-primary" />
         </div>
       </div>
 
@@ -41,11 +42,11 @@
           x-cloak
           x-show="show_replies"
           x-on:click="show_replies = ! show_replies"
-          class="group z-10 left-[-17px] px-3 top-[30px] bottom-[-4px] absolute cursor-pointer"
+          class="group z-10 left-[14px] px-3 top-[58px] group bottom-[-2px] absolute cursor-pointer"
         >
           <i
             :class="!show_replies ? 'bg-primary bottom-[0px]' : 'bottom-[0px]'"
-            class="absolute top-0 bottom-0 z-10 border-l-[2px] border-base-content/5"
+            class="absolute top-0 bottom-0 z-10 group-hover:bg-primary border-l-[2px] border-base-content/20"
           />
         </div>
         <!-- <div class="-mt-[26px]  z-[50] ml-10" :if={is_list(@threaded_replies) and length(@threaded_replies) > 0}>

@@ -218,11 +218,11 @@ defmodule Bonfire.UI.Social.ActivityLive do
           "activity-#{e(assigns, :activity_inception, nil)}-#{id || "no-activity-id"}",
       object_type: object_type,
       object_type_readable: object_type_readable,
-      date_ago:
-        if(e(assigns, :ui_compact, nil),
-          do: DatesTimes.date_from_now(id, format: :narrow),
-          else: DatesTimes.date_from_now(id)
-        ),
+      date_ago: DatesTimes.date_from_now(id, format: :narrow),
+        # if(e(assigns, :ui_compact, nil),
+        #   do: DatesTimes.date_from_now(id, format: :narrow),
+        #   else: DatesTimes.date_from_now(id)
+        # ),
       verb: verb,
       verb_display: verb_display,
       created_verb_display: e(assigns, :created_verb_display, nil),
@@ -353,14 +353,14 @@ defmodule Bonfire.UI.Social.ActivityLive do
       aria-label="user activity"
       tabIndex="0"
       class={
-        "p-4 pb-2 activity relative group flex flex-col #{@class}",
+        "p-4 pb-2 activity relative flex flex-col #{@class}",
         "!p-0 !pb-4": e(@show_minimal_subject_and_note, false),
         "main_reply_to !mb-1 items-center !flex-row order-first !p-0 !pb-2":
           @object_id != nil and e(@activity, :replied, :reply_to_id, nil) == nil and
             @activity_id == nil and @showing_within != :widget and
             @showing_within != :search,
         "": @showing_within != :thread and @thread_mode != :flat,
-        reply:
+        "reply":
           @object_id != nil and e(@activity, :replied, :reply_to_id, nil) != nil and
             @activity_id != nil,
         "unread-activity":
@@ -437,6 +437,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
                 activity_inception={e(component_assigns, :activity_inception, @activity_inception)}
                 viewing_main_object={e(component_assigns, :viewing_main_object, @viewing_main_object)}
                 cw={@cw}
+                thread_mode={@thread_mode}
                 is_remote={@is_remote}
               />
             {#match Bonfire.UI.Social.Activity.MediaLive}

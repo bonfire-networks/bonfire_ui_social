@@ -1,8 +1,47 @@
+<div class="p-3 border-b border-base-content/20">
+  <div class="flex justify-between">
+    <div class="dropdown">
+      <label tabindex="0" class="!border !border-base-content/30 font-medium rounded-full btn btn-ghost btn-xs normal-case">
+        <#Icon iconify="tabler:layout-rows" class="w-4 h-4" />
+        {l("Layout: Nested replies")}</label>
+      <ul tabindex="0" class="dropdown-content mt-1 z-[999] menu p-1 shadow bg-base-100 rounded-box w-52">
+        <li><a>{l "Nested replies"}</a></li>
+        <li><a>{l "Compact"}</a></li>
+        <li><a>{l "Chat"}</a></li>
+      </ul>
+    </div>
+    <div class="flex items-center gap-3">
+      <div class="dropdown dropdown-end">
+      <label tabindex="0" class="!border !border-base-content/30 font-medium rounded-full btn-xs btn btn-outline normal-case">
+        <#Icon iconify="material-symbols:sort" class="w-4 h-4" />
+        {l("Sort: Chronological")}</label>
+      <ul tabindex="0" class="dropdown-content mt-1 z-[999] menu p-1 shadow bg-base-100 rounded-box w-52">
+        <li><a>{l "Chronological"}</a></li>
+        <li><a>{l "By latest reply"}</a></li>
+        <li><a>{l "By replies"}</a></li>
+        <li><a>{l "By boosts"}</a></li>
+        <li><a>{l "By likes"}</a></li>
+      </ul>
+    </div>
+      <div class="dropdown dropdown-end">
+      <label tabindex="0" class="!border !border-base-content/30 font-medium rounded-full btn-xs btn btn-outline normal-case">
+        <#Icon iconify="ri:list-ordered-2" class="w-4 h-4" />
+        {l("Order: Newer first")}</label>
+      <ul tabindex="0" class="dropdown-content mt-1 z-[999] menu p-1 shadow bg-base-100 rounded-box w-52">
+        <li><a>{l "Newest first"}</a></li>
+        <li><a>{l "Oldest first"}</a></li>
+      </ul>
+    </div>
+    </div>
+  </div>
+</div>
+
+
 <div data-role="thread" id={@id} x-data="{show_replies: true}">
   {#if (@replies || e(@streams.threaded_replies, :inserts, nil) || e(@streams.replies, :inserts, [])) !=
       []}
     <div class="flex flex-col flex-1">
-      <div data-id="replies" class="flex flex-col flex-1 py-4">
+      <div data-id="replies" class="flex flex-col flex-1 pb-4">
         <Bonfire.UI.Common.LoadPreviousLive
           live_handler={Bonfire.Social.Threads}
           page_info={@page_info}

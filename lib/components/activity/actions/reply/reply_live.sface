@@ -10,7 +10,7 @@
         title={l("Reply")}
       >
         <!-- x-on:click={"show_smart_input('#{l("Reply")}')"} -->
-        <Iconify.Bonfire.Reply.render class={"w-5 h-5 stroke-1 fill-base-content/50", "!fill-primary": @reply_btn_text} />
+        <Iconify.Bonfire.Reply.render class={"w-5 h-5 stroke-1 fill-base-content/50", "fill-primary group-hover:fill-primary-content": @reply_btn_text} />
         <span class={if !@reply_btn_text, do: "sr-only"}>{@reply_btn_text || l("Reply")}</span>
         <!-- <span :if={@reply_btn_text} class="text-primary/80">
           ({@reply_count})
