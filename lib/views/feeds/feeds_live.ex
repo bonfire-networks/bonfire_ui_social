@@ -5,6 +5,7 @@ defmodule Bonfire.UI.Social.FeedsLive do
 
   declare_extension("Social",
     icon: "noto:newspaper",
+    emoji: "📰",
     # exclude_from_nav: true
     default_nav: [
       Bonfire.UI.Social.FeedsLive,
