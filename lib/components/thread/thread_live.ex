@@ -14,14 +14,16 @@ defmodule Bonfire.UI.Social.ThreadLive do
   prop page_info, :any, default: nil
   prop activity, :any, default: nil
   prop object, :any, default: nil
+  prop thread_id, :any, default: nil
   prop reply_to_id, :any, default: nil
+
   prop main_object_component_id, :any, default: nil
-  # prop thread_id, :any, default: nil
   # prop page, :any, default: "thread"
   prop feed_id, :any, default: nil
   # prop create_object_type, :any, default: nil
   # prop to_boundaries, :any, default: nil
   # prop to_circles, :list, default: []
+  prop exclude_circles, :list, default: []
   prop current_url, :string, default: nil
   # prop smart_input_opts, :map, default: %{}
   prop thread_mode, :any, default: nil

@@ -87,6 +87,35 @@ defmodule Bonfire.Social.Threads.LiveHandler do
     end
   end
 
+  def handle_event("reply", %{"id" => reply_to_id} = params, socket) do
+    activity = e(socket.assigns, :activity, %{})
+
+    reply_to =
+      e(socket.assigns, :object, nil) ||
+        e(activity, :object, nil) ||
+        e(socket.assigns, :object_id, nil) ||
+        e(activity, :object_id, nil)
+
+    if reply_to_id == Enums.id(reply_to) do
+      reply(reply_to, activity, socket)
+    else
+      reply(reply_to_id, activity, socket)
+    end
+  end
+
+  def handle_event("reply", _params, socket) do
+    activity = e(socket.assigns, :activity, %{})
+
+    reply(
+      e(socket.assigns, :object, nil) ||
+        e(activity, :object, nil) ||
+        e(socket.assigns, :object_id, nil) ||
+        e(activity, :object_id, nil),
+      activity,
+      socket
+    )
+  end
+
   def handle_event(
         "list_participants",
         _attrs,
@@ -128,6 +157,83 @@ defmodule Bonfire.Social.Threads.LiveHandler do
     maybe_send_update(Bonfire.UI.Social.ThreadLive, thread_id, new_reply: data)
 
     {:noreply, socket}
+  end
+
+  def reply(reply_to, activity, socket) do
+    debug(reply_to, "reply!")
+
+    reply_to_id = Enums.id(reply_to)
+
+    with {:ok, current_user} <- current_user_or_remote_interaction(socket, l("reply"), reply_to),
+         # TODO: can we use the preloaded object_boundaries rather than making an extra query
+         true <- Bonfire.Boundaries.can?(current_user, :reply, reply_to_id) do
+      published_in = e(socket.assigns, :published_in, nil)
+      published_in_id = id(published_in)
+
+      # TODO: don't re-load participants here as we already have the list (at least when we're in a thread)
+      # TODO: include thread_id in list_participants/3 call
+      participants =
+        (e(socket.assigns, :participants, nil) ||
+           Bonfire.Social.Threads.list_participants(Map.put(activity, :object, reply_to), nil,
+             current_user: current_user
+           ) || [])
+        |> Enum.reject(&(e(&1, :character, :id, nil) in [id(current_user), published_in_id]))
+
+      to_circles =
+        if participants != [],
+          do:
+            Enum.map(participants, &{e(&1, :character, :username, l("someone")), e(&1, :id, nil)})
+
+      mentions =
+        if participants != [],
+          do: Enum.map_join(participants, " ", &("@" <> e(&1, :character, :username, ""))) <> " "
+
+      thread_id =
+        e(activity, :replied, :thread_id, nil) ||
+          e(reply_to_id, :replied, :thread_id, nil)
+
+      debug(mentions, "send activity to smart input")
+
+      Bonfire.UI.Common.SmartInput.LiveHandler.open_with_text_suggestion(
+        mentions,
+        # we reply to objects, not
+        [
+          # reset_smart_input: false, # avoid double-reset
+          reply_to_id: reply_to_id,
+          context_id: thread_id,
+          to_circles: to_circles || [],
+          mentions: if(published_in_id, do: [published_in_id], else: []),
+          create_object_type:
+            if(e(socket.assigns, :object_type, nil) == Bonfire.Data.Social.Message, do: :message),
+          to_boundaries: [
+            if(published_in_id,
+              do:
+                {:clone_context,
+                 e(published_in, :profile, :name, nil) || e(published_in, :named, :name, nil) ||
+                   e(published_in, :name, nil)},
+              else:
+                Bonfire.Boundaries.preset_boundary_tuple_from_acl(
+                  e(socket.assigns, :object_boundary, nil)
+                )
+            )
+          ],
+          activity_inception: "reply_to",
+          # TODO: use assigns_merge and send_update to the ActivityLive component within smart_input instead, so that `update/2` isn't triggered again
+          activity: activity,
+          object: reply_to
+        ],
+        socket.assigns[:__context__]
+      )
+
+      {:noreply, socket}
+    else
+      false ->
+        error(l("Sorry, you cannot reply to this"))
+
+      other ->
+        # for remote interaction redirect
+        other
+    end
   end
 
   def thread_init(socket) do

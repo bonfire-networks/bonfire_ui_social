@@ -1,7 +1,6 @@
 <Bonfire.UI.Social.Activity.ReplyLive
   object_id={id(@object)}
   object_type={@object_type}
-  activity_id={id(Bonfire.UI.Social.Activity.ActionsLive.the_activity(@activity, @object))}
   object_boundary={@object_boundary}
   permalink={@permalink}
   thread_mode={@thread_mode}

@@ -28,7 +28,7 @@
               phx-click="assign"
               phx-target={"##{@activity_component_id}"}
               phx-value-send_self="true"
-              phx-value-input_to_atoms="true"
+              phx-value-to_atoms="true"
               phx-value-thread_mode="nested"
               class="flex items-center w-full gap-2 text-sm text-base-content/70"
             >
@@ -40,7 +40,7 @@
               phx-click="assign"
               phx-target={"##{@activity_component_id}"}
               phx-value-send_self="true"
-              phx-value-input_to_atoms="true"
+              phx-value-to_atoms="true"
               phx-value-thread_mode="flat"
               class="flex items-center w-full gap-2 text-sm text-base-content/70"
             >
@@ -109,6 +109,17 @@
       />
     </li> -->
 
+    <li><div class="px-4 py-2 w-full">
+        <div
+          phx-click="open"
+          phx-target={"#modal_boundary_#{id(@object)}"}
+          class="flex items-center w-full gap-2 text-sm text-base-content/70"
+        >
+          <#Icon iconify="fluent:door-tag-20-filled" class="w-4 h-4 shrink-0" />
+          {l("View boundaries")}
+        </div></div>
+    </li>
+
     <li :if={module_enabled?(Bonfire.Classify.Web.TagModalLive)}>
       <Dynamic.Component
         module={Bonfire.Classify.Web.TagModalLive}
@@ -158,6 +169,7 @@
         </ul>
       </details>
     </li>
+
     <!-- Block the author, etc -->
     <Bonfire.Boundaries.Web.BlockMenuButtonsLive
       parent_id={@activity_component_id || id(@activity)}

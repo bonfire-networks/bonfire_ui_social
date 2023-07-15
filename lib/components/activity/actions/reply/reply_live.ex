@@ -2,9 +2,8 @@ defmodule Bonfire.UI.Social.Activity.ReplyLive do
   use Bonfire.UI.Common.Web, :stateless_component
 
   # def handle_event(action, attrs, socket), do: Bonfire.UI.Common.LiveHandlers.handle_event(action, attrs, socket, __MODULE__)
-  prop object_id, :string, required: true
+  prop object_id, :string, default: nil
   prop object_type, :any
-  prop activity_id, :string
   prop permalink, :string
   prop reply_count, :any, default: nil
   prop showing_within, :atom, default: nil

@@ -27,7 +27,7 @@
             <LiveRedirect
               to={~p"/coordination/task/#{e(@object, :id, "")}"}
               class="flex-1 text-sm font-medium cursor-pointer link link-hover"
-            >{e(@object, :name, e(@object, :note, l("Untitled task")))}
+            >{e(@object, :name, nil) || e(@object, :note, nil) || l("Untitled task")}
             </LiveRedirect>
             <!-- <span class="mr-2 badge badge-outline badge-success" :if={e(@object, :finished, nil)}>
               {l("Completed")}
@@ -47,9 +47,19 @@
               </span>
             </span>
             <div class="flex items-center gap-3">
-              <Bonfire.UI.Common.LikeActionLive
-                id={ComponentID.new(Bonfire.UI.Common.LikeActionLive, id(@object), __MODULE__)}
-                object_id={id(@object)}
+              <Bonfire.UI.Social.Activity.ReactionsLive
+                object={@object}
+                activity={@activity}
+                object_type={@object_type}
+                object_boundary={@object_boundary}
+                permalink={@permalink}
+                thread_mode={@thread_mode}
+                showing_within={@showing_within}
+                object_type_readable={@object_type_readable}
+                hide_reply={@hide_reply}
+                viewing_main_object={@viewing_main_object}
+                activity_component_id={@activity_component_id}
+                reply_count={@reply_count}
               />
               <div
                 class="tooltip"
@@ -80,9 +90,10 @@
                 <span>{DatesTimes.date_from_now(e(@object, :due, nil)) || l("No due date")}</span>
               </div>
 
-              <div :if={e(@object, :note, nil)}>
+              <!-- <div :if={e(@object, :note, nil)}>
                 <#Icon iconify="carbon:document" class="w-5 h-5 text-base-content/70" />
-              </div>
+              </div> -->
+
               <Dynamic.Component
                 :if={module_enabled?(Bonfire.UI.Coordination.TaskActionsMenuLive, @__context__)}
                 module={Bonfire.UI.Coordination.TaskActionsMenuLive}
