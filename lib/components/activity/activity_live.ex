@@ -52,7 +52,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
   prop(thread_boost_count, :any, default: nil)
   prop(participant_count, :any, default: nil)
   prop(last_reply_id, :any, default: nil)
-  prop(ui_compact, :boolean, default: false)
+
   prop(hide_actions_until_hovered, :boolean, default: false)
 
   @decorate time()
@@ -219,7 +219,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
       object_type: object_type,
       object_type_readable: object_type_readable,
       date_ago: DatesTimes.date_from_now(id, format: :narrow),
-      # if(e(assigns, :ui_compact, nil),
+      # if(e(assigns[:__context], :ui_compact, nil),
       #   do: DatesTimes.date_from_now(id, format: :narrow),
       #   else: DatesTimes.date_from_now(id)
       # ),
@@ -235,7 +235,6 @@ defmodule Bonfire.UI.Social.ActivityLive do
       cw: e(object, :post_content, :name, nil) != nil,
       is_remote: e(activity, :peered, nil) != nil or e(object, :peered, nil) != nil,
       reply_count: e(replied, :nested_replies_count, 0) + e(replied, :direct_replies_count, 0),
-      ui_compact: e(assigns, :ui_compact, nil) || e(assigns, :__context__, :ui_compact, nil),
       hide_actions_until_hovered:
         !e(assigns, :viewing_main_object, nil) and
           Settings.get(
@@ -426,7 +425,6 @@ defmodule Bonfire.UI.Social.ActivityLive do
                 cw={@cw}
                 published_in={@published_in}
                 thread_title={e(component_assigns, :thread_title, @thread_title)}
-                ui_compact={@ui_compact}
               />
             {#match Bonfire.UI.Social.Activity.NoteLive}
               <Bonfire.UI.Social.Activity.NoteLive

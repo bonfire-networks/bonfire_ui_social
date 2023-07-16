@@ -255,14 +255,17 @@ defmodule Bonfire.Social.Threads.LiveHandler do
       # TODO: change for thread forking?
       thread_id: thread_id,
       current_user: current_user,
-      page: "thread"
+      page: "thread",
+      thread_loading: true
       # participants: participants
     )
 
     # |> IO.inspect
   end
 
-  def load_thread_maybe_async(%Phoenix.LiveView.Socket{} = socket, loading \\ true) do
+  def load_thread_maybe_async(socket_or_opts, loading \\ true, reset_stream \\ false)
+
+  def load_thread_maybe_async(%Phoenix.LiveView.Socket{} = socket, loading, reset_stream) do
     socket_connected = connected?(socket)
     current_user = current_user(socket)
 
@@ -314,7 +317,7 @@ defmodule Bonfire.Social.Threads.LiveHandler do
           send_thread_updates(
             pid,
             e(socket.assigns, :id, nil) || thread_id,
-            {replies, assigns ++ [loaded_async: true]}
+            {replies, assigns ++ [loaded_async: true, reset_stream: reset_stream]}
           )
 
           # TODO: use first or last depending on order
@@ -345,7 +348,7 @@ defmodule Bonfire.Social.Threads.LiveHandler do
     end
   end
 
-  def load_thread_maybe_async(_thread_id, _assigns, socket_or_opts) do
+  def load_thread_maybe_async(socket_or_opts, _, _) do
     # debug(e(socket_or_opts, :assigns, nil), "not socket")
     load_thread(socket_or_opts)
   end
@@ -373,12 +376,10 @@ defmodule Bonfire.Social.Threads.LiveHandler do
     end
   end
 
-  def max_depth(context, ui_compact \\ nil),
+  def max_depth(ui_compact \\ nil),
     do:
       Config.get(:thread_default_max_depth, 3) *
-        if(
-          ui_compact || e(context, :ui_compact, nil) ||
-            e(context, :__context__, :ui_compact, nil),
+        if(ui_compact,
           do: 2,
           else: 1
         )
@@ -396,9 +397,9 @@ defmodule Bonfire.Social.Threads.LiveHandler do
              Threads.list_replies(thread_id,
                current_user: current_user,
                after: e(socket.assigns, :after, nil),
-               max_depth: max_depth(socket),
+               max_depth: max_depth(socket.assigns[:__context__]),
                thread_mode: e(socket.assigns, :thread_mode, nil),
-               reverse_order: e(socket.assigns, :reverse_order, nil),
+               sort_order: e(socket.assigns, :sort_order, nil),
                showing_within: e(socket.assigns, :showing_within, nil)
              ) do
         reply_count = length(replies)

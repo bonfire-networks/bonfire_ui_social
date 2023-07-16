@@ -21,16 +21,19 @@ defmodule Bonfire.UI.Social.ThreadBranchLive do
   # prop page, :any, default: "thread"
   # prop create_object_type, :any, default: nil
   prop current_url, :string, default: nil
-  prop ui_compact, :boolean, default: false
 
   def update(%{insert_stream: {:threaded_replies, entries, at}} = assigns, socket) do
     debug("branch is being poured into")
+    ui_compact = assigns[:__context__][:ui_compact] || socket.assigns[:__context__][:ui_compact]
 
     {:ok,
      socket
      |> assign(Map.drop(assigns, [:insert_stream]))
      |> LiveHandler.insert_comments(
        {:threaded_replies, entries ++ e(socket.assigns, :threaded_replies, []), at}
+     )
+     |> assign_global(
+       ui_compact: ui_compact || assigns[:thread_level] >= LiveHandler.max_depth(ui_compact) / 2
      )}
   end
 

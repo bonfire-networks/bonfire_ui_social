@@ -19,7 +19,7 @@
       thread_level={@thread_level}
       thread_mode={@thread_mode}
       showing_within={@showing_within || :thread}
-      ui_compact={@ui_compact || @thread_level >= LiveHandler.max_depth(@__context__, @ui_compact) / 2}
+      ui_compact={@__context__[:ui_compact] || @thread_level >= LiveHandler.max_depth(@__context__[:ui_compact]) / 2}
     />
 
     <!-- {#if is_list(@threaded_replies) and @threaded_replies != []} -->
@@ -75,14 +75,13 @@
                 thread_level={@thread_level + 1}
                 showing_within={@showing_within}
                 current_url={@current_url || current_url(@__context__)}
-                ui_compact={@ui_compact}
               />
             </div>
           {/for}
 
           {#if (e(@comment, :direct_replies_count, nil) || e(@comment, :replied, :direct_replies_count, 0)) >
               length(@threaded_replies) ||
-              @thread_level + 1 >= LiveHandler.max_depth(@__context__, @ui_compact)}
+              @thread_level + 1 >= LiveHandler.max_depth(@__context__[:ui_compact])}
             <div class="flex items-center -mx-2 -mt-1">
               <div
                 phx-click="Bonfire.Social.Threads:load_replies"

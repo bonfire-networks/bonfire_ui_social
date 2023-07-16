@@ -8,13 +8,13 @@
       <div class="flex items-center gap-1">
         {#case @last_reply_id}
           {#match nil}
-            <span class="loading loading-spinner loading-sm text-base-content/70" />
             <div class="text-sm tracking-wide text-base-content/70 text-center">{l("Last Reply")}</div>
+            <span class="loading loading-spinner loading-sm text-base-content/70" />
           {#match false}
             <div class="text-sm tracking-wide text-base-content/70 text-center">{l("No Replies")}</div>
           {#match _}
-            <div class="font-medium text-sm text-base-content/90 text-center">{DatesTimes.date_from_now(@last_reply_id, format: :narrow)}</div>
             <div class="text-sm tracking-wide text-base-content/70 text-center">{l("Last Reply")}</div>
+            <div class="font-medium text-sm text-base-content/90 text-center">{DatesTimes.date_from_now(@last_reply_id, format: :narrow)}</div>
         {/case}
       </div>
       <div class="flex items-center gap-1">

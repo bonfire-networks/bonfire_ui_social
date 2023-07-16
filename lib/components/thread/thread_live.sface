@@ -6,18 +6,51 @@
         class="!border !border-base-content/30 font-medium rounded-full btn btn-ghost btn-xs normal-case"
       >
         <#Icon iconify="tabler:layout-rows" class="w-4 h-4" />
-        {l("Layout: Nested replies")}</label>
+        {l("Layout:")}
+        {#if @thread_mode == :flat}
+          {l("Linear")},
+        {#else}
+          {l("Nested replies")},
+        {/if}
+
+        {#if @__context__[:ui_compact]}
+          {l("Compact")}
+        {#else}
+          {l("Cozy")}
+        {/if}
+      </label>
       <ul
         tabindex="0"
         class="dropdown-content mt-1 z-[999] menu p-1 shadow bg-base-100 rounded-box w-52"
       >
-        <li><a>{l("Nested replies")}</a></li>
-        <li><a>{l("Compact")}</a></li>
-        <li><a>{l("Chat")}</a></li>
+        {#if @thread_mode == :flat}
+          <li phx-click="set" phx-value-to_atoms="true" phx-value-thread_mode="nested" phx-target={@myself}><a>{l("Nested replies")}</a></li>
+        {#else}
+          <li phx-click="set" phx-value-to_atoms="true" phx-value-thread_mode="flat" phx-target={@myself}><a>{l("Linear")}</a></li>
+        {/if}
+
+        {#if @__context__[:ui_compact]}
+          <li
+            phx-click="set"
+            phx-value-to_atoms="true"
+            phx-value-ui_compact="false"
+            phx-value-assign_global="true"
+            phx-target={@myself}
+          ><a>{l("Cozy")}</a></li>
+        {#else}
+          <li
+            phx-click="set"
+            phx-value-to_atoms="true"
+            phx-value-ui_compact="true"
+            phx-value-assign_global="true"
+            phx-target={@myself}
+          ><a>{l("Compact")}</a></li>
+        {/if}
       </ul>
     </div>
     <div class="flex items-center gap-3">
-      <div class="dropdown dropdown-end">
+      <!-- <div class="dropdown dropdown-end">
+      :if={@thread_mode==:flat} 
         <label
           tabindex="0"
           class="!border !border-base-content/30 font-medium rounded-full btn-xs btn btn-outline normal-case"
@@ -29,25 +62,48 @@
           class="dropdown-content mt-1 z-[999] menu p-1 shadow bg-base-100 rounded-box w-52"
         >
           <li><a>{l("Chronological")}</a></li>
-          <li><a>{l("By latest reply")}</a></li>
+          <li :if={@thread_mode !=:flat}><a>{l("By latest reply")}</a></li> 
           <li><a>{l("By replies")}</a></li>
           <li><a>{l("By boosts")}</a></li>
           <li><a>{l("By likes")}</a></li>
         </ul>
-      </div>
+      </div> -->
+
       <div class="dropdown dropdown-end">
         <label
           tabindex="0"
           class="!border !border-base-content/30 font-medium rounded-full btn-xs btn btn-outline normal-case"
         >
           <#Icon iconify="ri:list-ordered-2" class="w-4 h-4" />
-          {l("Order: Newer first")}</label>
+          {l("Order:")}
+
+          {#if @sort_order == :asc}
+            {l("Oldest first")}
+          {#else}
+            {l("Newest first")}
+          {/if}
+        </label>
         <ul
           tabindex="0"
           class="dropdown-content mt-1 z-[999] menu p-1 shadow bg-base-100 rounded-box w-52"
         >
-          <li><a>{l("Newest first")}</a></li>
-          <li><a>{l("Oldest first")}</a></li>
+          {#if @sort_order == :asc}
+            <li
+              phx-click="set"
+              phx-value-to_atoms="true"
+              phx-value-sort_order="desc"
+              phx-value-assign_global="true"
+              phx-target={@myself}
+            ><a>{l("Newest first")}</a></li>
+          {#else}
+            <li
+              phx-click="set"
+              phx-value-to_atoms="true"
+              phx-value-sort_order="asc"
+              phx-value-assign_global="true"
+              phx-target={@myself}
+            ><a>{l("Oldest first")}</a></li>
+          {/if}
         </ul>
       </div>
     </div>
@@ -55,8 +111,7 @@
 </div>
 
 <div data-role="thread" id={"thread_#{@id}"} x-data="{show_replies: true}">
-  {#if (@replies || e(@streams.threaded_replies, :inserts, nil) || e(@streams.replies, :inserts, [])) !=
-      []}
+  {#if @thread_loading != nil || @replies != []}
     <div class="flex flex-col flex-1">
       <div data-id="replies" class="flex flex-col flex-1 pb-4">
         <Bonfire.UI.Common.LoadPreviousLive
@@ -66,7 +121,22 @@
           context={@thread_id}
         />
 
-        {#if @thread_mode != :flat and e(@streams.threaded_replies, :inserts, []) != []}
+        <!-- flat mode simple list (use for manually set assigns, like the clicked comment while the thread is loading) -->
+        {#for reply <- @replies || []}
+          <div data-role="comment-list" class="reply flex relative w-full mx-auto pl-2 pt-3">
+            <CommentLive
+              comment={reply}
+              thread_id={@thread_id}
+              feed_id={@feed_id}
+              current_url={@current_url}
+              thread_object={@object}
+              thread_mode={@thread_mode}
+              showing_within={@showing_within || :thread}
+            />
+          </div>
+        {/for}
+
+        {#if @thread_mode != :flat}
           <div id={"stream_#{@id}"} phx-update="stream">
             {#for {entry_id, {reply, child_replies}} <- @streams.threaded_replies}
               <ThreadBranchLive
@@ -79,30 +149,14 @@
                 thread_object={@object}
                 thread_mode={@thread_mode}
                 showing_within={@showing_within || :thread}
-                ui_compact={@ui_compact}
               />
             {/for}
           </div>
         {#else}
-          <!-- flat mode simple list -->
-          {#for reply <- @replies || []}
-            <div class="reply flex relative w-full mx-auto pl-2 pt-3">
-              <CommentLive
-                comment={reply}
-                thread_id={@thread_id}
-                feed_id={@feed_id}
-                current_url={@current_url}
-                thread_object={@object}
-                thread_mode={@thread_mode}
-                showing_within={@showing_within || :thread}
-                ui_compact={@ui_compact}
-              />
-            </div>
-          {/for}
           <!-- flat mode stream -->
           <div id={"stream_#{@id}"} phx-update="stream">
             {#for {entry_id, reply} <- @streams.replies}
-              <div id={entry_id} class="reply flex relative w-full mx-auto pl-2 pt-3">
+              <div id={entry_id} data-role="comment-flat" class="reply flex relative w-full mx-auto pl-2 pt-3">
                 <CommentLive
                   comment={reply}
                   thread_id={@thread_id}
@@ -111,7 +165,6 @@
                   thread_object={@object}
                   thread_mode={@thread_mode}
                   showing_within={@showing_within || :thread}
-                  ui_compact={@ui_compact}
                 />
               </div>
             {/for}

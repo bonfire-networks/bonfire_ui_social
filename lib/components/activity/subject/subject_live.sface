@@ -55,7 +55,7 @@
       <div class="flex items-center gap-2">
         <LiveRedirect
           :if={!Settings.get([Bonfire.UI.Common.AvatarLive, :hide_avatars], false, @__context__)}
-          class="h-8"
+          class={"", "h-8": !@__context__[:ui_compact], "h-6": @__context__[:ui_compact]}
           opts={"data-id": "subject_name", "aria-label": e(@character, :username, "") <> " profile"}
           to={path(@character)}
         >
@@ -63,11 +63,16 @@
             parent_id={@activity_component_id || id(@activity)}
             user={@profile}
             title={e(@profile, :name, "Anonymous")}
-            class="w-8 h-8 rounded-full bg-base-100"
+            class={
+              "rounded-full bg-base-100",
+              "h-8 w-8": !@__context__[:ui_compact],
+              "h-6 w-6": @__context__[:ui_compact]
+            }
           />
         </LiveRedirect>
         <div class="flex flex-col">
           <LiveRedirect
+            :if={!@__context__[:ui_compact]}
             opts={"data-id": "subject_name", "aria-label": l("%{name}'s profile", name: e(@profile, :name, ""))}
             class="text-sm font-semibold link link-hover text-base-content/90"
             to={path(@character)}
@@ -75,18 +80,29 @@
             {e(@profile, :name, "Anonymous")}
           </LiveRedirect>
           <div class="flex items-center gap-1 -mt-1">
-            <LiveRedirect
-              :if={e(@character, :username, nil)}
-              opts={
-                "data-id": "subject_username",
-                "aria-label": l("%{name}'s profile", name: e(@profile, :name, ""))
-              }
-              class="text-xs font-normal link link-hover ellipsis text-base-content/70 subject_username"
-              to={path(@character)}
-            >
-              @{e(@character, :username, "")}
-            </LiveRedirect>
-            <span class="text-xs text-base-content/70">·</span>
+            {#if !@__context__[:ui_compact]}
+              <LiveRedirect
+                :if={e(@character, :username, nil)}
+                opts={
+                  "data-id": "subject_username",
+                  "aria-label": l("%{name}'s profile", name: e(@profile, :name, ""))
+                }
+                class="text-xs font-normal link link-hover ellipsis text-base-content/70 subject_username"
+                to={path(@character)}
+              >
+                @{e(@character, :username, "")}
+              </LiveRedirect>
+            {#else}
+              <LiveRedirect
+                opts={"data-id": "subject_name", "aria-label": l("%{name}'s profile", name: e(@profile, :name, ""))}
+                class="text-sm font-semibold link link-hover text-base-content/90"
+                to={path(@character)}
+              >
+                {e(@profile, :name, "Anonymous")}
+              </LiveRedirect>
+            {/if}
+
+            <!-- <span class="text-xs text-base-content/70">·</span> -->
             <Dynamic.Component
               :if={module_enabled?(Bonfire.Boundaries.Web.BoundaryIconStatelessLive) and
                 @object_type not in [Bonfire.Data.Social.Message]}
@@ -130,7 +146,11 @@
             user={@profile}
             title={e(@profile, :name, "Anonymous")}
             viewing_main_object={@viewing_main_object}
-            class={" rounded-full bg-base-100", "w-12 h-12": @ui_compact != true, "w-6 h-6": @ui_compact}
+            class={
+              " rounded-full bg-base-100",
+              "w-12 h-12": @__context__[:ui_compact] != true,
+              "w-6 h-6": @__context__[:ui_compact]
+            }
           />
         </LiveRedirect>
       </div>
@@ -153,7 +173,7 @@
               {e(@profile, :name, "Anonymous")}
             </LiveRedirect>
             <LiveRedirect
-              :if={e(@character, :username, nil) && @ui_compact}
+              :if={e(@character, :username, nil) && @__context__[:ui_compact]}
               opts={
                 "data-id": "subject_username",
                 "aria-label": l("%{name}'s profile", name: e(@profile, :name, ""))
@@ -190,7 +210,7 @@
           </div>
           <!-- <span class="ml-2 text-[15px] text-base-content/70">replied to <b class="font-bold text-base-content link">title topic</b></span> -->
           <!-- </div> -->
-          <div class="flex items-center gap-1" :if={@ui_compact != true}>
+          <div class="flex items-center gap-1" :if={@__context__[:ui_compact] != true}>
             <LiveRedirect
               :if={e(@character, :username, nil)}
               opts={

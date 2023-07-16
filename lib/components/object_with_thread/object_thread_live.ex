@@ -19,13 +19,12 @@ defmodule Bonfire.UI.Social.ObjectThreadLive do
   prop showing_within, :atom, default: :thread
   prop current_url, :string, default: nil
   prop thread_mode, :any, default: nil
-  # prop reverse_order, :any, default: nil
+  # prop sort_order, :any, default: nil
   # prop participants, :any, default: []
   # prop textarea_class, :css_class, default: nil
   # prop replied_activity_class, :css_class, default: nil
   prop replies, :any, default: nil
   prop page_info, :any, default: nil
-  prop(ui_compact, :boolean, default: false)
 
   def render(assigns) do
     assigns

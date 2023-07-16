@@ -38,7 +38,6 @@
           thread_mode={@thread_mode}
           object_boundary={if @showing_within == :messages, do: :skip_boundary_check}
           viewing_main_object={false}
-          ui_compact={@ui_compact}
         />
     {/case}
   </div>

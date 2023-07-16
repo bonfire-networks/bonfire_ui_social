@@ -27,11 +27,12 @@ defmodule Bonfire.UI.Social.ThreadLive do
   prop current_url, :string, default: nil
   # prop smart_input_opts, :map, default: %{}
   prop thread_mode, :any, default: nil
-  prop ui_compact, :boolean, default: false
-  # prop reverse_order, :any, default: nil
+  prop sort_by, :any, default: nil
+  prop sort_order, :boolean, default: false
   prop showing_within, :atom, default: :thread
   # prop loading, :boolean, default: false
   prop order_by, :any, default: :id
+  prop thread_loading, :boolean, default: nil
 
   def mount(socket) do
     {
@@ -58,7 +59,7 @@ defmodule Bonfire.UI.Social.ThreadLive do
     {:ok,
      socket
      |> assign(Map.drop(assigns, [:insert_stream]))
-     |> LiveHandler.insert_comments(entries)}
+     |> LiveHandler.insert_comments(entries, reset: assigns[:reset_stream])}
   end
 
   def update(%{replies: replies, page_info: page_info, loaded_async: true} = assigns, socket)
@@ -200,7 +201,7 @@ defmodule Bonfire.UI.Social.ThreadLive do
 
     socket
     |> assign(assigns)
-    |> load_comments(true)
+    |> LiveHandler.load_thread_maybe_async(false, true)
   end
 
   def update(assigns, %{assigns: %{loaded_async: true}} = socket) do
@@ -224,6 +225,20 @@ defmodule Bonfire.UI.Social.ThreadLive do
      socket
      |> LiveHandler.thread_init()
      |> LiveHandler.load_thread_maybe_async(show_loading?)}
+  end
+
+  def handle_event(
+        "set",
+        attrs,
+        socket
+      ) do
+    # need to reload comments so streams are updated 
+    {:noreply,
+     socket
+     # |> assign( replies: [])
+     |> Bonfire.UI.Common.LiveHandlers.assign_attrs(attrs)
+     |> LiveHandler.load_thread_maybe_async(false, true)
+     |> debug("seeet")}
   end
 
   def handle_event(

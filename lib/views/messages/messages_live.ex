@@ -49,7 +49,8 @@ defmodule Bonfire.UI.Social.MessagesLive do
        #  ]
 
        #  nav_items: []
-     )}
+     )
+     |> assign_global(ui_compact: true)}
   end
 
   def do_handle_params(%{"username" => username} = _params, _url, socket) do
