@@ -1,4 +1,8 @@
-<div class="p-3 border-b border-base-content/20">
+
+
+<div data-role="thread" id={"thread_#{@id}"} x-data="{show_replies: true}">
+
+<div :if={current_user(@__context__)} class="p-3 border-b border-base-content/20">
   <div class="flex justify-between">
     <div class="dropdown">
       <label
@@ -110,7 +114,6 @@
   </div>
 </div>
 
-<div data-role="thread" id={"thread_#{@id}"} x-data="{show_replies: true}">
   {#if @thread_loading != nil || @replies != []}
     <div class="flex flex-col flex-1">
       <div data-id="replies" class="flex flex-col flex-1 pb-4">
