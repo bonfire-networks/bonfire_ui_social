@@ -1,59 +1,56 @@
-
-
 <div data-role="thread" id={"thread_#{@id}"} x-data="{show_replies: true}">
+  <div :if={current_user(@__context__)} class="p-3 border-b border-base-content/20">
+    <div class="flex justify-between">
+      <div class="dropdown">
+        <label
+          tabindex="0"
+          class="!border !border-base-content/30 font-medium rounded-full btn btn-ghost btn-xs normal-case"
+        >
+          <#Icon iconify="tabler:layout-rows" class="w-4 h-4" />
+          {l("Layout:")}
+          {#if @thread_mode == :flat}
+            {l("Linear")},
+          {#else}
+            {l("Nested replies")},
+          {/if}
 
-<div :if={current_user(@__context__)} class="p-3 border-b border-base-content/20">
-  <div class="flex justify-between">
-    <div class="dropdown">
-      <label
-        tabindex="0"
-        class="!border !border-base-content/30 font-medium rounded-full btn btn-ghost btn-xs normal-case"
-      >
-        <#Icon iconify="tabler:layout-rows" class="w-4 h-4" />
-        {l("Layout:")}
-        {#if @thread_mode == :flat}
-          {l("Linear")},
-        {#else}
-          {l("Nested replies")},
-        {/if}
+          {#if @__context__[:ui_compact]}
+            {l("Compact")}
+          {#else}
+            {l("Cozy")}
+          {/if}
+        </label>
+        <ul
+          tabindex="0"
+          class="dropdown-content mt-1 z-[999] menu p-1 shadow bg-base-100 rounded-box w-52"
+        >
+          {#if @thread_mode == :flat}
+            <li phx-click="set" phx-value-to_atoms="true" phx-value-thread_mode="nested" phx-target={@myself}><a>{l("Nested replies")}</a></li>
+          {#else}
+            <li phx-click="set" phx-value-to_atoms="true" phx-value-thread_mode="flat" phx-target={@myself}><a>{l("Linear")}</a></li>
+          {/if}
 
-        {#if @__context__[:ui_compact]}
-          {l("Compact")}
-        {#else}
-          {l("Cozy")}
-        {/if}
-      </label>
-      <ul
-        tabindex="0"
-        class="dropdown-content mt-1 z-[999] menu p-1 shadow bg-base-100 rounded-box w-52"
-      >
-        {#if @thread_mode == :flat}
-          <li phx-click="set" phx-value-to_atoms="true" phx-value-thread_mode="nested" phx-target={@myself}><a>{l("Nested replies")}</a></li>
-        {#else}
-          <li phx-click="set" phx-value-to_atoms="true" phx-value-thread_mode="flat" phx-target={@myself}><a>{l("Linear")}</a></li>
-        {/if}
-
-        {#if @__context__[:ui_compact]}
-          <li
-            phx-click="set"
-            phx-value-to_atoms="true"
-            phx-value-ui_compact="false"
-            phx-value-assign_global="true"
-            phx-target={@myself}
-          ><a>{l("Cozy")}</a></li>
-        {#else}
-          <li
-            phx-click="set"
-            phx-value-to_atoms="true"
-            phx-value-ui_compact="true"
-            phx-value-assign_global="true"
-            phx-target={@myself}
-          ><a>{l("Compact")}</a></li>
-        {/if}
-      </ul>
-    </div>
-    <div class="flex items-center gap-3">
-      <!-- <div class="dropdown dropdown-end">
+          {#if @__context__[:ui_compact]}
+            <li
+              phx-click="set"
+              phx-value-to_atoms="true"
+              phx-value-ui_compact="false"
+              phx-value-assign_global="true"
+              phx-target={@myself}
+            ><a>{l("Cozy")}</a></li>
+          {#else}
+            <li
+              phx-click="set"
+              phx-value-to_atoms="true"
+              phx-value-ui_compact="true"
+              phx-value-assign_global="true"
+              phx-target={@myself}
+            ><a>{l("Compact")}</a></li>
+          {/if}
+        </ul>
+      </div>
+      <div class="flex items-center gap-3">
+        <!-- <div class="dropdown dropdown-end">
       :if={@thread_mode==:flat} 
         <label
           tabindex="0"
@@ -73,46 +70,46 @@
         </ul>
       </div> -->
 
-      <div class="dropdown dropdown-end">
-        <label
-          tabindex="0"
-          class="!border !border-base-content/30 font-medium rounded-full btn-xs btn btn-outline normal-case"
-        >
-          <#Icon iconify="ri:list-ordered-2" class="w-4 h-4" />
-          {l("Order:")}
+        <div class="dropdown dropdown-end">
+          <label
+            tabindex="0"
+            class="!border !border-base-content/30 font-medium rounded-full btn-xs btn btn-outline normal-case"
+          >
+            <#Icon iconify="ri:list-ordered-2" class="w-4 h-4" />
+            {l("Order:")}
 
-          {#if @sort_order == :asc}
-            {l("Oldest first")}
-          {#else}
-            {l("Newest first")}
-          {/if}
-        </label>
-        <ul
-          tabindex="0"
-          class="dropdown-content mt-1 z-[999] menu p-1 shadow bg-base-100 rounded-box w-52"
-        >
-          {#if @sort_order == :asc}
-            <li
-              phx-click="set"
-              phx-value-to_atoms="true"
-              phx-value-sort_order="desc"
-              phx-value-assign_global="true"
-              phx-target={@myself}
-            ><a>{l("Newest first")}</a></li>
-          {#else}
-            <li
-              phx-click="set"
-              phx-value-to_atoms="true"
-              phx-value-sort_order="asc"
-              phx-value-assign_global="true"
-              phx-target={@myself}
-            ><a>{l("Oldest first")}</a></li>
-          {/if}
-        </ul>
+            {#if @sort_order == :asc}
+              {l("Oldest first")}
+            {#else}
+              {l("Newest first")}
+            {/if}
+          </label>
+          <ul
+            tabindex="0"
+            class="dropdown-content mt-1 z-[999] menu p-1 shadow bg-base-100 rounded-box w-52"
+          >
+            {#if @sort_order == :asc}
+              <li
+                phx-click="set"
+                phx-value-to_atoms="true"
+                phx-value-sort_order="desc"
+                phx-value-assign_global="true"
+                phx-target={@myself}
+              ><a>{l("Newest first")}</a></li>
+            {#else}
+              <li
+                phx-click="set"
+                phx-value-to_atoms="true"
+                phx-value-sort_order="asc"
+                phx-value-assign_global="true"
+                phx-target={@myself}
+              ><a>{l("Oldest first")}</a></li>
+            {/if}
+          </ul>
+        </div>
       </div>
     </div>
   </div>
-</div>
 
   {#if @thread_loading != nil || @replies != []}
     <div class="flex flex-col flex-1">
