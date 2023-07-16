@@ -1,5 +1,5 @@
 <Bonfire.UI.Common.OpenModalLive
-  id={ComponentID.new(Bonfire.UI.Common.OpenModalLive, @parent_id, __MODULE__)}
+  id={Text.random_string()}
   title_text={l("Version history")}
   modal_class="modal_wide"
   form_opts={"phx-submit": "Bonfire.Social.Posts:edit", "phx-target": "##{@activity_component_id}"}

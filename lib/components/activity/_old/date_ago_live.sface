@@ -1,8 +1,8 @@
 {#if @viewing_main_object}
   <div class="flex items-center space-x-2">
-    <BoundaryIconStatelessLive
+    <Bonfire.Boundaries.Web.BoundaryIconStatelessLive
       :if={@object_type not in [Bonfire.Data.Social.Message]}
-      object={@object}
+      object_id={id(@object)}
       object_boundary={@object_boundary}
     />
     <div class="flex items-center space-x-1 subject_timestamp">

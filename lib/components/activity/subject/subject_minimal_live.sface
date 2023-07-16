@@ -205,10 +205,11 @@
                   </Bonfire.UI.Social.Activity.LinkToActivityLive>
 
                   <Dynamic.Component
-                    :if={module_enabled?(Bonfire.Boundaries.Web.ActivityVisibilityIconLive) and
+                    :if={module_enabled?(Bonfire.Boundaries.Web.BoundaryIconStatelessLive) and
                       @object_type not in [Bonfire.Data.Social.Message]}
-                    module={Bonfire.Boundaries.Web.ActivityVisibilityIconLive}
-                    object={@object}
+                    module={Bonfire.Boundaries.Web.BoundaryIconStatelessLive}
+                    object_id={id(@object)}
+                    parent_id={"boundary_#{id(@activity || @object)}"}
                     with_icon
                     object_boundary={@object_boundary}
                   />

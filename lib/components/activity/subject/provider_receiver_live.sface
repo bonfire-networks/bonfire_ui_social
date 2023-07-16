@@ -48,21 +48,15 @@
           :if={module_enabled?(Bonfire.Boundaries.Web.BoundaryIconStatelessLive) and
             @object_type not in [Bonfire.Data.Social.Message]}
           module={Bonfire.Boundaries.Web.BoundaryIconStatelessLive}
-          object={@object}
-          with_icon
-          id={ComponentID.new(Bonfire.Boundaries.Web.BoundaryIconStatelessLive, id(@object), id(@activity))}
+          object_id={id(@object)}
           object_boundary={@object_boundary}
+          parent_id={"boundary_#{id(@activity)}"}
+          with_icon
         />
       </div>
     </div>
 
     <!-- <div class="flex items-center">
-      <BoundaryIconStatelessLive
-        id={ComponentID.new(BoundaryIconStatelessLive, id(@object), id(@activity))}
-        object={@object}
-        with_icon
-        object_boundary={@object_boundary}
-      />
 
       <span class="text-xs text-primary-content-500">
         <LiveRedirect to={@permalink}>

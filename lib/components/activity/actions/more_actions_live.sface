@@ -112,7 +112,7 @@
     <li><div class="px-4 py-2 w-full">
         <div
           phx-click="open"
-          phx-target={"#modal_boundary_#{id(@object)}"}
+          phx-target={"#modal_boundary_#{id(@activity || @object)}"}
           class="flex items-center w-full gap-2 text-sm text-base-content/70"
         >
           <#Icon iconify="fluent:door-tag-20-filled" class="w-4 h-4 shrink-0" />

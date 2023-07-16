@@ -1,5 +1,5 @@
 <!-- <Bonfire.UI.Common.OpenModalLive
-  id={Pointers.ULID.generate()}
+  id={Text.random_string()}
   no_actions={true}
   title_text={l("Pin")}
   form_opts={"phx-submit": "Bonfire.Social.Objects:tag"}

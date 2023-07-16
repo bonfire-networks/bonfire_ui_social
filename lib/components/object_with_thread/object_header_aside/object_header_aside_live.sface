@@ -6,7 +6,7 @@
   <Bonfire.UI.Social.Activity.InstanceIconLive peered={e(@activity, :peered, nil)} />
   <Bonfire.Boundaries.Web.BoundaryIconLive
     with_label
-    id={ComponentID.new(Bonfire.Boundaries.Web.BoundaryIconLive, id(@activity), __MODULE__)}
+    id={"boundary_#{id(@thread_id)}"}
     object={@activity}
   /> -->
 

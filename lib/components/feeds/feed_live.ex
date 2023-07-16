@@ -66,7 +66,7 @@ defmodule Bonfire.UI.Social.FeedLive do
   end
 
   defp component_id(feed_id, entry) do
-    "#{feed_id}_#{id(entry) || e(entry, :activity, :id, nil) || e(entry, :object, :id, nil) || e(entry, :edge, :id, nil) || Pointers.ULID.generate()}"
+    "#{feed_id}_#{id(entry) || e(entry, :activity, :id, nil) || e(entry, :object, :id, nil) || e(entry, :edge, :id, nil) || Text.random_string()}"
   end
 
   # consolidate different kinds of lists/feeds into Activity
