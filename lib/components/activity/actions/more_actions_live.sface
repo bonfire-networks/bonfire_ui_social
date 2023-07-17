@@ -21,49 +21,49 @@
   >
     <#slot {@extra_items} />
 
-    <li :if={@viewing_main_object && @thread_id &&
-      Bonfire.Boundaries.can?(@__context__, :describe, @object_boundary || @thread_id)}>
-      <Bonfire.UI.Common.OpenModalLive
-        id={"thread_title_#{id(@activity) || @thread_id}"}
-        title_text={l("Edit the title of this discussion")}
-        no_actions
-        form_opts={"phx-submit": "Bonfire.Social.Objects:set_name"}
-      >
-        <Field for={:thread} class="my-4">
-          <TextInput
-            placeholder="Set a name for the thread..."
-            name="name"
-            class="w-full bg-base-content/10 input input-bordered"
-            value={e(@activity, :replied, :thread, :named, :name, nil) || e(@object, :post_content, :name, nil) ||
-              e(@object, :post_content, :summary, nil) || e(@object, :post_content, :html_body, nil) ||
-              e(@object, :profile, :name, nil) || e(@object, :name, nil)}
-          />
-          <HiddenInput name="id" value={@thread_id} />
-          <button class="normal-case w-full rounded-full btn-outline btn btn-primary mt-3">
-            {l("Save")}
-          </button>
-        </Field>
-        <:open_btn>
-          <div class="flex items-center w-full gap-2 text-sm text-base-content/70">
-            <#Icon iconify="subway:title" class="w-4 h-4 shrink-0" />
-            {l("Edit discussion title")}
-          </div>
-        </:open_btn>
-      </Bonfire.UI.Common.OpenModalLive>
-    </li>
+    {#if current_user_id(@__context__)}
+      <li :if={@viewing_main_object && @thread_id &&
+        Bonfire.Boundaries.can?(@__context__, :describe, @object_boundary || @thread_id)}>
+        <Bonfire.UI.Common.OpenModalLive
+          id={"thread_title_#{id(@activity) || @thread_id}"}
+          title_text={l("Edit the title of this discussion")}
+          no_actions
+          form_opts={"phx-submit": "Bonfire.Social.Objects:set_name"}
+        >
+          <Field for={:thread} class="my-4">
+            <TextInput
+              placeholder="Set a name for the thread..."
+              name="name"
+              class="w-full bg-base-content/10 input input-bordered"
+              value={e(@activity, :replied, :thread, :named, :name, nil) || e(@object, :post_content, :name, nil) ||
+                e(@object, :post_content, :summary, nil) || e(@object, :post_content, :html_body, nil) ||
+                e(@object, :profile, :name, nil) || e(@object, :name, nil)}
+            />
+            <HiddenInput name="id" value={@thread_id} />
+            <button class="normal-case w-full rounded-full btn-outline btn btn-primary mt-3">
+              {l("Save")}
+            </button>
+          </Field>
+          <:open_btn>
+            <div class="flex items-center w-full gap-2 text-sm text-base-content/70">
+              <#Icon iconify="subway:title" class="w-4 h-4 shrink-0" />
+              {l("Edit discussion title")}
+            </div>
+          </:open_btn>
+        </Bonfire.UI.Common.OpenModalLive>
+      </li>
 
-    <li :if={@object_type in [Bonfire.Data.Social.Post] and module_enabled?(Bonfire.UI.Social.EditPostLive) &&
-      current_user_id(@__context__)}>
-      <Dynamic.Component
-        module={Bonfire.UI.Social.EditPostLive}
-        object={@object}
-        object_boundary={@object_boundary}
-        activity_component_id={@activity_component_id}
-        parent_id={@activity_component_id || id(@activity)}
-      />
-    </li>
+      <li :if={@object_type in [Bonfire.Data.Social.Post] and module_enabled?(Bonfire.UI.Social.EditPostLive)}>
+        <Dynamic.Component
+          module={Bonfire.UI.Social.EditPostLive}
+          object={@object}
+          object_boundary={@object_boundary}
+          activity_component_id={@activity_component_id}
+          parent_id={@activity_component_id || id(@activity)}
+        />
+      </li>
 
-    <!-- <li class="hover:bg-neutral hover:bg-opacity-20">
+      <!-- <li class="hover:bg-neutral hover:bg-opacity-20">
       <Bonfire.UI.Social.PinActionLive
         object={@object}
         class="flex items-center px-4 text-sm text-neutral-content/80"
@@ -78,35 +78,36 @@
       />
     </li> -->
 
-    <li><div class="px-4 py-2 w-full">
-        <div
-          phx-click="open"
-          phx-target={"#modal_boundary_#{id(@activity || @object)}"}
-          class="flex items-center w-full gap-2 text-sm text-base-content/70"
-        >
-          <#Icon iconify="fluent:door-tag-20-filled" class="w-4 h-4 shrink-0" />
-          {l("View boundaries")}
-        </div></div>
-    </li>
+      <li><div class="px-4 py-2 w-full">
+          <div
+            phx-click="open"
+            phx-target={"#modal_boundary_#{id(@activity || @object)}"}
+            class="flex items-center w-full gap-2 text-sm text-base-content/70"
+          >
+            <#Icon iconify="fluent:door-tag-20-filled" class="w-4 h-4 shrink-0" />
+            {l("View boundaries")}
+          </div></div>
+      </li>
 
-    <li :if={module_enabled?(Bonfire.Classify.Web.TagModalLive)}>
-      <Dynamic.Component
-        module={Bonfire.Classify.Web.TagModalLive}
-        object={@object}
-        parent_id={@activity_component_id || id(@activity)}
-      />
-    </li>
+      <li :if={module_enabled?(Bonfire.Classify.Web.TagModalLive)}>
+        <Dynamic.Component
+          module={Bonfire.Classify.Web.TagModalLive}
+          object={@object}
+          parent_id={@activity_component_id || id(@activity)}
+        />
+      </li>
 
-    <li :if={current_user_id(@__context__) != @subject_id and
-      Types.object_type(@subject) == Bonfire.Data.Identity.User}>
-      <Dynamic.Component
-        :if={module_enabled?(Bonfire.Boundaries.Web.AddToCircleLive) and @current_user}
-        module={Bonfire.Boundaries.Web.AddToCircleLive}
-        user_id={@subject_id}
-        name={e(@subject, :profile, :name, nil)}
-        parent_id={id(@activity_component_id || @activity)}
-      />
-    </li>
+      <li :if={current_user_id(@__context__) != @subject_id and
+        Types.object_type(@subject) == Bonfire.Data.Identity.User}>
+        <Dynamic.Component
+          :if={module_enabled?(Bonfire.Boundaries.Web.AddToCircleLive) and @current_user}
+          module={Bonfire.Boundaries.Web.AddToCircleLive}
+          user_id={@subject_id}
+          name={e(@subject, :profile, :name, nil)}
+          parent_id={id(@activity_component_id || @activity)}
+        />
+      </li>
+    {/if}
 
     <li :if={current_user_id(@__context__) != @subject_id and @verb != "Flag"}>
       <details>
