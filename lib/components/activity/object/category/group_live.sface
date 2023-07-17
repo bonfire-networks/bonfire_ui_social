@@ -1,25 +1,26 @@
-<div class="bg-base-100 mt-2 rounded-lg">
+<LiveRedirect to={@permalink} class="hover:bg-base-content/5 p-3 flex items-center gap-4">
   <div
-    class="h-[140px] rounded-t-lg bg-center bg-cover bg-no-repeat bg-base-200"
+    class="h-[96px] w-[96px] shrink-0 rounded-lg bg-center bg-cover bg-no-repeat bg-base-200"
     style={"background-image: url('#{Media.banner_url(@object)}')"}
   />
-  <div class="flex items-center gap-3 justify-between w-full p-4">
+  <div class="flex items-center gap-3 justify-between w-full">
     <div class="flex items-center flex-1 gap-4 font-medium text-base-content">
       <div class="flex flex-col">
-        <LiveRedirect to={@permalink} class="font-semibold link link-hover">
+        <div class="font-semibold link link-hover">
           {rich(name(@object))}
-        </LiveRedirect>
-        <div class="max-w-full prose-sm prose line-clamp-2 !text-base-content/70 text-sm mt-0.5">{e(@object, :profile, :summary, "")}</div>
+        </div>
+        <div><span class="font-medium">{e(@object, :character, :follow_count, :object_count, 0)}</span> <span class="text-base-content/70">{l "Members"}</span></div>
+        <!-- <div class="max-w-full prose-sm prose line-clamp-2 !text-base-content/70 text-sm mt-0.5">{e(@object, :profile, :summary, "")}</div> -->
       </div>
       <!-- <div class="text-sm font-normal text-base-content/70">{Bonfire.Me.Characters.display_username(e(@object, :character, :username, nil), true)}</div> -->
     </div>
-    <div class="flex items-center gap-1 md:gap-2">
+    <!-- <div class="flex items-center gap-1 md:gap-2">
       <Bonfire.UI.Social.Activity.CategoryActionsLive
         object={@object}
         activity_id={id(@activity)}
         object_boundary={@object_boundary}
         object_type={:group}
       />
-    </div>
+    </div> -->
   </div>
-</div>
+</LiveRedirect>
