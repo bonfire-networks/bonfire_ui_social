@@ -49,7 +49,7 @@ defmodule Bonfire.Social.Messages.LiveHandler do
          threads_widget(
            current_user(socket),
            context,
-           [tab_id: nil, thread_id: e(socket.assigns, :thread_id, nil)] ++ opts
+           [tab_id: nil, thread_id: e(socket.assigns, :thread_id, nil)] ++ List.wrap(opts)
          )
      )}
   end
@@ -64,7 +64,7 @@ defmodule Bonfire.Social.Messages.LiveHandler do
              showing_within: :messages,
              threads: list_threads(current_user, user, opts),
              thread_id: opts[:thread_id]
-           ] ++ opts}
+           ] ++ List.wrap(opts)}
         ]
         # secondary: [
         #   {Bonfire.Tag.Web.WidgetTagsLive, []}
@@ -76,7 +76,8 @@ defmodule Bonfire.Social.Messages.LiveHandler do
   def list_threads(current_user, user \\ nil, opts \\ []) do
     # TODO: put limit in Settings
     if current_user,
-      do: Messages.list(current_user, user, [latest_in_threads: true, limit: 8] ++ opts)
+      do:
+        Messages.list(current_user, user, [latest_in_threads: true, limit: 8] ++ List.wrap(opts))
 
     # |> debug()
   end

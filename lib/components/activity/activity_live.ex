@@ -52,6 +52,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
   prop(thread_boost_count, :any, default: nil)
   prop(participant_count, :any, default: nil)
   prop(last_reply_id, :any, default: nil)
+  prop(published_in, :any, default: nil)
 
   prop(hide_actions_until_hovered, :boolean, default: false)
 
@@ -265,7 +266,8 @@ defmodule Bonfire.UI.Social.ActivityLive do
     parent_id
   end
 
-  def maybe_published_in(_, _) do
+  def maybe_published_in(none, _) do
+    # debug(none, "none")
     nil
   end
 

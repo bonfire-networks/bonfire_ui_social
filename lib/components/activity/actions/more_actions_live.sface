@@ -97,11 +97,13 @@
       />
     </li>
 
-    <li :if={current_user_id(@__context__) != @subject_id}>
+    <li :if={current_user_id(@__context__) != @subject_id and
+      Types.object_type(@subject) == Bonfire.Data.Identity.User}>
       <Dynamic.Component
         :if={module_enabled?(Bonfire.Boundaries.Web.AddToCircleLive) and @current_user}
         module={Bonfire.Boundaries.Web.AddToCircleLive}
         user_id={@subject_id}
+        name={e(@subject, :profile, :name, nil)}
         parent_id={id(@activity_component_id || @activity)}
       />
     </li>

@@ -8,6 +8,8 @@
     with_label
     id={"boundary_#{id(@thread_id)}"}
     object={@activity}
+          object_type={Types.object_type(@object)}
+
   /> -->
 
   <div class="relative z-40 dropdown dropdown-end">

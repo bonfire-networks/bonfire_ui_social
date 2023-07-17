@@ -213,7 +213,8 @@ defmodule Bonfire.Social.Threads.LiveHandler do
                    e(published_in, :name, nil)},
               else:
                 Bonfire.Boundaries.preset_boundary_tuple_from_acl(
-                  e(socket.assigns, :object_boundary, nil)
+                  e(socket.assigns, :object_boundary, nil),
+                  e(socket.assigns, :object_type, nil)
                 )
             )
           ],

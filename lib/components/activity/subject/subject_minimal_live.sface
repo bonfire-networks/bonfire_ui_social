@@ -209,6 +209,7 @@
                       @object_type not in [Bonfire.Data.Social.Message]}
                     module={Bonfire.Boundaries.Web.BoundaryIconStatelessLive}
                     object_id={id(@object)}
+                    object_type={Types.object_type(@published_in) || @object_type}
                     parent_id={"boundary_#{id(@activity || @object)}"}
                     with_icon
                     object_boundary={@object_boundary}
