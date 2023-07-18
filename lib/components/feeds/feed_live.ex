@@ -22,8 +22,8 @@ defmodule Bonfire.UI.Social.FeedLive do
   prop hide_load_more, :boolean, default: false
   prop verb_default, :string, default: nil
 
-  prop page, :string, default: nil
-  prop page_title, :string, required: true
+  # prop page, :string, default: nil
+  # prop page_title, :string, required: true
   prop feed_title, :string, default: nil
 
   @doc "What LiveHandler and/or event name to send the patch event to for tabs navigation (if any)"

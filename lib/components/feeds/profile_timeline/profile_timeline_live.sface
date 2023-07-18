@@ -10,8 +10,13 @@
       tab_class="flex flex-1 pt-4 text-base capitalize hover:bg-base-content hover:bg-opacity-10 place-content-center lined_tab"
       item_class="text-base-content/70 text-sm pb-3 border-b-2 border-transparent font-semibold"
       selected_tab={@selected_tab}
-      path_prefix={"/@#{e(@user, :character, :username, "")}/"}
-      tabs={if @character_type == :user,
+      path_prefix={
+        if @character_type == :user, 
+        do: "/@#{e(@user, :character, :username, "")}/",
+        else: "/&#{e(@user, :character, :username, "")}/"
+      }
+      tabs={
+        if @character_type == :user,
         do: Config.get([:ui, :profile, :navigation], timeline: l("Timeline")),
         else: Config.get([:ui, :group, :profile, :navigation], timeline: l("Timeline"))}
     />
