@@ -11,7 +11,10 @@
       item_class="text-base-content/70 text-sm pb-3 border-b-2 border-transparent font-semibold"
       selected_tab={@selected_tab}
       path_prefix={"/@#{e(@user, :character, :username, "")}/"}
-      tabs={Config.get([:ui, :profile, :navigation], timeline: l("Timeline"))}
+      tabs={
+        if @character_type == :user,
+        do: Config.get([:ui, :profile, :navigation], timeline: l("Timeline")),
+        else: Config.get([:ui, :group, :profile, :navigation], timeline: l("Timeline"))}
     />
     <Bonfire.UI.Social.FeedLive
       id="feed_profile_timeline"
