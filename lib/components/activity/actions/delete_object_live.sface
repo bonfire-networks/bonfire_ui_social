@@ -40,7 +40,7 @@ TODO: use preloaded boundaries for can? when available
 
   <:action_btns>
     <button
-      phx-click={@action || if @form_opts == [], do: "Bonfire.Social.Objects:delete"}
+      phx-click={@action || if @form_opts == %{}, do: "Bonfire.Social.Objects:delete"}
       phx-value-id={id(@object)}
       phx-value-redirect_after={@redirect_after}
       class="normal-case rounded btn btn-error btn-sm"

@@ -2,7 +2,7 @@
   id={Text.random_string()}
   title_text={l("Version history")}
   modal_class="modal_wide"
-  form_opts={"phx-submit": "Bonfire.Social.Posts:edit", "phx-target": "##{@activity_component_id}"}
+  form_opts={%{"phx-submit" => "Bonfire.Social.Posts:edit", "phx-target": "##{@activity_component_id}"}}
   :let={autocomplete: autocomplete}
 >
   <input type="hidden" name="id" value={id(@object)}>

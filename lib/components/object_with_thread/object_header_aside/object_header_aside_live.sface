@@ -29,7 +29,7 @@
           id="object_header_thread_title"
           title_text={l("Edit the thread title")}
           no_actions
-          form_opts={"phx-submit": "Bonfire.Social.Objects:set_name"}
+          {%{"phx-submit" => "Bonfire.Social.Objects:set_name"}}
         >
           <Field for={:thread} class="my-4">
             <TextInput
