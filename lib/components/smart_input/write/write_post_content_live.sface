@@ -1,4 +1,4 @@
-<div class="flex flex-col h-full overflow-hidden write_post_content">
+<div class="flex flex-col h-full  write_post_content">
   <Form
     for={Bonfire.Social.Posts.LiveHandler.post_changeset(@current_user)}
     submit={JS.push(handler(@create_object_type)) |> Bonfire.UI.Common.SmartInput.LiveHandler.minimize()}
