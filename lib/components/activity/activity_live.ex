@@ -355,12 +355,13 @@ defmodule Bonfire.UI.Social.ActivityLive do
       tabIndex="0"
       class={
         "p-4 pb-2 activity relative flex flex-col #{@class}",
-        "!p-0 !pb-4": e(@show_minimal_subject_and_note, false),
+        "!p-0 !pb-4 hover:!bg-transparent": e(@show_minimal_subject_and_note, false),
         "main_reply_to !mb-1 items-center !flex-row order-first !p-0 !pb-2":
           @object_id != nil and e(@activity, :replied, :reply_to_id, nil) == nil and
             @activity_id == nil and @showing_within != :widget and
             @showing_within != :search,
         "": @showing_within != :thread and @thread_mode != :flat,
+        "hover:bg-base-content/5 cursor-pointer": @showing_within == :notifications,
         reply:
           @object_id != nil and e(@activity, :replied, :reply_to_id, nil) != nil and
             @activity_id != nil,

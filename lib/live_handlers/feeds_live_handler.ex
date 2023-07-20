@@ -409,6 +409,7 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
     do: [
       tab_path_suffix: "/#{filter}",
       page_title: l("Posts"),
+      page: "posts",
       page_header_icon: "ri:chat-2-line"
     ]
 
@@ -1084,6 +1085,7 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
      [
        loading: false,
        selected_tab: tab,
+       page: "posts",
        page_info: e(feed, :page_info, [])
      ]}
   end

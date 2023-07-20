@@ -3,6 +3,8 @@ defmodule Bonfire.UI.Social.NotificationsFeedLive do
 
   declare_nav_link(l("Notifications"),
     icon: "ri:notification-2-line",
+    icon_active: "ri:notification-2",
+    page: "notifications",
     badge: [
       id: :notifications,
       feed_key: :notifications_id
