@@ -5,6 +5,7 @@ defmodule Bonfire.UI.Social.Activity.GroupLive do
   prop activity, :any, default: nil
   prop object_boundary, :any, default: nil
   prop permalink, :string, default: nil
+  prop showing_within, :atom, default: nil
 
   def preloads(),
     do: [

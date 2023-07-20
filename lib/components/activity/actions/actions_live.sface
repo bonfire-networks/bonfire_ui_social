@@ -2,6 +2,9 @@
     id(@activity) == nil}
   <div />
 {#else} -->
+{#if @showing_within == :notifications  && id(e(@activity, :object, :subject, nil)) == current_user_id(@__context__)}
+<div />
+{#else}
 <div
   x-show={if @showing_within == :thread and !@viewing_main_object, do: "show_replies"}
   x-transition
@@ -67,4 +70,4 @@
     />
   </div>
 </div>
-<!-- {/if} -->
+{/if}

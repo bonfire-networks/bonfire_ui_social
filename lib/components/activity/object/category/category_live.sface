@@ -4,6 +4,7 @@
       object={@object}
       object_boundary={@object_boundary}
       permalink={@permalink}
+      showing_within={@showing_within}
     />
   {#match _}
     <div class="flex w-full mt-2 border rounded-lg media_container  border-base-content/20">

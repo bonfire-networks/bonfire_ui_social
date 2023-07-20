@@ -1,4 +1,7 @@
-<LiveRedirect to={@permalink} class="hover:bg-base-content/5 p-3 flex items-center gap-4">
+<LiveRedirect to={@permalink} class={
+  "hover:bg-base-content/5 p-3 flex items-center gap-4",
+  "mt-4 rounded-lg border border-base-content/20": @showing_within == :feed
+  }>
   <div
     class="h-[96px] w-[96px] shrink-0 rounded-lg bg-center bg-cover bg-no-repeat bg-base-200"
     style={"background-image: url('#{Media.banner_url(@object)}')"}

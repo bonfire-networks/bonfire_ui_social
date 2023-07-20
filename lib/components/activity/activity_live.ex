@@ -455,6 +455,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
                 __context__={@__context__}
                 showing_within={@showing_within}
                 thread_mode={@thread_mode}
+                profile={e(component_assigns, :profile, nil)}
                 activity={e(component_assigns, :activity, @activity)}
                 object={e(component_assigns, :object, @object)}
                 object_boundary={@object_boundary}
@@ -1039,15 +1040,15 @@ defmodule Bonfire.UI.Social.ActivityLive do
     do: [Bonfire.UI.Social.Activity.NoteLive]
 
   def component_for_object_type(type, _) when type in [Bonfire.Data.Identity.User],
-    do: [Bonfire.UI.Social.Activity.CharacterLive]
-
+    # do: [Bonfire.UI.Social.Activity.CharacterLive]
+    do: []
   # do: [{Bonfire.UI.Social.Activity.CharacterLive, %{
   #     object: repo().maybe_preload(object, [:character, profile: :icon])
   #   }}]
 
   def component_for_object_type(type, _) when type in [Bonfire.Data.Social.Follow],
-    do: [Bonfire.UI.Social.Activity.CharacterLive]
-
+    # do: [Bonfire.UI.Social.Activity.CharacterLive]
+    do: []
   def component_for_object_type(type, _) when type in [:group],
     do: [Bonfire.UI.Social.Activity.GroupLive]
 
