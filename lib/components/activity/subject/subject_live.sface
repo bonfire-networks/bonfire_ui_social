@@ -249,7 +249,6 @@
           }>
             <!-- {@verb} {@object_type} -->
             <LiveRedirect
-              :if={!Settings.get([Bonfire.UI.Common.AvatarLive, :hide_avatars], false, @__context__)}
               opts={"data-id": "subject_name", "aria-label": l("%{name}'s profile", name: e(@profile, :name, ""))}
               class={
                 "link link-hover text-[15px] font-semibold",
