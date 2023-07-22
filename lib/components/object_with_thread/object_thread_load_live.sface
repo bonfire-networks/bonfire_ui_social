@@ -6,4 +6,5 @@
   thread_mode={@thread_mode}
   current_url={@current_url}
   replies={@replies}
+  participants={@participants}
 />

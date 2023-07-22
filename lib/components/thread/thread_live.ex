@@ -26,13 +26,20 @@ defmodule Bonfire.UI.Social.ThreadLive do
   prop exclude_circles, :list, default: []
   prop current_url, :string, default: nil
   # prop smart_input_opts, :map, default: %{}
+  prop participants, :any, default: nil
+
   prop thread_mode, :any, default: nil
   prop sort_by, :any, default: nil
-  prop sort_order, :boolean, default: false
+  prop sort_order, :any, default: false
   prop showing_within, :atom, default: :thread
   # prop loading, :boolean, default: false
   prop order_by, :any, default: :id
   prop thread_loading, :boolean, default: nil
+
+  prop(reply_count, :any, default: nil)
+  prop(thread_boost_count, :any, default: nil)
+  prop(participant_count, :any, default: nil)
+  prop(last_reply_id, :any, default: nil)
 
   def mount(socket) do
     {

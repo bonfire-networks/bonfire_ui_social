@@ -5,7 +5,7 @@
         page={@page}
         page_title={@page_title}
         feed_id={@feed_id}
-        participants={e(@participants, [])}
+        participants={@participants}
         object_id={@thread_id}
         thread_id={@thread_id}
         activity={@activity}

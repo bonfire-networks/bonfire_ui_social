@@ -277,6 +277,7 @@ defmodule Bonfire.Social.Threads.LiveHandler do
 
         object = e(socket.assigns, :object, nil)
         thread_id = e(socket.assigns, :thread_id, nil) || id(object)
+        component_id = e(socket.assigns, :id, nil) || thread_id
 
         async_task(fn ->
           # compute & send stats
@@ -284,10 +285,11 @@ defmodule Bonfire.Social.Threads.LiveHandler do
           limit = 4
 
           participants =
-            Threads.list_participants(e(socket.assigns, :activity, nil) || object, thread_id,
-              limit: limit,
-              current_user: current_user
-            )
+            e(socket.assigns, :participants, nil) ||
+              Threads.list_participants(e(socket.assigns, :activity, nil) || object, thread_id,
+                limit: limit,
+                current_user: current_user
+              )
 
           participant_count = Enum.count(participants)
 
@@ -296,12 +298,10 @@ defmodule Bonfire.Social.Threads.LiveHandler do
               do: Threads.count_participants(thread_id, current_user: current_user),
               else: participant_count
 
-          maybe_send_update(
+          send_thread_updates(
             pid,
-            Bonfire.UI.Social.ActivityLive,
-            e(socket.assigns, :main_object_component_id, nil),
+            component_id,
             %{
-              update_activity: true,
               participants: participants,
               participant_count: participant_count,
               thread_boost_count:
@@ -314,27 +314,20 @@ defmodule Bonfire.Social.Threads.LiveHandler do
           # Query comments asynchronously
           {replies, assigns} = load_thread_assigns(socket)
 
+          # TODO: use first or last depending on sort order
+          last_reply = List.first(replies)
+
           # send comments 
           send_thread_updates(
             pid,
-            e(socket.assigns, :id, nil) || thread_id,
-            {replies, assigns ++ [loaded_async: true, reset_stream: reset_stream]}
-          )
-
-          # TODO: use first or last depending on order
-          last_reply = List.first(replies)
-
-          # send stats that depend on the comment list
-          maybe_send_update(
-            pid,
-            Bonfire.UI.Social.ActivityLive,
-            e(socket.assigns, :main_object_component_id, nil),
-            %{
-              update_activity: true,
-              last_reply_id: id(last_reply) || false
-              # last_reply_path: path(last_reply),
-              # reply_count: assigns[:reply_count]
-            }
+            component_id,
+            {replies,
+             assigns ++
+               [
+                 loaded_async: true,
+                 reset_stream: reset_stream,
+                 last_reply_id: id(last_reply) || false
+               ]}
           )
         end)
       else

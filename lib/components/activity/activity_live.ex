@@ -49,9 +49,6 @@ defmodule Bonfire.UI.Social.ActivityLive do
   prop(created_verb_display, :string, default: @created_verb_display)
   prop(object_type_readable, :string, default: nil)
   prop(reply_count, :any, default: nil)
-  prop(thread_boost_count, :any, default: nil)
-  prop(participant_count, :any, default: nil)
-  prop(last_reply_id, :any, default: nil)
   prop(published_in, :any, default: nil)
 
   prop(hide_actions_until_hovered, :boolean, default: false)
@@ -308,10 +305,6 @@ defmodule Bonfire.UI.Social.ActivityLive do
          e(activity, :files, nil) || e(object, :files, nil) || e(activity, :media, nil) ||
            e(object, :media, nil)
        ) ++
-       component_stats(
-         showing_within,
-         viewing_main_object
-       ) ++
        component_actions(
          verb,
          activity,
@@ -469,17 +462,6 @@ defmodule Bonfire.UI.Social.ActivityLive do
                 viewing_main_object={e(component_assigns, :viewing_main_object, @viewing_main_object)}
                 activity_component_id={e(component_assigns, :activity_component_id, @activity_component_id)}
                 reply_count={@reply_count}
-              />
-            {#match Bonfire.UI.Social.Activity.ThreadStatsLive}
-              <Bonfire.UI.Social.Activity.ThreadStatsLive
-                :if={@current_user}
-                __context__={@__context__}
-                activity_component_id={@activity_component_id}
-                reply_count={@reply_count}
-                participant_count={@participant_count}
-                participants={@participants}
-                last_reply_id={@last_reply_id}
-                thread_boost_count={@thread_boost_count}
               />
             {#match _}
               <Dynamic.Component
@@ -1043,6 +1025,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
   def component_for_object_type(type, _) when type in [Bonfire.Data.Identity.User],
     # do: [Bonfire.UI.Social.Activity.CharacterLive]
     do: []
+
   # do: [{Bonfire.UI.Social.Activity.CharacterLive, %{
   #     object: repo().maybe_preload(object, [:character, profile: :icon])
   #   }}]
@@ -1050,6 +1033,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
   def component_for_object_type(type, _) when type in [Bonfire.Data.Social.Follow],
     # do: [Bonfire.UI.Social.Activity.CharacterLive]
     do: []
+
   def component_for_object_type(type, _) when type in [:group],
     do: [Bonfire.UI.Social.Activity.GroupLive]
 
@@ -1094,23 +1078,6 @@ defmodule Bonfire.UI.Social.ActivityLive do
     debug(other, "no files")
     []
   end
-
-  defp component_stats(
-         showing_within,
-         viewing_main_object
-       )
-
-  defp component_stats(
-         :thread,
-         true
-       ),
-       do: [Bonfire.UI.Social.Activity.ThreadStatsLive]
-
-  defp component_stats(
-         _,
-         _
-       ),
-       do: []
 
   # @decorate time()
   def component_actions(

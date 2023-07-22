@@ -11,6 +11,6 @@ defmodule Bonfire.UI.Social.Activity.MainObjectInfoLive do
   prop hide_reply, :boolean
   prop viewing_main_object, :boolean
   prop flagged, :any
-  prop participants, :list
+  prop participants, :any, default: nil
   prop object_boundary, :any, default: nil
 end

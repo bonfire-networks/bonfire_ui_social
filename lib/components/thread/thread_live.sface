@@ -1,118 +1,23 @@
 <div data-role="thread" id={"thread_#{@id}"} x-data="{show_replies: true}">
-  <div :if={current_user(@__context__)} class="p-3 border-b border-base-content/20">
-    <div class="flex items-center justify-between">
-      <span class="text-sm font-medium text-base-content/70">{l "Discussion"}</span>
-     
-      <div class="flex items-center gap-3">
-        <div class="dropdown dropdown-end">
-          <label
-            tabindex="0"
-            class="rounded-full btn btn-ghost btn-sm btn-circle normal-case"
-          >
-            <#Icon iconify="tabler:layout-rows" class="w-5 h-5 text-base-content/70" />
-            <!-- {l("Layout:")}
-            {#if @thread_mode == :flat}
-              {l("Linear")}
-            {#else}
-              {l("Nested replies")}
-            {/if} -->
-
-            <!-- {#if @__context__[:ui_compact]}
-              {l("Compact")}
-            {#else}
-              {l("Cozy")}
-            {/if} -->
-          </label>
-          <ul
-            tabindex="0"
-            class="dropdown-content mt-1 z-[999] menu gap-1 p-1 shadow bg-base-100 rounded-box w-52"
-          >
-              <li phx-click="set" phx-value-to_atoms="true" phx-value-thread_mode="nested" phx-target={@myself}>
-                <a class={"text-base-content/70", "active !text-base-content/100 font-semibold": @thread_mode != :flat }>{l("Nested replies")}</a>
-              </li>
-            
-              <li phx-click="set" phx-value-to_atoms="true" phx-value-thread_mode="flat" phx-target={@myself}>
-                <a class={"text-base-content/70", "active !text-base-content/100 font-semibold": @thread_mode == :flat }>{l("Linear")}</a>
-              </li>
-            
-            <!-- {#if @__context__[:ui_compact]}
-              <li
-                phx-click="set"
-                phx-value-to_atoms="true"
-                phx-value-ui_compact="false"
-                phx-value-assign_global="true"
-                phx-target={@myself}
-              ><a>{l("Cozy")}</a></li>
-            {#else}
-              <li
-                phx-click="set"
-                phx-value-to_atoms="true"
-                phx-value-ui_compact="true"
-                phx-value-assign_global="true"
-                phx-target={@myself}
-              ><a>{l("Compact")}</a></li>
-            {/if} -->
-          </ul>
-        </div>
-        <div class="flex items-center gap-3">
-            <!-- <div class="dropdown dropdown-end">
-            :if={@thread_mode==:flat} 
-              <label
-                tabindex="0"
-                class="!border !border-base-content/30 font-medium rounded-full btn-xs btn btn-outline normal-case"
-              >
-                <#Icon iconify="material-symbols:sort" class="w-4 h-4" />
-                {l("Sort: Chronological")}</label>
-              <ul
-                tabindex="0"
-                class="dropdown-content mt-1 z-[999] menu p-1 shadow bg-base-100 rounded-box w-52"
-              >
-                <li><a>{l("Chronological")}</a></li>
-                <li :if={@thread_mode !=:flat}><a>{l("By latest reply")}</a></li> 
-                <li><a>{l("By replies")}</a></li>
-                <li><a>{l("By boosts")}</a></li>
-                <li><a>{l("By likes")}</a></li>
-              </ul>
-            </div> -->
-
-          <div class="dropdown dropdown-end">
-            <label
-              tabindex="0"
-              class="rounded-full btn-sm btn btn-ghost btn-circle normal-case"
-            >
-              <#Icon iconify="ri:list-ordered-2" class="w-5 h-5 text-base-content/70" />
-              <!-- {l("Order:")}
-
-              {#if @sort_order == :asc}
-                {l("Oldest first")}
-              {#else}
-                {l("Newest first")}
-              {/if} -->
-            </label>
-            <ul
-              tabindex="0"
-              class="dropdown-content mt-1 z-[999] menu p-1 gap-1 shadow bg-base-100 rounded-box w-52"
-            >
-              <li
-                phx-click="set"
-                phx-value-to_atoms="true"
-                phx-value-sort_order="desc"
-                phx-value-assign_global="true"
-                phx-target={@myself}
-              ><a class={"text-base-content/70", "active !text-base-content/100 font-semibold": @sort_order != :asc}>{l("Newest first")}</a></li>
-              <li
-                phx-click="set"
-                phx-value-to_atoms="true"
-                phx-value-sort_order="asc"
-                phx-value-assign_global="true"
-                phx-target={@myself}
-              ><a class={"text-base-content/70", "active !text-base-content/100 font-semibold": @sort_order == :asc}>{l("Oldest first")}</a></li>
-            </ul>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
+  <Bonfire.UI.Social.Activity.ThreadStatsLive
+    :if={id(@current_user)}
+    event_target={@myself}
+    reply_count={@reply_count}
+    participant_count={@participant_count}
+    participants={@participants}
+    last_reply_id={@last_reply_id}
+    thread_boost_count={@thread_boost_count}
+  >
+    <Bonfire.UI.Social.ThreadControlsLive
+      event_target={@myself}
+      thread_object={@object}
+      thread_mode={@thread_mode}
+      sort_by={@sort_by}
+      sort_order={@sort_order}
+      order_by={@order_by}
+      showing_within={@showing_within || :thread}
+    />
+  </Bonfire.UI.Social.Activity.ThreadStatsLive>
 
   {#if @thread_loading != nil || @replies != []}
     <div class="flex flex-col flex-1">

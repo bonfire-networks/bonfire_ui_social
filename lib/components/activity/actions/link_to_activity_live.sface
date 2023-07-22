@@ -18,6 +18,7 @@
         object_id: @thread_id || id(@object),
         current_url: @permalink,
         show: {false},
+        label: "",
         object: if(@thread_id == id(@object), do: @object),
         activity: if(@thread_id == id(@object), do: @activity),
         replies:

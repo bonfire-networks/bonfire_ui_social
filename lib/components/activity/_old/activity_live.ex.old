@@ -13,7 +13,7 @@ defmodule Bonfire.UI.Social.ActivityOLDLive do
   prop hide_reply, :boolean, default: false
   prop class, :css_class, required: false, default: ""
   prop thread_object, :any
-  prop participants, :list
+  prop participants, :any, default: nil
   prop object_boundary, :any, default: nil
   prop check_object_boundary, :boolean, default: false
 

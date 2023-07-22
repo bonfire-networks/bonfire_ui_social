@@ -2,72 +2,73 @@
     id(@activity) == nil}
   <div />
 {#else} -->
-{#if @showing_within == :notifications  && id(e(@activity, :object, :subject, nil)) == current_user_id(@__context__)}
-<div />
+{#if @showing_within == :notifications &&
+    id(e(@activity, :object, :subject, nil)) == current_user_id(@__context__)}
+  <div />
 {#else}
-<div
-  x-show={if @showing_within == :thread and !@viewing_main_object, do: "show_replies"}
-  x-transition
-  class={
-    "h-[32px]",
-    "thread_actions flex items-center": @showing_within == :thread,
-    "feed_actions items-center flex": @viewing_main_object != true,
-    "mt-3 gap-4 flex-col md:flex-row":
-      e(@showing_within, :feed) == :feed || @showing_within == :notifications,
-    "mt-1": @showing_within == :widget
-  }
->
-  <!-- :class={if @viewing_main_object != true, do: "activity_active ? '' : '[@media(any-hover:hover)]:hidden'"} -->
   <div
-    to={@permalink}
-    :if={@showing_within in [nil, :feed] &&
-      @thread_title && e(@activity, :replied, :reply_to_id, nil) != nil}
-    class="preview_activity_link flex w-full md:w-auto items-center line-clamp-1 text-base-content/70 font-medium text-[13px] gap-1 bg-base-100 px-2 py-1 rounded"
-  >
-    <!-- <#Icon iconify="subway:title" class="w-4 h-4 text-info" /> -->
-    <span class="font-normal">{l("In")}</span>
-    <span class="link break-all link-hover text-base-content/90">{@thread_title}</span>
-  </div>
-
-  <div
+    x-show={if @showing_within == :thread and !@viewing_main_object, do: "show_replies"}
+    x-transition
     class={
-      "feed-clickable flex-1 w-full md:w-auto items-center justify-between md:justify-end gap-6",
-      "!justify-end mt-1": @showing_within == :thread && @viewing_main_object != true,
-      "-mx-4 border-t !justify-between border-base-content/20 !p-3 !pb-0":
-        @viewing_main_object == true
+      "h-[32px]",
+      "thread_actions flex items-center": @showing_within == :thread,
+      "feed_actions items-center flex": @viewing_main_object != true,
+      "mt-3 gap-4 flex-col md:flex-row":
+        e(@showing_within, :feed) == :feed || @showing_within == :notifications,
+      "mt-1": @showing_within == :widget
     }
-    x-cloak
-    :class="show_actions ? 'flex' : ''"
-    x-bind:hidden="show_actions ? false : 'until-found'"
   >
-    <Bonfire.UI.Social.Activity.ReactionsLive
-      object={@object}
-      activity={@activity}
-      object_type={@object_type}
-      object_boundary={@object_boundary}
-      permalink={@permalink}
-      thread_mode={@thread_mode}
-      showing_within={@showing_within}
-      object_type_readable={@object_type_readable}
-      hide_reply={@hide_reply}
-      viewing_main_object={@viewing_main_object}
-      activity_component_id={@activity_component_id}
-      reply_count={@reply_count}
-    />
+    <!-- :class={if @viewing_main_object != true, do: "activity_active ? '' : '[@media(any-hover:hover)]:hidden'"} -->
+    <div
+      to={@permalink}
+      :if={@showing_within in [nil, :feed] &&
+        @thread_title && e(@activity, :replied, :reply_to_id, nil) != nil}
+      class="preview_activity_link flex w-full md:w-auto items-center line-clamp-1 text-base-content/70 font-medium text-[13px] gap-1 bg-base-100 px-2 py-1 rounded"
+    >
+      <!-- <#Icon iconify="subway:title" class="w-4 h-4 text-info" /> -->
+      <span class="font-normal">{l("In")}</span>
+      <span class="link break-all link-hover text-base-content/90">{@thread_title}</span>
+    </div>
 
-    <Bonfire.UI.Social.Activity.MoreActionsLive
-      object={@object}
-      activity={@activity}
-      object_type={@object_type}
-      object_boundary={@object_boundary}
-      object_type_readable={@object_type_readable}
-      verb={@verb}
-      thread_id={@thread_id}
-      thread_mode={@thread_mode}
-      showing_within={@showing_within}
-      viewing_main_object={@viewing_main_object}
-      activity_component_id={@activity_component_id}
-    />
+    <div
+      class={
+        "feed-clickable flex-1 w-full md:w-auto items-center justify-between md:justify-end gap-6",
+        "!justify-end mt-1": @showing_within == :thread && @viewing_main_object != true,
+        "-mx-4 border-t !justify-between border-base-content/20 !p-3 !pb-0":
+          @viewing_main_object == true
+      }
+      x-cloak
+      :class="show_actions ? 'flex' : ''"
+      x-bind:hidden="show_actions ? false : 'until-found'"
+    >
+      <Bonfire.UI.Social.Activity.ReactionsLive
+        object={@object}
+        activity={@activity}
+        object_type={@object_type}
+        object_boundary={@object_boundary}
+        permalink={@permalink}
+        thread_mode={@thread_mode}
+        showing_within={@showing_within}
+        object_type_readable={@object_type_readable}
+        hide_reply={@hide_reply}
+        viewing_main_object={@viewing_main_object}
+        activity_component_id={@activity_component_id}
+        reply_count={@reply_count}
+      />
+
+      <Bonfire.UI.Social.Activity.MoreActionsLive
+        object={@object}
+        activity={@activity}
+        object_type={@object_type}
+        object_boundary={@object_boundary}
+        object_type_readable={@object_type_readable}
+        verb={@verb}
+        thread_id={@thread_id}
+        thread_mode={@thread_mode}
+        showing_within={@showing_within}
+        viewing_main_object={@viewing_main_object}
+        activity_component_id={@activity_component_id}
+      />
+    </div>
   </div>
-</div>
 {/if}

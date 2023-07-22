@@ -74,7 +74,6 @@
     {#match :notifications}
       <div class="flex items-center w-full">
         {#if @verb == "Like"}
-
           <div data-role="liked_by" class="flex items-start gap-5 justify-start">
             <!-- LIKE -->
             <Iconify.Bonfire.LikeFire.render class="w-7 h-7 text-yellow-500" />
@@ -82,7 +81,7 @@
               <Bonfire.UI.Common.AvatarLive
                 user={e(@activity, :subject, :profile, nil)}
                 title={e(@activity, :subject, :profile, :name, "Anonymous")}
-                class={"h-9 w-9 rounded-full bg-base-content/20"}
+                class="h-9 w-9 rounded-full bg-base-content/20"
               />
               <div class="font-medium text-sm text-base-content/90">
                 <LiveRedirect
@@ -97,12 +96,10 @@
                   {/if}
                 </LiveRedirect>
 
-                {raw(@verb_display)} {l " your activity"}
+                {raw(@verb_display)} {l(" your activity")}
               </div>
             </div>
           </div>
-
-
 
           <!-- <div data-role="liked_by" class="flex items-center justify-start pb-2 mb-2">
             <Iconify.Bonfire.LikeFire.render class="w-5 h-5 text-yellow-500" />
@@ -128,19 +125,20 @@
           <LiveRedirect
             aria-label={e(@activity, :subject, :character, :username, "") <> " profile"}
             to={path(e(@activity, :subject, :character, nil))}
-            class="flex items-start gap-5 justify-start pb-2 mb-2">
+            class="flex items-start gap-5 justify-start pb-2 mb-2"
+          >
             <!-- FOLLOW -->
             <#Icon solid="UserAdd" class="flex-shrink-0 w-7 h-7 text-info" />
             <div class="flex-1 flex flex-col gap-2">
               <Bonfire.UI.Common.AvatarLive
-                  user={e(@activity, :subject, :profile, nil)}
-                  title={e(@activity, :subject, :profile, :name, "Anonymous")}
-                  class={"h-9 w-9 rounded-full bg-base-content/20"}
-                />
+                user={e(@activity, :subject, :profile, nil)}
+                title={e(@activity, :subject, :profile, :name, "Anonymous")}
+                class="h-9 w-9 rounded-full bg-base-content/20"
+              />
               <div class="font-medium text-sm text-base-content/90">
                 {e(@activity, :subject, :profile, :name, nil) || e(@activity, :subject, :character, :username, nil)}
 
-                {raw(@verb_display)} 
+                {raw(@verb_display)}
 
                 <!-- special case when current_user is the one being followed -->
                 <span :if={id(@object) == current_user_id(@__context__)}>
@@ -162,7 +160,7 @@
               <Bonfire.UI.Common.AvatarLive
                 user={e(@activity, :subject, :profile, nil)}
                 title={e(@activity, :subject, :profile, :name, "Anonymous")}
-                class={"h-9 w-9 rounded-full bg-base-content/20"}
+                class="h-9 w-9 rounded-full bg-base-content/20"
               />
               <div class="font-medium text-sm text-base-content/90">
                 <LiveRedirect
@@ -177,7 +175,7 @@
                   {/if}
                 </LiveRedirect>
 
-                {raw(@verb_display)} {l " your activity"}
+                {raw(@verb_display)} {l(" your activity")}
               </div>
             </div>
           </div>
