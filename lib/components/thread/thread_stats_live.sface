@@ -1,6 +1,6 @@
 <div class="flex items-center px-2 gap-2 w-full">
   <form phx-change="Bonfire.Social.Threads:list_participants" phx-target={@event_target}>
-    <div class="collapse mb-1 collapse-arrow rounded-none w-auto border-t border-base-content/20">
+    <div class="collapse mb-1 collapse-arrow rounded-none w-auto ">
       <input type="checkbox" phx-update="ignore">
       <div class="collapse-title p-3  flex items-center flex-1 gap-6 px-0">
         <div class="flex items-center gap-1">
