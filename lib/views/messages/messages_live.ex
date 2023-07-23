@@ -7,7 +7,7 @@ defmodule Bonfire.UI.Social.MessagesLive do
 
   declare_nav_link(l("Direct Messages"),
     icon: "ri:mail-line",
-    icon_active: "ri:mail",
+    icon_active: "ri:mail-fill",
     page: "messages",
     badge: [
       id: :inbox,
