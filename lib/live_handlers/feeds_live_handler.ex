@@ -799,11 +799,11 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
     feed_assigns(feed_id, socket)
   end
 
-  # defp feed_assigns({"user_timeline_" <> user_or_other_id, other}, socket) do
-  #   warn(other, "load user/other timeline: #{user_or_other_id}")
-  #   load_user_feed_assigns("timeline", user_or_other_id, other, socket)
-  #   |> debug()
-  # end
+  defp feed_assigns({"user_timeline_" <> user_or_other_id, other}, socket) do
+    debug(other, "load user/other timeline: #{user_or_other_id}")
+    load_user_feed_assigns("timeline", user_or_other_id, other, socket)
+    # |> debug()
+  end
 
   defp feed_assigns({feed_id, other}, socket) do
     warn(feed_id, "unrecognised feed_id")
@@ -1111,39 +1111,14 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
      ]}
   end
 
-  def load_user_feed_assigns(tab, feed_id, attrs, socket)
-      when is_binary(tab) and is_binary(feed_id) do
-    params = input_to_atoms(attrs)
-    # for custom feeds
-    feed_id =
-      ulid!(feed_id)
-      |> debug("feed_id")
-
-    feed =
-      if module_enabled?(Bonfire.Social.FeedActivities, socket),
-        do:
-          Bonfire.Social.FeedActivities.feed(feed_id,
-            pagination: params,
-            exclude_feed_ids: e(params, :exclude_feed_ids, []),
-            current_user: current_user(socket)
-          )
-          |> debug("feed")
-
-    {e(feed, :edges, []),
-     [
-       loading: false,
-       selected_tab: tab,
-       feed_id: feed_id,
-       page_info: e(feed, :page_info, [])
-     ]}
-  end
-
   def load_user_feed_assigns("timeline" = tab, user, params, socket) do
     user = user || e(socket, :assigns, :user, nil)
 
     feed_id =
       if user && module_enabled?(Bonfire.Social.Feeds, user),
-        do: Bonfire.Social.Feeds.feed_id(:outbox, user)
+        do:
+          Bonfire.Social.Feeds.feed_id(:outbox, user)
+          |> debug("outbox for #{id(user)}")
 
     feed =
       if feed_id && module_enabled?(Bonfire.Social.FeedActivities, user),
@@ -1236,6 +1211,33 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
       feed: requests
       # page_info: e(requested, :page_info, [])
     ]
+  end
+
+  def load_user_feed_assigns(tab, feed_id, attrs, socket)
+      when is_binary(tab) and is_binary(feed_id) do
+    params = input_to_atoms(attrs)
+    # for custom feeds
+    feed_id =
+      ulid!(feed_id)
+      |> debug("feed_id")
+
+    feed =
+      if module_enabled?(Bonfire.Social.FeedActivities, socket),
+        do:
+          Bonfire.Social.FeedActivities.feed(feed_id,
+            pagination: params,
+            exclude_feed_ids: e(params, :exclude_feed_ids, []),
+            current_user: current_user(socket)
+          )
+          |> debug("feed")
+
+    {e(feed, :edges, []),
+     [
+       loading: false,
+       selected_tab: tab,
+       feed_id: feed_id,
+       page_info: e(feed, :page_info, [])
+     ]}
   end
 
   defp list_requested(current_user, pagination) do

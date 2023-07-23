@@ -14,8 +14,8 @@
         do: "/@#{e(@user, :character, :username, "")}/",
         else: "/&#{e(@user, :character, :username, "")}/"}
       tabs={if @character_type == :user,
-        do: Config.get([:ui, :profile, :navigation], timeline: l("Timeline")),
-        else: Config.get([:ui, :group, :profile, :navigation], timeline: l("Timeline"))}
+        do: Config.get([:ui, :profile, :navigation], nil: l("Timeline")),
+        else: Config.get([:ui, :group, :profile, :navigation], nil: l("Timeline"))}
     />
     <Bonfire.UI.Social.FeedLive
       id="feed_profile_timeline"

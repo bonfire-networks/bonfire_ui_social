@@ -31,7 +31,7 @@ defmodule Bonfire.UI.Social.RuntimeConfig do
       profile: [
         # TODO: make dynamic based on active extensions
         sections: [
-          timeline: Bonfire.UI.Social.ProfileTimelineLive,
+          nil: Bonfire.UI.Social.ProfileTimelineLive,
           # private: Bonfire.UI.Social.MessageThreadsLive,
           posts: Bonfire.UI.Social.ProfilePostsLive,
           boosts: Bonfire.UI.Social.ProfileBoostsLive,
@@ -41,7 +41,7 @@ defmodule Bonfire.UI.Social.RuntimeConfig do
           requests: Bonfire.UI.Social.ProfileFollowsLive
         ],
         navigation: [
-          timeline: l("Timeline"),
+          nil: l("Timeline"),
           posts: l("Posts"),
           boosts: l("Boosts")
         ],
