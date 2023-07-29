@@ -3,7 +3,11 @@
 </div>
 
 <div class="flex items-center gap-2 border-b border-base-content/20 w-full">
-  <form class="w-full" phx-change="Bonfire.Social.Threads:list_participants" phx-target={@event_target}>
+  <form
+    class="w-full"
+    phx-change="Bonfire.Social.Threads:list_participants"
+    phx-target={@event_target}
+  >
     <div class="collapse mb-1 collapse-arrow rounded-none w-auto">
       <input type="checkbox" phx-update="ignore">
       <div class="collapse-title px-3  flex items-center flex-1 gap-4 py-0 min-h-[2.75rem]">
@@ -14,7 +18,7 @@
               <div class="text-sm tracking-wide text-base-content/70 text-center">{l("Last Reply")}</div>
             {#match false}
               <!-- <div class="text-sm tracking-wide text-base-content/70 text-center">{l("No Replies")}</div> -->
-            <div />
+              <div />
             {#match _}
               <div class="font-medium text-sm text-base-content/90 text-center">{DatesTimes.date_from_now(@last_reply_id, format: :narrow)}</div>
               <div class="text-sm tracking-wide text-base-content/70 text-center">{l("Last Reply")}</div>
@@ -76,5 +80,4 @@
     </div>
   </form>
   <div class="grow" />
-
 </div>
