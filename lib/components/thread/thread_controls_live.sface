@@ -1,112 +1,117 @@
-<div :if={current_user_id(@__context__)} class="flex gap-3">
-  <div class="dropdown dropdown-end">
-    <label tabindex="0" class="rounded-full btn btn-ghost btn-sm btn-circle normal-case">
-      <#Icon iconify="tabler:layout-rows" class="w-5 h-5 text-base-content/70" />
-      <!-- {l("Layout:")}
-            {#if @thread_mode == :flat}
-              {l("Linear")}
-            {#else}
-              {l("Nested replies")}
-            {/if} -->
-
-      <!-- {#if @__context__[:ui_compact]}
-              {l("Compact")}
-            {#else}
-              {l("Cozy")}
-            {/if} -->
-    </label>
-    <ul
-      tabindex="0"
-      class="dropdown-content mt-1 z-[999] menu gap-1 p-1 shadow bg-base-100 rounded-box w-52"
-    >
-      <li
-        phx-click="set"
-        phx-value-to_atoms="true"
-        phx-value-thread_mode="nested"
-        phx-target={@event_target}
-      >
-        <a class={"text-base-content/70", "active !text-base-content/100 font-semibold": @thread_mode != :flat}>{l("Nested replies")}</a>
-      </li>
-
-      <li
-        phx-click="set"
-        phx-value-to_atoms="true"
-        phx-value-thread_mode="flat"
-        phx-target={@event_target}
-      >
-        <a class={"text-base-content/70", "active !text-base-content/100 font-semibold": @thread_mode == :flat}>{l("Linear")}</a>
-      </li>
-
-      <!-- {#if @__context__[:ui_compact]}
-              <li
-                phx-click="set"
-                phx-value-to_atoms="true"
-                phx-value-ui_compact="false"
-                phx-value-assign_global="true"
-                phx-target={@event_target}
-              ><a>{l("Cozy")}</a></li>
-            {#else}
-              <li
-                phx-click="set"
-                phx-value-to_atoms="true"
-                phx-value-ui_compact="true"
-                phx-value-assign_global="true"
-                phx-target={@event_target}
-              ><a>{l("Compact")}</a></li>
-            {/if} -->
-    </ul>
-  </div>
-  <div class="flex items-center gap-3">
-    <!-- <div class="dropdown dropdown-end">
-            :if={@thread_mode==:flat} 
-              <label
-                tabindex="0"
-                class="!border !border-base-content/30 font-medium rounded-full btn-xs btn btn-outline normal-case"
-              >
-                <#Icon iconify="material-symbols:sort" class="w-4 h-4" />
-                {l("Sort: Chronological")}</label>
-              <ul
-                tabindex="0"
-                class="dropdown-content mt-1 z-[999] menu p-1 shadow bg-base-100 rounded-box w-52"
-              >
-                <li><a>{l("Chronological")}</a></li>
-                <li :if={@thread_mode !=:flat}><a>{l("By latest reply")}</a></li> 
-                <li><a>{l("By replies")}</a></li>
-                <li><a>{l("By boosts")}</a></li>
-                <li><a>{l("By likes")}</a></li>
-              </ul>
-            </div> -->
-
+<div class="flex items-center p-3 pb-0 w-full justify-between">
+  <span class="text-sm font-medium text-base-content/70">
+    {l("Discussion")}
+  </span>
+  <div :if={current_user_id(@__context__)} class="flex gap-3">
     <div class="dropdown dropdown-end">
-      <label tabindex="0" class="rounded-full btn-sm btn btn-ghost btn-circle normal-case">
-        <#Icon iconify="ri:list-ordered-2" class="w-5 h-5 text-base-content/70" />
-        <!-- {l("Order:")}
-
-              {#if @sort_order == :asc}
-                {l("Oldest first")}
+      <label tabindex="0" class="rounded-full btn btn-ghost btn-sm btn-circle normal-case">
+        <#Icon iconify="tabler:layout-rows" class="w-5 h-5 text-base-content/70" />
+        <!-- {l("Layout:")}
+              {#if @thread_mode == :flat}
+                {l("Linear")}
               {#else}
-                {l("Newest first")}
+                {l("Nested replies")}
+              {/if} -->
+
+        <!-- {#if @__context__[:ui_compact]}
+                {l("Compact")}
+              {#else}
+                {l("Cozy")}
               {/if} -->
       </label>
       <ul
         tabindex="0"
-        class="dropdown-content mt-1 z-[999] menu p-1 gap-1 shadow bg-base-100 rounded-box w-52"
+        class="dropdown-content mt-1 z-[999] menu gap-1 p-1 shadow bg-base-100 rounded-box w-52"
       >
         <li
           phx-click="set"
           phx-value-to_atoms="true"
-          phx-value-sort_order="desc"
-          phx-value-assign_global="true"
+          phx-value-thread_mode="nested"
           phx-target={@event_target}
-        ><a class={"text-base-content/70", "active !text-base-content/100 font-semibold": @sort_order != :asc}>{l("Newest first")}</a></li>
+        >
+          <a class={"text-base-content/70", "active !text-base-content/100 font-semibold": @thread_mode != :flat}>{l("Nested replies")}</a>
+        </li>
+
         <li
           phx-click="set"
           phx-value-to_atoms="true"
-          phx-value-sort_order="asc"
-          phx-value-assign_global="true"
+          phx-value-thread_mode="flat"
           phx-target={@event_target}
-        ><a class={"text-base-content/70", "active !text-base-content/100 font-semibold": @sort_order == :asc}>{l("Oldest first")}</a></li>
+        >
+          <a class={"text-base-content/70", "active !text-base-content/100 font-semibold": @thread_mode == :flat}>{l("Linear")}</a>
+        </li>
+
+        <!-- {#if @__context__[:ui_compact]}
+                <li
+                  phx-click="set"
+                  phx-value-to_atoms="true"
+                  phx-value-ui_compact="false"
+                  phx-value-assign_global="true"
+                  phx-target={@event_target}
+                ><a>{l("Cozy")}</a></li>
+              {#else}
+                <li
+                  phx-click="set"
+                  phx-value-to_atoms="true"
+                  phx-value-ui_compact="true"
+                  phx-value-assign_global="true"
+                  phx-target={@event_target}
+                ><a>{l("Compact")}</a></li>
+              {/if} -->
       </ul>
+    </div>
+    <div class="flex items-center gap-3">
+      <!-- <div class="dropdown dropdown-end">
+              :if={@thread_mode==:flat} 
+                <label
+                  tabindex="0"
+                  class="!border !border-base-content/30 font-medium rounded-full btn-xs btn btn-outline normal-case"
+                >
+                  <#Icon iconify="material-symbols:sort" class="w-4 h-4" />
+                  {l("Sort: Chronological")}</label>
+                <ul
+                  tabindex="0"
+                  class="dropdown-content mt-1 z-[999] menu p-1 shadow bg-base-100 rounded-box w-52"
+                >
+                  <li><a>{l("Chronological")}</a></li>
+                  <li :if={@thread_mode !=:flat}><a>{l("By latest reply")}</a></li> 
+                  <li><a>{l("By replies")}</a></li>
+                  <li><a>{l("By boosts")}</a></li>
+                  <li><a>{l("By likes")}</a></li>
+                </ul>
+              </div> -->
+
+      <div class="dropdown dropdown-end">
+        <label tabindex="0" class="rounded-full btn-sm btn btn-ghost btn-circle normal-case">
+          <#Icon iconify="ri:list-ordered-2" class="w-5 h-5 text-base-content/70" />
+          <!-- {l("Order:")}
+
+                {#if @sort_order == :asc}
+                  {l("Oldest first")}
+                {#else}
+                  {l("Newest first")}
+                {/if} -->
+        </label>
+        <ul
+          tabindex="0"
+          class="dropdown-content mt-1 z-[999] menu p-1 gap-1 shadow bg-base-100 rounded-box w-52"
+        >
+          <li
+            phx-click="set"
+            phx-value-to_atoms="true"
+            phx-value-sort_order="desc"
+            phx-value-assign_global="true"
+            phx-target={@event_target}
+          ><a class={"text-base-content/70", "active !text-base-content/100 font-semibold": @sort_order != :asc}>{l("Newest first")}</a></li>
+          <li
+            phx-click="set"
+            phx-value-to_atoms="true"
+            phx-value-sort_order="asc"
+            phx-value-assign_global="true"
+            phx-target={@event_target}
+          ><a class={"text-base-content/70", "active !text-base-content/100 font-semibold": @sort_order == :asc}>{l("Oldest first")}</a></li>
+        </ul>
+      </div>
     </div>
   </div>
 </div>
