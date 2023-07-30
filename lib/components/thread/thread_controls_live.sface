@@ -1,8 +1,12 @@
-<div class="flex items-center p-3 pb-0 w-full justify-between">
-  <span class="text-sm font-medium text-base-content/70">
+<div class="flex items-center p-3 pb-0 w-full justify-end">
+  <!-- <span class="text-sm font-medium text-base-content/70">
     {l("Discussion")}
-  </span>
+  </span> -->
   <div :if={current_user_id(@__context__)} class="flex gap-3">
+    <Bonfire.UI.Social.ThreadMarkSeenLive
+      :if={@showing_within == :messages and @thread_id}
+      thread_id={@thread_id}
+    />
     <div class="dropdown dropdown-end">
       <label tabindex="0" class="rounded-full btn btn-ghost btn-sm btn-circle normal-case">
         <#Icon iconify="tabler:layout-rows" class="w-5 h-5 text-base-content/70" />

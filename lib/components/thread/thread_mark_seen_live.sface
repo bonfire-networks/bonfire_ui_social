@@ -1,0 +1,13 @@
+<div class="flex items-center gap-2">
+  <button
+    phx-click="Bonfire.Social.Threads:mark_seen"
+    phx-target={"#badge_counter_#{:inbox}"}
+    phx-value-thread_id={@thread_id}
+    phx-value-scope="all"
+    x-on:click="document.querySelectorAll('.unread-activity').forEach((activity) => {activity.classList.remove('unread-activity')})"
+    class="z-50 flex items-center gap-2 font-normal normal-case rounded btn-secondary btn-square btn btn-sm"
+  >
+    <#Icon iconify="ic:round-check" class="w-5 h-5 text-base-content/70" />
+    <span class="sr-only">{l("Mark all as read")}</span>
+  </button>
+</div>

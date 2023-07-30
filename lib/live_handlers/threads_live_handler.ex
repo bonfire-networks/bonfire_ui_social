@@ -4,6 +4,30 @@ defmodule Bonfire.Social.Threads.LiveHandler do
 
   alias Bonfire.Social.Threads
 
+  def handle_event(
+        "mark_seen",
+        %{"scope" => "all", "thread_id" => thread_id},
+        %{assigns: %{count: count}} = socket
+      )
+      when is_binary(thread_id) do
+    current_user = current_user_required!(socket)
+
+    marked =
+      if current_user do
+        # Task.async(fn -> # asynchronously simply so the count is updated quicker for the user
+        debug(thread_id, "mark_seen: all in thread")
+        Bonfire.Social.Threads.mark_all_seen([thread_id: thread_id], current_user: current_user)
+        # end)
+      end
+
+    {:noreply,
+     socket
+     |> assign(
+       # TODO
+       count: count - (marked || 0)
+     )}
+  end
+
   def handle_params(
         %{"after" => cursor} = _attrs,
         _,

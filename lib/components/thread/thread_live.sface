@@ -11,7 +11,7 @@
   >
     <Bonfire.UI.Social.ThreadControlsLive
       event_target={@myself}
-      thread_object={@object}
+      thread_id={@thread_id}
       thread_mode={@thread_mode}
       sort_by={@sort_by}
       sort_order={@sort_order}
