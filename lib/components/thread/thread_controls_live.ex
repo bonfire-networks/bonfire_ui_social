@@ -8,5 +8,4 @@ defmodule Bonfire.UI.Social.ThreadControlsLive do
   prop showing_within, :atom, default: :thread
   prop sort_by, :any, default: nil
   prop sort_order, :any, default: false
-  prop order_by, :any, default: :id
 end

@@ -73,7 +73,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
       )
       when preloaded_async_activities == true do
     debug(
-      "Activity ##{debug_i(socket.assigns[:i], socket.assigns[:activity_inception])} prepared already, just assign updated activity"
+      "Activity ##{debug_i(socket.assigns[:activity_id], socket.assigns[:activity_inception])} prepared already, just assign updated activity"
     )
 
     {:ok,
@@ -102,7 +102,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
       )
       when not is_nil(object_boundary) do
     debug(
-      "Activity ##{debug_i(socket.assigns[:i], socket.assigns[:activity_inception])} prepared already, just assign object_boundary"
+      "Activity ##{debug_i(socket.assigns[:activity_id], socket.assigns[:activity_inception])} prepared already, just assign object_boundary"
     )
 
     {:ok,
@@ -112,7 +112,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
 
   def update(assigns, %{assigns: %{activity_prepared: _}} = socket) do
     debug(
-      "Activity ##{debug_i(assigns[:i] || socket.assigns[:i], assigns[:activity_inception] || socket.assigns[:activity_inception])} prepared already"
+      "Activity ##{debug_i(assigns[:activity_id] || socket.assigns[:activity_id], assigns[:activity_inception] || socket.assigns[:activity_inception])} prepared already"
     )
 
     # FYI: assigning blindly here causes problems
@@ -143,7 +143,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
 
   def prepare(%{activity: %{object: object}, object: nil} = assigns) when not is_nil(object) do
     debug(
-      "Activity ##{debug_i(assigns[:i], assigns[:activity_inception])} prepare activity with object in assoc"
+      "Activity ##{debug_i(assigns[:activity_id], assigns[:activity_inception])} prepare activity with object in assoc"
     )
 
     Map.put(assigns, :object, object)
@@ -153,7 +153,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
   def prepare(assigns), do: Map.put(assigns, :activity_prepared, :skipped)
 
   defp do_prepare(%{activity: activity, object: object} = assigns) when not is_nil(object) do
-    # debug("Activity ##{debug_i(assigns[:i], assigns[:activity_inception])} preparation started")
+    # debug("Activity ##{debug_i(assigns[:activity_id], assigns[:activity_inception])} preparation started")
     # debug(assigns, "initial assigns")
 
     # debug(object, "object")
@@ -782,9 +782,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
        %{
          id: "reply_to-#{activity_component_id}-#{id}",
          activity_inception: activity_id,
-         show_minimal_subject_and_note:
-           e(reply_to_post_content, :name, nil) || e(reply_to_post_content, :summary, nil) ||
-             e(reply_to_post_content, :html_body, nil) || true,
+         show_minimal_subject_and_note: name_or_text(reply_to_post_content) || true,
          viewing_main_object: false,
          thread_title: thread_title,
          object: reply_to_post_content,
@@ -827,10 +825,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
        %{
          id: "reply_to-#{activity_component_id}-#{reply_to_id}",
          activity_inception: activity_id,
-         show_minimal_subject_and_note:
-           e(replied, :post_content, :name, nil) || e(replied, :post_content, :summary, nil) ||
-             e(replied, :post_content, :html_body, nil) || e(replied, :name, nil) ||
-             e(replied, :summary, nil) || e(replied, :html_body, nil) || true,
+         show_minimal_subject_and_note: name_or_text(replied) || true,
          viewing_main_object: false,
          thread_title: thread_title,
          object: replied,
@@ -870,10 +865,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
        %{
          id: "reply_to-#{activity_component_id}-#{reply_to_id}",
          activity_inception: activity_id,
-         show_minimal_subject_and_note:
-           e(replied, :post_content, :name, nil) || e(replied, :post_content, :summary, nil) ||
-             e(replied, :post_content, :html_body, nil) || e(replied, :name, nil) ||
-             e(replied, :summary, nil) || e(replied, :html_body, nil) || true,
+         show_minimal_subject_and_note: name_or_text(replied) || true,
          viewing_main_object: false,
          thread_title: thread_title,
          object: replied,
@@ -937,6 +929,16 @@ defmodule Bonfire.UI.Social.ActivityLive do
     debug(a, "no reply_to")
     []
   end
+
+  def name_or_text(%{post_content: %{name: _} = post_content} = _data),
+    do: name_or_text(post_content)
+
+  def name_or_text(%{named: %{name: name}} = _data), do: name
+
+  def name_or_text(%{name: _} = data),
+    do: e(data, :name, nil) || e(data, :summary, nil) || e(data, :html_body, nil)
+
+  def name_or_text(_data), do: nil
 
   # @decorate time()
   # def maybe_load_in_reply_to(

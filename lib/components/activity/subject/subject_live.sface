@@ -36,7 +36,7 @@
           x-show="expanded"
           :class="{'p_line_clamp': !expanded}"
           x-collapse.min.20px
-          class="font-medium cursor-pointer w-full  max-w-full  relative gap-1  prose prose-sm !text-sm !text-base-content/70 prose-a:text-base-content/70 prose-a:no-underline prose-p:inline-block"
+          class="font-medium cursor-pointer w-full max-w-full relative gap-1 prose prose-sm !text-sm !text-base-content/70 prose-a:text-base-content/70 prose-a:no-underline prose-p:inline-block"
         >
           {if(@showing_within != :thread and @thread_title,
             do:

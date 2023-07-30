@@ -4,7 +4,7 @@
   object_boundary={@object_boundary}
   permalink={@permalink}
   thread_mode={@thread_mode}
-  reply_count={if @showing_within == :thread,
+  reply_count={if @showing_within == :thread and @thread_mode != :flat,
     do:
       e(@activity, :replied, :direct_replies_count, nil) ||
         e(@object, :replied, :direct_replies_count, 0),

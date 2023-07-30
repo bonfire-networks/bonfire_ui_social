@@ -12,7 +12,7 @@
       </div> -->
 
   <div class="flex-1 w-full" x-data="{reply: false, show: true}">
-    {#case get_activity(@comment)}
+    {#case get_activity(@activity || @comment)}
       {#match nil}
         <div class="mx-4 my-2">
           <div class="p-4 rounded-md bg-info/10">

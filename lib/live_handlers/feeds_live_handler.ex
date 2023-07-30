@@ -839,14 +839,48 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
       object: object,
       object_id: id(activity) || id(object),
       showing_within: e(assigns, :showing_within, nil),
+      thread_mode: e(assigns, :thread_mode, nil),
       object_type: e(assigns, :object_type, nil)
     }
+  end
+
+  defp uniq_assign(list_of_components, field) do
+    case list_of_components
+         |> Enum.map(& &1[field])
+         |> Enum.uniq() do
+      [nil] ->
+        nil
+
+      [val] ->
+        val
+
+      other ->
+        warn(other, "more than one kind of #{field}")
+        nil
+    end
   end
 
   @decorate time()
   defp preload_extras(list_of_components, _list_of_ids, current_user) do
     # TODO: less preloads if not in a feed
-    preloads = [:feed, :with_reply_to, :with_media, :with_parent]
+
+    showing_within =
+      list_of_components
+      |> uniq_assign(:showing_within)
+      |> debug("preloadwithin")
+
+    thread_mode =
+      list_of_components
+      |> uniq_assign(:thread_mode)
+      |> debug("thread_mode")
+
+    preloads =
+      case {showing_within, thread_mode} do
+        {:thread, :flat} -> [:feed, :with_reply_to, :with_media]
+        {:thread, _} -> [:feed, :with_media]
+        _ -> [:feed, :with_thread_name, :with_reply_to, :with_media, :with_parent]
+      end
+      |> debug("whatpreloads")
 
     opts = [
       preload: preloads,

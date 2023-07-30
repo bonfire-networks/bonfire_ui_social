@@ -33,7 +33,6 @@ defmodule Bonfire.UI.Social.ThreadLive do
   prop sort_order, :any, default: false
   prop showing_within, :atom, default: :thread
   # prop loading, :boolean, default: false
-  prop order_by, :any, default: :id
   prop thread_loading, :boolean, default: nil
 
   prop(reply_count, :any, default: nil)
@@ -213,6 +212,14 @@ defmodule Bonfire.UI.Social.ThreadLive do
 
   def update(assigns, %{assigns: %{loaded_async: true}} = socket) do
     debug("showing previously async-loaded replies")
+
+    {:ok,
+     socket
+     |> assign(assigns)}
+  end
+
+  def update(%{skip_loading_comments: true} = assigns, socket) do
+    debug("skip_loading_comments")
 
     {:ok,
      socket

@@ -330,6 +330,7 @@ defmodule Bonfire.Social.Threads.LiveHandler do
             pid,
             component_id,
             %{
+              skip_loading_comments: true,
               participants: participants,
               participant_count: participant_count,
               thread_boost_count:
@@ -421,6 +422,7 @@ defmodule Bonfire.Social.Threads.LiveHandler do
                after: e(socket.assigns, :after, nil),
                max_depth: max_depth(socket.assigns[:__context__]),
                thread_mode: e(socket.assigns, :thread_mode, nil),
+               sort_by: e(socket.assigns, :sort_by, nil),
                sort_order: e(socket.assigns, :sort_order, nil),
                showing_within: e(socket.assigns, :showing_within, nil)
              ) do

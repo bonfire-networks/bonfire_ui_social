@@ -15,7 +15,6 @@
       thread_mode={@thread_mode}
       sort_by={@sort_by}
       sort_order={@sort_order}
-      order_by={@order_by}
       showing_within={@showing_within || :thread}
     />
   </Bonfire.UI.Social.Activity.ThreadStatsLive>

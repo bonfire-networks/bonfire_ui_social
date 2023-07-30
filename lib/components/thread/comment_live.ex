@@ -19,8 +19,12 @@ defmodule Bonfire.UI.Social.CommentLive do
     activity
   end
 
-  def get_activity(%{activity: %{object: %{}} = activity}) do
+  def get_activity(%{activity: %{object: %{}} = activity} = replied) do
     activity
+    |> Map.put(
+      :replied,
+      Map.drop(replied, [:activity])
+    )
   end
 
   def get_activity(_), do: nil

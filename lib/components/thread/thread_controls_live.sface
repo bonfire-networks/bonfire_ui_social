@@ -65,36 +65,79 @@
       </ul>
     </div>
     <div class="flex items-center gap-3">
-      <!-- <div class="dropdown dropdown-end">
-              :if={@thread_mode==:flat} 
-                <label
-                  tabindex="0"
-                  class="!border !border-base-content/30 font-medium rounded-full btn-xs btn btn-outline normal-case"
-                >
-                  <#Icon iconify="material-symbols:sort" class="w-4 h-4" />
-                  {l("Sort: Chronological")}</label>
-                <ul
-                  tabindex="0"
-                  class="dropdown-content mt-1 z-[999] menu p-1 shadow bg-base-100 rounded-box w-52"
-                >
-                  <li><a>{l("Chronological")}</a></li>
-                  <li :if={@thread_mode !=:flat}><a>{l("By latest reply")}</a></li> 
-                  <li><a>{l("By replies")}</a></li>
-                  <li><a>{l("By boosts")}</a></li>
-                  <li><a>{l("By likes")}</a></li>
-                </ul>
-              </div> -->
+      <div class="dropdown dropdown-end">
+        <label tabindex="0" class="rounded-full btn-sm btn btn-ghost btn-circle normal-case">
+          <#Icon iconify="mdi:order-alphabetical-ascending" class="w-5 h-5" />
+          <!-- {l("Sort: Chronological")} -->
+        </label>
+        <ul
+          tabindex="0"
+          class="dropdown-content mt-1 z-[999] menu p-1 shadow bg-base-100 rounded-box w-52"
+        >
+          <li
+            phx-click="set"
+            phx-value-to_atoms="true"
+            phx-value-sort_by="nil"
+            phx-value-assign_global="true"
+            phx-target={@event_target}
+          >
+            <a class={"text-base-content/70", "active !text-base-content/100 font-semibold": is_nil(@sort_by)}>
+              {l("Chronological by branch")}</a></li>
+
+          <li
+            :if={@thread_mode != :flat}
+            phx-click="set"
+            phx-value-to_atoms="true"
+            phx-value-sort_by="latest_reply"
+            phx-value-assign_global="true"
+            phx-target={@event_target}
+          >
+            <a class={"text-base-content/70", "active !text-base-content/100 font-semibold": @sort_by == :latest_reply}>
+              {l("Chronological by latest reply")}</a></li>
+
+          <li
+            phx-click="set"
+            phx-value-to_atoms="true"
+            phx-value-sort_by="num_replies"
+            phx-value-assign_global="true"
+            phx-target={@event_target}
+          >
+            <a class={"text-base-content/70", "active !text-base-content/100 font-semibold": @sort_by == "num_replies"}>
+              {l("By amount of replies")}</a></li>
+
+          <li
+            phx-click="set"
+            phx-value-to_atoms="true"
+            phx-value-sort_by="num_boosts"
+            phx-value-assign_global="true"
+            phx-target={@event_target}
+          >
+            <a class={"text-base-content/70", "active !text-base-content/100 font-semibold": @sort_by == :num_boosts}>
+              {l("By amount of boosts")}</a></li>
+
+          <li
+            phx-click="set"
+            phx-value-to_atoms="true"
+            phx-value-sort_by="num_likes"
+            phx-value-assign_global="true"
+            phx-target={@event_target}
+          >
+            <a class={"text-base-content/70", "active !text-base-content/100 font-semibold": @sort_by == :num_likes}>
+              {l("By amount of likes")}</a></li>
+        </ul>
+      </div>
 
       <div class="dropdown dropdown-end">
         <label tabindex="0" class="rounded-full btn-sm btn btn-ghost btn-circle normal-case">
-          <#Icon iconify="ri:list-ordered-2" class="w-5 h-5 text-base-content/70" />
-          <!-- {l("Order:")}
+          <!-- {l("Order:")} -->
 
-                {#if @sort_order == :asc}
-                  {l("Oldest first")}
-                {#else}
-                  {l("Newest first")}
-                {/if} -->
+          {#if @sort_order == :asc}
+            <#Icon iconify="octicon:sort-asc-16" class="w-5 h-5 text-base-content/70" />
+            <!-- {l("Oldest first")} -->
+          {#else}
+            <#Icon iconify="octicon:sort-desc-16" class="w-5 h-5 text-base-content/70" />
+            <!-- {l("Newest first")} -->
+          {/if}
         </label>
         <ul
           tabindex="0"
@@ -106,14 +149,14 @@
             phx-value-sort_order="desc"
             phx-value-assign_global="true"
             phx-target={@event_target}
-          ><a class={"text-base-content/70", "active !text-base-content/100 font-semibold": @sort_order != :asc}>{l("Newest first")}</a></li>
+          ><a class={"text-base-content/70", "active !text-base-content/100 font-semibold": @sort_order != :asc}>{if @sort_by in [nil, :latest_reply], do: l("Newest first"), else: l("Most first")}</a></li>
           <li
             phx-click="set"
             phx-value-to_atoms="true"
             phx-value-sort_order="asc"
             phx-value-assign_global="true"
             phx-target={@event_target}
-          ><a class={"text-base-content/70", "active !text-base-content/100 font-semibold": @sort_order == :asc}>{l("Oldest first")}</a></li>
+          ><a class={"text-base-content/70", "active !text-base-content/100 font-semibold": @sort_order == :asc}>{if @sort_by in [nil, :latest_reply], do: l("Oldest first"), else: l("Least first")}</a></li>
         </ul>
       </div>
     </div>
