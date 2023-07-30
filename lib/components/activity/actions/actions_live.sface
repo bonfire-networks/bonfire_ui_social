@@ -64,6 +64,7 @@
         verb={@verb}
         thread_id={@thread_id}
         thread_mode={@thread_mode}
+        thread_title={@thread_title}
         showing_within={@showing_within}
         viewing_main_object={@viewing_main_object}
         activity_component_id={@activity_component_id}

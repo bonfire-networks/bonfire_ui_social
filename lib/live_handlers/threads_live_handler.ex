@@ -170,6 +170,9 @@ defmodule Bonfire.Social.Threads.LiveHandler do
       published_in = e(socket.assigns, :published_in, nil)
       published_in_id = id(published_in)
 
+      create_object_type =
+        if(e(socket.assigns, :object_type, nil) == Bonfire.Data.Social.Message, do: :message)
+
       # TODO: don't re-load participants here as we already have the list (at least when we're in a thread)
       # TODO: include thread_id in list_participants/3 call
       participants =
@@ -182,10 +185,10 @@ defmodule Bonfire.Social.Threads.LiveHandler do
       to_circles =
         if participants != [],
           do:
-            Enum.map(participants, &{e(&1, :character, :username, l("someone")), e(&1, :id, nil)})
+            Enum.map(participants, &{e(&1, :id, nil), e(&1, :character, :username, l("someone"))})
 
       mentions =
-        if participants != [],
+        if create_object_type != :message and participants != [],
           do: Enum.map_join(participants, " ", &("@" <> e(&1, :character, :username, ""))) <> " "
 
       thread_id =
@@ -203,8 +206,9 @@ defmodule Bonfire.Social.Threads.LiveHandler do
           context_id: thread_id,
           to_circles: to_circles || [],
           mentions: if(published_in_id, do: [published_in_id], else: []),
-          create_object_type:
-            if(e(socket.assigns, :object_type, nil) == Bonfire.Data.Social.Message, do: :message),
+          create_object_type: create_object_type,
+          #  do not allow editing recipients when replying to a group thread
+          smart_input_opts: [recipients_editable: false],
           to_boundaries: [
             if(published_in_id,
               do:

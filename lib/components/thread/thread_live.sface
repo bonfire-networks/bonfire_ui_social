@@ -2,6 +2,7 @@
   <Bonfire.UI.Social.Activity.ThreadStatsLive
     :if={id(@current_user)}
     event_target={@myself}
+    showing_within={@showing_within}
     reply_count={@reply_count}
     participant_count={@participant_count}
     participants={@participants}

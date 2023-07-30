@@ -4,6 +4,7 @@
     submit={JS.push(handler(@create_object_type)) |> Bonfire.UI.Common.SmartInput.LiveHandler.minimize()}
     action={"/LiveHandler/" <> handler(@create_object_type)}
     change="validate"
+    id="#smart_input_form"
     opts={
       autocomplete: "off",
       "phx-target": "#smart_input"
@@ -15,7 +16,6 @@
     <Bonfire.UI.Common.InputControlsLive
       preloaded_recipients={e(@preloaded_recipients, [])}
       open_boundaries={@open_boundaries}
-      show_select_recipients={@show_select_recipients}
       boundaries_modal_id={@boundaries_modal_id}
       smart_input_opts={@smart_input_opts}
       reply_to_id={id(@reply_to_id)}

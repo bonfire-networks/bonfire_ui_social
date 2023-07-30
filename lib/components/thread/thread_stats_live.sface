@@ -32,7 +32,7 @@
         <div class="text-sm font-medium text-base-content/70 text-center">56</div>
         <div class="text-sm tracking-wide text-base-content/70 text-center">{l "Links"}</div>
       </div> -->
-        <div class="flex items-center gap-1">
+        <div :if={@showing_within != :messages} class="flex items-center gap-1">
           {#if @thread_boost_count}
             <div class="text-sm font-medium text-base-content/90 text-center">{@thread_boost_count || 0}</div>
           {#else}

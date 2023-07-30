@@ -87,8 +87,7 @@ defmodule Bonfire.Social.Messages.LiveHandler do
       params
       # |> debug("attrs")
       |> input_to_atoms()
-
-    # |> debug
+      |> debug
 
     with {:ok, sent} <- Messages.send(current_user_required!(socket), attrs) do
       # debug(sent, "sent!")

@@ -11,6 +11,7 @@ defmodule Bonfire.UI.Social.Activity.ThreadStatsLive do
   prop participant_count, :any, default: nil
   prop thread_boost_count, :any, default: nil
   prop last_reply_id, :any, default: nil
+  prop showing_within, :any, default: nil
 
   slot default
 end

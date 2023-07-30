@@ -196,8 +196,9 @@ defmodule Bonfire.UI.Social.MessagesLive do
         names =
           if is_list(participants) and participants != [],
             do:
-              Enum.map_join(
-                participants,
+              participants
+              |> Enum.reject(&(&1.id == current_user.id))
+              |> Enum.map_join(
                 " & ",
                 &e(&1, :profile, :name, e(&1, :character, :username, l("someone else")))
               )
@@ -208,7 +209,7 @@ defmodule Bonfire.UI.Social.MessagesLive do
         prompt = l("Compose a thoughtful response")
 
         # l("Conversation between %{people}", people: names)
-        title = if names, do: names, else: l("Conversation")
+        title = if names && names != [], do: names, else: l("Conversation")
 
         threads =
           e(socket.assigns, :threads, nil) || LiveHandler.list_threads(current_user, socket)

@@ -27,6 +27,7 @@
           id={@main_object_component_id}
           showing_within={:thread}
           thread_mode={@thread_mode}
+          thread_title={@page_title}
           viewing_main_object
           activity={@activity}
           object={@object}
