@@ -247,12 +247,14 @@ defmodule Bonfire.UI.Social.ThreadLive do
         socket
       ) do
     # need to reload comments so streams are updated 
-    {:noreply,
-     socket
-     # |> assign( replies: [])
-     |> Bonfire.UI.Common.LiveHandlers.assign_attrs(attrs)
-     |> LiveHandler.load_thread_maybe_async(false, true)
-     |> debug("seeet")}
+    {
+      :noreply,
+      socket
+      # |> assign( replies: [])
+      |> Bonfire.UI.Common.LiveHandlers.assign_attrs(attrs)
+      |> LiveHandler.load_thread_maybe_async(false, true)
+      # |> debug("seeet")
+    }
   end
 
   def handle_event(

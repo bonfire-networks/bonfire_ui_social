@@ -75,7 +75,8 @@ defmodule Bonfire.Social.Likes.LiveHandler do
       component_id: assigns.id,
       object: object || e(assigns, :object_id, nil),
       object_id: e(assigns, :object_id, nil) || ulid(object),
-      previous_value: e(assigns, :my_like, nil)
+      previous_my_like: e(assigns, :my_like, nil),
+      previous_like_count: e(assigns, :like_count, nil)
     }
   end
 
@@ -102,8 +103,8 @@ defmodule Bonfire.Social.Likes.LiveHandler do
     |> Map.new(fn component ->
       {component.component_id,
        %{
-         my_like: Map.get(my_states, component.object_id) || component.previous_value || false,
-         like_count: e(objects_counts, component.object_id, nil)
+         my_like: Map.get(my_states, component.object_id) || component.previous_my_like || false,
+         like_count: e(objects_counts, component.object_id, nil) || component.previous_like_count
        }}
     end)
   end

@@ -33,7 +33,12 @@
   object_type={@object_type}
   object_boundary={@object_boundary}
   showing_within={@showing_within}
-  boost_count={e(Bonfire.UI.Social.Activity.ActionsLive.the_activity(@activity, @object), :boost_count, nil)}
+  boost_count={e(
+    Bonfire.UI.Social.Activity.ActionsLive.the_activity(@activity, @object),
+    :boost_count,
+    :object_count,
+    nil
+  )}
 />
 
 <Bonfire.UI.Common.LikeActionLive
@@ -44,5 +49,10 @@
   )}
   object_id={id(@object)}
   object_boundary={@object_boundary}
-  like_count={e(Bonfire.UI.Social.Activity.ActionsLive.the_activity(@activity, @object), :like_count, nil)}
+  like_count={e(
+    Bonfire.UI.Social.Activity.ActionsLive.the_activity(@activity, @object),
+    :like_count,
+    :object_count,
+    nil
+  )}
 />

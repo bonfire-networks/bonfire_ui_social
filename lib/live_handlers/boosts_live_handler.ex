@@ -48,7 +48,8 @@ defmodule Bonfire.Social.Boosts.LiveHandler do
       component_id: assigns.id,
       object: object || e(assigns, :object_id, nil),
       object_id: e(assigns, :object_id, nil) || ulid(object),
-      previous_value: e(assigns, :my_boost, nil)
+      previous_my_boost: e(assigns, :my_boost, nil),
+      previous_boost_count: e(assigns, :boost_count, nil)
     }
   end
 
@@ -81,8 +82,10 @@ defmodule Bonfire.Social.Boosts.LiveHandler do
     |> Map.new(fn component ->
       {component.component_id,
        %{
-         my_boost: Map.get(my_states, component.object_id) || component.previous_value || false,
-         boost_count: e(objects_counts, component.object_id, nil)
+         my_boost:
+           Map.get(my_states, component.object_id) || component.previous_my_boost || false,
+         boost_count:
+           e(objects_counts, component.object_id, nil) || component.previous_boost_count
        }}
     end)
   end
