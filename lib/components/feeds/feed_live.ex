@@ -286,7 +286,8 @@ defmodule Bonfire.UI.Social.FeedLive do
       # |> assign( replies: [])
       |> Bonfire.UI.Common.LiveHandlers.assign_attrs(attrs)
       |> LiveHandler.insert_feed(
-        LiveHandler.feed_assigns_maybe_async(socket.assigns[:selected_tab], socket)
+        ...,
+        LiveHandler.feed_assigns_maybe_async(socket.assigns[:selected_tab], ...)
       )
       # |> debug("seeet")
     }

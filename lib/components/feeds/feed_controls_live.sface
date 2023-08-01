@@ -121,7 +121,7 @@
         <li
           phx-click="set"
           phx-value-to_integers="true"
-          phx-value-time_limit={30}
+          phx-value-time_limit={7}
           phx-value-assign_global="true"
           phx-target={@event_target}
         ><a class={
@@ -134,7 +134,7 @@
         <li
           phx-click="set"
           phx-value-to_integers="true"
-          phx-value-time_limit={7}
+          phx-value-time_limit={30}
           phx-value-assign_global="true"
           phx-target={@event_target}
         ><a class={
