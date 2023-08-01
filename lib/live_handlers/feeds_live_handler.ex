@@ -427,35 +427,45 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
   defp feed_filter_assigns(_),
     do: [tab_path_suffix: nil, page_title: l("Activities"), page_header_icon: "ri:home-line"]
 
-  @decorate time()
-  def feed_assigns_maybe_async({feed_name, filters_or_custom_query_or_feed_id_or_ids}, socket) do
+  # @decorate time()
+
+  def feed_assigns_maybe_async(other, socket, show_loader \\ true, reset_stream \\ false)
+
+  def feed_assigns_maybe_async(
+        {feed_name, filters_or_custom_query_or_feed_id_or_ids},
+        socket,
+        show_loader,
+        reset_stream
+      ) do
     feed_name = feed_name(feed_name, socket)
     debug(filters_or_custom_query_or_feed_id_or_ids, feed_name)
 
     assigns =
       (feed_default_assigns(feed_name, socket) ++
-         feed_filter_assigns(filters_or_custom_query_or_feed_id_or_ids))
+         feed_filter_assigns(filters_or_custom_query_or_feed_id_or_ids) ++ [loading: show_loader])
       |> debug("start by setting feed_default_assigns")
 
     feed_assigns_maybe_async_load(
       {feed_name, filters_or_custom_query_or_feed_id_or_ids},
       assigns,
-      socket
+      socket,
+      reset_stream
     )
   end
 
-  def feed_assigns_maybe_async(other, socket) do
+  def feed_assigns_maybe_async(other, socket, show_loader, reset_stream) do
     feed_name = feed_name(other, socket)
     debug(other, feed_name)
 
     assigns =
-      feed_default_assigns(feed_name, socket)
+      (feed_default_assigns(feed_name, socket) ++ [loading: show_loader])
       |> debug("start by setting feed_default_assigns")
 
     feed_assigns_maybe_async_load(
       {feed_name, assigns[:feed_ids] || assigns[:feed_id]},
       assigns,
-      socket
+      socket,
+      reset_stream
     )
   end
 
@@ -467,7 +477,6 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
       |> debug(feed_name)
 
     [
-      loading: true,
       # feed_id: feed_name,
       feed_name: feed_name,
       feed_id: feed_id,
@@ -489,7 +498,6 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
       |> debug(feed_name)
 
     [
-      loading: true,
       feed_name: feed_name,
       feed_id: feed_id,
       feed_component_id: component_id(feed_id, socket.assigns),
@@ -516,7 +524,6 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
       |> debug(feed_name)
 
     [
-      loading: true,
       feed_name: feed_name,
       feed_id: feed_id,
       feed_component_id: component_id(feed_id, socket.assigns),
@@ -536,7 +543,6 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
     # debug(feed_name)
 
     [
-      loading: true,
       feed_name: feed_name,
       feed_id: feed_name,
       feed_component_id: component_id(feed_name, socket.assigns),
@@ -556,7 +562,6 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
   # WIP
   def feed_default_assigns(:flags = feed_name, socket) do
     [
-      loading: true,
       feed_name: feed_name,
       feed_id: feed_name,
       feed_component_id: component_id(feed_name, socket.assigns),
@@ -579,7 +584,6 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
     debug(filters_or_custom_query_or_feed_id_or_ids, "filters_or_custom_query_or_feed_id_or_ids")
 
     [
-      loading: true,
       feed_name: feed_name,
       feed_id: feed_name,
       feed_filters: filters_or_custom_query_or_feed_id_or_ids,
@@ -593,7 +597,6 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
     debug(feed_name)
 
     [
-      loading: true,
       feed_name: feed_name,
       feed_id: feed_name,
       feed_component_id: component_id(feed_name, socket.assigns),
@@ -606,7 +609,6 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
     debug(other)
 
     [
-      loading: true,
       feed_component_id: component_id(other, socket.assigns),
       feed: nil,
       page_info: nil
@@ -636,15 +638,23 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
       (e(assigns, :feed_component_id, nil) || feed_id_only(feed_id_or_tuple) || :feeds)
       |> debug()
 
-  @decorate time()
-  # defp feed_assigns_maybe_async_load(feed_name, assigns, %{assigns: %{loading: false}} = socket) do
+  # @decorate time()
+  defp feed_assigns_maybe_async_load(
+         feed_name_id_or_tuple,
+         assigns,
+         socket,
+         reset_stream \\ false
+       )
+
+  # defp feed_assigns_maybe_async_load(feed_name, assigns, %{assigns: %{loading: false}} = socket, reset_stream) do
   #   debug("Skip loading feed...")
   #   []
   # end
   defp feed_assigns_maybe_async_load(
          feed_name_id_or_tuple,
          assigns,
-         %Phoenix.LiveView.Socket{} = socket
+         %Phoenix.LiveView.Socket{} = socket,
+         reset_stream
        ) do
     socket_connected = connected?(socket)
 
@@ -656,13 +666,18 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
         async_task(fn ->
           debug(feed_name_id_or_tuple, "Query activities asynchronously")
 
-          feed_assigns(feed_name_id_or_tuple, socket)
-          # Bonfire.Common.Benchmark.apply_timed(&feed_assigns/2, [feed_name_id_or_tuple, socket])
+          {entries, new_assigns} = feed_assigns(feed_name_id_or_tuple, socket)
           # |> debug("feed_assigns")
-          |> send_feed_updates(
+
+          send_feed_updates(
             pid,
             assigns[:feed_component_id] || :feeds,
-            ...,
+            {entries,
+             new_assigns ++
+               [
+                 loaded_async: true,
+                 reset_stream: reset_stream
+               ]},
             Bonfire.UI.Social.FeedLive
           )
         end)
@@ -679,7 +694,7 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
     end
   end
 
-  defp feed_assigns_maybe_async_load(feed_name_id_or_tuple, assigns, socket) do
+  defp feed_assigns_maybe_async_load(feed_name_id_or_tuple, assigns, socket, _reset_stream) do
     feed_assigns_merged(feed_name_id_or_tuple, assigns, socket)
   end
 

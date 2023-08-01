@@ -6,8 +6,8 @@
         class="rounded-full btn-sm btn btn-ghost btn-circle normal-case text-base-content/70"
       >
         {#case @sort_by}
-          {#match :latest_reply}
-            <#Icon iconify="mdi:sprout" class="w-6 h-6" />
+          {#match :num_replies}
+            <Iconify.Bonfire.Reply.render class="w-5 h-5 stroke-1 fill-base-content/70" />
           {#match :num_boosts}
             <Iconify.Bonfire.Boost.render class="w-5 h-5 stroke-1 fill-base-content/70" />
           {#match :num_likes}

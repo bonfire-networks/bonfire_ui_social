@@ -305,9 +305,9 @@ defmodule Bonfire.Social.Threads.LiveHandler do
     # |> IO.inspect
   end
 
-  def load_thread_maybe_async(socket_or_opts, loading \\ true, reset_stream \\ false)
+  def load_thread_maybe_async(socket_or_opts, show_loader \\ true, reset_stream \\ false)
 
-  def load_thread_maybe_async(%Phoenix.LiveView.Socket{} = socket, loading, reset_stream) do
+  def load_thread_maybe_async(%Phoenix.LiveView.Socket{} = socket, show_loader, reset_stream) do
     socket_connected = connected?(socket)
     current_user = current_user(socket)
 
@@ -377,7 +377,7 @@ defmodule Bonfire.Social.Threads.LiveHandler do
       end
 
       socket
-      |> assign(loading: loading)
+      |> assign(loading: show_loader)
     else
       debug("socket not connected or not logged in, just load thread")
       load_thread(socket)

@@ -217,7 +217,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
       object_type: object_type,
       object_type_readable: object_type_readable,
       # unit: :minute
-      date_ago: DatesTimes.date_from_now(id, format: :narrow),
+      date_ago: DatesTimes.date_from_now(object_id || id, format: :narrow),
       # if(e(assigns[:__context], :ui_compact, nil),
       #   do: DatesTimes.date_from_now(id, format: :narrow),
       #   else: DatesTimes.date_from_now(id)
@@ -599,6 +599,13 @@ defmodule Bonfire.UI.Social.ActivityLive do
       when object_type in [Bonfire.Data.Identity.User],
       do: []
 
+  #  if subject is also the creator use that
+  def component_maybe_creator(
+        %{subject: %{id: id} = subject} = _activity,
+        %{created: %{creator_id: id}} = _object
+      ),
+      do: component_maybe_creator(subject)
+
   def component_activity_maybe_creator(activity, object, _),
     do:
       component_maybe_creator(object) ||
@@ -618,6 +625,18 @@ defmodule Bonfire.UI.Social.ActivityLive do
 
   # def component_maybe_creator(%{receiver: %{id: _} = receiver} = object),
   #   do: [{Bonfire.UI.Social.Activity.ProviderReceiverLive, %{object: object}}]
+
+  #  if subject is also the creator use that
+  def component_maybe_creator(
+        %{subject: %{id: id} = subject, created: %{creator_id: id}} = _activity
+      ),
+      do: component_maybe_creator(subject)
+
+  #  if subject is also the creator use that
+  def component_maybe_creator(
+        %{subject: %{id: id} = subject, object: %{created: %{creator_id: id}}} = _activity
+      ),
+      do: component_maybe_creator(subject)
 
   def component_maybe_creator(%{created: %{creator: %{id: _}}} = object),
     do:

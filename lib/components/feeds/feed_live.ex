@@ -49,14 +49,13 @@ defmodule Bonfire.UI.Social.FeedLive do
   slot bottom_or_empty_feed
 
   def mount(socket) do
-    feed_id =
-      e(socket.assigns, :feed_name, nil) || e(socket.assigns, :feed_id, nil) ||
-        e(socket.assigns, :id, nil)
+    # FIXME: assigns not available in mount
+    # feed_id = e(socket.assigns, :feed_name, nil) || e(socket.assigns, :feed_id, nil) || e(socket.assigns, :id, nil)
 
     {
       :ok,
       socket
-      |> stream_configure(:feed, dom_id: &component_id(feed_id, &1))
+      |> stream_configure(:feed, dom_id: &component_id("feed", &1))
       |> stream(:feed, [])
       |> assign(
         feed: nil,
@@ -124,7 +123,7 @@ defmodule Bonfire.UI.Social.FeedLive do
 
     socket
     |> assign(Map.drop(assigns, [:insert_stream]))
-    |> LiveHandler.insert_feed(entries)
+    |> LiveHandler.insert_feed(entries, reset: assigns[:reset_stream])
     |> ok_socket()
   end
 
@@ -287,7 +286,7 @@ defmodule Bonfire.UI.Social.FeedLive do
       |> Bonfire.UI.Common.LiveHandlers.assign_attrs(attrs)
       |> LiveHandler.insert_feed(
         ...,
-        LiveHandler.feed_assigns_maybe_async(socket.assigns[:selected_tab], ...)
+        LiveHandler.feed_assigns_maybe_async(socket.assigns[:selected_tab], ..., true, true)
       )
       # |> debug("seeet")
     }
