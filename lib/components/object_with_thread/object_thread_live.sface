@@ -14,7 +14,7 @@
         showing_within={@showing_within || :thread}
       /> -->
       <!-- <Bonfire.UI.Common.BackButtonLive showing_within={@showing_within || :thread} /> -->
-      <div class="border-b border-base-content/20">
+      <div class="">
         <div
           :if={e(@activity, :replied, :thread, :named, :name, nil)}
           class="px-4 flex items-center mt-4 mb-2 font-bold gap-2 text-2xl tracking-wider"
