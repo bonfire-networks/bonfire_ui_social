@@ -23,7 +23,17 @@
       event_target={@myself}
       path_prefix={@tab_path_prefix}
       path_suffix={@tab_path_suffix}
-    />
+    >
+      <Bonfire.UI.Social.FeedControlsLive
+        :if={@feed_name in [nil, :my, :local, :fediverse]}
+        event_target={@myself}
+        feed_id={@feed_id}
+        sort_by={@sort_by}
+        time_limit={@time_limit}
+        sort_order={@sort_order}
+        showing_within={@showing_within}
+      />
+    </Bonfire.UI.Common.TabsLive>
     {#if @feed_count || e(@streams.feed, :inserts, []) != []}
       <div
         id={"feed_#{@feed_id || @id}"}

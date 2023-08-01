@@ -137,7 +137,7 @@
           >
             <a class={
               "flex gap-2 text-base-content/70",
-              "active !text-base-content/100 font-semibold": @sort_by == "num_replies"
+              "active !text-base-content/100 font-semibold": @sort_by == :num_replies
             }>
               <Iconify.Bonfire.Reply.render class="w-5 h-5 stroke-1 fill-base-content/70" />
               {l("By amount of replies")}</a></li>

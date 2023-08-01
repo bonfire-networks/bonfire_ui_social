@@ -42,6 +42,10 @@ defmodule Bonfire.UI.Social.FeedLive do
   prop item_class, :css_class, default: ""
   prop tab_primary_class, :css_class, default: nil
 
+  prop sort_by, :any, default: nil
+  prop time_limit, :any, default: 7
+  prop sort_order, :any, default: false
+
   slot bottom_or_empty_feed
 
   def mount(socket) do
@@ -266,9 +270,26 @@ defmodule Bonfire.UI.Social.FeedLive do
     {:noreply,
      socket
      |> assign(selected_tab: tab)
-     |> Bonfire.Social.Feeds.LiveHandler.insert_feed(
-       LiveHandler.feed_assigns_maybe_async(tab, socket)
-     )}
+     |> LiveHandler.insert_feed(LiveHandler.feed_assigns_maybe_async(tab, socket))}
+  end
+
+  def handle_event(
+        "set",
+        attrs,
+        socket
+      ) do
+    debug(attrs)
+    # need to reload feed so streams are updated 
+    {
+      :noreply,
+      socket
+      # |> assign( replies: [])
+      |> Bonfire.UI.Common.LiveHandlers.assign_attrs(attrs)
+      |> LiveHandler.insert_feed(
+        LiveHandler.feed_assigns_maybe_async(socket.assigns[:selected_tab], socket)
+      )
+      # |> debug("seeet")
+    }
   end
 
   def handle_event(

@@ -216,7 +216,8 @@ defmodule Bonfire.UI.Social.ActivityLive do
           "activity-#{e(assigns, :activity_inception, nil)}-#{id || "no-activity-id"}",
       object_type: object_type,
       object_type_readable: object_type_readable,
-      date_ago: DatesTimes.date_from_now(id, format: :narrow, unit: :minute),
+      # unit: :minute
+      date_ago: DatesTimes.date_from_now(id, format: :narrow),
       # if(e(assigns[:__context], :ui_compact, nil),
       #   do: DatesTimes.date_from_now(id, format: :narrow),
       #   else: DatesTimes.date_from_now(id)
