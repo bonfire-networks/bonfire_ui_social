@@ -54,6 +54,15 @@ defmodule Bonfire.UI.Social.FeedsLive do
        tab_path_suffix: nil,
        feed_component_id: nil,
        feedback_title: l("Your feed is empty"),
+       page_header_aside: [
+        {Bonfire.UI.Social.FeedControlsLive,
+         [
+           feed_id: :notifications,
+           sort_by: :asc,
+           time_limit: 7,
+           sort_order: false
+         ]}
+        ],
        feedback_message:
          l("You can start by following some people, or writing a new post yourself."),
        sidebar_widgets: [
