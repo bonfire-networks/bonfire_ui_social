@@ -469,6 +469,20 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
     )
   end
 
+  def page_header_asides(socket, component_id) do
+    [
+      page_header_aside: [
+        {Bonfire.UI.Social.FeedControlsLive,
+         [
+           event_target: component_id,
+           sort_by: e(socket, :assigns, :sort_by, nil),
+           time_limit: e(socket, :assigns, :sort_by, 7),
+           sort_order: e(socket, :assigns, :sort_order, false)
+         ]}
+      ]
+    ]
+  end
+
   def feed_default_assigns(:my = feed_name, socket) do
     feed_id = Bonfire.Social.Feeds.my_feed_id(:inbox, socket)
 
@@ -476,12 +490,14 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
       Bonfire.Social.Feeds.my_home_feed_ids(socket)
       |> debug(feed_name)
 
+    component_id = component_id(feed_id, socket.assigns)
+
     [
       # feed_id: feed_name,
       feed_name: feed_name,
       feed_id: feed_id,
       feed_ids: feed_ids,
-      feed_component_id: component_id(feed_id, socket.assigns),
+      feed_component_id: component_id,
       # FIXME: clean up page vs tab
       selected_tab: nil,
       page: "feed",
@@ -489,7 +505,7 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
       # feed_title: l("My feed"),
       feed: nil,
       page_info: nil
-    ]
+    ] ++ page_header_asides(socket, component_id)
   end
 
   def feed_default_assigns(:fediverse = feed_name, socket) do
@@ -497,10 +513,12 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
       Bonfire.Social.Feeds.named_feed_id(:activity_pub)
       |> debug(feed_name)
 
+    component_id = component_id(feed_id, socket.assigns)
+
     [
       feed_name: feed_name,
       feed_id: feed_id,
-      feed_component_id: component_id(feed_id, socket.assigns),
+      feed_component_id: component_id,
       selected_tab: :fediverse,
       # FIXME: clean up page vs tab
       page: "federation",
@@ -515,7 +533,7 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
       # feed_id: feed_name,
       feed: nil,
       page_info: nil
-    ]
+    ] ++ page_header_asides(socket, component_id)
   end
 
   def feed_default_assigns(:local = feed_name, socket) do
@@ -523,10 +541,12 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
       Bonfire.Social.Feeds.named_feed_id(:local)
       |> debug(feed_name)
 
+    component_id = component_id(feed_id, socket.assigns)
+
     [
       feed_name: feed_name,
       feed_id: feed_id,
-      feed_component_id: component_id(feed_id, socket.assigns),
+      feed_component_id: component_id,
       selected_tab: :local,
       # FIXME: clean up page vs tab
       page: "local",
@@ -536,7 +556,7 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
       feedback_message: l("It seems like the paint is still fresh on this instance..."),
       feed: nil,
       page_info: nil
-    ]
+    ] ++ page_header_asides(socket, component_id)
   end
 
   def feed_default_assigns(:likes = feed_name, socket) do
@@ -580,7 +600,22 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
   end
 
   def feed_default_assigns({feed_name, filters_or_custom_query_or_feed_id_or_ids}, socket)
-      when is_atom(feed_name) or is_binary(feed_name) do
+      when is_atom(feed_name) do
+    debug(filters_or_custom_query_or_feed_id_or_ids, "filters_or_custom_query_or_feed_id_or_ids")
+
+    feed_default_assigns(feed_name, socket) ++
+      [
+        # feed_name: feed_name,
+        # feed_id: feed_name,
+        feed_filters: filters_or_custom_query_or_feed_id_or_ids
+        # feed_component_id: component_id(feed_name, socket.assigns),
+        # feed: nil,
+        # page_info: nil
+      ]
+  end
+
+  def feed_default_assigns({feed_name, filters_or_custom_query_or_feed_id_or_ids}, socket)
+      when is_binary(feed_name) do
     debug(filters_or_custom_query_or_feed_id_or_ids, "filters_or_custom_query_or_feed_id_or_ids")
 
     [

@@ -1,4 +1,4 @@
-<div :if={current_user_id(@__context__)} class="flex gap-3">
+<div class="flex gap-3">
   <div class="flex items-center gap-3">
     <div class="dropdown dropdown-end">
       <label
