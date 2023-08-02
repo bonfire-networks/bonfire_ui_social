@@ -23,7 +23,7 @@
                 <button
                   x-on:click="content_open = ! content_open"
                   x-text={"content_open ? '#{l("Show less")}' : '#{l("Show more")}'"}
-                  class="ml-1 normal-case rounded btn btn-xs"
+                  class="ml-1 normal-case rounded-full !border !border-base-content/30 btn-outline btn btn-xs"
                 >
                   {l("Show more")}
                 </button>

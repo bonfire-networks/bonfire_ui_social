@@ -61,7 +61,7 @@
       <!-- BODY -->
       <div
         id="write_post_body_field"
-        class="flex-1 max-h-[240px] break-words"
+        class="h-full flex-1 break-words"
         phx-update={if @reset_smart_input, do: "replace", else: "ignore"}
       >
         <Inputs for={:post_content}>
