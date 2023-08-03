@@ -36,7 +36,7 @@
           x-show="expanded"
           :class="{'p_line_clamp': !expanded}"
           x-collapse.min.20px
-          class="font-medium cursor-pointer w-full max-w-full relative gap-1 prose prose-sm !text-sm !text-base-content/70 prose-a:text-base-content/70 prose-a:no-underline prose-p:inline-block"
+          class="font-normal cursor-pointer w-full max-w-full relative gap-1 prose prose-sm !text-sm !text-base-content/70 prose-a:text-base-content/70 prose-a:no-underline prose-p:inline-block"
         >
           {if(@showing_within != :thread and @thread_title,
             do:
@@ -63,15 +63,15 @@
         >
           <LiveRedirect
             opts={"data-id": "subject_name"}
-            aria-label={e(@activity, :subject, :character, :username, "") <> " profile"}
+            aria-label={e(@character, :username, "") <> " profile"}
             class="font-semibold text-base-content hover:underline"
-            to={path(e(@activity, :subject, :character, nil))}
+            to={path(e(@character, nil))}
           >
             <Bonfire.UI.Common.AvatarLive
               class="w-9 h-9 rounded-full bg-base-content/20"
-              parent_id={@activity_component_id || id(@activity)}
-              user={e(@activity, :subject, nil)}
-              title={e(@activity, :subject, :profile, :name, "Anonymous")}
+              parent_id={@activity_component_id || id(@character)}
+              user={e(@profile, nil)}
+              title={e(@profile, :name, "Anonymous")}
             />
           </LiveRedirect>
         </div>
@@ -83,22 +83,22 @@
                 opts={"data-id": "subject_name"}
                 aria-label={l("%{name}'s profile", name: e(@profile, :name, ""))}
                 class="link link-hover"
-                to={path(e(@activity, :subject, :character, nil))}
+                to={path(e(@character, nil))}
               >
-                {e(@activity, :subject, :profile, :name, "Anonymous")}
+                {e(@profile, :name, "Anonymous")}
               </LiveRedirect>
             </div>
             <!-- <span class="ml-2 text-[15px] text-base-content/70">replied to <b class="font-bold text-base-content link">title topic</b></span> -->
             <!-- </div> -->
             <div class="flex items-center -mt-1 gap-1">
               <LiveRedirect
-                :if={e(@activity, :subject, :character, :username, nil)}
+                :if={e(@character, :username, nil)}
                 opts={"data-id": "subject_username"}
-                aria-label={l("%{name}'s profile", name: e(@activity, :subject, :profile, :name, ""))}
+                aria-label={l("%{name}'s profile", name: e(@profile, :name, ""))}
                 class="link link-hover text-[14px] font-normal truncate ellipsis text-base-content/70 subject_username"
-                to={path(e(@activity, :subject, nil))}
+                to={path(e(@profile, nil))}
               >
-                @{e(@activity, :subject, :character, :username, "")}
+                @{e(@character, :username, "")}
               </LiveRedirect>
               <span class="text-base-content/70">·</span>
 
