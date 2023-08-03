@@ -76,6 +76,16 @@
           }>
             <Iconify.Bonfire.LikeFire.render class="h-[20px] w-[18px]" />
             {l("By amount of likes")}</a></li>
+
+        <!-- <li></li>
+        <li>
+          <a class="form-control">
+            <label class="flex gap-2 cursor-pointer">
+              <input type="checkbox" checked="checked" class="checkbox-sm checkbox" />
+              <span class="text-base-content/70">Remember me</span> 
+            </label>
+          </a>
+        </li> -->
       </ul>
     </div>
 
