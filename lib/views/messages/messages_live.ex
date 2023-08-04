@@ -20,10 +20,6 @@ defmodule Bonfire.UI.Social.MessagesLive do
   def mount(params, _session, socket) do
     feed_id = :inbox
     # feed_id = Bonfire.Social.Feeds.my_feed_id(feed_id, socket)
-    # participants =
-    #   Bonfire.Social.Threads.list_participants(Map.put(activity, :object, message), thread_id,
-    #     current_user: current_user
-    #   )
     {:ok,
      socket
      |> assign(
@@ -37,7 +33,6 @@ defmodule Bonfire.UI.Social.MessagesLive do
        feed_id: feed_id,
        activity: nil,
        object: nil,
-       participants: [],
        #  reply_to_id: nil,
        #  thread_id: nil,
        thread_mode: maybe_to_atom(e(params, "mode", nil)) || :flat,
@@ -185,38 +180,13 @@ defmodule Bonfire.UI.Social.MessagesLive do
         #       )
         #     )
 
-        participants =
-          Bonfire.Social.Threads.list_participants(Map.put(activity, :object, message), thread_id,
+        %{
+          participants: participants,
+          title: title
+        } =
+          LiveHandler.thread_participants(thread_id, activity, message,
             current_user: current_user
           )
-
-        # to_circles =
-        #   if is_list(participants) and participants !=[],
-        #     do:
-        #       participants
-        #       |> Enum.reject(&(&1.id == current_user.id))
-        #       |> Enum.map(&{e(&1, :character, :username, l("someone")), e(&1, :id, nil)})
-
-        names =
-          if is_list(participants) and participants != [],
-            do:
-              participants
-              |> Enum.reject(&(&1.id == current_user.id))
-              |> Enum.map_join(
-                " & ",
-                &e(&1, :profile, :name, e(&1, :character, :username, l("someone else")))
-              )
-
-        # mentions = if length(participants)>0, do: Enum.map_join(participants, " ", & "@"<>e(&1, :character, :username, ""))<>" "
-
-        #  if mentions, do: "for %{people}", people: mentions), else: l "Note to self..."
-        prompt = l("Compose a thoughtful response")
-
-        # l("Conversation between %{people}", people: names)
-        title = if names && names != [], do: names, else: l("Conversation")
-
-        threads =
-          e(socket.assigns, :threads, nil) || LiveHandler.list_threads(current_user, socket)
 
         {
           :noreply,
@@ -244,7 +214,7 @@ defmodule Bonfire.UI.Social.MessagesLive do
                   #    context: nil,
                   #    tab_id: nil,
                   #    showing_within: :messages,
-                  #    threads: threads
+                  #    threads: e(socket.assigns, :threads, nil) || LiveHandler.list_threads(current_user, socket)
                   #  ]}
                 ]
               ]

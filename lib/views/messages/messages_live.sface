@@ -22,7 +22,6 @@
       showing_within={:messages}
       context={current_user_id(@__context__)}
       threads={@threads}
-      participants={@participants}
     />
   {/if}
 </main>

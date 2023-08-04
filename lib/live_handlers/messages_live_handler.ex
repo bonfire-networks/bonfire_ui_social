@@ -78,8 +78,56 @@ defmodule Bonfire.Social.Messages.LiveHandler do
     if current_user,
       do:
         Messages.list(current_user, user, [latest_in_threads: true, limit: 8] ++ List.wrap(opts))
+        # |> debug()
+        |> repo().maybe_preload(activity: [replied: [thread: :named]])
+  end
 
-    # |> debug()
+  def thread_meta(key, thread_id, activity, object, opts) do
+    thread_participants(thread_id, activity, object, opts)
+    |> Map.get(key)
+  end
+
+  def thread_participants(thread_id, activity, object, opts) do
+    current_user = current_user(opts)
+
+    participants =
+      if(not is_nil(object), do: Map.put(activity, :object, object), else: activity)
+      |> Bonfire.Social.Threads.list_participants(
+        thread_id,
+        current_user: current_user,
+        skip_boundary_check: true
+      )
+
+    # to_circles =
+    #   if is_list(participants) and participants !=[],
+    #     do:
+    #       participants
+    #       |> Enum.reject(&(&1.id == current_user.id))
+    #       |> Enum.map(&{e(&1, :character, :username, l("someone")), e(&1, :id, nil)})
+
+    names =
+      if is_list(participants) and participants != [],
+        do:
+          participants
+          |> Enum.reject(&(&1.id == id(current_user)))
+          |> Enum.map_join(
+            " & ",
+            &e(&1, :profile, :name, e(&1, :character, :username, l("someone else")))
+          )
+
+    # mentions = if length(participants)>0, do: Enum.map_join(participants, " ", & "@"<>e(&1, :character, :username, ""))<>" "
+
+    #  if mentions, do: "for %{people}", people: mentions), else: l "Note to self..."
+    # prompt = l("Compose a thoughtful response")
+
+    # l("Conversation between %{people}", people: names)
+    title = if names && names != [], do: names, else: l("Conversation")
+
+    %{
+      participants: participants,
+      names: names,
+      title: title
+    }
   end
 
   def send_message(params, socket) do

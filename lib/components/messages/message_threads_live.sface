@@ -22,15 +22,17 @@
               <div class="flex-1 w-full min-w-0 sm:flex sm:items-center sm:justify-between">
                 <div class="w-full truncate">
                   <div class="flex items-center justify-between">
-                    {#if e(activity, :replied, :thread, :named, :name, nil)}
-                      <div class="flex-1 text-sm font-semibold truncate text-base-content">
-                        {Text.text_only(e(activity, :replied, :thread, :named, :name, nil))}
-                      </div>
-                    {#else}
-                      <div class="flex-1 text-sm font-semibold truncate text-base-content/70">
-                        {l("Untitled thread")}
-                      </div>
-                    {/if}
+                    <div class="flex-1 text-sm font-semibold truncate text-base-content">
+                      {#case {LiveHandler.thread_meta(:title, e(activity, :replied, :thread_id, nil), activity, nil,
+                           current_user: @current_user
+                         ), e(activity, :replied, :thread, :named, :name, nil)}}
+                        {#match {participant_names, nil}}
+                          {participant_names}
+                        {#match {participant_names, thread_name}}
+                          {participant_names}:
+                          <span class="text-base-content/70">{thread_name}</span>
+                      {/case}
+                    </div>
                     <div class="flex items-center mt-0.5 text-xs text-base-content/70">
                       <p><time datetime={DatesTimes.date_from_pointer(activity)}>{DatesTimes.date_from_now(activity)}</time></p>
                     </div>
