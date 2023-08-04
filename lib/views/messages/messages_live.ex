@@ -20,7 +20,10 @@ defmodule Bonfire.UI.Social.MessagesLive do
   def mount(params, _session, socket) do
     feed_id = :inbox
     # feed_id = Bonfire.Social.Feeds.my_feed_id(feed_id, socket)
-
+    # participants =
+    #   Bonfire.Social.Threads.list_participants(Map.put(activity, :object, message), thread_id,
+    #     current_user: current_user
+    #   )
     {:ok,
      socket
      |> assign(
@@ -34,6 +37,7 @@ defmodule Bonfire.UI.Social.MessagesLive do
        feed_id: feed_id,
        activity: nil,
        object: nil,
+       participants: [],
        #  reply_to_id: nil,
        #  thread_id: nil,
        thread_mode: maybe_to_atom(e(params, "mode", nil)) || :flat,
@@ -235,13 +239,13 @@ defmodule Bonfire.UI.Social.MessagesLive do
             sidebar_widgets: [
               users: [
                 main: [
-                  {Bonfire.UI.Social.MessageThreadsLive,
-                   [
-                     context: nil,
-                     tab_id: nil,
-                     showing_within: :messages,
-                     threads: threads
-                   ]}
+                  # {Bonfire.UI.Social.MessageThreadsLive,
+                  #  [
+                  #    context: nil,
+                  #    tab_id: nil,
+                  #    showing_within: :messages,
+                  #    threads: threads
+                  #  ]}
                 ]
               ]
             ]
@@ -272,6 +276,7 @@ defmodule Bonfire.UI.Social.MessagesLive do
       |> assign(
         threads: threads,
         page_title: l("Direct Messages"),
+
         # to_boundaries: [{"message", "Message"}],
         tab_id: nil
       )
