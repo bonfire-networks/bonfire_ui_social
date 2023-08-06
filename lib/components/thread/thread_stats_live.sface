@@ -4,9 +4,10 @@
     phx-change="Bonfire.Social.Threads:list_participants"
     phx-target={@event_target}
   >
-    <div class="collapse mb-1 collapse-arrow rounded-none w-auto">
-      <input type="checkbox" phx-update="ignore">
-      <div class="collapse-title px-3  flex items-center flex-1 gap-4 py-0 min-h-[2.75rem]">
+
+  <div x-data="{open: false}" class="p-2">
+    <div class="flex items-center justify-between">
+      <div class="flex items-center flex-1 gap-4 py-0 min-h-[2.75rem] px-2">
         <div class="flex items-center gap-1">
           {#case @last_reply_id}
             {#match nil}
@@ -24,10 +25,6 @@
           <div class="text-sm font-medium text-base-content/90 text-center">{@reply_count || 0}</div>
           <div class="text-sm tracking-wide text-base-content/70 text-center">{l("Replies")}</div>
         </div>
-        <!-- <div class="flex flex-col">
-        <div class="text-sm font-medium text-base-content/70 text-center">56</div>
-        <div class="text-sm tracking-wide text-base-content/70 text-center">{l "Links"}</div>
-      </div> -->
         <div :if={@showing_within != :messages} class="flex items-center gap-1">
           {#if @thread_boost_count}
             <div class="text-sm font-medium text-base-content/90 text-center">{@thread_boost_count || 0}</div>
@@ -44,38 +41,79 @@
           {/if}
           <div class="text-sm tracking-wide text-base-content/70 text-center">{l("Participants")}</div>
         </div>
-        <!-- <div class="avatar-group -space-x-4 mr-10">
-          <Bonfire.UI.Common.AvatarLive
-            :for={p <- (@participants || []) |> Enum.take(4)}
-            parent_id="thread_stats"
-            class="w-7 h-7 rounded-full bg-base-100"
-            user={e(p, :subject, nil) || p}
-            src={e(p, :subject, "icon", nil)}
-          />
-          <div :if={Enum.count(@participants || []) > 4} class="avatar placeholder">
-            <div class="w-8 bg-neutral-focus text-sm text-neutral-content">
-              <span>{@participant_count}</span>
+      </div>
+      <button
+        x-show="!open"
+        type="button"
+        x-on:click="open = !open"
+        class="normal-case btn-circle btn btn-ghost btn-sm"
+      >
+        <#Icon solid="ChevronDown" class="w-6 h-6 text-base-content/70" />
+      </button>
+      <button
+        x-show="open"
+        type="button"
+        x-on:click="open = !open"
+        class="normal-case btn-circle btn btn-ghost btn-sm"
+      >
+        <#Icon solid="ChevronUp" class="w-6 h-6 text-base-content/70" />
+      </button>
+    </div>
+      <div x-show="open" x-cloak x-collapse :class="{'overflow-visible': open}">
+        <div class="flex flex-wrap items-center gap-3 p-2">
+        {#for p <- @participants || []}
+          <div class="z-[99999999999] relative">
+            <div>
+            <span class="tippy" aria-describedby="tooltip">
+              <Bonfire.UI.Common.ProfileItemLive
+                wrapper_class=""
+                show_controls={[]}
+                only_img
+                avatar_class="w-8 h-8 rounded-full bg-base-100"
+                profile={e(p, :profile, nil)}
+                character={e(p, :character, nil)}
+                parent_id="thread_stats"
+              />
+            </span>
+            <!-- <div role="tooltip" class="hidden tippy_template">
+              <div class="card relative z-[999999] w-64 bg-base-100 shadow-xl">
+                <div class="card-body p-4">
+                  <div class="flex flex-col">
+                    <div class="flex justify-between items-center">
+                      <Bonfire.UI.Common.AvatarLive
+                        parent_id={"profile_item_thread_stats"}
+                        user={e(p, :profile, nil)}
+                        class={"w-12 h-12 rounded-full bg-base-content/10"}
+                      />
+                      <Bonfire.UI.Common.FollowButtonLive
+                        :if={current_user_id(@__context__) &&
+                        current_user_id(@__context__) != id(e(p, :profile, nil))}
+                        id={ComponentID.new(Bonfire.UI.Common.FollowButtonLive, id(e(p, :profile, nil)), __MODULE__)}
+                        object_id={id(e(p, :profile, nil))}
+                        path={path(e(p, :character, nil))}
+                        hide_icon
+                      />
+                    </div>
+                    <div class="mt-3">
+                      <p class={"text-base font-bold text-base-content/90"}>
+                          {e(p, :profile, :name, "Anon")}
+                        </p>
+                        <p class="text-sm text-base-content/70">
+                          {Bonfire.Me.Characters.display_username(e(p, :character, :username, nil), true)}
+                        </p>
+                        <div class="mt-2 prose leading-[1.5rem] prose-sm text-base-content/90">{e(p, :profile,  :summary, "" )}</div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div> -->
             </div>
           </div>
-        </div> -->
-      </div>
-      <div class="border-base-content/20 collapse-content">
-        <div class="flex flex-wrap items-center gap-3">
-          <Bonfire.UI.Common.ProfileItemLive
-            :for={p <- @participants || []}
-            wrapper_class=""
-            show_controls={[]}
-            only_img
-            avatar_class="w-8 h-8 rounded-full bg-base-100"
-            profile={e(p, :profile, nil)}
-            character={e(p, :character, nil)}
-            parent_id="thread_stats"
-          />
+          {/for}
         </div>
       </div>
     </div>
   </form>
-  <div class="grow" />
 </div>
 
 <div class="flex items-center w-full justify-between">
