@@ -44,9 +44,13 @@ defmodule Bonfire.UI.Social.Activity.MediaLive do
   def description(%{media: media}), do: description(media)
 
   def description(%{} = media) do
-    (e(media.metadata, "facebook", "og:description", nil) ||
+    json_ld = e(media.metadata, "json_ld", nil)
+
+    (e(json_ld, "description", nil) ||
+       e(media.metadata, "facebook", "og:description", nil) ||
        e(media.metadata, "twitter", "twitter:description", nil) ||
-       e(media.metadata, "other", "description", nil))
+       e(media.metadata, "other", "description", nil) ||
+       e(json_ld, "headline", nil))
     |> unwrap()
   end
 

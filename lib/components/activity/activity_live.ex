@@ -447,6 +447,21 @@ defmodule Bonfire.UI.Social.ActivityLive do
                 thread_mode={@thread_mode}
                 is_remote={@is_remote}
               />
+            {#match _
+              when component in [
+                     Bonfire.UI.Social.Activity.UnknownLive,
+                     Bonfire.UI.Social.Activity.UnknownActivityStreamsLive
+                   ]}
+              <Dynamic.Component
+                module={component}
+                __context__={@__context__}
+                showing_within={@showing_within}
+                viewing_main_object={e(component_assigns, :viewing_main_object, @viewing_main_object)}
+                object={e(component_assigns, :object, @object)}
+                object_type={e(component_assigns, :object_type, @object_type)}
+                object_type_readable={e(component_assigns, :object_type_readable, @object_type_readable)}
+                json={e(component_assigns, :json, nil)}
+              />
             {#match Bonfire.UI.Social.Activity.MediaLive}
               <Bonfire.UI.Social.Activity.MediaLive
                 :if={@hide_activity != "media" and @showing_within != :smart_input}
@@ -505,6 +520,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
                 character={e(component_assigns, :character, nil)}
                 media={e(component_assigns, :media, nil)}
                 activity_component_id={e(component_assigns, :activity_component_id, @activity_component_id)}
+                json={e(component_assigns, :json, nil)}
               />
           {/case}
         {/for}
@@ -1029,6 +1045,25 @@ defmodule Bonfire.UI.Social.ActivityLive do
 
   def component_object(_, _, %{} = object, object_type) do
     case object_type || Types.object_type(object) do
+      Bonfire.Data.Social.APActivity ->
+        json = e(object, :json, nil)
+
+        case String.capitalize(
+               e(json, "object", "type", nil) || e(json, "type", nil) || "Remote Activity"
+             ) do
+          "Event" = object_type ->
+            [
+              {Bonfire.UI.Social.Activity.EventActivityStreamsLive,
+               json: json, object_type_readable: object_type}
+            ]
+
+          object_type ->
+            [
+              {Bonfire.UI.Social.Activity.UnknownActivityStreamsLive,
+               json: json, object_type_readable: object_type}
+            ]
+        end
+
       type when is_atom(type) and not is_nil(type) ->
         debug(type, "component object_type recognised")
         component_for_object_type(type, object)
