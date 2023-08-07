@@ -16,17 +16,6 @@
       "flex items-top gap-2 w-full": @show_minimal_subject_and_note
     }
   >
-    <div :if={@showing_within == :smart_input} class="absolute pl-3 ml-3  right-[-30px]">
-      <span
-        phx-click="Bonfire.UI.Common.SmartInput:remove_data"
-        class="btn btn-xs btn-circle btn-ghost"
-        title={l("Cancel Reply")}
-      >
-        <span class="sr-only">{l("Cancel Reply")}</span>
-        <#Icon solid="X" class="w-4 h-4" />
-      </span>
-    </div>
-
     {#if @show_minimal_subject_and_note}
       <div class="flex-shrink-0">
         <#Icon iconify="ic:round-reply" class="w-5 h-5 text-base-content/70" />
@@ -109,7 +98,7 @@
                 object={@object}
                 activity={@activity}
                 object_type={@object_type}
-                permalink={@permalink || path(@object) || path(e(@activity, :object, nil))}
+                permalink={@permalink || path(@activity) || path(@object) || path(e(@activity, :object, nil))}
                 thread_id={@thread_id}
               >
                 <span class="subject_timestamp text-[13px] font-normal no-underline truncate ellipsis text-base-content/70">
@@ -200,8 +189,7 @@
                 object={@object}
                 activity={@activity}
                 object_type={@object_type}
-                permalink={@permalink || path(@object) ||
-                  path(e(@activity, :object, nil))}
+                permalink={@permalink || path(@activity) || path(@object) || path(e(@activity, :object, nil))}
                 thread_id={@thread_id}
               >
                 <span class="text-sm font-normal no-underline subject_timestamp text-base-content/60">
@@ -322,8 +310,7 @@
               object={@object}
               activity={@activity}
               object_type={@object_type}
-              permalink={@permalink || path(@object) ||
-                path(e(@activity, :object, nil))}
+              permalink={@permalink || path(@activity) || path(@object) || path(e(@activity, :object, nil))}
               thread_id={@thread_id}
             >
               <span class="subject_timestamp text-[13px] font-normal no-underline truncate ellipsis text-base-content/70">
@@ -338,13 +325,13 @@
     {/if}
   </div>
 
-  <LiveRedirect
-    to={@permalink}
+  <a
+    href={@permalink}
     :if={e(@activity, :replied, :reply_to_id, nil) == nil and @showing_within in [nil, :feed] and
       @thread_title}
-    class="flex items-center mt-3 font-bold gap-2 text-lg"
+    class="preview_activity_link flex items-center mt-3 font-bold gap-2 text-lg"
   >
     <!-- <#Icon iconify="subway:title" class="w-4 h-4 text-info" /> -->
     <span class="link link-hover">{@thread_title}</span>
-  </LiveRedirect>
+  </a>
 {/if}

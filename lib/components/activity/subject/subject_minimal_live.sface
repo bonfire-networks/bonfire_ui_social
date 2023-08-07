@@ -72,7 +72,7 @@
     {#match :search}
       <div />
     {#match :notifications}
-      <div class="flex items-center w-full">
+      <div class="flex items-center justify-between w-full">
         {#if @verb == "Like"}
           <div data-role="liked_by" class="flex items-start gap-5 justify-start">
             <!-- LIKE -->
@@ -340,6 +340,20 @@
             </div>
           </div> -->
         {/if}
+
+        <Bonfire.UI.Social.Activity.LinkToActivityLive
+          :if={@showing_within not in [:smart_input]}
+          object={@object}
+          activity={@activity}
+          object_type={@object_type}
+          permalink={@permalink || path(@activity) || path(@object) || path(e(@activity, :object, nil))}
+          thread_id={@thread_id}
+        >
+          <span class="subject_timestamp text-[13px] font-normal no-underline truncate ellipsis text-base-content/70">
+            {@date_ago || DatesTimes.date_from_now(@activity) || DatesTimes.date_from_now(@object) ||
+              DatesTimes.date_from_now(e(@activity, :object, nil))}
+          </span>
+        </Bonfire.UI.Social.Activity.LinkToActivityLive>
       </div>
     {#match _}
       <div class="flex items-center w-full">

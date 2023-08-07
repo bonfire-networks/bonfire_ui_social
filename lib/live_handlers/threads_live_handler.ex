@@ -298,7 +298,7 @@ defmodule Bonfire.Social.Threads.LiveHandler do
       thread_id: thread_id,
       current_user: current_user,
       page: "thread",
-      thread_loading: true
+      loading: true
       # participants: participants
     )
 
@@ -528,10 +528,12 @@ defmodule Bonfire.Social.Threads.LiveHandler do
   def insert_comments(socket, {:replies, replies}, opts) do
     debug(replies, "insert flat replies into stream")
 
+    # Utils.e(socket.assigns, :replies, [])
+
     maybe_stream_insert(
       socket,
       :replies,
-      List.wrap(replies) ++ Utils.e(socket.assigns, :replies, []),
+      replies,
       opts
     )
   end

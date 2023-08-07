@@ -23,27 +23,27 @@ defmodule Bonfire.UI.Social.Activity.MoreActionsLive do
   slot admin_items, required: false
 
   def render(assigns) do
-    subject = subject(assigns.activity, assigns.object)
+    creator = creator_or_subject(assigns.activity, assigns.object)
 
     assigns
     |> assign(
-      subject: subject,
-      subject_id: subject_id(assigns.activity, assigns.object, subject),
-      name: name(assigns.activity, assigns.object, subject)
+      creator: creator,
+      creator_id: creator_or_subject_id(assigns.activity, assigns.object, creator),
+      name: name(assigns.activity, assigns.object, creator)
     )
     |> render_sface()
   end
 
-  def subject(activity, object) do
-    e(activity, :subject, nil) || e(object, :created, :creator, nil)
+  defp creator_or_subject(activity, object) do
+    e(object, :created, :creator, nil) || e(activity, :subject, nil)
   end
 
-  def subject_id(activity, object, subject \\ nil) do
-    id(subject || subject(activity, object)) || e(activity, :subject_id, nil) ||
-      e(object, :created, :creator_id, nil) || e(object, :creator_id, nil)
+  defp creator_or_subject_id(activity, object, subject \\ nil) do
+    id(subject) || e(object, :created, :creator_id, nil) || e(object, :creator_id, nil) ||
+      e(activity, :subject_id, nil)
   end
 
-  def name(activity, object, subject \\ nil) do
-    e(subject || subject(activity, object), :profile, :name, l("this user"))
+  defp name(activity, object, subject \\ nil) do
+    e(subject || creator_or_subject(activity, object), :profile, :name, l("this user"))
   end
 end

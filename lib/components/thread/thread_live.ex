@@ -32,8 +32,7 @@ defmodule Bonfire.UI.Social.ThreadLive do
   prop sort_by, :any, default: nil
   prop sort_order, :any, default: false
   prop showing_within, :atom, default: :thread
-  # prop loading, :boolean, default: false
-  prop thread_loading, :boolean, default: nil
+  prop loading, :boolean, default: false
 
   prop(reply_count, :any, default: nil)
   prop(thread_boost_count, :any, default: nil)
@@ -44,19 +43,19 @@ defmodule Bonfire.UI.Social.ThreadLive do
     {
       :ok,
       socket
-      |> stream_configure(:replies, dom_id: &component_id(&1))
+      |> stream_configure(:replies, dom_id: &component_id(&1, "flat"))
       |> stream(:replies, [])
-      |> stream_configure(:threaded_replies, dom_id: &component_id(&1))
+      |> stream_configure(:threaded_replies, dom_id: &component_id(&1, "nested"))
       |> stream(:threaded_replies, [])
     }
   end
 
-  defp component_id({entry, _children}) do
-    id(entry)
+  defp component_id({entry, _children}, prefix) do
+    "#{prefix}_#{id(entry)}"
   end
 
-  defp component_id(entry) do
-    id(entry)
+  defp component_id(entry, prefix) do
+    "#{prefix}_#{id(entry)}"
   end
 
   def update(%{insert_stream: entries} = assigns, socket) do
@@ -65,6 +64,7 @@ defmodule Bonfire.UI.Social.ThreadLive do
     {:ok,
      socket
      |> assign(Map.drop(assigns, [:insert_stream]))
+     |> assign(replies: [])
      |> LiveHandler.insert_comments(entries, reset: assigns[:reset_stream])}
   end
 
@@ -246,13 +246,16 @@ defmodule Bonfire.UI.Social.ThreadLive do
         attrs,
         socket
       ) do
-    # need to reload comments so streams are updated 
+    debug("need to reload comments so streams are updated")
+
     {
       :noreply,
       socket
-      # |> assign( replies: [])
+      |> assign(replies: [])
+      |> stream(:replies, [], reset: true)
+      |> stream(:threaded_replies, [], reset: true)
       |> Bonfire.UI.Common.LiveHandlers.assign_attrs(attrs)
-      |> LiveHandler.load_thread_maybe_async(false, true)
+      |> LiveHandler.load_thread_maybe_async(true, true)
       # |> debug("seeet")
     }
   end

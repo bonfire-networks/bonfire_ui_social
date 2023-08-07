@@ -15,6 +15,12 @@ defmodule Bonfire.UI.Social.CommentLive do
   # prop create_object_type, :any, default: nil
   prop current_url, :string, default: nil
 
+  def render(assigns) do
+    assigns
+    |> assign(:activity, get_activity(assigns.activity || assigns.comment))
+    |> render_sface()
+  end
+
   def get_activity(%{__struct__: Bonfire.Data.Social.Activity, object: %{}} = activity) do
     activity
   end

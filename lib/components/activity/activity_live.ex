@@ -68,7 +68,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
   end
 
   def update(
-        %{preloaded_async_activities: preloaded_async_activities, activity: activity} = _assigns,
+        %{preloaded_async_activities: preloaded_async_activities, activity: activity} = assigns,
         %{assigns: %{activity_prepared: _}} = socket
       )
       when preloaded_async_activities == true do
@@ -82,8 +82,10 @@ defmodule Bonfire.UI.Social.ActivityLive do
        activity: if(is_map(activity), do: Map.drop(activity, [:object])),
        object: e(activity, :object, nil),
        published_in: maybe_published_in(activity, nil),
-             thread_title: e(socket.assigns, :thread_title, nil) || e(activity, :replied, :thread, :named, :name, nil)
-
+       thread_title:
+         e(assigns, :thread_title, nil) || e(socket.assigns, :thread_title, nil) ||
+           e(activity, :replied, :thread, :named, :name, nil),
+       thread_mode: e(assigns, :thread_mode, nil) || e(socket.assigns, :thread_mode, nil)
      )}
   end
 
@@ -191,8 +193,10 @@ defmodule Bonfire.UI.Social.ActivityLive do
           end
         end
 
+    debug(activity, "theactivity")
+
     object_id = id(object)
-    id = id(activity) || object_id
+    id = object_id || id(activity)
 
     current_url =
       (assigns[:current_url] || current_url(assigns[:__context__]))
@@ -365,7 +369,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
           e(@activity, :seen, nil) == nil and @showing_within == :notifications and
             @activity_inception == nil,
         "active-activity":
-          String.contains?(@current_url || "", @permalink) and @showing_within != :smart_input
+          String.contains?(@current_url || "", @permalink || "") and @showing_within != :smart_input
       }
     >
       <form
@@ -381,6 +385,12 @@ defmodule Bonfire.UI.Social.ActivityLive do
         <input type="hidden" name="feed_id" value={@feed_id}>
         <input type="hidden" name="activity_id" value={@activity_id}>
       </form>
+      <div
+        :if={@viewing_main_object && (@thread_title || e(@activity, :replied, :thread, :named, :name, nil))}
+        class="flex items-center mb-4 font-bold gap-2 text-2xl tracking-wider"
+      >
+        <span class="">{@thread_title || e(@activity, :replied, :thread, :named, :name, "")}</span>
+      </div>
 
       {#if @hide_activity != "all"}
         {#for {component, component_assigns} when is_atom(component) <-
@@ -474,7 +484,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
                 myself={nil}
                 created_verb_display={@created_verb_display}
                 showing_within={@showing_within}
-                thread_mode={@thread_mode}
+                thread_mode={debug(@thread_mode, "thread_modessss")}
                 activity={e(component_assigns, :activity, @activity)}
                 object={e(component_assigns, :object, @object)}
                 object_id={e(component_assigns, :object_id, @object_id)}
@@ -612,10 +622,12 @@ defmodule Bonfire.UI.Social.ActivityLive do
   def component_activity_maybe_creator(activity, object, _),
     do:
       component_maybe_creator(object) ||
-        component_maybe_creator(activity) || (
+        component_maybe_creator(activity) ||
+        (
           debug(activity)
           debug(object)
-          [])
+          []
+        )
 
   def component_maybe_creator(%{
         creator_profile: %{id: _} = profile,

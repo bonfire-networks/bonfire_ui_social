@@ -19,7 +19,7 @@
     />
   </Bonfire.UI.Social.Activity.ThreadStatsLive>
 
-  {#if @thread_loading != nil || @replies != []}
+  {#if @loading != true || @replies != []}
     <div class="flex flex-col flex-1">
       <div data-id="replies" class="flex flex-col flex-1 pb-4">
         <Bonfire.UI.Common.LoadPreviousLive
@@ -71,7 +71,7 @@
                   feed_id={@feed_id}
                   current_url={@current_url}
                   thread_object={@object}
-                  thread_mode={@thread_mode}
+                  thread_mode={debug(@thread_mode, "thread_modessss")}
                   showing_within={@showing_within || :thread}
                 />
               </div>

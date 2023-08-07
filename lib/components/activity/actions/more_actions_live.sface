@@ -29,7 +29,7 @@
           id={"thread_title_#{id(@activity) || @thread_id}"}
           title_text={l("Edit the title of this discussion")}
           no_actions
-          form_opts={%{"phx-submit" => "Bonfire.Social.Objects:set_name", "phx-target"=>"#main_thread_title"}}
+          form_opts={%{"phx-submit" => "Bonfire.Social.Objects:set_name", "phx-target" => "##{@activity_component_id}"}}
         >
           <Field for={:thread} class="my-4">
             <TextInput
@@ -99,19 +99,19 @@
         />
       </li>
 
-      <li :if={current_user_id(@__context__) != @subject_id and
-        Types.object_type(@subject) == Bonfire.Data.Identity.User}>
+      <li :if={current_user_id(@__context__) != @creator_id and
+        Types.object_type(@creator) == Bonfire.Data.Identity.User}>
         <Dynamic.Component
           :if={module_enabled?(Bonfire.Boundaries.Web.AddToCircleLive) and @current_user}
           module={Bonfire.Boundaries.Web.AddToCircleLive}
-          user_id={@subject_id}
-          name={e(@subject, :profile, :name, nil)}
+          user_id={@creator_id}
+          name={e(@creator, :profile, :name, nil)}
           parent_id={id(@activity_component_id || @activity)}
         />
       </li>
     {/if}
 
-    <li :if={current_user_id(@__context__) != @subject_id and @verb != "Flag"}>
+    <li :if={current_user_id(@__context__) != @creator_id and @verb != "Flag"}>
       <details>
         <summary>
           <div class="flex items-center w-full gap-2 text-sm text-base-content/70">
@@ -132,9 +132,9 @@
           </li>
 
           <!-- Flag the author -->
-          <li data-role="flag_author" :if={not is_nil(@subject_id) and not is_nil(@current_user)}>
+          <li data-role="flag_author" :if={not is_nil(@creator_id) and not is_nil(@current_user)}>
             <Bonfire.UI.Common.FlagActionLive
-              object={@subject_id}
+              object={@creator_id}
               flagged={@flagged}
               parent_id={"user-#{id(@activity_component_id || @activity)}"}
               object_type={@name || l("user")}
@@ -147,7 +147,7 @@
     <!-- Block the author, etc -->
     <Bonfire.Boundaries.Web.BlockMenuButtonsLive
       parent_id={@activity_component_id || id(@activity)}
-      object={@subject}
+      object={@creator}
       peered={e(@object, :peered, nil)}
     />
 
@@ -167,7 +167,7 @@
               <Bonfire.UI.Social.Activity.DeleteObjectLive
                 skip_permission_check
                 object={@object}
-                creator_id={@subject_id}
+                creator_id={@creator_id}
                 object_type_readable={@object_type_readable}
                 object_boundary={@object_boundary}
                 parent_id={"object-#{id(@activity_component_id || @activity)}"}
@@ -182,7 +182,7 @@
                 object={@activity}
                 object_boundary={@object_boundary}
                 object_type_readable={l("from feeds")}
-                creator_id={@subject_id}
+                creator_id={@creator_id}
                 parent_id={"delete-activity-#{id(@activity_component_id || @activity)}"}
                 explanation={l(
                   "Deleting from feeds means this %{verb} and this %{object} still exist, but this activity won't be discoverable via the local instance's feeds. Remote feeds won't be affected.",
@@ -198,7 +198,7 @@
     {#elseif @object_boundary && @object_type in [Bonfire.Data.Social.Message] && id(@activity)}
       <Bonfire.UI.Social.Activity.DeleteObjectLive
         object={@object}
-        creator_id={@subject_id}
+        creator_id={@creator_id}
         object_type_readable={@object_type_readable}
         object_boundary={@object_boundary}
         parent_id={"object-#{id(@activity_component_id || @activity)}"}

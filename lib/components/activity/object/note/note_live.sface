@@ -6,7 +6,9 @@
     "!ml-12 !opacity-70": @showing_within == :notifications,
     "!mt-1 cursor-default": @showing_within == :thread,
     "mb-3": @viewing_main_object,
-    "ml-10 !mt-0": @thread_mode != :flat && @showing_within == :thread && !@viewing_main_object
+    "ml-10 !mt-0":
+      debug(@thread_mode, "thread_modessss") != :flat && @showing_within == :thread &&
+        !@viewing_main_object
   }
   x-show={if @showing_within == :thread && !@viewing_main_object, do: "show_replies"}
   x-transition

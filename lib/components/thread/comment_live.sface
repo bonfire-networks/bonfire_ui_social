@@ -1,4 +1,4 @@
-<div data-id="comment" class="flex flex-1 w-full items-top">
+<div id={"cc_#{id(@activity)}"} data-id="comment" class="flex flex-1 w-full items-top">
   <!-- <div
         :if={@thread_level > 1}
         x-cloak
@@ -12,33 +12,32 @@
       </div> -->
 
   <div class="flex-1 w-full" x-data="{reply: false, show: true}">
-    {#case get_activity(@activity || @comment)}
-      {#match nil}
-        <div class="mx-4 my-2">
-          <div class="p-4 rounded-md bg-info/10">
-            <div class="flex">
-              <div class="flex-shrink-0">
-                <#Icon solid="InformationCircle" class="w-5 h-5 text-info" />
-              </div>
-              <div class="flex-1 ml-3 md:flex md:justify-between">
-                <p class="text-sm text-info">{l("This comment was deleted.")}</p>
-              </div>
+    {#if is_nil(@activity)}
+      <div class="mx-4 my-2">
+        <div class="p-4 rounded-md bg-info/10">
+          <div class="flex">
+            <div class="flex-shrink-0">
+              <#Icon solid="InformationCircle" class="w-5 h-5 text-info" />
+            </div>
+            <div class="flex-1 ml-3 md:flex md:justify-between">
+              <p class="text-sm text-info">{l("This comment was deleted.")}</p>
             </div>
           </div>
         </div>
-      {#match activity}
-        <Bonfire.UI.Social.ActivityLive
-          id={"comment_#{id(activity)}"}
-          activity={activity}
-          thread_object={@thread_object}
-          class="showing_within:thread !p-3 !shadow-none !rounded-none"
-          feed_id={@feed_id}
-          current_url={@current_url || current_url(@__context__)}
-          showing_within={:thread}
-          thread_mode={@thread_mode}
-          object_boundary={if @showing_within == :messages, do: :skip_boundary_check}
-          viewing_main_object={false}
-        />
-    {/case}
+      </div>
+    {#else}
+      <Bonfire.UI.Social.ActivityLive
+        id={"comment_#{id(@activity)}"}
+        activity={debug(@activity, "comment_activity")}
+        thread_object={@thread_object}
+        class="showing_within:thread !p-3 !shadow-none !rounded-none"
+        feed_id={@feed_id}
+        current_url={@current_url || current_url(@__context__)}
+        showing_within={:thread}
+        thread_mode={debug(@thread_mode, "thread_modessss")}
+        object_boundary={if @showing_within == :messages, do: :skip_boundary_check}
+        viewing_main_object={false}
+      />
+    {/if}
   </div>
 </div>

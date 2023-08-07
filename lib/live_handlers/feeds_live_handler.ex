@@ -1170,7 +1170,8 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
         do:
           Bonfire.Social.Posts.list_by(user,
             pagination: input_to_atoms(params),
-            current_user: current_user(socket)
+            current_user: current_user(socket),
+            preload: :feed
           )
 
     # |> debug("posts")

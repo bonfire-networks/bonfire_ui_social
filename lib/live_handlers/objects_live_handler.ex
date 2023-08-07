@@ -105,7 +105,7 @@ defmodule Bonfire.Social.Objects.LiveHandler do
     #         &("@" <> e(&1, :character, :username, ""))
     #       ) <> " "
 
-    #debug(activity)
+    # debug(activity)
     thread_title = e(activity, :replied, :thread, :named, :name, nil)
 
     socket
