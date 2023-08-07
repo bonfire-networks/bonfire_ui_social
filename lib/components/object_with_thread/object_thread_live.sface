@@ -16,10 +16,11 @@
       <!-- <Bonfire.UI.Common.BackButtonLive showing_within={@showing_within || :thread} /> -->
       <div class="">
         <div
-          :if={e(@activity, :replied, :thread, :named, :name, nil)}
+          :if={@thread_title || e(@activity, :replied, :thread, :named, :name, nil)}
+          id="main_thread_title"
           class="px-4 flex items-center mt-4 mb-2 font-bold gap-2 text-2xl tracking-wider"
         >
-          <span class="">{e(@activity, :replied, :thread, :named, :name, "")}</span>
+          <span class="">{@thread_title || e(@activity, :replied, :thread, :named, :name, "")}</span>
         </div>
         <Bonfire.UI.Social.ActivityLive
           :if={@activity}
@@ -27,7 +28,7 @@
           id={@main_object_component_id}
           showing_within={:thread}
           thread_mode={@thread_mode}
-          thread_title={@page_title}
+          thread_title={@thread_title}
           viewing_main_object
           activity={@activity}
           object={@object}

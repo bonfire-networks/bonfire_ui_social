@@ -5,7 +5,7 @@ defmodule Bonfire.UI.Social.ObjectThreadLoadLive do
   prop post_id, :string, default: nil
   prop object, :any, default: nil
   # prop page, :string, default: nil
-  # prop page_title, :string, default: nil
+  prop thread_title, :string, default: nil
   # prop show_reply_input, :boolean, default: false
   # prop search_placeholder, :string, default: nil
   prop thread_id, :string, default: nil

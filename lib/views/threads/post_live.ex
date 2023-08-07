@@ -10,6 +10,7 @@ defmodule Bonfire.UI.Social.PostLive do
      socket
      |> assign(
        page_title: l("Post"),
+       thread_title: nil,
        page: "discussion",
        #  to_circles: [],
        participants: nil,

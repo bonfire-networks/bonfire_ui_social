@@ -972,8 +972,7 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
       |> filter_empty([])
       |> preload_activity_and_object_assocs([:object], opts)
       |> Map.new(fn activity -> {id(activity) || id(e(activity, :object, nil)), activity} end)
-
-    # |> debug("list_of_activities")
+      |> debug("list_of_activities")
 
     list_of_components
     # |> debug()

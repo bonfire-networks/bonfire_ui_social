@@ -12,7 +12,7 @@ defmodule Bonfire.Social.Objects.LiveHandler do
 
       {:noreply,
        socket
-       |> assign(page_title: name)
+       |> assign(thread_title: name)
        |> assign_flash(:info, l("Name updated!"))}
     end
   end
@@ -67,6 +67,7 @@ defmodule Bonfire.Social.Objects.LiveHandler do
     # FIXME: is this re-preloading the object we already have?
     activity =
       Bonfire.Social.Activities.activity_preloads(activity, :all, current_user: current_user)
+      |> repo().maybe_preload(replied: [thread: [:named]])
 
     # debug(object, "the object")
     # debug(activity, "the activity")
@@ -104,7 +105,8 @@ defmodule Bonfire.Social.Objects.LiveHandler do
     #         &("@" <> e(&1, :character, :username, ""))
     #       ) <> " "
 
-    # page_title = e(activity, :replied, :thread, :named, :name, page_title)
+    #debug(activity)
+    thread_title = e(activity, :replied, :thread, :named, :name, nil)
 
     socket
     |> assign_generic(
@@ -137,11 +139,11 @@ defmodule Bonfire.Social.Objects.LiveHandler do
       # participants: participants,
       no_index:
         Bonfire.Me.Settings.get([Bonfire.Me.Users, :undiscoverable], true, current_user: author),
-      thread_id: thread_id
+      thread_id: thread_id,
       # reply_to_id: object,
       # smart_input_opts: %{text_suggestion: mentions, prompt: smart_input_prompt},
       # to_circles: to_circles || []
-      # page_title: page_title
+      thread_title: thread_title
     )
   end
 

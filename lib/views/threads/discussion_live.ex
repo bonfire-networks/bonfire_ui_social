@@ -8,6 +8,7 @@ defmodule Bonfire.UI.Social.DiscussionLive do
      socket
      |> assign(
        page_title: l("Discussion"),
+       thread_title: nil,
        page: "discussion",
        showing_within: :thread,
        # search_placeholder: l("Search this discussion"),

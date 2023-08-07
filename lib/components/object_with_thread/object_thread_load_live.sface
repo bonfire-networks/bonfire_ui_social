@@ -3,6 +3,7 @@
   object={@object}
   object_id={@object_id}
   thread_id={@thread_id}
+  thread_title={@thread_title}
   thread_mode={@thread_mode}
   current_url={@current_url}
   replies={@replies}

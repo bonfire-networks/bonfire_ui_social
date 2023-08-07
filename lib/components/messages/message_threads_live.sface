@@ -14,7 +14,7 @@
         >
           <div class="relative w-full indicator">
             <span
-              :if={!e(activity, :seen, nil)}
+              :if={!e(activity, :seen, nil) and e(activity, :subject_id, nil) != current_user_id(@__context__)}
               class="indicator-item badge badge-xs bg-base-content/30 right-6 bottom-1 top-[auto] invisible unread-activity"
             >
             </span>

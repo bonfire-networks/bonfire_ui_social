@@ -81,7 +81,9 @@ defmodule Bonfire.UI.Social.ActivityLive do
        socket,
        activity: if(is_map(activity), do: Map.drop(activity, [:object])),
        object: e(activity, :object, nil),
-       published_in: maybe_published_in(activity, nil)
+       published_in: maybe_published_in(activity, nil),
+             thread_title: e(socket.assigns, :thread_title, nil) || e(activity, :replied, :thread, :named, :name, nil)
+
      )}
   end
 
@@ -600,16 +602,20 @@ defmodule Bonfire.UI.Social.ActivityLive do
       do: []
 
   #  if subject is also the creator use that
-  def component_maybe_creator(
+  def component_activity_maybe_creator(
         %{subject: %{id: id} = subject} = _activity,
-        %{created: %{creator_id: id}} = _object
+        %{created: %{creator_id: id}} = _object,
+        _
       ),
-      do: component_maybe_creator(subject)
+      do: component_maybe_creator(subject) || []
 
   def component_activity_maybe_creator(activity, object, _),
     do:
       component_maybe_creator(object) ||
-        component_maybe_creator(activity) || []
+        component_maybe_creator(activity) || (
+          debug(activity)
+          debug(object)
+          [])
 
   def component_maybe_creator(%{
         creator_profile: %{id: _} = profile,
@@ -721,8 +727,8 @@ defmodule Bonfire.UI.Social.ActivityLive do
   #     )
   #     |> component_maybe_creator()
 
-  def component_maybe_creator(activity) do
-    warn(activity, "could not find a creator")
+  def component_maybe_creator(activity_or_object) do
+    warn(activity_or_object, "could not find a creator")
     nil
   end
 
