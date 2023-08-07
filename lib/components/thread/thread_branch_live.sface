@@ -56,7 +56,7 @@
         </button>
       </div> -->
 
-        <div class={"replies replies-level-" <> to_string(@thread_level + 1) <> " my-4 ml-3"}>
+        <div class={"replies replies-level-" <> to_string(@thread_level + 1) <> " ml-3"}>
           {#for {{subreply, sub_child_replies}, index} <- Enum.with_index(@threaded_replies |> debug("idddd"), 1)}
             <div class="relative">
               <!-- <div 
