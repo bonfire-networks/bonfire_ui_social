@@ -34,16 +34,16 @@ defmodule Bonfire.UI.Social.Activity.MoreActionsLive do
     |> render_sface()
   end
 
-  defp creator_or_subject(activity, object) do
+  def creator_or_subject(activity, object) do
     e(object, :created, :creator, nil) || e(activity, :subject, nil)
   end
 
-  defp creator_or_subject_id(activity, object, subject \\ nil) do
+  def creator_or_subject_id(activity, object, subject \\ nil) do
     id(subject) || e(object, :created, :creator_id, nil) || e(object, :creator_id, nil) ||
       e(activity, :subject_id, nil)
   end
 
-  defp name(activity, object, subject \\ nil) do
+  def name(activity, object, subject \\ nil) do
     e(subject || creator_or_subject(activity, object), :profile, :name, l("this user"))
   end
 end

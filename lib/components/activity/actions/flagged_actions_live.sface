@@ -139,7 +139,7 @@
         <Bonfire.UI.Social.Activity.DeleteObjectLive
           object={@object}
           icon_class="w-5 h-5 stroke-1 text-error"
-          creator_id={Bonfire.UI.Social.Activity.MoreActionsLive.subject_id(@activity, @object)}
+          creator_id={Bonfire.UI.Social.Activity.MoreActionsLive.creator_or_subject_id(@activity, @object)}
           object_type_readable={@object_type_readable}
           parent_id={id(@activity)}
           open_btn_class="flex rounded btn btn-ghost hover:bg-error/30 bg-error/20 normal-case btn-sm gap-2 text-error text-xs"

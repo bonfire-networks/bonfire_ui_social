@@ -640,9 +640,10 @@ defmodule Bonfire.UI.Social.ActivityLive do
       component_maybe_creator(object) ||
         component_maybe_creator(activity) ||
         (
+          debug("could not find a creator")
           debug(activity)
           debug(object)
-          []
+          [Bonfire.UI.Social.Activity.SubjectMinimalLive]
         )
 
   def component_maybe_creator(%{
@@ -756,7 +757,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
   #     |> component_maybe_creator()
 
   def component_maybe_creator(activity_or_object) do
-    warn(activity_or_object, "could not find a creator")
+    # warn(activity_or_object, "could not find a creator")
     nil
   end
 

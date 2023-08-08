@@ -567,6 +567,7 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
       feed_id: feed_name,
       feed_component_id: component_id(feed_name, socket.assigns),
       selected_tab: :likes,
+      showing_within: :feed_by_subject,
       # FIXME: clean up page vs tab
       page: "local",
       # page_title: l("My favourites"),
@@ -935,11 +936,15 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
       |> uniq_assign(:thread_mode)
       |> debug("thread_mode")
 
+    preload_feed_extra = [:with_thread_name, :with_reply_to, :with_media, :with_parent]
+
     preloads =
       case {showing_within, thread_mode} do
         {:thread, :flat} -> [:feed, :with_reply_to, :with_media]
         {:thread, _} -> [:feed, :with_media]
-        _ -> [:feed, :with_thread_name, :with_reply_to, :with_media, :with_parent]
+        {:feed_by_creator, _} -> [:with_object_more]
+        {:feed_by_subject, _} -> [:feed_by_subject] ++ preload_feed_extra
+        _ -> [:feed] ++ preload_feed_extra
       end
       |> debug("whatpreloads")
 
@@ -1171,7 +1176,7 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
           Bonfire.Social.Posts.list_by(user,
             pagination: input_to_atoms(params),
             current_user: current_user(socket),
-            preload: :feed
+            preload: :feed_by_creator
           )
 
     # |> debug("posts")
@@ -1181,6 +1186,7 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
        loading: false,
        selected_tab: tab,
        page: "posts",
+       showing_within: :feed_by_creator,
        page_info: e(feed, :page_info, [])
      ]}
   end
@@ -1202,6 +1208,7 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
      [
        loading: false,
        selected_tab: tab,
+       showing_within: :feed_by_subject,
        page_info: e(feed, :page_info, [])
      ]}
   end
@@ -1229,6 +1236,7 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
      [
        loading: false,
        selected_tab: tab,
+       showing_within: :feed_by_subject,
        feed_id: feed_id,
        page_info: e(feed, :page_info, [])
      ]}

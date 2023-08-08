@@ -140,8 +140,8 @@
 
                 {raw(@verb_display)}
 
-                <!-- special case when current_user is the one being followed -->
                 <span :if={id(@object) == current_user_id(@__context__)}>
+                  <!-- special case when current_user is the one being followed -->
                   {l("you")}
                 </span>
               </div>
@@ -395,8 +395,8 @@
 
                 {raw(@verb_display)}
 
-                <!-- special case when current_user is the one being followed -->
                 <span :if={id(@object) == current_user_id(@__context__)}>
+                  <!-- special case when current_user is the one being followed -->
                   {l("you")}
                 </span>
               </div>
@@ -551,8 +551,40 @@
               </div>
             </div>
           </div>
-          <!-- {#else}
-          <div class="flex items-center justify-start">
+        {#else}
+          <div data-role="verb_other" class="flex items-center justify-start pb-2 mb-2">
+            <div :if={e(@activity, :subject, nil)} class="text-sm font-medium text-base-content/70">
+              <LiveRedirect
+                aria-label={e(@activity, :subject, :character, :username, "") <> " profile"}
+                class="font-medium link link-hover text-base-content/70"
+                to={path(e(@activity, :subject, :character, nil))}
+              >
+                {#if id(@object) == current_user_id(@__context__)}
+                  {l("You")}
+                {#else}
+                  {e(@activity, :subject, :profile, :name, nil) || e(@activity, :subject, :character, :username, nil)}
+                {/if}
+              </LiveRedirect>
+
+              {raw(@verb_display)}
+            </div>
+
+            <Bonfire.UI.Social.Activity.LinkToActivityLive
+              :if={@showing_within not in [:smart_input]}
+              object={@object}
+              activity={@activity}
+              object_type={@object_type}
+              permalink={@permalink || path(@activity) || path(@object) || path(e(@activity, :object, nil))}
+              thread_id={@thread_id}
+            >
+              <span class="subject_timestamp text-[13px] font-normal no-underline truncate ellipsis text-base-content/70">
+                {@date_ago || DatesTimes.date_from_now(@activity) || DatesTimes.date_from_now(@object) ||
+                  DatesTimes.date_from_now(e(@activity, :object, nil))}
+              </span>
+            </Bonfire.UI.Social.Activity.LinkToActivityLive>
+          </div>
+
+          <!-- <div class="flex items-center justify-start">
             <Iconify.iconify
                 icon={Bonfire.Boundaries.Verbs.get(@verb)[:icon]} 
                 class="w-4 h-4 text-error" />
