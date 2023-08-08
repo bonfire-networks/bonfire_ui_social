@@ -506,6 +506,7 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
       feed: nil,
       page_info: nil
     ]
+
     # ] ++ page_header_asides(socket, component_id)
   end
 
@@ -535,6 +536,7 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
       feed: nil,
       page_info: nil
     ]
+
     # ] ++ page_header_asides(socket, component_id)
   end
 
@@ -559,6 +561,7 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
       feed: nil,
       page_info: nil
     ]
+
     # ] ++ page_header_asides(socket, component_id)
   end
 
