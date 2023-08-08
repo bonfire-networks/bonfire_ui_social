@@ -1,4 +1,4 @@
-defmodule Bonfire.UI.Social.Activity.EventActivityStreamsLive do
+defmodule Bonfire.UI.Social.Activity.UnknownActivityStreamsLive do
   use Bonfire.UI.Common.Web, :stateless_component
 
   prop json, :any, default: nil
