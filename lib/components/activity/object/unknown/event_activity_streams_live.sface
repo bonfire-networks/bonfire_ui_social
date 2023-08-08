@@ -1,3 +1,43 @@
+<div class="bg-base-100 rounded-box shadow">
+  {#case object_field(@json, "attachment")}
+    {#match nil}
+    {#match img}
+    <div class="relative">
+      <img src={e(img, "url" , "href", nil)} alt="" class="w-full h-32 rounded-t-box object-cover" />
+      <div class="bottom-3 left-3 absolute w-12 h-12 shadow bg-white rounded-lg">
+        <span class="rounded-t-lg block bg-red-600 h-3"></span>
+        <div class="flex h-9 items-center place-content-center flex-col">
+          <span class="text-sm font-bold text-gray-800">9</span>
+          <span class="text-xs uppercase font-medium -mt-1 text-gray-800">AGO</span>
+        </div>
+      </div>
+    </div>
+  {/case}
+  <div class="p-4">
+    <h2 class="mb-2 font-semibold text-base-content">
+      {rich(object_field(debug(@json, "apjson"), "name") || l("Unsupported type or deleted object"))}
+    </h2>
+    {#case object_field(@json, "location")}
+    {#match nil}
+    {#match location}
+    <div class="flex items-center gap-2">
+      <#Icon iconify="ph:map-pin-fill" class="w-4 h-4 text-base-content/70" />
+      <div class="flex items-baseline text-base-content/70 text-sm">
+        <span :if={!e(location, "name", nil)} class="">{e(location, "name", nil)},</span>
+        <span>{e(location, "address", "addressLocality", nil)},  {e(location, "address", "addressRegion", nil)}</span>
+      </div>
+    </div>
+    {/case}
+  </div>
+</div>
+
+
+
+
+
+
+<!-- 
+
 <div class="py-2">
   <span class="text-opacity-70">
     {@object_type_readable}:
@@ -7,23 +47,15 @@
     {rich(object_field(debug(@json, "apjson"), "name") || l("Unsupported type or deleted object"))}
   </h2>
 
-  <!-- <h3 class="text-xs tracking-wider text-primary-content-600 uppercase">Summary</h3> -->
   <div class="mb-2 prose-sm prose text-primary-content-700 max-w-prose">
     {rich(object_field(@json, "summary"))}
 
     <p>{object_field(@json, "startTime")}</p>
   </div>
 
-  {#case object_field(@json, "location")}
-    {#match nil}
-    {#match location}
-      <div class="mb-2 prose-sm prose text-primary-content-700 max-w-prose">{rich(e(location, "name", nil))}
-
-        {rich(e(location, "address", "streetAddress", nil))} {rich(e(location, "address", "addressLocality", nil))} {rich(e(location, "address", "postalCode", nil))} {rich(e(location, "address", "addressCountry", nil))}
-      </div>
-  {/case}
+  
 
   <article class="prose-sm prose max-w-prose">
     {rich(object_field(@json, "content"))}
   </article>
-</div>
+</div> -->

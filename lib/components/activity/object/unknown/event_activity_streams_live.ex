@@ -6,6 +6,6 @@ defmodule Bonfire.UI.Social.Activity.EventActivityStreamsLive do
   prop object_type_readable, :any, default: nil
 
   defp object_field(json, field) do
-    e(json, "object", field, nil) || e(json, field, nil)
+    e(json, "object", field, nil) || e(json, field, nil) |> debug("TETETE")
   end
 end
