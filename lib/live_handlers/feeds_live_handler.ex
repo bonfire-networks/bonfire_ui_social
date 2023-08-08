@@ -469,19 +469,19 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
     )
   end
 
-  def page_header_asides(socket, component_id) do
-    [
-      page_header_aside: [
-        {Bonfire.UI.Social.FeedControlsLive,
-         [
-           event_target: component_id,
-           sort_by: e(socket, :assigns, :sort_by, nil),
-           time_limit: e(socket, :assigns, :sort_by, 7),
-           sort_order: e(socket, :assigns, :sort_order, false)
-         ]}
-      ]
-    ]
-  end
+  # def page_header_asides(socket, component_id) do
+  #   [
+  #     page_header_aside: [
+  #       {Bonfire.UI.Social.FeedControlsLive,
+  #        [
+  #          event_target: component_id,
+  #          sort_by: e(socket, :assigns, :sort_by, nil),
+  #          time_limit: e(socket, :assigns, :sort_by, 7),
+  #          sort_order: e(socket, :assigns, :sort_order, false)
+  #        ]}
+  #     ]
+  #   ]
+  # end
 
   def feed_default_assigns(:my = feed_name, socket) do
     feed_id = Bonfire.Social.Feeds.my_feed_id(:inbox, socket)
@@ -505,7 +505,8 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
       # feed_title: l("My feed"),
       feed: nil,
       page_info: nil
-    ] ++ page_header_asides(socket, component_id)
+    ]
+    # ] ++ page_header_asides(socket, component_id)
   end
 
   def feed_default_assigns(:fediverse = feed_name, socket) do
@@ -533,7 +534,8 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
       # feed_id: feed_name,
       feed: nil,
       page_info: nil
-    ] ++ page_header_asides(socket, component_id)
+    ]
+    # ] ++ page_header_asides(socket, component_id)
   end
 
   def feed_default_assigns(:local = feed_name, socket) do
@@ -556,7 +558,8 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
       feedback_message: l("It seems like the paint is still fresh on this instance..."),
       feed: nil,
       page_info: nil
-    ] ++ page_header_asides(socket, component_id)
+    ]
+    # ] ++ page_header_asides(socket, component_id)
   end
 
   def feed_default_assigns(:likes = feed_name, socket) do
