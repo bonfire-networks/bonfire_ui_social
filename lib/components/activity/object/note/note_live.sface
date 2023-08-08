@@ -48,7 +48,7 @@
             <div
               data-id="object_body"
               class={
-                "prose break-words object_body max-w-none prose-p:pt-0 prose-p:my-0 prose-a:text-primary prose-a:no-underline",
+                "prose break-words object_body max-w-none prose-p:pt-0 prose-p:my-0 prose-a:text-primary prose-a:no-underline prose-sm",
                 "!my-0 !text-sm !font-normal ": @showing_within == :smart_input,
                 "md:!prose-sm": @showing_within == :thread and !@viewing_main_object,
                 "md:prose-base": @viewing_main_object,

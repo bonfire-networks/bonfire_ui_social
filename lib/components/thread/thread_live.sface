@@ -64,7 +64,7 @@
           <!-- flat mode stream -->
           <div id={"stream_#{@id}"} phx-update="stream">
             {#for {entry_id, reply} <- @streams.replies}
-              <div id={entry_id} data-role="comment-flat" class="reply flex relative w-full mx-auto pl-2 pt-3">
+              <div id={entry_id} data-role="comment-flat" class="reply flex relative w-full mx-auto border-b border-base-content/20 pt-3">
                 <CommentLive
                   comment={reply}
                   thread_id={@thread_id}
