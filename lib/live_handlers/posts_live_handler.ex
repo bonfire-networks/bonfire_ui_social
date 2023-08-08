@@ -162,15 +162,9 @@ defmodule Bonfire.Social.Posts.LiveHandler do
   # end
 
   def handle_event("input", %{"circles" => selected_circles} = _attrs, socket)
-      when is_list(selected_circles) and length(selected_circles) > 0 do
-    # |> Enum.uniq()
-    previous_circles = e(socket, :assigns, :to_circles, [])
-
-    new_circles = Bonfire.Boundaries.LiveHandler.set_circles(selected_circles, previous_circles)
-
+      when is_list(selected_circles) and selected_circles != [] do
     {:noreply,
-     socket
-     |> assign(to_circles: new_circles || [])}
+     Bonfire.Boundaries.LiveHandler.set_circles_tuples(:to_circles, selected_circles, socket)}
   end
 
   # no circle

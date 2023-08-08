@@ -94,6 +94,9 @@
         <!-- {l("Order:")} -->
 
         {#case @time_limit}
+          {#match 0}
+            <#Icon iconify="fa6-solid:infinity" class="w-5 h-5 text-base-content/70" />
+            <!-- {l("All time")} -->
           {#match 1}
             <#Icon iconify="ri:24-hours-fill" class="w-5 h-5 text-base-content/70" />
             <!-- {l("Today")} -->
@@ -149,7 +152,7 @@
           phx-target={@event_target}
         ><a class={
             "flex gap-2 text-base-content/70",
-            "active !text-base-content/100 font-semibold": is_nil(@time_limit)
+            "active !text-base-content/100 font-semibold": @time_limit == 30
           }>
             <#Icon
               iconify="streamline:interface-calendar-date-month-thirty-thirty-calendar-date-week-day-month"
@@ -169,6 +172,19 @@
           }>
             <#Icon iconify="iconoir:birthday-cake" class="w-5 h-5 text-base-content/70" />
             {l("Year")}</a></li>
+
+        <li
+          phx-click="set"
+          phx-value-to_integers="true"
+          phx-value-time_limit="0"
+          phx-value-assign_global="true"
+          phx-target={@event_target}
+        ><a class={
+            "flex gap-2 text-base-content/70",
+            "active !text-base-content/100 font-semibold": @time_limit == 0
+          }>
+            <#Icon iconify="fa6-solid:infinity" class="w-5 h-5 text-base-content/70" />
+            {l("All time")}</a></li>
       </ul>
     </div>
 
