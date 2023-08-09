@@ -7,7 +7,7 @@ defmodule Bonfire.UI.Social.Activity.LinkToActivityLive do
   prop object_type, :any, required: true
   prop permalink, :string, required: true
 
-  # prop showing_within, :atom, default: nil
+  prop showing_within, :atom, default: nil
   # prop viewing_main_object, :boolean, default: false
   # prop object_boundary, :any, default: nil
 

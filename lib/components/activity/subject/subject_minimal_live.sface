@@ -235,6 +235,7 @@
                     object_type={@object_type}
                     permalink={@permalink || path(@object) || path(e(@activity, :object, nil))}
                     thread_id={@thread_id}
+                    showing_within={@showing_within}
                   >
                     <span class="subject_timestamp text-[13px] font-normal no-underline truncate ellipsis text-base-content/70">
                       {@date_ago || DatesTimes.date_from_now(@activity) || DatesTimes.date_from_now(@object) ||
@@ -283,6 +284,7 @@
                 object_type={@object_type}
                 permalink={@permalink}
                 thread_id={@thread_id}
+                    showing_within={@showing_within}
               >
                 <span class="subject_timestamp text-[13px] font-normal no-underline truncate ellipsis text-base-content/70">
                   {@date_ago}
@@ -348,6 +350,7 @@
           object_type={@object_type}
           permalink={@permalink || path(@activity) || path(@object) || path(e(@activity, :object, nil))}
           thread_id={@thread_id}
+          showing_within={@showing_within}
         >
           <span class="subject_timestamp text-[13px] font-normal no-underline truncate ellipsis text-base-content/70">
             {@date_ago || DatesTimes.date_from_now(@activity) || DatesTimes.date_from_now(@object) ||
@@ -479,6 +482,7 @@
                     object_type={@object_type}
                     permalink={@permalink || path(@object) || path(e(@activity, :object, nil))}
                     thread_id={@thread_id}
+                    showing_within={@showing_within}
                   >
                     <span class="subject_timestamp text-[13px] font-normal no-underline truncate ellipsis text-base-content/70">
                       {@date_ago || DatesTimes.date_from_now(@activity) || DatesTimes.date_from_now(@object) ||
@@ -527,6 +531,7 @@
                 object_type={@object_type}
                 permalink={@permalink}
                 thread_id={@thread_id}
+                    showing_within={@showing_within}
               >
                 <span class="subject_timestamp text-[13px] font-normal no-underline truncate ellipsis text-base-content/70">
                   {@date_ago}
@@ -576,6 +581,7 @@
               object_type={@object_type}
               permalink={@permalink || path(@activity) || path(@object) || path(e(@activity, :object, nil))}
               thread_id={@thread_id}
+              showing_within={@showing_within}
             >
               <span class="subject_timestamp text-[13px] font-normal no-underline truncate ellipsis text-base-content/70">
                 {@date_ago || DatesTimes.date_from_now(@activity) || DatesTimes.date_from_now(@object) ||

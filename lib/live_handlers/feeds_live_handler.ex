@@ -276,12 +276,7 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
   end
 
   def paginate_feed(feed_id, attrs, socket, opts) when not is_nil(feed_id) do
-    paginate = input_to_atoms(attrs)
-
-    opts =
-      to_options(socket)
-      |> Keyword.merge(opts)
-      |> Keyword.put(:paginate, paginate)
+    opts = paginate_opts(attrs, socket, opts)
 
     if(current_user_id(opts) && feed_id == Bonfire.Social.Feeds.my_feed_id(:inbox, opts)) do
       debug(
@@ -305,16 +300,27 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
   def paginate_default_feed(attrs, socket, opts \\ []) do
     debug("Feeds - paginate - there's no feed_id, so load the default")
 
-    paginate = input_to_atoms(attrs)
+    paginate_fetch_assign_default(
+      paginate_opts(attrs, socket, opts),
+      socket
+    )
+  end
 
+  def paginate_opts(attrs, socket, opts) do
     opts =
       to_options(socket)
       |> Keyword.merge(opts)
-      |> Keyword.put(:paginate, paginate)
 
-    paginate_fetch_assign_default(
-      opts,
-      socket
+    opts
+    |> Keyword.put(
+      :paginate,
+      Keyword.merge(
+        Keyword.new(input_to_atoms(attrs)),
+        Activities.order_pagination_opts(
+          opts[:sort_by] || e(socket.assigns, :sort_by, nil),
+          opts[:sort_order] || e(socket.assigns, :sort_order, nil)
+        )
+      )
     )
   end
 

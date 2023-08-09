@@ -13,6 +13,8 @@ defmodule Bonfire.UI.Social.Activity.ProviderReceiverLive do
   prop permalink, :string, default: nil
   prop object_boundary, :any, default: nil
 
+  prop showing_within, :atom, default: nil
+
   def provider(%{id: _} = provider, _primary_accountable, _object), do: provider
   def provider(_provider, %{id: _} = primary_accountable, _object), do: primary_accountable
   def provider(_provider, _primary_accountable, %{id: _} = object), do: provider(object)
