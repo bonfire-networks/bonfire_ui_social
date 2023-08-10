@@ -1,0 +1,29 @@
+<div class="bg-base-100 rounded-box shadow">
+  {#case object_field(@json, "icon")}
+    {#match nil}
+    {#match img}
+      <div class="relative">
+        <img src={e(img, "url", nil)} alt="" class="w-full h-100 rounded-t-box object-cover">
+        <div class="absolute flex justify-center items-center inset-0">
+        <div class="bg-gray-900/60 z-50 gap-4 px-3 py-2 rounded flex justify-center items-center place-content-center">
+            <button class="">
+                <#Icon iconify="heroicons:play-20-solid" class="w-6 h-6 text-gray-200" />
+            </button>
+             <button class="">
+                <#Icon iconify="heroicons-outline:external-link" class="w-6 h-6 text-gray-200" />
+            </button>
+        </div>
+        </div>
+      </div>
+  {/case}
+  <div class="p-4">
+    <h2 class="mb-0 font-semibold text-base-content">
+      {rich(object_field(debug(@json, "apjson"), "name") || l("Unsupported type or deleted object"))}
+    </h2>
+    <div class="flex items-baseline gap-2">
+        <div :if={object_field(@json, "published")} class="text-sm text-base-content/70">{DatesTimes.date_from_now(object_field(@json, "published")) }</div>
+        <span>·</span>
+        <div :if={object_field(@json, "views")} class="text-sm text-base-content/70">{object_field(@json, "views")} {l("Views")}</div>
+    </div>
+  </div>
+</div>

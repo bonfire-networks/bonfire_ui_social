@@ -1058,6 +1058,12 @@ defmodule Bonfire.UI.Social.ActivityLive do
                json: json, object_type_readable: object_type}
             ]
 
+          "Video" = object_type ->
+              [
+                {Bonfire.UI.Social.Activity.VideoActivityStreamsLive,
+                 json: json, object_type_readable: object_type}
+              ]
+
           object_type ->
             [
               {Bonfire.UI.Social.Activity.UnknownActivityStreamsLive,

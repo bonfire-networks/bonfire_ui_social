@@ -56,7 +56,7 @@
                     <:open_btn>
                       <div class="relative h-full">
                         <LazyImage
-                          class="w-full !object-cover m-image h-full cursor-pointer aspect-video rounded-md"
+                          class="border border-base-content/10 w-full !object-cover m-image h-full cursor-pointer aspect-video rounded-md"
                           m={m}
                           alt={media_label}
                           src={preview_img(m) || Media.media_url(m)}
@@ -80,51 +80,62 @@
   {/case}
 
   <div class="flex flex-col gap-2">
+
+
     {#for m <- link_list(@media)}
       {#case Media.media_url(m)}
         {#match nil}
         {#match media_url}
-          <a
-            href={media_url || preview_img(m)}
-            target="_blank"
-            class="flex w-full border rounded-lg media_container hover:bg-base-content/5 border-base-content/20"
-          >
-            <div class="flex items-center gap-3 overflow-hidden">
-              <div class="flex items-center rounded-l-lg shrink-0 w-[120px] h-[120px] bg-base-content/10 place-content-center">
-                {#case preview_img(m) || e(m.metadata, "favicon", nil) ||
-                    Bonfire.Files.FaviconStore.favicon_url(media_url)}
-                  {#match nil}
-                    <#Icon solid="ExternalLink" class="w-9 h-9 text-base-content/70" />
-                  {#match preview_img}
-                    {#case String.ends_with?(preview_img, ".ico")}
-                      {#match true}
-                        <img
-                          class="rounded-none object-cover rounded-l-lg  cursor-pointer m-image w-[120px] h-[120px]"
-                          src={preview_img}
-                        />
-                      {#match _}
-                        <img
-                          class="rounded-none object-cover rounded-l-lg  cursor-pointer m-image w-[120px] h-[120px]"
-                          src={preview_img}
-                        />
-                    {/case}
-                {/case}
+          {#case String.ends_with?(media_url, ".mp4")}
+            {#match true}
+              <video class="h-[350px] w-full rounded-box border border-base-content/10" controls>
+                <source src={media_url |> debug("CACCA")} type="video/mp4">
+                <source src={media_url |> debug("CACCA")} type="video/ogg">
+                Your browser does not support the video tag.
+              </video>
+            {#match _}
+              <a
+                href={media_url || preview_img(m)}
+                target="_blank"
+                class="flex w-full border rounded-lg media_container hover:bg-base-content/5 border-base-content/20"
+                >
+              <div class="flex items-center gap-3 overflow-hidden">
+                <div class="flex items-center rounded-l-lg shrink-0 w-[120px] h-[120px] bg-base-content/10 place-content-center">
+                  {#case preview_img(m) || e(m.metadata, "favicon", nil) ||
+                      Bonfire.Files.FaviconStore.favicon_url(media_url)}
+                    {#match nil}
+                      <#Icon solid="ExternalLink" class="w-9 h-9 text-base-content/70" />
+                    {#match preview_img}
+                      {#case String.ends_with?(preview_img, ".ico")}
+                        {#match true}
+                          <img
+                            class="rounded-none object-cover rounded-l-lg  cursor-pointer m-image w-[120px] h-[120px]"
+                            src={preview_img}
+                          />
+                        {#match _}
+                          <img
+                            class="rounded-none object-cover rounded-l-lg  cursor-pointer m-image w-[120px] h-[120px]"
+                            src={preview_img}
+                          />
+                      {/case}
+                  {/case}
+                </div>
+                <div class="px-2">
+                  <div class="text-sm" :if={provider(m)}>
+                    {e(the_media(m), :metadata, "oembed", "author_name", nil)}
+                    <span class="text-base-content/70" :if={provider(m)}>{provider(m)}</span>
+                  </div>
+                  <div class="text-sm font-medium line-clamp-1">
+                    {media_label(m) || l("View m")} ({e(the_media(m), :media_type, nil) || l("link")})
+                  </div>
+                  <div class="max-w-[420px] text-sm mt-0.5 break-words line-clamp-4 text-base-content/70">
+                    {description(m)}
+                  </div>
+                  <!-- {e(the_media(m), :metadata, "location", "name", nil)} {e(the_media(m), :metadata, "startDate", nil)} -->
+                </div>
               </div>
-              <div class="px-2">
-                <div class="text-sm" :if={provider(m)}>
-                  {e(the_media(m), :metadata, "oembed", "author_name", nil)}
-                  <span class="text-base-content/70" :if={provider(m)}>{provider(m)}</span>
-                </div>
-                <div class="text-sm font-medium line-clamp-1">
-                  {media_label(m) || l("View m")} ({e(the_media(m), :media_type, nil) || l("link")})
-                </div>
-                <div class="max-w-[420px] text-sm mt-0.5 break-words line-clamp-4 text-base-content/70">
-                  {description(m)}
-                </div>
-                <!-- {e(the_media(m), :metadata, "location", "name", nil)} {e(the_media(m), :metadata, "startDate", nil)} -->
-              </div>
-            </div>
-          </a>
+            </a>
+          {/case}
       {/case}
     {/for}
   </div>

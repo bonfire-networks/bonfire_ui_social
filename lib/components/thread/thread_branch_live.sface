@@ -42,11 +42,11 @@
           x-cloak
           x-show="show_replies"
           x-on:click="show_replies = ! show_replies"
-          class="group z-10 left-[14px] px-3 top-[58px] group bottom-[-2px] absolute cursor-pointer"
+          class="group z-10  px-3 top-0 group bottom-0 absolute cursor-pointer"
         >
           <i
             :class="!show_replies ? 'bg-primary bottom-[0px]' : 'bottom-[0px]'"
-            class="absolute top-0 bottom-0 z-10 group-hover:bg-primary border-l-[2px] border-base-content/20"
+            class="absolute top-[63px] bottom-[-8px] left-[28px] z-10 group-hover:bg-primary border-l-[2px] border-base-content/20 left-[14px]"
           />
         </div>
         <!-- <div class="-mt-[26px]  z-[50] ml-10" :if={is_list(@threaded_replies) and length(@threaded_replies) > 0}>
