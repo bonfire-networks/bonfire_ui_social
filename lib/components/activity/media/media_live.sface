@@ -95,10 +95,10 @@
             <a
               href={media_url}
               target="_blank"
-              class="flex order-last w-full border rounded-lg media_container hover:bg-base-content/5 border-base-content/20"
+              class="flex order-last w-full border rounded media_container hover:bg-base-content/5 border-base-content/20"
             >
               <div class="flex items-center gap-3 overflow-hidden">
-                <div class="flex items-center rounded-l-lg shrink-0 w-10 h-10 bg-base-content/10 place-content-center">
+                <div class="flex items-center rounded-l shrink-0 w-10 h-10 place-content-center">
                   <#Icon iconify="bxs:file-pdf" class="w-8 h-8 text-base-content/70" />
                 </div>
                   <div class="text-sm font-medium line-clamp-1">
