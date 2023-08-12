@@ -3,7 +3,11 @@
     {#match nil}
     {#match img}
       <div class="relative">
-        <img src={e(img, "url", "href", nil)} alt="" class="w-full h-[320px] rounded-t-box object-cover">
+        <img
+          src={e(img, "url", "href", nil)}
+          alt=""
+          class="w-full h-[320px] rounded-t-box object-cover"
+        />
         <!-- <div class="bottom-3 left-3 absolute min-w-12 min-h-12 shadow bg-white rounded-lg">
           <span class="rounded-t-lg block bg-red-600 h-3" />
           <div class="flex min-h-9 items-center place-content-center flex-col p-1">

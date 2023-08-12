@@ -84,7 +84,6 @@
       {#case Media.media_url(m)}
         {#match nil}
         {#match media_url}
-          
           {#if String.ends_with?(media_url, ".mp4")}
             <video class="h-[350px] w-full rounded-box border border-base-content/10" controls>
               <source src={media_url} type="video/mp4">
@@ -101,9 +100,9 @@
                 <div class="flex items-center rounded-l shrink-0 w-10 h-10 place-content-center">
                   <#Icon iconify="bxs:file-pdf" class="w-8 h-8 text-base-content/70" />
                 </div>
-                  <div class="text-sm font-medium line-clamp-1">
-                    {media_label(m) || l("View ")} ({e(the_media(m), :label, nil) || l("PDF")})
-                  </div>
+                <div class="text-sm font-medium line-clamp-1">
+                  {media_label(m) || l("View ")} ({e(the_media(m), :label, nil) || l("PDF")})
+                </div>
               </div>
             </a>
           {#else _}
