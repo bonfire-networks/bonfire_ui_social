@@ -1,37 +1,60 @@
-{#case MediaLive.media_img(@media) || Media.media_url(@media)}
-  {#match maybe_media_img}
-    {#if String.starts_with?(e(@media, :media_type, ""), ["image"]) or
-        (is_binary(maybe_media_img) and
-           String.contains?(maybe_media_img, [".jpg", ".jpeg", ".png", ".gif", ".webp"]))}
-      <LazyImage
-        class="max-h-[calc(var(--inner-window-height)_-_150px)] relative mx-auto"
-        alt={MediaLive.media_label(@media)}
-        src={maybe_media_img}
-      />
-    {#else}
-      {#case e(@media.metadata, "facebook", "og:video:url", nil) ||
-          e(@media.metadata, "twitter", "twitter:player", nil) ||
-          e(@media.metadata, "facebook", "og:video", nil)}
-        {#match nil}
-          {#case e(@media.metadata, "oembed", "html", nil)}
-            {#match nil}
-              <a href={Media.media_url(@media)} target="_blank">{l("View the %{media}", media: e(@media, :media_type, l("media")))}</a>
-            {#match embed}
-              {raw(embed)}
-          {/case}
-        {#match url}
-          <iframe
-            width={e(@media.metadata, "facebook", "og:video:width", nil) ||
-              e(@media.metadata, "other", "video_width", nil) || "800"}
-            height={e(@media.metadata, "facebook", "og:video:height", nil) ||
-              e(@media.metadata, "other", "video_height", nil) || "500"}
-            src={url |> String.replace("youtube.com", "yewtu.be")}
-            frameborder="0"
-            allow="accelerometer; encrypted-@media; gyroscope; picture-in-picture"
-            allowfullscreen="allowfullscreen"
-            class={"", "w-full max-h-screen": String.starts_with?(@media.media_type, ["video"])}
-            style={if String.starts_with?(@media.media_type, ["video"]), do: "height:900px", else: ""}
-          />
+<div class="z-500 relative text-center">
+  {#case Media.media_url(@media)}
+    {#match media_url}
+      {#case MediaLive.media_img(@media) || media_url}
+        {#match maybe_media_img}
+          {#if is_binary(maybe_media_img) and MediaLive.is_image?(maybe_media_img, e(@media, :media_type, nil))}
+            <LazyImage
+              class="max-h-[calc(var(--inner-window-height)_-_150px)] relative mx-auto"
+              alt={MediaLive.media_label(@media)}
+              src={maybe_media_img}
+            />
+          {#else}
+            {#case e(@media.metadata, "facebook", "og:video:url", nil) ||
+                e(@media.metadata, "twitter", "twitter:player", nil) ||
+                e(@media.metadata, "facebook", "og:video", nil)}
+              {#match nil}
+                {#case e(@media.metadata, "oembed", "html", nil)}
+                  {#match nil}
+                    {#if String.ends_with?(media_url, ".mp4")}
+                      <video class={@video_css} controls autoplay>
+                        <source src={media_url} type="video/mp4">
+                        Your browser does not support the video tag.
+                      </video>
+                    {#elseif String.ends_with?(media_url, [".ogg", ".ogv"])}
+                      <video class={@video_css} controls autoplay>
+                        <source src={media_url} type="video/ogg">
+                        Your browser does not support the video tag.
+                      </video>
+                    {#elseif String.ends_with?(media_url, ".webm")}
+                      <video class={@video_css} controls autoplay>
+                        <source src={media_url} type="video/webm">
+                        Your browser does not support the video tag.
+                      </video>
+                    {#else}
+                      <div class="pt-4 text-center">
+                        <a href={media_url} target="_blank" class="link">{l("View the %{media}", media: e(@media, :media_type, l("media")))}</a>
+                      </div>
+                    {/if}
+                  {#match embed}
+                    {raw(embed)}
+                {/case}
+              {#match url}
+                <!-- TODO: url |> String.replace("youtube.com", "yewtu.be") -->
+                <iframe
+                  width={e(@media.metadata, "facebook", "og:video:width", nil) ||
+                    e(@media.metadata, "other", "video_width", nil) || "800"}
+                  height={e(@media.metadata, "facebook", "og:video:height", nil) ||
+                    e(@media.metadata, "other", "video_height", nil) || "500"}
+                  src={url}
+                  frameborder="0"
+                  allow="accelerometer; encrypted-@media; gyroscope; picture-in-picture"
+                  allowfullscreen="allowfullscreen"
+                  class={"", "w-full max-h-screen": String.starts_with?(@media.media_type, ["video"])}
+                  style={if String.starts_with?(@media.media_type, ["video"]), do: "height:900px", else: ""}
+                />
+            {/case}
+          {/if}
       {/case}
-    {/if}
-{/case}
+  {/case}
+</div>

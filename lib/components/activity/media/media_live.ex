@@ -6,42 +6,87 @@ defmodule Bonfire.UI.Social.Activity.MediaLive do
   prop viewing_main_object, :boolean, default: false
   prop label, :string, default: nil
 
-  def media_list(media) do
-    Enum.filter(List.wrap(media), fn m ->
-      m_type = m |> the_media() |> e(:media_type, nil)
+  @image_exts [".jpg", ".jpeg", ".png", ".gif", ".webp"]
+  @image_types ["image", "photo"]
+  @multimedia_exts @image_exts ++ [".mp4", ".mkv", ".ogv", ".ogg", ".mp3", ".mpa", ".webm"]
+  @multimedia_types @image_types ++ ["video", "embed", "audio", "song", "rich"]
 
-      # String.starts_with?(m_type, ["image", "video", "embed", "audio", "song", "photo", "rich"]) or
-      String.starts_with?(m_type, ["image", "photo", "rich"]) or
-        String.contains?(Media.media_url(m), [".jpg", ".jpeg", ".png", ".gif", ".webp"])
-    end)
+  def render(%{media: medias} = assigns) when is_list(medias) do
+    do_render(assigns, medias)
   end
 
-  def link_list(media) do
-    Enum.reject(List.wrap(media), fn m ->
-      m_type = m |> the_media() |> e(:media_type, nil)
+  def render(%{media: media} = assigns) when is_map(media) do
+    do_render(assigns, [media])
+  end
 
-      String.starts_with?(m_type, ["image", "photo", "rich"]) or
-        String.contains?(Media.media_url(m), [".jpg", ".jpeg", ".png", ".gif", ".webp"])
-    end)
+  def do_render(assigns, medias) do
+    # medias = the_medias(medias)
+
+    {multimedia_list, link_list} =
+      the_medias(medias)
+      |> Enum.split_with(
+        &(String.starts_with?(&1.media_type, @multimedia_types) or
+            String.ends_with?(Media.media_url(&1), @multimedia_exts))
+      )
+
+    assigns
+    # |> assign(:media, medias) 
+    # |> assign(:multimedia_list, multimedia_list(medias)) 
+    # |> assign(:link_list, link_list(medias))     
+    |> assign(:multimedia_list, multimedia_list)
+    |> assign(:link_list, link_list)
+    |> render_sface()
+  end
+
+  def the_medias(medias) do
+    medias
+    |> Enum.map(&the_media/1)
   end
 
   def the_media(%{media: media}) do
+    the_media(media)
+  end
+
+  def the_media(%Bonfire.Files.Media{} = media) do
+    # {e(m, :media_type, nil), media}
     media
   end
 
   def the_media(media) do
-    media
+    error(media, "no valid Media assigned")
+    %Bonfire.Files.Media{}
   end
 
-  def provider(%{media: media}), do: provider(media)
+  def is_image?(url), do: String.ends_with?(url, @image_exts)
+
+  def is_image?(url, media_type),
+    do: String.ends_with?(url, @image_exts) or String.starts_with?(media_type, @image_exts)
+
+  # def multimedia_list(media) do
+  #   Enum.filter(List.wrap(media), fn m ->
+  #     m_type = m |> e(:media_type, nil)
+
+  #     # WIP: use modal for videos and embeds too
+  #     # String.starts_with?(m_type, @image_types) or
+  #     String.starts_with?(m_type, @multimedia_exts ) or
+  #       String.ends_with?(Media.media_url(m), @image_exts)
+  #   end)
+  # end
+
+  # def link_list(media) do
+  #   Enum.reject(List.wrap(media), fn m ->
+  #     m_type = m |> e(:media_type, nil)
+
+  #     String.starts_with?(m_type, @multimedia_exts) or
+  #       String.ends_with?(Media.media_url(m), @image_exts)
+  #   end)
+  # end
 
   def provider(%{} = media) do
     (e(media.metadata, "facebook", "og:site_name", nil) ||
        e(media.metadata, "oembed", "provider_url", nil))
     |> unwrap()
   end
-
-  def description(%{media: media}), do: description(media)
 
   def description(%{} = media) do
     json_ld = e(media.metadata, "json_ld", nil)
@@ -64,16 +109,12 @@ defmodule Bonfire.UI.Social.Activity.MediaLive do
     |> unwrap()
   end
 
-  def media_img(%{media: media}), do: media_img(media)
-
   def media_img(%{} = media) do
     (e(media.metadata, "oembed", "url", nil) || Media.image_url(media))
     |> unwrap()
   end
 
   def media_img(_), do: nil
-
-  def media_label(%{media: media}), do: media_label(media)
 
   def media_label(%{} = media) do
     (e(media.metadata, "label", nil) || e(media.metadata, "oembed", "title", nil) ||
