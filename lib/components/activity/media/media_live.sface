@@ -34,6 +34,7 @@
                       no_actions
                       no_header
                       no_backdrop
+                      image_preview
                       enable_fallback={false}
                       modal_class=""
                       wrapper_class="max-h-full !w-full md:w-10/12 !p-0 max-w-[100%] !bg-transparent shadow-none rounded-none"
