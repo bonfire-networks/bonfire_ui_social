@@ -8,8 +8,8 @@ defmodule Bonfire.UI.Social.Activity.MediaLive do
 
   @image_exts [".jpg", ".jpeg", ".png", ".gif", ".webp"]
   @image_types ["image", "photo"]
-  @multimedia_exts @image_exts ++ [".mp4", ".mkv", ".ogv", ".ogg", ".mp3", ".mpa", ".webm"]
-  @multimedia_types @image_types ++ ["video", "embed", "audio", "song", "rich"]
+  @multimedia_exts [".mp4", ".mkv", ".ogv", ".ogg", ".mp3", ".mpa", ".webm"]
+  @multimedia_types ["video", "embed", "audio", "song", "rich"]
 
   def render(%{media: medias} = assigns) when is_list(medias) do
     do_render(assigns, medias)
@@ -22,17 +22,35 @@ defmodule Bonfire.UI.Social.Activity.MediaLive do
   def do_render(assigns, medias) do
     # medias = the_medias(medias)
 
-    {multimedia_list, link_list} =
+    # {multimedia_list, link_list} =
+    # the_medias(medias)
+    # |> Enum.split_with(
+    #   &(String.starts_with?(&1.media_type, @multimedia_types) or
+    #       String.ends_with?(Media.media_url(&1), @multimedia_exts))
+    # )
+
+    {image_list, multimedia_list, link_list} =
       the_medias(medias)
-      |> Enum.split_with(
-        &(String.starts_with?(&1.media_type, @multimedia_types) or
-            String.ends_with?(Media.media_url(&1), @multimedia_exts))
-      )
+      |> Enum.reduce({[], [], []}, fn m, {image_list, multimedia_list, link_list} ->
+        cond do
+          String.starts_with?(m.media_type, @image_types) or
+              String.ends_with?(m.path, @image_exts) ->
+            {[m | image_list], multimedia_list, link_list}
+
+          String.starts_with?(m.media_type, @multimedia_types) or
+              String.ends_with?(m.path, @multimedia_exts) ->
+            {image_list, [m | multimedia_list], link_list}
+
+          true ->
+            {image_list, multimedia_list, [m | link_list]}
+        end
+      end)
 
     assigns
     # |> assign(:media, medias) 
     # |> assign(:multimedia_list, multimedia_list(medias)) 
     # |> assign(:link_list, link_list(medias))     
+    |> assign(:image_list, image_list)
     |> assign(:multimedia_list, multimedia_list)
     |> assign(:link_list, link_list)
     |> render_sface()

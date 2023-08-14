@@ -1,5 +1,5 @@
 {#if @showing_within != :smart_input}
-  {#case Enum.count(@multimedia_list)}
+  {#case Enum.count(@multimedia_list ++ @image_list)}
     {#match num_medias}
       <div
         x-show="content_open == true"
@@ -13,7 +13,7 @@
           "grid-cols-4": num_medias > 3
         }
       >
-        {#for {%{} = m, counter} <- Enum.with_index(@multimedia_list)}
+        {#for {%{} = m, counter} <- Enum.with_index(@multimedia_list ++ @image_list)}
           {#case media_label(m) || l("Sorry, no caption provided by author")}
             {#match media_label}
               <article class={
