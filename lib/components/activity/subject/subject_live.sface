@@ -91,20 +91,17 @@
               </LiveRedirect>
               <span class="text-base-content/70">·</span>
 
-              <Bonfire.UI.Social.Activity.InstanceIconLive peered={e(@activity, :peered, nil)} />
+              <Bonfire.UI.Social.Activity.InstanceIconLive peered={@peered} />
 
               <Bonfire.UI.Social.Activity.LinkToActivityLive
                 :if={@showing_within not in [:smart_input]}
-                object={@object}
-                activity={@activity}
                 object_type={@object_type}
-                permalink={@permalink || path(@activity) || path(@object) || path(e(@activity, :object, nil))}
+                permalink={@permalink}
                 thread_id={@thread_id}
                 showing_within={@showing_within}
               >
                 <span class="subject_timestamp text-[13px] font-normal no-underline truncate ellipsis text-base-content/70">
-                  {@date_ago || DatesTimes.date_from_now(@activity) || DatesTimes.date_from_now(@object) ||
-                    DatesTimes.date_from_now(e(@activity, :object, nil))}
+                  {@date_ago || DatesTimes.date_from_now(@activity_id) || DatesTimes.date_from_now(@object_id)}
                 </span>
               </Bonfire.UI.Social.Activity.LinkToActivityLive>
 
@@ -112,9 +109,9 @@
                 :if={module_enabled?(Bonfire.Boundaries.Web.BoundaryIconStatelessLive) and
                   @object_type not in [Bonfire.Data.Social.Message]}
                 module={Bonfire.Boundaries.Web.BoundaryIconStatelessLive}
-                object_id={id(@object)}
+                object_id={@object_id}
                 object_type={Types.object_type(@published_in) || @object_type}
-                parent_id={"boundary_#{id(@activity || @object)}"}
+                parent_id={"boundary_#{@activity_id || @object_id}"}
                 with_icon
                 object_boundary={@object_boundary}
               />
@@ -132,7 +129,7 @@
             to={path(@character)}
           >
             <Bonfire.UI.Common.AvatarLive
-              parent_id={@activity_component_id || id(@activity)}
+              parent_id={@activity_component_id || @activity_id}
               user={@profile}
               title={e(@profile, :name, "Anonymous")}
               class={
@@ -179,24 +176,21 @@
                 :if={module_enabled?(Bonfire.Boundaries.Web.BoundaryIconStatelessLive) and
                   @object_type not in [Bonfire.Data.Social.Message]}
                 module={Bonfire.Boundaries.Web.BoundaryIconStatelessLive}
-                object_id={id(@object)}
+                object_id={@object_id}
                 object_type={@object_type}
-                parent_id={"boundary_#{id(@activity || @object)}"}
+                parent_id={"boundary_#{@activity_id || @object_id}"}
                 with_icon
                 object_boundary={@object_boundary}
               />
               <Bonfire.UI.Social.Activity.LinkToActivityLive
                 :if={@showing_within not in [:smart_input]}
-                object={@object}
-                activity={@activity}
                 object_type={@object_type}
-                permalink={@permalink || path(@activity) || path(@object) || path(e(@activity, :object, nil))}
+                permalink={@permalink}
                 thread_id={@thread_id}
                 showing_within={@showing_within}
               >
                 <span class="text-sm font-normal no-underline subject_timestamp text-base-content/60">
-                  {@date_ago || DatesTimes.date_from_now(@activity) || DatesTimes.date_from_now(@object) ||
-                    DatesTimes.date_from_now(e(@activity, :object, nil))}
+                  {@date_ago || DatesTimes.date_from_now(@activity_id) || DatesTimes.date_from_now(@object_id)}
                 </span>
               </Bonfire.UI.Social.Activity.LinkToActivityLive>
             </div>
@@ -212,10 +206,10 @@
           <LiveRedirect
             opts={"data-id": "subject_name", "aria-label": e(@character, :username, "") <> " profile"}
             class="font-semibold text-base-content hover:underline"
-            to={path(@character)}
+            to={path(@character) || "/user/#{@subject_id}"}
           >
             <Bonfire.UI.Common.AvatarLive
-              parent_id={@activity_component_id || id(@activity)}
+              parent_id={@activity_component_id || @activity_id}
               user={@profile}
               title={e(@profile, :name, "Anonymous")}
               viewing_main_object={@viewing_main_object}
@@ -240,9 +234,9 @@
                   "link link-hover text-[15px] font-semibold",
                   "!text-lg !font-semibold": @viewing_main_object
                 }
-                to={path(@character)}
+                to={path(@character) || "/user/#{@subject_id}"}
               >
-                {e(@profile, :name, "Anonymous")}
+                {e(@profile, :name, nil)}
               </LiveRedirect>
               <LiveRedirect
                 :if={e(@character, :username, nil) && @__context__[:ui_compact]}
@@ -256,16 +250,19 @@
                 @{e(@character, :username, "")}
               </LiveRedirect>
 
-              {#if @verb == "Create" and @object_type in [Bonfire.Classify.Category]}
-                <div>
-                  <span>{l("created a new")}</span> <LiveRedirect
-                    class="font-medium link link-hover"
-                    to={~p"/+#{e(@object, :character, :username, nil) || id(@object)}"}
-                  >{l("topic")}</LiveRedirect></div>
-              {#elseif @verb == "Reply"}
+              {#if @verb == "Reply"}
                 <!-- {l("replied")} -->
               {#elseif @verb == "Pin"}
                 {l("pinned")}
+                <!-- 
+              FIXME: put somewhere else since we don't have the object in SubjectLive
+              {#elseif @verb == "Create" and @object_type in [Bonfire.Classify.Category]}
+                <div>
+                  <span>{l("created a new")}</span> <LiveRedirect
+                    class="font-medium link link-hover"
+                    to={~p"/+#{e(@object, :character, :username, nil) || (@object_id)}"}
+                  >{l("topic")}</LiveRedirect></div>
+              
               {#elseif @verb == "Schedule" and e(@object, :due, nil)}
                 {l("scheduled a task %{date}", date: DatesTimes.date_from_now(e(@object, :due, nil)))}
               {#elseif @verb == "Label" and e(@object, :finished, nil) == true}
@@ -277,7 +274,7 @@
                   name:
                     e(@object, :provider, :profile, :name, nil) ||
                       e(@object, :provider, :character, :username, nil)
-                )}
+                )} -->
               {/if}
             </div>
             <!-- <span class="ml-2 text-[15px] text-base-content/70">replied to <b class="font-bold text-base-content link">title topic</b></span> -->
@@ -301,27 +298,24 @@
               :if={module_enabled?(Bonfire.Boundaries.Web.BoundaryIconStatelessLive) and
                 @object_type not in [Bonfire.Data.Social.Message]}
               module={Bonfire.Boundaries.Web.BoundaryIconStatelessLive}
-              object_id={id(@object)}
+              object_id={@object_id}
               object_type={Types.object_type(@published_in) || @object_type}
-              parent_id={"boundary_#{id(@activity || @object)}"}
+              parent_id={"boundary_#{@activity_id || @object_id}"}
               with_icon
               object_boundary={@object_boundary}
             />
             <Bonfire.UI.Social.Activity.LinkToActivityLive
               :if={@showing_within not in [:smart_input]}
-              object={@object}
-              activity={@activity}
               object_type={@object_type}
-              permalink={@permalink || path(@activity) || path(@object) || path(e(@activity, :object, nil))}
+              permalink={@permalink}
               thread_id={@thread_id}
               showing_within={@showing_within}
             >
               <span class="subject_timestamp text-[13px] font-normal no-underline truncate ellipsis text-base-content/70">
-                {@date_ago || DatesTimes.date_from_now(@activity) || DatesTimes.date_from_now(@object) ||
-                  DatesTimes.date_from_now(e(@activity, :object, nil))}
+                {@date_ago || DatesTimes.date_from_now(@activity_id) || DatesTimes.date_from_now(@object_id)}
               </span>
             </Bonfire.UI.Social.Activity.LinkToActivityLive>
-            <Bonfire.UI.Social.Activity.InstanceIconLive peered={e(@activity, :peered, nil) || e(@object, :peered, nil)} />
+            <Bonfire.UI.Social.Activity.InstanceIconLive peered={@peered} />
           </div>
         </div>
       </div>
@@ -330,7 +324,7 @@
 
   <a
     href={@permalink}
-    :if={e(@activity, :replied, :reply_to_id, nil) == nil and @showing_within in [nil, :feed] and
+    :if={@reply_to_id == nil and @showing_within in [nil, :feed] and
       @thread_title}
     class="preview_activity_link flex items-center mt-3 font-bold gap-2 text-lg"
   >

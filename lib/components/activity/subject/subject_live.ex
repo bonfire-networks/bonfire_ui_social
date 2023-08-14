@@ -2,8 +2,10 @@ defmodule Bonfire.UI.Social.Activity.SubjectLive do
   use Bonfire.UI.Common.Web, :stateless_component
   alias Bonfire.Common.Text
 
-  prop activity, :any, default: nil
-  prop object, :any, default: nil
+  prop activity_id, :any, default: nil
+  prop object_id, :any, default: nil
+  prop peered, :any, default: nil
+  prop reply_to_id, :any, default: nil
   prop profile, :any, default: nil
   prop character, :any, default: nil
   prop date_ago, :any, default: nil
@@ -22,7 +24,6 @@ defmodule Bonfire.UI.Social.Activity.SubjectLive do
 
   def render(assigns) do
     assigns
-    |> debug("subassss")
     |> prepare()
     |> render_sface()
   end
@@ -46,37 +47,7 @@ defmodule Bonfire.UI.Social.Activity.SubjectLive do
         %{
           profile: nil,
           character: nil,
-          activity: %{subject_id: id},
-          current_user: %{id: id, profile: profile, character: character}
-        } = assigns
-      ) do
-    assigns
-    |> assign(
-      profile: profile,
-      character: character
-    )
-  end
-
-  def prepare(
-        %{
-          profile: nil,
-          character: nil,
           subject_id: id,
-          subject_user: %{id: id, profile: profile, character: character}
-        } = assigns
-      ) do
-    assigns
-    |> assign(
-      profile: profile,
-      character: character
-    )
-  end
-
-  def prepare(
-        %{
-          profile: nil,
-          character: nil,
-          activity: %{subject_id: id},
           subject_user: %{id: id, profile: profile, character: character}
         } = assigns
       ) do
@@ -89,6 +60,7 @@ defmodule Bonfire.UI.Social.Activity.SubjectLive do
 
   def prepare(assigns) do
     assigns
+    |> debug("could not prepare")
   end
 
   def preloads(),

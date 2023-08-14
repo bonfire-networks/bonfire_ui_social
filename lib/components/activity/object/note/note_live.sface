@@ -70,14 +70,14 @@
           </div>
       {/case}
   {/case}
-  
+
   <div>
     <button
-      x-show="expandable" 
-      type="button" 
+      x-show="expandable"
+      type="button"
       @click="expanded = !expanded"
-      x-text="expanded ? 'Read less' : 'Read more'" 
+      x-text="expanded ? 'Read less' : 'Read more'"
       class="link text-sm mt-2 font-semibold link-hover link-primary normal-case"
-    >{l "Read more"}</button>
+    >{l("Read more")}</button>
   </div>
 </div>

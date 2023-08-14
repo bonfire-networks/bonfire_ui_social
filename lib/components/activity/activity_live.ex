@@ -372,6 +372,62 @@ defmodule Bonfire.UI.Social.ActivityLive do
           String.contains?(@current_url || "", @permalink || "") and @showing_within != :smart_input
       }
     >
+      {#if id(@current_user)}
+        {#if String.starts_with?(@permalink || "", ["/post/", "/discussion/"])}
+          <div class="text-xs">
+            <Bonfire.UI.Common.OpenPreviewLive
+              href={@permalink || path(@object)}
+              parent_id={"#{id(@activity)}_#{id(@object)}_#{Text.random_string()}"}
+              open_btn_text=""
+              title_text={e(@object, :name, nil) || e(@object, :post_content, :name, nil) || l("Discussion")}
+              open_btn_wrapper_class="open_preview_link hidden"
+              open_btn_class=""
+              modal_assigns={
+                post_id:
+                  if(
+                    @object_type == :post or
+                      String.starts_with?(@permalink || "", ["/post/"]),
+                    do: @thread_id || id(@object)
+                  ),
+                thread_id: @thread_id,
+                object_id: @thread_id || id(@object),
+                current_url: @permalink,
+                show: true,
+                label: "",
+                object: if(@thread_id == id(@object), do: @object),
+                activity: if(@thread_id == id(@object), do: @activity),
+                replies:
+                  if(@thread_id != id(@object),
+                    do: [%{id: "preview-comment", activity: Map.put(@activity, :object, @object)}]
+                  ),
+                preview_component: Bonfire.UI.Social.ObjectThreadLoadLive
+              }
+              root_assigns={
+                page_title: l("Discussion")
+              }
+            />
+          </div>
+          <!-- TODO: derive the view from object_type? and compute object_type not just based on schema, but also with some logic looking at fields (eg. action=="work") -->
+        {#elseif String.starts_with?(@permalink || "", ["/coordination/task/"])}
+          <Bonfire.UI.Common.OpenPreviewLive
+            href={@permalink}
+            parent_id={"#{id(@activity)}_#{id(@object)}_#{if @showing_within == :notifications, do: Text.random_string()}"}
+            open_btn_text={l("View task")}
+            title_text={e(@object, :name, nil) || l("Task")}
+            open_btn_wrapper_class="open_preview_link hidden"
+            open_btn_class=""
+            modal_assigns={
+              id: @thread_id || id(@object),
+              current_url: @permalink,
+              preview_view: Bonfire.UI.Coordination.TaskLive
+            }
+            root_assigns={
+              page_title: l("Task")
+            }
+          />
+        {/if}
+      {/if}
+
       <form
         :if={!id(e(@activity, :seen, nil)) and not is_nil(@feed_id) and
           @showing_within in [:messages, :thread, :notifications] and
@@ -411,18 +467,19 @@ defmodule Bonfire.UI.Social.ActivityLive do
             {#match _
               when component in [
                      Bonfire.UI.Social.Activity.SubjectLive,
-                     Bonfire.UI.Social.Activity.SubjectMinimalLive
+                     Bonfire.UI.Social.Activity.SubjectMinimalLive,
+                     Bonfire.UI.Social.Activity.NoSubjectLive
                    ]}
               <Dynamic.Component
                 :if={@hide_activity != "subject"}
                 module={component}
                 profile={e(component_assigns, :profile, nil)}
                 character={e(component_assigns, :character, nil)}
+                activity_id={id(e(component_assigns, :activity, @activity))}
+                object_id={id(e(component_assigns, :object, @object))}
                 verb={e(component_assigns, :verb, @verb)}
                 verb_display={e(component_assigns, :verb_display, @verb_display)}
-                activity={e(component_assigns, :activity, @activity)}
                 subject_id={e(component_assigns, :subject_id, nil)}
-                object={e(component_assigns, :object, @object)}
                 object_boundary={@object_boundary}
                 object_type={e(component_assigns, :object_type, @object_type)}
                 date_ago={e(component_assigns, :date_ago, @date_ago)}
@@ -434,6 +491,8 @@ defmodule Bonfire.UI.Social.ActivityLive do
                 thread_id={@thread_id}
                 cw={@cw}
                 published_in={@published_in}
+                reply_to_id={e(@activity, :replied, :reply_to_id, nil)}
+                peered={e(@activity, :peered, nil) || e(@object, :peered, nil)}
                 thread_title={e(component_assigns, :thread_title, @thread_title)}
                 subject_user={@subject_user}
               />
@@ -615,9 +674,11 @@ defmodule Bonfire.UI.Social.ActivityLive do
       when verb in @create_or_reply_verbs,
       do: [{Bonfire.UI.Social.Activity.SubjectLive, %{profile: nil, character: character}}]
 
-  def component_activity_subject(verb, %{subject_id: id}, _, _, _, _)
-      when verb in @create_or_reply_verbs,
-      do: [{Bonfire.UI.Social.Activity.SubjectLive, %{subject_id: id}}]
+  # def component_activity_subject(verb, %{subject_id: id} = _activity, %{created: %{creator: nil}} = _object, _object_type, _, _) when verb in @create_or_reply_verbs, do: [{Bonfire.UI.Social.Activity.SubjectLive, %{subject_id: id}}]
+
+  # def component_activity_subject(verb, %{subject_id: id} = activity, object, object_type, _, _)
+  # when verb in @create_or_reply_verbs,
+  # do: if is_nil(e(activity, :object, :created, :creator, nil)) and is_nil(e(object, :created, :creator, nil)), do: [{Bonfire.UI.Social.Activity.SubjectLive, %{subject_id: id}}], else: component_activity_maybe_creator(activity, object, object_type)
 
   # other
   def component_activity_subject(_verb, activity, object, object_type, _, _),
@@ -642,28 +703,90 @@ defmodule Bonfire.UI.Social.ActivityLive do
       do: component_maybe_creator(subject) || []
 
   def component_activity_maybe_creator(
-        _activity,
-        %{created: %{creator_id: id, creator: nil}} = _object,
+        %{subject: %{id: id} = subject, object: %{created: %{creator_id: id}}} = activity,
+        object,
         _
       ),
-      do: [{Bonfire.UI.Social.Activity.SubjectLive, %{subject_id: id}}]
+      do:
+        component_maybe_creator(subject) ||
+          component_activity_maybe_creator_fallbacks(activity, object)
+
+  # def component_activity_maybe_creator(
+  #       %{object: %{created: %{creator_id: id, creator: nil}}} = _activity,
+  #       _object,
+  #       _
+  #     ),
+  #     do: warn("zzzz") && [{Bonfire.UI.Social.Activity.SubjectLive, %{subject_id: id}}]
+
+  #   def component_activity_maybe_creator(
+  #       _activity,
+  #       %{created: %{creator_id: id, creator: nil}} = _object,
+  #       _
+  #     ),
+  #     do: [{Bonfire.UI.Social.Activity.SubjectLive, %{subject_id: id}}]
+
+  def component_activity_maybe_creator(
+        %{object: %{created: %{creator: %{id: _} = creator}}} = activity,
+        object,
+        _
+      ),
+      do:
+        component_maybe_creator(creator) ||
+          component_activity_maybe_creator_fallbacks(activity, object)
 
   def component_activity_maybe_creator(activity, object, _),
+    do: component_activity_maybe_creator_fallbacks(activity, object)
+
+  defp component_activity_maybe_creator_fallbacks(activity, object),
     do:
       component_maybe_creator(object) ||
         component_maybe_creator(activity) ||
         (
-          debug("could not find a creator")
-          debug(activity)
-          debug(object)
-          [Bonfire.UI.Social.Activity.NoSubjectLive]
+          creator =
+            e(object, :created, :creator, nil) || e(activity, :object, :created, :creator, nil) ||
+              e(activity, :created, :creator, nil)
+
+          creator_id =
+            e(object, :created, :creator_id, nil) || e(activity, :created, :creator_id, nil)
+
+          case (creator ||
+                  if(not is_nil(creator_id) and creator_id == e(activity, :subject_id, nil),
+                    do: e(activity, :subject, nil)
+                  ) || creator_id)
+               |> debug("this is a fallback, component_maybe_creator *should* handle most cases") do
+            nil ->
+              debug("could not find a creator")
+              debug(activity)
+              debug(object)
+              [Bonfire.UI.Social.Activity.NoSubjectLive]
+
+            %{
+              profile: %{id: _} = profile,
+              character: %{id: _} = character
+            } ->
+              [
+                {Bonfire.UI.Social.Activity.SubjectLive,
+                 %{profile: profile, character: character}}
+              ]
+
+            creator_id when is_binary(creator_id) ->
+              debug("could only find a creator_id")
+              debug(activity)
+              debug(object)
+              [{Bonfire.UI.Social.Activity.SubjectLive, %{subject_id: creator_id}}]
+
+            other ->
+              error(other, "invalid creator")
+
+              [Bonfire.UI.Social.Activity.NoSubjectLive]
+          end
         )
 
   def component_maybe_creator(%{
         creator_profile: %{id: _} = profile,
         creator_character: %{id: _} = character
       }),
-      do: component_maybe_creator(%{profile: profile, character: character})
+      do: [{Bonfire.UI.Social.Activity.SubjectLive, %{profile: profile, character: character}}]
 
   # def component_maybe_creator(%{provider: %{id: _} = provider} = object),
   #   do: [{Bonfire.UI.Social.Activity.ProviderReceiverLive, %{object: object}}]
@@ -690,18 +813,6 @@ defmodule Bonfire.UI.Social.ActivityLive do
     do:
       object
       # |> repo().maybe_preload(created: [creator: [:profile, :character]])
-      |> e(:created, :creator, nil)
-      |> component_maybe_creator()
-
-  def component_maybe_creator(%{created: %{creator: %{profile: _}}} = object),
-    do:
-      object
-      |> e(:created, :creator, nil)
-      |> component_maybe_creator()
-
-  def component_maybe_creator(%{created: %{creator: %{character: _}}} = object),
-    do:
-      object
       |> e(:created, :creator, nil)
       |> component_maybe_creator()
 
