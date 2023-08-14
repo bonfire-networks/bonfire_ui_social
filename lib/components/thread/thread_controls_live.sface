@@ -1,4 +1,4 @@
-<div class="flex items-center p-3 pb-0 w-full justify-end">
+<div class="flex items-center p-3 w-full justify-end">
   <!-- <span class="text-sm font-medium text-base-content/70">
     {l("Discussion")}
   </span> -->

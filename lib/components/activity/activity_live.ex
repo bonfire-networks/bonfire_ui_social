@@ -387,7 +387,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
       </form>
       <div
         :if={@viewing_main_object && (@thread_title || e(@activity, :replied, :thread, :named, :name, nil))}
-        class="flex items-center mb-4 font-bold gap-2 text-2xl tracking-wider"
+        class="flex items-center mb-4 font-medium gap-2 text-2xl tracking-wide"
       >
         <span class="">{@thread_title || e(@activity, :replied, :thread, :named, :name, "")}</span>
       </div>

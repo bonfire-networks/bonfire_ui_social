@@ -137,7 +137,7 @@
               title={e(@profile, :name, "Anonymous")}
               class={
                 "rounded-full bg-base-100",
-                "h-9 w-9": !@__context__[:ui_compact],
+                "h-8 w-8": !@__context__[:ui_compact],
                 "h-6 w-6": @__context__[:ui_compact]
               }
             />
@@ -146,7 +146,7 @@
             <LiveRedirect
               :if={!@__context__[:ui_compact]}
               opts={"data-id": "subject_name", "aria-label": l("%{name}'s profile", name: e(@profile, :name, ""))}
-              class="font-semibold link link-hover text-base-content/90"
+              class="font-semibold text-sm link link-hover text-base-content/90"
               to={path(@character)}
             >
               {e(@profile, :name, "Anonymous")}

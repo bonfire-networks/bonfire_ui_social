@@ -115,6 +115,7 @@
   </form>
 </div>
 
-<div class="flex items-center w-full justify-between">
+<div class="flex items-center w-full border-b border-base-content/20 justify-between">
+  <span class="text-sm font-semibold px-3 text-base-content/70">{l"Replies"}</span>
   <#slot />
 </div>
