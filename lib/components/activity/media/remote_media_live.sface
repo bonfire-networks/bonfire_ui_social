@@ -46,7 +46,7 @@
                     e(@media.metadata, "other", "video_width", nil) || "800"}
                   height={e(@media.metadata, "facebook", "og:video:height", nil) ||
                     e(@media.metadata, "other", "video_height", nil) || "500"}
-                  src={url}
+                  src={"#{url}?&autoplay=1"}
                   frameborder="0"
                   allow="accelerometer; encrypted-@media; gyroscope; picture-in-picture"
                   allowfullscreen="allowfullscreen"
