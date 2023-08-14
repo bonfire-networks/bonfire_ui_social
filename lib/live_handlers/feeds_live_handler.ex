@@ -248,12 +248,6 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
     send_feed_updates(pid, feed_ids, assigns ++ [insert_stream: %{feed: entries}], component)
   end
 
-  defp send_feed_updates(pid, feed_ids, assigns, component) when is_list(feed_ids) do
-    for feed_id <- feed_ids do
-      send_feed_updates(pid, feed_id, assigns, component)
-    end
-  end
-
   defp send_feed_updates(pid, feed_id, assigns, component)
        when (is_pid(pid) or is_nil(pid)) and (is_list(assigns) or is_map(assigns)) do
     debug(feed_id, "Sending feed update to")
@@ -393,7 +387,7 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
     # socket
     # |> assign_generic(feed: feed_edges)
 
-    if feed_edges[:feed_component_id] do
+    if e(feed_edges, :feed_component_id, nil) do
       # temp workaround for when we're not actually getting a feed but rather a list of assigns for some reason
       socket
       |> assign_generic(feed_edges)
@@ -443,7 +437,12 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
         show_loader,
         reset_stream
       ) do
-    feed_name = feed_name(feed_name, socket)
+    feed_name =
+      feed_name
+      |> debug()
+      |> feed_name(socket)
+      |> debug()
+
     debug(filters_or_custom_query_or_feed_id_or_ids, feed_name)
 
     assigns =
@@ -459,9 +458,12 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
     )
   end
 
-  def feed_assigns_maybe_async(other, socket, show_loader, reset_stream) do
-    feed_name = feed_name(other, socket)
-    debug(other, feed_name)
+  def feed_assigns_maybe_async(feed_name, socket, show_loader, reset_stream) do
+    feed_name =
+      feed_name
+      |> debug()
+      |> feed_name(socket)
+      |> debug()
 
     assigns =
       (feed_default_assigns(feed_name, socket) ++ [loading: show_loader])
@@ -490,16 +492,17 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
   # end
 
   def feed_default_assigns(:my = feed_name, socket) do
-    feed_id = Bonfire.Social.Feeds.my_feed_id(:inbox, socket)
+    feed_id =
+      Bonfire.Social.Feeds.my_feed_id(:inbox, socket)
+      |> debug(feed_name)
 
     feed_ids =
       Bonfire.Social.Feeds.my_home_feed_ids(socket)
-      |> debug(feed_name)
+      |> debug("feed_ids")
 
     component_id = component_id(feed_id, socket.assigns)
 
     [
-      # feed_id: feed_name,
       feed_name: feed_name,
       feed_id: feed_id,
       feed_ids: feed_ids,
@@ -629,6 +632,7 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
 
   def feed_default_assigns({feed_name, filters_or_custom_query_or_feed_id_or_ids}, socket)
       when is_binary(feed_name) do
+    debug(feed_name, "feed_name")
     debug(filters_or_custom_query_or_feed_id_or_ids, "filters_or_custom_query_or_feed_id_or_ids")
 
     [
@@ -639,6 +643,11 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
       feed: nil,
       page_info: nil
     ]
+  end
+
+  def feed_default_assigns(:default, socket) do
+    feed_name(:default, id(socket))
+    |> feed_default_assigns(socket)
   end
 
   def feed_default_assigns(feed_name, socket) when is_atom(feed_name) do
@@ -663,11 +672,11 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
     ]
   end
 
-  defp feed_name(name, socket) when is_nil(name) or name == :default do
+  defp feed_name(name, current_user_or_socket) when is_nil(name) or name == :default do
     # || current_account(socket)
-    current = current_user(socket)
+    current = id(current_user_or_socket) || current_user_id(current_user_or_socket)
 
-    if not is_nil(ulid(current)) do
+    if not is_nil(current) do
       # my feed
       :my
     else
@@ -683,8 +692,9 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
 
   defp component_id(feed_id_or_tuple, assigns),
     do:
-      (e(assigns, :feed_component_id, nil) || feed_id_only(feed_id_or_tuple) || :feeds)
-      |> debug()
+      (e(assigns, :feed_component_id, nil) ||
+         feed_id_or_tuple |> debug("feed_id_or_tuple") |> feed_id_only() || :feeds)
+      |> debug("the_feed_component_id")
 
   # @decorate time()
   defp feed_assigns_maybe_async_load(

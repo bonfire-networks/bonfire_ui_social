@@ -2,6 +2,7 @@
   :if={@feed_component_id}
   id={@feed_component_id}
   feed_id={@feed_id}
+  feed_name={@feed_name}
   feed_ids={@feed_ids}
   page_title={@page_title}
   tabs_class="flex justify-between w-full border-b bg-base-300 tabs border-base-content border-opacity-20"

@@ -61,7 +61,8 @@ defmodule Bonfire.UI.Social.FeedLive do
       |> assign(
         feed: nil,
         hide_activities: nil,
-        feed_count: nil
+        feed_count: nil,
+        hide_fresh: 0
       )
       #  temporary_assigns: [
       #    feed: []
@@ -130,14 +131,12 @@ defmodule Bonfire.UI.Social.FeedLive do
 
   # adding new feed item
   def update(%{new_activity: new_activity} = _assigns, socket) when is_map(new_activity) do
-    debug("new_activity (feed is a temporary assign, so only add new activities)")
+    debug("new_activity, add to top of feed")
 
     {:ok,
      socket
-     |> assign(
-       feed_update_mode: "prepend",
-       feed: [new_activity]
-     )}
+     |> assign(hide_fresh: e(socket.assigns, :hide_fresh, 0) + 1)
+     |> LiveHandler.insert_feed(new_activity, at: 0, reset: false)}
   end
 
   # def update(%{__context__: %{new_activity: new_activity}} = assigns, socket) when is_map(new_activity) do
@@ -195,7 +194,11 @@ defmodule Bonfire.UI.Social.FeedLive do
     socket =
       socket
       |> assign(feed_component_id: socket.assigns.id)
-      |> LiveHandler.feed_assigns_maybe_async(assigns[:id] || :default, ...)
+      |> LiveHandler.feed_assigns_maybe_async(
+        assigns[:feed_name] || socket.assigns[:feed_name] || socket.assigns[:feed_id] ||
+          assigns[:feed_id] || assigns[:id] || socket.assigns[:id] || :default,
+        ...
+      )
       |> LiveHandler.insert_feed(socket, ...)
 
     maybe_subscribe(socket)
@@ -211,7 +214,11 @@ defmodule Bonfire.UI.Social.FeedLive do
     socket =
       socket
       |> assign(feed_component_id: socket.assigns.id)
-      |> LiveHandler.feed_assigns_maybe_async(assigns[:feed_id] || assigns[:id] || :default, ...)
+      |> LiveHandler.feed_assigns_maybe_async(
+        assigns[:feed_name] || socket.assigns[:feed_name] || socket.assigns[:feed_id] ||
+          assigns[:feed_id] || assigns[:id] || socket.assigns[:id] || :default,
+        ...
+      )
       |> LiveHandler.insert_feed(socket, ...)
 
     maybe_subscribe(socket)
@@ -262,18 +269,18 @@ defmodule Bonfire.UI.Social.FeedLive do
   #   {:noreply, socket}
   # end
 
-  def do_handle_event("select_tab", attrs, socket) do
-    tab = maybe_to_atom(e(attrs, "name", nil))
+  # def do_handle_event("select_tab", attrs, socket) do
+  #   tab = maybe_to_atom(e(attrs, "name", nil))
 
-    debug(attrs, tab)
+  #   debug(attrs, tab)
 
-    {:noreply,
-     socket
-     |> assign(selected_tab: tab)
-     |> LiveHandler.insert_feed(LiveHandler.feed_assigns_maybe_async(tab, socket))}
-  end
+  #   {:noreply,
+  #    socket
+  #    |> assign(selected_tab: tab)
+  #    |> LiveHandler.insert_feed(LiveHandler.feed_assigns_maybe_async(tab, socket))}
+  # end
 
-  def handle_event(
+  def do_handle_event(
         "set",
         attrs,
         socket
@@ -288,11 +295,30 @@ defmodule Bonfire.UI.Social.FeedLive do
       # |> assign(:page_header_aside, LiveHandler.page_header_asides(...))
       |> LiveHandler.insert_feed(
         ...,
-        LiveHandler.feed_assigns_maybe_async(socket.assigns[:selected_tab], ..., true, true)
+        LiveHandler.feed_assigns_maybe_async(
+          socket.assigns[:feed_name] || socket.assigns[:feed_id] || socket.assigns[:id] ||
+            :default,
+          ...,
+          true,
+          true
+        )
       )
       # |> debug("seeet")
     }
   end
+
+  #   def handle_event(
+  #       "hide_fresh",
+  #       attrs,
+  #       socket
+  #     )do
+
+  #   {:ok,
+  #    socket
+  #    |> assign(
+  #      hide_fresh: 0
+  #    )}
+  # end
 
   def handle_event(
         action,

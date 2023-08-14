@@ -1,6 +1,5 @@
 <div
-  x-data="{expanded: false, expandable: $refs.note.scrollHeight > $refs.note.clientHeight}"
-  :class="{'previewable_expanded': expanded}"
+  x-data="{expanded: false, expandable: $refs.note && $refs.note.scrollHeight > $refs.note.clientHeight}"
   class={
     "note previewable_activity mt-3 cursor-pointer max-w-[594px] overflow-x-hidden",
     "!mt-2": @showing_within == :widget,
@@ -62,6 +61,7 @@
                     "md:prose-sm": @showing_within in [nil, :feed, :search, :notifications],
                     previewable_truncate: !@viewing_main_object
                   }
+                  :class="{'previewable_expanded': expanded}"
                 >
                   {rich(
                     # maybe_truncate(

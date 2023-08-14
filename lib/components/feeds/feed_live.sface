@@ -35,6 +35,24 @@
         showing_within={@showing_within}
       />
     </Bonfire.UI.Common.TabsLive>
+
+    <div
+      :if={@hide_fresh != 0}
+      data-id="load_fresh"
+      class="flex justify-center w-full p-3 mx-auto border-t border-base-content border-opacity-10 bg-base-100"
+    >
+      <btn
+        phx-click={JS.show(to: ".fresh_hidden")
+        |> JS.hide()
+
+        # |> JS.push("hide_fresh", target: @myself)}
+        class="w-full p-1 normal-case btn-ghost btn btn-sm btn-wide"
+      >
+        {l("Show more recent")}
+        <!-- {"(#{@hide_fresh})"} -->
+      </btn>
+    </div>
+
     {#if @feed_count || e(@streams.feed, :inserts, []) != []}
       <div
         id={"feed_#{@feed_id || @id}"}
@@ -48,7 +66,10 @@
           <div
             id={entry_id}
             :if={@hide_activities != "component"}
-            class={if @hide_activities == "infinite_scroll", do: "infinite_scroll_hidden hidden"}
+            class={
+              "infinite_scroll_hidden hidden": @hide_activities == "infinite_scroll",
+              "fresh_hidden hidden": @hide_fresh != 0
+            }
           >
             <!-- id={"activity-#{component_id(@feed_id || @id, entry)}"} -->
             <ActivityLive
