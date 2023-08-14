@@ -372,7 +372,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
           String.contains?(@current_url || "", @permalink || "") and @showing_within != :smart_input
       }
     >
-      {#if id(@current_user)}
+      {#if current_user_id(@__context__)}
         {#if String.starts_with?(@permalink || "", ["/post/", "/discussion/"])}
           <div class="text-xs">
             <Bonfire.UI.Common.OpenPreviewLive
@@ -616,18 +616,28 @@ defmodule Bonfire.UI.Social.ActivityLive do
       )
 
   # don't show subject twice
-  def component_activity_subject(_, _, _, Bonfire.Data.Identity.User, _, _),
-    do: [Bonfire.UI.Social.Activity.SubjectMinimalLive]
+  def component_activity_subject(_, activity, _, Bonfire.Data.Identity.User, _, _),
+    do: [
+      {Bonfire.UI.Social.Activity.SubjectMinimalLive,
+       %{
+         subject_id: e(activity, :subject_id, nil),
+         profile: e(activity, :subject, :profile, nil),
+         character: e(activity, :subject, :character, nil)
+       }}
+    ]
 
   # quoting a reply_to <-- this is handled by the Bonfire.UI.Social.Activity.SubjectLive internally
   # def component_activity_subject(_, _, %{activity_inception: true}), do: [Bonfire.UI.Social.Activity.SubjectRepliedLive]
 
-  def component_activity_subject(verb, _activity, _, object_type, _, _)
+  def component_activity_subject(verb, activity, _, object_type, _, _)
       when verb in @react_or_simple_verbs and object_type in [Bonfire.Data.Identity.User],
       do: [
         {Bonfire.UI.Social.Activity.SubjectMinimalLive,
          %{
-           verb: verb
+           verb: verb,
+           subject_id: e(activity, :subject_id, nil),
+           profile: e(activity, :subject, :profile, nil),
+           character: e(activity, :subject, :character, nil)
          }}
       ]
 
@@ -639,18 +649,24 @@ defmodule Bonfire.UI.Social.ActivityLive do
           {Bonfire.UI.Social.Activity.SubjectMinimalLive,
            %{
              # activity: repo().maybe_preload(activity, subject: [:character]),
-             verb: verb
+             verb: verb,
+             subject_id: e(activity, :subject_id, nil),
+             profile: e(activity, :subject, :profile, nil),
+             character: e(activity, :subject, :character, nil)
            }}
         ] ++ component_activity_maybe_creator(activity, object, object_type)
 
   # replies (when shown in notifications)
-  def component_activity_subject(verb, _activity, _, _, :notifications, _)
+  def component_activity_subject(verb, activity, _, _, :notifications, _)
       when verb in @reply_verbs,
       do: [
         {Bonfire.UI.Social.Activity.SubjectMinimalLive,
          %{
            #  activity: repo().maybe_preload(activity, subject: [:character]),
-           verb: verb
+           verb: verb,
+           subject_id: e(activity, :subject_id, nil),
+           profile: e(activity, :subject, :profile, nil),
+           character: e(activity, :subject, :character, nil)
          }}
       ]
 
