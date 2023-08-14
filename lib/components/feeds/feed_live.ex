@@ -11,6 +11,7 @@ defmodule Bonfire.UI.Social.FeedLive do
   prop feed_ids, :any, default: nil
   prop feed_filters, :any, default: []
   prop feed, :any, default: []
+  prop subject_user, :any, default: nil
   prop page_info, :any, default: nil
   prop loading, :boolean, default: true
   prop preload, :atom, default: :feed
@@ -43,7 +44,7 @@ defmodule Bonfire.UI.Social.FeedLive do
   prop tab_primary_class, :css_class, default: nil
 
   prop sort_by, :any, default: nil
-  prop time_limit, :any, default: 7
+  prop time_limit, :any, default: nil
   prop sort_order, :any, default: false
 
   slot bottom_or_empty_feed

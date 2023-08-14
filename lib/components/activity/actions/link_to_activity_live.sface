@@ -2,7 +2,7 @@
   <div class="text-xs">
     <Bonfire.UI.Common.OpenPreviewLive
       href={@permalink || path(@object)}
-      parent_id={"#{id(@activity)}_#{id(@object)}_#{if @showing_within == :notifications, do: Text.random_string()}"}
+      parent_id={"#{id(@activity)}_#{id(@object)}_#{Text.random_string()}"}
       open_btn_text=""
       title_text={e(@object, :name, nil) || e(@object, :post_content, :name, nil) || l("Discussion")}
       open_btn_wrapper_class="open_preview_link"

@@ -17,6 +17,79 @@ defmodule Bonfire.UI.Social.Activity.SubjectLive do
   prop cw, :boolean, default: nil
   prop show_minimal_subject_and_note, :any, default: false
   prop published_in, :any, default: nil
+  prop subject_id, :any, default: nil
+  prop subject_user, :any, default: nil
+
+  def render(assigns) do
+    assigns
+    |> debug("subassss")
+    |> prepare()
+    |> render_sface()
+  end
+
+  def prepare(
+        %{
+          profile: nil,
+          character: nil,
+          subject_id: id,
+          current_user: %{id: id, profile: profile, character: character}
+        } = assigns
+      ) do
+    assigns
+    |> assign(
+      profile: profile,
+      character: character
+    )
+  end
+
+  def prepare(
+        %{
+          profile: nil,
+          character: nil,
+          activity: %{subject_id: id},
+          current_user: %{id: id, profile: profile, character: character}
+        } = assigns
+      ) do
+    assigns
+    |> assign(
+      profile: profile,
+      character: character
+    )
+  end
+
+  def prepare(
+        %{
+          profile: nil,
+          character: nil,
+          subject_id: id,
+          subject_user: %{id: id, profile: profile, character: character}
+        } = assigns
+      ) do
+    assigns
+    |> assign(
+      profile: profile,
+      character: character
+    )
+  end
+
+  def prepare(
+        %{
+          profile: nil,
+          character: nil,
+          activity: %{subject_id: id},
+          subject_user: %{id: id, profile: profile, character: character}
+        } = assigns
+      ) do
+    assigns
+    |> assign(
+      profile: profile,
+      character: character
+    )
+  end
+
+  def prepare(assigns) do
+    assigns
+  end
 
   def preloads(),
     do: [

@@ -873,9 +873,12 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
     feed_assigns(feed_id, socket)
   end
 
-  defp feed_assigns({"user_timeline_" <> user_or_other_id, other}, socket) do
-    debug(other, "load user/other timeline: #{user_or_other_id}")
-    load_user_feed_assigns("timeline", user_or_other_id, other, socket)
+  defp feed_assigns({"user_" <> tab_and_user_or_other_id, other}, socket) do
+    debug(other, "load user/other timeline: #{tab_and_user_or_other_id}")
+
+    [tab, user_or_other_id] = String.split(tab_and_user_or_other_id, "_", parts: 2)
+
+    load_user_feed_assigns(tab, user_or_other_id, other, socket)
     # |> debug()
   end
 
@@ -956,7 +959,7 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
         {:thread, _} -> [:feed, :with_media]
         {:feed_by_creator, _} -> [:with_object_more]
         {:feed_by_subject, _} -> [:feed_by_subject] ++ preload_feed_extra
-        _ -> [:feed] ++ preload_feed_extra
+        _ -> [:feed_by_subject] ++ preload_feed_extra
       end
       |> debug("whatpreloads")
 
@@ -1239,7 +1242,8 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
         do:
           Bonfire.Social.FeedActivities.feed(feed_id,
             pagination: input_to_atoms(params),
-            current_user: current_user(socket)
+            current_user: current_user(socket),
+            subject_user: user
           )
 
     #  debug(feed: feed)

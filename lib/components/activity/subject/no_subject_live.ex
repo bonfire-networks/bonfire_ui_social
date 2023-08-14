@@ -1,4 +1,4 @@
-defmodule Bonfire.UI.Social.Activity.SubjectMinimalLive do
+defmodule Bonfire.UI.Social.Activity.NoSubjectLive do
   use Bonfire.UI.Common.Web, :stateless_component
 
   prop activity, :any, default: nil
@@ -14,9 +14,4 @@ defmodule Bonfire.UI.Social.Activity.SubjectMinimalLive do
   prop thread_id, :string, default: nil
   prop thread_title, :any, default: nil
   prop published_in, :any, default: nil
-  prop subject_id, :any, default: nil
-  prop subject_user, :any, default: nil
-
-  def render(assigns),
-    do: Bonfire.UI.Social.Activity.SubjectLive.prepare(assigns) |> render_sface()
 end

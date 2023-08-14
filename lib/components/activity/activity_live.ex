@@ -50,7 +50,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
   prop(object_type_readable, :string, default: nil)
   prop(reply_count, :any, default: nil)
   prop(published_in, :any, default: nil)
-
+  prop subject_user, :any, default: nil
   prop(hide_actions_until_hovered, :boolean, default: false)
 
   @decorate time()
@@ -421,6 +421,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
                 verb={e(component_assigns, :verb, @verb)}
                 verb_display={e(component_assigns, :verb_display, @verb_display)}
                 activity={e(component_assigns, :activity, @activity)}
+                subject_id={e(component_assigns, :subject_id, nil)}
                 object={e(component_assigns, :object, @object)}
                 object_boundary={@object_boundary}
                 object_type={e(component_assigns, :object_type, @object_type)}
@@ -434,6 +435,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
                 cw={@cw}
                 published_in={@published_in}
                 thread_title={e(component_assigns, :thread_title, @thread_title)}
+                subject_user={@subject_user}
               />
             {#match Bonfire.UI.Social.Activity.NoteLive}
               <Bonfire.UI.Social.Activity.NoteLive
@@ -613,6 +615,10 @@ defmodule Bonfire.UI.Social.ActivityLive do
       when verb in @create_or_reply_verbs,
       do: [{Bonfire.UI.Social.Activity.SubjectLive, %{profile: nil, character: character}}]
 
+  def component_activity_subject(verb, %{subject_id: id}, _, _, _, _)
+      when verb in @create_or_reply_verbs,
+      do: [{Bonfire.UI.Social.Activity.SubjectLive, %{subject_id: id}}]
+
   # other
   def component_activity_subject(_verb, activity, object, object_type, _, _),
     do:
@@ -635,6 +641,13 @@ defmodule Bonfire.UI.Social.ActivityLive do
       ),
       do: component_maybe_creator(subject) || []
 
+  def component_activity_maybe_creator(
+        _activity,
+        %{created: %{creator_id: id, creator: nil}} = _object,
+        _
+      ),
+      do: [{Bonfire.UI.Social.Activity.SubjectLive, %{subject_id: id}}]
+
   def component_activity_maybe_creator(activity, object, _),
     do:
       component_maybe_creator(object) ||
@@ -643,7 +656,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
           debug("could not find a creator")
           debug(activity)
           debug(object)
-          [Bonfire.UI.Social.Activity.SubjectMinimalLive]
+          [Bonfire.UI.Social.Activity.NoSubjectLive]
         )
 
   def component_maybe_creator(%{
@@ -1041,8 +1054,14 @@ defmodule Bonfire.UI.Social.ActivityLive do
   def component_object(_, _, %{post_content: %{html_body: _}}, _),
     do: [Bonfire.UI.Social.Activity.NoteLive]
 
-  # def component_object(_, %{object: %{profile: _}}), do: [Bonfire.UI.Social.Activity.CharacterLive]
-  # def component_object(_, %{object: %{character: _}}), do: [Bonfire.UI.Social.Activity.CharacterLive]
+  def component_object(_, _, %{profile: %{id: _}}, _),
+    do: [Bonfire.UI.Social.Activity.CharacterLive]
+
+  def component_object(_, _, %{character: %{id: _}}, _),
+    do: [Bonfire.UI.Social.Activity.CharacterLive]
+
+  def component_object(_, _, _, Bonfire.Data.Identity.User),
+    do: [Bonfire.UI.Social.Activity.CharacterLive]
 
   def component_object(_, _, %{} = object, object_type) do
     case object_type || Types.object_type(object) do
@@ -1105,16 +1124,14 @@ defmodule Bonfire.UI.Social.ActivityLive do
     do: [Bonfire.UI.Social.Activity.NoteLive]
 
   def component_for_object_type(type, _) when type in [Bonfire.Data.Identity.User],
-    # do: [Bonfire.UI.Social.Activity.CharacterLive]
-    do: []
+    do: [Bonfire.UI.Social.Activity.CharacterLive]
 
   # do: [{Bonfire.UI.Social.Activity.CharacterLive, %{
   #     object: repo().maybe_preload(object, [:character, profile: :icon])
   #   }}]
 
   def component_for_object_type(type, _) when type in [Bonfire.Data.Social.Follow],
-    # do: [Bonfire.UI.Social.Activity.CharacterLive]
-    do: []
+    do: [Bonfire.UI.Social.Activity.CharacterLive]
 
   def component_for_object_type(type, _) when type in [:group],
     do: [Bonfire.UI.Social.Activity.GroupLive]

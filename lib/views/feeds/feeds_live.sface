@@ -17,4 +17,5 @@
   loading={@loading}
   tab_path_prefix="/feed/"
   tab_path_suffix={@tab_path_suffix}
+  time_limit={7}
 />
