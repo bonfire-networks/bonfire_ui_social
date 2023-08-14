@@ -1,4 +1,6 @@
 <div
+  x-data="{expanded: false, expandable: $refs.note.scrollHeight > $refs.note.clientHeight}"
+  :class="{'previewable_expanded': expanded}"
   class={
     "note previewable_activity mt-3 cursor-pointer max-w-[594px] overflow-x-hidden",
     "!mt-2": @showing_within == :widget,
@@ -11,7 +13,6 @@
         !@viewing_main_object
   }
   x-ref="note_container"
-  x-data="{expanded: false, expandable: $refs.note.scrollHeight > $refs.note.clientHeight}"
   x-show={if @showing_within == :thread && !@viewing_main_object, do: "show_replies"}
   x-transition
 >
@@ -40,44 +41,47 @@
           {/if}
 
           <div x-show={if cw, do: "content_open"} x-cloak={cw == true} x-collapse={cw == true}>
-            <p
-              :if={e(post_content(@object), :summary, nil)}
-              class="font-light prose max-w-prose prose-p:pt-1"
-            >
-              {rich(e(post_content(@object), :summary, nil))}
-            </p>
+            {#case e(post_content(@object), :summary, nil)}
+              {#match nil}
+              {#match summary}
+                <p class="font-light prose max-w-prose prose-p:pt-1">
+                  {rich(summary)}
+                </p>
+            {/case}
+            {#case e(post_content(@object), :html_body, nil) ||
+                if !e(post_content(@object), :name, nil), do: l("This content is not available.")}
+              {#match nil}
+              {#match html_body}
+                <div
+                  x-ref="note"
+                  data-id="object_body"
+                  class={
+                    "prose break-words object_body max-w-none prose-p:pt-0 prose-p:my-0 prose-a:text-primary prose-a:no-underline prose-sm",
+                    "!my-0 !text-sm !font-normal ": @showing_within == :smart_input,
+                    "md:prose-base": @viewing_main_object,
+                    "md:prose-sm": @showing_within in [nil, :feed, :search, :notifications],
+                    previewable_truncate: !@viewing_main_object
+                  }
+                >
+                  {rich(
+                    # maybe_truncate(
+                    html_body,
+                    #  @viewing_main_object || @showing_within not in [nil, :feed, :search, :notifications]
+                    # ),
+                    skip_markdown: @is_remote || @showing_within == :search
+                  )}
+                </div>
 
-            <div
-              x-ref="note"
-              data-id="object_body"
-              :class="{'!line-clamp-none' :  expanded}"
-              class={
-                "prose break-words object_body max-w-none prose-p:pt-0 prose-p:my-0 prose-a:text-primary prose-a:no-underline prose-sm",
-                "!my-0 !text-sm !font-normal ": @showing_within == :smart_input,
-                "md:prose-base": @viewing_main_object,
-                "md:prose-sm": @showing_within in [nil, :feed, :search, :notifications],
-                previewable_truncate: !@viewing_main_object && @showing_within != :thread
-              }
-            >
-              {rich(
-                # maybe_truncate(
-                e(post_content(@object), :html_body, l("This content is not available.")),
-                #  @viewing_main_object || @showing_within not in [nil, :feed, :search, :notifications]
-                # ),
-                skip_markdown: @is_remote || @showing_within == :search
-              )}
-            </div>
+                <div x-show="expandable">
+                  <button
+                    type="button"
+                    @click="expanded = !expanded"
+                    x-text="expanded ? 'Read less' : 'Read more'"
+                    class="link text-sm mt-2 font-semibold link-hover link-primary normal-case"
+                  >{l("Read more")}</button>
+                </div>
+            {/case}
           </div>
       {/case}
   {/case}
-
-  <div>
-    <button
-      x-show="expandable"
-      type="button"
-      @click="expanded = !expanded"
-      x-text="expanded ? 'Read less' : 'Read more'"
-      class="link text-sm mt-2 font-semibold link-hover link-primary normal-case"
-    >{l("Read more")}</button>
-  </div>
 </div>

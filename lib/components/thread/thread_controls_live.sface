@@ -83,7 +83,11 @@
         >
           {#case @sort_by}
             {#match :latest_reply}
-              <#Icon iconify="mdi:sprout" class="w-6 h-6" />
+              {#if @thread_mode == :flat}
+                <#Icon iconify="mdi:order-alphabetical-ascending" class="w-5 h-5" />
+              {#else}
+                <#Icon iconify="mdi:sprout" class="w-6 h-6" />
+              {/if}
             {#match :num_replies}
               <Iconify.Bonfire.Reply.render class="w-5 h-5 stroke-1 fill-base-content/70" />
             {#match :num_boosts}
@@ -107,7 +111,8 @@
           >
             <a class={
               "flex gap-2 text-base-content/70",
-              "active !text-base-content/100 font-semibold": is_nil(@sort_by)
+              "active !text-base-content/100 font-semibold":
+                is_nil(@sort_by) or (@thread_mode == :flat and @sort_by == :latest_reply)
             }>
               <#Icon iconify="mdi:order-alphabetical-ascending" class="w-5 h-5" />
               {if @thread_mode != :flat, do: l("Chronological by branch"), else: l("Chronological")}
