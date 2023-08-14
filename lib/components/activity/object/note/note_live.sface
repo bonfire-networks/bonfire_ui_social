@@ -10,6 +10,8 @@
       debug(@thread_mode, "thread_modessss") != :flat && @showing_within == :thread &&
         !@viewing_main_object
   }
+  x-ref="note_container"
+  x-data="{expanded: false, expandable: $refs.note.scrollHeight > $refs.note.clientHeight}"
   x-show={if @showing_within == :thread && !@viewing_main_object, do: "show_replies"}
   x-transition
 >
@@ -46,7 +48,9 @@
             </p>
 
             <div
+              x-ref="note"
               data-id="object_body"
+              :class="{'!line-clamp-none' :  expanded}"
               class={
                 "prose break-words object_body max-w-none prose-p:pt-0 prose-p:my-0 prose-a:text-primary prose-a:no-underline prose-sm",
                 "!my-0 !text-sm !font-normal ": @showing_within == :smart_input,
@@ -66,4 +70,14 @@
           </div>
       {/case}
   {/case}
+  
+  <div>
+    <button
+      x-show="expandable" 
+      type="button" 
+      @click="expanded = !expanded"
+      x-text="expanded ? 'Read less' : 'Read more'" 
+      class="link text-sm mt-2 font-semibold link-hover link-primary normal-case"
+    >{l "Read more"}</button>
+  </div>
 </div>
