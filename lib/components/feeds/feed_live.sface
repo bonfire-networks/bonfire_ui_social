@@ -41,11 +41,11 @@
       id="show_fresh"
       phx-click={JS.show(to: ".fresh_hidden")
       |> JS.add_class("hidden")}
-      class="flex justify-center w-full p-3 mx-auto border-t border-base-content border-opacity-10 bg-base-100"
+      class="flex justify-center w-full p-3 mx-auto sticky top-[60px] z-[99999999999999]"
       phx-show={JS.remove_class("hidden")}
     >
       <!-- style={if @hide_fresh==0, do: "display: none;", else: ""} -->
-      <btn class="w-full p-1 normal-case btn-ghost btn btn-sm btn-wide">
+      <btn class="normal-case btn btn-sm rounded-full btn-primary">
         <!-- |> JS.push("hide_fresh", target: @myself) -->
         {l("Show more recent")}
         <!-- {"(#{@hide_fresh})"} -->
@@ -156,7 +156,7 @@
           {/if}
         {#else}
           {#if is_integer(@time_limit) and @time_limit != 0}
-            <p>{lp("That's all for today...", "That's all for the last %{number} days...", @time_limit,
+            <p class="text-sm mb-3 font-medium">{lp("That's all for today...", "That's all for the last %{number} days...", @time_limit,
                 number: @time_limit
               )}</p>
 

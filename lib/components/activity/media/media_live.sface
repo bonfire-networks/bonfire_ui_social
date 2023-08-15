@@ -250,7 +250,7 @@
   <div
     :if={@link_list != []}
     class={
-      "flex flex-col gap-2",
+      "flex flex-col gap-2 mt-3",
       "!ml-12": @showing_within == :notifications
     }
   >
