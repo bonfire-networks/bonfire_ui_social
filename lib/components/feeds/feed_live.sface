@@ -43,11 +43,10 @@
     >
       <btn
         phx-click={JS.show(to: ".fresh_hidden")
-        |> JS.hide()
-
-        # |> JS.push("hide_fresh", target: @myself)}
+        |> JS.hide()}
         class="w-full p-1 normal-case btn-ghost btn btn-sm btn-wide"
       >
+        <!-- |> JS.push("hide_fresh", target: @myself) -->
         {l("Show more recent")}
         <!-- {"(#{@hide_fresh})"} -->
       </btn>

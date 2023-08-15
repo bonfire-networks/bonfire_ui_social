@@ -377,6 +377,11 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
     # |> assign_generic(assigns)
   end
 
+  def insert_feed(socket, {:error, assigns}, opts) do
+    socket
+    |> assign_error(assigns)
+  end
+
   def insert_feed(socket, {feed_edges, assigns}, opts) do
     socket
     |> assign_generic(assigns)
@@ -440,7 +445,7 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
     feed_name =
       feed_name
       |> debug()
-      |> feed_name(socket)
+      |> feed_name(current_user_id(socket))
       |> debug()
 
     debug(filters_or_custom_query_or_feed_id_or_ids, feed_name)
@@ -462,7 +467,7 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
     feed_name =
       feed_name
       |> debug()
-      |> feed_name(socket)
+      |> feed_name(current_user_id(socket))
       |> debug()
 
     assigns =
@@ -617,6 +622,7 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
 
   def feed_default_assigns({feed_name, filters_or_custom_query_or_feed_id_or_ids}, socket)
       when is_atom(feed_name) do
+    debug(feed_name, "feed_name")
     debug(filters_or_custom_query_or_feed_id_or_ids, "filters_or_custom_query_or_feed_id_or_ids")
 
     feed_default_assigns(feed_name, socket) ++
@@ -646,7 +652,7 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
   end
 
   def feed_default_assigns(:default, socket) do
-    feed_name(:default, id(socket))
+    feed_name(:default, current_user_id(socket))
     |> feed_default_assigns(socket)
   end
 
@@ -673,8 +679,9 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
   end
 
   defp feed_name(name, current_user_or_socket) when is_nil(name) or name == :default do
+    debug(current_user_or_socket)
+    current = current_user_id(current_user_or_socket)
     # || current_account(socket)
-    current = id(current_user_or_socket) || current_user_id(current_user_or_socket)
 
     if not is_nil(current) do
       # my feed
