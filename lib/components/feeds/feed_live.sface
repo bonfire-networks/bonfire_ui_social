@@ -38,11 +38,13 @@
 
     <div
       :if={@hide_fresh != 0}
-      data-id="load_fresh"
+      id="show_fresh"
       phx-click={JS.show(to: ".fresh_hidden")
-      |> JS.hide()}
+      |> JS.add_class("hidden")}
       class="flex justify-center w-full p-3 mx-auto border-t border-base-content border-opacity-10 bg-base-100"
+      phx-show={JS.remove_class("hidden")}
     >
+      <!-- style={if @hide_fresh==0, do: "display: none;", else: ""} -->
       <btn class="w-full p-1 normal-case btn-ghost btn btn-sm btn-wide">
         <!-- |> JS.push("hide_fresh", target: @myself) -->
         {l("Show more recent")}
@@ -81,6 +83,7 @@
               feed_id={@feed_id}
               hide_activity={@hide_activities}
               subject_user={@subject_user}
+              hide_actions={@hide_fresh != 0}
             />
           </div>
         {/for}

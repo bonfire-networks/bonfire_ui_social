@@ -51,7 +51,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
   prop(reply_count, :any, default: nil)
   prop(published_in, :any, default: nil)
   prop subject_user, :any, default: nil
-  prop(hide_actions_until_hovered, :boolean, default: false)
+  prop(hide_actions, :any, default: false)
 
   @decorate time()
   def preload(list_of_assigns) do
@@ -240,17 +240,18 @@ defmodule Bonfire.UI.Social.ActivityLive do
       cw: e(object, :post_content, :name, nil) != nil,
       is_remote: e(activity, :peered, nil) != nil or e(object, :peered, nil) != nil,
       reply_count: e(replied, :nested_replies_count, 0) + e(replied, :direct_replies_count, 0),
-      hide_actions_until_hovered:
-        !e(assigns, :viewing_main_object, nil) and
-          Settings.get(
-            [
-              Bonfire.UI.Social.Activity.ActionsLive,
-              e(assigns, :showing_within, nil) || :feed,
-              :hide_until_hovered
-            ],
-            nil,
-            assigns
-          )
+      hide_actions:
+        e(assigns, :hide_actions, nil) ||
+          (!e(assigns, :viewing_main_object, nil) and
+             Settings.get(
+               [
+                 Bonfire.UI.Social.Activity.ActionsLive,
+                 e(assigns, :showing_within, nil) || :feed,
+                 :hide_until_hovered
+               ],
+               nil,
+               assigns
+             ) && "until_hovered")
     })
 
     # |> debug("Activity preparation done")
@@ -342,9 +343,9 @@ defmodule Bonfire.UI.Social.ActivityLive do
     ~F"""
     <article
       x-data="{content_open: false, show_actions: false}"
-      x-init={"content_open = #{!@cw}; show_actions = #{if @hide_actions_until_hovered, do: "('ontouchstart' in window) || (navigator.maxTouchPoints > 0) || (navigator.msMaxTouchPoints > 0)", else: true}"}
-      x-on:mouseover={if @hide_actions_until_hovered, do: "show_actions=true"}
-      x-on:mouseover.away={if @hide_actions_until_hovered, do: "show_actions=false"}
+      x-init={"content_open = #{!@cw}; show_actions = #{if @hide_actions == "until_hovered", do: "('ontouchstart' in window) || (navigator.maxTouchPoints > 0) || (navigator.msMaxTouchPoints > 0)", else: true}"}
+      x-on:mouseover={if @hide_actions == "until_hovered", do: "show_actions=true"}
+      x-on:mouseover.away={if @hide_actions == "until_hovered", do: "show_actions=false"}
       id={@activity_component_id}
       data-href={@permalink}
       phx-hook={if !@viewing_main_object and !@show_minimal_subject_and_note and
@@ -533,7 +534,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
               />
             {#match _ when component in [Bonfire.UI.Social.Activity.ActionsLive, Bonfire.UI.Social.FlaggedActionsLive]}
               <Dynamic.Component
-                :if={@hide_activity != "actions"}
+                :if={@hide_activity != "actions" and @hide_actions != true}
                 module={component}
                 __context__={@__context__}
                 showing_within={@showing_within}

@@ -133,10 +133,18 @@ defmodule Bonfire.UI.Social.FeedLive do
   def update(%{new_activity: new_activity} = _assigns, socket) when is_map(new_activity) do
     debug("new_activity, add to top of feed")
 
-    {:ok,
-     socket
-     |> assign(hide_fresh: e(socket.assigns, :hide_fresh, 0) + 1)
-     |> LiveHandler.insert_feed(new_activity, at: 0, reset: false)}
+    {
+      :ok,
+      socket
+      |> assign(hide_fresh: e(socket.assigns, :hide_fresh, 0) + 1)
+      # what an ugly way but idk
+      |> push_event("js-exec-attr-event", %{
+        to: "#show_fresh",
+        attr: "phx-show"
+      })
+      |> LiveHandler.insert_feed(new_activity, at: 0, reset: false)
+      #  |> JS.show(to: "#show_fresh") # LV doesn't have this for some reason
+    }
   end
 
   # def update(%{__context__: %{new_activity: new_activity}} = assigns, socket) when is_map(new_activity) do
