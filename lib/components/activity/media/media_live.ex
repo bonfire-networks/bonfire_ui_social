@@ -120,15 +120,17 @@ defmodule Bonfire.UI.Social.Activity.MediaLive do
   def preview_img(%{media: media}), do: preview_img(media)
 
   def preview_img(%{} = media) do
-    (e(media.metadata, "oembed", "thumbnail_url", nil) ||
-       e(media.metadata, "facebook", "og:image", nil) ||
-       e(media.metadata, "twitter", "twitter:image", nil) ||
+    (e(media, :metadata, "oembed", "thumbnail_url", nil) ||
+       e(media, :metadata, "facebook", "og:image", nil) ||
+       e(media, :metadata, "twitter", "twitter:image", nil) ||
+       e(media, :metadata, "icon", "url", nil) || e(media, :metadata, "icon", nil) ||
+       e(media, :metadata, "image", "url", nil) || e(media, :metadata, "image", nil) ||
        media_img(media))
     |> unwrap()
   end
 
   def media_img(%{} = media) do
-    (e(media.metadata, "oembed", "url", nil) || Media.image_url(media))
+    (e(media, :metadata, "oembed", "url", nil) || Media.image_url(media))
     |> unwrap()
   end
 

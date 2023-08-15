@@ -3,7 +3,7 @@
     {#match img when is_binary(img)}
       <!-- Only show the preview here if we have not attached media (hopefully with oembed) -->
       <div class="relative">
-        <img src={e(img, "url", nil)} alt="" class="w-full h-100 rounded-t-box object-cover">
+        <img src={img} alt="" class="w-full h-100 rounded-t-box object-cover">
         <div class="absolute flex justify-center items-center inset-0">
           <div class="bg-gray-900/60 z-50 gap-4 px-3 py-2 rounded flex justify-center items-center place-content-center">
             <!-- <button class="">
@@ -44,7 +44,12 @@
       {/case}
     </div>
 
-    <article class={"prose-sm prose max-w-prose ", "line-clamp-4": !@viewing_main_object}>
+    <article class={
+      "prose-sm prose max-w-prose ",
+      p_line_clamp_4: !@viewing_main_object,
+      p_line_clamp_6: @viewing_main_object
+    }>
+      <!-- TODO: show more button for long descriptions like in NoteLive -->
       {rich(object_field(@json, "content"))}
     </article>
   </div>

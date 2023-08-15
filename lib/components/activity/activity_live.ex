@@ -513,6 +513,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
               when component in [
                      Bonfire.UI.Social.Activity.UnknownLive,
                      Bonfire.UI.Social.Activity.UnknownActivityStreamsLive,
+                     Bonfire.UI.Social.Activity.AudioActivityStreamsLive,
                      Bonfire.UI.Social.Activity.VideoActivityStreamsLive
                    ]}
               <Dynamic.Component
@@ -1204,6 +1205,12 @@ defmodule Bonfire.UI.Social.ActivityLive do
           "Event" = object_type ->
             [
               {Bonfire.UI.Social.Activity.EventActivityStreamsLive,
+               json: json, object_type_readable: object_type}
+            ]
+
+          object_type when object_type in ["Audio", "Podcastepisode"] ->
+            [
+              {Bonfire.UI.Social.Activity.AudioActivityStreamsLive,
                json: json, object_type_readable: object_type}
             ]
 

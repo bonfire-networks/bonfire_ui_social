@@ -1,0 +1,77 @@
+<div class="bg-base-100 rounded-box shadow">
+  <div class="flex w-full">
+    {#case (!e(@activity, :files, nil) and object_field(@json, "url")) || object_field(@json, "id")}
+      {#match audio}
+        <!-- Only show the preview here if we have not attached media (hopefully with oembed) -->
+        <div class="relative basis-[50%]">
+          <img
+            src={e(object_field(@json, "image") || object_field(@json, "icon"), "url", nil)}
+            alt=""
+            class="w-full h-auto rounded-box object-cover"
+          />
+          <div class="absolute flex justify-center items-center inset-0">
+            <div class="bg-gray-900/60 z-50 gap-4 px-3 py-2 rounded flex justify-center items-center place-content-center">
+              <Bonfire.UI.Common.OpenModalLive
+                id={"media_modal_#{id(@json)}#{Text.random_string()}"}
+                reusable_modal_id="media_player_modal"
+                no_actions
+                no_header
+                no_backdrop
+                image_preview
+                enable_fallback={false}
+                modal_class=""
+                wrapper_class="max-h-full !w-full md:w-10/12 !p-0 max-w-[100%] !bg-transparent shadow-none rounded-none"
+                open_btn_class="w-full"
+                open_btn_wrapper_class="w-full h-full"
+              >
+                <Bonfire.UI.Social.Activity.RemoteMediaLive media={%{
+                  media_type: "audio",
+                  path: e(audio, "href", nil) || audio,
+                  metadata: %{
+                    "name" => object_field(debug(@json, "apjson"), "name") || l("Untitled audio"),
+                    "icon" => e(object_field(@json, "image") || object_field(@json, "icon"), "url", nil)
+                  }
+                }} />
+
+                <:open_btn>
+                  <button class="">
+                    <#Icon iconify="heroicons:play-20-solid" class="w-6 h-6 text-gray-200" />
+                  </button>
+                </:open_btn>
+              </Bonfire.UI.Common.OpenModalLive>
+
+              <a href={e(@json, "id", nil)} target="_blank">
+                <#Icon iconify="heroicons-outline:external-link" class="w-6 h-6 text-gray-200" />
+              </a>
+            </div>
+          </div>
+        </div>
+      {#match _}
+    {/case}
+    <div class="m-6" ">
+      <h2 class="font-semibold text-base-content">
+        {rich(object_field(debug(@json, "apjson"), "name") || l("Untitled audio"))}
+      </h2>
+
+      <p class="mt-2 text-sm">
+        {#case object_field(@json, "duration")}
+          {#match duration when is_number(duration)}
+            {Bonfire.Common.Localise.Cldr.Unit.new(:second, duration)
+            ~> Bonfire.Common.Localise.Cldr.Unit.decompose([:day, :hour, :minute, :second])
+            |> Bonfire.Common.Localise.Cldr.Unit.to_string(style: :short)
+            |> ok_unwrap() || duration}
+          {#match duration}
+            {duration}
+        {/case}
+      </p>
+    </div>
+  </div>
+
+  <div class="p-4">
+    <article class={"prose-sm prose max-w-prose ", p_line_clamp_4: !@viewing_main_object}>
+      <!-- "p_line_clamp_6": @viewing_main_object -->
+      <!-- TODO: show more button for long descriptions like in NoteLive -->
+      {rich(object_field(@json, "content") || e(object_field(@json, "description"), "content", nil))}
+    </article>
+  </div>
+</div>

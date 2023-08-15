@@ -10,11 +10,11 @@
               src={maybe_media_img}
             />
           {#else}
-            {#case e(@media.metadata, "facebook", "og:video:url", nil) ||
-                e(@media.metadata, "twitter", "twitter:player", nil) ||
-                e(@media.metadata, "facebook", "og:video", nil)}
+            {#case e(@media, :metadata, "facebook", "og:video:url", nil) ||
+                e(@media, :metadata, "twitter", "twitter:player", nil) ||
+                e(@media, :metadata, "facebook", "og:video", nil)}
               {#match nil}
-                {#case e(@media.metadata, "oembed", "html", nil)}
+                {#case e(@media, :metadata, "oembed", "html", nil)}
                   {#match nil}
                     {#if String.ends_with?(media_url, ".mp4")}
                       <video class={@video_css} controls autoplay>
@@ -31,6 +31,25 @@
                         <source src={media_url} type="video/webm">
                         Your browser does not support the video tag.
                       </video>
+                    {#elseif String.ends_with?(media_url, ".mp3")}
+                      <div class="relative max-w-[300px]">
+                        <LazyImage
+                          src={MediaLive.preview_img(@media)}
+                          alt=""
+                          class="w-full h-auto rounded-box object-cover"
+                        />
+
+                        <div class="absolute top-4 flex-row justify-center items-center">
+                          <h2 class="m-3 p-3 font-semibold text-base-content bg-base-100 bg-opacity-50 rounded-box shadow">
+                            {e(@media, :metadata, "name", nil)}
+                          </h2>
+
+                          <audio class={@video_css} controls autoplay>
+                            <source src={media_url} type="audio/mp3">
+                            Your browser does not support the audio tag.
+                          </audio>
+                        </div>
+                      </div>
                     {#else}
                       <div class="pt-4 text-center">
                         <a href={media_url} target="_blank" class="link">{l("View the %{media}", media: e(@media, :media_type, l("media")))}</a>
@@ -42,10 +61,10 @@
               {#match url}
                 <!-- TODO: url |> String.replace("youtube.com", "yewtu.be") -->
                 <iframe
-                  width={e(@media.metadata, "facebook", "og:video:width", nil) ||
-                    e(@media.metadata, "other", "video_width", nil) || "800"}
-                  height={e(@media.metadata, "facebook", "og:video:height", nil) ||
-                    e(@media.metadata, "other", "video_height", nil) || "500"}
+                  width={e(@media, :metadata, "facebook", "og:video:width", nil) ||
+                    e(@media, :metadata, "other", "video_width", nil) || "800"}
+                  height={e(@media, :metadata, "facebook", "og:video:height", nil) ||
+                    e(@media, :metadata, "other", "video_height", nil) || "500"}
                   src={"#{url}?&autoplay=1"}
                   frameborder="0"
                   allow="accelerometer; encrypted-@media; gyroscope; picture-in-picture"
