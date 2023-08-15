@@ -3,6 +3,7 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
   use Untangle
   alias Bonfire.Social.Activities
   alias Bonfire.Data.Social.Activity
+  alias Bonfire.UI.Social.ActivityLive
 
   def handle_params(
         %{"after" => _cursor_after} = attrs,
@@ -64,7 +65,7 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
 
   def handle_event("delete", %{"id" => id} = _params, socket) do
     # TODO: check permission
-    with num when is_integer(num) <- Bonfire.Social.FeedActivities.delete(id, :id) do
+    with num when is_integer(num) <- Bonfire.Social.Activities.delete(id) do
       Bonfire.UI.Common.OpenModalLive.close()
 
       {:noreply,
@@ -224,6 +225,12 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
     {:noreply, socket}
   end
 
+  def handle_info({:hide_activity, activity}, socket) do
+    remove_activity(activity)
+
+    {:noreply, socket}
+  end
+
   def handle_info({:load_feed, key}, socket) do
     {entries, assigns} = feed_assigns(key, socket)
 
@@ -231,6 +238,12 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
      socket
      |> assign_generic(assigns)
      |> insert_feed(entries)}
+  end
+
+  def remove_activity(activity) do
+    maybe_send_update(ActivityLive, ActivityLive.component_id(id(activity), nil),
+      activity_remove: true
+    )
   end
 
   def reply_to_activity(js \\ %JS{}, activity_component_id) do

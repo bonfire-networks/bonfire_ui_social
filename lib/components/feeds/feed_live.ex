@@ -56,7 +56,7 @@ defmodule Bonfire.UI.Social.FeedLive do
     {
       :ok,
       socket
-      |> stream_configure(:feed, dom_id: &component_id("feed", &1))
+      |> stream_configure(:feed, dom_id: &stream_id("feed", &1))
       |> stream(:feed, [])
       |> assign(
         feed: nil,
@@ -70,7 +70,7 @@ defmodule Bonfire.UI.Social.FeedLive do
     }
   end
 
-  defp component_id(feed_id, entry) do
+  defp stream_id(feed_id, entry) do
     "#{feed_id}_#{id(entry) || e(entry, :activity, :id, nil) || e(entry, :object, :id, nil) || e(entry, :edge, :id, nil) || Text.random_string()}"
   end
 

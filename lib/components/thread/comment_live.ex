@@ -1,6 +1,7 @@
 defmodule Bonfire.UI.Social.CommentLive do
   use Bonfire.UI.Common.Web, :stateless_component
-  alias Bonfire.UI.Social.CommentLive
+  # alias Bonfire.UI.Social.CommentLive
+  alias Bonfire.UI.Social.ActivityLive
 
   prop comment, :map
   prop activity, :any, default: nil

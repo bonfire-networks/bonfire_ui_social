@@ -26,8 +26,11 @@
         </div>
       </div>
     {#else}
-      <Bonfire.UI.Social.ActivityLive
-        id={"comment_#{id(@activity)}"}
+      <ActivityLive
+        id={ActivityLive.component_id(
+          id(@activity) || e(@activity, :object, :id, nil),
+          "comment_#{id(@comment) || Text.random_string()}"
+        )}
         activity={debug(@activity, "comment_activity")}
         thread_object={@thread_object}
         class="showing_within:thread !p-3 !shadow-none !rounded-none"

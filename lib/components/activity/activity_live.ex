@@ -355,6 +355,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
       tabIndex="0"
       class={
         "p-4 pb-2 activity relative flex flex-col #{@class}",
+        hidden: @hide_activity == "all",
         "!p-0 !pb-4 hover:!bg-transparent": e(@show_minimal_subject_and_note, false),
         "main_reply_to !mb-1 items-center !flex-row order-first !p-0 !pb-2":
           @object_id != nil and e(@activity, :replied, :reply_to_id, nil) == nil and
@@ -372,81 +373,82 @@ defmodule Bonfire.UI.Social.ActivityLive do
           String.contains?(@current_url || "", @permalink || "") and @showing_within != :smart_input
       }
     >
-      {#if current_user_id(@__context__)}
-        {#if String.starts_with?(@permalink || "", ["/post/", "/discussion/"])}
-          <Bonfire.UI.Common.OpenPreviewLive
-            href={@permalink || path(@object)}
-            parent_id={"#{id(@activity)}_#{id(@object)}_#{Text.random_string()}"}
-            open_btn_text=""
-            title_text={e(@object, :name, nil) || e(@object, :post_content, :name, nil) || l("Discussion")}
-            open_btn_wrapper_class="open_preview_link hidden"
-            open_btn_class=""
-            modal_assigns={
-              post_id:
-                if(
-                  @object_type == :post or
-                    String.starts_with?(@permalink || "", ["/post/"]),
-                  do: @thread_id || id(@object)
-                ),
-              thread_id: @thread_id,
-              object_id: @thread_id || id(@object),
-              current_url: @permalink,
-              show: true,
-              label: "",
-              object: if(@thread_id == id(@object), do: @object),
-              activity: if(@thread_id == id(@object), do: @activity),
-              replies:
-                if(@thread_id != id(@object),
-                  do: [%{id: "preview-comment", activity: Map.put(@activity, :object, @object)}]
-                ),
-              preview_component: Bonfire.UI.Social.ObjectThreadLoadLive
-            }
-            root_assigns={
-              page_title: l("Discussion")
-            }
-          />
-          <!-- TODO: derive the view from object_type? and compute object_type not just based on schema, but also with some logic looking at fields (eg. action=="work") -->
-        {#elseif String.starts_with?(@permalink || "", ["/coordination/task/"])}
-          <Bonfire.UI.Common.OpenPreviewLive
-            href={@permalink}
-            parent_id={"#{id(@activity)}_#{id(@object)}_#{if @showing_within == :notifications, do: Text.random_string()}"}
-            open_btn_text={l("View task")}
-            title_text={e(@object, :name, nil) || l("Task")}
-            open_btn_wrapper_class="open_preview_link hidden"
-            open_btn_class=""
-            modal_assigns={
-              id: @thread_id || id(@object),
-              current_url: @permalink,
-              preview_view: Bonfire.UI.Coordination.TaskLive
-            }
-            root_assigns={
-              page_title: l("Task")
-            }
-          />
-        {/if}
-      {/if}
-
-      <form
-        :if={!id(e(@activity, :seen, nil)) and not is_nil(@feed_id) and
-          @showing_within in [:messages, :thread, :notifications] and
-          e(@activity, :subject, :id, nil) != current_user_id(@__context__) and
-          e(@object, :created, :creator_id, nil) != current_user_id(@__context__) and
-          e(@object, :created, :creator_id, nil) != current_user_id(@__context__)}
-        phx-submit="Bonfire.Social.Feeds:mark_seen"
-        phx-target={"#badge_counter_#{@feed_id || "missing_feed_id"}"}
-        x-intersect.once="$el.dispatchEvent(new Event('submit', {bubbles: true, cancelable: true})); $el.parentNode.classList.remove('unread-activity');"
-      >
-        <input type="hidden" name="feed_id" value={@feed_id}>
-        <input type="hidden" name="activity_id" value={@activity_id}>
-      </form>
-      <div
-        :if={@viewing_main_object && (@thread_title || e(@activity, :replied, :thread, :named, :name, nil))}
-        class="flex items-center mb-4 font-medium gap-2 text-2xl tracking-wide"
-      >
-        <span class="">{@thread_title || e(@activity, :replied, :thread, :named, :name, "")}</span>
-      </div>
-
       {#if @hide_activity != "all"}
+        {#if current_user_id(@__context__)}
+          {#if String.starts_with?(@permalink || "", ["/post/", "/discussion/"])}
+            <Bonfire.UI.Common.OpenPreviewLive
+              href={@permalink || path(@object)}
+              parent_id={"#{id(@activity)}_#{id(@object)}_#{Text.random_string()}"}
+              open_btn_text=""
+              title_text={e(@object, :name, nil) || e(@object, :post_content, :name, nil) || l("Discussion")}
+              open_btn_wrapper_class="open_preview_link hidden"
+              open_btn_class=""
+              modal_assigns={
+                post_id:
+                  if(
+                    @object_type == :post or
+                      String.starts_with?(@permalink || "", ["/post/"]),
+                    do: @thread_id || id(@object)
+                  ),
+                thread_id: @thread_id,
+                object_id: @thread_id || id(@object),
+                current_url: @permalink,
+                show: true,
+                label: "",
+                object: if(@thread_id == id(@object), do: @object),
+                activity: if(@thread_id == id(@object), do: @activity),
+                replies:
+                  if(@thread_id != id(@object),
+                    do: [%{id: "preview-comment", activity: Map.put(@activity, :object, @object)}]
+                  ),
+                preview_component: Bonfire.UI.Social.ObjectThreadLoadLive
+              }
+              root_assigns={
+                page_title: l("Discussion")
+              }
+            />
+            <!-- TODO: derive the view from object_type? and compute object_type not just based on schema, but also with some logic looking at fields (eg. action=="work") -->
+          {#elseif String.starts_with?(@permalink || "", ["/coordination/task/"])}
+            <Bonfire.UI.Common.OpenPreviewLive
+              href={@permalink}
+              parent_id={"#{id(@activity)}_#{id(@object)}_#{if @showing_within == :notifications, do: Text.random_string()}"}
+              open_btn_text={l("View task")}
+              title_text={e(@object, :name, nil) || l("Task")}
+              open_btn_wrapper_class="open_preview_link hidden"
+              open_btn_class=""
+              modal_assigns={
+                id: @thread_id || id(@object),
+                current_url: @permalink,
+                preview_view: Bonfire.UI.Coordination.TaskLive
+              }
+              root_assigns={
+                page_title: l("Task")
+              }
+            />
+          {/if}
+        {/if}
+
+        <form
+          :if={!id(e(@activity, :seen, nil)) and not is_nil(@feed_id) and
+            @showing_within in [:messages, :thread, :notifications] and
+            e(@activity, :subject, :id, nil) != current_user_id(@__context__) and
+            e(@object, :created, :creator_id, nil) != current_user_id(@__context__) and
+            e(@object, :created, :creator_id, nil) != current_user_id(@__context__)}
+          phx-submit="Bonfire.Social.Feeds:mark_seen"
+          phx-target={"#badge_counter_#{@feed_id || "missing_feed_id"}"}
+          x-intersect.once="$el.dispatchEvent(new Event('submit', {bubbles: true, cancelable: true})); $el.parentNode.classList.remove('unread-activity');"
+        >
+          <input type="hidden" name="feed_id" value={@feed_id}>
+          <input type="hidden" name="activity_id" value={@activity_id}>
+        </form>
+
+        <div
+          :if={@viewing_main_object && (@thread_title || e(@activity, :replied, :thread, :named, :name, nil))}
+          class="flex items-center mb-4 font-medium gap-2 text-2xl tracking-wide"
+        >
+          <span class="">{@thread_title || e(@activity, :replied, :thread, :named, :name, "")}</span>
+        </div>
+
         {#for {component, component_assigns} when is_atom(component) <-
             activity_components(
               @activity,
@@ -1410,6 +1412,14 @@ defmodule Bonfire.UI.Social.ActivityLive do
   # # TODO: use live_redirect
   # def object_link(text, %{character: %{username: username}}, class \\ "hover:underline font-bold"), do: "<a class='#{class}' href='/user/#{username}'>#{text}</a>"
   # def object_link(text, %{id: id}, class), do: "<a class='#{class}' href='/discussion/#{id}'>#{text}</a>"
+
+  def component_id(id, _fallback) when is_binary(id) do
+    "activity_#{id}"
+  end
+
+  def component_id(_id, fallback) do
+    fallback
+  end
 
   defdelegate handle_params(params, attrs, socket), to: Bonfire.UI.Common.LiveHandlers
 

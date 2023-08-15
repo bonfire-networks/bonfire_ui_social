@@ -39,13 +39,11 @@
     <div
       :if={@hide_fresh != 0}
       data-id="load_fresh"
+      phx-click={JS.show(to: ".fresh_hidden")
+      |> JS.hide()}
       class="flex justify-center w-full p-3 mx-auto border-t border-base-content border-opacity-10 bg-base-100"
     >
-      <btn
-        phx-click={JS.show(to: ".fresh_hidden")
-        |> JS.hide()}
-        class="w-full p-1 normal-case btn-ghost btn btn-sm btn-wide"
-      >
+      <btn class="w-full p-1 normal-case btn-ghost btn btn-sm btn-wide">
         <!-- |> JS.push("hide_fresh", target: @myself) -->
         {l("Show more recent")}
         <!-- {"(#{@hide_fresh})"} -->
@@ -72,7 +70,11 @@
           >
             <!-- id={"activity-#{component_id(@feed_id || @id, entry)}"} -->
             <ActivityLive
-              id={"s_activity_#{entry_id}"}
+              id={ActivityLive.component_id(
+                id(entry) || e(entry, :activity, :id, nil) || e(entry, :object, :id, nil) ||
+                  e(entry, :edge, :id, nil),
+                "s_activity_#{entry_id}"
+              )}
               activity={get_activity(entry)}
               showing_within={@showing_within}
               verb_default={@verb_default}
@@ -97,10 +99,13 @@
       >
         <!-- phx-update={e(@feed_update_mode, "append")} -->
         {#for {entry, i} <- Enum.with_index(@feed)}
-          <!-- id={"f-#{@feed_id || @id}-a-#{i}"} -->
           <div id={"f_#{@feed_id || @id}_a_#{i}"} :if={@hide_activities != "component"}>
             <ActivityLive
-              id={"f_activity_#{component_id(@feed_name || @feed_id || @id, entry)}"}
+              id={ActivityLive.component_id(
+                id(entry) || e(entry, :activity, :id, nil) || e(entry, :object, :id, nil) ||
+                  e(entry, :edge, :id, nil),
+                "f_activity_#{@feed_name || @feed_id || @id}_#{i}"
+              )}
               activity={get_activity(entry)}
               showing_within={@showing_within}
               verb_default={@verb_default}

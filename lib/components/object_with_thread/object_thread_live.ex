@@ -27,10 +27,13 @@ defmodule Bonfire.UI.Social.ObjectThreadLive do
   prop page_info, :any, default: nil
 
   def render(assigns) do
+    id =
+      assigns[:thread_id] || id(assigns[:activity]) || assigns[:object_id] || assigns[:post_id] ||
+        id(assigns[:object])
+
     assigns
     |> assign_new(:main_object_component_id, fn ->
-      "main_object_" <>
-        (assigns[:thread_id] || id(assigns[:activity]) || id(assigns[:object]) || "no_ID")
+      Bonfire.UI.Social.ActivityLive.component_id(id, "main_object")
     end)
     |> render_sface()
   end

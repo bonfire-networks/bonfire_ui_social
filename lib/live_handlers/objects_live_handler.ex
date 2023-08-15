@@ -50,13 +50,15 @@ defmodule Bonfire.Social.Objects.LiveHandler do
     with {:ok, _} <- Objects.delete(id, current_user: current_user_required!(socket)) do
       Bonfire.UI.Common.OpenModalLive.close()
 
-      {:noreply,
-       socket
-       |> assign_flash(:info, l("Deleted!"))
-       |> redirect_to(
-         e(params, "redirect_after", nil),
-         fallback: current_url(socket)
-       )}
+      {
+        :noreply,
+        socket
+        |> assign_flash(:info, l("Deleted!"))
+        #  |> redirect_to(
+        #    e(params, "redirect_after", nil),
+        #    fallback: current_url(socket)
+        #  )
+      }
     end
   end
 
