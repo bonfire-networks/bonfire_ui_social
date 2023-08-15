@@ -512,13 +512,15 @@ defmodule Bonfire.UI.Social.ActivityLive do
             {#match _
               when component in [
                      Bonfire.UI.Social.Activity.UnknownLive,
-                     Bonfire.UI.Social.Activity.UnknownActivityStreamsLive
+                     Bonfire.UI.Social.Activity.UnknownActivityStreamsLive,
+                     Bonfire.UI.Social.Activity.VideoActivityStreamsLive
                    ]}
               <Dynamic.Component
                 module={component}
                 __context__={@__context__}
                 showing_within={@showing_within}
                 viewing_main_object={e(component_assigns, :viewing_main_object, @viewing_main_object)}
+                activity={e(component_assigns, :activity, @activity)}
                 object={e(component_assigns, :object, @object)}
                 object_type={e(component_assigns, :object_type, @object_type)}
                 object_type_readable={e(component_assigns, :object_type_readable, @object_type_readable)}

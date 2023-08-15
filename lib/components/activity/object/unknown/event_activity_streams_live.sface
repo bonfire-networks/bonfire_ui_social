@@ -8,12 +8,12 @@
           alt=""
           class="w-full h-[320px] rounded-t-box object-cover"
         />
-        <!-- <div class="bottom-3 left-3 absolute min-w-12 min-h-12 shadow bg-white rounded-lg">
+        <div class="bottom-3 left-3 absolute min-w-12 min-h-12 shadow bg-white rounded-lg">
           <span class="rounded-t-lg block bg-red-600 h-3" />
           <div class="flex min-h-9 items-center place-content-center flex-col p-1">
             <span class="text-sm font-bold text-gray-800 text-center uppercase max-w-[60px]">{DatesTimes.date_from_now(object_field(@json, "startTime")) || l("Event")}</span>
           </div>
-        </div> -->
+        </div>
       </div>
   {/case}
 
@@ -42,18 +42,17 @@
         <div class="flex items-center mt-2 gap-2">
           <#Icon iconify="ph:calendar-blank-bold" class="w-4 h-4 text-base-content/70" />
           <div class="flex items-baseline text-base-content/70 text-sm">
-            {start_date}
-            <span>{DatesTimes.date_from_now(start_date)}</span>
+            {DatesTimes.format(start_date)}
           </div>
         </div>
     {/case}
 
-    <!-- <div class="mb-2 prose-sm prose text-primary-content-700 max-w-prose">
+    <!-- <div class="prose-sm prose text-primary-content-700 max-w-prose">
       {rich(object_field(@json, "summary"))}
     </div> -->
 
-    <!-- <article class={"prose-sm prose max-w-prose ", "line-clamp-4": !@viewing_main_object}>
-      {rich(object_field(@json, "content"))}
-    </article> -->
+    <article class={"mt-2 prose-sm prose max-w-prose ", "line-clamp-4": !@viewing_main_object}>
+      {rich(object_field(@json, "summary") || object_field(@json, "content"))}
+    </article>
   </div>
 </div>

@@ -42,7 +42,7 @@
                       open_btn_wrapper_class="w-full h-full"
                     >
                       <div
-                        class="h-full z-[9999999999999]"
+                        class="h-full sticky bg-base-100 z-[9999999999999]"
                         style={if String.starts_with?(m.media_type, ["video"]),
                           do: "min-width: 90vw; min-height: 90vh",
                           else: ""}
