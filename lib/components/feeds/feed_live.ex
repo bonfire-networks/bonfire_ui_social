@@ -13,6 +13,7 @@ defmodule Bonfire.UI.Social.FeedLive do
   prop feed, :any, default: []
   prop subject_user, :any, default: nil
   prop page_info, :any, default: nil
+  prop previous_page_info, :any, default: nil
   prop loading, :boolean, default: true
   prop preload, :atom, default: :feed
 

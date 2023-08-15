@@ -4,41 +4,39 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
   alias Bonfire.Social.Activities
   alias Bonfire.Data.Social.Activity
   alias Bonfire.UI.Social.ActivityLive
+  alias Bonfire.Social.FeedActivities
 
   def handle_params(
         %{"after" => _cursor_after} = attrs,
         _,
-        %{assigns: %{feed_id: feed_id}} = socket
-      )
-      when not is_nil(feed_id) do
-    paginate_feed(feed_id, attrs, socket)
-  end
-
-  def handle_params(%{"after" => _cursor_after} = attrs, _, socket) do
-    paginate_default_feed(attrs, socket)
+        socket
+      ) do
+    paginate_feed(
+      e(socket.assigns, :feed_name, nil) || e(socket.assigns, :feed_id, nil) ||
+        e(socket.assigns, :feed_ids, nil) || e(socket.assigns, :id, nil),
+      attrs,
+      socket,
+      hide_activities: false
+    )
   end
 
   def handle_params(_attrs, _, socket) do
     {:noreply, socket}
   end
 
-  def handle_event("load_more", attrs, %{assigns: %{feed_id: feed_id}} = socket)
-      when not is_nil(feed_id) do
-    paginate_feed(feed_id, attrs, socket)
-  end
-
   def handle_event("load_more", %{"context" => feed_id} = attrs, socket)
       when is_binary(feed_id) do
-    paginate_feed(feed_id, attrs, socket)
+    paginate_feed(feed_id, attrs, socket, hide_activities: false)
   end
 
   def handle_event("load_more", attrs, socket) do
-    paginate_default_feed(attrs, socket)
-  end
-
-  def handle_event("preload_more", attrs, %{assigns: %{feed_id: feed_id}} = socket)
-      when not is_nil(feed_id) do
-    paginate_feed(feed_id, attrs, socket, hide_activities: "infinite_scroll")
+    paginate_feed(
+      e(socket.assigns, :feed_name, nil) || e(socket.assigns, :feed_id, nil) ||
+        e(socket.assigns, :feed_ids, nil) || e(socket.assigns, :id, nil),
+      attrs,
+      socket,
+      hide_activities: false
+    )
   end
 
   def handle_event("preload_more", %{"context" => feed_id} = attrs, socket)
@@ -47,7 +45,13 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
   end
 
   def handle_event("preload_more", attrs, socket) do
-    paginate_default_feed(attrs, socket, hide_activities: "infinite_scroll")
+    paginate_feed(
+      e(socket.assigns, :feed_name, nil) || e(socket.assigns, :feed_id, nil) ||
+        e(socket.assigns, :feed_ids, nil) || e(socket.assigns, :id, nil),
+      attrs,
+      socket,
+      hide_activities: "infinite_scroll"
+    )
   end
 
   def handle_event("reply_to_activity", _params, socket) do
@@ -85,12 +89,12 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
         # TODO
         to -> to
       end
-      |> Bonfire.Social.FeedActivities.get_feed_ids()
+      |> FeedActivities.get_feed_ids()
       |> debug("tooo")
 
     # TODO: check permission
     with {:ok, _} <-
-           Bonfire.Social.FeedActivities.maybe_feed_publish(current_user, activity, object, to,
+           FeedActivities.maybe_feed_publish(current_user, activity, object, to,
              current_user: current_user
            ) do
       {:noreply,
@@ -146,7 +150,7 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
       if current_user do
         # Task.async(fn -> # asynchronously simply so the count is updated quicker for the user
         debug(feed_id, "mark_seen: all in feed")
-        Bonfire.Social.FeedActivities.mark_all_seen(feed_id, current_user: current_user)
+        FeedActivities.mark_all_seen(feed_id, current_user: current_user)
         # end)
       end
 
@@ -282,47 +286,51 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
      |> insert_feed(load_user_feed_assigns(selected_tab_and_user_id, attrs, socket))}
   end
 
-  def paginate_feed(feed_id, attrs, socket, opts) when not is_nil(feed_id) do
+  def paginate_feed(feed_id, attrs, socket, opts) do
     opts = paginate_opts(attrs, socket, opts)
 
-    if(current_user_id(opts) && feed_id == Bonfire.Social.Feeds.my_feed_id(:inbox, opts)) do
-      debug(
-        "Feeds - paginate - the feed_id assigned in the view is current user's inbox, so load that"
-      )
+    # if(current_user_id(opts) && feed_id == Bonfire.Social.Feeds.my_feed_id(:inbox, opts)) do
+    #   debug(
+    #     "Feeds - paginate - the feed_id assigned in the view is current user's inbox, so load that"
+    #   )
 
-      paginate_fetch_assign_default(
-        opts,
-        socket
-      )
-    else
-      feed_id
-      |> debug("Feeds - paginate - a feed_id has been assigned in the view, so load that")
-      |> paginate_fetch_assign_feed(
-        opts,
-        socket
-      )
-    end
-  end
-
-  def paginate_default_feed(attrs, socket, opts \\ []) do
-    debug("Feeds - paginate - there's no feed_id, so load the default")
-
-    paginate_fetch_assign_default(
-      paginate_opts(attrs, socket, opts),
+    #   paginate_fetch_assign_default(
+    #     opts,
+    #     socket
+    #   )
+    # else
+    (feed_id || :default)
+    # |> debug("Feeds - paginate - a feed_id has been assigned in the view, so load that")
+    |> paginate_fetch_assign_feed(
+      opts,
       socket
     )
+
+    # end
   end
 
+  # def paginate_default_feed(attrs, socket, opts \\ []) do
+  #   debug("Feeds - paginate - there's no feed_id, so load the default")
+
+  #   paginate_fetch_assign_default(
+  #     paginate_opts(attrs, socket, opts),
+  #     socket
+  #   )
+  # end
+
   def paginate_opts(attrs, socket, opts) do
+    attrs = input_to_atoms(attrs)
+
     opts =
       to_options(socket)
       |> Keyword.merge(opts)
+      |> Keyword.put(:time_limit, attrs[:time_limit] || e(socket.assigns, :time_limit, nil))
 
     opts
     |> Keyword.put(
       :paginate,
       Keyword.merge(
-        Keyword.new(input_to_atoms(attrs)),
+        Keyword.new(attrs),
         Activities.order_pagination_opts(
           opts[:sort_by] || e(socket.assigns, :sort_by, nil),
           opts[:sort_order] || e(socket.assigns, :sort_order, nil)
@@ -332,19 +340,23 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
   end
 
   def paginate_fetch_assign_default(opts, socket) do
-    current = current_user(socket) || current_account(socket)
+    debug(opts)
+
+    # || current_account(socket)
+    current = current_user(socket)
 
     feed_or_tuple =
       if current do
-        feed_id = Bonfire.Social.Feeds.my_feed_id(:inbox, socket)
-        feed_ids = Bonfire.Social.Feeds.my_home_feed_ids(socket)
+        feed_id = Bonfire.Social.Feeds.my_feed_id(:inbox, current)
+        feed_ids = Bonfire.Social.Feeds.my_home_feed_ids(current)
         {feed_id, feed_ids}
       else
         # fallback to showing instance feed
         Bonfire.Social.Feeds.named_feed_id(:local)
       end
 
-    {entries, assigns} = feed_assigns(feed_or_tuple, opts)
+    # FIXME? 
+    {entries, assigns} = feed_assigns(feed_or_tuple, socket)
 
     {:noreply,
      socket
@@ -366,7 +378,7 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
   end
 
   defp paginate_fetch_assign_feed(feed_id, opts, socket) do
-    feed = Bonfire.Social.FeedActivities.feed(feed_id, opts)
+    feed = FeedActivities.feed(feed_id, opts)
 
     {:noreply,
      socket
@@ -374,6 +386,8 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
        feed_update_mode: "append",
        hide_activities: opts[:hide_activities],
        feed_count: Enum.count(e(feed, :edges, [])),
+       time_limit: opts[:time_limit],
+       previous_page_info: e(socket.assigns, :page_info, nil),
        page_info: e(feed, :page_info, [])
      )
      |> insert_feed(e(feed, :edges, []), opts)}
@@ -385,7 +399,11 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
     debug(assigns, "nothing to add")
 
     socket
-    |> assign_generic(page_info: assigns[:page_info])
+    |> assign_generic(
+      previous_page_info: e(socket.assigns, :page_info, nil),
+      page_info: assigns[:page_info],
+      loading: false
+    )
 
     # |> assign_generic(assigns)
   end
@@ -458,7 +476,7 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
     feed_name =
       feed_name
       |> debug()
-      |> feed_name(current_user_id(socket))
+      |> FeedActivities.feed_name(current_user_id(socket))
       |> debug()
 
     debug(filters_or_custom_query_or_feed_id_or_ids, feed_name)
@@ -480,7 +498,7 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
     feed_name =
       feed_name
       |> debug()
-      |> feed_name(current_user_id(socket))
+      |> FeedActivities.feed_name(current_user_id(socket))
       |> debug()
 
     assigns =
@@ -665,7 +683,7 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
   end
 
   def feed_default_assigns(:default, socket) do
-    feed_name(:default, current_user_id(socket))
+    FeedActivities.feed_name(:default, current_user_id(socket))
     |> feed_default_assigns(socket)
   end
 
@@ -689,25 +707,6 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
       feed: nil,
       page_info: nil
     ]
-  end
-
-  defp feed_name(name, current_user_or_socket) when is_nil(name) or name == :default do
-    debug(current_user_or_socket)
-    current = current_user_id(current_user_or_socket)
-    # || current_account(socket)
-
-    if not is_nil(current) do
-      # my feed
-      :my
-    else
-      # fallback to showing instance feed
-      :local
-    end
-    |> debug("default feed to load:")
-  end
-
-  defp feed_name(name, _socket) do
-    name
   end
 
   defp component_id(feed_id_or_tuple, assigns),
@@ -797,98 +796,73 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
   defp feed_assigns({feed_id, feed_id_or_ids}, socket)
        when feed_id == :my or (is_list(feed_id_or_ids) and feed_id_or_ids != []) do
     # My Feed
-    with %{edges: feed, page_info: page_info} <-
+    with %{} = feed <-
            feed_id_or_ids
            |> debug("feed_id_or_ids")
-           |> Bonfire.Social.FeedActivities.my_feed(socket, ...) do
-      {feed,
-       [
-         loading: false,
-         page_info: page_info
-       ]}
+           |> FeedActivities.my_feed(socket, ...) do
+      merge_feed_assigns(feed, [loading: false], e(socket.assigns, :page_info, nil))
     end
   end
 
   defp feed_assigns({{feed_id, nil}, %{} = filters}, socket) when filters != %{} do
     # clean up
-    with %{edges: feed, page_info: page_info} <-
+    with %{} = feed <-
            {feed_id, filters}
            |> debug("filters")
-           |> Bonfire.Social.FeedActivities.feed(socket) do
-      {feed,
-       [
-         loading: false,
-         page_info: page_info
-       ]}
+           |> FeedActivities.feed(socket) do
+      merge_feed_assigns(feed, [loading: false], e(socket.assigns, :page_info, nil))
     end
   end
 
   defp feed_assigns({feed_id, %{} = filters}, socket) when filters != %{} do
-    with %{edges: feed, page_info: page_info} <-
+    with %{} = feed <-
            {feed_id, filters}
            |> debug("filters")
-           |> Bonfire.Social.FeedActivities.feed(socket) do
-      {feed,
-       [
-         loading: false,
-         page_info: page_info
-       ]}
+           |> FeedActivities.feed(socket) do
+      merge_feed_assigns(feed, [loading: false], e(socket.assigns, :page_info, nil))
     end
   end
 
   defp feed_assigns(feed_id, socket) when is_binary(feed_id) do
-    with %{edges: feed, page_info: page_info} <-
+    with %{} = feed <-
            feed_id
            |> debug("feed_id")
-           |> Bonfire.Social.FeedActivities.feed(..., socket) do
-      {feed,
-       [
-         loading: false,
-         page_info: page_info
-       ]}
+           |> FeedActivities.feed(..., socket) do
+      merge_feed_assigns(feed, [loading: false], e(socket.assigns, :page_info, nil))
     end
   end
 
   defp feed_assigns(:likes = _feed_id, socket) do
     # TODO: pagination
-    with %{edges: feed, page_info: page_info} <-
+    with %{} = feed <-
            Bonfire.Social.Likes.list_my(current_user: current_user_required!(socket)) do
-      feed
-      |> debug("likes")
-
-      {feed,
-       [
-         loading: false,
-         page_info: page_info
-       ]}
+      merge_feed_assigns(feed, [loading: false], e(socket.assigns, :page_info, nil))
     end
   end
 
   defp feed_assigns(%Ecto.Query{} = custom_query, socket) do
-    with %{edges: feed, page_info: page_info} <-
+    with %{} = feed <-
            custom_query
            |> debug("custom_query")
-           |> Bonfire.Social.FeedActivities.feed(socket) do
-      {feed,
-       [
-         loading: false,
-         page_info: page_info
-       ]}
+           |> FeedActivities.feed(socket) do
+      merge_feed_assigns(feed, [loading: false], e(socket.assigns, :page_info, nil))
     end
   end
 
   defp feed_assigns(feed_name, socket) when is_atom(feed_name) do
     feed_id = Bonfire.Social.Feeds.named_feed_id(feed_name, socket)
 
-    with %{edges: feed, page_info: page_info} <-
-           Bonfire.Social.FeedActivities.feed({feed_name, feed_id}, socket) do
-      {feed,
-       [
-         loading: false,
-         feed_name: feed_name,
-         feed_id: feed_id,
-         page_info: page_info
-       ]}
+    with %{} = feed <-
+           FeedActivities.feed({feed_name, feed_id}, socket) do
+      merge_feed_assigns(
+        feed,
+        [
+          loading: false,
+          feed_name: feed_name,
+          feed_id: feed_id
+        ],
+        e(socket.assigns, :page_info, nil)
+      )
     end
   end
 
@@ -1193,22 +1167,24 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
       |> debug("feed_id")
 
     feed =
-      if module_enabled?(Bonfire.Social.FeedActivities, socket),
+      if module_enabled?(FeedActivities, socket),
         do:
-          Bonfire.Social.FeedActivities.feed({feed_id, feed_filters},
+          FeedActivities.feed({feed_id, feed_filters},
             pagination: params,
             exclude_feed_ids: e(params, :exclude_feed_ids, []),
             current_user: current_user(socket)
           )
           |> debug("feed")
 
-    {e(feed, :edges, []),
-     [
-       loading: false,
-       selected_tab: tab,
-       feed_id: feed_id,
-       page_info: e(feed, :page_info, [])
-     ]}
+    merge_feed_assigns(
+      feed,
+      [
+        loading: false,
+        selected_tab: tab,
+        feed_id: feed_id
+      ],
+      e(socket.assigns, :page_info, nil)
+    )
   end
 
   # note the 4 arity
@@ -1226,14 +1202,16 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
 
     # |> debug("posts")
 
-    {e(feed, :edges, []),
-     [
-       loading: false,
-       selected_tab: tab,
-       page: "posts",
-       showing_within: :feed_by_creator,
-       page_info: e(feed, :page_info, [])
-     ]}
+    merge_feed_assigns(
+      feed,
+      [
+        loading: false,
+        selected_tab: tab,
+        page: "posts",
+        showing_within: :feed_by_creator
+      ],
+      e(socket.assigns, :page_info, nil)
+    )
   end
 
   def load_user_feed_assigns("boosts" = tab, user, params, socket) do
@@ -1249,13 +1227,15 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
 
     # |> debug("boosts")
 
-    {e(feed, :edges, []),
-     [
-       loading: false,
-       selected_tab: tab,
-       showing_within: :feed_by_subject,
-       page_info: e(feed, :page_info, [])
-     ]}
+    merge_feed_assigns(
+      feed,
+      [
+        loading: false,
+        selected_tab: tab,
+        showing_within: :feed_by_subject
+      ],
+      e(socket.assigns, :page_info, nil)
+    )
   end
 
   def load_user_feed_assigns("timeline" = tab, user, params, socket) do
@@ -1268,9 +1248,9 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
           |> debug("outbox for #{id(user)}")
 
     feed =
-      if feed_id && module_enabled?(Bonfire.Social.FeedActivities, user),
+      if feed_id && module_enabled?(FeedActivities, user),
         do:
-          Bonfire.Social.FeedActivities.feed(feed_id,
+          FeedActivities.feed(feed_id,
             pagination: input_to_atoms(params),
             current_user: current_user(socket),
             subject_user: user
@@ -1278,14 +1258,16 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
 
     #  debug(feed: feed)
 
-    {e(feed, :edges, []),
-     [
-       loading: false,
-       selected_tab: tab,
-       showing_within: :feed_by_subject,
-       feed_id: feed_id,
-       page_info: e(feed, :page_info, [])
-     ]}
+    merge_feed_assigns(
+      feed,
+      [
+        loading: false,
+        selected_tab: tab,
+        showing_within: :feed_by_subject,
+        feed_id: feed_id
+      ],
+      e(socket.assigns, :page_info, nil)
+    )
   end
 
   def load_user_feed_assigns(tab, user, params, socket) when tab in ["followers", "members"] do
@@ -1371,22 +1353,24 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
       |> debug("feed_id")
 
     feed =
-      if module_enabled?(Bonfire.Social.FeedActivities, socket),
+      if module_enabled?(FeedActivities, socket),
         do:
-          Bonfire.Social.FeedActivities.feed(feed_id,
+          FeedActivities.feed(feed_id,
             pagination: params,
             exclude_feed_ids: e(params, :exclude_feed_ids, []),
             current_user: current_user(socket)
           )
           |> debug("feed")
 
-    {e(feed, :edges, []),
-     [
-       loading: false,
-       selected_tab: tab,
-       feed_id: feed_id,
-       page_info: e(feed, :page_info, [])
-     ]}
+    merge_feed_assigns(
+      feed,
+      [
+        loading: false,
+        selected_tab: tab,
+        feed_id: feed_id
+      ],
+      e(socket.assigns, :page_info, nil)
+    )
   end
 
   defp list_requested(current_user, pagination) do
@@ -1410,5 +1394,14 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
       current_user: current_user
     )
     |> debug("requests")
+  end
+
+  defp merge_feed_assigns(feed, new_assigns, previous_page_info) do
+    {e(feed, :edges, []),
+     new_assigns ++
+       [
+         previous_page_info: previous_page_info,
+         page_info: e(feed, :page_info, [])
+       ]}
   end
 end

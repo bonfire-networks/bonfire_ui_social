@@ -119,44 +119,66 @@
           </div>
         {/for}
       </div>
+    {/if}
 
-      <div :if={@bottom_or_empty_feed} class="mt-1 mb-2 text-center text-base-content">
-        <#slot {@bottom_or_empty_feed}>
-        </#slot>
-      </div>
-    {#else}
-      {#if @loading}
-        <div class="flex flex-col items-center gap-3 py-12 place-content-center">
-          <img src={Bonfire.Web.Endpoint.static_path("/images/loading.svg")}>
-          <div class="sr-only text-base-content">{l("Loading...")}</div>
-        </div>
-        <!-- {#case maybe_cute_gif()}
+    <!-- context={@id} -->
+    <Bonfire.UI.Common.LoadMoreLive
+      live_handler={Bonfire.Social.Feeds}
+      page_info={@page_info}
+      target={@myself}
+      infinite_load
+      hide_load_more={@hide_load_more}
+      entry_count={@feed_count}
+    >
+      <:if_no_more>
+        {#if !@previous_page_info}
+          {#if @loading}
+            <div class="flex flex-col items-center gap-3 py-12 place-content-center">
+              <img src={Bonfire.Web.Endpoint.static_path("/images/loading.svg")}>
+              <div class="sr-only text-base-content">{l("Loading...")}</div>
+            </div>
+            <!-- {#case maybe_cute_gif()}
           {#match url when is_binary(url)}
             <div class="flex flex-row items-center justify-center my-12">
               <img src={url}>
             </div>
           {#match _}
         {/case} -->
-      {#else}
-        <div data-id="empty-feed" class="flex items-center place-content-center">
-          <Bonfire.UI.Common.EmptyFeed
-            feed_name={@feed_name}
-            feedback_title={@feedback_title}
-            feedback_message={@feedback_message}
-            empty_feed={@bottom_or_empty_feed}
-          />
-        </div>
-      {/if}
-    {/if}
+          {#else}
+            <div data-id="empty-feed" class="flex items-center place-content-center">
+              <Bonfire.UI.Common.EmptyFeed
+                feed_name={@feed_name}
+                feedback_title={@feedback_title}
+                feedback_message={@feedback_message}
+                empty_feed={@bottom_or_empty_feed}
+              />
+            </div>
+          {/if}
+        {#else}
+          {#if is_integer(@time_limit) and @time_limit != 0}
+            <p>{lp("That's all for today...", "That's all for the last %{number} days...", @time_limit,
+                number: @time_limit
+              )}</p>
 
-    <Bonfire.UI.Common.LoadMoreLive
-      :if={@page_info && e(@hide_load_more, false) != true}
-      live_handler={Bonfire.Social.Feeds}
-      page_info={@page_info}
-      target={@myself}
-      infinite_load
-      context={@id}
-      entry_count={@feed_count}
-    />
+            <!-- TODO: instead of switching to infinity, switch 1 level up from current limit, eg. from day to week -->
+            <Bonfire.UI.Common.LoadMoreLive
+              :if={!@sort_by}
+              live_handler={Bonfire.Social.Feeds}
+              page_info={@previous_page_info}
+              target={@myself}
+              label={l("Show older activities")}
+              opts={%{"phx-value-time_limit" => 0}}
+            />
+          {#else}
+            <p>{l("That's all folks...")}</p>
+          {/if}
+        {/if}
+      </:if_no_more>
+    </Bonfire.UI.Common.LoadMoreLive>
+
+    <div :if={@bottom_or_empty_feed} class="mt-1 mb-2 text-center text-base-content">
+      <#slot {@bottom_or_empty_feed}>
+      </#slot>
+    </div>
   </div>
 </div>
