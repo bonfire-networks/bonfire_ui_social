@@ -5,7 +5,7 @@
   :class="{'collapsed': !show_replies}"
   class={
     "reply thread-level-" <> to_string(@thread_level) <> " flex relative  w-full mx-auto ",
-    "border-b border-base-content/20": @threaded_replies != [] && @thread_level == 1,
+    "border-b border-base-content/20": @threaded_replies != [] && @thread_level == 1
   }
 >
   <div class="relative flex-1 w-full">
@@ -36,10 +36,7 @@
         </div>
       </div>
 
-      <div 
-        x-show="show_replies" 
-        class="bg-base-content/10"
-        x-transition>
+      <div x-show="show_replies" class="bg-base-content/10" x-transition>
         <div
           :if={@thread_level > 1}
           x-cloak
@@ -52,7 +49,6 @@
             class="w-2 absolute top-0 border-dashed bottom-0 z-10 group-hover:bg-primary border-base-content/10 bottom-[0px]"
           />
         </div>
-
 
         <!-- <div class="-mt-[26px]  z-[50] ml-10" :if={is_list(@threaded_replies) and length(@threaded_replies) > 0}>
         <button class="relative flex items-center gap-2 text-sm normal-case btn btn-ghost btn-info btn-xs">

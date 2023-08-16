@@ -4,7 +4,10 @@
   </span>
 
   <h2 class="mb-2 text-xl font-medium text-base-content">
-    {rich(object_field(debug(@json, "apjson"), "name") || l("Unsupported type or deleted object"))}
+    {rich(
+      object_field(debug(@json, "apjson"), "name") || object_field(@json, "title") ||
+        l("Unsupported type or deleted object")
+    )}
   </h2>
 
   <!-- <h3 class="text-xs tracking-wider text-primary-content-600 uppercase">Summary</h3> -->

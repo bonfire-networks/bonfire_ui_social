@@ -1,4 +1,4 @@
-    <!-- "ml-10 !mt-0":
+<!-- "ml-10 !mt-0":
       debug(@thread_mode, "thread_modessss") != :flat && @showing_within == :thread &&
         !@viewing_main_object -->
 <div
@@ -9,7 +9,7 @@
     "!my-0": @showing_within == :smart_input,
     "!ml-12 !opacity-70": @showing_within == :notifications,
     "!mt-1 cursor-default": @showing_within == :thread,
-    "mb-3": @viewing_main_object,
+    "mb-3": @viewing_main_object
   }
   x-ref="note_container"
   x-show={if @showing_within == :thread && !@viewing_main_object, do: "show_replies"}
@@ -72,9 +72,7 @@
                   )}
                 </div>
 
-                <div
-                   x-cloak
-                   x-show="expandable">
+                <div x-cloak x-show="expandable">
                   <button
                     type="button"
                     @click="expanded = !expanded"
