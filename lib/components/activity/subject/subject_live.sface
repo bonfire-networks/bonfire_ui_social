@@ -324,9 +324,11 @@
 
   <a
     href={@permalink}
-    :if={@reply_to_id == nil and @showing_within in [nil, :feed] and
+    :if={@reply_to_id == nil and @showing_within in [nil, :feed, :thread] and
       @thread_title}
-    class="preview_activity_link flex items-center mt-3 font-bold gap-2 text-lg"
+    class={
+      "preview_activity_link flex items-center mt-3 font-bold gap-2 text-lg",
+      "mb-2 !mt-0 !text-xl": @viewing_main_object}
   >
     <!-- <#Icon iconify="subway:title" class="w-4 h-4 text-info" /> -->
     <span class="link link-hover">{@thread_title}</span>

@@ -1,3 +1,6 @@
+    <!-- "ml-10 !mt-0":
+      debug(@thread_mode, "thread_modessss") != :flat && @showing_within == :thread &&
+        !@viewing_main_object -->
 <div
   x-data="{expanded: false, expandable: $refs.note && $refs.note.scrollHeight > $refs.note.clientHeight}"
   class={
@@ -7,9 +10,6 @@
     "!ml-12 !opacity-70": @showing_within == :notifications,
     "!mt-1 cursor-default": @showing_within == :thread,
     "mb-3": @viewing_main_object,
-    "ml-10 !mt-0":
-      debug(@thread_mode, "thread_modessss") != :flat && @showing_within == :thread &&
-        !@viewing_main_object
   }
   x-ref="note_container"
   x-show={if @showing_within == :thread && !@viewing_main_object, do: "show_replies"}
@@ -72,7 +72,9 @@
                   )}
                 </div>
 
-                <div x-show="expandable">
+                <div
+                   x-cloak
+                   x-show="expandable">
                   <button
                     type="button"
                     @click="expanded = !expanded"

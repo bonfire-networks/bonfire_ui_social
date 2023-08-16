@@ -308,7 +308,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
          showing_within,
          activity_inception
        ) ++
-       component_object(verb, activity, object, object_type, showing_within) ++
+       component_object(verb, activity, object, object_type) ++
        component_maybe_attachments(
          e(activity, :files, nil) || e(object, :files, nil) || e(activity, :media, nil) ||
            e(object, :media, nil)
@@ -375,7 +375,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
       }
     >
       {#if @hide_activity != "all"}
-        {#if current_user_id(@__context__)}
+        {#if current_user_id(@__context__) && @showing_within != :smart_input}
           {#if String.starts_with?(@permalink || "", ["/post/", "/discussion/"])}
             <Bonfire.UI.Common.OpenPreviewLive
               href={@permalink || path(@object)}
@@ -442,13 +442,6 @@ defmodule Bonfire.UI.Social.ActivityLive do
           <input type="hidden" name="feed_id" value={@feed_id}>
           <input type="hidden" name="activity_id" value={@activity_id}>
         </form>
-
-        <div
-          :if={@viewing_main_object && (@thread_title || e(@activity, :replied, :thread, :named, :name, nil))}
-          class="flex items-center mb-4 font-medium gap-2 text-2xl tracking-wide"
-        >
-          <span class="">{@thread_title || e(@activity, :replied, :thread, :named, :name, "")}</span>
-        </div>
 
         {#for {component, component_assigns} when is_atom(component) <-
             activity_components(
@@ -1180,34 +1173,22 @@ defmodule Bonfire.UI.Social.ActivityLive do
   # end
 
   # @decorate time()
-  def component_object(verb, activity, object, object_type, showing_within)
+  def component_object(verb, activity, object, object_type)
 
-  def component_object(_, _, %{post_content: %{html_body: _}}, _, _),
+  def component_object(_, _, %{post_content: %{html_body: _}}, _),
     do: [Bonfire.UI.Social.Activity.NoteLive]
 
-  def component_object(verb, _, _, Bonfire.Data.Identity.User, showing_within),
-    do:
-      if(verb != "Follow" or showing_within != :notifications,
-        do: [Bonfire.UI.Social.Activity.CharacterLive],
-        else: []
-      )
+  def component_object(_, _, %{profile: %{id: _}}, _),
+    do: [Bonfire.UI.Social.Activity.CharacterLive]
 
-  def component_object(verb, _, %{profile: %{id: _}}, _, showing_within),
-    do:
-      if(verb != "Follow" or showing_within != :notifications,
-        do: [Bonfire.UI.Social.Activity.CharacterLive],
-        else: []
-      )
+  def component_object(_, _, %{character: %{id: _}}, _),
+    do: [Bonfire.UI.Social.Activity.CharacterLive]
 
-  def component_object(verb, _, %{character: %{id: _}}, _, showing_within),
-    do:
-      if(verb != "Follow" or showing_within != :notifications,
-        do: [Bonfire.UI.Social.Activity.CharacterLive],
-        else: []
-      )
+  def component_object(_, _, _, Bonfire.Data.Identity.User),
+    do: [Bonfire.UI.Social.Activity.CharacterLive]
 
-  def component_object(_, _, %{} = object, object_type, showing_within) do
-    case (object_type || Types.object_type(object)) |> debug("detect_object_type") do
+  def component_object(_, _, %{} = object, object_type) do
+    case object_type || Types.object_type(object) do
       Bonfire.Data.Social.APActivity ->
         json = e(object, :json, nil)
 
@@ -1239,10 +1220,6 @@ defmodule Bonfire.UI.Social.ActivityLive do
             ]
         end
 
-      Bonfire.Data.Social.Follow when showing_within == :notifications ->
-        # follower in notifications is already shown in subject
-        []
-
       type when is_atom(type) and not is_nil(type) ->
         debug(type, "component object_type recognised")
         component_for_object_type(type, object)
@@ -1257,7 +1234,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
     end
   end
 
-  def component_object(_, _, _, _, _) do
+  def component_object(_, _, _, _) do
     debug("activity has no object")
     [Bonfire.UI.Social.Activity.UnknownLive]
   end

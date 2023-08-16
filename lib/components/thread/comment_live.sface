@@ -1,4 +1,5 @@
-<div id={"cc_#{id(@activity)}"} data-id="comment" class="flex flex-1 w-full items-top">
+<div id={"cc_#{id(@activity)}"} data-id="comment" class={
+  "flex flex-1 w-full items-top bg-base-300 border-b border-base-content/20"}>
   <!-- <div
         :if={@thread_level > 1}
         x-cloak

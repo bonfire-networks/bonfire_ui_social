@@ -4,9 +4,8 @@
   x-data="{show_replies: true}"
   :class="{'collapsed': !show_replies}"
   class={
-    "reply thread-level-" <> to_string(@thread_level) <> " flex relative  w-full mx-auto",
-    "border-b border-base-content/20": @thread_mode == :flat,
-    "pl-2": @thread_level > 1
+    "reply thread-level-" <> to_string(@thread_level) <> " flex relative  w-full mx-auto ",
+    "border-b border-base-content/20": @threaded_replies != [] && @thread_level == 1,
   }
 >
   <div class="relative flex-1 w-full">
@@ -37,18 +36,24 @@
         </div>
       </div>
 
-      <div x-show="show_replies" x-transition>
+      <div 
+        x-show="show_replies" 
+        class="bg-base-content/10"
+        x-transition>
         <div
+          :if={@thread_level > 1}
           x-cloak
           x-show="show_replies"
           x-on:click="show_replies = ! show_replies"
-          class="group z-10  px-4 top-[3.5rem] left-[0.65rem] bottom-[-8px] top-0 group bottom-0 absolute cursor-pointer left-4"
+          class="group z-10 left-0 top-0 group bottom-0 absolute cursor-pointer -left-2"
         >
           <i
             :class="!show_replies ? 'bg-primary bottom-[0px]' : 'bottom-[0px]'"
-            class="absolute top-0 bottom-0 z-10 group-hover:bg-primary border-l-[2px] border-base-content/10"
+            class="w-2 absolute top-0 border-dashed bottom-0 z-10 group-hover:bg-primary border-base-content/10 bottom-[0px]"
           />
         </div>
+
+
         <!-- <div class="-mt-[26px]  z-[50] ml-10" :if={is_list(@threaded_replies) and length(@threaded_replies) > 0}>
         <button class="relative flex items-center gap-2 text-sm normal-case btn btn-ghost btn-info btn-xs">
           <#Icon iconify="ic:outline-arrow-drop-down" class="w-5 h-5" />
@@ -56,7 +61,7 @@
         </button>
       </div> -->
 
-        <div class={"replies replies-level-" <> to_string(@thread_level + 1) <> " ml-3"}>
+        <div class={"replies replies-level-" <> to_string(@thread_level + 1) <> " ml-2"}>
           {#for {{subreply, sub_child_replies}, index} <- Enum.with_index(@threaded_replies |> debug("idddd"), 1)}
             <div class="relative">
               <!-- <div 
