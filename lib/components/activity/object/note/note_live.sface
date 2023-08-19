@@ -25,7 +25,7 @@
               <p class="text-base font-medium leading-5 text-base-content">
                 <span>{name || l("CW")}</span>
                 <button
-                  x-on:click="content_open = ! content_open"
+                  x-on:click="content_open = ! content_open; $nextTick(() => { expandable = $refs.note && $refs.note.scrollHeight > $refs.note.clientHeight }); "
                   x-text={"content_open ? '#{l("Show less")}' : '#{l("Show more")}'"}
                   class="ml-1 normal-case rounded-full !border !border-base-content/30 btn-outline btn btn-xs"
                 >
