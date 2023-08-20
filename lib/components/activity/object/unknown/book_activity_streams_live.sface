@@ -1,0 +1,59 @@
+<div class="bg-base-100 rounded-box shadow">
+  <div class="flex">
+    {#case object_field(@json, "cover")}
+      {#match nil}
+      {#match img}
+        <a href={object_field(@json, "id")} target="_blank" class="relative basis-[50%]">
+          <img
+            src={e(img, "url", "href", nil) || e(img, "url", nil)}
+            alt=""
+            class="h-auto w-full rounded-t-box object-cover"
+          />
+        </a>
+    {/case}
+
+    <div class="p-4">
+      <a href={object_field(@json, "id")} target="_blank">
+        <h2 class="mb-2 font-semibold text-base-content">
+          {rich(
+            object_field(debug(@json, "apjson"), "title") || object_field(@json, "name") ||
+              l("Untitled book")
+          )}
+        </h2>
+        <h3 class="mb-2 text-base-content">
+          {rich(object_field(debug(@json, "apjson"), "subtitle"))}
+        </h3>
+      </a>
+
+      {#for tag <- object_field(@json, "subjects") || []}
+        <LiveRedirect to={"/search/?s=#{tag}"} class="text-xs text-base-content/70 link">{tag}</LiveRedirect>
+        <!-- <span>·</span> -->
+      {/for}
+
+      <div class="flex items-center mt-2 gap-2">
+        <div class="flex items-baseline text-base-content/70 text-sm">
+          <span :if={object_field(@json, "pages")} class="">{object_field(@json, "pages")} {l("pages")}</span>
+        </div>
+      </div>
+
+      <div class="flex items-center mt-2 gap-2">
+        {object_field(@json, "physicalFormat")} {object_field(@json, "type")}
+        {#case object_field(@json, "publishedDate")}
+          {#match nil}
+          {#match published_date}
+            <div class="flex items-baseline text-base-content/70 text-sm">
+              <!-- {l "Published:"} -->
+              {DatesTimes.format(published_date, format: :y)}
+            </div>
+        {/case}
+      </div>
+    </div>
+  </div>
+
+  <article class={"m-2 prose-sm prose max-w-prose ", "line-clamp-4": !@viewing_main_object}>
+    {rich(
+      object_field(@json, "description") || object_field(@json, "summary") ||
+        object_field(@json, "content")
+    )}
+  </article>
+</div>

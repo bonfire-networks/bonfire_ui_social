@@ -2,6 +2,7 @@
   {#case Enum.count(@multimedia_list)}
     {#match 0}
     {#match num_medias}
+      <!-- MULTIMEDIA ATTACHMENTS -->
       <div
         x-show="content_open == true"
         class={
@@ -132,6 +133,7 @@
   {#case Enum.count(@image_list)}
     {#match 0}
     {#match num_medias}
+      <!-- IMAGE ATTACHMENTS -->
       <div
         x-show="content_open == true"
         class={
@@ -177,6 +179,13 @@
                       >
                         <Bonfire.UI.Social.Activity.RemoteMediaLive media={m} />
 
+                        <!-- <LazyImage
+                                  class="border border-base-content/10 w-full !object-cover m-image h-full cursor-pointer aspect-video rounded-md"
+                                  m={m}
+                                  alt={media_label}
+                                  src={Media.media_url(m)}
+                                /> -->
+
                         <div class="absolute z-20 pt-4 bottom-2 left-2 right-2 md:relative">
                           <div class="prose  line-clamp-2 text-center prose-sm px-4 bg-black/30 text-white py-1.5 rounded-full mx-auto">{media_label}</div>
                           <p class="text-sm">{e(m.metadata, "description", nil) || e(m.metadata, "facebook", "og:description", nil) ||
@@ -189,18 +198,18 @@
                         <div class="relative h-full">
                           {#case preview_img(m) || Media.media_url(m)}
                             {#match maybe_preview_img}
-                              {#if is_image?(maybe_preview_img)}
-                                <LazyImage
-                                  class="border border-base-content/10 w-full !object-cover m-image h-full cursor-pointer aspect-video rounded-md"
-                                  m={m}
-                                  alt={media_label}
-                                  src={maybe_preview_img}
-                                />
-                              {#else}
+                              <!-- {#if is_image?(maybe_preview_img)} -->
+                              <LazyImage
+                                class="border border-base-content/10 w-full !object-cover m-image h-full cursor-pointer aspect-video rounded-md"
+                                m={m}
+                                alt={media_label}
+                                src={maybe_preview_img}
+                              />
+                              <!-- {#else}
                                 <div class="items-center rounded-l shrink-0 w-10 h-10 place-content-center">
                                   <#Icon iconify="bi:play-fill" class="w-8 h-8 text-base-content/70" />
                                 </div>
-                              {/if}
+                              {/if} -->
                           {/case}
 
                           <div class="absolute z-50 bottom-3 left-3 dropdown dropdown-hover dropdown-top">
@@ -254,6 +263,7 @@
       "!ml-12": @showing_within == :notifications
     }
   >
+    <!-- LINKS -->
     {#for m <- @link_list}
       {#case Media.media_url(m)}
         {#match nil}

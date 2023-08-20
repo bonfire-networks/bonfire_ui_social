@@ -78,7 +78,7 @@ defmodule Bonfire.UI.Social.Activity.MediaLive do
   def is_image?(url), do: String.ends_with?(url, @image_exts)
 
   def is_image?(url, media_type),
-    do: String.ends_with?(url, @image_exts) or String.starts_with?(media_type, @image_exts)
+    do: String.ends_with?(url, @image_exts) or String.starts_with?(media_type, @image_types)
 
   # def multimedia_list(media) do
   #   Enum.filter(List.wrap(media), fn m ->
