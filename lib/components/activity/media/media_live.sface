@@ -1,5 +1,5 @@
 {#if @showing_within != :smart_input}
-  {#case Enum.count(@multimedia_list)}
+  {#case @multimedia_count}
     {#match 0}
     {#match num_medias}
       <!-- MULTIMEDIA ATTACHMENTS -->
@@ -130,7 +130,7 @@
       </div>
   {/case}
 
-  {#case Enum.count(@image_list)}
+  {#case @image_count}
     {#match 0}
     {#match num_medias}
       <!-- IMAGE ATTACHMENTS -->

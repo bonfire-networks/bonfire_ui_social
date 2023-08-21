@@ -5,6 +5,7 @@ defmodule Bonfire.UI.Social.Activity.MediaLive do
   prop showing_within, :atom, default: nil
   prop viewing_main_object, :boolean, default: false
   prop label, :string, default: nil
+  prop parent_id, :any, default: nil
 
   @image_exts [".jpg", ".jpeg", ".png", ".gif", ".webp"]
   @image_types ["image", "photo"]
@@ -46,6 +47,18 @@ defmodule Bonfire.UI.Social.Activity.MediaLive do
         end
       end)
 
+    multimedia_count = Enum.count(multimedia_list)
+    image_count = Enum.count(image_list)
+    link_count = Enum.count(link_list)
+
+    case assigns[:parent_id] do
+      nil ->
+        nil
+
+      id ->
+        Bonfire.Common.Cache.put("num_media:#{id}", [multimedia_count, image_count, link_count])
+    end
+
     assigns
     # |> assign(:media, medias) 
     # |> assign(:multimedia_list, multimedia_list(medias)) 
@@ -53,6 +66,9 @@ defmodule Bonfire.UI.Social.Activity.MediaLive do
     |> assign(:image_list, image_list)
     |> assign(:multimedia_list, multimedia_list)
     |> assign(:link_list, link_list)
+    |> assign(:multimedia_count, multimedia_count)
+    |> assign(:image_count, image_count)
+    |> assign(:link_count, link_count)
     |> render_sface()
   end
 

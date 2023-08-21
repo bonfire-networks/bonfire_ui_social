@@ -552,10 +552,18 @@ defmodule Bonfire.UI.Social.ActivityLive do
                 object_type_readable={e(component_assigns, :object_type_readable, @object_type_readable)}
                 json={e(component_assigns, :json, nil)}
               />
+            {#match Bonfire.UI.Social.Activity.MediaSkeletonLive}
+              <Bonfire.UI.Social.Activity.MediaSkeletonLive
+                __context__={@__context__}
+                showing_within={@showing_within}
+                viewing_main_object={@viewing_main_object}
+                {...component_assigns || []}
+              />
             {#match Bonfire.UI.Social.Activity.MediaLive}
               <Bonfire.UI.Social.Activity.MediaLive
                 :if={@hide_activity != "media" and @showing_within != :smart_input}
                 __context__={@__context__}
+                parent_id={id(@object) || id(@activity)}
                 showing_within={@showing_within}
                 viewing_main_object={e(component_assigns, :viewing_main_object, @viewing_main_object)}
                 media={List.wrap(e(component_assigns, :media, []))}
@@ -1336,32 +1344,22 @@ defmodule Bonfire.UI.Social.ActivityLive do
 
   def component_maybe_attachments(id, files, _)
       when is_list(files) and files != [] do
-    num_media = length(files)
+    # num_media = length(files)
+    # debug(num_media, "has files")
 
-    debug(num_media, "has files")
-
-    Bonfire.Common.Cache.put("num_media:#{id}", num_media)
+    # Bonfire.Common.Cache.put("num_media:#{id}", num_media)
 
     [
-      {Bonfire.UI.Social.Activity.MediaLive, %{media: files, num_media: num_media}}
+      {Bonfire.UI.Social.Activity.MediaLive, %{media: files}}
     ]
   end
 
   def component_maybe_attachments(id, other, _) do
     case Bonfire.Common.Cache.get("num_media:#{id}") do
-      {:ok, num} when is_number(num) and num > 0 ->
-        html =
-          for _ <- 1..num,
-              do:
-                "<div class='flex items-center justify-center w-full h-48 rounded sm:w-96'><div iconify='octicon:file-media-24' class='w-10 h-10'></div></div>"
-
+      {:ok, [multimedia_count, image_count, link_count]} ->
         [
-          {:html,
-           """
-               <div role="status" class="space-y-8 animate-pulse md:space-y-0 md:space-x-8 md:flex md:items-center">
-               #{html}
-           </div>
-           """}
+          {Bonfire.UI.Social.Activity.MediaSkeletonLive,
+           %{multimedia_count: multimedia_count, image_count: image_count, link_count: link_count}}
         ]
 
       _ ->
