@@ -70,7 +70,7 @@
                   allow="accelerometer; encrypted-@media; gyroscope; picture-in-picture"
                   allowfullscreen="allowfullscreen"
                   class={"", "w-full max-h-screen": String.starts_with?(@media.media_type, ["video"])}
-                  style={if String.starts_with?(@media.media_type, ["video"]), do: "height:900px", else: ""}
+                  style={if String.starts_with?(@media.media_type, ["video"]), do: "", else: ""}
                 />
             {/case}
           {/if}

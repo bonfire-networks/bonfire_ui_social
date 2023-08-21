@@ -45,7 +45,7 @@
                       <div
                         class="h-full sticky bg-base-100 z-[9999999999999]"
                         style={if String.starts_with?(m.media_type, ["video"]),
-                          do: "min-width: 90vw; min-height: 90vh",
+                          do: "",
                           else: ""}
                       >
                         <Bonfire.UI.Social.Activity.RemoteMediaLive media={m} />
