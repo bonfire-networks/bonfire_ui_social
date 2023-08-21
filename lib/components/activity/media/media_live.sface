@@ -236,7 +236,7 @@
                             />
                           {#else}
                             <div class="flex items-center rounded-l shrink-0 w-10 h-10 place-content-center">
-                              <#Icon iconify="bi:play-fill" class="w-8 h-8 text-base-content/70" />
+                              <#Icon iconify="octicon:file-media-24" class="w-8 h-8 text-base-content/70" />
                             </div>
                           {/if}
                       {/case}

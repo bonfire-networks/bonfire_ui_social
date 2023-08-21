@@ -335,8 +335,10 @@ defmodule Bonfire.UI.Social.ActivityLive do
        ) ++
        component_object(verb, activity, object, object_type) ++
        component_maybe_attachments(
+         id(object) || id(activity),
          e(activity, :files, nil) || e(object, :files, nil) || e(activity, :media, nil) ||
-           e(object, :media, nil)
+           e(object, :media, nil),
+         activity_inception
        ) ++
        component_actions(
          verb,
@@ -485,6 +487,8 @@ defmodule Bonfire.UI.Social.ActivityLive do
               @activity_component_id
             ) || []}
           {#case component}
+            {#match :html}
+              {raw(component_assigns)}
             {#match _
               when component in [
                      Bonfire.UI.Social.Activity.SubjectLive,
@@ -1328,18 +1332,42 @@ defmodule Bonfire.UI.Social.ActivityLive do
     [Bonfire.UI.Social.Activity.UnknownLive]
   end
 
-  def component_maybe_attachments(files)
+  def component_maybe_attachments(_, _, inception) when not is_nil(inception), do: []
+
+  def component_maybe_attachments(id, files, _)
       when is_list(files) and files != [] do
-    debug(files, "has files")
+    num_media = length(files)
+
+    debug(num_media, "has files")
+
+    Bonfire.Common.Cache.put("num_media:#{id}", num_media)
 
     [
-      {Bonfire.UI.Social.Activity.MediaLive, %{media: files}}
+      {Bonfire.UI.Social.Activity.MediaLive, %{media: files, num_media: num_media}}
     ]
   end
 
-  def component_maybe_attachments(other) do
-    debug(other, "no files")
-    []
+  def component_maybe_attachments(id, other, _) do
+    case Bonfire.Common.Cache.get("num_media:#{id}") do
+      {:ok, num} when is_number(num) and num > 0 ->
+        html =
+          for _ <- 1..num,
+              do:
+                "<div class='flex items-center justify-center w-full h-48 rounded sm:w-96'><div iconify='octicon:file-media-24' class='w-10 h-10'></div></div>"
+
+        [
+          {:html,
+           """
+               <div role="status" class="space-y-8 animate-pulse md:space-y-0 md:space-x-8 md:flex md:items-center">
+               #{html}
+           </div>
+           """}
+        ]
+
+      _ ->
+        debug(other, "no files")
+        []
+    end
   end
 
   # @decorate time()
