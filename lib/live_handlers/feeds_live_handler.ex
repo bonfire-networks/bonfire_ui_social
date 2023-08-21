@@ -955,15 +955,13 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
       |> uniq_assign(:thread_mode)
       |> debug("thread_mode")
 
-    preload_feed_extra = [:with_thread_name, :with_reply_to, :with_media, :with_parent]
-
     preloads =
       case {showing_within, thread_mode} do
         {:thread, :flat} -> [:feed, :with_reply_to, :with_media]
         {:thread, _} -> [:feed, :with_media]
         {:feed_by_creator, _} -> [:with_object_more]
-        {:feed_by_subject, _} -> [:feed_by_subject] ++ preload_feed_extra
-        _ -> [:feed_by_subject] ++ preload_feed_extra
+        {:feed_by_subject, _} -> [:feed_by_subject, :feed_postload]
+        _ -> [:feed_by_subject, :feed_postload]
       end
       |> debug("whatpreloads")
 

@@ -10,6 +10,7 @@ defmodule Bonfire.UI.Social.Activity.NoteLive do
   prop cw, :boolean, default: nil
   prop is_remote, :boolean, default: false
   prop thread_mode, :atom, default: nil
+  prop hide_actions, :boolean, default: false
 
   def preloads(),
     do: [

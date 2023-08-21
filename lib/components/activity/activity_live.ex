@@ -76,17 +76,15 @@ defmodule Bonfire.UI.Social.ActivityLive do
       "Activity ##{debug_i(socket.assigns[:activity_id], socket.assigns[:activity_inception])} prepared already, just assign updated activity"
     )
 
+    debug(assigns)
+
     {:ok,
      assign(
        socket,
        activity: if(is_map(activity), do: Map.drop(activity, [:object])),
-       object: e(activity, :object, nil),
-       published_in: maybe_published_in(activity, nil),
-       thread_title:
-         e(assigns, :thread_title, nil) || e(socket.assigns, :thread_title, nil) ||
-           e(activity, :replied, :thread, :named, :name, nil),
-       thread_mode: e(assigns, :thread_mode, nil) || e(socket.assigns, :thread_mode, nil)
-     )}
+       object: e(activity, :object, nil)
+     )
+     |> maybe_update_some_assigns(assigns)}
   end
 
   def update(
@@ -120,13 +118,35 @@ defmodule Bonfire.UI.Social.ActivityLive do
     )
 
     # FYI: assigning blindly here causes problems
-    {:ok, socket}
+    {:ok,
+     socket
+     |> maybe_update_some_assigns(assigns)}
   end
 
   def update(assigns, socket) do
     {:ok,
      socket
      |> assign(prepare(assigns))}
+  end
+
+  defp maybe_update_some_assigns(socket, assigns) do
+    assign(
+      socket,
+      published_in: maybe_published_in(socket.assigns[:activity], nil),
+      thread_title:
+        e(assigns, :thread_title, nil) || e(socket.assigns, :thread_title, nil) ||
+          e(socket.assigns[:activity], :replied, :thread, :named, :name, nil),
+      thread_mode:
+        case e(assigns, :thread_mode, nil) do
+          nil -> e(socket.assigns, :thread_mode, nil)
+          thread_mode -> thread_mode
+        end,
+      hide_actions:
+        case e(assigns, :hide_actions, nil) do
+          nil -> e(socket.assigns, :hide_actions, nil)
+          hide_actions -> hide_actions
+        end
+    )
   end
 
   def remove(socket) do
@@ -237,21 +257,26 @@ defmodule Bonfire.UI.Social.ActivityLive do
       thread_id: thread_id,
       thread_title: e(assigns, :thread_title, nil) || e(thread, :named, :name, nil),
       published_in: maybe_published_in(activity, verb),
-      cw: e(object, :post_content, :name, nil) != nil,
+      cw: e(assigns, :cw, nil) || e(object, :post_content, :name, nil) != nil,
       is_remote: e(activity, :peered, nil) != nil or e(object, :peered, nil) != nil,
       reply_count: e(replied, :nested_replies_count, 0) + e(replied, :direct_replies_count, 0),
       hide_actions:
-        e(assigns, :hide_actions, nil) ||
-          (!e(assigns, :viewing_main_object, nil) and
-             Settings.get(
-               [
-                 Bonfire.UI.Social.Activity.ActionsLive,
-                 e(assigns, :showing_within, nil) || :feed,
-                 :hide_until_hovered
-               ],
-               nil,
-               assigns
-             ) && "until_hovered")
+        case e(assigns, :hide_actions, nil) do
+          nil ->
+            !e(assigns, :viewing_main_object, nil) and
+              Settings.get(
+                [
+                  Bonfire.UI.Social.Activity.ActionsLive,
+                  e(assigns, :showing_within, nil) || :feed,
+                  :hide_until_hovered
+                ],
+                nil,
+                assigns
+              ) && "until_hovered"
+
+          hide_actions ->
+            hide_actions
+        end
     })
 
     # |> debug("Activity preparation done")
@@ -395,6 +420,8 @@ defmodule Bonfire.UI.Social.ActivityLive do
                 object_id: @thread_id || id(@object),
                 current_url: @permalink,
                 show: true,
+                hide_actions: false,
+                cw: false,
                 label: "",
                 object: if(@thread_id == id(@object), do: @object),
                 activity: if(@thread_id == id(@object), do: @activity),
@@ -501,6 +528,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
                 cw={@cw}
                 thread_mode={@thread_mode}
                 is_remote={@is_remote}
+                hide_actions={@hide_actions}
               />
             {#match _
               when component in [
