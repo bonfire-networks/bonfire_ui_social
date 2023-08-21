@@ -79,10 +79,7 @@
     >
       {#for counter <- 1..@link_count}
         <div class="flex items-center justify-center w-full h-48 bg-gray-300 rounded sm:w-96 dark:bg-gray-700">
-          <div
-            iconify="octicon:file-media-24"
-            class="w-10 h-10 text-gray-200 dark:text-gray-600"
-          />
+          <div iconify="octicon:file-media-24" class="w-10 h-10 text-gray-200 dark:text-gray-600" />
         </div>
         <div class="w-full">
           <div class="h-2.5 bg-gray-200 rounded-full dark:bg-gray-700 w-48 mb-4" />

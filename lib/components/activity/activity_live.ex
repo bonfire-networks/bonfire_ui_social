@@ -1009,6 +1009,8 @@ defmodule Bonfire.UI.Social.ActivityLive do
       when verb in @reply_verbs do
     debug("we have a reply_to, preloaded with post_content")
 
+    Bonfire.Common.Cache.put("has_reply_to:#{activity_id}", true)
+
     [
       {Bonfire.UI.Social.ActivityLive,
        %{
@@ -1039,7 +1041,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
                 character: %{id: _} = subject_character,
                 profile: %{id: _} = subject_profile
               }
-            } = replied
+            } = reply_to
         },
         _,
         _,
@@ -1052,17 +1054,19 @@ defmodule Bonfire.UI.Social.ActivityLive do
       when verb in @reply_verbs and is_binary(reply_to_id) do
     debug("we have another kind of reply_to, preloaded with creator")
 
+    Bonfire.Common.Cache.put("has_reply_to:#{activity_id}", true)
+
     [
       {Bonfire.UI.Social.ActivityLive,
        %{
          id: "reply_to-#{activity_component_id}-#{reply_to_id}",
          activity_inception: activity_id,
-         show_minimal_subject_and_note: name_or_text(replied) || true,
+         show_minimal_subject_and_note: name_or_text(reply_to) || true,
          viewing_main_object: false,
          thread_title: thread_title,
-         object: replied,
+         object: reply_to,
          activity: %{
-           # Activities.load_object(replied, skip_boundary_check: true),
+           # Activities.load_object(reply_to, skip_boundary_check: true),
            subject: %{
              profile: subject_profile,
              character: subject_character
@@ -1091,6 +1095,8 @@ defmodule Bonfire.UI.Social.ActivityLive do
       )
       when verb in @reply_verbs and is_binary(reply_to_id) do
     debug("we have another kind of reply_to, but no creator")
+
+    Bonfire.Common.Cache.put("has_reply_to:#{activity_id}", true)
 
     [
       {Bonfire.UI.Social.ActivityLive,
@@ -1157,8 +1163,49 @@ defmodule Bonfire.UI.Social.ActivityLive do
   #     when object_id != thread_id,
   #     do: maybe_load_in_reply_to(thread, thread_id, current_user: current_user(assigns))
 
+  def component_maybe_in_reply_to(_, %{reply_to_id: nil}, _, _, _, _, _, _, _) do
+    debug("no reply_to")
+    []
+  end
+
+  def component_maybe_in_reply_to(
+        _,
+        %{id: id, reply_to: %Ecto.Association.NotLoaded{}},
+        _,
+        _,
+        _,
+        _,
+        _,
+        _,
+        _
+      ) do
+    case Bonfire.Common.Cache.get("has_reply_to:#{id}") do
+      {:ok, true} ->
+        debug("reply_to was not loaded")
+
+        [
+          {:html,
+           """
+           <div role="status" class="space-y-2.5 animate-pulse max-w-[50%] mb-2">
+           <div class="flex items-center w-full space-x-2">
+           <div class="h-2.5 bg-gray-200 rounded-full dark:bg-gray-700 w-10"></div>
+           <div class="h-2.5 bg-gray-300 rounded-full dark:bg-gray-600 w-24"></div>
+           <div class="h-2.5 bg-gray-300 rounded-full dark:bg-gray-600 w-full"></div>
+           </div>
+           <span class="sr-only">Loading...</span>
+           </div>
+
+           """}
+        ]
+
+      _ ->
+        debug(id, "no has_reply_to in cache")
+        []
+    end
+  end
+
   def component_maybe_in_reply_to(_, a, _, _, _, _, _, _, _) do
-    debug(a, "no reply_to")
+    debug(a, "cannot determine if there's a reply_to")
     []
   end
 
