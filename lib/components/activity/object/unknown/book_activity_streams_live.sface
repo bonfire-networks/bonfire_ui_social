@@ -46,7 +46,7 @@
 
       <!-- Publication date -->
       <div class="mt-2">
-      {#case object_field(@json, "publishedDate")}
+      {#case object_field(@json, "firstPublishedDate") ||  object_field(@json, "publishedDate")}
           {#match nil}
           {#match published_date}
           <div class="flex  items-center mt-2 gap-2">
