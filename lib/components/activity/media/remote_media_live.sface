@@ -1,4 +1,4 @@
-<div class="z-500 relative text-center">
+<div class="z-500 relative text-center h-full">
   {#case Media.media_url(@media)}
     {#match media_url}
       {#case MediaLive.media_img(@media) || media_url}
@@ -16,12 +16,12 @@
               {#match nil}
                 {#case e(@media, :metadata, "oembed", "html", nil)}
                   {#match nil}
-                    {#if String.ends_with?(media_url, ".mp4")}
+                    {#if String.ends_with?(media_url, [".mp4", ".mkv"])}
                       <video class={@video_css} controls autoplay>
                         <source src={media_url} type="video/mp4">
                         Your browser does not support the video tag.
                       </video>
-                    {#elseif String.ends_with?(media_url, [".ogg", ".ogv"])}
+                    {#elseif String.ends_with?(media_url, [".ogg", ".ogv", ".ogx", ".ogm", ".spx", ".opus"])}
                       <video class={@video_css} controls autoplay>
                         <source src={media_url} type="video/ogg">
                         Your browser does not support the video tag.
@@ -31,24 +31,32 @@
                         <source src={media_url} type="video/webm">
                         Your browser does not support the video tag.
                       </video>
-                    {#elseif String.ends_with?(media_url, ".mp3")}
+                    {#elseif String.ends_with?(media_url, [".mp3", ".m4a", ".oga", ".flac", ".aac", ".wav", ".caf"])}
                       <div class="relative rounded rounded-b-none border border-b-0 border-base-content/20 max-w-[300px]">
                         <div class="flex p-3 pb-0 mb-3 items-center gap-3">
-                          <div class="bg-base-200">
-                            <LazyImage
-                              src={MediaLive.preview_img(@media)}
-                              alt=""
-                              class="w-16 h-16 object-cover"
-                            />
-                          </div>
-                          <div class="text-sm text-left font-semibold text-base-content/70">
-                            {e(@media, :metadata, "name", "Unknown audio")}
-                          </div>
+                          {#case MediaLive.preview_img(@media)}
+                            {#match media_img}
+                              <div :if={MediaLive.is_image?(media_img)} class="bg-base-200">
+                                <LazyImage
+                                  src={media_img}
+                                  alt=""
+                                  class="w-16 h-16 object-cover"
+                                  fallback_icon="octicon:file-media-24"
+                                />
+                              </div>
+                          {/case}
+                          {#case e(@media, :metadata, "name", nil)}
+                            {#match nil}
+                            {#match name}
+                              <div class="text-sm text-left font-semibold text-base-content/70">
+                                {name}
+                              </div>
+                          {/case}
                         </div>
-                        <audio controls autoplay>
-                          <source src={media_url} type="audio/mp3">
+                        <audio controls autoplay class={@default_css}>
+                          <source src={media_url} type={"audio/#{Bonfire.Files.file_extension_only(media_url) || "mp3"}"}>
                           Your browser does not support the audio tag.
-                            <!-- <a href={media_url}> {l "Download audio"} </a> -->
+                          <!-- <a href={media_url}> {l "Download audio"} </a> -->
                         </audio>
                       </div>
                     {#else}
@@ -70,7 +78,7 @@
                   frameborder="0"
                   allow="accelerometer; encrypted-@media; gyroscope; picture-in-picture"
                   allowfullscreen="allowfullscreen"
-                  class={"", "max-h-screen h-[400px] w-[500px]": String.starts_with?(@media.media_type, ["video"])}
+                  class={if String.starts_with?(@media.media_type, ["video"]), do: @block_css, else: @default_css}
                   style={if String.starts_with?(@media.media_type, ["video"]), do: "", else: ""}
                 />
             {/case}

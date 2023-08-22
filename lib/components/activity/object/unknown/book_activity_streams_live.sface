@@ -3,7 +3,11 @@
     {#case object_field(@json, "cover")}
       {#match nil}
       {#match img}
-        <a href={object_field(@json, "id")} target="_blank" class="relative h-full min-w-[140px] max-w-[200px]">
+        <a
+          href={object_field(@json, "id")}
+          target="_blank"
+          class="relative h-full min-w-[140px] max-w-[200px]"
+        >
           <img
             src={e(img, "url", "href", nil) || e(img, "url", nil)}
             alt=""
@@ -28,7 +32,10 @@
       {#if object_field(@json, "subjects")}
         <div class="mt-1">
           {#for tag <- object_field(@json, "subjects") || []}
-            <LiveRedirect to={"/search/?s=#{tag}"} class="badge badge-primary badge-outline badge-sm !border !border-primary/20 !leading-[1.25rem] !h-[1.25rem]">{tag}</LiveRedirect>
+            <LiveRedirect
+              to={"/search/?s=#{tag}"}
+              class="badge badge-primary badge-outline badge-sm !border !border-primary/20 !leading-[1.25rem] !h-[1.25rem]"
+            >{tag}</LiveRedirect>
             <!-- <span>·</span> -->
           {/for}
         </div>
@@ -46,16 +53,16 @@
 
       <!-- Publication date -->
       <div class="mt-2">
-      {#case object_field(@json, "firstPublishedDate") ||  object_field(@json, "publishedDate")}
+        {#case object_field(@json, "firstPublishedDate") || object_field(@json, "publishedDate")}
           {#match nil}
           {#match published_date}
-          <div class="flex  items-center mt-2 gap-2">
-            <#Icon iconify="carbon:building" class="w-4 h-4 text-base-content/70" />
-            <div class="flex items-baseline text-base-content/70 text-sm">
-              {l "Published in"}
-              {DatesTimes.format(published_date, format: :y)} {l "by"} {List.first(object_field(@json, "publishers"))}
+            <div class="flex  items-center mt-2 gap-2">
+              <#Icon iconify="carbon:building" class="w-4 h-4 text-base-content/70" />
+              <div class="flex items-baseline text-base-content/70 text-sm">
+                {l("Published in")}
+                {DatesTimes.format(published_date, format: :y)} {l("by")} {List.first(object_field(@json, "publishers"))}
+              </div>
             </div>
-          </div>
         {/case}
       </div>
 
@@ -66,7 +73,7 @@
         </div>
       </div> -->
 
-       <!-- note -->
+      <!-- note -->
       <article class={"mt-2 prose-sm prose max-w-prose text-base-content/90", "line-clamp-6": !@viewing_main_object}>
         {rich(
           object_field(@json, "description") || object_field(@json, "summary") ||
@@ -75,6 +82,4 @@
       </article>
     </div>
   </div>
-
-  
 </div>

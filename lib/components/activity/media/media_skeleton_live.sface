@@ -57,7 +57,7 @@
               num_medias ==
                 4
           }>
-            <figure class="w-10 h-10 text-base-content/20"" iconify="octicon:file-media-24">
+            <figure class="w-10 h-10 text-base-content/20" " iconify="octicon:file-media-24">
               <span class="sr-only">Loading...</span>
             </figure>
           </article>

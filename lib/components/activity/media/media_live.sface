@@ -15,8 +15,8 @@
         }
       >
         {#for {%{} = m, counter} <- Enum.with_index(@multimedia_list)}
-          {#case media_label(m) || l("Sorry, no caption provided by author")}
-            {#match media_label}
+          {#case {media_label(m) || l("Untitled media"), String.starts_with?(m.media_type, ["video"])}}
+            {#match {media_label, is_video?}}
               <article class={
                 "m-entry h-full w-full row-span-4 object-cover",
                 "!row-span-2 !h-auto":
@@ -33,23 +33,22 @@
                       id={"media_modal_#{id(m)}#{Text.random_string()}"}
                       reusable_modal_id="media_player_modal"
                       no_actions
-                      no_header
+                      title_text={media_label}
+                      title_class="font-bold text-base line-clamp-1 px-2 max-w-[420px]"
                       no_backdrop
                       image_preview
                       enable_fallback={false}
-                      modal_class=""
-                      wrapper_class="max-h-full !w-full md:w-10/12 !p-0 max-w-[100%] !bg-transparent shadow-none rounded-none"
+                      modal_class={"resize overflow-auto", "w-[500px]": is_video?, "w-[320px]": !is_video?}
+                      wrapper_class="h-full max-h-full !w-full md:w-10/12 pt-1 max-w-[100%] bg-base-100 shadow-none rounded-none"
                       open_btn_class="w-full"
                       open_btn_wrapper_class="w-full h-full"
                     >
-                    
                       <div
                         class="h-full sticky bg-base-100 z-[9999999999999]"
-                        style={if String.starts_with?(m.media_type, ["video"]),
-                          do: "max-width: 500px; border-top-left-radius: 8px: border-top-right-radius: 8px",
+                        style={if is_video?,
+                          do: "border-top-left-radius: 8px: border-top-right-radius: 8px",
                           else: ""}
                       >
-                
                         <!-- <div class="">
                           <div class="text-xs truncate  p-2 rounded-t-lg text-base-content/90">{media_label}</div>
                            <p class="text-sm">{e(m.metadata, "description", nil) || e(m.metadata, "facebook", "og:description", nil) ||
@@ -57,7 +56,6 @@
                               e(m.metadata, "other", "description", nil)}</p> 
                         </div> -->
                         <Bonfire.UI.Social.Activity.RemoteMediaLive media={m} />
-
                       </div>
 
                       <:open_btn>
@@ -71,11 +69,12 @@
                                     m={m}
                                     alt={media_label}
                                     src={maybe_preview_img}
+                                    fallback_icon="majesticons:video"
                                   />
                                 {#else}
-                                <div class="h-60 flex items-center place-content-center rounded-t-box">
-                                  <#Icon iconify="majesticons:video" class="w-full h-32 text-base-content/70" />
-                                </div>
+                                  <div class="h-60 flex items-center place-content-center rounded-t-box">
+                                    <#Icon iconify="majesticons:video" class="w-full h-32 text-base-content/70" />
+                                  </div>
                                 {/if}
                             {/case}
                             <!-- PLAY OR FOLLOW LINK -->
@@ -111,6 +110,7 @@
                               m={m}
                               alt={media_label}
                               src={maybe_preview_img}
+                              fallback_icon="majesticons:video"
                             />
                           {#else}
                             <div class="flex items-center rounded-l shrink-0 w-10 h-10 place-content-center">
@@ -303,13 +303,15 @@
                       {#case String.ends_with?(preview_img, ".ico")}
                         {#match true}
                           <LazyImage
-                            class="rounded-none object-cover rounded-l-lg  cursor-pointer m-image w-[120px] h-[120px]"
+                            class="rounded-none object-cover rounded-l-lg  cursor-pointer m-image w-[36px] h-[36px]"
                             src={preview_img}
+                            fallback_icon="heroicons-outline:external-link"
                           />
                         {#match _}
                           <LazyImage
                             class="rounded-none object-cover rounded-l-lg  cursor-pointer m-image w-[120px] h-[120px]"
                             src={preview_img}
+                            fallback_icon="heroicons-outline:external-link"
                           />
                       {/case}
                   {/case}
