@@ -170,7 +170,7 @@
               opts={%{"phx-value-time_limit" => 0}}
             />
           {#else}
-            <p>{l("That's all folks...")}</p>
+            <p class="text-sm font-medium text-base-content/50">{l("That's all folks...")}</p>
           {/if}
         {/if}
       </:if_no_more>
