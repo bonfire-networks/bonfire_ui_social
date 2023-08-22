@@ -1,4 +1,4 @@
-<div class="bg-base-100 rounded-box shadow">
+<div class="rounded-box border border-base-content/20">
   {#case object_field(@json, "attachment")}
     {#match nil}
     {#match img}
@@ -8,11 +8,8 @@
           alt=""
           class="w-full h-[320px] rounded-t-box object-cover"
         />
-        <div class="bottom-3 left-3 absolute min-w-12 min-h-12 shadow bg-white rounded-lg">
-          <span class="rounded-t-lg block bg-red-600 h-3" />
-          <div class="flex min-h-9 items-center place-content-center flex-col p-1">
-            <span class="text-sm font-bold text-gray-800 text-center uppercase max-w-[60px]">{DatesTimes.date_from_now(object_field(@json, "startTime")) || l("Event")}</span>
-          </div>
+        <div class="top-3 right-3 absolute badge rounded h-[1.75rem]">
+          <span class="text-sm font-semibold">{l("Event")}</span>
         </div>
       </div>
   {/case}

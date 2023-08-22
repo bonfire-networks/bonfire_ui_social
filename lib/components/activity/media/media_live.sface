@@ -42,54 +42,58 @@
                       open_btn_class="w-full"
                       open_btn_wrapper_class="w-full h-full"
                     >
+                    
                       <div
                         class="h-full sticky bg-base-100 z-[9999999999999]"
                         style={if String.starts_with?(m.media_type, ["video"]),
-                          do: "",
+                          do: "max-width: 500px; border-top-left-radius: 8px: border-top-right-radius: 8px",
                           else: ""}
                       >
+                
+                        <!-- <div class="">
+                          <div class="text-xs truncate  p-2 rounded-t-lg text-base-content/90">{media_label}</div>
+                           <p class="text-sm">{e(m.metadata, "description", nil) || e(m.metadata, "facebook", "og:description", nil) ||
+                              e(m.metadata, "twitter", "twitter:description", nil) ||
+                              e(m.metadata, "other", "description", nil)}</p> 
+                        </div> -->
                         <Bonfire.UI.Social.Activity.RemoteMediaLive media={m} />
 
-                        <div class="absolute z-20 pt-4 bottom-2 left-2 right-2 md:relative">
-                          <div class="prose  line-clamp-2 text-center prose-sm px-4 bg-black/30 text-white py-1.5 rounded-full mx-auto">{media_label}</div>
-                          <p class="text-sm">{e(m.metadata, "description", nil) || e(m.metadata, "facebook", "og:description", nil) ||
-                              e(m.metadata, "twitter", "twitter:description", nil) ||
-                              e(m.metadata, "other", "description", nil)}</p>
-                        </div>
                       </div>
 
                       <:open_btn>
-                        <div class="relative h-full text-center items-center justify-center">
-                          {#case preview_img(m) || Media.media_url(m)}
-                            {#match maybe_preview_img}
-                              {#if is_image?(maybe_preview_img)}
-                                <LazyImage
-                                  class="border border-base-content/10 w-full !object-cover m-image h-full cursor-pointer aspect-video rounded-md"
-                                  m={m}
-                                  alt={media_label}
-                                  src={maybe_preview_img}
-                                />
-                              {#else}
-                                <#Icon iconify="majesticons:video" class="w-full h-60 text-base-content/70" />
-                              {/if}
-                          {/case}
-
-                          <!-- PLAY OR FOLLOW LINK -->
-                          <div class="absolute flex justify-center items-center inset-0">
-                            <div class="bg-gray-900/60 z-50 gap-4 px-3 py-2 rounded flex justify-center items-center place-content-center">
-                              <button class="">
-                                <#Icon iconify="heroicons:play-20-solid" class="w-6 h-6 text-gray-200" />
-                              </button>
-                              <a href={Media.media_url(m)} target="_blank">
-                                <#Icon iconify="heroicons-outline:external-link" class="w-6 h-6 text-gray-200" />
-                              </a>
+                        <div class="rounded-box border border-base-content/20 h-full text-center items-center justify-center">
+                          <div class="relative">
+                            {#case preview_img(m) || Media.media_url(m)}
+                              {#match maybe_preview_img}
+                                {#if is_image?(maybe_preview_img)}
+                                  <LazyImage
+                                    class="w-full rounded-t-box !object-cover m-image cursor-pointer aspect-video"
+                                    m={m}
+                                    alt={media_label}
+                                    src={maybe_preview_img}
+                                  />
+                                {#else}
+                                <div class="h-60 flex items-center place-content-center rounded-t-box">
+                                  <#Icon iconify="majesticons:video" class="w-full h-32 text-base-content/70" />
+                                </div>
+                                {/if}
+                            {/case}
+                            <!-- PLAY OR FOLLOW LINK -->
+                            <div class="absolute flex justify-center items-center inset-0">
+                              <div class="bg-gray-900/60 z-50 gap-4 px-3 py-2 rounded flex justify-center items-center place-content-center">
+                                <button class="">
+                                  <#Icon iconify="heroicons:play-20-solid" class="w-6 h-6 text-gray-200" />
+                                </button>
+                                <a href={Media.media_url(m)} target="_blank">
+                                  <#Icon iconify="heroicons-outline:external-link" class="w-6 h-6 text-gray-200" />
+                                </a>
+                              </div>
                             </div>
                           </div>
 
-                          <div class="absolute z-50 bottom-3 left-3 dropdown dropdown-hover dropdown-top">
-                            <label tabindex="0" class="text-white border-none rounded btn btn-xs bg-black/60">alt</label>
-                            <div tabindex="0" class="p-2 rounded shadow dropdown-content bg-base-100 w-52">
-                              <div class="prose-sm prose text-base-content">{media_label}</div>
+                          <div class="">
+                            <div class="p-4">
+                              <div class="font-semibold text-base-content/80">{media_label}</div>
                             </div>
                           </div>
                           <figcaption class="sr-only">{media_label}</figcaption>

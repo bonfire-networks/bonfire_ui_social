@@ -21,7 +21,7 @@
     <h2 class="mb-0 font-semibold text-base-content">
       {rich(object_field(debug(@json, "apjson"), "name") || l("Untitled video"))}
     </h2>
-    <div class="flex items-baseline gap-2">
+    <div class="flex items-baseline gap-2 py-2">
       {#case object_field(@json, "published")}
         {#match nil}
         {#match date}

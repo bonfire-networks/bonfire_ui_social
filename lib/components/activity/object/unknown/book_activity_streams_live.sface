@@ -1,59 +1,80 @@
-<div class="bg-base-100 rounded-box shadow">
-  <div class="flex">
+<div class="border border-base-content/20 rounded-box">
+  <div class="flex p-3 gap-4">
     {#case object_field(@json, "cover")}
       {#match nil}
       {#match img}
-        <a href={object_field(@json, "id")} target="_blank" class="relative basis-[50%]">
+        <a href={object_field(@json, "id")} target="_blank" class="relative h-full min-w-[140px] max-w-[200px]">
           <img
             src={e(img, "url", "href", nil) || e(img, "url", nil)}
             alt=""
-            class="h-auto w-full rounded-t-box object-cover"
+            class="h-full w-full rounded object-cover"
           />
         </a>
     {/case}
 
-    <div class="p-4">
+    <div class="">
       <a href={object_field(@json, "id")} target="_blank">
-        <h2 class="mb-2 font-semibold text-base-content">
+        <h2 class="font-semibold text-lg text-base-content">
           {rich(
             object_field(debug(@json, "apjson"), "title") || object_field(@json, "name") ||
               l("Untitled book")
           )}
         </h2>
-        <h3 class="mb-2 text-base-content">
-          {rich(object_field(debug(@json, "apjson"), "subtitle"))}
+        <h3 :if={object_field(debug(@json, "apjson"), "subtitle")} class="text-sm text-base-content/80">
+          {object_field(debug(@json, "apjson"), "subtitle")}
         </h3>
       </a>
 
-      {#for tag <- object_field(@json, "subjects") || []}
-        <LiveRedirect to={"/search/?s=#{tag}"} class="text-xs text-base-content/70 link">{tag}</LiveRedirect>
-        <!-- <span>·</span> -->
-      {/for}
-
-      <div class="flex items-center mt-2 gap-2">
-        <div class="flex items-baseline text-base-content/70 text-sm">
-          <span :if={object_field(@json, "pages")} class="">{object_field(@json, "pages")} {l("pages")}</span>
+      {#if object_field(@json, "subjects")}
+        <div class="mt-1">
+          {#for tag <- object_field(@json, "subjects") || []}
+            <LiveRedirect to={"/search/?s=#{tag}"} class="badge badge-primary badge-outline badge-sm !border !border-primary/20 !leading-[1.25rem] !h-[1.25rem]">{tag}</LiveRedirect>
+            <!-- <span>·</span> -->
+          {/for}
         </div>
+      {/if}
+      <!-- TYPE -->
+      <div class="flex items-center mt-1 gap-2 text-sm font-semibold text-base-content/80">
+        {object_field(@json, "physicalFormat")} {object_field(@json, "type")}
       </div>
 
-      <div class="flex items-center mt-2 gap-2">
-        {object_field(@json, "physicalFormat")} {object_field(@json, "type")}
-        {#case object_field(@json, "publishedDate")}
+      <!-- PAGES -->
+      <div :if={object_field(@json, "pages")} class="flex  items-center mt-2 gap-2">
+        <#Icon iconify="carbon:book" class="w-4 h-4 text-base-content/70" />
+        <span class="text-base-content/70 text-sm">{object_field(@json, "pages")} {l("pages")}</span>
+      </div>
+
+      <!-- Publication date -->
+      <div class="mt-2">
+      {#case object_field(@json, "publishedDate")}
           {#match nil}
           {#match published_date}
+          <div class="flex  items-center mt-2 gap-2">
+            <#Icon iconify="carbon:building" class="w-4 h-4 text-base-content/70" />
             <div class="flex items-baseline text-base-content/70 text-sm">
-              <!-- {l "Published:"} -->
-              {DatesTimes.format(published_date, format: :y)}
+              {l "Published in"}
+              {DatesTimes.format(published_date, format: :y)} {l "by"} {List.first(object_field(@json, "publishers"))}
             </div>
+          </div>
         {/case}
       </div>
+
+      <!-- Publisher -->
+      <!-- <div class="flex items-center mt-2 gap-2">
+        <div class="flex items-baseline text-base-content/70 text-sm">
+          <span :if={object_field(@json, "publishers")} class="">{List.first(object_field(@json, "publishers"))} {l("Publisher")}</span>
+        </div>
+      </div> -->
+
+       <!-- note -->
+      <article class={"mt-2 prose-sm prose max-w-prose text-base-content/90", "line-clamp-6": !@viewing_main_object}>
+        {rich(
+          object_field(@json, "description") || object_field(@json, "summary") ||
+            object_field(@json, "content")
+        )}
+      </article>
     </div>
   </div>
 
-  <article class={"m-2 prose-sm prose max-w-prose ", "line-clamp-4": !@viewing_main_object}>
-    {rich(
-      object_field(@json, "description") || object_field(@json, "summary") ||
-        object_field(@json, "content")
-    )}
-  </article>
+  
 </div>

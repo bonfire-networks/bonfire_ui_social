@@ -1,13 +1,13 @@
-<div class="bg-base-100 rounded-box shadow">
-  <div class="flex w-full">
+<div class="border rounded-box border-base-content/20">
+  <div class="flex w-full gap-3">
     {#case (!e(@activity, :files, nil) and object_field(@json, "url")) || object_field(@json, "id")}
       {#match audio}
         <!-- Only show the preview here if we have not attached media (hopefully with oembed) -->
-        <div class="relative basis-[50%]">
+        <div class="relative w-[160px] min-w-[160px] h-full">
           <img
             src={e(object_field(@json, "image") || object_field(@json, "icon"), "url", nil)}
             alt=""
-            class="w-full h-auto rounded-box object-cover"
+            class="w-full h-full rounded-box rounded-r-none object-cover"
           />
           <div class="absolute flex justify-center items-center inset-0">
             <div class="bg-gray-900/60 z-50 gap-4 px-3 py-2 rounded flex justify-center items-center place-content-center">
@@ -48,12 +48,12 @@
         </div>
       {#match _}
     {/case}
-    <div class="m-6" ">
-      <h2 class="font-semibold text-base-content">
+    <div class="py-2">
+      <div class="font-semibold text-base-content">
         {rich(object_field(debug(@json, "apjson"), "name") || l("Untitled audio"))}
-      </h2>
+      </div>
 
-      <p class="mt-2 text-sm">
+      <p class="mt-1 text-xs text-base-content/50">
         {#case object_field(@json, "duration")}
           {#match duration when is_number(duration)}
             {Bonfire.Common.Localise.Cldr.Unit.new(:second, duration)
@@ -64,14 +64,16 @@
             {duration}
         {/case}
       </p>
+
+       <div class="">
+        <article class={"text-sm mt-3 text-base-content/70 ", p_line_clamp_4: !@viewing_main_object}>
+          <!-- "p_line_clamp_6": @viewing_main_object -->
+          <!-- TODO: show more button for long descriptions like in NoteLive -->
+          {rich(object_field(@json, "content") || e(object_field(@json, "description"), "content", nil))}
+        </article>
+      </div>
     </div>
   </div>
 
-  <div class="p-4">
-    <article class={"prose-sm prose max-w-prose ", p_line_clamp_4: !@viewing_main_object}>
-      <!-- "p_line_clamp_6": @viewing_main_object -->
-      <!-- TODO: show more button for long descriptions like in NoteLive -->
-      {rich(object_field(@json, "content") || e(object_field(@json, "description"), "content", nil))}
-    </article>
-  </div>
+ 
 </div>

@@ -32,23 +32,24 @@
                         Your browser does not support the video tag.
                       </video>
                     {#elseif String.ends_with?(media_url, ".mp3")}
-                      <div class="relative max-w-[300px]">
-                        <LazyImage
-                          src={MediaLive.preview_img(@media)}
-                          alt=""
-                          class="w-full h-auto rounded-box object-cover"
-                        />
-
-                        <div class="absolute top-4 flex-row justify-center items-center">
-                          <h2 class="m-3 p-3 font-semibold text-base-content bg-base-100 bg-opacity-50 rounded-box shadow">
-                            {e(@media, :metadata, "name", nil)}
-                          </h2>
-
-                          <audio class={@video_css} controls autoplay>
-                            <source src={media_url} type="audio/mp3">
-                            Your browser does not support the audio tag.
-                          </audio>
+                      <div class="relative rounded rounded-b-none border border-b-0 border-base-content/20 max-w-[300px]">
+                        <div class="flex p-3 pb-0 mb-3 items-center gap-3">
+                          <div class="bg-base-200">
+                            <LazyImage
+                              src={MediaLive.preview_img(@media)}
+                              alt=""
+                              class="w-16 h-16 object-cover"
+                            />
+                          </div>
+                          <div class="text-sm text-left font-semibold text-base-content/70">
+                            {e(@media, :metadata, "name", "Unknown audio")}
+                          </div>
                         </div>
+                        <audio controls autoplay>
+                          <source src={media_url} type="audio/mp3">
+                          Your browser does not support the audio tag.
+                            <!-- <a href={media_url}> {l "Download audio"} </a> -->
+                        </audio>
                       </div>
                     {#else}
                       <div class="pt-4 text-center">
@@ -69,7 +70,7 @@
                   frameborder="0"
                   allow="accelerometer; encrypted-@media; gyroscope; picture-in-picture"
                   allowfullscreen="allowfullscreen"
-                  class={"", "w-full max-h-screen": String.starts_with?(@media.media_type, ["video"])}
+                  class={"", "max-h-screen h-[400px] w-[500px]": String.starts_with?(@media.media_type, ["video"])}
                   style={if String.starts_with?(@media.media_type, ["video"]), do: "", else: ""}
                 />
             {/case}
