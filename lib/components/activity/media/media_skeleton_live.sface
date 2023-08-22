@@ -16,7 +16,7 @@
       >
         {#for counter <- 1..num_medias}
           <article class={
-            "m-entry h-full w-full row-span-4 object-cover items-center justify-center max-w-sm bg-gray-300 rounded-lg  dark:bg-gray-700",
+            "m-entry w-full row-span-4 object-cover items-center justify-center bg-base-content/10 h-60 rounded-lg",
             "!row-span-2 !h-auto":
               num_medias ==
                 3 && counter != 1,
@@ -49,7 +49,7 @@
       >
         {#for counter <- 1..num_medias}
           <article class={
-            "m-entry h-full w-full row-span-4 object-cover items-center justify-center max-w-sm bg-gray-300 rounded-lg  dark:bg-gray-700",
+            "m-entry h-60 w-full row-span-4 object-cover items-center place-content-center flex justify-center  bg-base-content/10 rounded-lg",
             "!row-span-2 !h-auto":
               num_medias ==
                 3 && counter != 1,
@@ -57,7 +57,7 @@
               num_medias ==
                 4
           }>
-            <figure class="w-10 h-10" iconify="octicon:file-media-24">
+            <figure class="w-10 h-10 text-base-content/20"" iconify="octicon:file-media-24">
               <span class="sr-only">Loading...</span>
             </figure>
           </article>
@@ -75,19 +75,19 @@
     <!-- LINKS -->
     <div
       role="status"
-      class="animate-pulse space-y-8 md:space-y-0 md:space-x-8 md:flex md:items-center"
+      class="animate-pulse space-y-4 md:space-y-0 md:space-x-4 md:flex md:items-center"
     >
       {#for counter <- 1..@link_count}
-        <div class="flex items-center justify-center w-full h-48 bg-gray-300 rounded sm:w-96 dark:bg-gray-700">
-          <div iconify="octicon:file-media-24" class="w-10 h-10 text-gray-200 dark:text-gray-600" />
+        <div class="flex items-center justify-center h-[120px] w-[120px] min-w-[120px] bg-base-content/20 rounded">
+          <div iconify="octicon:file-media-24" class="w-10 h-10 text-base-content/10" />
         </div>
         <div class="w-full">
-          <div class="h-2.5 bg-gray-200 rounded-full dark:bg-gray-700 w-48 mb-4" />
-          <div class="h-2 bg-gray-200 rounded-full dark:bg-gray-700 max-w-[480px] mb-2.5" />
-          <div class="h-2 bg-gray-200 rounded-full dark:bg-gray-700 mb-2.5" />
-          <div class="h-2 bg-gray-200 rounded-full dark:bg-gray-700 max-w-[440px] mb-2.5" />
-          <div class="h-2 bg-gray-200 rounded-full dark:bg-gray-700 max-w-[460px] mb-2.5" />
-          <div class="h-2 bg-gray-200 rounded-full dark:bg-gray-700 max-w-[360px]" />
+          <div class="h-2.5 bg-base-content/10 rounded-full w-48 mb-4" />
+          <div class="h-2 bg-base-content/10 rounded-full max-w-[480px] mb-2.5" />
+          <div class="h-2 bg-base-content/10 rounded-full mb-2.5" />
+          <div class="h-2 bg-base-content/10 rounded-full max-w-[440px] mb-2.5" />
+          <div class="h-2 bg-base-content/10 rounded-full max-w-[460px] mb-2.5" />
+          <div class="h-2 bg-base-content/10 rounded-full max-w-[360px]" />
         </div>
       {/for}
       <span class="sr-only">Loading...</span>
