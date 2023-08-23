@@ -12,9 +12,9 @@
     "mb-3": @viewing_main_object
   }
   x-ref="note_container"
-  x-show={if @showing_within == :thread && !@viewing_main_object, do: "show_replies"}
   x-transition
 >
+  <!-- x-show={if @showing_within == :thread && !@viewing_main_object, do: "show_replies"} -->
   <!-- id={"note-#{@activity_inception}-#{id(@activity) || id(@object) || "no-id"}-#{e(assigns, :viewing_main_object, false)}"} -->
   {#case e(post_content(@object), :name, nil)}
     {#match name}

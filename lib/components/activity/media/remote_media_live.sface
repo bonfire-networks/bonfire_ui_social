@@ -32,8 +32,8 @@
                         Your browser does not support the video tag.
                       </video>
                     {#elseif String.ends_with?(media_url, [".mp3", ".m4a", ".oga", ".flac", ".aac", ".wav", ".caf"])}
-                      <div class="relative rounded rounded-b-none border border-b-0 border-base-content/20 max-w-[300px]">
-                        <div class="flex p-3 pb-0 mb-3 items-center gap-3">
+                      <div class="relative rounded rounded-b-none p-2 w-full">
+                        <div class="flex  items-center gap-3">
                           {#case MediaLive.preview_img(@media)}
                             {#match media_img}
                               <div :if={MediaLive.is_image?(media_img)} class="bg-base-200">

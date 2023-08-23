@@ -2,7 +2,6 @@
   id={@id}
   data-id="branch"
   x-data="{show_replies: true}"
-  :class="{'collapsed': !show_replies}"
   class={
     "reply thread-level-" <> to_string(@thread_level) <> " flex relative  w-full mx-auto ",
     "border-b border-base-content/20": @threaded_replies != [] && @thread_level == 1
@@ -23,48 +22,31 @@
 
     <!-- {#if is_list(@threaded_replies) and @threaded_replies != []} -->
     {#if @thread_mode != :flat}
-      <div
+      <!-- <div
         class="absolute left-[12px] cursor-pointer top-[24px] z-30"
         x-on:click="show_replies = ! show_replies"
       >
-        <!-- <div x-cloak x-show="show_replies">
-          <#Icon iconify="fluent:triangle-down-12-filled" class="w-3 h-3 text-base-content/50" />
-        </div> -->
         <div x-cloak x-show="!show_replies">
-          <!-- <span class="text-xs text-accent">[+]</span> -->
           <#Icon iconify="eva:expand-fill" class="w-4 h-4 text-primary" />
         </div>
-      </div>
-
-      <div x-show="show_replies" class="bg-base-content/10" x-transition>
-        <div
-          :if={@thread_level > 1}
-          x-cloak
-          x-show="show_replies"
-          x-on:click="show_replies = ! show_replies"
-          class="group z-10 left-0 top-0 group bottom-0 absolute cursor-pointer -left-2"
-        >
-          <i
-            :class="!show_replies ? 'bg-primary bottom-[0px]' : 'bottom-[0px]'"
-            class="w-2 absolute top-0 border-dashed bottom-0 z-10 group-hover:bg-primary border-base-content/10 bottom-[0px]"
-          />
-        </div>
-
-        <!-- <div class="-mt-[26px]  z-[50] ml-10" :if={is_list(@threaded_replies) and length(@threaded_replies) > 0}>
-        <button class="relative flex items-center gap-2 text-sm normal-case btn btn-ghost btn-info btn-xs">
-          <#Icon iconify="ic:outline-arrow-drop-down" class="w-5 h-5" />
-          <span>{length(@threaded_replies)} {l "reply"}</span>
-        </button>
       </div> -->
 
-        <div class={"replies replies-level-" <> to_string(@thread_level + 1) <> " ml-2"}>
+      <div x-show="show_replies" data-id="show_replies" class="" x-transition>
+        <div 
+          :if={@threaded_replies != []}
+          class="relative">
+          <div class="group absolute px-2 left-8 cursor-pointer h-4 -top-4 bottom-0 z-30" x-on:click="show_replies = ! show_replies">
+            <div class="absolute group-hover:bg-primary left-2 cursor-pointer inset-0 w-[2px] bottom-0 bg-base-content/20 z-30"></div>
+          </div>
+        <div 
+          class={
+            "replies replies-level-" <> to_string(@thread_level + 1) <> " ml-2 my-4 " }>
           {#for {{subreply, sub_child_replies}, index} <- Enum.with_index(@threaded_replies |> debug("idddd"), 1)}
             <div class="relative">
               <!-- <div 
                 :if={index == length(@threaded_replies)}
                 class="w-3 bg-base-100 absolute left-[-10px] top-[10px] z-30 bottom-0" /> -->
               <!-- <div class="z-40 absolute border-base-content/20 w-6 h-6 border-0 border-b-2 border-l-2 rounded-bl-lg left-[-10px] top-[-6px]" /> -->
-              <!-- <div :if={index < length(@threaded_replies)} /> -->
               <Dynamic.LiveComponent
                 module={Bonfire.UI.Social.ThreadBranchLive}
                 id={id(subreply)}
@@ -100,6 +82,15 @@
             </div>
           {/if}
         </div>
+        </div>
+      </div>
+
+      <div 
+        x-on:click="show_replies = ! show_replies"  
+        x-show="!show_replies" 
+        x-cloak 
+        class="p-2 bg-base-content/5 flex items-center place-content-center">
+        <span class="btn btn-xs rounded-full !border !border-base-content/20 normal-case btn-ghost">{l("Show replies")}</span>
       </div>
     {/if}
   </div>

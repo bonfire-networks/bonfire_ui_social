@@ -7,17 +7,17 @@
   <div />
 {#else}
   <div
-    x-show={if @showing_within == :thread and !@viewing_main_object, do: "show_replies"}
     x-transition
     class={
       "",
-      "thread_actions flex items-center": @showing_within == :thread,
+      "thread_actions mt-3 flex items-center": @showing_within == :thread,
       "feed_actions items-center flex": @viewing_main_object != true,
       "mt-3 gap-4 flex-col md:flex-row":
         e(@showing_within, :feed) == :feed || @showing_within == :notifications,
       "mt-1": @showing_within == :widget
     }
   >
+    <!-- x-show={if @showing_within == :thread and !@viewing_main_object, do: "show_replies"} -->
     <!-- :class={if @viewing_main_object != true, do: "activity_active ? '' : '[@media(any-hover:hover)]:hidden'"} -->
 
     <!-- <div
