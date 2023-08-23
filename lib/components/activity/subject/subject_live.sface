@@ -150,7 +150,9 @@
                 {e(@profile, :name, "Anonymous")}
               </LiveRedirect>
 
-              <div class="gap-0 flex items-center">
+              <div 
+                :if={!@__context__[:ui_compact]}
+                class="gap-0 flex items-center">
                 <Dynamic.Component
                   :if={module_enabled?(Bonfire.Boundaries.Web.BoundaryIconStatelessLive) and
                     @object_type not in [Bonfire.Data.Social.Message]}
@@ -175,7 +177,7 @@
               </div>
 
             </div>
-            <div class="flex items-center gap-1">
+            <div class="flex items-center gap-1 w-full">
               {#if !@__context__[:ui_compact]}
                 <LiveRedirect
                   :if={e(@character, :username, nil)}
@@ -189,6 +191,7 @@
                   @{e(@character, :username, "")}
                 </LiveRedirect>
               {#else}
+              <div class="flex items-center w-full justify-between">
                 <LiveRedirect
                   opts={"data-id": "subject_name", "aria-label": l("%{name}'s profile", name: e(@profile, :name, ""))}
                   class="text-sm font-semibold link link-hover text-base-content/90"
@@ -196,6 +199,31 @@
                 >
                   {e(@profile, :name, "Anonymous")}
                 </LiveRedirect>
+                <div class="gap-0 flex items-center">
+                <Dynamic.Component
+                  :if={module_enabled?(Bonfire.Boundaries.Web.BoundaryIconStatelessLive) and
+                    @object_type not in [Bonfire.Data.Social.Message]}
+                  module={Bonfire.Boundaries.Web.BoundaryIconStatelessLive}
+                  object_id={@object_id}
+                  object_type={@object_type}
+                  parent_id={"boundary_#{@activity_id || @object_id}"}
+                  with_icon
+                  object_boundary={@object_boundary}
+                />
+                <Bonfire.UI.Social.Activity.LinkToActivityLive
+                  :if={@showing_within not in [:smart_input]}
+                  object_type={@object_type}
+                  permalink={@permalink}
+                  thread_id={@thread_id}
+                  showing_within={@showing_within}
+                >
+                  <span class="text-xs font-normal no-underline subject_timestamp text-base-content/60">
+                    {@date_ago || DatesTimes.date_from_now(@activity_id) || DatesTimes.date_from_now(@object_id)}
+                  </span>
+                </Bonfire.UI.Social.Activity.LinkToActivityLive>
+              </div>
+
+              </div>
               {/if}
 
               <!-- <span class="text-xs text-base-content/70">·</span> -->
