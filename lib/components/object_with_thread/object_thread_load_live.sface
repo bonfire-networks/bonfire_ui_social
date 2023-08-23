@@ -8,4 +8,5 @@
   current_url={@current_url}
   replies={@replies}
   participants={@participants}
+  showing_within={@showing_within}
 />

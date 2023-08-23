@@ -196,7 +196,10 @@ defmodule Bonfire.UI.Social.ActivityLive do
     # |> debug("object_type")
     object_type_readable = Types.object_type_display(object_type)
 
-    replied = e(activity, :replied, nil) || e(object, :replied, nil)
+    replied =
+      e(activity, :replied, nil) ||
+        e(object, :replied, nil)
+        |> debug("areplied")
 
     thread =
       e(assigns, :thread_object, nil) || e(replied, :thread, nil) || e(replied, :thread_id, nil)
@@ -1038,8 +1041,10 @@ defmodule Bonfire.UI.Social.ActivityLive do
             %{
               id: reply_to_id,
               created: %{
-                character: %{id: _} = subject_character,
-                profile: %{id: _} = subject_profile
+                creator: %{
+                  character: %{id: _} = subject_character,
+                  profile: %{id: _} = subject_profile
+                }
               }
             } = reply_to
         },
@@ -1173,12 +1178,13 @@ defmodule Bonfire.UI.Social.ActivityLive do
         %{id: id, reply_to: %Ecto.Association.NotLoaded{}},
         _,
         _,
-        _,
+        viewing_main_object,
         _,
         _,
         _,
         _
-      ) do
+      )
+      when viewing_main_object != true do
     case Bonfire.Common.Cache.get("has_reply_to:#{id}") do
       {:ok, true} ->
         debug("reply_to was not loaded")

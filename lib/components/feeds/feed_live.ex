@@ -76,11 +76,11 @@ defmodule Bonfire.UI.Social.FeedLive do
   end
 
   # consolidate different kinds of lists/feeds into Activity
-  defp get_activity(%{activity: %{} = activity, edge: %{} = edge}),
+  defp get_activity(%{activity: %{id: _} = activity, edge: %{id: _} = edge}),
     do: merge_structs_as_map(activity, edge)
 
   defp get_activity(%{activity: %{id: _} = activity}), do: activity
-  defp get_activity(%{edge: %{} = activity}), do: activity
+  defp get_activity(%{edge: %{id: _} = activity}), do: activity
   defp get_activity(activity), do: activity
 
   def tabs(current_user, object_type) do

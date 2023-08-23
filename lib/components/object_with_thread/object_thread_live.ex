@@ -33,7 +33,11 @@ defmodule Bonfire.UI.Social.ObjectThreadLive do
 
     assigns
     |> assign_new(:main_object_component_id, fn ->
-      Bonfire.UI.Social.ActivityLive.component_id(id, "main_object")
+      main_object_id = Bonfire.UI.Social.ActivityLive.component_id(id, "main_object")
+
+      if assigns[:showing_within] == :preview,
+        do: "preview_#{main_object_id}",
+        else: main_object_id
     end)
     |> render_sface()
   end
