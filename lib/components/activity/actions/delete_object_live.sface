@@ -27,11 +27,7 @@ TODO: use preloaded boundaries for can? when available
 
   <:open_btn>
     <div role="delete" title={l("Delete this object")} class={@open_btn_class}>
-      <#Icon
-        :if={!@hide_icon}
-        solid="Trash"
-        class={e(@icon_class, "w-4 h-4 shrink-0")}
-      />
+      <#Icon :if={!@hide_icon} solid="Trash" class={e(@icon_class, "w-4 h-4 shrink-0")} />
       <span :if={!@hide_text} class="truncate ellipsis">
         {l("Delete")} {e(@object_type_readable, l("object"))}
       </span>

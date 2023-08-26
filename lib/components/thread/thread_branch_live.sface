@@ -32,64 +32,64 @@
       </div> -->
 
       <div x-show="show_replies" data-id="show_replies" class="" x-transition>
-        <div 
-          :if={@threaded_replies != []}
-          class="relative">
-          <div class="group absolute px-2 left-8 cursor-pointer h-4 -top-4 bottom-0 z-30" x-on:click="show_replies = ! show_replies">
-            <div class="absolute group-hover:bg-primary left-2 cursor-pointer inset-0 w-[2px] bottom-0 bg-base-content/20 z-30"></div>
+        <div :if={@threaded_replies != []} class="relative">
+          <div
+            class="group absolute px-2 left-8 cursor-pointer h-4 -top-4 bottom-0 z-30"
+            x-on:click="show_replies = ! show_replies"
+          >
+            <div class="absolute group-hover:bg-primary left-2 cursor-pointer inset-0 w-[2px] bottom-0 bg-base-content/20 z-30" />
           </div>
-        <div 
-          class={
-            "replies replies-level-" <> to_string(@thread_level + 1) <> " ml-2 my-4 " }>
-          {#for {{subreply, sub_child_replies}, index} <- Enum.with_index(@threaded_replies |> debug("idddd"), 1)}
-            <div class="relative">
-              <!-- <div 
+          <div class={"replies replies-level-" <> to_string(@thread_level + 1) <> " ml-2 my-4 "}>
+            {#for {{subreply, sub_child_replies}, index} <- Enum.with_index(@threaded_replies |> debug("idddd"), 1)}
+              <div class="relative">
+                <!-- <div 
                 :if={index == length(@threaded_replies)}
                 class="w-3 bg-base-100 absolute left-[-10px] top-[10px] z-30 bottom-0" /> -->
-              <!-- <div class="z-40 absolute border-base-content/20 w-6 h-6 border-0 border-b-2 border-l-2 rounded-bl-lg left-[-10px] top-[-6px]" /> -->
-              <Dynamic.LiveComponent
-                module={Bonfire.UI.Social.ThreadBranchLive}
-                id={id(subreply)}
-                comment={subreply}
-                thread_id={@thread_id}
-                thread_object={@thread_object}
-                feed_id={@feed_id}
-                threaded_replies={sub_child_replies}
-                thread_level={@thread_level + 1}
-                showing_within={@showing_within}
-                current_url={@current_url || current_url(@__context__)}
-              />
-            </div>
-          {/for}
-
-          {#if (e(@comment, :direct_replies_count, nil) || e(@comment, :replied, :direct_replies_count, 0)) >
-              length(@threaded_replies) ||
-              @thread_level + 1 >= LiveHandler.max_depth(@__context__[:ui_compact])}
-            <div class="flex items-center -mx-2 -mt-1">
-              <div
-                phx-click="Bonfire.Social.Threads:load_replies"
-                phx-value-id={e(@comment, :id, nil)}
-                phx-value-level={@thread_level + 1}
-                phx-target={@myself}
-                class="flex items-center visible px-2 py-1 ml-4 rounded cursor-pointer group dark:bg-neutral-400 hover:bg-neutral hover:bg-opacity-30 click:invisible"
-              >
-                <span class="text-xs font-semibold text-primary-content-800">Load {case (e(@comment, :direct_replies_count, nil) || e(@comment, :replied, :direct_replies_count, 0)) -
-                         length(@threaded_replies) do
-                    0 -> ""
-                    num -> num
-                  end} more replies</span>
+                <!-- <div class="z-40 absolute border-base-content/20 w-6 h-6 border-0 border-b-2 border-l-2 rounded-bl-lg left-[-10px] top-[-6px]" /> -->
+                <Dynamic.LiveComponent
+                  module={Bonfire.UI.Social.ThreadBranchLive}
+                  id={id(subreply)}
+                  comment={subreply}
+                  thread_id={@thread_id}
+                  thread_object={@thread_object}
+                  feed_id={@feed_id}
+                  threaded_replies={sub_child_replies}
+                  thread_level={@thread_level + 1}
+                  showing_within={@showing_within}
+                  current_url={@current_url || current_url(@__context__)}
+                />
               </div>
-            </div>
-          {/if}
-        </div>
+            {/for}
+
+            {#if (e(@comment, :direct_replies_count, nil) || e(@comment, :replied, :direct_replies_count, 0)) >
+                length(@threaded_replies) ||
+                @thread_level + 1 >= LiveHandler.max_depth(@__context__[:ui_compact])}
+              <div class="flex items-center -mx-2 -mt-1">
+                <div
+                  phx-click="Bonfire.Social.Threads:load_replies"
+                  phx-value-id={e(@comment, :id, nil)}
+                  phx-value-level={@thread_level + 1}
+                  phx-target={@myself}
+                  class="flex items-center visible px-2 py-1 ml-4 rounded cursor-pointer group dark:bg-neutral-400 hover:bg-neutral hover:bg-opacity-30 click:invisible"
+                >
+                  <span class="text-xs font-semibold text-primary-content-800">Load {case (e(@comment, :direct_replies_count, nil) || e(@comment, :replied, :direct_replies_count, 0)) -
+                           length(@threaded_replies) do
+                      0 -> ""
+                      num -> num
+                    end} more replies</span>
+                </div>
+              </div>
+            {/if}
+          </div>
         </div>
       </div>
 
-      <div 
-        x-on:click="show_replies = ! show_replies"  
-        x-show="!show_replies" 
-        x-cloak 
-        class="p-2 bg-base-content/5 flex items-center place-content-center">
+      <div
+        x-on:click="show_replies = ! show_replies"
+        x-show="!show_replies"
+        x-cloak
+        class="p-2 bg-base-content/5 flex items-center place-content-center"
+      >
         <span class="btn btn-xs rounded-full !border !border-base-content/20 normal-case btn-ghost">{l("Show replies")}</span>
       </div>
     {/if}

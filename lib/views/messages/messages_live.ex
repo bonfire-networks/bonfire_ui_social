@@ -20,39 +20,40 @@ defmodule Bonfire.UI.Social.MessagesLive do
   def mount(params, _session, socket) do
     feed_id = :inbox
     # feed_id = Bonfire.Social.Feeds.my_feed_id(feed_id, socket)
-    {:ok,
-     socket
-     |> assign(
-       showing_within: :messages,
-       #  smart_input_opts: %{prompt: l("Message"), icon: "mdi:inbox"},
-       #  smart_input_opts: [inline_only: true],
-       # to_boundaries: [{"message", "Message"}],
-       page_title: l("Messages"),
-       page: "messages",
-       page_header_icon: "ri:mail-line",
-       feed_id: feed_id,
-       activity: nil,
-       object: nil,
-       #  reply_to_id: nil,
-       #  thread_id: nil,
-       thread_mode: maybe_to_atom(e(params, "mode", nil)) || :flat,
-       feedback_title: l("No messages"),
-       feedback_message: l("Select a thread or start a new one..."),
-       page_header_aside: [
-         {Bonfire.UI.Social.HeaderAsideDmLive, [feed_id: feed_id]}
-       ]
-       #  sidebar_widgets: [
-       #    users: [
-       #      secondary: [
-       #        {Bonfire.Tag.Web.WidgetTagsLive, []}
-       #      ]
-       #    ]
-       #  ]
+    {
+      :ok,
+      socket
+      |> assign(
+        showing_within: :messages,
+        #  smart_input_opts: %{prompt: l("Message"), icon: "mdi:inbox"},
+        #  smart_input_opts: [inline_only: true],
+        # to_boundaries: [{"message", "Message"}],
+        page_title: l("Messages"),
+        page: "messages",
+        page_header_icon: "ri:mail-line",
+        feed_id: feed_id,
+        activity: nil,
+        object: nil,
+        #  reply_to_id: nil,
+        #  thread_id: nil,
+        thread_mode: maybe_to_atom(e(params, "mode", nil)) || :flat,
+        feedback_title: l("No messages"),
+        feedback_message: l("Select a thread or start a new one..."),
+        page_header_aside: [
+          {Bonfire.UI.Social.HeaderAsideDmLive, [feed_id: feed_id]}
+        ]
+        #  sidebar_widgets: [
+        #    users: [
+        #      secondary: [
+        #        {Bonfire.Tag.Web.WidgetTagsLive, []}
+        #      ]
+        #    ]
+        #  ]
 
-       #  nav_items: []
-     )
-    #  |> assign_global(ui_compact: true)
-  }
+        #  nav_items: []
+      )
+      #  |> assign_global(ui_compact: true)
+    }
   end
 
   def do_handle_params(%{"username" => username} = _params, _url, socket) do
