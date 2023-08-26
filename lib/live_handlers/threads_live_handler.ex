@@ -50,12 +50,19 @@ defmodule Bonfire.Social.Threads.LiveHandler do
 
   def live_more(thread_id, paginate, socket) do
     debug(paginate, "paginate thread")
-    current_user = current_user(socket)
+
+    opts = [
+      current_user: current_user(socket),
+      paginate: paginate,
+      thread_mode: e(socket.assigns, :thread_mode, nil),
+      sort_by: e(socket.assigns, :sort_by, nil),
+      sort_order: e(socket.assigns, :sort_order, nil)
+    ]
 
     with %{edges: replies, page_info: page_info} <-
-           Bonfire.Social.Threads.list_replies(thread_id,
-             current_user: current_user,
-             paginate: paginate
+           Bonfire.Social.Threads.list_replies(
+             thread_id,
+             opts
            ) do
       replies =
         (e(socket.assigns, :replies, []) ++ replies)
@@ -66,10 +73,9 @@ defmodule Bonfire.Social.Threads.LiveHandler do
       threaded_replies =
         if is_list(replies) and length(replies) > 0,
           do:
-            Bonfire.Social.Threads.arrange_replies_tree(replies,
-              thread_mode: e(socket.assigns, :thread_mode, nil),
-              sort_by: e(socket.assigns, :sort_by, nil),
-              sort_order: e(socket.assigns, :sort_order, nil)
+            Bonfire.Social.Threads.arrange_replies_tree(
+              replies,
+              opts
             ),
           else: []
 
@@ -96,14 +102,20 @@ defmodule Bonfire.Social.Threads.LiveHandler do
   def handle_event("load_replies", %{"id" => id, "level" => level}, socket) do
     debug("load extra replies")
 
-    thread_mode = e(socket.assigns, :thread_mode, nil)
+    opts = [
+      current_user: current_user(socket),
+      max_depth: level + 3,
+      thread_mode: e(socket.assigns, :thread_mode, nil),
+      sort_by: e(socket.assigns, :sort_by, nil),
+      sort_order: e(socket.assigns, :sort_order, nil)
+    ]
 
     {level, _} = Integer.parse(level)
 
     %{edges: replies} =
-      Bonfire.Social.Threads.list_replies(id, socket: socket, max_depth: level + 3)
+      Bonfire.Social.Threads.list_replies(id, opts)
 
-    if thread_mode == :flat and is_list(replies) and
+    if opts[:thread_mode] == :flat and is_list(replies) and
          e(socket.assigns, :reply_count, 0) > 0 do
       {:noreply,
        insert_comments(
@@ -115,10 +127,9 @@ defmodule Bonfire.Social.Threads.LiveHandler do
        insert_comments(
          socket,
          {:threaded_replies,
-          Bonfire.Social.Threads.arrange_replies_tree(replies,
-            thread_mode: thread_mode,
-            sort_by: e(socket.assigns, :sort_by, nil),
-            sort_order: e(socket.assigns, :sort_order, nil)
+          Bonfire.Social.Threads.arrange_replies_tree(
+            replies,
+            opts
           ) || []}
        )}
     end
@@ -439,7 +450,6 @@ defmodule Bonfire.Social.Threads.LiveHandler do
     if thread_id do
       debug("loading by thread_id")
       # debug(assigns)
-      current_user = current_user(socket)
 
       thread_mode = e(socket.assigns, :thread_mode, nil)
       sort_by = e(socket.assigns, :sort_by, nil)
@@ -447,7 +457,7 @@ defmodule Bonfire.Social.Threads.LiveHandler do
 
       with %{edges: replies, page_info: page_info} <-
              Threads.list_replies(thread_id,
-               current_user: current_user,
+               current_user: current_user(socket),
                after: e(socket.assigns, :after, nil),
                max_depth: max_depth(socket.assigns[:__context__]),
                thread_mode: thread_mode,
