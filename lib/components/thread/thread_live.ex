@@ -31,6 +31,7 @@ defmodule Bonfire.UI.Social.ThreadLive do
   prop thread_mode, :any, default: nil
   prop sort_by, :any, default: nil
   prop sort_order, :any, default: false
+
   prop showing_within, :atom, default: :thread
   prop loading, :boolean, default: false
 
@@ -237,6 +238,14 @@ defmodule Bonfire.UI.Social.ThreadLive do
 
     {:ok,
      socket
+     |> update(:thread_mode, fn
+       nil -> Settings.get([Bonfire.UI.Social.ThreadLive, :thread_mode], nil, @__context__)
+       manual -> manual
+     end)
+     |> update(:sort_by, fn
+       nil -> Settings.get([Bonfire.UI.Social.ThreadLive, :sort_by], nil, @__context__)
+       manual -> manual
+     end)
      |> LiveHandler.thread_init()
      |> LiveHandler.load_thread_maybe_async(show_loading?)}
   end
