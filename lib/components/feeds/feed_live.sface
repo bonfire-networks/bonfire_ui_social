@@ -126,7 +126,7 @@
       live_handler={Bonfire.Social.Feeds}
       page_info={@page_info}
       target={@myself}
-      infinite_load
+      infinite_scroll={Settings.get([:ui, :infinite_scroll], :preload, @__context__)}
       hide_load_more={@hide_load_more}
       entry_count={@feed_count}
     >
