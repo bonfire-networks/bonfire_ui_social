@@ -29,8 +29,6 @@
 {#else}
   <div class="flex items-center">
     <Bonfire.UI.Social.Activity.LinkToActivityLive
-      object={@object}
-      activity={@activity}
       object_type={@object_type}
       permalink={@permalink}
       thread_id={@thread_id}

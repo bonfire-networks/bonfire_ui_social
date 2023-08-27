@@ -4,20 +4,17 @@
     context={@published_in}
   />
 
-  <Bonfire.UI.Social.Activity.InstanceIconLive peered={e(@activity, :peered, nil)} />
+  <Bonfire.UI.Social.Activity.InstanceIconLive peered={@peered} />
 
   <Bonfire.UI.Social.Activity.LinkToActivityLive
     :if={@showing_within not in [:smart_input]}
-    object={@object}
-    activity={@activity}
     object_type={@object_type}
-    permalink={@permalink || path(@object) || path(e(@activity, :object, nil))}
+    permalink={@permalink}
     thread_id={@thread_id}
     showing_within={@showing_within}
   >
     <span class="subject_timestamp text-[13px] font-normal no-underline truncate ellipsis text-base-content/70">
-      {@date_ago || DatesTimes.date_from_now(@activity) || DatesTimes.date_from_now(@object) ||
-        DatesTimes.date_from_now(e(@activity, :object, nil))}
+      {@date_ago || DatesTimes.date_from_now(@activity_id) || DatesTimes.date_from_now(@object_id)}
     </span>
   </Bonfire.UI.Social.Activity.LinkToActivityLive>
 
@@ -25,9 +22,9 @@
     :if={module_enabled?(Bonfire.Boundaries.Web.BoundaryIconStatelessLive) and
       @object_type not in [Bonfire.Data.Social.Message]}
     module={Bonfire.Boundaries.Web.BoundaryIconStatelessLive}
-    object_id={id(@object)}
+    object_id={@object_id}
     object_type={Types.object_type(@published_in) || @object_type}
-    parent_id={"boundary_#{id(@activity || @object)}"}
+    parent_id={"boundary_#{@activity_id || @object_id}"}
     with_icon
     object_boundary={@object_boundary}
   />

@@ -4,6 +4,7 @@ defmodule Bonfire.UI.Social.Activity.SubjectLive do
 
   prop activity_id, :any, default: nil
   prop object_id, :any, default: nil
+  prop subject_peered, :any, default: nil
   prop peered, :any, default: nil
   prop reply_to_id, :any, default: nil
   prop profile, :any, default: nil

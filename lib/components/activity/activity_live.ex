@@ -520,7 +520,8 @@ defmodule Bonfire.UI.Social.ActivityLive do
                 cw={@cw}
                 published_in={@published_in}
                 reply_to_id={e(@activity, :replied, :reply_to_id, nil)}
-                peered={e(@activity, :peered, nil) || e(@object, :peered, nil)}
+                subject_peered={e(@activity, :subject, :peered, nil)}
+                peered={e(@object, :peered, nil) || e(@activity, :subject, :peered, nil) || e(@activity, :peered, nil)}
                 thread_title={e(component_assigns, :thread_title, @thread_title)}
                 subject_user={@subject_user}
               />

@@ -162,9 +162,9 @@
 
             <!-- TODO: instead of switching to infinity, switch 1 level up from current limit, eg. from day to week -->
             <Bonfire.UI.Common.LoadMoreLive
-              :if={!@sort_by and @previous_page_info}
+              :if={!@sort_by and (@previous_page_info || @page_info)}
               live_handler={Bonfire.Social.Feeds}
-              page_info={@previous_page_info}
+              page_info={@previous_page_info || @page_info}
               target={@myself}
               label={l("Show older activities")}
               opts={%{"phx-value-time_limit" => 0}}
