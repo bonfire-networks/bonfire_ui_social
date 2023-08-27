@@ -136,15 +136,20 @@ defmodule Bonfire.UI.Social.ActivityLive do
       thread_title:
         e(assigns, :thread_title, nil) || e(socket.assigns, :thread_title, nil) ||
           e(socket.assigns[:activity], :replied, :thread, :named, :name, nil),
+      showing_within:
+        case e(assigns, :showing_within, nil) do
+          nil -> e(socket.assigns, :showing_within, nil)
+          existing -> existing
+        end,
       thread_mode:
         case e(assigns, :thread_mode, nil) do
           nil -> e(socket.assigns, :thread_mode, nil)
-          thread_mode -> thread_mode
+          existing -> existing
         end,
       hide_actions:
         case e(assigns, :hide_actions, nil) do
           nil -> e(socket.assigns, :hide_actions, nil)
-          hide_actions -> hide_actions
+          existing -> existing
         end
     )
   end

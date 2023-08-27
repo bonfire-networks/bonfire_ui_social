@@ -102,6 +102,8 @@ defmodule Bonfire.Social.Threads.LiveHandler do
   def handle_event("load_replies", %{"id" => id, "level" => level}, socket) do
     debug("load extra replies")
 
+    {level, _} = Integer.parse(level)
+
     opts = [
       current_user: current_user(socket),
       max_depth: level + 3,
@@ -109,8 +111,6 @@ defmodule Bonfire.Social.Threads.LiveHandler do
       sort_by: e(socket.assigns, :sort_by, nil),
       sort_order: e(socket.assigns, :sort_order, nil)
     ]
-
-    {level, _} = Integer.parse(level)
 
     %{edges: replies} =
       Bonfire.Social.Threads.list_replies(id, opts)
