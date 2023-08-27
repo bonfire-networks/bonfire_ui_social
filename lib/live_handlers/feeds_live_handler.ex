@@ -373,7 +373,7 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
     do: paginate_fetch_assign_default(opts, socket)
 
   defp paginate_fetch_assign_feed(:likes, opts, socket) do
-    # TODO
+    warn("TODO")
     {:noreply, socket}
   end
 
@@ -387,7 +387,7 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
        hide_activities: opts[:hide_activities],
        feed_count: Enum.count(e(feed, :edges, [])),
        time_limit: opts[:time_limit],
-       previous_page_info: e(socket.assigns, :page_info, nil),
+       previous_page_info: e(socket.assigns, :page_info, false),
        page_info: e(feed, :page_info, [])
      )
      |> insert_feed(e(feed, :edges, []), opts)}
@@ -400,7 +400,7 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
 
     socket
     |> assign_generic(
-      previous_page_info: e(socket.assigns, :page_info, nil),
+      previous_page_info: e(socket.assigns, :page_info, false),
       page_info: assigns[:page_info],
       loading: false
     )
@@ -1288,7 +1288,8 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
       back: "/@#{e(user, :character, :username, nil)}",
       selected_tab: tab,
       feed: requests ++ e(followers, :edges, []),
-      page_info: e(followers, :page_info, [])
+      page_info: e(followers, :page_info, []),
+      previous_page_info: e(socket.assigns, :page_info, false)
     ]
   end
 
@@ -1313,7 +1314,8 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
       back: "/@#{e(user, :character, :username, nil)}",
       selected_tab: tab,
       feed: requested ++ e(followed, :edges, []),
-      page_info: e(followed, :page_info, [])
+      page_info: e(followed, :page_info, []),
+      previous_page_info: e(socket.assigns, :page_info, false)
     ]
   end
 
@@ -1398,7 +1400,7 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
     {e(feed, :edges, []),
      new_assigns ++
        [
-         previous_page_info: previous_page_info,
+         previous_page_info: previous_page_info || false,
          page_info: e(feed, :page_info, [])
        ]}
   end
