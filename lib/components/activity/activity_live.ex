@@ -1139,7 +1139,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
 
   def component_maybe_in_reply_to(
         verb,
-        %{replied: %{} = replied},
+        %{replied: %{id: _} = replied},
         showing_within,
         activity_inception,
         viewing_main_object,
@@ -1177,15 +1177,15 @@ defmodule Bonfire.UI.Social.ActivityLive do
   def component_maybe_in_reply_to(
         _,
         %{id: id, reply_to: %Ecto.Association.NotLoaded{}},
-        _,
+        showing_within,
         _,
         viewing_main_object,
-        _,
+        thread_mode,
         _,
         _,
         _
       )
-      when viewing_main_object != true do
+      when viewing_main_object != true and (showing_within != :thread or thread_mode == :flat) do
     case Bonfire.Common.Cache.get("has_reply_to:#{id}") do
       {:ok, true} ->
         debug("reply_to was not loaded")
