@@ -23,8 +23,7 @@ defmodule Bonfire.Social.Flags.LiveHandler do
 
     subject =
       if attrs["subject"] &&
-           (Bonfire.Me.Users.is_admin?(current_user) or
-              Bonfire.Boundaries.can?(current_user, :mediate, attrs["context"])),
+           Bonfire.Boundaries.can?(socket.assigns[:__context__], :mediate, attrs["context"]),
          do:
            Bonfire.Me.Users.by_id(attrs["subject"], current_user: current_user) |> ok_unwrap(nil),
          else: current_user
@@ -43,8 +42,7 @@ defmodule Bonfire.Social.Flags.LiveHandler do
 
     subject =
       if attrs["subject"] &&
-           (Bonfire.Me.Users.is_admin?(current_user) or
-              Bonfire.Boundaries.can?(current_user, :mediate, context)),
+           Bonfire.Boundaries.can?(socket.assigns[:__context__], :mediate, context),
          do:
            Bonfire.Me.Users.by_id(attrs["subject"], current_user: current_user) |> ok_unwrap(nil),
          else: current_user

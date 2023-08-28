@@ -7,6 +7,7 @@
     current_user={e(@current_user, nil)}
     feed={@feed}
     page_info={@page_info}
+    previous_page_info={false}
     showing_within={:flags}
     loading={@loading}
     hide_tabs

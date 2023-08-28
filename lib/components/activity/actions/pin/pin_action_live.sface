@@ -25,7 +25,7 @@
         phx-value-id={ulid(@object)}
         phx-value-scope={:instance}
         phx-value-component={__MODULE__} 
-        :if={@object && Bonfire.Me.Users.is_admin?(@current_user) || Bonfire.Boundaries.can?(@__context__, :pin, :instance)} class="flex items-center gap-2 p-3 border rounded cursor-pointer hover:bg-base-content/5 place-content-center border-base-content/30">
+        :if={@object && Bonfire.Boundaries.can?(@__context__, :pin, :instance)} class="flex items-center gap-2 p-3 border rounded cursor-pointer hover:bg-base-content/5 place-content-center border-base-content/30">
         <#Icon iconify="material-symbols:camping-rounded" class="w-5 h-5 text-base-content/70" />
         <span class="font-medium tracking-wider capitalize">{l "Istance"}</span>
       </span>

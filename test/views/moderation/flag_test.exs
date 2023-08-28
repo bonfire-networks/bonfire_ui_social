@@ -3,6 +3,7 @@ defmodule Bonfire.Social.Moderation.FlagTest do
   alias Bonfire.Social.Fake
   alias Bonfire.Social.Posts
   alias Bonfire.Social.Follows
+  alias Bonfire.Me.Accounts
   alias Bonfire.Me.Users
   alias Bonfire.Files.Test
   import Bonfire.Common.Enums
@@ -44,9 +45,8 @@ defmodule Bonfire.Social.Moderation.FlagTest do
     alice = fake_user!(account)
     admin = fake_admin!()
 
-    refute Users.is_admin?(me)
-    refute Users.is_admin?(alice)
-    assert Users.is_admin?(admin)
+    refute Accounts.is_admin?(account)
+    assert Accounts.is_admin?(admin)
 
     # alice creates a post
     content = "here is an epic html post"
@@ -329,7 +329,7 @@ defmodule Bonfire.Social.Moderation.FlagTest do
   end
 
   # can add once we implement custom roles
-  # NOTE: we do have `Bonfire.Boundaries.can?(@current_user, :mediate, :instance)`
+  # NOTE: we do have `Bonfire.Boundaries.can?(context, :mediate, :instance)`
   # test "If I have the right instance permission, as a user I want to see and act upon the flags feed in admin settings" do
 
   # end

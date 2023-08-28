@@ -29,8 +29,7 @@ defmodule Bonfire.UI.Social.Activity.DeleteObjectLive do
     current_user_id(context) ==
       (@creator_id || e(object, :created, :creator_id, nil) ||
          e(object, :created, :creator, :id, nil)) or
-      ((Bonfire.Me.Users.is_admin?(current_user(context)) ||
-          Bonfire.Boundaries.can?(context, :delete, object_boundary || object) ||
+      ((Bonfire.Boundaries.can?(context, :delete, object_boundary || object) ||
           Bonfire.Boundaries.can?(context, :delete, :instance)) &&
          Types.object_type(object) != Bonfire.Data.Identity.User)
   end

@@ -83,15 +83,15 @@ defmodule Bonfire.UI.Social.FeedLive do
   defp get_activity(%{edge: %{id: _} = activity}), do: activity
   defp get_activity(activity), do: activity
 
-  def tabs(current_user, object_type) do
+  def tabs(context) do
     # disabled hiding of remote tab because it is also useful to find remote activities that were looked up manually
     # case ActivityPub.Config.federating?() do
     #   true ->
-    if not is_nil(current_user) do
-      if object_type in ["discussions", "posts"],
+    if current_user_id(context) do
+      if context[:current_params]["object_type"] in ["discussions", "posts"],
         do: [nil: l("My feed"), local: l("Local"), fediverse: l("Remote")],
         else:
-          if(!Bonfire.Me.Users.is_admin?(current_user),
+          if(!Bonfire.Boundaries.can?(context, :mediate, :instance),
             do: [
               nil: l("My feed"),
               local: l("Local"),

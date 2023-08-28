@@ -19,7 +19,7 @@
       item_class={@item_class}
       tab_primary_class={@tab_primary_class}
       link_component={@tab_link_component}
-      tabs={tabs(current_user(@__context__), @__context__[:current_params]["object_type"])}
+      tabs={tabs(@__context__)}
       event_handler={@event_handler}
       event_target={@myself}
       path_prefix={@tab_path_prefix}

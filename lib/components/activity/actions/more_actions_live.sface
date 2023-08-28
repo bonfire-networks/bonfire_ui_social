@@ -72,7 +72,7 @@
       />
     </li>
 
-    <li :if={Integration.is_admin?(@current_user) or Bonfire.Boundaries.can?(@current_user, :pin, :instance)}>
+    <li :if={Bonfire.Boundaries.can?(@__context__, :pin, :instance)}>
       <Bonfire.UI.Social.PinActionLive
         object={@object}
         class="flex items-center px-4 text-sm text-neutral-content/80"
