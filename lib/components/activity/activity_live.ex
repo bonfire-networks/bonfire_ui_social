@@ -265,7 +265,9 @@ defmodule Bonfire.UI.Social.ActivityLive do
       thread_id: thread_id,
       thread_title: e(assigns, :thread_title, nil) || e(thread, :named, :name, nil),
       published_in: maybe_published_in(activity, verb),
-      cw: e(assigns, :cw, nil) || e(object, :post_content, :name, nil) != nil,
+      cw:
+        e(assigns, :cw, nil) || e(activity, :sensitive, :is_sensitive, nil) ||
+          e(object, :post_content, :summary, nil) != nil,
       is_remote: e(activity, :peered, nil) != nil or e(object, :peered, nil) != nil,
       reply_count: e(replied, :nested_replies_count, 0) + e(replied, :direct_replies_count, 0),
       hide_actions:
@@ -542,6 +544,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
                 activity_inception={e(component_assigns, :activity_inception, @activity_inception)}
                 viewing_main_object={e(component_assigns, :viewing_main_object, @viewing_main_object)}
                 cw={@cw}
+                thread_title={@thread_title}
                 thread_mode={@thread_mode}
                 is_remote={@is_remote}
                 hide_actions={@hide_actions}

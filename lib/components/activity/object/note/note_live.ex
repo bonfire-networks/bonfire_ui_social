@@ -9,6 +9,7 @@ defmodule Bonfire.UI.Social.Activity.NoteLive do
   prop activity_inception, :any, default: nil
   prop cw, :boolean, default: nil
   prop is_remote, :boolean, default: false
+  prop thread_title, :any, default: nil
   prop thread_mode, :atom, default: nil
   prop hide_actions, :boolean, default: false
 

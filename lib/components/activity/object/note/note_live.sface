@@ -15,14 +15,23 @@
 >
   <!-- x-show={if @showing_within == :thread && !@viewing_main_object, do: "show_replies"} -->
   <!-- id={"note-#{@activity_inception}-#{id(@activity) || id(@object) || "no-id"}-#{e(assigns, :viewing_main_object, false)}"} -->
+
   {#case e(post_content(@object), :name, nil)}
+    {#match nil}
     {#match name}
-      {#case @cw == true or (is_nil(@cw) and not is_nil(name))}
+      <div :if={name != @thread_title} class="w-full h-auto max-w-full p-0 m-0 mt-6 text-2xl font-bold">
+        {rich(name)}
+      </div>
+  {/case}
+
+  {#case e(post_content(@object), :summary, nil)}
+    {#match summary}
+      {#case @cw == true or (is_nil(@cw) and not is_nil(summary))}
         {#match cw}
           {#if cw}
             <div class="flex items-baseline gap-2 mb-2">
-              <p class="text-base font-medium leading-5 text-base-content">
-                <span>{name || l("CW")}</span>
+              <p>
+                <span class="prose max-w-prose prose-p:pt-1">{summary || l("Content Warning")}</span>
                 {#if !@hide_actions}
                   <button
                     x-on:click="content_open = ! content_open; $nextTick(() => { expandable = $refs.note && $refs.note.scrollHeight > $refs.note.clientHeight });"
@@ -39,19 +48,12 @@
               </p>
             </div>
           {#else}
-            <div :if={name} class="w-full h-auto max-w-full p-0 m-0 mt-6 text-2xl font-bold">
-              {rich(name)}
+            <div :if={summary} class="prose max-w-prose prose-p:pt-1">
+              {rich(summary)}
             </div>
           {/if}
 
-          <div x-show={if cw == true, do: "content_open"} x-cloak={cw == true} x-collapse={cw == true}>
-            {#case e(post_content(@object), :summary, nil)}
-              {#match nil}
-              {#match summary}
-                <p class="font-light prose max-w-prose prose-p:pt-1">
-                  {rich(summary)}
-                </p>
-            {/case}
+          <div x-show={if cw, do: "content_open"} x-cloak={cw} x-collapse={cw}>
             {#case e(post_content(@object), :html_body, nil) ||
                 if !e(post_content(@object), :name, nil), do: l("This content is not available.")}
               {#match nil}

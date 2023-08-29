@@ -34,7 +34,6 @@
       <!-- CW -->
       <div
         class="hidden"
-        :if={Config.get([:ui, :smart_input, :cw]) == true}
         id="smart_input_post_title"
         phx-update={if @reset_smart_input, do: "replace", else: "ignore"}
       >
@@ -45,7 +44,7 @@
               class="absolute w-5 h-5 stroke-1 top-[14px] left-3 text-base-content/70"
             />
             <label for="title" class="sr-only">{l("Title")}</label>
-            <Field name={:name}>
+            <Field name={:summary}>
               <TextInput
                 opts={
                   placeholder: l("Enter a content warning"),
