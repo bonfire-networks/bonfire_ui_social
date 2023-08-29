@@ -26,7 +26,7 @@
       path_suffix={@tab_path_suffix}
     >
       <Bonfire.UI.Social.FeedControlsLive
-        :if={@feed_name in [nil, :my, :local, :fediverse] and id(@current_user)}
+        :if={@feed_name in [nil, :my, :local, :fediverse] and id(current_user(@__context__))}
         event_target={@myself}
         feed_id={@feed_id}
         sort_by={@sort_by}

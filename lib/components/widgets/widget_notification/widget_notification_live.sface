@@ -8,6 +8,6 @@
   <Bonfire.UI.Social.FeedLive
     class="pl-0 showing_within:widget"
     hide_tabs
-    {...load(@current_user)}
+    {...load(current_user(@__context__))}
   />
 </Bonfire.UI.Common.WidgetBlockLive>

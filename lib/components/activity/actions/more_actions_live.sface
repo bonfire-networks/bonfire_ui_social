@@ -102,7 +102,7 @@
       <li :if={current_user_id(@__context__) != @creator_id and
         Types.object_type(@creator) == Bonfire.Data.Identity.User}>
         <Dynamic.Component
-          :if={module_enabled?(Bonfire.Boundaries.Web.AddToCircleLive) and @current_user}
+          :if={module_enabled?(Bonfire.Boundaries.Web.AddToCircleLive) and current_user(@__context__)}
           module={Bonfire.Boundaries.Web.AddToCircleLive}
           user_id={@creator_id}
           name={e(@creator, :profile, :name, nil)}
@@ -132,7 +132,10 @@
           </li>
 
           <!-- Flag the author -->
-          <li data-role="flag_author" :if={not is_nil(@creator_id) and not is_nil(@current_user)}>
+          <li
+            data-role="flag_author"
+            :if={not is_nil(@creator_id) and not is_nil(current_user(@__context__))}
+          >
             <Bonfire.UI.Common.FlagActionLive
               object={@creator_id}
               flagged={@flagged}

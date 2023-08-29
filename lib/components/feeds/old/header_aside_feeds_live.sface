@@ -4,12 +4,12 @@
   </label>
   <ul tabindex="0" class="p-2 shadow dropdown-content menu bg-base-100 rounded-box w-52">
     <div
-      :if={current_user(@current_user) ||
+      :if={current_user(current_user(@__context__)) ||
         Settings.get([:bonfire_social, :feeds, :federation, :show_guests], true, @__context__)}
       class="pb-2 rounded-b-box"
     >
       <div class="menu bg-base-100">
-        <li :if={current_user(@current_user)}>
+        <li :if={current_user(current_user(@__context__))}>
           <LiveRedirect
             class={"ml-1": @selected_tab != "home", "bg-primary/10": @selected_tab == "home"}
             to={path(:feed)}
@@ -27,7 +27,7 @@
             <span class="text-sm truncate ellipsis">{l("Local")}</span>
           </LiveRedirect>
         </li>
-        <li :if={current_user(@current_user) ||
+        <li :if={current_user(current_user(@__context__)) ||
           Settings.get([:bonfire_social, :feeds, :federation, :show_guests], false, @__context__)}>
           <LiveRedirect
             class={"ml-1": @selected_tab != "fediverse", "bg-primary/10": @selected_tab == "fediverse"}

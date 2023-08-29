@@ -1,11 +1,11 @@
 <div
-  class={"border-t border-base-content/20": !id(@current_user)}
+  class={"border-t border-base-content/20": !id(current_user(@__context__))}
   data-role="thread"
   id={"thread_#{@id}"}
   x-data="{show_replies: true}"
 >
   <Bonfire.UI.Social.Activity.ThreadStatsLive
-    :if={id(@current_user)}
+    :if={id(current_user(@__context__))}
     event_target={@myself}
     showing_within={@showing_within}
     reply_count={@reply_count}

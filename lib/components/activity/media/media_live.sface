@@ -28,7 +28,7 @@
               }>
                 <figure class="h-full">
                   <!-- FIXME: enable_fallback for logged out visitors instead of just not using the modal -->
-                  {#if id(@current_user)}
+                  {#if id(current_user(@__context__))}
                     <Bonfire.UI.Common.OpenModalLive
                       id={"media_modal_#{id(m)}#{Text.random_string()}"}
                       reusable_modal_id="media_player_modal"
@@ -163,7 +163,7 @@
               }>
                 <figure class="h-full">
                   <!-- FIXME: enable_fallback for logged out visitors instead of just not using the modal -->
-                  {#if id(@current_user)}
+                  {#if id(current_user(@__context__))}
                     <Bonfire.UI.Common.OpenModalLive
                       id={"media_modal_#{id(m)}#{Text.random_string()}"}
                       no_actions

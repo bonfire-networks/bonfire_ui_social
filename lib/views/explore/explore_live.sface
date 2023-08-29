@@ -2,7 +2,7 @@
   <Bonfire.UI.Common.TabsLive
     selected_tab={@selected_tab}
     path_prefix="/explore/"
-    tabs={if id(@current_user),
+    tabs={if id(current_user(@__context__)),
       do: Config.get([:ui, :explore, :navigation], hashtags: l("Hashtags")),
       else: Config.get([:ui, :explore, :navigation], hashtags: l("Hashtags"))}
   />

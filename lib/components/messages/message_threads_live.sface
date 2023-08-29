@@ -24,7 +24,7 @@
                   <div class="flex items-center justify-between">
                     <div class="flex-1 text-sm font-semibold truncate text-base-content">
                       {#case {LiveHandler.thread_meta(:title, e(activity, :replied, :thread_id, nil), activity, nil,
-                           current_user: @current_user
+                           current_user: current_user(@__context__)
                          ), e(activity, :replied, :thread, :named, :name, nil)}}
                         {#match {participant_names, nil}}
                           {participant_names}

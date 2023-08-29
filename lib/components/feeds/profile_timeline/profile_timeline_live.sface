@@ -2,7 +2,7 @@
   <#slot {@header} />
   <div class={
     "",
-    "max-w-[680px] mx-auto": !@current_user
+    "max-w-[680px] mx-auto": !current_user(@__context__)
   }>
     <Bonfire.UI.Common.TabsLive
       :if={!@hide_tabs}
