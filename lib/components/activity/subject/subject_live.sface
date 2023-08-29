@@ -100,7 +100,10 @@
                 thread_id={@thread_id}
                 showing_within={@showing_within}
               >
-                <span class="subject_timestamp text-[13px] font-normal no-underline truncate ellipsis text-base-content/70">
+                <span
+                  data-role="date_ago"
+                  class="subject_timestamp text-[13px] font-normal no-underline truncate ellipsis text-base-content/70"
+                >
                   {@date_ago || DatesTimes.date_from_now(@activity_id) || DatesTimes.date_from_now(@object_id)}
                 </span>
               </Bonfire.UI.Social.Activity.LinkToActivityLive>
@@ -341,7 +344,10 @@
               thread_id={@thread_id}
               showing_within={@showing_within}
             >
-              <span class="subject_timestamp text-[13px] font-normal no-underline truncate ellipsis text-base-content/70">
+              <span
+                data-role="subject_timestamp"
+                class="subject_timestamp text-[13px] font-normal no-underline truncate ellipsis text-base-content/70"
+              >
                 {@date_ago || DatesTimes.date_from_now(@activity_id) || DatesTimes.date_from_now(@object_id)}
               </span>
             </Bonfire.UI.Social.Activity.LinkToActivityLive>

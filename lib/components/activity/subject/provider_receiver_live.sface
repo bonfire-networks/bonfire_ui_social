@@ -38,7 +38,10 @@
               thread_id={@thread_id}
               showing_within={@showing_within}
             >
-              <span class="subject_timestamp text-[13px] font-normal no-underline truncate ellipsis text-base-content/70">
+              <span
+                data-role="date"
+                class="subject_timestamp text-[13px] font-normal no-underline truncate ellipsis text-base-content/70"
+              >
                 {@date_ago}
               </span>
             </Bonfire.UI.Social.Activity.LinkToActivityLive>

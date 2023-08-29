@@ -320,7 +320,8 @@ defmodule Bonfire.UI.Social.ActivityLive do
          thread_mode,
          thread_id,
          thread_title,
-         activity_component_id
+         activity_component_id,
+         subject_user
        ) do
     (component_maybe_in_reply_to(
        verb,
@@ -339,7 +340,8 @@ defmodule Bonfire.UI.Social.ActivityLive do
          object,
          object_type,
          showing_within,
-         activity_inception
+         activity_inception,
+         subject_user
        ) ++
        component_object(verb, activity, object, object_type) ++
        component_maybe_attachments(
@@ -492,7 +494,8 @@ defmodule Bonfire.UI.Social.ActivityLive do
               @thread_mode,
               @thread_id,
               @thread_title,
-              @activity_component_id
+              @activity_component_id,
+              @subject_user
             ) || []}
           {#case component}
             {#match :html}
@@ -658,11 +661,12 @@ defmodule Bonfire.UI.Social.ActivityLive do
         object,
         object_type,
         showing_within,
-        activity_inception
+        activity_inception,
+        subject_user
       )
 
   # don't show subject twice
-  def component_activity_subject(_, activity, _, Bonfire.Data.Identity.User, _, _),
+  def component_activity_subject(_, activity, _, Bonfire.Data.Identity.User, _, _, _),
     do: [
       {Bonfire.UI.Social.Activity.SubjectMinimalLive,
        %{
@@ -675,7 +679,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
   # quoting a reply_to <-- this is handled by the Bonfire.UI.Social.Activity.SubjectLive internally
   # def component_activity_subject(_, _, %{activity_inception: true}), do: [Bonfire.UI.Social.Activity.SubjectRepliedLive]
 
-  def component_activity_subject(verb, activity, _, object_type, _, _)
+  def component_activity_subject(verb, activity, _, object_type, _, _, _)
       when verb in @react_or_simple_verbs and object_type in [Bonfire.Data.Identity.User],
       do: [
         {Bonfire.UI.Social.Activity.SubjectMinimalLive,
@@ -688,7 +692,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
       ]
 
   # reactions should show the reactor + original creator
-  def component_activity_subject(verb, activity, object, object_type, _, _)
+  def component_activity_subject(verb, activity, object, object_type, _, _, _)
       when verb in @react_or_simple_verbs,
       do:
         [
@@ -703,7 +707,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
         ] ++ component_activity_maybe_creator(activity, object, object_type)
 
   # replies (when shown in notifications)
-  def component_activity_subject(verb, activity, _, _, :notifications, _)
+  def component_activity_subject(verb, activity, _, _, :notifications, _, _)
       when verb in @reply_verbs,
       do: [
         {Bonfire.UI.Social.Activity.SubjectMinimalLive,
@@ -723,27 +727,44 @@ defmodule Bonfire.UI.Social.ActivityLive do
         _,
         _,
         _,
+        _,
         _
       )
       when verb in @create_or_reply_verbs,
       do: [{Bonfire.UI.Social.Activity.SubjectLive, %{profile: profile, character: character}}]
 
-  def component_activity_subject(verb, %{subject: %{profile: %{id: _} = profile}}, _, _, _, _)
+  def component_activity_subject(verb, %{subject: %{profile: %{id: _} = profile}}, _, _, _, _, _)
       when verb in @create_or_reply_verbs,
       do: [{Bonfire.UI.Social.Activity.SubjectLive, %{profile: profile, character: nil}}]
 
-  def component_activity_subject(verb, %{subject: %{character: %{id: _} = character}}, _, _, _, _)
+  def component_activity_subject(
+        verb,
+        %{subject: %{character: %{id: _} = character}},
+        _,
+        _,
+        _,
+        _,
+        _
+      )
       when verb in @create_or_reply_verbs,
       do: [{Bonfire.UI.Social.Activity.SubjectLive, %{profile: nil, character: character}}]
 
-  # def component_activity_subject(verb, %{subject_id: id} = _activity, %{created: %{creator: nil}} = _object, _object_type, _, _) when verb in @create_or_reply_verbs, do: [{Bonfire.UI.Social.Activity.SubjectLive, %{subject_id: id}}]
+  def component_activity_subject(verb, %{subject_id: id}, _, _, _, _, %{
+        id: id,
+        profile: profile,
+        character: character
+      })
+      when verb in @create_or_reply_verbs,
+      do: [{Bonfire.UI.Social.Activity.SubjectLive, %{profile: profile, character: character}}]
 
-  # def component_activity_subject(verb, %{subject_id: id} = activity, object, object_type, _, _)
+  # def component_activity_subject(verb, %{subject_id: id} = _activity, %{created: %{creator: nil}} = _object, _object_type, _, _, _) when verb in @create_or_reply_verbs, do: [{Bonfire.UI.Social.Activity.SubjectLive, %{subject_id: id}}]
+
+  # def component_activity_subject(verb, %{subject_id: id} = activity, object, object_type, _, _, _)
   # when verb in @create_or_reply_verbs,
   # do: if is_nil(e(activity, :object, :created, :creator, nil)) and is_nil(e(object, :created, :creator, nil)), do: [{Bonfire.UI.Social.Activity.SubjectLive, %{subject_id: id}}], else: component_activity_maybe_creator(activity, object, object_type)
 
   # other
-  def component_activity_subject(_verb, activity, object, object_type, _, _),
+  def component_activity_subject(_verb, activity, object, object_type, _, _, _),
     do:
       activity
       # |> debug("activity")
@@ -1341,7 +1362,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
 
   def component_object(_, _, _, _) do
     debug("activity has no object")
-    [Bonfire.UI.Social.Activity.UnknownLive]
+    []
   end
 
   def component_for_object_type(type, %{post_content: %{html_body: _}})

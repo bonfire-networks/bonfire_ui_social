@@ -34,7 +34,7 @@
       thread_id={@thread_id}
       showing_within={@showing_within}
     >
-      <span class="subject_timestamp text-base-content/70">
+      <span data-role="date_ago" class="subject_timestamp text-base-content/70">
         {@date_ago}
       </span>
     </Bonfire.UI.Social.Activity.LinkToActivityLive>
