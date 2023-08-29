@@ -48,7 +48,7 @@
       <div class="flex flex-col gap-2 mt-4 border rounded border-base-content/20">
         <div class="relative border-b border-base-content/20">
           <#Icon
-            iconify="ri:alarm-warning-line"
+            iconify="ri:alert-fill"
             class="absolute w-5 h-5 stroke-1 top-[14px] left-3 text-base-content/70"
           />
           <input

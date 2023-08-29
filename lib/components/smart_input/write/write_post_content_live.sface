@@ -37,10 +37,20 @@
         id="smart_input_post_title"
         phx-update={if @reset_smart_input, do: "replace", else: "ignore"}
       >
+        <div class="p-4 mb-0 bg-info/10">
+          <div class="flex">
+            <div class="flex-shrink-0">
+              <#Icon iconify="heroicons-solid:information-circle" class="w-5 h-5 text-info" />
+            </div>
+            <div class="flex-1 ml-3 md:flex md:justify-between">
+              <p class="text-sm text-info">{l"By toggling the Content Warning all the contents will be marked as sensitive. You can add an optional CW message."}</p>
+            </div>
+          </div>
+        </div>
         <Inputs for={:post_content}>
           <div class="relative p-2 border-b bg-base-300 border-base-content/20">
             <#Icon
-              iconify="ri:alarm-warning-line"
+              iconify="ri:alert-fill"
               class="absolute w-5 h-5 stroke-1 top-[14px] left-3 text-base-content/70"
             />
             <label for="title" class="sr-only">{l("Title")}</label>
@@ -50,7 +60,7 @@
                   placeholder: l("Enter a content warning"),
                   "phx-debounce": "blur"
                 }
-                class="w-full h-8 pl-12 text-sm bg-transparent rounded input"
+                class="w-full h-8 pl-10 text-sm bg-transparent rounded input"
               />
             </Field>
           </div>
