@@ -34,7 +34,7 @@ defmodule Bonfire.UI.Social.Activity.SubjectLive do
           profile: nil,
           character: nil,
           subject_id: id,
-          current_user: %{id: id, profile: profile, character: character}
+          __context__: %{current_user: %{id: id, profile: profile, character: character}}
         } = assigns
       ) do
     assigns
