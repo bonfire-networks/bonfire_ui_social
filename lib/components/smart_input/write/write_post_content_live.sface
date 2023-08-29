@@ -43,7 +43,9 @@
               <#Icon iconify="heroicons-solid:information-circle" class="w-5 h-5 text-info" />
             </div>
             <div class="flex-1 ml-3 md:flex md:justify-between">
-              <p class="text-sm text-info">{l"By toggling the Content Warning all the contents will be marked as sensitive. You can add an optional CW message."}</p>
+              <p class="text-sm text-info">{l(
+                  "By toggling the Content Warning all the contents will be marked as sensitive. You can add an optional CW message."
+                )}</p>
             </div>
           </div>
         </div>

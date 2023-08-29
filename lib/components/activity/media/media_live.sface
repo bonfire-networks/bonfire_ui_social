@@ -75,7 +75,7 @@
     {/for}
   </div>
 
-  <div >
+  <div>
     {#case @multimedia_count}
       {#match 0}
       {#match num_medias}
@@ -100,9 +100,10 @@
                     num_medias ==
                       4
                 }>
-                  <div 
+                  <div
                     class="absolute inset-0 backdrop-blur-md bg-white/30"
-                    :if={@cw || Settings.get([Bonfire.UI.Social.Activity.MediaLive, :hide], false, @__context__)}></div>
+                    :if={@cw || Settings.get([Bonfire.UI.Social.Activity.MediaLive, :hide], false, @__context__)}
+                  />
                   <figure class="h-full">
                     <!-- FIXME: enable_fallback for logged out visitors instead of just not using the modal -->
                     {#if id(current_user(@__context__))}
@@ -235,7 +236,6 @@
                     num_medias ==
                       4
                 }>
-                
                   <figure class="h-full">
                     <!-- FIXME: enable_fallback for logged out visitors instead of just not using the modal -->
                     {#if id(current_user(@__context__))}
@@ -275,10 +275,16 @@
 
                         <:open_btn>
                           <div class="relative h-full">
-                          <div class="absolute inset-0 flex items-center cursor-pointer place-content-center justify-center z-[60]" :if={@cw || Settings.get([Bonfire.UI.Social.Activity.MediaLive, :hide], false, @__context__)}>
-                            <button class="btn btn-sm rounded normal-case">{l "Media Hidden"}</button>
-                          </div>
-                          <div class="absolute inset-0 backdrop-blur-xl z-50 cursor-pointer rounded-md" :if={@cw || Settings.get([Bonfire.UI.Social.Activity.MediaLive, :hide], false, @__context__)}></div>
+                            <div
+                              class="absolute inset-0 flex items-center cursor-pointer place-content-center justify-center z-[60]"
+                              :if={@cw || Settings.get([Bonfire.UI.Social.Activity.MediaLive, :hide], false, @__context__)}
+                            >
+                              <button class="btn btn-sm rounded normal-case">{l("Media Hidden")}</button>
+                            </div>
+                            <div
+                              class="absolute inset-0 backdrop-blur-xl z-50 cursor-pointer rounded-md"
+                              :if={@cw || Settings.get([Bonfire.UI.Social.Activity.MediaLive, :hide], false, @__context__)}
+                            />
                             {#case preview_img(m) || Media.media_url(m)}
                               {#match maybe_preview_img}
                                 <!-- {#if is_image?(maybe_preview_img)} -->

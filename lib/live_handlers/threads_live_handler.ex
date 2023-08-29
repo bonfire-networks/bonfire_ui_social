@@ -14,7 +14,7 @@ defmodule Bonfire.Social.Threads.LiveHandler do
 
     marked =
       if current_user do
-        # Task.async(fn -> # asynchronously simply so the count is updated quicker for the user
+        # Task.async(fn -> # TODO? asynchronously simply so the count is updated quicker for the user
         debug(thread_id, "mark_seen: all in thread")
         Bonfire.Social.Threads.mark_all_seen([thread_id: thread_id], current_user: current_user)
         # end)
@@ -331,7 +331,7 @@ defmodule Bonfire.Social.Threads.LiveHandler do
         thread_id = e(socket.assigns, :thread_id, nil) || id(object)
         component_id = e(socket.assigns, :id, nil) || thread_id
 
-        async_task(fn ->
+        apply_task(:start_link, fn ->
           # compute & send stats
 
           limit = 4
@@ -363,7 +363,7 @@ defmodule Bonfire.Social.Threads.LiveHandler do
           )
         end)
 
-        async_task(fn ->
+        apply_task(:start_link, fn ->
           # Query comments asynchronously
           {replies, assigns} = load_thread_assigns(socket)
 
