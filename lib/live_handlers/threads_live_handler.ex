@@ -52,7 +52,7 @@ defmodule Bonfire.Social.Threads.LiveHandler do
     debug(paginate, "paginate thread")
 
     opts = [
-      current_user: current_user(socket),
+      current_user: current_user(socket.assigns),
       paginate: paginate,
       thread_mode: e(socket.assigns, :thread_mode, nil),
       sort_by: e(socket.assigns, :sort_by, nil),
@@ -105,7 +105,7 @@ defmodule Bonfire.Social.Threads.LiveHandler do
     {level, _} = Integer.parse(level)
 
     opts = [
-      current_user: current_user(socket),
+      current_user: current_user(socket.assigns),
       max_depth: level + 3,
       thread_mode: e(socket.assigns, :thread_mode, nil),
       sort_by: e(socket.assigns, :sort_by, nil),
@@ -184,7 +184,7 @@ defmodule Bonfire.Social.Threads.LiveHandler do
            e(socket.assigns, :activity, nil) || e(socket.assigns, :object, nil),
            e(socket.assigns, :thread_id, nil),
            limit: 50,
-           current_user: current_user(socket)
+           current_user: current_user(socket.assigns)
          ),
        already_loaded_participants: true
      )}
@@ -199,7 +199,7 @@ defmodule Bonfire.Social.Threads.LiveHandler do
     debug("received :new_reply")
 
     # id = e(data, :object, :id, nil) || e(data, :id, nil)
-    # permitted? = id && Bonfire.Common.Pointers.exists?([id: id], current_user: current_user(socket)) |> debug("double check boundary upon receiving a LivePush")
+    # permitted? = id && Bonfire.Common.Pointers.exists?([id: id], current_user: current_user(socket.assigns)) |> debug("double check boundary upon receiving a LivePush")
 
     # if permitted?, do: # Note: now checking permission in ThreadLive
     maybe_send_update(Bonfire.UI.Social.ThreadLive, thread_id, new_reply: data)
@@ -291,7 +291,7 @@ defmodule Bonfire.Social.Threads.LiveHandler do
 
   def thread_init(socket) do
     # debug(assigns, "thread assigns")
-    current_user = current_user(socket)
+    current_user = current_user(socket.assigns)
     object = e(socket.assigns, :object, nil) || e(socket.assigns, :activity, :object)
 
     thread_id =
@@ -320,7 +320,7 @@ defmodule Bonfire.Social.Threads.LiveHandler do
 
   def load_thread_maybe_async(%Phoenix.LiveView.Socket{} = socket, show_loader, reset_stream) do
     socket_connected = connected?(socket)
-    current_user = current_user(socket)
+    current_user = current_user(socket.assigns)
 
     if (socket_connected || current_user != nil) && Config.env() != :test do
       if socket_connected do
@@ -457,7 +457,7 @@ defmodule Bonfire.Social.Threads.LiveHandler do
 
       with %{edges: replies, page_info: page_info} <-
              Threads.list_replies(thread_id,
-               current_user: current_user(socket),
+               current_user: current_user(socket.assigns),
                after: e(socket.assigns, :after, nil),
                max_depth: max_depth(socket.assigns[:__context__]),
                thread_mode: thread_mode,

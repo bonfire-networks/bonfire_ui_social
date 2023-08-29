@@ -63,7 +63,7 @@ defmodule Bonfire.Social.Objects.LiveHandler do
   end
 
   def init_object_assigns(object, activity, _assigns, socket, page_title \\ nil) do
-    current_user = current_user(socket)
+    current_user = current_user(socket.assigns)
     id = ulid(object)
 
     # FIXME: is this re-preloading the object we already have?
@@ -171,7 +171,7 @@ defmodule Bonfire.Social.Objects.LiveHandler do
   end
 
   def load_object_assigns(%{post_id: id} = assigns, socket) when is_binary(id) do
-    current_user = current_user(socket)
+    current_user = current_user(socket.assigns)
 
     # debug(params, "PARAMS")
     # debug(url, "post url")
@@ -186,7 +186,7 @@ defmodule Bonfire.Social.Objects.LiveHandler do
   end
 
   def load_object_assigns(%{object_id: id} = assigns, socket) when is_binary(id) do
-    current_user = current_user(socket)
+    current_user = current_user(socket.assigns)
     # debug(params, "PARAMS")
     with id when is_binary(id) <- ulid(id),
          {:ok, object} <- Bonfire.Social.Objects.read(id, current_user: current_user) do

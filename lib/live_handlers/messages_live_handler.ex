@@ -47,7 +47,7 @@ defmodule Bonfire.Social.Messages.LiveHandler do
      |> assign(
        sidebar_widgets:
          threads_widget(
-           current_user(socket),
+           current_user(socket.assigns),
            context,
            [tab_id: nil, thread_id: e(socket.assigns, :thread_id, nil)] ++ List.wrap(opts)
          )
