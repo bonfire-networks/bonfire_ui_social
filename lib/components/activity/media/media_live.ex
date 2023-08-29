@@ -6,6 +6,7 @@ defmodule Bonfire.UI.Social.Activity.MediaLive do
   prop viewing_main_object, :boolean, default: false
   prop label, :string, default: nil
   prop parent_id, :any, default: nil
+  prop cw, :any, default: nil
 
   @image_exts [".jpg", ".jpeg", ".png", ".gif", ".webp"]
   @image_types ["image", "photo"]

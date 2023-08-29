@@ -582,6 +582,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
                 showing_within={@showing_within}
                 viewing_main_object={e(component_assigns, :viewing_main_object, @viewing_main_object)}
                 media={List.wrap(e(component_assigns, :media, []))}
+                cw={@cw}
               />
             {#match _ when component in [Bonfire.UI.Social.Activity.ActionsLive, Bonfire.UI.Social.FlaggedActionsLive]}
               <Dynamic.Component
