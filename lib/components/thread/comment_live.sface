@@ -1,7 +1,10 @@
 <div
   id={"cc_#{id(@activity)}"}
   data-id="comment"
-  class="flex flex-1 w-full items-top bg-base-300 border-b border-base-content/20"
+  class={
+    "flex flex-1 w-full items-top",
+    "bg-base-300 ": @thread_level == 1}
+
 >
   <!-- <div
         :if={@thread_level > 1}
@@ -37,7 +40,7 @@
         )}
         activity={debug(@activity, "comment_activity")}
         thread_object={@thread_object}
-        class="showing_within:thread !p-3 !shadow-none !rounded-none"
+        class="showing_within:thread"
         feed_id={@feed_id}
         current_url={@current_url || current_url(@__context__)}
         showing_within={:thread}

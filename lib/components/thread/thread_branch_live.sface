@@ -3,8 +3,9 @@
   data-id="branch"
   x-data="{show_replies: true}"
   class={
-    "reply thread-level-" <> to_string(@thread_level) <> " flex relative  w-full mx-auto ",
-    "border-b border-base-content/20": @threaded_replies != [] && @thread_level == 1
+    "reply thread-level-" <> to_string(@thread_level) <> " flex relative",
+    "": @threaded_replies != [] && @thread_level == 1,
+    "border-b border-base-content/20 bg-base-100": @thread_level == 1
   }
 >
   <div class="relative flex-1 w-full">
@@ -30,18 +31,27 @@
           <#Icon iconify="eva:expand-fill" class="w-4 h-4 text-primary" />
         </div>
       </div> -->
-
       <div x-show="show_replies" data-id="show_replies" class="" x-transition>
-        <div :if={@threaded_replies != []} class="relative">
-          <div
-            class="group absolute px-2 left-8 cursor-pointer h-4 -top-4 bottom-0 z-30"
-            x-on:click="show_replies = ! show_replies"
-          >
-            <div class="absolute group-hover:bg-primary left-2 cursor-pointer inset-0 w-[2px] bottom-0 bg-base-content/20 z-30" />
-          </div>
-          <div class={"replies replies-level-" <> to_string(@thread_level + 1) <> " ml-2 my-4 "}>
+        <div 
+          :if={@threaded_replies != []} 
+          class={
+            "relative ml-8",
+            "!ml-0": @thread_level < 2}>
+
+            <div class="group absolute px-2 left-6 cursor-pointer top-0 h-8 z-30" x-on:click="show_replies = ! show_replies">
+              <div class="absolute group-hover:border-primary left-2 cursor-pointer inset-0 border-l-2 border-dashed bottom-0 border-base-content/10 z-30" />
+            </div>
+
+            
+          <div class={"replies replies-level-" <> to_string(@thread_level + 1) <> " pt-4"}>
             {#for {{subreply, sub_child_replies}, index} <- Enum.with_index(@threaded_replies || [], 1)}
               <div class="relative">
+              <div
+                class="group absolute px-2 left-6 cursor-pointer top-16 bottom-0 z-30"
+                x-on:click="show_replies = ! show_replies"
+              >
+                <div class="absolute group-hover:bg-primary left-2 cursor-pointer inset-0 w-[2px] bottom-0 bg-base-content/10 z-30" />
+              </div>
                 <!-- <div 
                 :if={index == length(@threaded_replies)}
                 class="w-3 bg-base-100 absolute left-[-10px] top-[10px] z-30 bottom-0" /> -->
@@ -88,7 +98,7 @@
         x-on:click="show_replies = ! show_replies"
         x-show="!show_replies"
         x-cloak
-        class="p-2 bg-base-content/5 flex items-center place-content-center"
+        class="p-2 flex items-center place-content-center"
       >
         <span class="btn btn-xs rounded-full !border !border-base-content/20 normal-case btn-ghost">{l("Show replies")}</span>
       </div>

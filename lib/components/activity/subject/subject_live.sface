@@ -44,90 +44,13 @@
           {/if}
         </div>
       </div>
-    {#elseif @showing_within == :notifications}
-      <div class="flex items-start w-full">
-        <div
-          class="mr-3"
-          :if={!Settings.get([Bonfire.UI.Common.AvatarLive, :hide_avatars], false, @__context__)}
-        >
-          <LiveRedirect
-            opts={"data-id": "subject_name"}
-            aria-label={e(@character, :username, "") <> " profile"}
-            class="font-semibold text-base-content hover:underline"
-            to={path(e(@character, nil))}
-          >
-            <Bonfire.UI.Common.AvatarLive
-              class="w-9 h-9 rounded-full bg-base-content/20"
-              parent_id={@activity_component_id || id(@character)}
-              user={e(@profile, nil)}
-              title={e(@profile, :name, "Anonymous")}
-            />
-          </LiveRedirect>
-        </div>
-        <div class="flex items-start justify-between leading-[16px] min-w-0 space-x-1 w-full">
-          <div class="flex flex-col flex-1 gap-0 feed-clickable">
-            <div class="text-sm font-semibold line-clamp-1">
-              <!-- {@verb} {@object_type} -->
-              <LiveRedirect
-                opts={"data-id": "subject_name"}
-                aria-label={l("%{name}'s profile", name: e(@profile, :name, ""))}
-                class="link link-hover"
-                to={path(e(@character, nil))}
-              >
-                {e(@profile, :name, "Anonymous")}
-              </LiveRedirect>
-            </div>
-            <!-- <span class="ml-2 text-[15px] text-base-content/70">replied to <b class="font-bold text-base-content link">title topic</b></span> -->
-            <!-- </div> -->
-            <div class="flex items-center -mt-1 gap-1">
-              <LiveRedirect
-                :if={e(@character, :username, nil)}
-                opts={"data-id": "subject_username"}
-                aria-label={l("%{name}'s profile", name: e(@profile, :name, ""))}
-                class="link link-hover text-[14px] font-normal truncate ellipsis text-base-content/70 subject_username"
-                to={path(e(@profile, nil))}
-              >
-                @{e(@character, :username, "")}
-              </LiveRedirect>
-              <span class="text-base-content/70">·</span>
-
-              <Bonfire.UI.Social.Activity.InstanceIconLive peered={@peered} />
-
-              <Bonfire.UI.Social.Activity.LinkToActivityLive
-                :if={@showing_within not in [:smart_input]}
-                object_type={@object_type}
-                permalink={@permalink}
-                thread_id={@thread_id}
-                showing_within={@showing_within}
-              >
-                <span
-                  data-role="date_ago"
-                  class="subject_timestamp text-[13px] font-normal no-underline truncate ellipsis text-base-content/70"
-                >
-                  {@date_ago || DatesTimes.date_from_now(@activity_id) || DatesTimes.date_from_now(@object_id)}
-                </span>
-              </Bonfire.UI.Social.Activity.LinkToActivityLive>
-
-              <Dynamic.Component
-                :if={module_enabled?(Bonfire.Boundaries.Web.BoundaryIconStatelessLive) and
-                  @object_type not in [Bonfire.Data.Social.Message]}
-                module={Bonfire.Boundaries.Web.BoundaryIconStatelessLive}
-                object_id={@object_id}
-                object_type={Types.object_type(@published_in) || @object_type}
-                parent_id={"boundary_#{@activity_id || @object_id}"}
-                with_icon
-                object_boundary={@object_boundary}
-              />
-            </div>
-          </div>
-        </div>
-      </div>
+    
     {#elseif @showing_within in [:thread, :messages] && !@viewing_main_object}
-      <div class="flex justify-start gap-1 mb-2">
+      <div class="flex justify-start gap-1">
         <div class="flex items-center gap-3 w-full">
           <LiveRedirect
             :if={!Settings.get([Bonfire.UI.Common.AvatarLive, :hide_avatars], false, @__context__)}
-            class={"", "h-10": !@__context__[:ui_compact], "h-6": @__context__[:ui_compact]}
+            class={"", "h-8": !@__context__[:ui_compact], "h-6": @__context__[:ui_compact]}
             opts={"data-id": "subject_name", "aria-label": e(@character, :username, "") <> " profile"}
             to={path(@character)}
           >
@@ -137,7 +60,7 @@
               title={e(@profile, :name, "Anonymous")}
               class={
                 "rounded-full bg-base-100",
-                "h-10 w-10": !@__context__[:ui_compact],
+                "h-8 w-8": !@__context__[:ui_compact],
                 "h-6 w-6": @__context__[:ui_compact]
               }
             />
@@ -147,7 +70,7 @@
               <LiveRedirect
                 :if={!@__context__[:ui_compact]}
                 opts={"data-id": "subject_name", "aria-label": l("%{name}'s profile", name: e(@profile, :name, ""))}
-                class="font-semibold link link-hover text-base-content/90"
+                class="font-semibold text-sm link link-hover text-base-content/90"
                 to={path(@character)}
               >
                 {e(@profile, :name, "Anonymous")}
@@ -177,7 +100,7 @@
                 </Bonfire.UI.Social.Activity.LinkToActivityLive>
               </div>
             </div>
-            <div class="flex items-center gap-1 w-full">
+            <div :if={@__context__[:ui_compact]} class="flex items-center gap-1 w-full">
               {#if !@__context__[:ui_compact]}
                 <LiveRedirect
                   :if={e(@character, :username, nil)}

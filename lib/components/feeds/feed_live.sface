@@ -5,7 +5,7 @@
   aria-live="assertive"
   aria-atomic="true"
   class={
-    "w-full feed  flex-1 h-full grow",
+    "w-full feed flex-1 h-full grow",
     "!max-w-[680px] mx-auto": !current_user(@__context__)
   }
 >
@@ -39,8 +39,11 @@
     <div
       :if={@hide_fresh != 0}
       id="show_fresh"
-      phx-click={JS.show(to: ".fresh_hidden")
-      |> JS.add_class("hidden")}
+      @click="window.scrollTo({top: 0, behavior: 'smooth'})"
+      phx-click={
+        JS.show(to: ".fresh_hidden")
+        |> JS.add_class("hidden")
+      }
       class="flex justify-center w-full p-3 mx-auto sticky top-[60px] z-[99999999999999]"
       phx-show={JS.remove_class("hidden")}
     >
@@ -156,7 +159,7 @@
           {/if}
         {#else}
           {#if is_integer(@time_limit) and @time_limit != 0}
-            <p class="text-sm mb-3 text-base-content/50 font-semibold">{lp("That's all for today...", "That's all for the last %{number} days...", @time_limit,
+            <p class="text-sm mb-3 text-center text-base-content/50 font-semibold">{lp("That's all for today...", "That's all for the last %{number} days...", @time_limit,
                 number: @time_limit
               )}</p>
 

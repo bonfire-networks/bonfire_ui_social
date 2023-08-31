@@ -7,15 +7,17 @@
       :if={@showing_within == :messages and @thread_id}
       thread_id={@thread_id}
     />
+
+    <div class="flex rounded-md border border-base-content/20  items-center gap-3">
     <div class="dropdown dropdown-end">
-      <label tabindex="0" class="rounded-full btn btn-ghost btn-sm btn-circle normal-case">
+      <label tabindex="0" class="btn rounded-l rounded-r-none btn-ghost btn-sm btn-square normal-case">
         <!-- {l("Layout:")} -->
         {#if @thread_mode == :flat}
           <!-- {l("Linear")} -->
-          <#Icon iconify="fa-solid:list" class="w-5 h-5 text-base-content/70" />
+          <#Icon iconify="fa-solid:list" class="w-4 h-4 text-base-content/70" />
         {#else}
           <!-- {l("Nested replies")} -->
-          <#Icon iconify="clarity:tree-view-solid" class="w-5 h-5 text-base-content/70" />
+          <#Icon iconify="clarity:tree-view-solid" class="w-4 h-4 text-base-content/70" />
         {/if}
 
         <!-- {#if @__context__[:ui_compact]}
@@ -26,7 +28,7 @@
       </label>
       <ul
         tabindex="0"
-        class="dropdown-content mt-1 z-[999] menu gap-1 p-1 shadow bg-base-100 rounded-box w-52"
+        class="dropdown-content mt-1 z-[999] menu gap-1 p-1 shadow bg-base-100 rounded-box w-60"
       >
         <li
           phx-click="set"
@@ -38,7 +40,7 @@
             "flex gap-2 text-base-content/70",
             "active !text-base-content/100 font-semibold": @thread_mode != :flat
           }>
-            <#Icon iconify="clarity:tree-view-solid" class="w-5 h-5 text-base-content/70" />
+            <#Icon iconify="clarity:tree-view-solid" class="w-4 h-4 text-base-content/70" />
             {l("Threaded replies")}</a>
         </li>
 
@@ -75,11 +77,11 @@
               {/if} -->
       </ul>
     </div>
-    <div class="flex items-center gap-3">
+
       <div class="dropdown dropdown-end">
         <label
           tabindex="0"
-          class="rounded-full btn-sm btn btn-ghost btn-circle normal-case text-base-content/70"
+          class="btn-sm btn btn-ghost btn-square rounded-none normal-case text-base-content/70"
         >
           {#case @sort_by}
             {#match :latest_reply}
@@ -100,7 +102,7 @@
         </label>
         <ul
           tabindex="0"
-          class="dropdown-content mt-1 z-[999] menu p-1 shadow bg-base-100 rounded-box w-52"
+          class="dropdown-content mt-1 z-[999] menu p-1 shadow bg-base-100 rounded-box w-60"
         >
           <li
             phx-click="set"
@@ -178,20 +180,20 @@
       </div>
 
       <div class="dropdown dropdown-end">
-        <label tabindex="0" class="rounded-full btn-sm btn btn-ghost btn-circle normal-case">
+        <label tabindex="0" class="btn-sm rounded-r rounded-l-none btn btn-ghost btn-square normal-case">
           <!-- {l("Order:")} -->
 
           {#if @sort_order == :asc}
-            <#Icon iconify="octicon:sort-asc-16" class="w-5 h-5 text-base-content/70" />
+            <#Icon iconify="octicon:sort-asc-16" class="w-4 h-4 text-base-content/70" />
             <!-- {l("Oldest first")} -->
           {#else}
-            <#Icon iconify="octicon:sort-desc-16" class="w-5 h-5 text-base-content/70" />
+            <#Icon iconify="octicon:sort-desc-16" class="w-4 h-4 text-base-content/70" />
             <!-- {l("Newest first")} -->
           {/if}
         </label>
         <ul
           tabindex="0"
-          class="dropdown-content mt-1 z-[999] menu p-1 gap-1 shadow bg-base-100 rounded-box w-52"
+          class="dropdown-content mt-1 z-[999] menu p-1 gap-1 shadow bg-base-100 rounded-box w-60"
         >
           <li
             phx-click="set"
@@ -203,7 +205,7 @@
               "flex gap-2 text-base-content/70",
               "active !text-base-content/100 font-semibold": @sort_order != :asc
             }>
-              <#Icon iconify="octicon:sort-desc-16" class="w-5 h-5 text-base-content/70" />
+              <#Icon iconify="octicon:sort-desc-16" class="w-4 h-4 text-base-content/70" />
               {if @sort_by in [nil, :latest_reply], do: l("Newest first"), else: l("Most first")}</a></li>
           <li
             phx-click="set"
@@ -215,7 +217,7 @@
               "flex gap-2 text-base-content/70",
               "active !text-base-content/100 font-semibold": @sort_order == :asc
             }>
-              <#Icon iconify="octicon:sort-asc-16" class="w-5 h-5 text-base-content/70" />
+              <#Icon iconify="octicon:sort-asc-16" class="w-4 h-4 text-base-content/70" />
               {if @sort_by in [nil, :latest_reply], do: l("Oldest first"), else: l("Least first")}</a></li>
         </ul>
       </div>
