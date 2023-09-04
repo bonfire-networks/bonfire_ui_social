@@ -157,7 +157,7 @@
           {/if}
         {#else}
           {#if is_integer(@time_limit) and @time_limit != 0}
-            <p class="text-sm mb-3 text-center text-base-content/50 font-semibold">{lp("That's all for today...", "That's all for the last %{number} days...", @time_limit,
+            <p class="text-sm py-4 bg-base-content/5 mt-4 text-center text-base-content/70 font-semibold">{lp("That's all for today...", "That's all for the last %{number} days...", @time_limit,
                 number: @time_limit
               )}</p>
 
