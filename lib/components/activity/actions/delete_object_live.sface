@@ -7,7 +7,7 @@ TODO: use preloaded boundaries for can? when available
   title_text={l("Delete this") <> " " <> e(@object_type_readable, l("object"))}
   form_opts={@form_opts}
 >
-  <div class="prose-sm prose">
+  <div class="prose-sm prose mt-3">
     <!-- {rich l "You may be able to undo this deletion *in some cases*, but in any case the data will eventually be permanently deleted from this instance."} -->
     <p>{@explanation || l("A request will be sent to remote instances to delete it as well.")}</p>
   </div>
@@ -39,7 +39,7 @@ TODO: use preloaded boundaries for can? when available
       phx-click={@action || if @form_opts == %{}, do: "Bonfire.Social.Objects:delete"}
       phx-value-id={id(@object)}
       phx-value-redirect_after={@redirect_after}
-      class="normal-case rounded btn btn-error btn-sm"
+      class="normal-case rounded-full btn btn-error btn-sm"
     >
       <span class="truncate ellipsis">{l("Delete")} {e(@object_type_readable, l("object"))}</span>
     </button>
