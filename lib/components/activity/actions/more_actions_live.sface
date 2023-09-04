@@ -199,13 +199,15 @@
       </li>
       <!-- Delete the object -->
     {#elseif @object_boundary && @object_type in [Bonfire.Data.Social.Message] && id(@activity)}
-      <Bonfire.UI.Social.Activity.DeleteObjectLive
-        object={@object}
-        creator_id={@creator_id}
-        object_type_readable={@object_type_readable}
-        object_boundary={@object_boundary}
-        parent_id={"object-#{id(@activity_component_id || @activity)}"}
-      />
+      <li>
+        <Bonfire.UI.Social.Activity.DeleteObjectLive
+          object={@object}
+          creator_id={@creator_id}
+          object_type_readable={@object_type_readable}
+          object_boundary={@object_boundary}
+          parent_id={"object-#{id(@activity_component_id || @activity)}"}
+        />
+      </li>
     {/if}
     <#slot {@admin_items} />
   </ul>

@@ -18,14 +18,14 @@
   >
     {#if @show_minimal_subject_and_note}
       <div class="flex-shrink-0">
-        <#Icon iconify="ic:round-reply" class="w-5 h-5 text-base-content/70" />
+        <#Icon iconify="ic:round-reply" class="w-5 h-5 text-base-content/50" />
       </div>
       <div class="flex items-top" x-data="{expanded: false}" x-on:click="expanded = ! expanded">
         <div
           x-show="expanded"
           :class="{'p_line_clamp': !expanded}"
           x-collapse.min.20px
-          class="font-normal cursor-pointer w-full max-w-full relative gap-1 prose prose-sm !text-sm !text-base-content/70 prose-a:text-base-content/70 prose-a:no-underline prose-p:inline-block"
+          class="font-semibold cursor-pointer w-full max-w-full relative gap-1 prose prose-sm !text-sm !text-base-content/50 prose-a:text-base-content/50 prose-a:no-underline prose-p:inline-block"
         >
           {if(@showing_within != :thread and @thread_title,
             do:
@@ -44,7 +44,6 @@
           {/if}
         </div>
       </div>
-    
     {#elseif @showing_within in [:thread, :messages] && !@viewing_main_object}
       <div class="flex justify-start gap-1">
         <div class="flex items-center gap-3 w-full">
@@ -59,7 +58,7 @@
               user={@profile}
               title={e(@profile, :name, "Anonymous")}
               class={
-                "rounded-full bg-base-100",
+                "bg-base-100 rounded",
                 "h-8 w-8": !@__context__[:ui_compact],
                 "h-6 w-6": @__context__[:ui_compact]
               }
@@ -94,7 +93,7 @@
                   thread_id={@thread_id}
                   showing_within={@showing_within}
                 >
-                  <span class="text-xs font-normal no-underline subject_timestamp text-base-content/60">
+                  <span class="text-xs font-normal no-underline subject_timestamp text-base-content/50">
                     {@date_ago || DatesTimes.date_from_now(@activity_id) || DatesTimes.date_from_now(@object_id)}
                   </span>
                 </Bonfire.UI.Social.Activity.LinkToActivityLive>
@@ -140,7 +139,7 @@
                       thread_id={@thread_id}
                       showing_within={@showing_within}
                     >
-                      <span class="text-xs font-normal no-underline subject_timestamp text-base-content/60">
+                      <span class="text-xs font-normal no-underline subject_timestamp text-base-content/50">
                         {@date_ago || DatesTimes.date_from_now(@activity_id) || DatesTimes.date_from_now(@object_id)}
                       </span>
                     </Bonfire.UI.Social.Activity.LinkToActivityLive>
@@ -177,7 +176,7 @@
             />
           </LiveRedirect>
         </div>
-        <div class="flex items-start justify-between w-full min-w-0 space-x-1 leading-4">
+        <div class="flex items-center justify-between w-full min-w-0 space-x-1 leading-4">
           <div class="flex flex-col flex-1 min-w-0 truncate feed-clickable">
             <div class={
               "text-sm font-medium line-clamp-1 text-base-content/70",
@@ -242,7 +241,7 @@
                   "data-id": "subject_username",
                   "aria-label": l("%{name}'s profile", name: e(@profile, :name, ""))
                 }
-                class="text-sm font-normal truncate link link-hover ellipsis text-base-content/70 subject_username"
+                class="text-sm font-normal truncate link link-hover ellipsis text-base-content/50 subject_username"
                 to={path(@character)}
               >
                 @{e(@character, :username, "")}
@@ -269,7 +268,7 @@
             >
               <span
                 data-role="subject_timestamp"
-                class="subject_timestamp text-[13px] font-normal no-underline truncate ellipsis text-base-content/70"
+                class="subject_timestamp text-[13px] font-normal no-underline truncate ellipsis text-base-content/50"
               >
                 {@date_ago || DatesTimes.date_from_now(@activity_id) || DatesTimes.date_from_now(@object_id)}
               </span>

@@ -128,22 +128,22 @@
             class="flex items-center gap-5 justify-start pb-2 mb-2"
           >
             <!-- FOLLOW -->
-              <#Icon solid="UserAdd" class="flex-shrink-0 w-7 h-7 text-info" />
-              <!-- <Bonfire.UI.Common.AvatarLive
+            <#Icon solid="UserAdd" class="flex-shrink-0 w-7 h-7 text-info" />
+            <!-- <Bonfire.UI.Common.AvatarLive
                 user={@profile}
                 title={e(@profile, :name, "Anonymous")}
                 class="h-9 w-9 rounded-full bg-base-content/20"
               /> -->
-              <div class="font-medium text-sm text-base-content/90">
-                {e(@profile, :name, nil) || e(@character, :username, nil)}
+            <div class="font-medium text-sm text-base-content/90">
+              {e(@profile, :name, nil) || e(@character, :username, nil)}
 
-                {raw(@verb_display)}
+              {raw(@verb_display)}
 
-                <span :if={@object_id == current_user_id(@__context__)}>
-                  <!-- special case when current_user is the one being followed -->
-                  {l("you")}
-                </span>
-              </div>
+              <span :if={@object_id == current_user_id(@__context__)}>
+                <!-- special case when current_user is the one being followed -->
+                {l("you")}
+              </span>
+            </div>
           </LiveRedirect>
         {#elseif @published_in}
           <!-- <Bonfire.UI.Social.Activity.PublishedInLive

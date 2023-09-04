@@ -3,8 +3,8 @@
   data-id="comment"
   class={
     "flex flex-1 w-full items-top",
-    "bg-base-300 ": @thread_level == 1}
-
+    "bg-base-300 ": @thread_level == 1
+  }
 >
   <!-- <div
         :if={@thread_level > 1}

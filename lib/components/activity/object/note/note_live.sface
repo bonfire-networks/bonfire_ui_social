@@ -9,7 +9,7 @@
     "!my-0": @showing_within == :smart_input,
     "!mt-0 ml-11 cursor-default": @showing_within == :thread && !@viewing_main_object,
     "!ml-12": @showing_within == :notifications,
-    "mb-3": @viewing_main_object,
+    "mb-3": @viewing_main_object
   }
   x-ref="note_container"
   x-transition
@@ -17,13 +17,13 @@
   <!-- x-show={if @showing_within == :thread && !@viewing_main_object, do: "show_replies"} -->
   <!-- id={"note-#{@activity_inception}-#{id(@activity) || id(@object) || "no-id"}-#{e(assigns, :viewing_main_object, false)}"} -->
 
-  {#case e(post_content(@object), :name, nil)}
+  <!-- {#case e(post_content(@object), :name, nil)}
     {#match nil}
     {#match name}
       <div :if={name != @thread_title} class="w-full h-auto max-w-full p-0 m-0 mt-6 text-2xl font-bold">
         {rich(name)}
       </div>
-  {/case}
+  {/case} -->
 
   {#case e(post_content(@object), :summary, nil)}
     {#match summary}
@@ -65,8 +65,8 @@
                   class={
                     "prose break-words object_body max-w-none prose-p:pt-0 prose-p:my-0 prose-a:text-primary prose-a:no-underline prose-sm",
                     "!my-0 !text-sm !font-normal ": @showing_within == :smart_input,
-                    "md:prose-base": @viewing_main_object,
-                    "md:prose-sm": @showing_within in [nil, :feed, :search, :notifications],
+                    "md:!prose-lg": @viewing_main_object,
+                    "": @showing_within in [nil, :feed, :search, :notifications],
                     previewable_truncate: !@viewing_main_object
                   }
                   :class="{'previewable_expanded': expanded}"
