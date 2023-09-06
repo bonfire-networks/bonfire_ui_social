@@ -23,8 +23,7 @@
       <div :if={name != @thread_title} class="w-full h-auto max-w-full p-0 m-0 mt-6 text-2xl font-bold">
         {rich(name)}
       </div>
-  {/case} -->
-
+  {/case}  -->
   {#case e(post_content(@object), :summary, nil)}
     {#match summary}
       {#case @cw == true or (is_nil(@cw) and not is_nil(summary))}
@@ -63,9 +62,10 @@
                   x-ref="note"
                   data-id="object_body"
                   class={
-                    "prose break-words object_body max-w-none prose-p:pt-0 prose-p:my-0 prose-a:text-primary prose-a:no-underline prose-sm",
+                    "prose break-words object_body max-w-none prose-p:pt-0 prose-p:my-0 prose-a:text-primary prose-a:no-underline",
                     "!my-0 !text-sm !font-normal ": @showing_within == :smart_input,
-                    "md:!prose-lg": @viewing_main_object,
+                    "prose-sm": !@viewing_main_object,
+                    "md:!prose-base": @viewing_main_object,
                     "": @showing_within in [nil, :feed, :search, :notifications],
                     previewable_truncate: !@viewing_main_object
                   }

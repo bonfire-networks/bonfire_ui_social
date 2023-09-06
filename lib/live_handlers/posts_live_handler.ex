@@ -20,10 +20,10 @@ defmodule Bonfire.Social.Posts.LiveHandler do
   def handle_event("post", params, socket) do
     attrs =
       params
-      # |> debug("post params")
+      |> debug("post params qua")
       |> input_to_atoms()
 
-    # |> debug("post attrs")
+      |> debug("post attrs qui")
 
     # debug(e(socket.assigns, :showing_within, nil), "SHOWING")
     current_user = current_user_required!(socket)
@@ -35,7 +35,7 @@ defmodule Bonfire.Social.Posts.LiveHandler do
              current_user: current_user,
              post_attrs:
                Bonfire.Social.Posts.prepare_post_attrs(attrs)
-               |> Map.put(:uploaded_media, uploaded_media),
+              |> Map.put(:uploaded_media, uploaded_media),
              boundary: e(params, "to_boundaries", "mentions"),
              to_circles: e(params, "to_circles", []),
              context_id: e(params, "context_id", nil),
@@ -71,7 +71,7 @@ defmodule Bonfire.Social.Posts.LiveHandler do
         socket
         |> assign_flash(
           :info,
-          "<div class='flex justify-between items-center'> <span>#{l("Posted!")} </span><a href='#{permalink}' class='btn-outline btn btn-xs normal-case font-medium text-info-content rounded'>#{l("Show")}</a></div>"
+          "<div class='flex justify-between items-center'> <span>#{l("Posted!")} </span><a href='#{permalink}' class='btn-outline mr-2 btn btn-xs normal-case font-medium text-info-content rounded-full'>#{l("Show")}</a></div>"
         )
         # |> Bonfire.UI.Common.SmartInput.LiveHandler.close_smart_input()
         |> Bonfire.UI.Common.SmartInput.LiveHandler.reset_input()
@@ -187,7 +187,7 @@ defmodule Bonfire.Social.Posts.LiveHandler do
   end
 
   def post_changeset(attrs \\ %{}, creator) do
-    # debug(attrs, "ATTRS")
+    debug(attrs, "ATTRS33")
     Posts.changeset(:create, attrs, creator)
     # |> debug("pc")
   end

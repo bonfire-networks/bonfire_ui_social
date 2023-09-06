@@ -73,20 +73,17 @@
       <div
         id="write_post_body_field"
         class="h-full flex-1 break-words"
-        phx-update={if @reset_smart_input, do: "replace", else: "ignore"}
+      
       >
-        <Inputs for={:post_content}>
           <label for="description" class="sr-only">{l("Text")}</label>
-          <Field class="flex-1 h-full grow" name={:html_body}>
             <WriteEditorLive
               field_name="post[post_content][html_body]"
+              reset_smart_input={@reset_smart_input}
               textarea_class={@textarea_class}
               smart_input_opts={@smart_input_opts}
               insert_text={@insert_text}
               showing_within={@showing_within}
             />
-          </Field>
-        </Inputs>
       </div>
     </Bonfire.UI.Common.InputControlsLive>
   </Form>
