@@ -1,6 +1,7 @@
 <div class="flex flex-col h-full  write_post_content">
   <Form
-    for={Bonfire.Social.Posts.LiveHandler.post_changeset(current_user(@__context__))}
+    for={%{}} 
+    as={:post}
     submit={JS.push(handler(@create_object_type)) |> Bonfire.UI.Common.SmartInput.LiveHandler.minimize()}
     action={"/LiveHandler/" <> handler(@create_object_type)}
     change="validate"
@@ -73,12 +74,13 @@
       <div
         id="write_post_body_field"
         class="h-full flex-1 break-words"
-        phx-update={if @reset_smart_input, do: "replace", else: "ignore"}
+         phx-update="ignore"
       >
-        <Inputs for={:post_content}>
+        <!-- phx-update={if @reset_smart_input, do: "replace", else: "ignore"} -->
+        <!-- <Inputs for={:post_content}>
           <label for="description" class="sr-only">{l("Text")}</label>
           <Field class="flex-1 h-full grow" name={:html_body}>
-            <TextInput  type="hidden" class="editor_hidden_input" />
+            <TextInput  class="h-[30px] editor_hidden_input" /> -->
             <WriteEditorLive
               field_name="post[post_content][html_body]"
               reset_smart_input={@reset_smart_input}
@@ -87,8 +89,8 @@
               insert_text={@insert_text}
               showing_within={@showing_within}
             />
-          </Field>
-        </Inputs>
+          <!-- </Field>
+        </Inputs> -->
       </div>
     </Bonfire.UI.Common.InputControlsLive>
   </Form>

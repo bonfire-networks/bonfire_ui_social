@@ -84,7 +84,7 @@
               feed_id={@feed_id}
               hide_activity={@hide_activities}
               subject_user={@subject_user}
-              hide_actions={@hide_fresh != 0}
+              
             />
           </div>
         {/for}

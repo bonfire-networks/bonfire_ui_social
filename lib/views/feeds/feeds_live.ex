@@ -10,24 +10,27 @@ defmodule Bonfire.UI.Social.FeedsLive do
     default_nav: [
       Bonfire.UI.Social.FeedsLive,
       # Bonfire.UI.Social.ExploreLive,
-      # Bonfire.UI.Me.ProfileLive,
       Bonfire.UI.Social.Feeds.LocalLive,
       Bonfire.UI.Social.Feeds.FederationLive,
       # Bonfire.UI.Social.Feeds.LikesLive,
       Bonfire.UI.Social.MessagesLive,
       Bonfire.UI.Social.NotificationsFeedLive,
+      Bonfire.UI.Me.ProfileLive,
       Bonfire.UI.Groups.SidebarGroupsLive
     ]
   )
 
   # declare_nav_link(l("My feed"), page: "feed", icon: "heroicons-solid:newspaper")
-  declare_nav_link([
-    {l("Activities"),
-     page: "feed", href: &nav_link_feed/1, icon: "ri:home-line", icon_active: "ri:home-fill"}
+  declare_nav_link(
+    l("Activities"),
+    page: "feed",
+    href: &nav_link_feed/1,
+    icon: "ri:home-line",
+    icon_active: "ri:home-fill"
     # {l("Posts"), page: "posts", href: &nav_link_posts/1, icon: "ri:chat-2-line", icon_active: "ri:chat-2-fill"}
     # {l("Discussions"),
     #  page: "discussions", href: &nav_link_discussions/1, icon: "ri:discuss-line"}
-  ])
+  )
 
   def nav_link_feed(context),
     do:
