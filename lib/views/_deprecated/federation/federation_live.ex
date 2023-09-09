@@ -3,10 +3,10 @@ defmodule Bonfire.UI.Social.Feeds.FederationLive do
 
   alias Bonfire.Social.Feeds.LiveHandler
 
-  # declare_nav_link(l("Remote"),
-  #   page: "federation",
-  #   href: "/feed/federation",
-  #   icon: "el:network")
+  declare_nav_link(l("Remote"),
+    page: "federation",
+    href: "/feed/federation",
+    icon: "el:network")
 
   on_mount {LivePlugs, [Bonfire.UI.Me.LivePlugs.LoadCurrentUser]}
 

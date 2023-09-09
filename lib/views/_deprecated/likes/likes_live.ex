@@ -1,10 +1,11 @@
 defmodule Bonfire.UI.Social.Feeds.LikesLive do
   use Bonfire.UI.Common.Web, :surface_live_view
 
-  # declare_nav_link(l("Favourites"),
-  #   page: "likes",
-  #   icon: "bi:stars"
-  # )
+  declare_nav_link(l("Favourites"),
+    page: "favourites",
+    href: "/feed/likes",
+    icon: "bi:stars"
+  )
 
   on_mount {LivePlugs, [Bonfire.UI.Me.LivePlugs.UserRequired]}
 
