@@ -22,7 +22,6 @@ defmodule Bonfire.Social.Posts.LiveHandler do
       params
       |> debug("post params qua")
       |> input_to_atoms()
-
       |> debug("post attrs qui")
 
     # debug(e(socket.assigns, :showing_within, nil), "SHOWING")
@@ -35,7 +34,7 @@ defmodule Bonfire.Social.Posts.LiveHandler do
              current_user: current_user,
              post_attrs:
                Bonfire.Social.Posts.prepare_post_attrs(attrs)
-              |> Map.put(:uploaded_media, uploaded_media),
+               |> Map.put(:uploaded_media, uploaded_media),
              boundary: e(params, "to_boundaries", "mentions"),
              to_circles: e(params, "to_circles", []),
              context_id: e(params, "context_id", nil),

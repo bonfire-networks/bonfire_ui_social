@@ -149,7 +149,8 @@
 
     <!-- Block the author, etc -->
     <Dynamic.Component
-      :if={current_user_id(@__context__) != @creator_id && module_enabled?(Bonfire.Boundaries.Web.BlockMenuButtonsLive)}
+      :if={current_user_id(@__context__) != @creator_id &&
+        module_enabled?(Bonfire.Boundaries.Web.BlockMenuButtonsLive)}
       module={Bonfire.Boundaries.Web.BlockMenuButtonsLive}
       parent_id={@activity_component_id || id(@activity)}
       object={@creator}
