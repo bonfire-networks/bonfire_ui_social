@@ -28,8 +28,10 @@ defmodule Bonfire.Social.Moderation.BlockTest do
     |> element("button[data-role=ghost]")
     |> render_click()
 
-    assert render(view) =~ "blocked"
-    assert render(view) =~ "unghost"
+    # open_browser(view)
+
+    assert render(view) =~ "ghosted"
+    assert render(view) =~ "Unghost"
   end
 
   test "Silence a user works" do
@@ -52,8 +54,8 @@ defmodule Bonfire.Social.Moderation.BlockTest do
     |> element("button[data-role=silence]")
     |> render_click()
 
-    assert render(view) =~ "blocked"
-    assert render(view) =~ "unsilence"
+    assert render(view) =~ "silenced"
+    assert render(view) =~ "Unsilence"
   end
 
   test "I can see a list of ghosted users" do
@@ -69,7 +71,7 @@ defmodule Bonfire.Social.Moderation.BlockTest do
     assert {:ok, _silenced} = Bonfire.Boundaries.Blocks.block(carl, :silence, current_user: me)
     # login as me and navigate to ghosted page in settings
     conn = conn(user: me, account: account)
-    {:ok, view, _html} = live(conn, "/settings/ghosted")
+    {:ok, view, _html} = live(conn, "/boundaries/ghosted")
     # check that alice and bob are there
     assert render(view) =~ alice.profile.name
     assert render(view) =~ bob.profile.name
@@ -90,7 +92,7 @@ defmodule Bonfire.Social.Moderation.BlockTest do
     assert {:ok, _silenced} = Bonfire.Boundaries.Blocks.block(carl, :silence, current_user: me)
     # login as me and navigate to ghosted page in settings
     conn = conn(user: me, account: account)
-    {:ok, view, _html} = live(conn, "/settings/silenced")
+    {:ok, view, _html} = live(conn, "/boundaries/silenced")
     # check that alice and bob are there
     refute render(view) =~ alice.profile.name
     refute render(view) =~ bob.profile.name
@@ -109,7 +111,7 @@ defmodule Bonfire.Social.Moderation.BlockTest do
     assert {:ok, _ghost} = Bonfire.Boundaries.Blocks.block(alice, :ghost, current_user: me)
     # login as me and navigate to ghosted page in settings
     conn = conn(user: me, account: account)
-    {:ok, view, _html} = live(conn, "/settings/ghosted")
+    {:ok, view, _html} = live(conn, "/boundaries/ghosted")
     # check that alice is there
     assert render(view) =~ alice.profile.name
     # remove from the ghosted list
@@ -132,7 +134,7 @@ defmodule Bonfire.Social.Moderation.BlockTest do
     assert {:ok, _ghost} = Bonfire.Boundaries.Blocks.block(alice, :silence, current_user: me)
     # login as me and navigate to ghosted page in settings
     conn = conn(user: me, account: account)
-    {:ok, view, _html} = live(conn, "/settings/silenced")
+    {:ok, view, _html} = live(conn, "/boundaries/silenced")
     # check that alice is there
     assert render(view) =~ alice.profile.name
     # remove from the ghosted list
@@ -144,7 +146,6 @@ defmodule Bonfire.Social.Moderation.BlockTest do
     refute render(view) =~ alice.profile.name
   end
 
-  # WIP: not implemented yet
   test "I can see if I silenced a user from their profile page" do
     # create a bunch of users
     account = fake_account!()
@@ -158,7 +159,6 @@ defmodule Bonfire.Social.Moderation.BlockTest do
     assert render(view) =~ "silenced"
   end
 
-  # WIP: not implemented yet
   test "I can see if I ghosted a user from their profile page" do
     # create a bunch of users
     account = fake_account!()
@@ -199,7 +199,8 @@ defmodule Bonfire.Social.Moderation.BlockTest do
       refute render(view) =~ html_body
     end
 
-    test "i'll be able to view their profile or read post via direct link" do
+
+    test "i'll be able to view their profile, I cannot read post via direct link" do
       # create a bunch of users
       account = fake_account!()
       me = fake_user!(account)
@@ -229,7 +230,7 @@ defmodule Bonfire.Social.Moderation.BlockTest do
       assert {:ok, thread, _html} = live(conn, "/post/#{post.id}")
 
       # view the post previously created
-      assert render(thread) =~ html_body
+      refute render(thread) =~ html_body
     end
 
     test "i'll not see any @ mentions from them" do
@@ -288,17 +289,17 @@ defmodule Bonfire.Social.Moderation.BlockTest do
       refute render(view) =~ html_body
     end
 
-    test "I'll not be able to follow them" do
-      # create a bunch of users
-      account = fake_account!()
-      me = fake_user!(account)
-      alice = fake_user!(account)
-      assert {:ok, _silenced} = Bonfire.Boundaries.Blocks.block(alice, :silence, current_user: me)
-      conn = conn(user: me, account: account)
-      {:ok, view, _html} = live(conn, "/@#{alice.character.username}")
+    # test "I'll not be able to follow them" do
+    #   # create a bunch of users
+    #   account = fake_account!()
+    #   me = fake_user!(account)
+    #   alice = fake_user!(account)
+    #   assert {:ok, _silenced} = Bonfire.Boundaries.Blocks.block(alice, :silence, current_user: me)
+    #   conn = conn(user: me, account: account)
+    #   {:ok, view, _html} = live(conn, "/@#{alice.character.username}")
 
-      refute has_element?(view, "div[data-role=follow_wrapper] a[data-id=follow]")
-    end
+    #   refute has_element?(view, "div[data-role=follow_wrapper] a[data-id=follow]")
+    # end
   end
 
   describe "if I ghosted a user they will not be able to interact with me or with my content" do

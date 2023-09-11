@@ -180,14 +180,14 @@
           <div class="flex flex-col flex-1 min-w-0 truncate feed-clickable">
             <div class={
               "text-sm font-medium line-clamp-1 text-base-content/70",
-              "!text-lg !font-semibold": @viewing_main_object
+              "!text-base": @viewing_main_object
             }>
               <!-- {@verb} {@object_type} -->
               <LiveRedirect
                 opts={"data-id": "subject_name", "aria-label": l("%{name}'s profile", name: e(@profile, :name, ""))}
                 class={
                   "link link-hover text-[15px] font-semibold",
-                  "!text-lg !font-semibold": @viewing_main_object
+                  "!text-base": @viewing_main_object
                 }
                 to={path(@character) || "/user/#{@subject_id}"}
               >

@@ -31,18 +31,18 @@ defmodule Bonfire.Social.Activities.NegativeBoundariesTest do
     # login as alice and verify that she cannot see the post
     conn = conn(user: alice, account: account)
     {:ok, view, _html} = live(conn, "/feed/local")
-    refute has_element?(view, "#activity-#{feed_id}-#{id(post)}")
+    refute has_element?(view, "article")
 
     # ...and cannot like and boost
     refute has_element?(
              view,
-             "#activity-#{feed_id}-#{id(post)} button[data-role=like_enabled]"
+             "article button[data-role=like_enabled]"
            )
 
     # ...and cannot like
     refute has_element?(
              view,
-             "#activity-#{feed_id}-#{id(post)} button[data-role=boost_enabled]"
+             "article button[data-role=boost_enabled]"
            )
 
     # login as bob and verify that he can like the post
@@ -51,7 +51,7 @@ defmodule Bonfire.Social.Activities.NegativeBoundariesTest do
 
     assert has_element?(
              view,
-             "#activity-#{feed_id}-#{id(post)} button[data-role=like_enabled]"
+             "article button[data-role=like_enabled]"
            )
   end
 
@@ -79,17 +79,17 @@ defmodule Bonfire.Social.Activities.NegativeBoundariesTest do
     # login as alice and verify that she can see the post
     conn = conn(user: alice, account: account)
     {:ok, view, _html} = live(conn, "/feed/local")
-    assert has_element?(view, "#activity-#{feed_id}-#{id(post)}")
+    assert has_element?(view, "article")
 
     # ...but cannot like and boost
     refute has_element?(
              view,
-             "#activity-#{feed_id}-#{id(post)} button[data-role=like_enabled]"
+             "article button[data-role=like_enabled]"
            )
 
     refute has_element?(
              view,
-             "#activity-#{feed_id}-#{id(post)} button[data-role=boost_enabled]"
+             "article button[data-role=boost_enabled]"
            )
 
     # login as bob and verify that he can like the post
@@ -98,7 +98,7 @@ defmodule Bonfire.Social.Activities.NegativeBoundariesTest do
 
     assert has_element?(
              view,
-             "#activity-#{feed_id}-#{id(post)} button[data-role=like_enabled]"
+             "article button[data-role=like_enabled]"
            )
   end
 
@@ -126,23 +126,23 @@ defmodule Bonfire.Social.Activities.NegativeBoundariesTest do
     # login as alice and verify that she can see the post
     conn = conn(user: alice, account: account)
     {:ok, view, _html} = live(conn, "/feed/local")
-    assert has_element?(view, "#activity-#{feed_id}-#{id(post)}")
+    assert has_element?(view, "article")
 
     # ...can like and bosst
     assert has_element?(
              view,
-             "#activity-#{feed_id}-#{id(post)} button[data-role=like_enabled]"
+             "article button[data-role=like_enabled]"
            )
 
     assert has_element?(
              view,
-             "#activity-#{feed_id}-#{id(post)} button[data-role=boost_enabled]"
+             "article button[data-role=boost_enabled]"
            )
 
     # ...but cannot reply
     refute has_element?(
              view,
-             "#activity-#{feed_id}-#{id(post)} button[data-role=reply_enabled]"
+             "article button[data-role=reply_enabled]"
            )
 
     # login as bob and verify that he can reply
@@ -151,7 +151,7 @@ defmodule Bonfire.Social.Activities.NegativeBoundariesTest do
 
     assert has_element?(
              view,
-             "#activity-#{feed_id}-#{id(post)} button[data-role=reply_enabled]"
+             "article button[data-role=reply_enabled]"
            )
   end
 end

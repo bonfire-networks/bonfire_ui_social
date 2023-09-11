@@ -35,22 +35,23 @@ defmodule Bonfire.Social.Activities.BoundariesInFeedsTest do
     # login as myself and verify that I can see the post
     conn = conn(user: me, account: account)
     {:ok, view, _html} = live(conn, "/post/#{post.id}")
-    assert has_element?(view, "#ot-#{id(post)}")
+    open_browser(view)
+    assert has_element?(view, "article", html_body)
 
     # login as alice and verify that she can see the post too
     conn = conn(user: alice, account: account)
     {:ok, view, _html} = live(conn, "/post/#{post.id}")
-    assert has_element?(view, "#ot-#{id(post)}")
+    assert has_element?(view, "article", html_body)
 
     # login as bob and verify that he can see the post too
     conn = conn(user: bob, account: account)
     {:ok, view, _html} = live(conn, "/post/#{post.id}")
-    assert has_element?(view, "#ot-#{id(post)}")
+    assert has_element?(view, "article", html_body)
 
     # login as carl and verify that he cannot see the post
     conn = conn(user: carl, account: account)
     {:ok, view, _html} = live(conn, "/post/#{post.id}")
-    refute has_element?(view, "#ot-#{id(post)}")
+    refute has_element?(view, "article", html_body)
   end
 
   test "adding a user with a 'participate' role and verify that the user can engage in the post's activities and discussions." do
@@ -75,30 +76,30 @@ defmodule Bonfire.Social.Activities.BoundariesInFeedsTest do
     # login as myself and verify that I can see the post
     conn = conn(user: me, account: account)
     {:ok, view, _html} = live(conn, "/post/#{post.id}")
-    assert has_element?(view, "#ot-#{id(post)}")
-    # element(view, "#ot-#{id(post)}") |> render() |> debug
+    assert has_element?(view, "article")
+    # element(view, "article") |> render() |> debug
 
     # ...and can like and boost and reply
-    assert has_element?(view, "#ot-#{id(post)} button[data-role=like_enabled]")
-    assert has_element?(view, "#ot-#{id(post)} button[data-role=boost_enabled]")
-    assert has_element?(view, "#ot-#{id(post)} button[data-role=reply_enabled]")
+    assert has_element?(view, "article button[data-role=like_enabled]")
+    assert has_element?(view, "article button[data-role=boost_enabled]")
+    assert has_element?(view, "article button[data-role=reply_enabled]")
 
     # login as alice and verify that she can see the post
     conn = conn(user: alice, account: account)
     {:ok, view, _html} = live(conn, "/post/#{post.id}")
-    assert has_element?(view, "#ot-#{id(post)}")
+    assert has_element?(view, "article")
 
     # ...and can like and boost and reply
-    assert has_element?(view, "#ot-#{id(post)} button[data-role=like_enabled]")
-    assert has_element?(view, "#ot-#{id(post)} button[data-role=boost_enabled]")
-    assert has_element?(view, "#ot-#{id(post)} button[data-role=reply_enabled]")
+    assert has_element?(view, "article button[data-role=like_enabled]")
+    assert has_element?(view, "article button[data-role=boost_enabled]")
+    assert has_element?(view, "article button[data-role=reply_enabled]")
 
     # login as bob and verify that he cannot see, like, boost and reply
     conn = conn(user: bob, account: account)
     {:ok, view, _html} = live(conn, "/post/#{post.id}")
-    refute has_element?(view, "#ot-#{id(post)} button[data-role=like_enabled]")
-    refute has_element?(view, "#ot-#{id(post)} button[data-role=boost_enabled]")
-    refute has_element?(view, "#ot-#{id(post)} button[data-role=reply_enabled]")
+    refute has_element?(view, "article button[data-role=like_enabled]")
+    refute has_element?(view, "article button[data-role=boost_enabled]")
+    refute has_element?(view, "article button[data-role=reply_enabled]")
   end
 
   test "creating a post with a custom boundary, and verify that only users within the boundary can access the post according to their assigned roles." do

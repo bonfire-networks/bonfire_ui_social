@@ -27,7 +27,11 @@ defmodule Bonfire.Social.Activities.CreatePost.Test do
       live_pubsub_wait(view)
 
       assert posted =
+<<<<<<< HEAD
                html
+=======
+              view
+>>>>>>> 2f436250 (https://github.com/bonfire-networks/bonfire-app/issues/699)
                |> form("#smart_input form")
                |> render_submit(%{
                  "to_boundaries" => "public",
@@ -112,9 +116,7 @@ defmodule Bonfire.Social.Activities.CreatePost.Test do
 
       attrs_reply = %{
         post_content: %{
-          summary: "summary",
-          name: reply_content,
-          html_body: html_body
+          html_body: reply_content
         },
         reply_to_id: post.id
       }
@@ -122,22 +124,15 @@ defmodule Bonfire.Social.Activities.CreatePost.Test do
       {:ok, post} =
         Posts.publish(current_user: alice, post_attrs: attrs_reply, boundary: "public")
 
-      # then I log in and reply to it
-      # assert view
-      # |> form("#smart_input form")
-      # |> render_submit(%{
-      #   "to_boundaries" => "public",
-      #   "reply_to" => %{"reply_to_id" => post.id},
-      #   "post" => %{
-      #   "post_content" => %{"html_body" => "reply to alice"}}
-      # })
+
 
       # im not sure if live_pubsub_wait is enough to wait for asyync loading of the reply
       # so we wait a bit more
       conn = conn(user: me, account: account)
       {:ok, view, _html} = live(conn, "/feed/local")
-      live_pubsub_wait(view)
 
+      live_pubsub_wait(view)
+      #  open_browser(view)
       assert has_element?(view, "[data-id=feed]", reply_content)
 
       # view |> open_browser()

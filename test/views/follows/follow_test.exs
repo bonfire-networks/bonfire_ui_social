@@ -30,7 +30,7 @@ defmodule Bonfire.Social.Follows.Test do
       assert view
              |> render()
              ~> Floki.find("[data-id=unfollow]")
-             |> Floki.text() =~ "Unfollow"
+             |> Floki.text() =~ "Following"
     end
   end
 

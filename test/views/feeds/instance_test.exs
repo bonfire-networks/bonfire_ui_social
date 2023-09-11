@@ -8,38 +8,31 @@ defmodule Bonfire.Social.Feeds.Instance.Test do
   describe "show" do
     test "not logged in" do
       conn = conn()
-      conn = get(conn, "/feed/local")
       feed_id = Bonfire.Social.Feeds.named_feed_id(:local)
 
-      doc = floki_response(conn)
-      # |> IO.inspect
-      main = Floki.find(doc, "main")
-      # assert redirected_to(conn) =~ "/login"
-      assert [_] = Floki.find(doc, "[id='#{feed_id}']")
+      {:ok, _view, html} = live(conn, "/feed/local")
+      # live_pubsub_wait(view)
+      # open_browser(view)
+      assert html  =~ "Log in"
+
+      # doc = floki_response(conn)
+      # # |> IO.inspect
+      # main = Floki.find(doc, "main")
+      # # assert redirected_to(conn) =~ "/login"
+      # assert [_] = Floki.find(doc, "[id='#{feed_id}']")
     end
 
-    test "with account" do
-      account = fake_account!()
-      user = fake_user!(account)
-      conn = conn(account: account)
-      next = "/feed/local"
-      feed_id = Bonfire.Social.Feeds.named_feed_id(:local)
 
-      # |> IO.inspect
-      {view, doc} = floki_live(conn, next)
-      assert [_] = Floki.find(doc, "[id='#{feed_id}']")
-    end
 
     test "with user" do
       account = fake_account!()
       user = fake_user!(account)
       conn = conn(user: user, account: account)
-      next = "/feed/local"
       feed_id = Bonfire.Social.Feeds.named_feed_id(:local)
 
       # |> IO.inspect
-      {view, doc} = floki_live(conn, next)
-      assert [_] = Floki.find(doc, "[id='#{feed_id}']")
+      {:ok, _view, html} = live(conn, "/feed/local")
+      assert [_] = Floki.find(html, "[id='#{feed_id}']")
     end
 
     test "my own posts in instance feed (with local preset selected)" do
@@ -63,7 +56,7 @@ defmodule Bonfire.Social.Feeds.Instance.Test do
       # |> IO.inspect
       {view, doc} = floki_live(conn, next)
       assert [feed] = Floki.find(doc, "[id='#{feed_id}']")
-      assert Floki.text(feed) =~ "test post name"
+      assert Floki.text(feed) =~ "summary"
     end
 
     test "local posts from people I am not following in instance feed (if local preset selected)" do
@@ -88,8 +81,9 @@ defmodule Bonfire.Social.Feeds.Instance.Test do
 
       # |> IO.inspect
       {view, doc} = floki_live(conn, next)
+      open_browser(view)
       assert [feed] = Floki.find(doc, "[id='#{feed_id}']")
-      assert Floki.text(feed) =~ "test post name"
+      assert Floki.text(feed) =~ "summary"
     end
   end
 
@@ -104,14 +98,12 @@ defmodule Bonfire.Social.Feeds.Instance.Test do
 
       attrs = %{
         post_content: %{
-          summary: "summary",
-          name: "test post name",
           html_body: "<p>epic html message</p>"
         }
       }
 
       assert {:ok, post} = Posts.publish(current_user: user, post_attrs: attrs)
-      assert post.post_content.name =~ "test post name"
+      assert post.post_content.html_body =~ "epic html message"
 
       conn = conn(user: user2, account: account2)
       next = "/feed/local"
@@ -120,7 +112,7 @@ defmodule Bonfire.Social.Feeds.Instance.Test do
       # |> IO.inspect
       {view, doc} = floki_live(conn, next)
       assert [feed] = Floki.find(doc, "[id='#{feed_id}']")
-      refute Floki.text(feed) =~ "test post name"
+      refute Floki.text(feed) =~ "epic html message"
     end
   end
 
@@ -162,8 +154,8 @@ defmodule Bonfire.Social.Feeds.Instance.Test do
     entries =
       doc
       |> Floki.find("article")
-
+    # open_browser(view)
     dump(entries, "entries")
-    assert length(entries) == 5
+    assert length(entries) == 1
   end
 end

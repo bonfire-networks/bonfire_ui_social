@@ -35,11 +35,10 @@ defmodule Bonfire.Social.Feeds.LoadMoreTest do
       end
 
       {:ok, view, _html} = live(conn, "/feed/local")
-      # open_browser(view)
-      # feed = element(view, "[data-id=feed_activity_list]")
-      # assert has_element?(feed)
 
-      # no more posts
+
+      live_pubsub_wait(view)
+
       refute has_element?(view, "a[data-role=load_more_button]")
     end
 

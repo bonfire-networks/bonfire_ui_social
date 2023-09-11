@@ -9,7 +9,7 @@
     "!my-0": @showing_within == :smart_input,
     "!mt-0 ml-11 cursor-default": @showing_within == :thread && !@viewing_main_object,
     "!ml-12": @showing_within == :notifications,
-    "mb-3": @viewing_main_object
+    "!mt-0 mb-3": @viewing_main_object
   }
   x-ref="note_container"
   x-transition

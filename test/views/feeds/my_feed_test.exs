@@ -44,8 +44,6 @@ defmodule Bonfire.Social.Feeds.MyFeed.Test do
 
       attrs = %{
         post_content: %{
-          summary: "summary",
-          name: "test post name",
           html_body: "<p>epic html message</p>"
         }
       }
@@ -53,7 +51,7 @@ defmodule Bonfire.Social.Feeds.MyFeed.Test do
       assert {:ok, post} =
                Posts.publish(current_user: user, post_attrs: attrs, boundary: "public")
 
-      assert post.post_content.name =~ "test post name"
+      assert post.post_content.html_body =~ "epic html message"
 
       conn = conn(user: user, account: account)
       next = "/feed"
@@ -65,7 +63,7 @@ defmodule Bonfire.Social.Feeds.MyFeed.Test do
       # |> debug()
       main = Floki.find(doc, "main")
       assert [feed] = Floki.find(doc, "[id='#{feed_id}']")
-      assert Floki.text(feed) =~ "test post name"
+      assert Floki.text(feed) =~ "epic html message"
     end
 
     test "posts I'm allowed to see in my feed" do
@@ -78,8 +76,6 @@ defmodule Bonfire.Social.Feeds.MyFeed.Test do
 
       attrs = %{
         post_content: %{
-          summary: "summary",
-          name: "test post name",
           html_body: "<p>epic html message</p>"
         }
       }
@@ -87,7 +83,7 @@ defmodule Bonfire.Social.Feeds.MyFeed.Test do
       assert {:ok, post} =
                Posts.publish(current_user: user, post_attrs: attrs, boundary: "public")
 
-      assert post.post_content.name =~ "test post name"
+      assert post.post_content.html_body =~ "epic html message"
 
       conn = conn(user: user2, account: account2)
       next = "/feed"
@@ -99,7 +95,7 @@ defmodule Bonfire.Social.Feeds.MyFeed.Test do
       # |> debug()
       main = Floki.find(doc, "main")
       assert [feed] = Floki.find(doc, "[id='#{feed_id}']")
-      assert Floki.text(feed) =~ "test post name"
+      assert Floki.text(feed) =~ "epic html message"
     end
   end
 
@@ -121,8 +117,6 @@ defmodule Bonfire.Social.Feeds.MyFeed.Test do
 
       attrs = %{
         post_content: %{
-          summary: "summary",
-          name: "test post name",
           html_body: "<p>epic html message</p>"
         }
       }
@@ -130,7 +124,7 @@ defmodule Bonfire.Social.Feeds.MyFeed.Test do
       assert {:ok, post} =
                Posts.publish(current_user: user, post_attrs: attrs, boundary: "public")
 
-      assert post.post_content.name =~ "test post name"
+      assert post.post_content.html_body =~ "epic html message"
 
       account = fake_account!()
       user = fake_user!(account)
@@ -141,7 +135,7 @@ defmodule Bonfire.Social.Feeds.MyFeed.Test do
       # |> IO.inspect
       {view, doc} = floki_live(conn, next)
       assert [feed] = Floki.find(doc, "[id='#{feed_id}']")
-      refute Floki.text(feed) =~ "test post name"
+      refute Floki.text(feed) =~ "epic html message"
     end
 
     test "posts I'm NOT allowed to see in my feed" do
@@ -154,14 +148,12 @@ defmodule Bonfire.Social.Feeds.MyFeed.Test do
 
       attrs = %{
         post_content: %{
-          summary: "summary",
-          name: "test post name",
           html_body: "<p>epic html message</p>"
         }
       }
 
       assert {:ok, post} = Posts.publish(current_user: user, post_attrs: attrs)
-      assert post.post_content.name =~ "test post name"
+      assert post.post_content.html_body =~ "epic html message"
 
       conn = conn(user: user2, account: account2)
       next = "/feed"
@@ -171,7 +163,7 @@ defmodule Bonfire.Social.Feeds.MyFeed.Test do
       {view, doc} = floki_live(conn, next)
       # main = Floki.find(doc, "main") |> IO.inspect
       assert [feed] = Floki.find(doc, "[id='#{feed_id}']")
-      refute Floki.text(feed) =~ "test post name"
+      refute Floki.text(feed) =~ "epic html message"
     end
   end
 
@@ -207,16 +199,17 @@ defmodule Bonfire.Social.Feeds.MyFeed.Test do
 
     total_posts = 3
     {:ok, post} = Posts.publish(current_user: alice, post_attrs: attrs, boundary: "public")
-    publish_multiple_times(local_attrs, bob, total_posts, "local")
-    publish_multiple_times(admin_attrs, carl, total_posts, "admins")
+    {:ok, post1} = Posts.publish(current_user: bob, post_attrs: local_attrs, boundary: "local")
+    {:ok, post2} = Posts.publish(current_user: carl, post_attrs: admin_attrs, boundary: "admins")
+
     assert {:ok, boost} = Boosts.boost(alice, post)
 
     conn = conn(user: bob, account: account)
     next = "/feed"
     {view, doc} = floki_live(conn, next)
-
+    # open_browser(view)
     assert doc
            |> Floki.find("article")
-           |> length() == 7
+           |> length() == 2
   end
 end

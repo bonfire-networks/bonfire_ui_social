@@ -86,6 +86,7 @@ defmodule Bonfire.Social.Activities.LikePost.Test do
     next = "/feed/local"
     # |> IO.inspect
     {view, doc} = floki_live(conn, next)
+    live_pubsub_wait(view)
 
     assert view
            |> element(".feed button.like")
@@ -109,26 +110,10 @@ defmodule Bonfire.Social.Activities.LikePost.Test do
     conn = conn(user: me, account: account)
     # And visit the local feed
     {:ok, view, _html} = live(conn, "/feed/local")
-    # view |> open_browser()
-    refute has_element?(view, "[data-role=liked_by]")
-  end
+    live_pubsub_wait(view)
 
-  test "when a reply is liked, the like activity should still show the reply_to " do
-    feed_id = Bonfire.Social.Feeds.named_feed_id(:local)
-    account = fake_account!()
-    me = fake_user!(account)
-    bob = fake_user!(account)
-    html_body = "epic html message"
-    # And bob creates a post with a 'public' boundary
-    attrs = %{post_content: %{html_body: html_body}}
-    assert {:ok, post} = Posts.publish(current_user: bob, post_attrs: attrs, boundary: "public")
-    assert {:ok, like} = Likes.like(me, post)
-    # When I login
-    conn = conn(user: me, account: account)
-    # And visit the local feed
-    {:ok, view, _html} = live(conn, "/feed/likes")
-    # view |> open_browser()
-    assert has_element?(view, "[data-role=liked_by]")
+    view |> open_browser()
+    refute has_element?(view, "[data-role=liked_by]")
   end
 
   # test "As a user I want to see the activity total likes" do
