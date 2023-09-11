@@ -40,15 +40,16 @@ defmodule Bonfire.Social.Activities.BoostPost.Test do
 
   describe "unboost a post" do
     test "works" do
-      poster = fake_user!()
+      some_account = fake_account!()
+      poster = fake_user!(some_account)
+      someone = fake_user!(some_account)
+
       content = "here is an epic html post"
       attrs = %{post_content: %{html_body: content}}
       # poster posts
       assert {:ok, post} =
-               Posts.publish(current_user: poster, post_attrs: attrs, boundary: "local")
+               Posts.publish(current_user: poster, post_attrs: attrs, boundary: "public")
 
-      some_account = fake_account!()
-      someone = fake_user!(some_account)
       conn = conn(user: someone, account: some_account)
 
       # someone boosts

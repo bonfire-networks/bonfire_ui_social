@@ -21,10 +21,11 @@ defmodule Bonfire.Social.Activities.CreatePost.Test do
 
       next = "/feed"
       # |> IO.inspect
-      {view, doc} = floki_live(conn, next)
+      {:ok, view, html} = live(conn, next)
+      # open_browser(view)
 
       assert posted =
-               view
+              html
                |> form("#smart_input form")
                |> render_submit(%{
                  "to_boundaries" => "public",
@@ -48,9 +49,11 @@ defmodule Bonfire.Social.Activities.CreatePost.Test do
 
       next = "/feed"
       # |> IO.inspect
-      {view, doc} = floki_live(conn, next)
+      {:ok, view, _html} = live(conn, next)
+      # open_browser(view)
+      live_pubsub_wait(view)
 
-      assert view
+      assert posted = view
              |> form("#smart_input form")
              |> render_submit(%{
                "to_boundaries" => "public",
@@ -59,8 +62,8 @@ defmodule Bonfire.Social.Activities.CreatePost.Test do
 
       next = "/user"
       # |> IO.inspect
-      {view, doc} = floki_live(conn, next)
-      assert has_element?(view, "[data-id=feed]", content)
+      {:ok, profile, _html} = live(conn, next)
+      assert has_element?(profile, "[data-id=feed]", content)
     end
 
     test "shows up right away" do
@@ -73,7 +76,7 @@ defmodule Bonfire.Social.Activities.CreatePost.Test do
 
       next = "/feed"
       # |> IO.inspect
-      {view, doc} = floki_live(conn, next)
+      {:ok, view, _html} = live(conn, next)
 
       assert view
              |> form("#smart_input form")

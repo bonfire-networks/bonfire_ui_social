@@ -159,7 +159,7 @@
           class="mr-3"
         >
           <LiveRedirect
-            opts={"data-id": "subject_name", "aria-label": e(@character, :username, "") <> " profile"}
+            opts={"data-id": "subject_avatar", "aria-label": e(@character, :username, "") <> " profile"}
             class="font-semibold text-base-content hover:underline"
             to={path(@character) || "/user/#{@subject_id}"}
           >

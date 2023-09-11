@@ -120,7 +120,10 @@ defmodule Bonfire.UI.Social.Feeds.BoostsActivityTest do
     feed = Bonfire.Social.FeedActivities.my_feed(alice)
     # |> IO.inspect
     fp = feed.edges |> List.first()
-
+    # conn = conn(user: alice, account: account)
+    # next = "/feed/local"
+    # {view, doc} = floki_live(conn, next)
+    # open_browser(view)
     assert doc =
              render_stateful(Bonfire.UI.Social.ActivityLive, %{
                id: "activity",
@@ -129,8 +132,8 @@ defmodule Bonfire.UI.Social.Feeds.BoostsActivityTest do
 
     assert doc
            |> Floki.parse_fragment()
-           ~> Floki.find("[data-id=subject_name]")
-           |> Floki.text() =~ alice.profile.name
+           ~> Floki.find("[data-role=boosted_by]")
+           |> Floki.text() =~ bob.profile.name
   end
 
   test "As a user, when I boosts a post, I want to see the activity boosted object" do

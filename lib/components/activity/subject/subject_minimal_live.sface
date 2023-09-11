@@ -407,7 +407,7 @@
             showing_within={@showing_within}
           /> -->
         {#elseif @verb == "Boost"}
-          <div class="flex items-center justify-start pb-2 mb-2">
+          <div data-role="boosted_by" class="flex items-center justify-start pb-2 mb-2">
             <!-- BOOST -->
             <Iconify.Bonfire.Boost.render class="w-5 h-5 stroke-1 fill-info" />
             <div class="flex-1 ml-2">

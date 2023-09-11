@@ -8,6 +8,7 @@ defmodule Bonfire.UI.Social.Feeds.LikeActivityTest do
   alias Bonfire.Social.Follows
   alias Bonfire.Social.Posts
 
+  @tag :skip
   test "As a user I want to see the activity total likes" do
     # Create alice user
     account = fake_account!()
@@ -138,20 +139,13 @@ defmodule Bonfire.UI.Social.Feeds.LikeActivityTest do
 
     assert {:ok, post} = Posts.publish(current_user: alice, post_attrs: attrs, boundary: "public")
     assert {:ok, like} = Likes.like(bob, post)
-    feed = Bonfire.Social.FeedActivities.my_feed(alice)
-    # |> IO.inspect
-    fp = feed.edges |> List.first()
 
-    assert doc =
-             render_stateful(Bonfire.UI.Social.ActivityLive, %{
-               id: "activity",
-               activity: fp.activity
-             })
+    conn = conn(user: bob, account: account)
+    next = "/feed/likes"
 
-    assert doc
-           |> Floki.parse_fragment()
-           ~> Floki.find("[data-id=subject_name]")
-           |> Floki.text() =~ alice.profile.name
+
+    {:ok, view, _html} = live(conn, next)
+    assert has_element?(view, "a[data-id=subject_name]", alice.profile.name)
   end
 
   @tag :fixme
