@@ -30,15 +30,19 @@
             <a
               href={media_url || preview_img(m)}
               target="_blank"
-              class="flex w-full border rounded-lg media_container hover:bg-base-content/5 border-base-content/20"
+              class="flex  w-full border rounded-lg media_container hover:bg-base-content/5 border-base-content/20"
             >
               <div class="flex items-center gap-3 overflow-hidden">
-                <div class="flex items-center rounded-l-lg shrink-0 w-[120px] h-[120px] bg-base-content/10 place-content-center">
+                <div class="flex relative items-center rounded-l-lg shrink-0 w-[120px] h-[120px] bg-base-content/10 place-content-center">
                   {#case preview_img(m) || e(m.metadata, "favicon", nil) ||
                       Bonfire.Files.FaviconStore.favicon_url(media_url)}
                     {#match nil}
                       <#Icon solid="ExternalLink" class="w-9 h-9 text-base-content/70" />
                     {#match preview_img}
+                      <div
+                        class="absolute inset-0 backdrop-blur-lg bg-white/30 z-50 rounded-box"
+                        :if={@cw || Settings.get([Bonfire.UI.Social.Activity.MediaLive, :hide], false, @__context__)}
+                      />
                       {#case String.ends_with?(preview_img, ".ico")}
                         {#match true}
                           <LazyImage
@@ -101,7 +105,7 @@
                       4
                 }>
                   <div
-                    class="absolute inset-0 backdrop-blur-md bg-white/30 z-50 rounded-box"
+                    class="absolute inset-0 backdrop-blur-xl bg-white/30 z-50 rounded-box"
                     :if={@cw || Settings.get([Bonfire.UI.Social.Activity.MediaLive, :hide], false, @__context__)}
                   />
                   <figure class="h-full">
@@ -180,6 +184,11 @@
                     {#else}
                       <!-- if logged out -->
                       <a href={Media.media_url(m)} target="_blank" class="relative h-full">
+                        <div
+                          class="absolute inset-0 backdrop-blur-xl bg-white/30 z-50 rounded-box"
+                          :if={@cw || Settings.get([Bonfire.UI.Social.Activity.MediaLive, :hide], false, @__context__)}
+                        />
+
                         {#case preview_img(m) || Media.media_url(m)}
                           {#match maybe_preview_img}
                             {#if is_image?(maybe_preview_img)}
@@ -275,16 +284,12 @@
 
                         <:open_btn>
                           <div class="relative h-full">
-                            <div
-                              class="absolute inset-0 flex items-center cursor-pointer place-content-center justify-center z-[60]"
-                              :if={@cw || Settings.get([Bonfire.UI.Social.Activity.MediaLive, :hide], false, @__context__)}
-                            >
-                              <button class="btn btn-sm rounded normal-case">{l("Media Hidden")}</button>
-                            </div>
-                            <div
-                              class="absolute inset-0 backdrop-blur-xl z-50 cursor-pointer rounded-md"
-                              :if={@cw || Settings.get([Bonfire.UI.Social.Activity.MediaLive, :hide], false, @__context__)}
-                            />
+                            {#if @cw || Settings.get([Bonfire.UI.Social.Activity.MediaLive, :hide], false, @__context__)}
+                              <div class="absolute inset-0 flex items-center cursor-pointer place-content-center justify-center z-[60]">
+                                <button class="btn btn-sm rounded normal-case">{l("Media Hidden")}</button>
+                              </div>
+                              <div class="absolute inset-0 backdrop-blur-2xl z-50 cursor-pointer rounded-md" />
+                            {/if}
                             {#case preview_img(m) || Media.media_url(m)}
                               {#match maybe_preview_img}
                                 <!-- {#if is_image?(maybe_preview_img)} -->
@@ -313,7 +318,14 @@
                       </Bonfire.UI.Common.OpenModalLive>
                     {#else}
                       <!-- if logged out -->
-                      <a href={Media.media_url(m)} target="_blank" class="relative h-full">
+                      <a href={Media.media_url(m)} target="_blank" class="relative h-full block">
+                        {#if @cw || Settings.get([Bonfire.UI.Social.Activity.MediaLive, :hide], false, @__context__)}
+                          <div class="absolute inset-0 flex items-center cursor-pointer place-content-center justify-center z-[60]">
+                            <button class="btn btn-sm rounded normal-case">{l("Media Hidden")}</button>
+                          </div>
+                          <div class="absolute inset-0 backdrop-blur-2xl z-50 cursor-pointer rounded-md" />
+                        {/if}
+
                         {#case preview_img(m) || Media.media_url(m)}
                           {#match maybe_preview_img}
                             {#if is_image?(maybe_preview_img)}

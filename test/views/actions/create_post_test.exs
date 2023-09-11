@@ -27,7 +27,7 @@ defmodule Bonfire.Social.Activities.CreatePost.Test do
       live_pubsub_wait(view)
 
       assert posted =
-              view
+               view
                |> form("#smart_input form")
                |> render_submit(%{
                  "to_boundaries" => "public",
@@ -119,8 +119,6 @@ defmodule Bonfire.Social.Activities.CreatePost.Test do
 
       {:ok, post} =
         Posts.publish(current_user: alice, post_attrs: attrs_reply, boundary: "public")
-
-
 
       # im not sure if live_pubsub_wait is enough to wait for asyync loading of the reply
       # so we wait a bit more

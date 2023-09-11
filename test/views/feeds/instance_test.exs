@@ -13,7 +13,7 @@ defmodule Bonfire.Social.Feeds.Instance.Test do
       {:ok, _view, html} = live(conn, "/feed/local")
       # live_pubsub_wait(view)
       # open_browser(view)
-      assert html  =~ "Log in"
+      assert html =~ "Log in"
 
       # doc = floki_response(conn)
       # # |> IO.inspect
@@ -21,8 +21,6 @@ defmodule Bonfire.Social.Feeds.Instance.Test do
       # # assert redirected_to(conn) =~ "/login"
       # assert [_] = Floki.find(doc, "[id='#{feed_id}']")
     end
-
-
 
     test "with user" do
       account = fake_account!()
@@ -154,6 +152,7 @@ defmodule Bonfire.Social.Feeds.Instance.Test do
     entries =
       doc
       |> Floki.find("article")
+
     # open_browser(view)
     dump(entries, "entries")
     assert length(entries) == 1

@@ -199,7 +199,6 @@ defmodule Bonfire.Social.Moderation.BlockTest do
       refute render(view) =~ html_body
     end
 
-
     test "i'll be able to view their profile, I cannot read post via direct link" do
       # create a bunch of users
       account = fake_account!()

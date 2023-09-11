@@ -36,7 +36,6 @@ defmodule Bonfire.Social.Feeds.LoadMoreTest do
 
       {:ok, view, _html} = live(conn, "/feed/local")
 
-
       live_pubsub_wait(view)
 
       refute has_element?(view, "a[data-role=load_more_button]")
