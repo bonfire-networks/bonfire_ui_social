@@ -27,7 +27,7 @@ defmodule Bonfire.Social.Activities.CreatePost.Test do
       live_pubsub_wait(view)
 
       assert posted =
-              html
+               html
                |> form("#smart_input form")
                |> render_submit(%{
                  "to_boundaries" => "public",
@@ -55,12 +55,13 @@ defmodule Bonfire.Social.Activities.CreatePost.Test do
       # open_browser(view)
       live_pubsub_wait(view)
 
-      assert posted = view
-             |> form("#smart_input form")
-             |> render_submit(%{
-               "to_boundaries" => "public",
-               "post" => %{"post_content" => %{"html_body" => content}}
-             })
+      assert posted =
+               view
+               |> form("#smart_input form")
+               |> render_submit(%{
+                 "to_boundaries" => "public",
+                 "post" => %{"post_content" => %{"html_body" => content}}
+               })
 
       next = "/user"
       # |> IO.inspect

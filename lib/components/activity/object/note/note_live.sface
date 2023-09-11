@@ -28,7 +28,7 @@
     {#match summary}
       {#case @cw == true or (is_nil(@cw) and not is_nil(summary))}
         {#match cw}
-          {#if cw}
+          {#if cw and e(post_content(@object), :html_body, nil)}
             <div class="flex items-baseline gap-2 mb-2">
               <p>
                 <span class="prose max-w-prose prose-p:pt-1">{summary || l("Content Warning")}</span>
@@ -55,7 +55,7 @@
 
           <div x-show={if cw, do: "content_open"} x-cloak={cw} x-collapse={cw}>
             {#case e(post_content(@object), :html_body, nil) ||
-                if !e(post_content(@object), :name, nil), do: l("This content is not available.")}
+                if !e(@activity, :media, nil), do: l("This content is not available.")}
               {#match nil}
               {#match html_body}
                 <div

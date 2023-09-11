@@ -10,7 +10,6 @@ defmodule Bonfire.UI.Social.Feeds.FeedActivityTest do
 
   import Bonfire.Common.Enums
 
-
   test "As a user I want to see the activity total replies" do
     # Create alice user
     account = fake_account!()
@@ -86,7 +85,6 @@ defmodule Bonfire.UI.Social.Feeds.FeedActivityTest do
     conn = conn(user: alice, account: account)
     next = "/feed/local"
 
-
     {:ok, view, _html} = live(conn, next)
     # Then I should see the post in my feed
     assert has_element?(view, "a[data-id=subject_avatar]")
@@ -108,14 +106,12 @@ defmodule Bonfire.UI.Social.Feeds.FeedActivityTest do
     conn = conn(user: alice, account: account)
     next = "/feed/local"
 
-
     {:ok, view, _html} = live(conn, next)
     # Then I should see the post in my feed
     assert has_element?(view, "a[data-id=subject_name]", alice.profile.name)
   end
 
   test "As a user, when I create a new post, I want to see my username next to my name in the activity subject" do
-
     account = fake_account!()
     alice = fake_user!(account)
     feed_id = Bonfire.Social.Feeds.named_feed_id(:local)
@@ -129,12 +125,10 @@ defmodule Bonfire.UI.Social.Feeds.FeedActivityTest do
     conn = conn(user: alice, account: account)
     next = "/feed/local"
 
-
     {:ok, view, _html} = live(conn, next)
     # open_browser(view)
     # Then I should see the post in my feed
     assert has_element?(view, "a[data-id=subject_username]", alice.character.username)
-
   end
 
   test "As a user, when I create a new post, I want to see the content in the activity object" do
@@ -151,14 +145,12 @@ defmodule Bonfire.UI.Social.Feeds.FeedActivityTest do
     conn = conn(user: alice, account: account)
     next = "/feed/local"
 
-
     {:ok, view, _html} = live(conn, next)
     # Then I should see the post in my feed
     assert has_element?(view, "div[data-id=object_body]", "first post")
   end
 
   test "As a user, when I create a new post, I want to see when the post was created" do
-
     account = fake_account!()
     alice = fake_user!(account)
     feed_id = Bonfire.Social.Feeds.named_feed_id(:local)
@@ -171,7 +163,6 @@ defmodule Bonfire.UI.Social.Feeds.FeedActivityTest do
 
     conn = conn(user: alice, account: account)
     next = "/feed/local"
-
 
     {:ok, view, _html} = live(conn, next)
     # Then I should see the post in my feed
