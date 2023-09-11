@@ -6,7 +6,8 @@ defmodule Bonfire.UI.Social.Feeds.FederationLive do
   declare_nav_link(l("Remote"),
     page: "federation",
     href: "/feed/federation",
-    icon: "el:network")
+    icon: "el:network"
+  )
 
   on_mount {LivePlugs, [Bonfire.UI.Me.LivePlugs.LoadCurrentUser]}
 
