@@ -27,11 +27,7 @@ defmodule Bonfire.Social.Activities.CreatePost.Test do
       live_pubsub_wait(view)
 
       assert posted =
-<<<<<<< HEAD
-               html
-=======
               view
->>>>>>> 2f436250 (https://github.com/bonfire-networks/bonfire-app/issues/699)
                |> form("#smart_input form")
                |> render_submit(%{
                  "to_boundaries" => "public",
