@@ -19,10 +19,12 @@ defmodule Bonfire.Social.Activities.CreatePost.Test do
 
       conn = conn(user: someone, account: some_account)
 
-      next = "/feed"
-      # |> IO.inspect
-      {:ok, view, html} = live(conn, next)
+      next = "/settings"
+      {:ok, view, _html} = live(conn, next)
       # open_browser(view)
+
+      # wait for persistent smart input to be ready
+      live_pubsub_wait(view)
 
       assert posted =
               html
@@ -47,7 +49,7 @@ defmodule Bonfire.Social.Activities.CreatePost.Test do
 
       conn = conn(user: someone, account: some_account)
 
-      next = "/feed"
+      next = "/settings"
       # |> IO.inspect
       {:ok, view, _html} = live(conn, next)
       # open_browser(view)
