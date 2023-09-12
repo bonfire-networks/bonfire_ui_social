@@ -537,10 +537,12 @@ defmodule Bonfire.Social.Moderation.BlockTest do
       # create a bunch of users
       account = fake_account!()
       me = fake_user!(account)
+      {:ok, me} = Users.make_admin(me)
       alice = fake_user!(account)
       bob = fake_user!(account)
       carl = fake_user!(account)
       # ghost alice and bob
+
       assert {:ok, _ghost} = Bonfire.Boundaries.Blocks.block(alice, :ghost, :instance_wide)
       # login as me and navigate to ghosted page in settings
       conn = conn(user: me, account: account)
@@ -566,6 +568,7 @@ defmodule Bonfire.Social.Moderation.BlockTest do
       # ghost alice and bob
       assert {:ok, _ghost} = Bonfire.Boundaries.Blocks.block(alice, :silence, :instance_wide)
       # login as me and navigate to ghosted page in settings
+      {:ok, me} = Users.make_admin(me)
       conn = conn(user: me, account: account)
       {:ok, view, _html} = live(conn, "/boundaries/instance_silenced")
       # check that alice is there

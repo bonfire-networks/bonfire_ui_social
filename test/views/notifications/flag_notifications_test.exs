@@ -31,6 +31,7 @@ defmodule Bonfire.Social.Notifications.Flag.Test do
       assert text =~ "flagged"
     end
 
+    # FIXME: This is not the current behaviour, flags are not shown in notifications but only in admin panel
     test "flags on a post (which admin does not explicitly have permission to see) in admin's notifications" do
       alice_account = fake_account!()
       {:ok, alice} = Users.make_admin(fake_user!(alice_account))

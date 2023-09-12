@@ -7,7 +7,6 @@ defmodule Bonfire.Social.Threads.RepliesTest do
   alias Bonfire.Social.Posts
 
   # when we enable counts
-  @tag :todo
   test "As a user I want to see the activity total replies" do
     # Create alice user
     account = fake_account!()
