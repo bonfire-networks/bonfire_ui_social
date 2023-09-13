@@ -12,6 +12,7 @@
     :if={@thread_level > 1 && @thread_mode != :flat}
     class={
       "group absolute px-2 left-7 cursor-pointer top-[76px] bottom-0 z-30",
+      "!left-5 !top-[46px]":  @__context__[:ui_compact],
       "": @threaded_replies != []}
       x-on:click="show_replies = ! show_replies"
     >

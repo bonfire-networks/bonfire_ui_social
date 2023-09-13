@@ -394,7 +394,9 @@ defmodule Bonfire.UI.Social.ActivityLive do
       aria-label="user activity"
       tabIndex="0"
       class={
-        "p-4 pb-2 pl-[5rem] activity relative flex flex-col #{@class}",
+        "p-4 pb-2 activity relative flex flex-col #{@class}",
+        "pl-[5rem]":  @__context__[:ui_compact] != true,
+        "pl-[3rem]": @__context__[:ui_compact],
         hidden: @hide_activity == "all",
         "!p-0 !pb-2 hover:!bg-transparent": e(@show_minimal_subject_and_note, false),
         "main_reply_to !mb-1 items-center !flex-row order-first !p-0 !pb-2":
