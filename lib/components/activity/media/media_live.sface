@@ -30,7 +30,7 @@
             <a
               href={media_url || preview_img(m)}
               target="_blank"
-              class="flex  w-full border rounded-lg media_container hover:bg-base-content/5 border-base-content/20"
+              class="flex  w-full border rounded-lg media_container hover:bg-base-content/5 border-base-content/10"
             >
               <div class="flex items-center gap-3 overflow-hidden">
                 <div class="flex relative items-center rounded-l-lg shrink-0 w-[120px] h-[120px] bg-base-content/10 place-content-center">

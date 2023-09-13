@@ -399,6 +399,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
         "pl-[3rem]": @__context__[:ui_compact],
         hidden: @hide_activity == "all",
         "!p-0 !pb-2 hover:!bg-transparent": e(@show_minimal_subject_and_note, false),
+        "!pl-0 !pt-0": @showing_within == :smart_input,
         "main_reply_to !mb-1 items-center !flex-row order-first !p-0 !pb-2":
           @object_id != nil and e(@activity, :replied, :reply_to_id, nil) == nil and
             @activity_id == nil and @showing_within != :widget and

@@ -13,7 +13,8 @@
     class={
       "subject relative",
       "!mb-3": @viewing_main_object == true,
-      "flex items-top gap-2 w-full -ml-9": @show_minimal_subject_and_note
+      "flex items-top gap-2 w-full -ml-9": @show_minimal_subject_and_note,
+      "!ml-0 pb-2": @showing_within == :smart_input
     }
   >
     {#if @show_minimal_subject_and_note}
