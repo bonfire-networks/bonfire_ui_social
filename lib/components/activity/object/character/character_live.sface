@@ -8,7 +8,7 @@
       <div class="absolute left-0">
         <Bonfire.UI.Common.AvatarLive
           parent_id={@activity_component_id || id(@activity)}
-          class="w-6 h-6 teee"
+          class="w-6 h-6"
           bg_class="bg-base-200 rounded-btn"
           user={the_other(@activity, @object, @__context__)}
         />
@@ -24,14 +24,11 @@
     </LiveRedirect>
   </div>
 {#else}
-  <div class={
-    "flex-1 mb-4",
-    "ml-12": @showing_within == :notifications
-  }>
+  <div class={"flex-1 mb-4"}>
     <Bonfire.UI.Common.ProfileItemLive
       show_controls={[]}
       lg
-      avatar_class="w-12 h-12 rounded-full bg-base-100"
+      avatar_class="w-12 h-12 rounded-full bg-base-content/10"
       profile={e(the_other(@activity, @object, @__context__), :profile, nil)}
       character={e(the_other(@activity, @object, @__context__), :character, nil)}
     />

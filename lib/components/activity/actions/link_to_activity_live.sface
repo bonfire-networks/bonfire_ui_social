@@ -1,7 +1,8 @@
 <!-- NOTE: we use a simple anchor here, so it gets overriden by OpenPreviewLive JS -->
 <a
   href={@permalink}
-  class="preview_activity_link px-1 text-xs normal-case link link-hover text-base-content/70"
+  data-role="subject_timestamp"
+  class="preview_activity_link subject_timestamp text-sm font-normal no-underline truncate ellipsis text-base-content/50"
 >
   <#slot />
 </a>

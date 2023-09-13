@@ -11,9 +11,9 @@
   <div
     data-id="subject"
     class={
-      "subject",
+      "subject relative",
       "!mb-3": @viewing_main_object == true,
-      "flex items-top gap-2 w-full": @show_minimal_subject_and_note
+      "flex items-top gap-2 w-full -ml-9": @show_minimal_subject_and_note
     }
   >
     {#if @show_minimal_subject_and_note}
@@ -44,119 +44,17 @@
           {/if}
         </div>
       </div>
-    {#elseif @showing_within in [:thread, :messages] && !@viewing_main_object}
-      <div class="flex justify-start gap-1">
-        <div class="flex items-center gap-3 w-full">
-          <LiveRedirect
-            :if={!Settings.get([Bonfire.UI.Common.AvatarLive, :hide_avatars], false, @__context__)}
-            class={"", "h-8": !@__context__[:ui_compact], "h-6": @__context__[:ui_compact]}
-            opts={"data-id": "subject_name", "aria-label": e(@character, :username, "") <> " profile"}
-            to={path(@character)}
-          >
-            <Bonfire.UI.Common.AvatarLive
-              parent_id={@activity_component_id || @activity_id}
-              user={@profile}
-              title={e(@profile, :name, "Anonymous")}
-              class={
-                "bg-base-100 rounded",
-                "h-8 w-8": !@__context__[:ui_compact],
-                "h-6 w-6": @__context__[:ui_compact]
-              }
-            />
-          </LiveRedirect>
-          <div class="flex flex-col flex-1">
-            <div class="flex items-center justify-between">
-              <LiveRedirect
-                :if={!@__context__[:ui_compact]}
-                opts={"data-id": "subject_name", "aria-label": l("%{name}'s profile", name: e(@profile, :name, ""))}
-                class="font-semibold text-sm link link-hover text-base-content/90"
-                to={path(@character)}
-              >
-                {e(@profile, :name, "Anonymous")}
-              </LiveRedirect>
-
-              <div :if={!@__context__[:ui_compact]} class="gap-0 flex items-center">
-                <Dynamic.Component
-                  :if={module_enabled?(Bonfire.Boundaries.Web.BoundaryIconStatelessLive) and
-                    @object_type not in [Bonfire.Data.Social.Message]}
-                  module={Bonfire.Boundaries.Web.BoundaryIconStatelessLive}
-                  object_id={@object_id}
-                  object_type={@object_type}
-                  parent_id={"boundary_#{@activity_id || @object_id}"}
-                  with_icon
-                  object_boundary={@object_boundary}
-                />
-                <Bonfire.UI.Social.Activity.LinkToActivityLive
-                  :if={@showing_within not in [:smart_input]}
-                  object_type={@object_type}
-                  permalink={@permalink}
-                  thread_id={@thread_id}
-                  showing_within={@showing_within}
-                >
-                  <span class="text-xs font-normal no-underline subject_timestamp text-base-content/50">
-                    {@date_ago || DatesTimes.date_from_now(@activity_id) || DatesTimes.date_from_now(@object_id)}
-                  </span>
-                </Bonfire.UI.Social.Activity.LinkToActivityLive>
-              </div>
-            </div>
-            <div :if={@__context__[:ui_compact]} class="flex items-center gap-1 w-full">
-              {#if !@__context__[:ui_compact]}
-                <LiveRedirect
-                  :if={e(@character, :username, nil)}
-                  opts={
-                    "data-id": "subject_username",
-                    "aria-label": l("%{name}'s profile", name: e(@profile, :name, ""))
-                  }
-                  class="text-sm font-normal link link-hover ellipsis text-base-content/50 subject_username"
-                  to={path(@character)}
-                >
-                  @{e(@character, :username, "")}
-                </LiveRedirect>
-              {#else}
-                <div class="flex items-center w-full justify-between">
-                  <LiveRedirect
-                    opts={"data-id": "subject_name", "aria-label": l("%{name}'s profile", name: e(@profile, :name, ""))}
-                    class="text-sm font-semibold link link-hover text-base-content/90"
-                    to={path(@character)}
-                  >
-                    {e(@profile, :name, "Anonymous")}
-                  </LiveRedirect>
-                  <div class="gap-0 flex items-center">
-                    <Dynamic.Component
-                      :if={module_enabled?(Bonfire.Boundaries.Web.BoundaryIconStatelessLive) and
-                        @object_type not in [Bonfire.Data.Social.Message]}
-                      module={Bonfire.Boundaries.Web.BoundaryIconStatelessLive}
-                      object_id={@object_id}
-                      object_type={@object_type}
-                      parent_id={"boundary_#{@activity_id || @object_id}"}
-                      with_icon
-                      object_boundary={@object_boundary}
-                    />
-                    <Bonfire.UI.Social.Activity.LinkToActivityLive
-                      :if={@showing_within not in [:smart_input]}
-                      object_type={@object_type}
-                      permalink={@permalink}
-                      thread_id={@thread_id}
-                      showing_within={@showing_within}
-                    >
-                      <span class="text-xs font-normal no-underline subject_timestamp text-base-content/50">
-                        {@date_ago || DatesTimes.date_from_now(@activity_id) || DatesTimes.date_from_now(@object_id)}
-                      </span>
-                    </Bonfire.UI.Social.Activity.LinkToActivityLive>
-                  </div>
-                </div>
-              {/if}
-
-              <!-- <span class="text-xs text-base-content/70">·</span> -->
-            </div>
-          </div>
-        </div>
-      </div>
+    
     {#else}
-      <div class="flex items-center">
+      <div class={
+        "flex items-start",
+        "!items-center": @viewing_main_object}>
         <div
           :if={!Settings.get([Bonfire.UI.Common.AvatarLive, :hide_avatars], false, @__context__)}
-          class="mr-3"
+          class={
+            "absolute -ml-[4rem]": !@viewing_main_object, 
+            "mr-3": @viewing_main_object
+          }
         >
           <LiveRedirect
             opts={"data-id": "subject_avatar", "aria-label": e(@character, :username, "") <> " profile"}
@@ -169,86 +67,42 @@
               title={e(@profile, :name, "Anonymous")}
               viewing_main_object={@viewing_main_object}
               class={
-                " rounded-full bg-base-100",
-                "w-10 h-10": @__context__[:ui_compact] != true,
+                " rounded-full bg-base-content/10",
+                "w-12 h-12": @__context__[:ui_compact] != true,
                 "w-6 h-6": @__context__[:ui_compact]
               }
             />
           </LiveRedirect>
         </div>
-        <div class="flex items-center justify-between w-full min-w-0 space-x-1 leading-4">
-          <div class="flex flex-col flex-1 min-w-0 truncate feed-clickable">
-            <div class={
-              "text-sm font-medium line-clamp-1 text-base-content/70",
+        <div class={
+          "flex items-baseline gap-1 w-full feed-clickable -mt-1",
+          "flex-col !mt-0 !gap-0": @viewing_main_object
+          }>
+          <LiveRedirect
+            opts={"data-id": "subject_name", "aria-label": l("%{name}'s profile", name: e(@profile, :name, ""))}
+            class={
+              "link link-hover font-semibold text-sm",
               "!text-base": @viewing_main_object
-            }>
-              <!-- {@verb} {@object_type} -->
-              <LiveRedirect
-                opts={"data-id": "subject_name", "aria-label": l("%{name}'s profile", name: e(@profile, :name, ""))}
-                class={
-                  "link link-hover text-[15px] font-semibold",
-                  "!text-base": @viewing_main_object
-                }
-                to={path(@character) || "/user/#{@subject_id}"}
-              >
-                {e(@profile, :name, nil)}
-              </LiveRedirect>
-              <LinkLive
-                :if={e(@character, :username, nil) && @__context__[:ui_compact]}
-                opts={
-                  "data-id": "subject_username",
-                  "aria-label": l("%{name}'s profile", name: e(@profile, :name, ""))
-                }
-                class="text-sm font-normal truncate link link-hover ellipsis text-base-content/30 subject_username"
-                to={e(@subject_peered, :canonical_uri, nil) || path(@character)}
-              >
-                @{e(@character, :username, "")}
-              </LinkLive>
-
-              {#if @verb == "Reply"}
-                <!-- {l("replied")} -->
-              {#elseif @verb == "Pin"}
-                {l("pinned")}
-                <!-- 
-              FIXME: put somewhere else since we don't have the object in SubjectLive
-              {#elseif @verb == "Create" and @object_type in [Bonfire.Classify.Category]}
-                <div>
-                  <span>{l("created a new")}</span> <LiveRedirect
-                    class="font-medium link link-hover"
-                    to={~p"/+#{e(@object, :character, :username, nil) || (@object_id)}"}
-                  >{l("topic")}</LiveRedirect></div>
-              
-              {#elseif @verb == "Schedule" and e(@object, :due, nil)}
-                {l("scheduled a task %{date}", date: DatesTimes.date_from_now(e(@object, :due, nil)))}
-              {#elseif @verb == "Label" and e(@object, :finished, nil) == true}
-                {l("completed a task")}
-              {#elseif @verb == "Label" and e(@object, :finished, nil) == false}
-                {l("re-opened a task")}
-              {#elseif @verb in ["Assign", "Appoint"] and e(@object, :provider, nil)}
-                {l("assigned a task to %{name}",
-                  name:
-                    e(@object, :provider, :profile, :name, nil) ||
-                      e(@object, :provider, :character, :username, nil)
-                )} -->
-              {/if}
-            </div>
-            <!-- <span class="ml-2 text-[15px] text-base-content/70">replied to <b class="font-bold text-base-content link">title topic</b></span> -->
-            <!-- </div> -->
-            <div class="flex items-center gap-1" :if={@__context__[:ui_compact] != true}>
-              <LiveRedirect
-                :if={e(@character, :username, nil)}
-                opts={
-                  "data-id": "subject_username",
-                  "aria-label": l("%{name}'s profile", name: e(@profile, :name, ""))
-                }
-                class="text-sm font-normal truncate link link-hover ellipsis text-base-content/50 subject_username"
-                to={path(@character)}
-              >
-                @{e(@character, :username, "")}
-              </LiveRedirect>
-            </div>
-          </div>
-          <div class="flex items-center gap-1">
+            }
+            to={path(@character) || "/user/#{@subject_id}"}
+          >
+            {e(@profile, :name, nil)}
+          </LiveRedirect>
+          <span class="w-full flex items-baseline">
+            <LinkLive
+              :if={e(@character, :username, nil)}
+              opts={
+                "data-id": "subject_username",
+                "aria-label": l("%{name}'s profile", name: e(@profile, :name, ""))
+              }
+              class={
+                "text-sm font-normal ml-1 truncate link link-hover ellipsis text-base-content/50 subject_username",
+                "!ml-0": @viewing_main_object}
+              to={e(@subject_peered, :canonical_uri, nil) || path(@character)}
+            >
+              @{e(@character, :username, "")}
+            </LinkLive>
+            <span class="text-sm text-base-content/50">&nbsp;·&nbsp;</span>
             <Dynamic.Component
               :if={module_enabled?(Bonfire.Boundaries.Web.BoundaryIconStatelessLive) and
                 @object_type not in [Bonfire.Data.Social.Message]}
@@ -257,6 +111,7 @@
               object_type={Types.object_type(@published_in) || @object_type}
               parent_id={"boundary_#{@activity_id || @object_id}"}
               with_icon
+              class="translate-y-0.5"
               object_boundary={@object_boundary}
             />
             <Bonfire.UI.Social.Activity.LinkToActivityLive
@@ -266,15 +121,10 @@
               thread_id={@thread_id}
               showing_within={@showing_within}
             >
-              <span
-                data-role="subject_timestamp"
-                class="subject_timestamp text-[13px] font-normal no-underline truncate ellipsis text-base-content/50"
-              >
-                {@date_ago || DatesTimes.date_from_now(@activity_id) || DatesTimes.date_from_now(@object_id)}
-              </span>
+              {@date_ago || DatesTimes.date_from_now(@activity_id) || DatesTimes.date_from_now(@object_id)} 
             </Bonfire.UI.Social.Activity.LinkToActivityLive>
             <Bonfire.UI.Social.Activity.InstanceIconLive peered={@peered} />
-          </div>
+          </span>
         </div>
       </div>
     {/if}
@@ -285,8 +135,8 @@
     :if={@reply_to_id == nil and @showing_within in [nil, :feed, :thread] and
       @thread_title}
     class={
-      "preview_activity_link flex items-center mt-3 font-semibold gap-2 text-base",
-      "mb-2 !mt-0 !text-xl": @viewing_main_object
+      "preview_activity_link flex items-center mt-3 font-medium gap-2 text-base",
+      "!mt-0 !text-lg": @viewing_main_object
     }
   >
     <#Icon iconify="solar:text-bold" class="w-4 h-4 text-base-content/70" />

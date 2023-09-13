@@ -3,6 +3,7 @@ defmodule Bonfire.UI.Social.Activity.NoteLive do
   alias Bonfire.Common.Text
 
   prop object, :any
+  prop profile, :any, default: nil
   prop activity, :any, default: nil
   prop viewing_main_object, :boolean, default: false
   prop showing_within, :atom, default: nil

@@ -167,6 +167,6 @@ defmodule Bonfire.UI.Social.Feeds.FeedActivityTest do
     {:ok, view, _html} = live(conn, next)
     # Then I should see the post in my feed
     # open_browser(view)
-    assert has_element?(view, "span[data-role=subject_timestamp]")
+    assert has_element?(view, "[data-role=subject_timestamp]")
   end
 end

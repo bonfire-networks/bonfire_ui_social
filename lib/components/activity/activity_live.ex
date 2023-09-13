@@ -394,7 +394,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
       aria-label="user activity"
       tabIndex="0"
       class={
-        "p-4 pb-2 activity relative flex flex-col #{@class}",
+        "p-4 pb-2 pl-[5rem] activity relative flex flex-col #{@class}",
         hidden: @hide_activity == "all",
         "!p-0 !pb-2 hover:!bg-transparent": e(@show_minimal_subject_and_note, false),
         "main_reply_to !mb-1 items-center !flex-row order-first !p-0 !pb-2":
@@ -402,7 +402,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
             @activity_id == nil and @showing_within != :widget and
             @showing_within != :search,
         "": @showing_within != :thread and @thread_mode != :flat,
-        "hover:bg-base-content/5 cursor-pointer": @showing_within == :notifications,
+        "hover:bg-base-content/5 cursor-pointer !ml-0": @showing_within == :notifications,
         reply:
           @object_id != nil and e(@activity, :replied, :reply_to_id, nil) != nil and
             @activity_id != nil,
@@ -540,6 +540,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
                 :if={@hide_activity != "note" and !@show_minimal_subject_and_note}
                 showing_within={@showing_within}
                 activity={e(component_assigns, :activity, @activity)}
+                profile={e(component_assigns, :profile, nil)}
                 object={e(component_assigns, :object, @object)}
                 activity_inception={e(component_assigns, :activity_inception, @activity_inception)}
                 viewing_main_object={e(component_assigns, :viewing_main_object, @viewing_main_object)}

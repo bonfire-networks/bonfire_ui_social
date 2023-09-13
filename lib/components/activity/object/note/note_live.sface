@@ -4,12 +4,11 @@
 <div
   x-data="{expanded: false, expandable: $refs.note && $refs.note.scrollHeight > $refs.note.clientHeight}"
   class={
-    "note previewable_activity mt-3 cursor-pointer max-w-[594px] overflow-x-hidden",
+    "note previewable_activity mt-1 cursor-pointer max-w-[594px] overflow-x-hidden",
     "!mt-2": @showing_within == :widget,
     "!my-0": @showing_within == :smart_input,
-    "!mt-0 ml-11 cursor-default": @showing_within == :thread && !@viewing_main_object,
-    "!ml-12": @showing_within == :notifications,
-    "!mt-0 mb-3": @viewing_main_object
+    "opacity-60": @showing_within == :notifications,
+    "cursor-default": @showing_within == :thread && !@viewing_main_object,
   }
   x-ref="note_container"
   x-transition

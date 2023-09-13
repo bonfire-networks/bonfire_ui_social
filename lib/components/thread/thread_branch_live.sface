@@ -5,15 +5,25 @@
   class={
     "reply thread-level-" <> to_string(@thread_level) <> " flex relative",
     "": @threaded_replies != [] && @thread_level == 1,
-    "border-b border-base-content/20 bg-base-100": @thread_level == 1
+    "border-b border-base-content/10": @thread_level == 1 || @thread_mode == :flat
   }
 >
+  <div
+    :if={@thread_level > 1 && @thread_mode != :flat}
+    class={
+      "group absolute px-2 left-7 cursor-pointer top-[76px] bottom-0 z-30",
+      "": @threaded_replies != []}
+      x-on:click="show_replies = ! show_replies"
+    >
+      <div class="absolute group-hover:border-primary left-2 cursor-pointer inset-0 border-l-2 bottom-0 border-base-content/10 z-30" />
+    </div>
   <div class="relative flex-1 w-full">
     <Bonfire.UI.Social.CommentLive
       comment={@comment}
       thread_id={@thread_id}
       feed_id={@feed_id}
       current_url={@current_url}
+      threaded_replies={@threaded_replies}
       thread_object={@thread_object}
       thread_level={@thread_level}
       thread_mode={@thread_mode}
@@ -39,22 +49,23 @@
             "!ml-0": @thread_level < 2
           }
         >
-          <div
+          <!-- <div
             class="group absolute px-2 left-6 cursor-pointer top-0 h-8 z-30"
             x-on:click="show_replies = ! show_replies"
           >
             <div class="absolute group-hover:border-primary left-2 cursor-pointer inset-0 border-l-2 border-dashed bottom-0 border-base-content/10 z-30" />
-          </div>
+          </div> -->
+          
 
           <div class={"replies replies-level-" <> to_string(@thread_level + 1) <> " pt-4"}>
             {#for {{subreply, sub_child_replies}, index} <- Enum.with_index(@threaded_replies || [], 1)}
               <div class="relative">
-                <div
-                  class="group absolute px-2 left-6 cursor-pointer top-16 bottom-0 z-30"
+                <!-- <div
+                  class="group absolute px-2 left-7 cursor-pointer top-16 bottom-0 z-30"
                   x-on:click="show_replies = ! show_replies"
                 >
                   <div class="absolute group-hover:bg-primary left-2 cursor-pointer inset-0 w-[2px] bottom-0 bg-base-content/10 z-30" />
-                </div>
+                </div> -->
                 <!-- <div 
                 :if={index == length(@threaded_replies)}
                 class="w-3 bg-base-100 absolute left-[-10px] top-[10px] z-30 bottom-0" /> -->

@@ -67,6 +67,7 @@ defmodule Bonfire.UI.Social.FeedsLive do
        page_header_icon: "ri:home-line",
        feed: nil,
        page_info: nil,
+       no_header: true,
        loading: true,
        feed_id: nil,
        feed_title: nil,
