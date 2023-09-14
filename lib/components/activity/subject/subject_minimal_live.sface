@@ -250,7 +250,7 @@
 
          
         {#elseif @verb == "Flag"}
-          <div data-role="flagged_by" class="flex items-center justify-start pb-2 -ml-8">
+          <div data-role="flagged_by" class="flex items-center justify-start pb-3 -ml-8">
             <!-- FLAG -->
             <#Icon solid="Flag" class="w-4 h-4 text-error" />
             <div class="flex-1 ml-2">
@@ -318,7 +318,7 @@
     {#match _}
       <div class="flex items-center w-full">
         {#if @verb == "Like"}
-          <div data-role="liked_by" class="flex items-center justify-start pb-2 -ml-8">
+          <div data-role="liked_by" class="flex items-center justify-start pb-3 -ml-8">
             <!-- LIKE -->
             <Iconify.Bonfire.LikeFire.render class="w-5 h-5 text-yellow-500" />
             <div class="flex-1 ml-2">
@@ -340,7 +340,7 @@
             </div>
           </div>
         {#elseif @verb == "Follow"}
-          <div class="flex items-center justify-start pb-2 -ml-8">
+          <div class="flex items-center justify-start pb-3 -ml-8">
             <!-- FOLLOW -->
             <#Icon solid="UserAdd" class="flex-shrink-0 w-5 h-5 text-base-content/70" />
             <div class="flex-1 ml-2">
@@ -368,7 +368,7 @@
             showing_within={@showing_within}
           /> -->
         {#elseif @verb == "Boost"}
-          <div data-role="boosted_by" class="flex items-center justify-start pb-2 -ml-8">
+          <div data-role="boosted_by" class="flex items-center justify-start pb-3 -ml-8">
             <!-- BOOST -->
             <Iconify.Bonfire.Boost.render class="w-5 h-5 stroke-1 fill-base-content/50" />
             <div class="flex-1 ml-2">
@@ -495,7 +495,7 @@
             </div>
           </div> -->
         {#elseif @verb == "Flag"}
-          <div data-role="flagged_by" class="flex items-center justify-start pb-2 -ml-8">
+          <div data-role="flagged_by" class="flex items-center justify-start pb-3 -ml-8">
             <!-- FLAG -->
             <#Icon solid="Flag" class="w-4 h-4 text-error" />
             <div class="flex-1 ml-2">
@@ -512,7 +512,7 @@
             </div>
           </div>
         {#else}
-          <div data-role="verb_other" class="flex items-center justify-start pb-2 -ml-8">
+          <div data-role="verb_other" class="flex items-center justify-start pb-3 -ml-8">
             <div :if={@profile || @character} class="text-sm font-medium text-base-content/70">
               <LiveRedirect
                 aria-label={e(@character, :username, "") <> " profile"}
