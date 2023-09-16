@@ -1,9 +1,4 @@
-<div
-  id={"cc_#{id(@activity)}"}
-  data-id="comment"
-  class={
-    "flex flex-1 w-full relative items-top"}
->
+<div id={"cc_#{id(@activity)}"} data-id="comment" class="flex flex-1 w-full relative items-top">
   <!-- <div
         :if={@thread_level > 1}
         x-cloak
@@ -15,17 +10,17 @@
           class="bg-base-content/10 top-0 bottom-0 z-10 w-[2px] absolute"
         />
       </div> -->
-    <div
-      :if={@thread_level < 2}
-      class={
-        "group absolute px-2 left-7 cursor-pointer top-[76px] bottom-0 z-30",
-        "!left-5 !top-[46px]":  @__context__[:ui_compact],
-        "bottom-[-24px]": @threaded_replies != []}
-      x-on:click="show_replies = ! show_replies"
-    >
-      <div class="absolute group-hover:border-primary left-2 cursor-pointer inset-0 border-l-2 bottom-0 border-base-content/10 z-30" />
-    </div>
-
+  <div
+    :if={@thread_level < 2}
+    class={
+      "group absolute px-2 left-7 cursor-pointer top-[76px] bottom-0 z-30",
+      "!left-5 !top-[46px]": @__context__[:ui_compact],
+      "bottom-[-24px]": @threaded_replies != []
+    }
+    x-on:click="show_replies = ! show_replies"
+  >
+    <div class="absolute group-hover:border-primary left-2 cursor-pointer inset-0 border-l-2 bottom-0 border-base-content/10 z-30" />
+  </div>
 
   <div class="flex-1 w-full" x-data="{reply: false, show: true}">
     {#if is_nil(@activity)}
@@ -59,7 +54,4 @@
       />
     {/if}
   </div>
-
-
-  
 </div>

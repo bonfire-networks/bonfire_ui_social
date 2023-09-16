@@ -8,7 +8,7 @@
     "!mt-2": @showing_within == :widget,
     "!my-0": @showing_within == :smart_input,
     "opacity-60": @showing_within == :notifications,
-    "cursor-default": @showing_within == :thread && !@viewing_main_object,
+    "cursor-default": @showing_within == :thread && !@viewing_main_object
   }
   x-ref="note_container"
   x-transition

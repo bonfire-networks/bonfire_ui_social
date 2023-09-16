@@ -45,11 +45,11 @@
           {/if}
         </div>
       </div>
-    
     {#else}
       <div class={
         "flex items-start",
-        "!items-center": @viewing_main_object}>
+        "!items-center": @viewing_main_object
+      }>
         <div
           :if={!Settings.get([Bonfire.UI.Common.AvatarLive, :hide_avatars], false, @__context__)}
           class={
@@ -79,7 +79,7 @@
         <div class={
           "flex items-baseline gap-1 w-full feed-clickable -mt-1",
           "flex-col !mt-0 !gap-0": @viewing_main_object
-          }>
+        }>
           <LiveRedirect
             opts={"data-id": "subject_name", "aria-label": l("%{name}'s profile", name: e(@profile, :name, ""))}
             class={
@@ -99,7 +99,8 @@
               }
               class={
                 "text-sm font-normal ml-1 truncate link link-hover ellipsis text-base-content/50 subject_username",
-                "!ml-0": @viewing_main_object}
+                "!ml-0": @viewing_main_object
+              }
               to={e(@subject_peered, :canonical_uri, nil) || path(@character)}
             >
               @{e(@character, :username, "")}
@@ -123,7 +124,7 @@
               thread_id={@thread_id}
               showing_within={@showing_within}
             >
-              {@date_ago || DatesTimes.date_from_now(@activity_id) || DatesTimes.date_from_now(@object_id)} 
+              {@date_ago || DatesTimes.date_from_now(@activity_id) || DatesTimes.date_from_now(@object_id)}
             </Bonfire.UI.Social.Activity.LinkToActivityLive>
             <Bonfire.UI.Social.Activity.InstanceIconLive peered={@peered} />
           </span>

@@ -27,9 +27,7 @@ defmodule Bonfire.Social.Moderation.FlagTest do
     assert has_element?(view, "article", content)
     # then I flag the post
     view
-    |> element(
-      "article li[data-role=flag_object] div[data-role=open_modal]"
-    )
+    |> element("article li[data-role=flag_object] div[data-role=open_modal]")
     |> render_click()
 
     view |> element("button[data-role=submit_flag]") |> render_click()
@@ -181,9 +179,7 @@ defmodule Bonfire.Social.Moderation.FlagTest do
     debug("now open the modal")
 
     view
-    |> element(
-      "article li[data-role=flag_object] div[data-role=open_modal]"
-    )
+    |> element("article li[data-role=flag_object] div[data-role=open_modal]")
     |> render_click()
 
     # does the modal say that it's already flagged?
@@ -208,9 +204,7 @@ defmodule Bonfire.Social.Moderation.FlagTest do
     assert has_element?(view, "article", content)
     # then I flag the post
     view
-    |> element(
-      "article li[data-role=flag_author] div[data-role=open_modal]"
-    )
+    |> element("article li[data-role=flag_author] div[data-role=open_modal]")
     |> render_click()
 
     view |> element("button[data-role=submit_flag]") |> render_click()

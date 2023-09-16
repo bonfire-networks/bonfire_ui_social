@@ -395,7 +395,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
       tabIndex="0"
       class={
         "p-4 pb-2 activity relative flex flex-col #{@class}",
-        "pl-[5rem]":  @__context__[:ui_compact] != true,
+        "pl-[5rem]": @__context__[:ui_compact] != true,
         "pl-[3rem]": @__context__[:ui_compact],
         hidden: @hide_activity == "all",
         "!p-0 !pb-2 hover:!bg-transparent": e(@show_minimal_subject_and_note, false),

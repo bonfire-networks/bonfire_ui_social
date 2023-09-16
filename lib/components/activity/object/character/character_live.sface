@@ -24,7 +24,7 @@
     </LiveRedirect>
   </div>
 {#else}
-  <div class={"flex-1 mb-4"}>
+  <div class="flex-1 mb-4">
     <Bonfire.UI.Common.ProfileItemLive
       show_controls={[]}
       lg

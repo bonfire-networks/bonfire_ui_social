@@ -1,7 +1,7 @@
 <div data-id="subject">
   {#case @showing_within}
     {#match :thread}
-     <div />
+      <div />
     {#match :widget}
       <div class="flex items-center mb-2">
         <div class="flex items-center justify-start w-5 h-5">
@@ -44,7 +44,8 @@
     {#match :notifications}
       <div class={
         "flex items-center justify-between w-full",
-        "-ml-[3rem]": @verb not in ["Reply", "Respond"] }>
+        "-ml-[3rem]": @verb not in ["Reply", "Respond"]
+      }>
         {#if @verb == "Like"}
           <div data-role="liked_by" class="flex items-start gap-5 justify-start">
             <!-- LIKE -->
@@ -247,8 +248,6 @@
             subject_id={@subject_id}
             subject_user={@subject_user}
           />
-
-         
         {#elseif @verb == "Flag"}
           <div data-role="flagged_by" class="flex items-center justify-start pb-3 -ml-8">
             <!-- FLAG -->
