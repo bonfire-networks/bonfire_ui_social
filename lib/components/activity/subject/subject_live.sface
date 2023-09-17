@@ -99,7 +99,8 @@
               }
               class={
                 "text-sm font-normal ml-1 truncate max-w-[200px] link link-hover ellipsis text-base-content/50 subject_username",
-                "!ml-0": @viewing_main_object}
+                "!ml-0": @viewing_main_object
+              }
               to={e(@subject_peered, :canonical_uri, nil) || path(@character)}
             >
               @{e(@character, :username, "")}
