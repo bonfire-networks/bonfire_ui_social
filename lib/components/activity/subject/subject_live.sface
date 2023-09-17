@@ -77,13 +77,13 @@
           </LiveRedirect>
         </div>
         <div class={
-          "flex items-baseline gap-1 w-full feed-clickable -mt-1",
+          "flex items-baseline gap-1 w-full feed-clickable -mt-1 justify-start",
           "flex-col !mt-0 !gap-0": @viewing_main_object
         }>
           <LiveRedirect
             opts={"data-id": "subject_name", "aria-label": l("%{name}'s profile", name: e(@profile, :name, ""))}
             class={
-              "link link-hover font-semibold text-sm max-w-[400px] truncate flex-1",
+              "link link-hover font-semibold text-sm max-w-[400px] truncate",
               "!text-base": @viewing_main_object
             }
             to={path(@character) || "/user/#{@subject_id}"}

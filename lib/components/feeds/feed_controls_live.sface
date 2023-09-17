@@ -13,7 +13,7 @@
           {#match :num_likes}
             <Iconify.Bonfire.LikeFire.render class="h-[20px] w-[18px]" />
           {#match _}
-            <#Icon iconify="mdi:order-alphabetical-ascending" class="w-5 h-5" />
+            <#Icon iconify="mdi:order-alphabetical-ascending" class="w-5 h-5 text-base-content/70" />
         {/case}
       </label>
       <ul
@@ -31,7 +31,7 @@
             "flex gap-2 text-base-content/70",
             "active !text-base-content/100 font-semibold": is_nil(@sort_by)
           }>
-            <#Icon iconify="mdi:order-alphabetical-ascending" class="w-5 h-5" />
+            <#Icon iconify="mdi:order-alphabetical-ascending" class="w-5 h-5 text-base-content/70" />
             {l("Chronological")}
           </a></li>
 
