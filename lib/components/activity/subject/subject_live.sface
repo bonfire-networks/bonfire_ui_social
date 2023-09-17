@@ -83,14 +83,14 @@
           <LiveRedirect
             opts={"data-id": "subject_name", "aria-label": l("%{name}'s profile", name: e(@profile, :name, ""))}
             class={
-              "link link-hover font-semibold text-sm",
+              "link link-hover font-semibold text-sm max-w-[400px] truncate flex-1",
               "!text-base": @viewing_main_object
             }
             to={path(@character) || "/user/#{@subject_id}"}
           >
             {e(@profile, :name, nil)}
           </LiveRedirect>
-          <span class="w-full flex items-baseline">
+          <span class="flex items-baseline">
             <LinkLive
               :if={e(@character, :username, nil)}
               opts={
@@ -98,9 +98,8 @@
                 "aria-label": l("%{name}'s profile", name: e(@profile, :name, ""))
               }
               class={
-                "text-sm font-normal ml-1 truncate link link-hover ellipsis text-base-content/50 subject_username",
-                "!ml-0": @viewing_main_object
-              }
+                "text-sm font-normal ml-1 truncate max-w-[200px] link link-hover ellipsis text-base-content/50 subject_username",
+                "!ml-0": @viewing_main_object}
               to={e(@subject_peered, :canonical_uri, nil) || path(@character)}
             >
               @{e(@character, :username, "")}
