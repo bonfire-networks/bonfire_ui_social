@@ -38,7 +38,7 @@ defmodule Bonfire.Social.Feeds.LoadMoreTest do
 
       live_pubsub_wait(view)
 
-      refute has_element?(view, "a[data-role=load_more_button]")
+      refute has_element?(view, "[data-role=load_more_button]")
     end
 
     # FIXME: because of deferred joins and infinite scroll we do now show the button - should instead test if once the button is clicked and there's no more activities it disappears
@@ -68,7 +68,7 @@ defmodule Bonfire.Social.Feeds.LoadMoreTest do
 
       {:ok, view, _html} = live(conn, "/feed/local")
 
-      refute has_element?(view, "a[data-role=load_more_button]")
+      refute has_element?(view, "[data-role=load_more_button]")
       feed = element(view, "[data-id=feed_activity_list]")
       assert has_element?(feed)
     end
@@ -100,7 +100,7 @@ defmodule Bonfire.Social.Feeds.LoadMoreTest do
       conn = conn(user: bob, account: account2)
       {:ok, view, _html} = live(conn, "/feed/local")
 
-      assert has_element?(view, "a[data-role=load_more_button]")
+      assert has_element?(view, "[data-role=load_more_button]")
     end
 
     test "As a user when I click on load more I want to see next activities below the others (using LiveView websocket)" do
