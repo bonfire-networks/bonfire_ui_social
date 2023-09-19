@@ -35,7 +35,6 @@
       preview_boundary_for_username={@preview_boundary_for_username}
       preview_boundary_verbs={@preview_boundary_verbs}
       boundary_preset={@boundary_preset}
-      
     >
       <!-- CW -->
       <div
@@ -57,10 +56,7 @@
         </div> -->
         <Inputs for={:post_content}>
           <div class="relative p-2 border-b bg-base-300 border-base-content/20">
-            <#Icon
-              iconify="ri:alert-fill"
-              class="absolute w-5 h-5 stroke-1 top-[14px] left-3 text-warning"
-            />
+            <#Icon iconify="ri:alert-fill" class="absolute w-5 h-5 stroke-1 top-[14px] left-3 text-warning" />
             <label for="title" class="sr-only">{l("Title")}</label>
             <Field name={:summary}>
               <TextInput
