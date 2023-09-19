@@ -13,7 +13,7 @@
   <div
     :if={@thread_level < 2}
     class={
-      "group absolute px-2 left-7 cursor-pointer top-[76px] bottom-0 z-30",
+      "group absolute px-2 left-6 cursor-pointer top-[64px] bottom-0 z-30",
       "!left-5 !top-[46px]": @__context__[:ui_compact],
       "bottom-[-24px]": @threaded_replies != []
     }
