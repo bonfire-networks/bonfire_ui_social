@@ -90,7 +90,9 @@
           >
             {e(@profile, :name, nil)}
           </LiveRedirect>
-          <span class="flex items-baseline">
+          <span class={
+            "flex items-baseline", 
+            "-mt-1": @viewing_main_object}>
             <LinkLive
               :if={e(@character, :username, nil)}
               opts={

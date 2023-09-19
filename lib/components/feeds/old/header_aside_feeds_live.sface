@@ -2,7 +2,7 @@
   <label tabindex="0" class="flex normal-case btn place-content-center btn-circle btn-ghost btn-sm">
     <#Icon solid="DotsVertical" class="w-5 h-5 text-base-content text-opacity-70" />
   </label>
-  <ul tabindex="0" class="p-2 shadow dropdown-content menu bg-base-100 rounded-box w-52">
+  <ul tabindex="0" class="p-2 shadow dropdown-content menu bg-base-200 rounded-box w-52">
     <div
       :if={current_user(current_user(@__context__)) ||
         Settings.get([:bonfire_social, :feeds, :federation, :show_guests], true, @__context__)}

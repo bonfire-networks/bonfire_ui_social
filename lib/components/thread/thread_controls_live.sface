@@ -28,7 +28,7 @@
         </label>
         <ul
           tabindex="0"
-          class="dropdown-content mt-1 z-[999] menu gap-1 p-1 shadow bg-base-100 rounded-box w-60"
+          class="dropdown-content mt-1 z-[999] menu gap-1 p-1 shadow bg-base-200 rounded-box w-60"
         >
           <li
             phx-click="set"
@@ -102,7 +102,7 @@
         </label>
         <ul
           tabindex="0"
-          class="dropdown-content mt-1 z-[999] menu p-1 shadow bg-base-100 rounded-box w-60"
+          class="dropdown-content mt-1 z-[999] menu p-1 shadow bg-base-200 rounded-box w-60"
         >
           <li
             phx-click="set"
@@ -193,7 +193,7 @@
         </label>
         <ul
           tabindex="0"
-          class="dropdown-content mt-1 z-[999] menu p-1 gap-1 shadow bg-base-100 rounded-box w-60"
+          class="dropdown-content mt-1 z-[999] menu p-1 gap-1 shadow bg-base-200 rounded-box w-60"
         >
           <li
             phx-click="set"
