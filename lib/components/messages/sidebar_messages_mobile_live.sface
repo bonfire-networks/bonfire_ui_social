@@ -27,7 +27,7 @@
       x-transition:leave-start="translate-x-0"
       x-transition:leave-end="-translate-x-full"
       x-description="Off-canvas menu, show/hide based on off-canvas menu state."
-      class="relative flex flex-col flex-1 w-full max-w-md bg-base-300"
+      class="relative flex flex-col flex-1 w-full max-w-md bg-base-100"
       x-on:click.away="open_sidebar_drawer = false"
     >
       <div
