@@ -29,6 +29,11 @@ defmodule Bonfire.UI.Social.WritePostContentLive do
   prop boundaries_modal_id, :string, default: :sidebar_composer
   prop reset_smart_input, :boolean, default: false
 
+  prop preview_boundary_for_id, :any, default: nil
+  prop preview_boundary_for_username, :any, default: nil
+  prop preview_boundary_verbs, :any, default: nil
+
+
   # Classes to customize the smart input appearance
   prop textarea_container_class, :css_class
   prop textarea_container_class_alpine, :string

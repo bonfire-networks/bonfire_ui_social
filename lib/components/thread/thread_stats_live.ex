@@ -1,6 +1,6 @@
 defmodule Bonfire.UI.Social.Activity.ThreadStatsLive do
   use Bonfire.UI.Common.Web, :stateless_component
-  alias Bonfire.Common.Text
+  # alias Bonfire.Common.Text
 
   # prop object, :any
   # prop activity, :any, default: nil

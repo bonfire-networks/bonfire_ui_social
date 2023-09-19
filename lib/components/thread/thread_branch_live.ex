@@ -7,7 +7,7 @@ defmodule Bonfire.UI.Social.ThreadBranchLive do
   # alias Bonfire.UI.Me.CreateUserLive
   alias Bonfire.Social.Threads.LiveHandler
   alias Bonfire.UI.Social.CommentLive
-  alias Bonfire.UI.Social.ThreadBranchLive
+  # alias Bonfire.UI.Social.ThreadBranchLive
   # import Bonfire.Me.Integration
 
   prop comment, :map

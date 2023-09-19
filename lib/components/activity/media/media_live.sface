@@ -40,7 +40,7 @@
                       <#Icon solid="ExternalLink" class="w-9 h-9 text-base-content/70" />
                     {#match preview_img}
                       <div
-                        class="absolute inset-0 backdrop-blur-lg bg-white/30 z-50 rounded-box"
+                        class="absolute inset-0 backdrop-blur-lg bg-white/30 z-50 rounded-l-lg"
                         :if={@cw || Settings.get([Bonfire.UI.Social.Activity.MediaLive, :hide], false, @__context__)}
                       />
                       {#case String.ends_with?(preview_img, ".ico")}

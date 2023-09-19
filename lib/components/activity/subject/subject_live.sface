@@ -54,7 +54,7 @@
           :if={!Settings.get([Bonfire.UI.Common.AvatarLive, :hide_avatars], false, @__context__)}
           class={
             "absolute -ml-[2rem]": @__context__[:ui_compact] && !@viewing_main_object,
-            "absolute -ml-[4rem]": @__context__[:ui_compact] != true && !@viewing_main_object,
+            "absolute -ml-[3.25rem]": @__context__[:ui_compact] != true && !@viewing_main_object,
             "mr-3": @viewing_main_object
           }
         >
@@ -70,7 +70,7 @@
               viewing_main_object={@viewing_main_object}
               class={
                 " rounded-full bg-base-content/10",
-                "w-12 h-12": @__context__[:ui_compact] != true,
+                "w-10 h-10": @__context__[:ui_compact] != true,
                 "w-6 h-6": @__context__[:ui_compact]
               }
             />
@@ -98,7 +98,7 @@
                 "aria-label": l("%{name}'s profile", name: e(@profile, :name, ""))
               }
               class={
-                "text-sm font-normal ml-1 truncate max-w-[200px] link link-hover ellipsis text-base-content/50 subject_username",
+                "text-sm font-light mx-1 truncate max-w-[200px] link link-hover ellipsis text-base-content/50 subject_username",
                 "!ml-0": @viewing_main_object
               }
               to={e(@subject_peered, :canonical_uri, nil) || path(@character)}
