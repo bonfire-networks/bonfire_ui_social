@@ -47,4 +47,16 @@ defmodule Bonfire.UI.Social.BrowsingTest do
 
   end
 
+  test "unlinking a post from the favourites feed does not remove it instantly" do
+
+  end
+
+  test "even if the likes feed has 0 items, it shows the 'show older activities' button instead of the empty message" do
+
+  end
+
+  test "editing the CW of a post doesn't update it" do
+
+  end
+
 end
