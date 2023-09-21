@@ -104,7 +104,6 @@ defmodule Bonfire.Social.Posts.LiveHandler do
     current_user = current_user_required!(socket)
 
     with {:ok, %{model: updated}} <- PostContents.edit(current_user, id, attrs) do
-      debug(updated, "vverr")
       # TODO: update activity assigns with edits
       Bonfire.UI.Common.OpenModalLive.close()
 

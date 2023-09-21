@@ -16,13 +16,14 @@
   <!-- x-show={if @showing_within == :thread && !@viewing_main_object, do: "show_replies"} -->
   <!-- id={"note-#{@activity_inception}-#{id(@activity) || id(@object) || "no-id"}-#{e(assigns, :viewing_main_object, false)}"} -->
 
-  <!-- {#case e(post_content(@object), :name, nil)}
+  {#case e(post_content(@object), :name, nil)}
     {#match nil}
     {#match name}
-      <div :if={name != @thread_title} class="w-full h-auto max-w-full p-0 m-0 mt-6 text-2xl font-bold">
+      <div :if={name != @thread_title} class="w-full h-auto max-w-full p-0 m-0 my-1 text-2xl font-bold">
         {rich(name)}
       </div>
-  {/case}  -->
+  {/case}
+
   {#case e(post_content(@object), :summary, nil)}
     {#match summary}
       {#case @cw == true or (is_nil(@cw) and not is_nil(summary))}

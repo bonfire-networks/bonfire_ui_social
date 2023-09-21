@@ -46,20 +46,27 @@
         {l("Edit")}
       </h3>
       <div class="flex flex-col gap-2 mt-4 border rounded border-base-content/20">
+        <input
+          name="name"
+          class="w-full input input-bordered"
+          autocomplete="off"
+          placeholder={l("Title")}
+          value={e(Bonfire.UI.Social.Activity.NoteLive.post_content(@object), :name, nil)}
+        />
+
         <div class="relative border-b border-base-content/20">
           <#Icon
             iconify="ri:alert-fill"
             class="absolute w-5 h-5 stroke-1 top-[14px] left-3 text-base-content/70"
           />
           <input
-            name="name"
+            name="summary"
             class="w-full pl-12 input"
             autocomplete="off"
             placeholder={l("CW")}
-            value={e(Bonfire.UI.Social.Activity.NoteLive.post_content(@object), :name, nil)}
+            value={e(Bonfire.UI.Social.Activity.NoteLive.post_content(@object), :summary, nil)}
           />
         </div>
-        <!-- <input name="summary" class="w-full input input-bordered" autocomplete="off" placeholder={l "Summary"}> -->
 
         <textarea
           name="html_body"
