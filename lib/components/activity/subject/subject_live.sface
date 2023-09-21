@@ -69,7 +69,7 @@
               title={e(@profile, :name, "Anonymous")}
               viewing_main_object={@viewing_main_object}
               class={
-                " rounded-full bg-base-content/10",
+                " rounded-full",
                 "w-10 h-10": @__context__[:ui_compact] != true,
                 "w-6 h-6": @__context__[:ui_compact]
               }

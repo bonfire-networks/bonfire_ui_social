@@ -28,7 +28,7 @@
     <Bonfire.UI.Common.ProfileItemLive
       show_controls={[]}
       lg
-      avatar_class="w-12 h-12 rounded-full bg-base-content/10"
+      avatar_class="w-12 h-12 rounded-full"
       profile={e(the_other(@activity, @object, @__context__), :profile, nil)}
       character={e(the_other(@activity, @object, @__context__), :character, nil)}
     />
