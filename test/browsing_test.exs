@@ -59,4 +59,18 @@ defmodule Bonfire.UI.Social.BrowsingTest do
 
   end
 
+  test "change theme does not instant update the theme" do
+
+  end
+
+  test "feed activities preferences iun user settings behavirous does not switch" do
+
+  end
+
+  test "feed default sort has no active otion" do
+
+  end
+
+
+
 end
