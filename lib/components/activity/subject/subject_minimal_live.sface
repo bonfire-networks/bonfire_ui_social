@@ -371,10 +371,10 @@
             <!-- BOOST -->
             <Iconify.Bonfire.Boost.render class="w-5 h-5 stroke-1 fill-base-content/50" />
             <div class="flex-1 ml-2">
-              <div class="text-sm font-normal text-base-content/50">
+              <div class="text-sm font-semibold text-base-content/50">
                 <LiveRedirect
                   aria-label={e(@character, :username, "") <> " " <> l("profile")}
-                  class="font-normal link link-hover text-base-content/50"
+                  class="font-semibold link link-hover text-base-content/50"
                   to={path(@character)}
                 >
                   {e(@profile, :name, nil) || e(@character, :username, nil)}
