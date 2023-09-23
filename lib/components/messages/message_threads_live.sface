@@ -75,7 +75,7 @@
         )}
       </div>
       <Bonfire.UI.Common.SmartInputButtonLive
-        class="gap-2 mt-3 normal-case rounded btn btn-sm btn-primary"
+        class="gap-2 mt-3 normal-case rounded-full btn-outline !border !border-primary/30 btn btn-sm btn-primary"
         showing_within={:messages}
         create_object_type={:message}
         icon="tabler:mail-plus"

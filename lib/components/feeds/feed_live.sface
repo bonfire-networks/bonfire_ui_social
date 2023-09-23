@@ -169,7 +169,7 @@
             {#else}
               <div :if={socket_connected?(@__context__)} class="w-full flex items-center justify-center mb-4">
                 <button
-                  class="normal-case btn btn-outline rounded-full btn-primary"
+                  class="normal-case btn btn-outline rounded-full btn-primary !border !border-primary/30"
                   phx-click="set"
                   phx-value-to_integers="true"
                   phx-value-time_limit={0}

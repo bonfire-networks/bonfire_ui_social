@@ -244,7 +244,7 @@ defmodule Bonfire.Social.Threads.LiveHandler do
           e(reply_to_id, :replied, :thread_id, nil)
 
       debug(mentions, "send activity to smart input")
-
+      push_event(socket, "mention_suggestions", %{text: mentions})
       Bonfire.UI.Common.SmartInput.LiveHandler.open_with_text_suggestion(
         mentions,
         # we reply to objects, not
@@ -275,7 +275,7 @@ defmodule Bonfire.Social.Threads.LiveHandler do
           activity: activity,
           object: reply_to
         ],
-        socket.assigns[:__context__]
+        socket
       )
 
       {:noreply, socket}
@@ -370,7 +370,7 @@ defmodule Bonfire.Social.Threads.LiveHandler do
           # TODO: use first or last depending on sort order
           last_reply = List.first(replies)
 
-          # send comments 
+          # send comments
           send_thread_updates(
             pid,
             component_id,
