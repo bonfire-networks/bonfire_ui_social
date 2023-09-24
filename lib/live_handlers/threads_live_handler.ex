@@ -244,8 +244,6 @@ defmodule Bonfire.Social.Threads.LiveHandler do
           e(reply_to_id, :replied, :thread_id, nil)
 
       debug(mentions, "send activity to smart input")
-      push_event(socket, "mention_suggestions", %{text: mentions})
-
       Bonfire.UI.Common.SmartInput.LiveHandler.open_with_text_suggestion(
         mentions,
         # we reply to objects, not
@@ -279,7 +277,9 @@ defmodule Bonfire.Social.Threads.LiveHandler do
         socket
       )
 
-      {:noreply, socket}
+      {:noreply, socket
+        |> maybe_push_event("mention_suggestions", %{text: mentions})
+    }
     else
       false ->
         error(l("Sorry, you cannot reply to this"))
