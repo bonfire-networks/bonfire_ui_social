@@ -47,7 +47,7 @@ defmodule Bonfire.Social.Follows.LiveHandler do
 
     with {:ok, _follow} <-
            Bonfire.Social.Follows.accept(id, current_user: current_user_required!(socket)) do
-      {:noreply, socket}
+      {:noreply, socket}  
     else
       e ->
         error(e, l("There was an error when trying to accept the request"))
