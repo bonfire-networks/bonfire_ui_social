@@ -82,6 +82,7 @@
               showing_within={@showing_within}
               verb_default={@verb_default}
               feed_id={@feed_id}
+              is_remote={@feed_name in [:fediverse]}
               hide_activity={@hide_activities}
               subject_user={@subject_user}
             />
