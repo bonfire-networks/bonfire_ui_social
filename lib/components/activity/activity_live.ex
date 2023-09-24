@@ -172,7 +172,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
 
   def prepare(%{activity: %{object: object}, object: nil} = assigns) when not is_nil(object) do
     debug(
-      "Activity ##{debug_i(assigns[:activity_id], assigns[:activity_inception])} prepare activity with object in assoc"
+      "Activity ##{debug_i(assigns[:activity_id] || id(assigns[:activity]), assigns[:activity_inception])} prepare activity with object in assoc"
     )
 
     Map.put(assigns, :object, object)

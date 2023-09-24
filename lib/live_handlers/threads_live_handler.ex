@@ -245,6 +245,7 @@ defmodule Bonfire.Social.Threads.LiveHandler do
 
       debug(mentions, "send activity to smart input")
       push_event(socket, "mention_suggestions", %{text: mentions})
+
       Bonfire.UI.Common.SmartInput.LiveHandler.open_with_text_suggestion(
         mentions,
         # we reply to objects, not

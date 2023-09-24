@@ -65,12 +65,7 @@
       </div>
   {/case}
 
-  <div
-    :if={@link_count && @link_count > 0}
-    class={
-      "flex flex-col gap-2 mt-3"
-    }
-  >
+  <div :if={@link_count && @link_count > 0} class="flex flex-col gap-2 mt-3">
     <!-- LINKS -->
     <div
       role="status"

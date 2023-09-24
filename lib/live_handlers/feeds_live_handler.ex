@@ -973,6 +973,8 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
       skip_boundary_check: true
     ]
 
+    # NOTE: we receive the `ActivityLive` assigns pre-prepare even though this is running async
+
     list_of_activities =
       list_of_components
       # |> debug("list_of_components")
@@ -981,20 +983,24 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
           # debug(activity, "struct")
           activity
 
-        %{activity: %{} = activity} ->
+        %{activity: %{id: _} = activity} ->
           struct(Activity, activity)
 
         %{object: %{__struct__: _} = object} ->
           %Activity{object: object}
+
+        %{activity: nil} ->
+          nil
 
         other ->
           warn(other, "cannot preload extras")
           nil
       end)
       |> filter_empty([])
+      |> debug("list_of_activities pre-postload")
       |> preload_activity_and_object_assocs([:object], opts)
       |> Map.new(fn activity -> {id(activity) || id(e(activity, :object, nil)), activity} end)
-      |> debug("list_of_activities")
+      |> debug("list_of_activities postloaded")
 
     list_of_components
     # |> debug()
@@ -1060,6 +1066,7 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
     if Bonfire.Common.Config.get([:ui, :feed_object_extension_preloads_disabled]) != true do
       feed
       |> Bonfire.Social.Activities.activity_preloads(opts[:preload], opts)
+      # |> debug("pre-maybe_preloads_per_nested_schema")
       |> Bonfire.Common.Repo.Preload.maybe_preloads_per_nested_schema(
         under,
         object_preloads(),
