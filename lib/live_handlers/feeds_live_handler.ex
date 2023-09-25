@@ -957,8 +957,8 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
 
     preloads =
       case {showing_within, thread_mode} do
-        {:thread, :flat} -> [:feed, :with_reply_to, :with_media]
-        {:thread, _} -> [:feed, :with_media]
+        {:thread, :flat} -> [:feed, :with_reply_to, :with_media, :with_object_more]
+        {:thread, _} -> [:feed, :with_media, :with_object_more]
         {:feed_by_creator, _} -> [:with_object_more, :feed_postload]
         {:feed_by_subject, _} -> [:feed_by_subject, :feed_postload]
         _ -> [:feed_by_subject, :feed_postload]

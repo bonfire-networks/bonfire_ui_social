@@ -137,7 +137,8 @@ defmodule Bonfire.UI.Social.ActivityLive do
       is_remote:
         socket.assigns[:is_remote] ||
           (e(socket.assigns[:activity], :peered, nil) != nil or
-             e(socket.assigns[:object], :peered, nil) != nil),
+             e(socket.assigns[:object], :peered, nil) != nil or
+             e(socket.assigns[:activity], :object, :peered, nil) != nil),
       thread_title:
         e(assigns, :thread_title, nil) || e(socket.assigns, :thread_title, nil) ||
           e(socket.assigns[:activity], :replied, :thread, :named, :name, nil),
@@ -274,7 +275,9 @@ defmodule Bonfire.UI.Social.ActivityLive do
         e(assigns, :cw, nil) || e(activity, :sensitive, :is_sensitive, nil) ||
           e(object, :post_content, :summary, nil) != nil,
       is_remote:
-        assigns[:is_remote] || e(activity, :peered, nil) != nil or e(object, :peered, nil) != nil,
+        assigns[:is_remote] ||
+          (e(activity, :peered, nil) != nil or e(object, :peered, nil) != nil or
+             e(activity, :object, :peered, nil) != nil),
       reply_count: e(replied, :nested_replies_count, 0) + e(replied, :direct_replies_count, 0),
       hide_actions:
         case e(assigns, :hide_actions, nil) do

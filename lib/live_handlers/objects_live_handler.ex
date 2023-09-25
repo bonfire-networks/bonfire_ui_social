@@ -209,6 +209,8 @@ defmodule Bonfire.Social.Objects.LiveHandler do
   def not_found_fallback(id, params, socket) do
     case Bonfire.Common.URIs.remote_canonical_url(id) do
       url when is_binary(url) ->
+        debug(url, "remote object - redirect to canonical")
+
         socket
         |> redirect(external: url)
 
