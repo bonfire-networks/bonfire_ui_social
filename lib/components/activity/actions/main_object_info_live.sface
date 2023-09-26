@@ -1,9 +1,9 @@
 <div class="flex items-center p-3 py-1">
   <div class="flex items-center flex-1">
-    <!-- <LivePatch to="#" class="ml-2 text-sm link link-hover text-base-content text-opacity-60"><span class="font-bold">4</span> {l "likes"}</LivePatch>
+    {!-- <LivePatch to="#" class="ml-2 text-sm link link-hover text-base-content text-opacity-60"><span class="font-bold">4</span> {l "likes"}</LivePatch>
     <span class="ml-2 text-sm text-base-content text-opacity-60">·</span>
     <LivePatch to="#" class="ml-2 text-sm link link-hover text-base-content text-opacity-60"><span class="font-bold">4</span> {l "boosts"}</LivePatch> 
-    <span class="ml-2 text-sm text-base-content text-opacity-60">·</span> -->
+    <span class="ml-2 text-sm text-base-content text-opacity-60">·</span> --}
     <div :if={length(e(@participants, [])) > 1}>
       <span class="text-sm text-base-content text-opacity-60">·</span>
       <LivePatch
@@ -13,7 +13,7 @@
       ><span class="font-bold">{length(e(@participants, []))}</span> {l("participants")}</LivePatch>
     </div>
   </div>
-  <!-- <div class="pl-2 border-l">
+  {!-- <div class="pl-2 border-l">
     <#Icon outline="ChevronDown" class="w-5 h-5" />
-</div> -->
+</div> --}
 </div>

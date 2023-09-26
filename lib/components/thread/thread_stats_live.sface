@@ -74,7 +74,7 @@
                     parent_id="thread_stats"
                   />
                 </span>
-                <!-- <div role="tooltip" class="hidden tippy_template">
+                {!-- <div role="tooltip" class="hidden tippy_template">
               <div class="card relative z-[999999] w-64 bg-base-100 shadow-xl">
                 <div class="card-body p-4">
                   <div class="flex flex-col">
@@ -105,7 +105,7 @@
                   </div>
                 </div>
               </div>
-            </div> -->
+            </div> --}
               </div>
             </div>
           {/for}

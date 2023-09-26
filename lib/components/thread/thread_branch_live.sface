@@ -33,16 +33,16 @@
       ui_compact={@__context__[:ui_compact] || @thread_level >= LiveHandler.max_depth(@__context__[:ui_compact]) / 2}
     />
 
-    <!-- {#if is_list(@threaded_replies) and @threaded_replies != []} -->
+    {!-- {#if is_list(@threaded_replies) and @threaded_replies != []} --}
     {#if @thread_mode != :flat}
-      <!-- <div
+      {!-- <div
         class="absolute left-[12px] cursor-pointer top-[24px] z-30"
         x-on:click="show_replies = ! show_replies"
       >
         <div x-cloak x-show="!show_replies">
           <#Icon iconify="eva:expand-fill" class="w-4 h-4 text-primary" />
         </div>
-      </div> -->
+      </div> --}
       <div x-show="show_replies" data-id="show_replies" class="" x-transition>
         <div
           :if={@threaded_replies != []}
@@ -51,26 +51,26 @@
             "!ml-0": @thread_level < 2
           }
         >
-          <!-- <div
+          {!-- <div
             class="group absolute px-2 left-6 cursor-pointer top-0 h-8 z-30"
             x-on:click="show_replies = ! show_replies"
           >
             <div class="absolute group-hover:border-primary left-2 cursor-pointer inset-0 border-l-2 border-dashed bottom-0 border-base-content/10 z-30" />
-          </div> -->
+          </div> --}
 
           <div class={"replies replies-level-" <> to_string(@thread_level + 1) <> " pt-4"}>
             {#for {{subreply, sub_child_replies}, index} <- Enum.with_index(@threaded_replies || [], 1)}
               <div class="relative">
-                <!-- <div
+                {!-- <div
                   class="group absolute px-2 left-7 cursor-pointer top-16 bottom-0 z-30"
                   x-on:click="show_replies = ! show_replies"
                 >
                   <div class="absolute group-hover:bg-primary left-2 cursor-pointer inset-0 w-[2px] bottom-0 bg-base-content/10 z-30" />
-                </div> -->
-                <!-- <div 
+                </div> --}
+                {!-- <div 
                 :if={index == length(@threaded_replies)}
-                class="w-3 bg-base-100 absolute left-[-10px] top-[10px] z-30 bottom-0" /> -->
-                <!-- <div class="z-40 absolute border-base-content/20 w-6 h-6 border-0 border-b-2 border-l-2 rounded-bl-lg left-[-10px] top-[-6px]" /> -->
+                class="w-3 bg-base-100 absolute left-[-10px] top-[10px] z-30 bottom-0" /> --}
+                {!-- <div class="z-40 absolute border-base-content/20 w-6 h-6 border-0 border-b-2 border-l-2 rounded-bl-lg left-[-10px] top-[-6px]" /> --}
                 <Dynamic.LiveComponent
                   module={Bonfire.UI.Social.ThreadBranchLive}
                   id={id(subreply)}

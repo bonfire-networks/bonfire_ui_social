@@ -1,5 +1,5 @@
 {#if @showing_within == :widget}
-  <!-- show the object or character that isn't me -->
+  {!-- show the object or character that isn't me --}
   <div class="flex w-full activity_widget">
     <LiveRedirect
       to={path(the_other(@activity, @object, @__context__))}
@@ -42,8 +42,8 @@
   >
     {l("Accept")}
   </button>
-  <!-- show the object or character that isn't me -->
-  <!-- <div class="flex w-full activity_notification">
+  {!-- show the object or character that isn't me --}
+  {!-- <div class="flex w-full activity_notification">
     <LiveRedirect
       to={path(the_other(@activity, @object, @__context__))}
       class="flex profile-item group"
@@ -65,5 +65,5 @@
         </div>
       </div>
     </LiveRedirect>    
-  </div> -->
+  </div> --}
 {/if}

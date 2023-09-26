@@ -1,14 +1,14 @@
 <div class="bg-base-100 rounded-box shadow">
   {#case !e(@activity, :files, nil) and object_field(@json, "icon")}
     {#match img when is_binary(img)}
-      <!-- Only show the preview here if we have not attached media (hopefully with oembed) -->
+      {!-- Only show the preview here if we have not attached media (hopefully with oembed) --}
       <div class="relative">
         <img src={img} alt="" class="w-full h-100 rounded-t-box object-cover">
         <div class="absolute flex justify-center items-center inset-0">
           <div class="bg-gray-900/60 z-50 gap-4 px-3 py-2 rounded flex justify-center items-center place-content-center">
-            <!-- <button class="">
+            {!-- <button class="">
               <#Icon iconify="heroicons:play-20-solid" class="w-6 h-6 text-gray-200" />
-            </button> -->
+            </button> --}
             <a href={object_field(@json, "id")} target="_blank">
               <#Icon iconify="heroicons-outline:external-link" class="w-6 h-6 text-gray-200" />
             </a>
@@ -33,7 +33,7 @@
         {#match nil}
         {#match category}
           <div class="text-sm text-base-content/70">{category}</div>
-          <!-- <span>·</span> -->
+          {!-- <span>·</span> --}
       {/case}
 
       {#case object_field(@json, "views")}
@@ -49,7 +49,7 @@
       p_line_clamp_4: !@viewing_main_object,
       p_line_clamp_6: @viewing_main_object
     }>
-      <!-- TODO: show more button for long descriptions like in NoteLive -->
+      {!-- TODO: show more button for long descriptions like in NoteLive --}
       {rich(object_field(@json, "content"))}
     </article>
   </div>

@@ -50,11 +50,11 @@
                   </div>
                 </div>
               </div>
-              <!-- <div class="flex-shrink-0 ml-5">
+              {!-- <div class="flex-shrink-0 ml-5">
                 <div class="flex items-center mt-1 text-xs text-base-content/70">
                   <p><time datetime={"#{date_from_pointer(activity)}"}>{DatesTimes.date_from_now(activity)}</time></p>
                 </div>
-              </div> -->
+              </div> --}
             </div>
           </div>
         </LivePatch>

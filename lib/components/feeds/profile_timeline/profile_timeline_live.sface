@@ -43,8 +43,8 @@
         </a>
       </:bottom_or_empty_feed>
     </Bonfire.UI.Social.FeedLive>
-    <!-- <div class="hidden lg:flex">
+    {!-- <div class="hidden lg:flex">
       <#slot {@widget} />
-    </div> -->
+    </div> --}
   </div>
 </div>

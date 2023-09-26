@@ -36,22 +36,22 @@
               to={"/search/?s=#{tag}"}
               class="badge badge-primary badge-outline badge-sm !border !border-primary/20 !leading-[1.25rem] !h-[1.25rem]"
             >{tag}</LiveRedirect>
-            <!-- <span>·</span> -->
+            {!-- <span>·</span> --}
           {/for}
         </div>
       {/if}
-      <!-- TYPE -->
+      {!-- TYPE --}
       <div class="flex items-center mt-1 gap-2 text-sm font-semibold text-base-content/80">
         {object_field(@json, "physicalFormat")} {object_field(@json, "type")}
       </div>
 
-      <!-- PAGES -->
+      {!-- PAGES --}
       <div :if={object_field(@json, "pages")} class="flex  items-center mt-2 gap-2">
         <#Icon iconify="carbon:book" class="w-4 h-4 text-base-content/70" />
         <span class="text-base-content/70 text-sm">{object_field(@json, "pages")} {l("pages")}</span>
       </div>
 
-      <!-- Publication date -->
+      {!-- Publication date --}
       <div class="mt-2">
         {#case object_field(@json, "firstPublishedDate") || object_field(@json, "publishedDate")}
           {#match nil}
@@ -66,14 +66,14 @@
         {/case}
       </div>
 
-      <!-- Publisher -->
-      <!-- <div class="flex items-center mt-2 gap-2">
+      {!-- Publisher --}
+      {!-- <div class="flex items-center mt-2 gap-2">
         <div class="flex items-baseline text-base-content/70 text-sm">
           <span :if={object_field(@json, "publishers")} class="">{List.first(object_field(@json, "publishers"))} {l("Publisher")}</span>
         </div>
-      </div> -->
+      </div> --}
 
-      <!-- note -->
+      {!-- note --}
       <article class={"mt-2 prose-sm prose max-w-prose text-base-content/90", "line-clamp-6": !@viewing_main_object}>
         {rich(
           object_field(@json, "description") || object_field(@json, "summary") ||

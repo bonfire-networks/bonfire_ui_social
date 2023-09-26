@@ -1,13 +1,13 @@
 <div class="flex flex-col max-w-screen-md mx-auto">
-  <!-- <Bonfire.UI.Common.PageTitleLive page_title={@page_title} /> -->
+  {!-- <Bonfire.UI.Common.PageTitleLive page_title={@page_title} /> --}
 
-  <!-- <div class="relative flex items-center px-3 mt-6 mb-6 md:px-0">
+  {!-- <div class="relative flex items-center px-3 mt-6 mb-6 md:px-0">
     <div class="flex items-center flex-1 gap-5 text-xl font-semibold text-base-content">
       <#Icon iconify="noto:bell" class="w-5 h-5" />
       <span>{l("Notifications")}</span>
     </div>
     <Bonfire.UI.Social.HeaderAsideNotificationsSeenLive feed_id={:notifications} />
-  </div> -->
+  </div> --}
 
   <Bonfire.UI.Social.FeedLive
     id={e(@feed_id, :notifications)}

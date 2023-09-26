@@ -1,7 +1,7 @@
 <div class="flex items-center p-3 w-full justify-end">
-  <!-- <span class="text-sm font-medium text-base-content/70">
+  {!-- <span class="text-sm font-medium text-base-content/70">
     {l("Discussion")}
-  </span> -->
+  </span> --}
   <div :if={current_user_id(@__context__)} class="flex gap-3">
     <Bonfire.UI.Social.ThreadMarkSeenLive
       :if={@showing_within == :messages and @thread_id}
@@ -11,20 +11,20 @@
     <div class="flex rounded-md border border-base-content/20  items-center gap-3">
       <div class="dropdown dropdown-end">
         <label tabindex="0" class="btn rounded-l rounded-r-none btn-ghost btn-sm btn-square normal-case">
-          <!-- {l("Layout:")} -->
+          {!-- {l("Layout:")} --}
           {#if @thread_mode == :flat}
-            <!-- {l("Linear")} -->
+            {!-- {l("Linear")} --}
             <#Icon iconify="fa-solid:list" class="w-4 h-4 text-base-content/70" />
           {#else}
-            <!-- {l("Nested replies")} -->
+            {!-- {l("Nested replies")} --}
             <#Icon iconify="clarity:tree-view-solid" class="w-4 h-4 text-base-content/70" />
           {/if}
 
-          <!-- {#if @__context__[:ui_compact]}
+          {!-- {#if @__context__[:ui_compact]}
                 {l("Compact")}
               {#else}
                 {l("Cozy")}
-              {/if} -->
+              {/if} --}
         </label>
         <ul
           tabindex="0"
@@ -58,7 +58,7 @@
               {l("Flat list")}</a>
           </li>
 
-          <!-- {#if @__context__[:ui_compact]}
+          {!-- {#if @__context__[:ui_compact]}
                 <li
                   phx-click="set"
                   phx-value-to_atoms="true"
@@ -74,7 +74,7 @@
                   phx-value-assign_global="true"
                   phx-target={@event_target}
                 ><a>{l("Compact")}</a></li>
-              {/if} -->
+              {/if} --}
         </ul>
       </div>
 
@@ -181,14 +181,14 @@
 
       <div class="dropdown dropdown-end">
         <label tabindex="0" class="btn-sm rounded-r rounded-l-none btn btn-ghost btn-square normal-case">
-          <!-- {l("Order:")} -->
+          {!-- {l("Order:")} --}
 
           {#if @sort_order == :asc}
             <#Icon iconify="octicon:sort-asc-16" class="w-4 h-4 text-base-content/70" />
-            <!-- {l("Oldest first")} -->
+            {!-- {l("Oldest first")} --}
           {#else}
             <#Icon iconify="octicon:sort-desc-16" class="w-4 h-4 text-base-content/70" />
-            <!-- {l("Newest first")} -->
+            {!-- {l("Newest first")} --}
           {/if}
         </label>
         <ul

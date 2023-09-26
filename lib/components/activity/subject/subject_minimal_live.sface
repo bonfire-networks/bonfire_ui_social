@@ -7,7 +7,7 @@
         <div class="flex items-center justify-start w-5 h-5">
           <Iconify.Bonfire.LikeFire.render :if={@verb == "Like"} class="w-5 h-5 text-yellow-500" />
           <#Icon solid="UserAdd" :if={@verb == "Follow"} class="flex-shrink-0 w-5 h-5 text-info" />
-          <!-- Boost icon -->
+          {!-- Boost icon --}
           <svg
             :if={@verb == "Boost"}
             viewBox="0 0 24 24"
@@ -48,7 +48,7 @@
       }>
         {#if @verb == "Like"}
           <div data-role="liked_by" class="flex items-start gap-5 justify-start">
-            <!-- LIKE -->
+            {!-- LIKE --}
             <Iconify.Bonfire.LikeFire.render class="w-7 h-7 text-yellow-500" />
             <div class="flex-1 flex flex-col gap-2">
               <Bonfire.UI.Common.AvatarLive
@@ -74,7 +74,7 @@
             </div>
           </div>
 
-          <!-- <div data-role="liked_by" class="flex items-center justify-start pb-2 mb-2">
+          {!-- <div data-role="liked_by" class="flex items-center justify-start pb-2 mb-2">
             <Iconify.Bonfire.LikeFire.render class="w-5 h-5 text-yellow-500" />
             <div class="flex-1 ml-2">
               <div class="text-sm font-medium text-base-content/70">
@@ -93,39 +93,39 @@
                 {raw(@verb_display)}
               </div>
             </div>
-          </div> -->
+          </div> --}
         {#elseif @verb == "Follow"}
           <LiveRedirect
             aria-label={e(@character, :username, "") <> " profile"}
             to={path(@character)}
             class="flex items-center gap-5 justify-start pb-2"
           >
-            <!-- FOLLOW -->
+            {!-- FOLLOW --}
             <#Icon solid="UserAdd" class="flex-shrink-0 w-7 h-7 text-info" />
-            <!-- <Bonfire.UI.Common.AvatarLive
+            {!-- <Bonfire.UI.Common.AvatarLive
                 user={@profile}
                 title={e(@profile, :name, "Anonymous")}
                 class="h-9 w-9 rounded-full bg-base-content/20"
-              /> -->
+              /> --}
             <div class="font-medium text-sm text-base-content/90">
               {e(@profile, :name, nil) || e(@character, :username, nil)}
 
               {raw(@verb_display)}
 
               <span :if={@object_id == current_user_id(@__context__)}>
-                <!-- special case when current_user is the one being followed -->
+                {!-- special case when current_user is the one being followed --}
                 {l("you")}
               </span>
             </div>
           </LiveRedirect>
         {#elseif @published_in}
-          <!-- <Bonfire.UI.Social.Activity.PublishedInLive
+          {!-- <Bonfire.UI.Social.Activity.PublishedInLive
             context={@published_in}
             showing_within={@showing_within}
-          /> -->
+          /> --}
         {#elseif @verb == "Boost"}
           <div data-role="boosted_by" class="flex items-start gap-5 justify-start">
-            <!-- BOOST -->
+            {!-- BOOST --}
             <Iconify.Bonfire.Boost.render class="w-7 h-7 stroke-1 fill-info" />
             <div class="flex-1 flex flex-col gap-2">
               <Bonfire.UI.Common.AvatarLive
@@ -151,7 +151,7 @@
             </div>
           </div>
         {#elseif @verb in ["Reply", "Respond"]}
-          <!-- <div class="flex items-start w-full">
+          {!-- <div class="flex items-start w-full">
             <div
               class="mr-3"
               :if={!Settings.get([Bonfire.UI.Common.AvatarLive, :hide_avatars], false, @__context__)}
@@ -224,7 +224,7 @@
                 </div>
               </div>
             </div>
-          </div> -->
+          </div> --}
           <Bonfire.UI.Social.Activity.SubjectLive
             activity_id={@activity_id}
             activity_component_id={@activity_component_id}
@@ -250,7 +250,7 @@
           />
         {#elseif @verb == "Flag"}
           <div data-role="flagged_by" class="flex items-center justify-start pb-3 -ml-8">
-            <!-- FLAG -->
+            {!-- FLAG --}
             <#Icon solid="Flag" class="w-4 h-4 text-error" />
             <div class="flex-1 ml-2">
               <div class="text-sm font-medium text-base-content/70">
@@ -265,7 +265,7 @@
               </div>
             </div>
           </div>
-          <!-- {#else}
+          {!-- {#else}
           <div class="flex items-center justify-start">
             <Iconify.iconify
                 icon={Bonfire.Boundaries.Verbs.get(@verb)[:icon]} 
@@ -296,10 +296,10 @@
                 {/if}
               </div>
             </div>
-          </div> -->
+          </div> --}
         {/if}
 
-        <!-- <Bonfire.UI.Social.Activity.LinkToActivityLive
+        {!-- <Bonfire.UI.Social.Activity.LinkToActivityLive
           :if={@showing_within not in [:smart_input]}
           object_type={@object_type}
           permalink={@permalink}
@@ -312,13 +312,13 @@
           >
             {@date_ago || DatesTimes.date_from_now(@activity_id) || DatesTimes.date_from_now(@object_id)}
           </span>
-        </Bonfire.UI.Social.Activity.LinkToActivityLive> -->
+        </Bonfire.UI.Social.Activity.LinkToActivityLive> --}
       </div>
     {#match _}
       <div class="flex items-center w-full">
         {#if @verb == "Like"}
           <div data-role="liked_by" class="flex items-center justify-start pb-3 -ml-8">
-            <!-- LIKE -->
+            {!-- LIKE --}
             <Iconify.Bonfire.LikeFire.render class="w-5 h-5 text-yellow-500" />
             <div class="flex-1 ml-2">
               <div class="text-sm font-medium text-base-content/70">
@@ -340,7 +340,7 @@
           </div>
         {#elseif @verb == "Follow"}
           <div class="flex items-center justify-start pb-3 -ml-8">
-            <!-- FOLLOW -->
+            {!-- FOLLOW --}
             <#Icon solid="UserAdd" class="flex-shrink-0 w-5 h-5 text-base-content/70" />
             <div class="flex-1 ml-2">
               <div class="text-sm font-medium text-base-content/70">
@@ -355,20 +355,20 @@
                 {raw(@verb_display)}
 
                 <span :if={@object_id == current_user_id(@__context__)}>
-                  <!-- special case when current_user is the one being followed -->
+                  {!-- special case when current_user is the one being followed --}
                   {l("you")}
                 </span>
               </div>
             </div>
           </div>
         {#elseif @published_in}
-          <!-- <Bonfire.UI.Social.Activity.PublishedInLive
+          {!-- <Bonfire.UI.Social.Activity.PublishedInLive
             context={@published_in}
             showing_within={@showing_within}
-          /> -->
+          /> --}
         {#elseif @verb == "Boost"}
           <div data-role="boosted_by" class="flex items-center justify-start pb-3 -ml-8">
-            <!-- BOOST -->
+            {!-- BOOST --}
             <Iconify.Bonfire.Boost.render class="w-5 h-5 stroke-1 fill-base-content/50" />
             <div class="flex-1 ml-2">
               <div class="text-sm font-semibold text-base-content/50">
@@ -405,7 +405,7 @@
             <div class="flex items-start justify-between leading-[16px] min-w-0 space-x-1 w-full">
               <div class="flex flex-col flex-1 gap-0 feed-clickable">
                 <div class="text-sm font-medium lowercase line-clamp-1 text-base-content/70">
-                  <!-- {@verb} {@object_type} -->
+                  {!-- {@verb} {@object_type} --}
                   <LiveRedirect
                     opts={"data-id": "subject_name"}
                     aria-label={l("%{name}'s profile", name: e(@profile, :name, ""))}
@@ -415,8 +415,8 @@
                     {e(@profile, :name, "Anonymous")}
                   </LiveRedirect>
                 </div>
-                <!-- <span class="ml-2 text-[15px] text-base-content/70">replied to <b class="font-bold text-base-content link">title topic</b></span> -->
-                <!-- </div> -->
+                {!-- <span class="ml-2 text-[15px] text-base-content/70">replied to <b class="font-bold text-base-content link">title topic</b></span> --}
+                {!-- </div> --}
                 <div class="flex items-center gap-1">
                   <LiveRedirect
                     :if={e(@character, :username, nil)}
@@ -460,7 +460,7 @@
               </div>
             </div>
           </div>
-          <!--div class="flex w-full items-top">
+          {!--div class="flex w-full items-top">
             <div class="">
               <Bonfire.UI.Common.AvatarLive parent_id={@activity_component_id || @activity_id || @object_id)} user={@profile} />
             </div>
@@ -492,10 +492,10 @@
                 </span>
               </Bonfire.UI.Social.Activity.LinkToActivityLive>
             </div>
-          </div> -->
+          </div> --}
         {#elseif @verb == "Flag"}
           <div data-role="flagged_by" class="flex items-center justify-start pb-3 -ml-8">
-            <!-- FLAG -->
+            {!-- FLAG --}
             <#Icon solid="Flag" class="w-4 h-4 text-error" />
             <div class="flex-1 ml-2">
               <div class="text-sm font-medium text-base-content/70">
@@ -543,7 +543,7 @@
             </Bonfire.UI.Social.Activity.LinkToActivityLive>
           </div>
 
-          <!-- <div class="flex items-center justify-start">
+          {!-- <div class="flex items-center justify-start">
             <Iconify.iconify
                 icon={Bonfire.Boundaries.Verbs.get(@verb)[:icon]} 
                 class="w-4 h-4 text-error" />
@@ -573,7 +573,7 @@
                 {/if}
               </div>
             </div>
-          </div> -->
+          </div> --}
         {/if}
       </div>
   {/case}

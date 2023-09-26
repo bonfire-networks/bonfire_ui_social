@@ -44,9 +44,9 @@
         </div>
     {/case}
 
-    <!-- <div class="prose-sm prose text-primary-content-700 max-w-prose">
+    {!-- <div class="prose-sm prose text-primary-content-700 max-w-prose">
       {rich(object_field(@json, "summary"))}
-    </div> -->
+    </div> --}
 
     <article class={"mt-2 prose-sm prose max-w-prose ", "line-clamp-4": !@viewing_main_object}>
       {rich(object_field(@json, "summary") || object_field(@json, "content"))}

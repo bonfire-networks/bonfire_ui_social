@@ -1,4 +1,4 @@
-  <!-- <aside class="flex-1 hidden mx-3 mt-4 rounded-lg lg:flex md:flex-shrink-0">
+  {!-- <aside class="flex-1 hidden mx-3 mt-4 rounded-lg lg:flex md:flex-shrink-0">
       <div class="w-full h-full px-4">
 
         <%= if current_user(@__context__) do %>
@@ -23,4 +23,4 @@
           </div>
         </div>
       </div>
-  </aside> -->
+  </aside> --}

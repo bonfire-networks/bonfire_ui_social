@@ -2,7 +2,7 @@
   {#case @multimedia_count}
     {#match 0}
     {#match num_medias}
-      <!-- MULTIMEDIA ATTACHMENTS -->
+      {!-- MULTIMEDIA ATTACHMENTS --}
       <div
         x-show="content_open == true"
         class={
@@ -35,7 +35,7 @@
   {#case @image_count}
     {#match 0}
     {#match num_medias}
-      <!-- IMAGE ATTACHMENTS -->
+      {!-- IMAGE ATTACHMENTS --}
       <div
         x-show="content_open == true"
         class={
@@ -66,7 +66,7 @@
   {/case}
 
   <div :if={@link_count && @link_count > 0} class="flex flex-col gap-2 mt-3">
-    <!-- LINKS -->
+    {!-- LINKS --}
     <div
       role="status"
       class="animate-pulse space-y-4 md:space-y-0 md:space-x-4 md:flex md:items-center"

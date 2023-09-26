@@ -1,6 +1,6 @@
 {#if @showing_within != :smart_input}
   <div :if={@link_list != []} class="flex flex-col gap-2 mt-3">
-    <!-- LINKS -->
+    {!-- LINKS --}
     {#for m <- @link_list}
       {#case Media.media_url(m)}
         {#match nil}
@@ -64,7 +64,7 @@
                   <div class="max-w-[420px] text-sm mt-0.5 break-words line-clamp-2 text-base-content/70">
                     {description(m)}
                   </div>
-                  <!-- {e(m, :metadata, "location", "name", nil)} {e(m, :metadata, "startDate", nil)} -->
+                  {!-- {e(m, :metadata, "location", "name", nil)} {e(m, :metadata, "startDate", nil)} --}
                 </div>
               </div>
             </a>
@@ -77,7 +77,7 @@
     {#case @multimedia_count}
       {#match 0}
       {#match num_medias}
-        <!-- MULTIMEDIA ATTACHMENTS -->
+        {!-- MULTIMEDIA ATTACHMENTS --}
         <div class={
           "grid w-full grid-flow-col grid-with-ratio grid-rows-4 gap-1 my-3",
           "!grid-cols-1 !grid-rows-1": @showing_within == :smart_input,
@@ -103,7 +103,7 @@
                     :if={@cw || Settings.get([Bonfire.UI.Social.Activity.MediaLive, :hide], false, @__context__)}
                   />
                   <figure class="h-full">
-                    <!-- FIXME: enable_fallback for logged out visitors instead of just not using the modal -->
+                    {!-- FIXME: enable_fallback for logged out visitors instead of just not using the modal --}
                     {#if id(current_user(@__context__))}
                       <Bonfire.UI.Common.OpenModalLive
                         id={"media_modal_#{id(m)}#{Text.random_string()}"}
@@ -125,12 +125,12 @@
                             do: "border-top-left-radius: 8px: border-top-right-radius: 8px",
                             else: ""}
                         >
-                          <!-- <div class="">
+                          {!-- <div class="">
                           <div class="text-xs truncate  p-2 rounded-t-lg text-base-content/90">{media_label}</div>
                            <p class="text-sm">{e(m.metadata, "description", nil) || e(m.metadata, "facebook", "og:description", nil) ||
                               e(m.metadata, "twitter", "twitter:description", nil) ||
                               e(m.metadata, "other", "description", nil)}</p> 
-                        </div> -->
+                        </div> --}
                           <Bonfire.UI.Social.Activity.RemoteMediaLive media={m} />
                         </div>
 
@@ -153,7 +153,7 @@
                                     </div>
                                   {/if}
                               {/case}
-                              <!-- PLAY OR FOLLOW LINK -->
+                              {!-- PLAY OR FOLLOW LINK --}
                               <div class="absolute flex justify-center items-center inset-0">
                                 <div class="bg-gray-900/60 z-50 gap-4 px-3 py-2 rounded flex justify-center items-center place-content-center">
                                   <button class="">
@@ -176,7 +176,7 @@
                         </:open_btn>
                       </Bonfire.UI.Common.OpenModalLive>
                     {#else}
-                      <!-- if logged out -->
+                      {!-- if logged out --}
                       <a href={Media.media_url(m)} target="_blank" class="relative h-full">
                         <div
                           class="absolute inset-0 backdrop-blur-xl bg-white/30 z-50 rounded-box"
@@ -199,12 +199,12 @@
                               </div>
                             {/if}
                         {/case}
-                        <!-- <div class="absolute z-50 bottom-3 left-3 dropdown dropdown-hover dropdown-top">
+                        {!-- <div class="absolute z-50 bottom-3 left-3 dropdown dropdown-hover dropdown-top">
                           <label tabindex="0" class="text-white border-none rounded btn btn-xs bg-black/60">alt</label>
                           <div tabindex="0" class="p-2 rounded shadow dropdown-content bg-base-100 w-52">
                             <div class="prose-sm prose text-base-content">{media_label}</div>
                           </div>
-                        </div> -->
+                        </div> --}
                         <figcaption class="sr-only">{media_label}</figcaption>
                       </a>
                     {/if}
@@ -218,7 +218,7 @@
     {#case @image_count}
       {#match 0}
       {#match num_medias}
-        <!-- IMAGE ATTACHMENTS -->
+        {!-- IMAGE ATTACHMENTS --}
         <div class={
           "grid w-full grid-flow-col grid-with-ratio grid-rows-4 gap-1 my-3",
           "!grid-cols-1 !grid-rows-1": @showing_within == :smart_input,
@@ -240,7 +240,7 @@
                       4
                 }>
                   <figure class="h-full">
-                    <!-- FIXME: enable_fallback for logged out visitors instead of just not using the modal -->
+                    {!-- FIXME: enable_fallback for logged out visitors instead of just not using the modal --}
                     {#if id(current_user(@__context__))}
                       <Bonfire.UI.Common.OpenModalLive
                         id={"media_modal_#{id(m)}#{Text.random_string()}"}
@@ -261,12 +261,12 @@
                         >
                           <Bonfire.UI.Social.Activity.RemoteMediaLive media={m} />
 
-                          <!-- <LazyImage
+                          {!-- <LazyImage
                                   class="border border-base-content/10 w-full !object-cover m-image h-full cursor-pointer aspect-video rounded-md"
                                   m={m}
                                   alt={media_label}
                                   src={Media.media_url(m)}
-                                /> -->
+                                /> --}
 
                           <div class="fixed z-20 bottom-0 left-0 bg-black/30 right-0">
                             <div class="prose  line-clamp-6 text-center prose-sm p-4  text-white mx-auto">{media_label}</div>
@@ -286,32 +286,32 @@
                             {/if}
                             {#case preview_img(m) || Media.media_url(m)}
                               {#match maybe_preview_img}
-                                <!-- {#if is_image?(maybe_preview_img)} -->
+                                {!-- {#if is_image?(maybe_preview_img)} --}
                                 <LazyImage
                                   class="border border-base-content/10 w-full !object-cover m-image h-full cursor-pointer aspect-video rounded-md"
                                   m={m}
                                   alt={media_label}
                                   src={maybe_preview_img}
                                 />
-                                <!-- {#else}
+                                {!-- {#else}
                                 <div class="items-center rounded-l shrink-0 w-10 h-10 place-content-center">
                                   <#Icon iconify="bi:play-fill" class="w-8 h-8 text-base-content/70" />
                                 </div>
-                              {/if} -->
+                              {/if} --}
                             {/case}
 
-                            <!-- <div class="absolute z-50 bottom-3 left-3 dropdown dropdown-hover dropdown-top">
+                            {!-- <div class="absolute z-50 bottom-3 left-3 dropdown dropdown-hover dropdown-top">
                               <label tabindex="0" class="text-white border-none rounded btn btn-xs bg-black/60">alt</label>
                               <div tabindex="0" class="p-2 rounded shadow dropdown-content bg-base-100 w-52">
                                 <div class="prose-sm prose text-base-content">{media_label}</div>
                               </div>
-                            </div> -->
+                            </div> --}
                             <figcaption class="sr-only">{media_label}</figcaption>
                           </div>
                         </:open_btn>
                       </Bonfire.UI.Common.OpenModalLive>
                     {#else}
-                      <!-- if logged out -->
+                      {!-- if logged out --}
                       <a href={Media.media_url(m)} target="_blank" class="relative h-full block">
                         {#if @cw || Settings.get([Bonfire.UI.Social.Activity.MediaLive, :hide], false, @__context__)}
                           <div class="absolute inset-0 flex items-center cursor-pointer place-content-center justify-center z-[60]">
@@ -352,7 +352,7 @@
     {/case}
   </div>
 
-  <!-- {#case Enum.count(List.wrap(@media))}
+  {!-- {#case Enum.count(List.wrap(@media))}
     {#match num_medias}
       <div
         x-show="content_open == true"
@@ -477,5 +477,5 @@
           {/case}
         {/for}
       </div>
-  {/case} -->
+  {/case} --}
 {/if}

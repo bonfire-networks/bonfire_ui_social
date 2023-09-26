@@ -1,4 +1,4 @@
-<!-- <Bonfire.UI.Common.OpenModalLive
+{!-- <Bonfire.UI.Common.OpenModalLive
   id={Text.random_string()}
   no_actions={true}
   title_text={l("Pin")}
@@ -40,7 +40,7 @@
     </div>
   </:open_btn>
 </Bonfire.UI.Common.OpenModalLive>
- -->
+ --}
 
 <button
   :if={@object}
@@ -55,7 +55,7 @@
   <#Icon iconify="bi:pin-angle-fill" class="w-4 h-4" />
   {if @scope == :instance, do: l("Pin to instance"), else: l("Pin to your profile")}
 </button>
-<!-- 
+{!-- 
 <div
   :if={@object}
   data-id="pin_action"
@@ -82,4 +82,4 @@
 >
   <#Icon iconify="bi:pin-angle-fill" class="w-5 h-5" />
   {if @scope == :instance, do: l("Unpin from instance"), else: l("Unpin")}
-</div> -->
+</div> --}

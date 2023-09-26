@@ -61,7 +61,7 @@
       </div>
     </div>
 
-    <!-- <div class="flex items-center">
+    {!-- <div class="flex items-center">
 
       <span class="text-xs text-primary-content-500">
         <LiveRedirect to={@permalink}>
@@ -72,8 +72,8 @@
 
         <Bonfire.UI.Social.Activity.InstanceIconLive object={@object} />
       </span>
-    </div> -->
-    <!-- <Bonfire.UI.Social.Activity.DateAgoLive
+    </div> --}
+    {!-- <Bonfire.UI.Social.Activity.DateAgoLive
       permalink={@permalink}
       date_ago={@date_ago}
       object={@object}
@@ -82,8 +82,8 @@
       object_boundary={@object_boundary}
       showing_within={@showing_within}
       verb_display={@verb_display}
-    /> -->
-    <!-- 
+    /> --}
+    {!-- 
     <div
       :if={receiver(@receiver, @object) |> dump &&
         receiver(@receiver, @object) != provider(@provider, @primary_accountable, @object)}
@@ -99,6 +99,6 @@
 
         <Bonfire.UI.Common.AvatarLive parent_id={"receiver-#{@activity_component_id || id(@card)}"} user={receiver(@receiver, @object)} />
       </LiveRedirect>
-    </div> -->
+    </div> --}
   </div>
 </div>

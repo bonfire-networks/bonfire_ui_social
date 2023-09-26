@@ -1,15 +1,15 @@
-<!-- <Bonfire.UI.Common.BoostActionLive
+{!-- <Bonfire.UI.Common.BoostActionLive
   id={ComponentID.new(Bonfire.UI.Common.BoostActionLive, id(@object))}
   object_id={id(@object)}
   showing_within={:feed}
-/> -->
-<!-- <Bonfire.UI.Common.LikeActionLive
+/> --}
+{!-- <Bonfire.UI.Common.LikeActionLive
   id={ComponentID.new(Bonfire.UI.Common.LikeActionLive, id(@object))}
   object_id={id(@object)}
   object_boundary={@object_boundary}
-/> -->
+/> --}
 <div class="flex items-center gap-2">
-  <!-- <div class="px-1 flex-1 flex h-full w-full place-content-center items-center"> -->
+  {!-- <div class="px-1 flex-1 flex h-full w-full place-content-center items-center"> --}
   <Bonfire.UI.Common.FollowButtonLive
     :if={e(@object, :character, nil)}
     id={ComponentID.new(Bonfire.UI.Common.FollowButtonLive, id(@object), @activity_id)}
@@ -21,14 +21,14 @@
     object_boundary={@object_boundary}
     hide_icon
   />
-  <!-- </div>
-  <div class="px-1 flex-1 flex h-full w-full place-content-center items-center border-t border-base-content/20"> -->
-  <!-- <Bonfire.UI.Social.Activity.MoreActionsLive
+  {!-- </div>
+  <div class="px-1 flex-1 flex h-full w-full place-content-center items-center border-t border-base-content/20"> --}
+  {!-- <Bonfire.UI.Social.Activity.MoreActionsLive
     object={@object}
     object_type={@object_type}
     verb={if @object_type == :group, do: l("Join")}
     object_boundary={@object_boundary}
     activity_component_id={@activity_id}
-  /> -->
-  <!-- </div> -->
+  /> --}
+  {!-- </div> --}
 </div>

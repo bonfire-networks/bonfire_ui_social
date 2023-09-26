@@ -32,7 +32,7 @@
           </div>
           <div class="max-w-full prose-sm prose line-clamp-2 !text-base-content/70 !text-xs">{e(@object, :profile, :summary, "")}</div>
         </div>
-        <!-- <div class="text-sm font-normal text-base-content/70">{Bonfire.Me.Characters.display_username(e(@object, :character, :username, nil), true)}</div> -->
+        {!-- <div class="text-sm font-normal text-base-content/70">{Bonfire.Me.Characters.display_username(e(@object, :character, :username, nil), true)}</div> --}
       </LiveRedirect>
       <div class="flex items-center border-l border-base-content/20 w-[120px] gap-1 md:gap-2">
         <Bonfire.UI.Social.Activity.CategoryActionsLive

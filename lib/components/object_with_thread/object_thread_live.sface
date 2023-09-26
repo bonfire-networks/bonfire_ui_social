@@ -3,17 +3,17 @@
   "!max-w-[680px] mx-auto": !current_user(@__context__)
 }>
   <div class="flex-1">
-    <!-- INITIAL POST -->
+    {!-- INITIAL POST --}
 
     <div class="relative">
-      <!-- <Bonfire.UI.Social.ObjectHeaderAsideLive
+      {!-- <Bonfire.UI.Social.ObjectHeaderAsideLive
         page_title={@page_title}
         participants={@participants || []}
         thread_id={@thread_id}
         activity={@activity}
         showing_within={@showing_within || :thread}
-      /> -->
-      <!-- <Bonfire.UI.Common.BackButtonLive showing_within={@showing_within || :thread} /> -->
+      /> --}
+      {!-- <Bonfire.UI.Common.BackButtonLive showing_within={@showing_within || :thread} /> --}
       <div id="thread_main_object">
         <Bonfire.UI.Social.ActivityLive
           :if={@activity}

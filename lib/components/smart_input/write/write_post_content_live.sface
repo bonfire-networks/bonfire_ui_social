@@ -36,13 +36,13 @@
       preview_boundary_verbs={@preview_boundary_verbs}
       boundary_preset={@boundary_preset}
     >
-      <!-- CW -->
+      {!-- CW --}
       <div
         phx-update={if @reset_smart_input, do: "replace", else: "ignore"}
         class="hidden"
         id="smart_input_post_title"
       >
-        <!-- <div class="p-4 mb-0 bg-info/10">
+        {!-- <div class="p-4 mb-0 bg-info/10">
           <div class="flex">
             <div class="flex-shrink-0">
               <#Icon iconify="heroicons-solid:information-circle" class="w-5 h-5 text-info" />
@@ -53,7 +53,7 @@
                 )}</p>
             </div>
           </div>
-        </div> -->
+        </div> --}
         <Inputs for={:post_content}>
           <div class="relative p-2 border-b bg-base-100 border-base-content/20">
             <#Icon iconify="ri:alert-fill" class="absolute w-5 h-5 stroke-1 top-[14px] left-3 text-warning" />
@@ -71,13 +71,13 @@
         </Inputs>
       </div>
 
-      <!-- BODY -->
+      {!-- BODY --}
       <div id="write_post_body_field" class="h-full flex-1 break-words" phx-update="ignore">
-        <!-- phx-update={if @reset_smart_input, do: "replace", else: "ignore"} -->
-        <!-- <Inputs for={:post_content}>
+        {!-- phx-update={if @reset_smart_input, do: "replace", else: "ignore"} --}
+        {!-- <Inputs for={:post_content}>
           <label for="description" class="sr-only">{l("Text")}</label>
           <Field class="flex-1 h-full grow" name={:html_body}>
-            <TextInput  class="h-[30px] editor_hidden_input" /> -->
+            <TextInput  class="h-[30px] editor_hidden_input" /> --}
         <WriteEditorLive
           field_name="post[post_content][html_body]"
           reset_smart_input={@reset_smart_input}
@@ -86,8 +86,8 @@
           insert_text={@insert_text}
           showing_within={@showing_within}
         />
-        <!-- </Field>
-        </Inputs> -->
+        {!-- </Field>
+        </Inputs> --}
       </div>
     </Bonfire.UI.Common.InputControlsLive>
   </Form>

@@ -2,7 +2,7 @@
   :if={@showing_within not in [:group, :topic, :thread] and not is_nil(@context)}
   class={@class}
 >
-  <!-- Something published in a Category / Topic -->
+  {!-- Something published in a Category / Topic --}
   <#Icon iconify="ri:group-fill" class="w-4 h-4 text-info" />
   <div class="flex-1 ml-2">
     <div class="text-sm font-medium text-base-content/70">

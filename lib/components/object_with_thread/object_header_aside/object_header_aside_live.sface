@@ -1,5 +1,5 @@
 <div class="flex items-center gap-4">
-  <!-- <Bonfire.UI.Common.LikeActionLive
+  {!-- <Bonfire.UI.Common.LikeActionLive
     id={ComponentID.new(Bonfire.UI.Common.LikeActionLive, id(@activity), __MODULE__)}
     object={@activity}
   />
@@ -10,7 +10,7 @@
     object={@activity}
           object_type={Types.object_type(@object)}
 
-  /> -->
+  /> --}
 
   <div class="relative z-40 dropdown dropdown-end">
     <label
@@ -51,7 +51,7 @@
         </Bonfire.UI.Common.OpenModalLive>
       </li>
 
-      <!-- <li :if={module_enabled?(Bonfire.UI.Common.ProfileItemLive)}>
+      {!-- <li :if={module_enabled?(Bonfire.UI.Common.ProfileItemLive)}>
         <Bonfire.UI.Common.OpenModalLive
           :if={@thread_id}
           id="object_header_participants"
@@ -75,7 +75,7 @@
             </div>
           </:open_btn>
         </Bonfire.UI.Common.OpenModalLive>
-      </li> -->
+      </li> --}
     </ul>
   </div>
 </div>

@@ -18,7 +18,7 @@
           id={ComponentID.new(Bonfire.UI.Common.LikeActionLive, id(@object), id(@activity))}
           object_id={ulid(@object)}
         />
-        <!-- <LivePatch to={if @process_url, do: e(@process_url, "/list/") <> e(@object, :id, ""), else: path(@object)}> -->
+        {!-- <LivePatch to={if @process_url, do: e(@process_url, "/list/") <> e(@object, :id, ""), else: path(@object)}> --}
         <LiveRedirect to={~p"/coordination/list/" <> e(@object, :id, "")}>
           <div class="text-base font-semibold text-base-content hover:underline">{e(@object, :name, nil)}</div>
         </LiveRedirect>
@@ -34,7 +34,7 @@
         </div>
       </div>
 
-      <!-- NOTE -->
+      {!-- NOTE --}
       <div
         :if={e(@object, :note, nil)}
         class={

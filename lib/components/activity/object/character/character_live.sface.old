@@ -8,7 +8,7 @@
     <div 
       class="text-sm font-medium text-base-content text-opacity-80">
 
-      <!-- first show the subject -->
+      {!-- first show the subject --}
       <span data-id="subject">
         <LiveRedirect
           :if={e(@activity, :subject, :id, nil) != current_user_id(@__context__)}
@@ -25,7 +25,7 @@
 
       {raw @verb_display}
 
-      <!-- then summarise the object -->
+      {!-- then summarise the object --}
       <span :if={ulid(@object) == current_user_id(@__context__)}>
         you
       </span>
@@ -41,7 +41,7 @@
 </div>
 
 
-<!-- then show the object or character that isn't me -->
+{!-- then show the object or character that isn't me --}
 <div class="flex w-full activity_notification">
   <LiveRedirect to={path(the_other(assigns))} class="flex profile-item group ">
     <div class="absolute left-0">
@@ -71,15 +71,15 @@
   class={"flex items-center mb-3 -ml-7"}
   :if={@showing_within not in [:search]}
 >
-  <!-- <div 
+  {!-- <div 
     class="flex items-center justify-start w-5 h-5">
     <#Icon solid="UserAdd" class="w-5 h-5 text-info" />      
-  </div> -->
+  </div> --}
   <div class="flex-1 ml-2">
     <div 
       class="text-sm font-medium text-base-content text-opacity-80">
-      <!-- first show the subject -->
-      <!--       
+      {!-- first show the subject --}
+      {!--       
       <span data-id="subject">
         <LiveRedirect
           :if={e(@activity, :subject, :id, nil) != current_user_id(@__context__)}
@@ -94,10 +94,10 @@
         </span>
       </span>
 
-      {raw @verb_display} -->
+      {raw @verb_display} --}
 
-      <!-- then summarise the object -->
-      <!-- <span :if={ulid(@object) == current_user_id(@__context__)}>
+      {!-- then summarise the object --}
+      {!-- <span :if={ulid(@object) == current_user_id(@__context__)}>
         {l "you"}
       </span>
       <LiveRedirect 
@@ -105,12 +105,12 @@
         to={path(@object)} 
         class="font-semibold link link-hover">
         {e(@object, :profile, :name, "Anonymous")}
-      </LiveRedirect>  -->
+      </LiveRedirect>  --}
     </div>
   </div>
 </div>
 
-<!-- then show the object or character that isn't me -->
+{!-- then show the object or character that isn't me --}
 <div class="flex w-full activity_notification">
 
   <LiveRedirect to={path(the_other(assigns))} class="flex profile-item group ">
@@ -126,14 +126,14 @@
           @{e(the_other(assigns), :character, :username, "anon")} 
         </p>
       </div>
-        <!-- SHOW THE BIO IN SEARCH -->
+        {!-- SHOW THE BIO IN SEARCH --}
       <div class="prose-sm prose">
          {rich e(the_other(assigns), :profile, :summary, "")}
       </div>
     </div>
   </LiveRedirect>
 
-  <!-- TODO: put in seperate component -->
+  {!-- TODO: put in seperate component --}
   <button 
   :if={@verb=="Request to Follow"}
   :on-click="Bonfire.Social.Follows:accept" 

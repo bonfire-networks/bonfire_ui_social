@@ -25,5 +25,5 @@
     loading={@loading}
     hide_tabs
   />
-  <!-- subject_user={@user} -->
+  {!-- subject_user={@user} --}
 </div>

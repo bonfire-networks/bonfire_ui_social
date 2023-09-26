@@ -1,6 +1,6 @@
-<!-- Delete the object 
+{!-- Delete the object 
 TODO: use preloaded boundaries for can? when available
--->
+--}
 <OpenModalLive
   :if={@skip_permission_check == true or can_delete?(@__context__, @object, @object_boundary)}
   id={Text.random_string()}
@@ -8,7 +8,7 @@ TODO: use preloaded boundaries for can? when available
   form_opts={@form_opts}
 >
   <div class="prose-sm prose mt-3">
-    <!-- {rich l "You may be able to undo this deletion *in some cases*, but in any case the data will eventually be permanently deleted from this instance."} -->
+    {!-- {rich l "You may be able to undo this deletion *in some cases*, but in any case the data will eventually be permanently deleted from this instance."} --}
     <p>{@explanation || l("A request will be sent to remote instances to delete it as well.")}</p>
   </div>
 

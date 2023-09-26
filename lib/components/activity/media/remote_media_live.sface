@@ -56,7 +56,7 @@
                         <audio controls autoplay class={@default_css}>
                           <source src={media_url} type={"audio/#{Bonfire.Files.file_extension_only(media_url) || "mp3"}"}>
                           Your browser does not support the audio tag.
-                          <!-- <a href={media_url}> {l "Download audio"} </a> -->
+                          {!-- <a href={media_url}> {l "Download audio"} </a> --}
                         </audio>
                       </div>
                     {#else}
@@ -68,7 +68,7 @@
                     {raw(embed)}
                 {/case}
               {#match url}
-                <!-- TODO: url |> String.replace("youtube.com", "yewtu.be") -->
+                {!-- TODO: url |> String.replace("youtube.com", "yewtu.be") --}
                 <iframe
                   width={e(@media, :metadata, "facebook", "og:video:width", nil) ||
                     e(@media, :metadata, "other", "video_width", nil) || "800"}

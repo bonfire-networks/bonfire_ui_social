@@ -7,7 +7,7 @@
     "dropdown-top dropdown-end showing_within:widget": @showing_within == :widget
   }
 >
-  <!-- phx-viewport-bottom={JS.add_class("!dropdown-top", to: "#more-menu-#{id(@activity_component_id || @activity)}")} -->
+  {!-- phx-viewport-bottom={JS.add_class("!dropdown-top", to: "#more-menu-#{id(@activity_component_id || @activity)}")} --}
 
   <button tabindex="0" class="btn btn-ghost btn-circle btn-sm">
     <#Icon solid="DotsVertical" class="w-[18px] h-[18px] md:w-4 md:h-4 text-base-content/50" />
@@ -65,7 +65,7 @@
         />
       </li>
 
-      <!-- <li class="hover:bg-neutral hover:bg-opacity-20">
+      {!-- <li class="hover:bg-neutral hover:bg-opacity-20">
       <Bonfire.UI.Social.PinActionLive
         object={@object}
         class="flex items-center px-4 text-sm text-neutral-content/80"
@@ -78,7 +78,7 @@
         class="flex items-center px-4 text-sm text-neutral-content/80"
         scope={:instance}
       />
-    </li> -->
+    </li> --}
 
       <li :if={@object_type not in [Bonfire.Data.Social.Message]}><div class="px-4 py-2 w-full">
           <div
@@ -120,7 +120,7 @@
           </div>
         </summary>
         <ul>
-          <!-- Flag the object -->
+          {!-- Flag the object --}
           <li data-role="flag_object">
             <Bonfire.UI.Common.FlagActionLive
               object={@object}
@@ -131,7 +131,7 @@
             />
           </li>
 
-          <!-- Flag the author -->
+          {!-- Flag the author --}
           <li
             data-role="flag_author"
             :if={not is_nil(@creator_id) and not is_nil(current_user(@__context__))}
@@ -147,7 +147,7 @@
       </details>
     </li>
 
-    <!-- Block the author, etc -->
+    {!-- Block the author, etc --}
     <Dynamic.Component
       :if={current_user_id(@__context__) != @creator_id &&
         module_enabled?(Bonfire.Boundaries.Web.BlockMenuButtonsLive)}
@@ -180,7 +180,7 @@
               />
             </li>
 
-            <!-- Delete the activity -->
+            {!-- Delete the activity --}
             <li :if={id(@activity)}>
               <Bonfire.UI.Social.Activity.DeleteObjectLive
                 skip_permission_check
@@ -200,7 +200,7 @@
           </ul>
         </details>
       </li>
-      <!-- Delete the object -->
+      {!-- Delete the object --}
     {#elseif @object_boundary && @object_type in [Bonfire.Data.Social.Message] && id(@activity)}
       <li>
         <Bonfire.UI.Social.Activity.DeleteObjectLive

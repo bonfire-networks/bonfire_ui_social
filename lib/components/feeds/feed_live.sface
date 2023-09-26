@@ -45,11 +45,11 @@
       class="flex justify-center w-full p-3 mx-auto sticky top-[60px] z-[99999999999999]"
       phx-show={JS.remove_class("hidden")}
     >
-      <!-- style={if @hide_fresh==0, do: "display: none;", else: ""} -->
+      {!-- style={if @hide_fresh==0, do: "display: none;", else: ""} --}
       <btn class="normal-case btn btn-sm rounded-full btn-primary">
-        <!-- |> JS.push("hide_fresh", target: @myself) -->
+        {!-- |> JS.push("hide_fresh", target: @myself) --}
         {l("Show more recent")}
-        <!-- {"(#{@hide_fresh})"} -->
+        {!-- {"(#{@hide_fresh})"} --}
       </btn>
     </div>
 
@@ -60,9 +60,9 @@
         phx-update="stream"
         class="flex flex-col divide-y divide-base-content/10"
       >
-        <!-- phx-update={e(@feed_update_mode, "append")} -->
+        {!-- phx-update={e(@feed_update_mode, "append")} --}
         {#for {entry_id, entry} <- @streams.feed}
-          <!-- id={"f-#{@feed_id || @id}-a-#{i}"} -->
+          {!-- id={"f-#{@feed_id || @id}-a-#{i}"} --}
           <div
             id={entry_id}
             :if={@hide_activities != "component"}
@@ -71,7 +71,7 @@
               "fresh_hidden hidden": @hide_fresh != 0
             }
           >
-            <!-- id={"activity-#{component_id(@feed_id || @id, entry)}"} -->
+            {!-- id={"activity-#{component_id(@feed_id || @id, entry)}"} --}
             <ActivityLive
               id={ActivityLive.component_id(
                 id(entry) || e(entry, :activity, :id, nil) || e(entry, :object, :id, nil) ||
@@ -96,7 +96,7 @@
         phx-update="append"
         class="flex flex-col divide-y divide-base-content/10"
       >
-        <!-- phx-update={e(@feed_update_mode, "append")} -->
+        {!-- phx-update={e(@feed_update_mode, "append")} --}
         {#for {entry, i} <- Enum.with_index(@feed)}
           <div id={"f_#{@feed_id || @id}_a_#{i}"} :if={@hide_activities != "component"}>
             <ActivityLive
@@ -117,7 +117,7 @@
       </div>
     {/if}
 
-    <!-- context={@id} -->
+    {!-- context={@id} --}
     <Bonfire.UI.Common.LoadMoreLive
       live_handler={Bonfire.Social.Feeds}
       page_info={@page_info}
@@ -133,13 +133,13 @@
               <img src={Bonfire.Web.Endpoint.static_path("/images/loading.svg")}>
               <div class="sr-only text-base-content">{l("Loading...")}</div>
             </div>
-            <!-- {#case maybe_cute_gif()}
+            {!-- {#case maybe_cute_gif()}
           {#match url when is_binary(url)}
             <div class="flex flex-row items-center justify-center my-12">
               <img src={url}>
             </div>
           {#match _}
-        {/case} -->
+        {/case} --}
           {#else}
             <div data-id="empty-feed" class="flex items-center place-content-center">
               <Bonfire.UI.Common.EmptyFeed
@@ -156,7 +156,7 @@
                 number: @time_limit
               )}</p>
 
-            <!-- TODO: instead of switching to infinity, switch 1 level up from current limit, eg. from day to week -->
+            {!-- TODO: instead of switching to infinity, switch 1 level up from current limit, eg. from day to week --}
             {#if !@sort_by and
                 (e(@previous_page_info, :end_cursor, nil) || e(@page_info, :end_cursor, nil)) |> debug("ppppp")}
               <Bonfire.UI.Common.LoadMoreLive

@@ -29,9 +29,9 @@
               <div class="text-sm text-base-content/70" :if={provider(link)}>
                 {provider(link)}
               </div>
-              <!-- <div class="break-words line-clamp-2 text-base-content/70" :if={description(link)}>
+              {!-- <div class="break-words line-clamp-2 text-base-content/70" :if={description(link)}>
             {description(link)}
-          </div> -->
+          </div> --}
             </div>
           </div>
         </a>

@@ -21,7 +21,7 @@
       </span>
 
       <span class="mr-2 text-sm text-base-content text-opacity-60">
-        <!-- <span class="capitalize">{@verb_display}</span> -->
+        {!-- <span class="capitalize">{@verb_display}</span> --}
         {@date_ago}
       </span>
     </div>

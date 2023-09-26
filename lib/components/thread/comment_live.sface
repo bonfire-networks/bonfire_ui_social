@@ -1,5 +1,5 @@
 <div id={"cc_#{id(@activity)}"} data-id="comment" class="flex flex-1 w-full relative items-top">
-  <!-- <div
+  {!-- <div
         :if={@thread_level > 1}
         x-cloak
         x-show="show_replies"
@@ -9,7 +9,7 @@
           :class="!show_replies ? 'bg-primary bottom-[0px]' : 'bottom-[0px]'"
           class="bg-base-content/10 top-0 bottom-0 z-10 w-[2px] absolute"
         />
-      </div> -->
+      </div> --}
   <div
     :if={@thread_level < 2}
     class={

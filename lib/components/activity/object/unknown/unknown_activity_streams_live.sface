@@ -10,7 +10,7 @@
     )}
   </h2>
 
-  <!-- <h3 class="text-xs tracking-wider text-primary-content-600 uppercase">Summary</h3> -->
+  {!-- <h3 class="text-xs tracking-wider text-primary-content-600 uppercase">Summary</h3> --}
   <div class="mb-2 prose-sm prose text-primary-content-700 max-w-prose">{rich(object_field(@json, "summary"))}</div>
 
   <article class="prose-sm prose max-w-prose">

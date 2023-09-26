@@ -461,7 +461,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
                 page_title: l("Discussion")
               }
             />
-            <!-- TODO: derive the view from object_type? and compute object_type not just based on schema, but also with some logic looking at fields (eg. action=="work") -->
+            {!-- TODO: derive the view from object_type? and compute object_type not just based on schema, but also with some logic looking at fields (eg. action=="work") --}
           {#elseif String.starts_with?(@permalink || "", ["/coordination/task/"])}
             <Bonfire.UI.Common.OpenPreviewLive
               href={@permalink}

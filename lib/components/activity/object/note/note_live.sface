@@ -1,6 +1,6 @@
-<!-- "ml-10 !mt-0":
+{!-- "ml-10 !mt-0":
       debug(@thread_mode, "thread_modessss") != :flat && @showing_within == :thread &&
-        !@viewing_main_object -->
+        !@viewing_main_object --}
 <div
   x-data="{expanded: false, expandable: $refs.note && $refs.note.scrollHeight > $refs.note.clientHeight}"
   class={
@@ -13,8 +13,8 @@
   x-ref="note_container"
   x-transition
 >
-  <!-- x-show={if @showing_within == :thread && !@viewing_main_object, do: "show_replies"} -->
-  <!-- id={"note-#{@activity_inception}-#{id(@activity) || id(@object) || "no-id"}-#{e(assigns, :viewing_main_object, false)}"} -->
+  {!-- x-show={if @showing_within == :thread && !@viewing_main_object, do: "show_replies"} --}
+  {!-- id={"note-#{@activity_inception}-#{id(@activity) || id(@object) || "no-id"}-#{e(assigns, :viewing_main_object, false)}"} --}
 
   {#case e(post_content(@object), :name, nil)}
     {#match nil}

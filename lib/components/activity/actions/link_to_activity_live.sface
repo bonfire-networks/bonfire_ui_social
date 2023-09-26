@@ -1,4 +1,4 @@
-<!-- NOTE: we use a simple anchor here, so it gets overriden by OpenPreviewLive JS -->
+{!-- NOTE: we use a simple anchor here, so it gets overriden by OpenPreviewLive JS --}
 <a
   href={@permalink}
   data-role="subject_timestamp"

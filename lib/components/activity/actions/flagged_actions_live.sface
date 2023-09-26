@@ -55,8 +55,8 @@
           </div>
         </li>
 
-        <!-- Block the author -->
-        <!-- <Dynamic.Component
+        {!-- Block the author --}
+        {!-- <Dynamic.Component
           :if={module_enabled?(Bonfire.Boundaries.Web.BlockButtonLive)}
           module={Bonfire.Boundaries.Web.BlockButtonLive}
           parent_id={@activity_component_id || id(@activity)}
@@ -67,10 +67,10 @@
           type="block"
           class="flex items-center w-full gap-2 text-sm text-base-content/70"
           with_icon
-        /> -->
+        /> --}
 
-        <!-- Block the flagger -->
-        <!-- <Dynamic.Component
+        {!-- Block the flagger --}
+        {!-- <Dynamic.Component
           :if={module_enabled?(Bonfire.Boundaries.Web.BlockButtonLive)}
           module={Bonfire.Boundaries.Web.BlockButtonLive}
           parent_id={@activity_component_id || id(@activity)}
@@ -81,7 +81,7 @@
           type="block"
           class="flex items-center w-full gap-2 text-sm text-base-content/70"
           with_icon 
-        />-->
+        />--}
 
         {#case e(@activity, :tree, :parent_id, nil)}
           {#match nil}
@@ -160,15 +160,15 @@
       <span>{l("Unflag")}</span>
     </button>
 
-    <!-- <LiveRedirect 
+    {!-- <LiveRedirect 
       to={@permalink}
     >
       <button
         class="normal-case btn btn-sm">
         {l "View"}
       </button>
-    </LiveRedirect> -->
-    <!-- <Bonfire.UI.Social.Activity.MoreActionsLive
+    </LiveRedirect> --}
+    {!-- <Bonfire.UI.Social.Activity.MoreActionsLive
       object={@object} 
       object_type={@object_type} 
       activity={@activity} 
@@ -180,6 +180,6 @@
       <:extra_items>
 
       </:extra_items>
-    </Bonfire.UI.Social.Activity.MoreActionsLive> -->
+    </Bonfire.UI.Social.Activity.MoreActionsLive> --}
   </div>
 </div>

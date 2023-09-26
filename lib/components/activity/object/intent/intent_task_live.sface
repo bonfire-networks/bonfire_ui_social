@@ -29,9 +29,9 @@
               class="flex-1 text-sm font-medium cursor-pointer link link-hover"
             >{e(@object, :name, nil) || e(@object, :note, nil) || l("Untitled task")}
             </LiveRedirect>
-            <!-- <span class="mr-2 badge badge-outline badge-success" :if={e(@object, :finished, nil)}>
+            {!-- <span class="mr-2 badge badge-outline badge-success" :if={e(@object, :finished, nil)}>
               {l("Completed")}
-            </span> -->
+            </span> --}
           </div>
           <div class="flex items-center gap-4 -ml-1.5 md:ml-0">
             <span :if={length(e(@object, :context, [])) > 0}>
@@ -90,9 +90,9 @@
                 <span>{DatesTimes.date_from_now(e(@object, :due, nil)) || l("No due date")}</span>
               </div>
 
-              <!-- <div :if={e(@object, :note, nil)}>
+              {!-- <div :if={e(@object, :note, nil)}>
                 <#Icon iconify="carbon:document" class="w-5 h-5 text-base-content/70" />
-              </div> -->
+              </div> --}
 
               <Dynamic.Component
                 :if={module_enabled?(Bonfire.UI.Coordination.TaskActionsMenuLive, @__context__)}
