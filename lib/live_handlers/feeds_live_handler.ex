@@ -555,6 +555,32 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
     # ] ++ page_header_asides(socket, component_id)
   end
 
+  def feed_default_assigns(:explore = feed_name, socket) do
+    feed_id = :explore
+
+    component_id = component_id(feed_id, socket.assigns)
+
+    [
+      feed_name: feed_name,
+      feed_id: :explore,
+      feed_component_id: component_id,
+      selected_tab: :explore,
+      # FIXME: clean up page vs tab
+      page: "explore",
+      page_title: "Explore activities",
+      no_header: false,
+      # page_title: l("Activities from members of the local instance"),
+      feedback_title: l("There is not activities to explore"),
+      # feed_id: feed_name,
+      feedback_message:
+        l("It seems like the paint is still fresh and there are no activities to explore..."),
+      feed: nil,
+      page_info: nil
+    ]
+
+    # ] ++ page_header_asides(socket, component_id)
+  end
+
   def feed_default_assigns(:fediverse = feed_name, socket) do
     feed_id =
       Bonfire.Social.Feeds.named_feed_id(:activity_pub)
@@ -569,7 +595,7 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
       selected_tab: :fediverse,
       # FIXME: clean up page vs tab
       page: "federation",
-      page_title: "Explore",
+      page_title: "Explore remote activities from the fediverse",
       no_header: false,
       # page_header_icon: "ri:home-line",
       # page_title: l("Federated activities from remote instances"),
@@ -601,7 +627,7 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
       selected_tab: :local,
       # FIXME: clean up page vs tab
       page: "local",
-      page_title: "Explore",
+      page_title: "Explore activities local to this instance",
       no_header: false,
       # page_title: l("Activities from members of the local instance"),
       feedback_title: l("Your local feed is empty"),

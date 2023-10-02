@@ -91,7 +91,7 @@ defmodule Bonfire.UI.Social.FeedLive do
     # case ActivityPub.Config.federating?() do
     #   true ->
     if current_user_id(context) do
-      [local: l("Local"), fediverse: l("Remote")]
+      [explore: l("Everything"), local: l("Local"), fediverse: l("Remote")]
       # if context[:current_params]["object_type"] in ["discussions", "posts"],
       #   do: [nil: l("My feed"), local: l("Local"), fediverse: l("Remote")],
       #   else:
@@ -111,7 +111,7 @@ defmodule Bonfire.UI.Social.FeedLive do
       #       ]
       #     )
     else
-      [local: l("Local"), fediverse: l("Remote")]
+      [explore: l("Everything"), local: l("Local"), fediverse: l("Remote")]
     end
 
     #   _ ->

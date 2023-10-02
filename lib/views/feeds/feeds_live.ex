@@ -27,7 +27,7 @@ defmodule Bonfire.UI.Social.FeedsLive do
        page: "feed", href: &nav_link_feed/1, icon: "ri:home-line", icon_active: "ri:home-fill"},
       {l("Explore"),
        page: "explore",
-       href: "/feed/explore/local",
+       href: "/feed/explore",
        icon: "ri:safari-line",
        icon_active: "ri:safari-fill"}
       # {l("Moderation"),

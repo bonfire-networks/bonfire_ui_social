@@ -14,8 +14,7 @@ defmodule Bonfire.UI.Social.Routes do
         live("/feed", FeedsLive, as: :feed)
         live("/feed/local", FeedsLive, :local, as: :feed)
         live("/feed/fediverse", FeedsLive, :fediverse, as: :feed)
-        live("/feed/explore", FeedsLive, as: :explore)
-        live("/feed/explore/:tab", FeedsLive, as: :explore)
+        live("/feed/explore", FeedsLive, :explore, as: :explore)
         live("/feed/:tab", FeedsLive, as: :feed)
 
         # TODO:
