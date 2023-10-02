@@ -108,11 +108,18 @@ defmodule Bonfire.Social.Follows.LiveHandler do
 
     list_of_components
     |> Map.new(fn component ->
+      disable? =
+        (Bonfire.Social.Integration.is_local?(component.object) == false and
+           !Bonfire.Social.Integration.federating?(current_user))
+        |> debug("disable follow?")
+
       {component.component_id,
        %{
          my_follow:
            if(Map.get(my_requests, component.object_id), do: :requested) ||
-             Map.get(my_follows, component.object_id) || component.previous_value || false
+             Map.get(my_follows, component.object_id) || component.previous_value || false,
+         disabled: disable?,
+         title: if(disable?, do: l("Cannot follow a remote actor when federation is disabled."))
          # ghosted?: ghosted?,
          # ghosted_instance_wide?: ghosted_instance_wide?,
          # silenced?: silenced?,

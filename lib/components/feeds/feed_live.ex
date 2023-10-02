@@ -88,7 +88,7 @@ defmodule Bonfire.UI.Social.FeedLive do
 
   def tabs(context) do
     # disabled hiding of remote tab because it is also useful to find remote activities that were looked up manually
-    # case ActivityPub.Config.federating?() do
+    # case Bonfire.Social.Integration.federating?(current_user(context)) do
     #   true ->
     if current_user_id(context) do
       [explore: l("Everything"), local: l("Local"), fediverse: l("Remote")]
