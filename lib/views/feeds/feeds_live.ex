@@ -21,24 +21,21 @@ defmodule Bonfire.UI.Social.FeedsLive do
   )
 
   # declare_nav_link(l("My feed"), page: "feed", icon: "heroicons-solid:newspaper")
-  declare_nav_link([
-    {l("My feed"),
-    page: "feed",
-    href: &nav_link_feed/1,
-    icon: "ri:home-line",
-    icon_active: "ri:home-fill"},
-    {l("Explore"),
-    page: "explore",
-    href: "/feed/explore/local",
-    icon: "ri:safari-line",
-    icon_active: "ri:safari-fill"},
-    # {l("Moderation"),
-    # page: "moderation",
-    # href: &nav_link_feed/1,
-    # icon: "ri:seedling-line",
-    # icon_active: "ri:seedling-fill"}
-
-  ]
+  declare_nav_link(
+    [
+      {l("My feed"),
+       page: "feed", href: &nav_link_feed/1, icon: "ri:home-line", icon_active: "ri:home-fill"},
+      {l("Explore"),
+       page: "explore",
+       href: "/feed/explore/local",
+       icon: "ri:safari-line",
+       icon_active: "ri:safari-fill"}
+      # {l("Moderation"),
+      # page: "moderation",
+      # href: &nav_link_feed/1,
+      # icon: "ri:seedling-line",
+      # icon_active: "ri:seedling-fill"}
+    ]
     # {l("Local"),
     # page: "feed",
     # href: &nav_link_feed/1,
