@@ -91,24 +91,25 @@ defmodule Bonfire.UI.Social.FeedLive do
     # case ActivityPub.Config.federating?() do
     #   true ->
     if current_user_id(context) do
-      if context[:current_params]["object_type"] in ["discussions", "posts"],
-        do: [nil: l("My feed"), local: l("Local"), fediverse: l("Remote")],
-        else:
-          if(!Bonfire.Boundaries.can?(context, :mediate, :instance),
-            do: [
-              nil: l("My feed"),
-              local: l("Local"),
-              fediverse: l("Remote"),
-              likes: l("Liked")
-            ],
-            else: [
-              nil: l("My feed"),
-              local: l("Local"),
-              fediverse: l("Remote"),
-              likes: l("Liked"),
-              flags: l("Flags")
-            ]
-          )
+      [local: l("Local"), fediverse: l("Remote")]
+      # if context[:current_params]["object_type"] in ["discussions", "posts"],
+      #   do: [nil: l("My feed"), local: l("Local"), fediverse: l("Remote")],
+      #   else:
+      #     if(!Bonfire.Boundaries.can?(context, :mediate, :instance),
+      #       do: [
+      #         nil: l("My feed"),
+      #         local: l("Local"),
+      #         fediverse: l("Remote"),
+      #         likes: l("Liked")
+      #       ],
+      #       else: [
+      #         nil: l("My feed"),
+      #         local: l("Local"),
+      #         fediverse: l("Remote"),
+      #         likes: l("Liked"),
+      #         flags: l("Flags")
+      #       ]
+      #     )
     else
       [local: l("Local"), fediverse: l("Remote")]
     end
@@ -298,7 +299,7 @@ defmodule Bonfire.UI.Social.FeedLive do
         socket
       ) do
     debug(attrs)
-    # need to reload feed so streams are updated 
+    # need to reload feed so streams are updated
     {
       :noreply,
       socket

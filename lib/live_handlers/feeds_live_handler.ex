@@ -355,7 +355,7 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
         Bonfire.Social.Feeds.named_feed_id(:local)
       end
 
-    # FIXME? 
+    # FIXME?
     {entries, assigns} = feed_assigns(feed_or_tuple, socket)
 
     {:noreply,
@@ -569,7 +569,9 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
       selected_tab: :fediverse,
       # FIXME: clean up page vs tab
       page: "federation",
-      page_header_icon: "ri:home-line",
+      page_title: "Explore",
+      no_header: false,
+      # page_header_icon: "ri:home-line",
       # page_title: l("Federated activities from remote instances"),
       # feed_title: l("Activities from around the fediverse"),
       feedback_title: l("Your fediverse feed is empty"),
@@ -599,6 +601,8 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
       selected_tab: :local,
       # FIXME: clean up page vs tab
       page: "local",
+      page_title: "Explore",
+      no_header: false,
       # page_title: l("Activities from members of the local instance"),
       feedback_title: l("Your local feed is empty"),
       # feed_id: feed_name,
@@ -618,9 +622,12 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
       feed_id: feed_name,
       feed_component_id: component_id(feed_name, socket.assigns),
       selected_tab: :likes,
+      hide_tabs: true,
       showing_within: :feed_by_subject,
       # FIXME: clean up page vs tab
-      page: "local",
+      page: "favourites",
+      page_title: "Favourites",
+      no_header: false,
       # page_title: l("My favourites"),
       # feed_title: l("My favourites"),
       feedback_title: l("You have no favourites yet"),

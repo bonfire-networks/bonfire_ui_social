@@ -5,9 +5,9 @@
   feed_name={@feed_name}
   feed_ids={@feed_ids}
   page_title={@page_title}
-  tabs_class="flex justify-between w-full tabs  sticky top-0 z-[9999999] bg-base-100 h-[60px]"
-  tab_class="flex flex-1 pt-4 text-base capitalize hover:bg-base-content hover:bg-opacity-10 place-content-center lined_tab"
-  item_class="text-base-content/60 text-sm pb-3 border-b-4 border-transparent font-medium"
+  tabs_class={
+    "flex items-center gap-2 px-4 w-full tabs sticky top-[56px] py-1 z-[9999999] backdrop-blur-sm bg-base-100/70",
+    "h-[60px] !top-0 !py-0": @feed_name in [nil, :my]}
   page={@page}
   feedback_title={@feedback_title}
   feedback_message={@feedback_message}

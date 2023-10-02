@@ -14,7 +14,10 @@ defmodule Bonfire.UI.Social.Routes do
         live("/feed", FeedsLive, as: :feed)
         live("/feed/local", FeedsLive, :local, as: :feed)
         live("/feed/fediverse", FeedsLive, :fediverse, as: :feed)
+        live("/feed/explore", FeedsLive, as: :explore)
+        live("/feed/explore/:tab", FeedsLive, as: :explore)
         live("/feed/:tab", FeedsLive, as: :feed)
+
         # TODO:
         live("/feed/:tab/:object_type", FeedsLive, as: :feed)
 
@@ -38,7 +41,6 @@ defmodule Bonfire.UI.Social.Routes do
         live("/messages/:id/reply/:reply_to_id", MessagesLive, as: Bonfire.Data.Social.Message)
         live("/messages/@:username", MessagesLive, as: Bonfire.Data.Social.Message)
         live("/messages", MessagesLive, as: Bonfire.Data.Social.Message)
-        # live("/explore", ExploreLive, as: :explore)
         # live("/write", WriteLive, as: :write)
       end
 

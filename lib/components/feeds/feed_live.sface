@@ -12,7 +12,7 @@
   <div class="">
     <Bonfire.UI.Common.TabsLive
       :if={@hide_tabs != true}
-      type={if @feed_name in [nil, :my, :local, :likes, :fediverse, :flags], do: :select}
+      type={if @feed_name in [nil, :my], do: :static}
       selected_tab={@selected_tab}
       class={@tabs_class}
       tab_class={@tab_class}
