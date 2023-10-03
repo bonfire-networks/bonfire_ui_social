@@ -372,7 +372,7 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
   defp paginate_fetch_assign_feed(:default, opts, socket),
     do: paginate_fetch_assign_default(opts, socket)
 
-  defp paginate_fetch_assign_feed(:likes, opts, socket) do
+  defp paginate_fetch_assign_feed(:likes, _opts, socket) do
     warn("TODO")
     {:noreply, socket}
   end
@@ -395,7 +395,7 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
 
   def insert_feed(socket, feed_edges, opts \\ [])
 
-  def insert_feed(socket, {[], assigns}, opts) do
+  def insert_feed(socket, {[], assigns}, _opts) do
     debug(assigns, "nothing to add")
 
     socket
@@ -408,7 +408,7 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
     # |> assign_generic(assigns)
   end
 
-  def insert_feed(socket, {:error, assigns}, opts) do
+  def insert_feed(socket, {:error, assigns}, _opts) do
     socket
     |> assign_error(assigns)
   end
@@ -435,12 +435,12 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
 
   def assign_feed(socket, assigns, opts \\ [])
 
-  def assign_feed(socket, {_feed_edges, assigns}, opts) do
+  def assign_feed(socket, {_feed_edges, assigns}, _opts) do
     socket
     |> assign_generic(assigns)
   end
 
-  def assign_feed(socket, assigns, opts) do
+  def assign_feed(socket, assigns, _opts) do
     socket
     |> assign_generic(assigns)
   end

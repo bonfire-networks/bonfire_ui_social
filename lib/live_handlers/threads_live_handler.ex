@@ -28,6 +28,14 @@ defmodule Bonfire.Social.Threads.LiveHandler do
      )}
   end
 
+  def handle_event(
+    "load_more",
+      %{"after" => _cursor} = attrs,
+      %{assigns: %{thread_id: thread_id}} = socket
+    ) do
+  live_more(thread_id, input_to_atoms(attrs), socket)
+  end
+
   def handle_params(
         %{"after" => cursor} = _attrs,
         _,
@@ -91,13 +99,7 @@ defmodule Bonfire.Social.Threads.LiveHandler do
     end
   end
 
-  def handle_event(
-        "load_more",
-        %{"after" => _cursor} = attrs,
-        %{assigns: %{thread_id: thread_id}} = socket
-      ) do
-    live_more(thread_id, input_to_atoms(attrs), socket)
-  end
+
 
   def handle_event("load_replies", %{"id" => id, "level" => level}, socket) do
     debug("load extra replies")

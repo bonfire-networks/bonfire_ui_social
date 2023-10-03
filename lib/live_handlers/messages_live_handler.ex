@@ -158,7 +158,7 @@ defmodule Bonfire.Social.Messages.LiveHandler do
      |> Bonfire.UI.Common.SmartInput.LiveHandler.reset_input()}
   end
 
-  defp message_sent(sent, _attrs, socket) do
+  defp message_sent(_sent, _attrs, socket) do
     {
       :noreply,
       socket

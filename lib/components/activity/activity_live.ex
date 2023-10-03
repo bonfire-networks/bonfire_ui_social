@@ -315,7 +315,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
     parent_id
   end
 
-  def maybe_published_in(none, _) do
+  def maybe_published_in(_none, _) do
     # debug(none, "none")
     nil
   end
@@ -980,7 +980,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
   #     )
   #     |> component_maybe_creator()
 
-  def component_maybe_creator(activity_or_object) do
+  def component_maybe_creator(_activity_or_object) do
     # warn(activity_or_object, "could not find a creator")
     nil
   end
@@ -1005,8 +1005,8 @@ defmodule Bonfire.UI.Social.ActivityLive do
         activity_inception,
         viewing_main_object,
         thread_mode,
-        thread_id,
-        thread_title,
+        _thread_id,
+        _thread_title,
         _activity_component_id
       )
       # cases where we do not show reply_to
@@ -1016,7 +1016,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
       do: []
 
   def component_maybe_in_reply_to(
-        verb,
+        _verb,
         %{reply_to: %{id: reply_to_id}},
         showing_within,
         _,
@@ -1439,7 +1439,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
 
   def component_maybe_attachments(_, _, inception) when not is_nil(inception), do: []
 
-  def component_maybe_attachments(id, files, _)
+  def component_maybe_attachments(_id, files, _)
       when is_list(files) and files != [] do
     # num_media = length(files)
     # debug(num_media, "has files")

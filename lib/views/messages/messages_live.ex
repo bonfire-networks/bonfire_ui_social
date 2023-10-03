@@ -141,7 +141,7 @@ defmodule Bonfire.UI.Social.MessagesLive do
   #    )}
   # end
 
-  def do_handle_params(%{"id" => id} = params, url, socket) do
+  def do_handle_params(%{"id" => id} = _params, url, socket) do
     if not is_ulid?(id) do
       do_handle_params(%{"username" => id}, url, socket)
     else
@@ -161,7 +161,7 @@ defmodule Bonfire.UI.Social.MessagesLive do
           Bonfire.Social.Activities.activity_preloads(activity, :all, current_user: current_user)
           |> debug("preloaded")
 
-        reply_to_id = e(params, "reply_to_id", nil)
+        # reply_to_id = e(params, "reply_to_id", nil)
         thread_id = e(activity, :replied, :thread_id, id)
 
         # debug(activity, "activity")

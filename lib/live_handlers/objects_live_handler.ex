@@ -46,7 +46,7 @@ defmodule Bonfire.Social.Objects.LiveHandler do
     end
   end
 
-  def handle_event("delete", %{"id" => id} = params, socket) do
+  def handle_event("delete", %{"id" => id} = _params, socket) do
     with {:ok, _} <- Objects.delete(id, current_user: current_user_required!(socket)) do
       Bonfire.UI.Common.OpenModalLive.close()
 
@@ -62,7 +62,7 @@ defmodule Bonfire.Social.Objects.LiveHandler do
     end
   end
 
-  def init_object_assigns(object, activity, _assigns, socket, page_title \\ nil) do
+  def init_object_assigns(object, activity, _assigns, socket, _page_title \\ nil) do
     current_user = current_user(socket.assigns)
     id = ulid(object)
 
@@ -171,7 +171,7 @@ defmodule Bonfire.Social.Objects.LiveHandler do
   end
 
   def load_object_assigns(%{post_id: id} = assigns, socket) when is_binary(id) do
-    current_user = current_user(socket.assigns)
+    _current_user = current_user(socket.assigns)
 
     # debug(params, "PARAMS")
     # debug(url, "post url")

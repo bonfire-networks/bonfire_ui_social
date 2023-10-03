@@ -1,6 +1,6 @@
 defmodule Bonfire.UI.Social.ThreadControlsLive do
   use Bonfire.UI.Common.Web, :stateless_component
-  alias Bonfire.UI.Social.CommentLive
+  # alias Bonfire.UI.Social.CommentLive
 
   prop event_target, :any, default: nil
   prop thread_id, :any, default: nil
