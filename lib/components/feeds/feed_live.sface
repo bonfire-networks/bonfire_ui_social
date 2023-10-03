@@ -11,7 +11,7 @@
 >
   <div class="">
     <Bonfire.UI.Common.TabsLive
-      :if={@hide_tabs != true}
+      :if={@hide_tabs != true or (@top_page == "home" and @feed_name != :my)}
       type={if @feed_name in [nil, :my], do: :static}
       selected_tab={@selected_tab}
       selected_name={@feed_title || l("My feed")}
