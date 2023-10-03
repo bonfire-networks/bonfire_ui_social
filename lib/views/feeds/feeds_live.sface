@@ -7,7 +7,7 @@
   page_title={@page_title}
   tabs_class={
     "flex items-center gap-2 w-full tabs sticky top-[56px] py-1 z-[9999999] backdrop-blur-sm bg-base-100/70",
-    "h-[60px] !top-0 !py-0": @feed_name in [nil, :my],
+    "h-[56px] !top-0 !py-0": @feed_name in [nil, :my],
     "!py-0 border-b border-base-content/10": @feed_name in [:explore, :fediverse, :local]
   }
   page={@page}
