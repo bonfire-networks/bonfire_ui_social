@@ -14,12 +14,13 @@
       :if={@hide_tabs != true}
       type={if @feed_name in [nil, :my], do: :static}
       selected_tab={@selected_tab}
+      selected_name={@feed_title || l("My feed")}
       class={@tabs_class}
       tab_class={@tab_class}
       item_class={@item_class}
       tab_primary_class={@tab_primary_class}
       link_component={@tab_link_component}
-      tabs={tabs(@__context__)}
+      tabs={tabs(@top_page, @__context__)}
       event_handler={@event_handler}
       event_target={@myself}
       path_prefix={@tab_path_prefix}

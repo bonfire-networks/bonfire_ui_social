@@ -23,8 +23,11 @@ defmodule Bonfire.UI.Social.FeedsLive do
   # declare_nav_link(l("My feed"), page: "feed", icon: "heroicons-solid:newspaper")
   declare_nav_link(
     [
-      {l("My feed"),
-       page: "feed", href: &nav_link_feed/1, icon: "ri:home-line", icon_active: "ri:home-fill"},
+      {
+        l("My feed"),
+        page: "feed", icon: "ri:home-line", icon_active: "ri:home-fill", href: "/feed"
+        #  href: &nav_link_feed/1
+      },
       {l("Explore"),
        page: "explore",
        href: "/feed/explore",
@@ -52,11 +55,7 @@ defmodule Bonfire.UI.Social.FeedsLive do
     #  page: "discussions", href: &nav_link_discussions/1, icon: "ri:discuss-line"}]
   )
 
-  def nav_link_feed(context),
-    do:
-      "/feed/#{Settings.get([Bonfire.UI.Social.FeedLive, :default_feed],
-      nil,
-      context)}"
+  # def nav_link_feed(context), do: "/feed/#{Settings.get([Bonfire.UI.Social.FeedLive, :default_feed], nil, context)}"
 
   # def nav_link_posts(%{current_params: %{"tab" => tab}}) when not is_nil(tab), do: "/feed/#{tab}/posts"
   # def nav_link_posts(_), do: "/feed/filter/posts"

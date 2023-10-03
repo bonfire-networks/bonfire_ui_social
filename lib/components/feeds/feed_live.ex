@@ -24,7 +24,6 @@ defmodule Bonfire.UI.Social.FeedLive do
   prop hide_load_more, :boolean, default: false
   prop verb_default, :string, default: nil
 
-  # prop page, :string, default: nil
   # prop page_title, :string, required: true
   prop feed_title, :string, default: nil
 
@@ -38,10 +37,19 @@ defmodule Bonfire.UI.Social.FeedLive do
   prop tab_path_suffix, :string, default: nil
   prop hide_tabs, :boolean, default: false
   prop selected_tab, :any, default: nil
+  prop top_page, :any, default: nil
 
-  prop tabs_class, :css_class
-  prop tab_class, :css_class
-  prop item_class, :css_class, default: ""
+  prop tabs_class, :css_class,
+    default:
+      "flex items-center gap-2 w-full tabs sticky top-[56px] py-1 z-[9999999] backdrop-blur-sm bg-base-100/70 h-[60px] !top-0 !py-0"
+
+  prop tab_class, :css_class,
+    default:
+      "flex flex-1 pt-4 text-base capitalize hover:bg-base-content hover:bg-opacity-10 place-content-center lined_tab"
+
+  prop item_class, :css_class,
+    default: "text-base-content/60 text-sm pb-3 border-b-4 border-transparent font-medium"
+
   prop tab_primary_class, :css_class, default: nil
 
   prop sort_by, :any, default: nil
@@ -86,12 +94,20 @@ defmodule Bonfire.UI.Social.FeedLive do
   defp get_activity(%{edge: %{id: _} = activity}), do: activity
   defp get_activity(activity), do: activity
 
-  def tabs(context) do
+  def tabs(page, context) do
     # disabled hiding of remote tab because it is also useful to find remote activities that were looked up manually
     # case Bonfire.Social.Integration.federating?(current_user(context)) do
     #   true ->
     if current_user_id(context) do
-      [explore: l("Everything"), local: l("Local"), fediverse: l("Remote")]
+      if page == "home",
+        do: [
+          nil: l("My feed"),
+          explore: l("Everything"),
+          local: l("Local"),
+          fediverse: l("Remote")
+        ],
+        else: [explore: l("Everything"), local: l("Local"), fediverse: l("Remote")]
+
       # if context[:current_params]["object_type"] in ["discussions", "posts"],
       #   do: [nil: l("My feed"), local: l("Local"), fediverse: l("Remote")],
       #   else:
