@@ -41,7 +41,7 @@ defmodule Bonfire.UI.Social.FeedLive do
 
   prop tabs_class, :css_class,
     default:
-      "flex items-center gap-2 w-full tabs sticky top-[56px] py-1 z-[9999999] backdrop-blur-sm bg-base-100/70 h-[60px] !top-0 !py-0"
+      "flex items-center gap-2 w-full tabs sticky top-[56px] py-1 z-[9999999] backdrop-blur-sm bg-base-100/70 h-[56px] !top-0 !py-0 border-b border-base-content/10"
 
   prop tab_class, :css_class,
     default:
