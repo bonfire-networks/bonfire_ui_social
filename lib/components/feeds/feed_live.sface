@@ -153,6 +153,7 @@
           {/if}
         {#else}
           {#if is_integer(@time_limit) and @time_limit != 0}
+          <div class="m-4 border border-base-content/10 rounded-lg">
             <p class="text-sm py-4 mt-4 text-center text-base-content/50 font-medium">{lp("That's all for today...", "That's all for the last %{number} days...", @time_limit,
                 number: @time_limit
               )}</p>
@@ -181,8 +182,9 @@
                   {l("Show older activities")}
                 </button></div>
             {/if}
+          </div>
           {#else}
-            <p class="text-sm font-medium text-base-content/50 text-center mt-4">{l("That's all folks...")}</p>
+            <p class="text-sm font-medium text-base-content/50 text-center my-4">{l("That's all folks...")}</p>
           {/if}
         {/if}
       </:if_no_more>
