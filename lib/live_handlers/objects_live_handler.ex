@@ -140,7 +140,9 @@ defmodule Bonfire.Social.Objects.LiveHandler do
       # ],
       # participants: participants,
       no_index:
-        Bonfire.Me.Settings.get([Bonfire.Me.Users, :undiscoverable], true, current_user: author),
+        Bonfire.Common.Settings.get([Bonfire.Me.Users, :undiscoverable], true,
+          current_user: author
+        ),
       thread_id: thread_id,
       # reply_to_id: object,
       # smart_input_opts: %{text_suggestion: mentions, prompt: smart_input_prompt},

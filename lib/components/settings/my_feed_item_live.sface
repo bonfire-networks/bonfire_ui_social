@@ -5,7 +5,7 @@
       name={"Bonfire.Social.Feeds[my_feed_includes][#{@key}]"}
       value={@force_checked == true or
         (@force_unchecked != true and
-           Bonfire.Me.Settings.get(
+           Bonfire.Common.Settings.get(
              [Bonfire.Social.Feeds, :my_feed_includes, @key],
              true,
              @scope || @__context__

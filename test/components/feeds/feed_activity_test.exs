@@ -18,7 +18,7 @@ defmodule Bonfire.UI.Social.Feeds.FeedActivityTest do
     account2 = fake_account!()
     bob = fake_user!(account2)
 
-    if Bonfire.Me.Settings.get([:ui, :show_activity_counts], nil,
+    if Bonfire.Common.Settings.get([:ui, :show_activity_counts], nil,
          current_user: bob,
          current_account: account2
        ) do

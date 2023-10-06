@@ -1,4 +1,4 @@
-<form name="settings" phx-change="Bonfire.Me.Settings:set">
+<form name="settings" phx-change="Bonfire.Common.Settings:set">
   <Bonfire.UI.Social.Settings.MyFeedItemLive
     label={l("Posts and other activities from people I follow")}
     key={:followed_users}

@@ -67,7 +67,9 @@ defmodule Bonfire.Social.Boosts.LiveHandler do
     debug(my_states, "my_boosts")
 
     objects_counts =
-      if Bonfire.Me.Settings.get([:ui, :show_activity_counts], nil, current_user: current_user) do
+      if Bonfire.Common.Settings.get([:ui, :show_activity_counts], nil,
+           current_user: current_user
+         ) do
         list_of_components
         |> Enum.map(fn %{object: object} ->
           object
