@@ -153,36 +153,36 @@
           {/if}
         {#else}
           {#if is_integer(@time_limit) and @time_limit != 0}
-          <div class="m-4 border border-base-content/10 rounded-lg">
-            <p class="text-sm py-4 mt-4 text-center text-base-content/50 font-medium">{lp("That's all for today...", "That's all for the last %{number} days...", @time_limit,
-                number: @time_limit
-              )}</p>
+            <div class="m-4 border border-base-content/10 rounded-lg">
+              <p class="text-sm py-4 mt-4 text-center text-base-content/50 font-medium">{lp("That's all for today...", "That's all for the last %{number} days...", @time_limit,
+                  number: @time_limit
+                )}</p>
 
-            {!-- TODO: instead of switching to infinity, switch 1 level up from current limit, eg. from day to week --}
-            {#if !@sort_by and
-                (e(@previous_page_info, :end_cursor, nil) || e(@page_info, :end_cursor, nil)) |> debug("ppppp")}
-              <Bonfire.UI.Common.LoadMoreLive
-                live_handler={Bonfire.Social.Feeds}
-                page_info={@previous_page_info || @page_info}
-                target={@myself}
-                label={l("Show older activities")}
-                opts={%{"phx-value-time_limit" => 0}}
-                hide_if_no_more
-              />
-            {#else}
-              <div :if={socket_connected?(@__context__)} class="w-full flex items-center justify-center mb-4">
-                <button
-                  class="normal-case btn btn-outline rounded-full btn-primary !border !border-primary/30"
-                  phx-click="set"
-                  phx-value-to_integers="true"
-                  phx-value-time_limit={0}
-                  phx-value-assign_global="true"
-                  phx-target={@myself}
-                >
-                  {l("Show older activities")}
-                </button></div>
-            {/if}
-          </div>
+              {!-- TODO: instead of switching to infinity, switch 1 level up from current limit, eg. from day to week --}
+              {#if !@sort_by and
+                  (e(@previous_page_info, :end_cursor, nil) || e(@page_info, :end_cursor, nil)) |> debug("ppppp")}
+                <Bonfire.UI.Common.LoadMoreLive
+                  live_handler={Bonfire.Social.Feeds}
+                  page_info={@previous_page_info || @page_info}
+                  target={@myself}
+                  label={l("Show older activities")}
+                  opts={%{"phx-value-time_limit" => 0}}
+                  hide_if_no_more
+                />
+              {#else}
+                <div :if={socket_connected?(@__context__)} class="w-full flex items-center justify-center mb-4">
+                  <button
+                    class="normal-case btn btn-outline rounded-full btn-primary !border !border-primary/30"
+                    phx-click="set"
+                    phx-value-to_integers="true"
+                    phx-value-time_limit={0}
+                    phx-value-assign_global="true"
+                    phx-target={@myself}
+                  >
+                    {l("Show older activities")}
+                  </button></div>
+              {/if}
+            </div>
           {#else}
             <p class="text-sm font-medium text-base-content/50 text-center my-4">{l("That's all folks...")}</p>
           {/if}
