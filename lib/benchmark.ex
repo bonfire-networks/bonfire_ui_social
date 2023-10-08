@@ -1,9 +1,56 @@
 defmodule Bonfire.UI.Social.Benchmark do
   @endpoint Bonfire.Web.Endpoint
   import Phoenix.ConnTest
+  alias Bonfire.Common.Config
   # import Untangle
 
   # NOTE: make sure you populate your local with seeds first, and then call these functions in iex
+
+  def feed_queries do
+    Logger.configure(level: :info)
+
+    Benchee.run(
+      md_lib_feed_queries(),
+      # some_feed_queries(),
+      parallel: 1,
+      warmup: 2,
+      time: 5,
+      memory_time: 2,
+      reduction_time: 2,
+      profile_after: true,
+      formatters: [
+        {Benchee.Formatters.HTML, file: "benchmarks/output/feed_queries.html"},
+        Benchee.Formatters.Console
+      ]
+    )
+  end
+
+  defp md_lib_feed_queries do
+    %{
+      "render activities with earmark" => fn ->
+        Config.put(:markdown_library, :earmark)
+        live_feed(limit: 10)
+      end,
+      "render activities with mdex" => fn ->
+        Config.put(:markdown_library, nil)
+        live_feed(limit: 10)
+      end
+    }
+  end
+
+  defp some_feed_queries do
+    %{
+      "query 1 activity" => fn ->
+        Bonfire.Social.FeedActivities.feed(:local, limit: 1)
+      end,
+      "query 10 activities" => fn ->
+        Bonfire.Social.FeedActivities.feed(:local, limit: 10)
+      end,
+      "query 20 activities" => fn ->
+        Bonfire.Social.FeedActivities.feed(:local, limit: 20)
+      end
+    }
+  end
 
   def feed_query_methods do
     Logger.configure(level: :info)
@@ -43,38 +90,6 @@ defmodule Bonfire.UI.Social.Benchmark do
       profile_after: true,
       formatters: [
         {Benchee.Formatters.HTML, file: "benchmarks/output/feed_query_methods.html"},
-        Benchee.Formatters.Console
-      ]
-    )
-  end
-
-  defp some_feed_queries do
-    %{
-      "query 1 activity" => fn ->
-        Bonfire.Social.FeedActivities.feed(:local, limit: 1)
-      end,
-      "query 10 activities" => fn ->
-        Bonfire.Social.FeedActivities.feed(:local, limit: 10)
-      end,
-      "query 20 activities" => fn ->
-        Bonfire.Social.FeedActivities.feed(:local, limit: 20)
-      end
-    }
-  end
-
-  def feed_queries do
-    Logger.configure(level: :info)
-
-    Benchee.run(
-      some_feed_queries(),
-      parallel: 1,
-      warmup: 2,
-      time: 5,
-      memory_time: 2,
-      reduction_time: 2,
-      profile_after: true,
-      formatters: [
-        # {Benchee.Formatters.HTML, file: "benchmarks/output/feed_queries.html"},
         Benchee.Formatters.Console
       ]
     )
