@@ -55,6 +55,32 @@
         </Bonfire.UI.Common.OpenModalLive>
       </li>
 
+      {#case e(@object, :peered, :canonical_uri, nil)}
+        {#match nil}
+        {#match canonical_uri}
+          <li>
+            <div
+              phx-click="Bonfire.Social.Feeds:fetch_replies"
+              phx-value-canonical_uri={canonical_uri}
+              class="flex items-center gap-2 text-sm text-base-content/70"
+            >
+              <#Icon iconify="mdi:sprout" class="w-4 h-4 shrink-0 text-base-content/70" />
+              <span>{l("Get latest comments")}</span>
+            </div>
+          </li>
+          <li>
+            <a
+              href={canonical_uri}
+              target="_blank"
+              rel="noopener noreferrer"
+              class="flex items-center gap-2 text-sm text-base-content/70"
+            >
+              <#Icon solid="ExternalLink" class="w-4 h-4 shrink-0 text-base-content/70" />
+              <span>{l("View on the original instance")}</span>
+            </a>
+          </li>
+      {/case}
+
       <li :if={@object_type in [Bonfire.Data.Social.Post] and module_enabled?(Bonfire.UI.Social.EditPostLive)}>
         <Dynamic.Component
           module={Bonfire.UI.Social.EditPostLive}

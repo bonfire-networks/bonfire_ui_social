@@ -54,6 +54,15 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
     )
   end
 
+  def handle_event("fetch_replies", _, socket) do
+    ActivityPub.Federator.Fetcher.fetch_replies(
+      [pointer: socket.assigns[:post] || socket.assigns[:object]],
+      mode: :async
+    )
+
+    {:noreply, socket}
+  end
+
   def handle_event("reply_to_activity", _params, socket) do
     activity = e(socket.assigns, :activity, %{})
 
