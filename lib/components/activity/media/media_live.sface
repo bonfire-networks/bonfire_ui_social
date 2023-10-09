@@ -9,16 +9,32 @@
             <a
               href={media_url}
               target="_blank"
-              class="flex order-last w-full media_container hover:bg-base-content/5"
+              class="order-last w-full media_container hover:bg-base-content/5"
             >
-              <div class="flex items-center gap-2 overflow-hidden">
-                <div class="flex items-center rounded-l shrink-0 place-content-center">
-                  <#Icon iconify="bxs:file-pdf" class="w-8 h-8 text-base-content/70" />
-                </div>
-                <div class="text-sm font-medium line-clamp-1">
-                  {media_label(m) || l("View")} ({e(m, :label, nil) || l("PDF")})
-                </div>
-              </div>
+              {#case Media.thumbnail_url(m)}
+                {#match nil}
+                  <div class="flex gap-2 overflow-hidden">
+                    <div class="flex items-center rounded-l shrink-0 place-content-center">
+                      <#Icon iconify="bxs:file-pdf" class="w-8 h-8 text-base-content/70" />
+                    </div>
+                    <div class="text-sm font-medium line-clamp-1">
+                      {media_label(m) || l("View")} ({e(m, :label, nil) || l("PDF")})
+                    </div>
+                  </div>
+                {#match preview_img}
+                  <div class="text-sm font-medium line-clamp-1">
+                    {media_label(m) || l("View")} ({e(m, :label, nil) || l("PDF")})
+                  </div>
+                  <LazyImage
+                    class="rounded-none object-cover object-top rounded-l-lg cursor-pointer m-image w-full h-[300px] lg:h-[420px]"
+                    src={preview_img}
+                    fallback_icon="bxs:file-pdf"
+                  />
+                  {!-- <img
+                            class="rounded-none object-cover rounded-l-lg cursor-pointer m-image w-[240px] h-[380px]"
+                            src={preview_img}
+                          />--}
+              {/case}
             </a>
           {#else _}
             <a
