@@ -6,7 +6,7 @@
       <div
         x-show="content_open == true"
         class={
-          "animate-pulse grid w-full grid-flow-col grid-with-ratio grid-rows-4 gap-1 my-3",
+          "animate-pulse grid w-full grid-flow-col grid-with-ratio grid-rows-4 gap-1 mt-3",
           "!grid-cols-1 !grid-rows-1": @showing_within == :smart_input,
           "overflow-clip": @viewing_main_object != true,
           "grid-cols-1": num_medias == 1,
@@ -39,7 +39,7 @@
       <div
         x-show="content_open == true"
         class={
-          "animate-pulse grid w-full grid-flow-col grid-with-ratio grid-rows-4 gap-1 my-3",
+          "animate-pulse grid w-full grid-flow-col grid-with-ratio grid-rows-4 gap-1 mt-3",
           "!grid-cols-1 !grid-rows-1": @showing_within == :smart_input,
           "overflow-clip": @viewing_main_object != true,
           "grid-cols-1": num_medias == 1,

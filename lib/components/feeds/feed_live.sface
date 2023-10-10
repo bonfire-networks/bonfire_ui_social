@@ -47,7 +47,8 @@
       phx-show={JS.remove_class("hidden")}
     >
       {!-- style={if @hide_fresh==0, do: "display: none;", else: ""} --}
-      <btn class="normal-case btn btn-sm rounded-full btn-primary">
+      <btn class="normal-case btn btn-xs rounded-full btn-primary">
+        <#Icon iconify="mdi:arrow-up" class="w-4 h-4" />
         {!-- |> JS.push("hide_fresh", target: @myself) --}
         {l("Show more recent")}
         {!-- {"(#{@hide_fresh})"} --}
