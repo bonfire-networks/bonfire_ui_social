@@ -24,7 +24,7 @@
     {#if current_user_id(@__context__)}
       <li :if={@viewing_main_object && @thread_id &&
         (@object_type in [Bonfire.Data.Social.Message] ||
-           Bonfire.Boundaries.can?(@__context__, :describe, @object_boundary || @thread_id))}>
+           Bonfire.Boundaries.can?(@__context__, :describe, [@object_boundary, @thread_id]))}>
         <Bonfire.UI.Common.OpenModalLive
           id={"thread_title_#{id(@activity) || @thread_id}"}
           title_text={l("Edit the title of this discussion")}
@@ -81,7 +81,8 @@
           </li>
       {/case}
 
-      <li :if={@object_type in [Bonfire.Data.Social.Post] and module_enabled?(Bonfire.UI.Social.EditPostLive)}>
+      <li :if={@object_type in [Bonfire.Data.Social.Post, Bonfire.Data.Social.Message] and
+        module_enabled?(Bonfire.UI.Social.EditPostLive)}>
         <Dynamic.Component
           module={Bonfire.UI.Social.EditPostLive}
           object={@object}
