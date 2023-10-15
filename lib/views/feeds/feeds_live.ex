@@ -76,6 +76,7 @@ defmodule Bonfire.UI.Social.FeedsLive do
        feed: nil,
        page_info: nil,
        no_header: true,
+       no_index: true,
        loading: true,
        feed_id: nil,
        feed_title: nil,

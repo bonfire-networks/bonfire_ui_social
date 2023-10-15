@@ -31,6 +31,7 @@ defmodule Bonfire.UI.Social.MessagesLive do
         page_title: l("Messages"),
         page: "messages",
         page_header_icon: "ri:mail-line",
+        no_index: true,
         feed_id: feed_id,
         activity: nil,
         object: nil,

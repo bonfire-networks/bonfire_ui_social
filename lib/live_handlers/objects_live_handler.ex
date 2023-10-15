@@ -77,8 +77,9 @@ defmodule Bonfire.Social.Objects.LiveHandler do
 
     # |> debug("object author")
     author =
-      e(activity, :subject, nil) || e(activity, :created, :creator, nil) ||
-        e(activity, :object, :created, :creator, nil)
+      (e(activity, :subject, nil) || e(activity, :created, :creator, nil) ||
+         e(activity, :object, :created, :creator, nil))
+      |> repo().maybe_preload(:settings)
 
     thread_id = e(activity, :replied, :thread_id, id)
     # |> debug("reply_to_id")
@@ -140,9 +141,11 @@ defmodule Bonfire.Social.Objects.LiveHandler do
       # ],
       # participants: participants,
       no_index:
-        Bonfire.Common.Settings.get([Bonfire.Me.Users, :undiscoverable], true,
-          current_user: author
-        ),
+        !Bonfire.Common.Extend.module_enabled?(Bonfire.Search.Indexer, author)
+        |> debug("no_index"),
+      # Bonfire.Common.Settings.get([Bonfire.Me.Users, :undiscoverable], true,
+      #   current_user: author
+      # ),
       thread_id: thread_id,
       # reply_to_id: object,
       # smart_input_opts: %{text_suggestion: mentions, prompt: smart_input_prompt},
