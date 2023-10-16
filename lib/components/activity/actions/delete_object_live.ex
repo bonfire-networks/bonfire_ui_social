@@ -27,8 +27,10 @@ defmodule Bonfire.UI.Social.Activity.DeleteObjectLive do
 
   def can_delete?(context, object, object_boundary \\ nil) do
     current_user_id(context) ==
-      (@creator_id || e(object, :created, :creator_id, nil) ||
-         e(object, :created, :creator, :id, nil)) or
+      (e(object, :created, :creator_id, nil) ||
+         e(object, :created, :creator, :id, nil) ||
+         e(object, :creator, :id, nil) ||
+         e(object, :creator_id, nil)) or
       ((Bonfire.Boundaries.can?(context, :delete, [object_boundary, object]) ||
           Bonfire.Boundaries.can?(context, :delete, :instance)) &&
          Types.object_type(object) != Bonfire.Data.Identity.User)

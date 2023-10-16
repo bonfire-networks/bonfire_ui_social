@@ -1491,7 +1491,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
   #   [Bonfire.UI.Social.Activity.MainObjectInfoLive] ++ component_actions(nil, activity, nil)
   # end
 
-  def component_actions(_, activity, object_type, _, _, _) do
+  def component_actions(_, activity, object_type, _, _, _) when not is_nil(object_type) do
     actions_for_object_type(activity, object_type)
   end
 
