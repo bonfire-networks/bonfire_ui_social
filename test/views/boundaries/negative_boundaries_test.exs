@@ -31,6 +31,7 @@ defmodule Bonfire.Social.Activities.NegativeBoundariesTest do
     # login as alice and verify that she cannot see the post
     conn = conn(user: alice, account: account)
     {:ok, view, _html} = live(conn, "/feed/local")
+    # FIXME: we should check for the actual post, not the mere existence of one
     refute has_element?(view, "article")
 
     # ...and cannot like and boost
@@ -126,6 +127,8 @@ defmodule Bonfire.Social.Activities.NegativeBoundariesTest do
     # login as alice and verify that she can see the post
     conn = conn(user: alice, account: account)
     {:ok, view, _html} = live(conn, "/feed/local")
+
+    # FIXME: should look for the actual article
     assert has_element?(view, "article")
 
     # ...can like and bosst

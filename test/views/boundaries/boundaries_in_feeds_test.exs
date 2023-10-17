@@ -147,6 +147,8 @@ defmodule Bonfire.Social.Activities.BoundariesInFeedsTest do
     # login as alice and verify that she can see the post
     conn = conn(user: alice, account: account)
     {:ok, view, _html} = live(conn, "/feed/local")
+
+    # FIXME: should look for the actual article
     assert has_element?(view, "article")
 
     # ...but cannot like
@@ -328,6 +330,7 @@ defmodule Bonfire.Social.Activities.BoundariesInFeedsTest do
     conn = conn(user: bob, account: account)
     {:ok, view, _html} = live(conn, "/feed/local")
 
+    # FIXME: should look for the actual article
     assert has_element?(view, "article")
 
     # ...can like, boost
@@ -368,6 +371,7 @@ defmodule Bonfire.Social.Activities.BoundariesInFeedsTest do
     conn = conn(user: me, account: account)
     {:ok, view, _html} = live(conn, "/feed/local")
 
+    # FIXME: look for the actual post
     assert has_element?(view, "article")
 
     # ...can like, boost

@@ -23,6 +23,7 @@ defmodule Bonfire.Social.Activities.BoostPost.Test do
       # |> IO.inspect
       {view, doc} = floki_live(conn, next)
 
+      # FIXME: we should check for the actual post, not the mere existence of one
       assert view
              |> element(".feed [data-id='boost_action]")
              |> render_click()

@@ -171,6 +171,8 @@ defmodule Bonfire.Social.Moderation.FlagTest do
     {:ok, view, _html} = live(conn, "/feed/local")
     # Then I should see the post in my feed
     # open_browser(view)
+
+    # FIXME: should look for the actual article
     assert has_element?(view, "article", content)
 
     # does the actions menu show that it's already flagged?

@@ -5,6 +5,7 @@ defmodule Bonfire.Social.Notifications.Threads.Test do
   alias Bonfire.Social.Follows
 
   describe "show" do
+    # FIXME: should this be expected behaviour? (without @ mention)
     @tag :skip_ci
     test "replies I'm allowed to see (even from people I'm not following) in my notifications" do
       some_account = fake_account!()
