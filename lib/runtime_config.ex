@@ -35,12 +35,14 @@ defmodule Bonfire.UI.Social.RuntimeConfig do
           # private: Bonfire.UI.Social.MessageThreadsLive,
           posts: Bonfire.UI.Social.ProfilePostsLive,
           boosts: Bonfire.UI.Social.ProfileBoostsLive,
+          highlights: Bonfire.UI.Social.ProfilePinsLive,
           followers: Bonfire.UI.Social.ProfileFollowsLive,
           followed: Bonfire.UI.Social.ProfileFollowsLive,
           requested: Bonfire.UI.Social.ProfileFollowsLive,
           requests: Bonfire.UI.Social.ProfileFollowsLive
         ],
         navigation: [
+          # highlights: l("Highlights"),
           nil: l("Timeline"),
           posts: l("Posts"),
           boosts: l("Boosts")

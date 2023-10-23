@@ -15,6 +15,9 @@
       /> --}
       {!-- <Bonfire.UI.Common.BackButtonLive showing_within={@showing_within || :thread} /> --}
       <div id="thread_main_object">
+        {#if @activity == nil}
+          <div class="m-3 text-center p-8 rounded-lg border border-base-content/30 flex items-center place-content-center">{l "You cannot view this activity"}</div>
+        {#else}
         <Bonfire.UI.Social.ActivityLive
           :if={@activity}
           class="rounded-none !shadow-none !px-4 mt-0 pt-0 main_object_in_thread"
@@ -28,6 +31,7 @@
           feed_id={@feed_id}
           object_boundary={if @showing_within == :messages, do: :skip_boundary_check}
         />
+        {/if}
       </div>
       <div class="">
         <Bonfire.UI.Social.ThreadLive

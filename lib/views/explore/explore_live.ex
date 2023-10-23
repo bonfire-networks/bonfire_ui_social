@@ -1,7 +1,7 @@
 defmodule Bonfire.UI.Social.ExploreLive do
   use Bonfire.UI.Common.Web, :surface_live_view
 
-  declare_nav_link(l("Explore"), page: "Explore", icon: "ic:outline-explore")
+  declare_nav_link(l("Explore"), page: "Explore", icon: "ri:safari-line")
 
   on_mount {LivePlugs,
             [Bonfire.UI.Me.LivePlugs.LoadCurrentUser, Bonfire.UI.Me.LivePlugs.AccountRequired]}
@@ -20,7 +20,7 @@ defmodule Bonfire.UI.Social.ExploreLive do
        page: "explore",
        selected_tab: "explore",
        #  without_sidebar: true,
-       page_header_icon: "ic:outline-explore",
+       page_header_icon: "ri:safari-line",
        page_title: l("Explore"),
        feedback_title: l("You have no activities"),
        feedback_message:

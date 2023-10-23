@@ -1,6 +1,7 @@
 defmodule Bonfire.UI.Social.BrowsingTest do
   use Bonfire.UI.Social.ConnCase, async: true
 
+  alias Bonfire.Common.Config
   alias Bonfire.Social.Fake
   alias Bonfire.Me.Users
   alias Bonfire.Social.Boosts
@@ -8,8 +9,104 @@ defmodule Bonfire.UI.Social.BrowsingTest do
   alias Bonfire.Social.Follows
   alias Bonfire.Social.Posts
 
+
+  test "Alice pins a post, the post is pinned on her timeline" do
+    # Alice pins a post
+
+    # Alice navigates to her profile
+    # Alice sees the post pinned
+  end
+
+
+
+  test "Switch from chronological feed to most replied works" do
+    # create 3 posts, with different replies
+    # Config.put(:default_pagination_limit, 10)
+    Config.put(:pagination_hard_max_limit, 10)
+
+
+     account = fake_account!()
+     alice = fake_user!(account)
+     bob = fake_user!(account)
+     carl = fake_user!(account)
+
+     # alice creates a post
+     attrs = %{
+       post_content: %{summary: "summary", name: "test post name", html_body: "first post"}
+     }
+
+     assert {:ok, post} = Posts.publish(current_user: alice, post_attrs: attrs, boundary: "public")
+     attrs_reply = %{
+       post_content: %{summary: "summary", name: "name 2", html_body: "<p>reply to first post</p>"},
+       reply_to_id: post.id
+     }
+     assert {:ok, post_reply} =
+       Posts.publish(current_user: bob, post_attrs: attrs_reply, boundary: "public")
+     assert {:ok, post_reply1} =
+       Posts.publish(current_user: bob, post_attrs: attrs_reply, boundary: "public")
+     assert {:ok, post_reply2} =
+       Posts.publish(current_user: bob, post_attrs: attrs_reply, boundary: "public")
+
+      assert {:ok, new_post} = Posts.publish(current_user: carl, post_attrs: attrs, boundary: "public")
+      attrs_reply = %{
+        post_content: %{summary: "summary", name: "name 2", html_body: "<p>reply to first post</p>"},
+        reply_to_id: new_post.id
+      }
+      assert {:ok, new_post_reply} =
+        Posts.publish(current_user: alice, post_attrs: attrs_reply, boundary: "public")
+      assert {:ok, new_post_reply1} =
+        Posts.publish(current_user: alice, post_attrs: attrs_reply, boundary: "public")
+
+     #login as alice
+     conn = conn(user: alice, account: account)
+     next = "/feed/local"
+     # navigate to the local feed
+     {:ok, view, _html} = live(conn, next)
+     open_browser(view)
+     # # wait 5 seconds
+     # :timer.sleep(5000)
+     # open_browser(view)
+
+
+      # Then I should see the post in my feed
+      assert has_element?(view, "a[data-id=subject_name]", alice.profile.name)
+
+
+  end
+
+
+
   test "Alice boosts Bob post, navigate to local feed with alice, the boosted activity does not show the subject (alice)" do
     # it works on other feeds, but not on local feed
+    account = fake_account!()
+    alice = fake_user!(account)
+    bob = fake_user!(account)
+    carl = fake_user!(account)
+    feed_id = Bonfire.Social.Feeds.named_feed_id(:local)
+
+    # carl creates a post
+    attrs = %{
+      post_content: %{summary: "summary", name: "test post name", html_body: "first post"}
+    }
+
+    assert {:ok, post} = Posts.publish(current_user: alice, post_attrs: attrs, boundary: "public")
+
+    assert {:ok, _} = Follows.follow(alice, bob)
+
+    #login as carl
+    conn = conn(user: carl, account: account)
+    next = "/feed/local"
+    # navigate to the local feed
+    {:ok, view, _html} = live(conn, next)
+    # open_browser(view)
+    # # wait 5 seconds
+    # :timer.sleep(5000)
+    # open_browser(view)
+
+
+     # Then I should see the post in my feed
+     assert has_element?(view, "a[data-id=subject_name]", alice.profile.name)
+
   end
 
   test "Alice navigate to bob profile, try to add bob in a circle, the list of circles is empty even if alice has circles" do
