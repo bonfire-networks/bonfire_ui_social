@@ -2,13 +2,36 @@ defmodule Bonfire.UI.Social.BrowsingTest do
   use Bonfire.UI.Social.ConnCase, async: true
 
   alias Bonfire.Common.Config
-  alias Bonfire.Social.Fake
-  alias Bonfire.Me.Users
-  alias Bonfire.Social.Boosts
-  alias Bonfire.Social.Likes
+  # alias Bonfire.Social.Fake
+  # alias Bonfire.Me.Users
+  # alias Bonfire.Social.Boosts
+  # alias Bonfire.Social.Likes
   alias Bonfire.Social.Follows
   alias Bonfire.Social.Posts
 
+  setup_all do
+
+    orig1 = Config.get!(:pagination_hard_max_limit)
+
+    orig2 = Config.get!(:default_pagination_limit)
+
+
+
+    Config.put(:pagination_hard_max_limit, 10)
+
+    Config.put(:default_pagination_limit, 10)
+
+
+
+    on_exit(fn ->
+
+      Config.put(:pagination_hard_max_limit, orig1)
+
+      Config.put(:default_pagination_limit, orig2)
+
+    end)
+
+  end
 
   test "Alice pins a post, the post is pinned on her timeline" do
     # Alice pins a post
@@ -22,54 +45,97 @@ defmodule Bonfire.UI.Social.BrowsingTest do
   test "Switch from chronological feed to most replied works" do
     # create 3 posts, with different replies
     # Config.put(:default_pagination_limit, 10)
-    Config.put(:pagination_hard_max_limit, 10)
-
+    # Config.put(:pagination_hard_max_limit, 10)
 
      account = fake_account!()
      alice = fake_user!(account)
      bob = fake_user!(account)
      carl = fake_user!(account)
+     assert {:ok, _} = Follows.follow(alice, bob)
+     assert {:ok, _} = Follows.follow(alice, carl)
 
      # alice creates a post
      attrs = %{
-       post_content: %{summary: "summary", name: "test post name", html_body: "first post"}
+       post_content: %{html_body: "first post"}
      }
 
      assert {:ok, post} = Posts.publish(current_user: alice, post_attrs: attrs, boundary: "public")
      attrs_reply = %{
-       post_content: %{summary: "summary", name: "name 2", html_body: "<p>reply to first post</p>"},
+       post_content: %{html_body: "<p>reply to first post</p>"},
        reply_to_id: post.id
      }
-     assert {:ok, post_reply} =
+     assert {:ok, reply2} =
        Posts.publish(current_user: bob, post_attrs: attrs_reply, boundary: "public")
-     assert {:ok, post_reply1} =
+     assert {:ok, reply3} =
        Posts.publish(current_user: bob, post_attrs: attrs_reply, boundary: "public")
-     assert {:ok, post_reply2} =
+     assert {:ok, reply4} =
        Posts.publish(current_user: bob, post_attrs: attrs_reply, boundary: "public")
 
-      assert {:ok, new_post} = Posts.publish(current_user: carl, post_attrs: attrs, boundary: "public")
+      assert {:ok, reply5} = Posts.publish(current_user: carl, post_attrs: attrs, boundary: "public")
       attrs_reply = %{
-        post_content: %{summary: "summary", name: "name 2", html_body: "<p>reply to first post</p>"},
-        reply_to_id: new_post.id
+        post_content: %{html_body: "<p>reply to first post</p>"},
+        reply_to_id: reply5.id
       }
-      assert {:ok, new_post_reply} =
+      assert {:ok, reply6} =
         Posts.publish(current_user: alice, post_attrs: attrs_reply, boundary: "public")
-      assert {:ok, new_post_reply1} =
+      assert {:ok, reply7} =
         Posts.publish(current_user: alice, post_attrs: attrs_reply, boundary: "public")
 
      #login as alice
      conn = conn(user: alice, account: account)
-     next = "/feed/local"
-     # navigate to the local feed
+     # navigate to the my feed
+     next = "/feed"
      {:ok, view, _html} = live(conn, next)
-     open_browser(view)
-     # # wait 5 seconds
-     # :timer.sleep(5000)
-     # open_browser(view)
+
+     #  check the first article tag has 0 replies
+
+     # the first comment shown has 0 replies
+     assert has_element?(
+      view,
+      "div[data-id=feed_activity_list] article:first-child div[data-role=reply_action]",
+      "0")
+      # the second comment shown has 0 replies
+      assert has_element?(
+        view,
+        "div[data-id=feed_activity_list] > div:nth-child(2) div[data-role=reply_action]",
+        "0")
+      # the third comment shown has 2 replies
+      assert has_element?(
+      view,
+      "div[data-id=feed_activity_list] div:nth-child(3) div[data-role=reply_action]",
+      "2")
+
+      # the fourth comment shown has 0 replies
+      assert has_element?(
+      view,
+      "div[data-id=feed_activity_list] div:nth-child(4) div[data-role=reply_action]",
+      "0")
+      # the fifth comment shown has 0 replies
+      assert has_element?(
+      view,
+      "div[data-id=feed_activity_list] div:nth-child(5) div[data-role=reply_action]",
+      "0")
+      # the sixth comment shown has 0 replies
+      assert has_element?(
+        view,
+        "div[data-id=feed_activity_list] div:nth-child(6) div[data-role=reply_action]",
+        "0")
+      # the seventh comment shown has 3 replies
+      assert has_element?(
+        view,
+        "div[data-id=feed_activity_list] div:nth-child(7) div[data-role=reply_action]",
+        "3")
 
 
-      # Then I should see the post in my feed
-      assert has_element?(view, "a[data-id=subject_name]", alice.profile.name)
+      # change the feed controls on "by amount of replies"
+      # click on the "by amount of replies"
+      view
+      |> element("li[data-role=amount_of_replies]")
+      |> render_click()
+
+      live_pubsub_wait(view)
+      :timer.sleep(5000)
+      open_browser(view)
 
 
   end

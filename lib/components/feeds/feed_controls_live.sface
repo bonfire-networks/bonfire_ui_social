@@ -21,6 +21,7 @@
         class="dropdown-content mt-1 z-[999] menu p-1 shadow bg-base-200 rounded-box w-52"
       >
         <li
+          data-role="chronological"
           phx-click="set"
           phx-value-to_atoms="true"
           phx-value-sort_by="nil"
@@ -36,6 +37,7 @@
           </a></li>
 
         <li
+          data-role="amount_of_replies"
           phx-click="set"
           phx-value-to_atoms="true"
           phx-value-sort_by="num_replies"
@@ -50,6 +52,7 @@
             {l("By amount of replies")}</a></li>
 
         <li
+          data-role="amount_of_boosts"
           phx-click="set"
           phx-value-to_atoms="true"
           phx-value-sort_by="num_boosts"
@@ -64,6 +67,7 @@
             {l("By amount of boosts")}</a></li>
 
         <li
+          data-role="amount_of_likes"
           phx-click="set"
           phx-value-to_atoms="true"
           phx-value-sort_by="num_likes"
@@ -119,6 +123,7 @@
         class="dropdown-content mt-1 z-[999] menu p-1 gap-1 shadow bg-base-200 rounded-box w-52"
       >
         <li
+          data-role="day"
           phx-click="set"
           phx-value-to_integers="true"
           phx-value-time_limit={1}
@@ -132,6 +137,7 @@
             {l("Day")}</a></li>
 
         <li
+          data-role="week"
           phx-click="set"
           phx-value-to_integers="true"
           phx-value-time_limit={7}
@@ -145,6 +151,7 @@
             {l("Week")}</a></li>
 
         <li
+          data-role="month"
           phx-click="set"
           phx-value-to_integers="true"
           phx-value-time_limit={30}
@@ -161,6 +168,7 @@
             {l("Month")}</a></li>
 
         <li
+          data-role="year"
           phx-click="set"
           phx-value-to_integers="true"
           phx-value-time_limit={365}
@@ -174,6 +182,7 @@
             {l("Year")}</a></li>
 
         <li
+          data-role="infinite"
           phx-click="set"
           phx-value-to_integers="true"
           phx-value-time_limit="0"
@@ -206,6 +215,7 @@
           class="dropdown-content mt-1 z-[999] menu p-1 gap-1 shadow bg-base-200 rounded-box w-52"
         >
           <li
+            data-role="most first"
             phx-click="set"
             phx-value-to_atoms="true"
             phx-value-sort_order="desc"
@@ -218,6 +228,7 @@
               <#Icon iconify="octicon:sort-desc-16" class="w-5 h-5 text-base-content/50" />
               {l("Most first")}</a></li>
           <li
+            data-role="least first"
             phx-click="set"
             phx-value-to_atoms="true"
             phx-value-sort_order="asc"
