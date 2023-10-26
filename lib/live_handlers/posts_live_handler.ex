@@ -73,6 +73,8 @@ defmodule Bonfire.Social.Posts.LiveHandler do
           "<div class='flex justify-between items-center'> <span>#{l("Posted!")} </span><a href='#{permalink}' class='btn-outline mr-2 btn btn-xs normal-case font-medium text-info-content rounded-full'>#{l("Show")}</a></div>"
         )
         # |> Bonfire.UI.Common.SmartInput.LiveHandler.close_smart_input()
+        |> push_event("smart_input:reset", %{})
+
         |> Bonfire.UI.Common.SmartInput.LiveHandler.reset_input()
         # |> patch_to(current_url(socket), fallback: path(published)) # so the flash appears - TODO: causes a conflict between the activity coming in via pubsub
 

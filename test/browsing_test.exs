@@ -129,6 +129,12 @@ defmodule Bonfire.UI.Social.BrowsingTest do
 
       # change the feed controls on "by amount of replies"
       # click on the "by amount of replies"
+      assert has_element?(
+        view,
+        "[data-role=amount_of_replies]",
+        "By amount of replies"
+      )
+
       view
       |> element("li[data-role=amount_of_replies]")
       |> render_click()
