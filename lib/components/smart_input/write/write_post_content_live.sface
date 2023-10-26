@@ -10,9 +10,10 @@
       autocomplete: "off",
       "phx-target": "#smart_input"
     }
-    class={"flex-1"}
-  >
-
+    class={if WriteEditorLive.use_rich_editor?(e(@smart_input_opts, :wysiwyg, true), @__context__),
+      do: "with_editor flex-1",
+      else: "with_textarea flex-1"}
+    >
 
     <Bonfire.UI.Common.InputControlsLive
       preloaded_recipients={e(@preloaded_recipients, [])}
