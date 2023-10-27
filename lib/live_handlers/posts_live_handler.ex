@@ -61,7 +61,6 @@ defmodule Bonfire.Social.Posts.LiveHandler do
           do: "#{thread_url}#activity-#{activity.object.id}",
           else: "#{path(activity.object)}#"
 
-
       {
         :noreply,
         socket
@@ -71,7 +70,6 @@ defmodule Bonfire.Social.Posts.LiveHandler do
         )
         # |> Bonfire.UI.Common.SmartInput.LiveHandler.close_smart_input()
         |> push_event("smart_input:reset", %{})
-
         |> Bonfire.UI.Common.SmartInput.LiveHandler.reset_input()
         # |> patch_to(current_url(socket), fallback: path(published)) # so the flash appears - TODO: causes a conflict between the activity coming in via pubsub
 

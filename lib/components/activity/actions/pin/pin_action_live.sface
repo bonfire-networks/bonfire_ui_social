@@ -1,89 +1,82 @@
 <Bonfire.UI.Common.OpenModalLive
-    :if={@object}
-    id={Text.random_string()}
-    no_actions
-    open_btn_wrapper_class="flex items-center gap-2 text-sm text-base-content/70 w-full flex-1"
-  >
+  :if={@object}
+  id={Text.random_string()}
+  no_actions
+  open_btn_wrapper_class="flex items-center gap-2 text-sm text-base-content/70 w-full flex-1"
+>
   {#if @scope != :instance}
-    {#if (current_user(@__context__) && Bonfire.Social.Pins.pinned?(current_user(@__context__), @object))}
-        <h3 class="font-bold text-base flex-1 modal-title">{l("You have already pinned this activity")}</h3>
-        <p class="mt-2 prose-sm prose">{l("You can unpin this activity to remove it from your profile highlights tab")}</p>
-        <button
-          phx-click="Bonfire.Social.Pins:pin"
-          phx-value-direction="down"
-          phx-value-id={id(@object)}
-          phx-value-scope={@scope}
-          phx-value-component={__MODULE__}
-          type="button"
-          class="btn mt-4 w-full btn-warning rounded-full btn-sm normal-case"
-        >          
+    {#if current_user(@__context__) && Bonfire.Social.Pins.pinned?(current_user(@__context__), @object)}
+      <h3 class="font-bold text-base flex-1 modal-title">{l("You have already pinned this activity")}</h3>
+      <p class="mt-2 prose-sm prose">{l("You can unpin this activity to remove it from your profile highlights tab")}</p>
+      <button
+        phx-click="Bonfire.Social.Pins:pin"
+        phx-value-direction="down"
+        phx-value-id={id(@object)}
+        phx-value-scope={@scope}
+        phx-value-component={__MODULE__}
+        type="button"
+        class="btn mt-4 w-full btn-warning rounded-full btn-sm normal-case"
+      >
         <#Icon iconify="bi:pin-angle-fill" class="w-4 h-4" />
         {l("Unpin this activity")}
-        </button>
-
-             {#else}
-        
-        <h3 class="font-bold text-base flex-1 modal-title">{l("Pin this activity")}</h3>
-        <p class="mt-2 prose-sm prose">{l("Pins will be added in your highlights profile tab.")}</p>
-        
-        <button
-          :if={@object}
-          data-id="pin_action"
-          phx-click="Bonfire.Social.Pins:pin"
-          phx-value-direction="up"
-          phx-value-id={id(@object)}
-          phx-value-scope={@scope}
-          phx-value-component={__MODULE__}
-          class="btn mt-4 w-full btn-primary rounded-full btn-sm normal-case"
-        >
-          <#Icon iconify="bi:pin-angle-fill" class="w-4 h-4" />
-          {if @scope == :instance, do: l("Pin to instance"), else: l("Pin to your profile")}
-        </button>
-      {/if}
+      </button>
     {#else}
-    {#if (current_user(@__context__) && Bonfire.Social.Pins.pinned?(:instance, @object))}
-        <h3 class="font-bold text-base flex-1 modal-title">{l("You have already pinned this activity")}</h3>
-        <p class="mt-2 prose-sm prose">{l("You can unpin this activity to remove it from the instance highlights tab")}</p>
-        <button
-          phx-click="Bonfire.Social.Pins:pin"
-          phx-value-direction="down"
-          phx-value-id={id(@object)}
-          phx-value-scope={@scope}
-          phx-value-component={__MODULE__}
-          type="button"
-          class="btn mt-4 w-full btn-warning rounded-full btn-sm normal-case"
-        >          
-        <#Icon iconify="bi:pin-angle-fill" class="w-4 h-4" />
-        {l("Unpin this activity")}
-        </button>
+      <h3 class="font-bold text-base flex-1 modal-title">{l("Pin this activity")}</h3>
+      <p class="mt-2 prose-sm prose">{l("Pins will be added in your highlights profile tab.")}</p>
 
-             {#else}
-        
-        <h3 class="font-bold text-base flex-1 modal-title">{l("Pin this activity")}</h3>
-        <p class="mt-2 prose-sm prose">{l("Pins will be added to the instance highlights tab.")}</p>
-        
-        <button
-          :if={@object}
-          data-id="pin_action"
-          phx-click="Bonfire.Social.Pins:pin"
-          phx-value-direction="up"
-          phx-value-id={id(@object)}
-          phx-value-scope={@scope}
-          phx-value-component={__MODULE__}
-          class="btn mt-4 w-full btn-primary rounded-full btn-sm normal-case"
-        >
-          <#Icon iconify="bi:pin-angle-fill" class="w-4 h-4" />
-          {if @scope == :instance, do: l("Pin to instance"), else: l("Pin this activity")}
-        </button>
-      {/if}
-
-  
-  
-  {/if}
-    <:open_btn>
-      <div class="flex items-center w-full gap-2 text-sm text-base-content/70">
+      <button
+        :if={@object}
+        data-id="pin_action"
+        phx-click="Bonfire.Social.Pins:pin"
+        phx-value-direction="up"
+        phx-value-id={id(@object)}
+        phx-value-scope={@scope}
+        phx-value-component={__MODULE__}
+        class="btn mt-4 w-full btn-primary rounded-full btn-sm normal-case"
+      >
         <#Icon iconify="bi:pin-angle-fill" class="w-4 h-4" />
         {if @scope == :instance, do: l("Pin to instance"), else: l("Pin to your profile")}
-      </div>
-    </:open_btn>
-  </Bonfire.UI.Common.OpenModalLive>
+      </button>
+    {/if}
+  {#else}
+    {#if current_user(@__context__) && Bonfire.Social.Pins.pinned?(:instance, @object)}
+      <h3 class="font-bold text-base flex-1 modal-title">{l("You have already pinned this activity")}</h3>
+      <p class="mt-2 prose-sm prose">{l("You can unpin this activity to remove it from the instance highlights tab")}</p>
+      <button
+        phx-click="Bonfire.Social.Pins:pin"
+        phx-value-direction="down"
+        phx-value-id={id(@object)}
+        phx-value-scope={@scope}
+        phx-value-component={__MODULE__}
+        type="button"
+        class="btn mt-4 w-full btn-warning rounded-full btn-sm normal-case"
+      >
+        <#Icon iconify="bi:pin-angle-fill" class="w-4 h-4" />
+        {l("Unpin this activity")}
+      </button>
+    {#else}
+      <h3 class="font-bold text-base flex-1 modal-title">{l("Pin this activity")}</h3>
+      <p class="mt-2 prose-sm prose">{l("Pins will be added to the instance highlights tab.")}</p>
+
+      <button
+        :if={@object}
+        data-id="pin_action"
+        phx-click="Bonfire.Social.Pins:pin"
+        phx-value-direction="up"
+        phx-value-id={id(@object)}
+        phx-value-scope={@scope}
+        phx-value-component={__MODULE__}
+        class="btn mt-4 w-full btn-primary rounded-full btn-sm normal-case"
+      >
+        <#Icon iconify="bi:pin-angle-fill" class="w-4 h-4" />
+        {if @scope == :instance, do: l("Pin to instance"), else: l("Pin this activity")}
+      </button>
+    {/if}
+  {/if}
+  <:open_btn>
+    <div class="flex items-center w-full gap-2 text-sm text-base-content/70">
+      <#Icon iconify="bi:pin-angle-fill" class="w-4 h-4" />
+      {if @scope == :instance, do: l("Pin to instance"), else: l("Pin to your profile")}
+    </div>
+  </:open_btn>
+</Bonfire.UI.Common.OpenModalLive>

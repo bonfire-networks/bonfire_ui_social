@@ -16,21 +16,21 @@
       {!-- <Bonfire.UI.Common.BackButtonLive showing_within={@showing_within || :thread} /> --}
       <div id="thread_main_object">
         {#if @activity == nil}
-          <div class="m-3 text-center p-8 rounded-lg border border-base-content/30 flex items-center place-content-center">{l "You cannot view this activity"}</div>
+          <div class="m-3 text-center p-8 rounded-lg border border-base-content/30 flex items-center place-content-center">{l("You cannot view this activity")}</div>
         {#else}
-        <Bonfire.UI.Social.ActivityLive
-          :if={@activity}
-          class="rounded-none !shadow-none !px-4 mt-0 pt-0 main_object_in_thread"
-          id={@main_object_component_id}
-          showing_within={:thread}
-          thread_mode={@thread_mode}
-          thread_title={@thread_title}
-          viewing_main_object
-          activity={@activity}
-          object={@object}
-          feed_id={@feed_id}
-          object_boundary={if @showing_within == :messages, do: :skip_boundary_check}
-        />
+          <Bonfire.UI.Social.ActivityLive
+            :if={@activity}
+            class="rounded-none !shadow-none !px-4 mt-0 pt-0 main_object_in_thread"
+            id={@main_object_component_id}
+            showing_within={:thread}
+            thread_mode={@thread_mode}
+            thread_title={@thread_title}
+            viewing_main_object
+            activity={@activity}
+            object={@object}
+            feed_id={@feed_id}
+            object_boundary={if @showing_within == :messages, do: :skip_boundary_check}
+          />
         {/if}
       </div>
       <div class="">

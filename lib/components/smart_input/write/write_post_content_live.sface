@@ -13,8 +13,7 @@
     class={if WriteEditorLive.use_rich_editor?(e(@smart_input_opts, :wysiwyg, true), @__context__),
       do: "with_editor flex-1",
       else: "with_textarea flex-1"}
-    >
-
+  >
     <Bonfire.UI.Common.InputControlsLive
       preloaded_recipients={e(@preloaded_recipients, [])}
       open_boundaries={@open_boundaries}
@@ -37,7 +36,7 @@
       preview_boundary_verbs={@preview_boundary_verbs}
       boundary_preset={@boundary_preset}
     >
-       <div
+      <div
         phx-update={if @reset_smart_input, do: "replace", else: "ignore"}
         class="hidden"
         id="smart_input_post_title"
@@ -58,7 +57,7 @@
           </div>
         </Inputs>
       </div>
-       
+
       <WriteEditorLive
         field_name="post[post_content][html_body]"
         reset_smart_input={@reset_smart_input}

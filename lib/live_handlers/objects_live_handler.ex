@@ -68,7 +68,7 @@ defmodule Bonfire.Social.Objects.LiveHandler do
 
     # FIXME: is this re-preloading the object we already have?
     activity =
-      Bonfire.Social.Activities.activity_preloads(activity, :all, current_user: current_user)
+      Bonfire.Social.Activities.activity_preloads(activity, [:all], current_user: current_user)
       |> repo().maybe_preload(replied: [thread: [:named]])
 
     # debug(object, "the object")

@@ -4,9 +4,7 @@
   role="feed"
   aria-live="assertive"
   aria-atomic="true"
-  class={
-    "w-full feed flex-1 h-full grow"
-  }
+  class="w-full feed flex-1 h-full grow"
 >
   <div class="">
     <Bonfire.UI.Common.TabsLive

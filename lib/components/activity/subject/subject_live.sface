@@ -51,11 +51,10 @@
         "!items-center": @viewing_main_object
       }>
         <div class={
-            "absolute -ml-[2rem]": @__context__[:ui_compact] && !@viewing_main_object,
-            "absolute -ml-[3.25rem]": @__context__[:ui_compact] != true && !@viewing_main_object,
-            "mr-3": @viewing_main_object
-          }
-        >
+          "absolute -ml-[2rem]": @__context__[:ui_compact] && !@viewing_main_object,
+          "absolute -ml-[3.25rem]": @__context__[:ui_compact] != true && !@viewing_main_object,
+          "mr-3": @viewing_main_object
+        }>
           <LiveRedirect
             opts={"data-id": "subject_avatar", "aria-label": e(@character, :username, "") <> " profile"}
             class="font-semibold text-base-content hover:underline"

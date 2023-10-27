@@ -10,27 +10,19 @@ defmodule Bonfire.UI.Social.BrowsingTest do
   alias Bonfire.Social.Posts
 
   setup_all do
-
     orig1 = Config.get!(:pagination_hard_max_limit)
 
     orig2 = Config.get!(:default_pagination_limit)
-
-
 
     Config.put(:pagination_hard_max_limit, 10)
 
     Config.put(:default_pagination_limit, 10)
 
-
-
     on_exit(fn ->
-
       Config.put(:pagination_hard_max_limit, orig1)
 
       Config.put(:default_pagination_limit, orig2)
-
     end)
-
   end
 
   test "Alice pins a post, the post is pinned on her timeline" do
@@ -40,113 +32,126 @@ defmodule Bonfire.UI.Social.BrowsingTest do
     # Alice sees the post pinned
   end
 
-
-
   test "Switch from chronological feed to most replied works" do
     # create 3 posts, with different replies
     # Config.put(:default_pagination_limit, 10)
     # Config.put(:pagination_hard_max_limit, 10)
 
-     account = fake_account!()
-     alice = fake_user!(account)
-     bob = fake_user!(account)
-     carl = fake_user!(account)
-     assert {:ok, _} = Follows.follow(alice, bob)
-     assert {:ok, _} = Follows.follow(alice, carl)
+    account = fake_account!()
+    alice = fake_user!(account)
+    bob = fake_user!(account)
+    carl = fake_user!(account)
+    assert {:ok, _} = Follows.follow(alice, bob)
+    assert {:ok, _} = Follows.follow(alice, carl)
 
-     # alice creates a post
-     attrs = %{
-       post_content: %{html_body: "first post"}
-     }
+    # alice creates a post
+    attrs = %{
+      post_content: %{html_body: "first post"}
+    }
 
-     assert {:ok, post} = Posts.publish(current_user: alice, post_attrs: attrs, boundary: "public")
-     attrs_reply = %{
-       post_content: %{html_body: "<p>reply to first post</p>"},
-       reply_to_id: post.id
-     }
-     assert {:ok, reply2} =
-       Posts.publish(current_user: bob, post_attrs: attrs_reply, boundary: "public")
-     assert {:ok, reply3} =
-       Posts.publish(current_user: bob, post_attrs: attrs_reply, boundary: "public")
-     assert {:ok, reply4} =
-       Posts.publish(current_user: bob, post_attrs: attrs_reply, boundary: "public")
+    assert {:ok, post} = Posts.publish(current_user: alice, post_attrs: attrs, boundary: "public")
 
-      assert {:ok, reply5} = Posts.publish(current_user: carl, post_attrs: attrs, boundary: "public")
-      attrs_reply = %{
-        post_content: %{html_body: "<p>reply to first post</p>"},
-        reply_to_id: reply5.id
-      }
-      assert {:ok, reply6} =
-        Posts.publish(current_user: alice, post_attrs: attrs_reply, boundary: "public")
-      assert {:ok, reply7} =
-        Posts.publish(current_user: alice, post_attrs: attrs_reply, boundary: "public")
+    attrs_reply = %{
+      post_content: %{html_body: "<p>reply to first post</p>"},
+      reply_to_id: post.id
+    }
 
-     #login as alice
-     conn = conn(user: alice, account: account)
-     # navigate to the my feed
-     next = "/feed"
-     {:ok, view, _html} = live(conn, next)
+    assert {:ok, reply2} =
+             Posts.publish(current_user: bob, post_attrs: attrs_reply, boundary: "public")
 
-     #  check the first article tag has 0 replies
+    assert {:ok, reply3} =
+             Posts.publish(current_user: bob, post_attrs: attrs_reply, boundary: "public")
 
-     # the first comment shown has 0 replies
-     assert has_element?(
-      view,
-      "div[data-id=feed_activity_list] article:first-child div[data-role=reply_action]",
-      "0")
-      # the second comment shown has 0 replies
-      assert has_element?(
-        view,
-        "div[data-id=feed_activity_list] > div:nth-child(2) div[data-role=reply_action]",
-        "0")
-      # the third comment shown has 2 replies
-      assert has_element?(
-      view,
-      "div[data-id=feed_activity_list] div:nth-child(3) div[data-role=reply_action]",
-      "2")
+    assert {:ok, reply4} =
+             Posts.publish(current_user: bob, post_attrs: attrs_reply, boundary: "public")
 
-      # the fourth comment shown has 0 replies
-      assert has_element?(
-      view,
-      "div[data-id=feed_activity_list] div:nth-child(4) div[data-role=reply_action]",
-      "0")
-      # the fifth comment shown has 0 replies
-      assert has_element?(
-      view,
-      "div[data-id=feed_activity_list] div:nth-child(5) div[data-role=reply_action]",
-      "0")
-      # the sixth comment shown has 0 replies
-      assert has_element?(
-        view,
-        "div[data-id=feed_activity_list] div:nth-child(6) div[data-role=reply_action]",
-        "0")
-      # the seventh comment shown has 3 replies
-      assert has_element?(
-        view,
-        "div[data-id=feed_activity_list] div:nth-child(7) div[data-role=reply_action]",
-        "3")
+    assert {:ok, reply5} =
+             Posts.publish(current_user: carl, post_attrs: attrs, boundary: "public")
 
+    attrs_reply = %{
+      post_content: %{html_body: "<p>reply to first post</p>"},
+      reply_to_id: reply5.id
+    }
 
-      # change the feed controls on "by amount of replies"
-      # click on the "by amount of replies"
-      assert has_element?(
-        view,
-        "[data-role=amount_of_replies]",
-        "By amount of replies"
-      )
+    assert {:ok, reply6} =
+             Posts.publish(current_user: alice, post_attrs: attrs_reply, boundary: "public")
 
-      view
-      |> element("li[data-role=amount_of_replies]")
-      |> render_click()
+    assert {:ok, reply7} =
+             Posts.publish(current_user: alice, post_attrs: attrs_reply, boundary: "public")
 
-      live_pubsub_wait(view)
-      :timer.sleep(5000)
-      open_browser(view)
+    # login as alice
+    conn = conn(user: alice, account: account)
+    # navigate to the my feed
+    next = "/feed"
+    {:ok, view, _html} = live(conn, next)
 
+    #  check the first article tag has 0 replies
 
+    # the first comment shown has 0 replies
+    assert has_element?(
+             view,
+             "div[data-id=feed_activity_list] article:first-child div[data-role=reply_action]",
+             "0"
+           )
+
+    # the second comment shown has 0 replies
+    assert has_element?(
+             view,
+             "div[data-id=feed_activity_list] > div:nth-child(2) div[data-role=reply_action]",
+             "0"
+           )
+
+    # the third comment shown has 2 replies
+    assert has_element?(
+             view,
+             "div[data-id=feed_activity_list] div:nth-child(3) div[data-role=reply_action]",
+             "2"
+           )
+
+    # the fourth comment shown has 0 replies
+    assert has_element?(
+             view,
+             "div[data-id=feed_activity_list] div:nth-child(4) div[data-role=reply_action]",
+             "0"
+           )
+
+    # the fifth comment shown has 0 replies
+    assert has_element?(
+             view,
+             "div[data-id=feed_activity_list] div:nth-child(5) div[data-role=reply_action]",
+             "0"
+           )
+
+    # the sixth comment shown has 0 replies
+    assert has_element?(
+             view,
+             "div[data-id=feed_activity_list] div:nth-child(6) div[data-role=reply_action]",
+             "0"
+           )
+
+    # the seventh comment shown has 3 replies
+    assert has_element?(
+             view,
+             "div[data-id=feed_activity_list] div:nth-child(7) div[data-role=reply_action]",
+             "3"
+           )
+
+    # change the feed controls on "by amount of replies"
+    # click on the "by amount of replies"
+    assert has_element?(
+             view,
+             "[data-role=amount_of_replies]",
+             "By amount of replies"
+           )
+
+    view
+    |> element("li[data-role=amount_of_replies]")
+    |> render_click()
+
+    live_pubsub_wait(view)
+    :timer.sleep(5000)
+    open_browser(view)
   end
-
-
 
   test "Alice boosts Bob post, navigate to local feed with alice, the boosted activity does not show the subject (alice)" do
     # it works on other feeds, but not on local feed
@@ -165,7 +170,7 @@ defmodule Bonfire.UI.Social.BrowsingTest do
 
     assert {:ok, _} = Follows.follow(alice, bob)
 
-    #login as carl
+    # login as carl
     conn = conn(user: carl, account: account)
     next = "/feed/local"
     # navigate to the local feed
@@ -175,10 +180,8 @@ defmodule Bonfire.UI.Social.BrowsingTest do
     # :timer.sleep(5000)
     # open_browser(view)
 
-
-     # Then I should see the post in my feed
-     assert has_element?(view, "a[data-id=subject_name]", alice.profile.name)
-
+    # Then I should see the post in my feed
+    assert has_element?(view, "a[data-id=subject_name]", alice.profile.name)
   end
 
   test "Alice navigate to bob profile, try to add bob in a circle, the list of circles is empty even if alice has circles" do
