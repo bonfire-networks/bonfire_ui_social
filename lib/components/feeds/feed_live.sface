@@ -59,7 +59,7 @@
         id={"feed_#{@feed_id || @id}"}
         data-id="feed_activity_list"
         phx-update="stream"
-        class="flex flex-col divide-y divide-base-content/10"
+        class="flex flex-col divide-y divide-base-content/10 bonfire_feed"
       >
         {!-- phx-update={e(@feed_update_mode, "append")} --}
         {#for {entry_id, entry} <- @streams.feed}
@@ -68,6 +68,7 @@
             id={entry_id}
             :if={@hide_activities != "component"}
             class={
+              "activity_wrapper",
               "infinite_scroll_hidden hidden": @hide_activities == "infinite_scroll",
               "fresh_hidden hidden": @hide_fresh != 0
             }

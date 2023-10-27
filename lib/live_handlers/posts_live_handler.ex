@@ -20,9 +20,7 @@ defmodule Bonfire.Social.Posts.LiveHandler do
   def handle_event("post", params, socket) do
     attrs =
       params
-      |> debug("post params qua")
       |> input_to_atoms()
-      |> debug("post attrs qui")
 
     # debug(e(socket.assigns, :showing_within, nil), "SHOWING")
     current_user = current_user_required!(socket)
@@ -63,7 +61,6 @@ defmodule Bonfire.Social.Posts.LiveHandler do
           do: "#{thread_url}#activity-#{activity.object.id}",
           else: "#{path(activity.object)}#"
 
-      debug(permalink, "permalink")
 
       {
         :noreply,

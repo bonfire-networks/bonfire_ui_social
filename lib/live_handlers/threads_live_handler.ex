@@ -209,7 +209,9 @@ defmodule Bonfire.Social.Threads.LiveHandler do
 
   def reply(reply_to, activity, socket) do
     debug(reply_to, "reply!")
-
+    debug( e(socket.assigns, :object_boundary, nil), "object_boundary!")
+    debug(e(socket.assigns, :published_in, nil), "published_in_id!")
+    debug( e(socket.assigns, :object_type, nil), "object_type!")
     reply_to_id = Enums.id(reply_to)
 
     with {:ok, current_user} <- current_user_or_remote_interaction(socket, l("reply"), reply_to),
