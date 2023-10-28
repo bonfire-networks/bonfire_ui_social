@@ -556,7 +556,7 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
       selected_tab: nil,
       page: "feed",
       # page_title: l("My feed"),
-      # feed_title: l("My feed"),
+      feed_title: l("My feed"),
       feed: nil,
       page_info: nil
     ]
@@ -577,7 +577,7 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
       # FIXME: clean up page vs tab
       page: "explore",
       page_title: "Explore activities",
-      no_header: false,
+      no_header: true,
       # page_title: l("Activities from members of the local instance"),
       feedback_title: l("There is not activities to explore"),
       # feed_id: feed_name,
@@ -605,7 +605,7 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
       # FIXME: clean up page vs tab
       page: "federation",
       page_title: "Explore remote activities from the fediverse",
-      no_header: false,
+      no_header: true,
       # page_header_icon: "ri:home-line",
       # page_title: l("Federated activities from remote instances"),
       # feed_title: l("Activities from around the fediverse"),
@@ -637,7 +637,7 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
       # FIXME: clean up page vs tab
       page: "local",
       page_title: "Explore local activities",
-      no_header: false,
+      no_header: true,
       # page_title: l("Activities from members of the local instance"),
       feedback_title: l("Your local feed is empty"),
       # feed_id: feed_name,

@@ -24,7 +24,7 @@ defmodule Bonfire.UI.Social.FeedLive do
   prop hide_load_more, :boolean, default: false
   prop verb_default, :string, default: nil
 
-  # prop page_title, :string, required: true
+  prop page_title, :string, required: true
   prop feed_title, :string, default: nil
 
   @doc "What LiveHandler and/or event name to send the patch event to for tabs navigation (if any)"
@@ -39,9 +39,7 @@ defmodule Bonfire.UI.Social.FeedLive do
   prop selected_tab, :any, default: nil
   prop top_page, :any, default: nil
 
-  prop tabs_class, :css_class,
-    default:
-      "flex items-center gap-2 w-full tabs sticky top-[56px] py-1 z-[9999999] backdrop-blur-sm bg-base-100/70 h-[56px] !top-0 !py-0 border-b border-base-content/10"
+  prop tabs_class, :css_class, default: nil
 
   prop tab_class, :css_class,
     default:

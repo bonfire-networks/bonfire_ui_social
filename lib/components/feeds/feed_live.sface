@@ -9,10 +9,14 @@
   <div class="">
     <Bonfire.UI.Common.TabsLive
       :if={@hide_tabs != true or (@top_page == "home" and @feed_name != :my)}
-      type={if @feed_name in [nil, :my], do: :static}
+      type={if @feed_name in [nil, :my], do: :static, else: :with_header}
       selected_tab={@selected_tab}
-      selected_name={@feed_title || l("My feed")}
-      class={@tabs_class}
+      selected_name={@feed_title || @page_title}
+      class={
+        "flex items-center gap-2 w-full tabs sticky top-0 py-1 z-[9999999] backdrop-blur-sm bg-base-100/70",
+        "h-[56px]": @feed_name in [nil, :my],
+        "border-b border-base-content/10": @feed_name in [:explore, :fediverse, :local]
+      }
       tab_class={@tab_class}
       item_class={@item_class}
       tab_primary_class={@tab_primary_class}
@@ -24,7 +28,7 @@
       path_suffix={@tab_path_suffix}
     >
       <Bonfire.UI.Social.FeedControlsLive
-        :if={@feed_name in [nil, :my, :local, :fediverse] and id(current_user(@__context__))}
+        :if={@feed_name in [nil, :my, :local, :fediverse, :explore] and current_user_id(@__context__)}
         event_target={@myself}
         feed_id={@feed_id}
         sort_by={@sort_by}
