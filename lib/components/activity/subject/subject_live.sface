@@ -62,7 +62,8 @@
           >
             <Bonfire.UI.Common.AvatarLive
               parent_id={@activity_component_id || @activity_id}
-              user={@profile}
+              user_id={id(@profile)}
+              src={Media.avatar_url(@profile)}
               title={e(@profile, :name, "Anonymous")}
               viewing_main_object={@viewing_main_object}
               class={

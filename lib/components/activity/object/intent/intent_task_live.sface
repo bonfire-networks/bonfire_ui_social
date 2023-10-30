@@ -73,7 +73,7 @@
                   <Bonfire.UI.Common.AvatarLive
                     parent_id={@activity_component_id || "avatar-activity-#{id(@object)}"}
                     class="inline-block w-6 h-6 rounded-full bg-base-content/5"
-                    user={@object.provider}
+                    user_id={id(@object.provider)}
                   />
                 </LiveRedirect>
               </div>

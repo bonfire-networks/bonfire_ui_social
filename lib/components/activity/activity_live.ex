@@ -396,6 +396,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
       x-on:mouseover.away={if @hide_actions == "until_hovered", do: "show_actions=false"}
       id={@activity_component_id}
       data-href={@permalink}
+      data-url={@__context__.current_url || ''}
       phx-hook={if !@viewing_main_object and !@show_minimal_subject_and_note and
            @showing_within != :thread,
          do: "PreviewActivity"}
@@ -422,7 +423,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
           e(@activity, :seen, nil) == nil and @showing_within == :notifications and
             @activity_inception == nil,
         "active-activity":
-          String.contains?(@current_url || "", @permalink || "") and @showing_within != :smart_input
+          String.contains?(@permalink || "", @__context__.current_url || "") and @showing_within != :smart_input
       }
     >
       {#if @hide_activity != "all"}
@@ -525,6 +526,8 @@ defmodule Bonfire.UI.Social.ActivityLive do
                 module={component}
                 profile={e(component_assigns, :profile, nil)}
                 character={e(component_assigns, :character, nil)}
+                profile_name={e(component_assigns, :profile, :name, nil)}
+                character_username={e(component_assigns, :character, :username, nil)}
                 activity_id={id(e(component_assigns, :activity, @activity))}
                 object_id={id(e(component_assigns, :object, @object))}
                 verb={e(component_assigns, :verb, @verb)}
@@ -552,13 +555,10 @@ defmodule Bonfire.UI.Social.ActivityLive do
                 :if={@hide_activity != "note" and !@show_minimal_subject_and_note}
                 showing_within={@showing_within}
                 activity={e(component_assigns, :activity, @activity)}
-                profile={e(component_assigns, :profile, nil)}
                 object={e(component_assigns, :object, @object)}
-                activity_inception={e(component_assigns, :activity_inception, @activity_inception)}
                 viewing_main_object={e(component_assigns, :viewing_main_object, @viewing_main_object)}
                 cw={@cw}
                 thread_title={@thread_title}
-                thread_mode={@thread_mode}
                 is_remote={@is_remote}
                 hide_actions={@hide_actions}
               />
@@ -604,7 +604,6 @@ defmodule Bonfire.UI.Social.ActivityLive do
                 __context__={@__context__}
                 showing_within={@showing_within}
                 thread_mode={@thread_mode}
-                profile={e(component_assigns, :profile, nil)}
                 activity={e(component_assigns, :activity, @activity)}
                 object={e(component_assigns, :object, @object)}
                 object_boundary={@object_boundary}

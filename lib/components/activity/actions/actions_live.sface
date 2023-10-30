@@ -1,7 +1,3 @@
-{!-- {#if id(@object) != nil and e(the_activity(@activity, @object), :replied, :reply_to_id, nil) == nil and
-    id(@activity) == nil}
-  <div />
-{#else} --}
 {#if @showing_within == :notifications &&
     id(e(@activity, :object, :subject, nil)) == current_user_id(@__context__)}
   <div />
@@ -17,23 +13,8 @@
       "mt-1": @showing_within == :widget
     }
   >
-    {!-- x-show={if @showing_within == :thread and !@viewing_main_object, do: "show_replies"} --}
-    {!-- :class={if @viewing_main_object != true, do: "activity_active ? '' : '[@media(any-hover:hover)]:hidden'"} --}
-
-    {!-- <div
-      to={@permalink}
-      :if={@showing_within in [nil, :feed] &&
-        @thread_title && e(@activity, :replied, :reply_to_id, nil) != nil}
-      class="preview_activity_link inline-flex w-full md:w-auto items-center line-clamp-1 text-base-content/70 font-medium text-[13px] gap-1 bg-base-100 px-2 py-1 rounded"
-    >
-      <span class="font-normal">{l("In")}</span>
-      <span class="link break-all link-hover text-base-content/90">{@thread_title}</span>
-    </div> --}
 
     <div class="feed-clickable flex flex-1 w-full md:w-auto items-center justify-end gap-6">
-      {!-- x-cloak
-      :class="show_actions ? 'flex' : ''"
-      x-bind:hidden="show_actions ? false : 'until-found'" --}
       <Bonfire.UI.Social.Activity.ReactionsLive
         object={@object}
         activity={@activity}

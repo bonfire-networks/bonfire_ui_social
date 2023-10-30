@@ -52,7 +52,8 @@
             <#Icon icon="bonfire:fire" mode={:img} class="w-7 h-7 text-yellow-500" />
             <div class="flex-1 flex flex-col gap-2">
               <Bonfire.UI.Common.AvatarLive
-                user={@profile}
+                user_id={id(@profile)}
+                src={Media.avatar_url(@profile)}
                 title={e(@profile, :name, "Anonymous")}
                 class="h-9 w-9 rounded-full bg-base-content/20"
               />
@@ -129,7 +130,8 @@
             <#Icon icon="bonfire:boost" mode={:img} class="w-7 h-7 stroke-1 fill-info" />
             <div class="flex-1 flex flex-col gap-2">
               <Bonfire.UI.Common.AvatarLive
-                user={@profile}
+                user_id={id(@profile)}
+                src={Media.avatar_url(@profile)}
                 title={e(@profile, :name, "Anonymous")}
                 class="h-9 w-9 rounded-full bg-base-content/20"
               />
@@ -397,7 +399,8 @@
               >
                 <Bonfire.UI.Common.AvatarLive
                   parent_id={@activity_component_id || @activity_id || @object_id}
-                  user={@profile}
+                  user_id={id(@profile)}
+                  src={Media.avatar_url(@profile)}
                   title={e(@profile, :name, "Anonymous")}
                 />
               </LiveRedirect>
