@@ -396,7 +396,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
       x-on:mouseover.away={if @hide_actions == "until_hovered", do: "show_actions=false"}
       id={@activity_component_id}
       data-href={@permalink}
-      data-url={@__context__.current_url || ''}
+      data-url={@__context__.current_url || ~c""}
       phx-hook={if !@viewing_main_object and !@show_minimal_subject_and_note and
            @showing_within != :thread,
          do: "PreviewActivity"}
@@ -423,7 +423,8 @@ defmodule Bonfire.UI.Social.ActivityLive do
           e(@activity, :seen, nil) == nil and @showing_within == :notifications and
             @activity_inception == nil,
         "active-activity":
-          String.contains?(@permalink || "", @__context__.current_url || "") and @showing_within != :smart_input
+          String.contains?(@permalink || "", @__context__.current_url || "") and
+            @showing_within != :smart_input
       }
     >
       {#if @hide_activity != "all"}
