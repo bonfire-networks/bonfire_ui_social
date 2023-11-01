@@ -14,14 +14,9 @@
         title={l("Reply")}
       >
         {!-- x-on:click={"show_smart_input('#{l("Reply")}')"} --}
-        <#Icon
-          iconify="basil:comment-outline"
-          class={
-            "w-5 h-5  text-base-content/50"
-          }
-        />
-            <!-- "fill-base-content group-hover:fill-base-300": @reply_btn_text -->
-        <span class={"sr-only"}>{l("Reply")}</span>
+        <#Icon iconify="basil:comment-outline" class="w-5 h-5  text-base-content/50" />
+        <!-- "fill-base-content group-hover:fill-base-300": @reply_btn_text -->
+        <span class="sr-only">{l("Reply")}</span>
         {!-- <span :if={@reply_btn_text} class="text-primary/80">
           ({@reply_count})
         </span> --}
