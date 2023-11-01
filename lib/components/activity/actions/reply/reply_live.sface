@@ -15,20 +15,19 @@
       >
         {!-- x-on:click={"show_smart_input('#{l("Reply")}')"} --}
         <#Icon
-          icon="bonfire:reply"
-          mode={:img}
+          iconify="basil:comment-outline"
           class={
-            "w-5 h-5 stroke-1 fill-base-content/50",
-            "fill-base-content group-hover:fill-base-300": @reply_btn_text
+            "w-5 h-5  text-base-content/50"
           }
         />
-        <span class={if !@reply_btn_text, do: "sr-only"}>{@reply_btn_text || l("Reply")}</span>
+            <!-- "fill-base-content group-hover:fill-base-300": @reply_btn_text -->
+        <span class={"sr-only"}>{l("Reply")}</span>
         {!-- <span :if={@reply_btn_text} class="text-primary/80">
           ({@reply_count})
         </span> --}
       </button>
       {!-- {/if} --}
-      <span :if={!@reply_btn_text} class="ml-1 text-[13px] text-base-content/50">
+      <span class="ml-1 text-[13px] text-base-content/50">
         {@reply_count}
       </span>
     {#match _}
@@ -41,7 +40,7 @@
           title={l("You can't reply to this activity")}
         >
           <span class="text-opacity-20 text-base-content">
-            <#Icon icon="bonfire:reply" mode={:img} class="w-5 h-5 stroke-1 fill-base-content/20" />
+            <#Icon iconify="basil:comment-outline" class="w-5 h-5  fill-base-content/20" />
           </span>
           <span class={if !@cannot_reply_text, do: "sr-only"}>{@cannot_reply_text || l("Cannot Reply")}</span>
         </button>

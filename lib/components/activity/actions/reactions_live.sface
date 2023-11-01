@@ -15,7 +15,6 @@
   activity_component_id={@activity_component_id}
   class="flex btn btn-sm btn-ghost btn-circle text-base-content/70"
 />
-<!-- reply_btn_text={if @viewing_main_object, do: l("Reply")} -->
 
 <Bonfire.UI.Common.BoostActionLive
   id={ComponentID.new(

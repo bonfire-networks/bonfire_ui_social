@@ -5,7 +5,7 @@
     {#match :widget}
       <div class="flex items-center mb-2">
         <div class="flex items-center justify-start w-5 h-5">
-          <#Icon icon="bonfire:fire" mode={:img} :if={@verb == "Like"} class="w-5 h-5 text-yellow-500" />
+          <#Icon iconify="nimbus:fire" :if={@verb == "Like"} class="w-5 h-5 text-yellow-500" />
           <#Icon solid="UserAdd" :if={@verb == "Follow"} class="flex-shrink-0 w-5 h-5 text-info" />
           {!-- Boost icon --}
           <svg
@@ -49,7 +49,7 @@
         {#if @verb == "Like"}
           <div data-role="liked_by" class="flex items-start gap-5 justify-start">
             {!-- LIKE --}
-            <#Icon icon="bonfire:fire" mode={:img} class="w-7 h-7 text-yellow-500" />
+            <#Icon iconify="nimbus:fire" class="w-7 h-7 text-yellow-500" />
             <div class="flex-1 flex flex-col gap-2">
               <Bonfire.UI.Common.AvatarLive
                 user_id={id(@profile)}
@@ -76,7 +76,7 @@
           </div>
 
           {!-- <div data-role="liked_by" class="flex items-center justify-start pb-2 mb-2">
-            <#Icon icon="bonfire:fire" mode={:img} class="w-5 h-5 text-yellow-500" />
+            <#Icon iconify="nimbus:fire" class="w-5 h-5 text-yellow-500" />
             <div class="flex-1 ml-2">
               <div class="text-sm font-medium text-base-content/70">
                 <LiveRedirect
@@ -127,7 +127,7 @@
         {#elseif @verb == "Boost"}
           <div data-role="boosted_by" class="flex items-start gap-5 justify-start">
             {!-- BOOST --}
-            <#Icon icon="bonfire:boost" mode={:img} class="w-7 h-7 stroke-1 fill-info" />
+            <#Icon iconify="mdi:twitter-retweet" class="w-7 h-7 stroke-1 fill-info" />
             <div class="flex-1 flex flex-col gap-2">
               <Bonfire.UI.Common.AvatarLive
                 user_id={id(@profile)}
@@ -321,7 +321,7 @@
         {#if @verb == "Like"}
           <div data-role="liked_by" class="flex items-center justify-start pb-3 -ml-8">
             {!-- LIKE --}
-            <#Icon icon="bonfire:fire" mode={:img} class="w-5 h-5 text-yellow-500" />
+            <#Icon iconify="nimbus:fire" class="w-5 h-5 text-yellow-500" />
             <div class="flex-1 ml-2">
               <div class="text-sm font-medium text-base-content/70">
                 <LiveRedirect
@@ -371,7 +371,7 @@
         {#elseif @verb == "Boost"}
           <div data-role="boosted_by" class="flex items-center justify-start pb-3 -ml-8">
             {!-- BOOST --}
-            <#Icon icon="bonfire:boost" mode={:img} class="w-5 h-5 stroke-1 fill-base-content/50" />
+            <#Icon iconify="mdi:twitter-retweet" class="w-5 h-5 stroke-1 fill-base-content/50" />
             <div class="flex-1 ml-2">
               <div class="text-sm font-semibold text-base-content/50">
                 <LiveRedirect

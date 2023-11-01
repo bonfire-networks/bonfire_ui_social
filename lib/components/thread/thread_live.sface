@@ -98,22 +98,7 @@
                   <span class="sr-only">Loading...</span>
                 </div>
               {#else}
-                {!-- <span :if={@page_info} class="my-12 badge">
-          {l("No replies...")}
-        </span> --}
-
-                {!-- <Bonfire.UI.Social.Activity.ReplyLive
-                  object_id={id(@object) || @reply_to_id || @thread_id}
-                  activity_id={id(@activity)}
-                  activity_component_id={@main_object_component_id}
-                  permalink={current_url(@__context__)}
-                  thread_mode={@thread_mode}
-                  reply_count={0}
-                  showing_within={@showing_within}
-                  viewing_main_object
-                  reply_btn_text={l("Reply")}
-                  class="flex btn btn-sm flex-1 group !border !border-base-content/30 rounded-full btn-outline items-center gap-2 normal-case"
-                /> --}
+              
               {/if}
             </div>
           </:if_no_more>
