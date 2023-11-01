@@ -3,7 +3,7 @@
     <div class="dropdown dropdown-end">
       <label
         tabindex="0"
-        class="rounded-full btn-sm btn btn-ghost btn-circle normal-case text-base-content/50"
+        class="rounded-full btn-sm btn btn-ghost btn-circle normal-case text-base-content/70"
       >
         {#case @sort_by}
           {#match :num_replies}
@@ -13,7 +13,7 @@
           {#match :num_likes}
             <#Icon iconify="nimbus:fire" class="w-5 h-5" />
           {#match _}
-            <#Icon iconify="mdi:order-alphabetical-ascending" class="w-5 h-5 text-base-content/50" />
+            <#Icon iconify="mdi:order-alphabetical-ascending" class="w-5 h-5 text-base-content/70" />
         {/case}
       </label>
       <ul
@@ -29,10 +29,10 @@
           phx-target={@event_target}
         >
           <a class={
-            "flex gap-2 text-base-content/50",
+            "flex gap-2 text-base-content/70",
             "active !text-base-content/100": is_nil(@sort_by)
           }>
-            <#Icon iconify="mdi:order-alphabetical-ascending" class="w-5 h-5 text-base-content/50" />
+            <#Icon iconify="mdi:order-alphabetical-ascending" class="w-5 h-5 text-base-content/70" />
             {l("Chronological")}
           </a></li>
 
@@ -45,7 +45,7 @@
           phx-target={@event_target}
         >
           <a class={
-            "flex gap-2 text-base-content/50",
+            "flex gap-2 text-base-content/70",
             "active !text-base-content/100": @sort_by == :num_replies
           }>
             <#Icon iconify="basil:comment-outline" class="w-5 h-5 stroke-1 fill-base-content/50" />
@@ -60,7 +60,7 @@
           phx-target={@event_target}
         >
           <a class={
-            "flex gap-2 text-base-content/50",
+            "flex gap-2 text-base-content/70",
             "active !text-base-content/100": @sort_by == :num_boosts
           }>
             <#Icon iconify="mdi:repeat-variant" class="w-5 h-5 stroke-1 fill-base-content/50" />
@@ -75,7 +75,7 @@
           phx-target={@event_target}
         >
           <a class={
-            "flex gap-2 text-base-content/50",
+            "flex gap-2 text-base-content/70",
             "active !text-base-content/100": @sort_by == :num_likes
           }>
             <#Icon iconify="nimbus:fire" class="w-5 h-5" />
@@ -86,7 +86,7 @@
           <a class="form-control">
             <label class="flex gap-2 cursor-pointer">
               <input type="checkbox" checked="checked" class="checkbox-sm checkbox" />
-              <span class="text-base-content/50">Remember me</span> 
+              <span class="text-base-content/70">Remember me</span> 
             </label>
           </a>
         </li> --}
@@ -99,22 +99,22 @@
 
         {#case @time_limit}
           {#match 1}
-            <#Icon iconify="ri:24-hours-fill" class="w-5 h-5 text-base-content/50" />
+            <#Icon iconify="ri:24-hours-fill" class="w-5 h-5 text-base-content/70" />
             {!-- {l("Today")} --}
           {#match 7}
-            <#Icon iconify="mdi:numeric-7-box" class="w-5 h-5 text-base-content/50" />
+            <#Icon iconify="mdi:numeric-7-box" class="w-5 h-5 text-base-content/70" />
             {!-- {l("Week")} --}
           {#match 365}
-            <#Icon iconify="iconoir:birthday-cake" class="w-5 h-5 text-base-content/50" />
+            <#Icon iconify="iconoir:birthday-cake" class="w-5 h-5 text-base-content/70" />
             {!-- {l("Year")} --}
           {#match 30}
             <#Icon
               iconify="streamline:interface-calendar-date-month-thirty-thirty-calendar-date-week-day-month"
-              class="w-5 h-5 text-base-content/50 stroke-2"
+              class="w-5 h-5 text-base-content/70 stroke-2"
             />
             {!-- {l("Month")} --}
           {#match _}
-            <#Icon iconify="fa6-solid:infinity" class="w-5 h-5 text-base-content/50" />
+            <#Icon iconify="fa6-solid:infinity" class="w-5 h-5 text-base-content/70" />
             {!-- {l("All time")} --}
         {/case}
       </label>
@@ -130,10 +130,10 @@
           phx-value-assign_global="true"
           phx-target={@event_target}
         ><a class={
-            "flex gap-2 text-base-content/50",
+            "flex gap-2 text-base-content/70",
             "active !text-base-content/100": @time_limit == 1
           }>
-            <#Icon iconify="ri:24-hours-fill" class="w-5 h-5 text-base-content/50" />
+            <#Icon iconify="ri:24-hours-fill" class="w-5 h-5 text-base-content/70" />
             {l("Day")}</a></li>
 
         <li
@@ -144,10 +144,10 @@
           phx-value-assign_global="true"
           phx-target={@event_target}
         ><a class={
-            "flex gap-2 text-base-content/50",
+            "flex gap-2 text-base-content/70",
             "active !text-base-content/100": @time_limit == 7
           }>
-            <#Icon iconify="mdi:numeric-7-box" class="w-5 h-5 text-base-content/50" />
+            <#Icon iconify="mdi:numeric-7-box" class="w-5 h-5 text-base-content/70" />
             {l("Week")}</a></li>
 
         <li
@@ -158,12 +158,12 @@
           phx-value-assign_global="true"
           phx-target={@event_target}
         ><a class={
-            "flex gap-2 text-base-content/50",
+            "flex gap-2 text-base-content/70",
             "active !text-base-content/100": @time_limit == 30
           }>
             <#Icon
               iconify="streamline:interface-calendar-date-month-thirty-thirty-calendar-date-week-day-month"
-              class="w-5 h-5 text-base-content/50"
+              class="w-5 h-5 text-base-content/70"
             />
             {l("Month")}</a></li>
 
@@ -175,10 +175,10 @@
           phx-value-assign_global="true"
           phx-target={@event_target}
         ><a class={
-            "flex gap-2 text-base-content/50",
+            "flex gap-2 text-base-content/70",
             "active !text-base-content/100": @time_limit == 365
           }>
-            <#Icon iconify="iconoir:birthday-cake" class="w-5 h-5 text-base-content/50" />
+            <#Icon iconify="iconoir:birthday-cake" class="w-5 h-5 text-base-content/70" />
             {l("Year")}</a></li>
 
         <li
@@ -189,10 +189,10 @@
           phx-value-assign_global="true"
           phx-target={@event_target}
         ><a class={
-            "flex gap-2 text-base-content/50",
+            "flex gap-2 text-base-content/70",
             "active !text-base-content/100": !@time_limit or @time_limit == 0
           }>
-            <#Icon iconify="fa6-solid:infinity" class="w-5 h-5 text-base-content/50" />
+            <#Icon iconify="fa6-solid:infinity" class="w-5 h-5 text-base-content/70" />
             {l("All time")}</a></li>
       </ul>
     </div>
@@ -203,10 +203,10 @@
           {!-- {l("Order:")} --}
 
           {#if @sort_order == :asc}
-            <#Icon iconify="octicon:sort-asc-16" class="w-5 h-5 text-base-content/50" />
+            <#Icon iconify="octicon:sort-asc-16" class="w-5 h-5 text-base-content/70" />
             {!-- {l("Oldest first")} --}
           {#else}
-            <#Icon iconify="octicon:sort-desc-16" class="w-5 h-5 text-base-content/50" />
+            <#Icon iconify="octicon:sort-desc-16" class="w-5 h-5 text-base-content/70" />
             {!-- {l("Newest first")} --}
           {/if}
         </label>
@@ -222,10 +222,10 @@
             phx-value-assign_global="true"
             phx-target={@event_target}
           ><a class={
-              "flex gap-2 text-base-content/50",
+              "flex gap-2 text-base-content/70",
               "active !text-base-content/100": @sort_order != :asc
             }>
-              <#Icon iconify="octicon:sort-desc-16" class="w-5 h-5 text-base-content/50" />
+              <#Icon iconify="octicon:sort-desc-16" class="w-5 h-5 text-base-content/70" />
               {l("Most first")}</a></li>
           <li
             data-role="least first"
@@ -235,10 +235,10 @@
             phx-value-assign_global="true"
             phx-target={@event_target}
           ><a class={
-              "flex gap-2 text-base-content/50",
+              "flex gap-2 text-base-content/70",
               "active !text-base-content/100": @sort_order == :asc
             }>
-              <#Icon iconify="octicon:sort-asc-16" class="w-5 h-5 text-base-content/50" />
+              <#Icon iconify="octicon:sort-asc-16" class="w-5 h-5 text-base-content/70" />
               {l("Least first")}</a></li>
         </ul>
       </div>

@@ -53,7 +53,7 @@
         {rich(object_field(debug(@json, "apjson"), "name") || l("Untitled audio"))}
       </div>
 
-      <p class="mt-1 text-xs text-base-content/50">
+      <p class="mt-1 text-xs text-base-content/70">
         {#case object_field(@json, "duration")}
           {#match duration when is_number(duration)}
             {Bonfire.Common.Localise.Cldr.Unit.new(:second, duration)

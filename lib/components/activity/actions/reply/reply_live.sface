@@ -22,7 +22,7 @@
         </span> --}
       </button>
       {!-- {/if} --}
-      <span class="ml-1 text-[13px] text-base-content/50">
+      <span class="ml-1 text-[13px] text-base-content/70">
         {@reply_count}
       </span>
     {#match _}
@@ -43,7 +43,7 @@
           {@reply_count}
         </span>
       {#else}
-        <span class="loading loading-spinner loading-sm text-base-content/50" />
+        <span class="loading loading-spinner loading-sm text-base-content/70" />
       {/if}
   {/case}
 </div>

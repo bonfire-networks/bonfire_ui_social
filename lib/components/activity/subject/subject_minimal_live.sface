@@ -127,7 +127,7 @@
         {#elseif @verb == "Boost"}
           <div data-role="boosted_by" class="flex items-start gap-5 justify-start">
             {!-- BOOST --}
-            <#Icon iconify="mdi:repeat-variant" class="w-7 h-7 stroke-1 fill-info" />
+            <#Icon iconify="system-uicons:retweet" class="w-7 h-7 stroke-1 fill-info" />
             <div class="flex-1 flex flex-col gap-2">
               <Bonfire.UI.Common.AvatarLive
                 user_id={id(@profile)}
@@ -371,12 +371,12 @@
         {#elseif @verb == "Boost"}
           <div data-role="boosted_by" class="flex items-center justify-start pb-3 -ml-8">
             {!-- BOOST --}
-            <#Icon iconify="mdi:repeat-variant" class="w-5 h-5 stroke-1 fill-base-content/50" />
+            <#Icon iconify="system-uicons:retweet" class="w-5 h-5 stroke-1 fill-base-content/50" />
             <div class="flex-1 ml-2">
-              <div class="text-sm font-semibold text-base-content/50">
+              <div class="text-sm font-semibold text-base-content/70">
                 <LiveRedirect
                   aria-label={e(@character, :username, "") <> " " <> l("profile")}
-                  class="font-semibold link link-hover text-base-content/50"
+                  class="font-semibold link link-hover text-base-content/70"
                   to={path(@character)}
                 >
                   {e(@profile, :name, nil) || e(@character, :username, nil)}
