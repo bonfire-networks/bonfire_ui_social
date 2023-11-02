@@ -1,14 +1,17 @@
 defmodule Bonfire.Social.Activities.CreatePost.Test do
   use Bonfire.UI.Social.ConnCase, async: true
+  use Bonfire.Common.Utils
   alias Bonfire.Social.Fake
   alias Bonfire.Social.Posts
   alias Bonfire.Social.Follows
   alias Bonfire.Files.Test
+
   # FIXME: path
   @icon_file %{
     path: Path.expand("fixtures/150.png", __DIR__),
     filename: "150.png"
   }
+
 
   describe "create a post" do
     test "shows a confirmation flash message" do
@@ -69,7 +72,7 @@ defmodule Bonfire.Social.Activities.CreatePost.Test do
       assert has_element?(profile, "[data-id=feed]", content)
     end
 
-    test "shows up right away" do
+    test "shows up in feed right away" do
       some_account = fake_account!()
       someone = fake_user!(some_account)
 
@@ -94,68 +97,49 @@ defmodule Bonfire.Social.Activities.CreatePost.Test do
       assert has_element?(view, "[data-id=feed]", content)
     end
 
-    test "replies that appear via pubsub should show the reply_to" do
-      # create a bunch of users
-      account = fake_account!()
-      me = fake_user!(account)
-      alice = fake_user!(account)
-      Follows.follow(me, alice)
-      feed_id = Bonfire.Social.Feeds.named_feed_id(:local)
 
-      # then alice creates a post
-      html_body = "epic html message"
-      attrs = %{post_content: %{html_body: html_body}}
-      {:ok, post} = Posts.publish(current_user: alice, post_attrs: attrs, boundary: "public")
-      # reply_to = %{reply_to_id: post.id, thread_id: post.id}
+    test "has the correct permissions when replying" do
+      alice = fake_user!("none")
 
-      reply_content = "this is reply 112"
+    bob = fake_user!("contribute")
 
-      attrs_reply = %{
-        post_content: %{
-          html_body: reply_content
-        },
-        reply_to_id: post.id
-      }
+    attrs = %{
+      post_content: %{summary: "summary", name: "test post name", html_body: "@#{bob.character.username} first post</p>"}
+    }
 
-      {:ok, post} =
-        Posts.publish(current_user: alice, post_attrs: attrs_reply, boundary: "public")
+    assert {:ok, op} = Posts.publish(current_user: alice, post_attrs: attrs, boundary: "mentions")
 
-      # im not sure if live_pubsub_wait is enough to wait for asyync loading of the reply
-      # so we wait a bit more
-      conn = conn(user: me, account: account)
-      {:ok, view, _html} = live(conn, "/feed/local")
 
-      live_pubsub_wait(view)
-      #  open_browser(view)
-      assert has_element?(view, "[data-id=feed]", reply_content)
+      content = "here is an epic html post"
 
-      # view |> open_browser()
-    end
+      conn = conn(user: bob)
 
-    test "images/attachments should be hidden behind CW even when the initial activity appears via pubsub" do
-      # create a bunch of users
-      account = fake_account!()
-      me = fake_user!(account)
-      feed_id = Bonfire.Social.Feeds.named_feed_id(:local)
-      # then I log in and go to my local feed
-      conn = conn(user: me, account: account)
-      {:ok, view, _html} = live(conn, "/feed/local")
-      # and create a post
-      html_body = "epic html message"
-
-      attrs = %{
-        # uploaded_media: [], WIP: Not sure how to add a fake media
-        post_content: %{html_body: html_body}
-      }
-
-      {:ok, post} = Posts.publish(current_user: me, post_attrs: attrs, boundary: "public")
-      {:ok, view, _html} = live(conn, "/feed/local")
+      next = "/post/#{id(op)}"
+      # |> IO.inspect
+      {:ok, view, _html} = live(conn, next)
+      # open_browser(view)
       live_pubsub_wait(view)
 
-      # TODO!
+      assert _click =
+               view
+               |> element("[data-id=action_reply]")
+               |> render_click()
 
-      # we wait a bit more
-      # view |> open_browser()
+               assert view
+               |> form("#smart_input form")
+               |> render_submit(%{
+                 "to_boundaries" => "mentions",
+                 "post" => %{"post_content" => %{"html_body" => content}}
+               })
+
+    conn2 = conn(user: alice)
+
+      next = "/@#{bob.character.username}"
+      # |> IO.inspect
+      {:ok, feed, _html} = live(conn2, next)
+      assert has_element?(feed, "[data-id=feed]", content)
+
+      # WIP: does this test do what's expected?
     end
   end
 end
