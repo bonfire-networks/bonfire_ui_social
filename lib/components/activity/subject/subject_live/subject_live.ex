@@ -7,8 +7,8 @@ defmodule Bonfire.UI.Social.Activity.SubjectLive do
   prop subject_peered, :any, default: nil
   prop peered, :any, default: nil
   prop reply_to_id, :any, default: nil
-  prop profile, :any, default: nil
-  prop character, :any, default: nil
+  # prop profile, :any, default: nil
+  # prop character, :any, default: nil
   prop date_ago, :any, default: nil
   prop permalink, :string, default: nil
   prop showing_within, :atom, default: nil
@@ -17,13 +17,14 @@ defmodule Bonfire.UI.Social.Activity.SubjectLive do
   prop viewing_main_object, :boolean, default: false
   prop thread_id, :string, default: nil
   prop thread_title, :any, default: nil
-  prop cw, :boolean, default: nil
-  prop show_minimal_subject_and_note, :any, default: false
   prop published_in, :any, default: nil
   prop subject_id, :any, default: nil
   prop subject_user, :any, default: nil
   prop profile_name, :string, default: nil
   prop character_username, :string, default: nil
+  prop path, :string, default: nil
+  prop profile_media, :string, default: nil
+  prop profile_id, :string, default: nil
 
   def render(assigns) do
     assigns
@@ -33,37 +34,41 @@ defmodule Bonfire.UI.Social.Activity.SubjectLive do
 
   def prepare(
         %{
-          profile: nil,
-          character: nil,
+          profile_name: nil,
+          character_username: nil,
           subject_id: id,
           __context__: %{current_user: %{id: id, profile: profile, character: character}}
         } = assigns
       ) do
     assigns
     |> assign(
-      profile: profile,
-      character: character
+      profile_name: profile.name,
+      character_username: character.username,
+      path: path(character),
+      profile_media: Common.Media.avatar_url(profile)
     )
   end
 
   def prepare(
         %{
-          profile: nil,
-          character: nil,
+          profile_name: nil,
+          character_username: nil,
           subject_id: id,
           subject_user: %{id: id, profile: profile, character: character}
         } = assigns
       ) do
     assigns
     |> assign(
-      profile: profile,
-      character: character
+      profile_name: profile.name,
+      character_username: character.username,
+      path: path(character),
+      profile_media: Media.avatar_url(profile)
     )
   end
 
   def prepare(assigns) do
     assigns
-    # |> debug("could not prepare")
+   |> debug("could not prepare")
   end
 
   def preloads(),

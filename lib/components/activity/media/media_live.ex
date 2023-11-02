@@ -4,6 +4,7 @@ defmodule Bonfire.UI.Social.Activity.MediaLive do
   prop media, :list, default: nil
   prop showing_within, :atom, default: nil
   prop viewing_main_object, :boolean, default: false
+  prop activity_inception, :boolean, default: false
   prop label, :string, default: nil
   prop parent_id, :any, default: nil
   prop cw, :any, default: nil
@@ -61,9 +62,9 @@ defmodule Bonfire.UI.Social.Activity.MediaLive do
     end
 
     assigns
-    # |> assign(:media, medias) 
-    # |> assign(:multimedia_list, multimedia_list(medias)) 
-    # |> assign(:link_list, link_list(medias))     
+    # |> assign(:media, medias)
+    # |> assign(:multimedia_list, multimedia_list(medias))
+    # |> assign(:link_list, link_list(medias))
     |> assign(:image_list, image_list)
     |> assign(:multimedia_list, multimedia_list)
     |> assign(:link_list, link_list)

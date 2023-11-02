@@ -1,15 +1,8 @@
-{!-- "ml-10 !mt-0":
-      debug(@thread_mode, "thread_modessss") != :flat && @showing_within == :thread &&
-        !@viewing_main_object --}
 <div
+  data-id="activity_note"
   x-data="{expanded: false, expandable: $refs.note && $refs.note.scrollHeight > $refs.note.clientHeight}"
-  class={
-    "note previewable_activity mt-1 cursor-pointer max-w-[594px] overflow-x-hidden",
-    "!mt-2": @showing_within == :widget,
-    "!my-0": @showing_within == :smart_input,
-    "opacity-60": @showing_within == :notifications,
-    "cursor-default": @showing_within == :thread && !@viewing_main_object
-  }
+  data-rendered={@showing_within}
+  class="note previewable_activity mt-1 cursor-pointer max-w-[594px] overflow-x-hidden"
   x-ref="note_container"
   x-transition
 >
@@ -61,13 +54,12 @@
                 <div
                   x-ref="note"
                   data-id="object_body"
+                  data-rendered={@showing_within}
+                  data-main-object={@viewing_main_object}
                   class={
                     "prose break-words object_body max-w-none prose-p:pt-0 prose-p:my-0 prose-a:text-primary prose-a:no-underline",
-                    "!my-0 !text-sm !font-normal ": @showing_within == :smart_input,
-                    "prose-sm": !@viewing_main_object,
-                    "md:!prose-base": @viewing_main_object,
-                    "": @showing_within in [nil, :feed, :search, :notifications],
-                    previewable_truncate: !@viewing_main_object
+                    "prose-sm previewable_truncate": !@viewing_main_object,
+                    
                   }
                   :class="{'previewable_expanded': expanded}"
                 >

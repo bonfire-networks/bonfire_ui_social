@@ -13,13 +13,13 @@
   <div
     :if={@thread_level < 2}
     class={
-      "group absolute px-2 left-[1.4rem] cursor-pointer top-[64px] bottom-0 z-30",
+      "group absolute px-2 left-[2.2rem] cursor-pointer top-[64px] bottom-0 z-30",
       "!left-5 !top-[46px]": @__context__[:ui_compact],
       "bottom-[-24px]": @threaded_replies != []
     }
     x-on:click="show_replies = ! show_replies"
   >
-    <div class="absolute group-hover:border-primary left-2 cursor-pointer inset-0 border-l-2 bottom-0 border-base-content/10 z-30" />
+    <div class="absolute left-2 cursor-pointer inset-0 border-l-2 bottom-0 border-base-content/10 z-30" />
   </div>
 
   <div class="flex-1 w-full" x-data="{reply: false, show: true}">

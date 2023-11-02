@@ -1,0 +1,21 @@
+
+.subject[data-main-object] {
+  @apply !mb-3 !items-center;
+}
+
+.subject[data-main-object] [data-id="subject_avatar"] {
+  @apply mr-3 ml-0 !relative;
+} 
+
+.subject[data-main-object] [data-id="subject_details"] {
+  @apply flex-col !mt-0 !gap-0;
+} 
+
+.subject[data-main-object] [data-id="subject_details"] [data-id="subject_name"]{
+  @apply !text-base
+} 
+
+.subject[data-main-object] [data-id="subject_details"] [data-id="subject_username"]{
+  @apply !ml-0
+} 
+  

@@ -11,7 +11,7 @@
   <div
     :if={@thread_level > 1 && @thread_mode != :flat}
     class={
-      "group absolute px-2 left-[1.4rem] cursor-pointer top-[64px] bottom-0 z-30",
+      "group absolute px-2 left-[2.2rem] cursor-pointer top-[64px] bottom-0 z-30",
       "!left-5 !top-[46px]": @__context__[:ui_compact],
       "": @threaded_replies != []
     }

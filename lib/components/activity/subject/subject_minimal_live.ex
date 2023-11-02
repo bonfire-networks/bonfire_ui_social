@@ -5,8 +5,8 @@ defmodule Bonfire.UI.Social.Activity.SubjectMinimalLive do
   prop object_id, :any, default: nil
   prop peered, :any, default: nil
   # prop reply_to_id, :any, default: nil
-  prop profile, :any, default: nil
-  prop character, :any, default: nil
+  # prop profile, :any, default: nil
+  # prop character, :any, default: nil
   prop verb, :string
   prop verb_display, :string
   prop permalink, :string, default: nil
@@ -18,6 +18,11 @@ defmodule Bonfire.UI.Social.Activity.SubjectMinimalLive do
   prop published_in, :any, default: nil
   prop subject_id, :any, default: nil
   prop subject_user, :any, default: nil
+  prop profile_name, :string, default: nil
+  prop character_username, :string, default: nil
+  prop path, :string, default: nil
+  prop profile_media, :string, default: nil
+  prop profile_id, :string, default: nil
 
   def render(assigns),
     do: Bonfire.UI.Social.Activity.SubjectLive.prepare(assigns) |> render_sface()

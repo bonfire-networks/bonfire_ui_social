@@ -13,6 +13,7 @@ defmodule Bonfire.UI.Social.Activity.NoteLive do
   prop thread_title, :any, default: nil
   # prop thread_mode, :atom, default: nil
   prop hide_actions, :boolean, default: false
+  prop activity_inception, :boolean, default: false
 
   def preloads(),
     do: [

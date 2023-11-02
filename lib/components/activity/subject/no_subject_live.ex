@@ -4,10 +4,10 @@ defmodule Bonfire.UI.Social.Activity.NoSubjectLive do
   prop activity_id, :any, default: nil
   prop object_id, :any, default: nil
   prop peered, :any, default: nil
-  prop profile, :any, default: nil
-  prop character, :any, default: nil
-  prop verb, :string, default: nil
-  prop verb_display, :string, default: nil
+  # prop profile, :any, default: nil
+  # prop character, :any, default: nil
+  # prop verb, :string, default: nil
+  # prop verb_display, :string, default: nil
   prop permalink, :string, default: nil
   prop showing_within, :atom, default: nil
   prop object_type, :any, default: nil

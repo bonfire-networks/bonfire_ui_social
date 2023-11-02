@@ -12,6 +12,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
   @react_verbs Application.compile_env(:bonfire, [:verb_families, :react])
   @simple_verbs Application.compile_env(:bonfire, [:verb_families, :simple_action])
   @react_or_simple_verbs @react_verbs ++ @simple_verbs
+  @react_or_reply_verbs @react_verbs ++ @reply_verbs
   @create_or_reply_verbs @create_verbs ++ @reply_verbs
   @created_verb_display Activities.verb_display("Create")
 
@@ -397,33 +398,31 @@ defmodule Bonfire.UI.Social.ActivityLive do
       id={@activity_component_id}
       data-href={@permalink}
       data-url={@__context__.current_url || ~c""}
-      phx-hook={if !@viewing_main_object and !@show_minimal_subject_and_note and
+      phx-hook={if !@viewing_main_object and
            @showing_within != :thread,
          do: "PreviewActivity"}
       role="article"
       aria-label="user activity"
       tabIndex="0"
       class={
-        "p-4 pb-2 activity relative flex flex-col #{@class}",
-        "pl-[4rem]": @__context__[:ui_compact] != true,
+        "p-5 pl-[5rem] activity relative flex flex-col #{@class}",
+        "replied !p-0 mb-4": @activity_inception && @showing_within != :smart_input,
         "pl-[3rem]": @__context__[:ui_compact],
         hidden: @hide_activity == "all",
-        "!p-0 !pb-2 hover:!bg-transparent": e(@show_minimal_subject_and_note, false),
-        "!pl-0 !pt-0": @showing_within == :smart_input,
-        "main_reply_to !mb-1 items-center !flex-row order-first !p-0 !pb-2":
-          @object_id != nil and e(@activity, :replied, :reply_to_id, nil) == nil and
-            @activity_id == nil and @showing_within != :widget and
-            @showing_within != :search,
-        "": @showing_within != :thread and @thread_mode != :flat,
-        "hover:bg-base-content/5 cursor-pointer !ml-0": @showing_within == :notifications,
-        reply:
-          @object_id != nil and e(@activity, :replied, :reply_to_id, nil) != nil and
-            @activity_id != nil,
+        # "main_reply_to !mb-1 items-center !flex-row order-first !p-0 !pb-2":
+        #   @object_id != nil and e(@activity, :replied, :reply_to_id, nil) == nil and
+        #     @activity_id == nil and @showing_within != :widget and
+        #     @showing_within != :search,
+        # "": @showing_within != :thread and @thread_mode != :flat,
+        # "hover:bg-base-content/5 cursor-pointer !ml-0": @showing_within == :notifications,
+        # reply:
+        #   @object_id != nil and e(@activity, :replied, :reply_to_id, nil) != nil and
+        #     @activity_id != nil,
         "unread-activity":
           e(@activity, :seen, nil) == nil and @showing_within == :notifications and
             @activity_inception == nil,
         "active-activity":
-          String.contains?(@permalink || "", @__context__.current_url || "") and
+          String.contains?(@current_url || "", @permalink || "") and
             @showing_within != :smart_input
       }
     >
@@ -525,25 +524,22 @@ defmodule Bonfire.UI.Social.ActivityLive do
               <Dynamic.Component
                 :if={@hide_activity != "subject"}
                 module={component}
-                profile={e(component_assigns, :profile, nil)}
-                character={e(component_assigns, :character, nil)}
+                path={path(e(component_assigns, :character, nil))}
+                profile_media={Media.avatar_url(e(component_assigns, :profile, nil))}
                 profile_name={e(component_assigns, :profile, :name, nil)}
+                profile_id={e(component_assigns, :profile, :id, nil)}
                 character_username={e(component_assigns, :character, :username, nil)}
                 activity_id={id(e(component_assigns, :activity, @activity))}
                 object_id={id(e(component_assigns, :object, @object))}
-                verb={e(component_assigns, :verb, @verb)}
-                verb_display={e(component_assigns, :verb_display, @verb_display)}
                 subject_id={e(component_assigns, :subject_id, nil)}
                 object_boundary={@object_boundary}
                 object_type={e(component_assigns, :object_type, @object_type)}
                 date_ago={e(component_assigns, :date_ago, @date_ago)}
                 permalink={e(component_assigns, :permalink, @permalink)}
-                show_minimal_subject_and_note={@show_minimal_subject_and_note}
                 viewing_main_object={e(component_assigns, :viewing_main_object, @viewing_main_object)}
                 activity_component_id={e(component_assigns, :activity_component_id, @activity_component_id)}
                 showing_within={@showing_within}
                 thread_id={@thread_id}
-                cw={@cw}
                 published_in={@published_in}
                 reply_to_id={e(@activity, :replied, :reply_to_id, nil)}
                 subject_peered={e(@activity, :subject, :peered, nil)}
@@ -553,8 +549,9 @@ defmodule Bonfire.UI.Social.ActivityLive do
               />
             {#match Bonfire.UI.Social.Activity.NoteLive}
               <Bonfire.UI.Social.Activity.NoteLive
-                :if={@hide_activity != "note" and !@show_minimal_subject_and_note}
+                :if={@hide_activity != "note"}
                 showing_within={@showing_within}
+                activity_inception={@activity_inception}
                 activity={e(component_assigns, :activity, @activity)}
                 object={e(component_assigns, :object, @object)}
                 viewing_main_object={e(component_assigns, :viewing_main_object, @viewing_main_object)}
@@ -585,14 +582,16 @@ defmodule Bonfire.UI.Social.ActivityLive do
               <Bonfire.UI.Social.Activity.MediaSkeletonLive
                 __context__={@__context__}
                 showing_within={@showing_within}
+                activity_inception={@activity_inception}
                 viewing_main_object={@viewing_main_object}
                 {...component_assigns || []}
               />
             {#match Bonfire.UI.Social.Activity.MediaLive}
               <Bonfire.UI.Social.Activity.MediaLive
-                :if={@hide_activity != "media" and @showing_within != :smart_input}
+                :if={@hide_activity != "media"}
                 __context__={@__context__}
                 parent_id={id(@object) || id(@activity)}
+                activity_inception={@activity_inception}
                 showing_within={@showing_within}
                 viewing_main_object={e(component_assigns, :viewing_main_object, @viewing_main_object)}
                 media={List.wrap(e(component_assigns, :media, []))}
@@ -620,7 +619,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
               />
             {#match _}
               <Dynamic.Component
-                :if={@hide_activity != "dynamic"}
+                :if={@hide_activity != "dynamic" &&  @showing_within != :notifications }
                 module={component}
                 id={e(component_assigns, :id, nil)}
                 myself={nil}
@@ -683,15 +682,15 @@ defmodule Bonfire.UI.Social.ActivityLive do
       )
 
   # don't show subject twice
-  def component_activity_subject(_, activity, _, Bonfire.Data.Identity.User, _, _, _),
-    do: [
-      {Bonfire.UI.Social.Activity.SubjectMinimalLive,
-       %{
-         subject_id: e(activity, :subject_id, nil),
-         profile: e(activity, :subject, :profile, nil),
-         character: e(activity, :subject, :character, nil)
-       }}
-    ]
+  # def component_activity_subject(_, activity, _, Bonfire.Data.Identity.User, _, _, _),
+  #   do: [
+  #     {Bonfire.UI.Social.Activity.SubjectMinimalLive,
+  #      %{
+  #        subject_id: e(activity, :subject_id, nil),
+  #        profile: e(activity, :subject, :profile, nil),
+  #        character: e(activity, :subject, :character, nil)
+  #      }}
+  #   ]
 
   # quoting a reply_to <-- this is handled by the Bonfire.UI.Social.Activity.SubjectLive internally
   # def component_activity_subject(_, _, %{activity_inception: true}), do: [Bonfire.UI.Social.Activity.SubjectRepliedLive]
@@ -710,7 +709,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
 
   # reactions should show the reactor + original creator
   def component_activity_subject(verb, activity, object, object_type, _, _, _)
-      when verb in @react_or_simple_verbs,
+      when verb in @react_or_reply_verbs,
       do:
         [
           {Bonfire.UI.Social.Activity.SubjectMinimalLive,
@@ -1043,7 +1042,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
                   profile: %{id: _} = subject_profile
                 }
               }
-            } = _reply_to
+            } = reply_to
         },
         _,
         _,
@@ -1062,17 +1061,12 @@ defmodule Bonfire.UI.Social.ActivityLive do
       {Bonfire.UI.Social.ActivityLive,
        %{
          id: "reply_to-#{activity_component_id}-#{id}",
-         activity_inception: activity_id,
+          activity_inception: activity_id,
          show_minimal_subject_and_note: name_or_text(reply_to_post_content) || true,
          viewing_main_object: false,
          thread_title: thread_title,
          object: reply_to_post_content,
-         activity: %{
-           subject: %{
-             profile: subject_profile,
-             character: subject_character
-           }
-         }
+         activity: reply_to
        }}
     ]
   end
@@ -1437,7 +1431,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
     [Bonfire.UI.Social.Activity.UnknownLive]
   end
 
-  def component_maybe_attachments(_, _, inception) when not is_nil(inception), do: []
+  # def component_maybe_attachments(_, _, inception) when not is_nil(inception), do: []
 
   def component_maybe_attachments(_id, files, _)
       when is_list(files) and files != [] do
@@ -1476,9 +1470,9 @@ defmodule Bonfire.UI.Social.ActivityLive do
       )
 
   # don't show any
-  def component_actions(_, _, _, _, activity_inception, _)
-      when not is_nil(activity_inception),
-      do: []
+  # def component_actions(_, _, _, _, activity_inception, _)
+  #     when not is_nil(activity_inception),
+  #     do: []
 
   def component_actions(_, _, _, showing_within, _, _)
       when showing_within == :smart_input,
