@@ -201,7 +201,8 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
   def handle_info({:count_increment, feed_ids}, socket) do
     debug(feed_ids, "count_increment")
 
-    maybe_send_update(Bonfire.UI.Common.BadgeCounterLive, feed_ids, count_increment: 1)
+    if socket_connected?(socket) != false,
+      do: maybe_send_update(Bonfire.UI.Common.BadgeCounterLive, feed_ids, count_increment: 1)
 
     {:noreply, socket}
   end
@@ -277,7 +278,7 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
   defp send_feed_updates(pid, feed_id, assigns, component)
        when (is_pid(pid) or is_nil(pid)) and (is_list(assigns) or is_map(assigns)) do
     debug(feed_id, "Sending feed update to")
-    maybe_send_update(pid, component, feed_id, assigns)
+    maybe_send_update(component, feed_id, assigns, pid)
   end
 
   defp send_feed_updates(pid, feed_id, {:error, e}, _component) do

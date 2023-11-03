@@ -202,7 +202,8 @@ defmodule Bonfire.Social.Threads.LiveHandler do
     # permitted? = id && Bonfire.Common.Pointers.exists?([id: id], current_user: current_user(socket.assigns)) |> debug("double check boundary upon receiving a LivePush")
 
     # if permitted?, do: # Note: now checking permission in ThreadLive
-    maybe_send_update(Bonfire.UI.Social.ThreadLive, thread_id, new_reply: data)
+    if socket_connected?(socket) != false,
+      do: maybe_send_update(Bonfire.UI.Social.ThreadLive, thread_id, new_reply: data)
 
     {:noreply, socket}
   end
@@ -521,7 +522,7 @@ defmodule Bonfire.Social.Threads.LiveHandler do
   def send_thread_updates(pid, thread_id, assigns, component)
       when is_pid(pid) and (is_list(assigns) or is_map(assigns)) do
     debug(thread_id, "Sending comments update to")
-    maybe_send_update(pid, component, thread_id, assigns)
+    maybe_send_update(component, thread_id, assigns, pid)
   end
 
   def send_thread_updates(pid, thread_id, {:error, e}, _component) do

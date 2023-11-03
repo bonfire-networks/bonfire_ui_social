@@ -517,7 +517,10 @@ defmodule Bonfire.UI.Social.ActivityLive do
               <Dynamic.Component
                 :if={@hide_activity != "subject"}
                 module={component}
-                path={path(e(component_assigns, :character, nil))}
+                path={case e(component_assigns, :character, nil) do
+                  nil -> nil
+                  character -> path(character)
+                end}
                 profile_media={Media.avatar_url(e(component_assigns, :profile, nil))}
                 profile_name={e(component_assigns, :profile, :name, nil)}
                 profile_id={e(component_assigns, :profile, :id, nil)}
