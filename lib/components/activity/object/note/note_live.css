@@ -1,0 +1,25 @@
+
+div[data-rendered="widget"]  {
+    @apply !mt-2;
+  }
+  
+  div[data-rendered="smart_input"]  {
+    @apply !my-0 !ml-0;
+  }
+  
+  div[data-rendered="notifications"]  {
+    @apply opacity-60;
+  }
+  
+  div[data-rendered="thread"]  {
+    @apply cursor-default;
+  }
+  
+  div[data-id="object_body"][data-rendered="smart_input"] {
+   @apply !my-0 !text-sm !font-normal
+  }
+  
+  div[data-id="object_body"][data-main-object] {
+    @apply md:prose-base md:prose-p:my-0
+   }
+  

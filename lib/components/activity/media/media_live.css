@@ -1,0 +1,32 @@
+div[data-id="multimedia_grid"][data-media="1"] {
+    @apply grid-cols-1
+  }
+  
+  div[data-id="multimedia_grid"][data-media="2"] {
+    @apply grid-cols-2
+  }
+  
+  
+  div[data-id="multimedia_grid"][data-media="4"] {
+    @apply grid-cols-4
+  }
+  
+  div[data-id="multimedia_grid"][data-rendered="smart_input"] {
+    @apply !grid-cols-1 !grid-rows-1;
+  }
+  
+  
+  div[data-id="remote_media"][data-video] {
+    border-top-left-radius: 8px;
+    border-top-right-radius: 8px
+  }
+  
+  article[data-id="article_media"][data-media="4"] {
+    @apply !row-span-2 !col-span-2 !h-auto;
+  }
+  
+  div[data-media-type-video] {
+    min-width: 90vw; 
+    min-height: 90vh
+  }
+  

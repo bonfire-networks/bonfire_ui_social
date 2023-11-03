@@ -1,0 +1,6 @@
+
+
+div[data-id="more_menu"][data-rendered="widget"] {
+    @apply dropdown-top dropdown-end;
+  }
+  
