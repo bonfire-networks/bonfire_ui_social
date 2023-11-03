@@ -402,7 +402,6 @@ defmodule Bonfire.UI.Social.ActivityLive do
            @showing_within != :thread,
          do: "Bonfire.UI.Common.PreviewContentLive#PreviewActivity"}
       role="article"
-
       data-id="activity"
       data-rendered={@showing_within}
       data-hidden={@hide_activity}
