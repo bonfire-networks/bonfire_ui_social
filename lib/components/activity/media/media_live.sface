@@ -96,14 +96,12 @@
       {#match num_medias}
 
         {!-- MULTIMEDIA ATTACHMENTS --}
-        <div class={
-          "grid w-full grid-flow-col grid-with-ratio grid-rows-4 gap-1 mt-3",
-          "!grid-cols-1 !grid-rows-1": @showing_within == :smart_input,
-          "overflow-clip": @viewing_main_object != true,
-          "grid-cols-1": num_medias == 1,
-          "grid-cols-2": num_medias == 2,
-          "grid-cols-4": num_medias > 3
-          }>
+        <div 
+          data-id="multimedia_grid"
+          data-media={num_medias}
+          data-rendered={@showing_within}
+          data-main-object={@viewing_main_object}
+          class="grid w-full grid-flow-col grid-with-ratio grid-rows-4 gap-1 my-3 overflow-clip">
           {#for {%{} = m, counter} <- Enum.with_index(@multimedia_list)}
             {#if @showing_within != :smart_input}
 
@@ -140,17 +138,9 @@
                           open_btn_wrapper_class="w-full h-full"
                         >
                           <div
-                            class="h-full sticky bg-base-100 z-[9999999999999]"
-                            style={if is_video?,
-                              do: "border-top-left-radius: 8px: border-top-right-radius: 8px",
-                              else: ""}
-                          >
-                            {!-- <div class="">
-                            <div class="text-xs truncate  p-2 rounded-t-lg text-base-content/90">{media_label}</div>
-                            <p class="text-sm">{e(m.metadata, "description", nil) || e(m.metadata, "facebook", "og:description", nil) ||
-                                e(m.metadata, "twitter", "twitter:description", nil) ||
-                                e(m.metadata, "other", "description", nil)}</p> 
-                          </div> --}
+                            data-id="remote_media"
+                            data-video={is_video?}
+                            class="h-full sticky bg-base-100 z-[9999999999999]">
                             <Bonfire.UI.Social.Activity.RemoteMediaLive media={m} />
                           </div>
 
@@ -245,24 +235,23 @@
       {#match num_medias}
         {!-- IMAGE ATTACHMENTS --}
         {#if @showing_within != :smart_input}
-        <div class={
-          "grid w-full grid-flow-col grid-with-ratio grid-rows-4 gap-1 mt-3",
-          "overflow-clip": @viewing_main_object != true,
-          "grid-cols-1": num_medias == 1,
-          "grid-cols-2": num_medias == 2,
-          "grid-cols-4": num_medias > 3
-        }>
+        <div 
+          data-id="multimedia_grid"
+          data-media={num_medias}
+          data-rendered={@showing_within}
+          data-main-object={@viewing_main_object}
+          class="grid w-full grid-flow-col grid-with-ratio grid-rows-4 gap-1 my-3">
           {#for {%{} = m, counter} <- Enum.with_index(@image_list)}
             {#case media_label(m) || l("Sorry, no caption provided by author")}
               {#match media_label}
-                <article class={
+                <article 
+                  data-id="article_media"
+                  data-media={num_medias}
+                  class={
                   "m-entry h-full w-full row-span-4 object-cover",
                   "!row-span-2 !h-auto":
                     num_medias ==
                       3 && counter != 0,
-                  "!row-span-2 !col-span-2 !h-auto":
-                    num_medias ==
-                      4
                 }>
                   <figure class="h-full">
                     {!-- FIXME: enable_fallback for logged out visitors instead of just not using the modal --}
@@ -280,10 +269,7 @@
                       >
                         <div
                           class="h-full"
-                          style={if String.starts_with?(m.media_type, ["video"]),
-                            do: "min-width: 90vw; min-height: 90vh",
-                            else: ""}
-                        >
+                          data-media-type-video={String.starts_with?(m.media_type, ["video"])}>
                           <Bonfire.UI.Social.Activity.RemoteMediaLive media={m} />
 
                           {!-- <LazyImage
@@ -318,19 +304,7 @@
                                   alt={media_label}
                                   src={maybe_preview_img}
                                 />
-                                {!-- {#else}
-                                <div class="items-center rounded-l shrink-0 w-10 h-10 place-content-center">
-                                  <#Icon iconify="bi:play-fill" class="w-8 h-8 text-base-content/70" />
-                                </div>
-                              {/if} --}
                             {/case}
-
-                            {!-- <div class="absolute z-50 bottom-3 left-3 dropdown dropdown-hover dropdown-top">
-                              <label tabindex="0" class="text-white border-none rounded btn btn-xs bg-black/60">alt</label>
-                              <div tabindex="0" class="p-2 rounded shadow dropdown-content bg-base-100 w-52">
-                                <div class="prose-sm prose text-base-content">{media_label}</div>
-                              </div>
-                            </div> --}
                             <figcaption class="sr-only">{media_label}</figcaption>
                           </div>
                         </:open_btn>
@@ -361,7 +335,7 @@
                             {/if}
                         {/case}
                         <div class="absolute z-50 bottom-3 left-3 dropdown dropdown-hover dropdown-top">
-                          <label tabindex="0" class="text-white border-none rounded btn btn-xs bg-black/60">alt</label>
+                          <label tabindex="0" class="text-white border-none rounded btn btn-xs bg-black/60">{l "alt"}</label>
                           <div tabindex="0" class="p-2 rounded shadow dropdown-content bg-base-200 w-52">
                             <div class="prose-sm prose text-base-content">{media_label}</div>
                           </div>

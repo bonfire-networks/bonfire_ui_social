@@ -402,22 +402,16 @@ defmodule Bonfire.UI.Social.ActivityLive do
            @showing_within != :thread,
          do: "PreviewActivity"}
       role="article"
+
+      data-id="activity"
+      data-rendered={@showing_within}
+      data-hidden={@hide_activity}
       aria-label="user activity"
       tabIndex="0"
       class={
         "p-5 pl-[5rem] activity relative flex flex-col #{@class}",
         "replied !p-0 mb-4": @activity_inception && @showing_within != :smart_input,
         "pl-[3rem]": @__context__[:ui_compact],
-        hidden: @hide_activity == "all",
-        # "main_reply_to !mb-1 items-center !flex-row order-first !p-0 !pb-2":
-        #   @object_id != nil and e(@activity, :replied, :reply_to_id, nil) == nil and
-        #     @activity_id == nil and @showing_within != :widget and
-        #     @showing_within != :search,
-        # "": @showing_within != :thread and @thread_mode != :flat,
-        # "hover:bg-base-content/5 cursor-pointer !ml-0": @showing_within == :notifications,
-        # reply:
-        #   @object_id != nil and e(@activity, :replied, :reply_to_id, nil) != nil and
-        #     @activity_id != nil,
         "unread-activity":
           e(@activity, :seen, nil) == nil and @showing_within == :notifications and
             @activity_inception == nil,

@@ -1,11 +1,9 @@
 <div
+  data-id="more_menu"
+  data-rendered={@showing_within}
   id={"more-menu-#{id(@activity_component_id || @activity)}"}
   aria-haspopup="true"
-  class={
-    "dropdown feed_activity relative",
-    "dropdown-end": @showing_within != :widget,
-    "dropdown-top dropdown-end showing_within:widget": @showing_within == :widget
-  }
+  class="dropdown dropdown-end feed_activity relative"
 >
   {!-- phx-viewport-bottom={JS.add_class("!dropdown-top", to: "#more-menu-#{id(@activity_component_id || @activity)}")} --}
 

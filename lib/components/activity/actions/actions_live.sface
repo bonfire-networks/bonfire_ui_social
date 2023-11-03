@@ -1,17 +1,13 @@
-{#if @showing_within == :notifications &&
+<!-- {#if @showing_within == :notifications &&
     id(e(@activity, :object, :subject, nil)) == current_user_id(@__context__)}
   <div />
-{#else}
+{#else} -->
   <div
+    data-id="activity_actions"
+    data-rendered={@showing_within}
+    data-main-object={@viewing_main_object}
     x-transition
-    class={
-      "",
-      "thread_actions mt-3 flex items-center": @showing_within == :thread,
-      "feed_actions items-center flex": @viewing_main_object != true,
-      "mt-3 gap-4 flex-col md:flex-row":
-        e(@showing_within, :feed) == :feed || @showing_within == :notifications,
-      "mt-1": @showing_within == :widget
-    }
+    class="feed_actions items-center flex"
   >
     <div class="feed-clickable flex flex-1 w-full md:w-auto items-center justify-end gap-6">
       <Bonfire.UI.Social.Activity.ReactionsLive
@@ -45,4 +41,4 @@
       />
     </div>
   </div>
-{/if}
+<!-- {/if} -->
