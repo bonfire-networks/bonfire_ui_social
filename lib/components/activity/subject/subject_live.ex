@@ -68,7 +68,7 @@ defmodule Bonfire.UI.Social.Activity.SubjectLive do
 
   def prepare(assigns) do
     assigns
-   |> debug("could not prepare")
+    |> debug("could not prepare")
   end
 
   def preloads(),

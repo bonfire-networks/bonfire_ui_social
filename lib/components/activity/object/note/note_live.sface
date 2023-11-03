@@ -58,8 +58,7 @@
                   data-main-object={@viewing_main_object}
                   class={
                     "prose break-words object_body max-w-none prose-p:pt-0 prose-p:my-0 prose-a:text-primary prose-a:no-underline",
-                    "prose-sm previewable_truncate": !@viewing_main_object,
-                    
+                    "prose-sm previewable_truncate": !@viewing_main_object
                   }
                   :class="{'previewable_expanded': expanded}"
                 >

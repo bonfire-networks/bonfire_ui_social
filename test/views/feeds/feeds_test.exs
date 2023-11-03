@@ -3,73 +3,71 @@ defmodule Bonfire.Social.Feeds.Test do
   alias Bonfire.Social.Fake
   alias Bonfire.Social.{Boosts, Likes, Follows, Posts}
 
+  test "replies that appear via pubsub should show the reply_to" do
+    # create a bunch of users
+    account = fake_account!()
+    me = fake_user!(account)
+    alice = fake_user!(account)
+    Follows.follow(me, alice)
+    feed_id = Bonfire.Social.Feeds.named_feed_id(:local)
 
-      test "replies that appear via pubsub should show the reply_to" do
-      # create a bunch of users
-      account = fake_account!()
-      me = fake_user!(account)
-      alice = fake_user!(account)
-      Follows.follow(me, alice)
-      feed_id = Bonfire.Social.Feeds.named_feed_id(:local)
+    # then alice creates a post
+    html_body = "epic html message"
+    attrs = %{post_content: %{html_body: html_body}}
+    {:ok, post} = Posts.publish(current_user: alice, post_attrs: attrs, boundary: "public")
+    # reply_to = %{reply_to_id: post.id, thread_id: post.id}
 
-      # then alice creates a post
-      html_body = "epic html message"
-      attrs = %{post_content: %{html_body: html_body}}
-      {:ok, post} = Posts.publish(current_user: alice, post_attrs: attrs, boundary: "public")
-      # reply_to = %{reply_to_id: post.id, thread_id: post.id}
+    reply_content = "this is reply 112"
 
-      reply_content = "this is reply 112"
+    attrs_reply = %{
+      post_content: %{
+        html_body: reply_content
+      },
+      reply_to_id: post.id
+    }
 
-      attrs_reply = %{
-        post_content: %{
-          html_body: reply_content
-        },
-        reply_to_id: post.id
-      }
+    {:ok, post} =
+      Posts.publish(current_user: alice, post_attrs: attrs_reply, boundary: "public")
 
-      {:ok, post} =
-        Posts.publish(current_user: alice, post_attrs: attrs_reply, boundary: "public")
+    # im not sure if live_pubsub_wait is enough to wait for asyync loading of the reply
+    # so we wait a bit more
+    conn = conn(user: me, account: account)
+    {:ok, view, _html} = live(conn, "/feed/local")
 
-      # im not sure if live_pubsub_wait is enough to wait for asyync loading of the reply
-      # so we wait a bit more
-      conn = conn(user: me, account: account)
-      {:ok, view, _html} = live(conn, "/feed/local")
+    live_pubsub_wait(view)
+    #  open_browser(view)
+    assert has_element?(view, "[data-id=feed]", reply_content)
 
-      live_pubsub_wait(view)
-      #  open_browser(view)
-      assert has_element?(view, "[data-id=feed]", reply_content)
+    # view |> open_browser()
+  end
 
-      # view |> open_browser()
-    end
+  @tag :todo
+  test "images/attachments should be hidden behind CW even when the initial activity appears via pubsub" do
+    # create a bunch of users
+    account = fake_account!()
+    me = fake_user!(account)
+    feed_id = Bonfire.Social.Feeds.named_feed_id(:local)
+    # then I log in and go to my local feed
+    conn = conn(user: me, account: account)
+    {:ok, view, _html} = live(conn, "/feed/local")
+    # and create a post
+    html_body = "epic html message"
 
-    @tag :todo
-    test "images/attachments should be hidden behind CW even when the initial activity appears via pubsub" do
-      # create a bunch of users
-      account = fake_account!()
-      me = fake_user!(account)
-      feed_id = Bonfire.Social.Feeds.named_feed_id(:local)
-      # then I log in and go to my local feed
-      conn = conn(user: me, account: account)
-      {:ok, view, _html} = live(conn, "/feed/local")
-      # and create a post
-      html_body = "epic html message"
+    attrs = %{
+      # uploaded_media: [], WIP: Not sure how to add a fake media
+      post_content: %{html_body: html_body}
+    }
 
-      attrs = %{
-        # uploaded_media: [], WIP: Not sure how to add a fake media
-        post_content: %{html_body: html_body}
-      }
+    {:ok, post} = Posts.publish(current_user: me, post_attrs: attrs, boundary: "public")
+    {:ok, view, _html} = live(conn, "/feed/local")
+    live_pubsub_wait(view)
 
-      {:ok, post} = Posts.publish(current_user: me, post_attrs: attrs, boundary: "public")
-      {:ok, view, _html} = live(conn, "/feed/local")
-      live_pubsub_wait(view)
+    # TODO!
 
-      # TODO!
+    # we wait a bit more
+    # view |> open_browser()
+  end
 
-      # we wait a bit more
-      # view |> open_browser()
-    end
-
-    
   describe "Feeds UX" do
     test "As a user when I publish a new post I want to see it appearing at the beginning of the feed without refreshing the page" do
     end

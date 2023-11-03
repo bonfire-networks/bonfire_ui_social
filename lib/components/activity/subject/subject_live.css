@@ -11,6 +11,7 @@
   @apply flex-col !mt-0 !gap-0;
 } 
 
+
 .subject[data-main-object] [data-id="subject_details"] [data-id="subject_name"]{
   @apply !text-base
 } 
@@ -18,4 +19,3 @@
 .subject[data-main-object] [data-id="subject_details"] [data-id="subject_username"]{
   @apply !ml-0
 } 
-  

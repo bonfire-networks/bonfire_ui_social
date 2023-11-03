@@ -7,7 +7,11 @@
         <div class="flex items-center justify-start w-5 h-5">
           <#Icon iconify="nimbus:fire" :if={@verb == "Like"} class="w-5 h-5 text-yellow-500" />
           <#Icon solid="UserAdd" :if={@verb == "Follow"} class="flex-shrink-0 w-5 h-5 text-info" />
-          <#Icon iconify="system-uicons:retweet" :if={@verb == "Boost"} class="w-5 h-5 stroke-1 fill-info" />
+          <#Icon
+            iconify="system-uicons:retweet"
+            :if={@verb == "Boost"}
+            class="w-5 h-5 stroke-1 fill-info"
+          />
           <#Icon solid="Pencil" :if={@verb == "Reply"} class="w-4 h-4 text-info" />
           <#Icon solid="Flag" :if={@verb == "Flag"} class="w-4 h-4 text-error" />
         </div>
@@ -61,37 +65,35 @@
               </div>
             </div>
           </div>
-
         {#elseif @verb == "Follow"}
-         {!-- FOLLOW --}
-         <div class="flex items-start gap-4">
+          {!-- FOLLOW --}
+          <div class="flex items-start gap-4">
             <#Icon solid="UserAdd" class="flex-shrink-0 w-7 h-7 text-info" />
             <div class="flex flex-col gap-2">
-            <Bonfire.UI.Common.AvatarLive
-              user_id={@profile_id}
-              src={@profile_media}
-              title={@profile_name}
-              class="h-9 w-9 rounded-full bg-base-content/20"
-            />
-            <LiveRedirect
-              aria-label={e(@character_username, "") <> " profile"}
-              to={@path}
-              class="flex link link-hover items-center gap-5 justify-start pb-2"
-            >
-            
-              <div class="font-medium text-sm text-base-content/90">
-                {@profile_name || @character_username}
+              <Bonfire.UI.Common.AvatarLive
+                user_id={@profile_id}
+                src={@profile_media}
+                title={@profile_name}
+                class="h-9 w-9 rounded-full bg-base-content/20"
+              />
+              <LiveRedirect
+                aria-label={e(@character_username, "") <> " profile"}
+                to={@path}
+                class="flex link link-hover items-center gap-5 justify-start pb-2"
+              >
+                <div class="font-medium text-sm text-base-content/90">
+                  {@profile_name || @character_username}
 
-                {raw(@verb_display)}
+                  {raw(@verb_display)}
 
-                <span :if={@object_id == current_user_id(@__context__)}>
-                  {!-- special case when current_user is the one being followed --}
-                  {l("you")}
-                </span>
-              </div>
-            </LiveRedirect>
+                  <span :if={@object_id == current_user_id(@__context__)}>
+                    {!-- special case when current_user is the one being followed --}
+                    {l("you")}
+                  </span>
+                </div>
+              </LiveRedirect>
+            </div>
           </div>
-        </div>
         {#elseif @published_in}
           {!-- <Bonfire.UI.Social.Activity.PublishedInLive
             context={@published_in}
@@ -110,7 +112,7 @@
               />
               <div class="font-medium text-sm text-base-content/90">
                 <LiveRedirect
-                   aria-label={e(@character_username, "") <> " profile"}
+                  aria-label={e(@character_username, "") <> " profile"}
                   to={@path}
                   class="font-semibold"
                 >
@@ -125,9 +127,8 @@
               </div>
             </div>
           </div>
-         {#elseif @verb in ["Reply", "Respond"]}
-
-        <!--  <Bonfire.UI.Social.Activity.SubjectLive
+        {#elseif @verb in ["Reply", "Respond"]}
+          <!--  <Bonfire.UI.Social.Activity.SubjectLive
             activity_id={@activity_id}
             activity_component_id={@activity_component_id}
             object_id={@object_id}
@@ -217,78 +218,76 @@
         </Bonfire.UI.Social.Activity.LinkToActivityLive> --}
       </div>
     {#match _}
-        <div class="flex items-center w-full">
-          {#if @verb == "Like"}
-            <div data-role="liked_by" class="flex items-center justify-start pb-3 -ml-8">
-              {!-- LIKE --}
-              <#Icon iconify="nimbus:fire" class="w-5 h-5 text-yellow-500" />
-              <div class="flex-1 ml-2">
-                <div class="text-sm font-medium text-base-content/70">
-                  <LiveRedirect
-                    aria-label={e(@character_username, "") <> " profile"}
-                    class="font-medium link link-hover text-base-content/70"
-                    to={@path}
-                  >
-                    {#if @object_id == current_user_id(@__context__)}
-                      {l("You")}
-                    {#else}
-                      {@profile_name || @character_username}
-                    {/if}
-                  </LiveRedirect>
-
-                  {raw(@verb_display)}
-                </div>
-              </div>
-            </div>
-
-          {#elseif @verb == "Follow"}
-            <div class="flex items-center justify-start pb-3 -ml-8">
-              {!-- FOLLOW --}
-              <#Icon solid="UserAdd" class="flex-shrink-0 w-5 h-5 text-base-content/70" />
-              <div class="flex-1 ml-2">
-                <div class="text-sm font-medium text-base-content/70">
-                  <LiveRedirect
-                    aria-label={e(@character_username, "") <> " profile"}
-                    class="font-medium link link-hover text-base-content/70"
-                    to={@path}
-                  >
+      <div class="flex items-center w-full">
+        {#if @verb == "Like"}
+          <div data-role="liked_by" class="flex items-center justify-start pb-3 -ml-8">
+            {!-- LIKE --}
+            <#Icon iconify="nimbus:fire" class="w-5 h-5 text-yellow-500" />
+            <div class="flex-1 ml-2">
+              <div class="text-sm font-medium text-base-content/70">
+                <LiveRedirect
+                  aria-label={e(@character_username, "") <> " profile"}
+                  class="font-medium link link-hover text-base-content/70"
+                  to={@path}
+                >
+                  {#if @object_id == current_user_id(@__context__)}
+                    {l("You")}
+                  {#else}
                     {@profile_name || @character_username}
-                  </LiveRedirect>
+                  {/if}
+                </LiveRedirect>
 
-                  {raw(@verb_display)}
-
-                  <span :if={@object_id == current_user_id(@__context__)}>
-                    {!-- special case when current_user is the one being followed --}
-                    {l("you")}
-                  </span>
-                </div>
+                {raw(@verb_display)}
               </div>
             </div>
-          {#elseif @published_in}
-            {!-- <Bonfire.UI.Social.Activity.PublishedInLive
+          </div>
+        {#elseif @verb == "Follow"}
+          <div class="flex items-center justify-start pb-3 -ml-8">
+            {!-- FOLLOW --}
+            <#Icon solid="UserAdd" class="flex-shrink-0 w-5 h-5 text-base-content/70" />
+            <div class="flex-1 ml-2">
+              <div class="text-sm font-medium text-base-content/70">
+                <LiveRedirect
+                  aria-label={e(@character_username, "") <> " profile"}
+                  class="font-medium link link-hover text-base-content/70"
+                  to={@path}
+                >
+                  {@profile_name || @character_username}
+                </LiveRedirect>
+
+                {raw(@verb_display)}
+
+                <span :if={@object_id == current_user_id(@__context__)}>
+                  {!-- special case when current_user is the one being followed --}
+                  {l("you")}
+                </span>
+              </div>
+            </div>
+          </div>
+        {#elseif @published_in}
+          {!-- <Bonfire.UI.Social.Activity.PublishedInLive
               context={@published_in}
               showing_within={@showing_within}
             /> --}
-          {#elseif @verb == "Boost"}
-            <div data-role="boosted_by" class="flex items-center justify-start pb-3 -ml-8">
-              {!-- BOOST --}
-              <#Icon iconify="system-uicons:retweet" class="w-5 h-5 stroke-1 fill-base-content/50" />
-              <div class="flex-1 ml-2">
-                <div class="text-sm font-medium text-base-content/70">
-                  <LiveRedirect
-                    aria-label={e(@character_username, "") <> " " <> l("profile")}
-                    class="font-medium link link-hover text-base-content/70"
-                    to={@path}
-                  >
-                    {@profile_name || @character_username}
-                  </LiveRedirect>
-                  {raw(@verb_display)}
-                </div>
+        {#elseif @verb == "Boost"}
+          <div data-role="boosted_by" class="flex items-center justify-start pb-3 -ml-8">
+            {!-- BOOST --}
+            <#Icon iconify="system-uicons:retweet" class="w-5 h-5 stroke-1 fill-base-content/50" />
+            <div class="flex-1 ml-2">
+              <div class="text-sm font-medium text-base-content/70">
+                <LiveRedirect
+                  aria-label={e(@character_username, "") <> " " <> l("profile")}
+                  class="font-medium link link-hover text-base-content/70"
+                  to={@path}
+                >
+                  {@profile_name || @character_username}
+                </LiveRedirect>
+                {raw(@verb_display)}
               </div>
             </div>
-          {#elseif @verb in ["Reply", "Respond"]}
-          
-            <!-- <div class="flex items-center w-full">
+          </div>
+        {#elseif @verb in ["Reply", "Respond"]}
+          <!-- <div class="flex items-center w-full">
               <div
                 class="mr-3"
                 :if={!Settings.get([Bonfire.UI.Common.AvatarLive, :hide_avatars], false, @__context__)}
@@ -365,26 +364,25 @@
                 </div>
               </div>
             </div> -->
-            
-          {#elseif @verb == "Flag"}
-            <div data-role="flagged_by" class="flex items-center justify-start pb-3 -ml-8">
-              {!-- FLAG --}
-              <#Icon solid="Flag" class="w-4 h-4 text-error" />
-              <div class="flex-1 ml-2">
-                <div class="text-sm font-medium text-base-content/70">
-                  <LiveRedirect
-                    aria-label={e(@character_username, "") <> " " <> l("profile")}
-                    class="font-medium link link-hover"
-                    to={@path}
-                  >
-                    {@profile_name || @character_username}
-                  </LiveRedirect>
-                  {raw(@verb_display)}
-                </div>
+        {#elseif @verb == "Flag"}
+          <div data-role="flagged_by" class="flex items-center justify-start pb-3 -ml-8">
+            {!-- FLAG --}
+            <#Icon solid="Flag" class="w-4 h-4 text-error" />
+            <div class="flex-1 ml-2">
+              <div class="text-sm font-medium text-base-content/70">
+                <LiveRedirect
+                  aria-label={e(@character_username, "") <> " " <> l("profile")}
+                  class="font-medium link link-hover"
+                  to={@path}
+                >
+                  {@profile_name || @character_username}
+                </LiveRedirect>
+                {raw(@verb_display)}
               </div>
             </div>
-          {#else}
-            <!-- <div data-role="verb_other" class="flex items-center justify-start pb-3 -ml-8">
+          </div>
+        {#else}
+          <!-- <div data-role="verb_other" class="flex items-center justify-start pb-3 -ml-8">
               <div :if={@profile_name || @character_username} class="text-sm font-medium text-base-content/70">
                 <LiveRedirect
                   aria-label={e(@character_username, "") <> " profile"}
@@ -416,7 +414,7 @@
               </Bonfire.UI.Social.Activity.LinkToActivityLive>
             </div> -->
 
-            {!-- <div class="flex items-center justify-start">
+          {!-- <div class="flex items-center justify-start">
               <Iconify.iconify
                   icon={Bonfire.Boundaries.Verbs.get(@verb)[:icon]} 
                   class="w-4 h-4 text-error" />
@@ -447,7 +445,7 @@
                 </div>
               </div>
             </div> --}
-          {/if}
-        </div>
+        {/if}
+      </div>
   {/case}
 </div>

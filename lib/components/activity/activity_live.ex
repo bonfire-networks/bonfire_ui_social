@@ -400,7 +400,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
       data-url={@__context__.current_url || ~c""}
       phx-hook={if !@viewing_main_object and
            @showing_within != :thread,
-         do: "PreviewActivity"}
+         do: "Bonfire.UI.Common.PreviewContentLive#PreviewActivity"}
       role="article"
 
       data-id="activity"
@@ -613,7 +613,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
               />
             {#match _}
               <Dynamic.Component
-                :if={@hide_activity != "dynamic" &&  @showing_within != :notifications }
+                :if={@hide_activity != "dynamic" && @showing_within != :notifications}
                 module={component}
                 id={e(component_assigns, :id, nil)}
                 myself={nil}
@@ -1055,7 +1055,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
       {Bonfire.UI.Social.ActivityLive,
        %{
          id: "reply_to-#{activity_component_id}-#{id}",
-          activity_inception: activity_id,
+         activity_inception: activity_id,
          show_minimal_subject_and_note: name_or_text(reply_to_post_content) || true,
          viewing_main_object: false,
          thread_title: thread_title,

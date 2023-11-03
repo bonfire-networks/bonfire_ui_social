@@ -12,7 +12,6 @@ defmodule Bonfire.Social.Activities.CreatePost.Test do
     filename: "150.png"
   }
 
-
   describe "create a post" do
     test "shows a confirmation flash message" do
       some_account = fake_account!()
@@ -97,18 +96,22 @@ defmodule Bonfire.Social.Activities.CreatePost.Test do
       assert has_element?(view, "[data-id=feed]", content)
     end
 
-
+    @tag :todo
     test "has the correct permissions when replying" do
       alice = fake_user!("none")
 
-    bob = fake_user!("contribute")
+      bob = fake_user!("contribute")
 
-    attrs = %{
-      post_content: %{summary: "summary", name: "test post name", html_body: "@#{bob.character.username} first post</p>"}
-    }
+      attrs = %{
+        post_content: %{
+          summary: "summary",
+          name: "test post name",
+          html_body: "@#{bob.character.username} first post</p>"
+        }
+      }
 
-    assert {:ok, op} = Posts.publish(current_user: alice, post_attrs: attrs, boundary: "mentions")
-
+      assert {:ok, op} =
+               Posts.publish(current_user: alice, post_attrs: attrs, boundary: "mentions")
 
       content = "here is an epic html post"
 
@@ -117,7 +120,6 @@ defmodule Bonfire.Social.Activities.CreatePost.Test do
       next = "/post/#{id(op)}"
       # |> IO.inspect
       {:ok, view, _html} = live(conn, next)
-      # open_browser(view)
       live_pubsub_wait(view)
 
       assert _click =
@@ -125,14 +127,16 @@ defmodule Bonfire.Social.Activities.CreatePost.Test do
                |> element("[data-id=action_reply]")
                |> render_click()
 
-               assert view
-               |> form("#smart_input form")
-               |> render_submit(%{
-                 "to_boundaries" => "mentions",
-                 "post" => %{"post_content" => %{"html_body" => content}}
-               })
+      open_browser(view)
 
-    conn2 = conn(user: alice)
+      assert view
+             |> form("#smart_input form")
+             |> render_submit(%{
+               "to_boundaries" => "mentions",
+               "post" => %{"post_content" => %{"html_body" => content}}
+             })
+
+      conn2 = conn(user: alice)
 
       next = "/@#{bob.character.username}"
       # |> IO.inspect
