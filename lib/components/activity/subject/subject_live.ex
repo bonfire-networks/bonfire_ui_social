@@ -2,13 +2,19 @@ defmodule Bonfire.UI.Social.Activity.SubjectLive do
   use Bonfire.UI.Common.Web, :stateless_component
   alias Bonfire.Common.Text
 
+  prop profile, :any, default: nil
+  prop profile_name, :string, default: nil
+  prop profile_media, :string, default: nil
+
+  prop character, :any, default: nil
+  prop character_username, :string, default: nil
+
   prop activity_id, :any, default: nil
+  prop subject_id, :any, default: nil
   prop object_id, :any, default: nil
   prop subject_peered, :any, default: nil
   prop peered, :any, default: nil
   prop reply_to_id, :any, default: nil
-  # prop profile, :any, default: nil
-  # prop character, :any, default: nil
   prop date_ago, :any, default: nil
   prop permalink, :string, default: nil
   prop showing_within, :atom, default: nil
@@ -18,13 +24,8 @@ defmodule Bonfire.UI.Social.Activity.SubjectLive do
   prop thread_id, :string, default: nil
   prop thread_title, :any, default: nil
   prop published_in, :any, default: nil
-  prop subject_id, :any, default: nil
   prop subject_user, :any, default: nil
-  prop profile_name, :string, default: nil
-  prop character_username, :string, default: nil
   prop path, :string, default: nil
-  prop profile_media, :string, default: nil
-  prop profile_id, :string, default: nil
 
   def render(assigns) do
     assigns
@@ -42,8 +43,8 @@ defmodule Bonfire.UI.Social.Activity.SubjectLive do
       ) do
     assigns
     |> assign(
-      profile_name: profile.name,
-      character_username: character.username,
+      profile_name: e(profile, :name, nil),
+      character_username: e(character, :username, nil),
       path: path(character),
       profile_media: Common.Media.avatar_url(profile)
     )
@@ -59,9 +60,28 @@ defmodule Bonfire.UI.Social.Activity.SubjectLive do
       ) do
     assigns
     |> assign(
-      profile_name: profile.name,
-      character_username: character.username,
+      profile_name: e(profile, :name, nil),
+      character_username: e(character, :username, nil),
       path: path(character),
+      profile_media: Media.avatar_url(profile)
+    )
+  end
+
+  def prepare(
+        %{
+          profile_name: nil,
+          character_username: nil,
+          profile: profile,
+          character: character
+        } = assigns
+      )
+      when not is_nil(profile) or not is_nil(character) do
+    assigns
+    |> assign(
+      subject_id: id(profile),
+      profile_name: e(profile, :name, nil),
+      character_username: e(character, :username, nil),
+      path: path(character || profile),
       profile_media: Media.avatar_url(profile)
     )
   end

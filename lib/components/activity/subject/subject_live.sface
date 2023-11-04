@@ -18,7 +18,7 @@
   >
     <Bonfire.UI.Common.AvatarLive
       parent_id={@activity_component_id || @activity_id}
-      user_id={@profile_id}
+      user_id={@subject_id}
       src={@profile_media}
       title={@profile_name}
       viewing_main_object={@viewing_main_object}

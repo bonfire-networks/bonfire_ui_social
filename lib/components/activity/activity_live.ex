@@ -523,11 +523,10 @@ defmodule Bonfire.UI.Social.ActivityLive do
                 end}
                 profile_media={Media.avatar_url(e(component_assigns, :profile, nil))}
                 profile_name={e(component_assigns, :profile, :name, nil)}
-                profile_id={e(component_assigns, :profile, :id, nil)}
                 character_username={e(component_assigns, :character, :username, nil)}
-                activity_id={id(e(component_assigns, :activity, @activity))}
-                object_id={id(e(component_assigns, :object, @object))}
-                subject_id={e(component_assigns, :subject_id, nil)}
+                activity_id={id(e(component_assigns, :activity, nil) || @activity)}
+                object_id={id(e(component_assigns, :object, nil) || @object)}
+                subject_id={e(component_assigns, :subject_id, nil) || e(component_assigns, :profile, :id, nil)}
                 object_boundary={@object_boundary}
                 object_type={e(component_assigns, :object_type, @object_type)}
                 date_ago={e(component_assigns, :date_ago, @date_ago)}
