@@ -62,15 +62,29 @@ defmodule Bonfire.Social.Objects.LiveHandler do
     end
   end
 
-  def init_object_assigns(object, activity, _assigns, socket, _page_title \\ nil) do
+  defp init_object_assigns(object, socket) do
     current_user = current_user(socket.assigns)
+
+    # TODO: less ugly
+
+    {activity, object} = Map.pop(object, :activity)
+
+    activity =
+      activity
+      |> Map.put(:object, object)
+      |> Bonfire.Social.Activities.activity_preloads([:with_creator, :tags, :with_thread_name],
+        current_user: current_user
+      )
+
+    {object, activity} = Map.pop(activity, :object)
+
+    init_object_activity_assigns(object, activity, socket)
+  end
+
+  defp init_object_activity_assigns(object, activity, socket) do
+    # current_user = current_user(socket.assigns)
     id = id(object)
     canonical_url = path(object)
-
-    # FIXME: is this re-preloading the object we already have?
-    activity =
-      Bonfire.Social.Activities.activity_preloads(activity, [:all], current_user: current_user)
-      |> repo().maybe_preload(replied: [thread: [:named]])
 
     # debug(object, "the object")
     # debug(activity, "the activity")
@@ -78,8 +92,8 @@ defmodule Bonfire.Social.Objects.LiveHandler do
 
     # |> debug("object author")
     author =
-      (e(activity, :subject, nil) || e(activity, :created, :creator, nil) ||
-         e(activity, :object, :created, :creator, nil))
+      (e(activity, :subject, nil) || e(object, :created, :creator, nil) ||
+         e(activity, :created, :creator, nil))
       |> repo().maybe_preload(:settings)
 
     thread_id = e(activity, :replied, :thread_id, id)
@@ -154,6 +168,21 @@ defmodule Bonfire.Social.Objects.LiveHandler do
       # to_circles: to_circles || []
       thread_title: thread_title
     )
+    |> maybe_seo_assign(object, activity)
+
+    # |> debug
+  end
+
+  defp maybe_seo_assign(socket, %{post_content: %{} = post_content} = object, activity) do
+    post_content
+    |> Map.put(:pointer, object |> Map.drop([:post_content]))
+    |> maybe_seo_assign(socket, ..., activity)
+  end
+
+  defp maybe_seo_assign(socket, object, activity) do
+    if !socket_connected?(socket),
+      do: SEO.assign(socket, Map.put(object, :activity, activity)),
+      else: socket
   end
 
   def load_object_assigns(%{assigns: assigns} = socket), do: load_object_assigns(assigns, socket)
@@ -165,7 +194,7 @@ defmodule Bonfire.Social.Objects.LiveHandler do
       )
       when is_binary(id) and id == pre_loaded do
     debug(pre_loaded, "object pre_loaded")
-    init_object_assigns(assigns.object, assigns.activity, assigns, socket, l("Discussion"))
+    init_object_activity_assigns(assigns.object, assigns.activity, socket)
   end
 
   def load_object_assigns(
@@ -174,7 +203,7 @@ defmodule Bonfire.Social.Objects.LiveHandler do
       )
       when is_binary(id) and id == pre_loaded do
     debug(pre_loaded, "post pre_loaded")
-    init_object_assigns(assigns.object, assigns.activity, assigns, socket, l("Post"))
+    init_object_activity_assigns(assigns.object, assigns.activity, socket)
   end
 
   def load_object_assigns(%{post_id: id} = assigns, socket) when is_binary(id) do
@@ -183,9 +212,7 @@ defmodule Bonfire.Social.Objects.LiveHandler do
     # debug(params, "PARAMS")
     # debug(url, "post url")
     with {:ok, object} <- Bonfire.Social.Posts.read(ulid!(id), socket) do
-      {activity, object} = Map.pop(object, :activity)
-
-      init_object_assigns(object, activity, assigns, socket, l("Post"))
+      init_object_assigns(object, socket)
     else
       _e ->
         not_found_fallback(id, e(assigns, :params, nil), socket)
@@ -197,15 +224,9 @@ defmodule Bonfire.Social.Objects.LiveHandler do
     # debug(params, "PARAMS")
     with id when is_binary(id) <- ulid(id),
          {:ok, object} <- Bonfire.Social.Objects.read(id, current_user: current_user) do
-      {activity, object} = Map.pop(object, :activity)
-      {preloaded_object, activity} = Map.pop(activity, :object)
-
       init_object_assigns(
-        Map.merge(object, preloaded_object || %{}),
-        activity,
-        assigns,
-        socket,
-        l("Discussion")
+        object,
+        socket
       )
     else
       _e ->
