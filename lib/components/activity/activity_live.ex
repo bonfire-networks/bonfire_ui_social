@@ -1466,9 +1466,9 @@ defmodule Bonfire.UI.Social.ActivityLive do
       )
 
   # don't show any
-  # def component_actions(_, _, _, _, activity_inception, _)
-  #     when not is_nil(activity_inception),
-  #     do: []
+  def component_actions(_, _, _, _, activity_inception, _)
+      when not is_nil(activity_inception),
+      do: []
 
   def component_actions(_, _, _, showing_within, _, _)
       when showing_within == :smart_input,

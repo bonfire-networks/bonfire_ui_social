@@ -7,7 +7,7 @@ article[data-id="activity"][data-hidden="all"] {
   
   
   article[data-id="activity"][data-inception] {
-    @apply !p-0 mb-4; 
+    @apply !p-0 mb-6; 
   }
   
    
@@ -16,10 +16,10 @@ article[data-id="activity"][data-hidden="all"] {
     content: "";
     width: 2px;
     top: 16px;
-    bottom: -24px;
+    bottom: -32px;
     left: -36px;
     z-index: -1;
-    background-color: hsla(var(--bc) / 0.1);
+    background-color: hsla(var(--bc) / 0.3);
   }
 
   article .prose img.emoji {
