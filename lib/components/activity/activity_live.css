@@ -1,50 +1,6 @@
 
 
 
-article[data-id="activity"][data-hidden="all"] {
-    @apply hidden; 
-  }
-  
-  
-  article[data-id="activity"][data-inception] {
-    @apply !p-0 mb-6; 
-  }
-  
-   
-  article.replied::after {
-    position: absolute;
-    content: "";
-    width: 2px;
-    top: 16px;
-    bottom: -32px;
-    left: -36px;
-    z-index: -1;
-    background-color: hsla(var(--bc) / 0.3);
-  }
-
-  article .prose img.emoji {
-    height: 38px;
-    margin: 0 !important;
-    display: inline-block;
-  }
-
-  .active-activity::after, .activity:target::after, div.reply:target::after {
-    position: absolute;
-    z-index: -1;
-    content: "";
-    right: 0px;
-    top: 0px;
-    bottom: 0px;
-    @apply border-r-2 border-primary;
-  }
-
-
-article.unread-activity {
-    @apply border-l-2 border-primary !bg-primary/5;
-  }
-
-
-
 .mfm {
     display: inline-block;
   }
@@ -293,7 +249,3 @@ article.unread-activity {
       display: contents;
     }
 
-
-.p_line_clamp p {
-    @apply line-clamp-1
-  }

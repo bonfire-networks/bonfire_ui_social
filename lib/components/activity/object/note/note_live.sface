@@ -54,6 +54,7 @@
                 <div
                   x-ref="note"
                   data-id="object_body"
+                  data-inception={@activity_inception}
                   data-rendered={@showing_within}
                   data-main-object={@viewing_main_object}
                   class={

@@ -409,7 +409,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
       tabIndex="0"
       class={
         "p-5 pl-[5rem] activity relative flex flex-col #{@class}",
-        "replied !p-0 mb-4": @activity_inception && @showing_within != :smart_input,
+        "replied !p-0 mb-8": @activity_inception && @showing_within != :smart_input,
         "pl-[3rem]": @__context__[:ui_compact],
         "unread-activity":
           e(@activity, :seen, nil) == nil and @showing_within == :notifications and
