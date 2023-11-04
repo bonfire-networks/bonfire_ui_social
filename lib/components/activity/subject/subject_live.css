@@ -1,22 +1,3 @@
-div[data-main-object] {
-  @apply !mb-3 !items-center;
-}
-
-div[data-main-object] [data-id="subject_avatar"] {
-  @apply mr-3 ml-0 !relative;
-} 
-
-div[data-main-object] [data-id="subject_details"] {
-  @apply flex-col !mt-0 !gap-0;
-} 
-
-div[data-main-object] [data-id="subject_details"] [data-id="subject_name"]{
-  @apply !text-base;
-} 
-
-div[data-main-object] [data-id="subject_details"] [data-id="subject_username"]{
-  @apply !ml-0;
-} 
 
 
 .mfm {
