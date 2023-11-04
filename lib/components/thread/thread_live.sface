@@ -5,7 +5,7 @@
   x-data="{show_replies: true}"
 >
   <Bonfire.UI.Social.Activity.ThreadStatsLive
-    :if={current_user_id(@__context__)}
+    :if={socket_connected?(@__context__)}
     event_target={@myself}
     showing_within={@showing_within}
     reply_count={@reply_count}

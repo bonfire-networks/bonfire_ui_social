@@ -64,7 +64,8 @@ defmodule Bonfire.Social.Objects.LiveHandler do
 
   def init_object_assigns(object, activity, _assigns, socket, _page_title \\ nil) do
     current_user = current_user(socket.assigns)
-    id = ulid(object)
+    id = id(object)
+    canonical_url = path(object)
 
     # FIXME: is this re-preloading the object we already have?
     activity =
@@ -115,6 +116,7 @@ defmodule Bonfire.Social.Objects.LiveHandler do
     |> assign_generic(
       object_id: id,
       object_loaded: true,
+      canonical_url: canonical_url,
       activity: activity,
       object: object,
       sidebar_widgets: [

@@ -8,6 +8,7 @@
   />
 
   <Bonfire.UI.Social.Settings.MyFeedItemLive
+    :if={module_enabled?(Bonfire.Classify.Category)}
     label={l("Activities from groups I follow")}
     key={:followed_categories}
     scope={@scope}
