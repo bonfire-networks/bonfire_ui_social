@@ -27,7 +27,7 @@
     module={Bonfire.Boundaries.Web.BoundaryIconStatelessLive}
     object_id={@object_id}
     object_type={Types.object_type(@published_in) || @object_type}
-    parent_id={"boundary_#{@activity_id || @object_id}"}
+    parent_id={"#{@activity_inception}#{@activity_id || @object_id}"}
     with_icon
     object_boundary={@object_boundary}
   />

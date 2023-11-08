@@ -40,7 +40,8 @@
       <ActivityLive
         id={ActivityLive.component_id(
           id(@activity) || e(@activity, :object, :id, nil),
-          "comment_#{id(@comment) || Text.random_string()}"
+          "comment_#{id(@comment) || Text.random_string()}",
+          @activity_inception
         )}
         activity={debug(@activity, "comment_activity")}
         thread_object={@thread_object}
@@ -51,6 +52,7 @@
         thread_mode={debug(@thread_mode, "thread_modessss")}
         object_boundary={if @showing_within == :messages, do: :skip_boundary_check}
         viewing_main_object={false}
+        activity_inception={@activity_inception}
       />
     {/if}
   </div>

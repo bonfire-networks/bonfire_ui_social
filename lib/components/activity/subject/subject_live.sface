@@ -55,11 +55,11 @@
       <span class="text-sm text-base-content/70">&nbsp;·&nbsp;</span>
       <Dynamic.Component
         :if={module_enabled?(Bonfire.Boundaries.Web.BoundaryIconStatelessLive) and
-          @object_type not in [Bonfire.Data.Social.Message]}
+          @object_type not in [Bonfire.Data.Social.Message] and @activity_inception != "reply_to"}
         module={Bonfire.Boundaries.Web.BoundaryIconStatelessLive}
         object_id={@object_id}
         object_type={Types.object_type(@published_in) || @object_type}
-        parent_id={"boundary_#{@activity_id || @object_id}"}
+        parent_id={"#{@activity_inception}#{@activity_id || @object_id}"}
         with_icon
         class="translate-y-0.5"
         object_boundary={@object_boundary}

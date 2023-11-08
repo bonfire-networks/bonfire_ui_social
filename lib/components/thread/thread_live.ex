@@ -35,6 +35,8 @@ defmodule Bonfire.UI.Social.ThreadLive do
   prop showing_within, :atom, default: :thread
   prop loading, :boolean, default: false
 
+  prop activity_inception, :any, default: nil
+
   prop(reply_count, :any, default: nil)
   prop(thread_boost_count, :any, default: nil)
   prop(participant_count, :any, default: nil)

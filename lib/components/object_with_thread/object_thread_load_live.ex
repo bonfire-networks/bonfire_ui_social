@@ -22,6 +22,7 @@ defmodule Bonfire.UI.Social.ObjectThreadLoadLive do
   prop replies, :any, default: nil
   # prop page_info, :any, default: nil
   # prop loading, :boolean, default: false
+  prop activity_inception, :any, default: nil
 
   def update(%{post_id: id} = assigns, %{assigns: %{object: %{id: previously_loaded}}} = socket)
       when is_binary(id) and id == previously_loaded do

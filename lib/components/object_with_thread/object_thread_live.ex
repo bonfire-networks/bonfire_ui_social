@@ -25,6 +25,7 @@ defmodule Bonfire.UI.Social.ObjectThreadLive do
   # prop replied_activity_class, :css_class, default: nil
   prop replies, :any, default: nil
   prop page_info, :any, default: nil
+  prop activity_inception, :any, default: nil
 
   def render(assigns) do
     id =
@@ -33,7 +34,12 @@ defmodule Bonfire.UI.Social.ObjectThreadLive do
 
     assigns
     |> assign_new(:main_object_component_id, fn ->
-      main_object_id = Bonfire.UI.Social.ActivityLive.component_id(id, "main_object")
+      main_object_id =
+        Bonfire.UI.Social.ActivityLive.component_id(
+          id,
+          "main_object",
+          assigns[:activity_inception]
+        )
 
       if assigns[:showing_within] == :preview,
         do: "preview_#{main_object_id}",

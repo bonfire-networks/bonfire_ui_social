@@ -21,6 +21,7 @@ defmodule Bonfire.UI.Social.ThreadBranchLive do
   # prop page, :any, default: "thread"
   # prop create_object_type, :any, default: nil
   prop current_url, :string, default: nil
+  prop activity_inception, :any, default: nil
 
   def update(%{insert_stream: {:threaded_replies, entries, at}} = assigns, socket) do
     debug("branch is being poured into")

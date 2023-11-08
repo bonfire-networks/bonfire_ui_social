@@ -29,6 +29,7 @@
             activity={@activity}
             object={@object}
             feed_id={@feed_id}
+            activity_inception={@activity_inception}
             object_boundary={if @showing_within == :messages, do: :skip_boundary_check}
           />
         {/if}
@@ -48,6 +49,7 @@
           activity={@activity}
           object={@object}
           showing_within={@showing_within || :thread}
+          activity_inception={@activity_inception}
         />
       </div>
     </div>

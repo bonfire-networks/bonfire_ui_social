@@ -9,4 +9,5 @@
   replies={@replies}
   participants={@participants}
   showing_within={@showing_within}
+  activity_inception={@activity_inception}
 />

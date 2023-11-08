@@ -26,6 +26,7 @@ defmodule Bonfire.UI.Social.Activity.SubjectLive do
   prop published_in, :any, default: nil
   prop subject_user, :any, default: nil
   prop path, :string, default: nil
+  prop activity_inception, :any, default: nil
 
   def render(assigns) do
     assigns

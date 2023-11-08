@@ -45,6 +45,7 @@
               thread_object={@object}
               thread_mode={@thread_mode}
               showing_within={@showing_within || :thread}
+              activity_inception={@activity_inception}
             />
           </div>
         {/for}
@@ -62,6 +63,7 @@
                 thread_object={@object}
                 thread_mode={@thread_mode}
                 showing_within={@showing_within || :thread}
+                activity_inception={@activity_inception}
               />
             {/for}
           </div>
@@ -78,6 +80,7 @@
                   thread_object={@object}
                   thread_mode={debug(@thread_mode, "thread_modessss")}
                   showing_within={@showing_within || :thread}
+                  activity_inception={@activity_inception}
                 />
               </div>
             {/for}

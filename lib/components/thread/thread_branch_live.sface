@@ -30,6 +30,7 @@
       thread_level={@thread_level}
       thread_mode={@thread_mode}
       showing_within={@showing_within || :thread}
+      activity_inception={@activity_inception}
       ui_compact={@__context__[:ui_compact] || @thread_level >= LiveHandler.max_depth(@__context__[:ui_compact]) / 2}
     />
 
@@ -81,6 +82,7 @@
                   threaded_replies={sub_child_replies}
                   thread_level={@thread_level + 1}
                   showing_within={@showing_within}
+                  activity_inception={@activity_inception}
                   current_url={@current_url || current_url(@__context__)}
                 />
               </div>

@@ -28,7 +28,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
   prop feed_id, :any, default: nil
   prop activity_component_id, :any, default: nil
   prop viewing_main_object, :boolean, default: false
-  prop activity_inception, :string, default: nil
+  prop activity_inception, :any, default: nil
   prop showing_within, :any, default: nil
   prop hide_reply, :boolean, default: false
   prop class, :string, required: false, default: ""
@@ -59,9 +59,10 @@ defmodule Bonfire.UI.Social.ActivityLive do
     LiveHandler.update_many(assigns_sockets,
       caller_module: __MODULE__
     )
-    |> debug("lllll")
+    # |> debug("lllll")
     |> Enum.map(&maybe_update(&1))
-    |> debug("kkkk")
+
+    # |> debug("kkkk")
   end
 
   defp debug_i(i, activity_inception), do: i || "inception-from-#{activity_inception}"
@@ -466,7 +467,8 @@ defmodule Bonfire.UI.Social.ActivityLive do
                   if(@thread_id != id(@object),
                     do: [%{id: "preview-comment", activity: Map.put(@activity, :object, @object)}]
                   ),
-                preview_component: Bonfire.UI.Social.ObjectThreadLoadLive
+                preview_component: Bonfire.UI.Social.ObjectThreadLoadLive,
+                activity_inception: "preview"
               }
               root_assigns={
                 page_title: l("Discussion")
@@ -550,6 +552,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
                 permalink={e(component_assigns, :permalink, @permalink)}
                 viewing_main_object={e(component_assigns, :viewing_main_object, @viewing_main_object)}
                 activity_component_id={e(component_assigns, :activity_component_id, @activity_component_id)}
+                activity_inception={e(component_assigns, :activity_inception, @activity_inception)}
                 showing_within={@showing_within}
                 thread_id={@thread_id}
                 published_in={@published_in}
@@ -1579,12 +1582,14 @@ defmodule Bonfire.UI.Social.ActivityLive do
   # def object_link(text, %{character: %{username: username}}, class \\ "hover:underline font-bold"), do: "<a class='#{class}' href='/user/#{username}'>#{text}</a>"
   # def object_link(text, %{id: id}, class), do: "<a class='#{class}' href='/discussion/#{id}'>#{text}</a>"
 
-  def component_id(id, _fallback) when is_binary(id) do
-    "activity_#{id}"
+  def component_id(id, _fallback, activity_inception \\ nil)
+
+  def component_id(id, _fallback, activity_inception) when is_binary(id) do
+    "#{activity_inception}activity_#{id}"
   end
 
-  def component_id(_id, fallback) do
-    fallback
+  def component_id(_id, fallback, activity_inception) do
+    "#{activity_inception}#{fallback}"
   end
 
   defdelegate handle_params(params, attrs, socket), to: Bonfire.UI.Common.LiveHandlers
