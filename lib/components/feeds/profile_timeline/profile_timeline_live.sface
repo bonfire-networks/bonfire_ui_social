@@ -34,7 +34,7 @@
     >
       <:bottom_or_empty_feed>
         <a
-          class="text-base-content/70 click hover:bg-base-content/5 border border-base-content/10 p-4 m-4 rounded-lg"
+          class="text-base-content/70 click hover:bg-base-content/5 border border-base-content/20 p-4 m-4 rounded-lg"
           :if={e(@user, :character, :peered, :canonical_uri, nil)}
           href={e(@user, :character, :peered, :canonical_uri, nil)}
           target="_blank"

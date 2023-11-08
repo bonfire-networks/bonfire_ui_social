@@ -5,7 +5,7 @@
   class={
     "reply thread-level-" <> to_string(@thread_level) <> " flex relative",
     "": @threaded_replies != [] && @thread_level == 1,
-    "border-b border-base-content/10": @thread_level == 1 || @thread_mode == :flat
+    "border-b border-base-content/20": @thread_level == 1 || @thread_mode == :flat
   }
 >
   <div
@@ -17,7 +17,7 @@
     }
     x-on:click="show_replies = ! show_replies"
   >
-    <div class="absolute group-hover:border-primary left-2 cursor-pointer inset-0 border-l-2 bottom-0 border-base-content/10 z-30" />
+    <div class="absolute group-hover:border-primary left-2 cursor-pointer inset-0 border-l-2 bottom-0 border-base-content/20 z-30" />
   </div>
   <div class="relative flex-1 w-full">
     <Bonfire.UI.Social.CommentLive
@@ -55,7 +55,7 @@
             class="group absolute px-2 left-6 cursor-pointer top-0 h-8 z-30"
             x-on:click="show_replies = ! show_replies"
           >
-            <div class="absolute group-hover:border-primary left-2 cursor-pointer inset-0 border-l-2 border-dashed bottom-0 border-base-content/10 z-30" />
+            <div class="absolute group-hover:border-primary left-2 cursor-pointer inset-0 border-l-2 border-dashed bottom-0 border-base-content/20 z-30" />
           </div> --}
 
           <div class={"replies replies-level-" <> to_string(@thread_level + 1) <> " "}>

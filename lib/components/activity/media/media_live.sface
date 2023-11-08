@@ -39,7 +39,7 @@
           <a
             href={media_url || preview_img(m)}
             target="_blank"
-            class="flex  w-full border rounded-lg media_container hover:bg-base-content/5 border-base-content/10"
+            class="flex  w-full border rounded-lg media_container hover:bg-base-content/5 border-base-content/20"
           >
             <div class="flex items-center gap-3 overflow-hidden">
               <div class="flex relative items-center rounded-l-lg shrink-0 w-[120px] h-[120px] bg-base-content/10 place-content-center">
@@ -195,7 +195,7 @@
                           {#match maybe_preview_img}
                             {#if is_image?(maybe_preview_img)}
                               <LazyImage
-                                class="border border-base-content/10 w-full !object-cover m-image h-full cursor-pointer aspect-video rounded-md"
+                                class="border border-base-content/20 w-full !object-cover m-image h-full cursor-pointer aspect-video rounded-md"
                                 m={m}
                                 alt={media_label}
                                 src={maybe_preview_img}
@@ -269,7 +269,7 @@
                           <Bonfire.UI.Social.Activity.RemoteMediaLive media={m} />
 
                           {!-- <LazyImage
-                                  class="border border-base-content/10 w-full !object-cover m-image h-full cursor-pointer aspect-video rounded-md"
+                                  class="border border-base-content/20 w-full !object-cover m-image h-full cursor-pointer aspect-video rounded-md"
                                   m={m}
                                   alt={media_label}
                                   src={Media.media_url(m)}
@@ -295,7 +295,7 @@
                               {#match maybe_preview_img}
                                 {!-- {#if is_image?(maybe_preview_img)} --}
                                 <LazyImage
-                                  class="border border-base-content/10 w-full !object-cover m-image h-full cursor-pointer aspect-video rounded-md"
+                                  class="border border-base-content/20 w-full !object-cover m-image h-full cursor-pointer aspect-video rounded-md"
                                   m={m}
                                   alt={media_label}
                                   src={maybe_preview_img}
@@ -319,7 +319,7 @@
                           {#match maybe_preview_img}
                             {#if is_image?(maybe_preview_img)}
                               <LazyImage
-                                class="border border-base-content/10 w-full !object-cover m-image h-full cursor-pointer aspect-video rounded-md"
+                                class="border border-base-content/20 w-full !object-cover m-image h-full cursor-pointer aspect-video rounded-md"
                                 m={m}
                                 alt={media_label}
                                 src={maybe_preview_img}

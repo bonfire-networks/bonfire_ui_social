@@ -1,18 +1,26 @@
-<div class="mt-2 form-control">
-  <label class="justify-start cursor-pointer label">
-    <input
-      type="checkbox"
-      name={"Bonfire.Social.Feeds[my_feed_includes][#{@key}]"}
-      value={@force_checked == true or
-        (@force_unchecked != true and
-           Bonfire.Common.Settings.get(
-             [Bonfire.Social.Feeds, :my_feed_includes, @key],
-             true,
-             @scope || @__context__
-           ))}
-      disabled={@disabled}
-      class="toggle toggle-primary"
-    />
-    <span class="ml-2 label-text">{@label}</span>
-  </label>
-</div>
+<form phx-change="Bonfire.Common.Settings:set">
+  <div class="form-control">
+    <label class="!px-0 justify-start cursor-pointer label">
+      <input name="scope" value={@scope} type="hidden">
+      <input
+        name={"Bonfire.Social.Feeds[my_feed_includes][#{@key}]"}
+        type="checkbox"
+        value={to_string(
+          Bonfire.Common.Settings.get(
+            [Bonfire.Social.Feeds, :my_feed_includes, @key],
+            true,
+            @scope || @__context__
+          )
+        )}
+        checked={Bonfire.Common.Settings.get(
+          [Bonfire.Social.Feeds, :my_feed_includes, @key],
+          true,
+          @scope || @__context__
+        )}
+        disabled={@disabled}
+        class="toggle toggle-primary"
+      />
+      <span class="ml-2 label-text">{@label}</span>
+    </label>
+  </div>
+</form>

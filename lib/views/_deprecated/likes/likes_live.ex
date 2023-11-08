@@ -4,7 +4,8 @@ defmodule Bonfire.UI.Social.Feeds.LikesLive do
   declare_nav_link(l("Favourites"),
     page: "favourites",
     href: "/feed/likes",
-    icon: "nimbus:fire"
+    icon: "mingcute:fire-line",
+    icon_active: "mingcute:fire-fill"
   )
 
   on_mount {LivePlugs, [Bonfire.UI.Me.LivePlugs.UserRequired]}

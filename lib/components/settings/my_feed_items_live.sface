@@ -1,42 +1,42 @@
-<form name="settings" phx-change="Bonfire.Common.Settings:set">
-  <Bonfire.UI.Social.Settings.MyFeedItemLive
-    label={l("Posts and other activities from people I follow")}
-    key={:followed_users}
-    disabled
-    force_checked
-    scope={@scope}
-  />
+<!-- <form name="settings" phx-change="Bonfire.Common.Settings:set"> -->
+<Bonfire.UI.Social.Settings.MyFeedItemLive
+  label={l("Posts and other activities from people I follow")}
+  key={:followed_users}
+  disabled
+  force_checked
+  scope={@scope}
+/>
 
-  <Bonfire.UI.Social.Settings.MyFeedItemLive
-    :if={module_enabled?(Bonfire.Classify.Category)}
-    label={l("Activities from groups I follow")}
-    key={:followed_categories}
-    scope={@scope}
-  />
+<Bonfire.UI.Social.Settings.MyFeedItemLive
+  :if={module_enabled?(Bonfire.Classify.Category)}
+  label={l("Activities from groups I follow")}
+  key={:followed_categories}
+  scope={@scope}
+/>
 
-  <Bonfire.UI.Social.Settings.MyFeedItemLive label={l("Boosts")} key={:boost} scope={@scope} />
+<Bonfire.UI.Social.Settings.MyFeedItemLive label={l("Boosts")} key={:boost} scope={@scope} />
 
-  <Bonfire.UI.Social.Settings.MyFeedItemLive label={l("Replies")} key={:reply} scope={@scope} />
+<Bonfire.UI.Social.Settings.MyFeedItemLive label={l("Replies")} key={:reply} scope={@scope} />
 
-  <Bonfire.UI.Social.Settings.MyFeedItemLive label={l("Follows")} key={:follow} scope={@scope} />
+<Bonfire.UI.Social.Settings.MyFeedItemLive label={l("Follows")} key={:follow} scope={@scope} />
 
-  <Bonfire.UI.Social.Settings.MyFeedItemLive
-    label={if @scope != :instance, do: l("My own activities", else: l("User's own activities"))}
-    key={:outbox}
-    scope={@scope}
-  />
+<Bonfire.UI.Social.Settings.MyFeedItemLive
+  label={if @scope != :instance, do: l("My own activities", else: l("User's own activities"))}
+  key={:outbox}
+  scope={@scope}
+/>
 
-  <Bonfire.UI.Social.Settings.MyFeedItemLive
-    label={l("Notifications")}
-    key={:notifications}
-    scope={@scope}
-  />
+<Bonfire.UI.Social.Settings.MyFeedItemLive
+  label={l("Notifications")}
+  key={:notifications}
+  scope={@scope}
+/>
 
-  <Bonfire.UI.Social.Settings.MyFeedItemLive
-    label={l("Messages")}
-    key={:messages}
-    disabled
-    force_unchecked
-    scope={@scope}
-  />
-</form>
+<Bonfire.UI.Social.Settings.MyFeedItemLive
+  label={l("Messages")}
+  key={:messages}
+  disabled
+  force_unchecked
+  scope={@scope}
+/>
+<!-- </form> -->

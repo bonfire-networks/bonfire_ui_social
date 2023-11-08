@@ -15,7 +15,7 @@
       class={
         "flex items-center gap-2 w-full tabs sticky top-0 pt-1 z-[9999999] backdrop-blur-sm bg-base-100/70",
         "h-[56px]": @feed_name in [nil, :my],
-        "border-b border-base-content/10": @feed_name in [:explore, :fediverse, :local]
+        "border-b border-base-content/20": @feed_name in [:explore, :fediverse, :local]
       }
       tab_class={@tab_class}
       item_class={@item_class}
@@ -61,7 +61,7 @@
         id={"feed_#{@feed_id || @id}"}
         data-id="feed_activity_list"
         phx-update="stream"
-        class="flex flex-col divide-y divide-base-content/10 bonfire_feed"
+        class="flex flex-col divide-y divide-base-content/20 bonfire_feed"
       >
         {!-- phx-update={e(@feed_update_mode, "append")} --}
         {#for {entry_id, entry} <- @streams.feed}
@@ -98,7 +98,7 @@
         id={"feed_#{@feed_name || @feed_id || @id}"}
         data-id="feed_activity_list"
         phx-update="append"
-        class="flex flex-col divide-y divide-base-content/10"
+        class="flex flex-col divide-y divide-base-content/20"
       >
         {!-- phx-update={e(@feed_update_mode, "append")} --}
         {#for {entry, i} <- Enum.with_index(@feed)}
@@ -156,7 +156,7 @@
           {/if}
         {#else}
           {#if is_integer(@time_limit) and @time_limit != 0}
-            <div class="m-4 border border-base-content/10 rounded-lg">
+            <div class="m-4 border border-base-content/20 rounded-lg">
               <p class="text-sm py-4 mt-4 text-center text-base-content/70 font-medium">{lp("That's all for today...", "That's all for the last %{number} days...", @time_limit,
                   number: @time_limit
                 )}</p>
