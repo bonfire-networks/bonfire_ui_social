@@ -84,7 +84,7 @@ defmodule Bonfire.UI.Social.Benchmark do
       },
       parallel: 1,
       warmup: 2,
-      time: 5,
+      time: 10,
       memory_time: 2,
       reduction_time: 2,
       profile_after: true,

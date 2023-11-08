@@ -461,14 +461,15 @@ defmodule Bonfire.UI.Social.ActivityLive do
                 hide_actions: false,
                 cw: false,
                 label: "",
-                object: if(@thread_id == id(@object), do: @object),
-                activity: if(@thread_id == id(@object), do: @activity),
+                object: if(not is_nil(@thread_id) and @thread_id == id(@object), do: @object),
+                activity: if(not is_nil(@thread_id) and @thread_id == id(@object), do: @activity),
                 replies:
-                  if(@thread_id != id(@object),
+                  if(not is_nil(@thread_id) and @thread_id != id(@object),
                     do: [%{id: "preview-comment", activity: Map.put(@activity, :object, @object)}]
                   ),
                 preview_component: Bonfire.UI.Social.ObjectThreadLoadLive,
-                activity_inception: "preview"
+                activity_inception: "preview",
+                check_object_boundary: false
               }
               root_assigns={
                 page_title: l("Discussion")

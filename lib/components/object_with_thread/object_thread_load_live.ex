@@ -36,13 +36,19 @@ defmodule Bonfire.UI.Social.ObjectThreadLoadLive do
     {:ok, assign(socket, assigns)}
   end
 
+  def update(%{object_id: id} = assigns, %{assigns: %{object: %{id: previously_loaded}}} = socket)
+      when is_binary(id) and id == previously_loaded do
+    debug(previously_loaded, "object previously_loaded")
+    {:ok, assign(socket, assigns)}
+  end
+
   def update(assigns, socket) do
     debug(assigns, "load object")
 
     socket = socket |> assign(assigns)
 
     with %Phoenix.LiveView.Socket{} = socket <-
-           Bonfire.Social.Objects.LiveHandler.load_object_assigns(socket) do
+           Bonfire.Social.Objects.LiveHandler.load_object_assigns(socket) |> debug("zzsildj") do
       {:ok, socket}
     else
       {:error, e} ->
