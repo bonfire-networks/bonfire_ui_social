@@ -232,7 +232,8 @@ defmodule Bonfire.UI.Social.ActivityLive do
         |> debug("areplied")
 
     thread =
-      e(assigns, :thread_object, nil) || e(replied, :thread, nil) || e(replied, :thread_id, nil) || e(assigns, :thread_id, nil)
+      e(assigns, :thread_object, nil) || e(replied, :thread, nil) || e(replied, :thread_id, nil) ||
+        e(assigns, :thread_id, nil)
 
     thread_id = id(thread)
     # debug(thread, "thread")
