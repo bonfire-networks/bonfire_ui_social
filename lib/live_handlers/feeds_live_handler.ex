@@ -580,7 +580,7 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
       page_title: "Explore activities",
       no_header: true,
       # page_title: l("Activities from members of the local instance"),
-      feedback_title: l("There is not activities to explore"),
+      feedback_title: l("There is no activities to explore"),
       # feed_id: feed_name,
       feedback_message:
         l("It seems like the paint is still fresh and there are no activities to explore..."),
@@ -940,9 +940,18 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
   end
 
   def update_many(assigns_sockets, opts) do
-    assigns_sockets
-    |> Bonfire.Boundaries.LiveHandler.maybe_preload_and_check_boundaries(opts ++ [verbs: [:read]])
     # |> preloads(opts) # NOTE: we preload most activity assocs after querying rather than here so as to not mix different ways they're loaded (eg. Edges vs FeedPublish)
+    (assigns_sockets
+     |> Bonfire.Boundaries.LiveHandler.maybe_preload_and_check_boundaries(
+       opts ++ [verbs: [:read], return_assigns_socket_tuple: true]
+     ) ||
+       assigns_sockets)
+    # |> debug("bbbb")
+    #   |> Enum.map(fn 
+    #     {assigns, socket} -> {assigns, socket}
+    #     %{} = socket -> {socket.assigns, socket} 
+    #   end)
+    |> debug("cccc")
     |> preload_assigns_async(
       &assigns_to_params/1,
       &preload_extras/3,
@@ -1047,11 +1056,13 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
     list_of_components
     # |> debug()
     |> Map.new(fn component ->
-      {component.component_id,
-       %{
-         activity: list_of_activities[component.object_id] || component.activity
-         # object_type: Types.object_type(list_of_activities[component.object_id]) || component.object_type
-       }}
+      activity = list_of_activities[component.object_id] || component.activity
+
+      {
+        component.component_id,
+        if(activity, do: %{activity: activity})
+        # ActivityLive.assigns_from_activity(list_of_activities[component.object_id] || component.activity)  
+      }
     end)
   end
 
