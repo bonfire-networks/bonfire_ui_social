@@ -55,8 +55,8 @@ defmodule Bonfire.UI.Social.ActivityLive do
   prop(hide_actions, :any, default: false)
 
   @decorate time()
-  def preload(list_of_assigns) do
-    LiveHandler.preload(list_of_assigns,
+  def update_many(assigns_sockets) do
+    LiveHandler.update_many(assigns_sockets,
       caller_module: __MODULE__
     )
   end
@@ -182,6 +182,11 @@ defmodule Bonfire.UI.Social.ActivityLive do
       "Activity ##{debug_i(assigns[:activity_id] || id(assigns[:activity]), assigns[:activity_inception])} prepare activity with object in assoc"
     )
 
+    Map.put(assigns, :object, object)
+    |> do_prepare()
+  end
+
+  def prepare(%{activity: %{object: object}} = assigns) when not is_nil(object) do
     Map.put(assigns, :object, object)
     |> do_prepare()
   end
@@ -397,7 +402,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
       x-on:mouseover.away={if @hide_actions == "until_hovered", do: "show_actions=false"}
       id={@activity_component_id}
       data-href={@permalink}
-      data-url={@__context__.current_url || ~c""}
+      data-url={e(@__context__, :current_url, nil) || ~c""}
       phx-hook={if !@viewing_main_object and
            @showing_within != :thread,
          do: "Bonfire.UI.Common.PreviewContentLive#PreviewActivity"}

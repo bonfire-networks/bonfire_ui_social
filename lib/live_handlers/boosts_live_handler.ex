@@ -37,8 +37,8 @@ defmodule Bonfire.Social.Boosts.LiveHandler do
     {:noreply, socket}
   end
 
-  def preload(list_of_assigns, opts \\ []) do
-    preload_assigns_async(list_of_assigns, &assigns_to_params/1, &do_preload/3, opts)
+  def update_many(assigns_sockets, opts \\ []) do
+    preload_assigns_async(assigns_sockets, &assigns_to_params/1, &do_preload/3, opts)
   end
 
   defp assigns_to_params(assigns) do

@@ -939,11 +939,10 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
     error(feed_id, "Unrecognised feed")
   end
 
-  def preload(list_of_assigns, opts) do
-    list_of_assigns
+  def update_many(assigns_sockets, opts) do
+    assigns_sockets
     |> Bonfire.Boundaries.LiveHandler.maybe_preload_and_check_boundaries(opts ++ [verbs: [:read]])
     # |> preloads(opts) # NOTE: we preload most activity assocs after querying rather than here so as to not mix different ways they're loaded (eg. Edges vs FeedPublish)
-    |> Enum.map(&Activities.assigns_with_object_under_activity/1)
     |> preload_assigns_async(
       &assigns_to_params/1,
       &preload_extras/3,
@@ -954,8 +953,8 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
   end
 
   defp assigns_to_params(assigns) do
-    activity = e(assigns, :activity, nil)
-    object = e(assigns, :object, nil)
+    activity = Activities.activity_with_object_from_assigns(assigns)
+    object = e(assigns, :object, nil) || e(activity, :object, nil)
 
     %{
       component_id: assigns.id,
@@ -1020,7 +1019,7 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
 
     list_of_activities =
       list_of_components
-      # |> debug("list_of_components")
+      |> debug("list_of_components")
       |> Enum.map(fn
         %{activity: %{__struct__: _} = activity} ->
           # debug(activity, "struct")

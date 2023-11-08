@@ -147,8 +147,8 @@ defmodule Bonfire.UI.Social.ActivityOLDLive do
     """
   end
 
-  def preload(list_of_assigns) do
-    Bonfire.Boundaries.LiveHandler.preload(list_of_assigns, caller_module: __MODULE__)
+  def update_many(assigns_sockets) do
+    Bonfire.Boundaries.LiveHandler.update_many(assigns_sockets, caller_module: __MODULE__)
   end
 
 
