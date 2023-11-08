@@ -27,7 +27,7 @@
       path_prefix={@tab_path_prefix}
       path_suffix={@tab_path_suffix}
     >
-      <Bonfire.UI.Social.FeedControlsLive
+      <!-- <Bonfire.UI.Social.FeedControlsLive
         :if={@feed_name in [nil, :my, :local, :fediverse, :explore] and current_user_id(@__context__)}
         event_target={@myself}
         feed_id={@feed_id}
@@ -35,7 +35,7 @@
         time_limit={@time_limit}
         sort_order={@sort_order}
         showing_within={@showing_within}
-      />
+      /> -->
     </Bonfire.UI.Common.TabsLive>
 
     <div
