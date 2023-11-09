@@ -1,6 +1,7 @@
 defmodule Bonfire.UI.Social.Benchmark do
   @endpoint Bonfire.Web.Endpoint
   import Phoenix.ConnTest
+  import Phoenix.LiveViewTest
   alias Bonfire.Common.Config
   # import Untangle
 
@@ -18,10 +19,7 @@ defmodule Bonfire.UI.Social.Benchmark do
       memory_time: 2,
       reduction_time: 2,
       profile_after: true,
-      formatters: [
-        {Benchee.Formatters.HTML, file: "benchmarks/output/feed_queries.html"},
-        Benchee.Formatters.Console
-      ]
+      formatters: formatters("benchmarks/output/feed_queries.html")
     )
   end
 
@@ -88,10 +86,7 @@ defmodule Bonfire.UI.Social.Benchmark do
       memory_time: 2,
       reduction_time: 2,
       profile_after: true,
-      formatters: [
-        {Benchee.Formatters.HTML, file: "benchmarks/output/feed_query_methods.html"},
-        Benchee.Formatters.Console
-      ]
+      formatters: formatters("benchmarks/output/feed_query_methods.html")
     )
   end
 
@@ -116,48 +111,44 @@ defmodule Bonfire.UI.Social.Benchmark do
     Logger.configure(level: :info)
     conn = build_conn()
 
-    feed = Bonfire.Social.FeedActivities.feed(:local, limit: 20)
+    feed = Bonfire.Social.FeedActivities.feed(:local)
 
     Benchee.run(
       %{
-        # "fetch feed page with 1 activity" => fn -> get(conn, "/feed/local?limit=1") end,
-        # "fetch feed page with 10 activities" => fn -> get(conn, "/feed/local?limit=10") end,
-        "fetch feed page with 20 activities" => fn -> get(conn, "/feed/local?limit=20") end,
-
-        # "render feed component with 10 activities (not incl. async preloads)" => fn -> live_feed(limit: 10, enable_async_preloads: true) end,
-        "query & render feed component with 20 activities (not incl. async preloads)" => fn ->
-          live_feed(limit: 20, enable_async_preloads: true)
+        "fetch feed page with activities" => fn -> get(conn, "/feed/local") end,
+        # "query & render entire feed page with activities" => fn -> live(conn, "/feed/local") end, # NOPE: LiveView helpers can only be invoked from the test process
+        "query & render feed component with activities (using all async preloads)" => fn ->
+          live_feed(live_update_many_preloads: :async)
         end,
-
-        # "render feed component with 10 activities  (incl. preloads)" => fn -> live_feed(limit: 10, enable_async_preloads: false) end,
-        "query & render feed component with 20 activities (incl. preloads)" => fn ->
-          live_feed(limit: 20, enable_async_preloads: false)
+        "query & render feed component with activities (inline all preloads)" => fn ->
+          live_feed(live_update_many_preloads: :inline)
         end,
-        "render feed component with 20 already queried activities (incl. preloads)" => fn ->
-          render_feed(feed.edges, enable_async_preloads: false)
+        "query & render feed component with activities (skipping all preloads)" => fn ->
+          live_feed(live_update_many_preloads: :skip)
         end,
-        "render feed component with 20 already queried activities (not incl. async preloads)" =>
-          fn ->
-            render_feed(feed.edges, enable_async_preloads: true)
-          end,
-
-        # "fetch feed page with 1 (skipped) activity" => fn ->
-        #   get(conn, "/feed/local?limit=1&hide_activities=component")
-        # end,
-        # "fetch feed page with 10 (skipped) activities" => fn ->
-        #   get(conn, "/feed/local?limit=10&hide_activities=component")
-        # end,
-        "fetch feed page with 20 (skipped) activities" => fn ->
-          get(conn, "/feed/local?limit=20&hide_activities=component")
+        "query & render feed component with activities (using feed async preloads)" => fn ->
+          live_feed(feed_live_update_many_preloads: :async)
         end,
-        # "fetch feed page with 1 (not rendered) activity" => fn ->
-        #   get(conn, "/feed/local?limit=1&hide_activities=all")
-        # end,
-        # "fetch feed page with 10 (not rendered) activities" => fn ->
-        #   get(conn, "/feed/local?limit=10&hide_activities=all")
-        # end,
-        "fetch feed page with 20 (not rendered) activities" => fn ->
-          get(conn, "/feed/local?limit=20&hide_activities=all")
+        "query & render feed component with activities (inline feed preloads)" => fn ->
+          live_feed(feed_live_update_many_preloads: :inline)
+        end,
+        "query & render feed component with activities (skipping feed preloads)" => fn ->
+          live_feed(feed_live_update_many_preloads: :skip)
+        end,
+        "render feed component with already queried activities (skipping preloads)" => fn ->
+          render_feed(feed.edges, live_update_many_preloads: :skip)
+        end,
+        "render feed component with already queried activities (inline preloads)" => fn ->
+          render_feed(feed.edges, live_update_many_preloads: :inline)
+        end,
+        "render feed component with already queried activities (using async preloads)" => fn ->
+          render_feed(feed.edges, live_update_many_preloads: :async)
+        end,
+        "fetch feed page with (skipped) activities" => fn ->
+          get(conn, "/feed/local?&hide_activities=component")
+        end,
+        "fetch feed page with (not rendered) activities" => fn ->
+          get(conn, "/feed/local?&hide_activities=all")
         end
       },
       parallel: 1,
@@ -166,10 +157,7 @@ defmodule Bonfire.UI.Social.Benchmark do
       memory_time: 2,
       reduction_time: 2,
       profile_after: true,
-      formatters: [
-        {Benchee.Formatters.HTML, file: "benchmarks/output/feed_page.html"},
-        Benchee.Formatters.Console
-      ]
+      formatters: formatters("benchmarks/output/feed_page.html")
     )
 
     Logger.configure(level: :debug)
@@ -182,10 +170,26 @@ defmodule Bonfire.UI.Social.Benchmark do
   end
 
   def render_feed(feed, opts \\ []) do
-    Process.put(:enable_async_preloads, opts[:enable_async_preloads] || true)
+    Process.put(:live_update_many_preloads, opts[:live_update_many_preloads])
+    Process.put(:feed_live_update_many_preloads, opts[:feed_live_update_many_preloads])
 
     Bonfire.UI.Common.Testing.Helpers.render_stateful(Bonfire.UI.Social.FeedLive, %{
       feed: feed
     })
+  end
+
+  if Config.get(:env) == :prod do
+    defp formatters(file) do
+      [
+        Benchee.Formatters.Console
+      ]
+    end
+  else
+    defp formatters(file) do
+      [
+        {Benchee.Formatters.HTML, file: file},
+        Benchee.Formatters.Console
+      ]
+    end
   end
 end

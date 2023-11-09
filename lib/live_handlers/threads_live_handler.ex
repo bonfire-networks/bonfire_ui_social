@@ -210,9 +210,13 @@ defmodule Bonfire.Social.Threads.LiveHandler do
 
   def reply(reply_to, activity, socket) do
     debug(reply_to, "reply!")
+
+    # TODO: we should be getting the type from ActivityLive
+    object_type = e(socket.assigns, :object_type, nil) || Types.object_type(reply_to)
+
     debug(e(socket.assigns, :object_boundary, nil), "object_boundary!")
     debug(e(socket.assigns, :published_in, nil), "published_in_id!")
-    debug(e(socket.assigns, :object_type, nil), "object_type!")
+    debug(object_type, "object_type!")
     reply_to_id = Enums.id(reply_to)
 
     with {:ok, current_user} <- current_user_or_remote_interaction(socket, l("reply"), reply_to),
@@ -222,7 +226,7 @@ defmodule Bonfire.Social.Threads.LiveHandler do
       published_in_id = id(published_in)
 
       create_object_type =
-        if(e(socket.assigns, :object_type, nil) == Bonfire.Data.Social.Message, do: :message)
+        if(object_type == Bonfire.Data.Social.Message, do: :message)
 
       # TODO: don't re-load participants here as we already have the list (at least when we're in a thread)
       # TODO: include thread_id in list_participants/3 call
@@ -269,7 +273,7 @@ defmodule Bonfire.Social.Threads.LiveHandler do
               else:
                 Bonfire.Boundaries.preset_boundary_tuple_from_acl(
                   e(socket.assigns, :object_boundary, nil),
-                  e(socket.assigns, :object_type, nil)
+                  object_type
                 )
             )
             |> debug("to_boundaries")

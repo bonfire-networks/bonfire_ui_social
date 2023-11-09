@@ -123,6 +123,12 @@ defmodule Bonfire.UI.Social.ActivityLive do
     |> maybe_update_some_assigns(assigns)
   end
 
+  def maybe_update({%{} = assigns, %Phoenix.LiveView.Socket{} = socket}) do
+    socket
+    |> assign(assigns)
+    |> maybe_update()
+  end
+
   def maybe_update(socket) do
     socket
     #  |> assign(prepare(assigns))
@@ -222,8 +228,11 @@ defmodule Bonfire.UI.Social.ActivityLive do
     # |> debug("verb (modified)")
 
     verb_display = Activities.verb_display(verb)
-    object_type = Types.object_type(object)
-    # |> debug("object_type")
+
+    object_type =
+      Types.object_type(object)
+      |> debug("object_type!!")
+
     object_type_readable = Types.object_type_display(object_type)
 
     replied =

@@ -940,10 +940,18 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
   end
 
   def update_many(assigns_sockets, opts) do
+    feed_live_update_many_preloads = feed_live_update_many_preloads?()
+
+    # if feed_live_update_many_preloads !=:inline do
     # |> preloads(opts) # NOTE: we preload most activity assocs after querying rather than here so as to not mix different ways they're loaded (eg. Edges vs FeedPublish)
     (assigns_sockets
      |> Bonfire.Boundaries.LiveHandler.maybe_preload_and_check_boundaries(
-       opts ++ [verbs: [:read], return_assigns_socket_tuple: true]
+       opts ++
+         [
+           verbs: [:read],
+           return_assigns_socket_tuple: true,
+           live_update_many_preloads: feed_live_update_many_preloads
+         ]
      ) ||
        assigns_sockets)
     # |> debug("bbbb")
@@ -955,11 +963,22 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
     |> preload_assigns_async(
       &assigns_to_params/1,
       &preload_extras/3,
-      opts ++ [preload_status_key: :preloaded_async_activities]
+      opts ++
+        [
+          preload_status_key: :preloaded_async_activities,
+          live_update_many_preloads: feed_live_update_many_preloads
+        ]
     )
 
     # |> debug
+    # else
+    #   assigns_sockets
+    # end
   end
+
+  defp feed_live_update_many_preloads?,
+    do:
+      Process.get(:feed_live_update_many_preloads) || Config.get(:feed_live_update_many_preloads)
 
   defp assigns_to_params(assigns) do
     activity = Activities.activity_with_object_from_assigns(assigns)
