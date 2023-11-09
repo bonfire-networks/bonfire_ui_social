@@ -1011,6 +1011,17 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
     end
   end
 
+  def feed_extra_preloads_list(showing_within, thread_mode) do
+    case {showing_within, thread_mode} do
+      {:thread, :flat} -> [:feed, :with_reply_to, :with_media, :with_object_more]
+      {:thread, _} -> [:feed, :with_media, :with_object_more]
+      {:feed_by_creator, _} -> [:with_object_more, :feed_postload]
+      {:feed_by_subject, _} -> [:feed_by_subject, :feed_postload]
+      _ -> [:feed_by_subject, :feed_postload]
+    end
+    |> debug("whatpreloads")
+  end
+
   @decorate time()
   defp preload_extras(list_of_components, _list_of_ids, current_user) do
     # TODO: less preloads if not in a feed
@@ -1025,15 +1036,7 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
       |> uniq_assign(:thread_mode)
       |> debug("thread_mode")
 
-    preloads =
-      case {showing_within, thread_mode} do
-        {:thread, :flat} -> [:feed, :with_reply_to, :with_media, :with_object_more]
-        {:thread, _} -> [:feed, :with_media, :with_object_more]
-        {:feed_by_creator, _} -> [:with_object_more, :feed_postload]
-        {:feed_by_subject, _} -> [:feed_by_subject, :feed_postload]
-        _ -> [:feed_by_subject, :feed_postload]
-      end
-      |> debug("whatpreloads")
+    preloads = feed_extra_preloads_list(showing_within, thread_mode)
 
     opts = [
       preload: preloads,
