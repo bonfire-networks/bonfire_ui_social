@@ -163,6 +163,36 @@ defmodule Bonfire.UI.Social.Benchmark do
     Logger.configure(level: :debug)
   end
 
+  def feed_render_page do
+    Logger.configure(level: :info)
+    conn = build_conn()
+
+    feed = Bonfire.Social.FeedActivities.feed(:local)
+
+    Benchee.run(
+      %{
+        # "render feed component with already queried activities (skipping preloads)" => fn ->
+        #   render_feed(feed.edges, live_update_many_preloads: :skip)
+        # end,
+        # "render feed component with already queried activities (using async preloads)" => fn ->
+        #   render_feed(feed.edges, live_update_many_preloads: :async)
+        # end,
+        "render feed component with already queried activities (inline preloads)" => fn ->
+          render_feed(feed.edges, live_update_many_preloads: :inline)
+        end
+      },
+      parallel: 1,
+      warmup: 2,
+      time: 25,
+      memory_time: 2,
+      reduction_time: 2,
+      profile_after: true,
+      formatters: formatters("benchmarks/output/feed_page.html")
+    )
+
+    Logger.configure(level: :debug)
+  end
+
   def live_feed(opts \\ []) do
     feed = Bonfire.Social.FeedActivities.feed(:local, opts)
 
