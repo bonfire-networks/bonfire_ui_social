@@ -49,3 +49,13 @@
     nil
   )}
 />
+
+<Bonfire.UI.Common.BookmarkActionLive
+  id={ComponentID.new(
+    Bonfire.UI.Common.BookmarkActionLive,
+    id(@object),
+    @activity_component_id || id(@activity)
+  )}
+  object_id={id(@object)}
+  object_boundary={@object_boundary}
+/>
