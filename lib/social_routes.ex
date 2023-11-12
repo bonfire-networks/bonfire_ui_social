@@ -36,6 +36,8 @@ defmodule Bonfire.UI.Social.Routes do
         pipe_through(:browser)
         pipe_through(:user_required)
 
+        live("/bookmarks", Feeds.BookmarksLive, :bookmarks, as: Bonfire.Data.Social.Bookmark)
+
         live("/feed/likes", FeedsLive, :likes, as: :feed)
         # live("/feed/likes/", Feeds.LikesLive, as: Bonfire.Data.Social.Like)
 

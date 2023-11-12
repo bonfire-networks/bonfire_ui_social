@@ -3,7 +3,7 @@ defmodule Bonfire.UI.Social.Feeds.BookmarksLive do
 
   declare_nav_link(l("Bookmarks"),
     page: "Bookmarks",
-    href: "/feed/bookmarks",
+    href: "/bookmarks",
     icon: "carbon:bookmark",
     icon_active: "carbon:bookmark-filled"
   )
@@ -26,7 +26,8 @@ defmodule Bonfire.UI.Social.Feeds.BookmarksLive do
        showing_within: :bookmarks,
        loading: false,
        page: "Bookmarks",
-       page_title: l("My Bookmarks")
+       feed_title: l("My Bookmarks"),
+       no_header: true
      )}
   end
 
