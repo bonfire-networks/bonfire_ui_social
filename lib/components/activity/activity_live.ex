@@ -567,6 +567,8 @@ defmodule Bonfire.UI.Social.ActivityLive do
                 showing_within={@showing_within}
                 thread_id={@thread_id}
                 published_in={@published_in}
+                verb={e(component_assigns, :verb, @verb)}
+                verb_display={e(component_assigns, :verb_display, @verb_display)}
                 reply_to_id={e(@activity, :replied, :reply_to_id, nil)}
                 subject_peered={e(@activity, :subject, :peered, nil)}
                 peered={e(@object, :peered, nil) || e(@activity, :subject, :peered, nil) || e(@activity, :peered, nil)}
@@ -708,24 +710,39 @@ defmodule Bonfire.UI.Social.ActivityLive do
       )
 
   # don't show subject twice
-  # def component_activity_subject(_, activity, _, Bonfire.Data.Identity.User, _, _, _),
-  #   do: [
-  #     {Bonfire.UI.Social.Activity.SubjectMinimalLive,
-  #      %{
-  #        subject_id: e(activity, :subject_id, nil),
-  #        profile: e(activity, :subject, :profile, nil),
-  #        character: e(activity, :subject, :character, nil)
-  #      }}
-  #   ]
+  def component_activity_subject(verb, activity, _, Bonfire.Data.Identity.User, _, _, _),
+    do: [
+      {Bonfire.UI.Social.Activity.SubjectMinimalLive,
+       %{
+         verb: verb,
+         subject_id: e(activity, :subject_id, nil),
+         profile: e(activity, :subject, :profile, nil),
+         character: e(activity, :subject, :character, nil)
+       }}
+    ]
 
   # quoting a reply_to <-- this is handled by the Bonfire.UI.Social.Activity.SubjectLive internally
   # def component_activity_subject(_, _, %{activity_inception: true}), do: [Bonfire.UI.Social.Activity.SubjectRepliedLive]
 
   def component_activity_subject(verb, activity, _, object_type, _, _, _)
-      when verb in @react_or_simple_verbs and object_type in [Bonfire.Data.Identity.User],
+      when verb in @react_or_simple_verbs and object_type in [Bonfire.Data.Identity.User] do
+    [
+      {Bonfire.UI.Social.Activity.SubjectMinimalLive,
+       %{
+         verb: verb,
+         subject_id: e(activity, :subject_id, nil),
+         profile: e(activity, :subject, :profile, nil),
+         character: e(activity, :subject, :character, nil)
+       }}
+    ]
+  end
+
+  def component_activity_subject(verb, activity, object, object_type, :notifications, _, _)
+      when verb in @react_verbs,
       do: [
         {Bonfire.UI.Social.Activity.SubjectMinimalLive,
          %{
+           # activity: repo().maybe_preload(activity, subject: [:character]),
            verb: verb,
            subject_id: e(activity, :subject_id, nil),
            profile: e(activity, :subject, :profile, nil),
@@ -748,20 +765,6 @@ defmodule Bonfire.UI.Social.ActivityLive do
            }}
         ] ++ component_activity_maybe_creator(activity, object, object_type)
 
-  # replies (when shown in notifications)
-  def component_activity_subject(verb, activity, _, _, :notifications, _, _)
-      when verb in @reply_verbs,
-      do: [
-        {Bonfire.UI.Social.Activity.SubjectMinimalLive,
-         %{
-           #  activity: repo().maybe_preload(activity, subject: [:character]),
-           verb: verb,
-           subject_id: e(activity, :subject_id, nil),
-           profile: e(activity, :subject, :profile, nil),
-           character: e(activity, :subject, :character, nil)
-         }}
-      ]
-
   # create (or reply) activities
   def component_activity_subject(
         verb,
@@ -774,6 +777,11 @@ defmodule Bonfire.UI.Social.ActivityLive do
       )
       when verb in @create_or_reply_verbs,
       do: [{Bonfire.UI.Social.Activity.SubjectLive, %{profile: profile, character: character}}]
+
+  # replies (when shown in notifications)
+  def component_activity_subject(verb, activity, _, _, :notifications, _, _)
+      when verb in @reply_verbs,
+      do: []
 
   def component_activity_subject(verb, %{subject: %{profile: %{id: _} = profile}}, _, _, _, _, _)
       when verb in @create_or_reply_verbs,
@@ -1496,8 +1504,8 @@ defmodule Bonfire.UI.Social.ActivityLive do
       )
 
   # don't show any
-  def component_actions(_, _, _, _, activity_inception, _)
-      when not is_nil(activity_inception),
+  def component_actions(_, _, _, showing_within, activity_inception, _)
+      when not is_nil(activity_inception) and showing_within != :thread,
       do: []
 
   def component_actions(_, _, _, showing_within, _, _)
