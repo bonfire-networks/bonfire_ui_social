@@ -53,17 +53,19 @@ defmodule Bonfire.UI.Social.ActivityLive do
   prop published_in, :any, default: nil
   prop subject_user, :any, default: nil
   prop hide_actions, :any, default: false
+  prop activity_loaded_preloads, :list, default: []
 
+  # TODO: uncomment and move prepare call here
   # @decorate time()
-  def update_many(assigns_sockets) do
-    LiveHandler.update_many(assigns_sockets,
-      caller_module: __MODULE__
-    )
-    # |> debug("lllll")
-    |> Enum.map(&maybe_update(&1))
+  # def update_many(assigns_sockets) do 
+  #   LiveHandler.update_many(assigns_sockets,
+  #     caller_module: __MODULE__
+  #   )
+  #   # |> debug("lllll")
+  #   |> Enum.map(&maybe_update(&1))
 
-    # |> debug("kkkk")
-  end
+  #   # |> debug("kkkk")
+  # end
 
   defp debug_i(i, activity_inception), do: i || "inception-from-#{activity_inception}"
 

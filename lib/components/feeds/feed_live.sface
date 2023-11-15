@@ -89,6 +89,7 @@
               is_remote={@feed_name in [:fediverse]}
               hide_activity={@hide_activities}
               subject_user={@subject_user}
+              activity_loaded_preloads={@activity_loaded_preloads}
             />
           </div>
         {/for}
@@ -115,6 +116,7 @@
               feed_id={@feed_id}
               hide_activity={@hide_activities}
               subject_user={@subject_user}
+              activity_loaded_preloads={@activity_loaded_preloads}
             />
           </div>
         {/for}

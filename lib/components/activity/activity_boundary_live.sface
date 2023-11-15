@@ -1,0 +1,32 @@
+{#if LiveHandler.feed_live_update_many_preloads?() != :inline}
+  <Dynamic.Component
+    :if={module_enabled?(Bonfire.Boundaries.Web.BoundaryIconStatelessLive)}
+    module={Bonfire.Boundaries.Web.BoundaryIconStatelessLive}
+    with_icon={@with_icon}
+    with_label={@with_label}
+    parent_id={@parent_id}
+    scope={@scope}
+    class={@class}
+    object_boundary={@object_boundary}
+    boundary_preset={@boundary_preset}
+    object_type={@object_type}
+    object={@object}
+    object_id={@object_id}
+  />
+{#else}
+  <Dynamic.LiveComponent
+    :if={module_enabled?(Bonfire.Boundaries.Web.BoundaryIconLive)}
+    module={Bonfire.Boundaries.Web.BoundaryIconLive}
+    id={"boundary_#{@parent_id}_#{@object_id || id(@object)}"}
+    with_icon={@with_icon}
+    with_label={@with_label}
+    parent_id={@parent_id}
+    scope={@scope}
+    class={@class}
+    object_boundary={@object_boundary}
+    boundary_preset={@boundary_preset}
+    object_type={@object_type}
+    object={@object}
+    object_id={@object_id}
+  />
+{/if}

@@ -46,6 +46,7 @@
               thread_mode={@thread_mode}
               showing_within={@showing_within || :thread}
               activity_inception={@activity_inception}
+              activity_loaded_preloads={@activity_loaded_preloads}
             />
           </div>
         {/for}
@@ -64,6 +65,7 @@
                 thread_mode={@thread_mode}
                 showing_within={@showing_within || :thread}
                 activity_inception={@activity_inception}
+                activity_loaded_preloads={@activity_loaded_preloads}
               />
             {/for}
           </div>
@@ -81,6 +83,7 @@
                   thread_mode={debug(@thread_mode, "thread_modessss")}
                   showing_within={@showing_within || :thread}
                   activity_inception={@activity_inception}
+                  activity_loaded_preloads={@activity_loaded_preloads}
                 />
               </div>
             {/for}

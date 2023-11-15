@@ -18,6 +18,8 @@ defmodule Bonfire.UI.Social.CommentLive do
   prop current_url, :string, default: nil
   prop activity_inception, :any, default: nil
 
+  prop activity_loaded_preloads, :list, default: []
+
   def render(assigns) do
     assigns
     |> assign(:activity, get_activity(assigns.activity || assigns.comment))

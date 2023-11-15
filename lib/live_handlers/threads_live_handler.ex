@@ -464,16 +464,21 @@ defmodule Bonfire.Social.Threads.LiveHandler do
       thread_mode = e(socket.assigns, :thread_mode, nil)
       sort_by = e(socket.assigns, :sort_by, nil)
       sort_order = e(socket.assigns, :sort_order, nil)
+      showing_within = e(socket.assigns, :showing_within, :thread)
+
+      preloads =
+        Bonfire.Social.Feeds.LiveHandler.feed_extra_preloads_list(showing_within, thread_mode)
 
       with %{edges: replies, page_info: page_info} <-
              Threads.list_replies(thread_id,
                current_user: current_user(socket.assigns),
+               preload: preloads,
                after: e(socket.assigns, :after, nil),
                max_depth: max_depth(socket.assigns[:__context__]),
                thread_mode: thread_mode,
                sort_by: sort_by,
                sort_order: sort_order,
-               showing_within: e(socket.assigns, :showing_within, nil)
+               showing_within: showing_within
              ) do
         reply_count = length(replies)
 
@@ -488,7 +493,8 @@ defmodule Bonfire.Social.Threads.LiveHandler do
            sort_order: sort_order,
            page_info: page_info,
            thread_id: thread_id,
-           reply_count: reply_count
+           reply_count: reply_count,
+           activity_loaded_preloads: preloads
          ]}
       end
     end

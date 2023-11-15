@@ -21,10 +21,8 @@
     </span>
   </Bonfire.UI.Social.Activity.LinkToActivityLive>
 
-  <Dynamic.Component
-    :if={module_enabled?(Bonfire.Boundaries.Web.BoundaryIconStatelessLive) and
-      @object_type not in [Bonfire.Data.Social.Message]}
-    module={Bonfire.Boundaries.Web.BoundaryIconStatelessLive}
+  <Bonfire.UI.Social.ActivityBoundaryLive
+    :if={@object_type not in [Bonfire.Data.Social.Message]}
     object_id={@object_id}
     object_type={Types.object_type(@published_in) || @object_type}
     parent_id={"#{@activity_inception}#{@activity_id || @object_id}"}

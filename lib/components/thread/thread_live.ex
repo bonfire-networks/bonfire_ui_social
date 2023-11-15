@@ -37,10 +37,12 @@ defmodule Bonfire.UI.Social.ThreadLive do
 
   prop activity_inception, :any, default: nil
 
-  prop(reply_count, :any, default: nil)
-  prop(thread_boost_count, :any, default: nil)
-  prop(participant_count, :any, default: nil)
-  prop(last_reply_id, :any, default: nil)
+  prop reply_count, :any, default: nil
+  prop thread_boost_count, :any, default: nil
+  prop participant_count, :any, default: nil
+  prop last_reply_id, :any, default: nil
+
+  prop activity_loaded_preloads, :list, default: []
 
   def mount(socket) do
     {
