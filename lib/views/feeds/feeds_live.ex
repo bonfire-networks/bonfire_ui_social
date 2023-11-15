@@ -2,6 +2,7 @@ defmodule Bonfire.UI.Social.FeedsLive do
   use Bonfire.UI.Common.Web, :surface_live_view
 
   alias Bonfire.Social.Feeds.LiveHandler
+  alias Bonfire.UI.Social.FeedLive
 
   declare_extension("Social",
     # icon: "noto:newspaper",
@@ -107,50 +108,33 @@ defmodule Bonfire.UI.Social.FeedsLive do
 
   def do_handle_params(%{"tab" => tab} = params, _url, socket)
       when tab in ["federation", "fediverse", "remote"] do
-    do_feed_assigns({:fediverse, params}, socket)
+    set_feed_assigns({:fediverse, params}, socket)
   end
 
   def do_handle_params(%{"tab" => "local" = _tab} = params, _url, socket) do
-    do_feed_assigns({:local, params}, socket)
+    set_feed_assigns({:local, params}, socket)
   end
 
   def do_handle_params(%{"tab" => "likes" = _tab} = params, _url, socket) do
-    do_feed_assigns({:likes, params}, socket)
+    set_feed_assigns({:likes, params}, socket)
   end
 
   def do_handle_params(%{"tab" => "flags" = _tab} = params, _url, socket) do
-    do_feed_assigns({:flags, params}, socket)
+    set_feed_assigns({:flags, params}, socket)
   end
 
   def do_handle_params(params, _url, socket) do
-    do_feed_assigns(
+    set_feed_assigns(
       {e(socket, :assigns, :live_action, :default), params},
       socket
     )
   end
 
-  def do_feed_assigns(feed_meta, socket) do
+  def set_feed_assigns(feed_meta, socket) do
     {:noreply,
      socket
      |> assign(LiveHandler.feed_default_assigns(feed_meta, socket))
-     |> assign(...,
-       sidebar_widgets: [
-         users: [
-           secondary: [
-             {Bonfire.UI.Social.WidgetFeedLive,
-              [
-                event_target: "##{e(..., :assigns, :feed_component_id, nil)}",
-                feed_name: e(..., :assigns, :feed_name, nil),
-                sort_by: e(..., :assigns, :sort_by, nil),
-                time_limit: e(..., :assigns, :time_limit, nil),
-                sort_order: e(..., :assigns, :sort_order, nil),
-                showing_within: e(..., :assigns, :showing_within, nil)
-              ]},
-             {Bonfire.Tag.Web.WidgetTagsLive, []}
-           ]
-         ]
-       ]
-     )}
+     |> assign(..., FeedLive.widgets(e(..., :assigns, nil)))}
   end
 
   def handle_params(params, uri, socket),

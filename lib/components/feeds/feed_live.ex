@@ -310,18 +310,47 @@ defmodule Bonfire.UI.Social.FeedLive do
   #    |> LiveHandler.insert_feed(LiveHandler.feed_assigns_maybe_async(tab, socket))}
   # end
 
+  def widgets(assigns) do
+    [
+      sidebar_widgets: [
+        users: [
+          secondary: [
+            {Bonfire.UI.Social.WidgetFeedLive,
+             [
+               event_target: "##{e(assigns, :feed_component_id, nil)}",
+               feed_name: e(assigns, :feed_name, nil),
+               sort_by: e(assigns, :sort_by, nil),
+               time_limit: e(assigns, :time_limit, nil),
+               sort_order: e(assigns, :sort_order, nil),
+               showing_within: e(assigns, :showing_within, nil)
+             ]},
+            {Bonfire.Tag.Web.WidgetTagsLive, []}
+          ]
+        ]
+      ]
+    ]
+  end
+
   def do_handle_event(
         "set",
         attrs,
         socket
       ) do
-    debug(attrs)
+    # debug(attrs)
     # need to reload feed so streams are updated
+
+    socket =
+      socket
+      # |> assign( replies: [])
+      |> Bonfire.UI.Common.LiveHandlers.assign_attrs(attrs)
+
+    send_self(widgets(e(socket, :assigns, nil)))
+
     {
       :noreply,
       socket
       # |> assign( replies: [])
-      |> Bonfire.UI.Common.LiveHandlers.assign_attrs(attrs)
+      # |> Bonfire.UI.Common.LiveHandlers.assign_attrs(attrs)
       # |> assign(:page_header_aside, LiveHandler.page_header_asides(...))
       |> LiveHandler.insert_feed(
         ...,
