@@ -1,0 +1,6 @@
+<Bonfire.UI.Common.WidgetBlockLive
+  class="relative w-full mx-auto rounded-xl border border-base-content/20"
+  widget_title={e(@widget_title, "Filter feed")}
+>
+  <Bonfire.UI.Social.FeedControlsLive />
+</Bonfire.UI.Common.WidgetBlockLive>

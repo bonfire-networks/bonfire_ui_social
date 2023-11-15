@@ -34,6 +34,7 @@ defmodule Bonfire.UI.Social.Activity.SubjectLive do
     |> render_sface()
   end
 
+  @spec prepare(any()) :: any()
   def prepare(
         %{
           profile_name: nil,
@@ -70,8 +71,6 @@ defmodule Bonfire.UI.Social.Activity.SubjectLive do
 
   def prepare(
         %{
-          profile_name: nil,
-          character_username: nil,
           profile: profile,
           character: character
         } = assigns

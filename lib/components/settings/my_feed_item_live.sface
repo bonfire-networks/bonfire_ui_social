@@ -1,6 +1,6 @@
 <form phx-change="Bonfire.Common.Settings:set">
   <div class="form-control">
-    <label class="!px-0 justify-start cursor-pointer label">
+    <label class="!px-0 !pt-0 justify-start cursor-pointer label">
       <input name="scope" value={@scope} type="hidden">
       <input
         name={"Bonfire.Social.Feeds[my_feed_includes][#{@key}]"}

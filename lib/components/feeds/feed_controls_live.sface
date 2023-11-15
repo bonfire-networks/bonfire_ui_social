@@ -1,12 +1,5 @@
-<div>
-  <Bonfire.UI.Common.OpenModalLive
-    id="sort_feed"
-    title_text={l("Timeline option")}
-    no_actions
-    open_btn_wrapper_class="flex"
-  >
-    <div class="flex flex-col mt-3 justify-between gap-5 divide-y divide-base-content/20">
-      <!-- <div class="dropdown dropdown-end">
+<div class="flex flex-col p-3 justify-between gap-3">
+  <!-- <div class="dropdown dropdown-end">
         <label
           tabindex="0"
           class="rounded-full btn-sm btn btn-ghost normal-case text-base-content/70"
@@ -26,75 +19,75 @@
               <span>{l("default")}</span>
           {/case}
         </label> -->
-      <div class="flex flex-col gap-2">
-        <span class="font-medium text-sm uppercase text-base-content/80">{l("Included activities")}</span>
-        <Bonfire.UI.Social.Settings.MyFeedItemsLive scope={:user} />
-      </div>
-      <div class="flex flex-col gap-2 pt-3">
-        <span class="font-medium text-sm uppercase text-base-content/80">{l("Sort by")}</span>
-        <ul tabindex="0" class="menu p-0 gap-1 menu-horizontal">
-          <li
-            data-role="chronological"
-            phx-click="set"
-            phx-value-to_atoms="true"
-            phx-value-sort_by="nil"
-            phx-value-assign_global="true"
-            phx-target={@event_target}
-          >
-            <a class={
-              "flex gap-2 text-base-content/70 border border-base-content/30",
-              "border-base-content/5 active !text-base-content/100": is_nil(@sort_by)
-            }>
-              <#Icon iconify="mdi:order-alphabetical-ascending" class="w-5 h-5 text-base-content/70" />
-              {l("Chronological")}
-            </a></li>
+  <div class="flex flex-col gap-2">
+    <span class="font-medium text-sm text-base-content/80">{l("Included activities")}</span>
+    <Bonfire.UI.Social.Settings.MyFeedItemsLive scope={:user} />
+  </div>
+  <div class="flex flex-col gap-2 pt-3">
+    <span class="font-medium text-sm text-base-content/80">{l("Sort by")}</span>
+    <ul tabindex="0" class="menu p-0 gap-1 menu-horizontal">
+      <li
+        data-role="chronological"
+        phx-click="set"
+        phx-value-to_atoms="true"
+        phx-value-sort_by="nil"
+        phx-value-assign_global="true"
+        phx-target={@event_target}
+      >
+        <a class={
+          "flex gap-2 text-base-content/70 border border-base-content/30",
+          "border-base-content/5 active !text-base-content/100": is_nil(@sort_by)
+        }>
+          <#Icon iconify="mdi:order-alphabetical-ascending" class="w-5 h-5 text-base-content/70" />
+          {l("Chronological")}
+        </a></li>
 
-          <li
-            data-role="amount_of_replies"
-            phx-click="set"
-            phx-value-to_atoms="true"
-            phx-value-sort_by="num_replies"
-            phx-value-assign_global="true"
-            phx-target={@event_target}
-          >
-            <a class={
-              "flex gap-2 text-base-content/70 border border-base-content/30",
-              "border-base-content/5 active !text-base-content/100": @sort_by == :num_replies
-            }>
-              <#Icon iconify="basil:comment-outline" class="w-5 h-5 stroke-1 fill-base-content/50" />
-              {l("By amount of replies")}</a></li>
+      <li
+        data-role="amount_of_replies"
+        phx-click="set"
+        phx-value-to_atoms="true"
+        phx-value-sort_by="num_replies"
+        phx-value-assign_global="true"
+        phx-target={@event_target}
+      >
+        <a class={
+          "flex gap-2 text-base-content/70 border border-base-content/30",
+          "border-base-content/5 active !text-base-content/100": @sort_by == :num_replies
+        }>
+          <#Icon iconify="basil:comment-outline" class="w-5 h-5 stroke-1 fill-base-content/50" />
+          {l("By amount of replies")}</a></li>
 
-          <li
-            data-role="amount_of_boosts"
-            phx-click="set"
-            phx-value-to_atoms="true"
-            phx-value-sort_by="num_boosts"
-            phx-value-assign_global="true"
-            phx-target={@event_target}
-          >
-            <a class={
-              "flex gap-2 text-base-content/70 border border-base-content/30",
-              "border-base-content/5 active !text-base-content/100": @sort_by == :num_boosts
-            }>
-              <#Icon iconify="mdi:repeat-variant" class="w-5 h-5 stroke-1 fill-base-content/50" />
-              {l("By amount of boosts")}</a></li>
+      <li
+        data-role="amount_of_boosts"
+        phx-click="set"
+        phx-value-to_atoms="true"
+        phx-value-sort_by="num_boosts"
+        phx-value-assign_global="true"
+        phx-target={@event_target}
+      >
+        <a class={
+          "flex gap-2 text-base-content/70 border border-base-content/30",
+          "border-base-content/5 active !text-base-content/100": @sort_by == :num_boosts
+        }>
+          <#Icon iconify="mdi:repeat-variant" class="w-5 h-5 stroke-1 fill-base-content/50" />
+          {l("By amount of boosts")}</a></li>
 
-          <li
-            data-role="amount_of_likes"
-            phx-click="set"
-            phx-value-to_atoms="true"
-            phx-value-sort_by="num_likes"
-            phx-value-assign_global="true"
-            phx-target={@event_target}
-          >
-            <a class={
-              "flex gap-2 text-base-content/70 border border-base-content/30",
-              "border-base-content/5 active !text-base-content/100": @sort_by == :num_likes
-            }>
-              <#Icon iconify="mingcute:fire-line" class="w-5 h-5" />
-              {l("By amount of likes")}</a></li>
+      <li
+        data-role="amount_of_likes"
+        phx-click="set"
+        phx-value-to_atoms="true"
+        phx-value-sort_by="num_likes"
+        phx-value-assign_global="true"
+        phx-target={@event_target}
+      >
+        <a class={
+          "flex gap-2 text-base-content/70 border border-base-content/30",
+          "border-base-content/5 active !text-base-content/100": @sort_by == :num_likes
+        }>
+          <#Icon iconify="mingcute:fire-line" class="w-5 h-5" />
+          {l("By amount of likes")}</a></li>
 
-          {!-- <li></li>
+      {!-- <li></li>
           <li>
             <a class="form-control">
               <label class="flex gap-2 cursor-pointer">
@@ -103,11 +96,11 @@
               </label>
             </a>
           </li> --}
-        </ul>
-      </div>
-      <!-- </div> -->
+    </ul>
+  </div>
+  <!-- </div> -->
 
-      <!-- <div class="dropdown dropdown-end">
+  <!-- <div class="dropdown dropdown-end">
         <label tabindex="0" class="rounded-full btn-sm btn btn-ghost normal-case">
           {!-- {l("Order:")} --}
 
@@ -133,8 +126,8 @@
           {/case}
         </label> -->
 
-      {#if not is_nil(@sort_by)}
-        <!-- <div class="dropdown dropdown-end">
+  {#if not is_nil(@sort_by)}
+    <!-- <div class="dropdown dropdown-end">
           <label tabindex="0" class="rounded-full btn-sm btn btn-ghost btn-circle normal-case">
             {!-- {l("Order:")} --}
 
@@ -146,122 +139,115 @@
               {!-- {l("Newest first")} --}
             {/if}
           </label> -->
-        <div class="flex flex-col gap-2 pt-3">
-          <span class="font-medium text-sm uppercase text-base-content/80">{l("Order")}</span>
-          <ul tabindex="0" class="z-[999] menu p-1 gap-1 menu-horizontal">
-            <li
-              data-role="most first"
-              phx-click="set"
-              phx-value-to_atoms="true"
-              phx-value-sort_order="desc"
-              phx-value-assign_global="true"
-              phx-target={@event_target}
-            ><a class={
-                "flex gap-2 text-base-content/70 border border-base-content/30",
-                "border-base-content/5 active !text-base-content/100": @sort_order != :asc
-              }>
-                <#Icon iconify="octicon:sort-desc-16" class="w-5 h-5 text-base-content/70" />
-                {l("Most first")}</a></li>
-            <li
-              data-role="least first"
-              phx-click="set"
-              phx-value-to_atoms="true"
-              phx-value-sort_order="asc"
-              phx-value-assign_global="true"
-              phx-target={@event_target}
-            ><a class={
-                "flex gap-2 text-base-content/70 border border-base-content/30",
-                "border-base-content/5 active !text-base-content/100": @sort_order == :asc
-              }>
-                <#Icon iconify="octicon:sort-asc-16" class="w-5 h-5 text-base-content/70" />
-                {l("Least first")}</a></li>
-          </ul>
-        </div>
-      {/if}
-
-      <div class="flex flex-col gap-2 pt-3">
-        <span class="font-medium text-sm uppercase text-base-content/80">{l("Limit to")}</span>
-        <ul tabindex="0" class="menu p-0 gap-1 menu-horizontal">
-          <li
-            data-role="day"
-            phx-click="set"
-            3
-            phx-value-to_integers="true"
-            phx-value-time_limit={1}
-            phx-value-assign_global="true"
-            phx-target={@event_target}
-          ><a class={
-              "flex gap-2 text-base-content/70 border border-base-content/30",
-              "border-base-content/5 active !text-base-content/100": @time_limit == 1
-            }>
-              <#Icon iconify="ri:24-hours-fill" class="w-5 h-5 text-base-content/70" />
-              {l("Day")}</a></li>
-
-          <li
-            data-role="week"
-            phx-click="set"
-            phx-value-to_integers="true"
-            phx-value-time_limit={7}
-            phx-value-assign_global="true"
-            phx-target={@event_target}
-          ><a class={
-              "flex gap-2 text-base-content/70 border border-base-content/30",
-              "border-base-content/5 active !text-base-content/100": @time_limit == 7
-            }>
-              <#Icon iconify="mdi:numeric-7-box" class="w-5 h-5 text-base-content/70" />
-              {l("Week")}</a></li>
-
-          <li
-            data-role="month"
-            phx-click="set"
-            phx-value-to_integers="true"
-            phx-value-time_limit={30}
-            phx-value-assign_global="true"
-            phx-target={@event_target}
-          ><a class={
-              "flex gap-2 text-base-content/70 border border-base-content/30",
-              "border-base-content/5 active !text-base-content/100": @time_limit == 30
-            }>
-              <#Icon
-                iconify="streamline:interface-calendar-date-month-thirty-thirty-calendar-date-week-day-month"
-                class="w-5 h-5 text-base-content/70"
-              />
-              {l("Month")}</a></li>
-
-          <li
-            data-role="year"
-            phx-click="set"
-            phx-value-to_integers="true"
-            phx-value-time_limit={365}
-            phx-value-assign_global="true"
-            phx-target={@event_target}
-          ><a class={
-              "flex gap-2 text-base-content/70 border border-base-content/30",
-              "border-base-content/5 active !text-base-content/100": @time_limit == 365
-            }>
-              <#Icon iconify="iconoir:birthday-cake" class="w-5 h-5 text-base-content/70" />
-              {l("Year")}</a></li>
-
-          <li
-            data-role="infinite"
-            phx-click="set"
-            phx-value-to_integers="true"
-            phx-value-time_limit="0"
-            phx-value-assign_global="true"
-            phx-target={@event_target}
-          ><a class={
-              "flex gap-2 text-base-content/70 border border-base-content/30",
-              "border-base-content/5 active !text-base-content/100": !@time_limit or @time_limit == 0
-            }>
-              <#Icon iconify="fa6-solid:infinity" class="w-5 h-5 text-base-content/70" />
-              {l("All time")}</a></li>
-        </ul>
-      </div>
+    <div class="flex flex-col gap-2 pt-3">
+      <span class="font-medium text-sm text-base-content/80">{l("Order")}</span>
+      <ul tabindex="0" class="z-[999] menu p-1 gap-1 menu-horizontal">
+        <li
+          data-role="most first"
+          phx-click="set"
+          phx-value-to_atoms="true"
+          phx-value-sort_order="desc"
+          phx-value-assign_global="true"
+          phx-target={@event_target}
+        ><a class={
+            "flex gap-2 text-base-content/70 border border-base-content/30",
+            "border-base-content/5 active !text-base-content/100": @sort_order != :asc
+          }>
+            <#Icon iconify="octicon:sort-desc-16" class="w-5 h-5 text-base-content/70" />
+            {l("Most first")}</a></li>
+        <li
+          data-role="least first"
+          phx-click="set"
+          phx-value-to_atoms="true"
+          phx-value-sort_order="asc"
+          phx-value-assign_global="true"
+          phx-target={@event_target}
+        ><a class={
+            "flex gap-2 text-base-content/70 border border-base-content/30",
+            "border-base-content/5 active !text-base-content/100": @sort_order == :asc
+          }>
+            <#Icon iconify="octicon:sort-asc-16" class="w-5 h-5 text-base-content/70" />
+            {l("Least first")}</a></li>
+      </ul>
     </div>
-    <:open_btn>
-      <button class="btn btn-ghost btn-sm btn-circle">
-        <#Icon iconify="ph:gear-fill" class="w-5 h-5 text-base-content" />
-      </button>
-    </:open_btn>
-  </Bonfire.UI.Common.OpenModalLive>
+  {/if}
+
+  <div class="flex flex-col gap-2 pt-3">
+    <span class="font-medium text-sm text-base-content/80">{l("Limit to")}</span>
+    <ul tabindex="0" class="menu p-0 gap-1 menu-horizontal">
+      <li
+        data-role="day"
+        phx-click="set"
+        3
+        phx-value-to_integers="true"
+        phx-value-time_limit={1}
+        phx-value-assign_global="true"
+        phx-target={@event_target}
+      ><a class={
+          "flex gap-2 text-base-content/70 border border-base-content/30",
+          "border-base-content/5 active !text-base-content/100": @time_limit == 1
+        }>
+          <#Icon iconify="ri:24-hours-fill" class="w-5 h-5 text-base-content/70" />
+          {l("Day")}</a></li>
+
+      <li
+        data-role="week"
+        phx-click="set"
+        phx-value-to_integers="true"
+        phx-value-time_limit={7}
+        phx-value-assign_global="true"
+        phx-target={@event_target}
+      ><a class={
+          "flex gap-2 text-base-content/70 border border-base-content/30",
+          "border-base-content/5 active !text-base-content/100": @time_limit == 7
+        }>
+          <#Icon iconify="mdi:numeric-7-box" class="w-5 h-5 text-base-content/70" />
+          {l("Week")}</a></li>
+
+      <li
+        data-role="month"
+        phx-click="set"
+        phx-value-to_integers="true"
+        phx-value-time_limit={30}
+        phx-value-assign_global="true"
+        phx-target={@event_target}
+      ><a class={
+          "flex gap-2 text-base-content/70 border border-base-content/30",
+          "border-base-content/5 active !text-base-content/100": @time_limit == 30
+        }>
+          <#Icon
+            iconify="streamline:interface-calendar-date-month-thirty-thirty-calendar-date-week-day-month"
+            class="w-5 h-5 text-base-content/70"
+          />
+          {l("Month")}</a></li>
+
+      <li
+        data-role="year"
+        phx-click="set"
+        phx-value-to_integers="true"
+        phx-value-time_limit={365}
+        phx-value-assign_global="true"
+        phx-target={@event_target}
+      ><a class={
+          "flex gap-2 text-base-content/70 border border-base-content/30",
+          "border-base-content/5 active !text-base-content/100": @time_limit == 365
+        }>
+          <#Icon iconify="iconoir:birthday-cake" class="w-5 h-5 text-base-content/70" />
+          {l("Year")}</a></li>
+
+      <li
+        data-role="infinite"
+        phx-click="set"
+        phx-value-to_integers="true"
+        phx-value-time_limit="0"
+        phx-value-assign_global="true"
+        phx-target={@event_target}
+      ><a class={
+          "flex gap-2 text-base-content/70 border border-base-content/30",
+          "border-base-content/5 active !text-base-content/100": !@time_limit or @time_limit == 0
+        }>
+          <#Icon iconify="fa6-solid:infinity" class="w-5 h-5 text-base-content/70" />
+          {l("All time")}</a></li>
+    </ul>
+  </div>
 </div>

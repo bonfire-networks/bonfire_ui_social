@@ -1,6 +1,6 @@
 <!-- <form name="settings" phx-change="Bonfire.Common.Settings:set"> -->
 <Bonfire.UI.Social.Settings.MyFeedItemLive
-  label={l("Posts and other activities from people I follow")}
+  label={l("Activities from people I follow")}
   key={:followed_users}
   disabled
   force_checked
@@ -14,23 +14,68 @@
   scope={@scope}
 />
 
-<Bonfire.UI.Social.Settings.MyFeedItemLive label={l("Boosts")} key={:boost} scope={@scope} />
+<form phx-change="Bonfire.Common.Settings:set">
+  <Bonfire.UI.Common.SettingsToggleLive
+    name={l("Boosts")}
+    keys={[Bonfire.Social.Feeds, :my_feed_includes, :boost]}
+    scope={@scope}
+    compact
+  />
+</form>
 
+<form phx-change="Bonfire.Common.Settings:set">
+  <Bonfire.UI.Common.SettingsToggleLive
+    name={l("Replies")}
+    keys={[Bonfire.Social.Feeds, :my_feed_includes, :reply]}
+    scope={@scope}
+    compact
+  />
+</form>
+
+<form phx-change="Bonfire.Common.Settings:set">
+  <Bonfire.UI.Common.SettingsToggleLive
+    name={l("Follows")}
+    keys={[Bonfire.Social.Feeds, :my_feed_includes, :follow]}
+    scope={@scope}
+    compact
+  />
+</form>
+
+<form phx-change="Bonfire.Common.Settings:set">
+  <Bonfire.UI.Common.SettingsToggleLive
+    name={if @scope != :instance, do: l("My own activities", else: l("User's own activities"))}
+    keys={[Bonfire.Social.Feeds, :my_feed_includes, :outbox]}
+    scope={@scope}
+    compact
+  />
+</form>
+
+<form :if={@scope == :instance} phx-change="Bonfire.Common.Settings:set">
+  <Bonfire.UI.Common.SettingsToggleLive
+    name={l("Notifications")}
+    keys={[Bonfire.Social.Feeds, :my_feed_includes, :notifications]}
+    scope={@scope}
+    compact
+  />
+</form>
+
+<!-- <Bonfire.UI.Social.Settings.MyFeedItemLive label={l("Boosts")} key={:boost} scope={@scope} /> -->
+<!-- 
 <Bonfire.UI.Social.Settings.MyFeedItemLive label={l("Replies")} key={:reply} scope={@scope} />
 
-<Bonfire.UI.Social.Settings.MyFeedItemLive label={l("Follows")} key={:follow} scope={@scope} />
+<Bonfire.UI.Social.Settings.MyFeedItemLive label={l("Follows")} key={:follow} scope={@scope} /> -->
 
-<Bonfire.UI.Social.Settings.MyFeedItemLive
+<!-- <Bonfire.UI.Social.Settings.MyFeedItemLive
   label={if @scope != :instance, do: l("My own activities", else: l("User's own activities"))}
   key={:outbox}
   scope={@scope}
-/>
+/> -->
 
-<Bonfire.UI.Social.Settings.MyFeedItemLive
+<!-- <Bonfire.UI.Social.Settings.MyFeedItemLive
   label={l("Notifications")}
   key={:notifications}
   scope={@scope}
-/>
+/> -->
 
 <Bonfire.UI.Social.Settings.MyFeedItemLive
   label={l("Messages")}
