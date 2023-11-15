@@ -3,4 +3,5 @@ defmodule Bonfire.UI.Social.Settings.MyFeedItemsLive do
 
   prop title, :string
   prop scope, :any, default: nil
+  prop feed_name, :atom, default: nil
 end

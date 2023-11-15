@@ -90,6 +90,7 @@ defmodule Bonfire.UI.Social.FeedsLive do
        sidebar_widgets: [
          users: [
            secondary: [
+             #  {Bonfire.UI.Social.WidgetFeedLive, [event_target: ]},
              {Bonfire.Tag.Web.WidgetTagsLive, []}
            ]
          ],
@@ -106,29 +107,49 @@ defmodule Bonfire.UI.Social.FeedsLive do
 
   def do_handle_params(%{"tab" => tab} = params, _url, socket)
       when tab in ["federation", "fediverse", "remote"] do
-    {:noreply, assign(socket, LiveHandler.feed_default_assigns({:fediverse, params}, socket))}
+    do_feed_assigns({:fediverse, params}, socket)
   end
 
   def do_handle_params(%{"tab" => "local" = _tab} = params, _url, socket) do
-    {:noreply, assign(socket, LiveHandler.feed_default_assigns({:local, params}, socket))}
+    do_feed_assigns({:local, params}, socket)
   end
 
   def do_handle_params(%{"tab" => "likes" = _tab} = params, _url, socket) do
-    {:noreply, assign(socket, LiveHandler.feed_default_assigns({:likes, params}, socket))}
+    do_feed_assigns({:likes, params}, socket)
   end
 
   def do_handle_params(%{"tab" => "flags" = _tab} = params, _url, socket) do
-    {:noreply, assign(socket, LiveHandler.feed_default_assigns({:flags, params}, socket))}
+    do_feed_assigns({:flags, params}, socket)
   end
 
   def do_handle_params(params, _url, socket) do
+    do_feed_assigns(
+      {e(socket, :assigns, :live_action, :default), params},
+      socket
+    )
+  end
+
+  def do_feed_assigns(feed_meta, socket) do
     {:noreply,
-     assign(
-       socket,
-       LiveHandler.feed_default_assigns(
-         {e(socket, :assigns, :live_action, :default), params},
-         socket
-       )
+     socket
+     |> assign(LiveHandler.feed_default_assigns(feed_meta, socket))
+     |> assign(...,
+       sidebar_widgets: [
+         users: [
+           secondary: [
+             {Bonfire.UI.Social.WidgetFeedLive,
+              [
+                event_target: "##{e(..., :assigns, :feed_component_id, nil)}",
+                feed_name: e(..., :assigns, :feed_name, nil),
+                sort_by: e(..., :assigns, :sort_by, nil),
+                time_limit: e(..., :assigns, :time_limit, nil),
+                sort_order: e(..., :assigns, :sort_order, nil),
+                showing_within: e(..., :assigns, :showing_within, nil)
+              ]},
+             {Bonfire.Tag.Web.WidgetTagsLive, []}
+           ]
+         ]
+       ]
      )}
   end
 

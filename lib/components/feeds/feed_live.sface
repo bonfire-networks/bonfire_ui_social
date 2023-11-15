@@ -58,7 +58,7 @@
 
     {#if @feed_count || e(@streams.feed, :inserts, []) != []}
       <div
-        id={"feed_#{@feed_id || @id}"}
+        id={"feed_#{@feed_name || @feed_id || @id}"}
         data-id="feed_activity_list"
         phx-update="stream"
         class="flex flex-col divide-y divide-base-content/20 bonfire_feed flex-1 h-full grow"

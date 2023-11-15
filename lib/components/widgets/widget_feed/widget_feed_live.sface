@@ -2,5 +2,12 @@
   class="relative w-full mx-auto rounded-xl border border-base-content/20"
   widget_title={e(@widget_title, "Filter feed")}
 >
-  <Bonfire.UI.Social.FeedControlsLive />
+  <Bonfire.UI.Social.FeedControlsLive
+    event_target={@event_target}
+    feed_name={@feed_name}
+    sort_by={@sort_by}
+    time_limit={@time_limit}
+    sort_order={@sort_order}
+    showing_within={@showing_within}
+  />
 </Bonfire.UI.Common.WidgetBlockLive>

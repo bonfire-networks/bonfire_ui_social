@@ -7,17 +7,20 @@
   scope={@scope}
 />
 
-<Bonfire.UI.Social.Settings.MyFeedItemLive
+<Bonfire.UI.Common.SettingsToggleLive
   :if={module_enabled?(Bonfire.Classify.Category)}
   label={l("Activities from groups I follow")}
-  key={:followed_categories}
+  keys={[Bonfire.Social.Feeds, :my_feed_includes, :followed_categories]}
+  default_value
   scope={@scope}
+  compact
 />
 
 <form phx-change="Bonfire.Common.Settings:set">
   <Bonfire.UI.Common.SettingsToggleLive
     name={l("Boosts")}
     keys={[Bonfire.Social.Feeds, :my_feed_includes, :boost]}
+    default_value
     scope={@scope}
     compact
   />
@@ -27,6 +30,7 @@
   <Bonfire.UI.Common.SettingsToggleLive
     name={l("Replies")}
     keys={[Bonfire.Social.Feeds, :my_feed_includes, :reply]}
+    default_value
     scope={@scope}
     compact
   />
@@ -36,6 +40,7 @@
   <Bonfire.UI.Common.SettingsToggleLive
     name={l("Follows")}
     keys={[Bonfire.Social.Feeds, :my_feed_includes, :follow]}
+    default_value={false}
     scope={@scope}
     compact
   />
@@ -45,6 +50,7 @@
   <Bonfire.UI.Common.SettingsToggleLive
     name={if @scope != :instance, do: l("My own activities", else: l("User's own activities"))}
     keys={[Bonfire.Social.Feeds, :my_feed_includes, :outbox]}
+    default_value
     scope={@scope}
     compact
   />
@@ -54,6 +60,7 @@
   <Bonfire.UI.Common.SettingsToggleLive
     name={l("Notifications")}
     keys={[Bonfire.Social.Feeds, :my_feed_includes, :notifications]}
+    default_value
     scope={@scope}
     compact
   />

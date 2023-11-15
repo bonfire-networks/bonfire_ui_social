@@ -764,7 +764,7 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
   defp component_id(feed_id_or_tuple, assigns),
     do:
       (e(assigns, :feed_component_id, nil) ||
-         feed_id_or_tuple |> debug("feed_id_or_tuple") |> feed_id_only() || :feeds)
+         "feed_#{feed_id_or_tuple |> feed_id_only() || "unknown"}")
       |> debug("the_feed_component_id")
 
   # @decorate time()
