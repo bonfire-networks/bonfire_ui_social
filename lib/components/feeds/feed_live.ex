@@ -65,7 +65,7 @@ defmodule Bonfire.UI.Social.FeedLive do
     {
       :ok,
       socket
-      |> stream_configure(:feed, dom_id: &stream_id("feed", &1))
+      |> stream_configure(:feed, dom_id: &stream_id("fa", &1))
       |> stream(:feed, [])
       |> assign(
         feed: nil,
@@ -286,8 +286,15 @@ defmodule Bonfire.UI.Social.FeedLive do
 
   def maybe_subscribe(socket) do
     case e(socket.assigns, :feed_ids, nil) || e(socket.assigns, :feed_id, nil) do
-      nil -> debug("no feed_id known, not subscribing to live updates")
-      feed_or_feeds -> PubSub.subscribe(feed_or_feeds, socket)
+      nil ->
+        debug("no feed_id known, not subscribing to live updates")
+
+      "user_timeline_" <> feed_id ->
+        PubSub.subscribe(feed_id, socket)
+
+      feed_or_feeds ->
+        # debug(feed_or_feeds, "live subscribing to")
+        PubSub.subscribe(feed_or_feeds, socket)
     end
   end
 

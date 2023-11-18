@@ -55,17 +55,17 @@ defmodule Bonfire.UI.Social.ActivityLive do
   prop hide_actions, :any, default: false
   prop activity_loaded_preloads, :list, default: []
 
-  # TODO: uncomment and move prepare call here
   # @decorate time()
-  # def update_many(assigns_sockets) do
-  #   LiveHandler.update_many(assigns_sockets,
-  #     caller_module: __MODULE__
-  #   )
-  #   # |> debug("lllll")
-  #   |> Enum.map(&maybe_update(&1))
-
-  #   # |> debug("kkkk")
-  # end
+  def update_many(assigns_sockets) do
+    assigns_sockets
+    # TODO: uncomment and move prepare call here
+    #   |> LiveHandler.update_many(
+    #     caller_module: __MODULE__
+    #   )
+    # |> debug("lllll")
+    |> Enum.map(&maybe_update(&1))
+    |> debug("kkkk")
+  end
 
   defp debug_i(i, activity_inception), do: i || "inception-from-#{activity_inception}"
 
@@ -100,7 +100,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
 
   def maybe_update(%{assigns: %{update_activity: true} = assigns} = socket) do
     debug("Activity - assigns with `update_activity` so we update them")
-
+    # FIXME?
     socket
     #  |> assign(assigns)
   end
@@ -120,7 +120,6 @@ defmodule Bonfire.UI.Social.ActivityLive do
       "Activity ##{debug_i(assigns[:activity_id] || socket.assigns[:activity_id], assigns[:activity_inception] || socket.assigns[:activity_inception])} prepared already"
     )
 
-    # FYI: assigning blindly here causes problems
     socket
     |> maybe_update_some_assigns(assigns)
   end
@@ -132,8 +131,14 @@ defmodule Bonfire.UI.Social.ActivityLive do
   end
 
   def maybe_update(socket) do
+    debug(
+      "Activity ##{debug_i(socket.assigns[:activity_id], socket.assigns[:activity_inception])} not prepared yet"
+    )
+
     socket
-    #  |> assign(prepare(assigns))
+    |> maybe_update_some_assigns(socket.assigns)
+
+    #  |> assign(prepare(socket.assigns))
   end
 
   def maybe_update_some_assigns(socket, assigns) do
@@ -157,10 +162,19 @@ defmodule Bonfire.UI.Social.ActivityLive do
         end,
       published_in: maybe_published_in(socket.assigns[:activity], nil),
       is_remote:
-        socket.assigns[:is_remote] ||
-          (e(socket.assigns[:activity], :peered, nil) != nil or
-             e(socket.assigns[:object], :peered, nil) != nil or
-             e(socket.assigns[:activity], :object, :peered, nil) != nil),
+        # e(socket.assigns[:activity], :peered, nil) != nil or
+        (socket.assigns[:is_remote] ||
+           (e(socket.assigns[:object], :peered, nil) != nil or
+              e(socket.assigns[:activity], :object, :peered, nil) != nil or
+              e(
+                e(socket.assigns[:object], :created, :creator, nil) ||
+                  e(socket.assigns[:activity], :object, :created, :creator, nil) ||
+                  e(socket.assigns[:activity], :subject, nil),
+                :character,
+                :peered,
+                nil
+              ) != nil))
+        |> debug("is_remote"),
       thread_title:
         e(assigns, :thread_title, nil) || e(socket.assigns, :thread_title, nil) ||
           e(socket.assigns[:activity], :replied, :thread, :named, :name, nil)
@@ -646,6 +660,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
                 viewing_main_object={e(component_assigns, :viewing_main_object, @viewing_main_object)}
                 activity_component_id={e(component_assigns, :activity_component_id, @activity_component_id)}
                 reply_count={@reply_count}
+                is_remote={@is_remote}
               />
             {#match _}
               <Dynamic.Component
@@ -677,6 +692,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
                 media={e(component_assigns, :media, nil)}
                 activity_component_id={e(component_assigns, :activity_component_id, @activity_component_id)}
                 json={e(component_assigns, :json, nil)}
+                is_remote={@is_remote}
               />
           {/case}
         {/for}

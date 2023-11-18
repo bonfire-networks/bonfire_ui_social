@@ -21,7 +21,11 @@
         </label> -->
   <div class="flex flex-col gap-2">
     <span class="font-medium text-sm text-base-content/80">{l("Included activities")}</span>
-    <Bonfire.UI.Social.Settings.MyFeedItemsLive scope={:user} feed_name={@feed_name} />
+    <Bonfire.UI.Social.Settings.MyFeedItemsLive
+      scope={:user}
+      feed_name={@feed_name}
+      hide_forced_defaults
+    />
   </div>
   <div class="flex flex-col gap-2 pt-3">
     <span class="font-medium text-sm text-base-content/80">{l("Sort by")}</span>

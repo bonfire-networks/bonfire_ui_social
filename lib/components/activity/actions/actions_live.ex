@@ -17,6 +17,7 @@ defmodule Bonfire.UI.Social.Activity.ActionsLive do
   prop flagged, :any, default: nil
   prop thread_mode, :any, default: nil
   prop object_boundary, :any, default: nil
+  prop is_remote, :boolean, default: false
 
   def count(replied) do
     # debug(replied)

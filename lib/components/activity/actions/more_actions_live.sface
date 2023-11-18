@@ -53,20 +53,20 @@
         </Bonfire.UI.Common.OpenModalLive>
       </li>
 
-      {#case e(@object, :peered, :canonical_uri, nil)}
+      {#case e(@object, :peered, :canonical_uri, nil) || @is_remote}
         {#match nil}
+        {#match false}
         {#match canonical_uri}
           <li>
             <div
               phx-click="Bonfire.Social.Feeds:fetch_replies"
-              phx-value-canonical_uri={canonical_uri}
               class="flex items-center gap-2 text-sm text-base-content/70"
             >
               <#Icon iconify="mdi:sprout" class="w-4 h-4 shrink-0 text-base-content/70" />
               <span>{l("Get latest comments")}</span>
             </div>
           </li>
-          <li>
+          <li :if={is_binary(canonical_uri)}>
             <a
               href={canonical_uri}
               target="_blank"

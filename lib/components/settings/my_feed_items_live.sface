@@ -1,5 +1,6 @@
 <!-- <form name="settings" phx-change="Bonfire.Common.Settings:set"> -->
 <Bonfire.UI.Social.Settings.MyFeedItemLive
+  :if={!@hide_forced_defaults}
   label={l("Activities from people I follow")}
   key={:followed_users}
   disabled
@@ -10,7 +11,7 @@
 <Bonfire.UI.Common.SettingsToggleLive
   :if={module_enabled?(Bonfire.Classify.Category)}
   label={l("Activities from groups I follow")}
-  keys={[Bonfire.Social.Feeds, :my_feed_includes, :followed_categories]}
+  keys={[Bonfire.Social.Feeds, :include, :followed_categories]}
   default_value
   scope={@scope}
   compact
@@ -19,7 +20,7 @@
 <form phx-change="Bonfire.Common.Settings:set">
   <Bonfire.UI.Common.SettingsToggleLive
     name={l("Boosts")}
-    keys={[Bonfire.Social.Feeds, :my_feed_includes, :boost]}
+    keys={[Bonfire.Social.Feeds, :include, :boost]}
     default_value
     scope={@scope}
     compact
@@ -29,7 +30,7 @@
 <form phx-change="Bonfire.Common.Settings:set">
   <Bonfire.UI.Common.SettingsToggleLive
     name={l("Replies")}
-    keys={[Bonfire.Social.Feeds, :my_feed_includes, :reply]}
+    keys={[Bonfire.Social.Feeds, :include, :reply]}
     default_value
     scope={@scope}
     compact
@@ -39,7 +40,7 @@
 <form phx-change="Bonfire.Common.Settings:set">
   <Bonfire.UI.Common.SettingsToggleLive
     name={l("Follows")}
-    keys={[Bonfire.Social.Feeds, :my_feed_includes, :follow]}
+    keys={[Bonfire.Social.Feeds, :include, :follow]}
     default_value={false}
     scope={@scope}
     compact
@@ -49,7 +50,7 @@
 <form phx-change="Bonfire.Common.Settings:set">
   <Bonfire.UI.Common.SettingsToggleLive
     name={if @scope != :instance, do: l("My own activities", else: l("User's own activities"))}
-    keys={[Bonfire.Social.Feeds, :my_feed_includes, :outbox]}
+    keys={[Bonfire.Social.Feeds, :include, :outbox]}
     default_value
     scope={@scope}
     compact
@@ -59,7 +60,7 @@
 <form :if={@scope == :instance} phx-change="Bonfire.Common.Settings:set">
   <Bonfire.UI.Common.SettingsToggleLive
     name={l("Notifications")}
-    keys={[Bonfire.Social.Feeds, :my_feed_includes, :notifications]}
+    keys={[Bonfire.Social.Feeds, :include, :notifications]}
     default_value
     scope={@scope}
     compact
@@ -85,10 +86,11 @@
 /> -->
 
 <Bonfire.UI.Social.Settings.MyFeedItemLive
+  :if={!@hide_forced_defaults}
   label={l("Messages")}
   key={:messages}
   disabled
-  force_unchecked
+  force_checked={false}
   scope={@scope}
 />
 <!-- </form> -->

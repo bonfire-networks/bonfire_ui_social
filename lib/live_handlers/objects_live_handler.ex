@@ -72,7 +72,7 @@ defmodule Bonfire.Social.Objects.LiveHandler do
     activity =
       activity
       |> Map.put(:object, object)
-      |> Bonfire.Social.Activities.activity_preloads([:with_creator, :tags, :with_thread_name],
+      |> Bonfire.Social.Activities.activity_preloads(default_preloads(),
         current_user: current_user
       )
 
@@ -185,6 +185,18 @@ defmodule Bonfire.Social.Objects.LiveHandler do
       else: socket
   end
 
+  defp default_preloads(),
+    do: [
+      # :default, 
+      :with_creator,
+      :with_object_posts,
+      :with_reply_to,
+      :with_thread_name,
+      :with_parent,
+      :with_media,
+      :tags
+    ]
+
   def load_object_assigns(%{assigns: assigns} = socket), do: load_object_assigns(assigns, socket)
   def load_object_assigns(%{} = assigns), do: load_object_assigns(assigns, assigns)
 
@@ -207,11 +219,15 @@ defmodule Bonfire.Social.Objects.LiveHandler do
   end
 
   def load_object_assigns(%{post_id: id} = assigns, socket) when is_binary(id) do
-    _current_user = current_user(socket.assigns)
+    current_user = current_user(socket.assigns)
 
     # debug(params, "PARAMS")
     # debug(url, "post url")
-    with {:ok, object} <- Bonfire.Social.Posts.read(ulid!(id), socket) do
+    with {:ok, object} <-
+           Bonfire.Social.Posts.read(ulid!(id),
+             current_user: current_user,
+             preload: default_preloads()
+           ) do
       init_object_assigns(object, socket)
     else
       _e ->
@@ -223,7 +239,11 @@ defmodule Bonfire.Social.Objects.LiveHandler do
     current_user = current_user(socket.assigns)
     # debug(params, "PARAMS")
     with id when is_binary(id) <- ulid(id),
-         {:ok, object} <- Bonfire.Social.Objects.read(id, current_user: current_user) do
+         {:ok, object} <-
+           Bonfire.Social.Objects.read(id,
+             current_user: current_user,
+             preload: default_preloads()
+           ) do
       init_object_assigns(
         object,
         socket

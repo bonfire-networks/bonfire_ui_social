@@ -13,6 +13,7 @@ defmodule Bonfire.UI.Social.ProfilePostsLive do
   prop page_info, :any
   prop follows_me, :boolean, default: false
   prop loading, :boolean, default: false
+  prop feed_component_id, :any, default: nil
 
   slot header
 end

@@ -6,8 +6,9 @@
       do: Config.get([:ui, :explore, :navigation], hashtags: l("Hashtags")),
       else: Config.get([:ui, :explore, :navigation], hashtags: l("Hashtags"))}
   />
+
   <Bonfire.UI.Social.FeedLive
-    id={e(@feed_id, :notifications)}
+    id={ComponentID.new(Bonfire.UI.Social.FeedLive, @feed_id || :local, __MODULE__)}
     feed_id={@feed_id}
     page_title={@page_title}
     feed={@feed}

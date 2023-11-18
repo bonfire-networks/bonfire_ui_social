@@ -10,7 +10,7 @@
   </div> --}
 
   <Bonfire.UI.Social.FeedLive
-    id={e(@feed_id, :notifications)}
+    id={ComponentID.new(Bonfire.UI.Social.FeedLive, e(@feed_id, :notifications), __MODULE__)}
     feed_id={@feed_id}
     page_title={@page_title}
     feed={@feed}

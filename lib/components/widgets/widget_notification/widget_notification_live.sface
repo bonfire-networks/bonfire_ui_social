@@ -5,6 +5,9 @@
     </LiveRedirect>
   </:action>
 
+  {!-- 
+      TODO: support LivePush:
+      ComponentID.new(Bonfire.UI.Social.FeedLive, @feed_ids || @feed_id, __MODULE__) --}
   <Bonfire.UI.Social.FeedLive
     class="pl-0 showing_within:widget"
     hide_tabs

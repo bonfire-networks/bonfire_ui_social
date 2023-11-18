@@ -7,6 +7,10 @@
     </div>
     {!-- <Bonfire.UI.Social.HeaderAsideNotificationsSeenLive  feed_id={:notifications} /> --}
   </div>
+
+  {!-- 
+      TODO: support LivePush:
+      ComponentID.new(Bonfire.UI.Social.FeedLive, @feed_ids || @feed_id, __MODULE__) --}
   <Bonfire.UI.Social.FeedLive
     id="feed_profile_likes"
     feed_id="feed_profile_likes"

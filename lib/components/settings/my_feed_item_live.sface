@@ -3,20 +3,29 @@
     <label class="!px-0 !pt-0 justify-start cursor-pointer label">
       <input name="scope" value={@scope} type="hidden">
       <input
-        name={"Bonfire.Social.Feeds[my_feed_includes][#{@key}]"}
+        name={"Bonfire.Social.Feeds[include][#{@key}]"}
         type="checkbox"
         value={to_string(
           Bonfire.Common.Settings.get(
-            [Bonfire.Social.Feeds, :my_feed_includes, @key],
+            [Bonfire.Social.Feeds, :include, @key],
             true,
             @scope || @__context__
           )
         )}
-        checked={Bonfire.Common.Settings.get(
-          [Bonfire.Social.Feeds, :my_feed_includes, @key],
-          true,
-          @scope || @__context__
-        )}
+        checked={case @force_checked do
+          true ->
+            true
+
+          false ->
+            false
+
+          _ ->
+            Bonfire.Common.Settings.get(
+              [Bonfire.Social.Feeds, :include, @key],
+              true,
+              @scope || @__context__
+            )
+        end}
         disabled={@disabled}
         class="toggle toggle-primary"
       />

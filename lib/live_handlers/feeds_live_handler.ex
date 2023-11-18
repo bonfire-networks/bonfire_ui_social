@@ -277,10 +277,21 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
     send_feed_updates(pid, feed_ids, assigns ++ [insert_stream: %{feed: entries}], component)
   end
 
+  defp send_feed_updates(
+         pid,
+         "Elixir.Bonfire.UI.Social.FeedLive-" <> _ = feed_id,
+         assigns,
+         component
+       )
+       when (is_pid(pid) or is_nil(pid)) and (is_list(assigns) or is_map(assigns)) do
+    debug(feed_id, "Sending feed update to component")
+    maybe_send_update(component, feed_id, assigns, pid)
+  end
+
   defp send_feed_updates(pid, feed_id, assigns, component)
        when (is_pid(pid) or is_nil(pid)) and (is_list(assigns) or is_map(assigns)) do
-    debug(feed_id, "Sending feed update to")
-    maybe_send_update(component, feed_id, assigns, pid)
+    debug(feed_id, "Sending feed update to feed(s)")
+    ComponentID.send_updates(component, feed_id, assigns, pid)
   end
 
   defp send_feed_updates(pid, feed_id, {:error, e}, _component) do
@@ -556,7 +567,7 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
       Bonfire.Social.Feeds.my_home_feed_ids(socket)
       |> debug("feed_ids")
 
-    component_id = component_id(feed_id, socket.assigns)
+    component_id = component_id([feed_id] ++ feed_ids, socket.assigns)
 
     [
       feed_name: feed_name,
@@ -576,15 +587,23 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
   end
 
   def feed_default_assigns(:explore = feed_name, socket) do
-    feed_id = :explore
+    feed_id = "0AND0MSTRANGERS0FF1NTERNET"
 
-    component_id = component_id(feed_id, socket.assigns)
+    component_id =
+      component_id(
+        [
+          feed_id,
+          Bonfire.Social.Feeds.named_feed_id(:activity_pub),
+          Bonfire.Social.Feeds.named_feed_id(:local)
+        ],
+        socket.assigns
+      )
 
     [
       feed_name: feed_name,
-      feed_id: :explore,
+      feed_id: feed_id,
       feed_component_id: component_id,
-      selected_tab: :explore,
+      selected_tab: feed_name,
       # FIXME: clean up page vs tab
       page: "explore",
       page_title: "Explore activities",
@@ -762,10 +781,14 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
     ]
   end
 
-  defp component_id(feed_id_or_tuple, assigns),
+  defp component_id(_feed_id_or_tuple, %{feed_component_id: feed_component_id} = _assigns)
+       when not is_nil(feed_component_id),
+       do: feed_component_id
+
+  defp component_id(feed_id_or_tuple, _assigns),
     do:
-      (e(assigns, :feed_component_id, nil) ||
-         "feed_#{feed_id_or_tuple |> feed_id_only() || "unknown"}")
+      ComponentID.new(Bonfire.UI.Social.FeedLive, feed_id_or_tuple |> feed_id_only())
+      #  "feed_#{feed_id_or_tuple |> feed_id_only() || "unknown"}"
       |> debug("the_feed_component_id")
 
   # @decorate time()
@@ -801,7 +824,7 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
 
           send_feed_updates(
             pid,
-            assigns[:feed_component_id] || :feeds,
+            assigns[:feed_component_id] || assigns[:feed_id] || :feeds,
             {entries,
              new_assigns ++
                [
@@ -1228,7 +1251,12 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
       ) do
     socket_connected = connected?(socket)
 
-    if (socket_connected || current_user(socket.assigns)) && Config.env() != :test do
+    user = user_or_feed || e(socket.assigns, :user, nil) || current_user(socket.assigns)
+
+    feed_id = e(user, :character, :outbox_id, nil) || id(user)
+    feed_component_id = ComponentID.new(Bonfire.UI.Social.FeedLive, feed_id)
+
+    if (socket_connected || not is_nil(current_user_id(socket.assigns))) && Config.env() != :test do
       if socket_connected do
         debug(tab, "socket connected, so load async")
         pid = self()
@@ -1239,7 +1267,8 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
           load_user_feed_assigns(tab, user_or_feed, params, socket)
           |> send_feed_updates(
             pid,
-            "feed_profile_#{tab}",
+            # "feed_profile_#{tab}",
+            feed_component_id,
             ...,
             Bonfire.UI.Social.FeedLive
           )
@@ -1252,6 +1281,8 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
       {:noreply,
        assign(socket,
          loading: true,
+         feed_component_id: feed_component_id,
+         feed_ids: [feed_id],
          feed: [],
          selected_tab: tab
        )}
