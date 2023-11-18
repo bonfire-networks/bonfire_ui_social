@@ -279,7 +279,7 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
 
   defp send_feed_updates(
          pid,
-         "Elixir.Bonfire.UI.Social.FeedLive-" <> _ = feed_id,
+         "Bonfire-UI-Social-FeedLive_" <> _ = feed_id,
          assigns,
          component
        )

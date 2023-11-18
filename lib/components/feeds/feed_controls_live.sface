@@ -24,6 +24,8 @@
     <Bonfire.UI.Social.Settings.MyFeedItemsLive
       scope={:user}
       feed_name={@feed_name}
+      event_name="set_setting"
+      event_target={@event_target}
       hide_forced_defaults
     />
   </div>

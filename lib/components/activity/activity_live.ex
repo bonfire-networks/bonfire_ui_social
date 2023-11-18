@@ -161,19 +161,21 @@ defmodule Bonfire.UI.Social.ActivityLive do
           existing -> existing
         end,
       published_in: maybe_published_in(socket.assigns[:activity], nil),
+      # e(socket.assigns[:activity], :peered, nil) != nil or
       is_remote:
-        # e(socket.assigns[:activity], :peered, nil) != nil or
         (socket.assigns[:is_remote] ||
-           (e(socket.assigns[:object], :peered, nil) != nil or
-              e(socket.assigns[:activity], :object, :peered, nil) != nil or
-              e(
-                e(socket.assigns[:object], :created, :creator, nil) ||
-                  e(socket.assigns[:activity], :object, :created, :creator, nil) ||
-                  e(socket.assigns[:activity], :subject, nil),
-                :character,
-                :peered,
-                nil
-              ) != nil))
+           !Bonfire.Social.Integration.is_local?(
+             e(socket.assigns[:object], :peered, nil) ||
+               e(socket.assigns[:activity], :object, :peered, nil) ||
+               e(
+                 e(socket.assigns[:object], :created, :creator, nil) ||
+                   e(socket.assigns[:activity], :object, :created, :creator, nil) ||
+                   e(socket.assigns[:activity], :subject, nil),
+                 :character,
+                 :peered,
+                 nil
+               ) || e(socket.assigns, :subject_user, nil)
+           ))
         |> debug("is_remote"),
       thread_title:
         e(assigns, :thread_title, nil) || e(socket.assigns, :thread_title, nil) ||

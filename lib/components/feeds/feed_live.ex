@@ -339,6 +339,23 @@ defmodule Bonfire.UI.Social.FeedLive do
   end
 
   def do_handle_event(
+        "set_setting",
+        attrs,
+        socket
+      ) do
+    with {
+           :noreply,
+           socket
+         } <- Bonfire.Common.Settings.LiveHandler.handle_event("set", attrs, socket) do
+      do_handle_event(
+        "set",
+        %{},
+        socket
+      )
+    end
+  end
+
+  def do_handle_event(
         "set",
         attrs,
         socket
@@ -348,7 +365,7 @@ defmodule Bonfire.UI.Social.FeedLive do
 
     socket =
       socket
-      # |> assign( replies: [])
+      |> assign(loading: true)
       |> Bonfire.UI.Common.LiveHandlers.assign_attrs(attrs)
 
     send_self(widgets(e(socket, :assigns, nil)))
@@ -356,7 +373,6 @@ defmodule Bonfire.UI.Social.FeedLive do
     {
       :noreply,
       socket
-      # |> assign( replies: [])
       # |> Bonfire.UI.Common.LiveHandlers.assign_attrs(attrs)
       # |> assign(:page_header_aside, LiveHandler.page_header_asides(...))
       |> LiveHandler.insert_feed(

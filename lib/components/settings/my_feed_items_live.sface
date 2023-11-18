@@ -1,4 +1,3 @@
-<!-- <form name="settings" phx-change="Bonfire.Common.Settings:set"> -->
 <Bonfire.UI.Social.Settings.MyFeedItemLive
   :if={!@hide_forced_defaults}
   label={l("Activities from people I follow")}
@@ -8,16 +7,18 @@
   scope={@scope}
 />
 
-<Bonfire.UI.Common.SettingsToggleLive
-  :if={module_enabled?(Bonfire.Classify.Category)}
-  label={l("Activities from groups I follow")}
-  keys={[Bonfire.Social.Feeds, :include, :followed_categories]}
-  default_value
-  scope={@scope}
-  compact
-/>
+<form phx-change={@event_name || "Bonfire.Common.Settings:set"} phx-target={@event_target}>
+  <Bonfire.UI.Common.SettingsToggleLive
+    :if={module_enabled?(Bonfire.Classify.Category)}
+    label={l("Activities from groups I follow")}
+    keys={[Bonfire.Social.Feeds, :include, :followed_categories]}
+    default_value
+    scope={@scope}
+    compact
+  />
+</form>
 
-<form phx-change="Bonfire.Common.Settings:set">
+<form phx-change={@event_name || "Bonfire.Common.Settings:set"} phx-target={@event_target}>
   <Bonfire.UI.Common.SettingsToggleLive
     name={l("Boosts")}
     keys={[Bonfire.Social.Feeds, :include, :boost]}
@@ -27,7 +28,7 @@
   />
 </form>
 
-<form phx-change="Bonfire.Common.Settings:set">
+<form phx-change={@event_name || "Bonfire.Common.Settings:set"} phx-target={@event_target}>
   <Bonfire.UI.Common.SettingsToggleLive
     name={l("Replies")}
     keys={[Bonfire.Social.Feeds, :include, :reply]}
@@ -37,7 +38,7 @@
   />
 </form>
 
-<form phx-change="Bonfire.Common.Settings:set">
+<form phx-change={@event_name || "Bonfire.Common.Settings:set"} phx-target={@event_target}>
   <Bonfire.UI.Common.SettingsToggleLive
     name={l("Follows")}
     keys={[Bonfire.Social.Feeds, :include, :follow]}
@@ -47,7 +48,7 @@
   />
 </form>
 
-<form phx-change="Bonfire.Common.Settings:set">
+<form phx-change={@event_name || "Bonfire.Common.Settings:set"} phx-target={@event_target}>
   <Bonfire.UI.Common.SettingsToggleLive
     name={if @scope != :instance, do: l("My own activities", else: l("User's own activities"))}
     keys={[Bonfire.Social.Feeds, :include, :outbox]}
@@ -57,7 +58,11 @@
   />
 </form>
 
-<form :if={@scope == :instance} phx-change="Bonfire.Common.Settings:set">
+<form
+  :if={!@hide_forced_defaults}
+  phx-change={@event_name || "Bonfire.Common.Settings:set"}
+  phx-target={@event_target}
+>
   <Bonfire.UI.Common.SettingsToggleLive
     name={l("Notifications")}
     keys={[Bonfire.Social.Feeds, :include, :notifications]}
