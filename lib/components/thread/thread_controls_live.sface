@@ -93,7 +93,7 @@
             {#match :num_replies}
               <#Icon iconify="basil:comment-outline" class="w-5 h-5 stroke-1 fill-base-content/50" />
             {#match :num_boosts}
-              <#Icon iconify="mdi:repeat-variant" class="w-5 h-5 stroke-1 fill-base-content/50" />
+              <#Icon iconify="system-uicons:retweet" class="w-5 h-5 stroke-1 fill-base-content/50" />
             {#match :num_likes}
               <#Icon iconify="mingcute:fire-line" class="h-[20px] w-[18px" />
             {#match _}
@@ -160,7 +160,7 @@
               "flex gap-2 text-base-content/70",
               "active !text-base-content/100 font-semibold": @sort_by == :num_boosts
             }>
-              <#Icon iconify="mdi:repeat-variant" class="w-5 h-5 stroke-1 fill-base-content/50" />
+              <#Icon iconify="system-uicons:retweet" class="w-5 h-5 stroke-1 fill-base-content/50" />
               {l("By amount of boosts")}</a></li>
 
           <li

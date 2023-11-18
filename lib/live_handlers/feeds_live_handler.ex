@@ -11,6 +11,8 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
         _,
         socket
       ) do
+    debug(socket, "QUIIII")
+
     paginate_feed(
       e(socket.assigns, :feed_name, nil) || e(socket.assigns, :feed_id, nil) ||
         e(socket.assigns, :feed_ids, nil) || e(socket.assigns, :id, nil),
@@ -310,7 +312,6 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
     #   )
     # else
     (feed_id || :default)
-    # |> debug("Feeds - paginate - a feed_id has been assigned in the view, so load that")
     |> paginate_fetch_assign_feed(
       opts,
       socket
@@ -1007,9 +1008,9 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
      ) ||
        assigns_sockets)
     # |> debug("bbbb")
-    #   |> Enum.map(fn 
+    #   |> Enum.map(fn
     #     {assigns, socket} -> {assigns, socket}
-    #     %{} = socket -> {socket.assigns, socket} 
+    #     %{} = socket -> {socket.assigns, socket}
     #   end)
     |> debug("cccc")
     |> preload_assigns_async(
@@ -1135,7 +1136,7 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
       {
         component.component_id,
         if(activity, do: %{activity: activity, activity_loaded_preloads: preloads})
-        # ActivityLive.assigns_from_activity(list_of_activities[component.object_id] || component.activity)  
+        # ActivityLive.assigns_from_activity(list_of_activities[component.object_id] || component.activity)
       }
     end)
   end

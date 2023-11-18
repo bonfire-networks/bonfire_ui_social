@@ -9,7 +9,7 @@
               <#Icon iconify="basil:comment-outline" class="w-5 h-5 stroke-1 fill-base-content/50" />
               <span>{l("Sort by amount of replies")}</span>
             {#match :num_boosts}
-              <#Icon iconify="mdi:repeat-variant" class="w-5 h-5 stroke-1 fill-base-content/50" />
+              <#Icon iconify="system-uicons:retweet" class="w-5 h-5 stroke-1 fill-base-content/50" />
               <span>{l("Sort by amount of boosts")}</span>
             {#match :num_likes}
               <#Icon iconify="mingcute:fire-line" class="w-5 h-5" />
@@ -34,12 +34,15 @@
         phx-value-assign_global="true"
         phx-target={@event_target}
       >
-        <a class={
-          "flex gap-2 text-base-content/70 border border-base-content/30",
-          "border-base-content/5 active !text-base-content/100": is_nil(@sort_by)
-        }>
+        <a
+          data-tip={l("Chronological")}
+          class={
+            "tooltip tooltip-bottom flex gap-2 text-base-content/70 border border-base-content/30",
+            "border-base-content/5 active !text-base-content/100": is_nil(@sort_by)
+          }
+        >
           <#Icon iconify="mdi:order-alphabetical-ascending" class="w-5 h-5 text-base-content/70" />
-          {l("Chronological")}
+          <span class="sr-only">{l("Chronological")}</span>
         </a></li>
 
       <li
@@ -50,12 +53,17 @@
         phx-value-assign_global="true"
         phx-target={@event_target}
       >
-        <a class={
-          "flex gap-2 text-base-content/70 border border-base-content/30",
-          "border-base-content/5 active !text-base-content/100": @sort_by == :num_replies
-        }>
+        <a
+          data-tip={l("By amount of replies")}
+          class={
+            "tooltip tooltip-bottom flex gap-2 text-base-content/70 border border-base-content/30",
+            "border-base-content/5 active !text-base-content/100": @sort_by == :num_replies
+          }
+        >
           <#Icon iconify="basil:comment-outline" class="w-5 h-5 stroke-1 fill-base-content/50" />
-          {l("By amount of replies")}</a></li>
+          <span class="sr-only">{l("By amount of replies")}</span>
+        </a>
+      </li>
 
       <li
         data-role="amount_of_boosts"
@@ -65,12 +73,17 @@
         phx-value-assign_global="true"
         phx-target={@event_target}
       >
-        <a class={
-          "flex gap-2 text-base-content/70 border border-base-content/30",
-          "border-base-content/5 active !text-base-content/100": @sort_by == :num_boosts
-        }>
-          <#Icon iconify="mdi:repeat-variant" class="w-5 h-5 stroke-1 fill-base-content/50" />
-          {l("By amount of boosts")}</a></li>
+        <a
+          data-tip={l("By amount of boosts")}
+          class={
+            "tooltip tooltip-bottom flex gap-2 text-base-content/70 border border-base-content/30",
+            "border-base-content/5 active !text-base-content/100": @sort_by == :num_boosts
+          }
+        >
+          <#Icon iconify="system-uicons:retweet" class="w-5 h-5 stroke-1 fill-base-content/50" />
+          <span class="sr-only">{l("By amount of boosts")}</span>
+        </a>
+      </li>
 
       <li
         data-role="amount_of_likes"
@@ -80,12 +93,17 @@
         phx-value-assign_global="true"
         phx-target={@event_target}
       >
-        <a class={
-          "flex gap-2 text-base-content/70 border border-base-content/30",
-          "border-base-content/5 active !text-base-content/100": @sort_by == :num_likes
-        }>
-          <#Icon iconify="mingcute:fire-line" class="w-5 h-5" />
-          {l("By amount of likes")}</a></li>
+        <a
+          data-tip={l("By amount of likes")}
+          class={
+            "tooltip tooltip-bottom flex gap-2 text-base-content/70 border border-base-content/30",
+            "border-base-content/5 active !text-base-content/100": @sort_by == :num_likes
+          }
+        >
+          <#Icon iconify="mingcute:fire-fill" class="w-5 h-5" />
+          <span class="sr-only">{l("By amount of likes")}</span>
+        </a>
+      </li>
 
       {!-- <li></li>
           <li>
@@ -188,7 +206,7 @@
           "border-base-content/5 active !text-base-content/100": @time_limit == 1
         }>
           <#Icon iconify="ri:24-hours-fill" class="w-5 h-5 text-base-content/70" />
-          {l("Day")}</a></li>
+          <span class="sr-only">{l("Day")}</span></a></li>
 
       <li
         data-role="week"
@@ -202,7 +220,7 @@
           "border-base-content/5 active !text-base-content/100": @time_limit == 7
         }>
           <#Icon iconify="mdi:numeric-7-box" class="w-5 h-5 text-base-content/70" />
-          {l("Week")}</a></li>
+          <span class="sr-only">{l("Week")}</span></a></li>
 
       <li
         data-role="month"
@@ -219,7 +237,7 @@
             iconify="streamline:interface-calendar-date-month-thirty-thirty-calendar-date-week-day-month"
             class="w-5 h-5 text-base-content/70"
           />
-          {l("Month")}</a></li>
+          <span class="sr-only">{l("Month")}</span></a></li>
 
       <li
         data-role="year"
@@ -233,7 +251,7 @@
           "border-base-content/5 active !text-base-content/100": @time_limit == 365
         }>
           <#Icon iconify="iconoir:birthday-cake" class="w-5 h-5 text-base-content/70" />
-          {l("Year")}</a></li>
+          <span class="sr-only">{l("Year")}</span></a></li>
 
       <li
         data-role="infinite"
@@ -247,7 +265,7 @@
           "border-base-content/5 active !text-base-content/100": !@time_limit or @time_limit == 0
         }>
           <#Icon iconify="fa6-solid:infinity" class="w-5 h-5 text-base-content/70" />
-          {l("All time")}</a></li>
+          <span class="sr-only">{l("All time")}</span></a></li>
     </ul>
   </div>
 </div>

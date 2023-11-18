@@ -1,6 +1,6 @@
 <Bonfire.UI.Common.WidgetBlockLive
   class="relative w-full mx-auto rounded-xl border border-base-content/20"
-  widget_title={e(@widget_title, "Filter feed")}
+  widget_title={e(@widget_title, "Filter options")}
 >
   <Bonfire.UI.Social.FeedControlsLive
     event_target={@event_target}

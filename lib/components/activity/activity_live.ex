@@ -57,7 +57,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
 
   # TODO: uncomment and move prepare call here
   # @decorate time()
-  # def update_many(assigns_sockets) do 
+  # def update_many(assigns_sockets) do
   #   LiveHandler.update_many(assigns_sockets,
   #     caller_module: __MODULE__
   #   )
@@ -446,7 +446,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
             @activity_inception == nil,
         "active-activity":
           String.contains?(@current_url || "", @permalink || "") and
-            @showing_within != :smart_input
+            @showing_within != :smart_input and @viewing_main_object == false
       }
     >
       {#if @hide_activity != "all"}
