@@ -11,7 +11,7 @@
     boundary_preset={@boundary_preset}
     object_type={@object_type}
     object={@object}
-    object_id={@object_id}
+    object_id={@object_id || id(@object)}
   />
 {#else}
   <Dynamic.LiveComponent
@@ -27,6 +27,6 @@
     boundary_preset={@boundary_preset}
     object_type={@object_type}
     object={@object}
-    object_id={@object_id}
+    object_id={@object_id || id(@object)}
   />
 {/if}
