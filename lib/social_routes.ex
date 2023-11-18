@@ -38,7 +38,7 @@ defmodule Bonfire.UI.Social.Routes do
 
         live("/bookmarks", Feeds.BookmarksLive, :bookmarks, as: Bonfire.Data.Social.Bookmark)
 
-        live("/feed/likes", FeedsLive, :likes, as: :feed)
+        live("/feed/likes", FeedsLive, :likes, as: Bonfire.Data.Social.Like)
         # live("/feed/likes/", Feeds.LikesLive, as: Bonfire.Data.Social.Like)
 
         live("/messages/:id", MessagesLive, as: Bonfire.Data.Social.Message)
