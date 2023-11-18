@@ -287,7 +287,7 @@
             </div>
           </div>
         {#elseif @verb in ["Reply", "Respond"]}
-          <!-- <div class="flex items-center w-full">
+          {!-- <div class="flex items-center w-full">
               <div
                 class="mr-3"
                 :if={!Settings.get([Bonfire.UI.Common.AvatarLive, :hide_avatars], false, @__context__)}
@@ -309,7 +309,6 @@
               <div class="flex items-start justify-between leading-[16px] min-w-0 space-x-1 w-full">
                 <div class="flex flex-col flex-1 gap-0 feed-clickable">
                   <div class="text-sm font-medium lowercase line-clamp-1 text-base-content/70">
-                    {!-- {@verb} {@object_type} --}
                     <LiveRedirect
                       opts={"data-id": "subject_name"}
                       aria-label={l("%{name}'s profile", name: e(@profile, :name, ""))}
@@ -319,8 +318,7 @@
                       {e(@profile, :name, "Anonymous")}
                     </LiveRedirect>
                   </div>
-                  {!-- <span class="ml-2 text-[15px] text-base-content/70">replied to <b class="font-bold text-base-content link">title topic</b></span> --}
-                  {!-- </div> --}
+                  <!-- <span class="ml-2 text-[15px] text-base-content/70">replied to <b class="font-bold text-base-content link">title topic</b></span>  </div>  -->
                   <div class="flex items-center gap-1">
                     <LiveRedirect
                       :if={e(@character, :username, nil)}
@@ -363,7 +361,7 @@
                   </div>
                 </div>
               </div>
-            </div> -->
+            </div> --}
         {#elseif @verb == "Flag"}
           <div data-role="flagged_by" class="flex items-center justify-start pb-3 -ml-8">
             {!-- FLAG --}

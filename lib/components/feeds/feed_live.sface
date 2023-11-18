@@ -146,7 +146,7 @@
             </div>
           {#match _}
         {/case} --}
-          {#else}
+          {#elseif !(is_list(@feed) and @feed != [])}
             <div data-id="empty-feed" class="flex items-center place-content-center">
               <Bonfire.UI.Common.EmptyFeed
                 feed_name={@feed_name}

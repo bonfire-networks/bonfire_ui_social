@@ -690,12 +690,11 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
       hide_tabs: true,
       showing_within: :feed_by_subject,
       # FIXME: clean up page vs tab
-      page: "favourites",
-      page_title: "Favourites",
+      page: "likes",
+      page_title: "Likes",
       no_header: false,
-      # page_title: l("My favourites"),
       # feed_title: l("My favourites"),
-      feedback_title: l("You have no favourites yet"),
+      feedback_title: l("Have you not liked anything yet?"),
       # feed_id: feed_name,
       # feedback_message: l("It seems like the paint is still fresh on this instance..."),
       feed: nil,
@@ -713,8 +712,6 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
       scope: :instance,
       # FIXME: clean up page vs tab
       page: "flags",
-      # page_title: l("My favourites"),
-      # feed_title: l("My favourites"),
       feedback_title: l("You have no flagged activities..."),
       # feed_id: feed_name,
       # feedback_message: l("It seems like the paint is still fresh on this instance..."),
@@ -1018,38 +1015,38 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
   def update_many(assigns_sockets, opts) do
     feed_live_update_many_preloads = feed_live_update_many_preloads?()
 
-    # if feed_live_update_many_preloads !=:inline do
-    # |> preloads(opts) # NOTE: we preload most activity assocs after querying rather than here so as to not mix different ways they're loaded (eg. Edges vs FeedPublish)
-    (assigns_sockets
-     |> Bonfire.Boundaries.LiveHandler.maybe_preload_and_check_boundaries(
-       opts ++
-         [
-           verbs: [:read],
-           return_assigns_socket_tuple: true,
-           live_update_many_preloads: feed_live_update_many_preloads
-         ]
-     ) ||
-       assigns_sockets)
-    # |> debug("bbbb")
-    #   |> Enum.map(fn
-    #     {assigns, socket} -> {assigns, socket}
-    #     %{} = socket -> {socket.assigns, socket}
-    #   end)
-    |> debug("cccc")
-    |> preload_assigns_async(
-      &assigns_to_params/1,
-      &preload_extras/3,
-      opts ++
-        [
-          preload_status_key: :preloaded_async_activities,
-          live_update_many_preloads: feed_live_update_many_preloads
-        ]
-    )
+    if feed_live_update_many_preloads != :inline do
+      (assigns_sockets
+       |> Bonfire.Boundaries.LiveHandler.maybe_preload_and_check_boundaries(
+         opts ++
+           [
+             verbs: [:read],
+             return_assigns_socket_tuple: true,
+             live_update_many_preloads: feed_live_update_many_preloads
+           ]
+       ) ||
+         assigns_sockets)
+      # |> debug("bbbb")
+      #   |> Enum.map(fn
+      #     {assigns, socket} -> {assigns, socket}
+      #     %{} = socket -> {socket.assigns, socket}
+      #   end)
+      |> debug("cccc")
+      |> preload_assigns_async(
+        &assigns_to_params/1,
+        &preload_extras/3,
+        opts ++
+          [
+            preload_status_key: :preloaded_async_activities,
+            return_assigns_socket_tuple: true,
+            live_update_many_preloads: feed_live_update_many_preloads
+          ]
+      )
 
-    # |> debug
-    # else
-    #   assigns_sockets
-    # end
+      # |> debug
+    else
+      assigns_sockets
+    end
   end
 
   def feed_live_update_many_preloads?,

@@ -27,8 +27,9 @@ defmodule Bonfire.UI.Social.ActivityLive do
   prop date_ago, :any, default: nil
   prop feed_id, :any, default: nil
   prop activity_component_id, :any, default: nil
-  prop viewing_main_object, :boolean, default: false
   prop activity_inception, :any, default: nil
+  prop activity_prepared, :atom, default: nil
+  prop viewing_main_object, :boolean, default: false
   prop showing_within, :any, default: nil
   prop hide_reply, :boolean, default: false
   prop class, :string, required: false, default: ""
@@ -58,130 +59,148 @@ defmodule Bonfire.UI.Social.ActivityLive do
   # @decorate time()
   def update_many(assigns_sockets) do
     assigns_sockets
-    # TODO: uncomment and move prepare call here
-    #   |> LiveHandler.update_many(
-    #     caller_module: __MODULE__
-    #   )
-    # |> debug("lllll")
-    |> Enum.map(&maybe_update(&1))
+    |> LiveHandler.update_many(caller_module: __MODULE__)
+    |> debug("lllll")
+    |> Enum.map(fn
+      {assigns, socket} ->
+        maybe_update(assigns, socket)
+
+      socket ->
+        maybe_update(socket.assigns, socket)
+    end)
     |> debug("kkkk")
   end
 
   defp debug_i(i, activity_inception), do: i || "inception-from-#{activity_inception}"
 
-  def maybe_update(%{assigns: %{activity_remove: true}} = socket) do
+  def maybe_update(%{activity_remove: true}, socket) do
     remove(socket)
   end
 
   def maybe_update(
-        %{
-          assigns:
-            %{
-              activity_prepared: true,
-              preloaded_async_activities: preloaded_async_activities,
-              activity: activity
-            } = assigns
-        } = socket
+        %{preloaded_async_activities: preloaded_async_activities, activity: activity} = assigns,
+        %{assigns: %{activity_prepared: true}} = socket
       )
       when is_map(activity) and preloaded_async_activities == true do
     debug(
       "Activity ##{debug_i(socket.assigns[:activity_id], socket.assigns[:activity_inception])} prepared already, just assign updated activity"
     )
 
-    # debug(assigns)
+    debug(assigns)
 
     assign(
       socket,
-      activity: Map.drop(activity, [:object]),
+      activity: if(is_map(activity), do: Map.drop(activity, [:object])),
       object: e(activity, :object, nil)
     )
-    |> maybe_update_some_assigns(assigns)
+    |> maybe_update_some_assigns(assigns, [])
   end
 
-  def maybe_update(%{assigns: %{update_activity: true} = assigns} = socket) do
+  def maybe_update(
+        %{update_activity: true} = assigns,
+        socket
+      ) do
     debug("Activity - assigns with `update_activity` so we update them")
-    # FIXME?!
+
     socket
-    #  |> assign(assigns)
+    |> assign(assigns)
+    |> maybe_update_some_assigns(assigns, [])
   end
 
-  # def maybe_update(%{assigns: %{activity_prepared: true, object_boundary: object_boundary} = assigns} = socket)
-  #     when not is_nil(object_boundary) do
-  #   debug(
-  #     "Activity ##{debug_i(socket.assigns[:activity_id], socket.assigns[:activity_inception])} prepared already, just assign object_boundary"
-  #   )
+  def maybe_update(
+        %{object_boundary: object_boundary} = _assigns,
+        %{assigns: %{activity_prepared: true}} = socket
+      )
+      when not is_nil(object_boundary) do
+    debug(
+      "Activity ##{debug_i(socket.assigns[:activity_id], socket.assigns[:activity_inception])} prepared already, just assign object_boundary"
+    )
 
-  #   socket
-  #   |> assign(object_boundary: object_boundary)
-  #   |> maybe_update_some_assigns(assigns)
-  # end
+    socket
+    |> assign(object_boundary: object_boundary)
+  end
 
-  def maybe_update(%{assigns: %{activity_prepared: true} = assigns} = socket) do
+  def maybe_update(assigns, %{assigns: %{activity_prepared: true}} = socket) do
     debug(
       "Activity ##{debug_i(assigns[:activity_id] || socket.assigns[:activity_id], assigns[:activity_inception] || socket.assigns[:activity_inception])} prepared already"
     )
 
+    # FYI: assigning blindly here causes problems
     socket
-    |> maybe_update_some_assigns(assigns)
+    |> maybe_update_some_assigns(assigns, [])
   end
 
-  def maybe_update({%{} = assigns, %Phoenix.LiveView.Socket{} = socket}) do
-    socket
-    |> assign(assigns)
-    |> maybe_update()
-  end
-
-  def maybe_update(socket) do
+  def maybe_update(assigns, socket) do
     debug(
-      "Activity ##{debug_i(socket.assigns[:activity_id], socket.assigns[:activity_inception])} not prepared yet"
+      "Activity ##{debug_i(assigns[:activity_id] || socket.assigns[:activity_id], assigns[:activity_inception] || socket.assigns[:activity_inception])} not prepared, do so now"
     )
 
     socket
-    |> maybe_update_some_assigns(socket.assigns)
-
-    #  |> assign(prepare(socket.assigns))
+    |> assign(prepare(assigns))
   end
 
-  def maybe_update_some_assigns(socket, assigns) do
-    # TODO: use this also in `prepare` to avoid duplication
-    assign(
-      socket,
-      showing_within:
-        case e(assigns, :showing_within, nil) do
-          nil -> e(socket.assigns, :showing_within, nil)
-          existing -> existing
-        end,
+  def maybe_update_some_assigns(socket \\ nil, assigns, extras) do
+    socket
+    |> assign(some_assigns(socket, assigns, extras))
+  end
+
+  defp some_assigns(socket \\ %{}, assigns, extras)
+
+  defp some_assigns(%Phoenix.LiveView.Socket{assigns: socket_assigns}, assigns, extras),
+    do: some_assigns(socket_assigns, assigns, extras)
+
+  defp some_assigns(socket_assigns, assigns, extras) do
+    activity = assigns[:activity] || socket_assigns[:activity]
+    object = assigns[:object] || e(activity, :object, nil) || socket_assigns[:object]
+
+    showing_within =
+      case e(assigns, :showing_within, nil) do
+        nil -> e(socket_assigns, :showing_within, nil)
+        existing -> existing
+      end || :feed
+
+    [
+      showing_within: showing_within,
       thread_mode:
         case e(assigns, :thread_mode, nil) do
-          nil -> e(socket.assigns, :thread_mode, nil)
+          nil -> e(socket_assigns, :thread_mode, nil)
           existing -> existing
         end,
-      hide_actions:
-        case e(assigns, :hide_actions, nil) do
-          nil -> e(socket.assigns, :hide_actions, nil)
-          existing -> existing
-        end,
-      published_in: maybe_published_in(socket.assigns[:activity], nil),
-      # e(socket.assigns[:activity], :peered, nil) != nil or
+      published_in: maybe_published_in(activity, extras[:verb]),
+      # e(socket_assigns[:activity], :peered, nil) != nil or
       is_remote:
-        (socket.assigns[:is_remote] ||
+        (assigns[:is_remote] || socket_assigns[:is_remote] ||
            !Bonfire.Social.Integration.is_local?(
-             e(socket.assigns[:object], :peered, nil) ||
-               e(socket.assigns[:activity], :object, :peered, nil) ||
-               e(
-                 e(socket.assigns[:object], :created, :creator, nil) ||
-                   e(socket.assigns[:activity], :object, :created, :creator, nil) ||
-                   e(socket.assigns[:activity], :subject, nil),
-                 :character,
-                 :peered,
-                 nil
-               ) || e(socket.assigns, :subject_user, nil)
+             e(object, :peered, nil) ||
+               e(object, :created, :creator, nil) ||
+               e(activity, :subject, nil) ||
+               e(assigns, :subject_user, nil) ||
+               e(socket_assigns, :subject_user, nil)
            ))
         |> debug("is_remote"),
       thread_title:
-        e(assigns, :thread_title, nil) || e(socket.assigns, :thread_title, nil) ||
-          e(socket.assigns[:activity], :replied, :thread, :named, :name, nil)
-    )
+        e(assigns, :thread_title, nil) || e(socket_assigns, :thread_title, nil) ||
+          e(extras[:thread], :named, :name, nil) ||
+          e(activity, :replied, :thread, :named, :name, nil),
+      hide_actions:
+        case e(assigns, :hide_actions, nil) || e(socket_assigns, :hide_actions, nil) do
+          nil ->
+            !(e(assigns, :viewing_main_object, nil) ||
+                e(socket_assigns, :viewing_main_object, nil)) and
+              Settings.get(
+                [
+                  Bonfire.UI.Social.Activity.ActionsLive,
+                  showing_within,
+                  :hide_until_hovered
+                ],
+                nil,
+                current_user(assigns) || current_user(socket_assigns)
+              ) && "until_hovered"
+
+          hide_actions ->
+            hide_actions
+        end
+    ]
   end
 
   # def assigns_from_activity(activity) do
@@ -295,12 +314,17 @@ defmodule Bonfire.UI.Social.ActivityLive do
     # |> debug()
 
     assigns
+    |> some_assigns(
+      verb: verb,
+      thread: thread
+    )
+    |> Enum.into(assigns)
     |> Map.merge(%{
       activity_prepared: true,
       activity_id: id || "no-activity-id",
       object_id: object_id || "no-object-id",
       activity_component_id:
-        Enums.id(assigns) ||
+        assigns[:activity_component_id] || Enums.id(assigns) ||
           "activity-#{e(assigns, :activity_inception, nil)}-#{id || "no-activity-id"}",
       object_type: object_type,
       object_type_readable: object_type_readable,
@@ -317,33 +341,10 @@ defmodule Bonfire.UI.Social.ActivityLive do
       thread_url: thread_url,
       current_url: current_url,
       thread_id: thread_id,
-      thread_title: e(assigns, :thread_title, nil) || e(thread, :named, :name, nil),
-      published_in: maybe_published_in(activity, verb),
       cw:
         e(assigns, :cw, nil) || e(activity, :sensitive, :is_sensitive, nil) ||
           e(object, :post_content, :summary, nil) != nil,
-      is_remote:
-        assigns[:is_remote] ||
-          (e(activity, :peered, nil) != nil or e(object, :peered, nil) != nil or
-             e(activity, :object, :peered, nil) != nil),
-      reply_count: e(replied, :nested_replies_count, 0) + e(replied, :direct_replies_count, 0),
-      hide_actions:
-        case e(assigns, :hide_actions, nil) do
-          nil ->
-            !e(assigns, :viewing_main_object, nil) and
-              Settings.get(
-                [
-                  Bonfire.UI.Social.Activity.ActionsLive,
-                  e(assigns, :showing_within, nil) || :feed,
-                  :hide_until_hovered
-                ],
-                nil,
-                assigns
-              ) && "until_hovered"
-
-          hide_actions ->
-            hide_actions
-        end
+      reply_count: e(replied, :nested_replies_count, 0) + e(replied, :direct_replies_count, 0)
     })
 
     # |> debug("Activity preparation done")
@@ -425,7 +426,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
     |> debug("components")
   end
 
-  def maybe_prepare(%{activity: _, activity_prepared: _} = assigns) do
+  def maybe_prepare(%{activity: _, activity_prepared: true} = assigns) do
     assigns
   end
 
@@ -434,7 +435,10 @@ defmodule Bonfire.UI.Social.ActivityLive do
   end
 
   def render(%{activity: _} = assigns) do
-    # assigns = maybe_prepare(assigns)
+    assigns =
+      if assigns[:activity_prepared] == :defer_to_render,
+        do: maybe_prepare(assigns),
+        else: assigns
 
     ~F"""
     <article
@@ -669,7 +673,9 @@ defmodule Bonfire.UI.Social.ActivityLive do
               <Dynamic.Component
                 :if={@hide_activity != "dynamic" && @showing_within != :notifications}
                 module={component}
-                id={e(component_assigns, :id, nil)}
+                activity_component_id={e(component_assigns, :id, nil)}
+                activity_prepared={:defer_to_render}
+                activity_inception={e(component_assigns, :activity_inception, @activity_inception)}
                 myself={nil}
                 created_verb_display={@created_verb_display}
                 showing_within={@showing_within}
@@ -686,14 +692,12 @@ defmodule Bonfire.UI.Social.ActivityLive do
                 permalink={e(component_assigns, :permalink, @permalink)}
                 thread_url={@thread_url}
                 thread_id={@thread_id}
-                activity_inception={e(component_assigns, :activity_inception, @activity_inception)}
                 viewing_main_object={e(component_assigns, :viewing_main_object, @viewing_main_object)}
                 show_minimal_subject_and_note={e(component_assigns, :show_minimal_subject_and_note, @show_minimal_subject_and_note)}
                 hide_reply={e(component_assigns, :hide_reply, @hide_reply)}
                 profile={e(component_assigns, :profile, nil)}
                 character={e(component_assigns, :character, nil)}
                 media={e(component_assigns, :media, nil)}
-                activity_component_id={e(component_assigns, :activity_component_id, @activity_component_id)}
                 json={e(component_assigns, :json, nil)}
                 is_remote={@is_remote}
               />

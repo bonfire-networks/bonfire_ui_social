@@ -1,8 +1,8 @@
 defmodule Bonfire.UI.Social.Feeds.LikesLive do
   use Bonfire.UI.Common.Web, :surface_live_view
 
-  declare_nav_link(l("Favourites"),
-    page: "favourites",
+  declare_nav_link(l("Likes"),
+    page: "likes",
     href: "/feed/likes",
     icon: "mingcute:fire-line",
     icon_active: "mingcute:fire-fill"
@@ -25,7 +25,7 @@ defmodule Bonfire.UI.Social.Feeds.LikesLive do
        page_info: page_info,
        showing_within: :likes,
        loading: false,
-       page: "favourites",
+       page: "likes",
        sidebar_widgets: [
          users: [
            secondary: [
@@ -38,7 +38,7 @@ defmodule Bonfire.UI.Social.Feeds.LikesLive do
            ]
          ]
        ],
-       page_title: l("My Favourites")
+       page_title: l("Likes")
      )}
   end
 
