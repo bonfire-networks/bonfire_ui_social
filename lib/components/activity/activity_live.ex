@@ -77,7 +77,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
         %{
           assigns:
             %{
-              activity_prepared: _,
+              activity_prepared: true,
               preloaded_async_activities: preloaded_async_activities,
               activity: activity
             } = assigns
@@ -100,22 +100,23 @@ defmodule Bonfire.UI.Social.ActivityLive do
 
   def maybe_update(%{assigns: %{update_activity: true} = assigns} = socket) do
     debug("Activity - assigns with `update_activity` so we update them")
-    # FIXME?
+    # FIXME?!
     socket
     #  |> assign(assigns)
   end
 
-  def maybe_update(%{assigns: %{activity_prepared: _, object_boundary: object_boundary}} = socket)
-      when not is_nil(object_boundary) do
-    debug(
-      "Activity ##{debug_i(socket.assigns[:activity_id], socket.assigns[:activity_inception])} prepared already, just assign object_boundary"
-    )
+  # def maybe_update(%{assigns: %{activity_prepared: true, object_boundary: object_boundary} = assigns} = socket)
+  #     when not is_nil(object_boundary) do
+  #   debug(
+  #     "Activity ##{debug_i(socket.assigns[:activity_id], socket.assigns[:activity_inception])} prepared already, just assign object_boundary"
+  #   )
 
-    socket
-    |> assign(object_boundary: object_boundary)
-  end
+  #   socket
+  #   |> assign(object_boundary: object_boundary)
+  #   |> maybe_update_some_assigns(assigns)
+  # end
 
-  def maybe_update(%{assigns: %{activity_prepared: _} = assigns} = socket) do
+  def maybe_update(%{assigns: %{activity_prepared: true} = assigns} = socket) do
     debug(
       "Activity ##{debug_i(assigns[:activity_id] || socket.assigns[:activity_id], assigns[:activity_inception] || socket.assigns[:activity_inception])} prepared already"
     )
@@ -433,7 +434,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
   end
 
   def render(%{activity: _} = assigns) do
-    assigns = maybe_prepare(assigns)
+    # assigns = maybe_prepare(assigns)
 
     ~F"""
     <article
