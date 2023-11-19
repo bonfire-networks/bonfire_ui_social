@@ -107,6 +107,8 @@
         />
       </li>
 
+      {!-- 
+      FIXME 
       <li :if={@object_type not in [Bonfire.Data.Social.Message]}><div class="px-4 py-2 w-full">
           <div
             phx-click="open"
@@ -116,7 +118,7 @@
             <#Icon iconify="fluent:door-tag-20-filled" class="w-4 h-4 shrink-0" />
             {l("View boundaries")}
           </div></div>
-      </li>
+      </li> --}
 
       <li :if={module_enabled?(Bonfire.Classify.Web.TagModalLive)}>
         <Dynamic.Component
@@ -161,7 +163,7 @@
           {!-- Flag the author --}
           <li
             data-role="flag_author"
-            :if={not is_nil(@creator_id) and not is_nil(current_user(@__context__))}
+            :if={not is_nil(@creator_id) and not is_nil(current_user_id(@__context__))}
           >
             <Bonfire.UI.Common.FlagActionLive
               object={@creator_id}

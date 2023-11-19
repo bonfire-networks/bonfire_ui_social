@@ -27,6 +27,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
   prop date_ago, :any, default: nil
   prop feed_id, :any, default: nil
   prop activity_component_id, :any, default: nil
+  prop parent_id, :any, default: nil
   prop activity_inception, :any, default: nil
   prop activity_prepared, :atom, default: nil
   prop viewing_main_object, :boolean, default: false
@@ -251,7 +252,9 @@ defmodule Bonfire.UI.Social.ActivityLive do
   def prepare(assigns), do: Map.put(assigns, :activity_prepared, :skipped)
 
   defp do_prepare(%{activity: activity, object: object} = assigns) when not is_nil(object) do
-    # debug("Activity ##{debug_i(assigns[:activity_id], assigns[:activity_inception])} preparation started")
+    activity_inception = e(assigns, :activity_inception, nil)
+
+    # debug("Activity ##{debug_i(assigns[:activity_id], activity_inception)} preparation started")
     # debug(assigns, "initial assigns")
 
     # debug(object, "object")
@@ -297,7 +300,8 @@ defmodule Bonfire.UI.Social.ActivityLive do
     debug(activity, "theactivity")
 
     object_id = id(object)
-    id = object_id || id(activity)
+    a_id = id(activity) || object_id
+    o_id = object_id || a_id
 
     current_url =
       (assigns[:current_url] || current_url(assigns[:__context__]))
@@ -305,13 +309,17 @@ defmodule Bonfire.UI.Social.ActivityLive do
 
     # permalink = path(object)
     permalink =
-      if(thread_url && thread_id != id,
-        do: "#{thread_url}#comment_#{id}",
+      if(thread_url && thread_id != o_id,
+        do: "#{thread_url}#comment_#{o_id}",
         else: "#{path(object)}#"
       )
       |> String.trim_leading("#{current_url || "#"}#")
 
     # |> debug()
+
+    activity_component_id =
+      Enums.id(assigns) || assigns[:activity_component_id] ||
+        "activity-#{activity_inception}-#{a_id || "no-activity-id"}"
 
     assigns
     |> some_assigns(
@@ -321,15 +329,13 @@ defmodule Bonfire.UI.Social.ActivityLive do
     |> Enum.into(assigns)
     |> Map.merge(%{
       activity_prepared: true,
-      activity_id: id || "no-activity-id",
-      object_id: object_id || "no-object-id",
-      activity_component_id:
-        assigns[:activity_component_id] || Enums.id(assigns) ||
-          "activity-#{e(assigns, :activity_inception, nil)}-#{id || "no-activity-id"}",
+      activity_id: a_id || "no-activity-id",
+      object_id: o_id || "no-object-id",
+      activity_component_id: activity_component_id,
       object_type: object_type,
       object_type_readable: object_type_readable,
       # unit: :minute
-      date_ago: DatesTimes.date_from_now(object_id || id, format: :narrow),
+      date_ago: DatesTimes.date_from_now(object_id || o_id, format: :narrow),
       # if(e(assigns[:__context], :ui_compact, nil),
       #   do: DatesTimes.date_from_now(id, format: :narrow),
       #   else: DatesTimes.date_from_now(id)
@@ -344,7 +350,9 @@ defmodule Bonfire.UI.Social.ActivityLive do
       cw:
         e(assigns, :cw, nil) || e(activity, :sensitive, :is_sensitive, nil) ||
           e(object, :post_content, :summary, nil) != nil,
-      reply_count: e(replied, :nested_replies_count, 0) + e(replied, :direct_replies_count, 0)
+      reply_count: e(replied, :nested_replies_count, 0) + e(replied, :direct_replies_count, 0),
+      parent_id:
+        "#{activity_component_id}_#{e(assigns, :showing_within, nil)}_#{activity_inception}"
     })
 
     # |> debug("Activity preparation done")
@@ -475,7 +483,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
           {#if String.starts_with?(@permalink || "", ["/post/", "/discussion/"])}
             <Bonfire.UI.Common.OpenPreviewLive
               href={@permalink || path(@object)}
-              parent_id={"#{id(@activity)}_#{id(@object)}_#{Text.random_string()}"}
+              parent_id={@parent_id}
               open_btn_text=""
               title_text={e(@object, :name, nil) || e(@object, :post_content, :name, nil) || l("Discussion")}
               open_btn_wrapper_class="open_preview_link hidden"
@@ -512,7 +520,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
           {#elseif String.starts_with?(@permalink || "", ["/coordination/task/"])}
             <Bonfire.UI.Common.OpenPreviewLive
               href={@permalink}
-              parent_id={"#{id(@activity)}_#{id(@object)}_#{if @showing_within == :notifications, do: Text.random_string()}"}
+              parent_id={@parent_id}
               open_btn_text={l("View task")}
               title_text={e(@object, :name, nil) || l("Task")}
               open_btn_wrapper_class="open_preview_link hidden"
@@ -588,6 +596,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
                 activity_component_id={e(component_assigns, :activity_component_id, @activity_component_id)}
                 activity_inception={e(component_assigns, :activity_inception, @activity_inception)}
                 showing_within={@showing_within}
+                parent_id={@parent_id}
                 thread_id={@thread_id}
                 published_in={@published_in}
                 verb={e(component_assigns, :verb, @verb)}
@@ -641,7 +650,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
               <Bonfire.UI.Social.Activity.MediaLive
                 :if={@hide_activity != "media"}
                 __context__={@__context__}
-                parent_id={id(@object) || id(@activity)}
+                parent_id={@parent_id}
                 activity_inception={@activity_inception}
                 showing_within={@showing_within}
                 viewing_main_object={e(component_assigns, :viewing_main_object, @viewing_main_object)}

@@ -5,7 +5,7 @@
       object_id={id(@object)}
       object_boundary={@object_boundary}
       object_type={Types.object_type(@published_in) || @object_type}
-      parent_id={"#{@activity_inception}#{@id}"}
+      parent_id={"#{@activity_inception}"}
     />
     <div class="flex items-center space-x-1 subject_timestamp">
       <span

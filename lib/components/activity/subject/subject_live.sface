@@ -57,7 +57,7 @@
         :if={@object_type not in [Bonfire.Data.Social.Message] and @activity_inception != "reply_to"}
         object_id={@object_id}
         object_type={Types.object_type(@published_in) || @object_type}
-        parent_id={"#{@activity_inception}#{@activity_id || @object_id}"}
+        parent_id={@parent_id}
         with_icon
         class="translate-y-0.5"
         object_boundary={@object_boundary}

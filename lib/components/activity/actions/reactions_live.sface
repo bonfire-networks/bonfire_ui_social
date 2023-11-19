@@ -51,6 +51,7 @@
 />
 
 <Bonfire.UI.Common.BookmarkActionLive
+  :if={not is_nil(current_user_id(@__context__))}
   id={ComponentID.new(
     Bonfire.UI.Common.BookmarkActionLive,
     id(@object),
