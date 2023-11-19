@@ -7,15 +7,15 @@ defmodule Bonfire.UI.Social.Benchmark do
 
   # NOTE: make sure you populate your local with seeds first, and then call these functions in iex
 
-  def feed_queries do
+  def feed do
     Logger.configure(level: :info)
 
     Benchee.run(
-      md_lib_feed_queries(),
+      md_lib_feed(),
       # some_feed_queries(),
-      parallel: 1,
+      parallel: 2,
       warmup: 2,
-      time: 5,
+      time: 10,
       memory_time: 2,
       reduction_time: 2,
       profile_after: true,
@@ -23,15 +23,17 @@ defmodule Bonfire.UI.Social.Benchmark do
     )
   end
 
-  defp md_lib_feed_queries do
+  defp md_lib_feed do
+    feed = Bonfire.Social.FeedActivities.feed(:fediverse, limit: 20)
+
     %{
       "render activities with earmark" => fn ->
-        Config.put(:markdown_library, :earmark)
-        live_feed(limit: 10)
+        Config.put(:markdown_library, Earmark)
+        render_feed(feed.edges)
       end,
       "render activities with mdex" => fn ->
-        Config.put(:markdown_library, nil)
-        live_feed(limit: 10)
+        Config.put(:markdown_library, MDEx)
+        render_feed(feed.edges)
       end
     }
   end
