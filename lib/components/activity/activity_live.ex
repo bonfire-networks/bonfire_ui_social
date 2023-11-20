@@ -458,7 +458,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
       data-href={@permalink}
       data-url={e(@__context__, :current_url, nil) || ~c""}
       phx-hook={if !@viewing_main_object and
-           @showing_within != :thread,
+           @showing_within not in [:thread, :smart_input, :widget],
          do: "Bonfire.UI.Common.PreviewContentLive#PreviewActivity"}
       role="article"
       data-id="activity"
