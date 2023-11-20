@@ -2,7 +2,7 @@ defmodule Bonfire.UI.Social.Feeds.BookmarksLive do
   use Bonfire.UI.Common.Web, :surface_live_view
 
   declare_nav_link(l("Bookmarks"),
-    page: "Bookmarks",
+    page: "bookmarks",
     href: "/bookmarks",
     icon: "carbon:bookmark",
     icon_active: "carbon:bookmark-filled"

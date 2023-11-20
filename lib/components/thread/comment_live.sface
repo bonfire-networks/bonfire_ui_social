@@ -25,15 +25,9 @@
   <div class="flex-1 w-full" x-data="{reply: false, show: true}">
     {#if is_nil(@activity)}
       <div class="mx-4 my-2">
-        <div class="p-4 rounded-md bg-info/10">
-          <div class="flex">
-            <div class="flex-shrink-0">
-              <#Icon solid="InformationCircle" class="w-5 h-5 text-info" />
-            </div>
-            <div class="flex-1 ml-3 md:flex md:justify-between">
-              <p class="text-sm text-info">{l("This comment was deleted.")}</p>
-            </div>
-          </div>
+        <div class="alert alert-info" role="alert">
+          <#Icon solid="InformationCircle" class="w-5 h-5 shrink-0" />
+          <span class="">{l("This comment was deleted.")}</span>
         </div>
       </div>
     {#else}

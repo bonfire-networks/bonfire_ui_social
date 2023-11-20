@@ -1,4 +1,4 @@
-<div :if={@link_list != [] && @showing_within != :smart_input} class="flex flex-col gap-2 my-3">
+<div :if={@link_list != [] && @showing_within != :smart_input} class="flex flex-col gap-2">
   {!-- LINKS --}
   {#for m <- @link_list}
     {#case Media.media_url(m)}
@@ -46,7 +46,7 @@
                 {#case preview_img(m) || e(m.metadata, "favicon", nil) ||
                     Bonfire.Files.FaviconStore.favicon_url(media_url)}
                   {#match nil}
-                    <#Icon solid="ExternalLink" class="w-9 h-9 text-base-content/70" />
+                    <#Icon iconify="ion:newspaper-outline" class="w-8 h-8 text-base-content/70" />
                   {#match preview_img}
                     <div
                       class="absolute inset-0 backdrop-blur-lg bg-white/30 z-50 rounded-l-lg"
@@ -57,13 +57,13 @@
                         <LazyImage
                           class="rounded-none object-cover rounded-l-lg  cursor-pointer m-image w-[36px] h-[36px]"
                           src={preview_img}
-                          fallback_icon="heroicons-outline:external-link"
+                          fallback_icon="ion:newspaper-outline"
                         />
                       {#match _}
                         <LazyImage
                           class="rounded-none object-cover rounded-l-lg  cursor-pointer m-image w-[120px] h-[120px]"
                           src={preview_img}
-                          fallback_icon="heroicons-outline:external-link"
+                          fallback_icon="ion:newspaper-outline"
                         />
                     {/case}
                 {/case}
