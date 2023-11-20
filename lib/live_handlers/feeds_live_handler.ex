@@ -11,8 +11,6 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
         _,
         socket
       ) do
-    debug(socket, "QUIIII")
-
     paginate_feed(
       e(socket.assigns, :feed_name, nil) || e(socket.assigns, :feed_id, nil) ||
         e(socket.assigns, :feed_ids, nil) || e(socket.assigns, :id, nil),

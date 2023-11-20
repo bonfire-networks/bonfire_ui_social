@@ -68,7 +68,7 @@
                     wrapper_class=""
                     show_controls={[]}
                     only_img
-                    avatar_class="w-8 h-8 rounded-full bg-base-100"
+                    avatar_class="w-8 h-8 rounded-full bg-base-300"
                     profile={e(p, :profile, nil)}
                     character={e(p, :character, nil)}
                     parent_id="thread_stats"

@@ -22,7 +22,7 @@
           <Bonfire.UI.Common.ProfileItemLive
             show_controls={[]}
             inline
-            avatar_class="w-7 h-7 rounded-full bg-base-100"
+            avatar_class="w-7 h-7 rounded-full bg-base-300"
             profile={e(editor, :profile, nil)}
             character={e(editor, :character, nil)}
           />
