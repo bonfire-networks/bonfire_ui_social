@@ -13,9 +13,9 @@
         "flex items-center space-x-2 mx-2",
         "mt-2 !mx-0": e(@showing_within, :feed) in [:feed, :notifications, :likes]
       }>
-        <Bonfire.UI.Common.LikeActionLive
+        <Bonfire.UI.Social.LikeActionLive
           :if={e(@showing_within, :feed) not in [:feed, :likes, :notifications]}
-          id={ComponentID.new(Bonfire.UI.Common.LikeActionLive, id(@object), id(@activity))}
+          id={ComponentID.new(Bonfire.UI.Social.LikeActionLive, id(@object), id(@activity))}
           object_id={ulid(@object)}
         />
         {!-- <LivePatch to={if @process_url, do: e(@process_url, "/list/") <> e(@object, :id, ""), else: path(@object)}> --}

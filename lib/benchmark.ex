@@ -119,39 +119,45 @@ defmodule Bonfire.UI.Social.Benchmark do
       %{
         "fetch feed page with activities" => fn -> get(conn, "/feed/local") end,
         # "query & render entire feed page with activities" => fn -> live(conn, "/feed/local") end, # NOPE: LiveView helpers can only be invoked from the test process
-        "query & render feed component with activities (using all async preloads)" => fn ->
-          live_feed(live_update_many_preloads: :async)
-        end,
-        "query & render feed component with activities (inline all preloads)" => fn ->
-          live_feed(live_update_many_preloads: :inline)
-        end,
-        "query & render feed component with activities (skipping all preloads)" => fn ->
-          live_feed(live_update_many_preloads: :skip)
-        end,
-        "query & render feed component with activities (using feed async preloads)" => fn ->
-          live_feed(feed_live_update_many_preloads: :async)
-        end,
-        "query & render feed component with activities (inline feed preloads)" => fn ->
-          live_feed(feed_live_update_many_preloads: :inline)
-        end,
-        "query & render feed component with activities (skipping feed preloads)" => fn ->
-          live_feed(feed_live_update_many_preloads: :skip)
-        end,
+        # "query & render feed component with activities (using all async preloads)" => fn ->
+        #   live_feed(live_update_many_preloads: :async)
+        # end,
+        # "query & render feed component with activities (inline all preloads)" => fn ->
+        #   live_feed(live_update_many_preloads: :inline)
+        # end,
+        # "query & render feed component with activities (skipping all preloads)" => fn ->
+        #   live_feed(live_update_many_preloads: :skip)
+        # end,
+        # "query & render feed component with activities (using feed async preloads)" => fn ->
+        #   live_feed(feed_live_update_many_preloads: :async_total) # FIXME
+        # end,
+        # "query & render feed component with activities (inline feed preloads)" => fn ->
+        #   live_feed(feed_live_update_many_preloads: :inline)
+        # end,
+        # "query & render feed component with activities (inline + async actions)" => fn ->
+        #   live_feed(feed_live_update_many_preloads: :async_actions)
+        # end,
+        # "query & render feed component with activities (skipping feed preloads)" => fn ->
+        #   live_feed(feed_live_update_many_preloads: :skip)
+        # end,
         "render feed component with already queried activities (skipping preloads)" => fn ->
-          render_feed(feed.edges, live_update_many_preloads: :skip)
+          render_feed(feed.edges, feed_live_update_many_preloads: :skip)
         end,
         "render feed component with already queried activities (inline preloads)" => fn ->
-          render_feed(feed.edges, live_update_many_preloads: :inline)
+          render_feed(feed.edges, feed_live_update_many_preloads: :inline)
         end,
-        "render feed component with already queried activities (using async preloads)" => fn ->
-          render_feed(feed.edges, live_update_many_preloads: :async)
+        "render feed component with already queried activities (async actions preloads)" => fn ->
+          render_feed(feed.edges, feed_live_update_many_preloads: :async_actions)
         end,
-        "fetch feed page with (skipped) activities" => fn ->
-          get(conn, "/feed/local?&hide_activities=component")
-        end,
-        "fetch feed page with (not rendered) activities" => fn ->
-          get(conn, "/feed/local?&hide_activities=all")
+        "render feed component with already queried activities (async preloads)" => fn ->
+          render_feed(feed.edges, feed_live_update_many_preloads: :async)
         end
+        # "fetch feed page with (skipped) activities" => fn ->
+        #   get(conn, "/feed/local?&hide_activities=component")
+        # end,
+        # "fetch feed page with (not rendered) activities" => fn ->
+        #   get(conn, "/feed/local?&hide_activities=all")
+        # end
       },
       parallel: 1,
       warmup: 2,

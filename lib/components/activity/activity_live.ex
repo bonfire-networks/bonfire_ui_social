@@ -60,8 +60,8 @@ defmodule Bonfire.UI.Social.ActivityLive do
   # @decorate time()
   def update_many(assigns_sockets) do
     assigns_sockets
-    |> LiveHandler.update_many(caller_module: __MODULE__)
-    |> debug("lllll")
+    |> LiveHandler.activity_update_many(caller_module: __MODULE__)
+    # |> debug("lllll")
     |> Enum.map(fn
       {assigns, socket} ->
         maybe_update(assigns, socket)
@@ -69,7 +69,8 @@ defmodule Bonfire.UI.Social.ActivityLive do
       socket ->
         maybe_update(socket.assigns, socket)
     end)
-    |> debug("kkkk")
+
+    # |> debug("kkkk")
   end
 
   defp debug_i(i, activity_inception), do: i || "inception-from-#{activity_inception}"
@@ -658,26 +659,55 @@ defmodule Bonfire.UI.Social.ActivityLive do
                 cw={@cw}
               />
             {#match _ when component in [Bonfire.UI.Social.Activity.ActionsLive, Bonfire.UI.Social.FlaggedActionsLive]}
-              <Dynamic.Component
-                :if={@hide_activity != "actions" and @hide_actions != true}
-                module={component}
-                __context__={@__context__}
-                showing_within={@showing_within}
-                thread_mode={@thread_mode}
-                activity={e(component_assigns, :activity, @activity)}
-                object={e(component_assigns, :object, @object)}
-                object_boundary={@object_boundary}
-                object_type={e(component_assigns, :object_type, @object_type)}
-                object_type_readable={e(component_assigns, :object_type_readable, @object_type_readable)}
-                verb={e(component_assigns, :verb, @verb)}
-                thread_id={@thread_id}
-                thread_title={e(component_assigns, :thread_title, @thread_title)}
-                permalink={e(component_assigns, :permalink, @permalink)}
-                viewing_main_object={e(component_assigns, :viewing_main_object, @viewing_main_object)}
-                activity_component_id={e(component_assigns, :activity_component_id, @activity_component_id)}
-                reply_count={@reply_count}
-                is_remote={@is_remote}
-              />
+              {#if @hide_activity != "actions" and @hide_actions != true}
+                {#if LiveHandler.feed_live_update_many_preloads?() == :async_actions}
+                  <Dynamic.LiveComponent
+                    id={"#{@activity_component_id}_actions"}
+                    module={component}
+                    __context__={@__context__}
+                    showing_within={@showing_within}
+                    thread_mode={@thread_mode}
+                    activity={e(component_assigns, :activity, @activity)}
+                    object={e(component_assigns, :object, @object)}
+                    object_boundary={@object_boundary}
+                    object_type={e(component_assigns, :object_type, @object_type)}
+                    object_type_readable={e(component_assigns, :object_type_readable, @object_type_readable)}
+                    verb={e(component_assigns, :verb, @verb)}
+                    thread_id={@thread_id}
+                    thread_title={e(component_assigns, :thread_title, @thread_title)}
+                    permalink={e(component_assigns, :permalink, @permalink)}
+                    viewing_main_object={e(component_assigns, :viewing_main_object, @viewing_main_object)}
+                    activity_component_id={e(component_assigns, :activity_component_id, @activity_component_id)}
+                    parent_id={@parent_id}
+                    published_in={@published_in}
+                    reply_count={@reply_count}
+                    is_remote={@is_remote}
+                  />
+                {#else}
+                  <Dynamic.Component
+                    module={component}
+                    myself={@myself}
+                    __context__={@__context__}
+                    showing_within={@showing_within}
+                    thread_mode={@thread_mode}
+                    activity={e(component_assigns, :activity, @activity)}
+                    object={e(component_assigns, :object, @object)}
+                    object_boundary={@object_boundary}
+                    object_type={e(component_assigns, :object_type, @object_type)}
+                    object_type_readable={e(component_assigns, :object_type_readable, @object_type_readable)}
+                    verb={e(component_assigns, :verb, @verb)}
+                    thread_id={@thread_id}
+                    thread_title={e(component_assigns, :thread_title, @thread_title)}
+                    permalink={e(component_assigns, :permalink, @permalink)}
+                    viewing_main_object={e(component_assigns, :viewing_main_object, @viewing_main_object)}
+                    activity_component_id={e(component_assigns, :activity_component_id, @activity_component_id)}
+                    parent_id={@parent_id}
+                    published_in={@published_in}
+                    reply_count={@reply_count}
+                    is_remote={@is_remote}
+                  />
+                {/if}
+              {/if}
             {#match _}
               <Dynamic.Component
                 :if={@hide_activity != "dynamic" && @showing_within != :notifications}
@@ -1547,7 +1577,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
       do: []
 
   # WIP: THIS NEEDS TO BE REFACTORED ACCORDING TO actions_for_object_type
-  def component_actions("Flag", _, _, _, _, _), do: [Bonfire.UI.Social.FlaggedActionsLive]
+  # def component_actions("Flag", _, _, _, _, _), do: [Bonfire.UI.Social.FlaggedActionsLive]
 
   # def component_actions(_, activity, _, _, _, true) do
   #   [Bonfire.UI.Social.Activity.MainObjectInfoLive] ++ component_actions(nil, activity, nil)

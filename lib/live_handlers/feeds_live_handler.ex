@@ -260,11 +260,11 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
     )
   end
 
-  def reply_to_activity(js \\ %JS{}, activity_component_id) do
+  def reply_to_activity(js \\ %JS{}, target) do
     js
     |> JS.push(
       "Bonfire.Social.Feeds:reply_to_activity",
-      target: "##{activity_component_id}"
+      target: target
     )
     |> Bonfire.UI.Common.SmartInput.LiveHandler.maximize()
   end
@@ -1010,36 +1010,77 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
     error(feed_id, "Unrecognised feed")
   end
 
-  def update_many(assigns_sockets, opts) do
+  def activity_update_many(assigns_sockets, opts) do
     feed_live_update_many_preloads = feed_live_update_many_preloads?()
 
-    if feed_live_update_many_preloads != :inline do
-      (assigns_sockets
-       |> Bonfire.Boundaries.LiveHandler.maybe_preload_and_check_boundaries(
-         opts ++
-           [
-             verbs: [:read],
-             return_assigns_socket_tuple: true,
-             live_update_many_preloads: feed_live_update_many_preloads
-           ]
-       ) ||
-         assigns_sockets)
-      # |> debug("bbbb")
-      #   |> Enum.map(fn
-      #     {assigns, socket} -> {assigns, socket}
-      #     %{} = socket -> {socket.assigns, socket}
-      #   end)
-      |> debug("cccc")
-      |> preload_assigns_async(
-        &assigns_to_params/1,
-        &preload_extras/3,
+    boundary_opts =
+      opts ++
+        [
+          verbs: [:read],
+          return_assigns_socket_tuple: true,
+          live_update_many_preloads: feed_live_update_many_preloads
+        ]
+
+    assigns_sockets =
+      assigns_sockets
+      |> Bonfire.Boundaries.LiveHandler.maybe_check_boundaries(boundary_opts) || assigns_sockets
+
+    if feed_live_update_many_preloads == :async_total do
+      # |> debug("ccccccc") 
+      batch_update_many_async(
+        assigns_sockets,
+        [
+          Bonfire.Boundaries.LiveHandler.update_many_opts(
+            opts ++
+              [
+                verbs: [:read]
+              ]
+          ),
+          opts ++
+            [
+              preload_status_key: :preloaded_async_activities,
+              return_assigns_socket_tuple: true,
+              live_update_many_preloads: feed_live_update_many_preloads,
+              assigns_to_params_fn: &assigns_to_params/1,
+              preload_fn: &preload_extras/3
+            ]
+        ],
+        opts
+      ) || assigns_sockets
+
+      # |> debug
+    else
+      assigns_sockets
+    end
+  end
+
+  def actions_update_many(assigns_sockets, opts) do
+    feed_live_update_many_preloads = feed_live_update_many_preloads?()
+
+    if feed_live_update_many_preloads == :async_actions do
+      opts =
         opts ++
           [
-            preload_status_key: :preloaded_async_activities,
             return_assigns_socket_tuple: true,
-            live_update_many_preloads: feed_live_update_many_preloads
+            live_update_many_preloads: :user_async_or_skip
           ]
-      )
+
+      # |> debug("ccccccc") 
+      batch_update_many_async(
+        assigns_sockets,
+        [
+          Bonfire.Boundaries.LiveHandler.update_many_opts(
+            opts ++
+              [
+                verbs: [:read]
+              ]
+          ),
+          Bonfire.Social.Boosts.LiveHandler.update_many_opts(opts),
+          Bonfire.Social.Likes.LiveHandler.update_many_opts(opts),
+          Bonfire.Social.Bookmarks.LiveHandler.update_many_opts(opts)
+        ],
+        opts
+      ) || assigns_sockets
 
       # |> debug
     else

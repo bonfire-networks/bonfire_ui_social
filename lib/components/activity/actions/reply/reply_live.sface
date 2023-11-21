@@ -7,8 +7,11 @@
         data-role="reply_enabled"
         class={@class}
         data-id="action_reply"
-        phx-click={if @activity_component_id,
-          do: Bonfire.Social.Feeds.LiveHandler.reply_to_activity(@activity_component_id),
+        phx-click={if @event_target || @activity_component_id,
+          do:
+            Bonfire.Social.Feeds.LiveHandler.reply_to_activity(
+              @event_target || "##{@activity_component_id}"
+            ),
           else: "Bonfire.Social.Threads:reply"}
         phx-value-id={@object_id}
         title={l("Reply")}

@@ -1,6 +1,6 @@
 <div class="flex items-center gap-4">
-  {!-- <Bonfire.UI.Common.LikeActionLive
-    id={ComponentID.new(Bonfire.UI.Common.LikeActionLive, id(@activity), __MODULE__)}
+  {!-- <Bonfire.UI.Social.LikeActionLive
+    id={ComponentID.new(Bonfire.UI.Social.LikeActionLive, id(@activity), __MODULE__)}
     object={@activity}
   />
   <Bonfire.UI.Social.Activity.InstanceIconLive peered={e(@activity, :peered, nil)} />
@@ -51,7 +51,7 @@
         </Bonfire.UI.Common.OpenModalLive>
       </li>
 
-      {!-- <li :if={module_enabled?(Bonfire.UI.Common.ProfileItemLive)}>
+      {!-- <li :if={module_enabled?(Bonfire.UI.Me.ProfileItemLive)}>
         <Bonfire.UI.Common.OpenModalLive
           :if={@thread_id}
           id="object_header_participants"
@@ -61,7 +61,7 @@
             {#for p <- e(@participants, [])}
               <div class="py-2">
                 <Dynamic.Component
-                  module={Bonfire.UI.Common.ProfileItemLive}
+                  module={Bonfire.UI.Me.ProfileItemLive}
                   character={e(p, :character, nil) || e(p, :activity, :subject, :character, nil)}
                   profile={e(p, :profile, nil) || e(p, :activity, :subject, :profile, nil)}
                   class="btn btn-square btn-ghost btn-sm"

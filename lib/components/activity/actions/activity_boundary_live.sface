@@ -1,4 +1,4 @@
-{#if LiveHandler.feed_live_update_many_preloads?() != :inline}
+{#if LiveHandler.feed_live_update_many_preloads?() in [:async_total, :async_actions]}
   <Dynamic.Component
     :if={module_enabled?(Bonfire.Boundaries.Web.BoundaryIconStatelessLive)}
     module={Bonfire.Boundaries.Web.BoundaryIconStatelessLive}

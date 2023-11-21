@@ -26,7 +26,9 @@
   </div>
 {#else}
   <div class="flex-1 mb-4 -ml-[3.75rem]">
-    <Bonfire.UI.Common.ProfileItemLive
+    <Dynamic.Component
+      :if={module_enabled?(Bonfire.UI.Me.ProfileItemLive)}
+      module={Bonfire.UI.Me.ProfileItemLive}
       show_controls={[]}
       lg
       avatar_class="w-12 h-12 rounded-full bg-base-300"

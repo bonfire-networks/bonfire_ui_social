@@ -147,10 +147,6 @@ defmodule Bonfire.UI.Social.ActivityOLDLive do
     """
   end
 
-  def update_many(assigns_sockets) do
-    Bonfire.Boundaries.LiveHandler.update_many(assigns_sockets, caller_module: __MODULE__)
-  end
-
 
   # don't show subject twice
   def component_activity_subject(_, %{object: %Bonfire.Data.Identity.User{}}, _), do: []

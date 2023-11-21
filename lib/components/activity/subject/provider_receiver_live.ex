@@ -1,6 +1,6 @@
 defmodule Bonfire.UI.Social.Activity.ProviderReceiverLive do
   use Bonfire.UI.Common.Web, :stateless_component
-  # alias Bonfire.Boundaries.Web.BoundaryIconStatelessLive
+  alias Bonfire.Social.Feeds.LiveHandler
 
   prop object, :any, default: nil
   prop activity, :any, default: nil

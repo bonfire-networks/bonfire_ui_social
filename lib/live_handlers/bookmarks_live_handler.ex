@@ -48,7 +48,7 @@ defmodule Bonfire.Social.Bookmarks.LiveHandler do
 
   defp bookmark_action(object, bookmarked?, params, socket) do
     ComponentID.send_updates(
-      e(params, "component", Bonfire.UI.Common.BookmarkActionLive),
+      e(params, "component", Bonfire.UI.Social.BookmarkActionLive),
       ulid(object),
       my_bookmark: bookmarked?
     )
@@ -65,7 +65,15 @@ defmodule Bonfire.Social.Bookmarks.LiveHandler do
   def bookmarker_count(_), do: 0
 
   def update_many(assigns_sockets, opts \\ []) do
-    preload_assigns_async(assigns_sockets, &assigns_to_params/1, &do_preload/3, opts)
+    update_many_async(assigns_sockets, update_many_opts(opts))
+  end
+
+  def update_many_opts(opts \\ []) do
+    opts ++
+      [
+        assigns_to_params_fn: &assigns_to_params/1,
+        preload_fn: &do_preload/3
+      ]
   end
 
   defp assigns_to_params(assigns) do

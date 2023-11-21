@@ -1,5 +1,6 @@
 defmodule Bonfire.UI.Social.Activity.NoSubjectLive do
   use Bonfire.UI.Common.Web, :stateless_component
+  alias Bonfire.Social.Feeds.LiveHandler
 
   prop activity_id, :any, default: nil
   prop object_id, :any, default: nil

@@ -1,5 +1,8 @@
 defmodule Bonfire.UI.Social.Activity.ActionsLive do
-  use Bonfire.UI.Common.Web, :stateless_component
+  use Bonfire.UI.Common.Web, :stateful_component
+
+  alias Bonfire.Social.Feeds.LiveHandler
+
   prop activity, :any, default: nil
   prop object, :any, required: true
   # prop profile, :any, default: nil
@@ -18,6 +21,42 @@ defmodule Bonfire.UI.Social.Activity.ActionsLive do
   prop thread_mode, :any, default: nil
   prop object_boundary, :any, default: nil
   prop is_remote, :boolean, default: false
+  prop hide_more_actions, :boolean, default: false
+  prop parent_id, :any, default: nil
+  prop published_in, :any, default: nil
+
+  prop my_boost, :any, default: nil
+  prop my_like, :any, default: nil
+  prop my_bookmark, :any, default: nil
+
+  def update_many(assigns_sockets) do
+    assigns_sockets
+    |> LiveHandler.actions_update_many(caller_module: __MODULE__)
+    |> debug("lllll")
+    |> Enum.map(fn
+      {assigns, socket} ->
+        assign(socket, assigns)
+
+      socket ->
+        socket
+    end)
+
+    # |> debug("kkkk")
+  end
+
+  def handle_event(
+        action,
+        attrs,
+        socket
+      ),
+      do:
+        Bonfire.UI.Common.LiveHandlers.handle_event(
+          action,
+          attrs,
+          socket,
+          __MODULE__
+          # &do_handle_event/3
+        )
 
   def count(replied) do
     # debug(replied)

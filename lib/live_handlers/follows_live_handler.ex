@@ -13,7 +13,7 @@ defmodule Bonfire.Social.Follows.LiveHandler do
     with {:ok, current_user} <- current_user_or_remote_interaction(socket, l("follow"), id),
          {:ok, _follow} <- Bonfire.Social.Follows.follow(current_user, id) do
       ComponentID.send_assigns(
-        e(params, "component", Bonfire.UI.Common.FollowButtonLive),
+        e(params, "component", Bonfire.UI.Social.FollowButtonLive),
         id,
         set,
         socket
@@ -32,7 +32,7 @@ defmodule Bonfire.Social.Follows.LiveHandler do
       ]
 
       ComponentID.send_assigns(
-        e(params, "component", Bonfire.UI.Common.FollowButtonLive),
+        e(params, "component", Bonfire.UI.Social.FollowButtonLive),
         id,
         set,
         socket
@@ -55,7 +55,15 @@ defmodule Bonfire.Social.Follows.LiveHandler do
   end
 
   def update_many(assigns_sockets, opts \\ []) do
-    preload_assigns_async(assigns_sockets, &assigns_to_params/1, &do_preload/3, opts)
+    update_many_async(assigns_sockets, update_many_opts(opts))
+  end
+
+  def update_many_opts(opts \\ []) do
+    opts ++
+      [
+        assigns_to_params_fn: &assigns_to_params/1,
+        preload_fn: &do_preload/3
+      ]
   end
 
   defp assigns_to_params(assigns) do

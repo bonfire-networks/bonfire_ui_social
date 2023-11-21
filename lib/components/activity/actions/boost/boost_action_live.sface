@@ -1,0 +1,43 @@
+<div class="relative z-20">
+  {#case @object_type not in [Bonfire.Data.Social.Message] and
+      (current_user(@__context__) == nil or !@object_boundary or
+         Bonfire.Boundaries.can?(@__context__, :boost, @object_boundary))}
+    {#match true}
+      <button
+        :if={@object_id}
+        id={@id}
+        data-id="boost_action"
+        data-boosted={@my_boost}
+        data-role="boost_enabled"
+        disabled={if @object_type in [Bonfire.Data.Social.Message], do: "disabled"}
+        phx-click={"#{if @my_boost, do: "Bonfire.Social.Boosts:undo", else: "Bonfire.Social.Boosts:boost"}"}
+        phx-target={@myself}
+        phx-value-id={@object_id}
+        phx-value-component={__MODULE__}
+        class="btn btn-ghost btn-circle boost btn-sm  font-medium text-base-content/70 flex gap-1"
+        title={l("Boost this")}
+      >
+        <#Icon iconify="system-uicons:retweet" class="icon w-5 h-5 text-base-content/70" />
+        <!-- <span class="sr-only">
+            {if @my_boost, do: l("Boosted"), else: l("Boost")}
+          </span> -->
+        <span :if={e(@boost_count, 0) > 0}>{e(@boost_count, 0)}</span>
+      </button>
+    {#match _}
+      <button
+        type="button"
+        data-role="boost_disabled"
+        class="cursor-not-allowed boost btn btn-circle btn-ghost btn-sm text-base-content font-medium"
+        title={l("You can't boost this activity")}
+      >
+        <span class="flex gap-1 text-opacity-20">
+          <#Icon iconify="system-uicons:retweet" class="w-5 h-5  text-base-content/20" />
+
+          <span class="sr-only feed_activity_text">
+            {l("Cannot Boost")}
+          </span>
+          <span :if={e(@boost_count, 0) > 0}>{e(@boost_count, 0)}</span>
+        </span>
+      </button>
+  {/case}
+</div>

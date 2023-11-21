@@ -47,13 +47,16 @@ defmodule Bonfire.Social.Likes.LiveHandler do
   end
 
   defp like_action(object, liked?, params, socket) do
+    # TODO: send this to ActionsLive if using feed_live_update_many_preloads :async_actions
     ComponentID.send_updates(
-      e(params, "component", Bonfire.UI.Common.LikeActionLive),
+      e(params, "component", Bonfire.UI.Social.LikeActionLive),
       ulid(object),
       my_like: liked?
     )
 
-    {:noreply, socket}
+    {:noreply,
+     socket
+     |> assign(:my_like, liked?)}
   end
 
   def liker_count(%{"current_count" => a}), do: a |> String.to_integer()
@@ -65,7 +68,15 @@ defmodule Bonfire.Social.Likes.LiveHandler do
   def liker_count(_), do: 0
 
   def update_many(assigns_sockets, opts \\ []) do
-    preload_assigns_async(assigns_sockets, &assigns_to_params/1, &do_preload/3, opts)
+    update_many_async(assigns_sockets, update_many_opts(opts))
+  end
+
+  def update_many_opts(opts \\ []) do
+    opts ++
+      [
+        assigns_to_params_fn: &assigns_to_params/1,
+        preload_fn: &do_preload/3
+      ]
   end
 
   defp assigns_to_params(assigns) do

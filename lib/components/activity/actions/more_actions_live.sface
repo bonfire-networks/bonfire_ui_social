@@ -17,6 +17,34 @@
     aria-orientation="vertical"
     aria-labelledby="more-menu"
   >
+    <li :if={@object_type not in [Bonfire.Data.Social.Message]}><div class="px-4 py-2 w-full">
+        {#if LiveHandler.feed_live_update_many_preloads?() == :async_actions}
+          <Bonfire.Boundaries.Web.BoundaryIconStatelessLive
+            object_id={id(@object)}
+            object_boundary={@object_boundary}
+            object_type={Types.object_type(@published_in) || @object_type}
+            parent_id={@parent_id}
+            with_icon
+            with_label
+            class=""
+            open_btn_wrapper_class="flex items-center w-full gap-2 text-sm text-base-content/70 px-4 py-2"
+          />
+        {#else}
+          <!-- 
+      TODO:
+      <div
+            phx-click="open"
+            phx-target={"#modal_boundary_#{id(@activity || @object)}"}
+            class="flex items-center w-full gap-2 text-sm text-base-content/70 px-4 py-2"
+          >
+            <#Icon iconify="fluent:door-tag-20-filled" class="w-4 h-4 shrink-0" />
+            {l("View boundaries")} 
+                        </div>
+-->
+        {/if}
+      </div>
+    </li>
+
     <#slot {@extra_items} />
 
     {#if current_user_id(@__context__)}
@@ -107,19 +135,6 @@
         />
       </li>
 
-      {!-- 
-      FIXME 
-      <li :if={@object_type not in [Bonfire.Data.Social.Message]}><div class="px-4 py-2 w-full">
-          <div
-            phx-click="open"
-            phx-target={"#modal_boundary_#{id(@activity || @object)}"}
-            class="flex items-center w-full gap-2 text-sm text-base-content/70 px-4 py-2"
-          >
-            <#Icon iconify="fluent:door-tag-20-filled" class="w-4 h-4 shrink-0" />
-            {l("View boundaries")}
-          </div></div>
-      </li> --}
-
       <li :if={module_enabled?(Bonfire.Classify.Web.TagModalLive)}>
         <Dynamic.Component
           module={Bonfire.Classify.Web.TagModalLive}
@@ -151,7 +166,7 @@
         <ul>
           {!-- Flag the object --}
           <li data-role="flag_object">
-            <Bonfire.UI.Common.FlagActionLive
+            <Bonfire.UI.Social.FlagActionLive
               object={@object}
               flagged={@flagged}
               parent_id={"object-#{id(@activity_component_id || @activity)}"}
@@ -165,7 +180,7 @@
             data-role="flag_author"
             :if={not is_nil(@creator_id) and not is_nil(current_user_id(@__context__))}
           >
-            <Bonfire.UI.Common.FlagActionLive
+            <Bonfire.UI.Social.FlagActionLive
               object={@creator_id}
               flagged={@flagged}
               parent_id={"user-#{id(@activity_component_id || @activity)}"}

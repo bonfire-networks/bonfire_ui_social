@@ -4,6 +4,8 @@ defmodule Bonfire.UI.Social.Activity.MoreActionsLive do
   # alias Bonfire.UI.Common.OpenModalLive
   # alias Bonfire.UI.Social.Integration
 
+  alias Bonfire.Social.Feeds.LiveHandler
+
   prop activity, :any, default: nil
   prop object, :any, required: true
   prop object_type, :any, default: nil
@@ -16,6 +18,8 @@ defmodule Bonfire.UI.Social.Activity.MoreActionsLive do
   prop thread_mode, :any, default: nil
   prop thread_title, :any, default: nil
   prop is_remote, :boolean, default: false
+  prop parent_id, :any, default: nil
+  prop published_in, :any, default: nil
 
   prop showing_within, :atom, default: nil
   prop viewing_main_object, :boolean, default: false

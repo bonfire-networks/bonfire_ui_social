@@ -9,37 +9,197 @@
   x-transition
   class="feed_actions items-center flex"
 >
-  <div class="feed-clickable flex flex-1 w-full md:w-auto items-center justify-end gap-6">
-    <Bonfire.UI.Social.Activity.ReactionsLive
-      object={@object}
-      activity={@activity}
-      object_type={@object_type}
-      object_boundary={@object_boundary}
-      permalink={@permalink}
-      thread_mode={@thread_mode}
-      showing_within={@showing_within}
-      object_type_readable={@object_type_readable}
-      hide_reply={@hide_reply}
-      viewing_main_object={@viewing_main_object}
-      activity_component_id={@activity_component_id}
-      reply_count={@reply_count}
-    />
+  <div class="feed-clickable flex flex-1 w-full md:w-auto h-4 items-center justify-end gap-6">
+    {#if @verb == "Flag"}
+      <Bonfire.UI.Social.FlaggedActionsLive
+        object={@object}
+        activity={@activity}
+        object_type={@object_type}
+        object_boundary={@object_boundary}
+        object_type_readable={@object_type_readable}
+        verb={@verb}
+        thread_id={@thread_id}
+        thread_mode={@thread_mode}
+        thread_title={@thread_title}
+        showing_within={@showing_within}
+        viewing_main_object={@viewing_main_object}
+        activity_component_id={@activity_component_id}
+        is_remote={@is_remote}
+      />
+    {#else}
+      {#if LiveHandler.feed_live_update_many_preloads?() == :async_actions}
+        {#if @object_boundary || !socket_connected?(@__context__)}
+          <!-- LOAD ALL AS IF THEY WERE STATELESS COMPONENTS, since we preload data in this component -->
 
-    <Bonfire.UI.Social.Activity.MoreActionsLive
-      object={@object}
-      activity={@activity}
-      object_type={@object_type}
-      object_boundary={@object_boundary}
-      object_type_readable={@object_type_readable}
-      verb={@verb}
-      thread_id={@thread_id}
-      thread_mode={@thread_mode}
-      thread_title={@thread_title}
-      showing_within={@showing_within}
-      viewing_main_object={@viewing_main_object}
-      activity_component_id={@activity_component_id}
-      is_remote={@is_remote}
-    />
+          <Dynamic.Component
+            module={Bonfire.UI.Social.Activity.ReplyLive}
+            object_id={id(@object)}
+            object_type={@object_type}
+            object_boundary={@object_boundary}
+            permalink={@permalink}
+            thread_mode={@thread_mode}
+            reply_count={if @showing_within == :thread and @thread_mode != :flat,
+              do:
+                e(@activity, :replied, :direct_replies_count, nil) ||
+                  e(@object, :replied, :direct_replies_count, 0),
+              else: @reply_count}
+            showing_within={@showing_within}
+            hide_reply={@hide_reply}
+            viewing_main_object={@viewing_main_object}
+            activity_component_id={@activity_component_id}
+            event_target={@myself}
+            class="flex btn btn-sm btn-ghost btn-circle text-base-content/70"
+          />
+
+          <Dynamic.Component
+            module={Bonfire.UI.Social.BoostActionLive}
+            id={"#{@id}_boost"}
+            myself={@myself}
+            object_id={id(@object)}
+            object_type={@object_type}
+            object_boundary={@object_boundary}
+            showing_within={@showing_within}
+            my_boost={@my_boost}
+            boost_count={e(
+              the_activity(@activity, @object),
+              :boost_count,
+              :object_count,
+              nil
+            )}
+          />
+
+          <Dynamic.Component
+            module={Bonfire.UI.Social.LikeActionLive}
+            id={"#{@id}_like"}
+            event_target={@myself}
+            myself={@myself}
+            object_id={id(@object)}
+            object_boundary={@object_boundary}
+            my_like={@my_like}
+            like_count={e(
+              the_activity(@activity, @object),
+              :like_count,
+              :object_count,
+              nil
+            )}
+          />
+
+          <Dynamic.Component
+            module={Bonfire.UI.Social.BookmarkActionLive}
+            id={"#{@id}_bookmark"}
+            event_target={@myself}
+            myself={@myself}
+            :if={not is_nil(current_user_id(@__context__))}
+            object_id={id(@object)}
+            object_boundary={@object_boundary}
+            my_bookmark={@my_bookmark}
+          />
+
+          <Bonfire.UI.Social.Activity.MoreActionsLive
+            :if={!@hide_more_actions}
+            object={@object}
+            activity={@activity}
+            object_type={@object_type}
+            object_boundary={@object_boundary}
+            object_type_readable={@object_type_readable}
+            verb={@verb}
+            thread_id={@thread_id}
+            thread_mode={@thread_mode}
+            thread_title={@thread_title}
+            showing_within={@showing_within}
+            viewing_main_object={@viewing_main_object}
+            activity_component_id={@activity_component_id}
+            is_remote={@is_remote}
+            parent_id={@parent_id}
+            published_in={@published_in}
+          />
+        {#else}
+          <!-- ACTIONS SKELETON GOES HERE -->
+        {/if}
+      {#else}
+        <Bonfire.UI.Social.Activity.ReplyLive
+          object_id={id(@object)}
+          object_type={@object_type}
+          object_boundary={@object_boundary}
+          permalink={@permalink}
+          thread_mode={@thread_mode}
+          reply_count={if @showing_within == :thread and @thread_mode != :flat,
+            do:
+              e(@activity, :replied, :direct_replies_count, nil) ||
+                e(@object, :replied, :direct_replies_count, 0),
+            else: @reply_count}
+          showing_within={@showing_within}
+          hide_reply={@hide_reply}
+          viewing_main_object={@viewing_main_object}
+          activity_component_id={@activity_component_id}
+          class="flex btn btn-sm btn-ghost btn-circle text-base-content/70"
+        />
+
+        <Bonfire.UI.Social.BoostActionLive
+          id={ComponentID.new(
+            Bonfire.UI.Social.BoostActionLive,
+            id(@object),
+            @activity_component_id || id(@activity)
+          )}
+          object_id={id(@object)}
+          object_type={@object_type}
+          object_boundary={@object_boundary}
+          showing_within={@showing_within}
+          boost_count={e(
+            Bonfire.UI.Social.Activity.ActionsLive.the_activity(@activity, @object),
+            :boost_count,
+            :object_count,
+            nil
+          )}
+        />
+
+        <Bonfire.UI.Social.LikeActionLive
+          id={ComponentID.new(
+            Bonfire.UI.Social.LikeActionLive,
+            id(@object),
+            @activity_component_id || id(@activity)
+          )}
+          object_id={id(@object)}
+          object_boundary={@object_boundary}
+          like_count={e(
+            Bonfire.UI.Social.Activity.ActionsLive.the_activity(@activity, @object),
+            :like_count,
+            :object_count,
+            nil
+          )}
+        />
+
+        <Bonfire.UI.Social.BookmarkActionLive
+          :if={not is_nil(current_user_id(@__context__))}
+          id={ComponentID.new(
+            Bonfire.UI.Social.BookmarkActionLive,
+            id(@object),
+            @activity_component_id || id(@activity)
+          )}
+          object_id={id(@object)}
+          object_boundary={@object_boundary}
+        />
+
+        <Bonfire.UI.Social.Activity.MoreActionsLive
+          :if={!@hide_more_actions}
+          object={@object}
+          activity={@activity}
+          object_type={@object_type}
+          object_boundary={@object_boundary}
+          object_type_readable={@object_type_readable}
+          verb={@verb}
+          thread_id={@thread_id}
+          thread_mode={@thread_mode}
+          thread_title={@thread_title}
+          showing_within={@showing_within}
+          viewing_main_object={@viewing_main_object}
+          activity_component_id={@activity_component_id}
+          is_remote={@is_remote}
+          parent_id={@parent_id}
+          published_in={@published_in}
+        />
+      {/if}
+    {/if}
   </div>
 </div>
 <!-- {/if} -->
