@@ -2,14 +2,28 @@
     id(e(@activity, :object, :subject, nil)) == current_user_id(@__context__)}
   <div />
 {#else} -->
+<!-- data-show-plain-actions={!Settings.get(
+                [
+                  Bonfire.UI.Social.Activity.ActionsLive,
+                  @showing_within,
+                  :hide_until_hovered
+                ],
+                nil,
+                current_user_id(@__context__)
+              )} -->
 <div
   data-id="activity_actions"
   data-rendered={@showing_within}
   data-main-object={@viewing_main_object}
-  x-transition
-  class="feed_actions items-center flex"
+  class="feed_actions h-8"
 >
-  <div class="feed-clickable flex flex-1 w-full md:w-auto h-4 items-center justify-end gap-6">
+  <div
+    x-transition
+    x-cloak
+    :class="show_actions ? 'flex' : 'hidden'"
+    x-bind:hidden="show_actions ? false : 'until-found'"
+    class="feed-clickable flex-1 w-full md:w-auto items-center justify-end gap-6"
+  >
     {#if @verb == "Flag"}
       <Bonfire.UI.Social.FlaggedActionsLive
         object={@object}

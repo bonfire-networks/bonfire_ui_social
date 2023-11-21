@@ -452,7 +452,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
     ~F"""
     <article
       x-data="{content_open: false, show_actions: false}"
-      x-init={"content_open = #{!@cw}; show_actions = #{if @hide_actions == "until_hovered", do: "('ontouchstart' in window) || (navigator.maxTouchPoints > 0) || (navigator.msMaxTouchPoints > 0)", else: true}"}
+      x-init={"content_open = #{!@cw}; show_actions = #{if @hide_actions == ~c"until_hovered", do: "('ontouchstart' in window) || (navigator.maxTouchPoints > 0) || (navigator.msMaxTouchPoints > 0)", else: true}"}
       x-on:mouseover={if @hide_actions == "until_hovered", do: "show_actions=true"}
       x-on:mouseover.away={if @hide_actions == "until_hovered", do: "show_actions=false"}
       id={@activity_component_id}
