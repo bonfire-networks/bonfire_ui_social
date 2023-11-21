@@ -15,7 +15,7 @@
   data-id="activity_actions"
   data-rendered={@showing_within}
   data-main-object={@viewing_main_object}
-  class="feed_actions h-8"
+  class="feed_actions h-5"
 >
   <div
     x-transition
