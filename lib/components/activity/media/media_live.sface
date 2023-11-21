@@ -1,4 +1,4 @@
-<div :if={@link_list != [] && @showing_within != :smart_input} class="mt-2 flex flex-col gap-2">
+<div :if={@link_list != [] && @showing_within != :smart_input} class="my-2 flex flex-col gap-2">
   {!-- LINKS --}
   {#for m <- @link_list}
     {#case Media.media_url(m)}
