@@ -15,14 +15,14 @@
   data-id="activity_actions"
   data-rendered={@showing_within}
   data-main-object={@viewing_main_object}
-  class="feed_actions h-5"
+  class="feed_actions h-8"
 >
   <div
     x-transition
     x-cloak
     x-bind:class="show_actions ? '!flex' : ''"
     class={
-      " feed-clickable flex-1 w-full md:w-auto items-center justify-end gap-6",
+      " feed-clickable mt-2 flex-1 w-full md:w-auto items-center justify-end gap-6",
       "flex can-hover:hidden": @hide_actions,
       flex: !@hide_actions
     }

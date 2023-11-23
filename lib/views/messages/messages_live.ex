@@ -6,8 +6,8 @@ defmodule Bonfire.UI.Social.MessagesLive do
   import Untangle
 
   declare_nav_link(l("Direct Messages"),
-    icon: "ri:mail-line",
-    icon_active: "ri:mail-fill",
+    icon: "carbon:email",
+    icon_active: "carbon:email",
     page: "messages",
     badge: [
       id: :inbox,
@@ -30,7 +30,7 @@ defmodule Bonfire.UI.Social.MessagesLive do
         # to_boundaries: [{"message", "Message"}],
         page_title: l("Messages"),
         page: "messages",
-        page_header_icon: "ri:mail-line",
+        page_header_icon: "carbon:email",
         no_index: true,
         feed_id: feed_id,
         activity: nil,

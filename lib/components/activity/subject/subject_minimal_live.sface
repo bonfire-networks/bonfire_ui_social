@@ -15,7 +15,7 @@
           <#Icon solid="Pencil" :if={@verb == "Reply"} class="w-4 h-4 text-info" />
           <#Icon solid="Flag" :if={@verb == "Flag"} class="w-4 h-4 text-error" />
         </div>
-        <div class="flex-1 ml-2">
+        <div class="flex-1 ml-3">
           <div class="text-sm font-medium text-base-content/70">
             <LiveRedirect
               aria-label={e(@character_username, "") <> " profile"}
@@ -155,7 +155,7 @@
           <div data-role="flagged_by" class="flex items-center justify-start pb-3 -ml-8">
             {!-- FLAG --}
             <#Icon solid="Flag" class="w-4 h-4 text-error" />
-            <div class="flex-1 ml-2">
+            <div class="flex-1 ml-3">
               <div class="text-sm font-medium text-base-content/70">
                 <LiveRedirect
                   aria-label={e(@character_username, "") <> " " <> l("profile")}
@@ -173,7 +173,7 @@
             <Iconify.iconify
                 icon={Bonfire.Boundaries.Verbs.get(@verb)[:icon]} 
                 class="w-4 h-4 text-error" />
-            <div class="flex-1 ml-2">
+            <div class="flex-1 ml-3">
               <div class="text-sm font-medium text-base-content/70">
                 <LiveRedirect
                   aria-label={e(@character_username, "") <> " " <> l("profile")}
@@ -223,7 +223,7 @@
           <div data-role="liked_by" class="flex items-center justify-start pb-3 -ml-8">
             {!-- LIKE --}
             <#Icon iconify="mingcute:fire-fill" class="w-5 h-5 text-yellow-500" />
-            <div class="flex-1 ml-2">
+            <div class="flex-1 ml-3">
               <div class="text-sm font-medium text-base-content/70">
                 <LiveRedirect
                   aria-label={e(@character_username, "") <> " profile"}
@@ -245,7 +245,7 @@
           <div class="flex items-center justify-start pb-3 -ml-8">
             {!-- FOLLOW --}
             <#Icon solid="UserAdd" class="flex-shrink-0 w-5 h-5 text-base-content/70" />
-            <div class="flex-1 ml-2">
+            <div class="flex-1 ml-3">
               <div class="text-sm font-medium text-base-content/70">
                 <LiveRedirect
                   aria-label={e(@character_username, "") <> " profile"}
@@ -273,7 +273,7 @@
           <div data-role="boosted_by" class="flex items-center justify-start pb-3 -ml-8">
             {!-- BOOST --}
             <#Icon iconify="system-uicons:retweet" class="w-5 h-5 text-success" />
-            <div class="flex-1 ml-2">
+            <div class="flex-1 ml-3">
               <div class="text-sm font-medium text-base-content/70">
                 <LiveRedirect
                   aria-label={e(@character_username, "") <> " " <> l("profile")}
@@ -366,7 +366,7 @@
           <div data-role="flagged_by" class="flex items-center justify-start pb-3 -ml-8">
             {!-- FLAG --}
             <#Icon solid="Flag" class="w-4 h-4 text-error" />
-            <div class="flex-1 ml-2">
+            <div class="flex-1 ml-3">
               <div class="text-sm font-medium text-base-content/70">
                 <LiveRedirect
                   aria-label={e(@character_username, "") <> " " <> l("profile")}
@@ -416,7 +416,7 @@
               <Iconify.iconify
                   icon={Bonfire.Boundaries.Verbs.get(@verb)[:icon]} 
                   class="w-4 h-4 text-error" />
-              <div class="flex-1 ml-2">
+              <div class="flex-1 ml-3">
                 <div class="text-sm font-medium text-base-content/70">
                   <LiveRedirect
                     aria-label={e(@character_username, "") <> " " <> l("profile")}

@@ -27,14 +27,14 @@ defmodule Bonfire.UI.Social.FeedsLive do
     [
       {
         l("My feed"),
-        page: "feed", icon: "ri:home-line", icon_active: "ri:home-fill", href: "/feed"
+        page: "feed", icon: "carbon:home", icon_active: "carbon:home", href: "/feed"
         #  href: &nav_link_feed/1
       },
       {l("Explore"),
        page: "explore",
        href: "/feed/explore",
-       icon: "ri:safari-line",
-       icon_active: "ri:safari-fill"}
+       icon: "carbon:explore",
+       icon_active: "carbon:explore"}
       # {l("Moderation"),
       # page: "moderation",
       # href: &nav_link_feed/1,
@@ -74,7 +74,7 @@ defmodule Bonfire.UI.Social.FeedsLive do
        selected_tab: nil,
        page: "feed",
        page_title: l("Activities"),
-       page_header_icon: "ri:home-line",
+       page_header_icon: "carbon:home",
        feed: nil,
        page_info: nil,
        no_header: true,

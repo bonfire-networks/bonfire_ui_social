@@ -4,7 +4,7 @@
   <div class="flex items-center justify-start w-5 h-5">
     <#Icon solid="UserAdd" class="w-5 h-5 text-info" />      
   </div>
-  <div class="flex-1 ml-2">
+  <div class="flex-1 ml-3">
     <div 
       class="text-sm font-medium text-base-content text-opacity-80">
 
@@ -75,7 +75,7 @@
     class="flex items-center justify-start w-5 h-5">
     <#Icon solid="UserAdd" class="w-5 h-5 text-info" />      
   </div> --}
-  <div class="flex-1 ml-2">
+  <div class="flex-1 ml-3">
     <div 
       class="text-sm font-medium text-base-content text-opacity-80">
       {!-- first show the subject --}

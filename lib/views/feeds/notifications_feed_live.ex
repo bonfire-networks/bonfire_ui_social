@@ -2,8 +2,8 @@ defmodule Bonfire.UI.Social.NotificationsFeedLive do
   use Bonfire.UI.Common.Web, :surface_live_view
 
   declare_nav_link(l("Notifications"),
-    icon: "ri:notification-2-line",
-    icon_active: "ri:notification-2-fill",
+    icon: "carbon:notification",
+    icon_active: "carbon:notification",
     page: "notifications",
     badge: [
       id: :notifications,
@@ -28,7 +28,7 @@ defmodule Bonfire.UI.Social.NotificationsFeedLive do
        page: "notifications",
        selected_tab: "notifications",
        #  without_sidebar: true,
-       page_header_icon: "ri:notification-2-line",
+       page_header_icon: "carbon:notification",
        page_title: l("Notifications"),
        feedback_title: l("You have no notifications"),
        feedback_message:

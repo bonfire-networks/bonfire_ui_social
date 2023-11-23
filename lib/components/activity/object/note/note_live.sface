@@ -2,7 +2,7 @@
   data-id="activity_note"
   x-data="{expanded: false, expandable: $refs.note && $refs.note.scrollHeight > $refs.note.clientHeight}"
   data-rendered={@showing_within}
-  class="note previewable_activity mt-1 cursor-pointer max-w-[594px] overflow-x-hidden"
+  class="note previewable_activity cursor-pointer max-w-[594px] overflow-x-hidden"
   x-ref="note_container"
   x-transition
 >

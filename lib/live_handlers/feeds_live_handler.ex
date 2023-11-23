@@ -490,7 +490,7 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
     ]
 
   defp feed_filter_assigns(_),
-    do: [tab_path_suffix: nil, page_title: l("Activities"), page_header_icon: "ri:home-line"]
+    do: [tab_path_suffix: nil, page_title: l("Activities"), page_header_icon: "carbon:home"]
 
   # @decorate time()
 
@@ -1026,7 +1026,7 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
       |> Bonfire.Boundaries.LiveHandler.maybe_check_boundaries(boundary_opts) || assigns_sockets
 
     if feed_live_update_many_preloads == :async_total do
-      # |> debug("ccccccc") 
+      # |> debug("ccccccc")
       batch_update_many_async(
         assigns_sockets,
         [
@@ -1065,7 +1065,7 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
             live_update_many_preloads: :user_async_or_skip
           ]
 
-      # |> debug("ccccccc") 
+      # |> debug("ccccccc")
       batch_update_many_async(
         assigns_sockets,
         [
