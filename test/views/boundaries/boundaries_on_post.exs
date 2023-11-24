@@ -35,7 +35,7 @@ defmodule Bonfire.Social.Activities.BoundariesInFeedsTest do
     # login as myself and verify that I can see the post
     conn = conn(user: me, account: account)
     {:ok, view, _html} = live(conn, "/post/#{post.id}")
-    open_browser(view)
+    # open_browser(view)
     assert has_element?(view, "article", html_body)
 
     # login as alice and verify that she can see the post too

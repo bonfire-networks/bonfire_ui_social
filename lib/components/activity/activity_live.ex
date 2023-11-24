@@ -464,13 +464,14 @@ defmodule Bonfire.UI.Social.ActivityLive do
       role="article"
       data-id="activity"
       data-rendered={@showing_within}
+      data-avatar-hidden={Settings.get([Bonfire.UI.Common.AvatarLive, :hide_avatars], false, @__context__)}
       data-hidden={@hide_activity}
+      data-compact={@__context__[:ui_compact]}
       aria-label="user activity"
       tabIndex="0"
       class={
         "p-5 pl-[4.5rem] activity relative flex flex-col #{@class}",
         "replied !p-0 mb-8": @activity_inception && @showing_within not in [:smart_input, :thread],
-        "pl-[3rem] after:!left-[-20px]": @__context__[:ui_compact],
         "unread-activity":
           e(@activity, :seen, nil) == nil and @showing_within == :notifications and
             @activity_inception == nil,

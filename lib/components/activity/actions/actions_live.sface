@@ -16,6 +16,7 @@
   data-rendered={@showing_within}
   data-main-object={@viewing_main_object}
   class="feed_actions h-8"
+  data-hide={@hide_actions}
 >
   <div
     x-transition

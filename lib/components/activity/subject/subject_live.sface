@@ -9,10 +9,11 @@
   class="subject relative flex items-start"
 >
   <LiveRedirect
+    :if={!Settings.get([Bonfire.UI.Common.AvatarLive, :hide_avatars], false, @__context__)}
     opts={"data-id": "subject_avatar", "aria-label": e(@character_username, "") <> " profile"}
     class={
       "absolute -ml-[3.5rem] font-semibold text-base-content hover:underline",
-      "-ml-[2rem]": @__context__[:ui_compact] && !@viewing_main_object
+      "!-ml-[2.5rem]": @__context__[:ui_compact] && !@viewing_main_object
     }
     to={@path || "/user/#{@subject_id}"}
   >
@@ -24,7 +25,7 @@
       viewing_main_object={@viewing_main_object}
       class={
         "rounded-full bg-base-content/10 w-11 h-11",
-        "w-6 h-6": @__context__[:ui_compact]
+        "!w-7 !h-7": @__context__[:ui_compact]
       }
     />
   </LiveRedirect>
