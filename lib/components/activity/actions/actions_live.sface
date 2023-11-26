@@ -70,6 +70,7 @@
           />
 
           <Dynamic.Component
+            :if={@showing_within != :messages}
             module={Bonfire.UI.Social.BoostActionLive}
             id={"#{@id}_boost"}
             myself={@myself}
@@ -159,6 +160,7 @@
         />
 
         <Bonfire.UI.Social.BoostActionLive
+          :if={@showing_within != :messages}
           id={ComponentID.new(
             Bonfire.UI.Social.BoostActionLive,
             id(@object),

@@ -23,6 +23,7 @@
                 <div class="w-full truncate">
                   <div class="flex items-center justify-between">
                     <div class="flex-1 text-sm font-semibold truncate text-base-content">
+                      <!-- FIXME: do not look this up on render -->
                       {#case {LiveHandler.thread_meta(:title, e(activity, :replied, :thread_id, nil), activity, nil,
                            current_user: current_user(@__context__)
                          ), e(activity, :replied, :thread, :named, :name, nil)}}

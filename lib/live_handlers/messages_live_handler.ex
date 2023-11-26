@@ -82,21 +82,24 @@ defmodule Bonfire.Social.Messages.LiveHandler do
         |> repo().maybe_preload(activity: [replied: [thread: :named]])
   end
 
-  def thread_meta(key, thread_id, activity, object, opts) do
-    thread_participants(thread_id, activity, object, opts)
-    |> Map.get(key)
-  end
-
   def thread_participants(thread_id, activity, object, opts) do
     current_user = current_user(opts)
 
-    participants =
-      if(not is_nil(object), do: Map.put(activity, :object, object), else: activity)
-      |> Bonfire.Social.Threads.list_participants(
-        thread_id,
-        current_user: current_user,
-        skip_boundary_check: true
-      )
+    if(not is_nil(object), do: Map.put(activity, :object, object), else: activity)
+    |> Bonfire.Social.Threads.list_participants(
+      thread_id,
+      current_user: current_user,
+      skip_boundary_check: true
+    )
+  end
+
+  def thread_meta(key, thread_id, activity, object, opts) do
+    thread_meta(thread_id, activity, object, opts)
+    |> Map.get(key)
+  end
+
+  def thread_meta(thread_id, activity, object, opts) do
+    participants = thread_participants(thread_id, activity, object, opts)
 
     # to_circles =
     #   if is_list(participants) and participants !=[],
@@ -109,7 +112,7 @@ defmodule Bonfire.Social.Messages.LiveHandler do
       if is_list(participants) and participants != [],
         do:
           participants
-          |> Enum.reject(&(&1.id == id(current_user)))
+          |> Enum.reject(&(&1.id == current_user_id(opts)))
           |> Enum.map_join(
             " & ",
             &e(&1, :profile, :name, e(&1, :character, :username, l("someone else")))

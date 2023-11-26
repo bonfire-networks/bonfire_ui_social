@@ -1065,20 +1065,30 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
             live_update_many_preloads: :user_async_or_skip
           ]
 
+      {current_user, opts} =
+        opts_for_update_many_async(List.first(assigns_sockets), opts)
+        |> debug("opts_for_update_many_async")
+
       # |> debug("ccccccc")
       batch_update_many_async(
+        current_user,
         assigns_sockets,
-        [
-          Bonfire.Boundaries.LiveHandler.update_many_opts(
-            opts ++
-              [
-                verbs: [:read]
-              ]
-          ),
-          Bonfire.Social.Boosts.LiveHandler.update_many_opts(opts),
-          Bonfire.Social.Likes.LiveHandler.update_many_opts(opts),
-          Bonfire.Social.Bookmarks.LiveHandler.update_many_opts(opts)
-        ],
+        if(opts[:showing_within] != :messages,
+          do: [
+            Bonfire.Boundaries.LiveHandler.update_many_opts(
+              opts ++
+                [
+                  verbs: [:read]
+                ]
+            ),
+            Bonfire.Social.Boosts.LiveHandler.update_many_opts(opts)
+          ],
+          else: []
+        ) ++
+          [
+            Bonfire.Social.Likes.LiveHandler.update_many_opts(opts),
+            Bonfire.Social.Bookmarks.LiveHandler.update_many_opts(opts)
+          ],
         opts
       ) || assigns_sockets
 
