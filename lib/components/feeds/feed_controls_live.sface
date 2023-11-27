@@ -1,24 +1,4 @@
 <div class="flex flex-col p-3 justify-between gap-3">
-  <!-- <div class="dropdown dropdown-end">
-        <label
-          tabindex="0"
-          class="rounded-full btn-sm btn btn-ghost normal-case text-base-content/70"
-        >
-          {#case @sort_by}
-            {#match :num_replies}
-              <#Icon iconify="basil:comment-outline" class="w-5 h-5 stroke-1 fill-base-content/50" />
-              <span>{l("Sort by amount of replies")}</span>
-            {#match :num_boosts}
-              <#Icon iconify="system-uicons:retweet" class="w-5 h-5 stroke-1 fill-base-content/50" />
-              <span>{l("Sort by amount of boosts")}</span>
-            {#match :num_likes}
-              <#Icon iconify="mingcute:fire-line" class="w-5 h-5" />
-              <span>{l("Sort by amount of likes")}</span>
-            {#match _}
-              <#Icon iconify="mdi:order-alphabetical-ascending" class="w-5 h-5 text-base-content/70" />
-              <span>{l("default")}</span>
-          {/case}
-        </label> -->
   <div class="flex flex-col gap-2">
     <span class="font-medium text-sm text-base-content/80">{l("Included activities")}</span>
     <Bonfire.UI.Social.Settings.MyFeedItemsLive
@@ -29,140 +9,30 @@
       hide_forced_defaults
     />
   </div>
+
   <div class="flex flex-col gap-2 pt-3">
     <span class="font-medium text-sm text-base-content/80">{l("Sort by")}</span>
-    <ul tabindex="0" class="menu p-0 gap-1 menu-horizontal">
-      <li
-        data-role="chronological"
-        phx-click="set"
-        phx-value-to_atoms="true"
-        phx-value-sort_by="nil"
-        phx-value-assign_global="true"
-        phx-target={@event_target}
-      >
-        <a
-          data-tip={l("Chronological")}
-          class={
-            "tooltip tooltip-bottom flex gap-2 text-base-content/70 border border-base-content/30",
-            "border-base-content/5 active !text-base-content/100": is_nil(@sort_by)
-          }
-        >
-          <#Icon iconify="mdi:order-alphabetical-ascending" class="w-5 h-5 text-base-content/70" />
-          <span class="sr-only">{l("Chronological")}</span>
-        </a></li>
-
-      <li
-        data-role="amount_of_replies"
-        phx-click="set"
-        phx-value-to_atoms="true"
-        phx-value-sort_by="num_replies"
-        phx-value-assign_global="true"
-        phx-target={@event_target}
-      >
-        <a
-          data-tip={l("By amount of replies")}
-          class={
-            "tooltip tooltip-bottom flex gap-2 text-base-content/70 border border-base-content/30",
-            "border-base-content/5 active !text-base-content/100": @sort_by == :num_replies
-          }
-        >
-          <#Icon iconify="basil:comment-outline" class="w-5 h-5 stroke-1 fill-base-content/50" />
-          <span class="sr-only">{l("By amount of replies")}</span>
-        </a>
-      </li>
-
-      <li
-        data-role="amount_of_boosts"
-        phx-click="set"
-        phx-value-to_atoms="true"
-        phx-value-sort_by="num_boosts"
-        phx-value-assign_global="true"
-        phx-target={@event_target}
-      >
-        <a
-          data-tip={l("By amount of boosts")}
-          class={
-            "tooltip tooltip-bottom flex gap-2 text-base-content/70 border border-base-content/30",
-            "border-base-content/5 active !text-base-content/100": @sort_by == :num_boosts
-          }
-        >
-          <#Icon iconify="system-uicons:retweet" class="w-5 h-5 stroke-1 fill-base-content/50" />
-          <span class="sr-only">{l("By amount of boosts")}</span>
-        </a>
-      </li>
-
-      <li
-        data-role="amount_of_likes"
-        phx-click="set"
-        phx-value-to_atoms="true"
-        phx-value-sort_by="num_likes"
-        phx-value-assign_global="true"
-        phx-target={@event_target}
-      >
-        <a
-          data-tip={l("By amount of likes")}
-          class={
-            "tooltip tooltip-bottom flex gap-2 text-base-content/70 border border-base-content/30",
-            "border-base-content/5 active !text-base-content/100": @sort_by == :num_likes
-          }
-        >
-          <#Icon iconify="mingcute:fire-fill" class="w-5 h-5" />
-          <span class="sr-only">{l("By amount of likes")}</span>
-        </a>
-      </li>
-
-      {!-- <li></li>
-          <li>
-            <a class="form-control">
-              <label class="flex gap-2 cursor-pointer">
-                <input type="checkbox" checked="checked" class="checkbox-sm checkbox" />
-                <span class="text-base-content/70">Remember me</span> 
-              </label>
-            </a>
-          </li> --}
-    </ul>
+    <Bonfire.UI.Social.Settings.ReactionsSortItemsLive
+      scope={:user}
+      feed_name={@feed_name}
+      event_name="set_setting"
+      event_target={@event_target}
+      compact
+    />
   </div>
-  <!-- </div> -->
 
-  <!-- <div class="dropdown dropdown-end">
-        <label tabindex="0" class="rounded-full btn-sm btn btn-ghost normal-case">
-          {!-- {l("Order:")} --}
+  <div class="flex flex-col gap-2 pt-3">
+    <span class="font-medium text-sm text-base-content/80">{l("Limit to")}</span>
+    <Bonfire.UI.Social.Settings.TimeSortItemsLive
+      scope={:user}
+      feed_name={@feed_name}
+      event_name="set_setting"
+      event_target={@event_target}
+      compact
+    />
+  </div>
 
-          {#case @time_limit}
-            {#match 1}
-              <#Icon iconify="ri:24-hours-fill" class="w-5 h-5 text-base-content/70" />
-              {l("Today")}
-            {#match 7}
-              <#Icon iconify="mdi:numeric-7-box" class="w-5 h-5 text-base-content/70" />
-              {l("Week")}
-            {#match 365}
-              <#Icon iconify="iconoir:birthday-cake" class="w-5 h-5 text-base-content/70" />
-              {l("Year")}
-            {#match 30}
-              <#Icon
-                iconify="streamline:interface-calendar-date-month-thirty-thirty-calendar-date-week-day-month"
-                class="w-5 h-5 text-base-content/70 stroke-2"
-              />
-              {l("Month")}
-            {#match _}
-              <#Icon iconify="fa6-solid:infinity" class="w-5 h-5 text-base-content/70" />
-              {l("All time")}
-          {/case}
-        </label> -->
-
-  {#if not is_nil(@sort_by)}
-    <!-- <div class="dropdown dropdown-end">
-          <label tabindex="0" class="rounded-full btn-sm btn btn-ghost btn-circle normal-case">
-            {!-- {l("Order:")} --}
-
-            {#if @sort_order == :asc}
-              <#Icon iconify="octicon:sort-asc-16" class="w-5 h-5 text-base-content/70" />
-              {!-- {l("Oldest first")} --}
-            {#else}
-              <#Icon iconify="octicon:sort-desc-16" class="w-5 h-5 text-base-content/70" />
-              {!-- {l("Newest first")} --}
-            {/if}
-          </label> -->
+  <!-- {#if not is_nil(@sort_by)}
     <div class="flex flex-col gap-2 pt-3">
       <span class="font-medium text-sm text-base-content/80">{l("Order")}</span>
       <ul tabindex="0" class="z-[999] menu p-1 gap-1 menu-horizontal">
@@ -194,84 +64,5 @@
             {l("Least first")}</a></li>
       </ul>
     </div>
-  {/if}
-
-  <div class="flex flex-col gap-2 pt-3">
-    <span class="font-medium text-sm text-base-content/80">{l("Limit to")}</span>
-    <ul tabindex="0" class="menu p-0 gap-1 menu-horizontal">
-      <li
-        data-role="day"
-        phx-click="set"
-        3
-        phx-value-to_integers="true"
-        phx-value-time_limit={1}
-        phx-value-assign_global="true"
-        phx-target={@event_target}
-      ><a class={
-          "flex gap-2 text-base-content/70 border border-base-content/30",
-          "border-base-content/5 active !text-base-content/100": @time_limit == 1
-        }>
-          <#Icon iconify="ri:24-hours-fill" class="w-5 h-5 text-base-content/70" />
-          <span class="sr-only">{l("Day")}</span></a></li>
-
-      <li
-        data-role="week"
-        phx-click="set"
-        phx-value-to_integers="true"
-        phx-value-time_limit={7}
-        phx-value-assign_global="true"
-        phx-target={@event_target}
-      ><a class={
-          "flex gap-2 text-base-content/70 border border-base-content/30",
-          "border-base-content/5 active !text-base-content/100": @time_limit == 7
-        }>
-          <#Icon iconify="mdi:numeric-7-box" class="w-5 h-5 text-base-content/70" />
-          <span class="sr-only">{l("Week")}</span></a></li>
-
-      <li
-        data-role="month"
-        phx-click="set"
-        phx-value-to_integers="true"
-        phx-value-time_limit={30}
-        phx-value-assign_global="true"
-        phx-target={@event_target}
-      ><a class={
-          "flex gap-2 text-base-content/70 border border-base-content/30",
-          "border-base-content/5 active !text-base-content/100": @time_limit == 30
-        }>
-          <#Icon
-            iconify="streamline:interface-calendar-date-month-thirty-thirty-calendar-date-week-day-month"
-            class="w-5 h-5 text-base-content/70"
-          />
-          <span class="sr-only">{l("Month")}</span></a></li>
-
-      <li
-        data-role="year"
-        phx-click="set"
-        phx-value-to_integers="true"
-        phx-value-time_limit={365}
-        phx-value-assign_global="true"
-        phx-target={@event_target}
-      ><a class={
-          "flex gap-2 text-base-content/70 border border-base-content/30",
-          "border-base-content/5 active !text-base-content/100": @time_limit == 365
-        }>
-          <#Icon iconify="iconoir:birthday-cake" class="w-5 h-5 text-base-content/70" />
-          <span class="sr-only">{l("Year")}</span></a></li>
-
-      <li
-        data-role="infinite"
-        phx-click="set"
-        phx-value-to_integers="true"
-        phx-value-time_limit="0"
-        phx-value-assign_global="true"
-        phx-target={@event_target}
-      ><a class={
-          "flex gap-2 text-base-content/70 border border-base-content/30",
-          "border-base-content/5 active !text-base-content/100": !@time_limit or @time_limit == 0
-        }>
-          <#Icon iconify="fa6-solid:infinity" class="w-5 h-5 text-base-content/70" />
-          <span class="sr-only">{l("All time")}</span></a></li>
-    </ul>
-  </div>
+  {/if} -->
 </div>

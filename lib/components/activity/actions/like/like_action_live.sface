@@ -1,4 +1,4 @@
-<div class="relative z-20">
+<div class="relative z-20 flex items-center">
   {#case is_nil(current_user_id(@__context__)) or !@object_boundary or
       Bonfire.Boundaries.can?(@__context__, :like, @object_boundary)}
     {#match true}
@@ -28,8 +28,8 @@
         <span :if={@my_like} class="sr-only">
           {l("Liked")}
         </span>
-        <span :if={e(@like_count, 0) > 0}>{e(@like_count, 0)}</span>
       </button>
+      <span class="ml-1 text-[13px] text-base-content/70" :if={e(@like_count, 0) > 0}>{e(@like_count, 0)}</span>
     {#match _}
       <button
         type="button"

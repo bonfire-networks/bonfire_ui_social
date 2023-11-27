@@ -36,7 +36,7 @@
   >
     <LiveRedirect
       opts={"data-id": "subject_name", "aria-label": l("%{name}'s profile", name: @profile_name)}
-      class="link link-hover font-semibold text-sm max-w-[400px] truncate"
+      class="link link-hover font-medium text-sm max-w-[400px] truncate"
       to={@path || "/user/#{@subject_id}"}
     >
       {@profile_name}

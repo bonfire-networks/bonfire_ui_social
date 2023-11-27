@@ -1,4 +1,4 @@
-<div class="relative z-20">
+<div class="relative z-20 flex items-center">
   {#case @object_type not in [Bonfire.Data.Social.Message] and
       (current_user(@__context__) == nil or !@object_boundary or
          Bonfire.Boundaries.can?(@__context__, :boost, @object_boundary))}
@@ -21,8 +21,8 @@
         <!-- <span class="sr-only">
             {if @my_boost, do: l("Boosted"), else: l("Boost")}
           </span> -->
-        <span :if={e(@boost_count, 0) > 0}>{e(@boost_count, 0)}</span>
       </button>
+      <span class="ml-1 text-[13px] text-base-content/70" :if={e(@boost_count, 0) > 0}>{e(@boost_count, 0)}</span>
     {#match _}
       <button
         type="button"

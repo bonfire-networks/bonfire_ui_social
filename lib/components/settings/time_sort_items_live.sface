@@ -1,0 +1,13 @@
+<form
+  data-scope="time_limit"
+  phx-change={@event_name || "Bonfire.Common.Settings:set"}
+  phx-target={@event_target}
+>
+  <Bonfire.UI.Common.SettingsRadiosLive
+    keys={[Bonfire.UI.Social.FeedLive, :time_limit]}
+    options={%{1 => l("Day"), 7 => l("Week"), 30 => l("Month"), 365 => "Year", 0 => "All time"}}
+    default_value={7}
+    scope={@scope}
+    compact
+  />
+</form>
