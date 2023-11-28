@@ -487,7 +487,8 @@ defmodule Bonfire.UI.Social.ActivityLive do
               href={@permalink || path(@object)}
               parent_id={@parent_id}
               open_btn_text=""
-              title_text={e(@object, :name, nil) || e(@object, :post_content, :name, nil) || l("Discussion")}
+              title_text={@thread_title || e(@object, :name, nil) || e(@object, :post_content, :name, nil) ||
+                l("Discussion")}
               open_btn_wrapper_class="open_preview_link hidden"
               open_btn_class=""
               modal_assigns={
@@ -531,7 +532,9 @@ defmodule Bonfire.UI.Social.ActivityLive do
               modal_assigns={
                 id: @thread_id || id(@object),
                 current_url: @permalink,
-                preview_view: Bonfire.UI.Coordination.TaskLive
+                preview_view: Bonfire.UI.Coordination.TaskLive,
+                activity_inception: "preview",
+                check_object_boundary: false
               }
               root_assigns={
                 page_title: l("Task")
