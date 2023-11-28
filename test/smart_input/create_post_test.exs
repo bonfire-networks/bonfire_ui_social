@@ -12,6 +12,38 @@ defmodule Bonfire.Social.Activities.CreatePost.Test do
     filename: "150.png"
   }
 
+  # test "create a post with uploads" do
+  #   # Create alice user
+  #   account = fake_account!()
+  #   alice = fake_user!(account)
+
+  #   # login as alice
+  #   conn = conn(user: alice, account: account)
+  #   {:ok, view, _html} = live(conn, "/")
+
+  #   # create an upload
+  #   icon =
+  #     file_input(view, "[data-scope=composer_form]", :file_server, [
+  #       %{
+  #         last_modified: 1_594_171_879_000,
+  #         name: "image.png",
+  #         content: File.read!(@icon_file),
+  #         type: "image/png"
+  #       }
+  #     ])
+
+  #   uploaded = render_upload(icon, "image.png")
+
+  #   # create a post
+  #   attrs = %{
+  #     post_content: %{summary: "summary", name: "test post name", html_body: "first post"}
+  #   }
+
+  #   assert {:ok, post} =
+  #            Posts.publish(current_user: alice, post_attrs: attrs, boundary: "public")
+
+  # end
+
   describe "create a post" do
     test "shows a confirmation flash message" do
       some_account = fake_account!()
