@@ -512,6 +512,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
                   ),
                 preview_component: Bonfire.UI.Social.ObjectThreadLoadLive,
                 activity_inception: "preview",
+                showing_within: :thread,
                 check_object_boundary: false
               }
               root_assigns={

@@ -25,7 +25,12 @@
         </span> --}
       </button>
       {!-- {/if} --}
-      <span class="ml-1 text-[13px] text-base-content/70">
+      <span
+        data-role="reply_count"
+        :if={Bonfire.Common.Settings.get([:ui, :show_activity_counts], false, @__context__) &&
+          e(@reply_count, 0) > 0}
+        class="ml-1 text-[13px] text-base-content/70"
+      >
         {@reply_count}
       </span>
     {#match _}
@@ -42,7 +47,11 @@
           </span>
           <span class={if !@cannot_reply_text, do: "sr-only"}>{@cannot_reply_text || l("Cannot Reply")}</span>
         </button>
-        <span class="ml-1 text-xs text-base-content text-opacity-70">
+        <span
+          :if={Bonfire.Common.Settings.get([:ui, :show_activity_counts], false, @__context__) &&
+            e(@reply_count, 0) > 0}
+          class="ml-1 text-xs text-base-content text-opacity-70"
+        >
           {@reply_count}
         </span>
       {#else}

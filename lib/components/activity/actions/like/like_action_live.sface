@@ -23,13 +23,17 @@
 
         <span :if={!@my_like} class="sr-only">
           {l("Like")}
-          <span :if={e(@like_count, 0) > 0}>{e(@like_count, 0)}</span>
         </span>
         <span :if={@my_like} class="sr-only">
           {l("Liked")}
         </span>
       </button>
-      <span class="ml-1 text-[13px] text-base-content/70" :if={e(@like_count, 0) > 0}>{e(@like_count, 0)}</span>
+      <span
+        data-role="like_count"
+        class="ml-1 text-[13px] text-base-content/70"
+        :if={Bonfire.Common.Settings.get([:ui, :show_activity_counts], false, @__context__) &&
+          e(@like_count, 0) > 0}
+      >{e(@like_count, 0)}</span>
     {#match _}
       <button
         type="button"
@@ -44,7 +48,8 @@
         <span class="sr-only">
           {l("Cannot Like")}
         </span>
-        <span :if={e(@like_count, 0) > 0}>{e(@like_count, 0)}</span>
+        <span :if={Bonfire.Common.Settings.get([:ui, :show_activity_counts], false, @__context__) &&
+          e(@like_count, 0) > 0}>{e(@like_count, 0)}</span>
       </button>
   {/case}
 </div>

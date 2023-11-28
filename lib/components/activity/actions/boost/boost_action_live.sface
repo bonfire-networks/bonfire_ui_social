@@ -22,7 +22,12 @@
             {if @my_boost, do: l("Boosted"), else: l("Boost")}
           </span> -->
       </button>
-      <span class="ml-1 text-[13px] text-base-content/70" :if={e(@boost_count, 0) > 0}>{e(@boost_count, 0)}</span>
+      <span
+        class="ml-1 text-[13px] text-base-content/70"
+        data-role="boost_count"
+        :if={Bonfire.Common.Settings.get([:ui, :show_activity_counts], false, @__context__) &&
+          e(@boost_count, 0) > 0}
+      >{e(@boost_count, 0)}</span>
     {#match _}
       <button
         type="button"
@@ -36,7 +41,8 @@
           <span class="sr-only feed_activity_text">
             {l("Cannot Boost")}
           </span>
-          <span :if={e(@boost_count, 0) > 0}>{e(@boost_count, 0)}</span>
+          <span :if={Bonfire.Common.Settings.get([:ui, :show_activity_counts], false, @__context__) &&
+            e(@boost_count, 0) > 0}>{e(@boost_count, 0)}</span>
         </span>
       </button>
   {/case}

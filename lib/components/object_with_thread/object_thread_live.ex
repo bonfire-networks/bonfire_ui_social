@@ -41,7 +41,7 @@ defmodule Bonfire.UI.Social.ObjectThreadLive do
           assigns[:activity_inception]
         )
 
-      if assigns[:showing_within] == :preview,
+      if assigns[:activity_inception] == "preview",
         do: "preview_#{main_object_id}",
         else: main_object_id
     end)
