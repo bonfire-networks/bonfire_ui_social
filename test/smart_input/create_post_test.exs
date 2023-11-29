@@ -24,7 +24,7 @@ defmodule Bonfire.Social.Activities.CreatePost.Test do
     file = Path.expand("../fixtures/icon.png", __DIR__)
 
     icon =
-      file_input(view, "[data-scope=composer_form]", :files, [
+      file_input(view, "#smart_input_form", :files, [
         %{
           name: "image.png",
           content: File.read!(file),
