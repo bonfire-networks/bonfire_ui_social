@@ -1,2 +1,14 @@
-<div class="p-1 mt-6 rounded-lg shadow bg-base-100">
+<div class="p-3 pt-0 border-b border-base-content/20">
+  <Bonfire.UI.Common.SmartInputInlineLive
+    id={:smart_input}
+    showing_within={:page}
+    reply_to_id={@reply_to_id}
+    context_id={@context_id}
+    create_object_type={@create_object_type}
+    thread_mode={:flat}
+    title_open
+    to_boundaries={@to_boundaries}
+    to_circles={@to_circles}
+    smart_input_opts={@smart_input_opts}
+  />
 </div>

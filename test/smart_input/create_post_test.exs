@@ -19,7 +19,7 @@ defmodule Bonfire.Social.Activities.CreatePost.Test do
 
     # login as alice
     conn = conn(user: alice, account: account)
-    {:ok, view, _html} = live(conn, "/")
+    {:ok, view, _html} = live(conn, "/write")
 
     file = Path.expand("../fixtures/icon.png", __DIR__)
 

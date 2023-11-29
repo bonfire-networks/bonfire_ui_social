@@ -45,7 +45,7 @@ defmodule Bonfire.UI.Social.Routes do
         live("/messages/:id/reply/:reply_to_id", MessagesLive, as: Bonfire.Data.Social.Message)
         live("/messages/@:username", MessagesLive, as: Bonfire.Data.Social.Message)
         live("/messages", MessagesLive, as: Bonfire.Data.Social.Message)
-        # live("/write", WriteLive, as: :write)
+        live("/write", WriteLive, as: :write)
       end
 
       # pages you need an account to view

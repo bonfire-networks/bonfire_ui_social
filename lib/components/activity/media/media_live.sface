@@ -287,7 +287,7 @@
                           <div class="relative h-full">
                             {#if @cw || Settings.get([Bonfire.UI.Social.Activity.MediaLive, :hide], false, @__context__)}
                               <div class="absolute inset-0 flex items-center cursor-pointer place-content-center justify-center z-[60]">
-                                <button class="btn btn-sm rounded normal-case">{l("Media Hidden")}</button>
+                                <button class="btn btn-sm rounded-full normal-case btn-outline border-base-content/20">{l("Media Hidden")}</button>
                               </div>
                               <div class="absolute inset-0 backdrop-blur-2xl z-50 cursor-pointer rounded-md" />
                             {/if}
@@ -310,7 +310,7 @@
                       <a href={Media.media_url(m)} target="_blank" class="relative h-full block">
                         {#if @cw || Settings.get([Bonfire.UI.Social.Activity.MediaLive, :hide], false, @__context__)}
                           <div class="absolute inset-0 flex items-center cursor-pointer place-content-center justify-center z-[60]">
-                            <button class="btn btn-sm rounded normal-case">{l("Media Hidden")}</button>
+                            <button class="btn btn-sm rounded-full normal-case btn-outline border-base-content/20">{l("Media Hidden")}</button>
                           </div>
                           <div class="absolute inset-0 backdrop-blur-2xl z-50 cursor-pointer rounded-md" />
                         {/if}
