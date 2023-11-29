@@ -5,11 +5,11 @@
     submit={JS.push(handler(@create_object_type)) |> Bonfire.UI.Common.SmartInput.LiveHandler.minimize()}
     action={"/LiveHandler/" <> handler(@create_object_type)}
     change="validate"
-    data-scope="composer_form"
-    id="#smart_input_form"
+    id="smart_input_form"
     opts={
       autocomplete: "off",
-      "phx-target": "#smart_input"
+      "phx-target": "#smart_input",
+      "data-scope": "composer_form"
     }
     class={if WriteEditorLive.use_rich_editor?(e(@smart_input_opts, :wysiwyg, true), @__context__),
       do: "with_editor flex-1",

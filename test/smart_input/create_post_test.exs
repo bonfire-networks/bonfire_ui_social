@@ -7,42 +7,48 @@ defmodule Bonfire.Social.Activities.CreatePost.Test do
   alias Bonfire.Files.Test
 
   # FIXME: path
-  @icon_file %{
-    path: Path.expand("fixtures/150.png", __DIR__),
-    filename: "150.png"
-  }
+  # @icon_file %{
+  #   path: Path.expand("fixtures/150.png", __DIR__),
+  #   filename: "150.png"
+  # }
 
-  # test "create a post with uploads" do
-  #   # Create alice user
-  #   account = fake_account!()
-  #   alice = fake_user!(account)
+  test "create a post with uploads" do
+    # Create alice user
+    account = fake_account!()
+    alice = fake_user!(account)
 
-  #   # login as alice
-  #   conn = conn(user: alice, account: account)
-  #   {:ok, view, _html} = live(conn, "/")
+    # login as alice
+    conn = conn(user: alice, account: account)
+    {:ok, view, _html} = live(conn, "/")
 
-  #   # create an upload
-  #   icon =
-  #     file_input(view, "[data-scope=composer_form]", :file_server, [
-  #       %{
-  #         last_modified: 1_594_171_879_000,
-  #         name: "image.png",
-  #         content: File.read!(@icon_file),
-  #         type: "image/png"
-  #       }
-  #     ])
+    file = Path.expand("../fixtures/icon.png", __DIR__)
 
-  #   uploaded = render_upload(icon, "image.png")
+    icon =
+      file_input(view, "[data-scope=composer_form]", :files, [
+        %{
+          name: "image.png",
+          content: File.read!(file),
+          type: "image/png"
+        }
+      ])
 
-  #   # create a post
-  #   attrs = %{
-  #     post_content: %{summary: "summary", name: "test post name", html_body: "first post"}
-  #   }
+    uploaded = render_upload(icon, "image.png")
 
-  #   assert {:ok, post} =
-  #            Posts.publish(current_user: alice, post_attrs: attrs, boundary: "public")
+    # create a post
+    content = "here is an epic html post"
 
-  # end
+    assert posted =
+             view
+             |> form("#smart_input_form")
+             |> render_submit(%{
+               "to_boundaries" => "public",
+               "post" => %{"post_content" => %{"html_body" => content}}
+             })
+
+    assert [ok] = find_flash(posted)
+    {:ok, refreshed_view, _html} = live(conn, "/feed/local")
+    open_browser(refreshed_view)
+  end
 
   describe "create a post" do
     test "shows a confirmation flash message" do

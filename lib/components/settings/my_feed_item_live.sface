@@ -27,7 +27,7 @@
             )
         end}
         disabled={@disabled}
-        class="toggle toggle-primary"
+        class="toggle toggle-sm"
       />
       <span class="ml-2 label-text">{@label}</span>
     </label>
