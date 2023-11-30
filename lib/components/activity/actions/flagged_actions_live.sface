@@ -1,10 +1,10 @@
 <div aria-haspopup="true" class="dropdown dropdown-end feed_activity relative">
   <button
     tabindex="0"
-    class="rounded gap-2 text-xs text-base-content/70 btn bg-primary/10 hover:bg-primary/30 text-primary btn-ghost normal-case btn-sm"
+    class="border-warning/30 btn btn-outline btn-warning rounded-full normal-case btn-sm"
   >
     <#Icon iconify="game-icons:heart-plus" class="w-5 h-5 stroke-1" />
-    <span>{l("Mediate")}</span>
+    {l("Mediate")}
   </button>
   <ul
     tabindex="0"
@@ -41,9 +41,9 @@
             create_object_type: :message,
             to_circles: [
               %{
-                e(flagged_character(@object || @activity), :username, nil) =>
-                  id(e(flagged_character(@object), nil))
-              }
+               id(e(flagged_character(@object), nil)) => e(flagged_character(@object || @activity), :username, nil)
+                  
+              } 
             ]
           }}
           prompt={l("Message the original author")}
@@ -136,11 +136,11 @@
   <div>
     <Bonfire.UI.Social.Activity.DeleteObjectLive
       object={@object}
-      icon_class="w-5 h-5 stroke-1 text-error"
+      icon_class="w-5 h-5 stroke-1"
       creator_id={Bonfire.UI.Social.Activity.MoreActionsLive.creator_or_subject_id(@activity, @object)}
       object_type_readable={@object_type_readable}
       parent_id={id(@activity)}
-      open_btn_class="flex rounded btn btn-ghost hover:bg-error/30 bg-error/20 normal-case btn-sm gap-2 text-error text-xs"
+      open_btn_class="flex btn btn-sm btn-error btn-outline rounded-full border-error/30"
     />
   </div>
 {/if}
@@ -152,10 +152,10 @@
   data-role="unflag"
   title={l("Unflag")}
   phx-value-subject={e(@activity, :subject, :id, "")}
-  class="flex rounded btn bg-primary/20 text-primary text-xs hover:bg-primary/30 btn-ghost normal-case btn-sm"
+  class="flex rounded-full btn btn-outline btn-info border-info/30 btn-sm"
 >
-  <#Icon iconify="fluent:flag-off-16-filled" class="w-5 h-5 text-primary stroke-1" />
-  <span>{l("Unflag")}</span>
+  <#Icon iconify="fluent:flag-off-16-filled" class="w-5 h-5 stroke-1" />
+  {l("Unflag")}
 </button>
 
 {!-- <LiveRedirect 
