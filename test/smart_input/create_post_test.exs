@@ -11,7 +11,6 @@ defmodule Bonfire.Social.Activities.CreatePost.Test do
   #   path: Path.expand("fixtures/150.png", __DIR__),
   #   filename: "150.png"
   # }
-
   test "create a post with uploads" do
     # Create alice user
     account = fake_account!()
@@ -22,7 +21,8 @@ defmodule Bonfire.Social.Activities.CreatePost.Test do
     {:ok, view, _html} = live(conn, "/write")
 
     file = Path.expand("../fixtures/icon.png", __DIR__)
-
+    debug(file, "CACCA")
+    open_browser(view)
     icon =
       file_input(view, "#smart_input_form", :files, [
         %{
