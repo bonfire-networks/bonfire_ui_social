@@ -23,6 +23,7 @@ defmodule Bonfire.Social.Activities.CreatePost.Test do
     file = Path.expand("../fixtures/icon.png", __DIR__)
     debug(file, "CACCA")
     open_browser(view)
+
     icon =
       file_input(view, "#smart_input_form", :files, [
         %{

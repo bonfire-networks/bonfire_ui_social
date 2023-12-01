@@ -41,9 +41,9 @@
             create_object_type: :message,
             to_circles: [
               %{
-               id(e(flagged_character(@object), nil)) => e(flagged_character(@object || @activity), :username, nil)
-                  
-              } 
+                id(e(flagged_character(@object), nil)) =>
+                  e(flagged_character(@object || @activity), :username, nil)
+              }
             ]
           }}
           prompt={l("Message the original author")}
