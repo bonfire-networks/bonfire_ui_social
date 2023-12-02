@@ -1,16 +1,13 @@
 defmodule Bonfire.Social.Activities.CreatePost.Test do
   use Bonfire.UI.Social.ConnCase, async: true
   use Bonfire.Common.Utils
+  import Bonfire.Files.Simulation
+
   alias Bonfire.Social.Fake
   alias Bonfire.Social.Posts
   alias Bonfire.Social.Follows
   alias Bonfire.Files.Test
 
-  # FIXME: path
-  # @icon_file %{
-  #   path: Path.expand("fixtures/150.png", __DIR__),
-  #   filename: "150.png"
-  # }
   test "create a post with uploads" do
     # Create alice user
     account = fake_account!()
@@ -20,7 +17,7 @@ defmodule Bonfire.Social.Activities.CreatePost.Test do
     conn = conn(user: alice, account: account)
     {:ok, view, _html} = live(conn, "/write")
 
-    file = Path.expand("../fixtures/icon.png", __DIR__)
+    file = icon_file()
     debug(file, "CACCA")
     open_browser(view)
 
