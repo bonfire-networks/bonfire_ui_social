@@ -87,7 +87,7 @@ defmodule Bonfire.Social.Follows.LiveHandler do
     my_follows =
       if current_user,
         do:
-          Bonfire.Social.Follows.get!(current_user, list_of_ids,
+          Bonfire.Social.Follows.get!(current_user, List.wrap(list_of_ids),
             preload: false,
             skip_boundary_check: true
           )
