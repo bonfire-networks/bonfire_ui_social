@@ -17,8 +17,7 @@ defmodule Bonfire.Social.Activities.CreatePost.Test do
     conn = conn(user: alice, account: account)
     {:ok, view, _html} = live(conn, "/write")
 
-    file = icon_file()
-    debug(file, "CACCA")
+    file = Path.expand("../fixtures/icon.png", __DIR__)
     open_browser(view)
 
     icon =

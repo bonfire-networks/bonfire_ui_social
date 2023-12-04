@@ -1584,7 +1584,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
       do: []
 
   # WIP: THIS NEEDS TO BE REFACTORED ACCORDING TO actions_for_object_type
-  # def component_actions("Flag", _, _, _, _, _), do: [Bonfire.UI.Social.FlaggedActionsLive]
+  def component_actions("Flag", _, _, _, _, _), do: [Bonfire.UI.Social.Activity.ActionsLive]
 
   # def component_actions(_, activity, _, _, _, true) do
   #   [Bonfire.UI.Social.Activity.MainObjectInfoLive] ++ component_actions(nil, activity, nil)

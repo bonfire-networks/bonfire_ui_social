@@ -5,7 +5,7 @@ defmodule Bonfire.Social.Feeds.LoadMoreTest do
   alias Bonfire.Social.Likes
   alias Bonfire.Social.Follows
   alias Bonfire.Social.Posts
-
+  use Mneme
   import Untangle
 
   describe "Load More in Feeds" do
@@ -13,8 +13,7 @@ defmodule Bonfire.Social.Feeds.LoadMoreTest do
     test "As a user I dont want to see the load more button if there are the same number of activities as the pagination limit" do
       # make sure we start with a blank slate:
       Bonfire.Common.Repo.delete_all(Bonfire.Data.Social.FeedPublish)
-      total_posts = Bonfire.Common.Config.get(:default_pagination_limit, 2)
-
+      total_posts = Bonfire.Common.Config.get(:default_pagination_limit, 2) |> debug("TOTAL POST")
       account = fake_account!()
       me = fake_user!(account)
 
@@ -36,9 +35,15 @@ defmodule Bonfire.Social.Feeds.LoadMoreTest do
 
       {:ok, view, _html} = live(conn, "/feed/local")
 
-      live_pubsub_wait(view)
+      # live_pubsub_wait(view)
 
-      refute has_element?(view, "[data-role=load_more_button]")
+      auto_assert true <- has_element?(view, "[data-role=load_more_button]")
+
+      view
+      |> element("[data-role=load_more_button]")
+      |> render_click()
+
+      auto_assert false <- has_element?(view, "[data-role=load_more_button]")
     end
 
     # FIXME: because of deferred joins and infinite scroll we do now show the button - should instead test if once the button is clicked and there's no more activities it disappears
@@ -108,6 +113,7 @@ defmodule Bonfire.Social.Feeds.LoadMoreTest do
       # Create alice user
       account = fake_account!()
       alice = fake_user!(account)
+
       # Create bob user
       # account2 = fake_account!()
       # bob = fake_user!(account2)
@@ -142,6 +148,7 @@ defmodule Bonfire.Social.Feeds.LoadMoreTest do
 
       # open_browser(view)
       articles = Floki.find(more_doc, "[data-id=feed] article")
+
       # articles = element(more_doc, "[data-id=feed] article")
       # # |> debug("articles")
 

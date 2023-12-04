@@ -53,34 +53,6 @@
       </div>
     </li>
 
-    {!-- Block the author --}
-    {!-- <Dynamic.Component
-          :if={module_enabled?(Bonfire.Boundaries.Web.BlockButtonLive)}
-          module={Bonfire.Boundaries.Web.BlockButtonLive}
-          parent_id={@activity_component_id || id(@activity)}
-          object={flagged_subject(@object || @activity)}
-          peered={e(flagged_subject(@object || @activity), :peered, nil)}
-          scope={e(@activity, :tree, :parent, nil) || e(@activity, :tree, :parent_id, nil)}
-          label={l("the original author")}
-          type="block"
-          class="flex items-center w-full gap-2 text-sm text-base-content/70"
-          with_icon
-        /> --}
-
-    {!-- Block the flagger --}
-    {!-- <Dynamic.Component
-          :if={module_enabled?(Bonfire.Boundaries.Web.BlockButtonLive)}
-          module={Bonfire.Boundaries.Web.BlockButtonLive}
-          parent_id={@activity_component_id || id(@activity)}
-          object={e(@activity, :subject, nil)}
-          peered={e(@activity, :subject, :peered, nil)}
-          scope={e(@activity, :tree, :parent, nil) || e(@activity, :tree, :parent_id, nil)}
-          label={l("the flagger")}
-          type="block"
-          class="flex items-center w-full gap-2 text-sm text-base-content/70"
-          with_icon 
-        />--}
-
     {#case e(@activity, :tree, :parent_id, nil)}
       {#match nil}
       {#match context_id}
@@ -132,11 +104,60 @@
     {/case}
   </ul>
 </div>
+
+<div aria-haspopup="true" class="dropdown dropdown-end feed_activity relative">
+  <button
+    tabindex="0"
+    class="border-warning/30 btn btn-outline btn-warning rounded-full normal-case btn-sm"
+  >
+    <#Icon iconify="heroicons-solid:ban" class="w-5 h-5 stroke-1" />
+    {l("Block")}
+  </button>
+  <ul
+    tabindex="0"
+    class="!block w-72 mt-2 z-[910] menu-sm relative shadow menu dropdown-content text-base-content bg-base-200 rounded-lg dropdown_actions"
+    role="menu"
+    aria-orientation="vertical"
+    aria-labelledby="more-menu"
+  >
+    <li>
+      {!-- Block the author --}
+      <Dynamic.Component
+        :if={module_enabled?(Bonfire.Boundaries.Web.BlockButtonLive)}
+        module={Bonfire.Boundaries.Web.BlockButtonLive}
+        parent_id={@activity_component_id || id(@activity)}
+        object={flagged_subject(@object || @activity)}
+        peered={e(flagged_subject(@object || @activity), :peered, nil)}
+        scope={e(@activity, :tree, :parent, nil) || e(@activity, :tree, :parent_id, nil)}
+        label={l("the original author")}
+        type="block"
+        class="flex items-center w-full gap-2 text-sm text-base-content/70"
+        with_icon
+      />
+    </li>
+    <li>
+      {!-- Block the flagger --}
+      <Dynamic.Component
+        :if={module_enabled?(Bonfire.Boundaries.Web.BlockButtonLive)}
+        module={Bonfire.Boundaries.Web.BlockButtonLive}
+        parent_id={@activity_component_id || id(@activity)}
+        object={e(@activity, :subject, nil)}
+        peered={e(@activity, :subject, :peered, nil)}
+        scope={e(@activity, :tree, :parent, nil) || e(@activity, :tree, :parent_id, nil)}
+        label={l("the flagger")}
+        type="block"
+        class="flex items-center w-full gap-2 text-sm text-base-content/70"
+        with_icon
+      />
+    </li>
+  </ul>
+</div>
 {#if @object_type != Bonfire.Data.Identity.User}
   <div>
     <Bonfire.UI.Social.Activity.DeleteObjectLive
       object={@object}
       icon_class="w-5 h-5 stroke-1"
+      hide_text
       creator_id={Bonfire.UI.Social.Activity.MoreActionsLive.creator_or_subject_id(@activity, @object)}
       object_type_readable={@object_type_readable}
       parent_id={id(@activity)}
@@ -155,7 +176,7 @@
   class="flex rounded-full btn btn-outline btn-info border-info/30 btn-sm"
 >
   <#Icon iconify="fluent:flag-off-16-filled" class="w-5 h-5 stroke-1" />
-  {l("Unflag")}
+  <span class="sr-only">{l("Unflag")}</span>
 </button>
 
 {!-- <LiveRedirect 
