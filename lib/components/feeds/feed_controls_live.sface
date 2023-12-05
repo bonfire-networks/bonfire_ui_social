@@ -1,26 +1,38 @@
-<div class="flex flex-col p-3 justify-between gap-3">
-  <div class="flex flex-col gap-2">
-    <span class="font-medium text-sm text-base-content/80">{l("Included activities")}</span>
-    <Bonfire.UI.Social.Settings.MyFeedItemsLive
-      scope={:user}
-      feed_name={@feed_name}
-      event_name="set_setting"
-      event_target={@event_target}
-      hide_forced_defaults
-    />
+<div x-data="{open: false}">
+  <div
+    class="mx-3 pb-3 flex justify-between items-center text-base font-bold tracking-wide"
+    role="banner"
+  >
+    <div>{l("Feed options")}</div>
+    <label @click="open = ! open" class="btn btn-circle btn-ghost btn-sm">
+      <!-- <input type="checkbox" /> -->
+      <span x-show="!open"><#Icon solid="ChevronDown" class="fill-current w-5 h-5 text-base-content/80" /></span>
+      <span x-cloak x-show="open"><#Icon solid="ChevronUp" class="fill-current w-5 h-5 text-base-content/80" /></span>
+    </label>
   </div>
+  <div x-transition x-cloak x-show="open" class="flex flex-col p-3 pt-0 justify-between gap-3">
+    <div class="flex flex-col gap-2">
+      <span class="font-medium text-sm text-base-content/80">{l("Included activities")}</span>
+      <Bonfire.UI.Social.Settings.MyFeedItemsLive
+        scope={:user}
+        feed_name={@feed_name}
+        event_name="set_setting"
+        event_target={@event_target}
+        hide_forced_defaults
+      />
+    </div>
 
-  <div class="flex flex-col gap-2 pt-3">
-    <span class="font-medium text-sm text-base-content/80">{l("Sort by")}</span>
-    <Bonfire.UI.Social.Settings.ReactionsSortItemsLive
-      scope={:user}
-      feed_name={@feed_name}
-      event_name="set_setting"
-      event_target={@event_target}
-      compact
-    />
+    <div class="flex flex-col gap-2 pt-3">
+      <span class="font-medium text-sm text-base-content/80">{l("Sort by")}</span>
+      <Bonfire.UI.Social.Settings.ReactionsSortItemsLive
+        scope={:user}
+        feed_name={@feed_name}
+        event_name="set_setting"
+        event_target={@event_target}
+        compact
+      />
 
-    {!-- <div class="dropdown dropdown-end">
+      {!-- <div class="dropdown dropdown-end">
         <label
           tabindex="0"
           class="rounded-full btn-sm btn btn-ghost normal-case text-base-content/70"
@@ -41,7 +53,7 @@
           {/case}
         </label></div> --}
 
-    {!--
+      {!--
     <ul tabindex="0" class="menu p-0 gap-1 menu-horizontal">
       <li
         data-role="chronological"
@@ -120,19 +132,19 @@
       </li>
       <li></li>
     </ul> --}
-  </div>
+    </div>
 
-  <div class="flex flex-col gap-2 pt-3">
-    <span class="font-medium text-sm text-base-content/80">{l("Limit to")}</span>
-    <Bonfire.UI.Social.Settings.TimeSortItemsLive
-      scope={:user}
-      feed_name={@feed_name}
-      event_name="set_setting"
-      event_target={@event_target}
-      compact
-    />
+    <div class="flex flex-col gap-2 pt-3">
+      <span class="font-medium text-sm text-base-content/80">{l("Limit to")}</span>
+      <Bonfire.UI.Social.Settings.TimeSortItemsLive
+        scope={:user}
+        feed_name={@feed_name}
+        event_name="set_setting"
+        event_target={@event_target}
+        compact
+      />
 
-    {!-- <div class="flex flex-col gap-2 pt-3">
+      {!-- <div class="flex flex-col gap-2 pt-3">
     <span class="font-medium text-sm text-base-content/80">{l("Limit to")}</span>
     <ul tabindex="0" class="menu p-0 gap-1 menu-horizontal">
       <li
@@ -206,9 +218,9 @@
           <span class="sr-only">{l("All time")}</span></a></li>
     </ul>
   </div> --}
-  </div>
+    </div>
 
-  <!-- {#if not is_nil(@sort_by)}
+    <!-- {#if not is_nil(@sort_by)}
     <div class="flex flex-col gap-2 pt-3">
       <span class="font-medium text-sm text-base-content/80">{l("Order")}</span>
       <ul tabindex="0" class="z-[999] menu p-1 gap-1 menu-horizontal">
@@ -241,4 +253,5 @@
       </ul>
     </div>
   {/if} -->
+  </div>
 </div>

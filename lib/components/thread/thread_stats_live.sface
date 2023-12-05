@@ -4,8 +4,8 @@
     phx-change="Bonfire.Social.Threads:list_participants"
     phx-target={@event_target}
   >
-    <div x-data="{open: false}" class="p-2">
-      <div class="flex items-center justify-between">
+    <div x-data="{open: false}" class="p-2 pt-0">
+      <div class="flex items-center rounded bg-base-content/10 justify-between">
         <div class="flex items-center flex-1 gap-4 py-0 min-h-[2.75rem] px-2">
           <div class="flex items-center gap-1">
             {#case @last_reply_id}
@@ -42,6 +42,7 @@
           </div>
         </div>
         <button
+          :if={@participant_count > 0}
           x-show="!open"
           type="button"
           x-on:click="open = !open"
