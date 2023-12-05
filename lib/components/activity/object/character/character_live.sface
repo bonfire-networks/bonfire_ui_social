@@ -28,7 +28,7 @@
   <div class={
     "flex-1 mb-4",
     "!-ml-[2.5rem]": @__context__[:ui_compact] && !@viewing_main_object,
-    "-ml-[3.5rem]":
+    "-ml-[3.25rem]":
       !Settings.get([Bonfire.UI.Common.AvatarLive, :hide_avatars], false, @__context__)
   }>
     <Dynamic.Component
