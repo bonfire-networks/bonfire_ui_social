@@ -10,9 +10,15 @@
   <input type="hidden" name="id" value={id(@object)}>
 
   <div class="flex-1 mt-4">
-    {#for {%{user: editor, item_changes: current_version, meta: previous_version, inserted_at: inserted_at},
+    {#for {%{
+         editor: editor,
+         diffed: diffed,
+         diff_count: diff_count,
+         diff_percent: diff_percent,
+         edited_at: edited_at
+       },
        i} <-
-        Bonfire.Social.PostContents.get_versions(
+        Bonfire.Social.PostContents.get_versions_diffed(
           Bonfire.UI.Social.Activity.NoteLive.post_content(@object)
         )
         |> Enum.with_index()}
@@ -28,14 +34,21 @@
             profile={e(editor, :profile, nil)}
             character={e(editor, :character, nil)}
           />
-          {if i == 0,
-            do: l("created ") <> DatesTimes.date_from_now(id(@object)),
-            else: l("edited ") <> DatesTimes.date_from_now(inserted_at)}
+          <div class="ml-2">
+            {if i == 0,
+              do: l("created ") <> DatesTimes.date_from_now(id(@object)),
+              else:
+                lp("%{number_of_edits} edit", "%{number_of_edits} edits", diff_count,
+                  number_of_edits: diff_count
+                ) <>
+                  " (#{Bonfire.Common.Localise.Cldr.Number.to_string!(diff_percent, format: :percent)}) " <>
+                  DatesTimes.date_from_now(edited_at)}
+          </div>
         </div>
         <div class="collapse-content prose">
-          <p>{rich(diff(e(previous_version, :name, ""), e(current_version, :name, "")))}</p>
-          <p>{rich(diff(e(previous_version, :summary, ""), e(current_version, :summary, "")))}</p>
-          <p>{rich(diff(e(previous_version, :html_body, ""), e(current_version, :html_body, "")))}</p>
+          <p>{rich(e(diffed, :name, :html, ""))}</p>
+          <p>{rich(e(diffed, :summary, :html, ""))}</p>
+          <p>{rich(e(diffed, :html_body, :html, ""))}</p>
         </div>
       </div>
     {#else}
