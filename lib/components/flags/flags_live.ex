@@ -1,6 +1,6 @@
 defmodule Bonfire.UI.Social.FlagsLive do
   use Bonfire.UI.Common.Web, :stateful_component
-  # 
+  #
 
   prop page_title, :string, default: "Flags"
   prop feed, :list, default: []
@@ -22,6 +22,7 @@ defmodule Bonfire.UI.Social.FlagsLive do
      socket
      |> assign(
        page: "flags",
+        feed_update_mode: "append",
        # selected_tab: "flags",
        page_title: "Flags",
        current_user: current_user,

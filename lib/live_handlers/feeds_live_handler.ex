@@ -307,7 +307,7 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
      |> insert_feed(load_user_feed_assigns(selected_tab_and_user_id, attrs, socket))}
   end
 
-  def paginate_feed(feed, attrs, socket, opts) when feed in [:likes, :bookmarks] do
+  def paginate_feed(feed, attrs, socket, opts) when feed in [:likes, :bookmarks, :flags] do
     attrs = input_to_atoms(attrs)
 
     opts =
