@@ -307,6 +307,15 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
      |> insert_feed(load_user_feed_assigns(selected_tab_and_user_id, attrs, socket))}
   end
 
+  def paginate_feed(feed, attrs, socket, opts) when feed in [:likes, :bookmarks] do
+    attrs = input_to_atoms(attrs)
+
+    opts =
+      opts ++ Keyword.new(attrs) ++ [paginate?: true, current_user: current_user(socket)]
+
+    do_paginate_fetch_assign_feed(feed, opts, socket)
+  end
+
   def paginate_feed(feed_id, attrs, socket, opts) do
     opts = paginate_opts(attrs, socket, opts)
 
@@ -338,7 +347,7 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
   #   )
   # end
 
-  def paginate_opts(attrs, socket, opts) do
+  defp paginate_opts(attrs, socket, opts) do
     attrs = input_to_atoms(attrs)
 
     opts =
@@ -392,20 +401,19 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
   defp paginate_fetch_assign_feed(:default, opts, socket),
     do: paginate_fetch_assign_default(opts, socket)
 
-  # defp paginate_fetch_assign_feed(:likes, _opts, socket) do
-  #   debug(:likes, "TODO")
-  #   {:noreply, socket}
-  # end
-
   defp paginate_fetch_assign_feed(feed_id, opts, socket) do
     preloads =
       e(socket.assigns, :activity_loaded_preloads, nil) ||
         feed_extra_preloads_list(e(socket.assigns, :showing_within, nil))
 
+    do_paginate_fetch_assign_feed(feed_id, Keyword.put(opts, :preload, preloads), socket)
+  end
+
+  defp do_paginate_fetch_assign_feed(feed_id, opts, socket) do
     feed =
       FeedActivities.feed(
         feed_id,
-        Keyword.put(opts, :preload, preloads)
+        opts
       )
 
     {:noreply,
@@ -417,7 +425,7 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
        time_limit: opts[:time_limit],
        previous_page_info: e(socket.assigns, :page_info, false),
        page_info: e(feed, :page_info, []),
-       activity_loaded_preloads: preloads
+       activity_loaded_preloads: opts[:preloads] || []
      )
      |> insert_feed(e(feed, :edges, []), opts)}
   end
@@ -933,21 +941,21 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
 
   # Add pagination ->
   defp feed_assigns(:likes = _feed_id, socket) do
-    preloads = feed_extra_preloads_list(e(socket.assigns, :showing_within, nil))
+    # preloads = feed_extra_preloads_list(e(socket.assigns, :showing_within, nil))
 
-    # TODO: pagination
-    opts =
-      paginate_opts(%{}, socket,
-        current_user: current_user_required!(socket),
-        paginate?: true,
-        preload: preloads
-      )
+    opts = [
+      current_user: current_user_required!(socket),
+      paginate?: true
+      # preload: preloads
+    ]
+
+    # opts = paginate_opts(%{}, socket, opts)
 
     with %{} = feed <-
            Bonfire.Social.Likes.list_my(opts) do
       merge_feed_assigns(
         feed,
-        [loading: false, activity_loaded_preloads: preloads],
+        [loading: false],
         e(socket.assigns, :page_info, nil)
       )
     end
