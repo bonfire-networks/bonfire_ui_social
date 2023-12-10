@@ -360,7 +360,6 @@ defmodule Bonfire.UI.Social.FeedLive do
         attrs,
         socket
       ) do
-    # debug(attrs)
     # need to reload feed so streams are updated
 
     socket =
