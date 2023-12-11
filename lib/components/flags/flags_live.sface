@@ -11,6 +11,7 @@
     current_user={e(current_user(@__context__), nil)}
     feed={@feed}
     page_info={@page_info}
+    hide_guest_fallback
     previous_page_info={false}
     showing_within={:flags}
     loading={@loading}

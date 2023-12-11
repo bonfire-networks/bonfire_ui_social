@@ -9,6 +9,7 @@ defmodule Bonfire.UI.Social.FeedLive do
   prop feed_name, :atom, default: nil
   prop feed_id, :any, default: nil
   prop feed_ids, :any, default: nil
+  prop hide_guest_fallback, :boolean, default: false
   prop feed_filters, :any, default: []
   prop feed, :any, default: []
   prop subject_user, :any, default: nil

@@ -6,12 +6,15 @@ defmodule Bonfire.UI.Social.FlagsLive do
   prop feed, :list, default: []
   prop page_info, :list, default: []
 
-  def update(assigns, socket) do
-    current_user = current_user(assigns) || current_user(socket.assigns)
-    scope = assigns[:scope] || socket.assigns[:scope]
+
+
+
+  def update(_assigns, socket) do
+    current_user = current_user(socket.assigns)
+    scope = socket.assigns[:scope]
 
     feed =
-      Bonfire.Social.Flags.list_preloaded(scope: scope, current_user: current_user)
+      Bonfire.Social.Flags.list_preloaded(socket)
       |> debug("flags for #{id(scope) || inspect(scope)}")
 
     edges =
@@ -22,8 +25,6 @@ defmodule Bonfire.UI.Social.FlagsLive do
      socket
      |> assign(
        page: "flags",
-        feed_update_mode: "append",
-       # selected_tab: "flags",
        page_title: "Flags",
        current_user: current_user,
        feed_id: :flags,
