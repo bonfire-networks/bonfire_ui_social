@@ -3,7 +3,6 @@ defmodule Bonfire.UI.Social.FlagsLive do
   #
   prop test, :string, default: ""
 
-
   def update(_assigns, socket) do
     current_user = current_user(socket.assigns)
     scope = socket.assigns[:scope]
