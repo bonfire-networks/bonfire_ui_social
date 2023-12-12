@@ -45,6 +45,8 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
   end
 
   def handle_event("preload_more", attrs, socket) do
+    debug(attrs, "CACCA22")
+
     paginate_feed(
       e(socket.assigns, :feed_name, nil) || e(socket.assigns, :feed_id, nil) ||
         e(socket.assigns, :feed_ids, nil) || e(socket.assigns, :id, nil),
@@ -410,6 +412,8 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
   end
 
   defp do_paginate_fetch_assign_feed(feed_id, opts, socket) do
+    debug(opts, "CACCA222")
+
     feed =
       FeedActivities.feed(
         feed_id,

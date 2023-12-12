@@ -1,6 +1,5 @@
 <div id="flags_list">
   {!-- <Bonfire.UI.Common.PageTitleLive page_title={@page_title} /> --}
-
   {!-- 
       TODO: support LivePush:
       ComponentID.new(Bonfire.UI.Social.FeedLive, @feed_ids || @feed_id, __MODULE__) --}
