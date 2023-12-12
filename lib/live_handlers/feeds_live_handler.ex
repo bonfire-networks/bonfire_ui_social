@@ -41,7 +41,6 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
 
   def handle_event("preload_more", %{"context" => feed_id} = attrs, socket)
       when is_binary(feed_id) do
-
     paginate_feed(feed_id, attrs, socket, hide_activities: "infinite_scroll")
   end
 

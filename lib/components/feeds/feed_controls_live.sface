@@ -1,10 +1,11 @@
 <div x-data="{open: false}">
   <div
-    class="mx-3 pb-3 flex justify-between items-center text-base font-bold tracking-wide"
+    class="mx-3 pb-3 flex justify-between items-center text-base font-bold tracking-wide cursor-pointer"
     role="banner"
+    @click="open = ! open"
   >
     <div>{l("Feed options")}</div>
-    <label @click="open = ! open" class="btn btn-circle btn-ghost btn-sm">
+    <label class="btn btn-circle btn-ghost btn-sm">
       <!-- <input type="checkbox" /> -->
       <span x-show="!open"><#Icon solid="ChevronDown" class="fill-current w-5 h-5 text-base-content/80" /></span>
       <span x-cloak x-show="open"><#Icon solid="ChevronUp" class="fill-current w-5 h-5 text-base-content/80" /></span>
