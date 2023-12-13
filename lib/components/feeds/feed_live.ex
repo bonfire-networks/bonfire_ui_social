@@ -100,47 +100,10 @@ defmodule Bonfire.UI.Social.FeedLive do
     # case Bonfire.Social.Integration.federating?(current_user(context)) do
     #   true ->
     if current_user_id(context) do
-      # if page == "home",
-      #   do: [
-      #     nil: l("My feed"),
-      #     explore: l("Everything"),
-      #     local: l("Local"),
-      #     fediverse: l("Remote")
-      #   ],
-      #   else:
       [explore: l("Everything"), local: l("Local"), fediverse: l("Remote")]
-
-      # if context[:current_params]["object_type"] in ["discussions", "posts"],
-      #   do: [nil: l("My feed"), local: l("Local"), fediverse: l("Remote")],
-      #   else:
-      #     if(!Bonfire.Boundaries.can?(context, :mediate, :instance),
-      #       do: [
-      #         nil: l("My feed"),
-      #         local: l("Local"),
-      #         fediverse: l("Remote"),
-      #         likes: l("Liked")
-      #       ],
-      #       else: [
-      #         nil: l("My feed"),
-      #         local: l("Local"),
-      #         fediverse: l("Remote"),
-      #         likes: l("Liked"),
-      #         flags: l("Flags")
-      #       ]
-      #     )
     else
       [explore: l("Everything"), local: l("Local"), fediverse: l("Remote")]
     end
-
-    #   _ ->
-    #     if not is_nil(current_user) do
-    #       if object_type in ["discussions", "posts"],
-    #         do: [nil: l("My feed"), local: l("Local")],
-    #         else: [nil: l("My feed"), local: l("Local"), likes: l("Liked")]
-    #     else
-    #       [local: l("Local")]
-    #     end
-    # end
   end
 
   def update(%{insert_stream: %{feed: entries}} = assigns, socket) do

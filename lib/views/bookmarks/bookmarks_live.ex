@@ -27,8 +27,7 @@ defmodule Bonfire.UI.Social.Feeds.BookmarksLive do
        loading: false,
        page: "bookmarks",
        feed_name: :bookmarks,
-       feed_title: l("Bookmarks"),
-       no_header: true
+       feed_title: l("Bookmarks")
      )}
   end
 

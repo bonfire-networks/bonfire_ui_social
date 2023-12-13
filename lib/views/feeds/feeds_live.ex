@@ -112,6 +112,10 @@ defmodule Bonfire.UI.Social.FeedsLive do
     set_feed_assigns({:fediverse, params}, socket)
   end
 
+  def do_handle_params(%{"tab" => "curated" = _tab} = params, _url, socket) do
+    set_feed_assigns({:curated, params}, socket)
+  end
+
   def do_handle_params(%{"tab" => "local" = _tab} = params, _url, socket) do
     set_feed_assigns({:local, params}, socket)
   end

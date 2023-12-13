@@ -6,6 +6,7 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
   alias Bonfire.UI.Social.ActivityLive
   alias Bonfire.Social.FeedActivities
 
+  @spec handle_params(any(), any(), any()) :: {:noreply, any()}
   def handle_params(
         %{"after" => _cursor_after} = attrs,
         _,
@@ -45,8 +46,6 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
   end
 
   def handle_event("preload_more", attrs, socket) do
-    debug(attrs, "CACCA22")
-
     paginate_feed(
       e(socket.assigns, :feed_name, nil) || e(socket.assigns, :feed_id, nil) ||
         e(socket.assigns, :feed_ids, nil) || e(socket.assigns, :id, nil),
@@ -412,8 +411,6 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
   end
 
   defp do_paginate_fetch_assign_feed(feed_id, opts, socket) do
-    debug(opts, "CACCA222")
-
     feed =
       FeedActivities.feed(
         feed_id,
@@ -690,6 +687,27 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
     # ] ++ page_header_asides(socket, component_id)
   end
 
+  def feed_default_assigns(:curated = feed_name, socket) do
+    [
+      feed_name: feed_name,
+      feed_id: feed_name,
+      feed_component_id: component_id(feed_name, socket.assigns),
+      selected_tab: :curated,
+      # hide_tabs: true,
+      showing_within: :feed_by_subject,
+      # FIXME: clean up page vs tab
+      page: "Curated",
+      page_title: "Curated",
+      no_header: true,
+      # feed_title: l("My favourites"),
+      feedback_title: l("Nothing curated yet?"),
+      # feed_id: feed_name,
+      # feedback_message: l("It seems like the paint is still fresh on this instance..."),
+      feed: nil,
+      page_info: nil
+    ]
+  end
+
   def feed_default_assigns(:likes = feed_name, socket) do
     # debug(feed_name)
 
@@ -829,7 +847,6 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
 
           {entries, new_assigns} = feed_assigns(feed_name_id_or_tuple, socket)
           # |> debug("feed_assigns")
-
           send_feed_updates(
             pid,
             assigns[:feed_component_id] || assigns[:feed_id] || :feeds,
@@ -871,6 +888,16 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
 
   @decorate time()
   defp feed_assigns(feed, socket)
+
+  defp feed_assigns({:flags, _filters}, socket) do
+    # NOTE: we don't support extra filter on likes for now
+    feed_assigns(:flags, socket)
+  end
+
+  defp feed_assigns({:curated, _filters}, socket) do
+    # NOTE: we don't support extra filter on likes for now
+    feed_assigns(:curated, socket)
+  end
 
   defp feed_assigns({:likes, _filters}, socket) do
     # NOTE: we don't support extra filter on likes for now
@@ -938,6 +965,47 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
       merge_feed_assigns(
         feed,
         [loading: false, activity_loaded_preloads: preloads],
+        e(socket.assigns, :page_info, nil)
+      )
+    end
+  end
+
+  defp feed_assigns(:flags = _feed_id, socket) do
+    # preloads = feed_extra_preloads_list(e(socket.assigns, :showing_within, nil))
+    opts = [
+      current_user: current_user_required!(socket),
+      paginate?: true,
+      include_flags: :moderators
+      # preload: preloads
+    ]
+
+    with %{} = feed <-
+           Bonfire.Social.Flags.list(opts) do
+      merge_feed_assigns(
+        feed,
+        [loading: false],
+        e(socket.assigns, :page_info, nil)
+      )
+    end
+  end
+
+  defp feed_assigns(:curated = _feed_id, socket) do
+    # preloads = feed_extra_preloads_list(e(socket.assigns, :showing_within, nil))
+
+    opts = [
+      object_type: [],
+      current_user: current_user_required!(socket),
+      paginate?: true
+      # preload: preloads
+    ]
+
+    # opts = paginate_opts(%{}, socket, opts)
+
+    with %{} = feed <-
+           Bonfire.Social.Pins.list_instance_pins(opts) do
+      merge_feed_assigns(
+        feed,
+        [loading: false],
         e(socket.assigns, :page_info, nil)
       )
     end
