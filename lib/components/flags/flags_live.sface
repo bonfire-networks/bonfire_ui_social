@@ -4,12 +4,5 @@
       TODO: support LivePush:
       ComponentID.new(Bonfire.UI.Social.FeedLive, @feed_ids || @feed_id, __MODULE__) --}
 
-  <Bonfire.UI.Social.FeedLive
-    id={:flags}
-    feed_id={:flags}
-    showing_within={:flags}
-    loading={@loading}
-    feed={nil}
-    hide_tabs
-  />
+  <Bonfire.UI.Social.FeedLive id={:flags} feed_name={:flags} showing_within={:flags} hide_tabs />
 </div>

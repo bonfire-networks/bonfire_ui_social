@@ -3,13 +3,11 @@ defmodule Bonfire.UI.Social.FlagsLive do
   #
   prop feed_count, :string, default: ""
 
-  def update(_assigns, socket) do
+  def update(assigns, socket) do
     {:ok,
      socket
-     |> assign(
-       feed_id: :flags,
-       loading: false
-     )}
+     |> assign(assigns)
+     |> assign(feed_id: :flags)}
   end
 
   # def handle_params(%{"tab" => tab} = _params, _url, socket) do

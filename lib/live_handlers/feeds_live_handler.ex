@@ -288,9 +288,16 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
   end
 
   defp send_feed_updates(pid, feed_id, assigns, component)
-       when (is_pid(pid) or is_nil(pid)) and (is_list(assigns) or is_map(assigns)) do
+       when (is_pid(pid) or is_nil(pid)) and (is_list(assigns) or is_map(assigns)) and
+              is_binary(feed_id) do
     debug(feed_id, "Sending feed update to feed(s)")
     ComponentID.send_updates(component, feed_id, assigns, pid)
+  end
+
+  defp send_feed_updates(pid, feed_id, assigns, component)
+       when (is_pid(pid) or is_nil(pid)) and (is_list(assigns) or is_map(assigns)) do
+    debug(feed_id, "Sending feed update to component")
+    maybe_send_update(component, feed_id, assigns, pid)
   end
 
   defp send_feed_updates(pid, feed_id, {:error, e}, _component) do

@@ -11,7 +11,7 @@ defmodule Bonfire.UI.Social.FeedLive do
   prop feed_ids, :any, default: nil
   prop hide_guest_fallback, :boolean, default: false
   prop feed_filters, :any, default: []
-  prop feed, :any, default: []
+  prop feed, :any, default: nil
   prop subject_user, :any, default: nil
   prop page_info, :any, default: nil
   prop previous_page_info, :any, default: nil
