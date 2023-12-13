@@ -98,7 +98,7 @@
         data-media={num_medias}
         data-rendered={@showing_within}
         data-main-object={@viewing_main_object}
-        class="grid w-full grid-flow-col grid-with-ratio grid-rows-4 gap-1 overflow-clip"
+        class="grid w-full grid-flow-col grid-with-ratio grid-rows-4 gap-1 mt-1 overflow-clip"
       >
         {#for {%{} = m, counter} <- Enum.with_index(@multimedia_list)}
           {#if @showing_within != :smart_input}
@@ -236,7 +236,7 @@
           data-media={num_medias}
           data-rendered={@showing_within}
           data-main-object={@viewing_main_object}
-          class="grid w-full grid-flow-col grid-with-ratio grid-rows-4 gap-1"
+          class="grid w-full grid-flow-col grid-with-ratio grid-rows-4 gap-1 mt-1"
         >
           {#for {%{} = m, counter} <- Enum.with_index(@image_list)}
             {#case media_label(m) || l("Sorry, no caption provided by author")}
