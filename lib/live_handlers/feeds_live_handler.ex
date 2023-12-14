@@ -468,13 +468,12 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
   def insert_feed(socket, feed_edges, opts) do
     # socket
     # |> assign_generic(feed: feed_edges)
-
     if e(feed_edges, :feed_component_id, nil) do
       # temp workaround for when we're not actually getting a feed but rather a list of assigns for some reason
       socket
       |> assign_generic(feed_edges)
     else
-      # debug(feed_edges, "insert feed into stream")
+      debug(feed_edges, "insert feed into stream")
       maybe_stream_insert(socket, :feed, feed_edges || [], opts)
     end
   end
@@ -987,7 +986,7 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
     ]
 
     with %{} = feed <-
-           Bonfire.Social.Flags.list(opts) do
+           Bonfire.Social.Flags.list_preloaded(opts) do
       merge_feed_assigns(
         feed,
         [loading: false],
