@@ -206,7 +206,29 @@
         {/if}
       </div>
     {#match _}
-      {#if @verb == "Like"}
+      {#if @verb == "Pin"}
+        <div data-role="liked_by" class="flex items-center justify-start pb-3 -ml-8">
+          {!-- LIKE --}
+          <#Icon iconify="carbon:pin-filled" class="w-5 h-5 text-info" />
+          <div class="flex-1 ml-3">
+            <div class="text-sm font-medium text-base-content/70">
+              <LiveRedirect
+                aria-label={e(@character_username, "") <> " profile"}
+                class="font-medium link link-hover text-base-content/70"
+                to={@path}
+              >
+                {#if @object_id == current_user_id(@__context__)}
+                  {l("You")}
+                {#else}
+                  {@profile_name || @character_username}
+                {/if}
+              </LiveRedirect>
+
+              {raw(@verb_display)}
+            </div>
+          </div>
+        </div>
+      {#elseif @verb == "Like"}
         <div data-role="liked_by" class="flex items-center justify-start pb-3 -ml-8">
           {!-- LIKE --}
           <#Icon iconify="mingcute:fire-fill" class="w-5 h-5 text-yellow-500" />

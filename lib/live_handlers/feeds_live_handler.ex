@@ -737,6 +737,29 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
     ]
   end
 
+  def feed_default_assigns(:bookmarks = feed_name, socket) do
+    # debug(feed_name)
+
+    [
+      feed_name: feed_name,
+      feed_id: feed_name,
+      feed_component_id: component_id(feed_name, socket.assigns),
+      selected_tab: :bookmarks,
+      hide_tabs: true,
+      showing_within: :feed_by_subject,
+      # FIXME: clean up page vs tab
+      page: "bookmarks",
+      page_title: "Bookmarks",
+      no_header: false,
+      # feed_title: l("My favourites"),
+      feedback_title: l("Have you not bookmarked anything yet?"),
+      # feed_id: feed_name,
+      # feedback_message: l("It seems like the paint is still fresh on this instance..."),
+      feed: nil,
+      page_info: nil
+    ]
+  end
+
   # WIP
   def feed_default_assigns(:flags = feed_name, socket) do
     [

@@ -126,7 +126,7 @@
     {!-- context={@id} --}
     <Bonfire.UI.Common.LoadMoreLive
       live_handler={Bonfire.Social.Feeds}
-      page_info={@page_info}
+      page_info={@previous_page_info || @page_info}
       target={@myself}
       infinite_scroll={Settings.get([:ui, :infinite_scroll], :preload, @__context__)}
       hide_load_more={@hide_load_more}
@@ -140,12 +140,12 @@
               <div class="sr-only text-base-content">{l("Loading...")}</div>
             </div>
             {!-- {#case maybe_cute_gif()}
-          {#match url when is_binary(url)}
-            <div class="flex flex-row items-center justify-center my-12">
-              <img src={url}>
-            </div>
-          {#match _}
-        {/case} --}
+                {#match url when is_binary(url)}
+                  <div class="flex flex-row items-center justify-center my-12">
+                    <img src={url}>
+                  </div>
+                {#match _}
+              {/case} --}
           {#elseif !(is_list(@feed) and @feed != [])}
             <div data-id="empty-feed" class="flex items-center place-content-center">
               <Bonfire.UI.Common.EmptyFeed

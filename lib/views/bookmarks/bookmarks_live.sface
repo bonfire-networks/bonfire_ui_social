@@ -12,5 +12,6 @@
     showing_within={@showing_within}
     verb_default="bookmark"
     loading={@loading}
+    hide_tabs
   />
 </div>

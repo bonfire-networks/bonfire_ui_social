@@ -22,6 +22,7 @@ defmodule Bonfire.UI.Social.Feeds.BookmarksLive do
      socket
      |> assign(
        feed: feed,
+       page_title: "Bookmarks",
        page_info: page_info,
        showing_within: :bookmarks,
        loading: false,
