@@ -13,9 +13,9 @@
       selected_tab={@selected_tab}
       selected_name={@feed_title || @page_title}
       class={
-        "flex items-center gap-2 w-full tabs sticky top-0 pt-1 z-[9999999] backdrop-blur-sm bg-base-100/70",
+        "flex items-center gap-2 w-full tabs sticky top-0 z-[9999999] backdrop-blur-sm bg-base-100/70",
         "h-[56px]": @feed_name in [nil, :my],
-        "border-b border-base-content/20": @feed_name in [:explore, :fediverse, :local]
+        "border-b border-base-content/20": @feed_name in [:explore, :fediverse, :local, :curated]
       }
       tab_class={@tab_class}
       item_class={@item_class}

@@ -100,7 +100,8 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
         to -> to
       end
       |> FeedActivities.get_feed_ids()
-      |> debug("tooo")
+
+    # |> debug("tooo")
 
     # TODO: check permission
     with {:ok, _} <-
@@ -315,7 +316,8 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
      |> insert_feed(load_user_feed_assigns(selected_tab_and_user_id, attrs, socket))}
   end
 
-  def paginate_feed(feed, attrs, socket, opts) when feed in [:likes, :bookmarks, :flags] do
+  def paginate_feed(feed, attrs, socket, opts)
+      when feed in [:likes, :bookmarks, :flags, :curated] do
     attrs = input_to_atoms(attrs)
 
     opts =
@@ -355,7 +357,7 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
   #   )
   # end
 
-  defp paginate_opts(attrs, socket, opts) do
+  def paginate_opts(attrs, socket, opts) do
     attrs = input_to_atoms(attrs)
 
     opts =
@@ -760,7 +762,6 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
     ]
   end
 
-  # WIP
   def feed_default_assigns(:flags = feed_name, socket) do
     [
       feed_name: feed_name,

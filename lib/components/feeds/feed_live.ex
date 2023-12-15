@@ -99,11 +99,21 @@ defmodule Bonfire.UI.Social.FeedLive do
     # disabled hiding of remote tab because it is also useful to find remote activities that were looked up manually
     # case Bonfire.Social.Integration.federating?(current_user(context)) do
     #   true ->
-    if current_user_id(context) do
-      [explore: l("Everything"), local: l("Local"), fediverse: l("Remote")]
+    # if current_user_id(context) do
+    if Bonfire.Common.Settings.get(
+         [Bonfire.UI.Social.FeedsLive, :curated],
+         false,
+         @__context__[:instance_settings] || :instance
+       ) do
+      [curated: l("Curated"), local: l("Local"), fediverse: l("Remote")]
     else
       [explore: l("Everything"), local: l("Local"), fediverse: l("Remote")]
     end
+
+    # else
+
+    #   [curated: l("Curated"), local: l("Local"), fediverse: l("Remote")]
+    # end
   end
 
   def update(%{insert_stream: %{feed: entries}} = assigns, socket) do
