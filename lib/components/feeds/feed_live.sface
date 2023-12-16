@@ -126,7 +126,7 @@
     {!-- context={@id} --}
     <Bonfire.UI.Common.LoadMoreLive
       live_handler={Bonfire.Social.Feeds}
-      page_info={@previous_page_info || @page_info}
+      page_info={@page_info || @previous_page_info}
       target={@myself}
       infinite_scroll={Settings.get([:ui, :infinite_scroll], :preload, @__context__)}
       hide_load_more={@hide_load_more}
@@ -168,7 +168,7 @@
                   (e(@previous_page_info, :end_cursor, nil) || e(@page_info, :end_cursor, nil)) |> debug("ppppp")}
                 <Bonfire.UI.Common.LoadMoreLive
                   live_handler={Bonfire.Social.Feeds}
-                  page_info={@previous_page_info || @page_info}
+                  page_info={@page_info || @previous_page_info}
                   target={@myself}
                   hide_guest_fallback={@hide_guest_fallback}
                   label={l("Show older activities")}
