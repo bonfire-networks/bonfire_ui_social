@@ -100,10 +100,9 @@ defmodule Bonfire.UI.Social.FeedLive do
     # case Bonfire.Social.Integration.federating?(current_user(context)) do
     #   true ->
     # if current_user_id(context) do
-    if Bonfire.Common.Settings.get(
+    if Bonfire.Common.Config.get(
          [Bonfire.UI.Social.FeedsLive, :curated],
-         false,
-         @__context__[:instance_settings] || :instance
+         false
        ) do
       [curated: l("Curated"), local: l("Local"), fediverse: l("Remote")]
     else
@@ -291,7 +290,15 @@ defmodule Bonfire.UI.Social.FeedLive do
   #    |> LiveHandler.insert_feed(LiveHandler.feed_assigns_maybe_async(tab, socket))}
   # end
 
-  def widgets(assigns) do
+  def maybe_widgets(assigns) do
+    maybe_widgets(assigns, feed_name(assigns))
+  end
+
+  def maybe_widgets(assigns, feed_name) do
+    if feed_name in [:my, :explore, :fediverse, :local], do: widgets(assigns), else: []
+  end
+
+  defp widgets(assigns) do
     [
       sidebar_widgets: [
         users: [
@@ -311,6 +318,11 @@ defmodule Bonfire.UI.Social.FeedLive do
       ]
     ]
   end
+
+  def feed_name(assigns),
+    do:
+      assigns[:feed_name] || assigns[:feed_id] || assigns[:id] ||
+        :default
 
   def do_handle_event(
         "set_setting",
@@ -341,7 +353,10 @@ defmodule Bonfire.UI.Social.FeedLive do
       |> assign(loading: true)
       |> Bonfire.UI.Common.LiveHandlers.assign_attrs(attrs)
 
-    send_self(widgets(e(socket, :assigns, nil)))
+    feed_name = feed_name(socket.assigns)
+
+    if feed_name in [:my, :explore, :fediverse, :local],
+      do: send_self(widgets(e(socket, :assigns, nil)))
 
     {
       :noreply,
@@ -351,8 +366,7 @@ defmodule Bonfire.UI.Social.FeedLive do
       |> LiveHandler.insert_feed(
         ...,
         LiveHandler.feed_assigns_maybe_async(
-          socket.assigns[:feed_name] || socket.assigns[:feed_id] || socket.assigns[:id] ||
-            :default,
+          feed_name,
           ...,
           true,
           true

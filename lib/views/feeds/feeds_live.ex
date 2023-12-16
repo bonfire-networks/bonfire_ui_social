@@ -139,7 +139,7 @@ defmodule Bonfire.UI.Social.FeedsLive do
     {:noreply,
      socket
      |> assign(LiveHandler.feed_default_assigns(feed_meta, socket))
-     |> assign(..., FeedLive.widgets(e(..., :assigns, nil)))}
+     |> assign(..., FeedLive.maybe_widgets(e(..., :assigns, nil)))}
   end
 
   def handle_params(params, uri, socket),
