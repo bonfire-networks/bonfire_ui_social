@@ -823,18 +823,18 @@ defmodule Bonfire.UI.Social.ActivityLive do
 
   # reactions should show the reactor + original creator
   def component_activity_subject(verb, activity, object, object_type, _, _, _)
-      when verb in @react_or_reply_verbs,
-      do:
-        [
-          {Bonfire.UI.Social.Activity.SubjectMinimalLive,
-           %{
-             # activity: repo().maybe_preload(activity, subject: [:character]),
-             verb: verb,
-             subject_id: e(activity, :subject_id, nil),
-             profile: e(activity, :subject, :profile, nil),
-             character: e(activity, :subject, :character, nil)
-           }}
-        ] ++ component_activity_maybe_creator(activity, object, object_type)
+      when verb in @react_or_reply_verbs do
+    [
+      {Bonfire.UI.Social.Activity.SubjectMinimalLive,
+       %{
+         # activity: repo().maybe_preload(activity, subject: [:character]),
+         verb: verb,
+         subject_id: e(activity, :subject_id, nil),
+         profile: e(activity, :subject, :profile, nil),
+         character: e(activity, :subject, :character, nil)
+       }}
+    ] ++ component_activity_maybe_creator(activity, object, object_type)
+  end
 
   # create (or reply) activities
   def component_activity_subject(

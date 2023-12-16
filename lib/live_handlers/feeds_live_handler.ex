@@ -705,8 +705,8 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
       showing_within: :feed_by_subject,
       # FIXME: clean up page vs tab
       page: "Curated",
-      page_title: "Curated",
-      no_header: true,
+      page_title: "Curated feed",
+      no_header: current_user_id(socket.assigns),
       # feed_title: l("My favourites"),
       feedback_title: l("Nothing curated yet?"),
       # feed_id: feed_name,
@@ -1024,7 +1024,6 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
 
     opts = [
       object_type: [],
-      current_user: current_user_required!(socket),
       paginate?: true
       # preload: preloads
     ]

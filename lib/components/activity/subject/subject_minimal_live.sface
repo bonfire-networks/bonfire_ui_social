@@ -207,9 +207,9 @@
       </div>
     {#match _}
       {#if @verb == "Pin"}
-        <div data-role="liked_by" class="flex items-center justify-start pb-3 -ml-8">
+        <div data-role="pinned" class="flex items-center justify-start pb-3 -ml-8">
           {!-- LIKE --}
-          <#Icon iconify="carbon:pin-filled" class="w-5 h-5 text-info" />
+          <#Icon iconify="material-symbols:push-pin" class="w-5 h-5 text-base-content/70" />
           <div class="flex-1 ml-3">
             <div class="text-sm font-medium text-base-content/70">
               <LiveRedirect

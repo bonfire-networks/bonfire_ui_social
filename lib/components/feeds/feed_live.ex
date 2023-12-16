@@ -295,7 +295,30 @@ defmodule Bonfire.UI.Social.FeedLive do
   end
 
   def maybe_widgets(assigns, feed_name) do
-    if feed_name in [:my, :explore, :fediverse, :local], do: widgets(assigns), else: []
+    cond do
+      feed_name in [:my, :explore, :fediverse, :local] -> widgets(assigns)
+      feed_name in [:curated] -> curated_widgets(assigns)
+      true -> []
+    end
+  end
+
+  defp curated_widgets(assigns) do
+    [
+      sidebar_widgets: [
+        guests: [
+          secondary: [
+            {Bonfire.UI.Social.WidgetCuratedLive, []},
+            {Bonfire.Tag.Web.WidgetTagsLive, []}
+          ]
+        ],
+        users: [
+          secondary: [
+            {Bonfire.UI.Social.WidgetCuratedLive, []},
+            {Bonfire.Tag.Web.WidgetTagsLive, []}
+          ]
+        ]
+      ]
+    ]
   end
 
   defp widgets(assigns) do

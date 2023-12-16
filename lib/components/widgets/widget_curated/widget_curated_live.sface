@@ -1,0 +1,13 @@
+<Bonfire.UI.Common.WidgetBlockLive>
+  <div class="p-3 pt-0">
+    <div class="flex items-center gap-2">
+      <#Icon iconify="material-symbols:push-pin" class="w-5 h-5 text-base-content/70" />
+      <span class="text-sm font-semibold">{l("Curated feed")}</span>
+    </div>
+
+    <div class="prose mt-2 text-sm prose-sm">{l(
+        "The curated feed is made of local and remote activities hand-picked by this instance moderators."
+      )}
+    </div>
+  </div>
+</Bonfire.UI.Common.WidgetBlockLive>
