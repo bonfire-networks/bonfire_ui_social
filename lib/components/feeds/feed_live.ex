@@ -100,14 +100,11 @@ defmodule Bonfire.UI.Social.FeedLive do
     # case Bonfire.Social.Integration.federating?(current_user(context)) do
     #   true ->
     # if current_user_id(context) do
-    if Bonfire.Common.Config.get(
-         [Bonfire.UI.Social.FeedsLive, :curated],
-         false
-       ) &&
+    if module_enabled?(Bonfire.Social.Pins) and
          Bonfire.Common.Settings.get(
            [Bonfire.UI.Social.FeedsLive, :curated],
            false,
-           current_user(context)
+           context
          ) do
       [curated: l("Curated"), local: l("Local"), fediverse: l("Remote")]
     else
