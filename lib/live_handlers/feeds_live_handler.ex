@@ -308,13 +308,13 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
 
   def paginate_feed(feed_id, attrs, socket, opts \\ [])
 
-  def paginate_feed("user_" <> selected_tab_and_user_id, attrs, socket, _opts) do
-    debug(selected_tab_and_user_id, "paginate user feed")
+  # def paginate_feed("user_" <> selected_tab_and_user_id, attrs, socket, _opts) do
+  #   debug(selected_tab_and_user_id, "paginate user feed")
 
-    {:noreply,
-     socket
-     |> insert_feed(load_user_feed_assigns(selected_tab_and_user_id, attrs, socket))}
-  end
+  #   {:noreply,
+  #    socket
+  #    |> insert_feed(load_user_feed_assigns(selected_tab_and_user_id, attrs, socket))}
+  # end
 
   def paginate_feed(feed, attrs, socket, opts)
       when feed in [:likes, :bookmarks, :flags, :curated] do
@@ -328,7 +328,6 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
 
   def paginate_feed(feed_id, attrs, socket, opts) do
     opts = paginate_opts(attrs, socket, opts)
-
     # if(current_user_id(opts) && feed_id == Bonfire.Social.Feeds.my_feed_id(:inbox, opts)) do
     #   debug(
     #     "Feeds - paginate - the feed_id assigned in the view is current user's inbox, so load that"
@@ -379,8 +378,6 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
   end
 
   def paginate_fetch_assign_default(opts, socket) do
-    debug(opts)
-
     # || current_account(socket)
     current = current_user(socket.assigns)
 
@@ -1510,6 +1507,7 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
     merge_feed_assigns(
       feed,
       [
+        feed_update_mode: "append",
         loading: false,
         selected_tab: tab,
         feed_id: feed_id,
