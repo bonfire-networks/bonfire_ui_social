@@ -336,11 +336,10 @@ defmodule Bonfire.UI.Social.ActivityLive do
       object_type: object_type,
       object_type_readable: object_type_readable,
       # unit: :minute
-      date_ago: DatesTimes.date_from_now(object_id || o_id, format: :narrow),
-      # if(e(assigns[:__context], :ui_compact, nil),
-      #   do: DatesTimes.date_from_now(id, format: :narrow),
-      #   else: DatesTimes.date_from_now(id)
-      # ),
+      date_ago: if(e(assigns[:__context], :ui_compact, nil) && Bonfire.Common.Localise.get_locale_id() not in [:fr], # NOTE: skip narrow format which gives odd results in some languages
+        do: DatesTimes.date_from_now(object_id, format: :narrow),
+        else: DatesTimes.date_from_now(object_id)
+      ),
       verb: verb,
       verb_display: verb_display,
       created_verb_display: e(assigns, :created_verb_display, nil),
