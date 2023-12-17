@@ -48,7 +48,7 @@
           "data-id": "subject_username",
           "aria-label": l("%{name}'s profile", name: @profile_name)
         }
-        class="text-sm font-light mx-1 truncate max-w-[200px] link link-hover ellipsis text-base-content/70 subject_username"
+        class="text-sm font-light ml-1 truncate max-w-[200px] link link-hover ellipsis text-base-content/70 subject_username"
         to={e(@subject_peered, :canonical_uri, nil) || @path}
       >
         @{@character_username}

@@ -103,7 +103,12 @@ defmodule Bonfire.UI.Social.FeedLive do
     if Bonfire.Common.Config.get(
          [Bonfire.UI.Social.FeedsLive, :curated],
          false
-       ) do
+       ) &&
+         Bonfire.Common.Settings.get(
+           [Bonfire.UI.Social.FeedsLive, :curated],
+           false,
+           current_user(context)
+         ) do
       [curated: l("Curated"), local: l("Local"), fediverse: l("Remote")]
     else
       [explore: l("Everything"), local: l("Local"), fediverse: l("Remote")]

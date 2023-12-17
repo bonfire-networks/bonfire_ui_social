@@ -112,6 +112,22 @@ defmodule Bonfire.UI.Social.FeedsLive do
     set_feed_assigns({:fediverse, params}, socket)
   end
 
+  def do_handle_params(%{"tab" => "explore" = _tab} = params, _url, socket) do
+    if Bonfire.Common.Config.get(
+         [Bonfire.UI.Social.FeedsLive, :curated],
+         false
+       ) &&
+         Bonfire.Common.Settings.get(
+           [Bonfire.UI.Social.FeedsLive, :curated],
+           false,
+           current_user(socket.assigns)
+         ) do
+      set_feed_assigns({:curated, params}, socket)
+    else
+      set_feed_assigns({:explore, params}, socket)
+    end
+  end
+
   def do_handle_params(%{"tab" => "curated" = _tab} = params, _url, socket) do
     set_feed_assigns({:curated, params}, socket)
   end
