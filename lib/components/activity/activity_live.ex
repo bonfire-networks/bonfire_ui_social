@@ -1417,11 +1417,13 @@ defmodule Bonfire.UI.Social.ActivityLive do
   def component_object(_, _, %{post_content: %{html_body: _}}, _),
     do: [Bonfire.UI.Social.Activity.NoteLive]
 
-  def component_object(_, _, %{profile: %{id: _}}, _),
-    do: [Bonfire.UI.Social.Activity.CharacterLive]
+  def component_object(_, _, %{profile: %{id: _}}, object_type)
+      when object_type not in [:group, :topic],
+      do: [Bonfire.UI.Social.Activity.CharacterLive]
 
-  def component_object(_, _, %{character: %{id: _}}, _),
-    do: [Bonfire.UI.Social.Activity.CharacterLive]
+  def component_object(_, _, %{character: %{id: _}}, object_type)
+      when object_type not in [:group, :topic],
+      do: [Bonfire.UI.Social.Activity.CharacterLive]
 
   def component_object(_, _, _, Bonfire.Data.Identity.User),
     do: [Bonfire.UI.Social.Activity.CharacterLive]

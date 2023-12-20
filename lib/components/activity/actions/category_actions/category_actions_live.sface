@@ -1,34 +1,11 @@
-{!-- <Bonfire.UI.Social.BoostActionLive
-  id={ComponentID.new(Bonfire.UI.Social.BoostActionLive, id(@object))}
+<Bonfire.UI.Social.FollowButtonLive
+  :if={e(@object, :character, nil)}
+  id={ComponentID.new(Bonfire.UI.Social.FollowButtonLive, id(@object), @activity_id)}
   object_id={id(@object)}
-  showing_within={:feed}
-/> --}
-{!-- <Bonfire.UI.Social.LikeActionLive
-  id={ComponentID.new(Bonfire.UI.Social.LikeActionLive, id(@object))}
-  object_id={id(@object)}
+  path={path(@object)}
+  verb={if @object_type == :group, do: l("Join")}
+  verb_undo={if @object_type == :group, do: l("Leave")}
+  verb_already={if @object_type == :group, do: l("Joined")}
   object_boundary={@object_boundary}
-/> --}
-<div class="flex items-center gap-2">
-  {!-- <div class="px-1 flex-1 flex h-full w-full place-content-center items-center"> --}
-  <Bonfire.UI.Social.FollowButtonLive
-    :if={e(@object, :character, nil)}
-    id={ComponentID.new(Bonfire.UI.Social.FollowButtonLive, id(@object), @activity_id)}
-    object_id={id(@object)}
-    path={path(@object)}
-    verb={if @object_type == :group, do: l("Join")}
-    verb_undo={if @object_type == :group, do: l("Leave")}
-    verb_already={if @object_type == :group, do: l("Joined")}
-    object_boundary={@object_boundary}
-    hide_icon
-  />
-  {!-- </div>
-  <div class="px-1 flex-1 flex h-full w-full place-content-center items-center border-t border-base-content/20"> --}
-  {!-- <Bonfire.UI.Social.Activity.MoreActionsLive
-    object={@object}
-    object_type={@object_type}
-    verb={if @object_type == :group, do: l("Join")}
-    object_boundary={@object_boundary}
-    activity_component_id={@activity_id}
-  /> --}
-  {!-- </div> --}
-</div>
+  hide_icon
+/>
