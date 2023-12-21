@@ -1,4 +1,4 @@
-<Bonfire.UI.Common.WidgetBlockLive class="relative w-full mx-auto rounded-xl border border-base-content/20">
+<Bonfire.UI.Common.WidgetBlockLive class="relative w-full mx-auto rounded-xl bg-base-content/5 pt-3">
   <Bonfire.UI.Social.FeedControlsLive
     event_target={@event_target}
     feed_name={@feed_name}

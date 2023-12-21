@@ -328,6 +328,8 @@ defmodule Bonfire.UI.Social.FeedLive do
       sidebar_widgets: [
         users: [
           secondary: [
+            {Bonfire.UI.Social.WidgetFeedDescriptionLive,
+             [feed_name: e(assigns, :feed_name, nil)]},
             {Bonfire.UI.Social.WidgetFeedLive,
              [
                event_target: "##{e(assigns, :feed_component_id, nil)}",

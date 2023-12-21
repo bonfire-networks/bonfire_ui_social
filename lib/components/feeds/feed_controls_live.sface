@@ -1,6 +1,6 @@
 <div x-data="{open: false}">
   <div
-    class="mx-3 pb-3 flex justify-between items-center text-base font-bold tracking-wide cursor-pointer"
+    class="mx-3 pb-3 flex justify-between items-center text-sm font-bold tracking-wide cursor-pointer"
     role="banner"
     @click="open = ! open"
   >
