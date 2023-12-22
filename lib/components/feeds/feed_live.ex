@@ -309,15 +309,13 @@ defmodule Bonfire.UI.Social.FeedLive do
       sidebar_widgets: [
         guests: [
           secondary: [
-            {Bonfire.UI.Social.WidgetFeedDescriptionLive,
-             [feed_name: e(assigns, :feed_name, nil)]},
+            {Bonfire.UI.Social.WidgetFeedDescriptionLive, [feed_name: :curated]},
             {Bonfire.Tag.Web.WidgetTagsLive, []}
           ]
         ],
         users: [
           secondary: [
-            {Bonfire.UI.Social.WidgetFeedDescriptionLive,
-             [feed_name: e(assigns, :feed_name, nil)]},
+            {Bonfire.UI.Social.WidgetFeedDescriptionLive, [feed_name: :curated]},
             {Bonfire.Tag.Web.WidgetTagsLive, []}
           ]
         ]
@@ -326,16 +324,22 @@ defmodule Bonfire.UI.Social.FeedLive do
   end
 
   defp widgets(assigns) do
+    feed_name = e(assigns, :feed_name, nil)
+
     [
       sidebar_widgets: [
+        guests: [
+          secondary: [
+            {Bonfire.UI.Social.WidgetFeedDescriptionLive, [feed_name: feed_name]}
+          ]
+        ],
         users: [
           secondary: [
-            {Bonfire.UI.Social.WidgetFeedDescriptionLive,
-             [feed_name: e(assigns, :feed_name, nil)]},
+            {Bonfire.UI.Social.WidgetFeedDescriptionLive, [feed_name: feed_name]},
             {Bonfire.UI.Social.WidgetFeedLive,
              [
                event_target: "##{e(assigns, :feed_component_id, nil)}",
-               feed_name: e(assigns, :feed_name, nil),
+               feed_name: feed_name,
                sort_by: e(assigns, :sort_by, nil),
                time_limit: e(assigns, :time_limit, nil),
                sort_order: e(assigns, :sort_order, nil),
