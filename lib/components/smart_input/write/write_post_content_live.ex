@@ -9,6 +9,15 @@ defmodule Bonfire.UI.Social.WritePostContentLive do
   alias Surface.Components.Form.Inputs
   alias Bonfire.UI.Common.WriteEditorLive
 
+  @behaviour Bonfire.UI.Common.SmartInputModule
+  def smart_input_module,
+    do: [
+      :post,
+      Bonfire.Data.Social.Post,
+      Bonfire.Data.Social.PostContent,
+      Bonfire.Data.Social.Message
+    ]
+
   # prop target_component, :string, default: nil
   prop reply_to_id, :any, default: nil
   prop context_id, :string, default: nil

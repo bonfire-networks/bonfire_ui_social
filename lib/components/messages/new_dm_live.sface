@@ -4,5 +4,5 @@
   create_object_type={:message}
   as_icon
   icon="tabler:mail-plus"
-  prompt={"#{l("New message")}"}
+  prompt={l("New message")}
 />
