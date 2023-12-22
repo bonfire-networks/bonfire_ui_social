@@ -309,13 +309,15 @@ defmodule Bonfire.UI.Social.FeedLive do
       sidebar_widgets: [
         guests: [
           secondary: [
-            {Bonfire.UI.Social.WidgetCuratedLive, []},
+            {Bonfire.UI.Social.WidgetFeedDescriptionLive,
+             [feed_name: e(assigns, :feed_name, nil)]},
             {Bonfire.Tag.Web.WidgetTagsLive, []}
           ]
         ],
         users: [
           secondary: [
-            {Bonfire.UI.Social.WidgetCuratedLive, []},
+            {Bonfire.UI.Social.WidgetFeedDescriptionLive,
+             [feed_name: e(assigns, :feed_name, nil)]},
             {Bonfire.Tag.Web.WidgetTagsLive, []}
           ]
         ]
