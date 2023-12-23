@@ -62,7 +62,6 @@ defmodule Bonfire.UI.Social.FeedLive do
   def mount(socket) do
     # FIXME: assigns not available in mount
     # feed_id = e(socket.assigns, :feed_name, nil) || e(socket.assigns, :feed_id, nil) || e(socket.assigns, :id, nil)
-
     {
       :ok,
       socket
