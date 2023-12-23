@@ -4,6 +4,26 @@ defmodule Bonfire.Social.Threads.LiveHandler do
 
   alias Bonfire.Social.Threads
 
+  def handle_params(
+        %{"after" => cursor} = _attrs,
+        _,
+        %{assigns: %{thread_id: thread_id}} = socket
+      ) do
+    live_more(thread_id, [after: cursor], socket)
+  end
+
+  def handle_params(%{"after" => cursor, "context" => thread_id} = _attrs, _, socket) do
+    live_more(thread_id, [after: cursor], socket)
+  end
+
+  # workaround for a weird issue appearing in tests
+  def handle_params(attrs, uri, socket) do
+    case URI.parse(uri) do
+      %{path: "/discussion/" <> thread_id} -> live_more(thread_id, input_to_atoms(attrs), socket)
+      %{path: "/post/" <> thread_id} -> live_more(thread_id, input_to_atoms(attrs), socket)
+    end
+  end
+
   def handle_event(
         "mark_seen",
         %{"scope" => "all", "thread_id" => thread_id},
@@ -34,69 +54,6 @@ defmodule Bonfire.Social.Threads.LiveHandler do
         %{assigns: %{thread_id: thread_id}} = socket
       ) do
     live_more(thread_id, input_to_atoms(attrs), socket)
-  end
-
-  def handle_params(
-        %{"after" => cursor} = _attrs,
-        _,
-        %{assigns: %{thread_id: thread_id}} = socket
-      ) do
-    live_more(thread_id, [after: cursor], socket)
-  end
-
-  def handle_params(%{"after" => cursor, "context" => thread_id} = _attrs, _, socket) do
-    live_more(thread_id, [after: cursor], socket)
-  end
-
-  # workaround for a weird issue appearing in tests
-  def handle_params(attrs, uri, socket) do
-    case URI.parse(uri) do
-      %{path: "/discussion/" <> thread_id} -> live_more(thread_id, input_to_atoms(attrs), socket)
-      %{path: "/post/" <> thread_id} -> live_more(thread_id, input_to_atoms(attrs), socket)
-    end
-  end
-
-  def live_more(thread_id, paginate, socket) do
-    debug(paginate, "paginate thread")
-
-    opts = [
-      current_user: current_user(socket.assigns),
-      paginate: paginate,
-      thread_mode: e(socket.assigns, :thread_mode, nil),
-      sort_by: e(socket.assigns, :sort_by, nil),
-      sort_order: e(socket.assigns, :sort_order, nil)
-    ]
-
-    with %{edges: replies, page_info: page_info} <-
-           Bonfire.Social.Threads.list_replies(
-             thread_id,
-             opts
-           ) do
-      replies =
-        (e(socket.assigns, :replies, []) ++ replies)
-        |> Enum.uniq()
-
-      # |> debug("REPLIES")
-
-      threaded_replies =
-        if is_list(replies) and length(replies) > 0,
-          do:
-            Bonfire.Social.Threads.arrange_replies_tree(
-              replies,
-              opts
-            ),
-          else: []
-
-      # debug(threaded_replies, "REPLIES threaded")
-
-      {:noreply,
-       socket
-       |> assign(
-         replies: replies,
-         threaded_replies: threaded_replies,
-         page_info: page_info
-       )}
-    end
   end
 
   def handle_event("load_replies", %{"id" => id, "level" => level}, socket) do
@@ -135,7 +92,7 @@ defmodule Bonfire.Social.Threads.LiveHandler do
     end
   end
 
-  def handle_event("reply", %{"id" => reply_to_id} = params, socket) do
+  def handle_event("reply", %{"id" => reply_to_id} = _params, socket) do
     activity = e(socket.assigns, :activity, %{})
 
     reply_to =
@@ -206,6 +163,49 @@ defmodule Bonfire.Social.Threads.LiveHandler do
       do: maybe_send_update(Bonfire.UI.Social.ThreadLive, thread_id, new_reply: data)
 
     {:noreply, socket}
+  end
+
+  def live_more(thread_id, paginate, socket) do
+    debug(paginate, "paginate thread")
+
+    opts = [
+      current_user: current_user(socket.assigns),
+      paginate: paginate,
+      thread_mode: e(socket.assigns, :thread_mode, nil),
+      sort_by: e(socket.assigns, :sort_by, nil),
+      sort_order: e(socket.assigns, :sort_order, nil)
+    ]
+
+    with %{edges: replies, page_info: page_info} <-
+           Bonfire.Social.Threads.list_replies(
+             thread_id,
+             opts
+           ) do
+      replies =
+        (e(socket.assigns, :replies, []) ++ replies)
+        |> Enum.uniq()
+
+      # |> debug("REPLIES")
+
+      threaded_replies =
+        if is_list(replies) and length(replies) > 0,
+          do:
+            Bonfire.Social.Threads.arrange_replies_tree(
+              replies,
+              opts
+            ),
+          else: []
+
+      # debug(threaded_replies, "REPLIES threaded")
+
+      {:noreply,
+       socket
+       |> assign(
+         replies: replies,
+         threaded_replies: threaded_replies,
+         page_info: page_info
+       )}
+    end
   end
 
   def reply(reply_to, activity, socket) do
@@ -542,7 +542,7 @@ defmodule Bonfire.Social.Threads.LiveHandler do
 
   def insert_comments(socket, replies, opts \\ [])
 
-  def insert_comments(socket, {[], assigns}, opts) do
+  def insert_comments(socket, {[], assigns}, _opts) do
     debug(assigns, "nothing to add")
 
     socket

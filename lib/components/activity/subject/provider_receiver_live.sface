@@ -31,12 +31,7 @@
             <span>·</span>
             <Bonfire.UI.Social.Activity.LinkToActivityLive
               :if={@showing_within not in [:smart_input]}
-              object={@object}
-              activity={@activity}
-              object_type={@object_type}
               permalink={@permalink}
-              thread_id={@thread_id}
-              showing_within={@showing_within}
             >
               <span
                 data-role="date"
@@ -91,7 +86,6 @@
       <LiveRedirect
         to={path(character(@object, :receiver))}
         opts={"data-id": "subject_name"}
-        aria-label={"#{e(character(@object, :receiver), [:username, :display_username], "")} profile"}
         class="font-semibold text-primary-content-800 hover:underline"
         >
         {e(profile(receiver(@receiver, @object)), :name, "Anonymous")}

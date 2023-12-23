@@ -17,6 +17,7 @@ defmodule Bonfire.UI.Social.CommentLive do
   # prop create_object_type, :any, default: nil
   prop current_url, :string, default: nil
   prop activity_inception, :any, default: nil
+  prop ui_compact, :any, default: nil
 
   prop activity_loaded_preloads, :list, default: []
 

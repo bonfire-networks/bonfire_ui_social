@@ -7,11 +7,7 @@
   <div class="flex-1 ml-3">
     <div class="text-sm font-medium text-base-content/70">
       {l("Published in")}
-      <LiveRedirect
-        aria-label={e(@context, :character, :username, "") <> " " <> l("profile")}
-        class="font-medium link text-base-content/70"
-        to={path(@context)}
-      >
+      <LiveRedirect class="font-medium link text-base-content/70" to={path(@context)}>
         {e(@context, :profile, :name, nil) || e(@context, :character, :username, nil)}
       </LiveRedirect>
     </div>

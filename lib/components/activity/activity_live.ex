@@ -812,7 +812,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
     ]
   end
 
-  def component_activity_subject(verb, activity, object, object_type, :notifications, _, _)
+  def component_activity_subject(verb, activity, _object, _object_type, :notifications, _, _)
       when verb in @react_verbs,
       do: [
         {Bonfire.UI.Social.Activity.SubjectMinimalLive,
@@ -854,7 +854,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
       do: [{Bonfire.UI.Social.Activity.SubjectLive, %{profile: profile, character: character}}]
 
   # replies (when shown in notifications)
-  def component_activity_subject(verb, activity, _, _, :notifications, _, _)
+  def component_activity_subject(verb, _activity, _, _, :notifications, _, _)
       when verb in @reply_verbs,
       do: []
 
@@ -1147,8 +1147,8 @@ defmodule Bonfire.UI.Social.ActivityLive do
               post_content: %{id: id} = reply_to_post_content,
               created: %{
                 creator: %{
-                  character: %{id: _} = subject_character,
-                  profile: %{id: _} = subject_profile
+                  character: %{id: _} = _subject_character,
+                  profile: %{id: _} = _subject_profile
                 }
               }
             } = reply_to

@@ -7,10 +7,9 @@
 
   {!-- 
       TODO: support LivePush:
-      ComponentID.new(Bonfire.UI.Social.FeedLive, @feed_ids || @feed_id, __MODULE__) --}
-  <Bonfire.UI.Social.FeedLive
-    class="pl-0 showing_within:widget"
-    hide_tabs
-    {...load(current_user(@__context__))}
-  />
+      ComponentID.new(Bonfire.UI.Social.FeedLive, @feed_ids || @feed_id, __MODULE__) 
+      
+      class="pl-0 showing_within:widget"
+--}
+  <Bonfire.UI.Social.FeedLive hide_tabs {...load(current_user(@__context__))} />
 </Bonfire.UI.Common.WidgetBlockLive>

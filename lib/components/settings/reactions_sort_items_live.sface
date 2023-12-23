@@ -13,6 +13,6 @@
     ]}
     default_value={false}
     scope={@scope}
-    compact
   />
+  <!-- compact={@compact} -->
 </form>

@@ -13,7 +13,6 @@
         <LiveRedirect
           :if={e(@activity, :subject, :id, nil) != current_user_id(@__context__)}
           to={path(e(@activity, :subject, nil))}
-          aria-label={e(@activity, :subject, :character, :username, "") <> " profile"}
           class="font-medium "
           >
           {e(@activity, :subject, :profile, :name, "Anonymous")}
@@ -84,7 +83,6 @@
         <LiveRedirect
           :if={e(@activity, :subject, :id, nil) != current_user_id(@__context__)}
           to={path(e(@activity, :subject, nil))}
-          aria-label={e(@activity, :subject, :character, :username, "") <> " profile"}
           class="font-medium "
           >
           {e(@activity, :subject, :profile, :name, "Anonymous")}

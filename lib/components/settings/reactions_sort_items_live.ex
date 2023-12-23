@@ -6,4 +6,5 @@ defmodule Bonfire.UI.Social.Settings.ReactionsSortItemsLive do
   prop feed_name, :atom, default: nil
   prop event_name, :any, default: nil
   prop event_target, :any, default: nil
+  prop compact, :boolean, default: false
 end

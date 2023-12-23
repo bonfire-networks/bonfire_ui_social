@@ -849,7 +849,8 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
          feed_name_id_or_tuple,
          assigns,
          socket,
-         reset_stream \\ false
+         # \\ false
+         reset_stream
        )
 
   # defp feed_assigns_maybe_async_load(feed_name, assigns, %{assigns: %{loading: false}} = socket, reset_stream) do

@@ -8,10 +8,7 @@
 
   <Bonfire.UI.Social.Activity.LinkToActivityLive
     :if={@showing_within not in [:smart_input]}
-    object_type={@object_type}
     permalink={@permalink}
-    thread_id={@thread_id}
-    showing_within={@showing_within}
   >
     <span
       data-role="no_subject"

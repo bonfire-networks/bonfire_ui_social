@@ -1,13 +1,9 @@
 <Bonfire.UI.Social.ObjectThreadLive
-  page={@page}
   thread_title={@thread_title}
-  search_placeholder={@search_placeholder}
   thread_mode={@thread_mode}
   activity={@activity}
   object={@object}
   post_id={@post_id}
   thread_id={e(@thread_id, nil)}
   participants={@participants}
-  loading={@loading}
-  label=""
 />

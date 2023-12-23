@@ -23,7 +23,7 @@
   </div>
 
   <div
-    data-compact={@__context__[:ui_compact]}
+    data-compact={@ui_compact || @__context__[:ui_compact]}
     data-role="comment-lined"
     :if={@thread_level < 2}
     class={

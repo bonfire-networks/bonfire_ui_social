@@ -30,12 +30,7 @@
   </div>
 {#else}
   <div class="flex items-center">
-    <Bonfire.UI.Social.Activity.LinkToActivityLive
-      object_type={@object_type}
-      permalink={@permalink}
-      thread_id={@thread_id}
-      showing_within={@showing_within}
-    >
+    <Bonfire.UI.Social.Activity.LinkToActivityLive permalink={@permalink}>
       <span data-role="date_ago" class="subject_timestamp text-base-content/70">
         {@date_ago}
       </span>

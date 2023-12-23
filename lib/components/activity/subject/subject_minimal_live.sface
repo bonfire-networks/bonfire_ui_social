@@ -17,11 +17,7 @@
         </div>
         <div class="flex-1 ml-3">
           <div class="text-sm font-medium text-base-content/70">
-            <LiveRedirect
-              aria-label={e(@character_username, "") <> " profile"}
-              class="font-medium"
-              to={@path}
-            >
+            <LiveRedirect class="font-medium" to={@path}>
               {@profile_name}
             </LiveRedirect>
             {raw(@verb_display)}
@@ -52,11 +48,7 @@
                 class="h-9 w-9 rounded-full bg-base-content/20"
               />
               <div class="font-medium text-sm text-base-content/90">
-                <LiveRedirect
-                  aria-label={e(@character_username, "") <> " profile"}
-                  class="font-semibold"
-                  to={@path}
-                >
+                <LiveRedirect class="font-semibold" to={@path}>
                   {#if @object_id == current_user_id(@__context__)}
                     {l("You")}
                   {#else}
@@ -79,11 +71,7 @@
                 title={@profile_name}
                 class="h-9 w-9 rounded-full bg-base-content/20"
               />
-              <LiveRedirect
-                aria-label={e(@character_username, "") <> " profile"}
-                to={@path}
-                class="flex link link-hover items-center gap-5 justify-start pb-2"
-              >
+              <LiveRedirect to={@path} class="flex link link-hover items-center gap-5 justify-start pb-2">
                 <div class="font-medium text-sm text-base-content/90">
                   {@profile_name || @character_username}
 
@@ -114,11 +102,7 @@
                 class="h-9 w-9 rounded-full bg-base-content/20"
               />
               <div class="font-medium text-sm text-base-content/90">
-                <LiveRedirect
-                  aria-label={e(@character_username, "") <> " profile"}
-                  to={@path}
-                  class="font-semibold"
-                >
+                <LiveRedirect to={@path} class="font-semibold">
                   {#if @object_id == current_user_id(@__context__)}
                     {l("You")}
                   {#else}
@@ -160,11 +144,7 @@
             <#Icon solid="Flag" class="w-4 h-4 text-error" />
             <div class="flex-1 ml-3">
               <div class="text-sm font-medium text-base-content/70">
-                <LiveRedirect
-                  aria-label={e(@character_username, "") <> " " <> l("profile")}
-                  class="font-medium link link-hover"
-                  to={@path}
-                >
+                <LiveRedirect class="font-medium link link-hover" to={@path}>
                   {@profile_name || @character_username}
                 </LiveRedirect>
                 {raw(@verb_display)}
@@ -179,7 +159,6 @@
             <div class="flex-1 ml-3">
               <div class="text-sm font-medium text-base-content/70">
                 <LiveRedirect
-                  aria-label={e(@character_username, "") <> " " <> l("profile")}
                   class="font-medium link link-hover"
                   to={@path}
                 >
@@ -212,11 +191,7 @@
           <#Icon iconify="material-symbols:push-pin" class="w-5 h-5 text-base-content/70" />
           <div class="flex-1 ml-3">
             <div class="text-sm font-medium text-base-content/70">
-              <LiveRedirect
-                aria-label={e(@character_username, "") <> " profile"}
-                class="font-medium link link-hover text-base-content/70"
-                to={@path}
-              >
+              <LiveRedirect class="font-medium link link-hover text-base-content/70" to={@path}>
                 {#if @object_id == current_user_id(@__context__)}
                   {l("You")}
                 {#else}
@@ -234,11 +209,7 @@
           <#Icon iconify="mingcute:fire-fill" class="w-5 h-5 text-yellow-500" />
           <div class="flex-1 ml-3">
             <div class="text-sm font-medium text-base-content/70">
-              <LiveRedirect
-                aria-label={e(@character_username, "") <> " profile"}
-                class="font-medium link link-hover text-base-content/70"
-                to={@path}
-              >
+              <LiveRedirect class="font-medium link link-hover text-base-content/70" to={@path}>
                 {#if @object_id == current_user_id(@__context__)}
                   {l("You")}
                 {#else}
@@ -256,11 +227,7 @@
           <#Icon solid="UserAdd" class="flex-shrink-0 w-5 h-5 text-base-content/70" />
           <div class="flex-1 ml-3">
             <div class="text-sm font-medium text-base-content/70">
-              <LiveRedirect
-                aria-label={e(@character_username, "") <> " profile"}
-                class="font-medium link link-hover text-base-content/70"
-                to={@path}
-              >
+              <LiveRedirect class="font-medium link link-hover text-base-content/70" to={@path}>
                 {@profile_name || @character_username}
               </LiveRedirect>
 
@@ -280,11 +247,7 @@
           <#Icon iconify="system-uicons:retweet" class="w-5 h-5 text-success" />
           <div class="flex-1 ml-3">
             <div class="text-sm font-medium text-base-content/70">
-              <LiveRedirect
-                aria-label={e(@character_username, "") <> " " <> l("profile")}
-                class="font-medium link link-hover text-base-content/70"
-                to={@path}
-              >
+              <LiveRedirect class="font-medium link link-hover text-base-content/70" to={@path}>
                 {@profile_name || @character_username}
               </LiveRedirect>
               {raw(@verb_display)}
@@ -298,11 +261,7 @@
           <#Icon solid="Flag" class="w-4 h-4 text-error" />
           <div class="flex-1 ml-3">
             <div class="text-sm font-medium text-base-content/70">
-              <LiveRedirect
-                aria-label={e(@character_username, "") <> " " <> l("profile")}
-                class="font-medium link link-hover"
-                to={@path}
-              >
+              <LiveRedirect class="font-medium link link-hover" to={@path}>
                 {@profile_name || @character_username}
               </LiveRedirect>
               {raw(@verb_display)}

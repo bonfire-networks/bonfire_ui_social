@@ -5,7 +5,6 @@
   feed_name={@feed_name}
   feed_ids={@feed_ids}
   page_title={@page_title}
-  page={@page}
   feedback_title={@feedback_title}
   feedback_message={@feedback_message}
   feed={@feed}

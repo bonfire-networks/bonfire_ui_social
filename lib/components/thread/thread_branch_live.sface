@@ -65,7 +65,7 @@
           </div> --}
 
           <div class={"replies replies-level-" <> to_string(@thread_level + 1) <> " "}>
-            {#for {{subreply, sub_child_replies}, index} <- Enum.with_index(@threaded_replies || [], 1)}
+            {#for {subreply, sub_child_replies} <- @threaded_replies || []}
               <div class="relative">
                 {!-- <div
                   class="group absolute px-2 left-7 cursor-pointer top-16 bottom-0 z-30"

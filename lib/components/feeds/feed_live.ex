@@ -25,7 +25,7 @@ defmodule Bonfire.UI.Social.FeedLive do
   prop hide_load_more, :boolean, default: false
   prop verb_default, :string, default: nil
 
-  prop page_title, :string, required: true
+  prop page_title, :string, default: nil
   prop feed_title, :string, default: nil
 
   @doc "What LiveHandler and/or event name to send the patch event to for tabs navigation (if any)"
@@ -95,7 +95,7 @@ defmodule Bonfire.UI.Social.FeedLive do
   defp get_activity(%{edge: %{id: _} = activity}), do: activity
   defp get_activity(activity), do: activity
 
-  def tabs(page, context) do
+  def tabs(_page, context) do
     # disabled hiding of remote tab because it is also useful to find remote activities that were looked up manually
     # case Bonfire.Social.Integration.federating?(current_user(context)) do
     #   true ->
@@ -299,12 +299,12 @@ defmodule Bonfire.UI.Social.FeedLive do
   def maybe_widgets(assigns, feed_name) do
     cond do
       feed_name in [:my, :explore, :fediverse, :local] -> widgets(assigns)
-      feed_name in [:curated] -> curated_widgets(assigns)
+      feed_name in [:curated] -> curated_widgets()
       true -> []
     end
   end
 
-  defp curated_widgets(assigns) do
+  defp curated_widgets() do
     [
       sidebar_widgets: [
         guests: [

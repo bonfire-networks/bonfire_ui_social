@@ -64,12 +64,7 @@
         class="translate-y-0.5"
         object_boundary={@object_boundary}
       />
-      <Bonfire.UI.Social.Activity.LinkToActivityLive
-        object_type={@object_type}
-        permalink={@permalink}
-        thread_id={@thread_id}
-        showing_within={@showing_within}
-      >
+      <Bonfire.UI.Social.Activity.LinkToActivityLive permalink={@permalink}>
         {@date_ago || DatesTimes.date_from_now(@activity_id) || DatesTimes.date_from_now(@object_id)}
       </Bonfire.UI.Social.Activity.LinkToActivityLive>
       <Bonfire.UI.Social.Activity.InstanceIconLive peered={@peered} />

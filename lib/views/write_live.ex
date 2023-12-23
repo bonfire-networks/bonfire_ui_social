@@ -8,7 +8,7 @@ defmodule Bonfire.UI.Social.WriteLive do
   # )
   on_mount {LivePlugs, [Bonfire.UI.Me.LivePlugs.UserRequired]}
 
-  def mount(params, session, socket) do
+  def mount(_params, session, socket) do
     {:ok,
      socket
      |> assign(

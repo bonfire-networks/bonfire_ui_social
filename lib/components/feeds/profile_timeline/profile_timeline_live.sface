@@ -24,7 +24,6 @@
       subject_user={@user}
       feed_filters={@feed_filters}
       page_title={@page_title}
-      page={@page}
       feed={@feed}
       page_info={@page_info}
       selected_tab={@selected_tab}
