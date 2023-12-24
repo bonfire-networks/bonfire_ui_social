@@ -54,7 +54,6 @@ defmodule Bonfire.UI.Social.FeedLive do
   prop sort_by, :any, default: nil
   prop time_limit, :any, default: nil
   prop sort_order, :any, default: false
-
   prop activity_loaded_preloads, :list, default: []
 
   slot bottom_or_empty_feed
