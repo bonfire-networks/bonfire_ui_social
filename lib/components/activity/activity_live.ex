@@ -26,6 +26,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
   prop verb_display, :string, default: nil
   prop date_ago, :any, default: nil
   prop feed_id, :any, default: nil
+  prop feed_name, :any, default: nil
   prop activity_component_id, :any, default: nil
   prop parent_id, :any, default: nil
   prop activity_inception, :any, default: nil
@@ -675,6 +676,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
                     module={component}
                     __context__={@__context__}
                     showing_within={@showing_within}
+                    feed_name={@feed_name}
                     thread_mode={@thread_mode}
                     activity={e(component_assigns, :activity, @activity)}
                     object={e(component_assigns, :object, @object)}

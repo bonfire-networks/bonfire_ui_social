@@ -85,6 +85,7 @@
               activity={get_activity(entry)}
               showing_within={@showing_within}
               verb_default={@verb_default}
+              feed_name={@feed_name}
               feed_id={@feed_id}
               is_remote={@feed_name in [:fediverse]}
               hide_activity={@hide_activities}
@@ -113,7 +114,9 @@
               activity={get_activity(entry)}
               showing_within={@showing_within}
               verb_default={@verb_default}
+              feed_name={@feed_name}
               feed_id={@feed_id}
+              is_remote={@feed_name in [:fediverse]}
               hide_activity={@hide_activities}
               subject_user={@subject_user}
               activity_loaded_preloads={@activity_loaded_preloads}

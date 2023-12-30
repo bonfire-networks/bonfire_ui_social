@@ -22,19 +22,22 @@ defmodule Bonfire.UI.Social.Activity.MoreActionsLive do
   prop published_in, :any, default: nil
 
   prop showing_within, :atom, default: nil
+  prop feed_name, :any, default: nil
   prop viewing_main_object, :boolean, default: false
 
   slot extra_items, required: false
   slot admin_items, required: false
 
   def render(assigns) do
+    # TODO: optimise all of this
+
     creator = creator_or_subject(assigns.activity, assigns.object)
 
     assigns
     |> assign(
       creator: creator,
       creator_id: creator_or_subject_id(assigns.activity, assigns.object, creator),
-      name: name(assigns.activity, assigns.object, creator)
+      creator_name: name(assigns.activity, assigns.object, creator)
     )
     |> render_sface()
   end

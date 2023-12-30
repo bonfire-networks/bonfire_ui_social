@@ -126,6 +126,7 @@
             thread_mode={@thread_mode}
             thread_title={@thread_title}
             showing_within={@showing_within}
+            feed_name={@feed_name}
             viewing_main_object={@viewing_main_object}
             activity_component_id={@activity_component_id}
             is_remote={@is_remote}
@@ -217,6 +218,7 @@
           thread_mode={@thread_mode}
           thread_title={@thread_title}
           showing_within={@showing_within}
+          feed_name={@feed_name}
           viewing_main_object={@viewing_main_object}
           activity_component_id={@activity_component_id}
           is_remote={@is_remote}

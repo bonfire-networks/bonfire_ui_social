@@ -86,20 +86,20 @@
         {#match false}
         {#match canonical_uri}
           <li>
-            <div
+            <a
               phx-click="Bonfire.Social.Feeds:fetch_replies"
-              class="flex items-center gap-2 text-sm text-base-content/70"
+              class="!flex items-center gap-2 text-base-content/70"
             >
               <#Icon iconify="mdi:sprout" class="w-4 h-4 shrink-0 text-base-content/70" />
               <span>{l("Get latest comments")}</span>
-            </div>
+            </a>
           </li>
           <li :if={is_binary(canonical_uri)}>
             <a
               href={canonical_uri}
               target="_blank"
               rel="noopener noreferrer"
-              class="flex items-center gap-2 text-sm text-base-content/70"
+              class="!flex items-center gap-2 text-base-content/70"
             >
               <#Icon solid="ExternalLink" class="w-4 h-4 shrink-0 text-base-content/70" />
               <span>{l("View on the original instance")}</span>
@@ -145,6 +145,26 @@
         />
       </li>
 
+      {#if @feed_name == :my}
+        {#case e(@activity, :subject, :id, nil)}
+          {#match nil}
+          {#match subject_id}
+            <li :if={subject_id != current_user_id(@__context__)}>
+              <a
+                phx-disable-with={l("Unfollowing...")}
+                data-id="unfollow"
+                :on-click="Bonfire.Social.Follows:unfollow"
+                phx-value-id={subject_id}
+                class="!flex items-center gap-2 text-base-content/70"
+              >
+                <#Icon solid="UserRemove" class="w-4 h-4 shrink-0" />
+                <span class="truncate ellipsis">
+                  {l("Unfollow")} {e(@activity, :subject, :profile, :name, nil) || e(@activity, :subject, :character, :username, nil)}</span>
+              </a>
+            </li>
+        {/case}
+      {/if}
+
       <li :if={current_user_id(@__context__) != @creator_id and
         Types.object_type(@creator) == Bonfire.Data.Identity.User}>
         <Dynamic.Component
@@ -186,7 +206,7 @@
               object={@creator_id}
               flagged={@flagged}
               parent_id={"user-#{id(@activity_component_id || @activity)}"}
-              object_type={@name || l("user")}
+              object_type={@creator_name || l("user")}
             />
           </li>
         </ul>
