@@ -95,9 +95,8 @@
                 <#Icon iconify="carbon:document" class="w-5 h-5 text-base-content/70" />
               </div> --}
 
-              <Dynamic.Component
-                :if={module_enabled?(Bonfire.UI.Coordination.TaskActionsMenuLive, @__context__)}
-                module={Bonfire.UI.Coordination.TaskActionsMenuLive}
+              <StatelessComponent
+                module={maybe_component(Bonfire.UI.Coordination.TaskActionsMenuLive, @__context__)}
                 task={@object}
                 is_editable?
               />

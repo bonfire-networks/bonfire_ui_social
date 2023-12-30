@@ -586,7 +586,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
                      Bonfire.UI.Social.Activity.SubjectMinimalLive,
                      Bonfire.UI.Social.Activity.NoSubjectLive
                    ]}
-              <Dynamic.Component
+              <StatelessComponent
                 :if={@hide_activity != "subject"}
                 module={component}
                 path={case e(component_assigns, :character, nil) do
@@ -638,7 +638,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
                      Bonfire.UI.Social.Activity.AudioActivityStreamsLive,
                      Bonfire.UI.Social.Activity.VideoActivityStreamsLive
                    ]}
-              <Dynamic.Component
+              <StatelessComponent
                 module={component}
                 __context__={@__context__}
                 showing_within={@showing_within}
@@ -671,7 +671,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
             {#match _ when component in [Bonfire.UI.Social.Activity.ActionsLive, Bonfire.UI.Social.FlaggedActionsLive]}
               {#if @hide_activity != "actions" and @hide_actions != true}
                 {#if LiveHandler.feed_live_update_many_preloads?() == :async_actions}
-                  <Dynamic.LiveComponent
+                  <StatefulComponent
                     id={"#{@activity_component_id}_actions"}
                     module={component}
                     __context__={@__context__}
@@ -696,7 +696,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
                     hide_actions={@hide_actions}
                   />
                 {#else}
-                  <Dynamic.Component
+                  <StatelessComponent
                     module={component}
                     myself={@myself}
                     __context__={@__context__}
@@ -722,7 +722,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
                 {/if}
               {/if}
             {#match _}
-              <Dynamic.Component
+              <StatelessComponent
                 :if={@hide_activity != "dynamic" && @showing_within != :notifications}
                 module={component}
                 activity_component_id={e(component_assigns, :id, nil)}

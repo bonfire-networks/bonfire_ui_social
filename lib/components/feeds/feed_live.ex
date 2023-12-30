@@ -98,7 +98,7 @@ defmodule Bonfire.UI.Social.FeedLive do
     # case Bonfire.Social.Integration.federating?(current_user(context)) do
     #   true ->
     # if current_user_id(context) do
-    if module_enabled?(Bonfire.Social.Pins) and
+    if module_enabled?(Bonfire.Social.Pins, context) and
          Bonfire.Common.Settings.get(
            [Bonfire.UI.Social.FeedsLive, :curated],
            false,

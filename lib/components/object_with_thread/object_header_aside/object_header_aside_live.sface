@@ -51,7 +51,7 @@
         </Bonfire.UI.Common.OpenModalLive>
       </li>
 
-      {!-- <li :if={module_enabled?(Bonfire.UI.Me.ProfileItemLive)}>
+      {!-- <li module={maybe_component(Bonfire.UI.Me.ProfileItemLive)}>
         <Bonfire.UI.Common.OpenModalLive
           :if={@thread_id}
           id="object_header_participants"
@@ -60,8 +60,8 @@
           <div class="flex flex-col divide-y divide-base-content/20">
             {#for p <- e(@participants, [])}
               <div class="py-2">
-                <Dynamic.Component
-                  module={Bonfire.UI.Me.ProfileItemLive}
+                <StatelessComponent
+                  module={maybe_component(Bonfire.UI.Me.ProfileItemLive)}
                   character={e(p, :character, nil) || e(p, :activity, :subject, :character, nil)}
                   profile={e(p, :profile, nil) || e(p, :activity, :subject, :profile, nil)}
                   class="btn btn-square btn-ghost btn-sm"

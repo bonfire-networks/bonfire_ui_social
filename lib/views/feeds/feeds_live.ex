@@ -113,7 +113,7 @@ defmodule Bonfire.UI.Social.FeedsLive do
   end
 
   def do_handle_params(%{"tab" => "explore" = _tab} = params, _url, socket) do
-    if module_enabled?(Bonfire.Social.Pins) and
+    if module_enabled?(Bonfire.Social.Pins, socket) and
          Bonfire.Common.Settings.get(
            [Bonfire.UI.Social.FeedsLive, :curated],
            false,

@@ -122,9 +122,8 @@
   >
     <li>
       {!-- Block the author --}
-      <Dynamic.Component
-        :if={module_enabled?(Bonfire.Boundaries.Web.BlockButtonLive)}
-        module={Bonfire.Boundaries.Web.BlockButtonLive}
+      <StatelessComponent
+        module={maybe_component(Bonfire.Boundaries.Web.BlockButtonLive, @__context__)}
         parent_id={@activity_component_id || id(@activity)}
         object={flagged_subject(@object || @activity)}
         peered={e(flagged_subject(@object || @activity), :peered, nil)}
@@ -137,9 +136,8 @@
     </li>
     <li>
       {!-- Block the flagger --}
-      <Dynamic.Component
-        :if={module_enabled?(Bonfire.Boundaries.Web.BlockButtonLive)}
-        module={Bonfire.Boundaries.Web.BlockButtonLive}
+      <StatelessComponent
+        module={maybe_component(Bonfire.Boundaries.Web.BlockButtonLive, @__context__)}
         parent_id={@activity_component_id || id(@activity)}
         object={e(@activity, :subject, nil)}
         peered={e(@activity, :subject, :peered, nil)}

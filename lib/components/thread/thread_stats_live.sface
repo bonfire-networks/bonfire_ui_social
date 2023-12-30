@@ -65,9 +65,8 @@
             <div class="z-[99999999999] relative">
               <div>
                 <span class="tippy" aria-describedby="tooltip">
-                  <Dynamic.Component
-                    :if={module_enabled?(Bonfire.UI.Me.ProfileItemLive)}
-                    module={Bonfire.UI.Me.ProfileItemLive}
+                  <StatelessComponent
+                    module={maybe_component(Bonfire.UI.Me.ProfileItemLive)}
                     wrapper_class=""
                     show_controls={[]}
                     only_img

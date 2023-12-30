@@ -107,10 +107,9 @@
           </li>
       {/case}
 
-      <li :if={@object_type in [Bonfire.Data.Social.Post, Bonfire.Data.Social.Message] and
-        module_enabled?(Bonfire.UI.Social.EditPostLive)}>
-        <Dynamic.Component
-          module={Bonfire.UI.Social.EditPostLive}
+      <li :if={@object_type in [Bonfire.Data.Social.Post, Bonfire.Data.Social.Message]}>
+        <StatelessComponent
+          module={maybe_component(Bonfire.UI.Social.EditPostLive)}
           object={@object}
           object_boundary={@object_boundary}
           activity_component_id={@activity_component_id}
@@ -118,7 +117,7 @@
         />
       </li>
 
-      {#if module_enabled?(Bonfire.Social.Pins)}
+      {#if module_enabled?(Bonfire.Social.Pins, @__context__)}
         <li
           :if={current_user_id(@__context__) == @creator_id && @object_type not in [Bonfire.Data.Social.Message]}
           class="hover:bg-neutral hover:bg-opacity-20"
@@ -137,9 +136,9 @@
         </li>
       {/if}
 
-      <li :if={module_enabled?(Bonfire.Classify.Web.TagModalLive)}>
-        <Dynamic.Component
-          module={Bonfire.Classify.Web.TagModalLive}
+      <li>
+        <StatelessComponent
+          module={maybe_component(Bonfire.Classify.Web.TagModalLive, @__context__)}
           object={@object}
           parent_id={@activity_component_id || id(@activity)}
         />
@@ -165,11 +164,10 @@
         {/case}
       {/if}
 
-      <li :if={current_user_id(@__context__) != @creator_id and
+      <li :if={current_user_id(@__context__) && current_user_id(@__context__) != @creator_id and
         Types.object_type(@creator) == Bonfire.Data.Identity.User}>
-        <Dynamic.Component
-          :if={module_enabled?(Bonfire.Boundaries.Web.AddToCircleLive) and current_user(@__context__)}
-          module={Bonfire.Boundaries.Web.AddToCircleLive}
+        <StatelessComponent
+          module={maybe_component(Bonfire.Boundaries.Web.AddToCircleLive, @__context__)}
           user_id={@creator_id}
           name={e(@creator, :profile, :name, nil)}
           parent_id={id(@activity_component_id || @activity)}
@@ -214,10 +212,9 @@
     </li>
 
     {!-- Block the author, etc --}
-    <Dynamic.Component
-      :if={current_user_id(@__context__) != @creator_id &&
-        module_enabled?(Bonfire.Boundaries.Web.BlockMenuButtonsLive)}
-      module={Bonfire.Boundaries.Web.BlockMenuButtonsLive}
+    <StatelessComponent
+      :if={current_user_id(@__context__) != @creator_id}
+      module={maybe_component(Bonfire.Boundaries.Web.BlockMenuButtonsLive, @__context__)}
       parent_id={@activity_component_id || id(@activity)}
       object={@creator}
       peered={e(@object, :peered, nil)}

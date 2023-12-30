@@ -10,8 +10,8 @@ defmodule Bonfire.UI.Social.RuntimeConfig do
   def config do
     import Config
 
-    config :bonfire_ui_social,
-      disabled: false
+    # config :bonfire_ui_social,
+    #   modularity: :disabled
 
     config :bonfire, :ui,
       explore: [

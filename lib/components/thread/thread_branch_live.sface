@@ -77,8 +77,8 @@
                 :if={index == length(@threaded_replies)}
                 class="w-3 bg-base-100 absolute left-[-10px] top-[10px] z-30 bottom-0" /> --}
                 {!-- <div class="z-40 absolute border-base-content/20 w-6 h-6 border-0 border-b-2 border-l-2 rounded-bl-lg left-[-10px] top-[-6px]" /> --}
-                <Dynamic.LiveComponent
-                  module={Bonfire.UI.Social.ThreadBranchLive}
+                <StatefulComponent
+                  module={maybe_component(Bonfire.UI.Social.ThreadBranchLive, @__context__)}
                   id={id(subreply)}
                   comment={subreply}
                   thread_id={@thread_id}

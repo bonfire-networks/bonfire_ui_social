@@ -9,7 +9,7 @@
 
 <form phx-change={@event_name || "Bonfire.Common.Settings:set"} phx-target={@event_target}>
   <Bonfire.UI.Common.SettingsToggleLive
-    :if={module_enabled?(Bonfire.Classify.Category)}
+    module={maybe_component(Bonfire.Classify.Category, @__context__)}
     label={l("Activities from groups I follow")}
     keys={[Bonfire.Social.Feeds, :include, :followed_categories]}
     default_value

@@ -31,9 +31,8 @@
     "-ml-[3.25rem]":
       !Settings.get([Bonfire.UI.Common.AvatarLive, :hide_avatars], false, @__context__)
   }>
-    <Dynamic.Component
-      :if={module_enabled?(Bonfire.UI.Me.ProfileItemLive)}
-      module={Bonfire.UI.Me.ProfileItemLive}
+    <StatelessComponent
+      module={maybe_component(Bonfire.UI.Me.ProfileItemLive, @__context__)}
       show_summary
       avatar_class={"w-11 h-11 rounded-full bg-base-300", "!w-7 !h-7": @__context__[:ui_compact]}
       profile={e(the_other(@activity, @object, @__context__), :profile, nil)}
