@@ -1663,8 +1663,8 @@ defmodule Bonfire.UI.Social.ActivityLive do
     ]
   end
 
-  # def reply_to_display(%Pointers.Pointer{} = reply_to) do
-  #   Bonfire.Common.Pointers.get!(reply_to)
+  # def reply_to_display(%Needle.Pointer{} = reply_to) do
+  #   Bonfire.Common.Needle.get!(reply_to)
   #   |> repo().maybe_preload([:post_content])
   #   |> repo().maybe_preload([:profile, :character])
   #   |> reply_to_display()

@@ -215,7 +215,7 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
     current_user = current_user(socket.assigns)
 
     permitted? =
-      Bonfire.Common.Pointers.exists?([id: e(data, :activity, :object, :id, nil)],
+      Bonfire.Common.Needle.exists?([id: e(data, :activity, :object, :id, nil)],
         current_user: current_user
       )
       |> debug("checked boundary upon receiving a LivePush - permitted?")
