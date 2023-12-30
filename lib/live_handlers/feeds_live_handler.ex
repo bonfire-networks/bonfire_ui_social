@@ -1526,9 +1526,9 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
     preloads = [:feed_by_creator] ++ feed_extra_preloads_list(showing_within)
 
     feed =
-      if module_enabled?(Bonfire.Social.Posts, user),
+      if module_enabled?(Bonfire.Posts, user),
         do:
-          Bonfire.Social.Posts.list_by(user,
+          Bonfire.Posts.list_by(user,
             pagination: input_to_atoms(params),
             current_user: current_user(socket.assigns),
             preload: preloads
@@ -1618,7 +1618,7 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
       if id(user) == id(current_user), do: list_requests(current_user, pagination), else: []
 
     followers =
-      Bonfire.Social.Follows.list_followers(user,
+      Bonfire.Social.Graph.Follows.list_followers(user,
         pagination: pagination,
         current_user: current_user
       )
@@ -1643,7 +1643,7 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
       if id(user) == id(current_user), do: list_requested(current_user, pagination), else: []
 
     followed =
-      Bonfire.Social.Follows.list_followed(user,
+      Bonfire.Social.Graph.Follows.list_followed(user,
         pagination: pagination,
         current_user: current_user
       )
@@ -1722,7 +1722,7 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
     # TODO: apply boundaries to Requests and then be able to view someone's requests/requested that involve me
     # TODO: pagination
     # user,
-    Bonfire.Social.Requests.list_my_requested(
+    Bonfire.Social.Graph.Requests.list_my_requested(
       pagination: pagination,
       current_user: current_user,
       type: Bonfire.Data.Social.Follow
@@ -1734,7 +1734,7 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
     # TODO: apply boundaries to Requests and then be able to view someone's requests/requested that involve me
     # TODO: pagination
     # user,
-    Bonfire.Social.Requests.list_my_requesters(
+    Bonfire.Social.Graph.Requests.list_my_requesters(
       pagination: pagination,
       current_user: current_user
     )

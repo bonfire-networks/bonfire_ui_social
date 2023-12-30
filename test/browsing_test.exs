@@ -6,8 +6,8 @@ defmodule Bonfire.UI.Social.BrowsingTest do
   # alias Bonfire.Me.Users
   # alias Bonfire.Social.Boosts
   # alias Bonfire.Social.Likes
-  alias Bonfire.Social.Follows
-  alias Bonfire.Social.Posts
+  alias Bonfire.Social.Graph.Follows
+  alias Bonfire.Posts
 
   setup_all do
     orig1 = Config.get!(:pagination_hard_max_limit)

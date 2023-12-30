@@ -18,8 +18,8 @@ defmodule Bonfire.UI.Social.WidgetMessagesLive do
     feed =
       if current_user,
         do:
-          if(module_enabled?(Bonfire.Social.Messages, current_user),
-            do: Bonfire.Social.Messages.list(current_user, nil, paginate: paginate)
+          if(module_enabled?(Bonfire.Messages, current_user),
+            do: Bonfire.Messages.list(current_user, nil, paginate: paginate)
           )
 
     e(feed, :edges, nil)

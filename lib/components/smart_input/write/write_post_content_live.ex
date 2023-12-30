@@ -50,7 +50,7 @@ defmodule Bonfire.UI.Social.WritePostContentLive do
 
   def handler(create_object_type) do
     if create_object_type == :message,
-      do: "Bonfire.Social.Messages:send",
-      else: "Bonfire.Social.Posts:post"
+      do: "Bonfire.Messages:send",
+      else: "Bonfire.Posts:post"
   end
 end

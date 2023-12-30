@@ -1,7 +1,7 @@
 <div class="flex-1">
   {#if e(@threads, :edges, []) != []}
     <Bonfire.UI.Common.LoadPreviousLive
-      live_handler={Bonfire.Social.Messages}
+      live_handler={Bonfire.Messages}
       page_info={e(@threads, :page_info, nil)}
       context={@context}
     />
@@ -63,7 +63,7 @@
     </ul>
 
     <Bonfire.UI.Common.LoadMoreLive
-      live_handler={Bonfire.Social.Messages}
+      live_handler={Bonfire.Messages}
       page_info={e(@threads, :page_info, nil)}
       context={@context}
     />

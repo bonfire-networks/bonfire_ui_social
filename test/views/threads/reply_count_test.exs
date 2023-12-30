@@ -3,8 +3,8 @@ defmodule Bonfire.Social.Threads.RepliesTest do
   alias Bonfire.Social.Fake
   alias Bonfire.Social.Boosts
   alias Bonfire.Social.Likes
-  alias Bonfire.Social.Follows
-  alias Bonfire.Social.Posts
+  alias Bonfire.Social.Graph.Follows
+  alias Bonfire.Posts
 
   # when we enable counts
   test "As a user I want to see the activity total replies" do

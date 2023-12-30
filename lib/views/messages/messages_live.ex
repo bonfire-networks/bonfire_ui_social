@@ -2,7 +2,7 @@ defmodule Bonfire.UI.Social.MessagesLive do
   use Bonfire.UI.Common.Web, :surface_live_view
 
   # alias Bonfire.Social.Integration
-  alias Bonfire.Social.Messages.LiveHandler
+  alias Bonfire.Messages.LiveHandler
   import Untangle
 
   declare_nav_link(l("Direct Messages"),
@@ -122,7 +122,7 @@ defmodule Bonfire.UI.Social.MessagesLive do
 
   # def do_handle_params(%{"id" => "compose" = id} = params, url, socket) do
   #   current_user = current_user_required!(socket)
-  #   users = Bonfire.Social.Follows.list_my_followed(current_user, paginate: false)
+  #   users = Bonfire.Social.Graph.Follows.list_my_followed(current_user, paginate: false)
 
   #   {:noreply,
   #    socket
@@ -150,7 +150,7 @@ defmodule Bonfire.UI.Social.MessagesLive do
 
       current_user = current_user_required!(socket)
 
-      with {:ok, message} <- Bonfire.Social.Messages.read(id, current_user: current_user) do
+      with {:ok, message} <- Bonfire.Messages.read(id, current_user: current_user) do
         # debug(message, "the first message in thread")
 
         # TODO: clean up the following

@@ -1,4 +1,4 @@
-defmodule Bonfire.Social.Follows.LiveHandler do
+defmodule Bonfire.Social.Graph.Follows.LiveHandler do
   use Bonfire.UI.Common.Web, :live_handler
   import Untangle
   # alias Bonfire.Boundaries.Circles
@@ -11,7 +11,7 @@ defmodule Bonfire.Social.Follows.LiveHandler do
     ]
 
     with {:ok, current_user} <- current_user_or_remote_interaction(socket, l("follow"), id),
-         {:ok, _follow} <- Bonfire.Social.Follows.follow(current_user, id) do
+         {:ok, _follow} <- Bonfire.Social.Graph.Follows.follow(current_user, id) do
       ComponentID.send_assigns(
         e(params, "component", Bonfire.UI.Social.FollowButtonLive),
         id,
@@ -26,7 +26,7 @@ defmodule Bonfire.Social.Follows.LiveHandler do
   end
 
   def handle_event("unfollow", %{"id" => id} = params, socket) do
-    with _ <- Bonfire.Social.Follows.unfollow(current_user_required!(socket), id) do
+    with _ <- Bonfire.Social.Graph.Follows.unfollow(current_user_required!(socket), id) do
       set = [
         my_follow: false
       ]
@@ -46,7 +46,7 @@ defmodule Bonfire.Social.Follows.LiveHandler do
     # debug(socket)
 
     with {:ok, _follow} <-
-           Bonfire.Social.Follows.accept(id, current_user: current_user_required!(socket)) do
+           Bonfire.Social.Graph.Follows.accept(id, current_user: current_user_required!(socket)) do
       {:noreply, socket}
     else
       e ->
@@ -87,7 +87,7 @@ defmodule Bonfire.Social.Follows.LiveHandler do
     my_follows =
       if current_user,
         do:
-          Bonfire.Social.Follows.get!(current_user, List.wrap(list_of_ids),
+          Bonfire.Social.Graph.Follows.get!(current_user, List.wrap(list_of_ids),
             preload: false,
             skip_boundary_check: true
           )
@@ -105,7 +105,10 @@ defmodule Bonfire.Social.Follows.LiveHandler do
     my_requests =
       if current_user,
         do:
-          Bonfire.Social.Requests.get!(current_user, Bonfire.Data.Social.Follow, remaining_ids,
+          Bonfire.Social.Graph.Requests.get!(
+            current_user,
+            Bonfire.Data.Social.Follow,
+            remaining_ids,
             preload: false,
             skip_boundary_check: true
           )

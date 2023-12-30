@@ -2,7 +2,7 @@ defmodule Bonfire.Social.Notifications.Likes.Test do
   use Bonfire.UI.Social.ConnCase, async: true
   alias Bonfire.Social.Fake
   alias Bonfire.Social.Likes
-  alias Bonfire.Social.Posts
+  alias Bonfire.Posts
 
   describe "show" do
     @tag :skip_ci

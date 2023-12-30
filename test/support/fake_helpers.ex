@@ -18,7 +18,7 @@ defmodule Bonfire.UI.Social.Test.FakeHelpers do
 
   def publish_multiple_times(msg, user, n, preset) when n > 0 do
     {:ok, _post} =
-      Bonfire.Social.Posts.publish(current_user: user, post_attrs: msg, boundary: preset)
+      Bonfire.Posts.publish(current_user: user, post_attrs: msg, boundary: preset)
 
     publish_multiple_times(msg, user, n - 1, preset)
   end

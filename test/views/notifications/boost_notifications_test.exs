@@ -2,7 +2,7 @@ defmodule Bonfire.Social.Notifications.Boosts.Test do
   use Bonfire.UI.Social.ConnCase, async: true
   alias Bonfire.Social.Fake
   alias Bonfire.Social.Boosts
-  alias Bonfire.Social.Posts
+  alias Bonfire.Posts
 
   describe "show" do
     test "boosts on my posts (even from people I'm not following) in my notifications" do

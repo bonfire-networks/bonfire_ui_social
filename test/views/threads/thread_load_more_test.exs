@@ -3,8 +3,8 @@ defmodule Bonfire.Social.Threads.LoadMoreTest do
   alias Bonfire.Social.Fake
   alias Bonfire.Social.Boosts
   alias Bonfire.Social.Likes
-  alias Bonfire.Social.Follows
-  alias Bonfire.Social.Posts
+  alias Bonfire.Social.Graph.Follows
+  alias Bonfire.Posts
 
   describe "Load More in Threads" do
     test "As a user I dont want to see the load more button if there are less than 11 replies" do

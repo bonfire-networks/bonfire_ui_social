@@ -152,7 +152,7 @@
               <a
                 phx-disable-with={l("Unfollowing...")}
                 data-id="unfollow"
-                :on-click="Bonfire.Social.Follows:unfollow"
+                :on-click="Bonfire.Social.Graph.Follows:unfollow"
                 phx-value-id={subject_id}
                 class="!flex items-center gap-2 text-base-content/70"
               >

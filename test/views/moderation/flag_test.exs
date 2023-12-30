@@ -1,8 +1,8 @@
 defmodule Bonfire.Social.Moderation.FlagTest do
   use Bonfire.UI.Social.ConnCase, async: true
   alias Bonfire.Social.Fake
-  alias Bonfire.Social.Posts
-  alias Bonfire.Social.Follows
+  alias Bonfire.Posts
+  alias Bonfire.Social.Graph.Follows
   alias Bonfire.Me.Accounts
   alias Bonfire.Me.Users
   alias Bonfire.Files.Test

@@ -1,8 +1,8 @@
 defmodule Bonfire.Social.Feeds.Instance.Test do
   use Bonfire.UI.Social.ConnCase, async: true
   alias Bonfire.Social.Fake
-  alias Bonfire.Social.Posts
-  alias Bonfire.Social.Follows
+  alias Bonfire.Posts
+  alias Bonfire.Social.Graph.Follows
   alias Bonfire.Social.Boosts
 
   describe "show" do

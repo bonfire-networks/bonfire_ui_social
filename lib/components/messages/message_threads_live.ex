@@ -1,6 +1,6 @@
 defmodule Bonfire.UI.Social.MessageThreadsLive do
   use Bonfire.UI.Common.Web, :stateless_component
-  alias Bonfire.Social.Messages.LiveHandler
+  alias Bonfire.Messages.LiveHandler
 
   prop threads, :any, default: nil
   prop thread_id, :string, default: nil

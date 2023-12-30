@@ -23,7 +23,10 @@ defmodule Bonfire.UI.Social.FollowButtonLive do
   slot if_followed
 
   def update_many(assigns_sockets),
-    do: Bonfire.Social.Follows.LiveHandler.update_many(assigns_sockets, caller_module: __MODULE__)
+    do:
+      Bonfire.Social.Graph.Follows.LiveHandler.update_many(assigns_sockets,
+        caller_module: __MODULE__
+      )
 
   def handle_event(
         action,

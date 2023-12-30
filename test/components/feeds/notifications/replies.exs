@@ -5,8 +5,8 @@ defmodule Bonfire.UI.Social.Feeds.Notifications.ReplyTest do
   alias Bonfire.Me.Users
   alias Bonfire.Social.Boosts
   alias Bonfire.Social.Likes
-  alias Bonfire.Social.Follows
-  alias Bonfire.Social.Posts
+  alias Bonfire.Social.Graph.Follows
+  alias Bonfire.Posts
 
   # When an activity is a reply to another one, in the feed I want to see both activities: the original activity and the reply with enough information to understand the context
   test "As a user, when someone replies to my activity, I want to see it in notifications, include the author' name of the reply" do

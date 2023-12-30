@@ -11,7 +11,7 @@
       data-cid={@id}
       data-id="follow"
       id={"#{@id}-btn"}
-      :on-click={if !@disabled, do: "Bonfire.Social.Follows:follow"}
+      :on-click={if !@disabled, do: "Bonfire.Social.Graph.Follows:follow"}
       href={if !current_user_id(@__context__), do: "#{@path}/follow"}
       rel="noopener noreferrer"
       phx-disable-with={l("loading...")}
@@ -34,7 +34,7 @@
         x-on:mouseover.away={"text = '#{l("Requested")}'"}
         data-cid={@id}
         data-id="unfollow"
-        :on-click={if !@disabled, do: "Bonfire.Social.Follows:unfollow"}
+        :on-click={if !@disabled, do: "Bonfire.Social.Graph.Follows:unfollow"}
         phx-value-id={@object_id}
         :class={"{ '!btn-error': text == '#{l("Cancel")}' }"}
         class={
@@ -57,7 +57,7 @@
         id={"#{@id}-btn"}
         data-cid={@id}
         data-id="unfollow"
-        :on-click={if !@disabled, do: "Bonfire.Social.Follows:unfollow"}
+        :on-click={if !@disabled, do: "Bonfire.Social.Graph.Follows:unfollow"}
         phx-value-id={@object_id}
         :class={"text == '#{@verb_undo || l("Unfollow")}' ? '!btn-error' : ''"}
         class={

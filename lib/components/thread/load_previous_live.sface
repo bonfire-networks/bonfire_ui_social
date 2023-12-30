@@ -3,7 +3,7 @@
   class="flex justify-center w-full p-3 mx-auto place-items-center"
 >
   <a
-    phx-click="Bonfire.Social.Posts:load_more"
+    phx-click="Bonfire.Posts:load_more"
     phx-value-before={e(@page_info, :start_cursor, nil)}
     class="relative inline-flex items-center px-4 py-2 text-sm font-medium text-primary-content-700 bg-base-100 border border-gray-300 rounded-md hover:bg-neutral hover:bg-opacity-30"
   >{l("Load previous comments")}</a>

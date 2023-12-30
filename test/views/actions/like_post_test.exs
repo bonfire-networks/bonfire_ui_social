@@ -1,9 +1,9 @@
 defmodule Bonfire.Social.Activities.LikePost.Test do
   use Bonfire.UI.Social.ConnCase, async: true
   alias Bonfire.Social.Fake
-  alias Bonfire.Social.Posts
+  alias Bonfire.Posts
   alias Bonfire.Social.Likes
-  alias Bonfire.Social.Follows
+  alias Bonfire.Social.Graph.Follows
   import Bonfire.Common.Enums
 
   test "like a post" do

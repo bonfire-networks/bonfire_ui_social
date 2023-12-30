@@ -5,8 +5,8 @@ defmodule Bonfire.UI.Social.Feeds.FeedActivityTest do
   alias Bonfire.Me.Users
   alias Bonfire.Social.Boosts
   alias Bonfire.Social.Likes
-  alias Bonfire.Social.Follows
-  alias Bonfire.Social.Posts
+  alias Bonfire.Social.Graph.Follows
+  alias Bonfire.Posts
 
   import Bonfire.Common.Enums
 

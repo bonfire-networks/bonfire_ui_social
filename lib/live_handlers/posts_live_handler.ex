@@ -1,19 +1,19 @@
-defmodule Bonfire.Social.Posts.LiveHandler do
+defmodule Bonfire.Posts.LiveHandler do
   use Bonfire.UI.Common.Web, :live_handler
   import Untangle
   use Bonfire.Common.Utils
-  alias Bonfire.Social.Posts
+  alias Bonfire.Posts
   alias Bonfire.Social.PostContents
   # alias Bonfire.Data.Social.PostContent
   # alias Bonfire.Data.Social.Post
   # alias Ecto.Changeset
 
   def handle_event("post", %{"create_object_type" => "message"} = params, socket) do
-    Bonfire.Social.Messages.LiveHandler.send_message(params, socket)
+    Bonfire.Messages.LiveHandler.send_message(params, socket)
   end
 
   def handle_event("post", %{"post" => %{"create_object_type" => "message"}} = params, socket) do
-    Bonfire.Social.Messages.LiveHandler.send_message(params, socket)
+    Bonfire.Messages.LiveHandler.send_message(params, socket)
   end
 
   # if not a message, it's a post by default
@@ -31,7 +31,7 @@ defmodule Bonfire.Social.Posts.LiveHandler do
            [
              current_user: current_user,
              post_attrs:
-               Bonfire.Social.Posts.prepare_post_attrs(attrs)
+               Bonfire.Posts.prepare_post_attrs(attrs)
                |> Map.put(:uploaded_media, uploaded_media),
              boundary: e(params, "to_boundaries", "mentions"),
              to_circles: e(params, "to_circles", []),
@@ -39,7 +39,7 @@ defmodule Bonfire.Social.Posts.LiveHandler do
              return_epic_on_error: true
            ]
            |> debug("publish opts"),
-         {:ok, published} <- Bonfire.Social.Posts.publish(opts) do
+         {:ok, published} <- Bonfire.Posts.publish(opts) do
       debug(published, "published!")
 
       activity = e(published, :activity, nil)
@@ -100,7 +100,7 @@ defmodule Bonfire.Social.Posts.LiveHandler do
   def handle_event("edit", %{"id" => id} = attrs, socket) do
     current_user = current_user_required!(socket)
 
-    with {:ok, updated} <- PostContents.edit(current_user, id, attrs) do
+    with {:ok, updated} <- Bonfire.Social.PostContents.edit(current_user, id, attrs) do
       # TODO: update activity assigns with edits
       Bonfire.UI.Common.OpenModalLive.close()
 

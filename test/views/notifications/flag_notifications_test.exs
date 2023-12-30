@@ -3,7 +3,7 @@ defmodule Bonfire.Social.Notifications.Flag.Test do
   alias Bonfire.Me.Users
   alias Bonfire.Social.Fake
   alias Bonfire.Social.Flags
-  alias Bonfire.Social.Posts
+  alias Bonfire.Posts
 
   describe "show" do
     test "flags on a post (which admin has permission to see) in admin's notifications" do

@@ -1,8 +1,8 @@
-defmodule Bonfire.Social.Follows.Test do
+defmodule Bonfire.Social.Graph.Follows.Test do
   use Bonfire.UI.Social.ConnCase, async: true
   alias Bonfire.Social.Fake
-  alias Bonfire.Social.Posts
-  alias Bonfire.Social.Follows
+  alias Bonfire.Posts
+  alias Bonfire.Social.Graph.Follows
 
   describe "follow" do
     test "when I click follow on someone's profile" do

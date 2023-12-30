@@ -3,8 +3,8 @@ defmodule Bonfire.Social.Feeds.LoadMoreTest do
   alias Bonfire.Social.Fake
   alias Bonfire.Social.Boosts
   alias Bonfire.Social.Likes
-  alias Bonfire.Social.Follows
-  alias Bonfire.Social.Posts
+  alias Bonfire.Social.Graph.Follows
+  alias Bonfire.Posts
   use Mneme
   import Untangle
 

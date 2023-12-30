@@ -88,7 +88,7 @@ defmodule Bonfire.Social.Objects.LiveHandler do
 
     # debug(object, "the object")
     # debug(activity, "the activity")
-    # following = if current_user && module_enabled?(Bonfire.Social.Follows, user) && Bonfire.Social.Follows.following?(current_user, object), do: [object.id]
+    # following = if current_user && module_enabled?(Bonfire.Social.Graph.Follows, user) && Bonfire.Social.Graph.Follows.following?(current_user, object), do: [object.id]
 
     # |> debug("object author")
     author =
@@ -224,7 +224,7 @@ defmodule Bonfire.Social.Objects.LiveHandler do
     # debug(params, "PARAMS")
     # debug(url, "post url")
     with {:ok, object} <-
-           Bonfire.Social.Posts.read(ulid!(id),
+           Bonfire.Posts.read(ulid!(id),
              current_user: current_user,
              preload: default_preloads()
            ) do

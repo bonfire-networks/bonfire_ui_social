@@ -3,7 +3,7 @@
   title_text={l("Version history")}
   modal_class="modal_wide"
   form_opts={if !@read_only,
-    do: %{"phx-submit" => "Bonfire.Social.Posts:edit", "phx-target": "##{@activity_component_id}"},
+    do: %{"phx-submit" => "Bonfire.Posts:edit", "phx-target": "##{@activity_component_id}"},
     else: %{}}
   :let={autocomplete: _autocomplete}
 >

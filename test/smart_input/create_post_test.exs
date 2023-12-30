@@ -4,8 +4,8 @@ defmodule Bonfire.Social.Activities.CreatePost.Test do
   import Bonfire.Files.Simulation
 
   alias Bonfire.Social.Fake
-  alias Bonfire.Social.Posts
-  alias Bonfire.Social.Follows
+  alias Bonfire.Posts
+  alias Bonfire.Social.Graph.Follows
   alias Bonfire.Files.Test
 
   test "create a post with uploads" do

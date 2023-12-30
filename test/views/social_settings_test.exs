@@ -4,10 +4,10 @@ defmodule Bonfire.UI.Social.SettingsTest do
   import Phoenix.LiveViewTest
   import Bonfire.Files.Simulation
 
-  alias Bonfire.Social.Posts
+  alias Bonfire.Posts
   alias Bonfire.Social.Boosts
   alias Bonfire.Social.Likes
-  alias Bonfire.Social.Follows
+  alias Bonfire.Social.Graph.Follows
   alias Bonfire.Common.Config
 
   setup_all do
