@@ -111,7 +111,7 @@ defmodule Bonfire.UI.Social.ThreadLive do
     # Note: doing this here temporarily while not using pushed comment for nested threads
     permitted? =
       object_id &&
-        Bonfire.Common.Needle.exists?([id: object_id],
+        Bonfire.Common.Needles.exists?([id: object_id],
           current_user: current_user(socket.assigns)
         )
         |> debug("double check boundary upon receiving a LivePush")

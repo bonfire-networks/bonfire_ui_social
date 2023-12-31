@@ -156,7 +156,7 @@ defmodule Bonfire.Social.Threads.LiveHandler do
     debug("received :new_reply")
 
     # id = e(data, :object, :id, nil) || e(data, :id, nil)
-    # permitted? = id && Bonfire.Common.Needle.exists?([id: id], current_user: current_user(socket.assigns)) |> debug("double check boundary upon receiving a LivePush")
+    # permitted? = id && Bonfire.Common.Needles.exists?([id: id], current_user: current_user(socket.assigns)) |> debug("double check boundary upon receiving a LivePush")
 
     # if permitted?, do: # Note: now checking permission in ThreadLive
     if socket_connected?(socket) != false,
