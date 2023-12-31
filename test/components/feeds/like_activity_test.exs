@@ -141,7 +141,7 @@ defmodule Bonfire.UI.Social.Feeds.LikeActivityTest do
     assert {:ok, like} = Likes.like(bob, post)
 
     conn = conn(user: bob, account: account)
-    next = "/feed/likes"
+    next = "/likes"
 
     {:ok, view, _html} = live(conn, next)
     assert has_element?(view, "a[data-id=subject_name]", alice.profile.name)

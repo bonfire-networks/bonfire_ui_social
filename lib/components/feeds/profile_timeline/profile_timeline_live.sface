@@ -17,7 +17,8 @@
         do: Config.get([:ui, :profile, :navigation], nil: l("Timeline")),
         else: Config.get([:ui, :group, :profile, :navigation], nil: l("Timeline"))}
     />
-    <Bonfire.UI.Social.FeedLive
+    <StatefulComponent
+      module={maybe_component(Bonfire.UI.Social.FeedLive, @__context__)}
       id={@feed_component_id || "user_#{@selected_tab}_#{id(@user)}"}
       feed_id={"user_#{@selected_tab}_#{id(@user)}"}
       feed_ids={@feed_ids}
@@ -43,7 +44,7 @@
           {markdown(l("Please visit the **remote profile** if you don't want to miss any older activities."))}
         </a>
       </:bottom_or_empty_feed>
-    </Bonfire.UI.Social.FeedLive>
+    </StatefulComponent>
     {!-- <div class="hidden lg:flex">
       <#slot {@widget} />
     </div> --}

@@ -7,7 +7,8 @@
       else: Config.get([:ui, :explore, :navigation], hashtags: l("Hashtags"))}
   />
 
-  <Bonfire.UI.Social.FeedLive
+  <StatefulComponent
+    module={maybe_component(Bonfire.UI.Social.FeedLive, @__context__)}
     id={ComponentID.new(Bonfire.UI.Social.FeedLive, @feed_id || :local, __MODULE__)}
     feed_id={@feed_id}
     page_title={@page_title}

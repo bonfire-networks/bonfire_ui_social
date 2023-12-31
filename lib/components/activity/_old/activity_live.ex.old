@@ -210,13 +210,13 @@ defmodule Bonfire.UI.Social.ActivityOLDLive do
       do: {Bonfire.UI.Social.Activity.SubjectLive, %{profile: profile, character: character}}
 
   def component_activity_maybe_creator(%{provider: %{id: _}}),
-    do: Bonfire.UI.Social.Activity.ProviderReceiverLive
+    do: Bonfire.UI.ValueFlows.Preview.ProviderReceiverLive
 
   def component_activity_maybe_creator(%{primary_accountable: %{id: _} = primary_accountable}),
-    do: {Bonfire.UI.Social.Activity.ProviderReceiverLive, %{provider: primary_accountable}}
+    do: {Bonfire.UI.ValueFlows.Preview.ProviderReceiverLive, %{provider: primary_accountable}}
 
   def component_activity_maybe_creator(%{receiver: %{id: _}}),
-    do: Bonfire.UI.Social.Activity.ProviderReceiverLive
+    do: Bonfire.UI.ValueFlows.Preview.ProviderReceiverLive
 
   def component_activity_maybe_creator(%{object: %{id: _} = object}),
     do: component_activity_maybe_creator(object)
@@ -385,8 +385,8 @@ defmodule Bonfire.UI.Social.ActivityOLDLive do
   def component_object(_, %{object: %{post_content: %Bonfire.Data.Social.PostContent{}}}, _),
     do: [Bonfire.UI.Social.Activity.NoteLive]
 
-  # def component_object(_, %{object: %{profile: _}}), do: [Bonfire.UI.Social.Activity.CharacterLive]
-  # def component_object(_, %{object: %{character: _}}), do: [Bonfire.UI.Social.Activity.CharacterLive]
+  # def component_object(_, %{object: %{profile: _}}), do: [Bonfire.UI.Me.Preview.CharacterLive]
+  # def component_object(_, %{object: %{character: _}}), do: [Bonfire.UI.Me.Preview.CharacterLive]
 
   def component_object(_, %{object: %{} = object}, object_type) do
     case object_type do
@@ -415,30 +415,30 @@ defmodule Bonfire.UI.Social.ActivityOLDLive do
     do: [Bonfire.UI.Social.Activity.NoteLive]
 
   def component_for_object_type(type, object) when type in [Bonfire.Data.Identity.User],
-    do: [{Bonfire.UI.Social.Activity.CharacterLive, %{
+    do: [{Bonfire.UI.Me.Preview.CharacterLive, %{
         object: repo().maybe_preload(object, [:character, profile: :icon])
       }}]
 
   def component_for_object_type(type, object) when type in [Bonfire.Classify.Category],
-    do: [Bonfire.UI.Social.Activity.CategoryLive]
+    do: [Bonfire.Classify.Web.Preview.CategoryLive]
 
   def component_for_object_type(type, object) when type in [ValueFlows.EconomicEvent],
-    do: [Bonfire.UI.Social.Activity.EconomicEventLive.activity_component(object)]
+    do: [Bonfire.UI.ValueFlows.Preview.EconomicEventLive.activity_component(object)]
 
   def component_for_object_type(type, object) when type in [ValueFlows.EconomicResource],
-    do: [Bonfire.UI.Social.Activity.EconomicResourceLive]
+    do: [Bonfire.UI.ValueFlows.Preview.EconomicResourceLive]
 
   # TODO: choose between Task and other Intent types
   def component_for_object_type(type, object) when type in [ValueFlows.Planning.Intent],
-    do: [Bonfire.UI.Social.Activity.IntentTaskLive]
+    do: [Bonfire.UI.ValueFlows.Preview.IntentTaskLive]
 
-  # def component_for_object_type(type, object) when type in [ValueFlows.Process], do: [Bonfire.UI.Social.Activity.ProcessListLive.activity_component(object)] # TODO: choose between Task and other Intent types
+  # def component_for_object_type(type, object) when type in [ValueFlows.Process], do: [Bonfire.UI.ValueFlows.Preview.ProcessListLive.activity_component(object)] # TODO: choose between Task and other Intent types
   def component_for_object_type(type, object) when type in [ValueFlows.Process],
     do: [
       {Config.get(
          [:ui, :default_instance_feed_previews, :process],
-         Bonfire.UI.Social.Activity.ProcessListLive
-       ), object: Bonfire.UI.Social.Activity.ProcessListLive.prepare(object)}
+         Bonfire.UI.ValueFlows.Preview.ProcessListLive
+       ), object: Bonfire.UI.ValueFlows.Preview.ProcessListLive.prepare(object)}
     ]
 
   def component_for_object_type(type, _object) do
@@ -459,7 +459,7 @@ defmodule Bonfire.UI.Social.ActivityOLDLive do
   def component_actions(_, _, %{activity_inception: activity_inception}) when not is_nil(activity_inception), do: [] # don't show any
 
   # WIP: THIS NEEDS TO BE REFACTORED ACCORDING TO actions_for_object_type
-  def component_actions("flag", _, _), do: [Bonfire.UI.Social.FlaggedActionsLive]
+  def component_actions("flag", _, _), do: [Bonfire.UI.Moderation.FlaggedActionsLive]
 
   # def component_actions(_, activity, %{viewing_main_object: true}) do
   #   [Bonfire.UI.Social.Activity.MainObjectInfoLive] ++ component_actions(nil, activity, nil)
@@ -518,11 +518,11 @@ defmodule Bonfire.UI.Social.ActivityOLDLive do
   def component_show_standard_actions(_activity), do: [Bonfire.UI.Social.Activity.ActionsLive]
 
   def component_show_process_actions(_activity),
-    do: [Bonfire.UI.Social.Activity.ProcessActionsLive]
+    do: [Bonfire.UI.ValueFlows.Preview.ProcessActionsLive]
 
   def component_show_event_actions(activity) do
     [
-      {Bonfire.UI.Social.Activity.EventActionsLive,
+      {Bonfire.UI.ValueFlows.Preview.EventActionsLive,
        %{object: e(activity, :object, :resource_inventoried_as, nil) || e(activity, :object, nil)}}
     ]
   end

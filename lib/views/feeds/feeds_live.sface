@@ -1,4 +1,5 @@
-<FeedLive
+<StatefulComponent
+  module={maybe_component(Bonfire.UI.Social.FeedLive, @__context__)}
   :if={@feed_component_id}
   id={@feed_component_id}
   feed_id={@feed_id}

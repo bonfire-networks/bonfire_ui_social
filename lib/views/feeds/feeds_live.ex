@@ -14,9 +14,9 @@ defmodule Bonfire.UI.Social.FeedsLive do
       # Bonfire.UI.Social.ExploreLive,
       # Bonfire.UI.Social.Feeds.LocalLive,
       # Bonfire.UI.Social.Feeds.FederationLive,
-      Bonfire.UI.Social.Feeds.BookmarksLive,
+      Bonfire.UI.Reactions.BookmarksLive,
       # Bonfire.UI.Social.Feeds.LikesLive,
-      Bonfire.UI.Social.MessagesLive,
+      Bonfire.UI.Messages.MessagesLive,
       Bonfire.UI.Social.NotificationsFeedLive,
       # Bonfire.UI.Me.ProfileLive,
       Bonfire.UI.Groups.SidebarGroupsLive

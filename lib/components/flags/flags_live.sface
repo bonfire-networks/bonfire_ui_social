@@ -1,8 +1,0 @@
-<div id="flags_list">
-  {!-- <Bonfire.UI.Common.PageTitleLive page_title={@page_title} /> --}
-  {!-- 
-      TODO: support LivePush:
-      ComponentID.new(Bonfire.UI.Social.FeedLive, @feed_ids || @feed_id, __MODULE__) --}
-
-  <Bonfire.UI.Social.FeedLive id={:flags} feed_name={:flags} showing_within={:flags} hide_tabs />
-</div>

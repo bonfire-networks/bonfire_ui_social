@@ -29,7 +29,8 @@
     }
   >
     {#if @verb == "Flag"}
-      <Bonfire.UI.Social.FlaggedActionsLive
+      <StatelessComponent
+        module={maybe_component(Bonfire.UI.Moderation.FlaggedActionsLive, @__context__)}
         object={@object}
         activity={@activity}
         object_type={@object_type}
@@ -71,7 +72,7 @@
 
           <StatelessComponent
             :if={@showing_within != :messages}
-            module={maybe_component(Bonfire.UI.Social.BoostActionLive, @__context__)}
+            module={maybe_component(Bonfire.UI.Reactions.BoostActionLive, @__context__)}
             id={"#{@id}_boost"}
             myself={@myself}
             object_id={id(@object)}
@@ -88,7 +89,7 @@
           />
 
           <StatelessComponent
-            module={maybe_component(Bonfire.UI.Social.LikeActionLive, @__context__)}
+            module={maybe_component(Bonfire.UI.Reactions.LikeActionLive, @__context__)}
             id={"#{@id}_like"}
             event_target={@myself}
             myself={@myself}
@@ -104,7 +105,7 @@
           />
 
           <StatelessComponent
-            module={maybe_component(Bonfire.UI.Social.BookmarkActionLive, @__context__)}
+            module={maybe_component(Bonfire.UI.Reactions.BookmarkActionLive, @__context__)}
             id={"#{@id}_bookmark"}
             event_target={@myself}
             myself={@myself}
@@ -142,7 +143,8 @@
           <div class="skeleton w-6 h-6 ml-1 rounded-full shrink-0" />
         {/if}
       {#else}
-        <Bonfire.UI.Social.Activity.ReplyLive
+        <StatefulComponent
+          module={maybe_component(Bonfire.UI.Social.Activity.ReplyLive, @__context__)}
           object_id={id(@object)}
           object_type={@object_type}
           object_boundary={@object_boundary}
@@ -160,10 +162,11 @@
           class="flex btn btn-sm btn-ghost btn-circle text-base-content/70"
         />
 
-        <Bonfire.UI.Social.BoostActionLive
+        <StatefulComponent
+          module={maybe_component(Bonfire.UI.Reactions.BoostActionLive, @__context__)}
           :if={@showing_within != :messages}
           id={ComponentID.new(
-            Bonfire.UI.Social.BoostActionLive,
+            Bonfire.UI.Reactions.BoostActionLive,
             id(@object),
             @activity_component_id || id(@activity)
           )}
@@ -179,9 +182,10 @@
           )}
         />
 
-        <Bonfire.UI.Social.LikeActionLive
+        <StatefulComponent
+          module={maybe_component(Bonfire.UI.Reactions.LikeActionLive, @__context__)}
           id={ComponentID.new(
-            Bonfire.UI.Social.LikeActionLive,
+            Bonfire.UI.Reactions.LikeActionLive,
             id(@object),
             @activity_component_id || id(@activity)
           )}
@@ -195,10 +199,11 @@
           )}
         />
 
-        <Bonfire.UI.Social.BookmarkActionLive
+        <StatefulComponent
+          module={maybe_component(Bonfire.UI.Reactions.BookmarkActionLive, @__context__)}
           :if={not is_nil(current_user_id(@__context__))}
           id={ComponentID.new(
-            Bonfire.UI.Social.BookmarkActionLive,
+            Bonfire.UI.Reactions.BookmarkActionLive,
             id(@object),
             @activity_component_id || id(@activity)
           )}

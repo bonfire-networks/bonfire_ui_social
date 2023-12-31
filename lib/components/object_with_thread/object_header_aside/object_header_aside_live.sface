@@ -1,6 +1,7 @@
 <div class="flex items-center gap-4">
-  {!-- <Bonfire.UI.Social.LikeActionLive
-    id={ComponentID.new(Bonfire.UI.Social.LikeActionLive, id(@activity), __MODULE__)}
+  {!-- <StatefulComponent
+          module={maybe_component(Bonfire.UI.Reactions.LikeActionLive, @__context__)}
+    id={ComponentID.new(Bonfire.UI.Reactions.LikeActionLive, id(@activity), __MODULE__)}
     object={@activity}
   />
   <Bonfire.UI.Social.Activity.InstanceIconLive peered={e(@activity, :peered, nil)} />

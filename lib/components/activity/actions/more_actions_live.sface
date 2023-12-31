@@ -19,7 +19,8 @@
   >
     <li :if={@object_type not in [Bonfire.Data.Social.Message]}><div class="px-4 py-2 w-full">
         {#if LiveHandler.feed_live_update_many_preloads?() == :async_actions}
-          <Bonfire.Boundaries.Web.BoundaryIconStatelessLive
+          <StatelessComponent
+            module={maybe_component(Bonfire.Boundaries.Web.BoundaryIconStatelessLive, @__context__)}
             object_id={id(@object)}
             object_boundary={@object_boundary}
             object_type={Types.object_type(@published_in) || @object_type}
@@ -122,13 +123,15 @@
           :if={current_user_id(@__context__) == @creator_id && @object_type not in [Bonfire.Data.Social.Message]}
           class="hover:bg-neutral hover:bg-opacity-20"
         >
-          <Bonfire.UI.Social.PinActionLive
+          <StatelessComponent
+            module={maybe_component(Bonfire.UI.Reactions.PinActionLive, @__context__)}
             object={@object}
             class="flex items-center px-4 text-sm text-neutral-content/80"
           />
         </li>
         <li :if={Bonfire.Boundaries.can?(@__context__, :pin, :instance)}>
-          <Bonfire.UI.Social.PinActionLive
+          <StatelessComponent
+            module={maybe_component(Bonfire.UI.Reactions.PinActionLive, @__context__)}
             object={@object}
             class="flex items-center px-4 text-sm text-neutral-content/80"
             scope={:instance}
@@ -186,7 +189,8 @@
         <ul>
           {!-- Flag the object --}
           <li data-role="flag_object">
-            <Bonfire.UI.Social.FlagActionLive
+            <StatelessComponent
+              module={maybe_component(Bonfire.UI.Moderation.FlagActionLive, @__context__)}
               object={@object}
               flagged={@flagged}
               parent_id={"object-#{id(@activity_component_id || @activity)}"}
@@ -200,7 +204,8 @@
             data-role="flag_author"
             :if={not is_nil(@creator_id) and not is_nil(current_user_id(@__context__))}
           >
-            <Bonfire.UI.Social.FlagActionLive
+            <StatelessComponent
+              module={maybe_component(Bonfire.UI.Moderation.FlagActionLive, @__context__)}
               object={@creator_id}
               flagged={@flagged}
               parent_id={"user-#{id(@activity_component_id || @activity)}"}
@@ -233,7 +238,8 @@
           </summary>
           <ul>
             <li :if={id(@object)}>
-              <Bonfire.UI.Social.Activity.DeleteObjectLive
+              <StatelessComponent
+                module={maybe_component(Bonfire.UI.Social.Activity.DeleteObjectLive, @__context__)}
                 skip_permission_check
                 object={@object}
                 creator_id={@creator_id}
@@ -245,7 +251,8 @@
 
             {!-- Delete the activity --}
             <li :if={id(@activity)}>
-              <Bonfire.UI.Social.Activity.DeleteObjectLive
+              <StatelessComponent
+                module={maybe_component(Bonfire.UI.Social.Activity.DeleteObjectLive, @__context__)}
                 skip_permission_check
                 action="Bonfire.Social.Feeds:delete"
                 object={@activity}
@@ -266,7 +273,8 @@
       {!-- Delete the object --}
     {#elseif @object_boundary && @object_type in [Bonfire.Data.Social.Message] && id(@activity)}
       <li>
-        <Bonfire.UI.Social.Activity.DeleteObjectLive
+        <StatelessComponent
+          module={maybe_component(Bonfire.UI.Social.Activity.DeleteObjectLive, @__context__)}
           object={@object}
           creator_id={@creator_id}
           object_type_readable={@object_type_readable}

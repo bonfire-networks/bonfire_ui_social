@@ -18,44 +18,23 @@ defmodule Bonfire.UI.Social.RuntimeConfig do
         sections: [
           hashtags: Bonfire.UI.Social.FeedsLive,
           users: Bonfire.UI.Social.FeedsLive,
-          posts: Bonfire.UI.Social.FeedsLive,
           groups: Bonfire.UI.Social.FeedsLive
         ],
         navigation: [
           hashtags: l("Hashtags"),
           users: l("Users"),
-          posts: l("Posts"),
           groups: l("Groups")
         ]
       ],
       profile: [
         # TODO: make dynamic based on active extensions
         sections: [
-          nil: Bonfire.UI.Social.ProfileTimelineLive,
-          # private: Bonfire.UI.Social.MessageThreadsLive,
-          posts: Bonfire.UI.Social.ProfilePostsLive,
-          boosts: Bonfire.UI.Social.ProfileBoostsLive,
-          highlights: Bonfire.UI.Social.ProfilePinsLive,
-          followers: Bonfire.UI.Social.ProfileFollowsLive,
-          followed: Bonfire.UI.Social.ProfileFollowsLive,
-          requested: Bonfire.UI.Social.ProfileFollowsLive,
-          requests: Bonfire.UI.Social.ProfileFollowsLive
+          nil: Bonfire.UI.Social.ProfileTimelineLive
+          # private: Bonfire.UI.Messages.MessageThreadsLive,
         ],
         navigation: [
           # highlights: l("Highlights"),
-          nil: l("Timeline"),
-          posts: l("Posts"),
-          boosts: l("Boosts")
-        ],
-        network: [
-          followers: l("Followers"),
-          followed: l("Followed")
-        ],
-        my_network: [
-          followers: l("Followers"),
-          # requests: "Follower requests",
-          followed: l("Followed")
-          # requested: "Pending"
+          nil: l("Timeline")
         ],
         widgets: []
       ]

@@ -1,8 +1,0 @@
-<Bonfire.UI.Common.SmartInputButtonLive
-  class="gap-2 normal-case rounded-full btn-outline !border !border-primary/30 btn btn-sm btn-primary"
-  showing_within={:messages}
-  create_object_type={:message}
-  as_icon
-  icon="tabler:mail-plus"
-  prompt={l("New message")}
-/>

@@ -1395,12 +1395,13 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
     # TODO: collect these from the code on startup
     [
       # {Bonfire.Data.Social.Post, Bonfire.UI.Social.Activity.NoteLive.preloads()}, # only needed if we no longer preload PostContent by default
-      {Bonfire.Data.Identity.User, Bonfire.UI.Social.Activity.CharacterLive.preloads()},
-      {Bonfire.Classify.Category, Bonfire.UI.Social.Activity.CategoryLive.preloads()},
-      {ValueFlows.EconomicEvent, Bonfire.UI.Social.Activity.EconomicEventLive.preloads()},
-      {ValueFlows.EconomicResource, Bonfire.UI.Social.Activity.EconomicResourceLive.preloads()},
-      {ValueFlows.Planning.Intent, Bonfire.UI.Social.Activity.IntentTaskLive.preloads()},
-      {ValueFlows.Process, Bonfire.UI.Social.Activity.ProcessListLive.preloads()}
+      {Bonfire.Data.Identity.User, Bonfire.UI.Me.Preview.CharacterLive.preloads()},
+      {Bonfire.Classify.Category, Bonfire.Classify.Web.Preview.CategoryLive.preloads()},
+      {ValueFlows.EconomicEvent, Bonfire.UI.ValueFlows.Preview.EconomicEventLive.preloads()},
+      {ValueFlows.EconomicResource,
+       Bonfire.UI.ValueFlows.Preview.EconomicResourceLive.preloads()},
+      {ValueFlows.Planning.Intent, Bonfire.UI.ValueFlows.Preview.IntentTaskLive.preloads()},
+      {ValueFlows.Process, Bonfire.UI.ValueFlows.Preview.ProcessListLive.preloads()}
     ]
     |> debug("preload object data in feed")
   end

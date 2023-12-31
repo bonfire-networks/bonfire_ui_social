@@ -1,4 +1,5 @@
-<Bonfire.UI.Social.ObjectThreadLive
+<StatelessComponent
+  module={maybe_component(Bonfire.UI.Social.ObjectThreadLive)}
   thread_title={@thread_title}
   thread_mode={@thread_mode}
   activity={@activity}

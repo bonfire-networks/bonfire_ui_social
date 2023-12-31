@@ -668,7 +668,11 @@ defmodule Bonfire.UI.Social.ActivityLive do
                 media={List.wrap(e(component_assigns, :media, []))}
                 cw={@cw}
               />
-            {#match _ when component in [Bonfire.UI.Social.Activity.ActionsLive, Bonfire.UI.Social.FlaggedActionsLive]}
+            {#match _
+              when component in [
+                     Bonfire.UI.Social.Activity.ActionsLive,
+                     Bonfire.UI.Moderation.FlaggedActionsLive
+                   ]}
               {#if @hide_activity != "actions" and @hide_actions != true}
                 {#if LiveHandler.feed_live_update_many_preloads?() == :async_actions}
                   <StatefulComponent
@@ -999,13 +1003,13 @@ defmodule Bonfire.UI.Social.ActivityLive do
       do: [{Bonfire.UI.Social.Activity.SubjectLive, %{profile: profile, character: character}}]
 
   # def component_maybe_creator(%{provider: %{id: _} = provider} = object),
-  #   do: [{Bonfire.UI.Social.Activity.ProviderReceiverLive, %{object: object}}]
+  #   do: [{Bonfire.UI.ValueFlows.Preview.ProviderReceiverLive, %{object: object}}]
 
   # def component_maybe_creator(%{primary_accountable: %{id: _} = primary_accountable} = object),
-  #   do: [{Bonfire.UI.Social.Activity.ProviderReceiverLive, %{object: object}}]
+  #   do: [{Bonfire.UI.ValueFlows.Preview.ProviderReceiverLive, %{object: object}}]
 
   # def component_maybe_creator(%{receiver: %{id: _} = receiver} = object),
-  #   do: [{Bonfire.UI.Social.Activity.ProviderReceiverLive, %{object: object}}]
+  #   do: [{Bonfire.UI.ValueFlows.Preview.ProviderReceiverLive, %{object: object}}]
 
   #  if subject is also the creator use that
   def component_maybe_creator(
@@ -1422,14 +1426,14 @@ defmodule Bonfire.UI.Social.ActivityLive do
 
   def component_object(_, _, %{profile: %{id: _}}, object_type)
       when object_type not in [:group, :topic],
-      do: [Bonfire.UI.Social.Activity.CharacterLive]
+      do: [Bonfire.UI.Me.Preview.CharacterLive]
 
   def component_object(_, _, %{character: %{id: _}}, object_type)
       when object_type not in [:group, :topic],
-      do: [Bonfire.UI.Social.Activity.CharacterLive]
+      do: [Bonfire.UI.Me.Preview.CharacterLive]
 
   def component_object(_, _, _, Bonfire.Data.Identity.User),
-    do: [Bonfire.UI.Social.Activity.CharacterLive]
+    do: [Bonfire.UI.Me.Preview.CharacterLive]
 
   def component_object(_, _, %{} = object, object_type) do
     case object_type || Types.object_type(object) do
@@ -1504,38 +1508,38 @@ defmodule Bonfire.UI.Social.ActivityLive do
     do: [Bonfire.UI.Social.Activity.NoteLive]
 
   def component_for_object_type(type, _) when type in [Bonfire.Data.Identity.User],
-    do: [Bonfire.UI.Social.Activity.CharacterLive]
+    do: [Bonfire.UI.Me.Preview.CharacterLive]
 
-  # do: [{Bonfire.UI.Social.Activity.CharacterLive, %{
+  # do: [{Bonfire.UI.Me.Preview.CharacterLive, %{
   #     object: repo().maybe_preload(object, [:character, profile: :icon])
   #   }}]
 
   def component_for_object_type(type, _) when type in [Bonfire.Data.Social.Follow],
-    do: [Bonfire.UI.Social.Activity.CharacterLive]
+    do: [Bonfire.UI.Me.Preview.CharacterLive]
 
   def component_for_object_type(type, _) when type in [:group],
-    do: [Bonfire.UI.Social.Activity.GroupLive]
+    do: [Bonfire.UI.Groups.Preview.GroupLive]
 
   def component_for_object_type(type, _) when type in [:topic, Bonfire.Classify.Category],
-    do: [Bonfire.UI.Social.Activity.CategoryLive]
+    do: [Bonfire.Classify.Web.Preview.CategoryLive]
 
   def component_for_object_type(type, object) when type in [ValueFlows.EconomicEvent],
-    do: [Bonfire.UI.Social.Activity.EconomicEventLive.activity_component(object)]
+    do: [Bonfire.UI.ValueFlows.Preview.EconomicEventLive.activity_component(object)]
 
   def component_for_object_type(type, _) when type in [ValueFlows.EconomicResource],
-    do: [Bonfire.UI.Social.Activity.EconomicResourceLive]
+    do: [Bonfire.UI.ValueFlows.Preview.EconomicResourceLive]
 
   # TODO: choose between Task and other Intent types
   def component_for_object_type(type, _) when type in [ValueFlows.Planning.Intent],
-    do: [Bonfire.UI.Social.Activity.IntentTaskLive]
+    do: [Bonfire.UI.ValueFlows.Preview.IntentTaskLive]
 
-  # def component_for_object_type(type, object) when type in [ValueFlows.Process], do: [Bonfire.UI.Social.Activity.ProcessListLive.activity_component(object)] # TODO: choose between Task and other Intent types
+  # def component_for_object_type(type, object) when type in [ValueFlows.Process], do: [Bonfire.UI.ValueFlows.Preview.ProcessListLive.activity_component(object)] # TODO: choose between Task and other Intent types
   def component_for_object_type(type, object) when type in [ValueFlows.Process],
     do: [
       {Bonfire.Common.Config.get(
          [:ui, :default_instance_feed_previews, :process],
-         Bonfire.UI.Social.Activity.ProcessListLive
-       ), object: Bonfire.UI.Social.Activity.ProcessListLive.prepare(object)}
+         Bonfire.UI.ValueFlows.Preview.ProcessListLive
+       ), object: Bonfire.UI.ValueFlows.Preview.ProcessListLive.prepare(object)}
     ]
 
   def component_for_object_type(type, _object) do
@@ -1651,14 +1655,14 @@ defmodule Bonfire.UI.Social.ActivityLive do
   def component_show_standard_actions(_activity), do: [Bonfire.UI.Social.Activity.ActionsLive]
 
   def component_show_category_actions(_activity),
-    do: [Bonfire.UI.Social.Activity.CategoryActionsLive]
+    do: [Bonfire.Classify.Web.CategoryActionsLive]
 
   def component_show_process_actions(_activity),
-    do: [Bonfire.UI.Social.Activity.ProcessActionsLive]
+    do: [Bonfire.UI.ValueFlows.Preview.ProcessActionsLive]
 
   def component_show_event_actions(activity) do
     [
-      {Bonfire.UI.Social.Activity.EventActionsLive,
+      {Bonfire.UI.ValueFlows.Preview.EventActionsLive,
        %{object: e(activity, :object, :resource_inventoried_as, nil) || e(activity, :object, nil)}}
     ]
   end

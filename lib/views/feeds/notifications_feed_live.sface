@@ -6,10 +6,13 @@
       <#Icon iconify="noto:bell" class="w-5 h-5" />
       <span>{l("Notifications")}</span>
     </div>
-    <Bonfire.UI.Social.HeaderAsideNotificationsSeenLive feed_id={:notifications} />
+    <StatelessComponent
+          module={maybe_component(Bonfire.UI.Social.HeaderAsideNotificationsSeenLive, @__context__)}
+          feed_id={:notifications} />
   </div> --}
 
-  <Bonfire.UI.Social.FeedLive
+  <StatefulComponent
+    module={maybe_component(Bonfire.UI.Social.FeedLive, @__context__)}
     id={ComponentID.new(Bonfire.UI.Social.FeedLive, e(@feed_id, :notifications), __MODULE__)}
     feed_id={@feed_id}
     page_title={@page_title}
