@@ -1,0 +1,49 @@
+{#case Media.media_url(@media)}
+  {#match media_url}
+    {#case e(@media.metadata, "oembed", "download_url", nil)}
+      {#match download_url}
+        <LinkLive
+          to={if !download_url, do: media_url}
+          class="flex w-full border rounded-t-lg media_container border-base-content/20 bg-white text-black font-serif"
+          target="_blank"
+        >
+          <div class="relative items-center overflow-hidden">
+            <div class="absolute flex right-1 top-1 shrink-0 gap-1">
+              <a :if={download_url} href={download_url} target="_blank">
+                <#Icon iconify="pajamas:import" class="w-5 h-5 text-gray-800" />
+              </a>
+
+              <LinkLive to={if download_url, do: media_url} target="_blank">
+                <#Icon iconify="heroicons-outline:external-link" class="w-5 h-5 text-gray-800" />
+              </LinkLive>
+            </div>
+
+            <div class="px-2">
+              <div class="mx-20 py-2 text-lg font-medium text-center font-medium">
+                {MediaLive.media_label(@media) ||
+                  if @media.media_type == "link", do: e(@media, :path, nil), else: l("View")}
+              </div>
+
+              <div class="text-sm text-center">
+                {#case e(@media, :metadata, "oembed", "published", "date-parts", nil)}
+                  {#match published when is_list(published)}
+                    <span class="mb-2">{e(@media, :metadata, "oembed", "short-container-title", nil) ||
+                        e(@media, :metadata, "oembed", "container-title", nil)} {published |> List.flatten() |> Enum.join("-")}</span>
+                  {#match _}
+                {/case}
+
+                {#for author <- List.wrap(e(@media, :metadata, "oembed", "author", []))}
+                  <p class="text-xs">{e(author, "given", nil)} {e(author, "family", nil)}, {e(author, "affiliation", "name", nil)}
+                  </p>
+                {/for}
+
+                <div class="mx-4 my-2 text-sm text-justify  break-words">
+                  {MediaLive.description(@media) |> Text.text_only()}
+                </div>
+                {!-- {e(@media, :metadata, "oembed", "subject", nil)} --}
+              </div>
+            </div>
+          </div>
+        </LinkLive>
+    {/case}
+{/case}

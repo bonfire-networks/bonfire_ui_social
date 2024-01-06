@@ -48,6 +48,7 @@ defmodule Bonfire.UI.Social.Activity.MediaLive do
             {image_list, multimedia_list, [m | link_list]}
         end
       end)
+      |> debug("3_media_lists")
 
     multimedia_count = Enum.count(multimedia_list)
     image_count = Enum.count(image_list)
@@ -131,7 +132,8 @@ defmodule Bonfire.UI.Social.Activity.MediaLive do
        e(media.metadata, "facebook", "og:description", nil) ||
        e(media.metadata, "twitter", "twitter:description", nil) ||
        e(media.metadata, "other", "description", nil) ||
-       e(json_ld, "headline", nil))
+       e(json_ld, "headline", nil) ||
+       e(media.metadata, "oembed", "abstract", nil))
     |> unwrap()
   end
 

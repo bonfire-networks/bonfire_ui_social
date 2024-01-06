@@ -6,13 +6,13 @@
           <#Icon iconify="ph:rss-simple-bold" class="w-5 h-5 text-base-content" />
           <span class="text-sm font-semibold">{l("My feed")}</span>
         </div>
-        <div class="prose mt-2 text-sm prose-sm">{l("All visible activities published by people you follow")}</div>
+        <div class="prose mt-2 text-sm prose-sm">{l("All visible activities by people you follow")}</div>
       {#match :local}
         <div class="flex items-center gap-2">
           <#Icon iconify="ph:campfire-bold" class="w-5 h-5 text-base-content" />
           <span class="text-sm font-semibold">{l("Local feed")}</span>
         </div>
-        <div class="prose mt-2 text-sm prose-sm">{l("All visible activities published by users of this instance")}
+        <div class="prose mt-2 text-sm prose-sm">{l("All visible activities by users of this instance")}
         </div>
       {#match :fediverse}
         <div class="flex items-center gap-2">
@@ -20,7 +20,7 @@
           <span class="text-sm font-semibold">{l("Remote")}</span>
         </div>
         <div class="prose mt-2 text-sm prose-sm">{l(
-            "All visible activities published by people from other fediverse instances (who have been followed or somehow interacted with by users of this instance)"
+            "All visible activities by people on other fediverse instances (who have been followed or somehow interacted with by users of this instance)"
           )}</div>
       {#match :explore}
         <div class="flex items-center gap-2">

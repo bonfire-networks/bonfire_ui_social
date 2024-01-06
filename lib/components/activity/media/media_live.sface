@@ -8,6 +8,7 @@
           <a
             href={media_url}
             target="_blank"
+            data-id="pdf-link"
             class="order-last w-full media_container hover:bg-base-content/5"
           >
             {#case Media.thumbnail_url(m)}
@@ -35,54 +36,80 @@
                             />--}
             {/case}
           </a>
+        {#elseif e(m.metadata, "oembed", "DOI", nil)}
+          <Bonfire.UI.Social.Activity.AcademicPaperLive media={m} />
         {#else _}
-          <a
-            href={media_url || preview_img(m)}
-            target="_blank"
-            class="flex  w-full border rounded-lg media_container hover:bg-base-content/5 border-base-content/20"
-          >
-            <div class="flex items-center gap-3 overflow-hidden">
-              <div class="flex relative items-center rounded-l-lg shrink-0 w-[120px] h-[120px] bg-base-content/10 place-content-center">
-                {#case preview_img(m) || e(m.metadata, "favicon", nil) ||
-                    Bonfire.Files.FaviconStore.favicon_url(media_url)}
-                  {#match nil}
-                    <#Icon iconify="ion:newspaper-outline" class="w-8 h-8 text-base-content/70" />
-                  {#match preview_img}
-                    <div
-                      class="absolute inset-0 backdrop-blur-lg bg-white/30 z-50 rounded-l-lg"
-                      :if={@cw || Settings.get([Bonfire.UI.Social.Activity.MediaLive, :hide], false, @__context__)}
-                    />
-                    {#case String.ends_with?(preview_img, ".ico")}
-                      {#match true}
-                        <LazyImage
-                          class="rounded-none object-cover rounded-l-lg  cursor-pointer m-image w-[36px] h-[36px]"
-                          src={preview_img}
-                          fallback_icon="ion:newspaper-outline"
-                        />
-                      {#match _}
-                        <LazyImage
-                          class="rounded-none object-cover rounded-l-lg  cursor-pointer m-image w-[120px] h-[120px]"
-                          src={preview_img}
-                          fallback_icon="ion:newspaper-outline"
-                        />
-                    {/case}
-                {/case}
-              </div>
-              <div class="px-2">
-                <div class="text-sm font-medium line-clamp-1">
-                  {media_label(m) || if m.media_type == "link", do: e(m, :path, nil), else: l("View")} ({m.media_type || l("link")})
-                </div>
-                <div class="text-sm" :if={provider(m)}>
-                  {e(m, :metadata, "oembed", "author_name", nil)}
-                  <span class="text-base-content/70" :if={provider(m)}>{provider(m)}</span>
-                </div>
-                <div class="max-w-[420px] text-sm mt-0.5 break-words line-clamp-2 text-base-content/70">
-                  {description(m)}
-                </div>
-                {!-- {e(m, :metadata, "location", "name", nil)} {e(m, :metadata, "startDate", nil)} --}
-              </div>
-            </div>
-          </a>
+          {#case preview_img(m)}
+            {#match preview_img}
+              {#case e(m.metadata, "oembed", "download_url", nil)}
+                {#match download_url}
+                  <LinkLive
+                    to={if !download_url, do: media_url || preview_img}
+                    class="flex w-full border rounded-lg media_container hover:bg-base-content/5 border-base-content/20"
+                    target="_blank"
+                  >
+                    <div class="flex items-center gap-3 overflow-hidden">
+                      <div class="flex relative items-center rounded-l-lg shrink-0 w-[120px] h-[120px] bg-base-content/10 place-content-center">
+                        <a :if={download_url} href={download_url} target="_blank">
+                          <#Icon iconify="pajamas:import" class="w-8 h-8 text-gray-200" />
+                        </a>
+
+                        <LinkLive to={if download_url, do: media_url || preview_img} target="_blank">
+                          {#case preview_img || e(m.metadata, "favicon", nil) ||
+                              Bonfire.Files.FaviconStore.favicon_url(media_url)}
+                            {#match nil}
+                              <#Icon iconify="ion:newspaper-outline" class="w-8 h-8 text-base-content/70" />
+                            {#match preview_img}
+                              <div
+                                class="absolute inset-0 backdrop-blur-lg bg-white/30 z-50 rounded-l-lg"
+                                :if={@cw || Settings.get([Bonfire.UI.Social.Activity.MediaLive, :hide], false, @__context__)}
+                              />
+                              {#case String.ends_with?(preview_img, ".ico")}
+                                {#match true}
+                                  <LazyImage
+                                    class="rounded-none object-cover rounded-l-lg  cursor-pointer m-image w-[36px] h-[36px]"
+                                    src={preview_img}
+                                    fallback_icon="ion:newspaper-outline"
+                                  />
+                                {#match _}
+                                  <LazyImage
+                                    class="rounded-none object-cover rounded-l-lg  cursor-pointer m-image w-[120px] h-[120px]"
+                                    src={preview_img}
+                                    fallback_icon="ion:newspaper-outline"
+                                  />
+                              {/case}
+                          {/case}
+                        </LinkLive>
+                      </div>
+                      <div class="px-2">
+                        <div class="text-sm font-medium line-clamp-1">
+                          {media_label(m) || if m.media_type == "link", do: e(m, :path, nil), else: l("View")} ({m.media_type || l("link")})
+                        </div>
+
+                        <div class="text-sm">
+                          {e(m, :metadata, "oembed", "author_name", nil)}
+
+                          {#case e(m, :metadata, "oembed", "published", "date-parts", nil)}
+                            {#match published when is_list(published)}
+                              <span class="text-base-content/70">{published |> List.flatten() |> Enum.join("-")}</span>
+                            {#match _}
+                          {/case}
+
+                          {#case provider(m)}
+                            {#match nil}
+                            {#match provider}
+                              <span class="text-base-content/70">{provider}</span>
+                          {/case}
+                        </div>
+                        <div class="max-w-[420px] text-sm mt-0.5 break-words line-clamp-2 text-base-content/70">
+                          {description(m)}
+                        </div>
+                        {!-- {e(m, :metadata, "location", "name", nil)} {e(m, :metadata, "startDate", nil)} --}
+                      </div>
+                    </div>
+                  </LinkLive>
+              {/case}
+          {/case}
         {/if}
     {/case}
   {/for}
