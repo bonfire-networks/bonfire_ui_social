@@ -416,7 +416,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
          activity_inception,
          subject_user
        ) ++
-       component_object(verb, activity, object, object_type) ++
+       component_object(object, object_type) ++
        component_maybe_attachments(
          id(object) || id(activity),
          e(activity, :files, nil) || e(object, :files, nil) || e(activity, :media, nil) ||
@@ -1419,61 +1419,23 @@ defmodule Bonfire.UI.Social.ActivityLive do
   # end
 
   # @decorate time()
-  def component_object(verb, activity, object, object_type)
+  def component_object(object, object_type)
 
-  def component_object(_, _, %{post_content: %{html_body: _}}, _),
-    do: [Bonfire.UI.Social.Activity.NoteLive]
+  # def component_object(%{profile: %{id: _}}, object_type)
+  #     when object_type not in [:group, :topic],
+  #     do: [Bonfire.UI.Me.Preview.CharacterLive]
+  # def component_object(%{character: %{id: _}}, object_type)
+  #     when object_type not in [:group, :topic],
+  #     do: [Bonfire.UI.Me.Preview.CharacterLive]
+  # def component_object(_, Bonfire.Data.Identity.User),
+  #   do: [Bonfire.UI.Me.Preview.CharacterLive]
 
-  def component_object(_, _, %{profile: %{id: _}}, object_type)
-      when object_type not in [:group, :topic],
-      do: [Bonfire.UI.Me.Preview.CharacterLive]
+  def component_object(object, type) when is_atom(type) and not is_nil(type) do
+    component_for_object_type(type, object)
+  end
 
-  def component_object(_, _, %{character: %{id: _}}, object_type)
-      when object_type not in [:group, :topic],
-      do: [Bonfire.UI.Me.Preview.CharacterLive]
-
-  def component_object(_, _, _, Bonfire.Data.Identity.User),
-    do: [Bonfire.UI.Me.Preview.CharacterLive]
-
-  def component_object(_, _, %{} = object, object_type) do
+  def component_object(%{} = object, object_type) do
     case object_type || Types.object_type(object) do
-      Bonfire.Data.Social.APActivity ->
-        json = e(object, :json, nil)
-
-        case String.capitalize(
-               e(json, "object", "type", nil) || e(json, "type", nil) || "Remote Activity"
-             ) do
-          "Event" = object_type ->
-            [
-              {Bonfire.UI.Social.Activity.EventActivityStreamsLive,
-               json: json, object_type_readable: object_type}
-            ]
-
-          "Video" = object_type ->
-            [
-              {Bonfire.UI.Social.Activity.VideoActivityStreamsLive,
-               json: json, object_type_readable: object_type}
-            ]
-
-          "Edition" = object_type ->
-            [
-              {Bonfire.UI.Social.Activity.BookActivityStreamsLive,
-               json: json, object_type_readable: object_type}
-            ]
-
-          object_type when object_type in ["Audio", "Podcastepisode"] ->
-            [
-              {Bonfire.UI.Social.Activity.AudioActivityStreamsLive,
-               json: json, object_type_readable: object_type}
-            ]
-
-          object_type ->
-            [
-              {Bonfire.UI.Social.Activity.UnknownActivityStreamsLive,
-               json: json, object_type_readable: object_type}
-            ]
-        end
-
       type when is_atom(type) and not is_nil(type) ->
         debug(type, "component object_type recognised")
         component_for_object_type(type, object)
@@ -1493,57 +1455,107 @@ defmodule Bonfire.UI.Social.ActivityLive do
     []
   end
 
-  def component_for_object_type(type, %{post_content: %{html_body: _}})
-      when type in [Bonfire.Data.Social.Post],
-      do: [Bonfire.UI.Social.Activity.NoteLive]
+  def component_for_object_type(Bonfire.Data.Social.Post, %{post_content: %{html_body: _}}),
+    do: [Bonfire.UI.Social.Activity.NoteLive]
 
   def component_for_object_type(type, _object) when type in [Bonfire.Data.Social.Post],
     # for posts with no text content (eg. only with attachments)
     do: []
 
-  def component_for_object_type(type, _) when type in [Bonfire.Data.Social.Message],
+  def component_for_object_type(Bonfire.Data.Social.Message, _),
     do: [Bonfire.UI.Social.Activity.NoteLive]
 
-  def component_for_object_type(type, _) when type in [Bonfire.Data.Social.PostContent],
+  def component_for_object_type(Bonfire.Data.Social.PostContent, _),
     do: [Bonfire.UI.Social.Activity.NoteLive]
 
-  def component_for_object_type(type, _) when type in [Bonfire.Data.Identity.User],
-    do: [Bonfire.UI.Me.Preview.CharacterLive]
+  # def component_for_object_type(type, _) when type in [Bonfire.Data.Identity.User],
+  #   do: [Bonfire.UI.Me.Preview.CharacterLive]
+  # def component_for_object_type(type, _) when type in [Bonfire.Data.Social.Follow],
+  #   do: [Bonfire.UI.Me.Preview.CharacterLive]
 
-  # do: [{Bonfire.UI.Me.Preview.CharacterLive, %{
-  #     object: repo().maybe_preload(object, [:character, profile: :icon])
-  #   }}]
+  # def component_for_object_type(type, _) when type in [:group],
+  #   do: [Bonfire.UI.Groups.Preview.GroupLive]
 
-  def component_for_object_type(type, _) when type in [Bonfire.Data.Social.Follow],
-    do: [Bonfire.UI.Me.Preview.CharacterLive]
+  # def component_for_object_type(type, _) when type in [:topic, Bonfire.Classify.Category],
+  #   do: [Bonfire.Classify.Web.Preview.CategoryLive]
 
-  def component_for_object_type(type, _) when type in [:group],
-    do: [Bonfire.UI.Groups.Preview.GroupLive]
+  # def component_for_object_type(type, object) when type in [ValueFlows.EconomicEvent],
+  #   do: [Bonfire.UI.ValueFlows.Preview.EconomicEventLive.activity_component(object)]
 
-  def component_for_object_type(type, _) when type in [:topic, Bonfire.Classify.Category],
-    do: [Bonfire.Classify.Web.Preview.CategoryLive]
+  # def component_for_object_type(type, _) when type in [ValueFlows.EconomicResource],
+  #   do: [Bonfire.UI.ValueFlows.Preview.EconomicResourceLive]
 
-  def component_for_object_type(type, object) when type in [ValueFlows.EconomicEvent],
-    do: [Bonfire.UI.ValueFlows.Preview.EconomicEventLive.activity_component(object)]
+  # # TODO: choose between Task and other Intent types
+  # def component_for_object_type(type, _) when type in [ValueFlows.Planning.Intent],
+  #   do: [Bonfire.UI.ValueFlows.Preview.IntentTaskLive]
 
-  def component_for_object_type(type, _) when type in [ValueFlows.EconomicResource],
-    do: [Bonfire.UI.ValueFlows.Preview.EconomicResourceLive]
+  def component_for_object_type(Bonfire.Data.Social.APActivity, object) do
+    json = e(object, :json, nil)
 
-  # TODO: choose between Task and other Intent types
-  def component_for_object_type(type, _) when type in [ValueFlows.Planning.Intent],
-    do: [Bonfire.UI.ValueFlows.Preview.IntentTaskLive]
+    case String.capitalize(
+           e(json, "object", "type", nil) || e(json, "type", nil) || "Remote Activity"
+         ) do
+      # TODO: make the supported types here extensible/configurable
+      "Event" = object_type ->
+        [
+          {Bonfire.UI.Social.Activity.EventActivityStreamsLive,
+           json: json, object_type_readable: object_type}
+        ]
 
-  # def component_for_object_type(type, object) when type in [ValueFlows.Process], do: [Bonfire.UI.ValueFlows.Preview.ProcessListLive.activity_component(object)] # TODO: choose between Task and other Intent types
-  def component_for_object_type(type, object) when type in [ValueFlows.Process],
-    do: [
-      {Bonfire.Common.Config.get(
-         [:ui, :default_instance_feed_previews, :process],
-         Bonfire.UI.ValueFlows.Preview.ProcessListLive
-       ), object: Bonfire.UI.ValueFlows.Preview.ProcessListLive.prepare(object)}
-    ]
+      "Video" = object_type ->
+        [
+          {Bonfire.UI.Social.Activity.VideoActivityStreamsLive,
+           json: json, object_type_readable: object_type}
+        ]
+
+      "Edition" = object_type ->
+        [
+          {Bonfire.UI.Social.Activity.BookActivityStreamsLive,
+           json: json, object_type_readable: object_type}
+        ]
+
+      object_type when object_type in ["Audio", "Podcastepisode"] ->
+        [
+          {Bonfire.UI.Social.Activity.AudioActivityStreamsLive,
+           json: json, object_type_readable: object_type}
+        ]
+
+      object_type ->
+        [
+          {Bonfire.UI.Social.Activity.UnknownActivityStreamsLive,
+           json: json, object_type_readable: object_type}
+        ]
+    end
+  end
+
+  # def component_for_object_type(type, object) when type in [ValueFlows.Process], do: [Bonfire.UI.ValueFlows.Preview.ProcessListLive.activity_component(object)]
+
+  def component_for_object_type(type, object) when is_atom(type) and not is_nil(type) do
+    case Config.get([:ui, :object_preview, type]) do
+      nil ->
+        [Bonfire.UI.Social.Activity.UnknownLive]
+
+      module when is_atom(module) ->
+        [module]
+
+      module_def when is_list(module_def) ->
+        module_def
+
+      module_def when is_tuple(module_def) ->
+        [module_def]
+
+      module_fun when is_function(module_fun) ->
+        module_fun.(object)
+
+      other ->
+        error(other, "Unrecognised object_preview config")
+        [Bonfire.UI.Social.Activity.UnknownLive]
+    end
+    |> debug()
+  end
 
   def component_for_object_type(type, _object) do
-    warn("no component set up for object_type: #{inspect(type)}, fallback to UnknownLive")
+    warn(type, "no component set up for object_type, fallback to UnknownLive")
 
     [Bonfire.UI.Social.Activity.UnknownLive]
   end
@@ -1617,54 +1629,35 @@ defmodule Bonfire.UI.Social.ActivityLive do
 
   def actions_for_object_type(activity, type)
       when type in [Bonfire.Data.Social.Post, Bonfire.Data.Social.PostContent],
-      do: component_show_standard_actions(activity)
+      do: [Bonfire.UI.Social.Activity.ActionsLive]
 
   # def actions_for_object_type(activity, type)
   #     when type in [Bonfire.Classify.Category],
-  #     do: component_show_category_actions(activity)
-  def actions_for_object_type(_activity, type)
-      when type in [Bonfire.Classify.Category],
-      do: []
+  #     do: [Bonfire.Classify.Web.CategoryActionsLive]
+
+  # def actions_for_object_type(_activity, type)
+  #     when type in [Bonfire.Classify.Category],
+  #     do: []
 
   # def actions_for_object_type(activity, type) when type in [ValueFlows.EconomicEvent],
-  #   do: component_show_event_actions(activity)
+  #   do: [
+  #   {Bonfire.UI.ValueFlows.Preview.EventActionsLive,
+  #    %{object: e(activity, :object, :resource_inventoried_as, nil) || e(activity, :object, nil)}}
+  # ]
 
   # def actions_for_object_type(activity, type) when type in [ValueFlows.EconomicResource],
-  #   do: component_show_process_actions(activity)
+  #   do: [Bonfire.UI.ValueFlows.Preview.ProcessActionsLive]
 
-  # TODO: choose between Task and other Intent types
-  def actions_for_object_type(_activity, type) when type in [ValueFlows.Planning.Intent],
-    do: []
+  # def actions_for_object_type(_activity, type) when type in [ValueFlows.Planning.Intent],
+  #   do: []
 
-  # TODO: choose between Task and other Intent types
-  def actions_for_object_type(_activity, type) when type in [ValueFlows.Process],
-    do: []
+  # def actions_for_object_type(_activity, type) when type in [ValueFlows.Process],
+  #   do: []
 
   def actions_for_object_type(activity, type) do
     debug(type, "No specific actions defined fot this type")
-    component_show_standard_actions(activity)
+    [Bonfire.UI.Social.Activity.ActionsLive]
     # [Bonfire.UI.Social.Activity.NoActionsLive]
-  end
-
-  # |> debug
-  def component_show_standard_actions(
-        %{subject: %{character: %{username: _username}}} = _activity
-      ),
-      do: [Bonfire.UI.Social.Activity.ActionsLive]
-
-  def component_show_standard_actions(_activity), do: [Bonfire.UI.Social.Activity.ActionsLive]
-
-  def component_show_category_actions(_activity),
-    do: [Bonfire.Classify.Web.CategoryActionsLive]
-
-  def component_show_process_actions(_activity),
-    do: [Bonfire.UI.ValueFlows.Preview.ProcessActionsLive]
-
-  def component_show_event_actions(activity) do
-    [
-      {Bonfire.UI.ValueFlows.Preview.EventActionsLive,
-       %{object: e(activity, :object, :resource_inventoried_as, nil) || e(activity, :object, nil)}}
-    ]
   end
 
   # def reply_to_display(%Needle.Pointer{} = reply_to) do

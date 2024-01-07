@@ -5,8 +5,8 @@
         <div class="pb-5 border-b">
           <span class="block mb-2 text-xs tracking-wide text-primary-content-600 uppercase">Notifications</span>
           <div class="flex flex-col space-y-3">
-            <%= if e(@activity, :replied, :thread_id, nil), do: live_component(@socket, Bonfire.UI.Social.FollowButtonLive, following: e(assigns, :following, []), object_id: e(@activity, :replied, :thread_id, nil), label: "the entire discussion", class: "rounded-md shadow-sm w-full flex flex-1 text-left btn btn-secondary") %>
-            <%= if e(@activity, :object_id, nil) && e(@activity, :object_id, nil) != e(@activity, :replied, :thread_id, nil), do: live_component(@socket, Bonfire.UI.Social.FollowButtonLive, following: e(assigns, :following, []), object_id: e(@activity, :object_id, nil), label: "this sub-thread", class: "rounded-md shadow-sm w-full flex flex-1 text-left btn btn-secondary") %>
+            <%= if e(@activity, :replied, :thread_id, nil), do: live_component(@socket, Bonfire.UI.Social.Graph.FollowButtonLive, following: e(assigns, :following, []), object_id: e(@activity, :replied, :thread_id, nil), label: "the entire discussion", class: "rounded-md shadow-sm w-full flex flex-1 text-left btn btn-secondary") %>
+            <%= if e(@activity, :object_id, nil) && e(@activity, :object_id, nil) != e(@activity, :replied, :thread_id, nil), do: live_component(@socket, Bonfire.UI.Social.Graph.FollowButtonLive, following: e(assigns, :following, []), object_id: e(@activity, :object_id, nil), label: "this sub-thread", class: "rounded-md shadow-sm w-full flex flex-1 text-left btn btn-secondary") %>
           </div>
         </div>
         <% end %>

@@ -178,7 +178,8 @@
       </li>
     {/if}
 
-    <li :if={current_user_id(@__context__) != @creator_id and @verb != "Flag"}>
+    <li :if={current_user_id(@__context__) != @creator_id and @verb != "Flag" and
+      module_enabled?(Bonfire.UI.Moderation.FlagActionLive, @__context__)}>
       <details>
         <summary>
           <div class="flex items-center w-full gap-2 text-sm text-base-content/70">
@@ -190,7 +191,7 @@
           {!-- Flag the object --}
           <li data-role="flag_object">
             <StatelessComponent
-              module={maybe_component(Bonfire.UI.Moderation.FlagActionLive, @__context__)}
+              module={Bonfire.UI.Moderation.FlagActionLive}
               object={@object}
               flagged={@flagged}
               parent_id={"object-#{id(@activity_component_id || @activity)}"}
@@ -205,7 +206,7 @@
             :if={not is_nil(@creator_id) and not is_nil(current_user_id(@__context__))}
           >
             <StatelessComponent
-              module={maybe_component(Bonfire.UI.Moderation.FlagActionLive, @__context__)}
+              module={Bonfire.UI.Moderation.FlagActionLive}
               object={@creator_id}
               flagged={@flagged}
               parent_id={"user-#{id(@activity_component_id || @activity)}"}

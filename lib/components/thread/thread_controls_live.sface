@@ -149,33 +149,35 @@
               <#Icon iconify="basil:comment-outline" class="w-5 h-5 stroke-1 fill-base-content/50" />
               {l("By amount of replies")}</a></li>
 
-          <li
-            phx-click="set"
-            phx-value-to_atoms="true"
-            phx-value-sort_by="num_boosts"
-            phx-value-assign_global="true"
-            phx-target={@event_target}
-          >
-            <a class={
-              "flex gap-2 text-base-content/70",
-              "active !text-base-content/100 font-semibold": @sort_by == :num_boosts
-            }>
-              <#Icon iconify="system-uicons:retweet" class="w-5 h-5 stroke-1 fill-base-content/50" />
-              {l("By amount of boosts")}</a></li>
+          {#if extension_enabled?(:bonfire_ui_reactions, @__context__)}
+            <li
+              phx-click="set"
+              phx-value-to_atoms="true"
+              phx-value-sort_by="num_boosts"
+              phx-value-assign_global="true"
+              phx-target={@event_target}
+            >
+              <a class={
+                "flex gap-2 text-base-content/70",
+                "active !text-base-content/100 font-semibold": @sort_by == :num_boosts
+              }>
+                <#Icon iconify="system-uicons:retweet" class="w-5 h-5 stroke-1 fill-base-content/50" />
+                {l("By amount of boosts")}</a></li>
 
-          <li
-            phx-click="set"
-            phx-value-to_atoms="true"
-            phx-value-sort_by="num_likes"
-            phx-value-assign_global="true"
-            phx-target={@event_target}
-          >
-            <a class={
-              "flex gap-2 text-base-content/70",
-              "active !text-base-content/100 font-semibold": @sort_by == :num_likes
-            }>
-              <#Icon iconify="mingcute:fire-line" class="w-5 h-5" />
-              {l("By amount of likes")}</a></li>
+            <li
+              phx-click="set"
+              phx-value-to_atoms="true"
+              phx-value-sort_by="num_likes"
+              phx-value-assign_global="true"
+              phx-target={@event_target}
+            >
+              <a class={
+                "flex gap-2 text-base-content/70",
+                "active !text-base-content/100 font-semibold": @sort_by == :num_likes
+              }>
+                <#Icon iconify="mingcute:fire-line" class="w-5 h-5" />
+                {l("By amount of likes")}</a></li>
+          {/if}
         </ul>
       </div>
 

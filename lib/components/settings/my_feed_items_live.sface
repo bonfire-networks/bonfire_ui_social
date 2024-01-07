@@ -7,9 +7,12 @@
   scope={@scope}
 />
 
-<form phx-change={@event_name || "Bonfire.Common.Settings:set"} phx-target={@event_target}>
+<form
+  :if={extension_enabled?(:bonfire_classify, @__context__)}
+  phx-change={@event_name || "Bonfire.Common.Settings:set"}
+  phx-target={@event_target}
+>
   <Bonfire.UI.Common.SettingsToggleLive
-    module={maybe_component(Bonfire.Classify.Category, @__context__)}
     label={l("Activities from groups I follow")}
     keys={[Bonfire.Social.Feeds, :include, :followed_categories]}
     default_value
@@ -19,6 +22,7 @@
 </form>
 
 <form
+  :if={extension_enabled?(:bonfire_ui_reactions, @__context__)}
   data-scope="boosts"
   phx-change={@event_name || "Bonfire.Common.Settings:set"}
   phx-target={@event_target}

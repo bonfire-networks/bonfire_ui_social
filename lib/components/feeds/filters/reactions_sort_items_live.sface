@@ -1,0 +1,23 @@
+<form
+  data-scope="reactions_sort"
+  phx-change={@event_name || "Bonfire.Common.Settings:set"}
+  phx-target={@event_target}
+>
+  <Bonfire.UI.Common.SettingsRadiosLive
+    keys={[Bonfire.UI.Social.FeedLive, :sort_by]}
+    options={if extension_enabled?(:bonfire_ui_reactions, @__context__),
+      do: [
+        false: l("Chronological"),
+        num_replies: l("Amount of replies"),
+        num_boosts: l("Amount of boosts"),
+        num_likes: l("Amount of likes")
+      ],
+      else: [
+        false: l("Chronological"),
+        num_replies: l("Amount of replies")
+      ]}
+    default_value={false}
+    scope={@scope}
+  />
+  <!-- compact={@compact} -->
+</form>
