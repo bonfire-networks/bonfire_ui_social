@@ -47,7 +47,11 @@ defmodule Bonfire.Social.Objects.LiveHandler do
   end
 
   def handle_event("delete", %{"id" => id} = _params, socket) do
-    with {:ok, _} <- Objects.delete(id, current_user: current_user_required!(socket)) do
+    with {:ok, _} <-
+           Objects.delete(id,
+             current_user: current_user_required!(socket),
+             socket_connected: true
+           ) do
       Bonfire.UI.Common.OpenModalLive.close()
 
       {

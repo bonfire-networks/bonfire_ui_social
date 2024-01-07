@@ -242,7 +242,7 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
   end
 
   def handle_info({:hide_activity, activity}, socket) do
-    remove_activity(activity)
+    if socket_connected?(socket), do: remove_activity(activity)
 
     {:noreply, socket}
   end
