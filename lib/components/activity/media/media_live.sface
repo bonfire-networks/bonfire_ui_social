@@ -4,6 +4,7 @@
     {#case Media.media_url(m)}
       {#match nil}
       {#match media_url}
+        <!-- test {m.metadata} -->
         {#if String.ends_with?(media_url, ".pdf")}
           <a
             href={media_url}
