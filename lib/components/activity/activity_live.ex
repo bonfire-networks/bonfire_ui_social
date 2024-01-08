@@ -1531,9 +1531,19 @@ defmodule Bonfire.UI.Social.ActivityLive do
   # def component_for_object_type(type, object) when type in [ValueFlows.Process], do: [Bonfire.UI.ValueFlows.Preview.ProcessListLive.activity_component(object)]
 
   def component_for_object_type(type, object) when is_atom(type) and not is_nil(type) do
-    case Config.get([:ui, :object_preview, type]) do
+    component_def_for(:object_preview, type, object, Bonfire.UI.Social.Activity.UnknownLive)
+  end
+
+  def component_for_object_type(type, _object) do
+    warn(type, "no component set up for object_type, fallback to UnknownLive")
+
+    [Bonfire.UI.Social.Activity.UnknownLive]
+  end
+
+  defp component_def_for(key, type, object, fallback) when is_atom(type) and not is_nil(type) do
+    case Config.get([:ui, key, type]) do
       nil ->
-        [Bonfire.UI.Social.Activity.UnknownLive]
+        [fallback]
 
       module when is_atom(module) ->
         [module]
@@ -1549,15 +1559,9 @@ defmodule Bonfire.UI.Social.ActivityLive do
 
       other ->
         error(other, "Unrecognised object_preview config")
-        [Bonfire.UI.Social.Activity.UnknownLive]
+        [fallback]
     end
     |> debug()
-  end
-
-  def component_for_object_type(type, _object) do
-    warn(type, "no component set up for object_type, fallback to UnknownLive")
-
-    [Bonfire.UI.Social.Activity.UnknownLive]
   end
 
   # def component_maybe_attachments(_, _, inception) when not is_nil(inception), do: []
@@ -1653,6 +1657,10 @@ defmodule Bonfire.UI.Social.ActivityLive do
 
   # def actions_for_object_type(_activity, type) when type in [ValueFlows.Process],
   #   do: []
+
+  def actions_for_object_type(activity, type) when is_atom(type) and not is_nil(type) do
+    component_def_for(:object_actions, type, activity, Bonfire.UI.Social.Activity.ActionsLive)
+  end
 
   def actions_for_object_type(activity, type) do
     debug(type, "No specific actions defined fot this type")
