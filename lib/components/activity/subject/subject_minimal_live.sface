@@ -36,7 +36,41 @@
           "-ml-[3rem]": @verb not in ["Reply", "Respond"]
         }
       >
-        {#if @verb == "Like"}
+        {#if @verb == "Request to Follow"}
+          <div class="flex items-center w-full justify-between">
+            <div class="flex items-start flex-1 gap-4">
+              <#Icon solid="UserAdd" class="flex-shrink-0 w-7 h-7 text-info" />
+              <div class="flex flex-col gap-2">
+                <Bonfire.UI.Common.AvatarLive
+                  user_id={@profile_id}
+                  src={@profile_media}
+                  title={@profile_name}
+                  class="h-9 w-9 rounded-full bg-base-content/20"
+                />
+                <LiveRedirect to={@path} class="flex link link-hover items-center gap-5 justify-start pb-2">
+                  <div class="font-medium text-sm text-base-content/90">
+                    {@profile_name || @character_username}
+
+                    {raw(@verb_display)}
+
+                    <span :if={@object_id == current_user_id(@__context__)}>
+                      {!-- special case when current_user is the one being followed --}
+                      {l("you")}
+                    </span>
+                  </div>
+                </LiveRedirect>
+              </div>
+            </div>
+            <button
+              :on-click="Bonfire.Social.Graph.Follows:accept"
+              phx-value-id={id(@activity_id)}
+              type="button"
+              class="normal-case -mr-[3rem] rounded-full btn-outline border !border-primary/30 btn-sm btn-primary"
+            >
+              {l("Accept")}
+            </button>
+          </div>
+        {#elseif @verb == "Like"}
           <div data-role="liked_by" class="flex items-start gap-5 justify-start">
             {!-- LIKE --}
             <#Icon iconify="mingcute:fire-fill" class="w-7 h-7 text-yellow-500" />
@@ -185,7 +219,26 @@
         {/if}
       </div>
     {#match _}
-      {#if @verb == "Pin"}
+      {#if @verb == "Request to Follow"}
+        <div class="flex items-center justify-start pb-3 -ml-8">
+          {!-- FOLLOW --}
+          <#Icon solid="UserAdd" class="flex-shrink-0 w-5 h-5 text-base-content/70" />
+          <div class="flex-1 ml-3">
+            <div class="text-sm font-medium text-base-content/70">
+              <LiveRedirect class="font-medium link link-hover text-base-content/70" to={@path}>
+                {@profile_name || @character_username}
+              </LiveRedirect>
+
+              {raw(@verb_display)}
+
+              <span :if={@object_id == current_user_id(@__context__)}>
+                {!-- special case when current_user is the one being followed --}
+                {l("you")}
+              </span>
+            </div>
+          </div>
+        </div>
+      {#elseif @verb == "Pin"}
         <div data-role="pinned" class="flex items-center justify-start pb-3 -ml-8">
           {!-- LIKE --}
           <#Icon iconify="material-symbols:push-pin" class="w-5 h-5 text-base-content/70" />
