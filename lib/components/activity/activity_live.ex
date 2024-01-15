@@ -184,7 +184,8 @@ defmodule Bonfire.UI.Social.ActivityLive do
       thread_title:
         e(assigns, :thread_title, nil) || e(socket_assigns, :thread_title, nil) ||
           e(extras[:thread], :named, :name, nil) ||
-          e(activity, :replied, :thread, :named, :name, nil),
+          e(activity, :replied, :thread, :named, :name, nil) ||
+          e(object, :named, :name, nil),
       hide_actions:
         case e(assigns, :hide_actions, nil) || e(socket_assigns, :hide_actions, nil) do
           nil ->
@@ -755,6 +756,8 @@ defmodule Bonfire.UI.Social.ActivityLive do
                 character={e(component_assigns, :character, nil)}
                 media={e(component_assigns, :media, nil)}
                 json={e(component_assigns, :json, nil)}
+                label={e(component_assigns, :label, nil)}
+                to={e(component_assigns, :to, nil)}
                 is_remote={@is_remote}
               />
           {/case}
@@ -1531,19 +1534,17 @@ defmodule Bonfire.UI.Social.ActivityLive do
   # def component_for_object_type(type, object) when type in [ValueFlows.Process], do: [Bonfire.UI.ValueFlows.Preview.ProcessListLive.activity_component(object)]
 
   def component_for_object_type(type, object) when is_atom(type) and not is_nil(type) do
-    component_def_for(:object_preview, type, object, Bonfire.UI.Social.Activity.UnknownLive)
+    component_def_for(:object_preview, type, object, &component_object_fallback/2)
   end
 
-  def component_for_object_type(type, _object) do
-    warn(type, "no component set up for object_type, fallback to UnknownLive")
-
-    [Bonfire.UI.Social.Activity.UnknownLive]
+  def component_for_object_type(type, object) do
+    component_object_fallback(type, object)
   end
 
   defp component_def_for(key, type, object, fallback) when is_atom(type) and not is_nil(type) do
     case Config.get([:ui, key, type]) do
       nil ->
-        [fallback]
+        if is_function(fallback), do: fallback.(type, object), else: [fallback]
 
       module when is_atom(module) ->
         [module]
@@ -1559,9 +1560,28 @@ defmodule Bonfire.UI.Social.ActivityLive do
 
       other ->
         error(other, "Unrecognised object_preview config")
-        [fallback]
+        if is_function(fallback), do: fallback.(type, object), else: [fallback]
     end
     |> debug()
+  end
+
+  defp component_object_fallback(type, %{named: %{name: name}} = object)
+       when type == Bonfire.Tag.Hashtag do
+    [{LinkLive, label: "##{name}", to: path(object)}]
+  end
+
+  defp component_object_fallback(_type, %{name: name} = object) do
+    [{LinkLive, label: name, to: path(object)}]
+  end
+
+  defp component_object_fallback(_type, %{named: %{name: name}} = object) do
+    [{LinkLive, label: name, to: path(object)}]
+  end
+
+  defp component_object_fallback(type, object) do
+    warn(type, "no component set up for object_type, fallback to UnknownLive")
+
+    [Bonfire.UI.Social.Activity.UnknownLive]
   end
 
   # def component_maybe_attachments(_, _, inception) when not is_nil(inception), do: []
