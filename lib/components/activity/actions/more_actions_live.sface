@@ -1,23 +1,24 @@
 <div
   data-id="more_menu"
+  phx-hook="Tooltip"
   data-rendered={@showing_within}
   id={"more-menu-#{id(@activity_component_id || @activity)}"}
   aria-haspopup="true"
-  class="dropdown dropdown-end feed_activity relative"
+  class="feed_activity relative"
 >
   {!-- phx-viewport-bottom={JS.add_class("!dropdown-top", to: "#more-menu-#{id(@activity_component_id || @activity)}")} --}
 
-  <button tabindex="0" class="btn btn-ghost btn-circle btn-sm">
+  <button tabindex="0" class="tooltip-button btn btn-ghost btn-circle btn-sm">
     <#Icon solid="DotsVertical" class="w-[18px] h-[18px] md:w-4 md:h-4 text-base-content/70" />
   </button>
   <ul
     tabindex="0"
-    class="!block w-64 z-[910] relative shadow menu md:menu-compact dropdown-content text-base-content bg-base-200 rounded-lg dropdown_actions"
+    class="tooltip z-[9999] menu shadow bg-base-200 rounded-lg p-0 w-64 absolute top-0 right-0 hidden"
     role="menu"
     aria-orientation="vertical"
     aria-labelledby="more-menu"
   >
-    <li :if={@object_type not in [Bonfire.Data.Social.Message]}><div class="px-4 py-2 w-full">
+    <li :if={@object_type not in [Bonfire.Data.Social.Message]}><div class="px-4 py-2 w-full bg-base-content/5 rounded-b-none">
         {#if LiveHandler.feed_live_update_many_preloads?() == :async_actions}
           <StatelessComponent
             module={maybe_component(Bonfire.Boundaries.Web.BoundaryIconStatelessLive, @__context__)}
@@ -28,7 +29,7 @@
             with_icon
             with_label
             class=""
-            open_btn_wrapper_class="flex items-center w-full gap-2 text-sm text-base-content/70 px-4 py-2"
+            open_btn_wrapper_class="flex items-center w-full gap-2 text-sm text-base-content/70 py-2"
           />
         {#else}
           <!-- 
