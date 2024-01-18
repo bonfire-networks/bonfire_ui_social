@@ -13,12 +13,12 @@
   </button>
   <ul
     tabindex="0"
-    class="tooltip z-[9999] menu shadow bg-base-200 rounded-lg p-0 w-64 absolute top-0 right-0 hidden"
+    class="tooltip z-[999999999999] menu shadow bg-base-200 rounded-lg p-0 w-64 absolute top-0 right-0 hidden"
     role="menu"
     aria-orientation="vertical"
     aria-labelledby="more-menu"
   >
-    <li :if={@object_type not in [Bonfire.Data.Social.Message]}><div class="px-4 py-2 w-full bg-base-content/5 rounded-b-none">
+    <li :if={@object_type not in [Bonfire.Data.Social.Message]}><div class="w-full p-0 flex bg-base-content/5 rounded-b-none">
         {#if LiveHandler.feed_live_update_many_preloads?() == :async_actions}
           <StatelessComponent
             module={maybe_component(Bonfire.Boundaries.Web.BoundaryIconStatelessLive, @__context__)}
@@ -28,8 +28,8 @@
             parent_id={@parent_id}
             with_icon
             with_label
-            class=""
-            open_btn_wrapper_class="flex items-center w-full gap-2 text-sm text-base-content/70 py-2"
+            class="w-full"
+            open_btn_wrapper_class="flex items-center w-full gap-2 text-sm text-base-content/70 py-4 px-4"
           />
         {#else}
           <!-- 
@@ -182,7 +182,7 @@
     <li :if={current_user_id(@__context__) != @creator_id and @verb != "Flag" and
       module_enabled?(Bonfire.UI.Moderation.FlagActionLive, @__context__)}>
       <details>
-        <summary>
+        <summary class="text-base-content/70">
           <div class="flex items-center w-full gap-2 text-sm text-base-content/70">
             <#Icon solid="Flag" class="w-4 h-4 shrink-0" />
             <span class="truncate ellipsis">{l("Flag")}</span>
@@ -232,7 +232,7 @@
         Bonfire.UI.Social.Activity.DeleteObjectLive.can_delete?(@__context__, @object, @object_boundary)}
       <li>
         <details>
-          <summary>
+          <summary class="text-error/80">
             <div class="flex items-center w-full gap-2 text-sm text-error/80">
               <#Icon solid="Trash" class="w-4 h-4 shrink-0" />
               <span class="truncate ellipsis">{l("Delete")}</span>
