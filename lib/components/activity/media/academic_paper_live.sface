@@ -9,8 +9,6 @@
           target="_blank"
         >
           <div class="relative p-4 w-full">
-            
-
             <div class="">
               <div class="by-2 text-lg font-medium font-serif font-semibold">
                 {MediaLive.media_label(@media) ||
@@ -61,14 +59,23 @@
               </div>
             </div>
             <div class="flex gap-2 items-center mt-4">
-              <a :if={download_url} href={download_url} class="btn btn-outline border-black/30 text-gray-800 btn-sm flex-1 rounded-full" target="_blank">
+              <a
+                :if={download_url}
+                href={download_url}
+                class="btn btn-outline border-black/30 text-gray-800 btn-sm flex-1 rounded-full"
+                target="_blank"
+              >
                 <#Icon iconify="pajamas:import" class="w-5 h-5 text-gray-800" />
-                <span>{l "Download"}</span>
+                <span>{l("Download")}</span>
               </a>
 
-              <LinkLive to={if download_url, do: media_url} class="btn btn-outline border-black/30 text-gray-800 btn-sm rounded-full flex-1" target="_blank">
+              <LinkLive
+                to={if download_url, do: media_url}
+                class="btn btn-outline border-black/30 text-gray-800 btn-sm rounded-full flex-1"
+                target="_blank"
+              >
                 <#Icon iconify="heroicons-outline:external-link" class="w-5 h-5 text-gray-800" />
-                <span>{l "Read paper"}</span>
+                <span>{l("Read paper")}</span>
               </LinkLive>
             </div>
           </div>
