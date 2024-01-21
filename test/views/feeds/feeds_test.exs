@@ -26,8 +26,7 @@ defmodule Bonfire.Social.Feeds.Test do
       reply_to_id: post.id
     }
 
-    {:ok, post} =
-      Posts.publish(current_user: alice, post_attrs: attrs_reply, boundary: "public")
+    {:ok, post} = Posts.publish(current_user: alice, post_attrs: attrs_reply, boundary: "public")
 
     # im not sure if live_pubsub_wait is enough to wait for asyync loading of the reply
     # so we wait a bit more

@@ -69,8 +69,7 @@ defmodule Bonfire.Social.Threads.LiveHandler do
       sort_order: e(socket.assigns, :sort_order, nil)
     ]
 
-    %{edges: replies} =
-      Bonfire.Social.Threads.list_replies(id, opts)
+    %{edges: replies} = Bonfire.Social.Threads.list_replies(id, opts)
 
     if opts[:thread_mode] == :flat and is_list(replies) and
          e(socket.assigns, :reply_count, 0) > 0 do
@@ -225,8 +224,7 @@ defmodule Bonfire.Social.Threads.LiveHandler do
       published_in = e(socket.assigns, :published_in, nil)
       published_in_id = id(published_in)
 
-      create_object_type =
-        if(object_type == Bonfire.Data.Social.Message, do: :message)
+      create_object_type = if(object_type == Bonfire.Data.Social.Message, do: :message)
 
       # TODO: don't re-load participants here as we already have the list (at least when we're in a thread)
       # TODO: include thread_id in list_participants/3 call

@@ -118,8 +118,7 @@ defmodule Bonfire.UI.Social.SettingsTest do
         post_content: %{summary: "summary", name: "test post name", html_body: "first post"}
       }
 
-      assert {:ok, post} =
-               Posts.publish(current_user: bob, post_attrs: attrs, boundary: "public")
+      assert {:ok, post} = Posts.publish(current_user: bob, post_attrs: attrs, boundary: "public")
 
       # create a reply by bob
       attrs_reply = %{

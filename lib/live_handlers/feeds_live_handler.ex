@@ -320,8 +320,7 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
       when feed in [:likes, :bookmarks, :flags, :curated] do
     attrs = input_to_atoms(attrs)
 
-    opts =
-      opts ++ Keyword.new(attrs) ++ [paginate?: true, current_user: current_user(socket)]
+    opts = opts ++ Keyword.new(attrs) ++ [paginate?: true, current_user: current_user(socket)]
 
     do_paginate_fetch_assign_feed(feed, opts, socket)
   end
