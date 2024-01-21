@@ -9,15 +9,7 @@
           target="_blank"
         >
           <div class="relative p-4 w-full">
-            <div class="absolute flex right-1 top-1 shrink-0 gap-1">
-              <a :if={download_url} href={download_url} target="_blank">
-                <#Icon iconify="pajamas:import" class="w-5 h-5 text-gray-800" />
-              </a>
-
-              <LinkLive to={if download_url, do: media_url} target="_blank">
-                <#Icon iconify="heroicons-outline:external-link" class="w-5 h-5 text-gray-800" />
-              </LinkLive>
-            </div>
+            
 
             <div class="">
               <div class="by-2 text-lg font-medium font-serif font-semibold">
@@ -55,7 +47,7 @@
                     {/if}
                   </div>
 
-                  <div class="flex flex-wrap gap-2 mt-4">
+                  <div class="flex flex-wrap gap-2 mt-2">
                     {#for subject <- List.wrap(e(@media, :metadata, "oembed", "subject", []))}
                       <span class="text-sm badge badge-outline border-black/30 text-black">{subject}</span>
                     {/for}
@@ -67,6 +59,17 @@
                   {!-- {e(@media, :metadata, "oembed", "subject", nil)} --}
                 </div>
               </div>
+            </div>
+            <div class="flex gap-2 items-center mt-4">
+              <a :if={download_url} href={download_url} class="btn btn-outline border-black/30 text-gray-800 btn-sm flex-1 rounded-full" target="_blank">
+                <#Icon iconify="pajamas:import" class="w-5 h-5 text-gray-800" />
+                <span>{l "Download"}</span>
+              </a>
+
+              <LinkLive to={if download_url, do: media_url} class="btn btn-outline border-black/30 text-gray-800 btn-sm rounded-full flex-1" target="_blank">
+                <#Icon iconify="heroicons-outline:external-link" class="w-5 h-5 text-gray-800" />
+                <span>{l "Read paper"}</span>
+              </LinkLive>
             </div>
           </div>
         </LinkLive>
