@@ -9,15 +9,15 @@
             <div class="mt-2 text-xs font-medium uppercase">{e(@media, :metadata, "oembed", "publisher", nil) ||
                 e(@media, :metadata, "oembed", "container-title", nil)}
             </div>
-            <div class="mb-2 text-xl font-medium font-serif font-semibold">
+            <div class="text-xl font-semibold">
               {MediaLive.media_label(@media) ||
                 if @media.media_type == "link", do: e(@media, :path, nil), else: l("View")}
             </div>
 
-            <div class="text-sm mt-2 text-left">
-              <div class="mt-4">
+            <div class="text-sm text-left">
+              <div class="mt-2">
                 <!-- <div class="uppercase font-medium text-base-content/70 text-xs">{l("authors")}</div> -->
-                <div class="flex flex-wrap gap-0.5 mt-0.5">
+                <div class="flex flex-wrap gap-0.5">
                   {#for author <- Enum.intersperse(List.wrap(e(@media, :metadata, "oembed", "author", [])), ",")}
                     <span class="text-sm text-base-content/80">
                       {#if is_map(author)}
