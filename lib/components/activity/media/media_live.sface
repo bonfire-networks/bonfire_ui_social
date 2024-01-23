@@ -37,12 +37,16 @@
                             />--}
             {/case}
           </a>
-        {#elseif e(m.metadata, "oembed", "DOI", nil)}
-          <Bonfire.UI.Social.Activity.AcademicPaperLive media={m} />
+        {#elseif e(m.metadata, "wikibase", "itemType", nil) in ["journalArticle"] or
+            e(m.metadata, "crossref", "DOI", nil)}
+          <Bonfire.UI.Social.Activity.AcademicPaperLive
+            media={m}
+            metadata={e(m.metadata, "wikibase", nil) || e(m.metadata, "crossref", nil)}
+          />
         {#else _}
           {#case preview_img(m)}
             {#match preview_img}
-              {#case e(m.metadata, "oembed", "download_url", nil)}
+              {#case e(m.metadata, "oembed", "download_url", nil) || e(m.metadata, "download_url", nil)}
                 {#match download_url}
                   <LinkLive
                     to={if !download_url, do: media_url || preview_img}

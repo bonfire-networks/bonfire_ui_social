@@ -3,6 +3,7 @@ defmodule Bonfire.UI.Social.Activity.AcademicPaperLive do
   alias Bonfire.UI.Social.Activity.MediaLive
 
   prop media, :map, default: nil
+  prop metadata, :map, default: nil
 
   def update(assign, socket) do
     {:noreply, socket}

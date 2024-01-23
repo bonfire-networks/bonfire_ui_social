@@ -157,7 +157,8 @@ defmodule Bonfire.UI.Social.Activity.MediaLive do
   def media_img(_), do: nil
 
   def media_label(%{} = media) do
-    (e(media.metadata, "label", nil) || e(media.metadata, "oembed", "title", nil) ||
+    (e(media.metadata, "label", nil) || e(media.metadata, "wikibase", "title", nil) ||
+       e(media.metadata, "crossref", "title", nil) || e(media.metadata, "oembed", "title", nil) ||
        e(media.metadata, "facebook", "og:title", nil) ||
        e(media.metadata, "twitter", "twitter:title", nil) ||
        e(media.metadata, "other", "title", nil))
