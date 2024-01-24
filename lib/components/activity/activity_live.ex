@@ -397,17 +397,18 @@ defmodule Bonfire.UI.Social.ActivityLive do
          activity_component_id,
          subject_user
        ) do
-    (component_maybe_in_reply_to(
-       verb,
-       activity,
-       showing_within,
-       activity_inception,
-       viewing_main_object,
-       thread_mode,
-       thread_id,
-       thread_title,
-       activity_component_id
-     ) ++
+    (component_maybe_attachments(showing_within == :media, activity, object, activity_inception) ++
+       component_maybe_in_reply_to(
+         verb,
+         activity,
+         showing_within,
+         activity_inception,
+         viewing_main_object,
+         thread_mode,
+         thread_id,
+         thread_title,
+         activity_component_id
+       ) ++
        component_activity_subject(
          verb,
          activity,
@@ -418,12 +419,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
          subject_user
        ) ++
        component_object(object, object_type) ++
-       component_maybe_attachments(
-         id(object) || id(activity),
-         e(activity, :files, nil) || e(object, :files, nil) || e(activity, :media, nil) ||
-           e(object, :media, nil),
-         activity_inception
-       ) ++
+       component_maybe_attachments(showing_within != :media, activity, object, activity_inception) ++
        component_actions(
          verb,
          activity,
@@ -439,6 +435,17 @@ defmodule Bonfire.UI.Social.ActivityLive do
     end)
     |> debug("components")
   end
+
+  defp component_maybe_attachments(true, activity, object, activity_inception) do
+    component_maybe_attachments(
+      id(object) || id(activity),
+      e(activity, :files, nil) || e(object, :files, nil) || e(activity, :media, nil) ||
+        e(object, :media, nil),
+      activity_inception
+    )
+  end
+
+  defp component_maybe_attachments(_, _activity, _object, _activity_inception), do: []
 
   def maybe_prepare(%{activity: _, activity_prepared: true} = assigns) do
     assigns
