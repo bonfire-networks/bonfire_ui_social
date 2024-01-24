@@ -38,12 +38,13 @@
             {/case}
           </a>
         {#elseif e(m.metadata, "wikibase", "itemType", nil) in ["journalArticle"] or
-            e(m.metadata, "crossref", "DOI", nil)}
+            e(m.metadata, "crossref", "DOI", false) or e(m.metadata, "oembed", "DOI", false)}
           <Bonfire.UI.Social.Activity.AcademicPaperLive
             media={m}
-            metadata={e(m.metadata, "wikibase", nil) || e(m.metadata, "crossref", nil)}
+            metadata={e(m.metadata, "wikibase", nil) || e(m.metadata, "crossref", nil) || e(m.metadata, "oembed", nil)}
           />
         {#else _}
+          <code>{inspect(e(m.metadata, "oembed", "DOI", nil), pretty: true)}</code>
           {#case preview_img(m)}
             {#match preview_img}
               {#case e(m.metadata, "oembed", "download_url", nil) || e(m.metadata, "download_url", nil)}
@@ -55,9 +56,9 @@
                   >
                     <div class="flex items-center gap-3 overflow-hidden">
                       <div class="flex relative items-center rounded-l-lg shrink-0 w-[120px] h-[120px] bg-base-content/10 place-content-center">
-                        <a :if={download_url} href={download_url} target="_blank">
+                        <!-- <a :if={download_url} href={download_url} target="_blank">
                           <#Icon iconify="pajamas:import" class="w-8 h-8 text-gray-200" />
-                        </a>
+                        </a> -->
 
                         <LinkLive to={if download_url, do: media_url || preview_img} target="_blank">
                           {#case preview_img || e(m.metadata, "favicon", nil) ||
@@ -157,12 +158,12 @@
                         reusable_modal_id="media_player_modal"
                         no_actions
                         title_text={media_label}
-                        title_class="font-bold text-base line-clamp-1 px-2 max-w-[420px]"
+                        title_class="font-bold text-base line-clamp-1 bg-secondary text-secondary-content p-2 max-w-[420px]"
                         no_backdrop
                         image_preview
                         enable_fallback={false}
-                        modal_class={"resize overflow-auto", "w-[500px]": is_video?, "w-[320px]": !is_video?}
-                        wrapper_class="h-full max-h-full !w-full md:w-10/12 max-w-[100%] bg-base-100 shadow-none rounded-none"
+                        modal_class={"", "w-[500px]": is_video?, "w-[390px] !bottom-2 !left-2": !is_video?}
+                        wrapper_class="h-full max-h-full !w-full md:w-10/12 max-w-[100%] bg-base-100 shadow-lg rounded-lg"
                         open_btn_class="w-full"
                         open_btn_wrapper_class="w-full h-full"
                       >
