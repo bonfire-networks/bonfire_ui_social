@@ -44,7 +44,6 @@
             metadata={e(m.metadata, "wikibase", nil) || e(m.metadata, "crossref", nil) || e(m.metadata, "oembed", nil)}
           />
         {#else _}
-          <code>{inspect(e(m.metadata, "oembed", "DOI", nil), pretty: true)}</code>
           {#case preview_img(m)}
             {#match preview_img}
               {#case e(m.metadata, "oembed", "download_url", nil) || e(m.metadata, "download_url", nil)}

@@ -218,6 +218,12 @@
       </details>
     </li>
 
+    <StatelessComponent
+      module={maybe_component(Bonfire.Label.Web.ContentLabelLive, @__context__)}
+      object={@object}
+      object_boundary={@object_boundary}
+    />
+
     {!-- Block the author, etc --}
     <StatelessComponent
       :if={current_user_id(@__context__) != @creator_id}
