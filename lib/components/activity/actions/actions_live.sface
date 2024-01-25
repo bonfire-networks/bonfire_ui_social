@@ -1,8 +1,9 @@
-<!-- {#if @showing_within == :notifications &&
+<div>
+  <!-- {#if @showing_within == :notifications &&
     id(e(@activity, :object, :subject, nil)) == current_user_id(@__context__)}
   <div />
 {#else} -->
-<!-- data-show-plain-actions={!Settings.get(
+  <!-- data-show-plain-actions={!Settings.get(
                 [
                   Bonfire.UI.Social.Activity.ActionsLive,
                   @showing_within,
@@ -11,46 +12,147 @@
                 nil,
                 current_user_id(@__context__)
               )} -->
-<div
-  data-id="activity_actions"
-  data-rendered={@showing_within}
-  data-main-object={@viewing_main_object}
-  class="feed_actions order-last h-8"
-  data-hide={@hide_actions}
->
-  <div
-    x-transition
-    x-cloak
-    x-bind:class="show_actions ? '!flex' : ''"
-    class={
-      " feed-clickable mt-2 flex-1 w-full md:w-auto items-center justify-end gap-6",
-      "flex can-hover:hidden": @hide_actions,
-      flex: !@hide_actions
-    }
-  >
-    {#if @verb == "Flag"}
-      <StatelessComponent
-        module={maybe_component(Bonfire.UI.Moderation.FlaggedActionsLive, @__context__)}
-        object={@object}
-        activity={@activity}
-        object_type={@object_type}
-        object_boundary={@object_boundary}
-        object_type_readable={@object_type_readable}
-        verb={@verb}
-        thread_id={@thread_id}
-        thread_mode={@thread_mode}
-        thread_title={@thread_title}
-        showing_within={@showing_within}
-        viewing_main_object={@viewing_main_object}
-        activity_component_id={@activity_component_id}
-        is_remote={@is_remote}
-      />
-    {#else}
-      {#if LiveHandler.feed_live_update_many_preloads?() == :async_actions}
-        {#if @object_boundary || !socket_connected?(@__context__)}
-          <!-- LOAD ALL AS IF THEY WERE STATELESS COMPONENTS, since we preload data in this component -->
 
-          <StatelessComponent
+  <StatelessComponent
+    :if={@labelled && @showing_within != :smart_input}
+    module={maybe_module(Bonfire.Label.Web.LabelledLive) || Bonfire.UI.Social.Activity.LabelledLive}
+    labelled={@labelled}
+    showing_within={@showing_within}
+  />
+
+  <div
+    data-id="activity_actions"
+    data-rendered={@showing_within}
+    data-main-object={@viewing_main_object}
+    class="feed_actions order-last h-8"
+    data-hide={@hide_actions}
+  >
+    <div
+      x-transition
+      x-cloak
+      x-bind:class="show_actions ? '!flex' : ''"
+      class={
+        " feed-clickable mt-2 flex-1 w-full md:w-auto items-center justify-end gap-6",
+        "flex can-hover:hidden": @hide_actions,
+        flex: !@hide_actions
+      }
+    >
+      {#if @verb == "Flag"}
+        <StatelessComponent
+          module={maybe_component(Bonfire.UI.Moderation.FlaggedActionsLive, @__context__)}
+          object={@object}
+          activity={@activity}
+          object_type={@object_type}
+          object_boundary={@object_boundary}
+          object_type_readable={@object_type_readable}
+          verb={@verb}
+          thread_id={@thread_id}
+          thread_mode={@thread_mode}
+          thread_title={@thread_title}
+          showing_within={@showing_within}
+          viewing_main_object={@viewing_main_object}
+          activity_component_id={@activity_component_id}
+          is_remote={@is_remote}
+        />
+      {#else}
+        {#if LiveHandler.feed_live_update_many_preloads?() == :async_actions}
+          {#if @object_boundary || !socket_connected?(@__context__)}
+            <!-- LOAD ALL AS IF THEY WERE STATELESS COMPONENTS, since we preload data in this component -->
+
+            <StatelessComponent
+              module={maybe_component(Bonfire.UI.Social.Activity.ReplyLive, @__context__)}
+              object_id={id(@object)}
+              object_type={@object_type}
+              object_boundary={@object_boundary}
+              permalink={@permalink}
+              thread_mode={@thread_mode}
+              reply_count={if @showing_within == :thread and @thread_mode != :flat,
+                do:
+                  e(@activity, :replied, :direct_replies_count, nil) ||
+                    e(@object, :replied, :direct_replies_count, 0),
+                else: @reply_count}
+              showing_within={@showing_within}
+              hide_reply={@hide_reply}
+              viewing_main_object={@viewing_main_object}
+              activity_component_id={@activity_component_id}
+              event_target={@myself}
+              class="flex btn btn-sm btn-ghost btn-circle text-base-content/70"
+            />
+
+            <StatelessComponent
+              :if={@showing_within != :messages}
+              module={maybe_component(Bonfire.UI.Reactions.BoostActionLive, @__context__)}
+              id={"#{@id}_boost"}
+              myself={@myself}
+              object_id={id(@object)}
+              object_type={@object_type}
+              object_boundary={@object_boundary}
+              showing_within={@showing_within}
+              my_boost={@my_boost}
+              boost_count={e(
+                the_activity(@activity, @object),
+                :boost_count,
+                :object_count,
+                nil
+              )}
+            />
+
+            <StatelessComponent
+              module={maybe_component(Bonfire.UI.Reactions.LikeActionLive, @__context__)}
+              id={"#{@id}_like"}
+              event_target={@myself}
+              myself={@myself}
+              object_id={id(@object)}
+              object_boundary={@object_boundary}
+              my_like={@my_like}
+              like_count={e(
+                the_activity(@activity, @object),
+                :like_count,
+                :object_count,
+                nil
+              )}
+            />
+
+            <StatelessComponent
+              module={maybe_component(Bonfire.UI.Reactions.BookmarkActionLive, @__context__)}
+              id={"#{@id}_bookmark"}
+              event_target={@myself}
+              myself={@myself}
+              :if={not is_nil(current_user_id(@__context__))}
+              object_id={id(@object)}
+              object_boundary={@object_boundary}
+              my_bookmark={@my_bookmark}
+            />
+
+            <Bonfire.UI.Social.Activity.MoreActionsLive
+              :if={!@hide_more_actions}
+              object={@object}
+              activity={@activity}
+              object_type={@object_type}
+              object_boundary={@object_boundary}
+              object_type_readable={@object_type_readable}
+              verb={@verb}
+              thread_id={@thread_id}
+              thread_mode={@thread_mode}
+              thread_title={@thread_title}
+              showing_within={@showing_within}
+              feed_name={@feed_name}
+              viewing_main_object={@viewing_main_object}
+              activity_component_id={@activity_component_id}
+              is_remote={@is_remote}
+              parent_id={@parent_id}
+              published_in={@published_in}
+            />
+          {#else}
+            <!-- ACTIONS SKELETON GOES HERE -->
+            <div class="skeleton w-6 h-6 rounded-full shrink-0" />
+            <div class="skeleton w-6 h-6 ml-1 rounded-full shrink-0" />
+            <div class="skeleton w-6 h-6 ml-1 rounded-full shrink-0" />
+            <div class="skeleton w-6 h-6 ml-1 rounded-full shrink-0" />
+            <div class="skeleton w-6 h-6 ml-1 rounded-full shrink-0" />
+          {/if}
+        {#else}
+          <StatefulComponent
             module={maybe_component(Bonfire.UI.Social.Activity.ReplyLive, @__context__)}
             object_id={id(@object)}
             object_type={@object_type}
@@ -66,53 +168,56 @@
             hide_reply={@hide_reply}
             viewing_main_object={@viewing_main_object}
             activity_component_id={@activity_component_id}
-            event_target={@myself}
             class="flex btn btn-sm btn-ghost btn-circle text-base-content/70"
           />
 
-          <StatelessComponent
-            :if={@showing_within != :messages}
+          <StatefulComponent
             module={maybe_component(Bonfire.UI.Reactions.BoostActionLive, @__context__)}
-            id={"#{@id}_boost"}
-            myself={@myself}
+            :if={@showing_within != :messages}
+            id={ComponentID.new(
+              Bonfire.UI.Reactions.BoostActionLive,
+              id(@object),
+              @activity_component_id || id(@activity)
+            )}
             object_id={id(@object)}
             object_type={@object_type}
             object_boundary={@object_boundary}
             showing_within={@showing_within}
-            my_boost={@my_boost}
             boost_count={e(
-              the_activity(@activity, @object),
+              Bonfire.UI.Social.Activity.ActionsLive.the_activity(@activity, @object),
               :boost_count,
               :object_count,
               nil
             )}
           />
 
-          <StatelessComponent
+          <StatefulComponent
             module={maybe_component(Bonfire.UI.Reactions.LikeActionLive, @__context__)}
-            id={"#{@id}_like"}
-            event_target={@myself}
-            myself={@myself}
+            id={ComponentID.new(
+              Bonfire.UI.Reactions.LikeActionLive,
+              id(@object),
+              @activity_component_id || id(@activity)
+            )}
             object_id={id(@object)}
             object_boundary={@object_boundary}
-            my_like={@my_like}
             like_count={e(
-              the_activity(@activity, @object),
+              Bonfire.UI.Social.Activity.ActionsLive.the_activity(@activity, @object),
               :like_count,
               :object_count,
               nil
             )}
           />
 
-          <StatelessComponent
+          <StatefulComponent
             module={maybe_component(Bonfire.UI.Reactions.BookmarkActionLive, @__context__)}
-            id={"#{@id}_bookmark"}
-            event_target={@myself}
-            myself={@myself}
             :if={not is_nil(current_user_id(@__context__))}
+            id={ComponentID.new(
+              Bonfire.UI.Reactions.BookmarkActionLive,
+              id(@object),
+              @activity_component_id || id(@activity)
+            )}
             object_id={id(@object)}
             object_boundary={@object_boundary}
-            my_bookmark={@my_bookmark}
           />
 
           <Bonfire.UI.Social.Activity.MoreActionsLive
@@ -134,104 +239,9 @@
             parent_id={@parent_id}
             published_in={@published_in}
           />
-        {#else}
-          <!-- ACTIONS SKELETON GOES HERE -->
-          <div class="skeleton w-6 h-6 rounded-full shrink-0" />
-          <div class="skeleton w-6 h-6 ml-1 rounded-full shrink-0" />
-          <div class="skeleton w-6 h-6 ml-1 rounded-full shrink-0" />
-          <div class="skeleton w-6 h-6 ml-1 rounded-full shrink-0" />
-          <div class="skeleton w-6 h-6 ml-1 rounded-full shrink-0" />
         {/if}
-      {#else}
-        <StatefulComponent
-          module={maybe_component(Bonfire.UI.Social.Activity.ReplyLive, @__context__)}
-          object_id={id(@object)}
-          object_type={@object_type}
-          object_boundary={@object_boundary}
-          permalink={@permalink}
-          thread_mode={@thread_mode}
-          reply_count={if @showing_within == :thread and @thread_mode != :flat,
-            do:
-              e(@activity, :replied, :direct_replies_count, nil) ||
-                e(@object, :replied, :direct_replies_count, 0),
-            else: @reply_count}
-          showing_within={@showing_within}
-          hide_reply={@hide_reply}
-          viewing_main_object={@viewing_main_object}
-          activity_component_id={@activity_component_id}
-          class="flex btn btn-sm btn-ghost btn-circle text-base-content/70"
-        />
-
-        <StatefulComponent
-          module={maybe_component(Bonfire.UI.Reactions.BoostActionLive, @__context__)}
-          :if={@showing_within != :messages}
-          id={ComponentID.new(
-            Bonfire.UI.Reactions.BoostActionLive,
-            id(@object),
-            @activity_component_id || id(@activity)
-          )}
-          object_id={id(@object)}
-          object_type={@object_type}
-          object_boundary={@object_boundary}
-          showing_within={@showing_within}
-          boost_count={e(
-            Bonfire.UI.Social.Activity.ActionsLive.the_activity(@activity, @object),
-            :boost_count,
-            :object_count,
-            nil
-          )}
-        />
-
-        <StatefulComponent
-          module={maybe_component(Bonfire.UI.Reactions.LikeActionLive, @__context__)}
-          id={ComponentID.new(
-            Bonfire.UI.Reactions.LikeActionLive,
-            id(@object),
-            @activity_component_id || id(@activity)
-          )}
-          object_id={id(@object)}
-          object_boundary={@object_boundary}
-          like_count={e(
-            Bonfire.UI.Social.Activity.ActionsLive.the_activity(@activity, @object),
-            :like_count,
-            :object_count,
-            nil
-          )}
-        />
-
-        <StatefulComponent
-          module={maybe_component(Bonfire.UI.Reactions.BookmarkActionLive, @__context__)}
-          :if={not is_nil(current_user_id(@__context__))}
-          id={ComponentID.new(
-            Bonfire.UI.Reactions.BookmarkActionLive,
-            id(@object),
-            @activity_component_id || id(@activity)
-          )}
-          object_id={id(@object)}
-          object_boundary={@object_boundary}
-        />
-
-        <Bonfire.UI.Social.Activity.MoreActionsLive
-          :if={!@hide_more_actions}
-          object={@object}
-          activity={@activity}
-          object_type={@object_type}
-          object_boundary={@object_boundary}
-          object_type_readable={@object_type_readable}
-          verb={@verb}
-          thread_id={@thread_id}
-          thread_mode={@thread_mode}
-          thread_title={@thread_title}
-          showing_within={@showing_within}
-          feed_name={@feed_name}
-          viewing_main_object={@viewing_main_object}
-          activity_component_id={@activity_component_id}
-          is_remote={@is_remote}
-          parent_id={@parent_id}
-          published_in={@published_in}
-        />
       {/if}
-    {/if}
+    </div>
   </div>
+  <!-- {/if} -->
 </div>
-<!-- {/if} -->

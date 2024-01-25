@@ -54,6 +54,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
   prop object_type_readable, :string, default: nil
   prop reply_count, :any, default: nil
   prop published_in, :any, default: nil
+  prop labelled, :any, default: nil
   prop subject_user, :any, default: nil
   prop hide_actions, :any, default: false
   prop activity_loaded_preloads, :list, default: []
@@ -719,6 +720,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
                     activity_component_id={e(component_assigns, :activity_component_id, @activity_component_id)}
                     parent_id={@parent_id}
                     published_in={@published_in}
+                    labelled={@labelled}
                     reply_count={@reply_count}
                     is_remote={@is_remote}
                     hide_actions={@hide_actions}
@@ -743,6 +745,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
                     activity_component_id={e(component_assigns, :activity_component_id, @activity_component_id)}
                     parent_id={@parent_id}
                     published_in={@published_in}
+                    labelled={@labelled}
                     reply_count={@reply_count}
                     is_remote={@is_remote}
                     hide_actions={@hide_actions}
@@ -785,12 +788,6 @@ defmodule Bonfire.UI.Social.ActivityLive do
               />
           {/case}
         {/for}
-
-        <Bonfire.UI.Social.Activity.LabelledLive
-          :if={@labelled && @showing_within != :smart_input}
-          labelled={@labelled}
-          showing_within={@showing_within}
-        />
       {/if}
     </article>
     """
