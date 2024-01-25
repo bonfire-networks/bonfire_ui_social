@@ -140,9 +140,9 @@
         </li>
       {/if}
 
-      <li>
+      <li :if={extension_enabled?(:bonfire_ui_topics) or extension_enabled?(:bonfire_ui_groups)}>
         <StatelessComponent
-          module={maybe_component(Bonfire.Classify.Web.TagModalLive, @__context__)}
+          module={maybe_component(Bonfire.Tag.Web.TagModalLive, @__context__)}
           object={@object}
           parent_id={@activity_component_id || id(@activity)}
         />
@@ -222,6 +222,7 @@
       module={maybe_component(Bonfire.Label.Web.ContentLabelLive, @__context__)}
       object={@object}
       object_boundary={@object_boundary}
+      target={"##{@activity_component_id}"}
     />
 
     {!-- Block the author, etc --}

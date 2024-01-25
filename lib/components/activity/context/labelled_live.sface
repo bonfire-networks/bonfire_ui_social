@@ -1,0 +1,24 @@
+<div
+  :if={@showing_within not in [:group, :topic, :thread] and not is_nil(@labelled)}
+  class={@class}
+>
+  <!-- <#Icon iconify="ri:group-fill" class="w-4 h-4 text-info" /> -->
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    fill="none"
+    viewBox="0 0 24 24"
+    class="stroke-current shrink-0 w-6 h-6"
+  ><path
+      stroke-linecap="round"
+      stroke-linejoin="round"
+      stroke-width="2"
+      d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+    /></svg>
+  <div class="flex-1 ml-3">
+    <div class="text-sm font-medium text-base-content/70">
+      <LiveRedirect class="font-medium link text-base-content/70" to={path(@labelled)}>
+        {e(@labelled, :profile, :name, nil) || e(@labelled, :character, :username, nil)}
+      </LiveRedirect>
+    </div>
+  </div>
+</div>

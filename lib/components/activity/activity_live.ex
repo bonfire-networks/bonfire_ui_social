@@ -170,6 +170,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
           existing -> existing
         end,
       published_in: maybe_published_in(activity, extras[:verb]),
+      labelled: maybe_labelled(activity, extras[:verb]),
       # e(socket_assigns[:activity], :peered, nil) != nil or
       is_remote:
         (assigns[:is_remote] || socket_assigns[:is_remote] ||
@@ -378,8 +379,17 @@ defmodule Bonfire.UI.Social.ActivityLive do
     parent_id
   end
 
-  def maybe_published_in(_none, _) do
-    # debug(none, "none")
+  def maybe_published_in(none, verb) do
+    # debug(none, "none for #{verb}")
+    nil
+  end
+
+  def maybe_labelled(%{subject: %{table_id: "2AGSCANBECATEG0RY0RHASHTAG"} = subject}, "Label") do
+    subject
+  end
+
+  def maybe_labelled(none, verb) do
+    debug(none, "none for #{verb}")
     nil
   end
 
@@ -569,6 +579,12 @@ defmodule Bonfire.UI.Social.ActivityLive do
           <input type="hidden" name="feed_id" value={@feed_id}>
           <input type="hidden" name="activity_id" value={@activity_id}>
         </form>
+
+        <Bonfire.UI.Social.Activity.PublishedInLive
+          :if={@published_in && @showing_within != :smart_input}
+          context={@published_in}
+          showing_within={@showing_within}
+        />
 
         {#for {component, component_assigns} when is_atom(component) <-
             activity_components(
@@ -769,6 +785,12 @@ defmodule Bonfire.UI.Social.ActivityLive do
               />
           {/case}
         {/for}
+
+        <Bonfire.UI.Social.Activity.LabelledLive
+          :if={@labelled && @showing_within != :smart_input}
+          labelled={@labelled}
+          showing_within={@showing_within}
+        />
       {/if}
     </article>
     """

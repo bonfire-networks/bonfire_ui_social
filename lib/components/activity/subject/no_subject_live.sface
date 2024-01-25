@@ -1,9 +1,4 @@
 <div data-role="no_subject" class="flex items-end w-full">
-  <Bonfire.UI.Social.Activity.PublishedInLive
-    :if={@published_in && @showing_within != :smart_input}
-    context={@published_in}
-  />
-
   <Bonfire.UI.Social.Activity.InstanceIconLive peered={@peered} />
 
   <Bonfire.UI.Social.Activity.LinkToActivityLive

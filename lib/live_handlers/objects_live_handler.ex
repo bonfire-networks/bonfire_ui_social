@@ -31,21 +31,6 @@ defmodule Bonfire.Social.Objects.LiveHandler do
     end
   end
 
-  def handle_event("tag", %{"tags" => tags} = params, socket) do
-    with {:ok, _} <-
-           Bonfire.Social.Tags.maybe_tag(
-             current_user_required!(socket),
-             e(params, "id", nil) || e(socket.assigns, :object, nil),
-             tags
-           ) do
-      Bonfire.UI.Common.OpenModalLive.close()
-
-      {:noreply,
-       socket
-       |> assign_flash(:info, l("Tagged!"))}
-    end
-  end
-
   def handle_event("delete", %{"id" => id} = _params, socket) do
     with {:ok, _} <-
            Objects.delete(id,
