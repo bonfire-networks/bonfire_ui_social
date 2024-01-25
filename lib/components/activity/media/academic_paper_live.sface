@@ -20,13 +20,8 @@
                   <div class="mt-2">
                     <!-- <div class="uppercase font-medium text-base-content/70 text-xs">{l("authors")}</div> -->
                     <div class="flex flex-wrap gap-0.5 text-sm text-base-content/80">
-                      {#for author <-
-                          Enum.intersperse(List.wrap(e(@metadata, "creators", []) || e(@metadata, "author", [])), ",")}
-                        {#if is_map(author)}
-                          {e(author, "given", nil) || e(author, "firstName", nil)} {e(author, "family", nil) || e(author, "lastName", nil)}
-                        {#else}{author}
-                        {/if}
-                      {/for}
+                      {#for {author, i} <-
+                          Enum.with_index(List.wrap(e(@metadata, "creators", []) || e(@metadata, "author", [])))}{if i !=0, do: ","} {e(author, "given", nil) || e(author, "firstName", nil)} {e(author, "family", nil) || e(author, "lastName", nil)}{/for}
                     </div>
 
                     <div class="flex items-center mt-2 gap-4">
