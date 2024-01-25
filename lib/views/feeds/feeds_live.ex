@@ -10,6 +10,7 @@ defmodule Bonfire.UI.Social.FeedsLive do
     # exclude_from_nav: true
     default_nav: [
       Bonfire.UI.Social.FeedsLive,
+      Bonfire.UI.Files.Web.MediaFeedLive,
       Bonfire.Search.Web.SearchLive,
       # Bonfire.UI.Social.ExploreLive,
       # Bonfire.UI.Social.Feeds.LocalLive,

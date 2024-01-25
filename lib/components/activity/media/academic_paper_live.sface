@@ -8,7 +8,7 @@
             <div class="w-full border p-4 rounded-lg media_container border-base-content/20 bg-base-100 text-base-content">
               <div class="relative w-full">
                 <span class="text-sm badge badge-accent rounded bg-accent/30 border-none !text-accent">{e(@metadata, "type", nil) || e(@metadata, "itemType", nil)}</span>
-                <div class="mt-2 text-xs font-medium uppercase">{e(@metadata, "publisher", nil) ||
+                <div class="mt-2 text-xs font-semibold text-base-content/70 uppercase">{e(@metadata, "publisher", nil) ||
                     e(@metadata, "container-title", nil) || e(@metadata, "publicationTitle", nil)}
                 </div>
                 <div class="text-xl font-semibold">
@@ -18,16 +18,17 @@
 
                 <div class="text-sm text-left">
                   <div class="mt-2">
+                    <!-- <code>{inspect(@metadata, pretty: true)}</code> -->
                     <!-- <div class="uppercase font-medium text-base-content/70 text-xs">{l("authors")}</div> -->
                     <div class="flex flex-wrap gap-0.5 text-sm text-base-content/80">
                       {#for {author, i} <-
-                          Enum.with_index(List.wrap(e(@metadata, "creators", []) || e(@metadata, "author", [])))}{if i != 0, do: ","} {e(author, "given", nil) || e(author, "firstName", nil)} {e(author, "family", nil) || e(author, "lastName", nil)}{/for}
+                          Enum.with_index(List.wrap(e(@metadata, "author", [])) || e(@metadata, "creators", []))}{if i != 0, do: ","} {e(author, "given", nil) || e(author, "firstName", nil)} {e(author, "family", nil) || e(author, "lastName", nil)}{/for}
                     </div>
 
                     <div class="flex items-center mt-2 gap-4">
                       {#case e(@metadata, "created", "date-time", nil)}
                         {#match published when is_binary(published)}
-                          <div class="mt-2 flex items-center gap-2">
+                          <div class="mt-2 text-base-content/70 flex items-center gap-2">
                             <#Icon iconify="material-symbols:date-range-outline" class="w-4 h-4 text-base-content/70" />
                             <span class="font-medium">{published |> DatesTimes.format(format: "MMMM d, Y")}</span>
                           </div>
@@ -39,7 +40,7 @@
                         <span class="font-bold">{e(@metadata, "references-count", 0)}</span> {l("References")}</div>
                     {/if} -->
 
-                      <div :if={doi} class="mt-2 flex items-center gap-2">
+                      <div :if={doi} class="mt-2 text-base-content/70  flex items-center gap-2">
                         <span>DOI: <a target="blank" class="link" href={"https://dx.doi.org/#{doi}"} ">{doi}</a></span>
                       </div>
 
@@ -53,7 +54,7 @@
                       {/for}
                     </div>
 
-                    <div class="mt-2 text-sm text-justify line-clamp-5 break-words">
+                    <div class="mt-2 text-sm text-justify text-base-content/90 line-clamp-5 break-words">
                       {MediaLive.description(@media) |> Text.text_only()}
                     </div>
                     {!-- {e(@metadata, "subject", nil)} --}

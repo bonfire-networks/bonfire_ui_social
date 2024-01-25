@@ -1,6 +1,8 @@
 <div
+  data-id="media_list"
+  data-rendered={@showing_within}
   :if={@link_list != [] && @showing_within != :smart_input}
-  class={"my-2 flex flex-col gap-2", "-ml-[2.5rem] mb-4": @showing_within == :media}
+  class="my-2 flex flex-col gap-2"
 >
   {!-- LINKS --}
   {#for m <- @link_list}
@@ -62,7 +64,7 @@
                           <#Icon iconify="pajamas:import" class="w-8 h-8 text-gray-200" />
                         </a> -->
 
-                        <LinkLive to={if download_url, do: media_url || preview_img} target="_blank">
+                        <div>
                           {#case preview_img || e(m.metadata, "favicon", nil) ||
                               Bonfire.Files.FaviconStore.favicon_url(media_url)}
                             {#match nil}
@@ -87,7 +89,7 @@
                                   />
                               {/case}
                           {/case}
-                        </LinkLive>
+                        </div>
                       </div>
                       <div class="px-2">
                         <div class="text-sm font-medium line-clamp-1">
@@ -155,69 +157,159 @@
                   <figure class="h-full">
                     {!-- FIXME: enable_fallback for logged out visitors instead of just not using the modal --}
                     {#if current_user_id(@__context__)}
-                      <Bonfire.UI.Common.OpenModalLive
-                        id={"media_modal_#{id(m)}#{Text.random_string()}"}
-                        reusable_modal_id="media_player_modal"
-                        no_actions
-                        title_text={media_label}
-                        title_class="font-bold text-base line-clamp-1 bg-secondary text-secondary-content p-2 max-w-[420px]"
-                        no_backdrop
-                        image_preview
-                        enable_fallback={false}
-                        modal_class={"", "w-[500px]": is_video?, "w-[390px] !bottom-2 !left-2": !is_video?}
-                        wrapper_class="h-full max-h-full !w-full md:w-10/12 max-w-[100%] bg-base-100 shadow-lg rounded-lg"
-                        open_btn_class="w-full"
-                        open_btn_wrapper_class="w-full h-full"
-                      >
-                        <div
-                          data-id="remote_media"
-                          data-video={is_video?}
-                          class="h-full sticky bg-base-100 z-[9999999999999]"
-                        >
-                          <Bonfire.UI.Social.Activity.RemoteMediaLive media={m} />
-                        </div>
+                      {#if is_video?}
+                        <div class="rounded-box border border-base-content/20 h-full text-center items-center justify-center">
+                          <div class="relative rounded-t-box bg-base-100">
+                            {#case preview_img(m) || Media.media_url(m)}
+                              {#match maybe_preview_img}
+                                {#if is_image?(maybe_preview_img)}
+                                  <LazyImage
+                                    class="w-full rounded-t-box !object-cover m-image cursor-pointer aspect-video"
+                                    m={m}
+                                    alt={media_label}
+                                    src={maybe_preview_img}
+                                    fallback_icon="majesticons:video"
+                                  />
+                                {#else}
+                                  <div class="h-60 flex items-center place-content-center rounded-t-box">
+                                    <#Icon iconify="majesticons:video" class="w-full h-32 text-base-content/70" />
+                                  </div>
+                                {/if}
+                            {/case}
+                            {!-- PLAY OR FOLLOW LINK --}
+                            <div class="absolute flex justify-center items-center inset-0">
+                              <div class="bg-gray-900/60 z-50 gap-4 px-3 py-2 rounded flex justify-center items-center place-content-center">
+                                <Bonfire.UI.Common.OpenModalLive
+                                  id={"media_modal_#{id(m)}#{Text.random_string()}"}
+                                  reusable_modal_id="media_player_modal"
+                                  no_actions
+                                  title_text={media_label}
+                                  title_class="font-bold text-base line-clamp-1 bg-secondary text-secondary-content p-2 max-w-[420px]"
+                                  no_backdrop
+                                  image_preview
+                                  enable_fallback={false}
+                                  modal_class={"", "w-[500px]": is_video?, "w-[390px] !bottom-2 !left-2": !is_video?}
+                                  wrapper_class="h-full max-h-full !w-full md:w-10/12 max-w-[100%] bg-base-100 shadow-lg rounded-lg"
+                                  open_btn_class="w-full"
+                                  open_btn_wrapper_class="w-full h-full"
+                                >
+                                  <div
+                                    data-id="remote_media"
+                                    data-video={is_video?}
+                                    class="h-full sticky bg-base-100 z-[9999999999999]"
+                                  >
+                                    <Bonfire.UI.Social.Activity.RemoteMediaLive media={m} />
+                                  </div>
 
-                        <:open_btn>
-                          <div class="rounded-box border border-base-content/20 h-full text-center items-center justify-center">
-                            <div class="relative rounded-t-box bg-base-100">
-                              {#case preview_img(m) || Media.media_url(m)}
-                                {#match maybe_preview_img}
-                                  {#if is_image?(maybe_preview_img)}
-                                    <LazyImage
-                                      class="w-full rounded-t-box !object-cover m-image cursor-pointer aspect-video"
-                                      m={m}
-                                      alt={media_label}
-                                      src={maybe_preview_img}
-                                      fallback_icon="majesticons:video"
-                                    />
-                                  {#else}
-                                    <div class="h-60 flex items-center place-content-center rounded-t-box">
-                                      <#Icon iconify="majesticons:video" class="w-full h-32 text-base-content/70" />
-                                    </div>
-                                  {/if}
-                              {/case}
-                              {!-- PLAY OR FOLLOW LINK --}
-                              <div class="absolute flex justify-center items-center inset-0">
-                                <div class="bg-gray-900/60 z-50 gap-4 px-3 py-2 rounded flex justify-center items-center place-content-center">
-                                  <button class="">
-                                    <#Icon iconify="heroicons:play-20-solid" class="w-6 h-6 text-gray-200" />
-                                  </button>
-                                  <a href={Media.media_url(m)} target="_blank">
-                                    <#Icon iconify="heroicons-outline:external-link" class="w-6 h-6 text-gray-200" />
-                                  </a>
+                                  <:open_btn>
+                                    <button class="">
+                                      <#Icon iconify="heroicons:play-20-solid" class="w-6 h-6 text-gray-200" />
+                                    </button>
+                                  </:open_btn>
+                                </Bonfire.UI.Common.OpenModalLive>
+
+                                <a href={Media.media_url(m)} target="_blank">
+                                  <#Icon iconify="heroicons-outline:external-link" class="w-6 h-6 text-gray-200" />
+                                </a>
+                              </div>
+                            </div>
+                          </div>
+
+                          <div class="">
+                            <div class="p-4">
+                              <div class="font-semibold text-base-content/80">{media_label}</div>
+                            </div>
+                          </div>
+                          <figcaption class="sr-only">{media_label}</figcaption>
+                        </div>
+                      {#else}
+                        <div class="flex w-full border rounded-lg media_container border-base-content/20">
+                          <div class="flex justify-between w-full">
+                            <div class="flex items-center gap-3 overflow-hidden">
+                              <div class="flex relative items-center rounded-l-lg shrink-0 w-[120px] h-[120px] bg-base-content/10 place-content-center">
+                                <div>
+                                  {#case preview_img(m) || Media.media_url(m)}
+                                    {#match maybe_preview_img}
+                                      {#if is_image?(maybe_preview_img)}
+                                        <LazyImage
+                                          class="w-full rounded-l-lg !object-cover m-image"
+                                          m={m}
+                                          alt={media_label}
+                                          src={maybe_preview_img}
+                                          fallback_icon="majesticons:video"
+                                        />
+                                      {#else}
+                                        <div class="h-[120px] flex items-center place-content-center rounded-t-box">
+                                          <#Icon iconify="majesticons:video" class="w-full h-12 text-base-content/70" />
+                                        </div>
+                                      {/if}
+                                  {/case}
                                 </div>
                               </div>
-                            </div>
+                              <div class="px-2 w-full flex-1">
+                                <div class="text-sm font-medium line-clamp-1">
+                                  {media_label}
+                                </div>
 
-                            <div class="">
-                              <div class="p-4">
-                                <div class="font-semibold text-base-content/80">{media_label}</div>
+                                <div class="text-sm">
+                                  {e(m, :metadata, "oembed", "author_name", nil)}
+                                  {#case e(m, :metadata, "oembed", "published", "date-parts", nil)}
+                                    {#match published when is_list(published)}
+                                      <span class="text-base-content/70">{published |> List.flatten() |> Enum.join("-")}</span>
+                                    {#match _}
+                                  {/case}
+
+                                  {#case provider(m)}
+                                    {#match nil}
+                                    {#match provider}
+                                      <span class="text-base-content/70">{provider}</span>
+                                  {/case}
+                                </div>
+                                <div class="max-w-[420px] text-sm mt-0.5 break-words line-clamp-2 text-base-content/70">{description(m)}</div>
                               </div>
                             </div>
-                            <figcaption class="sr-only">{media_label}</figcaption>
+                            <div class="flex border-l border-base-content/20 justify-center items-center flex-col">
+                              <div class="flex-col divide-base-content/20 z-50 flex justify-center items-center place-content-center">
+                                <Bonfire.UI.Common.OpenModalLive
+                                  id={"media_modal_#{id(m)}#{Text.random_string()}"}
+                                  reusable_modal_id="media_player_modal"
+                                  no_actions
+                                  title_text={media_label}
+                                  title_class="font-bold text-base line-clamp-1 bg-secondary text-secondary-content p-2 max-w-[420px]"
+                                  no_backdrop
+                                  image_preview
+                                  enable_fallback={false}
+                                  modal_class={"", "w-[500px]": is_video?, "w-[390px] !bottom-2 !left-2": !is_video?}
+                                  wrapper_class="h-full max-h-full !w-full md:w-10/12 max-w-[100%] bg-base-100 shadow-lg rounded-lg"
+                                  open_btn_class="w-full"
+                                  open_btn_wrapper_class="w-full h-full"
+                                >
+                                  <div
+                                    data-id="remote_media"
+                                    data-video={is_video?}
+                                    class="h-full sticky bg-base-100 z-[9999999999999]"
+                                  >
+                                    <Bonfire.UI.Social.Activity.RemoteMediaLive media={m} />
+                                  </div>
+
+                                  <:open_btn>
+                                    <button class="h-[60px] w-[60px] cursor-pointer hover:bg-base-content/10 flex place-content-center items-center">
+                                      <#Icon iconify="heroicons:play-20-solid" class="w-6 h-6 text-gray-200" />
+                                    </button>
+                                  </:open_btn>
+                                </Bonfire.UI.Common.OpenModalLive>
+                                <a
+                                  href={Media.media_url(m)}
+                                  class="border-t cursor-pointer hover:bg-base-content/10 flex-1 min-h-[60px] h-[60px] w-[60px] flex place-content-center items-center border-base-content/20"
+                                  target="_blank"
+                                >
+                                  <#Icon iconify="heroicons-outline:external-link" class="w-6 h-6 text-gray-200" />
+                                </a>
+                              </div>
+                            </div>
                           </div>
-                        </:open_btn>
-                      </Bonfire.UI.Common.OpenModalLive>
+                        </div>
+                      {/if}
                     {#else}
                       {!-- if logged out --}
                       <a href={Media.media_url(m)} target="_blank" class="relative h-full">
