@@ -1,24 +1,27 @@
 <div
   :if={@showing_within not in [:group, :topic, :thread] and not is_nil(@labelled)}
-  class={@class}
+  data-type={e(@labelled, :id, nil)}
+  class={"border mt-3 rounded-lg border-base-content/30"}
 >
-  <!-- <#Icon iconify="ri:group-fill" class="w-4 h-4 text-info" /> -->
-  <svg
-    xmlns="http://www.w3.org/2000/svg"
-    fill="none"
-    viewBox="0 0 24 24"
-    class="stroke-current shrink-0 w-6 h-6"
-  ><path
-      stroke-linecap="round"
-      stroke-linejoin="round"
-      stroke-width="2"
-      d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
-    /></svg>
-  <div class="flex-1 ml-3">
-    <div class="text-sm font-medium text-base-content/70">
-      <LiveRedirect class="font-medium link text-base-content/70" to={path(@labelled)}>
-        {e(@labelled, :profile, :name, nil) || e(@labelled, :character, :username, nil)}
-      </LiveRedirect>
+  <div class="bg-base-content/5  rounded-t-lg border-b border-base-content/30 flex items-center gap-3 py-2 p-3">
+    {#if e(@labelled, :id, nil) == "1ABE10VTDATEDGET1ATESTNEWS"}
+      <#Icon iconify="ph:info-fill" class="w-5 h-5 text-info"/>
+    {#elseif e(@labelled, :id, nil) == "1ABE1M1S1NF0RMEDGETZEFACTS"}
+      <#Icon iconify="mingcute:warning-fill" class="w-5 h-5 text-warning"/>
+    {#else}
+    <#Icon iconify="ooui:error" class="w-5 h-5 text-error"/>
+    {/if}
+    <div class="font-semibold text-base-content">
+      {e(@labelled, :profile, :name, nil) || e(@labelled, :character, :username, nil)}
+    </div>
+  </div>
+  <div class="p-3">
+    <div class="prose leading-[22px] text-base-content/90 prose-sm">Started in 2020, Bonfire is a mission-driven project creating sustainable open-source tools and building blocks for communities to engage meaningfully, coordinate as peers, make collective decisions, and cooperate effectively – all interconnected with countless federated apps across the web. We're dedicated to nurturing digital spaces that encourage vibrant community participation and impactful collaboration.</div>
+  </div>
+  <div class="flex flex-col p-3 mt-2 border-t border-base-content/30 pt-2 gap-1">
+    <div class="flex items-center gap-2 text-sm text-base-content/70">
+        <#Icon iconify="ri:attachment-2" class="w-4 h-4 text-base-content/70" />
+        <a class="link" href="#">https://bonfirenetworks.org/about/</a>
     </div>
   </div>
 </div>
