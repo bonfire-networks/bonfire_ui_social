@@ -294,7 +294,7 @@
 
                                   <:open_btn>
                                     <button class="h-[60px] w-[60px] cursor-pointer hover:bg-base-content/10 flex place-content-center items-center">
-                                      <#Icon iconify="heroicons:play-20-solid" class="w-6 h-6 text-gray-200" />
+                                      <#Icon iconify="heroicons:play-20-solid" class="w-5 h-5 text-base-content/70" />
                                     </button>
                                   </:open_btn>
                                 </Bonfire.UI.Common.OpenModalLive>
@@ -303,7 +303,7 @@
                                   class="border-t cursor-pointer hover:bg-base-content/10 flex-1 min-h-[60px] h-[60px] w-[60px] flex place-content-center items-center border-base-content/20"
                                   target="_blank"
                                 >
-                                  <#Icon iconify="heroicons-outline:external-link" class="w-6 h-6 text-gray-200" />
+                                  <#Icon iconify="heroicons-outline:external-link" class="w-5 h-5 text-base-content/70" />
                                 </a>
                               </div>
                             </div>
