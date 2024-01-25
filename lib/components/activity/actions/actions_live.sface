@@ -17,6 +17,7 @@
     :if={@labelled && @showing_within != :smart_input}
     module={maybe_module(Bonfire.Label.Web.LabelledLive) || Bonfire.UI.Social.Activity.LabelledLive}
     labelled={@labelled}
+    activity={@activity}
     showing_within={@showing_within}
   />
 
