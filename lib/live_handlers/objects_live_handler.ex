@@ -183,6 +183,7 @@ defmodule Bonfire.Social.Objects.LiveHandler do
       :with_thread_name,
       :with_parent,
       :with_media,
+      :maybe_with_labelled,
       :tags
     ]
 

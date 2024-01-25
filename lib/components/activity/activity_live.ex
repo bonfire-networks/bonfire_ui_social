@@ -385,6 +385,14 @@ defmodule Bonfire.UI.Social.ActivityLive do
     nil
   end
 
+  def maybe_labelled(%{labelled: %{subject: %{} = label} = _labelled}, _) do
+    label
+  end
+
+  def maybe_labelled(%{labelled: %{} = labelled}, _) do
+    labelled
+  end
+
   def maybe_labelled(%{subject: %{table_id: "2AGSCANBECATEG0RY0RHASHTAG"} = subject}, "Label") do
     subject
   end
