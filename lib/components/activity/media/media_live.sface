@@ -10,7 +10,17 @@
       {#match nil}
       {#match media_url}
         <!-- test {m.metadata} -->
-        {#if String.ends_with?(media_url, ".pdf")}
+        {#if e(m.metadata, "wikibase", "itemType", nil) in ["journalArticle"] or
+            e(m.metadata, "crossref", "DOI", nil) || e(m.metadata, "oembed", "DOI", nil) ||
+            e(m.metadata, "other", "citation_doi", nil) || e(m.metadata, "other", "citation_doi", nil) ||
+            e(m.metadata, "json_ld", "@type", nil) in ["ScholarlyArticle"]}
+          <Bonfire.UI.Social.Activity.AcademicPaperLive
+            media={m}
+            metadata={e(m.metadata, "wikibase", nil) || e(m.metadata, "crossref", nil) ||
+              e(m.metadata, "json_ld", []) |> List.wrap() |> List.first() || e(m.metadata, "oembed", nil) ||
+              e(m.metadata, "other", nil)}
+          />
+        {#elseif String.ends_with?(media_url, ".pdf")}
           <a
             href={media_url}
             target="_blank"
@@ -42,12 +52,6 @@
                             />--}
             {/case}
           </a>
-        {#elseif e(m.metadata, "wikibase", "itemType", nil) in ["journalArticle"] or
-            e(m.metadata, "crossref", "DOI", false) or e(m.metadata, "oembed", "DOI", false)}
-          <Bonfire.UI.Social.Activity.AcademicPaperLive
-            media={m}
-            metadata={e(m.metadata, "wikibase", nil) || e(m.metadata, "crossref", nil) || e(m.metadata, "oembed", nil)}
-          />
         {#else _}
           {#case preview_img(m)}
             {#match preview_img}
