@@ -8,7 +8,7 @@
             <div class="w-full border p-4 rounded-lg media_container border-base-content/20 bg-base-100 text-base-content">
               <div class="relative w-full">
                 <span class="text-sm badge badge-accent rounded bg-accent/30 border-none !text-accent">{e(@metadata, "type", nil) || e(@metadata, "itemType", nil) || e(@metadata, "@type", nil)}</span>
-                <div class="mt-2 text-xs font-semibold text-base-content/70 uppercase">{e(@metadata, "publisher", nil) ||
+                <div class="mt-2 mb-1 text-xs font-semibold text-base-content/70 uppercase">{e(@metadata, "publisher", nil) ||
                     e(@metadata, "container-title", nil) || e(@metadata, "publicationTitle", nil)}
                 </div>
                 <div class="text-xl font-semibold">
@@ -17,38 +17,28 @@
                 </div>
 
                 <div class="text-sm text-left">
-                  <div class="mt-2">
-                    <!-- <code>{inspect(@metadata, pretty: true)}</code> -->
-                    <!-- <div class="uppercase font-medium text-base-content/70 text-xs">{l("authors")}</div> -->
+                  <div class="">
                     <div class="flex flex-wrap gap-0.5 text-sm text-base-content/80">
                       {#for {author, i} <-
                           Enum.with_index(List.wrap(e(@metadata, "author", [])) || e(@metadata, "creators", []))}{if i != 0, do: ","} {e(author, "given", nil) || e(author, "firstName", nil)} {e(author, "family", nil) || e(author, "lastName", nil) || e(author, "name", nil)}{/for}
                     </div>
 
-                    <div class="flex items-center mt-2 gap-4">
+                    <div class="flex items-center mt-2 mb-4 gap-4">
                       {#case e(@metadata, "created", "date-time", nil)}
                         {#match published when is_binary(published)}
-                          <div class="mt-2 text-base-content/70 flex items-center gap-2">
+                          <div class=" text-base-content/70 flex items-center gap-2">
                             <#Icon iconify="material-symbols:date-range-outline" class="w-4 h-4 text-base-content/70" />
                             <span class="font-medium">{published |> DatesTimes.format(format: "MMMM d, Y")}</span>
                           </div>
                         {#match _}
                       {/case}
-                      <!-- {#if e(@metadata, "references-count", nil)}
-                      <div class="mt-2 flex items-center gap-2">
-                        <#Icon iconify="codicon:references" class="w-4 h-4 text-base-content/70" />
-                        <span class="font-bold">{e(@metadata, "references-count", 0)}</span> {l("References")}</div>
-                    {/if} -->
 
-                      <div :if={doi} class="mt-2 text-base-content/70  flex items-center gap-2">
-                        <span>DOI: <a target="blank" class="link" href={"https://doi.org/#{doi}"} ">{doi}</a></span>
+                      <div :if={doi} class="text-base-content/70  flex items-center gap-2">
+                        <span>DOI: <a target="blank" class="link" href={"https://dx.doi.org/#{doi}"}>{doi}</a></span>
                       </div>
-
-                      <!-- <div class="mt-2 flex items-center gap-2">
-                        <a target="_blank" href={e(@metadata, "license", 0, "URL", nil)}>{l "LICENSE"}</a>
-                      </div> -->
                     </div>
-                    <div class="flex flex-wrap gap-2 mt-4">
+
+                    <div class="flex flex-wrap gap-2">
                       {#for subject <- List.wrap(e(@metadata, "subject", []))}
                         <span class="text-sm badge badge-info bg-info/30 border-none !text-info">#{subject}</span>
                       {/for}
