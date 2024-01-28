@@ -2,7 +2,8 @@
   {#match media_url}
     {#case e(@media.metadata, "download_url", nil)}
       {#match download_url}
-        {#case e(@metadata, "DOI", nil) || e(@metadata, "identifiers", "doi", nil) || e(@metadata, "url", nil) || e(@media.metadata, "facebook", "og:url", nil)}
+        {#case e(@metadata, "DOI", nil) || e(@metadata, "identifiers", "doi", nil) || e(@metadata, "url", nil) ||
+            e(@media.metadata, "facebook", "og:url", nil)}
           {#match doi}
             <!-- <code>{inspect(@media.metadata, pretty: true)}</code> -->
             <div class="w-full border p-4 rounded-lg media_container border-base-content/20 bg-base-100 text-base-content">
@@ -26,7 +27,7 @@
                     <div class="flex items-center mt-2 mb-4 gap-4">
                       {#case e(@metadata, "created", "date-time", nil)}
                         {#match published when is_binary(published)}
-                          <div class=" text-base-content/70 flex items-center gap-2">
+                          <div class="text-base-content/70 flex items-center gap-2">
                             <#Icon iconify="material-symbols:date-range-outline" class="w-4 h-4 text-base-content/70" />
                             <span class="font-medium">{published |> DatesTimes.format(format: "MMMM d, Y")}</span>
                           </div>
@@ -35,18 +36,18 @@
 
                       <div :if={doi} class="text-base-content/70 text-sm flex items-center gap-2">
                         <span>
-                        {#case doi}
-                        {#match "https://doi.org/"<>doi_id}
-                          <a target="blank" class="link" href={doi}>doi:{doi_id}</a>
-                        {#match "https://dx.doi.org/"<>doi_id}
-                          <a target="blank" class="link" href={doi}>doi:{doi_id}</a>
-                        {#match "http"<>_}
-                          <a target="blank" class="link" href={doi}>{doi}</a>
-                        {#match "doi:"<>doi_id}
-                          <a target="blank" class="link" href={"https://doi.org/#{doi_id}"}>{doi}</a>
-                        {#match _}
-                          <a target="blank" class="link" href={"https://doi.org/#{doi}"}>doi:{doi}</a>
-                        {/case}
+                          {#case doi}
+                            {#match "https://doi.org/" <> doi_id}
+                              <a target="blank" class="link" href={doi}>doi:{doi_id}</a>
+                            {#match "https://dx.doi.org/" <> doi_id}
+                              <a target="blank" class="link" href={doi}>doi:{doi_id}</a>
+                            {#match "http" <> _}
+                              <a target="blank" class="link" href={doi}>{doi}</a>
+                            {#match "doi:" <> doi_id}
+                              <a target="blank" class="link" href={"https://doi.org/#{doi_id}"}>{doi}</a>
+                            {#match _}
+                              <a target="blank" class="link" href={"https://doi.org/#{doi}"}>doi:{doi}</a>
+                          {/case}
                         </span>
                       </div>
                     </div>
