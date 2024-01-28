@@ -2,13 +2,13 @@
   {#match media_url}
     {#case e(@media.metadata, "download_url", nil)}
       {#match download_url}
-        {#case e(@metadata, "DOI", nil) || e(@metadata, "identifiers", "doi", nil)}
+        {#case e(@metadata, "DOI", nil) || e(@metadata, "identifiers", "doi", nil) || e(@metadata, "url", nil) || e(@media.metadata, "facebook", "og:url", nil)}
           {#match doi}
             <!-- <code>{inspect(@media.metadata, pretty: true)}</code> -->
             <div class="w-full border p-4 rounded-lg media_container border-base-content/20 bg-base-100 text-base-content">
               <div class="relative w-full">
                 <span class="text-sm badge badge-accent rounded bg-accent/30 border-none !text-accent">{e(@metadata, "type", nil) || e(@metadata, "itemType", nil) || e(@metadata, "@type", nil)}</span>
-                <div class="mt-2 mb-1 text-xs font-semibold text-base-content/70 uppercase">{e(@metadata, "publisher", nil) ||
+                <div class="mt-2 mb-1 text-xs font-semibold text-base-content/70 uppercase">{e(@metadata, "isPartOf", "name", nil) || e(@metadata, "publisher", nil) ||
                     e(@metadata, "container-title", nil) || e(@metadata, "publicationTitle", nil)}
                 </div>
                 <div class="text-xl font-semibold">
@@ -33,8 +33,21 @@
                         {#match _}
                       {/case}
 
-                      <div :if={doi} class="text-base-content/70  flex items-center gap-2">
-                        <span>DOI: <a target="blank" class="link" href={"https://dx.doi.org/#{doi}"}>{doi}</a></span>
+                      <div :if={doi} class="text-base-content/70 text-sm flex items-center gap-2">
+                        <span>
+                        {#case doi}
+                        {#match "https://doi.org/"<>doi_id}
+                          <a target="blank" class="link" href={doi}>doi:{doi_id}</a>
+                        {#match "https://dx.doi.org/"<>doi_id}
+                          <a target="blank" class="link" href={doi}>doi:{doi_id}</a>
+                        {#match "http"<>_}
+                          <a target="blank" class="link" href={doi}>{doi}</a>
+                        {#match "doi:"<>doi_id}
+                          <a target="blank" class="link" href={"https://doi.org/#{doi_id}"}>{doi}</a>
+                        {#match _}
+                          <a target="blank" class="link" href={"https://doi.org/#{doi}"}>doi:{doi}</a>
+                        {/case}
+                        </span>
                       </div>
                     </div>
 
