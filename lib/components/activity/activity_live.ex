@@ -56,6 +56,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
   prop published_in, :any, default: nil
   prop labelled, :any, default: nil
   prop subject_user, :any, default: nil
+  prop peered, :any, default: nil
   prop hide_actions, :any, default: false
   prop activity_loaded_preloads, :list, default: []
 
@@ -163,6 +164,12 @@ defmodule Bonfire.UI.Social.ActivityLive do
         existing -> existing
       end || :feed
 
+    peered =
+      (e(object, :peered, nil) || e(activity, :peered, nil) ||
+         e(activity, :subject, :character, :peered, nil) ||
+         e(activity, :created, :creator, :character, :peered, nil))
+      |> debug("peeeered")
+
     [
       showing_within: showing_within,
       thread_mode:
@@ -172,12 +179,11 @@ defmodule Bonfire.UI.Social.ActivityLive do
         end,
       published_in: maybe_published_in(activity, extras[:verb]),
       labelled: maybe_labelled(activity, extras[:verb]),
-      # e(socket_assigns[:activity], :peered, nil) != nil or
+      peered: peered,
       is_remote:
         (assigns[:is_remote] || socket_assigns[:is_remote] ||
            !Bonfire.Social.Integration.is_local?(
-             e(object, :peered, nil) ||
-               e(object, :created, :creator, nil) ||
+             peered ||
                e(activity, :subject, nil) ||
                e(assigns, :subject_user, nil) ||
                e(socket_assigns, :subject_user, nil)
@@ -646,8 +652,9 @@ defmodule Bonfire.UI.Social.ActivityLive do
                 verb={e(component_assigns, :verb, @verb)}
                 verb_display={e(component_assigns, :verb_display, @verb_display)}
                 reply_to_id={e(@activity, :replied, :reply_to_id, nil)}
-                subject_peered={e(@activity, :subject, :peered, nil)}
-                peered={e(@object, :peered, nil) || e(@activity, :subject, :peered, nil) || e(@activity, :peered, nil)}
+                subject_peered={e(@activity, :subject, :character, :peered, nil)}
+                peered={@peered}
+                is_remote={@is_remote}
                 thread_title={e(component_assigns, :thread_title, @thread_title)}
                 subject_user={@subject_user}
               />
@@ -1548,6 +1555,12 @@ defmodule Bonfire.UI.Social.ActivityLive do
       "Edition" = object_type ->
         [
           {Bonfire.UI.Social.Activity.BookActivityStreamsLive,
+           json: json, object_type_readable: object_type}
+        ]
+
+      object_type when object_type in ["Article", "Page"] ->
+        [
+          {Bonfire.UI.Social.Activity.ArticleActivityStreamsLive,
            json: json, object_type_readable: object_type}
         ]
 

@@ -5,11 +5,11 @@ defmodule Bonfire.UI.Social.Activity.InstanceIconLive do
   prop peered, :any, default: nil
   # prop verb_display, :string
 
-  def permalink(%{peered: %{canonical_uri: permalink}}) when is_binary(permalink) do
+  def permalink(%{canonical_uri: permalink}) do
     permalink
   end
 
-  def permalink(%{canonical_uri: permalink}) when is_binary(permalink) do
+  def permalink(%{peered: %{canonical_uri: permalink}}) do
     permalink
   end
 
@@ -17,7 +17,7 @@ defmodule Bonfire.UI.Social.Activity.InstanceIconLive do
     warn("FIXME: Peered should already come preloaded in object")
 
     object
-    |> repo().maybe_preload(:peered)
+    # |> repo().maybe_preload(:peered)
     |> e(:peered, :canonical_uri, nil)
   end
 
@@ -26,8 +26,8 @@ defmodule Bonfire.UI.Social.Activity.InstanceIconLive do
     Bonfire.Federate.ActivityPub.Peered.get_canonical_uri(object)
   end
 
-  def permalink(_) do
-    debug("seems to be a local object")
+  def permalink(other) do
+    debug(other, "seems to be a local object")
     nil
   end
 end

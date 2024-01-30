@@ -1,15 +1,16 @@
 {#case permalink(@peered || @object)}
-  {#match link when is_binary(link)}
+  {#match nil}
+  {#match link}
     <a
       href={link}
       target="_blank"
       rel="noopener noreferrer"
       data-tip={l("Originates from a remote instance")}
-      class="z-20 tooltip tooltip-bottom"
+      class="mx-2 z-20 tooltip tooltip-bottom text-base-content/70"
     >
       {#case Bonfire.Files.FaviconStore.favicon_url(link)}
         {#match nil}
-          <#Icon iconify="heroicons-solid:external-link" class="w-4 h-4 text-base-content/70" />
+          <#Icon iconify="heroicons-solid:external-link" class="w-4 h-4" />
         {#match image}
           <img
             src={image}
@@ -18,5 +19,4 @@
           />
       {/case}
     </a>
-  {#match _}
 {/case}

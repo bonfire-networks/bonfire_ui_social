@@ -47,6 +47,18 @@
       </div>
     </li>
 
+    <li>
+      <a
+        phx-hook="Copy"
+        id={"more_action_copy_url_#{id(@activity)}_#{id(@object)}"}
+        href={URIs.canonical_url(@object)}
+        class="flex items-center gap-2 text-sm text-base-content/70"
+      >
+        <#Icon iconify="ri:file-copy-line" class="w-4 h-4 shrink-0" />
+        <span>{l("Copy link")}</span>
+      </a>
+    </li>
+
     <#slot {@extra_items} />
 
     {#if current_user_id(@__context__)}

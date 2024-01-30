@@ -15,6 +15,7 @@ defmodule Bonfire.UI.Social.Activity.SubjectLive do
   prop object_id, :any, default: nil
   prop subject_peered, :any, default: nil
   prop peered, :any, default: nil
+  prop is_remote, :boolean, default: false
   prop reply_to_id, :any, default: nil
   prop date_ago, :any, default: nil
   prop permalink, :string, default: nil

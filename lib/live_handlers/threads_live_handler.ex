@@ -211,7 +211,15 @@ defmodule Bonfire.Social.Threads.LiveHandler do
     debug(reply_to, "reply!")
 
     # TODO: we should be getting the type from ActivityLive
-    object_type = e(socket.assigns, :object_type, nil) || Types.object_type(reply_to)
+    object_type =
+      case e(socket.assigns, :object_type, nil) || Types.object_type(reply_to) do
+        Bonfire.Data.Social.APActivity ->
+          json = e(activity, :object, :json, nil) || e(socket.assigns, :object, :json, nil)
+          e(json, "object", "type", nil) || e(json, "type", nil)
+
+        other ->
+          other
+      end
 
     debug(e(socket.assigns, :object_boundary, nil), "object_boundary!")
     debug(e(socket.assigns, :published_in, nil), "published_in_id!")
@@ -243,6 +251,8 @@ defmodule Bonfire.Social.Threads.LiveHandler do
       mentions =
         if create_object_type != :message and participants != [],
           do: Enum.map_join(participants, " ", &("@" <> e(&1, :character, :username, ""))) <> " "
+
+      # workaround for mobilizon not supported mentions
 
       thread_id =
         e(activity, :replied, :thread_id, nil) ||

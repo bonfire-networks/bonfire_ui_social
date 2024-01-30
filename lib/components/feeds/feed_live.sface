@@ -138,16 +138,16 @@
         {#if is_nil(@previous_page_info)}
           {#if @loading}
             <div class="flex flex-col items-center gap-3 py-12 place-content-center">
-              <img src={Bonfire.Web.Endpoint.static_path("/images/loading.svg")}>
+              {#if socket_connected?(@__context__) && @cute_gif}
+                <div class="flex flex-row items-center justify-center my-12">
+                  <img src={@cute_gif}>
+                </div>
+              {#else}
+                <img src={Bonfire.Web.Endpoint.static_path("/images/loading.svg")}>
+              {/if}
+
               <div class="sr-only text-base-content">{l("Loading...")}</div>
             </div>
-            {!-- {#case maybe_cute_gif()}
-                {#match url when is_binary(url)}
-                  <div class="flex flex-row items-center justify-center my-12">
-                    <img src={url}>
-                  </div>
-                {#match _}
-              {/case} --}
           {#elseif !(is_list(@feed) and @feed != [])}
             <div data-id="empty-feed" class="flex items-center place-content-center">
               <Bonfire.UI.Common.EmptyFeed

@@ -62,7 +62,7 @@
       <Bonfire.UI.Social.Activity.LinkToActivityLive permalink={@permalink}>
         {@date_ago || DatesTimes.date_from_now(@activity_id) || DatesTimes.date_from_now(@object_id)}
       </Bonfire.UI.Social.Activity.LinkToActivityLive>
-      <Bonfire.UI.Social.Activity.InstanceIconLive peered={@peered} />
+      <Bonfire.UI.Social.Activity.InstanceIconLive :if={debug(@is_remote)} peered={debug(@peered)} />
     </span>
   </div>
   <!-- {#if @show_minimal_subject_and_note}      

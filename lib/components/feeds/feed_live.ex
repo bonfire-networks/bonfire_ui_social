@@ -70,7 +70,8 @@ defmodule Bonfire.UI.Social.FeedLive do
         feed: nil,
         hide_activities: nil,
         feed_count: nil,
-        hide_fresh: 0
+        hide_fresh: 0,
+        cute_gif: maybe_cute_gif()
       )
       #  temporary_assigns: [
       #    feed: []
