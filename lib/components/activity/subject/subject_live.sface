@@ -4,7 +4,7 @@
   class="subject relative flex items-start"
 >
   <LiveRedirect
-    :if={!Settings.get([Bonfire.UI.Common.AvatarLive, :hide_avatars], false, @__context__)}
+    :if={@subject_id && !Settings.get([Bonfire.UI.Common.AvatarLive, :hide_avatars], false, @__context__)}
     opts={"data-id": "subject_avatar", "aria-label": e(@character_username, "") <> " profile"}
     class={
       "absolute -ml-[3.25rem] -top-[4px] font-semibold text-base-content hover:underline",
@@ -30,6 +30,7 @@
     class="flex items-baseline gap-1 w-full feed-clickable -mt-1 justify-start"
   >
     <LiveRedirect
+      :if={@profile_name}
       opts={"data-id": "subject_name", "aria-label": l("%{name}'s profile", name: @profile_name)}
       class="link link-hover font-semibold text-sm max-w-[400px] truncate"
       to={@path || "/user/#{@subject_id}"}
@@ -62,7 +63,7 @@
       <Bonfire.UI.Social.Activity.LinkToActivityLive permalink={@permalink}>
         {@date_ago || DatesTimes.date_from_now(@activity_id) || DatesTimes.date_from_now(@object_id)}
       </Bonfire.UI.Social.Activity.LinkToActivityLive>
-      <Bonfire.UI.Social.Activity.InstanceIconLive :if={debug(@is_remote)} peered={debug(@peered)} />
+      <Bonfire.UI.Social.Activity.InstanceIconLive :if={@is_remote} peered={@peered} />
     </span>
   </div>
   <!-- {#if @show_minimal_subject_and_note}      
@@ -87,10 +88,10 @@
 </div>
 
 <a
-  data-id="title_in_subject"
-  href={@permalink}
   :if={@reply_to_id == nil and @showing_within in [nil, :feed, :thread] and
     @thread_title}
+  data-id="title_in_subject"
+  href={@permalink}
   class="preview_activity_link flex items-center mt-3 font-medium gap-2 text-base"
 >
   <#Icon iconify="solar:text-bold" class="w-4 h-4 text-base-content/70" />

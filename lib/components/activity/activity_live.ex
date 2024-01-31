@@ -186,7 +186,8 @@ defmodule Bonfire.UI.Social.ActivityLive do
              peered ||
                e(activity, :subject, nil) ||
                e(assigns, :subject_user, nil) ||
-               e(socket_assigns, :subject_user, nil)
+               e(socket_assigns, :subject_user, nil),
+             false
            ))
         |> debug("is_remote"),
       thread_title:
@@ -1197,7 +1198,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
               post_content: %{id: id} = reply_to_post_content,
               created: %{
                 creator: %{
-                  character: %{id: _} = _subject_character,
+                  character: %{id: creator_id} = _subject_character,
                   profile: %{id: _} = _subject_profile
                 }
               }
@@ -1221,10 +1222,12 @@ defmodule Bonfire.UI.Social.ActivityLive do
        %{
          id: "reply_to-#{activity_component_id}-#{id}",
          activity_inception: activity_id,
-         show_minimal_subject_and_note: name_or_text(reply_to_post_content) || true,
+         #  show_minimal_subject_and_note: name_or_text(reply_to_post_content) || true,
+         show_minimal_subject_and_note: true,
          viewing_main_object: false,
          thread_title: thread_title,
          object: reply_to_post_content,
+         subject_id: creator_id,
          activity: reply_to
        }}
     ]
@@ -1263,10 +1266,12 @@ defmodule Bonfire.UI.Social.ActivityLive do
        %{
          id: "reply_to-#{activity_component_id}-#{reply_to_id}",
          activity_inception: activity_id,
-         show_minimal_subject_and_note: name_or_text(reply_to) || true,
+         #  show_minimal_subject_and_note: name_or_text(reply_to) || true,
+         show_minimal_subject_and_note: true,
          viewing_main_object: false,
          thread_title: thread_title,
          object: reply_to,
+         subject_id: id(subject_profile),
          activity: %{
            # Activities.load_object(reply_to, skip_boundary_check: true),
            subject: %{
@@ -1305,10 +1310,12 @@ defmodule Bonfire.UI.Social.ActivityLive do
        %{
          id: "reply_to-#{activity_component_id}-#{reply_to_id}",
          activity_inception: activity_id,
-         show_minimal_subject_and_note: name_or_text(replied) || true,
+         #  show_minimal_subject_and_note: name_or_text(replied) || true,
+         show_minimal_subject_and_note: true,
          viewing_main_object: false,
          thread_title: thread_title,
          object: replied,
+         subject_id: true,
          activity: %{
            # Activities.load_object(replied, skip_boundary_check: true),
            subject: nil
@@ -1611,6 +1618,12 @@ defmodule Bonfire.UI.Social.ActivityLive do
     end
     |> debug()
   end
+
+  defp component_object_fallback(_object_type, %{profile: %{id: _}}),
+    do: [Bonfire.UI.Me.Preview.CharacterLive]
+
+  defp component_object_fallback(_object_type, %{character: %{id: _}}),
+    do: [Bonfire.UI.Me.Preview.CharacterLive]
 
   defp component_object_fallback(type, %{named: %{name: name}} = object)
        when type == Bonfire.Tag.Hashtag do

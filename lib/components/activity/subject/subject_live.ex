@@ -43,12 +43,15 @@ defmodule Bonfire.UI.Social.Activity.SubjectLive do
         %{
           profile_name: nil,
           character_username: nil,
-          subject_id: id,
-          __context__: %{current_user: %{id: id, profile: profile, character: character}}
+          subject_id: current_user_id,
+          __context__: %{
+            current_user: %{id: current_user_id, profile: profile, character: character}
+          }
         } = assigns
       ) do
     assigns
     |> assign(
+      subject_id: current_user_id,
       profile_name: e(profile, :name, nil),
       character_username: e(character, :username, nil),
       path: path(character),
@@ -60,12 +63,13 @@ defmodule Bonfire.UI.Social.Activity.SubjectLive do
         %{
           profile_name: nil,
           character_username: nil,
-          subject_id: id,
-          subject_user: %{id: id, profile: profile, character: character}
+          subject_id: subject_user_id,
+          subject_user: %{id: subject_user_id, profile: profile, character: character}
         } = assigns
       ) do
     assigns
     |> assign(
+      subject_id: subject_user_id,
       profile_name: e(profile, :name, nil),
       character_username: e(character, :username, nil),
       path: path(character),
