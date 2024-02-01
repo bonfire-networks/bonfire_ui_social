@@ -15,6 +15,7 @@ defmodule Bonfire.UI.Social.WriteLive do
        page_title: l("Write something"),
        page: "write",
        without_sidebar: true,
+       without_secondary_widgets: true,
        create_object_type: maybe_to_atom(e(session, "create_object_type", nil)),
        smart_input_opts: [
          inline_only: true,

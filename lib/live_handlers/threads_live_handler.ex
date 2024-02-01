@@ -355,7 +355,7 @@ defmodule Bonfire.Social.Threads.LiveHandler do
           limit = 4
 
           participants =
-            e(socket.assigns, :participants, nil) ||
+            e(socket.assigns, :participants, []) ||
               Threads.list_participants(e(socket.assigns, :activity, nil) || object, thread_id,
                 limit: limit,
                 current_user: current_user

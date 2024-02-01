@@ -94,6 +94,5 @@
   href={@permalink}
   class="preview_activity_link flex items-center mt-3 font-medium gap-2 text-base"
 >
-  <#Icon iconify="solar:text-bold" class="w-4 h-4 text-base-content/70" />
   <span class="link link-hover">{@thread_title}</span>
 </a>
