@@ -2,14 +2,18 @@
   data-id="activity_note"
   x-data="{expanded: false, expandable: $refs.note && $refs.note.scrollHeight > $refs.note.clientHeight}"
   data-rendered={@showing_within}
-  class="note previewable_activity cursor-pointer mt-0.5 max-w-[594px] overflow-x-hidden"
+  class={
+    "note previewable_activity cursor-pointer mt-0.5 max-w-[594px] overflow-x-hidden",
+    "!max-w-full !mt-8":
+      is_nil(current_user_id(@__context__)) && @showing_within == :thread && @viewing_main_object
+  }
   x-ref="note_container"
   x-transition
 >
   {!-- x-show={if @showing_within == :thread && !@viewing_main_object, do: "show_replies"} --}
   {!-- id={"note-#{@activity_inception}-#{id(@activity) || id(@object) || "no-id"}-#{e(assigns, :viewing_main_object, false)}"} --}
 
-  {#case e(post_content(@object), :name, nil)}
+  <!-- {#case e(post_content(@object), :name, nil)}
     {#match nil}
     {#match name}
       <div
@@ -18,7 +22,7 @@
       >
         {rich(name)}
       </div>
-  {/case}
+  {/case} -->
 
   {#case e(post_content(@object), :summary, nil)}
     {#match summary}
@@ -62,7 +66,9 @@
                   data-main-object={@viewing_main_object}
                   class={
                     "prose font-normal break-words object_body max-w-none prose-p:mb-1 prose-p:pt-0 text-[14px] prose-a:text-primary prose-a:no-underline",
-                    "prose-sm previewable_truncate": !@viewing_main_object
+                    "prose-sm previewable_truncate": !@viewing_main_object,
+                    "!prose-xl":
+                      is_nil(current_user_id(@__context__)) && @showing_within == :thread && @viewing_main_object
                   }
                   :class="{'previewable_expanded': expanded}"
                 >

@@ -1,4 +1,11 @@
 <div
+  :if={@thread_title && @showing_within == :thread && @viewing_main_object}
+  class="text-5xl font-semibold mt-8 mb-8 leading-[56px]"
+>
+  {@thread_title}
+</div>
+
+<div
   data-id="subject"
   data-main-object={@viewing_main_object}
   class="subject relative flex items-start"
@@ -7,7 +14,7 @@
     :if={@subject_id && !Settings.get([Bonfire.UI.Common.AvatarLive, :hide_avatars], false, @__context__)}
     opts={"data-id": "subject_avatar", "aria-label": e(@character_username, "") <> " profile"}
     class={
-      "absolute -ml-[3.25rem] -top-[4px] font-semibold text-base-content hover:underline",
+      "absolute -ml-[3.25rem] font-semibold text-base-content hover:underline",
       "!-ml-[2.5rem]": @__context__[:ui_compact] && !@viewing_main_object
     }
     to={@path || "/user/#{@subject_id}"}
