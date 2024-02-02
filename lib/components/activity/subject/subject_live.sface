@@ -92,7 +92,7 @@
     @thread_title}
   data-id="title_in_subject"
   href={@permalink}
-  class="preview_activity_link flex items-center mt-3 font-medium gap-2 text-base"
+  class="preview_activity_link flex items-center mt-1 font-medium gap-2 text-base"
 >
   <span class="link link-hover">{@thread_title}</span>
 </a>
