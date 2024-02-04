@@ -68,7 +68,12 @@
         object_boundary={@object_boundary}
       />
       <Bonfire.UI.Social.Activity.LinkToActivityLive permalink={@permalink}>
-        {@date_ago || DatesTimes.date_from_now(@activity_id) || DatesTimes.date_from_now(@object_id)}
+        <Bonfire.UI.Social.Activity.DateAgoLive
+          date_ago={@date_ago}
+          activity_id={@activity_id}
+          object_id={@object_id}
+          parent_id={@parent_id}
+        />
       </Bonfire.UI.Social.Activity.LinkToActivityLive>
       <Bonfire.UI.Social.Activity.InstanceIconLive :if={@is_remote} peered={@peered} />
     </span>

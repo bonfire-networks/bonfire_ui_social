@@ -405,7 +405,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
   end
 
   def maybe_labelled(none, verb) do
-    debug(none, "none for #{verb}")
+    # debug(none, "none for #{verb}")
     nil
   end
 

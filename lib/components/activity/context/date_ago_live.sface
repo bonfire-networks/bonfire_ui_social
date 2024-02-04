@@ -1,0 +1,6 @@
+{#case DatesTimes.to_date(@activity_id || @object_id)}
+  {#match nil}
+    {@date_ago}
+  {#match date}
+    <span id={"date_ago_#{@parent_id}_#{@activity_id}_#{@object_id}"} data-date={date} :hook>{@date_ago || DatesTimes.relative_date(date)}</span>
+{/case}

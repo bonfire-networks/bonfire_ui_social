@@ -16,4 +16,5 @@ defmodule Bonfire.UI.Social.Activity.NoSubjectLive do
   prop thread_id, :string, default: nil
   prop thread_title, :any, default: nil
   prop published_in, :any, default: nil
+  prop parent_id, :any, default: nil
 end

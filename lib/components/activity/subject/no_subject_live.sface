@@ -9,7 +9,12 @@
       data-role="no_subject"
       class="subject_timestamp text-[13px] font-normal no-underline truncate ellipsis text-base-content/70"
     >
-      {@date_ago || DatesTimes.date_from_now(@activity_id) || DatesTimes.date_from_now(@object_id)}
+      <Bonfire.UI.Social.Activity.DateAgoLive
+        date_ago={@date_ago}
+        activity_id={@activity_id}
+        object_id={@object_id}
+        parent_id={@parent_id}
+      />
     </span>
   </Bonfire.UI.Social.Activity.LinkToActivityLive>
 
