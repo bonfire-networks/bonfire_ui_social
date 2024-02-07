@@ -103,7 +103,7 @@
 </div>
 
 <a
-  :if={@reply_to_id == nil and @showing_within in [nil, :feed, :thread] and
+  :if={@reply_to_id == nil and @showing_within in [nil, :feed] and
     @thread_title}
   data-id="title_in_subject"
   href={@permalink}
