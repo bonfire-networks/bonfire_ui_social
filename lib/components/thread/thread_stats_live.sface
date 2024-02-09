@@ -4,7 +4,7 @@
     phx-change="Bonfire.Social.Threads:list_participants"
     phx-target={@event_target}
   >
-    <div x-data="{open: false}" class="border-t border-base-content/20">
+    <div x-data="{open: false}" class="">
       <div class="flex items-center justify-between">
         <div class="flex items-center flex-1 gap-4 py-0 min-h-[2.75rem] px-2">
           <div class="flex items-center gap-1">
@@ -16,8 +16,9 @@
                 <div class="text-xs font-medium text-base-content/90 text-center mr-1">0</div>
                 <div class="text-xs tracking-wide text-base-content/70 text-center">{l("Replies")}</div>
               {#match _}
-                <div class="text-xs tracking-wide text-base-content/70 text-center">{l("Last Reply")}</div>
-                <div class="font-medium text-xs text-base-content/90 text-center">{DatesTimes.date_from_now(@last_reply_id, format: :narrow)}</div>
+                <div class="text-xs tracking-wide text-base-content/70">
+                {l("Last Reply")} <span class="font-medium text-xs text-base-content/90">{DatesTimes.date_from_now(@last_reply_id, format: :narrow)}</span>
+                </div>
             {/case}
           </div>
           <div :if={@reply_count != 0} class="flex items-center gap-1">

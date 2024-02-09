@@ -2,7 +2,7 @@
   :if={@thread_title && @showing_within == :thread && @viewing_main_object}
   class={
     "text-3xl font-semibold mb-4 leading-[40px]",
-    "!text-5xl !mb-8 !leading-[56px]": !current_user_id(@__context__)
+    "!text-4xl !mb-8 !leading-[52px]": !current_user_id(@__context__)
   }
 >
   {@thread_title}
