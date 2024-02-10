@@ -17,7 +17,7 @@
                 <div class="text-xs tracking-wide text-base-content/70 text-center">{l("Replies")}</div>
               {#match _}
                 <div class="text-xs tracking-wide text-base-content/70">
-                {l("Last Reply")} <span class="font-medium text-xs text-base-content/90">{DatesTimes.date_from_now(@last_reply_id, format: :narrow)}</span>
+                  {l("Last Reply")} <span class="font-medium text-xs text-base-content/90">{DatesTimes.date_from_now(@last_reply_id, format: :narrow)}</span>
                 </div>
             {/case}
           </div>
