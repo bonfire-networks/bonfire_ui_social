@@ -4,7 +4,7 @@
   data-rendered={@showing_within}
   class={
     "note previewable_activity cursor-pointer mt-0.5 max-w-[594px] overflow-x-hidden",
-    "!max-w-full !mt-8":
+    "!max-w-full":
       is_nil(current_user_id(@__context__)) && @showing_within == :thread && @viewing_main_object
   }
   x-ref="note_container"
@@ -67,7 +67,7 @@
                   class={
                     "prose font-normal break-words object_body max-w-none prose-p:mb-1 prose-p:pt-0 text-[14px] prose-a:text-primary prose-a:no-underline",
                     "prose-sm previewable_truncate": !@viewing_main_object,
-                    "!prose-xl":
+                    "prose-lg":
                       is_nil(current_user_id(@__context__)) && @showing_within == :thread && @viewing_main_object
                   }
                   :class="{'previewable_expanded': expanded}"
