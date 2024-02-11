@@ -44,6 +44,7 @@
                 <LazyImage
                   class="rounded-none object-cover object-top rounded-l-lg cursor-pointer m-image w-full h-[300px] lg:h-[420px]"
                   src={preview_img}
+                  media={m}
                   fallback_icon="bxs:file-pdf"
                 />
                 {!-- <img
@@ -86,12 +87,14 @@
                                   <LazyImage
                                     class="rounded-none object-cover rounded-l-lg  cursor-pointer m-image w-[36px] h-[36px]"
                                     src={preview_img}
+                                    media={m}
                                     fallback_icon="ion:newspaper-outline"
                                   />
                                 {#match _}
                                   <LazyImage
                                     class="rounded-none object-cover rounded-l-lg  cursor-pointer m-image w-[120px] h-[120px]"
                                     src={preview_img}
+                                    media={m}
                                     fallback_icon="ion:newspaper-outline"
                                   />
                               {/case}
@@ -172,7 +175,7 @@
                                 {#if is_image?(maybe_preview_img)}
                                   <LazyImage
                                     class="w-full rounded-t-box !object-cover m-image cursor-pointer aspect-video"
-                                    m={m}
+                                    media={m}
                                     alt={media_label}
                                     src={maybe_preview_img}
                                     fallback_icon="majesticons:video"
@@ -243,7 +246,7 @@
                                       {#if is_image?(maybe_preview_img)}
                                         <LazyImage
                                           class="w-full rounded-l-lg !object-cover m-image"
-                                          m={m}
+                                          media={m}
                                           alt={media_label}
                                           src={maybe_preview_img}
                                           fallback_icon="majesticons:video"
@@ -333,7 +336,7 @@
                             {#if is_image?(maybe_preview_img)}
                               <LazyImage
                                 class="border border-base-content/10 w-full !object-cover m-image h-full cursor-pointer aspect-video rounded-md"
-                                m={m}
+                                media={m}
                                 alt={media_label}
                                 src={maybe_preview_img}
                                 fallback_icon="majesticons:video"
@@ -407,7 +410,7 @@
 
                           {!-- <LazyImage
                                   class="border border-base-content/20 w-full !object-cover m-image h-full cursor-pointer aspect-video rounded-md"
-                                  m={m}
+                                  media={m}
                                   alt={media_label}
                                   src={Media.media_url(m)}
                                 /> --}
@@ -433,7 +436,7 @@
                                 {!-- {#if is_image?(maybe_preview_img)} --}
                                 <LazyImage
                                   class="border border-base-content/10 w-full !object-cover m-image h-full cursor-pointer aspect-video rounded-md"
-                                  m={m}
+                                  media={m}
                                   alt={media_label}
                                   src={maybe_preview_img}
                                 />
@@ -457,7 +460,7 @@
                             {#if is_image?(maybe_preview_img)}
                               <LazyImage
                                 class="border border-base-content/10 w-full !object-cover m-image h-full cursor-pointer aspect-video rounded-md"
-                                m={m}
+                                media={m}
                                 alt={media_label}
                                 src={maybe_preview_img}
                               />

@@ -8,6 +8,7 @@
               class="max-h-[calc(var(--inner-window-height)_-_150px)] relative mx-auto"
               alt={MediaLive.media_label(@media)}
               src={maybe_media_img}
+              media={@media}
             />
           {#else}
             {#case e(@media, :metadata, "facebook", "og:video:url", nil) ||
@@ -39,6 +40,7 @@
                               <div :if={MediaLive.is_image?(media_img)} class="bg-base-200">
                                 <LazyImage
                                   src={media_img}
+                                  media={@media}
                                   alt=""
                                   class="w-16 h-16 object-cover"
                                   fallback_icon="octicon:file-media-24"
