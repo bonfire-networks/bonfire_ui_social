@@ -20,7 +20,7 @@
               e(m.metadata, "json_ld", []) |> List.wrap() |> List.first() || e(m.metadata, "oembed", nil) ||
               e(m.metadata, "other", nil)}
           />
-        {#elseif String.ends_with?(media_url, ".pdf")}
+        {#elseif String.ends_with?(media_url || "", ".pdf")}
           <a
             href={media_url}
             target="_blank"
@@ -82,7 +82,7 @@
                                 class="absolute inset-0 backdrop-blur-lg bg-white/30 z-50 rounded-l-lg"
                                 :if={@cw || Settings.get([Bonfire.UI.Social.Activity.MediaLive, :hide], false, @__context__)}
                               />
-                              {#case String.ends_with?(preview_img, ".ico")}
+                              {#case String.ends_with?(preview_img || "", ".ico")}
                                 {#match true}
                                   <LazyImage
                                     class="rounded-none object-cover rounded-l-lg  cursor-pointer m-image w-[36px] h-[36px]"
@@ -149,7 +149,7 @@
       >
         {#for {%{} = m, counter} <- Enum.with_index(@multimedia_list)}
           {#if @showing_within != :smart_input}
-            {#case {media_label(m) || l("Untitled media"), String.starts_with?(m.media_type, ["video"])}}
+            {#case {media_label(m) || l("Untitled media"), String.starts_with?(m.media_type || "", ["video"])}}
               {#match {media_label, is_video?}}
                 <article class={
                   "m-entry relative h-full w-full row-span-4 object-cover",
@@ -405,7 +405,7 @@
                         open_btn_class="w-full"
                         open_btn_wrapper_class="w-full h-full"
                       >
-                        <div class="h-full" data-media-type-video={String.starts_with?(m.media_type, ["video"])}>
+                        <div class="h-full" data-media-type-video={String.starts_with?(m.media_type || "", ["video"])}>
                           <Bonfire.UI.Social.Activity.RemoteMediaLive media={m} />
 
                           {!-- <LazyImage

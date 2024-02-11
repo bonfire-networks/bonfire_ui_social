@@ -459,7 +459,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
       c when is_atom(c) and not is_nil(c) -> {c, nil}
       other -> other
     end)
-    |> debug("components")
+    |> debug("preview_components")
   end
 
   defp component_maybe_attachments(true, activity, object, activity_inception) do
@@ -706,7 +706,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
                 activity_inception={@activity_inception}
                 showing_within={@showing_within}
                 viewing_main_object={e(component_assigns, :viewing_main_object, @viewing_main_object)}
-                media={List.wrap(e(component_assigns, :media, []))}
+                media={e(component_assigns, :media, [])}
                 cw={@cw}
               />
             {#match _
@@ -1624,6 +1624,9 @@ defmodule Bonfire.UI.Social.ActivityLive do
 
   defp component_object_fallback(_object_type, %{character: %{id: _}}),
     do: [Bonfire.UI.Me.Preview.CharacterLive]
+
+  defp component_object_fallback(type, %{} = object) when type == Bonfire.Files.Media,
+    do: [{Bonfire.UI.Social.Activity.MediaLive, %{media: object}}]
 
   defp component_object_fallback(type, %{named: %{name: name}} = object)
        when type == Bonfire.Tag.Hashtag do

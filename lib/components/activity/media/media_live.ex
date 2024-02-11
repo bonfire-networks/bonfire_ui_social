@@ -1,7 +1,7 @@
 defmodule Bonfire.UI.Social.Activity.MediaLive do
   use Bonfire.UI.Common.Web, :stateless_component
 
-  prop media, :list, default: nil
+  prop media, :any, default: nil
   prop showing_within, :atom, default: nil
   prop viewing_main_object, :boolean, default: false
   prop activity_inception, :boolean, default: false
@@ -14,15 +14,7 @@ defmodule Bonfire.UI.Social.Activity.MediaLive do
   @multimedia_exts [".mp4", ".mkv", ".ogv", ".ogg", ".mp3", ".mpa", ".webm"]
   @multimedia_types ["video", "embed", "audio", "song", "rich"]
 
-  def render(%{media: medias} = assigns) when is_list(medias) do
-    do_render(assigns, medias)
-  end
-
-  def render(%{media: media} = assigns) when is_map(media) do
-    do_render(assigns, [media])
-  end
-
-  def do_render(assigns, medias) do
+  def render(assigns) do
     # medias = the_medias(medias)
 
     # {multimedia_list, link_list} =
@@ -32,16 +24,22 @@ defmodule Bonfire.UI.Social.Activity.MediaLive do
     #       String.ends_with?(Media.media_url(&1), @multimedia_exts))
     # )
 
+    media =
+      assigns[:media]
+      # |> debug()
+      |> the_medias()
+      |> debug("the_medias")
+
     {image_list, multimedia_list, link_list} =
-      the_medias(medias)
+      media
       |> Enum.reduce({[], [], []}, fn m, {image_list, multimedia_list, link_list} ->
         cond do
-          String.starts_with?(m.media_type, @image_types) or
-              String.ends_with?(m.path, @image_exts) ->
+          String.starts_with?(m.media_type || "", @image_types) or
+              String.ends_with?(m.path || "", @image_exts) ->
             {[m | image_list], multimedia_list, link_list}
 
-          String.starts_with?(m.media_type, @multimedia_types) or
-              String.ends_with?(m.path, @multimedia_exts) ->
+          String.starts_with?(m.media_type || "", @multimedia_types) or
+              String.ends_with?(m.path || "", @multimedia_exts) ->
             {image_list, [m | multimedia_list], link_list}
 
           true ->
@@ -63,7 +61,7 @@ defmodule Bonfire.UI.Social.Activity.MediaLive do
     end
 
     assigns
-    # |> assign(:media, medias)
+    |> assign(:media, media)
     # |> assign(:multimedia_list, multimedia_list(medias))
     # |> assign(:link_list, link_list(medias))
     |> assign(:image_list, image_list)
@@ -75,29 +73,29 @@ defmodule Bonfire.UI.Social.Activity.MediaLive do
     |> render_sface()
   end
 
-  def the_medias(medias) do
+  def the_medias(medias) when is_list(medias) do
     medias
-    |> Enum.map(&the_media/1)
+    |> Enum.flat_map(&the_medias/1)
   end
 
-  def the_media(%{media: media}) do
-    the_media(media)
+  def the_medias(%{media: %{id: _} = media}) do
+    the_medias(media)
   end
 
-  def the_media(%Bonfire.Files.Media{} = media) do
+  def the_medias(%Bonfire.Files.Media{} = media) do
     # {e(m, :media_type, nil), media}
-    media
+    [media]
   end
 
-  def the_media(media) do
+  def the_medias(media) do
     error(media, "no valid Media assigned")
-    %Bonfire.Files.Media{}
+    []
   end
 
-  def is_image?(url), do: String.ends_with?(url, @image_exts)
+  def is_image?(url), do: String.ends_with?(url || "", @image_exts)
 
   def is_image?(url, media_type),
-    do: String.ends_with?(url, @image_exts) or String.starts_with?(media_type, @image_types)
+    do: String.ends_with?(url, @image_exts) or String.starts_with?(media_type || "", @image_types)
 
   # def multimedia_list(media) do
   #   Enum.filter(List.wrap(media), fn m ->

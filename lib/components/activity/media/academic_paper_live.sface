@@ -9,7 +9,8 @@
             <div class="w-full border p-4 rounded-lg media_container border-base-content/20 bg-base-100 text-base-content">
               <div class="relative w-full">
                 <span class="text-sm badge badge-accent rounded bg-accent/30 border-none !text-accent">{e(@metadata, "type", nil) || e(@metadata, "itemType", nil) || e(@metadata, "@type", nil)}</span>
-                <div class="mt-2 mb-1 text-xs font-semibold text-base-content/70 uppercase">{e(@metadata, "isPartOf", "name", nil) || e(@metadata, "publisher", nil) ||
+                <div class="mt-2 mb-1 text-xs font-semibold text-base-content/70 uppercase">{e(@metadata, "isPartOf", "name", nil) || e(@metadata, "publisher", "name", nil) ||
+                    e(@metadata, "publisher", nil) ||
                     e(@metadata, "container-title", nil) || e(@metadata, "publicationTitle", nil)}
                 </div>
                 <div class="text-xl font-semibold">
@@ -42,7 +43,7 @@
                             {#match "https://dx.doi.org/" <> doi_id}
                               <a target="blank" class="link" href={doi}>doi:{doi_id}</a>
                             {#match "http" <> _}
-                              <a target="blank" class="link" href={doi}>{doi}</a>
+                              <!-- <a target="blank" class="link" href={doi}>{doi}</a> -->
                             {#match "doi:" <> doi_id}
                               <a target="blank" class="link" href={"https://doi.org/#{doi_id}"}>{doi}</a>
                             {#match _}
