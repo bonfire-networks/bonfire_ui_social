@@ -22,19 +22,52 @@
   >
   </div>
 
-  <div
+  <!-- <div
     data-compact={@ui_compact || @__context__[:ui_compact]}
     data-role="comment-lined"
     :if={@thread_level < 2}
     class={
-      "group absolute px-2 left-[1.8rem] cursor-pointer top-[64px] bottom-0 z-30",
-      "bottom-[-24px]": @threaded_replies != []
+      "group absolute px-2 left-[32px] cursor-pointer top-[60px] bottom-0 z-30",
+      "!bottom-[-32px]": @threaded_replies != [],
+      "!bottom-[-20px]": @threaded_replies != [] && @thread_mode != :flat,
     }
     x-on:click="show_replies = ! show_replies"
   >
-    <div class="absolute left-2 cursor-pointer inset-0 border-l-2 bottom-0 border-base-content/20 z-30" />
+    <div class="absolute left-2 cursor-pointer inset-0 border-l bottom-0 brightness-[.3] border-base-content z-30" />
+  </div> -->
+  <div
+    :if={@thread_mode != :flat && @threaded_replies != []}
+    class={
+      "absolute px-2 left-[32px] cursor-pointer top-[40px] bottom-0 z-30",
+      "!left-[18px] !top-[30px]": @__context__[:ui_compact],
+      "!left-[20px] top-[46px]":
+        Settings.get([Bonfire.UI.Common.AvatarLive, :hide_avatars], false, @__context__)
+    }
+  >
+    <div class={
+      "absolute left-2 cursor-pointer inset-0 border-l bottom-0 brightness-[.3] border-base-content z-30",
+      "!-left-[3px]": Settings.get([Bonfire.UI.Common.AvatarLive, :hide_avatars], false, @__context__)
+    } />
   </div>
-
+  <div
+    :if={@thread_mode != :flat && @threaded_replies != []}
+    x-on:click="show_replies = ! show_replies"
+    class={
+      "absolute p-0.5 z-50 bg-base-100 flex items-center place-content-center left-[28px] bottom-[24px]",
+      "!left-[14px]": @__context__[:ui_compact]
+    }
+  >
+    <span
+      x-cloak
+      x-show="!show_replies"
+      class="btn !border-base-content/30 text-base-content/70 btn-xs text-xs !h-[1.25rem] !min-h-[1.25rem] !w-[1.25rem] btn-circle btn-outline normal-case"
+    >+</span>
+    <span
+      x-cloak
+      x-show="show_replies"
+      class="btn !border-base-content/30 text-base-content/70 btn-xs text-xs !h-[1.25rem] !min-h-[1.25rem] !w-[1.25rem] btn-circle btn-outline normal-case"
+    >-</span>
+  </div>
   <div data-role="comment-activity" class="flex-1 w-full" x-data="{reply: false, show: true}">
     {#if is_nil(@activity)}
       <div class="mx-4 my-2">

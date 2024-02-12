@@ -1,9 +1,6 @@
-<div>
+<section>
   <#slot {@header} />
-  <div class={
-    "",
-    "max-w-[680px] mx-auto": !current_user_id(@__context__)
-  }>
+  <div data_id="profile_timeline">
     <Bonfire.UI.Common.TabsLive
       :if={!@hide_tabs}
       class="flex justify-between w-full border-b bg-base-100 tabs border-base-content border-opacity-20"
@@ -49,4 +46,4 @@
       <#slot {@widget} />
     </div> --}
   </div>
-</div>
+</section>

@@ -1,14 +1,4 @@
 <div
-  :if={@thread_title && @showing_within == :thread && @viewing_main_object}
-  class={
-    "text-3xl font-semibold mb-4 leading-[40px]",
-    "!text-4xl !mb-8 !leading-[52px]": !current_user_id(@__context__)
-  }
->
-  {@thread_title}
-</div>
-
-<div
   data-id="subject"
   data-main-object={@viewing_main_object}
   class="subject relative flex items-start"
@@ -111,3 +101,10 @@
 >
   <span class="link link-hover">{@thread_title}</span>
 </a>
+
+<div
+  :if={@thread_title && @showing_within == :thread && @viewing_main_object}
+  class="text-2xl font-semibold my-2 leading-[36x]"
+>
+  {@thread_title}
+</div>

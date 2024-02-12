@@ -9,8 +9,8 @@ defmodule Bonfire.UI.Social.ThreadBranchLive do
   alias Bonfire.UI.Social.CommentLive
   # alias Bonfire.UI.Social.ThreadBranchLive
   # import Bonfire.Me.Integration
-
   prop comment, :map
+
   prop thread_object, :any
   prop thread_level, :number, default: 1
   prop threaded_replies, :any
