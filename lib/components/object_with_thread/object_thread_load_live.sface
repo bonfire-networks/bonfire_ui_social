@@ -1,3 +1,4 @@
+<div>
 <StatelessComponent
   module={maybe_component(Bonfire.UI.Social.ObjectThreadLive)}
   activity={@activity}
@@ -12,3 +13,4 @@
   showing_within={@showing_within}
   activity_inception={@activity_inception}
 />
+</div>
