@@ -214,13 +214,11 @@ defmodule Bonfire.Social.Objects.LiveHandler do
     # debug(params, "PARAMS")
     # debug(url, "post url")
     with {:ok, object} <-
-      Utils.maybe_apply(
-           Bonfire.Posts,
-           :read,
-           [ulid!(id),
-             [current_user: current_user,
-             preload: default_preloads()]
-           ]) do
+           Utils.maybe_apply(
+             Bonfire.Posts,
+             :read,
+             [ulid!(id), [current_user: current_user, preload: default_preloads()]]
+           ) do
       init_object_assigns(object, socket)
     else
       _e ->

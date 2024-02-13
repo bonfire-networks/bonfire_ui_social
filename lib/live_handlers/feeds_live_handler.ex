@@ -1193,24 +1193,32 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
             Utils.maybe_apply(
               Bonfire.Boundaries.LiveHandler,
               :update_many_opts,
-              [opts ++
-                [
-                  verbs: [:read]
-                ]]
+              [
+                opts ++
+                  [
+                    verbs: [:read]
+                  ]
+              ]
             ),
             Utils.maybe_apply(
               Bonfire.Social.Boosts.LiveHandler,
-              :update_many_opts, [opts])
+              :update_many_opts,
+              [opts]
+            )
           ],
           else: []
         ) ++
           [
             Utils.maybe_apply(
               Bonfire.Social.Likes.LiveHandler,
-              :update_many_opts, [opts]),
+              :update_many_opts,
+              [opts]
+            ),
             Utils.maybe_apply(
               Bonfire.Social.Bookmarks.LiveHandler,
-              :update_many_opts, [opts])
+              :update_many_opts,
+              [opts]
+            )
           ],
         opts
       ) || assigns_sockets
@@ -1411,13 +1419,18 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
     # TODO: collect these from the code on startup
     [
       # {Bonfire.Data.Social.Post, Bonfire.UI.Social.Activity.NoteLive.preloads()}, # only needed if we no longer preload PostContent by default
-      {Bonfire.Data.Identity.User, Utils.maybe_apply(Bonfire.UI.Me.Preview.CharacterLive, :preloads, [])},
-      {Bonfire.Classify.Category, Utils.maybe_apply(Bonfire.Classify.Web.Preview.CategoryLive, :preloads, [])},
-      {ValueFlows.EconomicEvent, Utils.maybe_apply(Bonfire.UI.ValueFlows.Preview.EconomicEventLive, :preloads, [])},
+      {Bonfire.Data.Identity.User,
+       Utils.maybe_apply(Bonfire.UI.Me.Preview.CharacterLive, :preloads, [])},
+      {Bonfire.Classify.Category,
+       Utils.maybe_apply(Bonfire.Classify.Web.Preview.CategoryLive, :preloads, [])},
+      {ValueFlows.EconomicEvent,
+       Utils.maybe_apply(Bonfire.UI.ValueFlows.Preview.EconomicEventLive, :preloads, [])},
       {ValueFlows.EconomicResource,
-      Utils.maybe_apply(Bonfire.UI.ValueFlows.Preview.EconomicResourceLive, :preloads, [])},
-      {ValueFlows.Planning.Intent, Utils.maybe_apply(Bonfire.UI.ValueFlows.Preview.IntentTaskLive, :preloads, [])},
-      {ValueFlows.Process, Utils.maybe_apply(Bonfire.UI.ValueFlows.Preview.ProcessListLive, :preloads, [])}
+       Utils.maybe_apply(Bonfire.UI.ValueFlows.Preview.EconomicResourceLive, :preloads, [])},
+      {ValueFlows.Planning.Intent,
+       Utils.maybe_apply(Bonfire.UI.ValueFlows.Preview.IntentTaskLive, :preloads, [])},
+      {ValueFlows.Process,
+       Utils.maybe_apply(Bonfire.UI.ValueFlows.Preview.ProcessListLive, :preloads, [])}
     ]
     |> debug("preload object data in feed")
   end
@@ -1545,14 +1558,17 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
     feed =
       if module_enabled?(Bonfire.Posts, user),
         do:
-        Utils.maybe_apply(
-          Bonfire.Posts,
-          :list_by,
-          [
-            user,
-            [pagination: input_to_atoms(params),
-            current_user: current_user(socket.assigns),
-            preload: preloads]]
+          Utils.maybe_apply(
+            Bonfire.Posts,
+            :list_by,
+            [
+              user,
+              [
+                pagination: input_to_atoms(params),
+                current_user: current_user(socket.assigns),
+                preload: preloads
+              ]
+            ]
           )
 
     # |> debug("posts")
@@ -1640,12 +1656,10 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
 
     followers =
       Utils.maybe_apply(
-      Bonfire.Social.Graph.Follows,
-      :list_followers,
-      [user,
-        [pagination: pagination,
-        current_user: current_user]
-      ])
+        Bonfire.Social.Graph.Follows,
+        :list_followers,
+        [user, [pagination: pagination, current_user: current_user]]
+      )
       |> debug("followers in feeed")
 
     [
@@ -1668,12 +1682,10 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
 
     followed =
       Utils.maybe_apply(
-      Bonfire.Social.Graph.Follows,
-      :list_followed,
-      [user,
-        [pagination: pagination,
-        current_user: current_user]
-      ])
+        Bonfire.Social.Graph.Follows,
+        :list_followed,
+        [user, [pagination: pagination, current_user: current_user]]
+      )
 
     # |> debug("followed")
 
@@ -1750,11 +1762,11 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
     # TODO: pagination
     # user,
     Utils.maybe_apply(
-    Bonfire.Social.Graph.Requests,
-    :list_my_requested,
-      [pagination: pagination,
+      Bonfire.Social.Graph.Requests,
+      :list_my_requested,
+      pagination: pagination,
       current_user: current_user,
-      type: Bonfire.Data.Social.Follow]
+      type: Bonfire.Data.Social.Follow
     )
     |> debug("requested")
   end
@@ -1764,11 +1776,10 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
     # TODO: pagination
     # user,
     Utils.maybe_apply(
-    Bonfire.Social.Graph.Requests,
-    :list_my_requesters,
-    [ pagination: pagination,
+      Bonfire.Social.Graph.Requests,
+      :list_my_requesters,
+      pagination: pagination,
       current_user: current_user
-    ]
     )
     |> debug("requests")
   end

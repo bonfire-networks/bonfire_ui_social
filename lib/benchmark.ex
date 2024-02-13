@@ -10,19 +10,23 @@ defmodule Bonfire.UI.Social.Benchmark do
 
   def feed do
     Logger.configure(level: :info)
+
     Utils.maybe_apply(
-    Benchee,
-    :run,
-    [
-      md_lib_feed(),
-      # some_feed_queries(),
-      [parallel: 2,
-      warmup: 2,
-      time: 10,
-      memory_time: 2,
-      reduction_time: 2,
-      profile_after: true,
-      formatters: formatters("benchmarks/output/feed_queries.html")]]
+      Benchee,
+      :run,
+      [
+        md_lib_feed(),
+        # some_feed_queries(),
+        [
+          parallel: 2,
+          warmup: 2,
+          time: 10,
+          memory_time: 2,
+          reduction_time: 2,
+          profile_after: true,
+          formatters: formatters("benchmarks/output/feed_queries.html")
+        ]
+      ]
     )
   end
 
@@ -57,44 +61,48 @@ defmodule Bonfire.UI.Social.Benchmark do
 
   def feed_query_methods do
     Logger.configure(level: :info)
+
     Utils.maybe_apply(
-    Benchee,
-    :run,
-    [
-      %{
-        "minimal join/preloads, with boundaries applied" => fn ->
-          Bonfire.Social.FeedActivities.feed(:local, preload: :with_object)
-        end,
-        "minimal join/preloads, without boundaries applied" => fn ->
-          Bonfire.Social.FeedActivities.feed(:local,
-            skip_boundary_check: true,
-            preload: :with_object
-          )
-        end,
-        # "caching preloads, with boundaries applied" => fn ->
-        #   Bonfire.Social.FeedActivities.feed(:local)
-        #   |> Bonfire.Social.Feeds.LiveHandler.preloads(with_cache: true)
-        # end,
-        # "caching preloads, without boundaries applied " => fn ->
-        #   Bonfire.Social.FeedActivities.feed(:local, skip_boundary_check: true)
-        #   |> Bonfire.Social.Feeds.LiveHandler.preloads(with_cache: true)
-        # end,
-        "full join/preloads, with boundaries applied" => fn ->
-          Bonfire.Social.FeedActivities.feed(:local, preload: :feed)
-        end,
-        "full join/preloads, without boundaries applied" => fn ->
-          Bonfire.Social.FeedActivities.feed(:local, skip_boundary_check: true, preload: :feed)
-        end
-        # "AP:shared_outbox" => fn -> ActivityPub.Web.ObjectView.render("outbox.json", %{outbox: :shared_outbox}) end
-      },
-     [ parallel: 1,
-      warmup: 2,
-      time: 10,
-      memory_time: 2,
-      reduction_time: 2,
-      profile_after: true,
-      formatters: formatters("benchmarks/output/feed_query_methods.html")]
-    ])
+      Benchee,
+      :run,
+      [
+        %{
+          "minimal join/preloads, with boundaries applied" => fn ->
+            Bonfire.Social.FeedActivities.feed(:local, preload: :with_object)
+          end,
+          "minimal join/preloads, without boundaries applied" => fn ->
+            Bonfire.Social.FeedActivities.feed(:local,
+              skip_boundary_check: true,
+              preload: :with_object
+            )
+          end,
+          # "caching preloads, with boundaries applied" => fn ->
+          #   Bonfire.Social.FeedActivities.feed(:local)
+          #   |> Bonfire.Social.Feeds.LiveHandler.preloads(with_cache: true)
+          # end,
+          # "caching preloads, without boundaries applied " => fn ->
+          #   Bonfire.Social.FeedActivities.feed(:local, skip_boundary_check: true)
+          #   |> Bonfire.Social.Feeds.LiveHandler.preloads(with_cache: true)
+          # end,
+          "full join/preloads, with boundaries applied" => fn ->
+            Bonfire.Social.FeedActivities.feed(:local, preload: :feed)
+          end,
+          "full join/preloads, without boundaries applied" => fn ->
+            Bonfire.Social.FeedActivities.feed(:local, skip_boundary_check: true, preload: :feed)
+          end
+          # "AP:shared_outbox" => fn -> ActivityPub.Web.ObjectView.render("outbox.json", %{outbox: :shared_outbox}) end
+        },
+        [
+          parallel: 1,
+          warmup: 2,
+          time: 10,
+          memory_time: 2,
+          reduction_time: 2,
+          profile_after: true,
+          formatters: formatters("benchmarks/output/feed_query_methods.html")
+        ]
+      ]
+    )
   end
 
   def feed_queries_without_benchee do
@@ -119,60 +127,65 @@ defmodule Bonfire.UI.Social.Benchmark do
     conn = build_conn()
 
     feed = Bonfire.Social.FeedActivities.feed(:local)
+
     Utils.maybe_apply(
-    Benchee,
-    :run,
-    [
-      %{
-        "fetch feed page with activities" => fn -> get(conn, "/feed/local") end,
-        # "query & render entire feed page with activities" => fn -> live(conn, "/feed/local") end, # NOPE: LiveView helpers can only be invoked from the test process
-        # "query & render feed component with activities (using all async preloads)" => fn ->
-        #   live_feed(live_update_many_preloads: :async)
-        # end,
-        # "query & render feed component with activities (inline all preloads)" => fn ->
-        #   live_feed(live_update_many_preloads: :inline)
-        # end,
-        # "query & render feed component with activities (skipping all preloads)" => fn ->
-        #   live_feed(live_update_many_preloads: :skip)
-        # end,
-        # "query & render feed component with activities (using feed async preloads)" => fn ->
-        #   live_feed(feed_live_update_many_preloads: :async_total) # FIXME
-        # end,
-        # "query & render feed component with activities (inline feed preloads)" => fn ->
-        #   live_feed(feed_live_update_many_preloads: :inline)
-        # end,
-        # "query & render feed component with activities (inline + async actions)" => fn ->
-        #   live_feed(feed_live_update_many_preloads: :async_actions)
-        # end,
-        # "query & render feed component with activities (skipping feed preloads)" => fn ->
-        #   live_feed(feed_live_update_many_preloads: :skip)
-        # end,
-        "render feed component with already queried activities (skipping preloads)" => fn ->
-          render_feed(feed.edges, feed_live_update_many_preloads: :skip)
-        end,
-        "render feed component with already queried activities (inline preloads)" => fn ->
-          render_feed(feed.edges, feed_live_update_many_preloads: :inline)
-        end,
-        "render feed component with already queried activities (async actions preloads)" => fn ->
-          render_feed(feed.edges, feed_live_update_many_preloads: :async_actions)
-        end,
-        "render feed component with already queried activities (async preloads)" => fn ->
-          render_feed(feed.edges, feed_live_update_many_preloads: :async)
-        end
-        # "fetch feed page with (skipped) activities" => fn ->
-        #   get(conn, "/feed/local?&hide_activities=component")
-        # end,
-        # "fetch feed page with (not rendered) activities" => fn ->
-        #   get(conn, "/feed/local?&hide_activities=all")
-        # end
-      },
-      [parallel: 1,
-      warmup: 2,
-      time: 25,
-      memory_time: 2,
-      reduction_time: 2,
-      profile_after: true,
-      formatters: formatters("benchmarks/output/feed_page.html")]]
+      Benchee,
+      :run,
+      [
+        %{
+          "fetch feed page with activities" => fn -> get(conn, "/feed/local") end,
+          # "query & render entire feed page with activities" => fn -> live(conn, "/feed/local") end, # NOPE: LiveView helpers can only be invoked from the test process
+          # "query & render feed component with activities (using all async preloads)" => fn ->
+          #   live_feed(live_update_many_preloads: :async)
+          # end,
+          # "query & render feed component with activities (inline all preloads)" => fn ->
+          #   live_feed(live_update_many_preloads: :inline)
+          # end,
+          # "query & render feed component with activities (skipping all preloads)" => fn ->
+          #   live_feed(live_update_many_preloads: :skip)
+          # end,
+          # "query & render feed component with activities (using feed async preloads)" => fn ->
+          #   live_feed(feed_live_update_many_preloads: :async_total) # FIXME
+          # end,
+          # "query & render feed component with activities (inline feed preloads)" => fn ->
+          #   live_feed(feed_live_update_many_preloads: :inline)
+          # end,
+          # "query & render feed component with activities (inline + async actions)" => fn ->
+          #   live_feed(feed_live_update_many_preloads: :async_actions)
+          # end,
+          # "query & render feed component with activities (skipping feed preloads)" => fn ->
+          #   live_feed(feed_live_update_many_preloads: :skip)
+          # end,
+          "render feed component with already queried activities (skipping preloads)" => fn ->
+            render_feed(feed.edges, feed_live_update_many_preloads: :skip)
+          end,
+          "render feed component with already queried activities (inline preloads)" => fn ->
+            render_feed(feed.edges, feed_live_update_many_preloads: :inline)
+          end,
+          "render feed component with already queried activities (async actions preloads)" =>
+            fn ->
+              render_feed(feed.edges, feed_live_update_many_preloads: :async_actions)
+            end,
+          "render feed component with already queried activities (async preloads)" => fn ->
+            render_feed(feed.edges, feed_live_update_many_preloads: :async)
+          end
+          # "fetch feed page with (skipped) activities" => fn ->
+          #   get(conn, "/feed/local?&hide_activities=component")
+          # end,
+          # "fetch feed page with (not rendered) activities" => fn ->
+          #   get(conn, "/feed/local?&hide_activities=all")
+          # end
+        },
+        [
+          parallel: 1,
+          warmup: 2,
+          time: 25,
+          memory_time: 2,
+          reduction_time: 2,
+          profile_after: true,
+          formatters: formatters("benchmarks/output/feed_page.html")
+        ]
+      ]
     )
 
     Logger.configure(level: :debug)
@@ -183,27 +196,32 @@ defmodule Bonfire.UI.Social.Benchmark do
     _conn = build_conn()
 
     feed = Bonfire.Social.FeedActivities.feed(:local)
+
     Utils.maybe_apply(
-    Benchee,
-    :run,
-      [%{
-        # "render feed component with already queried activities (skipping preloads)" => fn ->
-        #   render_feed(feed.edges, live_update_many_preloads: :skip)
-        # end,
-        # "render feed component with already queried activities (using async preloads)" => fn ->
-        #   render_feed(feed.edges, live_update_many_preloads: :async)
-        # end,
-        "render feed component with already queried activities (inline preloads)" => fn ->
-          render_feed(feed.edges, live_update_many_preloads: :inline)
-        end
-      },
-      [parallel: 1,
-      warmup: 2,
-      time: 25,
-      memory_time: 2,
-      reduction_time: 2,
-      profile_after: true,
-      formatters: formatters("benchmarks/output/feed_page.html")]]
+      Benchee,
+      :run,
+      [
+        %{
+          # "render feed component with already queried activities (skipping preloads)" => fn ->
+          #   render_feed(feed.edges, live_update_many_preloads: :skip)
+          # end,
+          # "render feed component with already queried activities (using async preloads)" => fn ->
+          #   render_feed(feed.edges, live_update_many_preloads: :async)
+          # end,
+          "render feed component with already queried activities (inline preloads)" => fn ->
+            render_feed(feed.edges, live_update_many_preloads: :inline)
+          end
+        },
+        [
+          parallel: 1,
+          warmup: 2,
+          time: 25,
+          memory_time: 2,
+          reduction_time: 2,
+          profile_after: true,
+          formatters: formatters("benchmarks/output/feed_page.html")
+        ]
+      ]
     )
 
     Logger.configure(level: :debug)
