@@ -1,16 +1,16 @@
 <div>
-<StatelessComponent
-  module={maybe_component(Bonfire.UI.Social.ObjectThreadLive)}
-  activity={@activity}
-  object={@object}
-  object_id={@object_id}
-  thread_id={@thread_id}
-  thread_title={@thread_title}
-  thread_mode={@thread_mode}
-  current_url={@current_url}
-  replies={@replies}
-  participants={@participants}
-  showing_within={@showing_within}
-  activity_inception={@activity_inception}
-/>
+  <StatelessComponent
+    module={maybe_component(Bonfire.UI.Social.ObjectThreadLive)}
+    activity={@activity}
+    object={@object}
+    object_id={@object_id}
+    thread_id={@thread_id}
+    thread_title={@thread_title}
+    thread_mode={@thread_mode}
+    current_url={@current_url}
+    replies={@replies}
+    participants={@participants}
+    showing_within={@showing_within}
+    activity_inception={@activity_inception}
+  />
 </div>
