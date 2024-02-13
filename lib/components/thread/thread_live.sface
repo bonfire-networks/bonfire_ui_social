@@ -58,6 +58,7 @@
               <ThreadBranchLive
                 id={entry_id}
                 comment={reply}
+                index={0}
                 threaded_replies={child_replies}
                 thread_id={@thread_id}
                 feed_id={@feed_id}

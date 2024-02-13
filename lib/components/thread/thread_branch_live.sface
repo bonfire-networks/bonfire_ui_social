@@ -17,9 +17,25 @@
   />
 
   <div class="relative flex-1 w-full">
+    <div
+      :if={@thread_mode != :flat && @threaded_replies != []}
+      class={
+        "absolute px-2 left-[32px] cursor-pointer top-[40px] bottom-0 z-30",
+        "!left-[18px] !top-[30px]": @__context__[:ui_compact],
+        "!left-[20px] top-[46px]":
+          Settings.get([Bonfire.UI.Common.AvatarLive, :hide_avatars], false, @__context__)
+      }
+    >
+      <div class={
+        "absolute left-2 cursor-pointer inset-0 border-l bottom-0 brightness-[.3] border-base-content z-30",
+        "!-left-[3px]": Settings.get([Bonfire.UI.Common.AvatarLive, :hide_avatars], false, @__context__)
+      } />
+    </div>
     <Bonfire.UI.Social.CommentLive
       comment={@comment}
+      total_replies_in_thread={@total_replies_in_thread}
       thread_id={@thread_id}
+      index={@index}
       feed_id={@feed_id}
       current_url={@current_url}
       threaded_replies={@threaded_replies}
@@ -51,11 +67,13 @@
           }
         >
           <div class={"replies replies-level-" <> to_string(@thread_level + 1) <> " "}>
-            {#for {subreply, sub_child_replies} <- @threaded_replies || []}
+            {#for {{subreply, sub_child_replies}, index} <- Enum.with_index(@threaded_replies || [])}
               <div class="relative">
                 <StatefulComponent
                   module={maybe_component(Bonfire.UI.Social.ThreadBranchLive, @__context__)}
                   id={id(subreply)}
+                  total_replies_in_thread={length(@threaded_replies)}
+                  index={index}
                   comment={subreply}
                   thread_id={@thread_id}
                   thread_object={@thread_object}

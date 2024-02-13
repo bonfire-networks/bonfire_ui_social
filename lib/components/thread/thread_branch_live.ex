@@ -11,6 +11,8 @@ defmodule Bonfire.UI.Social.ThreadBranchLive do
   # import Bonfire.Me.Integration
   prop comment, :map
 
+  prop total_replies_in_thread, :any, default: 0
+  prop index, :any, default: 0
   prop thread_object, :any
   prop thread_level, :number, default: 1
   prop threaded_replies, :any

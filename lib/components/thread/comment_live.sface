@@ -22,21 +22,10 @@
   >
   </div>
 
-  <!-- <div
-    data-compact={@ui_compact || @__context__[:ui_compact]}
-    data-role="comment-lined"
-    :if={@thread_level < 2}
-    class={
-      "group absolute px-2 left-[32px] cursor-pointer top-[60px] bottom-0 z-30",
-      "!bottom-[-32px]": @threaded_replies != [],
-      "!bottom-[-20px]": @threaded_replies != [] && @thread_mode != :flat,
-    }
-    x-on:click="show_replies = ! show_replies"
-  >
-    <div class="absolute left-2 cursor-pointer inset-0 border-l bottom-0 brightness-[.3] border-base-content z-30" />
-  </div> -->
   <div
-    :if={@thread_mode != :flat && @threaded_replies != []}
+    :if={@thread_mode != :flat &&
+      (@index != @total_replies_in_thread - 1 ||
+         (@index == @total_replies_in_thread - 1 && @threaded_replies != []))}
     class={
       "absolute px-2 left-[32px] cursor-pointer top-[40px] bottom-0 z-30",
       "!left-[18px] !top-[30px]": @__context__[:ui_compact],
