@@ -10,6 +10,8 @@ defmodule Bonfire.UI.Social.SettingsTest do
   alias Bonfire.Social.Graph.Follows
   alias Bonfire.Common.Config
 
+  @moduletag :mneme
+
   setup_all do
     orig1 = Config.get!(:pagination_hard_max_limit)
 
@@ -327,7 +329,7 @@ defmodule Bonfire.UI.Social.SettingsTest do
 
       {:ok, refreshed_view1, refreshed_html} = live(conn, "/feed/local")
       # check the first post is the one with most boosts: p2
-      open_browser(refreshed_view1)
+      # open_browser(refreshed_view1)
 
       auto_assert true <-
                     refreshed_html
@@ -555,11 +557,10 @@ defmodule Bonfire.UI.Social.SettingsTest do
 
       {:ok, refreshed_view, _html} = live(conn, "/feed/local")
       live_pubsub_wait(view)
-      open_browser(refreshed_view)
+      # open_browser(refreshed_view)
 
-      auto_assert true <-
-                    refreshed_view
-                    |> has_element?("[data-role=reply_count]")
+      assert refreshed_view
+             |> has_element?("[data-role=reply_count]")
     end
   end
 end

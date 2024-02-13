@@ -37,13 +37,13 @@ defmodule Bonfire.Social.Feeds.LoadMoreTest do
 
       # live_pubsub_wait(view)
 
-      auto_assert true <- has_element?(view, "[data-role=load_more_button]")
+      assert has_element?(view, "[data-role=load_more_button]")
 
       view
       |> element("[data-role=load_more_button]")
       |> render_click()
 
-      auto_assert false <- has_element?(view, "[data-role=load_more_button]")
+      refute has_element?(view, "[data-role=load_more_button]")
     end
 
     # FIXME: because of deferred joins and infinite scroll we do now show the button - should instead test if once the button is clicked and there's no more activities it disappears

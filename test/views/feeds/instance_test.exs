@@ -79,7 +79,7 @@ defmodule Bonfire.Social.Feeds.Instance.Test do
 
       # |> IO.inspect
       {view, doc} = floki_live(conn, next)
-      open_browser(view)
+      # open_browser(view)
       assert [feed] = Floki.find(doc, "[id='#{feed_id}']")
       assert Floki.text(feed) =~ "summary"
     end

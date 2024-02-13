@@ -39,7 +39,7 @@ defmodule Bonfire.Social.Threads.LoadMoreTest do
       {:ok, view, _html} = live(conn, next)
       live_pubsub_wait(view)
 
-      open_browser(view)
+      # open_browser(view)
       # {view, doc} = floki_live(conn, next)
       assert Floki.find(view, "[data-id=load_more]") == []
       # |> debug()

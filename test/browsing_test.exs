@@ -150,7 +150,7 @@ defmodule Bonfire.UI.Social.BrowsingTest do
 
     live_pubsub_wait(view)
     :timer.sleep(5000)
-    open_browser(view)
+    # open_browser(view)
   end
 
   test "Alice boosts Bob post, navigate to local feed with alice, the boosted activity does not show the subject (alice)" do
