@@ -23,7 +23,10 @@ defmodule Bonfire.UI.Social.Activity.InstanceIconLive do
 
   def permalink(object) when is_map(object) or is_binary(object) do
     warn(object, "FIXME: object does not have a :peered assoc, query it instead")
-    Bonfire.Federate.ActivityPub.Peered.get_canonical_uri(object)
+    Utils.maybe_apply(
+    Bonfire.Federate.ActivityPub.Peered,
+    :get_canonical_uri,
+    [object])
   end
 
   def permalink(other) do

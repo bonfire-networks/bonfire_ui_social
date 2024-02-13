@@ -364,7 +364,10 @@ defmodule Bonfire.UI.Social.FeedLive do
     with {
            :noreply,
            socket
-         } <- Bonfire.Common.Settings.LiveHandler.handle_event("set", attrs, socket) do
+         } <-
+          Utils.maybe_apply(
+          Bonfire.Common.Settings.LiveHandler,
+          :handle_event, ["set", attrs, socket]) do
       do_handle_event(
         "set",
         %{},

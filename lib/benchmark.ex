@@ -1,7 +1,8 @@
 defmodule Bonfire.UI.Social.Benchmark do
   @endpoint Bonfire.Web.Endpoint
   import Phoenix.ConnTest
-  import Phoenix.LiveViewTest
+  alias Bonfire.Common.Utils
+  # import Phoenix.LiveViewTest
   alias Bonfire.Common.Config
   # import Untangle
 
@@ -9,17 +10,19 @@ defmodule Bonfire.UI.Social.Benchmark do
 
   def feed do
     Logger.configure(level: :info)
-
-    Benchee.run(
+    Utils.maybe_apply(
+    Benchee,
+    :run,
+    [
       md_lib_feed(),
       # some_feed_queries(),
-      parallel: 2,
+      [parallel: 2,
       warmup: 2,
       time: 10,
       memory_time: 2,
       reduction_time: 2,
       profile_after: true,
-      formatters: formatters("benchmarks/output/feed_queries.html")
+      formatters: formatters("benchmarks/output/feed_queries.html")]]
     )
   end
 
@@ -54,8 +57,10 @@ defmodule Bonfire.UI.Social.Benchmark do
 
   def feed_query_methods do
     Logger.configure(level: :info)
-
-    Benchee.run(
+    Utils.maybe_apply(
+    Benchee,
+    :run,
+    [
       %{
         "minimal join/preloads, with boundaries applied" => fn ->
           Bonfire.Social.FeedActivities.feed(:local, preload: :with_object)
@@ -82,14 +87,14 @@ defmodule Bonfire.UI.Social.Benchmark do
         end
         # "AP:shared_outbox" => fn -> ActivityPub.Web.ObjectView.render("outbox.json", %{outbox: :shared_outbox}) end
       },
-      parallel: 1,
+     [ parallel: 1,
       warmup: 2,
       time: 10,
       memory_time: 2,
       reduction_time: 2,
       profile_after: true,
-      formatters: formatters("benchmarks/output/feed_query_methods.html")
-    )
+      formatters: formatters("benchmarks/output/feed_query_methods.html")]
+    ])
   end
 
   def feed_queries_without_benchee do
@@ -114,8 +119,10 @@ defmodule Bonfire.UI.Social.Benchmark do
     conn = build_conn()
 
     feed = Bonfire.Social.FeedActivities.feed(:local)
-
-    Benchee.run(
+    Utils.maybe_apply(
+    Benchee,
+    :run,
+    [
       %{
         "fetch feed page with activities" => fn -> get(conn, "/feed/local") end,
         # "query & render entire feed page with activities" => fn -> live(conn, "/feed/local") end, # NOPE: LiveView helpers can only be invoked from the test process
@@ -159,13 +166,13 @@ defmodule Bonfire.UI.Social.Benchmark do
         #   get(conn, "/feed/local?&hide_activities=all")
         # end
       },
-      parallel: 1,
+      [parallel: 1,
       warmup: 2,
       time: 25,
       memory_time: 2,
       reduction_time: 2,
       profile_after: true,
-      formatters: formatters("benchmarks/output/feed_page.html")
+      formatters: formatters("benchmarks/output/feed_page.html")]]
     )
 
     Logger.configure(level: :debug)
@@ -173,12 +180,13 @@ defmodule Bonfire.UI.Social.Benchmark do
 
   def feed_render_page do
     Logger.configure(level: :info)
-    conn = build_conn()
+    _conn = build_conn()
 
     feed = Bonfire.Social.FeedActivities.feed(:local)
-
-    Benchee.run(
-      %{
+    Utils.maybe_apply(
+    Benchee,
+    :run,
+      [%{
         # "render feed component with already queried activities (skipping preloads)" => fn ->
         #   render_feed(feed.edges, live_update_many_preloads: :skip)
         # end,
@@ -189,13 +197,13 @@ defmodule Bonfire.UI.Social.Benchmark do
           render_feed(feed.edges, live_update_many_preloads: :inline)
         end
       },
-      parallel: 1,
+      [parallel: 1,
       warmup: 2,
       time: 25,
       memory_time: 2,
       reduction_time: 2,
       profile_after: true,
-      formatters: formatters("benchmarks/output/feed_page.html")
+      formatters: formatters("benchmarks/output/feed_page.html")]]
     )
 
     Logger.configure(level: :debug)

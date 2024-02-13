@@ -387,7 +387,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
     parent_id
   end
 
-  def maybe_published_in(none, verb) do
+  def maybe_published_in(_none, _verb) do
     # debug(none, "none for #{verb}")
     nil
   end
@@ -404,7 +404,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
     subject
   end
 
-  def maybe_labelled(none, verb) do
+  def maybe_labelled(_none, _verb) do
     # debug(none, "none for #{verb}")
     nil
   end
@@ -1641,7 +1641,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
     [{LinkLive, label: name, to: path(object)}]
   end
 
-  defp component_object_fallback(type, object) do
+  defp component_object_fallback(type, _object) do
     warn(type, "no component set up for object_type, fallback to UnknownLive")
 
     [Bonfire.UI.Social.Activity.UnknownLive]
@@ -1714,7 +1714,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
 
   def actions_for_object_type(_activity, type) when type in [Bonfire.Data.Social.Flag], do: []
 
-  def actions_for_object_type(activity, type)
+  def actions_for_object_type(_activity, type)
       when type in [Bonfire.Data.Social.Post, Bonfire.Data.Social.PostContent],
       do: [Bonfire.UI.Social.Activity.ActionsLive]
 
@@ -1745,7 +1745,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
     component_def_for(:object_actions, type, activity, Bonfire.UI.Social.Activity.ActionsLive)
   end
 
-  def actions_for_object_type(activity, type) do
+  def actions_for_object_type(_activity, type) do
     debug(type, "No specific actions defined fot this type")
     [Bonfire.UI.Social.Activity.ActionsLive]
     # [Bonfire.UI.Social.Activity.NoActionsLive]
