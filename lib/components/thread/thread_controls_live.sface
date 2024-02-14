@@ -1,227 +1,246 @@
-<div class="flex items-center p-3 w-full justify-end">
-  {!-- <span class="text-sm font-medium text-base-content/70">
-    {l("Discussion")}
-  </span> --}
-  <div :if={current_user_id(@__context__)} class="flex gap-3">
-    <!-- <Bonfire.UI.Social.ThreadMarkSeenLive
-      :if={@showing_within == :messages and @thread_id}
-      thread_id={@thread_id}
-    /> -->
-
-    <div class="flex rounded-md border border-base-content/20  items-center gap-3">
-      <div class="dropdown dropdown-end">
-        <label tabindex="0" class="btn rounded-l rounded-r-none btn-ghost btn-sm btn-square normal-case">
-          {!-- {l("Layout:")} --}
-          {#if @thread_mode == :flat}
-            {!-- {l("Linear")} --}
-            <#Icon iconify="fa-solid:list" class="w-4 h-4 text-base-content/70" />
-          {#else}
-            {!-- {l("Nested replies")} --}
-            <#Icon iconify="clarity:tree-view-solid" class="w-4 h-4 text-base-content/70" />
-          {/if}
-
-          {!-- {#if @__context__[:ui_compact]}
-                {l("Compact")}
-              {#else}
-                {l("Cozy")}
-              {/if} --}
-        </label>
-        <ul
-          tabindex="0"
-          class="dropdown-content mt-1 z-[999] menu gap-1 p-1 shadow bg-base-200 rounded-box w-60"
-        >
-          <li
-            phx-click="set"
-            phx-value-to_atoms="true"
-            phx-value-thread_mode="nested"
-            phx-target={@event_target}
-          >
-            <a class={
-              "flex gap-2 text-base-content/70",
-              "active !text-base-content/100 font-semibold": @thread_mode != :flat
-            }>
-              <#Icon iconify="clarity:tree-view-solid" class="w-4 h-4 text-base-content/70" />
-              {l("Threaded replies")}</a>
-          </li>
-
-          <li
-            phx-click="set"
-            phx-value-to_atoms="true"
-            phx-value-thread_mode="flat"
-            phx-target={@event_target}
-          >
-            <a class={
-              "flex gap-2 text-base-content/70",
-              "active !text-base-content/100 font-semibold": @thread_mode == :flat
-            }>
-              <#Icon iconify="fa-solid:list" class="w-4 h-4 ml-1 text-base-content/70" />
-              {l("Flat list")}</a>
-          </li>
-
-          {!-- {#if @__context__[:ui_compact]}
-                <li
-                  phx-click="set"
-                  phx-value-to_atoms="true"
-                  phx-value-ui_compact="false"
-                  phx-value-assign_global="true"
-                  phx-target={@event_target}
-                ><a>{l("Cozy")}</a></li>
-              {#else}
-                <li
-                  phx-click="set"
-                  phx-value-to_atoms="true"
-                  phx-value-ui_compact="true"
-                  phx-value-assign_global="true"
-                  phx-target={@event_target}
-                ><a>{l("Compact")}</a></li>
-              {/if} --}
-        </ul>
-      </div>
-
-      <div class="dropdown dropdown-end">
-        <label
-          tabindex="0"
-          class="btn-sm btn btn-ghost btn-square rounded-none normal-case text-base-content/70"
-        >
-          {#case @sort_by}
-            {#match :latest_reply}
-              {#if @thread_mode == :flat}
+<div class="flex px-3 items-center w-full justify-between border-b border-base-content/20">
+  <div class="flex items-center min-w-fit	flex-1 gap-1">
+    <span class="text-sm flex-shrink-0 text-base-content/70">{l("Order by:")}</span>
+    <div phx-hook="Tooltip" id="order-dropdown" class="w-full flex flex-1">
+      <label
+        tabindex="0"
+        class="tooltip-button btn-sm btn flex-1 btn-ghost rounded-full normal-case text-base-content/70"
+      >
+        {#case @sort_by}
+          {#match :latest_reply}
+            {#if @thread_mode == :flat}
+              <span class="flex gap-2 text-base-content/70 items-center">
                 <#Icon iconify="mdi:order-alphabetical-ascending" class="w-5 h-5" />
-              {#else}
-                <#Icon iconify="mdi:sprout" class="w-6 h-6" />
-              {/if}
-            {#match :num_replies}
+                <span class="font-semibold">{l("Chronological")}</span>
+              </span>
+            {#else}
+              <span class="flex gap-2 text-base-content/70 items-center">
+                <#Icon iconify="mdi:sprout" class="w-5 h-5" />
+                <span class="font-semibold">{l("Chronological by latest reply")}</span>
+              </span>
+            {/if}
+          {#match :num_replies}
+            <span class="flex gap-2 text-base-content/70 items-center">
               <#Icon iconify="basil:comment-outline" class="w-5 h-5 stroke-1 fill-base-content/50" />
-            {#match :num_boosts}
+              <span class="font-semibold">{l("By amount of replies")}</span>
+            </span>
+          {#match :num_boosts}
+            <span class="flex gap-2 text-base-content/70 items-center">
               <#Icon iconify="system-uicons:retweet" class="w-5 h-5 stroke-1 fill-base-content/50" />
-            {#match :num_likes}
-              <#Icon iconify="mingcute:fire-line" class="h-[20px] w-[18px" />
-            {#match _}
+              <span class="font-semibold">{l("By amount of boosts")}</span>
+            </span>
+          {#match :num_likes}
+            <span class="flex gap-2 text-base-content/70 items-center">
+              <#Icon iconify="mingcute:fire-line" class="h-[20px] w-[18px]" />
+              <span class="font-semibold">{l("By amount of likes")}</span>
+            </span>
+          {#match _}
+            <span class="flex gap-2 text-base-content/70 items-center">
               <#Icon iconify="mdi:order-alphabetical-ascending" class="w-5 h-5" />
-          {/case}
-        </label>
-        <ul
-          tabindex="0"
-          class="dropdown-content mt-1 z-[999] menu p-1 shadow bg-base-200 rounded-box w-60"
+              <span class="font-semibold">{l("Chronological")}</span>
+            </span>
+        {/case}
+      </label>
+      <ul
+        tabindex="0"
+        class="tooltip z-[999] menu p-1 shadow bg-base-200 rounded-lg w-72 absolute top-0 left-0 hidden"
+      >
+        <li
+          phx-click="set"
+          phx-value-to_atoms="true"
+          phx-value-sort_by="nil"
+          phx-value-assign_global="true"
+          phx-target={@event_target}
         >
+          <a class={
+            "flex gap-2 text-base-content/70",
+            "active !text-base-content/100 font-semibold":
+              is_nil(@sort_by) or (@thread_mode == :flat and @sort_by == :latest_reply)
+          }>
+            <#Icon iconify="mdi:order-alphabetical-ascending" class="w-5 h-5" />
+            {if @thread_mode != :flat, do: l("Chronological by branch"), else: l("Chronological")}
+          </a></li>
+
+        <li
+          :if={@thread_mode != :flat}
+          phx-click="set"
+          phx-value-to_atoms="true"
+          phx-value-sort_by="latest_reply"
+          phx-value-assign_global="true"
+          phx-target={@event_target}
+        >
+          <a class={
+            "flex gap-2 text-base-content/70",
+            "active !text-base-content/100 font-semibold": @sort_by == :latest_reply
+          }>
+            <#Icon iconify="mdi:sprout" class="w-6 h-6" />
+            {l("Chronological by latest reply")}</a></li>
+
+        <li
+          phx-click="set"
+          phx-value-to_atoms="true"
+          phx-value-sort_by="num_replies"
+          phx-value-assign_global="true"
+          phx-target={@event_target}
+        >
+          <a class={
+            "flex gap-2 text-base-content/70",
+            "active !text-base-content/100 font-semibold": @sort_by == :num_replies
+          }>
+            <#Icon iconify="basil:comment-outline" class="w-5 h-5 stroke-1 fill-base-content/50" />
+            {l("By amount of replies")}</a></li>
+
+        {#if extension_enabled?(:bonfire_ui_reactions, @__context__)}
           <li
             phx-click="set"
             phx-value-to_atoms="true"
-            phx-value-sort_by="nil"
+            phx-value-sort_by="num_boosts"
             phx-value-assign_global="true"
             phx-target={@event_target}
           >
             <a class={
               "flex gap-2 text-base-content/70",
-              "active !text-base-content/100 font-semibold":
-                is_nil(@sort_by) or (@thread_mode == :flat and @sort_by == :latest_reply)
+              "active !text-base-content/100 font-semibold": @sort_by == :num_boosts
             }>
-              <#Icon iconify="mdi:order-alphabetical-ascending" class="w-5 h-5" />
-              {if @thread_mode != :flat, do: l("Chronological by branch"), else: l("Chronological")}
-            </a></li>
+              <#Icon iconify="system-uicons:retweet" class="w-5 h-5 stroke-1 fill-base-content/50" />
+              {l("By amount of boosts")}</a></li>
 
           <li
-            :if={@thread_mode != :flat}
             phx-click="set"
             phx-value-to_atoms="true"
-            phx-value-sort_by="latest_reply"
+            phx-value-sort_by="num_likes"
             phx-value-assign_global="true"
             phx-target={@event_target}
           >
             <a class={
               "flex gap-2 text-base-content/70",
-              "active !text-base-content/100 font-semibold": @sort_by == :latest_reply
+              "active !text-base-content/100 font-semibold": @sort_by == :num_likes
             }>
-              <#Icon iconify="mdi:sprout" class="w-6 h-6" />
-              {l("Chronological by latest reply")}</a></li>
+              <#Icon iconify="mingcute:fire-line" class="w-5 h-5" />
+              {l("By amount of likes")}</a></li>
+        {/if}
+      </ul>
+    </div>
+  </div>
+  <div class="flex items-center py-3 w-full justify-end">
+    {!-- <span class="text-sm font-medium text-base-content/70">
+      {l("Discussion")}
+    </span> --}
+    <div :if={current_user_id(@__context__)} class="flex gap-3">
+      <!-- <Bonfire.UI.Social.ThreadMarkSeenLive
+        :if={@showing_within == :messages and @thread_id}
+        thread_id={@thread_id}
+      /> -->
 
-          <li
-            phx-click="set"
-            phx-value-to_atoms="true"
-            phx-value-sort_by="num_replies"
-            phx-value-assign_global="true"
-            phx-target={@event_target}
+      <div class="flex rounded-md border border-base-content/20  items-center gap-3">
+        <div phx-hook="Tooltip" id="layout-dropdown" class="">
+          <label
+            tabindex="0"
+            class="tooltip-button btn rounded-l rounded-r-none btn-ghost btn-sm btn-square normal-case"
           >
-            <a class={
-              "flex gap-2 text-base-content/70",
-              "active !text-base-content/100 font-semibold": @sort_by == :num_replies
-            }>
-              <#Icon iconify="basil:comment-outline" class="w-5 h-5 stroke-1 fill-base-content/50" />
-              {l("By amount of replies")}</a></li>
-
-          {#if extension_enabled?(:bonfire_ui_reactions, @__context__)}
+            {#if @thread_mode == :flat}
+              <#Icon iconify="fa-solid:list" class="w-4 h-4 text-base-content/70" />
+            {#else}
+              <#Icon iconify="clarity:tree-view-solid" class="w-4 h-4 text-base-content/70" />
+            {/if}
+          </label>
+          <ul
+            tabindex="0"
+            class="tooltip z-[999] menu p-1 shadow bg-base-200 rounded-lg w-60 absolute top-0 left-0 hidden"
+          >
             <li
               phx-click="set"
               phx-value-to_atoms="true"
-              phx-value-sort_by="num_boosts"
-              phx-value-assign_global="true"
+              phx-value-thread_mode="nested"
               phx-target={@event_target}
             >
               <a class={
                 "flex gap-2 text-base-content/70",
-                "active !text-base-content/100 font-semibold": @sort_by == :num_boosts
+                "active !text-base-content/100 font-semibold": @thread_mode != :flat
               }>
-                <#Icon iconify="system-uicons:retweet" class="w-5 h-5 stroke-1 fill-base-content/50" />
-                {l("By amount of boosts")}</a></li>
+                <#Icon iconify="clarity:tree-view-solid" class="w-4 h-4 text-base-content/70" />
+                {l("Threaded replies")}</a>
+            </li>
 
             <li
               phx-click="set"
               phx-value-to_atoms="true"
-              phx-value-sort_by="num_likes"
-              phx-value-assign_global="true"
+              phx-value-thread_mode="flat"
               phx-target={@event_target}
             >
               <a class={
                 "flex gap-2 text-base-content/70",
-                "active !text-base-content/100 font-semibold": @sort_by == :num_likes
+                "active !text-base-content/100 font-semibold": @thread_mode == :flat
               }>
-                <#Icon iconify="mingcute:fire-line" class="w-5 h-5" />
-                {l("By amount of likes")}</a></li>
-          {/if}
-        </ul>
-      </div>
+                <#Icon iconify="fa-solid:list" class="w-4 h-4 ml-1 text-base-content/70" />
+                {l("Flat list")}</a>
+            </li>
 
-      <div class="dropdown dropdown-end">
-        <label tabindex="0" class="btn-sm rounded-r rounded-l-none btn btn-ghost btn-square normal-case">
-          {!-- {l("Order:")} --}
+            {!-- {#if @__context__[:ui_compact]}
+                  <li
+                    phx-click="set"
+                    phx-value-to_atoms="true"
+                    phx-value-ui_compact="false"
+                    phx-value-assign_global="true"
+                    phx-target={@event_target}
+                  ><a>{l("Cozy")}</a></li>
+                {#else}
+                  <li
+                    phx-click="set"
+                    phx-value-to_atoms="true"
+                    phx-value-ui_compact="true"
+                    phx-value-assign_global="true"
+                    phx-target={@event_target}
+                  ><a>{l("Compact")}</a></li>
+                {/if} --}
+          </ul>
+        </div>
 
-          {#if @sort_order == :asc}
-            <#Icon iconify="octicon:sort-asc-16" class="w-4 h-4 text-base-content/70" />
-            {!-- {l("Oldest first")} --}
-          {#else}
-            <#Icon iconify="octicon:sort-desc-16" class="w-4 h-4 text-base-content/70" />
-            {!-- {l("Newest first")} --}
-          {/if}
-        </label>
-        <ul
-          tabindex="0"
-          class="dropdown-content mt-1 z-[999] menu p-1 gap-1 shadow bg-base-200 rounded-box w-60"
-        >
-          <li
-            phx-click="set"
-            phx-value-to_atoms="true"
-            phx-value-sort_order="desc"
-            phx-value-assign_global="true"
-            phx-target={@event_target}
-          ><a class={
-              "flex gap-2 text-base-content/70",
-              "active !text-base-content/100 font-semibold": @sort_order != :asc
-            }>
-              <#Icon iconify="octicon:sort-desc-16" class="w-4 h-4 text-base-content/70" />
-              {if @sort_by in [nil, :latest_reply], do: l("Newest first"), else: l("Most first")}</a></li>
-          <li
-            phx-click="set"
-            phx-value-to_atoms="true"
-            phx-value-sort_order="asc"
-            phx-value-assign_global="true"
-            phx-target={@event_target}
-          ><a class={
-              "flex gap-2 text-base-content/70",
-              "active !text-base-content/100 font-semibold": @sort_order == :asc
-            }>
+        <div phx-hook="Tooltip" id="sort_timing_thread">
+          <label
+            tabindex="0"
+            class="tooltip-button btn-sm rounded-r rounded-l-none btn btn-ghost btn-square normal-case"
+          >
+            {!-- {l("Order:")} --}
+
+            {#if @sort_order == :asc}
               <#Icon iconify="octicon:sort-asc-16" class="w-4 h-4 text-base-content/70" />
-              {if @sort_by in [nil, :latest_reply], do: l("Oldest first"), else: l("Least first")}</a></li>
-        </ul>
+              {!-- {l("Oldest first")} --}
+            {#else}
+              <#Icon iconify="octicon:sort-desc-16" class="w-4 h-4 text-base-content/70" />
+              {!-- {l("Newest first")} --}
+            {/if}
+          </label>
+          <ul
+            tabindex="0"
+            class="tooltip z-[999] menu p-1 shadow bg-base-200 rounded-lg w-60 absolute top-0 left-0 hidden"
+          >
+            <li
+              phx-click="set"
+              phx-value-to_atoms="true"
+              phx-value-sort_order="desc"
+              phx-value-assign_global="true"
+              phx-target={@event_target}
+            ><a class={
+                "flex gap-2 text-base-content/70",
+                "active !text-base-content/100 font-semibold": @sort_order != :asc
+              }>
+                <#Icon iconify="octicon:sort-desc-16" class="w-4 h-4 text-base-content/70" />
+                {if @sort_by in [nil, :latest_reply], do: l("Newest first"), else: l("Most first")}</a></li>
+            <li
+              phx-click="set"
+              phx-value-to_atoms="true"
+              phx-value-sort_order="asc"
+              phx-value-assign_global="true"
+              phx-target={@event_target}
+            ><a class={
+                "flex gap-2 text-base-content/70",
+                "active !text-base-content/100 font-semibold": @sort_order == :asc
+              }>
+                <#Icon iconify="octicon:sort-asc-16" class="w-4 h-4 text-base-content/70" />
+                {if @sort_by in [nil, :latest_reply], do: l("Oldest first"), else: l("Least first")}</a></li>
+          </ul>
+        </div>
       </div>
     </div>
   </div>

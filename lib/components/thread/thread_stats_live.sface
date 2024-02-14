@@ -1,95 +1,94 @@
-<div class="flex items-center gap-2 border-b border-base-content/20 w-full">
-  <form
-    class="w-full"
-    phx-change="Bonfire.Social.Threads:list_participants"
-    phx-target={@event_target}
-  >
-    <div x-data="{open: false}" class="">
-      <div class="flex items-center justify-between">
-        <div class="flex items-center flex-1 gap-4 py-0 min-h-[2.75rem] px-2">
-          <div class="flex items-center gap-1">
-            {#case @last_reply_id}
-              {#match nil}
-                <span class="loading loading-spinner loading-sm text-base-content/70" />
-                <div class="text-xs tracking-wide text-base-content/70 text-center">{l("Last Reply")}</div>
-              {#match false}
-                <div class="text-xs font-medium text-base-content/90 text-center mr-1">0</div>
-                <div class="text-xs tracking-wide text-base-content/70 text-center">{l("Replies")}</div>
-              {#match _}
-                <div class="text-xs tracking-wide text-base-content/70">
-                  {l("Last Reply")} <span class="font-medium text-xs text-base-content/90">{DatesTimes.date_from_now(@last_reply_id, format: :narrow)}</span>
-                </div>
-            {/case}
-          </div>
-          <div :if={@reply_count != 0} class="flex items-center gap-1">
-            <div class="text-xs font-medium text-base-content/90 text-center">{@reply_count || 0}</div>
-            <div class="text-xs tracking-wide text-base-content/70 text-center">{l("Replies")}</div>
-          </div>
-          <div
-            :if={@showing_within != :messages and extension_enabled?(:bonfire_ui_reactions, @__context__)}
-            class="flex items-center gap-1"
-          >
-            {#if @thread_boost_count}
-              <div class="text-xs font-medium text-base-content/90 text-center">{@thread_boost_count || 0}</div>
-            {#else}
-              <span class="loading loading-spinner loading-sm text-base-content/70" />
-            {/if}
-            <div class="text-xs tracking-wide text-base-content/70 text-center">{l("Boosts")}</div>
-          </div>
-          <div class="flex items-center gap-1">
-            {#if @participant_count}
-              <div class="text-xs font-medium text-base-content/90 text-center">{@participant_count || 0}</div>
-            {#else}
-              <span class="loading loading-spinner loading-sm text-base-content/70" />
-            {/if}
-            <div class="text-xs tracking-wide text-base-content/70 text-center">{l("Participants")}</div>
-          </div>
-        </div>
-        <button
-          :if={@participant_count > 0}
-          x-show="!open"
-          type="button"
-          x-on:click="open = !open"
-          class="normal-case btn-circle btn btn-ghost btn-sm"
-        >
-          <#Icon solid="ChevronDown" class="w-6 h-6 text-base-content/70" />
-        </button>
-        <button
-          x-show="open"
-          type="button"
-          x-on:click="open = !open"
-          class="normal-case btn-circle btn btn-ghost btn-sm"
-        >
-          <#Icon solid="ChevronUp" class="w-6 h-6 text-base-content/70" />
-        </button>
-      </div>
-      <div x-show="open" x-cloak x-collapse :class="{'overflow-visible': open}">
-        <div class="flex flex-wrap items-center gap-3 p-2">
-          {#for p <- @participants || []}
-            <div class="z-[99999999999] relative">
-              <div>
-                <span class="tippy" aria-describedby="tooltip">
-                  <StatelessComponent
-                    module={maybe_component(Bonfire.UI.Me.ProfileItemLive)}
-                    wrapper_class=""
-                    show_controls={[]}
-                    only_img
-                    avatar_class="w-8 h-8 rounded-full bg-base-300"
-                    profile={e(p, :profile, nil)}
-                    character={e(p, :character, nil)}
-                    parent_id="thread_stats"
-                  />
-                </span>
-              </div>
+<div>
+  <div class="flex items-center gap-2 border-b border-base-content/20 w-full">
+    <form
+      class="w-full"
+      phx-change="Bonfire.Social.Threads:list_participants"
+      phx-target={@event_target}
+    >
+      <div x-data="{open: false}" class="">
+        <div class="flex items-center justify-between">
+          <div class="flex items-center flex-1 gap-4 py-0 min-h-[2.75rem] px-2">
+            <div class="flex items-center gap-1">
+              {#case @last_reply_id}
+                {#match nil}
+                  <span class="loading loading-spinner loading-sm text-base-content/70" />
+                  <div class="text-xs tracking-wide text-base-content/70 text-center">{l("Last Reply")}</div>
+                {#match false}
+                  <div class="text-xs font-medium text-base-content/90 text-center mr-1">0</div>
+                  <div class="text-xs tracking-wide text-base-content/70 text-center">{l("Replies")}</div>
+                {#match _}
+                  <div class="text-xs tracking-wide text-base-content/70">
+                    {l("Last Reply")} <span class="font-medium text-xs text-base-content/90">{DatesTimes.date_from_now(@last_reply_id, format: :narrow)}</span>
+                  </div>
+              {/case}
             </div>
-          {/for}
+            <div :if={@reply_count != 0} class="flex items-center gap-1">
+              <div class="text-xs font-medium text-base-content/90 text-center">{@reply_count || 0}</div>
+              <div class="text-xs tracking-wide text-base-content/70 text-center">{l("Replies")}</div>
+            </div>
+            <div
+              :if={@showing_within != :messages and extension_enabled?(:bonfire_ui_reactions, @__context__)}
+              class="flex items-center gap-1"
+            >
+              {#if @thread_boost_count}
+                <div class="text-xs font-medium text-base-content/90 text-center">{@thread_boost_count || 0}</div>
+              {#else}
+                <span class="loading loading-spinner loading-sm text-base-content/70" />
+              {/if}
+              <div class="text-xs tracking-wide text-base-content/70 text-center">{l("Boosts")}</div>
+            </div>
+            <div class="flex items-center gap-1">
+              {#if @participant_count}
+                <div class="text-xs font-medium text-base-content/90 text-center">{@participant_count || 0}</div>
+              {#else}
+                <span class="loading loading-spinner loading-sm text-base-content/70" />
+              {/if}
+              <div class="text-xs tracking-wide text-base-content/70 text-center">{l("Participants")}</div>
+            </div>
+          </div>
+          <button
+            :if={@participant_count > 0}
+            x-show="!open"
+            type="button"
+            x-on:click="open = !open"
+            class="normal-case btn-circle btn btn-ghost btn-sm"
+          >
+            <#Icon solid="ChevronDown" class="w-6 h-6 text-base-content/70" />
+          </button>
+          <button
+            x-show="open"
+            type="button"
+            x-on:click="open = !open"
+            class="normal-case btn-circle btn btn-ghost btn-sm"
+          >
+            <#Icon solid="ChevronUp" class="w-6 h-6 text-base-content/70" />
+          </button>
+        </div>
+        <div x-show="open" x-cloak x-collapse :class="{'overflow-visible': open}">
+          <div class="flex flex-wrap items-center gap-3 p-2">
+            {#for p <- @participants || []}
+              <div class="z-[99999999999] relative">
+                <div>
+                  <span class="tippy" aria-describedby="tooltip">
+                    <StatelessComponent
+                      module={maybe_component(Bonfire.UI.Me.ProfileItemLive)}
+                      wrapper_class=""
+                      show_controls={[]}
+                      only_img
+                      avatar_class="w-8 h-8 rounded-full bg-base-300"
+                      profile={e(p, :profile, nil)}
+                      character={e(p, :character, nil)}
+                      parent_id="thread_stats"
+                    />
+                  </span>
+                </div>
+              </div>
+            {/for}
+          </div>
         </div>
       </div>
-    </div>
-  </form>
-</div>
+    </form>
+  </div>
 
-<div class="flex items-center w-full justify-between">
-  <span class="text-sm font-semibold px-3 text-base-content/70">{l("Replies")}</span>
   <#slot />
 </div>

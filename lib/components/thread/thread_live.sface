@@ -26,7 +26,7 @@
   </Bonfire.UI.Social.Activity.ThreadStatsLive>
 
   {#if @loading != true || @replies != []}
-    <div class="flex flex-col flex-1">
+    <div class="flex flex-col flex-1 mt-4">
       <div data-id="replies" class="flex flex-col flex-1">
         <Bonfire.UI.Common.LoadPreviousLive
           live_handler={Bonfire.Social.Threads}
