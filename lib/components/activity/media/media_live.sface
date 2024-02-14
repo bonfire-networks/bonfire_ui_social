@@ -59,11 +59,12 @@
               {#case e(m.metadata, "oembed", "download_url", nil) || e(m.metadata, "download_url", nil)}
                 {#match download_url}
                   <LinkLive
+                    opts={"data-id": "media_link"}
                     to={if !download_url, do: media_url || preview_img}
                     class="flex w-full border rounded-lg media_container hover:bg-base-content/5 border-base-content/20"
                     target="_blank"
                   >
-                    <div class="flex items-center gap-3 overflow-hidden">
+                    <div class="flex w-full items-center gap-3 overflow-hidden">
                       <div
                         data-id="media_img"
                         class="flex relative items-center rounded-l-lg shrink-0 w-[120px] h-[120px] bg-base-content/10 place-content-center"
@@ -101,12 +102,12 @@
                           {/case}
                         </div>
                       </div>
-                      <div class="px-2">
-                        <div class="text-sm font-medium line-clamp-1">
+                      <div class="px-2 flex flex-col w-full flex-1">
+                        <div data-id="media_title" class="text-sm font-medium line-clamp-1">
                           {media_label(m) || if m.media_type == "link", do: e(m, :path, nil), else: l("View")} ({m.media_type || l("link")})
                         </div>
 
-                        <div class="text-sm">
+                        <div data-id="media_author" class="text-sm">
                           {e(m, :metadata, "oembed", "author_name", nil)}
 
                           {#case e(m, :metadata, "oembed", "published", "date-parts", nil)}
@@ -121,7 +122,7 @@
                               <span class="text-base-content/70">{provider}</span>
                           {/case}
                         </div>
-                        <div class="max-w-[420px] text-sm mt-0.5 break-words line-clamp-2 text-base-content/70">
+                        <div class="max-w-[420px] text-sm mt-2 break-words line-clamp-2 text-base-content/70">
                           {description(m)}
                         </div>
                         {!-- {e(m, :metadata, "location", "name", nil)} {e(m, :metadata, "startDate", nil)} --}
