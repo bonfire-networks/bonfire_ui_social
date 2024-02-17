@@ -1278,6 +1278,9 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
       {:feed_by_subject, _} ->
         [:feed_by_subject, :feed_postload]
 
+      {:media, _} ->
+        [:per_media, :with_creator, :with_object_posts]
+
       _ ->
         [:feed_by_subject, :feed_postload]
     end
