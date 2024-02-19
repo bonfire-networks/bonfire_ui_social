@@ -396,7 +396,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
     label
   end
 
-  def maybe_labelled(%{labelled: %{} = labelled}, _) do
+  def maybe_labelled(%{labelled: %{id: _} = labelled}, _) do
     labelled
   end
 
