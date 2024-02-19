@@ -7,7 +7,7 @@
   scope={@scope}
 />
 
-<form
+<!-- <form
   :if={extension_enabled?(:bonfire_classify, @__context__)}
   phx-change={@event_name || "Bonfire.Common.Settings:set"}
   phx-target={@event_target}
@@ -19,7 +19,7 @@
     scope={@scope}
     compact
   />
-</form>
+</form> -->
 
 <form
   :if={extension_enabled?(:bonfire_ui_reactions, @__context__)}
@@ -70,7 +70,7 @@
   phx-target={@event_target}
 >
   <Bonfire.UI.Common.SettingsToggleLive
-    name={if @scope != :instance, do: l("My own activities", else: l("User's own activities"))}
+    name={if @scope != :instance, do: l("My own activities"), else: l("User's own activities")}
     keys={[Bonfire.Social.Feeds, :include, :outbox]}
     default_value
     scope={@scope}
