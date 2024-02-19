@@ -8,10 +8,11 @@ defmodule Bonfire.UI.Social.FeedsLive do
     # icon: "noto:newspaper",
     # emoji: "📰",
     # exclude_from_nav: true
+    # FIXME: should only include moduels from current extension
     default_nav: [
       Bonfire.UI.Social.FeedsLive,
       Bonfire.UI.Files.Web.MediaFeedLive,
-      Bonfire.Search.Web.SearchLive,
+      # Bonfire.Search.Web.SearchLive,
       # Bonfire.UI.Social.ExploreLive,
       # Bonfire.UI.Social.Feeds.LocalLive,
       # Bonfire.UI.Social.Feeds.FederationLive,

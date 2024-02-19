@@ -4,10 +4,16 @@ defmodule Bonfire.UI.Social.DiscussionLive do
   on_mount {LivePlugs, [Bonfire.UI.Me.LivePlugs.LoadCurrentUser]}
 
   def mount(params, _session, socket) do
+    is_guest? = is_nil(current_user_id(socket.assigns))
+
     {:ok,
      socket
      |> assign(
        page_title: l("Discussion"),
+       is_guest?: is_guest?,
+       without_sidebar: is_guest?,
+       without_secondary_widgets: is_guest?,
+       no_header: is_guest?,
        thread_title: nil,
        page: "discussion",
        showing_within: :thread,
@@ -15,7 +21,6 @@ defmodule Bonfire.UI.Social.DiscussionLive do
        #  to_circles: [],
        participants: nil,
        #  smart_input_opts: %{prompt: l("Reply to this discussion")},
-       #  without_sidebar: true,
        activity: nil,
        post: nil,
        object: nil,

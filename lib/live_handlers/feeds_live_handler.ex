@@ -1589,6 +1589,48 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
     )
   end
 
+  def load_user_feed_assigns("objects" = tab, user, %{"extra" => object_type} = params, socket) do
+    user = user || e(socket, :assigns, :user, nil)
+    object_type = Types.maybe_to_atom(object_type)
+    object_type = Types.maybe_to_module(object_type) || object_type
+
+    showing_within = :feed_by_creator
+    preloads = [:feed_by_creator] ++ feed_extra_preloads_list(showing_within)
+
+    feed_id =
+      if user && module_enabled?(Bonfire.Social.Feeds, user),
+        do:
+          Bonfire.Social.Feeds.feed_id(:outbox, user)
+          |> debug("outbox for #{id(user)}")
+
+    feed =
+      if feed_id && module_enabled?(FeedActivities, user),
+        do:
+          FeedActivities.feed(
+            {feed_id,
+             %{
+               object_type: object_type
+             }}
+            |> debug(),
+            pagination: input_to_atoms(params),
+            current_user: current_user(socket.assigns),
+            subject_user: user,
+            preload: preloads
+          )
+
+    merge_feed_assigns(
+      feed,
+      [
+        loading: false,
+        selected_tab: tab,
+        page: "objects",
+        showing_within: showing_within,
+        activity_loaded_preloads: preloads
+      ],
+      e(socket.assigns, :page_info, nil)
+    )
+  end
+
   def load_user_feed_assigns("boosts" = tab, user, params, socket) do
     user = user || e(socket, :assigns, :user, nil)
 
