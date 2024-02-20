@@ -2,20 +2,25 @@
   {#match media_url}
     {#case e(@media.metadata, "download_url", nil)}
       {#match download_url}
-        {#case e(@metadata, "DOI", nil) || e(@metadata, "identifiers", "doi", nil) || e(@metadata, "url", nil) ||
+        {#case e(debug(@metadata), "DOI", nil) || e(@metadata, "identifiers", "doi", nil) ||
+            e(@metadata, "url", "value", nil) || e(@metadata, "url", nil) ||
             e(@media.metadata, "facebook", "og:url", nil)}
           {#match doi}
             <!-- <code>{inspect(@media.metadata, pretty: true)}</code> -->
-            <div class="w-full border p-4 rounded-lg media_container border-base-content/20 bg-base-100 text-base-content">
+            <div class={
+              "w-full media_container text-base-content",
+              "p-4 border border-base-content/20 bg-base-100 rounded-lg": @showing_within != :media
+            }>
               <div class="relative w-full">
                 {#case e(@metadata, "type", nil) || e(@metadata, "itemType", nil) || e(@metadata, "@type", nil)}
                   {#match nil}
                   {#match type}
-                    <span class="text-sm badge badge-accent rounded bg-accent/30 border-none !text-accent">{type}</span>
+                    <span class="text-sm badge badge-accent rounded bg-accent/30 border-none !text-accent capitalize">{type}</span>
                 {/case}
                 <div class="mt-2 mb-1 text-xs font-semibold text-base-content/70 uppercase">{e(@metadata, "isPartOf", "name", nil) || e(@metadata, "publisher", "name", nil) ||
                     e(@metadata, "publisher", nil) ||
-                    e(@metadata, "container-title", nil) || e(@metadata, "publicationTitle", nil)}
+                    e(@metadata, "container-title", nil) || e(@metadata, "publicationTitle", nil) ||
+                    e(@metadata, "journal-title", "value", nil)}
                 </div>
                 <div class="text-xl font-semibold">
                   {MediaLive.media_label(@media) ||
@@ -26,17 +31,26 @@
                   <div class="">
                     <div class="flex flex-wrap gap-0.5 text-sm text-base-content/80">
                       {#for {author, i} <-
-                          Enum.with_index(List.wrap(e(@metadata, "author", [])) || e(@metadata, "creators", []))}{if i != 0, do: ","} {e(author, "given", nil) || e(author, "firstName", nil)} {e(author, "family", nil) || e(author, "lastName", nil) || e(author, "name", nil)}{/for}
+                          Enum.with_index(
+                            List.wrap(
+                              e(@metadata, "author", []) || e(@metadata, "creators", []) ||
+                                e(@metadata, "source", "source-name", "value", [])
+                            )
+                          )}{if i != 0, do: ","}
+                        {e(author, "given", nil) || e(author, "firstName", nil)}
+                        {e(author, "family", nil) || e(author, "lastName", nil) || e(author, "name", nil) ||
+                          if(is_binary(author), do: author)}{/for}
                     </div>
 
                     <div class="flex items-center mt-2 mb-4 gap-4">
-                      {#case e(@metadata, "created", "date-time", nil)}
-                        {#match published when is_binary(published)}
+                      {#case e(@metadata, "created", "date-time", nil) || e(@metadata, "datePublished", nil) ||
+                          e(@metadata, "publication-date", nil) || e(@metadata, "date", nil)}
+                        {#match nil}
+                        {#match published}
                           <div class="text-base-content/70 flex items-center gap-2">
                             <#Icon iconify="material-symbols:date-range-outline" class="w-4 h-4 text-base-content/70" />
                             <span class="font-medium">{published |> DatesTimes.format(format: "MMMM d, Y")}</span>
                           </div>
-                        {#match _}
                       {/case}
 
                       <div :if={doi} class="text-base-content/70 text-sm flex items-center gap-2">

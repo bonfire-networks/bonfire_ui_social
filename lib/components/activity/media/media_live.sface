@@ -16,9 +16,10 @@
             e(m.metadata, "json_ld", "@type", nil) in ["ScholarlyArticle"]}
           <Bonfire.UI.Social.Activity.AcademicPaperLive
             media={m}
-            metadata={e(m.metadata, "wikibase", nil) || e(m.metadata, "crossref", nil) ||
+            metadata={e(m.metadata, "crossref", nil) || e(m.metadata, "orcid", nil) || e(m.metadata, "wikibase", nil) ||
               e(m.metadata, "json_ld", []) |> List.wrap() |> List.first() || e(m.metadata, "oembed", nil) ||
               e(m.metadata, "other", nil)}
+            showing_within={@showing_within}
           />
         {#elseif String.ends_with?(media_url || "", ".pdf")}
           <a

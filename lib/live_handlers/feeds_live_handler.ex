@@ -503,6 +503,13 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
       page_header_icon: "ri:chat-2-line"
     ]
 
+  defp feed_filter_assigns(%{"object_type" => filter}),
+    do: [
+      tab_path_suffix: "/#{filter}",
+      page_title: filter,
+      showing_within: Types.maybe_to_atom(filter)
+    ]
+
   defp feed_filter_assigns(_),
     do: [tab_path_suffix: nil, page_title: l("Activities"), page_header_icon: "carbon:home"]
 
@@ -518,16 +525,18 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
       ) do
     feed_name =
       feed_name
-      |> debug()
+      # |> debug()
       |> FeedActivities.feed_name(current_user_id(socket))
-      |> debug()
 
-    debug(filters_or_custom_query_or_feed_id_or_ids, feed_name)
+    # |> debug()
+
+    debug(feed_name, "feed_name")
+    debug(filters_or_custom_query_or_feed_id_or_ids, "filters_or_custom_query_or_feed_id_or_ids")
 
     assigns =
       (feed_default_assigns(feed_name, socket) ++
          feed_filter_assigns(filters_or_custom_query_or_feed_id_or_ids) ++ [loading: show_loader])
-      |> debug("start by setting feed_default_assigns")
+      |> debug("start by setting feed_default_assigns + feed_filter_assigns")
 
     feed_assigns_maybe_async_load(
       {feed_name, filters_or_custom_query_or_feed_id_or_ids},
@@ -540,9 +549,10 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
   def feed_assigns_maybe_async(feed_name, socket, show_loader, reset_stream) do
     feed_name =
       feed_name
-      |> debug()
+      # |> debug()
       |> FeedActivities.feed_name(current_user_id(socket))
-      |> debug()
+
+    # |> debug()
 
     assigns =
       (feed_default_assigns(feed_name, socket) ++ [loading: show_loader])
@@ -777,9 +787,6 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
 
   def feed_default_assigns({feed_name, filters_or_custom_query_or_feed_id_or_ids}, socket)
       when is_atom(feed_name) do
-    debug(feed_name, "feed_name")
-    debug(filters_or_custom_query_or_feed_id_or_ids, "filters_or_custom_query_or_feed_id_or_ids")
-
     feed_default_assigns(feed_name, socket) ++
       [
         # feed_name: feed_name,
@@ -793,9 +800,6 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
 
   def feed_default_assigns({feed_name, filters_or_custom_query_or_feed_id_or_ids}, socket)
       when is_binary(feed_name) do
-    debug(feed_name, "feed_name")
-    debug(filters_or_custom_query_or_feed_id_or_ids, "filters_or_custom_query_or_feed_id_or_ids")
-
     [
       feed_name: feed_name,
       feed_id: feed_name,
@@ -812,8 +816,6 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
   end
 
   def feed_default_assigns(feed_name, socket) when is_atom(feed_name) do
-    debug(feed_name)
-
     [
       feed_name: feed_name,
       feed_id: feed_name,
@@ -1589,13 +1591,12 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
     )
   end
 
-  def load_user_feed_assigns("objects" = tab, user, %{"extra" => object_type} = params, socket) do
+  def load_user_feed_assigns("objects" = tab, user, %{"extra" => type} = params, socket) do
     user = user || e(socket, :assigns, :user, nil)
-    object_type = Types.maybe_to_atom(object_type)
-    object_type = Types.maybe_to_module(object_type) || object_type
+    type = Types.maybe_to_atom(type)
+    object_type = Types.maybe_to_module(type) || type
 
-    showing_within = :feed_by_creator
-    preloads = [:feed_by_creator] ++ feed_extra_preloads_list(showing_within)
+    preloads = [:feed_by_creator] ++ feed_extra_preloads_list(:feed_by_creator)
 
     feed_id =
       if user && module_enabled?(Bonfire.Social.Feeds, user),
@@ -1615,6 +1616,7 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
             pagination: input_to_atoms(params),
             current_user: current_user(socket.assigns),
             subject_user: user,
+            showing_within: type,
             preload: preloads
           )
 
@@ -1624,7 +1626,7 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
         loading: false,
         selected_tab: tab,
         page: "objects",
-        showing_within: showing_within,
+        showing_within: type,
         activity_loaded_preloads: preloads
       ],
       e(socket.assigns, :page_info, nil)

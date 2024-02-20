@@ -194,13 +194,32 @@ defmodule Bonfire.UI.Social.FeedLive do
     debug("a user feed was NOT provided, fetching one now")
 
     socket = assign(socket, assigns)
+    socket = assign(socket, :feed_component_id, socket.assigns.id)
 
     socket =
       socket
-      |> assign(feed_component_id: socket.assigns.id)
       |> LiveHandler.feed_assigns_maybe_async(
-        assigns[:feed_name] || socket.assigns[:feed_name] || socket.assigns[:feed_id] ||
-          assigns[:feed_id] || assigns[:id] || socket.assigns[:id] || :default,
+        socket.assigns[:feed_name] || socket.assigns[:feed_id] || socket.assigns[:id] || :default,
+        ...
+      )
+      |> LiveHandler.insert_feed(socket, ...)
+
+    maybe_subscribe(socket)
+
+    {:ok, socket}
+  end
+
+  def update(%{feed: nil, feed_filters: empty_feed_filters} = assigns, socket)
+      when empty_feed_filters == %{} or empty_feed_filters == [] or empty_feed_filters == nil do
+    debug("a feed was NOT provided, fetching one now (without filters)")
+
+    socket = assign(socket, assigns)
+    socket = assign(socket, :feed_component_id, socket.assigns.id)
+
+    socket =
+      socket
+      |> LiveHandler.feed_assigns_maybe_async(
+        socket.assigns[:feed_name] || socket.assigns[:feed_id] || socket.assigns[:id] || :default,
         ...
       )
       |> LiveHandler.insert_feed(socket, ...)
@@ -211,16 +230,16 @@ defmodule Bonfire.UI.Social.FeedLive do
   end
 
   def update(%{feed: nil} = assigns, socket) do
-    debug("a feed was NOT provided, fetching one now")
+    debug("a feed was NOT provided, fetching one now (with filters)")
 
     socket = assign(socket, assigns)
+    socket = assign(socket, :feed_component_id, socket.assigns.id)
 
     socket =
       socket
-      |> assign(feed_component_id: socket.assigns.id)
       |> LiveHandler.feed_assigns_maybe_async(
-        assigns[:feed_name] || socket.assigns[:feed_name] || socket.assigns[:feed_id] ||
-          assigns[:feed_id] || assigns[:id] || socket.assigns[:id] || :default,
+        {socket.assigns[:feed_name] || socket.assigns[:feed_id] || socket.assigns[:id] ||
+           :default, socket.assigns[:feed_filters]},
         ...
       )
       |> LiveHandler.insert_feed(socket, ...)

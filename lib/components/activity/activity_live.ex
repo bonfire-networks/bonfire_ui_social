@@ -704,7 +704,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
                 __context__={@__context__}
                 parent_id={@parent_id}
                 activity_inception={@activity_inception}
-                showing_within={@showing_within}
+                showing_within={e(component_assigns, :showing_within, @showing_within)}
                 viewing_main_object={e(component_assigns, :viewing_main_object, @viewing_main_object)}
                 media={e(component_assigns, :media, [])}
                 cw={@cw}
@@ -1002,11 +1002,13 @@ defmodule Bonfire.UI.Social.ActivityLive do
         component_maybe_creator(activity) ||
         (
           creator =
-            e(object, :created, :creator, nil) || e(activity, :object, :created, :creator, nil) ||
-              e(activity, :created, :creator, nil)
+            e(object, :created, :creator, nil) || e(activity, :created, :creator, nil) ||
+              e(activity, :object, :created, :creator, nil) || e(object, :creator, nil) ||
+              e(activity, :object, :creator, nil)
 
           creator_id =
-            e(object, :created, :creator_id, nil) || e(activity, :created, :creator_id, nil)
+            e(object, :created, :creator_id, nil) || e(activity, :created, :creator_id, nil) ||
+              e(object, :creator_id, nil) || e(activity, :object, :creator_id, nil)
 
           case (creator ||
                   if(not is_nil(creator_id) and creator_id == e(activity, :subject_id, nil),
@@ -1014,7 +1016,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
                   ) || creator_id)
                |> debug("this is a fallback, component_maybe_creator *should* handle most cases") do
             nil ->
-              debug("could not find a creator")
+              debug("could not find a creator in activity or object")
               debug(activity)
               debug(object)
               [Bonfire.UI.Social.Activity.NoSubjectLive]
@@ -1626,7 +1628,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
     do: [Bonfire.UI.Me.Preview.CharacterLive]
 
   defp component_object_fallback(type, %{} = object) when type == Bonfire.Files.Media,
-    do: [{Bonfire.UI.Social.Activity.MediaLive, %{media: object}}]
+    do: [{Bonfire.UI.Social.Activity.MediaLive, %{media: object, showing_within: :media}}]
 
   defp component_object_fallback(type, %{named: %{name: name}} = object)
        when type == Bonfire.Tag.Hashtag do

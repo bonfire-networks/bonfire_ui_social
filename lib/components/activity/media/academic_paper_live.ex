@@ -4,6 +4,7 @@ defmodule Bonfire.UI.Social.Activity.AcademicPaperLive do
 
   prop media, :map, default: nil
   prop metadata, :map, default: nil
+  prop showing_within, :atom, default: nil
 
   def update(_assign, socket) do
     {:noreply, socket}
