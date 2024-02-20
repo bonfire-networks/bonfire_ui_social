@@ -35,12 +35,12 @@
                     <#Icon iconify="bxs:file-pdf" class="w-8 h-8 text-base-content/70" />
                   </div>
                   <div class="text-sm font-medium line-clamp-1">
-                    {media_label(m) || l("View")} ({e(m, :label, nil) || l("PDF")})
+                    {Bonfire.Files.Media.media_label(m) || l("View")} ({e(m, :label, nil) || l("PDF")})
                   </div>
                 </div>
               {#match preview_img}
                 <div class="text-sm font-medium line-clamp-1">
-                  {media_label(m) || l("View")} ({e(m, :label, nil) || l("PDF")})
+                  {Bonfire.Files.Media.media_label(m) || l("View")} ({e(m, :label, nil) || l("PDF")})
                 </div>
                 <LazyImage
                   class="rounded-none object-cover object-top rounded-l-lg cursor-pointer m-image w-full h-[300px] lg:h-[420px]"
@@ -105,7 +105,8 @@
                       </div>
                       <div class="px-2 flex flex-col w-full flex-1">
                         <div data-id="media_title" class="text-sm font-medium line-clamp-1">
-                          {media_label(m) || if m.media_type == "link", do: e(m, :path, nil), else: l("View")} ({m.media_type || l("link")})
+                          {Bonfire.Files.Media.media_label(m) ||
+                            if m.media_type == "link", do: e(m, :path, nil), else: l("View")} ({m.media_type || l("link")})
                         </div>
 
                         <div data-id="media_author" class="text-sm">
@@ -124,7 +125,7 @@
                           {/case}
                         </div>
                         <div class="max-w-[420px] text-sm mt-2 break-words line-clamp-2 text-base-content/70">
-                          {description(m)}
+                          {Bonfire.Files.Media.description(m)}
                         </div>
                         {!-- {e(m, :metadata, "location", "name", nil)} {e(m, :metadata, "startDate", nil)} --}
                       </div>
@@ -151,7 +152,8 @@
       >
         {#for {%{} = m, counter} <- Enum.with_index(@multimedia_list)}
           {#if @showing_within != :smart_input}
-            {#case {media_label(m) || l("Untitled media"), String.starts_with?(m.media_type || "", ["video"])}}
+            {#case {Bonfire.Files.Media.media_label(m) || l("Untitled media"),
+               String.starts_with?(m.media_type || "", ["video"])}}
               {#match {media_label, is_video?}}
                 <article class={
                   "m-entry relative h-full w-full row-span-4 object-cover",
@@ -280,7 +282,7 @@
                                       <span class="text-base-content/70">{provider}</span>
                                   {/case}
                                 </div>
-                                <div class="max-w-[420px] text-sm mt-0.5 break-words line-clamp-2 text-base-content/70">{description(m)}</div>
+                                <div class="max-w-[420px] text-sm mt-0.5 break-words line-clamp-2 text-base-content/70">{Bonfire.Files.Media.description(m)}</div>
                               </div>
                             </div>
                             <div class="flex border-l border-base-content/20 justify-center items-center flex-col">
@@ -381,7 +383,7 @@
           class="grid w-full grid-flow-col grid-with-ratio grid-rows-4 gap-1 mt-1"
         >
           {#for {%{} = m, counter} <- Enum.with_index(@image_list)}
-            {#case media_label(m) || l("Sorry, no caption provided by author")}
+            {#case Bonfire.Files.Media.media_label(m) || l("Sorry, no caption provided by author")}
               {#match media_label}
                 <article
                   data-id="article_media"

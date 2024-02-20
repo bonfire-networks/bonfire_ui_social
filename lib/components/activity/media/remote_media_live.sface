@@ -6,7 +6,7 @@
           {#if is_binary(maybe_media_img) and MediaLive.is_image?(maybe_media_img, e(@media, :media_type, nil))}
             <LazyImage
               class="max-h-[calc(var(--inner-window-height)_-_150px)] relative mx-auto"
-              alt={MediaLive.media_label(@media)}
+              alt={Bonfire.Files.Media.media_label(@media)}
               src={maybe_media_img}
               media={@media}
             />

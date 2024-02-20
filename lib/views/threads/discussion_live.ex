@@ -34,7 +34,8 @@ defmodule Bonfire.UI.Social.DiscussionLive do
        #  url: nil,
        search_placeholder: nil,
        #  to_boundaries: nil,
-       loading: false
+       loading: false,
+       nav_items: Bonfire.Common.ExtensionModule.default_nav()
      )}
   end
 

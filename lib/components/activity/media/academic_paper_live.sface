@@ -23,7 +23,7 @@
                     e(@metadata, "journal-title", "value", nil)}
                 </div>
                 <div class="text-xl font-semibold">
-                  {MediaLive.media_label(@media) ||
+                  {Bonfire.Files.Media.media_label(@media) ||
                     if @media.media_type == "link", do: e(@media, :path, nil), else: l("View")}
                 </div>
 
@@ -78,7 +78,7 @@
                     </div>
 
                     <div class="mt-2 text-sm text-justify text-base-content/90 line-clamp-5 break-words">
-                      {MediaLive.description(@media) |> Text.text_only()}
+                      {Bonfire.Files.Media.description(@media) |> Text.text_only()}
                     </div>
                     {!-- {e(@metadata, "subject", nil)} --}
                   </div>

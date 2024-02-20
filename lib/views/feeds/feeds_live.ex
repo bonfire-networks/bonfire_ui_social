@@ -91,6 +91,7 @@ defmodule Bonfire.UI.Social.FeedsLive do
        feedback_title: l("Your feed is empty"),
        feedback_message:
          l("You can start by following some people, or writing a new post yourself."),
+       nav_items: Bonfire.Common.ExtensionModule.default_nav(),
        sidebar_widgets: [
          users: [
            secondary: [

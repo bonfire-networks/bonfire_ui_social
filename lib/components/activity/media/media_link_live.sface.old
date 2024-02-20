@@ -17,20 +17,20 @@
                 {#match _image}
                   <img
                     class="object-cover w-full h-full rounded-none cursor-pointer rounded-l-md media-image"
-                    alt={media_label(link)}
+                    alt={Bonfire.Files.Media.media_label(link)}
                     src={preview_img(link)}
                   />
               {/case}
             </div>
             <div class="flex flex-col items-start content-start justify-start flex-1 p-3 space-y-1 text-sm text-left">
               <div class="font-medium line-clamp-1">
-                {media_label(link) || l("View media")} ({link.media_type})
+                {Bonfire.Files.Media.media_label(link) || l("View media")} ({link.media_type})
               </div>
               <div class="text-sm text-base-content/70" :if={provider(link)}>
                 {provider(link)}
               </div>
-              {!-- <div class="break-words line-clamp-2 text-base-content/70" :if={description(link)}>
-            {description(link)}
+              {!-- <div class="break-words line-clamp-2 text-base-content/70" :if={Bonfire.Files.Media.description(link)}>
+            {Bonfire.Files.Media.description(link)}
           </div> --}
             </div>
           </div>
