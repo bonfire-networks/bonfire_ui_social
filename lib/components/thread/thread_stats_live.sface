@@ -5,7 +5,7 @@
       phx-change="Bonfire.Social.Threads:list_participants"
       phx-target={@event_target}
     >
-      <div x-data="{open: false}" class="">
+      <div class="">
         <div class="flex items-center justify-between">
           <div class="flex items-center flex-1 gap-4 py-0 min-h-[2.75rem] px-2">
             <div class="flex items-center gap-1">
@@ -46,45 +46,27 @@
               <div class="text-xs tracking-wide text-base-content/70 text-center">{l("Participants")}</div>
             </div>
           </div>
-          <button
-            :if={@participant_count > 0}
-            x-show="!open"
-            type="button"
-            x-on:click="open = !open"
-            class="normal-case btn-circle btn btn-ghost btn-sm"
-          >
-            <#Icon solid="ChevronDown" class="w-6 h-6 text-base-content/70" />
-          </button>
-          <button
-            x-show="open"
-            type="button"
-            x-on:click="open = !open"
-            class="normal-case btn-circle btn btn-ghost btn-sm"
-          >
-            <#Icon solid="ChevronUp" class="w-6 h-6 text-base-content/70" />
-          </button>
         </div>
-        <div x-show="open" x-cloak x-collapse :class="{'overflow-visible': open}">
-          <div class="flex flex-wrap items-center gap-3 p-2">
-            {#for p <- @participants || []}
-              <div class="z-[99999999999] relative">
-                <div>
-                  <span class="tippy" aria-describedby="tooltip">
-                    <StatelessComponent
-                      module={maybe_component(Bonfire.UI.Me.ProfileItemLive)}
-                      wrapper_class=""
-                      show_controls={[]}
-                      only_img
-                      avatar_class="w-8 h-8 rounded-full bg-base-300"
-                      profile={e(p, :profile, nil)}
-                      character={e(p, :character, nil)}
-                      parent_id="thread_stats"
-                    />
-                  </span>
-                </div>
+
+        <div class="flex flex-wrap items-center gap-3 px-2">
+          {#for p <- @participants || []}
+            <div class="z-[99999999999] relative">
+              <div>
+                <span class="tippy" aria-describedby="tooltip">
+                  <StatelessComponent
+                    module={maybe_component(Bonfire.UI.Me.ProfileItemLive)}
+                    wrapper_class=""
+                    show_controls={[]}
+                    only_img
+                    avatar_class="w-8 h-8 rounded-full bg-base-300"
+                    profile={e(p, :profile, nil)}
+                    character={e(p, :character, nil)}
+                    parent_id="thread_stats"
+                  />
+                </span>
               </div>
-            {/for}
-          </div>
+            </div>
+          {/for}
         </div>
       </div>
     </form>
