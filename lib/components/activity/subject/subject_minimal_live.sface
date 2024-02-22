@@ -45,7 +45,7 @@
                   user_id={@profile_id}
                   src={@profile_media}
                   title={@profile_name}
-                  class="h-9 w-9 rounded-full bg-base-content/20"
+                  class="h-9 w-9 rounded-full"
                 />
                 <LiveRedirect to={@path} class="flex link link-hover items-center gap-5 justify-start pb-2">
                   <div class="font-medium text-sm text-base-content/90">
@@ -79,7 +79,7 @@
                 user_id={@profile_id}
                 src={@profile_media}
                 title={@profile_name}
-                class="h-9 w-9 rounded-full bg-base-content/20"
+                class="h-9 w-9 rounded-full"
               />
               <div class="font-medium text-sm text-base-content/90">
                 <LiveRedirect class="font-semibold" to={@path}>
@@ -103,7 +103,7 @@
                 user_id={@profile_id}
                 src={@profile_media}
                 title={@profile_name}
-                class="h-9 w-9 rounded-full bg-base-content/20"
+                class="h-9 w-9 rounded-full"
               />
               <LiveRedirect to={@path} class="flex link link-hover items-center gap-5 justify-start pb-2">
                 <div class="font-medium text-sm text-base-content/90">
@@ -133,7 +133,7 @@
                 user_id={@profile_id}
                 src={@profile_media}
                 title={@profile_name}
-                class="h-9 w-9 rounded-full bg-base-content/20"
+                class="h-9 w-9 rounded-full"
               />
               <div class="font-medium text-sm text-base-content/90">
                 <LiveRedirect to={@path} class="font-semibold">

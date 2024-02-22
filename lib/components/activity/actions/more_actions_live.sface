@@ -13,7 +13,7 @@
   </button>
   <ul
     tabindex="0"
-    class="tooltip z-[999999999999] menu shadow bg-base-200 rounded-lg p-0 w-64 absolute top-0 right-0 hidden"
+    class="tooltip z-[999999999999] menu shadow bg-base-100 shadow border border-base-content/10 rounded-lg p-0 w-64 absolute top-0 left-0 hidden"
     role="menu"
     aria-orientation="vertical"
     aria-labelledby="more-menu"

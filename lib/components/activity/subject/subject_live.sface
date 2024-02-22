@@ -19,7 +19,7 @@
       title={@profile_name}
       viewing_main_object={@viewing_main_object}
       class={
-        "rounded-full bg-neutral w-10 h-10",
+        "rounded-full w-10 h-10",
         "!w-7 !h-7": @__context__[:ui_compact]
       }
     />
