@@ -17,9 +17,9 @@
         </div>
         <div class="flex-1 ml-3">
           <div class="text-sm font-medium text-base-content/70">
-            <LiveRedirect class="font-medium" to={@path}>
+            <LinkLive class="font-medium" to={@path}>
               {@profile_name}
-            </LiveRedirect>
+            </LinkLive>
             {raw(@verb_display)}
           </div>
         </div>
@@ -47,7 +47,7 @@
                   title={@profile_name}
                   class="h-9 w-9 rounded-full"
                 />
-                <LiveRedirect to={@path} class="flex link link-hover items-center gap-5 justify-start pb-2">
+                <LinkLive to={@path} class="flex link link-hover items-center gap-5 justify-start pb-2">
                   <div class="font-medium text-sm text-base-content/90">
                     {@profile_name || @character_username}
 
@@ -58,7 +58,7 @@
                       {l("you")}
                     </span>
                   </div>
-                </LiveRedirect>
+                </LinkLive>
               </div>
             </div>
             <button
@@ -82,13 +82,13 @@
                 class="h-9 w-9 rounded-full"
               />
               <div class="font-medium text-sm text-base-content/90">
-                <LiveRedirect class="font-semibold" to={@path}>
+                <LinkLive class="font-semibold" to={@path}>
                   {#if @object_id == current_user_id(@__context__)}
                     {l("You")}
                   {#else}
                     {@profile_name || @character_username}
                   {/if}
-                </LiveRedirect>
+                </LinkLive>
 
                 {raw(@verb_display)} {l(" your activity")}
               </div>
@@ -105,7 +105,7 @@
                 title={@profile_name}
                 class="h-9 w-9 rounded-full"
               />
-              <LiveRedirect to={@path} class="flex link link-hover items-center gap-5 justify-start pb-2">
+              <LinkLive to={@path} class="flex link link-hover items-center gap-5 justify-start pb-2">
                 <div class="font-medium text-sm text-base-content/90">
                   {@profile_name || @character_username}
 
@@ -116,7 +116,7 @@
                     {l("you")}
                   </span>
                 </div>
-              </LiveRedirect>
+              </LinkLive>
             </div>
           </div>
         {#elseif @published_in}
@@ -136,13 +136,13 @@
                 class="h-9 w-9 rounded-full"
               />
               <div class="font-medium text-sm text-base-content/90">
-                <LiveRedirect to={@path} class="font-semibold">
+                <LinkLive to={@path} class="font-semibold">
                   {#if @object_id == current_user_id(@__context__)}
                     {l("You")}
                   {#else}
                     {@profile_name || @character_username}
                   {/if}
-                </LiveRedirect>
+                </LinkLive>
 
                 {raw(@verb_display)} {l(" your activity")}
               </div>
@@ -178,9 +178,9 @@
             <#Icon solid="Flag" class="w-4 h-4 text-error" />
             <div class="flex-1 ml-3">
               <div class="text-sm font-medium text-base-content/70">
-                <LiveRedirect class="font-medium link link-hover" to={@path}>
+                <LinkLive class="font-medium link link-hover" to={@path}>
                   {@profile_name || @character_username}
-                </LiveRedirect>
+                </LinkLive>
                 {raw(@verb_display)}
               </div>
             </div>
@@ -192,12 +192,12 @@
                 class="w-4 h-4 text-error" />
             <div class="flex-1 ml-3">
               <div class="text-sm font-medium text-base-content/70">
-                <LiveRedirect
+                <LinkLive
                   class="font-medium link link-hover"
                   to={@path}
                 >
                   {@profile_name || @character_username}
-                </LiveRedirect>
+                </LinkLive>
                 {#if @verb == "Schedule" and e(@object, :due, nil)}
                   {l("scheduled for %{date}", date: DatesTimes.date_from_now(e(@object, :due, nil)))}
                 {#elseif @verb == "Label" and e(@object, :finished, nil) == true}
@@ -225,9 +225,9 @@
           <#Icon solid="UserAdd" class="flex-shrink-0 w-5 h-5 text-base-content/70" />
           <div class="flex-1 ml-3">
             <div class="text-sm font-medium text-base-content/70">
-              <LiveRedirect class="font-medium link link-hover text-base-content/70" to={@path}>
+              <LinkLive class="font-medium link link-hover text-base-content/70" to={@path}>
                 {@profile_name || @character_username}
-              </LiveRedirect>
+              </LinkLive>
 
               {raw(@verb_display)}
 
@@ -244,13 +244,13 @@
           <#Icon iconify="material-symbols:push-pin" class="w-5 h-5 text-base-content/70" />
           <div class="flex-1 ml-3">
             <div class="text-sm font-medium text-base-content/70">
-              <LiveRedirect class="font-medium link link-hover text-base-content/70" to={@path}>
+              <LinkLive class="font-medium link link-hover text-base-content/70" to={@path}>
                 {#if @object_id == current_user_id(@__context__)}
                   {l("You")}
                 {#else}
                   {@profile_name || @character_username}
                 {/if}
-              </LiveRedirect>
+              </LinkLive>
 
               {raw(@verb_display)}
             </div>
@@ -262,13 +262,13 @@
           <#Icon iconify="mingcute:fire-fill" class="w-5 h-5 text-yellow-500" />
           <div class="flex-1 ml-3">
             <div class="text-sm font-medium text-base-content/70">
-              <LiveRedirect class="font-medium link link-hover text-base-content/70" to={@path}>
+              <LinkLive class="font-medium link link-hover text-base-content/70" to={@path}>
                 {#if @object_id == current_user_id(@__context__)}
                   {l("You")}
                 {#else}
                   {@profile_name || @character_username}
                 {/if}
-              </LiveRedirect>
+              </LinkLive>
 
               {raw(@verb_display)}
             </div>
@@ -280,9 +280,9 @@
           <#Icon solid="UserAdd" class="flex-shrink-0 w-5 h-5 text-base-content/70" />
           <div class="flex-1 ml-3">
             <div class="text-sm font-medium text-base-content/70">
-              <LiveRedirect class="font-medium link link-hover text-base-content/70" to={@path}>
+              <LinkLive class="font-medium link link-hover text-base-content/70" to={@path}>
                 {@profile_name || @character_username}
-              </LiveRedirect>
+              </LinkLive>
 
               {raw(@verb_display)}
 
@@ -300,9 +300,9 @@
           <#Icon iconify="system-uicons:retweet" class="w-5 h-5 text-success" />
           <div class="flex-1 ml-3">
             <div class="text-sm font-medium text-base-content/70">
-              <LiveRedirect class="font-medium link link-hover text-base-content/70" to={@path}>
+              <LinkLive class="font-medium link link-hover text-base-content/70" to={@path}>
                 {@profile_name || @character_username}
-              </LiveRedirect>
+              </LinkLive>
               {raw(@verb_display)}
             </div>
           </div>
@@ -314,9 +314,9 @@
           <#Icon solid="Flag" class="w-4 h-4 text-error" />
           <div class="flex-1 ml-3">
             <div class="text-sm font-medium text-base-content/70">
-              <LiveRedirect class="font-medium link link-hover" to={@path}>
+              <LinkLive class="font-medium link link-hover" to={@path}>
                 {@profile_name || @character_username}
-              </LiveRedirect>
+              </LinkLive>
               {raw(@verb_display)}
             </div>
           </div>

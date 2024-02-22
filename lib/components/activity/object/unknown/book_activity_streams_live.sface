@@ -32,10 +32,10 @@
       {#if object_field(@json, "subjects")}
         <div class="mt-1">
           {#for tag <- object_field(@json, "subjects") || []}
-            <LiveRedirect
+            <LinkLive
               to={"/search/?s=#{tag}"}
               class="badge badge-primary badge-outline badge-sm !border !border-primary/20 !leading-[1.25rem] !h-[1.25rem]"
-            >{tag}</LiveRedirect>
+            >{tag}</LinkLive>
             {!-- <span>·</span> --}
           {/for}
         </div>

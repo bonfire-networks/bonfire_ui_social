@@ -1,4 +1,4 @@
-<LiveRedirect to={@permalink} class="redirect_to_discussion_page">
+<LinkLive to={@permalink} class="redirect_to_discussion_page">
   <div class="feed_activity_action">
     <span class="feed_activity_icon">
       <svg
@@ -27,4 +27,4 @@
       {/if} --}
     </span>
   </div>
-</LiveRedirect>
+</LinkLive>

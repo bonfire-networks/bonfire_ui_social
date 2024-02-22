@@ -3,12 +3,12 @@
     <div class="flex">
       <div class="flex-1 text-center md:flex md:justify-between">
         <p class="flex-1 block text-sm text-blue-700">
-          <LiveRedirect to={path(e(@activity, :replied, :thread_post_content, nil))}>
+          <LinkLive to={path(e(@activity, :replied, :thread_post_content, nil))}>
             <span class="font-medium text-blue-700 whitespace-nowrap hover:text-blue-600">View entire discussion 
               <span aria-hidden="true">&rarr;</span>
             </span>
             <em>{ e(@activity, :replied, :thread_post_content, :name, nil) || e(@activity, :replied, :thread_post_content, :summary, nil) || e(@activity, :replied, :thread_post_content, :html_body, "") } ...</em>
-          </LiveRedirect>
+          </LinkLive>
         </p>
       </div>
     </div>

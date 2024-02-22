@@ -10,32 +10,32 @@
     >
       <div class="menu bg-base-100">
         <li :if={current_user(current_user(@__context__))}>
-          <LiveRedirect
+          <LinkLive
             class={"ml-1": @selected_tab != "home", "bg-primary/10": @selected_tab == "home"}
             to={path(:feed)}
           >
             <#Icon solid="Home" class="w-4 h-4" />
             <span class="text-sm truncate ellipsis">{l("Home")}</span>
-          </LiveRedirect>
+          </LinkLive>
         </li>
         <li>
-          <LiveRedirect
+          <LinkLive
             class={"ml-1": @selected_tab != "local", "bg-primary/10": @selected_tab == "local"}
             to={path(:local, :feed)}
           >
             <#Icon solid="LocationMarker" class="w-4 h-4" />
             <span class="text-sm truncate ellipsis">{l("Local")}</span>
-          </LiveRedirect>
+          </LinkLive>
         </li>
         <li :if={current_user(current_user(@__context__)) ||
           Settings.get([:bonfire_social, :feeds, :federation, :show_guests], false, @__context__)}>
-          <LiveRedirect
+          <LinkLive
             class={"ml-1": @selected_tab != "fediverse", "bg-primary/10": @selected_tab == "fediverse"}
             to={path(:local, :fediverse)}
           >
             <#Icon solid="Globe" class="w-4 h-4" />
             <span class="text-sm truncate ellipsis">{l("Federated")}</span>
-          </LiveRedirect>
+          </LinkLive>
         </li>
       </div>
     </div>
