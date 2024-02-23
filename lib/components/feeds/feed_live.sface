@@ -47,7 +47,7 @@
       phx-show={JS.remove_class("hidden")}
     >
       {!-- style={if @hide_fresh==0, do: "display: none;", else: ""} --}
-      <btn class="normal-case btn btn-xs rounded-full btn-primary">
+      <btn class="normal-case btn btn-xs  btn-primary">
         <#Icon iconify="mdi:arrow-up" class="w-4 h-4" />
         {!-- |> JS.push("hide_fresh", target: @myself) --}
         {l("Show more recent")}
@@ -180,7 +180,7 @@
               {#else}
                 <div :if={socket_connected?(@__context__)} class="w-full flex items-center justify-center mb-4">
                   <button
-                    class="normal-case btn btn-outline rounded-full btn-primary !border !border-primary/30"
+                    class="normal-case btn btn-outline  btn-primary !border !border-primary/30"
                     phx-click="set"
                     phx-value-to_integers="true"
                     phx-value-time_limit={0}

@@ -102,7 +102,7 @@
     </#slot>
   </:open_btn>
   <:action_btns>
-    <button :if={!@read_only} class="normal-case btn-sm rounded-full btn btn-primary">
+    <button :if={!@read_only} class="normal-case btn-sm btn btn-primary">
       {l("Done")}
     </button>
   </:action_btns>

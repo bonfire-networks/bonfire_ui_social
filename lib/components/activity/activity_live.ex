@@ -508,7 +508,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
       aria-label="user activity"
       tabIndex="0"
       class={
-        "p-5 pl-[4.5rem] activity relative flex flex-col #{@class}",
+        "p-5 pl-[4rem] activity relative flex flex-col #{@class}",
         "replied !p-0 mb-8 pointer-events-none":
           @activity_inception && @showing_within not in [:smart_input, :thread],
         "unread-activity":

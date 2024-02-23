@@ -82,7 +82,7 @@
                 e(@object, :profile, :name, nil) || e(@object, :name, nil)}
             />
             <HiddenInput name="id" value={@thread_id} />
-            <button class="normal-case w-full rounded-full btn-outline btn btn-primary mt-3">
+            <button class="normal-case w-full  btn-outline btn btn-primary mt-3">
               {l("Save")}
             </button>
           </Field>

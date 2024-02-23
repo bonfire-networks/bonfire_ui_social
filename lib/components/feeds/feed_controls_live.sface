@@ -37,7 +37,7 @@
       {!-- <div class="dropdown dropdown-end">
         <label
           tabindex="0"
-          class="rounded-full btn-sm btn btn-ghost normal-case text-base-content/70"
+          class=" btn-sm btn btn-ghost normal-case text-base-content/70"
         >
           {#case @sort_by}
             {#match :num_replies}

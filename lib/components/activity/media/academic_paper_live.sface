@@ -88,7 +88,7 @@
                 <a
                   :if={download_url && download_url != media_url}
                   href={download_url}
-                  class="btn btn-outline border-base-content/30  btn-sm flex-1 rounded-full"
+                  class="btn btn-outline border-base-content/30  btn-sm flex-1"
                   target="_blank"
                 >
                   <#Icon iconify="pajamas:import" class="w-5 h-5 text-base-content/70" />
@@ -98,7 +98,7 @@
                 <LinkLive
                   :if={not String.starts_with?(media_url, "doi:") and URIs.is_uri?(media_url)}
                   to={media_url}
-                  class="btn btn-outline border-base-content/30  btn-sm rounded-full flex-1"
+                  class="btn btn-outline border-base-content/30  btn-sm  flex-1"
                   target="_blank"
                 >
                   <#Icon iconify="heroicons-outline:external-link" class="w-5 h-5 text-base-content/70" />

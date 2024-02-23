@@ -39,7 +39,7 @@ TODO: use preloaded boundaries for can? when available
       phx-click={@action || if @form_opts == %{}, do: "Bonfire.Social.Objects:delete"}
       phx-value-id={id(@object)}
       phx-value-redirect_after={@redirect_after}
-      class="normal-case rounded-full btn btn-error btn-sm"
+      class="normal-case  btn btn-error btn-sm"
     >
       <span class="truncate ellipsis">{l("Delete")} {e(@object_type_readable, l("object"))}</span>
     </button>

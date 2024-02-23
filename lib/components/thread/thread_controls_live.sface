@@ -4,7 +4,7 @@
     <div phx-hook="Tooltip" id="order-dropdown" class="w-full flex flex-1">
       <label
         tabindex="0"
-        class="tooltip-button btn-sm btn flex-1 btn-ghost rounded-full normal-case text-base-content/70"
+        class="tooltip-button btn-sm btn flex-1 btn-ghost  normal-case text-base-content/70"
       >
         {#case @sort_by}
           {#match :latest_reply}
