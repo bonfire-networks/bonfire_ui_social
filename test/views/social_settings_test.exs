@@ -13,9 +13,9 @@ defmodule Bonfire.UI.Social.SettingsTest do
   @moduletag :mneme
 
   setup_all do
-    orig1 = Config.get!(:pagination_hard_max_limit)
+    orig1 = Config.get(:pagination_hard_max_limit)
 
-    orig2 = Config.get!(:default_pagination_limit)
+    orig2 = Config.get(:default_pagination_limit)
 
     Config.put(:pagination_hard_max_limit, 10)
 
