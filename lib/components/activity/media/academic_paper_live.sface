@@ -17,10 +17,10 @@
                   {#match type}
                     <span class="text-sm badge badge-accent rounded bg-accent/30 border-none !text-accent capitalize">{type}</span>
                 {/case}
-                <div class="mt-2 mb-1 text-xs font-semibold text-base-content/70 uppercase">{e(@metadata, "isPartOf", "name", nil) || e(@metadata, "publisher", "name", nil) ||
-                    e(@metadata, "publisher", nil) ||
-                    e(@metadata, "container-title", nil) || e(@metadata, "publicationTitle", nil) ||
-                    e(@metadata, "journal-title", "value", nil)}
+                <div class="mt-2 mb-1 text-xs font-semibold text-base-content/70 uppercase">{e(@metadata, "journal-title", "value", nil) || e(@metadata, "publisher", "name", nil) ||
+                    e(@metadata, "publisher", nil) || e(@metadata, "publicationTitle", nil) ||
+                    e(@metadata, "isPartOf", "name", nil) ||
+                    e(@metadata, "container-title", nil)}
                 </div>
                 <div class="text-xl font-semibold">
                   {Bonfire.Files.Media.media_label(@media) ||
@@ -43,8 +43,9 @@
                     </div>
 
                     <div class="flex items-center mt-2 mb-4 gap-4">
-                      {#case e(@metadata, "created", "date-time", nil) || e(@metadata, "datePublished", nil) ||
-                          e(@metadata, "publication-date", nil) || e(@metadata, "date", nil)}
+                      {#case e(@metadata, "datePublished", nil) ||
+                          e(@metadata, "publication-date", nil) || e(@metadata, "date", nil) ||
+                          e(@metadata, "created", "date-time", nil) || e(@metadata, "citation_publication_date", nil)}
                         {#match nil}
                         {#match published}
                           <div class="text-base-content/70 flex items-center gap-2">
