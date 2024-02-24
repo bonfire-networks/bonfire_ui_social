@@ -12,7 +12,6 @@
               "p-4 border border-base-content/20 bg-base-100 rounded-lg": @showing_within != :media
             }>
               <div class="relative w-full">
-                
                 <div class="font-semibold">
                   {e(@metadata, "citation_title", nil) || Bonfire.Files.Media.media_label(@media) ||
                     if @media.media_type == "link", do: e(@media, :path, nil), else: l("View")}
@@ -31,32 +30,32 @@
                       e(@metadata, "container-title", nil)}
                   </div>
                   {#case e(@metadata, "datePublished", nil) ||
-                          e(@metadata, "publication-date", nil) || e(@metadata, "date", nil) ||
-                          e(@metadata, "created", "date-time", nil) || e(@metadata, "DC.date", nil) ||
-                          e(@metadata, "citation_publication_date", nil)}
-                        {#match nil}
-                        {#match published}
-                          <div class="text-base-content/70 text-sm flex items-center gap-2">
-                            <!-- <#Icon iconify="material-symbols:date-range-outline" class="w-4 h-4 text-base-content/70" /> -->
-                            <span class="font-medium">{published |> DatesTimes.format(format: "MMMM d, Y")}</span>
-                          </div>
-                      {/case}
-                  <div :if={doi} class="text-base-content/70 text-sm flex items-center gap-2">
-                        <span>
-                          {#case doi}
-                            {#match "https://doi.org/" <> doi_id}
-                              <a target="blank" class="link" href={doi}>doi:{doi_id}</a>
-                            {#match "https://dx.doi.org/" <> doi_id}
-                              <a target="blank" class="link" href={doi}>doi:{doi_id}</a>
-                            {#match "http" <> _}
-                              <!-- <a target="blank" class="link" href={doi}>{doi}</a> -->
-                            {#match "doi:" <> doi_id}
-                              <a target="blank" class="link" href={"https://doi.org/#{doi_id}"}>{doi}</a>
-                            {#match _}
-                              <a target="blank" class="link" href={"https://doi.org/#{doi}"}>doi:{doi}</a>
-                          {/case}
-                        </span>
+                      e(@metadata, "publication-date", nil) || e(@metadata, "date", nil) ||
+                      e(@metadata, "created", "date-time", nil) || e(@metadata, "DC.date", nil) ||
+                      e(@metadata, "citation_publication_date", nil)}
+                    {#match nil}
+                    {#match published}
+                      <div class="text-base-content/70 text-sm flex items-center gap-2">
+                        <!-- <#Icon iconify="material-symbols:date-range-outline" class="w-4 h-4 text-base-content/70" /> -->
+                        <span class="font-medium">{published |> DatesTimes.format(format: "MMMM d, Y")}</span>
                       </div>
+                  {/case}
+                  <div :if={doi} class="text-base-content/70 text-sm flex items-center gap-2">
+                    <span>
+                      {#case doi}
+                        {#match "https://doi.org/" <> doi_id}
+                          <a target="blank" class="link" href={doi}>doi:{doi_id}</a>
+                        {#match "https://dx.doi.org/" <> doi_id}
+                          <a target="blank" class="link" href={doi}>doi:{doi_id}</a>
+                        {#match "http" <> _}
+                          <!-- <a target="blank" class="link" href={doi}>{doi}</a> -->
+                        {#match "doi:" <> doi_id}
+                          <a target="blank" class="link" href={"https://doi.org/#{doi_id}"}>{doi}</a>
+                        {#match _}
+                          <a target="blank" class="link" href={"https://doi.org/#{doi}"}>doi:{doi}</a>
+                      {/case}
+                    </span>
+                  </div>
                 </div>
                 <div class="text-sm text-left">
                   <div class="">
@@ -73,7 +72,6 @@
                           if(is_binary(author), do: author)}{/for}
                     </div>
 
-        
                     <div :if={not Enum.empty?(e(@metadata, "subject", []))} class="flex mt-2 flex-wrap gap-2">
                       {#for subject <- List.wrap(e(@metadata, "subject", []))}
                         <span class="text-sm badge badge-info bg-info/30 border-none !text-info">#{subject}</span>
