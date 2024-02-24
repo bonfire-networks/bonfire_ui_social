@@ -12,18 +12,20 @@
               "p-4 border border-base-content/20 bg-base-100 rounded-lg": @showing_within != :media
             }>
               <div class="relative w-full">
-                {#case e(@metadata, "type", nil) || e(@metadata, "itemType", nil) || e(@metadata, "@type", nil)}
+                {#case e(@metadata, "type", nil) || e(@metadata, "itemType", nil) ||
+                    e(@metadata, "citation_categories", nil) || e(@metadata, "@type", nil)}
                   {#match nil}
                   {#match type}
                     <span class="text-sm badge badge-accent rounded bg-accent/30 border-none !text-accent capitalize">{type}</span>
                 {/case}
-                <div class="mt-2 mb-1 text-xs font-semibold text-base-content/70 uppercase">{e(@metadata, "journal-title", "value", nil) || e(@metadata, "publisher", "name", nil) ||
+                <div class="mt-2 mb-1 text-xs font-semibold text-base-content/70 uppercase">{e(@metadata, "journal-title", "value", nil) || e(@metadata, "citation_journal_title", nil) ||
+                    e(@metadata, "publisher", "name", nil) ||
                     e(@metadata, "publisher", nil) || e(@metadata, "publicationTitle", nil) ||
                     e(@metadata, "isPartOf", "name", nil) ||
                     e(@metadata, "container-title", nil)}
                 </div>
                 <div class="text-xl font-semibold">
-                  {Bonfire.Files.Media.media_label(@media) ||
+                  {e(@metadata, "citation_title", nil) || Bonfire.Files.Media.media_label(@media) ||
                     if @media.media_type == "link", do: e(@media, :path, nil), else: l("View")}
                 </div>
 
@@ -34,7 +36,7 @@
                           Enum.with_index(
                             List.wrap(
                               e(@metadata, "author", []) || e(@metadata, "creators", []) ||
-                                e(@metadata, "source", "source-name", "value", [])
+                                e(@metadata, "source", "source-name", "value", []) || e(@metadata, "citation_author", [])
                             )
                           )}{if i != 0, do: ","}
                         {e(author, "given", nil) || e(author, "firstName", nil)}
@@ -45,7 +47,8 @@
                     <div class="flex items-center mt-2 mb-4 gap-4">
                       {#case e(@metadata, "datePublished", nil) ||
                           e(@metadata, "publication-date", nil) || e(@metadata, "date", nil) ||
-                          e(@metadata, "created", "date-time", nil) || e(@metadata, "citation_publication_date", nil)}
+                          e(@metadata, "created", "date-time", nil) || e(@metadata, "DC.date", nil) ||
+                          e(@metadata, "citation_publication_date", nil)}
                         {#match nil}
                         {#match published}
                           <div class="text-base-content/70 flex items-center gap-2">
@@ -79,7 +82,10 @@
                     </div>
 
                     <div class="mt-2 text-sm text-justify text-base-content/90 line-clamp-5 break-words">
-                      {Bonfire.Files.Media.description(@media) |> Text.text_only()}
+                      {raw(
+                        e(@metadata, "citation_abstract", nil) || e(@metadata, "abstractNote", nil) ||
+                          Bonfire.Files.Media.description(@media) |> Text.text_only()
+                      )}
                     </div>
                     {!-- {e(@metadata, "subject", nil)} --}
                   </div>
