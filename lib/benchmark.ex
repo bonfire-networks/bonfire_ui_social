@@ -2,6 +2,7 @@ defmodule Bonfire.UI.Social.Benchmark do
   @endpoint Bonfire.Web.Endpoint
   import Phoenix.ConnTest
   alias Bonfire.Common.Utils
+  import Bonfire.UI.Common.Testing.Helpers
   # import Phoenix.LiveViewTest
   alias Bonfire.Common.Config
   # import Untangle
@@ -15,12 +16,13 @@ defmodule Bonfire.UI.Social.Benchmark do
       Benchee,
       :run,
       [
-        md_lib_feed(),
+        current_user_approaches_feed(),
+        # md_lib_feed(),
         # some_feed_queries(),
         [
-          parallel: 2,
+          parallel: 1,
           warmup: 2,
-          time: 10,
+          time: 15,
           memory_time: 2,
           reduction_time: 2,
           profile_after: true,
@@ -28,6 +30,25 @@ defmodule Bonfire.UI.Social.Benchmark do
         ]
       ]
     )
+  end
+
+  defp current_user_approaches_feed do
+    conn = conn(user: fake_user!())
+
+    %{
+      "render activities with current_user in @__context__ assign" => fn ->
+        Process.put(:approach_to_current_user, :user)
+        get(conn, "/feed/local")
+      end,
+      "render activities with only ID in @__context__ assign" => fn ->
+        Process.put(:approach_to_current_user, :id)
+        get(conn, "/feed/local")
+      end,
+      "render activities with cached current_user" => fn ->
+        Process.put(:approach_to_current_user, :cache)
+        get(conn, "/feed/local")
+      end
+    }
   end
 
   defp md_lib_feed do
@@ -124,6 +145,7 @@ defmodule Bonfire.UI.Social.Benchmark do
 
   def feed_page do
     Logger.configure(level: :info)
+
     conn = build_conn()
 
     feed = Bonfire.Social.FeedActivities.feed(:local)
