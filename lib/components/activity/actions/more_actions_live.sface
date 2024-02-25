@@ -239,10 +239,10 @@
 
     {!-- Block the author, etc --}
     <StatelessComponent
-      :if={current_user_id(@__context__) != @creator_id}
+      :if={@creator_id && current_user_id(@__context__) != @creator_id}
       module={maybe_component(Bonfire.Boundaries.Web.BlockMenuButtonsLive, @__context__)}
       parent_id={@activity_component_id || id(@activity)}
-      object={@creator}
+      object={@creator || @creator_id}
       peered={e(@object, :peered, nil)}
     />
 
