@@ -41,7 +41,7 @@
                         <span class="font-medium">{published |> DatesTimes.format(format: "MMMM d, Y")}</span>
                       </div>
                   {/case}
-                      e(@metadata, "publication-date", nil) || e(@metadata, "date", nil) ||
+                  {#case e(@metadata, "publication-date", nil) || e(@metadata, "date", nil) ||
                       e(@metadata, "created", "date-time", nil) || e(@metadata, "DC.date", nil) ||
                       e(@metadata, "citation_publication_date", nil)}
                     {#match nil}
@@ -136,7 +136,7 @@
                   <span>{l("Read paper")}</span>
                 </LinkLive>
               </div>
-            </div>
+            <!-- </div> -->
         {/case}
     {/case}
 {/case}
