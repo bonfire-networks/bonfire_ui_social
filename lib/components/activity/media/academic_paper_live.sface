@@ -41,6 +41,7 @@
                         <span class="font-medium">{published |> DatesTimes.format(format: "MMMM d, Y")}</span>
                       </div>
                   {/case}
+<<<<<<< HEAD
                   {#case e(@metadata, "publication-date", nil) || e(@metadata, "date", nil) ||
                       e(@metadata, "created", "date-time", nil) || e(@metadata, "DC.date", nil) ||
                       e(@metadata, "citation_publication_date", nil)}
@@ -51,6 +52,8 @@
                         <span class="font-medium">{published |> DatesTimes.format(format: "MMMM d, Y")}</span>
                       </div>
                   {/case}
+=======
+>>>>>>> 5d5c4f87 (ui)
                   <div :if={doi} class="text-base-content/70 text-sm flex items-center gap-2">
                     <span>
                       {#case doi}
@@ -67,6 +70,7 @@
                       {/case}
                     </span>
                   </div>
+<<<<<<< HEAD
                   <span>
                     {#case doi}
                       {#match "https://doi.org/" <> doi_id}
@@ -81,6 +85,38 @@
                         <a target="blank" class="link" href={"https://doi.org/#{doi}"}>doi:{doi}</a>
                     {/case}
                   </span>
+=======
+                </div>
+                <div class="text-sm text-left">
+                  <div class="">
+                    <div class="flex flex-wrap gap-0.5 text-sm text-base-content/80">
+                      {#for {author, i} <-
+                          Enum.with_index(
+                            List.wrap(
+                              e(@metadata, "author", []) || e(@metadata, "creators", []) ||
+                                e(@metadata, "source", "source-name", "value", []) || e(@metadata, "citation_author", [])
+                            )
+                          )}{if i != 0, do: ","}
+                        {e(author, "given", nil) || e(author, "firstName", nil)}
+                        {e(author, "family", nil) || e(author, "lastName", nil) || e(author, "name", nil) ||
+                          if(is_binary(author), do: author)}{/for}
+                    </div>
+
+                    <div :if={not Enum.empty?(e(@metadata, "subject", []))} class="flex mt-2 flex-wrap gap-2">
+                      {#for subject <- List.wrap(e(@metadata, "subject", []))}
+                        <span class="text-sm badge badge-info bg-info/30 border-none !text-info">#{subject}</span>
+                      {/for}
+                    </div>
+
+                    <div class="mt-2 text-sm text-justify text-base-content/90 line-clamp-5 break-words">
+                      {raw(
+                        e(@metadata, "citation_abstract", nil) || e(@metadata, "abstractNote", nil) ||
+                          Bonfire.Files.Media.description(@media) |> Text.text_only()
+                      )}
+                    </div>
+                    {!-- {e(@metadata, "subject", nil)} --}
+                  </div>
+>>>>>>> 5d5c4f87 (ui)
                 </div>
               </div>
               <div class="text-sm text-left">
