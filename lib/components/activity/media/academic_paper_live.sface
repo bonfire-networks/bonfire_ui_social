@@ -12,7 +12,7 @@
               "p-4 border border-base-content/20 bg-base-100 rounded-lg": @showing_within != :media
             }>
               <div class="relative w-full">
-                <div class="text-sm text-base-content/70 mb-2">{e(@metadata, "journal-title", "value", nil) || e(@metadata, "citation_journal_title", nil) ||
+                <div class="text-sm text-base-content/70 mb-1">{e(@metadata, "journal-title", "value", nil) || e(@metadata, "citation_journal_title", nil) ||
                     e(@metadata, "publisher", "name", nil) ||
                     e(@metadata, "publisher", nil) || e(@metadata, "publicationTitle", nil) ||
                     e(@metadata, "isPartOf", "name", nil) ||
@@ -41,19 +41,7 @@
                         <span class="font-medium">{published |> DatesTimes.format(format: "MMMM d, Y")}</span>
                       </div>
                   {/case}
-<<<<<<< HEAD
-                  {#case e(@metadata, "publication-date", nil) || e(@metadata, "date", nil) ||
-                      e(@metadata, "created", "date-time", nil) || e(@metadata, "DC.date", nil) ||
-                      e(@metadata, "citation_publication_date", nil)}
-                    {#match nil}
-                    {#match published}
-                      <div class="text-base-content/70 text-sm flex items-center gap-2">
-                        <!-- <#Icon iconify="material-symbols:date-range-outline" class="w-4 h-4 text-base-content/70" /> -->
-                        <span class="font-medium">{published |> DatesTimes.format(format: "MMMM d, Y")}</span>
-                      </div>
-                  {/case}
-=======
->>>>>>> 5d5c4f87 (ui)
+
                   <div :if={doi} class="text-base-content/70 text-sm flex items-center gap-2">
                     <span>
                       {#case doi}
@@ -70,22 +58,7 @@
                       {/case}
                     </span>
                   </div>
-<<<<<<< HEAD
-                  <span>
-                    {#case doi}
-                      {#match "https://doi.org/" <> doi_id}
-                        <a target="blank" class="link" href={doi}>doi:{doi_id}</a>
-                      {#match "https://dx.doi.org/" <> doi_id}
-                        <a target="blank" class="link" href={doi}>doi:{doi_id}</a>
-                      {#match "http" <> _}
-                        <!-- <a target="blank" class="link" href={doi}>{doi}</a> -->
-                      {#match "doi:" <> doi_id}
-                        <a target="blank" class="link" href={"https://doi.org/#{doi_id}"}>{doi}</a>
-                      {#match _}
-                        <a target="blank" class="link" href={"https://doi.org/#{doi}"}>doi:{doi}</a>
-                    {/case}
-                  </span>
-=======
+
                 </div>
                 <div class="text-sm text-left">
                   <div class="">
@@ -116,62 +89,32 @@
                     </div>
                     {!-- {e(@metadata, "subject", nil)} --}
                   </div>
->>>>>>> 5d5c4f87 (ui)
+
                 </div>
               </div>
-              <div class="text-sm text-left">
-                <div class="">
-                  <div class="flex flex-wrap gap-0.5 text-sm text-base-content/80">
-                    {#for {author, i} <-
-                        Enum.with_index(
-                          List.wrap(
-                            e(@metadata, "author", []) || e(@metadata, "creators", []) ||
-                              e(@metadata, "source", "source-name", "value", []) || e(@metadata, "citation_author", [])
-                          )
-                        )}{if i != 0, do: ","}
-                      {e(author, "given", nil) || e(author, "firstName", nil)}
-                      {e(author, "family", nil) || e(author, "lastName", nil) || e(author, "name", nil) ||
-                        if(is_binary(author), do: author)}{/for}
-                  </div>
+              
+              <div class="flex gap-2 items-center mt-4">
+                <a
+                  :if={download_url && download_url != media_url}
+                  href={download_url}
+                  class="btn btn-outline border-base-content/30  btn-sm flex-1"
+                  target="_blank"
+                >
+                  <#Icon iconify="pajamas:import" class="w-5 h-5 text-base-content/70" />
+                  <span>{l("Download")}</span>
+                </a>
 
-                  <div :if={not Enum.empty?(e(@metadata, "subject", []))} class="flex mt-2 flex-wrap gap-2">
-                    {#for subject <- List.wrap(e(@metadata, "subject", []))}
-                      <span class="text-sm badge badge-info bg-info/30 border-none !text-info">#{subject}</span>
-                    {/for}
-                  </div>
-
-                  <div class="mt-2 text-sm text-justify text-base-content/90 line-clamp-5 break-words">
-                    {raw(
-                      e(@metadata, "citation_abstract", nil) || e(@metadata, "abstractNote", nil) ||
-                        Bonfire.Files.Media.description(@media) |> Text.text_only()
-                    )}
-                  </div>
-                  {!-- {e(@metadata, "subject", nil)} --}
-                </div>
+                <LinkLive
+                  :if={not String.starts_with?(media_url, "doi:") and URIs.is_uri?(media_url)}
+                  to={media_url}
+                  class="btn btn-outline border-base-content/30  btn-sm  flex-1"
+                  target="_blank"
+                >
+                  <#Icon iconify="heroicons-outline:external-link" class="w-5 h-5 text-base-content/70" />
+                  <span>{l("Read paper")}</span>
+                </LinkLive>
               </div>
             </div>
-            <div class="flex gap-2 items-center mt-4">
-              <a
-                :if={download_url && download_url != media_url}
-                href={download_url}
-                class="btn btn-outline border-base-content/30  btn-sm flex-1"
-                target="_blank"
-              >
-                <#Icon iconify="pajamas:import" class="w-5 h-5 text-base-content/70" />
-                <span>{l("Download")}</span>
-              </a>
-
-              <LinkLive
-                :if={not String.starts_with?(media_url, "doi:") and URIs.is_uri?(media_url)}
-                to={media_url}
-                class="btn btn-outline border-base-content/30  btn-sm  flex-1"
-                target="_blank"
-              >
-                <#Icon iconify="heroicons-outline:external-link" class="w-5 h-5 text-base-content/70" />
-                <span>{l("Read paper")}</span>
-              </LinkLive>
-            </div>
-            <!-- </div> -->
         {/case}
     {/case}
 {/case}
