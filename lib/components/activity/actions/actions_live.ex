@@ -47,20 +47,6 @@ defmodule Bonfire.UI.Social.Activity.ActionsLive do
     # |> debug("kkkk")
   end
 
-  def handle_event(
-        action,
-        attrs,
-        socket
-      ),
-      do:
-        Bonfire.UI.Common.LiveHandlers.handle_event(
-          action,
-          attrs,
-          socket,
-          __MODULE__
-          # &do_handle_event/3
-        )
-
   def count(replied) do
     # debug(replied)
     e(replied, :nested_replies_count, 0) + e(replied, :direct_replies_count, 0)

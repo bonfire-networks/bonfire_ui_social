@@ -110,12 +110,12 @@ defmodule Bonfire.UI.Social.FeedsLive do
   #   to_options(socket) ++ [feed_filters: %{object_type: params["type"]}]
   # end
 
-  def do_handle_params(%{"tab" => tab} = params, _url, socket)
+  def handle_params(%{"tab" => tab} = params, _url, socket)
       when tab in ["federation", "fediverse", "remote"] do
     set_feed_assigns({:fediverse, params}, socket)
   end
 
-  def do_handle_params(%{"tab" => "explore" = _tab} = params, _url, socket) do
+  def handle_params(%{"tab" => "explore" = _tab} = params, _url, socket) do
     if module_enabled?(Bonfire.Social.Pins, socket) and
          Bonfire.Common.Settings.get(
            [Bonfire.UI.Social.FeedsLive, :curated],
@@ -128,23 +128,23 @@ defmodule Bonfire.UI.Social.FeedsLive do
     end
   end
 
-  def do_handle_params(%{"tab" => "curated" = _tab} = params, _url, socket) do
+  def handle_params(%{"tab" => "curated" = _tab} = params, _url, socket) do
     set_feed_assigns({:curated, params}, socket)
   end
 
-  def do_handle_params(%{"tab" => "local" = _tab} = params, _url, socket) do
+  def handle_params(%{"tab" => "local" = _tab} = params, _url, socket) do
     set_feed_assigns({:local, params}, socket)
   end
 
-  def do_handle_params(%{"tab" => "likes" = _tab} = params, _url, socket) do
+  def handle_params(%{"tab" => "likes" = _tab} = params, _url, socket) do
     set_feed_assigns({:likes, params}, socket)
   end
 
-  def do_handle_params(%{"tab" => "flags" = _tab} = params, _url, socket) do
+  def handle_params(%{"tab" => "flags" = _tab} = params, _url, socket) do
     set_feed_assigns({:flags, params}, socket)
   end
 
-  def do_handle_params(params, _url, socket) do
+  def handle_params(params, _url, socket) do
     set_feed_assigns(
       {e(socket, :assigns, :live_action, :default), params},
       socket
@@ -157,31 +157,4 @@ defmodule Bonfire.UI.Social.FeedsLive do
      |> assign(LiveHandler.feed_default_assigns(feed_meta, socket))
      |> assign(..., FeedLive.maybe_widgets(e(..., :assigns, nil)))}
   end
-
-  def handle_params(params, uri, socket),
-    do:
-      Bonfire.UI.Common.LiveHandlers.handle_params(
-        params,
-        uri,
-        socket,
-        __MODULE__,
-        &do_handle_params/3
-      )
-
-  def handle_info(info, socket),
-    do: Bonfire.UI.Common.LiveHandlers.handle_info(info, socket, __MODULE__)
-
-  def handle_event(
-        action,
-        attrs,
-        socket
-      ),
-      do:
-        Bonfire.UI.Common.LiveHandlers.handle_event(
-          action,
-          attrs,
-          socket,
-          __MODULE__
-          # &do_handle_event/3
-        )
 end

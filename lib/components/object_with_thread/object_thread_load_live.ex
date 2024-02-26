@@ -59,18 +59,4 @@ defmodule Bonfire.UI.Social.ObjectThreadLoadLive do
         {:ok, socket}
     end
   end
-
-  def handle_event(
-        action,
-        attrs,
-        socket
-      ),
-      do:
-        Bonfire.UI.Common.LiveHandlers.handle_event(
-          action,
-          attrs,
-          socket,
-          __MODULE__
-          # &do_handle_event/3
-        )
 end

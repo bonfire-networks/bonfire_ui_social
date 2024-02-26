@@ -54,21 +54,4 @@ defmodule Bonfire.UI.Social.ThreadBranchLive do
     e(activity, :replied, :nested_replies_count, 0) +
       e(activity, :replied, :direct_replies_count, 0)
   end
-
-  def handle_event(
-        action,
-        attrs,
-        socket
-      ),
-      do:
-        Bonfire.UI.Common.LiveHandlers.handle_event(
-          action,
-          attrs,
-          socket,
-          __MODULE__
-          # &do_handle_event/3
-        )
-
-  def handle_info(info, socket),
-    do: Bonfire.UI.Common.LiveHandlers.handle_info(info, socket, __MODULE__)
 end

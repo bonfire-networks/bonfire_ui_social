@@ -299,7 +299,7 @@ defmodule Bonfire.UI.Social.FeedLive do
   #   {:noreply, socket}
   # end
 
-  # def do_handle_event("select_tab", attrs, socket) do
+  # def handle_event("select_tab", attrs, socket) do
   #   tab = maybe_to_atom(e(attrs, "name", nil))
 
   #   debug(attrs, tab)
@@ -375,7 +375,7 @@ defmodule Bonfire.UI.Social.FeedLive do
       assigns[:feed_name] || assigns[:feed_id] || assigns[:id] ||
         :default
 
-  def do_handle_event(
+  def handle_event(
         "set_setting",
         attrs,
         socket
@@ -389,7 +389,7 @@ defmodule Bonfire.UI.Social.FeedLive do
              :handle_event,
              ["set", attrs, socket]
            ) do
-      do_handle_event(
+      handle_event(
         "set",
         %{},
         socket
@@ -397,7 +397,7 @@ defmodule Bonfire.UI.Social.FeedLive do
     end
   end
 
-  def do_handle_event(
+  def handle_event(
         "set",
         attrs,
         socket
@@ -444,21 +444,4 @@ defmodule Bonfire.UI.Social.FeedLive do
   #      hide_fresh: 0
   #    )}
   # end
-
-  def handle_event(
-        action,
-        attrs,
-        socket
-      ),
-      do:
-        Bonfire.UI.Common.LiveHandlers.handle_event(
-          action,
-          attrs,
-          socket,
-          __MODULE__,
-          &do_handle_event/3
-        )
-
-  def handle_info(info, socket),
-    do: Bonfire.UI.Common.LiveHandlers.handle_info(info, socket, __MODULE__)
 end

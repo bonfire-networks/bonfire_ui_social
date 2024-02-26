@@ -1779,20 +1779,4 @@ defmodule Bonfire.UI.Social.ActivityLive do
   def component_id(_id, fallback, activity_inception) do
     "#{activity_inception}#{fallback}"
   end
-
-  defdelegate handle_params(params, attrs, socket), to: Bonfire.UI.Common.LiveHandlers
-
-  def handle_event(
-        action,
-        attrs,
-        socket
-      ),
-      do:
-        Bonfire.UI.Common.LiveHandlers.handle_event(
-          action,
-          attrs,
-          socket,
-          __MODULE__
-          # &do_handle_event/3
-        )
 end

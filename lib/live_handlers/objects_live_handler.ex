@@ -251,7 +251,7 @@ defmodule Bonfire.Social.Objects.LiveHandler do
         debug(url, "remote object - redirect to canonical")
 
         socket
-        |> redirect(external: url)
+        |> redirect_to(url)
 
       _ ->
         case Bonfire.Common.Types.object_type(
