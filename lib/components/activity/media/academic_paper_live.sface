@@ -2,7 +2,8 @@
   {#match media_url}
     {#case e(@media.metadata, "download_url", nil)}
       {#match download_url}
-        {#case e(debug(@metadata), "DOI", nil) || e(@metadata, "identifiers", "doi", nil) ||
+        {#case e(debug(@metadata, "paper_meta"), "DOI", nil) || e(@metadata, "identifiers", "doi", nil) ||
+            e(@metadata, "citation_doi", nil) ||
             e(@metadata, "url", "value", nil) || e(@metadata, "url", nil) ||
             e(@media.metadata, "facebook", "og:url", nil)}
           {#match doi}
@@ -22,6 +23,21 @@
                   {e(@metadata, "citation_title", nil) || Bonfire.Files.Media.media_label(@media) ||
                     if @media.media_type == "link", do: e(@media, :path, nil), else: l("View")}
                 </div>
+
+                <div class="flex flex-wrap mt-3 gap-0.5 text-sm text-base-content/80">
+                  {#for {author, i} <-
+                      Enum.with_index(
+                        List.wrap(
+                          e(@metadata, "author", nil) || e(@metadata, "creators", nil) ||
+                            e(@metadata, "source", "source-name", "value", nil) ||
+                            e(@metadata, "citation_author", nil)
+                        )
+                      )}{if i != 0, do: ","}
+                    {e(author, "given", nil) || e(author, "firstName", nil)}
+                    {e(author, "family", nil) || e(author, "lastName", nil) || e(author, "name", nil) ||
+                      if(is_binary(author), do: author)}{/for}
+                </div>
+
                 <div class="flex items-center gap-3 my-3">
                   {#case e(@metadata, "type", nil) || e(@metadata, "itemType", nil) ||
                       e(@metadata, "citation_categories", nil) || e(@metadata, "@type", nil)}
@@ -30,10 +46,11 @@
                       <span class="text-sm badge badge-accent rounded bg-accent/30 border-none !text-accent capitalize">{type}</span>
                   {/case}
 
-                  {#case e(@metadata, "datePublished", nil) ||
-                      e(@metadata, "publication-date", nil) || e(@metadata, "date", nil) ||
-                      e(@metadata, "created", "date-time", nil) || e(@metadata, "DC.date", nil) ||
-                      e(@metadata, "citation_publication_date", nil)}
+                  {#case (e(@metadata, "datePublished", nil) ||
+                       e(@metadata, "publication-date", nil) || e(@metadata, "date", nil) ||
+                       e(@metadata, "created", "date-time", nil) || e(@metadata, "DC.date", nil) ||
+                       e(@metadata, "citation_publication_date", nil))
+                    |> debug("dattte")}
                     {#match nil}
                     {#match published}
                       <div class="text-base-content/70 text-sm flex items-center gap-2">
@@ -61,19 +78,6 @@
                 </div>
                 <div class="text-sm text-left">
                   <div class="">
-                    <div class="flex flex-wrap gap-0.5 text-sm text-base-content/80">
-                      {#for {author, i} <-
-                          Enum.with_index(
-                            List.wrap(
-                              e(@metadata, "author", []) || e(@metadata, "creators", []) ||
-                                e(@metadata, "source", "source-name", "value", []) || e(@metadata, "citation_author", [])
-                            )
-                          )}{if i != 0, do: ","}
-                        {e(author, "given", nil) || e(author, "firstName", nil)}
-                        {e(author, "family", nil) || e(author, "lastName", nil) || e(author, "name", nil) ||
-                          if(is_binary(author), do: author)}{/for}
-                    </div>
-
                     <div :if={not Enum.empty?(e(@metadata, "subject", []))} class="flex mt-2 flex-wrap gap-2">
                       {#for subject <- List.wrap(e(@metadata, "subject", []))}
                         <span class="text-sm badge badge-info bg-info/30 border-none !text-info">#{subject}</span>
