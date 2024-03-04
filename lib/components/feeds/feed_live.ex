@@ -17,6 +17,7 @@ defmodule Bonfire.UI.Social.FeedLive do
   prop previous_page_info, :any, default: nil
   prop loading, :boolean, default: true
   prop preload, :atom, default: :feed
+  prop cache_strategy, :any, default: nil
 
   prop feedback_title, :string, default: nil
   prop feedback_message, :string, default: nil
