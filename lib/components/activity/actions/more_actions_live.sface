@@ -102,10 +102,23 @@
           <li>
             <a
               phx-click="Bonfire.Social.Feeds:fetch_replies"
+              phx-target={"##{@activity_component_id}"}
+              phx-value-id={id(@object) || id(@activity)}
               class="!flex items-center gap-2 text-base-content/70"
             >
               <#Icon iconify="mdi:sprout" class="w-4 h-4 shrink-0 text-base-content/70" />
-              <span>{l("Get latest comments")}</span>
+              <span>{l("Get latest replies")}</span>
+            </a>
+          </li>
+          <li>
+            <a
+              phx-click="Bonfire.Social.Feeds:fetch_thread"
+              phx-target={"##{@activity_component_id}"}
+              phx-value-id={id(@object) || id(@activity)}
+              class="!flex items-center gap-2 text-base-content/70"
+            >
+              <#Icon iconify="clarity:tree-view-solid" class="w-4 h-4 shrink-0 text-base-content/70" />
+              <span>{l("Get latest activities in thread")}</span>
             </a>
           </li>
           <li :if={is_binary(canonical_uri)}>
