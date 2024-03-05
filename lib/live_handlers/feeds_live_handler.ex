@@ -1135,7 +1135,7 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
 
     [tab, user_or_other_id] = String.split(tab_and_user_or_other_id, "_", parts: 2)
 
-    load_user_feed_assigns(tab, user_or_other_id, other, opts)
+    load_user_feed_assigns(tab, user_or_other_id, other, %{assigns: opts}) # FIXME socket/opts mismatch
     # |> debug()
   end
 
