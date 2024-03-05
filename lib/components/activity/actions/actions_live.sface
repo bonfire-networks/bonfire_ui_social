@@ -55,29 +55,29 @@
           is_remote={@is_remote}
         />
       {#else}
+        <StatelessComponent
+          module={maybe_component(Bonfire.UI.Social.Activity.ReplyLive, @__context__)}
+          object_id={id(@object)}
+          object_type={@object_type}
+          object_boundary={@object_boundary}
+          permalink={@permalink}
+          thread_mode={@thread_mode}
+          reply_count={if @showing_within == :thread and @thread_mode != :flat,
+            do:
+              e(@activity, :replied, :direct_replies_count, nil) ||
+                e(@object, :replied, :direct_replies_count, 0),
+            else: @reply_count}
+          showing_within={@showing_within}
+          hide_reply={@hide_reply}
+          viewing_main_object={@viewing_main_object}
+          activity_component_id={@activity_component_id}
+          event_target={@myself}
+          class="flex btn btn-sm btn-ghost btn-circle text-base-content/70"
+        />
+
         {#if LiveHandler.feed_live_update_many_preloads?() == :async_actions}
           {#if @object_boundary || !socket_connected?(@__context__)}
             <!-- LOAD ALL AS IF THEY WERE STATELESS COMPONENTS, since we preload data in this component -->
-
-            <StatelessComponent
-              module={maybe_component(Bonfire.UI.Social.Activity.ReplyLive, @__context__)}
-              object_id={id(@object)}
-              object_type={@object_type}
-              object_boundary={@object_boundary}
-              permalink={@permalink}
-              thread_mode={@thread_mode}
-              reply_count={if @showing_within == :thread and @thread_mode != :flat,
-                do:
-                  e(@activity, :replied, :direct_replies_count, nil) ||
-                    e(@object, :replied, :direct_replies_count, 0),
-                else: @reply_count}
-              showing_within={@showing_within}
-              hide_reply={@hide_reply}
-              viewing_main_object={@viewing_main_object}
-              activity_component_id={@activity_component_id}
-              event_target={@myself}
-              class="flex btn btn-sm btn-ghost btn-circle text-base-content/70"
-            />
 
             <StatelessComponent
               :if={@showing_within != :messages}
@@ -146,31 +146,12 @@
           {#else}
             <!-- ACTIONS SKELETON GOES HERE -->
             <div class="skeleton w-6 h-6 rounded-full shrink-0" />
-            <div class="skeleton w-6 h-6 ml-1 rounded-full shrink-0" />
+            <!-- <div class="skeleton w-6 h-6 ml-1 rounded-full shrink-0" /> -->
             <div class="skeleton w-6 h-6 ml-1 rounded-full shrink-0" />
             <div class="skeleton w-6 h-6 ml-1 rounded-full shrink-0" />
             <div class="skeleton w-6 h-6 ml-1 rounded-full shrink-0" />
           {/if}
         {#else}
-          <StatefulComponent
-            module={maybe_component(Bonfire.UI.Social.Activity.ReplyLive, @__context__)}
-            object_id={id(@object)}
-            object_type={@object_type}
-            object_boundary={@object_boundary}
-            permalink={@permalink}
-            thread_mode={@thread_mode}
-            reply_count={if @showing_within == :thread and @thread_mode != :flat,
-              do:
-                e(@activity, :replied, :direct_replies_count, nil) ||
-                  e(@object, :replied, :direct_replies_count, 0),
-              else: @reply_count}
-            showing_within={@showing_within}
-            hide_reply={@hide_reply}
-            viewing_main_object={@viewing_main_object}
-            activity_component_id={@activity_component_id}
-            class="flex btn btn-sm btn-ghost btn-circle text-base-content/70"
-          />
-
           <StatefulComponent
             module={maybe_component(Bonfire.UI.Reactions.BoostActionLive, @__context__)}
             :if={@showing_within != :messages}

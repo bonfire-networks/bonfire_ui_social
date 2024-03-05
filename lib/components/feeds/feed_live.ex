@@ -18,6 +18,7 @@ defmodule Bonfire.UI.Social.FeedLive do
   prop loading, :boolean, default: true
   prop preload, :atom, default: :feed
   prop cache_strategy, :any, default: nil
+  prop hide_activities, :any, default: nil
 
   prop feedback_title, :string, default: nil
   prop feedback_message, :string, default: nil
@@ -68,8 +69,6 @@ defmodule Bonfire.UI.Social.FeedLive do
       |> stream_configure(:feed, dom_id: &stream_id("fa", &1))
       |> stream(:feed, [])
       |> assign(
-        feed: nil,
-        hide_activities: nil,
         feed_count: nil,
         hide_fresh: 0,
         cute_gif: maybe_cute_gif()
@@ -116,6 +115,9 @@ defmodule Bonfire.UI.Social.FeedLive do
     #   [curated: l("Curated"), local: l("Local"), fediverse: l("Remote")]
     # end
   end
+
+  @decorate time()
+  def update(assigns, socket)
 
   def update(%{insert_stream: %{feed: entries}} = assigns, socket) do
     debug("feed stream is being poured into")
@@ -207,7 +209,7 @@ defmodule Bonfire.UI.Social.FeedLive do
 
     maybe_subscribe(socket)
 
-    {:ok, socket}
+    ok_socket(socket)
   end
 
   def update(%{feed: nil, feed_filters: empty_feed_filters} = assigns, socket)
@@ -227,7 +229,7 @@ defmodule Bonfire.UI.Social.FeedLive do
 
     maybe_subscribe(socket)
 
-    {:ok, socket}
+    ok_socket(socket)
   end
 
   def update(%{feed: nil} = assigns, socket) do
@@ -247,7 +249,7 @@ defmodule Bonfire.UI.Social.FeedLive do
 
     maybe_subscribe(socket)
 
-    {:ok, socket}
+    ok_socket(socket)
   end
 
   def update(%{feed: :loading} = assigns, socket) do
@@ -264,7 +266,7 @@ defmodule Bonfire.UI.Social.FeedLive do
 
   def update(_assigns, socket) do
     warn("No feed loaded")
-    {:ok, socket}
+    ok_socket(socket)
   end
 
   defp ok_socket(socket) do
@@ -273,8 +275,10 @@ defmodule Bonfire.UI.Social.FeedLive do
     {:ok,
      socket
      |> assign(
-       feed_component_id: socket.assigns.id,
-       hide_activities: socket.assigns[:__context__][:current_params]["hide_activities"]
+       feed_component_id: socket.assigns[:id],
+       hide_activities:
+         socket.assigns[:hide_activities] ||
+           socket.assigns[:__context__][:current_params]["hide_activities"]
      )}
   end
 
@@ -439,10 +443,10 @@ defmodule Bonfire.UI.Social.FeedLive do
   #       socket
   #     )do
 
-  #   {:ok,
+  #   ok_socket(
   #    socket
   #    |> assign(
   #      hide_fresh: 0
-  #    )}
+  #    ))
   # end
 end

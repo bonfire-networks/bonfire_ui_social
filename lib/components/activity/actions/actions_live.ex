@@ -32,6 +32,7 @@ defmodule Bonfire.UI.Social.Activity.ActionsLive do
   prop my_like, :any, default: nil
   prop my_bookmark, :any, default: nil
 
+  # @decorate time()
   def update_many(assigns_sockets) do
     assigns_sockets
     |> LiveHandler.actions_update_many(caller_module: __MODULE__)

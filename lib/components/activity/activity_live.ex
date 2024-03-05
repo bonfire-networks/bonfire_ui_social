@@ -60,7 +60,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
   prop hide_actions, :any, default: false
   prop activity_loaded_preloads, :list, default: []
 
-  # @decorate time()
+  @decorate time()
   def update_many(assigns_sockets) do
     assigns_sockets
     |> LiveHandler.activity_update_many(caller_module: __MODULE__)
@@ -715,7 +715,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
                      Bonfire.UI.Moderation.FlaggedActionsLive
                    ]}
               {#if @hide_activity != "actions" and @hide_actions != true}
-                {#if LiveHandler.feed_live_update_many_preloads?() == :async_actions}
+                {#if socket_connected?(@__context__) && LiveHandler.feed_live_update_many_preloads?() == :async_actions}
                   <StatefulComponent
                     id={"#{@activity_component_id}_actions"}
                     module={component}

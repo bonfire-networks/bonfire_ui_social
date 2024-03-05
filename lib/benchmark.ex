@@ -16,9 +16,9 @@ defmodule Bonfire.UI.Social.Benchmark do
       Benchee,
       :run,
       [
-        current_user_approaches_feed(),
+        # current_user_approaches_feed(),
         # md_lib_feed(),
-        # some_feed_queries(),
+        some_feed_queries(),
         [
           parallel: 1,
           warmup: 2,
@@ -155,8 +155,10 @@ defmodule Bonfire.UI.Social.Benchmark do
       :run,
       [
         %{
-          "fetch feed page with activities" => fn -> get(conn, "/feed/local") end,
           # "query & render entire feed page with activities" => fn -> live(conn, "/feed/local") end, # NOPE: LiveView helpers can only be invoked from the test process
+          # "query & render feed component with activities (default preloads)" => fn ->
+          #   live_feed()
+          # end,
           # "query & render feed component with activities (using all async preloads)" => fn ->
           #   live_feed(live_update_many_preloads: :async)
           # end,
@@ -178,24 +180,65 @@ defmodule Bonfire.UI.Social.Benchmark do
           # "query & render feed component with activities (skipping feed preloads)" => fn ->
           #   live_feed(feed_live_update_many_preloads: :skip)
           # end,
-          "render feed component with already queried activities (skipping preloads)" => fn ->
-            render_feed(feed.edges, feed_live_update_many_preloads: :skip)
-          end,
-          "render feed component with already queried activities (inline preloads)" => fn ->
-            render_feed(feed.edges, feed_live_update_many_preloads: :inline)
-          end,
-          "render feed component with already queried activities (async actions preloads)" =>
-            fn ->
-              render_feed(feed.edges, feed_live_update_many_preloads: :async_actions)
-            end,
-          "render feed component with already queried activities (async preloads)" => fn ->
-            render_feed(feed.edges, feed_live_update_many_preloads: :async)
-          end
+          # "render feed component with already queried activities (default preloads)" => fn ->
+          #   render_feed(feed.edges)
+          # end,
+          # "render feed component with already queried activities (skipping preloads)" => fn ->
+          #   render_feed(feed.edges, feed_live_update_many_preloads: :skip)
+          # end,
+          # "render feed component with already queried activities (inline preloads)" => fn ->
+          #   render_feed(feed.edges, feed_live_update_many_preloads: :inline)
+          # end,
+          # "render feed component with already queried activities (async actions preloads)" =>
+          #   fn ->
+          #     render_feed(feed.edges, feed_live_update_many_preloads: :async_actions)
+          #   end,
+          # "render feed component with already queried activities (async preloads)" => fn ->
+          #   render_feed(feed.edges, feed_live_update_many_preloads: :async)
+          # end,
+          # "render feed component with already queried activities (skip activity component)" => fn ->
+          #   render_feed(feed.edges, hide_activities: "component")
+          # end,
+          # "render feed component with already queried activities (hide activity component)" => fn ->
+          #   render_feed(feed.edges, hide_activities: "all")
+          # end,
+          # "render feed component with already queried activities (skip subject)" => fn ->
+          #   render_feed(feed.edges, hide_activities: "subject")
+          # end,
+          # "render feed component with already queried activities (skip note)" => fn ->
+          #   render_feed(feed.edges, hide_activities: "note")
+          # end,
+          # "render feed component with already queried activities (skip media)" => fn ->
+          #   render_feed(feed.edges, hide_activities: "media")
+          # end,
+          # "render feed component with already queried activities (skip actions)" => fn ->
+          #   render_feed(feed.edges, hide_activities: "actions")
+          # end,
+          # "render feed component with already queried activities (skip dynamic)" => fn ->
+          #   render_feed(feed.edges, hide_activities: "dynamic")
+          # end,
+          "fetch home page with activities" => fn -> get(conn, "/") end,
+          "fetch feed page with activities" => fn -> get(conn, "/feed/local") end
           # "fetch feed page with (skipped) activities" => fn ->
           #   get(conn, "/feed/local?&hide_activities=component")
           # end,
           # "fetch feed page with (not rendered) activities" => fn ->
           #   get(conn, "/feed/local?&hide_activities=all")
+          # end,
+          # "fetch feed page with not rendered subject" => fn ->
+          #   get(conn, "/feed/local?&hide_activities=subject")
+          # end,
+          # "fetch feed page with not rendered note" => fn ->
+          #   get(conn, "/feed/local?&hide_activities=note")
+          # end,
+          # "fetch feed page with not rendered media" => fn ->
+          #   get(conn, "/feed/local?&hide_activities=media")
+          # end,
+          # "fetch feed page with not rendered actions" => fn ->
+          #   get(conn, "/feed/local?&hide_activities=actions")
+          # end,
+          # "fetch feed page with not rendered dynamic component" => fn ->
+          #   get(conn, "/feed/local?&hide_activities=dynamic")
           # end
         },
         [
@@ -259,9 +302,12 @@ defmodule Bonfire.UI.Social.Benchmark do
     Process.put(:live_update_many_preloads, opts[:live_update_many_preloads])
     Process.put(:feed_live_update_many_preloads, opts[:feed_live_update_many_preloads])
 
-    Bonfire.UI.Common.Testing.Helpers.render_stateful(Bonfire.UI.Social.FeedLive, %{
-      feed: feed
-    })
+    Bonfire.UI.Common.Testing.Helpers.render_stateful(
+      Bonfire.UI.Social.FeedLive,
+      Enum.into(opts, %{
+        feed: feed
+      })
+    )
   end
 
   if Config.get(:env) == :prod do

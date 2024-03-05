@@ -1156,6 +1156,7 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
     end
   end
 
+  @decorate time()
   def activity_update_many(assigns_sockets, opts) do
     feed_live_update_many_preloads = feed_live_update_many_preloads?()
 
@@ -1200,6 +1201,7 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
     end
   end
 
+  @decorate time()
   def actions_update_many(assigns_sockets, opts) do
     feed_live_update_many_preloads = feed_live_update_many_preloads?()
 
