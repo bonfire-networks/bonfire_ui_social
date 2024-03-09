@@ -1,4 +1,4 @@
-{#case permalink(@peered || @object)}
+{#case Bonfire.Social.Objects.permalink(@peered || @object)}
   {#match nil}
   {#match link}
     <a
