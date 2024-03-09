@@ -30,7 +30,11 @@ defmodule Bonfire.UI.Social.FeedsLive do
     [
       {
         l("My feed"),
-        page: "feed", icon: "carbon:home", icon_active: "carbon:home", href: "/feed"
+        page: "feed",
+        icon: "carbon:home",
+        icon_active: "carbon:home",
+        href: "/feed",
+        phx_hook: "Bonfire.UI.Common.PreviewContentLive#PreviewExtra"
         #  href: &nav_link_feed/1
       },
       {l("Explore"),
