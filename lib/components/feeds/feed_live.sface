@@ -8,7 +8,7 @@
 >
   <div class="flex flex-col h-full grow">
     <Bonfire.UI.Common.TabsLive
-      :if={@hide_tabs != true or (@top_page == "home" and @feed_name != :my)}
+      :if={@hide_tabs != true or @top_page == "home"}
       type={if @feed_name in [nil, :my], do: :static, else: :with_header}
       selected_tab={@selected_tab}
       selected_name={@feed_title || @page_title}
