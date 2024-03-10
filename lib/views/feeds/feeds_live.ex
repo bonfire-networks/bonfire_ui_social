@@ -29,10 +29,11 @@ defmodule Bonfire.UI.Social.FeedsLive do
   declare_nav_link(
     [
       {
-        l("My feed"),
+        l("Feed"),
+        # icon: "carbon:home",
+        # icon_active: "carbon:home",
         page: "feed",
-        icon: "carbon:home",
-        icon_active: "carbon:home",
+        icon: "ph:rss-simple-bold",
         href: "/feed",
         phx_hook: "Bonfire.UI.Common.PreviewContentLive#PreviewExtra"
         #  href: &nav_link_feed/1

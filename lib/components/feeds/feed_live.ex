@@ -105,9 +105,19 @@ defmodule Bonfire.UI.Social.FeedLive do
            false,
            context
          ) do
-      [curated: l("Curated"), local: l("Local"), fediverse: l("Remote")]
+      [
+        # my: l("My feed"), 
+        curated: l("Curated"),
+        local: l("Local"),
+        fediverse: l("Remote")
+      ]
     else
-      [explore: l("Everything"), local: l("Local"), fediverse: l("Remote")]
+      [
+        # my: l("My feed"), 
+        explore: l("Everything"),
+        local: l("Local"),
+        fediverse: l("Remote")
+      ]
     end
 
     # else
