@@ -203,7 +203,7 @@
                                   reusable_modal_id="media_player_modal"
                                   no_actions
                                   title_text={media_label}
-                                  title_class="font-bold text-base line-clamp-1 bg-secondary text-secondary-content p-2 max-w-[420px]"
+                                  title_class="font-bold text-base line-clamp-1 bg-secondary text-secondary-content p-2 max-w-[420px] truncate ellipsis overflow-hidden"
                                   no_backdrop
                                   image_preview
                                   enable_fallback={false}
