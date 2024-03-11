@@ -34,7 +34,7 @@
     }
   >
     <div class={
-      "absolute left-2 cursor-pointer inset-0 border-l bottom-0 brightness-[.3] border-base-content z-30",
+      "absolute left-0 cursor-pointer inset-0 border-l bottom-0 brightness-[.3] border-base-content z-30",
       "!-left-[3px]": Settings.get([Bonfire.UI.Common.AvatarLive, :hide_avatars], false, @__context__)
     } />
   </div>
@@ -42,7 +42,7 @@
     :if={@thread_mode != :flat && @threaded_replies != []}
     x-on:click="show_replies = ! show_replies"
     class={
-      "absolute p-0.5 z-50 bg-base-100 flex items-center place-content-center left-[28px] bottom-[24px]",
+      "absolute p-0.5 z-50 bg-base-100 flex items-center place-content-center left-[20px] bottom-[24px]",
       "!left-[14px]": @__context__[:ui_compact]
     }
   >
