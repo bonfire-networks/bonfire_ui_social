@@ -11,7 +11,7 @@
   <div
     :if={@thread_level > 1 && @thread_mode != :flat}
     class={
-      "absolute top-[-10px] left-[-8px] w-8 h-8 border rounded-bl-xl brightness-[.3] border-base-content border-t-0 border-r-0",
+      "absolute top-[-14px] left-[-1px] w-8 h-8 border rounded-bl-xl brightness-[.3] border-base-content border-t-0 border-r-0",
       "!left-[-14px] !top-[-16px]": @__context__[:ui_compact]
     }
   />
@@ -20,7 +20,7 @@
     <div
       :if={@thread_mode != :flat && @threaded_replies != []}
       class={
-        "absolute px-2 left-[32px] cursor-pointer top-[40px] bottom-0 z-30",
+        "absolute px-2 left-[27px] cursor-pointer top-[40px] bottom-0 z-30",
         "!left-[18px] !top-[30px]": @__context__[:ui_compact],
         "!left-[20px] top-[46px]":
           Settings.get([Bonfire.UI.Common.AvatarLive, :hide_avatars], false, @__context__)
@@ -62,7 +62,7 @@
         <div
           :if={@threaded_replies != []}
           class={
-            "relative ml-10",
+            "relative ml-7",
             "!ml-0": @thread_level < 1
           }
         >

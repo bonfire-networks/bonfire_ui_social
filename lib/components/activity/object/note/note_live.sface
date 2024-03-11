@@ -2,8 +2,9 @@
   data-id="activity_note"
   x-data="{expanded: false, expandable: $refs.note && $refs.note.scrollHeight > $refs.note.clientHeight}"
   data-rendered={@showing_within}
+  data-main-object={@viewing_main_object}
   class={
-    "note previewable_activity cursor-pointer mt-0.5 max-w-[594px] overflow-x-hidden",
+    "note previewable_activity cursor-pointer mt-0.5 max-w-[594px]",
     "!max-w-full":
       is_nil(current_user_id(@__context__)) && @showing_within == :thread && @viewing_main_object
   }

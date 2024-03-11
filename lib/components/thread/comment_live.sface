@@ -27,7 +27,7 @@
       (@index != @total_replies_in_thread - 1 ||
          (@index == @total_replies_in_thread - 1 && @threaded_replies != []))}
     class={
-      "absolute px-2 left-[32px] cursor-pointer top-[40px] bottom-0 z-30",
+      "absolute px-2 left-[27px] cursor-pointer top-[40px] bottom-0 z-30",
       "!left-[18px] !top-[30px]": @__context__[:ui_compact],
       "!left-[20px] top-[46px]":
         Settings.get([Bonfire.UI.Common.AvatarLive, :hide_avatars], false, @__context__)
@@ -42,7 +42,7 @@
     :if={@thread_mode != :flat && @threaded_replies != []}
     x-on:click="show_replies = ! show_replies"
     class={
-      "absolute p-0.5 z-50 bg-base-100 flex items-center place-content-center left-[20px] bottom-[24px]",
+      "absolute p-0.5 z-50 bg-base-100 flex items-center place-content-center left-[15px] bottom-[24px]",
       "!left-[14px]": @__context__[:ui_compact]
     }
   >

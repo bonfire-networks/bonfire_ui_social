@@ -20,6 +20,7 @@
       viewing_main_object={@viewing_main_object}
       class={
         "rounded-full w-10 h-10",
+        "!w-8 !h-8": @showing_within == :thread,
         "!w-7 !h-7": @__context__[:ui_compact]
       }
     />
@@ -37,7 +38,7 @@
     >
       {@profile_name}
     </LinkLive>
-    <span class="flex items-baseline">
+    <span data-id="subject_secondary" class="flex items-baseline">
       <LinkLive
         :if={@character_username}
         opts={
@@ -104,7 +105,7 @@
 
 <div
   :if={@thread_title && @showing_within == :thread && @viewing_main_object}
-  class="text-2xl font-semibold my-2 leading-[36x]"
+  class="text-xl !ml-[-40px] font-semibold leading-[36x]"
 >
   {@thread_title}
 </div>
