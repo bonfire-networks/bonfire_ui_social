@@ -26,6 +26,7 @@
       event_target={@myself}
       path_prefix={@tab_path_prefix}
       path_suffix={@tab_path_suffix}
+      show_back_button
     >
       {!-- <Bonfire.UI.Social.FeedControlsLive
         :if={@feed_name in [nil, :my, :local, :fediverse, :explore] and current_user_id(@__context__)}

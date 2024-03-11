@@ -41,6 +41,7 @@ defmodule Bonfire.UI.Social.FeedLive do
   prop hide_tabs, :boolean, default: false
   prop selected_tab, :any, default: nil
   prop top_page, :any, default: nil
+  prop show_back_button, :boolean, default: false
 
   prop tabs_class, :css_class, default: nil
 
