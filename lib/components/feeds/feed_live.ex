@@ -58,6 +58,10 @@ defmodule Bonfire.UI.Social.FeedLive do
   prop sort_order, :any, default: false
   prop activity_loaded_preloads, :list, default: []
 
+  prop hide_fresh, :integer, default: 0
+  prop feed_count, :any, default: nil
+  prop cute_gif, :any, default: nil
+
   slot bottom_or_empty_feed
 
   def mount(socket) do
@@ -68,11 +72,7 @@ defmodule Bonfire.UI.Social.FeedLive do
       socket
       |> stream_configure(:feed, dom_id: &stream_id("fa", &1))
       |> stream(:feed, [])
-      |> assign(
-        feed_count: nil,
-        hide_fresh: 0,
-        cute_gif: maybe_cute_gif()
-      )
+      |> assign(cute_gif: maybe_cute_gif())
       #  temporary_assigns: [
       #    feed: []
       #  ]

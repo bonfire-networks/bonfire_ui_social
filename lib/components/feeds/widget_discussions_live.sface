@@ -1,0 +1,14 @@
+{#case feed(@feed_name)}
+  {#match {feed, feed_assigns}}
+    <Bonfire.UI.Common.WidgetBlockLive widget_title={e(@widget_title, "Active discussions")}>
+      <StatelessComponent
+        module={maybe_component(Bonfire.UI.Social.FeedLive, @__context__)}
+        id={:widget_discussion_feed}
+        feed_name={@feed_name}
+        feed={feed}
+        {...feed_assigns}
+      />
+    </Bonfire.UI.Common.WidgetBlockLive>
+  {#match _error}
+    <div />
+{/case}

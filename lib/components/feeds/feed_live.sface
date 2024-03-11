@@ -64,7 +64,7 @@
         class="flex flex-col divide-y divide-base-content/20 bonfire_feed flex-1 h-full grow"
       >
         {!-- phx-update={e(@feed_update_mode, "append")} --}
-        {#for {entry_id, entry} <- @streams.feed}
+        {#for {entry_id, entry} <- e(@streams.feed, [])}
           {!-- id={"f-#{@feed_id || @id}-a-#{i}"} --}
           <div
             id={entry_id}

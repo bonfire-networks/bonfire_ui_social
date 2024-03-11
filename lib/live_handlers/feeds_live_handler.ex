@@ -906,22 +906,25 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
     else
       debug("socket not connected or not logged in, load feed synchronously")
 
-      feed_assigns_merged(
+      feed_assigns_non_live(
         feed_name_id_or_tuple,
         assigns,
-        to_options(socket) ++ [cache: e(socket.assigns, :cache_strategy, nil) == :guest_cache]
+        socket
       )
     end
   end
 
   defp feed_assigns_maybe_async_load(feed_name_id_or_tuple, assigns, socket, _reset_stream) do
-    feed_assigns_merged(feed_name_id_or_tuple, assigns, to_options(socket))
+    # non-Socket connection
+    feed_assigns_non_live(feed_name_id_or_tuple, assigns, socket)
   end
 
-  defp feed_assigns_merged(feed_id, assigns, opts) do
-    debug(opts)
+  def feed_assigns_non_live(feed_id, assigns, opts) do
+    opts = to_options(opts)
 
-    case feed_assigns(feed_id, opts) do
+    case debug(opts ++ [cache: e(opts, :cache_strategy, nil) == :guest_cache])
+         |> feed_assigns(feed_id, ...) do
+      {:error, e} -> {:error, e}
       {entries, feed_assigns} when is_list(feed_assigns) -> {entries, assigns ++ feed_assigns}
       e -> e
     end
