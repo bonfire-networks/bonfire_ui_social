@@ -118,7 +118,7 @@ defmodule Bonfire.UI.Social.Activity.MediaLive do
   # end
 
   def provider(%{} = media) do
-    (e(media.metadata, "facebook", "og:site_name", nil) ||
+    (e(media.metadata, "facebook", "site_name", nil) ||
        e(media.metadata, "oembed", "provider_url", nil))
     |> unwrap()
   end
@@ -127,8 +127,8 @@ defmodule Bonfire.UI.Social.Activity.MediaLive do
 
   def preview_img(%{} = media) do
     (e(media, :metadata, "oembed", "thumbnail_url", nil) ||
-       e(media, :metadata, "facebook", "og:image", nil) ||
-       e(media, :metadata, "twitter", "twitter:image", nil) ||
+       e(media, :metadata, "facebook", "image", nil) ||
+       e(media, :metadata, "twitter", "image", nil) ||
        e(media, :metadata, "icon", "url", nil) || e(media, :metadata, "icon", nil) ||
        e(media, :metadata, "image", "url", nil) || e(media, :metadata, "image", nil) ||
        media_img(media))

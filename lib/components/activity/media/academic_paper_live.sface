@@ -5,7 +5,7 @@
         {#case e(debug(@metadata, "paper_meta"), "DOI", nil) || e(@metadata, "identifiers", "doi", nil) ||
             e(@metadata, "citation_doi", nil) ||
             e(@metadata, "url", "value", nil) || e(@metadata, "url", nil) ||
-            e(@media.metadata, "facebook", "og:url", nil)}
+            e(@media.metadata, "facebook", "url", nil)}
           {#match doi}
             <!-- <code>{inspect(@media.metadata, pretty: true)}</code> -->
             <div class={
