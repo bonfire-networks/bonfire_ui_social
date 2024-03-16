@@ -9,7 +9,7 @@ defmodule Bonfire.UI.Social.Activity.MediaLive do
   prop parent_id, :any, default: nil
   prop cw, :any, default: nil
 
-  @image_exts [".jpg", ".jpeg", ".png", ".gif", ".webp"]
+  @image_exts [".jpg", ".jpeg", ".png", ".gif", ".webp", ".svg", ".apng"]
   @image_types ["image", "photo"]
   @multimedia_exts [".mp4", ".mkv", ".ogv", ".ogg", ".mp3", ".mpa", ".webm"]
   @multimedia_types ["video", "embed", "audio", "song", "rich"]
