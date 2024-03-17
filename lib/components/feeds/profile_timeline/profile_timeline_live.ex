@@ -10,9 +10,9 @@ defmodule Bonfire.UI.Social.ProfileTimelineLive do
   prop feed_title, :string, default: nil
   prop feed_ids, :string, default: nil
   prop user, :map, default: %{}
-  prop feed, :list, default: []
+  prop feed, :list, default: nil
   prop feed_filters, :any, default: []
-  prop page_info, :any, default: %{}
+  prop page_info, :any, default: nil
   prop permalink, :string, default: nil
   prop showing_within, :atom, default: nil
   prop follows_me, :boolean, default: false

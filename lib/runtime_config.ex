@@ -27,14 +27,14 @@ defmodule Bonfire.UI.Social.RuntimeConfig do
         ]
       ],
       profile: [
-        # TODO: make dynamic based on active extensions
         sections: [
-          nil: Bonfire.UI.Social.ProfileTimelineLive
+          timeline: Bonfire.UI.Social.ProfileTimelineLive,
+          objects: Bonfire.UI.Social.ProfileTimelineLive
           # private: Bonfire.UI.Messages.MessageThreadsLive,
         ],
         navigation: [
           # highlights: l("Highlights"),
-          nil: l("Timeline")
+          timeline: l("Timeline")
         ],
         widgets: []
       ]

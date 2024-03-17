@@ -1486,7 +1486,10 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
     user = user_or_feed || e(socket.assigns, :user, nil) || current_user(socket.assigns)
 
     feed_id = e(user, :character, :outbox_id, nil) || id(user)
-    feed_component_id = ComponentID.new(Bonfire.UI.Social.FeedLive, feed_id)
+
+    feed_component_id =
+      e(socket.assigns, :feed_component_id, nil) ||
+        ComponentID.new(Bonfire.UI.Social.FeedLive, feed_id)
 
     if (socket_connected || not is_nil(current_user_id(socket.assigns))) && Config.env() != :test do
       if socket_connected do
@@ -1846,9 +1849,8 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
     Utils.maybe_apply(
       Bonfire.Social.Graph.Requests,
       :list_my_requested,
-      pagination: pagination,
-      current_user: current_user,
-      type: Bonfire.Data.Social.Follow
+      [pagination: pagination, current_user: current_user, type: Bonfire.Data.Social.Follow],
+      fallback_return: []
     )
     |> debug("requested")
   end
@@ -1860,8 +1862,8 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
     Utils.maybe_apply(
       Bonfire.Social.Graph.Requests,
       :list_my_requesters,
-      pagination: pagination,
-      current_user: current_user
+      [pagination: pagination, current_user: current_user],
+      fallback_return: []
     )
     |> debug("requests")
   end

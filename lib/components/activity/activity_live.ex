@@ -521,6 +521,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
     >
       {#if @hide_activity != "all"}
         {#if current_user_id(@__context__) && @showing_within != :smart_input}
+          {!-- TODO: make the list of preview paths/components/views configurable/hookable, and derive the view from object_type? and compute object_type not just based on schema, but also with some logic looking at fields (eg. action=="work") --}
           {#if String.starts_with?(@permalink || "", ["/post/", "/discussion/"])}
             <Bonfire.UI.Common.OpenPreviewLive
               href={@permalink || path(@object)}
@@ -528,8 +529,6 @@ defmodule Bonfire.UI.Social.ActivityLive do
               open_btn_text=""
               title_text={@thread_title || e(@object, :name, nil) || e(@object, :post_content, :name, nil) ||
                 l("Discussion")}
-              open_btn_wrapper_class="open_preview_link hidden"
-              open_btn_class=""
               modal_assigns={
                 post_id:
                   if(
@@ -559,15 +558,30 @@ defmodule Bonfire.UI.Social.ActivityLive do
                 page_title: l("Discussion")
               }
             />
-            {!-- TODO: derive the view from object_type? and compute object_type not just based on schema, but also with some logic looking at fields (eg. action=="work") --}
-          {#elseif String.starts_with?(@permalink || "", ["/coordination/task/"])}
+          {#elseif String.starts_with?(@permalink || "", ["/@", "/profile/", "/user"])}
+            {!-- <Bonfire.UI.Common.OpenPreviewLive
+              href={@permalink}
+              parent_id={@parent_id}
+              open_btn_text={l("View profile")}
+              title_text={e(@object, :profile, :name, nil) || l("Profile")}
+              modal_assigns={
+                id: @thread_id || id(@object),
+                current_url: @permalink,
+                preview_view: Bonfire.UI.Me.ProfileLive,
+                activity_inception: "preview"
+              }
+              root_assigns={
+                page_title: l("Profile")
+              }
+            />
+             --}
+          {#elseif String.starts_with?(@permalink || "", ["/coordination/task/"]) and
+              module_enabled?(Bonfire.UI.Coordination.TaskLive)}
             <Bonfire.UI.Common.OpenPreviewLive
               href={@permalink}
               parent_id={@parent_id}
               open_btn_text={l("View task")}
               title_text={e(@object, :name, nil) || l("Task")}
-              open_btn_wrapper_class="open_preview_link hidden"
-              open_btn_class=""
               modal_assigns={
                 id: @thread_id || id(@object),
                 current_url: @permalink,
