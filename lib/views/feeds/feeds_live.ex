@@ -7,6 +7,7 @@ defmodule Bonfire.UI.Social.FeedsLive do
   declare_extension("Social",
     # icon: "noto:newspaper",
     # emoji: "📰",
+    description: l("Basic social networking functionality, such as feeds and discussions."),
     # exclude_from_nav: true
     # FIXME: should only include moduels from current extension
     default_nav: [
