@@ -1,4 +1,4 @@
-defmodule Bonfire.UI.Social.ReactionsSortItemsLive do
+defmodule Bonfire.UI.Social.SortItemsLive do
   use Bonfire.UI.Common.Web, :stateless_component
 
   prop title, :string
@@ -7,4 +7,6 @@ defmodule Bonfire.UI.Social.ReactionsSortItemsLive do
   prop event_name, :any, default: nil
   prop event_target, :any, default: nil
   prop compact, :boolean, default: false
+
+  # declare_settings_component(l("Sort feed"), icon: "fluent:people-team-16-filled")
 end

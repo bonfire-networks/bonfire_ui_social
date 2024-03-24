@@ -7,4 +7,6 @@ defmodule Bonfire.UI.Social.Settings.MyFeedItemsLive do
   prop event_name, :any, default: nil
   prop event_target, :any, default: nil
   prop hide_forced_defaults, :boolean, default: false
+
+  # declare_settings_component(l("What to include in feed"), icon: "fluent:people-team-16-filled")
 end
