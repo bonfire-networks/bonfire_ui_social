@@ -73,8 +73,11 @@ defmodule Bonfire.UI.Social.ThreadLive do
      |> LiveHandler.insert_comments(entries, reset: assigns[:reset_stream])}
   end
 
-  def update(%{replies: replies, page_info: page_info, loaded_async: true} = assigns, socket)
-      when is_list(replies) and is_map(page_info) do
+  def update(
+        %{replies: replies, page_info: page_info, loaded_async: loaded_async} = assigns,
+        socket
+      )
+      when is_list(replies) and is_map(page_info) and is_binary(loaded_async) do
     debug("loading async-loaded replies")
 
     {:ok,
@@ -217,8 +220,8 @@ defmodule Bonfire.UI.Social.ThreadLive do
     |> LiveHandler.load_thread_maybe_async(false, true)
   end
 
-  def update(assigns, %{assigns: %{loaded_async: true}} = socket) do
-    debug("showing previously async-loaded replies")
+  def update(%{thread_id: thread_id} = assigns, %{assigns: %{loaded_async: thread_id}} = socket) do
+    debug("just show previously async-loaded replies for this thread")
 
     {:ok,
      socket

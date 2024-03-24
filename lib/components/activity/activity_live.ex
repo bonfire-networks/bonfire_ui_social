@@ -53,6 +53,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
   prop created_verb_display, :string, default: @created_verb_display
   prop object_type_readable, :string, default: nil
   prop reply_count, :any, default: nil
+  prop reply_to, :any, default: nil
   prop published_in, :any, default: nil
   prop labelled, :any, default: nil
   prop subject_user, :any, default: nil
@@ -297,6 +298,8 @@ defmodule Bonfire.UI.Social.ActivityLive do
       e(assigns, :thread_object, nil) || e(replied, :thread, nil) || e(replied, :thread_id, nil) ||
         e(assigns, :thread_id, nil)
 
+    reply_to = if verb in @reply_verbs, do: prepare_reply_to(replied || activity)
+
     thread_id = id(thread)
     # debug(thread, "thread")
     thread_url =
@@ -344,6 +347,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
       activity_id: a_id || "no-activity-id",
       object_id: o_id || "no-object-id",
       activity_component_id: activity_component_id,
+      reply_to: reply_to,
       object_type: object_type,
       object_type_readable: object_type_readable,
       # unit: :minute
@@ -421,12 +425,12 @@ defmodule Bonfire.UI.Social.ActivityLive do
          thread_id,
          thread_title,
          activity_component_id,
-         subject_user
+         subject_user,
+         reply_to
        ) do
     (component_maybe_attachments(showing_within == :media, activity, object, activity_inception) ++
        component_maybe_in_reply_to(
-         verb,
-         activity,
+         reply_to,
          showing_within,
          activity_inception,
          viewing_main_object,
@@ -521,45 +525,75 @@ defmodule Bonfire.UI.Social.ActivityLive do
     >
       {#if @hide_activity != "all"}
         {#if current_user_id(@__context__) && @showing_within != :smart_input}
-          {!-- TODO: make the list of preview paths/components/views configurable/hookable, and derive the view from object_type? and compute object_type not just based on schema, but also with some logic looking at fields (eg. action=="work") --}
-          {#if String.starts_with?(@permalink || "", ["/post/", "/discussion/"])}
-            <Bonfire.UI.Common.OpenPreviewLive
-              href={@permalink || path(@object)}
-              parent_id={@parent_id}
-              open_btn_text=""
-              title_text={@thread_title || e(@object, :name, nil) || e(@object, :post_content, :name, nil) ||
-                l("Discussion")}
-              modal_assigns={
-                post_id:
-                  if(
-                    @object_type == :post or
-                      String.starts_with?(@permalink || "", ["/post/"]),
-                    do: @thread_id || id(@object)
-                  ),
-                thread_id: @thread_id,
-                object_id: @thread_id || id(@object),
-                current_url: @permalink,
-                show: true,
-                hide_actions: false,
-                cw: false,
-                label: "",
-                object: if(not is_nil(@thread_id) and @thread_id == id(@object), do: @object),
-                activity: if(not is_nil(@thread_id) and @thread_id == id(@object), do: @activity),
-                replies:
-                  if(not is_nil(@thread_id) and @thread_id != id(@object),
-                    do: [%{id: "preview-comment", activity: Map.put(@activity, :object, @object)}]
-                  ),
-                preview_component: Bonfire.UI.Social.ObjectThreadLoadLive,
-                activity_inception: "preview",
-                showing_within: :thread,
-                check_object_boundary: false
-              }
-              root_assigns={
-                page_title: l("Discussion")
-              }
-            />
-          {#elseif String.starts_with?(@permalink || "", ["/@", "/profile/", "/user"])}
-            {!-- <Bonfire.UI.Common.OpenPreviewLive
+          {#case not is_nil(@thread_id) and @thread_id == (id(@object) || id(@activity))}
+            {#match top_of_thread?}
+              {#case not is_nil(@thread_id) and @thread_id == e(@reply_to, :object, :id, nil)}
+                {#match reply_to_top_of_thread?}
+                  {!-- TODO: make the list of preview paths/components/views configurable/hookable, and derive the view from object_type? and compute object_type not just based on schema, but also with some logic looking at fields (eg. action=="work") --}
+                  {#if String.starts_with?(@permalink || "", ["/post/", "/discussion/"])}
+                    <Bonfire.UI.Common.OpenPreviewLive
+                      href={@permalink || path(@object)}
+                      parent_id={@parent_id}
+                      open_btn_text=""
+                      title_text={@thread_title || e(@object, :name, nil) || e(@object, :post_content, :name, nil) ||
+                        l("Discussion")}
+                      modal_assigns={
+                        post_id:
+                          if(
+                            @object_type == :post or
+                              String.starts_with?(@permalink || "", ["/post/"]),
+                            do: @thread_id || id(@object)
+                          ),
+                        thread_id: @thread_id,
+                        object_id: @thread_id || id(@object),
+                        current_url: @permalink,
+                        show: true,
+                        hide_actions: false,
+                        cw: false,
+                        label: "",
+                        object:
+                          cond do
+                            top_of_thread? -> @object
+                            reply_to_top_of_thread? -> e(@reply_to, :object, nil)
+                            true -> nil
+                          end,
+                        activity:
+                          cond do
+                            top_of_thread? -> @activity
+                            reply_to_top_of_thread? -> e(@reply_to, :activity, nil)
+                            true -> nil
+                          end,
+                        replies:
+                          cond do
+                            top_of_thread? ->
+                              nil
+
+                            reply_to_top_of_thread? ->
+                              [%{id: "preview-comment", activity: Map.put(@activity, :object, @object)}]
+
+                            true ->
+                              [
+                                %{
+                                  id: "preview-comment-reply_to",
+                                  activity: Map.put(e(@reply_to, :activity, %{}), :object, e(@reply_to, :object, nil)),
+                                  replies: [
+                                    %{id: "preview-comment-reply", activity: Map.put(@activity, :object, @object)}
+                                  ]
+                                }
+                              ]
+                          end,
+                        preview_component: Bonfire.UI.Social.ObjectThreadLive,
+                        preview_component_stateful?: !top_of_thread? and !reply_to_top_of_thread?,
+                        activity_inception: "preview",
+                        showing_within: :thread,
+                        check_object_boundary: !top_of_thread? and !reply_to_top_of_thread?
+                      }
+                      root_assigns={
+                        page_title: l("Discussion")
+                      }
+                    />
+                  {#elseif String.starts_with?(@permalink || "", ["/@", "/profile/", "/user"])}
+                    {!-- <Bonfire.UI.Common.OpenPreviewLive
               href={@permalink}
               parent_id={@parent_id}
               open_btn_text={l("View profile")}
@@ -575,25 +609,27 @@ defmodule Bonfire.UI.Social.ActivityLive do
               }
             />
              --}
-          {#elseif String.starts_with?(@permalink || "", ["/coordination/task/"]) and
-              module_enabled?(Bonfire.UI.Coordination.TaskLive)}
-            <Bonfire.UI.Common.OpenPreviewLive
-              href={@permalink}
-              parent_id={@parent_id}
-              open_btn_text={l("View task")}
-              title_text={e(@object, :name, nil) || l("Task")}
-              modal_assigns={
-                id: @thread_id || id(@object),
-                current_url: @permalink,
-                preview_view: Bonfire.UI.Coordination.TaskLive,
-                activity_inception: "preview",
-                check_object_boundary: false
-              }
-              root_assigns={
-                page_title: l("Task")
-              }
-            />
-          {/if}
+                  {#elseif String.starts_with?(@permalink || "", ["/coordination/task/"]) and
+                      module_enabled?(Bonfire.UI.Coordination.TaskLive)}
+                    <Bonfire.UI.Common.OpenPreviewLive
+                      href={@permalink}
+                      parent_id={@parent_id}
+                      open_btn_text={l("View task")}
+                      title_text={e(@object, :name, nil) || l("Task")}
+                      modal_assigns={
+                        id: @thread_id || id(@object),
+                        current_url: @permalink,
+                        preview_view: Bonfire.UI.Coordination.TaskLive,
+                        activity_inception: "preview",
+                        check_object_boundary: false
+                      }
+                      root_assigns={
+                        page_title: l("Task")
+                      }
+                    />
+                  {/if}
+              {/case}
+          {/case}
         {/if}
 
         <form
@@ -629,7 +665,8 @@ defmodule Bonfire.UI.Social.ActivityLive do
               @thread_id,
               @thread_title,
               @activity_component_id,
-              @subject_user
+              @subject_user,
+              @reply_to
             ) || []}
           {#case component}
             {#match :html}
@@ -1160,10 +1197,108 @@ defmodule Bonfire.UI.Social.ActivityLive do
     nil
   end
 
+  def prepare_reply_to(%{
+        id: activity_id,
+        reply_to:
+          %{
+            post_content: %{id: id} = reply_to_post_content,
+            created: %{
+              creator: %{
+                character: %{id: creator_id} = _subject_character,
+                profile: %{id: _} = _subject_profile
+              }
+            }
+          } = reply_to
+      }) do
+    debug("we have a reply_to, preloaded with post_content")
+
+    %{
+      activity_id: activity_id,
+      object: reply_to_post_content,
+      subject_id: creator_id,
+      activity: reply_to
+    }
+  end
+
+  def prepare_reply_to(%{
+        id: activity_id,
+        reply_to:
+          %{
+            id: reply_to_id,
+            created: %{
+              creator: %{
+                character: %{id: _} = subject_character,
+                profile: %{id: creator_id} = subject_profile
+              }
+            }
+          } = reply_to
+      })
+      when is_binary(reply_to_id) do
+    debug("we have another kind of reply_to, preloaded with creator")
+
+    %{
+      activity_id: activity_id,
+      object: reply_to,
+      subject_id: creator_id,
+      activity: %{
+        # Activities.load_object(reply_to, skip_boundary_check: true),
+        subject: %{
+          profile: subject_profile,
+          character: subject_character
+        }
+      }
+    }
+  end
+
+  def prepare_reply_to(%{
+        id: activity_id,
+        reply_to:
+          %{
+            id: reply_to_id
+          } = replied
+      }) do
+    debug("we have another kind of reply_to, but no creator")
+
+    %{
+      activity_id: activity_id,
+      object: replied,
+      subject_id: true,
+      activity: %{
+        # Activities.load_object(replied, skip_boundary_check: true),
+        subject: nil
+      }
+    }
+  end
+
+  # def prepare_reply_to(
+  #       %{
+  #         id: activity_id,
+  #         reply_to:
+  #           %{
+  #             id: reply_to_id
+  #           } = replied
+  #       }
+  #     )
+  #     # other kind of reply
+  #     when is_binary(reply_to_id) do
+  #   maybe_load_in_reply_to(replied, activity_id, current_user: current_user(assigns))
+  # end
+
+  # def prepare_reply_to(
+  #       %{id: object_id, thread: %{id: thread_id} = thread}
+  #     )
+  #     when object_id != thread_id,
+  #     do: maybe_load_in_reply_to(thread, thread_id, current_user: current_user(assigns))
+
+  def prepare_reply_to(%{replied: %{id: _} = replied}),
+    do: prepare_reply_to(replied)
+
+  def prepare_reply_to(_),
+    do: nil
+
   # @decorate time()
   def component_maybe_in_reply_to(
-        verb,
-        activity,
+        reply_to,
         showing_within,
         activity_inception,
         viewing_main_object,
@@ -1174,8 +1309,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
       )
 
   def component_maybe_in_reply_to(
-        _verb,
-        _activity,
+        reply_to,
         showing_within,
         activity_inception,
         viewing_main_object,
@@ -1185,14 +1319,14 @@ defmodule Bonfire.UI.Social.ActivityLive do
         _activity_component_id
       )
       # cases where we do not show reply_to
-      when not is_nil(activity_inception) or
-             (viewing_main_object != true and showing_within in [:thread, :smart_input] and
-                thread_mode != :flat),
+      when is_nil(reply_to) or
+             (not is_nil(activity_inception) or
+                (viewing_main_object != true and showing_within in [:thread, :smart_input] and
+                   thread_mode != :flat)),
       do: []
 
   def component_maybe_in_reply_to(
-        _verb,
-        %{reply_to: %{id: reply_to_id}},
+        %{object: %{id: reply_to_id}},
         showing_within,
         _,
         _,
@@ -1206,20 +1340,12 @@ defmodule Bonfire.UI.Social.ActivityLive do
       do: []
 
   def component_maybe_in_reply_to(
-        verb,
         %{
-          id: activity_id,
-          reply_to:
-            %{
-              post_content: %{id: id} = reply_to_post_content,
-              created: %{
-                creator: %{
-                  character: %{id: creator_id} = _subject_character,
-                  profile: %{id: _} = _subject_profile
-                }
-              }
-            } = reply_to
-        },
+          activity_id: activity_id,
+          subject_id: subject_id,
+          activity: activity,
+          object: %{id: object_id} = object
+        } = reply_to,
         _,
         _,
         _,
@@ -1227,8 +1353,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
         _thread_id,
         thread_title,
         activity_component_id
-      )
-      when verb in @reply_verbs do
+      ) do
     debug("we have a reply_to, preloaded with post_content")
 
     Bonfire.Common.Cache.put("has_reply_to:#{activity_id}", true)
@@ -1236,201 +1361,56 @@ defmodule Bonfire.UI.Social.ActivityLive do
     [
       {Bonfire.UI.Social.ActivityLive,
        %{
-         id: "reply_to-#{activity_component_id}-#{id}",
+         id: "reply_to-#{activity_component_id}-#{object_id}",
          activity_inception: activity_id,
          #  show_minimal_subject_and_note: name_or_text(reply_to_post_content) || true,
          show_minimal_subject_and_note: true,
          viewing_main_object: false,
          thread_title: thread_title,
-         object: reply_to_post_content,
-         subject_id: creator_id,
-         activity: reply_to
-       }}
-    ]
-  end
-
-  def component_maybe_in_reply_to(
-        verb,
-        %{
-          id: activity_id,
-          reply_to:
-            %{
-              id: reply_to_id,
-              created: %{
-                creator: %{
-                  character: %{id: _} = subject_character,
-                  profile: %{id: _} = subject_profile
-                }
-              }
-            } = reply_to
-        },
-        _,
-        _,
-        _,
-        _,
-        _thread_id,
-        thread_title,
-        activity_component_id
-      )
-      when verb in @reply_verbs and is_binary(reply_to_id) do
-    debug("we have another kind of reply_to, preloaded with creator")
-
-    Bonfire.Common.Cache.put("has_reply_to:#{activity_id}", true)
-
-    [
-      {Bonfire.UI.Social.ActivityLive,
-       %{
-         id: "reply_to-#{activity_component_id}-#{reply_to_id}",
-         activity_inception: activity_id,
-         #  show_minimal_subject_and_note: name_or_text(reply_to) || true,
-         show_minimal_subject_and_note: true,
-         viewing_main_object: false,
-         thread_title: thread_title,
-         object: reply_to,
-         subject_id: id(subject_profile),
-         activity: %{
-           # Activities.load_object(reply_to, skip_boundary_check: true),
-           subject: %{
-             profile: subject_profile,
-             character: subject_character
-           }
-         }
-       }}
-    ]
-  end
-
-  def component_maybe_in_reply_to(
-        verb,
-        %{
-          id: activity_id,
-          reply_to:
-            %{
-              id: reply_to_id
-            } = replied
-        },
-        _,
-        _,
-        _,
-        _,
-        _thread_id,
-        thread_title,
-        activity_component_id
-      )
-      when verb in @reply_verbs and is_binary(reply_to_id) do
-    debug("we have another kind of reply_to, but no creator")
-
-    Bonfire.Common.Cache.put("has_reply_to:#{activity_id}", true)
-
-    [
-      {Bonfire.UI.Social.ActivityLive,
-       %{
-         id: "reply_to-#{activity_component_id}-#{reply_to_id}",
-         activity_inception: activity_id,
-         #  show_minimal_subject_and_note: name_or_text(replied) || true,
-         show_minimal_subject_and_note: true,
-         viewing_main_object: false,
-         thread_title: thread_title,
-         object: replied,
-         subject_id: true,
-         activity: %{
-           # Activities.load_object(replied, skip_boundary_check: true),
-           subject: nil
-         }
+         object: object,
+         subject_id: subject_id,
+         activity: activity
        }}
     ]
   end
 
   # def component_maybe_in_reply_to(
-  #       verb,
-  #       %{
-  #         id: activity_id,
-  #         reply_to:
-  #           %{
-  #             id: reply_to_id
-  #           } = replied
-  #       },
-  #       _, _, _, _, _, _, _
+  #       %{activity_id: activity_id, object: %Ecto.Association.NotLoaded{}},
+  #       showing_within,
+  #       _,
+  #       viewing_main_object,
+  #       thread_mode,
+  #       _,
+  #       _,
+  #       _
   #     )
-  #     # other kind of reply
-  #     when verb in @reply_verbs and is_binary(reply_to_id) do
-  #   maybe_load_in_reply_to(replied, activity_id, current_user: current_user(assigns))
+  #     when viewing_main_object != true and (showing_within != :thread or thread_mode == :flat) do
+  #   case Bonfire.Common.Cache.get("has_reply_to:#{activity_id}") do
+  #     {:ok, true} ->
+  #       debug("reply_to was not loaded")
+
+  #       [
+  #         {:html,
+  #          """
+  #          <div role="status" class="space-y-2.5 animate-pulse max-w-[50%] mb-2">
+  #          <div class="flex items-center w-full space-x-2">
+  #          <div class="h-2.5 bg-base-content/10 rounded-full w-10"></div>
+  #          <div class="h-2.5 bg-base-content/20 rounded-full w-24"></div>
+  #          <div class="h-2.5 bg-base-content/20 rounded-full w-full"></div>
+  #          </div>
+  #          <span class="sr-only">Loading...</span>
+  #          </div>
+
+  #          """}
+  #       ]
+
+  #     _ ->
+  #       debug(id, "no has_reply_to in cache")
+  #       []
+  #   end
   # end
 
-  def component_maybe_in_reply_to(
-        verb,
-        %{replied: %{id: _} = replied},
-        showing_within,
-        activity_inception,
-        viewing_main_object,
-        thread_mode,
-        thread_id,
-        thread_title,
-        activity_component_id
-      ),
-      do:
-        component_maybe_in_reply_to(
-          verb,
-          replied,
-          showing_within,
-          activity_inception,
-          viewing_main_object,
-          thread_mode,
-          thread_id,
-          thread_title,
-          activity_component_id
-        )
-
-  # def component_maybe_in_reply_to(
-  #       verb,
-  #       %{id: object_id, thread: %{id: thread_id} = thread},
-  #       _, _, _, _, _
-  #     )
-  #     when object_id != thread_id,
-  #     do: maybe_load_in_reply_to(thread, thread_id, current_user: current_user(assigns))
-
-  def component_maybe_in_reply_to(_, %{reply_to_id: nil}, _, _, _, _, _, _, _) do
-    debug("no reply_to")
-    []
-  end
-
-  def component_maybe_in_reply_to(
-        _,
-        %{id: id, reply_to: %Ecto.Association.NotLoaded{}},
-        showing_within,
-        _,
-        viewing_main_object,
-        thread_mode,
-        _,
-        _,
-        _
-      )
-      when viewing_main_object != true and (showing_within != :thread or thread_mode == :flat) do
-    case Bonfire.Common.Cache.get("has_reply_to:#{id}") do
-      {:ok, true} ->
-        debug("reply_to was not loaded")
-
-        [
-          {:html,
-           """
-           <div role="status" class="space-y-2.5 animate-pulse max-w-[50%] mb-2">
-           <div class="flex items-center w-full space-x-2">
-           <div class="h-2.5 bg-base-content/10 rounded-full w-10"></div>
-           <div class="h-2.5 bg-base-content/20 rounded-full w-24"></div>
-           <div class="h-2.5 bg-base-content/20 rounded-full w-full"></div>
-           </div>
-           <span class="sr-only">Loading...</span>
-           </div>
-
-           """}
-        ]
-
-      _ ->
-        debug(id, "no has_reply_to in cache")
-        []
-    end
-  end
-
-  def component_maybe_in_reply_to(_, a, _, _, _, _, _, _, _) do
+  def component_maybe_in_reply_to(a, _, _, _, _, _, _, _) do
     debug(a, "cannot determine if there's a reply_to")
     []
   end
@@ -1456,19 +1436,11 @@ defmodule Bonfire.UI.Social.ActivityLive do
   #   warn("FIXME: avoid n+1 and preload at feed level")
   #   reply_to_activity = load_reply_to(replied, opts)
 
-  #   [
-  #     {Bonfire.UI.Social.ActivityLive,
   #      %{
-  #        id: "ra-" <> reply_to_id,
-  #        activity_inception: activity_inception,
-  #  show_minimal_subject_and_note: true,
-  #        thread_title: thread_title,
   #        object: e(reply_to_activity, :object, nil),
   #        # |> IO.inspect,
   #        activity: reply_to_activity |> Map.delete(:object),
-  #        viewing_main_object: false
-  #      }}
-  #   ]
+  #      }
   # end
 
   # def load_reply_to(reply_to, opts) do

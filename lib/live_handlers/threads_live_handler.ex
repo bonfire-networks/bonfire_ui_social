@@ -383,7 +383,7 @@ defmodule Bonfire.Social.Threads.LiveHandler do
 
         apply_task(:start_link, fn ->
           # Query comments asynchronously
-          {replies, assigns} = load_thread_assigns(socket)
+          {replies, assigns} = load_thread_assigns(socket, thread_id)
 
           # TODO: use first or last depending on sort order
           last_reply = List.first(replies)
@@ -395,7 +395,7 @@ defmodule Bonfire.Social.Threads.LiveHandler do
             {replies,
              assigns ++
                [
-                 loaded_async: true,
+                 loaded_async: thread_id,
                  reset_stream: reset_stream,
                  last_reply_id: id(last_reply) || false
                ]}
@@ -461,9 +461,9 @@ defmodule Bonfire.Social.Threads.LiveHandler do
           else: 1
         )
 
-  def load_thread_assigns(socket) do
+  def load_thread_assigns(socket, thread_id \\ nil) do
     debug("load comments")
-    thread_id = e(socket.assigns, :thread_id, e(socket.assigns, :object, :id, nil))
+    thread_id = thread_id || e(socket.assigns, :thread_id, e(socket.assigns, :object, :id, nil))
 
     if thread_id do
       debug("loading by thread_id")
