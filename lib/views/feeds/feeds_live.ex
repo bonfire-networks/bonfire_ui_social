@@ -9,7 +9,7 @@ defmodule Bonfire.UI.Social.FeedsLive do
     # emoji: "📰",
     description: l("Basic social networking functionality, such as feeds and discussions."),
     # exclude_from_nav: true
-    # FIXME: should only include moduels from current extension
+    # FIXME: should only include modules from current extension
     default_nav: [
       Bonfire.UI.Social.FeedsLive,
       Bonfire.UI.Files.Web.MediaFeedLive,
