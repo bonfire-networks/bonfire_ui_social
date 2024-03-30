@@ -22,7 +22,7 @@
             :if={@activity}
             class="rounded-none !shadow-none !px-4  main_object_in_thread !pt-0"
             id={@main_object_component_id}
-            showing_within={@showing_within || :thread}
+            showing_within={@showing_within}
             thread_mode={@thread_mode}
             thread_title={@thread_title}
             viewing_main_object
