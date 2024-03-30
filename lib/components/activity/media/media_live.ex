@@ -82,7 +82,7 @@ defmodule Bonfire.UI.Social.Activity.MediaLive do
     the_medias(media)
   end
 
-  def the_medias(%Bonfire.Files.Media{} = media) do
+  def the_medias(%struct{} = media) when struct in [Bonfire.Files.Media] do
     # {e(m, :media_type, nil), media}
     [media]
   end
