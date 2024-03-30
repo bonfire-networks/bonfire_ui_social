@@ -32,7 +32,8 @@
                         <source src={media_url} type="video/webm">
                         Your browser does not support the video tag.
                       </video>
-                    {#elseif String.ends_with?(media_url, [".mp3", ".m4a", ".oga", ".flac", ".aac", ".wav", ".caf"])}
+                    {#elseif String.ends_with?(media_url, [".mp3", ".m4a", ".oga", ".flac", ".aac", ".wav", ".caf"]) or
+                        String.ends_with?(e(@media, :media_type, ""), "audio")}
                       <div class="relative rounded rounded-b-none p-2 w-full">
                         <div class="flex  items-center gap-3">
                           {#case MediaLive.preview_img(@media)}

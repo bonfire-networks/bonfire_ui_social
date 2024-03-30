@@ -1529,48 +1529,37 @@ defmodule Bonfire.UI.Social.ActivityLive do
   #   do: [Bonfire.UI.ValueFlows.Preview.IntentTaskLive]
 
   def component_for_object_type(Bonfire.Data.Social.APActivity, object) do
-    json = e(object, :json, nil)
+    json =
+      e(object, :json, nil)
+      |> IO.inspect(label: "APActivity json")
 
-    case String.capitalize(
-           e(json, "object", "type", nil) || e(json, "type", nil) || "Remote Activity"
-         ) do
-      # TODO: make the supported types here extensible/configurable
-      "Event" = object_type ->
-        [
-          {Bonfire.UI.Social.Activity.EventActivityStreamsLive,
-           json: json, object_type_readable: object_type}
-        ]
+    type = e(json, "object", "type", nil) || e(json, "type", nil) || "Remote Activity"
 
-      "Video" = object_type ->
-        [
-          {Bonfire.UI.Social.Activity.VideoActivityStreamsLive,
-           json: json, object_type_readable: object_type}
-        ]
+    component =
+      case String.capitalize(type) do
+        # TODO: make the supported types here extensible/configurable
+        "Event" ->
+          Bonfire.UI.Social.Activity.EventActivityStreamsLive
 
-      "Edition" = object_type ->
-        [
-          {Bonfire.UI.Social.Activity.BookActivityStreamsLive,
-           json: json, object_type_readable: object_type}
-        ]
+        "Video" ->
+          Bonfire.UI.Social.Activity.VideoActivityStreamsLive
 
-      object_type when object_type in ["Article", "Page"] ->
-        [
-          {Bonfire.UI.Social.Activity.ArticleActivityStreamsLive,
-           json: json, object_type_readable: object_type}
-        ]
+        "Edition" ->
+          Bonfire.UI.Social.Activity.BookActivityStreamsLive
 
-      object_type when object_type in ["Audio", "Podcastepisode"] ->
-        [
-          {Bonfire.UI.Social.Activity.AudioActivityStreamsLive,
-           json: json, object_type_readable: object_type}
-        ]
+        object_type when object_type in ["Article", "Page"] ->
+          Bonfire.UI.Social.Activity.ArticleActivityStreamsLive
 
-      object_type ->
-        [
-          {Bonfire.UI.Social.Activity.UnknownActivityStreamsLive,
-           json: json, object_type_readable: object_type}
-        ]
-    end
+        object_type when object_type in ["Audio", "Podcastepisode"] ->
+          Bonfire.UI.Social.Activity.AudioActivityStreamsLive
+
+        _ ->
+          Bonfire.UI.Social.Activity.UnknownActivityStreamsLive
+      end
+
+    [
+      {component, json: json, object_type_readable: type}
+    ]
   end
 
   # def component_for_object_type(type, object) when type in [ValueFlows.Process], do: [Bonfire.UI.ValueFlows.Preview.ProcessListLive.activity_component(object)]

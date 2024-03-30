@@ -3,42 +3,46 @@
     {#case (!e(@activity, :files, nil) and object_field(@json, "url")) || object_field(@json, "id")}
       {#match audio when is_map(audio) or is_binary(audio)}
         {!-- Only show the preview here if we have not attached media (hopefully with oembed) --}
-        <div class="relative w-[160px] min-w-[160px] h-full">
-          <img
-            src={e(object_field(@json, "image") || object_field(@json, "icon"), "url", nil)}
-            alt=""
-            class="w-full h-full rounded-box rounded-r-none object-cover"
-          />
+        <div class="relative w-[160px] h-auto">
+          {#case e(object_field(@json, "image") || object_field(@json, "icon"), "url", nil)}
+            {#match nil}
+            {#match img}
+              <img src={img} alt="" class="w-full h-full rounded-box rounded-r-none object-cover">
+          {/case}
           <div class="absolute flex justify-center items-center inset-0">
             <div class="bg-gray-900/60 z-50 gap-4 px-3 py-2 rounded flex justify-center items-center place-content-center">
-              <Bonfire.UI.Common.OpenModalLive
-                id={"media_modal_#{id(@json)}#{Text.random_string()}"}
-                reusable_modal_id="media_player_modal"
-                no_actions
-                no_header
-                no_backdrop
-                image_preview
-                enable_fallback={false}
-                modal_class=""
-                wrapper_class="max-h-full !w-full md:w-10/12 !p-0 max-w-[100%] !bg-transparent shadow-none rounded-none"
-                open_btn_class="w-full"
-                open_btn_wrapper_class="w-full h-full"
-              >
-                <Bonfire.UI.Social.Activity.RemoteMediaLive media={%{
-                  media_type: "audio",
-                  path: e(audio, "href", nil) || audio,
-                  metadata: %{
-                    "name" => object_field(debug(@json, "apjson"), "name") || l("Untitled audio"),
-                    "icon" => e(object_field(@json, "image") || object_field(@json, "icon"), "url", nil)
-                  }
-                }} />
+              {#case e(audio, "href", nil) || audio}
+                {#match audio_url when is_binary(audio_url)}
+                  <Bonfire.UI.Common.OpenModalLive
+                    id={"media_modal_#{id(@json)}#{Text.random_string()}"}
+                    reusable_modal_id="media_player_modal"
+                    no_actions
+                    no_header
+                    no_backdrop
+                    image_preview
+                    enable_fallback={false}
+                    modal_class=""
+                    wrapper_class="max-h-full !w-full md:w-10/12 !p-0 max-w-[100%] !bg-transparent shadow-none rounded-none"
+                    open_btn_class="w-full"
+                    open_btn_wrapper_class="w-full h-full"
+                  >
+                    <Bonfire.UI.Social.Activity.RemoteMediaLive media={%{
+                      media_type: "audio",
+                      path: audio_url,
+                      metadata: %{
+                        "name" => object_field(debug(@json, "apjson"), "name") || l("Untitled audio"),
+                        "icon" => e(object_field(@json, "image") || object_field(@json, "icon"), "url", nil)
+                      }
+                    }} />
 
-                <:open_btn>
-                  <button class="">
-                    <#Icon iconify="heroicons:play-20-solid" class="w-6 h-6 text-gray-200" />
-                  </button>
-                </:open_btn>
-              </Bonfire.UI.Common.OpenModalLive>
+                    <:open_btn>
+                      <button class="">
+                        <#Icon iconify="heroicons:play-20-solid" class="w-6 h-6 text-gray-200" />
+                      </button>
+                    </:open_btn>
+                  </Bonfire.UI.Common.OpenModalLive>
+                {#match _}
+              {/case}
 
               <a href={e(@json, "id", nil)} target="_blank">
                 <#Icon iconify="heroicons-outline:external-link" class="w-6 h-6 text-gray-200" />
