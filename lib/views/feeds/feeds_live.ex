@@ -4,10 +4,13 @@ defmodule Bonfire.UI.Social.FeedsLive do
   alias Bonfire.Social.Feeds.LiveHandler
   alias Bonfire.UI.Social.FeedLive
 
-  declare_extension("Social",
-    # icon: "noto:newspaper",
+  declare_extension("Social UI",
+    icon: "ph:rss-simple-bold",
     # emoji: "📰",
-    description: l("Basic social networking functionality, such as feeds and discussions."),
+    description:
+      l(
+        "User interfaces for basic social networking functionality, such as feeds and discussions."
+      ),
     # exclude_from_nav: true
     # FIXME: should only include modules from current extension
     default_nav: [
