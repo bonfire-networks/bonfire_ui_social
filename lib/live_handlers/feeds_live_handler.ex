@@ -1377,6 +1377,8 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
       |> Map.new(fn activity -> {id(activity) || id(e(activity, :object, nil)), activity} end)
       |> debug("list_of_activities postloaded")
 
+    raise false
+
     list_of_components
     # |> debug()
     |> Map.new(fn component ->
@@ -1455,10 +1457,27 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
     end
   end
 
+  # def preload_single_activity_and_object_assocs(feed, opts) do
+  #   if Bonfire.Common.Config.get([:ui, :feed_object_extension_preloads_disabled]) != true do
+  #     feed
+  #     |> Bonfire.Social.Activities.activity_preloads(opts[:preload], opts)
+  #     # |> debug("pre-maybe_preloads_per_nested_schema")
+  #     |> Bonfire.Common.Repo.Preload.maybe_preloads_per_schema(
+  #       object_preloads(),
+  #       opts
+  #     )
+  #   else
+  #     feed
+  #     |> Bonfire.Social.Activities.activity_preloads(opts[:preload], opts)
+  #   end
+  # end
+
   def object_preloads do
-    # TODO: collect these from the code on startup
+    # TODO: collect these from the code/config on startup, same as how we pick what preview component to use
     [
       # {Bonfire.Data.Social.Post, Bonfire.UI.Social.Activity.NoteLive.preloads()}, # only needed if we no longer preload PostContent by default
+      {Bonfire.Poll.Question,
+       Utils.maybe_apply(Bonfire.Poll.Web.Preview.QuestionLive, :preloads)},
       {Bonfire.Data.Identity.User,
        Utils.maybe_apply(Bonfire.UI.Me.Preview.CharacterLive, :preloads, [])},
       {Bonfire.Classify.Category,

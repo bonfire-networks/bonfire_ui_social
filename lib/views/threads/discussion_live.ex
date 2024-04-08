@@ -36,6 +36,8 @@ defmodule Bonfire.UI.Social.DiscussionLive do
   end
 
   def handle_params(%{"id" => id} = params, _url, socket) when is_binary(id) do
+    debug(id, "object_id")
+
     socket =
       socket
       |> assign(

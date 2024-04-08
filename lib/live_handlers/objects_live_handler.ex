@@ -61,9 +61,18 @@ defmodule Bonfire.Social.Objects.LiveHandler do
     activity =
       activity
       |> Map.put(:object, object)
-      |> Bonfire.Social.Activities.activity_preloads(default_preloads(),
-        current_user: current_user
+      # |> Bonfire.Social.Activities.activity_preloads(default_preloads(),
+      #   current_user: current_user
+      # )
+      |> Bonfire.Social.Feeds.LiveHandler.preload_activity_and_object_assocs([:object],
+        current_user: current_user,
+        preload:
+          Bonfire.Social.Feeds.LiveHandler.feed_extra_preloads_list(
+            socket.assigns[:showing_within],
+            socket.assigns[:thread_mode]
+          )
       )
+      |> debug()
 
     {object, activity} = Map.pop(activity, :object)
 
@@ -209,7 +218,7 @@ defmodule Bonfire.Social.Objects.LiveHandler do
   end
 
   def load_object_assigns(%{post_id: id} = assigns, socket) when is_binary(id) do
-    current_user = current_user(socket.assigns)
+    current_user = current_user(assigns) || current_user(socket.assigns)
 
     # debug(params, "PARAMS")
     # debug(url, "post url")
@@ -227,7 +236,7 @@ defmodule Bonfire.Social.Objects.LiveHandler do
   end
 
   def load_object_assigns(%{object_id: id} = assigns, socket) when is_binary(id) do
-    current_user = current_user(socket.assigns)
+    current_user = current_user(assigns) || current_user(socket.assigns)
     # debug(params, "PARAMS")
     with id when is_binary(id) <- ulid(id),
          {:ok, object} <-
@@ -246,6 +255,8 @@ defmodule Bonfire.Social.Objects.LiveHandler do
   end
 
   def not_found_fallback(id, params, socket) do
+    debug(id, "not found")
+
     case Bonfire.Common.URIs.remote_canonical_url(id) do
       url when is_binary(url) ->
         debug(url, "remote object - redirect to canonical")
