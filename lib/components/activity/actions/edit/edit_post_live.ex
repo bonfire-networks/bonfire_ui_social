@@ -13,11 +13,12 @@ defmodule Bonfire.UI.Social.EditPostLive do
     assigns
     |> assign(
       :read_only,
-      !(Bonfire.Boundaries.can?(assigns[:__context__], :edit, [
-          assigns[:object_boundary] |> debug,
-          assigns[:object] |> debug
-        ])
-        |> debug)
+      !Bonfire.Boundaries.can?(assigns[:__context__], :edit, [
+        assigns[:object_boundary]
+        |> debug("object_boundary"),
+        assigns[:object]
+        |> debug("object")
+      ])
     )
     |> render_sface()
   end

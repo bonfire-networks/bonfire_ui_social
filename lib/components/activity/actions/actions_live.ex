@@ -36,7 +36,7 @@ defmodule Bonfire.UI.Social.Activity.ActionsLive do
   def update_many(assigns_sockets) do
     assigns_sockets
     |> LiveHandler.actions_update_many(caller_module: __MODULE__)
-    |> debug("lllll")
+    # |> debug("lllll")
     |> Enum.map(fn
       {assigns, socket} ->
         assign(socket, assigns)

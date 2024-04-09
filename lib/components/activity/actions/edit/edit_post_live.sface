@@ -93,12 +93,25 @@
 
   <:open_btn>
     <#slot>
-      <div class="flex items-center gap-2">
-        <#Icon iconify="ant-design:edit-filled" class="w-4 h-4 shrink-0 text-base-content/70" />
-        <div class="text-sm text-base-content/70">
-          {if @read_only, do: l("Edit history"), else: l("Edit / History")}
+      <li :if={!@read_only}>
+        <div class="flex items-center gap-2">
+          <#Icon iconify="ant-design:edit-filled" class="w-4 h-4 shrink-0 text-base-content/70" />
+          <div class="text-sm text-base-content/70">
+            {l("Edit")}
+          </div>
         </div>
-      </div>
+      </li>
+      <li>
+        <div class="flex items-center gap-2">
+          <#Icon
+            iconify="material-symbols:difference-outline-rounded"
+            class="w-4 h-4 shrink-0 text-base-content/70"
+          />
+          <div class="text-sm text-base-content/70">
+            {l("Version history")}
+          </div>
+        </div>
+      </li>
     </#slot>
   </:open_btn>
   <:action_btns>

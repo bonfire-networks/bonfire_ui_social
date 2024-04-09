@@ -134,7 +134,8 @@
           </li>
       {/case}
 
-      <li :if={@object_type in [Bonfire.Data.Social.Post, Bonfire.Data.Social.Message]}>
+      {#if @object_type in [Bonfire.Data.Social.Post, Bonfire.Data.Social.Message] or
+          not is_nil(e(@object, :post_content, nil))}
         <StatelessComponent
           module={maybe_component(Bonfire.UI.Social.EditPostLive)}
           object={@object}
@@ -142,7 +143,7 @@
           activity_component_id={@activity_component_id}
           parent_id={@activity_component_id || id(@activity)}
         />
-      </li>
+      {/if}
 
       {#if module_enabled?(Bonfire.Social.Pins, @__context__)}
         <li
