@@ -1587,15 +1587,15 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
     preloads = feed_extra_preloads_list(e(socket.assigns, :showing_within, nil))
 
     feed =
-      if module_enabled?(FeedActivities, socket),
+      if module = maybe_module(FeedActivities, socket),
         do:
-          FeedActivities.feed({feed_id, feed_filters},
+          module.feed({feed_id, feed_filters},
             pagination: params,
             exclude_feed_ids: e(params, :exclude_feed_ids, []),
             current_user: current_user(socket.assigns),
             preload: preloads
-          )
-          |> debug("feed")
+          ),
+        else: []
 
     merge_feed_assigns(
       feed,
@@ -1616,22 +1616,23 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
 
     showing_within = :feed_by_creator
     preloads = [:feed_by_creator] ++ feed_extra_preloads_list(showing_within)
+    current_user = current_user(socket.assigns)
 
     feed =
-      if module_enabled?(Bonfire.Posts, user),
-        do:
-          Utils.maybe_apply(
-            Bonfire.Posts,
-            :list_by,
-            [
-              user,
-              [
-                pagination: input_to_atoms(params),
-                current_user: current_user(socket.assigns),
-                preload: preloads
-              ]
-            ]
-          )
+      Utils.maybe_apply(
+        Bonfire.Posts,
+        :list_by,
+        [
+          user,
+          [
+            pagination: input_to_atoms(params),
+            current_user: current_user,
+            preload: preloads
+          ]
+        ],
+        current_user: current_user,
+        fallback_return: []
+      )
 
     # |> debug("posts")
 
@@ -1652,30 +1653,39 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
     user = user || e(socket, :assigns, :user, nil)
     type = Types.maybe_to_atom(type)
     object_type = Types.maybe_to_module(type) || type
-
     preloads = [:feed_by_creator] ++ feed_extra_preloads_list(:feed_by_creator)
+    current_user = current_user(socket.assigns)
 
     feed_id =
-      if user && module_enabled?(Bonfire.Social.Feeds, user),
+      if not is_nil(user),
         do:
-          Bonfire.Social.Feeds.feed_id(:outbox, user)
+          maybe_apply(Bonfire.Social.Feeds, :feed_id, [:outbox, user],
+            current_user: current_user,
+            fallback_return: nil
+          )
           |> debug("outbox for #{id(user)}")
 
     feed =
-      if feed_id && module_enabled?(FeedActivities, user),
+      if not is_nil(feed_id),
         do:
-          FeedActivities.feed(
-            {feed_id,
-             %{
-               object_type: object_type
-             }}
-            |> debug(),
-            pagination: input_to_atoms(params),
-            current_user: current_user(socket.assigns),
-            subject_user: user,
-            showing_within: type,
-            preload: preloads
-          )
+          maybe_apply(
+            FeedActivities,
+            :feed,
+            [
+              {feed_id,
+               %{
+                 object_type: object_type
+               }},
+              pagination: input_to_atoms(params),
+              current_user: current_user(socket.assigns),
+              subject_user: user,
+              showing_within: type,
+              preload: preloads
+            ],
+            current_user: current_user,
+            fallback_return: []
+          ),
+        else: []
 
     merge_feed_assigns(
       feed,
@@ -1692,14 +1702,16 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
 
   def load_user_feed_assigns("boosts" = tab, user, params, socket) do
     user = user || e(socket, :assigns, :user, nil)
+    current_user = current_user(socket.assigns)
 
     feed =
-      if module_enabled?(Bonfire.Social.Boosts, user),
-        do:
-          Bonfire.Social.Boosts.list_by(user,
-            pagination: input_to_atoms(params),
-            current_user: current_user(socket.assigns)
-          )
+      maybe_apply(
+        Bonfire.Social.Boosts,
+        :list_by,
+        [user, pagination: input_to_atoms(params), current_user: current_user],
+        current_user: current_user,
+        fallback_return: []
+      )
 
     # |> debug("boosts")
 
@@ -1716,24 +1728,35 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
 
   def load_user_feed_assigns("timeline" = tab, user, params, socket) do
     user = user || e(socket, :assigns, :user, nil)
+    preloads = feed_extra_preloads_list(e(socket.assigns, :showing_within, nil))
+    current_user = current_user(socket.assigns)
 
     feed_id =
-      if user && module_enabled?(Bonfire.Social.Feeds, user),
+      if not is_nil(user),
         do:
-          Bonfire.Social.Feeds.feed_id(:outbox, user)
+          maybe_apply(Bonfire.Social.Feeds, :feed_id, [:outbox, user],
+            current_user: current_user,
+            fallback_return: nil
+          )
           |> debug("outbox for #{id(user)}")
 
-    preloads = feed_extra_preloads_list(e(socket.assigns, :showing_within, nil))
-
     feed =
-      if feed_id && module_enabled?(FeedActivities, user),
+      if not is_nil(feed_id),
         do:
-          FeedActivities.feed(feed_id,
-            pagination: input_to_atoms(params),
-            current_user: current_user(socket.assigns),
-            subject_user: user,
-            preload: preloads
-          )
+          maybe_apply(
+            FeedActivities,
+            :feed,
+            [
+              feed_id,
+              pagination: input_to_atoms(params),
+              current_user: current_user(socket.assigns),
+              subject_user: user,
+              preload: preloads
+            ],
+            current_user: current_user,
+            fallback_return: []
+          ),
+        else: []
 
     #  debug(feed: feed)
 
@@ -1762,7 +1785,9 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
       Utils.maybe_apply(
         Bonfire.Social.Graph.Follows,
         :list_followers,
-        [user, [pagination: pagination, current_user: current_user]]
+        [user, [pagination: pagination, current_user: current_user]],
+        current_user: current_user,
+        fallback_return: []
       )
       |> debug("followers in feeed")
 
@@ -1788,7 +1813,9 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
       Utils.maybe_apply(
         Bonfire.Social.Graph.Follows,
         :list_followed,
-        [user, [pagination: pagination, current_user: current_user]]
+        [user, [pagination: pagination, current_user: current_user]],
+        current_user: current_user,
+        fallback_return: []
       )
 
     # |> debug("followed")
@@ -1831,6 +1858,7 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
   def load_user_feed_assigns(tab, feed_id, attrs, socket)
       when is_binary(tab) and is_binary(feed_id) do
     params = input_to_atoms(attrs)
+    current_user = current_user(socket.assigns)
     # for custom feeds
     feed_id =
       ulid!(feed_id)
@@ -1839,15 +1867,20 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
     preloads = feed_extra_preloads_list(e(socket.assigns, :showing_within, nil))
 
     feed =
-      if module_enabled?(FeedActivities, socket),
-        do:
-          FeedActivities.feed(feed_id,
-            pagination: params,
-            exclude_feed_ids: e(params, :exclude_feed_ids, []),
-            current_user: current_user(socket.assigns),
-            preload: preloads
-          )
-          |> debug("feed")
+      maybe_apply(
+        Feeds,
+        :feed,
+        [
+          feed_id,
+          pagination: params,
+          exclude_feed_ids: e(params, :exclude_feed_ids, []),
+          current_user: current_user,
+          preload: preloads
+        ],
+        current_user: current_user,
+        fallback_return: []
+      )
+      |> debug("feed")
 
     merge_feed_assigns(
       feed,
