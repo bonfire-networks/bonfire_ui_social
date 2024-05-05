@@ -183,7 +183,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
       peered: peered,
       is_remote:
         (assigns[:is_remote] || socket_assigns[:is_remote] ||
-           !Bonfire.Social.Integration.is_local?(
+           !Bonfire.Social.is_local?(
              peered ||
                e(activity, :subject, nil) ||
                e(assigns, :subject_user, nil) ||

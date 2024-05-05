@@ -6,7 +6,7 @@ defmodule Bonfire.Social.Moderation.BlockTest do
   alias Bonfire.Me.Users
   alias Bonfire.Files.Test
   import Bonfire.Common.Enums
-  import Bonfire.UI.Me.Integration
+  import Bonfire.UI.Me
 
   test "Ghost a user works" do
     # create a bunch of users
