@@ -45,6 +45,8 @@ defimpl SEO.OpenGraph.Build, for: Bonfire.Data.Social.PostContent do
       e(post_content, :title, nil) ||
         e(post_content, :activity, :replied, :thread, :named, :name, nil)
 
+    first_media = List.first(e(post_content, :activity, :media, []))
+
     SEO.OpenGraph.build(
       title: title,
       detail:
@@ -65,7 +67,7 @@ defimpl SEO.OpenGraph.Build, for: Bonfire.Data.Social.PostContent do
           author,
           Path.absname(
             String.trim_leading(
-              Media.media_url(List.first(e(post_content, :activity, :media, []))) || "",
+              Media.thumbnail_url(first_media) || Media.media_url(first_media) || "",
               "/"
             )
           )
