@@ -145,7 +145,7 @@
                   <img src={@cute_gif}>
                 </div>
               {#else}
-                <img src={Bonfire.Web.Endpoint.static_path("/images/loading.svg")}>
+                <img src={Bonfire.Common.URIs.static_path("/images/loading.svg")}>
               {/if}
 
               <div class="sr-only text-base-content">{l("Loading...")}</div>
