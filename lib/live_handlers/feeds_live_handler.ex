@@ -1219,7 +1219,8 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
 
       {current_user, opts} =
         opts_for_update_many_async(List.first(assigns_sockets), opts)
-        |> debug("opts_for_update_many_async")
+
+      # |> debug("opts_for_update_many_async")
 
       # |> debug("ccccccc")
       batch_update_many_async(
