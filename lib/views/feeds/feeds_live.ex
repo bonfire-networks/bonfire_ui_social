@@ -95,6 +95,7 @@ defmodule Bonfire.UI.Social.FeedsLive do
        feed_id: nil,
        feed_title: nil,
        feed_ids: nil,
+       feed_filters: [],
        tab_path_suffix: nil,
        feed_component_id: nil,
        feedback_title: l("Your feed is empty"),
@@ -161,6 +162,7 @@ defmodule Bonfire.UI.Social.FeedsLive do
   end
 
   def set_feed_assigns(feed_meta, socket) do
+    debug(feed_meta)
     {:noreply,
      socket
      |> assign(LiveHandler.feed_default_assigns(feed_meta, socket))
