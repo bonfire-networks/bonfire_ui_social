@@ -163,6 +163,7 @@ defmodule Bonfire.UI.Social.FeedsLive do
 
   def set_feed_assigns(feed_meta, socket) do
     debug(feed_meta)
+
     {:noreply,
      socket
      |> assign(LiveHandler.feed_default_assigns(feed_meta, socket))

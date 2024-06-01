@@ -874,8 +874,9 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
          reset_stream
        ) do
     socket_connected = connected?(socket)
+    opts = to_options(socket)
 
-    if (socket_connected || current_user(socket.assigns)) && Config.env() != :test do
+    if (socket_connected || current_user(opts)) && Config.env() != :test do
       if socket_connected do
         debug("socket connected, so load feed async")
         pid = self()
@@ -883,7 +884,7 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
         apply_task(:start_link, fn ->
           debug(feed_name_id_or_tuple, "Query activities asynchronously")
 
-          {entries, new_assigns} = feed_assigns(feed_name_id_or_tuple, to_options(socket))
+          {entries, new_assigns} = feed_assigns(feed_name_id_or_tuple, opts)
           # |> debug("feed_assigns")
           send_feed_updates(
             pid,
@@ -909,7 +910,7 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
       feed_assigns_non_live(
         feed_name_id_or_tuple,
         assigns,
-        socket
+        opts
       )
     end
   end
