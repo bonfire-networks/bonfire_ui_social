@@ -1,4 +1,4 @@
-<div class="rounded-box border border-base-content/20">
+<div class="rounded-box border border-base-content/10">
   {#case object_field(@json, "attachment")}
     {#match nil}
     {#match img}

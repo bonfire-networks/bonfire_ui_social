@@ -1,5 +1,5 @@
 <div>
-  <div class="flex items-center gap-2 border-b border-base-content/20 w-full">
+  <div class="flex items-center gap-2  w-full">
     <form
       class="w-full"
       phx-change="Bonfire.Social.Threads:list_participants"
@@ -7,7 +7,7 @@
     >
       <div class="">
         <div class="flex items-center justify-between">
-          <div class="flex items-center flex-1 gap-4 py-0 min-h-[2.75rem] px-2">
+          <div class="flex items-center flex-1 gap-4 py-1 px-3">
             <div class="flex items-center gap-1">
               {#case @last_reply_id}
                 {#match nil}
