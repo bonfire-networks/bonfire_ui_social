@@ -577,7 +577,10 @@ defmodule Bonfire.UI.Social.ActivityLive do
                                   id: "preview-comment-reply_to",
                                   activity: Map.put(e(@reply_to, :activity, %{}), :object, e(@reply_to, :object, nil)),
                                   replies: [
-                                    %{id: "preview-comment-reply", activity: Map.put(@activity, :object, @object)}
+                                    %{
+                                      id: "preview-comment-reply",
+                                      activity: Map.put(@activity || %{}, :object, @object)
+                                    }
                                   ]
                                 }
                               ]

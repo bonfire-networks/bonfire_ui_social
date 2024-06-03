@@ -1,6 +1,20 @@
-{#case DatesTimes.to_date(@activity_id || @object_id)}
+{#case DatesTimes.to_date_time(@activity_id || @object_id)}
   {#match nil}
     {@date_ago}
-  {#match date}
-    <span id={"date_ago_#{@parent_id}_#{@activity_id}_#{@object_id}"} data-date={date} :hook>{@date_ago || DatesTimes.relative_date(date)}</span>
+  {#match date_time}
+    {#case Settings.get([:ui, :date_time_format], :relative, @__context__)}
+      {#match :relative}
+        <span
+          id={"date_ago_#{@parent_id}_#{@activity_id}_#{@object_id}"}
+          data-date={date_time}
+          title={DatesTimes.format(date_time)}
+          :hook
+        >{@date_ago || DatesTimes.relative_date(date_time)}</span>
+      {#match format}
+        {#if format in DatesTimes.available_format_keys()}
+          <span title={@date_ago}>{DatesTimes.format(date_time, format: format)}</span>
+        {#else}
+          <span title={@date_ago}>{error(format, "invalid format in settings") && DatesTimes.format(date_time)}</span>
+        {/if}
+    {/case}
 {/case}
