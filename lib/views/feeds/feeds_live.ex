@@ -89,7 +89,7 @@ defmodule Bonfire.UI.Social.FeedsLive do
        page_header_icon: "carbon:home",
        feed: nil,
        page_info: nil,
-       no_header: true,
+       no_header: false,
        no_index: true,
        loading: true,
        feed_id: nil,
