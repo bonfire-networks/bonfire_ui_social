@@ -28,6 +28,7 @@ defmodule Bonfire.UI.Social.NotificationsFeedLive do
        page: "notifications",
        selected_tab: "notifications",
        #  without_sidebar: true,
+       back: true,
        page_header_icon: "carbon:notification",
        page_title: l("Notifications"),
        feedback_title: l("You have no notifications"),
