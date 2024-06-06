@@ -37,12 +37,12 @@
                   <button
                     x-on:click="content_open = ! content_open; $nextTick(() => { expandable = $refs.note && $refs.note.scrollHeight > $refs.note.clientHeight });"
                     x-text={"content_open ? '#{l("Show less")}' : '#{l("Show more")}'"}
-                    class="show_more_toggle_action ml-1 normal-case !border !border-base-content/30 btn-outline btn btn-xs"
+                    class="show_more_toggle_action ml-1 normal-case btn-outline btn btn-xs"
                   >
                     {l("Show more")}
                   </button>
                 {#else}
-                  <div class="ml-1 normal-case !border !border-base-content/30 btn-outline btn btn-xs">
+                  <div class="ml-1 normal-case btn-outline btn btn-xs">
                     {l("Show more")}
                   </div>
                 {/if}

@@ -49,12 +49,12 @@
     <span
       x-cloak
       x-show="!show_replies"
-      class="btn !border-base-content/30 text-base-content/70 btn-xs text-xs !h-[1.25rem] !min-h-[1.25rem] !w-[1.25rem] btn-circle btn-outline normal-case"
+      class="btn text-base-content/70 btn-xs text-xs !h-[1.25rem] !min-h-[1.25rem] !w-[1.25rem] btn-circle btn-outline normal-case"
     >+</span>
     <span
       x-cloak
       x-show="show_replies"
-      class="btn !border-base-content/30 text-base-content/70 btn-xs text-xs !h-[1.25rem] !min-h-[1.25rem] !w-[1.25rem] btn-circle btn-outline normal-case"
+      class="btn text-base-content/70 btn-xs text-xs !h-[1.25rem] !min-h-[1.25rem] !w-[1.25rem] btn-circle btn-outline normal-case"
     >-</span>
   </div>
   <div data-role="comment-activity" class="flex-1 w-full" x-data="{reply: false, show: true}">

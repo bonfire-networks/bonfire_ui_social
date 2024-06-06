@@ -344,7 +344,7 @@
                           {#match maybe_preview_img}
                             {#if is_image?(maybe_preview_img)}
                               <LazyImage
-                                class="border border-base-content/10 w-full !object-cover m-image h-full cursor-pointer aspect-video rounded-md"
+                                class="border-4 border-base-content/10 w-full !object-cover m-image h-full cursor-pointer aspect-video rounded-md"
                                 media={m}
                                 alt={media_label}
                                 src={maybe_preview_img}
@@ -418,7 +418,7 @@
                           <Bonfire.UI.Social.Activity.RemoteMediaLive media={m} />
 
                           {!-- <LazyImage
-                                  class="border border-base-content/10 w-full !object-cover m-image h-full cursor-pointer aspect-video rounded-md"
+                                  class="border-4 border-base-content/10 w-full !object-cover m-image h-full cursor-pointer aspect-video rounded-md"
                                   media={m}
                                   alt={media_label}
                                   src={Media.media_url(m)}
@@ -444,7 +444,7 @@
                               {#match maybe_preview_img}
                                 {!-- {#if is_image?(maybe_preview_img)} --}
                                 <LazyImage
-                                  class="border border-base-content/10 w-full !object-cover m-image h-full cursor-pointer aspect-video rounded-md"
+                                  class="border-4 border-base-content/10 w-full !object-cover m-image h-full cursor-pointer aspect-video rounded-md"
                                   media={m}
                                   alt={media_label}
                                   src={maybe_preview_img}
@@ -468,7 +468,7 @@
                           {#match maybe_preview_img}
                             {#if is_image?(maybe_preview_img)}
                               <LazyImage
-                                class="border border-base-content/10 w-full !object-cover m-image h-full cursor-pointer aspect-video rounded-md"
+                                class="border-4 border-base-content/10 w-full !object-cover m-image h-full cursor-pointer aspect-video rounded-md"
                                 media={m}
                                 alt={media_label}
                                 src={maybe_preview_img}
