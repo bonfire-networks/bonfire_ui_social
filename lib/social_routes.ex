@@ -9,10 +9,6 @@ defmodule Bonfire.UI.Social.Routes do
 
         live("/feed", FeedsLive, as: :feed)
         live("/feed/local", FeedsLive, :local, as: :feed)
-        # live("/local", Feeds.LocalLive, as: :local)
-        # live("/federation", Feeds.FederationLive, as: :federation)
-        # live("/federation/:type", Feeds.FederationLive, as: :federation)
-
         live("/discussion/:id", DiscussionLive, as: Needle.Pointer)
         live("/discussion/as/:id", DiscussionLive, as: Bonfire.Data.Social.APActivity)
         live("/discussion/:type/:id", DiscussionLive, as: Needle.Pointer)
