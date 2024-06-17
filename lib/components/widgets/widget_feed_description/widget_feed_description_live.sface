@@ -1,5 +1,5 @@
 <Bonfire.UI.Common.WidgetBlockLive>
-  <div class="p-3 pt-0">
+  <div class="">
     {#case @feed_name}
       {#match :my}
         <div class="flex items-center gap-2">
