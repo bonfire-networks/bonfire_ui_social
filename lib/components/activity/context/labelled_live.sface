@@ -1,6 +1,6 @@
-<div data-type={id(@label)} class="border mt-3 rounded-lg border-base-content/30">
+<div data-type={id(@label)} class="border mt-3 rounded-lg border-base-content/10 shadow-sm">
   <!-- :if={@showing_within not in [:group, :topic, :thread] and not is_nil(@label)} -->
-  <div class="bg-base-content/5  rounded-t-lg border-b border-base-content/30 flex items-center gap-3 py-2 p-3">
+  <div class="bg-base-content/5 rounded-t-lg border-b border-base-content/10 flex items-center gap-3 py-2 p-3">
     {#if id(@label) == "1ABE10VTDATEDGET1ATESTNEWS"}
       <#Icon iconify="ph:info-fill" class="w-5 h-5 text-info" />
     {#elseif id(@label) == "1ABE1M1S1NF0RMEDGETZEFACTS"}

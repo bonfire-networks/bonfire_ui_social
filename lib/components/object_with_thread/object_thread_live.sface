@@ -19,7 +19,7 @@
                 main_object_component_id={@main_object_component_id}
                 module={maybe_component(@custom_preview, @__context__)}
               />
-              </div>
+            </div>
           {#else}
             <Bonfire.UI.Social.ActivityLive
               class="rounded-none !shadow-none !px-4  main_object_in_thread !pt-0"

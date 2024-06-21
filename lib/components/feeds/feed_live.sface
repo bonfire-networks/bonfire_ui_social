@@ -107,7 +107,6 @@
         {!-- phx-update={e(@feed_update_mode, "append")} --}
         {#for {entry, i} <- Enum.with_index(@feed)}
           <div id={"f_#{@feed_id || @id}_a_#{i}"} :if={@hide_activities != "component"}>
-            
             <ActivityLive
               id={ActivityLive.component_id(
                 id(entry) || e(entry, :activity, :id, nil) || e(entry, :object, :id, nil) ||

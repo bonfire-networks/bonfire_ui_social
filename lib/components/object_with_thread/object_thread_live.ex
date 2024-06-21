@@ -18,6 +18,7 @@ defmodule Bonfire.UI.Social.ObjectThreadLive do
   prop activity_inception, :any, default: nil
 
   prop custom_preview, :any, default: nil
+
   # NOTE: the update callback will only run when this is being used as a stateful component (i.e. in some cases in preview component)
   def update(%{post_id: id} = assigns, %{assigns: %{object: %{id: previously_loaded}}} = socket)
       when is_binary(id) and id == previously_loaded do
