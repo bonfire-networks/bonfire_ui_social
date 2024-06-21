@@ -84,6 +84,7 @@
                 "s_activity_#{entry_id}"
               )}
               activity={get_activity(entry)}
+              custom_preview={e(@custom_preview, nil)}
               showing_within={@showing_within}
               verb_default={@verb_default}
               feed_name={@feed_name}
@@ -106,6 +107,7 @@
         {!-- phx-update={e(@feed_update_mode, "append")} --}
         {#for {entry, i} <- Enum.with_index(@feed)}
           <div id={"f_#{@feed_id || @id}_a_#{i}"} :if={@hide_activities != "component"}>
+            
             <ActivityLive
               id={ActivityLive.component_id(
                 id(entry) || e(entry, :activity, :id, nil) || e(entry, :object, :id, nil) ||
@@ -114,6 +116,7 @@
               )}
               activity={get_activity(entry)}
               showing_within={@showing_within}
+              custom_preview={e(@custom_preview, nil)}
               verb_default={@verb_default}
               feed_name={@feed_name}
               feed_id={@feed_id}

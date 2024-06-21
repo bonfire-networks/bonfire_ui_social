@@ -6,31 +6,35 @@
     {!-- INITIAL POST --}
 
     <div class="relative mt-4">
-      {!-- <Bonfire.UI.Social.ObjectHeaderAsideLive
-        page_title={@page_title}
-        participants={@participants || []}
-        thread_id={@thread_id}
-        activity={@activity}
-        showing_within={@showing_within || :thread}
-      /> --}
-      {!-- <Bonfire.UI.Common.BackButtonLive showing_within={@showing_within || :thread} /> --}
       <div id="thread_main_object">
         {#if is_nil(@activity) and is_nil(@object)}
           <div class="m-3 text-center p-8 rounded-lg border border-base-content/30 flex items-center place-content-center">{l("You cannot view this activity")}</div>
         {#else}
-          <Bonfire.UI.Social.ActivityLive
-            class="rounded-none !shadow-none !px-4  main_object_in_thread !pt-0"
-            id={@main_object_component_id}
-            showing_within={@showing_within}
-            thread_mode={@thread_mode}
-            thread_title={@thread_title}
-            viewing_main_object
-            activity={@activity}
-            object={@object}
-            feed_id={@feed_id}
-            activity_inception={@activity_inception}
-            object_boundary={if @showing_within == :messages, do: :skip_boundary_check}
-          />
+          {#if e(@custom_preview, nil)}
+            <div>
+              <StatelessComponent
+                thread_title={@thread_title}
+                activity={@activity}
+                object={@object}
+                main_object_component_id={@main_object_component_id}
+                module={maybe_component(@custom_preview, @__context__)}
+              />
+              </div>
+          {#else}
+            <Bonfire.UI.Social.ActivityLive
+              class="rounded-none !shadow-none !px-4  main_object_in_thread !pt-0"
+              id={@main_object_component_id}
+              showing_within={@showing_within}
+              thread_mode={@thread_mode}
+              thread_title={@thread_title}
+              viewing_main_object
+              activity={@activity}
+              object={@object}
+              feed_id={@feed_id}
+              activity_inception={@activity_inception}
+              object_boundary={if @showing_within == :messages, do: :skip_boundary_check}
+            />
+          {/if}
         {/if}
       </div>
       <div class="">

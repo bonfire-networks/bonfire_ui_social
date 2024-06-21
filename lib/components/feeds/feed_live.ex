@@ -62,6 +62,7 @@ defmodule Bonfire.UI.Social.FeedLive do
   prop hide_fresh, :integer, default: 0
   prop feed_count, :any, default: nil
   prop cute_gif, :any, default: nil
+  prop custom_preview, :any, default: nil
 
   slot bottom_or_empty_feed
 

@@ -60,6 +60,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
   prop peered, :any, default: nil
   prop hide_actions, :any, default: false
   prop activity_loaded_preloads, :list, default: []
+  prop custom_preview, :any, default: nil
 
   @decorate time()
   def update_many(assigns_sockets) do
@@ -492,6 +493,19 @@ defmodule Bonfire.UI.Social.ActivityLive do
         else: assigns
 
     ~F"""
+    <div id={@activity_component_id}>
+    {#if e(@custom_preview, nil)}
+      <div>
+      <StatelessComponent
+        permalink={e(@permalink, "")}
+        date_ago={@date_ago}
+        object={e(@object, nil)}
+        activity={e(@activity, nil)}
+        activity_component_id={@activity_component_id}
+        module={maybe_component(@custom_preview, @__context__)}
+      />
+      </div>
+    {#else}
     <article
       x-data="{content_open: false, show_actions: false}"
       x-init={"content_open = #{!@cw}; show_actions = #{if @hide_actions == "until_hovered", do: "('ontouchstart' in window) || (navigator.maxTouchPoints > 0) || (navigator.msMaxTouchPoints > 0)", else: true}"}
@@ -858,8 +872,10 @@ defmodule Bonfire.UI.Social.ActivityLive do
               />
           {/case}
         {/for}
-      {/if}
-    </article>
+        {/if}
+      </article>
+    {/if}
+    </div>
     """
   end
 
