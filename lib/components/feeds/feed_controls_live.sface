@@ -1,6 +1,6 @@
 <div x-data="{open: false}">
   <div
-    class="mx-3 flex justify-between items-center text-sm font-bold tracking-wide cursor-pointer"
+    class="flex justify-between items-center text-sm font-bold tracking-wide cursor-pointer"
     role="banner"
     @click="open = ! open"
   >
@@ -15,7 +15,7 @@
     x-transition
     x-cloak
     x-show="open"
-    class="flex p-3 flex-col divide-y divide-base-content/10 justify-between gap-3"
+    class="flex pt-3 flex-col divide-y divide-base-content/10 justify-between gap-3"
   >
     <div class="flex flex-col gap-2">
       <span class="font-medium text-sm text-base-content/80">{l("Included activities")}</span>

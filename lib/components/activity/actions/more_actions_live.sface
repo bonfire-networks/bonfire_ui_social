@@ -13,7 +13,7 @@
   </button>
   <ul
     tabindex="0"
-    class="tooltip z-[999999999999] menu shadow bg-base-100 shadow border border-base-content/10 rounded-lg p-0 w-64 absolute top-0 left-0 hidden"
+    class="tooltip z-[999999999999] menu shadow bg-base-100 shadow border border-base-content/10 rounded-lg p-0 w-60 absolute top-0 left-0 hidden"
     role="menu"
     aria-orientation="vertical"
     aria-labelledby="more-menu"
@@ -29,7 +29,7 @@
             with_icon
             with_label
             class="w-full"
-            open_btn_wrapper_class="flex items-center w-full gap-2 text-sm text-base-content/70 py-4 px-4"
+            open_btn_wrapper_class="flex items-center w-full gap-2 text-sm py-3 px-4"
           />
         {#else}
           <!-- 
@@ -52,7 +52,7 @@
         phx-hook="Copy"
         id={"more_action_copy_url_#{id(@activity)}_#{id(@object)}_#{@showing_within}"}
         href={URIs.canonical_url(@object)}
-        class="flex items-center gap-2 text-sm text-base-content/70"
+        class="flex items-center gap-2 text-sm text-base-content"
       >
         <#Icon iconify="ri:file-copy-line" class="w-4 h-4 shrink-0" />
         <span data-role="label">{l("Copy link")}</span>
@@ -87,7 +87,7 @@
             </button>
           </Field>
           <:open_btn>
-            <div class="flex items-center w-full gap-2 text-sm text-base-content/70">
+            <div class="flex items-center w-full gap-2 text-sm text-base-content">
               <#Icon iconify="subway:title" class="w-4 h-4 shrink-0" />
               {l("Edit discussion title")}
             </div>
@@ -106,7 +106,7 @@
               phx-value-id={id(@object) || id(@activity)}
               class="!flex items-center gap-2 text-base-content/70"
             >
-              <#Icon iconify="mdi:sprout" class="w-4 h-4 shrink-0 text-base-content/70" />
+              <#Icon iconify="mdi:sprout" class="w-4 h-4 shrink-0 text-base-content" />
               <span>{l("Get latest replies")}</span>
             </a>
           </li>
@@ -117,7 +117,7 @@
               phx-value-id={id(@object) || id(@activity)}
               class="!flex items-center gap-2 text-base-content/70"
             >
-              <#Icon iconify="clarity:tree-view-solid" class="w-4 h-4 shrink-0 text-base-content/70" />
+              <#Icon iconify="clarity:tree-view-solid" class="w-4 h-4 shrink-0 text-base-content" />
               <span>{l("Get latest activities in thread")}</span>
             </a>
           </li>
@@ -128,7 +128,7 @@
               rel="noopener noreferrer"
               class="!flex items-center gap-2 text-base-content/70"
             >
-              <#Icon solid="ExternalLink" class="w-4 h-4 shrink-0 text-base-content/70" />
+              <#Icon solid="ExternalLink" class="w-4 h-4 shrink-0 text-base-content" />
               <span>{l("View on the original instance")}</span>
             </a>
           </li>
@@ -209,7 +209,7 @@
       module_enabled?(Bonfire.UI.Moderation.FlagActionLive, @__context__)}>
       <details>
         <summary class="text-base-content/70">
-          <div class="flex items-center w-full gap-2 text-sm text-base-content/70">
+          <div class="flex items-center w-full gap-2 text-sm text-base-content">
             <#Icon solid="Flag" class="w-4 h-4 shrink-0" />
             <span class="truncate ellipsis">{l("Flag")}</span>
           </div>

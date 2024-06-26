@@ -6,7 +6,7 @@
       target="_blank"
       rel="noopener noreferrer"
       data-tip={l("Originates from a remote instance")}
-      class="mx-2 z-20 tooltip tooltip-bottom text-base-content/70"
+      class="z-20 tooltip tooltip-bottom opacity-70"
     >
       {#case Bonfire.Files.FaviconStore.favicon_url(link)}
         {#match nil}

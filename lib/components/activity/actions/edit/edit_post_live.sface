@@ -24,7 +24,7 @@
         |> Enum.with_index()}
       <div class="collapse collapse-arrow  border border-base-content/10 rounded-none">
         <input type="checkbox" phx-update="ignore">
-        <div class="collapse-title w-full flex items-center text-sm text-base-content/70 gap-1">
+        <div class="collapse-title w-full flex items-center text-sm text-base-content gap-1">
           <StatelessComponent
             module={maybe_component(Bonfire.UI.Me.ProfileItemLive, @__context__)}
             show_controls={[]}
@@ -95,8 +95,8 @@
     <#slot>
       <li :if={!@read_only}>
         <div class="flex items-center gap-2">
-          <#Icon iconify="ant-design:edit-filled" class="w-4 h-4 shrink-0 text-base-content/70" />
-          <div class="text-sm text-base-content/70">
+          <#Icon iconify="ant-design:edit-filled" class="w-4 h-4 shrink-0 text-base-content" />
+          <div class="text-sm text-base-content">
             {l("Edit")}
           </div>
         </div>
@@ -105,9 +105,9 @@
         <div class="flex items-center gap-2">
           <#Icon
             iconify="material-symbols:difference-outline-rounded"
-            class="w-4 h-4 shrink-0 text-base-content/70"
+            class="w-4 h-4 shrink-0 text-base-content"
           />
-          <div class="text-sm text-base-content/70">
+          <div class="text-sm text-base-content">
             {l("Version history")}
           </div>
         </div>
