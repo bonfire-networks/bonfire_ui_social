@@ -1,4 +1,4 @@
-<div class="flex px-3 items-center w-full justify-between border-b border-base-content/10">
+<div class="flex px-3 items-center w-full justify-between border-b border-base-content/10 pb-2">
   <div class="flex items-center min-w-fit	flex-1 gap-1">
     <span class="text-sm flex-shrink-0 text-base-content/70">{l("Order by:")}</span>
     <div phx-hook="Tooltip" id="order-dropdown" class="w-full flex flex-1">
