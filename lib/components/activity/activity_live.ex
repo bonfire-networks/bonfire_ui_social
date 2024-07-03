@@ -511,7 +511,6 @@ defmodule Bonfire.UI.Social.ActivityLive do
           x-init={"content_open = #{!@cw}; show_actions = #{if @hide_actions == "until_hovered", do: "('ontouchstart' in window) || (navigator.maxTouchPoints > 0) || (navigator.msMaxTouchPoints > 0)", else: true}"}
           x-on:mouseover={if @hide_actions == "until_hovered", do: "show_actions=true"}
           x-on:mouseover.away={if @hide_actions == "until_hovered", do: "show_actions=false"}
-          id={@activity_component_id}
           data-href={@permalink}
           data-url={e(@__context__, :current_url, nil) || ~c""}
           phx-hook={if !@viewing_main_object and

@@ -34,7 +34,7 @@
     <LinkLive
       :if={@profile_name}
       opts={"data-id": "subject_name", "aria-label": l("%{name}'s profile", name: @profile_name)}
-      class="link link-hover font-semibold text-sm max-w-[400px] truncate"
+      class="link link-hover  font-semibold text-sm lg:max-w-[360px] truncate"
       to={@path || "/user/#{@subject_id}"}
     >
       {@profile_name}
@@ -46,7 +46,7 @@
           "data-id": "subject_username",
           "aria-label": l("%{name}'s profile", name: @profile_name)
         }
-        class="text-sm font-light ml-1 truncate max-w-[200px] link link-hover ellipsis text-base-content/70 subject_username"
+        class="text-sm hidden lg:block font-light ml-1 truncate max-w-[80px] lg:max-w-[200px] link link-hover ellipsis text-base-content/70 subject_username"
         to={e(@subject_peered, :canonical_uri, nil) || @path}
       >
         @{@character_username}

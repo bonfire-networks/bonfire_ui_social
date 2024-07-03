@@ -37,7 +37,7 @@
 
         {!-- flat mode simple list (use for manually set assigns, like the clicked comment while the thread is loading) --}
         {#for reply <- @replies || []}
-          <div data-role="comment-list" class="reply flex relative w-full mx-auto pt-3">
+          <div data-role="comment-list" class="reply flex relative w-full mx-auto">
             <CommentLive
               comment={reply}
               thread_id={@thread_id}
@@ -75,7 +75,7 @@
           {!-- flat mode stream --}
           <div id={"stream_#{@id}"} phx-update="stream">
             {#for {entry_id, reply} <- @streams.replies}
-              <div id={entry_id} data-role="comment-flat" class="reply flex relative w-full mx-auto pt-3">
+              <div id={entry_id} data-role="comment-flat" class="reply flex relative w-full mx-auto">
                 <CommentLive
                   comment={reply}
                   thread_id={@thread_id}
