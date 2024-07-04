@@ -9,7 +9,7 @@
   {!-- phx-viewport-bottom={JS.add_class("!dropdown-top", to: "#more-menu-#{id(@activity_component_id || @activity)}")} --}
 
   <button tabindex="0" class="tooltip-button btn btn-ghost btn-circle btn-sm">
-    <#Icon solid="DotsVertical" class="w-[18px] h-[18px] md:w-4 md:h-4 text-base-content/70" />
+    <#Icon solid="DotsVertical" class="w-[18px] h-[18px] md:w-4 md:h-4" />
   </button>
   <ul
     tabindex="0"
@@ -37,7 +37,7 @@
       <div
             phx-click="open"
             phx-target={"#modal_boundary_#{id(@activity || @object)}"}
-            class="flex items-center w-full gap-2 text-sm text-base-content/70 px-4 py-2"
+            class="flex items-center w-full gap-2 text-sm  px-4 py-2"
           >
             <#Icon iconify="fluent:door-tag-20-filled" class="w-4 h-4 shrink-0" />
             {l("View boundaries")} 
@@ -99,26 +99,26 @@
         {#match nil}
         {#match false}
         {#match canonical_uri}
-          <li>
+          <li :if={@showing_within == :thread}>
             <a
               phx-click="Bonfire.Social.Feeds:fetch_replies"
               phx-target={"##{@activity_component_id}"}
               phx-value-id={id(@object) || id(@activity)}
-              class="!flex items-center gap-2 text-base-content/70"
+              class="!flex items-center gap-2"
             >
               <#Icon iconify="mdi:sprout" class="w-4 h-4 shrink-0 text-base-content" />
               <span>{l("Get latest replies")}</span>
             </a>
           </li>
-          <li>
+          <li :if={@showing_within == :thread}>
             <a
               phx-click="Bonfire.Social.Feeds:fetch_thread"
               phx-target={"##{@activity_component_id}"}
               phx-value-id={id(@object) || id(@activity)}
-              class="!flex items-center gap-2 text-base-content/70"
+              class="!flex items-center gap-2"
             >
               <#Icon iconify="clarity:tree-view-solid" class="w-4 h-4 shrink-0 text-base-content" />
-              <span>{l("Get latest activities in thread")}</span>
+              <span>{l("Get latest activities")}</span>
             </a>
           </li>
           <li :if={is_binary(canonical_uri)}>
@@ -126,10 +126,10 @@
               href={canonical_uri}
               target="_blank"
               rel="noopener noreferrer"
-              class="!flex items-center gap-2 text-base-content/70"
+              class="!flex items-center gap-2"
             >
               <#Icon solid="ExternalLink" class="w-4 h-4 shrink-0 text-base-content" />
-              <span>{l("View on the original instance")}</span>
+              <span>{l("View remotely")}</span>
             </a>
           </li>
       {/case}
@@ -184,7 +184,7 @@
                 data-id="unfollow"
                 :on-click="Bonfire.Social.Graph.Follows:unfollow"
                 phx-value-id={subject_id}
-                class="!flex items-center gap-2 text-base-content/70"
+                class="!flex items-center gap-2"
               >
                 <#Icon solid="UserRemove" class="w-4 h-4 shrink-0" />
                 <span class="truncate ellipsis">
@@ -208,7 +208,7 @@
     <li :if={current_user_id(@__context__) != @creator_id and @verb != "Flag" and
       module_enabled?(Bonfire.UI.Moderation.FlagActionLive, @__context__)}>
       <details>
-        <summary class="text-base-content/70">
+        <summary class="">
           <div class="flex items-center w-full gap-2 text-sm text-base-content">
             <#Icon solid="Flag" class="w-4 h-4 shrink-0" />
             <span class="truncate ellipsis">{l("Flag")}</span>

@@ -39,7 +39,7 @@
     >
       {@profile_name}
     </LinkLive>
-    <span data-id="subject_secondary" class="flex items-center gap-2">
+    <span data-id="subject_secondary" class="flex items-center gap-1">
       <LinkLive
         :if={@character_username}
         opts={

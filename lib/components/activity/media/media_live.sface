@@ -210,7 +210,7 @@
                                   modal_class={"", "w-[500px]": is_video?, "w-[390px] !bottom-2 !left-2": !is_video?}
                                   wrapper_class="h-full max-h-full !w-full md:w-10/12 max-w-[100%] bg-base-100 shadow-lg rounded-lg"
                                   open_btn_class="w-full"
-                                  open_btn_wrapper_class="w-full h-full"
+                                  open_btn_wrapper_class="w-full h-full flex place-content-center"
                                 >
                                   <div
                                     data-id="remote_media"
