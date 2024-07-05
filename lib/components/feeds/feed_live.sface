@@ -198,13 +198,13 @@
           {#else}
             <p class="text-sm font-medium text-base-content/70 text-center my-4">{l("That's all folks...")}</p>
           {/if}
+
+          <div :if={@bottom_or_empty_feed} class="mt-1 mb-2 text-center text-base-content">
+            <#slot {@bottom_or_empty_feed}>
+            </#slot>
+          </div>
         {/if}
       </:if_no_more>
     </Bonfire.UI.Common.LoadMoreLive>
-
-    <div :if={@bottom_or_empty_feed} class="mt-1 mb-2 text-center text-base-content">
-      <#slot {@bottom_or_empty_feed}>
-      </#slot>
-    </div>
   </div>
 </div>

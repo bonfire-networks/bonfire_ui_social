@@ -1678,11 +1678,13 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
                %{
                  object_type: object_type
                }},
-              pagination: input_to_atoms(params),
-              current_user: current_user(socket.assigns),
-              subject_user: user,
-              showing_within: type,
-              preload: preloads
+              [
+                pagination: input_to_atoms(params),
+                current_user: current_user(socket.assigns),
+                subject_user: user,
+                showing_within: type,
+                preload: preloads
+              ]
             ],
             current_user: current_user,
             fallback_return: []
@@ -1710,7 +1712,7 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
       maybe_apply(
         Bonfire.Social.Boosts,
         :list_by,
-        [user, pagination: input_to_atoms(params), current_user: current_user],
+        [user, [pagination: input_to_atoms(params), current_user: current_user]],
         current_user: current_user,
         fallback_return: []
       )
@@ -1750,10 +1752,12 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
             :feed,
             [
               feed_id,
-              pagination: input_to_atoms(params),
-              current_user: current_user(socket.assigns),
-              subject_user: user,
-              preload: preloads
+              [
+                pagination: input_to_atoms(params),
+                current_user: current_user(socket.assigns),
+                subject_user: user,
+                preload: preloads
+              ]
             ],
             current_user: current_user,
             fallback_return: []
@@ -1870,14 +1874,16 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
 
     feed =
       maybe_apply(
-        Feeds,
+        FeedActivities,
         :feed,
         [
           feed_id,
-          pagination: params,
-          exclude_feed_ids: e(params, :exclude_feed_ids, []),
-          current_user: current_user,
-          preload: preloads
+          [
+            pagination: params,
+            exclude_feed_ids: e(params, :exclude_feed_ids, []),
+            current_user: current_user,
+            preload: preloads
+          ]
         ],
         current_user: current_user,
         fallback_return: []

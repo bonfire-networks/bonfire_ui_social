@@ -82,14 +82,12 @@
                         <div>
                           {#case preview_img || e(m.metadata, "favicon", nil) ||
                               Bonfire.Files.FaviconStore.favicon_url(media_url)}
-                            {#match nil}
-                              <#Icon iconify="ion:newspaper-outline" class="w-8 h-8 text-base-content/70" />
-                            {#match preview_img}
+                            {#match preview_img when is_binary(preview_img)}
                               <div
                                 class="absolute inset-0 backdrop-blur-lg bg-white/30 z-50 rounded-l-lg"
                                 :if={@cw || Settings.get([Bonfire.UI.Social.Activity.MediaLive, :hide], false, @__context__)}
                               />
-                              {#case String.ends_with?(preview_img || "", ".ico")}
+                              {#case String.ends_with?(preview_img, ".ico")}
                                 {#match true}
                                   <LazyImage
                                     class="rounded-none object-cover rounded-l-lg  cursor-pointer m-image w-[36px] h-[36px]"
@@ -105,6 +103,8 @@
                                     fallback_icon="ion:newspaper-outline"
                                   />
                               {/case}
+                            {#match _}
+                              <#Icon iconify="ion:newspaper-outline" class="w-8 h-8 text-base-content/70" />
                           {/case}
                         </div>
                       </div>
