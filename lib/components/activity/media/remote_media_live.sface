@@ -11,24 +11,24 @@
               media={@media}
             />
           {#else}
-            {#case e(@media, :metadata, "facebook", "video:url", nil) ||
+            {#case e(@media, :metadata, "facebook", "video", nil) ||
                 e(@media, :metadata, "twitter", "player", nil) ||
                 e(@media, :metadata, "facebook", "video", nil)}
               {#match nil}
                 {#case e(@media, :metadata, "oembed", "html", nil)}
                   {#match nil}
                     {#if String.ends_with?(media_url, [".mp4", ".mkv"])}
-                      <video class={@video_css} controls autoplay>
+                      <video class={@video_css} controls>
                         <source src={media_url} type="video/mp4">
                         Your browser does not support the video tag.
                       </video>
-                    {#elseif String.ends_with?(media_url, [".ogg", ".ogv", ".ogx", ".ogm", ".spx", ".opus"])}
-                      <video class={@video_css} controls autoplay>
+                    {#elseif String.ends_with?(media_url, [".ogg", ".ogv", ".ogx", ".ogm", ".spx", ".mov", ".opus"])}
+                      <video class={@video_css} controls>
                         <source src={media_url} type="video/ogg">
                         Your browser does not support the video tag.
                       </video>
                     {#elseif String.ends_with?(media_url, ".webm")}
-                      <video class={@video_css} controls autoplay>
+                      <video class={@video_css} controls>
                         <source src={media_url} type="video/webm">
                         Your browser does not support the video tag.
                       </video>
@@ -56,7 +56,7 @@
                               </div>
                           {/case}
                         </div>
-                        <audio controls autoplay class={@default_css}>
+                        <audio controls class={@default_css}>
                           <source src={media_url} type={"audio/#{Bonfire.Files.file_extension_only(media_url) || "mp3"}"}>
                           Your browser does not support the audio tag.
                           {!-- <a href={media_url}> {l "Download audio"} </a> --}
@@ -72,18 +72,23 @@
                 {/case}
               {#match url}
                 {!-- TODO: url |> String.replace("youtube.com", "yewtu.be") --}
-                <iframe
-                  width={e(@media, :metadata, "facebook", "video:width", nil) ||
+                <!-- width={e(@media, :metadata, "facebook", "video:width", nil) ||
                     e(@media, :metadata, "other", "video_width", nil) || "800"}
                   height={e(@media, :metadata, "facebook", "video:height", nil) ||
-                    e(@media, :metadata, "other", "video_height", nil) || "500"}
-                  src={"#{url}?&autoplay=1"}
-                  frameborder="0"
-                  allow="accelerometer; encrypted-@media; gyroscope; picture-in-picture"
-                  allowfullscreen="allowfullscreen"
-                  class={if String.starts_with?(@media.media_type, ["video"]), do: @block_css, else: @default_css}
-                  style={if String.starts_with?(@media.media_type, ["video"]), do: "", else: ""}
-                />
+                    e(@media, :metadata, "other", "video_height", nil) || "500"} -->
+                <div class="aspect-video rounded-t-box">
+                  <iframe
+                    src={"#{e(url, :url, nil)}?&autoplay=1"}
+                    frameborder="0"
+                    width="100%"
+                    loading="lazy"
+                    height="100%"
+                    allow="accelerometer; encrypted-@media; gyroscope; picture-in-picture"
+                    allowfullscreen="allowfullscreen"
+                    picture-in-picture
+                    class={"rounded-t-box", @default_css}
+                  />
+                </div>
             {/case}
           {/if}
       {/case}

@@ -1,0 +1,89 @@
+<div class="flex w-full border rounded-lg media_container border-base-content/10">
+  <div class="flex justify-between w-full">
+    <div class="flex items-center gap-3 overflow-hidden">
+      <div
+        data-id="media_img"
+        class="relative items-center rounded-l-lg shrink-0 w-[120px] h-[120px] bg-base-content/10 place-content-center"
+      >
+        <div>
+          {#case MediaLive.preview_img(@media) || Media.media_url(@media)}
+            {#match maybe_preview_img}
+              {#if MediaLive.is_image?(maybe_preview_img)}
+                <LazyImage
+                  class="w-full rounded-l-lg !object-cover m-image"
+                  media={@media}
+                  alt={@media_label}
+                  src={maybe_preview_img}
+                  fallback_icon="majesticons:video"
+                />
+              {#else}
+                <div class="h-[120px] flex items-center place-content-center rounded-t-box">
+                  <#Icon iconify="majesticons:video" class="w-full h-12 text-base-content/70" />
+                </div>
+              {/if}
+          {/case}
+        </div>
+      </div>
+      <div class="px-2 w-full flex-1">
+        <div class="text-sm font-medium line-clamp-1">
+          {@media_label}
+        </div>
+
+        <div class="text-sm">
+          {e(@media, :metadata, "oembed", "author_name", nil)}
+          {#case e(@media, :metadata, "oembed", "published", "date-parts", nil)}
+            {#match published when is_list(published)}
+              <span class="text-base-content/70">{published |> List.flatten() |> Enum.join("-")}</span>
+            {#match _}
+          {/case}
+
+          {#case MediaLive.provider(@media)}
+            {#match nil}
+            {#match provider}
+              <span class="text-base-content/70">{provider}</span>
+          {/case}
+        </div>
+        <div class="max-w-[420px] text-sm mt-0.5 break-words line-clamp-2 text-base-content/70">{Bonfire.Files.Media.description(@media)}</div>
+      </div>
+    </div>
+    <div class="flex border-l border-base-content/10 justify-center items-center flex-col">
+      <div class="flex-col divide-base-content/10 z-50 flex justify-center items-center place-content-center">
+        <Bonfire.UI.Common.OpenModalLive
+          id={"media_modal_#{id(@media)}#{Text.random_string()}"}
+          reusable_modal_id="media_player_modal"
+          no_actions
+          title_text={@media_label}
+          title_class="font-bold text-base line-clamp-1 bg-secondary text-secondary-content p-2 max-w-[420px]"
+          no_backdrop
+          image_preview
+          enable_fallback={false}
+          modal_class={"", "max-w-[500px]": @is_video?, "w-[390px] !bottom-2 !left-2": !@is_video?}
+          wrapper_class="h-full max-h-full !w-full md:w-10/12 max-w-[100%] bg-base-100 shadow-lg rounded-lg"
+          open_btn_class="w-full"
+          open_btn_wrapper_class="w-full h-full"
+        >
+          <div
+            data-id="remote_media"
+            data-video={@is_video?}
+            class="h-full sticky bg-base-100 z-[9999999999999]"
+          >
+            <Bonfire.UI.Social.Activity.RemoteMediaLive media={@media} />
+          </div>
+
+          <:open_btn>
+            <button class="h-[60px] w-[60px] cursor-pointer hover:bg-base-content/10 flex place-content-center items-center">
+              <#Icon iconify="heroicons:play-20-solid" class="w-5 h-5 text-base-content/70" />
+            </button>
+          </:open_btn>
+        </Bonfire.UI.Common.OpenModalLive>
+        <a
+          href={Media.media_url(@media)}
+          class="border-t cursor-pointer hover:bg-base-content/10 flex-1 min-h-[60px] h-[60px] w-[60px] flex place-content-center items-center border-base-content/10"
+          target="_blank"
+        >
+          <#Icon iconify="heroicons-outline:external-link" class="w-5 h-5 text-base-content/70" />
+        </a>
+      </div>
+    </div>
+  </div>
+</div>

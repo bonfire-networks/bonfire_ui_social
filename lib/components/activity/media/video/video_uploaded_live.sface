@@ -1,0 +1,72 @@
+<div class="rounded-box border border-base-content/10 h-full text-center items-center justify-center">
+  <div class="relative rounded-t-box bg-base-100">
+    <Bonfire.UI.Social.Activity.RemoteMediaLive media={@media} />
+
+    <!-- {#case MediaLive.preview_img(@media) || Media.media_url(@media)}
+      {#match maybe_preview_img}
+        {#if MediaLive.is_image?(maybe_preview_img)}
+          <LazyImage
+            class="w-full rounded-t-box !object-cover m-image cursor-pointer aspect-video"
+            media={@media}
+            alt={@media_label}
+            src={maybe_preview_img}
+            fallback_icon="majesticons:video"
+          />
+        {#else}
+          <div class="h-60 flex items-center place-content-center rounded-t-box">
+            <#Icon iconify="majesticons:video" class="w-full h-32 text-base-content/70" />
+          </div>
+        {/if}
+    {/case} -->
+    {!-- PLAY OR FOLLOW LINK --}
+
+    <!-- <div class="absolute flex justify-center items-center inset-0">
+      <div class="bg-gray-900/60 z-50 gap-4 px-3 py-2 rounded flex justify-center items-center place-content-center">
+        <Bonfire.UI.Common.OpenModalLive
+          id={"media_modal_#{id(@media)}#{Text.random_string()}"}
+          reusable_modal_id="media_player_modal"
+          no_actions
+          title_text={@media_label}
+          title_class="font-bold text-base line-clamp-1 bg-secondary text-secondary-content p-2 max-w-[420px] truncate ellipsis overflow-hidden"
+          no_backdrop
+          image_preview
+          enable_fallback={false}
+          modal_class={"", "max-w-[500px]": @is_video?, "w-[390px] !bottom-2 !left-2": !@is_video?}
+          wrapper_class="h-full max-h-full !w-full md:w-10/12 max-w-[100%] bg-base-100 shadow-lg rounded-lg"
+          open_btn_class="w-full"
+          open_btn_wrapper_class="w-full h-full flex place-content-center"
+        >
+          <div
+            data-id="remote_media"
+            data-video={@is_video?}
+            class="h-full sticky bg-base-100 z-[9999999999999]"
+          >
+            <Bonfire.UI.Social.Activity.RemoteMediaLive media={@media} />
+          </div>
+
+          <:open_btn>
+            <button class="">
+              <#Icon iconify="heroicons:play-20-solid" class="w-6 h-6 text-gray-200" />
+            </button>
+          </:open_btn>
+        </Bonfire.UI.Common.OpenModalLive>
+
+        <a href={Media.media_url(@media)} target="_blank">
+          <#Icon iconify="heroicons-outline:external-link" class="w-6 h-6 text-gray-200" />
+        </a>
+      </div>
+    </div> -->
+  </div>
+
+  <div class="">
+    <!-- <div class="p-4 flex flex-col gap-2">
+      {#case MediaLive.provider(@media)}
+            {#match nil}
+            {#match provider}
+        <span class="text-sm text-left text-base-content/70">{provider}</span>
+      {/case}
+      <div class="font-semibold text-left">{@media_label}</div>
+    </div> -->
+  </div>
+  <figcaption class="sr-only">{@media_label}</figcaption>
+</div>
