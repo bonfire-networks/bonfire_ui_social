@@ -32,7 +32,6 @@
             {#match preview_img}
               {#case e(m.metadata, "oembed", "download_url", nil) || e(m.metadata, "download_url", nil)}
                 {#match download_url}
-
                   <Bonfire.UI.Social.Activity.LinkLive
                     cw={@cw}
                     media_url={media_url}
@@ -40,7 +39,6 @@
                     download_url={download_url}
                     preview_img={preview_img}
                   />
-
               {/case}
           {/case}
         {/if}
