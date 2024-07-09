@@ -7,7 +7,7 @@
         id={:widget_discussion_feed}
         feed_name={@feed_name}
         feed={feed}
-        custom_preview={maybe_component(Bones.PreviewLive)}
+        custom_preview={maybe_component(Bonfire.UI.Social.Activity.PreviewLive)}
         {...feed_assigns}
       />
     </Bonfire.UI.Common.WidgetBlockLive>

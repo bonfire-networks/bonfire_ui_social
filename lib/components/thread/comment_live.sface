@@ -34,7 +34,7 @@
     }
   >
     <div class={
-      "absolute left-0 cursor-pointer inset-0 border-l bottom-0 border-base-300 z-30",
+      "absolute left-0 cursor-pointer inset-0 border-l bottom-0 border-gray-500 z-30",
       "!-left-[3px]": Settings.get([Bonfire.UI.Common.AvatarLive, :hide_avatars], false, @__context__)
     } />
   </div>

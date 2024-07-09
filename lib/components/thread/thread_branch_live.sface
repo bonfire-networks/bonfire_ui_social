@@ -11,7 +11,7 @@
   <div
     :if={@thread_level > 1 && @thread_mode != :flat}
     class={
-      "absolute top-[-14px] left-[-1px] w-8 h-8 border rounded-bl-xl border-base-300 border-t-0 border-r-0",
+      "absolute top-[-14px] left-[-1px] w-8 h-8 border rounded-bl-xl border-gray-500 border-t-0 border-r-0",
       "!left-[-14px] !top-[-16px]": @__context__[:ui_compact]
     }
   />
@@ -27,7 +27,7 @@
       }
     >
       <div class={
-        "absolute left-0 cursor-pointer inset-0 border-l bottom-0 border-base-300 z-30",
+        "absolute left-0 cursor-pointer inset-0 border-l bottom-0 border-gray-500 z-30",
         "!-left-[3px]": Settings.get([Bonfire.UI.Common.AvatarLive, :hide_avatars], false, @__context__)
       } />
     </div>
