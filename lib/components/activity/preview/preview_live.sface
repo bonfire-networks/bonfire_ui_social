@@ -1,14 +1,22 @@
-<article class="flex py-3">
+<div class="previewable_activity flex py-3">
   <!-- <img src={e(@object, :post_content, :media, [])} class="w-[160px] h-[160px] rounded-lg"> -->
 
   <div class="flex flex-col gap-1">
-    <LinkLive class="font-semibold link link-hover" to={@permalink}>
-      {e(@object, :post_content, :name, "No Title")}
-    </LinkLive>
+    {#case e(@object, :post_content, :name, nil) || e(@object, :post_content, :summary, nil)}
+      {#match nil}
+      {#match title}
+        <LinkLive class="font-semibold link link-hover" to={@permalink}>
+          {title}
+        </LinkLive>
+    {/case}
 
-    <div class="prose prose-sm line-clamp-3 prose-sm">
-      {rich(e(@object, :post_content, :html_body, "No description"))}
-    </div>
+    {#case e(@object, :post_content, :html_body, nil)}
+      {#match nil}
+      {#match html_body}
+        <div class="prose prose-sm line-clamp-3 prose-sm">
+          {rich(html_body)}
+        </div>
+    {/case}
 
     <div class="flex items-center gap-4">
       <StatelessComponent
@@ -46,4 +54,4 @@
       </div>
     </div>
   </div>
-</article>
+</div>

@@ -493,122 +493,120 @@ defmodule Bonfire.UI.Social.ActivityLive do
         else: assigns
 
     ~F"""
-    <div id={@activity_component_id}>
-      {#if e(@custom_preview, nil)}
-        <div>
-          <StatelessComponent
-            permalink={e(@permalink, "")}
-            date_ago={@date_ago}
-            object={e(@object, nil)}
-            activity={e(@activity, nil)}
-            activity_component_id={@activity_component_id}
-            module={maybe_component(@custom_preview, @__context__)}
-          />
-        </div>
+    <article
+      id={@activity_component_id}
+      x-data="{content_open: false, show_actions: false}"
+      x-init={"content_open = #{!@cw}; show_actions = #{if @hide_actions == "until_hovered", do: "('ontouchstart' in window) || (navigator.maxTouchPoints > 0) || (navigator.msMaxTouchPoints > 0)", else: true}"}
+      x-on:mouseover={if @hide_actions == "until_hovered", do: "show_actions=true"}
+      x-on:mouseover.away={if @hide_actions == "until_hovered", do: "show_actions=false"}
+      data-href={@permalink}
+      data-url={e(@__context__, :current_url, nil) || ~c""}
+      phx-hook={if !@viewing_main_object and
+           @showing_within not in [:thread, :smart_input, :widget],
+         do: "Bonfire.UI.Common.PreviewContentLive#PreviewActivity"}
+      role="article"
+      data-id="activity"
+      data-rendered={@showing_within}
+      data-avatar-hidden={Settings.get([Bonfire.UI.Common.AvatarLive, :hide_avatars], false, @__context__)}
+      data-hidden={@hide_activity}
+      data-compact={@__context__[:ui_compact]}
+      aria-label="user activity"
+      tabIndex="0"
+      class={
+        "p-5 pl-[4rem] activity relative flex flex-col #{@class}",
+        "replied !p-0 mb-8": @activity_inception && @showing_within not in [:smart_input, :thread],
+        "unread-activity":
+          e(@activity, :seen, nil) == nil and @showing_within == :notifications and
+            @activity_inception == nil,
+        "active-activity":
+          String.contains?(@current_url || "", @permalink || "") and
+            @showing_within != :smart_input and @viewing_main_object == false
+      }
+    >
+      {#if @custom_preview}
+        <StatelessComponent
+          permalink="@permalink}"
+          date_ago={@date_ago}
+          object={@object}
+          activity={@activity}
+          activity_component_id={@activity_component_id}
+          module={maybe_component(@custom_preview, @__context__)}
+        />
       {#else}
-        <article
-          x-data="{content_open: false, show_actions: false}"
-          x-init={"content_open = #{!@cw}; show_actions = #{if @hide_actions == "until_hovered", do: "('ontouchstart' in window) || (navigator.maxTouchPoints > 0) || (navigator.msMaxTouchPoints > 0)", else: true}"}
-          x-on:mouseover={if @hide_actions == "until_hovered", do: "show_actions=true"}
-          x-on:mouseover.away={if @hide_actions == "until_hovered", do: "show_actions=false"}
-          data-href={@permalink}
-          data-url={e(@__context__, :current_url, nil) || ~c""}
-          phx-hook={if !@viewing_main_object and
-               @showing_within not in [:thread, :smart_input, :widget],
-             do: "Bonfire.UI.Common.PreviewContentLive#PreviewActivity"}
-          role="article"
-          data-id="activity"
-          data-rendered={@showing_within}
-          data-avatar-hidden={Settings.get([Bonfire.UI.Common.AvatarLive, :hide_avatars], false, @__context__)}
-          data-hidden={@hide_activity}
-          data-compact={@__context__[:ui_compact]}
-          aria-label="user activity"
-          tabIndex="0"
-          class={
-            "p-5 pl-[4rem] activity relative flex flex-col #{@class}",
-            "replied !p-0 mb-8": @activity_inception && @showing_within not in [:smart_input, :thread],
-            "unread-activity":
-              e(@activity, :seen, nil) == nil and @showing_within == :notifications and
-                @activity_inception == nil,
-            "active-activity":
-              String.contains?(@current_url || "", @permalink || "") and
-                @showing_within != :smart_input and @viewing_main_object == false
-          }
-        >
-          {#if @hide_activity != "all"}
-            {#if current_user_id(@__context__) && @showing_within != :smart_input}
-              {#case not is_nil(@thread_id) and @thread_id == (id(@object) || id(@activity))}
-                {#match top_of_thread?}
-                  {#case not is_nil(@thread_id) and @thread_id == e(@reply_to, :object, :id, nil)}
-                    {#match reply_to_top_of_thread?}
-                      {!-- TODO: make the list of preview paths/components/views configurable/hookable, and derive the view from object_type? and compute object_type not just based on schema, but also with some logic looking at fields (eg. action=="work") --}
-                      {#if String.starts_with?(@permalink || "", ["/post/", "/discussion/"])}
-                        <Bonfire.UI.Common.OpenPreviewLive
-                          href={@permalink || path(@object)}
-                          parent_id={@parent_id}
-                          open_btn_text=""
-                          title_text={@thread_title || e(@object, :name, nil) || e(@object, :post_content, :name, nil) ||
-                            l("Discussion")}
-                          modal_assigns={
-                            post_id:
-                              if(
-                                @object_type == :post or
-                                  String.starts_with?(@permalink || "", ["/post/"]),
-                                do: @thread_id || id(@object)
-                              ),
-                            thread_id: @thread_id,
-                            object_id: @thread_id || id(@object),
-                            current_url: @permalink,
-                            show: true,
-                            hide_actions: false,
-                            cw: false,
-                            label: "",
-                            object:
-                              cond do
-                                top_of_thread? -> @object
-                                reply_to_top_of_thread? -> e(@reply_to, :object, nil)
-                                true -> nil
-                              end,
-                            activity:
-                              cond do
-                                top_of_thread? -> @activity
-                                reply_to_top_of_thread? -> e(@reply_to, :activity, nil)
-                                true -> nil
-                              end,
-                            replies:
-                              cond do
-                                top_of_thread? ->
-                                  nil
+        {#if @hide_activity != "all"}
+          {#if current_user_id(@__context__) && @showing_within != :smart_input}
+            {#case not is_nil(@thread_id) and @thread_id == (id(@object) || id(@activity))}
+              {#match top_of_thread?}
+                {#case not is_nil(@thread_id) and @thread_id == e(@reply_to, :object, :id, nil)}
+                  {#match reply_to_top_of_thread?}
+                    {!-- TODO: make the list of preview paths/components/views configurable/hookable, and derive the view from object_type? and compute object_type not just based on schema, but also with some logic looking at fields (eg. action=="work") --}
+                    {#if String.starts_with?(@permalink || "", ["/post/", "/discussion/"])}
+                      <Bonfire.UI.Common.OpenPreviewLive
+                        href={@permalink || path(@object)}
+                        parent_id={@parent_id}
+                        open_btn_text=""
+                        title_text={@thread_title || e(@object, :name, nil) || e(@object, :post_content, :name, nil) ||
+                          l("Discussion")}
+                        modal_assigns={
+                          post_id:
+                            if(
+                              @object_type == :post or
+                                String.starts_with?(@permalink || "", ["/post/"]),
+                              do: @thread_id || id(@object)
+                            ),
+                          thread_id: @thread_id,
+                          object_id: @thread_id || id(@object),
+                          current_url: @permalink,
+                          show: true,
+                          hide_actions: false,
+                          cw: false,
+                          label: "",
+                          object:
+                            cond do
+                              top_of_thread? -> @object
+                              reply_to_top_of_thread? -> e(@reply_to, :object, nil)
+                              true -> nil
+                            end,
+                          activity:
+                            cond do
+                              top_of_thread? -> @activity
+                              reply_to_top_of_thread? -> e(@reply_to, :activity, nil)
+                              true -> nil
+                            end,
+                          replies:
+                            cond do
+                              top_of_thread? ->
+                                nil
 
-                                reply_to_top_of_thread? ->
-                                  [%{id: "preview-comment", activity: Map.put(@activity, :object, @object)}]
+                              reply_to_top_of_thread? ->
+                                [%{id: "preview-comment", activity: Map.put(@activity, :object, @object)}]
 
-                                true ->
-                                  [
-                                    %{
-                                      id: "preview-comment-reply_to",
-                                      activity: Map.put(e(@reply_to, :activity, %{}), :object, e(@reply_to, :object, nil)),
-                                      replies: [
-                                        %{
-                                          id: "preview-comment-reply",
-                                          activity: Map.put(@activity || %{}, :object, @object)
-                                        }
-                                      ]
-                                    }
-                                  ]
-                              end,
-                            preview_component: Bonfire.UI.Social.ObjectThreadLive,
-                            preview_component_stateful?: !top_of_thread? and !reply_to_top_of_thread?,
-                            activity_inception: "preview",
-                            showing_within: :thread,
-                            check_object_boundary: !top_of_thread? and !reply_to_top_of_thread?
-                          }
-                          root_assigns={
-                            page_title: l("Discussion")
-                          }
-                        />
-                      {#elseif String.starts_with?(@permalink || "", ["/@", "/profile/", "/user"])}
-                        {!-- <Bonfire.UI.Common.OpenPreviewLive
+                              true ->
+                                [
+                                  %{
+                                    id: "preview-comment-reply_to",
+                                    activity: Map.put(e(@reply_to, :activity, %{}), :object, e(@reply_to, :object, nil)),
+                                    replies: [
+                                      %{
+                                        id: "preview-comment-reply",
+                                        activity: Map.put(@activity || %{}, :object, @object)
+                                      }
+                                    ]
+                                  }
+                                ]
+                            end,
+                          preview_component: Bonfire.UI.Social.ObjectThreadLive,
+                          preview_component_stateful?: !top_of_thread? and !reply_to_top_of_thread?,
+                          activity_inception: "preview",
+                          showing_within: :thread,
+                          check_object_boundary: !top_of_thread? and !reply_to_top_of_thread?
+                        }
+                        root_assigns={
+                          page_title: l("Discussion")
+                        }
+                      />
+                    {#elseif String.starts_with?(@permalink || "", ["/@", "/profile/", "/user"])}
+                      {!-- <Bonfire.UI.Common.OpenPreviewLive
               href={@permalink}
               parent_id={@parent_id}
               open_btn_text={l("View profile")}
@@ -624,256 +622,255 @@ defmodule Bonfire.UI.Social.ActivityLive do
               }
             />
              --}
-                      {#elseif String.starts_with?(@permalink || "", ["/coordination/task/"]) and
-                          module_enabled?(Bonfire.UI.Coordination.TaskLive)}
-                        <Bonfire.UI.Common.OpenPreviewLive
-                          href={@permalink}
-                          parent_id={@parent_id}
-                          open_btn_text={l("View task")}
-                          title_text={e(@object, :name, nil) || l("Task")}
-                          modal_assigns={
-                            id: @thread_id || id(@object),
-                            current_url: @permalink,
-                            preview_view: Bonfire.UI.Coordination.TaskLive,
-                            activity_inception: "preview",
-                            check_object_boundary: false
-                          }
-                          root_assigns={
-                            page_title: l("Task")
-                          }
-                        />
-                      {/if}
-                  {/case}
-              {/case}
-            {/if}
-
-            <form
-              :if={!id(e(@activity, :seen, nil)) and not is_nil(@feed_id) and
-                @showing_within in [:messages, :thread, :notifications] and
-                e(@activity, :subject, :id, nil) != current_user_id(@__context__) and
-                e(@object, :created, :creator_id, nil) != current_user_id(@__context__) and
-                e(@object, :created, :creator_id, nil) != current_user_id(@__context__)}
-              phx-submit="Bonfire.Social.Feeds:mark_seen"
-              phx-target={"#badge_counter_#{@feed_id || "missing_feed_id"}"}
-              x-intersect.once="$el.dispatchEvent(new Event('submit', {bubbles: true, cancelable: true})); $el.parentNode.classList.remove('unread-activity');"
-            >
-              <input type="hidden" name="feed_id" value={@feed_id}>
-              <input type="hidden" name="activity_id" value={@activity_id}>
-            </form>
-
-            <Bonfire.UI.Social.Activity.PublishedInLive
-              :if={@published_in && @showing_within != :smart_input}
-              context={@published_in}
-              showing_within={@showing_within}
-            />
-
-            {#for {component, component_assigns} when is_atom(component) <-
-                activity_components(
-                  @activity,
-                  @verb,
-                  @object,
-                  @object_type,
-                  @activity_inception,
-                  @showing_within,
-                  @viewing_main_object,
-                  @thread_mode,
-                  @thread_id,
-                  @thread_title,
-                  @activity_component_id,
-                  @subject_user,
-                  @reply_to
-                ) || []}
-              {#case component}
-                {#match :html}
-                  {raw(component_assigns)}
-                {#match _
-                  when component in [
-                         Bonfire.UI.Social.Activity.SubjectLive,
-                         Bonfire.UI.Social.Activity.SubjectMinimalLive,
-                         Bonfire.UI.Social.Activity.NoSubjectLive
-                       ]}
-                  <StatelessComponent
-                    :if={@hide_activity != "subject"}
-                    module={component}
-                    path={case e(component_assigns, :character, nil) do
-                      nil -> nil
-                      character -> path(character)
-                    end}
-                    profile_media={Media.avatar_url(e(component_assigns, :profile, nil))}
-                    profile_name={e(component_assigns, :profile, :name, nil)}
-                    character_username={e(component_assigns, :character, :username, nil)}
-                    activity_id={id(e(component_assigns, :activity, nil) || @activity)}
-                    object_id={id(e(component_assigns, :object, nil) || @object)}
-                    subject_id={e(component_assigns, :subject_id, nil) || e(component_assigns, :profile, :id, nil)}
-                    object_boundary={@object_boundary}
-                    object_type={e(component_assigns, :object_type, @object_type)}
-                    date_ago={e(component_assigns, :date_ago, @date_ago)}
-                    permalink={e(component_assigns, :permalink, @permalink)}
-                    viewing_main_object={e(component_assigns, :viewing_main_object, @viewing_main_object)}
-                    activity_component_id={e(component_assigns, :activity_component_id, @activity_component_id)}
-                    activity_inception={e(component_assigns, :activity_inception, @activity_inception)}
-                    showing_within={@showing_within}
-                    parent_id={@parent_id}
-                    thread_id={@thread_id}
-                    published_in={@published_in}
-                    verb={e(component_assigns, :verb, @verb)}
-                    verb_display={e(component_assigns, :verb_display, @verb_display)}
-                    reply_to_id={e(@activity, :replied, :reply_to_id, nil)}
-                    subject_peered={e(@activity, :subject, :character, :peered, nil)}
-                    peered={@peered}
-                    is_remote={@is_remote}
-                    thread_title={e(component_assigns, :thread_title, @thread_title)}
-                    subject_user={@subject_user}
-                  />
-                {#match Bonfire.UI.Social.Activity.NoteLive}
-                  <Bonfire.UI.Social.Activity.NoteLive
-                    :if={@hide_activity != "note"}
-                    showing_within={@showing_within}
-                    activity_inception={@activity_inception}
-                    activity={e(component_assigns, :activity, @activity)}
-                    object={e(component_assigns, :object, @object)}
-                    viewing_main_object={e(component_assigns, :viewing_main_object, @viewing_main_object)}
-                    cw={@cw}
-                    thread_title={@thread_title}
-                    is_remote={@is_remote}
-                    hide_actions={@hide_actions}
-                  />
-                {#match _
-                  when component in [
-                         Bonfire.UI.Social.Activity.UnknownLive,
-                         Bonfire.UI.Social.Activity.UnknownActivityStreamsLive,
-                         Bonfire.UI.Social.Activity.AudioActivityStreamsLive,
-                         Bonfire.UI.Social.Activity.VideoActivityStreamsLive
-                       ]}
-                  <StatelessComponent
-                    module={component}
-                    __context__={@__context__}
-                    showing_within={@showing_within}
-                    viewing_main_object={e(component_assigns, :viewing_main_object, @viewing_main_object)}
-                    activity={e(component_assigns, :activity, @activity)}
-                    object={e(component_assigns, :object, @object)}
-                    object_type={e(component_assigns, :object_type, @object_type)}
-                    object_type_readable={e(component_assigns, :object_type_readable, @object_type_readable)}
-                    json={e(component_assigns, :json, nil)}
-                  />
-                {#match Bonfire.UI.Social.Activity.MediaSkeletonLive}
-                  <Bonfire.UI.Social.Activity.MediaSkeletonLive
-                    __context__={@__context__}
-                    showing_within={@showing_within}
-                    activity_inception={@activity_inception}
-                    viewing_main_object={@viewing_main_object}
-                    {...component_assigns || []}
-                  />
-                {#match Bonfire.UI.Social.Activity.MediaLive}
-                  <Bonfire.UI.Social.Activity.MediaLive
-                    :if={@hide_activity != "media"}
-                    __context__={@__context__}
-                    parent_id={@parent_id}
-                    activity_inception={@activity_inception}
-                    showing_within={e(component_assigns, :showing_within, @showing_within)}
-                    viewing_main_object={e(component_assigns, :viewing_main_object, @viewing_main_object)}
-                    media={e(component_assigns, :media, [])}
-                    cw={@cw}
-                  />
-                {#match _
-                  when component in [
-                         Bonfire.UI.Social.Activity.ActionsLive,
-                         Bonfire.UI.Moderation.FlaggedActionsLive
-                       ]}
-                  {#if @hide_activity != "actions" and @hide_actions != true}
-                    {#if socket_connected?(@__context__) && LiveHandler.feed_live_update_many_preloads?() == :async_actions}
-                      <StatefulComponent
-                        id={"#{@activity_component_id}_actions"}
-                        module={component}
-                        __context__={@__context__}
-                        showing_within={@showing_within}
-                        feed_name={@feed_name}
-                        thread_mode={@thread_mode}
-                        activity={e(component_assigns, :activity, @activity)}
-                        object={e(component_assigns, :object, @object)}
-                        object_boundary={@object_boundary}
-                        object_type={e(component_assigns, :object_type, @object_type)}
-                        object_type_readable={e(component_assigns, :object_type_readable, @object_type_readable)}
-                        verb={e(component_assigns, :verb, @verb)}
-                        thread_id={@thread_id}
-                        thread_title={e(component_assigns, :thread_title, @thread_title)}
-                        permalink={e(component_assigns, :permalink, @permalink)}
-                        viewing_main_object={e(component_assigns, :viewing_main_object, @viewing_main_object)}
-                        activity_component_id={e(component_assigns, :activity_component_id, @activity_component_id)}
+                    {#elseif String.starts_with?(@permalink || "", ["/coordination/task/"]) and
+                        module_enabled?(Bonfire.UI.Coordination.TaskLive)}
+                      <Bonfire.UI.Common.OpenPreviewLive
+                        href={@permalink}
                         parent_id={@parent_id}
-                        published_in={@published_in}
-                        labelled={@labelled}
-                        reply_count={@reply_count}
-                        is_remote={@is_remote}
-                        hide_actions={@hide_actions}
-                      />
-                    {#else}
-                      <StatelessComponent
-                        module={component}
-                        myself={@myself}
-                        __context__={@__context__}
-                        showing_within={@showing_within}
-                        thread_mode={@thread_mode}
-                        activity={e(component_assigns, :activity, @activity)}
-                        object={e(component_assigns, :object, @object)}
-                        object_boundary={@object_boundary}
-                        object_type={e(component_assigns, :object_type, @object_type)}
-                        object_type_readable={e(component_assigns, :object_type_readable, @object_type_readable)}
-                        verb={e(component_assigns, :verb, @verb)}
-                        thread_id={@thread_id}
-                        thread_title={e(component_assigns, :thread_title, @thread_title)}
-                        permalink={e(component_assigns, :permalink, @permalink)}
-                        viewing_main_object={e(component_assigns, :viewing_main_object, @viewing_main_object)}
-                        activity_component_id={e(component_assigns, :activity_component_id, @activity_component_id)}
-                        parent_id={@parent_id}
-                        published_in={@published_in}
-                        labelled={@labelled}
-                        reply_count={@reply_count}
-                        is_remote={@is_remote}
-                        hide_actions={@hide_actions}
+                        open_btn_text={l("View task")}
+                        title_text={e(@object, :name, nil) || l("Task")}
+                        modal_assigns={
+                          id: @thread_id || id(@object),
+                          current_url: @permalink,
+                          preview_view: Bonfire.UI.Coordination.TaskLive,
+                          activity_inception: "preview",
+                          check_object_boundary: false
+                        }
+                        root_assigns={
+                          page_title: l("Task")
+                        }
                       />
                     {/if}
-                  {/if}
-                {#match _}
-                  <StatelessComponent
-                    :if={@hide_activity != "dynamic" && @showing_within != :notifications}
-                    module={component}
-                    activity_component_id={e(component_assigns, :id, nil)}
-                    activity_prepared={:defer_to_render}
-                    activity_inception={e(component_assigns, :activity_inception, @activity_inception)}
-                    myself={nil}
-                    created_verb_display={@created_verb_display}
-                    showing_within={@showing_within}
-                    thread_mode={debug(@thread_mode, "thread_modessss")}
-                    activity={e(component_assigns, :activity, @activity)}
-                    object={e(component_assigns, :object, @object)}
-                    object_id={e(component_assigns, :object_id, @object_id)}
-                    object_boundary={@object_boundary}
-                    object_type={e(component_assigns, :object_type, @object_type)}
-                    object_type_readable={e(component_assigns, :object_type_readable, @object_type_readable)}
-                    date_ago={e(component_assigns, :date_ago, @date_ago)}
-                    verb={e(component_assigns, :verb, @verb)}
-                    verb_display={e(component_assigns, :verb_display, @verb_display)}
-                    permalink={e(component_assigns, :permalink, @permalink)}
-                    thread_url={@thread_url}
-                    thread_id={@thread_id}
-                    viewing_main_object={e(component_assigns, :viewing_main_object, @viewing_main_object)}
-                    show_minimal_subject_and_note={e(component_assigns, :show_minimal_subject_and_note, @show_minimal_subject_and_note)}
-                    hide_reply={e(component_assigns, :hide_reply, @hide_reply)}
-                    profile={e(component_assigns, :profile, nil)}
-                    character={e(component_assigns, :character, nil)}
-                    media={e(component_assigns, :media, nil)}
-                    json={e(component_assigns, :json, nil)}
-                    label={e(component_assigns, :label, nil)}
-                    to={e(component_assigns, :to, nil)}
-                    is_remote={@is_remote}
-                  />
-              {/case}
-            {/for}
+                {/case}
+            {/case}
           {/if}
-        </article>
+
+          <form
+            :if={!id(e(@activity, :seen, nil)) and not is_nil(@feed_id) and
+              @showing_within in [:messages, :thread, :notifications] and
+              e(@activity, :subject, :id, nil) != current_user_id(@__context__) and
+              e(@object, :created, :creator_id, nil) != current_user_id(@__context__) and
+              e(@object, :created, :creator_id, nil) != current_user_id(@__context__)}
+            phx-submit="Bonfire.Social.Feeds:mark_seen"
+            phx-target={"#badge_counter_#{@feed_id || "missing_feed_id"}"}
+            x-intersect.once="$el.dispatchEvent(new Event('submit', {bubbles: true, cancelable: true})); $el.parentNode.classList.remove('unread-activity');"
+          >
+            <input type="hidden" name="feed_id" value={@feed_id}>
+            <input type="hidden" name="activity_id" value={@activity_id}>
+          </form>
+
+          <Bonfire.UI.Social.Activity.PublishedInLive
+            :if={@published_in && @showing_within != :smart_input}
+            context={@published_in}
+            showing_within={@showing_within}
+          />
+
+          {#for {component, component_assigns} when is_atom(component) <-
+              activity_components(
+                @activity,
+                @verb,
+                @object,
+                @object_type,
+                @activity_inception,
+                @showing_within,
+                @viewing_main_object,
+                @thread_mode,
+                @thread_id,
+                @thread_title,
+                @activity_component_id,
+                @subject_user,
+                @reply_to
+              ) || []}
+            {#case component}
+              {#match :html}
+                {raw(component_assigns)}
+              {#match _
+                when component in [
+                       Bonfire.UI.Social.Activity.SubjectLive,
+                       Bonfire.UI.Social.Activity.SubjectMinimalLive,
+                       Bonfire.UI.Social.Activity.NoSubjectLive
+                     ]}
+                <StatelessComponent
+                  :if={@hide_activity != "subject"}
+                  module={component}
+                  path={case e(component_assigns, :character, nil) do
+                    nil -> nil
+                    character -> path(character)
+                  end}
+                  profile_media={Media.avatar_url(e(component_assigns, :profile, nil))}
+                  profile_name={e(component_assigns, :profile, :name, nil)}
+                  character_username={e(component_assigns, :character, :username, nil)}
+                  activity_id={id(e(component_assigns, :activity, nil) || @activity)}
+                  object_id={id(e(component_assigns, :object, nil) || @object)}
+                  subject_id={e(component_assigns, :subject_id, nil) || e(component_assigns, :profile, :id, nil)}
+                  object_boundary={@object_boundary}
+                  object_type={e(component_assigns, :object_type, @object_type)}
+                  date_ago={e(component_assigns, :date_ago, @date_ago)}
+                  permalink={e(component_assigns, :permalink, @permalink)}
+                  viewing_main_object={e(component_assigns, :viewing_main_object, @viewing_main_object)}
+                  activity_component_id={e(component_assigns, :activity_component_id, @activity_component_id)}
+                  activity_inception={e(component_assigns, :activity_inception, @activity_inception)}
+                  showing_within={@showing_within}
+                  parent_id={@parent_id}
+                  thread_id={@thread_id}
+                  published_in={@published_in}
+                  verb={e(component_assigns, :verb, @verb)}
+                  verb_display={e(component_assigns, :verb_display, @verb_display)}
+                  reply_to_id={e(@activity, :replied, :reply_to_id, nil)}
+                  subject_peered={e(@activity, :subject, :character, :peered, nil)}
+                  peered={@peered}
+                  is_remote={@is_remote}
+                  thread_title={e(component_assigns, :thread_title, @thread_title)}
+                  subject_user={@subject_user}
+                />
+              {#match Bonfire.UI.Social.Activity.NoteLive}
+                <Bonfire.UI.Social.Activity.NoteLive
+                  :if={@hide_activity != "note"}
+                  showing_within={@showing_within}
+                  activity_inception={@activity_inception}
+                  activity={e(component_assigns, :activity, @activity)}
+                  object={e(component_assigns, :object, @object)}
+                  viewing_main_object={e(component_assigns, :viewing_main_object, @viewing_main_object)}
+                  cw={@cw}
+                  thread_title={@thread_title}
+                  is_remote={@is_remote}
+                  hide_actions={@hide_actions}
+                />
+              {#match _
+                when component in [
+                       Bonfire.UI.Social.Activity.UnknownLive,
+                       Bonfire.UI.Social.Activity.UnknownActivityStreamsLive,
+                       Bonfire.UI.Social.Activity.AudioActivityStreamsLive,
+                       Bonfire.UI.Social.Activity.VideoActivityStreamsLive
+                     ]}
+                <StatelessComponent
+                  module={component}
+                  __context__={@__context__}
+                  showing_within={@showing_within}
+                  viewing_main_object={e(component_assigns, :viewing_main_object, @viewing_main_object)}
+                  activity={e(component_assigns, :activity, @activity)}
+                  object={e(component_assigns, :object, @object)}
+                  object_type={e(component_assigns, :object_type, @object_type)}
+                  object_type_readable={e(component_assigns, :object_type_readable, @object_type_readable)}
+                  json={e(component_assigns, :json, nil)}
+                />
+              {#match Bonfire.UI.Social.Activity.MediaSkeletonLive}
+                <Bonfire.UI.Social.Activity.MediaSkeletonLive
+                  __context__={@__context__}
+                  showing_within={@showing_within}
+                  activity_inception={@activity_inception}
+                  viewing_main_object={@viewing_main_object}
+                  {...component_assigns || []}
+                />
+              {#match Bonfire.UI.Social.Activity.MediaLive}
+                <Bonfire.UI.Social.Activity.MediaLive
+                  :if={@hide_activity != "media"}
+                  __context__={@__context__}
+                  parent_id={@parent_id}
+                  activity_inception={@activity_inception}
+                  showing_within={e(component_assigns, :showing_within, @showing_within)}
+                  viewing_main_object={e(component_assigns, :viewing_main_object, @viewing_main_object)}
+                  media={e(component_assigns, :media, [])}
+                  cw={@cw}
+                />
+              {#match _
+                when component in [
+                       Bonfire.UI.Social.Activity.ActionsLive,
+                       Bonfire.UI.Moderation.FlaggedActionsLive
+                     ]}
+                {#if @hide_activity != "actions" and @hide_actions != true}
+                  {#if socket_connected?(@__context__) && LiveHandler.feed_live_update_many_preloads?() == :async_actions}
+                    <StatefulComponent
+                      id={"#{@activity_component_id}_actions"}
+                      module={component}
+                      __context__={@__context__}
+                      showing_within={@showing_within}
+                      feed_name={@feed_name}
+                      thread_mode={@thread_mode}
+                      activity={e(component_assigns, :activity, @activity)}
+                      object={e(component_assigns, :object, @object)}
+                      object_boundary={@object_boundary}
+                      object_type={e(component_assigns, :object_type, @object_type)}
+                      object_type_readable={e(component_assigns, :object_type_readable, @object_type_readable)}
+                      verb={e(component_assigns, :verb, @verb)}
+                      thread_id={@thread_id}
+                      thread_title={e(component_assigns, :thread_title, @thread_title)}
+                      permalink={e(component_assigns, :permalink, @permalink)}
+                      viewing_main_object={e(component_assigns, :viewing_main_object, @viewing_main_object)}
+                      activity_component_id={e(component_assigns, :activity_component_id, @activity_component_id)}
+                      parent_id={@parent_id}
+                      published_in={@published_in}
+                      labelled={@labelled}
+                      reply_count={@reply_count}
+                      is_remote={@is_remote}
+                      hide_actions={@hide_actions}
+                    />
+                  {#else}
+                    <StatelessComponent
+                      module={component}
+                      myself={@myself}
+                      __context__={@__context__}
+                      showing_within={@showing_within}
+                      thread_mode={@thread_mode}
+                      activity={e(component_assigns, :activity, @activity)}
+                      object={e(component_assigns, :object, @object)}
+                      object_boundary={@object_boundary}
+                      object_type={e(component_assigns, :object_type, @object_type)}
+                      object_type_readable={e(component_assigns, :object_type_readable, @object_type_readable)}
+                      verb={e(component_assigns, :verb, @verb)}
+                      thread_id={@thread_id}
+                      thread_title={e(component_assigns, :thread_title, @thread_title)}
+                      permalink={e(component_assigns, :permalink, @permalink)}
+                      viewing_main_object={e(component_assigns, :viewing_main_object, @viewing_main_object)}
+                      activity_component_id={e(component_assigns, :activity_component_id, @activity_component_id)}
+                      parent_id={@parent_id}
+                      published_in={@published_in}
+                      labelled={@labelled}
+                      reply_count={@reply_count}
+                      is_remote={@is_remote}
+                      hide_actions={@hide_actions}
+                    />
+                  {/if}
+                {/if}
+              {#match _}
+                <StatelessComponent
+                  :if={@hide_activity != "dynamic" && @showing_within != :notifications}
+                  module={component}
+                  activity_component_id={e(component_assigns, :id, nil)}
+                  activity_prepared={:defer_to_render}
+                  activity_inception={e(component_assigns, :activity_inception, @activity_inception)}
+                  myself={nil}
+                  created_verb_display={@created_verb_display}
+                  showing_within={@showing_within}
+                  thread_mode={debug(@thread_mode, "thread_modessss")}
+                  activity={e(component_assigns, :activity, @activity)}
+                  object={e(component_assigns, :object, @object)}
+                  object_id={e(component_assigns, :object_id, @object_id)}
+                  object_boundary={@object_boundary}
+                  object_type={e(component_assigns, :object_type, @object_type)}
+                  object_type_readable={e(component_assigns, :object_type_readable, @object_type_readable)}
+                  date_ago={e(component_assigns, :date_ago, @date_ago)}
+                  verb={e(component_assigns, :verb, @verb)}
+                  verb_display={e(component_assigns, :verb_display, @verb_display)}
+                  permalink={e(component_assigns, :permalink, @permalink)}
+                  thread_url={@thread_url}
+                  thread_id={@thread_id}
+                  viewing_main_object={e(component_assigns, :viewing_main_object, @viewing_main_object)}
+                  show_minimal_subject_and_note={e(component_assigns, :show_minimal_subject_and_note, @show_minimal_subject_and_note)}
+                  hide_reply={e(component_assigns, :hide_reply, @hide_reply)}
+                  profile={e(component_assigns, :profile, nil)}
+                  character={e(component_assigns, :character, nil)}
+                  media={e(component_assigns, :media, nil)}
+                  json={e(component_assigns, :json, nil)}
+                  label={e(component_assigns, :label, nil)}
+                  to={e(component_assigns, :to, nil)}
+                  is_remote={@is_remote}
+                />
+            {/case}
+          {/for}
+        {/if}
       {/if}
-    </div>
+    </article>
     """
   end
 
