@@ -3,6 +3,7 @@
   label={l("Activities from people I follow")}
   key={:followed_users}
   disabled
+  compact
   force_checked
   scope={@scope}
 />
@@ -94,7 +95,7 @@
 </form>
 
 <!-- <Bonfire.UI.Social.Settings.MyFeedItemLive label={l("Boosts")} key={:boost} scope={@scope} /> -->
-<!-- 
+<!--
 <Bonfire.UI.Social.Settings.MyFeedItemLive label={l("Replies")} key={:reply} scope={@scope} />
 
 <Bonfire.UI.Social.Settings.MyFeedItemLive label={l("Follows")} key={:follow} scope={@scope} /> -->
@@ -116,6 +117,7 @@
   label={l("Messages")}
   key={:messages}
   disabled
+  compact
   force_checked={false}
   scope={@scope}
 />
