@@ -606,10 +606,12 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
       feed_ids: feed_ids,
       feed_component_id: component_id,
       # FIXME: clean up page vs tab
-      selected_tab: nil,
-      page: "feed",
+      selected_tab: feed_name,
+      no_header: true,
+
+      page: "following",
       # page_title: l("My feed"),
-      feed_title: l("My feed"),
+      feed_title: l("Following"),
       feed: nil,
       page_info: nil
     ]

@@ -54,6 +54,7 @@ defmodule Bonfire.UI.Social.FeedLive do
 
   prop tab_primary_class, :css_class, default: nil
 
+  prop activity_class, :css_class, default: nil
   prop sort_by, :any, default: nil
   prop time_limit, :any, default: nil
   prop sort_order, :any, default: false
@@ -108,14 +109,14 @@ defmodule Bonfire.UI.Social.FeedLive do
            context
          ) do
       [
-        # my: l("My feed"),
+        my: l("Following"),
         curated: l("Curated"),
         local: l("Local"),
         fediverse: l("Remote")
       ]
     else
       [
-        # my: l("My feed"),
+        my: l("Following"),
         explore: l("Everything"),
         local: l("Local"),
         fediverse: l("Remote")

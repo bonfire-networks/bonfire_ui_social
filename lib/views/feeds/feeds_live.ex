@@ -32,19 +32,19 @@ defmodule Bonfire.UI.Social.FeedsLive do
   # declare_nav_link(l("My feed"), page: "feed", icon: "heroicons-solid:newspaper")
   declare_nav_link(
     [
-      {
-        l("Feed"),
-        # icon: "carbon:home",
-        # icon_active: "carbon:home",
-        page: "feed",
-        icon: "ph:rss-simple-bold",
-        href: "/feed",
-        phx_hook: "Bonfire.UI.Common.PreviewContentLive#PreviewExtra"
-        #  href: &nav_link_feed/1
-      },
+      # {
+      #   l("Feed"),
+      #   # icon: "carbon:home",
+      #   # icon_active: "carbon:home",
+      #   page: "feed",
+      #   icon: "ph:rss-simple-bold",
+      #   href: "/feed",
+      #   phx_hook: "Bonfire.UI.Common.PreviewContentLive#PreviewExtra"
+      #   #  href: &nav_link_feed/1
+      # },
       {l("Explore"),
        page: "explore",
-       href: "/feed/explore",
+       href: "/feed/my",
        icon: "carbon:explore",
        icon_active: "carbon:explore"}
       # {l("Moderation"),
@@ -125,17 +125,33 @@ defmodule Bonfire.UI.Social.FeedsLive do
     set_feed_assigns({:fediverse, params}, socket)
   end
 
+  # def handle_params(%{"tab" => "explore" = _tab} = params, _url, socket) do
+  #   if module_enabled?(Bonfire.Social.Pins, socket) and
+  #        Bonfire.Common.Settings.get(
+  #          [Bonfire.UI.Social.FeedsLive, :curated],
+  #          false,
+  #          socket.assigns
+  #        ) do
+  #     set_feed_assigns({:curated, params}, socket)
+  #   else
+  #     set_feed_assigns({:explore, params}, socket)
+  #   end
+  # end
   def handle_params(%{"tab" => "explore" = _tab} = params, _url, socket) do
-    if module_enabled?(Bonfire.Social.Pins, socket) and
-         Bonfire.Common.Settings.get(
-           [Bonfire.UI.Social.FeedsLive, :curated],
-           false,
-           socket.assigns
-         ) do
-      set_feed_assigns({:curated, params}, socket)
-    else
+    # if module_enabled?(Bonfire.Social.Pins, socket) and
+    #      Bonfire.Common.Settings.get(
+    #        [Bonfire.UI.Social.FeedsLive, :curated],
+    #        false,
+    #        socket.assigns
+    #      ) do
+    #   set_feed_assigns({:curated, params}, socket)
+    # else
       set_feed_assigns({:explore, params}, socket)
-    end
+    # end
+  end
+
+  def handle_params(%{"tab" => "my" = _tab} = params, _url, socket) do
+    set_feed_assigns({:my, params}, socket)
   end
 
   def handle_params(%{"tab" => "curated" = _tab} = params, _url, socket) do

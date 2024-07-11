@@ -8,14 +8,14 @@
 >
   <div class="flex flex-col h-full grow rounded-t-xl">
     <!-- TODO: show tabs at top of persistent feed and use event handler to trigger switching feed within the component rather than patch the view? -->
+      <!-- type={if @feed_name in [nil, :my], do: :header_only} -->
+        <!-- "h-[56px]": @feed_name in [nil, :my] -->
     <Bonfire.UI.Common.TabsLive
       :if={!@hide_tabs}
-      type={if @feed_name in [nil, :my], do: :header_only}
       selected_tab={@selected_tab}
       selected_name={@feed_title || @page_title}
       class={
-        "flex items-center gap-2 w-full rounded-t-xl tabs sticky top-0 z-[9999999] backdrop-blur-sm bg-base-100/70 border-b border-base-content/10",
-        "h-[56px]": @feed_name in [nil, :my]
+        "flex items-center gap-2 w-full rounded-t-xl tabs sticky top-0 z-[9999999] backdrop-blur-sm bg-base-100/70 border-b border-base-content/10"
       }
       tab_class={@tab_class}
       item_class={@item_class}
@@ -89,6 +89,7 @@
               verb_default={@verb_default}
               feed_name={@feed_name}
               feed_id={@feed_id}
+              class={@activity_class}
               is_remote={@feed_name in [:fediverse]}
               hide_activity={@hide_activities}
               subject_user={@subject_user}
@@ -121,6 +122,7 @@
               feed_id={@feed_id}
               is_remote={@feed_name in [:fediverse]}
               hide_activity={@hide_activities}
+              class={@activity_class}
               subject_user={@subject_user}
               activity_loaded_preloads={@activity_loaded_preloads}
             />
