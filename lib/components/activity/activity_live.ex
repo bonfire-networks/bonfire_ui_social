@@ -65,7 +65,6 @@ defmodule Bonfire.UI.Social.ActivityLive do
   def update_many(assigns_sockets) do
     assigns_sockets
     |> LiveHandler.activity_update_many(caller_module: __MODULE__)
-    # |> debug("lllll")
     |> Enum.map(fn
       {assigns, socket} ->
         maybe_update(assigns, socket)
@@ -74,7 +73,6 @@ defmodule Bonfire.UI.Social.ActivityLive do
         maybe_update(socket.assigns, socket)
     end)
 
-    # |> debug("kkkk")
   end
 
   defp debug_i(i, activity_inception), do: i || "inception-from-#{activity_inception}"
