@@ -1188,14 +1188,17 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
                 verbs: [:read]
               ]
           ),
-          opts ++
-            [
-              preload_status_key: :preloaded_async_activities,
-              return_assigns_socket_tuple: true,
-              live_update_many_preloads: feed_live_update_many_preloads,
-              assigns_to_params_fn: &assigns_to_params/1,
-              preload_fn: &preload_extras/3
-            ]
+          debug(
+            opts ++
+              [
+                preload_status_key: :preloaded_async_activities,
+                return_assigns_socket_tuple: true,
+                live_update_many_preloads: feed_live_update_many_preloads,
+                assigns_to_params_fn: &assigns_to_params/1,
+                preload_fn: &preload_extras/3
+              ],
+            "opts for batch_update_many_async"
+          )
         ],
         opts
       ) || assigns_sockets

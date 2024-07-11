@@ -62,7 +62,6 @@ defmodule Bonfire.UI.Social.ActivityLive do
   prop activity_loaded_preloads, :list, default: []
   prop custom_preview, :any, default: nil
 
-  @decorate time()
   def update_many(assigns_sockets) do
     assigns_sockets
     |> LiveHandler.activity_update_many(caller_module: __MODULE__)
