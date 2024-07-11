@@ -72,7 +72,6 @@ defmodule Bonfire.UI.Social.ActivityLive do
       socket ->
         maybe_update(socket.assigns, socket)
     end)
-
   end
 
   defp debug_i(i, activity_inception), do: i || "inception-from-#{activity_inception}"
