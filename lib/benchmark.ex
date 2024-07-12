@@ -32,39 +32,39 @@ defmodule Bonfire.UI.Social.Benchmark do
     )
   end
 
-  defp current_user_approaches_feed do
-    conn = conn(user: fake_user!())
+  # defp current_user_approaches_feed do
+  #   conn = conn(user: fake_user!())
 
-    %{
-      "render activities with current_user in @__context__ assign" => fn ->
-        Process.put(:approach_to_current_user, :user)
-        get(conn, "/feed/local")
-      end,
-      "render activities with only ID in @__context__ assign" => fn ->
-        Process.put(:approach_to_current_user, :id)
-        get(conn, "/feed/local")
-      end,
-      "render activities with cached current_user" => fn ->
-        Process.put(:approach_to_current_user, :cache)
-        get(conn, "/feed/local")
-      end
-    }
-  end
+  #   %{
+  #     "render activities with current_user in @__context__ assign" => fn ->
+  #       Process.put(:approach_to_current_user, :user)
+  #       get(conn, "/feed/local")
+  #     end,
+  #     "render activities with only ID in @__context__ assign" => fn ->
+  #       Process.put(:approach_to_current_user, :id)
+  #       get(conn, "/feed/local")
+  #     end,
+  #     "render activities with cached current_user" => fn ->
+  #       Process.put(:approach_to_current_user, :cache)
+  #       get(conn, "/feed/local")
+  #     end
+  #   }
+  # end
 
-  defp md_lib_feed do
-    feed = Bonfire.Social.FeedActivities.feed(:fediverse, limit: 20)
+  # defp md_lib_feed do
+  #   feed = Bonfire.Social.FeedActivities.feed(:fediverse, limit: 20)
 
-    %{
-      "render activities with earmark" => fn ->
-        Config.put(:markdown_library, Earmark)
-        render_feed(feed.edges)
-      end,
-      "render activities with mdex" => fn ->
-        Config.put(:markdown_library, MDEx)
-        render_feed(feed.edges)
-      end
-    }
-  end
+  #   %{
+  #     "render activities with earmark" => fn ->
+  #       Config.put(:markdown_library, Earmark)
+  #       render_feed(feed.edges)
+  #     end,
+  #     "render activities with mdex" => fn ->
+  #       Config.put(:markdown_library, MDEx)
+  #       render_feed(feed.edges)
+  #     end
+  #   }
+  # end
 
   defp some_feed_queries do
     %{
@@ -148,7 +148,7 @@ defmodule Bonfire.UI.Social.Benchmark do
 
     conn = build_conn()
 
-    feed = Bonfire.Social.FeedActivities.feed(:local)
+    # feed = Bonfire.Social.FeedActivities.feed(:local)
 
     Utils.maybe_apply(
       Benchee,

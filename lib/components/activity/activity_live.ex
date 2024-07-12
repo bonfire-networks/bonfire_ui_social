@@ -1211,7 +1211,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
         id: activity_id,
         reply_to:
           %{
-            post_content: %{id: id} = reply_to_post_content,
+            post_content: %{id: _id} = reply_to_post_content,
             created: %{
               creator: %{
                 character: %{id: creator_id} = _subject_character,
@@ -1264,7 +1264,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
         id: activity_id,
         reply_to:
           %{
-            id: reply_to_id
+            id: _reply_to_id
           } = replied
       }) do
     debug("we have another kind of reply_to, but no creator")
@@ -1355,7 +1355,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
           subject_id: subject_id,
           activity: activity,
           object: %{id: object_id} = object
-        } = reply_to,
+        } = _reply_to,
         _,
         _,
         _,

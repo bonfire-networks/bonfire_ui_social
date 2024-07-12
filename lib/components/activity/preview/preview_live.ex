@@ -11,7 +11,7 @@ defmodule Bonfire.UI.Social.Activity.PreviewLive do
     {:ok, socket}
   end
 
-  def update(assigns, socket) do
+  def update(_assigns, socket) do
     {:ok, socket}
   end
 end

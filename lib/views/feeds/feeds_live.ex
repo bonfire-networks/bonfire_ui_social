@@ -167,6 +167,38 @@ defmodule Bonfire.UI.Social.FeedsLive do
     set_feed_assigns({:flags, params}, socket)
   end
 
+  def tabs(_page, context) do
+    # disabled hiding of remote tab because it is also useful to find remote activities that were looked up manually
+    # case Bonfire.Social.federating?(current_user(context)) do
+    #   true ->
+    # if current_user_id(context) do
+    if module_enabled?(Bonfire.Social.Pins, context) and
+         Bonfire.Common.Settings.get(
+           [Bonfire.UI.Social.FeedsLive, :curated],
+           false,
+           context
+         ) do
+      [
+        my: l("Following"),
+        curated: l("Curated"),
+        local: l("Local"),
+        fediverse: l("Remote")
+      ]
+    else
+      [
+        my: l("Following"),
+        explore: l("Everything"),
+        local: l("Local"),
+        fediverse: l("Remote")
+      ]
+    end
+
+    # else
+
+    #   [curated: l("Curated"), local: l("Local"), fediverse: l("Remote")]
+    # end
+  end
+
   def handle_params(params, _url, socket) do
     set_feed_assigns(
       {e(socket, :assigns, :live_action, :default), params},
