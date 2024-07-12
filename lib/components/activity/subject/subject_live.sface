@@ -39,7 +39,11 @@
     >
       {@profile_name}
     </LinkLive>
-    <span data-id="subject_secondary" class="flex items-center gap-1">
+    <span
+      :if={@showing_within != :smart_input}
+      data-id="subject_secondary"
+      class="flex items-center gap-1"
+    >
       <LinkLive
         :if={@character_username}
         opts={

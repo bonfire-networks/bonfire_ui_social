@@ -7,7 +7,7 @@
         id={:widget_discussion_feed}
         feed_name={@feed_name}
         feed={feed}
-        activity_class="!pl-5"
+        activity_class="!p-0"
         custom_preview={maybe_component(Bonfire.UI.Social.Activity.PreviewLive)}
         {...feed_assigns}
       />

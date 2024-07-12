@@ -75,14 +75,16 @@
             {!-- LIKE --}
             <#Icon iconify="mingcute:fire-fill" class="w-7 h-7 text-yellow-500" />
             <div class="flex-1 flex flex-col gap-2">
-              <Bonfire.UI.Common.AvatarLive
-                user_id={@profile_id}
-                src={@profile_media}
-                title={@profile_name}
-                class="h-9 w-9 rounded-full"
-              />
+              <LinkLive to={@path}>
+                <Bonfire.UI.Common.AvatarLive
+                  user_id={@profile_id}
+                  src={@profile_media}
+                  title={@profile_name}
+                  class="h-9 w-9 rounded-full"
+                />
+              </LinkLive>
               <div class="font-medium text-sm text-base-content/90">
-                <LinkLive class="font-semibold" to={@path}>
+                <LinkLive class="link link-hover font-semibold" to={@path}>
                   {#if @object_id == current_user_id(@__context__)}
                     {l("You")}
                   {#else}
@@ -129,14 +131,16 @@
             {!-- BOOST --}
             <#Icon iconify="system-uicons:retweet" class="w-7 h-7 stroke-1 text-success" />
             <div class="flex-1 flex flex-col gap-2">
-              <Bonfire.UI.Common.AvatarLive
-                user_id={@profile_id}
-                src={@profile_media}
-                title={@profile_name}
-                class="h-9 w-9 rounded-full"
-              />
+              <LinkLive to={@path}>
+                <Bonfire.UI.Common.AvatarLive
+                  user_id={@profile_id}
+                  src={@profile_media}
+                  title={@profile_name}
+                  class="h-9 w-9 rounded-full"
+                />
+              </LinkLive>
               <div class="font-medium text-sm text-base-content/90">
-                <LinkLive to={@path} class="font-semibold">
+                <LinkLive to={@path} class="link link-hover font-semibold">
                   {#if @object_id == current_user_id(@__context__)}
                     {l("You")}
                   {#else}
