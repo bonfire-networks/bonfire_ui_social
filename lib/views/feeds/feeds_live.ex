@@ -43,10 +43,7 @@ defmodule Bonfire.UI.Social.FeedsLive do
       #   #  href: &nav_link_feed/1
       # },
       {l("Explore"),
-       page: "explore",
-       href: "/feed/my",
-       icon: "carbon:explore",
-       icon_active: "carbon:explore"}
+       page: "explore", href: "/feed/my", icon: "carbon:explore", icon_active: "carbon:explore"}
       # {l("Moderation"),
       # page: "moderation",
       # href: &nav_link_feed/1,
@@ -146,7 +143,7 @@ defmodule Bonfire.UI.Social.FeedsLive do
     #      ) do
     #   set_feed_assigns({:curated, params}, socket)
     # else
-      set_feed_assigns({:explore, params}, socket)
+    set_feed_assigns({:explore, params}, socket)
     # end
   end
 
