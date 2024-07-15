@@ -1079,7 +1079,11 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
     # opts = paginate_opts(%{}, socket, opts)
 
     with %{} = feed <-
-           Bonfire.Social.Likes.list_my(opts) do
+           Common.Utils.maybe_apply(
+             Bonfire.Social.Likes,
+             :list_my,
+             [opts]
+           ) do
       merge_feed_assigns(
         feed,
         [loading: false],
