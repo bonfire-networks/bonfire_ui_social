@@ -207,8 +207,6 @@ defmodule Bonfire.UI.Social.FeedsLive do
     # end
   end
 
-
-
   def set_feed_assigns(feed_meta, socket) do
     debug(feed_meta)
 
