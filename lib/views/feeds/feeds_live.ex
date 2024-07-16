@@ -167,6 +167,13 @@ defmodule Bonfire.UI.Social.FeedsLive do
     set_feed_assigns({:flags, params}, socket)
   end
 
+  def handle_params(params, _url, socket) do
+    set_feed_assigns(
+      {e(socket, :assigns, :live_action, :default), params},
+      socket
+    )
+  end
+
   def tabs(_page, context) do
     # disabled hiding of remote tab because it is also useful to find remote activities that were looked up manually
     # case Bonfire.Social.federating?(current_user(context)) do
@@ -199,12 +206,7 @@ defmodule Bonfire.UI.Social.FeedsLive do
     # end
   end
 
-  def handle_params(params, _url, socket) do
-    set_feed_assigns(
-      {e(socket, :assigns, :live_action, :default), params},
-      socket
-    )
-  end
+
 
   def set_feed_assigns(feed_meta, socket) do
     debug(feed_meta)

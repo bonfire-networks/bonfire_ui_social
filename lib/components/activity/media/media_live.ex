@@ -8,12 +8,12 @@ defmodule Bonfire.UI.Social.Activity.MediaLive do
   prop label, :string, default: nil
   prop parent_id, :any, default: nil
   prop cw, :any, default: nil
-  prop multimedia_exts, :list, default: @multimedia_exts
-  prop multimedia_types, :list, default: @multimedia_types
   @image_exts [".jpg", ".jpeg", ".png", ".gif", ".webp", ".svg", ".apng"]
   @image_types ["image", "photo"]
   @multimedia_exts [".mp4", ".mkv", ".ogv", ".ogg", ".mp3", ".mpa", ".webm", ".mov"]
   @multimedia_types ["video", "embed", "audio", "song", "rich"]
+  prop multimedia_exts, :list, default: @multimedia_exts
+  prop multimedia_types, :list, default: @multimedia_types
 
   def render(assigns) do
     # medias = the_medias(medias)

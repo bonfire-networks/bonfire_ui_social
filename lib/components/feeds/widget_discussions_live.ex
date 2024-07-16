@@ -5,7 +5,7 @@ defmodule Bonfire.UI.Social.WidgetDiscussionsLive do
   prop widget_title, :string, default: nil
 
   # 1 hours
-  @default_cache_ttl 1_000 * 60 * 60 * 1
+  # @default_cache_ttl 1_000 * 60 * 60 * 1
 
   def feed(feed_name) do
     # NOTE: for now this only shows public threads so we can store one cache for all users

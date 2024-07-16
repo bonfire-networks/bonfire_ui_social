@@ -2,7 +2,7 @@ defmodule Bonfire.UI.Social.Benchmark do
   @endpoint Bonfire.Web.Endpoint
   import Phoenix.ConnTest
   alias Bonfire.Common.Utils
-  import Bonfire.UI.Common.Testing.Helpers
+  # import Bonfire.UI.Common.Testing.Helpers
   # import Phoenix.LiveViewTest
   alias Bonfire.Common.Config
   # import Untangle
