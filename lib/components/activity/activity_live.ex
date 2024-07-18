@@ -521,7 +521,8 @@ defmodule Bonfire.UI.Social.ActivityLive do
     >
       {#if @custom_preview}
         <StatelessComponent
-          permalink="@permalink}"
+          permalink={@permalink}
+          reply_count={@reply_count}
           date_ago={@date_ago}
           object={@object}
           activity={@activity}

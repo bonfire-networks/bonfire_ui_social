@@ -39,7 +39,7 @@
               value={e(@page_title, "")}
               opts={placeholder: "Set a name for the thread..."}
             />
-            <HiddenInput name="id" value={@thread_id} />
+            <HiddenInput name="thread_id" value={@thread_id} />
             <button class="normal-case w-full  btn-outline btn btn-primary mt-3">
               {l("Save")}
             </button>

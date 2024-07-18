@@ -54,7 +54,7 @@ defmodule Bonfire.UI.Social.FeedLive do
 
   prop tab_primary_class, :css_class, default: nil
 
-  prop activity_class, :css_class, default: nil
+  prop activity_class, :string, default: nil
   prop sort_by, :any, default: nil
   prop time_limit, :any, default: nil
   prop sort_order, :any, default: false

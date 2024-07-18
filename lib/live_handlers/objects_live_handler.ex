@@ -3,9 +3,9 @@ defmodule Bonfire.Social.Objects.LiveHandler do
   import Untangle
   alias Bonfire.Social.Objects
 
-  def handle_event("set_name", %{"id" => _id, "name" => name} = params, socket) do
+  def handle_event("set_name", %{"thread_id" => _id, "name" => name} = params, socket) do
     with {:ok, _} <-
-           Objects.set_name(e(params, "id", nil) || e(socket.assigns, :object, nil), name,
+           Objects.set_name(e(params, "thread_id", nil) || e(socket.assigns, :object, nil), name,
              current_user: current_user_required!(socket)
            ) do
       Bonfire.UI.Common.OpenModalLive.close()

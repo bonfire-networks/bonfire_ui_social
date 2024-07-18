@@ -7,7 +7,7 @@
     else: %{}}
   :let={autocomplete: _autocomplete}
 >
-  <input type="hidden" name="id" value={id(@object)}>
+  <input type="hidden" name="post_id" value={id(@object)}>
 
   <div class="flex-1 mt-4">
     {#for {%{
