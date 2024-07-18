@@ -15,7 +15,6 @@
     reply_to_id={@reply_to_id}
     context_id={@context_id}
     create_object_type={@create_object_type}
-    thread_mode={:flat}
     title_open
     to_boundaries={@to_boundaries}
     to_circles={@to_circles}

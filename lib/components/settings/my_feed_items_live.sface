@@ -117,7 +117,6 @@
   label={l("Messages")}
   key={:messages}
   disabled
-  compact
   force_checked={false}
   scope={@scope}
 />

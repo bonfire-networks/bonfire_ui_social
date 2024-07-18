@@ -15,6 +15,7 @@
               <StatelessComponent
                 thread_title={@thread_title}
                 activity={@activity}
+                showing_within={@showing_within}
                 object={@object}
                 main_object_component_id={@main_object_component_id}
                 module={maybe_component(@custom_preview, @__context__)}

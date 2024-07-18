@@ -6,6 +6,7 @@
   activity={@activity}
   object={@object}
   post_id={@post_id}
+  showing_within={:thread}
   thread_id={e(@thread_id, nil)}
   participants={@participants}
 />
