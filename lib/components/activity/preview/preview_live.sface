@@ -8,7 +8,7 @@
     <div class="flex flex-col gap-1">
       {#case e(@object, :post_content, :name, nil) || e(@object, :post_content, :summary, nil)}
         {#match nil}
-          <div class="font-semibold text-lg text-base-content/90">
+          <div :if={!@is_remote} class="font-semibold text-lg text-base-content/90">
             {"No title"}
           </div>
         {#match title}
@@ -21,7 +21,10 @@
         {#match nil}
         {#match html_body}
           <div class="prose prose-sm line-clamp-3 prose-sm">
-            {rich(html_body)}
+            {rich(html_body,
+              skip_markdown: @is_remote,
+              __unsafe__: !@is_remote
+            )}
           </div>
       {/case}
 

@@ -527,6 +527,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
           object={@object}
           activity={@activity}
           activity_component_id={@activity_component_id}
+          is_remote={@is_remote}
           module={maybe_component(@custom_preview, @__context__)}
         />
       {#else}

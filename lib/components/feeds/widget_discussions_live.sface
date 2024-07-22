@@ -8,7 +8,7 @@
         feed_name={@feed_name}
         feed={feed}
         activity_class="discussion-preview"
-        custom_preview={maybe_component(Bonfire.UI.Social.Activity.PreviewLive)}
+        custom_preview={maybe_component(Bonfire.UI.Social.Activity.PreviewLive, @__context__)}
         {...feed_assigns}
       />
     </Bonfire.UI.Common.WidgetBlockLive>

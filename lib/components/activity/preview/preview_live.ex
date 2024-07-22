@@ -7,6 +7,7 @@ defmodule Bonfire.UI.Social.Activity.PreviewLive do
   prop activity_component_id, :string
   prop date_ago, :string
   prop reply_count, :any
+  prop is_remote, :any, default: nil
 
   def mount(socket) do
     {:ok, socket}
