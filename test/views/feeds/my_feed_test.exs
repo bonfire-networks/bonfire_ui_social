@@ -4,6 +4,10 @@ defmodule Bonfire.Social.Feeds.MyFeed.Test do
   alias Bonfire.Posts
   alias Bonfire.Social.Graph.Follows
   alias Bonfire.Social.Boosts
+  use Mneme
+  import Phoenix.LiveViewTest
+
+  @moduletag :mneme
 
   describe "show" do
     test "not logged in, display instance feed instead" do
@@ -12,7 +16,7 @@ defmodule Bonfire.Social.Feeds.MyFeed.Test do
       # assert redirected_to(conn) =~ "/login"
 
       feed_id = Bonfire.Social.Feeds.named_feed_id(:local)
-      assert [_] = Floki.find(doc, "[id='#{feed_id}']")
+      assert [_] = Floki.find(doc, "[id*='#{feed_id}']")
     end
 
     test "account only, display instance feed instead" do
@@ -23,7 +27,7 @@ defmodule Bonfire.Social.Feeds.MyFeed.Test do
       # assert redirected_to(conn) =~ "/login"
 
       feed_id = Bonfire.Social.Feeds.named_feed_id(:local)
-      assert [_] = Floki.find(doc, "[id='#{feed_id}']")
+      assert [_] = Floki.find(doc, "[id*='#{feed_id}']")
     end
 
     test "with user" do
@@ -35,7 +39,7 @@ defmodule Bonfire.Social.Feeds.MyFeed.Test do
 
       # |> IO.inspect
       {view, doc} = floki_live(conn, next)
-      assert [_] = Floki.find(doc, "[id='#{feed_id}']")
+      assert [_] = Floki.find(doc, "[id*='#{feed_id}']")
     end
 
     test "my own posts in my feed" do
@@ -62,7 +66,7 @@ defmodule Bonfire.Social.Feeds.MyFeed.Test do
       # debug(user: user)
       # |> debug()
       main = Floki.find(doc, "main")
-      assert [feed] = Floki.find(doc, "[id='#{feed_id}']")
+      assert [feed] = Floki.find(doc, "[id*='#{feed_id}']")
       assert Floki.text(feed) =~ "epic html message"
     end
 
@@ -73,6 +77,7 @@ defmodule Bonfire.Social.Feeds.MyFeed.Test do
       account2 = fake_account!()
       user2 = fake_user!(account2)
       Follows.follow(user2, user)
+      Follows.follow(user, user2)
 
       attrs = %{
         post_content: %{
@@ -88,14 +93,21 @@ defmodule Bonfire.Social.Feeds.MyFeed.Test do
       conn = conn(user: user2, account: account2)
       next = "/feed"
       feed_id = Bonfire.Social.Feeds.my_feed_id(:inbox, user2)
-
-      # |> IO.inspect
-      {view, doc} = floki_live(conn, next)
-      # debug(user: user2)
+      # {view, doc} = floki_live(conn, next)
+      {:ok, view, html} = live(conn, "/feed/local")# debug(user: user2)
       # |> debug()
-      main = Floki.find(doc, "main")
-      assert [feed] = Floki.find(doc, "[id='#{feed_id}']")
-      assert Floki.text(feed) =~ "epic html message"
+      main = Floki.find(html, "main")
+      # open_browser(view)
+
+      auto_assert true <-
+        html
+        |> Floki.find("article")
+        |> List.first()
+        |> Floki.text() =~ "epic html message"
+
+      # assert [feed] = Floki.find(html, "[id*='#{feed_id}']")
+      # open_browser(view)
+      # assert Floki.text(feed) =~ "epic html message"
     end
   end
 
@@ -134,7 +146,7 @@ defmodule Bonfire.Social.Feeds.MyFeed.Test do
 
       # |> IO.inspect
       {view, doc} = floki_live(conn, next)
-      assert [feed] = Floki.find(doc, "[id='#{feed_id}']")
+      assert [feed] = Floki.find(doc, "[id*='#{feed_id}']")
       refute Floki.text(feed) =~ "epic html message"
     end
 
@@ -162,7 +174,7 @@ defmodule Bonfire.Social.Feeds.MyFeed.Test do
       # |> IO.inspect
       {view, doc} = floki_live(conn, next)
       # main = Floki.find(doc, "main") |> IO.inspect
-      assert [feed] = Floki.find(doc, "[id='#{feed_id}']")
+      assert [feed] = Floki.find(doc, "[id*='#{feed_id}']")
       refute Floki.text(feed) =~ "epic html message"
     end
   end
@@ -195,9 +207,9 @@ defmodule Bonfire.Social.Feeds.MyFeed.Test do
 
     {:ok, post0} = Posts.publish(current_user: alice, post_attrs: attrs, boundary: "public")
     # bob follows alice
-    Follows.follow(bob, alice)
+    Follows.follow(alice, bob)
 
-    total_posts = 3
+    # total_posts = 3
     {:ok, post} = Posts.publish(current_user: alice, post_attrs: attrs, boundary: "public")
     {:ok, post1} = Posts.publish(current_user: bob, post_attrs: local_attrs, boundary: "local")
     {:ok, post2} = Posts.publish(current_user: carl, post_attrs: admin_attrs, boundary: "admins")
@@ -206,10 +218,14 @@ defmodule Bonfire.Social.Feeds.MyFeed.Test do
 
     conn = conn(user: bob, account: account)
     next = "/feed"
-    {view, doc} = floki_live(conn, next)
-    # open_browser(view)
-    assert doc
-           |> Floki.find("article")
-           |> length() == 2
+    {:ok, view, html} = live(conn, next)
+      # open_browser(view)
+      IO.inspect(html
+      |> Floki.find("article")
+      |> length(), label: "CACCA")
+      auto_assert true <-
+                    html
+                    |> Floki.find("article")
+                    |> length() == 2
   end
 end

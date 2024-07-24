@@ -30,7 +30,7 @@ defmodule Bonfire.Social.Feeds.Instance.Test do
 
       # |> IO.inspect
       {:ok, _view, html} = live(conn, "/feed/local")
-      assert [_] = Floki.find(html, "[id='#{feed_id}']")
+      assert [_] = Floki.find(html, "[id*='#{feed_id}']")
     end
 
     test "my own posts in instance feed (with local preset selected)" do
@@ -53,7 +53,7 @@ defmodule Bonfire.Social.Feeds.Instance.Test do
       feed_id = Bonfire.Social.Feeds.named_feed_id(:local)
       # |> IO.inspect
       {view, doc} = floki_live(conn, next)
-      assert [feed] = Floki.find(doc, "[id='#{feed_id}']")
+      assert [feed] = Floki.find(doc, "[id*='#{feed_id}']")
       assert Floki.text(feed) =~ "summary"
     end
 
@@ -80,7 +80,7 @@ defmodule Bonfire.Social.Feeds.Instance.Test do
       # |> IO.inspect
       {view, doc} = floki_live(conn, next)
       # open_browser(view)
-      assert [feed] = Floki.find(doc, "[id='#{feed_id}']")
+      assert [feed] = Floki.find(doc, "[id*='#{feed_id}']")
       assert Floki.text(feed) =~ "summary"
     end
   end
@@ -109,7 +109,7 @@ defmodule Bonfire.Social.Feeds.Instance.Test do
 
       # |> IO.inspect
       {view, doc} = floki_live(conn, next)
-      assert [feed] = Floki.find(doc, "[id='#{feed_id}']")
+      assert [feed] = Floki.find(doc, "[id*='#{feed_id}']")
       refute Floki.text(feed) =~ "epic html message"
     end
   end

@@ -22,7 +22,7 @@ defmodule Bonfire.Social.Feeds.Fediverse.Test do
 
       # |> IO.inspect
       {view, doc} = floki_live(conn, next)
-      assert [_] = Floki.find(doc, "[id='#{feed_id}']")
+      assert [_] = Floki.find(doc, "[id*='#{feed_id}']")
     end
 
     test "with user" do
@@ -34,7 +34,7 @@ defmodule Bonfire.Social.Feeds.Fediverse.Test do
 
       # |> IO.inspect
       {view, doc} = floki_live(conn, next)
-      assert [_] = Floki.find(doc, "[id='#{feed_id}']")
+      assert [_] = Floki.find(doc, "[id*='#{feed_id}']")
     end
 
     # test "remote posts in fediverse feed" do

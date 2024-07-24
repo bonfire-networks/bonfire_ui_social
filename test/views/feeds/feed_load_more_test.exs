@@ -120,7 +120,7 @@ defmodule Bonfire.Social.Feeds.LoadMoreTest do
       # bob follows alice
       # Follows.follow(bob, alice)
 
-      for n <- 1..total_posts do
+      for n <- 0..total_posts do
         assert {:ok, post} =
                  Posts.publish(
                    current_user: alice,
@@ -147,9 +147,9 @@ defmodule Bonfire.Social.Feeds.LoadMoreTest do
       live_pubsub_wait(view)
 
       # open_browser(view)
-      articles = Floki.find(more_doc, "[data-id=feed] article")
+      # articles = Floki.find(more_doc, "[data-id=feed] article")
 
-      # articles = element(more_doc, "[data-id=feed] article")
+      articles = element(more_doc, "[data-id=feed] article")
       # # |> debug("articles")
 
       assert Enum.count(articles) == total_posts
