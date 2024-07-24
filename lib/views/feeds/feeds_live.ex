@@ -33,7 +33,7 @@ defmodule Bonfire.UI.Social.FeedsLive do
   declare_nav_link(
     [
       # NOTE: sticky feed, see https://github.com/bonfire-networks/bonfire-app/issues/901
-      # { 
+      # {
       #   l("Feed"),
       #   # icon: "carbon:home",
       #   # icon_active: "carbon:home",
@@ -44,7 +44,7 @@ defmodule Bonfire.UI.Social.FeedsLive do
       #   #  href: &nav_link_feed/1
       # },
       {l("Activities"),
-       page: "explore", href: "/feed/my", icon: "carbon:explore", icon_active: "carbon:explore"}
+       page: "activities", href: "/feed/my", icon: "carbon:explore", icon_active: "carbon:explore"}
       # {l("Moderation"),
       # page: "moderation",
       # href: &nav_link_feed/1,
@@ -82,7 +82,7 @@ defmodule Bonfire.UI.Social.FeedsLive do
      socket
      |> assign(
        selected_tab: nil,
-       page: "feed",
+       page: :explore,
        page_title: l("Activities"),
        page_header_icon: "carbon:home",
        feed: nil,

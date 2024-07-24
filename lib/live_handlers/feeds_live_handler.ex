@@ -608,7 +608,7 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
       # FIXME: clean up page vs tab
       selected_tab: feed_name,
       no_header: true,
-      page: "following",
+      page: "activities",
       # page_title: l("My feed"),
       feed_title: l("Following"),
       feed: nil,
@@ -637,7 +637,7 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
       feed_component_id: component_id,
       selected_tab: feed_name,
       # FIXME: clean up page vs tab
-      page: "explore",
+      page: "activities",
       page_title: "Explore activities",
       no_header: true,
       # page_title: l("Activities from members of the local instance"),
@@ -665,7 +665,7 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
       feed_component_id: component_id,
       selected_tab: :fediverse,
       # FIXME: clean up page vs tab
-      page: "federation",
+      page: "activities",
       page_title: "Explore remote activities from the fediverse",
       no_header: true,
       # page_header_icon: "ri:home-line",
@@ -697,7 +697,7 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
       feed_component_id: component_id,
       selected_tab: :local,
       # FIXME: clean up page vs tab
-      page: "local",
+      page: "activities",
       page_title: "Explore local activities",
       no_header: true,
       # page_title: l("Activities from members of the local instance"),
@@ -720,7 +720,7 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
       # hide_tabs: true,
       showing_within: :feed_by_subject,
       # FIXME: clean up page vs tab
-      page: "Curated",
+      page: "activities",
       page_title: "Curated feed",
       no_header: current_user_id(socket.assigns),
       # feed_title: l("My favourites"),
