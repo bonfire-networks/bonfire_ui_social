@@ -32,7 +32,8 @@ defmodule Bonfire.UI.Social.Feeds.Notifications.ReplyTest do
     }
 
     # |> IO.inspect
-    assert {:ok, post_reply} = Posts.publish(current_user: bob, post_attrs: attrs_reply, boundary: "public")
+    assert {:ok, post_reply} =
+             Posts.publish(current_user: bob, post_attrs: attrs_reply, boundary: "public")
 
     feed = Bonfire.Social.FeedActivities.feed(:notifications, current_user: alice)
 
