@@ -94,16 +94,17 @@ defmodule Bonfire.Social.Feeds.MyFeed.Test do
       next = "/feed"
       feed_id = Bonfire.Social.Feeds.my_feed_id(:inbox, user2)
       # {view, doc} = floki_live(conn, next)
-      {:ok, view, html} = live(conn, "/feed/local")# debug(user: user2)
+      # debug(user: user2)
+      {:ok, view, html} = live(conn, "/feed/local")
       # |> debug()
       main = Floki.find(html, "main")
       # open_browser(view)
 
       auto_assert true <-
-        html
-        |> Floki.find("article")
-        |> List.first()
-        |> Floki.text() =~ "epic html message"
+                    html
+                    |> Floki.find("article")
+                    |> List.first()
+                    |> Floki.text() =~ "epic html message"
 
       # assert [feed] = Floki.find(html, "[id*='#{feed_id}']")
       # open_browser(view)
@@ -219,13 +220,17 @@ defmodule Bonfire.Social.Feeds.MyFeed.Test do
     conn = conn(user: bob, account: account)
     next = "/feed"
     {:ok, view, html} = live(conn, next)
-      # open_browser(view)
-      IO.inspect(html
+    # open_browser(view)
+    IO.inspect(
+      html
       |> Floki.find("article")
-      |> length(), label: "CACCA")
-      auto_assert true <-
-                    html
-                    |> Floki.find("article")
-                    |> length() == 2
+      |> length(),
+      label: "CACCA"
+    )
+
+    auto_assert true <-
+                  html
+                  |> Floki.find("article")
+                  |> length() == 2
   end
 end
