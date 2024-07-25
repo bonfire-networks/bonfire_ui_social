@@ -29,8 +29,10 @@ defmodule Bonfire.Social.Notifications.Threads.Test do
       conn = conn(user: someone, account: some_account)
       next = "/notifications"
       # |> IO.inspect
-      {view, doc} = floki_live(conn, next)
-      assert feed = Floki.find(doc, ".feed")
+      {:ok, view, html} = live(conn, next)
+      open_browser(view)
+      # {view, doc} = floki_live(conn, next)
+      assert feed = Floki.find(html, ".feed")
       assert Floki.text(feed) =~ "epic html reply"
     end
   end

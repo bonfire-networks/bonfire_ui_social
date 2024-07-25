@@ -39,7 +39,6 @@ defmodule Bonfire.UI.Social.Feeds.Notifications.ReplyTest do
 
     fp =
       feed.edges
-      |> IO.inspect(label: "CACCA")
       |> List.first()
 
     # |> IO.inspect
