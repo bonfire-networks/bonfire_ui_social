@@ -1915,7 +1915,7 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
     # TODO: pagination
     # user,
     Utils.maybe_apply(
-      Bonfire.Social.Graph.Requests,
+      Bonfire.Social.Requests,
       :list_my_requested,
       [pagination: pagination, current_user: current_user, type: Bonfire.Data.Social.Follow],
       fallback_return: []
@@ -1928,7 +1928,7 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
     # TODO: pagination
     # user,
     Utils.maybe_apply(
-      Bonfire.Social.Graph.Requests,
+      Bonfire.Social.Requests,
       :list_my_requesters,
       [pagination: pagination, current_user: current_user],
       fallback_return: []
