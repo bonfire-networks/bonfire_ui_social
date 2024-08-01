@@ -25,6 +25,7 @@ defmodule Bonfire.UI.Social.FeedsLive do
       Bonfire.UI.Messages.MessagesLive,
       Bonfire.UI.Social.NotificationsFeedLive,
       Bonfire.UI.Me.ProfileLive,
+      Bonfire.UI.Groups.ExploreLive,
       Bonfire.UI.Groups.SidebarGroupsLive
     ]
   )

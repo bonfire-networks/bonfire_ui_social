@@ -18,7 +18,7 @@
     class="flex pt-3 flex-col divide-y divide-base-content/10 justify-between gap-3"
   >
     <div class="flex flex-col gap-2">
-      <span class="font-medium text-sm text-base-content/80">{l("Included activities")}</span>
+      <!-- <span class="font-medium text-sm text-base-content/80">{l("Included activities")}</span> -->
       <Bonfire.UI.Social.Settings.MyFeedItemsLive
         scope={:user}
         feed_name={@feed_name}
