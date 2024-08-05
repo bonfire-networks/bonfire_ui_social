@@ -148,7 +148,9 @@ defmodule Bonfire.UI.Social.Benchmark do
 
     conn = build_conn()
 
-    # feed = Bonfire.Social.FeedActivities.feed(:local)
+    Config.put([Bonfire.UI.Social.FeedLive, :time_limit], 365)
+
+    feed = Bonfire.Social.FeedActivities.feed(:local)
 
     Utils.maybe_apply(
       Benchee,
@@ -180,9 +182,9 @@ defmodule Bonfire.UI.Social.Benchmark do
           # "query & render feed component with activities (skipping feed preloads)" => fn ->
           #   live_feed(feed_live_update_many_preloads: :skip)
           # end,
-          # "render feed component with already queried activities (default preloads)" => fn ->
-          #   render_feed(feed.edges)
-          # end,
+          "render feed component with already queried activities (default preloads)" => fn ->
+            render_feed(feed.edges)
+          end,
           # "render feed component with already queried activities (skipping preloads)" => fn ->
           #   render_feed(feed.edges, feed_live_update_many_preloads: :skip)
           # end,
@@ -217,11 +219,11 @@ defmodule Bonfire.UI.Social.Benchmark do
           # "render feed component with already queried activities (skip dynamic)" => fn ->
           #   render_feed(feed.edges, hide_activities: "dynamic")
           # end,
-          "fetch home page with activities" => fn -> get(conn, "/") end,
-          "fetch feed page with activities" => fn -> get(conn, "/feed/local") end
-          # "fetch feed page with (skipped) activities" => fn ->
-          #   get(conn, "/feed/local?&hide_activities=component")
-          # end,
+          # "fetch home page with activities" => fn -> get(conn, "/") end, # should be quick because cached
+          "fetch feed page with activities" => fn -> get(conn, "/feed/local") end,
+          "fetch feed page with (skipped) activities" => fn ->
+            get(conn, "/feed/local?&hide_activities=component")
+          end
           # "fetch feed page with (not rendered) activities" => fn ->
           #   get(conn, "/feed/local?&hide_activities=all")
           # end,
@@ -252,6 +254,8 @@ defmodule Bonfire.UI.Social.Benchmark do
         ]
       ]
     )
+
+    Config.put([Bonfire.UI.Social.FeedLive, :time_limit], 7)
 
     Logger.configure(level: :debug)
   end
