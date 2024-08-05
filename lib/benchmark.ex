@@ -315,7 +315,7 @@ defmodule Bonfire.UI.Social.Benchmark do
   end
 
   if Config.get(:env) == :prod do
-    defp formatters(file) do
+    defp formatters(_file) do
       [
         Benchee.Formatters.Console
       ]

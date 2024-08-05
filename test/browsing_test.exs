@@ -159,7 +159,7 @@ defmodule Bonfire.UI.Social.BrowsingTest do
     alice = fake_user!(account)
     bob = fake_user!(account)
     carl = fake_user!(account)
-    feed_id = Bonfire.Social.Feeds.named_feed_id(:local)
+    _feed_id = Bonfire.Social.Feeds.named_feed_id(:local)
 
     # carl creates a post
     attrs = %{
