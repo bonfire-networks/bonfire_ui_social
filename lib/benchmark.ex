@@ -9,16 +9,15 @@ defmodule Bonfire.UI.Social.Benchmark do
 
   # NOTE: make sure you populate your local with seeds first, and then call these functions in iex
 
-  def feed do
+  def feed_backend do
     Logger.configure(level: :info)
 
     Utils.maybe_apply(
       Benchee,
       :run,
       [
-        # current_user_approaches_feed(),
-        # md_lib_feed(),
         some_feed_queries(),
+        # current_user_approaches_feed(),
         [
           parallel: 1,
           warmup: 2,
@@ -30,6 +29,62 @@ defmodule Bonfire.UI.Social.Benchmark do
         ]
       ]
     )
+  end
+
+
+  defp some_feed_queries do
+    %{
+      "query 1 activity" => fn ->
+        Bonfire.Social.FeedActivities.feed(:local, limit: 1)
+      end,
+      "query 10 activities" => fn ->
+        Bonfire.Social.FeedActivities.feed(:local, limit: 10)
+      end,
+      "query 20 activities" => fn ->
+        Bonfire.Social.FeedActivities.feed(:local, limit: 20)
+      end,
+      "query 1 without boundaries" => fn ->
+        Bonfire.Social.FeedActivities.feed(:local, limit: 1, skip_boundary_check: true)
+      end,
+      "query 10 without boundaries" => fn ->
+        Bonfire.Social.FeedActivities.feed(:local, limit: 10, skip_boundary_check: true)
+      end,
+      "query 20 without boundaries" => fn ->
+        Bonfire.Social.FeedActivities.feed(:local, limit: 20, skip_boundary_check: true)
+      end,
+      "query 1 with 1 year time limit" => fn ->
+        Config.put([Bonfire.UI.Social.FeedLive, :time_limit], 365)
+        Bonfire.Social.FeedActivities.feed(:local, limit: 1)
+        Config.put([Bonfire.UI.Social.FeedLive, :time_limit], 7)
+      end,
+      "query 10 with 1 year time limit" => fn ->
+        Config.put([Bonfire.UI.Social.FeedLive, :time_limit], 365)
+        Bonfire.Social.FeedActivities.feed(:local, limit: 10)
+        Config.put([Bonfire.UI.Social.FeedLive, :time_limit], 7)
+      end,
+      "query 20 with 1 year time limit" => fn ->
+        Config.put([Bonfire.UI.Social.FeedLive, :time_limit], 365)
+        Bonfire.Social.FeedActivities.feed(:local, limit: 20)
+        Config.put([Bonfire.UI.Social.FeedLive, :time_limit], 7)
+      end,
+      "query 1 with 1 year time limit, without boundaries" => fn ->
+        Config.put([Bonfire.UI.Social.FeedLive, :time_limit], 365)
+        Bonfire.Social.FeedActivities.feed(:local, limit: 1, skip_boundary_check: true)
+        Config.put([Bonfire.UI.Social.FeedLive, :time_limit], 7)
+      end,
+      "query 10 with 1 year time limit, without boundaries" => fn ->
+        Config.put([Bonfire.UI.Social.FeedLive, :time_limit], 365)
+        Bonfire.Social.FeedActivities.feed(:local, limit: 10, skip_boundary_check: true)
+        Config.put([Bonfire.UI.Social.FeedLive, :time_limit], 7)
+      end,
+      "query 20 with 1 year time limit, without boundaries" => fn ->
+        Config.put([Bonfire.UI.Social.FeedLive, :time_limit], 365)
+        Bonfire.Social.FeedActivities.feed(:local, limit: 20, skip_boundary_check: true)
+        Config.put([Bonfire.UI.Social.FeedLive, :time_limit], 7)
+      end
+          
+
+    }
   end
 
   # defp current_user_approaches_feed do
@@ -51,35 +106,7 @@ defmodule Bonfire.UI.Social.Benchmark do
   #   }
   # end
 
-  # defp md_lib_feed do
-  #   feed = Bonfire.Social.FeedActivities.feed(:fediverse, limit: 20)
-
-  #   %{
-  #     "render activities with earmark" => fn ->
-  #       Config.put(:markdown_library, Earmark)
-  #       render_feed(feed.edges)
-  #     end,
-  #     "render activities with mdex" => fn ->
-  #       Config.put(:markdown_library, MDEx)
-  #       render_feed(feed.edges)
-  #     end
-  #   }
-  # end
-
-  defp some_feed_queries do
-    %{
-      "query 1 activity" => fn ->
-        Bonfire.Social.FeedActivities.feed(:local, limit: 1)
-      end,
-      "query 10 activities" => fn ->
-        Bonfire.Social.FeedActivities.feed(:local, limit: 10)
-      end,
-      "query 20 activities" => fn ->
-        Bonfire.Social.FeedActivities.feed(:local, limit: 20)
-      end
-    }
-  end
-
+ 
   def feed_query_methods do
     Logger.configure(level: :info)
 
@@ -149,12 +176,13 @@ defmodule Bonfire.UI.Social.Benchmark do
     conn = build_conn()
 
     Config.put([Bonfire.UI.Social.FeedLive, :time_limit], 365)
-
     feed = Bonfire.Social.FeedActivities.feed(:local)
+    Config.put([Bonfire.UI.Social.FeedLive, :time_limit], 7)
 
     Utils.maybe_apply(
       Benchee,
       :run,
+        # md_lib_feed(),
       [
         %{
           # "query & render entire feed page with activities" => fn -> live(conn, "/feed/local") end, # NOPE: LiveView helpers can only be invoked from the test process
@@ -182,7 +210,7 @@ defmodule Bonfire.UI.Social.Benchmark do
           # "query & render feed component with activities (skipping feed preloads)" => fn ->
           #   live_feed(feed_live_update_many_preloads: :skip)
           # end,
-          "render feed component with already queried activities (default preloads)" => fn ->
+          "render feed component with pre-queried activities" => fn ->
             render_feed(feed.edges)
           end,
           # "render feed component with already queried activities (skipping preloads)" => fn ->
@@ -220,9 +248,17 @@ defmodule Bonfire.UI.Social.Benchmark do
           #   render_feed(feed.edges, hide_activities: "dynamic")
           # end,
           # "fetch home page with activities" => fn -> get(conn, "/") end, # should be quick because cached
-          "fetch feed page with activities" => fn -> get(conn, "/feed/local") end,
-          "fetch feed page with (skipped) activities" => fn ->
-            get(conn, "/feed/local?&hide_activities=component")
+          "fetch feed page" => fn -> get(conn, "/feed/local?cache=skip") end,
+          "fetch feed page with activities not rendered " => fn ->
+            Config.put([Bonfire.UI.Social.FeedLive, :time_limit], 365)
+            get(conn, "/feed/local?cache=skip&hide_activities=component")
+            Config.put([Bonfire.UI.Social.FeedLive, :time_limit], 7)
+          end,
+          "fetch feed page with 1 year limit" => fn -> get(conn, "/feed/local?cache=skip") end,
+          "fetch feed page with 1 year limit & activities not rendered " => fn ->
+            Config.put([Bonfire.UI.Social.FeedLive, :time_limit], 365)
+            get(conn, "/feed/local?cache=skip&hide_activities=component")
+            Config.put([Bonfire.UI.Social.FeedLive, :time_limit], 7)
           end
           # "fetch feed page with (not rendered) activities" => fn ->
           #   get(conn, "/feed/local?&hide_activities=all")
@@ -246,7 +282,7 @@ defmodule Bonfire.UI.Social.Benchmark do
         [
           parallel: 1,
           warmup: 2,
-          time: 25,
+          time: 15,
           memory_time: 2,
           reduction_time: 2,
           profile_after: true,
@@ -255,10 +291,25 @@ defmodule Bonfire.UI.Social.Benchmark do
       ]
     )
 
-    Config.put([Bonfire.UI.Social.FeedLive, :time_limit], 7)
+    # Config.put([Bonfire.UI.Social.FeedLive, :time_limit], 7)
 
     Logger.configure(level: :debug)
   end
+
+   # defp md_lib_feed do
+  #   feed = Bonfire.Social.FeedActivities.feed(:fediverse, limit: 20)
+
+  #   %{
+  #     "render activities with earmark" => fn ->
+  #       Config.put(:markdown_library, Earmark)
+  #       render_feed(feed.edges)
+  #     end,
+  #     "render activities with mdex" => fn ->
+  #       Config.put(:markdown_library, MDEx)
+  #       render_feed(feed.edges)
+  #     end
+  #   }
+  # end
 
   def feed_render_page do
     Logger.configure(level: :info)
