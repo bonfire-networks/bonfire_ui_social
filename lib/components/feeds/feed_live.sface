@@ -14,7 +14,7 @@
       :if={!@hide_tabs}
       selected_tab={@selected_tab}
       selected_name={@feed_title || @page_title}
-      class="flex items-center gap-2 w-full rounded-t-xl tabs sticky top-0 z-[9999999] backdrop-blur-sm bg-base-100/70 border-b border-base-content/10"
+      class="flex items-center gap-2 w-full rounded-t-xl tabs sticky top-0 z-[9999999] backdrop-blur-sm bg-base-100/70 border-b border-base-content/20"
       tab_class={@tab_class}
       item_class={@item_class}
       tab_primary_class={@tab_primary_class}
@@ -60,7 +60,7 @@
         id={"feed_#{@feed_name || @feed_id || @id}"}
         data-id="feed_activity_list"
         phx-update="stream"
-        class="flex flex-col divide-y divide-base-content/10 bonfire_feed flex-1 h-full grow"
+        class="flex flex-col divide-y divide-base-content/20 bonfire_feed flex-1 h-full grow"
       >
         {!-- phx-update={e(@feed_update_mode, "append")} --}
         {#for {entry_id, entry} <- e(@streams.feed, [])}
@@ -101,7 +101,7 @@
         id={"feed_#{@feed_name || @feed_id || @id}"}
         data-id="feed_activity_list"
         phx-update="append"
-        class="flex flex-col divide-y divide-base-content/10"
+        class="flex flex-col divide-y divide-base-content/20"
       >
         {!-- phx-update={e(@feed_update_mode, "append")} --}
         {#for {entry, i} <- Enum.with_index(@feed)}

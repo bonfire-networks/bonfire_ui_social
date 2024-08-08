@@ -101,12 +101,14 @@
           <div class="flex items-start gap-4">
             <#Icon solid="UserAdd" class="flex-shrink-0 w-7 h-7 text-info" />
             <div class="flex flex-col gap-2">
-              <Bonfire.UI.Common.AvatarLive
-                user_id={@profile_id}
-                src={@profile_media}
-                title={@profile_name}
-                class="h-9 w-9 rounded-full"
-              />
+              <LinkLive to={@path}>
+                <Bonfire.UI.Common.AvatarLive
+                  user_id={@profile_id}
+                  src={@profile_media}
+                  title={@profile_name}
+                  class="h-9 w-9 rounded-full"
+                />
+              </LinkLive>
               <LinkLive to={@path} class="flex link link-hover items-center gap-5 justify-start pb-2">
                 <div class="font-medium text-sm text-base-content/90">
                   {@profile_name || @character_username}

@@ -10,7 +10,7 @@
             <!-- <code>{inspect(@media.metadata, pretty: true)}</code> -->
             <div class={
               "w-full media_container text-base-content",
-              "p-4 border border-base-content/10 bg-base-100 rounded-lg": @showing_within != :media
+              "p-4 border border-base-content/20 bg-base-100 rounded-lg": @showing_within != :media
             }>
               <div class="relative w-full">
                 <div class="text-sm text-base-content/70 mb-1">{e(@metadata, "journal-title", "value", nil) || e(@metadata, "citation_journal_title", nil) ||

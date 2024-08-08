@@ -221,13 +221,6 @@ defmodule Bonfire.Social.Feeds.MyFeed.Test do
     next = "/feed"
     {:ok, view, html} = live(conn, next)
     # open_browser(view)
-    IO.inspect(
-      html
-      |> Floki.find("article")
-      |> length(),
-      label: "CACCA"
-    )
-
     auto_assert true <-
                   html
                   |> Floki.find("article")

@@ -1,4 +1,4 @@
-<div class="flex px-3 items-center w-full justify-between border-b border-base-content/10 pb-2">
+<div class="flex px-3 items-center w-full justify-between border-b border-base-content/20 pb-2">
   <div class="flex items-center min-w-fit	flex-1 gap-1">
     <span class="text-sm flex-shrink-0 text-base-content/70">{l("Order by:")}</span>
     <div phx-hook="Tooltip" id="order-dropdown" class="w-full flex flex-1">
@@ -43,7 +43,7 @@
       </label>
       <ul
         tabindex="0"
-        class="tooltip z-[999] menu p-1 shadow-xl bg-base-100 rounded-lg border border-base-content/10 w-60 absolute top-0 left-0 hidden"
+        class="tooltip z-[999] menu p-1 shadow-xl bg-base-100 rounded-lg border border-base-content/20 w-60 absolute top-0 left-0 hidden"
       >
         <li
           phx-click="set"
@@ -132,7 +132,7 @@
         thread_id={@thread_id}
       /> -->
 
-      <div class="flex rounded-md border border-base-content/10  items-center gap-3">
+      <div class="flex rounded-md border border-base-content/20  items-center gap-3">
         <div phx-hook="Tooltip" id="layout-dropdown" class="">
           <label
             tabindex="0"
@@ -146,7 +146,7 @@
           </label>
           <ul
             tabindex="0"
-            class="tooltip z-[999] menu p-1 shadow-xl bg-base-100 rounded-lg border border-base-content/10 w-52 absolute top-0 left-0 hidden"
+            class="tooltip z-[999] menu p-1 shadow-xl bg-base-100 rounded-lg border border-base-content/20 w-52 absolute top-0 left-0 hidden"
           >
             <li
               phx-click="set"
@@ -213,7 +213,7 @@
           </label>
           <ul
             tabindex="0"
-            class="tooltip z-[999] menu p-1 shadow-xl bg-base-100 rounded-lg border border-base-content/10 w-52 absolute top-0 left-0 hidden"
+            class="tooltip z-[999] menu p-1 shadow-xl bg-base-100 rounded-lg border border-base-content/20 w-52 absolute top-0 left-0 hidden"
           >
             <li
               phx-click="set"

@@ -1,4 +1,4 @@
-<div class="flex w-full border rounded-lg media_container border-base-content/10">
+<div class="flex w-full border rounded-lg media_container border-base-content/20">
   <div class="flex justify-between w-full">
     <div class="flex items-center gap-3 overflow-hidden">
       <div
@@ -46,8 +46,8 @@
         <div class="max-w-[420px] text-sm mt-0.5 break-words line-clamp-2 text-base-content/70">{Bonfire.Files.Media.description(@media)}</div>
       </div>
     </div>
-    <div class="flex border-l border-base-content/10 justify-center items-center flex-col">
-      <div class="flex-col divide-base-content/10 z-50 flex justify-center items-center place-content-center">
+    <div class="flex border-l border-base-content/20 justify-center items-center flex-col">
+      <div class="flex-col divide-base-content/20 z-50 flex justify-center items-center place-content-center">
         <Bonfire.UI.Common.OpenModalLive
           id={"media_modal_#{id(@media)}#{Text.random_string()}"}
           reusable_modal_id="media_player_modal"
@@ -78,7 +78,7 @@
         </Bonfire.UI.Common.OpenModalLive>
         <a
           href={Media.media_url(@media)}
-          class="border-t cursor-pointer hover:bg-base-content/10 flex-1 min-h-[60px] h-[60px] w-[60px] flex place-content-center items-center border-base-content/10"
+          class="border-t cursor-pointer hover:bg-base-content/10 flex-1 min-h-[60px] h-[60px] w-[60px] flex place-content-center items-center border-base-content/20"
           target="_blank"
         >
           <#Icon iconify="heroicons-outline:external-link" class="w-5 h-5 text-base-content/70" />

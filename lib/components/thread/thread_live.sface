@@ -1,5 +1,5 @@
 <div
-  class={"border-t border-base-content/10": !current_user_id(@__context__)}
+  class={"border-t border-base-content/20": !current_user_id(@__context__)}
   data-role="thread"
   data-sorted={Settings.get([Bonfire.UI.Social.ThreadLive, :sort_by], nil, @__context__)}
   id={"thread_#{@id}"}

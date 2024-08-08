@@ -1,7 +1,7 @@
 <LinkLive
   opts={"data-id": "media_link"}
   to={if !@download_url, do: @media_url || @preview_img}
-  class="flex w-full border rounded-lg media_container hover:bg-base-content/5 border-base-content/10"
+  class="flex w-full border rounded-lg media_container hover:bg-base-content/5 border-base-content/20"
   target="_blank"
 >
   <div class="flex w-full items-center gap-3 overflow-hidden">

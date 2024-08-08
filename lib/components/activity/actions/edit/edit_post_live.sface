@@ -22,7 +22,7 @@
           Bonfire.UI.Social.Activity.NoteLive.post_content(@object)
         )
         |> Enum.with_index()}
-      <div class="collapse collapse-arrow  border border-base-content/10 rounded-none">
+      <div class="collapse collapse-arrow  border border-base-content/20 rounded-none">
         <input type="checkbox" phx-update="ignore">
         <div class="collapse-title w-full flex items-center text-sm text-base-content gap-1">
           <StatelessComponent
@@ -58,16 +58,16 @@
       <h3 class="font-bold mt-5 text-base flex-1">
         {l("Edit")}
       </h3>
-      <div class="flex flex-col gap-2 mt-4 border rounded border-base-content/10">
+      <div class="flex flex-col gap-2 mt-4 border rounded border-base-content/20">
         <input
           name="name"
-          class="w-full input border-0 border-b border-base-content/10 rounded-none"
+          class="w-full input border-0 border-b border-base-content/20 rounded-none"
           autocomplete="off"
           placeholder={l("Title")}
           value={e(Bonfire.UI.Social.Activity.NoteLive.post_content(@object), :name, nil)}
         />
 
-        <div class="relative border-b border-base-content/10">
+        <div class="relative border-b border-base-content/20">
           <#Icon
             iconify="ri:alert-fill"
             class="absolute w-5 h-5 stroke-1 top-[14px] left-3 text-base-content/70"
