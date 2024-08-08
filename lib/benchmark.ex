@@ -31,7 +31,6 @@ defmodule Bonfire.UI.Social.Benchmark do
     )
   end
 
-
   defp some_feed_queries do
     %{
       "query 1 activity" => fn ->
@@ -82,8 +81,6 @@ defmodule Bonfire.UI.Social.Benchmark do
         Bonfire.Social.FeedActivities.feed(:local, limit: 20, skip_boundary_check: true)
         Config.put([Bonfire.UI.Social.FeedLive, :time_limit], 7)
       end
-          
-
     }
   end
 
@@ -106,7 +103,6 @@ defmodule Bonfire.UI.Social.Benchmark do
   #   }
   # end
 
- 
   def feed_query_methods do
     Logger.configure(level: :info)
 
@@ -182,7 +178,7 @@ defmodule Bonfire.UI.Social.Benchmark do
     Utils.maybe_apply(
       Benchee,
       :run,
-        # md_lib_feed(),
+      # md_lib_feed(),
       [
         %{
           # "query & render entire feed page with activities" => fn -> live(conn, "/feed/local") end, # NOPE: LiveView helpers can only be invoked from the test process
@@ -296,7 +292,7 @@ defmodule Bonfire.UI.Social.Benchmark do
     Logger.configure(level: :debug)
   end
 
-   # defp md_lib_feed do
+  # defp md_lib_feed do
   #   feed = Bonfire.Social.FeedActivities.feed(:fediverse, limit: 20)
 
   #   %{

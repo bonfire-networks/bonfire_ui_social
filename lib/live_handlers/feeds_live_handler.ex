@@ -1787,7 +1787,7 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
     )
   end
 
-  def load_user_feed_assigns(tab, user, params, socket) when tab in ["followers", "members"] do
+  def load_user_feed_assigns(tab, user, params, socket) when tab in ["followers"] do
     user = user || e(socket, :assigns, :user, nil)
     current_user = current_user(socket.assigns)
     pagination = input_to_atoms(params)
@@ -1808,6 +1808,34 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
     [
       loading: false,
       back: "/@#{e(user, :character, :username, nil)}",
+      selected_tab: tab,
+      feed: requests ++ e(followers, :edges, []),
+      page_info: e(followers, :page_info, []),
+      previous_page_info: e(socket.assigns, :page_info, false)
+    ]
+  end
+
+  def load_user_feed_assigns(tab, user, params, socket) when tab in ["members"] do
+    user = user || e(socket, :assigns, :user, nil)
+    current_user = current_user(socket.assigns)
+    pagination = input_to_atoms(params)
+
+    requests =
+      if id(user) == id(current_user), do: list_requests(current_user, pagination), else: []
+
+    followers =
+      Utils.maybe_apply(
+        Bonfire.Social.Graph.Follows,
+        :list_followers,
+        [user, [pagination: pagination, current_user: current_user]],
+        current_user: current_user,
+        fallback_return: []
+      )
+      |> debug("followers in feeed")
+
+    [
+      loading: false,
+      back: "/&#{e(user, :character, :username, nil)}",
       selected_tab: tab,
       feed: requests ++ e(followers, :edges, []),
       page_info: e(followers, :page_info, []),

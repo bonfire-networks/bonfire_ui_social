@@ -1,6 +1,7 @@
 <div
   data-id="media_list"
   data-rendered={@showing_within}
+  data-main-object={@viewing_main_object}
   :if={@link_list != [] && @showing_within != :smart_input}
   class="my-2 flex flex-col gap-2"
 >
@@ -55,7 +56,7 @@
         data-id="multimedia_grid"
         data-media={num_medias}
         data-rendered={@showing_within}
-        data-main-object={@viewing_main_object}
+        dataa-main-object={@viewing_main_object}
         class="grid w-full grid-flow-col grid-with-ratio grid-rows-4 gap-1 mt-2 overflow-clip"
       >
         {#for {%{} = m, counter} <- Enum.with_index(@multimedia_list)}
@@ -140,7 +141,7 @@
           data-id="multimedia_grid"
           data-media={num_medias}
           data-rendered={@showing_within}
-          data-main-object={@viewing_main_object}
+          dataa-main-object={@viewing_main_object}
           class="grid w-full grid-flow-col grid-with-ratio grid-rows-4 gap-1 mt-1"
         >
           {#for {%{} = m, counter} <- Enum.with_index(@image_list)}
