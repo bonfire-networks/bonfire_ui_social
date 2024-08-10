@@ -14,7 +14,7 @@ exdiff = "~> 0.1.5"
 # bonfire_data_social = "~> 0.1"
 # for this extension:
 # surface_heroicons = "~> 0.5"
-telemetry = "~> 1.1.0"
+telemetry = "~> 1.2.0"
 surface = "~> 0.11.2"
 
 untangle = "~> 0.3.0"
