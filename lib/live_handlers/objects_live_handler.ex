@@ -268,15 +268,17 @@ defmodule Bonfire.Social.Objects.LiveHandler do
         case Bonfire.Common.Types.object_type(
                maybe_to_atom(e(params, "type", nil) |> debug) |> debug || id
              )
-             |> debug do
+             |> debug("object_type") do
           Bonfire.Data.Identity.User ->
             socket
             |> redirect_to("/user/#{id}")
 
-          type when is_binary(type) ->
+          type when is_binary(type) or (is_atom(type) and not is_nil(type)) ->
+            thing = Bonfire.Common.Types.object_type_display(type) || l("post")
+
             msg =
               l("Sorry, you can't view this %{thing}",
-                thing: Bonfire.Common.Types.object_type_display(type) || l("post")
+                thing: thing
               )
 
             if current_user_id(socket) do
@@ -285,7 +287,10 @@ defmodule Bonfire.Social.Objects.LiveHandler do
               socket
               |> assign_error(msg)
               # |> set_go_after()
-              |> redirect_to(path(:login))
+              # |> redirect_to(path(:login))
+              |> redirect_to(
+                "/remote_interaction?type=read&url=#{Bonfire.Common.URIs.canonical_url(id)}&name=#{thing}"
+              )
             end
 
           _ ->
