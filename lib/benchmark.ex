@@ -42,6 +42,7 @@ defmodule Bonfire.UI.Social.Benchmark do
       "query 20 activities" => fn ->
         Bonfire.Social.FeedActivities.feed(:local, limit: 20)
       end,
+      
       "query 1 without boundaries" => fn ->
         Bonfire.Social.FeedActivities.feed(:local, limit: 1, skip_boundary_check: true)
       end,
@@ -51,6 +52,7 @@ defmodule Bonfire.UI.Social.Benchmark do
       "query 20 without boundaries" => fn ->
         Bonfire.Social.FeedActivities.feed(:local, limit: 20, skip_boundary_check: true)
       end,
+
       "query 1 with 1 year time limit" => fn ->
         Config.put([Bonfire.UI.Social.FeedLive, :time_limit], 365)
         Bonfire.Social.FeedActivities.feed(:local, limit: 1)
@@ -78,6 +80,37 @@ defmodule Bonfire.UI.Social.Benchmark do
       end,
       "query 20 with 1 year time limit, without boundaries" => fn ->
         Config.put([Bonfire.UI.Social.FeedLive, :time_limit], 365)
+        Bonfire.Social.FeedActivities.feed(:local, limit: 20, skip_boundary_check: true)
+        Config.put([Bonfire.UI.Social.FeedLive, :time_limit], 7)
+      end,
+
+      "query 1 with no time limit" => fn ->
+        Config.put([Bonfire.UI.Social.FeedLive, :time_limit], 0)
+        Bonfire.Social.FeedActivities.feed(:local, limit: 1)
+        Config.put([Bonfire.UI.Social.FeedLive, :time_limit], 7)
+      end,
+      "query 10 with no time limit" => fn ->
+        Config.put([Bonfire.UI.Social.FeedLive, :time_limit], 0)
+        Bonfire.Social.FeedActivities.feed(:local, limit: 10)
+        Config.put([Bonfire.UI.Social.FeedLive, :time_limit], 7)
+      end,
+      "query 20 with no time limit" => fn ->
+        Config.put([Bonfire.UI.Social.FeedLive, :time_limit], 0)
+        Bonfire.Social.FeedActivities.feed(:local, limit: 20)
+        Config.put([Bonfire.UI.Social.FeedLive, :time_limit], 7)
+      end,
+      "query 1 with no time limit, without boundaries" => fn ->
+        Config.put([Bonfire.UI.Social.FeedLive, :time_limit], 0)
+        Bonfire.Social.FeedActivities.feed(:local, limit: 1, skip_boundary_check: true)
+        Config.put([Bonfire.UI.Social.FeedLive, :time_limit], 7)
+      end,
+      "query 10 with no time limit, without boundaries" => fn ->
+        Config.put([Bonfire.UI.Social.FeedLive, :time_limit], 0)
+        Bonfire.Social.FeedActivities.feed(:local, limit: 10, skip_boundary_check: true)
+        Config.put([Bonfire.UI.Social.FeedLive, :time_limit], 7)
+      end,
+      "query 20 with no time limit, without boundaries" => fn ->
+        Config.put([Bonfire.UI.Social.FeedLive, :time_limit], 0)
         Bonfire.Social.FeedActivities.feed(:local, limit: 20, skip_boundary_check: true)
         Config.put([Bonfire.UI.Social.FeedLive, :time_limit], 7)
       end
@@ -244,18 +277,28 @@ defmodule Bonfire.UI.Social.Benchmark do
           #   render_feed(feed.edges, hide_activities: "dynamic")
           # end,
           # "fetch home page with activities" => fn -> get(conn, "/") end, # should be quick because cached
+
           "fetch feed page" => fn -> get(conn, "/feed/local?cache=skip") end,
           "fetch feed page with activities not rendered " => fn ->
-            Config.put([Bonfire.UI.Social.FeedLive, :time_limit], 365)
             get(conn, "/feed/local?cache=skip&hide_activities=component")
-            Config.put([Bonfire.UI.Social.FeedLive, :time_limit], 7)
           end,
-          "fetch feed page with 1 year limit" => fn -> get(conn, "/feed/local?cache=skip") end,
+
+          "fetch feed page with 1 year limit" => fn -> get(conn, "/feed/local?cache=skip&time_limit=365") end,
           "fetch feed page with 1 year limit & activities not rendered " => fn ->
-            Config.put([Bonfire.UI.Social.FeedLive, :time_limit], 365)
-            get(conn, "/feed/local?cache=skip&hide_activities=component")
-            Config.put([Bonfire.UI.Social.FeedLive, :time_limit], 7)
+            get(conn, "/feed/local?cache=skip&hide_activities=component&time_limit=365")
+          end,
+          "fetch feed page with 1 year limit & activity sub-components not rendered " => fn ->
+            get(conn, "/feed/local?cache=skip&hide_activities=all&time_limit=365")
+          end,
+
+          "fetch feed page with no time limit" => fn -> get(conn, "/feed/local?cache=skip&time_limit=0") end,
+          "fetch feed page with no time limit & activities not rendered " => fn ->
+            get(conn, "/feed/local?cache=skip&hide_activities=component&time_limit=0")
+          end,
+          "fetch feed page with no time limit & activity sub-components not rendered " => fn ->
+            get(conn, "/feed/local?cache=skip&hide_activities=all&time_limit=0")
           end
+
           # "fetch feed page with (not rendered) activities" => fn ->
           #   get(conn, "/feed/local?&hide_activities=all")
           # end,
