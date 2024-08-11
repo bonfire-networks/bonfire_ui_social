@@ -274,6 +274,8 @@ defmodule Bonfire.Social.Objects.LiveHandler do
             |> redirect_to("/user/#{id}")
 
           type when is_binary(type) or (is_atom(type) and not is_nil(type)) ->
+            # It should be noted that this leaks the existence of an object, as well as its type, which may be a privacy issue for some threat models
+
             thing = Bonfire.Common.Types.object_type_display(type) || l("post")
 
             msg =
