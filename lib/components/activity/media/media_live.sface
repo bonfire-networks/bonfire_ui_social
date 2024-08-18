@@ -29,19 +29,13 @@
         {#elseif String.ends_with?(media_url || "", ".pdf")}
           <Bonfire.UI.Social.Activity.LinkPdfLive media={m} media_url={media_url} />
         {#else _}
-          {#case preview_img(m)}
-            {#match preview_img}
-              {#case e(m.metadata, "oembed", "download_url", nil) || e(m.metadata, "download_url", nil)}
-                {#match download_url}
-                  <Bonfire.UI.Social.Activity.LinkLive
-                    cw={@cw}
-                    media_url={media_url}
-                    media={m}
-                    download_url={download_url}
-                    preview_img={preview_img}
-                  />
-              {/case}
-          {/case}
+          <Bonfire.UI.Social.Activity.MediaLinkLive
+            cw={@cw}
+            media_url={media_url}
+            media={m}
+            download_url={e(m.metadata, "oembed", "download_url", nil) || e(m.metadata, "download_url", nil)}
+            preview_img={preview_img(m) |> debug("preview_imgsss")}
+          />
         {/if}
     {/case}
   {/for}

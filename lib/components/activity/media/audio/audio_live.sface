@@ -14,11 +14,11 @@
                   media={@media}
                   alt={@media_label}
                   src={maybe_preview_img}
-                  fallback_icon="majesticons:video"
+                  fallback_icon="majesticons:music"
                 />
               {#else}
                 <div class="h-[120px] flex items-center place-content-center rounded-t-box">
-                  <#Icon iconify="majesticons:video" class="w-full h-12 text-base-content/70" />
+                  <#Icon iconify="majesticons:music" class="w-full h-12 text-base-content/70" />
                 </div>
               {/if}
           {/case}

@@ -1,4 +1,4 @@
-defmodule Bonfire.UI.Social.Activity.LinkLive do
+defmodule Bonfire.UI.Social.Activity.MediaLinkLive do
   use Bonfire.UI.Common.Web, :stateless_component
   alias Bonfire.UI.Social.Activity.MediaLive
 
