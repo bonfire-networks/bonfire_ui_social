@@ -5,25 +5,25 @@ defmodule Bonfire.Social.Feeds.Fediverse.Test do
   alias Bonfire.Social.Graph.Follows
 
   describe "show" do
-    # test "not logged in" do
-    #   conn = conn()
-    #   conn = get(conn, "/feed/federation")
-    #   doc = floki_response(conn) #|> debug()
-    #   # assert redirected_to(conn) =~ "/login"
-    #   assert [_] = Floki.find(doc, "<h1>Federation")
-    # end
-
-    test "with account" do
-      account = fake_account!()
-      user = fake_user!(account)
-      conn = conn(account: account)
-      next = "/feed/federation"
-      feed_id = Bonfire.Social.Feeds.named_feed_id(:activity_pub)
-
-      # |> IO.inspect
-      {view, doc} = floki_live(conn, next)
-      assert [_] = Floki.find(doc, "[id*='#{feed_id}']")
+    test "not logged in" do
+      conn = conn()
+      conn = get(conn, "/feed/federation")
+      assert redirected_to(conn) =~ "/login"
+      # doc = floki_response(conn) #|> debug()
+      # assert [_] = Floki.find(doc, "<h1>Federation")
     end
+
+    # test "with account" do
+    #   account = fake_account!()
+    #   user = fake_user!(account)
+    #   conn = conn(account: account)
+    #   next = "/feed/federation"
+    #   feed_id = Bonfire.Social.Feeds.named_feed_id(:activity_pub)
+
+    #   # |> IO.inspect
+    #   {view, doc} = floki_live(conn, next)
+    #   assert [_] = Floki.find(doc, "[id*='#{feed_id}']")
+    # end
 
     test "with user" do
       account = fake_account!()

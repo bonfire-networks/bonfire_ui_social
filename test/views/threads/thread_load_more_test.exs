@@ -41,9 +41,10 @@ defmodule Bonfire.Social.Threads.LoadMoreTest do
 
       # open_browser(view)
       # {view, doc} = floki_live(conn, next)
-      assert Floki.find(view, "[data-id=load_more]") == []
+      html = view |> render()
+      assert Floki.find(html, "[data-id=load_more]") == []
       # |> debug()
-      replies = Floki.find(view, "[data-id='replies'] > [data-id='comment']")
+      replies = Floki.find(html, "[data-id='replies'] > [data-id='comment']")
       assert Enum.count(replies) == total_posts
     end
 

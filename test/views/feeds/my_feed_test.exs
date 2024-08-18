@@ -220,10 +220,11 @@ defmodule Bonfire.Social.Feeds.MyFeed.Test do
     conn = conn(user: bob, account: account)
     next = "/feed"
     {:ok, view, html} = live(conn, next)
-    # open_browser(view)
-    auto_assert true <-
-                  html
-                  |> Floki.find("article")
-                  |> length() == 2
+    open_browser(view)
+
+    assert 2 ==
+             html
+             |> Floki.find("article")
+             |> length()
   end
 end

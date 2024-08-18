@@ -35,9 +35,13 @@ defmodule Bonfire.Social.Threads.RepliesTest do
 
     conn = conn(user: bob, account: account2)
     next = "/feed"
-    {view, doc} = floki_live(conn, next)
+    {view, _doc} = floki_live(conn, next)
 
-    assert doc
+    # wait for async
+    live_pubsub_wait(view)
+
+    assert view
+           |> render()
            # |> info
            |> Floki.find("[data-id=feed] article")
            |> List.last()

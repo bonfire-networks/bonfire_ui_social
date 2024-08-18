@@ -53,7 +53,7 @@ defmodule Bonfire.UI.Social.SettingsTest do
       })
 
       # force a refresh
-      {:ok, refreshed_view, _html} = live(conn, "/")
+      {:ok, refreshed_view, _html} = live(conn, "/feed")
 
       # open_browser(refreshed_view)
       auto_assert true <-
@@ -214,7 +214,7 @@ defmodule Bonfire.UI.Social.SettingsTest do
       # default feed is set to myfeed
       # check that the first post is the one alice created
       conn = conn(user: alice, account: account)
-      {:ok, view, html} = live(conn, "/")
+      {:ok, view, html} = live(conn, "/feed")
 
       # ensure the first post in the feed is alice's post
       auto_assert true <-
@@ -233,7 +233,7 @@ defmodule Bonfire.UI.Social.SettingsTest do
       })
 
       # check that the first post is the one bob created
-      {:ok, refreshed_view, refreshed_html} = live(conn, "/")
+      {:ok, refreshed_view, refreshed_html} = live(conn, "/feed")
 
       auto_assert true <- html =~ "local"
 
@@ -375,7 +375,7 @@ defmodule Bonfire.UI.Social.SettingsTest do
       {:ok, p5} = Posts.publish(current_user: alice, post_attrs: attrs, boundary: "public")
       conn = conn(user: alice, account: account)
       # change the preferences to sort by replies
-      {:ok, view, _html} = live(conn, "/")
+      {:ok, view, _html} = live(conn, "/feed")
 
       auto_assert true <-
                     view
@@ -406,7 +406,7 @@ defmodule Bonfire.UI.Social.SettingsTest do
 
       # login as alice
       conn = conn(user: alice, account: account)
-      {:ok, view, _html} = live(conn, "/")
+      {:ok, view, _html} = live(conn, "/feed")
 
       # create and upload an image
       icon =

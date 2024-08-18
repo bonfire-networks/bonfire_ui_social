@@ -147,9 +147,9 @@ defmodule Bonfire.Social.Feeds.LoadMoreTest do
       live_pubsub_wait(view)
 
       # open_browser(view)
-      # articles = Floki.find(more_doc, "[data-id=feed] article")
 
-      articles = element(more_doc, "[data-id=feed] article")
+      articles = Floki.find(more_doc, "[data-id=feed] article")
+      # articles = element(more_doc, "[data-id=feed] article")
       # # |> debug("articles")
 
       assert Enum.count(articles) == total_posts

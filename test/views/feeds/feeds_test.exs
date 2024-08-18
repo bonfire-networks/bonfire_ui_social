@@ -1,7 +1,10 @@
 defmodule Bonfire.Social.Feeds.Test do
   use Bonfire.UI.Social.ConnCase, async: true
   alias Bonfire.Social.Fake
-  alias Bonfire.Social.{Boosts, Likes, Follows, Posts}
+  alias Bonfire.Social.Boosts
+  alias Bonfire.Social.Likes
+  alias Bonfire.Social.Graph.Follows
+  alias Bonfire.Posts
 
   test "replies that appear via pubsub should show the reply_to" do
     # create a bunch of users
