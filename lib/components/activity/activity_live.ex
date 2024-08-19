@@ -89,7 +89,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
       "Activity ##{debug_i(socket.assigns[:activity_id], socket.assigns[:activity_inception])} prepared already, just assign updated activity"
     )
 
-    debug(assigns)
+    # debug(assigns)
 
     assign(
       socket,
@@ -163,10 +163,11 @@ defmodule Bonfire.UI.Social.ActivityLive do
       end || :feed
 
     peered =
-      (e(object, :peered, nil) || e(activity, :peered, nil) ||
-         e(activity, :subject, :character, :peered, nil) ||
-         e(activity, :created, :creator, :character, :peered, nil))
-      |> debug("peeeered")
+      e(object, :peered, nil) || e(activity, :peered, nil) ||
+        e(activity, :subject, :character, :peered, nil) ||
+        e(activity, :created, :creator, :character, :peered, nil)
+
+    # |> debug("peeeered")
 
     [
       showing_within: showing_within,
@@ -192,6 +193,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
         e(assigns, :thread_title, nil) || e(socket_assigns, :thread_title, nil) ||
           e(extras[:thread], :named, :name, nil) ||
           e(activity, :replied, :thread, :named, :name, nil) ||
+          e(activity, :named, :name, nil) ||
           e(object, :named, :name, nil),
       hide_actions:
         case e(assigns, :hide_actions, nil) || e(socket_assigns, :hide_actions, nil) do
@@ -212,6 +214,8 @@ defmodule Bonfire.UI.Social.ActivityLive do
             hide_actions
         end
     ]
+
+    # |> debug("sooaa")
   end
 
   # def assigns_from_activity(activity) do
@@ -370,8 +374,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
       parent_id:
         "#{activity_component_id}_#{e(assigns, :showing_within, nil)}_#{activity_inception}"
     })
-
-    # |> debug("Activity preparation done")
+    |> debug("Activity preparation done")
   end
 
   defp do_prepare(assigns), do: Map.put(assigns, :activity_prepared, :skipped)
