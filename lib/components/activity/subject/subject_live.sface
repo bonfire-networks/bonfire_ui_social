@@ -110,7 +110,7 @@
 
 <div
   :if={@thread_title && @showing_within == :thread && @viewing_main_object}
-  class="text-xl !ml-[-40px] font-semibold leading-[36x]"
+  class="text-xl !ml-[-40px] font-semibold leading-[36x] break-all"
 >
   {@thread_title}
 </div>
