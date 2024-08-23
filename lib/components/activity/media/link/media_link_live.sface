@@ -1,13 +1,13 @@
 <LinkLive
   opts={"data-id": "media_link"}
   to={if !@download_url, do: @media_url || @preview_img}
-  class="flex w-full border rounded-lg media_container hover:bg-base-content/5 border-base-content/20"
+  class="flex w-full border rounded-lg media_container hover:bg-base-content/5 border-base-content/10"
   target="_blank"
 >
-  <div class="flex w-full items-center gap-3 overflow-hidden">
+  <div class="flex w-full items-center gap-3 flex-col overflow-hidden">
     <div
       data-id="media_img"
-      class="flex relative items-center rounded-l-lg shrink-0 w-[120px] h-[120px] bg-base-content/10 place-content-center"
+      class="flex relative items-center rounded-t-lg shrink-0 w-full bg-base-content/10 aspect-[1.91/1] place-content-center;"
     >
       <div>
         {#case @preview_img || e(@media, :metadata, "favicon", nil) ||
@@ -20,14 +20,14 @@
             {#case String.ends_with?(preview_img, ".ico")}
               {#match true}
                 <LazyImage
-                  class="rounded-none object-cover rounded-l-lg  cursor-pointer m-image w-[36px] h-[36px]"
+                  class="rounded-none object-cover rounded-t-lg  cursor-pointer m-image w-[36px] h-[36px]"
                   src={preview_img}
                   media={@media}
                   fallback_icon="ion:newspaper-outline"
                 />
               {#match _}
                 <LazyImage
-                  class="rounded-none object-cover rounded-l-lg  cursor-pointer m-image w-[120px] h-[120px]"
+                  class="rounded-none object-cover rounded-t-lg cursor-pointer m-image w-full aspect-[1.91/1]"
                   src={preview_img}
                   media={@media}
                   fallback_icon="ion:newspaper-outline"
@@ -38,12 +38,7 @@
         {/case}
       </div>
     </div>
-    <div class="px-2 flex flex-col w-full flex-1">
-      <div data-id="media_title" class="text-sm font-medium line-clamp-1">
-        {Bonfire.Files.Media.media_label(@media) ||
-          if @media.media_type == "link", do: e(@media, :path, nil), else: l("View")} ({@media.media_type || l("link")})
-      </div>
-
+    <div class="p-4 pt-0 flex flex-col w-full gap-1 flex-1">
       <div data-id="media_author" class="text-sm">
         {e(@media, :metadata, "oembed", "author_name", nil)}
 
@@ -59,10 +54,16 @@
             <span class="text-base-content/70">{provider}</span>
         {/case}
       </div>
-      <div class="max-w-[420px] text-sm mt-2 break-words line-clamp-2 text-base-content/70">
+
+      <div data-id="media_title" class="text-lg font-semibold">
+        {Bonfire.Files.Media.media_label(@media) ||
+          if @media.media_type == "link", do: e(@media, :path, nil), else: l("View")} ({@media.media_type || l("link")})
+      </div>
+
+      <div class="max-w-full text-sm break-words line-clamp-2 text-base-content/70">
         {Bonfire.Files.Media.description(@media)}
       </div>
-      {!-- {e(@media, :metadata, "location", "name", nil)} {e(@media, :metadata, "startDate", nil)} --}
+      <!-- {e(@media, :metadata, "location", "name", nil)} {e(@media, :metadata, "startDate", nil)} -->
     </div>
   </div>
 </LinkLive>

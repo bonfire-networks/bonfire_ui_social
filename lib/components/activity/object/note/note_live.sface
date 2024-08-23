@@ -4,7 +4,7 @@
   data-rendered={@showing_within}
   data-main-object={@viewing_main_object}
   class={
-    "note previewable_activity cursor-pointer mt-0.5 max-w-[594px]",
+    "note previewable_activity cursor-pointer mt-0.5",
     "!max-w-full":
       is_nil(current_user_id(@__context__)) && @showing_within == :thread && @viewing_main_object
   }

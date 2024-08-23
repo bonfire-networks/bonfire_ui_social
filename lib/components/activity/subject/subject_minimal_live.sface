@@ -323,7 +323,7 @@
               <LinkLive class="font-medium link link-hover" to={@path}>
                 {@profile_name || @character_username}
               </LinkLive>
-              {raw(@verb_display)} <span :if={@thread_title}>({@thread_title})</span>
+              {raw(@verb_display)} <span class="italic" :if={@thread_title}>({@thread_title})</span>
             </div>
           </div>
         </div>
