@@ -388,6 +388,40 @@ defmodule Bonfire.UI.Social.Benchmark do
     Logger.configure(level: :debug)
   end
 
+  def misc do
+    app_names = Bonfire.Common.Extend.loaded_application_names()
+
+    app_map =
+      Map.new(app_names, fn x -> {x, true} end)
+      |> IO.inspect()
+
+    Utils.maybe_apply(
+      Benchee,
+      :run,
+      [
+        %{
+          "Map.get" => fn ->
+            app_map
+            |> Map.get(:bonfire_common)
+          end,
+          "Enum.member" => fn ->
+            app_names
+            |> Enum.member?(:bonfire_common)
+          end
+        },
+        [
+          parallel: 1,
+          warmup: 2,
+          time: 25,
+          memory_time: 2,
+          reduction_time: 2,
+          profile_after: true,
+          formatters: formatters("benchmarks/output/misc.html")
+        ]
+      ]
+    )
+  end
+
   def live_feed(opts \\ []) do
     feed = Bonfire.Social.FeedActivities.feed(:local, opts)
 
