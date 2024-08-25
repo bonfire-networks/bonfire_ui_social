@@ -562,7 +562,7 @@ defmodule Bonfire.Social.Threads.LiveHandler do
   def insert_comments(socket, {:replies, replies}, opts) do
     debug(replies, "insert flat replies into stream")
 
-    # Utils.e(socket.assigns, :replies, [])
+    # e(socket.assigns, :replies, [])
 
     maybe_stream_insert(
       socket,
