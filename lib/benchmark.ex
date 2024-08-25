@@ -9,8 +9,11 @@ defmodule Bonfire.UI.Social.Benchmark do
 
   # NOTE: make sure you populate your local with seeds first, and then call these functions in iex
 
+  # @log_level :error
+  @log_level String.to_existing_atom(System.get_env("DEV_LOG_LEVEL", "debug"))
+
   def feed_backend do
-    Logger.configure(level: :info)
+    Logger.configure(level: @log_level)
 
     Utils.maybe_apply(
       Benchee,
@@ -134,7 +137,7 @@ defmodule Bonfire.UI.Social.Benchmark do
   # end
 
   def feed_query_methods do
-    Logger.configure(level: :info)
+    Logger.configure(level: @log_level)
 
     Utils.maybe_apply(
       Benchee,
@@ -193,11 +196,11 @@ defmodule Bonfire.UI.Social.Benchmark do
       end
     )
 
-    Logger.configure(level: :info)
+    Logger.configure(level: @log_level)
   end
 
   def feed_page do
-    Logger.configure(level: :info)
+    Logger.configure(level: @log_level)
 
     conn = build_conn()
 
@@ -350,7 +353,7 @@ defmodule Bonfire.UI.Social.Benchmark do
   # end
 
   def feed_render_page do
-    Logger.configure(level: :info)
+    Logger.configure(level: @log_level)
     _conn = build_conn()
 
     feed = Bonfire.Social.FeedActivities.feed(:local)
