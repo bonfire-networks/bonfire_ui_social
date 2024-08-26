@@ -257,8 +257,15 @@
       module={maybe_component(Bonfire.Boundaries.Web.BlockMenuButtonsLive, @__context__)}
       parent_id={@activity_component_id || id(@activity)}
       object={@creator || @creator_id}
+      
       peered={e(@object, :peered, nil)}
     />
+              {!-- 
+              # TODO: pass the silenced/ghosted/blocked booleans so it isn't re-queried by BlockButtonLive before enabling:
+              silence_extra_object={id(@object)}
+      extra_object_label={l("this %{object}", object: e(@object_type_readable, l("object")))}
+               --}
+
 
     {#if @object_boundary && @object_type not in [Bonfire.Data.Social.Message] &&
         (id(@object) || id(@activity)) &&
@@ -297,7 +304,7 @@
                 parent_id={"delete-activity-#{id(@activity_component_id || @activity)}"}
                 explanation={l(
                   "Deleting from feeds means this %{verb} and this %{object} still exist, but this activity won't be discoverable via the local instance's feeds. Remote feeds won't be affected.",
-                  object: e(@object_type_readable, l("object")),
+                  object: @object_type_readable || l("object"),
                   verb: @verb
                 )}
               />
