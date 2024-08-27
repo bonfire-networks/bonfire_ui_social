@@ -257,15 +257,10 @@
       module={maybe_component(Bonfire.Boundaries.Web.BlockMenuButtonsLive, @__context__)}
       parent_id={@activity_component_id || id(@activity)}
       object={@creator || @creator_id}
-      
+      silence_extra_object={id(@object)}
+      extra_object_label={l("this %{object}", object: e(@object_type_readable, l("object")))}
       peered={e(@object, :peered, nil)}
     />
-              {!-- 
-              # TODO: pass the silenced/ghosted/blocked booleans so it isn't re-queried by BlockButtonLive before enabling:
-              silence_extra_object={id(@object)}
-      extra_object_label={l("this %{object}", object: e(@object_type_readable, l("object")))}
-               --}
-
 
     {#if @object_boundary && @object_type not in [Bonfire.Data.Social.Message] &&
         (id(@object) || id(@activity)) &&
