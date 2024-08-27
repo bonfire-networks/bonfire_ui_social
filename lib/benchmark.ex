@@ -9,8 +9,8 @@ defmodule Bonfire.UI.Social.Benchmark do
 
   # NOTE: make sure you populate your local with seeds first, and then call these functions in iex
 
-  # @log_level :error
-  @log_level String.to_existing_atom(System.get_env("DEV_LOG_LEVEL", "debug"))
+  @log_level :info
+  # @log_level String.to_existing_atom(System.get_env("DEV_LOG_LEVEL", "debug"))
 
   def feed_backend do
     Logger.configure(level: @log_level)
