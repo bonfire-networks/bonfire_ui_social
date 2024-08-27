@@ -2,7 +2,7 @@
 <a
   href={@permalink}
   data-role="subject_timestamp"
-  class="preview_activity_link subject_timestamp text-sm font-light no-underline truncate ellipsis text-base-content/70"
+  class="preview_activity_link subject_timestamp text-sm font-light no-underline text-base-content/70"
 >
   <#slot />
 </a>

@@ -196,7 +196,7 @@ defmodule Bonfire.UI.Social.FeedsLive do
     else
       [
         my: l("Following"),
-        explore: l("Everything"),
+        explore: l("All"),
         local: l("Local"),
         fediverse: l("Remote")
       ]

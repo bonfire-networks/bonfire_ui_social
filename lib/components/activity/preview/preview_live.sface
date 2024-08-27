@@ -5,22 +5,22 @@
   <div class="previewable_activity flex">
     <!-- <img src={e(@object, :post_content, :media, [])} class="w-[160px] h-[160px] rounded-lg"> -->
 
-    <div class="flex flex-col gap-1 max-w-[550px]">
+    <div class="flex flex-col gap-1">
       {#case e(@object, :post_content, :name, nil) || e(@object, :post_content, :summary, nil)}
         {#match nil}
           <div :if={!@is_remote} class="font-semibold text-lg text-base-content/90">
             {"No title"}
           </div>
         {#match title}
-          <div class="font-semibold text-lg text-base-content/90 truncate">
-            {title}
+          <div class="font-semibold text-lg text-base-content/90 ">
+            <p>{title}</p>
           </div>
       {/case}
 
       {#case e(@object, :post_content, :html_body, nil)}
         {#match nil}
         {#match html_body}
-          <div class="prose prose-sm line-clamp-3 truncate prose-sm">
+          <div class="prose prose-sm line-clamp-3  prose-sm">
             {rich(html_body,
               skip_markdown: @is_remote,
               __unsafe__: !@is_remote

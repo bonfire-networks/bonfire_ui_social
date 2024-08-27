@@ -33,7 +33,7 @@
         data-role="notifications_subject"
         class={
           "flex items-center justify-between w-full",
-          "-ml-[3rem]": @verb not in ["Reply", "Respond"]
+          "-ml-[3rem]": @verb not in ["Reply", "Respond", "Flag"]
         }
       >
         {#if @verb == "Request to Follow"}

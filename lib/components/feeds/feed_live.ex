@@ -47,7 +47,7 @@ defmodule Bonfire.UI.Social.FeedLive do
 
   prop tab_class, :css_class,
     default:
-      "flex flex-1 pt-4 px-3 text-base capitalize hover:bg-base-content hover:bg-opacity-10 place-content-center lined_tab"
+      "flex flex-1 pt-4 px-2 text-base capitalize hover:bg-base-content hover:bg-opacity-10 place-content-center lined_tab"
 
   prop item_class, :css_class,
     default: "text-base-content/60 text-sm pb-4 border-b border-transparent font-medium"
@@ -117,7 +117,7 @@ defmodule Bonfire.UI.Social.FeedLive do
     else
       [
         my: l("Following"),
-        explore: l("Everything"),
+        explore: l("All"),
         local: l("Local"),
         fediverse: l("Remote")
       ]

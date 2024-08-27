@@ -10,11 +10,12 @@ defmodule Bonfire.UI.Social.DiscussionLive do
      socket
      |> assign(
        page_title: l("Discussion"),
-       thread_title: nil,
+       thread_title: "Discussion",
        page: "discussion",
        showing_within: :thread,
        # search_placeholder: l("Search this discussion"),
        #  to_circles: [],
+       no_mobile_header: true,
        participants: nil,
        #  smart_input_opts: %{prompt: l("Reply to this discussion")},
        activity: nil,
