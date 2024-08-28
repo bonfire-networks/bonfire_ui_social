@@ -2,15 +2,15 @@
   href={@media_url}
   target="_blank"
   data-id="pdf-link"
-  class="order-last w-full media_container hover:bg-base-content/5"
+  class="order-last w-full p-2 rounded bg-base-content/5 media_container hover:bg-base-content/5"
 >
   {#case Media.thumbnail_url(@media)}
     {#match nil}
-      <div class="flex gap-2 overflow-hidden">
-        <div class="flex items-center rounded-l shrink-0 place-content-center">
+      <div class="flex gap-3 overflow-hidden items-center">
+        <div class="flex border border-base-content/20 p-4 items-center rounded shrink-0 place-content-center">
           <#Icon iconify="bxs:file-pdf" class="w-8 h-8 text-base-content/70" />
         </div>
-        <div class="text-sm font-medium line-clamp-1">
+        <div class="text font-semibold line-clamp-2">
           {Bonfire.Files.Media.media_label(@media) || l("View")} ({e(@media, :label, nil) || l("PDF")})
         </div>
       </div>

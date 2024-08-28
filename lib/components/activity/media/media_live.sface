@@ -50,7 +50,7 @@
         data-id="multimedia_grid"
         data-media={num_medias}
         data-rendered={@showing_within}
-        dataa-main-object={@viewing_main_object}
+        data-main-object={@viewing_main_object}
         class="grid w-full grid-flow-col grid-with-ratio grid-rows-4 gap-1 mt-2 overflow-clip"
       >
         {#for {%{} = m, counter} <- Enum.with_index(@multimedia_list)}
