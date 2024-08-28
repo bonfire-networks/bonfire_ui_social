@@ -9,7 +9,7 @@
       data-id="media_img"
       class="flex relative items-center rounded-t-lg shrink-0 w-full bg-base-content/10 aspect-[1.91/1] place-content-center;"
     >
-      <div>
+      <div class="w-full flex place-content-center items-center">
         {#case @preview_img || e(@media, :metadata, "favicon", nil) ||
             Bonfire.Files.FaviconStore.favicon_url(@media_url)}
           {#match preview_img when is_binary(preview_img)}
