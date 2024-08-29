@@ -12,7 +12,7 @@
             {"No title"}
           </div>
         {#match title}
-          <div class="font-semibold text-lg text-base-content/90 ">
+          <div class="font-semibold text-lg text-base-content/90">
             <p>{title}</p>
           </div>
       {/case}

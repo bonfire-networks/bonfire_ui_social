@@ -29,7 +29,8 @@ defmodule Bonfire.UI.Social.Activity.MediaLive do
       assigns[:media]
       # |> debug()
       |> the_medias()
-      |> debug("the_medias")
+
+    # |> debug("the_medias...")
 
     {image_list, multimedia_list, link_list} =
       media

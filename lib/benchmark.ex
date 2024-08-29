@@ -117,6 +117,12 @@ defmodule Bonfire.UI.Social.Benchmark do
     }
   end
 
+  def feed_full_backend do
+    Config.put([Bonfire.UI.Social.FeedLive, :time_limit], 0)
+    Bonfire.Social.FeedActivities.feed(:local, limit: 20)
+    Config.put([Bonfire.UI.Social.FeedLive, :time_limit], 7)
+  end
+
   # defp current_user_approaches_feed do
   #   conn = conn(user: fake_user!())
 
@@ -337,6 +343,8 @@ defmodule Bonfire.UI.Social.Benchmark do
     Logger.configure(level: :debug)
   end
 
+  def feed_full_get(conn \\ build_conn()), do: get(conn, "/feed/local?cache=skip&time_limit=0")
+
   # defp md_lib_feed do
   #   feed = Bonfire.Social.FeedActivities.feed(:fediverse, limit: 20)
 
@@ -389,7 +397,8 @@ defmodule Bonfire.UI.Social.Benchmark do
   end
 
   def misc do
-    app_names = Bonfire.Common.Extend.loaded_application_names()
+    # app_names = Bonfire.Common.Extend.loaded_application_names()
+    app_names = [1, 2]
 
     app_map =
       Map.new(app_names, fn x -> {x, true} end)
@@ -411,10 +420,10 @@ defmodule Bonfire.UI.Social.Benchmark do
         },
         [
           parallel: 1,
-          warmup: 2,
-          time: 25,
-          memory_time: 2,
-          reduction_time: 2,
+          warmup: 0,
+          time: 1,
+          memory_time: 1,
+          reduction_time: 1,
           profile_after: true,
           formatters: formatters("benchmarks/output/misc.html")
         ]
