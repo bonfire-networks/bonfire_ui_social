@@ -145,23 +145,38 @@
         />
       {/if}
 
-      {#if module_enabled?(Bonfire.Social.Pins, @__context__)}
-        <li
-          :if={current_user_id(@__context__) == @creator_id && @object_type not in [Bonfire.Data.Social.Message]}
-          class="hover:bg-neutral hover:bg-opacity-20"
-        >
+      {#if module_enabled?(Bonfire.Social.Pins, @__context__) and
+          @object_type not in [Bonfire.Data.Social.Message]}
+        <li :if={@showing_within == :thread and @thread_id} class="hover:bg-neutral hover:bg-opacity-20">
+          <!-- TODO: should depend on thread creator: current_user_id(@__context__) == @thread_creator_id -->
           <StatelessComponent
             module={maybe_component(Bonfire.UI.Reactions.PinActionLive, @__context__)}
+            scope={:thread}
+            scope_object={@thread_id}
             object={@object}
             class="flex items-center px-4 text-sm text-neutral-content/80"
           />
         </li>
+
+        {!-- 
+        # TODO: re-enable once pins are shown on profile
+        <li
+          :if={current_user_id(@__context__) == @creator_id}
+          class="hover:bg-neutral hover:bg-opacity-20"
+        >
+          <StatelessComponent
+            module={maybe_component(Bonfire.UI.Reactions.PinActionLive, @__context__)}
+            scope={:profile}
+            object={@object}
+            class="flex items-center px-4 text-sm text-neutral-content/80"
+          />
+        </li> --}
         <li :if={Bonfire.Boundaries.can?(@__context__, :pin, :instance)}>
           <StatelessComponent
             module={maybe_component(Bonfire.UI.Reactions.PinActionLive, @__context__)}
+            scope={:instance}
             object={@object}
             class="flex items-center px-4 text-sm text-neutral-content/80"
-            scope={:instance}
           />
         </li>
       {/if}

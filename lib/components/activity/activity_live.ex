@@ -514,9 +514,10 @@ defmodule Bonfire.UI.Social.ActivityLive do
       class={
         "p-5 pl-[4rem] activity relative flex flex-col #{@class}",
         "replied !p-0 mb-8": @activity_inception && @showing_within not in [:smart_input, :thread],
+        "bg-success/20": not is_nil(e(@activity, :replied, :pinned, nil) || e(@activity, :pinned, nil)),
         "unread-activity":
-          e(@activity, :seen, nil) == nil and @showing_within == :notifications and
-            @activity_inception == nil,
+          is_nil(e(@activity, :seen, nil)) and @showing_within == :notifications and
+            is_nil(@activity_inception),
         "active-activity":
           String.contains?(@current_url || "", @permalink || "") and
             @showing_within != :smart_input and @viewing_main_object == false
