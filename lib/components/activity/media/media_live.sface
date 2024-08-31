@@ -41,7 +41,7 @@
   {/for}
 </div>
 
-<div>
+<div data-main-object={@viewing_main_object} data-id="multimedia_list">
   {#case @multimedia_count}
     {#match 0}
     {#match num_medias}
