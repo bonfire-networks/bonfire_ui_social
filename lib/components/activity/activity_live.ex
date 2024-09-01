@@ -282,14 +282,6 @@ defmodule Bonfire.UI.Social.ActivityLive do
 
     # |> debug("verb (modified)")
 
-    verb_display = Activities.verb_display(verb)
-
-    object_type =
-      Types.object_type(object)
-      |> debug("object_type!!")
-
-    object_type_readable = Types.object_type_display(object_type)
-
     replied =
       e(activity, :replied, nil) ||
         e(object, :replied, nil)
@@ -300,6 +292,18 @@ defmodule Bonfire.UI.Social.ActivityLive do
         e(assigns, :thread_id, nil)
 
     reply_to = if verb in @reply_verbs, do: prepare_reply_to(replied || activity)
+
+    verb_display = Activities.verb_display(verb)
+
+    object_type =
+      (assigns[:object_type] || Types.object_type(object))
+      |> debug("object_type!!")
+
+    object_type_readable =
+      assigns[:object_type_readable] ||
+        if object_type == Bonfire.Data.Social.Post and not is_nil(reply_to),
+          do: l("comment"),
+          else: Types.object_type_display(object_type)
 
     thread_id = id(thread)
     # debug(thread, "thread")
@@ -313,7 +317,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
           end
         end
 
-    debug(activity, "theactivity")
+    # debug(activity, "theactivity")
 
     object_id = id(object)
     a_id = id(activity) || object_id

@@ -1,69 +1,74 @@
 <LinkLive
   opts={"data-id": "media_link"}
   to={if !@download_url, do: @media_url || @preview_img}
-  class="flex w-full border rounded-lg media_container hover:bg-base-content/5 border-base-content/10"
+  class={
+    "flex w-full media_container gap-3 hover:bg-base-content/5 overflow-hidden",
+    @css_borders || "border rounded-lg border-base-content/10",
+    "flex-col items-center": is_binary(@preview_img) and !@small_icon
+  }
   target="_blank"
 >
-  <div class="flex w-full items-center gap-3 flex-col overflow-hidden">
+  {#if is_binary(@preview_img) and !@small_icon}
     <div
       data-id="media_img"
-      class="flex relative items-center rounded-t-lg shrink-0 w-full bg-base-content/10 aspect-[1.91/1] place-content-center;"
+      class="flex relative items-center rounded-t-lg shrink-0 w-full bg-base-content/10 aspect-[1.91/1] place-content-center"
     >
       <div class="w-full flex place-content-center items-center">
-        {#case @preview_img || e(@media, :metadata, "favicon", nil) ||
-            Bonfire.Files.FaviconStore.favicon_url(@media_url)}
-          {#match preview_img when is_binary(preview_img)}
-            <div
-              class="absolute inset-0 backdrop-blur-lg bg-white/30 z-50 rounded-l-lg"
-              :if={@cw || Settings.get([Bonfire.UI.Social.Activity.MediaLive, :hide], false, @__context__)}
-            />
-            {#case String.ends_with?(preview_img, ".ico")}
-              {#match true}
-                <LazyImage
-                  class="rounded-none object-cover rounded-t-lg  cursor-pointer m-image w-[36px] h-[36px]"
-                  src={preview_img}
-                  media={@media}
-                  fallback_icon="ion:newspaper-outline"
-                />
-              {#match _}
-                <LazyImage
-                  class="rounded-none object-cover rounded-t-lg cursor-pointer m-image w-full aspect-[1.91/1]"
-                  src={preview_img}
-                  media={@media}
-                  fallback_icon="ion:newspaper-outline"
-                />
-            {/case}
-          {#match _}
-            <#Icon iconify="ion:newspaper-outline" class="w-8 h-8 text-base-content/70" />
-        {/case}
+        <div
+          class="absolute inset-0 backdrop-blur-lg bg-white/30 z-50 rounded-l-lg"
+          :if={@cw || Settings.get([Bonfire.UI.Social.Activity.MediaLive, :hide], false, @__context__)}
+        />
+
+        <LazyImage
+          class="rounded-none object-cover rounded-t-lg cursor-pointer m-image w-full aspect-[1.91/1]"
+          src={@preview_img}
+          media={@media}
+          fallback_icon="ion:newspaper-outline"
+        />
       </div>
     </div>
-    <div class="p-4 pt-0 flex flex-col w-full gap-1 flex-1">
-      <div data-id="media_author" class="text-sm">
-        {e(@media, :metadata, "oembed", "author_name", nil)}
-
-        {#case e(@media, :metadata, "oembed", "published", "date-parts", nil)}
-          {#match published when is_list(published)}
-            <span class="text-base-content/70">{published |> List.flatten() |> Enum.join("-")}</span>
-          {#match _}
-        {/case}
-
-        {#case MediaLive.provider(@media)}
-          {#match nil}
-          {#match provider}
-            <span class="text-base-content/70">{provider}</span>
-        {/case}
-      </div>
-
-      <div data-id="media_title" class="text-lg font-semibold">
-        {Bonfire.Files.Media.media_label(@media) ||
-          if @media.media_type == "link", do: e(@media, :path, nil), else: l("View")} ({@media.media_type || l("link")})
-      </div>
-
-      <div class="max-w-full text-sm break-words line-clamp-2 text-base-content/70">
-        {Bonfire.Files.Media.description(@media)}
-      </div>
-      <!-- {e(@media, :metadata, "location", "name", nil)} {e(@media, :metadata, "startDate", nil)} -->
+  {#else}
+    <div class="flex place-content-center items-center pl-3">
+      {#case @preview_img || e(@media, :metadata, "favicon", nil) ||
+          Bonfire.Files.FaviconStore.favicon_url(@media_url)}
+        {#match favicon_url when is_binary(favicon_url)}
+          <LazyImage
+            class="rounded-none object-cover rounded-t-lg cursor-pointer m-image min-w-8 min-h-8 max-w-20 h-auto"
+            src={favicon_url}
+            media={@media}
+            fallback_icon="ion:newspaper-outline"
+          />
+        {#match _}
+          <#Icon iconify="ion:newspaper-outline" class="w-8 h-8 text-base-content/70" />
+      {/case}
     </div>
+  {/if}
+
+  <div class="p-4 pt-0 flex flex-col w-full gap-1 flex-1">
+    <div data-id="media_author" class="text-sm">
+      {e(@media, :metadata, "oembed", "author_name", nil)}
+
+      {#case e(@media, :metadata, "oembed", "published", "date-parts", nil)}
+        {#match published when is_list(published)}
+          <span class="text-base-content/70">{published |> List.flatten() |> Enum.join("-")}</span>
+        {#match _}
+      {/case}
+
+      {#case MediaLive.provider(@media)}
+        {#match nil}
+        {#match provider}
+          <span class="text-base-content/70">{provider}</span>
+      {/case}
+    </div>
+
+    <div data-id="media_title" class="text-lg font-semibold">
+      {Bonfire.Files.Media.media_label(@media) ||
+        if @media.media_type == "link", do: e(@media, :path, nil), else: l("View")} ({@media.media_type || l("link")})
+    </div>
+
+    <div class="max-w-full text-sm break-words line-clamp-2 text-base-content/70">
+      {Bonfire.Files.Media.description(@media)}
+    </div>
+    <!-- {e(@media, :metadata, "location", "name", nil)} {e(@media, :metadata, "startDate", nil)} -->
   </div>
 </LinkLive>

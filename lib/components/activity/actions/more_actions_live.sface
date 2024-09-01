@@ -293,6 +293,7 @@
       object={@object}
       object_boundary={@object_boundary}
       target={"##{@activity_component_id}"}
+      btn_label={l("Label this %{object}", object: e(@object_type_readable, l("object")))}
     />
 
     {!-- Block the author, etc --}

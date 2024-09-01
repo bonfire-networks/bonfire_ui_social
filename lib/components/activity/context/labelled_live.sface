@@ -1,13 +1,17 @@
-<div data-type={id(@label)} class="border mt-3 rounded-lg border-base-content/20 shadow-sm">
+<div data-type={@label_id} class="border mt-3 rounded-lg border-base-content/20 shadow-sm">
   <!-- :if={@showing_within not in [:group, :topic, :thread] and not is_nil(@label)} -->
   <div class="bg-base-content/5 rounded-t-lg border-b border-base-content/20 flex items-center gap-3 py-2 p-3">
-    {#if id(@label) == "1ABE10VTDATEDGET1ATESTNEWS"}
-      <#Icon iconify="ph:info-fill" class="w-5 h-5 text-info" />
-    {#elseif id(@label) == "1ABE1M1S1NF0RMEDGETZEFACTS"}
-      <#Icon iconify="mingcute:warning-fill" class="w-5 h-5 text-warning" />
-    {#else}
-      <#Icon iconify="ooui:error" class="w-5 h-5 text-error" />
-    {/if}
+    {#case @label_id || id(@label)}
+      {#match "1ABE10VTDATEDGET1ATESTNEWS"}
+        <#Icon iconify="ri:broadcast-fill" class="w-5 h-5 text-info" />
+      {#match "1ABE1M1S1NF0RMEDGETZEFACTS"}
+        <#Icon iconify="material-symbols:local-library-rounded" class="w-5 h-5 text-warning" />
+      {#match "1ABE1M1S1EAD1NGBACK2S0VRCE"}
+        <#Icon iconify="ooui:error" class="w-5 h-5 text-error" />
+      {#match _}
+        <#Icon iconify="material-symbols:local-library-rounded" class="w-5 h-5 text-warning" />
+    {/case}
+
     <div class="font-semibold text-base-content">
       {e(@label, :profile, :name, nil) || e(@label, :character, :username, nil)}
     </div>

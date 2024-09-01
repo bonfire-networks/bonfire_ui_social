@@ -25,9 +25,14 @@
               e(m.metadata, "crossref", nil)
             ])}
             showing_within={@showing_within}
+            css_borders={@css_borders}
           />
         {#elseif String.ends_with?(media_url || "", ".pdf")}
-          <Bonfire.UI.Social.Activity.LinkPdfLive media={m} media_url={media_url} />
+          <Bonfire.UI.Social.Activity.LinkPdfLive
+            media={m}
+            media_url={media_url}
+            css_borders={@css_borders}
+          />
         {#else _}
           <Bonfire.UI.Social.Activity.MediaLinkLive
             cw={@cw}
@@ -35,6 +40,8 @@
             media={m}
             download_url={e(m.metadata, "oembed", "download_url", nil) || e(m.metadata, "download_url", nil)}
             preview_img={preview_img(m) |> debug("preview_imgsss")}
+            css_borders={@css_borders}
+            small_icon={@small_icon}
           />
         {/if}
     {/case}
