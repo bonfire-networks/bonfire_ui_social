@@ -154,6 +154,7 @@
             scope={:thread}
             scope_object={@thread_id}
             object={@object}
+            pinned?={not is_nil(e(@activity, :replied, :pinned, nil) || e(@activity, :pinned, nil))}
             class="flex items-center px-4 text-sm text-neutral-content/80"
           />
         </li>
@@ -168,6 +169,7 @@
             module={maybe_component(Bonfire.UI.Reactions.PinActionLive, @__context__)}
             scope={:profile}
             object={@object}
+            pinned?={not is_nil(e(@activity, :pinned, nil))}
             class="flex items-center px-4 text-sm text-neutral-content/80"
           />
         </li> --}

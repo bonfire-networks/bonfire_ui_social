@@ -85,33 +85,33 @@
                 {#if @thread_mode == :flat}
                   <span class="flex gap-3 px-2 text-base-content items-center">
                     <#Icon iconify="mdi:order-alphabetical-ascending" class="w-4 h-4" />
-                    <span class="font-semibold">{l("Chronological")}</span>
+                    <span>{l("Chronological")}</span>
                   </span>
                 {#else}
                   <span class="flex gap-3 px-2 text-base-content items-center">
                     <#Icon iconify="mdi:sprout" class="w-4 h-4" />
-                    <span class="font-semibold">{l("Chronological by last reply")}</span>
+                    <span>{l("Chronological by last reply")}</span>
                   </span>
                 {/if}
               {#match :num_replies}
                 <span class="flex gap-3 px-2 text-base-content items-center">
                   <#Icon iconify="basil:comment-outline" class="w-4 h-4 stroke-1 fill-base-content/50" />
-                  <span class="font-semibold">{l("By amount of replies")}</span>
+                  <span>{l("By amount of replies")}</span>
                 </span>
               {#match :num_boosts}
                 <span class="flex gap-3 px-2 text-base-content items-center">
                   <#Icon iconify="system-uicons:retweet" class="w-4 h-4 stroke-1 fill-base-content/50" />
-                  <span class="font-semibold">{l("By amount of boosts")}</span>
+                  <span>{l("By amount of boosts")}</span>
                 </span>
               {#match :num_likes}
                 <span class="flex gap-3 px-2 text-base-content items-center">
                   <#Icon iconify="mingcute:fire-line" class="h-[20px] w-[18px]" />
-                  <span class="font-semibold">{l("By amount of likes")}</span>
+                  <span>{l("By amount of likes")}</span>
                 </span>
               {#match _}
                 <span class="flex gap-3 px-2 text-base-content items-center">
                   <#Icon iconify="mdi:order-alphabetical-ascending" class="w-4 h-4" />
-                  <span class="font-semibold">{l("Chronological")}</span>
+                  <span>{l("Chronological")}</span>
                 </span>
             {/case}
           </label>
