@@ -12,6 +12,7 @@ defmodule Bonfire.UI.Social.Activity.MoreActionsLive do
   prop object_boundary, :any, default: nil
   prop verb, :string, default: nil
   prop object_type_readable, :any, default: nil
+  prop permalink, :string, default: nil
   prop flagged, :any, default: nil
   prop activity_component_id, :string, default: nil
   prop thread_id, :string, required: true

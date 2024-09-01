@@ -224,41 +224,51 @@
 
     <li :if={current_user_id(@__context__) != @creator_id and @verb != "Flag" and
       module_enabled?(Bonfire.UI.Moderation.FlagActionLive, @__context__)}>
-      <details>
-        <summary class="">
-          <div class="flex items-center w-full gap-2 text-sm text-base-content">
-            <#Icon solid="Flag" class="w-4 h-4 shrink-0" />
-            <span class="truncate ellipsis">{l("Flag")}</span>
-          </div>
-        </summary>
-        <ul>
-          {!-- Flag the object --}
-          <li data-role="flag_object">
-            <StatelessComponent
-              module={Bonfire.UI.Moderation.FlagActionLive}
-              object={@object}
-              flagged={@flagged}
-              parent_id={"object-#{id(@activity_component_id || @activity)}"}
-              object_type={e(@object_type_readable, l("object"))}
-              label={l("Flag this %{object}", object: e(@object_type_readable, l("object")))}
-            />
-          </li>
-
-          {!-- Flag the author --}
-          <li
-            data-role="flag_author"
-            :if={not is_nil(@creator_id) and not is_nil(current_user_id(@__context__))}
+      {#if !current_user_id(@__context__)}
+        <li>
+          <a
+            href={"/remote_interaction?type=flag&name=#{l("this %{object}", object: e(@object_type_readable, l("object")))}&url=#{@permalink || URIs.canonical_url(@object)}"}
+            class="flex items-center w-full gap-2 text-sm text-base-content"
           >
-            <StatelessComponent
-              module={Bonfire.UI.Moderation.FlagActionLive}
-              object={@creator_id}
-              flagged={@flagged}
-              parent_id={"user-#{id(@activity_component_id || @activity)}"}
-              object_type={@creator_name || l("user")}
-            />
-          </li>
-        </ul>
-      </details>
+            <#Icon solid="Flag" class="w-4 h-4 shrink-0" />
+            <span class="truncate ellipsis">{l("Flag this %{object}", object: e(@object_type_readable, l("object")))}</span>
+          </a>
+        </li>
+      {#else}
+        <details>
+          <summary class="">
+            <div class="flex items-center w-full gap-2 text-sm text-base-content">
+              <#Icon solid="Flag" class="w-4 h-4 shrink-0" />
+              <span class="truncate ellipsis">{l("Flag")}</span>
+            </div>
+          </summary>
+          <ul>
+            {!-- Flag the object --}
+            <li data-role="flag_object">
+              <StatelessComponent
+                module={Bonfire.UI.Moderation.FlagActionLive}
+                object={@object}
+                permalink={@permalink}
+                flagged={@flagged}
+                parent_id={"object-#{id(@activity_component_id || @activity)}"}
+                object_type={e(@object_type_readable, l("object"))}
+                label={l("Flag this %{object}", object: e(@object_type_readable, l("object")))}
+              />
+            </li>
+
+            {!-- Flag the author --}
+            <li data-role="flag_author" :if={not is_nil(@creator_id)}>
+              <StatelessComponent
+                module={Bonfire.UI.Moderation.FlagActionLive}
+                object={@creator_id}
+                flagged={@flagged}
+                parent_id={"user-#{id(@activity_component_id || @activity)}"}
+                object_type={@creator_name || l("user")}
+              />
+            </li>
+          </ul>
+        </details>
+      {/if}
     </li>
 
     <StatelessComponent
@@ -274,6 +284,7 @@
       module={maybe_component(Bonfire.Boundaries.Web.BlockMenuButtonsLive, @__context__)}
       parent_id={@activity_component_id || id(@activity)}
       object={@creator || @creator_id}
+      permalink={@permalink}
       silence_extra_object={id(@object)}
       extra_object_label={l("this %{object}", object: e(@object_type_readable, l("object")))}
       peered={e(@object, :peered, nil)}

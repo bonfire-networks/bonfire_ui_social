@@ -208,6 +208,7 @@
             object_type={@object_type}
             object_boundary={@object_boundary}
             object_type_readable={@object_type_readable}
+            permalink={@permalink}
             verb={@verb}
             thread_id={@thread_id}
             thread_mode={@thread_mode}
