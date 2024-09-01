@@ -12,6 +12,7 @@
       {#match media_url}
         {#if e(m.metadata, "wikibase", "itemType", nil) in ["journalArticle"] or
             e(m.metadata, "crossref", "DOI", nil) || e(m.metadata, "oembed", "DOI", nil) ||
+            e(m.metadata, "other", "prism.doi", nil) ||
             e(m.metadata, "other", "citation_doi", nil) || e(m.metadata, "other", "citation_doi", nil) ||
             e(m.metadata, "json_ld", "@type", nil) in ["ScholarlyArticle", "Dataset"]}
           <Bonfire.UI.Social.Activity.AcademicPaperLive

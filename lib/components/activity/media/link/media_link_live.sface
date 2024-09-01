@@ -33,7 +33,7 @@
           Bonfire.Files.FaviconStore.favicon_url(@media_url)}
         {#match favicon_url when is_binary(favicon_url)}
           <LazyImage
-            class="rounded-none object-cover rounded-t-lg cursor-pointer m-image min-w-8 min-h-8 max-w-20 h-auto"
+            class="rounded-none object-cover rounded-t-lg cursor-pointer m-image min-w-8 max-w-28 w-auto h-auto"
             src={favicon_url}
             media={@media}
             fallback_icon="ion:newspaper-outline"

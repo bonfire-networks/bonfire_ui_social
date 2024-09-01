@@ -10,7 +10,8 @@
             <!-- <code>{inspect(@media.metadata, pretty: true)}</code> -->
             <div class={
               "w-full media_container text-base-content",
-              "p-4 border border-base-content/20 bg-base-100 rounded-lg": @showing_within != :media
+              @css_borders || "border border-base-content/20 rounded-lg",
+              "p-4 bg-base-100 ": @showing_within != :media
             }>
               <div class="relative w-full">
                 <div class="text-sm text-base-content/70 mb-1">{e(@metadata, "journal-title", "value", nil) || e(@metadata, "citation_journal_title", nil) ||
@@ -39,7 +40,7 @@
                 </div>
 
                 <div class="flex items-center gap-3 my-3">
-                  {#case e(@metadata, "type", nil) || e(@metadata, "itemType", nil) ||
+                  {#case e(@metadata, "dc.type", nil) || e(@metadata, "type", nil) || e(@metadata, "itemType", nil) ||
                       e(@metadata, "citation_categories", nil) || e(@metadata, "@type", nil)}
                     {#match nil}
                     {#match type}
@@ -78,11 +79,15 @@
                 </div>
                 <div class="text-sm text-left">
                   <div class="">
-                    <div :if={not Enum.empty?(e(@metadata, "subject", []))} class="flex mt-2 flex-wrap gap-2">
-                      {#for subject <- List.wrap(e(@metadata, "subject", []))}
-                        <span class="text-sm badge badge-info bg-info/30 border-none !text-info">#{subject}</span>
-                      {/for}
-                    </div>
+                    {#case List.wrap(e(@metadata, "subject", nil) || e(@metadata, "dc.subject", nil))}
+                      {#match []}
+                      {#match subjects}
+                        <div class="flex mt-2 flex-wrap gap-2">
+                          {#for subject <- subjects}
+                            <span class="text-sm badge badge-info bg-info/30 border-none !text-info">#{subject}</span>
+                          {/for}
+                        </div>
+                    {/case}
 
                     <div class="mt-2 text-sm text-justify text-base-content/90 line-clamp-5 break-words">
                       {raw(
