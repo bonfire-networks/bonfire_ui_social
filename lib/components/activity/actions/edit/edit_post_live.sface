@@ -10,49 +10,7 @@
   <input type="hidden" name="post_id" value={id(@object)}>
 
   <div class="flex-1 mt-4">
-    {#for {%{
-         editor: editor,
-         diffed: diffed,
-         diff_count: diff_count,
-         diff_percent: diff_percent,
-         edited_at: edited_at
-       },
-       i} <-
-        Bonfire.Social.PostContents.get_versions_diffed(
-          Bonfire.UI.Social.Activity.NoteLive.post_content(@object)
-        )
-        |> Enum.with_index()}
-      <div class="collapse collapse-arrow  border border-base-content/20 rounded-none">
-        <input type="checkbox" phx-update="ignore">
-        <div class="collapse-title w-full flex items-center text-sm text-base-content gap-1">
-          <StatelessComponent
-            module={maybe_component(Bonfire.UI.Me.ProfileItemLive, @__context__)}
-            show_controls={[]}
-            inline
-            avatar_class="w-7 h-7 rounded-full"
-            profile={e(editor, :profile, nil)}
-            character={e(editor, :character, nil)}
-          />
-          <div class="ml-2">
-            {if i == 0,
-              do: l("created ") <> DatesTimes.date_from_now(id(@object)),
-              else:
-                lp("%{number_of_edits} edit", "%{number_of_edits} edits", diff_count,
-                  number_of_edits: diff_count
-                ) <>
-                  " (#{Bonfire.Common.Localise.Cldr.Number.to_string!(diff_percent, format: :percent)}) " <>
-                  DatesTimes.date_from_now(edited_at)}
-          </div>
-        </div>
-        <div class="collapse-content prose">
-          <p>{rich(e(diffed, :name, :html, ""))}</p>
-          <p>{rich(e(diffed, :summary, :html, ""))}</p>
-          <p>{rich(e(diffed, :html_body, :html, ""))}</p>
-        </div>
-      </div>
-    {#else}
-      {l("Not edited")}
-    {/for}
+    <Bonfire.UI.Social.VersionHistoryLive object={@object} />
 
     <div :if={!@read_only} phx-update="ignore">
       <h3 class="font-bold mt-5 text-base flex-1">

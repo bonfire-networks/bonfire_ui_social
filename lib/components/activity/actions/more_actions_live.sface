@@ -134,17 +134,6 @@
           </li>
       {/case}
 
-      {#if @object_type in [Bonfire.Data.Social.Post, Bonfire.Data.Social.Message] or
-          not is_nil(e(@object, :post_content, nil))}
-        <StatelessComponent
-          module={maybe_component(Bonfire.UI.Social.EditPostLive)}
-          object={@object}
-          object_boundary={@object_boundary}
-          activity_component_id={@activity_component_id}
-          parent_id={@activity_component_id || id(@activity)}
-        />
-      {/if}
-
       {#if module_enabled?(Bonfire.Social.Pins, @__context__) and
           @object_type not in [Bonfire.Data.Social.Message]}
         <li :if={@showing_within == :thread and @thread_id} class="hover:bg-neutral hover:bg-opacity-20">
@@ -220,6 +209,34 @@
           parent_id={id(@activity_component_id || @activity)}
         />
       </li>
+    {/if}
+
+    {#if @object_type in [Bonfire.Data.Social.Post, Bonfire.Data.Social.Message] or
+        not is_nil(e(@object, :post_content, nil))}
+      {#if current_user_id(@__context__)}
+        <StatelessComponent
+          module={maybe_component(Bonfire.UI.Social.EditPostLive)}
+          object={@object}
+          object_boundary={@object_boundary}
+          activity_component_id={@activity_component_id}
+          parent_id={@activity_component_id || id(@activity)}
+        />
+      {#else}
+        <li>
+          <a
+            href={"/post/#{id(@object)}/history/"}
+            class="flex items-center w-full gap-2 text-sm text-base-content"
+          >
+            <#Icon
+              iconify="material-symbols:difference-outline-rounded"
+              class="w-4 h-4 shrink-0 text-base-content"
+            />
+            <div class="text-sm text-base-content">
+              {l("Version history")}
+            </div>
+          </a>
+        </li>
+      {/if}
     {/if}
 
     <li :if={current_user_id(@__context__) != @creator_id and @verb != "Flag" and

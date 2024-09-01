@@ -14,6 +14,8 @@ defmodule Bonfire.UI.Social.Routes do
         live("/discussion/:type/:id", DiscussionLive, as: Needle.Pointer)
         live("/discussion/:id/reply/:reply_to_id", DiscussionLive, as: Needle.Pointer)
 
+        live("/post/:id/history", PostHistoryLive)
+
         live("/discuss/:id", DiscussionLive, as: Bonfire.Data.Social.PostContent)
       end
 
