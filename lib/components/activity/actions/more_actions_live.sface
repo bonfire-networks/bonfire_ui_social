@@ -134,9 +134,28 @@
           </li>
       {/case}
 
+      <li
+        :if={module_enabled?(Bonfire.Social.Answers, @__context__) and @showing_within == :thread and
+          @thread_id != id(@object)}
+        class="hover:bg-neutral hover:bg-opacity-20"
+      >
+        <!-- TODO: should depend on thread creator: current_user_id(@__context__) == @thread_creator_id -->
+        <StatelessComponent
+          module={maybe_component(Bonfire.UI.Reactions.PinActionLive, @__context__)}
+          scope={:thread_answer}
+          scope_object={@thread_id}
+          object={@object}
+          pinned?={not is_nil(e(@activity, :replied, :pinned, nil) || e(@activity, :pinned, nil))}
+          class="flex items-center px-4 text-sm text-neutral-content/80"
+        />
+      </li>
+
       {#if module_enabled?(Bonfire.Social.Pins, @__context__) and
           @object_type not in [Bonfire.Data.Social.Message]}
-        <li :if={@showing_within == :thread and @thread_id} class="hover:bg-neutral hover:bg-opacity-20">
+        <li
+          :if={@showing_within == :thread and @thread_id != id(@object)}
+          class="hover:bg-neutral hover:bg-opacity-20"
+        >
           <!-- TODO: should depend on thread creator: current_user_id(@__context__) == @thread_creator_id -->
           <StatelessComponent
             module={maybe_component(Bonfire.UI.Reactions.PinActionLive, @__context__)}
