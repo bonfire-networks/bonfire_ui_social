@@ -27,7 +27,6 @@
     />
   </LinkLive>
 
-
   <div
     data-id="subject_details"
     class="flex items-baseline gap-1 w-full feed-clickable -mt-1 justify-start"
@@ -77,8 +76,6 @@
       </Bonfire.UI.Social.Activity.LinkToActivityLive>
       <Bonfire.UI.Social.Activity.InstanceIconLive :if={@is_remote} peered={@peered} />
     </span>
-
-    
   </div>
   <!-- {#if @show_minimal_subject_and_note}      
           <div class="flex items-top">
