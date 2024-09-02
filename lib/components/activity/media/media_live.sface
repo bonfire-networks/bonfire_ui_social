@@ -3,7 +3,7 @@
   data-rendered={@showing_within}
   data-main-object={@viewing_main_object}
   :if={@link_list != [] && @showing_within != :smart_input}
-  class="my-2 flex flex-col gap-2"
+  class={"flex flex-col", "my-2 gap-2": !@css_borders}
 >
   {!-- LINKS --}
   {#for m <- @link_list}
