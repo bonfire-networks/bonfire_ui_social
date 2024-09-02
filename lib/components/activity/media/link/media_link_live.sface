@@ -2,7 +2,7 @@
   opts={"data-id": "media_link"}
   to={if !@download_url, do: @media_url || @preview_img}
   class={
-    "flex w-full media_container gap-3 hover:bg-base-content/5 overflow-hidden",
+    "flex w-full items-center media_container gap-3 hover:bg-base-content/5 overflow-hidden",
     @css_borders || "border rounded-lg border-base-content/10",
     "flex-col items-center": is_binary(@preview_img) and !@small_icon
   }
@@ -28,7 +28,7 @@
       </div>
     </div>
   {#else}
-    <div class="flex place-content-center items-center pl-3">
+    <div class="flex place-content-center items-center w-[120px] min-h-[80px] bg-base-content/5">
       {#case @preview_img || e(@media, :metadata, "favicon", nil) ||
           Bonfire.Files.FaviconStore.favicon_url(@media_url)}
         {#match favicon_url when is_binary(favicon_url)}
@@ -44,7 +44,7 @@
     </div>
   {/if}
 
-  <div class="p-4 pt-0 flex flex-col w-full gap-1 flex-1">
+  <div class="p-2 flex flex-col w-full gap-1 flex-1">
     <div data-id="media_author" class="text-sm">
       {e(@media, :metadata, "oembed", "author_name", nil)}
 
@@ -61,12 +61,12 @@
       {/case}
     </div>
 
-    <div data-id="media_title" class="text-lg font-semibold">
+    <div data-id="media_title" class="text-lg line-clamp-2 font-semibold">
       {Bonfire.Files.Media.media_label(@media) ||
         if @media.media_type == "link", do: e(@media, :path, nil), else: l("View")} ({@media.media_type || l("link")})
     </div>
 
-    <div class="max-w-full text-sm break-words line-clamp-2 text-base-content/70">
+    <div class="max-w-full text-sm break-words line-clamp-1 text-base-content/70">
       {Bonfire.Files.Media.description(@media)}
     </div>
     <!-- {e(@media, :metadata, "location", "name", nil)} {e(@media, :metadata, "startDate", nil)} -->

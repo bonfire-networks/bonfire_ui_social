@@ -1,31 +1,23 @@
-<div class="flex px-3 items-center justify-end border-b border-base-content/20 pb-2">
-  <div class="flex items-center pt-2 justify-end">
-    {!-- <span class="text-sm font-medium text-base-content/70">
-      {l("Discussion")}
-    </span> --}
-    <div :if={current_user_id(@__context__)} class="flex gap-3">
-      <!-- <Bonfire.UI.Social.ThreadMarkSeenLive
-        :if={@showing_within == :messages and @thread_id}
-        thread_id={@thread_id}
-      /> -->
-
-      <div class="flex rounded-md items-center gap-3">
-        <div phx-hook="Tooltip" id="layout-dropdown" class="">
+<div class=" p-2  border-b border-base-content/20 border-t mt-2">
+    <div :if={current_user_id(@__context__)} class="flex justify-between flex-1 gap-3">
+        <div 
+          data-position="bottom"
+          phx-hook="Tooltip" id="layout-dropdown" class="flex-1">
           <label
             tabindex="0"
-            class="tooltip-button btn rounded-l rounded-r-none btn-ghost btn-sm  normal-case font-normal"
+            class="tooltip-button btn w-full btn-neutral btn-sm"
           >
             {#if @thread_mode == :flat}
-              <#Icon iconify="fa-solid:list" class="w-4 h-4 text-base-content/70" />
+              <#Icon iconify="fa-solid:list" class="w-4 h-4" />
               {l("Flat list")}
             {#else}
-              <#Icon iconify="clarity:tree-view-solid" class="w-4 h-4 text-base-content/70" />
+              <#Icon iconify="clarity:tree-view-solid" class="w-4 h-4" />
               {l("Threaded replies")}
             {/if}
           </label>
           <ul
             tabindex="0"
-            class="tooltip z-[999] menu p-1 shadow-xl bg-base-100 rounded-lg  w-52 absolute top-0 left-0 hidden"
+            class="tooltip z-[999] bonfire-dropdown-menu  w-52 absolute top-0 left-0 hidden"
           >
             <li
               phx-click="set"
@@ -54,31 +46,13 @@
                 <#Icon iconify="fa-solid:list" class="w-4 h-4" />
                 {l("Flat list")}</a>
             </li>
-
-            {!-- {#if @__context__[:ui_compact]}
-                  <li
-                    phx-click="set"
-                    phx-value-to_atoms="true"
-                    phx-value-ui_compact="false"
-                    phx-value-assign_global="true"
-                    phx-target={@event_target}
-                  ><a>{l("Cozy")}</a></li>
-                {#else}
-                  <li
-                    phx-click="set"
-                    phx-value-to_atoms="true"
-                    phx-value-ui_compact="true"
-                    phx-value-assign_global="true"
-                    phx-target={@event_target}
-                  ><a>{l("Compact")}</a></li>
-                {/if} --}
           </ul>
         </div>
 
-        <div phx-hook="Tooltip" id="order-dropdown" class="flex flex-1">
+        <div data-position="bottom" phx-hook="Tooltip" id="order-dropdown" class="flex w-full flex-1">
           <label
             tabindex="0"
-            class="tooltip-button btn-sm btn flex-1 btn-ghost  normal-case text-base-content/70 font-normal"
+            class="tooltip-button btn-sm btn flex-1 w-full btn-neutral"
           >
             {#case @sort_by}
               {#match :latest_reply}
@@ -117,7 +91,7 @@
           </label>
           <ul
             tabindex="0"
-            class="tooltip z-[999] menu p-1 shadow-xl bg-base-100 rounded-lg  w-60 absolute top-0 left-0 hidden"
+            class="tooltip z-[999] bonfire-dropdown-menu  w-60 absolute top-0 left-0 hidden"
           >
             <li
               phx-click="set"
@@ -195,26 +169,26 @@
             {/if}
           </ul>
         </div>
-      </div>
 
-      <div phx-hook="Tooltip" id="sort_timing_thread">
+
+      <div  data-position="bottom" phx-hook="Tooltip" class="flex-1" id="sort_timing_thread">
         <label
           tabindex="0"
-          class="tooltip-button btn-sm rounded-r rounded-l-none btn btn-ghost  normal-case font-normal"
+          class="tooltip-button w-full btn-sm btn btn-neutral "
         >
           <!-- {l("Order")} -->
 
           {#if @sort_order == :asc}
-            <#Icon iconify="octicon:sort-asc-16" class="w-4 h-4 text-base-content/70" />
+            <#Icon iconify="octicon:sort-asc-16" class="w-4 h-4 " />
             {l("Oldest first")}
           {#else}
-            <#Icon iconify="octicon:sort-desc-16" class="w-4 h-4 text-base-content/70" />
+            <#Icon iconify="octicon:sort-desc-16" class="w-4 h-4 " />
             {l("Newest first")}
           {/if}
         </label>
         <ul
           tabindex="0"
-          class="tooltip z-[999] menu p-1 shadow-xl bg-base-100 rounded-lg w-52 absolute top-0 left-0 hidden"
+          class="tooltip z-[999] bonfire-dropdown-menu w-52 absolute top-0 left-0 hidden"
         >
           <li
             phx-click="set"
@@ -242,6 +216,5 @@
               {if @sort_by in [nil, :latest_reply], do: l("Oldest first"), else: l("Least first")}</a></li>
         </ul>
       </div>
-    </div>
   </div>
 </div>

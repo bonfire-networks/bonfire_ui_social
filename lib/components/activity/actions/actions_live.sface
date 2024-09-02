@@ -20,6 +20,7 @@
     label_id={id(@labelled)}
     activity={@activity}
     showing_within={@showing_within}
+    viewing_main_object={@viewing_main_object}
   />
 
   <div

@@ -8,7 +8,7 @@ defmodule Bonfire.UI.Social.Activity.MediaLive do
   prop label, :string, default: nil
   prop parent_id, :any, default: nil
   prop cw, :any, default: nil
-  prop css_borders, :css_class, default: nil
+  prop css_borders, :css_class, default: "border border-base-content/10 rounded-md"
   prop small_icon, :boolean, default: false
 
   @image_exts [".jpg", ".jpeg", ".png", ".gif", ".webp", ".svg", ".apng"]
