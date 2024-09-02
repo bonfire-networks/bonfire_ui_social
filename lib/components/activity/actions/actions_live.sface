@@ -39,6 +39,14 @@
         flex: !@hide_actions
       }
     >
+
+    <div class="" :if={@is_answer && @showing_within == :thread}>
+      <div class="flex items-center gap-2 text-success text-sm">
+        <#Icon iconify="mdi:message-check" class="w-4 h-4" />
+        <span class="font-medium">{l "Accepted Answer"}</span>
+      </div>
+    </div>
+
       {#if @verb == "Flag"}
         <StatelessComponent
           module={maybe_component(Bonfire.UI.Moderation.FlaggedActionsLive, @__context__)}

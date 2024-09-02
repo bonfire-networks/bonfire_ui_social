@@ -7,7 +7,7 @@
     :if={@subject_id && !Settings.get([Bonfire.UI.Common.AvatarLive, :hide_avatars], false, @__context__)}
     opts={"data-id": "subject_avatar"}
     class={
-      "absolute -ml-[3.25rem] font-semibold text-base-content hover:underline",
+      "absolute -ml-[3.25rem] font-semibold text-base-content hover:underline z-50",
       "!-ml-[2.5rem]": @__context__[:ui_compact] && !@viewing_main_object
     }
     to={@path || "/user/#{@subject_id}"}
@@ -26,6 +26,7 @@
       }
     />
   </LinkLive>
+
 
   <div
     data-id="subject_details"
@@ -76,6 +77,8 @@
       </Bonfire.UI.Social.Activity.LinkToActivityLive>
       <Bonfire.UI.Social.Activity.InstanceIconLive :if={@is_remote} peered={@peered} />
     </span>
+
+    
   </div>
   <!-- {#if @show_minimal_subject_and_note}      
           <div class="flex items-top">

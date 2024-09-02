@@ -28,12 +28,12 @@
       </div>
     </div>
   {#else}
-    <div class="flex place-content-center items-center w-[120px] min-h-[80px] bg-base-content/5">
+    <div class="flex place-content-center items-center w-[120px] h-[120px]">
       {#case @preview_img || e(@media, :metadata, "favicon", nil) ||
           Bonfire.Files.FaviconStore.favicon_url(@media_url)}
         {#match favicon_url when is_binary(favicon_url)}
           <LazyImage
-            class="rounded-none object-cover rounded-t-lg cursor-pointer m-image min-w-8 max-w-28 w-auto h-auto"
+            class="rounded-none object-cover rounded-l-lg cursor-pointer m-image h-full"
             src={favicon_url}
             media={@media}
             fallback_icon="ion:newspaper-outline"

@@ -513,12 +513,12 @@ defmodule Bonfire.UI.Social.ActivityLive do
       data-avatar-hidden={Settings.get([Bonfire.UI.Common.AvatarLive, :hide_avatars], false, @__context__)}
       data-hidden={@hide_activity}
       data-compact={@__context__[:ui_compact]}
+      data-answer={not is_nil(e(@activity, :replied, :pinned, nil) || e(@activity, :pinned, nil))}
       aria-label="user activity"
       tabIndex="0"
       class={
         "p-5 pl-[4rem] activity relative flex flex-col #{@class}",
         "replied !p-0 mb-8": @activity_inception && @showing_within not in [:smart_input, :thread],
-        "bg-success/20": not is_nil(e(@activity, :replied, :pinned, nil) || e(@activity, :pinned, nil)),
         "unread-activity":
           is_nil(e(@activity, :seen, nil)) and @showing_within == :notifications and
             is_nil(@activity_inception),
@@ -809,6 +809,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
                       labelled={@labelled}
                       reply_count={@reply_count}
                       is_remote={@is_remote}
+                      is_answer={not is_nil(e(@activity, :replied, :pinned, nil) || e(@activity, :pinned, nil))}
                       hide_actions={@hide_actions}
                     />
                   {#else}
