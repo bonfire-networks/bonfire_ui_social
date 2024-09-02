@@ -282,6 +282,10 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
 
   defp send_feed_updates(pid \\ nil, feed_ids, assigns, component \\ Bonfire.UI.Social.FeedLive)
 
+  # defp send_feed_updates(pid, feed_ids, {[], assigns}, component) when is_list(assigns) do
+  #   debug("nothing to send") # NOTE: doing this means empty feed stays in loading state
+  # end
+
   defp send_feed_updates(pid, feed_ids, {entries, assigns}, component) when is_list(assigns) do
     send_feed_updates(pid, feed_ids, assigns ++ [insert_stream: %{feed: entries}], component)
   end
@@ -971,6 +975,28 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
     end
   end
 
+  defp feed_assigns("user_" <> tab_and_user_or_other_id, opts) do
+    [tab, user_or_other_id] =
+      String.split(tab_and_user_or_other_id, "_", parts: 2)
+      |> debug("tab and user_or_other_id")
+
+    # FIXME socket/opts mismatch
+    load_user_feed_assigns(tab, user_or_other_id, [], %{assigns: opts})
+    # |> debug()
+  end
+
+  defp feed_assigns({"user_" <> tab_and_user_or_other_id, other}, opts) do
+    debug(other, "load user/other timeline: #{tab_and_user_or_other_id}")
+
+    [tab, user_or_other_id] =
+      String.split(tab_and_user_or_other_id, "_", parts: 2)
+      |> debug("tab and user_or_other_id")
+
+    # FIXME socket/opts mismatch
+    load_user_feed_assigns(tab, user_or_other_id, other, %{assigns: opts})
+    # |> debug()
+  end
+
   defp feed_assigns({{feed_id, nil}, %{} = filters}, opts) when filters != %{} do
     preloads = feed_extra_preloads_list(e(opts, :showing_within, nil))
     opts = opts ++ [preload: preloads]
@@ -1135,18 +1161,8 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
   # end
 
   defp feed_assigns({feed_id, other}, opts) when is_atom(feed_id) and not is_nil(feed_id) do
-    warn(other, "ignoring unsupported param, for feed #{inspect(feed_id)}")
+    warn(other, "ignoring unrecognised param, for feed #{inspect(feed_id)}")
     feed_assigns(feed_id, opts)
-  end
-
-  defp feed_assigns({"user_" <> tab_and_user_or_other_id, other}, opts) do
-    debug(other, "load user/other timeline: #{tab_and_user_or_other_id}")
-
-    [tab, user_or_other_id] = String.split(tab_and_user_or_other_id, "_", parts: 2)
-
-    # FIXME socket/opts mismatch
-    load_user_feed_assigns(tab, user_or_other_id, other, %{assigns: opts})
-    # |> debug()
   end
 
   defp feed_assigns({feed_id, other}, opts) do
@@ -1289,9 +1305,9 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
       activity: activity,
       object: object,
       object_id: id(activity) || id(object),
-      showing_within: e(assigns, :showing_within, nil),
-      thread_mode: e(assigns, :thread_mode, nil),
-      object_type: e(assigns, :object_type, nil)
+      showing_within: ed(assigns, :showing_within, nil),
+      thread_mode: ed(assigns, :thread_mode, nil),
+      object_type: ed(assigns, :object_type, nil)
     }
   end
 
@@ -1386,8 +1402,6 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
       |> preload_activity_and_object_assocs([:object], opts)
       |> Map.new(fn activity -> {id(activity) || id(e(activity, :object, nil)), activity} end)
       |> debug("list_of_activities postloaded")
-
-    raise false
 
     list_of_components
     # |> debug()
@@ -1592,14 +1606,15 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
     # for custom feeds
     feed_id =
       ulid!(feed_id)
-      |> debug("feed_id")
 
     preloads = feed_extra_preloads_list(e(socket.assigns, :showing_within, nil))
 
     feed =
       if module = maybe_module(FeedActivities, socket),
         do:
-          module.feed({feed_id, feed_filters},
+          {feed_id, feed_filters}
+          |> debug("feed to query")
+          |> module.feed(
             pagination: params,
             exclude_feed_ids: e(params, :exclude_feed_ids, []),
             current_user: current_user(socket.assigns),
@@ -1685,7 +1700,8 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
               {feed_id,
                %{
                  object_type: object_type
-               }},
+               }}
+              |> debug("feed to load"),
               [
                 pagination: input_to_atoms(params),
                 current_user: current_user(socket.assigns),

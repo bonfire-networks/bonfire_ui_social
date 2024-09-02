@@ -133,7 +133,7 @@ defmodule Bonfire.UI.Social.FeedLive do
   def update(assigns, socket)
 
   def update(%{insert_stream: %{feed: entries}} = assigns, socket) do
-    debug("feed stream is being poured into")
+    debug(entries, "feed stream is being poured into")
 
     socket
     |> assign(Map.drop(assigns, [:insert_stream]))
@@ -428,6 +428,7 @@ defmodule Bonfire.UI.Social.FeedLive do
       |> Bonfire.UI.Common.LiveHandlers.assign_attrs(attrs)
 
     feed_name = feed_name(socket.assigns)
+    feed_filters = socket.assigns[:feed_filters]
 
     if feed_name in [:my, :explore, :fediverse, :local],
       do: send_self(widgets(e(socket, :assigns, nil)))
@@ -440,7 +441,7 @@ defmodule Bonfire.UI.Social.FeedLive do
       |> LiveHandler.insert_feed(
         ...,
         LiveHandler.feed_assigns_maybe_async(
-          feed_name,
+          {feed_name, feed_filters},
           ...,
           true,
           true

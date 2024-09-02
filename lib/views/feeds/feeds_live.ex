@@ -212,8 +212,9 @@ defmodule Bonfire.UI.Social.FeedsLive do
     debug(feed_meta)
 
     {:noreply,
-     socket
-     |> assign(LiveHandler.feed_default_assigns(feed_meta, socket))
+     LiveHandler.feed_default_assigns(feed_meta, socket)
+     |> debug("feed_default_assigns")
+     |> assign(socket, ...)
      |> assign(..., FeedLive.maybe_widgets(e(..., :assigns, nil)))}
   end
 end
