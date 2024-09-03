@@ -49,7 +49,7 @@ defmodule Bonfire.UI.Social.ActivityOLDLive do
     thread = e(assigns, :thread_object, nil) || e(activity, :replied, :thread, nil) || e(activity, :replied, :thread_id, nil)
 
     thread_url = if thread do
-      if is_struct(thread), do: path(thread), else: "/discussion/#{ulid(thread)}"
+      if is_struct(thread), do: path(thread), else: "/discussion/#{uid(thread)}"
     end
 
     permalink =
@@ -63,7 +63,7 @@ defmodule Bonfire.UI.Social.ActivityOLDLive do
         object_id: e(activity.object, :id, nil) || e(activity, :id, "no-object-id"),
         object_type: object_type,
         object_type_readable: object_type_readable,
-        date_ago: DatesTimes.date_from_now(ulid(activity) || ulid(activity.object)),
+        date_ago: DatesTimes.date_from_now(uid(activity) || uid(activity.object)),
         activity: activity |> Map.drop([:object]),
         verb: verb,
         verb_display: verb_display,
@@ -94,19 +94,19 @@ defmodule Bonfire.UI.Social.ActivityOLDLive do
 
     ~F"""
     <article
-      phx-click={if @showing_within !=:thread || e(assigns, :activity_inception, nil) ||  ulid(@object) == nil and e(@activity, :replied, :reply_to_id, nil) != nil and ulid(@activity) != nil, do: "Bonfire.Social.Feeds:open_activity"}
+      phx-click={if @showing_within !=:thread || e(assigns, :activity_inception, nil) ||  uid(@object) == nil and e(@activity, :replied, :reply_to_id, nil) != nil and uid(@activity) != nil, do: "Bonfire.Social.Feeds:open_activity"}
       phx-value-permalink={@permalink}
-      id={"activity#{e(assigns, :activity_inception, nil)}-"<>( ulid(@activity) || e(@object, :id, "no-id") )}
+      id={"activity#{e(assigns, :activity_inception, nil)}-"<>( uid(@activity) || e(@object, :id, "no-id") )}
       aria-label="user activity"
       role="article"
       tabIndex="0"
       class={
       "p-3 activity relative pl-14 group " <> e(assigns, :class, ""),
-      "cursor-pointer hover:bg-base-content hover:bg-opacity-5": ulid(@object) == nil or e(@activity, :replied, :reply_to_id, nil) != nil or ulid(@activity) != nil and !@viewing_main_object and !@showing_within != :thread, # Hover the activity background unless it is a quoted activity
+      "cursor-pointer hover:bg-base-content hover:bg-opacity-5": uid(@object) == nil or e(@activity, :replied, :reply_to_id, nil) != nil or uid(@activity) != nil and !@viewing_main_object and !@showing_within != :thread, # Hover the activity background unless it is a quoted activity
       "pt-6 rounded-md hover:bg-base-200 hover:bg-opacity-100 bg-base-200": @viewing_main_object == true,
-      "main_reply_to mb-2 p-2 py-1 mt-2 relative border-l-4 opacity-60 border-base-content border-opacity-40": ulid(@object) != nil and e(@activity, :replied, :reply_to_id, nil) == nil and ulid(@activity) == nil and @showing_within != :widget and @showing_within != :notification  and @showing_within != :search, # showing a quoted reply_to
+      "main_reply_to mb-2 p-2 py-1 mt-2 relative border-l-4 opacity-60 border-base-content border-opacity-40": uid(@object) != nil and e(@activity, :replied, :reply_to_id, nil) == nil and uid(@activity) == nil and @showing_within != :widget and @showing_within != :notification  and @showing_within != :search, # showing a quoted reply_to
       "cursor-text hover:bg-base-100 hover:bg-opacity-100": @showing_within == :thread,
-      "reply": ulid(@object) != nil and e(@activity, :replied, :reply_to_id, nil) != nil and ulid(@activity) != nil,
+      "reply": uid(@object) != nil and e(@activity, :replied, :reply_to_id, nil) != nil and uid(@activity) != nil,
     }>
       {#for {component, component_assigns} when is_atom(component) <- components}
         <StatelessComponent

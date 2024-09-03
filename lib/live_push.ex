@@ -106,8 +106,10 @@ defmodule Bonfire.UI.Social.LivePush do
   Sends a notification about an activity to a list of users, excluding the author/subject
   """
   def notify_users(subject, verb, object, users) do
+    subject_id = uid(subject)
+
     users
-    |> Enum.reject(&(ulid(&1) == ulid(subject)))
+    |> Enum.reject(&(uid(&1) == subject_id))
     |> FeedActivities.get_feed_ids(notifications: ...)
     |> normalise_feed_ids()
     |> send_notifications(subject, verb, object, ...)
@@ -118,9 +120,11 @@ defmodule Bonfire.UI.Social.LivePush do
     |> prepare_activity()
     |> maybe_push_thread()
 
+    subject_id = uid(subject)
+
     users =
       users
-      |> Enum.reject(&(ulid(&1) == ulid(subject)))
+      |> Enum.reject(&(uid(&1) == subject_id))
       |> debug()
 
     # FIXME: avoid querying this again
@@ -197,9 +201,7 @@ defmodule Bonfire.UI.Social.LivePush do
   defp normalise_feed_ids(feed_ids) do
     feed_ids
     # |> debug("input")
-    |> ulid()
-    |> List.wrap()
-    |> filter_empty([])
+    |> uids()
 
     # |> debug("normalised")
   end

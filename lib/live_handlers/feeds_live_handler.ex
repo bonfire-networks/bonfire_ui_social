@@ -1605,7 +1605,7 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
 
     # for custom feeds
     feed_id =
-      ulid!(feed_id)
+      uid!(feed_id)
 
     preloads = feed_extra_preloads_list(e(socket.assigns, :showing_within, nil))
 
@@ -1919,7 +1919,7 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
     current_user = current_user(socket.assigns)
     # for custom feeds
     feed_id =
-      ulid!(feed_id)
+      uid!(feed_id)
       |> debug("feed_id")
 
     preloads = feed_extra_preloads_list(e(socket.assigns, :showing_within, nil))

@@ -116,7 +116,7 @@ defmodule Bonfire.Social.Objects.LiveHandler do
     #   if length(participants) > 0,
     #     do:
     #       Enum.map_join(
-    #         participants |> Enum.reject(&(e(&1, :character, :id, nil) == ulid(current_user))),
+    #         participants |> Enum.reject(&(e(&1, :character, :id, nil) == uid(current_user))),
     #         " ",
     #         &("@" <> e(&1, :character, :username, ""))
     #       ) <> " "
@@ -226,7 +226,7 @@ defmodule Bonfire.Social.Objects.LiveHandler do
            Utils.maybe_apply(
              Bonfire.Posts,
              :read,
-             [ulid!(id), [current_user: current_user, preload: default_preloads()]]
+             [uid!(id), [current_user: current_user, preload: default_preloads()]]
            ) do
       init_object_assigns(object, socket)
     else
@@ -238,7 +238,7 @@ defmodule Bonfire.Social.Objects.LiveHandler do
   def load_object_assigns(%{object_id: id} = assigns, socket) when is_binary(id) do
     current_user = current_user(assigns) || current_user(socket.assigns)
     # debug(params, "PARAMS")
-    with id when is_binary(id) <- ulid(id),
+    with id when is_binary(id) <- uid(id),
          {:ok, object} <-
            Bonfire.Social.Objects.read(id,
              current_user: current_user,
