@@ -4,10 +4,10 @@
       <label tabindex="0" class="tooltip-button btn w-full btn-neutral btn-sm">
         {#if @thread_mode == :flat}
           <#Icon iconify="fa-solid:list" class="w-4 h-4" />
-          {l("Flat list")}
+          <span class="hidden lg:block">{l("Flat list")}</span>
         {#else}
           <#Icon iconify="clarity:tree-view-solid" class="w-4 h-4" />
-          {l("Threaded replies")}
+          <span class="hidden lg:block">{l("Threaded replies")}</span>
         {/if}
       </label>
       <ul tabindex="0" class="tooltip z-[999] bonfire-dropdown-menu  w-52 absolute top-0 left-0 hidden">
@@ -48,33 +48,33 @@
             {#if @thread_mode == :flat}
               <span class="flex gap-3 px-2 text-base-content items-center">
                 <#Icon iconify="mdi:order-alphabetical-ascending" class="w-4 h-4" />
-                <span>{l("Chronological")}</span>
+                <span class="hidden lg:block">{l("Chronological")}</span>
               </span>
             {#else}
               <span class="flex gap-3 px-2 text-base-content items-center">
                 <#Icon iconify="mdi:sprout" class="w-4 h-4" />
-                <span>{l("Chronological by last reply")}</span>
+                <span class="hidden lg:block">{l("Chronological by last reply")}</span>
               </span>
             {/if}
           {#match :num_replies}
             <span class="flex gap-3 px-2 text-base-content items-center">
               <#Icon iconify="basil:comment-outline" class="w-4 h-4 stroke-1 fill-base-content/50" />
-              <span>{l("By amount of replies")}</span>
+              <span class="hidden lg:block">{l("By amount of replies")}</span>
             </span>
           {#match :num_boosts}
             <span class="flex gap-3 px-2 text-base-content items-center">
               <#Icon iconify="system-uicons:retweet" class="w-4 h-4 stroke-1 fill-base-content/50" />
-              <span>{l("By amount of boosts")}</span>
+              <span class="hidden lg:block">{l("By amount of boosts")}</span>
             </span>
           {#match :num_likes}
             <span class="flex gap-3 px-2 text-base-content items-center">
               <#Icon iconify="mingcute:fire-line" class="h-[20px] w-[18px]" />
-              <span>{l("By amount of likes")}</span>
+              <span class="hidden lg:block">{l("By amount of likes")}</span>
             </span>
           {#match _}
             <span class="flex gap-3 px-2 text-base-content items-center">
               <#Icon iconify="mdi:order-alphabetical-ascending" class="w-4 h-4" />
-              <span>{l("Chronological")}</span>
+              <span class="hidden lg:block">{l("Chronological")}</span>
             </span>
         {/case}
       </label>
@@ -162,10 +162,10 @@
 
         {#if @sort_order == :asc}
           <#Icon iconify="octicon:sort-asc-16" class="w-4 h-4" />
-          {l("Oldest first")}
+          <span class="hidden lg:block">{l("Oldest first")}</span>
         {#else}
           <#Icon iconify="octicon:sort-desc-16" class="w-4 h-4" />
-          {l("Newest first")}
+          <span class="hidden lg:block">{l("Newest first")}</span>
         {/if}
       </label>
       <ul tabindex="0" class="tooltip z-[999] bonfire-dropdown-menu w-52 absolute top-0 left-0 hidden">
