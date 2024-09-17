@@ -1,0 +1,4 @@
+
+<%= e(@profile, :name, nil) %> - @<%= e(@character, :username, nil) %>:
+
+<%=@thread_title%>

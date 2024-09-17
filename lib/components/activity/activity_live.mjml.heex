@@ -1,0 +1,22 @@
+<%= for {component, component_assigns} <- activity_components(
+                @activity,
+                @verb,
+                @object,
+                @object_type,
+                false,
+                :email,
+                false,
+                @thread_mode,
+                @thread_id,
+                @thread_title,
+                nil,
+                nil,
+                @reply_to
+              ) || [] do %>
+  <%= maybe_apply(
+    component,
+    "#{filename_for_module_template(component)}_mjml",
+    [Map.merge(assigns, component_assigns || %{})],
+    fallback_return: "skip #{component}"
+  ) %>
+<% end %>

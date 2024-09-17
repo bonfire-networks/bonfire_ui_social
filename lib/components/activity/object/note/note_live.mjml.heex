@@ -1,0 +1,6 @@
+<mjml>
+  <%= Text.text_only(e(@object, :post_content, :name, nil)) %>
+
+  <%= Text.text_only(e(@object, :post_content, :summary, nil)) ||
+    Text.text_only(e(@object, :post_content, :html_body, nil)) %>
+</mjml>

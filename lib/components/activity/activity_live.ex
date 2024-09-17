@@ -265,6 +265,13 @@ defmodule Bonfire.UI.Social.ActivityLive do
 
   def prepare(assigns), do: Map.put(assigns, :activity_prepared, :skipped)
 
+  defp prepare_verb(activity, fallback \\ nil),
+    do:
+      Activities.verb_maybe_modify(
+        e(activity, :verb, nil) || e(activity, :verb_id, nil) || fallback,
+        activity
+      )
+
   defp do_prepare(%{activity: activity, object: object} = assigns) when not is_nil(object) do
     activity_inception = e(assigns, :activity_inception, nil)
 
@@ -273,12 +280,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
 
     # debug(object, "object")
 
-    verb =
-      Activities.verb_maybe_modify(
-        e(activity, :verb, nil) || e(activity, :verb_id, nil) ||
-          e(assigns, :verb_default, "Create"),
-        activity
-      )
+    verb = prepare_verb(activity, e(assigns, :verb_default, "Create"))
 
     # |> debug("verb (modified)")
 
@@ -417,21 +419,56 @@ defmodule Bonfire.UI.Social.ActivityLive do
     nil
   end
 
-  defp activity_components(
-         activity,
-         verb,
-         object,
-         object_type,
-         activity_inception,
-         showing_within,
-         viewing_main_object,
-         thread_mode,
-         thread_id,
-         thread_title,
-         activity_component_id,
-         subject_user,
-         reply_to
-       ) do
+  def activity_components(
+        activity,
+        object_override,
+        showing_within
+      ) do
+    object = object_override || e(activity, :object, nil)
+
+    replied =
+      e(activity, :replied, nil) ||
+        e(object, :replied, nil)
+
+    thread =
+      e(replied, :thread, nil) || e(replied, :thread_id, nil)
+
+    verb = prepare_verb(activity)
+
+    reply_to = if verb in @reply_verbs, do: prepare_reply_to(replied || activity)
+
+    activity_components(
+      activity,
+      verb,
+      object,
+      Types.object_type(object),
+      false,
+      showing_within,
+      false,
+      nil,
+      id(thread),
+      nil,
+      nil,
+      nil,
+      reply_to
+    )
+  end
+
+  def activity_components(
+        activity,
+        verb,
+        object,
+        object_type,
+        activity_inception,
+        showing_within,
+        viewing_main_object,
+        thread_mode,
+        thread_id,
+        thread_title,
+        activity_component_id,
+        subject_user,
+        reply_to
+      ) do
     (component_maybe_attachments(showing_within == :media, activity, object, activity_inception) ++
        component_maybe_in_reply_to(
          reply_to,
@@ -1510,7 +1547,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
     end
   end
 
-  def component_object(_, _, _, _) do
+  def component_object(_, _) do
     debug("activity has no object")
     []
   end
