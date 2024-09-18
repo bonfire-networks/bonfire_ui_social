@@ -1,6 +1,8 @@
 <mjml>
   <%= rich(e(@object, :post_content, :name, nil)) %>
 
-  <%= rich(e(@object, :post_content, :summary, nil) ||
-    e(@object, :post_content, :html_body, nil)) %>
+  <%= rich(
+    e(@object, :post_content, :summary, nil) ||
+      e(@object, :post_content, :html_body, nil)
+  ) %>
 </mjml>

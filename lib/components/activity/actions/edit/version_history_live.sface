@@ -19,7 +19,7 @@
         character={e(diff, :editor, :character, nil)}
       />
       <div class="ml-2">
-        {if i == 0,
+        {if i == 0 || diff[:diff_count] < 1,
           do: l("created ") <> DatesTimes.date_from_now(id(@object)),
           else:
             lp("%{number_of_edits} edit", "%{number_of_edits} edits", diff[:diff_count],
