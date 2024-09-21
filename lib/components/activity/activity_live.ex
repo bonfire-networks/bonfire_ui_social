@@ -70,7 +70,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
         maybe_update(assigns, socket)
 
       socket ->
-        maybe_update(socket.assigns, socket)
+        maybe_update(assigns(socket), socket)
     end)
   end
 
@@ -86,7 +86,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
       )
       when is_map(activity) and preloaded_async_activities == true do
     debug(
-      "Activity ##{debug_i(socket.assigns[:activity_id], socket.assigns[:activity_inception])} prepared already, just assign updated activity"
+      "Activity ##{debug_i(assigns(socket)[:activity_id], assigns(socket)[:activity_inception])} prepared already, just assign updated activity"
     )
 
     # debug(assigns)
@@ -116,7 +116,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
       )
       when not is_nil(object_boundary) do
     debug(
-      "Activity ##{debug_i(socket.assigns[:activity_id], socket.assigns[:activity_inception])} prepared already, just assign object_boundary"
+      "Activity ##{debug_i(assigns(socket)[:activity_id], assigns(socket)[:activity_inception])} prepared already, just assign object_boundary"
     )
 
     socket
@@ -125,7 +125,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
 
   def maybe_update(assigns, %{assigns: %{activity_prepared: true}} = socket) do
     debug(
-      "Activity ##{debug_i(assigns[:activity_id] || socket.assigns[:activity_id], assigns[:activity_inception] || socket.assigns[:activity_inception])} prepared already"
+      "Activity ##{debug_i(assigns[:activity_id] || assigns(socket)[:activity_id], assigns[:activity_inception] || assigns(socket)[:activity_inception])} prepared already"
     )
 
     # FYI: assigning blindly here causes problems
@@ -135,7 +135,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
 
   def maybe_update(assigns, socket) do
     debug(
-      "Activity ##{debug_i(assigns[:activity_id] || socket.assigns[:activity_id], assigns[:activity_inception] || socket.assigns[:activity_inception])} not prepared, do so now"
+      "Activity ##{debug_i(assigns[:activity_id] || assigns(socket)[:activity_id], assigns[:activity_inception] || assigns(socket)[:activity_inception])} not prepared, do so now"
     )
 
     socket

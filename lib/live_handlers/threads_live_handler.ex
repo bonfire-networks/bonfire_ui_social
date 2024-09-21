@@ -62,17 +62,17 @@ defmodule Bonfire.Social.Threads.LiveHandler do
     {level, _} = Integer.parse(level)
 
     opts = [
-      current_user: current_user(socket.assigns),
+      current_user: current_user(assigns(socket)),
       max_depth: level + 3,
-      thread_mode: e(socket.assigns, :thread_mode, nil),
-      sort_by: e(socket.assigns, :sort_by, nil),
-      sort_order: e(socket.assigns, :sort_order, nil)
+      thread_mode: e(assigns(socket), :thread_mode, nil),
+      sort_by: e(assigns(socket), :sort_by, nil),
+      sort_order: e(assigns(socket), :sort_order, nil)
     ]
 
     %{edges: replies} = Bonfire.Social.Threads.list_replies(id, opts)
 
     if opts[:thread_mode] == :flat and is_list(replies) and
-         e(socket.assigns, :reply_count, 0) > 0 do
+         e(assigns(socket), :reply_count, 0) > 0 do
       {:noreply,
        insert_comments(
          socket,
@@ -92,12 +92,12 @@ defmodule Bonfire.Social.Threads.LiveHandler do
   end
 
   def handle_event("reply", %{"id" => reply_to_id} = _params, socket) do
-    activity = e(socket.assigns, :activity, %{})
+    activity = e(assigns(socket), :activity, %{})
 
     reply_to =
-      e(socket.assigns, :object, nil) ||
+      e(assigns(socket), :object, nil) ||
         e(activity, :object, nil) ||
-        e(socket.assigns, :object_id, nil) ||
+        e(assigns(socket), :object_id, nil) ||
         e(activity, :object_id, nil)
 
     if reply_to_id == Enums.id(reply_to) do
@@ -108,12 +108,12 @@ defmodule Bonfire.Social.Threads.LiveHandler do
   end
 
   def handle_event("reply", _params, socket) do
-    activity = e(socket.assigns, :activity, %{})
+    activity = e(assigns(socket), :activity, %{})
 
     reply(
-      e(socket.assigns, :object, nil) ||
+      e(assigns(socket), :object, nil) ||
         e(activity, :object, nil) ||
-        e(socket.assigns, :object_id, nil) ||
+        e(assigns(socket), :object_id, nil) ||
         e(activity, :object_id, nil),
       activity,
       socket
@@ -137,10 +137,10 @@ defmodule Bonfire.Social.Threads.LiveHandler do
      assign(socket,
        participants:
          Threads.list_participants(
-           e(socket.assigns, :activity, nil) || e(socket.assigns, :object, nil),
-           e(socket.assigns, :thread_id, nil),
+           e(assigns(socket), :activity, nil) || e(assigns(socket), :object, nil),
+           e(assigns(socket), :thread_id, nil),
            limit: 50,
-           current_user: current_user(socket.assigns)
+           current_user: current_user(assigns(socket))
          ),
        already_loaded_participants: true
      )}
@@ -155,7 +155,7 @@ defmodule Bonfire.Social.Threads.LiveHandler do
     debug("received :new_reply")
 
     # id = e(data, :object, :id, nil) || e(data, :id, nil)
-    # permitted? = id && Bonfire.Common.Needles.exists?([id: id], current_user: current_user(socket.assigns)) |> debug("double check boundary upon receiving a LivePush")
+    # permitted? = id && Bonfire.Common.Needles.exists?([id: id], current_user: current_user(assigns(socket))) |> debug("double check boundary upon receiving a LivePush")
 
     # if permitted?, do: # Note: now checking permission in ThreadLive
     if socket_connected?(socket) != false,
@@ -168,11 +168,11 @@ defmodule Bonfire.Social.Threads.LiveHandler do
     debug(paginate, "paginate thread")
 
     opts = [
-      current_user: current_user(socket.assigns),
+      current_user: current_user(assigns(socket)),
       paginate: paginate,
-      thread_mode: e(socket.assigns, :thread_mode, nil),
-      sort_by: e(socket.assigns, :sort_by, nil),
-      sort_order: e(socket.assigns, :sort_order, nil)
+      thread_mode: e(assigns(socket), :thread_mode, nil),
+      sort_by: e(assigns(socket), :sort_by, nil),
+      sort_order: e(assigns(socket), :sort_order, nil)
     ]
 
     with %{edges: replies, page_info: page_info} <-
@@ -181,7 +181,7 @@ defmodule Bonfire.Social.Threads.LiveHandler do
              opts
            ) do
       replies =
-        (e(socket.assigns, :replies, []) ++ replies)
+        (e(assigns(socket), :replies, []) ++ replies)
         |> Enum.uniq()
 
       # |> debug("REPLIES")
@@ -212,24 +212,24 @@ defmodule Bonfire.Social.Threads.LiveHandler do
 
     # TODO: we should be getting the type from ActivityLive
     object_type =
-      case e(socket.assigns, :object_type, nil) || Types.object_type(reply_to) do
+      case e(assigns(socket), :object_type, nil) || Types.object_type(reply_to) do
         Bonfire.Data.Social.APActivity ->
-          json = e(activity, :object, :json, nil) || e(socket.assigns, :object, :json, nil)
+          json = e(activity, :object, :json, nil) || e(assigns(socket), :object, :json, nil)
           e(json, "object", "type", nil) || e(json, "type", nil)
 
         other ->
           other
       end
 
-    debug(e(socket.assigns, :object_boundary, nil), "object_boundary!")
-    debug(e(socket.assigns, :published_in, nil), "published_in_id!")
+    debug(e(assigns(socket), :object_boundary, nil), "object_boundary!")
+    debug(e(assigns(socket), :published_in, nil), "published_in_id!")
     debug(object_type, "object_type!")
     reply_to_id = Enums.id(reply_to)
 
     with {:ok, current_user} <- current_user_or_remote_interaction(socket, l("reply"), reply_to),
          # TODO: can we use the preloaded object_boundaries rather than making an extra query
          true <- Bonfire.Boundaries.can?(current_user, :reply, reply_to_id) do
-      published_in = e(socket.assigns, :published_in, nil)
+      published_in = e(assigns(socket), :published_in, nil)
       published_in_id = id(published_in)
 
       create_object_type = if(object_type == Bonfire.Data.Social.Message, do: :message)
@@ -237,7 +237,7 @@ defmodule Bonfire.Social.Threads.LiveHandler do
       # TODO: don't re-load participants here as we already have the list (at least when we're in a thread)
       # TODO: include thread_id in list_participants/3 call
       participants =
-        (e(socket.assigns, :participants, nil) ||
+        (e(assigns(socket), :participants, nil) ||
            Bonfire.Social.Threads.list_participants(Map.put(activity, :object, reply_to), nil,
              current_user: current_user
            ) || [])
@@ -280,7 +280,7 @@ defmodule Bonfire.Social.Threads.LiveHandler do
                    e(published_in, :name, nil)},
               else:
                 Bonfire.Boundaries.preset_boundary_tuple_from_acl(
-                  e(socket.assigns, :object_boundary, nil),
+                  e(assigns(socket), :object_boundary, nil),
                   object_type
                 )
             )
@@ -309,12 +309,12 @@ defmodule Bonfire.Social.Threads.LiveHandler do
 
   def thread_init(socket) do
     # debug(assigns, "thread assigns")
-    current_user = current_user(socket.assigns)
-    object = e(socket.assigns, :object, nil) || e(socket.assigns, :activity, :object)
+    current_user = current_user(assigns(socket))
+    object = e(assigns(socket), :object, nil) || e(assigns(socket), :activity, :object)
 
     thread_id =
-      e(socket.assigns, :thread_id, nil) ||
-        e(socket.assigns, :activity, :replied, :thread_id, nil) ||
+      e(assigns(socket), :thread_id, nil) ||
+        e(assigns(socket), :activity, :replied, :thread_id, nil) ||
         e(object, :replied, :thread_id, nil)
 
     socket
@@ -338,16 +338,16 @@ defmodule Bonfire.Social.Threads.LiveHandler do
 
   def load_thread_maybe_async(%Phoenix.LiveView.Socket{} = socket, show_loader, reset_stream) do
     socket_connected = connected?(socket)
-    current_user = current_user(socket.assigns)
+    current_user = current_user(assigns(socket))
 
     if (socket_connected || current_user != nil) && Config.env() != :test do
       if socket_connected do
         debug("socket connected, so load async")
         pid = self()
 
-        object = e(socket.assigns, :object, nil)
-        thread_id = e(socket.assigns, :thread_id, nil) || id(object)
-        component_id = e(socket.assigns, :id, nil) || thread_id
+        object = e(assigns(socket), :object, nil)
+        thread_id = e(assigns(socket), :thread_id, nil) || id(object)
+        component_id = e(assigns(socket), :id, nil) || thread_id
 
         apply_task(:start_link, fn ->
           # compute & send stats
@@ -355,8 +355,8 @@ defmodule Bonfire.Social.Threads.LiveHandler do
           limit = 4
 
           participants =
-            e(socket.assigns, :participants, []) ||
-              Threads.list_participants(e(socket.assigns, :activity, nil) || object, thread_id,
+            e(assigns(socket), :participants, []) ||
+              Threads.list_participants(e(assigns(socket), :activity, nil) || object, thread_id,
                 limit: limit,
                 current_user: current_user
               )
@@ -463,26 +463,26 @@ defmodule Bonfire.Social.Threads.LiveHandler do
 
   def load_thread_assigns(socket, thread_id \\ nil) do
     debug("load comments")
-    thread_id = thread_id || e(socket.assigns, :thread_id, e(socket.assigns, :object, :id, nil))
+    thread_id = thread_id || e(assigns(socket), :thread_id, e(assigns(socket), :object, :id, nil))
 
     if thread_id do
       debug("loading by thread_id")
       # debug(assigns)
 
-      thread_mode = e(socket.assigns, :thread_mode, nil)
-      sort_by = e(socket.assigns, :sort_by, nil)
-      sort_order = e(socket.assigns, :sort_order, nil)
-      showing_within = e(socket.assigns, :showing_within, :thread)
+      thread_mode = e(assigns(socket), :thread_mode, nil)
+      sort_by = e(assigns(socket), :sort_by, nil)
+      sort_order = e(assigns(socket), :sort_order, nil)
+      showing_within = e(assigns(socket), :showing_within, :thread)
 
       preloads =
         Bonfire.Social.Feeds.LiveHandler.feed_extra_preloads_list(showing_within, thread_mode)
 
       with %{edges: replies, page_info: page_info} <-
              Threads.list_replies(thread_id,
-               current_user: current_user(socket.assigns),
+               current_user: current_user(assigns(socket)),
                preload: preloads,
-               after: e(socket.assigns, :after, nil),
-               max_depth: max_depth(socket.assigns[:__context__]),
+               after: e(assigns(socket), :after, nil),
+               max_depth: max_depth(assigns(socket)[:__context__]),
                thread_mode: thread_mode,
                sort_by: sort_by,
                sort_order: sort_order,
@@ -562,7 +562,7 @@ defmodule Bonfire.Social.Threads.LiveHandler do
   def insert_comments(socket, {:replies, replies}, opts) do
     debug(replies, "insert flat replies into stream")
 
-    # e(socket.assigns, :replies, [])
+    # e(assigns(socket), :replies, [])
 
     maybe_stream_insert(
       socket,
@@ -598,8 +598,8 @@ defmodule Bonfire.Social.Threads.LiveHandler do
       socket
       |> assign_generic(replies)
     else
-      if e(socket.assigns, :thread_mode, nil) != :flat and is_list(replies) and
-           e(socket.assigns, :reply_count, 0) > 0 do
+      if e(assigns(socket), :thread_mode, nil) != :flat and is_list(replies) and
+           e(assigns(socket), :reply_count, 0) > 0 do
         :threaded_replies
       else
         :replies
@@ -609,7 +609,7 @@ defmodule Bonfire.Social.Threads.LiveHandler do
   end
 
   def maybe_subscribe(socket, thread_id) do
-    if thread_id && !e(socket.assigns, :pubsub_subscribed, nil) do
+    if thread_id && !e(assigns(socket), :pubsub_subscribed, nil) do
       debug(thread_id, "subscribing to live thread updates")
       PubSub.subscribe(thread_id, socket)
 

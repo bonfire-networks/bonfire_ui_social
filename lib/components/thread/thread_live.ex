@@ -98,7 +98,7 @@ defmodule Bonfire.UI.Social.ThreadLive do
   def update(%{new_reply: new_reply}, socket) when is_map(new_reply) do
     debug("adding new reply")
 
-    thread_id = e(socket.assigns, :thread_id, nil)
+    thread_id = e(assigns(socket), :thread_id, nil)
 
     object_id =
       e(new_reply, :object, :id, nil) || e(new_reply, :activity, :object, :id, nil) ||
@@ -115,7 +115,7 @@ defmodule Bonfire.UI.Social.ThreadLive do
     permitted? =
       object_id &&
         Bonfire.Common.Needles.exists?([id: object_id],
-          current_user: current_user(socket.assigns)
+          current_user: current_user(assigns(socket))
         )
         |> debug("double check boundary upon receiving a LivePush")
 
@@ -125,7 +125,7 @@ defmodule Bonfire.UI.Social.ThreadLive do
       #  |> LiveHandler.insert_comments(new_reply)
       # }
 
-      if e(socket.assigns, :thread_mode, nil) == :flat do
+      if e(assigns(socket), :thread_mode, nil) == :flat do
         debug("flat thread")
 
         {:ok,
@@ -163,8 +163,8 @@ defmodule Bonfire.UI.Social.ThreadLive do
         # activity_id = e(new_reply, :activity, :id, nil) || e(new_reply, :id, nil)
 
         # thread_url =
-        #   if is_struct(e(socket.assigns, :object, nil)) do
-        #     path(e(socket.assigns, :object, nil))
+        #   if is_struct(e(assigns(socket), :object, nil)) do
+        #     path(e(assigns(socket), :object, nil))
         #   else
         # "/discussion/#{thread_id}"
         #   end
@@ -189,7 +189,7 @@ defmodule Bonfire.UI.Social.ThreadLive do
         # replies = [
         #   new_reply
         #   |> Map.put(:path, path)
-        # ] ++ e(socket.assigns, :replies, [])
+        # ] ++ e(assigns(socket), :replies, [])
 
         # {:ok, socket
         #   |> assign(
@@ -252,7 +252,7 @@ defmodule Bonfire.UI.Social.ThreadLive do
          Settings.get(
            [Bonfire.UI.Social.ThreadLive, :thread_mode],
            nil,
-           socket.assigns[:__context__]
+           assigns(socket)[:__context__]
          )
 
        manual ->
@@ -260,7 +260,11 @@ defmodule Bonfire.UI.Social.ThreadLive do
      end)
      |> update(:sort_by, fn
        nil ->
-         Settings.get([Bonfire.UI.Social.ThreadLive, :sort_by], nil, socket.assigns[:__context__])
+         Settings.get(
+           [Bonfire.UI.Social.ThreadLive, :sort_by],
+           nil,
+           assigns(socket)[:__context__]
+         )
 
        manual ->
          manual

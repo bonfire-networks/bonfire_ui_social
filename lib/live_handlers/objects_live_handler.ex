@@ -5,7 +5,7 @@ defmodule Bonfire.Social.Objects.LiveHandler do
 
   def handle_event("set_name", %{"thread_id" => _id, "name" => name} = params, socket) do
     with {:ok, _} <-
-           Objects.set_name(e(params, "thread_id", nil) || e(socket.assigns, :object, nil), name,
+           Objects.set_name(e(params, "thread_id", nil) || e(assigns(socket), :object, nil), name,
              current_user: current_user_required!(socket)
            ) do
       Bonfire.UI.Common.OpenModalLive.close()
@@ -21,8 +21,8 @@ defmodule Bonfire.Social.Objects.LiveHandler do
     with {:ok, _} <-
            Objects.reset_preset_boundary(
              current_user_required!(socket),
-             e(params, "id", nil) || e(socket.assigns, :object, nil),
-             e(socket.assigns, :boundary_preset, nil) || e(params, "boundary_preset", nil),
+             e(params, "id", nil) || e(assigns(socket), :object, nil),
+             e(assigns(socket), :boundary_preset, nil) || e(params, "boundary_preset", nil),
              params
            ) do
       {:noreply,
@@ -52,7 +52,7 @@ defmodule Bonfire.Social.Objects.LiveHandler do
   end
 
   defp init_object_assigns(object, socket) do
-    current_user = current_user(socket.assigns)
+    current_user = current_user(assigns(socket))
 
     # TODO: less ugly
 
@@ -68,8 +68,8 @@ defmodule Bonfire.Social.Objects.LiveHandler do
         current_user: current_user,
         preload:
           Bonfire.Social.Feeds.LiveHandler.feed_extra_preloads_list(
-            socket.assigns[:showing_within],
-            socket.assigns[:thread_mode]
+            assigns(socket)[:showing_within],
+            assigns(socket)[:thread_mode]
           )
       )
       |> debug()
@@ -80,7 +80,7 @@ defmodule Bonfire.Social.Objects.LiveHandler do
   end
 
   defp init_object_activity_assigns(object, activity, socket) do
-    # current_user = current_user(socket.assigns)
+    # current_user = current_user(assigns(socket))
     id = id(object)
     canonical_url = path(object)
 
@@ -218,7 +218,7 @@ defmodule Bonfire.Social.Objects.LiveHandler do
   end
 
   def load_object_assigns(%{post_id: id} = assigns, socket) when is_binary(id) do
-    current_user = current_user(assigns) || current_user(socket.assigns)
+    current_user = current_user(assigns) || current_user(assigns(socket))
 
     # debug(params, "PARAMS")
     # debug(url, "post url")
@@ -236,7 +236,7 @@ defmodule Bonfire.Social.Objects.LiveHandler do
   end
 
   def load_object_assigns(%{object_id: id} = assigns, socket) when is_binary(id) do
-    current_user = current_user(assigns) || current_user(socket.assigns)
+    current_user = current_user(assigns) || current_user(assigns(socket))
     # debug(params, "PARAMS")
     with id when is_binary(id) <- uid(id),
          {:ok, object} <-

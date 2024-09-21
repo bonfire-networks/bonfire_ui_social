@@ -1,10 +1,9 @@
 defmodule Bonfire.UI.Social.FeedLive do
   use Bonfire.UI.Common.Web, :stateful_component
+  import Untangle
 
   alias Bonfire.UI.Social.ActivityLive
   alias Bonfire.Social.Feeds.LiveHandler
-
-  import Untangle
 
   prop feed_name, :atom, default: nil
   prop feed_id, :any, default: nil
@@ -69,7 +68,7 @@ defmodule Bonfire.UI.Social.FeedLive do
 
   def mount(socket) do
     # FIXME: assigns not available in mount
-    # feed_id = e(socket.assigns, :feed_name, nil) || e(socket.assigns, :feed_id, nil) || e(socket.assigns, :id, nil)
+    # feed_id = e(assigns(socket), :feed_name, nil) || e(assigns(socket), :feed_id, nil) || e(assigns(socket), :id, nil)
     {
       :ok,
       socket
@@ -148,7 +147,7 @@ defmodule Bonfire.UI.Social.FeedLive do
     {
       :ok,
       socket
-      |> assign(hide_fresh: e(socket.assigns, :hide_fresh, 0) + 1)
+      |> assign(hide_fresh: e(assigns(socket), :hide_fresh, 0) + 1)
       # what an ugly way but idk
       |> push_event("js-exec-attr-event", %{
         to: "#show_fresh",
@@ -181,13 +180,13 @@ defmodule Bonfire.UI.Social.FeedLive do
     debug("an initial feed was provided via assigns")
     debug(assigns)
 
-    # debug(socket.assigns, "socket assigns")
+    # debug(assigns(socket), "socket assigns")
     # debug(assigns)
     socket = assign(socket, assigns)
     # debug(socket)
 
-    feed_id_or_ids = e(socket.assigns, :feed_ids, nil) || e(socket.assigns, :feed_id, nil)
-    already_pubsub_subscribed = e(socket.assigns, :feed_pubsub_subscribed, nil)
+    feed_id_or_ids = e(assigns(socket), :feed_ids, nil) || e(assigns(socket), :feed_id, nil)
+    already_pubsub_subscribed = e(assigns(socket), :feed_pubsub_subscribed, nil)
 
     if already_pubsub_subscribed == feed_id_or_ids do
       debug(already_pubsub_subscribed, "already subscribed to this via pubsub")
@@ -210,12 +209,13 @@ defmodule Bonfire.UI.Social.FeedLive do
     debug("a user feed was NOT provided, fetching one now")
 
     socket = assign(socket, assigns)
-    socket = assign(socket, :feed_component_id, socket.assigns.id)
+    socket = assign(socket, :feed_component_id, assigns(socket).id)
 
     socket =
       socket
       |> LiveHandler.feed_assigns_maybe_async(
-        socket.assigns[:feed_name] || socket.assigns[:feed_id] || socket.assigns[:id] || :default,
+        assigns(socket)[:feed_name] || assigns(socket)[:feed_id] || assigns(socket)[:id] ||
+          :default,
         ...
       )
       |> LiveHandler.insert_feed(socket, ...)
@@ -230,12 +230,13 @@ defmodule Bonfire.UI.Social.FeedLive do
     debug("a feed was NOT provided, fetching one now (without filters)")
 
     socket = assign(socket, assigns)
-    socket = assign(socket, :feed_component_id, socket.assigns.id)
+    socket = assign(socket, :feed_component_id, assigns(socket).id)
 
     socket =
       socket
       |> LiveHandler.feed_assigns_maybe_async(
-        socket.assigns[:feed_name] || socket.assigns[:feed_id] || socket.assigns[:id] || :default,
+        assigns(socket)[:feed_name] || assigns(socket)[:feed_id] || assigns(socket)[:id] ||
+          :default,
         ...
       )
       |> LiveHandler.insert_feed(socket, ...)
@@ -249,13 +250,13 @@ defmodule Bonfire.UI.Social.FeedLive do
     debug("a feed was NOT provided, fetching one now (with filters)")
 
     socket = assign(socket, assigns)
-    socket = assign(socket, :feed_component_id, socket.assigns.id)
+    socket = assign(socket, :feed_component_id, assigns(socket).id)
 
     socket =
       socket
       |> LiveHandler.feed_assigns_maybe_async(
-        {socket.assigns[:feed_name] || socket.assigns[:feed_id] || socket.assigns[:id] ||
-           :default, socket.assigns[:feed_filters]},
+        {assigns(socket)[:feed_name] || assigns(socket)[:feed_id] || assigns(socket)[:id] ||
+           :default, assigns(socket)[:feed_filters]},
         ...
       )
       |> LiveHandler.insert_feed(socket, ...)
@@ -283,20 +284,20 @@ defmodule Bonfire.UI.Social.FeedLive do
   end
 
   defp ok_socket(socket) do
-    # debug(socket.assigns[:__context__][:current_params], "fsa")
+    # debug(assigns(socket)[:__context__][:current_params], "fsa")
 
     {:ok,
      socket
      |> assign(
-       feed_component_id: socket.assigns[:id],
+       feed_component_id: assigns(socket)[:id],
        hide_activities:
-         socket.assigns[:hide_activities] ||
-           socket.assigns[:__context__][:current_params]["hide_activities"]
+         assigns(socket)[:hide_activities] ||
+           assigns(socket)[:__context__][:current_params]["hide_activities"]
      )}
   end
 
   def maybe_subscribe(socket) do
-    case e(socket.assigns, :feed_ids, nil) || e(socket.assigns, :feed_id, nil) do
+    case e(assigns(socket), :feed_ids, nil) || e(assigns(socket), :feed_id, nil) do
       nil ->
         debug("no feed_id known, not subscribing to live updates")
 
@@ -427,11 +428,11 @@ defmodule Bonfire.UI.Social.FeedLive do
       |> assign(loading: true)
       |> Bonfire.UI.Common.LiveHandlers.assign_attrs(attrs)
 
-    feed_name = feed_name(socket.assigns)
-    feed_filters = socket.assigns[:feed_filters]
+    feed_name = feed_name(assigns(socket))
+    feed_filters = assigns(socket)[:feed_filters]
 
     if feed_name in [:my, :explore, :fediverse, :local],
-      do: send_self(widgets(e(socket, :assigns, nil)))
+      do: send_self(widgets(e(assigns(socket), nil)))
 
     {
       :noreply,

@@ -129,7 +129,7 @@ defmodule Bonfire.UI.Social.FeedsLive do
   #        Bonfire.Common.Settings.get(
   #          [Bonfire.UI.Social.FeedsLive, :curated],
   #          false,
-  #          socket.assigns
+  #          assigns(socket)
   #        ) do
   #     set_feed_assigns({:curated, params}, socket)
   #   else
@@ -141,7 +141,7 @@ defmodule Bonfire.UI.Social.FeedsLive do
     #      Bonfire.Common.Settings.get(
     #        [Bonfire.UI.Social.FeedsLive, :curated],
     #        false,
-    #        socket.assigns
+    #        assigns(socket)
     #      ) do
     #   set_feed_assigns({:curated, params}, socket)
     # else
@@ -171,7 +171,7 @@ defmodule Bonfire.UI.Social.FeedsLive do
 
   def handle_params(params, _url, socket) do
     set_feed_assigns(
-      {e(socket, :assigns, :live_action, :default), params},
+      {e(assigns(socket), :live_action, :default), params},
       socket
     )
   end
