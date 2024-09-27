@@ -15,7 +15,7 @@ exdiff = "~> 0.1.5"
 # for this extension:
 # surface_heroicons = "~> 0.5"
 telemetry = "~> 1.2.0"
-surface = "~> 0.11.2"
+# surface = "~> 0.12.0"
 
 untangle = "~> 0.3.0"
 arrows = "~> 0.2"
