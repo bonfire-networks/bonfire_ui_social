@@ -1,0 +1,1 @@
+<%=e(@profile, :name, nil) || e(@character, :username, nil)%> <%=(@verb_display)%>
