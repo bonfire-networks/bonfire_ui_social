@@ -814,7 +814,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
                   showing_within={e(component_assigns, :showing_within, @showing_within)}
                   viewing_main_object={e(component_assigns, :viewing_main_object, @viewing_main_object)}
                   media={e(component_assigns, :media, [])}
-                  cw={@cw}
+                  cw={@cw || @showing_within==:flags}
                 />
               {#match _
                 when component in [
