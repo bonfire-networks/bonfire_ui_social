@@ -57,17 +57,17 @@
           no_backdrop
           image_preview
           enable_fallback={false}
-          modal_class={"", "max-w-[500px]": @is_video?, "w-[390px] !bottom-2 !left-2": !@is_video?}
+          modal_class="w-[390px] !bottom-2 !left-2"
           wrapper_class="h-full max-h-full !w-full md:w-10/12 max-w-[100%] bg-base-100 shadow-lg rounded-lg"
           open_btn_class="w-full"
           open_btn_wrapper_class="w-full h-full"
         >
           <div
             data-id="remote_media"
-            data-video={@is_video?}
+            data-video={false}
             class="h-full sticky bg-base-100 z-[9999999999999]"
           >
-            <Bonfire.UI.Social.Activity.RemoteMediaLive media={@media} />
+            <Bonfire.UI.Social.Activity.RemoteMediaLive media={@media} autoplay={@autoplay} />
           </div>
 
           <:open_btn>

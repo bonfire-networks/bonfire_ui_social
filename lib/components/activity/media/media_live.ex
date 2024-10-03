@@ -2,12 +2,17 @@ defmodule Bonfire.UI.Social.Activity.MediaLive do
   use Bonfire.UI.Common.Web, :stateless_component
 
   prop media, :any, default: nil
+  prop label, :string, default: nil
+
   prop showing_within, :atom, default: nil
   prop viewing_main_object, :boolean, default: false
   prop activity_inception, :boolean, default: false
-  prop label, :string, default: nil
   prop parent_id, :any, default: nil
+
   prop cw, :any, default: nil
+  prop muted, :boolean, default: false
+  prop autoplay, :boolean, default: true
+
   prop css_borders, :css_class, default: "border border-base-content/10 rounded-md"
   prop small_icon, :boolean, default: false
 

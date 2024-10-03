@@ -5,10 +5,11 @@
         {#match maybe_media_img}
           {#if is_binary(maybe_media_img) and MediaLive.is_image?(maybe_media_img, e(@media, :media_type, nil))}
             <LazyImage
-              class="max-h-[calc(var(--inner-window-height)_-_150px)] relative mx-auto"
+              class={@base_image_css, @image_css}
               alt={Bonfire.Files.Media.media_label(@media)}
               src={maybe_media_img}
               media={@media}
+              opts={"phx-click": JS.remove_class("grayscale")}
             />
           {#else}
             {#case e(@media, :metadata, "facebook", "video", nil) ||
@@ -18,24 +19,24 @@
                 {#case e(@media, :metadata, "oembed", "html", nil)}
                   {#match nil}
                     {#if String.ends_with?(media_url, [".mp4", ".mkv"])}
-                      <video class={@video_css} controls>
+                      <video class={@base_css, @video_css} controls autoplay={@autoplay} muted={@muted}>
                         <source src={media_url} type="video/mp4">
                         Your browser does not support the video tag.
                       </video>
                     {#elseif String.ends_with?(media_url, [".ogg", ".ogv", ".ogx", ".ogm", ".spx", ".mov", ".opus"])}
-                      <video class={@video_css} controls>
+                      <video class={@base_css, @video_css} controls autoplay={@autoplay} muted={@muted}>
                         <source src={media_url} type="video/ogg">
                         Your browser does not support the video tag.
                       </video>
                     {#elseif String.ends_with?(media_url, ".webm")}
-                      <video class={@video_css} controls>
+                      <video class={@base_css, @video_css} controls autoplay={@autoplay} muted={@muted}>
                         <source src={media_url} type="video/webm">
                         Your browser does not support the video tag.
                       </video>
                     {#elseif String.ends_with?(media_url, [".mp3", ".m4a", ".oga", ".flac", ".aac", ".wav", ".caf"]) or
                         String.ends_with?(e(@media, :media_type, ""), "audio")}
                       <div class="relative rounded rounded-b-none p-2 w-full">
-                        <div class="flex  items-center gap-3">
+                        <div class="flex items-center gap-3">
                           {#case MediaLive.preview_img(@media)}
                             {#match media_img}
                               <div :if={MediaLive.is_image?(media_img)} class="bg-base-200">
@@ -56,7 +57,7 @@
                               </div>
                           {/case}
                         </div>
-                        <audio controls class={@default_css}>
+                        <audio controls autoplay={@autoplay} class={@base_css}>
                           <source src={media_url} type={"audio/#{Bonfire.Files.file_extension_only(media_url) || "mp3"}"}>
                           Your browser does not support the audio tag.
                           {!-- <a href={media_url}> {l "Download audio"} </a> --}
@@ -86,7 +87,7 @@
                     allow="accelerometer; encrypted-@media; gyroscope; picture-in-picture"
                     allowfullscreen="allowfullscreen"
                     picture-in-picture
-                    class={"rounded-t-box", @default_css}
+                    class={"rounded-t-box", @base_css}
                   />
                 </div>
             {/case}

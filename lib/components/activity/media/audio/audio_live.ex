@@ -3,8 +3,9 @@ defmodule Bonfire.UI.Social.Activity.AudioLive do
   alias Bonfire.UI.Social.Activity.MediaLive
 
   prop media, :map, required: true
-  prop is_video?, :boolean, default: false
   prop media_label, :string, default: nil
+
+  prop autoplay, :boolean, default: true
 
   def update(_assign, socket) do
     {:noreply, socket}
