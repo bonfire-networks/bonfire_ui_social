@@ -638,8 +638,8 @@ defmodule Bonfire.UI.Social.ActivityLive do
                                   }
                                 ]
                             end,
-                          preview_component: Bonfire.UI.Social.ObjectThreadLive,
-                          preview_component_stateful?: !top_of_thread? and !reply_to_top_of_thread?,
+                          modal_component: Bonfire.UI.Social.ObjectThreadLive,
+                          modal_component_stateful?: !top_of_thread? and !reply_to_top_of_thread?,
                           activity_inception: "preview",
                           showing_within: :thread,
                           check_object_boundary: !top_of_thread? and !reply_to_top_of_thread?
@@ -657,7 +657,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
               modal_assigns={
                 id: @thread_id || id(@object),
                 current_url: @permalink,
-                preview_view: Bonfire.UI.Me.ProfileLive,
+                modal_view: Bonfire.UI.Me.ProfileLive,
                 activity_inception: "preview"
               }
               root_assigns={
@@ -675,7 +675,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
                         modal_assigns={
                           id: @thread_id || id(@object),
                           current_url: @permalink,
-                          preview_view: Bonfire.UI.Coordination.TaskLive,
+                          modal_view: Bonfire.UI.Coordination.TaskLive,
                           activity_inception: "preview",
                           check_object_boundary: false
                         }
@@ -814,7 +814,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
                   showing_within={e(component_assigns, :showing_within, @showing_within)}
                   viewing_main_object={e(component_assigns, :viewing_main_object, @viewing_main_object)}
                   media={e(component_assigns, :media, [])}
-                  cw={@cw || @showing_within==:flags}
+                  cw={@cw || @showing_within == :flags}
                 />
               {#match _
                 when component in [

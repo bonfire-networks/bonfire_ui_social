@@ -9,6 +9,8 @@ defmodule Bonfire.UI.Social.Activity.MediaLinkLive do
   prop cw, :any, default: nil
   prop css_borders, :css_class, default: nil
   prop small_icon, :boolean, default: false
+  prop showing_within, :atom, default: nil
+  prop parent_id, :any, default: nil
 
   def update(_assign, socket) do
     {:noreply, socket}

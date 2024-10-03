@@ -43,6 +43,8 @@
             preview_img={preview_img(m) |> debug("preview_imgsss")}
             css_borders={@css_borders}
             small_icon={@small_icon}
+            showing_within={@showing_within}
+            parent_id={@parent_id}
           />
         {/if}
     {/case}
