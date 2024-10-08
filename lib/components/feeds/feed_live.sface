@@ -55,7 +55,7 @@
       </btn>
     </div>
 
-    {#if @feed_count || e(@streams.feed, :inserts, []) != []}
+    {#if @feed_count || (is_map(@streams) and e(@streams.feed, :inserts, []) != [])}
       <div
         id={"feed_#{@feed_name || @feed_id || @id}"}
         data-id="feed_activity_list"

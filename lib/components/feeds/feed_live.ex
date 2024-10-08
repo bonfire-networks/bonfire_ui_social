@@ -1,5 +1,6 @@
 defmodule Bonfire.UI.Social.FeedLive do
   use Bonfire.UI.Common.Web, :stateful_component
+  use_if_enabled(Bonfire.UI.Common.Web.Native, :stateful_component)
   import Untangle
 
   alias Bonfire.UI.Social.ActivityLive
@@ -66,7 +67,7 @@ defmodule Bonfire.UI.Social.FeedLive do
 
   slot bottom_or_empty_feed
 
-  def mount(socket) do
+  def mount(%Phoenix.LiveView.Socket{} = socket) do
     # FIXME: assigns not available in mount
     # feed_id = e(assigns(socket), :feed_name, nil) || e(assigns(socket), :feed_id, nil) || e(assigns(socket), :id, nil)
     {
@@ -78,6 +79,15 @@ defmodule Bonfire.UI.Social.FeedLive do
       #  temporary_assigns: [
       #    feed: []
       #  ]
+    }
+  end
+
+  # TEMP for LVN
+  def mount(socket_or_assigns) do
+    {
+      :ok,
+      socket_or_assigns
+      |> assign(cute_gif: maybe_cute_gif())
     }
   end
 
