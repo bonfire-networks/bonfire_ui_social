@@ -12,6 +12,8 @@ TODO: use preloaded boundaries for can? when available
     <p>{@explanation || l("A request will be sent to remote instances to delete it as well.")}</p>
   </div>
 
+  <input name="object_id" type="hidden" value={id(@object)}>
+
   {#if @with_password_prompt}
     <div class="text-base mt-5 font-medium">{l("Enter password to confirm")}</div>
     <label class="label">
