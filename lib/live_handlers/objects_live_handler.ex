@@ -265,38 +265,46 @@ defmodule Bonfire.Social.Objects.LiveHandler do
         |> redirect_to(url)
 
       _ ->
-        case Bonfire.Common.Types.object_type(
-               maybe_to_atom(e(params, "type", nil) |> debug) |> debug || id
-             )
-             |> debug("object_type") do
-          Bonfire.Data.Identity.User ->
-            socket
-            |> redirect_to("/user/#{id}")
+        canonical_path = path(id)
+        current_url = current_url(socket)
 
-          type when is_binary(type) or (is_atom(type) and not is_nil(type)) ->
-            # It should be noted that this leaks the existence of an object, as well as its type, which may be a privacy issue for some threat models
-
-            thing = Bonfire.Common.Types.object_type_display(type) || l("post")
-
-            msg =
-              l("Sorry, you can't view this %{thing}",
-                thing: thing
-              )
-
-            if current_user_id(socket) do
-              {:error, msg}
-            else
+        if canonical_path && current_url && canonical_path != current_url do
+          socket
+          |> redirect_to(canonical_path)
+        else
+          case Bonfire.Common.Types.object_type(
+                 maybe_to_atom(e(params, "type", nil) |> debug) |> debug || id
+               )
+               |> debug("object_type") do
+            Bonfire.Data.Identity.User ->
               socket
-              |> assign_error(msg)
-              # |> set_go_after()
-              # |> redirect_to(path(:login))
-              |> redirect_to(
-                "/remote_interaction?type=read&url=#{Bonfire.Common.URIs.canonical_url(id)}&name=#{thing}"
-              )
-            end
+              |> redirect_to("/user/#{id}")
 
-          _ ->
-            {:error, :not_found}
+            type when is_binary(type) or (is_atom(type) and not is_nil(type)) ->
+              # It should be noted that this leaks the existence of an object, as well as its type, which may be a privacy issue for some threat models
+
+              thing = Bonfire.Common.Types.object_type_display(type) || l("post")
+
+              msg =
+                l("Sorry, you can't view this %{thing}",
+                  thing: thing
+                )
+
+              if current_user_id(socket) do
+                {:error, msg}
+              else
+                socket
+                |> assign_error(msg)
+                # |> set_go_after()
+                # |> redirect_to(path(:login))
+                |> redirect_to(
+                  "/remote_interaction?type=read&url=#{Bonfire.Common.URIs.canonical_url(id)}&name=#{thing}"
+                )
+              end
+
+            _ ->
+              {:error, :not_found}
+          end
         end
     end
   end
