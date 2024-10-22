@@ -4,7 +4,8 @@
    i} <-
     Bonfire.Social.PostContents.get_versions_diffed(
       Bonfire.UI.Social.Activity.NoteLive.post_content(@object)
-      |> debug("pccc")
+      |> debug("pccc"),
+      @__context__
     )
     |> Enum.with_index()}
   <div class="collapse collapse-arrow  border border-base-content/20 rounded-none">
