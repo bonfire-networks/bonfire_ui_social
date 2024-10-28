@@ -109,7 +109,7 @@
                           {#match maybe_preview_img}
                             {#if is_image?(maybe_preview_img)}
                               <LazyImage
-                                class="border-4 border-base-content/20 w-full !object-cover m-image h-full cursor-pointer aspect-video rounded-md"
+                                class="border-4 border-base-content/10 w-full !object-cover m-image h-full cursor-pointer aspect-video rounded-md"
                                 media={m}
                                 alt={media_label}
                                 src={maybe_preview_img}
@@ -197,7 +197,7 @@
                             {#if @cw || @showing_within == :flags ||
                                 Settings.get([Bonfire.UI.Social.Activity.MediaLive, :hide], false, @__context__)}
                               <div class="absolute inset-0 flex items-center cursor-pointer place-content-center justify-center z-[60]">
-                                <button class="btn btn-sm  normal-case btn-outline border-base-content/20 btn-active">{l("Media Hidden")}</button>
+                                <button class="btn btn-sm  normal-case btn-outline border-base-content/10 btn-active">{l("Media Hidden")}</button>
                               </div>
                               <div class="absolute inset-0 backdrop-blur-2xl z-50 cursor-pointer rounded-md" />
                             {/if}
@@ -206,7 +206,7 @@
                                 {!-- {#if is_image?(maybe_preview_img)} --}
                                 <LazyImage
                                   class={
-                                    "border-base-content/20 w-full !object-cover m-image h-full cursor-pointer aspect-video rounded-md",
+                                    "border-base-content/10 w-full !object-cover m-image h-full cursor-pointer aspect-video rounded-md",
                                     grayscale: @showing_within == :flags
                                   }
                                   media={m}
@@ -224,7 +224,7 @@
                         {#if @cw || @showing_within == :flags ||
                             Settings.get([Bonfire.UI.Social.Activity.MediaLive, :hide], false, @__context__)}
                           <div class="absolute inset-0 flex items-center cursor-pointer place-content-center justify-center z-[60]">
-                            <button class="btn btn-sm  normal-case btn-outline border-base-content/20 btn-active">{l("Media Hidden")}</button>
+                            <button class="btn btn-sm  normal-case btn-outline border-base-content/10 btn-active">{l("Media Hidden")}</button>
                           </div>
                           <div class="absolute inset-0 backdrop-blur-2xl z-50 cursor-pointer rounded-md" />
                         {/if}
@@ -233,7 +233,7 @@
                           {#match maybe_preview_img}
                             {#if is_image?(maybe_preview_img)}
                               <LazyImage
-                                class="border-base-content/20 w-full !object-cover m-image h-full cursor-pointer aspect-video rounded-md"
+                                class="border-base-content/10 w-full !object-cover m-image h-full cursor-pointer aspect-video rounded-md"
                                 media={m}
                                 alt={media_label}
                                 src={maybe_preview_img}

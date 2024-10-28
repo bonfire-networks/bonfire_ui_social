@@ -555,6 +555,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
       tabIndex="0"
       class={
         "p-5 pl-[4rem] activity relative flex flex-col #{@class}",
+        "hover:bg-base-content/5": @showing_within not in [:thread, :smart_input, :widget],
         "replied !p-0 mb-8": @activity_inception && @showing_within not in [:smart_input, :thread],
         "unread-activity":
           is_nil(e(@activity, :seen, nil)) and @showing_within == :notifications and
@@ -740,7 +741,9 @@ defmodule Bonfire.UI.Social.ActivityLive do
                     nil -> nil
                     character -> path(character)
                   end}
+                  profile={e(component_assigns, :profile, nil)}
                   profile_media={Media.avatar_url(e(component_assigns, :profile, nil))}
+                  profile_summary={e(component_assigns, :profile, :summary, nil)}
                   profile_name={e(component_assigns, :profile, :name, nil)}
                   character_username={e(component_assigns, :character, :username, nil)}
                   activity_id={id(e(component_assigns, :activity, nil) || @activity)}
@@ -1453,8 +1456,8 @@ defmodule Bonfire.UI.Social.ActivityLive do
   #          <div role="status" class="space-y-2.5 animate-pulse max-w-[50%] mb-2">
   #          <div class="flex items-center w-full space-x-2">
   #          <div class="h-2.5 bg-base-content/10 rounded-full w-10"></div>
-  #          <div class="h-2.5 bg-base-content/20 rounded-full w-24"></div>
-  #          <div class="h-2.5 bg-base-content/20 rounded-full w-full"></div>
+  #          <div class="h-2.5 bg-base-content/10 rounded-full w-24"></div>
+  #          <div class="h-2.5 bg-base-content/10 rounded-full w-full"></div>
   #          </div>
   #          <span class="sr-only">Loading...</span>
   #          </div>

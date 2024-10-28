@@ -1,5 +1,5 @@
 <div
-  class={"border-t border-base-content/20": !current_user_id(@__context__)}
+  class={"border-t border-base-content/10": !current_user_id(@__context__)}
   data-role="thread"
   data-sorted={Settings.get([Bonfire.UI.Social.ThreadLive, :sort_by], nil, @__context__)}
   id={"thread_#{@id}"}
@@ -25,8 +25,16 @@
     />
   </Bonfire.UI.Social.Activity.ThreadStatsLive>
 
+
+  <!-- {#if @loading != true && @replies == []}
+    <Bonfire.UI.Common.EmptyFeed 
+      feedback_title={l("No replies yet")}
+      feedback_message={l("Be the first to reply!")}
+    />
+  {/if} -->
+
   {#if @loading != true || @replies != []}
-    <div class="flex flex-col flex-1 mt-6">
+    <div class="flex flex-col flex-1">
       <div data-id="replies" class="flex flex-col flex-1">
         <Bonfire.UI.Common.LoadPreviousLive
           live_handler={Bonfire.Social.Threads}

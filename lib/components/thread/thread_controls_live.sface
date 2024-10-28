@@ -1,7 +1,7 @@
-<div class="p-2  border-b border-base-content/20 border-t mt-2">
+<div class="p-2  border-b border-base-content/10 border-t mt-2">
   <div :if={current_user_id(@__context__)} class="flex justify-between flex-1 gap-3">
     <div data-position="bottom" phx-hook="Tooltip" id="layout-dropdown" class="flex-1">
-      <label tabindex="0" class="tooltip-button btn w-full btn-neutral btn-sm">
+      <label tabindex="0" class="tooltip-button btn w-full btn-outline btn-sm">
         {#if @thread_mode == :flat}
           <#Icon iconify="fa-solid:list" class="w-4 h-4" />
           <span class="hidden lg:block">{l("Flat list")}</span>
@@ -42,37 +42,37 @@
     </div>
 
     <div data-position="bottom" phx-hook="Tooltip" id="order-dropdown" class="flex w-full flex-1">
-      <label tabindex="0" class="tooltip-button btn-sm btn flex-1 w-full btn-neutral">
+      <label tabindex="0" class="tooltip-button btn-sm btn flex-1 w-full btn-outline">
         {#case @sort_by}
           {#match :latest_reply}
             {#if @thread_mode == :flat}
-              <span class="flex gap-3 px-2 text-base-content items-center">
+              <span class="flex gap-3 px-2  items-center">
                 <#Icon iconify="mdi:order-alphabetical-ascending" class="w-4 h-4" />
                 <span class="hidden lg:block">{l("Chronological")}</span>
               </span>
             {#else}
-              <span class="flex gap-3 px-2 text-base-content items-center">
+              <span class="flex gap-3 px-2  items-center">
                 <#Icon iconify="mdi:sprout" class="w-4 h-4" />
                 <span class="hidden lg:block">{l("Chronological by last reply")}</span>
               </span>
             {/if}
           {#match :num_replies}
-            <span class="flex gap-3 px-2 text-base-content items-center">
+            <span class="flex gap-3 px-2  items-center">
               <#Icon iconify="basil:comment-outline" class="w-4 h-4 stroke-1 fill-base-content/50" />
               <span class="hidden lg:block">{l("By amount of replies")}</span>
             </span>
           {#match :num_boosts}
-            <span class="flex gap-3 px-2 text-base-content items-center">
+            <span class="flex gap-3 px-2  items-center">
               <#Icon iconify="system-uicons:retweet" class="w-4 h-4 stroke-1 fill-base-content/50" />
               <span class="hidden lg:block">{l("By amount of boosts")}</span>
             </span>
           {#match :num_likes}
-            <span class="flex gap-3 px-2 text-base-content items-center">
+            <span class="flex gap-3 px-2  items-center">
               <#Icon iconify="mingcute:fire-line" class="h-[20px] w-[18px]" />
               <span class="hidden lg:block">{l("By amount of likes")}</span>
             </span>
           {#match _}
-            <span class="flex gap-3 px-2 text-base-content items-center">
+            <span class="flex gap-3 px-2  items-center">
               <#Icon iconify="mdi:order-alphabetical-ascending" class="w-4 h-4" />
               <span class="hidden lg:block">{l("Chronological")}</span>
             </span>
@@ -157,7 +157,7 @@
     </div>
 
     <div data-position="bottom" phx-hook="Tooltip" class="flex-1" id="sort_timing_thread">
-      <label tabindex="0" class="tooltip-button w-full btn-sm btn btn-neutral">
+      <label tabindex="0" class="tooltip-button w-full btn-sm btn btn-outline">
         <!-- {l("Order")} -->
 
         {#if @sort_order == :asc}

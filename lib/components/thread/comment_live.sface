@@ -1,6 +1,7 @@
 <div
   data-avatar-hidden={Settings.get([Bonfire.UI.Common.AvatarLive, :hide_avatars], false, @__context__)}
   id={"cc_#{id(@activity)}"}
+  style={"padding-left: #{@thread_level * 4}px"}
   data-id="comment"
   class="flex flex-1 w-full relative items-top"
 >
@@ -22,23 +23,25 @@
   >
   </div>
 
+
+
   <div
+    style={"left: #{reply * 6}px"}
+    :for={reply <- 0..(@thread_level - 1)}
+    class={
+      "absolute left-0 cursor-pointer top-0 border-l-2 bottom-0 border-primary border-opacity-30 z-30",
+      "border-thread-active": reply == (@thread_level - 1)
+    }
+  />
+
+  <!-- <div
     :if={@thread_mode != :flat &&
       (@index != @total_replies_in_thread - 1 ||
          (@index == @total_replies_in_thread - 1 && @threaded_replies != []))}
-    class={
-      "absolute px-2 left-[27px] cursor-pointer top-[40px] bottom-0 z-30",
-      "!left-[18px] !top-[30px]": @__context__[:ui_compact],
-      "!left-[20px] top-[46px]":
-        Settings.get([Bonfire.UI.Common.AvatarLive, :hide_avatars], false, @__context__)
-    }
-  >
-    <div class={
-      "absolute left-0 cursor-pointer inset-0 border-l bottom-0 border-gray-500 z-30",
-      "!-left-[3px]": Settings.get([Bonfire.UI.Common.AvatarLive, :hide_avatars], false, @__context__)
-    } />
-  </div>
-  <div
+    class="absolute px-2 left-0 cursor-pointer top-0 bottom-0 z-30">
+    <div class="absolute left-0 cursor-pointer inset-0 border-l-2 bottom-0 border-primary z-30" />
+  </div> -->
+  <!-- <div
     :if={@thread_mode != :flat && @threaded_replies != []}
     x-on:click="show_replies = ! show_replies"
     class={
@@ -56,7 +59,7 @@
       x-show="show_replies"
       class="btn text-base-content/70 btn-xs text-xs !h-[1.25rem] !min-h-[1.25rem] !w-[1.25rem] btn-circle btn-outline normal-case"
     >-</span>
-  </div>
+  </div> -->
   <div data-role="comment-activity" class="flex-1 w-full" x-data="{reply: false, show: true}">
     {#if is_nil(@activity)}
       <!-- <div class="mx-4 my-2">

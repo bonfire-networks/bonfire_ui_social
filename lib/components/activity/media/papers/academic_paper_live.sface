@@ -10,7 +10,7 @@
             <!-- <code>{inspect(@media.metadata, pretty: true)}</code> -->
             <div class={
               "w-full media_container text-base-content",
-              @css_borders || "border border-base-content/20 rounded-lg p-2",
+              @css_borders || "border border-base-content/10 rounded-lg p-2",
               "p-4 bg-base-100 ": @showing_within != :media
             }>
               <div class="relative w-full">

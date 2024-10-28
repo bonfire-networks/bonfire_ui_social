@@ -101,6 +101,9 @@ defmodule Bonfire.UI.Social.FeedsLive do
        feedback_message:
          l("You can start by following some people, or writing a new post yourself."),
        nav_items: Bonfire.Common.ExtensionModule.default_nav(),
+       page_header_aside: [
+        {Bonfire.UI.Common.SmartInputButtonLive, [prompt: l("Compose"), class: "btn-sm max-w-[100px] hidden md:inline-flex btn btn-primary"]}
+      ],
        sidebar_widgets: [
          users: [
            secondary: [

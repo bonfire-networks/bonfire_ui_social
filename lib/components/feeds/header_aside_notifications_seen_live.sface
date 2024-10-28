@@ -5,7 +5,7 @@
     phx-value-feed_id={@feed_id}
     phx-value-scope="all"
     x-on:click="document.querySelectorAll('.unread-activity').forEach((activity) => {activity.classList.remove('unread-activity')})"
-    class="btn btn-sm z-50 btn-neutral"
+    class="btn btn-sm z-50 btn-ghost"
   >
     <#Icon iconify="ic:round-check" class="w-5 h-5" />
     <span class="sr-only">{l("Mark all as read")}</span>

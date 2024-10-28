@@ -7,7 +7,7 @@
   {#case Media.thumbnail_url(@media)}
     {#match nil}
       <div class="flex gap-3 overflow-hidden items-center">
-        <div class="flex border border-base-content/20 p-4 items-center rounded shrink-0 place-content-center">
+        <div class="flex border border-base-content/10 p-4 items-center rounded shrink-0 place-content-center">
           <#Icon iconify="bxs:file-pdf" class="w-8 h-8 text-base-content/70" />
         </div>
         <div class="text font-semibold line-clamp-2">

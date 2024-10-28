@@ -1,7 +1,7 @@
 {#case feed(@feed_name)}
   {#match {[], feed_assigns}}
   {#match {feed, feed_assigns}}
-    <Bonfire.UI.Common.WidgetBlockLive class="">
+    <Bonfire.UI.Common.WidgetBlockLive class="shadow rounded-xl bg-base-100">
       <StatelessComponent
         module={maybe_component(Bonfire.UI.Social.FeedLive, @__context__)}
         id={:widget_discussion_feed}

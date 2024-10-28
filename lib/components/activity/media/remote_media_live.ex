@@ -17,7 +17,7 @@ defmodule Bonfire.UI.Social.Activity.RemoteMediaLive do
   prop image_css, :css_class, default: ""
 
   prop video_css, :css_class,
-    default: "w-full h-full inline-block rounded-box border border-base-content/20"
+    default: "w-full h-full inline-block rounded-box border border-base-content/10"
 
   # prop type, :any, default: nil
 end

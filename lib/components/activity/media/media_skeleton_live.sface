@@ -57,7 +57,7 @@
               num_medias ==
                 4
           }>
-            <figure class="w-10 h-10 text-base-content/20" " iconify="octicon:file-media-24">
+            <figure class="w-10 h-10 text-base-content/10" " iconify="octicon:file-media-24">
               <span class="sr-only">Loading...</span>
             </figure>
           </article>
@@ -72,7 +72,7 @@
       class="animate-pulse space-y-4 md:space-y-0 md:space-x-4 md:flex md:items-center"
     >
       {#for _counter <- 1..@link_count}
-        <div class="flex items-center justify-center h-[120px] w-[120px] min-w-[120px] bg-base-content/20 rounded">
+        <div class="flex items-center justify-center h-[120px] w-[120px] min-w-[120px] bg-base-content/10 rounded">
           <div iconify="octicon:file-media-24" class="w-10 h-10 text-base-content/10" />
         </div>
         <div class="w-full">

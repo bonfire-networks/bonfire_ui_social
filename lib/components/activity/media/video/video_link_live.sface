@@ -1,4 +1,4 @@
-<div class="rounded-box border border-base-content/20 h-full text-center items-center justify-center">
+<div class="rounded-box border border-base-content/10 h-full text-center items-center justify-center">
   <div class="relative rounded-t-box bg-base-100">
     <button
       class={"w-full relative remote_media_#{id(@media)}"}

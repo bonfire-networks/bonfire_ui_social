@@ -1,61 +1,103 @@
 <div
   data-id="subject"
-  data-main-object={@viewing_main_object}
   class="subject relative flex items-start"
 >
-  <LinkLive
-    :if={@subject_id && !Settings.get([Bonfire.UI.Common.AvatarLive, :hide_avatars], false, @__context__)}
-    opts={"data-id": "subject_avatar"}
-    class={
-      "absolute -ml-[3.25rem] font-semibold text-base-content hover:underline z-50",
-      "!-ml-[2.5rem]": @__context__[:ui_compact] && !@viewing_main_object
-    }
-    to={@path || "/user/#{@subject_id}"}
-    label={e(@character_username, "") <> " profile"}
-  >
-    <Bonfire.UI.Common.AvatarLive
-      parent_id={@activity_component_id || @activity_id}
-      user_id={@subject_id}
-      src={@profile_media}
-      title={@profile_name}
-      viewing_main_object={@viewing_main_object}
+  <div data-trigger="hover" data-position="top" phx-hook="Tooltip" id={"subject_avatar_tooltip_#{@subject_id}_#{@activity_id}_#{@reply_to_id}"} class="relative">
+    <label
+      class="tooltip-button"
+      tabindex="0"
+      role="button"
+      aria-haspopup="true"
+      aria-expanded="true"
+    >
+    <LinkLive
+      :if={@subject_id && !Settings.get([Bonfire.UI.Common.AvatarLive, :hide_avatars], false, @__context__)}
+      opts={"data-id": "subject_avatar"}
       class={
-        "rounded-full w-10 h-10",
-        "!w-8 !h-8": @showing_within == :thread,
-        "!w-7 !h-7": @__context__[:ui_compact]
+        "absolute -ml-[3.25rem] font-semibold text-base-content hover:underline z-50",
+        "!-ml-[2.5rem]": @__context__[:ui_compact] && !@viewing_main_object
       }
-    />
-  </LinkLive>
-
+      to={@path || "/user/#{@subject_id}"}
+      label={e(@character_username, "") <> " profile"}
+    >
+        <Bonfire.UI.Common.AvatarLive
+          parent_id={@activity_component_id || @activity_id}
+          user_id={@subject_id}
+          src={@profile_media}
+          title={@profile_name}
+          class={
+            "rounded-full w-11 h-11",
+            "!w-7 !h-7": @__context__[:ui_compact]
+          }
+        />
+        
+    </LinkLive>
+  </label>
+  <div class="tooltip z-[9999999999999999] absolute w-[300px] top-0 left-0 hidden">
+    
+    <Bonfire.UI.Me.UserPreviewLive 
+      href={@path || "/user/#{@subject_id}"}
+      with_summary={true}
+      user={%{
+        id: @subject_id,
+        is_local: !@is_remote,
+        profile: %{
+          name: @profile_name,
+          avatar_url: @profile_media,
+          summary: @profile_summary
+        },
+        character: %{
+          username: @character_username
+        }
+      }}>
+      <:actions>
+      <div class="flex p-3 pt-1 flex-1 items-center">
+        <StatefulComponent
+          module={maybe_component(Bonfire.UI.Social.Graph.FollowButtonLive, @__context__)}
+          :if={current_user_id(@__context__) &&
+            current_user_id(@__context__) != id(@subject_id)}
+          id={ComponentID.new(Bonfire.UI.Social.Graph.FollowButtonLive, id(@subject_id), __MODULE__)}
+          object_id={id(@subject_id)}
+          path={path(@character)}
+          hide_icon
+          />
+        </div>
+      </:actions>
+      </Bonfire.UI.Me.UserPreviewLive>
+  </div>
+</div>
   <div
     data-id="subject_details"
-    class="flex items-baseline gap-1 w-full feed-clickable -mt-1 justify-start"
+    class="flex items-baseline font-[15px] gap-1 w-full feed-clickable justify-start"
   >
+    <div class="flex items-center flex-1 gap-1">
     <LinkLive
       :if={@profile_name}
       opts={"data-id": "subject_name", "aria-label": l("%{name}'s profile", name: @profile_name)}
-      class="link link-hover  font-semibold text-sm lg:max-w-[360px] truncate"
+      class="link link-hover font-semibold lg:max-w-[360px] truncate"
       to={@path || "/user/#{@subject_id}"}
     >
       {@profile_name}
     </LinkLive>
+    <LinkLive
+        :if={@character_username && @showing_within != :smart_input}
+        opts={
+          "data-id": "subject_username",
+          "aria-label": l("%{name}'s profile", name: @profile_name)
+        }
+        class="hidden lg:block text-sm truncate max-w-[80px] lg:max-w-[200px] link link-hover ellipsis text-base-content/60 subject_username"
+        to={e(@subject_peered, :canonical_uri, nil) || @path}
+      >
+        @{@character_username}
+      </LinkLive>
+    </div>
     <span
       :if={@showing_within != :smart_input}
       data-id="subject_secondary"
       class="flex items-center gap-1"
     >
-      <LinkLive
-        :if={@character_username}
-        opts={
-          "data-id": "subject_username",
-          "aria-label": l("%{name}'s profile", name: @profile_name)
-        }
-        class="text-sm hidden lg:block font-light ml-1 truncate max-w-[80px] lg:max-w-[200px] link link-hover ellipsis text-base-content/70 subject_username"
-        to={e(@subject_peered, :canonical_uri, nil) || @path}
-      >
-        @{@character_username}
-      </LinkLive>
-      <span class="text-sm text-base-content/70">&nbsp;·&nbsp;</span>
+      <!-- <span class="text-sm text-base-content/70">&nbsp;·&nbsp;</span> -->
+
       <Bonfire.UI.Social.ActivityBoundaryLive
         :if={@object_type not in [Bonfire.Data.Social.Message] and @activity_inception != "reply_to" and
           LiveHandler.feed_live_update_many_preloads?() != :async_actions}
@@ -75,6 +117,7 @@
         />
       </Bonfire.UI.Social.Activity.LinkToActivityLive>
       <Bonfire.UI.Social.Activity.InstanceIconLive :if={@is_remote} peered={@peered} />
+
     </span>
   </div>
   <!-- {#if @show_minimal_subject_and_note}      

@@ -46,7 +46,7 @@
           title={l("You can't reply to this activity")}
         >
           <span class="text-opacity-20 text-base-content">
-            <#Icon iconify="basil:comment-outline" class="w-5 h-5  fill-base-content/20" />
+            <#Icon iconify="basil:comment-outline" class="w-5 h-5  fill-base-content/10" />
           </span>
           <span class={if !@cannot_reply_text, do: "sr-only"}>{@cannot_reply_text || l("Cannot Reply")}</span>
         </button>

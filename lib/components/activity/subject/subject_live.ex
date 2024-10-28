@@ -3,8 +3,9 @@ defmodule Bonfire.UI.Social.Activity.SubjectLive do
   alias Bonfire.Common.Text
   alias Bonfire.Social.Feeds.LiveHandler
 
-  prop profile, :any, default: nil
+  prop profile, :any, default: []
   prop profile_name, :string, default: nil
+  prop profile_summary, :string, default: nil
   prop profile_media, :string, default: nil
 
   prop character, :any, default: nil

@@ -4,33 +4,28 @@
   x-data="{show_replies: true}"
   class={
     "reply thread-level-" <> to_string(@thread_level) <> " flex relative",
-    "border-b border-base-content/20": @thread_mode == :flat
+    "border-b border-base-content/10": @thread_mode == :flat
   }
 >
   <!-- <div class="box-border h-md border-0 border-tone-4 border-solid border-b-[1px]  w-[calc(50%+0.5px)] border-l-[1px] rounded-bl-[12px]"></div> -->
-  <div
+  <!-- <div
     :if={@thread_level > 1 && @thread_mode != :flat}
     class={
       "absolute top-[-14px] left-[-1px] w-8 h-8 border rounded-bl-xl border-gray-500 border-t-0 border-r-0",
       "!left-[-14px] !top-[-16px]": @__context__[:ui_compact]
     }
-  />
+  /> -->
 
   <div class="relative flex-1 w-full">
-    <div
+    <!-- <div
       :if={@thread_mode != :flat && @threaded_replies != []}
-      class={
-        "absolute px-2 left-[27px] cursor-pointer top-[40px] bottom-0 z-30",
-        "!left-[18px] !top-[30px]": @__context__[:ui_compact],
-        "!left-[20px] top-[46px]":
-          Settings.get([Bonfire.UI.Common.AvatarLive, :hide_avatars], false, @__context__)
-      }
+      class="absolute px-2 left-[27px] cursor-pointer top-[40px] bottom-0 z-30"
     >
       <div class={
-        "absolute left-0 cursor-pointer inset-0 border-l bottom-0 border-gray-500 z-30",
+        "absolute left-0 cursor-pointer inset-0 border-l-2 bottom-0 border-gray-500 z-30",
         "!-left-[3px]": Settings.get([Bonfire.UI.Common.AvatarLive, :hide_avatars], false, @__context__)
       } />
-    </div>
+    </div> -->
     <Bonfire.UI.Social.CommentLive
       comment={@comment}
       total_replies_in_thread={@total_replies_in_thread}
@@ -62,7 +57,7 @@
         <div
           :if={@threaded_replies != []}
           class={
-            "relative ml-7",
+            "relative",
             "!ml-0": @thread_level < 1
           }
         >

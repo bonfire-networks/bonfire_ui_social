@@ -23,7 +23,7 @@
             </div>
           {#else}
             <Bonfire.UI.Social.ActivityLive
-              class="rounded-none !shadow-none !px-4 main_object_in_thread !pt-0"
+              class="main_object_in_thread"
               id={@main_object_component_id}
               showing_within={@showing_within}
               thread_mode={@thread_mode}
