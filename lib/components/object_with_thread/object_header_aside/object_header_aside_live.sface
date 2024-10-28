@@ -5,7 +5,7 @@
     object={@activity}
   />
   <Bonfire.UI.Social.Activity.InstanceIconLive peered={e(@activity, :peered, nil)} />
-  <Bonfire.Boundaries.Web.BoundaryIconLive
+  <Bonfire.UI.Boundaries.Web.BoundaryIconLive
     with_label
     id={"boundary_#{id(@thread_id)}"}
     object={@activity}

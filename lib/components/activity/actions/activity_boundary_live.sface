@@ -1,6 +1,6 @@
 {#if LiveHandler.feed_live_update_many_preloads?() in [:async_total, :async_actions]}
   <StatelessComponent
-    module={maybe_component(Bonfire.Boundaries.Web.BoundaryIconStatelessLive, @__context__)}
+    module={maybe_component(Bonfire.UI.Boundaries.Web.BoundaryIconStatelessLive, @__context__)}
     with_icon={@with_icon}
     with_label={@with_label}
     parent_id={@parent_id}
@@ -14,7 +14,7 @@
   />
 {#else}
   <StatefulComponent
-    module={maybe_component(Bonfire.Boundaries.Web.BoundaryIconLive, @__context__)}
+    module={maybe_component(Bonfire.UI.Boundaries.Web.BoundaryIconLive, @__context__)}
     id={"boundary_#{@parent_id}_#{@object_id || id(@object)}"}
     with_icon={@with_icon}
     with_label={@with_label}

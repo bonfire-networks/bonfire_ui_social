@@ -22,7 +22,7 @@
     <li :if={@object_type not in [Bonfire.Data.Social.Message]}><div class="w-full p-0 flex bg-base-content/5 rounded-b-none">
         {#if LiveHandler.feed_live_update_many_preloads?() == :async_actions}
           <StatelessComponent
-            module={maybe_component(Bonfire.Boundaries.Web.BoundaryIconStatelessLive, @__context__)}
+            module={maybe_component(Bonfire.UI.Boundaries.Web.BoundaryIconStatelessLive, @__context__)}
             object_id={id(@object)}
             object_boundary={@object_boundary}
             object_type={Types.object_type(@published_in) || @object_type}
@@ -223,7 +223,7 @@
       <li :if={current_user_id(@__context__) && current_user_id(@__context__) != @creator_id and
         Types.object_type(@creator) == Bonfire.Data.Identity.User}>
         <StatelessComponent
-          module={maybe_component(Bonfire.Boundaries.Web.AddToCircleLive, @__context__)}
+          module={maybe_component(Bonfire.UI.Boundaries.Web.AddToCircleLive, @__context__)}
           user_id={@creator_id}
           name={e(@creator, :profile, :name, nil)}
           parent_id={id(@activity_component_id || @activity)}
@@ -319,7 +319,7 @@
     {!-- Block the author, etc --}
     <StatelessComponent
       :if={@creator_id && current_user_id(@__context__) != @creator_id}
-      module={maybe_component(Bonfire.Boundaries.Web.BlockMenuButtonsLive, @__context__)}
+      module={maybe_component(Bonfire.UI.Boundaries.Web.BlockMenuButtonsLive, @__context__)}
       parent_id={@activity_component_id || id(@activity)}
       object={@creator || @creator_id}
       permalink={@permalink}

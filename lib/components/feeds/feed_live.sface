@@ -196,7 +196,10 @@
               {/if}
             </div>
           {#else}
-            <img class="max-w-[220px] opacity-80 mx-auto" src={Bonfire.Common.URIs.static_path("/images/bonfire-exausted.png")}>
+            <img
+              class="max-w-[220px] opacity-80 mx-auto"
+              src={Bonfire.Common.URIs.static_path("/images/bonfire-exausted.png")}
+            />
             <p class="text-sm font-medium text-base-content/70 text-center my-4">{l("That's all folks...")}</p>
           {/if}
 

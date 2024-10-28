@@ -25,13 +25,12 @@
     />
   </Bonfire.UI.Social.Activity.ThreadStatsLive>
 
-
-  <!-- {#if @loading != true && @replies == []}
-    <Bonfire.UI.Common.EmptyFeed 
+  {#if @loading == false && (@streams.threaded_replies.inserts == [] && @streams.replies.inserts == [])}
+    <Bonfire.UI.Common.EmptyFeed
       feedback_title={l("No replies yet")}
       feedback_message={l("Be the first to reply!")}
     />
-  {/if} -->
+  {/if}
 
   {#if @loading != true || @replies != []}
     <div class="flex flex-col flex-1">
