@@ -70,10 +70,8 @@
                     data-rendered={@showing_within}
                     data-main-object={@viewing_main_object}
                     class={
-                      "prose break-words object_body max-w-none prose-a:text-primary prose-a:no-underline",
-                      "prose-sm previewable_truncate": !@viewing_main_object,
-                      "prose-lg":
-                        is_nil(current_user_id(@__context__)) && @showing_within == :thread && @viewing_main_object
+                      "prose prose-sm break-words object_body max-w-none prose-a:text-primary prose-a:no-underline",
+                      previewable_truncate: !@viewing_main_object
                     }
                     :class="{'previewable_expanded': expanded}"
                   >
