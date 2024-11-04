@@ -34,24 +34,24 @@
         {#case @cw == true or (is_nil(@cw) and not is_nil(summary))}
           {#match cw}
             {#if cw and e(post_content(@object), :html_body, nil)}
-              <div class="flex items-baseline gap-2 mb-2">
-                <p>
-                  <span class="prose max-w-prose prose-p:pt-1">{summary || l("Content Warning")}</span>
-                  {#if !@hide_actions}
-                    <button
-                      x-on:click="content_open = ! content_open; $nextTick(() => { expandable = $refs.note && $refs.note.scrollHeight > $refs.note.clientHeight });"
-                      x-text={"content_open ? '#{l("Show less")}' : '#{l("Show more")}'"}
-                      class="show_more_toggle_action ml-1 normal-case btn-outline btn btn-xs"
-                    >
-                      {l("Show more")}
-                    </button>
-                  {#else}
-                    <div class="ml-1 normal-case btn-outline btn btn-xs">
-                      {l("Show more")}
-                    </div>
-                  {/if}
-                </p>
-              </div>
+              <button
+                x-on:click="content_open = ! content_open; $nextTick(() => { expandable = $refs.note && $refs.note.scrollHeight > $refs.note.clientHeight });"
+                class="flex w-full flex-1 items-start mb-2 gap-2 p-2 bg-base-content/5 border border-dashed border-base-content/10 rounded-lg"
+              >
+                <span class="leading-[24px] text-left text-sm text-base-content/70 flex-1">{summary || l("Content Warning")}</span>
+                {#if !@hide_actions}
+                  <div
+                    x-text={"content_open ? '#{l("Show less")}' : '#{l("Show more")}'"}
+                    class="show_more_toggle_action normal-case btn-ghost btn btn-xs"
+                  >
+                    <span>{l("Show more")}</span>
+                  </div>
+                {#else}
+                  <div class="normal-case btn-ghost btn btn-xs">
+                    {l("Show more")}
+                  </div>
+                {/if}
+              </button>
             {#else}
               <div :if={summary} class="prose max-w-prose prose-p:pt-1">
                 {rich(summary)}
