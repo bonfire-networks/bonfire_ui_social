@@ -36,7 +36,7 @@
             {#if cw and e(post_content(@object), :html_body, nil)}
               <button
                 x-on:click="content_open = ! content_open; $nextTick(() => { expandable = $refs.note && $refs.note.scrollHeight > $refs.note.clientHeight });"
-                class="flex w-full flex-1 items-start mb-2 gap-2 p-2 bg-base-content/5 border border-dashed border-base-content/10 rounded-lg"
+                class="flex w-full flex-1 items-start my-2 gap-2 p-2 bg-base-content/5 border border-dashed border-base-content/10 rounded-box"
               >
                 <span class="leading-[24px] text-left text-sm text-base-content/70 flex-1">{summary || l("Content Warning")}</span>
                 {#if !@hide_actions}
