@@ -1195,7 +1195,7 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
 
     assigns_sockets =
       assigns_sockets
-      |> Bonfire.UI.Boundaries.LiveHandler.maybe_check_boundaries(boundary_opts) ||
+      |> Bonfire.Boundaries.LiveHandler.maybe_check_boundaries(boundary_opts) ||
         assigns_sockets
 
     if feed_live_update_many_preloads == :async_total do
@@ -1203,7 +1203,7 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
       batch_update_many_async(
         assigns_sockets,
         [
-          Bonfire.UI.Boundaries.LiveHandler.update_many_opts(
+          Bonfire.Boundaries.LiveHandler.update_many_opts(
             opts ++
               [
                 verbs: [:read]
@@ -1254,7 +1254,7 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
         if(opts[:showing_within] != :messages,
           do: [
             Utils.maybe_apply(
-              Bonfire.UI.Boundaries.LiveHandler,
+              Bonfire.Boundaries.LiveHandler,
               :update_many_opts,
               [
                 opts ++
