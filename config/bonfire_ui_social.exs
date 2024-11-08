@@ -1,6 +1,6 @@
 import Config
 
-config :bonfire_ui_social,
+config :bonfire_common,
   localisation_path: "priv/localisation"
 
 config :bonfire, :ui,
