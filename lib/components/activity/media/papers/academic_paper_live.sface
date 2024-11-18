@@ -112,7 +112,7 @@
                 </a>
 
                 <LinkLive
-                  :if={not String.starts_with?(media_url, "doi:") and URIs.is_uri?(media_url)}
+                  :if={not String.starts_with?(media_url, "doi:") and URIs.valid_url?(media_url)}
                   to={media_url}
                   class="btn btn-outline  btn-sm  flex-1"
                   target="_blank"
