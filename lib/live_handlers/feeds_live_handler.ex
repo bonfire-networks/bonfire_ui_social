@@ -669,7 +669,7 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
       selected_tab: :fediverse,
       # FIXME: clean up page vs tab
       page: "activities",
-      page_title: "Explore remote activities from the fediverse",
+      page_title: "Activities from the fediverse",
       # no_header: true,
       # page_header_icon: "ri:home-line",
       # page_title: l("Federated activities from remote instances"),
