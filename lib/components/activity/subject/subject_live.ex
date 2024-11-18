@@ -32,6 +32,7 @@ defmodule Bonfire.UI.Social.Activity.SubjectLive do
   prop is_answer, :boolean, default: false
   prop activity_inception, :any, default: nil
   prop parent_id, :any, default: nil
+  # prop show_minimal_subject_and_note, :any, default: nil
 
   def render(assigns) do
     assigns

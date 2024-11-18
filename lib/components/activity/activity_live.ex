@@ -769,6 +769,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
                   is_remote={@is_remote}
                   thread_title={e(component_assigns, :thread_title, @thread_title)}
                   subject_user={@subject_user}
+                  show_minimal_subject_and_note={e(component_assigns, :show_minimal_subject_and_note, @show_minimal_subject_and_note)}
                 />
               {#match Bonfire.UI.Social.Activity.NoteLive}
                 <Bonfire.UI.Social.Activity.NoteLive
@@ -1406,7 +1407,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
           activity_id: activity_id,
           subject_id: subject_id,
           activity: activity,
-          object: %{id: object_id} = object
+          object: %{id: object_id} = reply_to_object
         } = _reply_to,
         _,
         _,
@@ -1426,10 +1427,11 @@ defmodule Bonfire.UI.Social.ActivityLive do
          id: "reply_to-#{activity_component_id}-#{object_id}",
          activity_inception: activity_id,
          #  show_minimal_subject_and_note: name_or_text(reply_to_post_content) || true,
+         # FIXME: not showing reply_to post content
          show_minimal_subject_and_note: true,
          viewing_main_object: false,
          thread_title: thread_title,
-         object: object,
+         object: reply_to_object,
          subject_id: subject_id,
          activity: activity
        }}

@@ -121,7 +121,7 @@
       <Bonfire.UI.Social.Activity.InstanceIconLive :if={@is_remote} peered={@peered} />
     </span>
   </div>
-  <!-- {#if @show_minimal_subject_and_note}      
+  {!-- {#if @show_minimal_subject_and_note}      
           <div class="flex items-top">
             <div
               class="font-medium cursor-pointer w-full max-w-full relative gap-1 prose prose-sm !text-sm !text-base-content/70 prose-a:text-base-content/70 prose-a:no-underline prose-p:inline-block"
@@ -137,9 +137,7 @@
                
             </div>
           </div>
-        {/if} -->
-
-  <!-- {/if} -->
+        {/if}  --}
 </div>
 
 <a
