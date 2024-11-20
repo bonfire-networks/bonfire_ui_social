@@ -14,12 +14,12 @@
   </button>
   <ul
     tabindex="0"
-    class="tooltip z-[999999999999] menu shadow bg-base-100 shadow border border-base-content/10 rounded-lg p-0 w-60 absolute top-0 left-0 hidden"
+    class="tooltip z-[999999999999] menu shadow bg-base-100 shadow border border-base-content/10 rounded-lg p-1 w-64 absolute top-0 left-0 hidden"
     role="menu"
     aria-orientation="vertical"
     aria-labelledby="more-menu"
   >
-    <li :if={@object_type not in [Bonfire.Data.Social.Message]}><div class="w-full p-0 flex bg-base-content/5 rounded-b-none">
+    <li :if={@object_type not in [Bonfire.Data.Social.Message]}><div class="w-full p-0 flex bg-base-content/5">
         {#if LiveHandler.feed_live_update_many_preloads?() == :async_actions}
           <StatelessComponent
             module={maybe_component(Bonfire.UI.Boundaries.Web.BoundaryIconStatelessLive, @__context__)}
