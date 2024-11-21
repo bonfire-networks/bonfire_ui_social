@@ -49,7 +49,7 @@
     <div class="flex border-l border-base-content/10 justify-center items-center flex-col">
       <div class="flex-col divide-base-content/10 z-50 flex justify-center items-center place-content-center">
         <Bonfire.UI.Common.OpenModalLive
-          id={"media_modal_#{id(@media)}#{Text.random_string()}"}
+          id={"media_modal_#{id(@media)}#{random_dom_id()}"}
           reusable_modal_id="media_player_modal"
           no_actions
           title_text={@media_label}

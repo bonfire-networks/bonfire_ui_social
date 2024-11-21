@@ -14,7 +14,7 @@
               {#case e(audio, "href", nil) || audio}
                 {#match audio_url when is_binary(audio_url)}
                   <Bonfire.UI.Common.OpenModalLive
-                    id={"media_modal_#{id(@json)}#{Text.random_string()}"}
+                    id={"media_modal_#{id(@json)}#{random_dom_id()}"}
                     reusable_modal_id="media_player_modal"
                     no_actions
                     no_header

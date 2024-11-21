@@ -92,7 +92,7 @@ defmodule Bonfire.UI.Social.FeedLive do
   end
 
   defp stream_id(feed_id, entry) do
-    "#{feed_id}_#{id(entry) || e(entry, :activity, :id, nil) || e(entry, :object, :id, nil) || e(entry, :edge, :id, nil) || Text.random_string()}"
+    "#{feed_id}_#{id(entry) || e(entry, :activity, :id, nil) || e(entry, :object, :id, nil) || e(entry, :edge, :id, nil) || random_dom_id()}"
   end
 
   # consolidate different kinds of lists/feeds into Activity

@@ -1,5 +1,5 @@
 <Bonfire.UI.Common.OpenModalLive
-  id={Text.random_string()}
+  id={random_dom_id()}
   title_text={l("Version history")}
   modal_class="modal_wide"
   form_opts={if !@read_only,
