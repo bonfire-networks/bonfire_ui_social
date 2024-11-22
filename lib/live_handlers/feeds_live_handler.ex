@@ -959,8 +959,15 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
   defp feed_assigns({feed_id, feed_id_or_ids}, opts)
        when feed_id == :my or (is_list(feed_id_or_ids) and feed_id_or_ids != []) do
     # My Feed
-    preloads = feed_extra_preloads_list(e(opts, :showing_within, nil))
-    opts = opts ++ [preload: preloads]
+    debug("A. Starting feed_assigns for my feed")
+
+    preloads =
+      feed_extra_preloads_list(e(opts, :showing_within, nil))
+      |> debug("A1. preloads")
+
+    opts =
+      (opts ++ [preload: preloads])
+      |> debug("A2. opts with preloads")
 
     with %{} = feed <-
            feed_id_or_ids

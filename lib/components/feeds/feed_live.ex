@@ -432,7 +432,6 @@ defmodule Bonfire.UI.Social.FeedLive do
         socket
       ) do
     # need to reload feed so streams are updated
-
     socket =
       socket
       |> assign(loading: true)
