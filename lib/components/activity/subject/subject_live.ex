@@ -41,60 +41,60 @@ defmodule Bonfire.UI.Social.Activity.SubjectLive do
   end
 
   @spec prepare(any()) :: any()
-  def prepare(
-        %{
-          profile_name: nil,
-          character_username: nil,
-          subject_id: current_user_id,
-          __context__: %{
-            current_user: %{id: current_user_id, profile: profile, character: character}
-          }
-        } = assigns
-      ) do
-    assigns
-    |> assign(
-      subject_id: current_user_id,
-      profile_name: e(profile, :name, nil),
-      character_username: e(character, :username, nil),
-      path: path(character),
-      profile_media: Common.Media.avatar_url(profile)
-    )
-  end
+  # def prepare(
+  #       %{
+  #         profile_name: nil,
+  #         character_username: nil,
+  #         subject_id: current_user_id,
+  #         __context__: %{
+  #           current_user: %{id: current_user_id, profile: profile, character: character}
+  #         }
+  #       } = assigns
+  #     ) do
+  #   assigns
+  #   |> assign(
+  #     subject_id: current_user_id,
+  #     profile_name: e(profile, :name, nil),
+  #     character_username: e(character, :username, nil),
+  #     path: path(character),
+  #     profile_media: Common.Media.avatar_url(profile)
+  #   )
+  # end
 
-  def prepare(
-        %{
-          profile_name: nil,
-          character_username: nil,
-          subject_id: subject_user_id,
-          subject_user: %{id: subject_user_id, profile: profile, character: character}
-        } = assigns
-      ) do
-    assigns
-    |> assign(
-      subject_id: subject_user_id,
-      profile_name: e(profile, :name, nil),
-      character_username: e(character, :username, nil),
-      path: path(character),
-      profile_media: Media.avatar_url(profile)
-    )
-  end
+  # def prepare(
+  #       %{
+  #         profile_name: nil,
+  #         character_username: nil,
+  #         subject_id: subject_user_id,
+  #         subject_user: %{id: subject_user_id, profile: profile, character: character}
+  #       } = assigns
+  #     ) do
+  #   assigns
+  #   |> assign(
+  #     subject_id: subject_user_id,
+  #     profile_name: e(profile, :name, nil),
+  #     character_username: e(character, :username, nil),
+  #     path: path(character),
+  #     profile_media: Media.avatar_url(profile)
+  #   )
+  # end
 
-  def prepare(
-        %{
-          profile: profile,
-          character: character
-        } = assigns
-      )
-      when not is_nil(profile) or not is_nil(character) do
-    assigns
-    |> assign(
-      subject_id: id(profile),
-      profile_name: e(profile, :name, nil),
-      character_username: e(character, :username, nil),
-      path: path(character || profile),
-      profile_media: Media.avatar_url(profile)
-    )
-  end
+  # def prepare(
+  #       %{
+  #         profile: profile,
+  #         character: character
+  #       } = assigns
+  #     )
+  #     when not is_nil(profile) or not is_nil(character) do
+  #   assigns
+  #   |> assign(
+  #     subject_id: id(profile),
+  #     profile_name: e(profile, :name, nil),
+  #     character_username: e(character, :username, nil),
+  #     path: path(character || profile),
+  #     profile_media: Media.avatar_url(profile)
+  #   )
+  # end
 
   def prepare(assigns) do
     assigns

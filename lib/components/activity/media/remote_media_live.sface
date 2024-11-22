@@ -72,6 +72,7 @@
                     {raw(embed)}
                 {/case}
               {#match url}
+                <!-- <code>{inspect(url)}</code> -->
                 {!-- TODO: url |> String.replace("youtube.com", "yewtu.be") --}
                 <!-- width={e(@media, :metadata, "facebook", "video:width", nil) ||
                     e(@media, :metadata, "other", "video_width", nil) || "800"}
@@ -79,7 +80,7 @@
                     e(@media, :metadata, "other", "video_height", nil) || "500"} -->
                 <div class="aspect-video rounded-t-box">
                   <iframe
-                    src={"#{e(url, :url, nil)}?&autoplay=1"}
+                    src={"#{e(url, "secure_url", nil)}?&autoplay=1"}
                     frameborder="0"
                     width="100%"
                     loading="lazy"
