@@ -8,7 +8,7 @@
     <div class="relative">
       <div id="thread_main_object">
         {#if is_nil(@activity) and is_nil(@object)}
-          <div class="m-3 text-center p-8 rounded-lg border border-base-content/30 flex items-center place-content-center">{l("You cannot view this activity")}</div>
+          <div class="m-3 text-center p-8 rounded-lg border border-base-content/30 flex items-center place-content-center">{l("Sorry, you cannot view this.")}</div>
         {#else}
           {#if e(@custom_preview, nil)}
             <div>

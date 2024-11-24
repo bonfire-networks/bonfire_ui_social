@@ -1,6 +1,6 @@
 <Bonfire.UI.Common.OpenModalLive
   id={random_dom_id()}
-  title_text={l("Version history")}
+  title_text={if @versioning_enabled, do: l("Version history"), else: l("Edit")}
   modal_class="modal_wide"
   form_opts={if !@read_only,
     do: %{"phx-submit" => "Bonfire.Posts:edit", "phx-target": "##{@activity_component_id}"},
@@ -10,10 +10,14 @@
   <input type="hidden" name="post_id" value={id(@object)}>
 
   <div class="flex-1 mt-4">
-    <Bonfire.UI.Social.VersionHistoryLive object={@object} />
+    <Bonfire.UI.Social.VersionHistoryLive
+      :if={@versioning_enabled}
+      versioning_enabled={@versioning_enabled}
+      object={@object}
+    />
 
     <div :if={!@read_only} phx-update="ignore">
-      <h3 class="font-bold mt-5 text-base flex-1">
+      <h3 :if={@versioning_enabled} class="font-bold mt-5 text-base flex-1">
         {l("Edit")}
       </h3>
       <div class="flex flex-col gap-2 mt-4 border rounded border-base-content/10">
@@ -59,7 +63,7 @@
           </div>
         </div>
       </li>
-      <li>
+      <li :if={@versioning_enabled}>
         <div class="flex items-center gap-2">
           <#Icon
             iconify="material-symbols:difference-outline-rounded"

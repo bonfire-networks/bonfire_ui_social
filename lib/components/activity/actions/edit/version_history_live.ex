@@ -4,4 +4,5 @@ defmodule Bonfire.UI.Social.VersionHistoryLive do
   slot default
 
   prop object, :any, default: nil
+  prop versioning_enabled, :boolean, default: true
 end
