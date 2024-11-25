@@ -1,10 +1,9 @@
 <div class={
-  "flex flex-col flex-1 rounded-xl shadow bg-base-100",
+  "flex flex-col flex-1",
   "!max-w-[720px] mx-auto w-full": !current_user_id(@__context__)
 }>
   <div class="flex-1">
     {!-- INITIAL POST --}
-
     <div class="relative">
       <div id="thread_main_object">
         {#if is_nil(@activity) and is_nil(@object)}

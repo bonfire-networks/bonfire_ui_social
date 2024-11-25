@@ -24,6 +24,7 @@
   </div>
 
   <div
+    :if={@showing_within != :messages}
     style={"left: #{reply * 6}px"}
     :for={reply <- 0..(@thread_level - 1)}
     class={
