@@ -1,7 +1,7 @@
 <div
   data-id="more_menu"
   phx-hook="Tooltip"
-  data-position="end"
+  data-position="left-end"
   data-rendered={@showing_within}
   id={"more-menu-#{id(@activity_component_id || @activity)}"}
   aria-haspopup="true"

@@ -48,7 +48,7 @@
           </div>
         </div>
 
-        <div class="flex flex-wrap items-center gap-3 px-2">
+        <div class="flex flex-wrap items-center gap-3 p-2">
           {#for p <- @participants || []}
             <div class="z-[99999999999] relative">
               <div>
