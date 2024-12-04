@@ -13,10 +13,10 @@
                 nil,
                 @reply_to
               ) || [] do %>
-  <%= maybe_apply(
+  {maybe_apply(
     component,
     "#{filename_for_module_template(component)}_mjml",
     [Map.merge(assigns, component_assigns || %{})],
     fallback_return: "skip #{component}"
-  ) %>
+  )}
 <% end %>

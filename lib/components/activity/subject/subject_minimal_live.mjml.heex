@@ -1,5 +1,5 @@
 <mjml>
-  <%= e(@profile, :name, nil) || e(@character, :username, nil) %>
+  {e(@profile, :name, nil) || e(@character, :username, nil)}
 
-  <%= raw(@verb_display) %>
+  {raw(@verb_display)}
 </mjml>
