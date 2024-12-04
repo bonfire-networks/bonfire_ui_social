@@ -1,6 +1,6 @@
 {#if module_enabled?(Bonfire.UI.Reactions.SortItemsLive, @__context__)}
   <StatelessComponent
-    module={Bonfire.UI.Reactions.SortItemsLive}
+    module={maybe_component(Bonfire.UI.Reactions.SortItemsLive)}
     scope={@scope}
     feed_name={@feed_name}
     event_name={@event_name}

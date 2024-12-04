@@ -283,7 +283,7 @@
             {!-- Flag the object --}
             <li data-role="flag_object">
               <StatelessComponent
-                module={Bonfire.UI.Moderation.FlagActionLive}
+                module={maybe_component(Bonfire.UI.Moderation.FlagActionLive)}
                 object={@object}
                 permalink={@permalink}
                 flagged={@flagged}
@@ -296,7 +296,7 @@
             {!-- Flag the author --}
             <li data-role="flag_author" :if={not is_nil(@creator_id)}>
               <StatelessComponent
-                module={Bonfire.UI.Moderation.FlagActionLive}
+                module={maybe_component(Bonfire.UI.Moderation.FlagActionLive)}
                 object={@creator_id}
                 flagged={@flagged}
                 parent_id={"user-#{id(@activity_component_id || @activity)}"}
