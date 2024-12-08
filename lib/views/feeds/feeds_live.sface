@@ -17,5 +17,5 @@
   tab_path_prefix="/feed/"
   tab_path_suffix={@tab_path_suffix}
   sort_by={Settings.get([Bonfire.UI.Social.FeedLive, :sort_by], nil, @__context__)}
-  time_limit={Settings.get([Bonfire.UI.Social.FeedLive, :time_limit], 0, @__context__)}
+  time_limit={Settings.get([Bonfire.UI.Social.FeedLive, :time_limit], 7, @__context__)}
 />
