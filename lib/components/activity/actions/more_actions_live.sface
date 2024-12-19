@@ -220,7 +220,7 @@
         {/case}
       {/if}
 
-      <li :if={current_user_id(@__context__) && current_user_id(@__context__) != @creator_id and
+      <li :if={(current_user_id(@__context__) && current_user_id(@__context__) != @creator_id) and
         Types.object_type(@creator) == Bonfire.Data.Identity.User}>
         <StatelessComponent
           module={maybe_component(Bonfire.UI.Boundaries.Web.AddToCircleLive, @__context__)}

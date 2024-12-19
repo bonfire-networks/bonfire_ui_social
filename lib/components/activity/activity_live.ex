@@ -198,17 +198,17 @@ defmodule Bonfire.UI.Social.ActivityLive do
       hide_actions:
         case e(assigns, :hide_actions, nil) || e(socket_assigns, :hide_actions, nil) do
           nil ->
-            !(e(assigns, :viewing_main_object, nil) ||
-                e(socket_assigns, :viewing_main_object, nil)) and
-              Settings.get(
-                [
-                  Bonfire.UI.Social.Activity.ActionsLive,
-                  showing_within,
-                  :hide_until_hovered
-                ],
-                nil,
-                current_user(assigns) || current_user(socket_assigns)
-              ) && "until_hovered"
+            (!(e(assigns, :viewing_main_object, nil) ||
+                 e(socket_assigns, :viewing_main_object, nil)) and
+               Settings.get(
+                 [
+                   Bonfire.UI.Social.Activity.ActionsLive,
+                   showing_within,
+                   :hide_until_hovered
+                 ],
+                 nil,
+                 current_user(assigns) || current_user(socket_assigns)
+               )) && "until_hovered"
 
           hide_actions ->
             hide_actions
