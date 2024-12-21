@@ -11,10 +11,12 @@
       {#match nil}
       {#match media_url}
         {#if (e(m.metadata, "wikibase", "itemType", nil) in ["journalArticle"] or
-             e(m.metadata, "crossref", "DOI", nil)) || e(m.metadata, "oembed", "DOI", nil) ||
+             e(m.metadata, "wikibase", "identifiers", "doi", nil)) ||
+            e(m.metadata, "crossref", "DOI", nil) || e(m.metadata, "oembed", "DOI", nil) ||
             e(m.metadata, "other", "prism.doi", nil) ||
             e(m.metadata, "other", "citation_doi", nil) || e(m.metadata, "other", "citation_doi", nil) ||
-            ed(m.metadata, "json_ld", "@type", nil) in ["ScholarlyArticle", "Dataset"]}
+            ed(m.metadata, "json_ld", "@type", nil) in ["ScholarlyArticle", "Dataset"] ||
+            String.starts_with?(media_url || "", "https://doi.org/")}
           <Bonfire.UI.Social.Activity.AcademicPaperLive
             media={m}
             metadata={Enums.deep_merge_reduce([

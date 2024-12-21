@@ -61,12 +61,15 @@
 
     <div class="p-2 flex flex-col w-full gap-1 flex-1">
       <div data-id="media_author" class="text-sm">
+        <span class="text-sm badge badge-accent rounded bg-accent/30 border-none !text-accent capitalize mr-1">{e(@media, :media_type, nil) || l("link")}</span>
+
         {e(@media, :metadata, "oembed", "author_name", nil)}
 
         {#case e(@media, :metadata, "oembed", "published", "date-parts", nil)}
-          {#match published when is_list(published)}
-            <span class="text-base-content/70">{published |> List.flatten() |> Enum.join("-")}</span>
-          {#match _}
+          {#match nil}
+          {#match []}
+          {#match published}
+            <span class="text-base-content/70">{published |> DatesTimes.format(format: "MMMM d, Y")}</span>
         {/case}
 
         {#case MediaLive.provider(@media)}
@@ -78,10 +81,10 @@
 
       <div data-id="media_title" class="text-lg line-clamp-2 font-semibold">
         {Bonfire.Files.Media.media_label(@media) ||
-          if @media.media_type == "link", do: e(@media, :path, nil), else: l("View")} ({@media.media_type || l("link")})
+          if @media.media_type == "link", do: e(@media, :path, nil), else: l("View")}
       </div>
 
-      <div class="max-w-full text-sm break-words line-clamp-1 text-base-content/70">
+      <div class="max-w-full text-sm break-words line-clamp-3 text-base-content/70">
         {Bonfire.Files.Media.description(@media)}
       </div>
       <!-- {e(@media, :metadata, "location", "name", nil)} {e(@media, :metadata, "startDate", nil)} -->

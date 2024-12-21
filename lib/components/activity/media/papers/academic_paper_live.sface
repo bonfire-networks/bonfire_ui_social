@@ -14,18 +14,22 @@
               "p-4 bg-base-100 ": @showing_within != :media
             }>
               <div class="relative w-full">
-                <div class="text-sm text-base-content/70 mb-1">{e(@metadata, "journal-title", "value", nil) || e(@metadata, "citation_journal_title", nil) ||
-                    e(@metadata, "publisher", "name", nil) ||
-                    e(@metadata, "publisher", nil) || e(@metadata, "publicationTitle", nil) ||
-                    e(@metadata, "isPartOf", "name", nil) ||
-                    e(@metadata, "container-title", nil)}
-                </div>
-                <div class="font-semibold">
-                  {e(@metadata, "citation_title", nil) || Bonfire.Files.Media.media_label(@media) ||
-                    if @media.media_type == "link", do: e(@media, :path, nil), else: l("View")}
+                <div class="mb-1">
+                  <span class="text-sm badge badge-accent rounded bg-accent/30 border-none !text-accent capitalize">{paper_type(@metadata)}</span>
+
+                  <span class="text-sm text-base-content/70 mb-1">{e(@metadata, "journal-title", "value", nil) || e(@metadata, "citation_journal_title", nil) ||
+                      e(@metadata, "publisher", "name", nil) ||
+                      e(@metadata, "publisher", nil) || e(@metadata, "publicationTitle", nil) ||
+                      e(@metadata, "isPartOf", "name", nil) ||
+                      e(@metadata, "container-title", nil)}
+                  </span>
                 </div>
 
-                <div class="flex flex-wrap mt-3 gap-0.5 text-sm text-base-content/80">
+                <div class="font-semibold">
+                  {e(@metadata, "citation_title", nil) || Bonfire.Files.Media.media_label(@media)}
+                </div>
+
+                <div class="flex flex-wrap mt-3 gap-2 text-sm text-base-content/80">
                   {#for {author, i} <-
                       Enum.with_index(
                         List.wrap(
@@ -37,15 +41,6 @@
                     {e(author, "given", nil) || e(author, "firstName", nil)}
                     {e(author, "family", nil) || e(author, "lastName", nil) || e(author, "name", nil) ||
                       if(is_binary(author), do: author)}{/for}
-                </div>
-
-                <div class="flex items-center gap-3 my-3">
-                  {#case e(@metadata, "dc.type", nil) || e(@metadata, "type", nil) || e(@metadata, "itemType", nil) ||
-                      e(@metadata, "citation_categories", nil) || e(@metadata, "@type", nil)}
-                    {#match nil}
-                    {#match type}
-                      <span class="text-sm badge badge-accent rounded bg-accent/30 border-none !text-accent capitalize">{type}</span>
-                  {/case}
 
                   {#case (e(@metadata, "datePublished", nil) ||
                        e(@metadata, "publication-date", nil) || e(@metadata, "date", nil) ||
@@ -54,25 +49,30 @@
                     |> debug("dattte")}
                     {#match nil}
                     {#match published}
-                      <div class="text-base-content/70 text-sm flex items-center gap-2">
+                      <span class="text-base-content/70 text-sm flex items-center gap-2">
                         <!-- <#Icon iconify="material-symbols:date-range-outline" class="w-4 h-4 text-base-content/70" /> -->
                         <span class="font-medium">{published |> DatesTimes.format(format: "MMMM d, Y")}</span>
-                      </div>
+                      </span>
                   {/case}
 
-                  <div :if={doi} class="text-base-content/70 text-sm flex items-center gap-2">
+                  <div
+                    :if={doi || String.contains?(e(@media, :path, nil), "doi.org/")}
+                    class="text-base-content/70 text-sm flex items-center gap-2"
+                  >
                     <span>
-                      {#case doi}
+                      {#case doi || e(@media, :path, nil)}
                         {#match "https://doi.org/" <> doi_id}
-                          <a target="blank" class="link" href={doi}>doi:{doi_id}</a>
+                          <a target="_blank" class="link" href={"https://doi.org/#{doi_id}"}>doi:{doi_id}</a>
                         {#match "https://dx.doi.org/" <> doi_id}
-                          <a target="blank" class="link" href={doi}>doi:{doi_id}</a>
+                          <a target="_blank" class="link" href={"https://doi.org/#{doi_id}"}>doi:{doi_id}</a>
                         {#match "http" <> _}
-                          <!-- <a target="blank" class="link" href={doi}>{doi}</a> -->
+                          <!-- <a target="_blank" class="link" href={doi}>{doi}</a> -->
                         {#match "doi:" <> doi_id}
-                          <a target="blank" class="link" href={"https://doi.org/#{doi_id}"}>{doi}</a>
+                          <a target="_blank" class="link" href={"https://doi.org/#{doi_id}"}>doi"{doi_id}</a>
+                        {#match _ when is_binary(doi)}
+                          <a target="_blank" class="link" href={"https://doi.org/#{doi}"}>doi:{doi}</a>
                         {#match _}
-                          <a target="blank" class="link" href={"https://doi.org/#{doi}"}>doi:{doi}</a>
+                          <!-- no DOI match -->
                       {/case}
                     </span>
                   </div>

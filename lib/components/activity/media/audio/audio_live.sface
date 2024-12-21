@@ -31,10 +31,12 @@
 
         <div class="text-sm">
           {e(@media, :metadata, "oembed", "author_name", nil)}
+
           {#case e(@media, :metadata, "oembed", "published", "date-parts", nil)}
-            {#match published when is_list(published)}
-              <span class="text-base-content/70">{published |> List.flatten() |> Enum.join("-")}</span>
-            {#match _}
+            {#match nil}
+            {#match []}
+            {#match published}
+              <span class="text-base-content/70">{published |> DatesTimes.format(format: "MMMM d, Y")}</span>
           {/case}
 
           {#case MediaLive.provider(@media)}

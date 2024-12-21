@@ -10,4 +10,15 @@ defmodule Bonfire.UI.Social.Activity.AcademicPaperLive do
   def update(_assign, socket) do
     {:noreply, socket}
   end
+
+  def paper_type(metadata) do
+    case e(metadata, "dc.type", nil) || e(metadata, "type", nil) || e(metadata, "itemType", nil) ||
+           e(metadata, "citation_categories", nil) || e(metadata, "@type", nil) do
+      "JournalArticle" -> l("Journal Article")
+      "journalArticle" -> l("Journal Article")
+      nil -> l("Article")
+      "ScholarlyArticle" -> l("Scholarly Article")
+      other -> other
+    end
+  end
 end
