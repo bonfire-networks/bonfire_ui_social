@@ -42,6 +42,7 @@ defmodule Bonfire.UI.Social.ThreadLive do
   prop participant_count, :any, default: nil
   prop last_reply_id, :any, default: nil
 
+  prop activity_preloads, :list, default: []
   prop activity_loaded_preloads, :list, default: []
 
   def mount(socket) do

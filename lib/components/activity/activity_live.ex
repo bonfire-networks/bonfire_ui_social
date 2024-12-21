@@ -59,6 +59,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
   prop subject_user, :any, default: nil
   prop peered, :any, default: nil
   prop hide_actions, :any, default: false
+  prop activity_preloads, :list, default: []
   prop activity_loaded_preloads, :list, default: []
   prop custom_preview, :any, default: nil
 
@@ -139,12 +140,12 @@ defmodule Bonfire.UI.Social.ActivityLive do
     )
 
     socket
-    |> assign(prepare(assigns))
+    |> assign(prepare(assigns) |> assigns_clean())
   end
 
   def maybe_update_some_assigns(socket \\ nil, assigns, extras) do
     socket
-    |> assign(some_assigns(socket, assigns, extras))
+    |> assign(some_assigns(socket, assigns, extras) |> assigns_clean())
   end
 
   defp some_assigns(socket \\ %{}, assigns, extras)
@@ -348,6 +349,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
       verb: verb,
       thread: thread
     )
+    # why merge?
     |> Enum.into(assigns)
     |> Map.merge(%{
       activity_prepared: true,
@@ -827,7 +829,8 @@ defmodule Bonfire.UI.Social.ActivityLive do
                        Bonfire.UI.Moderation.FlaggedActionsLive
                      ]}
                 {#if @hide_activity != "actions" and @hide_actions != true}
-                  {#if socket_connected?(@__context__) && LiveHandler.feed_live_update_many_preloads?() == :async_actions}
+                  {#if socket_connected?(@__context__) &&
+                      LiveHandler.feed_live_update_many_preload_mode() == :async_actions}
                     <StatefulComponent
                       id={"#{@activity_component_id}_actions"}
                       module={component}
@@ -1146,8 +1149,8 @@ defmodule Bonfire.UI.Social.ActivityLive do
 
             creator_id when is_binary(creator_id) ->
               debug("could only find a creator_id")
-              debug(activity)
-              debug(object)
+              # debug(activity)
+              # debug(object)
               [{Bonfire.UI.Social.Activity.SubjectLive, %{subject_id: creator_id}}]
 
             other ->

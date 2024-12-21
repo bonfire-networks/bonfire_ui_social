@@ -512,8 +512,8 @@ defmodule Bonfire.UI.Social.SettingsTest do
     end
 
     test "show reaction counts (likes/boosts)" do
-      # Process.put(:feed_live_update_many_preloads, :inline)
-      Config.put(:feed_live_update_many_preloads, :inline)
+      # Process.put(:feed_live_update_many_preload_mode, :inline)
+      Config.put(:feed_live_update_many_preload_mode, :inline)
       account = fake_account!()
       alice = fake_user!(account)
       bob = fake_user!(account)

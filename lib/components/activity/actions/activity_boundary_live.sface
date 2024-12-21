@@ -1,4 +1,4 @@
-{#if LiveHandler.feed_live_update_many_preloads?() in [:async_total, :async_actions]}
+{#if LiveHandler.feed_live_update_many_preload_mode() in [:async_total, :async_actions]}
   <StatelessComponent
     module={maybe_component(Bonfire.UI.Boundaries.Web.BoundaryIconStatelessLive, @__context__)}
     with_icon={@with_icon}

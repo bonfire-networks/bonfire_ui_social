@@ -102,7 +102,7 @@
 
       <Bonfire.UI.Social.ActivityBoundaryLive
         :if={@object_type not in [Bonfire.Data.Social.Message] and @activity_inception != "reply_to" and
-          LiveHandler.feed_live_update_many_preloads?() != :async_actions}
+          LiveHandler.feed_live_update_many_preload_mode() != :async_actions}
         object_id={@object_id}
         object_type={Types.object_type(@published_in) || @object_type}
         parent_id={@parent_id}

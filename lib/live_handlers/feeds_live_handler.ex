@@ -423,7 +423,7 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
   defp paginate_fetch_assign_feed(feed_id, opts, socket) do
     preloads =
       e(assigns(socket), :activity_loaded_preloads, nil) ||
-        feed_extra_preloads_list(e(assigns(socket), :showing_within, nil))
+        feed_query_preloads_list(e(assigns(socket), :showing_within, nil))
 
     do_paginate_fetch_assign_feed(feed_id, Keyword.put(opts, :preload, preloads), socket)
   end
@@ -962,7 +962,7 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
     debug("A. Starting feed_assigns for my feed")
 
     preloads =
-      feed_extra_preloads_list(e(opts, :showing_within, nil))
+      feed_query_preloads_list(e(opts, :showing_within, nil))
       |> debug("A1. preloads")
 
     opts =
@@ -1004,7 +1004,7 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
   end
 
   defp feed_assigns({{feed_id, nil}, %{} = filters}, opts) when filters != %{} do
-    preloads = feed_extra_preloads_list(e(opts, :showing_within, nil))
+    preloads = feed_query_preloads_list(e(opts, :showing_within, nil))
     opts = opts ++ [preload: preloads]
 
     with %{} = feed <-
@@ -1020,7 +1020,7 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
   end
 
   defp feed_assigns({feed_id, %{} = filters}, opts) when filters != %{} do
-    preloads = feed_extra_preloads_list(e(opts, :showing_within, nil))
+    preloads = feed_query_preloads_list(e(opts, :showing_within, nil))
     opts = opts ++ [preload: preloads]
 
     with %{} = feed <-
@@ -1036,7 +1036,7 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
   end
 
   defp feed_assigns(feed_id, opts) when is_binary(feed_id) do
-    preloads = feed_extra_preloads_list(e(opts, :showing_within, nil))
+    preloads = feed_query_preloads_list(e(opts, :showing_within, nil))
     opts = opts ++ [preload: preloads]
 
     with %{} = feed <-
@@ -1053,7 +1053,7 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
 
   defp feed_assigns(:flags = _feed_id, opts) do
     current_user_required!(opts)
-    # preloads = feed_extra_preloads_list(e(assigns(socket), :showing_within, nil))
+    # preloads = feed_query_preloads_list(e(assigns(socket), :showing_within, nil))
     opts =
       opts ++
         [
@@ -1073,7 +1073,7 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
   end
 
   defp feed_assigns(:curated = _feed_id, opts) do
-    # preloads = feed_extra_preloads_list(e(assigns(socket), :showing_within, nil))
+    # preloads = feed_query_preloads_list(e(assigns(socket), :showing_within, nil))
 
     opts =
       opts ++
@@ -1099,7 +1099,7 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
   defp feed_assigns(:likes = _feed_id, opts) do
     current_user_required!(opts)
 
-    # preloads = feed_extra_preloads_list(e(assigns(socket), :showing_within, nil))
+    # preloads = feed_query_preloads_list(e(assigns(socket), :showing_within, nil))
 
     opts =
       opts ++
@@ -1125,7 +1125,7 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
   end
 
   defp feed_assigns(%Ecto.Query{} = custom_query, opts) do
-    preloads = feed_extra_preloads_list(e(opts, :showing_within, nil))
+    preloads = feed_query_preloads_list(e(opts, :showing_within, nil))
     opts = opts ++ [preload: preloads]
 
     with %{} = feed <-
@@ -1142,7 +1142,7 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
 
   defp feed_assigns(feed_name, opts) when is_atom(feed_name) do
     feed_id = Bonfire.Social.Feeds.named_feed_id(feed_name, opts)
-    preloads = feed_extra_preloads_list(e(opts, :showing_within, nil))
+    preloads = feed_query_preloads_list(e(opts, :showing_within, nil))
     opts = opts ++ [preload: preloads]
 
     with %{} = feed <-
@@ -1190,65 +1190,100 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
 
   @decorate time()
   def activity_update_many(assigns_sockets, opts) do
-    feed_live_update_many_preloads = feed_live_update_many_preloads?()
+    feed_live_update_many_preload_mode =
+      case feed_live_update_many_preload_mode() do
+        # we also want to do other preloads inline
+        :async_actions -> :inline
+        other -> other
+      end
 
-    boundary_opts =
+    # |> IO.inspect(label: "feed_live_update_many_preload_mode")
+
+    opts =
       opts ++
         [
-          verbs: [:read],
-          return_assigns_socket_tuple: true,
-          live_update_many_preloads: feed_live_update_many_preloads
+          live_update_many_preload_mode: feed_live_update_many_preload_mode,
+          preload_status_key: :preloaded_async_activities,
+          return_assigns_socket_tuple: true
         ]
+
+    # FIXME: can't just use the first component's assigns to define our opts, but rather check all of them and group by different opts (specifically preloads) and execute them separately (in parallel), or merge them 
+    {current_user, opts} =
+      opts_for_update_many_async(List.first(assigns_sockets), opts)
 
     assigns_sockets =
       assigns_sockets
-      |> Bonfire.Boundaries.LiveHandler.maybe_check_boundaries(boundary_opts) ||
+      |> Bonfire.Boundaries.LiveHandler.maybe_check_boundaries(
+        opts ++
+          [
+            verbs: [:read],
+            current_user: current_user,
+            return_assigns_socket_tuple: true
+          ]
+      ) ||
         assigns_sockets
 
-    if feed_live_update_many_preloads == :async_total do
-      # |> debug("ccccccc")
-      batch_update_many_async(
-        assigns_sockets,
-        [
-          Bonfire.Boundaries.LiveHandler.update_many_opts(
-            opts ++
-              [
-                verbs: [:read]
-              ]
-          ),
-          debug(
-            opts ++
-              [
-                preload_status_key: :preloaded_async_activities,
-                return_assigns_socket_tuple: true,
-                live_update_many_preloads: feed_live_update_many_preloads,
-                assigns_to_params_fn: &assigns_to_params/1,
-                preload_fn: &preload_extras/3
-              ],
-            "opts for batch_update_many_async"
-          )
-        ],
-        opts
-      ) || assigns_sockets
+    case feed_live_update_many_preload_mode do
+      :inline ->
+        # |> debug("ccccccc")
+        update_many_async(
+          current_user,
+          assigns_sockets,
+          opts ++
+            [
+              assigns_to_params_fn: &assigns_to_params/1,
+              preload_fn: &do_preload_extras/3
+            ]
+        ) || assigns_sockets
 
-      # |> debug
-    else
-      assigns_sockets
+      :async_total ->
+        # |> debug("ccccccc")
+        batch_update_many_async(
+          current_user,
+          assigns_sockets,
+          [
+            Utils.maybe_apply(
+              Bonfire.Boundaries.LiveHandler,
+              :update_many_opts,
+              [
+                opts ++
+                  [
+                    verbs: [:read]
+                  ]
+              ]
+            ),
+            # TODO: add Likes, Bookmarks, etc like in `actions_update_many`
+            debug(
+              opts ++
+                [
+                  assigns_to_params_fn: &assigns_to_params/1,
+                  preload_fn: &do_preload_extras/3
+                ],
+              "opts for batch_update_many_async"
+            )
+          ],
+          opts
+        ) || assigns_sockets
+
+      _ ->
+        assigns_sockets
     end
   end
 
   @decorate time()
   def actions_update_many(assigns_sockets, opts) do
-    feed_live_update_many_preloads = feed_live_update_many_preloads?()
+    feed_live_update_many_preload_mode = feed_live_update_many_preload_mode()
 
-    if feed_live_update_many_preloads == :async_actions do
+    if feed_live_update_many_preload_mode == :async_actions do
       opts =
         opts ++
           [
             return_assigns_socket_tuple: true,
-            live_update_many_preloads: :user_async_or_skip
+            preload_status_key: :preloaded_async_actions,
+            live_update_many_preload_mode: :user_async_or_skip
           ]
 
+      # FIXME: can't just use the first component's assigns to define our opts, but rather check all of them and group by different opts (specifically preloads) and execute them separately (in parallel), or merge them 
       {current_user, opts} =
         opts_for_update_many_async(List.first(assigns_sockets), opts)
 
@@ -1284,10 +1319,14 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
               :update_many_opts,
               [opts]
             ),
-            Utils.maybe_apply(
-              Bonfire.Social.Bookmarks.LiveHandler,
-              :update_many_opts,
-              [opts]
+            if(
+              module_enabled?(Bonfire.UI.Reactions.BookmarkActionLive, current_user: current_user),
+              do:
+                Utils.maybe_apply(
+                  Bonfire.Social.Bookmarks.LiveHandler,
+                  :update_many_opts,
+                  [opts]
+                )
             )
           ],
         opts
@@ -1299,9 +1338,10 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
     end
   end
 
-  def feed_live_update_many_preloads?,
+  def feed_live_update_many_preload_mode,
     do:
-      Process.get(:feed_live_update_many_preloads) || Config.get(:feed_live_update_many_preloads)
+      Process.get(:feed_live_update_many_preload_mode) ||
+        Config.get(:feed_live_update_many_preload_mode) || :async_actions
 
   defp assigns_to_params(assigns) do
     activity = Activities.activity_with_object_from_assigns(assigns)
@@ -1318,20 +1358,9 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
     }
   end
 
-  defp uniq_assign(list_of_components, field) do
-    case list_of_components
-         |> Enum.map(& &1[field])
-         |> Enum.uniq() do
-      [nil] ->
-        nil
-
-      [val] ->
-        val
-
-      other ->
-        warn(other, "more than one kind of #{field}")
-        nil
-    end
+  def feed_query_preloads_list(showing_within, thread_mode \\ nil) do
+    debug("WIP: avoid prelading in single query")
+    []
   end
 
   def feed_extra_preloads_list(showing_within, thread_mode \\ nil) do
@@ -1357,10 +1386,12 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
     |> debug("whatpreloads")
   end
 
-  @decorate time()
-  defp preload_extras(list_of_components, _list_of_ids, current_user) do
-    # TODO: less preloads if not in a feed
+  def feed_async_preloads_list(showing_within, thread_mode \\ nil) do
+    feed_extra_preloads_list(showing_within, thread_mode)
+  end
 
+  defp do_preload_extras(list_of_components, _list_of_ids, current_user) do
+    # TODO: optimise the following so we don't iterate over all component assigns X times
     showing_within =
       list_of_components
       |> uniq_assign(:showing_within)
@@ -1371,8 +1402,20 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
       |> uniq_assign(:thread_mode)
       |> debug("thread_mode")
 
-    preloads = feed_extra_preloads_list(showing_within, thread_mode)
+    preloads =
+      list_of_components
+      |> uniq_assign(:activity_preloads)
+      |> Enums.filter_empty(nil) || feed_async_preloads_list(showing_within, thread_mode)
 
+    preload_extras(
+      preloads |> IO.inspect(label: "many_activity_preloads"),
+      list_of_components,
+      current_user
+    )
+  end
+
+  @decorate time()
+  def preload_extras(preloads, list_of_components, current_user) do
     opts = [
       preload: preloads,
       with_cache: false,
@@ -1614,7 +1657,7 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
     feed_id =
       uid!(feed_id)
 
-    preloads = feed_extra_preloads_list(e(assigns(socket), :showing_within, nil))
+    preloads = feed_query_preloads_list(e(assigns(socket), :showing_within, nil))
 
     feed =
       if module = maybe_module(FeedActivities, socket),
@@ -1647,7 +1690,7 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
     user = user || e(assigns(socket), :user, nil)
 
     showing_within = :feed_by_creator
-    preloads = [:feed_by_creator] ++ feed_extra_preloads_list(showing_within)
+    preloads = [:feed_by_creator] ++ feed_query_preloads_list(showing_within)
     current_user = current_user(assigns(socket))
 
     feed =
@@ -1685,7 +1728,7 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
     user = user || e(assigns(socket), :user, nil)
     type = Types.maybe_to_atom(type)
     object_type = Types.maybe_to_module(type) || type
-    preloads = [:feed_by_creator] ++ feed_extra_preloads_list(:feed_by_creator)
+    preloads = [:feed_by_creator] ++ feed_query_preloads_list(:feed_by_creator)
     current_user = current_user(assigns(socket))
 
     feed_id =
@@ -1763,7 +1806,7 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
 
   def load_user_feed_assigns("timeline" = tab, user, params, socket) do
     user = user || e(assigns(socket), :user, nil)
-    preloads = feed_extra_preloads_list(e(assigns(socket), :showing_within, nil))
+    preloads = feed_query_preloads_list(e(assigns(socket), :showing_within, nil))
     current_user = current_user(assigns(socket))
 
     feed_id =
@@ -1929,7 +1972,7 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
       uid!(feed_id)
       |> debug("feed_id")
 
-    preloads = feed_extra_preloads_list(e(assigns(socket), :showing_within, nil))
+    preloads = feed_query_preloads_list(e(assigns(socket), :showing_within, nil))
 
     feed =
       maybe_apply(

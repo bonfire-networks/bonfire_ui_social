@@ -20,7 +20,7 @@
     aria-labelledby="more-menu"
   >
     <li :if={@object_type not in [Bonfire.Data.Social.Message]}><div class="w-full p-0 flex bg-base-content/5">
-        {#if LiveHandler.feed_live_update_many_preloads?() == :async_actions}
+        {#if LiveHandler.feed_live_update_many_preload_mode() == :async_actions}
           <StatelessComponent
             module={maybe_component(Bonfire.UI.Boundaries.Web.BoundaryIconStatelessLive, @__context__)}
             object_id={id(@object)}

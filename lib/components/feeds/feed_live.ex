@@ -16,7 +16,6 @@ defmodule Bonfire.UI.Social.FeedLive do
   prop page_info, :any, default: nil
   prop previous_page_info, :any, default: nil
   prop loading, :boolean, default: true
-  prop preload, :atom, default: :feed
   prop cache_strategy, :any, default: nil
   prop hide_activities, :any, default: nil
 
@@ -58,6 +57,7 @@ defmodule Bonfire.UI.Social.FeedLive do
   prop sort_by, :any, default: nil
   prop time_limit, :any, default: nil
   prop sort_order, :any, default: false
+  prop activity_preloads, :list, default: []
   prop activity_loaded_preloads, :list, default: []
 
   prop hide_fresh, :integer, default: 0
@@ -142,7 +142,7 @@ defmodule Bonfire.UI.Social.FeedLive do
   def update(assigns, socket)
 
   def update(%{insert_stream: %{feed: entries}} = assigns, socket) do
-    debug(entries, "feed stream is being poured into")
+    debug("feed stream is being poured into")
 
     socket
     |> assign(Map.drop(assigns, [:insert_stream]))

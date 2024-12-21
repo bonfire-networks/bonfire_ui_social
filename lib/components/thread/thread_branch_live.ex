@@ -25,6 +25,7 @@ defmodule Bonfire.UI.Social.ThreadBranchLive do
   prop current_url, :string, default: nil
   prop activity_inception, :any, default: nil
 
+  prop activity_preloads, :list, default: []
   prop activity_loaded_preloads, :list, default: []
 
   def update(%{insert_stream: {:threaded_replies, entries, at}} = assigns, socket) do

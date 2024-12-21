@@ -273,41 +273,41 @@ defmodule Bonfire.UI.Social.Benchmark do
           #   live_feed()
           # end,
           # "query & render feed component with activities (using all async preloads)" => fn ->
-          #   live_feed(live_update_many_preloads: :async)
+          #   live_feed(live_update_many_preload_mode: :async)
           # end,
           # "query & render feed component with activities (inline all preloads)" => fn ->
-          #   live_feed(live_update_many_preloads: :inline)
+          #   live_feed(live_update_many_preload_mode: :inline)
           # end,
           # "query & render feed component with activities (skipping all preloads)" => fn ->
-          #   live_feed(live_update_many_preloads: :skip)
+          #   live_feed(live_update_many_preload_mode: :skip)
           # end,
           # "query & render feed component with activities (using feed async preloads)" => fn ->
-          #   live_feed(feed_live_update_many_preloads: :async_total) # FIXME
+          #   live_feed(feed_live_update_many_preload_mode: :async_total) # FIXME
           # end,
           # "query & render feed component with activities (inline feed preloads)" => fn ->
-          #   live_feed(feed_live_update_many_preloads: :inline)
+          #   live_feed(feed_live_update_many_preload_mode: :inline)
           # end,
           # "query & render feed component with activities (inline + async actions)" => fn ->
-          #   live_feed(feed_live_update_many_preloads: :async_actions)
+          #   live_feed(feed_live_update_many_preload_mode: :async_actions)
           # end,
           # "query & render feed component with activities (skipping feed preloads)" => fn ->
-          #   live_feed(feed_live_update_many_preloads: :skip)
+          #   live_feed(feed_live_update_many_preload_mode: :skip)
           # end,
           "render feed component with pre-queried activities" => fn ->
             render_feed(feed.edges)
           end,
           # "render feed component with already queried activities (skipping preloads)" => fn ->
-          #   render_feed(feed.edges, feed_live_update_many_preloads: :skip)
+          #   render_feed(feed.edges, feed_live_update_many_preload_mode: :skip)
           # end,
           # "render feed component with already queried activities (inline preloads)" => fn ->
-          #   render_feed(feed.edges, feed_live_update_many_preloads: :inline)
+          #   render_feed(feed.edges, feed_live_update_many_preload_mode: :inline)
           # end,
           # "render feed component with already queried activities (async actions preloads)" =>
           #   fn ->
-          #     render_feed(feed.edges, feed_live_update_many_preloads: :async_actions)
+          #     render_feed(feed.edges, feed_live_update_many_preload_mode: :async_actions)
           #   end,
           # "render feed component with already queried activities (async preloads)" => fn ->
-          #   render_feed(feed.edges, feed_live_update_many_preloads: :async)
+          #   render_feed(feed.edges, feed_live_update_many_preload_mode: :async)
           # end,
           # "render feed component with already queried activities (skip activity component)" => fn ->
           #   render_feed(feed.edges, hide_activities: "component")
@@ -420,13 +420,13 @@ defmodule Bonfire.UI.Social.Benchmark do
       [
         %{
           # "render feed component with already queried activities (skipping preloads)" => fn ->
-          #   render_feed(feed.edges, live_update_many_preloads: :skip)
+          #   render_feed(feed.edges, live_update_many_preload_mode: :skip)
           # end,
           # "render feed component with already queried activities (using async preloads)" => fn ->
-          #   render_feed(feed.edges, live_update_many_preloads: :async)
+          #   render_feed(feed.edges, live_update_many_preload_mode: :async)
           # end,
           "render feed component with already queried activities (inline preloads)" => fn ->
-            render_feed(feed.edges, live_update_many_preloads: :inline)
+            render_feed(feed.edges, live_update_many_preload_mode: :inline)
           end
         },
         [
@@ -486,8 +486,8 @@ defmodule Bonfire.UI.Social.Benchmark do
   end
 
   def render_feed(feed, opts \\ []) do
-    Process.put(:live_update_many_preloads, opts[:live_update_many_preloads])
-    Process.put(:feed_live_update_many_preloads, opts[:feed_live_update_many_preloads])
+    Process.put(:live_update_many_preload_mode, opts[:live_update_many_preload_mode])
+    Process.put(:feed_live_update_many_preload_mode, opts[:feed_live_update_many_preload_mode])
 
     Bonfire.UI.Common.Testing.Helpers.render_stateful(
       Bonfire.UI.Social.FeedLive,

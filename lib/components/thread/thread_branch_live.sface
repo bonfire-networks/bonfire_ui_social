@@ -40,6 +40,7 @@
       showing_within={@showing_within || :thread}
       activity_inception={@activity_inception}
       ui_compact={@__context__[:ui_compact] || @thread_level >= LiveHandler.max_depth(@__context__[:ui_compact]) / 2}
+      activity_preloads={@activity_preloads}
       activity_loaded_preloads={@activity_loaded_preloads}
     />
 
@@ -78,6 +79,7 @@
                   showing_within={@showing_within}
                   activity_inception={@activity_inception}
                   current_url={@current_url || current_url(@__context__)}
+                  activity_preloads={@activity_preloads}
                   activity_loaded_preloads={@activity_loaded_preloads}
                 />
               </div>

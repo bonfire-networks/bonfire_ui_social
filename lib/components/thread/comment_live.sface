@@ -89,6 +89,7 @@
         object_boundary={if @showing_within == :messages, do: :skip_boundary_check}
         viewing_main_object={false}
         activity_inception={@activity_inception}
+        activity_preloads={@activity_preloads}
         activity_loaded_preloads={@activity_loaded_preloads}
       />
     {/if}

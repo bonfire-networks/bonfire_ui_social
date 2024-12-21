@@ -69,7 +69,7 @@
           {#match nil}
           {#match []}
           {#match published}
-            <span class="text-base-content/70">{published |> DatesTimes.format(format: "MMMM d, Y")}</span>
+            <span class="text-base-content/70">{published |> DatesTimes.format_date(format: "MMMM d, Y")}</span>
         {/case}
 
         {#case MediaLive.provider(@media)}
