@@ -123,7 +123,7 @@ defmodule Bonfire.UI.Social.FeedsLive do
   end
 
   # defp from_socket do
-  #   to_options(socket) ++ [feed_filters: %{object_type: params["type"]}]
+  #   to_options(socket) ++ [feed_filters: %{object_types: params["type"]}]
   # end
 
   def handle_params(%{"tab" => tab} = params, _url, socket)

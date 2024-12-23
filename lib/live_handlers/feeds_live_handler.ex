@@ -501,14 +501,14 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
     |> assign_generic(assigns)
   end
 
-  defp feed_filter_assigns(%{"object_type" => "discussions" = filter}),
+  defp feed_filter_assigns(%{"object_types" => "discussion" = filter}),
     do: [
       tab_path_suffix: "/#{filter}",
       page_title: l("Discussions"),
       page_header_icon: "ri:discuss-line"
     ]
 
-  defp feed_filter_assigns(%{"object_type" => "posts" = filter}),
+  defp feed_filter_assigns(%{"object_types" => "post" = filter}),
     do: [
       tab_path_suffix: "/#{filter}",
       page_title: l("Posts"),
@@ -516,7 +516,7 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
       page_header_icon: "ri:chat-2-line"
     ]
 
-  defp feed_filter_assigns(%{"object_type" => filter}),
+  defp feed_filter_assigns(%{"object_types" => filter}),
     do: [
       tab_path_suffix: "/#{filter}",
       page_title: filter,
@@ -1078,7 +1078,7 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
     opts =
       opts ++
         [
-          object_type: [],
+          object_types: [],
           paginate?: true
           # preload: preloads
         ]
@@ -1344,7 +1344,7 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
         Config.get(:feed_live_update_many_preload_mode) || :async_actions
 
   defp assigns_to_params(assigns) do
-    activity = Activities.activity_with_object_from_assigns(assigns)
+    activity = activity_with_object_from_assigns(assigns)
     object = e(assigns, :object, nil) || e(activity, :object, nil)
 
     %{
@@ -1354,9 +1354,44 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
       object_id: id(activity) || id(object),
       showing_within: ed(assigns, :showing_within, nil),
       thread_mode: ed(assigns, :thread_mode, nil),
-      object_type: ed(assigns, :object_type, nil)
+      object_types: ed(assigns, :object_types, nil)
     }
   end
+
+  def activity_with_object_from_assigns(%{activity: %{object: %{id: _}} = activity} = _assigns) do
+    activity
+  end
+
+  def activity_with_object_from_assigns(
+        %{activity: %{} = activity, object: %{id: _} = object} = _assigns
+      ) do
+    debug("Activity with both an activity and object")
+
+    Map.put(
+      activity,
+      :object,
+      object
+    )
+  end
+
+  def activity_with_object_from_assigns(%{activity: %{} = activity} = assigns) do
+    debug("Activity without :object as assoc")
+
+    Activities.object_under_activity(activity, assigns[:object])
+  end
+
+  def activity_with_object_from_assigns(%{object: %{} = _object} = assigns) do
+    debug("Activity with only an object")
+
+    e(assigns[:object], :activity, nil) ||
+      %Activity{
+        subject:
+          e(assigns[:object], :created, :creator, nil) || e(assigns[:object], :creator, nil),
+        object: assigns[:object]
+      }
+  end
+
+  def activity_with_object_from_assigns(_), do: nil
 
   def feed_query_preloads_list(showing_within, thread_mode \\ nil) do
     debug("WIP: avoid prelading in single query")
@@ -1727,7 +1762,7 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
   def load_user_feed_assigns("objects" = tab, user, %{"extra" => type} = params, socket) do
     user = user || e(assigns(socket), :user, nil)
     type = Types.maybe_to_atom(type)
-    object_type = Types.maybe_to_module(type) || type
+    object_types = Types.maybe_to_module(type) || type
     preloads = [:feed_by_creator] ++ feed_query_preloads_list(:feed_by_creator)
     current_user = current_user(assigns(socket))
 
@@ -1749,7 +1784,7 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
             [
               {feed_id,
                %{
-                 object_type: object_type
+                 object_types: object_types
                }}
               |> debug("feed to load"),
               [
