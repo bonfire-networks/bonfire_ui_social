@@ -7,9 +7,9 @@
   class="w-full max-w-full flex flex-col feed w-full max-w-full lg:rounded-xl lg:shadow bg-base-100"
 >
   <div class="flex flex-col h-full grow rounded-t-xl break-all w-full max-w-full">
-    <!-- TODO: show tabs at top of persistent feed and use event handler to trigger switching feed within the component rather than patch the view? -->
-    <!-- type={if @feed_name in [nil, :my], do: :header_only} -->
-    <!-- "h-[56px]": @feed_name in [nil, :my] -->
+    {!-- TODO: show tabs at top of persistent feed and use event handler to trigger switching feed within the component rather than patch the view? --}
+    {!-- type={if @feed_name in [nil, :my], do: :header_only} --}
+    {!-- "h-[56px]": @feed_name in [nil, :my] --}
     <Bonfire.UI.Common.TabsLive
       :if={!@hide_tabs}
       selected_tab={@selected_tab}

@@ -4,10 +4,10 @@
     data-position="top"
     phx-hook="Tooltip"
     id={"subject_avatar_tooltip_#{@subject_id}_#{@activity_id}_#{@reply_to_id}"}
-    class="relative"
+    class="w-full"
   >
     <label
-      class="tooltip-button"
+      class="tooltip-button relative"
       tabindex="0"
       role="button"
       aria-haspopup="true"
@@ -27,7 +27,6 @@
           parent_id={@activity_component_id || @activity_id}
           user_id={@subject_id}
           src={@profile_media}
-          title={@profile_name}
           class={
             "rounded-full w-10 h-10",
             "!w-7 !h-7": @__context__[:ui_compact]
@@ -35,92 +34,107 @@
         />
       </LinkLive>
     </label>
-    <div class="tooltip z-[9999999999999999] absolute w-[300px] top-0 left-0 hidden">
-      <Bonfire.UI.Me.UserPreviewLive
-        href={@path || "/user/#{@subject_id}"}
-        with_summary
-        user={%{
-          id: @subject_id,
-          is_local: !@is_remote,
-          profile: %{
-            name: @profile_name,
-            avatar_url: @profile_media,
-            summary: @profile_summary
-          },
-          character: %{
-            username: @character_username
-          }
-        }}
-      >
-        <:actions>
-          <div class="flex p-3 pt-1 flex-1 items-center">
-            <StatefulComponent
-              module={maybe_component(Bonfire.UI.Social.Graph.FollowButtonLive, @__context__)}
-              :if={current_user_id(@__context__) &&
-                current_user_id(@__context__) != id(@subject_id)}
-              id={ComponentID.new(Bonfire.UI.Social.Graph.FollowButtonLive, id(@subject_id), __MODULE__)}
-              object_id={id(@subject_id)}
-              path={path(@character)}
-              hide_icon
+    <Bonfire.UI.Me.UserPreviewLive
+      href={@path || "/user/#{@subject_id || id(@character) || id(@profile)}"}
+      user={%{
+        id: @subject_id || id(@character) || id(@profile),
+        is_local: !@is_remote,
+        profile: %{
+          name: @profile_name,
+          icon: @profile_media,
+          summary: @profile_summary
+        },
+        character: %{
+          username: @character_username || e(@character, :username, nil)
+        }
+      }}
+      with_summary
+      class="tooltip z-[9999999999999999] absolute w-[300px] top-0 left-0 hidden"
+    >
+      <:actions>
+        <div
+          :if={current_user_id(@__context__) &&
+            current_user_id(@__context__) != @subject_id}
+          class="p-3 pt-1 items-center"
+        >
+          <StatefulComponent
+            module={maybe_component(Bonfire.UI.Social.Graph.FollowButtonLive, @__context__)}
+            id={ComponentID.new(Bonfire.UI.Social.Graph.FollowButtonLive, @subject_id, __MODULE__)}
+            object_id={@subject_id}
+            path={@path}
+            hide_icon
+          />
+          <div class="pt-1">
+            <StatelessComponent
+              module={maybe_component(Bonfire.UI.Boundaries.Web.AddToCircleLive, @__context__)}
+              user_id={@subject_id}
+              parent_id={"subject_avatar_tooltip_#{@subject_id}_#{@activity_id}_#{@reply_to_id}"}
+              as_icon
             />
           </div>
-        </:actions>
-      </Bonfire.UI.Me.UserPreviewLive>
-    </div>
-  </div>
-  <div
-    data-id="subject_details"
-    class="flex items-baseline font-[15px] -mt-1 gap-1 w-full feed-clickable justify-start"
-  >
-    <div class="flex items-center flex-1 gap-1">
-      <LinkLive
-        :if={@profile_name}
-        opts={"data-id": "subject_name", "aria-label": l("%{name}'s profile", name: @profile_name)}
-        class="link link-hover font-semibold lg:max-w-[360px] truncate"
-        to={@path || "/user/#{@subject_id}"}
-      >
-        {@profile_name}
-      </LinkLive>
-      <LinkLive
-        :if={@character_username && @showing_within != :smart_input}
-        opts={
-          "data-id": "subject_username",
-          "aria-label": l("%{name}'s profile", name: @profile_name)
-        }
-        class="hidden lg:block text-sm truncate max-w-[80px] lg:max-w-[200px] link link-hover ellipsis text-base-content/60 subject_username"
-        to={e(@subject_peered, :canonical_uri, nil) || @path}
-      >
-        @{@character_username}
-      </LinkLive>
-    </div>
-    <span
-      :if={@showing_within != :smart_input}
-      data-id="subject_secondary"
-      class="flex items-center gap-1"
+        </div>
+      </:actions>
+    </Bonfire.UI.Me.UserPreviewLive>
+    <div
+      data-id="subject_details"
+      class="flex items-baseline font-[15px] -mt-1 gap-1 w-full feed-clickable justify-start"
     >
-      <!-- <span class="text-sm text-base-content/70">&nbsp;·&nbsp;</span> -->
+      <div
+        class="tooltip-button flex items-center flex-1 gap-1"
+        role="button"
+        aria-haspopup="true"
+        aria-expanded="true"
+      >
+        <LinkLive
+          :if={@profile_name}
+          opts={"data-id": "subject_name", "aria-label": l("%{name}'s profile", name: @profile_name)}
+          class="link link-hover font-semibold lg:max-w-[360px] truncate"
+          to={@path || "/user/#{@subject_id || id(@character) || id(@profile)}"}
+        >
+          {@profile_name}
+        </LinkLive>
+        <LinkLive
+          :if={@character_username && @showing_within != :smart_input}
+          opts={
+            "data-id": "subject_username",
+            "aria-label": l("%{name}'s profile", name: @profile_name)
+          }
+          class="hidden lg:block text-sm truncate max-w-[80px] lg:max-w-[200px] link link-hover ellipsis text-base-content/60 subject_username"
+          to={e(@subject_peered, :canonical_uri, nil) || @path}
+        >
+          @{@character_username}
+        </LinkLive>
+      </div>
+      <span
+        :if={@showing_within != :smart_input}
+        data-id="subject_secondary"
+        class="flex items-center gap-1"
+      >
+        <!-- <span class="text-sm text-base-content/70">&nbsp;·&nbsp;</span> -->
 
-      <Bonfire.UI.Social.ActivityBoundaryLive
-        :if={@object_type not in [Bonfire.Data.Social.Message] and @activity_inception != "reply_to" and
-          LiveHandler.feed_live_update_many_preload_mode() != :async_actions}
-        object_id={@object_id}
-        object_type={Types.object_type(@published_in) || @object_type}
-        parent_id={@parent_id}
-        with_icon
-        class="translate-y-0.5"
-        object_boundary={@object_boundary}
-      />
-      <Bonfire.UI.Social.Activity.LinkToActivityLive permalink={@permalink}>
-        <Bonfire.UI.Social.Activity.DateAgoLive
-          date_ago={@date_ago}
-          activity_id={@activity_id}
+        <Bonfire.UI.Social.ActivityBoundaryLive
+          :if={@object_type not in [Bonfire.Data.Social.Message] and @activity_inception != "reply_to" and
+            LiveHandler.feed_live_update_many_preload_mode() != :async_actions}
           object_id={@object_id}
+          object_type={Types.object_type(@published_in) || @object_type}
           parent_id={@parent_id}
+          with_icon
+          class="translate-y-0.5"
+          object_boundary={@object_boundary}
         />
-      </Bonfire.UI.Social.Activity.LinkToActivityLive>
-      <Bonfire.UI.Social.Activity.InstanceIconLive :if={@is_remote} peered={@peered} />
-    </span>
+        <Bonfire.UI.Social.Activity.LinkToActivityLive permalink={@permalink}>
+          <Bonfire.UI.Social.Activity.DateAgoLive
+            date_ago={@date_ago}
+            activity_id={@activity_id}
+            object_id={@object_id}
+            parent_id={@parent_id}
+          />
+        </Bonfire.UI.Social.Activity.LinkToActivityLive>
+        <Bonfire.UI.Social.Activity.InstanceIconLive :if={@is_remote} peered={@peered} />
+      </span>
+    </div>
   </div>
+
   {!-- {#if @show_minimal_subject_and_note}      
           <div class="flex items-top">
             <div

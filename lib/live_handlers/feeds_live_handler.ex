@@ -1448,7 +1448,7 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
           nil
       end)
       |> filter_empty([])
-      |> debug("list_of_activities pre-postload")
+      # |> debug("list_of_activities pre-postload")
       |> preload_activity_and_object_assocs([:object], opts)
       |> Map.new(fn activity -> {id(activity) || id(e(activity, :object, nil)), activity} end)
       |> debug("list_of_activities postloaded")

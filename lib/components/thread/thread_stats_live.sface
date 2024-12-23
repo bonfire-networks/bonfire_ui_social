@@ -27,22 +27,16 @@
               <div class="text-xs tracking-wide text-base-content/70 text-center">{l("Replies")}</div>
             </div>
             <div
-              :if={@showing_within != :messages and extension_enabled?(:bonfire_ui_reactions, @__context__)}
+              :if={@showing_within != :messages and @thread_boost_count > 0 and
+                extension_enabled?(:bonfire_ui_reactions, @__context__)}
               class="flex items-center gap-1"
             >
-              {#if @thread_boost_count}
-                <div class="text-xs font-medium text-base-content/90 text-center">{@thread_boost_count || 0}</div>
-              {#else}
-                <span class="loading loading-spinner loading-sm text-base-content/70" />
-              {/if}
+              <div class="text-xs font-medium text-base-content/90 text-center">{@thread_boost_count || 0}</div>
+
               <div class="text-xs tracking-wide text-base-content/70 text-center">{l("Boosts")}</div>
             </div>
-            <div class="flex items-center gap-1">
-              {#if @participant_count}
-                <div class="text-xs font-medium text-base-content/90 text-center">{@participant_count || 0}</div>
-              {#else}
-                <span class="loading loading-spinner loading-sm text-base-content/70" />
-              {/if}
+            <div :if={@participant_count > 0} class="flex items-center gap-1">
+              <div class="text-xs font-medium text-base-content/90 text-center">{@participant_count || 0}</div>
               <div class="text-xs tracking-wide text-base-content/70 text-center">{l("Participants")}</div>
             </div>
           </div>
@@ -52,18 +46,17 @@
           {#for p <- @participants || []}
             <div class="z-[99999999999] relative">
               <div>
-                <span class="tippy" aria-describedby="tooltip">
-                  <StatelessComponent
-                    module={maybe_component(Bonfire.UI.Me.ProfileItemLive)}
-                    wrapper_class=""
-                    show_controls={[]}
-                    only_img
-                    avatar_class="w-8 h-8 rounded-full"
-                    profile={e(p, :profile, nil)}
-                    character={e(p, :character, nil)}
-                    parent_id="thread_stats"
-                  />
-                </span>
+                <StatelessComponent
+                  module={maybe_component(Bonfire.UI.Me.ProfileItemLive)}
+                  wrapper_class=""
+                  show_controls={[]}
+                  only_img
+                  with_popover
+                  avatar_class="w-8 h-8 rounded-full"
+                  profile={e(p, :profile, nil)}
+                  character={e(p, :character, nil)}
+                  parent_id="thread_stats"
+                />
               </div>
             </div>
           {/for}

@@ -140,7 +140,7 @@
           @thread_id != id(@object)}
         class="hover:bg-neutral hover:bg-opacity-20"
       >
-        <!-- TODO: should depend on thread creator: current_user_id(@__context__) == @thread_creator_id -->
+        {!-- TODO: should depend on thread creator: current_user_id(@__context__) == @thread_creator_id --}
         <StatelessComponent
           module={maybe_component(Bonfire.UI.Reactions.PinActionLive, @__context__)}
           scope={:thread_answer}
@@ -157,7 +157,7 @@
           :if={@showing_within == :thread and @thread_id != id(@object)}
           class="hover:bg-neutral hover:bg-opacity-20"
         >
-          <!-- TODO: should depend on thread creator: current_user_id(@__context__) == @thread_creator_id -->
+          {!-- TODO: should depend on thread creator: current_user_id(@__context__) == @thread_creator_id --}
           <StatelessComponent
             module={maybe_component(Bonfire.UI.Reactions.PinActionLive, @__context__)}
             scope={:thread}
