@@ -5,6 +5,7 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
   alias Bonfire.Data.Social.Activity
   alias Bonfire.UI.Social.ActivityLive
   alias Bonfire.Social.FeedActivities
+  alias Bonfire.Social.FeedLoader
 
   @spec handle_params(any(), any(), any()) :: {:noreply, any()}
   def handle_params(
@@ -108,7 +109,7 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
         # TODO
         to -> to
       end
-      |> FeedActivities.get_feed_ids()
+      |> FeedActivities.get_publish_feed_ids()
 
     # |> debug("tooo")
 
@@ -539,7 +540,7 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
     feed_name =
       feed_name
       # |> debug()
-      |> FeedActivities.feed_name(current_user_id(socket))
+      |> FeedLoader.feed_name_or_default(current_user_id(socket))
 
     # |> debug()
 
@@ -563,7 +564,7 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
     feed_name =
       feed_name
       # |> debug()
-      |> FeedActivities.feed_name(current_user_id(socket))
+      |> FeedLoader.feed_name_or_default(current_user_id(socket))
 
     # |> debug()
 
@@ -824,7 +825,7 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
   end
 
   def feed_default_assigns(:default, socket) do
-    FeedActivities.feed_name(:default, current_user_id(socket))
+    FeedLoader.feed_name_or_default(:default, current_user_id(socket))
     |> feed_default_assigns(socket)
   end
 
@@ -1413,7 +1414,7 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
         [:feed_by_subject, :feed_postload]
 
       {:media, _} ->
-        [:per_media, :with_creator, :with_object_posts]
+        [:per_media, :with_creator, :with_post_content]
 
       _ ->
         [:feed_by_subject, :feed_postload]

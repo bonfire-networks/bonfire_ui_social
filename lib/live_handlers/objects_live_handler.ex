@@ -187,7 +187,7 @@ defmodule Bonfire.Social.Objects.LiveHandler do
     do: [
       # :default,
       :with_creator,
-      :with_object_posts,
+      :with_post_content,
       :with_reply_to,
       :with_thread_name,
       :with_parent,
