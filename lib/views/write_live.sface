@@ -5,7 +5,7 @@
       image_class="w-8 h-8 bg-center bg-no-repeat bg-contain"
       href="/"
     />
-    <span class="text-sm font-medium">{l("Create a new article")}</span>
+    <span class="text-sm font-medium">{l("Create a new page")}</span>
   </div>
 </div>
 <div class="border-l flex-1 border-r border-base-content/30">
