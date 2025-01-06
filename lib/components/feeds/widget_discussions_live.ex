@@ -21,10 +21,12 @@ defmodule Bonfire.UI.Social.WidgetDiscussionsLive do
         # TODO: better workarounds for using FeedLive as stateless
         streams: %{feed: nil}
       ],
-      sort_by: :num_replies,
-      # days
-      time_limit: 10,
-      limit: 12,
+      %{
+        sort_by: :num_replies,
+        # days
+        time_limit: 10,
+        limit: 12
+      },
       cache_strategy: :guest_cache,
       preload: [:feed_by_subject, :feed_postload]
     )

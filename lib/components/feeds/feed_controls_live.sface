@@ -1,264 +1,163 @@
-<div x-data="{open: false}">
-  <div
-    class="flex justify-between items-center text-sm font-bold tracking-wide cursor-pointer"
-    role="banner"
-    @click="open = ! open"
-  >
-    <div>{l("Feed options")}</div>
-    <label class="btn btn-circle btn-ghost btn-sm">
-      <!-- <input type="checkbox" /> -->
-      <span x-show="!open"><#Icon solid="ChevronDown" class="fill-current w-5 h-5 text-base-content/80" /></span>
-      <span x-cloak x-show="open"><#Icon solid="ChevronUp" class="fill-current w-5 h-5 text-base-content/80" /></span>
-    </label>
-  </div>
-  <div
-    x-transition
-    x-cloak
-    x-show="open"
-    class="flex pt-3 flex-col divide-y divide-base-content/10 justify-between gap-3"
-  >
-    <div class="flex flex-col gap-2">
-      <!-- <span class="font-medium text-sm text-base-content/80">{l("Included activities")}</span> -->
-      <Bonfire.UI.Social.Settings.MyFeedItemsLive
-        scope={:user}
-        feed_name={@feed_name}
-        event_name="set_setting"
-        event_target={@event_target}
-        hide_forced_defaults
-      />
-    </div>
-
-    <div class="flex flex-col gap-2 pt-3">
-      <span class="font-medium text-sm text-base-content/80">{l("Sort by")}</span>
-      <StatelessComponent
-        module={maybe_component(Bonfire.UI.Social.SortItemsLive, @__context__)}
-        scope={:user}
-        feed_name={@feed_name}
-        event_name="set_setting"
-        event_target={@event_target}
-        compact
-      />
-
-      {!-- <div class="dropdown dropdown-end">
-        <label
-          tabindex="0"
-          class=" btn-sm btn btn-ghost normal-case text-base-content/70"
-        >
-          {#case @sort_by}
-            {#match :num_replies}
-              <#Icon iconify="basil:comment-outline" class="w-5 h-5 stroke-1 fill-base-content/50" />
-              <span>{l("Sort by amount of replies")}</span>
-            {#match :num_boosts}
-              <#Icon iconify="system-uicons:retweet" class="w-5 h-5 stroke-1 fill-base-content/50" />
-              <span>{l("Sort by amount of boosts")}</span>
-            {#match :num_likes}
-              <#Icon iconify="mingcute:fire-line" class="w-5 h-5" />
-              <span>{l("Sort by amount of likes")}</span>
-            {#match _}
-              <#Icon iconify="mdi:order-alphabetical-ascending" class="w-5 h-5 text-base-content/70" />
-              <span>{l("default")}</span>
-          {/case}
-        </label></div> --}
-
-      {!--
-    <ul tabindex="0" class="menu p-0 gap-1 menu-horizontal">
-      <li
-        data-role="chronological"
-        phx-click="set"
-        phx-value-to_atoms="true"
-        phx-value-sort_by="nil"
-        phx-value-assign_global="true"
-        phx-target={@event_target}
-      >
-        <a
-          data-tip={l("Chronological")}
-          class={
-            "tooltip tooltip-bottom flex gap-2 text-base-content/70 border ",
-            "border-base-content/5 active !text-base-content/100": is_nil(@sort_by)
-          }
-        >
-          <#Icon iconify="mdi:order-alphabetical-ascending" class="w-5 h-5 text-base-content/70" />
-          <span class="sr-only">{l("Chronological")}</span>
-        </a></li>
-      <li
-        data-role="amount_of_replies"
-        phx-click="set"
-        phx-value-to_atoms="true"
-        phx-value-sort_by="num_replies"
-        phx-value-assign_global="true"
-        phx-target={@event_target}
-      >
-        <a
-          data-tip={l("By amount of replies")}
-          class={
-            "tooltip tooltip-bottom flex gap-2 text-base-content/70 border ",
-            "border-base-content/5 active !text-base-content/100": @sort_by == :num_replies
-          }
-        >
-          <#Icon iconify="basil:comment-outline" class="w-5 h-5 stroke-1 fill-base-content/50" />
-          <span class="sr-only">{l("By amount of replies")}</span>
-        </a>
-      </li>
-      <li
-        data-role="amount_of_boosts"
-        phx-click="set"
-        phx-value-to_atoms="true"
-        phx-value-sort_by="num_boosts"
-        phx-value-assign_global="true"
-        phx-target={@event_target}
-      >
-        <a
-          data-tip={l("By amount of boosts")}
-          class={
-            "tooltip tooltip-bottom flex gap-2 text-base-content/70 border ",
-            "border-base-content/5 active !text-base-content/100": @sort_by == :num_boosts
-          }
-        >
-          <#Icon iconify="system-uicons:retweet" class="w-5 h-5 stroke-1 fill-base-content/50" />
-          <span class="sr-only">{l("By amount of boosts")}</span>
-        </a>
-      </li>
-      <li
-        data-role="amount_of_likes"
-        phx-click="set"
-        phx-value-to_atoms="true"
-        phx-value-sort_by="num_likes"
-        phx-value-assign_global="true"
-        phx-target={@event_target}
-      >
-        <a
-          data-tip={l("By amount of likes")}
-          class={
-            "tooltip tooltip-bottom flex gap-2 text-base-content/70 border ",
-            "border-base-content/5 active !text-base-content/100": @sort_by == :num_likes
-          }
-        >
-          <#Icon iconify="mingcute:fire-fill" class="w-5 h-5" />
-          <span class="sr-only">{l("By amount of likes")}</span>
-        </a>
-      </li>
-      <li></li>
-    </ul> --}
-    </div>
-
-    <div class="flex flex-col gap-2 pt-3">
-      <span class="font-medium text-sm text-base-content/80">{l("Limit to")}</span>
-      <Bonfire.UI.Social.Settings.TimeSortItemsLive
-        scope={:user}
-        feed_name={@feed_name}
-        event_name="set_setting"
-        event_target={@event_target}
-        compact
-      />
-
-      {!-- <div class="flex flex-col gap-2 pt-3">
-    <span class="font-medium text-sm text-base-content/80">{l("Limit to")}</span>
-    <ul tabindex="0" class="menu p-0 gap-1 menu-horizontal">
-      <li
-        data-role="day"
-        phx-click="set"
-        3
-        phx-value-to_integers="true"
-        phx-value-time_limit={1}
-        phx-value-assign_global="true"
-        phx-target={@event_target}
-      ><a class={
-          "flex gap-2 text-base-content/70 border ",
-          "border-base-content/5 active !text-base-content/100": @time_limit == 1
-        }>
-          <#Icon iconify="ri:24-hours-fill" class="w-5 h-5 text-base-content/70" />
-          <span class="sr-only">{l("Day")}</span></a></li>
-      <li
-        data-role="week"
-        phx-click="set"
-        phx-value-to_integers="true"
-        phx-value-time_limit={7}
-        phx-value-assign_global="true"
-        phx-target={@event_target}
-      ><a class={
-          "flex gap-2 text-base-content/70 border ",
-          "border-base-content/5 active !text-base-content/100": @time_limit == 7
-        }>
-          <#Icon iconify="mdi:numeric-7-box" class="w-5 h-5 text-base-content/70" />
-          <span class="sr-only">{l("Week")}</span></a></li>
-      <li
-        data-role="month"
-        phx-click="set"
-        phx-value-to_integers="true"
-        phx-value-time_limit={30}
-        phx-value-assign_global="true"
-        phx-target={@event_target}
-      ><a class={
-          "flex gap-2 text-base-content/70 border ",
-          "border-base-content/5 active !text-base-content/100": @time_limit == 30
-        }>
-          <#Icon
-            iconify="streamline:interface-calendar-date-month-thirty-thirty-calendar-date-week-day-month"
-            class="w-5 h-5 text-base-content/70"
-          />
-          <span class="sr-only">{l("Month")}</span></a></li>
-      <li
-        data-role="year"
-        phx-click="set"
-        phx-value-to_integers="true"
-        phx-value-time_limit={365}
-        phx-value-assign_global="true"
-        phx-target={@event_target}
-      ><a class={
-          "flex gap-2 text-base-content/70 border ",
-          "border-base-content/5 active !text-base-content/100": @time_limit == 365
-        }>
-          <#Icon iconify="iconoir:birthday-cake" class="w-5 h-5 text-base-content/70" />
-          <span class="sr-only">{l("Year")}</span></a></li>
-      <li
-        data-role="infinite"
-        phx-click="set"
-        phx-value-to_integers="true"
-        phx-value-time_limit="0"
-        phx-value-assign_global="true"
-        phx-target={@event_target}
-      ><a class={
-          "flex gap-2 text-base-content/70 border ",
-          "border-base-content/5 active !text-base-content/100": !@time_limit or @time_limit == 0
-        }>
-          <#Icon iconify="fa6-solid:infinity" class="w-5 h-5 text-base-content/70" />
-          <span class="sr-only">{l("All time")}</span></a></li>
-    </ul>
-  </div> --}
-    </div>
-
-    <!-- {#if not is_nil(@sort_by)}
-    <div class="flex flex-col gap-2 pt-3">
-      <span class="font-medium text-sm text-base-content/80">{l("Order")}</span>
-      <ul tabindex="0" class="z-[999] menu p-1 gap-1 menu-horizontal">
+<div x-data="{open: false}" class="p-2  border-b border-base-content/10 mt-2">
+  <div :if={current_user_id(@__context__)} class="flex justify-between flex-1 gap-3">
+    <div data-position="bottom" phx-hook="Tooltip" id="order-dropdown" class="flex w-full flex-1">
+      <label tabindex="0" class="tooltip-button btn-sm btn flex-1 w-full btn-outline">
+        {#case e(@feed_filters, :sort_by, nil)}
+          {#match :num_replies}
+            <span class="flex gap-3 px-2  items-center">
+              <#Icon iconify="basil:comment-outline" class="w-4 h-4 stroke-1 fill-base-content/50" />
+              <span class="hidden lg:block">{l("By amount of replies")}</span>
+            </span>
+          {#match :num_boosts}
+            <span class="flex gap-3 px-2  items-center">
+              <#Icon iconify="system-uicons:retweet" class="w-4 h-4 stroke-1 fill-base-content/50" />
+              <span class="hidden lg:block">{l("By amount of boosts")}</span>
+            </span>
+          {#match :num_likes}
+            <span class="flex gap-3 px-2  items-center">
+              <#Icon iconify="mingcute:fire-line" class="h-[20px] w-[18px]" />
+              <span class="hidden lg:block">{l("By amount of likes")}</span>
+            </span>
+          {#match _}
+            <span class="flex gap-3 px-2  items-center">
+              <#Icon iconify="mdi:order-alphabetical-ascending" class="w-4 h-4" />
+              <span class="hidden lg:block">{l("Chronological")}</span>
+            </span>
+        {/case}
+      </label>
+      <ul tabindex="0" class="tooltip z-[999] bonfire-dropdown-menu  w-60 absolute top-0 left-0 hidden">
         <li
-          data-role="most first"
+          phx-click="set"
+          phx-value-to_atoms="true"
+          phx-value-sort_by="nil"
+          phx-value-assign_global="true"
+          phx-target={@event_target}
+        >
+          <a class={
+            "flex gap-3 px-2 text-base-content",
+            "active !text-base-content/100 font-semibold": is_nil(e(@feed_filters, :sort_by, nil))
+          }>
+            <#Icon iconify="mdi:order-alphabetical-ascending" class="w-4 h-4" />
+            {l("Chronological")}
+          </a></li>
+
+        <li
+          phx-click="set"
+          phx-value-to_atoms="true"
+          phx-value-sort_by="num_replies"
+          phx-value-assign_global="true"
+          phx-target={@event_target}
+        >
+          <a class={
+            "flex gap-3 px-2 text-base-content",
+            "active !text-base-content/100 font-semibold": e(@feed_filters, :sort_by, nil) == :num_replies
+          }>
+            <#Icon iconify="basil:comment-outline" class="w-4 h-4 stroke-1 fill-base-content/50" />
+            {l("By amount of replies")}</a></li>
+
+        {#if extension_enabled?(:bonfire_ui_reactions, @__context__)}
+          <li
+            phx-click="set"
+            phx-value-to_atoms="true"
+            phx-value-sort_by="num_boosts"
+            phx-value-assign_global="true"
+            phx-target={@event_target}
+          >
+            <a class={
+              "flex gap-3 px-2 text-base-content",
+              "active !text-base-content/100 font-semibold": e(@feed_filters, :sort_by, nil) == :num_boosts
+            }>
+              <#Icon iconify="system-uicons:retweet" class="w-4 h-4 stroke-1 fill-base-content/50" />
+              {l("By amount of boosts")}</a></li>
+
+          <li
+            phx-click="set"
+            phx-value-to_atoms="true"
+            phx-value-sort_by="num_likes"
+            phx-value-assign_global="true"
+            phx-target={@event_target}
+          >
+            <a class={
+              "flex gap-3 px-2 text-base-content",
+              "active !text-base-content/100 font-semibold": e(@feed_filters, :sort_by, nil) == :num_likes
+            }>
+              <#Icon iconify="mingcute:fire-line" class="w-4 h-4" />
+              {l("By amount of likes")}</a></li>
+        {/if}
+      </ul>
+    </div>
+
+    <div data-position="bottom" phx-hook="Tooltip" class="flex-1" id="sort_timing_thread">
+      <label tabindex="0" class="tooltip-button w-full btn-sm btn btn-outline">
+        <!-- {l("Order")} -->
+
+        {#if e(@feed_filters, :sort_order, nil) == :asc}
+          <#Icon iconify="octicon:sort-asc-16" class="w-4 h-4" />
+          <span class="hidden lg:block">{l("Oldest first")}</span>
+        {#else}
+          <#Icon iconify="octicon:sort-desc-16" class="w-4 h-4" />
+          <span class="hidden lg:block">{l("Newest first")}</span>
+        {/if}
+      </label>
+      <ul tabindex="0" class="tooltip z-[999] bonfire-dropdown-menu w-52 absolute top-0 left-0 hidden">
+        <li
           phx-click="set"
           phx-value-to_atoms="true"
           phx-value-sort_order="desc"
           phx-value-assign_global="true"
           phx-target={@event_target}
         ><a class={
-            "flex gap-2 text-base-content/70 border ",
-            "border-base-content/5 active !text-base-content/100": @sort_order != :asc
+            "flex gap-3 px-2 text-base-content",
+            "active !text-base-content/100 font-semibold": e(@feed_filters, :sort_order, nil) != :asc
           }>
-            <#Icon iconify="octicon:sort-desc-16" class="w-5 h-5 text-base-content/70" />
-            {l("Most first")}</a></li>
+            <#Icon iconify="octicon:sort-desc-16" class="w-4 h-4" />
+            {if e(@feed_filters, :sort_by, nil) in [nil, :latest_reply],
+              do: l("Newest first"),
+              else: l("Most first")}</a></li>
         <li
-          data-role="least first"
           phx-click="set"
           phx-value-to_atoms="true"
           phx-value-sort_order="asc"
           phx-value-assign_global="true"
           phx-target={@event_target}
         ><a class={
-            "flex gap-2 text-base-content/70 border ",
-            "border-base-content/5 active !text-base-content/100": @sort_order == :asc
+            "flex gap-3 px-2 text-base-content",
+            "active !text-base-content/100 font-semibold": e(@feed_filters, :sort_order, nil) == :asc
           }>
-            <#Icon iconify="octicon:sort-asc-16" class="w-5 h-5 text-base-content/70" />
-            {l("Least first")}</a></li>
+            <#Icon iconify="octicon:sort-asc-16" class="w-4 h-4" />
+            {if e(@feed_filters, :sort_by, nil) in [nil, :latest_reply],
+              do: l("Oldest first"),
+              else: l("Least first")}</a></li>
       </ul>
     </div>
-  {/if} -->
+
+    <div
+      class="flex justify-between items-center text-sm font-bold tracking-wide cursor-pointer"
+      role="banner"
+      @click="open = ! open"
+    >
+      <div>{l("Filters")}</div>
+      <label class="btn btn-circle btn-ghost btn-sm">
+        {!-- <input type="checkbox" /> --}
+        <span x-show="!open"><#Icon solid="ChevronDown" class="fill-current w-5 h-5 text-base-content/80" /></span>
+        <span x-cloak x-show="open"><#Icon solid="ChevronUp" class="fill-current w-5 h-5 text-base-content/80" /></span>
+      </label>
+    </div>
+  </div>
+
+  <div
+    x-transition
+    x-cloak
+    x-show="open"
+    class="flex pt-3 flex-col divide-y divide-base-content/10 justify-between gap-3"
+  >
+    <Bonfire.UI.Social.FeedExtraControlsLive
+      event_target={@event_target}
+      feed_id={@feed_id}
+      feed_name={@feed_name}
+      feed_filters={@feed_filters}
+      hide_filters={[:sort_by]}
+      showing_within={@showing_within}
+    />
   </div>
 </div>

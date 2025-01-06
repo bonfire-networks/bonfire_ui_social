@@ -7,4 +7,5 @@ defmodule Bonfire.UI.Social.Settings.TimeSortItemsLive do
   prop event_name, :any, default: nil
   prop event_target, :any, default: nil
   prop compact, :boolean, default: false
+  prop time_limit, :integer, default: nil
 end

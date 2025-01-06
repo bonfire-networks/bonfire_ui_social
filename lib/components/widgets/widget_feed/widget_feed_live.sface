@@ -1,5 +1,5 @@
 <Bonfire.UI.Common.WidgetBlockLive>
-  <Bonfire.UI.Social.FeedControlsLive
+  <Bonfire.UI.Social.FeedExtraControlsLive
     event_target={@event_target}
     feed_name={@feed_name}
     sort_by={@sort_by}

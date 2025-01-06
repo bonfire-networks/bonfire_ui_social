@@ -1,11 +1,12 @@
-defmodule Bonfire.UI.Social.FeedControlsLive do
+defmodule Bonfire.UI.Social.FeedExtraControlsLive do
   use Bonfire.UI.Common.Web, :stateless_component
   # alias Bonfire.UI.Social.CommentLive
 
   prop event_target, :any, default: nil
-  prop feed_id, :any, default: nil
+  # prop feed_id, :any, default: nil
   prop feed_name, :atom, default: nil
   prop showing_within, :atom, default: nil
+  prop hide_filters, :list, default: []
   prop feed_filters, :any, default: nil
   # prop sort_by, :any, default: nil
   # prop time_limit, :any, default: nil

@@ -10,7 +10,7 @@
     {!-- TODO: show tabs at top of persistent feed and use event handler to trigger switching feed within the component rather than patch the view? --}
     {!-- type={if @feed_name in [nil, :my], do: :header_only} --}
     {!-- "h-[56px]": @feed_name in [nil, :my] --}
-    <Bonfire.UI.Common.TabsLive
+    {!-- <Bonfire.UI.Common.TabsLive
       :if={!@hide_tabs}
       selected_tab={@selected_tab}
       selected_name={@feed_title || @page_title}
@@ -25,17 +25,16 @@
       path_prefix={@tab_path_prefix}
       path_suffix={@tab_path_suffix}
       show_back_button={@show_back_button}
-    >
-      {!-- <Bonfire.UI.Social.FeedControlsLive
-        :if={@feed_name in [nil, :my, :local, :fediverse, :explore] and current_user_id(@__context__)}
-        event_target={@myself}
-        feed_id={@feed_id}
-        sort_by={@sort_by}
-        time_limit={@time_limit}
-        sort_order={@sort_order}
-        showing_within={@showing_within}
-      /> --}
-    </Bonfire.UI.Common.TabsLive>
+    ></Bonfire.UI.Common.TabsLive> --}
+
+    {!-- :if={@feed_name in [nil, :my, :local, :fediverse, :explore] and current_user_id(@__context__)} --}
+    <Bonfire.UI.Social.FeedControlsLive
+      event_target={@myself}
+      feed_id={@feed_id}
+      feed_name={@feed_name}
+      feed_filters={@feed_filters}
+      showing_within={@showing_within}
+    />
 
     <div
       :if={@hide_fresh != 0}

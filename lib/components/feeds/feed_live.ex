@@ -10,7 +10,6 @@ defmodule Bonfire.UI.Social.FeedLive do
   prop feed_id, :any, default: nil
   prop feed_ids, :any, default: nil
   prop hide_guest_fallback, :boolean, default: false
-  prop feed_filters, :any, default: []
   prop feed, :any, default: nil
   prop subject_user, :any, default: nil
   prop page_info, :any, default: nil
@@ -54,9 +53,9 @@ defmodule Bonfire.UI.Social.FeedLive do
   prop tab_primary_class, :css_class, default: nil
 
   prop activity_class, :string, default: nil
-  prop sort_by, :any, default: nil
-  prop time_limit, :any, default: nil
-  prop sort_order, :any, default: false
+  prop feed_filters, :any, default: nil
+  # prop time_limit, :any, default: nil
+  # prop sort_order, :any, default: false
   prop activity_preloads, :list, default: []
   prop activity_loaded_preloads, :list, default: []
 
@@ -383,15 +382,15 @@ defmodule Bonfire.UI.Social.FeedLive do
         users: [
           secondary: [
             {Bonfire.UI.Social.WidgetFeedDescriptionLive, [feed_name: feed_name]},
-            {Bonfire.UI.Social.WidgetFeedLive,
-             [
-               event_target: "##{e(assigns, :feed_component_id, nil)}",
-               feed_name: feed_name,
-               sort_by: e(assigns, :sort_by, nil),
-               time_limit: e(assigns, :time_limit, nil),
-               sort_order: e(assigns, :sort_order, nil),
-               showing_within: e(assigns, :showing_within, nil)
-             ]},
+            # {Bonfire.UI.Social.WidgetFeedLive,
+            #  [
+            #    event_target: "##{e(assigns, :feed_component_id, nil)}",
+            #    feed_name: feed_name,
+            #    sort_by: e(assigns, :sort_by, nil),
+            #    time_limit: e(assigns, :time_limit, nil),
+            #    sort_order: e(assigns, :sort_order, nil),
+            #    showing_within: e(assigns, :showing_within, nil)
+            #  ]},
             {Bonfire.Tag.Web.WidgetTagsLive, []}
           ]
         ]

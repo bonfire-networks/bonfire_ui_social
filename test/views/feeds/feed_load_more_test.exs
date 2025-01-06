@@ -174,7 +174,9 @@ defmodule Bonfire.Social.Feeds.LoadMoreTest do
       conn = conn(user: bob, account: account2)
       next = "/feed/local"
       {view, doc} = floki_live(conn, next)
-      assert [_, load_more_query_string] = Floki.attribute(doc, "[data-id=load_more] a", "href")
+
+      assert load_more_query_string =
+               Floki.attribute(doc, "[data-id=load_more] a", "href") |> List.last()
 
       url = "/feed/local" <> load_more_query_string
       info(url, "pagination URL")
@@ -203,7 +205,7 @@ defmodule Bonfire.Social.Feeds.LoadMoreTest do
       end
 
       conn = conn(user: bob, account: account2)
-      next = "/"
+      next = "/feed"
       {view, doc} = floki_live(conn, next)
       assert [_, load_more_query_string] = Floki.attribute(doc, "[data-id=load_more] a", "href")
 

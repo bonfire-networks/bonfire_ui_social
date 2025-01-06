@@ -31,50 +31,69 @@ defmodule Bonfire.UI.Social.FeedsLive do
   )
 
   # declare_nav_link(l("My feed"), page: "feed", icon: "heroicons-solid:newspaper")
-  declare_nav_link(
-    [
-      # NOTE: sticky feed, see https://github.com/bonfire-networks/bonfire-app/issues/901
-      # {
-      #   l("Feed"),
-      #   # icon: "carbon:home",
-      #   # icon_active: "carbon:home",
-      #   page: "feed",
-      #   icon: "ph:rss-simple-bold",
-      #   href: "/feed",
-      #   phx_hook: "Bonfire.UI.Common.PreviewContentLive#PreviewExtra"
-      #   #  href: &nav_link_feed/1
-      # },
-      {l("Activities"),
-       page: "activities", href: "/feed/my", icon: "carbon:explore", icon_active: "carbon:explore"}
-      # {l("Moderation"),
-      # page: "moderation",
-      # href: &nav_link_feed/1,
-      # icon: "ri:seedling-line",
-      # icon_active: "ri:seedling-fill"}
-    ]
-    # {l("Local"),
-    # page: "feed",
-    # href: &nav_link_feed/1,
-    # icon: "material-symbols:camping-rounded",
-    # icon_active: "ri:home-fill"},
-    # {l("Remote"),
-    # page: "feed",
-    # href: &nav_link_feed/1,
-    # icon: "el:network",
-    # icon_active: "ri:home-fill"},
+  declare_nav_link([
+    # NOTE: sticky feed, see https://github.com/bonfire-networks/bonfire-app/issues/901
+    # {
+    #   l("Feed"),
+    #   # icon: "carbon:home",
+    #   # icon_active: "carbon:home",
+    #   page: "feed",
+    #   icon: "ph:rss-simple-bold",
+    #   href: "/feed",
+    #   phx_hook: "Bonfire.UI.Common.PreviewContentLive#PreviewExtra"
+    #   #  href: &nav_link_feed/1
+    # }, 
 
-    # {l("Posts"), page: "posts", href: &nav_link_posts/1, icon: "ri:chat-2-line", icon_active: "ri:chat-2-fill"}
-    # {l("Discussions"),
-    #  page: "discussions", href: &nav_link_discussions/1, icon: "ri:discuss-line"}]
-  )
+    {
+      l("Feeds"),
+      page: "feed",
+      icon: "ph:rss-simple-bold",
+      href: &nav_link_feed/1,
+      sub_links: [
+        {l("Following"),
+         page: "following",
+         href: "/feed/my",
+         icon: "carbon:explore",
+         icon_active: "carbon:explore"},
+        {l("Local"),
+         page: "local",
+         href: "/feed/local",
+         icon: "material-symbols:camping-rounded",
+         icon_active: "ri:home-fill"},
+        {l("Remote"),
+         page: "fediverse",
+         href: "/feed/fediverse",
+         icon: "el:network",
+         icon_active: "ri:home-fill"},
+        {l("Posts"),
+         page: "posts",
+         href: &nav_link_posts/1,
+         icon: "ri:chat-2-line",
+         icon_active: "ri:chat-2-fill"},
+        {l("Discussions"),
+         page: "discussions", href: &nav_link_discussions/1, icon: "ri:discuss-line"}
 
-  # def nav_link_feed(context), do: "/feed/#{Settings.get([Bonfire.UI.Social.FeedLive, :default_feed], nil, context)}"
+        # {l("Moderation"),
+        # page: "moderation",
+        # href: &nav_link_feed/1,
+        # icon: "ri:seedling-line",
+        # icon_active: "ri:seedling-fill"}
+      ]
+    }
+  ])
 
-  # def nav_link_posts(%{current_params: %{"tab" => tab}}) when not is_nil(tab), do: "/feed/#{tab}/posts"
-  # def nav_link_posts(_), do: "/feed/filter/posts"
+  def nav_link_feed(context),
+    do: "/feed/#{Settings.get([Bonfire.UI.Social.FeedLive, :default_feed], nil, context)}"
 
-  # def nav_link_discussions(%{current_params: %{"tab" => tab}}) when not is_nil(tab), do: "/feed/#{tab}/discussions"
-  # def nav_link_discussions(_), do: "/feed/filter/discussions"
+  def nav_link_posts(%{current_params: %{"tab" => tab}}) when not is_nil(tab),
+    do: "/feed/#{tab}/posts"
+
+  def nav_link_posts(_), do: "/feed/filter/posts"
+
+  def nav_link_discussions(%{current_params: %{"tab" => tab}}) when not is_nil(tab),
+    do: "/feed/#{tab}/discussions"
+
+  def nav_link_discussions(_), do: "/feed/filter/discussions"
 
   on_mount {LivePlugs, [Bonfire.UI.Me.LivePlugs.LoadCurrentUser]}
 
