@@ -6,6 +6,7 @@
     event_name={@event_name}
     event_target={@event_target}
     compact={@compact}
+    sort_by={@sort_by}
   />
 {#else}
   <form
@@ -27,6 +28,7 @@
           num_replies: l("Amount of replies")
         ]}
       default_value={false}
+      current_value={@sort_by || :load_from_settings}
       scope={@scope}
     />
     <!-- compact={@compact} -->

@@ -3,6 +3,7 @@ defmodule Bonfire.UI.Social.FeedLive do
   use_if_enabled(Bonfire.UI.Common.Web.Native, :stateful_component)
   import Untangle
 
+  alias Bonfire.Social.FeedFilters
   alias Bonfire.UI.Social.ActivityLive
   alias Bonfire.Social.Feeds.LiveHandler
 
@@ -404,24 +405,66 @@ defmodule Bonfire.UI.Social.FeedLive do
         :default
 
   def handle_event(
-        "set_setting",
+        "set_filter",
+        %{"Elixir.Bonfire.Social.Feeds" => %{"include" => types}},
+        socket
+      ) do
+    warn(types, "WIP: set_types_filter")
+
+    {_include_map, exclude_map} = Map.split_with(types, fn {_, v} -> v == "true" end)
+
+    set_filters(
+      %{
+        # activity_types: Map.keys(include_map) # TODO?
+        exclude_activity_types: Map.keys(exclude_map)
+      },
+      socket
+    )
+  end
+
+  def handle_event(
+        "set_filter",
+        %{"Elixir.Bonfire.UI.Social.FeedLive" => attrs},
+        socket
+      ) do
+    # debug(attrs, "set_setting_filter")
+    set_filters(
+      attrs,
+      socket
+    )
+  end
+
+  def handle_event(
+        "set_filter",
         attrs,
         socket
       ) do
-    with {
-           :noreply,
-           socket
-         } <-
-           Utils.maybe_apply(
-             Bonfire.Common.Settings.LiveHandler,
-             :handle_event,
-             ["set", attrs, socket]
-           ) do
-      handle_event(
-        "set",
-        %{},
+    # debug(attrs, "set_filter")
+    set_filters(
+      attrs,
+      socket
+    )
+  end
+
+  def set_filters(
+        attrs,
         socket
-      )
+      ) do
+    # debug(attrs, "set_filter")
+    case FeedFilters.validate(attrs) do
+      {:ok, filters} ->
+        reload(
+          Enums.deep_merge(
+            assigns(socket)[:feed_filters] || %FeedFilters{},
+            filters
+            |> debug("validated")
+          )
+          |> debug("merged"),
+          socket
+        )
+
+      e ->
+        error(e)
     end
   end
 
@@ -430,22 +473,28 @@ defmodule Bonfire.UI.Social.FeedLive do
         attrs,
         socket
       ) do
-    # need to reload feed so streams are updated
-    socket =
+    reload(
+      assigns(socket)[:feed_filters],
       socket
-      |> assign(loading: true)
       |> Bonfire.UI.Common.LiveHandlers.assign_attrs(attrs)
+    )
+  end
+
+  def reload(
+        feed_filters,
+        socket
+      ) do
+    # need to reload feed so streams are updated
 
     feed_name = feed_name(assigns(socket))
-    feed_filters = assigns(socket)[:feed_filters]
 
-    if feed_name in [:my, :explore, :fediverse, :local],
-      do: send_self(widgets(e(assigns(socket), nil)))
+    # if feed_name in [:my, :explore, :fediverse, :local], do: 
+    send_self(widgets(e(assigns(socket), nil)))
 
     {
       :noreply,
       socket
-      # |> Bonfire.UI.Common.LiveHandlers.assign_attrs(attrs)
+      |> assign(loading: true)
       # |> assign(:page_header_aside, LiveHandler.page_header_asides(...))
       |> LiveHandler.insert_feed(
         ...,

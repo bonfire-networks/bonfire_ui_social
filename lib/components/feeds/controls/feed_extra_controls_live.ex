@@ -2,6 +2,7 @@ defmodule Bonfire.UI.Social.FeedExtraControlsLive do
   use Bonfire.UI.Common.Web, :stateless_component
   # alias Bonfire.UI.Social.CommentLive
 
+  prop event_name, :any, default: "set_filter"
   prop event_target, :any, default: nil
   # prop feed_id, :any, default: nil
   prop feed_name, :atom, default: nil

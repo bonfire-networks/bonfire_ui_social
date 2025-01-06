@@ -7,7 +7,7 @@
     keys={[Bonfire.UI.Social.FeedLive, :time_limit]}
     options={%{1 => l("Day"), 7 => l("Week"), 30 => l("Month"), 365 => "Year", 0 => "All time"}}
     default_value={7}
-    current_value={@time_limit}
+    current_value={@time_limit || :load_from_settings}
     scope={@scope}
   />
   <!-- compact={@compact} -->

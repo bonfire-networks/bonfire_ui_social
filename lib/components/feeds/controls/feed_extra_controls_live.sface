@@ -1,12 +1,55 @@
 <div class="flex flex-col gap-2">
   {!-- <span class="font-medium text-sm text-base-content/80">{l("Included activities")}</span> --}
-  <Bonfire.UI.Social.Settings.MyFeedItemsLive
-    scope={:user}
-    feed_name={@feed_name}
-    event_name="set_setting"
-    event_target={@event_target}
-    hide_forced_defaults
+
+  {!-- 
+<Bonfire.UI.Social.Settings.MyFeedItemLive label={l("Boosts")} key={:boost} scope={@scope} /> 
+<Bonfire.UI.Social.Settings.MyFeedItemLive label={l("Replies")} key={:reply} scope={@scope} />
+<Bonfire.UI.Social.Settings.MyFeedItemLive label={l("Follows")} key={:follow} scope={@scope} /> 
+--}
+
+  <form
+    :if={extension_enabled?(:bonfire_ui_reactions, @__context__)}
+    data-scope="boosts"
+    phx-change={@event_name}
+    phx-target={@event_target}
+  >
+    <Bonfire.UI.Common.SettingsToggleLive
+      name={l("Boosts")}
+      keys={[Bonfire.Social.Feeds, :include, :boost]}
+      default_value
+      current_value={:boost not in e(@feed_filters, :exclude_activity_types, [])}
+      compact
+    />
+  </form>
+
+  <form data-scope="follows" phx-change={@event_name} phx-target={@event_target}>
+    <Bonfire.UI.Common.SettingsToggleLive
+      name={l("Follows")}
+      keys={[Bonfire.Social.Feeds, :include, :follow]}
+      default_value={false}
+      current_value={:follow not in e(@feed_filters, :exclude_activity_types, [])}
+      compact
+    />
+  </form>
+
+  <!-- 
+TODO: use these from FeedFilters:
+  field :exclude_replies, :boolean, default: false
+  field :only_replies, :boolean, default: false
+
+<form
+  data-scope="replies"
+  phx-change={@event_name}
+  phx-target={@event_target}
+>
+  <Bonfire.UI.Common.SettingsToggleLive
+    name={l("Replies")}
+    keys={[Bonfire.Social.Feeds, :include, :reply]}
+    default_value
+    scope={@scope}
+    compact
   />
+</form> -->
 </div>
 
 <div :if={:sort_by not in @hide_filters} class="flex flex-col gap-2 pt-3">
@@ -15,7 +58,7 @@
     module={maybe_component(Bonfire.UI.Social.SortItemsLive, @__context__)}
     scope={:user}
     feed_name={@feed_name}
-    event_name="set_setting"
+    event_name={@event_name}
     event_target={@event_target}
     sort_by={e(@feed_filters, :sort_by, nil)}
     compact
@@ -46,10 +89,10 @@
 <ul tabindex="0" class="menu p-0 gap-1 menu-horizontal">
   <li
     data-role="chronological"
-    phx-click="set"
-    phx-value-to_atoms="true"
+    phx-click="set_filter"
+    
     phx-value-sort_by="nil"
-    phx-value-assign_global="true"
+    
     phx-target={@event_target}
   >
     <a
@@ -64,10 +107,10 @@
     </a></li>
   <li
     data-role="amount_of_replies"
-    phx-click="set"
-    phx-value-to_atoms="true"
+    phx-click="set_filter"
+    
     phx-value-sort_by="num_replies"
-    phx-value-assign_global="true"
+    
     phx-target={@event_target}
   >
     <a
@@ -83,10 +126,10 @@
   </li>
   <li
     data-role="amount_of_boosts"
-    phx-click="set"
-    phx-value-to_atoms="true"
+    phx-click="set_filter"
+    
     phx-value-sort_by="num_boosts"
-    phx-value-assign_global="true"
+    
     phx-target={@event_target}
   >
     <a
@@ -102,10 +145,10 @@
   </li>
   <li
     data-role="amount_of_likes"
-    phx-click="set"
-    phx-value-to_atoms="true"
+    phx-click="set_filter"
+    
     phx-value-sort_by="num_likes"
-    phx-value-assign_global="true"
+    
     phx-target={@event_target}
   >
     <a
@@ -128,7 +171,7 @@
   <Bonfire.UI.Social.Settings.TimeSortItemsLive
     scope={:user}
     feed_name={@feed_name}
-    event_name="set_setting"
+    event_name={@event_name}
     event_target={@event_target}
     time_limit={e(@feed_filters, :time_limit, nil)}
     compact
@@ -139,11 +182,11 @@
 <ul tabindex="0" class="menu p-0 gap-1 menu-horizontal">
   <li
     data-role="day"
-    phx-click="set"
+    phx-click="set_filter"
     3
     phx-value-to_integers="true"
     phx-value-time_limit={1}
-    phx-value-assign_global="true"
+    
     phx-target={@event_target}
   ><a class={
       "flex gap-2 text-base-content/70 border ",
@@ -153,10 +196,10 @@
       <span class="sr-only">{l("Day")}</span></a></li>
   <li
     data-role="week"
-    phx-click="set"
+    phx-click="set_filter"
     phx-value-to_integers="true"
     phx-value-time_limit={7}
-    phx-value-assign_global="true"
+    
     phx-target={@event_target}
   ><a class={
       "flex gap-2 text-base-content/70 border ",
@@ -166,10 +209,10 @@
       <span class="sr-only">{l("Week")}</span></a></li>
   <li
     data-role="month"
-    phx-click="set"
+    phx-click="set_filter"
     phx-value-to_integers="true"
     phx-value-time_limit={30}
-    phx-value-assign_global="true"
+    
     phx-target={@event_target}
   ><a class={
       "flex gap-2 text-base-content/70 border ",
@@ -182,10 +225,10 @@
       <span class="sr-only">{l("Month")}</span></a></li>
   <li
     data-role="year"
-    phx-click="set"
+    phx-click="set_filter"
     phx-value-to_integers="true"
     phx-value-time_limit={365}
-    phx-value-assign_global="true"
+    
     phx-target={@event_target}
   ><a class={
       "flex gap-2 text-base-content/70 border ",
@@ -195,10 +238,10 @@
       <span class="sr-only">{l("Year")}</span></a></li>
   <li
     data-role="infinite"
-    phx-click="set"
+    phx-click="set_filter"
     phx-value-to_integers="true"
     phx-value-time_limit="0"
-    phx-value-assign_global="true"
+    
     phx-target={@event_target}
   ><a class={
       "flex gap-2 text-base-content/70 border ",
@@ -216,10 +259,10 @@
   <ul tabindex="0" class="z-[999] menu p-1 gap-1 menu-horizontal">
     <li
       data-role="most first"
-      phx-click="set"
-      phx-value-to_atoms="true"
+      phx-click="set_filter"
+      
       phx-value-sort_order="desc"
-      phx-value-assign_global="true"
+      
       phx-target={@event_target}
     ><a class={
         "flex gap-2 text-base-content/70 border ",
@@ -229,10 +272,10 @@
         {l("Most first")}</a></li>
     <li
       data-role="least first"
-      phx-click="set"
-      phx-value-to_atoms="true"
+      phx-click="set_filter"
+      
       phx-value-sort_order="asc"
-      phx-value-assign_global="true"
+      
       phx-target={@event_target}
     ><a class={
         "flex gap-2 text-base-content/70 border ",
