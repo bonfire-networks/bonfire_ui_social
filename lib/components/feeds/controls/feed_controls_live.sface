@@ -1,4 +1,8 @@
-<div x-data="{open: false}" class="p-2  border-b border-base-content/10 mt-2">
+<div 
+  x-data="{open: false}" 
+  :class="{'bg-base-content/5': open}"
+  x-transition
+  class="p-2 rounded-t-xl  border-b border-base-content/10">
   <div :if={current_user_id(@__context__)} class="flex justify-between flex-1 gap-3">
     <div data-position="bottom" phx-hook="Tooltip" id="order-dropdown" class="flex w-full flex-1">
       <label tabindex="0" class="tooltip-button btn-sm btn flex-1 w-full btn-outline">
@@ -96,7 +100,7 @@
     </div>
 
     <div
-      class="flex justify-between items-center text-sm font-bold tracking-wide cursor-pointer"
+      class="flex justify-between flex-1 text-center btn btn-sm btn-outline items-center"
       role="banner"
       @click="open = ! open"
     >
@@ -113,7 +117,7 @@
     x-transition
     x-cloak
     x-show="open"
-    class="flex pt-3 flex-col divide-y divide-base-content/10 justify-between gap-3"
+    class="flex p-4 flex-col divide-y divide-base-content/10 justify-between gap-3"
   >
     <Bonfire.UI.Social.FeedExtraControlsLive
       event_target={@event_target}
