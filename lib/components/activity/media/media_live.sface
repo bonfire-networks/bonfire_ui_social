@@ -10,13 +10,8 @@
     {#case Media.media_url(m)}
       {#match nil}
       {#match media_url}
-        {#if (e(m.metadata, "wikibase", "itemType", nil) in ["journalArticle"] or
-             e(m.metadata, "wikibase", "identifiers", "doi", nil)) ||
-            e(m.metadata, "crossref", "DOI", nil) || e(m.metadata, "oembed", "DOI", nil) ||
-            e(m.metadata, "other", "prism.doi", nil) ||
-            e(m.metadata, "other", "citation_doi", nil) || e(m.metadata, "other", "citation_doi", nil) ||
-            ed(m.metadata, "json_ld", "@type", nil) in ["ScholarlyArticle", "Dataset"] ||
-            String.starts_with?(media_url || "", "https://doi.org/")}
+        {#if m.media_type == "research" or
+            maybe_apply(Bonfire.Files, :is_research, [media_url, m.metadata]) == true}
           <Bonfire.UI.Social.Activity.AcademicPaperLive
             media={m}
             metadata={Enums.deep_merge_reduce([

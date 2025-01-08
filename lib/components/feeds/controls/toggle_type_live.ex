@@ -8,7 +8,8 @@ defmodule Bonfire.UI.Social.ToggleTypeLive do
   # prop disabled, :boolean, default: false
   # prop scope, :any, default: nil
 
-  prop event_name, :any, default: "set_filter"
+  prop label_default, :string, default: nil
+  prop event_name, :string, default: "set_filter"
   prop event_target, :any, default: nil
 
   prop feed_filters, :any, default: nil

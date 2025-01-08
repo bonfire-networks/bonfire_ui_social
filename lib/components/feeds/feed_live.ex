@@ -7,7 +7,7 @@ defmodule Bonfire.UI.Social.FeedLive do
   alias Bonfire.UI.Social.ActivityLive
   alias Bonfire.Social.Feeds.LiveHandler
 
-  prop feed_name, :atom, default: nil
+  prop feed_name, :any, default: nil
   prop feed_id, :any, default: nil
   prop feed_ids, :any, default: nil
   prop hide_guest_fallback, :boolean, default: false
@@ -404,14 +404,16 @@ defmodule Bonfire.UI.Social.FeedLive do
       assigns[:feed_name] || assigns[:feed_id] || assigns[:id] ||
         :default
 
-  #  TODO: make reusable for other type filters
   defp set_type_activity(type, value, socket) do
     set_type(:activity_types, :exclude_activity_types, type, value, socket)
   end
 
-  #  TODO: make reusable for other type filters
   defp set_type_object(type, value, socket) do
     set_type(:object_types, :exclude_object_types, type, value, socket)
+  end
+
+  defp set_type_media(type, value, socket) do
+    set_type(:media_types, :exclude_media_types, type, value, socket)
   end
 
   defp set_type(already_selected_field, already_excluded_field, type, value, socket) do
@@ -492,6 +494,7 @@ defmodule Bonfire.UI.Social.FeedLive do
     case field do
       "activity_types" -> set_type_activity(type, params["toggle_value"], socket)
       "object_types" -> set_type_object(type, params["toggle_value"], socket)
+      "media_types" -> set_type_media(type, params["toggle_value"], socket)
     end
   end
 

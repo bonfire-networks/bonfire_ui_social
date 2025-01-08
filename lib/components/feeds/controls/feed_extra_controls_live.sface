@@ -1,31 +1,7 @@
 <div class="flex flex-col gap-2">
   {!-- <span class="font-medium text-sm text-base-content/80">{l("Included activities")}</span> --}
 
-  {!-- 
-<Bonfire.UI.Social.Settings.MyFeedItemLive label={l("Boosts")} key={:boost} scope={@scope} /> 
-<Bonfire.UI.Social.Settings.MyFeedItemLive label={l("Replies")} key={:reply} scope={@scope} />
-<Bonfire.UI.Social.Settings.MyFeedItemLive label={l("Follows")} key={:follow} scope={@scope} /> 
---}
-
   <div :if={extension_enabled?(:bonfire_ui_reactions, @__context__)} data-scope="boosts">
-    <!-- <Bonfire.UI.Common.SettingsToggleThroupleLive
-      name={l("Boosts")}
-      keys={[Bonfire.Social.Feeds, :include, :boost]}
-      input={"toggle_value"}
-      default_value={nil}
-      current_value={Bonfire.UI.Social.ToggleTypeLive.check_throuple(:boost, e(@feed_filters, :activity_types, []), e(@feed_filters, :exclude_activity_types, []))}
-      compact
-      event_target={@event_target}
-      event_name={@event_name}
-      label_yes={l("Only")}
-      label_default={l("Default")}
-      label_no={l("Hide")}
-      phx_values={%{
-        "phx-value-toggle" => "activity_types",
-        "phx-value-toggle_type" => "boost"
-      }}
-    /> -->
-
     <Bonfire.UI.Social.ToggleTypeLive
       label={l("Boosts")}
       key={:boost}
@@ -33,6 +9,7 @@
       feed_filters={@feed_filters}
       event_target={@event_target}
       event_name={@event_name}
+      label_default={l("Include")}
     />
   </div>
 
@@ -54,26 +31,58 @@
     feed_filters={@feed_filters}
     event_target={@event_target}
     event_name={@event_name}
+    label_default={l("Include")}
   />
 
-  <!-- 
-TODO: use these from FeedFilters:
-  field :exclude_replies, :boolean, default: false
-  field :only_replies, :boolean, default: false
-
-<form
-  data-scope="replies"
-  phx-change={@event_name}
-  phx-target={@event_target}
->
-  <Bonfire.UI.Common.SettingsToggleLive
-    name={l("Replies")}
-    keys={[Bonfire.Social.Feeds, :include, :reply]}
-    default_value
-    scope={@scope}
-    compact
+  <Bonfire.UI.Social.ToggleTypeLive
+    label={l("Replies")}
+    key={:reply}
+    field={:activity_types}
+    feed_filters={@feed_filters}
+    event_target={@event_target}
+    event_name={@event_name}
+    label_default={l("Include")}
   />
-</form> -->
+
+  <Bonfire.UI.Social.ToggleTypeLive
+    label={l("Images")}
+    key={:image}
+    field={:media_types}
+    feed_filters={@feed_filters}
+    event_target={@event_target}
+    event_name={@event_name}
+    label_default={l("Include")}
+  />
+
+  <Bonfire.UI.Social.ToggleTypeLive
+    label={l("Links")}
+    key={:link}
+    field={:media_types}
+    feed_filters={@feed_filters}
+    event_target={@event_target}
+    event_name={@event_name}
+    label_default={l("Include")}
+  />
+
+  <Bonfire.UI.Social.ToggleTypeLive
+    label={l("Books")}
+    key={:book}
+    field={:media_types}
+    feed_filters={@feed_filters}
+    event_target={@event_target}
+    event_name={@event_name}
+    label_default={l("Include")}
+  />
+
+  <Bonfire.UI.Social.ToggleTypeLive
+    label={l("Publications")}
+    key={:research}
+    field={:media_types}
+    feed_filters={@feed_filters}
+    event_target={@event_target}
+    event_name={@event_name}
+    label_default={l("Include")}
+  />
 </div>
 
 <div :if={:sort_by not in @hide_filters} class="flex flex-col gap-2 pt-3">
@@ -87,107 +96,6 @@ TODO: use these from FeedFilters:
     sort_by={e(@feed_filters, :sort_by, nil)}
     compact
   />
-
-  {!-- <div class="dropdown dropdown-end">
-    <label
-      tabindex="0"
-      class=" btn-sm btn btn-ghost normal-case text-base-content/70"
-    >
-      {#case e(@feed_filters, :sort_by, nil)}
-        {#match :num_replies}
-          <#Icon iconify="basil:comment-outline" class="w-5 h-5 stroke-1 fill-base-content/50" />
-          <span>{l("Sort by amount of replies")}</span>
-        {#match :num_boosts}
-          <#Icon iconify="system-uicons:retweet" class="w-5 h-5 stroke-1 fill-base-content/50" />
-          <span>{l("Sort by amount of boosts")}</span>
-        {#match :num_likes}
-          <#Icon iconify="mingcute:fire-line" class="w-5 h-5" />
-          <span>{l("Sort by amount of likes")}</span>
-        {#match _}
-          <#Icon iconify="mdi:order-alphabetical-ascending" class="w-5 h-5 text-base-content/70" />
-          <span>{l("default")}</span>
-      {/case}
-    </label></div> --}
-
-  {!--
-<ul tabindex="0" class="menu p-0 gap-1 menu-horizontal">
-  <li
-    data-role="chronological"
-    phx-click="set_filter"
-    
-    phx-value-sort_by="nil"
-    
-    phx-target={@event_target}
-  >
-    <a
-      data-tip={l("Chronological")}
-      class={
-        "tooltip tooltip-bottom flex gap-2 text-base-content/70 border ",
-        "border-base-content/5 active !text-base-content/100": is_nil(e(@feed_filters, :sort_by, nil))
-      }
-    >
-      <#Icon iconify="mdi:order-alphabetical-ascending" class="w-5 h-5 text-base-content/70" />
-      <span class="sr-only">{l("Chronological")}</span>
-    </a></li>
-  <li
-    data-role="amount_of_replies"
-    phx-click="set_filter"
-    
-    phx-value-sort_by="num_replies"
-    
-    phx-target={@event_target}
-  >
-    <a
-      data-tip={l("By amount of replies")}
-      class={
-        "tooltip tooltip-bottom flex gap-2 text-base-content/70 border ",
-        "border-base-content/5 active !text-base-content/100": e(@feed_filters, :sort_by, nil) == :num_replies
-      }
-    >
-      <#Icon iconify="basil:comment-outline" class="w-5 h-5 stroke-1 fill-base-content/50" />
-      <span class="sr-only">{l("By amount of replies")}</span>
-    </a>
-  </li>
-  <li
-    data-role="amount_of_boosts"
-    phx-click="set_filter"
-    
-    phx-value-sort_by="num_boosts"
-    
-    phx-target={@event_target}
-  >
-    <a
-      data-tip={l("By amount of boosts")}
-      class={
-        "tooltip tooltip-bottom flex gap-2 text-base-content/70 border ",
-        "border-base-content/5 active !text-base-content/100": e(@feed_filters, :sort_by, nil) == :num_boosts
-      }
-    >
-      <#Icon iconify="system-uicons:retweet" class="w-5 h-5 stroke-1 fill-base-content/50" />
-      <span class="sr-only">{l("By amount of boosts")}</span>
-    </a>
-  </li>
-  <li
-    data-role="amount_of_likes"
-    phx-click="set_filter"
-    
-    phx-value-sort_by="num_likes"
-    
-    phx-target={@event_target}
-  >
-    <a
-      data-tip={l("By amount of likes")}
-      class={
-        "tooltip tooltip-bottom flex gap-2 text-base-content/70 border ",
-        "border-base-content/5 active !text-base-content/100": e(@feed_filters, :sort_by, nil) == :num_likes
-      }
-    >
-      <#Icon iconify="mingcute:fire-fill" class="w-5 h-5" />
-      <span class="sr-only">{l("By amount of likes")}</span>
-    </a>
-  </li>
-  <li></li>
-</ul> --}
 </div>
 
 <div class="flex flex-col gap-2 pt-3">
@@ -200,113 +108,4 @@ TODO: use these from FeedFilters:
     time_limit={e(@feed_filters, :time_limit, nil)}
     compact
   />
-
-  {!-- <div class="flex flex-col gap-2 pt-3">
-<span class="font-medium text-sm text-base-content/80">{l("Limit to")}</span>
-<ul tabindex="0" class="menu p-0 gap-1 menu-horizontal">
-  <li
-    data-role="day"
-    phx-click="set_filter"
-    3
-    phx-value-to_integers="true"
-    phx-value-time_limit={1}
-    
-    phx-target={@event_target}
-  ><a class={
-      "flex gap-2 text-base-content/70 border ",
-      "border-base-content/5 active !text-base-content/100": e(@feed_filters, :time_limit, nil) == 1
-    }>
-      <#Icon iconify="ri:24-hours-fill" class="w-5 h-5 text-base-content/70" />
-      <span class="sr-only">{l("Day")}</span></a></li>
-  <li
-    data-role="week"
-    phx-click="set_filter"
-    phx-value-to_integers="true"
-    phx-value-time_limit={7}
-    
-    phx-target={@event_target}
-  ><a class={
-      "flex gap-2 text-base-content/70 border ",
-      "border-base-content/5 active !text-base-content/100": e(@feed_filters, :time_limit, nil) == 7
-    }>
-      <#Icon iconify="mdi:numeric-7-box" class="w-5 h-5 text-base-content/70" />
-      <span class="sr-only">{l("Week")}</span></a></li>
-  <li
-    data-role="month"
-    phx-click="set_filter"
-    phx-value-to_integers="true"
-    phx-value-time_limit={30}
-    
-    phx-target={@event_target}
-  ><a class={
-      "flex gap-2 text-base-content/70 border ",
-      "border-base-content/5 active !text-base-content/100": e(@feed_filters, :time_limit, nil) == 30
-    }>
-      <#Icon
-        iconify="streamline:interface-calendar-date-month-thirty-thirty-calendar-date-week-day-month"
-        class="w-5 h-5 text-base-content/70"
-      />
-      <span class="sr-only">{l("Month")}</span></a></li>
-  <li
-    data-role="year"
-    phx-click="set_filter"
-    phx-value-to_integers="true"
-    phx-value-time_limit={365}
-    
-    phx-target={@event_target}
-  ><a class={
-      "flex gap-2 text-base-content/70 border ",
-      "border-base-content/5 active !text-base-content/100": e(@feed_filters, :time_limit, nil) == 365
-    }>
-      <#Icon iconify="iconoir:birthday-cake" class="w-5 h-5 text-base-content/70" />
-      <span class="sr-only">{l("Year")}</span></a></li>
-  <li
-    data-role="infinite"
-    phx-click="set_filter"
-    phx-value-to_integers="true"
-    phx-value-time_limit="0"
-    
-    phx-target={@event_target}
-  ><a class={
-      "flex gap-2 text-base-content/70 border ",
-      "border-base-content/5 active !text-base-content/100": !e(@feed_filters, :time_limit, nil) or e(@feed_filters, :time_limit, nil) == 0
-    }>
-      <#Icon iconify="fa6-solid:infinity" class="w-5 h-5 text-base-content/70" />
-      <span class="sr-only">{l("All time")}</span></a></li>
-</ul>
-</div> --}
 </div>
-
-{!-- {#if not is_nil(e(@feed_filters, :sort_by, nil))}
-<div class="flex flex-col gap-2 pt-3">
-  <span class="font-medium text-sm text-base-content/80">{l("Order")}</span>
-  <ul tabindex="0" class="z-[999] menu p-1 gap-1 menu-horizontal">
-    <li
-      data-role="most first"
-      phx-click="set_filter"
-      
-      phx-value-sort_order="desc"
-      
-      phx-target={@event_target}
-    ><a class={
-        "flex gap-2 text-base-content/70 border ",
-        "border-base-content/5 active !text-base-content/100": e(@feed_filters, :sort_order, nil) != :asc
-      }>
-        <#Icon iconify="octicon:sort-desc-16" class="w-5 h-5 text-base-content/70" />
-        {l("Most first")}</a></li>
-    <li
-      data-role="least first"
-      phx-click="set_filter"
-      
-      phx-value-sort_order="asc"
-      
-      phx-target={@event_target}
-    ><a class={
-        "flex gap-2 text-base-content/70 border ",
-        "border-base-content/5 active !text-base-content/100": e(@feed_filters, :sort_order, nil) == :asc
-      }>
-        <#Icon iconify="octicon:sort-asc-16" class="w-5 h-5 text-base-content/70" />
-        {l("Least first")}</a></li>
-  </ul>
-</div>
-{/if} --}

@@ -174,7 +174,7 @@
                 )}</p>
 
               {!-- TODO: instead of switching to infinity, switch 1 level up from current limit, eg. from day to week --}
-              {#if !@sort_by and
+              {#if (!e(@feed_filters, :sort_by, nil) or e(@feed_filters, :sort_by, nil) == :date_created) and
                   (e(@previous_page_info, :end_cursor, nil) || e(@page_info, :end_cursor, nil)) |> debug("ppppp")}
                 <Bonfire.UI.Common.LoadMoreLive
                   live_handler={Bonfire.Social.Feeds}

@@ -12,3 +12,78 @@
   />
   <!-- compact={@compact} -->
 </form>
+
+{!-- <div class="flex flex-col gap-2 pt-3">
+<span class="font-medium text-sm text-base-content/80">{l("Limit to")}</span>
+<ul tabindex="0" class="menu p-0 gap-1 menu-horizontal">
+  <li
+    data-role="day"
+    phx-click="set_filter"
+    3
+    phx-value-to_integers="true"
+    phx-value-time_limit={1}
+    
+    phx-target={@event_target}
+  ><a class={
+      "flex gap-2 text-base-content/70 border ",
+      "border-base-content/5 active !text-base-content/100": e(@feed_filters, :time_limit, nil) == 1
+    }>
+      <#Icon iconify="ri:24-hours-fill" class="w-5 h-5 text-base-content/70" />
+      <span class="sr-only">{l("Day")}</span></a></li>
+  <li
+    data-role="week"
+    phx-click="set_filter"
+    phx-value-to_integers="true"
+    phx-value-time_limit={7}
+    
+    phx-target={@event_target}
+  ><a class={
+      "flex gap-2 text-base-content/70 border ",
+      "border-base-content/5 active !text-base-content/100": e(@feed_filters, :time_limit, nil) == 7
+    }>
+      <#Icon iconify="mdi:numeric-7-box" class="w-5 h-5 text-base-content/70" />
+      <span class="sr-only">{l("Week")}</span></a></li>
+  <li
+    data-role="month"
+    phx-click="set_filter"
+    phx-value-to_integers="true"
+    phx-value-time_limit={30}
+    
+    phx-target={@event_target}
+  ><a class={
+      "flex gap-2 text-base-content/70 border ",
+      "border-base-content/5 active !text-base-content/100": e(@feed_filters, :time_limit, nil) == 30
+    }>
+      <#Icon
+        iconify="streamline:interface-calendar-date-month-thirty-thirty-calendar-date-week-day-month"
+        class="w-5 h-5 text-base-content/70"
+      />
+      <span class="sr-only">{l("Month")}</span></a></li>
+  <li
+    data-role="year"
+    phx-click="set_filter"
+    phx-value-to_integers="true"
+    phx-value-time_limit={365}
+    
+    phx-target={@event_target}
+  ><a class={
+      "flex gap-2 text-base-content/70 border ",
+      "border-base-content/5 active !text-base-content/100": e(@feed_filters, :time_limit, nil) == 365
+    }>
+      <#Icon iconify="iconoir:birthday-cake" class="w-5 h-5 text-base-content/70" />
+      <span class="sr-only">{l("Year")}</span></a></li>
+  <li
+    data-role="infinite"
+    phx-click="set_filter"
+    phx-value-to_integers="true"
+    phx-value-time_limit="0"
+    
+    phx-target={@event_target}
+  ><a class={
+      "flex gap-2 text-base-content/70 border ",
+      "border-base-content/5 active !text-base-content/100": !e(@feed_filters, :time_limit, nil) or e(@feed_filters, :time_limit, nil) == 0
+    }>
+      <#Icon iconify="fa6-solid:infinity" class="w-5 h-5 text-base-content/70" />
+      <span class="sr-only">{l("All time")}</span></a></li>
+</ul>
+</div> --}

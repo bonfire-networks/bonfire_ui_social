@@ -13,7 +13,7 @@
     event_target={@event_target}
     event_name={@event_name}
     label_yes={l("Only")}
-    label_default={l("Default")}
+    label_default={@label_default || l("Default")}
     label_no={l("Hide")}
     phx_values={%{
       "phx-value-toggle" => @field,

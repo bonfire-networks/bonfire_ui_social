@@ -34,3 +34,104 @@
     <!-- compact={@compact} -->
   </form>
 {/if}
+
+{!-- <div class="dropdown dropdown-end">
+    <label
+      tabindex="0"
+      class=" btn-sm btn btn-ghost normal-case text-base-content/70"
+    >
+      {#case e(@feed_filters, :sort_by, nil)}
+        {#match :num_replies}
+          <#Icon iconify="basil:comment-outline" class="w-5 h-5 stroke-1 fill-base-content/50" />
+          <span>{l("Sort by amount of replies")}</span>
+        {#match :num_boosts}
+          <#Icon iconify="system-uicons:retweet" class="w-5 h-5 stroke-1 fill-base-content/50" />
+          <span>{l("Sort by amount of boosts")}</span>
+        {#match :num_likes}
+          <#Icon iconify="mingcute:fire-line" class="w-5 h-5" />
+          <span>{l("Sort by amount of likes")}</span>
+        {#match _}
+          <#Icon iconify="mdi:order-alphabetical-ascending" class="w-5 h-5 text-base-content/70" />
+          <span>{l("default")}</span>
+      {/case}
+    </label></div> --}
+
+{!--
+<ul tabindex="0" class="menu p-0 gap-1 menu-horizontal">
+  <li
+    data-role="chronological"
+    phx-click="set_filter"
+    
+    phx-value-sort_by="nil"
+    
+    phx-target={@event_target}
+  >
+    <a
+      data-tip={l("Chronological")}
+      class={
+        "tooltip tooltip-bottom flex gap-2 text-base-content/70 border ",
+        "border-base-content/5 active !text-base-content/100": is_nil(e(@feed_filters, :sort_by, nil))
+      }
+    >
+      <#Icon iconify="mdi:order-alphabetical-ascending" class="w-5 h-5 text-base-content/70" />
+      <span class="sr-only">{l("Chronological")}</span>
+    </a></li>
+  <li
+    data-role="amount_of_replies"
+    phx-click="set_filter"
+    
+    phx-value-sort_by="num_replies"
+    
+    phx-target={@event_target}
+  >
+    <a
+      data-tip={l("By amount of replies")}
+      class={
+        "tooltip tooltip-bottom flex gap-2 text-base-content/70 border ",
+        "border-base-content/5 active !text-base-content/100": e(@feed_filters, :sort_by, nil) == :num_replies
+      }
+    >
+      <#Icon iconify="basil:comment-outline" class="w-5 h-5 stroke-1 fill-base-content/50" />
+      <span class="sr-only">{l("By amount of replies")}</span>
+    </a>
+  </li>
+  <li
+    data-role="amount_of_boosts"
+    phx-click="set_filter"
+    
+    phx-value-sort_by="num_boosts"
+    
+    phx-target={@event_target}
+  >
+    <a
+      data-tip={l("By amount of boosts")}
+      class={
+        "tooltip tooltip-bottom flex gap-2 text-base-content/70 border ",
+        "border-base-content/5 active !text-base-content/100": e(@feed_filters, :sort_by, nil) == :num_boosts
+      }
+    >
+      <#Icon iconify="system-uicons:retweet" class="w-5 h-5 stroke-1 fill-base-content/50" />
+      <span class="sr-only">{l("By amount of boosts")}</span>
+    </a>
+  </li>
+  <li
+    data-role="amount_of_likes"
+    phx-click="set_filter"
+    
+    phx-value-sort_by="num_likes"
+    
+    phx-target={@event_target}
+  >
+    <a
+      data-tip={l("By amount of likes")}
+      class={
+        "tooltip tooltip-bottom flex gap-2 text-base-content/70 border ",
+        "border-base-content/5 active !text-base-content/100": e(@feed_filters, :sort_by, nil) == :num_likes
+      }
+    >
+      <#Icon iconify="mingcute:fire-fill" class="w-5 h-5" />
+      <span class="sr-only">{l("By amount of likes")}</span>
+    </a>
+  </li>
+  <li></li>
+</ul> --}

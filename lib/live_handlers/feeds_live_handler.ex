@@ -383,7 +383,10 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
     opts =
       to_options(socket)
       |> Keyword.merge(opts)
-      |> Keyword.put(:time_limit, attrs[:time_limit] || e(assigns(socket), :time_limit, nil))
+      |> Keyword.put(
+        :time_limit,
+        attrs[:time_limit] || e(assigns(socket), :feed_filters, :time_limit, nil)
+      )
 
     opts
     |> Keyword.put(
@@ -391,8 +394,8 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
       Keyword.merge(
         Keyword.new(attrs),
         Activities.order_pagination_opts(
-          opts[:sort_by] || e(assigns(socket), :sort_by, nil),
-          opts[:sort_order] || e(assigns(socket), :sort_order, nil)
+          opts[:sort_by] || e(assigns(socket), :feed_filters, :sort_by, nil),
+          opts[:sort_order] || e(assigns(socket), :feed_filters, :sort_order, nil)
         )
       )
     )
@@ -599,8 +602,8 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
   #       {Bonfire.UI.Social.FeedExtraControlsLive,
   #        [
   #          event_target: component_id,
-  #          sort_by: e(assigns(socket), :sort_by, nil),
-  #          time_limit: e(assigns(socket), :sort_by, 7),
+  #          sort_by: e(assigns(socket), :feed_filters, :sort_by, nil),
+  #          time_limit: e(assigns(socket), :feed_filters, :sort_by, 7),
   #          sort_order: e(assigns(socket), :sort_order, false)
   #        ]}
   #     ]

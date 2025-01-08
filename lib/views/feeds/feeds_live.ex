@@ -55,13 +55,18 @@ defmodule Bonfire.UI.Social.FeedsLive do
         {l("Local"),
          page: "local", href: "/feed/local", icon: "material-symbols:camping-rounded"},
         {l("Remote"), page: "fediverse", href: "/feed/fediverse", icon: "el:network"},
-        {l("Posts"),
-         page: "posts",
-         href: &nav_link_posts/1,
-         icon: "ri:chat-2-line",
-         icon_active: "ri:chat-2-fill"},
-        {l("Discussions"),
-         page: "discussions", href: &nav_link_discussions/1, icon: "ri:discuss-line"}
+        {
+          l("Posts"),
+          #  href: &nav_link_posts/1,
+          page: "posts",
+          href: "/feed/posts",
+          icon: "ri:chat-2-line",
+          icon_active: "ri:chat-2-fill"
+        }
+        # {l("Discussions"),
+        #  page: "discussions", 
+        # #  href: &nav_link_discussions/1, 
+        #  icon: "ri:discuss-line"}
 
         # {l("Moderation"),
         # page: "moderation",
@@ -75,15 +80,15 @@ defmodule Bonfire.UI.Social.FeedsLive do
   def nav_link_feed(context),
     do: "/feed/#{Settings.get([Bonfire.UI.Social.FeedLive, :default_feed], nil, context)}"
 
-  def nav_link_posts(%{current_params: %{"tab" => tab}}) when not is_nil(tab),
-    do: "/feed/#{tab}/posts"
+  # def nav_link_posts(%{current_params: %{"tab" => tab}}) when not is_nil(tab),
+  #   do: "/feed/#{tab}/posts"
 
-  def nav_link_posts(_), do: "/feed/filter/posts"
+  # def nav_link_posts(_), do: "/feed/filter/posts"
 
-  def nav_link_discussions(%{current_params: %{"tab" => tab}}) when not is_nil(tab),
-    do: "/feed/#{tab}/discussions"
+  # def nav_link_discussions(%{current_params: %{"tab" => tab}}) when not is_nil(tab),
+  #   do: "/feed/#{tab}/discussions"
 
-  def nav_link_discussions(_), do: "/feed/filter/discussions"
+  # def nav_link_discussions(_), do: "/feed/filter/discussions"
 
   on_mount {LivePlugs,
             [
@@ -139,9 +144,8 @@ defmodule Bonfire.UI.Social.FeedsLive do
   #   to_options(socket) ++ [feed_filters: %{object_types: params["type"]}]
   # end
 
-  def handle_params(%{"tab" => tab} = params, _url, socket)
-      when tab in ["federation", "fediverse", "remote"] do
-    set_feed_assigns({:fediverse, params}, socket)
+  def handle_params(%{"tab" => tab} = params, _url, socket) do
+    set_feed_assigns({maybe_to_atom(tab), params}, socket)
   end
 
   # def handle_params(%{"tab" => "explore" = _tab} = params, _url, socket) do
@@ -156,38 +160,18 @@ defmodule Bonfire.UI.Social.FeedsLive do
   #     set_feed_assigns({:explore, params}, socket)
   #   end
   # end
-  def handle_params(%{"tab" => "explore" = _tab} = params, _url, socket) do
-    # if module_enabled?(Bonfire.Social.Pins, socket) and
-    #      Bonfire.Common.Settings.get(
-    #        [Bonfire.UI.Social.FeedsLive, :curated],
-    #        false,
-    #        assigns(socket)
-    #      ) do
-    #   set_feed_assigns({:curated, params}, socket)
-    # else
-    set_feed_assigns({:explore, params}, socket)
-    # end
-  end
-
-  def handle_params(%{"tab" => "my" = _tab} = params, _url, socket) do
-    set_feed_assigns({:my, params}, socket)
-  end
-
-  def handle_params(%{"tab" => "curated" = _tab} = params, _url, socket) do
-    set_feed_assigns({:curated, params}, socket)
-  end
-
-  def handle_params(%{"tab" => "local" = _tab} = params, _url, socket) do
-    set_feed_assigns({:local, params}, socket)
-  end
-
-  def handle_params(%{"tab" => "likes" = _tab} = params, _url, socket) do
-    set_feed_assigns({:likes, params}, socket)
-  end
-
-  def handle_params(%{"tab" => "flags" = _tab} = params, _url, socket) do
-    set_feed_assigns({:flags, params}, socket)
-  end
+  # def handle_params(%{"tab" => "explore" = _tab} = params, _url, socket) do
+  #   # if module_enabled?(Bonfire.Social.Pins, socket) and
+  #   #      Bonfire.Common.Settings.get(
+  #   #        [Bonfire.UI.Social.FeedsLive, :curated],
+  #   #        false,
+  #   #        assigns(socket)
+  #   #      ) do
+  #   #   set_feed_assigns({:curated, params}, socket)
+  #   # else
+  #   set_feed_assigns({:explore, params}, socket)
+  #   # end
+  # end
 
   def handle_params(params, _url, socket) do
     set_feed_assigns(
