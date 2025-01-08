@@ -976,11 +976,10 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
     feed_assigns(:likes, opts)
   end
 
-  defp feed_assigns({feed_id, feed_id_or_ids}, opts)
-       when feed_id == :my or (is_list(feed_id_or_ids) and feed_id_or_ids != []) do
+  defp feed_assigns({:my, feed_id_or_ids}, opts) when is_list(feed_id_or_ids) do
     if Keyword.keyword?(feed_id_or_ids) do
       debug("looks like filters passed as a keyword list")
-      feed_assigns({feed_id, Map.new(feed_id_or_ids)}, opts)
+      feed_assigns({:my, Map.new(feed_id_or_ids)}, opts)
     else
       # My Feed
       debug("A. Starting feed_assigns for my feed")

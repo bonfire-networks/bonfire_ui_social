@@ -1,8 +1,9 @@
-<div 
-  x-data="{open: false}" 
+<div
+  x-data="{open: false}"
   :class="{'bg-base-content/5': open}"
   x-transition
-  class="p-2 rounded-t-xl  border-b border-base-content/10">
+  class="p-2 rounded-t-xl  border-b border-base-content/10"
+>
   <div :if={current_user_id(@__context__)} class="flex justify-between flex-1 gap-3">
     <div
       data-position="bottom"
@@ -163,5 +164,33 @@
       hide_filters={[:sort_by]}
       showing_within={@showing_within}
     />
+
+    <form
+      :if={module_enabled?(Bonfire.UI.Boundaries.Web.SetBoundariesLive)}
+      phx-change="multi_select"
+    >
+      <Bonfire.UI.Common.MultiselectLive
+        field={:subject_circles}
+        form_input_name={Bonfire.UI.Social.FeedLive}
+        preloaded_options={Bonfire.UI.Boundaries.Web.SetBoundariesLive.circles_for_multiselect(
+          current_user(@__context__),
+          :subject_circles
+        )}
+        implementation={:live_select}
+        mode={:quick_tags}
+        label={l("Search for one or more circles")}
+      />
+    </form>
+
+    <form phx-change="multi_select">
+      <Bonfire.UI.Common.MultiselectLive.UserSelectorLive
+        selected_options={[]}
+        class="focus:outline-0 border-0 border-b h-10 rounded-none border-base-content/10 text-sm select_recipients_input"
+        label={l("Search for one or more users ")}
+        form_input_name={__MODULE__}
+        implementation={:live_select}
+        mode={:quick_tags}
+      />
+    </form>
   </div>
 </div>

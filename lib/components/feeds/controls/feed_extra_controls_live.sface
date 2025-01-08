@@ -253,14 +253,6 @@ TODO: use these from FeedFilters:
 </div> --}
 </div>
 
-  <Bonfire.UI.Common.MultiselectLive.UserSelectorLive
-    selected_options={[]}
-    class="focus:outline-0 border-0 border-b h-10 rounded-none border-base-content/10 text-sm select_recipients_input"
-    label={l("Search for one or more users ")}
-    form_input_name={__MODULE__}
-    implementation={:live_select}
-  />
-
 {!-- {#if not is_nil(e(@feed_filters, :sort_by, nil))}
 <div class="flex flex-col gap-2 pt-3">
   <span class="font-medium text-sm text-base-content/80">{l("Order")}</span>

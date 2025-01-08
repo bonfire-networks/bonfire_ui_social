@@ -427,7 +427,6 @@ defmodule Bonfire.UI.Social.FeedLive do
         %{"Elixir.Bonfire.UI.Social.FeedLive" => attrs},
         socket
       ) do
-    # debug(attrs, "set_setting_filter")
     set_filters(
       attrs,
       socket
@@ -439,9 +438,28 @@ defmodule Bonfire.UI.Social.FeedLive do
         attrs,
         socket
       ) do
-    # debug(attrs, "set_filter")
     set_filters(
       attrs,
+      socket
+    )
+  end
+
+  def handle_event("multi_select", %{data: selected}, socket) when is_list(selected) do
+    filters =
+      Enum.group_by(selected, fn %{} = data -> data["field"] end)
+      |> debug()
+      |> Enum.reduce(%{}, fn {field, data}, acc ->
+        Map.merge(acc, %{
+          field =>
+            data
+            |> Enum.map(&id/1)
+            |> Enum.uniq()
+        })
+      end)
+      |> debug()
+
+    set_filters(
+      filters,
       socket
     )
   end
