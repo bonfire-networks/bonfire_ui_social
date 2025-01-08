@@ -39,10 +39,12 @@ jobs:
 
       - name: Load Configuration
         id: config
+        env:
+          OSIRIS_URL: "https://osiris-server.vercel.app"
         run: |
           # Install yq if not present
-          sudo wget https://github.com/mikefarah/yq/releases/download/v4.40.5/yq_linux_amd64 -O /usr/local/bin/yq
-          sudo chmod +x /usr/local/bin/yq
+          # sudo wget https://github.com/mikefarah/yq/releases/download/v4.40.5/yq_linux_amd64 -O /usr/local/bin/yq
+          # sudo chmod +x /usr/local/bin/yq
       
           # Get config from API endpoint
           CONFIG=$(curl -s "$OSIRIS_URL/api/config")
