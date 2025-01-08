@@ -40,16 +40,19 @@ jobs:
       - name: Load Configuration
         id: config
         run: |
-          # Get config directly from osiris-server instead of local file
-          OSIRIS_URL="https://osiris-server.vercel.app"
-          CONFIG=$(curl -s "$OSIRIS_URL/watcher/config/repositories.yml")
+          # Install yq if not present
+          sudo wget https://github.com/mikefarah/yq/releases/download/v4.40.5/yq_linux_amd64 -O /usr/local/bin/yq
+          sudo chmod +x /usr/local/bin/yq
+      
+          # Get config from API endpoint
+          CONFIG=$(curl -s "$OSIRIS_URL/api/config")
           
           if [ -z "$CONFIG" ]; then
             echo "::error::Failed to fetch configuration from osiris-server"
             exit 1
           fi
           
-          # Parse the downloaded config
+          # Parse the YAML into JSON for the repository
           REPO_CONFIG=$(echo "$CONFIG" | yq -o=json ".repositories[\"${{ github.repository }}\"]")
           
           if [ "$REPO_CONFIG" == "null" ]; then
@@ -57,7 +60,11 @@ jobs:
             exit 0
           fi
           
-          # Export config using GitHub Actions environment file syntax
+          # Log for debugging
+          echo "Repository config:"
+          echo "$REPO_CONFIG" | jq '.'
+          
+          # Export config
           echo 'CONFIG<<EOF' >> $GITHUB_ENV
           echo "$REPO_CONFIG" >> $GITHUB_ENV
           echo 'EOF' >> $GITHUB_ENV
