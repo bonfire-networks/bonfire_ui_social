@@ -404,12 +404,103 @@ defmodule Bonfire.UI.Social.FeedLive do
       assigns[:feed_name] || assigns[:feed_id] || assigns[:id] ||
         :default
 
+  #  TODO: make reusable for other type filters
+  defp set_type_activity(type, value, socket) do
+    set_type(:activity_types, :exclude_activity_types, type, value, socket)
+  end
+
+  #  TODO: make reusable for other type filters
+  defp set_type_object(type, value, socket) do
+    set_type(:object_types, :exclude_object_types, type, value, socket)
+  end
+
+  defp set_type(already_selected_field, already_excluded_field, type, value, socket) do
+    do_set_type(
+      e(assigns(socket), :feed_filters, already_selected_field, []),
+      e(assigns(socket), :feed_filters, already_excluded_field, []),
+      already_selected_field,
+      already_excluded_field,
+      Types.maybe_to_atom(type),
+      value,
+      socket
+    )
+  end
+
+  defp do_set_type(
+         already_selected,
+         already_excluded,
+         already_selected_field,
+         already_excluded_field,
+         type,
+         "true",
+         socket
+       ) do
+    set_filters(
+      %{
+        already_selected_field => already_selected ++ [type],
+        already_excluded_field => already_excluded |> Enum.reject(&(&1 == type))
+      },
+      socket,
+      true
+    )
+  end
+
+  defp do_set_type(
+         already_selected,
+         already_excluded,
+         already_selected_field,
+         already_excluded_field,
+         type,
+         "false",
+         socket
+       ) do
+    set_filters(
+      %{
+        already_selected_field => already_selected |> Enum.reject(&(&1 == type)),
+        already_excluded_field => already_excluded ++ [type]
+      },
+      socket,
+      true
+    )
+  end
+
+  defp do_set_type(
+         already_selected,
+         already_excluded,
+         already_selected_field,
+         already_excluded_field,
+         type,
+         value,
+         socket
+       ) do
+    set_filters(
+      %{
+        already_selected_field => already_selected |> Enum.reject(&(&1 == type)),
+        already_excluded_field => already_excluded |> Enum.reject(&(&1 == type))
+      },
+      socket,
+      true
+    )
+  end
+
+  def handle_event(
+        "set_filter",
+        %{"toggle" => field, "toggle_type" => type, "toggle_value" => value} = params,
+        socket
+      ) do
+    # warn(types, "WIP: set_types_filter")
+    case field do
+      "activity_types" -> set_type_activity(type, value, socket)
+      "object_types" -> set_type_object(type, value, socket)
+    end
+  end
+
   def handle_event(
         "set_filter",
         %{"Elixir.Bonfire.Social.Feeds" => %{"include" => types}},
         socket
       ) do
-    warn(types, "WIP: set_types_filter")
+    # warn(types, "WIP: set_types_filter")
 
     {_include_map, exclude_map} = Map.split_with(types, fn {_, v} -> v == "true" end)
 
@@ -464,28 +555,6 @@ defmodule Bonfire.UI.Social.FeedLive do
     )
   end
 
-  def set_filters(
-        attrs,
-        socket
-      ) do
-    # debug(attrs, "set_filter")
-    case FeedFilters.validate(attrs) do
-      {:ok, filters} ->
-        reload(
-          Enums.deep_merge(
-            assigns(socket)[:feed_filters] || %FeedFilters{},
-            filters
-            |> debug("validated")
-          )
-          |> debug("merged"),
-          socket
-        )
-
-      e ->
-        error(e)
-    end
-  end
-
   def handle_event(
         "set",
         attrs,
@@ -496,6 +565,31 @@ defmodule Bonfire.UI.Social.FeedLive do
       socket
       |> Bonfire.UI.Common.LiveHandlers.assign_attrs(attrs)
     )
+  end
+
+  def set_filters(
+        attrs,
+        socket,
+        replace_lists \\ false
+      ) do
+    # debug(attrs, "set_filter")
+    case FeedFilters.validate(attrs) do
+      {:ok, filters} ->
+        reload(
+          Enums.merge_to_struct(
+            FeedFilters,
+            debug(assigns(socket)[:feed_filters] || %{}, "existing filters"),
+            filters
+            |> debug("validated")
+            # replace_lists: replace_lists
+          )
+          |> debug("merged"),
+          socket
+        )
+
+      e ->
+        error(e)
+    end
   end
 
   def reload(
@@ -512,7 +606,10 @@ defmodule Bonfire.UI.Social.FeedLive do
     {
       :noreply,
       socket
-      |> assign(loading: true)
+      |> assign(
+        loading: true,
+        feed_filters: feed_filters
+      )
       # |> assign(:page_header_aside, LiveHandler.page_header_asides(...))
       |> LiveHandler.insert_feed(
         ...,

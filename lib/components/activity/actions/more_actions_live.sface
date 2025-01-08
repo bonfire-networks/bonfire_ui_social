@@ -233,7 +233,7 @@
 
     {#if @object_type in [Bonfire.Data.Social.Post, Bonfire.Data.Social.Message] or
         not is_nil(e(@object, :post_content, nil))}
-      {#if current_user_id(@__context__)}
+      {#if current_user_id(@__context__) && @object_boundary}
         <StatelessComponent
           module={maybe_component(Bonfire.UI.Social.EditPostLive)}
           object={@object}

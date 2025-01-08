@@ -85,7 +85,11 @@ defmodule Bonfire.UI.Social.FeedsLive do
 
   def nav_link_discussions(_), do: "/feed/filter/discussions"
 
-  on_mount {LivePlugs, [Bonfire.UI.Me.LivePlugs.LoadCurrentUser]}
+  on_mount {LivePlugs,
+            [
+              Bonfire.UI.Me.LivePlugs.LoadCurrentUser,
+              Bonfire.UI.Me.LivePlugs.LoadCurrentUserCircles
+            ]}
 
   def mount(_params, _session, socket) do
     {:ok,

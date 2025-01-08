@@ -20,19 +20,13 @@ defmodule Bonfire.UI.Social.FeedsFilters.Test do
       # Open filters section
       # |> click_button("Filters")
       # Toggle boost and follow filters
-      |> within("[data-id='feed_controls']", fn session ->
-        session
-        |> within("[data-scope='boosts']", fn session ->
-          session
-          |> uncheck("Boosts")
-          |> check("Boosts")
-        end)
-        |> within("[data-scope='follows']", fn session ->
-          session
-          |> uncheck("Follows")
-          |> check("Follows")
-        end)
-      end)
+
+      |> click_button("[data-toggle='boost'] button", "Only")
+      |> assert_has("[data-toggle='boost'] [data-id='enabled'].active")
+      |> click_button("[data-toggle='boost'] button", "Hide")
+      |> assert_has("[data-toggle='boost'] [data-id='disabled'].active")
+      |> click_button("[data-toggle='boost'] button", "Default")
+      |> assert_has("[data-toggle='boost'] [data-id='default'].active")
     end
 
     test "user can set time limit filters", %{} do
@@ -49,6 +43,8 @@ defmodule Bonfire.UI.Social.FeedsFilters.Test do
       end)
     end
 
+    # if this is desired?
+    @tag :todo
     test "filters persist after navigation", %{} do
       conn(user: fake_user!())
       |> visit("/feed")
@@ -56,20 +52,17 @@ defmodule Bonfire.UI.Social.FeedsFilters.Test do
       # Set some filters
       |> within("[data-scope='time_limit']", fn session ->
         session
-        |> choose("Week")
+        |> choose("Day")
       end)
-      |> within("[data-scope='boosts']", fn session ->
-        session
-        |> uncheck("Boosts")
-      end)
+      |> click_button("[data-toggle='boost'] button", "Only")
       # Navigate to another feed
-      |> click_link("Local")
+      |> click_link("nav [data-id=nav_links] a", "Local")
       |> assert_path("/feed/local")
       # Verify filters are still applied
-      # Week selected
-      |> assert_has("input[value='7']:checked")
-      # Boosts unchecked
-      |> refute_has("input[name='Elixir.Bonfire.Social.Feeds[include][boost]']:checked")
+      # Boosts checked
+      |> assert_has("[data-toggle='boost'] [data-id='enabled'].active")
+      # Day selected
+      |> assert_has("[data-scope='time_limit'] input[value='1']:checked")
     end
   end
 
@@ -129,7 +122,7 @@ defmodule Bonfire.UI.Social.FeedsFilters.Test do
       # Create an old post
       old_time = DateTime.add(DateTime.utc_now(), -60, :day)
 
-      {old_post, _} =
+      old_post =
         fake_post!(other_user, "public", %{
           post_content: %{name: "default post", html_body: "content"}
         })
@@ -138,7 +131,7 @@ defmodule Bonfire.UI.Social.FeedsFilters.Test do
       Repo.update_all("posts", set: [inserted_at: old_time])
 
       # Create a new post
-      {new_post, _} =
+      new_post =
         fake_post!(other_user, "public", %{
           post_content: %{name: "default post", html_body: "content"}
         })
@@ -186,12 +179,12 @@ defmodule Bonfire.UI.Social.FeedsFilters.Test do
   describe "feed sorting" do
     test "sorts posts by interactions", %{user: user, other_user: other_user} do
       # Create posts with different interaction counts
-      {popular_post, _} =
+      popular_post =
         fake_post!(other_user, "public", %{
           post_content: %{name: "default post", html_body: "content"}
         })
 
-      {less_popular_post, _} =
+      less_popular_post =
         fake_post!(other_user, "public", %{
           post_content: %{name: "default post", html_body: "content"}
         })
@@ -217,7 +210,7 @@ defmodule Bonfire.UI.Social.FeedsFilters.Test do
   describe "applying feed filters:" do
     test "filters out boosts when disabled", %{user: user, other_user: other_user} do
       # Create original post and boost it
-      {original_post, _} =
+      original_post =
         fake_post!(other_user, "public", %{
           post_content: %{name: "default post", html_body: "content"}
         })
@@ -230,13 +223,12 @@ defmodule Bonfire.UI.Social.FeedsFilters.Test do
       |> assert_has("[data-id=feed] article[data-verb=Boost]")
       # |> assert_has("[data-id=feed] article", count: 2)  # Original + boost - TODO: test this way with show_objects_only_once: false filter
       # |> click_button("Filters")
-      |> within("[data-scope='boosts']", fn session ->
-        session
-        |> uncheck("Boosts")
-      end)
-      |> refute_has("[data-id=feed] article[data-verb=Boost]")
 
+      |> click_button("[data-toggle='boost'] button", "Hide")
+      |> refute_has("[data-id=feed] article[data-verb=Boost]")
       # |> assert_has("[data-id=feed] article", count: 1)  # Only original
+      |> click_button("[data-toggle='boost'] button", "Only")
+      |> assert_has("[data-id=feed] article[data-verb=Boost]")
     end
   end
 

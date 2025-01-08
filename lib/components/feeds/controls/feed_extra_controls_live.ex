@@ -12,4 +12,21 @@ defmodule Bonfire.UI.Social.FeedExtraControlsLive do
   # prop sort_by, :any, default: nil
   # prop time_limit, :any, default: nil
   # prop sort_order, :any, default: false
+
+  @doc """
+  Bulk version that processes multiple values at once.
+  Returns a map of value => result for efficient lookups.
+
+  # TODO: use this once when rendering the component
+  """
+  def check_throuples(values, include, exclude) when is_list(values) do
+    activity_set = MapSet.new(include)
+    exclude_set = MapSet.new(exclude)
+
+    values
+    |> Stream.map(fn value ->
+      {value, Bonfire.UI.Social.ToggleTypeLive.check_throuple(value, activity_set, exclude_set)}
+    end)
+    |> Map.new()
+  end
 end

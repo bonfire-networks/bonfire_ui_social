@@ -7,30 +7,54 @@
 <Bonfire.UI.Social.Settings.MyFeedItemLive label={l("Follows")} key={:follow} scope={@scope} /> 
 --}
 
-  <form
-    :if={extension_enabled?(:bonfire_ui_reactions, @__context__)}
-    data-scope="boosts"
-    phx-change={@event_name}
-    phx-target={@event_target}
-  >
-    <Bonfire.UI.Common.SettingsToggleLive
+  <div :if={extension_enabled?(:bonfire_ui_reactions, @__context__)} data-scope="boosts">
+    <!-- <Bonfire.UI.Common.SettingsToggleThroupleLive
       name={l("Boosts")}
       keys={[Bonfire.Social.Feeds, :include, :boost]}
-      default_value
-      current_value={:boost not in e(@feed_filters, :exclude_activity_types, [])}
+      input={"toggle_value"}
+      default_value={nil}
+      current_value={Bonfire.UI.Social.ToggleTypeLive.check_throuple(:boost, e(@feed_filters, :activity_types, []), e(@feed_filters, :exclude_activity_types, []))}
       compact
-    />
-  </form>
+      event_target={@event_target}
+      event_name={@event_name}
+      label_yes={l("Only")}
+      label_default={l("Default")}
+      label_no={l("Hide")}
+      phx_values={%{
+        "phx-value-toggle" => "activity_types",
+        "phx-value-toggle_type" => "boost"
+      }}
+    /> -->
 
-  <form data-scope="follows" phx-change={@event_name} phx-target={@event_target}>
-    <Bonfire.UI.Common.SettingsToggleLive
-      name={l("Follows")}
-      keys={[Bonfire.Social.Feeds, :include, :follow]}
-      default_value={false}
-      current_value={:follow not in e(@feed_filters, :exclude_activity_types, [])}
-      compact
+    <Bonfire.UI.Social.ToggleTypeLive
+      label={l("Boosts")}
+      key={:boost}
+      field={:activity_types}
+      feed_filters={@feed_filters}
+      event_target={@event_target}
+      event_name={@event_name}
     />
-  </form>
+  </div>
+
+  <Bonfire.UI.Social.ToggleTypeLive
+    label={l("Follows")}
+    key={:follow}
+    field={:activity_types}
+    feed_filters={@feed_filters}
+    event_target={@event_target}
+    event_name={@event_name}
+  />
+
+  <!-- <Bonfire.UI.Social.ToggleTypeLive label={l("Likes")} key={:like} field={:activity_types} feed_filters={@feed_filters}  event_target={@event_target}  event_name={@event_name} /> -->
+
+  <Bonfire.UI.Social.ToggleTypeLive
+    label={l("Posts")}
+    key={:post}
+    field={:object_types}
+    feed_filters={@feed_filters}
+    event_target={@event_target}
+    event_name={@event_name}
+  />
 
   <!-- 
 TODO: use these from FeedFilters:

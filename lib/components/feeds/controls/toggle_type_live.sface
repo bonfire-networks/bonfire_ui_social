@@ -1,0 +1,23 @@
+<div data-toggle={@key}>
+  <Bonfire.UI.Common.SettingsToggleThroupleLive
+    name={@label}
+    keys={[Bonfire.Social.Feeds, :include, @key]}
+    input="toggle_value"
+    default_value={nil}
+    current_value={check_throuple(
+      @key,
+      e(@feed_filters, @field, []),
+      e(@feed_filters, maybe_to_atom("exclude_#{@field}"), [])
+    )}
+    compact
+    event_target={@event_target}
+    event_name={@event_name}
+    label_yes={l("Only")}
+    label_default={l("Default")}
+    label_no={l("Hide")}
+    phx_values={%{
+      "phx-value-toggle" => @field,
+      "phx-value-toggle_type" => @key
+    }}
+  />
+</div>

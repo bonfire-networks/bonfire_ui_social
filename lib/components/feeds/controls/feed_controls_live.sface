@@ -1,4 +1,5 @@
 <div
+  data-id="feed_controls"
   x-data="{open: false}"
   :class="{'bg-base-content/5': open}"
   x-transition
@@ -173,7 +174,7 @@
         field={:subject_circles}
         form_input_name={Bonfire.UI.Social.FeedLive}
         preloaded_options={Bonfire.UI.Boundaries.Web.SetBoundariesLive.circles_for_multiselect(
-          current_user(@__context__),
+          @__context__,
           :subject_circles
         )}
         implementation={:live_select}
