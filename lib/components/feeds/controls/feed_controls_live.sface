@@ -4,7 +4,12 @@
   x-transition
   class="p-2 rounded-t-xl  border-b border-base-content/10">
   <div :if={current_user_id(@__context__)} class="flex justify-between flex-1 gap-3">
-    <div data-position="bottom" phx-hook="Tooltip" id="order-dropdown" class="flex w-full flex-1">
+    <div
+      data-position="bottom"
+      phx-hook="Tooltip"
+      id="order_dropdown_feed"
+      class="flex w-full flex-1"
+    >
       <label tabindex="0" class="tooltip-button btn-sm btn flex-1 w-full btn-outline">
         {#case e(@feed_filters, :sort_by, nil)}
           {#match :num_replies}
@@ -30,44 +35,64 @@
         {/case}
       </label>
       <ul tabindex="0" class="tooltip z-[999] bonfire-dropdown-menu  w-60 absolute top-0 left-0 hidden">
-        <li phx-click="set_filter" phx-value-sort_by="nil" phx-target={@event_target}>
-          <a class={
-            "flex gap-3 px-2 text-base-content",
-            "active !text-base-content/100 font-semibold": is_nil(e(@feed_filters, :sort_by, nil))
-          }>
+        <li>
+          <a
+            phx-click="set_filter"
+            phx-value-sort_by="nil"
+            phx-target={@event_target}
+            class={
+              "flex gap-3 px-2 text-base-content",
+              "active !text-base-content/100 font-semibold": is_nil(e(@feed_filters, :sort_by, nil))
+            }
+          >
             <#Icon iconify="mdi:order-alphabetical-ascending" class="w-4 h-4" />
             {l("Chronological")}
           </a></li>
 
-        <li phx-click="set_filter" phx-value-sort_by="num_replies" phx-target={@event_target}>
-          <a class={
-            "flex gap-3 px-2 text-base-content",
-            "active !text-base-content/100 font-semibold": e(@feed_filters, :sort_by, nil) == :num_replies
-          }>
+        <li>
+          <a
+            phx-click="set_filter"
+            phx-value-sort_by="num_replies"
+            phx-target={@event_target}
+            class={
+              "flex gap-3 px-2 text-base-content",
+              "active !text-base-content/100 font-semibold": e(@feed_filters, :sort_by, nil) == :num_replies
+            }
+          >
             <#Icon iconify="basil:comment-outline" class="w-4 h-4 stroke-1 fill-base-content/50" />
             {l("By amount of replies")}</a></li>
 
         {#if extension_enabled?(:bonfire_ui_reactions, @__context__)}
-          <li phx-click="set_filter" phx-value-sort_by="num_boosts" phx-target={@event_target}>
-            <a class={
-              "flex gap-3 px-2 text-base-content",
-              "active !text-base-content/100 font-semibold": e(@feed_filters, :sort_by, nil) == :num_boosts
-            }>
+          <li>
+            <a
+              phx-click="set_filter"
+              phx-value-sort_by="num_boosts"
+              phx-target={@event_target}
+              class={
+                "flex gap-3 px-2 text-base-content",
+                "active !text-base-content/100 font-semibold": e(@feed_filters, :sort_by, nil) == :num_boosts
+              }
+            >
               <#Icon iconify="system-uicons:retweet" class="w-4 h-4 stroke-1 fill-base-content/50" />
               {l("By amount of boosts")}</a></li>
 
-          <li phx-click="set_filter" phx-value-sort_by="num_likes" phx-target={@event_target}>
-            <a class={
-              "flex gap-3 px-2 text-base-content",
-              "active !text-base-content/100 font-semibold": e(@feed_filters, :sort_by, nil) == :num_likes
-            }>
+          <li>
+            <a
+              phx-click="set_filter"
+              phx-value-sort_by="num_likes"
+              phx-target={@event_target}
+              class={
+                "flex gap-3 px-2 text-base-content",
+                "active !text-base-content/100 font-semibold": e(@feed_filters, :sort_by, nil) == :num_likes
+              }
+            >
               <#Icon iconify="mingcute:fire-line" class="w-4 h-4" />
               {l("By amount of likes")}</a></li>
         {/if}
       </ul>
     </div>
 
-    <div data-position="bottom" phx-hook="Tooltip" class="flex-1" id="sort_timing_thread">
+    <div data-position="bottom" phx-hook="Tooltip" class="flex-1" id="sort_timing_feed">
       <label tabindex="0" class="tooltip-button w-full btn-sm btn btn-outline">
         <!-- {l("Order")} -->
 
@@ -80,18 +105,28 @@
         {/if}
       </label>
       <ul tabindex="0" class="tooltip z-[999] bonfire-dropdown-menu w-52 absolute top-0 left-0 hidden">
-        <li phx-click="set_filter" phx-value-sort_order="desc" phx-target={@event_target}><a class={
-            "flex gap-3 px-2 text-base-content",
-            "active !text-base-content/100 font-semibold": e(@feed_filters, :sort_order, nil) != :asc
-          }>
+        <li><a
+            phx-click="set_filter"
+            phx-value-sort_order="desc"
+            phx-target={@event_target}
+            class={
+              "flex gap-3 px-2 text-base-content",
+              "active !text-base-content/100 font-semibold": e(@feed_filters, :sort_order, nil) != :asc
+            }
+          >
             <#Icon iconify="octicon:sort-desc-16" class="w-4 h-4" />
             {if e(@feed_filters, :sort_by, nil) in [nil, :latest_reply],
               do: l("Newest first"),
               else: l("Most first")}</a></li>
-        <li phx-click="set_filter" phx-value-sort_order="asc" phx-target={@event_target}><a class={
-            "flex gap-3 px-2 text-base-content",
-            "active !text-base-content/100 font-semibold": e(@feed_filters, :sort_order, nil) == :asc
-          }>
+        <li><a
+            phx-click="set_filter"
+            phx-value-sort_order="asc"
+            phx-target={@event_target}
+            class={
+              "flex gap-3 px-2 text-base-content",
+              "active !text-base-content/100 font-semibold": e(@feed_filters, :sort_order, nil) == :asc
+            }
+          >
             <#Icon iconify="octicon:sort-asc-16" class="w-4 h-4" />
             {if e(@feed_filters, :sort_by, nil) in [nil, :latest_reply],
               do: l("Oldest first"),

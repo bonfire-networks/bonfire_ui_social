@@ -164,10 +164,13 @@
             </div>
           {/if}
         {#else}
-          {#if is_integer(@time_limit) and @time_limit != 0}
+          {#if is_integer(e(@feed_filters, :time_limit, nil)) and e(@feed_filters, :time_limit, nil) != 0}
             <div class="">
-              <p class="text-sm py-4 mt-4 text-center text-base-content/70 font-medium">{lp("That's all for today...", "That's all for the last %{number} days...", @time_limit,
-                  number: @time_limit
+              <p class="text-sm py-4 mt-4 text-center text-base-content/70 font-medium">{lp(
+                  "That's all for today...",
+                  "That's all for the last %{number} days...",
+                  e(@feed_filters, :time_limit, nil),
+                  number: e(@feed_filters, :time_limit, nil)
                 )}</p>
 
               {!-- TODO: instead of switching to infinity, switch 1 level up from current limit, eg. from day to week --}

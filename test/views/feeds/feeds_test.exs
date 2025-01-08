@@ -1,4 +1,4 @@
-defmodule Bonfire.Social.Feeds.Test do
+defmodule Bonfire.UI.Social.Feeds.Test do
   use Bonfire.UI.Social.ConnCase, async: true
   alias Bonfire.Social.Fake
   alias Bonfire.Social.Boosts
@@ -38,7 +38,7 @@ defmodule Bonfire.Social.Feeds.Test do
 
     live_pubsub_wait(view)
     #  open_browser(view)
-    assert has_element?(view, "[data-id=feed]", reply_content)
+    assert has_element?(view, "[data-id=feed] article", reply_content)
 
     # view |> open_browser()
   end

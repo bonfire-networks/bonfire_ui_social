@@ -2,9 +2,7 @@
   <Bonfire.UI.Social.FeedExtraControlsLive
     event_target={@event_target}
     feed_name={@feed_name}
-    sort_by={@sort_by}
-    time_limit={@time_limit}
-    sort_order={@sort_order}
+    feed_filters={@feed_filters}
     showing_within={@showing_within}
   />
 </Bonfire.UI.Common.WidgetBlockLive>

@@ -1,4 +1,4 @@
-defmodule Bonfire.Social.Feeds.Benchmark.Test do
+defmodule Bonfire.UI.Social.Feeds.Benchmark.Test do
   use Bonfire.UI.Social.ConnCase, async: false
 
   @tag :benchmark

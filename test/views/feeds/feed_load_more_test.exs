@@ -1,4 +1,4 @@
-defmodule Bonfire.Social.Feeds.LoadMoreTest do
+defmodule Bonfire.UI.Social.Feeds.LoadMoreTest do
   use Bonfire.UI.Social.ConnCase, async: true
   alias Bonfire.Social.Fake
   alias Bonfire.Social.Boosts
