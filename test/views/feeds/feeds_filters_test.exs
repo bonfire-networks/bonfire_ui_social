@@ -170,7 +170,7 @@ defmodule Bonfire.UI.Social.FeedsFilters.Test do
     test "shows posts flagged by another user (as mod)", %{user: user, other_user: other_user} do
       {post, flag} = create_test_content(:flagged_content, user, other_user)
 
-      conn(user: user)
+      conn(user: fake_admin!())
       |> visit("/settings/instance/flags")
       |> assert_has("[data-id=feed] article", text: "flagged post")
     end
@@ -218,13 +218,17 @@ defmodule Bonfire.UI.Social.FeedsFilters.Test do
       booster = fake_user!("booster")
       {:ok, boost} = Bonfire.Social.Boosts.boost(booster, original_post)
 
-      conn(user: user)
-      |> visit("/feed/local")
-      |> assert_has("[data-id=feed] article[data-verb=Boost]")
-      # |> assert_has("[data-id=feed] article", count: 2)  # Original + boost - TODO: test this way with show_objects_only_once: false filter
-      # |> click_button("Filters")
+      session =
+        conn(user: user)
+        |> visit("/feed/local")
+        |> assert_has("[data-id=feed] article[data-verb=Boost]")
+        # |> assert_has("[data-id=feed] article", count: 2)  # Original + boost - TODO: test this way with show_objects_only_once: false filter
+        # |> click_button("Filters")
+        |> click_button("[data-toggle='boost'] button", "Hide")
 
-      |> click_button("[data-toggle='boost'] button", "Hide")
+      live_async_wait(session)
+
+      session
       |> refute_has("[data-id=feed] article[data-verb=Boost]")
       # |> assert_has("[data-id=feed] article", count: 1)  # Only original
       |> click_button("[data-toggle='boost'] button", "Only")

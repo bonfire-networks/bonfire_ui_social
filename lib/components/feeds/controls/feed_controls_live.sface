@@ -40,11 +40,12 @@
         <li>
           <a
             phx-click="set_filter"
-            phx-value-sort_by="nil"
+            phx-value-sort_by="date_created"
             phx-target={@event_target}
             class={
               "flex gap-3 px-2 text-base-content",
-              "active !text-base-content/100 font-semibold": is_nil(e(@feed_filters, :sort_by, nil))
+              "active !text-base-content/100 font-semibold":
+                is_nil(e(@feed_filters, :sort_by, nil)) or e(@feed_filters, :sort_by, nil) == :date_created
             }
           >
             <#Icon iconify="mdi:order-alphabetical-ascending" class="w-4 h-4" />

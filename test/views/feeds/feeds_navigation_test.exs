@@ -10,36 +10,30 @@ defmodule Bonfire.UI.Social.FeedsNavigation.Test do
     test "user can navigate between different feed types", %{} do
       conn(user: fake_user!())
       |> visit("/")
-      |> within("data-id[nav_links]", fn session ->
-        session
-        |> click_link("Following")
-        |> assert_path("/feed/my")
-        |> click_link("Local")
-        |> assert_path("/feed/local")
-        |> click_link("Remote")
-        |> assert_path("/feed/fediverse")
-        |> click_link("Posts")
-        |> assert_path("/feed/my/posts")
-        |> click_link("Discussions")
-        |> assert_path("/feed/my/discussions")
-      end)
+      |> click_link("nav [data-id=nav_links] a", "Following")
+      |> assert_path("/feed/my")
+      |> click_link("nav [data-id=nav_links] a", "Local")
+      |> assert_path("/feed/local")
+      |> click_link("nav [data-id=nav_links] a", "Remote")
+      |> assert_path("/feed/fediverse")
+      |> click_link("nav [data-id=nav_links] a", "Posts")
+      |> assert_path("/feed/filter/posts")
+      |> click_link("nav [data-id=nav_links] a", "Discussions")
+      |> assert_path("/feed/filter/discussions")
     end
 
     test "user can apply different sorting options", %{} do
       conn(user: fake_user!())
       |> visit("/feed")
       # Open the sort dropdown and select different options
-      |> within("#order_dropdown_feed", fn session ->
-        session
-        |> click_link("By amount of replies")
-        |> assert_has(".active", text: "By amount of replies")
-        |> click_link("By amount of boosts")
-        |> assert_has(".active", text: "By amount of boosts")
-        |> click_link("By amount of likes")
-        |> assert_has(".active", text: "By amount of likes")
-        |> click_link("Chronological")
-        |> assert_has(".active", text: "Chronological")
-      end)
+      |> click_link("#order_dropdown_feed a", "By amount of replies")
+      |> assert_has("#order_dropdown_feed label", text: "By amount of replies")
+      |> click_link("#order_dropdown_feed a", "By amount of boosts")
+      |> assert_has("#order_dropdown_feed label", text: "By amount of boosts")
+      |> click_link("#order_dropdown_feed a", "By amount of likes")
+      |> assert_has("#order_dropdown_feed label", text: "By amount of likes")
+      |> click_link("#order_dropdown_feed a", "Chronological")
+      |> assert_has("#order_dropdown_feed label", text: "Chronological")
     end
 
     test "user can change sort order", %{} do

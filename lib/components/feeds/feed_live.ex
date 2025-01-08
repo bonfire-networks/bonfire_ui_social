@@ -485,13 +485,13 @@ defmodule Bonfire.UI.Social.FeedLive do
 
   def handle_event(
         "set_filter",
-        %{"toggle" => field, "toggle_type" => type, "toggle_value" => value} = params,
+        %{"toggle" => field, "toggle_type" => type} = params,
         socket
       ) do
     # warn(types, "WIP: set_types_filter")
     case field do
-      "activity_types" -> set_type_activity(type, value, socket)
-      "object_types" -> set_type_object(type, value, socket)
+      "activity_types" -> set_type_activity(type, params["toggle_value"], socket)
+      "object_types" -> set_type_object(type, params["toggle_value"], socket)
     end
   end
 
