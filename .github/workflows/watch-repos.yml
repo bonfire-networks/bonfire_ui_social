@@ -133,11 +133,10 @@ jobs:
           
           echo "Starting full repository ingestion..."
           
-          # Call the ingest-repo endpoint
-          if ! call_api "${{ steps.config.outputs.osiris_url }}/api/ingest-repo" "{
+          # Initialize ingestion
+          response=$(call_api "${{ steps.config.outputs.osiris_url }}/api/ingest-repo" "{
             \"repo\": \"${{ github.repository }}\",
             \"branch\": \"${{ github.ref_name }}\",
-            \"forceReplace\": true,
             \"metadata\": {
               \"repository\": \"${{ github.repository }}\",
               \"branch\": \"${{ github.ref_name }}\",
@@ -146,10 +145,15 @@ jobs:
               \"process_timestamp\": \"$(date -u +"%Y-%m-%dT%H:%M:%SZ")\",
               \"config\": $CONFIG
             }
-          }"; then
-            echo "::error::Failed to perform full repository ingestion"
-            exit 1
-          fi
+          }")
+          
+          # Process each batch
+          echo "$response" | jq -r '.batchUrls[]' | while read -r batch_url; do
+            echo "Processing batch: $batch_url"
+            curl -s "$batch_url"
+            # Add small delay between batches
+            sleep 2
+          done
 
       - name: Process Incremental Changes
         if: >-
