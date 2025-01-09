@@ -161,7 +161,7 @@ defmodule Bonfire.Social.UI.Feeds.MyFeed.Test do
 
       attrs = %{
         post_content: %{
-          html_body: attrs[:post_content][:html_body]
+          html_body: "epic html message"
         }
       }
 
@@ -220,7 +220,7 @@ defmodule Bonfire.Social.UI.Feeds.MyFeed.Test do
     conn = conn(user: bob, account: account)
     next = "/feed"
     {:ok, view, html} = live(conn, next)
-    open_browser(view)
+    Phoenix.LiveViewTest.open_browser(view)
 
     assert 2 ==
              html
