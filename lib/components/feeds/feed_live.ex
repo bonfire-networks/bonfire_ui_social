@@ -538,6 +538,28 @@ defmodule Bonfire.UI.Social.FeedLive do
     )
   end
 
+  def handle_event(
+        "live_select_change",
+        %{"text" => text, "id" => live_select_id, "field" => field},
+        socket
+      ) do
+    options =
+      case field do
+        "subject_circles" ->
+          Bonfire.UI.Boundaries.Web.SetBoundariesLive.circles_for_multiselect(
+            socket.assigns.__context__,
+            :subject_circles,
+            text
+          )
+
+        _ ->
+          []
+      end
+
+    send_update(LiveSelect.Component, id: live_select_id, options: options)
+    {:noreply, socket}
+  end
+
   def handle_event("multi_select", %{data: selected}, socket) when is_list(selected) do
     filters =
       Enum.group_by(selected, fn %{} = data -> data["field"] end)
@@ -603,7 +625,7 @@ defmodule Bonfire.UI.Social.FeedLive do
 
     feed_name = feed_name(assigns(socket))
 
-    # if feed_name in [:my, :explore, :fediverse, :local], do: 
+    # if feed_name in [:my, :explore, :fediverse, :local], do:
     send_self(widgets(e(assigns(socket), nil)))
 
     {

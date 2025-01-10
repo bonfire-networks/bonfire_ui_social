@@ -1223,7 +1223,7 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
           return_assigns_socket_tuple: true
         ]
 
-    # FIXME: can't just use the first component's assigns to define our opts, but rather check all of them and group by different opts (specifically preloads) and execute them separately (in parallel), or merge them 
+    # FIXME: can't just use the first component's assigns to define our opts, but rather check all of them and group by different opts (specifically preloads) and execute them separately (in parallel), or merge them
     {current_user, opts} =
       opts_for_update_many_async(List.first(assigns_sockets), opts)
 
@@ -1299,7 +1299,7 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
             live_update_many_preload_mode: :user_async_or_skip
           ]
 
-      # FIXME: can't just use the first component's assigns to define our opts, but rather check all of them and group by different opts (specifically preloads) and execute them separately (in parallel), or merge them 
+      # FIXME: can't just use the first component's assigns to define our opts, but rather check all of them and group by different opts (specifically preloads) and execute them separately (in parallel), or merge them
       {current_user, opts} =
         opts_for_update_many_async(List.first(assigns_sockets), opts)
 
@@ -1423,16 +1423,16 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
         [:feed, :with_media, :with_object_more, :maybe_with_labelled]
 
       {:feed_by_creator, _} ->
-        [:with_object_more, :feed_postload]
+        [:with_object_more, :feed_postload, :post_content]
 
       {:feed_by_subject, _} ->
-        [:feed_by_subject, :feed_postload]
+        [:feed_by_subject, :feed_postload, :post_content]
 
       {:media, _} ->
         [:per_media, :with_creator, :with_post_content]
 
       _ ->
-        [:feed_by_subject, :feed_postload]
+        [:feed_by_subject, :feed_postload, :post_content]
     end
     |> debug("whatpreloads")
   end

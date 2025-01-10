@@ -22,7 +22,7 @@
     </label>
     <ul
       tabindex="0"
-      class="!block w-64 z-[910] relative shadow menu md:menu-compact dropdown-content text-base-content bg-base-200 rounded-lg"
+      class="!block w-64 z-[910] relative shadow menu md:menu-sm dropdown-content text-base-content bg-base-200 rounded-lg"
     >
       <li>
         <Bonfire.UI.Common.OpenModalLive

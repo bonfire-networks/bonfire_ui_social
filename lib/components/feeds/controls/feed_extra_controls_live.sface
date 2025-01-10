@@ -1,6 +1,5 @@
-<div class="flex flex-col gap-2">
-  {!-- <span class="font-medium text-sm text-base-content/80">{l("Included activities")}</span> --}
-
+<div class="flex flex-col gap-1">
+  <span class="font-semibold uppercase text-xs text-base-content/60 pb-2 border-b border-base-content/10 mb-2">{l("Activity types")}</span>
   <div :if={extension_enabled?(:bonfire_ui_reactions, @__context__)} data-scope="boosts">
     <Bonfire.UI.Social.ToggleTypeLive
       label={l("Boosts")}
@@ -86,7 +85,7 @@
 </div>
 
 <div :if={:sort_by not in @hide_filters} class="flex flex-col gap-2 pt-3">
-  <span class="font-medium text-sm text-base-content/80">{l("Sort by")}</span>
+  <span class="font-semibold uppercase text-xs text-base-content/60 pb-2 border-b border-base-content/10 mb-2">{l("Sort by")}</span>
   <StatelessComponent
     module={maybe_component(Bonfire.UI.Social.SortItemsLive, @__context__)}
     scope={:user}
@@ -99,7 +98,7 @@
 </div>
 
 <div class="flex flex-col gap-2 pt-3">
-  <span class="font-medium text-sm text-base-content/80">{l("Limit to")}</span>
+  <span class="font-semibold uppercase text-xs text-base-content/60 pb-2 border-b border-base-content/10 mb-2">{l("Limit to")}</span>
   <Bonfire.UI.Social.Settings.TimeSortItemsLive
     scope={:user}
     feed_name={@feed_name}

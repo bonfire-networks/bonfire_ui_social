@@ -92,7 +92,7 @@
                       type="button"
                       @click="expanded = !expanded"
                       x-text="expanded ? 'Read less' : 'Read more'"
-                      class="link text-sm mt-2 font-semibold link-hover link-primary normal-case"
+                      class="link text-sm mt-2 font-medium link-hover link-primary normal-case"
                     >{l("Read more")}</button>
                   </div>
               {/case}

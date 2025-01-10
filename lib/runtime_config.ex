@@ -28,8 +28,8 @@ defmodule Bonfire.UI.Social.RuntimeConfig do
       ],
       profile: [
         sections: [
-          timeline: Bonfire.UI.Social.ProfileTimelineLive,
-          objects: Bonfire.UI.Social.ProfileTimelineLive
+          timeline: Bonfire.UI.Social.ProfileTimelineLive
+          # objects: Bonfire.UI.Social.ProfileTimelineLive
           # private: Bonfire.UI.Messages.MessageThreadsLive,
         ],
         navigation: [
