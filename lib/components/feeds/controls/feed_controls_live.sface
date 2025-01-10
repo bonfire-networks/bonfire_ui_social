@@ -1,7 +1,7 @@
 <div
   data-id="feed_controls"
   x-data="{open: false}"
-  :class="{'bg-base-content/5': open}"
+  :class="{'bg-base-content/5 bg-opacity-[0.02]': open}"
   x-transition
   class="p-2 rounded-t-xl  border-b border-base-content/10"
 >
@@ -139,6 +139,7 @@
 
     <div
       class="flex justify-between flex-1 text-center btn btn-sm btn-outline items-center"
+      :class="{'btn-active': open}"
       role="banner"
       @click="open = ! open"
     >
@@ -152,19 +153,29 @@
   </div>
 
   <div x-transition x-cloak x-show="open" class="flex p-4 flex-col gap-2">
-    <Bonfire.UI.Social.FeedExtraControlsLive
-      event_target={@event_target}
-      event_name="set_filter"
-      feed_id={@feed_id}
-      feed_name={@feed_name}
-      feed_filters={@feed_filters}
-      hide_filters={[:sort_by]}
-      showing_within={@showing_within}
-    />
+    <span class="font-semibold mt-4 uppercase text-xs text-base-content/60 pb-2 border-b border-base-content/10 mb-2">{l("By Circles")}</span>
 
-    <span class="font-semibold mt-6 uppercase text-xs text-base-content/60 pb-2 border-b border-base-content/10 mb-2">{l("By Circles")}</span>
+    <div class="flex items-center gap-2 mb-6 w-full flex-1 flex-wrap">
+      <button
+        :for={circle <-
+          Bonfire.UI.Boundaries.Web.SetBoundariesLive.circles_for_multiselect(
+            @__context__,
+            :subject_circles
+          )}
+        type="button"
+        phx-click="set_filter"
+        phx-value-subject_circles={elem(circle, 1)[:id]}
+        phx-target={@event_target}
+        class={
+          "btn btn-outline btn-sm rounded-full",
+          "btn-active": elem(circle, 1)[:id] in List.wrap(e(@feed_filters, :subject_circles, []))
+        }
+      >
+        {elem(circle, 1)[:name]}
+      </button>
+    </div>
 
-    <form
+    <!-- <form
       :if={module_enabled?(Bonfire.UI.Boundaries.Web.SetBoundariesLive)}
       phx-change="multi_select"
     >
@@ -179,7 +190,17 @@
         mode={:quick_tags}
         label={l("Search for one or more circles")}
       />
-    </form>
+    </form> -->
+
+    <Bonfire.UI.Social.FeedExtraControlsLive
+      event_target={@event_target}
+      event_name="set_filter"
+      feed_id={@feed_id}
+      feed_name={@feed_name}
+      feed_filters={@feed_filters}
+      hide_filters={[:sort_by]}
+      showing_within={@showing_within}
+    />
 
     <span class="font-semibold mt-6 uppercase text-xs text-base-content/60 pb-2 border-b border-base-content/10 mb-2">{l("By Users")}</span>
     <form phx-change="multi_select">

@@ -518,6 +518,30 @@ defmodule Bonfire.UI.Social.FeedLive do
 
   def handle_event(
         "set_filter",
+        %{"subject_circles" => circle_id} = params,
+        socket
+      )
+      when not is_nil(circle_id) do
+    current_circles = e(socket.assigns, :feed_filters, :subject_circles, [])
+
+    updated_circles =
+      if circle_id in current_circles do
+        List.delete(current_circles, circle_id)
+      else
+        [circle_id | current_circles]
+      end
+      |> Enum.uniq()
+
+    set_filters(
+      %{
+        subject_circles: updated_circles
+      },
+      socket
+    )
+  end
+
+  def handle_event(
+        "set_filter",
         %{"Elixir.Bonfire.UI.Social.FeedLive" => attrs},
         socket
       ) do
@@ -558,6 +582,26 @@ defmodule Bonfire.UI.Social.FeedLive do
 
     send_update(LiveSelect.Component, id: live_select_id, options: options)
     {:noreply, socket}
+  end
+
+  def handle_event("toggle_circle_filter", %{"circle_id" => circle_id}, socket) do
+    current_circles = e(socket.assigns, :feed_filters, :subject_circles, [])
+
+    updated_circles =
+      if circle_id in current_circles do
+        List.delete(current_circles, circle_id)
+      else
+        [circle_id | current_circles] |> Enum.uniq()
+      end
+
+    set_filters(
+      %{
+        "Elixir.Bonfire.UI.Social.FeedLive" => %{
+          subject_circles: updated_circles
+        }
+      },
+      socket
+    )
   end
 
   def handle_event("multi_select", %{data: selected}, socket) when is_list(selected) do
