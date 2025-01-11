@@ -485,6 +485,7 @@ defmodule Bonfire.UI.Social.FeedLive do
     )
   end
 
+
   def handle_event(
         "set_filter",
         %{"toggle" => field, "toggle_type" => type} = params,
@@ -561,6 +562,7 @@ defmodule Bonfire.UI.Social.FeedLive do
       socket
     )
   end
+
 
   def handle_event(
         "live_select_change",

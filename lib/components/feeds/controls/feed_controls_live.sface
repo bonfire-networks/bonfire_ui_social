@@ -143,7 +143,7 @@
       role="banner"
       @click="open = ! open"
     >
-      <div>{l("Filters")}</div>
+      <div>{l("More filters")}</div>
       <label class="">
         {!-- <input type="checkbox" /> --}
         <span x-show="!open"><#Icon solid="ChevronDown" class="fill-current w-5 h-5 opacity-80" /></span>
@@ -153,6 +153,13 @@
   </div>
 
   <div x-transition x-cloak x-show="open" class="flex p-4 flex-col gap-2">
+    <span class="font-semibold mt-2 uppercase text-xs text-base-content/60 pb-2 border-b border-base-content/10 mb-2">{l("Federation")}</span>
+    <div class="flex items-center gap-2">
+      <button class="btn btn-outline btn-sm rounded-full">{l "Local"}</button>
+      <button class="btn btn-outline btn-sm rounded-full">{l "Federated"}</button>
+      <button class="btn btn-outline btn-sm rounded-full">{l "All"}</button>
+    </div>
+
     <span class="font-semibold mt-4 uppercase text-xs text-base-content/60 pb-2 border-b border-base-content/10 mb-2">{l("By Circles")}</span>
 
     <div class="flex items-center gap-2 mb-6 w-full flex-1 flex-wrap">
@@ -213,5 +220,9 @@
         mode={:quick_tags}
       />
     </form>
+    <div class="justify-end gap-3 flex items-center mt-4">
+      <button phx-target={@event_target} class="btn btn-sm ">{l "Save preset"}</button> 
+      <button phx-click="reset_filter" phx-target={@event_target} class="btn btn-sm btn-outline">{l "Reset"}</button>  
+    </div>
   </div>
 </div>
