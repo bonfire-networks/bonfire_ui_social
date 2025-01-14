@@ -31,7 +31,7 @@ defmodule Bonfire.UI.Social.FeedsLive do
   )
 
   # declare_nav_link(l("My feed"), page: "feed", icon: "heroicons-solid:newspaper")
-  declare_nav_link([
+  declare_nav_link(
     # NOTE: sticky feed, see https://github.com/bonfire-networks/bonfire-app/issues/901
     # {
     #   l("Feed"),
@@ -44,14 +44,14 @@ defmodule Bonfire.UI.Social.FeedsLive do
     #   #  href: &nav_link_feed/1
     # }, 
 
-    {
-      l("Feeds"),
+    l("Feeds"),
+    %{
       page: "feed",
       icon: "ph:rss-simple-bold",
       href: &nav_link_feed/1,
       sub_links: [
         {l("Following"), page: "following", href: "/feed/my", icon: "carbon:home"},
-        {l("Explore"), page: "following", href: "/feed/explore", icon: "carbon:explore"},
+        {l("Explore"), page: "explore", href: "/feed/explore", icon: "carbon:explore"},
         {l("Local"),
          page: "local", href: "/feed/local", icon: "material-symbols:camping-rounded"},
         {l("Remote"), page: "fediverse", href: "/feed/fediverse", icon: "el:network"},
@@ -75,7 +75,7 @@ defmodule Bonfire.UI.Social.FeedsLive do
         # icon_active: "ri:seedling-fill"}
       ]
     }
-  ])
+  )
 
   def nav_link_feed(context),
     do: "/feed/#{Settings.get([Bonfire.UI.Social.FeedLive, :default_feed], nil, context)}"
