@@ -85,7 +85,7 @@
       </div>
 
       <div class="max-w-full text-sm break-words line-clamp-3 text-base-content/70">
-        {Bonfire.Files.Media.description(@media)}
+        {raw(Text.maybe_sane_html(Bonfire.Files.Media.description(@media)))}
       </div>
       <!-- {e(@media, :metadata, "location", "name", nil)} {e(@media, :metadata, "startDate", nil)} -->
     </div>
