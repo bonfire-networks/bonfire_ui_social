@@ -153,34 +153,8 @@
   </div>
 
   <div x-transition x-cloak x-show="open" class="flex p-4 flex-col gap-2">
-    <span class="font-semibold mt-2 uppercase text-xs text-base-content/60 pb-2 border-b border-base-content/10 mb-2">{l("Federation")}</span>
-    <div class="flex items-center gap-2">
-      <button class="btn btn-outline btn-sm rounded-full">{l("Local")}</button>
-      <button class="btn btn-outline btn-sm rounded-full">{l("Federated")}</button>
-      <button class="btn btn-outline btn-sm rounded-full">{l("All")}</button>
-    </div>
-
-    <span class="font-semibold mt-4 uppercase text-xs text-base-content/60 pb-2 border-b border-base-content/10 mb-2">{l("By Circles")}</span>
-
-    <div class="flex items-center gap-2 mb-6 w-full flex-1 flex-wrap">
-      <button
-        :for={circle <-
-          Bonfire.UI.Boundaries.Web.SetBoundariesLive.circles_for_multiselect(
-            @__context__,
-            :subject_circles
-          )}
-        type="button"
-        phx-click="set_filter"
-        phx-value-subject_circles={elem(circle, 1)[:id]}
-        phx-target={@event_target}
-        class={
-          "btn btn-outline btn-sm rounded-full",
-          "btn-active": elem(circle, 1)[:id] in List.wrap(e(@feed_filters, :subject_circles, []))
-        }
-      >
-        {elem(circle, 1)[:name]}
-      </button>
-    </div>
+   
+    
 
     <!-- <form
       :if={module_enabled?(Bonfire.UI.Boundaries.Web.SetBoundariesLive)}
@@ -209,7 +183,7 @@
       showing_within={@showing_within}
     />
 
-    <span class="font-semibold mt-6 uppercase text-xs text-base-content/60 pb-2 border-b border-base-content/10 mb-2">{l("By Users")}</span>
+    <!-- <span class="font-semibold mt-6 uppercase text-xs text-base-content/60 pb-2 border-b border-base-content/10 mb-2">{l("By Users")}</span>
     <form phx-change="multi_select">
       <Bonfire.UI.Common.MultiselectLive.UserSelectorLive
         selected_options={[]}
@@ -219,7 +193,7 @@
         implementation={:live_select}
         mode={:quick_tags}
       />
-    </form>
+    </form> -->
     <div class="justify-end gap-3 flex items-center mt-4">
       <button phx-target={@event_target} class="btn btn-sm">{l("Save preset")}</button>
       <button phx-click="reset_filter" phx-target={@event_target} class="btn btn-sm btn-outline">{l("Reset")}</button>
