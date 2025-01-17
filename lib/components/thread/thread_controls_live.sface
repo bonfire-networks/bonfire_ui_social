@@ -10,7 +10,10 @@
           <span class="hidden lg:block">{l("Threaded replies")}</span>
         {/if}
       </label>
-      <ul tabindex="0" class="tooltip z-[999] menu bg-base-100 shadow-lg border rounded-xl border-base-content/10   w-52 absolute top-0 left-0 hidden">
+      <ul
+        tabindex="0"
+        class="tooltip z-[999] menu bg-base-100 shadow-lg border rounded-xl border-base-content/10   w-52 absolute top-0 left-0 hidden"
+      >
         <li
           phx-click="set"
           phx-value-to_atoms="true"
@@ -78,7 +81,10 @@
             </span>
         {/case}
       </label>
-      <ul tabindex="0" class="tooltip z-[999] menu bg-base-100 shadow-lg border rounded-xl border-base-content/10   w-60 absolute top-0 left-0 hidden">
+      <ul
+        tabindex="0"
+        class="tooltip z-[999] menu bg-base-100 shadow-lg border rounded-xl border-base-content/10   w-60 absolute top-0 left-0 hidden"
+      >
         <li
           phx-click="set"
           phx-value-to_atoms="true"
@@ -168,7 +174,10 @@
           <span class="hidden lg:block">{l("Newest first")}</span>
         {/if}
       </label>
-      <ul tabindex="0" class="tooltip z-[999] menu bg-base-100 shadow-lg border rounded-xl border-base-content/10  w-52 absolute top-0 left-0 hidden">
+      <ul
+        tabindex="0"
+        class="tooltip z-[999] menu bg-base-100 shadow-lg border rounded-xl border-base-content/10  w-52 absolute top-0 left-0 hidden"
+      >
         <li
           phx-click="set"
           phx-value-to_atoms="true"

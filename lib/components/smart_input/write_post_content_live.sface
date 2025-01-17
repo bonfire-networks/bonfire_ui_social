@@ -43,15 +43,15 @@
         class="hidden"
         id="smart_input_post_title"
       >
-      <div class="p-2">
-        <Inputs for={:post_content}>
-          <label class="input w-full">
-            <#Icon iconify="ri:alert-fill" class="w-4 h-4" />
-            <Field name={:summary}>
-              <input type="text" placeholder={l "Enter an optional content warning"} />
-            </Field>
-          </label>
-        </Inputs>
+        <div class="p-2">
+          <Inputs for={:post_content}>
+            <label class="input w-full">
+              <#Icon iconify="ri:alert-fill" class="w-4 h-4" />
+              <Field name={:summary}>
+                <input type="text" placeholder={l("Enter an optional content warning")}>
+              </Field>
+            </label>
+          </Inputs>
         </div>
       </div>
 

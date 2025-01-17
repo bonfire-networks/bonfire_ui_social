@@ -1,6 +1,6 @@
 <div
   data-id="feed_controls"
-   x-data="{
+  x-data="{
     open: false
   }"
   class="p-2 rounded-t-xl  pb-0"
@@ -36,7 +36,10 @@
             </span>
         {/case}
       </label>
-      <ul tabindex="0" class="tooltip z-[999] menu bg-base-100 shadow-lg border rounded-xl border-base-content/10   w-60 absolute top-0 left-0 hidden">
+      <ul
+        tabindex="0"
+        class="tooltip z-[999] menu bg-base-100 shadow-lg border rounded-xl border-base-content/10   w-60 absolute top-0 left-0 hidden"
+      >
         <li>
           <a
             phx-click="set_filter"
@@ -107,7 +110,10 @@
           <span class="hidden lg:block">{l("Newest first")}</span>
         {/if}
       </label>
-      <ul tabindex="0" class="tooltip z-[999] menu bg-base-100 shadow-lg border rounded-xl border-base-content/10  w-52 absolute top-0 left-0 hidden">
+      <ul
+        tabindex="0"
+        class="tooltip z-[999] menu bg-base-100 shadow-lg border rounded-xl border-base-content/10  w-52 absolute top-0 left-0 hidden"
+      >
         <li><a
             phx-click="set_filter"
             phx-value-sort_order="desc"
@@ -153,9 +159,6 @@
   </div>
 
   <div x-collapse x-show="open" class="flex p-4 flex-col gap-2">
-   
-    
-
     <!-- <form
       :if={module_enabled?(Bonfire.UI.Boundaries.Web.SetBoundariesLive)}
       phx-change="multi_select"

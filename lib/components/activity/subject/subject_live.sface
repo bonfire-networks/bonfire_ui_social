@@ -75,10 +75,7 @@
         </div>
       </:actions>
     </Bonfire.UI.Me.UserPreviewLive> -->
-  <div
-    data-id="subject_details"
-    class="flex gap-2 w-full feed-clickable justify-start"
-  >
+  <div data-id="subject_details" class="flex gap-2 w-full feed-clickable justify-start">
     <div
       class="flex items-center flex-1 gap-2"
       role="button"

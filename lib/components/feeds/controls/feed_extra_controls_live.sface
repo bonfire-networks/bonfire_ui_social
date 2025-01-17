@@ -1,33 +1,32 @@
 <div class="flex flex-col gap-1 w-full">
- <span class="font-semibold mt-2 uppercase text-xs text-base-content/60 pb-2 border-b border-base-content/10 mb-2">{l("Federation")}</span>
-    <div class="flex items-center gap-2">
-      <button class="btn btn-soft btn-secondary btn-sm rounded-full">{l("Local")}</button>
-      <button class="btn btn-soft btn-secondary btn-sm rounded-full">{l("Federated")}</button>
-      <button class="btn btn-soft btn-secondary btn-sm rounded-full">{l("All")}</button>
-    </div>
+  <span class="font-semibold mt-2 uppercase text-xs text-base-content/60 pb-2 border-b border-base-content/10 mb-2">{l("Federation")}</span>
+  <div class="flex items-center gap-2">
+    <button class="btn btn-soft btn-secondary btn-sm rounded-full">{l("Local")}</button>
+    <button class="btn btn-soft btn-secondary btn-sm rounded-full">{l("Federated")}</button>
+    <button class="btn btn-soft btn-secondary btn-sm rounded-full">{l("All")}</button>
+  </div>
 
-    <span class="font-semibold mt-4 uppercase text-xs text-base-content/60 pb-2 border-b border-base-content/10 mb-2">{l("By Circles")}</span>
+  <span class="font-semibold mt-4 uppercase text-xs text-base-content/60 pb-2 border-b border-base-content/10 mb-2">{l("By Circles")}</span>
 
-
-<div class="flex items-center gap-2 mb-6 w-full flex-1 flex-wrap">
-      <button
-        :for={circle <-
-          Bonfire.UI.Boundaries.Web.SetBoundariesLive.circles_for_multiselect(
-            @__context__,
-            :subject_circles
-          )}
-        type="button"
-        phx-click="set_filter"
-        phx-value-subject_circles={elem(circle, 1)[:id]}
-        phx-target={@event_target}
-        class={
-          "btn btn-soft btn-secondary btn-sm rounded-full",
-          "btn-active": elem(circle, 1)[:id] in List.wrap(e(@feed_filters, :subject_circles, []))
-        }
-      >
-        {elem(circle, 1)[:name]}
-      </button>
-    </div>
+  <div class="flex items-center gap-2 mb-6 w-full flex-1 flex-wrap">
+    <button
+      :for={circle <-
+        Bonfire.UI.Boundaries.Web.SetBoundariesLive.circles_for_multiselect(
+          @__context__,
+          :subject_circles
+        )}
+      type="button"
+      phx-click="set_filter"
+      phx-value-subject_circles={elem(circle, 1)[:id]}
+      phx-target={@event_target}
+      class={
+        "btn btn-soft btn-secondary btn-sm rounded-full",
+        "btn-active": elem(circle, 1)[:id] in List.wrap(e(@feed_filters, :subject_circles, []))
+      }
+    >
+      {elem(circle, 1)[:name]}
+    </button>
+  </div>
 
   <span class="font-semibold uppercase text-xs text-base-content/60 pb-2 border-b border-base-content/10 mb-2">{l("Activity types")}</span>
   <div :if={extension_enabled?(:bonfire_ui_reactions, @__context__)} data-scope="boosts">
