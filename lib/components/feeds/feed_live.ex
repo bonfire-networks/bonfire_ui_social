@@ -57,8 +57,7 @@ defmodule Bonfire.UI.Social.FeedLive do
   prop feed_filters, :any, default: nil
   # prop time_limit, :any, default: nil
   # prop sort_order, :any, default: false
-  prop activity_preloads, :list, default: []
-  prop activity_loaded_preloads, :list, default: []
+  prop activity_preloads, :tuple, default: {nil, nil}
 
   prop hide_fresh, :integer, default: 0
   prop feed_count, :any, default: nil

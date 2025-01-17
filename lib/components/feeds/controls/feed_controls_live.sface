@@ -153,9 +153,6 @@
   </div>
 
   <div x-transition x-cloak x-show="open" class="flex p-4 flex-col gap-2">
-   
-    
-
     <!-- <form
       :if={module_enabled?(Bonfire.UI.Boundaries.Web.SetBoundariesLive)}
       phx-change="multi_select"

@@ -59,8 +59,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
   prop subject_user, :any, default: nil
   prop peered, :any, default: nil
   prop hide_actions, :any, default: false
-  prop activity_preloads, :list, default: []
-  prop activity_loaded_preloads, :list, default: []
+  prop activity_preloads, :tuple, default: {nil, nil}
   prop custom_preview, :any, default: nil
 
   def update_many(assigns_sockets) do

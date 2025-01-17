@@ -91,7 +91,6 @@
               hide_activity={@hide_activities}
               subject_user={@subject_user}
               activity_preloads={@activity_preloads}
-              activity_loaded_preloads={@activity_loaded_preloads}
             />
           </div>
         {/for}
@@ -123,7 +122,6 @@
               class={@activity_class}
               subject_user={@subject_user}
               activity_preloads={@activity_preloads}
-              activity_loaded_preloads={@activity_loaded_preloads}
             />
           </div>
         {/for}

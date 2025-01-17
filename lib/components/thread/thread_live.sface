@@ -55,7 +55,6 @@
               showing_within={@showing_within || :thread}
               activity_inception={@activity_inception}
               activity_preloads={@activity_preloads}
-              activity_loaded_preloads={@activity_loaded_preloads}
             />
           </div>
         {/for}
@@ -76,7 +75,6 @@
                 showing_within={@showing_within || :thread}
                 activity_inception={@activity_inception}
                 activity_preloads={@activity_preloads}
-                activity_loaded_preloads={@activity_loaded_preloads}
               />
             {/for}
           </div>
@@ -95,7 +93,6 @@
                   showing_within={@showing_within || :thread}
                   activity_inception={@activity_inception}
                   activity_preloads={@activity_preloads}
-                  activity_loaded_preloads={@activity_loaded_preloads}
                 />
               </div>
             {/for}

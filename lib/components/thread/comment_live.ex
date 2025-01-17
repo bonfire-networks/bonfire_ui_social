@@ -21,8 +21,7 @@ defmodule Bonfire.UI.Social.CommentLive do
   prop activity_inception, :any, default: nil
   prop ui_compact, :any, default: nil
 
-  prop activity_preloads, :list, default: []
-  prop activity_loaded_preloads, :list, default: []
+  prop activity_preloads, :tuple, default: {nil, nil}
 
   def render(assigns) do
     assigns
