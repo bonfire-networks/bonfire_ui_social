@@ -1,9 +1,9 @@
 <div
   data-id="feed_controls"
-  x-data="{open: false}"
-  :class="{'bg-base-content/5 bg-opacity-[0.02]': open}"
-  x-transition
-  class="p-2 rounded-t-xl  border-b border-base-content/10"
+   x-data="{
+    open: false
+  }"
+  class="p-2 rounded-t-xl  pb-0"
 >
   <div :if={current_user_id(@__context__)} class="flex justify-between flex-1 gap-3">
     <div
@@ -12,7 +12,7 @@
       id="order_dropdown_feed"
       class="flex w-full flex-1"
     >
-      <label tabindex="0" class="tooltip-button btn-sm btn flex-1 w-full btn-outline">
+      <label tabindex="0" class="tooltip-button btn-sm btn flex-1 w-full">
         {#case e(@feed_filters, :sort_by, nil)}
           {#match :num_replies}
             <span class="flex gap-3 px-2  items-center">
@@ -26,17 +26,17 @@
             </span>
           {#match :num_likes}
             <span class="flex gap-3 px-2  items-center">
-              <#Icon iconify="mingcute:fire-line" class="h-[20px] w-[18px]" />
+              <#Icon iconify="mingcute:fire-line" class="h-[20px] w-[18px] text-base.content/50" />
               <span class="hidden lg:block">{l("Most liked")}</span>
             </span>
           {#match _}
             <span class="flex gap-3 px-2  items-center">
-              <#Icon iconify="mdi:order-alphabetical-ascending" class="w-4 h-4" />
+              <#Icon iconify="mdi:order-alphabetical-ascending" class="w-4 h-4 text-base-content/50" />
               <span class="hidden lg:block">{l("Chronological")}</span>
             </span>
         {/case}
       </label>
-      <ul tabindex="0" class="tooltip z-[999] bonfire-dropdown-menu  w-60 absolute top-0 left-0 hidden">
+      <ul tabindex="0" class="tooltip z-[999] menu bg-base-100 shadow-lg border rounded-xl border-base-content/10   w-60 absolute top-0 left-0 hidden">
         <li>
           <a
             phx-click="set_filter"
@@ -96,7 +96,7 @@
     </div>
 
     <div data-position="bottom" phx-hook="Tooltip" class="flex-1" id="sort_timing_feed">
-      <label tabindex="0" class="tooltip-button w-full btn-sm btn btn-outline">
+      <label tabindex="0" class="tooltip-button w-full btn-sm btn">
         <!-- {l("Order")} -->
 
         {#if e(@feed_filters, :sort_order, nil) == :asc}
@@ -107,7 +107,7 @@
           <span class="hidden lg:block">{l("Newest first")}</span>
         {/if}
       </label>
-      <ul tabindex="0" class="tooltip z-[999] bonfire-dropdown-menu w-52 absolute top-0 left-0 hidden">
+      <ul tabindex="0" class="tooltip z-[999] menu bg-base-100 shadow-lg border rounded-xl border-base-content/10  w-52 absolute top-0 left-0 hidden">
         <li><a
             phx-click="set_filter"
             phx-value-sort_order="desc"
@@ -138,7 +138,7 @@
     </div>
 
     <div
-      class="flex justify-between flex-1 text-center btn btn-sm btn-outline items-center"
+      class="flex justify-between flex-1 text-center btn btn-sm items-center"
       :class="{'btn-active': open}"
       role="banner"
       @click="open = ! open"
@@ -152,7 +152,10 @@
     </div>
   </div>
 
-  <div x-transition x-cloak x-show="open" class="flex p-4 flex-col gap-2">
+  <div x-collapse x-show="open" class="flex p-4 flex-col gap-2">
+   
+    
+
     <!-- <form
       :if={module_enabled?(Bonfire.UI.Boundaries.Web.SetBoundariesLive)}
       phx-change="multi_select"
@@ -192,8 +195,8 @@
       />
     </form> -->
     <div class="justify-end gap-3 flex items-center mt-4">
-      <button phx-target={@event_target} class="btn btn-sm">{l("Save preset")}</button>
-      <button phx-click="reset_filter" phx-target={@event_target} class="btn btn-sm btn-outline">{l("Reset")}</button>
+      <button phx-target={@event_target} class="btn btn-soft btn-primary btn-sm">{l("Save preset")}</button>
+      <button phx-click="reset_filter" phx-target={@event_target} class="btn btn-soft btn-sm">{l("Reset")}</button>
     </div>
   </div>
 </div>

@@ -1,7 +1,7 @@
 <div class="p-2  border-b border-base-content/10 border-t mt-2">
   <div :if={current_user_id(@__context__)} class="flex justify-between flex-1 gap-3">
     <div data-position="bottom" phx-hook="Tooltip" id="layout-dropdown" class="flex-1">
-      <label tabindex="0" class="tooltip-button btn w-full btn-outline btn-sm">
+      <label tabindex="0" class="tooltip-button btn w-full btn-soft btn-sm">
         {#if @thread_mode == :flat}
           <#Icon iconify="fa-solid:list" class="w-4 h-4" />
           <span class="hidden lg:block">{l("Flat list")}</span>
@@ -10,7 +10,7 @@
           <span class="hidden lg:block">{l("Threaded replies")}</span>
         {/if}
       </label>
-      <ul tabindex="0" class="tooltip z-[999] bonfire-dropdown-menu  w-52 absolute top-0 left-0 hidden">
+      <ul tabindex="0" class="tooltip z-[999] menu bg-base-100 shadow-lg border rounded-xl border-base-content/10   w-52 absolute top-0 left-0 hidden">
         <li
           phx-click="set"
           phx-value-to_atoms="true"
@@ -42,7 +42,7 @@
     </div>
 
     <div data-position="bottom" phx-hook="Tooltip" id="order-dropdown" class="flex w-full flex-1">
-      <label tabindex="0" class="tooltip-button btn-sm btn flex-1 w-full btn-outline">
+      <label tabindex="0" class="tooltip-button btn-sm btn flex-1 w-full btn-soft">
         {#case @sort_by}
           {#match :latest_reply}
             {#if @thread_mode == :flat}
@@ -78,7 +78,7 @@
             </span>
         {/case}
       </label>
-      <ul tabindex="0" class="tooltip z-[999] bonfire-dropdown-menu  w-60 absolute top-0 left-0 hidden">
+      <ul tabindex="0" class="tooltip z-[999] menu bg-base-100 shadow-lg border rounded-xl border-base-content/10   w-60 absolute top-0 left-0 hidden">
         <li
           phx-click="set"
           phx-value-to_atoms="true"
@@ -157,7 +157,7 @@
     </div>
 
     <div data-position="bottom" phx-hook="Tooltip" class="flex-1" id="sort_timing_thread">
-      <label tabindex="0" class="tooltip-button w-full btn-sm btn btn-outline">
+      <label tabindex="0" class="tooltip-button w-full btn-sm btn btn-soft">
         <!-- {l("Order")} -->
 
         {#if @sort_order == :asc}
@@ -168,7 +168,7 @@
           <span class="hidden lg:block">{l("Newest first")}</span>
         {/if}
       </label>
-      <ul tabindex="0" class="tooltip z-[999] bonfire-dropdown-menu w-52 absolute top-0 left-0 hidden">
+      <ul tabindex="0" class="tooltip z-[999] menu bg-base-100 shadow-lg border rounded-xl border-base-content/10  w-52 absolute top-0 left-0 hidden">
         <li
           phx-click="set"
           phx-value-to_atoms="true"

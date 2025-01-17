@@ -28,8 +28,8 @@
     style={"left: #{reply * 6}px"}
     :for={reply <- 0..(@thread_level - 1)}
     class={
-      "absolute left-0 cursor-pointer top-0 border-l-2 bottom-0 border-primary border-opacity-30 z-30",
-      "border-thread-active": reply == @thread_level - 1
+      "absolute left-0 cursor-pointer top-0 border-l-2 bottom-0 border-primary/30 z-30",
+      "!border-primary": reply == @thread_level - 1
     }
   />
 
@@ -62,7 +62,7 @@
   <div data-role="comment-activity" class="flex-1 w-full" x-data="{reply: false, show: true}">
     {#if is_nil(@activity)}
       <!-- <div class="mx-4 my-2">
-        <div class="alert alert-info" role="alert">
+        <div class="alert alert-info alert-soft" role="alert">
           <#Icon solid="InformationCircle" class="w-5 h-5 shrink-0" />
           <span class="">{l("This comment was deleted.")}</span>
         </div>

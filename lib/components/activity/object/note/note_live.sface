@@ -71,7 +71,7 @@
                     data-rendered={@showing_within}
                     data-main-object={@viewing_main_object}
                     class={
-                      "prose prose-sm break-words object_body max-w-none prose-a:text-primary prose-a:no-underline",
+                      "prose break-words object_body max-w-none prose-a:text-primary prose-a:no-underline prose-p:mb-0 prose-p:mt-0",
                       previewable_truncate: !@viewing_main_object
                     }
                     :class="{'previewable_expanded': expanded}"

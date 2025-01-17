@@ -43,21 +43,16 @@
         class="hidden"
         id="smart_input_post_title"
       >
+      <div class="p-2">
         <Inputs for={:post_content}>
-          <div class="relative p-2 border-b bg-base-100 border-base-content/10">
-            <#Icon iconify="ri:alert-fill" class="absolute w-5 h-5 stroke-1 top-[14px] left-3 text-warning" />
-            <label for="title" class="sr-only">{l("Title")}</label>
+          <label class="input w-full">
+            <#Icon iconify="ri:alert-fill" class="w-4 h-4" />
             <Field name={:summary}>
-              <TextInput
-                opts={
-                  placeholder: l("Enter an optional content warning"),
-                  "phx-debounce": "blur"
-                }
-                class="w-full h-8 pl-10 text-sm bg-transparent rounded input"
-              />
+              <input type="text" placeholder={l "Enter an optional content warning"} />
             </Field>
-          </div>
+          </label>
         </Inputs>
+        </div>
       </div>
 
       <WriteEditorLive
