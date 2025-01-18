@@ -160,13 +160,13 @@
 
   <div x-collapse x-show="open" class="flex p-4 flex-col gap-2">
     <!-- <form
-      :if={module_enabled?(Bonfire.UI.Boundaries.Web.SetBoundariesLive)}
+      :if={module_enabled?(Bonfire.UI.Boundaries.SetBoundariesLive)}
       phx-change="multi_select"
     >
       <Bonfire.UI.Common.MultiselectLive
         field={:subject_circles}
         form_input_name={Bonfire.UI.Social.FeedLive}
-        preloaded_options={Bonfire.UI.Boundaries.Web.SetBoundariesLive.circles_for_multiselect(
+        preloaded_options={Bonfire.UI.Boundaries.SetBoundariesLive.circles_for_multiselect(
           @__context__,
           :subject_circles
         )}

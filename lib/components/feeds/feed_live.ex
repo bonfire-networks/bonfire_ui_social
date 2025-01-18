@@ -569,7 +569,7 @@ defmodule Bonfire.UI.Social.FeedLive do
     options =
       case field do
         "subject_circles" ->
-          Bonfire.UI.Boundaries.Web.SetBoundariesLive.circles_for_multiselect(
+          Bonfire.UI.Boundaries.SetBoundariesLive.circles_for_multiselect(
             socket.assigns.__context__,
             :subject_circles,
             text

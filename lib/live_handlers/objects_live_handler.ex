@@ -31,6 +31,39 @@ defmodule Bonfire.Social.Objects.LiveHandler do
     end
   end
 
+  def handle_event("share", %{"boundary" => boundary} = params, socket) do
+    current_user = current_user(assigns(socket))
+
+    thing =
+      ed(assigns(socket), params["object_assign"] || :object, nil)
+      |> debug()
+
+    creator =
+      e(thing, :creator, nil) || e(thing, :created, :creator, nil) ||
+        e(thing, :created, :creator_id, nil) || e(thing, :caretaker, :caretaker, nil) ||
+        e(thing, :caretaker, :caretaker_id, nil) || e(thing, :provider, nil)
+
+    cond do
+      id(creator) != id(current_user) ->
+        error(creator, "Not allowed")
+
+      is_struct(thing) ->
+        # TODO: check permission
+        with {:ok, _} <-
+               Objects.publish(current_user, :boost, thing,
+                 to_boundaries: boundary,
+                 to_circles: params["to"]
+               ) do
+          {:noreply,
+           socket
+           |> assign_flash(:info, l("Done!"))}
+        end
+
+      true ->
+        error("No object to publish")
+    end
+  end
+
   def handle_event("delete", %{"id" => id} = _params, socket) do
     with {:ok, _} <-
            Objects.delete(id,
@@ -257,16 +290,22 @@ defmodule Bonfire.Social.Objects.LiveHandler do
   def not_found_fallback(id, params, socket) do
     debug(id, "not found")
 
+    current_url =
+      current_url(socket)
+      |> String.trim("#")
+      |> debug("current_url")
+
     case Bonfire.Common.URIs.remote_canonical_url(id) do
-      url when is_binary(url) ->
+      url when is_binary(url) and url != current_url ->
         debug(url, "remote object - redirect to canonical")
 
         socket
         |> redirect_to(url)
 
       _ ->
-        canonical_path = path(id)
-        current_url = current_url(socket)
+        canonical_path =
+          path(id)
+          |> debug("canonical_path")
 
         if canonical_path && current_url && canonical_path != current_url do
           socket

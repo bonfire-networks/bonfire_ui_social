@@ -11,7 +11,7 @@
   <div class="flex items-center gap-2 mb-6 w-full flex-1 flex-wrap">
     <button
       :for={circle <-
-        Bonfire.UI.Boundaries.Web.SetBoundariesLive.circles_for_multiselect(
+        Bonfire.UI.Boundaries.SetBoundariesLive.circles_for_multiselect(
           @__context__,
           :subject_circles
         )}
