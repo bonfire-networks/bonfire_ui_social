@@ -1,6 +1,7 @@
 <div
   data-id="activity_note"
-  x-data="{expanded: false, expandable: $refs.note && $refs.note.scrollHeight > $refs.note.clientHeight}"
+  x-data="{expanded: false, expandable: false}"
+  x-init="$nextTick(() => { expandable = $refs.note && $refs.note.scrollHeight > $refs.note.clientHeight })"
   data-rendered={@showing_within}
   data-main-object={@viewing_main_object}
   class={
