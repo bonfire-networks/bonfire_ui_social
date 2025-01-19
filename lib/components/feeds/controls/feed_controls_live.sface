@@ -1,4 +1,4 @@
-<div data-id="feed_controls" x-data="{open: false}" class="p-2 rounded-t-xl  pb-0">
+<div data-id="feed_controls" id="feed_controls" x-data="{open: false}" class="p-2 rounded-t-xl  pb-0">
   <div :if={current_user_id(@__context__)} class="flex justify-between flex-1 gap-3">
     <div
       data-position="bottom"
