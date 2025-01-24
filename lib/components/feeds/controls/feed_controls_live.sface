@@ -15,22 +15,22 @@
         {#case e(@feed_filters, :sort_by, nil)}
           {#match :num_replies}
             <span class="flex gap-3 px-2  items-center">
-              <#Icon iconify="basil:comment-outline" class="w-4 h-4 stroke-1 fill-base-content/50" />
+              <#Icon iconify="basil:comment-outline" class="w-4 h-4" />
               <span class="hidden lg:block">{l("Most replied")}</span>
             </span>
           {#match :num_boosts}
             <span class="flex gap-3 px-2  items-center">
-              <#Icon iconify="system-uicons:retweet" class="w-4 h-4 stroke-1 fill-base-content/50" />
+              <#Icon iconify="system-uicons:retweet" class="w-4 h-4" />
               <span class="hidden lg:block">{l("Most boosted")}</span>
             </span>
           {#match :num_likes}
             <span class="flex gap-3 px-2  items-center">
-              <#Icon iconify="mingcute:fire-line" class="h-[20px] w-[18px] text-base.content/50" />
+              <#Icon iconify="mingcute:fire-line" class="h-[20px] w-[18px]" />
               <span class="hidden lg:block">{l("Most liked")}</span>
             </span>
           {#match _}
             <span class="flex gap-3 px-2  items-center">
-              <#Icon iconify="mdi:order-alphabetical-ascending" class="w-4 h-4 text-base-content/50" />
+              <#Icon iconify="mdi:order-alphabetical-ascending" class="w-4 h-4" />
               <span class="hidden lg:block">{l("Chronological")}</span>
             </span>
         {/case}
@@ -129,7 +129,10 @@
       role="banner"
       @click="open = ! open"
     >
-      <div>{l("More filters")}</div>
+      <div class="flex items-center gap-2">
+        <#Icon iconify="carbon:filter" class="w-4 h-4" />
+        <span class="hidden lg:block">{l("More filters")}</span>
+      </div>
       <label class="">
         {!-- <input type="checkbox" /> --}
         <span x-show="!open"><#Icon solid="ChevronDown" class="fill-current w-5 h-5 opacity-80" /></span>
