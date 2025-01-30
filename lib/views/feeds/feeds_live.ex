@@ -26,6 +26,7 @@ defmodule Bonfire.UI.Social.FeedsLive do
       Bonfire.UI.Social.NotificationsFeedLive,
       Bonfire.UI.Me.ProfileLive,
       Bonfire.UI.Groups.ExploreLive,
+      Bonfire.PanDoRa.Components.SidebarPandoraLive,
       Bonfire.UI.Groups.SidebarGroupsLive
     ]
   )
@@ -42,7 +43,7 @@ defmodule Bonfire.UI.Social.FeedsLive do
     #   href: "/feed",
     #   phx_hook: "Bonfire.UI.Common.PreviewContentLive#PreviewExtra"
     #   #  href: &nav_link_feed/1
-    # }, 
+    # },
 
     l("Feeds"),
     %{
@@ -64,8 +65,8 @@ defmodule Bonfire.UI.Social.FeedsLive do
           icon_active: "ri:chat-2-fill"
         }
         # {l("Discussions"),
-        #  page: "discussions", 
-        # #  href: &nav_link_discussions/1, 
+        #  page: "discussions",
+        # #  href: &nav_link_discussions/1,
         #  icon: "ri:discuss-line"}
 
         # {l("Moderation"),
