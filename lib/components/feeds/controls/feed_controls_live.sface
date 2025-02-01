@@ -1,17 +1,12 @@
-<div
-  data-id="feed_controls"
-  id="feed_controls"
-  x-data="{open: false}"
-  class="p-2 rounded-t-xl  pb-0"
->
-  <div :if={current_user_id(@__context__)} class="flex justify-between flex-1 gap-3">
+<div data-id="feed_controls" id="feed_controls" x-data="{open: false}" class="p-2 rounded-t-xl">
+  <div :if={current_user_id(@__context__)} class="flex justify-between flex-1 gap-1">
     <div
       data-position="bottom-end"
       phx-hook="Tooltip"
       id="order_dropdown_feed"
       class="flex w-full flex-1"
     >
-      <label tabindex="0" class="tooltip-button btn-sm btn flex-1 w-full">
+      <label tabindex="0" class="tooltip-button btn w-full btn-soft btn-sm">
         {#case e(@feed_filters, :sort_by, nil)}
           {#match :num_replies}
             <span class="flex gap-3 px-2  items-center">
@@ -85,7 +80,7 @@
     </div>
 
     <div data-position="bottom" phx-hook="Tooltip" class="flex-1" id="sort_timing_feed">
-      <label tabindex="0" class="tooltip-button w-full btn-sm btn">
+      <label tabindex="0" class="tooltip-button btn w-full btn-soft btn-sm">
         <!-- {l("Order")} -->
 
         {#if e(@feed_filters, :sort_order, nil) == :asc}
@@ -124,7 +119,7 @@
     </div>
 
     <div
-      class="flex justify-between flex-1 text-center btn btn-sm items-center"
+      class="flex justify-between flex-1 text-center btn-soft btn btn-sm items-center"
       :class="{'btn-active': open}"
       role="banner"
       @click="open = ! open"

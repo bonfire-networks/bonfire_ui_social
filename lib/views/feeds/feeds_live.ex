@@ -51,18 +51,14 @@ defmodule Bonfire.UI.Social.FeedsLive do
       icon: "ph:rss-simple-bold",
       href: &nav_link_feed/1,
       sub_links: [
-        {l("Following"), page: "following", href: "/feed/my", icon: "carbon:home"},
-        {l("Explore"), page: "explore", href: "/feed/explore", icon: "carbon:explore"},
-        {l("Local"),
-         page: "local", href: "/feed/local", icon: "material-symbols:camping-rounded"},
-        {l("Remote"), page: "fediverse", href: "/feed/fediverse", icon: "el:network"},
+        {l("Following"), page: "following", href: "/feed/my", icon: "ic:baseline-rss-feed"},
+        {l("Explore"), page: "explore", href: "/feed/explore", icon: "ic:baseline-rss-feed"},
+        {l("Local"), page: "local", href: "/feed/local", icon: "ic:baseline-rss-feed"},
+        {l("Remote"), page: "fediverse", href: "/feed/fediverse", icon: "ic:baseline-rss-feed"},
         {
           l("Posts"),
           #  href: &nav_link_posts/1,
-          page: "posts",
-          href: "/feed/posts",
-          icon: "ri:chat-2-line",
-          icon_active: "ri:chat-2-fill"
+          page: "posts", href: "/feed/posts", icon: "ic:baseline-rss-feed"
         }
         # {l("Discussions"),
         #  page: "discussions",
