@@ -59,33 +59,35 @@
       </div>
     {/if}
 
-    <div class="p-2 flex flex-col w-full gap-1 flex-1">
-      <div data-id="media_author" class="text-sm">
-        <span class="text-sm badge badge-accent rounded bg-accent/30 border-none !text-accent capitalize mr-1">{e(@media, :media_type, nil) || l("link")}</span>
-
-        {e(@media, :metadata, "oembed", "author_name", nil)}
-
-        {#case e(@media, :metadata, "oembed", "published", "date-parts", nil)}
-          {#match nil}
-          {#match []}
-          {#match published}
-            <span class="text-base-content/70">{published |> DatesTimes.format_date(format: "MMMM d, Y")}</span>
-        {/case}
-
-        {#case MediaLive.provider(@media)}
-          {#match nil}
-          {#match provider}
-            <span class="text-base-content/70">{provider}</span>
-        {/case}
-      </div>
-
-      <div data-id="media_title" class="text-lg line-clamp-2 font-semibold">
+    <div class="p-2 pt-0 flex flex-col w-full gap-1 flex-1">
+      <div data-id="media_title" class="text-base line-clamp-2 font-semibold">
         {Bonfire.Files.Media.media_label(@media) ||
           if @media.media_type == "link", do: e(@media, :path, nil), else: l("View")}
       </div>
 
       <div class="max-w-full text-sm break-words line-clamp-3 text-base-content/70">
         {raw(Text.maybe_sane_html(Bonfire.Files.Media.description(@media)))}
+      </div>
+      <div data-id="media_author" class="text-xs pt-2 mt-2 border-t border-base-content/10">
+        <!-- <span class="text-sm badge badge-accent rounded bg-accent/30 border-none !text-accent capitalize mr-1">{e(@media, :media_type, nil) || l("link")}</span> -->
+
+        <!-- {e(@media, :metadata, "oembed", "author_name", nil)} -->
+        <!--       
+        {#case e(@media, :metadata, "oembed", "published", "date-parts", nil)}
+          {#match nil}
+          {#match []}
+          {#match published}
+            <span class="text-base-content/70">{published |> DatesTimes.format_date(format: "MMMM d, Y")}</span>
+        {/case} -->
+
+        {#case MediaLive.provider(@media)}
+          {#match nil}
+          {#match provider}
+            <div class="flex items-center gap-2">
+              <#Icon iconify="ph:globe" class="w-4 h-4 text-base-content/70" />
+              <span class="text-base-content/70">{provider}</span>
+            </div>
+        {/case}
       </div>
       <!-- {e(@media, :metadata, "location", "name", nil)} {e(@media, :metadata, "startDate", nil)} -->
     </div>
