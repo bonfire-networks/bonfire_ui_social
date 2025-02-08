@@ -23,11 +23,13 @@
     viewing_main_object={@viewing_main_object}
   />
 
+  <!-- ADD THE REACTION EMOJI PICKER HERE -->
+
   <div
     data-id="activity_actions"
     data-rendered={@showing_within}
     data-main-object={@viewing_main_object}
-    class="feed_actions order-last h-8"
+    class="feed_actions order-last"
     data-hide={@hide_actions}
   >
     <div
@@ -120,6 +122,11 @@
                 :object_count,
                 nil
               )}
+            />
+
+            <StatelessComponent
+              module={maybe_component(Bonfire.UI.Reactions.EmojiReactionsLive, @__context__)}
+              object_id={id(@object)}
             />
 
             <StatelessComponent
