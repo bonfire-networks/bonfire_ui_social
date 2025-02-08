@@ -55,21 +55,7 @@ defmodule Bonfire.UI.Social.FeedsLive do
         {l("Explore"), page: "explore", href: "/feed/explore", icon: "ic:baseline-rss-feed"},
         {l("Local"), page: "local", href: "/feed/local", icon: "ic:baseline-rss-feed"},
         {l("Remote"), page: "fediverse", href: "/feed/fediverse", icon: "ic:baseline-rss-feed"},
-        {
-          l("Posts"),
-          #  href: &nav_link_posts/1,
-          page: "posts", href: "/feed/posts", icon: "ic:baseline-rss-feed"
-        }
-        # {l("Discussions"),
-        #  page: "discussions",
-        # #  href: &nav_link_discussions/1,
-        #  icon: "ri:discuss-line"}
-
-        # {l("Moderation"),
-        # page: "moderation",
-        # href: &nav_link_feed/1,
-        # icon: "ri:seedling-line",
-        # icon_active: "ri:seedling-fill"}
+        {l("Posts"), page: "posts", href: "/feed/posts", icon: "ic:baseline-rss-feed"}
       ]
     }
   )

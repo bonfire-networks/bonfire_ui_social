@@ -37,7 +37,7 @@
             media_url={media_url}
             media={m}
             download_url={e(m.metadata, "oembed", "download_url", nil) || e(m.metadata, "download_url", nil)}
-            preview_img={preview_img(m) |> debug("preview_imgsss")}
+            preview_img={preview_img(m)}
             css_borders={@css_borders}
             small_icon={@small_icon}
             showing_within={@showing_within}

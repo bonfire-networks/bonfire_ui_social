@@ -164,7 +164,7 @@
         {#else}
           {#if is_integer(e(@feed_filters, :time_limit, nil)) and e(@feed_filters, :time_limit, nil) != 0}
             <div class="">
-              <p class="text-sm py-4 mt-4 text-center text-base-content/70 font-medium">{lp(
+              <p class="text-sm py-4 mt-4 text-center text-base-content/50 font-medium">{lp(
                   "That's all for today...",
                   "That's all for the last %{number} days...",
                   e(@feed_filters, :time_limit, nil),
@@ -186,7 +186,7 @@
               {#else}
                 <div :if={socket_connected?(@__context__)} class="w-full flex items-center justify-center mb-4">
                   <button
-                    class="normal-case btn btn-outline"
+                    class="normal-case btn btn-soft btn-secondary"
                     phx-click="set"
                     phx-value-to_integers="true"
                     phx-value-time_limit={0}

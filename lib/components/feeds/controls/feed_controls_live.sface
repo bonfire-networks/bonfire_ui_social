@@ -1,4 +1,9 @@
-<div data-id="feed_controls" id="feed_controls" x-data="{open: false}" class="p-2 rounded-t-xl">
+<div
+  data-id="feed_controls"
+  id="feed_controls"
+  x-data="{open: false}"
+  class="p-2 rounded-t-xl border-b border-base-content/10 relative feed_control_wrapper"
+>
   <div :if={current_user_id(@__context__)} class="flex justify-between flex-1 gap-1">
     <div
       data-position="bottom-end"
@@ -118,42 +123,15 @@
       </ul>
     </div>
 
-    <div
-      class="flex justify-between flex-1 text-center btn-soft btn btn-sm items-center"
-      :class="{'btn-active': open}"
-      role="banner"
-      @click="open = ! open"
-    >
-      <div class="flex items-center gap-2">
+    <div class="flex-1" :class="{'btn-active': open}" role="banner" @click="open = ! open">
+      <div class="tooltip-button btn w-full btn-soft btn-sm">
         <#Icon iconify="carbon:filter" class="w-4 h-4" />
         <span class="hidden lg:block">{l("More filters")}</span>
       </div>
-      <label class="">
-        {!-- <input type="checkbox" /> --}
-        <span x-show="!open"><#Icon solid="ChevronDown" class="fill-current w-5 h-5 opacity-80" /></span>
-        <span x-cloak x-show="open"><#Icon solid="ChevronUp" class="fill-current w-5 h-5 opacity-80" /></span>
-      </label>
     </div>
   </div>
 
   <div x-cloak x-show="open" x-collapse.duration.200ms class="flex p-4 flex-col gap-2">
-    <!-- <form
-      :if={module_enabled?(Bonfire.UI.Boundaries.SetBoundariesLive)}
-      phx-change="multi_select"
-    >
-      <Bonfire.UI.Common.MultiselectLive
-        field={:subject_circles}
-        form_input_name={Bonfire.UI.Social.FeedLive}
-        preloaded_options={Bonfire.UI.Boundaries.SetBoundariesLive.circles_for_multiselect(
-          @__context__,
-          :subject_circles
-        )}
-        implementation={:live_select}
-        mode={:quick_tags}
-        label={l("Search for one or more circles")}
-      />
-    </form> -->
-
     <Bonfire.UI.Social.FeedExtraControlsLive
       event_target={@event_target}
       event_name="set_filter"
@@ -178,6 +156,12 @@
     <div class="justify-end gap-3 flex items-center mt-4">
       <button phx-target={@event_target} class="btn btn-soft btn-primary btn-sm">{l("Save preset")}</button>
       <button phx-click="reset_filter" phx-target={@event_target} class="btn btn-soft btn-sm">{l("Reset")}</button>
+    </div>
+
+    <div class="mt-4 flex items-center place-content-center">
+      <button @click="open = false" class="btn btn-circle btn-soft btn-secondary">
+        <#Icon iconify="flowbite:chevron-double-up-outline" class="w-5 h-5" />
+      </button>
     </div>
   </div>
 </div>
