@@ -48,7 +48,7 @@
             Bonfire.Files.FaviconStore.favicon_url(@media_url)}
           {#match favicon_url when is_binary(favicon_url)}
             <LazyImage
-              class="rounded-none object-cover rounded-t-lg cursor-pointer m-image min-w-8 max-w-[120px] w-auto h-auto"
+              class="rounded-none object-cover rounded-l-lg cursor-pointer m-image min-w-8 max-w-[120px] w-full h-auto"
               src={favicon_url}
               media={@media}
               fallback_icon="ion:newspaper-outline"
@@ -68,11 +68,11 @@
       <div class="max-w-full text-sm break-words line-clamp-3 text-base-content/70">
         {raw(Text.maybe_sane_html(Bonfire.Files.Media.description(@media)))}
       </div>
-      <div data-id="media_author" class="text-xs pt-2 mt-2 border-t border-base-content/10">
-        <!-- <span class="text-sm badge badge-accent rounded bg-accent/30 border-none !text-accent capitalize mr-1">{e(@media, :media_type, nil) || l("link")}</span> -->
 
-        <!-- {e(@media, :metadata, "oembed", "author_name", nil)} -->
-        <!--       
+      <!-- <span class="text-sm badge badge-accent rounded bg-accent/30 border-none !text-accent capitalize mr-1">{e(@media, :media_type, nil) || l("link")}</span>
+
+        {e(@media, :metadata, "oembed", "author_name", nil)}
+              
         {#case e(@media, :metadata, "oembed", "published", "date-parts", nil)}
           {#match nil}
           {#match []}
@@ -80,15 +80,16 @@
             <span class="text-base-content/70">{published |> DatesTimes.format_date(format: "MMMM d, Y")}</span>
         {/case} -->
 
-        {#case MediaLive.provider(@media)}
-          {#match nil}
-          {#match provider}
+      {#case MediaLive.provider(@media)}
+        {#match nil}
+        {#match provider}
+          <div data-id="media_author" class="text-xs pt-2 mt-2 border-t border-base-content/10">
             <div class="flex items-center gap-2">
               <#Icon iconify="ph:globe" class="w-4 h-4 text-base-content/70" />
               <span class="text-base-content/70">{provider}</span>
             </div>
-        {/case}
-      </div>
+          </div>
+      {/case}
       <!-- {e(@media, :metadata, "location", "name", nil)} {e(@media, :metadata, "startDate", nil)} -->
     </div>
   </LinkLive>

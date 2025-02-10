@@ -127,6 +127,8 @@
             <StatelessComponent
               module={maybe_component(Bonfire.UI.Reactions.EmojiReactionsLive, @__context__)}
               object_id={id(@object)}
+              id={"#{@id}_react"}
+              myself={@myself}
             />
 
             <StatelessComponent

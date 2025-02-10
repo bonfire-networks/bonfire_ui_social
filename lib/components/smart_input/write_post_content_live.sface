@@ -32,6 +32,7 @@
       uploads={@uploads}
       uploaded_files={@uploaded_files}
       reset_smart_input={@reset_smart_input}
+      custom_emojis={@custom_emojis}
       show_cw_toggle
       preview_boundary_for_id={@preview_boundary_for_id}
       preview_boundary_for_username={@preview_boundary_for_username}
