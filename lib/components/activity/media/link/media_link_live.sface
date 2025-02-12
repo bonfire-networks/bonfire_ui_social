@@ -59,13 +59,13 @@
       </div>
     {/if}
 
-    <div class="p-2 pt-0 flex flex-col w-full gap-1 flex-1">
+    <div class="p-2 flex flex-col w-full gap-1 flex-1">
       <div data-id="media_title" class="text-base line-clamp-2 font-semibold">
         {Bonfire.Files.Media.media_label(@media) ||
           if @media.media_type == "link", do: e(@media, :path, nil), else: l("View")}
       </div>
 
-      <div class="max-w-full text-sm break-words line-clamp-3 text-base-content/70">
+      <div class="max-w-full text-sm break-words line-clamp-2 text-base-content/70">
         {raw(Text.maybe_sane_html(Bonfire.Files.Media.description(@media)))}
       </div>
 

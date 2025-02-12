@@ -129,6 +129,7 @@
               object_id={id(@object)}
               id={"#{@id}_react"}
               myself={@myself}
+              showing_within={@showing_within}
             />
 
             <StatelessComponent
