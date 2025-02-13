@@ -12,7 +12,8 @@ defmodule Bonfire.UI.Social.FeedsLive do
         "User interfaces for basic social networking functionality, such as feeds and discussions."
       ),
     # exclude_from_nav: true
-    # FIXME: should only include modules from current extension
+    # FIXME: should only include modules from current extension?
+    # FIXME: these should be set somewhere in config
     default_nav: [
       Bonfire.UI.Social.FeedsLive,
       # Bonfire.UI.Files.Web.MediaFeedLive,
