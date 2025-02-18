@@ -10,8 +10,7 @@
     {#case Media.media_url(m)}
       {#match nil}
       {#match media_url}
-        {#if m.media_type == "research" or
-            maybe_apply(Bonfire.Files, :is_research, [media_url, m.metadata]) == true}
+        {#if m.media_type == "research"}
           <Bonfire.UI.Social.Activity.AcademicPaperLive
             media={m}
             metadata={Enums.deep_merge_reduce([

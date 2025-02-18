@@ -32,20 +32,7 @@ defmodule Bonfire.UI.Social.FeedsLive do
     ]
   )
 
-  # declare_nav_link(l("My feed"), page: "feed", icon: "heroicons-solid:newspaper")
   declare_nav_link(
-    # NOTE: sticky feed, see https://github.com/bonfire-networks/bonfire-app/issues/901
-    # {
-    #   l("Feed"),
-    #   # icon: "carbon:home",
-    #   # icon_active: "carbon:home",
-    #   page: "feed",
-    #   icon: "ph:rss-simple-bold",
-    #   href: "/feed",
-    #   phx_hook: "Bonfire.UI.Common.PreviewContentLive#PreviewExtra"
-    #   #  href: &nav_link_feed/1
-    # },
-
     l("Feeds"),
     %{
       page: "feed",

@@ -142,10 +142,13 @@ defmodule Bonfire.UI.Social.Activity.MediaLive do
     (Media.thumbnail_url(media)
      |> debug("medthumbur") ||
        e(media, :metadata, "oembed", "thumbnail_url", nil) ||
-       e(media, :metadata, "facebook", "image", nil) ||
        e(media, :metadata, "twitter", "image", nil) ||
-       e(media, :metadata, "icon", "url", nil) || e(media, :metadata, "icon", nil) ||
-       e(media, :metadata, "image", "url", nil) || e(media, :metadata, "image", nil) ||
+       (e(media, :metadata, "facebook", "image", "url", nil) ||
+          e(media, :metadata, "facebook", "image", nil)) ||
+       e(media, :metadata, "icon", "url", nil) ||
+       e(media, :metadata, "icon", nil) ||
+       e(media, :metadata, "image", "url", nil) ||
+       e(media, :metadata, "image", nil) ||
        media_img(media))
     |> unwrap()
   end
