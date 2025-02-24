@@ -14,7 +14,7 @@ exdiff = "~> 0.1.5"
 # bonfire_data_social = "~> 0.1"
 # for this extension:
 # surface_heroicons = "~> 0.5"
-telemetry = "~> 1.2.0"
+telemetry = "~> 1.2"
 surface = "~> 0.12.0" # required if there's any JS hooks or CSS components that need to be found by Surface compiler
 
 untangle = "~> 0.3.0"

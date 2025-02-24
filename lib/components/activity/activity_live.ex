@@ -7,10 +7,10 @@ defmodule Bonfire.UI.Social.ActivityLive do
   alias Bonfire.Social.Feeds.LiveHandler
 
   # TODO: autogenerate with Verbs genserver?
-  @reply_verbs Application.compile_env(:bonfire, [:verb_families, :reply])
-  @create_verbs Application.compile_env(:bonfire, [:verb_families, :create])
-  @react_verbs Application.compile_env(:bonfire, [:verb_families, :react])
-  @simple_verbs Application.compile_env(:bonfire, [:verb_families, :simple_action])
+  @reply_verbs Application.compile_env(:bonfire, [:verb_families, :reply]) || []
+  @create_verbs Application.compile_env(:bonfire, [:verb_families, :create]) || []
+  @react_verbs Application.compile_env(:bonfire, [:verb_families, :react]) || []
+  @simple_verbs Application.compile_env(:bonfire, [:verb_families, :simple_action]) || []
   @react_or_simple_verbs @react_verbs ++ @simple_verbs
   @react_or_reply_verbs @react_verbs ++ @reply_verbs
   @create_or_reply_verbs @create_verbs ++ @reply_verbs
