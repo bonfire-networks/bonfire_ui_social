@@ -25,7 +25,7 @@ defmodule Bonfire.UI.Social.FeedsFilters.Test do
       |> assert_has("[data-toggle='boost'] [data-id='enabled'].active")
       |> click_button("[data-toggle='boost'] button", "Hide")
       |> assert_has("[data-toggle='boost'] [data-id='disabled'].active")
-      |> click_button("[data-toggle='boost'] button", "Default")
+      |> click_button("[data-toggle='boost'] button", "Include")
       |> assert_has("[data-toggle='boost'] [data-id='default'].active")
     end
 
@@ -34,7 +34,7 @@ defmodule Bonfire.UI.Social.FeedsFilters.Test do
       |> visit("/feed")
       # |> click_button("Filters")
       |> within("[data-scope='time_limit']", fn session ->
-        session
+        session # TODO refactor to use range
         |> choose("All time")
         |> choose("Day")
         |> choose("Week")
@@ -199,7 +199,7 @@ defmodule Bonfire.UI.Social.FeedsFilters.Test do
       |> visit("/feed/local")
       |> within("#order-dropdown", fn session ->
         session
-        |> click_link("By amount of likes")
+        |> click_link("Most liked")
       end)
 
       # Verify the popular post appears first
@@ -226,7 +226,7 @@ defmodule Bonfire.UI.Social.FeedsFilters.Test do
         # |> click_button("Filters")
         |> click_button("[data-toggle='boost'] button", "Hide")
 
-      live_async_wait(session)
+      live_async_wait(session) # FIXME?
 
       session
       |> refute_has("[data-id=feed] article[data-verb=Boost]")

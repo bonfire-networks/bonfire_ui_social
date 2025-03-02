@@ -62,17 +62,17 @@
           {#match :num_replies}
             <span class="flex gap-3 px-2  items-center">
               <#Icon iconify="basil:comment-outline" class="w-4 h-4 stroke-1 fill-base-content/50" />
-              <span class="hidden lg:block">{l("By amount of replies")}</span>
+              <span class="hidden lg:block">{l("Most replied")}</span>
             </span>
           {#match :num_boosts}
             <span class="flex gap-3 px-2  items-center">
               <#Icon iconify="system-uicons:retweet" class="w-4 h-4 stroke-1 fill-base-content/50" />
-              <span class="hidden lg:block">{l("By amount of boosts")}</span>
+              <span class="hidden lg:block">{l("Most boosted")}</span>
             </span>
           {#match :num_likes}
             <span class="flex gap-3 px-2  items-center">
               <#Icon iconify="mingcute:fire-line" class="h-[20px] w-[18px]" />
-              <span class="hidden lg:block">{l("By amount of likes")}</span>
+              <span class="hidden lg:block">{l("Most liked")}</span>
             </span>
           {#match _}
             <span class="flex gap-3 px-2  items-center">
@@ -128,7 +128,7 @@
             "active !text-base-content/100 font-semibold": @sort_by == :num_replies
           }>
             <#Icon iconify="basil:comment-outline" class="w-4 h-4 stroke-1 fill-base-content/50" />
-            {l("By amount of replies")}</a></li>
+            {l("Most replied")}</a></li>
 
         {#if extension_enabled?(:bonfire_ui_reactions, @__context__)}
           <li
@@ -143,7 +143,7 @@
               "active !text-base-content/100 font-semibold": @sort_by == :num_boosts
             }>
               <#Icon iconify="system-uicons:retweet" class="w-4 h-4 stroke-1 fill-base-content/50" />
-              {l("By amount of boosts")}</a></li>
+              {l("Most boosted")}</a></li>
 
           <li
             phx-click="set"
@@ -157,7 +157,7 @@
               "active !text-base-content/100 font-semibold": @sort_by == :num_likes
             }>
               <#Icon iconify="mingcute:fire-line" class="w-4 h-4" />
-              {l("By amount of likes")}</a></li>
+              {l("Most liked")}</a></li>
         {/if}
       </ul>
     </div>

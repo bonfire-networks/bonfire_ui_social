@@ -4,10 +4,11 @@ defmodule Bonfire.Social.Notifications.Threads.Test do
   alias Bonfire.Posts
   alias Bonfire.Social.Graph.Follows
 
+ 
   describe "show" do
     # FIXME: should this be expected behaviour? (without @ mention)
     @tag :skip_ci
-    test "replies I'm allowed to see (even from people I'm not following) in my notifications" do
+    test "replies I'm allowed to see (even from people I'm not following) in my notifications", %{conn: conn} do
       some_account = fake_account!()
       someone = fake_user!(some_account)
 
@@ -23,17 +24,12 @@ defmodule Bonfire.Social.Notifications.Threads.Test do
         reply_to_id: post.id
       }
 
-      assert {:ok, post_reply} =
+      assert {:ok, _post_reply} =
                Posts.publish(current_user: responder, post_attrs: attrs_reply, boundary: "public")
 
-      conn = conn(user: someone, account: some_account)
-      next = "/notifications"
-      # |> IO.inspect
-      {:ok, view, html} = live(conn, next)
-      open_browser(view)
-      # {view, doc} = floki_live(conn, next)
-      assert feed = Floki.find(html, ".feed")
-      assert Floki.text(feed) =~ "epic html reply"
+      conn(user: someone, account: some_account)
+      |> visit("/notifications")
+      |> assert_has(".feed", text: "epic html reply")
     end
   end
 
@@ -41,27 +37,22 @@ defmodule Bonfire.Social.Notifications.Threads.Test do
     test "replies I'm NOT allowed to see in my notifications" do
       some_account = fake_account!()
       someone = fake_user!(some_account)
-      # debug(someone.id)
 
       attrs = %{post_content: %{html_body: "<p>here is an epic html post</p>"}}
       assert {:ok, post} = Posts.publish(current_user: someone, post_attrs: attrs)
 
       responder = fake_user!()
-      # debug(responder.id)
 
       attrs_reply = %{
-        post_content: %{summary: "summary", name: "name 2", html_body: "<p>epic html reply</p>"},
+        post_content: %{summary: "summary", name: "name 2", html_body: "epic html reply"},
         reply_to_id: post.id
       }
 
-      assert {:ok, post_reply} = Posts.publish(current_user: responder, post_attrs: attrs_reply)
+      assert {:ok, _post_reply} = Posts.publish(current_user: responder, post_attrs: attrs_reply)
 
-      conn = conn(user: someone, account: some_account)
-      next = "/notifications"
-      # |> IO.inspect
-      {view, doc} = floki_live(conn, next)
-      assert feed = Floki.find(doc, ".feed")
-      refute Floki.text(feed) =~ "epic html reply"
+      conn(user: someone, account: some_account)
+      |> visit("/notifications")
+      |> refute_has(".feed", text: "epic html reply")
     end
   end
 end

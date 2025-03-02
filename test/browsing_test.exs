@@ -141,7 +141,7 @@ defmodule Bonfire.UI.Social.BrowsingTest do
     assert has_element?(
              view,
              "[data-role=amount_of_replies]",
-             "By amount of replies"
+             "Most replied"
            )
 
     view

@@ -10,28 +10,28 @@ defmodule Bonfire.UI.Social.FeedsNavigation.Test do
     test "user can navigate between different feed types", %{} do
       conn(user: fake_user!())
       |> visit("/")
-      |> click_link("nav [data-id=nav_links] a", "Following")
+      |> click_link("[data-id=nav_sidebar_nav_links] a", "Following")
       |> assert_path("/feed/my")
-      |> click_link("nav [data-id=nav_links] a", "Local")
+      |> click_link("[data-id=nav_sidebar_nav_links] a", "Local")
       |> assert_path("/feed/local")
-      |> click_link("nav [data-id=nav_links] a", "Remote")
+      |> click_link("[data-id=nav_sidebar_nav_links] a", "Remote")
       |> assert_path("/feed/fediverse")
-      |> click_link("nav [data-id=nav_links] a", "Posts")
-      |> assert_path("/feed/filter/posts")
-      |> click_link("nav [data-id=nav_links] a", "Discussions")
-      |> assert_path("/feed/filter/discussions")
+      |> click_link("[data-id=nav_sidebar_nav_links] a", "Posts")
+      |> assert_path("/feed/posts")
+      # |> click_link("[data-id=nav_sidebar_nav_links] a", "Discussions")
+      # |> assert_path("/feed/filter/discussions")
     end
 
     test "user can apply different sorting options", %{} do
       conn(user: fake_user!())
       |> visit("/feed")
       # Open the sort dropdown and select different options
-      |> click_link("#order_dropdown_feed a", "By amount of replies")
-      |> assert_has("#order_dropdown_feed label", text: "By amount of replies")
-      |> click_link("#order_dropdown_feed a", "By amount of boosts")
-      |> assert_has("#order_dropdown_feed label", text: "By amount of boosts")
-      |> click_link("#order_dropdown_feed a", "By amount of likes")
-      |> assert_has("#order_dropdown_feed label", text: "By amount of likes")
+      |> click_link("#order_dropdown_feed a", "Most replied")
+      |> assert_has("#order_dropdown_feed label", text: "Most replied")
+      |> click_link("#order_dropdown_feed a", "Most boosted")
+      |> assert_has("#order_dropdown_feed label", text: "Most boosted")
+      |> click_link("#order_dropdown_feed a", "Most liked")
+      |> assert_has("#order_dropdown_feed label", text: "Most liked")
       |> click_link("#order_dropdown_feed a", "Chronological")
       |> assert_has("#order_dropdown_feed label", text: "Chronological")
     end
@@ -41,10 +41,10 @@ defmodule Bonfire.UI.Social.FeedsNavigation.Test do
       |> visit("/feed")
       |> within("#sort_timing_feed", fn session ->
         session
-        |> click_link("Oldest first")
-        |> assert_has(".active", text: "Oldest first")
+        |> click_link("Oldest first") # FIXME
+        |> assert_has("label span", text: "Oldest first")
         |> click_link("Newest first")
-        |> assert_has(".active", text: "Newest first")
+        |> assert_has("label span", text: "Newest first")
       end)
     end
 

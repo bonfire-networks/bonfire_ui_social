@@ -25,17 +25,18 @@ defmodule Bonfire.Social.UI.Feeds.Fediverse.Test do
     #   assert [_] = Floki.find(doc, "[id*='#{feed_id}']")
     # end
 
-    test "with user" do
-      account = fake_account!()
-      user = fake_user!(account)
-      conn = conn(user: user, account: account)
-      next = "/feed/fediverse"
-      feed_id = Bonfire.Social.Feeds.named_feed_id(:activity_pub)
-
-      # |> IO.inspect
-      {view, doc} = floki_live(conn, next)
-      assert [_] = Floki.find(doc, "[id*='#{feed_id}']")
-    end
+test "fediverse feed is accessible when logged in" do
+  # Setup user account
+  account = fake_account!()
+  user = fake_user!(account)
+  feed_id = Bonfire.Social.Feeds.named_feed_id(:activity_pub)
+  |> IO.inspect(label: "feeeee")
+  
+  # Visit the fediverse feed as the user and verify it's visible
+  conn(user: user, account: account)
+  |> visit("/feed/fediverse")
+  |> assert_has("[id*='#{feed_id}']")
+end
 
     # test "remote posts in fediverse feed" do
     #   account = fake_account!()
@@ -81,31 +82,33 @@ defmodule Bonfire.Social.UI.Feeds.Fediverse.Test do
     #   assert [_] = Floki.find(doc, "[id='feed:home']")
     # end
 
-    test "local-only posts in fediverse feed" do
-      account = fake_account!()
-      user = fake_user!(account)
+test "local posts are not visible in fediverse feed" do
+  # Setup users and follow relationship
+  account = fake_account!()
+  user = fake_user!(account)
 
-      account2 = fake_account!()
-      user2 = fake_user!(account2)
-      Follows.follow(user2, user)
+  # Create a local-only post
+  attrs = %{
+    post_content: %{
+      summary: "summary",
+      name: "test local post name",
+      html_body: "<p>epic html message</p>"
+    }
+  }
+  # feed_id = Bonfire.Social.Feeds.named_feed_id(:activity_pub)
+  # |> IO.inspect(label: "feeeee")
+  
+  assert {:ok, post} = Posts.publish(current_user: user, post_attrs: attrs, boundary: "public")
+  assert post.post_content.name =~ "local post name"
 
-      attrs = %{
-        post_content: %{
-          summary: "summary",
-          name: "test post name",
-          html_body: "<p>epic html message</p>"
-        }
-      }
+  conn(user: user, account: account)
+  |> visit("/feed/explore")
+  |> assert_has("article", text: "local post name")
 
-      assert {:ok, post} = Posts.publish(current_user: user, post_attrs: attrs, boundary: "local")
-      assert post.post_content.name =~ "test post name"
-
-      conn = conn(user: user2, account: account2)
-      next = "/feed/fediverse"
-      # |> IO.inspect
-      {view, doc} = floki_live(conn, next)
-      assert [] = Floki.find(doc, "#feed:fediverse")
-      # refute Floki.text(feed) =~ "test post name"
-    end
+  # Visit the fediverse feed and verify post is not visible
+  conn(user: user, account: account)
+  |> visit("/feed/fediverse")
+  |> refute_has("article", text: "local post name") 
+end
   end
 end

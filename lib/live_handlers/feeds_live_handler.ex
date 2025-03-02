@@ -720,7 +720,7 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
       selected_tab: :local,
       # FIXME: clean up page vs tab
       page: "activities",
-      page_title: "Explore local activities",
+      page_title: l("Explore local activities"),
       # no_header: true,
       # page_title: l("Activities from members of the local instance"),
       feedback_title: l("Your local feed is empty"),
