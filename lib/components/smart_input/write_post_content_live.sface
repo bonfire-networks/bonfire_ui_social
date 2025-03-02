@@ -39,20 +39,18 @@
       preview_boundary_verbs={@preview_boundary_verbs}
       boundary_preset={@boundary_preset}
     >
-      <div
-        phx-update={if @reset_smart_input, do: "replace", else: "ignore"}
-        class="hidden"
-        id="smart_input_post_title"
-      >
+      <!-- phx-update={if @reset_smart_input, do: "replace", else: "ignore"} -->
+      <div class={if !e(@smart_input_opts, :cw, nil), do: "hidden"} id="smart_input_post_title">
         <div class="p-2">
-          <Inputs for={:post_content}>
-            <label class="input w-full">
-              <#Icon iconify="ri:alert-fill" class="w-4 h-4" />
-              <Field name={:summary}>
-                <input type="text" placeholder={l("Enter an optional content warning")}>
-              </Field>
-            </label>
-          </Inputs>
+          <label class="input w-full">
+            <#Icon iconify="ri:alert-fill" class="w-4 h-4" />
+            <input
+              name="post[post_content][summary]"
+              type="text"
+              placeholder={l("Enter an optional content warning")}
+              value={e(@smart_input_opts, :cw, nil)}
+            />
+          </label>
         </div>
       </div>
 

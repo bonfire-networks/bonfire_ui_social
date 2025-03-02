@@ -271,7 +271,12 @@ defmodule Bonfire.Social.Threads.LiveHandler do
           mentions: if(published_in_id, do: [published_in_id], else: []),
           create_object_type: create_object_type,
           #  do not allow editing recipients when replying to a group thread
-          smart_input_opts: [recipients_editable: false],
+          smart_input_opts: [
+            recipients_editable: false,
+            cw:
+              e(activity, :sensitive, :is_sensitive, nil) &&
+                e(activity, :object, :post_content, :summary, nil) |> IO.inspect(label: "pcccccc")
+          ],
           to_boundaries: [
             if(published_in_id,
               do:
