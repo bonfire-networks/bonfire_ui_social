@@ -38,12 +38,19 @@ defmodule Bonfire.UI.Social.FeedsLive do
       page: "feed",
       icon: "ph:rss-simple-bold",
       href: &nav_link_feed/1,
+      #  TODO: these should be generated from preset filters and settings
       sub_links: [
-        {l("Following"), page: "following", href: "/feed/my", icon: "ic:baseline-rss-feed"},
-        {l("Explore"), page: "explore", href: "/feed/explore", icon: "ic:baseline-rss-feed"},
-        {l("Local"), page: "local", href: "/feed/local", icon: "ic:baseline-rss-feed"},
-        {l("Remote"), page: "fediverse", href: "/feed/fediverse", icon: "ic:baseline-rss-feed"},
-        {l("Posts"), page: "posts", href: "/feed/posts", icon: "ic:baseline-rss-feed"},
+        {l("Following"), page: "following", href: "/feed/my", icon: "carbon:home"},
+        {l("Explore"), page: "explore", href: "/feed/explore", icon: "carbon:explore"},
+        {l("Local"),
+         page: "local", href: "/feed/local", icon: "material-symbols:camping-rounded"},
+        {l("Remote"), page: "remote", href: "/feed/remote", icon: "el:network"},
+        {l("Posts"),
+         page: "posts", href: "/feed/posts", icon: "ri:chat-2-line", icon_active: "ri:chat-2-fill"},
+        # {l("Discussions"),
+        #  page: "discussions",
+        # #  href: &nav_link_discussions/1,
+        #  icon: "ri:discuss-line"},
         {l("Bookmarks"),
          page: "bookmarks", href: "/feed/bookmarks", icon: "carbon:bookmark-filled"},
         {l("Likes"), page: "likes", href: "/feed/likes", icon: "mingcute:fire-line"}
@@ -86,7 +93,7 @@ defmodule Bonfire.UI.Social.FeedsLive do
        feed_id: nil,
        feed_title: nil,
        feed_ids: nil,
-       feed_filters: [],
+       feed_filters: %{},
        tab_path_suffix: nil,
        feed_component_id: nil,
        feedback_title: l("Your feed is empty"),
@@ -154,37 +161,37 @@ defmodule Bonfire.UI.Social.FeedsLive do
     )
   end
 
-  def tabs(_page, context) do
-    # disabled hiding of remote tab because it is also useful to find remote activities that were looked up manually
-    # case Bonfire.Social.federating?(current_user(context)) do
-    #   true ->
-    # if current_user_id(context) do
-    if module_enabled?(Bonfire.Social.Pins, context) and
-         Bonfire.Common.Settings.get(
-           [Bonfire.UI.Social.FeedsLive, :curated],
-           false,
-           context
-         ) do
-      [
-        my: l("Following"),
-        curated: l("Curated"),
-        local: l("Local"),
-        fediverse: l("Remote")
-      ]
-    else
-      [
-        my: l("Following"),
-        explore: l("All"),
-        local: l("Local"),
-        fediverse: l("Remote")
-      ]
-    end
+  # def tabs(_page, context) do
+  #   # disabled hiding of remote tab because it is also useful to find remote activities that were looked up manually
+  #   # case Bonfire.Social.federating?(current_user(context)) do
+  #   #   true ->
+  #   # if current_user_id(context) do
+  #   if module_enabled?(Bonfire.Social.Pins, context) and
+  #        Bonfire.Common.Settings.get(
+  #          [Bonfire.UI.Social.FeedsLive, :curated],
+  #          false,
+  #          context
+  #        ) do
+  #     [
+  #       my: l("Following"),
+  #       curated: l("Curated"),
+  #       local: l("Local"),
+  #       fediverse: l("Remote")
+  #     ]
+  #   else
+  #     [
+  #       my: l("Following"),
+  #       explore: l("All"),
+  #       local: l("Local"),
+  #       fediverse: l("Remote")
+  #     ]
+  #   end
 
-    # else
+  # else
 
-    #   [curated: l("Curated"), local: l("Local"), fediverse: l("Remote")]
-    # end
-  end
+  #   [curated: l("Curated"), local: l("Local"), fediverse: l("Remote")]
+  # end
+  # end
 
   def set_feed_assigns(feed_meta, socket) do
     debug(feed_meta)

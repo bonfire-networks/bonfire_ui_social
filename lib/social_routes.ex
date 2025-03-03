@@ -9,6 +9,9 @@ defmodule Bonfire.UI.Social.Routes do
 
         live("/feed", FeedsLive, as: :feed)
         live("/feed/local", FeedsLive, :local, as: :feed)
+
+        live("/bookmarks", FeedsLive, :bookmarks, as: :bookmarks)
+
         live("/discussion/:id", DiscussionLive, as: Needle.Pointer)
         live("/discussion/as/:id", DiscussionLive, as: Bonfire.Data.Social.APActivity)
         live("/discussion/:type/:id", DiscussionLive, as: Needle.Pointer)
@@ -23,8 +26,6 @@ defmodule Bonfire.UI.Social.Routes do
       scope "/", Bonfire.UI.Social do
         pipe_through(:browser)
         pipe_through(:user_required)
-        live("/feed/fediverse", FeedsLive, :fediverse, as: :feed)
-        # live("/feed/explore", FeedsLive, :explore, as: :explore)
         live("/feed/:tab", FeedsLive, as: :feed)
 
         # TODO:

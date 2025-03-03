@@ -454,7 +454,7 @@ defmodule Bonfire.UI.Social.Benchmark do
   def feed_full_get(conn \\ build_conn()), do: get(conn, "/feed/local?cache=skip&time_limit=0")
 
   # defp md_lib_feed do
-  #   feed = Bonfire.Social.FeedActivities.feed(:fediverse, limit: 20)
+  #   feed = Bonfire.Social.FeedActivities.feed(:remote, limit: 20)
 
   #   %{
   #     "render activities with earmark" => fn ->

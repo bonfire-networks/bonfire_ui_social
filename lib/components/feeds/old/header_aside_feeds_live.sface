@@ -30,8 +30,8 @@
         <li :if={current_user(current_user(@__context__)) ||
           Settings.get([:bonfire_social, :feeds, :federation, :show_guests], false, @__context__)}>
           <LinkLive
-            class={"ml-1": @selected_tab != "fediverse", "bg-primary/10": @selected_tab == "fediverse"}
-            to={path(:local, :fediverse)}
+            class={"ml-1": @selected_tab != "remote", "bg-primary/10": @selected_tab == "remote"}
+            to={path(:local, :remote)}
           >
             <#Icon solid="Globe" class="w-4 h-4" />
             <span class="text-sm truncate ellipsis">{l("Federated")}</span>

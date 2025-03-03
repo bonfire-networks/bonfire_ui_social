@@ -9,16 +9,18 @@
   feedback_title={@feedback_title}
   feedback_message={@feedback_message}
   feed={@feed}
-  feed_filters={@feed_filters}
   selected_tab={@selected_tab}
   feed_title={@feed_title}
   page_info={@page_info}
   loading={@loading}
   tab_path_prefix="/feed/"
   tab_path_suffix={@tab_path_suffix}
-  feed_filters={%{
-    feed_name: @feed_name,
-    sort_by: Settings.get([Bonfire.UI.Social.FeedLive, :sort_by], nil, @__context__),
-    time_limit: Settings.get([Bonfire.UI.Social.FeedLive, :time_limit], 7, @__context__)
-  }}
+  feed_filters={Map.merge(
+    %{
+      feed_name: @feed_name,
+      sort_by: Settings.get([Bonfire.UI.Social.FeedLive, :sort_by], nil, @__context__),
+      time_limit: Settings.get([Bonfire.UI.Social.FeedLive, :time_limit], 7, @__context__)
+    },
+    @feed_filters
+  )}
 />

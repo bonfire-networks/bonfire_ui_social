@@ -674,7 +674,7 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
     # ] ++ page_header_asides(socket, component_id)
   end
 
-  def feed_default_assigns(:fediverse = feed_name, socket) do
+  def feed_default_assigns(:remote = feed_name, socket) do
     feed_id =
       Bonfire.Social.Feeds.named_feed_id(:activity_pub)
       |> debug(feed_name)
@@ -685,7 +685,7 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
       feed_name: feed_name,
       feed_id: feed_id,
       feed_component_id: component_id,
-      selected_tab: :fediverse,
+      selected_tab: :remote,
       # FIXME: clean up page vs tab
       page: "activities",
       page_title: "Activities from the fediverse",
@@ -800,7 +800,7 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
     ]
   end
 
-  def feed_default_assigns(:flags = feed_name, socket) do
+  def feed_default_assigns(:flagged_content = feed_name, socket) do
     [
       feed_name: feed_name,
       feed_id: feed_name,
@@ -931,9 +931,12 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
       debug("socket not connected or not logged in, load feed synchronously")
 
       feed_assigns_non_live(
-        feed_name_id_or_tuple,
+        feed_id_only(feed_name_id_or_tuple),
         assigns,
-        e(assigns, :feed_filters, nil) || e(assigns(socket), :feed_filters, %{}),
+        Map.merge(
+          e(assigns, :feed_filters, nil) || e(assigns(socket), :feed_filters, %{}),
+          feed_filters_only(feed_name_id_or_tuple)
+        ),
         opts
       )
     end
@@ -942,9 +945,12 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
   defp feed_assigns_maybe_async_load(feed_name_id_or_tuple, assigns, socket, _reset_stream) do
     # non-Socket connection
     feed_assigns_non_live(
-      feed_name_id_or_tuple,
+      feed_id_only(feed_name_id_or_tuple),
       assigns,
-      e(assigns, :feed_filters, nil) || e(assigns(socket), :feed_filters, %{}),
+      Map.merge(
+        e(assigns, :feed_filters, nil) || e(assigns(socket), :feed_filters, %{}),
+        feed_filters_only(feed_name_id_or_tuple)
+      ),
       socket
     )
   end
@@ -963,23 +969,26 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
   defp feed_id_only({feed_id, _feed_ids}), do: feed_id
   defp feed_id_only(feed_id), do: feed_id
 
+  defp feed_filters_only({feed_id, %{} = filters}), do: filters
+  defp feed_filters_only(_), do: %{}
+
   @decorate time()
   defp feed_assigns(feed, opts)
 
-  defp feed_assigns({:flags, _filters}, opts) do
-    # NOTE: we don't support extra filter on likes for now
-    feed_assigns(:flags, opts)
-  end
+  # defp feed_assigns({:flags, _filters}, opts) do
+  #   # NOTE: we don't support extra filter on likes for now
+  #   feed_assigns(:flags, opts)
+  # end
 
-  defp feed_assigns({:curated, _filters}, opts) do
-    # NOTE: we don't support extra filter on likes for now
-    feed_assigns(:curated, opts)
-  end
+  # defp feed_assigns({:curated, _filters}, opts) do
+  #   # NOTE: we don't support extra filter on likes for now
+  #   feed_assigns(:curated, opts)
+  # end
 
-  defp feed_assigns({:likes, _filters}, opts) do
-    # NOTE: we don't support extra filter on likes for now
-    feed_assigns(:likes, opts)
-  end
+  # defp feed_assigns({:likes, _filters}, opts) do
+  #   # NOTE: we don't support extra filter on likes for now
+  #   feed_assigns(:likes, opts)
+  # end
 
   defp feed_assigns({:my, feed_id_or_ids}, opts) when is_list(feed_id_or_ids) do
     if Keyword.keyword?(feed_id_or_ids) do
@@ -1009,27 +1018,27 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
     end
   end
 
-  defp feed_assigns("user_" <> tab_and_user_or_other_id, opts) do
-    [tab, user_or_other_id] =
-      String.split(tab_and_user_or_other_id, "_", parts: 2)
-      |> debug("tab and user_or_other_id")
+  # defp feed_assigns("user_" <> tab_and_user_or_other_id, opts) do
+  #   [tab, user_or_other_id] =
+  #     String.split(tab_and_user_or_other_id, "_", parts: 2)
+  #     |> debug("tab and user_or_other_id")
 
-    # FIXME socket/opts mismatch
-    load_user_feed_assigns(tab, user_or_other_id, [], %{assigns: opts})
-    # |> debug()
-  end
+  #   # FIXME socket/opts mismatch
+  #   load_user_feed_assigns(tab, user_or_other_id, [], %{assigns: opts})
+  #   # |> debug()
+  # end
 
-  defp feed_assigns({"user_" <> tab_and_user_or_other_id, other}, opts) do
-    debug(other, "load user/other timeline: #{tab_and_user_or_other_id}")
+  # defp feed_assigns({"user_" <> tab_and_user_or_other_id, other}, opts) do
+  #   debug(other, "load user/other timeline: #{tab_and_user_or_other_id}")
 
-    [tab, user_or_other_id] =
-      String.split(tab_and_user_or_other_id, "_", parts: 2)
-      |> debug("tab and user_or_other_id")
+  #   [tab, user_or_other_id] =
+  #     String.split(tab_and_user_or_other_id, "_", parts: 2)
+  #     |> debug("tab and user_or_other_id")
 
-    # FIXME socket/opts mismatch
-    load_user_feed_assigns(tab, user_or_other_id, other, %{assigns: opts})
-    # |> debug()
-  end
+  #   # FIXME socket/opts mismatch
+  #   load_user_feed_assigns(tab, user_or_other_id, other, %{assigns: opts})
+  #   # |> debug()
+  # end
 
   defp feed_assigns({{feed_id, nil}, %{} = filters}, opts) when filters != %{} do
     feed_assigns({feed_id, filters}, opts)
@@ -1072,26 +1081,26 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
     end
   end
 
-  defp feed_assigns(:flags = _feed_id, opts) do
-    current_user_required!(opts)
+  # defp feed_assigns(:flags = _feed_id, opts) do
+  #   current_user_required!(opts)
 
-    opts =
-      opts ++
-        [
-          paginate?: true,
-          include_flags: :mod
-          # preload: preloads
-        ]
+  #   opts =
+  #     opts ++
+  #       [
+  #         paginate?: true,
+  #         include_flags: :mod
+  #         # preload: preloads
+  #       ]
 
-    with %{} = feed <-
-           Bonfire.Social.Flags.list_preloaded(opts) do
-      merge_feed_assigns(
-        feed,
-        [loading: false],
-        e(opts, :page_info, nil)
-      )
-    end
-  end
+  #   with %{} = feed <-
+  #          Bonfire.Social.Flags.list_preloaded(opts) do
+  #     merge_feed_assigns(
+  #       feed,
+  #       [loading: false],
+  #       e(opts, :page_info, nil)
+  #     )
+  #   end
+  # end
 
   defp feed_assigns(:curated = _feed_id, opts) do
     opts =
@@ -1115,31 +1124,31 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
   end
 
   # Add pagination ->
-  defp feed_assigns(:likes = _feed_id, opts) do
-    current_user_required!(opts)
+  # defp feed_assigns(:likes = _feed_id, opts) do
+  #   current_user_required!(opts)
 
-    opts =
-      opts ++
-        [
-          paginate?: true
-          # preload: preloads
-        ]
+  #   opts =
+  #     opts ++
+  #       [
+  #         paginate?: true
+  #         # preload: preloads
+  #       ]
 
-    # opts = paginate_opts(%{}, socket, opts)
+  #   # opts = paginate_opts(%{}, socket, opts)
 
-    with %{} = feed <-
-           Bonfire.Common.Utils.maybe_apply(
-             Bonfire.Social.Likes,
-             :list_my,
-             [opts]
-           ) do
-      merge_feed_assigns(
-        feed,
-        [loading: false],
-        e(opts, :page_info, nil)
-      )
-    end
-  end
+  #   with %{} = feed <-
+  #          Bonfire.Common.Utils.maybe_apply(
+  #            Bonfire.Social.Likes,
+  #            :list_my,
+  #            [opts]
+  #          ) do
+  #     merge_feed_assigns(
+  #       feed,
+  #       [loading: false],
+  #       e(opts, :page_info, nil)
+  #     )
+  #   end
+  # end
 
   defp feed_assigns(%Ecto.Query{} = custom_query, opts) do
     feed_filters = e(opts, :feed_filters, %{})
@@ -1162,7 +1171,16 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
   end
 
   defp feed_assigns(feed_name, opts) when is_atom(feed_name) do
-    feed_id = Bonfire.Social.Feeds.named_feed_id(feed_name, opts)
+    feed_id =
+      case Bonfire.Social.Feeds.named_feed_id(feed_name, opts) do
+        feed_id when feed_id != feed_name ->
+          feed_id
+
+        other ->
+          warn(other, "unrecognised feed_name")
+          nil
+      end
+
     feed_filters = e(opts, :feed_filters, %{})
 
     {preloads, postloads} =
@@ -1173,7 +1191,11 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
     opts = opts ++ [preload: preloads]
 
     with %{} = feed <-
-           FeedLoader.feed({feed_name, feed_id} |> debug("fnid"), feed_filters, opts) do
+           FeedLoader.feed(
+             if(feed_id, do: {feed_name, feed_id}, else: feed_name) |> debug("fnid"),
+             feed_filters,
+             opts
+           ) do
       merge_feed_assigns(
         feed,
         [
@@ -1424,6 +1446,7 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
 
   def activity_preloads_tuple_from_filters(filters, opts \\ []) do
     debug("WIP: avoid preloading in single query")
+    # TODO: should we first pass the feed_name through the preset fetcher?
     preload = opts[:preload] || FeedLoader.contextual_preloads_from_filters(filters, :query)
 
     postload =
@@ -1648,469 +1671,6 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
     |> debug("preload object data in feed")
   end
 
-  def user_feed_assign_or_load_async(
-        tab,
-        user_or_feed,
-        params,
-        %Phoenix.LiveView.Socket{} = socket
-      ) do
-    socket_connected = connected?(socket)
-
-    user = user_or_feed || e(assigns(socket), :user, nil) || current_user(assigns(socket))
-
-    feed_id = e(user, :character, :outbox_id, nil) || id(user)
-
-    feed_component_id =
-      e(assigns(socket), :feed_component_id, nil) ||
-        ComponentID.new(Bonfire.UI.Social.FeedLive, feed_id)
-
-    if (socket_connected || not is_nil(current_user_id(assigns(socket)))) && Config.env() != :test do
-      if socket_connected do
-        debug(tab, "socket connected, so load async")
-        pid = self()
-
-        apply_task(:start_link, fn ->
-          debug("Query user activities asynchronously")
-
-          load_user_feed_assigns(tab, user_or_feed, params, socket)
-          |> send_feed_updates(
-            pid,
-            # "feed_profile_#{tab}",
-            feed_component_id,
-            ...,
-            Bonfire.UI.Social.FeedLive
-          )
-        end)
-      else
-        debug(tab, "socket NOT connected, but logged in, so no need to load for SEO")
-      end
-
-      # return temporary assigns in the meantime
-      {:noreply,
-       assign(socket,
-         loading: true,
-         feed_component_id: feed_component_id,
-         feed_ids: [feed_id],
-         feed: [],
-         selected_tab: tab
-       )}
-    else
-      debug(tab, "socket not connected or not logged in, just load feed")
-      # for dead mounts
-      {:noreply,
-       assign_feed(
-         socket,
-         load_user_feed_assigns(tab, user_or_feed, params, socket)
-       )}
-    end
-  end
-
-  def user_feed_assign_or_load_async(tab, user_or_feed, params, socket) do
-    debug(tab, "not a socket, just load feed")
-
-    {:noreply,
-     assign_feed(
-       socket,
-       load_user_feed_assigns(tab, user_or_feed, params, socket)
-     )}
-  end
-
-  # note the 3 arity
-  def load_user_feed_assigns(selected_tab_and_user_id, params, socket) do
-    with [selected_tab, user_id] <- String.split(selected_tab_and_user_id, "_") do
-      debug(params, "Load and maybe paginate feed for user: #{selected_tab_and_user_id}")
-      load_user_feed_assigns(selected_tab, user_id, params, socket)
-    end
-  end
-
-  # note the 4 arity
-  def load_user_feed_assigns(
-        tab,
-        feed_id,
-        attrs,
-        %{assigns: %{feed_filters: feed_filters}} = socket
-      )
-      when not is_nil(feed_filters) and feed_filters != [] do
-    params = input_to_atoms(attrs)
-
-    # for custom feeds
-    feed_id =
-      uid!(feed_id)
-
-    # preloads = activity_preloads_tuple_from_filters(e(assigns(socket), :showing_within, nil))
-    {preloads, postloads} =
-      activity_preloads_tuple_from_filters(feed_filters,
-        showing_within: e(assigns(socket), :showing_within, nil)
-      )
-
-    feed =
-      if module = maybe_module(FeedLoader, socket),
-        do:
-          module.feed(
-            feed_id,
-            feed_filters,
-            pagination: params,
-            exclude_feed_ids: e(params, :exclude_feed_ids, []),
-            current_user: current_user(assigns(socket)),
-            preload: preloads
-          ),
-        else: []
-
-    merge_feed_assigns(
-      feed,
-      [
-        feed_update_mode: "append",
-        loading: false,
-        selected_tab: tab,
-        feed_id: feed_id,
-        activity_preloads: {preloads, postloads}
-      ],
-      e(assigns(socket), :page_info, nil)
-    )
-  end
-
-  # note the 4 arity
-  def load_user_feed_assigns("posts" = tab, user, params, socket) do
-    user = user || e(assigns(socket), :user, nil)
-    showing_within = :feed_by_creator
-    current_user = current_user(assigns(socket))
-    filters = e(assigns(socket), :filters, %{})
-    # preloads = [:feed_by_creator] ++ activity_preloads_tuple_from_filters(showing_within)
-    {preloads, postloads} =
-      activity_preloads_tuple_from_filters(filters,
-        showing_within: e(assigns(socket), :showing_within, nil)
-      )
-
-    #  TODO: use FeedLoader
-    feed =
-      Utils.maybe_apply(
-        Bonfire.Posts,
-        :list_by,
-        [
-          user,
-          [
-            pagination: input_to_atoms(params),
-            current_user: current_user,
-            preload: preloads
-          ]
-        ],
-        current_user: current_user,
-        fallback_return: []
-      )
-
-    # |> debug("posts")
-
-    merge_feed_assigns(
-      feed,
-      [
-        loading: false,
-        selected_tab: tab,
-        page: "posts",
-        showing_within: showing_within,
-        activity_preloads: {preloads, postloads}
-      ],
-      e(assigns(socket), :page_info, nil)
-    )
-  end
-
-  def load_user_feed_assigns("objects" = tab, user, %{"extra" => type} = params, socket) do
-    user = user || e(assigns(socket), :user, nil)
-    current_user = current_user(assigns(socket))
-    type = Types.maybe_to_atom(type)
-    object_types = Types.maybe_to_module(type) || type
-    filters = e(assigns(socket), :filters, %{})
-    # preloads = [:feed_by_creator] ++ activity_preloads_tuple_from_filters(:feed_by_creator)
-    {preloads, postloads} =
-      activity_preloads_tuple_from_filters(filters,
-        showing_within: e(assigns(socket), :showing_within, nil)
-      )
-
-    feed_id =
-      if not is_nil(user),
-        do:
-          maybe_apply(Bonfire.Social.Feeds, :feed_id, [:outbox, user],
-            current_user: current_user,
-            fallback_return: nil
-          )
-          |> debug("outbox for #{id(user)}")
-
-    feed =
-      if not is_nil(feed_id),
-        do:
-          maybe_apply(
-            FeedLoader,
-            :feed,
-            [
-              feed_id,
-              %{filters | object_types: object_types},
-              [
-                pagination: input_to_atoms(params),
-                current_user: current_user(assigns(socket)),
-                subject_user: user,
-                showing_within: type,
-                preload: preloads
-              ]
-            ],
-            current_user: current_user,
-            fallback_return: []
-          ),
-        else: []
-
-    merge_feed_assigns(
-      feed,
-      [
-        loading: false,
-        selected_tab: tab,
-        page: "objects",
-        showing_within: type,
-        activity_preloads: {preloads, postloads}
-      ],
-      e(assigns(socket), :page_info, nil)
-    )
-  end
-
-  def load_user_feed_assigns("boosts" = tab, user, params, socket) do
-    user = user || e(assigns(socket), :user, nil)
-    current_user = current_user(assigns(socket))
-
-    #  TODO: use FeedLoader
-    feed =
-      maybe_apply(
-        Bonfire.Social.Boosts,
-        :list_by,
-        [user, [pagination: input_to_atoms(params), current_user: current_user]],
-        current_user: current_user,
-        fallback_return: []
-      )
-
-    # |> debug("boosts")
-
-    merge_feed_assigns(
-      feed,
-      [
-        loading: false,
-        selected_tab: tab,
-        showing_within: :feed_by_subject
-      ],
-      e(assigns(socket), :page_info, nil)
-    )
-  end
-
-  def load_user_feed_assigns("timeline" = tab, user, params, socket) do
-    user = user || e(assigns(socket), :user, nil)
-    filters = e(assigns(socket), :filters, %{})
-
-    {preloads, postloads} =
-      activity_preloads_tuple_from_filters(filters,
-        showing_within: e(assigns(socket), :showing_within, nil)
-      )
-
-    current_user = current_user(assigns(socket))
-
-    feed_id =
-      if not is_nil(user),
-        do:
-          maybe_apply(Bonfire.Social.Feeds, :feed_id, [:outbox, user],
-            current_user: current_user,
-            fallback_return: nil
-          )
-          |> debug("outbox for #{id(user)}")
-
-    feed =
-      if not is_nil(feed_id),
-        do:
-          maybe_apply(
-            FeedLoader,
-            :feed,
-            [
-              feed_id,
-              filters,
-              [
-                pagination: input_to_atoms(params),
-                current_user: current_user(assigns(socket)),
-                subject_user: user,
-                preload: preloads
-              ]
-            ],
-            current_user: current_user,
-            fallback_return: []
-          ),
-        else: []
-
-    #  debug(feed: feed)
-
-    merge_feed_assigns(
-      feed,
-      [
-        loading: false,
-        selected_tab: tab,
-        showing_within: :feed_by_subject,
-        feed_id: feed_id,
-        activity_preloads: {preloads, postloads}
-      ],
-      e(assigns(socket), :page_info, nil)
-    )
-  end
-
-  def load_user_feed_assigns(tab, user, params, socket) when tab in ["followers"] do
-    user = user || e(assigns(socket), :user, nil)
-    current_user = current_user(assigns(socket))
-    pagination = input_to_atoms(params)
-
-    requests =
-      if id(user) == id(current_user), do: list_requests(current_user, pagination), else: []
-
-    #  TODO: use FeedLoader
-    followers =
-      Utils.maybe_apply(
-        Bonfire.Social.Graph.Follows,
-        :list_followers,
-        [user, [pagination: pagination, current_user: current_user]],
-        current_user: current_user,
-        fallback_return: []
-      )
-      |> debug("followers in feeed")
-
-    [
-      loading: false,
-      back: "/@#{e(user, :character, :username, nil)}",
-      selected_tab: tab,
-      feed: requests ++ e(followers, :edges, []),
-      page_info: e(followers, :page_info, []),
-      previous_page_info: e(assigns(socket), :page_info, false)
-    ]
-  end
-
-  def load_user_feed_assigns(tab, user, params, socket) when tab in ["members"] do
-    user = user || e(assigns(socket), :user, nil)
-    current_user = current_user(assigns(socket))
-    pagination = input_to_atoms(params)
-
-    requests =
-      if id(user) == id(current_user), do: list_requests(current_user, pagination), else: []
-
-    #  TODO: use FeedLoader
-    followers =
-      Utils.maybe_apply(
-        Bonfire.Social.Graph.Follows,
-        :list_followers,
-        [user, [pagination: pagination, current_user: current_user]],
-        current_user: current_user,
-        fallback_return: []
-      )
-      |> debug("followers in feeed")
-
-    [
-      loading: false,
-      back: "/&#{e(user, :character, :username, nil)}",
-      selected_tab: tab,
-      feed: requests ++ e(followers, :edges, []),
-      page_info: e(followers, :page_info, []),
-      previous_page_info: e(assigns(socket), :page_info, false)
-    ]
-  end
-
-  def load_user_feed_assigns("followed" = tab, user, params, socket) do
-    user = user || e(assigns(socket), :user, nil)
-    current_user = current_user(assigns(socket))
-    pagination = input_to_atoms(params)
-
-    requested =
-      if id(user) == id(current_user), do: list_requested(current_user, pagination), else: []
-
-    #  TODO: use FeedLoader
-    followed =
-      Utils.maybe_apply(
-        Bonfire.Social.Graph.Follows,
-        :list_followed,
-        [user, [pagination: pagination, current_user: current_user]],
-        current_user: current_user,
-        fallback_return: []
-      )
-
-    # |> debug("followed")
-
-    [
-      loading: false,
-      back: "/@#{e(user, :character, :username, nil)}",
-      selected_tab: tab,
-      feed: requested ++ e(followed, :edges, []),
-      page_info: e(followed, :page_info, []),
-      previous_page_info: e(assigns(socket), :page_info, false)
-    ]
-  end
-
-  def load_user_feed_assigns("requested" = tab, _user, params, socket) do
-    requested = list_requested(current_user(assigns(socket)), input_to_atoms(params))
-
-    [
-      loading: false,
-      selected_tab: tab,
-      back: "/@#{e(current_user(assigns(socket)), :character, :username, nil)}",
-      feed: requested
-      # TODO: pagination
-      # page_info: e(requested, :page_info, [])
-    ]
-  end
-
-  def load_user_feed_assigns("requests" = tab, _user, params, socket) do
-    requests = list_requests(current_user(assigns(socket)), input_to_atoms(params))
-
-    [
-      loading: false,
-      back: "/@#{e(current_user(assigns(socket)), :character, :username, nil)}",
-      selected_tab: tab,
-      feed: requests
-      # page_info: e(requested, :page_info, [])
-    ]
-  end
-
-  def load_user_feed_assigns(tab, feed_id, attrs, socket)
-      when is_binary(tab) and is_binary(feed_id) do
-    params = input_to_atoms(attrs)
-    current_user = current_user(assigns(socket))
-    filters = e(assigns(socket), :filters, %{})
-    # for custom feeds
-    feed_id =
-      uid!(feed_id)
-      |> debug("feed_id")
-
-    {preloads, postloads} =
-      activity_preloads_tuple_from_filters(filters,
-        showing_within: e(assigns(socket), :showing_within, nil)
-      )
-
-    feed =
-      maybe_apply(
-        FeedLoader,
-        :feed,
-        [
-          feed_id,
-          filters,
-          [
-            pagination: params,
-            exclude_feed_ids: e(params, :exclude_feed_ids, []),
-            current_user: current_user,
-            preload: preloads
-          ]
-        ],
-        current_user: current_user,
-        fallback_return: []
-      )
-      |> debug("feed")
-
-    merge_feed_assigns(
-      feed,
-      [
-        loading: false,
-        selected_tab: tab,
-        feed_id: feed_id,
-        activity_preloads: {preloads, postloads}
-      ],
-      e(assigns(socket), :page_info, nil)
-    )
-  end
-
   defp list_requested(current_user, pagination) do
     # TODO: apply boundaries to Requests and then be able to view someone's requests/requested that involve me
     # TODO: pagination
@@ -2145,4 +1705,467 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
          page_info: e(feed, :page_info, [])
        ]}
   end
+
+  # def user_feed_assign_or_load_async(
+  #       tab,
+  #       user_or_feed,
+  #       params,
+  #       %Phoenix.LiveView.Socket{} = socket
+  #     ) do
+  #   socket_connected = connected?(socket)
+
+  #   user = user_or_feed || e(assigns(socket), :user, nil) || current_user(assigns(socket))
+
+  #   feed_id = e(user, :character, :outbox_id, nil) || id(user)
+
+  #   feed_component_id =
+  #     e(assigns(socket), :feed_component_id, nil) ||
+  #       ComponentID.new(Bonfire.UI.Social.FeedLive, feed_id)
+
+  #   if (socket_connected || not is_nil(current_user_id(assigns(socket)))) && Config.env() != :test do
+  #     if socket_connected do
+  #       debug(tab, "socket connected, so load async")
+  #       pid = self()
+
+  #       apply_task(:start_link, fn ->
+  #         debug("Query user activities asynchronously")
+
+  #         load_user_feed_assigns(tab, user_or_feed, params, socket)
+  #         |> send_feed_updates(
+  #           pid,
+  #           # "feed_profile_#{tab}",
+  #           feed_component_id,
+  #           ...,
+  #           Bonfire.UI.Social.FeedLive
+  #         )
+  #       end)
+  #     else
+  #       debug(tab, "socket NOT connected, but logged in, so no need to load for SEO")
+  #     end
+
+  #     # return temporary assigns in the meantime
+  #     {:noreply,
+  #      assign(socket,
+  #        loading: true,
+  #        feed_component_id: feed_component_id,
+  #        feed_ids: [feed_id],
+  #        feed: [],
+  #        selected_tab: tab
+  #      )}
+  #   else
+  #     debug(tab, "socket not connected or not logged in, just load feed")
+  #     # for dead mounts
+  #     {:noreply,
+  #      assign_feed(
+  #        socket,
+  #        load_user_feed_assigns(tab, user_or_feed, params, socket)
+  #      )}
+  #   end
+  # end
+
+  # def user_feed_assign_or_load_async(tab, user_or_feed, params, socket) do
+  #   debug(tab, "not a socket, just load feed")
+
+  #   {:noreply,
+  #    assign_feed(
+  #      socket,
+  #      load_user_feed_assigns(tab, user_or_feed, params, socket)
+  #    )}
+  # end
+
+  # # note the 3 arity
+  # def load_user_feed_assigns(selected_tab_and_user_id, params, socket) do
+  #   with [selected_tab, user_id] <- String.split(selected_tab_and_user_id, "_") do
+  #     debug(params, "Load and maybe paginate feed for user: #{selected_tab_and_user_id}")
+  #     load_user_feed_assigns(selected_tab, user_id, params, socket)
+  #   end
+  # end
+
+  # # note the 4 arity
+  # def load_user_feed_assigns(
+  #       tab,
+  #       feed_id,
+  #       attrs,
+  #       %{assigns: %{feed_filters: feed_filters}} = socket
+  #     )
+  #     when not is_nil(feed_filters) and feed_filters != [] do
+  #   params = input_to_atoms(attrs)
+
+  #   # for custom feeds
+  #   feed_id =
+  #     uid!(feed_id)
+
+  #   # preloads = activity_preloads_tuple_from_filters(e(assigns(socket), :showing_within, nil))
+  #   {preloads, postloads} =
+  #     activity_preloads_tuple_from_filters(feed_filters,
+  #       showing_within: e(assigns(socket), :showing_within, nil)
+  #     )
+
+  #   feed =
+  #     if module = maybe_module(FeedLoader, socket),
+  #       do:
+  #         module.feed(
+  #           feed_id,
+  #           feed_filters,
+  #           pagination: params,
+  #           exclude_feed_ids: e(params, :exclude_feed_ids, []),
+  #           current_user: current_user(assigns(socket)),
+  #           preload: preloads
+  #         ),
+  #       else: []
+
+  #   merge_feed_assigns(
+  #     feed,
+  #     [
+  #       feed_update_mode: "append",
+  #       loading: false,
+  #       selected_tab: tab,
+  #       feed_id: feed_id,
+  #       activity_preloads: {preloads, postloads}
+  #     ],
+  #     e(assigns(socket), :page_info, nil)
+  #   )
+  # end
+
+  # # note the 4 arity
+  # def load_user_feed_assigns("posts" = tab, user, params, socket) do
+  #   user = user || e(assigns(socket), :user, nil)
+  #   showing_within = :feed_by_creator
+  #   current_user = current_user(assigns(socket))
+  #   filters = e(assigns(socket), :filters, %{})
+  #   # preloads = [:feed_by_creator] ++ activity_preloads_tuple_from_filters(showing_within)
+  #   {preloads, postloads} =
+  #     activity_preloads_tuple_from_filters(filters,
+  #       showing_within: e(assigns(socket), :showing_within, nil)
+  #     )
+
+  #   #  TODO: use FeedLoader
+  #   feed =
+  #     Utils.maybe_apply(
+  #       Bonfire.Posts,
+  #       :list_by,
+  #       [
+  #         user,
+  #         [
+  #           pagination: input_to_atoms(params),
+  #           current_user: current_user,
+  #           preload: preloads
+  #         ]
+  #       ],
+  #       current_user: current_user,
+  #       fallback_return: []
+  #     )
+
+  #   # |> debug("posts")
+
+  #   merge_feed_assigns(
+  #     feed,
+  #     [
+  #       loading: false,
+  #       selected_tab: tab,
+  #       page: "posts",
+  #       showing_within: showing_within,
+  #       activity_preloads: {preloads, postloads}
+  #     ],
+  #     e(assigns(socket), :page_info, nil)
+  #   )
+  # end
+
+  # def load_user_feed_assigns("objects" = tab, user, %{"extra" => type} = params, socket) do
+  #   user = user || e(assigns(socket), :user, nil)
+  #   current_user = current_user(assigns(socket))
+  #   type = Types.maybe_to_atom(type)
+  #   object_types = Types.maybe_to_module(type) || type
+  #   filters = e(assigns(socket), :filters, %{})
+  #   # preloads = [:feed_by_creator] ++ activity_preloads_tuple_from_filters(:feed_by_creator)
+  #   {preloads, postloads} =
+  #     activity_preloads_tuple_from_filters(filters,
+  #       showing_within: e(assigns(socket), :showing_within, nil)
+  #     )
+
+  #   feed_id =
+  #     if not is_nil(user),
+  #       do:
+  #         maybe_apply(Bonfire.Social.Feeds, :feed_id, [:outbox, user],
+  #           current_user: current_user,
+  #           fallback_return: nil
+  #         )
+  #         |> debug("outbox for #{id(user)}")
+
+  #   feed =
+  #     if not is_nil(feed_id),
+  #       do:
+  #         maybe_apply(
+  #           FeedLoader,
+  #           :feed,
+  #           [
+  #             feed_id,
+  #             %{filters | object_types: object_types},
+  #             [
+  #               pagination: input_to_atoms(params),
+  #               current_user: current_user(assigns(socket)),
+  #               subject_user: user,
+  #               showing_within: type,
+  #               preload: preloads
+  #             ]
+  #           ],
+  #           current_user: current_user,
+  #           fallback_return: []
+  #         ),
+  #       else: []
+
+  #   merge_feed_assigns(
+  #     feed,
+  #     [
+  #       loading: false,
+  #       selected_tab: tab,
+  #       page: "objects",
+  #       showing_within: type,
+  #       activity_preloads: {preloads, postloads}
+  #     ],
+  #     e(assigns(socket), :page_info, nil)
+  #   )
+  # end
+
+  # def load_user_feed_assigns("boosts" = tab, user, params, socket) do
+  #   user = user || e(assigns(socket), :user, nil)
+  #   current_user = current_user(assigns(socket))
+
+  #   #  TODO: use FeedLoader
+  #   feed =
+  #     maybe_apply(
+  #       Bonfire.Social.Boosts,
+  #       :list_by,
+  #       [user, [pagination: input_to_atoms(params), current_user: current_user]],
+  #       current_user: current_user,
+  #       fallback_return: []
+  #     )
+
+  #   # |> debug("boosts")
+
+  #   merge_feed_assigns(
+  #     feed,
+  #     [
+  #       loading: false,
+  #       selected_tab: tab,
+  #       showing_within: :feed_by_subject
+  #     ],
+  #     e(assigns(socket), :page_info, nil)
+  #   )
+  # end
+
+  # def load_user_feed_assigns("timeline" = tab, user, params, socket) do
+  #   user = user || e(assigns(socket), :user, nil)
+  #   filters = e(assigns(socket), :filters, %{})
+
+  #   {preloads, postloads} =
+  #     activity_preloads_tuple_from_filters(filters,
+  #       showing_within: e(assigns(socket), :showing_within, nil)
+  #     )
+
+  #   current_user = current_user(assigns(socket))
+
+  #   feed_id =
+  #     if not is_nil(user),
+  #       do:
+  #         maybe_apply(Bonfire.Social.Feeds, :feed_id, [:outbox, user],
+  #           current_user: current_user,
+  #           fallback_return: nil
+  #         )
+  #         |> debug("outbox for #{id(user)}")
+
+  #   feed =
+  #     if not is_nil(feed_id),
+  #       do:
+  #         maybe_apply(
+  #           FeedLoader,
+  #           :feed,
+  #           [
+  #             feed_id,
+  #             filters,
+  #             [
+  #               pagination: input_to_atoms(params),
+  #               current_user: current_user(assigns(socket)),
+  #               subject_user: user,
+  #               preload: preloads
+  #             ]
+  #           ],
+  #           current_user: current_user,
+  #           fallback_return: []
+  #         ),
+  #       else: []
+
+  #   #  debug(feed: feed)
+
+  #   merge_feed_assigns(
+  #     feed,
+  #     [
+  #       loading: false,
+  #       selected_tab: tab,
+  #       showing_within: :feed_by_subject,
+  #       feed_id: feed_id,
+  #       activity_preloads: {preloads, postloads}
+  #     ],
+  #     e(assigns(socket), :page_info, nil)
+  #   )
+  # end
+
+  # def load_user_feed_assigns(tab, user, params, socket) when tab in ["followers"] do
+  #   user = user || e(assigns(socket), :user, nil)
+  #   current_user = current_user(assigns(socket))
+  #   pagination = input_to_atoms(params)
+
+  #   requests =
+  #     if id(user) == id(current_user), do: list_requests(current_user, pagination), else: []
+
+  #   #  TODO: use FeedLoader
+  #   followers =
+  #     Utils.maybe_apply(
+  #       Bonfire.Social.Graph.Follows,
+  #       :list_followers,
+  #       [user, [pagination: pagination, current_user: current_user]],
+  #       current_user: current_user,
+  #       fallback_return: []
+  #     )
+  #     |> debug("followers in feeed")
+
+  #   [
+  #     loading: false,
+  #     back: "/@#{e(user, :character, :username, nil)}",
+  #     selected_tab: tab,
+  #     feed: requests ++ e(followers, :edges, []),
+  #     page_info: e(followers, :page_info, []),
+  #     previous_page_info: e(assigns(socket), :page_info, false)
+  #   ]
+  # end
+
+  # def load_user_feed_assigns(tab, user, params, socket) when tab in ["members"] do
+  #   user = user || e(assigns(socket), :user, nil)
+  #   current_user = current_user(assigns(socket))
+  #   pagination = input_to_atoms(params)
+
+  #   requests =
+  #     if id(user) == id(current_user), do: list_requests(current_user, pagination), else: []
+
+  #   #  TODO: use FeedLoader
+  #   followers =
+  #     Utils.maybe_apply(
+  #       Bonfire.Social.Graph.Follows,
+  #       :list_followers,
+  #       [user, [pagination: pagination, current_user: current_user]],
+  #       current_user: current_user,
+  #       fallback_return: []
+  #     )
+  #     |> debug("followers in feeed")
+
+  #   [
+  #     loading: false,
+  #     back: "/&#{e(user, :character, :username, nil)}",
+  #     selected_tab: tab,
+  #     feed: requests ++ e(followers, :edges, []),
+  #     page_info: e(followers, :page_info, []),
+  #     previous_page_info: e(assigns(socket), :page_info, false)
+  #   ]
+  # end
+
+  # def load_user_feed_assigns("followed" = tab, user, params, socket) do
+  #   user = user || e(assigns(socket), :user, nil)
+  #   current_user = current_user(assigns(socket))
+  #   pagination = input_to_atoms(params)
+
+  #   requested =
+  #     if id(user) == id(current_user), do: list_requested(current_user, pagination), else: []
+
+  #   #  TODO: use FeedLoader
+  #   followed =
+  #     Utils.maybe_apply(
+  #       Bonfire.Social.Graph.Follows,
+  #       :list_followed,
+  #       [user, [pagination: pagination, current_user: current_user]],
+  #       current_user: current_user,
+  #       fallback_return: []
+  #     )
+
+  #   # |> debug("followed")
+
+  #   [
+  #     loading: false,
+  #     back: "/@#{e(user, :character, :username, nil)}",
+  #     selected_tab: tab,
+  #     feed: requested ++ e(followed, :edges, []),
+  #     page_info: e(followed, :page_info, []),
+  #     previous_page_info: e(assigns(socket), :page_info, false)
+  #   ]
+  # end
+
+  # def load_user_feed_assigns("requested" = tab, _user, params, socket) do
+  #   requested = list_requested(current_user(assigns(socket)), input_to_atoms(params))
+
+  #   [
+  #     loading: false,
+  #     selected_tab: tab,
+  #     back: "/@#{e(current_user(assigns(socket)), :character, :username, nil)}",
+  #     feed: requested
+  #     # TODO: pagination
+  #     # page_info: e(requested, :page_info, [])
+  #   ]
+  # end
+
+  # def load_user_feed_assigns("requests" = tab, _user, params, socket) do
+  #   requests = list_requests(current_user(assigns(socket)), input_to_atoms(params))
+
+  #   [
+  #     loading: false,
+  #     back: "/@#{e(current_user(assigns(socket)), :character, :username, nil)}",
+  #     selected_tab: tab,
+  #     feed: requests
+  #     # page_info: e(requested, :page_info, [])
+  #   ]
+  # end
+
+  # def load_user_feed_assigns(tab, feed_id, attrs, socket)
+  #     when is_binary(tab) and is_binary(feed_id) do
+  #   params = input_to_atoms(attrs)
+  #   current_user = current_user(assigns(socket))
+  #   filters = e(assigns(socket), :filters, %{})
+  #   # for custom feeds
+  #   feed_id =
+  #     uid!(feed_id)
+  #     |> debug("feed_id")
+
+  #   {preloads, postloads} =
+  #     activity_preloads_tuple_from_filters(filters,
+  #       showing_within: e(assigns(socket), :showing_within, nil)
+  #     )
+
+  #   feed =
+  #     maybe_apply(
+  #       FeedLoader,
+  #       :feed,
+  #       [
+  #         feed_id,
+  #         filters,
+  #         [
+  #           pagination: params,
+  #           exclude_feed_ids: e(params, :exclude_feed_ids, []),
+  #           current_user: current_user,
+  #           preload: preloads
+  #         ]
+  #       ],
+  #       current_user: current_user,
+  #       fallback_return: []
+  #     )
+  #     |> debug("feed")
+
+  #   merge_feed_assigns(
+  #     feed,
+  #     [
+  #       loading: false,
+  #       selected_tab: tab,
+  #       feed_id: feed_id,
+  #       activity_preloads: {preloads, postloads}
+  #     ],
+  #     e(assigns(socket), :page_info, nil)
+  #   )
+  # end
 end

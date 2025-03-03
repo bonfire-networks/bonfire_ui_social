@@ -15,7 +15,7 @@ defmodule Bonfire.UI.Social.FeedsNavigation.Test do
       |> click_link("[data-id=nav_sidebar_nav_links] a", "Local")
       |> assert_path("/feed/local")
       |> click_link("[data-id=nav_sidebar_nav_links] a", "Remote")
-      |> assert_path("/feed/fediverse")
+      |> assert_path("/feed/remote")
       |> click_link("[data-id=nav_sidebar_nav_links] a", "Posts")
       |> assert_path("/feed/posts")
 

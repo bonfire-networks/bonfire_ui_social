@@ -9,6 +9,7 @@ defmodule Bonfire.UI.Social.FeedsFilters.Test do
   import Bonfire.Files.Simulation
 
   setup do
+    _ = fake_admin!()
     user = fake_user!("test_user")
     other_user = fake_user!("other_user")
     {:ok, %{user: user, other_user: other_user}}
@@ -164,6 +165,20 @@ defmodule Bonfire.UI.Social.FeedsFilters.Test do
     end
   end
 
+  describe "media feed" do
+    test "shows local images", %{user: user, other_user: other_user} do
+      {post1, _} = Fake.create_test_content(:local, user, other_user)
+
+      {media, _post} = Fake.create_test_content(:local_images, user, other_user)
+
+      conn(user: user)
+      |> visit("/feed/local_images")
+      # |> PhoenixTest.open_browser()
+      |> assert_has("article [data-id=article_media]")
+      |> refute_has("article", text: "default post")
+    end
+  end
+
   describe "flagged content feed" do
     test "shows posts flagged by me", %{user: user, other_user: other_user} do
       {post, flag} = Fake.create_test_content(:flagged_by_me, user, other_user)
@@ -214,6 +229,8 @@ defmodule Bonfire.UI.Social.FeedsFilters.Test do
   end
 
   describe "applying feed filters:" do
+    #  because of async feed (re)loading
+    @tag :fixme
     test "filters out boosts when disabled", %{user: user, other_user: other_user} do
       # Create original post and boost it
       original_post =

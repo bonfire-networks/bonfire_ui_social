@@ -24,7 +24,7 @@ defmodule Bonfire.UI.Social.Feeds.BookmarksFeed.Test do
     {:ok, bob_post} =
       Posts.publish(current_user: bob, post_attrs: bob_post_attrs, boundary: "public")
 
-    # Me bookmarks Alice's post
+    # I bookmark Alice's post
     {:ok, bookmark} = Bookmarks.bookmark(me, alice_post.id)
 
     conn = conn(user: me, account: account)
@@ -84,7 +84,7 @@ defmodule Bonfire.UI.Social.Feeds.BookmarksFeed.Test do
     |> assert_has("[data-id=object_body]", text: bob_post_content)
 
     # Unbookmark Bob's post
-    {:ok, unbookmarked} = Bookmarks.unbookmark(me, bob_post.id)
+    Bookmarks.unbookmark(me, bob_post.id)
 
     # Check that only Alice's post remains in bookmarks feed
     conn

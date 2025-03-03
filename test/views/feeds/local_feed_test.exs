@@ -1,4 +1,4 @@
-defmodule Bonfire.Social.Feeds.Instance.Test do
+defmodule Bonfire.Social.Feeds.LocalFeed.Test do
   use Bonfire.UI.Social.ConnCase, async: true
   alias Bonfire.Social.Fake
   alias Bonfire.Posts

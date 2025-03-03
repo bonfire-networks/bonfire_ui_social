@@ -27,7 +27,7 @@
       show_back_button={@show_back_button}
     ></Bonfire.UI.Common.TabsLive> --}
 
-    {!-- :if={@feed_name in [nil, :my, :local, :fediverse, :explore] and current_user_id(@__context__)} --}
+    {!-- :if={@feed_name in [nil, :my, :local, :remote, :explore] and current_user_id(@__context__)} --}
     <Bonfire.UI.Social.FeedControlsLive
       event_target={@myself}
       feed_id={@feed_id}
@@ -87,7 +87,7 @@
               feed_name={@feed_name}
               feed_id={@feed_id}
               class={@activity_class}
-              is_remote={@feed_name in [:fediverse]}
+              is_remote={@feed_name in [:remote]}
               hide_activity={@hide_activities}
               subject_user={@subject_user}
               activity_preloads={@activity_preloads}
@@ -117,7 +117,7 @@
               verb_default={@verb_default}
               feed_name={@feed_name}
               feed_id={@feed_id}
-              is_remote={@feed_name in [:fediverse]}
+              is_remote={@feed_name in [:remote]}
               hide_activity={@hide_activities}
               class={@activity_class}
               subject_user={@subject_user}

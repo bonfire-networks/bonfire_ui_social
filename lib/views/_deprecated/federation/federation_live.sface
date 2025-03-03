@@ -1,5 +1,5 @@
 <Bonfire.UI.Social.FeedLive
-  id={ComponentID.new(Bonfire.UI.Social.FeedLive, e(@feed_id, :fediverse), __MODULE__)}
+  id={ComponentID.new(Bonfire.UI.Social.FeedLive, e(@feed_id, :remote), __MODULE__)}
   feed_id={@feed_id}
   page_title={@page_title}
   feed={@feed}

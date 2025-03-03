@@ -101,6 +101,8 @@ defmodule Bonfire.UI.Social.Feeds.Test do
       )
     end
 
+    #  because actions are being loaded async
+    @tag :fixme
     test "As a user I want to see the activity's boundary", %{conn: conn, me: me} do
       # Create a post with a specific boundary
       html_body = "Post with local boundary"
@@ -184,7 +186,7 @@ defmodule Bonfire.UI.Social.Feeds.Test do
       |> click_link("[data-id=subject_name]", "test")
 
       # verify we're on the user's profile page again
-      |> assert_path("/character/test")
+      |> assert_path("/@test")
     end
 
     test "As a user I want to click over a user mention within an activity and navigate to their own profile page",

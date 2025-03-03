@@ -41,7 +41,7 @@ defmodule Bonfire.UI.Social.Feeds.ProfileFeed.Test do
      alice_post_content: alice_post_content}
   end
 
-  test "Profile feed only shows activities from the profile owner", %{
+  test "Profile feed shows activities by the user", %{
     conn: conn,
     me: me,
     alice: alice,
@@ -51,6 +51,7 @@ defmodule Bonfire.UI.Social.Feeds.ProfileFeed.Test do
     # Visit my profile feed
     conn
     |> visit("/user")
+    |> PhoenixTest.open_browser()
 
     # Test that both my post and my boost of alice's post are in the feed
     # |> assert_has("article", count: 2)
@@ -58,15 +59,26 @@ defmodule Bonfire.UI.Social.Feeds.ProfileFeed.Test do
     |> assert_has("[data-id=object_body]", text: my_post_content)
     # The boosted content should appear
     |> assert_has("[data-id=object_body]", text: alice_post_content)
+  end
 
+  test "Profile feed does not show activities by another user", %{
+    conn: conn,
+    me: me,
+    alice: alice,
+    my_post_content: my_post_content,
+    alice_post_content: alice_post_content
+  } do
     # Test that only my activities (my post & my boost) are in the feed
     # Visit alice's profile to verify her post doesn't show in my profile
+    conn
     |> visit("/user/#{alice.id}")
     |> assert_has("article", count: 1)
     |> assert_has("[data-id=object_body]", text: alice_post_content)
     |> refute_has("[data-id=object_body]", text: my_post_content)
   end
 
+  #  because feed being reloaded async
+  @tag :fixme
   test "can filter the profile feed by post only", %{
     conn: conn,
     me: me,

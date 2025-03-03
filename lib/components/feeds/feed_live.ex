@@ -344,7 +344,7 @@ defmodule Bonfire.UI.Social.FeedLive do
 
   def maybe_widgets(assigns, feed_name) do
     cond do
-      feed_name in [:my, :explore, :fediverse, :local] -> widgets(assigns)
+      feed_name in [:my, :explore, :remote, :local] -> widgets(assigns)
       feed_name in [:curated] -> curated_widgets()
       true -> []
     end
@@ -668,7 +668,7 @@ defmodule Bonfire.UI.Social.FeedLive do
 
     feed_name = feed_name(assigns(socket))
 
-    # if feed_name in [:my, :explore, :fediverse, :local], do:
+    # if feed_name in [:my, :explore, :remote, :local], do:
     send_self(widgets(e(assigns(socket), nil)))
 
     {

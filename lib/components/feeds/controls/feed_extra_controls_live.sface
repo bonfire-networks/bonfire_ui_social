@@ -1,9 +1,24 @@
 <div class="flex flex-col gap-1 w-full">
   <span class="font-semibold mt-2 uppercase text-xs text-base-content/60 pb-2 border-b border-base-content/10 mb-2">{l("Federation")}</span>
   <div class="flex items-center gap-2">
-    <button class="btn btn-soft btn-secondary btn-sm rounded-full">{l("Local")}</button>
-    <button class="btn btn-soft btn-secondary btn-sm rounded-full">{l("Federated")}</button>
-    <button class="btn btn-soft btn-secondary btn-sm rounded-full">{l("All")}</button>
+    <button
+      class="btn btn-soft btn-secondary btn-sm rounded-full"
+      phx-click="set_filter"
+      phx-value-origin={:local}
+      phx-target={@event_target}
+    >{l("Local")}</button>
+    <button
+      class="btn btn-soft btn-secondary btn-sm rounded-full"
+      phx-click="set_filter"
+      phx-value-origin={:remote}
+      phx-target={@event_target}
+    >{l("Remote")}</button>
+    <button
+      class="btn btn-soft btn-secondary btn-sm rounded-full"
+      phx-click="set_filter"
+      phx-value-origin={:all}
+      phx-target={@event_target}
+    >{l("All")}</button>
   </div>
 
   <span class="font-semibold mt-4 uppercase text-xs text-base-content/60 pb-2 border-b border-base-content/10 mb-2">{l("By Circles")}</span>

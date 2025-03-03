@@ -14,7 +14,7 @@
         </div>
         <div class="prose mt-2 text-sm prose-sm">{l("All visible activities by users of this instance")}
         </div>
-      {#match :fediverse}
+      {#match :remote}
         <div class="flex items-center gap-2">
           <#Icon iconify="streamline:planet" class="w-5 h-5 text-base-content" />
           <span class="text-sm font-semibold">{l("Remote")}</span>
