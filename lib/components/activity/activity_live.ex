@@ -547,6 +547,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
          do: "Bonfire.UI.Common.PreviewContentLive#PreviewActivity"}
       role="article"
       data-id="activity"
+      data-object_id={id(@object)}
       data-rendered={@showing_within}
       data-avatar-hidden={Settings.get([Bonfire.UI.Common.AvatarLive, :hide_avatars], false, @__context__)}
       data-hidden={@hide_activity}
