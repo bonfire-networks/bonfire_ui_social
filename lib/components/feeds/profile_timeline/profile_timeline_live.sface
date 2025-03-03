@@ -1,10 +1,11 @@
 <section>
   <#slot {@header} />
   <div data_id="profile_timeline">
+    <!-- feed_id={"user_#{@selected_tab}_#{id(@user)}"} -->
     <StatefulComponent
       module={maybe_component(Bonfire.UI.Social.FeedLive, @__context__)}
       id={@feed_component_id || "user_#{@selected_tab}_#{id(@user)}"}
-      feed_id={"user_#{@selected_tab}_#{id(@user)}"}
+      feed_name={@feed_name}
       feed_ids={@feed_ids}
       subject_user={@user}
       feed_filters={@feed_filters}

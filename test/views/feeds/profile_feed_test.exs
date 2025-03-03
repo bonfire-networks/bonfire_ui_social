@@ -6,7 +6,6 @@ defmodule Bonfire.UI.Social.Feeds.ProfileFeed.Test do
   alias Bonfire.Social.Graph.Follows
   alias Bonfire.Posts
 
-
   setup do
     account = fake_account!()
     me = fake_user!(account)
@@ -15,21 +14,31 @@ defmodule Bonfire.UI.Social.Feeds.ProfileFeed.Test do
     # me creates a post
     my_post_content = "This is my original post"
     my_post_attrs = %{post_content: %{html_body: my_post_content}}
-    {:ok, my_post} = Posts.publish(current_user: me, post_attrs: my_post_attrs, boundary: "public")
+
+    {:ok, my_post} =
+      Posts.publish(current_user: me, post_attrs: my_post_attrs, boundary: "public")
 
     # alice creates a post
     alice_post_content = "This is Alice's post"
     alice_post_attrs = %{post_content: %{html_body: alice_post_content}}
-    {:ok, alice_post} = Posts.publish(current_user: alice, post_attrs: alice_post_attrs, boundary: "public")
+
+    {:ok, alice_post} =
+      Posts.publish(current_user: alice, post_attrs: alice_post_attrs, boundary: "public")
 
     # me boosts alice post
     {:ok, boost} = Boosts.boost(me, alice_post.id)
 
     conn = conn(user: me, account: account)
 
-    {:ok, conn: conn, account: account, alice: alice, me: me,
-      my_post: my_post, alice_post: alice_post,
-      my_post_content: my_post_content, alice_post_content: alice_post_content}
+    {:ok,
+     conn: conn,
+     account: account,
+     alice: alice,
+     me: me,
+     my_post: my_post,
+     alice_post: alice_post,
+     my_post_content: my_post_content,
+     alice_post_content: alice_post_content}
   end
 
   test "Profile feed only shows activities from the profile owner", %{
@@ -47,7 +56,8 @@ defmodule Bonfire.UI.Social.Feeds.ProfileFeed.Test do
     # |> assert_has("article", count: 2)
 
     |> assert_has("[data-id=object_body]", text: my_post_content)
-    |> assert_has("[data-id=object_body]", text: alice_post_content)  # The boosted content should appear
+    # The boosted content should appear
+    |> assert_has("[data-id=object_body]", text: alice_post_content)
 
     # Test that only my activities (my post & my boost) are in the feed
     # Visit alice's profile to verify her post doesn't show in my profile

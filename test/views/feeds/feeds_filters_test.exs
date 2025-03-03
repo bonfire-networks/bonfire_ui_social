@@ -6,6 +6,7 @@ defmodule Bonfire.UI.Social.FeedsFilters.Test do
   alias Bonfire.Social.Graph.Follows
   alias Bonfire.Posts
   import Bonfire.Posts.Fake, except: [fake_remote_user!: 0]
+  import Bonfire.Files.Simulation
 
   setup do
     user = fake_user!("test_user")
@@ -34,7 +35,8 @@ defmodule Bonfire.UI.Social.FeedsFilters.Test do
       |> visit("/feed")
       # |> click_button("Filters")
       |> within("[data-scope='time_limit']", fn session ->
-        session # TODO refactor to use range
+        # TODO refactor to use range
+        session
         |> choose("All time")
         |> choose("Day")
         |> choose("Week")
@@ -44,6 +46,10 @@ defmodule Bonfire.UI.Social.FeedsFilters.Test do
     end
 
     # if this is desired?
+    @tag :todo
+    test "filters persist after load more", %{} do
+    end
+
     @tag :todo
     test "filters persist after navigation", %{} do
       conn(user: fake_user!())
@@ -69,7 +75,7 @@ defmodule Bonfire.UI.Social.FeedsFilters.Test do
   describe "following feed" do
     test "shows posts from followed users", %{user: user, other_user: other_user} do
       # Create test content for following feed
-      {post, _} = create_test_content(:my, user, other_user)
+      {post, _} = Fake.create_test_content(:my, user, other_user)
 
       conn(user: user)
       |> visit("/feed/my")
@@ -80,17 +86,17 @@ defmodule Bonfire.UI.Social.FeedsFilters.Test do
 
   describe "bookmarks feed" do
     test "shows bookmarked posts", %{user: user, other_user: other_user} do
-      {post, _} = create_test_content(:my_bookmarks, user, other_user)
+      {post, _} = Fake.create_test_content(:bookmarks, user, other_user)
 
       conn(user: user)
-      |> visit("/feed/my/bookmarks")
+      |> visit("/feed/bookmarks")
       |> assert_has("[data-id=feed] article", text: "bookmarkable post")
     end
   end
 
   describe "mentions feed" do
     test "shows posts mentioning the user", %{user: user, other_user: other_user} do
-      {post, _} = create_test_content(:mentions, user, other_user)
+      {post, _} = Fake.create_test_content(:mentions, user, other_user)
 
       conn(user: user)
       |> visit("/feed/mentions")
@@ -100,7 +106,7 @@ defmodule Bonfire.UI.Social.FeedsFilters.Test do
 
   describe "hashtag feed" do
     test "shows posts with specific hashtags", %{user: user, other_user: other_user} do
-      {post, _} = create_test_content(:hashtag, user, other_user)
+      {post, _} = Fake.create_test_content(:hashtag, user, other_user)
 
       conn(user: user)
       |> visit("/feed/hashtag/test")
@@ -110,7 +116,7 @@ defmodule Bonfire.UI.Social.FeedsFilters.Test do
 
   describe "local feed" do
     test "shows local posts", %{user: user, other_user: other_user} do
-      {post, _} = create_test_content(:local, user, other_user)
+      {post, _} = Fake.create_test_content(:local, user, other_user)
 
       conn(user: user)
       |> visit("/feed/local")
@@ -150,7 +156,7 @@ defmodule Bonfire.UI.Social.FeedsFilters.Test do
 
   describe "liked content feed" do
     test "shows posts liked by user", %{user: user, other_user: other_user} do
-      {post, like} = create_test_content(:liked_by_me, user, other_user)
+      {post, like} = Fake.create_test_content(:likes, user, other_user)
 
       conn(user: user)
       |> visit("/feed/liked")
@@ -160,7 +166,7 @@ defmodule Bonfire.UI.Social.FeedsFilters.Test do
 
   describe "flagged content feed" do
     test "shows posts flagged by me", %{user: user, other_user: other_user} do
-      {post, flag} = create_test_content(:flagged_by_me, user, other_user)
+      {post, flag} = Fake.create_test_content(:flagged_by_me, user, other_user)
 
       conn(user: user)
       |> visit("/settings/user/flags")
@@ -168,7 +174,7 @@ defmodule Bonfire.UI.Social.FeedsFilters.Test do
     end
 
     test "shows posts flagged by another user (as mod)", %{user: user, other_user: other_user} do
-      {post, flag} = create_test_content(:flagged_content, user, other_user)
+      {post, flag} = Fake.create_test_content(:flagged_content, user, other_user)
 
       conn(user: fake_admin!())
       |> visit("/settings/instance/flags")
@@ -226,173 +232,14 @@ defmodule Bonfire.UI.Social.FeedsFilters.Test do
         # |> click_button("Filters")
         |> click_button("[data-toggle='boost'] button", "Hide")
 
-      live_async_wait(session) # FIXME?
+      #  FIXME?
+      live_async_wait(session)
 
       session
       |> refute_has("[data-id=feed] article[data-verb=Boost]")
       # |> assert_has("[data-id=feed] article", count: 1)  # Only original
       |> click_button("[data-toggle='boost'] button", "Only")
       |> assert_has("[data-id=feed] article[data-verb=Boost]")
-    end
-  end
-
-  # Helper to create appropriate test content based on feed type
-  defp create_test_content(preset, user, other_user) do
-    case preset do
-      :my ->
-        other_user = fake_user!("other_user")
-
-        assert {:ok, %Bonfire.Data.Social.Follow{} = follow} =
-                 Bonfire.Social.Graph.Follows.follow(user, other_user)
-
-        # assert {:ok, %Bonfire.Data.Social.Follow{} = follow} =
-        #          Bonfire.Social.Graph.Follows.follow(other_user, user)
-
-        assert post =
-                 fake_post!(other_user, "public", %{
-                   post_content: %{
-                     name: "followed user post",
-                     html_body: "content from someone I follow"
-                   }
-                 })
-
-        # FIXME: why is post not appearing in my feed?
-        {post, nil}
-
-      :remote ->
-        #   remote_user = fake_remote_user!("remote_user")
-
-        #   post =
-        #     fake_post!(remote_user, "public", %{
-        #       post_content: %{
-        #         name: "remote post",
-        #         html_body: "content from fediverse"
-        #       }
-        #     })
-
-        # TODO
-        {nil, nil}
-
-      :notifications ->
-        create_test_content(:mentions, user, other_user)
-
-      :liked_by_me ->
-        assert post =
-                 fake_post!(other_user, "public", %{
-                   post_content: %{name: "likeable post", html_body: "content"}
-                 })
-
-        assert {:ok, like} = Bonfire.Social.Likes.like(user, post)
-        {post, like}
-
-      :user_followers ->
-        assert {:ok, follow} = Bonfire.Social.Graph.Follows.follow(user, other_user)
-
-        {other_user, follow}
-
-      :user_following ->
-        assert {:ok, follow} = Bonfire.Social.Graph.Follows.follow(other_user, user)
-
-        {user, follow}
-
-      :my_requests ->
-        # TODO
-        {nil, nil}
-
-      :my_bookmarks ->
-        assert post =
-                 fake_post!(user, "public", %{
-                   post_content: %{name: "bookmarkable post", html_body: "content"}
-                 })
-
-        assert {:ok, bookmark} = Bonfire.Social.Bookmarks.bookmark(user, post)
-
-        {post, nil}
-
-      :hashtag ->
-        assert post =
-                 fake_post!(user, "public", %{
-                   post_content: %{name: "tagged post", html_body: "post with #test"}
-                 })
-
-        {post, nil}
-
-      :mentions ->
-        assert post =
-                 fake_post!(other_user, "public", %{
-                   post_content: %{name: "mention me", html_body: "@#{user.character.username}"}
-                 })
-
-        {post, nil}
-
-      :flagged_by_me ->
-        assert post =
-                 fake_post!(other_user, "public", %{
-                   post_content: %{name: "flagged post", html_body: "content"}
-                 })
-
-        assert {:ok, flag} = Bonfire.Social.Flags.flag(user, post)
-        {post, flag}
-
-      :flagged_content ->
-        assert post =
-                 fake_post!(fake_user!(), "mentions", %{
-                   post_content: %{name: "flagged post", html_body: "content"}
-                 })
-
-        assert {:ok, flag} = Bonfire.Social.Flags.flag(other_user, post)
-        {post, flag}
-
-      :local_images ->
-        # assert {:ok, media} = Bonfire.Files.upload(ImageUploader, user, icon_file())
-        # post =
-        #   fake_post!(user, "public", %{
-        #     post_content: %{name: "media post", html_body: "content"},
-        #     uploaded_media: [media]
-        #   })
-        # {media, nil}
-
-        # TODO: images or open science publications attached to a post aren't directly linked to an activity (as opposed to open science publications fetched from ORCID API) so not included in current feed query, so need to adapt the feed query...
-        {nil, nil}
-
-      :research ->
-        #   assert {:ok, media} = Bonfire.OpenScience.APIs.fetch_and_publish_work(user, "https://doi.org/10.1080/1047840X.2012.720832")
-        #   {media, nil} 
-
-        #  FIXME: feed ends up empty
-        {nil, nil}
-
-      :local_media ->
-        # TODO: with both image and publication?
-        {nil, nil}
-
-      :trending_discussions ->
-        # TODO
-        {nil, nil}
-
-      :messages ->
-        #   receiver = Fake.fake_user!()
-        #   attrs = %{
-        #     to_circles: [receiver.id],
-        #     post_content: %{name: "test DM", html_body: "content"}
-        #   }
-        #   assert {:ok, message} = Messages.send(user, attrs)
-        #   {receiver, message}
-
-        # TODO?
-        {nil, nil}
-
-      other
-      when is_nil(other) or other in [:local, :explore, :user_by_object_type, :user_activities] ->
-        assert post =
-                 fake_post!(other_user, "public", %{
-                   post_content: %{name: "default post", html_body: "content"}
-                 })
-
-        {post, nil}
-
-      other ->
-        raise "Missing create_test_content case for #{inspect(other)}"
     end
   end
 end

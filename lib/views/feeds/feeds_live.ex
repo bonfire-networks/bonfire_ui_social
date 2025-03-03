@@ -43,7 +43,10 @@ defmodule Bonfire.UI.Social.FeedsLive do
         {l("Explore"), page: "explore", href: "/feed/explore", icon: "ic:baseline-rss-feed"},
         {l("Local"), page: "local", href: "/feed/local", icon: "ic:baseline-rss-feed"},
         {l("Remote"), page: "fediverse", href: "/feed/fediverse", icon: "ic:baseline-rss-feed"},
-        {l("Posts"), page: "posts", href: "/feed/posts", icon: "ic:baseline-rss-feed"}
+        {l("Posts"), page: "posts", href: "/feed/posts", icon: "ic:baseline-rss-feed"},
+        {l("Bookmarks"),
+         page: "bookmarks", href: "/feed/bookmarks", icon: "carbon:bookmark-filled"},
+        {l("Likes"), page: "likes", href: "/feed/likes", icon: "mingcute:fire-line"}
       ]
     }
   )

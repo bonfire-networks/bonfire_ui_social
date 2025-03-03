@@ -17,7 +17,9 @@ defmodule Bonfire.Social.Notifications.Threads.Test do
   describe "show" do
     # FIXME: should this be expected behaviour? (without @ mention)
     @tag :skip_ci
-    test "replies I'm allowed to see (even from people I'm not following) in my notifications", %{conn: conn} do
+    test "replies I'm allowed to see (even from people I'm not following) in my notifications", %{
+      conn: conn
+    } do
       some_account = fake_account!()
       someone = fake_user!(some_account)
 
@@ -65,113 +67,127 @@ defmodule Bonfire.Social.Notifications.Threads.Test do
     end
   end
 
-    # When an activity is a reply to another one, in the feed I want to see both activities: the original activity and the reply with enough information to understand the context
-    test "As a user, when someone replies to my activity, I want to see it in notifications, including the author's name of the reply", %{conn: conn} do
-      # Create users
-      account = fake_account!()
-      alice = fake_user!(account)
+  # When an activity is a reply to another one, in the feed I want to see both activities: the original activity and the reply with enough information to understand the context
+  test "As a user, when someone replies to my activity, I want to see it in notifications, including the author's name of the reply",
+       %{conn: conn} do
+    # Create users
+    account = fake_account!()
+    alice = fake_user!(account)
 
-      account2 = fake_account!()
-      bob = fake_user!(account2)
+    account2 = fake_account!()
+    bob = fake_user!(account2)
 
-      # Alice creates a post
-      attrs = %{
-        post_content: %{summary: "summary", name: "test post name", html_body: "<p>first post</p>"}
-      }
-      {:ok, post} = Posts.publish(current_user: alice, post_attrs: attrs, boundary: "public")
+    # Alice creates a post
+    attrs = %{
+      post_content: %{summary: "summary", name: "test post name", html_body: "<p>first post</p>"}
+    }
 
-      # Bob replies to Alice's post
-      attrs_reply = %{
-        post_content: %{summary: "summary", name: "name 2", html_body: "<p>reply to first post</p>"},
-        reply_to_id: post.id
-      }
-      {:ok, post_reply} = Posts.publish(current_user: bob, post_attrs: attrs_reply, boundary: "public")
+    {:ok, post} = Posts.publish(current_user: alice, post_attrs: attrs, boundary: "public")
 
-      # Alice checks her notifications
-      conn(user: alice, account: account)
-      |> visit("/notifications")
-      |> assert_has("[data-id=subject]", text: bob.profile.name)
-    end
+    # Bob replies to Alice's post
+    attrs_reply = %{
+      post_content: %{summary: "summary", name: "name 2", html_body: "<p>reply to first post</p>"},
+      reply_to_id: post.id
+    }
 
-    test "As a user, when someone replies to my activity, I want to see it in notifications, include the replied message", %{conn: conn} do
-      # Create users
-      account = fake_account!()
-      alice = fake_user!(account)
+    {:ok, post_reply} =
+      Posts.publish(current_user: bob, post_attrs: attrs_reply, boundary: "public")
 
-      account2 = fake_account!()
-      bob = fake_user!(account2)
+    # Alice checks her notifications
+    conn(user: alice, account: account)
+    |> visit("/notifications")
+    |> assert_has("[data-id=subject]", text: bob.profile.name)
+  end
 
-      # Alice creates a post
-      attrs = %{
-        post_content: %{summary: "summary", name: "test post name", html_body: "<p>first post</p>"}
-      }
-      {:ok, post} = Posts.publish(current_user: alice, post_attrs: attrs, boundary: "public")
+  test "As a user, when someone replies to my activity, I want to see it in notifications, include the replied message",
+       %{conn: conn} do
+    # Create users
+    account = fake_account!()
+    alice = fake_user!(account)
 
-      # Bob replies to Alice's post
-      attrs_reply = %{
-        post_content: %{summary: "summary", name: "name 2", html_body: "reply to first post"},
-        reply_to_id: post.id
-      }
-      {:ok, post_reply} = Posts.publish(current_user: bob, post_attrs: attrs_reply, boundary: "public")
+    account2 = fake_account!()
+    bob = fake_user!(account2)
 
-      # Alice checks her notifications
-      conn(user: alice, account: account)
-      |> visit("/notifications")
-      |> assert_has("article", text: "reply to first post")
-    end
+    # Alice creates a post
+    attrs = %{
+      post_content: %{summary: "summary", name: "test post name", html_body: "<p>first post</p>"}
+    }
 
-    test "As a user, when someone replies to my activity, I want to see it in notifications, included the author's name of the original activity"  do
-      # Create users
-      account = fake_account!()
-      alice = fake_user!(account)
+    {:ok, post} = Posts.publish(current_user: alice, post_attrs: attrs, boundary: "public")
 
-      account2 = fake_account!()
-      bob = fake_user!(account2)
+    # Bob replies to Alice's post
+    attrs_reply = %{
+      post_content: %{summary: "summary", name: "name 2", html_body: "reply to first post"},
+      reply_to_id: post.id
+    }
 
-      # Alice creates a post
-      attrs = %{
-        post_content: %{summary: "summary", name: "test post name", html_body: "<p>first post</p>"}
-      }
-      {:ok, post} = Posts.publish(current_user: alice, post_attrs: attrs, boundary: "public")
+    {:ok, post_reply} =
+      Posts.publish(current_user: bob, post_attrs: attrs_reply, boundary: "public")
 
-      # Bob replies to Alice's post
-      attrs_reply = %{
-        post_content: %{summary: "summary", name: "name 2", html_body: "reply to first post"},
-        reply_to_id: post.id
-      }
-      {:ok, post_reply} = Posts.publish(current_user: bob, post_attrs: attrs_reply, boundary: "public")
+    # Alice checks her notifications
+    conn(user: alice, account: account)
+    |> visit("/notifications")
+    |> assert_has("article", text: "reply to first post")
+  end
 
-      # Alice checks her notifications
-      conn(user: alice, account: account)
-      |> visit("/notifications")
-      |> assert_has("article a", text: alice.profile.name)
-    end
+  test "As a user, when someone replies to my activity, I want to see it in notifications, included the author's name of the original activity" do
+    # Create users
+    account = fake_account!()
+    alice = fake_user!(account)
 
-    test "As a user, when someone replies to my activity, I want to see it in notifications, included the content of the original activity", %{conn: conn} do
-      # Create users
-      account = fake_account!()
-      alice = fake_user!(account)
+    account2 = fake_account!()
+    bob = fake_user!(account2)
 
-      account2 = fake_account!()
-      bob = fake_user!(account2)
+    # Alice creates a post
+    attrs = %{
+      post_content: %{summary: "summary", name: "test post name", html_body: "<p>first post</p>"}
+    }
 
-      # Alice creates a post
-      attrs = %{
-        post_content: %{summary: "summary", name: "test post name", html_body: "<p>first post</p>"}
-      }
-      {:ok, post} = Posts.publish(current_user: alice, post_attrs: attrs, boundary: "public")
+    {:ok, post} = Posts.publish(current_user: alice, post_attrs: attrs, boundary: "public")
 
-      # Bob replies to Alice's post
-      attrs_reply = %{
-        post_content: %{summary: "summary", name: "name 2", html_body: "reply to first post"},
-        reply_to_id: post.id
-      }
-      {:ok, post_reply} = Posts.publish(current_user: bob, post_attrs: attrs_reply, boundary: "public")
+    # Bob replies to Alice's post
+    attrs_reply = %{
+      post_content: %{summary: "summary", name: "name 2", html_body: "reply to first post"},
+      reply_to_id: post.id
+    }
 
-      # Alice checks her notifications
-      conn(user: alice, account: account)
-      |> visit("/notifications")
-      |> assert_has("article", text: "first post")
-    end
+    {:ok, post_reply} =
+      Posts.publish(current_user: bob, post_attrs: attrs_reply, boundary: "public")
 
+    # Alice checks her notifications
+    conn(user: alice, account: account)
+    |> visit("/notifications")
+    |> assert_has("article a", text: alice.profile.name)
+  end
+
+  test "As a user, when someone replies to my activity, I want to see it in notifications, included the content of the original activity",
+       %{conn: conn} do
+    # Create users
+    account = fake_account!()
+    alice = fake_user!(account)
+
+    account2 = fake_account!()
+    bob = fake_user!(account2)
+
+    # Alice creates a post
+    attrs = %{
+      post_content: %{summary: "summary", name: "test post name", html_body: "<p>first post</p>"}
+    }
+
+    {:ok, post} = Posts.publish(current_user: alice, post_attrs: attrs, boundary: "public")
+
+    # Bob replies to Alice's post
+    attrs_reply = %{
+      post_content: %{summary: "summary", name: "name 2", html_body: "reply to first post"},
+      reply_to_id: post.id
+    }
+
+    {:ok, post_reply} =
+      Posts.publish(current_user: bob, post_attrs: attrs_reply, boundary: "public")
+
+    # Alice checks her notifications
+    conn(user: alice, account: account)
+    |> visit("/notifications")
+    |> assert_has("article", text: "first post")
+  end
 end

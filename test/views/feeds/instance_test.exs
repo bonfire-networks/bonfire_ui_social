@@ -17,7 +17,7 @@ defmodule Bonfire.Social.Feeds.Instance.Test do
   describe "show" do
     test "not logged in", %{user: user, account: account} do
       feed_id = Bonfire.Social.Feeds.named_feed_id(:local)
-      
+
       conn()
       |> visit("/feed/local")
       |> assert_has("a", text: "Log in")
@@ -25,7 +25,6 @@ defmodule Bonfire.Social.Feeds.Instance.Test do
     end
 
     test "with user", %{conn: conn, user: user, account: account} do
-
       feed_id = Bonfire.Social.Feeds.named_feed_id(:local)
 
       conn(user: user, account: account)
@@ -33,9 +32,11 @@ defmodule Bonfire.Social.Feeds.Instance.Test do
       |> assert_has("span", text: "Explore local activities")
     end
 
-    test "my own posts in instance feed (with local preset selected)", %{conn: conn, user: user, account: account} do
-
-
+    test "my own posts in instance feed (with local preset selected)", %{
+      conn: conn,
+      user: user,
+      account: account
+    } do
       attrs = %{
         post_content: %{
           summary: "summary",
@@ -48,15 +49,14 @@ defmodule Bonfire.Social.Feeds.Instance.Test do
       assert post.post_content.name =~ "test post name"
 
       feed_id = Bonfire.Social.Feeds.named_feed_id(:local)
-      
+
       conn(user: user, account: account)
       |> visit("/feed/local")
       |> assert_has("[id*='#{feed_id}']", text: "summary")
     end
 
-    test "local posts from people I am not following in instance feed (if local preset selected)", %{conn: conn, user: user, account: account} do
-      
-
+    test "local posts from people I am not following in instance feed (if local preset selected)",
+         %{conn: conn, user: user, account: account} do
       attrs = %{
         post_content: %{
           summary: "summary",
@@ -67,7 +67,6 @@ defmodule Bonfire.Social.Feeds.Instance.Test do
 
       assert {:ok, post} = Posts.publish(current_user: user, post_attrs: attrs, boundary: "local")
       assert post.post_content.name =~ "test post name"
-
 
       feed_id = Bonfire.Social.Feeds.named_feed_id(:local)
 
@@ -78,9 +77,11 @@ defmodule Bonfire.Social.Feeds.Instance.Test do
   end
 
   describe "DO NOT show" do
-    test "posts I'm NOT allowed to see in instance feed", %{conn: conn, user: user, account: account} do
-
-
+    test "posts I'm NOT allowed to see in instance feed", %{
+      conn: conn,
+      user: user,
+      account: account
+    } do
       account2 = fake_account!()
       user2 = fake_user!(account2)
       Follows.follow(user2, user)
@@ -103,7 +104,10 @@ defmodule Bonfire.Social.Feeds.Instance.Test do
     end
   end
 
-  test "Logged-out Home activities feed shows the instance outbox filtered by public boundary", %{user: user, account: account} do
+  test "Logged-out Home activities feed shows the instance outbox filtered by public boundary", %{
+    user: user,
+    account: account
+  } do
     alice = fake_user!(account)
 
     account2 = fake_account!()

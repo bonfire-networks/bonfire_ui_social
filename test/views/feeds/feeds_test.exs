@@ -6,7 +6,6 @@ defmodule Bonfire.UI.Social.Feeds.Test do
   alias Bonfire.Social.Graph.Follows
   alias Bonfire.Posts
 
-
   setup do
     account = fake_account!()
     me = fake_user!(account)
@@ -18,7 +17,11 @@ defmodule Bonfire.UI.Social.Feeds.Test do
   end
 
   @tag :todo
-  test "replies that appear via pubsub should show the reply_to", %{conn: conn, me: me, alice: alice} do
+  test "replies that appear via pubsub should show the reply_to", %{
+    conn: conn,
+    me: me,
+    alice: alice
+  } do
     Follows.follow(me, alice)
 
     # then alice creates a post
@@ -28,12 +31,14 @@ defmodule Bonfire.UI.Social.Feeds.Test do
 
     # alice creates a reply
     reply_content = "this is reply 112"
+
     attrs_reply = %{
       post_content: %{
         html_body: reply_content
       },
       reply_to_id: post.id
     }
+
     {:ok, reply} = Posts.publish(current_user: alice, post_attrs: attrs_reply, boundary: "public")
 
     # visit the feed and check for the reply
@@ -45,10 +50,12 @@ defmodule Bonfire.UI.Social.Feeds.Test do
   end
 
   @tag :todo
-  test "images/attachments should be hidden behind CW even when the initial activity appears via pubsub", %{conn: conn, me: me} do
+  test "images/attachments should be hidden behind CW even when the initial activity appears via pubsub",
+       %{conn: conn, me: me} do
     # Create a post with a content warning and media attachment
     html_body = "epic html message"
     cw = "new cw"
+
     attrs = %{
       post_content: %{
         html_body: html_body,
@@ -78,7 +85,8 @@ defmodule Bonfire.UI.Social.Feeds.Test do
 
   describe "Feeds UX" do
     @tag :todo
-    test "As a user when I publish a new post I want to see it appearing at the beginning of the feed without refreshing the page", %{conn: conn, me: me} do
+    test "As a user when I publish a new post I want to see it appearing at the beginning of the feed without refreshing the page",
+         %{conn: conn, me: me} do
       # Go to local feed
       conn
       |> visit("/feed/local")
@@ -88,7 +96,9 @@ defmodule Bonfire.UI.Social.Feeds.Test do
       |> click_button("[data-action=submit]", "Post")
 
       # Check that post appears at the beginning of the feed without page refresh
-      |> assert_has("[data-id=feed] article:first-child [data-id=object_body]", text: "This is a test post")
+      |> assert_has("[data-id=feed] article:first-child [data-id=object_body]",
+        text: "This is a test post"
+      )
     end
 
     test "As a user I want to see the activity's boundary", %{conn: conn, me: me} do
@@ -112,12 +122,14 @@ defmodule Bonfire.UI.Social.Feeds.Test do
 
       # Create a reply to the original post
       reply_content = "This is a reply to the original post"
+
       attrs_reply = %{
         post_content: %{
           html_body: reply_content
         },
         reply_to_id: post.id
       }
+
       {:ok, reply} = Posts.publish(current_user: me, post_attrs: attrs_reply, boundary: "public")
 
       # Visit the reply in its thread context
@@ -130,7 +142,8 @@ defmodule Bonfire.UI.Social.Feeds.Test do
     end
 
     @tag :todo
-    test "When I click the boost button, I want the boosted activity to appear in the timeline without refreshing", %{conn: conn, me: me, alice: alice} do
+    test "When I click the boost button, I want the boosted activity to appear in the timeline without refreshing",
+         %{conn: conn, me: me, alice: alice} do
       Follows.follow(me, alice)
 
       # alice creates a post
@@ -144,12 +157,16 @@ defmodule Bonfire.UI.Social.Feeds.Test do
       |> click_button("[data-id=boost_action]")
 
       # check that the boosted post appears in the timeline with boost indication
-      |> assert_has("[data-id=feed] article", count: 2) # Original post and boosted copy
+      # Original post and boosted copy
+      |> assert_has("[data-id=feed] article", count: 2)
+
       # Could check for specific boosted indicator depending on UI implementation
     end
 
-    test "As a user I want to click over the user avatar or name and navigate to their own profile page", %{conn: conn, me: me} do
-      username = "test" # Using the username from the HTML sample
+    test "As a user I want to click over the user avatar or name and navigate to their own profile page",
+         %{conn: conn, me: me} do
+      # Using the username from the HTML sample
+      username = "test"
       alice = fake_user!(username)
       # alice creates a post
       html_body = "Post from test user"
@@ -170,11 +187,14 @@ defmodule Bonfire.UI.Social.Feeds.Test do
       |> assert_path("/character/test")
     end
 
-    test "As a user I want to click over a user mention within an activity and navigate to their own profile page", %{conn: conn, me: me} do
+    test "As a user I want to click over a user mention within an activity and navigate to their own profile page",
+         %{conn: conn, me: me} do
       mayel = fake_user!("mayel")
 
       # Create a post with a mention
-      html_body = "<p> <a href=\"/character/mayel\">@mayel</a> here is a link <a href=\"https://example.com\">example.com</a></p>"
+      html_body =
+        "<p> <a href=\"/character/mayel\">@mayel</a> here is a link <a href=\"https://example.com\">example.com</a></p>"
+
       attrs = %{post_content: %{html_body: html_body}}
       {:ok, post} = Posts.publish(current_user: me, post_attrs: attrs, boundary: "public")
 
@@ -187,9 +207,9 @@ defmodule Bonfire.UI.Social.Feeds.Test do
       |> assert_path("/@mayel")
     end
 
-    test "As a user I want to click over a link that is part of an activity body and navigate to that link", %{conn: conn, me: me} do
-
-       # Create a user# Create a post with a link
+    test "As a user I want to click over a link that is part of an activity body and navigate to that link",
+         %{conn: conn, me: me} do
+      # Create a user# Create a post with a link
       html_body = "<p>Check out this link https://windsurf.run/elixir-phoenix-cursor-rules</p>"
       attrs = %{post_content: %{html_body: html_body}}
       {:ok, post} = Posts.publish(current_user: me, post_attrs: attrs, boundary: "public")

@@ -8,7 +8,8 @@ defmodule Bonfire.UI.Social.ProfileTimelineLive do
   # prop smart_input_opts, :map, default: %{}
   # prop search_placeholder, :string
   prop feed_title, :string, default: nil
-  prop feed_ids, :string, default: nil
+  prop feed_name, :any, default: nil
+  prop feed_ids, :any, default: nil
   prop user, :map, default: %{}
   prop feed, :list, default: nil
   prop feed_filters, :any, default: []

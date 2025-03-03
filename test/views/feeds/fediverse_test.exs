@@ -25,18 +25,20 @@ defmodule Bonfire.Social.UI.Feeds.Fediverse.Test do
     #   assert [_] = Floki.find(doc, "[id*='#{feed_id}']")
     # end
 
-test "fediverse feed is accessible when logged in" do
-  # Setup user account
-  account = fake_account!()
-  user = fake_user!(account)
-  feed_id = Bonfire.Social.Feeds.named_feed_id(:activity_pub)
-  |> IO.inspect(label: "feeeee")
-  
-  # Visit the fediverse feed as the user and verify it's visible
-  conn(user: user, account: account)
-  |> visit("/feed/fediverse")
-  |> assert_has("[id*='#{feed_id}']")
-end
+    test "fediverse feed is accessible when logged in" do
+      # Setup user account
+      account = fake_account!()
+      user = fake_user!(account)
+
+      feed_id =
+        Bonfire.Social.Feeds.named_feed_id(:activity_pub)
+        |> IO.inspect(label: "feeeee")
+
+      # Visit the fediverse feed as the user and verify it's visible
+      conn(user: user, account: account)
+      |> visit("/feed/fediverse")
+      |> assert_has("[id*='#{feed_id}']")
+    end
 
     # test "remote posts in fediverse feed" do
     #   account = fake_account!()
@@ -82,33 +84,36 @@ end
     #   assert [_] = Floki.find(doc, "[id='feed:home']")
     # end
 
-test "local posts are not visible in fediverse feed" do
-  # Setup users and follow relationship
-  account = fake_account!()
-  user = fake_user!(account)
+    test "local posts are not visible in fediverse feed" do
+      # Setup users and follow relationship
+      account = fake_account!()
+      user = fake_user!(account)
 
-  # Create a local-only post
-  attrs = %{
-    post_content: %{
-      summary: "summary",
-      name: "test local post name",
-      html_body: "<p>epic html message</p>"
-    }
-  }
-  # feed_id = Bonfire.Social.Feeds.named_feed_id(:activity_pub)
-  # |> IO.inspect(label: "feeeee")
-  
-  assert {:ok, post} = Posts.publish(current_user: user, post_attrs: attrs, boundary: "public")
-  assert post.post_content.name =~ "local post name"
+      # Create a local-only post
+      attrs = %{
+        post_content: %{
+          summary: "summary",
+          name: "test local post name",
+          html_body: "<p>epic html message</p>"
+        }
+      }
 
-  conn(user: user, account: account)
-  |> visit("/feed/explore")
-  |> assert_has("article", text: "local post name")
+      # feed_id = Bonfire.Social.Feeds.named_feed_id(:activity_pub)
+      # |> IO.inspect(label: "feeeee")
 
-  # Visit the fediverse feed and verify post is not visible
-  conn(user: user, account: account)
-  |> visit("/feed/fediverse")
-  |> refute_has("article", text: "local post name") 
-end
+      assert {:ok, post} =
+               Posts.publish(current_user: user, post_attrs: attrs, boundary: "public")
+
+      assert post.post_content.name =~ "local post name"
+
+      conn(user: user, account: account)
+      |> visit("/feed/explore")
+      |> assert_has("article", text: "local post name")
+
+      # Visit the fediverse feed and verify post is not visible
+      conn(user: user, account: account)
+      |> visit("/feed/fediverse")
+      |> refute_has("article", text: "local post name")
+    end
   end
 end

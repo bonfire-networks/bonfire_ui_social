@@ -275,7 +275,7 @@ defmodule Bonfire.Social.Threads.LiveHandler do
             recipients_editable: false,
             cw:
               e(activity, :sensitive, :is_sensitive, nil) &&
-                e(activity, :object, :post_content, :summary, nil) 
+                e(activity, :object, :post_content, :summary, nil)
           ],
           to_boundaries: [
             if(published_in_id,

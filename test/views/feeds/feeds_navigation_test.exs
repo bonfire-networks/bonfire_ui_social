@@ -18,6 +18,7 @@ defmodule Bonfire.UI.Social.FeedsNavigation.Test do
       |> assert_path("/feed/fediverse")
       |> click_link("[data-id=nav_sidebar_nav_links] a", "Posts")
       |> assert_path("/feed/posts")
+
       # |> click_link("[data-id=nav_sidebar_nav_links] a", "Discussions")
       # |> assert_path("/feed/filter/discussions")
     end
@@ -41,7 +42,8 @@ defmodule Bonfire.UI.Social.FeedsNavigation.Test do
       |> visit("/feed")
       |> within("#sort_timing_feed", fn session ->
         session
-        |> click_link("Oldest first") # FIXME
+        #  FIXME
+        |> click_link("Oldest first")
         |> assert_has("label span", text: "Oldest first")
         |> click_link("Newest first")
         |> assert_has("label span", text: "Newest first")

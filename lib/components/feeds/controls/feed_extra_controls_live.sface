@@ -48,7 +48,7 @@
     feed_filters={@feed_filters}
     event_target={@event_target}
     event_name={@event_name}
-      label_default={l("Include")}
+    label_default={l("Include")}
   />
 
   <!-- <Bonfire.UI.Social.ToggleTypeLive label={l("Likes")} key={:like} field={:activity_types} feed_filters={@feed_filters}  event_target={@event_target}  event_name={@event_name} /> -->
