@@ -8,20 +8,11 @@
     <!-- id="draggable_menu"
       phx-hook="Draggable" -->
     <ul
-      id="draggable_menu_settings"
-      phx-hook="Draggable"
-      data-widget-draggable
-      data-grouped="id"
-      data-parent="draggable_menu"
-      data-event="Bonfire.Common.Settings:reorder_widget"
       class="menu gap-3 bg-base-100 menu-sm p-0 w-full"
     >
       {#for {preset, index} <- Enum.with_index(@presets || [])}
         <li
-          data-sortable-item
-          data-order={index}
-          data-item={preset.id}
-          class="relative hover:bg-base-100 border border-base-content/10 rounded-xl"
+          class="relative border border-base-content/10 rounded-xl"
         >
           {!-- TODO? Draggable handle outside Alpine component --}
           {!-- <div
@@ -31,8 +22,7 @@
             <#Icon iconify="ic:baseline-drag-indicator" class="w-5 h-5" />
           </div> --}
 
-          {!-- Alpine component in separate container --}
-          <div x-data="{open: false}" class="pl-26 hover:bg-base-100 flex-col items-start flex w-full pr-4">
+          <div class="flex-col items-start flex w-full px-4">
             <div class="flex py-2 gap-3 items-center flex-1 w-full justify-between">
               <div class="flex flex-1 items-center gap-3">
                 <div class="flex flex-col">
@@ -73,15 +63,6 @@
                   <span class="sr-only">{l("Delete")}</span>
                 </button>
               </div>
-            </div>
-            <div
-              x-show="open"
-              class="border my-3 w-full hover:bg-base-100 flex flex-col p-3 border-base-content/10"
-              x-cloak
-              x-collapse
-            >
-              <div class="text-lg font-semibold">{l("Edit the feed preset")}</div>
-              <StatelessComponent module={maybe_component(Bonfire.UI.Social.FeedExtraControlsLive, @__context__)} />
             </div>
           </div>
         </li>

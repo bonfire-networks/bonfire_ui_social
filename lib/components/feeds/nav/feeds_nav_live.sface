@@ -10,7 +10,7 @@
           page={@page}
           type={:link}
           selected_tab={@selected_tab}
-          container_class="menu p-0 w-full"
+          container_class="menu before:content-none !ml-0 p-0 w-full"
         />
 
         <!-- {#for {preset, index} <- Enum.with_index(@presets || [])}
