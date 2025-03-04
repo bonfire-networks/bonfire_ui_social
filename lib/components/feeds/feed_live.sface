@@ -113,6 +113,7 @@
               )}
               activity={get_activity(entry)}
               showing_within={@showing_within}
+              hide_actions={@hide_actions}
               custom_preview={e(@custom_preview, nil)}
               verb_default={@verb_default}
               feed_name={@feed_name}

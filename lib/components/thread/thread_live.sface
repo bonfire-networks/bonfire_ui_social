@@ -43,61 +43,75 @@
         />
 
         {!-- flat mode simple list (use for manually set assigns, like the clicked comment while the thread is loading) --}
-        {#for reply <- @replies || []}
-          <div data-role="comment-list" class="reply flex relative w-full mx-auto">
-            <CommentLive
-              comment={reply}
-              thread_id={@thread_id}
-              feed_id={@feed_id}
-              current_url={@current_url}
-              thread_object={@object}
-              thread_mode={@thread_mode}
-              showing_within={@showing_within || :thread}
-              activity_inception={@activity_inception}
-              activity_preloads={@activity_preloads}
-            />
-          </div>
-        {/for}
-
-        {#if @thread_mode != :flat}
-          <div id={"stream_#{@id}"} phx-update="stream">
-            {#for {entry_id, {reply, child_replies}} <- @streams.threaded_replies}
-              <ThreadBranchLive
-                id={entry_id}
-                comment={reply}
-                index={0}
-                threaded_replies={child_replies}
-                thread_id={@thread_id}
-                feed_id={@feed_id}
-                current_url={@current_url}
-                thread_object={@object}
-                thread_mode={@thread_mode}
-                showing_within={@showing_within || :thread}
-                activity_inception={@activity_inception}
-                activity_preloads={@activity_preloads}
-              />
-            {/for}
-          </div>
-        {#else}
-          {!-- flat mode stream --}
-          <div id={"stream_#{@id}"} phx-update="stream">
-            {#for {entry_id, reply} <- @streams.replies}
-              <div id={entry_id} data-role="comment-flat" class="reply flex relative w-full mx-auto">
+        {#case Settings.get(
+            [
+              Bonfire.UI.Social.Activity.ActionsLive,
+              :thread,
+              :hide_until_hovered
+            ],
+            nil,
+            current_user(@__context__)
+          ) && "until_hovered"}
+          {#match hide_actions}
+            {#for reply <- @replies || []}
+              <div data-role="comment-list" class="reply flex relative w-full mx-auto">
                 <CommentLive
                   comment={reply}
                   thread_id={@thread_id}
                   feed_id={@feed_id}
                   current_url={@current_url}
                   thread_object={@object}
-                  thread_mode={debug(@thread_mode, "thread_modessss")}
+                  thread_mode={@thread_mode}
                   showing_within={@showing_within || :thread}
+                  hide_actions={hide_actions}
                   activity_inception={@activity_inception}
                   activity_preloads={@activity_preloads}
                 />
               </div>
             {/for}
-          </div>
-        {/if}
+
+            {#if @thread_mode != :flat}
+              <div id={"stream_#{@id}"} phx-update="stream">
+                {#for {entry_id, {reply, child_replies}} <- @streams.threaded_replies}
+                  <ThreadBranchLive
+                    id={entry_id}
+                    comment={reply}
+                    index={0}
+                    threaded_replies={child_replies}
+                    thread_id={@thread_id}
+                    feed_id={@feed_id}
+                    current_url={@current_url}
+                    thread_object={@object}
+                    thread_mode={@thread_mode}
+                    showing_within={@showing_within || :thread}
+                    hide_actions={hide_actions}
+                    activity_inception={@activity_inception}
+                    activity_preloads={@activity_preloads}
+                  />
+                {/for}
+              </div>
+            {#else}
+              {!-- flat mode stream --}
+              <div id={"stream_#{@id}"} phx-update="stream">
+                {#for {entry_id, reply} <- @streams.replies}
+                  <div id={entry_id} data-role="comment-flat" class="reply flex relative w-full mx-auto">
+                    <CommentLive
+                      comment={reply}
+                      thread_id={@thread_id}
+                      feed_id={@feed_id}
+                      current_url={@current_url}
+                      thread_object={@object}
+                      thread_mode={debug(@thread_mode, "thread_modessss")}
+                      showing_within={@showing_within || :thread}
+                      hide_actions={hide_actions}
+                      activity_inception={@activity_inception}
+                      activity_preloads={@activity_preloads}
+                    />
+                  </div>
+                {/for}
+              </div>
+            {/if}
+        {/case}
 
         <Bonfire.UI.Common.LoadMoreLive
           live_handler={Bonfire.Social.Threads}

@@ -24,6 +24,7 @@ defmodule Bonfire.UI.Social.ThreadBranchLive do
   # prop create_object_type, :any, default: nil
   prop current_url, :string, default: nil
   prop activity_inception, :any, default: nil
+  prop hide_actions, :any, default: false
 
   prop activity_preloads, :tuple, default: {nil, nil}
 

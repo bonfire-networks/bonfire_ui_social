@@ -18,6 +18,7 @@ defmodule Bonfire.UI.Social.FeedLive do
   prop loading, :boolean, default: true
   prop cache_strategy, :any, default: nil
   prop hide_activities, :any, default: nil
+  prop hide_actions, :any, default: false
 
   prop feedback_title, :string, default: nil
   prop feedback_message, :string, default: nil
@@ -214,25 +215,25 @@ defmodule Bonfire.UI.Social.FeedLive do
     )
   end
 
-  def update(%{feed_id: "user_timeline_"} = assigns, socket) do
-    debug("a user feed was NOT provided, fetching one now")
+  # def update(%{feed_id: "user_timeline_"} = assigns, socket) do
+  #   debug("a user feed was NOT provided, fetching one now")
 
-    socket = assign(socket, assigns)
-    socket = assign(socket, :feed_component_id, assigns(socket).id)
+  #   socket = assign(socket, assigns)
+  #   socket = assign(socket, :feed_component_id, assigns(socket).id)
 
-    socket =
-      socket
-      |> LiveHandler.feed_assigns_maybe_async(
-        assigns(socket)[:feed_name] || assigns(socket)[:feed_id] || assigns(socket)[:id] ||
-          :default,
-        ...
-      )
-      |> LiveHandler.insert_feed(socket, ...)
+  #   socket =
+  #     socket
+  #     |> LiveHandler.feed_assigns_maybe_async(
+  #       assigns(socket)[:feed_name] || assigns(socket)[:feed_id] || assigns(socket)[:id] ||
+  #         :default,
+  #       ...
+  #     )
+  #     |> LiveHandler.insert_feed(socket, ...)
 
-    maybe_subscribe(socket)
+  #   maybe_subscribe(socket)
 
-    ok_socket(socket)
-  end
+  #   ok_socket(socket)
+  # end
 
   def update(%{feed: nil, feed_filters: empty_feed_filters} = assigns, socket)
       when empty_feed_filters == %{} or empty_feed_filters == [] or empty_feed_filters == nil do
@@ -299,6 +300,17 @@ defmodule Bonfire.UI.Social.FeedLive do
      socket
      |> assign(
        feed_component_id: assigns(socket)[:id],
+       hide_actions:
+         assigns(socket)[:hide_actions] ||
+           (Settings.get(
+              [
+                Bonfire.UI.Social.Activity.ActionsLive,
+                :feed,
+                :hide_until_hovered
+              ],
+              nil,
+              current_user(socket)
+            ) && "until_hovered"),
        hide_activities:
          assigns(socket)[:hide_activities] ||
            assigns(socket)[:__context__][:current_params]["hide_activities"]

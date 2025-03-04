@@ -90,6 +90,7 @@
         viewing_main_object={false}
         activity_inception={@activity_inception}
         activity_preloads={@activity_preloads}
+        hide_actions={@hide_actions}
       />
     {/if}
   </div>
