@@ -924,19 +924,24 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
         apply_task(:start_link, fn ->
           debug(feed_name_id_or_tuple, "Query activities asynchronously")
 
-          {entries, new_assigns} = feed_assigns(feed_name_id_or_tuple, opts)
-          # |> debug("feed_assigns")
-          send_feed_updates(
-            pid,
-            assigns[:feed_component_id] || assigns[:feed_id] || :feeds,
-            {entries,
-             new_assigns ++
-               [
-                 loaded_async: true,
-                 reset_stream: reset_stream
-               ]},
-            Bonfire.UI.Social.FeedLive
-          )
+          with {entries, new_assigns} when is_list(new_assigns) <-
+                 feed_assigns(feed_name_id_or_tuple, opts) do
+            # |> debug("feed_assigns")
+            send_feed_updates(
+              pid,
+              assigns[:feed_component_id] || assigns[:feed_id] || :feeds,
+              {entries,
+               new_assigns ++
+                 [
+                   loaded_async: true,
+                   reset_stream: reset_stream
+                 ]},
+              Bonfire.UI.Social.FeedLive
+            )
+          else
+            e ->
+              error(e, "received invalid response from feed_assigns")
+          end
         end)
       else
         debug("socket NOT connected, but logged in, so no need to load for SEO")
@@ -2185,4 +2190,63 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
   #     e(assigns(socket), :page_info, nil)
   #   )
   # end
+
+  def handle_event("preset_create", %{"name" => name} = params, socket) do
+    debug(params)
+
+    with %{} = filters <- e(assigns(socket), :feed_filters, nil) || error("no filters"),
+         {:ok, settings} <-
+           Bonfire.Common.Settings.put(
+             [:bonfire_social, Bonfire.Social.Feeds, :feed_presets, maybe_to_atom(name)],
+             %{
+               name: name,
+               description: params["description"],
+               exclude_from_nav: params["show_in_nav"] != "on",
+               filters: filters
+             },
+             current_user: current_user(socket)
+           ) do
+      {
+        :noreply,
+        socket |> maybe_assign_context(settings)
+      }
+    end
+  end
+
+  def handle_event("preset_delete", %{"id" => id} = params, socket) do
+    debug(params)
+
+    with {:ok, settings} <-
+           Bonfire.Common.Settings.delete(
+             [:bonfire_social, Bonfire.Social.Feeds, :feed_presets, maybe_to_atom(id)],
+             current_user: current_user(socket)
+           ) do
+      {
+        :noreply,
+        socket |> maybe_assign_context(settings)
+      }
+    end
+  end
+
+  def handle_event("preset_nav_toggle", %{"id" => id} = params, socket) do
+    debug(params)
+
+    with {:ok, settings} <-
+           Bonfire.Common.Settings.put(
+             [
+               :bonfire_social,
+               Bonfire.Social.Feeds,
+               :feed_presets,
+               maybe_to_atom(id),
+               :exclude_from_nav
+             ],
+             params["show_in_nav"] != "on",
+             current_user: current_user(socket)
+           ) do
+      {
+        :noreply,
+        socket |> maybe_assign_context(settings)
+      }
+    end
+  end
 end

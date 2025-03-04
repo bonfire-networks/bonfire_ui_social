@@ -15,7 +15,8 @@ defmodule Bonfire.UI.Social.FeedsLive do
     # FIXME: should only include modules from current extension?
     # FIXME: these should be set somewhere in config
     default_nav: [
-      Bonfire.UI.Social.FeedsLive,
+      # Bonfire.UI.Social.FeedsLive,
+      Bonfire.UI.Social.FeedsNavLive,
       # Bonfire.UI.Files.Web.MediaFeedLive,
       Bonfire.Search.Web.SearchLive,
       # Bonfire.UI.Social.ExploreLive,
@@ -33,31 +34,31 @@ defmodule Bonfire.UI.Social.FeedsLive do
     ]
   )
 
-  declare_nav_link(
-    l("Feeds"),
-    %{
-      page: "feed",
-      icon: "ph:rss-simple-bold",
-      href: &nav_link_feed/1,
-      #  TODO: these should be generated from preset filters and settings
-      sub_links: [
-        {l("Following"), page: "following", href: "/feed/my", icon: "carbon:home"},
-        {l("Explore"), page: "explore", href: "/feed/explore", icon: "carbon:explore"},
-        {l("Local"),
-         page: "local", href: "/feed/local", icon: "material-symbols:camping-rounded"},
-        {l("Remote"), page: "remote", href: "/feed/remote", icon: "el:network"},
-        {l("Posts"),
-         page: "posts", href: "/feed/posts", icon: "ri:chat-2-line", icon_active: "ri:chat-2-fill"},
-        # {l("Discussions"),
-        #  page: "discussions",
-        # #  href: &nav_link_discussions/1,
-        #  icon: "ri:discuss-line"},
-        {l("Bookmarks"),
-         page: "bookmarks", href: "/feed/bookmarks", icon: "carbon:bookmark-filled"},
-        {l("Likes"), page: "likes", href: "/feed/likes", icon: "mingcute:fire-line"}
-      ]
-    }
-  )
+  # declare_nav_link(
+  #   l("Feeds"),
+  #   %{
+  #     page: "feed",
+  #     icon: "ph:rss-simple-bold",
+  #     href: &nav_link_feed/1,
+  #     #  TODO: these should be generated from preset filters and settings
+  #     sub_links: [
+  #       {l("Following"), page: "following", href: "/feed/my", icon: "carbon:home"},
+  #       {l("Explore"), page: "explore", href: "/feed/explore", icon: "carbon:explore"},
+  #       {l("Local"),
+  #        page: "local", href: "/feed/local", icon: "material-symbols:camping-rounded"},
+  #       {l("Remote"), page: "remote", href: "/feed/remote", icon: "el:network"},
+  #       {l("Posts"),
+  #        page: "posts", href: "/feed/posts", icon: "ri:chat-2-line", icon_active: "ri:chat-2-fill"},
+  #       # {l("Discussions"),
+  #       #  page: "discussions",
+  #       # #  href: &nav_link_discussions/1,
+  #       #  icon: "ri:discuss-line"},
+  #       {l("Bookmarks"),
+  #        page: "bookmarks", href: "/feed/bookmarks", icon: "carbon:bookmark-filled"},
+  #       {l("Likes"), page: "likes", href: "/feed/likes", icon: "mingcute:fire-line"}
+  #     ]
+  #   }
+  # )
 
   def nav_link_feed(context),
     do: "/feed/#{Settings.get([Bonfire.UI.Social.FeedLive, :default_feed], nil, context)}"

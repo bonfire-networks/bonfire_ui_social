@@ -6,102 +6,93 @@
 >
   <div :if={current_user_id(@__context__)} class="flex justify-between flex-1 gap-1">
     <div class="flex flex-1">
-    <div
-      data-position="bottom-end"
-      phx-hook="Tooltip"
-      id="order_dropdown_feed"
-      class="flex flex-1"
-      >
-      <label tabindex="0" class="tooltip-button !rounded-r-none btn w-full">
-        {#case e(@feed_filters, :sort_by, nil)}
-          {#match :num_replies}
-            <span class="flex items-center">
-              <#Icon iconify="basil:comment-outline" class="lg:hidden block w-4 h-4" />
-              <span class="hidden lg:block">{l("Most replied")}</span>
-            </span>
-          {#match :num_boosts}
-            <span class="flex items-center">
-              <#Icon iconify="system-uicons:retweet" class="lg:hidden block w-4 h-4" />
-              <span class="hidden lg:block">{l("Most boosted")}</span>
-            </span>
-          {#match :num_likes}
-            <span class="flex items-center">
-              <#Icon iconify="mingcute:fire-line" class="lg:hidden block h-[20px] w-[18px]" />
-              <span class="hidden lg:block">{l("Most liked")}</span>
-            </span>
-          {#match _}
-            <span class="flex items-center">
-              <#Icon iconify="mdi:order-alphabetical-ascending" class="lg:hidden block w-4 h-4" />
-              <span class="hidden lg:block">{l("Chronological")}</span>
-            </span>
-        {/case}
-      </label>
-      <ul
-        tabindex="0"
-        class="tooltip z-[999] menu bg-base-100 shadow-lg border rounded-xl border-base-content/10 w-45 absolute top-0 right-0 hidden"
-      >
-        <li>
-          <a
-            phx-click="set_filter"
-            phx-value-sort_by="date_created"
-            phx-target={@event_target}
-            class="flex gap-3 px-2 text-base-content"
-          >
-            <#Icon iconify="mdi:order-alphabetical-ascending" class="w-4 h-4" />
-            {l("Chronological")}
-          </a></li>
-
-        <li>
-          <a
-            phx-click="set_filter"
-            phx-value-sort_by="num_replies"
-            phx-target={@event_target}
-            class="flex gap-3 px-2 text-base-content"
-          >
-            <#Icon iconify="basil:comment-outline" class="w-4 h-4" />
-            {l("Most replied")}</a></li>
-
-        {#if extension_enabled?(:bonfire_ui_reactions, @__context__)}
+      <div data-position="bottom-end" phx-hook="Tooltip" id="order_dropdown_feed" class="flex flex-1">
+        <label tabindex="0" class="tooltip-button !rounded-r-none btn w-full">
+          {#case e(@feed_filters, :sort_by, nil)}
+            {#match :num_replies}
+              <span class="flex items-center">
+                <#Icon iconify="basil:comment-outline" class="lg:hidden block w-4 h-4" />
+                <span class="hidden lg:block">{l("Most replied")}</span>
+              </span>
+            {#match :num_boosts}
+              <span class="flex items-center">
+                <#Icon iconify="system-uicons:retweet" class="lg:hidden block w-4 h-4" />
+                <span class="hidden lg:block">{l("Most boosted")}</span>
+              </span>
+            {#match :num_likes}
+              <span class="flex items-center">
+                <#Icon iconify="mingcute:fire-line" class="lg:hidden block h-[20px] w-[18px]" />
+                <span class="hidden lg:block">{l("Most liked")}</span>
+              </span>
+            {#match _}
+              <span class="flex items-center">
+                <#Icon iconify="mdi:order-alphabetical-ascending" class="lg:hidden block w-4 h-4" />
+                <span class="hidden lg:block">{l("Chronological")}</span>
+              </span>
+          {/case}
+        </label>
+        <ul
+          tabindex="0"
+          class="tooltip z-[999] menu bg-base-100 shadow-lg border rounded-xl border-base-content/10 w-45 absolute top-0 right-0 hidden"
+        >
           <li>
             <a
               phx-click="set_filter"
-              phx-value-sort_by="num_boosts"
+              phx-value-sort_by="date_created"
               phx-target={@event_target}
               class="flex gap-3 px-2 text-base-content"
             >
-              <#Icon iconify="system-uicons:retweet" class="w-4 h-4" />
-              {l("Most boosted")}</a></li>
+              <#Icon iconify="mdi:order-alphabetical-ascending" class="w-4 h-4" />
+              {l("Chronological")}
+            </a></li>
 
           <li>
             <a
               phx-click="set_filter"
-              phx-value-sort_by="num_likes"
+              phx-value-sort_by="num_replies"
               phx-target={@event_target}
               class="flex gap-3 px-2 text-base-content"
             >
-              <#Icon iconify="mingcute:fire-line" class="w-4 h-4" />
-              {l("Most liked")}</a></li>
-        {/if}
-      </ul>
-    </div>
-    <div class="px-2 btn border-none border-l border-base-content/20 rounded-r-md flex items-center place-content-center ">
-      {#if e(@feed_filters, :sort_order, nil) == :asc}
-          <span phx-click="set_filter"
-            phx-value-sort_order="desc"
-            phx-target={@event_target}>
-          <#Icon iconify="mdi:arrow-down" class="w-4 h-4" />
+              <#Icon iconify="basil:comment-outline" class="w-4 h-4" />
+              {l("Most replied")}</a></li>
+
+          {#if extension_enabled?(:bonfire_ui_reactions, @__context__)}
+            <li>
+              <a
+                phx-click="set_filter"
+                phx-value-sort_by="num_boosts"
+                phx-target={@event_target}
+                class="flex gap-3 px-2 text-base-content"
+              >
+                <#Icon iconify="system-uicons:retweet" class="w-4 h-4" />
+                {l("Most boosted")}</a></li>
+
+            <li>
+              <a
+                phx-click="set_filter"
+                phx-value-sort_by="num_likes"
+                phx-target={@event_target}
+                class="flex gap-3 px-2 text-base-content"
+              >
+                <#Icon iconify="mingcute:fire-line" class="w-4 h-4" />
+                {l("Most liked")}</a></li>
+          {/if}
+        </ul>
+      </div>
+      <div class="px-2 btn border-none border-l border-base-content/20 rounded-r-md flex items-center place-content-center">
+        {#if e(@feed_filters, :sort_order, nil) == :asc}
+          <span phx-click="set_filter" phx-value-sort_order="desc" phx-target={@event_target}>
+            <#Icon iconify="mdi:arrow-down" class="w-4 h-4" />
           </span>
           <!-- <span class="hidden lg:block">{l("Oldest first")}</span> -->
         {#else}
-        <span phx-click="set_filter"
-            phx-value-sort_order="asc"
-            phx-target={@event_target}>
-          <#Icon iconify="mdi:arrow-up" class="w-4 h-4" />
+          <span phx-click="set_filter" phx-value-sort_order="asc" phx-target={@event_target}>
+            <#Icon iconify="mdi:arrow-up" class="w-4 h-4" />
           </span>
-          
+
           <!-- <span class="hidden lg:block">{l("Newest first")}</span> -->
         {/if}
-</div>
+      </div>
       <!-- <li><a
             phx-click="set_filter"
             phx-value-sort_order="desc"
@@ -177,7 +168,7 @@
           >
             <!-- <#Icon iconify="octicon:sort-desc-16" class="w-4 h-4" /> -->
             {l("Local")}</a>
-          </li>
+        </li>
         <li><a
             phx-click="set_filter"
             phx-value-origin={:remote}
@@ -196,9 +187,9 @@
             {l("All")}</a></li>
       </ul>
     </div>
-    
+
     <div data-position="bottom" phx-hook="Tooltip" class="flex-1" id="filter_circles_feed">
-      <label tabindex="0" class="tooltip-button btn w-full ">
+      <label tabindex="0" class="tooltip-button btn w-full">
         {l("Circles")}
       </label>
       <ul
@@ -206,22 +197,23 @@
         class="tooltip z-[999] menu bg-base-100 shadow-lg border rounded-xl border-base-content/10  w-52 absolute top-0 left-0 hidden"
       >
         <li :for={circle <-
-        Bonfire.UI.Boundaries.SetBoundariesLive.circles_for_multiselect(
-          @__context__,
-          :subject_circles
-        )}><a
+          Bonfire.UI.Boundaries.SetBoundariesLive.circles_for_multiselect(
+            @__context__,
+            :subject_circles
+          )}><a
             phx-click="set_filter"
             phx-value-subject_circles={elem(circle, 1)[:id]}
             phx-target={@event_target}
             class="flex gap-1 px-1 text-base-content"
           >
             <!-- <#Icon iconify="octicon:sort-desc-16" class="w-4 h-4" /> -->
-            <span class="flex-1"> {elem(circle, 1)[:name]}</span>
+            <span class="flex-1">
+              {elem(circle, 1)[:name]}</span>
             {#if elem(circle, 1)[:id] in List.wrap(e(@feed_filters, :subject_circles, []))}
               <#Icon iconify="carbon:checkmark-filled" class="w-4 h-4 text-success mr-2" />
             {/if}
-            </a>
-          </li>
+          </a>
+        </li>
         <!-- button
       :for={circle <-
         Bonfire.UI.Boundaries.SetBoundariesLive.circles_for_multiselect(
@@ -251,16 +243,16 @@
   </div>
 
   <div class="flex flex-col gap-2 pt-3 w-full">
-  <Bonfire.UI.Social.TimeControlLive
-    keys={[Bonfire.UI.Social.FeedLive, :time_limit]}
-    options={%{1 => l("Day"), 7 => l("Week"), 30 => l("Month"), 365 => "Year", 0 => "All time"}}
-    feed_name={@feed_name}
-    event_target={@event_target}
-    event_name={"set_filter"}
-    current_value={e(@feed_filters, :time_limit, :load_from_settings)}
-    scope={:user}
-  />
-</div>
+    <Bonfire.UI.Social.TimeControlLive
+      keys={[Bonfire.UI.Social.FeedLive, :time_limit]}
+      options={%{1 => l("Day"), 7 => l("Week"), 30 => l("Month"), 365 => "Year", 0 => "All time"}}
+      feed_name={@feed_name}
+      event_target={@event_target}
+      event_name="set_filter"
+      current_value={e(@feed_filters, :time_limit, :load_from_settings)}
+      scope={:user}
+    />
+  </div>
 
   <div x-cloak x-show="open" x-collapse.duration.200ms class="pb-0 flex pt-6 px-2 flex-col gap-2">
     <Bonfire.UI.Social.FeedExtraControlsLive
@@ -285,44 +277,50 @@
       />
     </form> -->
     <div class="justify-end gap-3 flex items-center mt-4">
-  <div>
-  <Bonfire.UI.Common.OpenModalLive
-    id={"add_to_feed_preset"}
-    title_text={l("Save this feed")}
-    no_actions
-  >
-    <div role="alert" class="alert my-2 mt-4 alert-info alert-soft">
-      <span>{l("You can save this feed configuration as a preset, to be able to access it anytime from your feed navbar.")}</span>
-    </div>
-    <form id="form_create_feed_preset" class="w-full flex flex-col gap-2">
-      <fieldset class="fieldset">
-        <legend class="fieldset-legend">{l("Feed title")}</legend>
-        <input class="input w-full" placeholder="Add a title..." />
-      </fieldset>
+      <div>
+        <Bonfire.UI.Common.OpenModalLive
+          id="add_to_feed_preset"
+          title_text={l("Save this feed")}
+          no_actions
+        >
+          <div role="alert" class="alert my-2 mt-4 alert-info alert-soft">
+            <span>{l(
+                "You can save this feed configuration as a preset, to be able to access it anytime from your feed navbar."
+              )}</span>
+          </div>
+          <form
+            id="form_create_feed_preset"
+            class="w-full flex flex-col gap-2"
+            phx-submit="Bonfire.Social.Feeds:preset_create"
+            phx-target={@event_target}
+          >
+            <fieldset class="fieldset">
+              <legend class="fieldset-legend">{l("Feed title")}</legend>
+              <input name="name" class="input w-full" placeholder="Add a title...">
+            </fieldset>
 
-      <fieldset class="fieldset">
-        <legend class="fieldset-legend">{l("Feed description")}</legend>
-        <textarea class="textarea w-full h-24" placeholder="Add a description..."></textarea>
-      </fieldset>
+            <fieldset class="fieldset">
+              <legend class="fieldset-legend">{l("Feed description")}</legend>
+              <textarea name="description" class="textarea w-full h-24" placeholder="Add a description..." />
+            </fieldset>
 
-  
-  <fieldset class="fieldset">
-    <label class="fieldset-label">
-      <input type="checkbox" checked="checked" class="checkbox" />
-      {l "Show in feeds navbar"}
-    </label>
-  </fieldset>
+            <fieldset class="fieldset">
+              <label class="fieldset-label">
+                <input type="checkbox" name="show_in_nav" checked="checked" class="checkbox">
+                {l("Show in feeds navbar")}
+              </label>
+            </fieldset>
 
-  <div class="flex justify-end">
-    <button type="submit" class="btn btn-primary">Save</button>
-  </div>
-</form>
-    <:open_btn>
-      <div class="btn btn-soft btn-primary btn-sm">{l("Save preset")}</div>
-    </:open_btn>
-  </Bonfire.UI.Common.OpenModalLive>
-</div>
-      <button phx-click="reset_filter" phx-target={@event_target} class="btn btn-soft btn-sm">{l("Reset")}</button>
+            <div class="flex justify-end">
+              <button type="submit" class="btn btn-primary">Save</button>
+            </div>
+          </form>
+          <:open_btn>
+            <div class="btn btn-soft btn-primary btn-sm">{l("Save preset")}</div>
+          </:open_btn>
+        </Bonfire.UI.Common.OpenModalLive>
+      </div>
+      <!-- <button phx-click="reset_filter" phx-target={@event_target} class="btn btn-soft btn-sm">{l("Reset")}</button> -->
     </div>
 
     <div class="flex items-center place-content-center">
@@ -332,16 +330,15 @@
     </div>
   </div>
 
-
-<div class="absolute bottom-0 left-0 right-0 h-1">
-  <svg xmlns="http://www.w3.org/2000/svg" width="100%" height="4" preserveAspectRatio="none">
-    <path d="M0,0 L8,4 L16,0 L24,4 L32,0 L40,4 L48,0 L56,4 L64,0 L72,4 L80,0 L88,4 L96,0 L104,4 L112,0 L120,4 L128,0 L136,4 L144,0 L152,4 L160,0 L168,4 L176,0 L184,4 L192,0 L200,4 L208,0 L216,4 L224,0 L232,4 L240,0 L248,4 L256,0 L264,4 L272,0 L280,4 L288,0 L296,4 L304,0 L312,4 L320,0 L328,4 L336,0 L344,4 L352,0 L360,4 L368,0 L376,4 L384,0 L392,4 L400,0 L408,4 L416,0 L424,4 L432,0 L440,4 L448,0 L456,4 L464,0 L472,4 L480,0 L488,4 L496,0 L504,4 L512,0 L520,4 L528,0 L536,4 L544,0 L552,4 L560,0 L568,4 L576,0 L584,4 L592,0 L600,4" 
-          stroke="currentColor" 
-          fill="none" 
-          stroke-width="1"
-          style="opacity: 0.2;" />
-  </svg>
-</div>
-
-
+  <div class="absolute bottom-0 left-0 right-0 h-1">
+    <svg xmlns="http://www.w3.org/2000/svg" width="100%" height="4" preserveAspectRatio="none">
+      <path
+        d="M0,0 L8,4 L16,0 L24,4 L32,0 L40,4 L48,0 L56,4 L64,0 L72,4 L80,0 L88,4 L96,0 L104,4 L112,0 L120,4 L128,0 L136,4 L144,0 L152,4 L160,0 L168,4 L176,0 L184,4 L192,0 L200,4 L208,0 L216,4 L224,0 L232,4 L240,0 L248,4 L256,0 L264,4 L272,0 L280,4 L288,0 L296,4 L304,0 L312,4 L320,0 L328,4 L336,0 L344,4 L352,0 L360,4 L368,0 L376,4 L384,0 L392,4 L400,0 L408,4 L416,0 L424,4 L432,0 L440,4 L448,0 L456,4 L464,0 L472,4 L480,0 L488,4 L496,0 L504,4 L512,0 L520,4 L528,0 L536,4 L544,0 L552,4 L560,0 L568,4 L576,0 L584,4 L592,0 L600,4"
+        stroke="currentColor"
+        fill="none"
+        stroke-width="1"
+        style="opacity: 0.2;"
+      />
+    </svg>
+  </div>
 </div>

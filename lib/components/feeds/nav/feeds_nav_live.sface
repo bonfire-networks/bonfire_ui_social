@@ -1,0 +1,29 @@
+<div>
+  <ul class="menu relative p-0 w-full mt-2">
+    <li>
+      <details open>
+        <summary class="font-bold uppercase text-xs text-base-content/50">{l("Feeds")}</summary>
+
+        <Bonfire.UI.Common.WidgetsLive
+          id="feeds_nav_links"
+          widgets={@presets}
+          page={@page}
+          type={:link}
+          selected_tab={@selected_tab}
+          container_class="menu p-0 w-full"
+        />
+
+        <!-- {#for {preset, index} <- Enum.with_index(@presets || [])}
+
+        <li><LinkLive to={~p"/feed/#{preset.id}"}>
+            <div class="w-7 h-7 rounded-lg bg-base-content/10 flex items-center place-content-center shadow-lg">
+              <Iconify.iconify icon="mingcute:movie-fill" class="w-4 h-4 text-base-content/70" />
+            </div>
+            <span class="font-medium text-base-content/80">{preset.id}</span></LinkLive>
+          </li>
+        
+        {/for} -->
+      </details>
+    </li>
+  </ul>
+</div>

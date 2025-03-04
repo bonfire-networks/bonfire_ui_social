@@ -1,0 +1,91 @@
+<div class="flex flex-col gap-6 p-4">
+  <div class="flex flex-col gap-1">
+    <div class="text-xl font-semibold">{l("Feed Settings")}</div>
+    <div class="text-base-content/70">{l("Configure your feed preferences and presets.")}</div>
+  </div>
+
+  <div class="flex flex-col gap-2">
+    <!-- id="draggable_menu"
+      phx-hook="Draggable" -->
+    <ul
+      id="draggable_menu_settings"
+      phx-hook="Draggable"
+      data-widget-draggable
+      data-grouped="id"
+      data-parent="draggable_menu"
+      data-event="Bonfire.Common.Settings:reorder_widget"
+      class="menu gap-3 bg-base-100 menu-sm p-0 w-full"
+    >
+      {#for {preset, index} <- Enum.with_index(@presets || [])}
+        <li
+          data-sortable-item
+          data-order={index}
+          data-item={preset.id}
+          class="relative hover:bg-base-100 border border-base-content/10 rounded-xl"
+        >
+          {!-- TODO? Draggable handle outside Alpine component --}
+          {!-- <div
+            data-sortable-handler
+            class="absolute left-0 top-0 bottom-0 w-23 flex items-center place-content-center border-r border-base-content/10"
+          >
+            <#Icon iconify="ic:baseline-drag-indicator" class="w-5 h-5" />
+          </div> --}
+
+          {!-- Alpine component in separate container --}
+          <div x-data="{open: false}" class="pl-26 hover:bg-base-100 flex-col items-start flex w-full pr-4">
+            <div class="flex py-2 gap-3 items-center flex-1 w-full justify-between">
+              <div class="flex flex-1 items-center gap-3">
+                <div class="flex flex-col">
+                  <div class="font-medium text-base">{preset[:name] || preset[:description] || preset.id}</div>
+                  <div class="text-sm text-base-content/70">{preset.description}</div>
+                  <div class="text-xs text-base-content/50 mt-1 flex gap-2 flex-wrap">
+                    {#if preset[:current_user_required]}
+                      <span class="badge badge-info badge-soft badge-sm">{l("Requires login")}</span>
+                    {/if}
+                    {#if preset.filters[:feed_name]}
+                      <span class="badge badge-sm badge-secondary badge-soft">{preset.filters.feed_name}</span>
+                    {/if}
+                    {#if preset.filters[:creators]}
+                      <span class="badge badge-sm badge-info badge-soft">By: {Enum.join(preset.filters.creators, ", ")}</span>
+                    {/if}
+                    {#if preset.filters[:media_types]}
+                      <span class="badge badge-sm badge-info badge-soft">Media: {Enum.join(preset.filters.media_types, ", ")}</span>
+                    {/if}
+                  </div>
+                </div>
+              </div>
+              <div class="flex items-center gap-2">
+                <form phx-change="Bonfire.Social.Feeds:preset_nav_toggle" phx-value-id={preset.id}>
+                  <label>
+                    <!-- <#Icon iconify="ph:eye-slash-bold" class="w-4 h-4" /> -->
+                    <input type="checkbox" name="show_in_nav" checked={preset[:exclude_from_nav] == false}>
+                    <span>{l("Show in navigation menu")}</span>
+                  </label>
+                </form>
+
+                <button
+                  :if={!preset[:built_in]}
+                  phx-click="Bonfire.Social.Feeds:preset_delete"
+                  phx-value-id={preset.id}
+                  class="btn btn-sm btn-circle btn-ghost text-error"
+                >
+                  <#Icon iconify="ph:trash-bold" class="w-4 h-4" />
+                  <span class="sr-only">{l("Delete")}</span>
+                </button>
+              </div>
+            </div>
+            <div
+              x-show="open"
+              class="border my-3 w-full hover:bg-base-100 flex flex-col p-3 border-base-content/10"
+              x-cloak
+              x-collapse
+            >
+              <div class="text-lg font-semibold">{l("Edit the feed preset")}</div>
+              <StatelessComponent module={maybe_component(Bonfire.UI.Social.FeedExtraControlsLive, @__context__)} />
+            </div>
+          </div>
+        </li>
+      {/for}
+    </ul>
+  </div>
+</div>
