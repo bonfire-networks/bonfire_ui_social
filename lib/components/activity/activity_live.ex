@@ -490,7 +490,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
          activity_inception,
          subject_user
        ) ++
-       component_object(object, object_type) ++
+       component_object(debug(object), debug(object_type)) ++
        component_maybe_attachments(showing_within != :media, activity, object, activity_inception) ++
        component_actions(
          verb,
@@ -500,6 +500,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
          activity_inception,
          viewing_main_object
        ))
+    |> debug("preview_components unfiltered")
     |> Enums.filter_empty([])
     |> Enum.map(fn
       c when is_atom(c) and not is_nil(c) -> {c, nil}
@@ -1421,7 +1422,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
         thread_title,
         activity_component_id
       ) do
-    debug("we have a reply_to, preloaded with post_content")
+    debug(reply_to_object, "we have a reply_to, preloaded with post_content?")
 
     Bonfire.Common.Cache.put("has_reply_to:#{activity_id}", true)
 
@@ -1430,7 +1431,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
        %{
          id: "reply_to-#{activity_component_id}-#{object_id}",
          activity_inception: activity_id,
-         #  show_minimal_subject_and_note: name_or_text(reply_to_post_content) || true,
+         # show_minimal_subject_and_note: name_or_text(reply_to_object) || true,
          # FIXME: not showing reply_to post content
          show_minimal_subject_and_note: true,
          viewing_main_object: false,
@@ -1565,14 +1566,17 @@ defmodule Bonfire.UI.Social.ActivityLive do
   def component_for_object_type(Bonfire.Data.Social.Post, %{post_content: %{html_body: _}}),
     do: [Bonfire.UI.Social.Activity.NoteLive]
 
-  def component_for_object_type(type, _object) when type in [Bonfire.Data.Social.Post],
+  def component_for_object_type(Bonfire.Data.Social.Post, %{html_body: _}),
+    do: [Bonfire.UI.Social.Activity.NoteLive]
+
+  def component_for_object_type(Bonfire.Data.Social.PostContent, _),
+    do: [Bonfire.UI.Social.Activity.NoteLive]
+
+  def component_for_object_type(Bonfire.Data.Social.Post, _object),
     # for posts with no text content (eg. only with attachments)
     do: []
 
   def component_for_object_type(Bonfire.Data.Social.Message, _),
-    do: [Bonfire.UI.Social.Activity.NoteLive]
-
-  def component_for_object_type(Bonfire.Data.Social.PostContent, _),
     do: [Bonfire.UI.Social.Activity.NoteLive]
 
   # def component_for_object_type(type, _) when type in [Bonfire.Data.Identity.User],

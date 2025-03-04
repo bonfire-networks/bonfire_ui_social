@@ -5,6 +5,7 @@
       href={link}
       target="_blank"
       rel="noopener noreferrer"
+      data-id="peered"
       data-tip={l("Originates from a remote instance")}
       class="z-20 tooltip tooltip-bottom opacity-70"
     >

@@ -17,7 +17,7 @@
         </div>
         <div class="flex-1 ml-3">
           <div class="text-sm font-medium text-base-content/70">
-            <LinkLive class="font-medium" to={@path}>
+            <LinkLive class="font-medium" to={@path} opts={"data-id": "subject_name"}>
               {@profile_name}
             </LinkLive>
             {raw(@verb_display)}
@@ -47,7 +47,11 @@
                   title={@profile_name}
                   class="h-9 w-9 rounded-full"
                 />
-                <LinkLive to={@path} class="flex link link-hover items-center gap-5 justify-start pb-2">
+                <LinkLive
+                  to={@path}
+                  opts={"data-id": "subject_name"}
+                  class="flex link link-hover items-center gap-5 justify-start pb-2"
+                >
                   <div class="font-medium text-sm text-base-content/90">
                     {@profile_name || @character_username}
 
@@ -75,7 +79,7 @@
             {!-- LIKE --}
             <#Icon iconify="mingcute:fire-fill" class="w-7 h-7 text-yellow-500" />
             <div class="flex-1 flex flex-col gap-2">
-              <LinkLive to={@path}>
+              <LinkLive to={@path} opts={"data-id": "subject_name"}>
                 <Bonfire.UI.Common.AvatarLive
                   user_id={@profile_id}
                   src={@profile_media}
@@ -84,7 +88,7 @@
                 />
               </LinkLive>
               <div class="font-medium text-sm text-base-content/90">
-                <LinkLive class="link link-hover font-semibold" to={@path}>
+                <LinkLive class="link link-hover font-semibold" to={@path} opts={"data-id": "subject_name"}>
                   {#if @object_id == current_user_id(@__context__)}
                     {l("You")}
                   {#else}
@@ -101,7 +105,7 @@
           <div class="flex items-start gap-4">
             <#Icon solid="UserAdd" class="flex-shrink-0 w-7 h-7 text-info" />
             <div class="flex flex-col gap-2">
-              <LinkLive to={@path}>
+              <LinkLive to={@path} opts={"data-id": "subject_name"}>
                 <Bonfire.UI.Common.AvatarLive
                   user_id={@profile_id}
                   src={@profile_media}
@@ -109,7 +113,11 @@
                   class="h-9 w-9 rounded-full"
                 />
               </LinkLive>
-              <LinkLive to={@path} class="flex link link-hover items-center gap-5 justify-start pb-2">
+              <LinkLive
+                to={@path}
+                opts={"data-id": "subject_name"}
+                class="flex link link-hover items-center gap-5 justify-start pb-2"
+              >
                 <div class="font-medium text-sm text-base-content/90">
                   {@profile_name || @character_username}
 
@@ -133,7 +141,7 @@
             {!-- BOOST --}
             <#Icon iconify="system-uicons:retweet" class="w-7 h-7 stroke-1 text-success" />
             <div class="flex-1 flex flex-col gap-2">
-              <LinkLive to={@path}>
+              <LinkLive to={@path} opts={"data-id": "subject_name"}>
                 <Bonfire.UI.Common.AvatarLive
                   user_id={@profile_id}
                   src={@profile_media}
@@ -142,7 +150,7 @@
                 />
               </LinkLive>
               <div class="font-medium text-sm text-base-content/90">
-                <LinkLive to={@path} class="link link-hover font-semibold">
+                <LinkLive to={@path} opts={"data-id": "subject_name"} class="link link-hover font-semibold">
                   {#if @object_id == current_user_id(@__context__)}
                     {l("You")}
                   {#else}
@@ -184,7 +192,7 @@
             <#Icon solid="Flag" class="w-4 h-4 text-error" />
             <div class="flex-1 ml-3">
               <div class="text-sm font-medium text-base-content/70">
-                <LinkLive class="font-medium link link-hover" to={@path}>
+                <LinkLive class="font-medium link link-hover" to={@path} opts={"data-id": "subject_name"}>
                   {@profile_name || @character_username}
                 </LinkLive>
                 {raw(@verb_display)} <span :if={@thread_title}>({@thread_title})</span>
@@ -197,10 +205,10 @@
                 icon={Bonfire.Boundaries.Verbs.get(@verb)[:icon]} 
                 class="w-4 h-4 text-error" />
             <div class="flex-1 ml-3">
-              <div class="text-sm font-medium text-base-content/70">
+              <div class="text-sm font-medium text-base-content/70"   >
                 <LinkLive
                   class="font-medium link link-hover"
-                  to={@path}
+                  to={@path} opts={"data-id": "subject_name"} 
                 >
                   {@profile_name || @character_username}
                 </LinkLive>
@@ -231,7 +239,11 @@
           <#Icon solid="UserAdd" class="flex-shrink-0 w-5 h-5 text-base-content/70" />
           <div class="flex-1 ml-3">
             <div class="text-sm font-medium text-base-content/70">
-              <LinkLive class="font-medium link link-hover text-base-content/70" to={@path}>
+              <LinkLive
+                class="font-medium link link-hover text-base-content/70"
+                to={@path}
+                opts={"data-id": "subject_name"}
+              >
                 {@profile_name || @character_username}
               </LinkLive>
 
@@ -250,7 +262,11 @@
           <#Icon iconify="material-symbols:push-pin" class="w-5 h-5 text-base-content/70" />
           <div class="flex-1 ml-3">
             <div class="text-sm font-medium text-base-content/70">
-              <LinkLive class="font-medium link link-hover text-base-content/70" to={@path}>
+              <LinkLive
+                class="font-medium link link-hover text-base-content/70"
+                to={@path}
+                opts={"data-id": "subject_name"}
+              >
                 {#if @object_id == current_user_id(@__context__)}
                   {l("You")}
                 {#else}
@@ -268,7 +284,11 @@
           <#Icon iconify="mingcute:fire-fill" class="w-5 h-5 text-yellow-500" />
           <div class="flex-1 ml-3">
             <div class="text-sm font-medium text-base-content/70">
-              <LinkLive class="font-medium link link-hover text-base-content/70" to={@path}>
+              <LinkLive
+                class="font-medium link link-hover text-base-content/70"
+                to={@path}
+                opts={"data-id": "subject_name"}
+              >
                 {#if @object_id == current_user_id(@__context__)}
                   {l("You")}
                 {#else}
@@ -286,7 +306,11 @@
           <#Icon solid="UserAdd" class="flex-shrink-0 w-5 h-5 text-base-content/70" />
           <div class="flex-1 ml-3">
             <div class="text-sm font-medium text-base-content/70">
-              <LinkLive class="font-medium link link-hover text-base-content/70" to={@path}>
+              <LinkLive
+                class="font-medium link link-hover text-base-content/70"
+                to={@path}
+                opts={"data-id": "subject_name"}
+              >
                 {@profile_name || @character_username}
               </LinkLive>
 
@@ -306,7 +330,11 @@
           <#Icon iconify="system-uicons:retweet" class="w-5 h-5 text-success" />
           <div class="flex-1 ml-3">
             <div class="text-sm font-medium text-base-content/70">
-              <LinkLive class="font-medium link link-hover text-base-content/70" to={@path}>
+              <LinkLive
+                class="font-medium link link-hover text-base-content/70"
+                to={@path}
+                opts={"data-id": "subject_name"}
+              >
                 {@profile_name || @character_username}
               </LinkLive>
               {raw(@verb_display)}
@@ -320,7 +348,7 @@
           <#Icon solid="Flag" class="w-4 h-4 text-error" />
           <div class="flex-1 ml-3">
             <div class="text-sm font-medium text-base-content/70">
-              <LinkLive class="font-medium link link-hover" to={@path}>
+              <LinkLive class="font-medium link link-hover" to={@path} opts={"data-id": "subject_name"}>
                 {@profile_name || @character_username}
               </LinkLive>
               {raw(@verb_display)} <span class="italic" :if={@thread_title}>({@thread_title})</span>

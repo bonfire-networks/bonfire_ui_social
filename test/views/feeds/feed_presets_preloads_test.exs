@@ -19,19 +19,18 @@ defmodule Bonfire.UI.Social.PreloadPresetTest do
   import Bonfire.Posts.Fake, except: [fake_remote_user!: 0]
   import Tesla.Mock
 
-
-def assert_has_or_open_browser(session, selector, opts \\ []) do 
-  assert_has(session, selector, opts)
-rescue
-  e -> 
-    PhoenixTest.open_browser(session)
-    reraise e, __STACKTRACE__
-end
+  def assert_has_or_open_browser(session, selector, opts \\ []) do
+    assert_has(session, selector, opts)
+  rescue
+    e ->
+      PhoenixTest.open_browser(session)
+      reraise e, __STACKTRACE__
+  end
 
   describe "check preloaded data" do
     setup do
       account = fake_account!()
-      user = fake_user!(account, %{name: "main user", username: "main_user"})
+      user = fake_admin!(account, %{name: "main user", username: "main_user"})
       other_user = fake_user!("other user")
       third_user = fake_user!("third user")
 
@@ -42,9 +41,18 @@ end
     end
 
     # Tests for different feed presets
-    for %{preset: preset, filters: filters} = params when preset not in [:user_followers, :user_following, :user_by_object_type, :hashtag, :mentions, nil] <-
+    # for %{preset: preset, postloads: postloads} = params when preset in [:local] <-
+    for %{preset: preset, postloads: postloads} = params
+        when preset not in [
+               :user_followers,
+               :user_following,
+               :user_by_object_type,
+               :hashtag,
+               :mentions,
+               nil
+             ] <-
           feed_preset_test_params() do
-      test "for `/feed/#{preset}`", %{
+      test "for `/feed/#{preset}` with #{inspect(postloads)}", %{
         conn: conn,
         account: account,
         user: user,
@@ -59,26 +67,32 @@ end
 
         conn = conn(user: user, account: account)
 
-        feed_path = "/feed/#{preset}"
+        feed_path =
+          if preset in [:user_activities] do
+            "/@other_user"
+          else
+            "/feed/#{preset}"
+          end
 
         # Verify the feed contains our test object
         if object do
+          activity = e(activity, :activity, nil) || e(object, :activity, nil) || activity
+
+          object =
+            Map.put(object, :activity, activity)
+            |> Activities.activity_preloads(preload: params.postloads)
+
+          preloaded_object = object.activity.object || object
+
           conn =
             conn
             |> visit(feed_path)
             |> assert_path(feed_path)
             |> assert_has_or_open_browser("[data-id=activity]")
-            |> assert_has_or_open_browser("[data-object_id=#{id(object)}]")
-
-          preloads = params.preloads ++ params.postloads
-
-          activity = e(activity, :activity, nil)  || e(object, :activity, nil) || activity
-
-          object = Map.put(object, :activity, activity)
-          |> Activities.activity_preloads(preload: preloads)
+            |> assert_has_or_open_browser("[data-object_id=#{id(preloaded_object)}]")
 
           # Verify preloads based on the feed preset configuration
-          verify_preloads_in_html(conn, preloads, object.activity.object || object, object.activity)
+          verify_preloads_in_html(conn, params.postloads, preloaded_object, object.activity)
         end
       end
     end
@@ -107,69 +121,153 @@ end
   defp verify_preloads_in_html(conn, [], object, activity) do
     conn
   end
+
   defp verify_preloads_in_html(conn, expected, object, activity) do
     conn
+    |> verify_verb(Enum.member?(expected, :with_verb), activity)
+    |> verify_object(Enum.member?(expected, :with_object), object)
+    |> verify_reply_to(Enum.member?(expected, :with_reply_to), activity)
+    |> verify_peered(Enum.member?(expected, :with_peered), activity, object)
+    # |> verify_tags(Enum.member?(expected, :tags), object) # TODO: needs test data
+    #  TODO: needs test data
+    |> verify_thread_name(Enum.member?(expected, :with_thread_name), object)
+    #  TODO: needs test data
+    |> verify_label(Enum.member?(expected, :maybe_with_labelled), activity)
+    |> verify_media(Enum.member?(expected, :with_media), activity)
     |> verify_subject(Enum.member?(expected, :with_subject), activity)
     |> verify_creator(Enum.member?(expected, :with_creator), object)
-    |> verify_object(Enum.member?(expected, :with_object), object)
-    |> verify_media(Enum.member?(expected, :with_media), activity)
-    |> verify_reply_to(Enum.member?(expected, :with_reply_to), activity)
-    # TODO: add verify_peered for :with_peered
-    # TODO: add verify_tags for :tags
-    # TODO: add verify_thread_name for :with_thread_name
-    # TODO: add verify_label for :maybe_with_labelled
-    # TODO: add verify_verb for :with_verb
   end
 
   defp verify_subject(conn, expected?, activity) do
     if expected? do
+      conn =
+        conn
+        |> assert_has_or_open_browser("[data-id=subject]")
+        |> assert_has_or_open_browser("[data-id=subject_name]",
+          text: activity.subject.profile.name
+        )
+
+      # Verify the link points to the correct profile path
+      if username = e(activity, :subject, :character, :username, nil) do
+        expected_path = "/@#{username}"
+
+        conn
+        |> assert_has_or_open_browser("a[data-id=subject_name][href='#{expected_path}']")
+      end
+    end ||
       conn
-      |> assert_has_or_open_browser("[data-id=subject]")
-      |> assert_has_or_open_browser("[data-id=subject_name]", text: activity.subject.profile.name)
-      # TODO: verify the link matches /@username
-    else
-      conn
-    end
   end
 
   defp verify_creator(conn, expected?, object) do
     if expected? do
+      conn =
+        conn
+        # Creator info is in subject component
+        |> assert_has_or_open_browser("[data-id=subject_avatar]")
+        |> assert_has_or_open_browser("[data-id=subject]",
+          text: object.created.creator.profile.name
+        )
+
+      # Verify the avatar link points to the correct profile path
+      if username = e(object, :created, :creator, :character, :username, nil) do
+        expected_path = "/@#{username}"
+
+        conn
+        |> assert_has_or_open_browser("a[data-id=subject_avatar][href='#{expected_path}']")
+      end
+    end ||
       conn
-      # Creator info is in subject component
-      |> assert_has_or_open_browser("[data-id=subject_avatar]") 
-      # TODO: verify the link around avatar matches /@username
-      |> assert_has_or_open_browser("[data-id=subject]", text: object.created.creator.profile.name)
-    else
-      conn
-    end
   end
 
   defp verify_object(conn, expected?, object) do
     if expected? do
+      if text = object.post_content.html_body do
+        conn
+        |> assert_has_or_open_browser("[data-id=activity_note]", text: text)
+      end
+    end ||
       conn
-      |> assert_has_or_open_browser("[data-id=activity_note]", text: object.post_content.html_body)
-    else
-      conn
-    end
   end
 
-
-  defp verify_media(conn, expected?, _activity) do
+  defp verify_media(conn, expected?, activity) do
     if expected? do
+      if e(activity, :media, []) != [] do
+        conn
+        |> assert_has_or_open_browser("[data-id=multimedia_list]")
+      end
+    end ||
       conn
-      |> assert_has_or_open_browser("[data-id=multimedia_list]")
-    else
-      conn
-    end
   end
 
   defp verify_reply_to(conn, expected?, activity) do
     if expected? do
-      # In the HTML, a reply typically shows a parent activity above the current activity
+      if text =
+           e(debug(activity, "theeeeea"), :replied, :reply_to, :post_content, :html_body, nil) do
+        # In the HTML, a reply typically shows a parent activity above the current activity
+        debug(text, "asserting reply_to")
+
+        conn
+        |> assert_has_or_open_browser("article.replied", text: text)
+      end
+    end ||
       conn
-      |> assert_has_or_open_browser(".replied", text: e(activity, :replied, :reply_to, :post_content, nil) )
-    else
+  end
+
+  defp verify_peered(conn, expected?, activity, object) do
+    if expected? do
+      if e(object, :peered, nil) || e(activity, :peered, nil) ||
+           e(activity, :subject, :character, :peered, nil) ||
+           e(activity, :created, :creator, :character, :peered, nil) do
+        conn
+        |> assert_has_or_open_browser("[data-id=peered]")
+      end
+    end ||
       conn
-    end
+  end
+
+  defp verify_tags(conn, expected?, object) do
+    if expected? do
+      if e(object, :post_content, :tags, nil) do
+        conn
+        # TODO: what to check for?
+        # |> assert_has_or_open_browser("[data-tag]")
+      end
+    end ||
+      conn
+  end
+
+  defp verify_thread_name(conn, expected?, activity) do
+    if expected? do
+      if title = e(activity, :replied, :thread, :named, :name, nil) do
+        # Check if thread name is displayed in the HTML
+        # This might be in a header or title element
+        conn
+        |> assert_has_or_open_browser("[data-id=title_in_subject]", title)
+      end
+    end ||
+      conn
+  end
+
+  defp verify_label(conn, expected?, activity) do
+    if expected? do
+      if text = e(activity, :labelled, :post_content, :html_body, nil) do
+        # Check if content label is displayed
+        conn
+        |> assert_has_or_open_browser("[data-id=labelled_widget]", text: text)
+      end
+    end ||
+      conn
+  end
+
+  defp verify_verb(conn, expected?, activity) do
+    if expected? do
+      if verb = e(activity, :verb, nil) do
+        # Check if activity verb is displayed
+        # The HTML example shows this as a data-verb attribute
+        conn
+        |> assert_has_or_open_browser("[data-verb=#{verb}]")
+      end
+    end ||
+      conn
   end
 end

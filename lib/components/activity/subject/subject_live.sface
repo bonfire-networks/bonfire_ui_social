@@ -20,7 +20,7 @@
       "absolute -ml-[3.25rem] font-semibold text-base-content hover:underline z-50",
       "!-ml-[2.5rem]": @__context__[:ui_compact] && !@viewing_main_object
     }
-    to={@path || "/user/#{@subject_id}"}
+    to={@path}
     label={e(@character_username, "") <> " profile"}
   >
     <Bonfire.UI.Common.AvatarLive
@@ -35,7 +35,7 @@
   </LinkLive>
   <!-- </label>
     <Bonfire.UI.Me.UserPreviewLive
-      href={@path || "/user/#{@subject_id || id(@character) || id(@profile)}"}
+      href={@path}
       user={%{
         id: @subject_id || id(@character) || id(@profile),
         is_local: !@is_remote,
@@ -86,7 +86,7 @@
         :if={@profile_name}
         opts={"data-id": "subject_name", "aria-label": l("%{name}'s profile", name: @profile_name)}
         class="link link-hover text-sm font-semibold lg:max-w-[360px] truncate"
-        to={@path || "/user/#{@subject_id || id(@character) || id(@profile)}"}
+        to={@path}
       >
         {@profile_name}
       </LinkLive>
@@ -146,9 +146,10 @@
                 else: l("Replying to %{name}", name: @profile_name)
                 }
                
+               {@show_minimal_subject_and_note}  
             </div>
           </div>
-        {/if}  --}
+        {/if}   --}
 </div>
 
 <a

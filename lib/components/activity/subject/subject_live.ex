@@ -32,49 +32,57 @@ defmodule Bonfire.UI.Social.Activity.SubjectLive do
   prop is_answer, :boolean, default: false
   prop activity_inception, :any, default: nil
   prop parent_id, :any, default: nil
-  # prop show_minimal_subject_and_note, :any, default: nil
+  prop show_minimal_subject_and_note, :any, default: nil
 
   def render(assigns) do
     assigns
+    |> debug("assigns received")
     |> prepare()
+    |> debug("assigns prepared")
     |> render_sface()
   end
 
   @spec prepare(any()) :: any()
   def prepare(
         %{
-          profile_name: nil,
-          character_username: nil,
-          subject_id: current_user_id,
+          profile_name: profile_name,
+          character_username: character_username,
+          subject_id: subject_id,
           __context__: %{
             current_user: %{id: current_user_id, profile: profile, character: character}
           }
         } = assigns
-      ) do
+      )
+      when subject_id == current_user_id and (is_nil(profile_name) or is_nil(character_username)) do
+    character_username = e(character, :username, character_username)
+
     assigns
     |> assign(
       subject_id: current_user_id,
-      profile_name: e(profile, :name, nil),
-      character_username: e(character, :username, nil),
-      path: path(character),
+      profile_name: e(profile, :name, profile_name),
+      character_username: character_username,
+      path: path(character) || prepare_path(character_username, subject_id, character, profile),
       profile_media: Common.Media.avatar_url(profile)
     )
   end
 
   def prepare(
         %{
-          profile_name: nil,
-          character_username: nil,
-          subject_id: subject_user_id,
+          profile_name: profile_name,
+          character_username: character_username,
+          subject_id: subject_id,
           subject_user: %{id: subject_user_id, profile: profile, character: character}
         } = assigns
-      ) do
+      )
+      when subject_id == subject_user_id and (is_nil(profile_name) or is_nil(character_username)) do
+    character_username = e(character, :username, character_username)
+
     assigns
     |> assign(
       subject_id: subject_user_id,
-      profile_name: e(profile, :name, nil),
-      character_username: e(character, :username, nil),
-      path: path(character),
+      profile_name: e(profile, :name, profile_name),
+      character_username: character_username,
+      path: path(character) || prepare_path(character_username, subject_id, character, profile),
       profile_media: Media.avatar_url(profile)
     )
   end
@@ -86,12 +94,15 @@ defmodule Bonfire.UI.Social.Activity.SubjectLive do
         } = assigns
       )
       when not is_nil(profile) or not is_nil(character) do
+    subject_id = id(profile || character)
+    character_username = e(character, :username, nil) || e(assigns, :character_username, nil)
+
     assigns
     |> assign(
-      subject_id: id(profile),
-      profile_name: e(profile, :name, nil),
-      character_username: e(character, :username, nil),
-      path: path(character || profile),
+      subject_id: subject_id,
+      profile_name: e(profile, :name, nil) || e(assigns, :profile_name, nil),
+      character_username: character_username,
+      path: path(character) || prepare_path(character_username, subject_id, character, profile),
       profile_media: Media.avatar_url(profile)
     )
   end
@@ -99,6 +110,12 @@ defmodule Bonfire.UI.Social.Activity.SubjectLive do
   def prepare(assigns) do
     assigns
     |> debug("could not prepare")
+  end
+
+  def prepare_path(character_username, subject_id, character, profile) do
+    if character_username,
+      do: "/@#{character_username}",
+      else: "/user/#{subject_id || id(character) || id(profile)}"
   end
 
   def preloads(),

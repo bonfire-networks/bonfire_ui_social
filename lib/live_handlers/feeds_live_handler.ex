@@ -800,6 +800,23 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
     ]
   end
 
+  def feed_default_assigns(:flagged_by_me = feed_name, socket) do
+    [
+      feed_name: feed_name,
+      feed_id: feed_name,
+      feed_component_id: component_id(feed_name, assigns(socket)),
+      selected_tab: :flags,
+      scope: :instance,
+      # FIXME: clean up page vs tab
+      page: "flags",
+      feedback_title: l("You have not flagged any activities..."),
+      # feed_id: feed_name,
+      # feedback_message: l("It seems like the paint is still fresh on this instance..."),
+      feed: nil,
+      page_info: nil
+    ]
+  end
+
   def feed_default_assigns(:flagged_content = feed_name, socket) do
     [
       feed_name: feed_name,
@@ -809,7 +826,7 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
       scope: :instance,
       # FIXME: clean up page vs tab
       page: "flags",
-      feedback_title: l("You have no flagged activities..."),
+      feedback_title: l("You have no flagged activities to review..."),
       # feed_id: feed_name,
       # feedback_message: l("It seems like the paint is still fresh on this instance..."),
       feed: nil,
