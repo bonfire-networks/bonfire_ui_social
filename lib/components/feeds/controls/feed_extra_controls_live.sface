@@ -1,6 +1,6 @@
 <div class="flex flex-col gap-1 w-full">
-  <span class="font-semibold mt-2 uppercase text-xs text-base-content/60 pb-2 border-b border-base-content/10 mb-2">{l("Federation")}</span>
-  <div class="flex items-center gap-2">
+  <!-- <span class="font-semibold mt-2 uppercase text-xs text-base-content/60 pb-2 border-b border-base-content/10 mb-2">{l("Federation")}</span> -->
+  <!-- <div class="flex items-center gap-2">
     <button
       class="btn btn-soft btn-secondary btn-sm rounded-full"
       phx-click="set_filter"
@@ -19,11 +19,11 @@
       phx-value-origin={:all}
       phx-target={@event_target}
     >{l("All")}</button>
-  </div>
+  </div> -->
 
-  <span class="font-semibold mt-4 uppercase text-xs text-base-content/60 pb-2 border-b border-base-content/10 mb-2">{l("By Circles")}</span>
+  <!-- <span class="font-semibold mt-4 uppercase text-xs text-base-content/60 pb-2 border-b border-base-content/10 mb-2">{l("By Circles")}</span> -->
 
-  <div class="flex items-center gap-2 mb-6 w-full flex-1 flex-wrap">
+  <!-- <div class="flex items-center gap-2 mb-6 w-full flex-1 flex-wrap">
     <button
       :for={circle <-
         Bonfire.UI.Boundaries.SetBoundariesLive.circles_for_multiselect(
@@ -41,9 +41,9 @@
     >
       {elem(circle, 1)[:name]}
     </button>
-  </div>
+  </div> -->
 
-  <span class="font-semibold uppercase text-xs text-base-content/60 pb-2 border-b border-base-content/10 mb-2">{l("Activity types")}</span>
+  <span class="font-semibold uppercase text-xs text-base-content/60 pb-2 border-b border-base-content/10 mb-2">{l("Filter by activity types")}</span>
   <div :if={extension_enabled?(:bonfire_ui_reactions, @__context__)} data-scope="boosts">
     <Bonfire.UI.Social.ToggleTypeLive
       label={l("Boosts")}
@@ -129,7 +129,7 @@
   />
 </div>
 
-<div :if={:sort_by not in @hide_filters} class="flex flex-col gap-2 pt-3 w-full">
+<!-- <div :if={:sort_by not in @hide_filters} class="flex flex-col gap-2 pt-3 w-full">
   <span class="font-semibold uppercase text-xs text-base-content/60 pb-2 border-b border-base-content/10 mb-2">{l("Sort by")}</span>
   <StatelessComponent
     module={maybe_component(Bonfire.UI.Social.SortItemsLive, @__context__)}
@@ -140,16 +140,6 @@
     sort_by={e(@feed_filters, :sort_by, nil)}
     compact
   />
-</div>
+</div> -->
 
-<div class="flex flex-col gap-2 pt-3 w-full">
-  <span class="font-semibold uppercase text-xs text-base-content/60 pb-2 border-b border-base-content/10 mb-2">{l("Limit to")}</span>
-  <Bonfire.UI.Social.Settings.TimeSortItemsLive
-    scope={:user}
-    feed_name={@feed_name}
-    event_name={@event_name}
-    event_target={@event_target}
-    time_limit={e(@feed_filters, :time_limit, nil)}
-    compact
-  />
-</div>
+

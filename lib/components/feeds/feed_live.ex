@@ -484,6 +484,16 @@ defmodule Bonfire.UI.Social.FeedLive do
     )
   end
 
+
+  def handle_event("set_filter", %{"Elixir.Bonfire.UI.Social.FeedLive" => %{"time_limit" => attrs}}, socket) do
+    debug(attrs, "cazz")
+    options = %{1 => l("Day"), 7 => l("Week"), 30 => l("Month"), 365 => "Year", 0 => "All time"}
+    values =  options |> Map.keys() |> Enum.sort()
+    selected_value = find_value_by_index(attrs, values)
+    debug(selected_value, "cazzz")
+    set_filters(%{time_limit: selected_value}, socket)
+  end
+
   def handle_event(
         "set_filter",
         %{"toggle" => field, "toggle_type" => type} = params,
@@ -692,6 +702,16 @@ defmodule Bonfire.UI.Social.FeedLive do
     }
   end
 
+
+  def find_value_by_index(index, values) do
+    index_int =
+      case Integer.parse(to_string(index)) do
+        {num, _} -> num
+        :error -> 0
+      end
+
+    Enum.at(values, index_int, List.first(values))
+  end
   #   def handle_event(
   #       "hide_fresh",
   #       attrs,

@@ -1,5 +1,5 @@
 defmodule Bonfire.UI.Social.Settings.TimeSortItemsLive do
-  use Bonfire.UI.Common.Web, :stateless_component
+  use Bonfire.UI.Common.Web, :stateful_component
 
   prop title, :string
   prop scope, :any, default: nil
