@@ -5,7 +5,7 @@
     {#match :widget}
       <div class="flex items-center mb-2">
         <div class="flex items-center justify-start w-5 h-5">
-          <#Icon iconify="mingcute:fire-line" :if={@verb == "Like"} class="w-5 h-5 text-yellow-500" />
+          <#Icon iconify="mingcute:fire-fill" :if={@verb == "Like"} class="w-5 h-5 text-yellow-500" />
           <#Icon solid="UserAdd" :if={@verb == "Follow"} class="flex-shrink-0 w-5 h-5 text-info" />
           <#Icon
             iconify="system-uicons:retweet"

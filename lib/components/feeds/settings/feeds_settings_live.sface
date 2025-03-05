@@ -7,13 +7,9 @@
   <div class="flex flex-col gap-2">
     <!-- id="draggable_menu"
       phx-hook="Draggable" -->
-    <ul
-      class="menu gap-3 bg-base-100 menu-sm p-0 w-full"
-    >
+    <ul class="flex flex-col gap-3 bg-base-100 menu-sm p-0 w-full">
       {#for {preset, index} <- Enum.with_index(@presets || [])}
-        <li
-          class="relative border border-base-content/10 rounded-xl"
-        >
+        <li class="relative border border-base-content/10 rounded-xl">
           {!-- TODO? Draggable handle outside Alpine component --}
           {!-- <div
             data-sortable-handler

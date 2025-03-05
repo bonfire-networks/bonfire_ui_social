@@ -21,7 +21,7 @@
               </span>
             {#match :num_likes}
               <span class="flex items-center">
-                <#Icon iconify="mingcute:fire-line" class="lg:hidden block h-[20px] w-[18px]" />
+                <#Icon iconify="mingcute:fire-fill" class="lg:hidden block h-[20px] w-[18px]" />
                 <span class="hidden lg:block">{l("Most liked")}</span>
               </span>
             {#match _}
@@ -74,7 +74,7 @@
                 phx-target={@event_target}
                 class="flex gap-3 px-2 text-base-content"
               >
-                <#Icon iconify="mingcute:fire-line" class="w-4 h-4" />
+                <#Icon iconify="mingcute:fire-fill" class="w-4 h-4" />
                 {l("Most liked")}</a></li>
           {/if}
         </ul>
