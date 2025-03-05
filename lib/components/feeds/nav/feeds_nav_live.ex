@@ -5,11 +5,7 @@ defmodule Bonfire.UI.Social.FeedsNavLive do
 
   def render(assigns) do
     presets =
-      Bonfire.Common.Settings.get(
-        [Bonfire.Social.Feeds, :feed_presets],
-        [],
-        current_user(assigns)
-      )
+      Bonfire.Social.Feeds.feed_presets_permitted(current_user: current_user(assigns))
       |> Enum.reject(fn {_slug, preset} ->
         preset[:exclude_from_nav] != false || preset[:parameterized]
       end)

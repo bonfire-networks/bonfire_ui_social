@@ -939,8 +939,13 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
               Bonfire.UI.Social.FeedLive
             )
           else
+            {:error, e} ->
+              error(e, "error returned by feed_assigns")
+              assign_error(socket, Bonfire.Fail.get_error_msg(e) || e, pid)
+
             e ->
               error(e, "received invalid response from feed_assigns")
+              assign_error(socket, "There was an error when trying to load the feed.", pid)
           end
         end)
       else
