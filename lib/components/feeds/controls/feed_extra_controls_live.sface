@@ -127,6 +127,18 @@
     event_name={@event_name}
     label_default={l("Include")}
   />
+
+  {#for key when key not in [:boost, :follow, :reply] <- debug(@feed_filters)[:activity_types] || []}
+    <Bonfire.UI.Social.ToggleTypeLive
+      label={String.capitalize(to_string(key))}
+      key={key}
+      field={:activity_types}
+      feed_filters={@feed_filters}
+      event_target={@event_target}
+      event_name={@event_name}
+      label_default={l("Include")}
+    />
+  {/for}
 </div>
 
 <!-- <div :if={:sort_by not in @hide_filters} class="flex flex-col gap-2 pt-3 w-full">

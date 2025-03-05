@@ -739,7 +739,7 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
       feed_id: feed_name,
       feed_component_id: component_id(feed_name, assigns(socket)),
       selected_tab: :curated,
-      # hide_tabs: true,
+      # hide_filters: true,
       showing_within: :feed_by_subject,
       # FIXME: clean up page vs tab
       page: "activities",
@@ -762,7 +762,7 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
       feed_id: feed_name,
       feed_component_id: component_id(feed_name, assigns(socket)),
       selected_tab: :likes,
-      hide_tabs: true,
+      hide_filters: true,
       showing_within: :feed_by_subject,
       # FIXME: clean up page vs tab
       page: "likes",
@@ -785,7 +785,7 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
       feed_id: feed_name,
       feed_component_id: component_id(feed_name, assigns(socket)),
       selected_tab: :bookmarks,
-      hide_tabs: true,
+      hide_filters: true,
       showing_within: :feed_by_subject,
       # FIXME: clean up page vs tab
       page: "bookmarks",
@@ -1025,20 +1025,19 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
       # My Feed
       debug("A. Starting feed_assigns for my feed")
 
-      {preloads, postloads} =
-        activity_preloads_tuple_from_filters(:my, showing_within: e(opts, :showing_within, nil))
-
-      opts =
-        (opts ++ [preload: preloads])
-        |> debug("A2. opts with preloads")
-
-      with %{} = feed <-
+      with {feed_filters, preloads, postloads} <-
+             prepare_filters_preloads_posloads(
+               :my,
+               opts
+             ),
+           opts = opts ++ [preload: preloads],
+           %{} = feed <-
              feed_id_or_ids
              |> debug("feed_id_or_ids")
              |> FeedLoader.my_feed(opts, ...) do
         merge_feed_assigns(
           feed,
-          [loading: false, activity_preloads: {preloads, postloads}],
+          [loading: false, activity_preloads: {preloads, postloads}, feed_filters: feed_filters],
           e(opts, :page_info, nil)
         )
       end
@@ -1067,20 +1066,21 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
   #   # |> debug()
   # end
 
-  defp feed_assigns({{feed_id, nil}, %{} = filters}, opts) when filters != %{} do
-    feed_assigns({feed_id, filters}, opts)
+  defp feed_assigns({{feed_id, nil}, %{} = feed_filters}, opts) when feed_filters != %{} do
+    feed_assigns({feed_id, feed_filters}, opts)
   end
 
-  defp feed_assigns({feed_id, %{} = filters}, opts) when filters != %{} do
-    {preloads, postloads} =
-      activity_preloads_tuple_from_filters(filters, showing_within: e(opts, :showing_within, nil))
-
-    opts = opts ++ [preload: preloads]
-
-    with %{} = feed <- FeedLoader.feed(feed_id, filters, opts) do
+  defp feed_assigns({feed_id, %{} = feed_filters}, opts) when feed_filters != %{} do
+    with {feed_filters, preloads, postloads} <-
+           prepare_filters_preloads_posloads(
+             feed_filters,
+             opts
+           ),
+         opts = opts ++ [preload: preloads],
+         %{} = feed <- FeedLoader.feed(feed_id, feed_filters, opts) do
       merge_feed_assigns(
         feed,
-        [loading: false, activity_preloads: {preloads, postloads}, feed_filters: filters],
+        [loading: false, activity_preloads: {preloads, postloads}, feed_filters: feed_filters],
         e(opts, :page_info, nil)
       )
     end
@@ -1089,14 +1089,13 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
   defp feed_assigns(feed_id, opts) when is_binary(feed_id) do
     feed_filters = e(opts, :feed_filters, %{})
 
-    {preloads, postloads} =
-      activity_preloads_tuple_from_filters(feed_filters,
-        showing_within: e(opts, :showing_within, nil)
-      )
-
-    opts = opts ++ [preload: preloads]
-
-    with %{} = feed <-
+    with {feed_filters, preloads, postloads} <-
+           prepare_filters_preloads_posloads(
+             feed_filters,
+             opts
+           ),
+         opts = opts ++ [preload: preloads],
+         %{} = feed <-
            feed_id
            |> debug("feed_id")
            |> FeedLoader.feed(..., feed_filters, opts) do
@@ -1180,12 +1179,13 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
   defp feed_assigns(%Ecto.Query{} = custom_query, opts) do
     feed_filters = e(opts, :feed_filters, %{})
 
-    {preloads, postloads} =
-      activity_preloads_tuple_from_filters(e(opts, :showing_within, nil), feed_filters)
-
-    opts = opts ++ [preload: preloads]
-
-    with %{} = feed <-
+    with {feed_filters, preloads, postloads} <-
+           prepare_filters_preloads_posloads(
+             feed_filters,
+             opts
+           ),
+         opts = opts ++ [preload: preloads],
+         %{} = feed <-
            custom_query
            |> debug("custom_query")
            |> FeedLoader.feed(feed_filters, opts) do
@@ -1210,14 +1210,13 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
 
     feed_filters = e(opts, :feed_filters, %{})
 
-    {preloads, postloads} =
-      activity_preloads_tuple_from_filters(feed_filters,
-        showing_within: e(opts, :showing_within, nil)
-      )
-
-    opts = opts ++ [preload: preloads]
-
-    with %{} = feed <-
+    with {feed_filters, preloads, postloads} <-
+           prepare_filters_preloads_posloads(
+             feed_filters,
+             opts
+           ),
+         opts = opts ++ [preload: preloads],
+         %{} = feed <-
            FeedLoader.feed(
              if(feed_id, do: {feed_name, feed_id}, else: feed_name) |> debug("fnid"),
              feed_filters,
@@ -1470,6 +1469,14 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
   end
 
   def activity_with_object_from_assigns(_), do: nil
+
+  def prepare_filters_preloads_posloads(filters, opts \\ []) do
+    with {:ok, filters} <- FeedLoader.prepare_feed_filters(filters, opts) do
+      {preload, postload} = activity_preloads_tuple_from_filters(filters, opts)
+
+      {filters, preload, postload}
+    end
+  end
 
   def activity_preloads_tuple_from_filters(filters, opts \\ []) do
     debug("WIP: avoid preloading in single query")

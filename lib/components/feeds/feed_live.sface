@@ -11,7 +11,7 @@
     {!-- type={if @feed_name in [nil, :my], do: :header_only} --}
     {!-- "h-[56px]": @feed_name in [nil, :my] --}
     {!-- <Bonfire.UI.Common.TabsLive
-      :if={!@hide_tabs}
+      :if={!@hide_filters}
       selected_tab={@selected_tab}
       selected_name={@feed_title || @page_title}
       class="flex items-center gap-2 w-full tabs border-b border-base-content/10"
@@ -29,6 +29,7 @@
 
     {!-- :if={@feed_name in [nil, :my, :local, :remote, :explore] and current_user_id(@__context__)} --}
     <Bonfire.UI.Social.FeedControlsLive
+      :if={!@hide_filters and current_user_id(@__context__)}
       event_target={@myself}
       feed_id={@feed_id}
       feed_name={@feed_name}

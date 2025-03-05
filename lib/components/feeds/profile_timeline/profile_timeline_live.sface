@@ -16,7 +16,6 @@
       feed_title={@feed_title}
       loading={@loading}
       showing_within={@showing_within}
-      hide_tabs
     >
       <:bottom_or_empty_feed>
         <a

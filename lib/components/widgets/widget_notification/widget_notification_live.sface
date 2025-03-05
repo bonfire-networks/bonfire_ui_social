@@ -14,7 +14,7 @@
   <StatefulComponent
     module={maybe_component(Bonfire.UI.Social.FeedLive, @__context__)}
     id={ComponentID.new(Bonfire.UI.Social.FeedLive, :notifications, __MODULE__)}
-    hide_tabs
+    hide_filters
     {...load(current_user(@__context__))}
   />
 </Bonfire.UI.Common.WidgetBlockLive>

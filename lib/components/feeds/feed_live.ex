@@ -38,7 +38,7 @@ defmodule Bonfire.UI.Social.FeedLive do
 
   prop tab_path_prefix, :string, default: "?tab="
   prop tab_path_suffix, :string, default: nil
-  prop hide_tabs, :boolean, default: false
+  prop hide_filters, :boolean, default: false
   prop selected_tab, :any, default: nil
   prop top_page, :any, default: nil
   prop show_back_button, :boolean, default: false

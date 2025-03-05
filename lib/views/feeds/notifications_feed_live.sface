@@ -22,6 +22,5 @@
     feedback_message={@feedback_message}
     showing_within={:notifications}
     loading={@loading}
-    hide_tabs
   />
 </div>

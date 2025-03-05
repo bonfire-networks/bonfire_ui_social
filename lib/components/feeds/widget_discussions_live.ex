@@ -13,7 +13,7 @@ defmodule Bonfire.UI.Social.WidgetDiscussionsLive do
       feed_name,
       [
         hide_load_more: true,
-        hide_tabs: true,
+        hide_filters: true,
         no_header: true,
         hide_activities: "actions",
         infinite_pages: false,
