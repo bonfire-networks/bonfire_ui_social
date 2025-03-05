@@ -1,8 +1,14 @@
 <div>
   <ul class="menu relative p-0 w-full mt-2">
     <li>
-      <details open>
-        <summary class="font-bold uppercase text-xs text-base-content/50">{l("Feeds")}</summary>
+      <details open={Bonfire.Common.Settings.get([Bonfire.Social.FeedLive, :show_feeds_nav_open], true, @__context__)}>
+        <summary
+          phx-click="Bonfire.Social.Feeds:toggle_feeds_nav_visibility"
+          class="font-bold uppercase text-xs
+  text-base-content/50"
+        >
+          {l("Feeds")}
+        </summary>
 
         <Bonfire.UI.Common.WidgetsLive
           id="feeds_nav_links"
@@ -10,7 +16,7 @@
           page={@page}
           type={:link}
           selected_tab={@selected_tab}
-          container_class="menu before:content-none !ml-0 p-0 w-full"
+          container_class="menu before:content-none after:content-none !ml-0 p-0 w-full"
         />
 
         <!-- {#for {preset, index} <- Enum.with_index(@presets || [])}

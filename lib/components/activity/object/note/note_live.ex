@@ -1,6 +1,7 @@
 defmodule Bonfire.UI.Social.Activity.NoteLive do
   use Bonfire.UI.Common.Web, :stateless_component
   alias Bonfire.Common.Text
+  import Phoenix.LiveView.JS
 
   prop object, :any
   # prop profile, :any, default: nil
@@ -13,6 +14,9 @@ defmodule Bonfire.UI.Social.Activity.NoteLive do
   # prop thread_mode, :atom, default: nil
   prop hide_actions, :boolean, default: false
   prop activity_inception, :boolean, default: false
+  prop activity_component_id, :string, default: nil
+  prop toggle_content, :any, default: nil
+  prop parent_id, :any, default: nil
 
   def preloads(),
     do: [
@@ -31,4 +35,10 @@ defmodule Bonfire.UI.Social.Activity.NoteLive do
   end
 
   def maybe_truncate(input, _skip, _length), do: input
+
+  # Helper function for checking expandable content after render
+  def check_expandable(id) do
+    %JS{}
+    |> JS.dispatch("bonfire:check-expandable")
+  end
 end

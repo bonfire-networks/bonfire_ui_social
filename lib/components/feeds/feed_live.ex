@@ -501,11 +501,9 @@ defmodule Bonfire.UI.Social.FeedLive do
         %{"Elixir.Bonfire.UI.Social.FeedLive" => %{"time_limit" => attrs}},
         socket
       ) do
-    debug(attrs, "cazz")
     options = %{1 => l("Day"), 7 => l("Week"), 30 => l("Month"), 365 => "Year", 0 => "All time"}
     values = options |> Map.keys() |> Enum.sort()
     selected_value = find_value_by_index(attrs, values)
-    debug(selected_value, "cazzz")
     set_filters(%{time_limit: selected_value}, socket)
   end
 

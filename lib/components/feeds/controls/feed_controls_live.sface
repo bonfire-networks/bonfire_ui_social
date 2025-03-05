@@ -236,7 +236,7 @@
 
     <div class="" :class="{'btn-active': open}" role="banner" @click="open = ! open">
       <div class="tooltip-button btn btn-square">
-        <#Icon iconify="carbon:filter" class="w-4 h-4" />
+        <#Icon iconify="mingcute:filter-fill" class="w-4 h-4" />
         <!-- <span class="hidden lg:block">{l("More filters")}</span> -->
       </div>
     </div>

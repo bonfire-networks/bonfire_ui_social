@@ -5,6 +5,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
   alias Bonfire.Social.Activities
   # alias Bonfire.Data.Social.Activity
   alias Bonfire.Social.Feeds.LiveHandler
+  import Phoenix.LiveView.JS
 
   # TODO: autogenerate with Verbs genserver?
   @reply_verbs Application.compile_env(:bonfire, [:verb_families, :reply]) || []
@@ -490,7 +491,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
          activity_inception,
          subject_user
        ) ++
-       component_object(debug(object), debug(object_type)) ++
+       component_object(object, object_type) ++
        component_maybe_attachments(showing_within != :media, activity, object, activity_inception) ++
        component_actions(
          verb,
@@ -534,13 +535,24 @@ defmodule Bonfire.UI.Social.ActivityLive do
         do: maybe_prepare(assigns),
         else: assigns
 
+    assigns =
+      Map.put(assigns, :toggle_content, fn ->
+        %JS{}
+        |> JS.toggle(
+          to: "#content_#{assigns.activity_component_id}",
+          in: "transition ease-out duration-300 transform",
+          out: "transition ease-in duration-200 transform",
+          time: 300
+        )
+        |> JS.toggle(to: "#content_show_more_#{assigns.activity_component_id}")
+        |> JS.toggle(to: "#content_show_less_#{assigns.activity_component_id}")
+      end)
+
     ~F"""
     <article
       id={@activity_component_id}
-      x-data="{content_open: false, show_actions: false}"
-      x-init={"content_open = #{!@cw}; show_actions = #{if @hide_actions == "until_hovered", do: "('ontouchstart' in window) || (navigator.maxTouchPoints > 0) || (navigator.msMaxTouchPoints > 0)", else: true}"}
-      x-on:mouseover={if @hide_actions == "until_hovered", do: "show_actions=true"}
-      x-on:mouseover.away={if @hide_actions == "until_hovered", do: "show_actions=false"}
+      data-content-open={!@cw}
+      data-object_id={id(@object)}
       data-href={@permalink}
       data-url={e(@__context__, :current_url, nil) || ~c""}
       phx-hook={if !@viewing_main_object and
@@ -548,7 +560,6 @@ defmodule Bonfire.UI.Social.ActivityLive do
          do: "Bonfire.UI.Common.PreviewContentLive#PreviewActivity"}
       role="article"
       data-id="activity"
-      data-object_id={id(@object)}
       data-rendered={@showing_within}
       data-avatar-hidden={Settings.get([Bonfire.UI.Common.AvatarLive, :hide_avatars], false, @__context__)}
       data-hidden={@hide_activity}
@@ -779,12 +790,15 @@ defmodule Bonfire.UI.Social.ActivityLive do
                 <Bonfire.UI.Social.Activity.NoteLive
                   :if={@hide_activity != "note"}
                   showing_within={@showing_within}
+                  parent_id={@parent_id}
                   activity_inception={@activity_inception}
+                  activity_component_id={e(component_assigns, :activity_component_id, @activity_component_id)}
                   activity={e(component_assigns, :activity, @activity)}
                   object={e(component_assigns, :object, @object)}
                   viewing_main_object={e(component_assigns, :viewing_main_object, @viewing_main_object)}
                   cw={@cw}
                   thread_title={@thread_title}
+                  toggle_content={@toggle_content}
                   is_remote={@is_remote}
                   hide_actions={@hide_actions}
                 />
@@ -1431,7 +1445,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
        %{
          id: "reply_to-#{activity_component_id}-#{object_id}",
          activity_inception: activity_id,
-         # show_minimal_subject_and_note: name_or_text(reply_to_object) || true,
+         #  show_minimal_subject_and_note: name_or_text(reply_to_object) || true,
          # FIXME: not showing reply_to post content
          show_minimal_subject_and_note: true,
          viewing_main_object: false,

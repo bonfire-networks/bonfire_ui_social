@@ -43,7 +43,6 @@
         </div>
       {/if}
     {#else}
-      quiiii
       <div class="flex place-content-center items-center w-[120px] h-[120px]">
         {#case e(@media, :metadata, "favicon", nil) ||
             Bonfire.Files.FaviconStore.favicon_url(@media_url)}

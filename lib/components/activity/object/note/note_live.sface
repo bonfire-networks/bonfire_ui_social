@@ -1,14 +1,6 @@
 <div
   data-id="activity_note"
-  x-data="{
-    expanded: false,
-    expandable: false,
-    init() {
-      this.$nextTick(() => {
-        this.expandable = this.$refs.note && this.$refs.note.scrollHeight > this.$refs.note.clientHeight;
-      });
-    }
-  }"
+  id={"note_container_#{@parent_id}_#{id(@activity) || id(@object) || 'no-id'}"}
   data-rendered={@showing_within}
   data-main-object={@viewing_main_object}
   class={
@@ -16,11 +8,10 @@
     "!max-w-full":
       is_nil(current_user_id(@__context__)) && @showing_within == :thread && @viewing_main_object
   }
-  x-ref="note_container"
-  x-transition
+  phx-mounted={check_expandable(id(@activity) || id(@object) || 'no-id')}
 >
   <Bonfire.UI.Common.OpenExternalLinkLive
-    id={"note-#{@showing_within}-#{id(@activity) || "no-a"}-#{id(@object) || "no-o"}-#{@viewing_main_object}-#{@activity_inception}"}
+    id={"note-#{@showing_within}-#{@parent_id}-#{id(@activity) || 'no-a'}-#{id(@object) || 'no-o'}-#{@viewing_main_object}-#{@activity_inception}"}
     prompt_external_links={@showing_within == :flags}
   >
     {!-- x-show={if @showing_within == :thread && !@viewing_main_object, do: "show_replies"} --}
@@ -37,23 +28,24 @@
           {rich(name)}
         </div>
     {/case}
-
     {#case e(post_content(@object), :summary, nil)}
       {#match summary}
         {#case @cw == true or (is_nil(@cw) and not is_nil(summary))}
           {#match cw}
             {#if cw and e(post_content(@object), :html_body, nil)}
               <button
-                x-on:click="content_open = ! content_open; $nextTick(() => { expandable = $refs.note && $refs.note.scrollHeight > $refs.note.clientHeight });"
+                phx-click={@toggle_content.()}
                 class="flex w-full flex-1 items-start my-2 gap-2 p-2 bg-base-content/5 border border-dashed border-base-content/10 rounded-box"
               >
                 <span data-role="cw" class="leading-[24px] text-left text-sm text-base-content/70 flex-1">{summary || l("Content Warning")}</span>
                 {#if !@hide_actions}
-                  <div
-                    x-text={"content_open ? '#{l("Show less")}' : '#{l("Show more")}'"}
-                    class="show_more_toggle_action normal-case btn-ghost btn btn-xs"
-                  >
-                    <span>{l("Show more")}</span>
+                  <div class="show_more_toggle_action normal-case btn-ghost btn btn-xs">
+                    <span id={"content_show_more_#{@activity_component_id}"} class={if !@cw, do: "hidden"}>
+                      {l("Show more")}
+                    </span>
+                    <span id={"content_show_less_#{@activity_component_id}"} class={if @cw, do: "hidden"}>
+                      {l("Show less")}
+                    </span>
                   </div>
                 {#else}
                   <div class="normal-case btn-ghost btn btn-xs">
@@ -67,22 +59,22 @@
               </div>
             {/if}
 
-            <div x-show={if cw, do: "content_open"} x-cloak={cw} x-collapse={cw}>
+            <div id={"content_#{@activity_component_id}"} class={if @cw, do: "hidden"}>
               {#case e(post_content(@object), :html_body, nil) ||
                   if !e(@activity, :media, nil), do: l("This content is not available.")}
                 {#match nil}
                 {#match html_body}
                   <div
-                    x-ref="note"
+                    id={"expandable_note_#{@parent_id}_#{id(@activity) || id(@object) || 'no-id'}"}
+                    data-ref={"note_ref_#{@parent_id}_#{id(@activity) || id(@object) || 'no-id'}"}
                     data-id="object_body"
                     data-inception={@activity_inception}
                     data-rendered={@showing_within}
                     data-main-object={@viewing_main_object}
                     class={
-                      "prose break-words object_body max-w-none prose-a:text-primary prose-a:no-underline hover:prose-a:underline prose-a:hover:underline prose-p:mb-0 prose-p:mt-0 prose-h1:text-xl prose-h2:text-xl prose-h3:text-lg prose-h4:text-base prose-h5:text-base prose-h6:text-base prose-h1:mb-0 prose-h2:my-0 prose-h3:mb-0 prose-h4:mb-0",
+                      "prose break-words object_body max-w-none prose-a:text-primary prose-a:no-underline hover:prose-a:underline prose-a:hover:underline prose-p:mb-0 prose-p:mt-0 prose-h1:text-xl prose-h2:text-xl prose-h3:text-lg prose-h4:text-base prose-h5:text-base prose-h6:text-base prose-h1:mb-0 prose-h2:my-0 prose-h3:mb-0 prose-h4:mb-0 text-[15px] leading-[1.56rem] text-base-content",
                       previewable_truncate: !@viewing_main_object
                     }
-                    :class="{'previewable_expanded': expanded}"
                   >
                     {rich(
                       # maybe_truncate(
@@ -95,13 +87,37 @@
                     )}
                   </div>
 
-                  <div :if={@showing_within != :smart_input} x-cloak x-show="expandable">
+                  <div
+                    :if={@showing_within != :smart_input && !@viewing_main_object}
+                    id={"expandable_controls_#{@parent_id}_#{id(@activity) || id(@object) || 'no-id'}"}
+                    class="hidden"
+                  >
                     <button
                       type="button"
-                      @click="expanded = !expanded"
-                      x-text="expanded ? 'Read less' : 'Read more'"
+                      id={"read_more_button_#{@parent_id}_#{id(@activity) || id(@object) || 'no-id'}"}
+                      phx-click={JS.remove_class("previewable_truncate",
+                        to: "#expandable_note_#{@parent_id}_#{id(@activity) || id(@object) || 'no-id'}"
+                      )
+                      |> JS.add_class("previewable_expanded",
+                        to: "#expandable_note_#{@parent_id}_#{id(@activity) || id(@object) || 'no-id'}"
+                      )
+                      |> JS.hide(to: "#read_more_button_#{@parent_id}_#{id(@activity) || id(@object) || 'no-id'}")
+                      |> JS.show(to: "#read_less_button_#{@parent_id}_#{id(@activity) || id(@object) || 'no-id'}")}
                       class="link text-sm mt-2 font-medium link-hover link-primary normal-case"
                     >{l("Read more")}</button>
+                    <button
+                      type="button"
+                      id={"read_less_button_#{@parent_id}_#{id(@activity) || id(@object) || 'no-id'}"}
+                      phx-click={JS.add_class("previewable_truncate",
+                        to: "#expandable_note_#{@parent_id}_#{id(@activity) || id(@object) || 'no-id'}"
+                      )
+                      |> JS.remove_class("previewable_expanded",
+                        to: "#expandable_note_#{@parent_id}_#{id(@activity) || id(@object) || 'no-id'}"
+                      )
+                      |> JS.show(to: "#read_more_button_#{@parent_id}_#{id(@activity) || id(@object) || 'no-id'}")
+                      |> JS.hide(to: "#read_less_button_#{@parent_id}_#{id(@activity) || id(@object) || 'no-id'}")}
+                      class="link text-sm mt-2 font-medium link-hover link-primary normal-case hidden"
+                    >{l("Read less")}</button>
                   </div>
               {/case}
             </div>
