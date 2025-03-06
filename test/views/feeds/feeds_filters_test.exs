@@ -160,7 +160,7 @@ defmodule Bonfire.UI.Social.FeedsFilters.Test do
       {post, like} = Fake.create_test_content(:likes, user, other_user)
 
       conn(user: user)
-      |> visit("/feed/liked")
+      |> visit("/feed/likes")
       |> assert_has("[data-id=feed] article", text: "likeable post")
     end
   end
@@ -169,10 +169,10 @@ defmodule Bonfire.UI.Social.FeedsFilters.Test do
     test "shows local images", %{user: user, other_user: other_user} do
       {post1, _} = Fake.create_test_content(:local, user, other_user)
 
-      {media, _post} = Fake.create_test_content(:local_images, user, other_user)
+      {media, _post} = Fake.create_test_content(:images, user, other_user)
 
       conn(user: user)
-      |> visit("/feed/local_images")
+      |> visit("/feed/images")
       # |> PhoenixTest.open_browser()
       |> assert_has("article [data-id=article_media]")
       |> refute_has("article", text: "default post")

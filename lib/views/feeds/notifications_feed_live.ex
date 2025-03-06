@@ -36,7 +36,7 @@ defmodule Bonfire.UI.Social.NotificationsFeedLive do
            "Did you know you can customise which activities you want to be notified for in your settings ?"
          ),
        current_user: current_user,
-       feed_id: :notifications,
+       feed_name: :notifications,
        feed: nil,
        page_info: nil,
        #  feed: e(feed, :edges, []),

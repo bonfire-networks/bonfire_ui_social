@@ -49,6 +49,8 @@ defmodule Bonfire.UI.Social.PreloadPresetTest do
                :user_by_object_type,
                :hashtag,
                :mentions,
+               :audio,
+               :videos,
                nil
              ] <-
           feed_preset_test_params() do

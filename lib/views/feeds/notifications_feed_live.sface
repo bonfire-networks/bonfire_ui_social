@@ -13,8 +13,8 @@
 
   <StatefulComponent
     module={maybe_component(Bonfire.UI.Social.FeedLive, @__context__)}
-    id={ComponentID.new(Bonfire.UI.Social.FeedLive, e(@feed_id, :notifications), __MODULE__)}
-    feed_id={@feed_id}
+    id={ComponentID.new(Bonfire.UI.Social.FeedLive, @feed_name, __MODULE__)}
+    feed_name={@feed_name}
     page_title={@page_title}
     feed={@feed}
     page_info={@page_info}

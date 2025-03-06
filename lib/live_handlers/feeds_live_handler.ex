@@ -1073,7 +1073,7 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
   defp feed_assigns({feed_id, %{} = feed_filters}, opts) when feed_filters != %{} do
     with {feed_filters, preloads, postloads} <-
            prepare_filters_preloads_posloads(
-             feed_filters,
+             Map.put(feed_filters, :feed_name, feed_id),
              opts
            ),
          opts = opts ++ [preload: preloads],
@@ -1091,7 +1091,7 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
 
     with {feed_filters, preloads, postloads} <-
            prepare_filters_preloads_posloads(
-             feed_filters,
+             Map.put(feed_filters, :feed_name, feed_id),
              opts
            ),
          opts = opts ++ [preload: preloads],
@@ -1114,7 +1114,7 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
   #     opts ++
   #       [
   #         paginate?: true,
-  #         include_flags: :mod
+  #         include_flags: :mediate
   #         # preload: preloads
   #       ]
 
@@ -1212,7 +1212,7 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
 
     with {feed_filters, preloads, postloads} <-
            prepare_filters_preloads_posloads(
-             feed_filters,
+             Map.put(feed_filters, :feed_name, feed_name),
              opts
            ),
          opts = opts ++ [preload: preloads],
@@ -1479,7 +1479,6 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
   end
 
   def activity_preloads_tuple_from_filters(filters, opts \\ []) do
-    debug("WIP: avoid preloading in single query")
     # TODO: should we first pass the feed_name through the preset fetcher?
     preload = opts[:preload] || FeedLoader.contextual_preloads_from_filters(filters, :query)
 
@@ -1489,6 +1488,7 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
         |> FeedLoader.filter_already_preloaded(preload)
 
     {preload, postload}
+    |> debug()
   end
 
   def feed_extra_preloads_list(showing_within, thread_mode \\ nil) do
