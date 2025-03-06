@@ -742,6 +742,7 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
       feed_component_id: component_id,
       page: "notifications",
       selected_tab: "notifications",
+      showing_within: :notifications,
       #  without_sidebar: true,
       back: true,
       page_header_icon: "carbon:notification",

@@ -162,6 +162,32 @@
               </div>
             </div>
           </div>
+        {#elseif @verb == "Pin"}
+          <div data-role="pinned_by" class="flex items-start gap-5 justify-start">
+            {!-- PIN --}
+            <#Icon iconify="system-uicons:retweet" class="w-7 h-7 stroke-1 text-success" />
+            <div class="flex-1 flex flex-col gap-2">
+              <LinkLive to={@path} opts={"data-id": "subject_name"}>
+                <Bonfire.UI.Common.AvatarLive
+                  user_id={@profile_id}
+                  src={@profile_media}
+                  title={@profile_name}
+                  class="h-9 w-9 rounded-full"
+                />
+              </LinkLive>
+              <div class="font-medium text-sm text-base-content/90">
+                <LinkLive to={@path} opts={"data-id": "subject_name"} class="link link-hover font-semibold">
+                  {#if @object_id == current_user_id(@__context__)}
+                    {l("You")}
+                  {#else}
+                    {@profile_name || @character_username}
+                  {/if}
+                </LinkLive>
+
+                {raw(@verb_display)} {l(" your activity")}
+              </div>
+            </div>
+          </div>
         {#elseif @verb in ["Reply", "Respond"]}
           <!--  <Bonfire.UI.Social.Activity.SubjectLive
             activity_id={@activity_id}

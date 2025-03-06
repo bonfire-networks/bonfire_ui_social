@@ -21,7 +21,7 @@
       {#match nil}
       {#match name}
         <div
-          :if={name != @thread_title}
+          :if={name != @thread_title && @showing_within != :smart_input}
           data-role="name"
           class="w-full h-auto max-w-full p-0 m-0 my-1 text-xl font-semibold break-all"
         >

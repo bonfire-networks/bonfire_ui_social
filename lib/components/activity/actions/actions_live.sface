@@ -127,6 +127,7 @@
               object_id={id(@object)}
               id={"#{@id}_react"}
               myself={@myself}
+              parent_id={@parent_id}
               showing_within={@showing_within}
             />
 
