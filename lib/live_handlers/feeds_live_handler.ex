@@ -733,6 +733,31 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
     # ] ++ page_header_asides(socket, component_id)
   end
 
+  def feed_default_assigns(:notifications = feed_name, socket) do
+    component_id = component_id(feed_name, assigns(socket))
+
+    [
+      feed_name: feed_name,
+      # feed_id: feed_id,
+      feed_component_id: component_id,
+      page: "notifications",
+      selected_tab: "notifications",
+      #  without_sidebar: true,
+      back: true,
+      page_header_icon: "carbon:notification",
+      page_title: l("Notifications"),
+      feedback_title: l("You have no notifications"),
+      feedback_message:
+        l(
+          "Did you know you can customise which activities you want to be notified for in your settings ?"
+        ),
+      feed: nil,
+      page_info: nil
+    ]
+
+    # ] ++ page_header_asides(socket, component_id)
+  end
+
   def feed_default_assigns(:curated = feed_name, socket) do
     [
       feed_name: feed_name,

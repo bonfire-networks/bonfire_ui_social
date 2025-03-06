@@ -265,8 +265,8 @@ defmodule Bonfire.UI.Social.FeedLive do
     socket =
       socket
       |> LiveHandler.feed_assigns_maybe_async(
-        {assigns(socket)[:feed_name] || assigns(socket)[:feed_id] || assigns(socket)[:id] ||
-           :default, assigns(socket)[:feed_filters]},
+        {assigns(socket)[:feed_name] || assigns(socket)[:feed_id],
+         assigns(socket)[:feed_filters]},
         ...
       )
       |> LiveHandler.insert_feed(socket, ...)

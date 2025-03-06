@@ -15,7 +15,7 @@ defmodule Bonfire.UI.Social.FeedsLive do
     # FIXME: should only include modules from current extension?
     # FIXME: these should be set somewhere in config
     default_nav: [
-      # Bonfire.UI.Social.FeedsLive,
+      Bonfire.UI.Social.FeedsLive,
       Bonfire.UI.Social.FeedsNavLive,
       # Bonfire.UI.Files.Web.MediaFeedLive,
       Bonfire.Search.Web.SearchLive,
@@ -31,6 +31,16 @@ defmodule Bonfire.UI.Social.FeedsLive do
       Bonfire.UI.Boundaries.SidebarCirclesLive,
       Bonfire.PanDoRa.Components.SidebarPandoraLive,
       Bonfire.UI.Groups.SidebarGroupsLive
+    ]
+  )
+
+  declare_nav_link(l("Notifications"),
+    icon: "carbon:notification-filled",
+    page: "notifications",
+    href: "/notifications",
+    badge: [
+      id: :notifications,
+      feed_key: :notifications_id
     ]
   )
 
