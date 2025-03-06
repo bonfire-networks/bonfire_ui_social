@@ -154,7 +154,11 @@
 
     <div data-position="bottom" phx-hook="Tooltip" class="flex-1" id="filter_origin_feed">
       <label tabindex="0" class="tooltip-button btn w-full">
-        {l("Remote")}
+        {case @feed_filters[:origin] do
+          [:remote] -> l("Remote")
+          [:local] -> l("Local")
+          _ -> l("Local & remote")
+        end}
       </label>
       <ul
         tabindex="0"
@@ -184,13 +188,16 @@
             class="flex gap-3 px-2 text-base-content"
           >
             <!-- <# Icon iconify="octicon:sort-asc-16" class="w-4 h-4" /> -->
-            {l("All")}</a></li>
+            {l("Local & remote")}</a></li>
       </ul>
     </div>
 
     <div data-position="bottom" phx-hook="Tooltip" class="flex-1" id="filter_circles_feed">
       <label tabindex="0" class="tooltip-button btn w-full">
-        {l("Circles")}
+        {l("Circles")} {case e(@feed_filters, :subject_circles, []) do
+          [] -> nil
+          circles -> "(#{length(circles)})"
+        end}
       </label>
       <ul
         tabindex="0"
@@ -249,7 +256,7 @@
       feed_name={@feed_name}
       event_target={@event_target}
       event_name="set_filter"
-      current_value={e(@feed_filters, :time_limit, :load_from_settings)}
+      current_value={e(@feed_filters, :time_limit, nil)}
       scope={:user}
     />
   </div>

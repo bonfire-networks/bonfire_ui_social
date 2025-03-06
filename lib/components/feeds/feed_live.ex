@@ -415,24 +415,12 @@ defmodule Bonfire.UI.Social.FeedLive do
       assigns[:feed_name] || assigns[:feed_id] || assigns[:id] ||
         :default
 
-  defp set_type_activity(type, value, socket) do
-    set_type(:activity_types, :exclude_activity_types, type, value, socket)
-  end
-
-  defp set_type_object(type, value, socket) do
-    set_type(:object_types, :exclude_object_types, type, value, socket)
-  end
-
-  defp set_type_media(type, value, socket) do
-    set_type(:media_types, :exclude_media_types, type, value, socket)
-  end
-
-  defp set_type(already_selected_field, already_excluded_field, type, value, socket) do
+  defp set_type(include_field, exclude_field, type, value, socket) do
     do_set_type(
-      e(assigns(socket), :feed_filters, already_selected_field, []),
-      e(assigns(socket), :feed_filters, already_excluded_field, []),
-      already_selected_field,
-      already_excluded_field,
+      e(assigns(socket), :feed_filters, include_field, []),
+      e(assigns(socket), :feed_filters, exclude_field, []),
+      include_field,
+      exclude_field,
       Types.maybe_to_atom(type),
       value,
       socket
@@ -442,17 +430,18 @@ defmodule Bonfire.UI.Social.FeedLive do
   defp do_set_type(
          already_selected,
          already_excluded,
-         already_selected_field,
-         already_excluded_field,
+         include_field,
+         exclude_field,
          type,
          "true",
          socket
        ) do
     set_filters(
       %{
-        already_selected_field => already_selected ++ [type],
-        already_excluded_field => already_excluded |> Enum.reject(&(&1 == type))
-      },
+        include_field => already_selected ++ [type],
+        exclude_field => already_excluded |> Enum.reject(&(&1 == type))
+      }
+      |> debug(),
       socket,
       true
     )
@@ -461,17 +450,18 @@ defmodule Bonfire.UI.Social.FeedLive do
   defp do_set_type(
          already_selected,
          already_excluded,
-         already_selected_field,
-         already_excluded_field,
+         include_field,
+         exclude_field,
          type,
          "false",
          socket
        ) do
     set_filters(
       %{
-        already_selected_field => already_selected |> Enum.reject(&(&1 == type)),
-        already_excluded_field => already_excluded ++ [type]
-      },
+        include_field => already_selected |> Enum.reject(&(&1 == type)),
+        exclude_field => already_excluded ++ [type]
+      }
+      |> debug(),
       socket,
       true
     )
@@ -480,17 +470,18 @@ defmodule Bonfire.UI.Social.FeedLive do
   defp do_set_type(
          already_selected,
          already_excluded,
-         already_selected_field,
-         already_excluded_field,
+         include_field,
+         exclude_field,
          type,
-         value,
+         _value,
          socket
        ) do
     set_filters(
       %{
-        already_selected_field => already_selected |> Enum.reject(&(&1 == type)),
-        already_excluded_field => already_excluded |> Enum.reject(&(&1 == type))
-      },
+        include_field => already_selected |> Enum.reject(&(&1 == type)),
+        exclude_field => already_excluded |> Enum.reject(&(&1 == type))
+      }
+      |> debug(),
       socket,
       true
     )
@@ -512,12 +503,13 @@ defmodule Bonfire.UI.Social.FeedLive do
         %{"toggle" => field, "toggle_type" => type} = params,
         socket
       ) do
-    # warn(types, "WIP: set_types_filter")
-    case field do
-      "activity_types" -> set_type_activity(type, params["toggle_value"], socket)
-      "object_types" -> set_type_object(type, params["toggle_value"], socket)
-      "media_types" -> set_type_media(type, params["toggle_value"], socket)
-    end
+    set_type(
+      maybe_to_atom(field),
+      maybe_to_atom("exclude_#{field}"),
+      type,
+      params["toggle_value"],
+      socket
+    )
   end
 
   def handle_event(
@@ -667,8 +659,9 @@ defmodule Bonfire.UI.Social.FeedLive do
     case FeedFilters.validate(attrs) do
       {:ok, filters} ->
         reload(
-          Enums.merge_to_struct(
-            FeedFilters,
+          # Enums.merge_to_struct(
+          #   FeedFilters,
+          Enums.merge_as_map(
             debug(assigns(socket)[:feed_filters] || %{}, "existing filters"),
             filters
             |> debug("validated")

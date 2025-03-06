@@ -966,7 +966,7 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
           else
             {:error, e} ->
               error(e, "error returned by feed_assigns")
-              assign_error(socket, Bonfire.Fail.get_error_msg(e) || e, pid)
+              assign_error(socket, Bonfire.Common.Errors.error_msg(e) || e, pid)
 
             e ->
               error(e, "received invalid response from feed_assigns")

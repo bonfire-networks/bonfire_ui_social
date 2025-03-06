@@ -14,7 +14,7 @@ defmodule Bonfire.UI.Social.FeedsNavLive do
         generate_link(
           preset[:name] || preset[:description] || slug,
           Bonfire.UI.Social.FeedsLive,
-          Map.merge(preset, %{page: slug, href: "/feed/#{slug}"}) |> debug("gl")
+          Map.merge(preset, %{page: slug, href: "/feed/#{slug}"})
         )
       end)
 
