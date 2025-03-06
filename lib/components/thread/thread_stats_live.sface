@@ -44,7 +44,7 @@
 
         <div class="flex flex-wrap items-center gap-3 p-2">
           {#for p <- @participants || []}
-            <div class="z-[99999999999] relative">
+            <div class="z-[9] relative">
               <div>
                 <StatelessComponent
                   module={maybe_component(Bonfire.UI.Me.ProfileItemLive)}

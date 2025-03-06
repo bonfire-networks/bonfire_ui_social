@@ -119,7 +119,7 @@
               phx-value-id={id(@object) || id(@activity)}
               class="!flex items-center gap-2"
             >
-              <#Icon iconify="clarity:tree-view-solid" class="w-4 h-4 shrink-0 text-base-content" />
+              <#Icon iconify="bi:list-nested" class="w-4 h-4 shrink-0 text-base-content" />
               <span>{l("Get latest activities")}</span>
             </a>
           </li>

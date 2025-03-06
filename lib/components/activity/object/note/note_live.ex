@@ -15,7 +15,6 @@ defmodule Bonfire.UI.Social.Activity.NoteLive do
   prop hide_actions, :boolean, default: false
   prop activity_inception, :boolean, default: false
   prop activity_component_id, :string, default: nil
-  prop toggle_content, :any, default: nil
   prop parent_id, :any, default: nil
 
   def preloads(),

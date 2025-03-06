@@ -535,19 +535,6 @@ defmodule Bonfire.UI.Social.ActivityLive do
         do: maybe_prepare(assigns),
         else: assigns
 
-    assigns =
-      Map.put(assigns, :toggle_content, fn ->
-        %JS{}
-        |> JS.toggle(
-          to: "#content_#{assigns.activity_component_id}",
-          in: "transition ease-out duration-300 transform",
-          out: "transition ease-in duration-200 transform",
-          time: 300
-        )
-        |> JS.toggle(to: "#content_show_more_#{assigns.activity_component_id}")
-        |> JS.toggle(to: "#content_show_less_#{assigns.activity_component_id}")
-      end)
-
     ~F"""
     <article
       id={@activity_component_id}
@@ -798,7 +785,6 @@ defmodule Bonfire.UI.Social.ActivityLive do
                   viewing_main_object={e(component_assigns, :viewing_main_object, @viewing_main_object)}
                   cw={@cw}
                   thread_title={@thread_title}
-                  toggle_content={@toggle_content}
                   is_remote={@is_remote}
                   hide_actions={@hide_actions}
                 />
