@@ -52,7 +52,7 @@
     <li>
       <a
         phx-hook="Copy"
-        id={"more_action_copy_url_#{id(@activity)}_#{id(@object)}_#{@showing_within}"}
+        id={"more_action_copy_url_#{@parent_id}_#{id(@activity)}_#{id(@object)}_#{@showing_within}"}
         href={URIs.canonical_url(@object)}
         class="flex items-center gap-2 text-sm text-base-content"
       >
