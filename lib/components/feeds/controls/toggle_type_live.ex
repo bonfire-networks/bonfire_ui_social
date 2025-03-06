@@ -28,7 +28,10 @@ defmodule Bonfire.UI.Social.ToggleTypeLive do
   end
 
   def check_throuple(value, include, exclude) do
-    case {MapSet.member?(include, value), MapSet.member?(exclude, value)} do
+    value_str = to_string(value)
+
+    case {MapSet.member?(include, value) || MapSet.member?(include, value_str),
+          MapSet.member?(exclude, value) || MapSet.member?(exclude, value_str)} do
       {true, false} -> true
       {false, true} -> false
       _ -> nil

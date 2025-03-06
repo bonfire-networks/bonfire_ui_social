@@ -89,16 +89,6 @@
   />
 
   <Bonfire.UI.Social.ToggleTypeLive
-    label={l("Images")}
-    key={:image}
-    field={:media_types}
-    feed_filters={@feed_filters}
-    event_target={@event_target}
-    event_name={@event_name}
-    label_default={l("Include")}
-  />
-
-  <Bonfire.UI.Social.ToggleTypeLive
     label={l("Links")}
     key={:link}
     field={:media_types}
@@ -109,8 +99,8 @@
   />
 
   <Bonfire.UI.Social.ToggleTypeLive
-    label={l("Books")}
-    key={:book}
+    label={l("Images")}
+    key={:image}
     field={:media_types}
     feed_filters={@feed_filters}
     event_target={@event_target}
@@ -119,7 +109,27 @@
   />
 
   <Bonfire.UI.Social.ToggleTypeLive
-    label={l("Publications")}
+    label={l("Videos")}
+    key={:video}
+    field={:media_types}
+    feed_filters={@feed_filters}
+    event_target={@event_target}
+    event_name={@event_name}
+    label_default={l("Include")}
+  />
+
+  <Bonfire.UI.Social.ToggleTypeLive
+    label={l("Audio")}
+    key={:audio}
+    field={:media_types}
+    feed_filters={@feed_filters}
+    event_target={@event_target}
+    event_name={@event_name}
+    label_default={l("Include")}
+  />
+
+  <Bonfire.UI.Social.ToggleTypeLive
+    label={l("Research publications")}
     key={:research}
     field={:media_types}
     feed_filters={@feed_filters}
@@ -128,11 +138,59 @@
     label_default={l("Include")}
   />
 
-  {#for key when key not in [:boost, :follow, :reply] <- debug(@feed_filters)[:activity_types] || []}
+  {#for key <- @feed_filters[:subject_types] || []}
+    <Bonfire.UI.Social.ToggleTypeLive
+      label={String.capitalize(to_string(key))}
+      key={key}
+      field={:subject_types}
+      feed_filters={@feed_filters}
+      event_target={@event_target}
+      event_name={@event_name}
+      label_default={l("Include")}
+    />
+  {/for}
+
+  {#for key when key not in [:boost, :follow, :reply] <- @feed_filters[:activity_types] || []}
     <Bonfire.UI.Social.ToggleTypeLive
       label={String.capitalize(to_string(key))}
       key={key}
       field={:activity_types}
+      feed_filters={@feed_filters}
+      event_target={@event_target}
+      event_name={@event_name}
+      label_default={l("Include")}
+    />
+  {/for}
+
+  {#for key when key not in [:post, "post"] <- @feed_filters[:object_types] || []}
+    <Bonfire.UI.Social.ToggleTypeLive
+      label={String.capitalize(to_string(key))}
+      key={key}
+      field={:object_types}
+      feed_filters={@feed_filters}
+      event_target={@event_target}
+      event_name={@event_name}
+      label_default={l("Include")}
+    />
+  {/for}
+
+  {#for key
+    when key not in [
+           :image,
+           :link,
+           :audio,
+           :video,
+           :research,
+           "image",
+           "link",
+           "audio",
+           "video",
+           "research"
+         ] <- @feed_filters[:media_types] || []}
+    <Bonfire.UI.Social.ToggleTypeLive
+      label={String.capitalize(to_string(key))}
+      key={key}
+      field={:media_types}
       feed_filters={@feed_filters}
       event_target={@event_target}
       event_name={@event_name}
