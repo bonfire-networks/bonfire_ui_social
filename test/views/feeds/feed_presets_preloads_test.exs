@@ -2,6 +2,7 @@ defmodule Bonfire.UI.Social.PreloadPresetTest do
   use Bonfire.UI.Social.ConnCase, async: true
   use Bonfire.Common.Utils
 
+  import Bonfire.Common.Simulation
   import Bonfire.Files.Simulation
   alias Bonfire.Files
   alias Bonfire.Files.ImageUploader
@@ -18,14 +19,6 @@ defmodule Bonfire.UI.Social.PreloadPresetTest do
   import Bonfire.Social.Fake
   import Bonfire.Posts.Fake, except: [fake_remote_user!: 0]
   import Tesla.Mock
-
-  def assert_has_or_open_browser(session, selector, opts \\ []) do
-    assert_has(session, selector, opts)
-  rescue
-    e ->
-      PhoenixTest.open_browser(session)
-      reraise e, __STACKTRACE__
-  end
 
   describe "check preloaded data" do
     setup do
