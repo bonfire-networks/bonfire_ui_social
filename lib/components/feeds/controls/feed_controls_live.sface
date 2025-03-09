@@ -79,7 +79,7 @@
           {/if}
         </ul>
       </div>
-      <div class="px-2 btn border-none rounded-l-none border-l border-base-content/20 rounded-r-md flex items-center place-content-center">
+      <div class="px-2 btn border-none rounded-l-none border-l border-base-content/20 flex items-center place-content-center">
         {#if e(@feed_filters, :sort_order, nil) == :asc}
           <span phx-click="set_filter" phx-value-sort_order={:desc} phx-target={@event_target}>
             <#Icon iconify="mdi:arrow-down" class="w-4 h-4" />

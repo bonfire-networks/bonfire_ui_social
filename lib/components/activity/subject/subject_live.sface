@@ -152,7 +152,7 @@
         {/if}   --}
 </div>
 
-<a
+<!-- <a
   :if={@reply_to_id == nil and @showing_within in [nil, :feed] and
     !@viewing_main_object and @thread_title}
   data-id="title_in_subject"
@@ -167,4 +167,4 @@
   class="text-xl font-semibold leading-[36x] break-all"
 >
   {@thread_title}
-</div>
+</div> -->

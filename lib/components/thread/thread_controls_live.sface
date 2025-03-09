@@ -164,7 +164,7 @@
       </div>
       <div
         id="sort_timing_thread"
-        class="px-2 relative z-[99] btn border-none rounded-l-none border-l border-base-content/20 rounded-r-md flex items-center place-content-center"
+        class="px-2 relative z-[99] btn border-none rounded-l-none border-l border-base-content/20 flex items-center place-content-center"
       >
         {#if @sort_order == :asc}
           <span
