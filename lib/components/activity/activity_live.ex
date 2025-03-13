@@ -751,7 +751,8 @@ defmodule Bonfire.UI.Social.ActivityLive do
                   character_username={e(component_assigns, :character, :username, nil)}
                   activity_id={id(e(component_assigns, :activity, nil) || @activity)}
                   object_id={id(e(component_assigns, :object, nil) || @object)}
-                  subject_id={e(component_assigns, :subject_id, nil) || e(component_assigns, :profile, :id, nil)}
+                  subject_id={e(component_assigns, :subject_id, nil) || e(component_assigns, :profile, :id, nil) ||
+                    e(@activity, :subject_id, nil)}
                   object_boundary={@object_boundary}
                   object_type={e(component_assigns, :object_type, @object_type)}
                   date_ago={e(component_assigns, :date_ago, @date_ago)}
@@ -772,6 +773,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
                   thread_title={e(component_assigns, :thread_title, @thread_title)}
                   subject_user={@subject_user}
                   show_minimal_subject_and_note={e(component_assigns, :show_minimal_subject_and_note, @show_minimal_subject_and_note)}
+                  extra_info={e(@object, :extra_info, nil)}
                 />
               {#match Bonfire.UI.Social.Activity.NoteLive}
                 <Bonfire.UI.Social.Activity.NoteLive
@@ -997,7 +999,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
 
   # reactions should show the reactor + original creator
   def component_activity_subject(verb, activity, object, object_type, _, _, _)
-      when verb in @react_or_reply_verbs do
+      when verb in @react_verbs do
     [
       {Bonfire.UI.Social.Activity.SubjectMinimalLive,
        %{
@@ -1138,7 +1140,8 @@ defmodule Bonfire.UI.Social.ActivityLive do
               debug("could not find a creator in activity or object")
               debug(activity)
               debug(object)
-              [Bonfire.UI.Social.Activity.NoSubjectLive]
+              # [Bonfire.UI.Social.Activity.NoSubjectLive]
+              [Bonfire.UI.Social.Activity.SubjectLive]
 
             %{
               profile: %{id: _} = profile,
@@ -1158,7 +1161,8 @@ defmodule Bonfire.UI.Social.ActivityLive do
             other ->
               error(other, "invalid creator")
 
-              [Bonfire.UI.Social.Activity.NoSubjectLive]
+              # [Bonfire.UI.Social.Activity.NoSubjectLive]
+              [Bonfire.UI.Social.Activity.SubjectLive]
           end
         )
 

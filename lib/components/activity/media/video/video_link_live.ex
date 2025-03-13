@@ -7,6 +7,7 @@ defmodule Bonfire.UI.Social.Activity.VideoLinkLive do
   prop showing_within, :atom, default: nil
   prop muted, :boolean, default: false
   prop autoplay, :boolean, default: true
+  prop media_label, :any, default: nil
 
   def update(_assign, socket) do
     {:noreply, socket}

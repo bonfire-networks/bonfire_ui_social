@@ -11,6 +11,9 @@ defmodule Bonfire.UI.Social.Activity.SubjectLive do
   prop character, :any, default: nil
   prop character_username, :string, default: nil
 
+  prop verb, :string, default: nil
+  prop verb_display, :string, default: nil
+
   prop activity_id, :any, default: nil
   prop subject_id, :any, default: nil
   prop object_id, :any, default: nil
@@ -33,6 +36,7 @@ defmodule Bonfire.UI.Social.Activity.SubjectLive do
   prop activity_inception, :any, default: nil
   prop parent_id, :any, default: nil
   prop show_minimal_subject_and_note, :any, default: nil
+  prop extra_info, :any, default: nil
 
   def render(assigns) do
     assigns

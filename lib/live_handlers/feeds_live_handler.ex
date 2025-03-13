@@ -1524,6 +1524,12 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
   def feed_extra_preloads_list(showing_within, thread_mode \\ nil) do
     # TODO: entirely replace with filter-based preloads?
     case {showing_within, thread_mode} do
+      {:annotations, :flat} ->
+        [:extra_info, :with_subject, :with_reply_to, :with_post_content]
+
+      {:annotations, _} ->
+        [:extra_info, :with_subject, :with_post_content]
+
       {:thread, :flat} ->
         [:feed, :with_reply_to, :with_media, :with_object_more, :maybe_with_labelled]
 

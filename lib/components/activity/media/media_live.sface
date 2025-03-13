@@ -50,6 +50,7 @@
 <div data-main-object={@viewing_main_object} data-id="multimedia_list">
   {#case @multimedia_count}
     {#match 0}
+      {!-- NO MULTIMEDIA --}
     {#match num_medias}
       {!-- MULTIMEDIA ATTACHMENTS --}
       <div
@@ -139,6 +140,7 @@
 
   {#case @image_count}
     {#match 0}
+      {!-- NO IMAGES --}
     {#match num_medias}
       {!-- IMAGE ATTACHMENTS --}
       {#if @showing_within != :smart_input}

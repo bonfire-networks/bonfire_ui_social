@@ -479,13 +479,16 @@ defmodule Bonfire.Social.Threads.LiveHandler do
       sort_order = e(assigns(socket), :sort_order, nil)
       showing_within = e(assigns(socket), :showing_within, :thread)
 
-      {preloads, postloads} =
-        Bonfire.Social.Feeds.LiveHandler.activity_preloads_tuple_from_filters(%{
-          sort_by: sort_by,
-          sort_order: sort_order,
-          showing_within: showing_within,
-          thread_mode: thread_mode
-        })
+      # TODO: use same logic as feeds preloads?
+      # {preloads, postloads} =
+      #   Bonfire.Social.Feeds.LiveHandler.activity_preloads_tuple_from_filters(%{
+      #     sort_by: sort_by,
+      #     sort_order: sort_order,
+      #     showing_within: showing_within,
+      #     thread_mode: thread_mode
+      #   })
+      preloads =
+        Bonfire.Social.Feeds.LiveHandler.feed_extra_preloads_list(showing_within, thread_mode)
 
       with %{edges: replies, page_info: page_info} <-
              Threads.list_replies(thread_id,
@@ -512,7 +515,7 @@ defmodule Bonfire.Social.Threads.LiveHandler do
            page_info: page_info,
            thread_id: thread_id,
            reply_count: reply_count,
-           activity_preloads: {preloads, postloads}
+           activity_preloads: {preloads, nil}
          ]}
       end
     end

@@ -145,10 +145,10 @@ defmodule Bonfire.UI.Social.Activity.MediaLive do
        e(media, :metadata, "twitter", "image", nil) ||
        (e(media, :metadata, "facebook", "image", "url", nil) ||
           e(media, :metadata, "facebook", "image", nil)) ||
-       e(media, :metadata, "icon", "url", nil) ||
-       e(media, :metadata, "icon", nil) ||
        e(media, :metadata, "image", "url", nil) ||
        e(media, :metadata, "image", nil) ||
+       e(media, :metadata, "icon", "url", nil) ||
+       e(media, :metadata, "icon", nil) ||
        media_img(media))
     |> unwrap()
   end

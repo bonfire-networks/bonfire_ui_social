@@ -107,7 +107,7 @@
       data-id="subject_secondary"
       class="flex items-center gap-1"
     >
-      <!-- <span class="text-sm text-base-content/70">&nbsp;·&nbsp;</span> -->
+      {!-- <span class="text-sm text-base-content/70">&nbsp;·&nbsp;</span> --}
 
       <Bonfire.UI.Social.ActivityBoundaryLive
         :if={@object_type not in [Bonfire.Data.Social.Message] and @activity_inception != "reply_to" and
@@ -120,6 +120,17 @@
         object_boundary={@object_boundary}
       />
       <Bonfire.UI.Social.Activity.LinkToActivityLive permalink={@permalink}>
+        {#if @showing_within == :annotations and e(@extra_info, :info, "timestamps", nil)}
+          <button
+            data-role="annotation-checkpoint"
+            data-in={e(@extra_info, :info, "timestamps", "in", "")}
+            data-out={e(@extra_info, :info, "timestamps", "out", "")}
+            class="btn btn-soft btn-accent btn-xs"
+          >From {DatesTimes.format_duration(e(@extra_info, :info, "timestamps", "in", ""))} to {DatesTimes.format_duration(e(@extra_info, :info, "timestamps", "out", ""))}</button>
+        {#else}
+          <span :if={@verb in ["Annotate", "Replied"]} class="">{@verb_display}
+          </span>
+        {/if}
         <Bonfire.UI.Social.Activity.DateAgoLive
           date_ago={@date_ago}
           activity_id={@activity_id}

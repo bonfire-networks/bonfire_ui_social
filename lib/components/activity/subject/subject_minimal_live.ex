@@ -7,8 +7,8 @@ defmodule Bonfire.UI.Social.Activity.SubjectMinimalLive do
   # prop reply_to_id, :any, default: nil
   # prop profile, :any, default: nil
   # prop character, :any, default: nil
-  prop verb, :string
-  prop verb_display, :string
+  prop verb, :string, default: nil
+  prop verb_display, :string, default: nil
   prop permalink, :string, default: nil
   prop showing_within, :atom, default: nil
   prop object_type, :any, default: nil

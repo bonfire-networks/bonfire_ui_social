@@ -3,7 +3,7 @@
     <button
       class={"w-full relative remote_media_#{id(@media)}"}
       type="button"
-      phx-click={JS.toggle(to: ".remote_media_#{id(@media)}")}
+      phx-click={if !e(@media, :metadata, "canonical_media", nil), do: JS.toggle(to: ".remote_media_#{id(@media)}")}
     >
       {#case MediaLive.preview_img(@media) || Media.media_url(@media)}
         {#match maybe_preview_img}
@@ -23,16 +23,20 @@
       {/case}
       <div class="absolute inset-0 w-full h-full flex items-center place-content-center">
         <div class="bg-gray-900/60 z-50 gap-4 px-4 h-12 rounded flex justify-center items-center place-content-center">
-          <div class="">
+          <LinkLive to={e(@media, :metadata, "canonical_media", nil)} class="">
             <#Icon iconify="heroicons:play-20-solid" class="w-6 h-6 hover:text-white text-gray-300" />
-          </div>
+          </LinkLive>
           <a href={Media.media_url(@media)} target="_blank">
             <#Icon iconify="heroicons-outline:external-link" class="w-6 h-6 hover:text-white text-gray-300" />
           </a>
         </div>
       </div>
     </button>
-    <div class={"remote_media_#{id(@media)}"} style="display: none;">
+    <div
+      :if={!e(@media, :metadata, "canonical_media", nil)}
+      class={"remote_media_#{id(@media)}"}
+      style="display: none;"
+    >
       <Bonfire.UI.Social.Activity.RemoteMediaLive media={@media} muted={@muted} autoplay={@autoplay} />
     </div>
   </div>
