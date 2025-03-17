@@ -2110,11 +2110,13 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
              %{
                name: name,
                description: params["description"],
+               icon: "ph:rss-simple-bold",
                exclude_from_nav: params["show_in_nav"] != "on",
                filters: filters
              },
              current_user: current_user(socket)
            ) do
+          Bonfire.UI.Common.OpenModalLive.close()
       {
         :noreply,
         socket |> maybe_assign_context(settings)

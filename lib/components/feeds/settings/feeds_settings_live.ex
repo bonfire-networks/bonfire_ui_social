@@ -23,7 +23,7 @@ defmodule Bonfire.UI.Social.FeedsSettingsLive do
 
       assigns
       |> assign(scoped: scoped)
-      |> assign(page_title: l("Configure Feeds"))
+      |> assign(page_title: l("Feeds options"))
       |> assign(presets: presets)
       |> render_sface()
     end

@@ -22,9 +22,9 @@
             <div class="flex py-2 gap-3 items-center flex-1 w-full justify-between">
               <div class="flex flex-1 items-center gap-3">
                 <div class="flex flex-col">
-                  <Iconify.iconify icon={preset[:icon] || "ic:baseline-rss-feed"} class="w-5 h-5" />
+                  <Iconify.iconify icon={preset[:icon] || "ic:baseline-rss-feed"} class="w-7 h-7 opacity-70" />
 
-                  <div class="font-medium text-base">{preset[:name] || preset[:description] || preset.id}</div>
+                  <div class="font-medium text-base mt-2">{preset[:name] || preset[:description] || preset.id}</div>
                   <div class="text-sm text-base-content/70">{preset[:description]}</div>
                   <div class="text-xs text-base-content/50 mt-1 flex gap-2 flex-wrap">
                     {#if preset[:current_user_required]}
@@ -43,19 +43,27 @@
                 </div>
               </div>
               <div class="flex items-center gap-2">
-                <form phx-change="Bonfire.Social.Feeds:preset_nav_toggle" phx-value-id={preset.id}>
+                  {#if preset[:exclude_from_nav] == false}
+                <button phx-click="Bonfire.Social.Feeds:preset_nav_toggle" phx-value-id={preset.id} class="btn btn-sm btn-warning btn-soft">
+                    {l "Exclude from the sidebar"}
+                </button>
+                  {#else}
+                <button phx-click="Bonfire.Social.Feeds:preset_nav_toggle" phx-value-id={preset.id} class="btn btn-sm btn-success btn-soft">
+                    {l "Include in the sidebar"}
+                </button>
+                  {/if}
+                <!-- <form phx-change="Bonfire.Social.Feeds:preset_nav_toggle" phx-value-id={preset.id}>
                   <label>
-                    <!-- <#Icon iconify="ph:eye-slash-bold" class="w-4 h-4" /> -->
                     <input type="checkbox" name="show_in_nav" checked={preset[:exclude_from_nav] == false}>
                     <span>{l("Show in navigation menu")}</span>
                   </label>
-                </form>
+                </form> -->
 
                 <button
                   :if={!preset[:built_in]}
                   phx-click="Bonfire.Social.Feeds:preset_delete"
                   phx-value-id={preset.id}
-                  class="btn btn-sm btn-circle btn-ghost text-error"
+                  class="btn btn-circle btn-ghost text-error"
                 >
                   <#Icon iconify="ph:trash-bold" class="w-4 h-4" />
                   <span class="sr-only">{l("Delete")}</span>
