@@ -137,13 +137,13 @@ defmodule Bonfire.UI.Social.ThreadLive do
         insert = {:threaded_replies, [{new_reply, []}], 0}
 
         if is_nil(reply_to_id) or reply_to_id == thread_id do
-          debug("top level reply")
+          IO.inspect("top level reply")
 
           {:ok,
            socket
            |> LiveHandler.insert_comments(insert)}
         else
-          debug("send to branch")
+          IO.inspect("send to branch")
 
           LiveHandler.send_thread_updates(
             self(),

@@ -2116,7 +2116,8 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
              },
              current_user: current_user(socket)
            ) do
-          Bonfire.UI.Common.OpenModalLive.close()
+      Bonfire.UI.Common.OpenModalLive.close()
+
       {
         :noreply,
         socket |> maybe_assign_context(settings)
