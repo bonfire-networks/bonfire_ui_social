@@ -63,6 +63,7 @@ defmodule Bonfire.UI.Social.ThreadLive do
     "#{prefix}_#{id(entry)}"
   end
 
+
   def update(%{insert_stream: entries} = assigns, socket) do
     debug("comments stream is being poured into")
 
@@ -137,17 +138,17 @@ defmodule Bonfire.UI.Social.ThreadLive do
         insert = {:threaded_replies, [{new_reply, []}], 0}
 
         if is_nil(reply_to_id) or reply_to_id == thread_id do
-          IO.inspect("top level reply")
+          debug("top level reply")
 
           {:ok,
            socket
            |> LiveHandler.insert_comments(insert)}
         else
-          IO.inspect("send to branch")
+          debug(reply_to_id, "send to branch")
 
           LiveHandler.send_thread_updates(
             self(),
-            reply_to_id,
+            component_id(reply_to_id, "nested"),
             [insert_stream: insert],
             ThreadBranchLive
           )

@@ -127,7 +127,7 @@
           class="btn btn-soft btn-accent btn-xs"
         >From {DatesTimes.format_duration(e(@extra_info, :info, "timestamps", "in", ""))} to {DatesTimes.format_duration(e(@extra_info, :info, "timestamps", "out", ""))}</button>
       {#else}
-        <span :if={@verb in ["Annotate", "Replied"]} class="text-xs no-underline text-base-content/80">{@verb_display}
+        <span :if={@verb in ["Annotate", "Replied"]} class="badge badge-accent badge-sm badge-soft">{@verb_display}
         </span>
       {/if}
 

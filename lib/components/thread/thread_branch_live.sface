@@ -67,7 +67,7 @@
               <div class="relative">
                 <StatefulComponent
                   module={maybe_component(Bonfire.UI.Social.ThreadBranchLive, @__context__)}
-                  id={id(subreply)}
+                  id={"nested_#{id(subreply)}"}
                   total_replies_in_thread={length(@threaded_replies)}
                   index={index}
                   comment={subreply}

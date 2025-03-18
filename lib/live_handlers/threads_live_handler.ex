@@ -336,7 +336,7 @@ defmodule Bonfire.Social.Threads.LiveHandler do
       # participants: participants
     )
 
-    # |> IO.inspect
+    # |> debug
   end
 
   def load_thread_maybe_async(socket_or_opts, show_loader \\ true, reset_stream \\ false)
