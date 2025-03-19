@@ -4,7 +4,7 @@
     <!-- feed_id={"user_#{@selected_tab}_#{id(@user)}"} -->
     <StatefulComponent
       module={maybe_component(Bonfire.UI.Social.FeedLive, @__context__)}
-      id={@feed_component_id || "user_#{@selected_tab}_#{id(@user)}"}
+      id={@feed_component_id || "Elixir.Bonfire.UI.Social.FeedLive__for_user_#{@selected_tab}_#{id(@user)}"}
       feed_name={@feed_name}
       feed_ids={@feed_ids}
       subject_user={@user}

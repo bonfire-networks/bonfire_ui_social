@@ -312,10 +312,9 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
        when (is_pid(pid) or is_nil(pid)) and (is_list(assigns) or is_map(assigns)) and
               is_binary(feed_id) do
     # Format the feed_id to match the expected component ID pattern
-    component_id = "#{component}__for_#{feed_id}"
-    debug(component_id, "Sending feed update to properly formatted feed component ID")
-    IO.inspect(assigns)
-    maybe_send_update(component, component_id, assigns, pid)
+    debug(feed_id, "Sending feed update to properly formatted feed component ID")
+    debug(assigns)
+    maybe_send_update(component, feed_id, assigns, pid)
   end
 
   defp send_feed_updates(pid, feed_ids, assigns, component)
