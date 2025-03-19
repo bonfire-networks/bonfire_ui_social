@@ -23,7 +23,7 @@
     <!-- <div class="absolute flex justify-center items-center inset-0">
       <div class="bg-gray-900/60 z-50 gap-4 px-3 py-2 rounded flex justify-center items-center place-content-center">
         <Bonfire.UI.Common.OpenModalLive
-          id={"media_modal_#{id(@media)}#{random_dom_id()}"}
+          id={deterministic_dom_id("media_modal", id(@media), "video", @parent_id)}
           reusable_modal_id="media_player_modal"
           no_actions
           title_text={@media_label}

@@ -225,7 +225,7 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
   end
 
   def handle_info({:new_activity, data}, socket) do
-    debug(data[:feed_ids], "received new_activity for these feed ids")
+    IO.inspect(data[:feed_ids], label: "received new_activity for these feed ids")
     # dump(data)
     current_user = current_user(assigns(socket))
 
@@ -303,7 +303,7 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
          component
        )
        when (is_pid(pid) or is_nil(pid)) and (is_list(assigns) or is_map(assigns)) do
-    debug(feed_id, "Sending feed update to component")
+    debug("#{feed_id}", "Sending feed update to component")
     IO.inspect(assigns)
     maybe_send_update(component, feed_id, assigns, pid)
   end
@@ -311,16 +311,29 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
   defp send_feed_updates(pid, feed_id, assigns, component)
        when (is_pid(pid) or is_nil(pid)) and (is_list(assigns) or is_map(assigns)) and
               is_binary(feed_id) do
-    debug(feed_id, "Sending feed update to feed(s)")
+    # Format the feed_id to match the expected component ID pattern
+    component_id = "#{component}__for_#{feed_id}"
+    debug(component_id, "Sending feed update to properly formatted feed component ID")
     IO.inspect(assigns)
-    ComponentID.send_updates(component, feed_id, assigns, pid)
+    maybe_send_update(component, component_id, assigns, pid)
+  end
+
+  defp send_feed_updates(pid, feed_ids, assigns, component)
+       when (is_pid(pid) or is_nil(pid)) and (is_list(assigns) or is_map(assigns)) and
+             is_list(feed_ids) do
+    # Handle a list of feed IDs by formatting each one and sending updates to all
+    debug(feed_ids, "Sending feed updates to multiple feeds")
+
+    Enum.each(feed_ids, fn feed_id when is_binary(feed_id) ->
+      component_id = "Bonfire-UI-Social-FeedLive__for_#{feed_id}"
+      debug(component_id, "Sending feed update to properly formatted feed component ID")
+      maybe_send_update(component, component_id, assigns, pid)
+    end)
   end
 
   defp send_feed_updates(pid, feed_id, assigns, component)
        when (is_pid(pid) or is_nil(pid)) and (is_list(assigns) or is_map(assigns)) do
-    debug(feed_id, "Sending feed update to component")
-    IO.inspect(assigns)
-    maybe_send_update(component, feed_id, assigns, pid)
+    maybe_send_update(component, feed_id, assigns)
   end
 
   defp send_feed_updates(pid, feed_id, {:error, e}, _component) do
@@ -716,7 +729,6 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
       |> debug(feed_name)
 
     component_id = component_id(feed_id, assigns(socket))
-
     [
       feed_name: feed_name,
       feed_id: feed_id,

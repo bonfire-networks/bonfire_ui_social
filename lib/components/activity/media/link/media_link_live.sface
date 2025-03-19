@@ -1,5 +1,5 @@
 <Bonfire.UI.Common.OpenExternalLinkLive
-  id={"media_link-#{@showing_within}-#{id(@media) || random_dom_id()}-via-#{@parent_id}"}
+  id={deterministic_dom_id("media_link", id(@media), @showing_within, @parent_id)}
   prompt_external_links={@showing_within == :flags}
 >
   <LinkLive

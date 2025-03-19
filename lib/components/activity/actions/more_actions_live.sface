@@ -144,6 +144,7 @@
         {!-- TODO: should depend on thread creator: current_user_id(@__context__) == @thread_creator_id --}
         <StatelessComponent
           module={maybe_component(Bonfire.UI.Reactions.PinActionLive, @__context__)}
+          parent_id={id(@activity_component_id || @activity)}
           scope={:thread_answer}
           scope_object={@thread_id}
           object={@object}
@@ -161,6 +162,7 @@
           {!-- TODO: should depend on thread creator: current_user_id(@__context__) == @thread_creator_id --}
           <StatelessComponent
             module={maybe_component(Bonfire.UI.Reactions.PinActionLive, @__context__)}
+            parent_id={id(@activity_component_id || @activity)}
             scope={:thread}
             scope_object={@thread_id}
             object={@object}
@@ -177,6 +179,7 @@
         >
           <StatelessComponent
             module={maybe_component(Bonfire.UI.Reactions.PinActionLive, @__context__)}
+            parent_id={id(@activity_component_id || @activity)}
             scope={:profile}
             object={@object}
             pinned?={not is_nil(e(@activity, :pinned, nil))}
@@ -186,6 +189,7 @@
         <li :if={Bonfire.Boundaries.can?(@__context__, :pin, :instance)}>
           <StatelessComponent
             module={maybe_component(Bonfire.UI.Reactions.PinActionLive, @__context__)}
+            parent_id={id(@activity_component_id || @activity)}
             scope={:instance}
             object={@object}
             class="flex items-center px-4 text-sm text-neutral-content/80"
@@ -312,6 +316,8 @@
     <StatelessComponent
       module={maybe_component(Bonfire.Label.Web.ContentLabelLive, @__context__)}
       object={@object}
+      scope={:activity}
+      parent_id={@activity_component_id || id(@activity)}
       object_boundary={@object_boundary}
       target={"##{@activity_component_id}"}
       btn_label={l("Label this %{object}", object: e(@object_type_readable, l("object")))}

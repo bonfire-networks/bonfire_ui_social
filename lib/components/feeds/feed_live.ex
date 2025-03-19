@@ -92,7 +92,14 @@ defmodule Bonfire.UI.Social.FeedLive do
   end
 
   defp stream_id(feed_id, entry) do
-    "#{feed_id}_#{id(entry) || e(entry, :activity, :id, nil) || e(entry, :object, :id, nil) || e(entry, :edge, :id, nil) || random_dom_id()}"
+    entry_id = id(entry) || e(entry, :activity, :id, nil) || e(entry, :object, :id, nil) || e(entry, :edge, :id, nil)
+
+    # Ensure we always have a deterministic ID, fallback to hash of entry content if no ID
+    final_id = if entry_id,
+      do: entry_id,
+      else: :erlang.phash2(inspect(entry), 1_000_000)
+
+    "#{feed_id}_#{final_id}"
   end
 
   # consolidate different kinds of lists/feeds into Activity
@@ -150,9 +157,10 @@ defmodule Bonfire.UI.Social.FeedLive do
     |> ok_socket()
   end
 
+
   # adding new feed item
   def update(%{new_activity: new_activity} = _assigns, socket) when is_map(new_activity) do
-    debug("new_activity, add to top of feed")
+    IO.inspect("new_activity, add to top of feed")
 
     {
       :ok,

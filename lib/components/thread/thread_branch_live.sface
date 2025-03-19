@@ -85,7 +85,7 @@
               </div>
             {/for}
 
-            {#if (e(@comment, :direct_replies_count, nil) || e(@comment, :replied, :direct_replies_count, 0)) >
+            <!-- {#if (e(@comment, :direct_replies_count, nil) || e(@comment, :replied, :direct_replies_count, 0)) >
                 length(@threaded_replies) ||
                 @thread_level + 1 >= LiveHandler.max_depth(@__context__[:ui_compact])}
               <div class="flex items-center -mx-2 -mt-1">
@@ -103,7 +103,7 @@
                     end} more replies</span>
                 </div>
               </div>
-            {/if}
+            {/if} -->
           </div>
         </div>
       </div>

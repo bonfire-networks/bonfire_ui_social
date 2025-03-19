@@ -3,7 +3,7 @@ TODO: use preloaded boundaries for can? when available
 --}
 <OpenModalLive
   :if={@skip_permission_check == true or can_delete?(@__context__, @object, @object_boundary)}
-  id={random_dom_id()}
+  id={deterministic_dom_id("delete_modal", id(@object), @object_type_readable, @parent_id)}
   title_text={l("Delete this") <> " " <> e(@object_type_readable, l("object"))}
   form_opts={@form_opts}
 >

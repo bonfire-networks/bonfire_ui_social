@@ -72,7 +72,7 @@
       <ActivityLive
         id={ActivityLive.component_id(
           id(@activity) || e(@activity, :object, :id, nil),
-          "comment_#{id(@comment) || random_dom_id()}",
+          deterministic_dom_id("comment", id(@comment), @thread_id, @activity_inception),
           @activity_inception
         )}
         activity={debug(@activity, "comment_activity")}

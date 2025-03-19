@@ -1821,13 +1821,16 @@ defmodule Bonfire.UI.Social.ActivityLive do
   # def object_link(text, %{character: %{username: username}}, class \\ "hover:underline font-bold"), do: "<a class='#{class}' href='/user/#{username}'>#{text}</a>"
   # def object_link(text, %{id: id}, class), do: "<a class='#{class}' href='/discussion/#{id}'>#{text}</a>"
 
-  def component_id(id, _fallback, activity_inception \\ nil)
+  def component_id(id, fallback, activity_inception \\ nil)
 
   def component_id(id, _fallback, activity_inception) when is_binary(id) do
+    # This is already deterministic, but ensure consistent format
     "#{activity_inception}activity_#{id}"
   end
 
   def component_id(_id, fallback, activity_inception) do
-    "#{activity_inception}#{fallback}"
+    # Ensure the fallback is also deterministic
+    fallback_id = if is_binary(fallback), do: fallback, else: "fallback"
+    "#{activity_inception}#{fallback_id}"
   end
 end

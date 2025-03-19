@@ -168,7 +168,7 @@
                     {!-- FIXME: enable_fallback for logged out visitors instead of just not using the modal --}
                     {#if current_user_id(@__context__)}
                       <Bonfire.UI.Common.OpenModalLive
-                        id={"media_modal_#{id(m)}#{random_dom_id()}"}
+                        id={deterministic_dom_id("media_modal", id(m), "media", @parent_id)}
                         no_actions
                         no_header
                         image_preview
