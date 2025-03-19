@@ -320,7 +320,7 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
 
   defp send_feed_updates(pid, feed_ids, assigns, component)
        when (is_pid(pid) or is_nil(pid)) and (is_list(assigns) or is_map(assigns)) and
-             is_list(feed_ids) do
+              is_list(feed_ids) do
     # Handle a list of feed IDs by formatting each one and sending updates to all
     debug(feed_ids, "Sending feed updates to multiple feeds")
 
@@ -729,6 +729,7 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
       |> debug(feed_name)
 
     component_id = component_id(feed_id, assigns(socket))
+
     [
       feed_name: feed_name,
       feed_id: feed_id,

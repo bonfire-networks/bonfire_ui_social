@@ -16,7 +16,10 @@ defmodule Bonfire.UI.Social.Feeds.ComponentID.Test do
       assert id1 == id2
 
       # Should not contain random elements
-      refute String.contains?(id1, ~r/[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}/)
+      refute String.contains?(
+               id1,
+               ~r/[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}/
+             )
     end
 
     test "preserves uniqueness based on inputs" do

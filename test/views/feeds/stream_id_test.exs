@@ -5,14 +5,16 @@ defmodule Bonfire.UI.Social.Feeds.StreamID.Test do
   # Expose private stream_id function for testing
   defmodule TestHelper do
     def stream_id(feed_id, entry) do
-      entry_id = Bonfire.Common.Enums.id(entry) ||
-                 Bonfire.Common.Utils.e(entry, :activity, :id, nil) ||
-                 Bonfire.Common.Utils.e(entry, :object, :id, nil) ||
-                 Bonfire.Common.Utils.e(entry, :edge, :id, nil)
+      entry_id =
+        Bonfire.Common.Enums.id(entry) ||
+          Bonfire.Common.Utils.e(entry, :activity, :id, nil) ||
+          Bonfire.Common.Utils.e(entry, :object, :id, nil) ||
+          Bonfire.Common.Utils.e(entry, :edge, :id, nil)
 
-      final_id = if entry_id,
-        do: entry_id,
-        else: :erlang.phash2(inspect(entry), 1_000_000)
+      final_id =
+        if entry_id,
+          do: entry_id,
+          else: :erlang.phash2(inspect(entry), 1_000_000)
 
       "#{feed_id}_#{final_id}"
     end

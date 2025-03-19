@@ -92,12 +92,15 @@ defmodule Bonfire.UI.Social.FeedLive do
   end
 
   defp stream_id(feed_id, entry) do
-    entry_id = id(entry) || e(entry, :activity, :id, nil) || e(entry, :object, :id, nil) || e(entry, :edge, :id, nil)
+    entry_id =
+      id(entry) || e(entry, :activity, :id, nil) || e(entry, :object, :id, nil) ||
+        e(entry, :edge, :id, nil)
 
     # Ensure we always have a deterministic ID, fallback to hash of entry content if no ID
-    final_id = if entry_id,
-      do: entry_id,
-      else: :erlang.phash2(inspect(entry), 1_000_000)
+    final_id =
+      if entry_id,
+        do: entry_id,
+        else: :erlang.phash2(inspect(entry), 1_000_000)
 
     "#{feed_id}_#{final_id}"
   end
@@ -156,7 +159,6 @@ defmodule Bonfire.UI.Social.FeedLive do
     |> LiveHandler.insert_feed(entries, reset: assigns[:reset_stream])
     |> ok_socket()
   end
-
 
   # adding new feed item
   def update(%{new_activity: new_activity} = _assigns, socket) when is_map(new_activity) do

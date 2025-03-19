@@ -63,7 +63,6 @@ defmodule Bonfire.UI.Social.ThreadLive do
     "#{prefix}_#{id(entry)}"
   end
 
-
   def update(%{insert_stream: entries} = assigns, socket) do
     debug("comments stream is being poured into")
 
