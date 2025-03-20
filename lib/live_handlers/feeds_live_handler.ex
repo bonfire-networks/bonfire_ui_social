@@ -864,7 +864,7 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
       feed_name: feed_name,
       feed_id: feed_name,
       feed_component_id: component_id(feed_name, assigns(socket)),
-      selected_tab: :flags,
+      selected_tab: "all flags",
       scope: :instance,
       # FIXME: clean up page vs tab
       page: "flags",
@@ -882,6 +882,7 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
       [
         # feed_name: feed_name,
         # feed_id: feed_name,
+        selected_tab: feed_name,
         feed_filters: filters_or_custom_query_or_feed_id_or_ids
         # feed_component_id: component_id(feed_name, assigns(socket)),
         # feed: nil,
@@ -893,6 +894,7 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
       when is_binary(feed_name) do
     [
       feed_name: feed_name,
+      selected_tab: feed_name,
       feed_id: feed_name,
       feed_filters: filters_or_custom_query_or_feed_id_or_ids,
       feed_component_id: component_id(feed_name, assigns(socket)),
@@ -910,6 +912,7 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
     [
       feed_name: feed_name,
       feed_id: feed_name,
+      selected_tab: feed_name,
       feed_component_id: component_id(feed_name, assigns(socket)),
       feed: nil,
       page_info: nil
@@ -2152,8 +2155,8 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
     end
   end
 
-  def handle_event("preset_nav_toggle", %{"id" => id} = params, socket) do
-    debug(params)
+  def handle_event("preset_nav_toggle", %{"id" => id, "exclude" => exclude} = params, socket) do
+    debug(exclude, "preset_nav_toggle params")
 
     with {:ok, settings} <-
            Bonfire.Common.Settings.put(
@@ -2164,7 +2167,7 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
                maybe_to_atom(id),
                :exclude_from_nav
              ],
-             params["show_in_nav"] != "on",
+             exclude,
              current_user: current_user(socket)
            ) do
       {

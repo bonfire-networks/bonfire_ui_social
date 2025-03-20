@@ -47,6 +47,7 @@
                   <button
                     phx-click="Bonfire.Social.Feeds:preset_nav_toggle"
                     phx-value-id={preset.id}
+                    phx-value-exclude="true"
                     class="btn btn-sm btn-warning btn-soft"
                   >
                     {l("Exclude from the sidebar")}
@@ -55,6 +56,7 @@
                   <button
                     phx-click="Bonfire.Social.Feeds:preset_nav_toggle"
                     phx-value-id={preset.id}
+                    phx-value-exclude="false"
                     class="btn btn-sm btn-success btn-soft"
                   >
                     {l("Include in the sidebar")}
