@@ -85,7 +85,7 @@
                     width="100%"
                     loading="lazy"
                     height="100%"
-                    allow="accelerometer; encrypted-@media; gyroscope; picture-in-picture"
+                    allow="accelerometer; gyroscope; picture-in-picture"
                     allowfullscreen="allowfullscreen"
                     picture-in-picture
                     class={"rounded-t-box", @base_css}
