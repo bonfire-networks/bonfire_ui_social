@@ -14,7 +14,7 @@ defmodule Bonfire.UI.Social.Feeds.StreamID.Test do
       final_id =
         if entry_id,
           do: entry_id,
-          else: :erlang.phash2(inspect(entry), 1_000_000)
+          else: :erlang.phash2(entry, 1_000_000)
 
       "#{feed_id}_#{final_id}"
     end

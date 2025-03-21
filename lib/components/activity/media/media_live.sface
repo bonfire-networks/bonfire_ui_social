@@ -79,12 +79,14 @@
                           media={m}
                           media_label={media_label}
                           muted={@muted || @cw || @showing_within == :flags}
+                          parent_id={@parent_id}
                         />
                       {#else}
                         <Bonfire.UI.Social.Activity.VideoLinkLive
                           media={m}
                           media_label={media_label}
                           muted={@muted || @cw || @showing_within == :flags}
+                          parent_id={@parent_id}
                         />
                       {/if}
                     {#else}
@@ -92,6 +94,7 @@
                         media={m}
                         media_label={media_label}
                         autoplay={@autoplay || @cw || @showing_within == :flags}
+                        parent_id={@parent_id}
                       />
                     {/if}
                     {!-- else if logged out: --}
@@ -182,6 +185,7 @@
                           <Bonfire.UI.Social.Activity.RemoteMediaLive
                             media={m}
                             image_css={grayscale: @showing_within == :flags}
+                            parent_id={@parent_id}
                           />
                           <div class="fixed z-20 bottom-0 left-0 bg-black/30 right-0">
                             <div class="prose  line-clamp-6 text-center prose-sm p-4  text-white mx-auto">{media_label}

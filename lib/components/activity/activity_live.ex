@@ -801,6 +801,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
                   module={component}
                   __context__={@__context__}
                   showing_within={@showing_within}
+                  parent_id={@parent_id}
                   viewing_main_object={e(component_assigns, :viewing_main_object, @viewing_main_object)}
                   activity={e(component_assigns, :activity, @activity)}
                   object={e(component_assigns, :object, @object)}

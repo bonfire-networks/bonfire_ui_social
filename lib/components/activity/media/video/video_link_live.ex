@@ -4,7 +4,10 @@ defmodule Bonfire.UI.Social.Activity.VideoLinkLive do
 
   prop media, :map, default: nil
   prop metadata, :map, default: nil
+
   prop showing_within, :atom, default: nil
+  prop parent_id, :any, default: nil
+
   prop muted, :boolean, default: false
   prop autoplay, :boolean, default: true
   prop media_label, :any, default: nil
