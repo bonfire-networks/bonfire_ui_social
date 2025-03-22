@@ -198,11 +198,16 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
 
     if current_user,
       do:
-        apply_task(:start_link, fn ->
-          # asynchronously simply so the count is updated quicker for the user
-          debug(activity_id, "mark_seen")
-          Bonfire.Social.Seen.mark_seen(current_user, activity_id)
-        end)
+        apply_task(
+          :start_async,
+          fn ->
+            # asynchronously simply so the count is updated quicker for the user
+            debug(activity_id, "mark_seen")
+            Bonfire.Social.Seen.mark_seen(current_user, activity_id)
+          end,
+          socket: socket,
+          id: "mark_seen"
+        )
 
     {:noreply,
      socket
@@ -1327,12 +1332,15 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
 
     # |> IO.inspect(label: "feed_live_update_many_preload_mode")
 
+    {first_assigns, _} = List.first(assigns_sockets)
+
     opts =
       opts ++
         [
           live_update_many_preload_mode: feed_live_update_many_preload_mode,
           preload_status_key: :preloaded_async_activities,
-          return_assigns_socket_tuple: true
+          return_assigns_socket_tuple: true,
+          id: e(first_assigns, :feed_name, nil) || e(first_assigns, :feed_id, nil)
         ]
 
     # FIXME: can't just use the first component's assigns to define our opts, but rather check all of them and group by different opts (specifically preloads) and execute them separately (in parallel), or merge them
@@ -1403,12 +1411,15 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
     feed_live_update_many_preload_mode = feed_live_update_many_preload_mode()
 
     if feed_live_update_many_preload_mode == :async_actions do
+      {first_assigns, _} = List.first(assigns_sockets)
+
       opts =
         opts ++
           [
             return_assigns_socket_tuple: true,
             preload_status_key: :preloaded_async_actions,
-            live_update_many_preload_mode: :user_async_or_skip
+            live_update_many_preload_mode: :user_async_or_skip,
+            id: e(first_assigns, :feed_name, nil) || e(first_assigns, :feed_id, nil)
           ]
 
       # FIXME: can't just use the first component's assigns to define our opts, but rather check all of them and group by different opts (specifically preloads) and execute them separately (in parallel), or merge them
@@ -1793,7 +1804,7 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
   #       debug(tab, "socket connected, so load async")
   #       pid = self()
 
-  #       apply_task(:start_link, fn ->
+  #       apply_task(:start_async, fn ->
   #         debug("Query user activities asynchronously")
 
   #         load_user_feed_assigns(tab, user_or_feed, params, socket)

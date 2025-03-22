@@ -86,7 +86,7 @@
               showing_within={@showing_within}
               verb_default={@verb_default}
               feed_name={@feed_name}
-              feed_id={@feed_id}
+              feed_id={@feed_id || @feed_ids}
               class={@activity_class}
               is_remote={@feed_name in [:remote]}
               hide_activity={@hide_activities}
@@ -118,7 +118,7 @@
               custom_preview={e(@custom_preview, nil)}
               verb_default={@verb_default}
               feed_name={@feed_name}
-              feed_id={@feed_id}
+              feed_id={@feed_id || @feed_ids}
               is_remote={@feed_name in [:remote]}
               hide_activity={@hide_activities}
               class={@activity_class}

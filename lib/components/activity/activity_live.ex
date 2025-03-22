@@ -644,6 +644,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
                             end,
                           modal_component: Bonfire.UI.Social.ObjectThreadLive,
                           modal_component_stateful?: !top_of_thread? and !reply_to_top_of_thread?,
+                          loaded: true,
                           activity_inception: "preview",
                           showing_within: :thread,
                           check_object_boundary: !top_of_thread? and !reply_to_top_of_thread?
@@ -681,7 +682,8 @@ defmodule Bonfire.UI.Social.ActivityLive do
                           current_url: @permalink,
                           modal_view: Bonfire.UI.Coordination.TaskLive,
                           activity_inception: "preview",
-                          check_object_boundary: false
+                          check_object_boundary: false,
+                          loading: false
                         }
                         root_assigns={
                           page_title: l("Task")
@@ -842,6 +844,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
                       __context__={@__context__}
                       showing_within={@showing_within}
                       feed_name={@feed_name}
+                      feed_id={@feed_id}
                       thread_mode={@thread_mode}
                       activity={e(component_assigns, :activity, @activity)}
                       object={e(component_assigns, :object, @object)}

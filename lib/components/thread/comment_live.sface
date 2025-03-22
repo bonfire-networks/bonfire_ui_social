@@ -82,7 +82,7 @@
         end}
         thread_object={@thread_object}
         class="showing_within:thread"
-        feed_id={@feed_id}
+        feed_id={@feed_id || @thread_id}
         current_url={@current_url || current_url(@__context__)}
         showing_within={@showing_within || :thread}
         thread_mode={debug(@thread_mode, "thread_modessss")}

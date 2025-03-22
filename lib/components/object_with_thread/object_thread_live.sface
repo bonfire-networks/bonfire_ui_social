@@ -30,7 +30,7 @@
               viewing_main_object
               activity={@activity}
               object={@object}
-              feed_id={@feed_id}
+              feed_id={@feed_id || @thread_id}
               activity_inception={@activity_inception}
               object_boundary={if @showing_within == :messages, do: :skip_boundary_check}
             />

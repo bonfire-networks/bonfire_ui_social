@@ -58,7 +58,7 @@
                 <CommentLive
                   comment={reply}
                   thread_id={@thread_id}
-                  feed_id={@feed_id}
+                  feed_id={@feed_id || @thread_id}
                   current_url={@current_url}
                   thread_object={@object}
                   thread_mode={@thread_mode}
@@ -79,7 +79,7 @@
                     index={0}
                     threaded_replies={child_replies}
                     thread_id={@thread_id}
-                    feed_id={@feed_id}
+                    feed_id={@feed_id || @thread_id}
                     current_url={@current_url}
                     thread_object={@object}
                     thread_mode={@thread_mode}
@@ -98,7 +98,7 @@
                     <CommentLive
                       comment={reply}
                       thread_id={@thread_id}
-                      feed_id={@feed_id}
+                      feed_id={@feed_id || @thread_id}
                       current_url={@current_url}
                       thread_object={@object}
                       thread_mode={debug(@thread_mode, "thread_modessss")}

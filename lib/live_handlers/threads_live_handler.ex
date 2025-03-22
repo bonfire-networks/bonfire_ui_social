@@ -354,58 +354,68 @@ defmodule Bonfire.Social.Threads.LiveHandler do
         thread_id = e(assigns(socket), :thread_id, nil) || id(object)
         component_id = e(assigns(socket), :id, nil) || thread_id
 
-        apply_task(:start_link, fn ->
-          # compute & send stats
+        apply_task(
+          :start_async,
+          fn ->
+            # compute & send stats
 
-          limit = 4
+            limit = 4
 
-          participants =
-            e(assigns(socket), :participants, []) ||
-              Threads.list_participants(e(assigns(socket), :activity, nil) || object, thread_id,
-                limit: limit,
-                current_user: current_user
-              )
+            participants =
+              e(assigns(socket), :participants, []) ||
+                Threads.list_participants(e(assigns(socket), :activity, nil) || object, thread_id,
+                  limit: limit,
+                  current_user: current_user
+                )
 
-          participant_count = Enum.count(participants)
+            participant_count = Enum.count(participants)
 
-          participant_count =
-            if participant_count == limit,
-              do: Threads.count_participants(thread_id, current_user: current_user),
-              else: participant_count
+            participant_count =
+              if participant_count == limit,
+                do: Threads.count_participants(thread_id, current_user: current_user),
+                else: participant_count
 
-          send_thread_updates(
-            pid,
-            component_id,
-            %{
-              skip_loading_comments: true,
-              participants: participants,
-              participant_count: participant_count,
-              thread_boost_count:
-                Bonfire.Social.Boosts.count([in_thread: thread_id], current_user: current_user)
-            }
-          )
-        end)
+            send_thread_updates(
+              pid,
+              component_id,
+              %{
+                skip_loading_comments: true,
+                participants: participants,
+                participant_count: participant_count,
+                thread_boost_count:
+                  Bonfire.Social.Boosts.count([in_thread: thread_id], current_user: current_user)
+              }
+            )
+          end,
+          socket: socket,
+          id: "load_thread_meta"
+        )
 
-        apply_task(:start_link, fn ->
-          # Query comments asynchronously
-          {replies, assigns} = load_thread_assigns(socket, thread_id)
+        apply_task(
+          :start_async,
+          fn ->
+            # Query comments asynchronously
+            {replies, assigns} = load_thread_assigns(socket, thread_id)
 
-          # TODO: use first or last depending on sort order
-          last_reply = List.first(replies)
+            # TODO: use first or last depending on sort order
+            last_reply = List.first(replies)
 
-          # send comments
-          send_thread_updates(
-            pid,
-            component_id,
-            {replies,
-             assigns ++
-               [
-                 loaded_async: thread_id,
-                 reset_stream: reset_stream,
-                 last_reply_id: id(last_reply) || false
-               ]}
-          )
-        end)
+            # send comments
+            send_thread_updates(
+              pid,
+              component_id,
+              {replies,
+               assigns ++
+                 [
+                   loaded_async: thread_id,
+                   reset_stream: reset_stream,
+                   last_reply_id: id(last_reply) || false
+                 ]}
+            )
+          end,
+          socket: socket,
+          id: "load_thread_comments"
+        )
       else
         debug("socket NOT connected, but logged in, so no need to load for SEO")
       end

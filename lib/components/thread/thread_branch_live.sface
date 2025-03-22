@@ -31,7 +31,7 @@
       total_replies_in_thread={@total_replies_in_thread}
       thread_id={@thread_id}
       index={@index}
-      feed_id={@feed_id}
+      feed_id={@feed_id || @thread_id}
       current_url={@current_url}
       threaded_replies={@threaded_replies}
       thread_object={@thread_object}
@@ -73,7 +73,7 @@
                   comment={subreply}
                   thread_id={@thread_id}
                   thread_object={@thread_object}
-                  feed_id={@feed_id}
+                  feed_id={@feed_id || @thread_id}
                   threaded_replies={sub_child_replies}
                   thread_level={@thread_level + 1}
                   showing_within={@showing_within}

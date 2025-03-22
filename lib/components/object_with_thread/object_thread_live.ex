@@ -24,13 +24,13 @@ defmodule Bonfire.UI.Social.ObjectThreadLive do
   def update(%{post_id: id} = assigns, %{assigns: %{object: %{id: previously_loaded}}} = socket)
       when is_binary(id) and id == previously_loaded do
     debug(previously_loaded, "post previously_loaded")
-    {:ok, assign(socket, assigns)}
+    {:ok, assign(socket, Enums.filter_empty(assigns, []))}
   end
 
   def update(%{object_id: id} = assigns, %{assigns: %{object: %{id: previously_loaded}}} = socket)
       when is_binary(id) and id == previously_loaded do
     debug(previously_loaded, "object previously_loaded")
-    {:ok, assign(socket, assigns)}
+    {:ok, assign(socket, Enums.filter_empty(assigns, []))}
   end
 
   def update(assigns, socket) do

@@ -16,6 +16,7 @@ defmodule Bonfire.UI.Social.Activity.ActionsLive do
   prop thread_title, :any, default: nil
   prop showing_within, :atom, default: nil
   prop feed_name, :any, default: nil
+  prop feed_id, :any, default: nil
   prop hide_reply, :boolean, default: false
   prop viewing_main_object, :boolean, default: false
   prop flagged, :any, default: nil
