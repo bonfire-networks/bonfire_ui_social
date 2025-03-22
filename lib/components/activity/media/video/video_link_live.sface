@@ -9,6 +9,7 @@
         {#match maybe_preview_img}
           {#if MediaLive.is_image?(maybe_preview_img)}
             <LazyImage
+              parent_id={["video", @parent_id, id(@media)]}
               class="w-full rounded-t-box !object-cover m-image cursor-pointer aspect-video"
               media={@media}
               alt={@media_label}

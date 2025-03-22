@@ -7,6 +7,8 @@ defmodule Bonfire.UI.Social.Activity.AudioLive do
 
   prop autoplay, :boolean, default: true
 
+  prop parent_id, :any, default: nil
+
   def update(_assign, socket) do
     {:noreply, socket}
   end

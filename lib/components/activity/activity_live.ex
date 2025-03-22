@@ -707,7 +707,8 @@ defmodule Bonfire.UI.Social.ActivityLive do
               e(@object, :created, :creator_id, nil) != current_user_id(@__context__) and
               e(@object, :created, :creator_id, nil) != current_user_id(@__context__)}
             phx-submit="Bonfire.Social.Feeds:mark_seen"
-            phx-target={"#badge_counter_#{@feed_id || "missing_feed_id"}"}
+            phx-target={"#badge_counter_#{@feed_id || "missing_feed_id"}"
+            # FIXME: this should only happen for notifications and messages}
             x-intersect.once="$el.dispatchEvent(new Event('submit', {bubbles: true, cancelable: true})); $el.parentNode.classList.remove('unread-activity');"
           >
             <input type="hidden" name="feed_id" value={@feed_id}>

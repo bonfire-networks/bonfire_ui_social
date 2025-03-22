@@ -16,7 +16,7 @@
   <LinkLive
     :if={@subject_id && !Settings.get([Bonfire.UI.Common.AvatarLive, :hide_avatars], false, @__context__)}
     opts={"data-id": "subject_avatar"}
-    parent_id={["subject_avatar", @activity_id]}
+    parent_id={["subject_avatar", @parent_id]}
     class={
       "absolute -ml-[3.25rem] font-semibold text-base-content hover:underline z-50",
       "!-ml-[2.5rem]": @__context__[:ui_compact] && !@viewing_main_object
@@ -25,7 +25,7 @@
     label={e(@character_username, "") <> " profile"}
   >
     <Bonfire.UI.Common.AvatarLive
-      parent_id={@activity_component_id || @activity_id}
+      parent_id={["subject", @activity_component_id || @activity_id]}
       user_id={@subject_id}
       src={@profile_media}
       class={
@@ -86,7 +86,7 @@
       <LinkLive
         :if={@profile_name}
         opts={"data-id": "subject_name", "aria-label": l("%{name}'s profile", name: @profile_name)}
-        parent_id={["subject_name", @activity_id]}
+        parent_id={["subject_name", @parent_id]}
         class="link text-[15px] link-hover text-sm font-bold lg:max-w-[360px] truncate"
         to={@path}
       >
@@ -98,7 +98,7 @@
           "data-id": "subject_username",
           "aria-label": l("%{name}'s profile", name: @profile_name)
         }
-        parent_id={["subject_username", @activity_id]}
+        parent_id={["subject_username", @parent_id]}
         class="hidden text-sm text-[15px]  lg:block truncate max-w-[220px] link link-hover ellipsis text-base-content/60 subject_username"
         to={e(@subject_peered, :canonical_uri, nil) || @path}
       >

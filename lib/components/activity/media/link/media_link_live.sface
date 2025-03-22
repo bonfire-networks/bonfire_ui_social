@@ -16,6 +16,7 @@
       {#if @small_icon}
         <div class="flex place-content-center items-center w-[120px] h-[120px]">
           <LazyImage
+            parent_id={["icon", @parent_id, id(@media)]}
             class="rounded-none object-cover rounded-l-lg cursor-pointer m-image h-full"
             src={@preview_img}
             media={@media}
@@ -34,6 +35,7 @@
             />
 
             <LazyImage
+              parent_id={["icon", @parent_id, id(@media)]}
               class="rounded-none object-cover rounded-t-lg cursor-pointer m-image w-full aspect-[1.91/1]"
               src={@preview_img}
               media={@media}
@@ -48,6 +50,7 @@
             Bonfire.Files.FaviconStore.favicon_url(@media_url)}
           {#match favicon_url when is_binary(favicon_url)}
             <LazyImage
+              parent_id={["icon", @parent_id, id(@media)]}
               class="rounded-none object-cover rounded-l-lg cursor-pointer m-image min-w-8 max-w-[120px] w-full h-auto"
               src={favicon_url}
               media={@media}

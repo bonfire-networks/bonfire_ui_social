@@ -23,12 +23,14 @@
             ])}
             showing_within={@showing_within}
             css_borders={@css_borders}
+            parent_id={@parent_id}
           />
         {#elseif String.ends_with?(media_url || "", ".pdf")}
           <Bonfire.UI.Social.Activity.LinkPdfLive
             media={m}
             media_url={media_url}
             css_borders={@css_borders}
+            parent_id={@parent_id}
           />
         {#else _}
           <Bonfire.UI.Social.Activity.MediaLinkLive
@@ -207,6 +209,7 @@
                               {#match maybe_preview_img}
                                 {!-- {#if is_image?(maybe_preview_img)} --}
                                 <LazyImage
+                                  parent_id={["media", @parent_id, id(m)]}
                                   class={
                                     "border-base-content/10 w-full !object-cover m-image h-full cursor-pointer aspect-video rounded-md",
                                     grayscale: @showing_within == :flags
@@ -235,6 +238,7 @@
                           {#match maybe_preview_img}
                             {#if is_image?(maybe_preview_img)}
                               <LazyImage
+                                parent_id={["imgp", @parent_id, id(m)]}
                                 class="border-base-content/10 w-full !object-cover m-image h-full cursor-pointer aspect-video rounded-md"
                                 media={m}
                                 alt={media_label}
