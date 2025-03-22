@@ -556,7 +556,7 @@ defmodule Bonfire.UI.Social.SettingsTest do
       })
 
       {:ok, refreshed_view, _html} = live(conn, "/feed/local")
-      live_pubsub_wait(view)
+      live_async_wait(view)
       # open_browser(refreshed_view)
 
       assert refreshed_view

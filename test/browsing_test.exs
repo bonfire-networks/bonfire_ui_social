@@ -148,7 +148,7 @@ defmodule Bonfire.UI.Social.BrowsingTest do
     |> element("li[data-role=amount_of_replies]")
     |> render_click()
 
-    live_pubsub_wait(view)
+    live_async_wait(view)
     :timer.sleep(5000)
     # open_browser(view)
   end

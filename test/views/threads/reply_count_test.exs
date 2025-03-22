@@ -38,7 +38,7 @@ defmodule Bonfire.Social.Threads.RepliesTest do
     {view, _doc} = floki_live(conn, next)
 
     # wait for async
-    live_pubsub_wait(view)
+    live_async_wait(view)
 
     assert view
            |> render()

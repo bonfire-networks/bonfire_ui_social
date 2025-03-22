@@ -37,7 +37,7 @@ defmodule Bonfire.Social.Threads.LoadMoreTest do
       conn = conn(user: bob, account: account2)
       next = "/discussion/#{op.id}"
       {:ok, view, _html} = live(conn, next)
-      live_pubsub_wait(view)
+      live_async_wait(view)
 
       # open_browser(view)
       # {view, doc} = floki_live(conn, next)

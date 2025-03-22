@@ -966,33 +966,40 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
         debug("socket connected, so load feed async")
         pid = self()
 
-        apply_task(:start_link, fn ->
-          debug(feed_name_id_or_tuple, "Query activities asynchronously")
+        apply_task(
+          :start_async,
+          fn ->
+            debug(feed_name_id_or_tuple, "Query activities asynchronously")
 
-          with {entries, new_assigns} when is_list(new_assigns) <-
-                 feed_assigns(feed_name_id_or_tuple, opts) do
-            # |> debug("feed_assigns")
-            send_feed_updates(
-              pid,
-              assigns[:feed_component_id] || assigns[:feed_id] || :feeds,
-              {entries,
-               new_assigns ++
-                 [
-                   loaded_async: true,
-                   reset_stream: reset_stream
-                 ]},
-              Bonfire.UI.Social.FeedLive
-            )
-          else
-            {:error, e} ->
-              error(e, "error returned by feed_assigns")
-              assign_error(socket, Bonfire.Common.Errors.error_msg(e) || e, pid)
+            with {entries, new_assigns} when is_list(new_assigns) <-
+                   feed_assigns(feed_name_id_or_tuple, opts) do
+              # |> debug("feed_assigns")
+              send_feed_updates(
+                pid,
+                assigns[:feed_component_id] || assigns[:feed_id] || :feeds,
+                {entries,
+                 new_assigns ++
+                   [
+                     loaded_async: true,
+                     reset_stream: reset_stream
+                   ]},
+                Bonfire.UI.Social.FeedLive
+              )
+            else
+              {:error, e} ->
+                error(e, "error returned by feed_assigns")
+                assign_error(socket, Bonfire.Common.Errors.error_msg(e) || e, pid)
 
-            e ->
-              error(e, "received invalid response from feed_assigns")
-              assign_error(socket, "There was an error when trying to load the feed.", pid)
-          end
-        end)
+              e ->
+                error(e, "received invalid response from feed_assigns")
+                assign_error(socket, "There was an error when trying to load the feed.", pid)
+            end
+          end,
+          socket: socket,
+          id: feed_name_id_or_tuple
+        )
+
+        # end of async
       else
         debug("socket NOT connected, but logged in, so no need to load for SEO")
       end
