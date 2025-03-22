@@ -80,10 +80,17 @@
               {l("Accept")}
             </button>
           </div>
-        {#elseif @verb == "Like"}
+        {#elseif @verb in ["Like", "React"]}
           <div data-role="liked_by" class="flex items-start gap-5 justify-start">
             {!-- LIKE --}
-            <#Icon iconify="mingcute:fire-fill" class="w-7 h-7 text-yellow-500" />
+
+            {#case @emoji}
+              {#match %{summary: emoji}}
+                <span class="text-yellow-500 text-[20px]">{emoji}</span>
+              {#match _}
+                <#Icon iconify="mingcute:fire-fill" class="w-7 h-7 text-yellow-500" />
+            {/case}
+
             <div class="flex-1 flex flex-col gap-2">
               <LinkLive
                 to={@path}
@@ -111,7 +118,7 @@
                   {/if}
                 </LinkLive>
 
-                {raw(@verb_display)} {l(" your activity")}
+                {if @verb == "React", do: l("reacted to your activity"), else: l("liked your activity")}
               </div>
             </div>
           </div>
@@ -141,12 +148,7 @@
                 <div class="font-medium text-sm text-base-content/90">
                   {@profile_name || @character_username}
 
-                  {raw(@verb_display)}
-
-                  <span :if={@object_id == current_user_id(@__context__)}>
-                    {!-- special case when current_user is the one being followed --}
-                    {l("you")}
-                  </span>
+                  {if @object_id == current_user_id(@__context__), do: l("followed you"), else: "followed"}
                 </div>
               </LinkLive>
             </div>
@@ -181,7 +183,7 @@
                   class="link link-hover font-semibold"
                 >
                   {#if @object_id == current_user_id(@__context__)}
-                    {l("You")}
+                    {l("you")}
                   {#else}
                     {@profile_name || @character_username}
                   {/if}
@@ -222,7 +224,7 @@
                   {/if}
                 </LinkLive>
 
-                {raw(@verb_display)} {l(" your activity")}
+                {l("pinned")}
               </div>
             </div>
           </div>
@@ -317,12 +319,9 @@
                 {@profile_name || @character_username}
               </LinkLive>
 
-              {raw(@verb_display)}
-
-              <span :if={@object_id == current_user_id(@__context__)}>
-                {!-- special case when current_user is the one being followed --}
-                {l("you")}
-              </span>
+              {if @object_id == current_user_id(@__context__),
+                do: l("requested to follow you"),
+                else: "requested to follow"}
             </div>
           </div>
         </div>
@@ -349,10 +348,17 @@
             </div>
           </div>
         </div>
-      {#elseif @verb == "Like"}
+      {#elseif @verb in ["Like", "React"]}
         <div data-role="liked_by" class="flex items-center justify-start pb-3 -ml-8">
           {!-- LIKE --}
-          <#Icon iconify="mingcute:fire-fill" class="w-5 h-5 text-yellow-500" />
+
+          {#case @emoji}
+            {#match %{summary: emoji}}
+              <span class="text-yellow-500 text-[15px]">{emoji}</span>
+            {#match _}
+              <#Icon iconify="mingcute:fire-fill" class="w-5 h-5 text-yellow-500" />
+          {/case}
+
           <div class="flex-1 ml-3">
             <div class="text-sm font-medium text-base-content/70">
               <LinkLive
@@ -368,7 +374,7 @@
                 {/if}
               </LinkLive>
 
-              {raw(@verb_display)}
+              {if @verb == "React", do: l("reacted to your activity"), else: l("liked your activity")}
             </div>
           </div>
         </div>

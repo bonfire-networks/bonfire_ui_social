@@ -23,6 +23,7 @@ defmodule Bonfire.UI.Social.Activity.SubjectMinimalLive do
   prop path, :string, default: nil
   prop profile_media, :string, default: nil
   prop profile_id, :string, default: nil
+  prop emoji, :any, default: nil
 
   def render(assigns),
     do: Bonfire.UI.Social.Activity.SubjectLive.prepare(assigns) |> render_sface()

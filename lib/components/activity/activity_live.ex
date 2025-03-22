@@ -10,7 +10,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
   # TODO: autogenerate with Verbs genserver?
   @reply_verbs Application.compile_env(:bonfire, [:verb_families, :reply]) || []
   @create_verbs Application.compile_env(:bonfire, [:verb_families, :create]) || []
-  @react_verbs Application.compile_env(:bonfire, [:verb_families, :react]) || []
+  @react_verbs (Application.compile_env(:bonfire, [:verb_families, :react]) || []) ++ ["React"]
   @simple_verbs Application.compile_env(:bonfire, [:verb_families, :simple_action]) || []
   @react_or_simple_verbs @react_verbs ++ @simple_verbs
   @react_or_reply_verbs @react_verbs ++ @reply_verbs
@@ -266,7 +266,13 @@ defmodule Bonfire.UI.Social.ActivityLive do
 
   def prepare(assigns), do: Map.put(assigns, :activity_prepared, :skipped)
 
-  defp prepare_verb(activity, fallback \\ nil),
+  defp prepare_verb(activity, fallback \\ nil)
+
+  defp prepare_verb(%{emoji: %{summary: _}}, fallback) do
+    "React"
+  end
+
+  defp prepare_verb(activity, fallback),
     do:
       Activities.verb_maybe_modify(
         e(activity, :verb, nil) || e(activity, :verb_id, nil) || fallback,
@@ -281,7 +287,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
 
     # debug(object, "object")
 
-    verb = prepare_verb(activity, e(assigns, :verb_default, "Create"))
+    verb = prepare_verb(activity, e(assigns, :verb_default, nil) || "Create")
 
     # |> debug("verb (modified)")
 
@@ -683,7 +689,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
                           modal_view: Bonfire.UI.Coordination.TaskLive,
                           activity_inception: "preview",
                           check_object_boundary: false,
-                          loading: false
+                          loaded: true
                         }
                         root_assigns={
                           page_title: l("Task")
@@ -768,6 +774,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
                   published_in={@published_in}
                   verb={e(component_assigns, :verb, @verb)}
                   verb_display={e(component_assigns, :verb_display, @verb_display)}
+                  emoji={e(component_assigns, :activity, :emoji, nil) || e(@activity, :emoji, nil)}
                   reply_to_id={e(@activity, :replied, :reply_to_id, nil)}
                   subject_peered={e(@activity, :subject, :character, :peered, nil)}
                   peered={@peered}
