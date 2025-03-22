@@ -1630,7 +1630,7 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
   defp do_preload_extras(list_of_components, opts) do
     # NOTE: we receive the `ActivityLive` assigns pre-prepare even though this is running async
 
-    list_of_activities =
+    activities =
       list_of_components
       |> debug("list_of_components")
       |> Enum.map(fn
@@ -1654,8 +1654,23 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
       |> filter_empty([])
       # |> debug("list_of_activities pre-postload")
       |> preload_activity_and_object_assocs([:object], opts)
+
+    list_of_activities =
+      activities
       |> Map.new(fn activity -> {id(activity) || id(e(activity, :object, nil)), activity} end)
       |> debug("list_of_activities postloaded")
+
+    list_of_emoji =
+      activities
+      |> Enum.map(fn a -> e(a, :edge, nil) end)
+      |> Enums.filter_empty([])
+      |> repo().maybe_preload(:emoji, skip_boundary_check: true)
+      |> Map.new(fn edge ->
+        case e(edge, :emoji, nil) do
+          nil -> nil
+          emoji -> {id(edge), emoji}
+        end
+      end)
 
     list_of_components
     # |> debug()
@@ -1665,7 +1680,11 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
       {
         component.component_id,
         if(activity,
-          do: %{activity: activity, activity_preloads: opts[:assign_activity_preloads]}
+          do: %{
+            activity: activity,
+            emoji: list_of_emoji[component.object_id],
+            activity_preloads: opts[:assign_activity_preloads]
+          }
         )
         # ActivityLive.assigns_from_activity(list_of_activities[component.object_id] || component.activity)
       }

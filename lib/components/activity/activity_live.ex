@@ -46,6 +46,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
   prop participants, :list, default: []
   prop object_boundary, :any, default: nil
   prop cw, :any, default: nil
+  prop emoji, :any, default: nil
   prop check_object_boundary, :boolean, default: false
   prop is_remote, :boolean, default: false
   prop show_minimal_subject_and_note, :any, default: false
@@ -710,7 +711,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
             phx-submit={if @feed_id, do: "Bonfire.Social.Feeds:mark_seen"}
             phx-target={if @feed_id, do: "#badge_counter_#{@feed_id}"}
           >
-          {!-- ^^ FIXME: mark_seen should only be included for notifications and messages --}
+            {!-- ^^ FIXME: mark_seen should only be included for notifications and messages --}
             <input type="hidden" name="feed_id" value={@feed_id}>
             <input type="hidden" name="activity_id" value={@activity_id}>
           </form>
@@ -775,7 +776,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
                   published_in={@published_in}
                   verb={e(component_assigns, :verb, @verb)}
                   verb_display={e(component_assigns, :verb_display, @verb_display)}
-                  emoji={e(component_assigns, :activity, :emoji, nil) || e(@activity, :emoji, nil)}
+                  emoji={@emoji || e(component_assigns, :activity, :emoji, nil) || e(@activity, :emoji, nil)}
                   reply_to_id={e(@activity, :replied, :reply_to_id, nil)}
                   subject_peered={e(@activity, :subject, :character, :peered, nil)}
                   peered={@peered}
