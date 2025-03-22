@@ -1,5 +1,5 @@
 <div data-id="subject" class="subject relative flex items-start">
-  <!-- <div
+  {!-- <div
     data-trigger="hover"
     data-position="top"
     phx-hook="Tooltip"
@@ -12,7 +12,7 @@
       role="button"
       aria-haspopup="true"
       aria-expanded="true"
-    > -->
+    > --}
   <LinkLive
     :if={@subject_id && !Settings.get([Bonfire.UI.Common.AvatarLive, :hide_avatars], false, @__context__)}
     opts={"data-id": "subject_avatar"}
@@ -34,7 +34,7 @@
       }
     />
   </LinkLive>
-  <!-- </label>
+  {!-- </label>
     <Bonfire.UI.Me.UserPreviewLive
       href={@path}
       user={%{
@@ -75,7 +75,7 @@
           </div>
         </div>
       </:actions>
-    </Bonfire.UI.Me.UserPreviewLive> -->
+    </Bonfire.UI.Me.UserPreviewLive> --}
   <div data-id="subject_details" class="flex gap-2 w-full feed-clickable justify-start">
     <div
       class="flex items-center flex-1 gap-2"
@@ -145,7 +145,7 @@
       <Bonfire.UI.Social.Activity.InstanceIconLive :if={@is_remote} peered={@peered} />
     </span>
   </div>
-  <!-- </div> -->
+  {!-- </div> --}
 
   {!-- {#if @show_minimal_subject_and_note}      
           <div class="flex items-top">
@@ -167,7 +167,7 @@
         {/if}   --}
 </div>
 
-<!-- <a
+{!-- <a
   :if={@reply_to_id == nil and @showing_within in [nil, :feed] and
     !@viewing_main_object and @thread_title}
   data-id="title_in_subject"
@@ -182,4 +182,4 @@
   class="text-xl font-semibold leading-[36x] break-all"
 >
   {@thread_title}
-</div> -->
+</div> --}

@@ -1577,9 +1577,10 @@ defmodule Bonfire.UI.Social.ActivityLive do
   def component_for_object_type(Bonfire.Data.Social.PostContent, _),
     do: [Bonfire.UI.Social.Activity.NoteLive]
 
-  def component_for_object_type(Bonfire.Data.Social.Post, _object),
-    # for posts with no text content (eg. only with attachments)
-    do: []
+  def component_for_object_type(Bonfire.Data.Social.Post, _object) do
+    debug("post with no text content (eg. only with attachments)")
+    []
+  end
 
   def component_for_object_type(Bonfire.Data.Social.Message, _),
     do: [Bonfire.UI.Social.Activity.NoteLive]
@@ -1670,7 +1671,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
         error(other, "Unrecognised object_preview config")
         if is_function(fallback), do: fallback.(type, object), else: [fallback]
     end
-    |> debug()
+    |> debug("component from config")
   end
 
   defp component_object_fallback(_object_type, %{profile: %{id: _}}),

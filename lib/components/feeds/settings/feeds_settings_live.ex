@@ -14,8 +14,14 @@ defmodule Bonfire.UI.Social.FeedsSettingsLive do
     else
       presets =
         Bonfire.Social.Feeds.feed_presets_permitted(current_user: current_user(assigns))
-        |> Enum.reject(fn {_slug, preset} ->
-          preset[:parameterized]
+        |> Enum.filter(fn {_slug, preset} ->
+          case preset[:parameterized] do
+            nil ->
+              true
+
+            param ->
+              param == %{subjects: [:me]}
+          end
         end)
         |> Enum.map(fn {id, preset} ->
           Map.put(preset, :id, id)

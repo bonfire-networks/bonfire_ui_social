@@ -91,7 +91,7 @@
             <StatelessComponent
               :if={@showing_within != :messages}
               module={maybe_component(Bonfire.UI.Reactions.BoostActionLive, @__context__)}
-              id={"#{@id}_boost"}
+              id={"#{@id || id(@object)}_boost"}
               myself={@myself}
               object_id={id(@object)}
               object_type={@object_type}
@@ -108,7 +108,7 @@
 
             <StatelessComponent
               module={maybe_component(Bonfire.UI.Reactions.LikeActionLive, @__context__)}
-              id={"#{@id}_like"}
+              id={"#{@id || id(@object)}_like"}
               event_target={@myself}
               myself={@myself}
               object_id={id(@object)}
@@ -125,7 +125,7 @@
             <StatelessComponent
               module={maybe_component(Bonfire.UI.Reactions.EmojiReactionsLive, @__context__)}
               object_id={id(@object)}
-              id={"#{@id}_react"}
+              id={"#{@id || id(@object)}_react"}
               myself={@myself}
               parent_id={@parent_id}
               showing_within={@showing_within}
@@ -133,7 +133,7 @@
 
             <StatelessComponent
               module={maybe_component(Bonfire.UI.Reactions.BookmarkActionLive, @__context__)}
-              id={"#{@id}_bookmark"}
+              id={"#{@id || id(@object)}_bookmark"}
               event_target={@myself}
               myself={@myself}
               :if={not is_nil(current_user_id(@__context__))}

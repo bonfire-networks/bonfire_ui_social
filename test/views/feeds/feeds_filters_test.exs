@@ -230,7 +230,6 @@ defmodule Bonfire.UI.Social.FeedsFilters.Test do
 
   describe "applying feed filters:" do
     #  because of async feed (re)loading
-    @tag :fixme
     test "filters out boosts when disabled", %{user: user, other_user: other_user} do
       # Create original post and boost it
       original_post =
@@ -248,15 +247,11 @@ defmodule Bonfire.UI.Social.FeedsFilters.Test do
         # |> assert_has("[data-id=feed] article", count: 2)  # Original + boost - TODO: test this way with show_objects_only_once: false filter
         # |> click_button("Filters")
         |> click_button("[data-toggle='boost'] button", "Hide")
-
-      #  FIXME?
-      live_async_wait(session)
-
-      session
-      |> refute_has("[data-id=feed] article[data-verb=Boost]")
-      # |> assert_has("[data-id=feed] article", count: 1)  # Only original
-      |> click_button("[data-toggle='boost'] button", "Only")
-      |> assert_has("[data-id=feed] article[data-verb=Boost]")
+        |> wait_async()
+        |> refute_has("[data-id=feed] article[data-verb=Boost]")
+        # |> assert_has("[data-id=feed] article", count: 1)  # Only original
+        |> click_button("[data-toggle='boost'] button", "Only")
+        |> assert_has("[data-id=feed] article[data-verb=Boost]")
     end
   end
 end
