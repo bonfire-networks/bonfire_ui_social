@@ -434,11 +434,11 @@ defmodule Bonfire.UI.Social.Feeds.FeedsPresets.PaginationTest do
     } do
       total_posts = limit * 3
 
-      # Create text posts
       for n <- 1..total_posts do
+        # Create text posts
         {:ok, _post} =
           Posts.publish(
-            current_user: user1,
+            current_user: user2,
             post_attrs: %{
               post_content: %{
                 html_body: "Text post #{n}"
@@ -446,11 +446,9 @@ defmodule Bonfire.UI.Social.Feeds.FeedsPresets.PaginationTest do
             },
             boundary: "public"
           )
-      end
 
-      # Create image posts
-      for n <- 1..total_posts do
-        {_media, _post} = Fake.create_test_content(:images, user1, user2, n)
+        # Create image posts
+        {_media, _post} = Fake.create_test_content(:images, user2, nil, n)
         nil
       end
 
@@ -461,13 +459,42 @@ defmodule Bonfire.UI.Social.Feeds.FeedsPresets.PaginationTest do
       #   |> visit("/feed/local?content_type=images")
       |> visit("/feed/local")
       |> wait_async()
-      # Apply the filter
-      |> click_button("[data-toggle='image'] button", "Only")
       # Should have pagination limit number of posts
       |> assert_has("[data-id=feed] article[data-id=activity]", count: limit)
+      # Apply the filter
+      |> click_button("[data-toggle='image'] button", "Only")
+      |> wait_async()
+      # Only image posts should appear
+      |> assert_has("article[data-id=activity]", text: "Image post")
+      |> refute_has_or_open_browser("article[data-id=activity]", text: "Text post")
+      # Load next page
+      |> click_button("[data-id=load_more]", "Load more")
+      |> wait_async()
+      # Now should have more posts, all images
+      |> assert_has("[data-id=feed] article[data-id=activity]", count: limit * 2)
+      # Still only image posts
+      |> assert_has("article[data-id=activity]", text: "Image post")
+      |> refute_has("article[data-id=activity]", text: "Text post")
+      # Count occurrences of the text "Image post"
+      |> unwrap(fn view ->
+        html = render(view)
+        assert Regex.scan(~r/Image post/, html) |> length() == limit * 2
+        html
+      end)
+
+      # now do the same with the user profile
+      conn
+      |> visit("/@#{user2.character.username}")
+      |> wait_async()
+      # Apply the filter
+      |> click_button("[data-toggle='image'] button", "Only")
+      |> wait_async()
+      # Should have pagination limit number of posts
+      |> assert_has_or_open_browser("[data-id=feed] article[data-id=activity]", count: limit)
       # Only image posts should appear
       |> assert_has_or_open_browser("article[data-id=activity]", text: "Image post")
       |> refute_has("article[data-id=activity]", text: "Text post")
+      |> PhoenixTest.open_browser()
       # Load next page
       |> click_button("[data-id=load_more]", "Load more")
       |> wait_async()

@@ -10,12 +10,16 @@ defmodule Bonfire.UI.Social.FeedLive do
   prop feed_name, :any, default: nil
   prop feed_id, :any, default: nil
   prop feed_ids, :any, default: nil
-  prop hide_guest_fallback, :boolean, default: false
   prop feed, :any, default: nil
   prop subject_user, :any, default: nil
+
   prop page_info, :any, default: nil
   prop previous_page_info, :any, default: nil
+  prop hide_guest_fallback, :boolean, default: false
+
   prop loading, :boolean, default: true
+  prop reloading, :boolean, default: true
+
   prop cache_strategy, :any, default: nil
   prop hide_activities, :any, default: nil
   prop hide_actions, :any, default: false
@@ -425,6 +429,239 @@ defmodule Bonfire.UI.Social.FeedLive do
       assigns[:feed_name] || assigns[:feed_id] || assigns[:id] ||
         :default
 
+  def handle_event(
+        "set_filter",
+        %{"Elixir.Bonfire.UI.Social.FeedLive" => attrs},
+        socket
+      ) do
+    handle_event(
+      "set_filter",
+      attrs,
+      socket
+    )
+  end
+
+  def handle_event(
+        "set_filter",
+        %{"time_limit" => attrs},
+        socket
+      ) do
+    options = %{1 => l("Day"), 7 => l("Week"), 30 => l("Month"), 365 => "Year", 0 => "All time"}
+    values = options |> Map.keys() |> Enum.sort()
+    selected_value = find_value_by_index(attrs, values)
+    set_filters(%{time_limit: selected_value}, socket)
+  end
+
+  def handle_event(
+        "set_filter",
+        %{"toggle" => field, "toggle_type" => type} = params,
+        socket
+      ) do
+    set_type(
+      maybe_to_atom(field),
+      maybe_to_atom("exclude_#{field}"),
+      type,
+      params["toggle_value"],
+      socket
+    )
+  end
+
+  def handle_event(
+        "set_filter",
+        %{"include" => types},
+        socket
+      ) do
+    # warn(types, "WIP: set_types_filter")
+
+    {_include_map, exclude_map} = Map.split_with(types, fn {_, v} -> v == "true" end)
+
+    set_filters(
+      %{
+        # activity_types: Map.keys(include_map) # TODO?
+        exclude_activity_types: Map.keys(exclude_map)
+      },
+      socket
+    )
+  end
+
+  def handle_event(
+        "set_filter",
+        %{"subject_circles" => circle_id} = params,
+        socket
+      )
+      when not is_nil(circle_id) do
+    current_circles = e(socket.assigns, :feed_filters, :subject_circles, [])
+
+    updated_circles =
+      if circle_id in current_circles do
+        List.delete(current_circles, circle_id)
+      else
+        [circle_id | current_circles]
+      end
+      |> Enum.uniq()
+
+    set_filters(
+      %{
+        subject_circles: updated_circles
+      },
+      socket
+    )
+  end
+
+  def handle_event(
+        "set_filter",
+        attrs,
+        socket
+      ) do
+    set_filters(
+      attrs,
+      socket
+    )
+  end
+
+  def handle_event(
+        "set",
+        attrs,
+        socket
+      ) do
+    reload(
+      assigns(socket)[:feed_filters],
+      socket
+      |> Bonfire.UI.Common.LiveHandlers.assign_attrs(attrs)
+    )
+  end
+
+  def handle_event(
+        "live_select_change",
+        %{"text" => text, "id" => live_select_id, "field" => field},
+        socket
+      ) do
+    options =
+      case field do
+        "subject_circles" ->
+          Bonfire.UI.Boundaries.SetBoundariesLive.circles_for_multiselect(
+            socket.assigns.__context__,
+            :subject_circles,
+            text
+          )
+
+        _ ->
+          []
+      end
+
+    send_update(LiveSelect.Component, id: live_select_id, options: options)
+    {:noreply, socket}
+  end
+
+  def handle_event("toggle_circle_filter", %{"circle_id" => circle_id}, socket) do
+    current_circles = e(socket.assigns, :feed_filters, :subject_circles, [])
+
+    updated_circles =
+      if circle_id in current_circles do
+        List.delete(current_circles, circle_id)
+      else
+        [circle_id | current_circles] |> Enum.uniq()
+      end
+
+    set_filters(
+      %{
+        "Elixir.Bonfire.UI.Social.FeedLive" => %{
+          subject_circles: updated_circles
+        }
+      },
+      socket
+    )
+  end
+
+  def handle_event("multi_select", %{data: selected}, socket) when is_list(selected) do
+    filters =
+      Enum.group_by(selected, fn %{} = data -> data["field"] end)
+      |> debug()
+      |> Enum.reduce(%{}, fn {field, data}, acc ->
+        Map.merge(acc, %{
+          field =>
+            data
+            |> Enum.map(&id/1)
+            |> Enum.uniq()
+        })
+      end)
+      |> debug()
+
+    set_filters(
+      filters,
+      socket
+    )
+  end
+
+  def set_filters(
+        attrs,
+        socket,
+        replace_lists \\ false
+      ) do
+    # debug(attrs, "set_filter")
+    case FeedFilters.validate(attrs) do
+      {:ok, filters} ->
+        reload(
+          # Enums.merge_to_struct(
+          #   FeedFilters,
+          Enums.merge_as_map(
+            debug(assigns(socket)[:feed_filters] || %{}, "existing filters"),
+            filters
+            |> debug("validated")
+            # replace_lists: replace_lists
+          )
+          |> debug("merged"),
+          socket,
+          Config.env() == :test
+        )
+
+      e ->
+        error(e)
+    end
+  end
+
+  def reload(
+        feed_filters,
+        socket,
+        reset \\ true
+      ) do
+    # need to reload feed so streams are updated
+
+    feed_name = feed_name(assigns(socket))
+
+    if is_nil(feed_name) or feed_name in [:my, :explore, :remote, :local, :custom],
+      do: send_self(widgets(e(assigns(socket), nil)))
+
+    socket =
+      socket
+      |> assign(
+        loading: reset,
+        reloading: !reset,
+        page_info: nil,
+        previous_page_info: nil,
+        feed_filters: feed_filters
+      )
+
+    # |> assign(:page_header_aside, LiveHandler.page_header_asides(...))
+
+    feed_assigns =
+      LiveHandler.feed_assigns_maybe_async(
+        {feed_name, feed_filters},
+        socket,
+        true,
+        true
+      )
+      |> debug("feed_assigns")
+
+    {
+      :noreply,
+      socket
+      |> LiveHandler.insert_feed(feed_assigns)
+      |> debug("socket_assigned")
+      # |> debug("seeet")
+    }
+  end
+
   defp set_type(include_field, exclude_field, type, value, socket) do
     do_set_type(
       e(assigns(socket), :feed_filters, include_field, []),
@@ -495,227 +732,6 @@ defmodule Bonfire.UI.Social.FeedLive do
       socket,
       true
     )
-  end
-
-  def handle_event(
-        "set_filter",
-        %{"Elixir.Bonfire.UI.Social.FeedLive" => %{"time_limit" => attrs}},
-        socket
-      ) do
-    options = %{1 => l("Day"), 7 => l("Week"), 30 => l("Month"), 365 => "Year", 0 => "All time"}
-    values = options |> Map.keys() |> Enum.sort()
-    selected_value = find_value_by_index(attrs, values)
-    set_filters(%{time_limit: selected_value}, socket)
-  end
-
-  def handle_event(
-        "set_filter",
-        %{"toggle" => field, "toggle_type" => type} = params,
-        socket
-      ) do
-    set_type(
-      maybe_to_atom(field),
-      maybe_to_atom("exclude_#{field}"),
-      type,
-      params["toggle_value"],
-      socket
-    )
-  end
-
-  def handle_event(
-        "set_filter",
-        %{"Elixir.Bonfire.Social.Feeds" => %{"include" => types}},
-        socket
-      ) do
-    # warn(types, "WIP: set_types_filter")
-
-    {_include_map, exclude_map} = Map.split_with(types, fn {_, v} -> v == "true" end)
-
-    set_filters(
-      %{
-        # activity_types: Map.keys(include_map) # TODO?
-        exclude_activity_types: Map.keys(exclude_map)
-      },
-      socket
-    )
-  end
-
-  def handle_event(
-        "set_filter",
-        %{"subject_circles" => circle_id} = params,
-        socket
-      )
-      when not is_nil(circle_id) do
-    current_circles = e(socket.assigns, :feed_filters, :subject_circles, [])
-
-    updated_circles =
-      if circle_id in current_circles do
-        List.delete(current_circles, circle_id)
-      else
-        [circle_id | current_circles]
-      end
-      |> Enum.uniq()
-
-    set_filters(
-      %{
-        subject_circles: updated_circles
-      },
-      socket
-    )
-  end
-
-  def handle_event(
-        "set_filter",
-        %{"Elixir.Bonfire.UI.Social.FeedLive" => attrs},
-        socket
-      ) do
-    set_filters(
-      attrs,
-      socket
-    )
-  end
-
-  def handle_event(
-        "set_filter",
-        attrs,
-        socket
-      ) do
-    set_filters(
-      attrs,
-      socket
-    )
-  end
-
-  def handle_event(
-        "live_select_change",
-        %{"text" => text, "id" => live_select_id, "field" => field},
-        socket
-      ) do
-    options =
-      case field do
-        "subject_circles" ->
-          Bonfire.UI.Boundaries.SetBoundariesLive.circles_for_multiselect(
-            socket.assigns.__context__,
-            :subject_circles,
-            text
-          )
-
-        _ ->
-          []
-      end
-
-    send_update(LiveSelect.Component, id: live_select_id, options: options)
-    {:noreply, socket}
-  end
-
-  def handle_event("toggle_circle_filter", %{"circle_id" => circle_id}, socket) do
-    current_circles = e(socket.assigns, :feed_filters, :subject_circles, [])
-
-    updated_circles =
-      if circle_id in current_circles do
-        List.delete(current_circles, circle_id)
-      else
-        [circle_id | current_circles] |> Enum.uniq()
-      end
-
-    set_filters(
-      %{
-        "Elixir.Bonfire.UI.Social.FeedLive" => %{
-          subject_circles: updated_circles
-        }
-      },
-      socket
-    )
-  end
-
-  def handle_event("multi_select", %{data: selected}, socket) when is_list(selected) do
-    filters =
-      Enum.group_by(selected, fn %{} = data -> data["field"] end)
-      |> debug()
-      |> Enum.reduce(%{}, fn {field, data}, acc ->
-        Map.merge(acc, %{
-          field =>
-            data
-            |> Enum.map(&id/1)
-            |> Enum.uniq()
-        })
-      end)
-      |> debug()
-
-    set_filters(
-      filters,
-      socket
-    )
-  end
-
-  def handle_event(
-        "set",
-        attrs,
-        socket
-      ) do
-    reload(
-      assigns(socket)[:feed_filters],
-      socket
-      |> Bonfire.UI.Common.LiveHandlers.assign_attrs(attrs)
-    )
-  end
-
-  def set_filters(
-        attrs,
-        socket,
-        replace_lists \\ false
-      ) do
-    # debug(attrs, "set_filter")
-    case FeedFilters.validate(attrs) do
-      {:ok, filters} ->
-        reload(
-          # Enums.merge_to_struct(
-          #   FeedFilters,
-          Enums.merge_as_map(
-            debug(assigns(socket)[:feed_filters] || %{}, "existing filters"),
-            filters
-            |> debug("validated")
-            # replace_lists: replace_lists
-          )
-          |> debug("merged"),
-          socket
-        )
-
-      e ->
-        error(e)
-    end
-  end
-
-  def reload(
-        feed_filters,
-        socket
-      ) do
-    # need to reload feed so streams are updated
-
-    feed_name = feed_name(assigns(socket))
-
-    # if feed_name in [:my, :explore, :remote, :local], do:
-    send_self(widgets(e(assigns(socket), nil)))
-
-    {
-      :noreply,
-      socket
-      |> assign(
-        loading: true,
-        feed_filters: feed_filters
-      )
-      # |> assign(:page_header_aside, LiveHandler.page_header_asides(...))
-      |> LiveHandler.insert_feed(
-        ...,
-        LiveHandler.feed_assigns_maybe_async(
-          {feed_name, feed_filters},
-          ...,
-          true,
-          true
-        )
-      )
-      # |> debug("seeet")
-    }
   end
 
   def find_value_by_index(index, values) do

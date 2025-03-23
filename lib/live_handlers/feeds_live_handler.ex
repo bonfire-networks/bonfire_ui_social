@@ -481,7 +481,7 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
        hide_activities: opts[:hide_activities],
        feed_count: Enum.count(e(feed, :edges, [])),
        time_limit: opts[:time_limit],
-       previous_page_info: e(assigns(socket), :page_info, false),
+       previous_page_info: e(assigns(socket), :page_info, nil),
        page_info: e(feed, :page_info, []),
        feed_filters: filters,
        activity_preloads: opts[:activity_preloads]
@@ -496,10 +496,12 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
     debug(assigns, "nothing to add")
 
     socket
+    |> assign_generic(assigns)
     |> assign_generic(
-      previous_page_info: e(assigns(socket), :page_info, false),
+      previous_page_info: e(assigns(socket), :page_info, nil),
       page_info: assigns[:page_info],
-      loading: false
+      loading: false,
+      reloading: false
     )
 
     # |> assign_generic(assigns)
@@ -511,6 +513,8 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
   end
 
   def insert_feed(socket, {feed_edges, assigns}, opts) do
+    debug(length(feed_edges), "inserting edges and assigns")
+
     socket
     |> assign_generic(assigns)
     |> insert_feed(feed_edges, opts)
@@ -519,13 +523,23 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
   def insert_feed(socket, feed_edges, opts) do
     # socket
     # |> assign_generic(feed: feed_edges)
-    if e(feed_edges, :feed_component_id, nil) do
-      # temp workaround for when we're not actually getting a feed but rather a list of assigns for some reason
+    if Keyword.keyword?(feed_edges) or e(feed_edges, :feed_component_id, nil) do
+      debug(
+        feed_edges,
+        "workaround for when we're not actually getting a feed but just a list of assigns (probably because the feed is being loaded async)"
+      )
+
       socket
       |> assign_generic(feed_edges)
     else
       debug(opts, "insert feed into stream")
-      maybe_stream_insert(socket, :feed, feed_edges || [], opts)
+
+      socket
+      |> assign_generic(
+        loading: false,
+        reloading: false
+      )
+      |> maybe_stream_insert(:feed, feed_edges || [], opts)
     end
   end
 
@@ -653,9 +667,9 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
       selected_tab: "following",
       page: "activities",
       # page_title: l("My feed"),
-      feed_title: l("Following"),
-      feed: nil,
-      page_info: nil
+      feed_title: l("Following")
+      # feed: nil,
+      # page_info: nil
     ]
 
     # ] ++ page_header_asides(socket, component_id)
@@ -687,9 +701,9 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
       feedback_title: l("There is no activities to explore"),
       # feed_id: feed_name,
       feedback_message:
-        l("It seems like the paint is still fresh and there are no activities to explore..."),
-      feed: nil,
-      page_info: nil
+        l("It seems like the paint is still fresh and there are no activities to explore...")
+      # feed: nil,
+      # page_info: nil
     ]
 
     # ] ++ page_header_asides(socket, component_id)
@@ -718,10 +732,10 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
       feedback_message:
         l(
           "It seems you and other local users do not follow anyone on a different federated instance"
-        ),
+        )
       # feed_id: feed_name,
-      feed: nil,
-      page_info: nil
+      # feed: nil,
+      # page_info: nil
     ]
 
     # ] ++ page_header_asides(socket, component_id)
@@ -746,9 +760,9 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
       # page_title: l("Activities from members of the local instance"),
       feedback_title: l("Your local feed is empty"),
       # feed_id: feed_name,
-      feedback_message: l("It seems like the paint is still fresh on this instance..."),
-      feed: nil,
-      page_info: nil
+      feedback_message: l("It seems like the paint is still fresh on this instance...")
+      # feed: nil,
+      # page_info: nil
     ]
 
     # ] ++ page_header_asides(socket, component_id)
@@ -773,8 +787,8 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
         l(
           "Did you know you can customise which activities you want to be notified for in your settings ?"
         ),
-      feed: nil,
-      page_info: nil,
+      # feed: nil,
+      # page_info: nil,
       page_header_aside: [
         {Bonfire.UI.Social.HeaderAsideNotificationsSeenLive,
          [
@@ -800,11 +814,11 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
       page_title: "Curated feed",
       no_header: current_user_id(assigns(socket)),
       # feed_title: l("My favourites"),
-      feedback_title: l("Nothing curated yet?"),
+      feedback_title: l("Nothing curated yet?")
       # feed_id: feed_name,
       # feedback_message: l("It seems like the paint is still fresh on this instance..."),
-      feed: nil,
-      page_info: nil
+      # feed: nil,
+      # page_info: nil
     ]
   end
 
@@ -823,11 +837,11 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
       page_title: "Likes",
       no_header: false,
       # feed_title: l("My favourites"),
-      feedback_title: l("Have you not liked anything yet?"),
+      feedback_title: l("Have you not liked anything yet?")
       # feed_id: feed_name,
       # feedback_message: l("It seems like the paint is still fresh on this instance..."),
-      feed: nil,
-      page_info: nil
+      # feed: nil,
+      # page_info: nil
     ]
   end
 
@@ -846,11 +860,11 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
       page_title: "Bookmarks",
       no_header: false,
       # feed_title: l("My favourites"),
-      feedback_title: l("Have you not bookmarked anything yet?"),
+      feedback_title: l("Have you not bookmarked anything yet?")
       # feed_id: feed_name,
       # feedback_message: l("It seems like the paint is still fresh on this instance..."),
-      feed: nil,
-      page_info: nil
+      # feed: nil,
+      # page_info: nil
     ]
   end
 
@@ -863,11 +877,11 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
       scope: :instance,
       # FIXME: clean up page vs tab
       page: "flags",
-      feedback_title: l("You have not flagged any activities..."),
+      feedback_title: l("You have not flagged any activities...")
       # feed_id: feed_name,
       # feedback_message: l("It seems like the paint is still fresh on this instance..."),
-      feed: nil,
-      page_info: nil
+      # feed: nil,
+      # page_info: nil
     ]
   end
 
@@ -880,11 +894,11 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
       scope: :instance,
       # FIXME: clean up page vs tab
       page: "flags",
-      feedback_title: l("You have no flagged activities to review..."),
+      feedback_title: l("You have no flagged activities to review...")
       # feed_id: feed_name,
       # feedback_message: l("It seems like the paint is still fresh on this instance..."),
-      feed: nil,
-      page_info: nil
+      # feed: nil,
+      # page_info: nil
     ]
   end
 
@@ -909,9 +923,9 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
       selected_tab: feed_name,
       feed_id: feed_name,
       feed_filters: filters_or_custom_query_or_feed_id_or_ids,
-      feed_component_id: component_id(feed_name, assigns(socket)),
-      feed: nil,
-      page_info: nil
+      feed_component_id: component_id(feed_name, assigns(socket))
+      # feed: nil,
+      # page_info: nil
     ]
   end
 
@@ -925,9 +939,9 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
       feed_name: feed_name,
       feed_id: feed_name,
       selected_tab: feed_name,
-      feed_component_id: component_id(feed_name, assigns(socket)),
-      feed: nil,
-      page_info: nil
+      feed_component_id: component_id(feed_name, assigns(socket))
+      # feed: nil,
+      # page_info: nil
     ]
   end
 
@@ -935,9 +949,9 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
     debug(other)
 
     [
-      feed_component_id: component_id(other, assigns(socket)),
-      feed: nil,
-      page_info: nil
+      feed_component_id: component_id(other, assigns(socket))
+      # feed: nil,
+      # page_info: nil
     ]
   end
 
@@ -993,7 +1007,9 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
                  new_assigns ++
                    [
                      loaded_async: true,
-                     reset_stream: reset_stream
+                     reset_stream: reset_stream,
+                     loading: false,
+                     reloading: false
                    ]},
                 Bonfire.UI.Social.FeedLive
               )
@@ -1101,7 +1117,7 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
              |> FeedLoader.my_feed(opts, ...) do
         merge_feed_assigns(
           feed,
-          [loading: false, activity_preloads: {preloads, postloads}, feed_filters: feed_filters],
+          [activity_preloads: {preloads, postloads}, feed_filters: feed_filters],
           e(opts, :page_info, nil)
         )
       end
@@ -1144,7 +1160,7 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
          %{} = feed <- FeedLoader.feed(feed_id, feed_filters, opts) do
       merge_feed_assigns(
         feed,
-        [loading: false, activity_preloads: {preloads, postloads}, feed_filters: feed_filters],
+        [activity_preloads: {preloads, postloads}, feed_filters: feed_filters],
         e(opts, :page_info, nil)
       )
     end
@@ -1165,7 +1181,7 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
            |> FeedLoader.feed(..., feed_filters, opts) do
       merge_feed_assigns(
         feed,
-        [loading: false, activity_preloads: {preloads, postloads}, feed_filters: feed_filters],
+        [activity_preloads: {preloads, postloads}, feed_filters: feed_filters],
         e(opts, :page_info, nil)
       )
     end
@@ -1207,7 +1223,7 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
            Bonfire.Social.Pins.list_instance_pins(opts) do
       merge_feed_assigns(
         feed,
-        [loading: false],
+        [],
         e(opts, :page_info, nil)
       )
     end
@@ -1255,7 +1271,7 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
            |> FeedLoader.feed(feed_filters, opts) do
       merge_feed_assigns(
         feed,
-        [loading: false, activity_preloads: {preloads, postloads}, feed_filters: feed_filters],
+        [activity_preloads: {preloads, postloads}, feed_filters: feed_filters],
         e(opts, :page_info, nil)
       )
     end
@@ -1289,7 +1305,6 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
       merge_feed_assigns(
         feed,
         [
-          loading: false,
           feed_name: feed_name,
           feed_id: feed_id,
           activity_preloads: {preloads, postloads},
@@ -1347,7 +1362,9 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
           live_update_many_preload_mode: feed_live_update_many_preload_mode,
           preload_status_key: :preloaded_async_activities,
           return_assigns_socket_tuple: true,
-          id: e(first_assigns, :feed_name, nil) || e(first_assigns, :feed_id, nil)
+          id:
+            e(first_assigns, :feed_name, nil) || e(first_assigns, :feed_id, nil) ||
+              e(first_assigns, :thread_id, nil) || id(first_assigns)
         ]
 
     # FIXME: can't just use the first component's assigns to define our opts, but rather check all of them and group by different opts (specifically preloads) and execute them separately (in parallel), or merge them
@@ -1426,7 +1443,9 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
             return_assigns_socket_tuple: true,
             preload_status_key: :preloaded_async_actions,
             live_update_many_preload_mode: :user_async_or_skip,
-            id: e(first_assigns, :feed_name, nil) || e(first_assigns, :feed_id, nil)
+            id:
+              e(first_assigns, :feed_name, nil) || e(first_assigns, :feed_id, nil) ||
+                e(first_assigns, :thread_id, nil) || id(first_assigns)
           ]
 
       # FIXME: can't just use the first component's assigns to define our opts, but rather check all of them and group by different opts (specifically preloads) and execute them separately (in parallel), or merge them
@@ -1804,7 +1823,7 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
     {e(feed, :edges, []),
      new_assigns ++
        [
-         previous_page_info: previous_page_info || false,
+         previous_page_info: previous_page_info,
          page_info: e(feed, :page_info, [])
        ]}
   end

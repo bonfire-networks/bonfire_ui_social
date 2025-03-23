@@ -83,17 +83,16 @@
         {#if e(@feed_filters, :sort_order, nil) == :asc}
           <span phx-click="set_filter" phx-value-sort_order={:desc} phx-target={@event_target}>
             <#Icon iconify="mdi:arrow-down" class="w-4 h-4" />
+            <span class="sr-only">{l("Oldest first")}</span>
           </span>
-          <!-- <span class="hidden lg:block">{l("Oldest first")}</span> -->
         {#else}
           <span phx-click="set_filter" phx-value-sort_order={:asc} phx-target={@event_target}>
             <#Icon iconify="mdi:arrow-up" class="w-4 h-4" />
+            <span class="sr-only">{l("Newest first")}</span>
           </span>
-
-          <!-- <span class="hidden lg:block">{l("Newest first")}</span> -->
         {/if}
       </div>
-      <!-- <li><a
+      {!-- <li><a
             phx-click="set_filter"
             phx-value-sort_order="desc"
             phx-target={@event_target}
@@ -112,10 +111,10 @@
             <#Icon iconify="octicon:sort-asc-16" class="w-4 h-4" />
             {if e(@feed_filters, :sort_by, nil) in [nil, :latest_reply],
               do: l("Oldest first"),
-              else: l("Least first")}</a></li> -->
+              else: l("Least first")}</a></li> --}
     </div>
 
-    <!-- <div data-position="bottom" phx-hook="Tooltip" class="flex-1" id="sort_timing_feed">
+    {!-- <div data-position="bottom" phx-hook="Tooltip" class="flex-1" id="sort_timing_feed">
       <label tabindex="0" class="tooltip-button btn w-full btn-soft">
         {#if e(@feed_filters, :sort_order, nil) == :asc}
           <#Icon iconify="octicon:sort-asc-16" class="w-4 h-4" />
@@ -150,7 +149,7 @@
               do: l("Oldest first"),
               else: l("Least first")}</a></li>
       </ul>
-    </div> -->
+    </div> --}
 
     <div data-position="bottom" phx-hook="Tooltip" class="flex-1" id="filter_origin_feed">
       <label tabindex="0" class="tooltip-button btn w-full">
@@ -221,7 +220,8 @@
             {/if}
           </a>
         </li>
-        <!-- button
+
+        {!-- button
       :for={circle <-
         Bonfire.UI.Boundaries.SetBoundariesLive.circles_for_multiselect(
           @__context__,
@@ -237,7 +237,7 @@
       }
     >
       {elem(circle, 1)[:name]}
-    </button> -->
+    </button> --}
       </ul>
     </div>
 
@@ -272,7 +272,7 @@
       showing_within={@showing_within}
     />
 
-    <!-- <span class="font-semibold mt-6 uppercase text-xs text-base-content/60 pb-2 border-b border-base-content/10 mb-2">{l("By Users")}</span>
+    {!-- <span class="font-semibold mt-6 uppercase text-xs text-base-content/60 pb-2 border-b border-base-content/10 mb-2">{l("By Users")}</span>
     <form phx-change="multi_select">
       <Bonfire.UI.Common.MultiselectLive.UserSelectorLive
         selected_options={[]}
@@ -282,9 +282,19 @@
         implementation={:live_select}
         mode={:quick_tags}
       />
-    </form> -->
-    <div class="justify-end gap-3 flex items-center mt-4">
-      <div>
+    </form> --}
+    <div class="flex justify-center items-center relative">
+      <div class="absolute left-1/2 transform -translate-x-1/2">
+        <button @click="open = false" class="btn btn-circle btn-soft btn-secondary">
+          {#if @reloading}
+            <#Icon iconify="eos-icons:three-dots-loading" class="w-5 h-5" />
+          {#else}
+            <#Icon iconify="flowbite:chevron-double-up-outline" class="w-5 h-5" />
+          {/if}
+        </button>
+      </div>
+
+      <div class="ml-auto">
         <Bonfire.UI.Common.OpenModalLive
           id="add_to_feed_preset"
           title_text={l("Save this feed")}
@@ -323,17 +333,13 @@
             </div>
           </form>
           <:open_btn>
-            <div class="btn btn-soft btn-primary btn-sm">{l("Save preset")}</div>
+            <div class="btn btn-soft btn-primary btn-sm">{l("Save as preset")}</div>
           </:open_btn>
         </Bonfire.UI.Common.OpenModalLive>
       </div>
-      <!-- <button phx-click="reset_filter" phx-target={@event_target} class="btn btn-soft btn-sm">{l("Reset")}</button> -->
-    </div>
-
-    <div class="flex items-center place-content-center">
-      <button @click="open = false" class="btn btn-circle btn-soft btn-secondary">
-        <#Icon iconify="flowbite:chevron-double-up-outline" class="w-5 h-5" />
-      </button>
+      {!-- TODO:
+      <button phx-click="reset_filter" phx-target={@event_target} class="btn btn-soft btn-sm">{l("Reset")}</button> 
+      --}
     </div>
   </div>
 
@@ -344,7 +350,10 @@
         stroke="currentColor"
         fill="none"
         stroke-width="1"
-        style="opacity: 0.2;"
+        style={if @reloading,
+          do:
+            "opacity: 0.2; stroke-dasharray: 10; stroke-dashoffset: 0; animation: wave 2s linear infinite;",
+          else: "opacity: 0.2;"}
       />
     </svg>
   </div>

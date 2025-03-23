@@ -175,8 +175,8 @@
             phx-target={@event_target}
           >
             <#Icon iconify="mdi:arrow-up" class="w-4 h-4" />
+            <span class="sr-only">{l("Oldest first")}</span>
           </span>
-          <!-- <span class="hidden lg:block">{l("Oldest first")}</span> -->
         {#else}
           <span
             phx-click="set"
@@ -186,14 +186,13 @@
             phx-target={@event_target}
           >
             <#Icon iconify="mdi:arrow-down" class="w-4 h-4" />
+            <span class="sr-only">{l("Newest first")}</span>
           </span>
-
-          <!-- <span class="hidden lg:block">{l("Newest first")}</span> -->
         {/if}
       </div>
     </div>
 
-    <!-- <div data-position="bottom" phx-hook="Tooltip" class="flex-1" id="sort_timing_thread">
+    {!-- <div data-position="bottom" phx-hook="Tooltip" class="flex-1" id="sort_timing_thread">
       <label tabindex="0" class="tooltip-button w-full btn-sm btn btn-soft">
         {#if @sort_order == :asc}
           <#Icon iconify="octicon:sort-asc-16" class="w-4 h-4" />
@@ -232,6 +231,6 @@
             <#Icon iconify="octicon:sort-asc-16" class="w-4 h-4" />
             {if @sort_by in [nil, :latest_reply], do: l("Oldest first"), else: l("Least first")}</a></li>
       </ul>
-    </div> -->
+    </div> --}
   </div>
 </div>

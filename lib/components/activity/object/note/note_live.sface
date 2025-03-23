@@ -47,20 +47,20 @@
                 class="flex w-full flex-1 items-start my-2 gap-2 p-2 bg-base-content/5 border border-dashed border-base-content/10 rounded-box"
               >
                 <span data-role="cw" class="leading-[24px] text-left text-sm text-base-content/70 flex-1">{summary || l("Content Warning")}</span>
-                {#if !@hide_actions}
-                  <div class="show_more_toggle_action normal-case btn-ghost btn btn-xs">
-                    <span id={"content_show_more_#{@activity_component_id}"} class={if !@cw, do: "hidden"}>
-                      {l("Show more")}
-                    </span>
-                    <span id={"content_show_less_#{@activity_component_id}"} class={if @cw, do: "hidden"}>
-                      {l("Show less")}
-                    </span>
-                  </div>
-                {#else}
+                {!-- {#if !@hide_actions} --}
+                <div class="show_more_toggle_action normal-case btn-ghost btn btn-xs">
+                  <span id={"content_show_more_#{@activity_component_id}"} class={if !@cw, do: "hidden"}>
+                    {l("Show more")}
+                  </span>
+                  <span id={"content_show_less_#{@activity_component_id}"} class={if @cw, do: "hidden"}>
+                    {l("Show less")}
+                  </span>
+                </div>
+                {!-- {#else}
                   <div class="normal-case btn-ghost btn btn-xs">
                     {l("Show more")}
                   </div>
-                {/if}
+                {/if} --}
               </button>
             {#else}
               <div :if={summary} class="prose max-w-prose prose-p:pt-1">

@@ -32,15 +32,16 @@
       "!border-primary": reply == @thread_level - 1
     }
   />
+  {!-- ^ TODO: make this clickable (as was done in the commented code below) so thread branches can be minimized/expanded --}
 
-  <!-- <div
+  {!-- <div
     :if={@thread_mode != :flat &&
       (@index != @total_replies_in_thread - 1 ||
          (@index == @total_replies_in_thread - 1 && @threaded_replies != []))}
     class="absolute px-2 left-0 cursor-pointer top-0 bottom-0 z-30">
     <div class="absolute left-0 cursor-pointer inset-0 border-l-2 bottom-0 border-primary z-30" />
-  </div> -->
-  <!-- <div
+  </div> --}
+  {!-- <div
     :if={@thread_mode != :flat && @threaded_replies != []}
     x-on:click="show_replies = ! show_replies"
     class={
@@ -58,7 +59,7 @@
       x-show="show_replies"
       class="btn text-base-content/70 btn-xs text-xs !h-[1.25rem] !min-h-[1.25rem] !w-[1.25rem] btn-circle btn-outline normal-case"
     >-</span>
-  </div> -->
+  </div> --}
   <div data-role="comment-activity" class="flex-1 w-full" x-data="{reply: false, show: true}">
     {#if is_nil(@activity)}
       <!-- <div class="mx-4 my-2">

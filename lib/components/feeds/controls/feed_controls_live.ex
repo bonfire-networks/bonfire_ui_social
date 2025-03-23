@@ -7,6 +7,7 @@ defmodule Bonfire.UI.Social.FeedControlsLive do
   prop feed_name, :any, default: nil
   prop showing_within, :atom, default: nil
   prop feed_filters, :any, default: nil
+  prop reloading, :boolean, default: false
   # prop sort_by, :any, default: nil
   # prop time_limit, :any, default: nil
   # prop sort_order, :any, default: false
