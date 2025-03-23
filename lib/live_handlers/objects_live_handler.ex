@@ -54,8 +54,13 @@ defmodule Bonfire.Social.Objects.LiveHandler do
                  to_boundaries: boundary,
                  to_circles: params["to"]
                ) do
+                debug(params, "CAZZ")
           {:noreply,
            socket
+           |> redirect_to(
+             e(params, "go", nil),
+             fallback: current_url(socket)
+           )
            |> assign_flash(:info, l("Done!"))}
         end
 
