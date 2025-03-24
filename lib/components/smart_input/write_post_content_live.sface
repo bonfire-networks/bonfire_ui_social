@@ -3,9 +3,9 @@
   <!-- for={%{}} -->
   <form
     as={:post}
+    phx-change="Bonfire.UI.Common.SmartInput:validate"
     phx-submit={JS.push(handler(@create_object_type)) |> Bonfire.UI.Common.SmartInput.LiveHandler.minimize()}
     action={"/LiveHandler/" <> handler(@create_object_type)}
-    phx-change="validate"
     id="smart_input_form"
     autocomplete="off"
     ,
@@ -51,7 +51,6 @@
           </label>
         </div>
       </div>
-
       <WriteEditorLive
         field_name="post[post_content][html_body]"
         reset_smart_input={@reset_smart_input}

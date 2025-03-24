@@ -77,8 +77,6 @@ defmodule Bonfire.Social.Objects.LiveHandler do
                  to_boundaries: boundary,
                  to_circles: params["to"]
                ) do
-          debug(params, "CAZZ")
-
           {:noreply,
            socket
            |> assign_flash(:info, l("Shared!"))
