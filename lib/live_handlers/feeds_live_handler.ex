@@ -793,7 +793,7 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
         {Bonfire.UI.Social.HeaderAsideNotificationsSeenLive,
          [
            feed_id: :notifications,
-           feed_name: "notifications",
+           feed_name: "notifications"
          ]}
       ]
     ]
