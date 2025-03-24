@@ -17,18 +17,31 @@ defmodule Bonfire.Social.Objects.LiveHandler do
     end
   end
 
-  def handle_event("reset_preset_boundary", params, socket) do
+  def handle_event("reset_boundary", %{"boundary" => boundary} = params, socket) do
+    thing =
+      params["object_id"] || ed(assigns(socket), params["object_assign"] || :object, nil)
+
     with {:ok, _} <-
            Objects.reset_preset_boundary(
              current_user_required!(socket),
-             e(params, "id", nil) || e(assigns(socket), :object, nil),
-             e(assigns(socket), :boundary_preset, nil) || e(params, "boundary_preset", nil),
-             params
+             thing,
+             e(assigns(socket), :boundary_preset, nil) ||
+               e(params, "previous_boundary_preset", nil),
+             to_boundaries: boundary,
+             to_circles: params["to"]
            ) do
       {:noreply,
        socket
-       |> assign_flash(:info, l("Boundary updated!"))}
+       |> assign_flash(:info, l("Boundary updated!"))
+       |> maybe_redirect_to(
+         e(params, "go", nil),
+         fallback: current_url(socket)
+       )}
     end
+  end
+
+  def handle_event("reset_boundary", %{"id" => acl_id} = params, socket) do
+    handle_event("reset_boundary", Map.put(params, "boundary", acl_id), socket)
   end
 
   def handle_event("share", %{"boundary" => boundary} = params, socket) do
@@ -39,11 +52,21 @@ defmodule Bonfire.Social.Objects.LiveHandler do
       |> debug()
 
     creator =
-      e(thing, :creator, nil) || e(thing, :created, :creator, nil) ||
-        e(thing, :created, :creator_id, nil) || e(thing, :caretaker, :caretaker, nil) ||
-        e(thing, :caretaker, :caretaker_id, nil) || e(thing, :provider, nil)
+      if not is_nil(thing),
+        do:
+          e(thing, :creator, nil) || e(thing, :created, :creator, nil) ||
+            e(thing, :created, :creator_id, nil) || e(thing, :caretaker, :caretaker, nil) ||
+            e(thing, :caretaker, :caretaker_id, nil) || e(thing, :provider, nil)
 
     cond do
+      is_nil(creator) ->
+        error("Oops, the system could not find what you are trying to share")
+
+      is_nil(creator) ->
+        error(
+          "Could not share because the system did not know if you are the creator or caretaker"
+        )
+
       id(creator) != id(current_user) ->
         error(creator, "Not allowed")
 
@@ -58,16 +81,32 @@ defmodule Bonfire.Social.Objects.LiveHandler do
 
           {:noreply,
            socket
-           |> redirect_to(
+           |> assign_flash(:info, l("Shared!"))
+           |> maybe_redirect_to(
              e(params, "go", nil),
              fallback: current_url(socket)
-           )
-           |> assign_flash(:info, l("Done!"))}
+           )}
         end
 
       true ->
-        error("No object to publish")
+        error("No object to share")
     end
+  end
+
+  def handle_event("share", %{"id" => acl_id} = params, socket) do
+    handle_event("share", Map.put(params, "boundary", acl_id), socket)
+  end
+
+  def maybe_redirect_to(socket, to, opts) when is_binary(to) and to != "" do
+    redirect_to(
+      socket,
+      to,
+      opts
+    )
+  end
+
+  def maybe_redirect_to(socket, _path, _) do
+    socket
   end
 
   def handle_event("delete", %{"id" => id} = _params, socket) do
