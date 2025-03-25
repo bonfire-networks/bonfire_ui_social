@@ -14,7 +14,6 @@
     showing_within={:page}
     reply_to_id={@reply_to_id}
     context_id={@context_id}
-    create_object_type={@create_object_type}
     title_open
     to_boundaries={@to_boundaries}
     to_circles={@to_circles}

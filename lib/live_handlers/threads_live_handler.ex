@@ -269,9 +269,9 @@ defmodule Bonfire.Social.Threads.LiveHandler do
           context_id: thread_id,
           to_circles: to_circles || [],
           mentions: if(published_in_id, do: [published_in_id], else: []),
-          create_object_type: create_object_type,
           #  do not allow editing recipients when replying to a group thread
           smart_input_opts: [
+            create_object_type: create_object_type,
             recipients_editable: false,
             cw:
               e(activity, :sensitive, :is_sensitive, nil) &&

@@ -20,7 +20,7 @@ defmodule Bonfire.UI.Social.WritePostContentLive do
 
   prop reply_to_id, :any, default: nil
   prop context_id, :string, default: nil
-  prop create_object_type, :any, default: nil
+  # prop create_object_type, :any, default: nil
   prop to_boundaries, :any, default: nil
   prop to_circles, :list, default: []
   prop exclude_circles, :list, default: []
@@ -49,7 +49,7 @@ defmodule Bonfire.UI.Social.WritePostContentLive do
   prop replied_activity_class, :css_class
 
   def handler(create_object_type) do
-    if create_object_type == :message,
+    if create_object_type == "message",
       do: "Bonfire.Messages:send",
       else: "Bonfire.Posts:post"
   end
