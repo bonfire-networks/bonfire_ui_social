@@ -19,7 +19,7 @@
           </div> --}
 
           <div class="flex-col items-start flex w-full px-4">
-            <div class="flex py-2 gap-3 items-center flex-1 w-full justify-between">
+            <div class="flex flex-col lg:flex-row py-2 gap-3 lg:items-center flex-1 w-full justify-between">
               <div class="flex flex-1 items-center gap-3">
                 <div class="flex flex-col">
                   <Iconify.iconify icon={preset[:icon] || "ic:baseline-rss-feed"} class="w-7 h-7 opacity-70" />
