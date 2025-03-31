@@ -15,7 +15,6 @@
         </div>
       </div>
     {#match preview_img}
-      
       <LazyImage
         parent_id={["pdf", @parent_id, id(@media)]}
         class="rounded-none object-cover object-top rounded-l-lg cursor-pointer m-image w-full h-[300px] lg:h-[420px]"
