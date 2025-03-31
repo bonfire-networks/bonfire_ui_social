@@ -57,7 +57,7 @@
     <#slot>
       <li :if={!@read_only}>
         <div class="flex items-center gap-2">
-          <#Icon iconify="ant-design:edit-filled" class="w-4 h-4 shrink-0 text-base-content" />
+          <!-- <#Icon iconify="ant-design:edit-filled" class="w-4 h-4 shrink-0 text-base-content" /> -->
           <div class="text-sm text-base-content">
             {l("Edit")}
           </div>
@@ -65,10 +65,10 @@
       </li>
       <li :if={@versioning_enabled}>
         <div class="flex items-center gap-2">
-          <#Icon
+          <!-- <#Icon
             iconify="material-symbols:difference-outline-rounded"
             class="w-4 h-4 shrink-0 text-base-content"
-          />
+          /> -->
           <div class="text-sm text-base-content">
             {l("Version history")}
           </div>

@@ -59,7 +59,7 @@
   <Bonfire.UI.Common.SettingsToggleLive
     name={l("Follows")}
     keys={[Bonfire.Social.Feeds, :include, :follow]}
-    default_value={false}
+    default_value
     scope={@scope}
     compact
   />

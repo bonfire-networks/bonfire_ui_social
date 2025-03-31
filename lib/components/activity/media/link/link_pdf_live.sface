@@ -15,9 +15,7 @@
         </div>
       </div>
     {#match preview_img}
-      <div class="text-sm font-medium line-clamp-1">
-        {Bonfire.Files.Media.media_label(@media) || l("View")} ({e(@media, :label, nil) || l("PDF")})
-      </div>
+      
       <LazyImage
         parent_id={["pdf", @parent_id, id(@media)]}
         class="rounded-none object-cover object-top rounded-l-lg cursor-pointer m-image w-full h-[300px] lg:h-[420px]"
@@ -25,5 +23,8 @@
         media={@media}
         fallback_icon="bxs:file-pdf"
       />
+      <div class="btn btn-sm w-full mt-2">
+        {Bonfire.Files.Media.media_label(@media) || l("View")} ({e(@media, :label, nil) || l("PDF")})
+      </div>
   {/case}
 </a>

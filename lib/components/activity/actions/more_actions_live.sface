@@ -56,7 +56,7 @@
         href={URIs.canonical_url(@object)}
         class="flex items-center gap-2 text-sm text-base-content"
       >
-        <#Icon iconify="ri:file-copy-line" class="w-4 h-4 shrink-0" />
+        <!-- <#Icon iconify="ri:file-copy-line" class="w-4 h-4 shrink-0" /> -->
         <span data-role="label">{l("Copy link")}</span>
       </a>
     </li>
@@ -90,7 +90,7 @@
           </Field>
           <:open_btn>
             <div class="flex items-center w-full gap-2 text-sm text-base-content">
-              <#Icon iconify="subway:title" class="w-4 h-4 shrink-0" />
+              <!-- <#Icon iconify="subway:title" class="w-4 h-4 shrink-0" /> -->
               {l("Edit discussion title")}
             </div>
           </:open_btn>
@@ -108,7 +108,7 @@
               phx-value-id={id(@object) || id(@activity)}
               class="!flex items-center gap-2"
             >
-              <#Icon iconify="mdi:sprout" class="w-4 h-4 shrink-0 text-base-content" />
+              <!-- <#Icon iconify="mdi:sprout" class="w-4 h-4 shrink-0 text-base-content" /> -->
               <span>{l("Get latest replies")}</span>
             </a>
           </li>
@@ -119,7 +119,7 @@
               phx-value-id={id(@object) || id(@activity)}
               class="!flex items-center gap-2"
             >
-              <#Icon iconify="bi:list-nested" class="w-4 h-4 shrink-0 text-base-content" />
+              <!-- <#Icon iconify="bi:list-nested" class="w-4 h-4 shrink-0 text-base-content" /> -->
               <span>{l("Get latest activities")}</span>
             </a>
           </li>
@@ -130,7 +130,7 @@
               rel="noopener noreferrer"
               class="!flex items-center gap-2"
             >
-              <#Icon solid="ExternalLink" class="w-4 h-4 shrink-0 text-base-content" />
+              <!-- <#Icon solid="ExternalLink" class="w-4 h-4 shrink-0 text-base-content" /> -->
               <span>{l("View remotely")}</span>
             </a>
           </li>
@@ -217,7 +217,7 @@
                 phx-value-id={subject_id}
                 class="!flex items-center gap-2"
               >
-                <#Icon solid="UserRemove" class="w-4 h-4 shrink-0" />
+                <!-- <#Icon solid="UserRemove" class="w-4 h-4 shrink-0" /> -->
                 <span class="truncate ellipsis">
                   {l("Unfollow")} {e(@activity, :subject, :profile, :name, nil) || e(@activity, :subject, :character, :username, nil)}</span>
               </a>
@@ -252,10 +252,10 @@
             href={"/post/#{id(@object)}/history/"}
             class="flex items-center w-full gap-2 text-sm text-base-content"
           >
-            <#Icon
+            <!-- <#Icon
               iconify="material-symbols:difference-outline-rounded"
               class="w-4 h-4 shrink-0 text-base-content"
-            />
+            /> -->
             <div class="text-sm text-base-content">
               {l("Version history")}
             </div>
@@ -272,7 +272,7 @@
             href={"/remote_interaction?type=flag&name=#{l("this %{object}", object: e(@object_type_readable, l("object")))}&url=#{@permalink || URIs.canonical_url(@object)}"}
             class="flex items-center w-full gap-2 text-sm text-base-content"
           >
-            <#Icon solid="Flag" class="w-4 h-4 shrink-0" />
+            <!-- <#Icon solid="Flag" class="w-4 h-4 shrink-0" /> -->
             <span class="truncate ellipsis">{l("Flag this %{object}", object: e(@object_type_readable, l("object")))}</span>
           </a>
         </li>
@@ -280,7 +280,7 @@
         <details>
           <summary class="">
             <div class="flex items-center w-full gap-2 text-sm text-base-content">
-              <#Icon solid="Flag" class="w-4 h-4 shrink-0" />
+              <!-- <#Icon solid="Flag" class="w-4 h-4 shrink-0" /> -->
               <span class="truncate ellipsis">{l("Flag")}</span>
             </div>
           </summary>
@@ -355,7 +355,7 @@
             </button>
             <:open_btn>
               <div class="flex items-center w-full gap-2 text-sm text-base-content">
-                <#Icon iconify="ic:round-lock" class="w-4 h-4 shrink-0" />
+                <!-- <#Icon iconify="ic:round-lock" class="w-4 h-4 shrink-0" /> -->
                 {l("Lock this discussion")}
               </div>
             </:open_btn>
@@ -379,7 +379,7 @@
             </button>
             <:open_btn>
               <div class="flex items-center w-full gap-2 text-sm text-base-content">
-                <#Icon iconify="ic:round-lock" class="w-4 h-4 shrink-0" />
+                <!-- <#Icon iconify="ic:round-lock" class="w-4 h-4 shrink-0" /> -->
                 {l("Unlock this discussion")}
               </div>
             </:open_btn>
@@ -395,7 +395,7 @@
         <details>
           <summary class="text-error/80">
             <div class="flex items-center w-full gap-2 text-sm text-error/80">
-              <#Icon solid="Trash" class="w-4 h-4 shrink-0" />
+              <!-- <#Icon solid="Trash" class="w-4 h-4 shrink-0" /> -->
               <span class="truncate ellipsis">{l("Delete")}</span>
             </div>
           </summary>
@@ -405,6 +405,7 @@
                 module={maybe_component(Bonfire.UI.Social.Activity.DeleteObjectLive, @__context__)}
                 skip_permission_check
                 object={@object}
+                hide_icon
                 creator_id={@creator_id}
                 object_type_readable={@object_type_readable}
                 object_boundary={@object_boundary}
@@ -419,6 +420,7 @@
                 skip_permission_check
                 action="Bonfire.Social.Feeds:delete"
                 object={@activity}
+                hide_icon
                 object_boundary={@object_boundary}
                 object_type_readable={l("from feeds")}
                 creator_id={@creator_id}
@@ -440,6 +442,7 @@
           module={maybe_component(Bonfire.UI.Social.Activity.DeleteObjectLive, @__context__)}
           object={@object}
           creator_id={@creator_id}
+          hide_icon
           object_type_readable={@object_type_readable}
           object_boundary={@object_boundary}
           parent_id={"object-#{id(@activity_component_id || @activity)}"}
