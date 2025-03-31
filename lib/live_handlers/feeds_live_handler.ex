@@ -230,7 +230,7 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
   end
 
   def handle_info({:new_activity, data}, socket) do
-    IO.inspect(data[:feed_ids], label: "received new_activity for these feed ids")
+    debug(data[:feed_ids], "received new_activity for these feed ids")
     # dump(data)
     current_user = current_user(assigns(socket))
 
@@ -309,7 +309,7 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
        )
        when (is_pid(pid) or is_nil(pid)) and (is_list(assigns) or is_map(assigns)) do
     debug("#{feed_id}", "Sending feed update to component")
-    IO.inspect(assigns)
+    debug(assigns)
     maybe_send_update(component, feed_id, assigns, pid)
   end
 
@@ -1352,7 +1352,7 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
         other -> other
       end
 
-    # |> IO.inspect(label: "feed_live_update_many_preload_mode")
+    # |> debug("feed_live_update_many_preload_mode")
 
     {first_assigns, _} = List.first(assigns_sockets)
 
@@ -1635,7 +1635,7 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
 
     postloads =
       (elem(activity_preloads, 1) || [])
-      |> IO.inspect(label: "many_activity_postloads")
+      |> debug("many_activity_postloads")
 
     opts = [
       preload: postloads,

@@ -1621,7 +1621,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
   def component_for_object_type(Bonfire.Data.Social.APActivity, object) do
     json =
       e(object, :json, nil)
-      |> IO.inspect(label: "APActivity json")
+      |> debug("APActivity json")
 
     type = e(json, "object", "type", nil) || e(json, "type", nil) || "Remote Activity"
 

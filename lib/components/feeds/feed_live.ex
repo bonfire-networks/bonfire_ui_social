@@ -166,7 +166,7 @@ defmodule Bonfire.UI.Social.FeedLive do
 
   # adding new feed item
   def update(%{new_activity: new_activity} = _assigns, socket) when is_map(new_activity) do
-    IO.inspect("new_activity, add to top of feed")
+    debug("new_activity, add to top of feed")
 
     {
       :ok,
