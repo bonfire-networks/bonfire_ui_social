@@ -64,7 +64,7 @@ defmodule Bonfire.UI.Social.FeedsLive do
   #       # #  href: &nav_link_discussions/1,
   #       #  icon: "ri:discuss-line"},
   #       {l("Bookmarks"),
-  #        page: "bookmarks", href: "/feed/bookmarks", icon: "carbon:bookmark-filled"},
+  #        page: "bookmarks", href: "/feed/bookmarks", icon: "lucide:bookmark-filled"},
   #       {l("Likes"), page: "likes", href: "/feed/likes", icon: "mingcute:fire-line"}
   #     ]
   #   }

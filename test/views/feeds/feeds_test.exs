@@ -101,10 +101,9 @@ defmodule Bonfire.UI.Social.Feeds.Test do
       )
     end
 
-    #  because actions are being loaded async
-    @tag :fixme
     test "As a user I want to see the activity's boundary", %{conn: conn, me: me} do
       # Create a post with a specific boundary
+      Process.put(:feed_live_update_many_preload_mode, :inline)
       html_body = "Post with local boundary"
       attrs = %{post_content: %{html_body: html_body}}
       {:ok, post} = Posts.publish(current_user: me, post_attrs: attrs, boundary: "local")

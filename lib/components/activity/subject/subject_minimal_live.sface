@@ -8,7 +8,7 @@
           <#Icon iconify="mingcute:fire-fill" :if={@verb == "Like"} class="w-5 h-5 text-yellow-500" />
           <#Icon solid="UserAdd" :if={@verb == "Follow"} class="flex-shrink-0 w-5 h-5 text-info" />
           <#Icon
-            iconify="system-uicons:retweet"
+            iconify="lucide:refresh-cw"
             :if={@verb == "Boost"}
             class="w-5 h-5 stroke-1 fill-info"
           />
@@ -163,7 +163,7 @@
         {#elseif @verb == "Boost"}
           <div data-role="boosted_by" class="flex items-start gap-5 justify-start">
             {!-- BOOST --}
-            <#Icon iconify="system-uicons:retweet" class="w-7 h-7 stroke-1 text-success" />
+            <#Icon iconify="lucide:refresh-cw" class="w-7 h-7 stroke-1 text-success" />
             <div class="flex-1 flex flex-col gap-2">
               <LinkLive to={@path} opts={"data-id": "subject_name"} parent_id={["subject_avatar", @parent_id]}>
                 <Bonfire.UI.Common.AvatarLive
@@ -195,7 +195,7 @@
         {#elseif @verb == "Pin"}
           <div data-role="pinned_by" class="flex items-start gap-5 justify-start">
             {!-- PIN --}
-            <#Icon iconify="system-uicons:retweet" class="w-7 h-7 stroke-1 text-success" />
+            <#Icon iconify="lucide:refresh-cw" class="w-7 h-7 stroke-1 text-success" />
             <div class="flex-1 flex flex-col gap-2">
               <LinkLive to={@path} opts={"data-id": "subject_name"} parent_id={["subject_avatar", @parent_id]}>
                 <Bonfire.UI.Common.AvatarLive
@@ -409,7 +409,7 @@
       {#elseif @verb == "Boost"}
         <div data-role="boosted_by" class="flex items-center justify-start pb-3 -ml-8">
           {!-- BOOST --}
-          <#Icon iconify="system-uicons:retweet" class="w-5 h-5 text-success" />
+          <#Icon iconify="lucide:refresh-cw" class="w-5 h-5 text-success" />
           <div class="flex-1 ml-3">
             <div class="text-sm font-medium text-base-content/70">
               <LinkLive

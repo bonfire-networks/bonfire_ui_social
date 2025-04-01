@@ -11,12 +11,12 @@
           {#case e(@feed_filters, :sort_by, nil)}
             {#match :num_replies}
               <span class="flex items-center">
-                <#Icon iconify="basil:comment-outline" class="lg:hidden block w-4 h-4" />
+                <#Icon iconify="lucide:message-circle" class="lg:hidden block w-4 h-4" />
                 <span class="hidden lg:block">{l("Most replied")}</span>
               </span>
             {#match :num_boosts}
               <span class="flex items-center">
-                <#Icon iconify="system-uicons:retweet" class="lg:hidden block w-4 h-4" />
+                <#Icon iconify="lucide:refresh-cw" class="lg:hidden block w-4 h-4" />
                 <span class="hidden lg:block">{l("Most boosted")}</span>
               </span>
             {#match :num_likes}
@@ -53,7 +53,7 @@
               phx-target={@event_target}
               class="flex gap-3 px-2 text-base-content"
             >
-              <#Icon iconify="basil:comment-outline" class="w-4 h-4" />
+              <#Icon iconify="lucide:message-circle" class="w-4 h-4" />
               {l("Most replied")}</a></li>
 
           {#if extension_enabled?(:bonfire_ui_reactions, @__context__)}
@@ -64,7 +64,7 @@
                 phx-target={@event_target}
                 class="flex gap-3 px-2 text-base-content"
               >
-                <#Icon iconify="system-uicons:retweet" class="w-4 h-4" />
+                <#Icon iconify="lucide:refresh-cw" class="w-4 h-4" />
                 {l("Most boosted")}</a></li>
 
             <li>

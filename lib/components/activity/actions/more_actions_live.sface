@@ -292,6 +292,7 @@
                 object={@object}
                 permalink={@permalink}
                 flagged={@flagged}
+                hide_icon
                 parent_id={"object-#{id(@activity_component_id || @activity)}"}
                 object_type={e(@object_type_readable, l("object"))}
                 label={l("Flag this %{object}", object: e(@object_type_readable, l("object")))}
@@ -303,6 +304,7 @@
               <StatelessComponent
                 module={maybe_component(Bonfire.UI.Moderation.FlagActionLive)}
                 object={@creator_id}
+                hide_icon
                 flagged={@flagged}
                 parent_id={"user-#{id(@activity_component_id || @activity)}"}
                 object_type={@creator_name || l("user")}

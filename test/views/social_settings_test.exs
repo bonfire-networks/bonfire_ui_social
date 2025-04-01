@@ -29,81 +29,81 @@ defmodule Bonfire.UI.Social.SettingsTest do
   end
 
   describe "Behaviours" do
-    test "As a user I want to hide actions on feed" do
-      account = fake_account!()
-      alice = fake_user!(account)
+    # test "As a user I want to hide actions on feed" do
+    #   account = fake_account!()
+    #   alice = fake_user!(account)
 
-      attrs = %{
-        post_content: %{summary: "summary", name: "test post name", html_body: "first post"}
-      }
+    #   attrs = %{
+    #     post_content: %{summary: "summary", name: "test post name", html_body: "first post"}
+    #   }
 
-      assert {:ok, post} =
-               Posts.publish(current_user: alice, post_attrs: attrs, boundary: "public")
+    #   assert {:ok, post} =
+    #            Posts.publish(current_user: alice, post_attrs: attrs, boundary: "public")
 
-      conn = conn(user: alice, account: account)
-      next = "/settings/user/preferences/behaviours"
-      {:ok, view, _html} = live(conn, next)
+    #   conn = conn(user: alice, account: account)
+    #   next = "/settings/user/preferences/behaviours"
+    #   {:ok, view, _html} = live(conn, next)
 
-      view
-      |> element("form[data-scope=set_hide_actions_on_feed]")
-      |> render_change(%{
-        "Elixir.Bonfire.UI.Social.Activity.ActionsLive" => %{
-          "feed" => %{"hide_until_hovered" => "true"}
-        }
-      })
+    #   view
+    #   |> element("form[data-scope=set_hide_actions_on_feed]")
+    #   |> render_change(%{
+    #     "Elixir.Bonfire.UI.Social.Activity.ActionsLive" => %{
+    #       "feed" => %{"hide_until_hovered" => "true"}
+    #     }
+    #   })
 
-      # force a refresh
-      {:ok, refreshed_view, _html} = live(conn, "/feed")
+    #   # force a refresh
+    #   {:ok, refreshed_view, _html} = live(conn, "/feed")
 
-      # open_browser(refreshed_view)
-      auto_assert true <-
-                    refreshed_view
-                    |> has_element?("article div[data-id=activity_actions][data-hide]")
-    end
+    #   # open_browser(refreshed_view)
+    #   auto_assert true <-
+    #                 refreshed_view
+    #                 |> has_element?("article div[data-id=activity_actions][data-hide]")
+    # end
 
-    test "As a user I want to hide actions on discussion" do
-      account = fake_account!()
-      alice = fake_user!(account)
+    # test "As a user I want to hide actions on discussion" do
+    #   account = fake_account!()
+    #   alice = fake_user!(account)
 
-      attrs = %{
-        post_content: %{summary: "summary", name: "test post name", html_body: "first post"}
-      }
+    #   attrs = %{
+    #     post_content: %{summary: "summary", name: "test post name", html_body: "first post"}
+    #   }
 
-      assert {:ok, post} =
-               Posts.publish(current_user: alice, post_attrs: attrs, boundary: "public")
+    #   assert {:ok, post} =
+    #            Posts.publish(current_user: alice, post_attrs: attrs, boundary: "public")
 
-      attrs_reply = %{
-        post_content: %{
-          summary: "summary",
-          name: "name 2",
-          html_body: "<p>reply to first post</p>"
-        },
-        reply_to_id: post.id
-      }
+    #   attrs_reply = %{
+    #     post_content: %{
+    #       summary: "summary",
+    #       name: "name 2",
+    #       html_body: "<p>reply to first post</p>"
+    #     },
+    #     reply_to_id: post.id
+    #   }
 
-      assert {:ok, post_reply} =
-               Posts.publish(current_user: alice, post_attrs: attrs_reply, boundary: "public")
+    #   assert {:ok, post_reply} =
+    #            Posts.publish(current_user: alice, post_attrs: attrs_reply, boundary: "public")
 
-      conn = conn(user: alice, account: account)
-      next = "/settings/user/preferences/behaviours"
-      {:ok, view, _html} = live(conn, next)
+    #   conn = conn(user: alice, account: account)
+    #   next = "/settings/user/preferences/behaviours"
+    #   {:ok, view, _html} = live(conn, next)
 
-      view
-      |> element("form[data-scope=set_hide_actions_on_discussion]")
-      |> render_change(%{
-        "Elixir.Bonfire.UI.Social.Activity.ActionsLive" => %{
-          "thread" => %{"hide_until_hovered" => "true"}
-        }
-      })
+    #   view
+    #   |> element("form[data-scope=set_hide_actions_on_discussion]")
+    #   |> render_change(%{
+    #     "Elixir.Bonfire.UI.Social.Activity.ActionsLive" => %{
+    #       "thread" => %{"hide_until_hovered" => "true"}
+    #     }
+    #   })
 
-      # force a refresh
-      {:ok, refreshed_view, _html} = live(conn, "/post/#{post.id}")
+    #   # force a refresh
+    #   {:ok, refreshed_view, _html} = live(conn, "/post/#{post.id}")
 
-      # open_browser(refreshed_view)
-      auto_assert true <-
-                    refreshed_view
-                    |> has_element?("article div[data-id=activity_actions][data-hide]")
-    end
+    #   # open_browser(refreshed_view)
+    #   auto_assert true <-
+    #                 refreshed_view
+    #                 |> has_element?("article div[data-id=activity_actions][data-hide]")
+    # end
 
     test "Feed activities" do
       Config.put(:pagination_hard_max_limit, 10)

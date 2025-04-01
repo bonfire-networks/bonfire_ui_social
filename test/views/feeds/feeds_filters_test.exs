@@ -248,6 +248,7 @@ defmodule Bonfire.UI.Social.FeedsFilters.Test do
         # |> click_button("Filters")
         |> click_button("[data-toggle='boost'] button", "Hide")
         |> wait_async()
+        |> PhoenixTest.open_browser()
         |> refute_has("[data-id=feed] article[data-verb=Boost]")
         # |> assert_has("[data-id=feed] article", count: 1)  # Only original
         |> click_button("[data-toggle='boost'] button", "Only")
