@@ -1505,7 +1505,7 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
 
   def feed_live_update_many_preload_mode,
     do:
-      Process.get(:feed_live_update_many_preload_mode) ||
+      ProcessTree.get(:feed_live_update_many_preload_mode) ||
         Config.get(:feed_live_update_many_preload_mode) || :async_actions
 
   defp assigns_to_params(assigns) do
