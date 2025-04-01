@@ -7,11 +7,7 @@
         <div class="flex items-center justify-start w-5 h-5">
           <#Icon iconify="mingcute:fire-fill" :if={@verb == "Like"} class="w-5 h-5 text-yellow-500" />
           <#Icon solid="UserAdd" :if={@verb == "Follow"} class="flex-shrink-0 w-5 h-5 text-info" />
-          <#Icon
-            iconify="lucide:refresh-cw"
-            :if={@verb == "Boost"}
-            class="w-5 h-5 stroke-1 fill-info"
-          />
+          <#Icon iconify="lucide:refresh-cw" :if={@verb == "Boost"} class="w-5 h-5 stroke-1 fill-info" />
           <#Icon solid="Pencil" :if={@verb == "Reply"} class="w-4 h-4 text-info" />
           <#Icon solid="Flag" :if={@verb == "Flag"} class="w-4 h-4 text-error" />
         </div>
