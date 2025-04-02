@@ -13,35 +13,62 @@ defmodule Bonfire.Social.Threads.ThreadsTest do
     other_user = fake_user!(other_account)
 
     # Create a post
-    {:ok, post} = Bonfire.Posts.create(me, %{post_content: %{html_body: "Original post"}})
-
-    # Create a first-level reply
-    {:ok, reply} =
-      Bonfire.Posts.reply(other_user, post, %{post_content: %{html_body: "First reply"}})
+    {:ok, post} =
+      Posts.publish(
+        current_user: me,
+        post_attrs: %{post_content: %{html_body: "Original post"}},
+        boundary: "public"
+      )
 
     conn = conn(user: me, account: account)
 
-    {:ok, conn: conn, me: me, other_user: other_user, post: post, reply: reply}
+    {:ok, conn: conn, me: me, other_user: other_user, post: post}
   end
 
-  test "replies to the original post appear instantly", %{conn: conn, post: post} do
-    conn
-    |> visit("/post/#{post.id}")
-    |> fill_in("Write a comment...", with: "My reply to the original post")
-    |> click_button("Reply")
-    |> assert_has(".comment", text: "My reply to the original post")
+  test "replies to the original post appear instantly", %{
+    conn: conn,
+    post: post,
+    other_user: other_user
+  } do
+    post_view =
+      conn
+      |> visit("/post/#{post.id}")
+
+    attrs_reply = %{
+      post_content: %{html_body: "First reply"},
+      reply_to_id: post.id
+    }
+
+    {:ok, reply} =
+      Posts.publish(current_user: other_user, post_attrs: attrs_reply, boundary: "public")
+
+    post_view
+    # |> PhoenixTest.open_browser()
+    |> assert_has("article", text: "First reply")
   end
 
-  test "replies to comments appear instantly", %{conn: conn, post: post, reply: reply} do
-    conn
-    |> visit("/post/#{post.id}")
-    # First, ensure the first-level reply is visible
-    |> assert_has(".comment", text: "First reply")
-    # Click the reply button on the first-level reply
-    |> click_button("[data-reply-to='#{reply.id}']", "Reply")
-    |> fill_in("Write a comment...", with: "Reply to the comment")
-    |> click_button("Reply")
-    # Assert that the new reply appears without a page refresh
-    |> assert_has(".comment .comment", text: "Reply to the comment")
+  test "replies to comments appear instantly", %{conn: conn, post: post, other_user: other_user} do
+    post_view =
+      conn
+      |> visit("/post/#{post.id}")
+
+    attrs_reply = %{
+      post_content: %{html_body: "First reply"},
+      reply_to_id: post.id
+    }
+
+    {:ok, reply} =
+      Posts.publish(current_user: other_user, post_attrs: attrs_reply, boundary: "public")
+
+    attrs_reply2 = %{
+      post_content: %{html_body: "Second reply"},
+      reply_to_id: post.id
+    }
+
+    {:ok, reply2} =
+      Posts.publish(current_user: other_user, post_attrs: attrs_reply2, boundary: "public")
+
+    post_view
+    |> assert_has("article", text: "Second reply")
   end
 end

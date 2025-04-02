@@ -44,9 +44,9 @@
       </ul>
     </div>
 
-    <div class="flex flex-1">
+    <div class="flex gap-1 flex-1">
       <div data-position="bottom" phx-hook="Tooltip" id="order-dropdown" class="flex w-full flex-1">
-        <label tabindex="0" class="tooltip-button !rounded-r-none btn w-full">
+        <label tabindex="0" class="tooltip-button btn w-full">
           {#case @sort_by}
             {#match :latest_reply}
               {#if @thread_mode == :flat}
@@ -164,7 +164,7 @@
       </div>
       <div
         id="sort_timing_thread"
-        class="px-2 relative z-[99] btn border-none rounded-l-none border-l border-base-content/20 flex items-center place-content-center"
+        class="px-2 relative z-[99] btn btn-circle flex items-center place-content-center"
       >
         {#if @sort_order == :asc}
           <span

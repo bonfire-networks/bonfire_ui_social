@@ -30,21 +30,11 @@ defmodule Bonfire.Social.Threads.RepliesTest do
     assert {:ok, post_reply} =
              Posts.publish(current_user: bob, post_attrs: attrs_reply, boundary: "public")
 
-    # bob follows alice
-    Follows.follow(bob, alice)
+    conn = conn(user: alice, account: account)
 
-    conn = conn(user: bob, account: account2)
-    next = "/feed"
-    {view, _doc} = floki_live(conn, next)
-
-    # wait for async
-    live_async_wait(view)
-
-    assert view
-           |> render()
-           # |> info
-           |> Floki.find("[data-id=feed] article")
-           |> List.last()
-           |> Floki.text() =~ "Reply"
+    conn
+    |> visit("/post/#{op.id}")
+    |> PhoenixTest.open_browser()
+    |> assert_has("[data-id=reply_count]", text: "1")
   end
 end

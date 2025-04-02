@@ -701,7 +701,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
             {/case}
           {/if}
 
-          <form
+          <!-- form
             :if={!id(e(@activity, :seen, nil)) and not is_nil(@feed_id) and
               @showing_within in [:messages, :thread, :notifications] and
               e(@activity, :subject, :id, nil) != current_user_id(@__context__) and
@@ -714,7 +714,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
             {!-- ^^ FIXME: mark_seen should only be included for notifications and messages --}
             <input type="hidden" name="feed_id" value={@feed_id}>
             <input type="hidden" name="activity_id" value={@activity_id}>
-          </form>
+          </form -->
 
           <Bonfire.UI.Social.Activity.PublishedInLive
             :if={@published_in && @showing_within != :smart_input}

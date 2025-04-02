@@ -23,7 +23,7 @@
               {/case}
             </div>
             <div :if={@reply_count != 0} class="flex items-center gap-1">
-              <div class="text-xs font-medium text-base-content/90 text-center">{@reply_count || 0}</div>
+              <div data-id="reply_count" class="text-xs font-medium text-base-content/90 text-center">{@reply_count || 0}</div>
               <div class="text-xs tracking-wide text-base-content/70 text-center">{l("Replies")}</div>
             </div>
             <div

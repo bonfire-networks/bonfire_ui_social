@@ -25,7 +25,8 @@
     />
   </Bonfire.UI.Social.Activity.ThreadStatsLive>
 
-  {#if @loading == false && (@streams.threaded_replies.inserts == [] && @streams.replies.inserts == [])}
+  {#if @loading == false and Enum.count(@streams.threaded_replies) == [] and
+      Enum.count(@streams.replies) == []}
     <Bonfire.UI.Common.EmptyFeed
       feedback_title={l("No replies yet")}
       feedback_message={l("Be the first to reply!")}
