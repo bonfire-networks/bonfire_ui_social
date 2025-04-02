@@ -337,7 +337,8 @@
       peered={e(@object, :peered, nil)}
     />
 
-    {#if @viewing_main_object && @thread_id && @object_type not in [Bonfire.Data.Social.Message]}
+    {#if @viewing_main_object && @thread_id && @object_type not in [Bonfire.Data.Social.Message] &&
+        module_enabled?(Bonfire.Boundaries.Locking.LiveHandler, @__context__)}
       {#if Bonfire.Boundaries.can?(@__context__, :grant, [@object_boundary, @thread_id])}
         <li>
           <Bonfire.UI.Common.OpenModalLive
@@ -349,7 +350,7 @@
                 "You can lock this discussion to prevent any replies from users on this instance and to block any remote replies from federating back to this instance."
               )}</p>
             <button
-              phx-click="Bonfire.Boundaries.Blocks:lock"
+              phx-click="Bonfire.Boundaries.Locking:lock"
               phx-value-id={@thread_id}
               class="normal-case w-full  btn-outline btn btn-primary mt-3"
             >
@@ -373,7 +374,7 @@
           >
             <p>{l("You can unlock this discussion to accept replies again.")}</p>
             <button
-              phx-click="Bonfire.Boundaries.Blocks:unlock"
+              phx-click="Bonfire.Boundaries.Locking:unlock"
               phx-value-id={@thread_id}
               class="normal-case w-full  btn-outline btn btn-primary mt-3"
             >
