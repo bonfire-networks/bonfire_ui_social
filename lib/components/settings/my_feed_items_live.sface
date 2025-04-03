@@ -6,7 +6,7 @@
   force_checked
   scope={@scope}
 />
-  <!-- compact -->
+<!-- compact -->
 
 <!-- <form
   :if={extension_enabled?(:bonfire_classify, @__context__)}

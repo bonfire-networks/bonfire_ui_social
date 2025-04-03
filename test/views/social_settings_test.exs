@@ -89,11 +89,12 @@ defmodule Bonfire.UI.Social.SettingsTest do
         end)
 
       # Visit the feed and check results
-      conn = visit(conn, "/feed/local")
-      # |> PhoenixTest.open_browser()
-      |> assert_has("[data-id=feed] article", text: "first post")
-      |> refute_has("[data-id=feed] article", text: "reply")
-      |> refute_has("[data-id=feed] article", text: "boosted")
+      conn =
+        visit(conn, "/feed/local")
+        # |> PhoenixTest.open_browser()
+        |> assert_has("[data-id=feed] article", text: "first post")
+        |> refute_has("[data-id=feed] article", text: "reply")
+        |> refute_has("[data-id=feed] article", text: "boosted")
 
       conn = visit(conn, "/settings/user/preferences/behaviours")
 
@@ -117,12 +118,12 @@ defmodule Bonfire.UI.Social.SettingsTest do
           c
         end)
 
-        conn = visit(conn, "/feed/local")
+      conn =
+        visit(conn, "/feed/local")
         # |> PhoenixTest.open_browser()
         |> assert_has("[data-id=feed] article", text: "first post")
         |> assert_has("[data-id=feed] article", text: "reply")
         |> assert_has("[data-id=feed] article", text: "boosted")
-
     end
 
     test "default feed" do
@@ -165,7 +166,8 @@ defmodule Bonfire.UI.Social.SettingsTest do
           # No need to click submit as the form has phx-change event
           c
         end)
-        # |> PhoenixTest.open_browser()
+
+      # |> PhoenixTest.open_browser()
 
       # Visit feed and check bob's post is shown first
       conn = visit(conn, "/feed")
@@ -215,7 +217,6 @@ defmodule Bonfire.UI.Social.SettingsTest do
       conn = visit(conn, "/feed/local")
       assert_has(conn, "article", text: "reply 2")
 
-
       conn = visit(conn, "/settings/user/preferences/behaviours")
 
       # Change sort to likes
@@ -246,7 +247,6 @@ defmodule Bonfire.UI.Social.SettingsTest do
       conn = visit(conn, "/feed/local")
       assert_has(conn, "article", text: "alice post")
     end
-
 
     test "discussion default layout" do
       account = fake_account!()

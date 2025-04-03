@@ -259,11 +259,11 @@ defmodule Bonfire.UI.Social.FeedsFilters.Test do
         # |> assert_has("[data-id=feed] article", count: 2)  # Original + boost - TODO: test this way with show_objects_only_once: false filter
         # |> click_button("Filters")
         |> click_button("[data-toggle='boost'] button", "Hide")
-
         |> wait_async()
         |> PhoenixTest.open_browser()
         |> refute_has("[data-id=feed] article[data-verb=Boost]")
-        |> assert_has("[data-id=feed] article", count: 1)  # Only original
+        # Only original
+        |> assert_has("[data-id=feed] article", count: 1)
         |> click_button("[data-toggle='boost'] button", "Only")
         |> assert_has("[data-id=feed] article[data-verb=Boost]")
     end
