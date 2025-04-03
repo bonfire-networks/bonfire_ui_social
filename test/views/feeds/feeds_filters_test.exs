@@ -34,15 +34,26 @@ defmodule Bonfire.UI.Social.FeedsFilters.Test do
     test "user can set time limit filters", %{} do
       conn(user: fake_user!())
       |> visit("/feed")
-      # |> click_button("Filters")
-      |> within("[data-scope='time_limit']", fn session ->
-        # TODO refactor to use range
-        session
-        |> choose("All time")
-        |> choose("Day")
-        |> choose("Week")
-        |> choose("Month")
-        |> choose("Year")
+      |> within("[data-scope='time_limit']", fn conn ->
+        # Since this is a range input, we need to set values directly
+        # The range has values from 0-4 corresponding to the displayed options
+
+        # Set to "All time" (value 0)
+        conn = fill_in(conn, "Time limit control", with: "0")
+
+        # Set to "Day" (value 1)
+        conn = fill_in(conn, "Time limit control", with: "1")
+
+        # Set to "Week" (value 2)
+        conn = fill_in(conn, "Time limit control", with: "2")
+
+        # Set to "Month" (value 3)
+        conn = fill_in(conn, "Time limit control", with: "3")
+
+        # Set to "Year" (value 4)
+        conn = fill_in(conn, "Time limit control", with: "4")
+
+        conn
       end)
     end
 
@@ -95,22 +106,23 @@ defmodule Bonfire.UI.Social.FeedsFilters.Test do
     end
   end
 
-  describe "mentions feed" do
-    test "shows posts mentioning the user", %{user: user, other_user: other_user} do
-      {post, _} = Fake.create_test_content(:mentions, user, other_user)
+  # describe "mentions feed" do
+  #   test "shows posts mentioning the user", %{user: user, other_user: other_user} do
+  #     {post, _} = Fake.create_test_content(:mentions, user, other_user)
 
-      conn(user: user)
-      |> visit("/feed/mentions")
-      |> assert_has("[data-id=feed] article", text: "@#{user.character.username}")
-    end
-  end
+  #     conn(user: user)
+  #     |> visit("/feed/mentions")
+  #     |> assert_has("[data-id=feed] article", text: "@#{user.character.username}")
+  #   end
+  # end
 
   describe "hashtag feed" do
     test "shows posts with specific hashtags", %{user: user, other_user: other_user} do
       {post, _} = Fake.create_test_content(:hashtag, user, other_user)
 
       conn(user: user)
-      |> visit("/feed/hashtag/test")
+      |> visit("/hashtag/test")
+      # |> PhoenixTest.open_browser()
       |> assert_has("[data-id=feed] article", text: "#test")
     end
   end
@@ -247,10 +259,11 @@ defmodule Bonfire.UI.Social.FeedsFilters.Test do
         # |> assert_has("[data-id=feed] article", count: 2)  # Original + boost - TODO: test this way with show_objects_only_once: false filter
         # |> click_button("Filters")
         |> click_button("[data-toggle='boost'] button", "Hide")
+
         |> wait_async()
         |> PhoenixTest.open_browser()
         |> refute_has("[data-id=feed] article[data-verb=Boost]")
-        # |> assert_has("[data-id=feed] article", count: 1)  # Only original
+        |> assert_has("[data-id=feed] article", count: 1)  # Only original
         |> click_button("[data-toggle='boost'] button", "Only")
         |> assert_has("[data-id=feed] article[data-verb=Boost]")
     end

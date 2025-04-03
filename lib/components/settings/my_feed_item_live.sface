@@ -1,6 +1,6 @@
 <form phx-change="Bonfire.Common.Settings:set">
   <div class="form-control">
-    <label class="!px-0 !pt-0 justify-start cursor-pointer label">
+    <label class="!px-0 !pt-0 pb-2 justify-start cursor-pointer label">
       <input name="scope" value={@scope} type="hidden">
       <input
         name={"Bonfire.Social.Feeds[include][#{@key}]"}
@@ -29,7 +29,7 @@
         disabled={@disabled}
         class="toggle toggle-sm"
       />
-      <span class="ml-2 label-text">{@label}</span>
+      <span class="ml-2 text-sm label-text">{@label}</span>
     </label>
   </div>
 </form>

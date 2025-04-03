@@ -3,10 +3,10 @@
   label={l("Activities from people I follow")}
   key={:followed_users}
   disabled
-  compact
   force_checked
   scope={@scope}
 />
+  <!-- compact -->
 
 <!-- <form
   :if={extension_enabled?(:bonfire_classify, @__context__)}

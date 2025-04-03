@@ -10,14 +10,15 @@ defmodule Bonfire.UI.Social.FeedsNavigation.Test do
     test "user can navigate between different feed types", %{} do
       conn(user: fake_user!())
       |> visit("/")
+      |> PhoenixTest.open_browser()
       |> click_link("[data-id=nav_sidebar_nav_links] a", "Following")
       |> assert_path("/feed/my")
-      |> click_link("[data-id=nav_sidebar_nav_links] a", "Local")
-      |> assert_path("/feed/local")
-      |> click_link("[data-id=nav_sidebar_nav_links] a", "Remote")
-      |> assert_path("/feed/remote")
-      |> click_link("[data-id=nav_sidebar_nav_links] a", "Posts")
-      |> assert_path("/feed/posts")
+      |> click_link("[data-id=nav_sidebar_nav_links] a", "Explore")
+      |> assert_path("/feed/explore")
+      |> click_link("[data-id=nav_sidebar_nav_links] a", "Likes")
+      |> assert_path("/feed/likes")
+      |> click_link("[data-id=nav_sidebar_nav_links] a", "Bookmarks")
+      |> assert_path("/feed/bookmarks")
 
       # |> click_link("[data-id=nav_sidebar_nav_links] a", "Discussions")
       # |> assert_path("/feed/filter/discussions")
@@ -40,14 +41,9 @@ defmodule Bonfire.UI.Social.FeedsNavigation.Test do
     test "user can change sort order", %{} do
       conn(user: fake_user!())
       |> visit("/feed")
-      |> within("#sort_timing_feed", fn session ->
-        session
-        #  FIXME
-        |> click_link("Oldest first")
-        |> assert_has("label span", text: "Oldest first")
-        |> click_link("Newest first")
-        |> assert_has("label span", text: "Newest first")
-      end)
+      |> assert_has("span", text: "Newest first")
+      |> click_link("Newest first")
+      |> assert_has("span", text: "Oldest first")
     end
 
     @tag :todo
