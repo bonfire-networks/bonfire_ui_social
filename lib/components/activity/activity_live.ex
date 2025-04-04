@@ -67,6 +67,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
   def update_many(assigns_sockets) do
     assigns_sockets
     |> LiveHandler.activity_update_many(caller_module: __MODULE__)
+    |> debug("activity_updated_many")
     |> Enum.map(fn
       {assigns, socket} ->
         maybe_update(assigns, socket)
@@ -356,8 +357,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
       verb: verb,
       thread: thread
     )
-    # why merge?
-    |> Enum.into(assigns)
+    |> Enum.into(debug(assigns, "original passed assigns"))
     |> Map.merge(%{
       activity_prepared: true,
       activity_id: a_id || "no-activity-id",
