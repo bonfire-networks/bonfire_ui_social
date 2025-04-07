@@ -54,24 +54,34 @@
             current_user(@__context__)
           ) && "until_hovered"}
           {#match hide_actions}
-            {#for reply <- @replies || []}
-              <div data-role="comment-list" class="reply flex relative w-full mx-auto">
-                <CommentLive
-                  comment={reply}
-                  thread_id={@thread_id}
-                  feed_id={@feed_id || @thread_id}
-                  current_url={@current_url}
-                  thread_object={@object}
-                  thread_mode={@thread_mode}
-                  showing_within={@showing_within || :thread}
-                  hide_actions={hide_actions}
-                  activity_inception={@activity_inception}
-                  activity_preloads={@activity_preloads}
-                />
-              </div>
-            {/for}
-
             {#if @thread_mode != :flat}
+              {!-- manually assigned threaded_replies (without using stream) --}
+              <div
+                :if={is_list(@threaded_replies) and @threaded_replies != []}
+                data-role="threaded_replies_assigned"
+                class=""
+              >
+                {#for {reply, child_replies} <- @threaded_replies}
+                  <ThreadBranchLive
+                    id={component_id(id(reply), "flat")}
+                    comment={reply}
+                    index={0}
+                    threaded_replies={child_replies}
+                    thread_id={@thread_id}
+                    feed_id={@feed_id || @thread_id}
+                    current_url={@current_url}
+                    thread_object={@object}
+                    thread_mode={@thread_mode}
+                    showing_within={@showing_within || :thread}
+                    hide_actions={hide_actions}
+                    activity_inception={@activity_inception}
+                    activity_preloads={@activity_preloads}
+                    depth_loaded={@depth_loaded}
+                  />
+                {/for}
+              </div>
+
+              {!-- nested mode stream --}
               <div id={"stream_#{@id}"} phx-update="stream">
                 {#for {entry_id, {reply, child_replies}} <- @streams.threaded_replies}
                   <ThreadBranchLive
@@ -88,10 +98,31 @@
                     hide_actions={hide_actions}
                     activity_inception={@activity_inception}
                     activity_preloads={@activity_preloads}
+                    depth_loaded={@depth_loaded}
                   />
                 {/for}
               </div>
             {#else}
+              {!-- manually assigned replies (without using stream) --}
+              <div :if={is_list(@replies) and @replies != []} data-role="replies_assigned" class="">
+                {#for reply <- @replies}
+                  <div data-role="comment-flat" class="reply flex relative w-full mx-auto">
+                    <CommentLive
+                      comment={reply}
+                      thread_id={@thread_id}
+                      feed_id={@feed_id || @thread_id}
+                      current_url={@current_url}
+                      thread_object={@object}
+                      thread_mode={@thread_mode}
+                      showing_within={@showing_within || :thread}
+                      hide_actions={hide_actions}
+                      activity_inception={@activity_inception}
+                      activity_preloads={@activity_preloads}
+                    />
+                  </div>
+                {/for}
+              </div>
+
               {!-- flat mode stream --}
               <div id={"stream_#{@id}"} phx-update="stream">
                 {#for {entry_id, reply} <- @streams.replies}
@@ -122,8 +153,8 @@
         >
           <:if_no_more>
             <div class="flex flex-col items-center w-full place-content-center">
-              {#if @loading}
-                <div class="flex items-center mt-8 place-content-center">
+              {#if @loading && socket_connected?(@__context__)}
+                <div data-role="loading" class="flex items-center mt-8 place-content-center">
                   <img src={Bonfire.Common.URIs.static_path("/images/loading.svg")}>
                   <span class="sr-only">Loading...</span>
                 </div>

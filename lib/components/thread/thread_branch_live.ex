@@ -11,6 +11,7 @@ defmodule Bonfire.UI.Social.ThreadBranchLive do
   # import Bonfire.Me.Integration
   prop comment, :map
 
+  prop depth_loaded, :any, default: nil
   prop total_replies_in_thread, :any, default: 0
   prop index, :any, default: 0
   prop thread_object, :any
@@ -37,6 +38,10 @@ defmodule Bonfire.UI.Social.ThreadBranchLive do
       :ok,
       socket
       |> assign(Map.drop(assigns, [:insert_stream]))
+      |> assign(
+        :threaded_replies_count,
+        e(assigns(socket), :threaded_replies_count, 0) + length(entries || [])
+      )
       |> LiveHandler.insert_comments(
         {:threaded_replies, entries ++ e(assigns(socket), :threaded_replies, []), at}
       )
@@ -49,7 +54,11 @@ defmodule Bonfire.UI.Social.ThreadBranchLive do
   def update(assigns, socket) do
     {:ok,
      socket
-     |> assign(assigns)}
+     |> assign(assigns)
+     |> assign(
+       :threaded_replies_count,
+       length(assigns[:threaded_replies] || assigns(socket)[:threaded_replies] || [])
+     )}
   end
 
   def sub_replies_count(comment) do

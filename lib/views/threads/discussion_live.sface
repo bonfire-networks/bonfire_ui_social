@@ -10,5 +10,9 @@
     showing_within={:thread}
     thread_id={e(@thread_id, nil)}
     participants={@participants}
+    loading={@loading}
+    replies={@replies}
+    threaded_replies={@threaded_replies}
+    page_info={@page_info}
   />
 </div>

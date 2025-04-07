@@ -13,10 +13,13 @@ defmodule Bonfire.UI.Social.ObjectThreadLive do
   prop current_url, :string, default: nil
   prop thread_mode, :any, default: nil
   prop participants, :any, default: nil
-  prop replies, :any, default: nil
-  prop page_info, :any, default: nil
   prop sort_order, :any, default: nil
   prop activity_inception, :any, default: nil
+
+  prop loading, :any, default: nil
+  prop replies, :any, default: nil
+  prop threaded_replies, :any, default: nil
+  prop page_info, :any, default: nil
 
   prop custom_preview, :any, default: nil
 

@@ -11,8 +11,8 @@
             <div class="flex items-center gap-1">
               {#case @last_reply_id}
                 {#match nil}
-                  <span class="loading loading-spinner loading-sm text-base-content/70" />
-                  <div class="text-xs tracking-wide text-base-content/70 text-center">{l("Last Reply")}</div>
+                  {!-- <span class="loading loading-spinner loading-sm text-base-content/70" />
+                  <div class="text-xs tracking-wide text-base-content/70 text-center">{l("Last Reply")}</div> --}
                 {#match false}
                   <div class="text-xs font-medium text-base-content/90 text-center mr-1">0</div>
                   <div class="text-xs tracking-wide text-base-content/70 text-center">{l("Replies")}</div>

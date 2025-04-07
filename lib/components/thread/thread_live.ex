@@ -11,7 +11,9 @@ defmodule Bonfire.UI.Social.ThreadLive do
   # import Bonfire.Me.Integration
 
   prop replies, :any, default: nil
+  prop threaded_replies, :any, default: nil
   prop page_info, :any, default: nil
+
   prop activity, :any, default: nil
   prop object, :any, default: nil
   prop thread_id, :any, default: nil
@@ -31,6 +33,7 @@ defmodule Bonfire.UI.Social.ThreadLive do
   prop thread_mode, :any, default: nil
   prop sort_by, :any, default: nil
   prop sort_order, :any, default: false
+  prop depth_loaded, :any, default: nil
 
   prop showing_within, :atom, default: :thread
   prop loading, :boolean, default: false
@@ -254,6 +257,7 @@ defmodule Bonfire.UI.Social.ThreadLive do
            nil,
            assigns(socket)[:__context__]
          )
+         |> debug("thread mode")
 
        manual ->
          manual

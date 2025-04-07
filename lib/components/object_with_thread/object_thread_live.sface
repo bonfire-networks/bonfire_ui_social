@@ -45,11 +45,13 @@
           current_url={@current_url}
           main_object_component_id={@main_object_component_id}
           feed_id={@feed_id}
-          replies={@replies}
           sort_order={@sort_order}
           participants={@participants}
           thread_mode={@thread_mode}
-          page_info={e(@page_info, [])}
+          loading={@loading}
+          replies={@replies}
+          threaded_replies={@threaded_replies}
+          page_info={@page_info}
           activity={@activity}
           object={@object}
           showing_within={@showing_within || :thread}
