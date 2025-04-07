@@ -147,7 +147,7 @@ defmodule Bonfire.UI.Social.FeedsFilters.Test do
         })
 
       # Update post timestamp to be old
-      Repo.update_all("posts", set: [inserted_at: old_time])
+      repo().update_all("posts", set: [inserted_at: old_time])
 
       # Create a new post
       new_post =

@@ -1345,7 +1345,9 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
 
   @decorate time()
   def activity_update_many(assigns_sockets, opts) do
-    feed_live_update_many_preload_mode =
+    feed_live_update_many_preload_mode = feed_live_update_many_preload_mode()
+
+    override_live_update_many_preload_mode =
       case feed_live_update_many_preload_mode() do
         # we also want to do other preloads inline
         :async_actions -> :inline
@@ -1359,7 +1361,7 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
     opts =
       opts ++
         [
-          live_update_many_preload_mode: feed_live_update_many_preload_mode,
+          live_update_many_preload_mode: override_live_update_many_preload_mode,
           preload_status_key: :preloaded_async_activities,
           return_assigns_socket_tuple: true,
           id:
@@ -1374,35 +1376,43 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
     assigns_sockets =
       assigns_sockets
       |> Bonfire.Boundaries.LiveHandler.maybe_check_boundaries(
-        opts ++
-          [
-            verbs: [:read],
-            current_user: current_user,
-            return_assigns_socket_tuple: true
-          ]
+        Keyword.merge(opts,
+          verbs: [:read],
+          current_user: current_user,
+          return_assigns_socket_tuple: true
+        )
       ) ||
         assigns_sockets
+
+    non_batch_opts =
+      Keyword.merge(opts,
+        assigns_to_params_fn: &assigns_to_params/1,
+        preload_fn: &preload_extras/3
+      )
 
     batch_opts = [
       Utils.maybe_apply(
         Bonfire.Boundaries.LiveHandler,
         :update_many_opts,
         [
-          opts ++
-            [
-              verbs: [:read]
-            ]
+          Keyword.merge(opts,
+            verbs: [:read]
+          )
         ]
       ),
       # TODO: add Likes, Bookmarks, etc as in `actions_update_many`
-      opts ++
-        [
-          assigns_to_params_fn: &assigns_to_params/1,
-          preload_fn: &preload_extras/3
-        ]
+      non_batch_opts
     ]
 
     case feed_live_update_many_preload_mode do
+      :async_actions ->
+        # |> debug("ccccccc")
+        update_many_async(
+          current_user,
+          assigns_sockets,
+          non_batch_opts
+        )
+
       :inline ->
         # |> debug("ccccccc")
         batch_update_many_async(
@@ -1410,7 +1420,7 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
           assigns_sockets,
           batch_opts,
           opts
-        ) || assigns_sockets
+        )
 
       :async_total ->
         # |> debug("ccccccc")
@@ -1419,11 +1429,11 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
           assigns_sockets,
           batch_opts,
           opts
-        ) || assigns_sockets
+        )
 
       _ ->
-        assigns_sockets
-    end
+        false
+    end || assigns_sockets
   end
 
   @decorate time()
