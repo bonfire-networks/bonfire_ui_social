@@ -1,7 +1,7 @@
 <div class="flex flex-col gap-6 p-4">
   <div class="flex flex-col gap-1">
-    <div class="text-xl font-semibold">{l("Feed Settings")}</div>
-    <div class="text-base-content/70">{l("Configure your feed preferences and presets.")}</div>
+    <div class="text-xl font-semibold">{l("Feed presets")}</div>
+    <div class="text-base-content/70">{l("Manage your filtered feeds.")}</div>
   </div>
 
   <div class="flex flex-col gap-2">

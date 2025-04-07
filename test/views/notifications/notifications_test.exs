@@ -10,7 +10,7 @@ defmodule Bonfire.UI.Social.Notifications.Test do
     #   conn = conn(account: account)
     #   next = "/notifications"
     #   {view, doc} = floki_live(conn, next) #|> IO.inspect
-    #   assert [_] = Floki.find(doc, ".feed")
+    #   assert [_] = Floki.find(doc, "[data-id=feed]")
     # end
 
     @tag :skip_ci
@@ -21,7 +21,7 @@ defmodule Bonfire.UI.Social.Notifications.Test do
       next = "/notifications"
       # |> IO.inspect
       {view, doc} = floki_live(conn, next)
-      refute [] == Floki.find(doc, ".feed")
+      refute [] == Floki.find(doc, "[data-id=feed]")
     end
   end
 
@@ -37,7 +37,7 @@ defmodule Bonfire.UI.Social.Notifications.Test do
     #   conn = conn(account: account)
     #   next = "/notifications"
     #   {view, doc} = floki_live(conn, next) #|> IO.inspect
-    #   assert [] == Floki.find(doc, ".feed") # TODO: what to show in this case?
+    #   assert [] == Floki.find(doc, "[data-id=feed]") # TODO: what to show in this case?
     # end
   end
 end

@@ -7,6 +7,7 @@ defmodule Bonfire.UI.Social.FeedsFilters.Test do
   alias Bonfire.Posts
   import Bonfire.Posts.Fake, except: [fake_remote_user!: 0]
   import Bonfire.Files.Simulation
+  use Bonfire.Common.Repo
 
   setup do
     _ = fake_admin!()
@@ -57,12 +58,8 @@ defmodule Bonfire.UI.Social.FeedsFilters.Test do
       end)
     end
 
+    @tag :todo
     # if this is desired?
-    @tag :todo
-    test "filters persist after load more", %{} do
-    end
-
-    @tag :todo
     test "filters persist after navigation", %{} do
       conn(user: fake_user!())
       |> visit("/feed")
