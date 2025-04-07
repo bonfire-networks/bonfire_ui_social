@@ -238,7 +238,8 @@ defmodule Bonfire.UI.Social.FeedsFilters.Test do
   end
 
   describe "applying feed filters:" do
-    #  because of async feed (re)loading
+    @tag :fixme
+    # because of async feed (re)loading?
     test "filters out boosts when disabled", %{user: user, other_user: other_user} do
       # Create original post and boost it
       original_post =

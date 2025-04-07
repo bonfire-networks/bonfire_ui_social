@@ -162,7 +162,7 @@ defmodule Bonfire.UI.Social.SettingsTest do
       conn =
         within(conn, "form[data-scope=set_default_feed]", fn c ->
           # Select "Local" from dropdown - use the actual select element id
-          c = select(c, "Local", from: "Set default feed")
+          c = select(c, "Local", option: "Set default feed")
           # No need to click submit as the form has phx-change event
           c
         end)
@@ -223,7 +223,7 @@ defmodule Bonfire.UI.Social.SettingsTest do
       conn =
         within(conn, "form[data-scope=reactions_sort]", fn c ->
           # Select "Number of likes" from dropdown
-          c = select(c, "Amount of likes", from: "Sort by")
+          c = select(c, "Amount of likes", option: "Sort by")
           # Submit the form
           c
         end)
@@ -238,7 +238,7 @@ defmodule Bonfire.UI.Social.SettingsTest do
       conn =
         within(conn, "form[data-scope=reactions_sort]", fn c ->
           # Select "Amount of replies" from dropdown
-          c = select(c, "Amount of replies", from: "Sort by")
+          c = select(c, "Amount of replies", option: "Sort by")
           # Submit the form
           c
         end)
@@ -276,7 +276,7 @@ defmodule Bonfire.UI.Social.SettingsTest do
       conn =
         within(conn, "form[data-scope=set_thread_layout]", fn c ->
           # Select "Flat" from dropdown
-          c = select(c, "Flat", from: "Set thread layout")
+          c = select(c, "Flat", option: "Set thread layout")
           # Submit the form
           # c = click_button(c, "Save")
           c
@@ -315,7 +315,7 @@ defmodule Bonfire.UI.Social.SettingsTest do
       conn =
         within(conn, "form[data-scope=set_thread_sorting]", fn c ->
           # Select "Number of replies" from dropdown
-          c = select(c, "Amount of replies", from: "Set thread sort")
+          c = select(c, "Amount of replies", option: "Set thread sort")
           # Submit the form
           # c = click_button(c, "Save")
           c

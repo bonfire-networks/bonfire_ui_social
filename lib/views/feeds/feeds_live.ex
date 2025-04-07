@@ -94,7 +94,7 @@ defmodule Bonfire.UI.Social.FeedsLive do
      socket
      |> assign(
        selected_tab: nil,
-       page: :explore,
+       #  page: :explore,
        page_title: l("Activities"),
        page_header_icon: "carbon:home",
        feed: nil,

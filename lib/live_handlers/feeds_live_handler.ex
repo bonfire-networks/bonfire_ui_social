@@ -555,30 +555,32 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
     |> assign_generic(assigns)
   end
 
-  defp feed_filter_assigns(%{"object_types" => "discussion" = filter}),
-    do: [
-      tab_path_suffix: "/#{filter}",
-      page_title: l("Discussions"),
-      page_header_icon: "ri:discuss-line"
-    ]
+  # defp feed_filter_assigns(%{"object_types" => "discussion" = filter}),
+  #   do: [
+  #     tab_path_suffix: "/#{filter}",
+  #     page_title: l("Discussions"),
+  #     page_header_icon: "ri:discuss-line"
+  #   ]
 
-  defp feed_filter_assigns(%{"object_types" => "post" = filter}),
-    do: [
-      tab_path_suffix: "/#{filter}",
-      page_title: l("Posts"),
-      page: "posts",
-      page_header_icon: "ri:chat-2-line"
-    ]
+  # defp feed_filter_assigns(%{"object_types" => "post" = filter}),
+  #   do: [
+  #     tab_path_suffix: "/#{filter}",
+  #     page_title: l("Posts"),
+  #     page: "posts",
+  #     page_header_icon: "ri:chat-2-line"
+  #   ]
 
-  defp feed_filter_assigns(%{"object_types" => filter}),
-    do: [
-      tab_path_suffix: "/#{filter}",
-      page_title: filter,
-      showing_within: Types.maybe_to_atom(filter)
-    ]
+  # defp feed_filter_assigns(%{"object_types" => filter}),
+  #   do: [
+  #     tab_path_suffix: "/#{filter}",
+  #     page_title: filter,
+  #     showing_within: Types.maybe_to_atom(filter)
+  #   ]
 
-  defp feed_filter_assigns(_),
-    do: [tab_path_suffix: nil, page_title: l("Activities"), page_header_icon: "carbon:home"]
+  # defp feed_filter_assigns(_),
+  #   do: [tab_path_suffix: nil, 
+  #   page_title: l("Activities"), 
+  #   page_header_icon: "carbon:home"]
 
   # @decorate time()
 
@@ -600,9 +602,9 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
     debug(feed_name, "feed_name")
     debug(filters_or_custom_query_or_feed_id_or_ids, "filters_or_custom_query_or_feed_id_or_ids")
 
+    # ++ feed_filter_assigns(filters_or_custom_query_or_feed_id_or_ids) 
     assigns =
-      (feed_default_assigns(feed_name, socket) ++
-         feed_filter_assigns(filters_or_custom_query_or_feed_id_or_ids) ++ [loading: show_loader])
+      (feed_default_assigns(feed_name, socket) ++ [loading: show_loader])
       |> debug("start by setting feed_default_assigns + feed_filter_assigns")
 
     feed_assigns_maybe_async_load(
@@ -658,21 +660,15 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
 
     component_id = component_id([feed_id] ++ feed_ids, assigns(socket))
 
-    [
-      feed_name: feed_name,
-      feed_id: feed_id,
-      feed_ids: feed_ids,
-      feed_component_id: component_id,
-      # FIXME: clean up page vs tab
-      selected_tab: "following",
-      page: "activities",
-      # page_title: l("My feed"),
-      feed_title: l("Following")
-      # feed: nil,
-      # page_info: nil
-    ]
-
-    # ] ++ page_header_asides(socket, component_id)
+    Keyword.merge(
+      [
+        feed_name: feed_name,
+        feed_id: feed_id,
+        feed_ids: feed_ids,
+        feed_component_id: component_id
+      ],
+      feed_default_assigns_from_preset(feed_name, socket)
+    )
   end
 
   def feed_default_assigns(:explore = feed_name, socket) do
@@ -688,25 +684,14 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
         assigns(socket)
       )
 
-    [
-      feed_name: feed_name,
-      feed_id: feed_id,
-      feed_component_id: component_id,
-      selected_tab: feed_name,
-      # FIXME: clean up page vs tab
-      page: "activities",
-      page_title: "Explore activities",
-      # no_header: true,
-      # page_title: l("Activities from members of the local instance"),
-      feedback_title: l("There is no activities to explore"),
-      # feed_id: feed_name,
-      feedback_message:
-        l("It seems like the paint is still fresh and there are no activities to explore...")
-      # feed: nil,
-      # page_info: nil
-    ]
-
-    # ] ++ page_header_asides(socket, component_id)
+    Keyword.merge(
+      [
+        feed_name: feed_name,
+        feed_id: feed_id,
+        feed_component_id: component_id
+      ],
+      feed_default_assigns_from_preset(feed_name, socket)
+    )
   end
 
   def feed_default_assigns(:remote = feed_name, socket) do
@@ -716,29 +701,14 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
 
     component_id = component_id(feed_id, assigns(socket))
 
-    [
-      feed_name: feed_name,
-      feed_id: feed_id,
-      feed_component_id: component_id,
-      selected_tab: :remote,
-      # FIXME: clean up page vs tab
-      page: "activities",
-      page_title: "Activities from the fediverse",
-      # no_header: true,
-      # page_header_icon: "ri:home-line",
-      # page_title: l("Federated activities from remote instances"),
-      # feed_title: l("Activities from around the fediverse"),
-      feedback_title: l("Your fediverse feed is empty"),
-      feedback_message:
-        l(
-          "It seems you and other local users do not follow anyone on a different federated instance"
-        )
-      # feed_id: feed_name,
-      # feed: nil,
-      # page_info: nil
-    ]
-
-    # ] ++ page_header_asides(socket, component_id)
+    Keyword.merge(
+      [
+        feed_name: feed_name,
+        feed_id: feed_id,
+        feed_component_id: component_id
+      ],
+      feed_default_assigns_from_preset(feed_name, socket)
+    )
   end
 
   def feed_default_assigns(:local = feed_name, socket) do
@@ -748,158 +718,14 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
 
     component_id = component_id(feed_id, assigns(socket))
 
-    [
-      feed_name: feed_name,
-      feed_id: feed_id,
-      feed_component_id: component_id,
-      selected_tab: :local,
-      # FIXME: clean up page vs tab
-      page: "activities",
-      page_title: l("Explore local activities"),
-      # no_header: true,
-      # page_title: l("Activities from members of the local instance"),
-      feedback_title: l("Your local feed is empty"),
-      # feed_id: feed_name,
-      feedback_message: l("It seems like the paint is still fresh on this instance...")
-      # feed: nil,
-      # page_info: nil
-    ]
-
-    # ] ++ page_header_asides(socket, component_id)
-  end
-
-  def feed_default_assigns(:notifications = feed_name, socket) do
-    component_id = component_id(feed_name, assigns(socket))
-
-    [
-      feed_name: feed_name,
-      # feed_id: feed_id,
-      feed_component_id: component_id,
-      page: "notifications",
-      selected_tab: "notifications",
-      showing_within: :notifications,
-      #  without_sidebar: true,
-      back: true,
-      page_header_icon: "carbon:notification",
-      page_title: l("Notifications"),
-      feedback_title: l("You have no notifications"),
-      feedback_message:
-        l(
-          "Did you know you can customise which activities you want to be notified for in your settings ?"
-        ),
-      # feed: nil,
-      # page_info: nil,
-      page_header_aside: [
-        {Bonfire.UI.Social.HeaderAsideNotificationsSeenLive,
-         [
-           feed_id: :notifications,
-           feed_name: "notifications"
-         ]}
-      ]
-    ]
-
-    # ] ++ page_header_asides(socket, component_id)
-  end
-
-  def feed_default_assigns(:curated = feed_name, socket) do
-    [
-      feed_name: feed_name,
-      feed_id: feed_name,
-      feed_component_id: component_id(feed_name, assigns(socket)),
-      selected_tab: :curated,
-      # hide_filters: true,
-      showing_within: :feed_by_subject,
-      # FIXME: clean up page vs tab
-      page: "activities",
-      page_title: "Curated feed",
-      no_header: current_user_id(assigns(socket)),
-      # feed_title: l("My favourites"),
-      feedback_title: l("Nothing curated yet?")
-      # feed_id: feed_name,
-      # feedback_message: l("It seems like the paint is still fresh on this instance..."),
-      # feed: nil,
-      # page_info: nil
-    ]
-  end
-
-  def feed_default_assigns(:likes = feed_name, socket) do
-    # debug(feed_name)
-
-    [
-      feed_name: feed_name,
-      feed_id: feed_name,
-      feed_component_id: component_id(feed_name, assigns(socket)),
-      selected_tab: :likes,
-      hide_filters: true,
-      showing_within: :feed_by_subject,
-      # FIXME: clean up page vs tab
-      page: "likes",
-      page_title: "Likes",
-      no_header: false,
-      # feed_title: l("My favourites"),
-      feedback_title: l("Have you not liked anything yet?")
-      # feed_id: feed_name,
-      # feedback_message: l("It seems like the paint is still fresh on this instance..."),
-      # feed: nil,
-      # page_info: nil
-    ]
-  end
-
-  def feed_default_assigns(:bookmarks = feed_name, socket) do
-    # debug(feed_name)
-
-    [
-      feed_name: feed_name,
-      feed_id: feed_name,
-      feed_component_id: component_id(feed_name, assigns(socket)),
-      selected_tab: :bookmarks,
-      hide_filters: true,
-      showing_within: :feed_by_subject,
-      # FIXME: clean up page vs tab
-      page: "bookmarks",
-      page_title: "Bookmarks",
-      no_header: false,
-      # feed_title: l("My favourites"),
-      feedback_title: l("Have you not bookmarked anything yet?")
-      # feed_id: feed_name,
-      # feedback_message: l("It seems like the paint is still fresh on this instance..."),
-      # feed: nil,
-      # page_info: nil
-    ]
-  end
-
-  def feed_default_assigns(:flagged_by_me = feed_name, socket) do
-    [
-      feed_name: feed_name,
-      feed_id: feed_name,
-      feed_component_id: component_id(feed_name, assigns(socket)),
-      selected_tab: :flags,
-      scope: :instance,
-      # FIXME: clean up page vs tab
-      page: "flags",
-      feedback_title: l("You have not flagged any activities...")
-      # feed_id: feed_name,
-      # feedback_message: l("It seems like the paint is still fresh on this instance..."),
-      # feed: nil,
-      # page_info: nil
-    ]
-  end
-
-  def feed_default_assigns(:flagged_content = feed_name, socket) do
-    [
-      feed_name: feed_name,
-      feed_id: feed_name,
-      feed_component_id: component_id(feed_name, assigns(socket)),
-      selected_tab: "all flags",
-      scope: :instance,
-      # FIXME: clean up page vs tab
-      page: "flags",
-      feedback_title: l("You have no flagged activities to review...")
-      # feed_id: feed_name,
-      # feedback_message: l("It seems like the paint is still fresh on this instance..."),
-      # feed: nil,
-      # page_info: nil
-    ]
+    Keyword.merge(
+      [
+        feed_name: feed_name,
+        feed_id: feed_id,
+        feed_component_id: component_id
+      ],
+      feed_default_assigns_from_preset(feed_name, socket)
+    )
   end
 
   def feed_default_assigns({feed_name, filters_or_custom_query_or_feed_id_or_ids}, socket)
@@ -918,15 +744,18 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
 
   def feed_default_assigns({feed_name, filters_or_custom_query_or_feed_id_or_ids}, socket)
       when is_binary(feed_name) do
-    [
-      feed_name: feed_name,
-      selected_tab: feed_name,
-      feed_id: feed_name,
-      feed_filters: filters_or_custom_query_or_feed_id_or_ids,
-      feed_component_id: component_id(feed_name, assigns(socket))
-      # feed: nil,
-      # page_info: nil
-    ]
+    Keyword.merge(
+      [
+        feed_name: feed_name,
+        selected_tab: feed_name,
+        feed_id: feed_name,
+        feed_filters: filters_or_custom_query_or_feed_id_or_ids,
+        feed_component_id: component_id(feed_name, assigns(socket))
+        # feed: nil,
+        # page_info: nil
+      ],
+      feed_default_assigns_from_preset(feed_name, socket)
+    )
   end
 
   def feed_default_assigns(:default, socket) do
@@ -935,14 +764,17 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
   end
 
   def feed_default_assigns(feed_name, socket) when is_atom(feed_name) do
-    [
-      feed_name: feed_name,
-      feed_id: feed_name,
-      selected_tab: feed_name,
-      feed_component_id: component_id(feed_name, assigns(socket))
-      # feed: nil,
-      # page_info: nil
-    ]
+    Keyword.merge(
+      [
+        feed_name: feed_name,
+        feed_id: feed_name,
+        selected_tab: feed_name,
+        feed_component_id: component_id(feed_name, assigns(socket))
+        # feed: nil,
+        # page_info: nil
+      ],
+      feed_default_assigns_from_preset(feed_name, socket)
+    )
   end
 
   def feed_default_assigns(other, socket) do
@@ -953,6 +785,18 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
       # feed: nil,
       # page_info: nil
     ]
+  end
+
+  def feed_default_assigns_from_preset(feed_name, opts) do
+    # TODO: optimise by avoiding loading the preset twice (here and in prepare_filters_assigns_preloads_posloads)
+    with {:ok, %{assigns: assigns}} <-
+           Bonfire.Social.Feeds.feed_preset_if_permitted(feed_name, opts) do
+      assigns
+    else
+      other ->
+        debug(other, "Could not find feed preset with assigns")
+        []
+    end
   end
 
   defp component_id(_feed_id_or_tuple, %{feed_component_id: feed_component_id} = _assigns)
@@ -1105,8 +949,8 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
       # My Feed
       debug("A. Starting feed_assigns for my feed")
 
-      with {feed_filters, preloads, postloads} <-
-             prepare_filters_preloads_posloads(
+      with {feed_filters, assigns, preloads, postloads} <-
+             prepare_filters_assigns_preloads_posloads(
                :my,
                opts
              ),
@@ -1117,7 +961,7 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
              |> FeedLoader.my_feed(opts, ...) do
         merge_feed_assigns(
           feed,
-          [activity_preloads: {preloads, postloads}, feed_filters: feed_filters],
+          [activity_preloads: {preloads, postloads}, feed_filters: feed_filters] ++ assigns,
           e(opts, :page_info, nil)
         )
       end
@@ -1150,17 +994,17 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
     feed_assigns({feed_id, feed_filters}, opts)
   end
 
-  defp feed_assigns({feed_id, %{} = feed_filters}, opts) when feed_filters != %{} do
-    with {feed_filters, preloads, postloads} <-
-           prepare_filters_preloads_posloads(
-             Map.put(feed_filters, :feed_name, feed_id),
+  defp feed_assigns({feed_name_or_id, %{} = feed_filters}, opts) when feed_filters != %{} do
+    with {feed_filters, assigns, preloads, postloads} <-
+           prepare_filters_assigns_preloads_posloads(
+             Map.put(feed_filters, :feed_name, feed_name_or_id),
              opts
            ),
          opts = opts ++ [preload: preloads],
-         %{} = feed <- FeedLoader.feed(feed_id, feed_filters, opts) do
+         %{} = feed <- FeedLoader.feed(feed_name_or_id, feed_filters, opts) do
       merge_feed_assigns(
         feed,
-        [activity_preloads: {preloads, postloads}, feed_filters: feed_filters],
+        [activity_preloads: {preloads, postloads}, feed_filters: feed_filters] ++ assigns,
         e(opts, :page_info, nil)
       )
     end
@@ -1169,8 +1013,8 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
   defp feed_assigns(feed_id, opts) when is_binary(feed_id) do
     feed_filters = e(opts, :feed_filters, %{})
 
-    with {feed_filters, preloads, postloads} <-
-           prepare_filters_preloads_posloads(
+    with {feed_filters, assigns, preloads, postloads} <-
+           prepare_filters_assigns_preloads_posloads(
              Map.put(feed_filters, :feed_name, feed_id),
              opts
            ),
@@ -1181,7 +1025,7 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
            |> FeedLoader.feed(..., feed_filters, opts) do
       merge_feed_assigns(
         feed,
-        [activity_preloads: {preloads, postloads}, feed_filters: feed_filters],
+        [activity_preloads: {preloads, postloads}, feed_filters: feed_filters] ++ assigns,
         e(opts, :page_info, nil)
       )
     end
@@ -1259,8 +1103,8 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
   defp feed_assigns(%Ecto.Query{} = custom_query, opts) do
     feed_filters = e(opts, :feed_filters, %{})
 
-    with {feed_filters, preloads, postloads} <-
-           prepare_filters_preloads_posloads(
+    with {feed_filters, assigns, preloads, postloads} <-
+           prepare_filters_assigns_preloads_posloads(
              feed_filters,
              opts
            ),
@@ -1271,7 +1115,7 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
            |> FeedLoader.feed(feed_filters, opts) do
       merge_feed_assigns(
         feed,
-        [activity_preloads: {preloads, postloads}, feed_filters: feed_filters],
+        [activity_preloads: {preloads, postloads}, feed_filters: feed_filters] ++ assigns,
         e(opts, :page_info, nil)
       )
     end
@@ -1290,8 +1134,8 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
 
     feed_filters = e(opts, :feed_filters, %{})
 
-    with {feed_filters, preloads, postloads} <-
-           prepare_filters_preloads_posloads(
+    with {feed_filters, assigns, preloads, postloads} <-
+           prepare_filters_assigns_preloads_posloads(
              Map.put(feed_filters, :feed_name, feed_name),
              opts
            ),
@@ -1309,7 +1153,7 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
           feed_id: feed_id,
           activity_preloads: {preloads, postloads},
           feed_filters: feed_filters
-        ],
+        ] ++ assigns,
         e(opts, :page_info, nil)
       )
     end
@@ -1564,11 +1408,11 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
 
   def activity_with_object_from_assigns(_), do: nil
 
-  def prepare_filters_preloads_posloads(filters, opts \\ []) do
-    with {:ok, filters} <- FeedLoader.prepare_feed_filters(filters, opts) do
+  def prepare_filters_assigns_preloads_posloads(filters, opts \\ []) do
+    with {:ok, preset, filters} <- FeedLoader.prepare_feed_preset_and_filters(filters, opts) do
       {preload, postload} = activity_preloads_tuple_from_filters(filters, opts)
 
-      {filters, preload, postload}
+      {filters, debug(preset[:assigns] || [], "assssss"), preload, postload}
     end
   end
 

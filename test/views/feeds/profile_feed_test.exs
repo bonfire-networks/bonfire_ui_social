@@ -77,7 +77,7 @@ defmodule Bonfire.UI.Social.Feeds.ProfileFeed.Test do
     |> refute_has("[data-id=object_body]", text: my_post_content)
   end
 
-  #  because feed being reloaded async - this actually seem to not work in the UI as well
+  # doesn't work because the boost still has a post as object
   @tag :fixme
   test "can filter the profile feed by post only", %{
     conn: conn,
