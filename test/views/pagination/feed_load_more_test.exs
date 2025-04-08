@@ -158,6 +158,7 @@ defmodule Bonfire.UI.Social.Feeds.LoadMoreTest do
       # # Now make a direct HTTP request with the pagination parameters
       # conn
       # |> visit(load_more_href) 
+      |> PhoenixTest.open_browser()
       |> click_link("a[data-id=next_page]", "Next page")
       |> assert_has_or_open_browser("[data-id=feed] article",
         count: Bonfire.Common.Config.get(:default_pagination_limit, 2)

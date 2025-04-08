@@ -85,7 +85,7 @@
         />
 
         {#if LiveHandler.feed_live_update_many_preload_mode() == :async_actions}
-          {#if @object_boundary || !socket_connected?(@__context__)}
+          {#if @object_boundary || !user_socket_connected?(@__context__)}
             <!-- LOAD ALL AS IF THEY WERE STATELESS COMPONENTS, since we preload data in this component -->
 
             <StatelessComponent

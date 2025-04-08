@@ -845,7 +845,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
                        Bonfire.UI.Moderation.FlaggedActionsLive
                      ]}
                 {#if @hide_activity != "actions" and @hide_actions != true}
-                  {#if socket_connected?(@__context__) &&
+                  {#if user_socket_connected?(@__context__) &&
                       LiveHandler.feed_live_update_many_preload_mode() == :async_actions}
                     <StatefulComponent
                       id={"#{@activity_component_id}_actions"}

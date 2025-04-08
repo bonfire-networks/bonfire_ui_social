@@ -365,7 +365,7 @@ defmodule Bonfire.Social.Threads.LiveHandler do
       thread_id: thread_id,
       current_user: current_user,
       page: "thread",
-      loading: socket_connected?(socket)
+      loading: user_socket_connected?(socket)
       # participants: participants
     )
 
@@ -375,7 +375,7 @@ defmodule Bonfire.Social.Threads.LiveHandler do
   def load_thread_maybe_async(socket_or_opts, show_loader \\ true, reset_stream \\ false)
 
   def load_thread_maybe_async(%Phoenix.LiveView.Socket{} = socket, show_loader, reset_stream) do
-    socket_connected = connected?(socket)
+    socket_connected = user_socket_connected?(socket)
     current_user = current_user(assigns(socket))
 
     if (socket_connected || current_user != nil) && Config.env() != :test do

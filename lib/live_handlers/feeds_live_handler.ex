@@ -828,7 +828,7 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
          %Phoenix.LiveView.Socket{} = socket,
          reset_stream
        ) do
-    socket_connected = connected?(socket)
+    socket_connected = user_socket_connected?(socket)
     opts = to_options(socket)
 
     if (socket_connected || current_user(opts)) && Config.env() != :test do
@@ -1683,7 +1683,7 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
   #       params,
   #       %Phoenix.LiveView.Socket{} = socket
   #     ) do
-  #   socket_connected = connected?(socket)
+  #   socket_connected = socket_connected?(socket)
 
   #   user = user_or_feed || e(assigns(socket), :user, nil) || current_user(assigns(socket))
 
