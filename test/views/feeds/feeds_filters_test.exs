@@ -1,5 +1,6 @@
 defmodule Bonfire.UI.Social.FeedsFilters.Test do
   use Bonfire.UI.Social.ConnCase, async: true
+  @moduletag :ui
   alias Bonfire.Social.Fake
   alias Bonfire.Social.Boosts
   alias Bonfire.Social.Likes
@@ -238,7 +239,6 @@ defmodule Bonfire.UI.Social.FeedsFilters.Test do
   end
 
   describe "applying feed filters:" do
-    @tag :fixme
     # because of async feed (re)loading?
     test "filters out boosts when disabled", %{user: user, other_user: other_user} do
       # Create original post and boost it
@@ -259,6 +259,7 @@ defmodule Bonfire.UI.Social.FeedsFilters.Test do
         |> click_button("[data-toggle='boost'] button", "Hide")
         |> wait_async()
         |> PhoenixTest.open_browser()
+        |> assert_has("[data-toggle='boost'] [data-id='disabled'].active")
         |> refute_has("[data-id=feed] article[data-verb=Boost]")
         # Only original
         |> assert_has("[data-id=feed] article", count: 1)

@@ -492,19 +492,32 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
   @spec insert_feed(any(), any(), any()) :: any()
   def insert_feed(socket, feed_edges, opts \\ [])
 
-  def insert_feed(socket, {[], assigns}, _opts) do
-    debug(assigns, "nothing to add")
+  def insert_feed(socket, {[], assigns}, opts) do
+    if opts[:reset] do
+      debug(assigns, "nothing to add, but still should reset")
 
-    socket
-    |> assign_generic(assigns)
-    |> assign_generic(
-      previous_page_info: e(assigns(socket), :page_info, nil),
-      page_info: assigns[:page_info],
-      loading: false,
-      reloading: false
-    )
+      socket
+      |> insert_feed([], opts)
+      |> assign_generic(assigns)
+      |> assign_generic(
+        previous_page_info: e(assigns(socket), :page_info, nil),
+        loading: false,
+        reloading: false
+      )
+    else
+      debug(assigns, "nothing to add")
 
-    # |> assign_generic(assigns)
+      socket
+      |> assign_generic(assigns)
+      |> assign_generic(
+        previous_page_info: e(assigns(socket), :page_info, nil),
+        page_info: assigns[:page_info],
+        loading: false,
+        reloading: false
+      )
+
+      # |> assign_generic(assigns)
+    end
   end
 
   def insert_feed(socket, {:error, assigns}, _opts) do
@@ -523,7 +536,8 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
   def insert_feed(socket, feed_edges, opts) do
     # socket
     # |> assign_generic(feed: feed_edges)
-    if Keyword.keyword?(feed_edges) or e(feed_edges, :feed_component_id, nil) do
+    if (feed_edges != [] and Keyword.keyword?(feed_edges)) or
+         e(feed_edges, :feed_component_id, nil) do
       debug(
         feed_edges,
         "workaround for when we're not actually getting a feed but just a list of assigns (probably because the feed is being loaded async)"
@@ -532,7 +546,7 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
       socket
       |> assign_generic(feed_edges)
     else
-      debug(opts, "insert feed into stream")
+      debug(opts, "insert feed into stream with opts")
 
       socket
       |> assign_generic(

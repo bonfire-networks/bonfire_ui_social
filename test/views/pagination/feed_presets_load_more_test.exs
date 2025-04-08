@@ -1,5 +1,6 @@
 defmodule Bonfire.UI.Social.Feeds.FeedsPresets.PaginationTest do
   use Bonfire.UI.Social.ConnCase, async: true
+  @moduletag :ui
   import Bonfire.Common.Simulation
   alias Bonfire.Social.Fake
   alias Bonfire.Social.Boosts
@@ -426,7 +427,6 @@ defmodule Bonfire.UI.Social.Feeds.FeedsPresets.PaginationTest do
   end
 
   describe "Filter Persistence Through Pagination" do
-    @tag :fixme
     test "custom filters persist when loading more posts", %{
       user1: user1,
       account: account,
@@ -494,7 +494,7 @@ defmodule Bonfire.UI.Social.Feeds.FeedsPresets.PaginationTest do
       |> assert_has_or_open_browser("[data-id=feed] article[data-id=activity]", count: limit)
       # Only image posts should appear
       |> assert_has_or_open_browser("article[data-id=activity]", text: "Image post")
-      |> refute_has("article[data-id=activity]", text: "Text post")
+      |> refute_has_or_open_browser("article[data-id=activity]", text: "Text post")
       # |> PhoenixTest.open_browser()
       # Load next page
       |> click_button("[data-id=load_more]", "Load more")

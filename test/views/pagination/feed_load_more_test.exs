@@ -1,5 +1,6 @@
 defmodule Bonfire.UI.Social.Feeds.LoadMoreTest do
   use Bonfire.UI.Social.ConnCase, async: true
+  @moduletag :ui
   import Bonfire.Common.Simulation
   alias Bonfire.Social.Fake
   alias Bonfire.Social.Boosts

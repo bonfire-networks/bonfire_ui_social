@@ -612,13 +612,21 @@ defmodule Bonfire.Social.Threads.LiveHandler do
 
   def insert_comments(socket, replies, opts \\ [])
 
-  def insert_comments(socket, {[], assigns}, _opts) do
-    debug(assigns, "nothing to add")
+  def insert_comments(socket, {[], assigns}, opts) do
+    if opts[:reset] do
+      debug(assigns, "nothing to add, but still should reset")
 
-    socket
-    |> assign_generic(page_info: assigns[:page_info])
+      socket
+      |> assign_generic(assigns)
+      |> insert_comments([], opts)
+    else
+      debug(assigns, "nothing to add")
 
-    # |> assign_generic(assigns)
+      socket
+      |> assign_generic(page_info: assigns[:page_info])
+
+      # |> assign_generic(assigns)
+    end
   end
 
   def insert_comments(socket, {:replies, replies}, opts) do

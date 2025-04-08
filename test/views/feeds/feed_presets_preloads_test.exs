@@ -1,5 +1,6 @@
 defmodule Bonfire.UI.Social.PreloadPresetTest do
   use Bonfire.UI.Social.ConnCase, async: true
+  @moduletag :ui
   use Bonfire.Common.Utils
 
   import Bonfire.Common.Simulation

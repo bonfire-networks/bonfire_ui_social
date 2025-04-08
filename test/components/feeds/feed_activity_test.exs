@@ -1,5 +1,6 @@
 defmodule Bonfire.UI.Social.Feeds.FeedActivityTest do
   use Bonfire.UI.Social.ConnCase, async: true
+  @moduletag :ui
 
   alias Bonfire.Social.Fake
   alias Bonfire.Me.Users

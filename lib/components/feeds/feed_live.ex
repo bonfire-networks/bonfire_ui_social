@@ -540,7 +540,7 @@ defmodule Bonfire.UI.Social.FeedLive do
       case field do
         "subject_circles" ->
           Bonfire.UI.Boundaries.SetBoundariesLive.circles_for_multiselect(
-            socket.assigns.__context__,
+            assigns(socket)[:__context__],
             :subject_circles,
             text
           )
@@ -651,13 +651,13 @@ defmodule Bonfire.UI.Social.FeedLive do
         true,
         true
       )
-      |> debug("feed_assigns")
+      |> debug("reload with feed_assigns")
 
     {
       :noreply,
       socket
-      |> LiveHandler.insert_feed(feed_assigns)
-      |> debug("socket_assigned")
+      |> LiveHandler.insert_feed(feed_assigns, reset: reset)
+      # |> debug("socket_assigned")
       # |> debug("seeet")
     }
   end

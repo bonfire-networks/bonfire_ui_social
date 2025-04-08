@@ -1,5 +1,6 @@
 defmodule Bonfire.UI.Social.SettingsTest do
   use Bonfire.UI.Social.ConnCase, async: false
+  @moduletag :ui
   use Mneme
   import Bonfire.Files.Simulation
 

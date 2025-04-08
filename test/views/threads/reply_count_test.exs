@@ -1,5 +1,6 @@
 defmodule Bonfire.Social.Threads.RepliesTest do
   use Bonfire.UI.Social.ConnCase, async: true
+  @moduletag :ui
   alias Bonfire.Social.Fake
   alias Bonfire.Social.Boosts
   alias Bonfire.Social.Likes

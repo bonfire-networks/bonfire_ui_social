@@ -1,5 +1,6 @@
 defmodule Bonfire.UI.Social.Feeds.ProfileFeed.Test do
   use Bonfire.UI.Social.ConnCase, async: true
+  @moduletag :ui
   alias Bonfire.Social.Fake
   alias Bonfire.Social.Boosts
   alias Bonfire.Social.Likes
@@ -7,16 +8,8 @@ defmodule Bonfire.UI.Social.Feeds.ProfileFeed.Test do
   alias Bonfire.Posts
 
   setup do
-    account = fake_account!()
-    me = fake_user!(account)
-    alice = fake_user!(account)
-
-    # me creates a post
-    my_post_content = "This is my original post"
-    my_post_attrs = %{post_content: %{html_body: my_post_content}}
-
-    {:ok, my_post} =
-      Posts.publish(current_user: me, post_attrs: my_post_attrs, boundary: "public")
+    me = fake_user!("meee")
+    alice = fake_user!("alice")
 
     # alice creates a post
     alice_post_content = "This is Alice's post"
@@ -25,14 +18,20 @@ defmodule Bonfire.UI.Social.Feeds.ProfileFeed.Test do
     {:ok, alice_post} =
       Posts.publish(current_user: alice, post_attrs: alice_post_attrs, boundary: "public")
 
-    # me boosts alice post
+    # I boost alice's post
     {:ok, boost} = Boosts.boost(me, alice_post.id)
 
-    conn = conn(user: me, account: account)
+    # I create a post
+    my_post_content = "This is my original post"
+    my_post_attrs = %{post_content: %{html_body: my_post_content}}
+
+    {:ok, my_post} =
+      Posts.publish(current_user: me, post_attrs: my_post_attrs, boundary: "public")
+
+    conn = conn(user: me)
 
     {:ok,
      conn: conn,
-     account: account,
      alice: alice,
      me: me,
      my_post: my_post,
@@ -57,7 +56,7 @@ defmodule Bonfire.UI.Social.Feeds.ProfileFeed.Test do
     # |> assert_has("article", count: 2)
 
     |> assert_has("[data-id=object_body]", text: my_post_content)
-    # The boosted content should appear
+    # The boosted content should appear too
     |> assert_has("[data-id=object_body]", text: alice_post_content)
   end
 
@@ -78,7 +77,6 @@ defmodule Bonfire.UI.Social.Feeds.ProfileFeed.Test do
   end
 
   # doesn't work because the boost still has a post as object
-  @tag :fixme
   test "can filter the profile feed by post only", %{
     conn: conn,
     me: me,
@@ -86,25 +84,30 @@ defmodule Bonfire.UI.Social.Feeds.ProfileFeed.Test do
     my_post_content: my_post_content,
     alice_post_content: alice_post_content
   } do
-    # Visit my profile feed
+    # Create image posts
+    {_media, _post} = Fake.create_test_content(:images, me, nil)
+
+    # connect as alice
+    conn = conn(user: alice)
+
+    # alice visits my profile feed
     conn
-    |> visit("/user")
-
-    # First verify both my original post and boosted content appear
-    # |> assert_has("[data-id=feed] article", count: 2)
-    # |> assert_has("[data-id=object_body]", text: my_post_content)
-    # |> assert_has("[data-id=object_body]", text: alice_post_content)
-
-    # Click the "Hide" button for boosts
-
+    |> visit("/user/#{me.id}")
+    |> PhoenixTest.open_browser()
     |> assert_has("[data-id=feed_controls]")
-    |> click_button("[data-toggle=boost] button", "Hide")
+    |> assert_has_or_open_browser("[data-id=object_body]", text: my_post_content)
+    |> assert_has("article [data-role=name]", text: "Image post")
 
-    # Test that my boost does not appear after filtering
-    |> refute_has("[data-id=object_body]", text: alice_post_content)
+    #  then we hide images
+    |> click_button("[data-toggle=image] button", "Hide")
+    |> wait_async()
+    |> assert_has_or_open_browser("[data-id=object_body]", text: my_post_content)
+    |> refute_has_or_open_browser("article [data-role=name]", text: "Image post")
 
-    # Test that my post still appears
-    |> assert_has("[data-id=object_body]", text: my_post_content)
-    |> assert_has("[data-id=feed] article", count: 1)
+    #  then we hide posts
+    |> click_button("[data-toggle=post] button", "Hide")
+    |> wait_async()
+    # should have nothing left
+    |> refute_has("[data-id=feed] article")
   end
 end

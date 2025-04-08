@@ -1,5 +1,6 @@
 defmodule Bonfire.UI.Social.Feeds.Benchmark.Test do
   use Bonfire.UI.Social.ConnCase, async: false
+  @moduletag :ui
 
   @tag :benchmark
   test "feed_queries" do

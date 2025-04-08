@@ -1,5 +1,6 @@
 defmodule Bonfire.UI.Social.Notifications.Test do
   use Bonfire.UI.Social.ConnCase, async: true
+  @moduletag :ui
   alias Bonfire.Social.Fake
   alias Bonfire.Posts
   alias Bonfire.Social.Graph.Follows
