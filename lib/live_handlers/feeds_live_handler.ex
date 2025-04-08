@@ -759,7 +759,7 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
   end
 
   def feed_default_assigns(:default, socket) do
-    FeedLoader.feed_name_or_default(:default, current_user_id(socket))
+    FeedLoader.feed_name_or_default(:default, socket)
     |> feed_default_assigns(socket)
   end
 

@@ -159,7 +159,7 @@ defmodule Bonfire.UI.Social.Feeds.LoadMoreTest do
       # conn
       # |> visit(load_more_href) 
       |> click_link("a[data-id=next_page]", "Next page")
-      |> assert_has("[data-id=feed] article",
+      |> assert_has_or_open_browser("[data-id=feed] article",
         count: Bonfire.Common.Config.get(:default_pagination_limit, 2)
       )
 

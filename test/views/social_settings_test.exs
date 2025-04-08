@@ -8,6 +8,7 @@ defmodule Bonfire.UI.Social.SettingsTest do
   alias Bonfire.Social.Likes
   alias Bonfire.Social.Graph.Follows
   alias Bonfire.Common.Config
+  alias Bonfire.Common.Enums
 
   @moduletag :mneme
 
@@ -152,9 +153,10 @@ defmodule Bonfire.UI.Social.SettingsTest do
       conn = conn(user: alice, account: account)
 
       # Check feed initially shows alice's post first
-      conn = visit(conn, "/feed")
-      # |> PhoenixTest.open_browser()
-      assert_has(conn, "article", text: "alice post")
+      conn =
+        visit(conn, "/feed")
+        # |> PhoenixTest.open_browser()
+        |> assert_has("article", text: "alice post")
 
       # Change default feed to local
       conn = visit(conn, "/settings/user/preferences/behaviours")
@@ -162,7 +164,7 @@ defmodule Bonfire.UI.Social.SettingsTest do
       conn =
         within(conn, "form[data-scope=set_default_feed]", fn c ->
           # Select "Local" from dropdown - use the actual select element id
-          c = select(c, "Local", option: "Set default feed")
+          c = select(c, "Set default feed", option: "Local")
           # No need to click submit as the form has phx-change event
           c
         end)
@@ -170,9 +172,10 @@ defmodule Bonfire.UI.Social.SettingsTest do
       # |> PhoenixTest.open_browser()
 
       # Visit feed and check bob's post is shown first
-      conn = visit(conn, "/feed")
-      # |> PhoenixTest.open_browser()
-      assert_has(conn, "article", text: "bob post")
+      conn =
+        visit(conn, "/feed")
+        # |> PhoenixTest.open_browser()
+        |> assert_has("article", text: "bob post")
     end
 
     test "feed default sort" do
@@ -223,7 +226,7 @@ defmodule Bonfire.UI.Social.SettingsTest do
       conn =
         within(conn, "form[data-scope=reactions_sort]", fn c ->
           # Select "Number of likes" from dropdown
-          c = select(c, "Amount of likes", option: "Sort by")
+          c = select(c, "Sort by", option: "Amount of likes")
           # Submit the form
           c
         end)
@@ -238,7 +241,7 @@ defmodule Bonfire.UI.Social.SettingsTest do
       conn =
         within(conn, "form[data-scope=reactions_sort]", fn c ->
           # Select "Amount of replies" from dropdown
-          c = select(c, "Amount of replies", option: "Sort by")
+          c = select(c, "Sort by", option: "Amount of replies")
           # Submit the form
           c
         end)
@@ -276,10 +279,9 @@ defmodule Bonfire.UI.Social.SettingsTest do
       conn =
         within(conn, "form[data-scope=set_thread_layout]", fn c ->
           # Select "Flat" from dropdown
-          c = select(c, "Flat", option: "Set thread layout")
+          select(c, "Set thread layout", option: "Flat")
           # Submit the form
-          # c = click_button(c, "Save")
-          c
+          # |> click_button("Save")
         end)
 
       # Check thread layout is flat
@@ -315,7 +317,7 @@ defmodule Bonfire.UI.Social.SettingsTest do
       conn =
         within(conn, "form[data-scope=set_thread_sorting]", fn c ->
           # Select "Number of replies" from dropdown
-          c = select(c, "Amount of replies", option: "Set thread sort")
+          c = select(c, "Sort by", option: "Amount of replies")
           # Submit the form
           # c = click_button(c, "Save")
           c

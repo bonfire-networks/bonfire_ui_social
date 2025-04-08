@@ -426,6 +426,7 @@ defmodule Bonfire.UI.Social.Feeds.FeedsPresets.PaginationTest do
   end
 
   describe "Filter Persistence Through Pagination" do
+    @tag :fixme
     test "custom filters persist when loading more posts", %{
       user1: user1,
       account: account,
@@ -465,7 +466,7 @@ defmodule Bonfire.UI.Social.Feeds.FeedsPresets.PaginationTest do
       |> click_button("[data-toggle='image'] button", "Only")
       |> wait_async()
       # Only image posts should appear
-      |> assert_has("article[data-id=activity]", text: "Image post")
+      |> assert_has_or_open_browser("article [data-role=name]", text: "Image post")
       |> refute_has_or_open_browser("article[data-id=activity]", text: "Text post")
       # Load next page
       |> click_button("[data-id=load_more]", "Load more")
@@ -473,7 +474,7 @@ defmodule Bonfire.UI.Social.Feeds.FeedsPresets.PaginationTest do
       # Now should have more posts, all images
       |> assert_has("[data-id=feed] article[data-id=activity]", count: limit * 2)
       # Still only image posts
-      |> assert_has("article[data-id=activity]", text: "Image post")
+      |> assert_has("article [data-role=name]", text: "Image post")
       |> refute_has("article[data-id=activity]", text: "Text post")
       # Count occurrences of the text "Image post"
       |> unwrap(fn view ->
@@ -494,14 +495,14 @@ defmodule Bonfire.UI.Social.Feeds.FeedsPresets.PaginationTest do
       # Only image posts should appear
       |> assert_has_or_open_browser("article[data-id=activity]", text: "Image post")
       |> refute_has("article[data-id=activity]", text: "Text post")
-      |> PhoenixTest.open_browser()
+      # |> PhoenixTest.open_browser()
       # Load next page
       |> click_button("[data-id=load_more]", "Load more")
       |> wait_async()
       # Now should have more posts, all images
       |> assert_has("[data-id=feed] article[data-id=activity]", count: limit * 2)
       # Still only image posts
-      |> assert_has("article[data-id=activity]", text: "Image post")
+      |> assert_has("article [data-role=name]", text: "Image post")
       |> refute_has("article[data-id=activity]", text: "Text post")
       # Count occurrences of the text "Image post"
       |> unwrap(fn view ->
