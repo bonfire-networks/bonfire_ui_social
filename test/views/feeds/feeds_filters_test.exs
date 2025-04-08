@@ -67,7 +67,7 @@ defmodule Bonfire.UI.Social.FeedsFilters.Test do
       # Set some filters
       |> within("[data-scope='time_limit']", fn session ->
         session
-        |> choose("Day")
+        |> choose("Time limit control", option: "Day")
       end)
       |> click_button("[data-toggle='boost'] button", "Only")
       # Navigate to another feed
