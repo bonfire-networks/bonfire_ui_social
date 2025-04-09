@@ -133,11 +133,11 @@
 
     {!-- context={@id} --}
     <Bonfire.UI.Common.LoadMoreLive
+      :if={!@hide_load_more}
       live_handler={Bonfire.Social.Feeds}
       page_info={@page_info}
       target={@myself}
       infinite_scroll={Settings.get([:ui, :infinite_scroll], :preload, @__context__)}
-      hide_load_more={@hide_load_more}
       entry_count={@feed_count}
     >
       <:if_no_more>
