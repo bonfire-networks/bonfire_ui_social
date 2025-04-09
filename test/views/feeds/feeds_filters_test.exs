@@ -123,6 +123,16 @@ defmodule Bonfire.UI.Social.FeedsFilters.Test do
       # |> PhoenixTest.open_browser()
       |> assert_has("[data-id=feed] article", text: "#test")
     end
+
+    test "ensure the subject is preloaded in hashtags feed", %{user: user, other_user: other_user} do
+      {post, _} = Fake.create_test_content(:hashtag, user, other_user)
+
+      conn(user: user)
+      |> visit("/hashtag/test")
+      # |> PhoenixTest.open_browser()
+      |> assert_has("[data-id=subject_details]", text: "#{user.profile.name}")
+      |> assert_has("[data-id=feed] article", text: "#test")
+    end
   end
 
   describe "local feed" do
