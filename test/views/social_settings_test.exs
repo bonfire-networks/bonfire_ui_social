@@ -165,7 +165,7 @@ defmodule Bonfire.UI.Social.SettingsTest do
       conn =
         within(conn, "form[data-scope=set_default_feed]", fn c ->
           # Select "Local" from dropdown - use the actual select element id
-          c = select(c, "Set default feed", option: "Local")
+          c = PhoenixTest.select(c, "Set default feed", option: "Local")
           # No need to click submit as the form has phx-change event
           c
         end)
@@ -227,7 +227,7 @@ defmodule Bonfire.UI.Social.SettingsTest do
       conn =
         within(conn, "form[data-scope=reactions_sort]", fn c ->
           # Select "Number of likes" from dropdown
-          c = select(c, "Sort by", option: "Amount of likes")
+          c = PhoenixTest.select(c, "Sort by", option: "Amount of likes")
           # Submit the form
           c
         end)
@@ -242,7 +242,7 @@ defmodule Bonfire.UI.Social.SettingsTest do
       conn =
         within(conn, "form[data-scope=reactions_sort]", fn c ->
           # Select "Amount of replies" from dropdown
-          c = select(c, "Sort by", option: "Amount of replies")
+          c = PhoenixTest.select(c, "Sort by", option: "Amount of replies")
           # Submit the form
           c
         end)
@@ -280,7 +280,7 @@ defmodule Bonfire.UI.Social.SettingsTest do
       conn =
         within(conn, "form[data-scope=set_thread_layout]", fn c ->
           # Select "Flat" from dropdown
-          select(c, "Set thread layout", option: "Flat")
+          PhoenixTest.select(c, "Set thread layout", option: "Flat")
           # Submit the form
           # |> click_button("Save")
         end)
@@ -318,7 +318,7 @@ defmodule Bonfire.UI.Social.SettingsTest do
       conn =
         within(conn, "form[data-scope=set_thread_sorting]", fn c ->
           # Select "Number of replies" from dropdown
-          c = select(c, "Sort by", option: "Amount of replies")
+          c = PhoenixTest.select(c, "Sort by", option: "Amount of replies")
           # Submit the form
           # c = click_button(c, "Save")
           c

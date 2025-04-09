@@ -36,6 +36,7 @@ defmodule Bonfire.UI.Social.ConnCase do
       import Untangle
       use Arrows
       # alias Bonfire.UI.Social.Router.Helpers, as: Routes
+      use Bonfire.Common.Repo
 
       # The default endpoint for testing
       @endpoint Application.compile_env!(:bonfire, :endpoint_module)

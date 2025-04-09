@@ -13,7 +13,7 @@ defmodule Bonfire.UI.Social.Feeds.LoadMoreTest do
   describe "Load More in Feeds" do
     test "As a user, I don't want to see the load more button if there are the same number of activities as the pagination limit" do
       # make sure we start with a blank slate:
-      Bonfire.Common.Repo.delete_all(Bonfire.Data.Social.FeedPublish)
+      repo().delete_all(Bonfire.Data.Social.FeedPublish)
       total_posts = Bonfire.Common.Config.get(:default_pagination_limit, 2) |> debug("TOTAL POST")
       account = fake_account!()
       me = fake_user!(account)
@@ -44,7 +44,7 @@ defmodule Bonfire.UI.Social.Feeds.LoadMoreTest do
 
     test "As a user, I don't want to see the load more button if there are less activities than the pagination limit" do
       # make sure we start with a blank slate:
-      Bonfire.Common.Repo.delete_all(Bonfire.Data.Social.FeedPublish)
+      repo().delete_all(Bonfire.Data.Social.FeedPublish)
 
       total_posts = Bonfire.Common.Config.get(:default_pagination_limit, 2) - 1
       account = fake_account!()

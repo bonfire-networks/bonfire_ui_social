@@ -63,9 +63,6 @@ defmodule Bonfire.Social.UI.Feeds.RemoteFeed.Test do
         }
       }
 
-      # feed_id = Bonfire.Social.Feeds.named_feed_id(:activity_pub)
-      # |> IO.inspect(label: "feeeee")
-
       assert {:ok, post} =
                Posts.publish(current_user: user, post_attrs: attrs, boundary: "public")
 

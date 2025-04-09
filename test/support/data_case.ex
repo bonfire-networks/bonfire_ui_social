@@ -22,7 +22,10 @@ defmodule Bonfire.UI.Social.DataCase do
       import Ecto
       import Ecto.Changeset
       import Ecto.Query
+      use Bonfire.Common.Repo
       # import Bonfire.UI.Social.DataCase
+
+      @moduletag :backend
     end
   end
 
