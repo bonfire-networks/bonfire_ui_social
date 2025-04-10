@@ -144,6 +144,22 @@ defmodule Bonfire.UI.Social.FeedsFilters.Test do
       |> assert_has("[data-id=feed] article", text: "default post")
     end
 
+    test "filtering by boost-only it correctly preloads the subject", %{user: user, other_user: other_user} do
+      # create a post
+      {post, _} = Fake.create_test_content(:local, user, other_user)
+      # boost it
+      {:ok, boost} = Boosts.boost(other_user, post)
+      # check the feed
+      conn(user: user)
+      |> visit("/feed/local")
+      |> assert_has("[data-id=feed] article[data-verb=Boost]", text: "default post")
+      |> click_button("[data-toggle='boost'] button", "Only")
+      |> PhoenixTest.open_browser()
+      |> assert_has("[data-id=subject_details]", text: "#{other_user.character.username}")
+      |> assert_has("[data-id=subject_details]", text: "#{user.character.username}")
+      |> assert_has("[data-id=subject_details]", text: "#{user.profile.name}")
+    end
+
     @tag :todo
     test "respects time filters", %{user: user, other_user: other_user} do
       # Create an old post
