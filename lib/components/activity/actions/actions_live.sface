@@ -159,6 +159,7 @@
             <div class="skeleton w-5 h-5 rounded-full shrink-0" />
             <div class="skeleton w-5 h-5 rounded-full shrink-0" />
             <div class="skeleton w-5 h-5 rounded-full shrink-0" />
+            <div class="skeleton w-5 h-5 rounded-full shrink-0" />
           {/if}
         {#else}
           <StatefulComponent
