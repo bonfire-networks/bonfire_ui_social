@@ -6,7 +6,7 @@
 >
   <div :if={current_user_id(@__context__)} class="flex justify-between flex-1 gap-1">
     <div class="flex gap-1 flex-1">
-      <div data-position="bottom-end" phx-hook="Tooltip" id="order_dropdown_feed" class="flex flex-1">
+      <div data-position="bottom-end" phx-hook="Tooltip" id="order_dropdown_feed" class="flex flex-1 relative">
         <label tabindex="0" class="tooltip-button btn w-full">
           {#case e(@feed_filters, :sort_by, nil)}
             {#match :num_replies}
@@ -92,26 +92,6 @@
           </a>
         {/if}
       </div>
-      {!-- <li><a
-            phx-click="set_filter"
-            phx-value-sort_order="desc"
-            phx-target={@event_target}
-            class="flex gap-3 px-2 text-base-content"
-          >
-            <#Icon iconify="octicon:sort-desc-16" class="w-4 h-4" />
-            {if e(@feed_filters, :sort_by, nil) in [nil, :latest_reply],
-              do: l("Newest first"),
-              else: l("Most first")}</a></li>
-        <li><a
-            phx-click="set_filter"
-            phx-value-sort_order="asc"
-            phx-target={@event_target}
-            class="flex gap-3 px-2 text-base-content"
-          >
-            <#Icon iconify="octicon:sort-asc-16" class="w-4 h-4" />
-            {if e(@feed_filters, :sort_by, nil) in [nil, :latest_reply],
-              do: l("Oldest first"),
-              else: l("Least first")}</a></li> --}
     </div>
 
     {!-- <div data-position="bottom" phx-hook="Tooltip" class="flex-1" id="sort_timing_feed">
@@ -151,7 +131,7 @@
       </ul>
     </div> --}
 
-    <div data-position="bottom" phx-hook="Tooltip" class="flex-1" id="filter_origin_feed">
+    <div data-position="bottom" phx-hook="Tooltip" class="flex-1 relative" id="filter_origin_feed">
       <label tabindex="0" class="tooltip-button btn w-full">
         {case @feed_filters[:origin] do
           [:remote] -> l("Remote")
@@ -191,7 +171,7 @@
       </ul>
     </div>
 
-    <div data-position="bottom" phx-hook="Tooltip" class="flex-1" id="filter_circles_feed">
+    <div data-position="bottom" phx-hook="Tooltip" class="flex-1 relative" id="filter_circles_feed">
       <label tabindex="0" class="tooltip-button btn w-full">
         {l("Circles")} {case e(@feed_filters, :subject_circles, []) do
           [] -> nil

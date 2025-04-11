@@ -264,6 +264,8 @@
       {/if}
     {/if}
 
+    <li class="m-1 border-t border-base-content/10"></li>
+
     <li :if={current_user_id(@__context__) != @creator_id and @verb != "Flag" and
       module_enabled?(Bonfire.UI.Moderation.FlagActionLive, @__context__)}>
       {#if !current_user_id(@__context__)}
