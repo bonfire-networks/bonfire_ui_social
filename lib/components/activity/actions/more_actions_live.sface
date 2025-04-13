@@ -264,7 +264,7 @@
       {/if}
     {/if}
 
-    <li class="m-1 border-t border-base-content/10"></li>
+    <li class="m-1 border-t border-base-content/10" />
 
     <li :if={current_user_id(@__context__) != @creator_id and @verb != "Flag" and
       module_enabled?(Bonfire.UI.Moderation.FlagActionLive, @__context__)}>
@@ -334,9 +334,10 @@
       parent_id={@activity_component_id || id(@activity)}
       object={@creator || @creator_id}
       permalink={@permalink}
-      silence_extra_object={id(@object)}
+      hide_object={@object}
       extra_object_label={l("this %{object}", object: e(@object_type_readable, l("object")))}
       peered={e(@object, :peered, nil)}
+      with_icon={false}
     />
 
     {#if @viewing_main_object && @thread_id && @object_type not in [Bonfire.Data.Social.Message] &&

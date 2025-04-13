@@ -4,6 +4,7 @@ defmodule Bonfire.UI.Social.Activity.ActionsLive do
   alias Bonfire.Social.Feeds.LiveHandler
 
   prop activity, :any, default: nil
+  prop subject_user, :any, default: nil
   prop object, :any, required: true
   # prop profile, :any, default: nil
   prop thread_id, :string, required: true

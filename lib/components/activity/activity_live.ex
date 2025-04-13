@@ -761,8 +761,9 @@ defmodule Bonfire.UI.Social.ActivityLive do
                   character_username={e(component_assigns, :character, :username, nil)}
                   activity_id={id(e(component_assigns, :activity, nil) || @activity)}
                   object_id={id(e(component_assigns, :object, nil) || @object)}
-                  subject_id={e(component_assigns, :subject_id, nil) || e(component_assigns, :profile, :id, nil) ||
+                  subject_id={e(component_assigns, :subject_id, nil) ||
                     e(@activity, :subject_id, nil)}
+                  subject_peered={e(@activity, :subject, :character, :peered, nil)}
                   object_boundary={@object_boundary}
                   object_type={e(component_assigns, :object_type, @object_type)}
                   date_ago={e(component_assigns, :date_ago, @date_ago)}
@@ -778,7 +779,6 @@ defmodule Bonfire.UI.Social.ActivityLive do
                   verb_display={e(component_assigns, :verb_display, @verb_display)}
                   emoji={@emoji || e(component_assigns, :activity, :emoji, nil) || e(@activity, :emoji, nil)}
                   reply_to_id={e(@activity, :replied, :reply_to_id, nil)}
-                  subject_peered={e(@activity, :subject, :character, :peered, nil)}
                   peered={@peered}
                   is_remote={@is_remote}
                   thread_title={e(component_assigns, :thread_title, @thread_title)}
@@ -873,6 +873,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
                       is_remote={@is_remote}
                       is_answer={not is_nil(e(@activity, :replied, :pinned, nil) || e(@activity, :pinned, nil))}
                       hide_actions={@hide_actions}
+                      subject_user={@subject_user}
                     />
                   {#else}
                     <StatelessComponent
@@ -997,18 +998,18 @@ defmodule Bonfire.UI.Social.ActivityLive do
     ]
   end
 
-  def component_activity_subject(verb, activity, _object, _object_type, :notifications, _, _)
-      when verb in @react_verbs,
-      do: [
-        {Bonfire.UI.Social.Activity.SubjectMinimalLive,
-         %{
-           # activity: repo().maybe_preload(activity, subject: [:character]),
-           verb: verb,
-           subject_id: e(activity, :subject_id, nil),
-           profile: e(activity, :subject, :profile, nil),
-           character: e(activity, :subject, :character, nil)
-         }}
-      ]
+  # def component_activity_subject(verb, activity, _object, _object_type, :notifications, _, _)
+  #     when verb in @react_verbs,
+  #     do: [
+  #       {Bonfire.UI.Social.Activity.SubjectMinimalLive,
+  #        %{
+  #          # activity: repo().maybe_preload(activity, subject: [:character]),
+  #          verb: verb,
+  #          subject_id: e(activity, :subject_id, nil),
+  #          profile: e(activity, :subject, :profile, nil),
+  #          character: e(activity, :subject, :character, nil)
+  #        }}
+  #     ]
 
   # reactions should show the reactor + original creator
   def component_activity_subject(verb, activity, object, object_type, _, _, _)
@@ -1102,7 +1103,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
       ),
       do:
         component_maybe_creator(subject) ||
-          component_activity_maybe_creator_fallbacks(activity, object)
+          component_maybe_creator_fallback(activity, object)
 
   # def component_activity_maybe_creator(
   #       %{object: %{created: %{creator_id: id, creator: nil}}} = _activity,
@@ -1125,65 +1126,19 @@ defmodule Bonfire.UI.Social.ActivityLive do
       ),
       do:
         component_maybe_creator(creator) ||
-          component_activity_maybe_creator_fallbacks(activity, object)
+          component_maybe_creator_fallback(activity, object)
 
   def component_activity_maybe_creator(activity, object, _),
-    do: component_activity_maybe_creator_fallbacks(activity, object)
-
-  defp component_activity_maybe_creator_fallbacks(activity, object),
-    do:
-      component_maybe_creator(object) ||
-        component_maybe_creator(activity) ||
-        (
-          creator =
-            e(object, :created, :creator, nil) || e(activity, :created, :creator, nil) ||
-              e(activity, :object, :created, :creator, nil) || e(object, :creator, nil) ||
-              e(activity, :object, :creator, nil)
-
-          creator_id =
-            e(object, :created, :creator_id, nil) || e(activity, :created, :creator_id, nil) ||
-              e(object, :creator_id, nil) || e(activity, :object, :creator_id, nil)
-
-          case (creator ||
-                  if(not is_nil(creator_id) and creator_id == e(activity, :subject_id, nil),
-                    do: e(activity, :subject, nil)
-                  ) || creator_id)
-               |> debug("this is a fallback, component_maybe_creator *should* handle most cases") do
-            nil ->
-              debug("could not find a creator in activity or object")
-              debug(activity)
-              debug(object)
-              # [Bonfire.UI.Social.Activity.NoSubjectLive]
-              [Bonfire.UI.Social.Activity.SubjectLive]
-
-            %{
-              profile: %{id: _} = profile,
-              character: %{id: _} = character
-            } ->
-              [
-                {Bonfire.UI.Social.Activity.SubjectLive,
-                 %{profile: profile, character: character}}
-              ]
-
-            creator_id when is_binary(creator_id) ->
-              debug("could only find a creator_id")
-              # debug(activity)
-              # debug(object)
-              [{Bonfire.UI.Social.Activity.SubjectLive, %{subject_id: creator_id}}]
-
-            other ->
-              error(other, "invalid creator")
-
-              # [Bonfire.UI.Social.Activity.NoSubjectLive]
-              [Bonfire.UI.Social.Activity.SubjectLive]
-          end
-        )
+    do: component_maybe_creator_fallback(activity, object)
 
   def component_maybe_creator(%{
-        creator_profile: %{id: _} = profile,
+        creator_profile: %{id: id} = profile,
         creator_character: %{id: _} = character
       }),
-      do: [{Bonfire.UI.Social.Activity.SubjectLive, %{profile: profile, character: character}}]
+      do: [
+        {Bonfire.UI.Social.Activity.SubjectLive,
+         %{verb: "Create", subject_id: id, profile: profile, character: character}}
+      ]
 
   # def component_maybe_creator(%{provider: %{id: _} = provider} = object),
   #   do: [{Bonfire.UI.ValueFlows.Preview.ProviderReceiverLive, %{object: object}}]
@@ -1229,11 +1184,14 @@ defmodule Bonfire.UI.Social.ActivityLive do
 
   def component_maybe_creator(
         %{
-          profile: %{id: _} = profile,
+          profile: %{id: id} = profile,
           character: %{id: _} = character
         } = _creator
       ),
-      do: [{Bonfire.UI.Social.Activity.SubjectLive, %{profile: profile, character: character}}]
+      do: [
+        {Bonfire.UI.Social.Activity.SubjectLive,
+         %{verb: "Create", subject_id: id, profile: profile, character: character}}
+      ]
 
   # def component_maybe_creator(
   #       %{provider: %Ecto.Association.NotLoaded{}, receiver: %Ecto.Association.NotLoaded{}} =
@@ -1281,6 +1239,58 @@ defmodule Bonfire.UI.Social.ActivityLive do
     # warn(activity_or_object, "could not find a creator")
     nil
   end
+
+  defp component_maybe_creator_fallback(activity, object),
+    do:
+      component_maybe_creator(object) ||
+        component_maybe_creator(activity) ||
+        (
+          creator =
+            e(object, :created, :creator, nil) || e(activity, :created, :creator, nil) ||
+              e(activity, :object, :created, :creator, nil) || e(object, :creator, nil) ||
+              e(activity, :object, :creator, nil)
+
+          creator_id =
+            e(object, :created, :creator_id, nil) || e(activity, :created, :creator_id, nil) ||
+              e(object, :creator_id, nil) || e(activity, :object, :creator_id, nil)
+
+          case (creator ||
+                  if(not is_nil(creator_id) and creator_id == e(activity, :subject_id, nil),
+                    do: e(activity, :subject, nil)
+                  ) || creator_id)
+               |> debug("this is a fallback, component_maybe_creator *should* handle most cases") do
+            nil ->
+              debug("could not find a creator in activity or object")
+              debug(activity)
+              debug(object)
+              # [Bonfire.UI.Social.Activity.NoSubjectLive]
+              [Bonfire.UI.Social.Activity.SubjectLive]
+
+            %{
+              profile: %{id: id} = profile,
+              character: %{id: _} = character
+            } ->
+              [
+                {Bonfire.UI.Social.Activity.SubjectLive,
+                 %{verb: "Create", subject_id: id, profile: profile, character: character}}
+              ]
+
+            creator_id when is_binary(creator_id) ->
+              debug("could only find a creator_id")
+              # debug(activity)
+              # debug(object)
+              [
+                {Bonfire.UI.Social.Activity.SubjectLive,
+                 %{verb: "Create", subject_id: creator_id}}
+              ]
+
+            other ->
+              error(other, "invalid creator")
+
+              # [Bonfire.UI.Social.Activity.NoSubjectLive]
+              [{Bonfire.UI.Social.Activity.SubjectLive, %{verb: "Create"}}]
+          end
+        )
 
   def prepare_reply_to(%{
         id: activity_id,

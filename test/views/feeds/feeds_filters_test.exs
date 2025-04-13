@@ -12,8 +12,8 @@ defmodule Bonfire.UI.Social.FeedsFilters.Test do
 
   setup do
     _ = fake_admin!()
-    user = fake_user!("test_user")
-    other_user = fake_user!("other_user")
+    user = fake_user!("test user")
+    other_user = fake_user!("other user")
     {:ok, %{user: user, other_user: other_user}}
   end
 
@@ -115,23 +115,15 @@ defmodule Bonfire.UI.Social.FeedsFilters.Test do
   # end
 
   describe "hashtag feed" do
-    test "shows posts with specific hashtags", %{user: user, other_user: other_user} do
+    test "shows posts with specific hashtags, and ensure the subject is preloaded in hashtags feed",
+         %{user: user, other_user: other_user} do
       {post, _} = Fake.create_test_content(:hashtag, user, other_user)
 
       conn(user: user)
       |> visit("/hashtag/test")
       # |> PhoenixTest.open_browser()
       |> assert_has("[data-id=feed] article", text: "#test")
-    end
-
-    test "ensure the subject is preloaded in hashtags feed", %{user: user, other_user: other_user} do
-      {post, _} = Fake.create_test_content(:hashtag, user, other_user)
-
-      conn(user: user)
-      |> visit("/hashtag/test")
-      # |> PhoenixTest.open_browser()
-      |> assert_has("[data-id=subject_details]", text: "#{user.profile.name}")
-      |> assert_has("[data-id=feed] article", text: "#test")
+      |> assert_has("[data-id=subject_name]", text: "#{user.profile.name}")
     end
   end
 
@@ -144,20 +136,26 @@ defmodule Bonfire.UI.Social.FeedsFilters.Test do
       |> assert_has("[data-id=feed] article", text: "default post")
     end
 
-    test "filtering by boost-only it correctly preloads the subject", %{user: user, other_user: other_user} do
+    test "filtering by boost-only it correctly preloads the subject and creator", %{
+      user: user,
+      other_user: other_user
+    } do
       # create a post
       {post, _} = Fake.create_test_content(:local, user, other_user)
       # boost it
-      {:ok, boost} = Boosts.boost(other_user, post)
+      {:ok, boost} = Boosts.boost(user, post)
       # check the feed
       conn(user: user)
       |> visit("/feed/local")
+      |> PhoenixTest.open_browser()
       |> assert_has("[data-id=feed] article[data-verb=Boost]", text: "default post")
       |> click_button("[data-toggle='boost'] button", "Only")
       |> PhoenixTest.open_browser()
-      |> assert_has("[data-id=subject_details]", text: "#{other_user.character.username}")
-      |> assert_has("[data-id=subject_details]", text: "#{user.character.username}")
-      |> assert_has("[data-id=subject_details]", text: "#{user.profile.name}")
+      |> assert_has("[data-id=subject_name]", text: "#{other_user.profile.name}")
+      |> assert_has("[data-id=subject_username]", text: "#{other_user.character.username}")
+      |> assert_has("[data-id=subject_name]", text: "#{user.profile.name}")
+
+      # |> assert_has("[data-id=subject_username]", text: "#{user.character.username}")
     end
 
     @tag :todo

@@ -151,6 +151,7 @@
               is_remote={@is_remote}
               parent_id={@parent_id}
               published_in={@published_in}
+              subject_user={@subject_user}
             />
           {#else}
             <!-- ACTIONS SKELETON GOES HERE -->
@@ -230,6 +231,7 @@
             is_remote={@is_remote}
             parent_id={@parent_id}
             published_in={@published_in}
+            subject_user={@subject_user}
           />
         {/if}
       {/if}

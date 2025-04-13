@@ -6,7 +6,12 @@
 >
   <div :if={current_user_id(@__context__)} class="flex justify-between flex-1 gap-1">
     <div class="flex gap-1 flex-1">
-      <div data-position="bottom-end" phx-hook="Tooltip" id="order_dropdown_feed" class="flex flex-1 relative">
+      <div
+        data-position="bottom-end"
+        phx-hook="Tooltip"
+        id="order_dropdown_feed"
+        class="flex flex-1 relative"
+      >
         <label tabindex="0" class="tooltip-button btn w-full">
           {#case e(@feed_filters, :sort_by, nil)}
             {#match :num_replies}
