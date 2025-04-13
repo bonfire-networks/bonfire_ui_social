@@ -19,7 +19,6 @@ defmodule Bonfire.UI.Social.Feeds.Test do
       %{method: :get, url: "https://windsurf.run/elixir-phoenix-cursor-rules"} ->
         "<title>Test HTML</title>"
     end)
-    
 
     {:ok, conn: conn, account: account, alice: alice, me: me}
   end
