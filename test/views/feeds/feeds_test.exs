@@ -6,6 +6,7 @@ defmodule Bonfire.UI.Social.Feeds.Test do
   alias Bonfire.Social.Likes
   alias Bonfire.Social.Graph.Follows
   alias Bonfire.Posts
+  import Tesla.Mock
 
   setup do
     account = fake_account!()
@@ -13,6 +14,12 @@ defmodule Bonfire.UI.Social.Feeds.Test do
     alice = fake_user!(account)
 
     conn = conn(user: me, account: account)
+
+    mock(fn
+      %{method: :get, url: "https://windsurf.run/elixir-phoenix-cursor-rules"} ->
+        "<title>Test HTML</title>"
+    end)
+    
 
     {:ok, conn: conn, account: account, alice: alice, me: me}
   end
@@ -228,7 +235,7 @@ defmodule Bonfire.UI.Social.Feeds.Test do
       |> assert_has("a[href='https://windsurf.run/elixir-phoenix-cursor-rules']")
 
       # We could also check the media preview card
-      |> assert_has("[data-id=media_link]")
+      |> assert_has_or_open_browser("[data-id=media_link]")
       |> assert_has("[data-id=media_title]", text: "Windsurf Directory")
     end
   end
