@@ -560,6 +560,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
       data-compact={@__context__[:ui_compact]}
       data-answer={not is_nil(e(@activity, :replied, :pinned, nil) || e(@activity, :pinned, nil))}
       data-verb={@verb}
+      role="button"
       aria-label="user activity"
       tabIndex="0"
       class={

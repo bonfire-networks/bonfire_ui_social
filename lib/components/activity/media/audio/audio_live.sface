@@ -3,7 +3,7 @@
     <div class="flex items-center gap-3 overflow-hidden">
       <div
         data-id="media_img"
-        class="relative items-center rounded-l-lg shrink-0 w-[120px] h-[120px] bg-base-content/10 place-content-center"
+        class="relative items-center rounded-l-lg shrink-0 w-[80px] h-20 place-content-center"
       >
         <div>
           {#case MediaLive.preview_img(@media) || Media.media_url(@media)}
@@ -18,8 +18,8 @@
                   fallback_icon="lucide:audio-lines"
                 />
               {#else}
-                <div class="h-[120px] flex items-center place-content-center rounded-t-box">
-                  <#Icon iconify="lucide:audio-lines" class="w-12 h-12 text-base-content/70" />
+                <div class="h-20 flex items-center place-content-center rounded-t-box">
+                  <#Icon iconify="lucide:audio-lines" class="w-8 h-8 text-base-content/70" />
                 </div>
               {/if}
           {/case}
@@ -50,8 +50,8 @@
       </div>
     </div>
     <div class="flex border-l border-base-content/10 justify-center items-center flex-col">
-      <div class="flex-col divide-base-content/10 z-50 flex justify-center items-center place-content-center">
-        <Bonfire.UI.Common.OpenModalLive
+      <div class="flex-col z-50 flex justify-center items-center place-content-center">
+        <!-- <Bonfire.UI.Common.OpenModalLive
           id={deterministic_dom_id("media_modal", id(@media), "audio", @parent_id)}
           reusable_modal_id="media_player_modal"
           no_actions
@@ -78,10 +78,10 @@
               <#Icon iconify="heroicons:play-20-solid" class="w-5 h-5 text-base-content/70" />
             </button>
           </:open_btn>
-        </Bonfire.UI.Common.OpenModalLive>
+        </Bonfire.UI.Common.OpenModalLive> -->
         <a
           href={Media.media_url(@media)}
-          class="border-t cursor-pointer hover:bg-base-content/10 flex-1 min-h-[60px] h-[60px] w-[60px] flex place-content-center items-center border-base-content/10"
+          class="cursor-pointer flex-1 min-h-[80px] hover:bg-base-content/5 h-20 w-[80px] flex place-content-center items-center"
           target="_blank"
         >
           <#Icon iconify="heroicons-outline:external-link" class="w-5 h-5 text-base-content/70" />

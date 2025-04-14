@@ -9,7 +9,7 @@
         <div class="prose mt-2 text-sm prose-sm">{l("All visible activities by people you follow")}</div>
       {#match :local}
         <div class="flex items-center gap-2">
-          <#Icon iconify="ph:campfire-bold" class="w-5 h-5 text-base-content" />
+          <#Icon iconify="mingcute:campground-fill" class="w-5 h-5 text-base-content" />
           <span class="text-sm font-semibold">{l("Local feed")}</span>
         </div>
         <div class="prose mt-2 text-sm prose-sm">{l("All visible activities by users of this instance")}

@@ -114,6 +114,8 @@ defmodule Bonfire.UI.Social.FeedsFilters.Test do
   #   end
   # end
 
+
+
   describe "hashtag feed" do
     test "shows posts with specific hashtags, and ensure the subject is preloaded in hashtags feed",
          %{user: user, other_user: other_user} do
