@@ -52,7 +52,7 @@
       boundary_preset={@boundary_preset}
     >
       <!-- phx-update={if @reset_smart_input, do: "replace", else: "ignore"} -->
-      <div class={if !e(@smart_input_opts, :cw, nil), do: "hidden"} id="smart_input_post_title">
+      <div phx-update="ignore" data-id={if @reset_smart_input, do: "replace", else: "ignore"} class={if !e(@smart_input_opts, :cw, nil), do: "hidden"} id="smart_input_post_title">
         <div class="p-2">
           <label class="input w-full">
             <#Icon iconify="ri:alert-fill" class="w-4 h-4" />

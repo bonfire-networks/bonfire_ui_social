@@ -19,7 +19,7 @@
     >
       <:bottom_or_empty_feed>
         <a
-          class="block text-base-content/70 click hover:bg-base-content/5 border-t border-base-content/20 p-4"
+          class="block text-base-content/70 click link link-hover link-primary text-sm mt-4"
           :if={e(@user, :character, :peered, :canonical_uri, nil)}
           href={e(@user, :character, :peered, :canonical_uri, nil)}
           target="_blank"
