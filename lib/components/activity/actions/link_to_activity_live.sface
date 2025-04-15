@@ -4,6 +4,6 @@
   data-role="subject_timestamp"
   class="preview_activity_link subject_timestamp text-xs no-underline text-base-content/60"
 >
-  <span class="sr-only">{l "activity timestamp"}</span>
+  <span class="sr-only">{l("activity timestamp")}</span>
   <#slot />
 </a>
