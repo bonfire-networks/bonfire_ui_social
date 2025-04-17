@@ -238,7 +238,7 @@
                             parent_id={@parent_id}
                           />
                           <div class="fixed z-20 bottom-0 left-0 bg-black/30 right-0">
-                            <div class="prose  line-clamp-6 text-center prose-sm p-4  text-white mx-auto">{media_label}
+                            <div class="line-clamp-6 text-center text-sm p-4 text-white/90 mx-auto">{media_label}
                               <p class="text-sm">{Bonfire.Files.Media.description(m.metadata)}</p>
                             </div>
                           </div>

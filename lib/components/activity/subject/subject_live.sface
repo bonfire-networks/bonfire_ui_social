@@ -108,7 +108,7 @@
     <span
       :if={@showing_within != :smart_input}
       data-id="subject_secondary"
-      class="flex items-center gap-1"
+      class="flex items-center gap-2"
     >
       {!-- <span class="text-sm text-base-content/70">&nbsp;·&nbsp;</span> --}
 
