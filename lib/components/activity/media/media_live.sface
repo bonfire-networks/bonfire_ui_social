@@ -245,7 +245,7 @@
                         </div>
 
                         <:open_btn>
-                          <div class="relative h-full">
+                          <div class="relative h-full overflow-hidden">
                             {#case preview_img(m) || Media.media_url(m)}
                               {#match maybe_preview_img}
                                 {!-- {#if is_image?(maybe_preview_img)} --}
