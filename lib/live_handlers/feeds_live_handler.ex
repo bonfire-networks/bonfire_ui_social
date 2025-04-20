@@ -1663,7 +1663,7 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
   def object_preloads do
     # TODO: collect these from the code/config on startup, same as how we pick what preview component to use
     [
-      # {Bonfire.Data.Social.Post, Bonfire.UI.Social.Activity.NoteLive.preloads()}, # only needed if we no longer preload PostContent by default
+      # {Bonfire.Data.Social.Post, Bonfire.UI.Social.Activity.NoteLive.preloads()}, # only needed if we no longer preload the post_content by default
       {Bonfire.Poll.Question,
        Utils.maybe_apply(Bonfire.Poll.Web.Preview.QuestionLive, :preloads)},
       {Bonfire.Data.Identity.User,
