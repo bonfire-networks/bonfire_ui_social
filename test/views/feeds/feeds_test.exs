@@ -6,6 +6,7 @@ defmodule Bonfire.UI.Social.Feeds.Test do
   alias Bonfire.Social.Likes
   alias Bonfire.Social.Graph.Follows
   alias Bonfire.Posts
+
   import Tesla.Mock
 
   setup do
@@ -16,8 +17,8 @@ defmodule Bonfire.UI.Social.Feeds.Test do
     conn = conn(user: me, account: account)
 
     mock(fn
-      %{method: :get, url: "https://windsurf.run/elixir-phoenix-cursor-rules"} ->
-        "<title>Test HTML</title>"
+      %{method: :get, url: "https://example.com/elixir-phoenix"} ->
+        %Tesla.Env{status: 200, body: "<title>Web Title Test</title>"}
     end)
 
     {:ok, conn: conn, account: account, alice: alice, me: me}
@@ -218,7 +219,7 @@ defmodule Bonfire.UI.Social.Feeds.Test do
     test "As a user I want to click over a link that is part of an activity body and navigate to that link",
          %{conn: conn, me: me} do
       # Create a user# Create a post with a link
-      html_body = "<p>Check out this link https://windsurf.run/elixir-phoenix-cursor-rules</p>"
+      html_body = "Check out this link https://example.com/elixir-phoenix"
       attrs = %{post_content: %{html_body: html_body}}
       {:ok, post} = Posts.publish(current_user: me, post_attrs: attrs, boundary: "public")
 
@@ -227,15 +228,14 @@ defmodule Bonfire.UI.Social.Feeds.Test do
       |> visit("/feed/local")
 
       # Check if the link is visible in the post body
-      |> assert_has("a[href*='windsurf.run']")
+      # |> assert_has("a[href*='example.com']")
 
-      # Note: We can't actually test clicking and navigating to external links in a feature test
-      # But we can verify the link has the correct attributes
-      |> assert_has("a[href='https://windsurf.run/elixir-phoenix-cursor-rules']")
+      # verify the link has the correct attributes
+      |> assert_has("a[href='https://example.com/elixir-phoenix']")
 
       # We could also check the media preview card
       |> assert_has_or_open_browser("[data-id=media_link]")
-      |> assert_has("[data-id=media_title]", text: "Windsurf Directory")
+      |> assert_has("[data-id=media_title]", text: "Web Title Test")
     end
   end
 end
