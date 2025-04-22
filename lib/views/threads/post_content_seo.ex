@@ -67,7 +67,8 @@ defimpl SEO.OpenGraph.Build, for: Bonfire.Data.Social.PostContent do
           author,
           Path.absname(
             String.trim_leading(
-              Media.thumbnail_url(first_media) || Media.media_url(first_media) || "",
+              ok_unwrap(Media.thumbnail_url(first_media)) ||
+                ok_unwrap(Media.media_url(first_media)) || "",
               "/"
             )
           )
