@@ -29,10 +29,10 @@
           class="flex relative items-center rounded-t-lg shrink-0 w-full bg-base-content/10 aspect-[1.91/1] place-content-center"
         >
           <div class="w-full flex place-content-center items-center">
-            <div
+            <!-- <div
               class="absolute inset-0 backdrop-blur-lg bg-white/30 z-50 rounded-l-lg"
               :if={@cw || Settings.get([Bonfire.UI.Social.Activity.MediaLive, :hide], false, @__context__)}
-            />
+            /> -->
 
             <LazyImage
               parent_id={["icon", @parent_id, id(@media)]}

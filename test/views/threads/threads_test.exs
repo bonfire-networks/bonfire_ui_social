@@ -23,8 +23,24 @@ defmodule Bonfire.Social.Threads.ThreadsTest do
 
     conn = conn(user: me, account: account)
 
-    {:ok, conn: conn, me: me, other_user: other_user, post: post}
+    {:ok, conn: conn, me: me, other_user: other_user, post: post, other_account: other_account}
   end
+
+  # test "when opening a post from another user profile, the main post subject is shown", %{
+  #   other_user: other_user,
+  #   me: me,
+  #   other_account: other_account,
+  #   post: post
+  # } do
+  #   conn = conn(user: other_user, account: other_account)
+  #   conn
+  #   |> visit("/@#{me.character.username}")
+  #   |> unwrap(fn view ->
+  #     view |> element("a", "activity timestamp")
+  #     |> render_click()
+  #   end)
+  #   |> PhoenixTest.open_browser()
+  # end
 
   test "replies to the original post appear instantly", %{
     conn: conn,

@@ -1,7 +1,7 @@
 <div
   data-id="feed_controls"
   id="feed_controls"
-  x-data="{open: false}"
+  x-data="{open: false, open_circles: false}"
   class="p-2 rounded-t-xl pb-4 bg-base-content/5 relative feed_control_wrapper"
 >
   <div :if={current_user_id(@__context__)} class="flex justify-between flex-1 gap-1">
@@ -141,7 +141,7 @@
         {case @feed_filters[:origin] do
           [:remote] -> l("Remote")
           [:local] -> l("Local")
-          _ -> l("Local & remote")
+          _ -> l("All")
         end}
       </label>
       <ul
@@ -172,38 +172,73 @@
             class="flex gap-3 px-2 text-base-content"
           >
             <!-- <# Icon iconify="octicon:sort-asc-16" class="w-4 h-4" /> -->
-            {l("Local & remote")}</a></li>
+            {l("All")}</a></li>
       </ul>
     </div>
 
-    <div data-position="bottom" phx-hook="Tooltip" class="flex-1 relative" id="filter_circles_feed">
-      <label tabindex="0" class="tooltip-button btn w-full">
+    <div class="flex-1 relative" id="filter_circles_feed">
+      <label tabindex="0" class="btn w-full" :class="{'btn-active': open_circles}" @click="open_circles = ! open_circles">
         {l("Circles")} {case e(@feed_filters, :subject_circles, []) do
           [] -> nil
           circles -> "(#{length(circles)})"
         end}
       </label>
-      <ul
+     
+    </div>
+
+    <div class="" :class="{'btn-active': open}" role="banner" @click="open = ! open">
+      <div class="tooltip-button btn btn-square">
+        <#Icon iconify="mingcute:filter-line" class="w-4 h-4" />
+        <!-- <span class="hidden lg:block">{l("More filters")}</span> -->
+      </div>
+    </div>
+  </div>
+
+  <div class="flex flex-col gap-2 pt-3 w-full">
+    <Bonfire.UI.Social.TimeControlLive
+      keys={[Bonfire.UI.Social.FeedLive, :time_limit]}
+      options={%{1 => l("Day"), 7 => l("Week"), 30 => l("Month"), 365 => "Year", 0 => "All time"}}
+      feed_name={@feed_name}
+      event_target={@event_target}
+      event_name="set_filter"
+      current_value={e(@feed_filters, :time_limit, nil)}
+      scope={:user}
+    />
+  </div>
+  
+  <div x-cloak x-show="open_circles" x-collapse.duration.200ms class="pb-0 flex pt-6 px-2 flex-col gap-2">
+    <span class="font-semibold uppercase text-xs text-base-content/60 pb-2 border-b border-base-content/10 mb-2">{l "Filter by circles"}</span>
+    <ul
         tabindex="0"
-        class="tooltip z-[999] menu bg-base-100 shadow-lg border rounded-xl border-base-content/10  w-52 absolute top-0 left-0 hidden"
+        class="w-full"
       >
-        <li :for={circle <-
+        <li class="flex flex-1 w-full" :for={circle <-
           Bonfire.UI.Boundaries.SetBoundariesLive.circles_for_multiselect(
             @__context__,
             :subject_circles
-          )}><a
+          )}>
+          <!-- <a
             phx-click="set_filter"
             phx-value-subject_circles={elem(circle, 1)[:id]}
             phx-target={@event_target}
             class="flex gap-1 px-1 text-base-content"
           >
-            <!-- <#Icon iconify="octicon:sort-desc-16" class="w-4 h-4" /> -->
             <span class="flex-1">
               {elem(circle, 1)[:name]}</span>
             {#if elem(circle, 1)[:id] in List.wrap(e(@feed_filters, :subject_circles, []))}
               <#Icon iconify="carbon:checkmark-filled" class="w-4 h-4 text-success mr-2" />
             {/if}
-          </a>
+          </a> -->
+
+           <Bonfire.UI.Social.ToggleTypeLive
+            label={elem(circle, 1)[:name]}
+            key={:follow}
+            field={:activity_types}
+            feed_filters={@feed_filters}
+            event_target={@event_target}
+            event_name={"test"}
+            label_default={l("Include")}
+          />
         </li>
 
         {!-- button
@@ -224,28 +259,8 @@
       {elem(circle, 1)[:name]}
     </button> --}
       </ul>
-    </div>
-
-    <div class="" :class="{'btn-active': open}" role="banner" @click="open = ! open">
-      <div class="tooltip-button btn btn-square">
-        <#Icon iconify="mingcute:filter-fill" class="w-4 h-4" />
-        <!-- <span class="hidden lg:block">{l("More filters")}</span> -->
-      </div>
-    </div>
   </div>
-
-  <div class="flex flex-col gap-2 pt-3 w-full">
-    <Bonfire.UI.Social.TimeControlLive
-      keys={[Bonfire.UI.Social.FeedLive, :time_limit]}
-      options={%{1 => l("Day"), 7 => l("Week"), 30 => l("Month"), 365 => "Year", 0 => "All time"}}
-      feed_name={@feed_name}
-      event_target={@event_target}
-      event_name="set_filter"
-      current_value={e(@feed_filters, :time_limit, nil)}
-      scope={:user}
-    />
-  </div>
-
+  
   <div x-cloak x-show="open" x-collapse.duration.200ms class="pb-0 flex pt-6 px-2 flex-col gap-2">
     <Bonfire.UI.Social.FeedExtraControlsLive
       event_target={@event_target}

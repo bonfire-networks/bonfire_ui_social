@@ -1,4 +1,4 @@
-<div data-toggle={@key}>
+<div class="flex-1 w-full" data-toggle={@key}>
   <Bonfire.UI.Common.SettingsToggleThroupleLive
     name={@label}
     keys={[Bonfire.Social.Feeds, :include, @key]}
