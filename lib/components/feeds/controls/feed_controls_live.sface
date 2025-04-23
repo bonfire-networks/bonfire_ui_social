@@ -177,13 +177,17 @@
     </div>
 
     <div class="flex-1 relative" id="filter_circles_feed">
-      <label tabindex="0" class="btn w-full" :class="{'btn-active': open_circles}" @click="open_circles = ! open_circles">
+      <label
+        tabindex="0"
+        class="btn w-full"
+        :class="{'btn-active': open_circles}"
+        @click="open_circles = ! open_circles"
+      >
         {l("Circles")} {case e(@feed_filters, :subject_circles, []) do
           [] -> nil
           circles -> "(#{length(circles)})"
         end}
       </label>
-     
     </div>
 
     <div class="" :class="{'btn-active': open}" role="banner" @click="open = ! open">
@@ -205,19 +209,24 @@
       scope={:user}
     />
   </div>
-  
-  <div x-cloak x-show="open_circles" x-collapse.duration.200ms class="pb-0 flex pt-6 px-2 flex-col gap-2">
-    <span class="font-semibold uppercase text-xs text-base-content/60 pb-2 border-b border-base-content/10 mb-2">{l "Filter by circles"}</span>
-    <ul
-        tabindex="0"
-        class="w-full"
-      >
-        <li class="flex flex-1 w-full" :for={circle <-
+
+  <div
+    x-cloak
+    x-show="open_circles"
+    x-collapse.duration.200ms
+    class="pb-0 flex pt-6 px-2 flex-col gap-2"
+  >
+    <span class="font-semibold uppercase text-xs text-base-content/60 pb-2 border-b border-base-content/10 mb-2">{l("Filter by circles")}</span>
+    <ul tabindex="0" class="w-full">
+      <li
+        class="flex flex-1 w-full"
+        :for={circle <-
           Bonfire.UI.Boundaries.SetBoundariesLive.circles_for_multiselect(
             @__context__,
             :subject_circles
-          )}>
-          <!-- <a
+          )}
+      >
+        <!-- <a
             phx-click="set_filter"
             phx-value-subject_circles={elem(circle, 1)[:id]}
             phx-target={@event_target}
@@ -230,18 +239,18 @@
             {/if}
           </a> -->
 
-           <Bonfire.UI.Social.ToggleTypeLive
-            label={elem(circle, 1)[:name]}
-            key={:follow}
-            field={:activity_types}
-            feed_filters={@feed_filters}
-            event_target={@event_target}
-            event_name={"test"}
-            label_default={l("Include")}
-          />
-        </li>
+        <Bonfire.UI.Social.ToggleTypeLive
+          label={elem(circle, 1)[:name]}
+          key={:follow}
+          field={:activity_types}
+          feed_filters={@feed_filters}
+          event_target={@event_target}
+          event_name="test"
+          label_default={l("Include")}
+        />
+      </li>
 
-        {!-- button
+      {!-- button
       :for={circle <-
         Bonfire.UI.Boundaries.SetBoundariesLive.circles_for_multiselect(
           @__context__,
@@ -258,9 +267,9 @@
     >
       {elem(circle, 1)[:name]}
     </button> --}
-      </ul>
+    </ul>
   </div>
-  
+
   <div x-cloak x-show="open" x-collapse.duration.200ms class="pb-0 flex pt-6 px-2 flex-col gap-2">
     <Bonfire.UI.Social.FeedExtraControlsLive
       event_target={@event_target}
