@@ -249,7 +249,7 @@
           label_default={l("Include")}
         />
 
-         <!-- <Bonfire.UI.Social.ToggleTypeLive
+        <!-- <Bonfire.UI.Social.ToggleTypeLive
             label={l("Follows")}
             key={:follow}
             field={:activity_types}
@@ -258,8 +258,6 @@
             event_name={@event_name}
             label_default={l("Include")}
           /> -->
-
-        
       </li>
 
       {!-- button
