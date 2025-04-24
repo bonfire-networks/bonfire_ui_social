@@ -241,13 +241,25 @@
 
         <Bonfire.UI.Social.ToggleTypeLive
           label={elem(circle, 1)[:name]}
-          key={:follow}
-          field={:activity_types}
+          key={elem(circle, 1)[:id]}
+          field={:subject_circles}
           feed_filters={@feed_filters}
           event_target={@event_target}
-          event_name="test"
+          event_name="set_filter"
           label_default={l("Include")}
         />
+
+         <!-- <Bonfire.UI.Social.ToggleTypeLive
+            label={l("Follows")}
+            key={:follow}
+            field={:activity_types}
+            feed_filters={@feed_filters}
+            event_target={@event_target}
+            event_name={@event_name}
+            label_default={l("Include")}
+          /> -->
+
+        
       </li>
 
       {!-- button
