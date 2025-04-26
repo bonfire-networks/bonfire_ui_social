@@ -80,6 +80,7 @@
     <div
       class="flex items-center flex-1 gap-2"
       role="button"
+      data-id="name_username"
       aria-haspopup="true"
       aria-expanded="true"
     >
