@@ -91,7 +91,7 @@
                       #  @viewing_main_object || @showing_within not in [nil, :feed, :search, :notifications]
                       # ),
                       # || @showing_within == :search,
-                      skip_markdown: false,
+                      skip_markdown: @is_remote,
                       __unsafe__: !@is_remote
                     )}
                   </div>

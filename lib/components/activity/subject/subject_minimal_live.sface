@@ -366,14 +366,14 @@
                 opts={"data-id": "subject_name"}
                 parent_id={["subject_name", @parent_id]}
               >
-                {#if @object_id == current_user_id(@__context__)}
+                {#if @object_id == current_user_id(@__context__) || @subject_id == current_user_id(@__context__)}
                   {l("You")}
                 {#else}
                   {@profile_name || @character_username}
                 {/if}
               </LinkLive>
 
-              {if @verb == "React", do: l("reacted to your activity"), else: l("liked your activity")}
+              {if @verb == "React", do: l("reacted to this activity"), else: l("liked this activity")}
             </div>
           </div>
         </div>
