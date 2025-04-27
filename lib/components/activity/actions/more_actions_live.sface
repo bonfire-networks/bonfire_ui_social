@@ -20,6 +20,11 @@
     aria-orientation="vertical"
     aria-labelledby="more-menu"
   >
+    <li class="hover:bg-base-100" :if={@object_type in [Bonfire.Data.Social.Message]}>
+      <div class="hover:bg-base-100 cursor-default flex items-center gap-2">
+      <#Icon iconify="mingcute:inbox-2-fill" class="w-4 h-4 shrink-0" />
+      <span>{l "Direct Message"}</span></div>
+    </li>
     <li :if={@object_type not in [Bonfire.Data.Social.Message]}><div class="w-full p-0 flex bg-base-content/5">
         {#if LiveHandler.feed_live_update_many_preload_mode() == :async_actions}
           <StatelessComponent
