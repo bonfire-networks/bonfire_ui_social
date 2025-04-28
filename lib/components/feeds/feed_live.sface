@@ -132,10 +132,16 @@
     {/if}
 
     {!-- context={@id} --}
-    <Bonfire.UI.Common.LoadMoreLive
+    <LoadMoreLive
       :if={!@hide_load_more}
       live_handler={Bonfire.Social.Feeds}
       page_info={@page_info}
+      cursor={LoadMoreLive.end_cursor(@page_info) ||
+        if @previous_page_info && Config.get([Bonfire.Social.Feeds, :query_with_deferred_join], true),
+          do: LoadMoreLive.end_cursor(@previous_page_info)}
+      multiply_limit={if Config.get([Bonfire.Social.Feeds, :query_with_deferred_join], true) and
+           !LoadMoreLive.end_cursor(@page_info),
+         do: (@multiply_limit || 2) * 2}
       target={@myself}
       infinite_scroll={Settings.get([:ui, :infinite_scroll], :preload, @__context__)}
       entry_count={@feed_count}
@@ -177,10 +183,11 @@
 
               {!-- TODO: instead of switching to infinity, switch 1 level up from current limit, eg. from day to week --}
               {#if (!e(@feed_filters, :sort_by, nil) or e(@feed_filters, :sort_by, nil) == :date_created) and
-                  (e(@previous_page_info, :end_cursor, nil) || e(@page_info, :end_cursor, nil)) |> debug("ppppp")}
-                <Bonfire.UI.Common.LoadMoreLive
+                  (e(@previous_page_info, :end_cursor, nil) || e(@page_info, :end_cursor, nil))}
+                <LoadMoreLive
                   live_handler={Bonfire.Social.Feeds}
                   page_info={@page_info || @previous_page_info}
+                  cursor={LoadMoreLive.end_cursor(@page_info) || LoadMoreLive.end_cursor(@previous_page_info)}
                   target={@myself}
                   hide_guest_fallback={@hide_guest_fallback}
                   label={l("Show older activities")}
@@ -217,6 +224,6 @@
           </div>
         {/if}
       </:if_no_more>
-    </Bonfire.UI.Common.LoadMoreLive>
+    </LoadMoreLive>
   </div>
 </div>

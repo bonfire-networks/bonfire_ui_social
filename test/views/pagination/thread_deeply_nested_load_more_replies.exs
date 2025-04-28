@@ -1,5 +1,5 @@
 defmodule Bonfire.UI.Social.Threads.NestedLoadMoreRepliesTest do
-  use Bonfire.UI.Social.ConnCase, async: true
+  use Bonfire.UI.Social.ConnCase, async: false
   @moduletag :ui
   alias Bonfire.Social.Fake
   alias Bonfire.Social.Graph.Follows

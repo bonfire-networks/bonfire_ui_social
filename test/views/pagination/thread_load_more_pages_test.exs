@@ -1,5 +1,5 @@
 defmodule Bonfire.UI.Social.Threads.LoadMoreTest do
-  use Bonfire.UI.Social.ConnCase, async: true
+  use Bonfire.UI.Social.ConnCase, async: false
   @moduletag :ui
   alias Bonfire.Social.Fake
   alias Bonfire.Social.Boosts
@@ -48,6 +48,11 @@ defmodule Bonfire.UI.Social.Threads.LoadMoreTest do
       conn = conn(user: bob, account: account2)
 
       # limit = Config.get(:pagination_hard_max_limit, 10)
+
+      on_exit(fn ->
+        Process.put([:bonfire, :default_pagination_limit], nil)
+        Process.put([:bonfire, :pagination_hard_max_limit], nil)
+      end)
 
       {:ok,
        conn: conn,

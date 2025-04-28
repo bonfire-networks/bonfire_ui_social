@@ -1,5 +1,5 @@
 defmodule Bonfire.UI.Social.Feeds.FeedsPresets.PaginationTest do
-  use Bonfire.UI.Social.ConnCase, async: true
+  use Bonfire.UI.Social.ConnCase, async: false
   @moduletag :ui
   import Bonfire.Common.Simulation
   alias Bonfire.Common.Config

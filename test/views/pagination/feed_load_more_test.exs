@@ -114,16 +114,10 @@ defmodule Bonfire.UI.Social.Feeds.LoadMoreTest do
       conn
       |> visit("/feed/local")
       # |> PhoenixTest.open_browser()
-      |> assert_has("[data-id=feed] article", count: limit)
+      |> assert_has_or_open_browser("[data-id=feed] article", count: limit)
       # This will use WebSocket event
       |> click_button("[data-id=load_more]", "Load more")
-      # We can use unwrap to access LiveView-specific functions if needed
-      |> unwrap(fn view ->
-        # Handle any LiveView specific operations here if needed
-        # For example, waiting for pubsub messages
-        _html = live_async_wait(view)
-        # view
-      end)
+      |> wait_async()
       # |> PhoenixTest.open_browser()
       |> assert_has("[data-id=feed] article", count: total_posts)
       |> assert_has("[data-id=subject]", count: total_posts)
@@ -176,7 +170,7 @@ defmodule Bonfire.UI.Social.Feeds.LoadMoreTest do
       # # Now make a direct HTTP request with the pagination parameters
       # conn
       # |> visit(load_more_href) 
-      # |> PhoenixTest.open_browser()
+      # |> PhoenixTest.open_browser() 
       |> click_link("a[data-id=next_page]", "Next page")
       |> assert_has_or_open_browser("[data-id=feed] article",
         count: limit

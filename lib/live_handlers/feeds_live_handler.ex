@@ -413,6 +413,11 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
         :time_limit,
         attrs[:time_limit] || e(assigns(socket), :feed_filters, :time_limit, nil)
       )
+      |> Keyword.put(
+        :deferred_join_multiply_limit,
+        attrs[:multiply_limit] || e(assigns(socket), :multiply_limit, nil)
+      )
+      |> Keyword.drop([:multiply_limit])
 
     opts
     |> Keyword.put(
@@ -420,8 +425,8 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
       Keyword.merge(
         Keyword.new(attrs),
         Activities.order_pagination_opts(
-          opts[:sort_by] || e(assigns(socket), :feed_filters, :sort_by, nil),
-          opts[:sort_order] || e(assigns(socket), :feed_filters, :sort_order, nil)
+          opts[:sort_by] || e(opts, :feed_filters, :sort_by, nil),
+          opts[:sort_order] || e(opts, :feed_filters, :sort_order, nil)
         )
       )
     )
@@ -486,6 +491,7 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
        hide_activities: opts[:hide_activities],
        feed_count: Enum.count(e(feed, :edges, [])),
        time_limit: opts[:time_limit],
+       multiply_limit: opts[:deferred_join_multiply_limit],
        previous_page_info: e(assigns(socket), :page_info, nil),
        page_info: e(feed, :page_info, []),
        feed_filters: filters,

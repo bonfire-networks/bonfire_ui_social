@@ -19,6 +19,9 @@ defmodule Bonfire.UI.Social.Feeds.Test do
     mock(fn
       %{method: :get, url: "https://example.com/elixir-phoenix"} ->
         %Tesla.Env{status: 200, body: "<title>Web Title Test</title>"}
+
+      %{url: url} ->
+        error(url, "No mock for URL")
     end)
 
     {:ok, conn: conn, account: account, alice: alice, me: me}
@@ -216,7 +219,7 @@ defmodule Bonfire.UI.Social.Feeds.Test do
       |> assert_path("/@mayel")
     end
 
-    test "As a user I want to click over a link that is part of an activity body and navigate to that link",
+    test "As a user I want to see a preview link that is part of an activity",
          %{conn: conn, me: me} do
       # Create a user# Create a post with a link
       html_body = "Check out this link https://example.com/elixir-phoenix"
