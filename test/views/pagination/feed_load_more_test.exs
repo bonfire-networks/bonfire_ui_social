@@ -125,7 +125,8 @@ defmodule Bonfire.UI.Social.Feeds.LoadMoreTest do
     end
 
     test "As a guest, when I click on load more on the local feed I want to see next activities even without JavaScript (using HTTP)" do
-      total_posts = Bonfire.Common.Config.get(:default_pagination_limit, 2) * 4
+      limit = Bonfire.Common.Config.get(:default_pagination_limit, 2)
+      total_posts = limit * 4
       # Create alice user
       account = fake_account!()
       alice = fake_user!(account)
@@ -146,8 +147,8 @@ defmodule Bonfire.UI.Social.Feeds.LoadMoreTest do
       # get the initial page to see the load more link
       conn
       |> visit("/feed/local")
-      |> assert_has("[data-id=feed] article",
-        count: Bonfire.Common.Config.get(:default_pagination_limit, 2)
+      |> assert_has_or_open_browser("[data-id=feed] article",
+        count: limit
       )
       # Extract the pagination URL (without clicking the button)
       # load_more_href = session
@@ -159,32 +160,32 @@ defmodule Bonfire.UI.Social.Feeds.LoadMoreTest do
       # # Now make a direct HTTP request with the pagination parameters
       # conn
       # |> visit(load_more_href) 
-      |> PhoenixTest.open_browser()
+      # |> PhoenixTest.open_browser()
       |> click_link("a[data-id=next_page]", "Next page")
       |> assert_has_or_open_browser("[data-id=feed] article",
-        count: Bonfire.Common.Config.get(:default_pagination_limit, 2)
+        count: limit
       )
 
       # Then visit the user profile who authored those posts
       conn
       |> visit("/@#{alice.character.username}")
       |> assert_has("[data-id=feed] article",
-        count: Bonfire.Common.Config.get(:default_pagination_limit, 2)
+        count: limit
       )
       |> click_link("a[data-id=next_page]", "Next page")
       |> assert_has("[data-id=feed] article",
-        count: Bonfire.Common.Config.get(:default_pagination_limit, 2)
+        count: limit
       )
 
       # Then visit the homepage which usually contains the local feed too
       conn
       |> visit("/")
       |> assert_has("[data-id=feed] article",
-        count: Bonfire.Common.Config.get(:default_pagination_limit, 2)
+        count: limit
       )
       |> click_link("a[data-id=next_page]", "Next page")
       |> assert_has("[data-id=feed] article",
-        count: Bonfire.Common.Config.get(:default_pagination_limit, 2)
+        count: limit
       )
     end
   end

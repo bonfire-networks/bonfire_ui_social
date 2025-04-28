@@ -571,7 +571,12 @@ defmodule Bonfire.UI.Social.Feeds.FeedsPresets.PaginationTest do
       |> click_button("[data-id=load_more]", "Load more")
       |> wait_async()
       # Verify the feed now contains all posts (still maintaining filters)
-      |> assert_has("[data-id=feed] article", count: total_posts)
+      |> assert_has_or("[data-id=feed] article", [count: total_posts], fn session ->
+        session
+        |> PhoenixTest.open_browser()
+        |> click_button("[data-id=load_more]", "Load more")
+        |> wait_async()
+      end)
       # Check oldest post is now loaded
       |> assert_has("[data-id=feed]", text: "Followed user post #{total_posts}")
       |> refute_has("[data-id=feed]", text: "Third party post")

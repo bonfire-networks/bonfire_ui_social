@@ -165,6 +165,7 @@
             </div>
           {/if}
         {#else}
+          {!-- we have a previous_page_info --}
           {#if is_integer(e(@feed_filters, :time_limit, nil)) and e(@feed_filters, :time_limit, nil) != 0}
             <div class="">
               <p class="text-sm py-4 mt-4 text-center text-base-content/50 font-medium">{lp(
@@ -197,11 +198,12 @@
                     phx-value-assign_global="true"
                     phx-target={@myself}
                   >
-                    {l("Show older activities")}
+                    {l("Show all activities with no time limit")}
                   </button></div>
               {/if}
             </div>
           {#else}
+            {!-- we have a previous_page_info but no time limit --}
             <img
               class="max-w-[220px] opacity-80 mx-auto"
               src={Bonfire.Common.URIs.static_path("/images/bonfire-exausted.png")}

@@ -71,7 +71,12 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
       mode: :async
     )
 
-    {:noreply, socket |> assign_flash(:info, l("Syncing with remote server. Content will gradually appear in the thread.."))}
+    {:noreply,
+     socket
+     |> assign_flash(
+       :info,
+       l("Syncing with remote server. Content will gradually appear in the thread..")
+     )}
   end
 
   def handle_event("reply_to_activity", _params, socket) do

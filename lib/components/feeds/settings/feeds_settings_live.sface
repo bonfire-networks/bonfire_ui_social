@@ -59,7 +59,7 @@
                     phx-value-exclude="true"
                     class="btn btn-sm btn-ghost"
                   >
-                    <input type="checkbox" checked class="checkbox checkbox-primary" />
+                    <input type="checkbox" checked class="checkbox checkbox-primary">
                     <span>{l("Include in the sidebar")}</span>
                   </button>
                 {#else}
@@ -69,7 +69,7 @@
                     phx-value-exclude="false"
                     class="btn btn-sm btn-ghost"
                   >
-                    <input type="checkbox"  class="checkbox checkbox-primary" />
+                    <input type="checkbox" class="checkbox checkbox-primary">
                     {l("Include in the sidebar")}
                   </button>
                 {/if}
@@ -79,8 +79,6 @@
                     <span>{l("Show in navigation menu")}</span>
                   </label>
                 </form> -->
-
-
               </div>
             </div>
           </div>
