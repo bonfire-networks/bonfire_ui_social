@@ -71,7 +71,7 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
       mode: :async
     )
 
-    {:noreply, socket}
+    {:noreply, socket |> assign_flash(:info, l("Syncing with remote server. Content will gradually appear in the thread.."))}
   end
 
   def handle_event("reply_to_activity", _params, socket) do
@@ -592,8 +592,8 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
   #   ]
 
   # defp feed_filter_assigns(_),
-  #   do: [tab_path_suffix: nil, 
-  #   page_title: l("Activities"), 
+  #   do: [tab_path_suffix: nil,
+  #   page_title: l("Activities"),
   #   page_header_icon: "carbon:home"]
 
   # @decorate time()
@@ -616,7 +616,7 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
     debug(feed_name, "feed_name")
     debug(filters_or_custom_query_or_feed_id_or_ids, "filters_or_custom_query_or_feed_id_or_ids")
 
-    # ++ feed_filter_assigns(filters_or_custom_query_or_feed_id_or_ids) 
+    # ++ feed_filter_assigns(filters_or_custom_query_or_feed_id_or_ids)
     assigns =
       (feed_default_assigns(feed_name, socket) ++ [loading: show_loader])
       |> debug("start by setting feed_default_assigns + feed_filter_assigns")
