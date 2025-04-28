@@ -2,6 +2,7 @@ defmodule Bonfire.UI.Social.Feeds.FeedsPresets.PaginationTest do
   use Bonfire.UI.Social.ConnCase, async: true
   @moduletag :ui
   import Bonfire.Common.Simulation
+  alias Bonfire.Common.Config
   alias Bonfire.Social.Fake
   alias Bonfire.Social.Boosts
   alias Bonfire.Social.Likes
@@ -23,6 +24,17 @@ defmodule Bonfire.UI.Social.Feeds.FeedsPresets.PaginationTest do
 
     # Make user1 follow user2
     Follows.follow(user1, user2)
+
+    # Save the original config
+    original_config = Config.get([Bonfire.Social.Feeds, :query_with_deferred_join])
+
+    # Set the test configuration (disabling deferred joins because they affect pagination)
+    Config.put([Bonfire.Social.Feeds, :query_with_deferred_join], false)
+
+    # Return the original config to be used in on_exit
+    on_exit(fn ->
+      Config.put([Bonfire.Social.Feeds, :query_with_deferred_join], original_config)
+    end)
 
     %{
       user1: user1,

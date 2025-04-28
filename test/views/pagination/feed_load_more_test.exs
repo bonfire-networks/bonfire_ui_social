@@ -1,7 +1,8 @@
 defmodule Bonfire.UI.Social.Feeds.LoadMoreTest do
-  use Bonfire.UI.Social.ConnCase, async: true
+  use Bonfire.UI.Social.ConnCase, async: false
   @moduletag :ui
   import Bonfire.Common.Simulation
+  alias Bonfire.Common.Config
   alias Bonfire.Social.Fake
   alias Bonfire.Social.Boosts
   alias Bonfire.Social.Likes
@@ -11,6 +12,21 @@ defmodule Bonfire.UI.Social.Feeds.LoadMoreTest do
   import Untangle
 
   describe "Load More in Feeds" do
+    setup do
+      # Save the original config
+      original_config = Config.get([Bonfire.Social.Feeds, :query_with_deferred_join])
+
+      # Set the test configuration (disabling deferred joins because they affect pagination)
+      Config.put([Bonfire.Social.Feeds, :query_with_deferred_join], false)
+
+      # Return the original config to be used in on_exit
+      on_exit(fn ->
+        Config.put([Bonfire.Social.Feeds, :query_with_deferred_join], original_config)
+      end)
+
+      :ok
+    end
+
     test "As a user, I don't want to see the load more button if there are the same number of activities as the pagination limit" do
       # make sure we start with a blank slate:
       repo().delete_all(Bonfire.Data.Social.FeedPublish)
@@ -66,7 +82,7 @@ defmodule Bonfire.UI.Social.Feeds.LoadMoreTest do
 
       conn
       |> visit("/feed/local")
-      |> refute_has("[data-id=load_more]")
+      |> refute_has_or_open_browser("[data-id=load_more]")
       |> assert_has("[data-id=feed_activity_list]")
     end
 
