@@ -411,11 +411,13 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
       |> Keyword.merge(opts)
       |> Keyword.put(
         :time_limit,
-        attrs[:time_limit] || e(assigns(socket), :feed_filters, :time_limit, nil)
+        Types.maybe_to_integer(attrs[:time_limit], nil) ||
+          e(assigns(socket), :feed_filters, :time_limit, nil)
       )
       |> Keyword.put(
         :deferred_join_multiply_limit,
-        Types.maybe_to_integer(attrs[:multiply_limit]) || e(assigns(socket), :multiply_limit, nil)
+        Types.maybe_to_integer(attrs[:multiply_limit], nil) ||
+          e(assigns(socket), :multiply_limit, nil) || 1
       )
       |> Keyword.drop([:multiply_limit])
 

@@ -19,56 +19,58 @@
               {#match nil}
                 {#case e(@media, :metadata, "oembed", "html", nil)}
                   {#match nil}
-                    {#if String.ends_with?(media_url, [".mp4", ".mkv"])}
-                      <video class={@base_css, @video_css} controls autoplay={@autoplay} muted={@muted}>
-                        <source src={media_url} type="video/mp4">
-                        Your browser does not support the video tag.
-                      </video>
-                    {#elseif String.ends_with?(media_url, [".ogg", ".ogv", ".ogx", ".ogm", ".spx", ".mov", ".opus"])}
-                      <video class={@base_css, @video_css} controls autoplay={@autoplay} muted={@muted}>
-                        <source src={media_url} type="video/ogg">
-                        Your browser does not support the video tag.
-                      </video>
-                    {#elseif String.ends_with?(media_url, ".webm")}
-                      <video class={@base_css, @video_css} controls autoplay={@autoplay} muted={@muted}>
-                        <source src={media_url} type="video/webm">
-                        Your browser does not support the video tag.
-                      </video>
-                    {#elseif String.ends_with?(media_url, [".mp3", ".m4a", ".oga", ".flac", ".aac", ".wav", ".caf"]) or
-                        String.ends_with?(e(@media, :media_type, ""), "audio")}
-                      <div class="relative rounded rounded-b-none p-2 w-full">
-                        <div class="flex items-center gap-3">
-                          {#case MediaLive.preview_img(@media)}
-                            {#match media_img}
-                              <div :if={MediaLive.is_image?(media_img)} class="bg-base-200">
-                                <LazyImage
-                                  parent_id={["media_preview", @parent_id, id(@media)]}
-                                  src={media_img}
-                                  media={@media}
-                                  alt=""
-                                  class="w-16 h-16 object-cover"
-                                  fallback_icon="octicon:file-media-24"
-                                />
-                              </div>
-                          {/case}
-                          {#case e(@media, :metadata, "name", nil)}
-                            {#match nil}
-                            {#match name}
-                              <div class="text-sm text-left font-semibold text-base-content/70">
-                                {name}
-                              </div>
-                          {/case}
+                    {#if is_binary(media_url)}
+                      {#if String.ends_with?(media_url, [".mp4", ".mkv"])}
+                        <video class={@base_css, @video_css} controls autoplay={@autoplay} muted={@muted}>
+                          <source src={media_url} type="video/mp4">
+                          Your browser does not support the video tag.
+                        </video>
+                      {#elseif String.ends_with?(media_url, [".ogg", ".ogv", ".ogx", ".ogm", ".spx", ".mov", ".opus"])}
+                        <video class={@base_css, @video_css} controls autoplay={@autoplay} muted={@muted}>
+                          <source src={media_url} type="video/ogg">
+                          Your browser does not support the video tag.
+                        </video>
+                      {#elseif String.ends_with?(media_url, ".webm")}
+                        <video class={@base_css, @video_css} controls autoplay={@autoplay} muted={@muted}>
+                          <source src={media_url} type="video/webm">
+                          Your browser does not support the video tag.
+                        </video>
+                      {#elseif String.ends_with?(media_url, [".mp3", ".m4a", ".oga", ".flac", ".aac", ".wav", ".caf"]) or
+                          String.ends_with?(e(@media, :media_type, ""), "audio")}
+                        <div class="relative rounded rounded-b-none p-2 w-full">
+                          <div class="flex items-center gap-3">
+                            {#case MediaLive.preview_img(@media)}
+                              {#match media_img}
+                                <div :if={MediaLive.is_image?(media_img)} class="bg-base-200">
+                                  <LazyImage
+                                    parent_id={["media_preview", @parent_id, id(@media)]}
+                                    src={media_img}
+                                    media={@media}
+                                    alt=""
+                                    class="w-16 h-16 object-cover"
+                                    fallback_icon="octicon:file-media-24"
+                                  />
+                                </div>
+                            {/case}
+                            {#case e(@media, :metadata, "name", nil)}
+                              {#match nil}
+                              {#match name}
+                                <div class="text-sm text-left font-semibold text-base-content/70">
+                                  {name}
+                                </div>
+                            {/case}
+                          </div>
+                          <audio controls autoplay={@autoplay} class={@base_css}>
+                            <source src={media_url} type={"audio/#{Bonfire.Files.file_extension_only(media_url) || "mp3"}"}>
+                            Your browser does not support the audio tag.
+                            {!-- <a href={media_url}> {l "Download audio"} </a> --}
+                          </audio>
                         </div>
-                        <audio controls autoplay={@autoplay} class={@base_css}>
-                          <source src={media_url} type={"audio/#{Bonfire.Files.file_extension_only(media_url) || "mp3"}"}>
-                          Your browser does not support the audio tag.
-                          {!-- <a href={media_url}> {l "Download audio"} </a> --}
-                        </audio>
-                      </div>
-                    {#else}
-                      <div class="pt-4 text-center">
-                        <a href={media_url} target="_blank" class="link">{l("View the %{media}", media: e(@media, :media_type, l("media")))}</a>
-                      </div>
+                      {#else}
+                        <div class="pt-4 text-center">
+                          <a href={media_url} target="_blank" class="link">{l("View the %{media}", media: e(@media, :media_type, l("media")))}</a>
+                        </div>
+                      {/if}
                     {/if}
                   {#match embed}
                     {raw(embed)}

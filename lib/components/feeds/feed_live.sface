@@ -141,7 +141,8 @@
           do: LoadMoreLive.end_cursor(@previous_page_info)}
       multiply_limit={if Config.get([Bonfire.Social.Feeds, :query_with_deferred_join], true) and
            !LoadMoreLive.end_cursor(@page_info),
-         do: (@multiply_limit || 2) * 2}
+         do: (@multiply_limit || 2) * 2,
+         else: 1}
       target={@myself}
       infinite_scroll={Settings.get([:ui, :infinite_scroll], :preload, @__context__)}
       entry_count={@feed_count}
