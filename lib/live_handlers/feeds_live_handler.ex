@@ -415,7 +415,7 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
       )
       |> Keyword.put(
         :deferred_join_multiply_limit,
-        attrs[:multiply_limit] || e(assigns(socket), :multiply_limit, nil)
+        Types.maybe_to_integer(attrs[:multiply_limit]) || e(assigns(socket), :multiply_limit, nil)
       )
       |> Keyword.drop([:multiply_limit])
 
