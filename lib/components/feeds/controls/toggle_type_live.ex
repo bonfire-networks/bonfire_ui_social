@@ -24,7 +24,7 @@ defmodule Bonfire.UI.Social.ToggleTypeLive do
   """
   def check_throuple(value, include, exclude) when is_list(include) or is_list(exclude) do
     # Convert to MapSets only once
-    check_throuple(value, MapSet.new(include), MapSet.new(exclude))
+    check_throuple(value, MapSet.new(include || []), MapSet.new(exclude || []))
   end
 
   def check_throuple(value, include, exclude) do

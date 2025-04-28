@@ -278,7 +278,7 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
     {:noreply,
      socket
      |> assign_generic(assigns)
-     |> insert_feed(entries)}
+     |> insert_feed(entries, to_options(socket))}
   end
 
   def remove_activity(activity) do
@@ -303,7 +303,12 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
   # end
 
   defp send_feed_updates(pid, feed_ids, {entries, assigns}, component) when is_list(assigns) do
-    send_feed_updates(pid, feed_ids, assigns ++ [insert_stream: %{feed: entries}], component)
+    send_feed_updates(
+      pid,
+      feed_ids,
+      Keyword.merge(assigns, insert_stream: %{feed: entries}),
+      component
+    )
   end
 
   defp send_feed_updates(
@@ -411,12 +416,12 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
       |> Keyword.merge(opts)
       |> Keyword.put(
         :time_limit,
-        Types.maybe_to_integer(attrs[:time_limit], nil) ||
+        e(attrs, "time_limit", nil) |> Types.maybe_to_integer(nil) ||
           e(assigns(socket), :feed_filters, :time_limit, nil)
       )
       |> Keyword.put(
         :deferred_join_multiply_limit,
-        Types.maybe_to_integer(attrs[:multiply_limit], nil) ||
+        e(attrs, "multiply_limit", nil) |> Types.maybe_to_integer(nil) ||
           e(assigns(socket), :multiply_limit, nil) || 1
       )
       |> Keyword.drop([:multiply_limit])
@@ -456,7 +461,7 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
      |> assign_generic(
        feed_update_mode: "append",
        hide_activities: opts[:hide_activities],
-       feed_count: Enum.count(entries || [])
+       feed_count: e(assigns, :page_info, :page_count, nil) || Enum.count(entries || [])
      )
      |> assign_generic(assigns)
      |> insert_feed(entries, opts)}
@@ -491,12 +496,13 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
      |> assign_generic(
        feed_update_mode: "append",
        hide_activities: opts[:hide_activities],
-       feed_count: Enum.count(e(feed, :edges, [])),
+       feed_count:
+         e(assigns(socket), :page_info, :page_count, nil) || Enum.count(e(feed, :edges, [])),
        time_limit: opts[:time_limit],
        multiply_limit: opts[:deferred_join_multiply_limit],
        previous_page_info: e(assigns(socket), :page_info, nil),
        page_info: e(feed, :page_info, []),
-       feed_filters: filters,
+       #  feed_filters: filters,
        activity_preloads: opts[:activity_preloads]
      )
      |> insert_feed(e(feed, :edges, []), opts)}
@@ -515,7 +521,8 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
       |> assign_generic(
         previous_page_info: e(assigns(socket), :page_info, nil),
         loading: false,
-        reloading: false
+        reloading: false,
+        feed_count: 0
       )
     else
       debug(assigns, "nothing to add")
@@ -539,11 +546,16 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
   end
 
   def insert_feed(socket, {feed_edges, assigns}, opts) do
-    debug(length(feed_edges), "inserting edges and assigns")
+    debug(assigns, "inserting edges and assigns")
 
     socket
     |> assign_generic(assigns)
     |> insert_feed(feed_edges, opts)
+  end
+
+  def insert_feed(socket, %Phoenix.LiveView.Socket{} = socket, opts) do
+    debug("got a socket instead")
+    socket
   end
 
   def insert_feed(socket, feed_edges, opts) do
@@ -564,12 +576,15 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
       socket
       |> assign_generic(
         loading: false,
-        reloading: false
+        reloading: false,
+        feed_count:
+          e(assigns(socket), :page_info, :page_count, nil) || Enum.count(feed_edges || [])
       )
       |> maybe_stream_insert(:feed, feed_edges || [], opts)
     end
   end
 
+  # TODO: remove
   def assign_feed(socket, assigns, opts \\ [])
 
   def assign_feed(socket, {_feed_edges, assigns}, _opts) do
@@ -631,7 +646,7 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
 
     # ++ feed_filter_assigns(filters_or_custom_query_or_feed_id_or_ids)
     assigns =
-      (feed_default_assigns(feed_name, socket) ++ [loading: show_loader])
+      Keyword.merge(feed_default_assigns(feed_name, socket), loading: show_loader)
       |> debug("start by setting feed_default_assigns + feed_filter_assigns")
 
     feed_assigns_maybe_async_load(
@@ -651,7 +666,7 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
     # |> debug()
 
     assigns =
-      (feed_default_assigns(feed_name, socket) ++ [loading: show_loader])
+      Keyword.merge(feed_default_assigns(feed_name, socket), loading: show_loader)
       |> debug("start by setting feed_default_assigns")
 
     feed_assigns_maybe_async_load(
@@ -692,7 +707,8 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
         feed_name: feed_name,
         feed_id: feed_id,
         feed_ids: feed_ids,
-        feed_component_id: component_id
+        feed_component_id: component_id,
+        feed_count: nil
       ],
       feed_default_assigns_from_preset(feed_name, socket)
     )
@@ -715,7 +731,8 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
       [
         feed_name: feed_name,
         feed_id: feed_id,
-        feed_component_id: component_id
+        feed_component_id: component_id,
+        feed_count: nil
       ],
       feed_default_assigns_from_preset(feed_name, socket)
     )
@@ -732,7 +749,8 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
       [
         feed_name: feed_name,
         feed_id: feed_id,
-        feed_component_id: component_id
+        feed_component_id: component_id,
+        feed_count: nil
       ],
       feed_default_assigns_from_preset(feed_name, socket)
     )
@@ -749,7 +767,8 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
       [
         feed_name: feed_name,
         feed_id: feed_id,
-        feed_component_id: component_id
+        feed_component_id: component_id,
+        feed_count: nil
       ],
       feed_default_assigns_from_preset(feed_name, socket)
     )
@@ -757,16 +776,15 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
 
   def feed_default_assigns({feed_name, filters_or_custom_query_or_feed_id_or_ids}, socket)
       when is_atom(feed_name) do
-    feed_default_assigns(feed_name, socket) ++
-      [
-        # feed_name: feed_name,
-        # feed_id: feed_name,
-        selected_tab: feed_name,
-        feed_filters: filters_or_custom_query_or_feed_id_or_ids
-        # feed_component_id: component_id(feed_name, assigns(socket)),
-        # feed: nil,
-        # page_info: nil
-      ]
+    Keyword.merge(feed_default_assigns(feed_name, socket),
+      # feed_name: feed_name,
+      # feed_id: feed_name,
+      selected_tab: feed_name,
+      feed_filters: filters_or_custom_query_or_feed_id_or_ids
+      # feed_component_id: component_id(feed_name, assigns(socket)),
+      # feed: nil,
+      # page_info: nil
+    )
   end
 
   def feed_default_assigns({feed_name, filters_or_custom_query_or_feed_id_or_ids}, socket)
@@ -777,7 +795,8 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
         selected_tab: feed_name,
         feed_id: feed_name,
         feed_filters: filters_or_custom_query_or_feed_id_or_ids,
-        feed_component_id: component_id(feed_name, assigns(socket))
+        feed_component_id: component_id(feed_name, assigns(socket)),
+        feed_count: nil
         # feed: nil,
         # page_info: nil
       ],
@@ -796,7 +815,8 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
         feed_name: feed_name,
         feed_id: feed_name,
         selected_tab: feed_name,
-        feed_component_id: component_id(feed_name, assigns(socket))
+        feed_component_id: component_id(feed_name, assigns(socket)),
+        feed_count: nil
         # feed: nil,
         # page_info: nil
       ],
@@ -808,7 +828,8 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
     debug(other)
 
     [
-      feed_component_id: component_id(other, assigns(socket))
+      feed_component_id: component_id(other, assigns(socket)),
+      feed_count: nil
       # feed: nil,
       # page_info: nil
     ]
@@ -858,7 +879,8 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
     socket_connected = user_socket_connected?(socket)
     opts = to_options(socket)
 
-    if (socket_connected || current_user(opts)) && Config.env() != :test do
+    # FIXME: should not depend on env
+    if maybe_load_async?(opts, socket_connected) do
       if socket_connected do
         debug("socket connected, so load feed async")
         pid = self()
@@ -875,13 +897,12 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
                 pid,
                 assigns[:feed_component_id] || assigns[:feed_id] || :feeds,
                 {entries,
-                 new_assigns ++
-                   [
-                     loaded_async: true,
-                     reset_stream: reset_stream,
-                     loading: false,
-                     reloading: false
-                   ]},
+                 Keyword.merge(new_assigns,
+                   loaded_async: true,
+                   reset_stream: reset_stream,
+                   loading: false,
+                   reloading: false
+                 )},
                 Bonfire.UI.Social.FeedLive
               )
             else
@@ -938,10 +959,20 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
 
     case debug(opts ++ [cache: e(opts, :cache_strategy, nil) == :guest_cache])
          |> feed_assigns({feed_id, feed_filters}, ...) do
-      {:error, e} -> {:error, e}
-      {entries, feed_assigns} when is_list(feed_assigns) -> {entries, assigns ++ feed_assigns}
-      e -> e
+      {:error, e} ->
+        {:error, e}
+
+      {entries, feed_assigns} when is_list(feed_assigns) ->
+        {entries, Keyword.merge(assigns, feed_assigns)}
+
+      e ->
+        e
     end
+  end
+
+  def maybe_load_async?(opts, socket_connected? \\ nil) do
+    (socket_connected? || user_socket_connected?(opts) || current_user_id(opts)) &&
+      Config.env() != :test
   end
 
   defp feed_id_only({feed_id, _feed_ids}), do: feed_id
@@ -988,7 +1019,10 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
              |> FeedLoader.my_feed(opts, ...) do
         merge_feed_assigns(
           feed,
-          [activity_preloads: {preloads, postloads}, feed_filters: feed_filters] ++ assigns,
+          Keyword.merge(assigns,
+            activity_preloads: {preloads, postloads},
+            feed_filters: feed_filters
+          ),
           e(opts, :page_info, nil)
         )
       end
@@ -1031,7 +1065,10 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
          %{} = feed <- FeedLoader.feed(feed_name_or_id, feed_filters, opts) do
       merge_feed_assigns(
         feed,
-        [activity_preloads: {preloads, postloads}, feed_filters: feed_filters] ++ assigns,
+        Keyword.merge(assigns,
+          activity_preloads: {preloads, postloads},
+          feed_filters: feed_filters
+        ),
         e(opts, :page_info, nil)
       )
     end
@@ -1052,7 +1089,10 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
            |> FeedLoader.feed(..., feed_filters, opts) do
       merge_feed_assigns(
         feed,
-        [activity_preloads: {preloads, postloads}, feed_filters: feed_filters] ++ assigns,
+        Keyword.merge(assigns,
+          activity_preloads: {preloads, postloads},
+          feed_filters: feed_filters
+        ),
         e(opts, :page_info, nil)
       )
     end
@@ -1142,7 +1182,10 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
            |> FeedLoader.feed(feed_filters, opts) do
       merge_feed_assigns(
         feed,
-        [activity_preloads: {preloads, postloads}, feed_filters: feed_filters] ++ assigns,
+        Keyword.merge(assigns,
+          activity_preloads: {preloads, postloads},
+          feed_filters: feed_filters
+        ),
         e(opts, :page_info, nil)
       )
     end
@@ -1175,12 +1218,12 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
            ) do
       merge_feed_assigns(
         feed,
-        [
+        Keyword.merge(assigns,
           feed_name: feed_name,
           feed_id: feed_id,
           activity_preloads: {preloads, postloads},
           feed_filters: feed_filters
-        ] ++ assigns,
+        ),
         e(opts, :page_info, nil)
       )
     end
@@ -1230,15 +1273,14 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
     {first_assigns, _} = List.first(assigns_sockets)
 
     opts =
-      opts ++
-        [
-          live_update_many_preload_mode: override_live_update_many_preload_mode,
-          preload_status_key: :preloaded_async_activities,
-          return_assigns_socket_tuple: true,
-          id:
-            e(first_assigns, :feed_name, nil) || e(first_assigns, :feed_id, nil) ||
-              e(first_assigns, :thread_id, nil) || id(first_assigns)
-        ]
+      Keyword.merge(opts,
+        live_update_many_preload_mode: override_live_update_many_preload_mode,
+        preload_status_key: :preloaded_async_activities,
+        return_assigns_socket_tuple: true,
+        id:
+          e(first_assigns, :feed_name, nil) || e(first_assigns, :feed_id, nil) ||
+            e(first_assigns, :thread_id, nil) || id(first_assigns)
+      )
 
     # FIXME: can't just use the first component's assigns to define our opts, but rather check all of them and group by different opts (specifically preloads) and execute them separately (in parallel), or merge them
     {current_user, opts} =
@@ -1313,15 +1355,14 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
       {first_assigns, _} = List.first(assigns_sockets)
 
       opts =
-        opts ++
-          [
-            return_assigns_socket_tuple: true,
-            preload_status_key: :preloaded_async_actions,
-            live_update_many_preload_mode: :user_async_or_skip,
-            id:
-              e(first_assigns, :feed_name, nil) || e(first_assigns, :feed_id, nil) ||
-                e(first_assigns, :thread_id, nil) || id(first_assigns)
-          ]
+        Keyword.merge(opts,
+          return_assigns_socket_tuple: true,
+          preload_status_key: :preloaded_async_actions,
+          live_update_many_preload_mode: :user_async_or_skip,
+          id:
+            e(first_assigns, :feed_name, nil) || e(first_assigns, :feed_id, nil) ||
+              e(first_assigns, :thread_id, nil) || id(first_assigns)
+        )
 
       # FIXME: can't just use the first component's assigns to define our opts, but rather check all of them and group by different opts (specifically preloads) and execute them separately (in parallel), or merge them
       {current_user, opts} =
@@ -1339,10 +1380,9 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
               Bonfire.Boundaries.LiveHandler,
               :update_many_opts,
               [
-                opts ++
-                  [
-                    verbs: [:read]
-                  ]
+                Keyword.merge(opts,
+                  verbs: [:read]
+                )
               ]
             ),
             Utils.maybe_apply(
@@ -1697,11 +1737,10 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
 
   defp merge_feed_assigns(feed, new_assigns, previous_page_info) do
     {e(feed, :edges, []),
-     new_assigns ++
-       [
-         previous_page_info: previous_page_info,
-         page_info: e(feed, :page_info, [])
-       ]}
+     Keyword.merge(new_assigns,
+       previous_page_info: previous_page_info,
+       page_info: e(feed, :page_info, [])
+     )}
   end
 
   # def user_feed_assign_or_load_async(

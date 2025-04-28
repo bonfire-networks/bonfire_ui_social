@@ -211,24 +211,13 @@ defmodule Bonfire.UI.Social.FeedLive do
     socket = assign(socket, assigns)
     # debug(socket)
 
-    feed_id_or_ids = e(assigns(socket), :feed_ids, nil) || e(assigns(socket), :feed_id, nil)
-    already_pubsub_subscribed = e(assigns(socket), :feed_pubsub_subscribed, nil)
-
-    if already_pubsub_subscribed == feed_id_or_ids do
-      debug(already_pubsub_subscribed, "already subscribed to this via pubsub")
-    else
-      maybe_subscribe(socket)
-    end
-
-    ok_socket(
-      socket
-      |> assign(
-        feed_pubsub_subscribed: feed_id_or_ids
-        # page_info: page_info,
-        # feed: feed
-        # |> debug("FeedLive: feed")
-      )
-    )
+    maybe_subscribe(socket)
+    # |> assign(
+    # page_info: page_info,
+    # feed: feed
+    # |> debug("FeedLive: feed")
+    # )
+    |> ok_socket()
   end
 
   # def update(%{feed_id: "user_timeline_"} = assigns, socket) do
@@ -246,50 +235,84 @@ defmodule Bonfire.UI.Social.FeedLive do
   #     )
   #     |> LiveHandler.insert_feed(socket, ...)
 
-  #   maybe_subscribe(socket)
-
-  #   ok_socket(socket)
+  #   ok_socket(maybe_subscribe(socket))
   # end
 
-  def update(%{feed: nil, feed_filters: empty_feed_filters} = assigns, socket)
-      when empty_feed_filters == %{} or empty_feed_filters == [] or empty_feed_filters == nil do
-    debug("a feed was NOT provided, fetching one now (without filters)")
-
-    socket = assign(socket, assigns)
-    socket = assign(socket, :feed_component_id, assigns(socket).id)
-
-    socket =
-      socket
-      |> LiveHandler.feed_assigns_maybe_async(
-        assigns(socket)[:feed_name] || assigns(socket)[:feed_id] || assigns(socket)[:id] ||
-          :default,
-        ...
+  def update(
+        %{feed: nil, feed_count: feed_count} = assigns,
+        %{assigns: %{feed_count: feed_count}} = socket
       )
-      |> LiveHandler.insert_feed(socket, ...)
-
-    maybe_subscribe(socket)
+      when not is_nil(feed_count) do
+    debug("a feed was NOT provided, but we have a feed_count")
 
     ok_socket(socket)
   end
 
-  def update(%{feed: nil} = assigns, socket) do
-    debug("a feed was NOT provided, fetching one now (with filters)")
+  def update(%{feed: nil, feed_count: feed_count} = assigns, socket)
+      when not is_nil(feed_count) do
+    debug("a feed was NOT provided, but feed_count was passed")
 
+    ok_socket(socket)
+  end
+
+  def update(%{feed: nil, feed_filters: empty_feed_filters} = assigns, socket)
+      when empty_feed_filters == %{} or empty_feed_filters == [] or empty_feed_filters == nil do
     socket = assign(socket, assigns)
     socket = assign(socket, :feed_component_id, assigns(socket).id)
 
-    socket =
-      socket
-      |> LiveHandler.feed_assigns_maybe_async(
-        {assigns(socket)[:feed_name] || assigns(socket)[:feed_id],
-         assigns(socket)[:feed_filters]},
-        ...
+    if user_socket_connected?(socket) || !current_user_id(socket) do
+      # if LiveHandler.maybe_load_async?(socket) do
+
+      debug("a feed was NOT provided, fetching one now (without filters)")
+
+      socket =
+        socket
+        |> assign(:feed_count, 0)
+        |> LiveHandler.feed_assigns_maybe_async(
+          assigns(socket)[:feed_name] || assigns(socket)[:feed_id] || assigns(socket)[:id] ||
+            :default,
+          ...
+        )
+        |> LiveHandler.insert_feed(socket, ...)
+
+      maybe_subscribe(socket)
+      |> ok_socket()
+    else
+      debug(
+        "a feed was NOT provided, but we don't have a user socket connected, so we just pass assigns and wait"
       )
-      |> LiveHandler.insert_feed(socket, ...)
 
-    maybe_subscribe(socket)
+      ok_socket(socket)
+    end
+  end
 
-    ok_socket(socket)
+  def update(%{feed: nil} = assigns, socket) do
+    socket = assign(socket, assigns)
+    socket = assign(socket, :feed_component_id, assigns(socket).id)
+
+    if user_socket_connected?(socket) || !current_user_id(socket) do
+      # if LiveHandler.maybe_load_async?(socket) do
+      debug("a feed was NOT provided, fetching one now (with filters)")
+
+      socket =
+        socket
+        |> assign(:feed_count, 0)
+        |> LiveHandler.feed_assigns_maybe_async(
+          {assigns(socket)[:feed_name] || assigns(socket)[:feed_id],
+           assigns(socket)[:feed_filters]},
+          ...
+        )
+        |> LiveHandler.insert_feed(socket, ...)
+
+      maybe_subscribe(socket)
+      |> ok_socket()
+    else
+      debug(
+        "a feed was NOT provided, but we don't have a user socket connected, so we just pass assigns and wait"
+      )
+
+      ok_socket(socket)
+    end
   end
 
   def update(%{feed: :loading} = assigns, socket) do
@@ -337,13 +360,25 @@ defmodule Bonfire.UI.Social.FeedLive do
     case e(assigns(socket), :feed_ids, nil) || e(assigns(socket), :feed_id, nil) do
       nil ->
         debug("no feed_id known, not subscribing to live updates")
+        socket
 
-      "user_timeline_" <> feed_id ->
-        PubSub.subscribe(feed_id, socket)
+      # "user_timeline_" <> feed_id ->
+      #   PubSub.subscribe(feed_id, socket)
 
       feed_or_feeds ->
-        # debug(feed_or_feeds, "live subscribing to")
-        PubSub.subscribe(feed_or_feeds, socket)
+        already_pubsub_subscribed = e(assigns(socket), :feed_pubsub_subscribed, nil)
+
+        if already_pubsub_subscribed == feed_or_feeds do
+          debug(already_pubsub_subscribed, "already subscribed to this via pubsub")
+
+          socket
+        else
+          # debug(feed_or_feeds, "live subscribing to")
+          PubSub.subscribe(feed_or_feeds, socket)
+
+          socket
+          |> assign(feed_pubsub_subscribed: feed_or_feeds)
+        end
     end
   end
 

@@ -161,7 +161,7 @@
 
               <div class="sr-only text-base-content">{l("Loading...")}</div>
             </div>
-          {#elseif !(is_list(@feed) and @feed != [])}
+          {#elseif not is_integer(@feed_count) or @feed_count == 0 or !(is_list(@feed) and @feed != [])}
             <div data-id="empty-feed" class="flex items-center place-content-center">
               <Bonfire.UI.Common.EmptyFeed
                 feed_name={@feed_name}
@@ -170,6 +170,13 @@
                 empty_feed={@bottom_or_empty_feed}
               />
             </div>
+          {#else}
+            {!-- we have a previous_page_info but no time limit --}
+            <img
+              class="max-w-[220px] opacity-80 mx-auto"
+              src={Bonfire.Common.URIs.static_path("/images/bonfire-exausted.png")}
+            />
+            <p class="text-sm font-medium text-base-content/70 text-center my-4">{l("That's all folks...")}</p>
           {/if}
         {#else}
           {!-- we have a previous_page_info --}

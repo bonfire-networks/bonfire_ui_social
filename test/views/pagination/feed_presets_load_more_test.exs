@@ -282,8 +282,8 @@ defmodule Bonfire.UI.Social.Feeds.FeedsPresets.PaginationTest do
       # Should have pagination limit number of posts
       |> assert_has("[data-id=feed] article", count: limit)
       # Only hashtag posts should appear
-      |> assert_has("article", text: "##{hashtag}")
-      |> refute_has("article", text: "Regular post")
+      |> refute_has_or_open_browser("article", text: "Regular post")
+      |> assert_has_or_open_browser("article", text: "##{hashtag}")
       # Load next page
       |> click_button("[data-id=load_more]", "Load more")
       |> wait_async()

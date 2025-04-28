@@ -100,11 +100,12 @@ defmodule Bonfire.UI.Social.Feeds.DeferredJoinPaginationTest do
 
       conn
       |> visit("/feed/local")
+      |> wait_async()
 
       # Verify window fallback works correctly:
       # - Should find posts via window fallback even if not in first window
+      |> assert_has_or_open_browser("[data-id=feed] article", text: "New Content")
       |> assert_has_count("[data-id=feed] article", count: limit)
-      |> assert_has("[data-id=feed] article", text: "New Content")
       |> refute_has_text("[data-id=feed] article", "Private Content")
 
       # PART 4: Test pagination with deferred join
@@ -112,7 +113,7 @@ defmodule Bonfire.UI.Social.Feeds.DeferredJoinPaginationTest do
 
       # Now test pagination with the posts we created
       # First page should display correctly
-      |> assert_has("[data-id=load_more]")
+      |> assert_has_or_open_browser("[data-id=load_more]")
 
       # Navigate to second page
       |> click_button("[data-id=load_more]", "Load more")
