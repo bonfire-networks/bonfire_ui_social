@@ -1,5 +1,5 @@
 <div data-role="reply_action" class="relative z-20 flex items-center">
-  {#case (current_user(@__context__) == nil or @object_type in [Bonfire.Data.Social.Message] or
+  {#case (current_user(@__context__) == nil or @object_type == Bonfire.Data.Social.Message or
        (@object_boundary && Bonfire.Boundaries.can?(@__context__, :reply, @object_boundary))) ||
       !@object_boundary}
     {#match true}

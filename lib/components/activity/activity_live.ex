@@ -986,7 +986,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
   # def component_activity_subject(_, _, %{activity_inception: true}), do: [Bonfire.UI.Social.Activity.SubjectRepliedLive]
 
   def component_activity_subject(verb, activity, _, object_type, _, _, _)
-      when verb in @react_or_simple_verbs and object_type in [Bonfire.Data.Identity.User] do
+      when verb in @react_or_simple_verbs and object_type == Bonfire.Data.Identity.User do
     [
       {Bonfire.UI.Social.Activity.SubjectMinimalLive,
        %{
@@ -1085,7 +1085,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
   def component_activity_maybe_creator(activity, object, object_type)
 
   def component_activity_maybe_creator(_, _, object_type)
-      when object_type in [Bonfire.Data.Identity.User],
+      when object_type == Bonfire.Data.Identity.User,
       do: []
 
   #  if subject is also the creator use that
@@ -1789,7 +1789,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
       when type in [Bonfire.Data.Identity.User, Bonfire.Data.Identity.Character],
       do: []
 
-  def actions_for_object_type(_activity, type) when type in [Bonfire.Data.Social.Flag], do: []
+  def actions_for_object_type(_activity, type) when type == Bonfire.Data.Social.Flag, do: []
 
   def actions_for_object_type(_activity, type)
       when type in [Bonfire.Data.Social.Post, Bonfire.Data.Social.PostContent],

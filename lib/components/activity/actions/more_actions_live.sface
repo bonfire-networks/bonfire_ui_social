@@ -20,26 +20,28 @@
     aria-orientation="vertical"
     aria-labelledby="more-menu"
   >
-    <li class="hover:bg-base-100" :if={@object_type in [Bonfire.Data.Social.Message]}>
-      <div class="hover:bg-base-100 cursor-default flex items-center gap-2">
-      <#Icon iconify="mingcute:inbox-2-fill" class="w-4 h-4 shrink-0" />
-      <span>{l "Direct Message"}</span></div>
-    </li>
-    <li :if={@object_type not in [Bonfire.Data.Social.Message]}><div class="w-full p-0 flex bg-base-content/5">
-        {#if LiveHandler.feed_live_update_many_preload_mode() == :async_actions}
-          <StatelessComponent
-            module={maybe_component(Bonfire.UI.Boundaries.BoundaryIconStatelessLive, @__context__)}
-            object_id={id(@object)}
-            object_boundary={@object_boundary}
-            object_type={Types.object_type(@published_in) || @object_type}
-            parent_id={@parent_id}
-            with_icon
-            with_label
-            class="w-full"
-            open_btn_wrapper_class="flex items-center w-full gap-2 text-sm py-3 px-4"
-          />
-        {#else}
-          <!-- 
+    {#if @object_type == Bonfire.Data.Social.Message}
+      <li class="hover:bg-base-100">
+        <div class="hover:bg-base-100 cursor-default flex items-center gap-2">
+          <#Icon iconify="mingcute:inbox-2-fill" class="w-4 h-4 shrink-0" />
+          <span>{l("Direct Message")}</span></div>
+      </li>
+    {#else}
+      <li><div class="w-full p-0 flex bg-base-content/5">
+          {#if LiveHandler.feed_live_update_many_preload_mode() == :async_actions}
+            <StatelessComponent
+              module={maybe_component(Bonfire.UI.Boundaries.BoundaryIconStatelessLive, @__context__)}
+              object_id={id(@object)}
+              object_boundary={@object_boundary}
+              object_type={Types.object_type(@published_in) || @object_type}
+              parent_id={@parent_id}
+              with_icon
+              with_label
+              class="w-full"
+              open_btn_wrapper_class="flex items-center w-full gap-2 text-sm py-3 px-4"
+            />
+          {#else}
+            {!-- 
       TODO:
       <div
             phx-click="open"
@@ -47,12 +49,13 @@
             class="flex items-center w-full gap-2 text-sm  px-4 py-2"
           >
             <#Icon iconify="fluent:door-tag-20-filled" class="w-4 h-4 shrink-0" />
-            {l("View boundaries")} 
-                        </div>
--->
-        {/if}
-      </div>
-    </li>
+            {l("View boundaries")}     
+       </div>
+       --}
+          {/if}
+        </div>
+      </li>
+    {/if}
 
     <li>
       <a
@@ -70,7 +73,7 @@
 
     {#if current_user_id(@__context__)}
       <li :if={@viewing_main_object && @thread_id &&
-        (@object_type in [Bonfire.Data.Social.Message] ||
+        (@object_type == Bonfire.Data.Social.Message ||
            Bonfire.Boundaries.can?(@__context__, :describe, @object_boundary))}>
         <Bonfire.UI.Common.OpenModalLive
           id={"thread_title_#{id(@activity) || @thread_id}"}
@@ -159,7 +162,7 @@
       </li>
 
       {#if module_enabled?(Bonfire.Social.Pins, @__context__) and
-          @object_type not in [Bonfire.Data.Social.Message]}
+          @object_type != Bonfire.Data.Social.Message}
         <li
           :if={@showing_within == :thread and @thread_id != id(@object)}
           class="hover:bg-neutral hover:bg-opacity-20"
@@ -345,7 +348,7 @@
       with_icon={false}
     />
 
-    {#if @viewing_main_object && @thread_id && @object_type not in [Bonfire.Data.Social.Message] &&
+    {#if @viewing_main_object && @thread_id && @object_type != Bonfire.Data.Social.Message &&
         module_enabled?(Bonfire.Boundaries.Locking.LiveHandler, @__context__)}
       {#if Bonfire.Boundaries.can?(@__context__, :grant, @object_boundary)}
         <li>
@@ -399,67 +402,70 @@
       {/if}
     {/if}
 
-    {#if @object_boundary && @object_type not in [Bonfire.Data.Social.Message] &&
-        (id(@object) || id(@activity)) &&
-        Bonfire.UI.Social.Activity.DeleteObjectLive.can_delete?(@__context__, @object, @object_boundary)}
-      <li>
-        <details>
-          <summary class="text-error/80">
-            <div class="flex items-center w-full gap-2 text-sm text-error/80">
-              <!-- <#Icon solid="Trash" class="w-4 h-4 shrink-0" /> -->
-              <span class="truncate ellipsis">{l("Delete")}</span>
-            </div>
-          </summary>
-          <ul>
-            <li :if={id(@object)}>
-              <StatelessComponent
-                module={maybe_component(Bonfire.UI.Social.Activity.DeleteObjectLive, @__context__)}
-                skip_permission_check
-                object={@object}
-                hide_icon
-                creator_id={@creator_id}
-                object_type_readable={@object_type_readable}
-                object_boundary={@object_boundary}
-                parent_id={"object-#{id(@activity_component_id || @activity)}"}
-              />
-            </li>
+    {#if @object_boundary && (id(@object) || id(@activity))}
+      {#if @object_type != Bonfire.Data.Social.Message}
+        {#if Bonfire.UI.Social.Activity.DeleteObjectLive.can_delete?(@__context__, @object, @object_boundary)}
+          <li>
+            <details>
+              <summary class="text-error/80">
+                <div class="flex items-center w-full gap-2 text-sm text-error/80">
+                  <!-- <#Icon solid="Trash" class="w-4 h-4 shrink-0" /> -->
+                  <span class="truncate ellipsis">{l("Delete")}</span>
+                </div>
+              </summary>
+              <ul>
+                <li :if={id(@object)}>
+                  <StatelessComponent
+                    module={maybe_component(Bonfire.UI.Social.Activity.DeleteObjectLive, @__context__)}
+                    skip_permission_check
+                    object={@object}
+                    hide_icon
+                    creator_id={@creator_id}
+                    object_type_readable={@object_type_readable}
+                    object_boundary={@object_boundary}
+                    parent_id={"object-#{id(@activity_component_id || @activity)}"}
+                  />
+                </li>
 
-            {!-- Delete the activity --}
-            <li :if={id(@activity)}>
-              <StatelessComponent
-                module={maybe_component(Bonfire.UI.Social.Activity.DeleteObjectLive, @__context__)}
-                skip_permission_check
-                action="Bonfire.Social.Feeds:delete"
-                object={@activity}
-                hide_icon
-                object_boundary={@object_boundary}
-                object_type_readable={l("from feeds")}
-                creator_id={@creator_id}
-                parent_id={"delete-activity-#{id(@activity_component_id || @activity)}"}
-                explanation={l(
-                  "Deleting from feeds means this %{verb} and this %{object} still exist, but this activity won't be discoverable via the local instance's feeds. Remote feeds won't be affected.",
-                  object: @object_type_readable || l("object"),
-                  verb: @verb
-                )}
-              />
-            </li>
-          </ul>
-        </details>
-      </li>
-      {!-- Delete the object --}
-    {#elseif @object_boundary && @object_type in [Bonfire.Data.Social.Message] && id(@activity)}
-      <li>
-        <StatelessComponent
-          module={maybe_component(Bonfire.UI.Social.Activity.DeleteObjectLive, @__context__)}
-          object={@object}
-          creator_id={@creator_id}
-          hide_icon
-          object_type_readable={@object_type_readable}
-          object_boundary={@object_boundary}
-          parent_id={"object-#{id(@activity_component_id || @activity)}"}
-        />
-      </li>
+                {!-- Delete the activity --}
+                <li :if={id(@activity)}>
+                  <StatelessComponent
+                    module={maybe_component(Bonfire.UI.Social.Activity.DeleteObjectLive, @__context__)}
+                    skip_permission_check
+                    action="Bonfire.Social.Feeds:delete"
+                    object={@activity}
+                    hide_icon
+                    object_boundary={@object_boundary}
+                    object_type_readable={l("from feeds")}
+                    creator_id={@creator_id}
+                    parent_id={"delete-activity-#{id(@activity_component_id || @activity)}"}
+                    explanation={l(
+                      "Deleting from feeds means this %{verb} and this %{object} still exist, but this activity won't be discoverable via the local instance's feeds. Remote feeds won't be affected.",
+                      object: @object_type_readable || l("object"),
+                      verb: @verb
+                    )}
+                  />
+                </li>
+              </ul>
+            </details>
+          </li>
+        {/if}
+        {!-- Delete the object --}
+      {#else}
+        <li>
+          <StatelessComponent
+            module={maybe_component(Bonfire.UI.Social.Activity.DeleteObjectLive, @__context__)}
+            object={@object || @activity}
+            creator_id={@creator_id}
+            hide_icon
+            object_type_readable={@object_type_readable}
+            object_boundary={@object_boundary}
+            parent_id={"object-#{id(@activity_component_id || @activity)}"}
+          />
+        </li>
+      {/if}
     {/if}
+
     <#slot {@admin_items} />
   </ul>
 </div>
