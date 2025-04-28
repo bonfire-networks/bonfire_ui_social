@@ -63,7 +63,7 @@
     {/if}
 
     <div class="p-2 flex flex-col w-full gap-1 flex-1">
-      <div data-id="media_title" class="text-base line-clamp-2 font-semibold">
+      <div data-id="media_title" class="text-base line-clamp-2 font-semibold text-pretty md:text-balanced">
         {Bonfire.Files.Media.media_label(@media) ||
           if @media.media_type == "link", do: e(@media, :path, nil), else: l("View")}
       </div>

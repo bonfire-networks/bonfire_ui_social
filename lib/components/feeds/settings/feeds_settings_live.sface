@@ -43,22 +43,33 @@
                 </div>
               </div>
               <div class="flex items-center gap-2">
+                <button
+                  :if={!preset[:built_in]}
+                  phx-click="Bonfire.Social.Feeds:preset_delete"
+                  phx-value-id={preset.id}
+                  class="btn btn-circle btn-error"
+                >
+                  <#Icon iconify="ph:trash-bold" class="w-4 h-4" />
+                  <span class="sr-only">{l("Delete")}</span>
+                </button>
                 {#if preset[:exclude_from_nav] == false}
                   <button
                     phx-click="Bonfire.Social.Feeds:preset_nav_toggle"
                     phx-value-id={preset.id}
                     phx-value-exclude="true"
-                    class="btn btn-sm btn-warning btn-soft"
+                    class="btn btn-sm btn-ghost"
                   >
-                    {l("Exclude from the sidebar")}
+                    <input type="checkbox" checked class="checkbox checkbox-primary" />
+                    <span>{l("Include in the sidebar")}</span>
                   </button>
                 {#else}
                   <button
                     phx-click="Bonfire.Social.Feeds:preset_nav_toggle"
                     phx-value-id={preset.id}
                     phx-value-exclude="false"
-                    class="btn btn-sm btn-success btn-soft"
+                    class="btn btn-sm btn-ghost"
                   >
+                    <input type="checkbox"  class="checkbox checkbox-primary" />
                     {l("Include in the sidebar")}
                   </button>
                 {/if}
@@ -69,15 +80,7 @@
                   </label>
                 </form> -->
 
-                <button
-                  :if={!preset[:built_in]}
-                  phx-click="Bonfire.Social.Feeds:preset_delete"
-                  phx-value-id={preset.id}
-                  class="btn btn-circle btn-ghost text-error"
-                >
-                  <#Icon iconify="ph:trash-bold" class="w-4 h-4" />
-                  <span class="sr-only">{l("Delete")}</span>
-                </button>
+
               </div>
             </div>
           </div>
