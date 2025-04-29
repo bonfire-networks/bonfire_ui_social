@@ -71,7 +71,7 @@
           if @media.media_type == "link", do: e(@media, :path, nil), else: l("View")}
       </div>
 
-      <div class="max-w-full text-sm break-words line-clamp-2 text-base-content/70">
+      <div class="break-all text-sm break-words line-clamp-2 text-base-content/70">
         {raw(Text.maybe_sane_html(Bonfire.Files.Media.description(@media)))}
       </div>
 
