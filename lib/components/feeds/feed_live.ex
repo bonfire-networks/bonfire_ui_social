@@ -41,6 +41,7 @@ defmodule Bonfire.UI.Social.FeedLive do
   # FIXME: should optimise by LinkPatchLive but currently not working
   prop tab_link_component, :atom, default: LinkLive
 
+  prop current_url, :any, default: nil
   prop tab_path_prefix, :string, default: "?tab="
   prop tab_path_suffix, :string, default: nil
   prop hide_filters, :boolean, default: false

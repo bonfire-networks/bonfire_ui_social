@@ -146,6 +146,7 @@
       target={@myself}
       infinite_scroll={Settings.get([:ui, :infinite_scroll], :preload, @__context__)}
       entry_count={@feed_count}
+      current_url={@current_url}
     >
       <:if_no_more>
         {#if is_nil(@previous_page_info)}
@@ -181,42 +182,12 @@
         {#else}
           {!-- we have a previous_page_info --}
           {#if is_integer(e(@feed_filters, :time_limit, nil)) and e(@feed_filters, :time_limit, nil) != 0}
-            <div class="">
-              <p class="text-sm py-4 mt-4 text-center text-base-content/50 font-medium">{lp(
-                  "That's all for today...",
-                  "That's all for the last %{number} days...",
-                  e(@feed_filters, :time_limit, nil),
-                  number: e(@feed_filters, :time_limit, nil)
-                )}</p>
-
-              {!-- TODO: instead of switching to infinity, switch 1 level up from current limit, eg. from day to week --}
-              {#if (!e(@feed_filters, :sort_by, nil) or e(@feed_filters, :sort_by, nil) == :date_created) and
-                  (e(@previous_page_info, :end_cursor, nil) || e(@page_info, :end_cursor, nil))}
-                <LoadMoreLive
-                  live_handler={Bonfire.Social.Feeds}
-                  page_info={@page_info || @previous_page_info}
-                  cursor={LoadMoreLive.end_cursor(@page_info) || LoadMoreLive.end_cursor(@previous_page_info)}
-                  target={@myself}
-                  hide_guest_fallback={@hide_guest_fallback}
-                  label={l("Show older activities")}
-                  opts={%{"phx-value-time_limit" => 0}}
-                  hide_if_no_more
-                />
-              {#elseif socket_connected?(@__context__)}
-                <div class="w-full flex items-center justify-center mb-4">
-                  <button
-                    data-id="load_more"
-                    class="normal-case btn btn-soft btn-secondary"
-                    phx-click="set"
-                    phx-value-to_integers="true"
-                    phx-value-time_limit={0}
-                    phx-value-assign_global="true"
-                    phx-target={@myself}
-                  >
-                    {l("Show all activities with no time limit")}
-                  </button></div>
-              {/if}
-            </div>
+            <p class="text-sm py-4 mt-4 text-center text-base-content/50 font-medium">{lp(
+                "That's all for today...",
+                "That's all for the last %{number} days...",
+                e(@feed_filters, :time_limit, nil),
+                number: e(@feed_filters, :time_limit, nil)
+              )}</p>
           {#else}
             {!-- we have a previous_page_info but no time limit --}
             <img
@@ -230,6 +201,55 @@
             <#slot {@bottom_or_empty_feed}>
             </#slot>
           </div>
+        {/if}
+
+        {#if !@loading and is_integer(e(@feed_filters, :time_limit, nil)) and
+            e(@feed_filters, :time_limit, nil) != 0}
+          {#if socket_connected?(@__context__)}
+            {#if (!e(@feed_filters, :sort_by, nil) or e(@feed_filters, :sort_by, nil) == :date_created) and
+                (e(@previous_page_info, :end_cursor, nil) || e(@page_info, :end_cursor, nil))}
+              {!-- we are sorting by date and can simply continue paginating but with no limit --}
+              {!-- TODO: instead of switching to infinity, switch 1 level up from current limit, eg. from day to week --}
+              <LoadMoreLive
+                live_handler={Bonfire.Social.Feeds}
+                page_info={@page_info || @previous_page_info}
+                cursor={LoadMoreLive.end_cursor(@page_info) || LoadMoreLive.end_cursor(@previous_page_info)}
+                target={@myself}
+                hide_guest_fallback={@hide_guest_fallback}
+                label={l("Show older activities")}
+                opts={%{"phx-value-time_limit" => 0}}
+                current_url={@current_url}
+                hide_if_no_more
+              />
+            {#else}
+              {!-- we need to reload the feed --}
+              <div class="w-full flex items-center justify-center mb-4">
+                <button
+                  data-id="load_more"
+                  class="normal-case btn btn-soft btn-secondary"
+                  phx-click="set"
+                  phx-value-to_integers="true"
+                  phx-value-time_limit={0}
+                  phx-value-assign_global="true"
+                  phx-target={@myself}
+                >
+                  {l("Show all activities with no time limit")}
+                </button>
+              </div>
+            {/if}
+          {#else}
+            {!-- no socket connected --}
+            <div class="w-full flex items-center justify-center mb-4">
+              <a
+                :if={!@hide_guest_fallback}
+                data-id="load_more"
+                class="normal-case btn btn-secondary btn-soft btn-wide"
+                href={"#{@current_url || @__context__[:current_url]}?time_limit=0&after=#{LoadMoreLive.end_cursor(@page_info) || LoadMoreLive.end_cursor(@previous_page_info)}"}
+              >
+                {l("Show all activities with no time limit")}
+              </a>
+            </div>
+          {/if}
         {/if}
       </:if_no_more>
     </LoadMoreLive>
