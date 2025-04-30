@@ -124,7 +124,7 @@ defmodule Bonfire.UI.Social.PreloadPresetTest do
     |> verify_verb(Enum.member?(expected, :with_verb), activity)
     |> verify_object(Enum.member?(expected, :with_object), object)
     |> verify_reply_to(Enum.member?(expected, :with_reply_to), activity)
-    |> verify_peered(Enum.member?(expected, :with_peered), activity, object)
+    |> verify_peered(Enum.member?(expected, :with_object_peered), activity, object)
     # |> verify_tags(Enum.member?(expected, :tags), object) # TODO: needs test data
     #  TODO: needs test data
     |> verify_thread_name(Enum.member?(expected, :with_thread_name), object)
@@ -135,24 +135,33 @@ defmodule Bonfire.UI.Social.PreloadPresetTest do
     |> verify_creator(Enum.member?(expected, :with_creator), object)
   end
 
-  defp verify_subject(conn, expected?, activity) do
+  defp verify_subject(session, expected?, activity) do
     if expected? do
-      conn =
-        conn
+      session =
+        session
         |> assert_has_or_open_browser("[data-id=subject]")
-        |> assert_has_or_open_browser("[data-id=subject_name]",
-          text: activity.subject.profile.name
+        |> assert_has_or(
+          "[data-id=subject_name]",
+          [text: activity.subject.profile.name],
+          fn session ->
+            if current_user(session.conn).profile.name == activity.subject.profile.name do
+              session
+              |> assert_has_or_open_browser("[data-id=subject_name]", text: "You")
+            else
+              flunk("Could not find subject's profile name in the HTML")
+            end
+          end
         )
 
       # Verify the link points to the correct profile path
       if username = e(activity, :subject, :character, :username, nil) do
         expected_path = "/@#{username}"
 
-        conn
+        session
         |> assert_has_or_open_browser("a[data-id=subject_name][href='#{expected_path}']")
       end
     end ||
-      conn
+      session
   end
 
   defp verify_creator(conn, expected?, object) do
