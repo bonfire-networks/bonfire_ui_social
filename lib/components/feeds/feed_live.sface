@@ -225,7 +225,7 @@
               {!-- we need to reload the feed --}
               <div class="w-full flex items-center justify-center mb-4">
                 <button
-                  data-id="load_more"
+                  data-id="load_all_time"
                   class="normal-case btn btn-soft btn-secondary"
                   phx-click="set"
                   phx-value-to_integers="true"
@@ -242,7 +242,7 @@
             <div class="w-full flex items-center justify-center mb-4">
               <a
                 :if={!@hide_guest_fallback}
-                data-id="load_more"
+                data-id="load_all_time"
                 class="normal-case btn btn-secondary btn-soft btn-wide"
                 href={"#{@current_url || @__context__[:current_url]}?time_limit=0&after=#{LoadMoreLive.end_cursor(@page_info) || LoadMoreLive.end_cursor(@previous_page_info)}"}
               >
