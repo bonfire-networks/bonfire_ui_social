@@ -1,4 +1,5 @@
 <div class="flex-1 w-full" data-toggle={@key}>
+  {!-- FIXME: don't use dynamic @key in keys for https://github.com/bonfire-networks/bonfire-app/issues/1239 --}
   <Bonfire.UI.Common.SettingsToggleThroupleLive
     name={@label}
     keys={[Bonfire.Social.Feeds, :include, @key]}
