@@ -33,6 +33,8 @@ defmodule Bonfire.UI.Social.ConnCase do
 
       import PhoenixTest
 
+      use Bonfire.Common.Config
+      use Bonfire.Common.Settings
       import Untangle
       use Arrows
       # alias Bonfire.UI.Social.Router.Helpers, as: Routes

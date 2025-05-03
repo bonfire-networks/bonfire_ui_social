@@ -4,7 +4,7 @@ defmodule Bonfire.UI.Social.Benchmark do
   alias Bonfire.Common.Utils
   import Bonfire.UI.Common.Testing.Helpers
   # import Phoenix.LiveViewTest
-  alias Bonfire.Common.Config
+  use Bonfire.Common.Config
   import Untangle
 
   # NOTE: make sure you populate your local with seeds first, and then call these functions in iex

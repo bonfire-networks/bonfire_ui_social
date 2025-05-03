@@ -50,7 +50,7 @@ defmodule Bonfire.UI.Social.Feeds.ProfileFeed.Test do
     # Visit my profile feed
     conn
     |> visit("/user")
-    |> PhoenixTest.open_browser()
+    # |> PhoenixTest.open_browser()
 
     # Test that both my post and my boost of alice's post are in the feed
     # |> assert_has("article", count: 2)
@@ -93,7 +93,7 @@ defmodule Bonfire.UI.Social.Feeds.ProfileFeed.Test do
     # alice visits my profile feed
     conn
     |> visit("/user/#{me.id}")
-    |> PhoenixTest.open_browser()
+    # |> PhoenixTest.open_browser()
     |> assert_has("[data-id=feed_controls]")
     |> assert_has_or_open_browser("[data-id=object_body]", text: my_post_content)
     |> assert_has("article [data-role=name]", text: "Image post")

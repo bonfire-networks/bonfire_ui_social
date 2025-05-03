@@ -2,7 +2,7 @@ defmodule Bonfire.UI.Social.Feeds.FeedsPresets.PaginationTest do
   use Bonfire.UI.Social.ConnCase, async: false
   @moduletag :ui
   import Bonfire.Common.Simulation
-  alias Bonfire.Common.Config
+  use Bonfire.Common.Config
   alias Bonfire.Social.Fake
   alias Bonfire.Social.Boosts
   alias Bonfire.Social.Likes
@@ -585,7 +585,7 @@ defmodule Bonfire.UI.Social.Feeds.FeedsPresets.PaginationTest do
       # Verify the feed now contains all posts (still maintaining filters)
       |> assert_has_or("[data-id=feed] article", [count: total_posts], fn session ->
         session
-        |> PhoenixTest.open_browser()
+        # |> PhoenixTest.open_browser()
         |> click_button("[data-id=load_more]", "Load more")
         |> wait_async()
       end)

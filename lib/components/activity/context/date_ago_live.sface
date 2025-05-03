@@ -2,7 +2,13 @@
   {#match nil}
     {@date_ago}
   {#match date_time}
-    {#case Settings.get([:ui, :date_time_format], :relative, @__context__)}
+    {#case Settings.get([:ui, :date_time_format], :relative,
+        context: @__context__,
+        name: l("Date format"),
+        description: l("How to display the date/time of activities"),
+        type: :select,
+        options: Keyword.merge([relative: l("Relative")], DatesTimes.available_formats())
+      )}
       {#match :relative}
         <span
           id={"date_ago_#{@parent_id}_#{@activity_id}_#{@object_id}"}

@@ -8,7 +8,7 @@ defmodule Bonfire.UI.Social.SettingsTest do
   alias Bonfire.Social.Boosts
   alias Bonfire.Social.Likes
   alias Bonfire.Social.Graph.Follows
-  alias Bonfire.Common.Config
+  use Bonfire.Common.Config
   alias Bonfire.Common.Enums
 
   @moduletag :mneme

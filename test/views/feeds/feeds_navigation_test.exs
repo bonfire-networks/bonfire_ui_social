@@ -11,7 +11,7 @@ defmodule Bonfire.UI.Social.FeedsNavigation.Test do
     test "user can navigate between different feed types", %{} do
       conn(user: fake_user!())
       |> visit("/")
-      |> PhoenixTest.open_browser()
+      # |> PhoenixTest.open_browser()
       |> click_link("[data-id=nav_sidebar_nav_links] a", "Following")
       |> assert_path("/feed/my")
       |> click_link("[data-id=nav_sidebar_nav_links] a", "Explore")

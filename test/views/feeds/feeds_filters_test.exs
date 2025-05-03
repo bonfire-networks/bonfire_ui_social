@@ -147,10 +147,10 @@ defmodule Bonfire.UI.Social.FeedsFilters.Test do
       # check the feed
       conn(user: user)
       |> visit("/feed/local")
-      |> PhoenixTest.open_browser()
+      # |> PhoenixTest.open_browser()
       |> assert_has("[data-id=feed] article[data-verb=Boost]", text: "default post")
       |> click_button("[data-toggle='boost'] button", "Only")
-      |> PhoenixTest.open_browser()
+      # |> PhoenixTest.open_browser()
       |> assert_has("[data-id=subject_name]", text: "#{other_user.profile.name}")
       |> assert_has("[data-id=subject_username]", text: "#{other_user.character.username}")
       |> assert_has("[data-id=subject_name]", text: "#{user.profile.name}")
@@ -282,7 +282,7 @@ defmodule Bonfire.UI.Social.FeedsFilters.Test do
         # |> click_button("Filters")
         |> click_button("[data-toggle='boost'] button", "Hide")
         |> wait_async()
-        |> PhoenixTest.open_browser()
+        # |> PhoenixTest.open_browser()
         |> assert_has("[data-toggle='boost'] [data-id='disabled'].active")
         |> refute_has("[data-id=feed] article[data-verb=Boost]")
         # Only original

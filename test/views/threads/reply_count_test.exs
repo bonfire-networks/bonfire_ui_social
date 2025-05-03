@@ -35,7 +35,7 @@ defmodule Bonfire.Social.Threads.RepliesTest do
 
     conn
     |> visit("/post/#{op.id}")
-    |> PhoenixTest.open_browser()
+    # |> PhoenixTest.open_browser()
     |> assert_has("[data-id=reply_count]", text: "1")
   end
 end
