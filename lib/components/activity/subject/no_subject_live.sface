@@ -1,5 +1,5 @@
-<div data-role="no_subject" class="flex items-end w-full">
-  <Bonfire.UI.Social.Activity.InstanceIconLive peered={@peered} />
+<div data-role="no_subject" class="flex justify-start items-end w-full">
+  <div class="flex-1" />
 
   <Bonfire.UI.Social.Activity.LinkToActivityLive
     :if={@showing_within not in [:smart_input]}
@@ -27,4 +27,6 @@
     with_icon
     object_boundary={@object_boundary}
   />
+
+  <Bonfire.UI.Social.Activity.InstanceIconLive peered={@peered} />
 </div>

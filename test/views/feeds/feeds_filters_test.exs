@@ -203,7 +203,7 @@ defmodule Bonfire.UI.Social.FeedsFilters.Test do
     test "shows local images", %{user: user, other_user: other_user} do
       {post1, _} = Fake.create_test_content(:local, user, other_user)
 
-      {media, _post} = Fake.create_test_content(:images, user, other_user)
+      {media, _post} = Fake.create_test_content(:local_media, user, other_user)
 
       conn(user: user)
       |> visit("/feed/images")
@@ -215,7 +215,7 @@ defmodule Bonfire.UI.Social.FeedsFilters.Test do
 
   describe "flagged content feed" do
     test "shows posts flagged by me", %{user: user, other_user: other_user} do
-      {post, flag} = Fake.create_test_content(:flagged_by_me, user, other_user)
+      {post, flag} = Fake.create_test_content(:my_flags, user, other_user)
 
       conn(user: user)
       |> visit("/settings/user/flags")

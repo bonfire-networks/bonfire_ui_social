@@ -30,6 +30,8 @@ defmodule Bonfire.UI.Social.PreloadPresetTest do
 
       conn = conn(user: user, account: account)
 
+      Process.put([:bonfire, :default_pagination_limit], 5)
+
       {:ok,
        conn: conn, account: account, user: user, other_user: other_user, third_user: third_user}
     end
@@ -79,17 +81,17 @@ defmodule Bonfire.UI.Social.PreloadPresetTest do
             Map.put(object, :activity, activity)
             |> Activities.activity_preloads(preload: params.postloads)
 
-          preloaded_object = object.activity.object || object
+          object = e(object, :activity, :object, nil) || object
 
           conn =
             conn
             |> visit(feed_path)
             |> assert_path(feed_path)
             |> assert_has_or_open_browser("[data-id=activity]")
-            |> assert_has_or_open_browser("[data-object_id=#{id(preloaded_object)}]")
+            |> assert_has_or_open_browser("[data-object_id=#{id(object)}]")
 
           # Verify preloads based on the feed preset configuration
-          verify_preloads_in_html(conn, params.postloads, preloaded_object, object.activity)
+          verify_preloads_in_html(conn, params.postloads, object, activity)
         end
       end
     end

@@ -589,7 +589,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
       {#else}
         {#if @hide_activity != "all"}
           {#if current_user_id(@__context__) && @showing_within != :smart_input}
-            {#case not is_nil(@thread_id) and @thread_id == (id(@object) || id(@activity))}
+            {#case is_nil(@thread_id) or @thread_id == (id(@object) || id(@activity))}
               {#match top_of_thread?}
                 {#case not is_nil(@thread_id) and @thread_id == e(@reply_to, :object, :id, nil)}
                   {#match reply_to_top_of_thread?}
@@ -1263,8 +1263,9 @@ defmodule Bonfire.UI.Social.ActivityLive do
               debug("could not find a creator in activity or object")
               debug(activity)
               debug(object)
-              # [Bonfire.UI.Social.Activity.NoSubjectLive]
-              [Bonfire.UI.Social.Activity.SubjectLive]
+              [Bonfire.UI.Social.Activity.NoSubjectLive]
+
+            # [Bonfire.UI.Social.Activity.SubjectLive]
 
             %{
               profile: %{id: id} = profile,

@@ -27,5 +27,5 @@ defmodule Bonfire.UI.Social.Activity.SubjectMinimalLive do
   prop emoji, :any, default: nil
 
   def render(assigns),
-    do: Bonfire.UI.Social.Activity.SubjectLive.prepare(assigns) |> render_sface()
+    do: Bonfire.UI.Social.Activity.SubjectLive.prepare(assigns, __MODULE__) |> render_sface()
 end

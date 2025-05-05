@@ -37,7 +37,7 @@ defmodule Bonfire.UI.Social.ObjectThreadLive do
   end
 
   def update(assigns, socket) do
-    debug(assigns, "load object")
+    debug(assigns, "maybe load object")
 
     socket = socket |> assign(assigns)
 

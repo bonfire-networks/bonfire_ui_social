@@ -57,7 +57,9 @@ defmodule Bonfire.UI.Social.Feeds.FeedsPresets.PaginationTest do
 
       # Create posts with images in reverse order (newest first)
       posts =
-        Enum.map(total_posts..1, fn n -> Fake.create_test_content(:images, user1, user2, n) end)
+        Enum.map(total_posts..1, fn n ->
+          Fake.create_test_content(:local_media, user1, user2, n)
+        end)
 
       # Visit the images feed
       conn = conn(user: user1, account: account)
@@ -461,7 +463,7 @@ defmodule Bonfire.UI.Social.Feeds.FeedsPresets.PaginationTest do
           )
 
         # Create image posts
-        {_media, _post} = Fake.create_test_content(:images, user2, nil, n)
+        {_media, _post} = Fake.create_test_content(:local_media, user2, nil, n)
         nil
       end
 

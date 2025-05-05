@@ -48,13 +48,15 @@ defmodule Bonfire.UI.Social.Activity.SubjectLive do
     |> render_sface()
   end
 
-  def prepare(assigns) do
-    subject_id = assigns[:subject_id]
+  def prepare(assigns, caller \\ __MODULE__) do
+    subject_id =
+      assigns[:subject_id]
+      |> debug("subject_id")
 
     if creator_or_subject = current_subject(assigns[:subject_id], assigns) do
       debug(
         creator_or_subject,
-        "profileee for #{assigns[:verb]} / #{subject_id} - creator_or_subject from current_user or subject_user"
+        "profileA for #{assigns[:verb]} / #{subject_id} via #{caller} - creator_or_subject from current_user or subject_user"
       )
 
       creator_or_subject_id = id(creator_or_subject)
@@ -78,7 +80,7 @@ defmodule Bonfire.UI.Social.Activity.SubjectLive do
       character = e(assigns, :character, nil)
       profile = e(assigns, :profile, nil)
 
-      debug(profile || character, "profileee for #{assigns[:verb]} / #{subject_id}")
+      debug(profile || character, "profileB for #{assigns[:verb]} via #{caller} / #{subject_id}")
 
       subject_id = subject_id || id(profile) || id(character)
 
@@ -90,7 +92,8 @@ defmodule Bonfire.UI.Social.Activity.SubjectLive do
         profile_name: e(profile, :name, nil) || e(assigns, :profile_name, nil),
         character_username: character_username,
         path:
-          path(character) || prepare_path(character_username, subject_id, character || profile),
+          if(character, do: path(character)) ||
+            prepare_path(character_username, subject_id, character || profile),
         profile_media: Media.avatar_url(profile)
       )
     end
@@ -101,20 +104,27 @@ defmodule Bonfire.UI.Social.Activity.SubjectLive do
     object = assigns[:object] || e(activity, :object, nil)
 
     creator_or_subject =
-      e(object, :created, :creator, nil) || e(activity, :created, :creator, nil) ||
-        e(object, :creator, nil) || e(activity, :subject, nil)
+      (e(object, :created, :creator, nil) || e(activity, :created, :creator, nil) ||
+         e(object, :creator, nil) || e(activity, :subject, nil))
+      |> debug("creator_or_subject")
 
     creator_or_subject_id =
-      id(creator_or_subject) || e(object, :created, :creator_id, nil) ||
-        e(activity, :created, :creator_id, nil) || e(object, :creator_id, nil) ||
-        e(activity, :subject_id, nil)
+      (id(creator_or_subject) || e(object, :created, :creator_id, nil) ||
+         e(activity, :created, :creator_id, nil) || e(object, :creator_id, nil) ||
+         e(activity, :subject_id, nil))
+      |> debug("creator_or_subject_id")
 
     current_subject(creator_or_subject || creator_or_subject_id, assigns)
   end
 
-  def current_subject(creator_or_subject, assigns) do
-    current_user = current_user(assigns)
-    subject_user = assigns[:subject_user]
+  def current_subject(creator_or_subject, %{} = assigns) do
+    current_user =
+      current_user(assigns)
+      |> debug("current_user")
+
+    subject_user =
+      assigns[:subject_user]
+      |> debug("subject_user")
 
     current_subject(creator_or_subject, subject_user, current_user)
   end
