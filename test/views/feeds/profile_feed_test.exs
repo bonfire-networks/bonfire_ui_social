@@ -85,7 +85,7 @@ defmodule Bonfire.UI.Social.Feeds.ProfileFeed.Test do
     alice_post_content: alice_post_content
   } do
     # Create image posts
-    {_media, _post} = Fake.create_test_content(:local_media, me, nil)
+    {_media, _post} = Fake.create_test_content(:image_post, me, nil)
 
     # connect as alice
     conn = conn(user: alice)

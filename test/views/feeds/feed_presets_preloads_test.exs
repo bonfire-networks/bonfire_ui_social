@@ -177,7 +177,7 @@ defmodule Bonfire.UI.Social.PreloadPresetTest do
         # Creator info is in subject component
         |> assert_has_or_open_browser("[data-id=subject_avatar]")
         |> assert_has_or_open_browser("[data-role=subject]",
-          text: object.created.creator.profile.name
+          text: e(object, :created, :creator, :profile, :name, "")
         )
 
       # Verify the avatar link points to the correct profile path

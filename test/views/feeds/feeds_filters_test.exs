@@ -206,7 +206,7 @@ defmodule Bonfire.UI.Social.FeedsFilters.Test do
     test "shows local images", %{user: user, other_user: other_user} do
       {post1, _} = Fake.create_test_content(:local, user, other_user)
 
-      {media, _post} = Fake.create_test_content(:local_media, user, other_user)
+      {media, _post} = Fake.create_test_content(:image_post, user, other_user)
 
       conn(user: user)
       |> visit("/feed/images")

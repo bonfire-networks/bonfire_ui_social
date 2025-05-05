@@ -905,6 +905,9 @@ defmodule Bonfire.UI.Social.ActivityLive do
                       reply_count={@reply_count}
                       is_remote={@is_remote}
                       hide_actions={@hide_actions}
+                      subject_user={@subject_user}
+                      creator={e(@object, :created, :creator, nil) || e(@activity, :created, :creator, nil) ||
+                        e(@activity, :subject, nil)}
                     />
                   {/if}
                 {/if}

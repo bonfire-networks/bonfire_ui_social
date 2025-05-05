@@ -51,44 +51,44 @@ defmodule Bonfire.UI.Social.Activity.MoreActionsLive do
     |> render_sface()
   end
 
-  def prepare(assigns) do
-    if creator_or_subject =
-         Bonfire.UI.Social.Activity.SubjectLive.current_creator_or_subject(assigns) do
-      # || id(creator_or_subject(activity, object)) || creator_or_subject_id(activity, object)
-      creator_or_subject_id = id(creator_or_subject)
-      character_username = e(creator_or_subject, :character, :username, nil)
+  # def prepare(assigns) do
+  #   if creator_or_subject =
+  #        Bonfire.UI.Social.Activity.SubjectLive.current_creator_or_subject(assigns) do
+  #     # || id(creator_or_subject(activity, object)) || creator_or_subject_id(activity, object)
+  #     creator_or_subject_id = id(creator_or_subject)
+  #     character_username = e(creator_or_subject, :character, :username, nil)
 
-      assigns
-      |> assign(
-        creator: creator_or_subject,
-        creator_id: creator_or_subject_id,
-        # name(assigns.activity, assigns.object, creator_or_subject)
-        creator_name: e(creator_or_subject, :profile, :name, l("this user"))
-      )
-    else
-      creator_or_subject = creator_or_subject(assigns[:activity], assigns[:object])
+  #     assigns
+  #     |> assign(
+  #       creator: creator_or_subject,
+  #       creator_id: creator_or_subject_id,
+  #       # name(assigns.activity, assigns.object, creator_or_subject)
+  #       creator_name: e(creator_or_subject, :profile, :name, l("this user"))
+  #     )
+  #   else
+  #     creator_or_subject = creator_or_subject(assigns[:activity], assigns[:object])
 
-      assigns
-      |> assign(
-        creator: creator_or_subject,
-        creator_id:
-          id(creator_or_subject) || creator_or_subject_id(assigns[:activity], assigns[:object]),
-        creator_name: e(creator_or_subject, :profile, :name, l("this user"))
-      )
-    end
-  end
+  #     assigns
+  #     |> assign(
+  #       creator: creator_or_subject,
+  #       creator_id:
+  #         id(creator_or_subject) || creator_or_subject_id(assigns[:activity], assigns[:object]),
+  #       creator_name: e(creator_or_subject, :profile, :name, l("this user"))
+  #     )
+  #   end
+  # end
 
-  def creator_or_subject(activity, object) do
-    e(object, :created, :creator, nil) || e(activity, :created, :creator, nil) ||
-      e(activity, :subject, nil)
-  end
+  # def creator_or_subject(activity, object) do
+  #   e(object, :created, :creator, nil) || e(activity, :created, :creator, nil) ||
+  #     e(activity, :subject, nil)
+  # end
 
-  def creator_or_subject_id(activity, object, subject \\ nil) do
-    id(subject) || e(object, :created, :creator_id, nil) || e(object, :creator_id, nil) ||
-      e(activity, :subject_id, nil)
-  end
+  # def creator_or_subject_id(activity, object, subject \\ nil) do
+  #   id(subject) || e(object, :created, :creator_id, nil) || e(object, :creator_id, nil) ||
+  #     e(activity, :subject_id, nil)
+  # end
 
-  def name(activity, object, subject \\ nil) do
-    e(subject || creator_or_subject(activity, object), :profile, :name, l("this user"))
-  end
+  # def name(activity, object, subject \\ nil) do
+  #   e(subject || creator_or_subject(activity, object), :profile, :name, l("this user"))
+  # end
 end

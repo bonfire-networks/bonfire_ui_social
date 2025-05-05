@@ -136,6 +136,7 @@
             <Bonfire.UI.Social.Activity.MoreActionsLive
               :if={!@hide_more_actions}
               object={@object}
+              creator={@creator}
               activity={@activity}
               object_type={@object_type}
               object_boundary={@object_boundary}
@@ -215,6 +216,7 @@
           <Bonfire.UI.Social.Activity.MoreActionsLive
             :if={!@hide_more_actions}
             object={@object}
+            creator={@creator}
             activity={@activity}
             object_type={@object_type}
             object_boundary={@object_boundary}

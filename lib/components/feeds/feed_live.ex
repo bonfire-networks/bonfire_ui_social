@@ -702,8 +702,8 @@ defmodule Bonfire.UI.Social.FeedLive do
 
   defp set_type(include_field, exclude_field, type, value, socket) do
     do_set_type(
-      e(assigns(socket), :feed_filters, include_field, []),
-      e(assigns(socket), :feed_filters, exclude_field, []),
+      List.wrap(ed(assigns(socket), :feed_filters, include_field, [])),
+      List.wrap(ed(assigns(socket), :feed_filters, exclude_field, [])),
       include_field,
       exclude_field,
       Types.maybe_to_atom(type),
