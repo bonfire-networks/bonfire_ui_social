@@ -81,7 +81,7 @@ defmodule Bonfire.Social.Notifications.Threads.Test do
     conn_alice
     |> visit("/notifications")
     |> assert_has("article", text: attrs_reply.post_content.html_body)
-    |> assert_has("[data-id=subject]", text: bob.profile.name)
+    |> assert_has("[data-role=subject]", text: bob.profile.name)
     |> assert_has("[data-verb=Reply]")
 
     # |> assert_has("article", text: attrs.post_content.html_body)

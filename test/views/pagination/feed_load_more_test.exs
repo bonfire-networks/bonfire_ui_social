@@ -120,7 +120,7 @@ defmodule Bonfire.UI.Social.Feeds.LoadMoreTest do
       |> wait_async()
       # |> PhoenixTest.open_browser()
       |> assert_has("[data-id=feed] article", count: total_posts)
-      |> assert_has("[data-id=subject]", count: total_posts)
+      |> assert_has("[data-role=subject]", count: total_posts)
 
       # Then visit the user profile who authored those posts
       conn

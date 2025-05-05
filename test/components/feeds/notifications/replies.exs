@@ -50,7 +50,7 @@ defmodule Bonfire.UI.Social.Feeds.Notifications.ReplyTest do
     assert doc
            |> Floki.parse_fragment()
            ~> elem(1)
-           |> Floki.find("[data-id=subject]")
+           |> Floki.find("[data-role=subject]")
            |> Floki.text() =~ bob.profile.name
   end
 

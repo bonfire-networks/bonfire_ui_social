@@ -8,6 +8,7 @@ defmodule Bonfire.UI.Social.Activity.MoreActionsLive do
 
   prop activity, :any, default: nil
   prop subject_user, :any, default: nil
+  prop creator, :any, default: nil
   prop object, :any, required: true
   prop object_type, :any, default: nil
   prop object_boundary, :any, default: nil
@@ -35,13 +36,18 @@ defmodule Bonfire.UI.Social.Activity.MoreActionsLive do
 
     # creator = creator_or_subject(assigns.activity, assigns.object) |> debug("crreator")
 
+    creator = assigns[:creator]
+
     assigns
-    |> prepare()
-    # |> assign(
-    #   creator: creator,
-    #   creator_id: creator_or_subject_id(assigns.activity, assigns.object, creator),
-    #   creator_name: name(assigns.activity, assigns.object, creator)
-    # )
+    # |> prepare()
+    |> assign(
+      #   creator: creator,
+      creator_id: id(creator),
+      # name(assigns.activity, assigns.object, creator)
+      creator_name:
+        e(creator, :profile, :name, nil) || e(creator, :character, :username, nil) ||
+          l("the user")
+    )
     |> render_sface()
   end
 

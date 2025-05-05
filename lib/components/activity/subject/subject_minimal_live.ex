@@ -26,6 +26,6 @@ defmodule Bonfire.UI.Social.Activity.SubjectMinimalLive do
   prop parent_id, :any, default: nil
   prop emoji, :any, default: nil
 
-  def render(assigns),
-    do: Bonfire.UI.Social.Activity.SubjectLive.prepare(assigns, __MODULE__) |> render_sface()
+  # def render(assigns),
+  #   do: Bonfire.UI.Social.Activity.SubjectLive.prepare(assigns, __MODULE__) |> render_sface()
 end

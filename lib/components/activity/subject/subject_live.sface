@@ -1,4 +1,4 @@
-<div data-id="subject" class="subject relative flex items-start">
+<div data-role="subject" class="subject relative flex items-start">
   {!-- <div
     data-trigger="hover"
     data-position="top"

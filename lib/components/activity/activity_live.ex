@@ -96,7 +96,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
 
     assign(
       socket,
-      activity: if(is_map(activity), do: Map.drop(activity, [:object])),
+      activity: if(is_map(activity), do: Map.delete(activity, :object)),
       object: e(activity, :object, nil)
     )
     |> maybe_update_some_assigns(assigns, [])
@@ -252,17 +252,21 @@ defmodule Bonfire.UI.Social.ActivityLive do
     do_prepare(assigns)
   end
 
-  def prepare(%{activity: %{object: object}, object: nil} = assigns) when not is_nil(object) do
+  def prepare(%{activity: %{object: object} = activity, object: nil} = assigns)
+      when not is_nil(object) do
     debug(
       "Activity ##{debug_i(assigns[:activity_id] || id(assigns[:activity]), assigns[:activity_inception])} prepare activity with object in assoc"
     )
 
     Map.put(assigns, :object, object)
+    |> Map.put(:activity, Map.delete(activity, :object))
     |> do_prepare()
   end
 
-  def prepare(%{activity: %{object: object}} = assigns) when not is_nil(object) do
-    Map.put(assigns, :object, object)
+  def prepare(%{activity: %{object: object} = activity} = assigns) when not is_nil(object) do
+    assigns
+    |> Map.put(:object, object)
+    |> Map.put(:activity, Map.delete(activity, :object))
     |> do_prepare()
   end
 
@@ -751,7 +755,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
                   :if={@hide_activity != "subject"}
                   module={component}
                   path={case e(component_assigns, :character, nil) do
-                    nil -> nil
+                    nil -> e(component_assigns, :subject_id, nil)
                     character -> path(character)
                   end}
                   profile={e(component_assigns, :profile, nil)}
@@ -874,6 +878,8 @@ defmodule Bonfire.UI.Social.ActivityLive do
                       is_answer={not is_nil(e(@activity, :replied, :pinned, nil) || e(@activity, :pinned, nil))}
                       hide_actions={@hide_actions}
                       subject_user={@subject_user}
+                      creator={e(@object, :created, :creator, nil) || e(@activity, :created, :creator, nil) ||
+                        e(@activity, :subject, nil)}
                     />
                   {#else}
                     <StatelessComponent

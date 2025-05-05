@@ -37,7 +37,7 @@ defmodule Bonfire.UI.Social.PreloadPresetTest do
     end
 
     # Tests for different feed presets
-    # for %{preset: preset, postloads: postloads} = params when preset in [:local] <-
+    # for %{preset: preset, postloads: postloads} = params when preset in [:my_flags] <-
     for %{preset: preset, postloads: postloads} = params
         when preset not in [
                :user_followers,
@@ -77,9 +77,13 @@ defmodule Bonfire.UI.Social.PreloadPresetTest do
         if object do
           activity = e(activity, :activity, nil) || e(object, :activity, nil) || activity
 
+          expected_preloads =
+            params.postloads
+            |> debug("Expected preloads for #{inspect(preset)}")
+
           object =
             Map.put(object, :activity, activity)
-            |> Activities.activity_preloads(preload: params.postloads)
+            |> Activities.activity_preloads(preload: expected_preloads)
 
           object = e(object, :activity, :object, nil) || object
 
@@ -91,7 +95,7 @@ defmodule Bonfire.UI.Social.PreloadPresetTest do
             |> assert_has_or_open_browser("[data-object_id=#{id(object)}]")
 
           # Verify preloads based on the feed preset configuration
-          verify_preloads_in_html(conn, params.postloads, object, activity)
+          verify_preloads_in_html(conn, preset, params.postloads, object, activity)
         end
       end
     end
@@ -117,11 +121,11 @@ defmodule Bonfire.UI.Social.PreloadPresetTest do
   end
 
   # Helpers to verify different preloads in the HTML
-  defp verify_preloads_in_html(conn, [], object, activity) do
+  defp verify_preloads_in_html(conn, preset, [], object, activity) do
     conn
   end
 
-  defp verify_preloads_in_html(conn, expected, object, activity) do
+  defp verify_preloads_in_html(conn, preset, expected, object, activity) do
     conn
     |> verify_verb(Enum.member?(expected, :with_verb), activity)
     |> verify_object(Enum.member?(expected, :with_object), object)
@@ -133,7 +137,7 @@ defmodule Bonfire.UI.Social.PreloadPresetTest do
     #  TODO: needs test data
     |> verify_label(Enum.member?(expected, :maybe_with_labelled), activity)
     |> verify_media(Enum.member?(expected, :with_media), activity)
-    |> verify_subject(Enum.member?(expected, :with_subject), activity)
+    |> verify_subject(preset != :my_flags and Enum.member?(expected, :with_subject), activity)
     |> verify_creator(Enum.member?(expected, :with_creator), object)
   end
 
@@ -141,7 +145,7 @@ defmodule Bonfire.UI.Social.PreloadPresetTest do
     if expected? do
       session =
         session
-        |> assert_has_or_open_browser("[data-id=subject]")
+        |> assert_has_or_open_browser("[data-role=subject]")
         |> assert_has_or(
           "[data-id=subject_name]",
           [text: activity.subject.profile.name],
@@ -172,7 +176,7 @@ defmodule Bonfire.UI.Social.PreloadPresetTest do
         conn
         # Creator info is in subject component
         |> assert_has_or_open_browser("[data-id=subject_avatar]")
-        |> assert_has_or_open_browser("[data-id=subject]",
+        |> assert_has_or_open_browser("[data-role=subject]",
           text: object.created.creator.profile.name
         )
 

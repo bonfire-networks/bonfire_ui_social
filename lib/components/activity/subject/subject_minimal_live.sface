@@ -1,4 +1,4 @@
-<div data-id="subject">
+<div data-role="subject" data-id={@subject_id}>
   {#case @showing_within}
     {#match :thread}
       <div />

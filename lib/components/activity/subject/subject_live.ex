@@ -40,13 +40,13 @@ defmodule Bonfire.UI.Social.Activity.SubjectLive do
   prop show_minimal_subject_and_note, :any, default: nil
   prop extra_info, :any, default: nil
 
-  def render(assigns) do
-    assigns
-    |> debug("assigns received")
-    |> prepare()
-    |> debug("assigns prepared")
-    |> render_sface()
-  end
+  # def render(assigns) do
+  #   assigns
+  #   |> debug("assigns received")
+  #   |> prepare()
+  #   |> debug("assigns prepared")
+  #   |> render_sface()
+  # end
 
   def prepare(assigns, caller \\ __MODULE__) do
     subject_id =

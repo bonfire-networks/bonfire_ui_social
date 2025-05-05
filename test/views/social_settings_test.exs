@@ -92,7 +92,7 @@ defmodule Bonfire.UI.Social.SettingsTest do
 
       # Visit the feed and check results
       conn =
-        visit(conn, "/feed/local")
+        visit(conn, "/feed/explore")
         # |> PhoenixTest.open_browser()
         |> assert_has("[data-id=feed] article", text: "first post")
         |> refute_has("[data-id=feed] article", text: "reply")
@@ -121,7 +121,7 @@ defmodule Bonfire.UI.Social.SettingsTest do
         end)
 
       conn =
-        visit(conn, "/feed/local")
+        visit(conn, "/feed/explore")
         # |> PhoenixTest.open_browser()
         |> assert_has("[data-id=feed] article", text: "first post")
         |> assert_has("[data-id=feed] article", text: "reply")

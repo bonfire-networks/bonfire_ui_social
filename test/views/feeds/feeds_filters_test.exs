@@ -146,11 +146,14 @@ defmodule Bonfire.UI.Social.FeedsFilters.Test do
       {:ok, boost} = Boosts.boost(user, post)
       # check the feed
       conn(user: user)
-      |> visit("/feed/local")
+      |> visit("/feed/explore")
       # |> PhoenixTest.open_browser()
-      |> assert_has("[data-id=feed] article[data-verb=Boost]", text: "default post")
+      # |> assert_has_or_open_browser("[data-id=feed] article[data-verb=Boost]", text: "default post")
       |> click_button("[data-toggle='boost'] button", "Only")
       # |> PhoenixTest.open_browser()
+      |> assert_has_or_open_browser("[data-id=feed] article[data-verb=Boost]",
+        text: "default post"
+      )
       |> assert_has("[data-id=subject_name]", text: "#{other_user.profile.name}")
       |> assert_has("[data-id=subject_username]", text: "#{other_user.character.username}")
       |> assert_has("[data-id=subject_name]", text: "#{user.profile.name}")
@@ -276,8 +279,8 @@ defmodule Bonfire.UI.Social.FeedsFilters.Test do
 
       session =
         conn(user: user)
-        |> visit("/feed/local")
-        |> assert_has("[data-id=feed] article[data-verb=Boost]")
+        |> visit("/feed/explore")
+        |> assert_has_or_open_browser("[data-id=feed] article[data-verb=Boost]")
         # |> assert_has("[data-id=feed] article", count: 2)  # Original + boost - TODO: test this way with show_objects_only_once: false filter
         # |> click_button("Filters")
         |> click_button("[data-toggle='boost'] button", "Hide")
