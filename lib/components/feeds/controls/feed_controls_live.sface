@@ -200,8 +200,6 @@
 
   <div class="flex flex-col gap-2 pt-3 w-full">
     <Bonfire.UI.Social.TimeControlLive
-      keys={[Bonfire.UI.Social.FeedLive, :time_limit]}
-      options={%{1 => l("Day"), 7 => l("Week"), 30 => l("Month"), 365 => "Year", 0 => "All time"}}
       feed_name={@feed_name}
       event_target={@event_target}
       event_name="set_filter"

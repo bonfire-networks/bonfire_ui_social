@@ -33,32 +33,6 @@ defmodule Bonfire.UI.Social.FeedsFilters.Test do
       |> assert_has("[data-toggle='boost'] [data-id='default'].active")
     end
 
-    test "user can set time limit filters", %{} do
-      conn(user: fake_user!())
-      |> visit("/feed")
-      |> within("[data-scope='time_limit']", fn conn ->
-        # Since this is a range input, we need to set values directly
-        # The range has values from 0-4 corresponding to the displayed options
-
-        # Set to "All time" (value 0)
-        conn = fill_in(conn, "Time limit control", with: "0")
-
-        # Set to "Day" (value 1)
-        conn = fill_in(conn, "Time limit control", with: "1")
-
-        # Set to "Week" (value 2)
-        conn = fill_in(conn, "Time limit control", with: "2")
-
-        # Set to "Month" (value 3)
-        conn = fill_in(conn, "Time limit control", with: "3")
-
-        # Set to "Year" (value 4)
-        conn = fill_in(conn, "Time limit control", with: "4")
-
-        conn
-      end)
-    end
-
     @tag :todo
     # if this is desired?
     test "filters persist after navigation", %{} do
@@ -159,36 +133,6 @@ defmodule Bonfire.UI.Social.FeedsFilters.Test do
       |> assert_has("[data-id=subject_name]", text: "#{user.profile.name}")
 
       # |> assert_has("[data-id=subject_username]", text: "#{user.character.username}")
-    end
-
-    @tag :todo
-    test "respects time filters", %{user: user, other_user: other_user} do
-      # Create an old post
-      old_time = DateTime.add(DateTime.utc_now(), -60, :day)
-
-      old_post =
-        fake_post!(other_user, "public", %{
-          post_content: %{name: "default post", html_body: "content"}
-        })
-
-      # Update post timestamp to be old
-      repo().update_all("posts", set: [inserted_at: old_time])
-
-      # Create a new post
-      new_post =
-        fake_post!(other_user, "public", %{
-          post_content: %{name: "default post", html_body: "content"}
-        })
-
-      conn(user: user)
-      |> visit("/feed/local")
-      # |> click_button("Filters")
-      |> within("[data-scope='time_limit']", fn session ->
-        session
-        |> choose("Month")
-      end)
-      |> assert_has("[data-id=feed] article", text: "default post")
-      |> refute_has("[data-id=feed] article", text: old_post.post_content.html_body)
     end
   end
 

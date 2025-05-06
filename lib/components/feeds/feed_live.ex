@@ -481,12 +481,13 @@ defmodule Bonfire.UI.Social.FeedLive do
 
   def handle_event(
         "set_filter",
-        %{"time_limit" => attrs},
+        %{"time_limit_idx" => time_limit_idx},
         socket
       ) do
-    options = %{1 => l("Day"), 7 => l("Week"), 30 => l("Month"), 365 => "Year", 0 => "All time"}
-    values = options |> Map.keys() |> Enum.sort()
-    selected_value = find_value_by_index(attrs, values)
+    selected_value =
+      Bonfire.UI.Social.TimeControlLive.find_value_by_index(time_limit_idx)
+      |> debug("selected value at index #{time_limit_idx}")
+
     set_filters(%{time_limit: selected_value}, socket)
   end
 
@@ -770,16 +771,6 @@ defmodule Bonfire.UI.Social.FeedLive do
       socket,
       true
     )
-  end
-
-  def find_value_by_index(index, values) do
-    index_int =
-      case Integer.parse(to_string(index)) do
-        {num, _} -> num
-        :error -> 0
-      end
-
-    Enum.at(values, index_int, List.first(values))
   end
 
   #   def handle_event(
