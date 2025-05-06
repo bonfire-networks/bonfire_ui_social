@@ -217,7 +217,7 @@
                 target={@myself}
                 hide_guest_fallback={@hide_guest_fallback}
                 label={l("Show older activities")}
-                opts={%{"phx-value-time_limit" => 0}}
+                opts={%{"data-id" => "load_all_time", "phx-value-time_limit" => 0}}
                 current_url={@current_url}
                 hide_if_no_more
               />
