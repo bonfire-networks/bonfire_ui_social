@@ -212,7 +212,10 @@ defmodule Bonfire.UI.Social.Feeds.LoadMoreRemoveTimeFilterTest do
       |> visit("/feed/?time_limit=1")
       # Check that we only see posts from today 
       |> assert_has_or_open_browser("[data-id=feed] article [data-id=object_body]", count: 1)
-      |> assert_has_or_open_browser("[data-id=feed] article", text: "seconds ago")
+      |> assert_has_or("[data-id=feed] article", [text: "seconds ago"], fn session ->
+        session
+        |> assert_has("[data-id=feed] article", text: "second ago")
+      end)
 
       # FIXME: body not preloaded in test env as guest
 

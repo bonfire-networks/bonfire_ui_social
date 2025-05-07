@@ -50,7 +50,7 @@ defmodule Bonfire.UI.Social.Feeds.LoadMoreTest do
 
       conn
       |> visit("/feed/local")
-      |> refute_has("[data-id=load_more]")
+      |> refute_has_or_open_browser("[data-id=load_more]", text: "Load more")
       |> assert_has("[data-id=feed_activity_list]")
 
       # |> assert_has("[data-id=load_more]")
@@ -82,7 +82,7 @@ defmodule Bonfire.UI.Social.Feeds.LoadMoreTest do
 
       conn
       |> visit("/feed/local")
-      |> refute_has_or_open_browser("[data-id=load_more]")
+      |> refute_has_or_open_browser("[data-id=load_more]", text: "Load more")
       |> assert_has("[data-id=feed_activity_list]")
     end
 

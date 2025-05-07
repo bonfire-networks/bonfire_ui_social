@@ -408,7 +408,9 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
   # end
 
   def paginate_opts(attrs, socket, opts) do
-    attrs = input_to_atoms(attrs)
+    attrs =
+      input_to_atoms(attrs)
+      |> debug("atttt")
 
     opts =
       to_options(socket)
@@ -425,13 +427,12 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
       |> Keyword.put(
         :deferred_join_multiply_limit,
         e(attrs, :multiply_limit, nil) |> Types.maybe_to_integer(nil) ||
-          e(opts, :multiply_limit, nil) || 1
+          e(opts, :deferred_join_multiply_limit, nil) || 1
       )
-      |> Keyword.drop([:multiply_limit])
       |> Keyword.put(
         :paginate,
         Keyword.merge(
-          Keyword.new(attrs),
+          Keyword.new(attrs) |> Keyword.delete(:multiply_limit),
           Activities.order_pagination_opts(
             opts[:sort_by] || e(opts, :feed_filters, :sort_by, nil),
             opts[:sort_order] || e(opts, :feed_filters, :sort_order, nil)
@@ -484,7 +485,11 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
      |> assign_generic(
        feed_update_mode: "append",
        hide_activities: opts[:hide_activities],
-       feed_count: e(opts, :page_info, :page_count, nil) || Enum.count(entries || [])
+       time_limit: opts[:time_limit],
+       deferred_join_multiply_limit: opts[:deferred_join_multiply_limit],
+       previous_page_info: e(opts, :page_info, nil),
+       feed_count: e(opts, :page_info, :page_count, nil) || Enum.count(entries || []),
+       loading: true
      )
      |> assign_generic(assigns)
      |> insert_feed(entries, opts)}
@@ -511,9 +516,10 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
        hide_activities: opts[:hide_activities],
        feed_count: e(opts, :page_info, :page_count, nil) || Enum.count(e(feed, :edges, [])),
        time_limit: opts[:time_limit],
-       multiply_limit: opts[:deferred_join_multiply_limit],
+       deferred_join_multiply_limit: opts[:deferred_join_multiply_limit],
        previous_page_info: e(opts, :page_info, nil),
        page_info: e(feed, :page_info, []),
+       loading: true,
        #  feed_filters: filters,
        activity_preloads: opts[:activity_preloads]
      )
@@ -531,7 +537,8 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
       |> insert_feed([], opts)
       |> assign_generic(assigns)
       |> assign_generic(
-        previous_page_info: e(assigns(socket), :page_info, nil),
+        previous_page_info: nil,
+        page_info: nil,
         loading: false,
         reloading: false,
         feed_count: 0
@@ -539,11 +546,12 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
     else
       debug(assigns, "nothing to add")
 
+      previous_page_info = e(opts, :page_info, nil) || e(assigns(socket), :page_info, nil)
+
       socket
       |> assign_generic(assigns)
       |> assign_generic(
-        previous_page_info: e(assigns(socket), :page_info, nil),
-        page_info: assigns[:page_info],
+        previous_page_info: previous_page_info,
         loading: false,
         reloading: false
       )
