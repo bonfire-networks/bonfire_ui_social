@@ -28,6 +28,7 @@
       parent_id={["subject", @activity_component_id || @activity_id]}
       user_id={@subject_id}
       src={@profile_media}
+      fallback_class="w-10 h-10"
       class={
         "rounded-full w-10 h-10",
         "!w-7 !h-7": @__context__[:ui_compact]
