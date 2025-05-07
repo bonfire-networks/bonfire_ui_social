@@ -138,8 +138,16 @@ defmodule Bonfire.UI.Social.FeedsLive do
   #   to_options(socket) ++ [feed_filters: %{object_types: params["type"]}]
   # end
 
+  def handle_params(
+        %{"after" => _cursor_after} = attrs,
+        url,
+        socket
+      ) do
+    LiveHandler.handle_params(attrs, url, prepare_feed_socket(attrs, socket))
+  end
+
   def handle_params(%{"tab" => tab} = params, _url, socket) do
-    set_feed_assigns({maybe_to_atom(tab), params}, socket)
+    set_feed_assigns(maybe_to_atom(tab), params, socket)
   end
 
   # def handle_params(%{"tab" => "explore" = _tab} = params, _url, socket) do
@@ -149,9 +157,9 @@ defmodule Bonfire.UI.Social.FeedsLive do
   #          false,
   #          assigns(socket)
   #        ) do
-  #     set_feed_assigns({:curated, params}, socket)
+  #     set_feed_assigns(:curated, params, socket)
   #   else
-  #     set_feed_assigns({:explore, params}, socket)
+  #     set_feed_assigns(:explore, params, socket)
   #   end
   # end
   # def handle_params(%{"tab" => "explore" = _tab} = params, _url, socket) do
@@ -161,15 +169,15 @@ defmodule Bonfire.UI.Social.FeedsLive do
   #   #        false,
   #   #        assigns(socket)
   #   #      ) do
-  #   #   set_feed_assigns({:curated, params}, socket)
+  #   #   set_feed_assigns(:curated, params, socket)
   #   # else
-  #   set_feed_assigns({:explore, params}, socket)
+  #   set_feed_assigns(:explore, params, socket)
   #   # end
   # end
 
   def handle_params(params, _url, socket) do
     set_feed_assigns(
-      {e(assigns(socket), :live_action, :default), params},
+      params,
       socket
     )
   end
@@ -206,13 +214,22 @@ defmodule Bonfire.UI.Social.FeedsLive do
   # end
   # end
 
-  def set_feed_assigns(feed_meta, socket) do
-    debug(feed_meta)
+  def prepare_feed_socket(feed \\ nil, attrs, socket) do
+    debug(feed, "feed")
+    debug(attrs, "attrs")
 
-    {:noreply,
-     LiveHandler.feed_default_assigns(feed_meta, socket)
-     |> debug("feed_default_assigns")
-     |> assign(socket, ...)
-     |> assign(..., FeedLive.maybe_widgets(e(..., :assigns, nil)))}
+    socket
+    |> assign(
+      LiveHandler.feed_default_assigns(
+        {feed || e(assigns(socket), :live_action, :default), input_to_atoms(attrs)},
+        socket
+      )
+      |> debug("feed_default_assigns")
+    )
+    |> assign(..., FeedLive.maybe_widgets(assigns(...)))
+  end
+
+  def set_feed_assigns(feed \\ nil, attrs, socket) do
+    {:noreply, prepare_feed_socket(feed, attrs, socket)}
   end
 end

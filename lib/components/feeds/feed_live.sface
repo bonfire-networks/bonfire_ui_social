@@ -131,127 +131,160 @@
       </div>
     {/if}
 
-    {!-- context={@id} --}
-    <LoadMoreLive
-      :if={!@hide_load_more}
-      live_handler={Bonfire.Social.Feeds}
-      page_info={@page_info}
-      cursor={LoadMoreLive.end_cursor(@page_info) ||
-        if @previous_page_info && Config.get([Bonfire.Social.Feeds, :query_with_deferred_join], true),
-          do: LoadMoreLive.end_cursor(@previous_page_info)}
-      multiply_limit={if Config.get([Bonfire.Social.Feeds, :query_with_deferred_join], true) and
-           !LoadMoreLive.end_cursor(@page_info),
-         do: (@multiply_limit || 2) * 2,
-         else: 1}
-      target={@myself}
-      infinite_scroll={Settings.get([:ui, :infinite_scroll], :preload, @__context__)}
-      entry_count={@feed_count}
-      current_url={@current_url}
-    >
-      <:if_no_more>
-        {#if is_nil(@previous_page_info)}
-          {#if @loading}
-            <div class="flex flex-col items-center gap-3 py-12 place-content-center">
-              {#if user_socket_connected?(@__context__) && @cute_gif}
-                <div class="flex flex-row items-center justify-center my-12">
-                  <img src={@cute_gif}>
-                </div>
-              {#else}
-                <img src={Bonfire.Common.URIs.static_path("/images/loading.svg")}>
-              {/if}
+    {!-- Pagination: --}
 
-              <div class="sr-only text-base-content">{l("Loading...")}</div>
-            </div>
-          {#elseif not is_integer(@feed_count) or @feed_count == 0 or !(is_list(@feed) and @feed != [])}
-            <div data-id="empty-feed" class="flex items-center place-content-center">
-              <Bonfire.UI.Common.EmptyFeed
-                feed_name={@feed_name}
-                feedback_title={@feedback_title}
-                feedback_message={@feedback_message}
-                empty_feed={@bottom_or_empty_feed}
-              />
-            </div>
-          {#else}
-            {!-- we have a previous_page_info but no time limit --}
-            <img
-              class="max-w-[220px] opacity-80 mx-auto"
-              src={Bonfire.Common.URIs.static_path("/images/bonfire-exausted.png")}
-            />
-            <p class="text-sm font-medium text-base-content/70 text-center my-4">{l("That's all folks...")}</p>
-          {/if}
-        {#else}
+    {!-- # TODO: put these in a prepare function instead of so many cases in the markup --}
+    {#case LoadMoreLive.end_cursor(@page_info)}
+      {#match end_cursor}
+        {#case LoadMoreLive.end_cursor(@previous_page_info)}
+          {#match previous_end_cursor}
+            {#case LoadMoreLive.final_cursor(@page_info) || LoadMoreLive.final_cursor(@previous_page_info)}
+              {#match final_end_cursor}
+                {#case Config.get([Bonfire.Social.Feeds, :query_with_deferred_join], true)}
+                  {#match query_with_deferred_join?}
+                    {#case Settings.get([:ui, :infinite_scroll], :preload, @__context__)}
+                      {#match infinite_scroll}
+                        {!-- context={@id} 
+          cursor={end_cursor ||
+if previous_end_cursor && query_with_deferred_join?,
+          do: previous_end_cursor}
+    --}
+                        <LoadMoreLive
+                          :if={!@hide_load_more}
+                          live_handler={Bonfire.Social.Feeds}
+                          page_info={@page_info}
+                          cursor={end_cursor}
+                          infinite_scroll={infinite_scroll}
+                          target={@myself}
+                          entry_count={@feed_count}
+                          current_url={append_params_uri(
+                            @current_url || @__context__[:current_url],
+                            "time_limit=#{e(@feed_filters, :time_limit, nil)}&multiply_limit=#{@multiply_limit}"
+                          )}
+                        >
+                          <:if_no_more>
+                            {#if is_integer(e(@feed_filters, :time_limit, nil)) and e(@feed_filters, :time_limit, nil) != 0}
+                              <p class="text-sm py-4 mt-4 text-center text-base-content/50 font-medium">{lp(
+                                  "That's all for today...",
+                                  "That's all for the last %{number} days...",
+                                  e(@feed_filters, :time_limit, nil),
+                                  number: e(@feed_filters, :time_limit, nil)
+                                )}</p>
+                            {#else}
+                              <!-- {#if is_nil(@previous_page_info)} -->
+                              {#if @loading}
+                                <div class="flex flex-col items-center gap-3 py-12 place-content-center">
+                                  {#if user_socket_connected?(@__context__) && @cute_gif}
+                                    <div class="flex flex-row items-center justify-center my-12">
+                                      <img src={@cute_gif}>
+                                    </div>
+                                  {#else}
+                                    <img src={Bonfire.Common.URIs.static_path("/images/loading.svg")}>
+                                  {/if}
+
+                                  <div class="sr-only text-base-content">{l("Loading...")}</div>
+                                </div>
+                              {#elseif not is_integer(@feed_count) or @feed_count == 0 or !(is_list(@feed) and @feed != [])}
+                                <div data-id="empty-feed" class="flex items-center place-content-center">
+                                  <Bonfire.UI.Common.EmptyFeed
+                                    feed_name={@feed_name}
+                                    feedback_title={@feedback_title}
+                                    feedback_message={@feedback_message}
+                                  />
+                                  {!-- empty_feed={@bottom_or_empty_feed} --}
+                                </div>
+                              {#else}
+                                {!-- we have a previous_page_info but no time limit --}
+                                <img
+                                  class="max-w-[220px] opacity-80 mx-auto"
+                                  src={Bonfire.Common.URIs.static_path("/images/bonfire-exausted.png")}
+                                />
+                                <p class="text-sm font-medium text-base-content/70 text-center my-4">{l("That's all folks...")}</p>
+                              {/if}
+                              <!-- {#else}
           {!-- we have a previous_page_info --}
-          {#if is_integer(e(@feed_filters, :time_limit, nil)) and e(@feed_filters, :time_limit, nil) != 0}
-            <p class="text-sm py-4 mt-4 text-center text-base-content/50 font-medium">{lp(
-                "That's all for today...",
-                "That's all for the last %{number} days...",
-                e(@feed_filters, :time_limit, nil),
-                number: e(@feed_filters, :time_limit, nil)
-              )}</p>
-          {#else}
+          
             {!-- we have a previous_page_info but no time limit --}
             <img
               class="max-w-[220px] opacity-80 mx-auto"
               src={Bonfire.Common.URIs.static_path("/images/bonfire-exausted.png")}
             />
             <p class="text-sm font-medium text-base-content/70 text-center my-4">{l("That's all folks...")}</p>
-          {/if}
+          {/if} -->
+                            {/if}
 
-          <div :if={@bottom_or_empty_feed} class="mt-1 mb-2 text-center text-base-content">
-            <#slot {@bottom_or_empty_feed}>
-            </#slot>
-          </div>
-        {/if}
+                            {#if !@loading |> debug("loaad") and is_integer(e(@feed_filters, :time_limit, nil) |> debug("tll")) and
+                                e(@feed_filters, :time_limit, nil) != 0}
+                              {#if user_socket_connected?(@__context__) |> debug("soo")}
+                                {#if ((debug(end_cursor, "ecc") || previous_end_cursor |> debug("pec") || final_end_cursor)
+                                   |> debug("acc") && !debug(e(@feed_filters, :sort_by, nil), "sbb")) ||
+                                    e(@feed_filters, :sort_by, nil) == :date_created}
+                                  {!-- we are sorting by date and can simply continue paginating but with no limit --}
+                                  {!-- TODO: instead of switching to infinity, switch 1 level up from current limit, eg. from 1 week to 1 month --}
+                                  <LoadMoreLive
+                                    live_handler={Bonfire.Social.Feeds}
+                                    page_info={@page_info || @previous_page_info}
+                                    cursor={end_cursor || previous_end_cursor || final_end_cursor}
+                                    multiply_limit={if query_with_deferred_join? and
+                                         !end_cursor,
+                                       do: (@multiply_limit || 2) * 2,
+                                       else: 1}
+                                    infinite_scroll={infinite_scroll}
+                                    target={@myself}
+                                    hide_guest_fallback={@hide_guest_fallback}
+                                    label={l("Show older activities")}
+                                    opts={%{"phx-value-time_limit" => 0}}
+                                    hide_if_no_more
+                                    current_url={@current_url}
+                                  />
+                                {#else}
+                                  {!-- do we need to reload the feed if not sorting by date? --}
+                                  <div class="w-full flex items-center justify-center mb-4">
+                                    <button
+                                      data-id="load_all_time"
+                                      class="normal-case btn btn-soft btn-secondary"
+                                      phx-click="set_filter"
+                                      phx-value-time_limit={0}
+                                      phx-value-multiply_limit={if query_with_deferred_join? and
+                                           !end_cursor,
+                                         do: (@multiply_limit || 2) * 2,
+                                         else: 1}
+                                      phx-target={@myself}
+                                    >
+                                      {l("Show all activities (with no time limit)")}
+                                    </button>
+                                  </div>
+                                {/if}
+                              {#else}
+                                {!-- no socket connected --}
+                                <div class="w-full flex items-center justify-center mb-4">
+                                  <a
+                                    :if={!@hide_guest_fallback}
+                                    data-id="load_all_time"
+                                    class="normal-case btn btn-secondary btn-soft btn-wide"
+                                    href={append_params_uri(
+                                      @current_url || @__context__[:current_url],
+                                      "time_limit=0&multiply_limit=#{if query_with_deferred_join? and !end_cursor,
+                                        do: (@multiply_limit || 2) * 2,
+                                        else: 1}&after=#{end_cursor || previous_end_cursor || final_end_cursor}"
+                                    )}
+                                  >
+                                    {l("Show older activities")}
+                                  </a>
+                                </div>
+                              {/if}
+                            {/if}
 
-        {#if !@loading and is_integer(e(@feed_filters, :time_limit, nil)) and
-            e(@feed_filters, :time_limit, nil) != 0}
-          {#if socket_connected?(@__context__)}
-            {#if (!e(@feed_filters, :sort_by, nil) or e(@feed_filters, :sort_by, nil) == :date_created) and
-                (e(@previous_page_info, :end_cursor, nil) || e(@page_info, :end_cursor, nil))}
-              {!-- we are sorting by date and can simply continue paginating but with no limit --}
-              {!-- TODO: instead of switching to infinity, switch 1 level up from current limit, eg. from day to week --}
-              <LoadMoreLive
-                live_handler={Bonfire.Social.Feeds}
-                page_info={@page_info || @previous_page_info}
-                cursor={LoadMoreLive.end_cursor(@page_info) || LoadMoreLive.end_cursor(@previous_page_info)}
-                target={@myself}
-                hide_guest_fallback={@hide_guest_fallback}
-                label={l("Show older activities")}
-                opts={%{"data-id" => "load_all_time", "phx-value-time_limit" => 0}}
-                current_url={@current_url}
-                hide_if_no_more
-              />
-            {#else}
-              {!-- we need to reload the feed --}
-              <div class="w-full flex items-center justify-center mb-4">
-                <button
-                  data-id="load_all_time"
-                  class="normal-case btn btn-soft btn-secondary"
-                  phx-click="set"
-                  phx-value-to_integers="true"
-                  phx-value-time_limit={0}
-                  phx-value-assign_global="true"
-                  phx-target={@myself}
-                >
-                  {l("Show all activities with no time limit")}
-                </button>
-              </div>
-            {/if}
-          {#else}
-            {!-- no socket connected --}
-            <div class="w-full flex items-center justify-center mb-4">
-              <a
-                :if={!@hide_guest_fallback}
-                data-id="load_all_time"
-                class="normal-case btn btn-secondary btn-soft btn-wide"
-                href={"#{@current_url || @__context__[:current_url]}?time_limit=0&after=#{LoadMoreLive.end_cursor(@page_info) || LoadMoreLive.end_cursor(@previous_page_info)}"}
-              >
-                {l("Show all activities with no time limit")}
-              </a>
-            </div>
-          {/if}
-        {/if}
-      </:if_no_more>
-    </LoadMoreLive>
+                            <div :if={@bottom_or_empty_feed} class="mt-1 mb-2 text-center text-base-content">
+                              <#slot {@bottom_or_empty_feed}>
+                              </#slot>
+                            </div>
+                          </:if_no_more>
+                        </LoadMoreLive>
+                    {/case}
+                {/case}
+            {/case}
+        {/case}
+    {/case}
   </div>
 </div>

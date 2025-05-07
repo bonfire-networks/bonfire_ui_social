@@ -481,9 +481,31 @@ defmodule Bonfire.UI.Social.FeedLive do
 
   def handle_event(
         "set_filter",
+        %{"time_limit" => time_limit} = attrs,
+        socket
+      ) do
+    assigns = assigns(socket)
+
+    # time_limit = LiveHandler.extract_time_limit(assigns, time_limit)
+
+    socket
+    |> assign(LiveHandler.prepare_time_limit(assigns, time_limit))
+    |> assign(
+      # time_limit: time_limit,
+      deferred_join_multiply_limit:
+        e(attrs, "multiply_limit", nil) |> Types.maybe_to_integer(nil) ||
+          e(assigns, :multiply_limit, nil) || 1
+    )
+    # |> set_filters(%{time_limit: time_limit}, ...)
+    |> reload()
+  end
+
+  def handle_event(
+        "set_filter",
         %{"time_limit_idx" => time_limit_idx},
         socket
       ) do
+    # special handling for range input control
     selected_value =
       Bonfire.UI.Social.TimeControlLive.find_value_by_index(time_limit_idx)
       |> debug("selected value at index #{time_limit_idx}")
@@ -660,16 +682,20 @@ defmodule Bonfire.UI.Social.FeedLive do
   end
 
   def reload(
-        feed_filters,
+        feed_filters \\ nil,
         socket,
         reset \\ true
       ) do
     # need to reload feed so streams are updated
 
-    feed_name = feed_name(assigns(socket))
+    assigns = assigns(socket)
+
+    feed_filters = feed_filters || e(assigns, :feed_filters, %{})
+
+    feed_name = feed_name(assigns)
 
     if is_nil(feed_name) or feed_name in [:my, :explore, :remote, :local, :custom],
-      do: send_self(widgets(e(assigns(socket), nil)))
+      do: send_self(widgets(assigns))
 
     socket =
       socket

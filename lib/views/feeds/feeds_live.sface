@@ -1,27 +1,30 @@
-<StatefulComponent
-  module={maybe_component(Bonfire.UI.Social.FeedLive, @__context__)}
-  :if={@feed_component_id}
-  id={@feed_component_id}
-  feed_id={@feed_id}
-  feed_name={@feed_name}
-  feed_ids={@feed_ids}
-  page_title={@page_title}
-  feedback_title={@feedback_title}
-  feedback_message={@feedback_message}
-  feed={@feed}
-  feed_count={@feed_count}
-  selected_tab={@selected_tab}
-  feed_title={@feed_title}
-  page_info={@page_info}
-  loading={@loading}
-  tab_path_prefix="/feed/"
-  tab_path_suffix={@tab_path_suffix}
-  feed_filters={Map.merge(
-    %{
-      feed_name: @feed_name
-      # sort_by: Settings.get([Bonfire.UI.Social.FeedLive, :sort_by], nil, @__context__),
-      # time_limit: Settings.get([Bonfire.UI.Social.FeedLive, :time_limit], 7, @__context__)
-    },
-    @feed_filters
-  )}
-/>
+{#if @feed_component_id}
+  <StatefulComponent
+    module={maybe_component(Bonfire.UI.Social.FeedLive, @__context__)}
+    id={@feed_component_id}
+    feed_id={@feed_id}
+    feed_name={@feed_name}
+    feed_ids={@feed_ids}
+    page_title={@page_title}
+    feedback_title={@feedback_title}
+    feedback_message={@feedback_message}
+    feed={@feed}
+    feed_count={@feed_count}
+    selected_tab={@selected_tab}
+    feed_title={@feed_title}
+    page_info={@page_info}
+    loading={@loading}
+    tab_path_prefix="/feed/"
+    tab_path_suffix={@tab_path_suffix}
+    feed_filters={Map.merge(
+      %{
+        feed_name: @feed_name
+        # sort_by: Settings.get([Bonfire.UI.Social.FeedLive, :sort_by], nil, @__context__),
+        # time_limit: Settings.get([Bonfire.UI.Social.FeedLive, :time_limit], 7, @__context__)
+      },
+      @feed_filters
+    )}
+  />
+{#else}
+  <!-- no feed_component_id provided for {@feed_name} / {@feed_id} -->
+{/if}

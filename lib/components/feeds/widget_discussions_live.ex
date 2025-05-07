@@ -16,7 +16,7 @@ defmodule Bonfire.UI.Social.WidgetDiscussionsLive do
         hide_filters: true,
         no_header: true,
         hide_activities: "actions",
-        infinite_pages: false,
+        # infinite_pages: false,
         myself: nil,
         # TODO: better workarounds for using FeedLive as stateless
         streams: %{feed: nil}

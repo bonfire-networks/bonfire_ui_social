@@ -47,14 +47,14 @@ defmodule Bonfire.UI.Social.Feeds.LoadMoreRemoveTimeFilterTest do
         })
 
       # Yesterday's post
-      yesterday_post =
+      two_days_ago_post =
         fake_post!(alice, "public", %{
           post_content: %{
             summary: "summary",
-            name: "Yesterday post",
+            name: "2 days ago post",
             html_body: "<p>Yesterday's content</p>"
           },
-          id: DatesTimes.past(1, :day) |> DatesTimes.generate_ulid()
+          id: DatesTimes.past(2, :day) |> DatesTimes.generate_ulid()
         })
 
       # Three days ago post
@@ -111,7 +111,7 @@ defmodule Bonfire.UI.Social.Feeds.LoadMoreRemoveTimeFilterTest do
         alice: alice,
         account: account,
         today_post: today_post,
-        yesterday_post: yesterday_post,
+        two_days_ago_post: two_days_ago_post,
         three_days_ago_post: three_days_ago_post,
         week_old_post: week_old_post,
         month_old_post: month_old_post,
@@ -128,28 +128,38 @@ defmodule Bonfire.UI.Social.Feeds.LoadMoreRemoveTimeFilterTest do
       # Visit feed and set time limit to 1 day using the UI control
       conn
       |> visit("/feed/local")
-      |> assert_has_or_open_browser("[data-id=feed] article")
+      |> assert_has_or_open_browser("[data-id=feed] article [data-id=object_body]")
       # 0 = Day
       |> fill_in("Time limit control", with: "0")
       |> wait_async()
       # Check that we only see posts from today (count should be less than total)
-      # Today and yesterday's posts
-      |> assert_has("[data-id=feed] article", count: 2)
+      # Today's post
+      |> assert_has_or_open_browser("[data-id=feed] article [data-id=object_body]", count: 1)
 
       # Test clicking the "load_all_time" button (which continues pagination with no time limit)
-      |> assert_has_or_open_browser("[data-id=load_all_time]")
-      |> assert_has_or_open_browser("[data-id=load_all_time]", text: "Show older activities")
-      |> click_button("[data-id=load_all_time]", "Show older activities")
+      |> assert_has_or_open_browser("[data-id=load_more]")
+      |> assert_has_or_open_browser("[data-id=load_more]", text: "Show older activities")
+      |> click_button("[data-id=load_more]", "Show older activities")
       |> wait_async()
       # Now we should see more posts beyond the time limit
-      |> assert_has("[data-id=feed] article", count: limit * 2)
+      |> assert_has_or_open_browser("[data-id=feed] article [data-id=object_body]",
+        count: 1 + limit
+      )
 
-      # Load more again to get all posts
-      |> assert_has_or_open_browser("[data-id=load_all_time]")
+      # Load more again 
+      |> assert_has_or_open_browser("[data-id=load_more]")
       |> click_button("[data-id=load_more]", "Load more")
       |> wait_async()
+
+      # Load more again to get all posts
+      |> assert_has_or_open_browser("[data-id=load_more]")
+      |> click_button("[data-id=load_more]", "Load more")
+      |> wait_async()
+
       # Now we should see all posts
-      |> assert_has("[data-id=feed] article", count: total_posts + 1)
+      |> assert_has_or_open_browser("[data-id=feed] article [data-id=object_body]",
+        count: total_posts
+      )
     end
 
     test "As a logged-in user, when I click the load_all_time button with non-date sorting, it should reload the feed with no time limit",
@@ -170,15 +180,15 @@ defmodule Bonfire.UI.Social.Feeds.LoadMoreRemoveTimeFilterTest do
       end)
       |> wait_async()
       # Check that we only see posts from today (count should be less than total)
-      # Today and yesterday's posts
-      |> assert_has("[data-id=feed] article", count: 2)
+      # Today's post
+      |> assert_has("[data-id=feed] article [data-id=object_body]", count: 1)
 
       # Test clicking the "load_all_time" button (which reloads the feed with no time limit)
       |> assert_has_or_open_browser("[data-id=load_all_time]")
-      |> click_button("[data-id=load_all_time]", "Show all activities with no time limit")
+      |> click_button("[data-id=load_all_time]", "Show all activities (with no time limit)")
       |> wait_async()
       # Now we should see more posts beyond the time limit
-      |> assert_has("[data-id=feed] article", count: limit)
+      |> assert_has("[data-id=feed] article [data-id=object_body]", count: limit)
 
       # Load more to get all posts
       |> assert_has_or_open_browser("[data-id=load_more]")
@@ -189,7 +199,7 @@ defmodule Bonfire.UI.Social.Feeds.LoadMoreRemoveTimeFilterTest do
       |> click_button("[data-id=load_more]", "Load more")
       |> wait_async()
       # Now we should see all posts
-      |> assert_has("[data-id=feed] article", count: total_posts + 1)
+      |> assert_has("[data-id=feed] article [data-id=object_body]", count: total_posts)
     end
 
     test "As a guest user with no socket, I can use the load_all_time link to remove time limits",
@@ -200,32 +210,32 @@ defmodule Bonfire.UI.Social.Feeds.LoadMoreRemoveTimeFilterTest do
       # Visit feed with a time_limit of 1 day
       conn
       |> visit("/feed/?time_limit=1")
-      |> assert_has_or_open_browser("[data-id=feed] article", count: limit)
-      # Check that we only see posts from today (count should be less than total)
-      # Today and yesterday's posts
-      |> assert_has("[data-id=feed] article", count: 2)
+      # Check that we only see posts from today 
+      |> assert_has_or_open_browser("[data-id=feed] article [data-id=object_body]", count: 1)
+      |> assert_has_or_open_browser("[data-id=feed] article", text: "seconds ago")
 
-      # FIXME: why need to first click on Next page?
-      |> click_link("a[data-id=next_page]", "Next page")
-      |> wait_async()
-      |> assert_has("[data-id=feed] article", count: limit)
+      # FIXME: body not preloaded in test env as guest
 
       # Test clicking the "load_all_time" link (for guests without socket connection)
       |> assert_has_or_open_browser("[data-id=load_all_time]")
-      |> click_link("[data-id=load_all_time]", "Show all activities with no time limit")
+      |> click_link("[data-id=load_all_time]", "Show older activities")
       |> wait_async()
       # Now we should see posts without time limit, but still paginated
-      |> assert_has("[data-id=feed] article", count: limit)
+      |> assert_has_or_open_browser("[data-id=feed] article", count: limit)
+      |> assert_has_or_open_browser("[data-id=feed] article", text: "days ago")
 
       # Load more using the next page links (since this is a no-socket scenario)
       |> click_link("a[data-id=next_page]", "Next page")
       |> wait_async()
-      |> assert_has("[data-id=feed] article", count: limit)
+      |> assert_has_or_open_browser("[data-id=feed] article", count: limit)
+      |> assert_has_or_open_browser("[data-id=feed] article", text: "last week")
+      |> assert_has_or_open_browser("[data-id=feed] article", text: "4 weeks ago")
 
       # Continue pagination to see all posts
       |> click_link("a[data-id=next_page]", "Next page")
       |> wait_async()
-      |> assert_has("[data-id=feed] article", count: limit)
+      # |> assert_has_or_open_browser("[data-id=feed] article", count: limit)
+      |> assert_has_or_open_browser("[data-id=feed] article", text: "months ago")
     end
   end
 end
