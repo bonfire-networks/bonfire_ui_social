@@ -47,7 +47,7 @@ defmodule Bonfire.UI.Social.Threads.NestedLoadMoreRepliesTest do
 
       Process.put([:bonfire, :thread_default_max_depth], max_depth)
 
-      assert max_depth == Bonfire.Social.Threads.LiveHandler.max_depth()
+      assert max_depth == Bonfire.Social.Threads.LiveHandler.max_depth(conn)
 
       # Create a nested chain of X replies
       replies = create_reply_chain(alice, original_post.id, depth, "Nested reply")

@@ -39,7 +39,8 @@
       thread_mode={@thread_mode}
       showing_within={@showing_within || :thread}
       activity_inception={@activity_inception}
-      ui_compact={@__context__[:ui_compact] || @thread_level >= LiveHandler.max_depth(@__context__[:ui_compact]) / 2}
+      ui_compact={@__context__[:ui_compact] ||
+        @thread_level >= LiveHandler.max_depth(@__context__[:ui_compact], @__context__) / 2}
       activity_preloads={@activity_preloads}
       hide_actions={@hide_actions}
     />
@@ -59,7 +60,7 @@
            debug(@threaded_replies_count, "threaded_replies_count")) &&
           (e(@comment, :total_replies_count, nil) || e(@comment, :replied, :total_replies_count, nil) || 0) >
             @threaded_replies_count}
-        {!-- ||  (@thread_level + 1 >= LiveHandler.max_depth(@__context__[:ui_compact]) --}
+        {!-- ||  (@thread_level + 1 >= LiveHandler.max_depth(@__context__[:ui_compact], @__context__) --}
         <div class="flex items-center">
           <button
             data-id="load_more_replies"

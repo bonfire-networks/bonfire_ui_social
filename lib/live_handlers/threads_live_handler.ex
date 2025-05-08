@@ -77,16 +77,25 @@ defmodule Bonfire.Social.Threads.LiveHandler do
 
     {level, _} = Integer.parse(level)
 
-    # TODO: configurable - note: it seems to load one more than this, probably because of pagination
-    load_more_replies_step = 2
+    assigns = assigns(socket)
+    current_user = current_user(assigns)
+
+    # it seems to load one more than this, probably because of pagination?
+    load_more_replies_step =
+      Settings.get(:thread_default_max_depth, 2,
+        current_user: current_user,
+        description: l("Reply levels"),
+        description: l("How many levels of replies to load/display at a time")
+      )
+
     load_depth = level + load_more_replies_step
 
     opts = [
-      current_user: current_user(assigns(socket)),
+      current_user: current_user,
       max_depth: load_depth,
-      thread_mode: e(assigns(socket), :thread_mode, nil),
-      sort_by: e(assigns(socket), :sort_by, nil),
-      sort_order: e(assigns(socket), :sort_order, nil)
+      thread_mode: e(assigns, :thread_mode, nil),
+      sort_by: e(assigns, :sort_by, nil),
+      sort_order: e(assigns, :sort_order, nil)
     ]
 
     %{edges: replies, page_info: page_info} = Bonfire.Social.Threads.list_replies(id, opts)
@@ -94,7 +103,7 @@ defmodule Bonfire.Social.Threads.LiveHandler do
     # TODO: do something with page_info? to support branch pagination
 
     if opts[:thread_mode] == :flat and is_list(replies) and
-         e(assigns(socket), :reply_count, 0) > 0 do
+         e(assigns, :reply_count, 0) > 0 do
       {:noreply,
        socket
        |> assign(depth_loaded: load_depth)
@@ -501,10 +510,10 @@ defmodule Bonfire.Social.Threads.LiveHandler do
     end
   end
 
-  def max_depth(ui_compact \\ nil),
+  def max_depth(ui_compact \\ nil, opts),
     do:
       debug(
-        Config.get(:thread_default_max_depth, 3) *
+        Settings.get(:thread_default_max_depth, 3, opts) *
           if(ui_compact,
             do: 2,
             else: 1
@@ -513,16 +522,17 @@ defmodule Bonfire.Social.Threads.LiveHandler do
 
   def load_thread_assigns(socket, thread_id \\ nil) do
     debug("load comments")
-    thread_id = thread_id || e(assigns(socket), :thread_id, e(assigns(socket), :object, :id, nil))
+    assigns = assigns(socket)
+    thread_id = thread_id || e(assigns, :thread_id, e(assigns, :object, :id, nil))
 
     if thread_id do
       debug("loading by thread_id")
       # debug(assigns)
 
-      thread_mode = e(assigns(socket), :thread_mode, nil)
-      sort_by = e(assigns(socket), :sort_by, nil)
-      sort_order = e(assigns(socket), :sort_order, nil)
-      showing_within = e(assigns(socket), :showing_within, :thread)
+      thread_mode = e(assigns, :thread_mode, nil)
+      sort_by = e(assigns, :sort_by, nil)
+      sort_order = e(assigns, :sort_order, nil)
+      showing_within = e(assigns, :showing_within, :thread)
 
       # TODO: use same logic as feeds preloads?
       # {preloads, postloads} =
@@ -535,13 +545,13 @@ defmodule Bonfire.Social.Threads.LiveHandler do
       preloads =
         Bonfire.Social.Feeds.LiveHandler.feed_extra_preloads_list(showing_within, thread_mode)
 
-      max_depth = max_depth(assigns(socket)[:__context__][:ui_compact])
+      max_depth = max_depth(assigns(socket)[:__context__][:ui_compact], assigns)
 
       with %{edges: replies, page_info: page_info} <-
              Threads.list_replies(thread_id,
-               current_user: current_user(assigns(socket)),
+               current_user: current_user(assigns),
                preload: preloads,
-               after: e(assigns(socket), :after, nil),
+               after: e(assigns, :after, nil),
                max_depth: max_depth,
                thread_mode: thread_mode,
                sort_by: sort_by,
