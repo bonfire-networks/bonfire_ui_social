@@ -1454,7 +1454,10 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
   def feed_live_update_many_preload_mode,
     do:
       (ProcessTree.get(:feed_live_update_many_preload_mode) ||
-         Config.get(:feed_live_update_many_preload_mode) || :async_actions)
+         Config.get(:feed_live_update_many_preload_mode, nil,
+           name: l("Feed Update Preload Mode"),
+           description: l("How to preload data when updating feeds (technical setting).")
+         ) || :async_actions)
       |> debug()
 
   defp assigns_to_params(assigns) do
@@ -1716,7 +1719,10 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
   # end
 
   def preload_activity_and_object_assocs(feed, under, opts) do
-    if Bonfire.Common.Config.get([:ui, :feed_object_extension_preloads_disabled]) != true do
+    if Bonfire.Common.Config.get([:ui, :feed_object_extension_preloads_disabled], false,
+         name: l("Disable Feed Extension Preloads"),
+         description: l("Technical setting to disable preloading extensions for feed objects.")
+       ) != true do
       feed
       |> Bonfire.Social.Activities.activity_preloads(opts[:preload], opts)
       # |> debug("pre-maybe_preloads_per_nested_schema")
@@ -2199,7 +2205,10 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
                    !Bonfire.Common.Settings.get(
                      [Bonfire.Social.FeedLive, :show_feeds_nav_open],
                      true,
-                     socket
+                     context: socket,
+                     name: l("Default Feeds Nav Open"),
+                     description:
+                       l("Whether the feed navigation sidebar should be open by default.")
                    )
                }
              },

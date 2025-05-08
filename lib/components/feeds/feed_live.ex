@@ -132,7 +132,9 @@ defmodule Bonfire.UI.Social.FeedLive do
          Bonfire.Common.Settings.get(
            [Bonfire.UI.Social.FeedsLive, :curated],
            false,
-           context
+           context: context,
+           name: l("Show Curated Tab"),
+           description: l("Show a curated feed tab on the feed page.")
          ) do
       [
         my: l("Following"),
@@ -349,7 +351,10 @@ defmodule Bonfire.UI.Social.FeedLive do
                 :hide_until_hovered
               ],
               nil,
-              current_user(socket)
+              context: current_user(socket),
+              name: l("Hide Activity Actions"),
+              description:
+                l("Hide actions (such a like or boost) in feeds until users hover over them.")
             ) && "until_hovered"),
        hide_activities:
          assigns(socket)[:hide_activities] ||

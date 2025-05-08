@@ -142,10 +142,17 @@
           {#match previous_end_cursor}
             {#case LoadMoreLive.final_cursor(@page_info) || LoadMoreLive.final_cursor(@previous_page_info)}
               {#match final_end_cursor}
-                {#case (Config.get([Bonfire.Social.Feeds, :query_with_deferred_join], true) &&
+                {#case (Config.get([Bonfire.Social.Feeds, :query_with_deferred_join], true,
+                     name: l("Use Deferred Joins"),
+                     description: l("Technical setting for query performance optimization.")
+                   ) &&
                      !@deferred_join_multiply_limit) or @deferred_join_multiply_limit < 4}
                   {#match query_with_deferred_join?}
-                    {#case Settings.get([:ui, :infinite_scroll], :preload, @__context__)}
+                    {#case Settings.get([:ui, :infinite_scroll], :preload,
+                        context: @__context__,
+                        name: l("Infinite Scrolling"),
+                        description: l("Enable infinite scrolling in feeds, or choose a hybrid approach.")
+                      )}
                       {#match infinite_scroll}
                         {#case Types.maybe_to_integer(e(@feed_filters, :time_limit, nil), 0)}
                           {#match time_limit}

@@ -7,10 +7,12 @@
         type="checkbox"
         value={to_string(
           Bonfire.Common.Settings.get(
-            [Bonfire.Social.Feeds, :include, @key],
-            true,
-            @scope || @__context__
-          )
+            [Bonfire.Social.Feeds, :include],
+            [],
+            context: @scope || @__context__,
+            name: l("Feed inclusion"),
+            description: l("What items to include in your feed.")
+          )[@key] || true
         )}
         checked={case @force_checked do
           true ->
@@ -21,10 +23,12 @@
 
           _ ->
             Bonfire.Common.Settings.get(
-              [Bonfire.Social.Feeds, :include, @key],
-              true,
-              @scope || @__context__
-            )
+              [Bonfire.Social.Feeds, :include],
+              [],
+              context: @scope || @__context__,
+              name: l("Feed inclusion"),
+              description: l("What items to include in your feed.")
+            )[@key] || true
         end}
         disabled={@disabled}
         class="toggle toggle-sm"

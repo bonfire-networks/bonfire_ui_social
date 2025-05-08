@@ -1,7 +1,11 @@
 <div
   class={"border-t border-base-content/10": !current_user_id(@__context__)}
   data-role="thread"
-  data-sorted={Settings.get([Bonfire.UI.Social.ThreadLive, :sort_by], nil, @__context__)}
+  data-sorted={Settings.get([Bonfire.UI.Social.ThreadLive, :sort_by], nil,
+    context: @__context__,
+    name: l("Thread Sort Order"),
+    description: l("How to sort threads and their replies.")
+  )}
   id={"thread_#{@id}"}
   x-data="{show_replies: true}"
 >

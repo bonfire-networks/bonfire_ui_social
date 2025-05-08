@@ -71,7 +71,11 @@ defmodule Bonfire.UI.Social.FeedsLive do
   # )
 
   def nav_link_feed(context),
-    do: "/feed/#{Settings.get([Bonfire.UI.Social.FeedLive, :default_feed], nil, context)}"
+    do:
+      "/feed/#{Settings.get([Bonfire.UI.Social.FeedLive, :default_feed], nil,
+      context: context,
+      name: l("Default Feed"),
+      description: l("Default feed to display when visiting the feed page."))}"
 
   # def nav_link_posts(%{current_params: %{"tab" => tab}}) when not is_nil(tab),
   #   do: "/feed/#{tab}/posts"
