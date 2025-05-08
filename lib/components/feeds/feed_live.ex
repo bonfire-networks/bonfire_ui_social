@@ -351,7 +351,7 @@ defmodule Bonfire.UI.Social.FeedLive do
                 :hide_until_hovered
               ],
               nil,
-              context: current_user(socket),
+              current_user: current_user(socket),
               name: l("Hide Activity Actions"),
               description:
                 l("Hide actions (such a like or boost) in feeds until users hover over them.")

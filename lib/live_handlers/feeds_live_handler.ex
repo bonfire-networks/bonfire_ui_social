@@ -2205,7 +2205,7 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
                    !Bonfire.Common.Settings.get(
                      [Bonfire.Social.FeedLive, :show_feeds_nav_open],
                      true,
-                     context: socket,
+                     context: assigns(socket),
                      name: l("Default Feeds Nav Open"),
                      description:
                        l("Whether the feed navigation sidebar should be open by default.")
