@@ -60,7 +60,7 @@
         data-media={num_medias}
         data-rendered={@showing_within}
         data-main-object={@viewing_main_object}
-        class="grid w-full grid-flow-col grid-with-ratio grid-rows-4 gap-1 mt-2 overflow-clip"
+        class="grid max-h-[380px] w-full grid-flow-col grid-with-ratio grid-rows-4 gap-1 mt-2 overflow-clip"
       >
         {#for {%{} = m, counter} <- Enum.with_index(@multimedia_list)}
           {#if @showing_within != :smart_input}
@@ -154,7 +154,7 @@
           data-media={num_medias}
           data-rendered={@showing_within}
           data-main-object={@viewing_main_object}
-          class="grid w-full grid-flow-col grid-with-ratio grid-rows-4 gap-1 mt-3"
+          class="grid max-h-[380px] w-full grid-flow-col grid-with-ratio grid-rows-4 gap-1 mt-3"
         >
           {#for {%{} = m, counter} <- Enum.with_index(@image_list)}
             {#case Bonfire.Files.Media.media_label(m) || l("Sorry, no caption provided by author")}
@@ -252,7 +252,7 @@
                                 <LazyImage
                                   parent_id={["media", @parent_id, id(m)]}
                                   class={
-                                    "border-base-content/10 !object-cover m-image h-full cursor-pointer max-h-[500px] rounded-md",
+                                    "border-base-content/10 !object-cover m-image w-full h-full cursor-pointer rounded-md",
                                     grayscale: @showing_within == :flags
                                   }
                                   media={m}
