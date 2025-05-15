@@ -137,10 +137,13 @@
     </div> --}
 
     <div data-position="bottom" phx-hook="Tooltip" class="flex-1 relative" id="filter_origin_feed">
-      <label tabindex="0" class="tooltip-button btn w-full">
+      <label tabindex="0" class="tooltip-button btn w-full capitalize">
+        <!-- {@feed_filters[:origin]} -->
         {case @feed_filters[:origin] do
           [:remote] -> l("Remote")
           [:local] -> l("Local")
+          :remote -> l("Remote")
+          :local -> l("Local")
           _ -> l("All")
         end}
       </label>
@@ -183,7 +186,7 @@
         :class="{'btn-active': open_circles}"
         @click="open_circles = ! open_circles"
       >
-        {l("Circles")} {case e(@feed_filters, :subject_circles, []) do
+        {l("By circles")} {case e(@feed_filters, :subject_circles, []) do
           [] -> nil
           circles -> "(#{length(circles)})"
         end}
