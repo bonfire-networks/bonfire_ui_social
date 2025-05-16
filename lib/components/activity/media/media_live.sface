@@ -137,7 +137,10 @@
                 </article>
             {/case}
           {#else}
-            <div>{id(m)}</div>
+            <div class="text-base-content/70 text-sm flex items-center gap-2">
+              <#Icon iconify="ri:attachment-2" class="w-4 h-4 text-base-content/70" />
+              <span>{id(m)}</span>
+            </div>
           {/if}
         {/for}
       </div>

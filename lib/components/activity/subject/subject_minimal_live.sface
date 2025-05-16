@@ -14,7 +14,7 @@
         <div class="flex-1 ml-3">
           <div class="text-sm font-medium text-base-content/70">
             <LinkLive
-              parent_id={["subject_name", @parent_id]}
+              parent_id={["subject_minimal_name", @parent_id]}
               class="font-medium"
               to={@path}
               opts={"data-id": "subject_name"}
@@ -52,7 +52,7 @@
                 <LinkLive
                   to={@path}
                   opts={"data-id": "subject_name"}
-                  parent_id={["subject_name", @parent_id]}
+                  parent_id={["subject_minimal_name", @parent_id]}
                   class="flex link link-hover items-center gap-5 justify-start pb-2"
                 >
                   <div class="font-medium text-sm text-base-content/90">
@@ -110,7 +110,7 @@
                   class="link link-hover font-semibold"
                   to={@path}
                   opts={"data-id": "subject_name"}
-                  parent_id={["subject_name", @parent_id]}
+                  parent_id={["subject_minimal_name", @parent_id]}
                 >
                   {#if @object_id == current_user_id(@__context__)}
                     {l("You")}
@@ -140,7 +140,7 @@
               <LinkLive
                 to={@path}
                 opts={"data-id": "subject_name"}
-                parent_id={["subject_name", @parent_id]}
+                parent_id={["subject_minimal_name", @parent_id]}
                 class="flex link link-hover items-center gap-5 justify-start pb-2"
               >
                 <div class="font-medium text-sm text-base-content/90">
@@ -174,7 +174,7 @@
                 <LinkLive
                   to={@path}
                   opts={"data-id": "subject_name"}
-                  parent_id={["subject_name", @parent_id]}
+                  parent_id={["subject_minimal_name", @parent_id]}
                   class="link link-hover font-semibold"
                 >
                   {#if @object_id == current_user_id(@__context__)}
@@ -206,7 +206,7 @@
                 <LinkLive
                   to={@path}
                   opts={"data-id": "subject_name"}
-                  parent_id={["subject_name", @parent_id]}
+                  parent_id={["subject_minimal_name", @parent_id]}
                   class="link link-hover font-semibold"
                 >
                   {#if @object_id == current_user_id(@__context__)}
@@ -254,7 +254,7 @@
                   class="font-medium link link-hover"
                   to={@path}
                   opts={"data-id": "subject_name"}
-                  parent_id={["subject_name", @parent_id]}
+                  parent_id={["subject_minimal_name", @parent_id]}
                 >
                   {@profile_name || @character_username}
                 </LinkLive>
@@ -306,7 +306,7 @@
                 class="font-medium link link-hover text-base-content/70"
                 to={@path}
                 opts={"data-id": "subject_name"}
-                parent_id={["subject_name", @parent_id]}
+                parent_id={["subject_minimal_name", @parent_id]}
               >
                 {@profile_name || @character_username}
               </LinkLive>
@@ -327,7 +327,7 @@
                 class="font-medium link link-hover text-base-content/70"
                 to={@path}
                 opts={"data-id": "subject_name"}
-                parent_id={["subject_name", @parent_id]}
+                parent_id={["subject_minimal_name", @parent_id]}
               >
                 {#if @object_id == current_user_id(@__context__)}
                   {l("You")}
@@ -364,7 +364,7 @@
                 class="font-medium link link-hover text-base-content/70"
                 to={@path}
                 opts={"data-id": "subject_name"}
-                parent_id={["subject_name", @parent_id]}
+                parent_id={["subject_minimal_name", @parent_id]}
               >
                 {#if @object_id == current_user_id(@__context__) || @subject_id == current_user_id(@__context__)}
                   {l("You")}
@@ -387,7 +387,7 @@
                 class="font-medium link link-hover text-base-content/70"
                 to={@path}
                 opts={"data-id": "subject_name"}
-                parent_id={["subject_name", @parent_id]}
+                parent_id={["subject_minimal_name", @parent_id]}
               >
                 {@profile_name || @character_username}
               </LinkLive>
@@ -412,7 +412,7 @@
                 class="font-medium link link-hover text-base-content/70"
                 to={@path}
                 opts={"data-id": "subject_name"}
-                parent_id={["subject_name", @parent_id]}
+                parent_id={["subject_minimal_name", @parent_id]}
               >
                 {@profile_name || @character_username}
               </LinkLive>
@@ -431,7 +431,7 @@
                 class="font-medium link link-hover"
                 to={@path}
                 opts={"data-id": "subject_name"}
-                parent_id={["subject_name", @parent_id]}
+                parent_id={["subject_minimal_name", @parent_id]}
               >
                 {@profile_name || @character_username}
               </LinkLive>

@@ -136,7 +136,7 @@
       </ul>
     </div> --}
 
-    <div data-position="bottom" phx-hook="Tooltip" class="flex-1 relative" id="filter_origin_feed">
+    <div data-position="bottom" phx-hook="Tooltip" class="relative" id="filter_origin_feed">
       <label tabindex="0" class="tooltip-button btn w-full capitalize">
         <!-- {@feed_filters[:origin]} -->
         {case @feed_filters[:origin] do
@@ -199,6 +199,51 @@
         <!-- <span class="hidden lg:block">{l("More filters")}</span> -->
       </div>
     </div>
+    <span>
+    <Bonfire.UI.Common.OpenModalLive
+          id="add_to_feed_preset_button"
+          title_text={l("Save this feed")}
+          no_actions
+          open_btn_wrapper_class="flex"
+        >
+          <div role="alert" class="alert my-2 mt-4 alert-info alert-soft">
+            <span>{l(
+                "You can save this feed configuration as a preset, to be able to access it anytime from your feed navbar."
+              )}</span>
+          </div>
+          <form
+            id="form_create_feed_preset"
+            class="w-full flex flex-col gap-2"
+            phx-submit="Bonfire.Social.Feeds:preset_create"
+            phx-target={@event_target}
+          >
+            <fieldset class="fieldset">
+              <legend class="fieldset-legend">{l("Feed title")}</legend>
+              <label for="feed_name" class="sr-only">{l("Feed title")}</label>
+              <input  id="feed_name" name="name" class="input w-full" placeholder="Add a title...">
+            </fieldset>
+
+            <fieldset class="fieldset">
+              <legend class="fieldset-legend">{l("Feed description")}</legend>
+              <textarea name="description" class="textarea w-full h-24" placeholder="Add a description..." />
+            </fieldset>
+
+            <fieldset class="fieldset">
+              <label class="fieldset-label">
+                <input type="checkbox" name="show_in_nav" checked="checked" class="checkbox">
+                {l("Show in feeds navbar")}
+              </label>
+            </fieldset>
+
+            <div class="flex justify-end">
+              <button type="submit" class="btn btn-primary">{l "Save feed"}</button>
+            </div>
+          </form>
+          <:open_btn>
+            <div class="btn btn-primary">{l("Save")}</div>
+          </:open_btn>
+        </Bonfire.UI.Common.OpenModalLive>
+      </span>
   </div>
 
   <div class="flex flex-col gap-2 pt-3 w-full">
@@ -314,7 +359,7 @@
         </button>
       </div>
 
-      <div class="ml-auto">
+      <!-- <div class="ml-auto">
         <Bonfire.UI.Common.OpenModalLive
           id="add_to_feed_preset"
           title_text={l("Save this feed")}
@@ -356,7 +401,7 @@
             <div class="btn btn-soft btn-primary btn-sm">{l("Save as preset")}</div>
           </:open_btn>
         </Bonfire.UI.Common.OpenModalLive>
-      </div>
+      </div> -->
       {!-- TODO:
       <button phx-click="reset_filter" phx-target={@event_target} class="btn btn-soft btn-sm">{l("Reset")}</button> 
       --}
