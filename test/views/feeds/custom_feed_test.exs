@@ -139,6 +139,5 @@ defmodule Bonfire.UI.Social.CustomFeedTest do
     |> visit("/feed/local")
     |> PhoenixTest.open_browser()
     |> assert_has("form[data-scope='time_limit'] input[type='range'][value='1']")
-
   end
 end

@@ -1643,28 +1643,30 @@ defmodule Bonfire.UI.Social.ActivityLive do
       e(object, :json, nil)
       |> debug("APActivity json")
 
-    type = e(json, "object", "type", nil) || e(json, "type", nil) || "Remote Activity"
+    types =
+      List.wrap(e(json, "object", "type", nil) || e(json, "type", nil) || "Remote Activity")
+      |> Enum.map(&String.capitalize/1)
 
-    component =
-      case String.capitalize(type) do
-        # TODO: make the supported types here extensible/configurable
-        "Event" ->
-          Bonfire.UI.Social.Activity.EventActivityStreamsLive
+    # Check for matching types in order of preference
+    {type, component} =
+      cond do
+        Enum.any?(types, &(&1 == "Event")) ->
+          {l("Event"), Bonfire.UI.Social.Activity.EventActivityStreamsLive}
 
-        "Video" ->
-          Bonfire.UI.Social.Activity.VideoActivityStreamsLive
+        Enum.any?(types, &(&1 == "Video")) ->
+          {l("Video"), Bonfire.UI.Social.Activity.VideoActivityStreamsLive}
 
-        "Edition" ->
-          Bonfire.UI.Social.Activity.BookActivityStreamsLive
+        Enum.any?(types, &(&1 == "Edition")) ->
+          {l("Edition"), Bonfire.UI.Social.Activity.BookActivityStreamsLive}
 
-        object_type when object_type in ["Article", "Page"] ->
-          Bonfire.UI.Social.Activity.ArticleActivityStreamsLive
+        Enum.any?(types, &(&1 == "Article" || &1 == "Page")) ->
+          {l("Article"), Bonfire.UI.Social.Activity.ArticleActivityStreamsLive}
 
-        object_type when object_type in ["Audio", "Podcastepisode"] ->
-          Bonfire.UI.Social.Activity.AudioActivityStreamsLive
+        Enum.any?(types, &(&1 == "Audio" || &1 == "PodcastEpisode")) ->
+          {l("Audio"), Bonfire.UI.Social.Activity.AudioActivityStreamsLive}
 
-        _ ->
-          Bonfire.UI.Social.Activity.UnknownActivityStreamsLive
+        true ->
+          {l("Remote Activity"), Bonfire.UI.Social.Activity.UnknownActivityStreamsLive}
       end
 
     [

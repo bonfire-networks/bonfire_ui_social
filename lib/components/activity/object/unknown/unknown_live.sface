@@ -27,12 +27,13 @@
     )}
   </div>
 
-  {#if e(@object, :post_content, :summary, e(@object, :profile, :summary, e(@object, :summary, nil)))}
-    <h3 class="text-xs tracking-wider text-primary-content-600 uppercase">Summary</h3>
-    <div class="mb-2 prose-sm prose text-primary-content-700 max-w-prose">{rich(
-        e(@object, :post_content, :summary, e(@object, :profile, :summary, e(@object, :summary, nil)))
-      )}</div>
-  {/if}
+  {#case e(@object, :summary, nil) || e(@object, :post_content, :summary, nil) ||
+      e(@object, :profile, :summary, nil)}
+    {#match nil}
+    {#match summary}
+      <h3 class="text-xs tracking-wider text-primary-content-600 uppercase">Summary</h3>
+      <div class="mb-2 prose-sm prose text-primary-content-700 max-w-prose">{rich(summary)}</div>
+  {/case}
 
   <article
     :if={e(@object, :post_content, :html_body, e(@object, :html_body, e(@object, :note, nil)))}

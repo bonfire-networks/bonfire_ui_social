@@ -167,7 +167,6 @@ defmodule Bonfire.UI.Social.FeedLive do
     socket
     |> assign(Map.drop(assigns, [:insert_stream]))
     |> LiveHandler.insert_feed(entries, reset: assigns[:reset_stream])
-
     |> ok_socket()
   end
 
@@ -415,21 +414,30 @@ defmodule Bonfire.UI.Social.FeedLive do
 
   def maybe_widgets(assigns, feed_name) do
     cond do
-      feed_name in [:my, :explore, :remote, :local] -> widgets(assigns)
-      feed_name in [:curated] -> curated_widgets()
-      feed_name in [:notifications] -> [
-        page_header_aside: [
-              {Bonfire.UI.Social.HeaderAsideNotificationsSeenLive,
-               [
-                 feed_id: :notifications,
-                 feed_name: "notifications"
-               ]},
-               {Bonfire.UI.Social.HeaderAsideFeedFiltersLive, []}
-            ]
-      ]
-      true -> [page_header_aside: [
-        {Bonfire.UI.Social.HeaderAsideFeedFiltersLive, []}
-      ],]
+      feed_name in [:my, :explore, :remote, :local] ->
+        widgets(assigns)
+
+      feed_name in [:curated] ->
+        curated_widgets()
+
+      feed_name in [:notifications] ->
+        [
+          page_header_aside: [
+            {Bonfire.UI.Social.HeaderAsideNotificationsSeenLive,
+             [
+               feed_id: :notifications,
+               feed_name: "notifications"
+             ]},
+            {Bonfire.UI.Social.HeaderAsideFeedFiltersLive, []}
+          ]
+        ]
+
+      true ->
+        [
+          page_header_aside: [
+            {Bonfire.UI.Social.HeaderAsideFeedFiltersLive, []}
+          ]
+        ]
     end
   end
 
@@ -454,10 +462,11 @@ defmodule Bonfire.UI.Social.FeedLive do
 
   defp widgets(assigns) do
     feed_name = e(assigns, :feed_name, nil)
+
     [
       page_header_aside: [
-          {Bonfire.UI.Social.HeaderAsideFeedFiltersLive, []}
-        ],
+        {Bonfire.UI.Social.HeaderAsideFeedFiltersLive, []}
+      ],
       sidebar_widgets: [
         guests: [
           secondary: [

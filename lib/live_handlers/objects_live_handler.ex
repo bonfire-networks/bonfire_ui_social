@@ -343,7 +343,7 @@ defmodule Bonfire.Social.Objects.LiveHandler do
         debug(url, "remote object - redirect to canonical")
 
         socket
-        |> redirect_to(url)
+        |> redirect_to(url, type: :maybe_external)
 
       _ ->
         canonical_path =
