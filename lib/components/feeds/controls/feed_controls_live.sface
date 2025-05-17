@@ -240,7 +240,10 @@
             </div>
           </form>
           <:open_btn>
-            <div class="btn btn-primary">{l("Save")}</div>
+            <div class="btn btn-primary">
+              <#Icon iconify="bxs:save" class="w-5 h-5 lg:hidden" />
+              <span class="hidden lg:block">{l("Save")}</span>
+            </div>
           </:open_btn>
         </Bonfire.UI.Common.OpenModalLive>
       </span>
@@ -348,7 +351,7 @@
         mode={:quick_tags}
       />
     </form> --}
-    <div class="flex justify-center items-center relative">
+    <div class="flex justify-center items-center relative py-4">
       <div class="absolute left-1/2 transform -translate-x-1/2">
         <button @click="open = false" class="btn btn-circle btn-soft btn-secondary">
           {#if @reloading}

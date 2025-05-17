@@ -81,8 +81,8 @@
                     data-rendered={@showing_within}
                     data-main-object={@viewing_main_object}
                     class={
-                      "prose break-normal object_body max-w-none prose-a:text-primary prose-a:no-underline prose-a:hover:underline prose-p:mb-0 prose-p:mt-0 prose-h1:text-3xl prose-h2:text-2xl prose-h3:text-lg prose-h4:text-base prose-h5:text-base prose-h6:text-base prose-h1:mb-0 prose-h2:my-0 prose-h3:mb-0 prose-h4:mb-0 text-base-content",
-                      "previewable_truncate text-[15px]": !@viewing_main_object
+                      "prose break-normal leading-[24px] object_body max-w-none prose-a:text-primary prose-a:no-underline prose-a:hover:underline prose-p:mb-0 prose-p:mt-0 prose-h1:text-3xl prose-h2:text-2xl prose-h3:text-lg prose-h4:text-base prose-h5:text-base prose-h6:text-base prose-h1:mb-0 prose-h2:my-0 prose-h3:mb-0 prose-h4:mb-0 text-base-content",
+                      "previewable_truncate": !@viewing_main_object && @showing_within != :thread,
                     }
                   >
                     {rich(
@@ -97,7 +97,7 @@
                   </div>
 
                   <div
-                    :if={@showing_within != :smart_input && !@viewing_main_object}
+                    :if={@showing_within not in [:smart_input, :thread] && !@viewing_main_object}
                     id={"expandable_controls_#{@parent_id}_#{id(@activity) || id(@object) || 'no-id'}"}
                     class="hidden"
                   >

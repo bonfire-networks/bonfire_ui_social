@@ -124,6 +124,7 @@ defmodule Bonfire.UI.Social.FeedsLive do
             class: "btn-sm max-w-[100px] hidden md:inline-flex btn btn-primary"
           ]}
        ],
+
        sidebar_widgets: [
          users: [
            secondary: [

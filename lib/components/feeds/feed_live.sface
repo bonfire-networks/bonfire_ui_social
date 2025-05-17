@@ -28,16 +28,22 @@
     ></Bonfire.UI.Common.TabsLive> --}
 
     {!-- :if={@feed_name in [nil, :my, :local, :remote, :explore] and current_user_id(@__context__)} --}
-    <Bonfire.UI.Social.FeedControlsLive
-      :if={!@hide_filters and current_user_id(@__context__)}
-      event_target={@myself}
-      feed_id={@feed_id}
-      feed_name={@feed_name}
-      feed_filters={@feed_filters}
-      showing_within={@showing_within}
-      reloading={@reloading}
-    />
 
+    <div id="feed_controls_wrapper" class={"hidden": !Settings.get([Bonfire.UI.Social, :show_feed_controls], :true,
+      context: @__context__,
+      name: l("Show Feed Controls"),
+      description: l("Show feed controls in the header.")
+    )}>
+      <Bonfire.UI.Social.FeedControlsLive
+        :if={!@hide_filters and current_user_id(@__context__)}
+        event_target={@myself}
+        feed_id={@feed_id}
+        feed_name={@feed_name}
+        feed_filters={@feed_filters}
+        showing_within={@showing_within}
+        reloading={@reloading}
+      />
+      </div>
     <div
       :if={@hide_fresh != 0}
       id="show_fresh"
