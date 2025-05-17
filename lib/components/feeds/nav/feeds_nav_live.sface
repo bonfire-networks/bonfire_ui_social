@@ -4,18 +4,18 @@
       <details open={Bonfire.Common.Settings.get([Bonfire.Social.FeedLive, :show_feeds_nav_open], true, @__context__)}>
         <summary
           phx-click="Bonfire.Social.Feeds:toggle_feeds_nav_visibility"
-          class="relative font-bold uppercase group text-xs text-base-content/50"
+          class="relative font-bold uppercase  text-xs text-base-content/50"
         >
           <span>{l("Feeds")}</span>
           <!-- data-trigger="hover"
             data-position="top-end"
             phx-hook="Tooltip"
             id="feeds_nav_settings" -->
-          <div class="normal-case  group-hover:opacity-100 opacity-0 font-normal absolute right-0">
+          <div class="normal-case font-normal absolute right-0">
             <LinkLive
               to={~p"/settings/user/feeds"}
               class="z-999 tooltip-button btn btn-circle btn-ghost btn-xs"
-            ><#Icon iconify="ph:gear-fill" class="w-4 h-4" /></LinkLive>
+            ><#Icon iconify="f7:gear" class="w-4 h-4" /></LinkLive>
             <!-- <span class="tooltip z-[9999999999999999] bg-base-300 rounded-md px-2 py-1.5 text-base-content/90 text-[13px] font-medium border border-base-content/10 shadow hidden absolute top-0">{l "Settings"}</span> -->
           </div>
         </summary>
