@@ -47,7 +47,7 @@
                   user_id={@profile_id}
                   src={@profile_media}
                   title={@profile_name}
-                  class="h-9 w-9 rounded-full"
+                  class="h-6 w-6 rounded-full"
                 />
                 <LinkLive
                   to={@path}
@@ -102,7 +102,7 @@
                   user_id={@profile_id}
                   src={@profile_media}
                   title={@profile_name}
-                  class="h-9 w-9 rounded-full"
+                  class="h-6 w-6 rounded-full"
                 />
               </LinkLive>
               <div class="font-medium text-sm text-base-content/90">
@@ -134,7 +134,7 @@
                   user_id={@profile_id}
                   src={@profile_media}
                   title={@profile_name}
-                  class="h-9 w-9 rounded-full"
+                  class="h-6 w-6 rounded-full"
                 />
               </LinkLive>
               <LinkLive
@@ -167,7 +167,7 @@
                   user_id={@profile_id}
                   src={@profile_media}
                   title={@profile_name}
-                  class="h-9 w-9 rounded-full"
+                  class="h-6 w-6 rounded-full"
                 />
               </LinkLive>
               <div class="font-medium text-sm text-base-content/90">
@@ -199,7 +199,7 @@
                   user_id={@profile_id}
                   src={@profile_media}
                   title={@profile_name}
-                  class="h-9 w-9 rounded-full"
+                  class="h-6 w-6 rounded-full"
                 />
               </LinkLive>
               <div class="font-medium text-sm text-base-content/90">
