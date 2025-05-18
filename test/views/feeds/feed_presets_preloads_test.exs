@@ -37,9 +37,10 @@ defmodule Bonfire.UI.Social.PreloadPresetTest do
     end
 
     # Tests for different feed presets
-    # for %{preset: preset, postloads: postloads} = params when preset in [:my_flags] <-
+    # for %{preset: preset, postloads: postloads} = params when preset in [:notifications] <-
     for %{preset: preset, postloads: postloads} = params
         when preset not in [
+               :user_activities,
                :user_followers,
                :user_following,
                :user_by_object_type,

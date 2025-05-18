@@ -761,7 +761,12 @@ defmodule Bonfire.UI.Social.ActivityLive do
                   profile={e(component_assigns, :profile, nil)}
                   profile_media={Media.avatar_url(e(component_assigns, :profile, nil))}
                   profile_summary={e(component_assigns, :profile, :summary, nil)}
-                  profile_name={e(component_assigns, :profile, :name, :nil!)}
+                  profile_name={e(
+                    component_assigns,
+                    :profile,
+                    :name,
+                    if(component != Bonfire.UI.Social.Activity.NoSubjectLive, do: :nil!)
+                  )}
                   character_username={e(component_assigns, :character, :username, nil)}
                   activity_id={id(e(component_assigns, :activity, nil) || @activity)}
                   object_id={id(e(component_assigns, :object, nil) || @object)}
@@ -1270,8 +1275,8 @@ defmodule Bonfire.UI.Social.ActivityLive do
                |> debug("this is a fallback, component_maybe_creator *should* handle most cases") do
             nil ->
               debug("could not find a creator in activity or object")
-              debug(activity)
-              debug(object)
+              debug(activity, "activity")
+              debug(object, "object")
               [Bonfire.UI.Social.Activity.NoSubjectLive]
 
             # [Bonfire.UI.Social.Activity.SubjectLive]
