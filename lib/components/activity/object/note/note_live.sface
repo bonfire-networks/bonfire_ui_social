@@ -23,9 +23,9 @@
         <div
           :if={name != @thread_title && @showing_within != :smart_input}
           data-role="name"
-          class="badge badge-accent badge-soft my-1 mt-2"
+          class="text-sm my-1 mt-2"
         >
-          <#Icon iconify="solar:text-bold" class="w-4 h-4" />
+          <!-- <#Icon iconify="solar:text-bold" class="w-4 h-4" /> -->
           {rich(name)}
         </div>
     {/case}
