@@ -47,6 +47,7 @@ defmodule Bonfire.UI.Social.WritePostContentLive do
   prop textarea_container_class_alpine, :string
   prop textarea_class, :css_class
   prop replied_activity_class, :css_class
+  prop event_target, :any, default: nil
 
   def handler(create_object_type) do
     if create_object_type == "message",

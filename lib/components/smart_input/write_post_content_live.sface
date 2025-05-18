@@ -10,7 +10,7 @@
         to_boundaries={@to_boundaries}
         to_circles={@to_circles}
         id="test"
-        event_target="#smart_input"
+        event_target={@event_target || "#smart_input"}
         context_id={@context_id}
         is_editable={e(@smart_input_opts, :recipients_editable, true)}
       />
@@ -25,7 +25,7 @@
     action={"/LiveHandler/" <> handler(e(@smart_input_opts, :create_object_type, nil))}
     id="smart_input_form"
     autocomplete="off"
-    phx-target="#smart_input"
+    phx-target={@event_target || "#smart_input"}
     data-scope="composer_form"
     class="with_editor flex-1"
   >
