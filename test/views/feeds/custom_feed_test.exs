@@ -66,7 +66,8 @@ defmodule Bonfire.UI.Social.CustomFeedTest do
 
     conn
     |> visit("/feed")
-
+    # check that it's set to default
+    |> assert_has_or_open_browser("form[data-scope='time_limit'] input[type='range'][value='1']")
     # Set time limit to Day (index 0)
     |> within("[data-scope='time_limit']", fn session ->
       session
@@ -76,6 +77,8 @@ defmodule Bonfire.UI.Social.CustomFeedTest do
         |> Phoenix.LiveViewTest.render_change(%{"time_limit_idx" => "0"})
       end)
     end)
+    # Check if we can see the time limit is set to Day
+    |> assert_has_or_open_browser("form[data-scope='time_limit'] input[type='range'][value='0']")
 
     # Click on Save button to open modal
     |> click_button("Save")
@@ -93,10 +96,10 @@ defmodule Bonfire.UI.Social.CustomFeedTest do
     |> visit("/settings/user/feeds")
 
     # Check that our new feed is listed
-    |> assert_has("div", text: preset_name)
+    |> assert_has_or_open_browser("div", text: preset_name)
   end
 
-  test "custom feed preset maintains time limit settings when navigating", %{
+  test "custom feed preset maintains time limit settings for saved presets", %{
     conn: conn,
     me: me,
     alice_post: alice_post,
@@ -108,7 +111,9 @@ defmodule Bonfire.UI.Social.CustomFeedTest do
     # Create the feed preset in a separate visit/session
     conn
     |> visit("/feed")
-    # Set time limit to Day (index 1 = Week)
+    # check that it's set to default
+    |> assert_has_or_open_browser("form[data-scope='time_limit'] input[type='range'][value='1']")
+    # Set time limit to Day 
     |> within("[data-scope='time_limit']", fn session ->
       session
       |> unwrap(fn view ->
@@ -127,17 +132,16 @@ defmodule Bonfire.UI.Social.CustomFeedTest do
 
     # Verify it was created by checking in settings
     |> visit("/settings/user/feeds")
-    |> assert_has("div", text: preset_name)
+    |> assert_has_or_open_browser("div", text: preset_name)
 
     # Now in a new session, check that the time limit is preserved
     # First visit the feed with the custom preset
     |> visit("/feed/#{preset_name}")
-    # Check if we can see the time limit is set to Week (1)
-    |> assert_has("form[data-scope='time_limit'] input[type='range'][value='0']")
-    |> PhoenixTest.open_browser()
+    # Check if we can see the time limit is set to Day
+    |> assert_has_or_open_browser("form[data-scope='time_limit'] input[type='range']")
+    |> assert_has_or_open_browser("form[data-scope='time_limit'] input[type='range'][value='0']")
     # Now go to a different feed and verify the time limit reverts to default
     |> visit("/feed/local")
-    |> PhoenixTest.open_browser()
-    |> assert_has("form[data-scope='time_limit'] input[type='range'][value='1']")
+    |> assert_has_or_open_browser("form[data-scope='time_limit'] input[type='range'][value='1']")
   end
 end

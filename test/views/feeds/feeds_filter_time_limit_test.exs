@@ -121,6 +121,7 @@ defmodule Bonfire.UI.Social.FeedsFilterTimeLimit.Test do
     |> assert_has_or_open_browser("[data-id=feed] article")
     |> assert_has_or_open_browser("[data-id=feed] article", text: "Today's post content")
     |> refute_has_or_open_browser("[data-id=feed] article", text: "Post from 60 days ago")
+    |> assert_has_or_open_browser("form[data-scope='time_limit'] input[type='range'][value='0']")
 
     # Set to "Month" (value 2)
     |> fill_in("Time limit control", with: "2")
@@ -129,6 +130,7 @@ defmodule Bonfire.UI.Social.FeedsFilterTimeLimit.Test do
     |> assert_has_or_open_browser("[data-id=feed] article")
     |> assert_has_or_open_browser("[data-id=feed] article", text: "Today's post content")
     |> refute_has_or_open_browser("[data-id=feed] article", text: "Post from 60 days ago")
+    |> assert_has_or_open_browser("form[data-scope='time_limit'] input[type='range'][value='2']")
 
     # Set to "All time" (value 4) to verify we can return to seeing everything
     |> fill_in("Time limit control", with: "4")
@@ -137,6 +139,7 @@ defmodule Bonfire.UI.Social.FeedsFilterTimeLimit.Test do
     |> assert_has_or_open_browser("[data-id=feed] article")
     |> assert_has_or_open_browser("[data-id=feed] article", text: "Today's post content")
     |> assert_has("[data-id=feed] article", text: "Post from 60 days ago")
+    |> assert_has_or_open_browser("form[data-scope='time_limit'] input[type='range'][value='4']")
   end
 
   test "respects time filters", %{
@@ -158,6 +161,7 @@ defmodule Bonfire.UI.Social.FeedsFilterTimeLimit.Test do
     |> assert_has_or_open_browser("[data-id=feed] article", text: "Month-old content")
     # Should not show posts older than a month
     |> refute_has_or_open_browser("[data-id=feed] article", text: "Post from 60 days ago")
+    |> assert_has_or_open_browser("form[data-scope='time_limit'] input[type='range'][value='2']")
   end
 
   describe "time limit feed filters:" do
@@ -179,6 +183,9 @@ defmodule Bonfire.UI.Social.FeedsFilterTimeLimit.Test do
       |> refute_has_or_open_browser("[data-id=feed] article", text: "Week-old content")
       |> refute_has_or_open_browser("[data-id=feed] article", text: "Month-old content")
       |> refute_has_or_open_browser("[data-id=feed] article", text: "Year-old content")
+      |> assert_has_or_open_browser(
+        "form[data-scope='time_limit'] input[type='range'][value='0']"
+      )
 
       # Test with Week filter
 
@@ -190,6 +197,9 @@ defmodule Bonfire.UI.Social.FeedsFilterTimeLimit.Test do
       |> assert_has_or_open_browser("[data-id=feed] article", text: "Week-old content")
       |> refute_has_or_open_browser("[data-id=feed] article", text: "Month-old content")
       |> refute_has_or_open_browser("[data-id=feed] article", text: "Year-old content")
+      |> assert_has_or_open_browser(
+        "form[data-scope='time_limit'] input[type='range'][value='1']"
+      )
 
       # Test with Month filter
 
@@ -201,6 +211,9 @@ defmodule Bonfire.UI.Social.FeedsFilterTimeLimit.Test do
       |> assert_has_or_open_browser("[data-id=feed] article", text: "Week-old content")
       |> assert_has_or_open_browser("[data-id=feed] article", text: "Month-old content")
       |> refute_has_or_open_browser("[data-id=feed] article", text: "Year-old content")
+      |> assert_has_or_open_browser(
+        "form[data-scope='time_limit'] input[type='range'][value='2']"
+      )
 
       # Test with Year filter
 
@@ -212,6 +225,9 @@ defmodule Bonfire.UI.Social.FeedsFilterTimeLimit.Test do
       |> assert_has_or_open_browser("[data-id=feed] article", text: "Week-old content")
       |> assert_has_or_open_browser("[data-id=feed] article", text: "Month-old content")
       |> assert_has_or_open_browser("[data-id=feed] article", text: "Year-old content")
+      |> assert_has_or_open_browser(
+        "form[data-scope='time_limit'] input[type='range'][value='3']"
+      )
 
       # Test with All Time filter (should show everything)
 
@@ -223,6 +239,9 @@ defmodule Bonfire.UI.Social.FeedsFilterTimeLimit.Test do
       |> assert_has_or_open_browser("[data-id=feed] article", text: "Week-old content")
       |> assert_has_or_open_browser("[data-id=feed] article", text: "Month-old content")
       |> assert_has_or_open_browser("[data-id=feed] article", text: "Year-old content")
+      |> assert_has_or_open_browser(
+        "form[data-scope='time_limit'] input[type='range'][value='4']"
+      )
     end
 
     #  do we want to show time limit on hashtag page? 
@@ -243,6 +262,9 @@ defmodule Bonfire.UI.Social.FeedsFilterTimeLimit.Test do
       |> assert_has("[data-id=feed] article", text: "Recent content with #test_tag")
       |> refute_has_or_open_browser("[data-id=feed] article", text: "Old content with #test_tag")
       |> refute_has_or_open_browser("[data-id=feed] article", text: "Recent content without tag")
+      |> assert_has_or_open_browser(
+        "form[data-scope='time_limit'] input[type='range'][value='2']"
+      )
     end
   end
 end
