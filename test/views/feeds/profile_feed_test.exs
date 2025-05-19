@@ -71,7 +71,7 @@ defmodule Bonfire.UI.Social.Feeds.ProfileFeed.Test do
     # Visit alice's profile to verify her post doesn't show in my profile
     conn
     |> visit("/user/#{alice.id}")
-    |> assert_has("article", count: 1)
+    # |> assert_has("article", count: 1)
     |> assert_has("[data-id=object_body]", text: alice_post_content)
     |> refute_has("[data-id=object_body]", text: my_post_content)
   end

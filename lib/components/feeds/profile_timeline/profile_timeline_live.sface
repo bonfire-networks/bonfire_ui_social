@@ -7,7 +7,7 @@
       id={@feed_component_id || "Elixir.Bonfire.UI.Social.FeedLive__for_user_#{@selected_tab}_#{id(@user)}"}
       feed_name={@feed_name}
       feed_ids={@feed_ids}
-      subject_user={@user}
+      subject_user={IO.inspect(@user, label: "pfsubject_user")}
       feed_filters={@feed_filters}
       page_title={@page_title}
       feed={@feed}

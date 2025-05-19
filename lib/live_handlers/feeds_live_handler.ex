@@ -921,30 +921,36 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
         apply_task(
           :start_async,
           fn ->
-            debug(feed_name_id_or_tuple, "Query activities asynchronously")
+            try do
+              debug(feed_name_id_or_tuple, "Query activities asynchronously")
 
-            with {entries, new_assigns} when is_list(new_assigns) <-
-                   feed_assigns(feed_name_id_or_tuple, opts) do
-              # |> debug("feed_assigns")
-              send_feed_updates(
-                pid,
-                assigns[:feed_component_id] || assigns[:feed_id] || :feeds,
-                {entries,
-                 Keyword.merge(new_assigns,
-                   loaded_async: true,
-                   reset_stream: reset_stream,
-                   loading: false,
-                   reloading: false
-                 )},
-                Bonfire.UI.Social.FeedLive
-              )
-            else
-              {:error, e} ->
-                error(e, "error returned by feed_assigns")
-                assign_error(socket, Bonfire.Common.Errors.error_msg(e) || e, pid)
+              with {entries, new_assigns} when is_list(new_assigns) <-
+                     feed_assigns(feed_name_id_or_tuple, opts) do
+                # |> debug("feed_assigns")
+                send_feed_updates(
+                  pid,
+                  assigns[:feed_component_id] || assigns[:feed_id] || :feeds,
+                  {entries,
+                   Keyword.merge(new_assigns,
+                     loaded_async: true,
+                     reset_stream: reset_stream,
+                     loading: false,
+                     reloading: false
+                   )},
+                  Bonfire.UI.Social.FeedLive
+                )
+              else
+                {:error, e} ->
+                  error(e, "error returned by feed_assigns")
+                  assign_error(socket, Bonfire.Common.Errors.error_msg(e) || e, pid)
 
+                e ->
+                  error(e, "received invalid response from feed_assigns")
+                  assign_error(socket, "There was an error when trying to load the feed.", pid)
+              end
+            rescue
               e ->
-                error(e, "received invalid response from feed_assigns")
+                error(e, "error raised by feed_assigns")
                 assign_error(socket, "There was an error when trying to load the feed.", pid)
             end
           end,
@@ -1512,7 +1518,8 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
   def activity_with_object_from_assigns(_), do: nil
 
   def prepare_filters_assigns_preloads_posloads(filters, opts \\ []) do
-    with {:ok, preset, filters} <- FeedLoader.prepare_feed_preset_and_filters(filters, opts) do
+    with {:ok, preset, filters} <-
+           FeedLoader.prepare_feed_preset_and_filters(debug(filters, "initial filters"), opts) do
       {preload, postload} = activity_preloads_tuple_from_filters(filters, opts)
 
       {filters, preset[:assigns] || [], preload, postload}
