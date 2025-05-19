@@ -13,14 +13,22 @@ set export
 
 APP_VSN_EXTRA := env_var_or_default("APP_VSN_EXTRA", "")
 DB_TESTS := env_var_or_default('DB_TESTS', "1")
+WARNINGS_AS_ERRORS := env_var_or_default('WARNINGS_AS_ERRORS', "0")
 DB_DOCKER_VERSION := env_var_or_default('DB_DOCKER_VERSION', "17-3.5")
-DB_DOCKER_IMAGE := env_var_or_default('DB_DOCKER_IMAGE', if arch() == "aarch64" { "ghcr.io/baosystems/postgis:"+DB_DOCKER_VERSION } else { "postgis/postgis:"+DB_DOCKER_VERSION+"-alpine" })
+DB_DOCKER_IMAGE := env_var_or_default('DB_DOCKER_IMAGE', if arch() == "aarch64" { "ghcr.io/baosystems/postgis:"+DB_DOCKER_VERSION } else { "docker.io/postgis/postgis:"+DB_DOCKER_VERSION+"-alpine" })
 DB_STARTUP_TIME := env_var_or_default("DB_STARTUP_TIME", "10")
 POSTGRES_PORT := env_var_or_default("POSTGRES_PORT", "5432")
 MIX_ENV := env_var_or_default("MIX_ENV", "test")
 POSTGRES_USER := env_var_or_default("POSTGRES_USER", "postgres")
 POSTGRES_PASSWORD := env_var_or_default("POSTGRES_PASSWORD", "postgres")
 POSTGRES_DB := env_var_or_default("POSTGRES_DB", "localhost:" + POSTGRES_PORT)
+OCI_RUNTIME := if `command -v docker || true` =~ 'docker' {
+    "docker"
+} else if `command -v podman || true` =~ "podman" {
+  "podman"
+} else {
+  ""
+}
 
 ## Configure just
 # choose shell for running recipes
@@ -35,8 +43,58 @@ help:
     @echo "Just commands:"
     @just --list
 
+
+# Update this project from the main boilerplate repository
+boilerplate-update repo="https://github.com/bonfire-networks/bonfire-extension-boilerplate.git" branch="main":
+    #!/usr/bin/env bash
+    set -eu
+    rm -rf .bonfire-extension-boilerplate
+    mkdir -p .bonfire-extension-boilerplate
+    echo "Cloning {{repo}} branch {{branch}}..."
+    git clone "{{repo}}" --branch "{{branch}}" --single-branch .bonfire-extension-boilerplate
+    just _copy_boilerplate_files .bonfire-extension-boilerplate .
+    rm -rf .bonfire-extension-boilerplate
+
+# Update all extensions using current directory as source
+boilerplate-copy-to-extensions:
+    #!/usr/bin/env bash
+    set -eu
+    for dir in ../../extensions/*/; do
+      if [ -d "$dir" ]; then
+        just _copy_boilerplate_files . "$dir"
+      fi
+    done
+
+# Copy boilerplate files from source to destination directory
+_copy_boilerplate_files src_dir dst_dir:
+    cd {{src_dir}} && ls -la && cp -Rfv * {{dst_dir}}/ && cp -Rfv .github {{dst_dir}}/ && cp -Rfv .tool-versions {{dst_dir}}/
+
+check-unused:
+    mix deps.unlock --check-unused
+
+check-formatted:
+    mix format --check-formatted
+
+lint: check-formatted
+# TODO? check-unused  
+
+dialyzer *args:
+    mix dialyzer {{args}}
+
+deps-compile:
+    mix deps.compile
+
 compile:
-    mix compile
+    #!/usr/bin/env bash
+    set -eu
+
+    if [ "$WARNINGS_AS_ERRORS" = "1" ]; then
+      args="--warnings-as-errors"
+    else
+      args=""
+    fi
+
+    mix compile $args
 
 clean: stop-test-db clean-symlinks
     mix deps.clean --all
@@ -45,11 +103,6 @@ clean: stop-test-db clean-symlinks
 clean-symlinks:
     find lib/ -type l -delete
 
-boilerplate-update:
-    mkdir -p .bonfire-extension-boilerplate .github/workflows
-    git clone https://github.com/bonfire-networks/bonfire-extension-boilerplate.git --branch main --single-branch .bonfire-extension-boilerplate
-    cd .bonfire-extension-boilerplate && cp .envrc justfile .gitignore .. && cp .github/workflows/main.yml ../.github/workflows/main.yml && cp lib/mix/mess.ex ../mess.exs
-    rm -rf .bonfire-extension-boilerplate
 
 deps-get:
     mix deps.get
@@ -95,12 +148,12 @@ create-test-db:
     mix ecto.create -r Bonfire.Common.Repo
 
 start-test-db:
-    docker run --name test-db -d -p {{POSTGRES_PORT}}:5432 -e POSTGRES_USER=${POSTGRES_USER} -e POSTGRES_PASSWORD=${POSTGRES_PASSWORD} --rm ${DB_DOCKER_IMAGE}
+    {{OCI_RUNTIME}} run --name test-db -d -p {{POSTGRES_PORT}}:5432 -e POSTGRES_USER=${POSTGRES_USER} -e POSTGRES_PASSWORD=${POSTGRES_PASSWORD} --rm ${DB_DOCKER_IMAGE}
     # Let the db start
     sleep {{DB_STARTUP_TIME}}
 
 stop-test-db:
-    docker rm -f test-db
+    {{OCI_RUNTIME}} rm -f test-db
 
 @release-increment: common-mix-tasks-setup
     #!/usr/bin/env bash
