@@ -3,6 +3,7 @@
   data-id="feed"
   role="feed"
   aria-live="assertive"
+  phx-hook="Bonfire.UI.Common.PreviewContentLive#MainFeed"
   aria-atomic="true"
   class="w-full max-w-full flex flex-col feed w-full max-w-full lg:rounded-xl lg:shadow bg-base-100"
 >

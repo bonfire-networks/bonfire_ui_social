@@ -240,9 +240,9 @@
           </div>
         </form>
         <:open_btn>
-          <div class="btn btn-primary">
-            <#Icon iconify="bxs:save" class="w-5 h-5 lg:hidden" />
-            <span class="hidden lg:block">{l("Save")}</span>
+          <div class="btn btn-primary btn-square">
+            <#Icon iconify="bxs:save" class="w-5 h-5" />
+            <span class="sr-only">{l("Save")}</span>
           </div>
         </:open_btn>
       </Bonfire.UI.Common.OpenModalLive>
