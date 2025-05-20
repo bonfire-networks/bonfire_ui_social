@@ -3,4 +3,5 @@ defmodule Bonfire.UI.Social.HeaderAsideFeedFiltersLive do
 
   # prop tab, :string, default: nil
   # prop all_seen, :boolean, default: false
+  prop feed_name, :string, default: nil
 end

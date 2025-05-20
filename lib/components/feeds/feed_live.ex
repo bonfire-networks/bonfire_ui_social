@@ -428,14 +428,14 @@ defmodule Bonfire.UI.Social.FeedLive do
                feed_id: :notifications,
                feed_name: "notifications"
              ]},
-            {Bonfire.UI.Social.HeaderAsideFeedFiltersLive, []}
+            {Bonfire.UI.Social.HeaderAsideFeedFiltersLive, [feed_name: "notifications"]}
           ]
         ]
 
       true ->
         [
           page_header_aside: [
-            {Bonfire.UI.Social.HeaderAsideFeedFiltersLive, []}
+            {Bonfire.UI.Social.HeaderAsideFeedFiltersLive, [feed_name: feed_name]},
           ]
         ]
     end
@@ -460,12 +460,12 @@ defmodule Bonfire.UI.Social.FeedLive do
     ]
   end
 
-  defp widgets(assigns) do
+  def widgets(assigns) do
     feed_name = e(assigns, :feed_name, nil)
 
     [
       page_header_aside: [
-        {Bonfire.UI.Social.HeaderAsideFeedFiltersLive, []}
+        {Bonfire.UI.Social.HeaderAsideFeedFiltersLive, [feed_name: feed_name]},
       ],
       sidebar_widgets: [
         guests: [
