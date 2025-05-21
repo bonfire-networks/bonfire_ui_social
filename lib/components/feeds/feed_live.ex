@@ -435,7 +435,7 @@ defmodule Bonfire.UI.Social.FeedLive do
       true ->
         [
           page_header_aside: [
-            {Bonfire.UI.Social.HeaderAsideFeedFiltersLive, [feed_name: feed_name]},
+            {Bonfire.UI.Social.HeaderAsideFeedFiltersLive, [feed_name: feed_name]}
           ]
         ]
     end
@@ -465,7 +465,7 @@ defmodule Bonfire.UI.Social.FeedLive do
 
     [
       page_header_aside: [
-        {Bonfire.UI.Social.HeaderAsideFeedFiltersLive, [feed_name: feed_name]},
+        {Bonfire.UI.Social.HeaderAsideFeedFiltersLive, [feed_name: feed_name]}
       ],
       sidebar_widgets: [
         guests: [
