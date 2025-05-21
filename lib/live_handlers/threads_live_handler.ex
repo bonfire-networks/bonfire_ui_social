@@ -114,7 +114,7 @@ defmodule Bonfire.Social.Threads.LiveHandler do
        |> assign(depth_loaded: load_depth)
        |> insert_comments(
          {:threaded_replies,
-          Threads.arrange_replies_tree(
+          Threads.prepare_replies_tree(
             replies,
             opts
           ) || []}
@@ -200,7 +200,7 @@ defmodule Bonfire.Social.Threads.LiveHandler do
 
     opts =
       [
-        current_user: current_user(assigns(socket)),
+        current_user: current_user(socket),
         paginate: paginate,
         thread_mode:
           (e(assigns(socket), :thread_mode, nil) ||
@@ -230,7 +230,7 @@ defmodule Bonfire.Social.Threads.LiveHandler do
       threaded_replies =
         if opts[:thread_mode] != :flat and is_list(replies) and replies != [],
           do:
-            Threads.arrange_replies_tree(
+            Threads.prepare_replies_tree(
               replies,
               opts
             ),
@@ -426,7 +426,9 @@ defmodule Bonfire.Social.Threads.LiveHandler do
                 participant_count: participant_count,
                 thread_boost_count:
                   Bonfire.Social.Boosts.count([in_thread: thread_id], current_user: current_user)
-              }
+              },
+              nil,
+              current_user: current_user
             )
           end,
           socket: socket,
@@ -452,7 +454,9 @@ defmodule Bonfire.Social.Threads.LiveHandler do
                    loaded_async: thread_id,
                    reset_stream: reset_stream,
                    last_reply_id: id(last_reply) || false
-                 ]}
+                 ]},
+              nil,
+              current_user: current_user
             )
           end,
           socket: socket,
@@ -489,10 +493,11 @@ defmodule Bonfire.Social.Threads.LiveHandler do
         |> assign(assigns)
         |> insert_comments(
           {:threaded_replies,
-           Threads.arrange_replies_tree(replies,
+           Threads.prepare_replies_tree(replies,
              thread_mode: thread_mode,
              sort_by: e(assigns, :sort_by, nil),
-             sort_order: e(assigns, :sort_order, nil)
+             sort_order: e(assigns, :sort_order, nil),
+             current_user: current_user(assigns) || current_user(socket)
            )}
         )
       else
@@ -583,21 +588,26 @@ defmodule Bonfire.Social.Threads.LiveHandler do
   def send_thread_updates(
         pid \\ self(),
         thread_id,
-        assigns,
-        component \\ Bonfire.UI.Social.ThreadLive
+        assigns_or_tuple,
+        component \\ Bonfire.UI.Social.ThreadLive,
+        opts \\ []
       )
 
-  def send_thread_updates(pid, thread_id, {replies, assigns}, component) when is_list(assigns) do
+  def send_thread_updates(pid, thread_id, {replies, assigns}, component, opts)
+      when is_list(assigns) do
     thread_mode = e(assigns, :thread_mode, nil)
 
     if thread_mode != :flat and is_list(replies) and
          e(assigns, :reply_count, 0) > 0 do
       debug("send threaded replies to stream")
 
-      Threads.arrange_replies_tree(replies,
-        thread_mode: thread_mode,
-        sort_by: e(assigns, :sort_by, nil),
-        sort_order: e(assigns, :sort_order, nil)
+      Threads.prepare_replies_tree(
+        replies,
+        Keyword.merge(opts,
+          thread_mode: thread_mode,
+          sort_by: e(assigns, :sort_by, nil),
+          sort_order: e(assigns, :sort_order, nil)
+        )
       )
       |> {:threaded_replies, ...}
     else
@@ -606,18 +616,30 @@ defmodule Bonfire.Social.Threads.LiveHandler do
       replies
       |> {:replies, ...}
     end
-    |> send_thread_updates(pid, thread_id, assigns ++ [insert_stream: ...], component)
+    |> send_thread_updates(
+      pid || self(),
+      thread_id,
+      assigns ++ [insert_stream: ...],
+      component || Bonfire.UI.Social.ThreadLive,
+      opts
+    )
   end
 
-  def send_thread_updates(pid, thread_id, assigns, component)
-      when is_pid(pid) and (is_list(assigns) or is_map(assigns)) do
+  def send_thread_updates(pid, thread_id, assigns, component, _opts)
+      when is_list(assigns) or is_map(assigns) do
     debug(thread_id, "Sending comments update to")
-    maybe_send_update(component, thread_id, assigns, pid)
+
+    maybe_send_update(
+      component || Bonfire.UI.Social.ThreadLive,
+      thread_id,
+      assigns,
+      pid || self()
+    )
   end
 
-  def send_thread_updates(pid, thread_id, {:error, e}, _component) do
+  def send_thread_updates(pid, thread_id, {:error, e}, _component, _opts) do
     debug(thread_id, "Returning error instead of comments")
-    assign_error(%{}, e, pid)
+    assign_error(%{}, e, pid || self())
   end
 
   def insert_comments(socket, replies, opts \\ [])

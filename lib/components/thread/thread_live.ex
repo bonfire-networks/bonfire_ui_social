@@ -152,7 +152,8 @@ defmodule Bonfire.UI.Social.ThreadLive do
             self(),
             component_id(reply_to_id, "nested"),
             [insert_stream: insert],
-            ThreadBranchLive
+            ThreadBranchLive,
+            current_user: current_user(socket)
           )
 
           {:ok, socket}
@@ -197,7 +198,7 @@ defmodule Bonfire.UI.Social.ThreadLive do
         # {:ok, socket
         #   |> assign(
         #     replies: replies,
-        #     threaded_replies: Bonfire.Social.Threads.arrange_replies_tree(replies) |> debug()
+        #     threaded_replies: Bonfire.Social.Threads.prepare_replies_tree(replies) |> debug()
         #   )
         # }
       end
