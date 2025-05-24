@@ -13,7 +13,6 @@ defmodule Bonfire.UI.Social.Feeds.LoadMoreTest do
   import Untangle
 
   describe "Load more in pages" do
-
     test "Load more works in followers/following page" do
       Bonfire.Common.Config.get(:default_pagination_limit, 2)
       #  create alice user
@@ -36,15 +35,15 @@ defmodule Bonfire.UI.Social.Feeds.LoadMoreTest do
       #  eve follows alice
       Follows.follow(eve, alice)
 
-      conn = conn(user: alice, account: account)
-      |> visit("/@#{alice.character.username}/followers")
-      |> assert_has("[data-id=profile_name]", count: 2)
-      |> click_button("[data-id=load_more]", "Load more")
-      |> assert_has("[data-id=profile_name]", count: 4)
+      conn =
+        conn(user: alice, account: account)
+        |> visit("/@#{alice.character.username}/followers")
+        |> assert_has("[data-id=profile_name]", count: 2)
+        |> click_button("[data-id=load_more]", "Load more")
+        |> assert_has("[data-id=profile_name]", count: 4)
     end
 
     test "Load more works in Search page" do
-
     end
 
     test "Load more works in messages list" do
@@ -54,6 +53,7 @@ defmodule Bonfire.UI.Social.Feeds.LoadMoreTest do
       on_exit(fn ->
         Bonfire.Common.Config.put(:default_pagination_limit, original_limit)
       end)
+
       #  create alice user
       account = fake_account!()
       alice = fake_user!(account)
@@ -65,19 +65,34 @@ defmodule Bonfire.UI.Social.Feeds.LoadMoreTest do
       dave = fake_user!()
       #  create eve user
       eve = fake_user!()
-      assert {:ok, message} = Messages.send(alice, %{to_circles: [bob.id], post_content: %{html_body: "test DM"}})
-      assert {:ok, message} = Messages.send(alice, %{to_circles: [charlie.id], post_content: %{html_body: "test DM"}})
-      assert {:ok, message} = Messages.send(alice, %{to_circles: [dave.id], post_content: %{html_body: "test DM"}})
-      assert {:ok, message} = Messages.send(alice, %{to_circles: [eve.id], post_content: %{html_body: "test DM"}})
-      conn = conn(user: alice, account: account)
-      |> visit("/messages")
-      |> assert_has("[data-id=thread_participants]", count: 2)
-      # |> PhoenixTest.open_browser()
-      |> click_button("[data-id=load_more]", "Load more")
-      # |> PhoenixTest.open_browser()
-      |> assert_has("[data-id=thread_participants]", count: 4)
-    end
 
+      assert {:ok, message} =
+               Messages.send(alice, %{to_circles: [bob.id], post_content: %{html_body: "test DM"}})
+
+      assert {:ok, message} =
+               Messages.send(alice, %{
+                 to_circles: [charlie.id],
+                 post_content: %{html_body: "test DM"}
+               })
+
+      assert {:ok, message} =
+               Messages.send(alice, %{
+                 to_circles: [dave.id],
+                 post_content: %{html_body: "test DM"}
+               })
+
+      assert {:ok, message} =
+               Messages.send(alice, %{to_circles: [eve.id], post_content: %{html_body: "test DM"}})
+
+      conn =
+        conn(user: alice, account: account)
+        |> visit("/messages")
+        |> assert_has("[data-id=thread_participants]", count: 2)
+        # |> PhoenixTest.open_browser()
+        |> click_button("[data-id=load_more]", "Load more")
+        # |> PhoenixTest.open_browser()
+        |> assert_has("[data-id=thread_participants]", count: 4)
+    end
   end
 
   describe "Load More in Feeds" do

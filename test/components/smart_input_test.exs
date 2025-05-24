@@ -6,6 +6,8 @@ defmodule Bonfire.UI.Social.SmartInputTest do
   alias Bonfire.Social.Fake
   alias Bonfire.Files.Test
 
+  @moduletag :ui
+
   test "create a post with uploads" do
     # Create alice user
     account = fake_account!()
