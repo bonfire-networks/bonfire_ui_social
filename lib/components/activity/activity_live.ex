@@ -165,10 +165,19 @@ defmodule Bonfire.UI.Social.ActivityLive do
         existing -> existing
       end || :feed
 
+    created =
+      e(object, :created, nil) ||
+        e(activity, :created, nil)
+
     peered =
-      e(object, :peered, nil) || e(activity, :peered, nil) ||
-        e(activity, :subject, :character, :peered, nil) ||
-        e(activity, :created, :creator, :character, :peered, nil)
+      e(object, :peered, nil) ||
+        e(created, :creator, :character, :peered, nil) ||
+        if id(object) == id(activity) do
+          e(activity, :peered, nil)
+        end ||
+        if is_nil(created) or e(created, :creator_id, nil) == e(activity, :subject_id, nil) do
+          e(activity, :subject, :character, :peered, nil)
+        end
 
     # |> debug("peeeered")
 
