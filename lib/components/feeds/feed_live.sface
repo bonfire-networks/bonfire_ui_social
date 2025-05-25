@@ -259,6 +259,7 @@ if previous_end_cursor && query_with_deferred_join?,
                                           phx-click="set_filter"
                                           phx-value-time_limit={0}
                                           phx-target={@myself}
+                                          phx-disable-with={l("Loading...")}
                                         >
                                           {l("Show all activities (with no time limit)")}
                                         </button>
