@@ -1549,10 +1549,17 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
         [:extra_info, :with_subject, :with_post_content]
 
       {:thread, :flat} ->
-        [:feed, :with_reply_to, :with_media, :with_object_more, :maybe_with_labelled]
+        [
+          :feed,
+          :with_reply_to,
+          :with_media,
+          :with_object_more,
+          :maybe_with_labelled,
+          :with_object_peered
+        ]
 
       {:thread, _} ->
-        [:feed, :with_media, :with_object_more, :maybe_with_labelled]
+        [:feed, :with_media, :with_object_more, :maybe_with_labelled, :with_object_peered]
 
       {:feed_by_creator, _} ->
         [:with_object_more, :feed_postload, :post_content]

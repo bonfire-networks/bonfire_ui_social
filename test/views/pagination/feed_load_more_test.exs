@@ -44,15 +44,12 @@ defmodule Bonfire.UI.Social.Feeds.LoadMoreTest do
     end
 
     test "Load more works in Search page" do
+
     end
 
     test "Load more works in messages list" do
-      original_limit = Bonfire.Common.Config.get(:default_pagination_limit)
-      Bonfire.Common.Config.put(:default_pagination_limit, 2)
+      Bonfire.Common.Config.get(:default_pagination_limit, 2)
 
-      on_exit(fn ->
-        Bonfire.Common.Config.put(:default_pagination_limit, original_limit)
-      end)
 
       #  create alice user
       account = fake_account!()

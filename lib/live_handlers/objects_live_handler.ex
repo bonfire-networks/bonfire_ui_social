@@ -269,7 +269,8 @@ defmodule Bonfire.Social.Objects.LiveHandler do
       :with_parent,
       :with_media,
       :maybe_with_labelled,
-      :tags
+      :tags,
+      :with_object_peered
     ]
 
   def load_object_assigns(%{assigns: assigns} = socket), do: load_object_assigns(assigns, socket)
