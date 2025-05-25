@@ -104,7 +104,7 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
   end
 
   def handle_event("publish", %{"to" => to} = params, socket) do
-    current_user = current_user(assigns(socket))
+    current_user = current_user(socket)
     activity = e(assigns(socket), :activity, nil) || id(params)
 
     if activity do
@@ -237,7 +237,7 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
   def handle_info({:new_activity, data}, socket) do
     debug(data[:feed_ids], "received new_activity for these feed ids")
     # dump(data)
-    current_user = current_user(assigns(socket))
+    current_user = current_user(socket)
 
     permitted? =
       Bonfire.Common.Needles.exists?([id: e(data, :activity, :object, :id, nil)],
@@ -1797,7 +1797,7 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
   #     ) do
   #   socket_connected = socket_connected?(socket)
 
-  #   user = user_or_feed || e(assigns(socket), :user, nil) || current_user(assigns(socket))
+  #   user = user_or_feed || e(assigns(socket), :user, nil) || current_user(socket)
 
   #   feed_id = e(user, :character, :outbox_id, nil) || id(user)
 
@@ -1805,7 +1805,7 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
   #     e(assigns(socket), :feed_component_id, nil) ||
   #       ComponentID.new(Bonfire.UI.Social.FeedLive, feed_id)
 
-  #   if (socket_connected || not is_nil(current_user_id(assigns(socket)))) && Config.env() != :test do
+  #   if (socket_connected || not is_nil(current_user_id(socket))) && Config.env() != :test do
   #     if socket_connected do
   #       debug(tab, "socket connected, so load async")
   #       pid = self()
@@ -1892,7 +1892,7 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
   #           feed_filters,
   #           pagination: params,
   #           exclude_feed_ids: e(params, :exclude_feed_ids, []),
-  #           current_user: current_user(assigns(socket)),
+  #           current_user: current_user(socket),
   #           preload: preloads
   #         ),
   #       else: []
@@ -1914,7 +1914,7 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
   # def load_user_feed_assigns("posts" = tab, user, params, socket) do
   #   user = user || e(assigns(socket), :user, nil)
   #   showing_within = :feed_by_creator
-  #   current_user = current_user(assigns(socket))
+  #   current_user = current_user(socket)
   #   filters = e(assigns(socket), :filters, %{})
   #   # preloads = [:feed_by_creator] ++ activity_preloads_tuple_from_filters(showing_within)
   #   {preloads, postloads} =
@@ -1956,7 +1956,7 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
 
   # def load_user_feed_assigns("objects" = tab, user, %{"extra" => type} = params, socket) do
   #   user = user || e(assigns(socket), :user, nil)
-  #   current_user = current_user(assigns(socket))
+  #   current_user = current_user(socket)
   #   type = Types.maybe_to_atom(type)
   #   object_types = Types.maybe_to_module(type) || type
   #   filters = e(assigns(socket), :filters, %{})
@@ -1986,7 +1986,7 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
   #             %{filters | object_types: object_types},
   #             [
   #               pagination: input_to_atoms(params),
-  #               current_user: current_user(assigns(socket)),
+  #               current_user: current_user(socket),
   #               subject_user: user,
   #               showing_within: type,
   #               preload: preloads
@@ -2012,7 +2012,7 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
 
   # def load_user_feed_assigns("boosts" = tab, user, params, socket) do
   #   user = user || e(assigns(socket), :user, nil)
-  #   current_user = current_user(assigns(socket))
+  #   current_user = current_user(socket)
 
   #   #  TODO: use FeedLoader
   #   feed =
@@ -2046,7 +2046,7 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
   #       showing_within: e(assigns(socket), :showing_within, nil)
   #     )
 
-  #   current_user = current_user(assigns(socket))
+  #   current_user = current_user(socket)
 
   #   feed_id =
   #     if not is_nil(user),
@@ -2068,7 +2068,7 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
   #             filters,
   #             [
   #               pagination: input_to_atoms(params),
-  #               current_user: current_user(assigns(socket)),
+  #               current_user: current_user(socket),
   #               subject_user: user,
   #               preload: preloads
   #             ]
@@ -2096,7 +2096,7 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
   # def load_user_feed_assigns(tab, feed_id, attrs, socket)
   #     when is_binary(tab) and is_binary(feed_id) do
   #   params = input_to_atoms(attrs)
-  #   current_user = current_user(assigns(socket))
+  #   current_user = current_user(socket)
   #   filters = e(assigns(socket), :filters, %{})
   #   # for custom feeds
   #   feed_id =

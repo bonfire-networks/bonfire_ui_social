@@ -118,7 +118,7 @@ defmodule Bonfire.UI.Social.ThreadLive do
     permitted? =
       object_id &&
         Bonfire.Common.Needles.exists?([id: object_id],
-          current_user: current_user(assigns(socket))
+          current_user: current_user(socket)
         )
         |> debug("double check boundary upon receiving a LivePush")
 

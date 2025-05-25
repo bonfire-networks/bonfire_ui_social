@@ -171,7 +171,7 @@ defmodule Bonfire.Social.Threads.LiveHandler do
            e(assigns(socket), :activity, nil) || e(assigns(socket), :object, nil),
            e(assigns(socket), :thread_id, nil),
            limit: 50,
-           current_user: current_user(assigns(socket))
+           current_user: current_user(socket)
          ),
        already_loaded_participants: true
      )}
@@ -186,7 +186,7 @@ defmodule Bonfire.Social.Threads.LiveHandler do
     debug("received :new_reply")
 
     # id = e(data, :object, :id, nil) || e(data, :id, nil)
-    # permitted? = id && Bonfire.Common.Needles.exists?([id: id], current_user: current_user(assigns(socket))) |> debug("double check boundary upon receiving a LivePush")
+    # permitted? = id && Bonfire.Common.Needles.exists?([id: id], current_user: current_user(socket)) |> debug("double check boundary upon receiving a LivePush")
 
     # if permitted?, do: # Note: now checking permission in ThreadLive
     if socket_connected?(socket) != false,
@@ -356,7 +356,7 @@ defmodule Bonfire.Social.Threads.LiveHandler do
 
   def thread_init(socket) do
     # debug(assigns, "thread assigns")
-    current_user = current_user(assigns(socket))
+    current_user = current_user(socket)
     object = e(assigns(socket), :object, nil) || e(assigns(socket), :activity, :object)
 
     thread_id =
@@ -385,7 +385,7 @@ defmodule Bonfire.Social.Threads.LiveHandler do
 
   def load_thread_maybe_async(%Phoenix.LiveView.Socket{} = socket, show_loader, reset_stream) do
     socket_connected = user_socket_connected?(socket)
-    current_user = current_user(assigns(socket))
+    current_user = current_user(socket)
 
     if (socket_connected || current_user != nil) && Config.env() != :test do
       if socket_connected do

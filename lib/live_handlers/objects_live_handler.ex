@@ -45,7 +45,7 @@ defmodule Bonfire.Social.Objects.LiveHandler do
   end
 
   def handle_event("share", %{"boundary" => boundary} = params, socket) do
-    current_user = current_user(assigns(socket))
+    current_user = current_user(socket)
 
     thing =
       ed(assigns(socket), params["object_assign"] || :object, nil)
@@ -128,7 +128,7 @@ defmodule Bonfire.Social.Objects.LiveHandler do
   end
 
   defp init_object_assigns(object, socket) do
-    current_user = current_user(assigns(socket))
+    current_user = current_user(socket)
 
     # TODO: less ugly
 
@@ -156,7 +156,7 @@ defmodule Bonfire.Social.Objects.LiveHandler do
   end
 
   defp init_object_activity_assigns(object, activity, socket) do
-    # current_user = current_user(assigns(socket))
+    # current_user = current_user(socket)
     id = id(object)
     canonical_url = path(object)
 
@@ -294,15 +294,24 @@ defmodule Bonfire.Social.Objects.LiveHandler do
   end
 
   def load_object_assigns(%{post_id: id} = assigns, socket) when is_binary(id) do
-    current_user = current_user(assigns) || current_user(assigns(socket))
+    current_user = current_user(assigns) || current_user(socket)
+
+    preloads = default_preloads()
 
     # debug(params, "PARAMS")
     # debug(url, "post url")
-    with {:ok, object} <-
+    with id when is_binary(id) <- uid(id),
+         {:ok, object} <-
            Utils.maybe_apply(
              Bonfire.Posts,
              :read,
-             [uid!(id), [current_user: current_user, preload: default_preloads()]]
+             [id, [current_user: current_user, preload: preloads]],
+             fallback_fun: fn ->
+               Bonfire.Social.Objects.read(id,
+                 current_user: current_user,
+                 preload: preloads
+               )
+             end
            ) do
       init_object_assigns(object, socket)
     else
@@ -312,7 +321,7 @@ defmodule Bonfire.Social.Objects.LiveHandler do
   end
 
   def load_object_assigns(%{object_id: id} = assigns, socket) when is_binary(id) do
-    current_user = current_user(assigns) || current_user(assigns(socket))
+    current_user = current_user(assigns) || current_user(socket)
     # debug(params, "PARAMS")
     with id when is_binary(id) <- uid(id),
          {:ok, object} <-
@@ -338,7 +347,9 @@ defmodule Bonfire.Social.Objects.LiveHandler do
       |> String.trim("#")
       |> debug("current_url")
 
-    case Bonfire.Common.URIs.remote_canonical_url(id) do
+    uid = uid(id)
+
+    case uid && Bonfire.Common.URIs.remote_canonical_url(uid) do
       url when is_binary(url) and url != current_url ->
         debug(url, "remote object - redirect to canonical")
 
