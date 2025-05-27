@@ -82,15 +82,15 @@
             {!-- LIKE --}
 
             {#case @emoji}
-              {#match %{summary: emoji}}
-                <span class="text-yellow-500 text-[20px]">{emoji}</span>
               {#match %{media_type: "emoji"} = emoji}
                 <LazyImage
                   parent_id={["emoji", @parent_id, id(emoji)]}
                   class="w-5 h-5"
                   media={emoji}
-                  alt={e(emoji, :metadata, "label", nil) || e(emoji, :metadata, "shortcode", nil)}
+                  alt={"#{e(emoji, :metadata, "shortcode", nil)} #{e(emoji, :metadata, "label", nil)}"}
                 />
+              {#match %{summary: emoji}}
+                <span class="text-yellow-500 text-[20px]">{emoji}</span>
               {#match _}
                 <#Icon iconify="mingcute:fire-fill" class="w-7 h-7 text-yellow-500" />
             {/case}

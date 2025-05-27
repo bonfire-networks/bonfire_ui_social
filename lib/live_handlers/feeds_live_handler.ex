@@ -1650,18 +1650,32 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
     list_of_activities =
       activities
       |> Map.new(fn activity -> {id(activity) || id(e(activity, :object, nil)), activity} end)
-      |> debug("list_of_activities postloaded")
 
-    list_of_emoji =
+    # |> debug("list_of_activities postloaded")
+
+    {custom_emoji, standard_emoji} =
       activities
       |> Enum.map(fn a -> e(a, :edge, nil) end)
       |> Enums.filter_empty([])
       |> repo().maybe_preload(:emoji, skip_boundary_check: true)
-      |> Map.new(fn edge ->
-        case e(edge, :emoji, nil) do
-          nil -> nil
-          emoji -> {id(edge), emoji}
-        end
+      |> Enum.split_with(fn
+        %{emoji: %Bonfire.Files.Media{}} ->
+          true
+
+        _ ->
+          false
+      end)
+
+    standard_emoji =
+      standard_emoji
+      |> repo().maybe_preload([emoji: [:extra_info]], skip_boundary_check: true)
+
+    list_of_emoji =
+      (standard_emoji ++ custom_emoji)
+      |> Map.new(fn
+        %{id: edge_id, emoji: %Bonfire.Files.Media{} = emoji} -> {edge_id, emoji}
+        %{id: edge_id, emoji: %{extra_info: %{id: _} = emoji}} -> {edge_id, emoji}
+        _ -> {nil, nil}
       end)
 
     list_of_components
@@ -1673,8 +1687,8 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
         component.component_id,
         if(activity,
           do: %{
-            activity: activity,
-            emoji: list_of_emoji[component.object_id],
+            activity: %{activity | emoji: list_of_emoji[component.object_id]},
+            # emoji: list_of_emoji[component.object_id],
             activity_preloads: opts[:assign_activity_preloads]
           }
         )

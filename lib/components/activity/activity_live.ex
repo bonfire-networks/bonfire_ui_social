@@ -165,6 +165,8 @@ defmodule Bonfire.UI.Social.ActivityLive do
         existing -> existing
       end || :feed
 
+    verb = extras[:verb] || prepare_verb(activity, e(assigns, :verb_default, nil) || "Create")
+
     created =
       e(object, :created, nil) ||
         e(activity, :created, nil)
@@ -183,13 +185,14 @@ defmodule Bonfire.UI.Social.ActivityLive do
 
     [
       showing_within: showing_within,
+      verb: verb,
       thread_mode:
         case e(assigns, :thread_mode, nil) do
           nil -> e(socket_assigns, :thread_mode, nil)
           existing -> existing
         end,
-      published_in: maybe_published_in(activity, extras[:verb]),
-      labelled: maybe_labelled(activity, extras[:verb]),
+      published_in: maybe_published_in(activity, verb),
+      labelled: maybe_labelled(activity, verb),
       peered: peered,
       is_remote:
         (assigns[:is_remote] || socket_assigns[:is_remote] ||
@@ -282,6 +285,10 @@ defmodule Bonfire.UI.Social.ActivityLive do
   def prepare(assigns), do: Map.put(assigns, :activity_prepared, :skipped)
 
   defp prepare_verb(activity, fallback \\ nil)
+
+  defp prepare_verb(%{emoji: %{media_type: "emoji"}}, fallback) do
+    "React"
+  end
 
   defp prepare_verb(%{emoji: %{summary: _}}, fallback) do
     "React"
@@ -443,6 +450,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
 
   def activity_components(
         activity,
+        verb,
         object_override,
         showing_within
       ) do
@@ -454,8 +462,6 @@ defmodule Bonfire.UI.Social.ActivityLive do
 
     thread =
       e(replied, :thread, nil) || e(replied, :thread_id, nil)
-
-    verb = prepare_verb(activity)
 
     reply_to = if verb in @reply_verbs, do: prepare_reply_to(replied || activity)
 
