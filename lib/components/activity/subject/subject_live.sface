@@ -18,7 +18,7 @@
     opts={"data-id": "subject_avatar"}
     parent_id={["subject_avatar", @parent_id]}
     class={
-      "absolute -ml-[3.25rem] font-semibold text-base-content hover:underline z-50",
+      "absolute -ml-[4rem] font-semibold text-base-content hover:underline z-50",
       "!-ml-[2.5rem]": @__context__[:ui_compact] && !@viewing_main_object
     }
     to={@path}
@@ -28,9 +28,9 @@
       parent_id={["subject", @activity_component_id || @activity_id]}
       user_id={@subject_id}
       src={@profile_media}
-      fallback_class="w-10 h-10"
+      fallback_class="w-12 h-12"
       class={
-        "rounded-full w-10 h-10",
+        "rounded-full w-12 h-12",
         "!w-7 !h-7": @__context__[:ui_compact]
       }
     />

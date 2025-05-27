@@ -1,0 +1,166 @@
+<div class="w-full">
+<div :if={current_user_id(@__context__)} class="flex justify-between flex-1 gap-1 w-full">
+  <div class="flex gap-1 flex-1">
+    <div
+      data-position="bottom-end"
+      phx-hook="Tooltip"
+      id="order_dropdown_feed"
+      class="flex flex-1 relative"
+    >
+      <label tabindex="0" class="tooltip-button btn w-full btn-outline btn-soft">
+        {#case e(@feed_filters, :sort_by, nil)}
+          {#match :num_replies}
+            <span class="flex items-center">
+              <#Icon iconify="lucide:message-circle" class="lg:hidden block w-4 h-4" />
+              <span class="hidden lg:block">{l("Most replied")}</span>
+            </span>
+          {#match :num_boosts}
+            <span class="flex items-center">
+              <#Icon iconify="lucide:refresh-cw" class="lg:hidden block w-4 h-4" />
+              <span class="hidden lg:block">{l("Most boosted")}</span>
+            </span>
+          {#match :num_likes}
+            <span class="flex items-center">
+              <#Icon iconify="mingcute:fire-fill" class="lg:hidden block h-[20px] w-[18px]" />
+              <span class="hidden lg:block">{l("Most liked")}</span>
+            </span>
+          {#match _}
+            <span class="flex items-center">
+              <#Icon iconify="mdi:order-alphabetical-ascending" class="lg:hidden block w-4 h-4" />
+              <span class="hidden lg:block">{l("Chronological")}</span>
+            </span>
+        {/case}
+      </label>
+      <ul
+        tabindex="0"
+        class="tooltip z-[999] menu bg-base-100 shadow-lg border rounded-xl border-base-content/10 w-45 absolute top-0 right-0 hidden"
+      >
+        <li>
+          <a
+            phx-click="set_filter"
+            phx-value-sort_by="date_created"
+            phx-target={@event_target}
+            class="flex gap-3 px-2 text-base-content"
+          >
+            <#Icon iconify="mdi:order-alphabetical-ascending" class="w-4 h-4" />
+            {l("Chronological")}
+          </a></li>
+
+        <li>
+          <a
+            phx-click="set_filter"
+            phx-value-sort_by="num_replies"
+            phx-target={@event_target}
+            class="flex gap-3 px-2 text-base-content"
+          >
+            <#Icon iconify="lucide:message-circle" class="w-4 h-4" />
+            {l("Most replied")}</a></li>
+
+        {#if extension_enabled?(:bonfire_ui_reactions, @__context__)}
+          <li>
+            <a
+              phx-click="set_filter"
+              phx-value-sort_by="num_boosts"
+              phx-target={@event_target}
+              class="flex gap-3 px-2 text-base-content"
+            >
+              <#Icon iconify="lucide:refresh-cw" class="w-4 h-4" />
+              {l("Most boosted")}</a></li>
+
+          <li>
+            <a
+              phx-click="set_filter"
+              phx-value-sort_by="num_likes"
+              phx-target={@event_target}
+              class="flex gap-3 px-2 text-base-content"
+            >
+              <#Icon iconify="mingcute:fire-fill" class="w-4 h-4" />
+              {l("Most liked")}</a></li>
+        {/if}
+      </ul>
+    </div>
+    <div class="px-2 btn btn-square flex items-center place-content-center btn-outline btn-soft">
+      {#if e(@feed_filters, :sort_order, nil) == :asc}
+        <a phx-click="set_filter" phx-value-sort_order={:desc} phx-target={@event_target}>
+          <#Icon iconify="mdi:arrow-down" class="w-4 h-4" />
+          <span class="sr-only">{l("Oldest first")}</span>
+        </a>
+      {#else}
+        <a phx-click="set_filter" phx-value-sort_order={:asc} phx-target={@event_target}>
+          <#Icon iconify="mdi:arrow-up" class="w-4 h-4" />
+          <span class="sr-only">{l("Newest first")}</span>
+        </a>
+      {/if}
+    </div>
+  </div>
+
+  <div data-position="bottom" phx-hook="Tooltip" class="relative" id="filter_origin_feed">
+    <label tabindex="0" class={"tooltip-button btn w-full btn-outline btn-soft capitalize", 
+                              "opacity-50 cursor-not-allowed": @preset_has_fixed_origin}>
+      {case @preset_has_fixed_origin do
+        true ->
+          case @preset_origin do
+            :remote -> l("Remote")
+            :local -> l("Local")
+            _ -> l("All")
+          end
+        false ->
+          case @feed_filters[:origin] do
+            [:remote] -> l("Remote")
+            [:local] -> l("Local")
+            :remote -> l("Remote")
+            :local -> l("Local")
+            _ -> l("All")
+          end
+      end}
+    </label>
+    <ul :if={not @preset_has_fixed_origin}
+      tabindex="0"
+      class="tooltip z-[999] menu bg-base-100 shadow-lg border rounded-xl border-base-content/10  w-52 absolute top-0 left-0 hidden"
+    >
+      <li><a
+          phx-click="set_filter"
+          phx-value-origin={:local}
+          phx-target={@event_target}
+          class="flex gap-3 px-2 text-base-content"
+        >
+          {l("Local")}</a>
+      </li>
+      <li><a
+          phx-click="set_filter"
+          phx-value-origin={:remote}
+          phx-target={@event_target}
+          class="flex gap-3 px-2 text-base-content"
+        >
+          {l("Remote")}</a></li>
+      <li><a
+          phx-click="set_filter"
+          phx-value-origin={:all}
+          phx-target={@event_target}
+          class="flex gap-3 px-2 text-base-content"
+        >
+          {l("All")}</a></li>
+    </ul>
+    <div :if={@preset_has_fixed_origin}
+      class="tooltip z-[999] bg-base-100 shadow-lg border rounded-xl border-base-content/10 p-3 w-52 absolute top-0 left-0 hidden"
+    >
+      <p class="text-sm text-base-content/70">
+        {l("Origin filter is fixed for this feed preset")}
+      </p>
+    </div>
+  </div>
+
+  <div :if={@show_circles_button} class="flex-1 relative" id="filter_circles_feed">
+    <label
+      tabindex="0"
+      class="btn w-full btn-outline btn-soft capitalize"
+      phx-click={JS.toggle(to: "#open_circles")}
+    >
+      {l("By circles")} {case e(@feed_filters, :subject_circles, []) do
+        [] -> nil
+        circles -> "(#{length(circles)})"
+      end}
+    </label>
+  </div>
+</div>
+</div>

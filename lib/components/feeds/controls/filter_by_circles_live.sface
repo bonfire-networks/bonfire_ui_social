@@ -1,0 +1,26 @@
+<div
+  id={@container_id}
+  class={@container_class}
+>
+  <div class="font-semibold uppercase text-xs text-base-content/60 mb-3  border-t border-base-content/10 pt-3 mt-3">{l("Filter by circles")}</div>
+  <ul tabindex="0" class="w-full">
+    <li
+      class="flex flex-1 w-full"
+      :for={circle <-
+        Bonfire.UI.Boundaries.SetBoundariesLive.circles_for_multiselect(
+          @__context__,
+          :subject_circles
+        )}
+    >
+      <Bonfire.UI.Social.ToggleTypeLive
+        label={elem(circle, 1)[:name]}
+        key={elem(circle, 1)[:id]}
+        field={:subject_circles}
+        feed_filters={@feed_filters}
+        event_target={@event_target}
+        event_name={@event_name}
+        label_default={l("Include")}
+      />
+    </li>
+  </ul>
+</div>

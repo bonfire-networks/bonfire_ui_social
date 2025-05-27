@@ -1,0 +1,99 @@
+<div
+  data-id="feed_controls"
+  id="feed_controls"
+  class="p-2 relative rounded-xl pb-4 outline outline-base-content/10 shadow-lg relative feed_control_wrapper bg-base-100"
+>
+  {#if @reloading}
+    <div class="absolute rounded-xl z-10 inset-0 flex items-center justify-center bg-base-content/10">
+      <span class="loading loading-ring loading-xl" />
+    </div>
+  {/if}
+  <Bonfire.UI.Social.TabFilterButtonsLive
+    feed_filters={@feed_filters}
+    event_target={@event_target}
+    get_button_class={&get_button_class/3}
+    get_tab_toggle_value={&get_tab_toggle_value/3}
+  />
+
+  <div class="flex flex-col gap-2 mt-2 w-full">
+    <Bonfire.UI.Social.TimeControlLive
+      feed_name={@feed_name}
+      event_target={@event_target}
+      event_name="set_filter"
+      current_value={e(@feed_filters, :time_limit, nil)}
+      scope={:user}
+    />
+  </div>
+
+  <div id="more_filters" class="pb-0 flex pt-3 flex-col gap-2 hidden">
+    <div class="font-semibold uppercase text-xs text-base-content/60 mb-3  border-t border-base-content/10 pt-3 mt-3">{l("Advanced Filters")}</div>
+
+    <!-- <Bonfire.UI.Social.ToggleTypeLive
+      label={l("Follows")}
+      key={:follow}
+      field={:activity_types}
+      feed_filters={@feed_filters}
+      event_target={@event_target}
+      event_name="set_filter"
+      label_default={l("Include")}
+    />
+
+    {#for key when key not in [:post, :reply, :boost, :follow] <- @feed_filters[:activity_types] || []}
+      <Bonfire.UI.Social.ToggleTypeLive
+        label={String.capitalize(to_string(key))}
+        key={key}
+        field={:activity_types}
+        feed_filters={@feed_filters}
+        event_target={@event_target}
+        event_name="set_filter"
+        label_default={l("Include")}
+      />
+    {/for}
+
+    {#for key when key not in [:image, :link, :audio, :video, :research] <- @feed_filters[:media_types] || []}
+      <Bonfire.UI.Social.ToggleTypeLive
+        label={String.capitalize(to_string(key))}
+        key={key}
+        field={:media_types}
+        feed_filters={@feed_filters}
+        event_target={@event_target}
+        event_name="set_filter"
+        label_default={l("Include")}
+      />
+    {/for}
+
+    {#for key when key not in [:post, "post"] <- @feed_filters[:object_types] || []}
+      <Bonfire.UI.Social.ToggleTypeLive
+        label={String.capitalize(to_string(key))}
+        key={key}
+        field={:object_types}
+        feed_filters={@feed_filters}
+        event_target={@event_target}
+        event_name="set_filter"
+        label_default={l("Include")}
+      />
+    {/for} -->
+    <StatefulComponent
+      id="advanced_filter_controls_lite"
+      module={Bonfire.UI.Social.AdvancedFilterControlsLive}
+      feed_filters={@feed_filters}
+      event_target={@event_target}
+    />
+    <Bonfire.UI.Social.FilterByCirclesLive
+      feed_filters={@feed_filters}
+      event_target={@event_target}
+    />
+    <div class="pb-0 flex pt-4 flex-col gap-2">
+      <Bonfire.UI.Social.FeedExtraControlsLive
+        event_target={@event_target}
+        event_name="set_filter"
+        feed_id={@feed_id}
+        feed_name={@feed_name}
+        feed_filters={@feed_filters}
+        hide_filters={[:sort_by]}
+        showing_within={@showing_within}
+      />
+    </div>
+    <Bonfire.UI.Social.SaveFeedPresetLive event_target={@event_target} />
+  </div>
+</div>

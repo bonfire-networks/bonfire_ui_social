@@ -1,0 +1,167 @@
+<div class="flex gap-1 items-center justify-evenly" id="tab-filter-buttons-container">
+  <div 
+    style={if should_hide_button?(:post, :object_types, assigns), do: "display: none;", else: ""}
+    class="tooltip tooltip-bottom w-full" data-tip="Show all posts"
+    data-switch="post" 
+    class="w-full flex-1">
+    <button 
+      data-id="filter-posts"
+      class={@get_button_class.(:post, :object_types, @feed_filters)}
+      phx-click="set_filter"
+      phx-value-toggle="object_types"
+      phx-value-toggle_type="post"
+      phx-value-toggle_value={@get_tab_toggle_value.(:post, :object_types, @feed_filters)}
+      phx-value-tab_mode="true"
+      phx-target={@event_target}
+    >
+      <#Icon iconify="mdi:pencil" class="w-5 h-5" />
+      <span class="sr-only">{l("Posts")}</span>
+    </button>
+  </div>
+  
+  <div 
+    style={if not extension_enabled?(:bonfire_ui_reactions, @__context__) or should_hide_button?(:boost, :activity_types, assigns), do: "display: none;", else: ""}
+    class="tooltip tooltip-bottom w-full" data-tip="Show only boosts"
+    data-switch="boost" class="w-full flex-1">
+    <button 
+      data-id="filter-boosts"
+      class={@get_button_class.(:boost, :activity_types, @feed_filters)}
+      phx-click="set_filter"
+      phx-value-toggle="activity_types"
+      phx-value-toggle_type="boost"
+      phx-value-toggle_value={@get_tab_toggle_value.(:boost, :activity_types, @feed_filters)}
+      phx-value-tab_mode="true"
+      phx-target={@event_target}
+    >
+      <#Icon iconify="lucide:refresh-cw" class="w-4 h-4" />
+      <span class="sr-only">{l("Boosts")}</span>
+    </button>
+  </div>
+  
+  <div 
+    style={if should_hide_button?(:follow, :activity_types, assigns), do: "display: none;", else: ""}
+    class="tooltip tooltip-bottom w-full" data-tip="Show only follows" data-switch="follow" class="w-full flex-1">
+    <button 
+      data-id="filter-follows"
+      class={@get_button_class.(:follow, :activity_types, @feed_filters)}
+      phx-click="set_filter"
+      phx-value-toggle="activity_types"
+      phx-value-toggle_type="follow"
+      phx-value-toggle_value={@get_tab_toggle_value.(:follow, :activity_types, @feed_filters)}
+      phx-value-tab_mode="true"
+      phx-target={@event_target}
+    >
+      <#Icon iconify="flowbite:user-add-solid" class="w-5 h-5" />
+      <span class="sr-only">{l("Follows")}</span>
+    </button>
+  </div>
+  
+  <div 
+    style={if should_hide_button?(:link, :media_types, assigns), do: "display: none;", else: ""}
+    class="tooltip tooltip-bottom w-full" data-tip="Show only links" data-switch="link" class="w-full flex-1">
+    <button 
+      data-id="filter-links"
+      class={@get_button_class.(:link, :media_types, @feed_filters)}
+      phx-click="set_filter"
+      phx-value-toggle="media_types"
+      phx-value-toggle_type="link"
+      phx-value-toggle_value={@get_tab_toggle_value.(:link, :media_types, @feed_filters)}
+      phx-value-tab_mode="true"
+      phx-target={@event_target}
+    >
+      <#Icon iconify="mdi:link" class="w-5 h-5" />
+      <span class="sr-only">{l("links")}</span>
+    </button>
+  </div>
+  
+  <div 
+    style={if should_hide_button?(:image, :media_types, assigns), do: "display: none;", else: ""}
+    class="tooltip tooltip-bottom w-full" data-tip="Show only images" data-switch="image" class="w-full flex-1">
+    <button 
+      data-id="filter-images"
+      class={@get_button_class.(:image, :media_types, @feed_filters)}
+      phx-click="set_filter"
+      phx-value-toggle="media_types"
+      phx-value-toggle_type="image"
+      phx-value-toggle_value={@get_tab_toggle_value.(:image, :media_types, @feed_filters)}
+      phx-value-tab_mode="true"
+      phx-target={@event_target}
+    >
+      <#Icon iconify="ic:round-image" class="w-5 h-5" />
+      <span class="sr-only">{l("Images")}</span>
+    </button>
+  </div>
+  
+  <div 
+    style={if should_hide_button?(:video, :media_types, assigns), do: "display: none;", else: ""}
+    class="tooltip tooltip-bottom w-full" data-tip="Show only videos" data-switch="video" class="w-full flex-1">
+    <button 
+      data-id="filter-videos"
+      class={@get_button_class.(:video, :media_types, @feed_filters)}
+      phx-click="set_filter"
+      phx-value-toggle="media_types"
+      phx-value-toggle_type="video"
+      phx-value-toggle_value={@get_tab_toggle_value.(:video, :media_types, @feed_filters)}
+      phx-value-tab_mode="true"
+      phx-target={@event_target}
+    >
+      <#Icon iconify="majesticons:video" class="w-5 h-5" />
+      <span class="sr-only">{l("Videos")}</span>
+    </button>
+  </div>
+  
+  <div 
+    style={if should_hide_button?(:audio, :media_types, assigns), do: "display: none;", else: ""}
+    class="tooltip tooltip-bottom w-full" data-tip="Show only audios" data-switch="audio" class="w-full flex-1">
+    <button 
+      data-id="filter-audio"
+      class={@get_button_class.(:audio, :media_types, @feed_filters)}
+      phx-click="set_filter"
+      phx-value-toggle="media_types"
+      phx-value-toggle_type="audio"
+      phx-value-toggle_value={@get_tab_toggle_value.(:audio, :media_types, @feed_filters)}
+      phx-value-tab_mode="true"
+      phx-target={@event_target}
+    >
+      <#Icon iconify="lucide:audio-lines" class="w-5 h-5" />
+      <span class="sr-only">{l("Audio")}</span>
+    </button>
+  </div>
+  
+  <div 
+    style={if should_hide_button?(:reply, :activity_types, assigns), do: "display: none;", else: ""}
+    class="tooltip tooltip-bottom w-full" data-tip="Show only replies" data-switch="reply" class="w-full flex-1">
+    <button 
+      data-id="filter-replies"
+      class={@get_button_class.(:reply, :activity_types, @feed_filters)}
+      phx-click="set_filter"
+      phx-value-toggle="activity_types"
+      phx-value-toggle_type="reply"
+      phx-value-toggle_value={@get_tab_toggle_value.(:reply, :activity_types, @feed_filters)}
+      phx-value-tab_mode="true"
+      phx-target={@event_target}
+    >
+      <#Icon iconify="mingcute:comment-fill" class="w-5 h-5" />
+      <span class="sr-only">{l("Replies")}</span>
+    </button>
+  </div>
+  
+  <!-- <div data-switch="research" class="w-full flex-1">
+    <button 
+      data-id="filter-research"
+      class={@get_button_class.(:research, :media_types, @feed_filters)}
+      phx-click="set_filter"
+      phx-value-toggle="media_types"
+      phx-value-toggle_type="research"
+      phx-value-toggle_value={@get_tab_toggle_value.(:research, :media_types, @feed_filters)}
+      phx-target={@event_target}
+    >
+      <#Icon iconify="mingcute:paper-fill" class="w-5 h-5" />
+      <span class="sr-only">{l("Research")}</span>
+    </button>
+  </div> -->
+  
+  <div class="border-l border-base-content/10 pl-2">
+    <button phx-click={JS.toggle(to: "#more_filters")} class="btn btn-ghost btn-square opacity-70"><#Icon iconify="mingcute:filter-2-line" class="w-5 h-5" /></button>  
+  </div>
+</div>

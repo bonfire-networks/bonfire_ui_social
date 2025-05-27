@@ -427,16 +427,16 @@ defmodule Bonfire.UI.Social.FeedLive do
              [
                feed_id: :notifications,
                feed_name: "notifications"
-             ]},
-            {Bonfire.UI.Social.HeaderAsideFeedFiltersLive, [feed_name: "notifications"]}
+             ]}
+            # {Bonfire.UI.Social.HeaderAsideFeedFiltersLive, [feed_name: "notifications"]}
           ]
         ]
 
       true ->
         [
-          page_header_aside: [
-            {Bonfire.UI.Social.HeaderAsideFeedFiltersLive, [feed_name: feed_name]}
-          ]
+          # page_header_aside: [
+          #   {Bonfire.UI.Social.HeaderAsideFeedFiltersLive, [feed_name: feed_name]}
+          # ]
         ]
     end
   end
@@ -464,9 +464,9 @@ defmodule Bonfire.UI.Social.FeedLive do
     feed_name = e(assigns, :feed_name, nil)
 
     [
-      page_header_aside: [
-        {Bonfire.UI.Social.HeaderAsideFeedFiltersLive, [feed_name: feed_name]}
-      ],
+      # page_header_aside: [
+      #   {Bonfire.UI.Social.HeaderAsideFeedFiltersLive, [feed_name: feed_name]}
+      # ],
       sidebar_widgets: [
         guests: [
           secondary: [
@@ -548,13 +548,37 @@ defmodule Bonfire.UI.Social.FeedLive do
         %{"toggle" => field, "toggle_type" => type} = params,
         socket
       ) do
-    set_type(
-      maybe_to_atom(field),
-      maybe_to_atom("exclude_#{field}"),
-      type,
-      params["toggle_value"],
-      socket
-    )
+    # Check if we're using the lite controls AND this is a tab mode click
+    if params["toggle_value"] == "true" &&
+         params["tab_mode"] == "true" &&
+         Settings.get([Bonfire.UI.Social, :use_lite_feed_controls], false,
+           context: assigns(socket)[:__context__]
+         ) do
+      # Tab behavior for tab filter buttons - clear ALL filters and set only this type
+      set_filters(
+        %{
+          # Clear all possible filter types
+          object_types: if(field == "object_types", do: [maybe_to_atom(type)], else: []),
+          media_types: if(field == "media_types", do: [maybe_to_atom(type)], else: []),
+          activity_types: if(field == "activity_types", do: [maybe_to_atom(type)], else: []),
+          # Also clear all exclude lists
+          exclude_object_types: [],
+          exclude_media_types: [],
+          exclude_activity_types: []
+        },
+        socket,
+        true
+      )
+    else
+      # Regular behavior for standard controls
+      set_type(
+        maybe_to_atom(field),
+        maybe_to_atom("exclude_#{field}"),
+        type,
+        params["toggle_value"],
+        socket
+      )
+    end
   end
 
   def handle_event(

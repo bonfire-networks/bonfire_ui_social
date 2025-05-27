@@ -1,0 +1,46 @@
+<Bonfire.UI.Common.OpenModalLive
+  id="add_to_feed_preset_button"
+  title_text={l("Save this feed")}
+  no_actions
+  open_btn_wrapper_class={@open_btn_wrapper_class}
+>
+  <div role="alert" class="alert my-2 mt-4 alert-info alert-soft">
+    <span>{l(
+        "You can save this feed configuration as a preset, to be able to access it anytime from your feed navbar."
+      )}</span>
+  </div>
+  <form
+    id="form_create_feed_preset"
+    class="w-full flex flex-col gap-2"
+    phx-submit="Bonfire.Social.Feeds:preset_create"
+    phx-target={@event_target}
+  >
+    <fieldset class="fieldset">
+      <legend class="fieldset-legend">{l("Feed title")}</legend>
+      <label for="feed_name" class="sr-only">{l("Feed title")}</label>
+      <input id="feed_name" name="name" class="input w-full" placeholder="Add a title...">
+    </fieldset>
+
+    <fieldset class="fieldset">
+      <legend class="fieldset-legend">{l("Feed description")}</legend>
+      <textarea name="description" class="textarea w-full h-24" placeholder="Add a description..." />
+    </fieldset>
+
+    <fieldset class="fieldset">
+      <label class="fieldset-label">
+        <input type="checkbox" name="show_in_nav" checked="checked" class="checkbox">
+        {l("Show in feeds navbar")}
+      </label>
+    </fieldset>
+
+    <div class="flex justify-end">
+      <button type="submit" class="btn btn-primary">{l("Save feed")}</button>
+    </div>
+  </form>
+  <:open_btn>
+    <div class="btn btn-primary flex-1 w-full mt-2">
+      <#Icon iconify="bxs:save" class="w-5 h-5" />
+      <span class="">{l("Save custom feed")}</span>
+    </div>
+  </:open_btn>
+</Bonfire.UI.Common.OpenModalLive>

@@ -796,13 +796,24 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
 
   def feed_default_assigns({feed_name, filters_or_custom_query_or_feed_id_or_ids}, socket)
       when is_atom(feed_name) do
+    default_assigns = feed_default_assigns(feed_name, socket)
+    
+    # Get preset exclusions from default assigns
+    preset_filters = Keyword.get(default_assigns, :feed_filters, %{})
+    
+    # Merge provided filters with preset filters, preserving preset exclusions
+    merged_filters = case filters_or_custom_query_or_feed_id_or_ids do
+      %{} = filters -> Map.merge(preset_filters, filters)
+      _ -> filters_or_custom_query_or_feed_id_or_ids
+    end
+    
     assigns =
-      feed_default_assigns(feed_name, socket)
+      default_assigns
       |> Keyword.merge(
         # feed_name: feed_name,
         # feed_id: feed_name,
         selected_tab: feed_name,
-        feed_filters: filters_or_custom_query_or_feed_id_or_ids
+        feed_filters: merged_filters
         # feed_component_id: component_id(feed_name, assigns(socket)),
         # feed: nil,
         # page_info: nil
@@ -816,19 +827,30 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
 
   def feed_default_assigns({feed_name, filters_or_custom_query_or_feed_id_or_ids}, socket)
       when is_binary(feed_name) do
+    preset_assigns = feed_default_assigns_from_preset(feed_name, socket)
+    
+    # Get preset exclusions from preset assigns
+    preset_filters = Keyword.get(preset_assigns, :feed_filters, %{})
+    
+    # Merge provided filters with preset filters, preserving preset exclusions
+    merged_filters = case filters_or_custom_query_or_feed_id_or_ids do
+      %{} = filters -> Map.merge(preset_filters, filters)
+      _ -> filters_or_custom_query_or_feed_id_or_ids
+    end
+    
     assigns =
       Keyword.merge(
         [
           feed_name: feed_name,
           selected_tab: feed_name,
           feed_id: feed_name,
-          feed_filters: filters_or_custom_query_or_feed_id_or_ids,
+          feed_filters: merged_filters,
           feed_component_id: component_id(feed_name, assigns(socket)),
           feed_count: nil
           # feed: nil,
           # page_info: nil
         ],
-        feed_default_assigns_from_preset(feed_name, socket)
+        preset_assigns
       )
 
     assigns
@@ -870,9 +892,20 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
 
   def feed_default_assigns_from_preset(feed_name, opts) do
     # TODO: optimise by avoiding loading the preset twice (here and in prepare_filters_assigns_preloads_posloads)
-    with {:ok, %{assigns: assigns}} <-
+    with {:ok, %{assigns: assigns, filters: filters}} <-
            Bonfire.Social.Feeds.feed_preset_if_permitted(feed_name, opts) do
-      assigns
+      # Include preset exclusions in feed_filters so child components don't need to re-fetch
+      preset_exclusions = %{
+        preset_excludes_activity_types: e(filters, :exclude_activity_types, []) |> List.wrap(),
+        preset_excludes_object_types: e(filters, :exclude_object_types, []) |> List.wrap(),
+        preset_excludes_media_types: e(filters, :exclude_media_types, []) |> List.wrap()
+      }
+      
+      # Merge preset exclusions into feed_filters
+      existing_filters = e(assigns, :feed_filters, %{})
+      updated_filters = Map.merge(existing_filters, preset_exclusions)
+      
+      Keyword.put(assigns, :feed_filters, updated_filters)
     else
       other ->
         debug(other, "Could not find feed preset with assigns")
@@ -1687,7 +1720,7 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
         component.component_id,
         if(activity,
           do: %{
-            activity: %{activity | emoji: list_of_emoji[component.object_id]},
+            activity: Map.put(activity, :emoji, list_of_emoji[component.object_id]),
             # emoji: list_of_emoji[component.object_id],
             activity_preloads: opts[:assign_activity_preloads]
           }
