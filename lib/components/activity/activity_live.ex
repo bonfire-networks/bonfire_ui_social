@@ -403,8 +403,14 @@ defmodule Bonfire.UI.Social.ActivityLive do
       current_url: current_url,
       thread_id: thread_id,
       cw:
-        e(assigns, :cw, nil) || e(activity, :sensitive, :is_sensitive, nil) ||
-          e(object, :post_content, :summary, nil) != nil,
+        if e(assigns, :activity_inception, nil) do
+          # This is a reply_to, calculate CW based on reply_to data structure
+          e(object, :summary, nil) != nil || e(activity, :sensitive, :is_sensitive, nil)
+        else
+          # For regular activities, calculate CW normally  
+          e(assigns, :cw, nil) || e(activity, :sensitive, :is_sensitive, nil) ||
+            e(object, :post_content, :summary, nil) != nil
+        end,
       reply_count: e(replied, :nested_replies_count, 0) + e(replied, :direct_replies_count, 0),
       parent_id:
         "#{activity_component_id}_#{e(assigns, :showing_within, nil)}_#{activity_inception}"
@@ -1495,7 +1501,10 @@ defmodule Bonfire.UI.Social.ActivityLive do
          thread_title: thread_title,
          object: reply_to_object,
          subject_id: subject_id,
-         activity: activity
+         activity: activity,
+         cw:
+           e(activity, :sensitive, :is_sensitive, nil) ||
+             e(reply_to_object, :summary, nil) != nil
        }}
     ]
   end
