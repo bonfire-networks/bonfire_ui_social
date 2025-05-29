@@ -1641,11 +1641,10 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
       assign_activity_preloads: {(elem(activity_preloads, 0) || []) ++ postloads, []},
       with_cache: false,
       current_user: current_user,
-      # skip boupreloadsndary because it should already be checked it the initial query
+      # skip_boundary_check because it should already be checked it the initial query
       skip_boundary_check: true
     ]
 
-    # TODO skip if no postloads to load
     do_preload_extras(
       list_of_components,
       opts
