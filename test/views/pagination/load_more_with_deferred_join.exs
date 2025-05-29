@@ -127,9 +127,9 @@ defmodule Bonfire.UI.Social.Feeds.DeferredJoinPaginationTest do
       #   |> PhoenixTest.open_browser()
       |> assert_has_or_open_browser("[data-id=feed] article", text: "Old Content 2")
 
-      # Click load more again
-      |> click_button("[data-id=load_more]", "Load more")
-      |> wait_async()
+      # Click load more again - NOTE: should not be needed as the backend should handle opening/dropping join windows automatically
+      # |> click_button("[data-id=load_more]", "Load more")
+      # |> wait_async()
 
       # Verify we've now loaded even more posts
       #   |> PhoenixTest.open_browser()
