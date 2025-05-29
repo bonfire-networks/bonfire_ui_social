@@ -430,7 +430,7 @@
                 {/if}
               </LinkLive>
 
-              {raw(@verb_display)} {l(" your activity")}
+              {raw(@verb_display)} {l(" the activity")}
             </div>
           </div>
 
