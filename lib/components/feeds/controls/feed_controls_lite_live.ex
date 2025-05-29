@@ -19,8 +19,8 @@ defmodule Bonfire.UI.Social.FeedControlsLiteLive do
     # For true tab behavior, also check that no other filters are active
     total_filters =
       length(e(feed_filters, :object_types, [])) +
-      length(e(feed_filters, :media_types, [])) +
-      length(e(feed_filters, :activity_types, []))
+        length(e(feed_filters, :media_types, [])) +
+        length(e(feed_filters, :activity_types, []))
 
     # This type is the only one selected if it's in its list AND total filters is 1
     is_in_list && total_filters == 1
@@ -31,8 +31,8 @@ defmodule Bonfire.UI.Social.FeedControlsLiteLive do
   """
   def no_filters_applied?(feed_filters) do
     length(e(feed_filters, :object_types, [])) == 0 &&
-    length(e(feed_filters, :media_types, [])) == 0 &&
-    length(e(feed_filters, :activity_types, [])) == 0
+      length(e(feed_filters, :media_types, [])) == 0 &&
+      length(e(feed_filters, :activity_types, [])) == 0
   end
 
   @doc """
@@ -42,13 +42,16 @@ defmodule Bonfire.UI.Social.FeedControlsLiteLive do
     cond do
       # Special case: Posts button should be active when NO filters are applied
       type == :post && field == :object_types && no_filters_applied?(feed_filters) ->
-        "btn flex-1 w-full btn-primary"  # Active tab state for default view
-        
+        # Active tab state for default view
+        "btn flex-1 w-full btn-primary"
+
       is_only_included?(type, field, feed_filters) ->
-        "btn flex-1 w-full btn-primary"  # Active tab state
-        
+        # Active tab state
+        "btn flex-1 w-full btn-primary"
+
       true ->
-        "btn flex-1 w-full btn-ghost"    # Inactive tab state
+        # Inactive tab state
+        "btn flex-1 w-full btn-ghost"
     end
   end
 
@@ -61,13 +64,16 @@ defmodule Bonfire.UI.Social.FeedControlsLiteLive do
     cond do
       # Special case: Posts button when no filters applied should set the filter
       type == :post && field == :object_types && no_filters_applied?(feed_filters) ->
-        "true"  # Set posts filter explicitly
-        
+        # Set posts filter explicitly
+        "true"
+
       is_only_included?(type, field, feed_filters) ->
-        nil  # Reset to default (show all)
-        
+        # Reset to default (show all)
+        nil
+
       true ->
-        "true"  # Set as only included type
+        # Set as only included type
+        "true"
     end
   end
 end

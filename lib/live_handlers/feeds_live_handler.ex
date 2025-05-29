@@ -797,16 +797,17 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
   def feed_default_assigns({feed_name, filters_or_custom_query_or_feed_id_or_ids}, socket)
       when is_atom(feed_name) do
     default_assigns = feed_default_assigns(feed_name, socket)
-    
+
     # Get preset exclusions from default assigns
     preset_filters = Keyword.get(default_assigns, :feed_filters, %{})
-    
+
     # Merge provided filters with preset filters, preserving preset exclusions
-    merged_filters = case filters_or_custom_query_or_feed_id_or_ids do
-      %{} = filters -> Map.merge(preset_filters, filters)
-      _ -> filters_or_custom_query_or_feed_id_or_ids
-    end
-    
+    merged_filters =
+      case filters_or_custom_query_or_feed_id_or_ids do
+        %{} = filters -> Map.merge(preset_filters, filters)
+        _ -> filters_or_custom_query_or_feed_id_or_ids
+      end
+
     assigns =
       default_assigns
       |> Keyword.merge(
@@ -828,16 +829,17 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
   def feed_default_assigns({feed_name, filters_or_custom_query_or_feed_id_or_ids}, socket)
       when is_binary(feed_name) do
     preset_assigns = feed_default_assigns_from_preset(feed_name, socket)
-    
+
     # Get preset exclusions from preset assigns
     preset_filters = Keyword.get(preset_assigns, :feed_filters, %{})
-    
+
     # Merge provided filters with preset filters, preserving preset exclusions
-    merged_filters = case filters_or_custom_query_or_feed_id_or_ids do
-      %{} = filters -> Map.merge(preset_filters, filters)
-      _ -> filters_or_custom_query_or_feed_id_or_ids
-    end
-    
+    merged_filters =
+      case filters_or_custom_query_or_feed_id_or_ids do
+        %{} = filters -> Map.merge(preset_filters, filters)
+        _ -> filters_or_custom_query_or_feed_id_or_ids
+      end
+
     assigns =
       Keyword.merge(
         [
@@ -900,11 +902,11 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
         preset_excludes_object_types: e(filters, :exclude_object_types, []) |> List.wrap(),
         preset_excludes_media_types: e(filters, :exclude_media_types, []) |> List.wrap()
       }
-      
+
       # Merge preset exclusions into feed_filters
       existing_filters = e(assigns, :feed_filters, %{})
       updated_filters = Map.merge(existing_filters, preset_exclusions)
-      
+
       Keyword.put(assigns, :feed_filters, updated_filters)
     else
       other ->

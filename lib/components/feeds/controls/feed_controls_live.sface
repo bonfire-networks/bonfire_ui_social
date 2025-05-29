@@ -16,10 +16,9 @@
       event_target={@event_target}
     />
 
-  <div class="border-l border-base-content/10 pl-2">
-    <button phx-click={JS.toggle(to: "#more_filters")} class="btn btn-ghost btn-square opacity-70"><#Icon iconify="mingcute:filter-2-line" class="w-5 h-5" /></button>  
-  </div>
-    
+    <div class="border-l border-base-content/10 pl-2">
+      <button phx-click={JS.toggle(to: "#more_filters")} class="btn btn-ghost btn-square opacity-70"><#Icon iconify="mingcute:filter-2-line" class="w-5 h-5" /></button>
+    </div>
   </div>
 
   <div class="flex flex-col gap-2 pt-3 w-full">

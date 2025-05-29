@@ -1,10 +1,12 @@
 <div class="flex gap-1 items-center justify-evenly" id="tab-filter-buttons-container">
-  <div 
+  <div
     style={if should_hide_button?(:post, :object_types, assigns), do: "display: none;", else: ""}
-    class="tooltip tooltip-bottom w-full" data-tip="Show all posts"
-    data-switch="post" 
-    class="w-full flex-1">
-    <button 
+    class="tooltip tooltip-bottom w-full"
+    data-tip="Show all posts"
+    data-switch="post"
+    class="w-full flex-1"
+  >
+    <button
       data-id="filter-posts"
       class={@get_button_class.(:post, :object_types, @feed_filters)}
       phx-click="set_filter"
@@ -18,12 +20,18 @@
       <span class="sr-only">{l("Posts")}</span>
     </button>
   </div>
-  
-  <div 
-    style={if not extension_enabled?(:bonfire_ui_reactions, @__context__) or should_hide_button?(:boost, :activity_types, assigns), do: "display: none;", else: ""}
-    class="tooltip tooltip-bottom w-full" data-tip="Show only boosts"
-    data-switch="boost" class="w-full flex-1">
-    <button 
+
+  <div
+    style={if not extension_enabled?(:bonfire_ui_reactions, @__context__) or
+         should_hide_button?(:boost, :activity_types, assigns),
+       do: "display: none;",
+       else: ""}
+    class="tooltip tooltip-bottom w-full"
+    data-tip="Show only boosts"
+    data-switch="boost"
+    class="w-full flex-1"
+  >
+    <button
       data-id="filter-boosts"
       class={@get_button_class.(:boost, :activity_types, @feed_filters)}
       phx-click="set_filter"
@@ -37,11 +45,15 @@
       <span class="sr-only">{l("Boosts")}</span>
     </button>
   </div>
-  
-  <div 
+
+  <div
     style={if should_hide_button?(:follow, :activity_types, assigns), do: "display: none;", else: ""}
-    class="tooltip tooltip-bottom w-full" data-tip="Show only follows" data-switch="follow" class="w-full flex-1">
-    <button 
+    class="tooltip tooltip-bottom w-full"
+    data-tip="Show only follows"
+    data-switch="follow"
+    class="w-full flex-1"
+  >
+    <button
       data-id="filter-follows"
       class={@get_button_class.(:follow, :activity_types, @feed_filters)}
       phx-click="set_filter"
@@ -55,11 +67,15 @@
       <span class="sr-only">{l("Follows")}</span>
     </button>
   </div>
-  
-  <div 
+
+  <div
     style={if should_hide_button?(:link, :media_types, assigns), do: "display: none;", else: ""}
-    class="tooltip tooltip-bottom w-full" data-tip="Show only links" data-switch="link" class="w-full flex-1">
-    <button 
+    class="tooltip tooltip-bottom w-full"
+    data-tip="Show only links"
+    data-switch="link"
+    class="w-full flex-1"
+  >
+    <button
       data-id="filter-links"
       class={@get_button_class.(:link, :media_types, @feed_filters)}
       phx-click="set_filter"
@@ -73,11 +89,15 @@
       <span class="sr-only">{l("links")}</span>
     </button>
   </div>
-  
-  <div 
+
+  <div
     style={if should_hide_button?(:image, :media_types, assigns), do: "display: none;", else: ""}
-    class="tooltip tooltip-bottom w-full" data-tip="Show only images" data-switch="image" class="w-full flex-1">
-    <button 
+    class="tooltip tooltip-bottom w-full"
+    data-tip="Show only images"
+    data-switch="image"
+    class="w-full flex-1"
+  >
+    <button
       data-id="filter-images"
       class={@get_button_class.(:image, :media_types, @feed_filters)}
       phx-click="set_filter"
@@ -91,11 +111,15 @@
       <span class="sr-only">{l("Images")}</span>
     </button>
   </div>
-  
-  <div 
+
+  <div
     style={if should_hide_button?(:video, :media_types, assigns), do: "display: none;", else: ""}
-    class="tooltip tooltip-bottom w-full" data-tip="Show only videos" data-switch="video" class="w-full flex-1">
-    <button 
+    class="tooltip tooltip-bottom w-full"
+    data-tip="Show only videos"
+    data-switch="video"
+    class="w-full flex-1"
+  >
+    <button
       data-id="filter-videos"
       class={@get_button_class.(:video, :media_types, @feed_filters)}
       phx-click="set_filter"
@@ -109,11 +133,15 @@
       <span class="sr-only">{l("Videos")}</span>
     </button>
   </div>
-  
-  <div 
+
+  <div
     style={if should_hide_button?(:audio, :media_types, assigns), do: "display: none;", else: ""}
-    class="tooltip tooltip-bottom w-full" data-tip="Show only audios" data-switch="audio" class="w-full flex-1">
-    <button 
+    class="tooltip tooltip-bottom w-full"
+    data-tip="Show only audios"
+    data-switch="audio"
+    class="w-full flex-1"
+  >
+    <button
       data-id="filter-audio"
       class={@get_button_class.(:audio, :media_types, @feed_filters)}
       phx-click="set_filter"
@@ -127,11 +155,15 @@
       <span class="sr-only">{l("Audio")}</span>
     </button>
   </div>
-  
-  <div 
+
+  <div
     style={if should_hide_button?(:reply, :activity_types, assigns), do: "display: none;", else: ""}
-    class="tooltip tooltip-bottom w-full" data-tip="Show only replies" data-switch="reply" class="w-full flex-1">
-    <button 
+    class="tooltip tooltip-bottom w-full"
+    data-tip="Show only replies"
+    data-switch="reply"
+    class="w-full flex-1"
+  >
+    <button
       data-id="filter-replies"
       class={@get_button_class.(:reply, :activity_types, @feed_filters)}
       phx-click="set_filter"
@@ -145,7 +177,7 @@
       <span class="sr-only">{l("Replies")}</span>
     </button>
   </div>
-  
+
   <!-- <div data-switch="research" class="w-full flex-1">
     <button 
       data-id="filter-research"
@@ -160,8 +192,8 @@
       <span class="sr-only">{l("Research")}</span>
     </button>
   </div> -->
-  
+
   <div class="border-l border-base-content/10 pl-2">
-    <button phx-click={JS.toggle(to: "#more_filters")} class="btn btn-ghost btn-square opacity-70"><#Icon iconify="mingcute:filter-2-line" class="w-5 h-5" /></button>  
+    <button phx-click={JS.toggle(to: "#more_filters")} class="btn btn-ghost btn-square opacity-70"><#Icon iconify="mingcute:filter-2-line" class="w-5 h-5" /></button>
   </div>
 </div>

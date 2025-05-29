@@ -8,13 +8,14 @@ defmodule Bonfire.UI.Social.TabFilterButtonsLive do
 
   def should_hide_button?(button_type, button_field, assigns) do
     # Use preset exclusions directly from feed_filters
-    exclusions = case button_field do
-      :activity_types -> e(assigns, :feed_filters, :preset_excludes_activity_types, [])
-      :object_types -> e(assigns, :feed_filters, :preset_excludes_object_types, [])
-      :media_types -> e(assigns, :feed_filters, :preset_excludes_media_types, [])
-      _ -> []
-    end
-    
+    exclusions =
+      case button_field do
+        :activity_types -> e(assigns, :feed_filters, :preset_excludes_activity_types, [])
+        :object_types -> e(assigns, :feed_filters, :preset_excludes_object_types, [])
+        :media_types -> e(assigns, :feed_filters, :preset_excludes_media_types, [])
+        _ -> []
+      end
+
     button_type in exclusions
   end
 end
