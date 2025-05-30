@@ -20,10 +20,10 @@
       <h3 :if={@versioning_enabled} class="font-bold mt-5 text-base flex-1">
         {l("Edit")}
       </h3>
-      <div class="flex flex-col gap-2 mt-4 border rounded border-base-content/10">
+      <div class="flex flex-col gap-2 mt-4 ">
         <input
           name="name"
-          class="w-full input border-0 border-b border-base-content/10 rounded-none"
+          class="w-full input"
           autocomplete="off"
           placeholder={l("Title")}
           value={e(Bonfire.UI.Social.Activity.NoteLive.post_content(@object), :name, nil)}
@@ -36,7 +36,7 @@
           />
           <input
             name="summary"
-            class="w-full pl-12 input"
+            class="w-full input"
             autocomplete="off"
             placeholder={l("CW")}
             value={e(Bonfire.UI.Social.Activity.NoteLive.post_content(@object), :summary, nil)}
