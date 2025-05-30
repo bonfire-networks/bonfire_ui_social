@@ -28,7 +28,7 @@ defmodule Bonfire.UI.Social.SettingsTest do
 
   describe "Behaviours" do
     # seems this setting is commented in behaviours
-    @tag :fixme
+    @tag :todo
     test "Feed activities" do
       Config.put(:pagination_hard_max_limit, 10)
       Config.put(:default_pagination_limit, 10)
@@ -131,7 +131,7 @@ defmodule Bonfire.UI.Social.SettingsTest do
     end
 
     # seems default_feed setting is commented
-    @tag :fixme
+    @tag :todo
     test "default feed" do
       # create alice user
       account = fake_account!()

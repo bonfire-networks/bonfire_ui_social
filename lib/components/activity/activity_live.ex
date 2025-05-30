@@ -786,7 +786,9 @@ defmodule Bonfire.UI.Social.ActivityLive do
                     component_assigns,
                     :profile,
                     :name,
-                    if(component != Bonfire.UI.Social.Activity.NoSubjectLive, do: :nil!)
+                    if(component != Bonfire.UI.Social.Activity.NoSubjectLive and @showing_within != :search,
+                      do: :nil!
+                    )
                   )}
                   character_username={e(component_assigns, :character, :username, nil)}
                   activity_id={id(e(component_assigns, :activity, nil) || @activity)}
