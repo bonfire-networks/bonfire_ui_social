@@ -40,7 +40,7 @@
         {#if @verb == "Request to Follow"}
           <div class="flex items-center w-full justify-between">
             <div class="flex items-start flex-1 gap-4">
-              <#Icon solid="UserAdd" class="flex-shrink-0 w-7 h-7 text-info" />
+              <#Icon solid="UserAdd" class="flex-shrink-0 w-6 h-6 text-info" />
               <div class="flex flex-col gap-2">
                 <Bonfire.UI.Common.AvatarLive
                   parent_id={["sm", @activity_component_id || @activity_id]}
@@ -91,7 +91,7 @@
               {#match %{summary: emoji}}
                 <span class="text-yellow-500 text-[20px]">{emoji}</span>
               {#match _}
-                <#Icon iconify="mingcute:fire-fill" class="w-7 h-7 text-yellow-500" />
+                <#Icon iconify="mingcute:fire-fill" class="w-6 h-6 text-yellow-500" />
             {/case}
 
             <div class="flex-1 flex flex-col gap-2">
@@ -125,7 +125,7 @@
         {#elseif @verb == "Follow"}
           {!-- FOLLOW --}
           <div class="flex items-start gap-4">
-            <#Icon solid="UserAdd" class="flex-shrink-0 w-7 h-7 text-info" />
+            <#Icon solid="UserAdd" class="flex-shrink-0 w-6 h-6 text-info" />
             <div class="flex flex-col gap-2">
               <LinkLive to={@path} opts={"data-id": "subject_name"} parent_id={["subject_avatar", @parent_id]}>
                 <Bonfire.UI.Common.AvatarLive
@@ -158,7 +158,7 @@
         {#elseif @verb == "Boost"}
           <div data-role="boosted_by" class="flex items-start gap-5 justify-start">
             {!-- BOOST --}
-            <#Icon iconify="lucide:refresh-cw" class="w-7 h-7 stroke-1 text-success" />
+            <#Icon iconify="lucide:refresh-cw" class="w-6 h-6 stroke-1 text-success" />
             <div class="flex-1 flex flex-col gap-2">
               <LinkLive to={@path} opts={"data-id": "subject_name"} parent_id={["subject_avatar", @parent_id]}>
                 <Bonfire.UI.Common.AvatarLive
@@ -190,7 +190,7 @@
         {#elseif @verb == "Pin"}
           <div data-role="pinned_by" class="flex items-start gap-5 justify-start">
             {!-- PIN --}
-            <#Icon iconify="lucide:refresh-cw" class="w-7 h-7 stroke-1 text-success" />
+            <#Icon iconify="lucide:refresh-cw" class="w-6 h-6 stroke-1 text-success" />
             <div class="flex-1 flex flex-col gap-2">
               <LinkLive to={@path} opts={"data-id": "subject_name"} parent_id={["subject_avatar", @parent_id]}>
                 <Bonfire.UI.Common.AvatarLive
@@ -246,7 +246,7 @@
         {#elseif @verb == "Flag"}
           <div data-role="flagged_by" class="flex items-center justify-start pb-3 -ml-8">
             {!-- FLAG --}
-            <#Icon solid="Flag" class="w-4 h-4 text-error" />
+            <#Icon solid="Flag" class="w-6 h-6 text-error" />
             <div class="flex-1 ml-3">
               <div class="text-sm font-medium text-base-content/70">
                 <LinkLive
