@@ -353,12 +353,12 @@ defmodule Bonfire.UI.Social.Feeds.FeedsPresets.PaginationTest do
       |> visit("/notifications")
       |> wait_async()
       # Should have pagination limit number of notifications
-      |> assert_has("[data-id=feed] article", count: limit)
+      |> assert_has_or_open_browser(".activity_wrapper > article", count: limit)
       # Load next page
       |> click_button("[data-id=load_more]", "Load more")
       |> wait_async()
       # Now should have more notifications
-      |> assert_has("[data-id=feed] article", count: limit * 2)
+      |> assert_has_or_open_browser(".activity_wrapper > article", count: limit * 2)
       # Load final pages
       |> click_button("[data-id=load_more]", "Load more")
       |> wait_async()
@@ -369,7 +369,7 @@ defmodule Bonfire.UI.Social.Feeds.FeedsPresets.PaginationTest do
       |> click_button("[data-id=load_more]", "Load more")
       |> wait_async()
       # Now should have all notifications
-      |> assert_has("[data-id=feed] article", count: total_posts * 2)
+      |> assert_has_or_open_browser(".activity_wrapper > article", count: total_posts * 2)
     end
   end
 

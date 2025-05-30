@@ -1646,18 +1646,14 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
       (elem(activity_preloads, 1) || [])
       |> debug("many_activity_postloads")
 
-    opts = [
+    do_preload_extras(
+      list_of_components,
       preload: postloads,
       assign_activity_preloads: {(elem(activity_preloads, 0) || []) ++ postloads, []},
       with_cache: false,
       current_user: current_user,
       # skip_boundary_check because it should already be checked it the initial query
       skip_boundary_check: true
-    ]
-
-    do_preload_extras(
-      list_of_components,
-      opts
     )
   end
 
@@ -1827,20 +1823,33 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
     [
       # {Bonfire.Data.Social.Post, Bonfire.UI.Social.Activity.NoteLive.preloads()}, # only needed if we no longer preload the post_content by default
       {Bonfire.Poll.Question,
-       Utils.maybe_apply(Bonfire.Poll.Web.Preview.QuestionLive, :preloads)},
+       Utils.maybe_apply(Bonfire.Poll.Web.Preview.QuestionLive, :preloads, [],
+         fallback_return: nil
+       )},
       {Bonfire.Data.Identity.User,
-       Utils.maybe_apply(Bonfire.UI.Me.Preview.CharacterLive, :preloads, [])},
+       Utils.maybe_apply(Bonfire.UI.Me.Preview.CharacterLive, :preloads, [], fallback_return: nil)},
       {Bonfire.Classify.Category,
-       Utils.maybe_apply(Bonfire.Classify.Web.Preview.CategoryLive, :preloads, [])},
+       Utils.maybe_apply(Bonfire.Classify.Web.Preview.CategoryLive, :preloads, [],
+         fallback_return: nil
+       )},
       {ValueFlows.EconomicEvent,
-       Utils.maybe_apply(Bonfire.UI.ValueFlows.Preview.EconomicEventLive, :preloads, [])},
+       Utils.maybe_apply(Bonfire.UI.ValueFlows.Preview.EconomicEventLive, :preloads, [],
+         fallback_return: nil
+       )},
       {ValueFlows.EconomicResource,
-       Utils.maybe_apply(Bonfire.UI.ValueFlows.Preview.EconomicResourceLive, :preloads, [])},
+       Utils.maybe_apply(Bonfire.UI.ValueFlows.Preview.EconomicResourceLive, :preloads, [],
+         fallback_return: nil
+       )},
       {ValueFlows.Planning.Intent,
-       Utils.maybe_apply(Bonfire.UI.ValueFlows.Preview.IntentTaskLive, :preloads, [])},
+       Utils.maybe_apply(Bonfire.UI.ValueFlows.Preview.IntentTaskLive, :preloads, [],
+         fallback_return: nil
+       )},
       {ValueFlows.Process,
-       Utils.maybe_apply(Bonfire.UI.ValueFlows.Preview.ProcessListLive, :preloads, [])}
+       Utils.maybe_apply(Bonfire.UI.ValueFlows.Preview.ProcessListLive, :preloads, [],
+         fallback_return: nil
+       )}
     ]
+    |> Enums.filter_empty([])
     |> debug("preload object data in feed")
   end
 
