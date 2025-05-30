@@ -941,7 +941,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
                 {/if}
               {#match _}
                 <StatelessComponent
-                  :if={@hide_activity != "dynamic" && @showing_within != :notifications}
+                  :if={@hide_activity != "dynamic"}
                   module={component}
                   activity_component_id={e(component_assigns, :id, nil)}
                   activity_prepared={:defer_to_render}
