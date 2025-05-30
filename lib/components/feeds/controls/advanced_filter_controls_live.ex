@@ -1,7 +1,7 @@
 defmodule Bonfire.UI.Social.AdvancedFilterControlsLive do
   use Bonfire.UI.Common.Web, :stateful_component
 
-  prop feed_filters, :map, required: true
+  prop feed_filters, :any, default: nil
   prop event_target, :any, required: true
   prop show_circles_button, :boolean, default: true
   prop circles_button_action, :string, default: nil

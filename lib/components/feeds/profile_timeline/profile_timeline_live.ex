@@ -12,7 +12,7 @@ defmodule Bonfire.UI.Social.ProfileTimelineLive do
   prop feed_ids, :any, default: nil
   prop user, :map, default: %{}
   prop feed, :list, default: nil
-  prop feed_filters, :any, default: []
+  prop feed_filters, :any, default: nil
   prop page_info, :any, default: nil
   prop permalink, :string, default: nil
   prop showing_within, :atom, default: nil

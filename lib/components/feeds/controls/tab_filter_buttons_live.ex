@@ -1,7 +1,7 @@
 defmodule Bonfire.UI.Social.TabFilterButtonsLive do
   use Bonfire.UI.Common.Web, :stateless_component
 
-  prop feed_filters, :map, required: true
+  prop feed_filters, :any, default: nil
   prop event_target, :any, required: true
   prop get_button_class, :fun, required: true
   prop get_tab_toggle_value, :fun, required: true
