@@ -976,16 +976,24 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
                 )
               else
                 {:error, e} ->
-                  error(e, "error returned by feed_assigns")
+                  err(e, "error returned by feed_assigns")
                   assign_error(socket, Bonfire.Common.Errors.error_msg(e) || e, pid)
 
                 e ->
-                  error(e, "received invalid response from feed_assigns")
+                  err(
+                    e,
+                    "There was an error when trying to load the feed. Received invalid response from feed_assigns"
+                  )
+
                   assign_error(socket, "There was an error when trying to load the feed.", pid)
               end
             rescue
               e ->
-                error(e, "error raised by feed_assigns")
+                err(
+                  e,
+                  "There was an error when trying to load the feed. Error raised by feed_assigns"
+                )
+
                 assign_error(socket, "There was an error when trying to load the feed.", pid)
             end
           end,
