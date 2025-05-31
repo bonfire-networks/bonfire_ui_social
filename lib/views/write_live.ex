@@ -40,4 +40,45 @@ defmodule Bonfire.UI.Social.WriteLive do
        ]
      )}
   end
+
+  def handle_params(%{"share_url" => url, "share_name" => name} = params, _url, socket) do
+    {:noreply,
+     socket
+     |> update(
+       :smart_input_opts,
+       fn opts -> Keyword.put(opts, :text, "[#{name}](#{url}) #{params["text"]} ") end
+     )}
+  end
+
+  def handle_params(%{"share_url" => url} = params, _url, socket) do
+    {:noreply,
+     socket
+     |> update(
+       :smart_input_opts,
+       fn opts -> Keyword.put(opts, :text, "#{url} #{params["text"]} ") end
+     )}
+  end
+
+  def handle_params(%{"text" => "http" <> _ = url, "share_name" => name} = params, _url, socket) do
+    # special case for no url but text that starts with http
+    {:noreply,
+     socket
+     |> update(
+       :smart_input_opts,
+       fn opts -> Keyword.put(opts, :text, "[#{name}](#{url}) ") end
+     )}
+  end
+
+  def handle_params(%{"text" => text} = params, _url, socket) do
+    {:noreply,
+     socket
+     |> update(
+       :smart_input_opts,
+       fn opts -> Keyword.put(opts, :text, "#{text} ") end
+     )}
+  end
+
+  def handle_params(_params, _url, socket) do
+    {:noreply, socket}
+  end
 end
