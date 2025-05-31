@@ -94,6 +94,7 @@
               id={"#{@id || id(@object)}_boost"}
               myself={@myself}
               object_id={id(@object)}
+              creator={@creator}
               object_type={@object_type}
               object_boundary={@object_boundary}
               showing_within={@showing_within}
@@ -112,6 +113,7 @@
               event_target={@myself}
               myself={@myself}
               object_id={id(@object)}
+              creator={@creator}
               object_boundary={@object_boundary}
               my_like={@my_like}
               like_count={e(
@@ -129,6 +131,7 @@
               myself={@myself}
               :if={not is_nil(current_user_id(@__context__))}
               object_id={id(@object)}
+              creator={@creator}
               object_boundary={@object_boundary}
               my_bookmark={@my_bookmark}
             />
@@ -173,6 +176,7 @@
               @activity_component_id || id(@activity)
             )}
             object_id={id(@object)}
+            creator={@creator}
             object_type={@object_type}
             object_boundary={@object_boundary}
             showing_within={@showing_within}
@@ -192,6 +196,7 @@
               @activity_component_id || id(@activity)
             )}
             object_id={id(@object)}
+            creator={@creator}
             object_boundary={@object_boundary}
             like_count={e(
               Bonfire.UI.Social.Activity.ActionsLive.the_activity(@activity, @object),
@@ -210,6 +215,7 @@
               @activity_component_id || id(@activity)
             )}
             object_id={id(@object)}
+            creator={@creator}
             object_boundary={@object_boundary}
           />
 
