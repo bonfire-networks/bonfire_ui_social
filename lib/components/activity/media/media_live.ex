@@ -57,7 +57,7 @@ defmodule Bonfire.UI.Social.Activity.MediaLive do
             {image_list, multimedia_list, [m | link_list]}
         end
       end)
-      |> debug("3_media_lists")
+      |> flood("3_media_lists")
 
     multimedia_count = Enum.count(multimedia_list)
     image_count = Enum.count(image_list)

@@ -2,7 +2,7 @@
   <div class="relative rounded-t-box bg-base-100">
     <Bonfire.UI.Social.Activity.RemoteMediaLive media={@media} muted={@muted} autoplay={false} />
 
-    <!-- {#case MediaLive.preview_img(@media) || Media.media_url(@media)}
+    {!-- {#case MediaLive.preview_img(@media) || Media.media_url(@media)}
       {#match maybe_preview_img}
         {#if MediaLive.is_image?(maybe_preview_img)}
           <LazyImage
@@ -17,10 +17,12 @@
             <#Icon iconify="majesticons:video" class="w-full h-32 text-base-content/70" />
           </div>
         {/if}
-    {/case} -->
-    {!-- PLAY OR FOLLOW LINK --}
+    {/case} --}
 
-    <!-- <div class="absolute flex justify-center items-center inset-0">
+    {!-- PLAY OR FOLLOW LINK --}
+    {!-- 
+    TODO: re-enable persistent media player modal
+    <div class="absolute flex justify-center items-center inset-0">
       <div class="bg-gray-900/60 z-50 gap-4 px-3 py-2 rounded flex justify-center items-center place-content-center">
         <Bonfire.UI.Common.OpenModalLive
           id={deterministic_dom_id("media_modal", id(@media), "video", @parent_id)}
@@ -55,18 +57,18 @@
           <#Icon iconify="heroicons-outline:external-link" class="w-6 h-6 text-gray-200" />
         </a>
       </div>
-    </div> -->
+    </div> --}
   </div>
 
   <div class="">
-    <!-- <div class="p-4 flex flex-col gap-2">
+    {!-- <div class="p-4 flex flex-col gap-2">
       {#case MediaLive.provider(@media)}
             {#match nil}
             {#match provider}
         <span class="text-sm text-left text-base-content/70">{provider}</span>
       {/case}
       <div class="font-semibold text-left">{@media_label}</div>
-    </div> -->
+    </div> --}
   </div>
   <figcaption class="sr-only">{@media_label}</figcaption>
 </div>

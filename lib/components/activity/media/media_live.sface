@@ -92,12 +92,20 @@
                         />
                       {/if}
                     {#else}
-                      <Bonfire.UI.Social.Activity.AudioLive
-                        media={m}
-                        media_label={media_label}
-                        autoplay={@autoplay || @cw || @showing_within == :flags}
-                        parent_id={@parent_id}
-                      />
+                      {#if String.ends_with?(m.path, e(@multimedia_exts, []))}
+                        <Bonfire.UI.Social.Activity.RemoteMediaLive
+                          media={m}
+                          muted={@muted}
+                          autoplay={@autoplay || @cw || @showing_within == :flags}
+                        />
+                      {#else}
+                        <Bonfire.UI.Social.Activity.AudioLive
+                          media={m}
+                          media_label={media_label}
+                          autoplay={@autoplay || @cw || @showing_within == :flags}
+                          parent_id={@parent_id}
+                        />
+                      {/if}
                     {/if}
                     {!-- else if logged out: --}
                     {!-- {#else}

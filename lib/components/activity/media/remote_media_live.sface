@@ -22,16 +22,16 @@
                     {#if is_binary(media_url)}
                       {#if String.ends_with?(media_url, [".mp4", ".mkv"])}
                         <video class={@base_css, @video_css} controls autoplay={@autoplay} muted={@muted}>
-                          <source src={media_url} type="video/mp4">
+                          <source src={media_url} type="video/mp4" preload="none">
                           Your browser does not support the video tag.
                         </video>
                       {#elseif String.ends_with?(media_url, [".ogg", ".ogv", ".ogx", ".ogm", ".spx", ".mov", ".opus"])}
-                        <video class={@base_css, @video_css} controls autoplay={@autoplay} muted={@muted}>
+                        <video class={@base_css, @video_css} controls autoplay={@autoplay} muted={@muted} preload="none">
                           <source src={media_url} type="video/ogg">
                           Your browser does not support the video tag.
                         </video>
                       {#elseif String.ends_with?(media_url, ".webm")}
-                        <video class={@base_css, @video_css} controls autoplay={@autoplay} muted={@muted}>
+                        <video class={@base_css, @video_css} controls autoplay={@autoplay} muted={@muted} preload="none">
                           <source src={media_url} type="video/webm">
                           Your browser does not support the video tag.
                         </video>
@@ -60,7 +60,7 @@
                                 </div>
                             {/case}
                           </div>
-                          <audio controls autoplay={@autoplay} class={@base_css}>
+                          <audio controls autoplay={@autoplay} class={@base_css} preload="none">
                             <source src={media_url} type={"audio/#{Bonfire.Files.file_extension_only(media_url) || "mp3"}"}>
                             Your browser does not support the audio tag.
                             {!-- <a href={media_url}> {l "Download audio"} </a> --}

@@ -1,4 +1,5 @@
 <div data-role="subject" data-id={@subject_id}>
+  {!-- TODO: can we simplify and remove the cases here, having just one definition per type and using conditional classes if needed? --}
   {#case @showing_within}
     {#match :thread}
       <div />

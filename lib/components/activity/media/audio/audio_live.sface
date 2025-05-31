@@ -51,7 +51,9 @@
     </div>
     <div class="flex border-l border-base-content/10 justify-center items-center flex-col">
       <div class="flex-col z-50 flex justify-center items-center place-content-center">
-        <!-- <Bonfire.UI.Common.OpenModalLive
+        {!-- 
+        TODO: re-enable persistent media player modal
+        <Bonfire.UI.Common.OpenModalLive
           id={deterministic_dom_id("media_modal", id(@media), "audio", @parent_id)}
           reusable_modal_id="media_player_modal"
           no_actions
@@ -78,7 +80,7 @@
               <#Icon iconify="heroicons:play-20-solid" class="w-5 h-5 text-base-content/70" />
             </button>
           </:open_btn>
-        </Bonfire.UI.Common.OpenModalLive> -->
+        </Bonfire.UI.Common.OpenModalLive> --}
         <a
           href={Media.media_url(@media)}
           class="cursor-pointer flex-1 min-h-[80px] hover:bg-base-content/5 h-20 w-[80px] flex place-content-center items-center"
