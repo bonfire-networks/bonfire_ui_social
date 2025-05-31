@@ -67,4 +67,18 @@ defmodule Bonfire.UI.Social.ThreadBranchLive do
     e(activity, :replied, :nested_replies_count, 0) +
       e(activity, :replied, :direct_replies_count, 0)
   end
+
+  def extra_replies_count(comment, threaded_replies_count) do
+    case {(e(comment, :direct_replies_count, nil) ||
+             e(comment, :replied, :direct_replies_count, 0)) -
+            threaded_replies_count,
+          e(comment, :nested_replies_count, nil) ||
+            e(comment, :replied, :nested_replies_count, nil) ||
+            0} do
+      {0, 0} -> ""
+      {0, nested} -> "~#{nested}"
+      {direct_left, nested} when nested > direct_left -> "#{direct_left}+"
+      {direct_left, _} -> direct_left
+    end
+  end
 end

@@ -106,12 +106,12 @@ defmodule Bonfire.Social.Threads.LiveHandler do
          e(assigns, :reply_count, 0) > 0 do
       {:noreply,
        socket
-       |> assign(depth_loaded: load_depth)
+       |> assign_generic(depth_loaded: load_depth)
        |> insert_comments({:replies, replies})}
     else
       {:noreply,
        socket
-       |> assign(depth_loaded: load_depth)
+       |> assign_generic(depth_loaded: load_depth)
        |> insert_comments(
          {:threaded_replies,
           Threads.prepare_replies_tree(
@@ -518,8 +518,9 @@ defmodule Bonfire.Social.Threads.LiveHandler do
   def max_depth(ui_compact \\ nil, opts),
     do:
       debug(
+        # if using compact layout or not logged in, use *double* the instance/default max depth 
         Settings.get(:thread_default_max_depth, 3, opts) *
-          if(ui_compact,
+          if(ui_compact || !current_user_id(opts),
             do: 2,
             else: 1
           )
