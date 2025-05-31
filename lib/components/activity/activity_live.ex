@@ -780,6 +780,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
                     character -> path(character)
                   end}
                   profile={e(component_assigns, :profile, nil)}
+                  profile_id={id(e(component_assigns, :profile, nil))}
                   profile_media={Media.avatar_url(e(component_assigns, :profile, nil))}
                   profile_summary={e(component_assigns, :profile, :summary, nil)}
                   profile_name={e(
