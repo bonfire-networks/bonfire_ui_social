@@ -16,7 +16,7 @@
       phx-value-tab_mode="true"
       phx-target={@event_target}
     >
-      <#Icon iconify="mdi:pencil" class="w-5 h-5" />
+      <#Icon iconify="dashicons:text-page" class="w-5 h-5" />
       <span class="sr-only">{l("Posts")}</span>
     </button>
   </div>
@@ -156,7 +156,7 @@
     </button>
   </div>
 
-  <div
+  {!-- <div
     style={if should_hide_button?(:reply, :activity_types, assigns), do: "display: none;", else: ""}
     class="tooltip tooltip-bottom w-full"
     data-tip="Show only replies"
@@ -176,9 +176,9 @@
       <#Icon iconify="mingcute:comment-fill" class="w-5 h-5" />
       <span class="sr-only">{l("Replies")}</span>
     </button>
-  </div>
+  </div> --}
 
-  <!-- <div data-switch="research" class="w-full flex-1">
+  {!-- <div data-switch="research" class="w-full flex-1">
     <button 
       data-id="filter-research"
       class={@get_button_class.(:research, :media_types, @feed_filters)}
@@ -191,7 +191,7 @@
       <#Icon iconify="mingcute:paper-fill" class="w-5 h-5" />
       <span class="sr-only">{l("Research")}</span>
     </button>
-  </div> -->
+  </div> --}
 
   <div class="border-l border-base-content/10 pl-2">
     <button phx-click={JS.toggle(to: "#more_filters")} class="btn btn-ghost btn-square opacity-70"><#Icon iconify="mingcute:filter-2-line" class="w-5 h-5" /></button>

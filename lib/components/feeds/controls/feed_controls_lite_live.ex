@@ -40,10 +40,10 @@ defmodule Bonfire.UI.Social.FeedControlsLiteLive do
   """
   def get_button_class(type, field, feed_filters) do
     cond do
-      # Special case: Posts button should be active when NO filters are applied
-      type == :post && field == :object_types && no_filters_applied?(feed_filters) ->
-        # Active tab state for default view
-        "btn flex-1 w-full btn-primary"
+      # Special case: Posts button should be active when NO filters are applied - why? by default we show everything, not just posts
+      # type == :post && field == :object_types && no_filters_applied?(feed_filters) ->
+      #   # Active tab state for default view
+      #   "btn flex-1 w-full btn-primary"
 
       is_only_included?(type, field, feed_filters) ->
         # Active tab state
