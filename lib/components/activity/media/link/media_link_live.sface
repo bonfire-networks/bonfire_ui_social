@@ -63,19 +63,21 @@
     {/if}
 
     <div class="p-2 flex flex-col w-full gap-1 flex-1">
-      <div
-        data-id="media_title"
-        class="text-base line-clamp-2 font-semibold text-pretty md:text-balanced"
-      >
-        {Bonfire.Files.Media.media_label(@media) ||
-          if @media.media_type == "link", do: e(@media, :path, nil), else: l("View")}
-      </div>
+      {#case Bonfire.Files.Media.media_label(@media)}
+        {#match media_label}
+          <div
+            data-id="media_title"
+            class="text-base line-clamp-2 font-semibold text-pretty md:text-balanced"
+          >
+            {media_label ||
+              if @media.media_type == "link", do: e(@media, :path, nil), else: l("View")}
+          </div>
 
-      <div class="break-all text-sm break-words line-clamp-2 text-base-content/70">
-        {raw(Text.maybe_sane_html(Bonfire.Files.Media.description(@media)))}
-      </div>
+          <div class="break-all text-sm break-words line-clamp-2 text-base-content/70">
+            {raw(Text.maybe_sane_html(Bonfire.Files.Media.description(@media)))}
+          </div>
 
-      <!-- <span class="text-sm badge badge-accent rounded bg-accent/30 border-none !text-accent capitalize mr-1">{e(@media, :media_type, nil) || l("link")}</span>
+          <!-- <span class="text-sm badge badge-accent rounded bg-accent/30 border-none !text-accent capitalize mr-1">{e(@media, :media_type, nil) || l("link")}</span>
 
         {e(@media, :metadata, "oembed", "author_name", nil)}
               
@@ -86,17 +88,18 @@
             <span class="text-base-content/70">{published |> DatesTimes.format_date(format: "MMMM d, Y")}</span>
         {/case} -->
 
-      {#case MediaLive.provider(@media)}
-        {#match nil}
-        {#match provider}
-          <div data-id="media_author" class="text-xs pt-2 mt-2 border-t border-base-content/10">
-            <div class="flex items-center gap-2">
-              <#Icon iconify="ph:globe" class="w-4 h-4 text-base-content/70" />
-              <span class="text-base-content/70">{provider}</span>
-            </div>
-          </div>
+          {#case MediaLive.provider(@media)}
+            {#match provider when is_binary(provider) and provider != media_label}
+              <div data-id="media_author" class="text-xs pt-2 mt-2 border-t border-base-content/10">
+                <div class="flex items-center gap-2">
+                  <#Icon iconify="ph:globe" class="w-4 h-4 text-base-content/70" />
+                  <span class="text-base-content/70">{provider}</span>
+                </div>
+              </div>
+            {#match _}
+          {/case}
+          <!-- {e(@media, :metadata, "location", "name", nil)} {e(@media, :metadata, "startDate", nil)} -->
       {/case}
-      <!-- {e(@media, :metadata, "location", "name", nil)} {e(@media, :metadata, "startDate", nil)} -->
     </div>
   </LinkLive>
 </Bonfire.UI.Common.OpenExternalLinkLive>
