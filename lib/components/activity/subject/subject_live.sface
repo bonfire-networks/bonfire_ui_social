@@ -1,7 +1,8 @@
-<div 
-  data-role="subject" 
+<div
+  data-role="subject"
   data-main-object={@viewing_main_object}
-  class="subject relative flex items-start">
+  class="subject relative flex items-start"
+>
   {!-- <div
     data-trigger="hover"
     data-position="top"
@@ -107,7 +108,8 @@
         parent_id={["subject_username", @parent_id]}
         class={
           "text-sm text-[15px] truncate max-w-[220px] link link-hover ellipsis text-base-content/60 subject_username",
-          "hidden lg:block": @showing_within != :thread or !@viewing_main_object}
+          "hidden lg:block": @showing_within != :thread or !@viewing_main_object
+        }
         to={e(@subject_peered, :canonical_uri, nil) || @path}
       >
         @{@character_username}
