@@ -11,7 +11,7 @@ defmodule Bonfire.UI.Social.Activity.MediaLive do
 
   prop cw, :any, default: nil
   prop muted, :boolean, default: false
-  prop autoplay, :boolean, default: true
+  prop autoplay, :boolean, default: false
 
   prop css_borders, :css_class, default: "border border-base-content/10 rounded-md"
   prop small_icon, :boolean, default: false

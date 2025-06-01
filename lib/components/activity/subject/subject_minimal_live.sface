@@ -265,9 +265,12 @@
             </div>
             <div :if={@thread_title} class="ml-8 w-full">
               <div class="relative w-full flex-1 text-sm text-base-content/90 flex items-baseline gap-1 alert alert-warning alert-soft alert-sm pl-8">
-              <#Icon iconify="mingcute:quote-left-fill" class="w-8 h-8 absolute top-[-12px] left-[-4px] text-warning/70" />
-              {@thread_title}
-            </div>
+                <#Icon
+                  iconify="mingcute:quote-left-fill"
+                  class="w-8 h-8 absolute top-[-12px] left-[-4px] text-warning/70"
+                />
+                {@thread_title}
+              </div>
             </div>
           </div>
           {!-- {#else}
@@ -463,27 +466,30 @@
       {#elseif @verb == "Flag"}
         <div data-role="flagged_by" class="flex flex-col items-start gap-2 w-full -ml-[3rem] mb-4">
           <div class="flex items-start gap-3 justify-start">
-              <#Icon solid="Flag" class="w-6 h-6 text-error" />
-              <div class="flex-1">
-                <div class="text-sm font-medium text-base-content/70">
-                  <LinkLive
-                    class="font-medium link link-hover"
-                    to={@path}
-                    opts={"data-id": "subject_name"}
-                    parent_id={["subject_minimal_name", @parent_id]}
-                  >
-                    {@profile_name || @character_username}
-                  </LinkLive>
-                  {raw(@verb_display)}
-                </div>
+            <#Icon solid="Flag" class="w-6 h-6 text-error" />
+            <div class="flex-1">
+              <div class="text-sm font-medium text-base-content/70">
+                <LinkLive
+                  class="font-medium link link-hover"
+                  to={@path}
+                  opts={"data-id": "subject_name"}
+                  parent_id={["subject_minimal_name", @parent_id]}
+                >
+                  {@profile_name || @character_username}
+                </LinkLive>
+                {raw(@verb_display)}
               </div>
             </div>
-            <div :if={@thread_title} class="ml-8 w-full">
-              <div class="relative w-full flex-1 text-sm text-base-content/90 flex items-baseline gap-1 alert alert-warning alert-soft alert-sm pl-8">
-              <#Icon iconify="mingcute:quote-left-fill" class="w-8 h-8 absolute top-[-12px] left-[-4px] text-warning/70" />
+          </div>
+          <div :if={@thread_title} class="ml-8 w-full">
+            <div class="relative w-full flex-1 text-sm text-base-content/90 flex items-baseline gap-1 alert alert-warning alert-soft alert-sm pl-8">
+              <#Icon
+                iconify="mingcute:quote-left-fill"
+                class="w-8 h-8 absolute top-[-12px] left-[-4px] text-warning/70"
+              />
               {@thread_title}
             </div>
-            </div>
+          </div>
         </div>
       {#else}
       {/if}
