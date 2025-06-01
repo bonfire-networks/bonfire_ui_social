@@ -1,4 +1,7 @@
-<div data-role="subject" class="subject relative flex items-start">
+<div 
+  data-role="subject" 
+  data-main-object={@viewing_main_object}
+  class="subject relative flex items-start">
   {!-- <div
     data-trigger="hover"
     data-position="top"
@@ -19,6 +22,7 @@
     parent_id={["subject_avatar", @parent_id]}
     class={
       "absolute -ml-[4rem] font-semibold text-base-content hover:underline z-50",
+      "!relative !ml-0 ": @viewing_main_object,
       "!-ml-[2.5rem]": @__context__[:ui_compact] && !@viewing_main_object
     }
     to={@path}

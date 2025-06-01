@@ -35,12 +35,12 @@
         data-role="notifications_subject"
         class={
           "flex items-center justify-between w-full",
-          "-ml-[3rem] mb-2": @verb not in ["Reply", "Respond", "Flag"]
+          "-ml-[3rem] mb-4": @verb not in ["Reply", "Respond", "Flag"]
         }
       >
         {#if @verb == "Request to Follow"}
           <div class="flex items-center w-full justify-between">
-            <div class="flex items-start flex-1 gap-4">
+            <div class="flex items-center flex-1 gap-3">
               <#Icon solid="UserAdd" class="flex-shrink-0 w-6 h-6 text-info" />
               <div class="flex gap-2">
                 {!-- <Bonfire.UI.Common.AvatarLive
@@ -54,9 +54,9 @@
                   to={@path}
                   opts={"data-id": "subject_name"}
                   parent_id={["subject_minimal_name", @parent_id]}
-                  class="flex link link-hover items-center gap-5 justify-start pb-2"
+                  class="flex link link-hover items-center gap-5 justify-start"
                 >
-                  <div class="font-medium text-sm text-base-content/90">
+                  <div class="font-medium text-sm text-base-content/70">
                     {@profile_name || @character_username}
 
                     {raw(@verb_display)}
@@ -96,7 +96,7 @@
             {/case}
 
             <div class="flex-1 flex gap-2">
-              <LinkLive to={@path} opts={"data-id": "subject_name"} parent_id={["subject_avatar", @parent_id]}>
+              <!-- <LinkLive to={@path} opts={"data-id": "subject_name"} parent_id={["subject_avatar", @parent_id]}>
                 <Bonfire.UI.Common.AvatarLive
                   parent_id={["sm", @activity_component_id || @activity_id]}
                   user_id={@profile_id}
@@ -104,8 +104,8 @@
                   title={@profile_name}
                   class="h-6 w-6 rounded-full"
                 />
-              </LinkLive>
-              <div class="font-medium text-sm text-base-content/90">
+              </LinkLive> -->
+              <div class="font-medium text-sm text-base-content/70">
                 <LinkLive
                   class="link link-hover font-semibold"
                   to={@path}
@@ -125,7 +125,7 @@
           </div>
         {#elseif @verb == "Follow"}
           {!-- FOLLOW --}
-          <div class="flex items-start gap-4">
+          <div class="flex items-center gap-3">
             <#Icon solid="UserAdd" class="flex-shrink-0 w-6 h-6 text-info" />
             <div class="flex gap-2">
               {!-- <LinkLive to={@path} opts={"data-id": "subject_name"} parent_id={["subject_avatar", @parent_id]}>
@@ -141,9 +141,9 @@
                 to={@path}
                 opts={"data-id": "subject_name"}
                 parent_id={["subject_minimal_name", @parent_id]}
-                class="flex link link-hover items-center gap-5 justify-start pb-2"
+                class="flex link link-hover items-center gap-5 justify-start"
               >
-                <div class="font-medium text-sm text-base-content/90">
+                <div class="font-medium text-sm text-base-content/70">
                   {@profile_name || @character_username}
 
                   {if @object_id == current_user_id(@__context__), do: l("followed you"), else: "followed"}
@@ -161,7 +161,7 @@
             {!-- BOOST --}
             <#Icon iconify="lucide:refresh-cw" class="w-6 h-6 stroke-1 text-success" />
             <div class="flex-1 flex gap-2">
-              <LinkLive to={@path} opts={"data-id": "subject_name"} parent_id={["subject_avatar", @parent_id]}>
+              <!-- <LinkLive to={@path} opts={"data-id": "subject_name"} parent_id={["subject_avatar", @parent_id]}>
                 <Bonfire.UI.Common.AvatarLive
                   parent_id={["sm", @activity_component_id || @activity_id]}
                   user_id={@profile_id}
@@ -169,8 +169,8 @@
                   title={@profile_name}
                   class="h-6 w-6 rounded-full"
                 />
-              </LinkLive>
-              <div class="font-medium text-sm text-base-content/90">
+              </LinkLive> -->
+              <div class="font-medium text-sm text-base-content/70">
                 <LinkLive
                   to={@path}
                   opts={"data-id": "subject_name"}
@@ -202,7 +202,7 @@
                   class="h-6 w-6 rounded-full"
                 />
               </LinkLive>
-              <div class="font-medium text-sm text-base-content/90">
+              <div class="font-medium text-sm text-base-content/70">
                 <LinkLive
                   to={@path}
                   opts={"data-id": "subject_name"}
@@ -246,10 +246,10 @@
           /> -->
         {#elseif @verb == "Flag"}
           {!-- FLAG --}
-          <div data-role="flagged_by" class="flex items-center justify-between w-full -ml-[3rem] mb-2">
-            <div class="flex items-start gap-5 justify-start">
+          <div data-role="flagged_by" class="flex items-center justify-between w-full -ml-[3rem] mb-4">
+            <div class="flex items-start gap-3 justify-start">
               <#Icon solid="Flag" class="w-6 h-6 text-error" />
-              <div class="flex-1 ml-3">
+              <div class="flex-1">
                 <div class="text-sm font-medium text-base-content/70">
                   <LinkLive
                     class="font-medium link link-hover"
@@ -406,12 +406,12 @@
       {#elseif @published_in}
       {#elseif @verb == "Boost"}
         {!-- BOOST --}
-        <div data-role="boosted_by" class="flex items-center justify-between w-full -ml-[3rem] mb-2">
-          <div class="flex items-start gap-5 justify-start">
+        <div data-role="boosted_by" class="flex items-center justify-between w-full -ml-[2rem] mb-4">
+          <div class="flex items-start gap-3 justify-start">
             <#Icon iconify="lucide:refresh-cw" class="w-5 h-5 text-success" />
 
             <div class="flex-1 flex gap-2 ml-3">
-              <div class="absolute left-[44px] top-[42px] z-[99999]">
+              <div class="absolute left-[44px] top-[49px] z-[99999]">
                 <Bonfire.UI.Common.AvatarLive
                   parent_id={["sm_absolute", @activity_component_id || @activity_id]}
                   user_id={@profile_id}
