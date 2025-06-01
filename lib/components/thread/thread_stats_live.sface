@@ -42,7 +42,7 @@
           </div>
         </div>
 
-        <div class="flex flex-wrap items-center gap-3 p-2">
+        <div :if={@participants != []} class="flex flex-wrap items-center gap-3 p-2">
           {#for p <- @participants || []}
             <div class="z-[9] relative">
               <div>
