@@ -7,7 +7,7 @@ defmodule Bonfire.UI.Social.Activity.RemoteMediaLive do
   prop muted, :boolean, default: false
   prop autoplay, :boolean, default: true
 
-  prop base_css, :css_class, default: "max-h-screen max-w-screen w-full"
+  prop base_css, :css_class, default: "max-w-screen w-full"
 
   # prop block_css, :css_class, default: [@default, "min-w-[400px] min-h-[260px] h-full"]
 
@@ -17,7 +17,7 @@ defmodule Bonfire.UI.Social.Activity.RemoteMediaLive do
   prop image_css, :css_class, default: ""
 
   prop video_css, :css_class,
-    default: "w-full h-full inline-block rounded-box border border-base-content/10"
+    default: "max-h-[380px] h-full inline-block rounded-box border border-base-content/10"
 
   # prop type, :any, default: nil
 end
