@@ -420,7 +420,7 @@
             <#Icon iconify="lucide:refresh-cw" class="w-5 h-5 text-success" />
 
             <div class="flex-1 flex gap-2">
-              <div class="absolute left-[44px] top-[49px] z-[99999]">
+              <div class="absolute left-[44px] top-[49px] z-[99]">
                 <Bonfire.UI.Common.AvatarLive
                   parent_id={["sm_absolute", @activity_component_id || @activity_id]}
                   user_id={@profile_id}

@@ -11,9 +11,9 @@
            description:
              l("Use the simplified tab-based feed controls instead of the full feed controls.")
          ) do
-        Bonfire.UI.Social.FeedControlsLiteLive
-      else
         Bonfire.UI.Social.FeedControlsLive
+      else
+        Bonfire.UI.Social.FeedControlsLiteLive
       end}
       event_target={@myself}
       feed_id={@feed_id}
