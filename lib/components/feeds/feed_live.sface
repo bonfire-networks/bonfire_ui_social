@@ -30,7 +30,7 @@
     aria-live="assertive"
     phx-hook="Bonfire.UI.Common.PreviewContentLive#MainFeed"
     aria-atomic="true"
-    class="w-full max-w-full flex flex-col feed w-full max-w-full lg:rounded-xl lg:shadow bg-base-100"
+    class="w-full flex flex-col feed max-w-[596px] lg:rounded-xl lg:shadow bg-base-100"
   >
     <div class="flex flex-col h-full grow rounded-t-xl break-all w-full max-w-full">
       {!-- TODO: show tabs at top of persistent feed and use event handler to trigger switching feed within the component rather than patch the view? --}
