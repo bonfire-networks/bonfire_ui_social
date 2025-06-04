@@ -909,8 +909,12 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
 
       Keyword.put(assigns, :feed_filters, updated_filters)
     else
+      {:ok, _} ->
+        # debug("No preset found with assigns")
+        []
+
       other ->
-        debug(other, "Could not find feed preset with assigns")
+        warn(other, "Could not find feed preset")
         []
     end
   end
@@ -1642,6 +1646,11 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
 
     # |> Enums.filter_empty(nil) || #feed_async_preloads_list(showing_within, thread_mode)
 
+    preloaded =
+      elem(activity_preloads, 0) || []
+
+    # |> debug("many_activity_postloads")
+
     postloads =
       (elem(activity_preloads, 1) || [])
       |> debug("many_activity_postloads")
@@ -1649,7 +1658,8 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
     do_preload_extras(
       list_of_components,
       preload: postloads,
-      assign_activity_preloads: {(elem(activity_preloads, 0) || []) ++ postloads, []},
+      preloaded: preloaded,
+      assign_activity_preloads: {preloaded ++ postloads, []},
       with_cache: false,
       current_user: current_user,
       # skip_boundary_check because it should already be checked it the initial query
@@ -1785,21 +1795,23 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
   # end
 
   def preload_activity_and_object_assocs(feed, under, opts) do
+    preload = opts[:preload]
+
     if Bonfire.Common.Config.get([:ui, :feed_object_extension_preloads_disabled], false,
          name: l("Disable Feed Extension Preloads"),
          description: l("Technical setting to disable preloading extensions for feed objects.")
        ) != true do
       feed
-      |> Bonfire.Social.Activities.activity_preloads(opts[:preload], opts)
+      |> Bonfire.Social.Activities.activity_preloads(preload, opts)
       # |> debug("pre-maybe_preloads_per_nested_schema")
       |> Bonfire.Common.Repo.Preload.maybe_preloads_per_nested_schema(
         under,
-        object_preloads(),
+        object_preloads(opts[:preloaded] || []),
         opts
       )
     else
       feed
-      |> Bonfire.Social.Activities.activity_preloads(opts[:preload], opts)
+      |> Bonfire.Social.Activities.activity_preloads(preload, opts)
     end
   end
 
@@ -1818,10 +1830,12 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
   #   end
   # end
 
-  def object_preloads do
+  def object_preloads(preload \\ []) do
     # TODO: collect these from the code/config on startup, same as how we pick what preview component to use
     [
       # {Bonfire.Data.Social.Post, Bonfire.UI.Social.Activity.NoteLive.preloads()}, # only needed if we no longer preload the post_content by default
+      # to follow Pointer
+      if(:per_media not in preload, do: Bonfire.Files.Media),
       {Bonfire.Poll.Question,
        Utils.maybe_apply(Bonfire.Poll.Web.Preview.QuestionLive, :preloads, [],
          fallback_return: nil
