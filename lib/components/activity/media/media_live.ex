@@ -105,10 +105,13 @@ defmodule Bonfire.UI.Social.Activity.MediaLive do
     []
   end
 
-  def is_image?(url), do: String.ends_with?(url || "", @image_exts)
+  def is_image?(url) when is_binary(url), do: String.ends_with?(url || "", @image_exts)
+  def is_image?(_url), do: nil
 
-  def is_image?(url, media_type),
+  def is_image?(url, media_type) when is_binary(url),
     do: String.ends_with?(url, @image_exts) or String.starts_with?(media_type || "", @image_types)
+
+  def is_image?(_url, _), do: nil
 
   # def multimedia_list(media) do
   #   Enum.filter(List.wrap(media), fn m ->
