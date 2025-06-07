@@ -109,7 +109,7 @@
         {#match nil}
         {#match false}
         {#match canonical_uri}
-          <li :if={@showing_within == :thread}>
+          <li :if={@showing_within == :thread and !@viewing_main_object}}>
             <a
               phx-click="Bonfire.Social.Feeds:fetch_replies"
               phx-target={"##{@activity_component_id}"}
@@ -120,7 +120,7 @@
               <span>{l("Get latest replies")}</span>
             </a>
           </li>
-          <li :if={@showing_within == :thread}>
+          <li :if={@showing_within == :thread and @viewing_main_object}>
             <a
               phx-click="Bonfire.Social.Feeds:fetch_thread"
               phx-target={"##{@activity_component_id}"}
@@ -128,7 +128,7 @@
               class="!flex items-center gap-2"
             >
               <!-- <#Icon iconify="bi:list-nested" class="w-4 h-4 shrink-0 text-base-content" /> -->
-              <span>{l("Get latest activities")}</span>
+              <span>{l("Get latest replies")}</span>
             </a>
           </li>
           <li :if={is_binary(canonical_uri)}>
