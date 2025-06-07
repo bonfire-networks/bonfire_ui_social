@@ -17,7 +17,7 @@
       phx-target={@event_target}
     >
       <#Icon iconify="dashicons:text-page" class="w-5 h-5" />
-      <span class="sr-only">{l("Posts")}</span>
+      <span class="sr-only">{l("All Posts")}</span>
     </button>
   </div>
 

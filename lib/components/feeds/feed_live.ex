@@ -548,27 +548,44 @@ defmodule Bonfire.UI.Social.FeedLive do
         %{"toggle" => field, "toggle_type" => type} = params,
         socket
       ) do
-    # Check if we're using the lite controls AND this is a tab mode click
-    if params["toggle_value"] == "true" &&
-         params["tab_mode"] == "true" &&
-         Settings.get([Bonfire.UI.Social, :use_lite_feed_controls], false,
+    # Check if we're NOT using the lite controls AND this is a tab mode click
+    if params["tab_mode"] == "true" &&
+         !Settings.get([Bonfire.UI.Social, :use_lite_feed_controls], false,
            context: assigns(socket)[:__context__]
          ) do
-      # Tab behavior for tab filter buttons - clear ALL filters and set only this type
-      set_filters(
-        %{
-          # Clear all possible filter types
-          object_types: if(field == "object_types", do: [maybe_to_atom(type)], else: []),
-          media_types: if(field == "media_types", do: [maybe_to_atom(type)], else: []),
-          activity_types: if(field == "activity_types", do: [maybe_to_atom(type)], else: []),
-          # Also clear all exclude lists
-          exclude_object_types: [],
-          exclude_media_types: [],
-          exclude_activity_types: []
-        },
-        socket,
-        true
-      )
+      # Tab behavior for tab filter buttons
+      if params["toggle_value"] == "true" do
+        # Set this tab as the only active filter
+        set_filters(
+          %{
+            # Clear all possible filter types, then set only the clicked one
+            object_types: if(field == "object_types", do: [maybe_to_atom(type)], else: []),
+            media_types: if(field == "media_types", do: [maybe_to_atom(type)], else: []),
+            activity_types: if(field == "activity_types", do: [maybe_to_atom(type)], else: []),
+            # Also clear all exclude lists
+            exclude_object_types: [],
+            exclude_media_types: [],
+            exclude_activity_types: []
+          },
+          socket,
+          true
+        )
+      else
+        # toggle_value is nil or "false" - clicking active tab, so show all
+        set_filters(
+          %{
+            # Clear all filters to show everything
+            object_types: [],
+            media_types: [],
+            activity_types: [],
+            exclude_object_types: [],
+            exclude_media_types: [],
+            exclude_activity_types: []
+          },
+          socket,
+          true
+        )
+      end
     else
       # Regular behavior for standard controls
       set_type(
