@@ -2,7 +2,7 @@
   <div
     :if={!@hide_filters and current_user_id(@__context__)}
     id="feed_controls_wrapper"
-    class="mb-3"
+    class="lg:mb-3 border-b border-base-content/10 lg:border-0"
   >
     <StatelessComponent
       module={if Settings.get([Bonfire.UI.Social, :use_lite_feed_controls], false,
@@ -30,7 +30,7 @@
     aria-live="assertive"
     phx-hook="Bonfire.UI.Common.PreviewContentLive#MainFeed"
     aria-atomic="true"
-    class="w-full flex flex-col feed max-w-[596px] lg:rounded-xl lg:shadow bg-base-100"
+    class="w-full flex flex-col feed max-w-[596px] lg:rounded-xl lg:shadow bg-base-100 mx-auto"
   >
     <div class="flex flex-col h-full grow rounded-t-xl break-all w-full max-w-full">
       {!-- TODO: show tabs at top of persistent feed and use event handler to trigger switching feed within the component rather than patch the view? --}
@@ -65,7 +65,7 @@
         phx-show={JS.remove_class("hidden")}
       >
         {!-- style={if @hide_fresh==0, do: "display: none;", else: ""} --}
-        <btn class="normal-case btn btn-xs  btn-primary">
+        <btn class="normal-case btn btn-sm btn-primary">
           <#Icon iconify="mdi:arrow-up" class="w-4 h-4" />
           {!-- |> JS.push("hide_fresh", target: @myself) --}
           {l("Show more recent")}

@@ -1,7 +1,7 @@
 <div
   data-id="feed_controls"
   id="feed_controls"
-  class="p-2 relative rounded-xl pb-4 outline outline-base-content/10 shadow-lg relative feed_control_wrapper bg-base-100"
+  class="p-2 relative lg:rounded-xl lg:pb-4 lg:outline lg:outline-base-content/10 lg:shadow-lg relative feed_control_wrapper bg-base-100"
 >
   {#if @reloading}
     <div class="absolute rounded-xl z-10 inset-0 flex items-center justify-center bg-base-content/10">
@@ -15,7 +15,7 @@
     get_tab_toggle_value={&get_tab_toggle_value/3}
   />
 
-  <div class="flex flex-col gap-2 mt-2 w-full">
+  <div class="hidden lg:flex flex-col gap-2 lg:mt-2 w-full">
     <Bonfire.UI.Social.TimeControlLive
       feed_name={@feed_name}
       event_target={@event_target}
@@ -25,7 +25,7 @@
     />
   </div>
 
-  <div id="more_filters" class="pb-0 flex pt-3 flex-col gap-2 hidden">
+  <div id="more_filters" class="pb-0 flex lg:pt-3 flex-col gap-2 hidden">
     <div class="font-semibold uppercase text-xs text-base-content/60 mb-3  border-t border-base-content/10 pt-3 mt-3">{l("Advanced Filters")}</div>
 
     <!-- <Bonfire.UI.Social.ToggleTypeLive
@@ -73,6 +73,15 @@
         label_default={l("Include")}
       />
     {/for} -->
+    <!-- <div class="flex lg:hidden flex-col gap-2 lg:mt-2 w-full">
+      <Bonfire.UI.Social.TimeControlLive
+        feed_name={@feed_name}
+        event_target={@event_target}
+        event_name="set_filter"
+        current_value={e(@feed_filters, :time_limit, nil)}
+        scope={:user}
+      />
+    </div> -->
     <StatefulComponent
       id="advanced_filter_controls_lite"
       module={Bonfire.UI.Social.AdvancedFilterControlsLive}

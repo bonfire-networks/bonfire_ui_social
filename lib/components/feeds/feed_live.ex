@@ -599,6 +599,49 @@ defmodule Bonfire.UI.Social.FeedLive do
   end
 
   def handle_event(
+        "mobile_filter_change",
+        %{} = params,
+        socket
+      ) do
+    value = params["filter_select"] || ""
+    
+    case value do
+      "" ->
+        # Empty value selected, delegate to set_filter to show all
+        handle_event(
+          "set_filter",
+          %{
+            "toggle" => "object_types",
+            "toggle_type" => "post",
+            "toggle_value" => nil,
+            "tab_mode" => "true"
+          },
+          socket
+        )
+        
+      _ ->
+        case String.split(value, ":") do
+          [field, type] when field != "" and type != "" ->
+            # Delegate to existing set_filter handler with tab_mode
+            handle_event(
+              "set_filter",
+              %{
+                "toggle" => field,
+                "toggle_type" => type,
+                "toggle_value" => "true",
+                "tab_mode" => "true"
+              },
+              socket
+            )
+
+          _ ->
+            # Invalid format, ignore
+            {:noreply, socket}
+        end
+    end
+  end
+
+  def handle_event(
         "set_filter",
         %{"include" => types},
         socket

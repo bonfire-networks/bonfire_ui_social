@@ -1,10 +1,40 @@
-<div class="flex gap-1 items-center justify-evenly" id="tab-filter-buttons-container">
+<div class="flex gap-1 items-center justify-between" id="tab-filter-buttons-container">
+<!-- Mobile select dropdown (visible on mobile only) -->
+<div class="md:hidden mr-3">
+  <form phx-change="mobile_filter_change" phx-target={@event_target}>
+    <select
+      name="filter_select"
+      class="select select-ghost text-xl font-semibold"
+    >
+      <option value="" selected={Bonfire.UI.Social.FeedControlsLiteLive.no_filters_applied?(@feed_filters)}>{l("All activities")}</option>
+      <option value="object_types:post" selected={Bonfire.UI.Social.FeedControlsLiteLive.is_only_included?(:post, :object_types, @feed_filters)}>{l("Show all Posts")}</option>
+      {#if extension_enabled?(:bonfire_ui_reactions, @__context__) and not should_hide_button?(:boost, :activity_types, assigns)}
+        <option value="activity_types:boost" selected={Bonfire.UI.Social.FeedControlsLiteLive.is_only_included?(:boost, :activity_types, @feed_filters)}>{l("Show all Boosts")}</option>
+      {/if}
+      {#if not should_hide_button?(:follow, :activity_types, assigns)}
+        <option value="activity_types:follow" selected={Bonfire.UI.Social.FeedControlsLiteLive.is_only_included?(:follow, :activity_types, @feed_filters)}>{l("Show all Follows")}</option>
+      {/if}
+      {#if not should_hide_button?(:link, :media_types, assigns)}
+        <option value="media_types:link" selected={Bonfire.UI.Social.FeedControlsLiteLive.is_only_included?(:link, :media_types, @feed_filters)}>{l("Show all Links")}</option>
+      {/if}
+      {#if not should_hide_button?(:image, :media_types, assigns)}
+        <option value="media_types:image" selected={Bonfire.UI.Social.FeedControlsLiteLive.is_only_included?(:image, :media_types, @feed_filters)}>{l("Show all Images")}</option>
+      {/if}
+      {#if not should_hide_button?(:video, :media_types, assigns)}
+        <option value="media_types:video" selected={Bonfire.UI.Social.FeedControlsLiteLive.is_only_included?(:video, :media_types, @feed_filters)}>{l("Show all Videos")}</option>
+      {/if}
+      {#if not should_hide_button?(:audio, :media_types, assigns)}
+        <option value="media_types:audio" selected={Bonfire.UI.Social.FeedControlsLiteLive.is_only_included?(:audio, :media_types, @feed_filters)}>{l("Show all Audio")}</option>
+      {/if}
+    </select>
+  </form>
+</div>
+<div class="hidden md:flex items-center justify-evenly flex-1">
   <div
     style={if should_hide_button?(:post, :object_types, assigns), do: "display: none;", else: ""}
     class="tooltip tooltip-bottom w-full"
     data-tip="Show all posts"
     data-switch="post"
-    class="w-full flex-1"
   >
     <button
       data-id="filter-posts"
@@ -29,7 +59,6 @@
     class="tooltip tooltip-bottom w-full"
     data-tip="Show only boosts"
     data-switch="boost"
-    class="w-full flex-1"
   >
     <button
       data-id="filter-boosts"
@@ -51,7 +80,6 @@
     class="tooltip tooltip-bottom w-full"
     data-tip="Show only follows"
     data-switch="follow"
-    class="w-full flex-1"
   >
     <button
       data-id="filter-follows"
@@ -73,7 +101,6 @@
     class="tooltip tooltip-bottom w-full"
     data-tip="Show only links"
     data-switch="link"
-    class="w-full flex-1"
   >
     <button
       data-id="filter-links"
@@ -95,7 +122,6 @@
     class="tooltip tooltip-bottom w-full"
     data-tip="Show only images"
     data-switch="image"
-    class="w-full flex-1"
   >
     <button
       data-id="filter-images"
@@ -117,7 +143,6 @@
     class="tooltip tooltip-bottom w-full"
     data-tip="Show only videos"
     data-switch="video"
-    class="w-full flex-1"
   >
     <button
       data-id="filter-videos"
@@ -139,7 +164,6 @@
     class="tooltip tooltip-bottom w-full"
     data-tip="Show only audios"
     data-switch="audio"
-    class="w-full flex-1"
   >
     <button
       data-id="filter-audio"
@@ -192,6 +216,7 @@
       <span class="sr-only">{l("Research")}</span>
     </button>
   </div> --}
+  </div>
 
   <div class="border-l border-base-content/10 pl-2">
     <button phx-click={JS.toggle(to: "#more_filters")} class="btn btn-ghost btn-square text-primary"><#Icon iconify="mingcute:filter-2-line" class="w-5 h-5" /></button>
