@@ -1,14 +1,14 @@
-<div class="px-4 py-2 border-l border-r border-b border-base-content/30">
-  <div class="flex items-center gap-3">
+<div class="">
+  <!-- <div class="flex items-center gap-3">
     <Bonfire.UI.Common.BackButtonLive />
     <Bonfire.UI.Common.LogoLinkLive
       image_class="w-8 h-8 bg-center bg-no-repeat bg-contain"
       href="/"
     />
     <span class="text-sm font-medium">{l("Create a new page")}</span>
-  </div>
+  </div> -->
 </div>
-<div class="border-l flex-1 border-r border-base-content/30">
+<div class="">
   <Bonfire.UI.Common.SmartInputInlineLive
     id={:smart_input}
     showing_within={:page}

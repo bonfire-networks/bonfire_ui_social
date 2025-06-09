@@ -407,7 +407,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
           # This is a reply_to, calculate CW based on reply_to data structure
           e(object, :summary, nil) != nil || e(activity, :sensitive, :is_sensitive, nil)
         else
-          # For regular activities, calculate CW normally  
+          # For regular activities, calculate CW normally
           e(assigns, :cw, nil) || e(activity, :sensitive, :is_sensitive, nil) ||
             e(object, :post_content, :summary, nil) != nil
         end,
@@ -1118,15 +1118,26 @@ defmodule Bonfire.UI.Social.ActivityLive do
     subject_id = e(activity, :subject_id, nil) || e(activity, :subject, :id, nil)
     
     if subject_id do
-      [
-        {Bonfire.UI.Social.Activity.SubjectLive,
-         %{
-           verb: verb,
-           subject_id: subject_id,
-           profile: e(activity, :subject, :profile, nil),
-           character: e(activity, :subject, :character, nil)
-         }}
-      ]
+      # Check if we have preloaded subject data
+      profile = e(activity, :subject, :profile, nil)
+      character = e(activity, :subject, :character, nil)
+      
+      # If we have subject_id but no profile/character, try to get creator data instead
+      if is_nil(profile) and is_nil(character) do
+        activity
+        |> component_activity_maybe_creator(object, object_type)
+      else
+        # We have proper subject data
+        [
+          {Bonfire.UI.Social.Activity.SubjectLive,
+           %{
+             verb: verb,
+             subject_id: subject_id,
+             profile: profile,
+             character: character
+           }}
+        ]
+      end
     else
       # Fall back to the default behavior when no subject is found
       activity
