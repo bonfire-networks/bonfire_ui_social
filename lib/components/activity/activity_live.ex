@@ -1116,12 +1116,12 @@ defmodule Bonfire.UI.Social.ActivityLive do
   def component_activity_subject(verb, activity, object, object_type, :smart_input, _, _) do
     # Try to extract subject info from various possible structures
     subject_id = e(activity, :subject_id, nil) || e(activity, :subject, :id, nil)
-    
+
     if subject_id do
       # Check if we have preloaded subject data
       profile = e(activity, :subject, :profile, nil)
       character = e(activity, :subject, :character, nil)
-      
+
       # If we have subject_id but no profile/character, try to get creator data instead
       if is_nil(profile) and is_nil(character) do
         activity

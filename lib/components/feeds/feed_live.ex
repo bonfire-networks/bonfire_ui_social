@@ -604,7 +604,7 @@ defmodule Bonfire.UI.Social.FeedLive do
         socket
       ) do
     value = params["filter_select"] || ""
-    
+
     case value do
       "" ->
         # Empty value selected, delegate to set_filter to show all
@@ -618,7 +618,7 @@ defmodule Bonfire.UI.Social.FeedLive do
           },
           socket
         )
-        
+
       _ ->
         case String.split(value, ":") do
           [field, type] when field != "" and type != "" ->
