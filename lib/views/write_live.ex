@@ -14,8 +14,8 @@ defmodule Bonfire.UI.Social.WriteLive do
      |> assign(
        page_title: l("Write something"),
        page: "write",
-       nav_items: Bonfire.Common.ExtensionModule.default_nav(),
-       back: true,
+       without_sidebar: true,
+       without_secondary_widgets: true,
        smart_input_opts: [
          create_object_type: maybe_to_atom(e(session, "create_object_type", nil)),
          inline_only: true,
