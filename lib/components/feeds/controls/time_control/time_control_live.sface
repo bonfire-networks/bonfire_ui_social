@@ -16,7 +16,7 @@
         value={get_index_value(@current_value, @options)}
         name={@input}
         max={length(@options) - 1}
-        class="range range-xs range-neutral w-full"
+        class="range range-xs range-secondary w-full"
         step="1"
       />
       <div class="flex w-full justify-between px-2 text-xs text-base-content/70">

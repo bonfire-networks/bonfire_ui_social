@@ -1,8 +1,17 @@
 <div>
   <div
+    id={@id}
+    data-id="feed"
+    role="feed"
+    aria-live="assertive"
+    phx-hook="Bonfire.UI.Common.PreviewContentLive#MainFeed"
+    aria-atomic="true"
+    class="w-full flex flex-col feed max-w-[596px] lg:rounded-xl lg:shadow bg-base-100 mx-auto"
+  >
+  <div
     :if={!@hide_filters and current_user_id(@__context__)}
     id="feed_controls_wrapper"
-    class="lg:mb-3 border-b border-base-content/10 lg:border-0"
+    class="lg:mb-3"
   >
     <StatelessComponent
       module={if Settings.get([Bonfire.UI.Social, :use_lite_feed_controls], false,
@@ -23,16 +32,8 @@
       reloading={@reloading}
     />
   </div>
-  <div
-    id={@id}
-    data-id="feed"
-    role="feed"
-    aria-live="assertive"
-    phx-hook="Bonfire.UI.Common.PreviewContentLive#MainFeed"
-    aria-atomic="true"
-    class="w-full flex flex-col feed max-w-[596px] lg:rounded-xl lg:shadow bg-base-100 mx-auto"
-  >
-    <div class="flex flex-col h-full grow rounded-t-xl break-all w-full max-w-full">
+
+    <div class="flex flex-col h-full grow break-all w-full max-w-full">
       {!-- TODO: show tabs at top of persistent feed and use event handler to trigger switching feed within the component rather than patch the view? --}
       {!-- type={if @feed_name in [nil, :my], do: :header_only} --}
       {!-- "h-[56px]": @feed_name in [nil, :my] --}

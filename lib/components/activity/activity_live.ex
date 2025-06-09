@@ -1112,6 +1112,28 @@ defmodule Bonfire.UI.Social.ActivityLive do
   # when verb in @create_or_reply_verbs,
   # do: if is_nil(e(activity, :object, :created, :creator, nil)) and is_nil(e(object, :created, :creator, nil)), do: [{Bonfire.UI.Social.Activity.SubjectLive, %{subject_id: id}}], else: component_activity_maybe_creator(activity, object, object_type)
 
+  # Handle smart_input showing_within - extract subject info from any activity structure
+  def component_activity_subject(verb, activity, object, object_type, :smart_input, _, _) do
+    # Try to extract subject info from various possible structures
+    subject_id = e(activity, :subject_id, nil) || e(activity, :subject, :id, nil)
+    
+    if subject_id do
+      [
+        {Bonfire.UI.Social.Activity.SubjectLive,
+         %{
+           verb: verb,
+           subject_id: subject_id,
+           profile: e(activity, :subject, :profile, nil),
+           character: e(activity, :subject, :character, nil)
+         }}
+      ]
+    else
+      # Fall back to the default behavior when no subject is found
+      activity
+      |> component_activity_maybe_creator(object, object_type)
+    end
+  end
+
   # other
   def component_activity_subject(_verb, activity, object, object_type, _, _, _),
     do:
