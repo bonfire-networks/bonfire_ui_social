@@ -81,7 +81,7 @@
           viewing_main_object={@viewing_main_object}
           activity_component_id={@activity_component_id}
           event_target={@myself}
-          class="flex btn btn-sm btn-ghost btn-circle group hover:bg-primary/10"
+          class="flex btn tooltip tooltip-bottom btn-sm btn-ghost btn-circle group hover:bg-primary/10"
         />
 
         {#if LiveHandler.feed_live_update_many_preload_mode() == :async_actions}

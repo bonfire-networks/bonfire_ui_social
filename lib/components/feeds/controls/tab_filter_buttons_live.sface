@@ -241,6 +241,10 @@
   </div>
 
   <div class="border-l border-base-content/10 pl-2">
-    <button phx-click={JS.toggle(to: "#more_filters")} class="btn btn-ghost btn-square text-primary"><#Icon iconify="mingcute:filter-2-line" class="w-5 h-5" /></button>
+    <button
+      data-tip={l("Advanced")}
+      phx-click={JS.toggle(to: "#more_filters")}
+      class="btn btn-ghost tooltip tooltip-bottom btn-square text-primary"
+    ><#Icon iconify="mingcute:filter-2-line" class="w-5 h-5" /></button>
   </div>
 </div>

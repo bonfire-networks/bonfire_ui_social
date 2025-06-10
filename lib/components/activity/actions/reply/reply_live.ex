@@ -12,7 +12,8 @@ defmodule Bonfire.UI.Social.Activity.ReplyLive do
   prop event_target, :any, default: nil
 
   prop class, :css_class,
-    default: "flex btn btn-ghost group btn-circle btn-sm hover:bg-primary/10"
+    default:
+      "flex btn tooltip tooltip-bottom btn-ghost group btn-circle btn-sm hover:bg-primary/10"
 
   # prop reply_btn_text, :string, default: nil
   prop cannot_reply_text, :string, default: nil
