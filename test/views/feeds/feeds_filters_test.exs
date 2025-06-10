@@ -17,6 +17,73 @@ defmodule Bonfire.UI.Social.FeedsFilters.Test do
     {:ok, %{user: user, other_user: other_user}}
   end
 
+
+  describe "tabs filter buttons UI" do
+    test "User can switch between feed tabs", %{user: user, other_user: other_user} do
+      # Create some test content to ensure tabs are populated
+      Bonfire.Common.Config.put(:default_pagination_limit, 6)
+      Fake.create_test_content(:likes, user, other_user)
+      Fake.create_test_content(:bookmarks, user, other_user)
+      Fake.create_test_content(:image_post, user, other_user)
+      {post, _} = Fake.create_test_content(:local, user, other_user)
+      # boost it
+      {:ok, boost} = Boosts.boost(user, post)
+      popular_post =
+        fake_post!(user, "public", %{
+          post_content: %{name: "default post", html_body: "content https://example.com"}
+        })
+
+      less_popular_post =
+        fake_post!(user, "public", %{
+          post_content: %{name: "default post", html_body: "content"}
+        })
+
+      conn(user: user)
+      |> visit("/feed/explore")
+      |> assert_has("[data-id=feed] .activity_wrapper", count: 5)
+      |> click_button("[data-id=filter-boosts]", "Boosts")
+      |> assert_has("[data-id=feed] .activity_wrapper", count: 1)
+      |> assert_has("[data-id=feed] [data-role=boosted_by]")
+      |> click_button("[data-id=filter-images]", "Images")
+      |> assert_has("[data-id=feed] .activity_wrapper", count: 1)
+      |> assert_has("article img")
+    end
+
+    test "User can switch between feed tabs from mobile", %{user: user, other_user: other_user} do
+      # Create some test content to ensure tabs are populated
+      Bonfire.Common.Config.put(:default_pagination_limit, 6)
+      Fake.create_test_content(:likes, user, other_user)
+      Fake.create_test_content(:bookmarks, user, other_user)
+      Fake.create_test_content(:image_post, user, other_user)
+      {post, _} = Fake.create_test_content(:local, user, other_user)
+      # boost it
+      {:ok, boost} = Boosts.boost(user, post)
+      popular_post =
+        fake_post!(user, "public", %{
+          post_content: %{name: "default post", html_body: "content https://example.com"}
+        })
+
+      less_popular_post =
+        fake_post!(user, "public", %{
+          post_content: %{name: "default post", html_body: "content"}
+        })
+
+      conn(user: user)
+      |> visit("/feed/explore")
+      |> assert_has("[data-id=feed] .activity_wrapper", count: 5)
+      |> within("#form_filter_select", fn session ->
+        session
+        |> PhoenixTest.select("Filter", option: "Show all Boosts")
+      end)
+      |> assert_has("[data-id=feed] [data-role=boosted_by]")
+      |> within("#form_filter_select", fn session ->
+        session
+        |> PhoenixTest.select("Filter", option: "Show all Images")
+      end)
+        |> assert_has("article img")
+    end
+  end
+
   describe "feed filters UI:" do
     test "user can toggle filter options", %{} do
       conn(user: fake_user!())
