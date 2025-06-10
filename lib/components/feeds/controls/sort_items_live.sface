@@ -69,7 +69,7 @@
     <a
       data-tip={l("Chronological")}
       class={
-        "tooltip tooltip-bottom flex gap-2 text-base-content/70 border ",
+        "lg:tooltip lg:tooltip-bottom flex gap-2 text-base-content/70 border ",
         "border-base-content/5 active !text-base-content/100": is_nil(e(@feed_filters, :sort_by, nil))
       }
     >
@@ -87,7 +87,7 @@
     <a
       data-tip={l("Most replied")}
       class={
-        "tooltip tooltip-bottom flex gap-2 text-base-content/70 border ",
+        "lg:tooltip lg:tooltip-bottom flex gap-2 text-base-content/70 border ",
         "border-base-content/5 active !text-base-content/100": e(@feed_filters, :sort_by, nil) == :num_replies
       }
     >
@@ -106,7 +106,7 @@
     <a
       data-tip={l("Most boosted")}
       class={
-        "tooltip tooltip-bottom flex gap-2 text-base-content/70 border ",
+        "lg:tooltip lg:tooltip-bottom flex gap-2 text-base-content/70 border ",
         "border-base-content/5 active !text-base-content/100": e(@feed_filters, :sort_by, nil) == :num_boosts
       }
     >
@@ -125,7 +125,7 @@
     <a
       data-tip={l("Most liked")}
       class={
-        "tooltip tooltip-bottom flex gap-2 text-base-content/70 border ",
+        "lg:tooltip lg:tooltip-bottom flex gap-2 text-base-content/70 border ",
         "border-base-content/5 active !text-base-content/100": e(@feed_filters, :sort_by, nil) == :num_likes
       }
     >

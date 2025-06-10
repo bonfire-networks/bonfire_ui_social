@@ -1,7 +1,7 @@
 <div
   data-role="subject"
   data-main-object={@viewing_main_object}
-  class="subject relative flex items-start"
+  class="subject relative mb-1 flex items-start"
 >
   {!-- <div
     data-trigger="hover"
@@ -82,23 +82,23 @@
         </div>
       </:actions>
     </Bonfire.UI.Me.UserPreviewLive> --}
-  <div data-id="subject_details" class="flex gap-2 w-full feed-clickable justify-start">
-    <div
-      class="flex items-center flex-1 gap-2"
-      role="button"
-      data-id="name_username"
-      aria-haspopup="true"
-      aria-expanded="true"
-    >
+  <div data-id="subject_details" class="flex flex-col gap-0 w-full feed-clickable justify-start">
+    <div class="flex" role="button" data-id="name_username" aria-haspopup="true" aria-expanded="true">
       <LinkLive
         :if={@profile_name}
         opts={"data-id": "subject_name", "aria-label": l("%{name}'s profile", name: @profile_name)}
         parent_id={["subject_name", @parent_id]}
-        class="link text-[15px] link-hover text-sm font-bold lg:max-w-[360px] truncate"
+        class="link text-[15px] max-w-[250px] lg:max-w-[500px] link-hover text-sm font-bold truncate"
         to={@path}
       >
         {@profile_name}
       </LinkLive>
+    </div>
+    <span
+      :if={@showing_within != :smart_input}
+      data-id="subject_secondary"
+      class="flex flex-1 items-center gap-1"
+    >
       <LinkLive
         :if={@character_username && @showing_within != :smart_input}
         opts={
@@ -106,21 +106,12 @@
           "aria-label": l("%{name}'s profile", name: @profile_name)
         }
         parent_id={["subject_username", @parent_id]}
-        class={
-          "text-sm text-[15px] truncate max-w-[220px] link link-hover ellipsis text-base-content/60 subject_username",
-          "hidden lg:block": @showing_within != :thread or !@viewing_main_object
-        }
+        class="text-sm text-[15px] truncate max-w-[150px] lg:max-w-[400px] link link-hover ellipsis text-base-content/60 subject_username"
         to={e(@subject_peered, :canonical_uri, nil) || @path}
       >
         @{@character_username}
       </LinkLive>
-    </div>
-    <span
-      :if={@showing_within != :smart_input}
-      data-id="subject_secondary"
-      class="flex items-center gap-2"
-    >
-      {!-- <span class="text-sm text-base-content/70">&nbsp;·&nbsp;</span> --}
+      <span class="text-sm text-base-content/70">&nbsp;·&nbsp;</span>
 
       <Bonfire.UI.Social.ActivityBoundaryLive
         :if={@object_type != Bonfire.Data.Social.Message and @activity_inception != "reply_to" and

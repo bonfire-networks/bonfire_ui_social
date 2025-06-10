@@ -17,7 +17,6 @@ defmodule Bonfire.UI.Social.FeedsFilters.Test do
     {:ok, %{user: user, other_user: other_user}}
   end
 
-
   describe "tabs filter buttons UI" do
     test "User can switch between feed tabs", %{user: user, other_user: other_user} do
       # Create some test content to ensure tabs are populated
@@ -28,6 +27,7 @@ defmodule Bonfire.UI.Social.FeedsFilters.Test do
       {post, _} = Fake.create_test_content(:local, user, other_user)
       # boost it
       {:ok, boost} = Boosts.boost(user, post)
+
       popular_post =
         fake_post!(user, "public", %{
           post_content: %{name: "default post", html_body: "content https://example.com"}
@@ -58,6 +58,7 @@ defmodule Bonfire.UI.Social.FeedsFilters.Test do
       {post, _} = Fake.create_test_content(:local, user, other_user)
       # boost it
       {:ok, boost} = Boosts.boost(user, post)
+
       popular_post =
         fake_post!(user, "public", %{
           post_content: %{name: "default post", html_body: "content https://example.com"}
@@ -80,7 +81,7 @@ defmodule Bonfire.UI.Social.FeedsFilters.Test do
         session
         |> PhoenixTest.select("Filter", option: "Show all Images")
       end)
-        |> assert_has("article img")
+      |> assert_has("article img")
     end
   end
 

@@ -443,7 +443,7 @@
                   {/if}
                 </LinkLive>
 
-                {raw(@verb_display)} {l(" the activity")}
+                {raw(@verb_display)}
               </div>
             </div>
           </div>

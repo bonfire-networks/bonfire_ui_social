@@ -55,7 +55,7 @@
   <div class="hidden md:flex items-center justify-evenly flex-1">
     <div
       style={if should_hide_button?(:post, :object_types, assigns), do: "display: none;", else: ""}
-      class="tooltip tooltip-bottom w-full"
+      class="lg:tooltip lg:tooltip-bottom w-full"
       data-tip="Show all posts"
       data-switch="post"
     >
@@ -79,7 +79,7 @@
            should_hide_button?(:boost, :activity_types, assigns),
          do: "display: none;",
          else: ""}
-      class="tooltip tooltip-bottom w-full"
+      class="lg:tooltip lg:tooltip-bottom w-full"
       data-tip="Show only boosts"
       data-switch="boost"
     >
@@ -100,7 +100,7 @@
 
     <div
       style={if should_hide_button?(:follow, :activity_types, assigns), do: "display: none;", else: ""}
-      class="tooltip tooltip-bottom w-full"
+      class="lg:tooltip lg:tooltip-bottom w-full"
       data-tip="Show only follows"
       data-switch="follow"
     >
@@ -121,7 +121,7 @@
 
     <div
       style={if should_hide_button?(:link, :media_types, assigns), do: "display: none;", else: ""}
-      class="tooltip tooltip-bottom w-full"
+      class="lg:tooltip lg:tooltip-bottom w-full"
       data-tip="Show only links"
       data-switch="link"
     >
@@ -142,7 +142,7 @@
 
     <div
       style={if should_hide_button?(:image, :media_types, assigns), do: "display: none;", else: ""}
-      class="tooltip tooltip-bottom w-full"
+      class="lg:tooltip lg:tooltip-bottom w-full"
       data-tip="Show only images"
       data-switch="image"
     >
@@ -163,7 +163,7 @@
 
     <div
       style={if should_hide_button?(:video, :media_types, assigns), do: "display: none;", else: ""}
-      class="tooltip tooltip-bottom w-full"
+      class="lg:tooltip lg:tooltip-bottom w-full"
       data-tip="Show only videos"
       data-switch="video"
     >
@@ -184,7 +184,7 @@
 
     <div
       style={if should_hide_button?(:audio, :media_types, assigns), do: "display: none;", else: ""}
-      class="tooltip tooltip-bottom w-full"
+      class="lg:tooltip lg:tooltip-bottom w-full"
       data-tip="Show only audios"
       data-switch="audio"
     >
@@ -205,7 +205,7 @@
 
     {!-- <div
     style={if should_hide_button?(:reply, :activity_types, assigns), do: "display: none;", else: ""}
-    class="tooltip tooltip-bottom w-full"
+    class="lg:tooltip lg:tooltip-bottom w-full"
     data-tip="Show only replies"
     data-switch="reply"
     class="w-full flex-1"
@@ -245,7 +245,7 @@
     <button
       data-tip={l("Advanced")}
       phx-click={JS.toggle(to: "#more_filters")}
-      class="btn btn-ghost tooltip tooltip-bottom btn-square text-primary"
+      class="btn btn-ghost lg:tooltip lg:tooltip-bottom btn-square text-primary"
     ><#Icon iconify="mingcute:filter-2-line" class="w-5 h-5" /></button>
   </div>
 </div>
