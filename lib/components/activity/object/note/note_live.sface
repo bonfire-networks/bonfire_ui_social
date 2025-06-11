@@ -14,9 +14,6 @@
     id={"note-#{@showing_within}-#{@parent_id}-#{id(@activity) || 'no-a'}-#{id(@object) || 'no-o'}-#{@viewing_main_object}-#{@activity_inception}"}
     prompt_external_links={@showing_within == :flags}
   >
-    {!-- x-show={if @showing_within == :thread && !@viewing_main_object, do: "show_replies"} --}
-    {!--  --}
-
     {#case e(post_content(@object), :name, nil)}
       {#match nil}
       {#match name}
@@ -25,7 +22,6 @@
           data-role="name"
           class="text-sm my-1 mt-2"
         >
-          <!-- <#Icon iconify="solar:text-bold" class="w-4 h-4" /> -->
           {rich(name)}
         </div>
     {/case}
@@ -34,34 +30,11 @@
         {#case @cw == true or (is_nil(@cw) and not is_nil(summary))}
           {#match cw}
             {#if cw and e(post_content(@object), :html_body, nil)}
-              <button
-                phx-click={%JS{}
-                |> JS.toggle(
-                  to: "#content_#{@activity_component_id}",
-                  in: "transition ease-out duration-300 transform",
-                  out: "transition ease-in duration-200 transform",
-                  time: 300
-                )
-                |> JS.toggle(to: "#content_show_more_#{@activity_component_id}")
-                |> JS.toggle(to: "#content_show_less_#{@activity_component_id}")}
-                class="flex w-full flex-1 items-start my-2 gap-2 p-2 bg-base-content/5 border border-dashed border-base-content/10 rounded-box"
-              >
-                <span data-role="cw" class="leading-[24px] text-left text-sm text-base-content/70 flex-1">{summary || l("Content Warning")}</span>
-                {!-- {#if !@hide_actions} --}
-                <div class="show_more_toggle_action normal-case btn-ghost btn btn-xs">
-                  <span id={"content_show_more_#{@activity_component_id}"} class={if !@cw, do: "hidden"}>
-                    {l("Show more")}
-                  </span>
-                  <span id={"content_show_less_#{@activity_component_id}"} class={if @cw, do: "hidden"}>
-                    {l("Show less")}
-                  </span>
-                </div>
-                {!-- {#else}
-                  <div class="normal-case btn-ghost btn btn-xs">
-                    {l("Show more")}
-                  </div>
-                {/if} --}
-              </button>
+              <Bonfire.UI.Social.Activity.CWLive
+                cw={@cw}
+                activity_component_id={@activity_component_id}
+                summary={summary}
+              />
             {#else}
               <div :if={summary} class="prose max-w-prose prose-p:pt-1">
                 {rich(summary)}
@@ -73,63 +46,23 @@
                   if !e(@activity, :media, nil), do: l("This content is not available.")}
                 {#match nil}
                 {#match html_body}
-                  <div
-                    id={"expandable_note_#{@parent_id}_#{id(@activity) || id(@object) || 'no-id'}"}
-                    data-ref={"note_ref_#{@parent_id}_#{id(@activity) || id(@object) || 'no-id'}"}
-                    data-id="object_body"
-                    data-inception={@activity_inception}
-                    data-rendered={@showing_within}
-                    data-main-object={@viewing_main_object}
-                    class={
-                      "prose break-normal leading-[24px] object_body max-w-none prose-a:text-primary prose-a:no-underline prose-a:hover:underline prose-p:mb-0 prose-p:mt-0 prose-h1:text-3xl prose-h2:text-2xl prose-h3:text-lg prose-h4:text-base prose-h5:text-base prose-h6:text-base prose-h1:mb-0 prose-h2:my-0 prose-h3:mb-0 prose-h4:mb-0 text-base-content prose-hr:!my-2",
-                      previewable_truncate: !@viewing_main_object && @showing_within != :thread
-                    }
-                  >
-                    {rich(
-                      # maybe_truncate(
-                      html_body,
-                      #  @viewing_main_object || @showing_within not in [nil, :feed, :search, :notifications]
-                      # ),
-                      # || @showing_within == :search,
-                      # remote content is stored in HTML, but local content may contain markdown and/or HTML
-                      skip_markdown: @is_remote,
-                      #  we want to sanitize rather than escape HTML in local content
-                      sanitize: !@is_remote
-                    )}
-                  </div>
+                  <Bonfire.UI.Social.Activity.HtmlBodyLive
+                    html_body={html_body}
+                    activity={@activity}
+                    object={@object}
+                    parent_id={@parent_id}
+                    showing_within={@showing_within}
+                    viewing_main_object={@viewing_main_object}
+                    activity_inception={@activity_inception}
+                  />
 
-                  <div
-                    :if={@showing_within not in [:smart_input, :thread] && !@viewing_main_object}
-                    id={"expandable_controls_#{@parent_id}_#{id(@activity) || id(@object) || 'no-id'}"}
-                    class="hidden"
-                  >
-                    <button
-                      type="button"
-                      id={"read_more_button_#{@parent_id}_#{id(@activity) || id(@object) || 'no-id'}"}
-                      phx-click={JS.remove_class("previewable_truncate",
-                        to: "#expandable_note_#{@parent_id}_#{id(@activity) || id(@object) || 'no-id'}"
-                      )
-                      |> JS.add_class("previewable_expanded",
-                        to: "#expandable_note_#{@parent_id}_#{id(@activity) || id(@object) || 'no-id'}"
-                      )
-                      |> JS.hide(to: "#read_more_button_#{@parent_id}_#{id(@activity) || id(@object) || 'no-id'}")
-                      |> JS.show(to: "#read_less_button_#{@parent_id}_#{id(@activity) || id(@object) || 'no-id'}")}
-                      class="link text-sm mt-2 font-medium link-hover link-primary normal-case"
-                    >{l("Read more")}</button>
-                    <button
-                      type="button"
-                      id={"read_less_button_#{@parent_id}_#{id(@activity) || id(@object) || 'no-id'}"}
-                      phx-click={JS.add_class("previewable_truncate",
-                        to: "#expandable_note_#{@parent_id}_#{id(@activity) || id(@object) || 'no-id'}"
-                      )
-                      |> JS.remove_class("previewable_expanded",
-                        to: "#expandable_note_#{@parent_id}_#{id(@activity) || id(@object) || 'no-id'}"
-                      )
-                      |> JS.show(to: "#read_more_button_#{@parent_id}_#{id(@activity) || id(@object) || 'no-id'}")
-                      |> JS.hide(to: "#read_less_button_#{@parent_id}_#{id(@activity) || id(@object) || 'no-id'}")}
-                      class="link text-sm mt-2 font-medium link-hover link-primary normal-case hidden"
-                    >{l("Read less")}</button>
-                  </div>
+                  <Bonfire.UI.Social.Activity.ReadMoreLive
+                    activity={@activity}
+                    object={@object}
+                    parent_id={@parent_id}
+                    showing_within={@showing_within}
+                    viewing_main_object={@viewing_main_object}
+                  />
               {/case}
             </div>
         {/case}

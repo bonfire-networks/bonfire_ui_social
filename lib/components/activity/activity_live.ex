@@ -405,11 +405,15 @@ defmodule Bonfire.UI.Social.ActivityLive do
       cw:
         if e(assigns, :activity_inception, nil) do
           # This is a reply_to, calculate CW based on reply_to data structure
-          e(object, :summary, nil) != nil || e(activity, :sensitive, :is_sensitive, nil)
+          e(activity, :sensitive, :is_sensitive, nil)
+
+          # || e(object, :summary, nil) != nil  <-- summary is not a replacement for CW now that we include article objects
         else
           # For regular activities, calculate CW normally
-          e(assigns, :cw, nil) || e(activity, :sensitive, :is_sensitive, nil) ||
-            e(object, :post_content, :summary, nil) != nil
+          e(assigns, :cw, nil) ||
+            e(activity, :sensitive, :is_sensitive, nil)
+
+          #  ||e(object, :post_content, :summary, nil) != nil <-- summary is not a replacement for CW now that we include article objects
         end,
       reply_count: e(replied, :nested_replies_count, 0) + e(replied, :direct_replies_count, 0),
       parent_id:
@@ -588,7 +592,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
       aria-label="user activity"
       tabIndex="0"
       class={
-        "p-5 activity-padding activity relative flex flex-col #{@class}",
+        "p-5 activity-padding activity relative flex flex-col gap-1 #{@class}",
         "hover:bg-base-content/5":
           @showing_within not in [:thread, :smart_input, :widget] && !@activity_inception,
         "replied !p-0 mb-8": @activity_inception && @showing_within not in [:smart_input, :thread],
@@ -833,6 +837,23 @@ defmodule Bonfire.UI.Social.ActivityLive do
                   thread_title={@thread_title}
                   is_remote={@is_remote}
                   hide_actions={@hide_actions}
+                />
+              {#match Bonfire.UI.Social.Activity.ArticleLive}
+                <Bonfire.UI.Social.Activity.ArticleLive
+                  :if={@hide_activity != "article"}
+                  __context__={@__context__}
+                  showing_within={@showing_within}
+                  parent_id={@parent_id}
+                  activity_inception={@activity_inception}
+                  activity_component_id={e(component_assigns, :activity_component_id, @activity_component_id)}
+                  activity={e(component_assigns, :activity, @activity)}
+                  object={e(component_assigns, :object, @object)}
+                  viewing_main_object={e(component_assigns, :viewing_main_object, @viewing_main_object)}
+                  cw={@cw}
+                  thread_title={@thread_title}
+                  is_remote={@is_remote}
+                  hide_actions={@hide_actions}
+                  json={e(component_assigns, :json, nil)}
                 />
               {#match _
                 when component in [
@@ -1538,9 +1559,8 @@ defmodule Bonfire.UI.Social.ActivityLive do
          object: reply_to_object,
          subject_id: subject_id,
          activity: activity,
-         cw:
-           e(activity, :sensitive, :is_sensitive, nil) ||
-             e(reply_to_object, :summary, nil) != nil
+         cw: e(activity, :sensitive, :is_sensitive, nil)
+         #  || e(reply_to_object, :summary, nil) != nil <-- summary is not a replacement for cw
        }}
     ]
   end
@@ -1664,6 +1684,10 @@ defmodule Bonfire.UI.Social.ActivityLive do
     debug("activity has no object")
     []
   end
+
+  def component_for_object_type(Bonfire.Data.Social.Post, %{post_content: %{name: name}})
+      when not is_nil(name) and name != "",
+      do: [Bonfire.UI.Social.Activity.ArticleLive]
 
   def component_for_object_type(Bonfire.Data.Social.Post, %{post_content: %{html_body: _}}),
     do: [Bonfire.UI.Social.Activity.NoteLive]

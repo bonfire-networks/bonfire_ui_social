@@ -1,0 +1,26 @@
+<div
+  id={"expandable_note_#{@parent_id}_#{id(@activity) || id(@object) || 'no-id'}"}
+  data-ref={"note_ref_#{@parent_id}_#{id(@activity) || id(@object) || 'no-id'}"}
+  data-id="object_body"
+  data-inception={@activity_inception}
+  data-rendered={@showing_within}
+  data-main-object={@viewing_main_object}
+  class={
+    "prose break-normal leading-[24px] object_body max-w-none prose-a:text-primary prose-a:no-underline prose-a:hover:underline prose-p:mb-0 prose-p:mt-0 prose-h1:font-semibold prose-h1:text-lg prose-h2:text-lg prose-h3:text-lg prose-h4:text-base prose-h5:text-base prose-h6:text-base prose-h1:mb-0 prose-h2:my-0 prose-h3:mb-0 prose-h4:mb-0 text-base-content prose-hr:!my-2",
+    previewable_truncate: !@viewing_main_object && @showing_within != :thread,
+    "!text-sm !text-base-content/70": e(@object_type, nil) == :article && @showing_within != :thread
+  }
+>
+
+ 
+  {rich(
+    # maybe_truncate(
+    @html_body,
+    #  @viewing_main_object || @showing_within not in [nil, :feed, :search, :notifications]
+    # ),
+    # remote content is stored in HTML, but local content may contain markdown and/or HTML
+    skip_markdown: @is_remote,
+    #  we want to sanitize rather than escape HTML in local content
+    sanitize: !@is_remote
+  )}
+</div>

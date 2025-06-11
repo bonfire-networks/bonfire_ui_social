@@ -1,0 +1,32 @@
+<div
+  :if={@showing_within not in [:smart_input, :thread] && !@viewing_main_object}
+  id={"expandable_controls_#{@parent_id}_#{id(@activity) || id(@object) || 'no-id'}"}
+  class="hidden"
+>
+  <button
+    type="button"
+    id={"read_more_button_#{@parent_id}_#{id(@activity) || id(@object) || 'no-id'}"}
+    phx-click={JS.remove_class("previewable_truncate",
+      to: "#expandable_note_#{@parent_id}_#{id(@activity) || id(@object) || 'no-id'}"
+    )
+    |> JS.add_class("previewable_expanded",
+      to: "#expandable_note_#{@parent_id}_#{id(@activity) || id(@object) || 'no-id'}"
+    )
+    |> JS.hide(to: "#read_more_button_#{@parent_id}_#{id(@activity) || id(@object) || 'no-id'}")
+    |> JS.show(to: "#read_less_button_#{@parent_id}_#{id(@activity) || id(@object) || 'no-id'}")}
+    class="link text-sm mt-2 font-medium link-hover link-primary normal-case"
+  >{l("Read more")}</button>
+  <button
+    type="button"
+    id={"read_less_button_#{@parent_id}_#{id(@activity) || id(@object) || 'no-id'}"}
+    phx-click={JS.add_class("previewable_truncate",
+      to: "#expandable_note_#{@parent_id}_#{id(@activity) || id(@object) || 'no-id'}"
+    )
+    |> JS.remove_class("previewable_expanded",
+      to: "#expandable_note_#{@parent_id}_#{id(@activity) || id(@object) || 'no-id'}"
+    )
+    |> JS.show(to: "#read_more_button_#{@parent_id}_#{id(@activity) || id(@object) || 'no-id'}")
+    |> JS.hide(to: "#read_less_button_#{@parent_id}_#{id(@activity) || id(@object) || 'no-id'}")}
+    class="link text-sm mt-2 font-medium link-hover link-primary normal-case hidden"
+  >{l("Read less")}</button>
+</div>

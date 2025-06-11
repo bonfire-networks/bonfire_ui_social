@@ -1,0 +1,95 @@
+<div
+  data-id="activity_article"
+  id={"article_container_#{@parent_id}_#{id(@activity) || id(@object) || 'no-id'}"}
+  data-rendered={@showing_within}
+  data-main-object={@viewing_main_object}
+  class={
+    "article previewable_activity cursor-pointer border border-base-content/10 rounded-box p-4",
+    "!max-w-full !border-0 !cursor-default !rounded-none !p-0":
+      @showing_within == :thread && @viewing_main_object
+  }
+  phx-mounted={check_expandable(id(@activity) || id(@object) || 'no-id')}
+>
+  <Bonfire.UI.Common.OpenExternalLinkLive
+    id={"article-#{@showing_within}-#{@parent_id}-#{id(@activity) || 'no-a'}-#{id(@object) || 'no-o'}-#{@viewing_main_object}-#{@activity_inception}"}
+    prompt_external_links={@showing_within == :flags}
+  >
+    <div
+      :if={@showing_within != :smart_input}
+      class={
+        "-mx-4 -mt-4 mb-4",
+        "!mt-2 mb-6": @showing_within == :thread and @viewing_main_object
+      }
+    >
+      <!-- WIP: Add the proper Image, or use a fallback: note. i'd still use a fallback for articles without images -->
+      <div
+        data-id="article_cover"
+        class={
+          "aspect-[4/3] w-full h-[220px] bg-base-200 relative lg:rounded-t-xl bg-center bg-cover bg-no-repeat",
+          "!rounded-none": @showing_within == :thread and @viewing_main_object
+        }
+        style="background-image: url('http://localhost:4000/images/bonfires.png')"
+      >
+        <p data-role="article_badge" class="absolute left-3 bottom-3 badge badge-neutral badge-sm">⁂ {l("Article")}</p>
+      </div>
+    </div>
+    {#case e(post_content(@object), :name, nil)}
+      {#match nil}
+      {#match name}
+        <div
+          data-role="name"
+          class={
+            "text-lg font-bold",
+            "!text-xl mb-3": @showing_within == :thread and @viewing_main_object
+          }
+        >
+          {rich(name)}
+        </div>
+    {/case}
+
+    <Bonfire.UI.Social.Activity.CWLive
+      :if={@cw}
+      cw={@cw}
+      activity_component_id={@activity_component_id}
+      summary={nil}
+    />
+
+    <div id={"content_#{@activity_component_id}"} class={if @cw, do: "hidden"}>
+      {#if @showing_within != :thread and e(post_content(@object), :summary, nil)}
+        <div
+          id={"expandable_note_#{@parent_id}_#{id(@activity) || id(@object) || 'no-id'}"}
+          class="prose max-w-prose prose-p:pt-1 prose-sm"
+        >
+          {rich(e(post_content(@object), :summary, nil),
+            skip_markdown: @is_remote,
+            __unsafe__: !@is_remote
+          )}
+        </div>
+      {#else}
+        {#case e(post_content(@object), :html_body, nil) ||
+            if !e(@activity, :media, nil), do: l("This content is not available.")}
+          {#match nil}
+          {#match html_body}
+            <Bonfire.UI.Social.Activity.HtmlBodyLive
+              html_body={html_body}
+              activity={@activity}
+              object={@object}
+              parent_id={@parent_id}
+              object_type={:article}
+              showing_within={@showing_within}
+              viewing_main_object={@viewing_main_object}
+              activity_inception={@activity_inception}
+            />
+
+            <Bonfire.UI.Social.Activity.ReadMoreLive
+              activity={@activity}
+              object={@object}
+              parent_id={@parent_id}
+              showing_within={@showing_within}
+              viewing_main_object={@viewing_main_object}
+            />
+        {/case}
+      {/if}
+    </div>
+  </Bonfire.UI.Common.OpenExternalLinkLive>
+</div>
