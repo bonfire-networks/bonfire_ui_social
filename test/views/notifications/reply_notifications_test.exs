@@ -40,7 +40,7 @@ defmodule Bonfire.Social.Notifications.Threads.Test do
 
       # Carl replies to Bob's post (private by default)
       attrs_reply = %{
-        post_content: %{summary: "summary", name: "name 2", html_body: "epic html reply"},
+        post_content: %{summary: "summary", html_body: "epic html reply"},
         reply_to_id: post.id
       }
 
@@ -59,7 +59,7 @@ defmodule Bonfire.Social.Notifications.Threads.Test do
        %{alice: alice, bob: bob, conn_alice: conn_alice} do
     # Alice creates a post
     attrs = %{
-      post_content: %{summary: "summary", name: "test post name", html_body: "alice's first post"}
+      post_content: %{summary: "summary", html_body: "alice's first post"}
     }
 
     {:ok, post} = Posts.publish(current_user: alice, post_attrs: attrs, boundary: "public")
@@ -68,7 +68,6 @@ defmodule Bonfire.Social.Notifications.Threads.Test do
     attrs_reply = %{
       post_content: %{
         summary: "summary",
-        name: "name 2",
         html_body: "@alice bob's reply to the post"
       },
       reply_to_id: post.id

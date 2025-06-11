@@ -17,14 +17,14 @@ defmodule Bonfire.Social.Threads.RepliesTest do
     bob = fake_user!(account2)
 
     attrs = %{
-      post_content: %{summary: "summary", name: "test post name", html_body: "<p>first post</p>"}
+      post_content: %{summary: "summary", html_body: "<p>first post</p>"}
     }
 
     assert {:ok, op} = Posts.publish(current_user: alice, post_attrs: attrs, boundary: "public")
 
     # Reply to the original post
     attrs_reply = %{
-      post_content: %{summary: "summary", name: "name 2", html_body: "<p>reply to first post</p>"},
+      post_content: %{summary: "summary", html_body: "<p>reply to first post</p>"},
       reply_to_id: op.id
     }
 

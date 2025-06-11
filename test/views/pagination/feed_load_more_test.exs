@@ -14,7 +14,7 @@ defmodule Bonfire.UI.Social.Feeds.LoadMoreTest do
 
   describe "Load more in pages" do
     test "Load more works in followers/following page" do
-      Bonfire.Common.Config.get(:default_pagination_limit, 2)
+      limit = Bonfire.Common.Config.get(:default_pagination_limit, 2)
       #  create alice user
       account = fake_account!()
       alice = fake_user!(account)
@@ -38,7 +38,7 @@ defmodule Bonfire.UI.Social.Feeds.LoadMoreTest do
       conn =
         conn(user: alice, account: account)
         |> visit("/@#{alice.character.username}/followers")
-        |> assert_has("#inner [data-id=profile_name]", count: 2)
+        |> assert_has("#inner [data-id=profile_name]", count: limit)
         |> click_button("[data-id=load_more]", "Load more")
         |> assert_has("#inner [data-id=profile_name]", count: 4)
     end
@@ -47,7 +47,7 @@ defmodule Bonfire.UI.Social.Feeds.LoadMoreTest do
     end
 
     test "Load more works in messages list" do
-      Bonfire.Common.Config.get(:default_pagination_limit, 2)
+      limit = Bonfire.Common.Config.get(:default_pagination_limit, 2)
 
       #  create alice user
       account = fake_account!()
@@ -82,7 +82,7 @@ defmodule Bonfire.UI.Social.Feeds.LoadMoreTest do
       conn =
         conn(user: alice, account: account)
         |> visit("/messages")
-        |> assert_has("[data-id=thread_participants]", count: 2)
+        |> assert_has("[data-id=thread_participants]", count: limit)
         # |> PhoenixTest.open_browser()
         |> click_button("[data-id=load_more]", "Load more")
         # |> PhoenixTest.open_browser()

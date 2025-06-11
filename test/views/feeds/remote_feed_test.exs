@@ -57,8 +57,7 @@ defmodule Bonfire.Social.UI.Feeds.RemoteFeed.Test do
       # Create a local-only post
       attrs = %{
         post_content: %{
-          summary: "summary",
-          name: "test local post name",
+          summary: "local post",
           html_body: "<p>epic html message</p>"
         }
       }
@@ -66,16 +65,16 @@ defmodule Bonfire.Social.UI.Feeds.RemoteFeed.Test do
       assert {:ok, post} =
                Posts.publish(current_user: user, post_attrs: attrs, boundary: "public")
 
-      assert post.post_content.name =~ "local post name"
+      assert post.post_content.summary =~ "local post"
 
       conn(user: user, account: account)
       |> visit("/feed/explore")
-      |> assert_has("article", text: "local post name")
+      |> assert_has("article", text: "local post")
 
       # Visit the fediverse feed and verify post is not visible
       conn(user: user, account: account)
       |> visit("/feed/remote")
-      |> refute_has("article", text: "local post name")
+      |> refute_has("article", text: "local post")
     end
   end
 end

@@ -147,18 +147,26 @@ defmodule Bonfire.UI.Social.PreloadPresetTest do
       session =
         session
         |> assert_has_or_open_browser("[data-role=subject]")
+        |> assert_has_or_open_browser("[data-id=subject_name]")
+
+      if name = e(activity, :subject, :profile, :name, nil) do
+        session
         |> assert_has_or(
           "[data-id=subject_name]",
-          [text: activity.subject.profile.name],
+          [text: name],
           fn session ->
-            if current_user(session.conn).profile.name == activity.subject.profile.name do
+            if current_user_id(session.conn) == e(activity, :subject_id, nil) do
               session
               |> assert_has_or_open_browser("[data-id=subject_name]", text: "You")
             else
-              flunk("Could not find subject's profile name in the HTML")
+              session
+              |> PhoenixTest.open_browser()
+
+              flunk("Could not find subject's profile name (#{inspect(name)}) in the HTML")
             end
           end
         )
+      end
 
       # Verify the link points to the correct profile path
       if username = e(activity, :subject, :character, :username, nil) do

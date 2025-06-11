@@ -39,8 +39,7 @@ defmodule Bonfire.UI.Social.Feeds.LoadMoreRemoveTimeFilterTest do
       today_post =
         fake_post!(alice, "public", %{
           post_content: %{
-            summary: "summary",
-            name: "Today post",
+            summary: "today's post",
             html_body: "<p>Today's post content</p>"
           },
           id: DatesTimes.now() |> DatesTimes.generate_ulid()
@@ -50,8 +49,7 @@ defmodule Bonfire.UI.Social.Feeds.LoadMoreRemoveTimeFilterTest do
       two_days_ago_post =
         fake_post!(alice, "public", %{
           post_content: %{
-            summary: "summary",
-            name: "2 days ago post",
+            summary: "2 days ago post",
             html_body: "<p>Yesterday's content</p>"
           },
           id: DatesTimes.past(2, :day) |> DatesTimes.generate_ulid()
@@ -61,8 +59,7 @@ defmodule Bonfire.UI.Social.Feeds.LoadMoreRemoveTimeFilterTest do
       three_days_ago_post =
         fake_post!(alice, "public", %{
           post_content: %{
-            summary: "summary",
-            name: "3 days ago post",
+            summary: "3 days ago post",
             html_body: "<p>Three days ago content</p>"
           },
           id: DatesTimes.past(3, :day) |> DatesTimes.generate_ulid()
@@ -72,8 +69,7 @@ defmodule Bonfire.UI.Social.Feeds.LoadMoreRemoveTimeFilterTest do
       week_old_post =
         fake_post!(alice, "public", %{
           post_content: %{
-            summary: "summary",
-            name: "Week old post",
+            summary: "Week old post",
             html_body: "<p>Week-old content</p>"
           },
           id: DatesTimes.past(7, :day) |> DatesTimes.generate_ulid()
@@ -83,8 +79,7 @@ defmodule Bonfire.UI.Social.Feeds.LoadMoreRemoveTimeFilterTest do
       month_old_post =
         fake_post!(alice, "public", %{
           post_content: %{
-            summary: "summary",
-            name: "Month old post",
+            summary: "Month old post",
             html_body: "<p>Month-old content</p>"
           },
           id: DatesTimes.past(30, :day) |> DatesTimes.generate_ulid()
@@ -94,8 +89,7 @@ defmodule Bonfire.UI.Social.Feeds.LoadMoreRemoveTimeFilterTest do
       old_post =
         fake_post!(alice, "public", %{
           post_content: %{
-            summary: "summary",
-            name: "Old post",
+            summary: "Old post",
             html_body: "<p>Post from 60 days ago</p>"
           },
           id: DatesTimes.past(60, :day) |> DatesTimes.generate_ulid()

@@ -41,13 +41,12 @@ defmodule Bonfire.Social.Feeds.LocalFeed.Test do
       attrs = %{
         post_content: %{
           summary: "summary",
-          name: "test post name",
           html_body: "<p>epic html message</p>"
         }
       }
 
       assert {:ok, post} = Posts.publish(current_user: user, post_attrs: attrs, boundary: "local")
-      assert post.post_content.name =~ "test post name"
+      assert post.post_content.summary =~ "summary"
 
       feed_id = Bonfire.Social.Feeds.named_feed_id(:local)
 
@@ -61,13 +60,12 @@ defmodule Bonfire.Social.Feeds.LocalFeed.Test do
       attrs = %{
         post_content: %{
           summary: "summary",
-          name: "test post name",
           html_body: "<p>epic html message</p>"
         }
       }
 
       assert {:ok, post} = Posts.publish(current_user: user, post_attrs: attrs, boundary: "local")
-      assert post.post_content.name =~ "test post name"
+      assert post.post_content.summary =~ "summary"
 
       feed_id = Bonfire.Social.Feeds.named_feed_id(:local)
 

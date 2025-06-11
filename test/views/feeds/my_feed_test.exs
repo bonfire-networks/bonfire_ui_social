@@ -162,19 +162,19 @@ defmodule Bonfire.Social.UI.Feeds.MyFeed.Test do
 
     # Define post content attributes 
     attrs = %{
-      post_content: %{summary: "summary", name: "test post name", html_body: "public post"}
+      post_content: %{summary: "summary", html_body: "public post"}
     }
 
     guest_attrs = %{
-      post_content: %{summary: "summary", name: "test post name", html_body: "guest_attrs post"}
+      post_content: %{summary: "summary", html_body: "guest_attrs post"}
     }
 
     local_attrs = %{
-      post_content: %{summary: "summary", name: "test post name", html_body: "local_attrs post"}
+      post_content: %{summary: "summary", html_body: "local_attrs post"}
     }
 
     admin_attrs = %{
-      post_content: %{summary: "summary", name: "test post name", html_body: "admin_attrs post"}
+      post_content: %{summary: "summary", html_body: "admin_attrs post"}
     }
 
     # Create an initial public post from Alice

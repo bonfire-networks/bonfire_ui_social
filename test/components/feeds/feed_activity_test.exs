@@ -30,7 +30,7 @@ defmodule Bonfire.UI.Social.Feeds.FeedActivityTest do
       Follows.follow(bob, alice)
 
       attrs = %{
-        post_content: %{summary: "summary", name: "test post name", html_body: "first post"}
+        post_content: %{summary: "summary", html_body: "first post"}
       }
 
       assert {:ok, post} =
@@ -38,7 +38,7 @@ defmodule Bonfire.UI.Social.Feeds.FeedActivityTest do
 
       # Reply to the original post
       attrs_reply = %{
-        post_content: %{summary: "summary", name: "name 2", html_body: "reply to post"},
+        post_content: %{summary: "summary", html_body: "reply to post"},
         reply_to_id: post.id
       }
 
@@ -78,7 +78,7 @@ defmodule Bonfire.UI.Social.Feeds.FeedActivityTest do
     feed_id = Bonfire.Social.Feeds.named_feed_id(:local)
 
     attrs = %{
-      post_content: %{summary: "summary", name: "test post name", html_body: "first post"}
+      post_content: %{summary: "summary", html_body: "first post"}
     }
 
     assert {:ok, post} = Posts.publish(current_user: alice, post_attrs: attrs, boundary: "public")
@@ -99,7 +99,7 @@ defmodule Bonfire.UI.Social.Feeds.FeedActivityTest do
     feed_id = Bonfire.Social.Feeds.named_feed_id(:local)
 
     attrs = %{
-      post_content: %{summary: "summary", name: "test post name", html_body: "first post"}
+      post_content: %{summary: "summary", html_body: "first post"}
     }
 
     assert {:ok, post} = Posts.publish(current_user: alice, post_attrs: attrs, boundary: "public")
@@ -118,7 +118,7 @@ defmodule Bonfire.UI.Social.Feeds.FeedActivityTest do
     feed_id = Bonfire.Social.Feeds.named_feed_id(:local)
 
     attrs = %{
-      post_content: %{summary: "summary", name: "test post name", html_body: "first post"}
+      post_content: %{summary: "summary", html_body: "first post"}
     }
 
     assert {:ok, post} = Posts.publish(current_user: alice, post_attrs: attrs, boundary: "public")
@@ -138,7 +138,7 @@ defmodule Bonfire.UI.Social.Feeds.FeedActivityTest do
     feed_id = Bonfire.Social.Feeds.named_feed_id(:local)
 
     attrs = %{
-      post_content: %{summary: "summary", name: "test post name", html_body: "first post"}
+      post_content: %{summary: "summary", html_body: "first post"}
     }
 
     assert {:ok, post} = Posts.publish(current_user: alice, post_attrs: attrs, boundary: "public")
@@ -157,7 +157,7 @@ defmodule Bonfire.UI.Social.Feeds.FeedActivityTest do
     feed_id = Bonfire.Social.Feeds.named_feed_id(:local)
 
     attrs = %{
-      post_content: %{summary: "summary", name: "test post name", html_body: "first post"}
+      post_content: %{summary: "summary", html_body: "first post"}
     }
 
     assert {:ok, post} = Posts.publish(current_user: alice, post_attrs: attrs, boundary: "public")

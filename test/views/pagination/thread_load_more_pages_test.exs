@@ -24,7 +24,6 @@ defmodule Bonfire.UI.Social.Threads.LoadMoreTest do
       attrs = %{
         post_content: %{
           summary: "summary",
-          name: "test post name",
           html_body: "<p>epic html message</p>"
         }
       }

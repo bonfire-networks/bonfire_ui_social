@@ -65,7 +65,7 @@
         {#for {%{} = m, counter} <- Enum.with_index(@multimedia_list)}
           {#if @showing_within != :smart_input}
             {#case {Bonfire.Files.Media.media_label(m) || l("Untitled media"),
-               String.starts_with?(m.media_type, ["video"])}}
+               String.starts_with?(m.media_type || "", "video")}}
               {#match {media_label, is_video?}}
                 <article class="m-entry relative h-full w-full row-span-4 object-cover">
                   <div
