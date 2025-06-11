@@ -1836,6 +1836,7 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
       # {Bonfire.Data.Social.Post, Bonfire.UI.Social.Activity.NoteLive.preloads()}, # only needed if we no longer preload the post_content by default
       # to follow Pointer
       if(:per_media not in preload, do: Bonfire.Files.Media),
+      Bonfire.Data.Social.APActivity,
       {Bonfire.Poll.Question,
        Utils.maybe_apply(Bonfire.Poll.Web.Preview.QuestionLive, :preloads, [],
          fallback_return: nil
