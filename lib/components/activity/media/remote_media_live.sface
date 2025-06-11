@@ -20,26 +20,27 @@
                 {#case e(@media, :metadata, "oembed", "html", nil)}
                   {#match nil}
                     {#if is_binary(media_url)}
-                      {#if String.ends_with?(media_url, [".mp4", ".mkv"])}
+                      {#if Bonfire.Files.has_extension?(media_url, [".mp4", ".mkv"])}
                         <video class={@base_css, @video_css} controls autoplay={@autoplay} muted={@muted}>
                           <source src={media_url} type="video/mp4" preload="none">
                           Your browser does not support the video tag.
                         </video>
-                      {#elseif String.ends_with?(media_url, [".ogg", ".ogv", ".ogx", ".ogm", ".spx", ".mov", ".opus"])}
+                      {#elseif Bonfire.Files.has_extension?(media_url, [".ogg", ".ogv", ".ogx", ".ogm", ".spx", ".mov", ".opus"])}
                         <video class={@base_css, @video_css} controls autoplay={@autoplay} muted={@muted} preload="none">
                           <source src={media_url} type="video/ogg">
                           Your browser does not support the video tag.
                         </video>
-                      {#elseif String.ends_with?(media_url, ".webm")}
+                      {#elseif Bonfire.Files.has_extension?(media_url, [".webm"])}
                         <video class={@base_css, @video_css} controls autoplay={@autoplay} muted={@muted} preload="none">
                           <source src={media_url} type="video/webm">
                           Your browser does not support the video tag.
                         </video>
-                      {#elseif String.ends_with?(media_url, [".mp3", ".m4a", ".oga", ".flac", ".aac", ".wav", ".caf"]) or
-                          String.ends_with?(e(@media, :media_type, ""), "audio")}
+                      {#elseif MediaLive.is_supported_audio_format?(@media.path, e(@media, :media_type, nil)) or
+                          e(@media, :media_type, nil) == "audio"}
                         <div class="relative rounded rounded-b-none p-2 w-full">
                           <div class="flex items-center gap-3">
                             {#case MediaLive.preview_img(@media)}
+                              {#match nil}
                               {#match media_img}
                                 <div :if={MediaLive.is_image?(media_img)} class="bg-base-200">
                                   <LazyImage
@@ -61,7 +62,10 @@
                             {/case}
                           </div>
                           <audio controls autoplay={@autoplay} class={@base_css} preload="none">
-                            <source src={media_url} type={"audio/#{Bonfire.Files.file_extension_only(media_url) || "mp3"}"}>
+                            <source
+                              src={media_url}
+                              type={e(@media, :media_type, nil) || "audio/#{Bonfire.Files.file_extension_only(media_url) || "mp3"}"}
+                            />
                             Your browser does not support the audio tag.
                             {!-- <a href={media_url}> {l "Download audio"} </a> --}
                           </audio>

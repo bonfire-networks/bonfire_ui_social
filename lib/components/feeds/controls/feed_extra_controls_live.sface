@@ -129,6 +129,26 @@
   />
 
   <Bonfire.UI.Social.ToggleTypeLive
+    label={l("Books")}
+    key="Edition"
+    field={:object_types}
+    feed_filters={@feed_filters}
+    event_target={@event_target}
+    event_name={@event_name}
+    label_default={l("Include")}
+  />
+
+  <Bonfire.UI.Social.ToggleTypeLive
+    label={l("Events")}
+    key={:Event}
+    field={:object_types}
+    feed_filters={@feed_filters}
+    event_target={@event_target}
+    event_name={@event_name}
+    label_default={l("Include")}
+  />
+
+  <Bonfire.UI.Social.ToggleTypeLive
     label={l("Research publications")}
     key={:research}
     field={:media_types}
@@ -162,7 +182,8 @@
     />
   {/for}
 
-  {#for key when key not in [:post, "post"] <- @feed_filters[:object_types] || []}
+  {#for key when key not in [:post, "post", Bonfire.Data.Social.Post, :Event, "Event", "Edition"] <-
+      @feed_filters[:object_types] || []}
     <Bonfire.UI.Social.ToggleTypeLive
       label={String.capitalize(to_string(key))}
       key={key}

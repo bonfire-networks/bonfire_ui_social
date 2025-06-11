@@ -8,7 +8,7 @@
         <div>
           {#case MediaLive.preview_img(@media) || Media.media_url(@media)}
             {#match maybe_preview_img}
-              {#if MediaLive.is_image?(maybe_preview_img)}
+              {#if maybe_preview_img && MediaLive.is_image?(maybe_preview_img)}
                 <LazyImage
                   parent_id={["audio", @parent_id, id(@media)]}
                   class="w-full rounded-l-lg !object-cover m-image"

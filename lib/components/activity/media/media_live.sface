@@ -76,7 +76,7 @@
                     {!-- FIXME: enable_fallback for logged out visitors instead of just not using the modal --}
                     <!-- {#if current_user_id(@__context__)} -->
                     {#if is_video?}
-                      {#if String.ends_with?(m.path, e(@multimedia_exts, []))}
+                      {#if is_supported_video_format?(m.path, m.media_type)}
                         <Bonfire.UI.Social.Activity.VideoUploadedLive
                           media={m}
                           media_label={media_label}
@@ -92,7 +92,7 @@
                         />
                       {/if}
                     {#else}
-                      {#if String.ends_with?(m.path, e(@multimedia_exts, []))}
+                      {#if is_supported_multimedia_format?(m.path, m.media_type)}
                         <Bonfire.UI.Social.Activity.RemoteMediaLive
                           media={m}
                           muted={@muted}

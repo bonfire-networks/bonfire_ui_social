@@ -1,6 +1,8 @@
 defmodule Bonfire.UI.Social.Activity.MediaLive do
   use Bonfire.UI.Common.Web, :stateless_component
 
+  alias Bonfire.Files
+
   prop media, :any, default: nil
   prop label, :string, default: nil
 
@@ -16,10 +18,21 @@ defmodule Bonfire.UI.Social.Activity.MediaLive do
   prop css_borders, :css_class, default: "border border-base-content/10 rounded-md"
   prop small_icon, :boolean, default: false
 
-  @image_exts [".jpg", ".jpeg", ".png", ".gif", ".webp", ".svg", ".apng"]
   @image_types ["image", "photo"]
-  @multimedia_exts [".mp4", ".mkv", ".ogv", ".ogg", ".mp3", ".mpa", ".webm", ".mov"]
-  @multimedia_types ["video", "embed", "audio", "song", "rich"]
+  @image_formats ["jpg", "jpeg", "png", "gif", "webp", "svg", "apng"]
+  @image_exts Enum.map(@image_formats, &".#{&1}")
+
+  @audio_types ["audio", "song"]
+  @audio_formats ["m4a", "oga", "ogg", "mp3", "flac", "mpa", "mpeg", "aac", "caf", "wav"]
+  @audio_exts Enum.map(@audio_formats, &".#{&1}")
+
+  @video_types ["video"]
+  @video_formats ["mp4", "mkv", "ogv", "ogg", "webm", "mov", "mpeg"]
+  @video_exts Enum.map(@audio_formats, &".#{&1}")
+
+  @multimedia_formats @audio_formats ++ @video_formats
+  @multimedia_exts @audio_exts ++ @video_exts
+  @multimedia_types @audio_types ++ @video_types ++ ["embed", "rich"]
 
   prop multimedia_exts, :list, default: @multimedia_exts
   prop multimedia_types, :list, default: @multimedia_types
@@ -46,11 +59,11 @@ defmodule Bonfire.UI.Social.Activity.MediaLive do
       |> Enum.reduce({[], [], []}, fn m, {image_list, multimedia_list, link_list} ->
         cond do
           String.starts_with?(m.media_type || "", @image_types) or
-              String.ends_with?(m.path || "", @image_exts) ->
+              Files.has_extension?(m.path || "", @image_exts) ->
             {[m | image_list], multimedia_list, link_list}
 
           String.starts_with?(m.media_type || "", @multimedia_types) or
-              String.ends_with?(m.path || "", @multimedia_exts) ->
+              Files.has_extension?(m.path || "", @multimedia_exts) ->
             {image_list, [m | multimedia_list], link_list}
 
           true ->
@@ -105,13 +118,37 @@ defmodule Bonfire.UI.Social.Activity.MediaLive do
     []
   end
 
-  def is_image?(url) when is_binary(url), do: String.ends_with?(url || "", @image_exts)
-  def is_image?(_url), do: nil
+  def is_image?(url), do: Files.has_extension?(url || "", @image_exts)
 
-  def is_image?(url, media_type) when is_binary(url),
-    do: String.ends_with?(url, @image_exts) or String.starts_with?(media_type || "", @image_types)
+  def is_image?(url, media_type),
+    do: is_image?(url) or String.starts_with?(media_type || "", @image_types)
 
-  def is_image?(_url, _), do: nil
+  def is_multimedia?(url), do: Files.has_extension?(url || "", @multimedia_exts)
+
+  def is_multimedia?(url, media_type),
+    do: is_multimedia?(url) or String.starts_with?(media_type || "", @multimedia_types)
+
+  def is_supported_multimedia_format?(url, media_type),
+    do:
+      is_multimedia?(url, media_type) and String.ends_with?(media_type || "", @multimedia_formats)
+
+  def is_video?(url), do: Files.has_extension?(url || "", @video_exts)
+
+  def is_video?(url, media_type),
+    do: is_video?(url) or String.starts_with?(media_type || "", @video_types)
+
+  def is_supported_video_format?(url, media_type),
+    do: is_video?(url, media_type) and String.ends_with?(media_type || "", @video_formats)
+
+  def is_audio?(url), do: Files.has_extension?(url, @audio_exts)
+
+  def is_audio?(url, media_type),
+    do: is_audio?(url) or String.starts_with?(media_type || "", @audio_types)
+
+  def is_supported_audio_format?(url, media_type),
+    do: is_audio?(url, media_type) and String.ends_with?(media_type || "", @audio_formats)
+
+  def is_supported_audio_format?(_url, _), do: false
 
   # def multimedia_list(media) do
   #   Enum.filter(List.wrap(media), fn m ->

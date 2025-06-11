@@ -1742,15 +1742,18 @@ defmodule Bonfire.UI.Social.ActivityLive do
         Enum.any?(types, &(&1 == "Event")) ->
           {l("Event"), Bonfire.UI.Social.Activity.EventActivityStreamsLive}
 
+        # NOTE: probably not used now as they're being created as Media
         Enum.any?(types, &(&1 == "Video")) ->
           {l("Video"), Bonfire.UI.Social.Activity.VideoActivityStreamsLive}
 
-        Enum.any?(types, &(&1 == "Edition")) ->
+        Enum.any?(types, &(&1 == "Edition" || &1 == "Book")) ->
           {l("Edition"), Bonfire.UI.Social.Activity.BookActivityStreamsLive}
 
+        # NOTE: probably not used now as Article is being created as a Post and Page as Media
         Enum.any?(types, &(&1 == "Article" || &1 == "Page")) ->
           {l("Article"), Bonfire.UI.Social.Activity.ArticleActivityStreamsLive}
 
+        # NOTE: probably not used now as they're being created as Media
         Enum.any?(types, &(&1 == "Audio" || &1 == "PodcastEpisode")) ->
           {l("Audio"), Bonfire.UI.Social.Activity.AudioActivityStreamsLive}
 
