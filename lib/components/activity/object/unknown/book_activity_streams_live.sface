@@ -59,8 +59,12 @@
             <div class="flex  items-center mt-2 gap-2">
               <#Icon iconify="carbon:building" class="w-4 h-4 text-base-content/70" />
               <div class="flex items-baseline text-base-content/70 text-sm">
-                {l("Published in")}
-                {DatesTimes.format(published_date, format: :y)} {l("by")} {List.first(object_field(@json, "publishers"))}
+                {l("Published in %{year}", year: DatesTimes.format(published_date, format: :y) || published_date)}
+                {} {#case List.first(object_field(@json, "publishers") || [])}
+                  {#match nil}
+                  {#match publisher}
+                    {l("by")} {publisher}
+                {/case}
               </div>
             </div>
         {/case}
@@ -69,7 +73,7 @@
       {!-- Publisher --}
       {!-- <div class="flex items-center mt-2 gap-2">
         <div class="flex items-baseline text-base-content/70 text-sm">
-          <span :if={object_field(@json, "publishers")} class="">{List.first(object_field(@json, "publishers"))} {l("Publisher")}</span>
+          <span :if={object_field(@json, "publishers")} class="">{List.first(object_field(@json, "publishers") || [])} {l("Publisher")}</span>
         </div>
       </div> --}
 

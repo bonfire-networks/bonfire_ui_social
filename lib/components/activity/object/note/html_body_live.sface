@@ -11,8 +11,6 @@
     "!text-sm !text-base-content/70": e(@object_type, nil) == :article && @showing_within != :thread
   }
 >
-
- 
   {rich(
     # maybe_truncate(
     @html_body,
