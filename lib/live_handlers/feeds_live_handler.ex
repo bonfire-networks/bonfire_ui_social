@@ -993,10 +993,16 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
               end
             rescue
               e ->
+                # error(
+                #   e,
+                #   "There was an error when trying to load the feed. Error raised by feed_assigns"
+                # )
                 err(
                   e,
                   "There was an error when trying to load the feed. Error raised by feed_assigns"
                 )
+
+                err(__STACKTRACE__, "Stacktrace")
 
                 assign_error(socket, "There was an error when trying to load the feed.", pid)
             end

@@ -23,9 +23,7 @@ defmodule Bonfire.UI.Social.Activity.NoteLive do
     ]
 
   def post_content(object) do
-    (e(object, :post_content, nil) || object)
-    |> flood("pccc")
-
+    e(object, :post_content, nil) || object
     # |> debug("activity_note_object")
   end
 
