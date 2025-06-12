@@ -1,7 +1,7 @@
 <div class={
   "flex flex-col flex-1",
   "!max-w-[720px] mx-auto w-full": !current_user_id(@__context__)
-}>
+} :hook="PreviewScrollTop">
   <div class="flex-1">
     {!-- INITIAL POST --}
     <div class="relative">
