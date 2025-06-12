@@ -11,7 +11,6 @@
     <div
       :if={!@hide_filters and current_user_id(@__context__)}
       id="feed_controls_wrapper"
-      class="lg:mb-3"
     >
       <StatelessComponent
         module={if Settings.get([Bonfire.UI.Social, :use_lite_feed_controls], false,
