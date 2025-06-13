@@ -1,65 +1,69 @@
 <div class="rounded-box border border-base-content/10 h-full text-center items-center justify-center">
-  <div class="relative rounded-t-box bg-base-100">
-    <button
-      class={"w-full relative remote_media_#{id(@media)}"}
-      type="button"
-      phx-click={if !e(@media, :metadata, "canonical_media", nil), do: JS.toggle(to: ".remote_media_#{id(@media)}")}
-    >
-      {#case MediaLive.preview_img(@media) || Media.media_url(@media)}
-        {#match maybe_preview_img}
-          {#if maybe_preview_img && MediaLive.is_image?(maybe_preview_img)}
-            <LazyImage
-              parent_id={["video", @parent_id, id(@media)]}
-              class="w-full rounded-t-box !object-cover m-image cursor-pointer aspect-video"
-              media={@media}
-              alt={@media_label}
-              src={maybe_preview_img}
-              fallback_icon="majesticons:video"
-            />
-          {#else}
-            <div class="h-60 flex items-center place-content-center rounded-t-box">
-              <#Icon iconify="majesticons:video" class="w-full h-32 text-base-content/70" />
+  {#case MediaLive.is_supported_multimedia_format?(@media.path, @media.media_type)}
+    {#match playable?}
+      <div class="relative rounded-t-box bg-base-100">
+        <button
+          class={"w-full relative remote_media_#{id(@media)}"}
+          type="button"
+          phx-click={if playable? && !e(@media, :metadata, "canonical_media", nil),
+            do: JS.toggle(to: ".remote_media_#{id(@media)}")}
+        >
+          {#case MediaLive.preview_img(@media) || Media.media_url(@media)}
+            {#match maybe_preview_img}
+              {#if maybe_preview_img && MediaLive.is_image?(maybe_preview_img)}
+                <LazyImage
+                  parent_id={["video", @parent_id, id(@media)]}
+                  class="w-full rounded-t-box !object-cover m-image cursor-pointer aspect-video"
+                  media={@media}
+                  alt={@media_label}
+                  src={maybe_preview_img}
+                  fallback_icon="majesticons:video"
+                />
+              {#else}
+                <div class="h-60 flex items-center place-content-center rounded-t-box">
+                  <#Icon iconify="majesticons:video" class="w-32 h-32 text-base-content/70" />
+                </div>
+              {/if}
+          {/case}
+          <div class="absolute inset-0 w-full h-full flex items-center place-content-center">
+            <div class="bg-gray-900/60 z-50 gap-4 px-4 h-12 rounded flex justify-center items-center place-content-center">
+              <LinkLive
+                to={e(@media, :metadata, "canonical_media", nil)}
+                parent_id={["video_link", id(@media), @showing_within, @parent_id]}
+                class=""
+              >
+                <#Icon iconify="heroicons:play-20-solid" class="w-6 h-6 hover:text-white text-gray-300" />
+              </LinkLive>
+              <a href={Media.media_url(@media)} target="_blank">
+                <#Icon iconify="heroicons-outline:external-link" class="w-6 h-6 hover:text-white text-gray-300" />
+              </a>
             </div>
-          {/if}
-      {/case}
-      <div class="absolute inset-0 w-full h-full flex items-center place-content-center">
-        <div class="bg-gray-900/60 z-50 gap-4 px-4 h-12 rounded flex justify-center items-center place-content-center">
-          <LinkLive
-            to={e(@media, :metadata, "canonical_media", nil)}
-            parent_id={["video_link", id(@media), @showing_within, @parent_id]}
-            class=""
-          >
-            <#Icon iconify="heroicons:play-20-solid" class="w-6 h-6 hover:text-white text-gray-300" />
-          </LinkLive>
-          <a href={Media.media_url(@media)} target="_blank">
-            <#Icon iconify="heroicons-outline:external-link" class="w-6 h-6 hover:text-white text-gray-300" />
-          </a>
+          </div>
+        </button>
+        <div
+          :if={playable? && !e(@media, :metadata, "canonical_media", nil)}
+          class={"remote_media_#{id(@media)}"}
+          style="display: none;"
+        >
+          <Bonfire.UI.Social.Activity.RemoteMediaLive
+            media={@media}
+            muted={@muted}
+            autoplay={@autoplay}
+            parent_id={@parent_id}
+          />
         </div>
       </div>
-    </button>
-    <div
-      :if={!e(@media, :metadata, "canonical_media", nil)}
-      class={"remote_media_#{id(@media)}"}
-      style="display: none;"
-    >
-      <Bonfire.UI.Social.Activity.RemoteMediaLive
-        media={@media}
-        muted={@muted}
-        autoplay={@autoplay}
-        parent_id={@parent_id}
-      />
-    </div>
-  </div>
 
-  <div class="">
-    <div class="p-2 flex flex-col gap-0">
-      {#case MediaLive.provider(@media)}
-        {#match nil}
-        {#match provider}
-          <span class="text-sm text-left text-base-content/70">{provider}</span>
-      {/case}
-      <div class="font-semibold text-left">{@media_label}</div>
-    </div>
-  </div>
-  <figcaption class="sr-only">{@media_label}</figcaption>
+      <div class="">
+        <div class="p-2 flex flex-col gap-0">
+          {#case MediaLive.provider(@media)}
+            {#match nil}
+            {#match provider}
+              <span class="text-sm text-left text-base-content/70">{provider}</span>
+          {/case}
+          <div class="font-semibold text-left">{@media_label}</div>
+        </div>
+      </div>
+      <figcaption class="sr-only">{@media_label}</figcaption>
+  {/case}
 </div>

@@ -18,6 +18,7 @@ defmodule Bonfire.UI.Social.Activity.MediaLive do
   prop css_borders, :css_class, default: "border border-base-content/10 rounded-md"
   prop small_icon, :boolean, default: false
 
+  # TODO: move all these to config (and move to Bonfire.Files)
   @image_types ["image", "photo"]
   @image_formats ["jpg", "jpeg", "png", "gif", "webp", "svg", "apng"]
   @image_exts Enum.map(@image_formats, &".#{&1}")

@@ -89,7 +89,10 @@
                         </div>
                     {/case}
 
-                    <div class="mt-2 text-sm text-justify text-base-content/90 line-clamp-5 break-words">
+                    <div class={
+                      "mt-2 text-sm text-justify text-base-content/90 break-words",
+                      "line-clamp-5": @showing_within in [:feed, :profile]
+                    }>
                       {raw(
                         e(@metadata, "citation_abstract", nil) || e(@metadata, "abstractNote", nil) ||
                           Bonfire.Files.Media.description(@media) |> Text.text_only()

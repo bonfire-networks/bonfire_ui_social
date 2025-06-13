@@ -5,7 +5,7 @@
 
   <h2 class="mb-2 text-xl font-medium text-base-content">
     {rich(
-      object_field(debug(@json, "apjson"), "name") || object_field(@json, "title") ||
+      object_field(flood(@json, "apjson"), "name") || object_field(@json, "title") ||
         l("Unsupported object type")
     )}
   </h2>

@@ -67,13 +67,19 @@
         {#match media_label}
           <div
             data-id="media_title"
-            class="text-base line-clamp-2 font-semibold text-pretty md:text-balanced"
+            class={
+              "text-base font-semibold text-pretty md:text-balanced",
+              "line-clamp-2": @showing_within in [:feed, :profile]
+            }
           >
             {media_label ||
               if @media.media_type == "link", do: e(@media, :path, nil), else: l("View")}
           </div>
 
-          <div class="break-all text-sm break-words line-clamp-2 text-base-content/70">
+          <div class={
+            "break-all text-sm break-words text-base-content/70",
+            "line-clamp-4": @showing_within in [:feed, :profile]
+          }>
             {raw(Text.maybe_sane_html(Bonfire.Files.Media.description(@media)))}
           </div>
 

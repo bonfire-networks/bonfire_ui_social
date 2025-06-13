@@ -1807,7 +1807,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
     do: [Bonfire.UI.Me.Preview.CharacterLive]
 
   defp component_object_fallback(type, %{} = object) when type == Bonfire.Files.Media,
-    do: [{Bonfire.UI.Social.Activity.MediaLive, %{media: object, showing_within: :media}}]
+    do: [{Bonfire.UI.Social.Activity.MediaLive, %{media: object}}]
 
   defp component_object_fallback(type, %{named: %{name: name}} = object)
        when type == Bonfire.Tag.Hashtag do

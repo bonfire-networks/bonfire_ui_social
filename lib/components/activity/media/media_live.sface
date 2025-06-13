@@ -60,12 +60,14 @@
         data-media={num_medias}
         data-rendered={@showing_within}
         data-main-object={@viewing_main_object}
-        class="grid max-h-[380px] w-full grid-flow-col grid-with-ratio grid-rows-4 gap-1 mt-3"
+        class={
+          "grid  w-full grid-flow-col grid-with-ratio grid-rows-4 gap-1 mt-3",
+          "max-h-[380px]": @showing_within in [:feed, :profile]
+        }
       >
         {#for {%{} = m, counter} <- Enum.with_index(@multimedia_list)}
           {#if @showing_within != :smart_input}
-            {#case {Bonfire.Files.Media.media_label(m) || l("Untitled media"),
-               String.starts_with?(m.media_type || "", "video")}}
+            {#case {Bonfire.Files.Media.media_label(m), String.starts_with?(m.media_type || "", "video")}}
               {#match {media_label, is_video?}}
                 <article class="m-entry relative h-full w-full row-span-4 object-cover">
                   <div
@@ -76,36 +78,39 @@
                     {!-- FIXME: enable_fallback for logged out visitors instead of just not using the modal --}
                     <!-- {#if current_user_id(@__context__)} -->
                     {#if is_video?}
-                      {#if is_supported_video_format?(m.path, m.media_type)}
+                      <!-- {#if is_supported_video_format?(m.path, m.media_type)}
                         <Bonfire.UI.Social.Activity.VideoUploadedLive
                           media={m}
                           media_label={media_label}
                           muted={@muted || @cw || @showing_within == :flags}
                           parent_id={@parent_id}
                         />
-                      {#else}
-                        <Bonfire.UI.Social.Activity.VideoLinkLive
-                          media={m}
-                          media_label={media_label}
-                          muted={@muted || @cw || @showing_within == :flags}
-                          parent_id={@parent_id}
-                        />
-                      {/if}
+                      {#else} -->
+                      <Bonfire.UI.Social.Activity.VideoLinkLive
+                        media={m}
+                        media_label={media_label}
+                        autoplay={@autoplay || (@viewing_main_object && !@cw && @showing_within != :flags)}
+                        muted={@muted || @cw || @showing_within == :flags}
+                        parent_id={@parent_id}
+                      />
+                      <!-- {/if} -->
                     {#else}
-                      {#if is_supported_multimedia_format?(m.path, m.media_type)}
+                      <!-- {#if is_supported_multimedia_format?(m.path, m.media_type)}
                         <Bonfire.UI.Social.Activity.RemoteMediaLive
                           media={m}
                           muted={@muted}
                           autoplay={@autoplay || @cw || @showing_within == :flags}
                         />
-                      {#else}
-                        <Bonfire.UI.Social.Activity.AudioLive
-                          media={m}
-                          media_label={media_label}
-                          autoplay={@autoplay || @cw || @showing_within == :flags}
-                          parent_id={@parent_id}
-                        />
-                      {/if}
+                      {#else} -->
+                      <Bonfire.UI.Social.Activity.AudioLive
+                        media={m}
+                        media_label={media_label}
+                        autoplay={@autoplay || (@viewing_main_object && !@cw && @showing_within != :flags)}
+                        muted={@muted}
+                        parent_id={@parent_id}
+                        showing_within={@showing_within}
+                      />
+                      <!-- {/if} -->
                     {/if}
                     {!-- else if logged out: --}
                     {!-- {#else}
@@ -249,7 +254,10 @@
                             parent_id={@parent_id}
                           />
                           <div class="fixed z-20 bottom-0 left-0 bg-black/30 right-0">
-                            <div class="line-clamp-6 text-center text-sm p-4 text-white/90 mx-auto">{media_label}
+                            <div class={
+                              "text-center text-sm p-4 text-white/90 mx-auto",
+                              "line-clamp-6": @showing_within in [:feed, :profile]
+                            }>{media_label}
                               <p class="text-sm">{Bonfire.Files.Media.description(m.metadata)}</p>
                             </div>
                           </div>
