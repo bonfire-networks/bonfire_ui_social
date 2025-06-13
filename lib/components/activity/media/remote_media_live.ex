@@ -5,7 +5,7 @@ defmodule Bonfire.UI.Social.Activity.RemoteMediaLive do
   prop media, :map, default: nil
 
   prop muted, :boolean, default: false
-  prop autoplay, :boolean, default: true
+  prop autoplay, :any, default: true
 
   prop base_css, :css_class, default: "max-w-screen w-full"
 

@@ -6,7 +6,7 @@ defmodule Bonfire.UI.Social.Activity.VideoUploadedLive do
   prop metadata, :map, default: nil
   prop showing_within, :atom, default: nil
   prop muted, :boolean, default: false
-  prop autoplay, :boolean, default: true
+  prop autoplay, :any, default: false
   prop parent_id, :any, default: nil
 
   def update(_assign, socket) do

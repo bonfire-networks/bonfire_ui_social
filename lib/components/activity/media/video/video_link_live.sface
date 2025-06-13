@@ -3,6 +3,7 @@
     {#match playable?}
       <div class="relative rounded-t-box bg-base-100">
         <button
+          :if={!@autoplay}
           class={"w-full relative remote_media_#{id(@media)}"}
           type="button"
           phx-click={if playable? && !e(@media, :metadata, "canonical_media", nil),
@@ -43,7 +44,7 @@
         <div
           :if={playable? && !e(@media, :metadata, "canonical_media", nil)}
           class={"remote_media_#{id(@media)}"}
-          style="display: none;"
+          style={if !@autoplay, do: "display: none;", else: ""}
         >
           <Bonfire.UI.Social.Activity.RemoteMediaLive
             media={@media}
