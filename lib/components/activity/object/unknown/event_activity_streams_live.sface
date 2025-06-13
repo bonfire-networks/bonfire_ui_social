@@ -1,3 +1,14 @@
+{#if @showing_within == :smart_input}
+  <div class="">
+    <div class="flex badge badge-neutral items-center gap-2 font-semibold">
+      <#Icon iconify="ph:calendar-blank-bold" class="w-4 h-4" />
+      {l("Event")}
+    </div>
+    <h2 class="mt-2 font-semibold text-base-content">
+        {rich(object_field(debug(@json, "apjson"), "name") || l("Untitled event"))}
+    </h2>
+  </div>
+{#else}
 <div class="rounded-box border border-base-content/10">
   {#case object_field(@json, "attachment")}
     {#match nil}
@@ -62,8 +73,9 @@
         </div>
     {/case}
 
-    <article class={"mt-4 text-base-content prose max-w-prose ", "text-base-content/70 prose-sm line-clamp-4": !@viewing_main_object}>
+    <article class={"mt-4 text-base-content prose max-w-prose ", "text-base-content/70 prose-sm line-clamp-2": !@viewing_main_object}>
       {rich(object_field(@json, "content"))}
     </article>
   </div>
 </div>
+{/if}

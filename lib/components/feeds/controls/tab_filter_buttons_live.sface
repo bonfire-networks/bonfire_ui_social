@@ -1,3 +1,4 @@
+<!-- TODO: Make it configurable by the user -->
 <div class="flex gap-1 items-center justify-between" id="tab-filter-buttons-container">
   <!-- Mobile select dropdown (visible on mobile only) -->
   <div class="md:hidden mr-3">
@@ -43,12 +44,16 @@
             selected={Bonfire.UI.Social.FeedControlsLiteLive.is_only_included?(:video, :media_types, @feed_filters)}
           >{l("Show all Videos")}</option>
         {/if}
-        {#if not should_hide_button?(:audio, :media_types, assigns)}
+        <!-- {#if not should_hide_button?(:audio, :media_types, assigns)}
           <option
             value="media_types:audio"
             selected={Bonfire.UI.Social.FeedControlsLiteLive.is_only_included?(:audio, :media_types, @feed_filters)}
           >{l("Show all Audio")}</option>
-        {/if}
+        {/if} -->
+        <option
+          value="object_types:Event"
+          selected={Bonfire.UI.Social.FeedControlsLiteLive.is_only_included?("Event", :object_types, @feed_filters)}
+        >{l("Show all Events")}</option>
       </select>
     </form>
   </div>
@@ -182,7 +187,7 @@
       </button>
     </div>
 
-    <div
+    <!-- <div
       style={if should_hide_button?(:audio, :media_types, assigns), do: "display: none;", else: ""}
       class="lg:tooltip lg:tooltip-bottom w-full"
       data-tip="Show only audios"
@@ -200,6 +205,26 @@
       >
         <#Icon iconify="lucide:audio-lines" class="w-5 h-5" />
         <span class="sr-only">{l("Audio")}</span>
+      </button>
+    </div> -->
+    <div
+      style={if should_hide_button?("Event", :object_types, assigns), do: "display: none;", else: ""}
+      class="lg:tooltip lg:tooltip-bottom w-full"
+      data-tip="Show only events"
+      data-switch="event"
+    >
+      <button
+        data-id="filter-events"
+        class={@get_button_class.("Event", :object_types, @feed_filters)}
+        phx-click="set_filter"
+        phx-value-toggle="object_types"
+        phx-value-toggle_type="Event"
+        phx-value-toggle_value={@get_tab_toggle_value.("Event", :object_types, @feed_filters)}
+        phx-value-tab_mode="true"
+        phx-target={@event_target}
+      >
+        <#Icon iconify="ph:calendar-blank-bold" class="w-5 h-5" />
+        <span class="sr-only">{l("Events")}</span>
       </button>
     </div>
 

@@ -1,5 +1,6 @@
 <div class="border border-base-content/10 rounded-box">
   <div class="flex p-3 gap-4">
+    <!-- {inspect(@json)} -->
     {#case object_field(@json, "cover")}
       {#match nil}
       {#match img}
