@@ -27,7 +27,7 @@
     {/case}
     {#case e(post_content(@object), :summary, nil)}
       {#match summary}
-        {#case @cw == true or (is_nil(@cw) and not is_nil(summary))}
+        {#case @cw == true or (@cw != false and not is_nil(summary))}
           {#match cw}
             {#if cw and e(post_content(@object), :html_body, nil)}
               <Bonfire.UI.Social.Activity.CWLive
@@ -35,8 +35,8 @@
                 activity_component_id={@activity_component_id}
                 summary={summary}
               />
-            {#else}
-              <div :if={summary} class="prose max-w-prose prose-p:pt-1">
+            {#elseif not is_nil(summary)}
+              <div class="prose max-w-prose prose-p:pt-1">
                 {rich(summary)}
               </div>
             {/if}

@@ -404,16 +404,16 @@ defmodule Bonfire.UI.Social.ActivityLive do
       thread_id: thread_id,
       cw:
         if e(assigns, :activity_inception, nil) do
-          # This is a reply_to, calculate CW based on reply_to data structure
-          e(activity, :sensitive, :is_sensitive, nil)
+          # This may be a reply_to, calculate CW based on reply_to data structure
+          sensitive?(activity)
 
           # || e(object, :summary, nil) != nil  <-- summary is not a replacement for CW now that we include article objects
         else
           # For regular activities, calculate CW normally
           e(assigns, :cw, nil) ||
-            e(activity, :sensitive, :is_sensitive, nil)
+            sensitive?(activity)
 
-          #  ||e(object, :post_content, :summary, nil) != nil <-- summary is not a replacement for CW now that we include article objects
+          #  || e(object, :post_content, :summary, nil) != nil <-- summary is not a replacement for CW now that we include article objects
         end,
       reply_count: e(replied, :nested_replies_count, 0) + e(replied, :direct_replies_count, 0),
       parent_id:
@@ -423,6 +423,24 @@ defmodule Bonfire.UI.Social.ActivityLive do
   end
 
   defp do_prepare(assigns), do: Map.put(assigns, :activity_prepared, :skipped)
+
+  defp sensitive?(activity) do
+    case Map.get(activity, :sensitive) do
+      nil ->
+        false
+
+      %Ecto.Association.NotLoaded{} ->
+        error(activity, "Sensitive field not preloaded for activity")
+        nil
+
+      %{is_sensitive: is_sensitive} when is_boolean(is_sensitive) ->
+        is_sensitive
+
+      other ->
+        error(other, "Sensitive assoc returned something unexpected")
+        nil
+    end
+  end
 
   def maybe_published_in(%{subject: %{table_id: "2AGSCANBECATEG0RY0RHASHTAG"} = subject}, "Boost") do
     subject
@@ -1559,7 +1577,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
          object: reply_to_object,
          subject_id: subject_id,
          activity: activity,
-         cw: e(activity, :sensitive, :is_sensitive, nil)
+         cw: e(activity, :sensitive, :is_sensitive, false)
          #  || e(reply_to_object, :summary, nil) != nil <-- summary is not a replacement for cw
        }}
     ]
@@ -1685,9 +1703,23 @@ defmodule Bonfire.UI.Social.ActivityLive do
     []
   end
 
-  def component_for_object_type(Bonfire.Data.Social.Post, %{post_content: %{name: name}})
-      when not is_nil(name) and name != "",
-      do: [Bonfire.UI.Social.Activity.ArticleLive]
+  # This gets compiled in, but you can make the character threshold bigger at runtime
+  @default_char_threshold Application.compile_env(:bonfire_posts, :article_char_threshold, 888)
+  # Use a conservative multiplier - ASCII is 1 byte per char, so this should ensure we don't filter out posts that might reach the character threshold
+  @min_body_bytes div(@default_char_threshold * 2, 3)
+
+  def component_for_object_type(Bonfire.Data.Social.Post, %{
+        post_content: %{name: name, html_body: html_body}
+      })
+      when is_binary(name) and is_binary(html_body) and
+             byte_size(name) > 2 and byte_size(html_body) > @min_body_bytes do
+    if String.length(html_body) > Application.get_env(:bonfire_posts, :article_char_threshold) ||
+         @default_char_threshold do
+      [Bonfire.UI.Social.Activity.ArticleLive]
+    else
+      [Bonfire.UI.Social.Activity.NoteLive]
+    end
+  end
 
   def component_for_object_type(Bonfire.Data.Social.Post, %{post_content: %{html_body: _}}),
     do: [Bonfire.UI.Social.Activity.NoteLive]

@@ -69,8 +69,18 @@
   <!-- <Bonfire.UI.Social.ToggleTypeLive label={l("Likes")} key={:like} field={:activity_types} feed_filters={@feed_filters}  event_target={@event_target}  event_name={@event_name} /> -->
 
   <Bonfire.UI.Social.ToggleTypeLive
-    label={l("Posts")}
+    label={l("All posts")}
     key={:post}
+    field={:object_types}
+    feed_filters={@feed_filters}
+    event_target={@event_target}
+    event_name={@event_name}
+    label_default={l("Include")}
+  />
+
+  <Bonfire.UI.Social.ToggleTypeLive
+    label={l("Articles")}
+    key={:article}
     field={:object_types}
     feed_filters={@feed_filters}
     event_target={@event_target}

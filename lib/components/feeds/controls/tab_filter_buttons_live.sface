@@ -13,47 +13,53 @@
           value="object_types:post"
           selected={Bonfire.UI.Social.FeedControlsLiteLive.is_only_included?(:post, :object_types, @feed_filters)}
         >{l("Show all Posts")}</option>
+        {#if not should_hide_button?(:article, :activity_types, assigns)}
+          <option
+            value="object_types:article"
+            selected={Bonfire.UI.Social.FeedControlsLiteLive.is_only_included?(:article, :object_types, @feed_filters)}
+          >{l("Show Articles")}</option>
+        {/if}
         {#if extension_enabled?(:bonfire_ui_reactions, @__context__) and
             not should_hide_button?(:boost, :activity_types, assigns)}
           <option
             value="activity_types:boost"
             selected={Bonfire.UI.Social.FeedControlsLiteLive.is_only_included?(:boost, :activity_types, @feed_filters)}
-          >{l("Show all Boosts")}</option>
+          >{l("Show Boosts")}</option>
         {/if}
         {#if not should_hide_button?(:follow, :activity_types, assigns)}
           <option
             value="activity_types:follow"
             selected={Bonfire.UI.Social.FeedControlsLiteLive.is_only_included?(:follow, :activity_types, @feed_filters)}
-          >{l("Show all Follows")}</option>
+          >{l("Show Follows")}</option>
         {/if}
         {#if not should_hide_button?(:link, :media_types, assigns)}
           <option
             value="media_types:link"
             selected={Bonfire.UI.Social.FeedControlsLiteLive.is_only_included?(:link, :media_types, @feed_filters)}
-          >{l("Show all Links")}</option>
+          >{l("Show Links")}</option>
         {/if}
         {#if not should_hide_button?(:image, :media_types, assigns)}
           <option
             value="media_types:image"
             selected={Bonfire.UI.Social.FeedControlsLiteLive.is_only_included?(:image, :media_types, @feed_filters)}
-          >{l("Show all Images")}</option>
+          >{l("Show Images")}</option>
         {/if}
         {#if not should_hide_button?(:video, :media_types, assigns)}
           <option
             value="media_types:video"
             selected={Bonfire.UI.Social.FeedControlsLiteLive.is_only_included?(:video, :media_types, @feed_filters)}
-          >{l("Show all Videos")}</option>
+          >{l("Show Videos")}</option>
         {/if}
-        <!-- {#if not should_hide_button?(:audio, :media_types, assigns)}
+        {#if not should_hide_button?(:audio, :media_types, assigns)}
           <option
             value="media_types:audio"
             selected={Bonfire.UI.Social.FeedControlsLiteLive.is_only_included?(:audio, :media_types, @feed_filters)}
-          >{l("Show all Audio")}</option>
-        {/if} -->
+          >{l("Show Audio")}</option>
+        {/if}
         <option
           value="object_types:Event"
           selected={Bonfire.UI.Social.FeedControlsLiteLive.is_only_included?("Event", :object_types, @feed_filters)}
-        >{l("Show all Events")}</option>
+        >{l("Show Events")}</option>
       </select>
     </form>
   </div>
