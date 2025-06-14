@@ -1704,7 +1704,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
   end
 
   # This gets compiled in, but you can make the character threshold bigger at runtime
-  @default_char_threshold Application.compile_env(:bonfire_posts, :article_char_threshold, 888)
+  @default_char_threshold Bonfire.Social.Activities.article_char_threshold()
   # Use a conservative multiplier - ASCII is 1 byte per char, so this should ensure we don't filter out posts that might reach the character threshold
   @min_body_bytes div(@default_char_threshold * 2, 3)
 
@@ -1713,7 +1713,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
       })
       when is_binary(name) and is_binary(html_body) and
              byte_size(name) > 2 and byte_size(html_body) > @min_body_bytes do
-    if String.length(html_body) > Application.get_env(:bonfire_posts, :article_char_threshold) ||
+    if String.length(html_body) > Bonfire.Social.Activities.article_char_threshold() ||
          @default_char_threshold do
       [Bonfire.UI.Social.Activity.ArticleLive]
     else

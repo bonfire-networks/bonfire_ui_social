@@ -992,11 +992,19 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
                   assign_error(socket, "There was an error when trying to load the feed.", pid)
               end
             rescue
+              e in RuntimeError ->
+                err(
+                  e,
+                  "There was an error when trying to load the feed. Error raised by feed_assigns"
+                )
+
+                assign_error(
+                  socket,
+                  e(e, :message, nil) || "There was an error when trying to load the feed.",
+                  pid
+                )
+
               e ->
-                # error(
-                #   e,
-                #   "There was an error when trying to load the feed. Error raised by feed_assigns"
-                # )
                 err(
                   e,
                   "There was an error when trying to load the feed. Error raised by feed_assigns"
