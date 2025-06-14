@@ -11,6 +11,7 @@ defmodule Bonfire.UI.Social.Activity.MediaLinkLive do
   prop small_icon, :boolean, default: false
   prop showing_within, :atom, default: nil
   prop parent_id, :any, default: nil
+  prop activity_inception, :boolean, default: false
 
   def update(_assign, socket) do
     {:noreply, socket}

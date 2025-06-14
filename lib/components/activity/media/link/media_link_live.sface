@@ -8,13 +8,14 @@
     class={
       "flex w-full items-center media_container gap-3 hover:bg-base-content/5 overflow-hidden",
       @css_borders || "border rounded-lg border-base-content/10",
-      "flex-col items-center": is_binary(@preview_img) and !@small_icon
+      "flex-col items-center": is_binary(@preview_img) and !@small_icon,
+      "!flex-row": e(@activity_inception, false)
     }
     target="_blank"
   >
     {#if is_binary(@preview_img)}
-      {#if @small_icon}
-        <div class="flex place-content-center items-center w-[120px] h-[120px]">
+      {#if @small_icon or @activity_inception}
+        <div class="flex place-content-center items-center max-w-[120px] h-[150px]">
           <LazyImage
             parent_id={["icon", @parent_id, id(@media)]}
             class="rounded-none object-cover rounded-l-lg cursor-pointer m-image h-full"

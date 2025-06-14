@@ -41,6 +41,7 @@
             preview_img={preview_img(m)}
             css_borders={@css_borders}
             small_icon={@small_icon}
+            activity_inception={@activity_inception}
             showing_within={@showing_within}
             parent_id={@parent_id}
           />
