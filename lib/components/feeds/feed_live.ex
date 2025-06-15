@@ -264,7 +264,8 @@ defmodule Bonfire.UI.Social.FeedLive do
     socket = assign(socket, assigns)
     socket = assign(socket, :feed_component_id, assigns(socket).id)
 
-    if user_socket_connected?(socket) || !current_user_id(socket) do
+    if user_socket_connected?(socket) || !current_user_id(socket) ||
+         LiveHandler.force_static?(socket) do
       # if LiveHandler.maybe_load_async?(socket) do
 
       debug("a feed was NOT provided, fetching one now (without filters)")
@@ -283,7 +284,7 @@ defmodule Bonfire.UI.Social.FeedLive do
       |> ok_socket()
     else
       debug(
-        "a feed was NOT provided, but we don't have a user socket connected, so we just pass assigns and wait"
+        "a feed was NOT provided, but we don't have a user socket connected, so we just pass assigns and wait for the socket to connect"
       )
 
       ok_socket(socket)
@@ -294,7 +295,8 @@ defmodule Bonfire.UI.Social.FeedLive do
     socket = assign(socket, assigns)
     socket = assign(socket, :feed_component_id, assigns(socket).id)
 
-    if user_socket_connected?(socket) || !current_user_id(socket) do
+    if user_socket_connected?(socket) || !current_user_id(socket) ||
+         LiveHandler.force_static?(socket) do
       # if LiveHandler.maybe_load_async?(socket) do
       debug("a feed was NOT provided, fetching one now (with filters)")
 
@@ -312,7 +314,7 @@ defmodule Bonfire.UI.Social.FeedLive do
       |> ok_socket()
     else
       debug(
-        "a feed was NOT provided, but we don't have a user socket connected, so we just pass assigns and wait"
+        "a feed was NOT provided, but we don't have a user socket connected, so we just pass assigns and wait for the socket to connect"
       )
 
       ok_socket(socket)

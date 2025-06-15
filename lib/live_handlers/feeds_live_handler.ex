@@ -948,13 +948,18 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
          %Phoenix.LiveView.Socket{} = socket,
          reset_stream
        ) do
-    socket_connected = user_socket_connected?(socket)
     opts = to_options(socket)
+    # |> debug("ooopts")
+    user_connected = user_socket_connected?(socket)
+    # |> debug("user_connected?")
 
     # FIXME: should not depend on env
-    if maybe_load_async?(opts, socket_connected) do
-      if socket_connected do
-        debug("socket connected, so load feed async")
+    if (user_connected || (current_user_id(opts) && !force_static?(opts))) &&
+         Config.env() != :test do
+      debug("socket connected or logged in (and not in test env)")
+
+      if user_connected do
+        debug("load feed async")
         pid = self()
 
         apply_task(
@@ -1070,9 +1075,9 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
     end
   end
 
-  def maybe_load_async?(opts, socket_connected? \\ nil) do
-    (socket_connected? || user_socket_connected?(opts) || current_user_id(opts)) &&
-      Config.env() != :test
+  def force_static?(opts) do
+    e(opts, :force_static, nil) || e(opts, :__context__, :force_static, nil) ||
+      e(opts, :assigns, :__context__, :force_static, nil)
   end
 
   defp feed_id_only({feed_id, _feed_ids}), do: feed_id
@@ -1673,6 +1678,7 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
       list_of_components,
       preload: postloads,
       preloaded: preloaded,
+      activity_preloads: activity_preloads,
       assign_activity_preloads: {preloaded ++ postloads, []},
       with_cache: false,
       current_user: current_user,
