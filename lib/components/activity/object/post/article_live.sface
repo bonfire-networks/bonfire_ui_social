@@ -25,7 +25,7 @@
       <div
         data-id="article_cover"
         class={
-          "aspect-[4/3] w-full h-[220px] bg-base-200 relative lg:rounded-t-xl bg-center bg-cover bg-no-repeat",
+          "flex relative items-center rounded-t-lg shrink-0 w-full bg-base-content/10 aspect-[1.91/1] place-content-center",
           "!rounded-none": @showing_within == :thread and @viewing_main_object
         }
         style="background-image: url('http://localhost:4000/images/bonfires.png')"
