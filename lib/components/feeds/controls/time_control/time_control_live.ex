@@ -4,7 +4,7 @@ defmodule Bonfire.UI.Social.TimeControlLive do
   @default_options [
     {1, l("Day")},
     {7, l("Week")},
-    {31, l("Month")},
+    {30, l("Month")},
     {365, "Year"},
     {0, "All time"}
   ]
