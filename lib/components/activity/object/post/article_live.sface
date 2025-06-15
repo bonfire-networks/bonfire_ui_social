@@ -28,7 +28,7 @@
           "flex relative items-center rounded-t-lg shrink-0 w-full bg-base-content/10 aspect-[1.91/1] place-content-center",
           "!rounded-none": @showing_within == :thread and @viewing_main_object
         }
-        style="background-image: url('http://localhost:4000/images/bonfires.png')"
+        style="background-image: url('/images/bonfires.png')"
       >
         <p data-role="article_badge" class="absolute left-3 bottom-3 badge badge-neutral badge-sm">⁂ {l("Article")}</p>
       </div>
