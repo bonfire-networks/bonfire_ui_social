@@ -48,7 +48,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
   prop cw, :any, default: nil
   prop emoji, :any, default: nil
   prop check_object_boundary, :boolean, default: false
-  prop is_remote, :boolean, default: false
+  prop is_remote, :any, default: nil
   prop show_minimal_subject_and_note, :any, default: false
   prop hide_activity, :any, default: nil
   prop i, :integer, default: nil
@@ -195,7 +195,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
       labelled: maybe_labelled(activity, verb),
       peered: peered,
       is_remote:
-        (assigns[:is_remote] || socket_assigns[:is_remote] ||
+        (assigns[:is_remote] ||| socket_assigns[:is_remote] |||
            !Bonfire.Social.is_local?(
              peered ||
                e(activity, :subject, nil) ||
@@ -555,13 +555,13 @@ defmodule Bonfire.UI.Social.ActivityLive do
          activity_inception,
          viewing_main_object
        ))
-    |> debug("preview_components unfiltered")
+    |> debug("preview_components unfiltered - #{activity_inception}")
     |> Enums.filter_empty([])
     |> Enum.map(fn
       c when is_atom(c) and not is_nil(c) -> {c, nil}
       other -> other
     end)
-    |> debug("preview_components")
+    |> debug("preview_components - #{activity_inception}")
   end
 
   defp component_maybe_attachments(true, activity, object, activity_inception) do
@@ -1421,6 +1421,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
     %{
       activity_id: activity_id,
       object: reply_to_post_content,
+      # object_type: Bonfire.Data.Social.Post,
       subject_id: creator_id,
       activity: reply_to
     }
@@ -1445,6 +1446,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
     %{
       activity_id: activity_id,
       object: reply_to,
+      # object_type: Types.object_type(reply_to),
       subject_id: creator_id,
       activity: %{
         # Activities.load_object(reply_to, skip_boundary_check: true),
@@ -1461,16 +1463,17 @@ defmodule Bonfire.UI.Social.ActivityLive do
         reply_to:
           %{
             id: _reply_to_id
-          } = replied
+          } = reply_to
       }) do
     debug("we have another kind of reply_to, but no creator")
 
     %{
       activity_id: activity_id,
-      object: replied,
+      object: reply_to,
+      # object_type: Types.object_type(reply_to),
       subject_id: true,
       activity: %{
-        # Activities.load_object(replied, skip_boundary_check: true),
+        # Activities.load_object(reply_to, skip_boundary_check: true),
         subject: nil
       }
     }
@@ -1575,6 +1578,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
          viewing_main_object: false,
          thread_title: thread_title,
          object: reply_to_object,
+         object_type: Types.object_type(reply_to_object),
          subject_id: subject_id,
          activity: activity,
          cw: e(activity, :sensitive, :is_sensitive, false)
@@ -1863,7 +1867,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
   # def component_maybe_attachments(_, _, inception) when not is_nil(inception), do: []
 
   def component_maybe_attachments(_id, files, _)
-      when is_list(files) and files != [] do
+      when (is_list(files) and files != []) or is_map(files) do
     # num_media = length(files)
     # debug(num_media, "has files")
 

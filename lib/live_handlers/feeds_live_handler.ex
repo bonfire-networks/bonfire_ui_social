@@ -1687,6 +1687,7 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
     activities =
       list_of_components
       |> debug("list_of_components")
+      #  FIXME: optimise by removing if not longer necessary
       |> Enum.map(fn
         %{activity: %{__struct__: _} = activity} ->
           # debug(activity, "struct")
@@ -1813,16 +1814,21 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
 
     if Bonfire.Common.Config.get([:ui, :feed_object_extension_preloads_disabled], false,
          name: l("Disable Feed Extension Preloads"),
-         description: l("Technical setting to disable preloading extensions for feed objects.")
+         description:
+           l("Technical setting to disable preloading extra fields for objects in feed.")
        ) != true do
       feed
-      |> Bonfire.Social.Activities.activity_preloads(preload, opts)
-      # |> debug("pre-maybe_preloads_per_nested_schema")
-      |> Bonfire.Common.Repo.Preload.maybe_preloads_per_nested_schema(
-        under,
-        object_preloads(opts[:preloaded] || []),
-        opts
+      |> Bonfire.Social.Activities.activity_preloads(
+        preload,
+        Keyword.put(opts, :preload_nested, {under, object_preloads(opts[:preloaded] || [])})
       )
+
+      # |> debug("pre-maybe_preloads_per_nested_schema")
+      # |> Bonfire.Common.Repo.Preload.maybe_preloads_per_nested_schema(
+      #   under,
+      #   object_preloads(opts[:preloaded] || []),
+      #   opts
+      # )
     else
       feed
       |> Bonfire.Social.Activities.activity_preloads(preload, opts)
@@ -1849,8 +1855,8 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
     [
       # {Bonfire.Data.Social.Post, Bonfire.UI.Social.Activity.NoteLive.preloads()}, # only needed if we no longer preload the post_content by default
       # to follow Pointer
-      if(:per_media not in preload, do: Bonfire.Files.Media),
-      Bonfire.Data.Social.APActivity,
+      # if(:per_media not in preload, do: Bonfire.Files.Media),
+      # Bonfire.Data.Social.APActivity,
       {Bonfire.Poll.Question,
        Utils.maybe_apply(Bonfire.Poll.Web.Preview.QuestionLive, :preloads, [],
          fallback_return: nil
