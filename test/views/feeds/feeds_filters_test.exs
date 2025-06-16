@@ -74,12 +74,12 @@ defmodule Bonfire.UI.Social.FeedsFilters.Test do
       |> assert_has("[data-id=feed] .activity_wrapper", count: 5)
       |> within("#form_filter_select", fn session ->
         session
-        |> PhoenixTest.select("Filter", option: "Show all Boosts")
+        |> PhoenixTest.select("Filter", option: "Show Boosts")
       end)
       |> assert_has("[data-id=feed] [data-role=boosted_by]")
       |> within("#form_filter_select", fn session ->
         session
-        |> PhoenixTest.select("Filter", option: "Show all Images")
+        |> PhoenixTest.select("Filter", option: "Show Images")
       end)
       |> assert_has("article img")
     end

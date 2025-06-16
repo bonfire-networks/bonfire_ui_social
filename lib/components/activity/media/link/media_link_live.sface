@@ -13,56 +13,57 @@
     }
     target="_blank"
   >
-    {#if is_binary(@preview_img)}
-      {#if @small_icon or @activity_inception}
-        <div class="flex place-content-center items-center max-w-[120px] h-[150px]">
-          <LazyImage
-            parent_id={["icon", @parent_id, id(@media)]}
-            class="rounded-none object-cover rounded-l-lg cursor-pointer m-image h-full"
-            src={@preview_img}
-            media={@media}
-            fallback_icon="ion:newspaper-outline"
-          />
-        </div>
-      {#else}
-        <div
-          data-id="media_img"
-          class="flex relative items-center rounded-t-lg shrink-0 w-full bg-base-content/10 aspect-[1.91/1] place-content-center"
-        >
-          <div class="w-full">
-            <!-- <div
-              class="absolute inset-0 backdrop-blur-lg bg-white/30 z-50 rounded-l-lg"
-              :if={@cw || Settings.get([Bonfire.UI.Social.Activity.MediaLive, :hide], false, @__context__)}
-            /> -->
-
+    {#if !@no_cover}
+      {#if is_binary(@preview_img)}
+        {#if @small_icon or @activity_inception}
+          <div class="flex place-content-center items-center max-w-[120px] h-[150px]">
             <LazyImage
               parent_id={["icon", @parent_id, id(@media)]}
-              class="rounded-none object-cover rounded-t-lg cursor-pointer m-image w-full aspect-[1.91/1]"
+              class="rounded-none object-cover rounded-l-lg cursor-pointer m-image h-full"
               src={@preview_img}
               media={@media}
               fallback_icon="ion:newspaper-outline"
             />
           </div>
+        {#else}
+          <div
+            data-id="media_img"
+            class="flex relative items-center rounded-t-lg shrink-0 w-full bg-base-content/10 aspect-[1.91/1] place-content-center"
+          >
+            <div class="w-full">
+              <!-- <div
+                class="absolute inset-0 backdrop-blur-lg bg-white/30 z-50 rounded-l-lg"
+                :if={@cw || Settings.get([Bonfire.UI.Social.Activity.MediaLive, :hide], false, @__context__)}
+              /> -->
+
+              <LazyImage
+                parent_id={["icon", @parent_id, id(@media)]}
+                class="rounded-none object-cover rounded-t-lg cursor-pointer m-image w-full aspect-[1.91/1]"
+                src={@preview_img}
+                media={@media}
+                fallback_icon="ion:newspaper-outline"
+              />
+            </div>
+          </div>
+        {/if}
+      {#else}
+        <div class="flex place-content-center items-center w-[120px] h-[120px]">
+          {#case e(@media, :metadata, "favicon", nil) ||
+              Bonfire.Files.FaviconStore.favicon_url(@media_url)}
+            {#match favicon_url when is_binary(favicon_url)}
+              <LazyImage
+                parent_id={["icon", @parent_id, id(@media)]}
+                class="rounded-none object-cover rounded-l-lg cursor-pointer m-image min-w-8 max-w-[120px] w-full h-auto"
+                src={favicon_url}
+                media={@media}
+                fallback_icon="ion:newspaper-outline"
+              />
+            {#match _}
+              <#Icon iconify="ion:newspaper-outline" class="w-8 h-8 text-base-content/70" />
+          {/case}
         </div>
       {/if}
-    {#else}
-      <div class="flex place-content-center items-center w-[120px] h-[120px]">
-        {#case e(@media, :metadata, "favicon", nil) ||
-            Bonfire.Files.FaviconStore.favicon_url(@media_url)}
-          {#match favicon_url when is_binary(favicon_url)}
-            <LazyImage
-              parent_id={["icon", @parent_id, id(@media)]}
-              class="rounded-none object-cover rounded-l-lg cursor-pointer m-image min-w-8 max-w-[120px] w-full h-auto"
-              src={favicon_url}
-              media={@media}
-              fallback_icon="ion:newspaper-outline"
-            />
-          {#match _}
-            <#Icon iconify="ion:newspaper-outline" class="w-8 h-8 text-base-content/70" />
-        {/case}
-      </div>
     {/if}
-
     <div class="p-2 flex flex-col w-full gap-1 flex-1">
       {#case Bonfire.Files.Media.media_label(@media)}
         {#match media_label}

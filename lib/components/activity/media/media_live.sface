@@ -37,6 +37,7 @@
             cw={@cw}
             media_url={media_url}
             media={m}
+            no_cover={if Enum.count(@link_list) > 1, do: true, else: false}
             download_url={e(m.metadata, "oembed", "download_url", nil) || e(m.metadata, "download_url", nil)}
             preview_img={preview_img(m)}
             css_borders={@css_borders}
