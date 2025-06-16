@@ -140,7 +140,7 @@ defmodule Bonfire.UI.Social.Feeds.LoadMoreRemoveTimeFilterTest do
         count: 1 + limit
       )
 
-      # Load more again 
+      # Load more again
       |> assert_has_or_open_browser("[data-id=load_more]")
       |> click_button("[data-id=load_more]", "Load more")
       |> wait_async()
@@ -204,12 +204,14 @@ defmodule Bonfire.UI.Social.Feeds.LoadMoreRemoveTimeFilterTest do
       # Visit feed with a time_limit of 1 day
       conn
       |> visit("/feed/?time_limit=1")
-      # Check that we only see posts from today 
+      # Check that we only see posts from today
       |> assert_has_or_open_browser("[data-id=feed] article [data-id=object_body]", count: 1)
-      |> assert_has_or("[data-id=feed] article", [text: "seconds ago"], fn session ->
-        session
-        |> assert_has("[data-id=feed] article", text: "second ago")
-      end)
+      # Cannot use "seconds ago" in test as depends on the time of the test run can change to "now", but this is not meaningful for the test.
+      # |> PhoenixTest.open_browser()
+      # |> assert_has_or("[data-id=feed] article", [text: "seconds ago"], fn session ->
+      #   session
+      #   |> assert_has("[data-id=feed] article", text: "second ago")
+      # end)
 
       # FIXME: body not preloaded in test env as guest
 
