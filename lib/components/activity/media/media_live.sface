@@ -31,6 +31,7 @@
             media_url={media_url}
             css_borders={@css_borders}
             parent_id={@parent_id}
+            showing_within={@showing_within}
           />
         {#else _}
           <Bonfire.UI.Social.Activity.MediaLinkLive
