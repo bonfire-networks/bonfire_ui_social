@@ -34,10 +34,4 @@ defmodule Bonfire.UI.Social.Activity.ArticleLive do
   end
 
   def maybe_truncate(input, _skip, _length), do: input
-
-  # Helper function for checking expandable content after render
-  def check_expandable(id) do
-    %JS{}
-    |> JS.dispatch("bonfire:check-expandable")
-  end
 end

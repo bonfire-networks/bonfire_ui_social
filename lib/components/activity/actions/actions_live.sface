@@ -159,12 +159,12 @@
             />
           {#else}
             <!-- ACTIONS SKELETON GOES HERE -->
-            <div class="skeleton w-5 h-5 rounded-full shrink-0" />
-            <!-- <div class="skeleton w-5 h-5 ml-1 rounded-full shrink-0" /> -->
-            <div class="skeleton w-5 h-5 rounded-full shrink-0" />
-            <div class="skeleton w-5 h-5 rounded-full shrink-0" />
-            <div class="skeleton w-5 h-5 rounded-full shrink-0" />
-            <div class="skeleton w-5 h-5 rounded-full shrink-0" />
+            <div class="skeleton w-6 h-6 rounded-full shrink-0" />
+            <!-- <div class="skeleton w-6 h-6 ml-1 rounded-full shrink-0" /> -->
+            <!-- <div class="skeleton w-6 h-6 rounded-full shrink-0" /> -->
+            <div class="skeleton w-6 h-6 rounded-full shrink-0" />
+            <div class="skeleton w-6 h-6 rounded-full shrink-0" />
+            <div class="skeleton w-6 h-6 rounded-full shrink-0" />
           {/if}
         {#else}
           <StatefulComponent

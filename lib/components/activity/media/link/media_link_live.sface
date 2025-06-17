@@ -16,7 +16,7 @@
     {#if !@no_cover}
       {#if is_binary(@preview_img)}
         {#if @small_icon or @activity_inception}
-          <div class="flex place-content-center items-center max-w-[120px] h-[120px]">
+          <div class="flex place-content-center items-center max-w-[130px] h-[130px]">
             <LazyImage
               parent_id={["icon", @parent_id, id(@media)]}
               class="rounded-none object-cover rounded-l-lg cursor-pointer m-image h-full"
@@ -67,46 +67,27 @@
     <div class="p-2 flex flex-col w-full gap-1 flex-1">
       {#case Bonfire.Files.Media.media_label(@media)}
         {#match media_label}
+          {#case MediaLive.provider(@media)}
+            {#match provider when is_binary(provider) and provider != media_label}
+              <div data-id="media_author" class="text-xs">
+                <div class="flex items-center gap-2">
+                  <#Icon iconify="ph:globe" class="w-4 h-4 text-primary" />
+                  <span class="capitalize text-primary">{provider}</span>
+                </div>
+              </div>
+            {#match _}
+          {/case}
           <div
             data-id="media_title"
-            class={
-              "text-base font-semibold text-pretty md:text-balanced",
-              "line-clamp-2": @showing_within in [:feed, :profile]
-            }
+            class="text-base font-semibold text-pretty md:text-balanced line-clamp-2"
           >
             {media_label ||
               if @media.media_type == "link", do: e(@media, :path, nil), else: l("View")}
           </div>
 
-          <div class={
-            "break-all text-sm break-words text-base-content/70",
-            "line-clamp-2": @showing_within in [:feed, :profile]
-          }>
+          <div class="break-all text-sm break-words text-base-content/70 line-clamp-2">
             {raw(Text.maybe_sane_html(Bonfire.Files.Media.description(@media)))}
           </div>
-
-          <!-- <span class="text-sm badge badge-accent rounded bg-accent/30 border-none !text-accent capitalize mr-1">{e(@media, :media_type, nil) || l("link")}</span>
-
-        {e(@media, :metadata, "oembed", "author_name", nil)}
-              
-        {#case e(@media, :metadata, "oembed", "published", "date-parts", nil)}
-          {#match nil}
-          {#match []}
-          {#match published}
-            <span class="text-base-content/70">{published |> DatesTimes.format_date(format: "MMMM d, Y")}</span>
-        {/case} -->
-
-          {#case MediaLive.provider(@media)}
-            {#match provider when is_binary(provider) and provider != media_label}
-              <div data-id="media_author" class="text-xs pt-2 mt-2 border-t border-base-content/10">
-                <div class="flex items-center gap-2">
-                  <#Icon iconify="ph:globe" class="w-4 h-4 text-base-content/70" />
-                  <span class="text-base-content/70">{provider}</span>
-                </div>
-              </div>
-            {#match _}
-          {/case}
-          <!-- {e(@media, :metadata, "location", "name", nil)} {e(@media, :metadata, "startDate", nil)} -->
       {/case}
     </div>
   </LinkLive>

@@ -1,7 +1,8 @@
 <div
-  :if={@showing_within not in [:smart_input, :thread] && !@viewing_main_object}
+  :if={@showing_within not in [:smart_input, :thread] &&
+    Bonfire.Social.PostContents.needs_truncation?(e(@object, :post_content, :html_body, nil))}
   id={"expandable_controls_#{@parent_id}_#{id(@activity) || id(@object) || 'no-id'}"}
-  class="hidden"
+  class=""
 >
   <button
     type="button"

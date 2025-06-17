@@ -8,7 +8,6 @@
     "!max-w-full !border-0 !cursor-default !rounded-none !p-0":
       @showing_within == :thread && @viewing_main_object
   }
-  phx-mounted={check_expandable(id(@activity) || id(@object) || 'no-id')}
 >
   <Bonfire.UI.Common.OpenExternalLinkLive
     id={"article-#{@showing_within}-#{@parent_id}-#{id(@activity) || 'no-a'}-#{id(@object) || 'no-o'}-#{@viewing_main_object}-#{@activity_inception}"}

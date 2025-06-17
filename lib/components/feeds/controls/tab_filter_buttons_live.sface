@@ -4,7 +4,7 @@
   <div class="md:hidden mr-3">
     <form id="form_filter_select" phx-change="mobile_filter_change" phx-target={@event_target}>
       <label class="sr-only" for="filter_select">{l("Filter")}</label>
-      <select id="filter_select" name="filter_select" class="select select-ghost text-xl font-semibold">
+      <select id="filter_select" name="filter_select" class="select select-ghost font-semibold">
         <option
           value=""
           selected={Bonfire.UI.Social.FeedControlsLiteLive.no_filters_applied?(@feed_filters)}

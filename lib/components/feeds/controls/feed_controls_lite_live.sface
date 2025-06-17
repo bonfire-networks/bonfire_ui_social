@@ -1,7 +1,7 @@
 <div
   data-id="feed_controls"
   id="feed_controls"
-  class="p-2 relative lg:rounded-t-xl border-b border-base-content/10 relative feed_control_wrapper bg-base-100"
+  class="py-1 lg:py-2 p-2 relative lg:rounded-t-xl border-t lg:border-t-0 border-b border-base-content/10 relative feed_control_wrapper bg-base-100"
 >
   {#if @reloading}
     <div class="absolute lg:rounded-t-xl z-10 inset-0 flex items-center justify-center bg-base-content/10">
