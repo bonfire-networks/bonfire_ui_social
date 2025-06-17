@@ -162,7 +162,7 @@
       <label
         tabindex="0"
         class="btn w-full btn-outline btn-soft capitalize"
-        phx-click={JS.toggle(to: "#open_circles")}
+        onclick={js_toggle(to: "#open_circles")}
       >
         {l("By circles")} {case e(@feed_filters, :subject_circles, []) do
           [] -> nil

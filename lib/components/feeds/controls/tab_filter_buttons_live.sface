@@ -275,7 +275,7 @@
   <div class="border-l border-base-content/10 pl-2">
     <button
       data-tip={l("Advanced")}
-      phx-click={JS.toggle(to: "#more_filters")}
+      onclick={js_toggle(to: "#more_filters")}
       class="btn btn-ghost lg:tooltip lg:tooltip-bottom btn-square text-primary !flex"
     ><#Icon iconify="mingcute:filter-2-line" class="w-5 h-5" /></button>
   </div>

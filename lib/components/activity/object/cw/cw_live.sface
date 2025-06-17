@@ -1,11 +1,11 @@
 <button
-  phx-click={%JS{}
-  |> JS.toggle(
+  onclick={js_toggle(
     to: "#content_#{@activity_component_id}",
     in: "transition ease-out duration-300 transform",
     out: "transition ease-in duration-200 transform",
     time: 300
-  )
+  )}
+  phx-click={%JS{}
   |> JS.toggle(to: "#content_show_more_#{@activity_component_id}")
   |> JS.toggle(to: "#content_show_less_#{@activity_component_id}")}
   class={e(@class, nil)}
@@ -13,10 +13,10 @@
   <span data-role="cw" class="leading-[24px] text-left text-sm text-base-content/70 flex-1">{@summary || l("Content Warning")}</span>
   <div class="show_more_toggle_action normal-case btn-ghost btn btn-xs">
     <span id={"content_show_more_#{@activity_component_id}"} class={if !@cw, do: "hidden"}>
-      {l("Show more")}
+      {l("Show")}
     </span>
     <span id={"content_show_less_#{@activity_component_id}"} class={if @cw, do: "hidden"}>
-      {l("Show less")}
+      {l("Hide")}
     </span>
   </div>
 </button>

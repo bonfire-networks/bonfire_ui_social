@@ -189,56 +189,57 @@
                   }
                 >
                   <figure class="h-full relative">
-                    {#if @cw || @showing_within == :flags ||
-                        Settings.get([Bonfire.UI.Social.Activity.MediaLive, :hide], false, @__context__)}
-                      <div id={deterministic_dom_id("sensitive-content-overlay", id(m), "media", @parent_id)}>
-                        <div class="absolute inset-0 flex items-center cursor-pointer place-content-center justify-center z-[60]">
+                    {!-- FIXME: enable_fallback for logged out visitors instead of just not using the modal --}
+                    {#if current_user_id(@__context__)}
+                      {#if @cw || @showing_within == :flags ||
+                          Settings.get([Bonfire.UI.Social.Activity.MediaLive, :hide], false, @__context__)}
+                        <div id={deterministic_dom_id("sensitive-content-overlay", id(m), "media", @parent_id)}>
+                          <div class="absolute inset-0 flex items-center cursor-pointer place-content-center justify-center z-[60]">
+                            <button
+                              phx-click={JS.hide(
+                                to: "#" <> deterministic_dom_id("sensitive-content-overlay", id(m), "media", @parent_id),
+                                transition: "fade-out"
+                              )
+                              |> JS.hide(
+                                to: "#" <> deterministic_dom_id("sensitive-content-backdrop", id(m), "media", @parent_id),
+                                transition: "fade-out"
+                              )
+                              |> JS.show(
+                                to: "#" <> deterministic_dom_id("hide-sensitive-content", id(m), "media", @parent_id),
+                                transition: "fade-in"
+                              )}
+                              class="btn z-[9999999999] btn-secondary btn-soft"
+                            >
+                              {l("Sensitive content")}
+                            </button>
+                          </div>
+                        </div>
+                        <div
+                          id={deterministic_dom_id("hide-sensitive-content", id(m), "media", @parent_id)}
+                          class="hidden"
+                        >
                           <button
-                            phx-click={JS.hide(
+                            phx-click={JS.show(
                               to: "#" <> deterministic_dom_id("sensitive-content-overlay", id(m), "media", @parent_id),
                               transition: "fade-out"
                             )
-                            |> JS.hide(
+                            |> JS.show(
                               to: "#" <> deterministic_dom_id("sensitive-content-backdrop", id(m), "media", @parent_id),
                               transition: "fade-out"
                             )
-                            |> JS.show(
+                            |> JS.hide(
                               to: "#" <> deterministic_dom_id("hide-sensitive-content", id(m), "media", @parent_id),
                               transition: "fade-in"
                             )}
-                            class="btn z-[9999999999] btn-secondary btn-soft"
-                          >
-                            {l("Sensitive content")}
-                          </button>
+                            class="absolute top-3 right-3 btn z-50"
+                          >{l("Hide")}</button>
                         </div>
-                      </div>
-                      <div
-                        id={deterministic_dom_id("hide-sensitive-content", id(m), "media", @parent_id)}
-                        class="hidden"
-                      >
-                        <button
-                          phx-click={JS.show(
-                            to: "#" <> deterministic_dom_id("sensitive-content-overlay", id(m), "media", @parent_id),
-                            transition: "fade-out"
-                          )
-                          |> JS.show(
-                            to: "#" <> deterministic_dom_id("sensitive-content-backdrop", id(m), "media", @parent_id),
-                            transition: "fade-out"
-                          )
-                          |> JS.hide(
-                            to: "#" <> deterministic_dom_id("hide-sensitive-content", id(m), "media", @parent_id),
-                            transition: "fade-in"
-                          )}
-                          class="absolute top-3 right-3 btn z-50"
-                        >{l("Hide")}</button>
-                      </div>
-                      <div
-                        id={deterministic_dom_id("sensitive-content-backdrop", id(m), "media", @parent_id)}
-                        class="absolute inset-0 backdrop-blur-2xl z-50 cursor-pointer rounded-md"
-                      />
-                    {/if}
-                    {!-- FIXME: enable_fallback for logged out visitors instead of just not using the modal --}
-                    {#if current_user_id(@__context__)}
+                        <div
+                          id={deterministic_dom_id("sensitive-content-backdrop", id(m), "media", @parent_id)}
+                          class="absolute inset-0 backdrop-blur-2xl z-50 cursor-pointer rounded-md"
+                        />
+                      {/if}
+
                       <Bonfire.UI.Common.OpenModalLive
                         id={deterministic_dom_id("media_modal", id(m), "media", @parent_id)}
                         no_actions

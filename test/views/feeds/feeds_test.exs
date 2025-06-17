@@ -86,8 +86,8 @@ defmodule Bonfire.UI.Social.Feeds.Test do
     |> refute_has("[data-id=object_body]:visible")
     |> refute_has("[data-id=media_list]:visible")
 
-    # Click the "Show more" button
-    |> click_button(".show_more_toggle_action", "Show more")
+    # Click the "Show" button
+    |> click_button(".show_more_toggle_action", "Show")
 
     # Verify content is now visible
     |> assert_has("[data-id=object_body]:visible")

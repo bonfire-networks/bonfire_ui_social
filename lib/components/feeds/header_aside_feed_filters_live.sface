@@ -1,5 +1,5 @@
 <button
-  phx-click={JS.toggle(to: "#feed_controls_wrapper")}
+  onclick={js_toggle(to: "#feed_controls_wrapper")}
   class="btn btn-sm btn-circle z-50 btn-ghost"
 >
   <#Icon iconify="f7:gear" class="w-5 h-5 text-primary" />
