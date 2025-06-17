@@ -16,7 +16,7 @@
     {#if !@no_cover}
       {#if is_binary(@preview_img)}
         {#if @small_icon or @activity_inception}
-          <div class="flex place-content-center items-center max-w-[120px] h-[150px]">
+          <div class="flex place-content-center items-center max-w-[120px] h-[120px]">
             <LazyImage
               parent_id={["icon", @parent_id, id(@media)]}
               class="rounded-none object-cover rounded-l-lg cursor-pointer m-image h-full"
