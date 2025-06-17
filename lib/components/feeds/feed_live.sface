@@ -10,7 +10,7 @@
   >
     <div :if={!@hide_filters and current_user_id(@__context__)} id="feed_controls_wrapper">
       <StatelessComponent
-        module={if Settings.get([Bonfire.UI.Social, :use_lite_feed_controls], false,
+        module={if !Settings.get([Bonfire.UI.Social, :use_lite_feed_controls], true,
              context: @__context__,
              name: l("Use Lite Feed Controls"),
              description:

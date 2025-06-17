@@ -193,7 +193,7 @@
       </button>
     </div>
 
-    <!-- <div
+    <div
       style={if should_hide_button?(:audio, :media_types, assigns), do: "display: none;", else: ""}
       class="lg:tooltip lg:tooltip-bottom w-full"
       data-tip="Show only audios"
@@ -212,7 +212,8 @@
         <#Icon iconify="lucide:audio-lines" class="w-5 h-5" />
         <span class="sr-only">{l("Audio")}</span>
       </button>
-    </div> -->
+    </div>
+
     <div
       style={if should_hide_button?("Event", :object_types, assigns), do: "display: none;", else: ""}
       class="lg:tooltip lg:tooltip-bottom w-full"
@@ -275,7 +276,7 @@
   <div class="border-l border-base-content/10 pl-2">
     <button
       data-tip={l("Advanced")}
-      onclick={js_toggle(to: "#more_filters")}
+      phx-click={JS.toggle(to: "#more_filters")}
       class="btn btn-ghost lg:tooltip lg:tooltip-bottom btn-square text-primary !flex"
     ><#Icon iconify="mingcute:filter-2-line" class="w-5 h-5" /></button>
   </div>
