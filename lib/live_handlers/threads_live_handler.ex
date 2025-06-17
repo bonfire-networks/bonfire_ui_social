@@ -90,12 +90,20 @@ defmodule Bonfire.Social.Threads.LiveHandler do
 
     load_depth = level + load_more_replies_step
 
+    thread_mode = e(assigns, :thread_mode, nil)
+    showing_within = e(assigns, :showing_within, :thread)
+
+    # TODO: take from assigns
+    preloads =
+      Bonfire.Social.Feeds.LiveHandler.feed_extra_preloads_list(showing_within, thread_mode)
+
     opts = [
       current_user: current_user,
       max_depth: load_depth,
-      thread_mode: e(assigns, :thread_mode, nil),
+      thread_mode: thread_mode,
       sort_by: e(assigns, :sort_by, nil),
-      sort_order: e(assigns, :sort_order, nil)
+      sort_order: e(assigns, :sort_order, nil),
+      preload: preloads
     ]
 
     %{edges: replies, page_info: page_info} = Bonfire.Social.Threads.list_replies(id, opts)
@@ -198,23 +206,31 @@ defmodule Bonfire.Social.Threads.LiveHandler do
   def live_more(thread_id, paginate, socket) do
     error(paginate, "paginate thread")
 
+    showing_within = e(assigns(socket), :showing_within, :thread)
+
+    thread_mode = e(assigns(socket), :thread_mode, nil)
+    #  || Settings.get(
+    #          [Bonfire.UI.Social.ThreadLive, :thread_mode],
+    #          nil,
+    #          assigns(socket)
+    #        ) || :nested)
+    #     |> debug("thread mode")
+
+    preloads =
+      Bonfire.Social.Feeds.LiveHandler.feed_extra_preloads_list(showing_within, thread_mode)
+
     opts =
       [
         current_user: current_user(socket),
         paginate: paginate,
-        thread_mode:
-          (e(assigns(socket), :thread_mode, nil) ||
-             Settings.get(
-               [Bonfire.UI.Social.ThreadLive, :thread_mode],
-               nil,
-               assigns(socket)
-             ) || :nested)
-          |> debug("thread mode"),
+        thread_mode: thread_mode,
         sort_by: e(assigns(socket), :sort_by, nil),
         max_depth: e(assigns(socket), :max_depth, nil),
-        sort_order: e(assigns(socket), :sort_order, nil)
+        sort_order: e(assigns(socket), :sort_order, nil),
+        preload: preloads
       ]
-      |> debug()
+
+    # |> debug()
 
     with %{edges: replies, page_info: page_info} <-
            Bonfire.Social.Threads.list_replies(

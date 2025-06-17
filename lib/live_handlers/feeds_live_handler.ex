@@ -1624,7 +1624,7 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
           :with_object_peered
         ]
 
-      {:thread, _} ->
+      {:thread, _nested} ->
         [:feed, :with_media, :with_object_more, :maybe_with_labelled, :with_object_peered]
 
       {:feed_by_creator, _} ->

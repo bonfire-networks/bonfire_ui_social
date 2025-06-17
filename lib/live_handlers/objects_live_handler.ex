@@ -142,6 +142,7 @@ defmodule Bonfire.Social.Objects.LiveHandler do
       # )
       |> Bonfire.Social.Feeds.LiveHandler.preload_activity_and_object_assocs([:object],
         current_user: current_user,
+        # TODO: use same logic as feeds preloads?
         preload:
           Bonfire.Social.Feeds.LiveHandler.feed_extra_preloads_list(
             assigns(socket)[:showing_within],
