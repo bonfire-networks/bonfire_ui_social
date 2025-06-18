@@ -551,10 +551,7 @@ defmodule Bonfire.UI.Social.FeedLive do
         socket
       ) do
     # Check if we're NOT using the lite controls AND this is a tab mode click
-    if params["tab_mode"] == "true" &&
-         !Settings.get([Bonfire.UI.Social, :use_lite_feed_controls], false,
-           context: assigns(socket)[:__context__]
-         ) do
+    if params["tab_mode"] == "true" do
       # Tab behavior for tab filter buttons
       if params["toggle_value"] == "true" do
         # Set this tab as the only active filter

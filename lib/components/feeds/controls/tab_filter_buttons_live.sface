@@ -67,7 +67,7 @@
     <div
       style={if should_hide_button?(:post, :object_types, assigns), do: "display: none;", else: ""}
       class="lg:tooltip lg:tooltip-bottom w-full"
-      data-tip="Show all posts"
+      data-tip={l("Show all posts")}
       data-switch="post"
     >
       <button
@@ -86,12 +86,35 @@
     </div>
 
     <div
-      style={if not extension_enabled?(:bonfire_ui_reactions, @__context__) or
-           should_hide_button?(:boost, :activity_types, assigns),
-         do: "display: none;",
-         else: ""}
+      style={if should_hide_button?(:article, :object_types, assigns),
+        do: "display: none;",
+        else: ""}
       class="lg:tooltip lg:tooltip-bottom w-full"
-      data-tip="Show only boosts"
+      data-tip={l("Show articles (long posts)")}
+      data-switch="article"
+    >
+      <button
+        data-id="filter-articles"
+        class={@get_button_class.(:article, :object_types, @feed_filters)}
+        phx-click="set_filter"
+        phx-value-toggle="object_types"
+        phx-value-toggle_type="article"
+        phx-value-toggle_value={@get_tab_toggle_value.(:article, :object_types, @feed_filters)}
+        phx-value-tab_mode="true"
+        phx-target={@event_target}
+      >
+        <#Icon iconify="icomoon-free:blog" class="w-4 h-4" />
+        <span class="sr-only">{l("Show articles (long posts)")}</span>
+      </button>
+    </div>
+
+    <div
+      :if={extension_enabled?(:bonfire_ui_reactions, @__context__)}
+      style={if should_hide_button?(:boost, :activity_types, assigns),
+        do: "display: none;",
+        else: ""}
+      class="lg:tooltip lg:tooltip-bottom w-full"
+      data-tip={l("Show only boosts")}
       data-switch="boost"
     >
       <button
@@ -112,7 +135,7 @@
     <div
       style={if should_hide_button?(:follow, :activity_types, assigns), do: "display: none;", else: ""}
       class="lg:tooltip lg:tooltip-bottom w-full"
-      data-tip="Show only follows"
+      data-tip={l("Show only follows")}
       data-switch="follow"
     >
       <button
@@ -133,7 +156,7 @@
     <div
       style={if should_hide_button?(:link, :media_types, assigns), do: "display: none;", else: ""}
       class="lg:tooltip lg:tooltip-bottom w-full"
-      data-tip="Show only links"
+      data-tip={l("Show only links")}
       data-switch="link"
     >
       <button
@@ -147,14 +170,14 @@
         phx-target={@event_target}
       >
         <#Icon iconify="mdi:link" class="w-5 h-5" />
-        <span class="sr-only">{l("links")}</span>
+        <span class="sr-only">{l("Show links")}</span>
       </button>
     </div>
 
     <div
       style={if should_hide_button?(:image, :media_types, assigns), do: "display: none;", else: ""}
       class="lg:tooltip lg:tooltip-bottom w-full"
-      data-tip="Show only images"
+      data-tip={l("Show only images")}
       data-switch="image"
     >
       <button
@@ -175,7 +198,7 @@
     <div
       style={if should_hide_button?(:video, :media_types, assigns), do: "display: none;", else: ""}
       class="lg:tooltip lg:tooltip-bottom w-full"
-      data-tip="Show only videos"
+      data-tip={l("Show only videos")}
       data-switch="video"
     >
       <button
@@ -196,7 +219,7 @@
     <div
       style={if should_hide_button?(:audio, :media_types, assigns), do: "display: none;", else: ""}
       class="lg:tooltip lg:tooltip-bottom w-full"
-      data-tip="Show only audios"
+      data-tip={l("Show only audio")}
       data-switch="audio"
     >
       <button
@@ -215,9 +238,30 @@
     </div>
 
     <div
+      style={if should_hide_button?("Edition", :object_types, assigns), do: "display: none;", else: ""}
+      class="lg:tooltip lg:tooltip-bottom w-full"
+      data-tip={l("Show only books")}
+      data-switch="Edition"
+    >
+      <button
+        data-id="filter-books"
+        class={@get_button_class.("Edition", :object_types, @feed_filters)}
+        phx-click="set_filter"
+        phx-value-toggle="object_types"
+        phx-value-toggle_type="Edition"
+        phx-value-toggle_value={@get_tab_toggle_value.("Edition", :object_types, @feed_filters)}
+        phx-value-tab_mode="true"
+        phx-target={@event_target}
+      >
+        <#Icon iconify="mdi:bookshelf" class="w-5 h-5" />
+        <span class="sr-only">{l("Books")}</span>
+      </button>
+    </div>
+
+    <div
       style={if should_hide_button?("Event", :object_types, assigns), do: "display: none;", else: ""}
       class="lg:tooltip lg:tooltip-bottom w-full"
-      data-tip="Show only events"
+      data-tip={l("Show only events")}
       data-switch="event"
     >
       <button
@@ -238,7 +282,7 @@
     {!-- <div
     style={if should_hide_button?(:reply, :activity_types, assigns), do: "display: none;", else: ""}
     class="lg:tooltip lg:tooltip-bottom w-full"
-    data-tip="Show only replies"
+    data-tip={l "Show only replies"}
     data-switch="reply"
     class="w-full flex-1"
   >
@@ -265,6 +309,7 @@
       phx-value-toggle="media_types"
       phx-value-toggle_type="research"
       phx-value-toggle_value={@get_tab_toggle_value.(:research, :media_types, @feed_filters)}
+      phx-value-tab_mode="true"
       phx-target={@event_target}
     >
       <#Icon iconify="mingcute:paper-fill" class="w-5 h-5" />
