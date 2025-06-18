@@ -1581,7 +1581,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
          object_type: Types.object_type(reply_to_object),
          subject_id: subject_id,
          activity: activity,
-         cw: e(activity, :sensitive, :is_sensitive, false)
+         cw: sensitive?(activity)
          #  || e(reply_to_object, :summary, nil) != nil <-- summary is not a replacement for cw
        }}
     ]
