@@ -24,7 +24,7 @@
       <div
         data-id="article_cover"
         class={
-          "flex relative items-center rounded-t-lg shrink-0 w-full bg-base-content/10 aspect-[1.91/1] place-content-center",
+          "flex relative items-center rounded-t-lg shrink-0 w-full bg-base-content/10 aspect-[1.91/1] place-content-center bg-no-repeat bg-cover",
           "!rounded-none": @showing_within == :thread and @viewing_main_object
         }
         style="background-image: url('/images/bonfires.png')"
