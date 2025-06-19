@@ -1,8 +1,6 @@
 <div
-  :if={@showing_within not in [:smart_input, :thread] &&
-    Bonfire.Social.PostContents.needs_truncation?(e(@object, :post_content, :html_body, nil))}
   id={"expandable_controls_#{@parent_id}_#{id(@activity) || id(@object) || 'no-id'}"}
-  class=""
+  class="read-more-controls"
 >
   <button
     type="button"
@@ -13,7 +11,7 @@
     |> JS.add_class("previewable_expanded",
       to: "#expandable_note_#{@parent_id}_#{id(@activity) || id(@object) || 'no-id'}"
     )
-    |> JS.hide(to: "#read_more_button_#{@parent_id}_#{id(@activity) || id(@object) || 'no-id'}")
+    |> JS.hide()
     |> JS.show(to: "#read_less_button_#{@parent_id}_#{id(@activity) || id(@object) || 'no-id'}")}
     class="link text-sm mt-2 font-medium link-hover link-primary normal-case"
   >{l("Read more")}</button>
@@ -26,8 +24,9 @@
     |> JS.remove_class("previewable_expanded",
       to: "#expandable_note_#{@parent_id}_#{id(@activity) || id(@object) || 'no-id'}"
     )
-    |> JS.show(to: "#read_more_button_#{@parent_id}_#{id(@activity) || id(@object) || 'no-id'}")
-    |> JS.hide(to: "#read_less_button_#{@parent_id}_#{id(@activity) || id(@object) || 'no-id'}")}
-    class="link text-sm mt-2 font-medium link-hover link-primary normal-case hidden"
+    |> JS.hide()
+    |> JS.show(to: "#read_more_button_#{@parent_id}_#{id(@activity) || id(@object) || 'no-id'}")}
+    class="link text-sm mt-2 font-medium link-hover link-primary normal-case"
+    style="display: none;"
   >{l("Read less")}</button>
 </div>

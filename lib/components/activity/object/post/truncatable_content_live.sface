@@ -1,0 +1,25 @@
+<div
+  :hook
+  id={"truncation_detector_#{@parent_id}_#{id(@activity) || id(@object) || 'no-id'}"}
+  data-showing-within={@showing_within}
+  data-viewing-main-object={@viewing_main_object}
+>
+  <Bonfire.UI.Social.Activity.HtmlBodyLive
+    html_body={@html_body}
+    activity={@activity}
+    object={@object}
+    parent_id={@parent_id}
+    object_type={@object_type}
+    showing_within={@showing_within}
+    viewing_main_object={@viewing_main_object}
+    activity_inception={@activity_inception}
+  />
+
+  <Bonfire.UI.Social.Activity.ReadMoreLive
+    activity={@activity}
+    object={@object}
+    parent_id={@parent_id}
+    showing_within={@showing_within}
+    viewing_main_object={@viewing_main_object}
+  />
+</div>

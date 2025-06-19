@@ -45,7 +45,7 @@
                   if !e(@activity, :media, nil), do: l("This content is not available.")}
                 {#match nil}
                 {#match html_body}
-                  <Bonfire.UI.Social.Activity.HtmlBodyLive
+                  <Bonfire.UI.Social.Activity.TruncatableContentLive
                     html_body={html_body}
                     activity={@activity}
                     object={@object}
@@ -53,14 +53,6 @@
                     showing_within={@showing_within}
                     viewing_main_object={@viewing_main_object}
                     activity_inception={@activity_inception}
-                  />
-
-                  <Bonfire.UI.Social.Activity.ReadMoreLive
-                    activity={@activity}
-                    object={@object}
-                    parent_id={@parent_id}
-                    showing_within={@showing_within}
-                    viewing_main_object={@viewing_main_object}
                   />
               {/case}
             </div>
