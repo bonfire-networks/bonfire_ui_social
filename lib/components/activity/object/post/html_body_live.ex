@@ -10,8 +10,4 @@ defmodule Bonfire.UI.Social.Activity.HtmlBodyLive do
   prop showing_within, :atom, default: nil
   prop viewing_main_object, :boolean, default: false
   prop is_remote, :boolean, default: false
-
-  def needs_truncation?(html_body) do
-    Bonfire.Social.PostContents.needs_truncation?(html_body)
-  end
 end
