@@ -13,14 +13,14 @@
         type="range"
         min="0"
         id="time_control"
-        value={get_index_value(@current_value, @options)}
+        value={get_index_value(@current_value, @options || default_options())}
         name={@input}
-        max={length(@options) - 1}
+        max={length(@options || default_options()) - 1}
         class="range range-xs range-secondary w-full"
         step="1"
       />
       <div class="flex w-full justify-between px-2 text-xs text-base-content/70">
-        {#for {_value, label} <- @options}
+        {#for {_value, label} <- @options || default_options()}
           <span>{label}</span>
         {/for}
       </div>

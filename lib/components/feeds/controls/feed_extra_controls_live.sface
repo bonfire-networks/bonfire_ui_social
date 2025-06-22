@@ -47,6 +47,7 @@
   <div :if={extension_enabled?(:bonfire_ui_reactions, @__context__)} data-scope="boosts">
     <Bonfire.UI.Social.ToggleTypeLive
       label={l("Boosts")}
+      icon="lucide:refresh-cw"
       key={:boost}
       field={:activity_types}
       feed_filters={@feed_filters}
@@ -70,6 +71,7 @@
 
   <Bonfire.UI.Social.ToggleTypeLive
     label={l("All posts")}
+    icon="dashicons:text-page"
     key={:post}
     field={:object_types}
     feed_filters={@feed_filters}
@@ -80,6 +82,7 @@
 
   <Bonfire.UI.Social.ToggleTypeLive
     label={l("Articles")}
+    icon="icomoon-free:blog"
     key={:article}
     field={:object_types}
     feed_filters={@feed_filters}

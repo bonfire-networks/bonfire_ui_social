@@ -1,15 +1,8 @@
 defmodule Bonfire.UI.Social.TimeControlLive do
   use Bonfire.UI.Common.Web, :stateless_component
 
-  @default_options [
-    {1, l("Day")},
-    {7, l("Week")},
-    {30, l("Month")},
-    {365, "Year"},
-    {0, "All time"}
-  ]
   prop keys, :any, default: []
-  prop options, :any, default: @default_options
+  prop options, :any, default: nil
   prop default_value, :any, default: nil
   prop event_target, :any, default: nil
   prop scope, :any, default: nil
@@ -29,8 +22,17 @@ defmodule Bonfire.UI.Social.TimeControlLive do
   #   |> render_sface()
   # end
 
+  def default_options,
+    do: [
+      {1, l("Day")},
+      {7, l("Week")},
+      {30, l("Month")},
+      {365, l("Year")},
+      {0, l("All time")}
+    ]
+
   # Find a value by its index in a sorted list of values
-  def find_value_by_index(range_index, options \\ @default_options) do
+  def find_value_by_index(range_index, options \\ default_options()) do
     # Get tuple at index or first tuple if index is out of bounds
     {value, _label} = Enum.at(options, Types.maybe_to_integer(range_index)) || List.first(options)
     value

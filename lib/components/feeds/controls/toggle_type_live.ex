@@ -5,6 +5,7 @@ defmodule Bonfire.UI.Social.ToggleTypeLive do
   prop field, :atom, required: true
   prop key, :any
   prop label, :string, default: nil
+  prop icon, :any, default: nil
   # prop disabled, :boolean, default: false
   # prop scope, :any, default: nil
 
