@@ -82,6 +82,7 @@
       >
         <#Icon iconify="dashicons:text-page" class="w-5 h-5" />
         <span class="sr-only">{l("All Posts")}</span>
+        <div class="filters_tabbed" />
       </button>
     </div>
 
@@ -105,6 +106,7 @@
       >
         <#Icon iconify="icomoon-free:blog" class="w-4 h-4" />
         <span class="sr-only">{l("Show articles (long posts)")}</span>
+        <div class="filters_tabbed" />
       </button>
     </div>
 
@@ -129,6 +131,7 @@
       >
         <#Icon iconify="lucide:refresh-cw" class="w-4 h-4" />
         <span class="sr-only">{l("Boosts")}</span>
+        <div class="filters_tabbed" />
       </button>
     </div>
 
@@ -150,6 +153,7 @@
       >
         <#Icon iconify="flowbite:user-add-solid" class="w-5 h-5" />
         <span class="sr-only">{l("Follows")}</span>
+        <div class="filters_tabbed" />
       </button>
     </div>
 
@@ -171,6 +175,7 @@
       >
         <#Icon iconify="mdi:link" class="w-5 h-5" />
         <span class="sr-only">{l("Show links")}</span>
+        <div class="filters_tabbed" />
       </button>
     </div>
 
@@ -192,10 +197,11 @@
       >
         <#Icon iconify="ic:round-image" class="w-5 h-5" />
         <span class="sr-only">{l("Images")}</span>
+        <div class="filters_tabbed" />
       </button>
     </div>
 
-    <div
+    <!-- <div
       style={if should_hide_button?(:video, :media_types, assigns), do: "display: none;", else: ""}
       class="lg:tooltip lg:tooltip-bottom w-full"
       data-tip={l("Show only videos")}
@@ -214,9 +220,9 @@
         <#Icon iconify="majesticons:video" class="w-5 h-5" />
         <span class="sr-only">{l("Videos")}</span>
       </button>
-    </div>
+    </div> -->
 
-    <div
+    <!-- <div
       style={if should_hide_button?(:audio, :media_types, assigns), do: "display: none;", else: ""}
       class="lg:tooltip lg:tooltip-bottom w-full"
       data-tip={l("Show only audio")}
@@ -235,9 +241,9 @@
         <#Icon iconify="lucide:audio-lines" class="w-5 h-5" />
         <span class="sr-only">{l("Audio")}</span>
       </button>
-    </div>
+    </div> -->
 
-    <div
+    <!-- <div
       style={if should_hide_button?("Edition", :object_types, assigns), do: "display: none;", else: ""}
       class="lg:tooltip lg:tooltip-bottom w-full"
       data-tip={l("Show only books")}
@@ -256,9 +262,9 @@
         <#Icon iconify="mdi:bookshelf" class="w-5 h-5" />
         <span class="sr-only">{l("Books")}</span>
       </button>
-    </div>
+    </div> -->
 
-    <div
+    <!-- <div
       style={if should_hide_button?("Event", :object_types, assigns), do: "display: none;", else: ""}
       class="lg:tooltip lg:tooltip-bottom w-full"
       data-tip={l("Show only events")}
@@ -277,7 +283,7 @@
         <#Icon iconify="ph:calendar-blank-bold" class="w-5 h-5" />
         <span class="sr-only">{l("Events")}</span>
       </button>
-    </div>
+    </div> -->
 
     {!-- <div
     style={if should_hide_button?(:reply, :activity_types, assigns), do: "display: none;", else: ""}

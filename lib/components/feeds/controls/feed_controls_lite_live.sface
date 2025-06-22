@@ -16,8 +16,8 @@
   />
 
   <div id="more_filters" class="pb-0 flex flex-col gap-2 hidden">
-    <div class="flex flex-col lg:mt-2 w-full">
-      <div class="font-semibold uppercase text-xs text-base-content/60 mb-3  border-t border-base-content/10 pt-3 mt-3">{l("Time limit")}</div>
+    <div class="flex flex-col w-full">
+      <div class="font-semibold uppercase text-xs text-base-content/60 mb-3  border-t border-base-content/10 pt-3">{l("Time limit")}</div>
       <Bonfire.UI.Social.TimeControlLive
         feed_name={@feed_name}
         event_target={@event_target}

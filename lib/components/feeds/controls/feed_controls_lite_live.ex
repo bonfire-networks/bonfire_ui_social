@@ -47,11 +47,11 @@ defmodule Bonfire.UI.Social.FeedControlsLiteLive do
 
       is_only_included?(type, field, feed_filters) ->
         # Active tab state
-        "btn flex-1 w-full btn-primary"
+        "btn btn-ghost flex-1 w-full relative btn-tabbed-primary"
 
       true ->
         # Inactive tab state
-        "btn flex-1 w-full btn-ghost"
+        "btn flex-1 w-full relative btn-ghost"
     end
   end
 
