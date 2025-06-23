@@ -15,7 +15,7 @@
     get_tab_toggle_value={&get_tab_toggle_value/3}
   />
 
-  <div id="more_filters" class="pb-0 flex flex-col gap-2 hidden">
+  <div id="more_filters" class="pb-0 flex flex-col gap-2 hidden mt-2">
     <div class="flex flex-col w-full">
       <div class="font-semibold uppercase text-xs text-base-content/60 mb-3  border-t border-base-content/10 pt-3">{l("Time limit")}</div>
       <Bonfire.UI.Social.TimeControlLive

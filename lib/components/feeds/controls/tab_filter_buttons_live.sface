@@ -1,7 +1,7 @@
 <!-- TODO: Make it configurable by the user -->
 <div class="flex gap-1 items-center justify-between" id="tab-filter-buttons-container">
   <!-- Mobile select dropdown (visible on mobile only) -->
-  <div class="md:hidden mr-3">
+  <div class="mr-3">
     <form id="form_filter_select" phx-change="mobile_filter_change" phx-target={@event_target}>
       <label class="sr-only" for="filter_select">{l("Filter")}</label>
       <select id="filter_select" name="filter_select" class="select select-ghost font-semibold">
@@ -63,7 +63,7 @@
       </select>
     </form>
   </div>
-  <div class="hidden md:flex items-center justify-evenly flex-1">
+  <!--div class="hidden md:flex items-center justify-evenly flex-1">
     <div
       style={if should_hide_button?(:post, :object_types, assigns), do: "display: none;", else: ""}
       class="lg:tooltip lg:tooltip-bottom w-full"
@@ -201,7 +201,7 @@
       </button>
     </div>
 
-    <!-- <div
+     <div
       style={if should_hide_button?(:video, :media_types, assigns), do: "display: none;", else: ""}
       class="lg:tooltip lg:tooltip-bottom w-full"
       data-tip={l("Show only videos")}
@@ -321,8 +321,8 @@
       <#Icon iconify="mingcute:paper-fill" class="w-5 h-5" />
       <span class="sr-only">{l("Research")}</span>
     </button>
+  </div> 
   </div> --}
-  </div>
 
   <div class="border-l border-base-content/10 pl-2">
     <button

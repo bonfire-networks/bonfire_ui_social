@@ -16,8 +16,8 @@
     <div
       :if={@showing_within != :smart_input}
       class={
-        "-mx-5 -mt-4 mb-4",
-        "!mt-2 mb-6": @showing_within == :thread and @viewing_main_object
+        "-mx-4 -mt-4 mb-4",
+        "!-mx-5 !mt-2 mb-6": @showing_within == :thread and @viewing_main_object
       }
     >
       <!-- WIP: Add the proper Image, or use a fallback: note. i'd still use a fallback for articles without images -->
@@ -46,14 +46,14 @@
         </div>
     {/case}
 
-    <Bonfire.UI.Social.Activity.CWLive
+    <!-- <Bonfire.UI.Social.Activity.CWLive
       :if={@cw}
       cw={@cw}
       activity_component_id={@activity_component_id}
       summary={nil}
-    />
-
-    <div id={"content_#{@activity_component_id}"} class={if @cw, do: "hidden"}>
+    /> -->
+<!-- class={if @cw, do: "hidden"} -->
+    <div id={"content_#{@activity_component_id}"} >
       {#if @showing_within != :thread and e(post_content(@object), :summary, nil)}
         <div
           id={"expandable_note_#{@parent_id}_#{id(@activity) || id(@object) || 'no-id'}"}

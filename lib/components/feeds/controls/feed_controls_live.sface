@@ -1,7 +1,7 @@
 <div
   data-id="feed_controls"
   id="feed_controls"
-  class="p-2 relative  lg:pb-4 border-base-content/10 border-b relative feed_control_wrapper bg-base-100 lg:rounded-t-xl"
+  class="p-2 relative border-base-content/10 border-b relative feed_control_wrapper bg-base-100 lg:rounded-t-xl"
 >
   {#if @reloading}
     <div class="absolute z-10 inset-0 flex items-center justify-center bg-base-content/10">
@@ -21,15 +21,6 @@
     </div>
   </div>
 
-  <div class="flex flex-col gap-2 pt-3 w-full">
-    <Bonfire.UI.Social.TimeControlLive
-      feed_name={@feed_name}
-      event_target={@event_target}
-      event_name="set_filter"
-      current_value={e(@feed_filters, :time_limit, nil)}
-      scope={:user}
-    />
-  </div>
 
   <Bonfire.UI.Social.FilterByCirclesLive
     feed_filters={@feed_filters}
@@ -37,6 +28,15 @@
   />
 
   <div id="more_filters" class="pb-0 flex pt-4 flex-col gap-2 hidden">
+    <div class="flex flex-col gap-2 pb-3 w-full">
+      <Bonfire.UI.Social.TimeControlLive
+        feed_name={@feed_name}
+        event_target={@event_target}
+        event_name="set_filter"
+        current_value={e(@feed_filters, :time_limit, nil)}
+        scope={:user}
+      />
+    </div>
     <Bonfire.UI.Social.FeedExtraControlsLive
       event_target={@event_target}
       event_name="set_filter"

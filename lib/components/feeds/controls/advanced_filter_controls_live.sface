@@ -7,7 +7,7 @@
         id="order_dropdown_feed"
         class="flex flex-1 relative"
       >
-        <label tabindex="0" class="tooltip-button btn w-full btn-outline btn-soft">
+        <label tabindex="0" class="tooltip-button btn w-full">
           {#case e(@feed_filters, :sort_by, nil)}
             {#match :num_replies}
               <span class="flex items-center">
@@ -79,7 +79,7 @@
           {/if}
         </ul>
       </div>
-      <div class="px-2 btn btn-square flex items-center place-content-center btn-outline btn-soft">
+      <!-- <div class="px-2 btn btn-square flex items-center place-content-center btn-outline btn-soft">
         {#if e(@feed_filters, :sort_order, nil) == :asc}
           <a phx-click="set_filter" phx-value-sort_order={:desc} phx-target={@event_target}>
             <#Icon iconify="mdi:arrow-down" class="w-4 h-4" />
@@ -91,32 +91,32 @@
             <span class="sr-only">{l("Newest first")}</span>
           </a>
         {/if}
-      </div>
+      </div> -->
     </div>
 
     <div data-position="bottom" phx-hook="Tooltip" class="relative" id="filter_origin_feed">
       <label
         tabindex="0"
         class={
-          "tooltip-button btn w-full btn-outline btn-soft capitalize",
+          "tooltip-button btn w-full capitalize",
           "opacity-50 cursor-not-allowed": @preset_has_fixed_origin
         }
       >
         {case @preset_has_fixed_origin do
           true ->
             case @preset_origin do
-              :remote -> l("Remote")
-              :local -> l("Local")
-              _ -> l("All")
+              :remote -> l("Only Remote")
+              :local -> l("Only Local")
+              _ -> l("Federated")
             end
 
           false ->
             case @feed_filters[:origin] do
-              [:remote] -> l("Remote")
-              [:local] -> l("Local")
-              :remote -> l("Remote")
-              :local -> l("Local")
-              _ -> l("All")
+              [:remote] -> l("Only Remote")
+              [:local] -> l("Only Local")
+              :remote -> l("Only Remote")
+              :local -> l("Only Local")
+              _ -> l("Federated")
             end
         end}
       </label>
@@ -131,7 +131,7 @@
             phx-target={@event_target}
             class="flex gap-3 px-2 text-base-content"
           >
-            {l("Local")}</a>
+            {l("Only Local")}</a>
         </li>
         <li><a
             phx-click="set_filter"
@@ -139,14 +139,14 @@
             phx-target={@event_target}
             class="flex gap-3 px-2 text-base-content"
           >
-            {l("Remote")}</a></li>
+            {l("Only Remote")}</a></li>
         <li><a
             phx-click="set_filter"
             phx-value-origin={:all}
             phx-target={@event_target}
             class="flex gap-3 px-2 text-base-content"
           >
-            {l("All")}</a></li>
+            {l("Federated")}</a></li>
       </ul>
       <div
         :if={@preset_has_fixed_origin}
@@ -161,7 +161,7 @@
     <div :if={@show_circles_button} class="flex-1 relative" id="filter_circles_feed">
       <label
         tabindex="0"
-        class="btn w-full btn-outline btn-soft capitalize"
+        class="btn w-full capitalize"
         phx-click={JS.toggle(to: "#open_circles")}
       >
         {l("By circles")} {case e(@feed_filters, :subject_circles, []) do
