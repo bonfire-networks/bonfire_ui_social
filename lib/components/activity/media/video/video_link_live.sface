@@ -28,13 +28,13 @@
           {/case}
           <div class="absolute inset-0 w-full h-full flex items-center place-content-center">
             <div class="bg-gray-900/60 z-50 gap-4 px-4 h-12 rounded flex justify-center items-center place-content-center">
-              <LinkLive
-                to={e(@media, :metadata, "canonical_media", nil)}
-                parent_id={["video_link", id(@media), @showing_within, @parent_id]}
-                class=""
-              >
-                <#Icon iconify="heroicons:play-20-solid" class="w-6 h-6 hover:text-white text-gray-300" />
-              </LinkLive>
+              {#case e(@media, :metadata, "canonical_media", nil)}
+                {#match nil}
+                {#match url}
+                  <LinkLive to={url} parent_id={["video_link", id(@media), @showing_within, @parent_id]} class="">
+                    <#Icon iconify="heroicons:play-20-solid" class="w-6 h-6 hover:text-white text-gray-300" />
+                  </LinkLive>
+              {/case}
               <a href={Media.media_url(@media)} target="_blank">
                 <#Icon iconify="heroicons-outline:external-link" class="w-6 h-6 hover:text-white text-gray-300" />
               </a>

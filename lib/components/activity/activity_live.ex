@@ -1794,7 +1794,8 @@ defmodule Bonfire.UI.Social.ActivityLive do
           {l("Audio"), Bonfire.UI.Social.Activity.AudioActivityStreamsLive}
 
         true ->
-          {l("Remote Activity"), Bonfire.UI.Social.Activity.UnknownActivityStreamsLive}
+          {List.first(types) || l("Remote Activity"),
+           Bonfire.UI.Social.Activity.UnknownActivityStreamsLive}
       end
 
     [
