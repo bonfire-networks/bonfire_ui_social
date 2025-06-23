@@ -16,7 +16,7 @@
     <div
       :if={@showing_within != :smart_input}
       class={
-        "-mx-4 -mt-4 mb-4",
+        "-mx-5 -mt-4 mb-4",
         "!mt-2 mb-6": @showing_within == :thread and @viewing_main_object
       }
     >
