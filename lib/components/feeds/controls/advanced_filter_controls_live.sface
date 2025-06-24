@@ -159,15 +159,13 @@
     </div>
 
     <div :if={@show_circles_button} class="flex-1 relative" id="filter_circles_feed">
-      <label
-        tabindex="0"
-        class="btn w-full capitalize"
-        phx-click={JS.toggle(to: "#open_circles")}
-      >
-        {l("By circles")} {case e(@feed_filters, :subject_circles, []) do
-          [] -> nil
-          circles -> "(#{length(circles)})"
-        end}
+      <label tabindex="0" class="btn w-full capitalize" phx-click={JS.toggle(to: "#open_circles")}>
+        <span class="hidden lg:flex">{l("By circles")}</span>
+        <span class="lg:hidden"><#Icon iconify="rivet-icons:circle" class="w-4 h-4" /></span>
+        <span>{case e(@feed_filters, :subject_circles, []) do
+            [] -> nil
+            circles -> "(#{length(circles)})"
+          end}</span>
       </label>
     </div>
   </div>

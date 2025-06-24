@@ -222,7 +222,7 @@
       </button>
     </div> -->
 
-    <!-- <div
+  <!-- <div
       style={if should_hide_button?(:audio, :media_types, assigns), do: "display: none;", else: ""}
       class="lg:tooltip lg:tooltip-bottom w-full"
       data-tip={l("Show only audio")}
@@ -243,7 +243,7 @@
       </button>
     </div> -->
 
-    <!-- <div
+  <!-- <div
       style={if should_hide_button?("Edition", :object_types, assigns), do: "display: none;", else: ""}
       class="lg:tooltip lg:tooltip-bottom w-full"
       data-tip={l("Show only books")}
@@ -264,7 +264,7 @@
       </button>
     </div> -->
 
-    <!-- <div
+  <!-- <div
       style={if should_hide_button?("Event", :object_types, assigns), do: "display: none;", else: ""}
       class="lg:tooltip lg:tooltip-bottom w-full"
       data-tip={l("Show only events")}
@@ -285,7 +285,7 @@
       </button>
     </div> -->
 
-    {!-- <div
+  {!-- <div
     style={if should_hide_button?(:reply, :activity_types, assigns), do: "display: none;", else: ""}
     class="lg:tooltip lg:tooltip-bottom w-full"
     data-tip={l "Show only replies"}
@@ -307,7 +307,7 @@
     </button>
   </div> --}
 
-    {!-- <div data-switch="research" class="w-full flex-1">
+  {!-- <div data-switch="research" class="w-full flex-1">
     <button 
       data-id="filter-research"
       class={@get_button_class.(:research, :media_types, @feed_filters)}

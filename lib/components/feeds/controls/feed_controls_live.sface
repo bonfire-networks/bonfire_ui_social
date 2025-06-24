@@ -21,7 +21,6 @@
     </div>
   </div>
 
-
   <Bonfire.UI.Social.FilterByCirclesLive
     feed_filters={@feed_filters}
     event_target={@event_target}

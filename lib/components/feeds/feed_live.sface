@@ -6,7 +6,7 @@
     aria-live="assertive"
     phx-hook="Bonfire.UI.Common.PreviewContentLive#MainFeed"
     aria-atomic="true"
-    class="w-full flex flex-col feed max-w-[596px] lg:rounded-xl lg:shadow bg-base-100 mx-auto"
+    class="w-full flex flex-col feed lg:rounded-xl lg:shadow bg-base-100 mx-auto"
   >
     <div :if={!@hide_filters and current_user_id(@__context__)} id="feed_controls_wrapper">
       <StatelessComponent

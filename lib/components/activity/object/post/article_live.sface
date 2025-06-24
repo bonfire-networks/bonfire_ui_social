@@ -24,7 +24,7 @@
       <div
         data-id="article_cover"
         class={
-          "flex relative items-center rounded-t-lg shrink-0 w-full bg-base-content/10 aspect-[1.91/1] place-content-center bg-no-repeat bg-cover h-[200px]",
+          "flex relative items-center rounded-t-lg shrink-0 w-full bg-base-content/10 aspect-[1.91/1] place-content-center bg-no-repeat bg-cover",
           "!rounded-none": @showing_within == :thread and @viewing_main_object
         }
         style="background-image: url('/images/bonfires.png')"
@@ -52,8 +52,8 @@
       activity_component_id={@activity_component_id}
       summary={nil}
     /> -->
-<!-- class={if @cw, do: "hidden"} -->
-    <div id={"content_#{@activity_component_id}"} >
+    <!-- class={if @cw, do: "hidden"} -->
+    <div id={"content_#{@activity_component_id}"}>
       {#if @showing_within != :thread and e(post_content(@object), :summary, nil)}
         <div
           id={"expandable_note_#{@parent_id}_#{id(@activity) || id(@object) || 'no-id'}"}

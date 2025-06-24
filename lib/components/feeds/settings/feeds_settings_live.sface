@@ -5,7 +5,6 @@
   </div>
 
   <div class="flex flex-col gap-2 divide-y divide-base-content/10">
-
     <div x-data="{open: false}" class="p-4">
       <div x-on:click="open = !open" class="flex items-center justify-between gap-4 cursor-pointer">
         <div class="flex flex-col gap-1">
@@ -115,8 +114,11 @@
       />
     </form>
 
-    <div :if={Settings.get([Bonfire.UI.Social, :use_lite_feed_controls], true, context: @__context__)} 
-      x-data="{open: false}" class="p-4">
+    <div
+      :if={Settings.get([Bonfire.UI.Social, :use_lite_feed_controls], true, context: @__context__)}
+      x-data="{open: false}"
+      class="p-4"
+    >
       <div x-on:click="open = !open" class="flex items-center justify-between gap-4 cursor-pointer">
         <div class="flex flex-col gap-1">
           <div class="text-sm font-medium">{l("Actiity types")}</div>
@@ -133,8 +135,5 @@
       <div x-show="open" x-cloak x-collapse>
       </div>
     </div>
-  
   </div>
-
-
 </div>
