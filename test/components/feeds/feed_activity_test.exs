@@ -10,6 +10,7 @@ defmodule Bonfire.UI.Social.Feeds.FeedActivityTest do
   alias Bonfire.Posts
 
   import Bonfire.Common.Enums
+  import Bonfire.Files.Simulation
 
   test "As a user I want to see the activity total replies" do
     # Create alice user
@@ -71,7 +72,7 @@ defmodule Bonfire.UI.Social.Feeds.FeedActivityTest do
     end
   end
 
-  test "As a user, when I create a new post, I want to see my avatar image in the activity subject" do
+  test "As a user, when I create a new post, I want to see my generated avatar image in the activity subject" do
     # Create alice user
     account = fake_account!()
     alice = fake_user!(account)
@@ -89,6 +90,36 @@ defmodule Bonfire.UI.Social.Feeds.FeedActivityTest do
     {:ok, view, _html} = live(conn, next)
     # Then I should see the post in my feed
     assert has_element?(view, "a[data-id=subject_avatar]")
+    #  ensure it is a generated avatar, since we didn't upload a custom one
+    assert has_element?(view, "a[data-id=subject_avatar] img[src*='gen_avatar']")
+
+    #  |> Floki.attribute("alt") == [alice.profile.name <> " profile image"]
+  end
+
+  test "As a user, when I create a new post, I want to see my uploaded avatar image in the activity subject" do
+    # Create alice user
+    %{user: alice, upload: upload, path: path, url: url} =
+      fake_user_with_avatar!()
+
+    assert path || url,
+           "Expected a path or URL for the uploaded file, got neither."
+
+    feed_id = Bonfire.Social.Feeds.named_feed_id(:local)
+
+    attrs = %{
+      post_content: %{summary: "summary", html_body: "first post"}
+    }
+
+    assert {:ok, post} = Posts.publish(current_user: alice, post_attrs: attrs, boundary: "public")
+
+    conn = conn(user: alice)
+    next = "/feed/local"
+
+    {:ok, view, _html} = live(conn, next)
+    # Then I should see the post in my feed
+    assert has_element?(view, "a[data-id=subject_avatar]")
+    #  ensure it is not a generated avatar, since we uploaded a custom one
+    refute has_element?(view, "a[data-id=subject_avatar] img[src*='gen_avatar']")
 
     #  |> Floki.attribute("alt") == [alice.profile.name <> " profile image"]
   end

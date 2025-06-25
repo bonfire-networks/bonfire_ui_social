@@ -18,7 +18,7 @@
       aria-expanded="true"
     > --}
   <LinkLive
-    :if={@subject_id && !Settings.get([Bonfire.UI.Common.AvatarLive, :hide_avatars], false, @__context__)}
+    :if={@subject_id && !Media.hide_avatars?(@__context__, @showing_within)}
     opts={"data-id": "subject_avatar"}
     parent_id={["subject_avatar", @parent_id]}
     class={
@@ -33,6 +33,7 @@
       parent_id={["subject", @activity_component_id || @activity_id]}
       user_id={@subject_id}
       src={@profile_media}
+      showing_within={@showing_within}
       fallback_class="w-12 h-12"
       class={
         "rounded-full w-12 h-12",

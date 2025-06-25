@@ -602,7 +602,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
       role="article"
       data-id="activity"
       data-rendered={@showing_within}
-      data-avatar-hidden={Settings.get([Bonfire.UI.Common.AvatarLive, :hide_avatars], false, @__context__)}
+      data-avatar-hidden={Media.hide_avatars?(@__context__, @showing_within)}
       data-hidden={@hide_activity}
       data-compact={@__context__[:ui_compact]}
       data-answer={not is_nil(e(@activity, :replied, :pinned, nil) || e(@activity, :pinned, nil))}
