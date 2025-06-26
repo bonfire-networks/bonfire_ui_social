@@ -1877,6 +1877,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
         e(object, :media, nil),
       object_type
     )
+    |> flood("prim_img")
   end
 
   # defp primary_image_and_component_maybe_attachments(_, _activity, _object, _activity_inception), do: []
@@ -1930,8 +1931,14 @@ defmodule Bonfire.UI.Social.ActivityLive do
 
   def split_primary_image(_), do: {nil, []}
 
-  defp is_primary_image?(%{media: %{metadata: %{"primary_image" => true}}}), do: true
-  defp is_primary_image?(%{metadata: %{"primary_image" => true}}), do: true
+  defp is_primary_image?(%{media: %{metadata: %{"primary_image" => true_val}}})
+       when true_val in [true, "true"],
+       do: true
+
+  defp is_primary_image?(%{metadata: %{"primary_image" => true_val}})
+       when true_val in [true, "true"],
+       do: true
+
   defp is_primary_image?(_), do: false
 
   # @decorate time()
