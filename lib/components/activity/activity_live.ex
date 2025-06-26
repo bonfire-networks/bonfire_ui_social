@@ -334,7 +334,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
         is_article?(object_type, object) -> :article
         true -> object_type
       end
-      |> flood("object_type!!")
+      |> debug("object_type!!")
 
     object_type_readable =
       assigns[:object_type_readable] ||
@@ -1877,7 +1877,8 @@ defmodule Bonfire.UI.Social.ActivityLive do
         e(object, :media, nil),
       object_type
     )
-    |> flood("prim_img")
+
+    # |> debug("prim_img")
   end
 
   # defp primary_image_and_component_maybe_attachments(_, _activity, _object, _activity_inception), do: []
@@ -1885,7 +1886,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
   def do_primary_image_and_component_maybe_attachments(_id, files, object_type)
       when (is_list(files) and files != []) or is_map(files) do
     {primary_image, files} =
-      if object_type == :article, do: split_primary_image(files), else: {nil, files}
+      if object_type == :article, do: Bonfire.Files.split_primary_image(files), else: {nil, files}
 
     {primary_image,
      [
@@ -1912,34 +1913,6 @@ defmodule Bonfire.UI.Social.ActivityLive do
         {nil, []}
     end
   end
-
-  def split_primary_image(files) when is_list(files) do
-    case Enum.split_with(files, &is_primary_image?/1) do
-      {[primary | _rest_primary], others} -> {primary, others}
-      {[], others} -> {nil, others}
-    end
-  end
-
-  def split_primary_image(files) when is_map(files) do
-    # Handle single file case
-    if is_primary_image?(files) do
-      {files, []}
-    else
-      {nil, [files]}
-    end
-  end
-
-  def split_primary_image(_), do: {nil, []}
-
-  defp is_primary_image?(%{media: %{metadata: %{"primary_image" => true_val}}})
-       when true_val in [true, "true"],
-       do: true
-
-  defp is_primary_image?(%{metadata: %{"primary_image" => true_val}})
-       when true_val in [true, "true"],
-       do: true
-
-  defp is_primary_image?(_), do: false
 
   # @decorate time()
   def component_actions(

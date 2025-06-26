@@ -114,15 +114,15 @@
       />
     </form>
 
-    <div
+    {!-- <div
       :if={Settings.get([Bonfire.UI.Social, :use_lite_feed_controls], true, context: @__context__)}
       x-data="{open: false}"
       class="p-4"
     >
       <div x-on:click="open = !open" class="flex items-center justify-between gap-4 cursor-pointer">
         <div class="flex flex-col gap-1">
-          <div class="text-sm font-medium">{l("Actiity types")}</div>
-          <div class="text-sm font-light text-base-content/70">{l("Here you can decide which activiy types you want to include in your feed control tab")}</div>
+          <div class="text-sm font-medium">{l("Activity and content types")}</div>
+          <div class="text-sm font-light text-base-content/70">{l("Here you can decide which activity and content types you want to include in your feed control tab")}</div>
         </div>
 
         <button type="button" x-cloak class="btn btn-circle btn-sm btn-ghost" x-show="open">
@@ -134,6 +134,6 @@
       </div>
       <div x-show="open" x-cloak x-collapse>
       </div>
-    </div>
+    </div> --}
   </div>
 </div>

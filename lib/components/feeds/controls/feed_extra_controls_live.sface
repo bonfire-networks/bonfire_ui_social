@@ -59,6 +59,7 @@
 
   <Bonfire.UI.Social.ToggleTypeLive
     label={l("Follows")}
+    icon="flowbite:user-add-solid"
     key={:follow}
     field={:activity_types}
     feed_filters={@feed_filters}
@@ -93,6 +94,7 @@
 
   <Bonfire.UI.Social.ToggleTypeLive
     label={l("Replies")}
+    icon="mingcute:comment-fill"
     key={:reply}
     field={:activity_types}
     feed_filters={@feed_filters}
@@ -103,6 +105,7 @@
 
   <Bonfire.UI.Social.ToggleTypeLive
     label={l("Links")}
+    icon="mdi:link"
     key={:link}
     field={:media_types}
     feed_filters={@feed_filters}
@@ -113,6 +116,7 @@
 
   <Bonfire.UI.Social.ToggleTypeLive
     label={l("Images")}
+    icon="ic:round-image"
     key={:image}
     field={:media_types}
     feed_filters={@feed_filters}
@@ -123,6 +127,7 @@
 
   <Bonfire.UI.Social.ToggleTypeLive
     label={l("Videos")}
+    icon="majesticons:video"
     key={:video}
     field={:media_types}
     feed_filters={@feed_filters}
@@ -133,6 +138,7 @@
 
   <Bonfire.UI.Social.ToggleTypeLive
     label={l("Audio")}
+    icon="lucide:audio-lines"
     key={:audio}
     field={:media_types}
     feed_filters={@feed_filters}
@@ -143,6 +149,7 @@
 
   <Bonfire.UI.Social.ToggleTypeLive
     label={l("Books")}
+    icon="mdi:bookshelf"
     key="Edition"
     field={:object_types}
     feed_filters={@feed_filters}
@@ -153,6 +160,7 @@
 
   <Bonfire.UI.Social.ToggleTypeLive
     label={l("Events")}
+    icon="mingcute:paper-fill"
     key={:Event}
     field={:object_types}
     feed_filters={@feed_filters}
@@ -163,6 +171,7 @@
 
   <Bonfire.UI.Social.ToggleTypeLive
     label={l("Research publications")}
+    icon="ph:calendar-blank-bold"
     key={:research}
     field={:media_types}
     feed_filters={@feed_filters}
@@ -173,6 +182,7 @@
 
   {#for key <- @feed_filters[:subject_types] || []}
     <Bonfire.UI.Social.ToggleTypeLive
+      icon="mingcute:users-fill"
       label={String.capitalize(to_string(key))}
       key={key}
       field={:subject_types}
@@ -185,6 +195,7 @@
 
   {#for key when key not in [:boost, :follow, :reply] <- @feed_filters[:activity_types] || []}
     <Bonfire.UI.Social.ToggleTypeLive
+      icon="heroicons-outline:eye"
       label={String.capitalize(to_string(key))}
       key={key}
       field={:activity_types}
@@ -198,6 +209,7 @@
   {#for key when key not in [:post, "post", Bonfire.Data.Social.Post, :Event, "Event", "Edition"] <-
       @feed_filters[:object_types] || []}
     <Bonfire.UI.Social.ToggleTypeLive
+      icon="fluent:box-16-regular"
       label={String.capitalize(to_string(key))}
       key={key}
       field={:object_types}
@@ -222,6 +234,7 @@
            "research"
          ] <- @feed_filters[:media_types] || []}
     <Bonfire.UI.Social.ToggleTypeLive
+      icon="octicon:file-media-24"
       label={String.capitalize(to_string(key))}
       key={key}
       field={:media_types}
