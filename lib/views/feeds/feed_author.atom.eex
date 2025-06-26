@@ -1,0 +1,9 @@
+<author>
+  <activity:object>http://activitystrea.ms/schema/1.0/person</activity:object>
+  <uri><%= URIs.canonical_url(@author) %></uri>
+  <poco:preferredUsername><%= e(@author, :character, :username, nil) %></poco:preferredUsername>
+  <poco:displayName><%= e(@author, :profile, :name, nil) || e(@author, :character, :username, nil) %></poco:displayName>
+  <poco:note><%= escape Text.text_only(e(@author, :profile, :summary, nil)) %></poco:note>
+  <name><%= e(@author, :character, :username, nil) %></name>
+
+</author>

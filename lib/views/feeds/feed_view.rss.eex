@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<rss version="2.0" xmlns:webfeeds="http://webfeeds.org/rss/1.0">
+  <channel>
+<%= if assigns[:subject_user] do %>
+    <title><%= e(@subject_user, :profile, :name, e(@subject_user, :character, :username, nil)) <> "'s timeline" %></title>
+    <updated><%= most_recent_update(@activities, @subject_user) %></updated>
+    <link><%= based_url("/feed/user_activities/#{e(@subject_user, :character, :username, nil)}/feed.rss") %></link>
+
+    <%= render @view_module, "feed_author.rss", Map.put(assigns, :author, @subject_user) %>
+
+    <%= if e(@page_info, :end_cursor, nil) do %>
+      <link rel="next"><%= based_url("/feed/user_activities/#{e(@subject_user, :character, :username, nil)}/feed.rss?after=#{e(@page_info, :end_cursor, nil)}") %></link>
+    <% end %>
+<% else %>
+    <title><%= @name || @page_title %></title>
+    <description><%= @description %></description>
+    <link><%= based_url("/feed/#{@feed_name}/#{@tag}/feed.rss") %></link>
+<% end %>
+
+<%= for %{activity: activity} <- @activities do %>
+  <%= if assigns[:subject_user] do %>
+    <%= render @view_module, "feed_activity.rss", Map.merge(assigns, prepare_activity(activity, subject_user: @subject_user)) %>
+  <% else %>
+    <%= render @view_module, "feed_activity.rss", Map.merge(assigns, prepare_activity(activity, author: true)) |> Map.put(:show_author, true) %>
+  <% end %>
+<% end %>
+  </channel>
+</rss>

@@ -1,0 +1,42 @@
+<item>
+  <activity:verb>http://activitystrea.ms/schema/1.0/post</activity:verb>
+  <activity:object-type>http://activitystrea.ms/schema/1.0/note</activity:object-type>
+
+<%= if assigns[:show_author] do %>
+  <%= render @view_module, "feed_author.rss", Map.put(assigns, :author, assigns[:author] || assigns[:subject_user]) %>
+<% end %>
+
+  <guid><%= e(@activity, :id, nil) %></guid>
+
+  <title><%= Text.text_only activity_title(@object) %></title>
+
+  <pubDate><%= pub_date(id(@activity)) %></pubDate>
+  <updated><%= pub_date(id(@activity)) %></updated>
+  
+  <ostatus:conversation ref="<%= activity_context(@activity) %>">
+    <%= activity_context(@activity) %>
+  </ostatus:conversation>
+
+  <description><%= Text.maybe_markdown_to_html(e(@object, :post_content, :summary, nil)) %> <%= escape Text.maybe_markdown_to_html(activity_content(@object),
+   # remote content is stored in HTML, but local content may contain markdown and/or HTML
+    skip_markdown: @is_remote,
+    #  we want to sanitize rather than escape HTML in local content
+    sanitize: !@is_remote) %></description>
+
+<%= if e(@activity, :local, false) do %>
+  <link><%= e(@activity, :id, nil) %></link>
+<% else %>
+  <link><%= e(@activity, :external_url, nil) %></link>
+<% end %>
+
+  <link rel="ostatus:conversation"><%= activity_context(@activity) %></link>
+
+<%= if href = get_href(e(@activity, :replied, :reply_to, nil)) do %>
+  <thr:in-reply-to ref='<%= href %>' href='<%= href %>'/>
+<% end %>
+
+<%= for attachment <- e(@activity, :media, []) do %>
+  <link type="<%= attachment_type(attachment) %>"><%= attachment_href(attachment) %></link>
+<% end %>
+
+</item>

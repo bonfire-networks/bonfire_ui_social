@@ -1,0 +1,35 @@
+  <logo><%= feed_logo() %></logo>
+
+  <logo><%= logo(@user) %></logo>
+
+<summary><%= escape(e(@author, :profile, :summary, nil)) %></summary>
+
+
+<link rel="avatar" href="<%= Media.avatar_url(@author) %>"/>
+<%= if Media.banner_url(@author) do %>
+  <link rel="header" href="<%= Media.banner_url(@author) %>"/>
+<% end %>
+
+
+<%# 
+<%= for id <- e(@activity, :mentions, []) do %>
+  <%= if id == as_public() do %>
+    <link rel="mentioned" ostatus:object-type="http://activitystrea.ms/schema/1.0/collection" href="<%= as_public() %>"/>
+  <% else %>
+    <link rel="mentioned" ostatus:object-type="http://activitystrea.ms/schema/1.0/person" href="<%= id %>"/>
+  <% end %>
+<% end %> 
+%>
+
+<%# 
+<%= for tag <- hashtags(@object) do %>
+  <category term="<%= tag %>"></category>
+<% end %> 
+%>
+
+
+<%# 
+<%= for {emoji, file} <- e(@activity, :emoji, %{}) do %>
+  <link name="<%= emoji %>" rel="emoji" href="<%= file %>"/>
+<% end %> 
+%>

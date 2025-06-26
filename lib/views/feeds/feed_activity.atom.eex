@@ -1,0 +1,46 @@
+<entry>
+  <activity:object-type>http://activitystrea.ms/schema/1.0/note</activity:object-type>
+  <activity:verb>http://activitystrea.ms/schema/1.0/post</activity:verb>
+
+<%= if assigns[:show_author] do %>
+  <%= render @view_module, "feed_author.atom", Map.put(assigns, :author, assigns[:author] || assigns[:subject_user]) %>
+<% end %>
+
+  <id><%= URIs.canonical_url(@object) %></id>
+  <title><%= Text.text_only activity_title(@object) %></title>
+
+<%= if e(@activity, :local, false) do %>
+  <%# <link type="application/atom+xml" href='<%= e(@activity, :id, nil) %>' rel="self"/> %>
+  <link type="text/html" href='<%= URIs.canonical_url(@object) %>' rel="alternate"/>
+<% else %>
+  <link type="text/html" href='<%= URIs.canonical_url(@object) %>' rel="alternate"/>
+<% end %>
+
+  <published><%= pub_date(id(@activity)) %></published>
+  <updated><%= pub_date(id(@activity)) %></updated>
+
+  <ostatus:conversation ref="<%= activity_context(@activity) %>">
+    <%= activity_context(@activity) %>
+  </ostatus:conversation>
+  <link href="<%= activity_context(@activity) %>" rel="ostatus:conversation"/>
+
+<%= if e(@object, :post_content, :summary, nil) do %>
+  <summary><%= Text.text_only(e(@object, :post_content, :summary, nil)) %></summary>
+<% end %>
+
+  <content type="xhtml"><div xmlns="http://www.w3.org/1999/xhtml"><%= Text.maybe_markdown_to_html(activity_content(@object),
+   # remote content is stored in HTML, but local content may contain markdown and/or HTML
+    skip_markdown: @is_remote,
+    #  we want to sanitize rather than escape HTML in local content
+    sanitize: !@is_remote) %></div></content>
+
+<%= if href = get_href(e(@activity, :replied, :reply_to, nil)) do %>
+  <thr:in-reply-to ref='<%= href %>' href='<%= href %>'/>
+<% end %>
+
+<%= for attachment <- e(@activity, :media, []) do %>
+  <link rel="enclosure" href="<%= attachment_href(attachment) %>" type="<%= attachment_type(attachment) %>"/>
+<% end %>
+
+
+</entry>

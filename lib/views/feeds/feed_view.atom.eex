@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<feed
+  xmlns="http://www.w3.org/2005/Atom"
+  xmlns:thr="http://purl.org/syndication/thread/1.0"
+  xmlns:activity="http://activitystrea.ms/spec/1.0/"
+  xmlns:poco="http://portablecontacts.net/spec/1.0"
+  xmlns:ostatus="http://ostatus.org/schema/1.0">
+
+<%= if assigns[:subject_user] do %>
+  <id><%= based_url("/feed/user_activities/#{e(@subject_user, :character, :username, nil)}/feed.atom") %></id>
+  <title><%= e(@subject_user, :profile, :name, e(@subject_user, :character, :username, nil)) %>'s timeline</title>
+  <updated><%= most_recent_update(@activities, @subject_user) %></updated>
+  <link rel="self" href="<%= based_url("/feed/user_activities/#{e(@subject_user, :character, :username, nil)}/feed.atom") %>" type="application/atom+xml"/>
+
+  <%= render @view_module, "feed_author.atom", Map.put(assigns, :author, @subject_user) %>
+  
+  <%= if e(@page_info, :end_cursor, nil) do %>
+    <link rel="next" href="<%= based_url("/feed/user_activities/#{e(@subject_user, :character, :username, nil)}/feed.atom?after=#{e(@page_info, :end_cursor, nil)}") %>" type="application/atom+xml"/>
+  <% end %>
+<% else %>
+  <id><%= based_url("/feed/#{@feed_name}/#{@tag}/feed.atom") %></id>
+  <title><%= @name || @page_title %></title>
+<%= if @description do %>
+  <subtitle><%= @description %></subtitle>
+<% end %>
+  <updated><%= most_recent_update(@activities) %></updated>
+  <link rel="self" href="<%= based_url("/feed/#{@feed_name}/#{@tag}/feed.atom") %>" type="application/atom+xml"/>
+<% end %>
+
+<%= for %{activity: activity} <- @activities do %>
+  <%= if assigns[:subject_user] do %>
+    <%= render @view_module, "feed_activity.atom", Map.merge(assigns, prepare_activity(activity, subject_user: @subject_user)) %>
+  <% else %>
+    <%= render @view_module, "feed_activity.atom", Map.merge(assigns, prepare_activity(activity, author: true)) |> Map.put(:show_author, true) %>
+  <% end %>
+<% end %>
+</feed>
