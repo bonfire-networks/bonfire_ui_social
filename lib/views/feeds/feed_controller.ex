@@ -9,15 +9,6 @@ defmodule Bonfire.UI.Social.FeedController do
   alias Bonfire.UI.Social.FeedView
   alias Bonfire.Common.Config
 
-  @doc "Feed redirect for other views who may want to redirect to the right feed format"
-  def feed_redirect(conn_or_socket, format, %{"feed_name" => feed_name} = params) do
-    if format in ["atom", "rss"] do
-      redirect_to(conn_or_socket, build_feed_path(feed_name, params, format))
-    else
-      redirect_to(conn_or_socket, build_feed_path(feed_name, params, "atom"))
-    end
-  end
-
   # Generic feed handler
   def feed(conn, %{"feed_name" => feed_name} = params) do
     format = params["format"] || get_format(conn)
@@ -37,23 +28,27 @@ defmodule Bonfire.UI.Social.FeedController do
   # Private helper functions
   defp fetch_feed_data(feed_name, params) do
     # Build context based on available params
-    opts = build_feed_opts(params)
+    opts =
+      build_feed_opts(params)
+      |> flood("oopts")
 
     # Get feed preset configuration
-    with {:ok, %{assigns: preset_assigns, filters: preset_filters}} <-
+    with {:ok, %{filters: preset_filters} = preset} <-
            Feeds.feed_preset_if_permitted(feed_name, opts),
-         merged_filters = Map.merge(preset_filters, extract_param_filters(params)),
+         merged_filters =
+           Map.merge(preset_filters, extract_param_filters(params, opts) |> flood("extttr"))
+           |> flood("filtt"),
          %{edges: activities, page_info: page_info} <-
-           FeedLoader.feed(String.to_atom(feed_name), merged_filters, opts) do
+           FeedLoader.feed(feed_name, merged_filters, opts) do
       feed_data =
         %{
           activities: activities,
           feed_name: feed_name,
           page_info: page_info,
+          tag: opts[:tags],
           subject_user: opts[:subject_user]
         }
-        |> maybe_add_tag_context(params)
-        |> Enum.into(preset_assigns)
+        |> Enum.into(preset[:assigns] || %{})
 
       {:ok, feed_data}
     end
@@ -68,40 +63,29 @@ defmodule Bonfire.UI.Social.FeedController do
     ]
     |> maybe_add_pagination(params)
     |> maybe_add_user_context(params)
+    |> maybe_add_tag_context(params)
   end
 
-  defp extract_param_filters(params) do
+  defp extract_param_filters(params, opts) do
     params
     # TODO: support more types
     |> Map.put(:object_type, Bonfire.Data.Social.Post)
-    |> maybe_add_tag_filter(params)
-    |> maybe_add_by_filter(params)
+    |> maybe_add_by_filter(opts)
   end
 
-  defp maybe_add_tag_filter(filters, %{"tag" => tag}) when is_binary(tag) do
-    Map.put(filters, :tags, tag)
-  end
-
-  defp maybe_add_tag_filter(filters, _), do: filters
-
-  defp maybe_add_by_filter(filters, %{"by" => by}) when is_binary(by) do
-    Map.put(filters, :by, by)
-  end
-
-  defp maybe_add_by_filter(filters, _), do: filters
-
-  defp maybe_add_user_context(feed_data, %{"username" => username}) do
+  defp maybe_add_user_context(opts, %{"param" => username}) do
     case Users.by_username(username) do
-      {:ok, user} -> Map.put(feed_data, :subject_user, user)
-      _ -> feed_data
+      {:ok, user} -> Keyword.put(opts, :subject_user, user)
+      _ -> opts
     end
   end
 
   defp maybe_add_user_context(feed_data, _), do: feed_data
 
-  defp maybe_add_tag_context(feed_data, %{"tag" => tag}) do
-    # TODO
-    feed_data
+  defp maybe_add_by_filter(filters, opts), do: Enums.maybe_put(filters, :by, opts[:subject_user])
+
+  defp maybe_add_tag_context(opts, %{"tag" => tag}) do
+    Keyword.put(opts, :tags, tag)
   end
 
   defp maybe_add_tag_context(feed_data, _), do: feed_data
@@ -134,23 +118,30 @@ defmodule Bonfire.UI.Social.FeedController do
   defp normalize_format(format) when format in ["rss", :rss], do: "rss"
   defp normalize_format(_), do: "atom"
 
-  defp build_feed_path(feed_name, params, format) do
+  @doc "Feed redirect for other views who may want to redirect to the right feed format"
+  def feed_redirect(conn_or_socket, format \\ "atom", feed_name \\ nil, params) do
+    redirect_to(conn_or_socket, feed_path(format, feed_name, params))
+  end
+
+  def feed_path(format \\ "atom", feed_name \\ nil, params) do
+    format = normalize_format(format)
+    # || params["tag"]
     param =
       params["param"] ||
-        params["username"] ||
-        params["tag"]
+        params["username"]
 
     path =
       if param do
-        "/feeds/#{feed_name}/#{param}.#{format}"
+        "/feed/#{feed_name || "local"}/#{param}/feed.#{format}"
       else
-        "/feeds/#{feed_name}.#{format}"
+        "/feed/#{feed_name || "local"}/feed.#{format}"
       end
 
     # Optionally add query string for extra params
     query =
       params
-      |> Map.drop(["feed_name", "param", "username", "tag"])
+      # , "tag"
+      |> Map.drop(["feed_name", "param", "username"])
       |> URI.encode_query()
 
     if query == "" do

@@ -1,5 +1,6 @@
 defmodule Bonfire.UI.Social.ProfileTimelineLive do
   use Bonfire.UI.Common.Web, :stateless_component
+  alias Bonfire.UI.Social.FeedController
 
   # prop page_title, :string, required: true
   # prop page, :string, required: true

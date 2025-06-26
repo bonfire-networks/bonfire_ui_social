@@ -51,12 +51,12 @@ defmodule Bonfire.UI.Social.FeedView do
   end
 
   def most_recent_update(activities) do
-    case List.first(activities) do
-      %{updated_at: updated_at} when not is_nil(updated_at) ->
-        DateTime.to_iso8601(updated_at)
+    case List.first(activities || []) do
+      # %{updated_at: updated_at} when not is_nil(updated_at) ->
+      #   DateTime.to_iso8601(updated_at)
 
-      %{published_at: published_at} when not is_nil(published_at) ->
-        DateTime.to_iso8601(published_at)
+      %{id: id} when not is_nil(id) ->
+        pub_date(id)
 
       _ ->
         DateTime.to_iso8601(DateTime.utc_now())
@@ -64,12 +64,15 @@ defmodule Bonfire.UI.Social.FeedView do
   end
 
   def most_recent_update(activities, user) do
-    case {List.first(activities), user} do
-      {%{updated_at: updated_at}, _} when not is_nil(updated_at) ->
-        DateTime.to_iso8601(updated_at)
+    case {List.first(activities || []), user} do
+      # {%{updated_at: updated_at}, _} when not is_nil(updated_at) ->
+      #   DateTime.to_iso8601(updated_at)
 
-      {_, user} when not is_nil(user) ->
-        DateTime.to_iso8601(e(user, :updated_at, DateTime.utc_now()))
+      {%{id: id}, _} when not is_nil(id) ->
+        pub_date(id)
+
+      # {_, user} when not is_nil(user) ->
+      #   DateTime.to_iso8601(e(user, :updated_at, DateTime.utc_now()))
 
       _ ->
         DateTime.to_iso8601(DateTime.utc_now())

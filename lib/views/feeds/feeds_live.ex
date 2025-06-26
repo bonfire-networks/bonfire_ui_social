@@ -3,6 +3,7 @@ defmodule Bonfire.UI.Social.FeedsLive do
 
   alias Bonfire.Social.Feeds.LiveHandler
   alias Bonfire.UI.Social.FeedLive
+  alias Bonfire.UI.Social.FeedController
 
   declare_extension("Social UI",
     icon: "ph:rss-simple-bold",
@@ -93,7 +94,7 @@ defmodule Bonfire.UI.Social.FeedsLive do
               Bonfire.UI.Me.LivePlugs.LoadCurrentUserCircles
             ]}
 
-  def mount(_params, _session, socket) do
+  def mount(_params, session, socket) do
     {:ok,
      socket
      |> assign(
@@ -134,7 +135,8 @@ defmodule Bonfire.UI.Social.FeedsLive do
          guests: [
            secondary: [{Bonfire.Tag.Web.WidgetTagsLive, []}]
          ]
-       ]
+       ],
+       maybe_rss_or_atom: maybe_rss_or_atom(session)
      )}
   end
 
@@ -218,6 +220,24 @@ defmodule Bonfire.UI.Social.FeedsLive do
   # end
   # end
 
+  def set_feed_assigns(feed \\ nil, attrs, socket) do
+    feed_str = to_string(feed)
+    ext = Path.extname(feed_str)
+
+    cond do
+      ext in [".rss", ".atom"] ->
+        format = String.trim_leading(ext, ".")
+        base = Path.rootname(feed_str)
+        FeedController.feed_redirect(socket, format, base, attrs)
+
+      format = socket.assigns[:maybe_rss_or_atom] ->
+        FeedController.feed_redirect(socket, format, feed, attrs)
+
+      true ->
+        {:noreply, prepare_feed_socket(feed, attrs, socket)}
+    end
+  end
+
   def prepare_feed_socket(feed \\ nil, attrs, socket) do
     debug(feed, "feed")
     debug(attrs, "attrs")
@@ -233,7 +253,17 @@ defmodule Bonfire.UI.Social.FeedsLive do
     |> assign(..., FeedLive.maybe_widgets(assigns(...)))
   end
 
-  def set_feed_assigns(feed \\ nil, attrs, socket) do
-    {:noreply, prepare_feed_socket(feed, attrs, socket)}
+  defp maybe_rss_or_atom(session) do
+    case Map.get(session, "accept_header") do
+      accept_header when is_binary(accept_header) ->
+        cond do
+          String.contains?(accept_header, "application/rss+xml") -> "rss"
+          String.contains?(accept_header, "application/atom+xml") -> "atom"
+          true -> nil
+        end
+
+      _ ->
+        nil
+    end
   end
 end

@@ -1,7 +1,19 @@
 <section>
   <#slot {@header} />
   <div data_id="profile_timeline">
-    <!-- feed_id={"user_#{@selected_tab}_#{id(@user)}"} -->
+    {!-- feed_id={"user_#{@selected_tab}_#{id(@user)}"} --}
+
+    <link
+      rel="alternate"
+      type="application/atom+xml"
+      href={FeedController.feed_path("atom", @feed_name, %{"username" => e(@user, :character, :username, nil)})}
+    />
+    <link
+      rel="alternate"
+      type="application/rss+xml"
+      href={FeedController.feed_path("rss", @feed_name, %{"username" => e(@user, :character, :username, nil)})}
+    />
+
     <StatefulComponent
       module={maybe_component(Bonfire.UI.Social.FeedLive, @__context__)}
       id={@feed_component_id || "Elixir.Bonfire.UI.Social.FeedLive__for_user_#{@selected_tab}_#{id(@user)}"}

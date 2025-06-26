@@ -27,7 +27,7 @@
   <link rel="self" href="<%= based_url("/feed/#{@feed_name}/#{@tag}/feed.atom") %>" type="application/atom+xml"/>
 <% end %>
 
-<%= for %{activity: activity} <- @activities do %>
+<%= for %{activity: activity} <- @activities || [] do %>
   <%= if assigns[:subject_user] do %>
     <%= render @view_module, "feed_activity.atom", Map.merge(assigns, prepare_activity(activity, subject_user: @subject_user)) %>
   <% else %>

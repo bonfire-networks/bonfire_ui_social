@@ -17,7 +17,7 @@
     <link><%= based_url("/feed/#{@feed_name}/#{@tag}/feed.rss") %></link>
 <% end %>
 
-<%= for %{activity: activity} <- @activities do %>
+<%= for %{activity: activity} <- @activities || [] do %>
   <%= if assigns[:subject_user] do %>
     <%= render @view_module, "feed_activity.rss", Map.merge(assigns, prepare_activity(activity, subject_user: @subject_user)) %>
   <% else %>
