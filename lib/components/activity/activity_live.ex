@@ -327,14 +327,27 @@ defmodule Bonfire.UI.Social.ActivityLive do
     verb_display = Activities.verb_display(verb)
 
     object_type =
-      (assigns[:object_type] || Types.object_type(object))
-      |> debug("object_type!!")
+      assigns[:object_type] || Types.object_type(object)
+
+    object_type =
+      cond do
+        is_article?(object_type, object) -> :article
+        true -> object_type
+      end
+      |> flood("object_type!!")
 
     object_type_readable =
       assigns[:object_type_readable] ||
-        if object_type == Bonfire.Data.Social.Post and not is_nil(reply_to),
-          do: l("comment"),
-          else: Types.object_type_display(object_type)
+        cond do
+          object_type == Bonfire.Data.Social.Post and not is_nil(reply_to) ->
+            l("comment")
+
+          object_type == :article ->
+            l("article")
+
+          true ->
+            Types.object_type_display(object_type)
+        end
 
     thread_id = id(thread)
     # debug(thread, "thread")
@@ -525,7 +538,15 @@ defmodule Bonfire.UI.Social.ActivityLive do
         subject_user,
         reply_to
       ) do
-    (component_maybe_attachments(showing_within == :media, activity, object, activity_inception) ++
+    {primary_image, attachments_component} =
+      primary_image_and_component_maybe_attachments(
+        object_type,
+        activity,
+        object,
+        activity_inception
+      )
+
+    (if(showing_within == :media, do: attachments_component, else: []) ++
        component_maybe_in_reply_to(
          reply_to,
          showing_within,
@@ -545,8 +566,8 @@ defmodule Bonfire.UI.Social.ActivityLive do
          activity_inception,
          subject_user
        ) ++
-       component_object(object, object_type) ++
-       component_maybe_attachments(showing_within != :media, activity, object, activity_inception) ++
+       component_object(object, object_type, %{primary_image: primary_image}) ++
+       if(showing_within != :media, do: attachments_component, else: []) ++
        component_actions(
          verb,
          activity,
@@ -556,24 +577,13 @@ defmodule Bonfire.UI.Social.ActivityLive do
          viewing_main_object
        ))
     |> debug("preview_components unfiltered - #{activity_inception}")
-    |> Enums.filter_empty([])
+    |> Enum.reject(&is_nil/1)
     |> Enum.map(fn
-      c when is_atom(c) and not is_nil(c) -> {c, nil}
+      c when is_atom(c) -> {c, nil}
       other -> other
     end)
     |> debug("preview_components - #{activity_inception}")
   end
-
-  defp component_maybe_attachments(true, activity, object, activity_inception) do
-    component_maybe_attachments(
-      id(object) || id(activity),
-      e(activity, :files, nil) || e(object, :files, nil) || e(activity, :media, nil) ||
-        e(object, :media, nil),
-      activity_inception
-    )
-  end
-
-  defp component_maybe_attachments(_, _activity, _object, _activity_inception), do: []
 
   def maybe_prepare(%{activity: _, activity_prepared: true} = assigns) do
     assigns
@@ -651,7 +661,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
                         modal_assigns={
                           post_id:
                             if(
-                              @object_type == :post or
+                              @object_type in [Bonfire.Data.Social.Post, :article] or
                                 String.starts_with?(@permalink || "", ["/post/"]),
                               do: @thread_id || id(@object)
                             ),
@@ -871,7 +881,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
                   thread_title={@thread_title}
                   is_remote={@is_remote}
                   hide_actions={@hide_actions}
-                  json={e(component_assigns, :json, nil)}
+                  primary_image={e(component_assigns, :primary_image, nil)}
                 />
               {#match _
                 when component in [
@@ -1671,26 +1681,26 @@ defmodule Bonfire.UI.Social.ActivityLive do
   # end
 
   # @decorate time()
-  def component_object(object, object_type)
+  def component_object(object, object_type, assigns \\ %{})
 
-  # def component_object(%{profile: %{id: _}}, object_type)
+  # def component_object(%{profile: %{id: _}}, object_type, _)
   #     when object_type not in [:group, :topic],
   #     do: [Bonfire.UI.Me.Preview.CharacterLive]
-  # def component_object(%{character: %{id: _}}, object_type)
+  # def component_object(%{character: %{id: _}}, object_type, _)
   #     when object_type not in [:group, :topic],
   #     do: [Bonfire.UI.Me.Preview.CharacterLive]
-  # def component_object(_, Bonfire.Data.Identity.User),
+  # def component_object(_, Bonfire.Data.Identity.User, _),
   #   do: [Bonfire.UI.Me.Preview.CharacterLive]
 
-  def component_object(object, type) when is_atom(type) and not is_nil(type) do
-    component_for_object_type(type, object)
+  def component_object(object, type, assigns) when is_atom(type) and not is_nil(type) do
+    component_for_object_type(type, object, assigns)
   end
 
-  def component_object(%{} = object, object_type) do
+  def component_object(%{} = object, object_type, assigns) do
     case object_type || Types.object_type(object) do
       type when is_atom(type) and not is_nil(type) ->
         debug(type, "component object_type recognised")
-        component_for_object_type(type, object)
+        component_for_object_type(type, object, assigns)
 
       _ ->
         warn(
@@ -1702,45 +1712,35 @@ defmodule Bonfire.UI.Social.ActivityLive do
     end
   end
 
-  def component_object(_, _) do
+  def component_object(_, _, _) do
     debug("activity has no object")
     []
   end
 
-  # This gets compiled in, but you can make the character threshold bigger at runtime
-  @default_char_threshold Bonfire.Social.Activities.article_char_threshold()
-  # Use a conservative multiplier - ASCII is 1 byte per char, so this should ensure we don't filter out posts that might reach the character threshold
-  @min_body_bytes div(@default_char_threshold * 2, 3)
-
-  def component_for_object_type(Bonfire.Data.Social.Post, %{
-        post_content: %{name: name, html_body: html_body}
-      })
-      when is_binary(name) and is_binary(html_body) and
-             byte_size(name) > 2 and byte_size(html_body) > @min_body_bytes do
-    if String.length(html_body) > Bonfire.Social.Activities.article_char_threshold() ||
-         @default_char_threshold do
-      [Bonfire.UI.Social.Activity.ArticleLive]
-    else
-      [Bonfire.UI.Social.Activity.NoteLive]
-    end
+  def component_for_object_type(:article, _, assigns) do
+    [{Bonfire.UI.Social.Activity.ArticleLive, assigns}]
   end
 
-  def component_for_object_type(Bonfire.Data.Social.Post, %{post_content: %{html_body: _}}),
-    do: [Bonfire.UI.Social.Activity.NoteLive]
+  def component_for_object_type(
+        Bonfire.Data.Social.Post,
+        %{post_content: %{html_body: _}},
+        assigns
+      ),
+      do: [{Bonfire.UI.Social.Activity.NoteLive, assigns}]
 
-  def component_for_object_type(Bonfire.Data.Social.Post, %{html_body: _}),
-    do: [Bonfire.UI.Social.Activity.NoteLive]
+  def component_for_object_type(Bonfire.Data.Social.Post, %{html_body: _}, assigns),
+    do: [{Bonfire.UI.Social.Activity.NoteLive, assigns}]
 
-  def component_for_object_type(Bonfire.Data.Social.PostContent, _),
-    do: [Bonfire.UI.Social.Activity.NoteLive]
+  def component_for_object_type(Bonfire.Data.Social.PostContent, _, assigns),
+    do: [{Bonfire.UI.Social.Activity.NoteLive, assigns}]
 
-  def component_for_object_type(Bonfire.Data.Social.Post, _object) do
+  def component_for_object_type(Bonfire.Data.Social.Post, _object, _) do
     debug("post with no text content (eg. only with attachments)")
     []
   end
 
-  def component_for_object_type(Bonfire.Data.Social.Message, _),
-    do: [Bonfire.UI.Social.Activity.NoteLive]
+  def component_for_object_type(Bonfire.Data.Social.Message, _, assigns),
+    do: [{Bonfire.UI.Social.Activity.NoteLive, assigns}]
 
   # def component_for_object_type(type, _) when type in [Bonfire.Data.Identity.User],
   #   do: [Bonfire.UI.Me.Preview.CharacterLive]
@@ -1763,7 +1763,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
   # def component_for_object_type(type, _) when type in [ValueFlows.Planning.Intent],
   #   do: [Bonfire.UI.ValueFlows.Preview.IntentTaskLive]
 
-  def component_for_object_type(Bonfire.Data.Social.APActivity, object) do
+  def component_for_object_type(Bonfire.Data.Social.APActivity, object, assigns) do
     json =
       e(object, :json, nil)
       |> debug("APActivity json")
@@ -1799,17 +1799,17 @@ defmodule Bonfire.UI.Social.ActivityLive do
       end
 
     [
-      {component, json: json, object_type_readable: type}
+      {component, Enum.into(%{json: json, object_type_readable: type}, assigns)}
     ]
   end
 
   # def component_for_object_type(type, object) when type in [ValueFlows.Process], do: [Bonfire.UI.ValueFlows.Preview.ProcessListLive.activity_component(object)]
 
-  def component_for_object_type(type, object) when is_atom(type) and not is_nil(type) do
+  def component_for_object_type(type, object, _assigns) when is_atom(type) and not is_nil(type) do
     component_def_for(:object_preview, type, object, &component_object_fallback/2)
   end
 
-  def component_for_object_type(type, object) do
+  def component_for_object_type(type, object, _assigns) do
     component_object_fallback(type, object)
   end
 
@@ -1865,33 +1865,74 @@ defmodule Bonfire.UI.Social.ActivityLive do
     [Bonfire.UI.Social.Activity.UnknownLive]
   end
 
-  # def component_maybe_attachments(_, _, inception) when not is_nil(inception), do: []
-
-  def component_maybe_attachments(_id, files, _)
-      when (is_list(files) and files != []) or is_map(files) do
-    # num_media = length(files)
-    # debug(num_media, "has files")
-
-    # Bonfire.Common.Cache.put("num_media:#{id}", num_media)
-
-    [
-      {Bonfire.UI.Social.Activity.MediaLive, %{media: files}}
-    ]
+  defp primary_image_and_component_maybe_attachments(
+         object_type,
+         activity,
+         object,
+         _activity_inception
+       ) do
+    do_primary_image_and_component_maybe_attachments(
+      id(object) || id(activity),
+      e(activity, :files, nil) || e(object, :files, nil) || e(activity, :media, nil) ||
+        e(object, :media, nil),
+      object_type
+    )
   end
 
-  def component_maybe_attachments(id, other, _) do
+  # defp primary_image_and_component_maybe_attachments(_, _activity, _object, _activity_inception), do: []
+
+  def do_primary_image_and_component_maybe_attachments(_id, files, object_type)
+      when (is_list(files) and files != []) or is_map(files) do
+    {primary_image, files} =
+      if object_type == :article, do: split_primary_image(files), else: {nil, files}
+
+    {primary_image,
+     [
+       {Bonfire.UI.Social.Activity.MediaLive, %{media: files}}
+     ]}
+  end
+
+  def do_primary_image_and_component_maybe_attachments(id, other, _object_type) do
+    # use cached amounts of images to display from MediaLive in case media is preloaded async
     case Bonfire.Common.Cache.get("num_media:#{id}") do
       {:ok, [multimedia_count, image_count, link_count]} ->
-        [
-          {Bonfire.UI.Social.Activity.MediaSkeletonLive,
-           %{multimedia_count: multimedia_count, image_count: image_count, link_count: link_count}}
-        ]
+        {nil,
+         [
+           {Bonfire.UI.Social.Activity.MediaSkeletonLive,
+            %{
+              multimedia_count: multimedia_count,
+              image_count: image_count,
+              link_count: link_count
+            }}
+         ]}
 
       _ ->
         debug(other, "no files")
-        []
+        {nil, []}
     end
   end
+
+  def split_primary_image(files) when is_list(files) do
+    case Enum.split_with(files, &is_primary_image?/1) do
+      {[primary | _rest_primary], others} -> {primary, others}
+      {[], others} -> {nil, others}
+    end
+  end
+
+  def split_primary_image(files) when is_map(files) do
+    # Handle single file case
+    if is_primary_image?(files) do
+      {files, []}
+    else
+      {nil, [files]}
+    end
+  end
+
+  def split_primary_image(_), do: {nil, []}
+
+  defp is_primary_image?(%{media: %{metadata: %{"primary_image" => true}}}), do: true
+  defp is_primary_image?(%{metadata: %{"primary_image" => true}}), do: true
+  defp is_primary_image?(_), do: false
 
   # @decorate time()
   def component_actions(
@@ -1998,4 +2039,24 @@ defmodule Bonfire.UI.Social.ActivityLive do
     fallback_id = if is_binary(fallback), do: fallback, else: "fallback"
     "#{activity_inception}#{fallback_id}"
   end
+
+  # This gets compiled in, but you can make the character threshold bigger at runtime
+  @default_char_threshold Bonfire.Social.Activities.article_char_threshold()
+  # Use a conservative multiplier - ASCII is 1 byte per char, so this should ensure we don't filter out posts that might reach the character threshold
+  @min_body_bytes div(@default_char_threshold * 2, 3)
+
+  def is_article?(Bonfire.Data.Social.Post, %{name: name, html_body: html_body})
+      when is_binary(name) and is_binary(html_body) and
+             byte_size(name) > 2 and byte_size(html_body) > @min_body_bytes do
+    String.length(html_body) >
+      (Bonfire.Social.Activities.article_char_threshold() ||
+         @default_char_threshold)
+  end
+
+  def is_article?(Bonfire.Data.Social.Post, %{
+        post_content: %{name: name, html_body: html_body}
+      }),
+      do: is_article?(Bonfire.Data.Social.Post, %{name: name, html_body: html_body})
+
+  def is_article?(_, _), do: false
 end

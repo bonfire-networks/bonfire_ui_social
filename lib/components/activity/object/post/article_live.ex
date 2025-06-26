@@ -6,6 +6,7 @@ defmodule Bonfire.UI.Social.Activity.ArticleLive do
   prop object, :any
   # prop profile, :any, default: nil
   prop activity, :any, default: nil
+  prop primary_image, :any, default: nil
   prop viewing_main_object, :boolean, default: false
   prop showing_within, :atom, default: nil
   prop cw, :boolean, default: nil

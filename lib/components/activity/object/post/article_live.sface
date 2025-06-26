@@ -13,25 +13,30 @@
     id={"article-#{@showing_within}-#{@parent_id}-#{id(@activity) || 'no-a'}-#{id(@object) || 'no-o'}-#{@viewing_main_object}-#{@activity_inception}"}
     prompt_external_links={@showing_within == :flags}
   >
-    <div
-      :if={@showing_within != :smart_input}
-      class={
-        "-mx-4 -mt-4 mb-4",
-        "!-mx-5 !mt-2 mb-6": @showing_within == :thread and @viewing_main_object
-      }
-    >
-      <!-- WIP: Add the proper Image, or use a fallback: note. i'd still use a fallback for articles without images -->
-      <div
-        data-id="article_cover"
-        class={
-          "flex relative items-center rounded-t-lg shrink-0 w-full bg-base-content/10 aspect-[1.91/1] place-content-center bg-no-repeat bg-cover",
-          "!rounded-none": @showing_within == :thread and @viewing_main_object
-        }
-        style="background-image: url('/images/bonfires.png')"
-      >
-        <p data-role="article_badge" class="absolute left-3 bottom-3 badge badge-neutral badge-sm">⁂ {l("Article")}</p>
-      </div>
-    </div>
+    {#case Media.media_url(@primary_image)}
+      {#match nil}
+      {#match url}
+        <div
+          :if={@showing_within != :smart_input}
+          class={
+            "-mx-4 -mt-4 mb-4",
+            "!-mx-5 !mt-2 mb-6": @showing_within == :thread and @viewing_main_object
+          }
+        >
+          <!-- WIP: Add the proper Image, or use a fallback: note. i'd still use a fallback for articles without images -->
+
+          <div
+            data-id="article_cover"
+            class={
+              "flex relative items-center rounded-t-lg shrink-0 w-full bg-base-content/10 aspect-[1.91/1] place-content-center bg-no-repeat bg-cover",
+              "!rounded-none": @showing_within == :thread and @viewing_main_object
+            }
+            style={"background-image: url('#{url}')"}
+          >
+            <p data-role="article_badge" class="absolute left-3 bottom-3 badge badge-neutral badge-sm">⁂ {l("Article")}</p>
+          </div>
+        </div>
+    {/case}
     {#case e(post_content(@object), :name, nil)}
       {#match nil}
       {#match name}
