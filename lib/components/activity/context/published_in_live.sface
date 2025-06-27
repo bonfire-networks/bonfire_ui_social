@@ -1,5 +1,5 @@
 <div
-  :if={@showing_within not in [:group, :topic, :thread] and not is_nil(@context)}
+  :if={not is_nil(@context) and @showing_within not in [:group, :topic, :thread]}
   class={@class}
 >
   {!-- Something published in a Category / Topic --}
