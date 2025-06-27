@@ -260,12 +260,12 @@ defmodule Bonfire.Social.Objects.LiveHandler do
       else: socket
   end
 
-  defp default_preloads(),
+  def default_preloads(),
     do: [
       # :default,
       :with_creator,
       :with_post_content,
-      :with_reply_to,
+      # :with_reply_to,
       :with_thread_name,
       :with_parent,
       :with_media,

@@ -30,14 +30,14 @@ defmodule Bonfire.UI.Social.FeedController do
     # Build context based on available params
     opts =
       build_feed_opts(params)
-      |> flood("oopts")
+
+    # |> debug("oopts")
 
     # Get feed preset configuration
     with {:ok, %{filters: preset_filters} = preset} <-
            Feeds.feed_preset_if_permitted(feed_name, opts),
          merged_filters =
-           Map.merge(preset_filters, extract_param_filters(params, opts) |> flood("extttr"))
-           |> flood("filtt"),
+           Map.merge(preset_filters, extract_param_filters(params, opts)),
          %{edges: activities, page_info: page_info} <-
            FeedLoader.feed(feed_name, merged_filters, opts) do
       feed_data =
