@@ -7,7 +7,7 @@
       event_target={@event_target}
     />
 
-    <div data-position="bottom" phx-hook="Tooltip" class="relative" id="filter_origin_feed">
+    <div data-position="bottom" phx-hook="Tooltip" class="relative flex-1" id="filter_origin_feed">
       <label
         tabindex="0"
         class={
