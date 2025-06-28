@@ -129,9 +129,18 @@ defmodule Bonfire.UI.Social.Activity.MediaLive do
   def is_multimedia?(url, media_type),
     do: is_multimedia?(url) or String.starts_with?(media_type || "", @multimedia_types)
 
-  def is_supported_multimedia_format?(url, media_type),
-    do:
-      is_multimedia?(url, media_type) and String.ends_with?(media_type || "", @multimedia_formats)
+  def is_supported_multimedia_format?(url, media_type) do
+    cond do
+      # Handle embedded content (YouTube, Vimeo, etc.)
+      String.starts_with?(media_type || "", ["embed", "rich"]) -> true
+      # Handle video.* types for embedded videos 
+      String.starts_with?(media_type || "", "video") -> true
+      # Handle direct file formats
+      is_multimedia?(url, media_type) and String.ends_with?(media_type || "", @multimedia_formats) -> true
+      # Default to false
+      true -> false
+    end
+  end
 
   def is_video?(url), do: Files.has_extension?(url || "", @video_exts)
 
@@ -177,12 +186,23 @@ defmodule Bonfire.UI.Social.Activity.MediaLive do
     |> unwrap()
   end
 
+  def author(%{} = media) do
+    (e(media, :metadata, "oembed", "author_name", nil) ||
+       e(media, :metadata, "twitter", "creator", nil) ||
+       e(media, :metadata, "other", "author", nil))
+    |> unwrap()
+  end
+
+  def author_url(%{} = media) do
+    (e(media, :metadata, "oembed", "author_url", nil) ||
+       e(media, :metadata, "twitter", "creator_url", nil))
+    |> unwrap()
+  end
+
   def preview_img(%{media: media}), do: preview_img(media)
 
   def preview_img(%{} = media) do
-    (Media.thumbnail_url(media)
-     |> debug("medthumbur") ||
-       e(media, :metadata, "oembed", "thumbnail_url", nil) ||
+    (e(media, :metadata, "oembed", "thumbnail_url", nil) ||
        e(media, :metadata, "twitter", "image", nil) ||
        (e(media, :metadata, "facebook", "image", "url", nil) ||
           e(media, :metadata, "facebook", "image", nil)) ||
@@ -190,6 +210,8 @@ defmodule Bonfire.UI.Social.Activity.MediaLive do
        e(media, :metadata, "image", nil) ||
        e(media, :metadata, "icon", "url", nil) ||
        e(media, :metadata, "icon", nil) ||
+       Media.thumbnail_url(media)
+       |> debug("medthumbur") ||
        media_img(media))
     |> unwrap()
   end

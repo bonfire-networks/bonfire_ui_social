@@ -30,6 +30,7 @@
             <div class="bg-gray-900/60 z-50 gap-4 px-4 h-12 rounded flex justify-center items-center place-content-center">
               {#case e(@media, :metadata, "canonical_media", nil)}
                 {#match nil}
+                  <#Icon iconify="heroicons:play-20-solid" class="w-6 h-6 hover:text-white text-gray-300" />
                 {#match url}
                   <LinkLive to={url} parent_id={["video_link", id(@media), @showing_within, @parent_id]} class="">
                     <#Icon iconify="heroicons:play-20-solid" class="w-6 h-6 hover:text-white text-gray-300" />
@@ -56,13 +57,20 @@
       </div>
 
       <div class="">
-        <div class="p-2 flex flex-col gap-0">
+        <div class="p-3 flex flex-col gap-0">
           {#case MediaLive.provider(@media)}
             {#match nil}
             {#match provider}
               <span class="text-sm text-left text-base-content/70">{provider}</span>
           {/case}
-          <div class="font-semibold text-left">{@media_label}</div>
+          <div class="font-bold text-lg text-left">{@media_label}</div>
+          {#case MediaLive.author(@media)}
+            {#match nil}
+            {#match author}
+              <div class="text-sm text-left font-medium text-base-content/70 mt-1">by 
+                {author}
+              </div>
+          {/case}
         </div>
       </div>
       <figcaption class="sr-only">{@media_label}</figcaption>

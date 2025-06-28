@@ -64,8 +64,7 @@
         data-rendered={@showing_within}
         data-main-object={@viewing_main_object}
         class={
-          "grid  w-full grid-flow-col grid-with-ratio grid-rows-4 gap-1 mt-3",
-          "max-h-[380px]": @showing_within in [:feed, :profile]
+          "grid  w-full grid-flow-col grid-with-ratio grid-rows-4 gap-1 mt-3"
         }
       >
         {#for {%{} = m, counter} <- Enum.with_index(@multimedia_list)}

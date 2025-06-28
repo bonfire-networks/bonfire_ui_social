@@ -80,7 +80,6 @@
                     {raw(embed)}
                 {/case}
               {#match url}
-                <!-- <code>{inspect(url)}</code> -->
                 {!-- TODO: url |> String.replace("youtube.com", "yewtu.be") --}
                 <!-- width={e(@media, :metadata, "facebook", "video:width", nil) ||
                     e(@media, :metadata, "other", "video_width", nil) || "800"}
