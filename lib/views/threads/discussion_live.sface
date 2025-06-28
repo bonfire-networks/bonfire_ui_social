@@ -9,6 +9,7 @@
     post_id={@post_id}
     showing_within={:thread}
     thread_id={@thread_id}
+    reply_id={@reply_id}
     include_path_ids={@include_path_ids}
     participants={@participants}
     loading={@loading}

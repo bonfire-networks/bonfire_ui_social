@@ -34,6 +34,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
   prop activity_prepared, :atom, default: nil
   prop viewing_main_object, :boolean, default: false
   prop showing_within, :any, default: nil
+  prop highlight_activity_id, :any, default: nil
   prop hide_reply, :boolean, default: false
   prop class, :string, required: false, default: ""
   prop thread_id, :string, default: nil
@@ -639,9 +640,10 @@ defmodule Bonfire.UI.Social.ActivityLive do
           is_nil(e(@activity, :seen, nil)) and @showing_within == :notifications and
             is_nil(@activity_inception),
         "active-activity":
-          String.contains?(@current_url || "", @object_id || "") and
+          @highlight_activity_id == @activity_id and
             @showing_within != :smart_input and @viewing_main_object == false
       }
+      phx-hook={if @highlight_activity_id == @activity_id, do: "ScrollTo"}
     >
       {#if @custom_preview}
         <StatelessComponent
@@ -678,6 +680,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
                             ),
                           thread_id: @thread_id,
                           object_id: @thread_id || @object_id,
+                          reply_id: @object_id,
                           include_path_ids:
                             e(
                               e(@activity, :replied, nil) ||

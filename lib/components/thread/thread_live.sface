@@ -72,6 +72,7 @@
                     index={0}
                     threaded_replies={child_replies}
                     thread_id={@thread_id}
+                    highlight_reply_id={@highlight_reply_id}
                     feed_id={@feed_id || @thread_id}
                     current_url={@current_url}
                     thread_object={@object}
@@ -94,6 +95,7 @@
                     index={0}
                     threaded_replies={child_replies}
                     thread_id={@thread_id}
+                    highlight_reply_id={@highlight_reply_id}
                     feed_id={@feed_id || @thread_id}
                     current_url={@current_url}
                     thread_object={@object}
@@ -114,6 +116,7 @@
                     <CommentLive
                       comment={reply}
                       thread_id={@thread_id}
+                      highlight_reply_id={@highlight_reply_id}
                       feed_id={@feed_id || @thread_id}
                       current_url={@current_url}
                       thread_object={@object}
@@ -134,6 +137,7 @@
                     <CommentLive
                       comment={reply}
                       thread_id={@thread_id}
+                      highlight_reply_id={@highlight_reply_id}
                       feed_id={@feed_id || @thread_id}
                       current_url={@current_url}
                       thread_object={@object}

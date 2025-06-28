@@ -12,6 +12,7 @@ defmodule Bonfire.UI.Social.CommentLive do
   prop thread_object, :any
   prop thread_level, :number, default: 0
   prop thread_id, :any
+  prop highlight_reply_id, :any, default: nil
   prop feed_id, :any, default: nil
   prop thread_mode, :any, default: nil
   prop showing_within, :atom, default: :thread

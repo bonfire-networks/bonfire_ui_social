@@ -17,6 +17,7 @@ defmodule Bonfire.UI.Social.ThreadLive do
   prop activity, :any, default: nil
   prop object, :any, default: nil
   prop thread_id, :any, default: nil
+  prop highlight_reply_id, :any, default: nil
   prop reply_to_id, :any, default: nil
   prop include_path_ids, :any, default: nil
 

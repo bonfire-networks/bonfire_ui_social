@@ -31,6 +31,7 @@
       total_replies_in_thread={@total_replies_in_thread}
       thread_id={@thread_id}
       index={@index}
+      highlight_reply_id={@highlight_reply_id}
       feed_id={@feed_id || @thread_id}
       current_url={@current_url}
       threaded_replies={@threaded_replies}
@@ -98,6 +99,7 @@
                   index={index}
                   comment={subreply}
                   thread_id={@thread_id}
+                  highlight_reply_id={@highlight_reply_id}
                   thread_object={@thread_object}
                   feed_id={@feed_id || @thread_id}
                   threaded_replies={sub_child_replies}

@@ -18,6 +18,7 @@ defmodule Bonfire.UI.Social.ThreadBranchLive do
   prop thread_level, :number, default: 1
   prop threaded_replies, :any
   prop thread_id, :any
+  prop highlight_reply_id, :any, default: nil
   prop feed_id, :any, default: nil
   prop thread_mode, :any, default: nil
   prop showing_within, :atom, default: :thread

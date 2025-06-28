@@ -76,6 +76,7 @@ defmodule Bonfire.UI.Social.DiscussionLive do
         params: params,
         object_id: id,
         thread_id: id,
+        reply_id: reply_id,
         #  url: url
         include_path_ids:
           Bonfire.Social.Threads.LiveHandler.maybe_include_path_ids(

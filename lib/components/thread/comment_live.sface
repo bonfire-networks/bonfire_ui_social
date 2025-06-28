@@ -91,6 +91,7 @@
         activity_inception={@activity_inception}
         activity_preloads={@activity_preloads}
         hide_actions={@hide_actions}
+        highlight_activity_id={@highlight_reply_id}
       />
     {/if}
   </div>
