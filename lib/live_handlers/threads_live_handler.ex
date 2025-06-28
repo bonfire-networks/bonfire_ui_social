@@ -80,9 +80,8 @@ defmodule Bonfire.Social.Threads.LiveHandler do
     assigns = assigns(socket)
     current_user = current_user(assigns)
 
-    # it seems to load one more than this, probably because of pagination?
     load_more_replies_step =
-      Settings.get(:thread_default_max_depth, 2,
+      Settings.get(:thread_default_max_depth, 3,
         current_user: current_user,
         description: l("Reply levels"),
         description: l("How many levels of replies to load/display at a time")
@@ -551,6 +550,7 @@ defmodule Bonfire.Social.Threads.LiveHandler do
       debug("loading by thread_id")
       # debug(assigns)
 
+      include_path_ids = e(assigns, :include_path_ids, nil)
       thread_mode = e(assigns, :thread_mode, nil)
       sort_by = e(assigns, :sort_by, nil)
       sort_order = e(assigns, :sort_order, nil)
@@ -569,16 +569,24 @@ defmodule Bonfire.Social.Threads.LiveHandler do
 
       max_depth = max_depth(assigns(socket)[:__context__][:ui_compact], assigns)
 
+      opts = [
+        current_user: current_user(assigns),
+        preload: preloads,
+        after: e(assigns, :after, nil),
+        max_depth: max_depth,
+        include_path_ids: include_path_ids,
+        thread_mode: thread_mode,
+        sort_by: sort_by,
+        sort_order: sort_order,
+        showing_within: showing_within
+      ]
+
+      # |> debug("load_thread_assigns opts")
+
       with %{edges: replies, page_info: page_info} <-
-             Threads.list_replies(thread_id,
-               current_user: current_user(assigns),
-               preload: preloads,
-               after: e(assigns, :after, nil),
-               max_depth: max_depth,
-               thread_mode: thread_mode,
-               sort_by: sort_by,
-               sort_order: sort_order,
-               showing_within: showing_within
+             Threads.list_replies(
+               thread_id,
+               opts
              ) do
         reply_count = length(replies)
 
@@ -593,6 +601,7 @@ defmodule Bonfire.Social.Threads.LiveHandler do
            sort_order: sort_order,
            page_info: page_info,
            thread_id: thread_id,
+           #  include_path_ids: nil,
            reply_count: reply_count,
            depth_loaded: max_depth,
            activity_preloads: {preloads, nil}

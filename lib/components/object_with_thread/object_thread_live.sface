@@ -42,6 +42,7 @@
           :if={@thread_id}
           id={@thread_id}
           thread_id={@thread_id}
+          include_path_ids={@include_path_ids}
           current_url={@current_url}
           main_object_component_id={@main_object_component_id}
           feed_id={@feed_id}

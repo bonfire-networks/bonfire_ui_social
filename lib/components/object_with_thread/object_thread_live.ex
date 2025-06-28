@@ -4,6 +4,7 @@ defmodule Bonfire.UI.Social.ObjectThreadLive do
   prop object_id, :string, default: nil
   prop post_id, :string, default: nil
   prop object, :any, default: nil
+  prop include_path_ids, :any, default: nil
   prop thread_title, :string, default: nil
   prop exclude_circles, :list, default: []
   prop thread_id, :string, default: nil

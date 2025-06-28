@@ -603,7 +603,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
     <article
       id={@activity_component_id}
       data-content-open={!@cw}
-      data-object_id={id(@object)}
+      data-object_id={@object_id}
       data-href={@permalink}
       data-url={e(@__context__, :current_url, nil) || ~c""}
       phx-hook={if !@viewing_main_object and
@@ -646,14 +646,14 @@ defmodule Bonfire.UI.Social.ActivityLive do
       {#else}
         {#if @hide_activity != "all"}
           {#if current_user_id(@__context__) && @showing_within != :smart_input}
-            {#case is_nil(@thread_id) or @thread_id == (id(@object) || id(@activity))}
+            {#case is_nil(@thread_id) or @thread_id == (@object_id || @activity_id)}
               {#match top_of_thread?}
                 {#case not is_nil(@thread_id) and @thread_id == e(@reply_to, :object, :id, nil)}
                   {#match reply_to_top_of_thread?}
                     {!-- TODO: make the list of preview paths/components/views configurable/hookable, and derive the view from object_type? and compute object_type not just based on schema, but also with some logic looking at fields (eg. action=="work") --}
                     {#if String.starts_with?(@permalink || "", ["/post/", "/discussion/"])}
                       <Bonfire.UI.Common.OpenPreviewLive
-                        href={@permalink || path(@object)}
+                        href={@permalink}
                         parent_id={@parent_id}
                         open_btn_text=""
                         title_text={@thread_title || e(@object, :name, nil) || e(@object, :post_content, :name, nil) ||
@@ -663,10 +663,18 @@ defmodule Bonfire.UI.Social.ActivityLive do
                             if(
                               @object_type in [Bonfire.Data.Social.Post, :article] or
                                 String.starts_with?(@permalink || "", ["/post/"]),
-                              do: @thread_id || id(@object)
+                              do: @thread_id || @object_id
                             ),
                           thread_id: @thread_id,
-                          object_id: @thread_id || id(@object),
+                          object_id: @thread_id || @object_id,
+                          include_path_ids:
+                            e(
+                              e(@activity, :replied, nil) ||
+                                e(@object, :replied, nil),
+                              :path,
+                              []
+                            ) ++ [@object_id],
+                          # ^ tells the comments loader to include the ancestors of the object regardless of max depth 
                           current_url: @permalink,
                           show: true,
                           hide_actions: false,
@@ -724,7 +732,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
               open_btn_text={l("View profile")}
               title_text={e(@object, :profile, :name, nil) || l("Profile")}
               modal_assigns={
-                id: @thread_id || id(@object),
+                id: @thread_id || @object_id,
                 current_url: @permalink,
                 modal_view: Bonfire.UI.Me.ProfileLive,
                 activity_inception: "preview"
@@ -742,7 +750,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
                         open_btn_text={l("View task")}
                         title_text={e(@object, :name, nil) || l("Task")}
                         modal_assigns={
-                          id: @thread_id || id(@object),
+                          id: @thread_id || @object_id,
                           current_url: @permalink,
                           modal_view: Bonfire.UI.Coordination.TaskLive,
                           activity_inception: "preview",
