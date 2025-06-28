@@ -25,7 +25,7 @@ defmodule Bonfire.UI.Social.DiscussionLive do
        post_id: nil,
        #  thread_id: nil,
        back: true,
-       #  reply_to_id: nil,
+       #  reply_id: nil,
        page_info: nil,
        replies: nil,
        threaded_replies: nil,
@@ -68,14 +68,21 @@ defmodule Bonfire.UI.Social.DiscussionLive do
   def handle_params(%{"id" => id} = params, _url, socket) when is_binary(id) do
     debug(id, "object_id")
 
+    reply_id = e(params, "reply_id", nil)
+
     socket =
       socket
       |> assign(
         params: params,
         object_id: id,
-        thread_id: id
+        thread_id: id,
         #  url: url
-        #  reply_to_id: e(params, "reply_to_id", id)
+        include_path_ids:
+          Bonfire.Social.Threads.LiveHandler.maybe_include_path_ids(
+            reply_id,
+            e(params, "level", nil),
+            e(assigns(socket), :__context__, nil) || assigns(socket)
+          )
       )
 
     with %Phoenix.LiveView.Socket{} = socket <-
@@ -94,7 +101,7 @@ defmodule Bonfire.UI.Social.DiscussionLive do
   defp redirect_to_thread_comment(socket, thread_id, comment_id) do
     debug(thread_id, "redirecting to thread")
 
-    redirect_path = "/discussion/#{thread_id}#comment_#{comment_id}"
+    redirect_path = "/discussion/#{thread_id}/reply/#{comment_id}"
 
     {:noreply,
      socket

@@ -9,7 +9,7 @@
         {#if is_nil(@activity) and is_nil(@object)}
           <div class="m-3 text-center p-8 rounded-lg border border-base-content/30 flex items-center place-content-center">{l("Sorry, you cannot view this.")}</div>
         {#else}
-          {#if e(@custom_preview, nil)}
+          {#if @custom_preview}
             <div>
               <StatelessComponent
                 thread_title={@thread_title}

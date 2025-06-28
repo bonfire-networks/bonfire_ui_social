@@ -20,7 +20,8 @@ defmodule Bonfire.UI.Social.Routes do
         live("/discussion/:id", DiscussionLive, as: Needle.Pointer)
         live("/discussion/as/:id", DiscussionLive, as: Bonfire.Data.Social.APActivity)
         live("/discussion/:type/:id", DiscussionLive, as: Needle.Pointer)
-        live("/discussion/:id/reply/:reply_to_id", DiscussionLive, as: Needle.Pointer)
+        live("/discussion/:id/reply/:reply_id", DiscussionLive, as: Needle.Pointer)
+        live("/discussion/:id/reply/:level/:reply_id", DiscussionLive, as: Needle.Pointer)
 
         live("/post/:id/history", PostHistoryLive)
 

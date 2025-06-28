@@ -8,7 +8,8 @@
     object={@object}
     post_id={@post_id}
     showing_within={:thread}
-    thread_id={e(@thread_id, nil)}
+    thread_id={@thread_id}
+    include_path_ids={@include_path_ids}
     participants={@participants}
     loading={@loading}
     replies={@replies}

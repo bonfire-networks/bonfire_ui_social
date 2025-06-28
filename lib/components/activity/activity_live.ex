@@ -41,6 +41,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
   prop thread_url, :string, default: nil
   prop thread_title, :string, default: nil
   prop thread_mode, :any, default: nil
+  prop thread_level, :any, default: nil
   prop current_url, :string, default: nil
   prop permalink, :string, default: nil
   prop participants, :list, default: []
@@ -318,6 +319,8 @@ defmodule Bonfire.UI.Social.ActivityLive do
         e(object, :replied, nil)
         |> debug("areplied")
 
+    thread_level = e(assigns, :thread_level, nil) || length(e(replied, :path, []))
+
     thread =
       e(assigns, :thread_object, nil) || e(replied, :thread, nil) || e(replied, :thread_id, nil) ||
         e(assigns, :thread_id, nil)
@@ -373,10 +376,17 @@ defmodule Bonfire.UI.Social.ActivityLive do
 
     # permalink = path(object)
     permalink =
-      if(thread_url && thread_id != o_id,
-        do: "#{thread_url}#comment_#{o_id}",
-        else: "#{path(object)}#"
-      )
+      cond do
+        thread_url && thread_id != o_id ->
+          if thread_level != 0 do
+            "#{thread_url}/reply/#{thread_level}/#{o_id}"
+          else
+            "#{thread_url}/reply/#{o_id}"
+          end
+
+        true ->
+          "#{path(object)}#"
+      end
       |> String.trim_leading("#{current_url || "#"}#")
 
     # |> debug()
@@ -415,6 +425,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
       thread_url: thread_url,
       current_url: current_url,
       thread_id: thread_id,
+      thread_level: thread_level,
       cw:
         if e(assigns, :activity_inception, nil) do
           # This may be a reply_to, calculate CW based on reply_to data structure
@@ -605,7 +616,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
       data-content-open={!@cw}
       data-object_id={@object_id}
       data-href={@permalink}
-      data-url={e(@__context__, :current_url, nil) || ~c""}
+      data-url={@current_url}
       phx-hook={if !@viewing_main_object and
            @showing_within not in [:thread, :smart_input, :widget],
          do: "Bonfire.UI.Common.PreviewContentLive#PreviewActivity"}
@@ -628,7 +639,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
           is_nil(e(@activity, :seen, nil)) and @showing_within == :notifications and
             is_nil(@activity_inception),
         "active-activity":
-          String.contains?(@current_url || "", @permalink || "") and
+          String.contains?(@current_url || "", @object_id || "") and
             @showing_within != :smart_input and @viewing_main_object == false
       }
     >
@@ -766,7 +777,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
             {/case}
           {/if}
 
-          <!-- form
+          {!-- form
             :if={!id(e(@activity, :seen, nil)) and not is_nil(@feed_id) and
               @showing_within in [:messages, :thread, :notifications] and
               e(@activity, :subject, :id, nil) != current_user_id(@__context__) and
@@ -776,10 +787,10 @@ defmodule Bonfire.UI.Social.ActivityLive do
             phx-submit={if @feed_id, do: "Bonfire.Social.Feeds:mark_seen"}
             phx-target={if @feed_id, do: "#badge_counter_#{@feed_id}"}
           >
-            {!-- ^^ FIXME: mark_seen should only be included for notifications and messages --}
+            <!-- ^^ FIXME: mark_seen should only be included for notifications and messages -->
             <input type="hidden" name="feed_id" value={@feed_id}>
             <input type="hidden" name="activity_id" value={@activity_id}>
-          </form -->
+          </form --}
 
           <Bonfire.UI.Social.Activity.PublishedInLive
             :if={@published_in && @showing_within != :smart_input}
@@ -1020,6 +1031,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
                   permalink={e(component_assigns, :permalink, @permalink)}
                   thread_url={@thread_url}
                   thread_id={@thread_id}
+                  thread_level={@thread_level}
                   viewing_main_object={e(component_assigns, :viewing_main_object, @viewing_main_object)}
                   show_minimal_subject_and_note={e(component_assigns, :show_minimal_subject_and_note, @show_minimal_subject_and_note)}
                   hide_reply={e(component_assigns, :hide_reply, @hide_reply)}

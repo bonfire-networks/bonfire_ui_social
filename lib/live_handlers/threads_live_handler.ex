@@ -541,6 +541,18 @@ defmodule Bonfire.Social.Threads.LiveHandler do
           )
       )
 
+  def maybe_include_path_ids(reply_id, level, context) do
+    current_user = current_user(context)
+
+    if reply_id,
+      do:
+        Threads.compute_include_path_ids(reply_id,
+          level: level,
+          max_depth: max_depth(e(context, :ui_compact, nil), current_user: current_user),
+          current_user: current_user
+        )
+  end
+
   def load_thread_assigns(socket, thread_id \\ nil) do
     debug("load comments")
     assigns = assigns(socket)
@@ -555,6 +567,7 @@ defmodule Bonfire.Social.Threads.LiveHandler do
       sort_by = e(assigns, :sort_by, nil)
       sort_order = e(assigns, :sort_order, nil)
       showing_within = e(assigns, :showing_within, :thread)
+      ui_compact = e(assigns, :__context__, :ui_compact, nil)
 
       # TODO: use same logic as feeds preloads?
       # {preloads, postloads} =
@@ -567,7 +580,7 @@ defmodule Bonfire.Social.Threads.LiveHandler do
       preloads =
         Bonfire.Social.Feeds.LiveHandler.feed_extra_preloads_list(showing_within, thread_mode)
 
-      max_depth = max_depth(assigns(socket)[:__context__][:ui_compact], assigns)
+      max_depth = max_depth(ui_compact, assigns)
 
       opts = [
         current_user: current_user(assigns),

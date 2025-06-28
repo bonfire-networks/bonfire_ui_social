@@ -146,7 +146,7 @@ defmodule Bonfire.UI.Social.Feeds.Test do
 
       # Visit the reply in its thread context
       conn
-      |> visit("/post/#{post.id}#comment_#{reply.id}")
+      |> visit("/post/#{post.id}/reply/#{reply.id}")
 
       # Verify that we can see both the reply and what it's replying to
       |> assert_has("[data-id=object_body]", text: original_content)

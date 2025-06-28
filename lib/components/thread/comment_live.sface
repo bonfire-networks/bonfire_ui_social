@@ -62,13 +62,12 @@
   </div> --}
   <div data-role="comment-activity" class="flex-1 w-full" x-data="{reply: false, show: true}">
     {#if is_nil(@activity)}
-      <!-- <div class="mx-4 my-2">
+      {!-- <div class="mx-4 my-2">
         <div class="alert alert-info alert-soft" role="alert">
           <#Icon solid="InformationCircle" class="w-5 h-5 shrink-0" />
           <span class="">{l("This comment was deleted.")}</span>
         </div>
-      </div> -->
-      <div />
+      </div> --}
     {#else}
       <ActivityLive
         id={ActivityLive.component_id(
