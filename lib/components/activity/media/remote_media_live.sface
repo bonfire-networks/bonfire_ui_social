@@ -77,17 +77,19 @@
                       {/if}
                     {/if}
                   {#match embed}
+                    {!-- TODO: only load external embed if autoplay or user clicks on a play button --}
                     {raw(embed)}
                 {/case}
               {#match url}
                 {!-- TODO: url |> String.replace("youtube.com", "yewtu.be") --}
-                <!-- width={e(@media, :metadata, "facebook", "video:width", nil) ||
+                {!-- width={e(@media, :metadata, "facebook", "video:width", nil) ||
                     e(@media, :metadata, "other", "video_width", nil) || "800"}
                   height={e(@media, :metadata, "facebook", "video:height", nil) ||
-                    e(@media, :metadata, "other", "video_height", nil) || "500"} -->
+                    e(@media, :metadata, "other", "video_height", nil) || "500"} --}
                 <div class="aspect-video rounded-t-box">
+                  {!-- TODO: only load external embed if autoplay or user clicks on a play button --}
                   <iframe
-                    src={"#{e(url, "secure_url", nil)}?&autoplay=1"}
+                    src={"#{e(url, "secure_url", nil) || url}?&autoplay=1"}
                     frameborder="0"
                     width="100%"
                     loading="lazy"

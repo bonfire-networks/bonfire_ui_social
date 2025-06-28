@@ -63,14 +63,12 @@
         data-media={num_medias}
         data-rendered={@showing_within}
         data-main-object={@viewing_main_object}
-        class={
-          "grid  w-full grid-flow-col grid-with-ratio grid-rows-4 gap-1 mt-3"
-        }
+        class="grid  w-full grid-flow-col grid-with-ratio grid-rows-4 gap-1 mt-3"
       >
         {#for {%{} = m, counter} <- Enum.with_index(@multimedia_list)}
           {#if @showing_within != :smart_input}
-            {#case {Bonfire.Files.Media.media_label(m), String.starts_with?(m.media_type || "", "video")}}
-              {#match {media_label, is_video?}}
+            {#case Bonfire.Files.Media.media_label(m)}
+              {#match media_label}
                 <article class="m-entry relative h-full w-full row-span-4 object-cover">
                   <div
                     class="absolute inset-0 backdrop-blur-xl bg-white/30 z-50 rounded-box"
@@ -79,7 +77,7 @@
                   <figure class="h-full">
                     {!-- FIXME: enable_fallback for logged out visitors instead of just not using the modal --}
                     <!-- {#if current_user_id(@__context__)} -->
-                    {#if is_video?}
+                    {#if String.starts_with?(m.media_type || "", "video")}
                       {!-- {#if is_supported_video_format?(m.path, m.media_type)}
                         <Bonfire.UI.Social.Activity.VideoUploadedLive
                           media={m}
@@ -97,22 +95,30 @@
                       />
                       {!-- {/if} --}
                     {#else}
-                      {!-- {#if is_supported_multimedia_format?(m.path, m.media_type)}
+                      {#if String.starts_with?(m.media_type || "", "audio")}
+                        {!-- {#if is_playable_multimedia_format?(m.path, m.media_type)}
                         <Bonfire.UI.Social.Activity.RemoteMediaLive
                           media={m}
                           muted={@muted}
-                          autoplay={@autoplay || @cw || @showing_within == :flags}
+                          autoplay={@autoplay || (@viewing_main_object && !@cw && @showing_within != :flags)}
                         />
                       {#else} --}
-                      <Bonfire.UI.Social.Activity.AudioLive
-                        media={m}
-                        media_label={media_label}
-                        autoplay={@autoplay || (@viewing_main_object && !@cw && @showing_within != :flags)}
-                        muted={@muted}
-                        parent_id={@parent_id}
-                        showing_within={@showing_within}
-                      />
-                      {!-- {/if} --}
+                        <Bonfire.UI.Social.Activity.AudioLive
+                          media={m}
+                          media_label={media_label}
+                          autoplay={@autoplay || (@viewing_main_object && !@cw && @showing_within != :flags)}
+                          muted={@muted}
+                          parent_id={@parent_id}
+                          showing_within={@showing_within}
+                        />
+                        {!-- {/if} --}
+                      {#else}
+                        <Bonfire.UI.Social.Activity.RemoteMediaLive
+                          media={m}
+                          muted={@muted}
+                          autoplay={@autoplay || (@viewing_main_object && !@cw && @showing_within != :flags)}
+                        />
+                      {/if}
                     {/if}
                     {!-- else if logged out: --}
                     {!-- {#else}

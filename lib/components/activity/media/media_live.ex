@@ -130,16 +130,17 @@ defmodule Bonfire.UI.Social.Activity.MediaLive do
     do: is_multimedia?(url) or String.starts_with?(media_type || "", @multimedia_types)
 
   def is_supported_multimedia_format?(url, media_type) do
-    cond do
-      # Handle embedded content (YouTube, Vimeo, etc.)
-      String.starts_with?(media_type || "", ["embed", "rich"]) -> true
-      # Handle video.* types for embedded videos 
-      String.starts_with?(media_type || "", "video") -> true
-      # Handle direct file formats
-      is_multimedia?(url, media_type) and String.ends_with?(media_type || "", @multimedia_formats) -> true
-      # Default to false
-      true -> false
-    end
+    is_multimedia?(url, media_type) and String.ends_with?(media_type || "", @multimedia_formats)
+  end
+
+  def is_playable_multimedia_format?(url, media_type, oembed \\ nil) do
+    # Handle embedded content (YouTube, Vimeo, etc.) + video or audio formats that can be played in the browser
+    is_embeddable?(media_type, oembed) || is_supported_multimedia_format?(url, media_type)
+  end
+
+  def is_embeddable?(media_type, oembed \\ nil) do
+    e(oembed, "html", nil) || e(oembed, "url", nil) ||
+      String.starts_with?(media_type || "", "embed")
   end
 
   def is_video?(url), do: Files.has_extension?(url || "", @video_exts)
