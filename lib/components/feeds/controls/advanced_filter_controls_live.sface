@@ -20,7 +20,7 @@
             case @preset_origin do
               :remote -> l("Only Remote")
               :local -> l("Only Local")
-              _ -> l("Federated")
+              _ -> l("Remote & Local")
             end
 
           false ->
@@ -29,7 +29,7 @@
               [:local] -> l("Only Local")
               :remote -> l("Only Remote")
               :local -> l("Only Local")
-              _ -> l("Federated")
+              _ -> l("Remote & Local")
             end
         end}
       </label>
@@ -59,7 +59,7 @@
             phx-target={@event_target}
             class="flex gap-3 px-2 text-base-content"
           >
-            {l("Federated")}</a></li>
+            {l("Remote & Local")}</a></li>
       </ul>
       <div
         :if={@preset_has_fixed_origin}

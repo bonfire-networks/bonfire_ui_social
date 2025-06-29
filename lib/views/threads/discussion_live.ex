@@ -23,13 +23,13 @@ defmodule Bonfire.UI.Social.DiscussionLive do
        object: nil,
        object_id: nil,
        post_id: nil,
-       #  thread_id: nil,
+       reply_id: nil,
+       thread_id: nil,
        back: true,
        #  reply_id: nil,
        page_info: nil,
        replies: nil,
        threaded_replies: nil,
-       thread_id: nil,
        thread_mode:
          (maybe_to_atom(e(params, "mode", nil)) ||
             Settings.get(

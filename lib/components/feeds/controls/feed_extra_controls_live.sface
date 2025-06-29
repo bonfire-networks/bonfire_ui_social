@@ -43,6 +43,19 @@
     </button>
   </div> --}
 
+  <div data-scope="include_my_activities">
+    <Bonfire.UI.Social.ToggleTypeLive
+      label={l("My activities")}
+      icon="lucide:refresh-cw"
+      key={:me}
+      field={:subjects}
+      feed_filters={@feed_filters}
+      event_target={@event_target}
+      event_name={@event_name}
+      label_default={l("Include")}
+    />
+  </div>
+
   <span class="font-semibold uppercase text-xs text-base-content/60 pt-3 border-t border-base-content/10 mb-2">{l("Filter by types")}</span>
   <div :if={extension_enabled?(:bonfire_ui_reactions, @__context__)} data-scope="boosts">
     <Bonfire.UI.Social.ToggleTypeLive
