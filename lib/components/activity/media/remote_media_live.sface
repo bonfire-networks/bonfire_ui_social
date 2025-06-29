@@ -89,7 +89,7 @@
                 <div class="aspect-video rounded-t-box">
                   {!-- TODO: only load external embed if autoplay or user clicks on a play button --}
                   <iframe
-                    src={"#{e(url, "secure_url", nil) || url}?&autoplay=1"}
+                    src={"#{e(url, "secure_url", nil) || url}?&autoplay=#{if @autoplay, do: 1, else: 0}"}
                     frameborder="0"
                     width="100%"
                     loading="lazy"
