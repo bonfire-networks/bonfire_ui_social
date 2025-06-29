@@ -46,7 +46,7 @@
   <div data-scope="include_my_activities">
     <Bonfire.UI.Social.ToggleTypeLive
       label={l("My activities")}
-      icon="lucide:refresh-cw"
+      icon="ri:user-line"
       key={:me}
       field={:subjects}
       feed_filters={@feed_filters}
@@ -173,7 +173,7 @@
 
   <Bonfire.UI.Social.ToggleTypeLive
     label={l("Events")}
-    icon="mingcute:paper-fill"
+    icon="ph:calendar-blank-bold"
     key={:Event}
     field={:object_types}
     feed_filters={@feed_filters}
@@ -184,7 +184,7 @@
 
   <Bonfire.UI.Social.ToggleTypeLive
     label={l("Research publications")}
-    icon="ph:calendar-blank-bold"
+    icon="mingcute:paper-fill"
     key={:research}
     field={:media_types}
     feed_filters={@feed_filters}
