@@ -1,7 +1,7 @@
 <section>
   <#slot {@header} />
-  <div data_id="profile_timeline">
-    {!-- feed_id={"user_#{@selected_tab}_#{id(@user)}"} --}
+  <div data-id="profile_timeline">
+    {!-- feed_id={"profile_#{@selected_tab}_#{id(@user)}"} --}
 
     <link
       rel="alternate"
@@ -16,9 +16,14 @@
 
     <StatefulComponent
       module={maybe_component(Bonfire.UI.Social.FeedLive, @__context__)}
-      id={@feed_component_id || "Elixir.Bonfire.UI.Social.FeedLive__for_user_#{@selected_tab}_#{id(@user)}"}
+      id={@feed_component_id ||
+        ComponentID.new(
+          Bonfire.UI.Social.FeedLive,
+          @feed_id || id(@user),
+          if(@selected_tab != :timeline, do: "profile_#{@selected_tab}")
+        )}
       feed_name={@feed_name}
-      feed_ids={@feed_ids}
+      feed_id={@feed_id}
       subject_user={@user}
       feed_filters={@feed_filters}
       page_title={@page_title}

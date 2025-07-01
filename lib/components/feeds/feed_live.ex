@@ -224,7 +224,7 @@ defmodule Bonfire.UI.Social.FeedLive do
     |> ok_socket()
   end
 
-  # def update(%{feed_id: "user_timeline_"} = assigns, socket) do
+  # def update(%{feed_id: "profile_timeline_"} = assigns, socket) do
   #   debug("a user feed was NOT provided, fetching one now")
 
   #   socket = assign(socket, assigns)
@@ -366,29 +366,43 @@ defmodule Bonfire.UI.Social.FeedLive do
   end
 
   def maybe_subscribe(socket) do
-    case e(assigns(socket), :feed_ids, nil) || e(assigns(socket), :feed_id, nil) do
+    case e(assigns(socket), :feed_ids, nil) |> Enums.filter_empty(nil) ||
+           e(assigns(socket), :feed_id, nil) do
       nil ->
         debug("no feed_id known, not subscribing to live updates")
         socket
 
-      # "user_timeline_" <> feed_id ->
-      #   PubSub.subscribe(feed_id, socket)
+      :user_activities ->
+        do_maybe_subscribe(
+          socket,
+          Bonfire.Social.Feeds.feed_id(:outbox, e(assigns(socket), :subject_user, nil))
+        )
 
       feed_or_feeds ->
-        already_pubsub_subscribed = e(assigns(socket), :feed_pubsub_subscribed, nil)
-
-        if already_pubsub_subscribed == feed_or_feeds do
-          debug(already_pubsub_subscribed, "already subscribed to this via pubsub")
-
-          socket
-        else
-          # debug(feed_or_feeds, "live subscribing to")
-          PubSub.subscribe(feed_or_feeds, socket)
-
-          socket
-          |> assign(feed_pubsub_subscribed: feed_or_feeds)
-        end
+        do_maybe_subscribe(socket, feed_or_feeds)
     end
+  end
+
+  defp do_maybe_subscribe(socket, feed_id) when is_binary(feed_id) or is_list(feed_id) do
+    already_pubsub_subscribed = e(assigns(socket), :feed_pubsub_subscribed, nil)
+
+    if already_pubsub_subscribed == feed_id do
+      warn(already_pubsub_subscribed, "already subscribed to this via pubsub")
+
+      socket
+    else
+      debug(feed_id, "live subscribing to")
+
+      PubSub.subscribe(feed_id, socket)
+
+      socket
+      |> assign(feed_pubsub_subscribed: feed_id)
+    end
+  end
+
+  defp do_maybe_subscribe(socket, feed_id) do
+    debug(feed_id, "feed_id(s) not recognised, not subscribing to live updates")
+    socket
   end
 
   # def handle_info({:new_activity, data}, socket) do
@@ -502,6 +516,18 @@ defmodule Bonfire.UI.Social.FeedLive do
   def handle_event(
         "set_filter",
         %{"Elixir.Bonfire.UI.Social.FeedLive" => attrs},
+        socket
+      ) do
+    handle_event(
+      "set_filter",
+      attrs,
+      socket
+    )
+  end
+
+  def handle_event(
+        "set_filter",
+        %{"Bonfire.UI.Social.FeedLive" => attrs},
         socket
       ) do
     handle_event(

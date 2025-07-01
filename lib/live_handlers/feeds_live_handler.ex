@@ -235,7 +235,10 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
   end
 
   def handle_info({:new_activity, data}, socket) do
-    debug(data[:feed_ids], "received new_activity for these feed ids")
+    feed_ids =
+      e(data, :feed_ids, nil)
+      |> debug("received new_activity for these feed ids")
+
     # dump(data)
     current_user = current_user(socket)
 
@@ -245,15 +248,16 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
       )
       |> debug("checked boundary upon receiving a LivePush - permitted?")
 
-    if permitted? && is_list(data[:feed_ids]) do
+    if permitted? && is_list(feed_ids) do
       my_home_feed_ids = Bonfire.Social.Feeds.my_home_feed_ids(current_user)
 
       feed_ids =
-        if Enum.any?(data[:feed_ids], fn feed_id -> feed_id in my_home_feed_ids end) do
-          # if activity targets any feeds we're following and/or meant to see in home feed, then target the home feed component
-          data[:feed_ids] ++ [Bonfire.Social.Feeds.my_feed_id(:inbox, current_user)]
+        if my_home_feed_ids != [] &&
+             Enum.any?(feed_ids, fn feed_id -> feed_id in my_home_feed_ids end) do
+          # if activity targets any feeds we're following and/or meant to see in home feed, then target the home feed as well
+          feed_ids ++ [Bonfire.Social.Feeds.my_feed_id(:inbox, current_user)]
         else
-          data[:feed_ids]
+          feed_ids
         end
 
       debug(feed_ids, "send_update to feeds")
@@ -311,38 +315,45 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
     )
   end
 
-  defp send_feed_updates(
-         pid,
-         "Bonfire-UI-Social-FeedLive_" <> _ = feed_id,
-         assigns,
-         component
-       )
-       when (is_pid(pid) or is_nil(pid)) and (is_list(assigns) or is_map(assigns)) do
-    debug("#{feed_id}", "Sending feed update to component")
-    debug(assigns)
-    maybe_send_update(component, feed_id, assigns, pid)
-  end
+  # defp send_feed_updates(
+  #        pid,
+  #        "Bonfire-UI-Social-FeedLive_" <> _ = feed_id,
+  #        assigns,
+  #        component
+  #      )
+  #      when (is_pid(pid) or is_nil(pid)) and (is_list(assigns) or is_map(assigns)) do
+  #   debug("#{feed_id}", "Sending feed update to component")
+  #   debug(assigns)
+  #   maybe_send_update(component, feed_id, assigns, pid)
+  # end
 
   defp send_feed_updates(pid, feed_id, assigns, component)
        when (is_pid(pid) or is_nil(pid)) and (is_list(assigns) or is_map(assigns)) and
               is_binary(feed_id) do
     # Format the feed_id to match the expected component ID pattern
-    debug(feed_id, "Sending feed update to properly formatted feed component ID")
-    debug(assigns)
-    maybe_send_update(component, feed_id, assigns, pid)
+    # TODO: clean this up with more consistent component IDs
+    # component_id = "Bonfire-UI-Social-FeedLive__for_#{feed_id}"
+    # debug(component_id, "Sending feed update to properly formatted feed component ID")
+    # maybe_send_update(component, component_id, assigns, pid)
+
+    ComponentID.send_updates(component, feed_id, assigns, pid)
   end
 
   defp send_feed_updates(pid, feed_ids, assigns, component)
        when (is_pid(pid) or is_nil(pid)) and (is_list(assigns) or is_map(assigns)) and
               is_list(feed_ids) do
-    # Handle a list of feed IDs by formatting each one and sending updates to all
     debug(feed_ids, "Sending feed updates to multiple feeds")
 
-    Enum.each(feed_ids, fn feed_id when is_binary(feed_id) ->
-      component_id = "Bonfire-UI-Social-FeedLive__for_#{feed_id}"
-      debug(component_id, "Sending feed update to properly formatted feed component ID")
-      maybe_send_update(component, component_id, assigns, pid)
-    end)
+    component_ids =
+      Enum.each(feed_ids, fn feed_id when is_binary(feed_id) ->
+        # Format the feed_id to match the expected component ID pattern
+        # TODO: clean this up with more consistent component IDs
+        #  "Bonfire-UI-Social-FeedLive__for_#{feed_id}"
+        # |> debug("Sending feed update to properly formatted feed component ID")
+        send_feed_updates(pid, feed_id, assigns, component)
+      end)
+
+    # maybe_send_update(component, component_ids, assigns, pid)
   end
 
   defp send_feed_updates(pid, feed_id, assigns, component)
@@ -357,7 +368,7 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
 
   def paginate_feed(feed_id, attrs, socket, opts \\ [])
 
-  # def paginate_feed("user_" <> selected_tab_and_user_id, attrs, socket, _opts) do
+  # def paginate_feed("profile_" <> selected_tab_and_user_id, attrs, socket, _opts) do
   #   debug(selected_tab_and_user_id, "paginate user feed")
 
   #   {:noreply,
@@ -1134,7 +1145,7 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
     end
   end
 
-  # defp feed_assigns("user_" <> tab_and_user_or_other_id, opts) do
+  # defp feed_assigns("profile_" <> tab_and_user_or_other_id, opts) do
   #   [tab, user_or_other_id] =
   #     String.split(tab_and_user_or_other_id, "_", parts: 2)
   #     |> debug("tab and user_or_other_id")
@@ -1144,7 +1155,7 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
   #   # |> debug()
   # end
 
-  # defp feed_assigns({"user_" <> tab_and_user_or_other_id, other}, opts) do
+  # defp feed_assigns({"profile_" <> tab_and_user_or_other_id, other}, opts) do
   #   debug(other, "load user/other timeline: #{tab_and_user_or_other_id}")
 
   #   [tab, user_or_other_id] =
