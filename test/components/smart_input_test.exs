@@ -31,7 +31,7 @@ defmodule Bonfire.UI.Social.SmartInputTest do
     session
     |> upload("Upload an attachment", file)
     |> upload("Upload an attachment", file2)
-    |> click_button("Publish")
+    |> click_button("Post")
     |> visit("/feed/local")
     |> assert_has_or_open_browser("[data-id=feed] article[data-id=article_media]", count: 2)
   end
