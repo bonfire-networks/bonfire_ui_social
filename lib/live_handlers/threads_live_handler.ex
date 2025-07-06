@@ -205,9 +205,10 @@ defmodule Bonfire.Social.Threads.LiveHandler do
   def live_more(thread_id, paginate, socket) do
     error(paginate, "paginate thread")
 
-    showing_within = e(assigns(socket), :showing_within, :thread)
+    assigns = assigns(socket)
+    showing_within = e(assigns, :showing_within, :thread)
 
-    thread_mode = e(assigns(socket), :thread_mode, nil)
+    thread_mode = e(assigns, :thread_mode, nil)
     #  || Settings.get(
     #          [Bonfire.UI.Social.ThreadLive, :thread_mode],
     #          nil,
@@ -223,9 +224,9 @@ defmodule Bonfire.Social.Threads.LiveHandler do
         current_user: current_user(socket),
         paginate: paginate,
         thread_mode: thread_mode,
-        sort_by: e(assigns(socket), :sort_by, nil),
-        max_depth: e(assigns(socket), :max_depth, nil),
-        sort_order: e(assigns(socket), :sort_order, nil),
+        sort_by: e(assigns, :sort_by, nil),
+        max_depth: e(assigns, :max_depth, nil),
+        sort_order: e(assigns, :sort_order, nil),
         preload: preloads
       ]
 
@@ -237,7 +238,7 @@ defmodule Bonfire.Social.Threads.LiveHandler do
              opts
            ) do
       replies =
-        (e(assigns(socket), :replies, []) ++ replies)
+        (e(assigns, :replies, []) ++ replies)
         |> Enum.uniq()
 
       # |> debug("REPLIES")

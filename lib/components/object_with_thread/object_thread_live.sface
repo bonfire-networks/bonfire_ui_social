@@ -47,6 +47,7 @@
           current_url={@current_url}
           main_object_component_id={@main_object_component_id}
           feed_id={@feed_id}
+          sort_by={@sort_by}
           sort_order={@sort_order}
           participants={@participants}
           thread_mode={@thread_mode}

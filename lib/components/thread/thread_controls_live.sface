@@ -63,17 +63,17 @@
             {#match :num_replies}
               <span class="flex gap-3 px-2  items-center">
                 <#Icon iconify="lucide:message-circle" class="w-4 h-4 stroke-1 fill-base-content/50" />
-                <span class="hidden lg:block">{l("Most replied")}</span>
+                <span class="hidden lg:block">{if @sort_order == :asc, do: l("Least replied"), else: l("Most replied")}</span>
               </span>
             {#match :num_boosts}
               <span class="flex gap-3 px-2  items-center">
                 <#Icon iconify="lucide:refresh-cw" class="w-4 h-4 stroke-1 fill-base-content/50" />
-                <span class="hidden lg:block">{l("Most boosted")}</span>
+                <span class="hidden lg:block">{if @sort_order == :asc, do: l("Least boosted"), else: l("Most boosted")}</span>
               </span>
             {#match :num_likes}
               <span class="flex gap-3 px-2  items-center">
                 <#Icon iconify="mingcute:fire-fill" class="h-[20px] w-[18px]" />
-                <span class="hidden lg:block">{l("Most liked")}</span>
+                <span class="hidden lg:block">{if @sort_order == :asc, do: l("Least liked"), else: l("Most liked")}</span>
               </span>
             {#match _}
               <span class="flex gap-3 px-2  items-center">
@@ -121,6 +121,7 @@
             phx-click="set"
             phx-value-to_atoms="true"
             phx-value-sort_by="num_replies"
+            phx-value-sort_order="desc"
             phx-value-assign_global="true"
             phx-target={@event_target}
           >
@@ -136,6 +137,7 @@
               phx-click="set"
               phx-value-to_atoms="true"
               phx-value-sort_by="num_boosts"
+              phx-value-sort_order="desc"
               phx-value-assign_global="true"
               phx-target={@event_target}
             >
@@ -150,6 +152,7 @@
               phx-click="set"
               phx-value-to_atoms="true"
               phx-value-sort_by="num_likes"
+              phx-value-sort_order="desc"
               phx-value-assign_global="true"
               phx-target={@event_target}
             >
