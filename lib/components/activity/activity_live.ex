@@ -296,12 +296,27 @@ defmodule Bonfire.UI.Social.ActivityLive do
     "React"
   end
 
-  defp prepare_verb(activity, fallback),
-    do:
-      Activities.verb_maybe_modify(
-        e(activity, :verb, nil) || e(activity, :verb_id, nil) || fallback,
-        activity
-      )
+  defp prepare_verb(activity, fallback) do
+    # Debug the activity structure to understand what's available
+    # debug(e(activity, :verb, nil), "prepare_verb: activity.verb")
+    # debug(e(activity, :verb_id, nil), "prepare_verb: activity.verb_id")
+    # debug(e(activity, :table_id, nil), "prepare_verb: activity.table_id")
+    # debug(e(activity, :__struct__, nil), "prepare_verb: activity.__struct__")
+    # debug(e(activity, :edge, nil), "prepare_verb: activity.edge")
+
+    # Extract verb string from nested structure if present
+    raw_verb =
+      e(activity, :verb, :verb, nil) || e(activity, :verb, nil) || e(activity, :verb_id, nil)
+
+    # |> debug("prepare_verb: raw verb before modification")
+
+    Activities.verb_maybe_modify(raw_verb || fallback, activity)
+    # |> debug("prepare_verb: final verb after verb_maybe_modify")
+  end
+
+  # defp derive_verb_from_table_id(%{table_id: "300STANN0VNCERESHARESH0VTS"}), do: "Boost"
+  # defp derive_verb_from_table_id(%{table_id: "61KESLYKL1KE1Y0VL1KESTH1S"}), do: "Like" 
+  # defp derive_verb_from_table_id(_), do: nil 
 
   defp do_prepare(%{activity: activity, object: object} = assigns) when not is_nil(object) do
     activity_inception = e(assigns, :activity_inception, nil)
@@ -569,15 +584,16 @@ defmodule Bonfire.UI.Social.ActivityLive do
          thread_title,
          activity_component_id
        ) ++
-       component_activity_subject(
-         verb,
-         activity,
-         object,
-         object_type,
-         showing_within,
-         activity_inception,
-         subject_user
-       ) ++
+       (component_activity_subject(
+          verb,
+          activity,
+          object,
+          object_type,
+          showing_within,
+          activity_inception,
+          subject_user
+        )
+        |> debug("component_activity_subject result")) ++
        component_object(object, object_type, %{primary_image: primary_image}) ++
        if(showing_within != :media, do: attachments_component, else: []) ++
        component_actions(
@@ -1134,6 +1150,8 @@ defmodule Bonfire.UI.Social.ActivityLive do
          character: e(activity, :subject, :character, nil)
        }}
     ] ++ component_activity_maybe_creator(activity, object, object_type)
+
+    # |> debug("MATCHED react case for verb: #{verb} in component_activity_subject")
   end
 
   # create (or reply) activities
@@ -1240,6 +1258,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
       do: component_maybe_creator(subject) || []
 
   def component_activity_maybe_creator(
+        #  NOTE: this is when creator_id==subject_id
         %{subject: %{id: id} = subject, object: %{created: %{creator_id: id}}} = activity,
         object,
         _
@@ -1263,16 +1282,31 @@ defmodule Bonfire.UI.Social.ActivityLive do
   #     do: [{Bonfire.UI.Social.Activity.SubjectLive, %{subject_id: id}}]
 
   def component_activity_maybe_creator(
-        %{object: %{created: %{creator: %{id: _} = creator}}} = activity,
+        activity,
+        %{created: %{creator: %{} = creator}} = object,
+        _
+      ),
+      do:
+        component_maybe_creator(creator) |> debug("component_activity_maybe_creator: result1") ||
+          component_maybe_creator_fallback(activity, object)
+          |> debug("component_activity_maybe_creator: fallback result1")
+
+  def component_activity_maybe_creator(
+        %{object: %{created: %{creator: %{} = creator}}} = activity,
         object,
         _
       ),
       do:
-        component_maybe_creator(creator) ||
+        component_maybe_creator(creator) |> debug("component_activity_maybe_creator: result2") ||
           component_maybe_creator_fallback(activity, object)
+          |> debug("component_activity_maybe_creator: fallback result2")
 
-  def component_activity_maybe_creator(activity, object, _),
-    do: component_maybe_creator_fallback(activity, object)
+  def component_activity_maybe_creator(activity, object, _) do
+    # debug(activity, "component_activity_maybe_creator: activity")
+    # debug(object, "component_activity_maybe_creator: object")
+    component_maybe_creator_fallback(activity, object)
+    # |> debug("component_activity_maybe_creator: fallback result3")
+  end
 
   def component_maybe_creator(%{
         creator_profile: %{id: id} = profile,
@@ -1304,12 +1338,13 @@ defmodule Bonfire.UI.Social.ActivityLive do
       ),
       do: component_maybe_creator(subject)
 
-  def component_maybe_creator(%{created: %{creator: %{id: _}}} = object),
-    do:
-      object
-      # |> repo().maybe_preload(created: [creator: [:profile, :character]])
-      |> e(:created, :creator, nil)
-      |> component_maybe_creator()
+  def component_maybe_creator(%{created: %{creator: %{} = creator}} = object) do
+    debug("component_maybe_creator: found created.creator")
+    debug(creator, "creator details")
+
+    creator
+    |> component_maybe_creator()
+  end
 
   def component_maybe_creator(%{creator: %{id: _}} = object),
     do:

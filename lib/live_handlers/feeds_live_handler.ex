@@ -237,16 +237,22 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
   def handle_info({:new_activity, data}, socket) do
     feed_ids =
       e(data, :feed_ids, nil)
-      |> debug("received new_activity for these feed ids")
+
+    # |> debug("received new_activity for these feed ids")
+
+    activity =
+      e(data, :activity, nil)
+      |> debug("received new_activity")
 
     # dump(data)
     current_user = current_user(socket)
 
     permitted? =
-      Bonfire.Common.Needles.exists?([id: e(data, :activity, :object, :id, nil)],
+      Bonfire.Common.Needles.exists?([id: e(activity, :object, :id, nil) || id(activity)],
         current_user: current_user
       )
-      |> debug("checked boundary upon receiving a LivePush - permitted?")
+
+    # |> debug("checked boundary upon receiving a LivePush - permitted?")
 
     if permitted? && is_list(feed_ids) do
       my_home_feed_ids = Bonfire.Social.Feeds.my_home_feed_ids(current_user)
@@ -262,7 +268,7 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
 
       debug(feed_ids, "send_update to feeds")
 
-      send_feed_updates(feed_ids, new_activity: data[:activity])
+      send_feed_updates(nil, feed_ids, [new_activity: activity], Bonfire.UI.Social.FeedLive)
     else
       debug("I not have permission to view this new activity")
     end

@@ -135,4 +135,38 @@ defmodule Bonfire.UI.Social.Feeds.PubSub.Test do
     conn
     |> assert_has_or_open_browser("#message_threads", text: message_content, timeout: 3000)
   end
+
+  test "new boost appears in the local feed in real time with both booster and original creator",
+       %{
+         conn: conn,
+         alice: alice,
+         me: me
+       } do
+    # Alice creates a post first
+    {:ok, post} =
+      Bonfire.Posts.publish(
+        current_user: me,
+        post_attrs: %{post_content: %{html_body: "my original post"}},
+        boundary: "public"
+      )
+
+    # Open my feed
+    conn = visit(conn, "/@alice")
+
+    # alice boosts it in a separate process
+    Task.start(fn ->
+      Bonfire.Social.Boosts.boost(alice, post)
+    end)
+
+    # Wait for the boost to appear and check that both users are shown
+    conn
+    |> assert_has_or_open_browser("[data-id=object_body]",
+      text: "my original post",
+      timeout: 3000
+    )
+    # Should show the booster in SubjectMinimalLive
+    |> assert_has_or_open_browser("[data-id=activity] [data-id=subject_name]", text: "alice")
+    # Should show the original creator in SubjectLive  
+    |> assert_has_or_open_browser("[data-id=activity] [data-id=subject_name]", text: "meee")
+  end
 end

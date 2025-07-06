@@ -114,6 +114,9 @@ defmodule Bonfire.UI.Social.FeedLive do
   end
 
   # consolidate different kinds of lists/feeds into Activity
+  defp get_activity(%{__struct__: Bonfire.Data.Social.Activity} = activity),
+    do: activity
+
   defp get_activity(%{activity: %{id: _} = activity, edge: %{id: _} = edge}),
     do: merge_structs_as_map(activity, edge) |> debug("merged_structs_as_map")
 
