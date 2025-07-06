@@ -786,7 +786,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
               e(@activity, :subject, :id, nil) != current_user_id(@__context__) and
               e(@object, :created, :creator_id, nil) != current_user_id(@__context__) and
               e(@object, :created, :creator_id, nil) != current_user_id(@__context__)}
-            x-intersect.once="$el.dispatchEvent(new Event('submit', {bubbles: true, cancelable: true})); $el.parentNode.classList.remove('unread-activity');"
+            x-intersect.once.full="$el.dispatchEvent(new Event('submit', {bubbles: true, cancelable: true})); $el.parentNode.classList.remove('unread-activity');"
             phx-submit={if @feed_id, do: "Bonfire.Social.Feeds:mark_seen"}
             phx-target={if @feed_id, do: "#badge_counter_#{@feed_id}"}
           >
