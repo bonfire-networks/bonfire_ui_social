@@ -175,7 +175,7 @@ defmodule Bonfire.UI.Social.ThreadLive do
         # "/discussion/#{thread_id}"
         #   end
 
-        # permalink = "#{thread_url}#activity-#{activity_id}"
+        # permalink = "#{thread_url}/reply/#{activity_id}"
 
         # {
         #   :ok,

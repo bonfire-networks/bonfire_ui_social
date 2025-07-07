@@ -17,13 +17,14 @@
       {#match nil}
       {#match name}
         <div
-          :if={name != @thread_title && @showing_within != :smart_input}
+          :if={name != @thread_title and @showing_within != :smart_input}
           data-role="name"
           class="text-sm my-1 mt-2"
         >
           {rich(name)}
         </div>
     {/case}
+
     {#case e(post_content(@object), :summary, nil)}
       {#match summary}
         {#case @cw == true or (@cw != false and not is_nil(summary))}
@@ -40,7 +41,7 @@
               </div>
             {/if}
 
-            <div id={"content_#{@activity_component_id}"} class={if @cw, do: "hidden"}>
+            <div id={"content_#{@activity_component_id}"} class={hidden: cw}>
               {#case e(post_content(@object), :html_body, nil) ||
                   if !e(@activity, :media, nil), do: l("This content is not available.")}
                 {#match nil}

@@ -52,16 +52,28 @@
         </div>
     {/case}
 
-    <!-- <Bonfire.UI.Social.Activity.CWLive
-      :if={@cw}
-      cw={@cw}
-      activity_component_id={@activity_component_id}
-      summary={nil}
-    /> -->
-    <!-- class={if @cw, do: "hidden"} -->
-    <div id={"content_#{@activity_component_id}"}>
-      {#if @showing_within != :thread and e(post_content(@object), :summary, nil)}
-        <div
+    {#case e(post_content(@object), :summary, nil)}
+      {#match summary}
+        {#case @cw == true or (@cw != false and not is_nil(summary))}
+          {#match cw}
+            {#if cw and e(post_content(@object), :html_body, nil)}
+              <Bonfire.UI.Social.Activity.CWLive
+                cw={@cw}
+                activity_component_id={@activity_component_id}
+                summary={summary}
+              />
+            {#elseif not is_nil(summary)}
+              <div class="prose max-w-prose prose-p:pt-1">
+                {rich(summary,
+                  skip_markdown: @is_remote,
+                  __unsafe__: !@is_remote
+                )}
+              </div>
+            {/if}
+
+            <div id={"content_#{@activity_component_id}"} class={hidden: cw}>
+              {#if @showing_within != :thread and !cw and e(post_content(@object), :summary, nil)}
+                {!-- <div
           id={"expandable_note_#{@parent_id}_#{id(@activity) || id(@object) || 'no-id'}"}
           class="prose max-w-prose prose-p:pt-1 prose-sm"
         >
@@ -69,24 +81,26 @@
             skip_markdown: @is_remote,
             __unsafe__: !@is_remote
           )}
-        </div>
-      {#else}
-        {#case e(post_content(@object), :html_body, nil) ||
-            if !e(@activity, :media, nil), do: l("This content is not available.")}
-          {#match nil}
-          {#match html_body}
-            <Bonfire.UI.Social.Activity.TruncatableContentLive
-              html_body={html_body}
-              activity={@activity}
-              object={@object}
-              parent_id={@parent_id}
-              object_type={:article}
-              showing_within={@showing_within}
-              viewing_main_object={@viewing_main_object}
-              activity_inception={@activity_inception}
-            />
+        </div> --}
+              {#else}
+                {#case e(post_content(@object), :html_body, nil) ||
+                    if !e(@activity, :media, nil), do: l("This content is not available.")}
+                  {#match nil}
+                  {#match html_body}
+                    <Bonfire.UI.Social.Activity.TruncatableContentLive
+                      html_body={html_body}
+                      activity={@activity}
+                      object={@object}
+                      parent_id={@parent_id}
+                      object_type={:article}
+                      showing_within={@showing_within}
+                      viewing_main_object={@viewing_main_object}
+                      activity_inception={@activity_inception}
+                    />
+                {/case}
+              {/if}
+            </div>
         {/case}
-      {/if}
-    </div>
+    {/case}
   </Bonfire.UI.Common.OpenExternalLinkLive>
 </div>
