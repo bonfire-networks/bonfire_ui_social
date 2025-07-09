@@ -63,7 +63,7 @@
                 summary={summary}
               />
             {#elseif not is_nil(summary)}
-              <div class="prose max-w-prose prose-p:pt-1">
+              <div class="prose max-w-prose prose-p:pt-1 prose-sm">
                 {rich(summary,
                   skip_markdown: @is_remote,
                   __unsafe__: !@is_remote
