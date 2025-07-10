@@ -5,28 +5,12 @@
   <button
     type="button"
     id={"read_more_button_#{@parent_id}_#{id(@activity) || id(@object) || 'no-id'}"}
-    phx-click={JS.remove_class("previewable_truncate",
-      to: "#expandable_note_#{@parent_id}_#{id(@activity) || id(@object) || 'no-id'}"
-    )
-    |> JS.add_class("previewable_expanded",
-      to: "#expandable_note_#{@parent_id}_#{id(@activity) || id(@object) || 'no-id'}"
-    )
-    |> JS.hide()
-    |> JS.show(to: "#read_less_button_#{@parent_id}_#{id(@activity) || id(@object) || 'no-id'}")}
-    class="link text-sm mt-2 font-medium link-hover link-primary normal-case"
+    class="link text-sm mt-2 font-medium link-hover link-primary normal-case read-more-btn"
   >{l("Read more")}</button>
   <button
     type="button"
     id={"read_less_button_#{@parent_id}_#{id(@activity) || id(@object) || 'no-id'}"}
-    phx-click={JS.add_class("previewable_truncate",
-      to: "#expandable_note_#{@parent_id}_#{id(@activity) || id(@object) || 'no-id'}"
-    )
-    |> JS.remove_class("previewable_expanded",
-      to: "#expandable_note_#{@parent_id}_#{id(@activity) || id(@object) || 'no-id'}"
-    )
-    |> JS.hide()
-    |> JS.show(to: "#read_more_button_#{@parent_id}_#{id(@activity) || id(@object) || 'no-id'}")}
-    class="link text-sm mt-2 font-medium link-hover link-primary normal-case"
+    class="link text-sm mt-2 font-medium link-hover link-primary normal-case read-less-btn"
     style="display: none;"
   >{l("Read less")}</button>
 </div>
