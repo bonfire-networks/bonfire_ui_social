@@ -125,7 +125,7 @@ defmodule Bonfire.UI.Social.FeedView do
     e(object, :tags, [])
   end
 
-  def as_public, do: "https://www.w3.org/ns/activitystreams#Public"
+  def as_public, do: Bonfire.Federate.ActivityPub.AdapterUtils.public_uri()
 
   def endpoint_url do
     Config.get(:endpoint_module).url()

@@ -7,7 +7,8 @@
   data-main-object={@viewing_main_object}
   class={
     "prose break-normal object_body max-w-none text-base-content prose-hr:!my-2 prose-br:hidden",
-    previewable_truncate: !@viewing_main_object &&
+    previewable_truncate:
+      !@viewing_main_object &&
         @showing_within not in [:smart_input],
     "!text-sm !text-base-content/70": e(@object_type, nil) == :article && @showing_within != :thread
   }
