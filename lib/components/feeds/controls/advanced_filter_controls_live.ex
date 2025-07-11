@@ -2,6 +2,7 @@ defmodule Bonfire.UI.Social.AdvancedFilterControlsLive do
   use Bonfire.UI.Common.Web, :stateful_component
 
   prop feed_filters, :any, default: nil
+  prop feed_name, :any, default: nil
   prop event_target, :any, required: true
   prop show_circles_button, :boolean, default: true
   prop show_sort_dropdown, :boolean, default: true

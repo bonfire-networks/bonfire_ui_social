@@ -29,4 +29,19 @@ defmodule Bonfire.UI.Social.FeedExtraControlsLive do
     end)
     |> Map.new()
   end
+
+  @doc """
+  Checks if current user's activities are excluded from the feed.
+  Returns true if user is in exclude_subjects list, false otherwise.
+  """
+  def user_activities_excluded?(feed_filters, context) do
+    case current_user_id(context) do
+      nil ->
+        false
+
+      user_id ->
+        exclude_subjects = e(feed_filters, :exclude_subjects, [])
+        user_id in exclude_subjects or to_string(user_id) in exclude_subjects
+    end
+  end
 end

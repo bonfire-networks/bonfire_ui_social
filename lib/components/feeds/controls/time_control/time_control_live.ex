@@ -24,10 +24,10 @@ defmodule Bonfire.UI.Social.TimeControlLive do
 
   def default_options,
     do: [
-      {1, l("Day")},
-      {7, l("Week")},
-      {30, l("Month")},
-      {365, l("Year")},
+      {1, l("Last Day")},
+      {7, l("Last Week")},
+      {30, l("Last Month")},
+      {365, l("Last Year")},
       {0, l("All time")}
     ]
 

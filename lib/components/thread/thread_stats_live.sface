@@ -1,33 +1,29 @@
 <div>
   <div class="flex items-center gap-2  w-full">
-    <form
-      class="w-full"
-      phx-change="Bonfire.Social.Threads:list_participants"
-      phx-target={@event_target}
-    >
+    <div>
       <div class="">
-        <div class="flex items-center justify-between">
+        <div class="flex items-center">
           <div class="flex items-center flex-1 gap-4 py-1 px-3">
-            <div class="flex items-center gap-1">
-              {#case @last_reply_id}
-                {#match nil}
-                  {!-- <span class="loading loading-spinner loading-sm text-base-content/70" />
+            {#case @last_reply_id}
+              {#match nil}
+                {!-- <span class="loading loading-spinner loading-sm text-base-content/70" />
                   <div class="text-xs tracking-wide text-base-content/70 text-center">{l("Last Reply")}</div> --}
-                {#match false}
+              {#match false}
+                <div class="flex items-center gap-1">
                   <div class="text-xs font-medium text-base-content/90 text-center mr-1">0</div>
                   <div class="text-xs tracking-wide text-base-content/70 text-center">{l("Replies")}</div>
-                {#match _}
-                  <div class="text-xs tracking-wide text-base-content/70">
-                    {l("Last Reply")} <span class="font-medium text-xs text-base-content/90">{DatesTimes.date_from_now(@last_reply_id, format: :narrow)}</span>
-                  </div>
-              {/case}
-            </div>
+                </div>
+              {#match _}
+                <div class="text-xs tracking-wide text-base-content/70">
+                  {l("Last Reply")} <span class="font-medium text-xs text-base-content/90">{DatesTimes.date_from_now(@last_reply_id, format: :narrow)}</span>
+                </div>
+            {/case}
             <div :if={@reply_count != 0} class="flex items-center gap-1">
               <div data-id="reply_count" class="text-xs font-medium text-base-content/90 text-center">{@reply_count || 0}</div>
               <div class="text-xs tracking-wide text-base-content/70 text-center">{l("Replies")}</div>
             </div>
             <div
-              :if={@showing_within != :messages and @thread_boost_count > 0 and
+              :if={@showing_within != :messages and
                 extension_enabled?(:bonfire_ui_reactions, @__context__)}
               class="flex items-center gap-1"
             >
@@ -35,14 +31,14 @@
 
               <div class="text-xs tracking-wide text-base-content/70 text-center">{l("Boosts")}</div>
             </div>
-            <div :if={@participant_count > 0} class="flex items-center gap-1">
+            <div class="flex items-center gap-1">
               <div class="text-xs font-medium text-base-content/90 text-center">{@participant_count || 0}</div>
               <div class="text-xs tracking-wide text-base-content/70 text-center">{l("Participants")}</div>
             </div>
           </div>
         </div>
 
-        <div :if={@participants != []} class="flex flex-wrap items-center gap-3 p-2">
+        <div class="flex flex-wrap items-center gap-3 p-2">
           {#for p <- @participants || []}
             <div class="z-[9] relative">
               <div>
@@ -62,7 +58,7 @@
           {/for}
         </div>
       </div>
-    </form>
+    </div>
   </div>
 
   <#slot />

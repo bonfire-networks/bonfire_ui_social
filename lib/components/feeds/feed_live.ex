@@ -545,20 +545,18 @@ defmodule Bonfire.UI.Social.FeedLive do
         %{"time_limit" => time_limit} = attrs,
         socket
       ) do
-    assigns = assigns(socket)
-
-    # time_limit = LiveHandler.extract_time_limit(assigns, time_limit)
-
-    socket
-    |> assign(LiveHandler.prepare_time_limit(assigns, time_limit))
-    |> assign(
-      # time_limit: time_limit,
-      deferred_join_multiply_limit:
-        e(attrs, "multiply_limit", nil) |> Types.maybe_to_integer(nil) ||
-          e(assigns, :multiply_limit, nil) || 1
+    # Use set_filters for consistency with other filter handling
+    set_filters(
+      %{time_limit: time_limit}
+      |> Map.merge(
+        # Handle multiply_limit if present
+        case e(attrs, "multiply_limit", nil) |> Types.maybe_to_integer(nil) do
+          nil -> %{}
+          multiply_limit -> %{deferred_join_multiply_limit: multiply_limit}
+        end
+      ),
+      socket
     )
-    # |> set_filters(%{time_limit: time_limit}, ...)
-    |> reload()
   end
 
   def handle_event(
@@ -802,13 +800,32 @@ defmodule Bonfire.UI.Social.FeedLive do
         replace_lists \\ false
       ) do
     # debug(attrs, "set_filter")
+
+    # Handle special case: origin: :all should clear the origin filter
+    {attrs, should_clear_origin} =
+      case attrs do
+        %{"origin" => "all"} -> {Map.delete(attrs, "origin"), true}
+        %{origin: :all} -> {Map.delete(attrs, :origin), true}
+        _ -> {attrs, false}
+      end
+
     case FeedFilters.validate(attrs) do
       {:ok, filters} ->
+        existing_filters = assigns(socket)[:feed_filters] || %{}
+
+        # If we need to clear origin, remove it from existing filters
+        existing_filters =
+          if should_clear_origin do
+            Map.delete(existing_filters, :origin)
+          else
+            existing_filters
+          end
+
         reload(
           # Enums.merge_to_struct(
           #   FeedFilters,
           Enums.merge_as_map(
-            debug(assigns(socket)[:feed_filters] || %{}, "existing filters"),
+            debug(existing_filters, "existing filters"),
             filters
             |> debug("validated")
             # replace_lists: replace_lists

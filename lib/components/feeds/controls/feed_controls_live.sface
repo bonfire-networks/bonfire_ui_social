@@ -1,33 +1,32 @@
 <div
   data-id="feed_controls"
   id="feed_controls"
-  class="p-2 relative border-base-content/10 border-b relative feed_control_wrapper bg-base-100 lg:rounded-t-xl"
+  class="relative border-base-content/10 border-b relative feed_control_wrapper bg-base-100 lg:rounded-t-xl"
 >
   {#if @reloading}
     <div class="absolute z-10 inset-0 flex items-center justify-center bg-base-content/10">
       <span class="loading loading-ring loading-xl" />
     </div>
   {/if}
-  <div class="flex w-full gap-2">
+  <div class="flex w-full gap-2 p-2">
     <StatefulComponent
       id="advanced_filter_controls"
       module={Bonfire.UI.Social.AdvancedFilterControlsLive}
       feed_filters={@feed_filters}
       event_target={@event_target}
+      feed_name={@feed_name}
     />
 
-    <div class="border-l border-base-content/10 pl-2">
-      <button phx-click={JS.toggle(to: "#more_filters")} class="btn btn-ghost btn-square opacity-70"><#Icon iconify="mingcute:filter-2-line" class="w-5 h-5" /></button>
+    <div class="">
+      <button
+        phx-click={JS.toggle(to: "#more_filters")}
+        class="btn btn-sm btn-secondary btn-ghost btn-square opacity-70"
+      ><#Icon iconify="codicon:settings" class="w-5 h-5" /></button>
     </div>
   </div>
 
-  <Bonfire.UI.Social.FilterByCirclesLive
-    feed_filters={@feed_filters}
-    event_target={@event_target}
-  />
-
-  <div id="more_filters" class="pb-0 flex pt-4 flex-col gap-2 hidden">
-    <div class="flex flex-col gap-2 pb-3 w-full">
+  <div id="more_filters" class="pb-0 flex p-4 bg-base-content/5 flex-col gap-2 hidden">
+    <!-- <div class="flex flex-col gap-2 pb-3 w-full">
       <Bonfire.UI.Social.TimeControlLive
         feed_name={@feed_name}
         event_target={@event_target}
@@ -35,7 +34,8 @@
         current_value={e(@feed_filters, :time_limit, nil)}
         scope={:user}
       />
-    </div>
+    </div> -->
+
     <Bonfire.UI.Social.FeedExtraControlsLive
       event_target={@event_target}
       event_name="set_filter"
@@ -47,7 +47,7 @@
     />
     <Bonfire.UI.Social.SaveFeedPresetLive
       event_target={@event_target}
-      open_btn_wrapper_class="w-full flex-1"
+      open_btn_wrapper_class="flex-1"
     />
   </div>
 </div>

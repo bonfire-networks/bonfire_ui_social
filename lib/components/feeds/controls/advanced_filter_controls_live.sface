@@ -1,5 +1,5 @@
 <div class="w-full">
-  <div :if={current_user_id(@__context__)} class="flex justify-between flex-1 gap-1 w-full">
+  <div :if={current_user_id(@__context__)} class="flex gap-3 flex-1 w-full">
     <StatelessComponent
       :if={@show_sort_dropdown}
       module={maybe_component(Bonfire.UI.Social.SortItemsDropdownLive)}
@@ -7,31 +7,60 @@
       event_target={@event_target}
     />
 
-    <div data-position="bottom" phx-hook="Tooltip" class="relative flex-1" id="filter_origin_feed">
+    <div data-position="bottom" phx-hook="Tooltip" class="relative" id="filter_origin_feed">
       <label
         tabindex="0"
         class={
-          "tooltip-button btn w-full capitalize",
+          "tooltip-button btn btn-sm btn-ghost w-full capitalize",
           "opacity-50 cursor-not-allowed": @preset_has_fixed_origin
         }
       >
-        {case @preset_has_fixed_origin do
-          true ->
-            case @preset_origin do
-              :remote -> l("Only Remote")
-              :local -> l("Only Local")
-              _ -> l("Remote & Local")
-            end
+        <span class="lg:hidden flex">
+          {#case @preset_has_fixed_origin}
+            {#match true}
+              {#case @preset_origin}
+                {#match :remote}
+                  <#Icon iconify="streamline:planet" class="w-4 h-4" />
+                {#match :local}
+                  <#Icon iconify="mingcute:campground-fill" class="w-4 h-4" />
+                {#match _}
+                  <#Icon iconify="mingcute:compass-fill" class="w-4 h-4" />
+              {/case}
+            {#match false}
+              {#case @feed_filters[:origin]}
+                {#match [:remote]}
+                  <#Icon iconify="streamline:planet" class="w-4 h-4" />
+                {#match [:local]}
+                  <#Icon iconify="mingcute:campground-fill" class="w-4 h-4" />
+                {#match :remote}
+                  <#Icon iconify="streamline:planet" class="w-4 h-4" />
+                {#match :local}
+                  <#Icon iconify="mingcute:campground-fill" class="w-4 h-4" />
+                {#match _}
+                  <#Icon iconify="mingcute:compass-fill" class="w-4 h-4" />
+              {/case}
+          {/case}
+        </span>
+        <span class="hidden lg:flex">
+          {case @preset_has_fixed_origin do
+            true ->
+              case @preset_origin do
+                :remote -> l("Only Remote")
+                :local -> l("Only Local")
+                _ -> l("Remote & Local")
+              end
 
-          false ->
-            case @feed_filters[:origin] do
-              [:remote] -> l("Only Remote")
-              [:local] -> l("Only Local")
-              :remote -> l("Only Remote")
-              :local -> l("Only Local")
-              _ -> l("Remote & Local")
-            end
-        end}
+            false ->
+              case @feed_filters[:origin] do
+                [:remote] -> l("Only Remote")
+                [:local] -> l("Only Local")
+                :remote -> l("Only Remote")
+                :local -> l("Only Local")
+                _ -> l("Remote & Local")
+              end
+          end}
+        </span>
+        <#Icon iconify="mdi:chevron-down" class="w-4 h-4" />
       </label>
       <ul
         :if={not @preset_has_fixed_origin}
@@ -42,24 +71,42 @@
             phx-click="set_filter"
             phx-value-origin={:local}
             phx-target={@event_target}
-            class="flex gap-3 px-2 text-base-content"
+            class="flex gap-3 px-2 justify-between items-center text-base-content"
           >
-            {l("Only Local")}</a>
+            {l("Only Local")}
+            <div class="w-5 h-5 flex items-center justify-center border border-base-content/20 rounded-full">
+              {#if e(@feed_filters, :origin, nil) == :local or e(@feed_filters, :origin, nil) == [:local]}
+                <span class="w-[14px] h-[14px] bg-primary rounded-full" />
+              {/if}
+            </div>
+          </a>
         </li>
         <li><a
             phx-click="set_filter"
             phx-value-origin={:remote}
             phx-target={@event_target}
-            class="flex gap-3 px-2 text-base-content"
+            class="flex gap-3 px-2 justify-between items-center text-base-content"
           >
-            {l("Only Remote")}</a></li>
+            {l("Only Remote")}
+            <div class="w-5 h-5 flex items-center justify-center border border-base-content/20 rounded-full">
+              {#if e(@feed_filters, :origin, nil) == :remote or e(@feed_filters, :origin, nil) == [:remote]}
+                <span class="w-[14px] h-[14px] bg-primary rounded-full" />
+              {/if}
+            </div>
+          </a></li>
         <li><a
             phx-click="set_filter"
             phx-value-origin={:all}
             phx-target={@event_target}
-            class="flex gap-3 px-2 text-base-content"
+            class="flex gap-3 px-2 justify-between items-center text-base-content"
           >
-            {l("Remote & Local")}</a></li>
+            {l("Remote & Local")}
+            <div class="w-5 h-5 flex items-center justify-center border border-base-content/20 rounded-full">
+              {#if is_nil(e(@feed_filters, :origin, nil)) or e(@feed_filters, :origin, nil) == :all}
+                <span class="w-[14px] h-[14px] bg-primary rounded-full" />
+              {/if}
+            </div>
+          </a></li>
       </ul>
       <div
         :if={@preset_has_fixed_origin}
@@ -71,15 +118,23 @@
       </div>
     </div>
 
-    <div :if={@show_circles_button} class="flex-1 relative" id="filter_circles_feed">
-      <label tabindex="0" class="btn w-full capitalize" phx-click={JS.toggle(to: "#open_circles")}>
+    <Bonfire.UI.Social.TimeControlLive
+      feed_name={@feed_name}
+      event_target={@event_target}
+      event_name="set_filter"
+      current_value={e(@feed_filters, :time_limit, nil)}
+      scope={:user}
+    />
+    <!-- <div :if={@show_circles_button} class="relative" id="filter_circles_feed">
+      <label tabindex="0" class="btn w-full btn-sm btn-ghost capitalize" phx-click={JS.toggle(to: "#open_circles")}>
         <span class="hidden lg:flex">{l("By circles")}</span>
         <span class="lg:hidden"><#Icon iconify="rivet-icons:circle" class="w-4 h-4" /></span>
         <span>{case e(@feed_filters, :subject_circles, []) do
             [] -> nil
             circles -> "(#{length(circles)})"
           end}</span>
+        <#Icon iconify="mdi:chevron-down" class="w-4 h-4" />
       </label>
-    </div>
+    </div> -->
   </div>
 </div>

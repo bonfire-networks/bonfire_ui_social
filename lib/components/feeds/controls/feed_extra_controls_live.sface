@@ -43,7 +43,24 @@
     </button>
   </div> --}
 
-  <div data-scope="include_my_activities">
+  {#if current_user_id(@__context__) &&
+      !(@showing_within == :profile && e(@feed_filters, :by, nil) == current_user_id(@__context__))}
+    <div data-scope="include_my_activities" class="flex justify-between items-center pb-3">
+      <span class="text-sm text-base-content/90">{l("Hide my own activities")}</span>
+      <input
+        type="checkbox"
+        checked={user_activities_excluded?(@feed_filters, @__context__)}
+        class="toggle toggle-sm"
+        phx-click="set_filter"
+        phx-value-toggle="subjects"
+        phx-value-toggle_type={current_user_id(@__context__)}
+        phx-value-toggle_value={if user_activities_excluded?(@feed_filters, @__context__), do: "default", else: "false"}
+        phx-target={@event_target}
+      />
+    </div>
+  {/if}
+
+  <!-- <div data-scope="include_my_activities">
     <Bonfire.UI.Social.ToggleTypeLive
       label={l("My activities")}
       icon="ri:user-line"
@@ -54,9 +71,14 @@
       event_name={@event_name}
       label_default={l("Include")}
     />
-  </div>
+  </div> -->
 
-  <span class="font-semibold uppercase text-xs text-base-content/60 pt-3 border-t border-base-content/10 mb-2">{l("Filter by types")}</span>
+  <Bonfire.UI.Social.FilterByCirclesLive
+    feed_filters={@feed_filters}
+    event_target={@event_target}
+  />
+
+  <div class="bg-base-content/20 font-semibold uppercase text-xs text-base-content/60 p-2 px-4 -mx-4 mb-3">{l("Filter by types")}</div>
   <div :if={extension_enabled?(:bonfire_ui_reactions, @__context__)} data-scope="boosts">
     <Bonfire.UI.Social.ToggleTypeLive
       label={l("Boosts")}

@@ -1,4 +1,4 @@
-<form
+<!-- <form
   data-scope="time_limit"
   phx-change={@event_name || "Bonfire.Common.Settings:set"}
   phx-target={@event_target}
@@ -26,4 +26,38 @@
       </div>
     </div>
   </div>
-</form>
+</form> -->
+
+<div data-position="bottom" phx-hook="Tooltip" id="time_control_dropdown" class="flex relative">
+  <label tabindex="0" class="tooltip-button btn btn-sm btn-ghost">
+    {Enum.find_value(default_options(), fn {v, name} ->
+      if v == @current_value, do: name, else: nil
+    end) ||
+      case @current_value do
+        nil -> l("All time")
+        :load_from_settings -> l("Loading...")
+        _ -> l("All time")
+      end}
+    <#Icon iconify="mdi:chevron-down" class="w-4 h-4" />
+  </label>
+  <ul
+    tabindex="0"
+    class="tooltip z-[999] menu bg-base-100 shadow-lg border rounded-xl border-base-content/10 w-52 absolute top-0 right-0 hidden"
+  >
+    {#for {days, label} <- default_options()}
+      <li>
+        <a
+          phx-click="set_filter"
+          phx-value-time_limit={days}
+          phx-target={@event_target}
+          class="flex gap-3 px-2 text-base-content justify-between items-center"
+        >
+          {label}
+          <div class="w-5 h-5 flex items-center justify-center border border-base-content/20 rounded-full">
+            <span :if={@current_value == days} class="w-[14px] h-[14px] bg-primary rounded-full" />
+          </div>
+        </a>
+      </li>
+    {/for}
+  </ul>
+</div>

@@ -1,47 +1,91 @@
-<div
-  data-position="bottom-end"
-  phx-hook="Tooltip"
-  id="order_dropdown_feed"
-  class="flex flex-1 relative"
->
-  <label tabindex="0" class="tooltip-button btn w-full">
-    {#case e(@feed_filters, :sort_by, nil)}
-      {#match :num_replies}
+<div data-position="bottom" phx-hook="Tooltip" id="order_dropdown_feed" class="flex relative">
+  <label tabindex="0" class="tooltip-button btn btn-sm btn-ghost">
+    {#case {e(@feed_filters, :sort_by, :date_created), e(@feed_filters, :sort_order, :desc)}}
+      {#match {:date_created, :desc}}
+        <span class="flex items-center">
+          <#Icon iconify="mdi:order-alphabetical-ascending" class="lg:hidden block w-4 h-4" />
+          <span class="hidden lg:block">{l("Most recent")}</span>
+        </span>
+      {#match {:date_created, :asc}}
+        <span class="flex items-center">
+          <#Icon iconify="mdi:order-alphabetical-ascending" class="lg:hidden block w-4 h-4" />
+          <span class="hidden lg:block">{l("Least recent")}</span>
+        </span>
+      {#match {:num_replies, :desc}}
         <span class="flex items-center">
           <#Icon iconify="lucide:message-circle" class="lg:hidden block w-4 h-4" />
-          <span class="hidden lg:block">{if e(@feed_filters, :sort_order, nil) == :asc, do: l("Least replied"), else: l("Most replied")}</span>
+          <span class="hidden lg:block">{l("Most replied")}</span>
         </span>
-      {#match :num_boosts}
+      {#match {:num_replies, :asc}}
+        <span class="flex items-center">
+          <#Icon iconify="lucide:message-circle" class="lg:hidden block w-4 h-4" />
+          <span class="hidden lg:block">{l("Least replied")}</span>
+        </span>
+      {#match {:num_boosts, :desc}}
         <span class="flex items-center">
           <#Icon iconify="lucide:refresh-cw" class="lg:hidden block w-4 h-4" />
-          <span class="hidden lg:block">{if e(@feed_filters, :sort_order, nil) == :asc, do: l("Least boosted"), else: l("Most boosted")}</span>
+          <span class="hidden lg:block">{l("Most boosted")}</span>
         </span>
-      {#match :num_likes}
+      {#match {:num_boosts, :asc}}
+        <span class="flex items-center">
+          <#Icon iconify="lucide:refresh-cw" class="lg:hidden block w-4 h-4" />
+          <span class="hidden lg:block">{l("Least boosted")}</span>
+        </span>
+      {#match {:num_likes, :desc}}
         <span class="flex items-center">
           <#Icon iconify="mingcute:fire-fill" class="lg:hidden block h-[20px] w-[18px]" />
-          <span class="hidden lg:block">{if e(@feed_filters, :sort_order, nil) == :asc, do: l("Least liked"), else: l("Most liked")}</span>
+          <span class="hidden lg:block">{l("Most liked")}</span>
+        </span>
+      {#match {:num_likes, :asc}}
+        <span class="flex items-center">
+          <#Icon iconify="mingcute:fire-fill" class="lg:hidden block h-[20px] w-[18px]" />
+          <span class="hidden lg:block">{l("Least liked")}</span>
         </span>
       {#match _}
         <span class="flex items-center">
           <#Icon iconify="mdi:order-alphabetical-ascending" class="lg:hidden block w-4 h-4" />
-          <span class="hidden lg:block">{l("Chronological")}</span>
+          <span class="hidden lg:block">{l("Most recent")}</span>
         </span>
     {/case}
+    <#Icon iconify="mdi:chevron-down" class="w-4 h-4" />
   </label>
   <ul
     tabindex="0"
-    class="tooltip z-[999] menu bg-base-100 shadow-lg border rounded-xl border-base-content/10 w-45 absolute top-0 right-0 hidden"
+    class="tooltip z-[999] menu bg-base-100 shadow-lg border rounded-xl border-base-content/10 w-52 absolute top-0 right-0 hidden"
   >
     <li>
       <a
         phx-click="set_filter"
         phx-value-sort_by="date_created"
+        phx-value-sort_order="desc"
         phx-target={@event_target}
-        class="flex gap-3 px-2 text-base-content"
+        class="flex gap-3 px-2 text-base-content justify-between items-center"
       >
-        <#Icon iconify="mdi:order-alphabetical-ascending" class="w-4 h-4" />
-        {l("Chronological")}
-      </a></li>
+        {l("Most recent")}
+        <div class="w-5 h-5 flex items-center justify-center border border-base-content/20 rounded-full">
+          {#if e(@feed_filters, :sort_by, :date_created) == :date_created and
+              e(@feed_filters, :sort_order, :desc) == :desc}
+            <span class="w-[14px] h-[14px] bg-primary rounded-full" />
+          {/if}
+        </div>
+      </a>
+    </li>
+    <li>
+      <a
+        phx-click="set_filter"
+        phx-value-sort_by="date_created"
+        phx-value-sort_order="asc"
+        phx-target={@event_target}
+        class="flex gap-3 justify-between items-center px-2 text-base-content"
+      >
+        {l("Least recent")}
+        <div class="w-5 h-5 flex items-center justify-center border border-base-content/20 rounded-full">
+          {#if e(@feed_filters, :sort_by, nil) == :date_created and e(@feed_filters, :sort_order, nil) == :asc}
+            <span class="w-[14px] h-[14px] bg-primary rounded-full" />
+          {/if}
+        </div>
+      </a>
+    </li>
 
     <li>
       <a
@@ -49,10 +93,32 @@
         phx-value-sort_by="num_replies"
         phx-value-sort_order="desc"
         phx-target={@event_target}
-        class="flex gap-3 px-2 text-base-content"
+        class="flex justify-between items-center gap-3 px-2 text-base-content"
       >
-        <#Icon iconify="lucide:message-circle" class="w-4 h-4" />
-        {l("Most replied")}</a></li>
+        {l("Most replied")}
+        <div class="w-5 h-5 flex items-center justify-center border border-base-content/20 rounded-full">
+          {#if e(@feed_filters, :sort_by, nil) == :num_replies and e(@feed_filters, :sort_order, nil) == :desc}
+            <span class="w-[14px] h-[14px] bg-primary rounded-full" />
+          {/if}
+        </div>
+      </a>
+    </li>
+    <li>
+      <a
+        phx-click="set_filter"
+        phx-value-sort_by="num_replies"
+        phx-value-sort_order="asc"
+        phx-target={@event_target}
+        class="flex gap-3 justify-between items-center px-2 text-base-content"
+      >
+        {l("Least replied")}
+        <div class="w-5 h-5 flex items-center justify-center border border-base-content/20 rounded-full">
+          {#if e(@feed_filters, :sort_by, nil) == :num_replies and e(@feed_filters, :sort_order, nil) == :asc}
+            <span class="w-[14px] h-[14px] bg-primary rounded-full" />
+          {/if}
+        </div>
+      </a>
+    </li>
 
     {#if extension_enabled?(:bonfire_ui_reactions, @__context__)}
       <li>
@@ -61,10 +127,32 @@
           phx-value-sort_by="num_boosts"
           phx-value-sort_order="desc"
           phx-target={@event_target}
-          class="flex gap-3 px-2 text-base-content"
+          class="flex justify-between items-center gap-3 px-2 text-base-content"
         >
-          <#Icon iconify="lucide:refresh-cw" class="w-4 h-4" />
-          {l("Most boosted")}</a></li>
+          {l("Most boosted")}
+          <div class="w-5 h-5 flex items-center justify-center border border-base-content/20 rounded-full">
+            {#if e(@feed_filters, :sort_by, nil) == :num_boosts and e(@feed_filters, :sort_order, nil) == :desc}
+              <span class="w-[14px] h-[14px] bg-primary rounded-full" />
+            {/if}
+          </div>
+        </a>
+      </li>
+      <li>
+        <a
+          phx-click="set_filter"
+          phx-value-sort_by="num_boosts"
+          phx-value-sort_order="asc"
+          phx-target={@event_target}
+          class="flex justify-between items-center gap-3 px-2 text-base-content"
+        >
+          {l("Least boosted")}
+          <div class="w-5 h-5 flex items-center justify-center border border-base-content/20 rounded-full">
+            {#if e(@feed_filters, :sort_by, nil) == :num_boosts and e(@feed_filters, :sort_order, nil) == :asc}
+              <span class="w-[14px] h-[14px] bg-primary rounded-full" />
+            {/if}
+          </div>
+        </a>
+      </li>
 
       <li>
         <a
@@ -72,23 +160,32 @@
           phx-value-sort_by="num_likes"
           phx-value-sort_order="desc"
           phx-target={@event_target}
-          class="flex gap-3 px-2 text-base-content"
+          class="flex gap-3 px-2 justify-between items-center text-base-content"
         >
-          <#Icon iconify="mingcute:fire-fill" class="w-4 h-4" />
-          {l("Most liked")}</a></li>
+          {l("Most liked")}
+          <div class="w-5 h-5 flex items-center justify-center border border-base-content/20 rounded-full">
+            {#if e(@feed_filters, :sort_by, nil) == :num_likes and e(@feed_filters, :sort_order, nil) == :desc}
+              <span class="w-[14px] h-[14px] bg-primary rounded-full" />
+            {/if}
+          </div>
+        </a>
+      </li>
+      <li>
+        <a
+          phx-click="set_filter"
+          phx-value-sort_by="num_likes"
+          phx-value-sort_order="asc"
+          phx-target={@event_target}
+          class="flex justify-between items-center gap-3 px-2 text-base-content"
+        >
+          {l("Least liked")}
+          <div class="w-5 h-5 flex items-center justify-center border border-base-content/20 rounded-full">
+            {#if e(@feed_filters, :sort_by, nil) == :num_likes and e(@feed_filters, :sort_order, nil) == :asc}
+              <span class="w-[14px] h-[14px] bg-primary rounded-full" />
+            {/if}
+          </div>
+        </a>
+      </li>
     {/if}
   </ul>
-</div>
-<div class="px-2 btn btn-square flex items-center place-content-center">
-  {#if e(@feed_filters, :sort_order, nil) == :asc}
-    <a phx-click="set_filter" phx-value-sort_order={:desc} phx-target={@event_target}>
-      <#Icon iconify="mdi:arrow-down" class="w-4 h-4" />
-      <span class="sr-only">{l("Oldest first")}</span>
-    </a>
-  {#else}
-    <a phx-click="set_filter" phx-value-sort_order={:asc} phx-target={@event_target}>
-      <#Icon iconify="mdi:arrow-up" class="w-4 h-4" />
-      <span class="sr-only">{l("Newest first")}</span>
-    </a>
-  {/if}
 </div>
