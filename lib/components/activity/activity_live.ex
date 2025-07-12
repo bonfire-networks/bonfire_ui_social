@@ -866,7 +866,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
                   object_id={id(e(component_assigns, :object, nil) || @object)}
                   subject_id={e(component_assigns, :subject_id, nil) ||
                     e(@activity, :subject_id, nil)}
-                  subject_peered={e(@activity, :subject, :character, :peered, nil)}
+                  subject_peered={e(component_assigns, :character, :peered, nil) || e(@activity, :subject, :character, :peered, nil)}
                   object_boundary={@object_boundary}
                   object_type={e(component_assigns, :object_type, @object_type)}
                   date_ago={e(component_assigns, :date_ago, @date_ago)}
