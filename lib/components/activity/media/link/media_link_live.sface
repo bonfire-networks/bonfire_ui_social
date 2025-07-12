@@ -8,8 +8,9 @@
     class={
       "flex w-full items-center media_container gap-3 hover:bg-base-content/5 overflow-hidden",
       @css_borders || "border rounded-lg border-base-content/10",
-      "flex-col items-center": is_binary(@preview_img) and !@small_icon,
-      "!flex-row": e(@activity_inception, false)
+      # Use row layout for small icons or activity inception, otherwise column for preview images
+      "flex-col items-center": is_binary(@preview_img) and !@small_icon and !@activity_inception,
+      "flex-row": @small_icon or @activity_inception
     }
     target="_blank"
   >
@@ -20,6 +21,7 @@
             <LazyImage
               parent_id={["icon", @parent_id, id(@media)]}
               class="rounded-none object-cover rounded-l-lg cursor-pointer m-image h-full"
+              fallback_class="w-8 h-8 text-base-content/70"
               src={@preview_img}
               media={@media}
               fallback_icon="ion:newspaper-outline"
@@ -39,6 +41,7 @@
               <LazyImage
                 parent_id={["icon", @parent_id, id(@media)]}
                 class="rounded-none object-cover rounded-t-lg cursor-pointer m-image w-full aspect-[1.91/1]"
+                fallback_class="w-8 h-8 text-base-content/70"
                 src={@preview_img}
                 media={@media}
                 fallback_icon="ion:newspaper-outline"
@@ -54,6 +57,7 @@
               <LazyImage
                 parent_id={["icon", @parent_id, id(@media)]}
                 class="rounded-none object-cover rounded-l-lg cursor-pointer m-image min-w-8 max-w-[120px] w-full h-auto"
+                fallback_class="w-8 h-8 text-base-content/70"
                 src={favicon_url}
                 media={@media}
                 fallback_icon="ion:newspaper-outline"

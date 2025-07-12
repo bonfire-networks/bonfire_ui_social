@@ -38,11 +38,12 @@
             cw={@cw}
             media_url={media_url}
             media={m}
-            no_cover={if Enum.count(@link_list) > 1, do: true, else: false}
+            # Use small icons for compact display when multiple links or explicitly requested
+            no_cover={Enum.count(@link_list) > 1 and !@small_icon}
+            small_icon={@small_icon or Enum.count(@link_list) > 1}
             download_url={e(m.metadata, "oembed", "download_url", nil) || e(m.metadata, "download_url", nil)}
             preview_img={preview_img(m)}
             css_borders={@css_borders}
-            small_icon={@small_icon}
             activity_inception={@activity_inception}
             showing_within={@showing_within}
             parent_id={@parent_id}

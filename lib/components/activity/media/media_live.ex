@@ -20,7 +20,7 @@ defmodule Bonfire.UI.Social.Activity.MediaLive do
 
   # TODO: move all these to config (and move to Bonfire.Files)
   @image_types ["image", "photo"]
-  @image_formats ["jpg", "jpeg", "png", "gif", "webp", "svg", "apng"]
+  @image_formats ["jpg", "jpeg", "png", "gif", "webp", "svg", "apng", "ico"]
   @image_exts Enum.map(@image_formats, &".#{&1}")
 
   @audio_types ["audio", "song"]
@@ -218,7 +218,8 @@ defmodule Bonfire.UI.Social.Activity.MediaLive do
   end
 
   def media_img(%{} = media) do
-    (e(media, :metadata, "oembed", "url", nil) || Media.image_url(media) |> debug("medimageur"))
+    Media.image_url(media)
+    |> debug("medimageur")
     |> unwrap()
   end
 
