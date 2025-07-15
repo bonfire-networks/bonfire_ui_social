@@ -64,7 +64,7 @@
         data-media={num_medias}
         data-rendered={@showing_within}
         data-main-object={@viewing_main_object}
-        class="grid  w-full grid-flow-col grid-with-ratio grid-rows-4 gap-1 mt-3"
+        class="flex flex-col gap-2 my-2"
       >
         {#for {%{} = m, counter} <- Enum.with_index(@multimedia_list)}
           {#if @showing_within != :smart_input}
@@ -79,14 +79,6 @@
                     {!-- FIXME: enable_fallback for logged out visitors instead of just not using the modal --}
                     <!-- {#if current_user_id(@__context__)} -->
                     {#if String.starts_with?(m.media_type || "", "video")}
-                      {!-- {#if is_supported_video_format?(m.path, m.media_type)}
-                        <Bonfire.UI.Social.Activity.VideoUploadedLive
-                          media={m}
-                          media_label={media_label}
-                          muted={@muted || @cw || @showing_within == :flags}
-                          parent_id={@parent_id}
-                        />
-                      {#else} --}
                       <Bonfire.UI.Social.Activity.VideoLinkLive
                         media={m}
                         media_label={media_label}

@@ -21,23 +21,40 @@
                   {#match nil}
                     {#if is_binary(media_url)}
                       {#if Bonfire.Files.has_extension?(media_url, [".mp4", ".mkv"])}
-                        <video class={@base_css, @video_css} controls autoplay={@autoplay} muted={@muted}>
-                          <source src={media_url} type="video/mp4" preload="none">
+                        <video class={@base_css, @video_css} controls autoplay={@autoplay} muted={@muted} preload={if @autoplay, do: "auto", else: "metadata"} poster={MediaLive.preview_img(@media)} title={Bonfire.Files.Media.media_label(@media)} playsinline crossorigin="anonymous">
+                          <source src={media_url} type="video/mp4">
+                          {#if e(@media, :metadata, "captions", nil)}
+                            <track kind="captions" src={e(@media, :metadata, "captions", nil)} srclang="en" label="English" default>
+                          {/if}
                           Your browser does not support the video tag.
                         </video>
-                      {#elseif Bonfire.Files.has_extension?(media_url, [".ogg", ".ogv", ".ogx", ".ogm", ".spx", ".mov", ".opus"])}
-                        <video class={@base_css, @video_css} controls autoplay={@autoplay} muted={@muted} preload="none">
+                      {#elseif Bonfire.Files.has_extension?(media_url, [".mov"])}
+                        <video class={@base_css, @video_css} controls autoplay={@autoplay} muted={@muted} preload={if @autoplay, do: "auto", else: "metadata"} poster={MediaLive.preview_img(@media)} title={Bonfire.Files.Media.media_label(@media)} playsinline crossorigin="anonymous">
+                          <source src={media_url} type="video/quicktime">
+                          {#if e(@media, :metadata, "captions", nil)}
+                            <track kind="captions" src={e(@media, :metadata, "captions", nil)} srclang="en" label="English" default>
+                          {/if}
+                          Your browser does not support the video tag.
+                        </video>
+                      {#elseif Bonfire.Files.has_extension?(media_url, [".ogg", ".ogv", ".ogx", ".ogm", ".spx", ".opus"])}
+                        <video class={@base_css, @video_css} controls autoplay={@autoplay} muted={@muted} preload={if @autoplay, do: "auto", else: "metadata"} poster={MediaLive.preview_img(@media)} title={Bonfire.Files.Media.media_label(@media)} playsinline crossorigin="anonymous">
                           <source src={media_url} type="video/ogg">
+                          {#if e(@media, :metadata, "captions", nil)}
+                            <track kind="captions" src={e(@media, :metadata, "captions", nil)} srclang="en" label="English" default>
+                          {/if}
                           Your browser does not support the video tag.
                         </video>
                       {#elseif Bonfire.Files.has_extension?(media_url, [".webm"])}
-                        <video class={@base_css, @video_css} controls autoplay={@autoplay} muted={@muted} preload="none">
+                        <video class={@base_css, @video_css} controls autoplay={@autoplay} muted={@muted} preload={if @autoplay, do: "auto", else: "metadata"} poster={MediaLive.preview_img(@media)} title={Bonfire.Files.Media.media_label(@media)} playsinline crossorigin="anonymous">
                           <source src={media_url} type="video/webm">
+                          {#if e(@media, :metadata, "captions", nil)}
+                            <track kind="captions" src={e(@media, :metadata, "captions", nil)} srclang="en" label="English" default>
+                          {/if}
                           Your browser does not support the video tag.
                         </video>
                       {#elseif MediaLive.is_supported_audio_format?(@media.path, e(@media, :media_type, nil)) or
                           e(@media, :media_type, nil) == "audio"}
-                        <div class="relative rounded rounded-b-none p-2 w-full">
+                        <div class="w-full">
                           <div class="flex items-center gap-3">
                             {#case MediaLive.preview_img(@media)}
                               {#match nil}
@@ -61,7 +78,7 @@
                                 </div>
                             {/case}
                           </div>
-                          <audio controls autoplay={@autoplay} class={@base_css} preload="none">
+                          <audio controls autoplay={@autoplay} class={@base_css} preload={if @autoplay, do: "auto", else: "metadata"} title={Bonfire.Files.Media.media_label(@media)} crossorigin="anonymous">
                             <source
                               src={media_url}
                               type={e(@media, :media_type, nil) || "audio/#{Bonfire.Files.file_extension_only(media_url) || "mp3"}"}
