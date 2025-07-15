@@ -1,12 +1,12 @@
 defmodule Bonfire.UI.Social.Activity.MediaLinkLive do
   @moduledoc """
   Component for displaying media links with flexible layout options.
-  
+
   ## Display Modes:
   - Full cover: Large preview image with vertical layout (default for single links with preview)
   - Small icon: 130x130 compact preview with horizontal layout (for multiple links or widgets)
   - No preview: Text-only with optional favicon fallback when no preview image is available
-  
+
   ## Layout Logic:
   - `small_icon` or `activity_inception` → horizontal layout with small preview (if available)
   - Single link with preview → vertical layout with full cover

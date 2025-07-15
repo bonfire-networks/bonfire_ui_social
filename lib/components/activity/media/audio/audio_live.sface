@@ -1,57 +1,61 @@
 <div class="flex flex-col w-full border rounded-lg media_container border-base-content/10">
-      <div>
-      <div class="p-4 w-full flex-1 flex items-center gap-3 bg-base-300 rounded-t-lg relative">
-        {!-- Title button (shown initially) --}
-        <div data-id="media_img">
-            {#case MediaLive.preview_img(@media) || Media.media_url(@media)}
-              {#match maybe_preview_img}
-                {#if maybe_preview_img && MediaLive.is_image?(maybe_preview_img)}
-                  <LazyImage
-                    parent_id={["audio", @parent_id, id(@media)]}
-                    class="w-full !object-cover m-image"
-                    media={@media}
-                    alt={@media_label}
-                    src={maybe_preview_img}
-                    fallback_icon="lucide:audio-lines"
-                  />
-                {#else}
-                    <#Icon iconify="lucide:audio-lines" class="w-5 h-5 text-accent" />
-                {/if}
-            {/case}
-        </div>
-
-        <div class="font-medium text-lg line-clamp-2">
-          {@media_label}
-        </div>
-
-         <a
-          href={Media.media_url(@media)}
-          class="btn btn-ghost btn-sm absolute right-0 top-0 btn-square btn-soft"
-          title={l("Open in new tab")}
-          target="_blank"
-        >
-          <#Icon iconify="heroicons-outline:external-link" class="w-4 h-4" />
-        </a>
+  <div>
+    <div class="p-4 w-full flex-1 flex items-center gap-3 bg-base-300 rounded-t-lg relative">
+      {!-- Title button (shown initially) --}
+      <div data-id="media_img">
+        {#case MediaLive.preview_img(@media) || Media.media_url(@media)}
+          {#match maybe_preview_img}
+            {#if maybe_preview_img && MediaLive.is_image?(maybe_preview_img)}
+              <LazyImage
+                parent_id={["audio", @parent_id, id(@media)]}
+                class="w-full !object-cover m-image"
+                media={@media}
+                alt={@media_label}
+                src={maybe_preview_img}
+                fallback_icon="lucide:audio-lines"
+              />
+            {#else}
+              <#Icon iconify="lucide:audio-lines" class="w-5 h-5 text-accent" />
+            {/if}
+        {/case}
       </div>
-      <div class="text-sm">
-          {e(@media, :metadata, "oembed", "author_name", nil)}
 
-          {#case e(@media, :metadata, "oembed", "published", "date-parts", nil)}
-            {#match nil}
-            {#match []}
-            {#match published}
-              <span class="text-base-content/70">{published |> DatesTimes.format(format: "MMMM d, Y")}</span>
-          {/case}
-
-          {#case MediaLive.provider(@media)}
-            {#match nil}
-            {#match provider}
-              <span class="text-base-content/70">{provider}</span>
-          {/case}
-        </div>
+      <div class="font-medium text-lg line-clamp-2">
+        {@media_label}
       </div>
-      {#if MediaLive.is_playable_multimedia_format?(@media.path, @media.media_type)}
-        <Bonfire.UI.Social.Activity.RemoteMediaLive base_css="relative p-2 w-full bg-base-300 rounded-b-lg" media={@media} muted={@muted} autoplay={false}/>
-      {/if}
-        
+
+      <a
+        href={Media.media_url(@media)}
+        class="btn btn-ghost btn-sm absolute right-0 top-0 btn-square btn-soft"
+        title={l("Open in new tab")}
+        target="_blank"
+      >
+        <#Icon iconify="heroicons-outline:external-link" class="w-4 h-4" />
+      </a>
+    </div>
+    <div class="text-sm">
+      {e(@media, :metadata, "oembed", "author_name", nil)}
+
+      {#case e(@media, :metadata, "oembed", "published", "date-parts", nil)}
+        {#match nil}
+        {#match []}
+        {#match published}
+          <span class="text-base-content/70">{published |> DatesTimes.format(format: "MMMM d, Y")}</span>
+      {/case}
+
+      {#case MediaLive.provider(@media)}
+        {#match nil}
+        {#match provider}
+          <span class="text-base-content/70">{provider}</span>
+      {/case}
+    </div>
+  </div>
+  {#if MediaLive.is_playable_multimedia_format?(@media.path, @media.media_type)}
+    <Bonfire.UI.Social.Activity.RemoteMediaLive
+      base_css="relative p-2 w-full bg-base-300 rounded-b-lg"
+      media={@media}
+      muted={@muted}
+      autoplay={false}
+    />
+  {/if}
 </div>

@@ -86,7 +86,12 @@ defmodule Bonfire.UI.Social.Activity.MediaLive do
         nil
 
       id ->
-        Bonfire.Common.Cache.put("num_media:#{id}", [multimedia_count, image_count, gif_count, link_count])
+        Bonfire.Common.Cache.put("num_media:#{id}", [
+          multimedia_count,
+          image_count,
+          gif_count,
+          link_count
+        ])
     end
 
     assigns

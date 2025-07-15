@@ -56,28 +56,28 @@
           </div>
       {/case} -->
 
-      <Bonfire.UI.Social.Activity.RemoteMediaLive
-        media={@media}
-        muted={@muted}
-        autoplay={@autoplay}
-        parent_id={@parent_id}
-      />
+  <Bonfire.UI.Social.Activity.RemoteMediaLive
+    media={@media}
+    muted={@muted}
+    autoplay={@autoplay}
+    parent_id={@parent_id}
+  />
 
-      <div :if={@media_label && @media_label != "image/gif"} class="p-3 flex flex-col gap-0">
-        {#case MediaLive.provider(@media)}
-          {#match nil}
-          {#match provider}
-            <span class="text-sm text-left text-base-content/70">{provider}</span>
-        {/case}
-        <div class="font-bold text-lg text-left">{@media_label}</div>
-        {#case MediaLive.author(@media)}
-          {#match nil}
-          {#match author}
-            <div class="text-sm text-left font-medium text-base-content/70 mt-1">by
-              {author}
-            </div>
-        {/case}
-      </div>
-    <figcaption class="sr-only">{@media_label}</figcaption>
+  <div :if={@media_label && @media_label != "image/gif"} class="p-3 flex flex-col gap-0">
+    {#case MediaLive.provider(@media)}
+      {#match nil}
+      {#match provider}
+        <span class="text-sm text-left text-base-content/70">{provider}</span>
+    {/case}
+    <div class="font-bold text-lg text-left">{@media_label}</div>
+    {#case MediaLive.author(@media)}
+      {#match nil}
+      {#match author}
+        <div class="text-sm text-left font-medium text-base-content/70 mt-1">by
+          {author}
+        </div>
+    {/case}
+  </div>
+  <figcaption class="sr-only">{@media_label}</figcaption>
   <!-- {/case} -->
 </div>

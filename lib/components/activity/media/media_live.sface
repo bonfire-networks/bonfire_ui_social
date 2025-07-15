@@ -38,7 +38,19 @@
             cw={@cw}
             media_url={media_url}
             media={m}
-            # Use small icons for compact display when multiple links or explicitly requested
+            #
+            Use
+            small
+            icons
+            for
+            compact
+            display
+            when
+            multiple
+            links
+            or
+            explicitly
+            requested
             no_cover={Enum.count(@link_list) > 1 and !@small_icon}
             small_icon={@small_icon or Enum.count(@link_list) > 1}
             download_url={e(m.metadata, "oembed", "download_url", nil) || e(m.metadata, "download_url", nil)}
@@ -166,6 +178,29 @@
     {#match num_medias}
       {!-- IMAGE ATTACHMENTS --}
       {#if @showing_within != :smart_input}
+        {!-- Create a single carousel modal for all images --}
+        {#if current_user_id(@__context__)}
+          <Bonfire.UI.Common.OpenModalLive
+            id={deterministic_dom_id("media_carousel_modal", @parent_id)}
+            no_actions
+            no_header
+            image_preview
+            enable_fallback={false}
+            modal_class="modal !modal-middle max-h-[100%]"
+            wrapper_class="max-h-full !w-full !p-0 max-w-[100%] !bg-transparent shadow-none rounded-none h-full"
+            open_btn_class="hidden"
+            open_btn_wrapper_class="hidden"
+          >
+            <Bonfire.UI.Social.Activity.MediaCarouselModalLive
+              media_list={@image_list}
+              parent_id={@parent_id}
+              showing_within={@showing_within}
+              cw={@cw}
+              __context__={@__context__}
+            />
+          </Bonfire.UI.Common.OpenModalLive>
+        {/if}
+
         <div
           data-id="multimedia_grid"
           data-media={num_medias}
@@ -238,53 +273,30 @@
                         />
                       {/if}
 
-                      <Bonfire.UI.Common.OpenModalLive
-                        id={deterministic_dom_id("media_modal", id(m), "media", @parent_id)}
-                        no_actions
-                        no_header
-                        image_preview
-                        enable_fallback={false}
-                        modal_class="modal !modal-middle max-h-[100%]"
-                        wrapper_class="max-h-full !w-full md:w-10/12 !p-0 max-w-[100%] !bg-transparent shadow-none rounded-none"
-                        open_btn_class="w-full"
-                        open_btn_wrapper_class="w-full h-full"
+                      {!-- Thumbnail that opens carousel modal --}
+                      <button
+                        type="button"
+                        phx-click="open"
+                        phx-target={"#" <> deterministic_dom_id("media_carousel_modal", @parent_id)}
+                        class="w-full h-full block"
                       >
-                        <div class="h-full" data-media-type-video={String.starts_with?(m.media_type || "", ["video"])}>
-                          <Bonfire.UI.Social.Activity.RemoteMediaLive
-                            media={m}
-                            image_css={grayscale: @showing_within == :flags}
-                            parent_id={@parent_id}
-                          />
-                          <div class="fixed z-20 bottom-0 left-0 bg-black/30 right-0">
-                            <div class={
-                              "text-center text-sm p-4 text-white/90 mx-auto",
-                              "line-clamp-6": @showing_within in [:feed, :profile]
-                            }>{media_label}
-                              <p class="text-sm">{Bonfire.Files.Media.description(m.metadata)}</p>
-                            </div>
-                          </div>
+                        <div class="relative h-full overflow-hidden">
+                          {#case preview_img(m) || Media.media_url(m)}
+                            {#match maybe_preview_img}
+                              <LazyImage
+                                parent_id={["media", @parent_id, id(m)]}
+                                class={
+                                  "border-base-content/10 !object-cover m-image w-full h-full cursor-pointer rounded-md",
+                                  grayscale: @showing_within == :flags
+                                }
+                                media={m}
+                                alt={media_label}
+                                src={maybe_preview_img}
+                              />
+                          {/case}
+                          <figcaption class="sr-only">{media_label}</figcaption>
                         </div>
-
-                        <:open_btn>
-                          <div class="relative h-full overflow-hidden">
-                            {#case preview_img(m) || Media.media_url(m)}
-                              {#match maybe_preview_img}
-                                {!-- {#if is_image?(maybe_preview_img)} --}
-                                <LazyImage
-                                  parent_id={["media", @parent_id, id(m)]}
-                                  class={
-                                    "border-base-content/10 !object-cover m-image w-full h-full cursor-pointer rounded-md",
-                                    grayscale: @showing_within == :flags
-                                  }
-                                  media={m}
-                                  alt={media_label}
-                                  src={maybe_preview_img}
-                                />
-                            {/case}
-                            <figcaption class="sr-only">{media_label}</figcaption>
-                          </div>
-                        </:open_btn>
-                      </Bonfire.UI.Common.OpenModalLive>
+                      </button>
                     {#else}
                       {!-- if logged out --}
                       <a href={Media.media_url(m)} target="_blank" class="relative h-full block">
@@ -389,10 +401,7 @@
                             </button>
                           </div>
                         </div>
-                        <div
-                          id={deterministic_dom_id("hide-sensitive-content", id(m), "gif", @parent_id)}
-                          class="hidden"
-                        >
+                        <div id={deterministic_dom_id("hide-sensitive-content", id(m), "gif", @parent_id)} class="hidden">
                           <button
                             phx-click={JS.show(
                               to: "#" <> deterministic_dom_id("sensitive-content-overlay", id(m), "gif", @parent_id),
