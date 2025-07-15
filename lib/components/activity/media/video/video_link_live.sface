@@ -63,7 +63,7 @@
         parent_id={@parent_id}
       />
 
-      <div :if={@media_label} class="p-3 flex flex-col gap-0">
+      <div :if={@media_label && @media_label != "image/gif"} class="p-3 flex flex-col gap-0">
         {#case MediaLive.provider(@media)}
           {#match nil}
           {#match provider}

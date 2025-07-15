@@ -337,4 +337,167 @@
         </div>
       {/if}
   {/case}
+
+  {#case @gif_count}
+    {#match 0}
+      {!-- NO GIFS --}
+    {#match num_gifs}
+      {!-- GIF ATTACHMENTS --}
+      {#if @showing_within != :smart_input}
+        <div
+          data-id="gif_grid"
+          data-media={num_gifs}
+          data-rendered={@showing_within}
+          data-main-object={@viewing_main_object}
+          class="flex flex-col gap-2 my-2"
+        >
+          {#for {%{} = m, counter} <- Enum.with_index(@gif_list)}
+            {#case Bonfire.Files.Media.media_label(m) || l("Sorry, no caption provided by author")}
+              {#match media_label}
+                <article
+                  data-id="article_gif"
+                  data-media={num_gifs}
+                  class={
+                    "m-entry h-full w-full row-span-4 object-cover",
+                    "!row-span-2 !h-auto":
+                      num_gifs ==
+                        3 && counter != 0
+                  }
+                >
+                  <figure class="h-full relative">
+                    {#if current_user_id(@__context__)}
+                      {#if @cw || @showing_within == :flags ||
+                          Settings.get([Bonfire.UI.Social.Activity.MediaLive, :hide], false, @__context__)}
+                        <div id={deterministic_dom_id("sensitive-content-overlay", id(m), "gif", @parent_id)}>
+                          <div class="absolute inset-0 flex items-center cursor-pointer place-content-center justify-center z-[60]">
+                            <button
+                              phx-click={JS.hide(
+                                to: "#" <> deterministic_dom_id("sensitive-content-overlay", id(m), "gif", @parent_id),
+                                transition: "fade-out"
+                              )
+                              |> JS.hide(
+                                to: "#" <> deterministic_dom_id("sensitive-content-backdrop", id(m), "gif", @parent_id),
+                                transition: "fade-out"
+                              )
+                              |> JS.show(
+                                to: "#" <> deterministic_dom_id("hide-sensitive-content", id(m), "gif", @parent_id),
+                                transition: "fade-in"
+                              )}
+                              class="btn z-[9999999999] btn-secondary btn-soft"
+                            >
+                              {l("Sensitive content")}
+                            </button>
+                          </div>
+                        </div>
+                        <div
+                          id={deterministic_dom_id("hide-sensitive-content", id(m), "gif", @parent_id)}
+                          class="hidden"
+                        >
+                          <button
+                            phx-click={JS.show(
+                              to: "#" <> deterministic_dom_id("sensitive-content-overlay", id(m), "gif", @parent_id),
+                              transition: "fade-out"
+                            )
+                            |> JS.show(
+                              to: "#" <> deterministic_dom_id("sensitive-content-backdrop", id(m), "gif", @parent_id),
+                              transition: "fade-out"
+                            )
+                            |> JS.hide(
+                              to: "#" <> deterministic_dom_id("hide-sensitive-content", id(m), "gif", @parent_id),
+                              transition: "fade-in"
+                            )}
+                            class="absolute top-3 right-3 btn z-50"
+                          >{l("Hide")}</button>
+                        </div>
+                        <div
+                          id={deterministic_dom_id("sensitive-content-backdrop", id(m), "gif", @parent_id)}
+                          class="absolute inset-0 backdrop-blur-2xl z-50 cursor-pointer rounded-md"
+                        />
+                      {/if}
+
+                      <Bonfire.UI.Common.OpenModalLive
+                        id={deterministic_dom_id("gif_modal", id(m), "gif", @parent_id)}
+                        no_actions
+                        no_header
+                        image_preview
+                        enable_fallback={false}
+                        modal_class="modal !modal-middle max-h-[100%]"
+                        wrapper_class="max-h-full !w-full md:w-10/12 !p-0 max-w-[100%] !bg-transparent shadow-none rounded-none"
+                        open_btn_class="w-full"
+                        open_btn_wrapper_class="w-full h-full"
+                      >
+                        <div class="h-full">
+                          <img
+                            src={Media.media_url(m)}
+                            class="gif-image-modal w-full h-full object-contain"
+                            alt={media_label}
+                          />
+                          <div class="fixed z-20 bottom-0 left-0 bg-black/30 right-0">
+                            <div class={
+                              "text-center text-sm p-4 text-white/90 mx-auto",
+                              "line-clamp-6": @showing_within in [:feed, :profile]
+                            }>{media_label}
+                              <p class="text-sm">{Bonfire.Files.Media.description(m.metadata)}</p>
+                            </div>
+                          </div>
+                        </div>
+
+                        <:open_btn>
+                          <div class="relative h-full overflow-hidden">
+                            <img
+                              src={Media.media_url(m)}
+                              class="gif-image border-base-content/10 !object-cover w-full h-full cursor-pointer rounded-md"
+                              alt={media_label}
+                            />
+                            <div class="absolute top-2 right-2 bg-black/50 text-white px-2 py-1 rounded text-xs">
+                              GIF
+                            </div>
+                            <figcaption class="sr-only">{media_label}</figcaption>
+                          </div>
+                        </:open_btn>
+                      </Bonfire.UI.Common.OpenModalLive>
+                    {#else}
+                      {!-- if logged out --}
+                      <a href={Media.media_url(m)} target="_blank" class="relative h-full block">
+                        {#if @cw || @showing_within == :flags ||
+                            Settings.get([Bonfire.UI.Social.Activity.MediaLive, :hide], false, @__context__)}
+                          <div class="absolute inset-0 flex items-center cursor-pointer place-content-center justify-center z-[60]">
+                            <button class="btn btn-sm  normal-case btn-outline border-base-content/10 btn-active">{l("Media Hidden")}</button>
+                          </div>
+                          <div class="absolute inset-0 backdrop-blur-2xl z-50 cursor-pointer rounded-md" />
+                        {/if}
+
+                        <img
+                          src={Media.media_url(m)}
+                          class="gif-image border-base-content/10 !object-cover h-full cursor-pointer max-h-[500px] rounded-md"
+                          alt={media_label}
+                        />
+                        <div class="absolute top-2 right-2 bg-black/50 text-white px-2 py-1 rounded text-xs">
+                          GIF
+                        </div>
+                        <div class="absolute z-50 bottom-3 left-3 dropdown dropdown-hover dropdown-top">
+                          <label tabindex="0" class="text-white border-none rounded btn btn-xs bg-black/60">{l("alt")}</label>
+                          <div tabindex="0" class="p-2 rounded shadow dropdown-content bg-base-200 w-52">
+                            <div class="prose-sm prose text-base-content">{media_label}</div>
+                          </div>
+                        </div>
+                        <figcaption class="sr-only">{media_label}</figcaption>
+                      </a>
+                    {/if}
+                  </figure>
+                </article>
+            {/case}
+          {/for}
+        </div>
+      {#else}
+        <div class="gap-2 mt-1">
+          {#for %{} = m <- @gif_list}
+            <div class="flex items-center gap-2">
+              <#Icon iconify="ri:attachment-2" class="w-4 h-4 text-base-content/50" />
+              <span class="text-sm text-base-content/50 truncate max-w-[320px]">{Media.media_url(m)} (GIF)</span>
+            </div>
+          {/for}
+        </div>
+      {/if}
+  {/case}
 </div>

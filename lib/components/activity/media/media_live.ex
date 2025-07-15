@@ -55,26 +55,30 @@ defmodule Bonfire.UI.Social.Activity.MediaLive do
 
     # |> debug("the_medias...")
 
-    {image_list, multimedia_list, link_list} =
+    {image_list, gif_list, multimedia_list, link_list} =
       media
-      |> Enum.reduce({[], [], []}, fn m, {image_list, multimedia_list, link_list} ->
+      |> Enum.reduce({[], [], [], []}, fn m, {image_list, gif_list, multimedia_list, link_list} ->
         cond do
+          is_gif?(m.path, m.media_type) ->
+            {image_list, [m | gif_list], multimedia_list, link_list}
+
           String.starts_with?(m.media_type || "", @image_types) or
               Files.has_extension?(m.path || "", @image_exts) ->
-            {[m | image_list], multimedia_list, link_list}
+            {[m | image_list], gif_list, multimedia_list, link_list}
 
           String.starts_with?(m.media_type || "", @multimedia_types) or
               Files.has_extension?(m.path || "", @multimedia_exts) ->
-            {image_list, [m | multimedia_list], link_list}
+            {image_list, gif_list, [m | multimedia_list], link_list}
 
           true ->
-            {image_list, multimedia_list, [m | link_list]}
+            {image_list, gif_list, multimedia_list, [m | link_list]}
         end
       end)
       |> debug("3_media_lists")
 
     multimedia_count = Enum.count(multimedia_list)
     image_count = Enum.count(image_list)
+    gif_count = Enum.count(gif_list)
     link_count = Enum.count(link_list)
 
     case assigns[:parent_id] do
@@ -82,7 +86,7 @@ defmodule Bonfire.UI.Social.Activity.MediaLive do
         nil
 
       id ->
-        Bonfire.Common.Cache.put("num_media:#{id}", [multimedia_count, image_count, link_count])
+        Bonfire.Common.Cache.put("num_media:#{id}", [multimedia_count, image_count, gif_count, link_count])
     end
 
     assigns
@@ -90,12 +94,14 @@ defmodule Bonfire.UI.Social.Activity.MediaLive do
     # |> assign(:multimedia_list, multimedia_list(medias))
     # |> assign(:link_list, link_list(medias))
     |> assign(:image_list, image_list)
+    |> assign(:gif_list, gif_list)
     |> assign(:multimedia_exts, @multimedia_exts)
     |> assign(:multimedia_types, @multimedia_types)
     |> assign(:multimedia_list, multimedia_list)
     |> assign(:link_list, link_list)
     |> assign(:multimedia_count, multimedia_count)
     |> assign(:image_count, image_count)
+    |> assign(:gif_count, gif_count)
     |> assign(:link_count, link_count)
     |> render_sface()
   end
@@ -160,6 +166,11 @@ defmodule Bonfire.UI.Social.Activity.MediaLive do
     do: is_audio?(url, media_type) and String.ends_with?(media_type || "", @audio_formats)
 
   def is_supported_audio_format?(_url, _), do: false
+
+  def is_gif?(url), do: Files.has_extension?(url || "", [".gif"])
+
+  def is_gif?(url, media_type),
+    do: is_gif?(url) or String.starts_with?(media_type || "", "image/gif")
 
   # def multimedia_list(media) do
   #   Enum.filter(List.wrap(media), fn m ->
