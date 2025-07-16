@@ -31,7 +31,7 @@ defmodule Bonfire.UI.Social.Activity.MediaLinkLive do
   # Force horizontal layout (used in thread inception context)
   prop activity_inception, :boolean, default: false
 
-  def update(_assign, socket) do
-    {:noreply, socket}
+  def update(assigns, socket) do
+    {:noreply, assign(socket, assigns)}
   end
 end
