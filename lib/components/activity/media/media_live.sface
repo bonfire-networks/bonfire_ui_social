@@ -436,11 +436,21 @@
                         open_btn_wrapper_class="w-full h-full"
                       >
                         <div class="h-full">
-                          <img
-                            src={Media.media_url(m)}
-                            class="gif-image-modal w-full h-full object-contain"
-                            alt={media_label}
-                          />
+                          {#if is_video?(m.path, m.media_type)}
+                            {!-- Render video files as GIF-style --}
+                            <Bonfire.UI.Social.Activity.RemoteMediaLive
+                              media={m}
+                              image_css={grayscale: @showing_within == :flags}
+                              parent_id={@parent_id}
+                            />
+                          {#else}
+                            {!-- Render actual GIF images --}
+                            <img
+                              src={Media.media_url(m)}
+                              class="gif-image-modal w-full h-full object-contain"
+                              alt={media_label}
+                            />
+                          {/if}
                           <div class="fixed z-20 bottom-0 left-0 bg-black/30 right-0">
                             <div class={
                               "text-center text-sm p-4 text-white/90 mx-auto",
@@ -453,11 +463,23 @@
 
                         <:open_btn>
                           <div class="relative h-full overflow-hidden">
-                            <img
-                              src={Media.media_url(m)}
-                              class="gif-image border-base-content/10 !object-cover w-full h-full cursor-pointer rounded-md"
-                              alt={media_label}
-                            />
+                            {#if is_video?(m.path, m.media_type)}
+                              {!-- Render video files as GIF-style preview --}
+                              <div class="w-full h-full cursor-pointer rounded-md overflow-hidden">
+                                <Bonfire.UI.Social.Activity.RemoteMediaLive
+                                  media={m}
+                                  image_css={grayscale: @showing_within == :flags}
+                                  parent_id={@parent_id}
+                                />
+                              </div>
+                            {#else}
+                              {!-- Render actual GIF images --}
+                              <img
+                                src={Media.media_url(m)}
+                                class="gif-image border-base-content/10 !object-cover w-full h-full cursor-pointer rounded-md"
+                                alt={media_label}
+                              />
+                            {/if}
                             <div class="absolute top-2 right-2 bg-black/50 text-white px-2 py-1 rounded text-xs">
                               GIF
                             </div>
@@ -476,11 +498,23 @@
                           <div class="absolute inset-0 backdrop-blur-2xl z-50 cursor-pointer rounded-md" />
                         {/if}
 
-                        <img
-                          src={Media.media_url(m)}
-                          class="gif-image border-base-content/10 !object-cover h-full cursor-pointer max-h-[500px] rounded-md"
-                          alt={media_label}
-                        />
+                        {#if is_video?(m.path, m.media_type)}
+                          {!-- Render video files as GIF-style for logged-out users --}
+                          <div class="w-full h-full cursor-pointer rounded-md overflow-hidden">
+                            <Bonfire.UI.Social.Activity.RemoteMediaLive
+                              media={m}
+                              image_css={grayscale: @showing_within == :flags}
+                              parent_id={@parent_id}
+                            />
+                          </div>
+                        {#else}
+                          {!-- Render actual GIF images --}
+                          <img
+                            src={Media.media_url(m)}
+                            class="gif-image border-base-content/10 !object-cover h-full cursor-pointer max-h-[500px] rounded-md"
+                            alt={media_label}
+                          />
+                        {/if}
                         <div class="absolute top-2 right-2 bg-black/50 text-white px-2 py-1 rounded text-xs">
                           GIF
                         </div>

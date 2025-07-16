@@ -2,12 +2,12 @@
   id={deterministic_dom_id("media_link", id(@media), @showing_within, @parent_id)}
   prompt_external_links={@showing_within == :flags}
 >
+<div class={@css_borders || "border rounded-lg border-base-content/10"}>
   <LinkLive
     opts={"data-id": "media_link"}
     to={if !@download_url, do: @media_url || @preview_img}
     class={
       "flex w-full items-center media_container gap-3 hover:bg-base-content/5 overflow-hidden",
-      @css_borders || "border rounded-lg border-base-content/10",
       # Use row layout for small icons or activity inception, otherwise column for preview images
       "flex-col items-center": is_binary(@preview_img) and !@small_icon and !@activity_inception,
       "flex-row": @small_icon or @activity_inception
@@ -95,4 +95,31 @@
       {/case}
     </div>
   </LinkLive>
+  
+  {#case MediaLive.fediverse_creator_names(@media, @media.path)}
+    {#match creator_names when creator_names != []}
+      <div data-id="fediverse_creators" class="text-sm border-t border-base-content/10 text-base-content/70 flex items-center gap-3 p-3">
+        <span class="text-xl text-secondary">⁂</span>
+        <div class="flex-1 font-medium gap-2 flex items-center">
+          <span class="text-base-content/70">{l("More from")}</span>
+            {#case List.first(creator_names)}
+              {#match creator when creator != nil}
+                <LinkLive
+                  to={"/user/" <> creator.username}
+                  class="link link-hover flex items-center gap-2"
+                >
+                  <Bonfire.UI.Common.AvatarLive
+                    src={creator.avatar_url}
+                    name={creator.display_name}
+                    class="w-6 h-6"
+                  />
+                  <span class="font-semibold text-base-content">{creator.display_name}</span>
+                </LinkLive>
+              {#match _}
+            {/case}
+        </div>
+      </div>
+    {#match _}
+  {/case}
+  </div>
 </Bonfire.UI.Common.OpenExternalLinkLive>

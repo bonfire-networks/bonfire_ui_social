@@ -29,7 +29,7 @@ defmodule Bonfire.UI.Social.Activity.MediaLive do
 
   @video_types ["video"]
   @video_formats ["mp4", "mkv", "ogv", "ogg", "webm", "mov", "mpeg"]
-  @video_exts Enum.map(@audio_formats, &".#{&1}")
+  @video_exts Enum.map(@video_formats, &".#{&1}")
 
   @multimedia_formats @audio_formats ++ @video_formats
   @multimedia_exts @audio_exts ++ @video_exts
@@ -59,7 +59,7 @@ defmodule Bonfire.UI.Social.Activity.MediaLive do
       media
       |> Enum.reduce({[], [], [], []}, fn m, {image_list, gif_list, multimedia_list, link_list} ->
         cond do
-          is_gif?(m.path, m.media_type) ->
+          is_gif?(m.path, m.media_type, m) ->
             {image_list, [m | gif_list], multimedia_list, link_list}
 
           String.starts_with?(m.media_type || "", @image_types) or
@@ -177,6 +177,10 @@ defmodule Bonfire.UI.Social.Activity.MediaLive do
   def is_gif?(url, media_type),
     do: is_gif?(url) or String.starts_with?(media_type || "", "image/gif")
 
+  def is_gif?(url, media_type, _media) do
+    is_gif?(url, media_type)
+  end
+
   # def multimedia_list(media) do
   #   Enum.filter(List.wrap(media), fn m ->
   #     m_type = m |> e(:media_type, nil)
@@ -204,10 +208,78 @@ defmodule Bonfire.UI.Social.Activity.MediaLive do
   end
 
   def author(%{} = media) do
-    (e(media, :metadata, "oembed", "author_name", nil) ||
+    (fediverse_creator(media) ||
+       e(media, :metadata, "oembed", "author_name", nil) ||
        e(media, :metadata, "twitter", "creator", nil) ||
        e(media, :metadata, "other", "author", nil))
     |> unwrap()
+  end
+
+  def fediverse_creator(%{} = media) do
+    e(media, :metadata, "twitter", "fediverse:creator", nil) ||
+    e(media, :metadata, "other", "fediverse:creator", nil)
+  end
+
+  def fediverse_creators(%{} = media) do
+    # Handle multiple fediverse:creator tags
+    creators = fediverse_creator(media)
+    cond do
+      is_list(creators) -> creators
+      is_binary(creators) -> [creators]
+      true -> []
+    end
+  end
+
+  def fediverse_creators(_), do: []
+
+  def fediverse_creator_names(%{} = media, article_url \\ nil) do
+    media
+    |> fediverse_creators()
+    |> Enum.map(&fetch_creator_profile(&1, article_url))
+    |> Enum.filter(&(&1 != nil))
+  end
+
+  def fediverse_creator_names(_, _), do: []
+
+  defp fetch_creator_profile(creator_handle, article_url) when is_binary(creator_handle) do
+    normalized_handle = if String.starts_with?(creator_handle, "@"), do: String.slice(creator_handle, 1..-1//-1), else: creator_handle
+
+    case ActivityPub.Actor.get_cached_or_fetch(username: normalized_handle) do
+      {:ok, actor} ->
+        # Check domain verification if article_url is provided
+        if article_url && !is_domain_verified?(actor, article_url) do
+          nil
+        else
+          [username, instance] = String.split(normalized_handle, "@", parts: 2)
+
+          %{
+            username: actor.username,
+            display_name: actor.data["name"] || actor.data["preferredUsername"] || username,
+            avatar_url: get_in(actor.data, ["icon", "url"]),
+            profile_url: actor.data["url"] || "https://#{instance}/@#{username}"
+          }
+        end
+      {:error, _reason} ->
+        nil
+    end
+  end
+
+  defp fetch_creator_profile(_, _), do: nil
+
+  defp is_domain_verified?(actor, article_url) do
+    article_domain = URI.parse(article_url).host
+    allowed_domains = actor.data["attributionDomains"] || []
+    
+    cond do
+      # If user has configured allowlist, check it
+      length(allowed_domains) > 0 ->
+        article_domain in allowed_domains
+      
+      # Fallback: if no allowlist, only allow same-domain attribution
+      true ->
+        creator_domain = String.split(actor.username, "@") |> List.last()
+        article_domain == creator_domain
+    end
   end
 
   def author_url(%{} = media) do
