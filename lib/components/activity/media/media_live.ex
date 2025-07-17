@@ -215,14 +215,20 @@ defmodule Bonfire.UI.Social.Activity.MediaLive do
     |> unwrap()
   end
 
-  def fediverse_creator(%{} = media) do
-    e(media, :metadata, "twitter", "fediverse:creator", nil) ||
-    e(media, :metadata, "other", "fediverse:creator", nil)
+  def fediverse_creator_names(%{} = media, article_url \\ nil) do
+    media
+    |> fediverse_creators()
+    # TODO: fetch these once when link metadata is fetched rather than checking every time
+    |> Enum.map(&fetch_creator_profile(&1, article_url))
+    |> Enum.filter(&(&1 != nil))
   end
 
-  def fediverse_creators(%{} = media) do
+  def fediverse_creator_names(_, _), do: []
+
+  defp fediverse_creators(%{} = media) do
     # Handle multiple fediverse:creator tags
     creators = fediverse_creator(media)
+
     cond do
       is_list(creators) -> creators
       is_binary(creators) -> [creators]
@@ -230,27 +236,25 @@ defmodule Bonfire.UI.Social.Activity.MediaLive do
     end
   end
 
-  def fediverse_creators(_), do: []
+  defp fediverse_creators(_), do: []
 
-  def fediverse_creator_names(%{} = media, article_url \\ nil) do
-    media
-    |> fediverse_creators()
-    |> Enum.map(&fetch_creator_profile(&1, article_url))
-    |> Enum.filter(&(&1 != nil))
+  defp fediverse_creator(%{} = media) do
+    e(media, :metadata, "twitter", "fediverse:creator", nil) ||
+      e(media, :metadata, "other", "fediverse:creator", nil)
   end
 
-  def fediverse_creator_names(_, _), do: []
+  # TODO: move to federation extension
+  defp fetch_creator_profile("@" <> normalized_handle, article_url),
+    do: fetch_creator_profile(normalized_handle, article_url)
 
-  defp fetch_creator_profile(creator_handle, article_url) when is_binary(creator_handle) do
-    normalized_handle = if String.starts_with?(creator_handle, "@"), do: String.slice(creator_handle, 1..-1//-1), else: creator_handle
-
-    case ActivityPub.Actor.get_cached_or_fetch(username: normalized_handle) do
+  defp fetch_creator_profile(handle, article_url) do
+    case ActivityPub.Actor.get_cached_or_fetch(username: handle) do
       {:ok, actor} ->
         # Check domain verification if article_url is provided
         if article_url && !is_domain_verified?(actor, article_url) do
           nil
         else
-          [username, instance] = String.split(normalized_handle, "@", parts: 2)
+          [username, instance] = String.split(handle, "@", parts: 2)
 
           %{
             username: actor.username,
@@ -259,6 +263,7 @@ defmodule Bonfire.UI.Social.Activity.MediaLive do
             profile_url: actor.data["url"] || "https://#{instance}/@#{username}"
           }
         end
+
       {:error, _reason} ->
         nil
     end
@@ -269,12 +274,12 @@ defmodule Bonfire.UI.Social.Activity.MediaLive do
   defp is_domain_verified?(actor, article_url) do
     article_domain = URI.parse(article_url).host
     allowed_domains = actor.data["attributionDomains"] || []
-    
+
     cond do
       # If user has configured allowlist, check it
       length(allowed_domains) > 0 ->
         article_domain in allowed_domains
-      
+
       # Fallback: if no allowlist, only allow same-domain attribution
       true ->
         creator_domain = String.split(actor.username, "@") |> List.last()

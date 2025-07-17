@@ -1858,7 +1858,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
 
     [
       {component, Enum.into(%{json: json, object_type_readable: type}, assigns)}
-    ]
+    ] ++ nested_object_components(json)
   end
 
   # def component_for_object_type(type, object) when type in [ValueFlows.Process], do: [Bonfire.UI.ValueFlows.Preview.ProcessListLive.activity_component(object)]
@@ -1955,13 +1955,14 @@ defmodule Bonfire.UI.Social.ActivityLive do
   def do_primary_image_and_component_maybe_attachments(id, other, _object_type) do
     # use cached amounts of images to display from MediaLive in case media is preloaded async
     case Bonfire.Common.Cache.get("num_media:#{id}") do
-      {:ok, [multimedia_count, image_count, link_count]} ->
+      {:ok, [multimedia_count, image_count, gif_count, link_count]} ->
         {nil,
          [
            {Bonfire.UI.Social.Activity.MediaSkeletonLive,
             %{
               multimedia_count: multimedia_count,
               image_count: image_count,
+              gif_count: gif_count,
               link_count: link_count
             }}
          ]}
@@ -2097,4 +2098,109 @@ defmodule Bonfire.UI.Social.ActivityLive do
       do: is_article?(Bonfire.Data.Social.Post, %{name: name, html_body: html_body})
 
   def is_article?(_, _), do: false
+
+  @doc """
+  Returns a list of components for rendering nested object previews in APActivity JSON.
+  Uses the stored metadata to determine which fields have preloaded pointers.
+  Reuses existing component_object/3 logic to keep it DRY.
+  """
+  def nested_object_components(json) when is_map(json) do
+    preloaded_fields = Map.get(json, "_bonfire_preloaded_fields", [])
+
+    if preloaded_fields != [] do
+      Enum.flat_map(preloaded_fields, fn field_name ->
+        field_str = to_string(field_name)
+
+        case Map.get(json, field_str) do
+          %{"pointer" => pointer_object} = _field_data when is_map(pointer_object) ->
+            # Single nested object with pointer - reuse component_object logic
+            nested_object_preview_components(
+              field_str,
+              Types.object_type(pointer_object),
+              pointer_object
+            )
+
+          list when is_list(list) ->
+            # List of potentially nested objects
+            list
+            |> Enum.with_index()
+            |> Enum.flat_map(fn {item, index} ->
+              case item do
+                %{"pointer" => pointer_object} = _item_data when is_map(pointer_object) ->
+                  nested_object_preview_components(
+                    "#{field_str}[#{index}]",
+                    Types.object_type(pointer_object),
+                    pointer_object
+                  )
+
+                _ ->
+                  []
+              end
+            end)
+
+          _ ->
+            []
+        end
+      end)
+    else
+      []
+    end
+  end
+
+  def nested_object_components(_), do: []
+
+  defp nested_object_preview_components(field_str, Bonfire.Data.Social.Activity, pointer_activity) do
+    [
+      {Bonfire.UI.Social.ActivityLive,
+       %{
+         id: "nested_activity_#{field_str}_#{id(pointer_activity)}",
+         activity: pointer_activity,
+         object: nil,
+         activity_inception: "nested_#{field_str}",
+         showing_within: :nested_preview,
+         viewing_main_object: false,
+         hide_actions: true,
+         class: "border-l-2 border-base-content/20 pl-4 ml-2 my-2 nested-preview"
+       }}
+    ]
+  end
+
+  defp nested_object_preview_components(field_name, object_type, pointer_object) do
+    # Reuse the existing component_object logic but wrap it in a preview container
+    object_components = component_object(pointer_object, object_type, %{})
+
+    # Wrap each component with preview styling and add a header
+    preview_header = [
+      {:html, "<h4 class=\"text-sm font-medium text-base-content/70 mb-2\">#{field_name}:</h4>"}
+    ]
+
+    preview_components =
+      Enum.map(object_components, fn
+        {component_module, component_assigns} when is_map(component_assigns) ->
+          {component_module,
+           Map.merge(
+             %{
+               object: pointer_object,
+               class: "border-l-2 border-base-content/20 pl-4 ml-2 my-2 nested-preview",
+               showing_within: :nested_preview,
+               hide_actions: true
+             },
+             component_assigns
+           )}
+
+        {component_module, component_assigns} ->
+          {component_module, component_assigns}
+
+        component_module when is_atom(component_module) ->
+          {component_module,
+           %{
+             object: pointer_object,
+             class: "border-l-2 border-base-content/20 pl-4 ml-2 my-2 nested-preview",
+             showing_within: :nested_preview,
+             hide_actions: true
+           }}
+      end)
+
+    preview_header ++ preview_components
+  end
 end

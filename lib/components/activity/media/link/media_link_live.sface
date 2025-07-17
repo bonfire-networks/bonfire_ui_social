@@ -2,112 +2,112 @@
   id={deterministic_dom_id("media_link", id(@media), @showing_within, @parent_id)}
   prompt_external_links={@showing_within == :flags}
 >
-<div class={@css_borders || "border rounded-lg border-base-content/10"}>
-  <LinkLive
-    opts={"data-id": "media_link"}
-    to={if !@download_url, do: @media_url || @preview_img}
-    class={
-      "flex w-full items-center media_container gap-3 hover:bg-base-content/5 overflow-hidden",
-      # Use row layout for small icons or activity inception, otherwise column for preview images
-      "flex-col items-center": is_binary(@preview_img) and !@small_icon and !@activity_inception,
-      "flex-row": @small_icon or @activity_inception
-    }
-    target="_blank"
-  >
-    {#if !@no_cover}
-      {#if is_binary(@preview_img)}
-        {#if @small_icon or @activity_inception}
-          <div class="flex place-content-center items-center max-w-[130px] h-[130px]">
-            <LazyImage
-              parent_id={["icon", @parent_id, id(@media)]}
-              class="rounded-none object-cover rounded-l-lg cursor-pointer m-image h-full"
-              fallback_class="w-8 h-8 text-base-content/70"
-              src={@preview_img}
-              media={@media}
-              fallback_icon="ion:newspaper-outline"
-            />
-          </div>
-        {#else}
-          <div
-            data-id="media_img"
-            class="flex relative items-center rounded-t-lg shrink-0 w-full bg-base-content/10 aspect-[1.91/1] place-content-center bg-no-repeat bg-cover"
-          >
-            <div class="w-full">
-              <!-- <div
-                class="absolute inset-0 backdrop-blur-lg bg-white/30 z-50 rounded-l-lg"
-                :if={@cw || Settings.get([Bonfire.UI.Social.Activity.MediaLive, :hide], false, @__context__)}
-              /> -->
-
+  <div class={@css_borders || "border rounded-lg border-base-content/10"}>
+    <LinkLive
+      opts={"data-id": "media_link"}
+      to={if !@download_url, do: @media_url || @preview_img}
+      class={
+        "flex w-full items-center media_container gap-3 hover:bg-base-content/5 overflow-hidden",
+        # Use row layout for small icons or activity inception, otherwise column for preview images
+        "flex-col items-center": is_binary(@preview_img) and !@small_icon and !@activity_inception,
+        "flex-row": @small_icon or @activity_inception
+      }
+      target="_blank"
+    >
+      {#if !@no_cover}
+        {#if is_binary(@preview_img)}
+          {#if @small_icon or @activity_inception}
+            <div class="flex place-content-center items-center max-w-[130px] h-[130px]">
               <LazyImage
                 parent_id={["icon", @parent_id, id(@media)]}
-                class="rounded-none object-cover rounded-t-lg cursor-pointer m-image w-full aspect-[1.91/1]"
+                class="rounded-none object-cover rounded-l-lg cursor-pointer m-image h-full"
                 fallback_class="w-8 h-8 text-base-content/70"
                 src={@preview_img}
                 media={@media}
                 fallback_icon="ion:newspaper-outline"
               />
             </div>
+          {#else}
+            <div
+              data-id="media_img"
+              class="flex relative items-center rounded-t-lg shrink-0 w-full bg-base-content/10 aspect-[1.91/1] place-content-center bg-no-repeat bg-cover"
+            >
+              <div class="w-full">
+                <!-- <div
+                class="absolute inset-0 backdrop-blur-lg bg-white/30 z-50 rounded-l-lg"
+                :if={@cw || Settings.get([Bonfire.UI.Social.Activity.MediaLive, :hide], false, @__context__)}
+              /> -->
+
+                <LazyImage
+                  parent_id={["icon", @parent_id, id(@media)]}
+                  class="rounded-none object-cover rounded-t-lg cursor-pointer m-image w-full aspect-[1.91/1]"
+                  fallback_class="w-8 h-8 text-base-content/70"
+                  src={@preview_img}
+                  media={@media}
+                  fallback_icon="ion:newspaper-outline"
+                />
+              </div>
+            </div>
+          {/if}
+        {#else}
+          <div class="flex place-content-center items-center w-[120px] h-[120px]">
+            {#case e(@media, :metadata, "favicon", nil) ||
+                Bonfire.Files.FaviconStore.favicon_url(@media_url)}
+              {#match favicon_url when is_binary(favicon_url)}
+                <LazyImage
+                  parent_id={["icon", @parent_id, id(@media)]}
+                  class="rounded-none object-cover rounded-l-lg cursor-pointer m-image min-w-8 max-w-[120px] w-full h-auto"
+                  fallback_class="w-8 h-8 text-base-content/70"
+                  src={favicon_url}
+                  media={@media}
+                  fallback_icon="ion:newspaper-outline"
+                />
+              {#match _}
+                <#Icon iconify="ion:newspaper-outline" class="w-8 h-8 text-base-content/70" />
+            {/case}
           </div>
         {/if}
-      {#else}
-        <div class="flex place-content-center items-center w-[120px] h-[120px]">
-          {#case e(@media, :metadata, "favicon", nil) ||
-              Bonfire.Files.FaviconStore.favicon_url(@media_url)}
-            {#match favicon_url when is_binary(favicon_url)}
-              <LazyImage
-                parent_id={["icon", @parent_id, id(@media)]}
-                class="rounded-none object-cover rounded-l-lg cursor-pointer m-image min-w-8 max-w-[120px] w-full h-auto"
-                fallback_class="w-8 h-8 text-base-content/70"
-                src={favicon_url}
-                media={@media}
-                fallback_icon="ion:newspaper-outline"
-              />
-            {#match _}
-              <#Icon iconify="ion:newspaper-outline" class="w-8 h-8 text-base-content/70" />
-          {/case}
-        </div>
       {/if}
-    {/if}
-    <div class="p-2 flex flex-col w-full gap-1 flex-1">
-      {#case Bonfire.Files.Media.media_label(@media)}
-        {#match media_label}
-          {#case MediaLive.provider(@media)}
-            {#match provider when is_binary(provider) and provider != media_label}
-              <div data-id="media_author" class="text-xs">
-                <div class="flex items-center gap-2">
-                  <#Icon iconify="ph:globe" class="w-4 h-4 text-primary" />
-                  <span class="capitalize text-primary">{provider}</span>
+      <div class="p-2 flex flex-col w-full gap-1 flex-1">
+        {#case Bonfire.Files.Media.media_label(@media)}
+          {#match media_label}
+            {#case MediaLive.provider(@media)}
+              {#match provider when is_binary(provider) and provider != media_label}
+                <div data-id="media_author" class="text-xs">
+                  <div class="flex items-center gap-2">
+                    <#Icon iconify="ph:globe" class="w-4 h-4 text-primary" />
+                    <span class="capitalize text-primary">{provider}</span>
+                  </div>
                 </div>
-              </div>
-            {#match _}
-          {/case}
-          <div
-            data-id="media_title"
-            class="text-base font-semibold text-pretty md:text-balanced line-clamp-2"
-          >
-            {rich(media_label) ||
-              if @media.media_type == "link", do: e(@media, :path, nil), else: l("View")}
-          </div>
+              {#match _}
+            {/case}
+            <div
+              data-id="media_title"
+              class="text-base font-semibold text-pretty md:text-balanced line-clamp-2"
+            >
+              {rich(media_label) ||
+                if @media.media_type == "link", do: e(@media, :path, nil), else: l("View")}
+            </div>
 
-          <div class="break-all text-sm break-words text-base-content/70 line-clamp-2">
-            {raw(Text.maybe_sane_html(Bonfire.Files.Media.description(@media)))}
-          </div>
-      {/case}
-    </div>
-  </LinkLive>
-  
-  {#case MediaLive.fediverse_creator_names(@media, @media.path)}
-    {#match creator_names when creator_names != []}
-      <div data-id="fediverse_creators" class="text-sm border-t border-base-content/10 text-base-content/70 flex items-center gap-3 p-3">
-        <span class="text-xl text-secondary">⁂</span>
-        <div class="flex-1 font-medium gap-2 flex items-center">
-          <span class="text-base-content/70">{l("More from")}</span>
+            <div class="break-all text-sm break-words text-base-content/70 line-clamp-2">
+              {raw(Text.maybe_sane_html(Bonfire.Files.Media.description(@media)))}
+            </div>
+        {/case}
+      </div>
+    </LinkLive>
+
+    {#case MediaLive.fediverse_creator_names(@media, @media.path)}
+      {#match creator_names when creator_names != []}
+        <div
+          data-id="fediverse_creators"
+          class="text-sm border-t border-base-content/10 text-base-content/70 flex items-center gap-3 p-3"
+        >
+          <span class="text-xl text-secondary">⁂</span>
+          <div class="flex-1 font-medium gap-2 flex items-center">
+            <span class="text-base-content/70">{l("More from")}</span>
             {#case List.first(creator_names)}
               {#match creator when creator != nil}
-                <LinkLive
-                  to={"/user/" <> creator.username}
-                  class="link link-hover flex items-center gap-2"
-                >
+                <LinkLive to={"/user/" <> creator.username} class="link link-hover flex items-center gap-2">
                   <Bonfire.UI.Common.AvatarLive
                     src={creator.avatar_url}
                     name={creator.display_name}
@@ -117,9 +117,9 @@
                 </LinkLive>
               {#match _}
             {/case}
+          </div>
         </div>
-      </div>
-    {#match _}
-  {/case}
+      {#match _}
+    {/case}
   </div>
 </Bonfire.UI.Common.OpenExternalLinkLive>

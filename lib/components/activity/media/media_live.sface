@@ -38,19 +38,6 @@
             cw={@cw}
             media_url={media_url}
             media={m}
-            #
-            Use
-            small
-            icons
-            for
-            compact
-            display
-            when
-            multiple
-            links
-            or
-            explicitly
-            requested
             no_cover={Enum.count(@link_list) > 1 and !@small_icon}
             small_icon={@small_icon or Enum.count(@link_list) > 1}
             download_url={e(m.metadata, "oembed", "download_url", nil) || e(m.metadata, "download_url", nil)}

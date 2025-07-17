@@ -1,4 +1,4 @@
-<!-- <form
+{!-- <form
   data-scope="time_limit"
   phx-change={@event_name || "Bonfire.Common.Settings:set"}
   phx-target={@event_target}
@@ -26,7 +26,7 @@
       </div>
     </div>
   </div>
-</form> -->
+</form> --}
 
 <div data-position="bottom" phx-hook="Tooltip" id="time_control_dropdown" class="flex relative">
   <label tabindex="0" class="tooltip-button btn btn-sm btn-ghost">
