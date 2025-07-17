@@ -111,7 +111,7 @@
                   <Bonfire.UI.Common.AvatarLive
                     src={creator.avatar_url}
                     name={creator.display_name}
-                    class="w-6 h-6"
+                    class="w-4 h-4"
                   />
                   <span class="font-semibold text-base-content">{creator.display_name}</span>
                 </LinkLive>

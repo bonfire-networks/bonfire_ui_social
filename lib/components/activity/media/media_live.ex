@@ -33,7 +33,7 @@ defmodule Bonfire.UI.Social.Activity.MediaLive do
 
   @multimedia_formats @audio_formats ++ @video_formats
   @multimedia_exts @audio_exts ++ @video_exts
-  @multimedia_types @audio_types ++ @video_types ++ ["embed", "rich"]
+  @multimedia_types @audio_types ++ @video_types ++ ["embed"]
 
   prop multimedia_exts, :list, default: @multimedia_exts
   prop multimedia_types, :list, default: @multimedia_types
