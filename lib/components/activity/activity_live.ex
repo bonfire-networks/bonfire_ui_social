@@ -315,8 +315,8 @@ defmodule Bonfire.UI.Social.ActivityLive do
   end
 
   # defp derive_verb_from_table_id(%{table_id: "300STANN0VNCERESHARESH0VTS"}), do: "Boost"
-  # defp derive_verb_from_table_id(%{table_id: "61KESLYKL1KE1Y0VL1KESTH1S"}), do: "Like" 
-  # defp derive_verb_from_table_id(_), do: nil 
+  # defp derive_verb_from_table_id(%{table_id: "61KESLYKL1KE1Y0VL1KESTH1S"}), do: "Like"
+  # defp derive_verb_from_table_id(_), do: nil
 
   defp do_prepare(%{activity: activity, object: object} = assigns) when not is_nil(object) do
     activity_inception = e(assigns, :activity_inception, nil)
@@ -704,7 +704,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
                               :path,
                               []
                             ) ++ [@object_id],
-                          # ^ tells the comments loader to include the ancestors of the object regardless of max depth 
+                          # ^ tells the comments loader to include the ancestors of the object regardless of max depth
                           current_url: @permalink,
                           show: true,
                           hide_actions: false,
@@ -1836,6 +1836,9 @@ defmodule Bonfire.UI.Social.ActivityLive do
         Enum.any?(types, &(&1 == "Event")) ->
           {l("Event"), Bonfire.UI.Social.Activity.EventActivityStreamsLive}
 
+        Enum.any?(types, &(&1 == "Arrive")) ->
+          {l("Arrive"), Bonfire.UI.Social.Activity.ArriveActivityStreamsLive}
+
         # NOTE: probably not used now as they're being created as Media
         Enum.any?(types, &(&1 == "Video")) ->
           {l("Video"), Bonfire.UI.Social.Activity.VideoActivityStreamsLive}
@@ -2201,6 +2204,6 @@ defmodule Bonfire.UI.Social.ActivityLive do
            }}
       end)
 
-    preview_header ++ preview_components
+    preview_components
   end
 end

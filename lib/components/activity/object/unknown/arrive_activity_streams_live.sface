@@ -1,0 +1,57 @@
+
+{#if @showing_within == :smart_input}
+  <div class="">
+    <div class="flex badge badge-neutral items-center gap-2 font-semibold">
+      <#Icon iconify="material-symbols:location-on" class="w-4 h-4" />
+      {l("Arrival")}
+    </div>
+    {#case e(@json, "location", "name", nil) || e(@json, "location", "pointer", :name, nil)}
+      {#match nil}
+        <h2 class="mt-2 font-semibold text-base-content">
+          {l("Arrived at unknown location")}
+        </h2>
+      {#match location_name}
+        <h2 class="mt-2 font-semibold text-base-content">
+          {l("Arrived in %{location}", location: location_name)}
+        </h2>
+    {/case}
+  </div>
+{#else}
+  <div class="my-2">
+    <div class="flex items-start gap-3">
+      <div class="flex-shrink-0">
+        <#Icon iconify="material-symbols:location-on" class="w-6 h-6 text-primary" />
+      </div>
+      
+      <div class="flex-1">
+        <div class="font-medium text-base-content">
+          {#case e(@json, "location", "name", nil) || e(@json, "location", "pointer", :name, nil)}
+            {#match nil}
+              {l("Arrived at unknown location")}
+            {#match location_name}
+              {l("Arrived in %{location}", location: location_name)}
+          {/case}
+        </div>
+        
+        <!-- {#if e(@json, "published", nil) || e(@json, "updated", nil)}
+          <div class="flex items-center gap-2 text-sm text-base-content/70 mb-2">
+            <#Icon iconify="ph:calendar-blank" class="w-4 h-4" />
+            {#case e(@json, "published", nil) || e(@json, "updated", nil)}
+              {#match nil}
+              {#match date_str}
+                {with {:ok, datetime, _offset} <- DateTime.from_iso8601(date_str) do
+                  case DatesTimes.format(datetime, format: "EEEE, MMMM d, y 'at' h:mm a") do
+                    {:ok, formatted} -> formatted
+                    formatted when is_binary(formatted) -> formatted
+                    _ -> date_str
+                  end
+                else
+                  _ -> date_str
+                end}
+            {/case}
+          </div>
+        {/if} -->
+      </div>
+    </div>
+  </div>
+{/if}
