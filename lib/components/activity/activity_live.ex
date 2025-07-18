@@ -2203,7 +2203,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
              hide_actions: true
            }}
       end)
-
+    # preview_header ++ preview_components WIP temp removed to find a better way to show preview_header
     preview_components
   end
 end
