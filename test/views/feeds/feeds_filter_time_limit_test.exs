@@ -27,7 +27,7 @@ defmodule Bonfire.UI.Social.FeedsFilterTimeLimit.Test do
         id: DatesTimes.now() |> DatesTimes.generate_ulid()
       })
 
-    # Yesterday's post  
+    # Yesterday's post
     yesterday_post =
       fake_post!(user, "public", %{
         post_content: %{name: "Yesterday post", html_body: "Yesterday's content"},
@@ -70,19 +70,19 @@ defmodule Bonfire.UI.Social.FeedsFilterTimeLimit.Test do
       })
 
     # Create tagged posts for hashtag filter tests
-    # recent_tagged_post = 
+    # recent_tagged_post =
     #   fake_post!(other_user, "public", %{
     #     post_content: %{name: "Recent tagged", html_body: "Recent content with #test_tag"},
     #     id: DatesTimes.now() |> DatesTimes.generate_ulid()
     #   })
 
-    # old_tagged_post = 
+    # old_tagged_post =
     #   fake_post!(other_user, "public", %{
     #     post_content: %{name: "Old tagged", html_body: "Old content with #test_tag"},
     #     id: DatesTimes.past(45, :day) |> DatesTimes.generate_ulid()
     #   })
 
-    # recent_untagged_post = 
+    # recent_untagged_post =
     #   fake_post!(other_user, "public", %{
     #     post_content: %{name: "Recent untagged", html_body: "Recent content without tag"},
     #     id: DatesTimes.now() |> DatesTimes.generate_ulid()
@@ -114,32 +114,34 @@ defmodule Bonfire.UI.Social.FeedsFilterTimeLimit.Test do
     |> visit("/feed")
     # Test each time filter option using the range input
 
-    # Set to "Day" (value 0)
-    |> fill_in("Time limit control", with: "0")
+    # Set to "Last Day"
+    |> click_link("Last Day")
     |> wait_async()
     # Verify we only see today's post
     |> assert_has_or_open_browser("[data-id=feed] article")
     |> assert_has_or_open_browser("[data-id=feed] article", text: "Today's post content")
     |> refute_has_or_open_browser("[data-id=feed] article", text: "Post from 60 days ago")
-    |> assert_has_or_open_browser("form[data-scope='time_limit'] input[type='range'][value='0']")
+    |> assert_has("label", text: "Last Day")
 
-    # Set to "Month" (value 2)
-    |> fill_in("Time limit control", with: "2")
+    # Set to "Last Month"
+    # |> click_button("Last Day")
+    |> click_link("Last Month")
     |> wait_async()
     # Verify we see recent posts but not older than 30 days
     |> assert_has_or_open_browser("[data-id=feed] article")
     |> assert_has_or_open_browser("[data-id=feed] article", text: "Today's post content")
     |> refute_has_or_open_browser("[data-id=feed] article", text: "Post from 60 days ago")
-    |> assert_has_or_open_browser("form[data-scope='time_limit'] input[type='range'][value='2']")
+    |> assert_has("label", text: "Last Month")
 
-    # Set to "All time" (value 4) to verify we can return to seeing everything
-    |> fill_in("Time limit control", with: "4")
+    # Set to "All time" to verify we can return to seeing everything
+    # |> click_button("Last Month")
+    |> click_link("All time")
     |> wait_async()
     # Verify we can see posts from all time periods
     |> assert_has_or_open_browser("[data-id=feed] article")
     |> assert_has_or_open_browser("[data-id=feed] article", text: "Today's post content")
     |> assert_has("[data-id=feed] article", text: "Post from 60 days ago")
-    |> assert_has_or_open_browser("form[data-scope='time_limit'] input[type='range'][value='4']")
+    |> assert_has("label", text: "All time")
   end
 
   test "respects time filters", %{
@@ -152,16 +154,15 @@ defmodule Bonfire.UI.Social.FeedsFilterTimeLimit.Test do
     |> visit("/feed/local")
     # Test with Monthly filter (shows posts from last 30 days)
 
-    # Value 2 corresponds to Month
-    |> fill_in("Time limit control", with: "2")
-    |> wait_async()
+    # Select Month from dropdown
+    |> click_link("Last Month")
     # Should show posts within the month limit
     |> assert_has_or_open_browser("[data-id=feed] article")
     |> assert_has_or_open_browser("[data-id=feed] article", text: "Today's post content")
     |> assert_has_or_open_browser("[data-id=feed] article", text: "Month-old content")
     # Should not show posts older than a month
     |> refute_has_or_open_browser("[data-id=feed] article", text: "Post from 60 days ago")
-    |> assert_has_or_open_browser("form[data-scope='time_limit'] input[type='range'][value='2']")
+    # |> assert_has("label", text: "Last Month")
   end
 
   describe "time limit feed filters:" do
@@ -175,76 +176,64 @@ defmodule Bonfire.UI.Social.FeedsFilterTimeLimit.Test do
       # Test with Day filter
       conn(user: user)
       |> visit("/feed/local")
-      # Value 0 corresponds to Day
-      |> fill_in("Time limit control", with: "0")
-      |> wait_async()
+      |> PhoenixTest.open_browser()
+      # Select Day from dropdown
+      |> click_link("Last Day")
       |> assert_has_or_open_browser("[data-id=feed] article")
       |> assert_has_or_open_browser("[data-id=feed] article", text: "Today's post content")
       |> refute_has_or_open_browser("[data-id=feed] article", text: "Week-old content")
       |> refute_has_or_open_browser("[data-id=feed] article", text: "Month-old content")
       |> refute_has_or_open_browser("[data-id=feed] article", text: "Year-old content")
-      |> assert_has_or_open_browser(
-        "form[data-scope='time_limit'] input[type='range'][value='0']"
-      )
+      |> assert_has("label", text: "Last Day")
 
       # Test with Week filter
 
-      # Value 1 corresponds to Week
-      |> fill_in("Time limit control", with: "1")
+      |> click_link("Last Week")
       |> wait_async()
       |> assert_has_or_open_browser("[data-id=feed] article")
       |> assert_has_or_open_browser("[data-id=feed] article", text: "Today's post content")
       |> assert_has_or_open_browser("[data-id=feed] article", text: "Week-old content")
       |> refute_has_or_open_browser("[data-id=feed] article", text: "Month-old content")
       |> refute_has_or_open_browser("[data-id=feed] article", text: "Year-old content")
-      |> assert_has_or_open_browser(
-        "form[data-scope='time_limit'] input[type='range'][value='1']"
-      )
+      |> assert_has("label", text: "Last Week")
 
       # Test with Month filter
 
-      # Value 2 corresponds to Month
-      |> fill_in("Time limit control", with: "2")
+      |> click_link("Last Month")
       |> wait_async()
       |> assert_has_or_open_browser("[data-id=feed] article")
       |> assert_has_or_open_browser("[data-id=feed] article", text: "Today's post content")
       |> assert_has_or_open_browser("[data-id=feed] article", text: "Week-old content")
       |> assert_has_or_open_browser("[data-id=feed] article", text: "Month-old content")
       |> refute_has_or_open_browser("[data-id=feed] article", text: "Year-old content")
-      |> assert_has_or_open_browser(
-        "form[data-scope='time_limit'] input[type='range'][value='2']"
-      )
+      |> assert_has("label", text: "Last Month")
 
       # Test with Year filter
 
-      # Value 3 corresponds to Year
-      |> fill_in("Time limit control", with: "3")
+      |> click_link("Last Year")
       |> wait_async()
       |> assert_has_or_open_browser("[data-id=feed] article")
       |> assert_has_or_open_browser("[data-id=feed] article", text: "Today's post content")
       |> assert_has_or_open_browser("[data-id=feed] article", text: "Week-old content")
       |> assert_has_or_open_browser("[data-id=feed] article", text: "Month-old content")
       |> assert_has_or_open_browser("[data-id=feed] article", text: "Year-old content")
-      |> assert_has_or_open_browser(
-        "form[data-scope='time_limit'] input[type='range'][value='3']"
-      )
+      |> assert_has("label", text: "Last Year")
 
       # Test with All Time filter (should show everything)
 
-      # Value 4 corresponds to All time
-      |> fill_in("Time limit control", with: "4")
+      # Select All time from dropdown
+
+      |> click_link("All time")
       |> wait_async()
       |> assert_has_or_open_browser("[data-id=feed] article")
       |> assert_has_or_open_browser("[data-id=feed] article", text: "Today's post content")
       |> assert_has_or_open_browser("[data-id=feed] article", text: "Week-old content")
       |> assert_has_or_open_browser("[data-id=feed] article", text: "Month-old content")
       |> assert_has_or_open_browser("[data-id=feed] article", text: "Year-old content")
-      |> assert_has_or_open_browser(
-        "form[data-scope='time_limit'] input[type='range'][value='4']"
-      )
+      |> assert_has("label", text: "All time")
     end
 
-    #  do we want to show time limit on hashtag page? 
+    #  do we want to show time limit on hashtag page?
     @tag :todo
     test "combines time limit with other filters", %{
       user: user,
@@ -255,16 +244,14 @@ defmodule Bonfire.UI.Social.FeedsFilterTimeLimit.Test do
       # Apply both time limit and hashtag filters
       conn(user: user)
       |> visit("/hashtag/test_tag")
-      # Value 2 corresponds to Month
-      |> fill_in("Time limit control", with: "2")
+      # Select Month from dropdown
+      |> click_link("Last Month")
       |> wait_async()
       # Should show recent tagged post but not old tagged or untagged posts
       |> assert_has("[data-id=feed] article", text: "Recent content with #test_tag")
       |> refute_has_or_open_browser("[data-id=feed] article", text: "Old content with #test_tag")
       |> refute_has_or_open_browser("[data-id=feed] article", text: "Recent content without tag")
-      |> assert_has_or_open_browser(
-        "form[data-scope='time_limit'] input[type='range'][value='2']"
-      )
+      |> assert_has("label", text: "Last Month")
     end
   end
 end

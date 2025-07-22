@@ -8,7 +8,16 @@ defmodule Bonfire.UI.Social.FeedsFilters.Test do
   alias Bonfire.Posts
   import Bonfire.Posts.Fake, except: [fake_remote_user!: 0]
   import Bonfire.Files.Simulation
+  import Tesla.Mock
   use Bonfire.Common.Repo
+
+  setup_all do
+    # Set up Tesla.Mock global handler
+    Tesla.Mock.mock_global(fn env ->
+      ActivityPub.Test.HttpRequestMock.request(env)
+    end)
+    :ok
+  end
 
   setup do
     _ = fake_admin!()

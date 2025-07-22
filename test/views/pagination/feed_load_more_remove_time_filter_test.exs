@@ -123,8 +123,9 @@ defmodule Bonfire.UI.Social.Feeds.LoadMoreRemoveTimeFilterTest do
       conn
       |> visit("/feed/local")
       |> assert_has_or_open_browser("[data-id=feed] article [data-id=object_body]")
-      # 0 = Day
-      |> fill_in("Time limit control", with: "0")
+      # Select Last Day from dropdown
+      # |> click_button("All time")
+      |> click_link("Last Day")
       |> wait_async()
       # Check that we only see posts from today (count should be less than total)
       # Today's post
@@ -164,8 +165,9 @@ defmodule Bonfire.UI.Social.Feeds.LoadMoreRemoveTimeFilterTest do
       conn
       |> visit("/feed/local")
       |> assert_has_or_open_browser("[data-id=feed] article")
-      # 0 = Day
-      |> fill_in("Time limit control", with: "0")
+      # Select Last Day from dropdown
+      # |> click_button("All time")
+      |> click_link("Last Day")
       |> wait_async()
       # Set sort to likes
       |> within("#order-dropdown", fn session ->

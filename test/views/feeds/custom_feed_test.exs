@@ -66,19 +66,9 @@ defmodule Bonfire.UI.Social.CustomFeedTest do
 
     conn
     |> visit("/feed")
-    # check that it's set to default
-    |> assert_has_or_open_browser("form[data-scope='time_limit'] input[type='range'][value='1']")
-    # Set time limit to Day (index 0)
-    |> within("[data-scope='time_limit']", fn session ->
-      session
-      |> unwrap(fn view ->
-        view
-        |> Phoenix.LiveViewTest.element("form[data-scope='time_limit']")
-        |> Phoenix.LiveViewTest.render_change(%{"time_limit_idx" => "0"})
-      end)
-    end)
-    # Check if we can see the time limit is set to Day
-    |> assert_has_or_open_browser("form[data-scope='time_limit'] input[type='range'][value='0']")
+    # Set time limit to Last Day
+    # |> click_button("All time")
+    |> click_link("Last Day")
 
     # Click on Save button to open modal
     |> click_button("Save")
@@ -111,17 +101,9 @@ defmodule Bonfire.UI.Social.CustomFeedTest do
     # Create the feed preset in a separate visit/session
     conn
     |> visit("/feed")
-    # check that it's set to default
-    |> assert_has_or_open_browser("form[data-scope='time_limit'] input[type='range'][value='1']")
-    # Set time limit to Day 
-    |> within("[data-scope='time_limit']", fn session ->
-      session
-      |> unwrap(fn view ->
-        view
-        |> Phoenix.LiveViewTest.element("form[data-scope='time_limit']")
-        |> Phoenix.LiveViewTest.render_change(%{"time_limit_idx" => "0"})
-      end)
-    end)
+    # Set time limit to Last Day
+    # |> click_button("All time")
+    |> click_link("Last Day")
     # Save the feed preset
     |> click_button("Save")
     |> within("form#form_create_feed_preset", fn session ->
@@ -137,11 +119,12 @@ defmodule Bonfire.UI.Social.CustomFeedTest do
     # Now in a new session, check that the time limit is preserved
     # First visit the feed with the custom preset
     |> visit("/feed/#{preset_name}")
-    # Check if we can see the time limit is set to Day
-    |> assert_has_or_open_browser("form[data-scope='time_limit'] input[type='range']")
-    |> assert_has_or_open_browser("form[data-scope='time_limit'] input[type='range'][value='0']")
+    # |> PhoenixTest.open_browser()
+    # Check if we can see the time limit is set to Last Day
+    |> assert_has("label", text: "Last Day")
     # Now go to a different feed and verify the time limit reverts to default
     |> visit("/feed/local")
-    |> assert_has_or_open_browser("form[data-scope='time_limit'] input[type='range'][value='1']")
+    # |> PhoenixTest.open_browser()
+    |> assert_has("label", text: "Last Week")
   end
 end

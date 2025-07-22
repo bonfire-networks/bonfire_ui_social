@@ -470,8 +470,9 @@ defmodule Bonfire.UI.Social.ActivityLive do
         false
 
       %Ecto.Association.NotLoaded{} ->
-        err(activity, "Sensitive field not preloaded for activity")
-        nil
+        # Default to false when sensitive field is not preloaded rather than erroring
+        # This allows guest users and other scenarios where sensitivity isn't critical
+        false
 
       %{is_sensitive: is_sensitive} when is_boolean(is_sensitive) ->
         is_sensitive
