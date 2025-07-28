@@ -107,20 +107,20 @@
                 <a
                   :if={download_url && download_url != media_url}
                   href={download_url}
-                  class="btn btn-outline  btn-sm flex-1"
+                  class="btn btn-secondary btn-soft btn-sm flex-1"
                   target="_blank"
                 >
-                  <#Icon iconify="pajamas:import" class="w-5 h-5 text-base-content/70" />
+                  <#Icon iconify="pajamas:import" class="w-4 h-4 opacity-70" />
                   <span>{l("Download")}</span>
                 </a>
 
                 <LinkLive
                   :if={not String.starts_with?(media_url, "doi:") and URIs.valid_url?(media_url)}
                   to={media_url}
-                  class="btn flex-1"
+                  class="btn btn-sm btn-soft flex-1"
                   target="_blank"
                 >
-                  <#Icon iconify="heroicons-outline:external-link" class="w-5 h-5 text-base-content/70" />
+                  <#Icon iconify="heroicons-outline:external-link" class="w-4 h-4 opacity-70" />
                   <span>{l("Read paper")}</span>
                 </LinkLive>
               </div>
