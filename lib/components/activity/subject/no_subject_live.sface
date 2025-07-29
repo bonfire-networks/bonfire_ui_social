@@ -18,6 +18,7 @@
     </span>
   </Bonfire.UI.Social.Activity.LinkToActivityLive>
 
+  {!-- NOTE: what is ActivityBoundaryLive doing here?
   <Bonfire.UI.Social.ActivityBoundaryLive
     :if={@object_type != Bonfire.Data.Social.Message and
       LiveHandler.feed_live_update_many_preload_mode() != :async_actions}
@@ -26,7 +27,8 @@
     parent_id={"#{@activity_inception}#{@activity_id}"}
     with_icon
     object_boundary={@object_boundary}
-  />
+  /> 
+  --}
 
   <Bonfire.UI.Social.Activity.InstanceIconLive peered={@peered} />
 </div>

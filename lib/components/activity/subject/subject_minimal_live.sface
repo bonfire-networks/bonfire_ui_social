@@ -79,48 +79,97 @@
             </button>
           </div>
         {#elseif @verb in ["Like", "React"]}
-          <div data-role="liked_by" class="flex items-start gap-5 justify-start">
-            {!-- LIKE --}
-            {#case @emoji}
-              {#match %{media_type: "emoji"} = emoji}
-                <LazyImage
-                  parent_id={["emoji", @parent_id, id(emoji)]}
-                  class="w-5 h-5"
-                  media={emoji}
-                  alt={"#{e(emoji, :metadata, "shortcode", nil)} #{e(emoji, :metadata, "label", nil)}"}
-                />
-              {#match %{summary: emoji}}
-                <span class="text-yellow-500 text-[20px]">{emoji}</span>
-              {#match _}
-                <#Icon iconify="mingcute:fire-fill" class="w-6 h-6 text-yellow-500" />
-            {/case}
-
-            <div class="flex-1 flex gap-2">
-              <!-- <LinkLive to={@path} opts={"data-id": "subject_name"} parent_id={["subject_avatar", @parent_id]}>
-                <Bonfire.UI.Common.AvatarLive
-                  parent_id={["sm", @activity_component_id || @activity_id]}
-                  user_id={@profile_id}
-                  src={@profile_media}
-                  title={@profile_name}
-                  class="h-6 w-6 rounded-full"
-                />
-              </LinkLive> -->
-              <div class="font-medium text-sm text-base-content/70">
-                <LinkLive
-                  class="link link-hover font-semibold"
-                  to={@path}
-                  opts={"data-id": "subject_name"}
-                  parent_id={["subject_minimal_name", @parent_id]}
-                >
-                  {#if @object_id == current_user_id(@__context__)}
-                    {l("You")}
-                  {#else}
-                    {@profile_name || @character_username}
-                  {/if}
-                </LinkLive>
-
-                {if @verb == "React", do: l("reacted to your activity"), else: l("liked your activity")}
-              </div>
+          <div data-role="liked_by" class="flex items-center gap-3 w-full -ml-[2rem] mb-4">
+            <#Icon iconify="mingcute:fire-fill" class="w-6 h-6 text-yellow-500 flex-shrink-0" />
+            <div class="flex items-center gap-2">
+              {#case @emoji}
+                {#match %{media_type: "emoji"} = emoji}
+                  <LazyImage
+                    parent_id={["emoji", @parent_id, id(emoji)]}
+                    class="w-5 h-5"
+                    media={emoji}
+                    alt={e(emoji, :metadata, "shortcode", nil) <> " " <> e(emoji, :metadata, "label", nil)}
+                  />
+                  <div class="flex-1 flex gap-2">
+                    <div class="font-medium text-sm text-base-content/70">
+                      <LinkLive
+                        class="link link-hover font-semibold"
+                        to={@path}
+                        opts={"data-id": "subject_name"}
+                        parent_id={["subject_minimal_name", @parent_id]}
+                      >
+                        {#if @object_id == current_user_id(@__context__)}
+                          {l("You")}
+                        {#else}
+                          {@profile_name || @character_username}
+                        {/if}
+                      </LinkLive>
+                      {if @verb == "React", do: l("reacted to your activity"), else: l("liked your activity")}
+                    </div>
+                  </div>
+                {#match %{summary: emoji}}
+                  <span class="text-yellow-500 text-[20px]">{emoji}</span>
+                  <div class="flex-1 flex gap-2">
+                    <div class="font-medium text-sm text-base-content/70">
+                      <LinkLive
+                        class="link link-hover font-semibold"
+                        to={@path}
+                        opts={"data-id": "subject_name"}
+                        parent_id={["subject_minimal_name", @parent_id]}
+                      >
+                        {#if @object_id == current_user_id(@__context__)}
+                          {l("You")}
+                        {#else}
+                          {@profile_name || @character_username}
+                        {/if}
+                      </LinkLive>
+                      {if @verb == "React", do: l("reacted to your activity"), else: l("liked your activity")}
+                    </div>
+                  </div>
+                {#match _}
+                  <div class="avatar-group -space-x-3">
+                    <Bonfire.UI.Common.AvatarLive
+                      parent_id={["sm", @activity_component_id || @activity_id]}
+                      user_id={@profile_id}
+                      src={@profile_media}
+                      title={@profile_name || @character_username}
+                      class="h-6 w-6 rounded-full"
+                    />
+                    {#if @subjects_more != []}
+                      {#for {subject, idx} <- Enum.with_index(@subjects_more)}
+                        {#if idx < 2}
+                          <Bonfire.UI.Common.AvatarLive
+                            parent_id={["sm", @activity_component_id || @activity_id, idx]}
+                            user_id={id(subject)}
+                            src={nil}
+                            title={e(subject, :profile, :name, nil)}
+                            class="h-6 w-6 rounded-full"
+                          />
+                        {/if}
+                      {/for}
+                    {/if}
+                  </div>
+                  <div class="text-sm text-base-content/70">
+                    <LinkLive
+                      to={@path}
+                      opts={"data-id": "subject_name"}
+                      parent_id={["subject_minimal_name", @parent_id]}
+                      class="link link-hover font-semibold"
+                    >
+                      {#if @object_id == current_user_id(@__context__)}
+                        {l("you")}
+                      {#else}
+                        {@profile_name || @character_username}
+                      {/if}
+                    </LinkLive>
+                    {#case length(@subjects_more)}
+                      {#match 0}
+                      {#match n}
+                        {lp("and %{number} other", "and %{number} others", n, number: n)}
+                    {/case}
+                    {if @verb == "React", do: l("reacted to your activity"), else: l("liked your activity")}
+                  </div>
+              {/case}
             </div>
           </div>
         {#elseif @verb == "Follow"}
@@ -157,20 +206,32 @@
             showing_within={@showing_within}
           /> --}
         {#elseif @verb == "Boost"}
-          <div data-role="boosted_by" class="flex items-start gap-5 justify-start">
-            {!-- BOOST --}
-            <#Icon iconify="lucide:refresh-cw" class="w-6 h-6 stroke-1 text-success" />
-            <div class="flex-1 flex gap-2">
-              <!-- <LinkLive to={@path} opts={"data-id": "subject_name"} parent_id={["subject_avatar", @parent_id]}>
+          <div data-role="boosted_by" class="flex items-center gap-3 w-full -ml-[2rem] mb-4">
+            <#Icon iconify="lucide:refresh-cw" class="w-6 h-6 text-success flex-shrink-0" />
+            <div class="flex items-center gap-2">
+              <div class="avatar-group -space-x-3">
                 <Bonfire.UI.Common.AvatarLive
                   parent_id={["sm", @activity_component_id || @activity_id]}
                   user_id={@profile_id}
                   src={@profile_media}
-                  title={@profile_name}
+                  title={@profile_name || @character_username}
                   class="h-6 w-6 rounded-full"
                 />
-              </LinkLive> -->
-              <div class="font-medium text-sm text-base-content/70">
+                {#if @subjects_more != []}
+                  {#for {subject, idx} <- Enum.with_index(@subjects_more)}
+                    {#if idx < 2}
+                      <Bonfire.UI.Common.AvatarLive
+                        parent_id={["sm", @activity_component_id || @activity_id, idx]}
+                        user_id={id(subject)}
+                        src={nil}
+                        title={e(subject, :profile, :name, nil)}
+                        class="h-6 w-6 rounded-full"
+                      />
+                    {/if}
+                  {/for}
+                {/if}
+              </div>
+              <div class="text-sm text-base-content/70">
                 <LinkLive
                   to={@path}
                   opts={"data-id": "subject_name"}
@@ -183,7 +244,11 @@
                     {@profile_name || @character_username}
                   {/if}
                 </LinkLive>
-
+                {#case length(@subjects_more)}
+                  {#match 0}
+                  {#match n}
+                    {lp("and %{number} other", "and %{number} others", n, number: n)}
+                {/case}
                 {raw(@verb_display)} {l(" your activity")}
               </div>
             </div>
@@ -353,39 +418,92 @@
         </div>
       {#elseif @verb in ["Like", "React"]}
         <div data-role="liked_by" class="flex items-center justify-start pb-3 -ml-8">
-          {!-- LIKE --}
-
-          {#case @emoji}
-            {#match %{summary: emoji}}
-              <span class="text-yellow-500 text-[15px]">{emoji}</span>
-            {#match %{media_type: "emoji"} = emoji}
-              <LazyImage
-                parent_id={["emoji", @parent_id, id(emoji)]}
-                class="w-5 h-5"
-                media={emoji}
-                alt={e(emoji, :metadata, "label", nil) || e(emoji, :metadata, "shortcode", nil)}
-              />
-            {#match _}
-              <#Icon iconify="mingcute:fire-fill" class="w-5 h-5 text-yellow-500" />
-          {/case}
-
-          <div class="flex-1 ml-3">
-            <div class="text-sm font-medium text-base-content/70">
-              <LinkLive
-                class="font-medium link link-hover text-base-content/70"
-                to={@path}
-                opts={"data-id": "subject_name"}
-                parent_id={["subject_minimal_name", @parent_id]}
-              >
-                {#if @object_id == current_user_id(@__context__) || @subject_id == current_user_id(@__context__)}
-                  {l("You")}
-                {#else}
-                  {@profile_name || @character_username}
-                {/if}
-              </LinkLive>
-
-              {if @verb == "React", do: l("reacted to this activity"), else: l("liked this activity")}
-            </div>
+          <#Icon iconify="mingcute:fire-fill" class="w-5 h-5 text-yellow-500" />
+          <div class="flex items-center gap-2 ml-3">
+            {#case @emoji}
+              {#match %{summary: emoji}}
+                <span class="text-yellow-500 text-[15px]">{emoji}</span>
+                <div class="font-medium text-sm text-base-content/70">
+                  <LinkLive
+                    class="font-medium link link-hover text-base-content/70"
+                    to={@path}
+                    opts={"data-id": "subject_name"}
+                    parent_id={["subject_minimal_name", @parent_id]}
+                  >
+                    {#if @object_id == current_user_id(@__context__) || @subject_id == current_user_id(@__context__)}
+                      {l("You")}
+                    {#else}
+                      {@profile_name || @character_username}
+                    {/if}
+                  </LinkLive>
+                  {if @verb == "React", do: l("reacted to this activity"), else: l("liked this activity")}
+                </div>
+              {#match %{media_type: "emoji"} = emoji}
+                <LazyImage
+                  parent_id={["emoji", @parent_id, id(emoji)]}
+                  class="w-5 h-5"
+                  media={emoji}
+                  alt={e(emoji, :metadata, "label", nil) || e(emoji, :metadata, "shortcode", nil)}
+                />
+                <div class="font-medium text-sm text-base-content/70">
+                  <LinkLive
+                    class="font-medium link link-hover text-base-content/70"
+                    to={@path}
+                    opts={"data-id": "subject_name"}
+                    parent_id={["subject_minimal_name", @parent_id]}
+                  >
+                    {#if @object_id == current_user_id(@__context__) || @subject_id == current_user_id(@__context__)}
+                      {l("You")}
+                    {#else}
+                      {@profile_name || @character_username}
+                    {/if}
+                  </LinkLive>
+                  {if @verb == "React", do: l("reacted to this activity"), else: l("liked this activity")}
+                </div>
+              {#match _}
+                <div class="avatar-group -space-x-3">
+                  <Bonfire.UI.Common.AvatarLive
+                    parent_id={["sm", @activity_component_id || @activity_id]}
+                    user_id={@profile_id}
+                    src={@profile_media}
+                    title={@profile_name || @character_username}
+                    class="h-6 w-6 rounded-full"
+                  />
+                  {#if @subjects_more != []}
+                    {#for {subject, idx} <- Enum.with_index(@subjects_more)}
+                      {#if idx < 2}
+                        <Bonfire.UI.Common.AvatarLive
+                          parent_id={["sm", @activity_component_id || @activity_id, idx]}
+                          user_id={id(subject)}
+                          src={nil}
+                          title={e(subject, :profile, :name, nil)}
+                          class="h-6 w-6 rounded-full"
+                        />
+                      {/if}
+                    {/for}
+                  {/if}
+                </div>
+                <div class="text-sm text-base-content/70">
+                  <LinkLive
+                    to={@path}
+                    opts={"data-id": "subject_name"}
+                    parent_id={["subject_minimal_name", @parent_id]}
+                    class="link link-hover font-semibold"
+                  >
+                    {#if @object_id == current_user_id(@__context__)}
+                      {l("you")}
+                    {#else}
+                      {@profile_name || @character_username}
+                    {/if}
+                  </LinkLive>
+                  {#case length(@subjects_more)}
+                    {#match 0}
+                    {#match n}
+                      {lp("and %{number} other", "and %{number} others", n, number: n)}
+                  {/case}
+                  {if @verb == "React", do: l("reacted to this activity"), else: l("liked this activity")}
+                </div>
+            {/case}
           </div>
         </div>
       {#elseif @verb == "Follow"}
@@ -420,14 +538,27 @@
             <#Icon iconify="lucide:refresh-cw" class="w-5 h-5 text-success" />
 
             <div class="flex-1 flex gap-2">
-              <div class="absolute left-[44px] top-[56px] z-[99]">
+              <div class="avatar-group -space-x-3">
                 <Bonfire.UI.Common.AvatarLive
-                  parent_id={["sm_absolute", @activity_component_id || @activity_id]}
+                  parent_id={["sm", @activity_component_id || @activity_id]}
                   user_id={@profile_id}
                   src={@profile_media}
-                  title={@profile_name}
+                  title={@profile_name || @character_username}
                   class="h-7 w-7 rounded-full"
                 />
+                {#if @subjects_more != []}
+                  {#for {subject, idx} <- Enum.with_index(@subjects_more)}
+                    {#if idx < 2}
+                      <Bonfire.UI.Common.AvatarLive
+                        parent_id={["sm", @activity_component_id || @activity_id, idx]}
+                        user_id={id(subject)}
+                        src={nil}
+                        title={e(subject, :profile, :name, nil)}
+                        class="h-7 w-7 rounded-full"
+                      />
+                    {/if}
+                  {/for}
+                {/if}
               </div>
               <div class="font-medium text-sm text-base-content/70">
                 <LinkLive
@@ -442,6 +573,12 @@
                     {@profile_name || @character_username}
                   {/if}
                 </LinkLive>
+
+                {#case length(@subjects_more)}
+                  {#match 0}
+                  {#match n}
+                    {lp("and %{number} other", "and %{number} others", n, number: n)}
+                {/case}
 
                 {raw(@verb_display)}
               </div>

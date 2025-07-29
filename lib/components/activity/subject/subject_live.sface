@@ -112,8 +112,8 @@
       >
         @{@character_username}
       </LinkLive>
-      <span class="text-sm text-base-content/70">&nbsp;·&nbsp;</span>
 
+      {!-- NOTE: what is ActivityBoundaryLive doing here?
       <Bonfire.UI.Social.ActivityBoundaryLive
         :if={@object_type != Bonfire.Data.Social.Message and @activity_inception != "reply_to" and
           LiveHandler.feed_live_update_many_preload_mode() != :async_actions}
@@ -124,6 +124,8 @@
         class="translate-y-0.5"
         object_boundary={@object_boundary}
       />
+      --}
+
       {#if @showing_within == :annotations and e(@extra_info, :info, "timestamps", nil)}
         <button
           data-role="annotation-checkpoint"
@@ -132,9 +134,25 @@
           class="btn btn-soft btn-accent btn-xs"
         >From {DatesTimes.format_duration(e(@extra_info, :info, "timestamps", "in", ""))} to {DatesTimes.format_duration(e(@extra_info, :info, "timestamps", "out", ""))}</button>
       {#else}
-        <span :if={@verb in ["Annotate", "Replied"]} class="badge badge-accent badge-sm badge-soft">{@verb_display}
-        </span>
+        {#if @verb != "Create"}
+          <span class="text-sm text-[15px] text-base-content/60">
+            {#case @replies_more_count || 0}
+              {#match 0}
+                {@verb_display}
+              {#match n}
+                {lp(
+                  "(and %{number} other) recently %{verb_past_tense}",
+                  "(and %{number} others) recently %{verb_past_tense}",
+                  n,
+                  number: n,
+                  verb_past_tense: @verb_display
+                )}
+            {/case}
+          </span>
+        {/if}
       {/if}
+
+      <span class="text-sm text-base-content/70">&nbsp;·&nbsp;</span>
 
       <Bonfire.UI.Social.Activity.LinkToActivityLive permalink={@permalink}>
         <Bonfire.UI.Social.Activity.DateAgoLive

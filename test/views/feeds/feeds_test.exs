@@ -240,5 +240,39 @@ defmodule Bonfire.UI.Social.Feeds.Test do
       |> assert_has_or_open_browser("[data-id=media_link]")
       |> assert_has("[data-id=media_title]", text: "Web Title Test")
     end
+
+    test "Grouped boost notification shows avatars and names correctly", %{conn: conn, me: me} do
+      alice = fake_user!("alice")
+      bob = fake_user!("bob")
+      charlie = fake_user!("charlie")
+
+      # Alice creates a post
+      {:ok, post} =
+        Posts.publish(
+          current_user: alice,
+          post_attrs: %{post_content: %{html_body: "Boosted post!"}},
+          boundary: "public"
+        )
+
+      # Bob and Charlie boost Alice's post
+      {:ok, _} = Bonfire.Social.Boosts.boost(charlie, post)
+      {:ok, _} = Bonfire.Social.Boosts.boost(bob, post)
+
+      # Visit notifications as Alice
+      conn = conn(user: alice)
+
+      conn
+      |> visit("/notifications")
+      # Check for avatars (should be up to 3)
+      |> assert_has_or_open_browser("[data-role=boosted_by] .avatar-group .avatar", count: 2)
+      # Check for Alice's name in bold (first booster)
+      |> assert_has_or_open_browser("[data-role=boosted_by]",
+        text: bob.profile.name || bob.character.username
+      )
+      # Check for the text 'and X others boosted your post'
+      |> assert_has_or_open_browser("[data-role=boosted_by]",
+        text: "and 1 other boosted your activity"
+      )
+    end
   end
 end

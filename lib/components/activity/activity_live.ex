@@ -869,6 +869,8 @@ defmodule Bonfire.UI.Social.ActivityLive do
                   object_id={id(e(component_assigns, :object, nil) || @object)}
                   subject_id={e(component_assigns, :subject_id, nil) ||
                     e(@activity, :subject_id, nil)}
+                  subjects_more={e(component_assigns, :subjects_more, [])}
+                  replies_more_count={e(@activity, :replies_more_count, 0)}
                   subject_peered={e(component_assigns, :character, :peered, nil) || e(@activity, :subject, :character, :peered, nil)}
                   object_boundary={@object_boundary}
                   object_type={e(component_assigns, :object_type, @object_type)}
@@ -1106,6 +1108,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
        %{
          verb: verb,
          subject_id: e(activity, :subject_id, nil),
+         subjects_more: e(activity, :subjects_more, []),
          profile: e(activity, :subject, :profile, nil),
          character: e(activity, :subject, :character, nil)
        }}
@@ -1121,6 +1124,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
        %{
          verb: verb,
          subject_id: e(activity, :subject_id, nil),
+         subjects_more: e(activity, :subjects_more, []),
          profile: e(activity, :subject, :profile, nil),
          character: e(activity, :subject, :character, nil)
        }}
@@ -1135,6 +1139,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
   #          # activity: repo().maybe_preload(activity, subject: [:character]),
   #          verb: verb,
   #          subject_id: e(activity, :subject_id, nil),
+  #          subjects_more: e(activity, :subjects_more, []),
   #          profile: e(activity, :subject, :profile, nil),
   #          character: e(activity, :subject, :character, nil)
   #        }}
@@ -1149,6 +1154,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
          # activity: repo().maybe_preload(activity, subject: [:character]),
          verb: verb,
          subject_id: e(activity, :subject_id, nil),
+         subjects_more: e(activity, :subjects_more, []),
          profile: e(activity, :subject, :profile, nil),
          character: e(activity, :subject, :character, nil)
        }}
@@ -2206,6 +2212,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
              hide_actions: true
            }}
       end)
+
     # preview_header ++ preview_components WIP temp removed to find a better way to show preview_header
     preview_components
   end

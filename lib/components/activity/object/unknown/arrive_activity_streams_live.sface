@@ -1,4 +1,3 @@
-
 {#if @showing_within == :smart_input}
   <div class="">
     <div class="flex badge badge-neutral items-center gap-2 font-semibold">
@@ -22,7 +21,7 @@
       <div class="flex-shrink-0">
         <#Icon iconify="material-symbols:location-on" class="w-6 h-6 text-primary" />
       </div>
-      
+
       <div class="flex-1">
         <div class="font-medium text-base-content">
           {#case e(@json, "location", "name", nil) || e(@json, "location", "pointer", :name, nil)}
@@ -32,7 +31,7 @@
               {l("Arrived in %{location}", location: location_name)}
           {/case}
         </div>
-        
+
         <!-- {#if e(@json, "published", nil) || e(@json, "updated", nil)}
           <div class="flex items-center gap-2 text-sm text-base-content/70 mb-2">
             <#Icon iconify="ph:calendar-blank" class="w-4 h-4" />

@@ -16,6 +16,7 @@ defmodule Bonfire.UI.Social.FeedsFilters.Test do
     Tesla.Mock.mock_global(fn env ->
       ActivityPub.Test.HttpRequestMock.request(env)
     end)
+
     :ok
   end
 

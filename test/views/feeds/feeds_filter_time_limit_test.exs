@@ -162,6 +162,7 @@ defmodule Bonfire.UI.Social.FeedsFilterTimeLimit.Test do
     |> assert_has_or_open_browser("[data-id=feed] article", text: "Month-old content")
     # Should not show posts older than a month
     |> refute_has_or_open_browser("[data-id=feed] article", text: "Post from 60 days ago")
+
     # |> assert_has("label", text: "Last Month")
   end
 
