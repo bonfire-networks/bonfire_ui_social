@@ -59,7 +59,10 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
   def handle_event("fetch_replies", params, %{assigns: assigns} = socket) do
     ActivityPub.Federator.Fetcher.fetch_replies(
       [pointer: params["id"] || assigns(socket)[:post] || assigns(socket)[:object]],
-      mode: :async
+      # TODO: clean/document these?
+      mode: :async,
+      fetch_collection: :async,
+      fetch_collection_entries: :async
     )
 
     {:noreply, socket}
@@ -68,7 +71,10 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
   def handle_event("fetch_thread", params, socket) do
     ActivityPub.Federator.Fetcher.fetch_thread(
       [pointer: params["id"] || assigns(socket)[:post] || assigns(socket)[:object]],
-      mode: :async
+      # TODO: clean/document these?
+      mode: :async,
+      fetch_collection: :async,
+      fetch_collection_entries: :async
     )
 
     {:noreply,
