@@ -181,6 +181,7 @@
             <Bonfire.UI.Social.Activity.MediaCarouselModalLive
               media_list={@image_list}
               parent_id={@parent_id}
+              modal_id={deterministic_dom_id("media_carousel_modal", @parent_id)}
               showing_within={@showing_within}
               cw={@cw}
               __context__={@__context__}

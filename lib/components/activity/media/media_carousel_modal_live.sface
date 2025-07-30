@@ -1,5 +1,5 @@
 <script src="https://unpkg.com/smoothscroll-polyfill@0.4.4/dist/smoothscroll.js" />
-
+<div class="relative h-full w-full">
 <div
   x-data={"{
         currentIndex: 0,
@@ -30,8 +30,11 @@
             }
         }
     }"}
-  class="flex w-full h-full flex-col"
+  class="flex relative z-20 w-full h-full flex-col"
 >
+<div phx-click="close"
+  phx-target={"[id='#{e(@modal_id, nil)}']"} class="inset-0 z-10 absolute"></div>
+
   <div
     x-on:keydown.right="next"
     x-on:keydown.left="prev"
@@ -46,7 +49,7 @@
     <!-- Prev Button -->
     <button
       x-on:click="prev"
-      class="text-6xl z-10 absolute left-4"
+      class="text-6xl z-20 absolute left-4"
       :aria-disabled="atBeginning"
       :tabindex="atBeginning ? -1 : 0"
       :class="{ 'opacity-50 cursor-not-allowed': atBeginning }"
@@ -161,7 +164,7 @@
     <!-- Next Button -->
     <button
       x-on:click="next"
-      class="text-6xl z-10 absolute right-4"
+      class="text-6xl z-20 absolute right-4"
       :aria-disabled="atEnd"
       :tabindex="atEnd ? -1 : 0"
       :class="{ 'opacity-50 cursor-not-allowed': atEnd }"
@@ -202,4 +205,5 @@
       {/for}
     </div>
   </div>
+</div>
 </div>
