@@ -247,7 +247,7 @@ if previous_end_cursor && query_with_deferred_join?,
                                         <div class="w-full flex items-center justify-center mb-4">
                                           <button
                                             data-id="load_all_time"
-                                            class="normal-case btn btn-soft btn-secondary"
+                                            class="normal-case btn btn-soft btn-primary"
                                             phx-click="set_filter"
                                             phx-value-time_limit={0}
                                             phx-target={@myself}
@@ -263,7 +263,7 @@ if previous_end_cursor && query_with_deferred_join?,
                                         <a
                                           :if={!@hide_guest_fallback}
                                           data-id="load_all_time"
-                                          class="normal-case btn btn-secondary btn-soft btn-wide"
+                                          class="normal-case btn btn-primary btn-soft btn-wide"
                                           href={append_params_uri(
                                             @current_url || @__context__[:current_url],
                                             time_limit: 0,
