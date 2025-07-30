@@ -32,7 +32,7 @@
         <!-- {#for {preset, index} <- Enum.with_index(@presets || [])}
 
         <li><LinkLive to={~p"/feed/#{preset.id}"}>
-            <div class="w-7 h-7 rounded-lg bg-base-content/10 flex items-center place-content-center shadow-lg">
+            <div class="w-7 h-7 rounded-lg bg-primary/10 flex items-center place-content-center">
               <Iconify.iconify icon="mingcute:movie-fill" class="w-4 h-4 text-base-content/70" />
             </div>
             <span class="font-medium text-base-content/80">{preset.id}</span></LinkLive>

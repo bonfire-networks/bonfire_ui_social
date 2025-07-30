@@ -1,7 +1,7 @@
-<div class="p-2 bg-base-content/10">
+<div class="p-2 border-t border-base-content/10">
   <div :if={current_user_id(@__context__)} class="flex flex-1 gap-3">
     <div data-position="bottom" phx-hook="Tooltip" id="layout-dropdown" class="">
-      <label tabindex="0" class="tooltip-button btn btn-ghost btn-sm">
+      <label tabindex="0" class="tooltip-button btn btn-soft btn-primary btn-sm">
         {#if @thread_mode == :flat}
           <#Icon iconify="bi:list" class="w-4 h-4" />
           <span class="hidden lg:block">{l("Linear")}</span>
@@ -51,7 +51,7 @@
     </div>
 
     <div data-position="bottom" phx-hook="Tooltip" id="order_dropdown_thread" class="flex relative">
-      <label tabindex="0" class="tooltip-button btn btn-sm btn-ghost">
+      <label tabindex="0" class="tooltip-button btn btn-sm btn-soft btn-primary">
         {#case {@sort_by, @sort_order}}
           {#match {nil, :desc}}
             <span class="flex items-center">

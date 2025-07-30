@@ -1,5 +1,5 @@
 <div class="w-full">
-  <div :if={current_user_id(@__context__)} class="flex gap-3 flex-1 w-full">
+  <div :if={current_user_id(@__context__)} class="flex gap-2 flex-1 w-full">
     <StatelessComponent
       :if={@show_sort_dropdown}
       module={maybe_component(Bonfire.UI.Social.SortItemsDropdownLive)}
@@ -7,11 +7,11 @@
       event_target={@event_target}
     />
 
-    <div data-position="bottom" phx-hook="Tooltip" class="relative" id="filter_origin_feed">
+    <div class="flex-1" data-position="bottom" phx-hook="Tooltip" class="relative flex-1" id="filter_origin_feed">
       <label
         tabindex="0"
         class={
-          "tooltip-button btn btn-sm btn-ghost w-full capitalize",
+          "tooltip-button btn btn-sm btn-soft btn-primary w-full capitalize",
           "opacity-50 cursor-not-allowed": @preset_has_fixed_origin
         }
       >
