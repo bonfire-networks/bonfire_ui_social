@@ -36,7 +36,7 @@ defmodule Bonfire.UI.Social.FeedsLive do
   )
 
   declare_nav_link(l("Notifications"),
-    icon: "carbon:notification-filled",
+    icon: "ph:bell-duotone",
     page: "notifications",
     href: "/notifications",
     badge: [
@@ -65,8 +65,8 @@ defmodule Bonfire.UI.Social.FeedsLive do
   #       # #  href: &nav_link_discussions/1,
   #       #  icon: "ri:discuss-line"},
   #       {l("Bookmarks"),
-  #        page: "bookmarks", href: "/feed/bookmarks", icon: "lucide:bookmark-filled"},
-  #       {l("Likes"), page: "likes", href: "/feed/likes", icon: "mingcute:fire-line"}
+  #        page: "bookmarks", href: "/feed/bookmarks", icon: "ph:bookmark-duotone-filled"},
+  #       {l("Likes"), page: "likes", href: "/feed/likes", icon: "ph:fire-duotone"}
   #     ]
   #   }
   # )

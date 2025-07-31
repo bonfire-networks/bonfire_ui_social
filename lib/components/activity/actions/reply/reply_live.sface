@@ -19,7 +19,7 @@
       >
         {!-- x-on:click={"show_smart_input('#{l("Reply")}')"} --}
         <#Icon
-          iconify="lucide:message-circle"
+          iconify="ph:chat-circle-duotone"
           class="w-5 h-5 group-hover:text-primary text-base-content/50"
         />
         <!-- "fill-base-content group-hover:fill-base-300": @reply_btn_text -->
@@ -49,7 +49,7 @@
           data-id="action_reply"
           title={l("You can't reply to this activity")}
         >
-          <#Icon iconify="lucide:message-circle" class="w-5 h-5" />
+          <#Icon iconify="ph:chat-circle-duotone" class="w-5 h-5" />
           <span class={if !@cannot_reply_text, do: "sr-only"}>{@cannot_reply_text || l("Cannot Reply")}</span>
         </button>
         <span

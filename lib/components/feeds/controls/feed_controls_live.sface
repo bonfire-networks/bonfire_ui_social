@@ -21,7 +21,7 @@
       <button
         phx-click={JS.toggle(to: "#more_filters")}
         class="btn btn-sm btn-soft btn-square btn-primary"
-      ><#Icon iconify="codicon:settings" class="w-5 h-5" /></button>
+      ><#Icon iconify="ph:sliders-horizontal-duotone" class="w-5 h-5" /></button>
     </div>
   </div>
 

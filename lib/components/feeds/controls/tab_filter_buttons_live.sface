@@ -129,7 +129,7 @@
         phx-value-tab_mode="true"
         phx-target={@event_target}
       >
-        <#Icon iconify="lucide:refresh-cw" class="w-4 h-4" />
+        <#Icon iconify="ph:rocket-launch" class="w-4 h-4" />
         <span class="sr-only">{l("Boosts")}</span>
         <div class="filters_tabbed" />
       </button>

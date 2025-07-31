@@ -1,7 +1,7 @@
 <script src="https://unpkg.com/smoothscroll-polyfill@0.4.4/dist/smoothscroll.js" />
 <div class="relative h-full w-full">
-<div
-  x-data={"{
+  <div
+    x-data={"{
         currentIndex: 0,
         totalImages: #{length(@media_list)},
         get atBeginning() { return this.currentIndex === 0; },
@@ -30,180 +30,179 @@
             }
         }
     }"}
-  class="flex relative z-20 w-full h-full flex-col"
->
-<div phx-click="close"
-  phx-target={"[id='#{e(@modal_id, nil)}']"} class="inset-0 z-10 absolute"></div>
-
-  <div
-    x-on:keydown.right="next"
-    x-on:keydown.left="prev"
-    x-on:keydown.escape="$dispatch('close')"
-    tabindex="0"
-    role="region"
-    aria-labelledby="carousel-label"
-    class="flex space-x-6 h-full items-center"
+    class="flex relative z-20 w-full h-full flex-col"
   >
-    <h2 id="carousel-label" class="sr-only" hidden>{l("Media carousel")}</h2>
+    <div phx-click="close" phx-target={"[id='#{e(@modal_id, nil)}']"} class="inset-0 z-10 absolute" />
 
-    <!-- Prev Button -->
-    <button
-      x-on:click="prev"
-      class="text-6xl z-20 absolute left-4"
-      :aria-disabled="atBeginning"
-      :tabindex="atBeginning ? -1 : 0"
-      :class="{ 'opacity-50 cursor-not-allowed': atBeginning }"
-    >
-      <span aria-hidden="true">
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          fill="none"
-          viewBox="0 0 24 24"
-          stroke-width="1.5"
-          stroke="currentColor"
-          class="w-12 h-12 text-white drop-shadow-lg"
-        >
-          <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 19.5 8.25 12l7.5-7.5" />
-        </svg>
-      </span>
-      <span class="sr-only">{l("Previous image")}</span>
-    </button>
-
-    <span id="carousel-content-label" class="sr-only" hidden>{l("Media content")}</span>
-
-    <ul
-      x-ref="slider"
+    <div
+      x-on:keydown.right="next"
+      x-on:keydown.left="prev"
+      x-on:keydown.escape="$dispatch('close')"
       tabindex="0"
-      role="listbox"
-      aria-labelledby="carousel-content-label"
-      class="flex w-full h-full snap-x snap-mandatory overflow-x-hidden m-0"
+      role="region"
+      aria-labelledby="carousel-label"
+      class="flex space-x-6 h-full items-center"
     >
-      {#for {%{} = m, counter} <- Enum.with_index(@media_list)}
-        <li
-          class="flex w-full h-full shrink-0 snap-start flex-col items-center justify-center"
-          role="option"
-        >
-          <div class="h-full w-full relative">
-            {#if @cw || @showing_within == :flags ||
-                Settings.get([Bonfire.UI.Social.Activity.MediaLive, :hide], false, @__context__)}
-              <div
-                x-show={"currentIndex === #{counter}"}
-                id={deterministic_dom_id("carousel-sensitive-overlay", id(m), "media", @parent_id)}
-              >
-                <div class="absolute inset-0 flex items-center cursor-pointer place-content-center justify-center z-[60]">
+      <h2 id="carousel-label" class="sr-only" hidden>{l("Media carousel")}</h2>
+
+      <!-- Prev Button -->
+      <button
+        x-on:click="prev"
+        class="text-6xl z-20 absolute left-4"
+        :aria-disabled="atBeginning"
+        :tabindex="atBeginning ? -1 : 0"
+        :class="{ 'opacity-50 cursor-not-allowed': atBeginning }"
+      >
+        <span aria-hidden="true">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke-width="1.5"
+            stroke="currentColor"
+            class="w-12 h-12 text-white drop-shadow-lg"
+          >
+            <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 19.5 8.25 12l7.5-7.5" />
+          </svg>
+        </span>
+        <span class="sr-only">{l("Previous image")}</span>
+      </button>
+
+      <span id="carousel-content-label" class="sr-only" hidden>{l("Media content")}</span>
+
+      <ul
+        x-ref="slider"
+        tabindex="0"
+        role="listbox"
+        aria-labelledby="carousel-content-label"
+        class="flex w-full h-full snap-x snap-mandatory overflow-x-hidden m-0"
+      >
+        {#for {%{} = m, counter} <- Enum.with_index(@media_list)}
+          <li
+            class="flex w-full h-full shrink-0 snap-start flex-col items-center justify-center"
+            role="option"
+          >
+            <div class="h-full w-full relative">
+              {#if @cw || @showing_within == :flags ||
+                  Settings.get([Bonfire.UI.Social.Activity.MediaLive, :hide], false, @__context__)}
+                <div
+                  x-show={"currentIndex === #{counter}"}
+                  id={deterministic_dom_id("carousel-sensitive-overlay", id(m), "media", @parent_id)}
+                >
+                  <div class="absolute inset-0 flex items-center cursor-pointer place-content-center justify-center z-[60]">
+                    <button
+                      phx-click={JS.hide(
+                        to: "#" <> deterministic_dom_id("carousel-sensitive-overlay", id(m), "media", @parent_id),
+                        transition: "fade-out"
+                      )
+                      |> JS.hide(
+                        to: "#" <> deterministic_dom_id("carousel-sensitive-backdrop", id(m), "media", @parent_id),
+                        transition: "fade-out"
+                      )
+                      |> JS.show(
+                        to: "#" <> deterministic_dom_id("carousel-hide-sensitive", id(m), "media", @parent_id),
+                        transition: "fade-in"
+                      )}
+                      class="btn z-[9999999999] btn-secondary btn-soft"
+                    >
+                      {l("Sensitive content")}
+                    </button>
+                  </div>
+                </div>
+                <div
+                  x-show="currentIndex === {counter}"
+                  id={deterministic_dom_id("carousel-hide-sensitive", id(m), "media", @parent_id)}
+                  class="hidden"
+                >
                   <button
-                    phx-click={JS.hide(
+                    phx-click={JS.show(
                       to: "#" <> deterministic_dom_id("carousel-sensitive-overlay", id(m), "media", @parent_id),
                       transition: "fade-out"
                     )
-                    |> JS.hide(
+                    |> JS.show(
                       to: "#" <> deterministic_dom_id("carousel-sensitive-backdrop", id(m), "media", @parent_id),
                       transition: "fade-out"
                     )
-                    |> JS.show(
+                    |> JS.hide(
                       to: "#" <> deterministic_dom_id("carousel-hide-sensitive", id(m), "media", @parent_id),
                       transition: "fade-in"
                     )}
-                    class="btn z-[9999999999] btn-secondary btn-soft"
-                  >
-                    {l("Sensitive content")}
-                  </button>
+                    class="absolute top-3 right-3 btn z-50"
+                  >{l("Hide")}</button>
+                </div>
+                <div
+                  x-show="currentIndex === {counter}"
+                  id={deterministic_dom_id("carousel-sensitive-backdrop", id(m), "media", @parent_id)}
+                  class="absolute inset-0 backdrop-blur-2xl z-50 cursor-pointer rounded-md"
+                />
+              {/if}
+
+              <div
+                class="h-full flex items-center justify-center"
+                data-media-type-video={String.starts_with?(m.media_type || "", "video")}
+              >
+                <Bonfire.UI.Social.Activity.RemoteMediaLive
+                  media={m}
+                  image_css={grayscale: @showing_within == :flags}
+                  parent_id={@parent_id}
+                />
+              </div>
+
+              <!-- Caption overlay -->
+              <div class="absolute z-20 bottom-0 left-0 bg-black/50 right-0">
+                <div class="text-center text-sm p-4 text-white/90 mx-auto">
+                  {Bonfire.Files.Media.media_label(m) || l("Sorry, no caption provided by author")}
+                  <p class="text-sm mt-1">{Bonfire.Files.Media.description(m.metadata)}</p>
                 </div>
               </div>
-              <div
-                x-show="currentIndex === {counter}"
-                id={deterministic_dom_id("carousel-hide-sensitive", id(m), "media", @parent_id)}
-                class="hidden"
-              >
-                <button
-                  phx-click={JS.show(
-                    to: "#" <> deterministic_dom_id("carousel-sensitive-overlay", id(m), "media", @parent_id),
-                    transition: "fade-out"
-                  )
-                  |> JS.show(
-                    to: "#" <> deterministic_dom_id("carousel-sensitive-backdrop", id(m), "media", @parent_id),
-                    transition: "fade-out"
-                  )
-                  |> JS.hide(
-                    to: "#" <> deterministic_dom_id("carousel-hide-sensitive", id(m), "media", @parent_id),
-                    transition: "fade-in"
-                  )}
-                  class="absolute top-3 right-3 btn z-50"
-                >{l("Hide")}</button>
-              </div>
-              <div
-                x-show="currentIndex === {counter}"
-                id={deterministic_dom_id("carousel-sensitive-backdrop", id(m), "media", @parent_id)}
-                class="absolute inset-0 backdrop-blur-2xl z-50 cursor-pointer rounded-md"
-              />
-            {/if}
-
-            <div
-              class="h-full flex items-center justify-center"
-              data-media-type-video={String.starts_with?(m.media_type || "", "video")}
-            >
-              <Bonfire.UI.Social.Activity.RemoteMediaLive
-                media={m}
-                image_css={grayscale: @showing_within == :flags}
-                parent_id={@parent_id}
-              />
             </div>
+          </li>
+        {/for}
+      </ul>
 
-            <!-- Caption overlay -->
-            <div class="absolute z-20 bottom-0 left-0 bg-black/50 right-0">
-              <div class="text-center text-sm p-4 text-white/90 mx-auto">
-                {Bonfire.Files.Media.media_label(m) || l("Sorry, no caption provided by author")}
-                <p class="text-sm mt-1">{Bonfire.Files.Media.description(m.metadata)}</p>
-              </div>
-            </div>
-          </div>
-        </li>
-      {/for}
-    </ul>
-
-    <!-- Next Button -->
-    <button
-      x-on:click="next"
-      class="text-6xl z-20 absolute right-4"
-      :aria-disabled="atEnd"
-      :tabindex="atEnd ? -1 : 0"
-      :class="{ 'opacity-50 cursor-not-allowed': atEnd }"
-    >
-      <span aria-hidden="true">
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          fill="none"
-          viewBox="0 0 24 24"
-          stroke-width="1.5"
-          stroke="currentColor"
-          class="w-12 h-12 text-white drop-shadow-lg"
-        >
-          <path stroke-linecap="round" stroke-linejoin="round" d="m8.25 4.5 7.5 7.5-7.5 7.5" />
-        </svg>
-      </span>
-      <span class="sr-only">{l("Next image")}</span>
-    </button>
-  </div>
-
-  <!-- Image counter and dots navigation -->
-  <div class="absolute bottom-20 left-0 right-0 z-30">
-    <div class="sr-only text-center">
-      <span class="text-white/90 text-sm drop-shadow-lg bg-black/30 px-2 py-1 rounded">
-        <span x-text="currentIndex + 1" /> {l("of")} <span x-text="totalImages" />
-      </span>
+      <!-- Next Button -->
+      <button
+        x-on:click="next"
+        class="text-6xl z-20 absolute right-4"
+        :aria-disabled="atEnd"
+        :tabindex="atEnd ? -1 : 0"
+        :class="{ 'opacity-50 cursor-not-allowed': atEnd }"
+      >
+        <span aria-hidden="true">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke-width="1.5"
+            stroke="currentColor"
+            class="w-12 h-12 text-white drop-shadow-lg"
+          >
+            <path stroke-linecap="round" stroke-linejoin="round" d="m8.25 4.5 7.5 7.5-7.5 7.5" />
+          </svg>
+        </span>
+        <span class="sr-only">{l("Next image")}</span>
+      </button>
     </div>
 
-    <!-- Dots navigation -->
-    <div class="flex justify-center mt-2 gap-1">
-      {#for {_, index} <- Enum.with_index(@media_list)}
-        <button
-          x-on:click="goTo({index})"
-          :class={"currentIndex === #{index} ? 'bg-white' : 'bg-white/50'"}
-          class="w-2 h-2 rounded-full transition-colors"
-          aria-label={l("Go to image") <> " " <> to_string(index + 1)}
-        />
-      {/for}
+    <!-- Image counter and dots navigation -->
+    <div class="absolute bottom-20 left-0 right-0 z-30">
+      <div class="sr-only text-center">
+        <span class="text-white/90 text-sm drop-shadow-lg bg-black/30 px-2 py-1 rounded">
+          <span x-text="currentIndex + 1" /> {l("of")} <span x-text="totalImages" />
+        </span>
+      </div>
+
+      <!-- Dots navigation -->
+      <div class="flex justify-center mt-2 gap-1">
+        {#for {_, index} <- Enum.with_index(@media_list)}
+          <button
+            x-on:click="goTo({index})"
+            :class={"currentIndex === #{index} ? 'bg-white' : 'bg-white/50'"}
+            class="w-2 h-2 rounded-full transition-colors"
+            aria-label={l("Go to image") <> " " <> to_string(index + 1)}
+          />
+        {/for}
+      </div>
     </div>
   </div>
-</div>
 </div>

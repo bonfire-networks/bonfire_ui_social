@@ -13,32 +13,32 @@
         </span>
       {#match {:num_replies, :desc}}
         <span class="flex items-center">
-          <#Icon iconify="lucide:message-circle" class="lg:hidden block w-4 h-4" />
+          <#Icon iconify="ph:chat-circle-duotone" class="lg:hidden block w-4 h-4" />
           <span class="hidden lg:block">{l("Most replied")}</span>
         </span>
       {#match {:num_replies, :asc}}
         <span class="flex items-center">
-          <#Icon iconify="lucide:message-circle" class="lg:hidden block w-4 h-4" />
+          <#Icon iconify="ph:chat-circle-duotone" class="lg:hidden block w-4 h-4" />
           <span class="hidden lg:block">{l("Least replied")}</span>
         </span>
       {#match {:num_boosts, :desc}}
         <span class="flex items-center">
-          <#Icon iconify="lucide:refresh-cw" class="lg:hidden block w-4 h-4" />
+          <#Icon iconify="ph:rocket-launch-duotone" class="lg:hidden block w-4 h-4" />
           <span class="hidden lg:block">{l("Most boosted")}</span>
         </span>
       {#match {:num_boosts, :asc}}
         <span class="flex items-center">
-          <#Icon iconify="lucide:refresh-cw" class="lg:hidden block w-4 h-4" />
+          <#Icon iconify="ph:rocket-launch-duotone" class="lg:hidden block w-4 h-4" />
           <span class="hidden lg:block">{l("Least boosted")}</span>
         </span>
       {#match {:num_likes, :desc}}
         <span class="flex items-center">
-          <#Icon iconify="mingcute:fire-fill" class="lg:hidden block h-[20px] w-[18px]" />
+          <#Icon iconify="ph:fire-duotone" class="lg:hidden block h-[20px] w-[18px]" />
           <span class="hidden lg:block">{l("Most liked")}</span>
         </span>
       {#match {:num_likes, :asc}}
         <span class="flex items-center">
-          <#Icon iconify="mingcute:fire-fill" class="lg:hidden block h-[20px] w-[18px]" />
+          <#Icon iconify="ph:fire-duotone" class="lg:hidden block h-[20px] w-[18px]" />
           <span class="hidden lg:block">{l("Least liked")}</span>
         </span>
       {#match _}

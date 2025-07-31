@@ -82,7 +82,7 @@
   <div :if={extension_enabled?(:bonfire_ui_reactions, @__context__)} data-scope="boosts">
     <Bonfire.UI.Social.ToggleTypeLive
       label={l("Boosts")}
-      icon="lucide:refresh-cw"
+      icon="ph:rocket-launch-duotone"
       key={:boost}
       field={:activity_types}
       feed_filters={@feed_filters}

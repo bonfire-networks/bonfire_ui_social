@@ -3,13 +3,13 @@
     {#case @feed_name}
       {#match :my}
         <div class="flex items-center gap-2">
-          <#Icon iconify="mingcute:home-4-fill" class="w-5 h-5 text-primary" />
+          <#Icon iconify="ph:house-duotone" class="w-5 h-5 text-primary" />
           <span class="text-sm font-semibold">{l("Following")}</span>
         </div>
         <div class="prose mt-2 text-sm prose-sm">{l("All visible activities by people you follow")}</div>
       {#match :local}
         <div class="flex items-center gap-2">
-          <#Icon iconify="mingcute:campground-fill" class="w-5 h-5 text-primary" />
+          <#Icon iconify="ph:campfire-duotone" class="w-5 h-5 text-primary" />
           <span class="text-sm font-semibold">{l("Local feed")}</span>
         </div>
         <div class="prose mt-2 text-sm prose-sm">{l("All visible activities by users of this instance")}
@@ -36,7 +36,7 @@
         <div class="prose mt-2 text-sm prose-sm">{l("Local or remote activities hand-picked by curators or admins of this instance.")}</div>
       {#match _}
         <div class="flex items-center gap-2">
-          <#Icon iconify="ph:globe" class="w-5 h-5 text-primary" />
+          <#Icon iconify="ph:globe-duotone" class="w-5 h-5 text-primary" />
           <span class="text-sm font-semibold">{l("Public feed")}</span>
         </div>
         <div class="prose mt-2 text-sm prose-sm">Public feed</div>

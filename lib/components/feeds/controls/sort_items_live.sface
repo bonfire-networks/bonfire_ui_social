@@ -42,13 +42,13 @@
     >
       {#case e(@feed_filters, :sort_by, nil)}
         {#match :num_replies}
-          <#Icon iconify="lucide:message-circle" class="w-5 h-5 stroke-1 fill-base-content/50" />
+          <#Icon iconify="ph:chat-circle-duotone" class="w-5 h-5 stroke-1 fill-base-content/50" />
           <span>{l("Sort by amount of replies")}</span>
         {#match :num_boosts}
-          <#Icon iconify="lucide:refresh-cw" class="w-5 h-5 stroke-1 fill-base-content/50" />
+          <#Icon iconify="ph:rocket-launch" class="w-5 h-5 stroke-1 fill-base-content/50" />
           <span>{l("Sort by amount of boosts")}</span>
         {#match :num_likes}
-          <#Icon iconify="mingcute:fire-line" class="w-5 h-5" />
+          <#Icon iconify="ph:fire-duotone" class="w-5 h-5" />
           <span>{l("Sort by amount of likes")}</span>
         {#match _}
           <#Icon iconify="mdi:order-alphabetical-ascending" class="w-5 h-5 text-base-content/70" />
@@ -91,7 +91,7 @@
         "border-base-content/5 active !text-base-content/100": e(@feed_filters, :sort_by, nil) == :num_replies
       }
     >
-      <#Icon iconify="lucide:message-circle" class="w-5 h-5 stroke-1 fill-base-content/50" />
+      <#Icon iconify="ph:chat-circle-duotone" class="w-5 h-5 stroke-1 fill-base-content/50" />
       <span class="sr-only">{l("Most replied")}</span>
     </a>
   </li>
@@ -110,7 +110,7 @@
         "border-base-content/5 active !text-base-content/100": e(@feed_filters, :sort_by, nil) == :num_boosts
       }
     >
-      <#Icon iconify="lucide:refresh-cw" class="w-5 h-5 stroke-1 fill-base-content/50" />
+      <#Icon iconify="ph:rocket-launch" class="w-5 h-5 stroke-1 fill-base-content/50" />
       <span class="sr-only">{l("Most boosted")}</span>
     </a>
   </li>
@@ -129,7 +129,7 @@
         "border-base-content/5 active !text-base-content/100": e(@feed_filters, :sort_by, nil) == :num_likes
       }
     >
-      <#Icon iconify="mingcute:fire-fill" class="w-5 h-5" />
+      <#Icon iconify="ph:fire-fill" class="w-5 h-5" />
       <span class="sr-only">{l("Most liked")}</span>
     </a>
   </li>

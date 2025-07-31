@@ -28,7 +28,12 @@
   </div>
 </form> --}
 
-<div data-position="bottom" phx-hook="Tooltip" id="time_control_dropdown" class="flex relative flex-1">
+<div
+  data-position="bottom"
+  phx-hook="Tooltip"
+  id="time_control_dropdown"
+  class="flex relative flex-1"
+>
   <label tabindex="0" class="tooltip-button btn w-full btn-sm btn-soft btn-primary capitalize">
     {Enum.find_value(default_options(), fn {v, name} ->
       if v == @current_value, do: name, else: nil

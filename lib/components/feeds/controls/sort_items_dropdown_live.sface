@@ -15,22 +15,27 @@
       </a>
     {/if}
   </div>
-  <div data-position="bottom-end" phx-hook="Tooltip" id="order_dropdown_feed" class="flex w-full relative">
+  <div
+    data-position="bottom-end"
+    phx-hook="Tooltip"
+    id="order_dropdown_feed"
+    class="flex w-full relative"
+  >
     <label tabindex="0" class="tooltip-button w-full btn btn-sm btn-soft btn-primary">
       {#case e(@feed_filters, :sort_by, nil)}
         {#match :num_replies}
           <span class="flex items-center">
-            <#Icon iconify="lucide:message-circle" class="lg:hidden block w-4 h-4" />
+            <#Icon iconify="ph:chat-circle-duotone" class="lg:hidden block w-4 h-4" />
             <span class="hidden lg:block">{if e(@feed_filters, :sort_order, nil) == :asc, do: l("Least replied"), else: l("Most replied")}</span>
           </span>
         {#match :num_boosts}
           <span class="flex items-center">
-            <#Icon iconify="lucide:refresh-cw" class="lg:hidden block w-4 h-4" />
+            <#Icon iconify="ph:rocket-launch-duotone" class="lg:hidden block w-4 h-4" />
             <span class="hidden lg:block">{if e(@feed_filters, :sort_order, nil) == :asc, do: l("Least boosted"), else: l("Most boosted")}</span>
           </span>
         {#match :num_likes}
           <span class="flex items-center">
-            <#Icon iconify="mingcute:fire-fill" class="lg:hidden block h-[20px] w-[18px]" />
+            <#Icon iconify="ph:fire-duotone" class="lg:hidden block h-[20px] w-[18px]" />
             <span class="hidden lg:block">{if e(@feed_filters, :sort_order, nil) == :asc, do: l("Least liked"), else: l("Most liked")}</span>
           </span>
         {#match _}

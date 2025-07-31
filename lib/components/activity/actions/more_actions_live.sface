@@ -9,8 +9,14 @@
 >
   {!-- phx-viewport-bottom={JS.add_class("!dropdown-top", to: "#more-menu-#{id(@activity_component_id || @activity)}")} --}
 
-  <button tabindex="0" class="tooltip-button btn btn-ghost btn-circle btn-sm">
-    <#Icon solid="DotsVertical" class="w-[18px] h-[18px] md:w-4 md:h-4 text-base-content/50" />
+  <button
+    tabindex="0"
+    class="tooltip-button btn btn-ghost group hover:bg-primary/10 btn-circle btn-sm transition-transform duration-150 ease-out hover:scale-105 active:scale-95 hover:-translate-y-0.5"
+  >
+    <#Icon
+      iconify="ph:dots-three-outline-vertical-duotone"
+      class="w-[18px] h-[18px] group-hover:text-primary md:w-4 md:h-4 text-base-content/50"
+    />
     <span class="sr-only">{l("More actions")}</span>
   </button>
   <ul

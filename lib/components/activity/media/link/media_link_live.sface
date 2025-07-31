@@ -75,7 +75,7 @@
               {#match provider when is_binary(provider) and provider != media_label}
                 <div data-id="media_author" class="text-xs">
                   <div class="flex items-center gap-2">
-                    <#Icon iconify="ph:globe" class="w-4 h-4 text-primary" />
+                    <#Icon iconify="ph:globe-duotone" class="w-4 h-4 text-primary" />
                     <span class="capitalize text-primary">{provider}</span>
                   </div>
                 </div>

@@ -7,7 +7,13 @@
       event_target={@event_target}
     />
 
-    <div class="flex-1" data-position="bottom" phx-hook="Tooltip" class="relative flex-1" id="filter_origin_feed">
+    <div
+      class="flex-1"
+      data-position="bottom"
+      phx-hook="Tooltip"
+      class="relative flex-1"
+      id="filter_origin_feed"
+    >
       <label
         tabindex="0"
         class={
@@ -22,7 +28,7 @@
                 {#match :remote}
                   <#Icon iconify="streamline:planet" class="w-4 h-4" />
                 {#match :local}
-                  <#Icon iconify="mingcute:campground-fill" class="w-4 h-4" />
+                  <#Icon iconify="ph:campfire-duotone" class="w-4 h-4" />
                 {#match _}
                   <#Icon iconify="mingcute:compass-fill" class="w-4 h-4" />
               {/case}
@@ -31,11 +37,11 @@
                 {#match [:remote]}
                   <#Icon iconify="streamline:planet" class="w-4 h-4" />
                 {#match [:local]}
-                  <#Icon iconify="mingcute:campground-fill" class="w-4 h-4" />
+                  <#Icon iconify="ph:campfire-duotone" class="w-4 h-4" />
                 {#match :remote}
                   <#Icon iconify="streamline:planet" class="w-4 h-4" />
                 {#match :local}
-                  <#Icon iconify="mingcute:campground-fill" class="w-4 h-4" />
+                  <#Icon iconify="ph:campfire-duotone" class="w-4 h-4" />
                 {#match _}
                   <#Icon iconify="mingcute:compass-fill" class="w-4 h-4" />
               {/case}
@@ -128,7 +134,7 @@
     <!-- <div :if={@show_circles_button} class="relative" id="filter_circles_feed">
       <label tabindex="0" class="btn w-full btn-sm btn-ghost capitalize" phx-click={JS.toggle(to: "#open_circles")}>
         <span class="hidden lg:flex">{l("By circles")}</span>
-        <span class="lg:hidden"><#Icon iconify="rivet-icons:circle" class="w-4 h-4" /></span>
+        <span class="lg:hidden"><#Icon iconify="ph:circle-duotone" class="w-4 h-4" /></span>
         <span>{case e(@feed_filters, :subject_circles, []) do
             [] -> nil
             circles -> "(#{length(circles)})"

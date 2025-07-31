@@ -22,7 +22,7 @@
     opts={"data-id": "subject_avatar"}
     parent_id={["subject_avatar", @parent_id]}
     class={
-      "absolute -ml-[4rem] font-semibold text-base-content hover:underline z-50",
+      "absolute -ml-[3.7rem] font-semibold text-base-content hover:underline z-50",
       "!relative !ml-0 ": @viewing_main_object,
       "!-ml-[2.5rem]": @__context__[:ui_compact] && !@viewing_main_object
     }
