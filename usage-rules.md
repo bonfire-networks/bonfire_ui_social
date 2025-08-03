@@ -14,6 +14,7 @@ Bonfire.UI.Social uses two types of Surface components:
 - Components are organized by feature domain (activity, feeds, threads, etc.)
 - Each component has an `.ex` file and often a corresponding `.sface` template
 - Complex components may have associated CSS files and JavaScript hooks
+- Native app support is available via conditional loading
 
 ### LiveHandlers
 Shared event handling logic is extracted into LiveHandler modules to keep components DRY:
@@ -40,6 +41,27 @@ end
 # For stateless components  
 defmodule Bonfire.UI.Social.MyStatelessLive do
   use Bonfire.UI.Common.Web, :stateless_component
+end
+
+# For native app support (optional)
+defmodule Bonfire.UI.Social.MyNativeComponentLive do
+  use Bonfire.UI.Common.Web, :stateful_component
+  use_if_enabled(Bonfire.UI.Common.Web.Native, :stateful_component)
+end
+```
+
+### LiveHandler Modules
+
+Create shared event handlers:
+
+```elixir
+defmodule MyApp.MyLiveHandler do
+  use Bonfire.UI.Common.Web, :live_handler
+  
+  def handle_event("my_event", params, socket) do
+    # Shared logic here
+    {:noreply, socket}
+  end
 end
 ```
 
@@ -74,14 +96,16 @@ The main component for rendering activities (posts, likes, follows, etc.):
   activity={activity}
   feed_id={@feed_id}
   showing_within={:feed}
+  loading={@feed_loading}
 />
 ```
 
 Key props:
 - `activity` - The activity struct
 - `feed_id` - ID of the containing feed
-- `showing_within` - Context (`:feed`, `:thread`, `:profile`)
+- `showing_within` - Context (`:feed`, `:thread`, `:profile`, `:deferred`)
 - `viewing_main_object` - Whether this is the main object view
+- `loading` - Controls deferred loading state
 
 ### FeedLive
 Container component for activity feeds:
@@ -94,6 +118,8 @@ Container component for activity feeds:
   feed_id={@feed_id}
   selected_tab={@selected_tab}
   hide_filters={false}
+  loading={@loading}
+  reloading={@reloading}
 />
 ```
 
@@ -102,6 +128,7 @@ Key props:
 - `feed_id` - Custom feed ID
 - `page_info` - Pagination info
 - `hide_filters` - Show/hide feed controls
+- `loading/reloading` - Loading states
 
 ### ThreadLive
 Displays threaded discussions:
@@ -114,6 +141,45 @@ Displays threaded discussions:
   thread_mode={:replies}
   max_depth={3}
 />
+```
+
+### ObjectThreadLive
+Combined object display with thread:
+
+```elixir
+<StatefulComponent
+  module={maybe_component(Bonfire.UI.Social.ObjectThreadLive, @__context__)}
+  object={@object}
+  thread_mode={@thread_mode}
+  permalink={@permalink}
+/>
+```
+
+## Stream Management
+
+FeedLive and ThreadLive use LiveView streams for efficient list management:
+
+```elixir
+# In component mount/update
+socket
+|> stream_configure(:feed, dom_id: &stream_id("fa", &1))
+|> stream(:feed, activities, reset: true)
+
+# For threads with multiple streams
+socket  
+|> stream_configure(:replies, dom_id: &component_id(&1, "flat"))
+|> stream(:replies, replies)
+|> stream_configure(:threaded_replies, dom_id: &component_id(&1, "nested"))
+|> stream(:threaded_replies, nested_replies)
+```
+
+In templates:
+```surface
+<div id={"stream_#{@id}"} phx-update="stream">
+  {#for {dom_id, activity} <- @streams.feed}
+    <ActivityLive id={dom_id} activity={activity} />
+  {/for}
+</div>
 ```
 
 ## Feed Patterns
@@ -147,7 +213,21 @@ defmodule MyApp.MyFeedLive do
   def handle_event("load_more" = event, params, socket) do
     Bonfire.Social.Feeds.LiveHandler.handle_event(event, params, socket)
   end
+  
+  def handle_event("preload_more", params, socket) do
+    # Preload for infinite scroll
+    Bonfire.Social.Feeds.LiveHandler.handle_event("preload_more", params, socket)
+  end
 end
+```
+
+### Deferred Loading
+
+Optimize initial page load:
+
+```elixir
+# Show placeholder while loading
+showing_within={if @feed_loading, do: :deferred, else: :feed}
 ```
 
 ## Activity Actions
@@ -186,6 +266,40 @@ Renders various media types with appropriate viewers:
 ```
 
 Supported types: `:image`, `:video`, `:audio`, `:pdf`, `:link`
+
+## Component Communication
+
+### Updating Components
+
+Use `send_update/3` for targeted updates:
+
+```elixir
+# Update specific component
+send_update(ActivityLive, 
+  id: "activity-#{activity_id}", 
+  activity: updated_activity,
+  updated: true
+)
+
+# Delayed update
+send_update_after(self(), {:refresh, id}, 1000)
+```
+
+### JavaScript Interop
+
+Use Phoenix.LiveView.JS for client-side interactions:
+
+```elixir
+import Phoenix.LiveView.JS
+
+# In templates
+<button phx-click={JS.toggle(to: "#details")}>
+  Toggle Details
+</button>
+
+# Dispatch custom events
+<div phx-click={JS.dispatch("custom-event", detail: %{id: @id})}>
+```
 
 ## Routes Integration
 
@@ -240,30 +354,20 @@ Components automatically subscribe to relevant topics:
 # In mount or handle_params
 PubSub.subscribe("feed:#{feed_id}", socket)
 
-# Handle incoming activities
+# Handle incoming activities with various message formats
 def handle_info({:new_activity, activity}, socket) do
   {:noreply, insert_activity(socket, activity)}
 end
-```
 
-## Styling and Assets
+# Module-based routing
+def handle_info({{Bonfire.Social.Feeds, :new_activity}, activity}, socket) do
+  {:noreply, insert_activity(socket, activity)}
+end
 
-### Component CSS
-```css
-/* In component_name_live.css */
-[data-id="my-component"] {
-  @apply flex flex-col gap-2;
-}
-```
-
-### JavaScript Hooks
-```javascript
-// In component_name_live.hooks.js
-export default {
-  mounted() {
-    // Hook logic
-  }
-}
+# String-based routing
+def handle_info({"Bonfire.Social.Feeds.LiveHandler:new_activity", activity}, socket) do
+  {:noreply, insert_activity(socket, activity)}
+end
 ```
 
 ## Testing Components
@@ -288,20 +392,58 @@ defmodule Bonfire.UI.Social.ActivityLiveTest do
 end
 ```
 
-### LiveView Testing
+### LiveView Testing with Data Attributes
+
+Use `data-id` and `data-role` for reliable selectors:
 
 ```elixir
 test "loads more activities", %{conn: conn} do
   {:ok, view, _html} = live(conn, "/feed")
   
-  # Trigger load more
+  # Use data-role selectors
   assert view
     |> element("[data-role=load_more]")
     |> render_click()
     
-  # Verify new activities loaded
+  # Verify using data-id
   assert has_element?(view, "[data-id=activity]", count: 20)
 end
+```
+
+In templates:
+```surface
+<div data-id="activity-#{@id}" data-role="activity">
+  <!-- content -->
+</div>
+
+<button data-role="load_more" phx-click="load_more">
+  Load More
+</button>
+```
+
+## Styling and Assets
+
+### Component CSS
+```css
+/* In component_name_live.css */
+[data-id="my-component"] {
+  @apply flex flex-col gap-2;
+}
+```
+
+### JavaScript Hooks
+```javascript
+// In component_name_live.hooks.js
+export default {
+  mounted() {
+    // Hook logic
+  }
+}
+```
+
+Register in template:
+```surface
+<div id="my-hook" phx-hook="MyHook">
 ```
 
 ## Performance Optimization
@@ -320,6 +462,14 @@ Activities are managed via LiveView streams:
 socket
 |> stream(:activities, activities, reset: true)
 |> assign(page_info: page_info)
+```
+
+### Feed Filters
+Use `Bonfire.Social.FeedFilters` for efficient filtering:
+
+```elixir
+alias Bonfire.Social.FeedFilters
+# Automatically handled by FeedLive
 ```
 
 ## Common Anti-Patterns
@@ -352,6 +502,15 @@ socket
 
 # Good - always pass context
 <MyComponent {...@__context__} />
+```
+
+### ❌ Direct State Updates
+```elixir
+# Bad - directly modifying assigns
+socket.assigns.activities ++ [new_activity]
+
+# Good - use streams or proper assigns
+stream_insert(socket, :activities, new_activity)
 ```
 
 ## Integration with Other Extensions
@@ -390,8 +549,10 @@ end
 - Check `feed_id` is consistent across components
 - Verify PubSub subscriptions match
 - Use `showing_within: :debug` to see all data
+- Check stream configuration for proper DOM IDs
 
 ### Missing Components
 - Ensure extension is enabled in Config
 - Check `maybe_component` is returning the module
 - Verify module name matches exactly
+- Check `@__context__` is being passed correctly
