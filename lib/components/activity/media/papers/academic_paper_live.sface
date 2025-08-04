@@ -4,6 +4,7 @@
       {#match download_url}
         {#case e(debug(@metadata, "paper_meta"), "DOI", nil) || e(@metadata, "identifiers", "doi", nil) ||
             e(@metadata, "citation_doi", nil) ||
+            extract_doi_from_orcid(@metadata) ||
             e(@metadata, "url", "value", nil) || e(@metadata, "url", nil) ||
             e(@media.metadata, "facebook", "url", nil)}
           {#match doi}
@@ -114,15 +115,37 @@
                   <span>{l("Download")}</span>
                 </a>
 
-                <LinkLive
-                  :if={not String.starts_with?(media_url, "doi:") and URIs.valid_url?(media_url)}
-                  to={media_url}
-                  class="btn btn-sm btn-soft flex-1"
-                  target="_blank"
-                >
-                  <#Icon iconify="heroicons-outline:external-link" class="w-4 h-4 opacity-70" />
-                  <span>{l("Read paper")}</span>
-                </LinkLive>
+                {#if is_orcid_work_url?(media_url)}
+                  <!-- Special handling for ORCID work URLs -->
+                  {#case doi}
+                    {#match doi_value when is_binary(doi_value)}
+                      <LinkLive
+                        to={format_doi_url(doi_value)}
+                        class="btn btn-sm btn-soft flex-1"
+                        target="_blank"
+                      >
+                        <#Icon iconify="heroicons-outline:external-link" class="w-4 h-4 opacity-70" />
+                        <span>{l("Read paper")}</span>
+                      </LinkLive>
+                    {#match _}
+                      <!-- No DOI available for ORCID work -->
+                      <div class="text-sm text-base-content/70 italic p-2 text-center">
+                        {l("Paper link not available")}
+                      </div>
+                  {/case}
+                {#elseif is_binary(media_url) and not String.starts_with?(media_url, "doi:") and URIs.valid_url?(media_url)}
+                  <!-- Regular URL -->
+                  <LinkLive
+                    to={media_url}
+                    class="btn btn-sm btn-soft flex-1"
+                    target="_blank"
+                  >
+                    <#Icon iconify="heroicons-outline:external-link" class="w-4 h-4 opacity-70" />
+                    <span>{l("Read paper")}</span>
+                  </LinkLive>
+                {#else}
+                  <!-- Invalid or DOI-only URL -->
+                {/if}
               </div>
             </div>
         {/case}
