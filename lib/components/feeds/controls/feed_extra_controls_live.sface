@@ -78,7 +78,7 @@
     event_target={@event_target}
   />
 
-  <div class="bg-base-content/20 font-semibold uppercase text-xs text-base-content/60 p-2 px-4 -mx-4 mb-3">{l("Filter by types")}</div>
+  <div class="bg-primary/10 font-semibold uppercase text-xs text-base-content/60 p-2 px-4 -mx-4 mb-3">{l("Filter by types")}</div>
   <div :if={extension_enabled?(:bonfire_ui_reactions, @__context__)} data-scope="boosts">
     <Bonfire.UI.Social.ToggleTypeLive
       label={l("Boosts")}

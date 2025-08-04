@@ -1,5 +1,5 @@
 <div id={@container_id} class={@container_class}>
-  <div class="bg-base-content/20 font-semibold uppercase text-xs text-base-content/60 p-2 px-4 -mx-4 mb-3">{l("Filter by circles")}</div>
+  <div class="bg-primary/10 font-semibold uppercase text-xs text-base-content/60 p-2 px-4 -mx-4 mb-3">{l("Filter by circles")}</div>
   <ul tabindex="0" class="w-full">
     <li
       class="flex flex-1 w-full"
