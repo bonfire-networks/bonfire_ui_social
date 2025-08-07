@@ -2285,13 +2285,14 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
     debug(params)
 
     with %{} = filters <- e(assigns(socket), :feed_filters, nil) || error("no filters"),
+         :ok <- validate_feed_name_unique(name, socket),
          {:ok, settings} <-
            Bonfire.Common.Settings.put(
              [:bonfire_social, Bonfire.Social.Feeds, :feed_presets, maybe_to_atom(name)],
              %{
                name: name,
                description: params["description"],
-               icon: "ph:rss-simple-bold",
+               icon: "ph:rss-simple-duotone",
                exclude_from_nav: params["show_in_nav"] != "on",
                filters: filters
              },
@@ -2303,6 +2304,24 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
         :noreply,
         socket |> maybe_assign_context(settings)
       }
+    else
+      {:error, :duplicate_name} ->
+        {
+          :noreply,
+          socket
+          |> assign_flash(
+            :error,
+            l("A feed with this name already exists. Please choose a different name.")
+          )
+        }
+
+      error ->
+        error(error)
+
+        {
+          :noreply,
+          socket |> assign_flash(:error, l("Could not create feed preset"))
+        }
     end
   end
 
@@ -2340,6 +2359,29 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
         :noreply,
         socket |> maybe_assign_context(settings)
       }
+    end
+  end
+
+  defp validate_feed_name_unique(name, socket) do
+    current_user = current_user(socket)
+
+    # Get all feed presets (both default and custom)
+    all_presets = Bonfire.Social.Feeds.feed_presets(current_user: current_user)
+
+    # Normalize the name for comparison
+    normalized_name = String.downcase(String.trim(name))
+
+    # Check if any existing preset has the same name (case-insensitive)
+    duplicate_exists? =
+      Enum.any?(all_presets, fn {_key, preset} ->
+        existing_name = preset[:name] || ""
+        String.downcase(String.trim(existing_name)) == normalized_name
+      end)
+
+    if duplicate_exists? do
+      {:error, :duplicate_name}
+    else
+      :ok
     end
   end
 

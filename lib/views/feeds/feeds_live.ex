@@ -6,7 +6,7 @@ defmodule Bonfire.UI.Social.FeedsLive do
   alias Bonfire.UI.Social.FeedController
 
   declare_extension("Social UI",
-    icon: "ph:rss-simple-bold",
+    icon: "ph:rss-simple-duotone",
     # emoji: "📰",
     description:
       l(
@@ -49,7 +49,7 @@ defmodule Bonfire.UI.Social.FeedsLive do
   #   l("Feeds"),
   #   %{
   #     page: "feed",
-  #     icon: "ph:rss-simple-bold",
+  #     icon: "ph:rss-simple-duotone",
   #     href: &nav_link_feed/1,
   #     #  TODO: these should be generated from preset filters and settings
   #     sub_links: [
