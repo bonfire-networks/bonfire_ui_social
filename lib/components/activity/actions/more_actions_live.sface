@@ -219,9 +219,9 @@
         />
       </li>
 
-      <li :if={extension_enabled?(:bonfire_open_science) and @showing_within == :thread and 
-        current_user_id(@__context__) == @creator_id and 
-        @object_type in [Bonfire.Data.Social.Post, Bonfire.Data.Social.Message] and 
+      <li :if={extension_enabled?(:bonfire_open_science) and @showing_within == :thread and
+        current_user_id(@__context__) == @creator_id and
+        @object_type in [Bonfire.Data.Social.Post, Bonfire.Data.Social.Message] and
         not is_nil(e(@object, :post_content, nil))}>
         <StatelessComponent
           module={maybe_component(Bonfire.OpenScience.ZenodoDoiButtonLive, @__context__)}
