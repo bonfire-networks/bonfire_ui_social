@@ -45,7 +45,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
   prop thread_level, :any, default: nil
   prop current_url, :string, default: nil
   prop permalink, :string, default: nil
-  prop participants, :list, default: []
+  prop participants, :any, default: nil
   prop object_boundary, :any, default: nil
   prop cw, :any, default: nil
   prop emoji, :any, default: nil
@@ -1001,6 +1001,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
                       subject_user={@subject_user}
                       creator={e(@object, :created, :creator, nil) || e(@activity, :created, :creator, nil) ||
                         e(@activity, :subject, nil)}
+                      participants={@participants}
                     />
                   {#else}
                     <StatelessComponent

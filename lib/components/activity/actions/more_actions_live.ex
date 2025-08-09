@@ -23,6 +23,7 @@ defmodule Bonfire.UI.Social.Activity.MoreActionsLive do
   prop is_remote, :boolean, default: false
   prop parent_id, :any, default: nil
   prop published_in, :any, default: nil
+  prop participants, :any, default: nil
 
   prop showing_within, :atom, default: nil
   prop feed_name, :any, default: nil

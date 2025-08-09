@@ -31,6 +31,7 @@ defmodule Bonfire.UI.Social.Activity.ActionsLive do
   prop labelled, :any, default: nil
   prop hide_actions, :any, default: false
   prop is_answer, :boolean, default: false
+  prop participants, :any, default: nil
 
   prop my_boost, :any, default: nil
   prop my_like, :any, default: nil

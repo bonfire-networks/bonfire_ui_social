@@ -153,7 +153,7 @@
       <li
         :if={module_enabled?(Bonfire.Social.Answers, @__context__) and @showing_within == :thread and
           @thread_id != id(@object)}
-        class=" "
+        class=""
       >
         {!-- TODO: should depend on thread creator: current_user_id(@__context__) == @thread_creator_id --}
         <StatelessComponent
@@ -169,10 +169,7 @@
 
       {#if module_enabled?(Bonfire.Social.Pins, @__context__) and
           @object_type != Bonfire.Data.Social.Message}
-        <li
-          :if={@showing_within == :thread and @thread_id != id(@object)}
-          class=" "
-        >
+        <li :if={@showing_within == :thread and @thread_id != id(@object)} class="">
           {!-- TODO: should depend on thread creator: current_user_id(@__context__) == @thread_creator_id --}
           <StatelessComponent
             module={maybe_component(Bonfire.UI.Reactions.PinActionLive, @__context__)}
@@ -226,8 +223,8 @@
         <StatelessComponent
           module={maybe_component(Bonfire.OpenScience.ZenodoDoiButtonLive, @__context__)}
           post={@object}
-          current_user={current_user(@__context__)}
           parent_id={@activity_component_id || id(@activity)}
+          participants={@participants}
         />
       </li>
 

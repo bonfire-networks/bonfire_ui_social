@@ -156,6 +156,7 @@
               parent_id={@parent_id}
               published_in={@published_in}
               subject_user={@subject_user}
+              participants={@participants}
             />
           {#else}
             <!-- ACTIONS SKELETON GOES HERE -->
@@ -240,6 +241,7 @@
             parent_id={@parent_id}
             published_in={@published_in}
             subject_user={@subject_user}
+            participants={@participants}
           />
         {/if}
       {/if}
