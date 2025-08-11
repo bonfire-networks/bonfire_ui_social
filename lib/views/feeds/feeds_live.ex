@@ -122,7 +122,7 @@ defmodule Bonfire.UI.Social.FeedsLive do
          {Bonfire.UI.Common.SmartInputButtonLive,
           [
             prompt: l("Compose"),
-            class: "btn-sm max-w-[120px] hidden md:inline-flex btn btn-primary"
+            class: "btn-sm hidden md:inline-flex btn btn-primary"
           ]}
        ],
        sidebar_widgets: [
