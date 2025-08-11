@@ -70,12 +70,12 @@
               phx-value-id={e(@comment, :id, nil)}
               phx-value-level={@thread_level + 1}
               phx-target={@myself}
-              class="flex items-center visible px-2 py-1 ml-4 rounded cursor-pointer group hover:bg-opacity-30 click:invisible"
+              class="flex items-center visible p-2 click:invisible"
             >
-              <span class="text-xs font-semibold text-primary-content-800">{l("Load %{count} more replies", count: extra_replies_count(@comment, @threaded_replies_count))}</span>
+              <span class="btn btn-xs">{l("Load %{count} more replies", count: extra_replies_count(@comment, @threaded_replies_count))}</span>
             </button>
           {#else}
-            <span class="text-xs font-semibold text-primary-content-800">
+            <span class="btn btn-xs">
               {extra_replies_count(@comment, @threaded_replies_count)} more replies (not shown)</span>
           {/if}
         </div>
