@@ -632,7 +632,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
 
     ~F"""
     <article
-      id={@activity_component_id}
+      id={@activity_component_id || "activity-#{@activity_id || Ecto.UUID.generate()}"}
       data-content-open={!@cw}
       data-object_id={@object_id}
       data-href={@permalink}

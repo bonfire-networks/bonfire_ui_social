@@ -16,6 +16,7 @@
   />
 
   <Bonfire.UI.Social.Activity.ReadMoreLive
+    :if={@showing_within != :smart_input}
     activity={@activity}
     object={@object}
     parent_id={@parent_id}
