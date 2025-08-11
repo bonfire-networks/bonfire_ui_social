@@ -56,7 +56,7 @@
               {#match favicon_url when is_binary(favicon_url)}
                 <LazyImage
                   parent_id={["icon", @parent_id, id(@media)]}
-                  class="rounded-none object-cover rounded-l-lg cursor-pointer m-image min-w-8 max-w-[120px] w-full h-auto"
+                  class="rounded-none object-cover rounded-l-lg cursor-pointer m-image min-w-8 max-w-[120px] w-full h-full"
                   fallback_class="w-8 h-8 text-base-content/70"
                   src={favicon_url}
                   media={@media}
