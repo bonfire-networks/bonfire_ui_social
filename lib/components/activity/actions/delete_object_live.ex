@@ -26,13 +26,12 @@ defmodule Bonfire.UI.Social.Activity.DeleteObjectLive do
   prop redirect_after, :any, default: nil
 
   def can_delete?(context, object, object_boundary \\ nil) do
-    current_user_id(context) ==
-      (e(object, :created, :creator_id, nil) ||
-         e(object, :created, :creator, :id, nil) ||
-         e(object, :creator, :id, nil) ||
-         e(object, :creator_id, nil)) or
-      (Types.object_type(object) != Bonfire.Data.Identity.User and
-         (Bonfire.Boundaries.can?(context, :delete, object_boundary) ||
-            Bonfire.Boundaries.can?(context, :delete, :instance)))
+    Types.object_type(object) != Bonfire.Data.Identity.User and
+      Bonfire.Social.maybe_can?(
+        context,
+        :delete,
+        object,
+        object_boundary
+      )
   end
 end

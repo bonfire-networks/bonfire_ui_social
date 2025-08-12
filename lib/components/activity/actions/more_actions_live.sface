@@ -217,9 +217,14 @@
       </li>
 
       <li :if={extension_enabled?(:bonfire_open_science) and @showing_within == :thread and
-        current_user_id(@__context__) == @creator_id and
-        @object_type in [Bonfire.Data.Social.Post, Bonfire.Data.Social.Message] and
-        not is_nil(e(@object, :post_content, nil))}>
+        @object_type in [Bonfire.Data.Social.Post] and
+        not is_nil(e(@object, :post_content, nil)) and
+        Bonfire.Social.maybe_can?(
+          @__context__,
+          :edit,
+          @object,
+          @object_boundary
+        )}>
         <StatelessComponent
           module={maybe_component(Bonfire.OpenScience.ZenodoDoiButtonLive, @__context__)}
           post={@object}
