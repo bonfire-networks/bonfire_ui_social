@@ -3,7 +3,7 @@ defmodule Bonfire.UI.Social.Activity.VideoUploadedLive do
   # alias Bonfire.UI.Social.Activity.MediaLive
 
   prop media, :map, default: nil
-  prop metadata, :map, default: nil
+  prop metadata, :any, default: nil
   prop showing_within, :atom, default: nil
   prop muted, :boolean, default: false
   prop autoplay, :any, default: false

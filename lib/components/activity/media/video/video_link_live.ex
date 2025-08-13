@@ -4,7 +4,7 @@ defmodule Bonfire.UI.Social.Activity.VideoLinkLive do
   alias Bonfire.Common.Media
 
   prop media, :map, default: nil
-  prop metadata, :map, default: nil
+  prop metadata, :any, default: nil
 
   prop showing_within, :atom, default: nil
   prop parent_id, :any, default: nil

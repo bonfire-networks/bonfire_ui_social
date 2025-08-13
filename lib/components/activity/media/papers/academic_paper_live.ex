@@ -3,7 +3,7 @@ defmodule Bonfire.UI.Social.Activity.AcademicPaperLive do
   # alias Bonfire.UI.Social.Activity.MediaLive
 
   prop media, :map, default: nil
-  prop metadata, :map, default: nil
+  prop metadata, :any, default: nil
   prop showing_within, :atom, default: nil
   prop css_borders, :css_class, default: nil
   prop parent_id, :any, default: nil
@@ -14,7 +14,8 @@ defmodule Bonfire.UI.Social.Activity.AcademicPaperLive do
 
   def paper_type(metadata) do
     case e(metadata, "dc.type", nil) || e(metadata, "type", nil) || e(metadata, "itemType", nil) ||
-           e(metadata, "citation_categories", nil) || e(metadata, "@type", nil) do
+           e(metadata, "citation_categories", nil) || e(metadata, "@type", nil) ||
+           e(metadata, "zenodo", "metadata", "upload_type", nil) do
       "JournalArticle" -> l("Journal Article")
       "journalArticle" -> l("Journal Article")
       nil -> l("Article")
