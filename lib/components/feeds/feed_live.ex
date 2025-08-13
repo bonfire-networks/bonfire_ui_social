@@ -381,6 +381,17 @@ defmodule Bonfire.UI.Social.FeedLive do
           Bonfire.Social.Feeds.feed_id(:outbox, e(assigns(socket), :subject_user, nil))
         )
 
+      feed when is_atom(feed) ->
+        debug(feed, "lookup feed")
+
+        do_maybe_subscribe(
+          socket,
+          Bonfire.Social.Feeds.user_named_or_feed_id(
+            feed,
+            debug(e(assigns(socket), :subject_user, nil) || current_user(socket), "agent")
+          )
+        )
+
       feed_or_feeds ->
         do_maybe_subscribe(socket, feed_or_feeds)
     end

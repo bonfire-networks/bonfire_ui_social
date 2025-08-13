@@ -257,8 +257,7 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
       Bonfire.Common.Needles.exists?([id: e(activity, :object, :id, nil) || id(activity)],
         current_user: current_user
       )
-
-    # |> debug("checked boundary upon receiving a LivePush - permitted?")
+      |> debug("checked boundary upon receiving a LivePush - permitted?")
 
     if permitted? && is_list(feed_ids) do
       my_home_feed_ids = Bonfire.Social.Feeds.my_home_feed_ids(current_user)
@@ -276,7 +275,7 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
 
       send_feed_updates(nil, feed_ids, [new_activity: activity], Bonfire.UI.Social.FeedLive)
     else
-      debug("I not have permission to view this new activity")
+      err("I not have permission to view this new activity")
     end
 
     {:noreply, socket}
@@ -764,6 +763,7 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
       component_id(
         [
           feed_id,
+          # both local and remote
           Bonfire.Social.Feeds.named_feed_id(:activity_pub),
           Bonfire.Social.Feeds.named_feed_id(:local)
         ],
@@ -781,41 +781,45 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
     )
   end
 
-  def feed_default_assigns(:remote = feed_name, socket) do
-    feed_id =
-      Bonfire.Social.Feeds.named_feed_id(:activity_pub)
-      |> debug(feed_name)
+  def feed_default_assigns(feed_name, socket) when is_nil(feed_name) or feed_name == :default do
+    FeedLoader.feed_name_or_default(:default, socket)
+    |> feed_default_assigns(socket)
+  end
 
-    component_id = component_id(feed_id, assigns(socket))
+  def feed_default_assigns(feed_name, socket) when is_atom(feed_name) and not is_nil(feed_name) do
+    feed_id =
+      Bonfire.Social.Feeds.user_named_or_feed_id(
+        feed_name,
+        debug(e(assigns(socket), :subject_user, nil) || current_user(socket), "agent")
+      )
+      |> debug(inspect(feed_name))
 
     Keyword.merge(
       [
         feed_name: feed_name,
         feed_id: feed_id,
-        feed_component_id: component_id,
+        selected_tab: feed_name,
+        feed_component_id: component_id(feed_id, assigns(socket)),
         feed_count: nil
       ],
       feed_default_assigns_from_preset(feed_name, socket)
     )
   end
 
-  def feed_default_assigns(:local = feed_name, socket) do
-    feed_id =
-      Bonfire.Social.Feeds.named_feed_id(:local)
-      |> debug(feed_name)
-
-    component_id = component_id(feed_id, assigns(socket))
-
-    Keyword.merge(
-      [
-        feed_name: feed_name,
-        feed_id: feed_id,
-        feed_component_id: component_id,
-        feed_count: nil
-      ],
-      feed_default_assigns_from_preset(feed_name, socket)
-    )
-  end
+  # def feed_default_assigns(feed_name, socket) when is_atom(feed_name) do
+  #   Keyword.merge(
+  #     [
+  #       feed_name: feed_name,
+  #       feed_id: feed_name,
+  #       selected_tab: feed_name,
+  #       feed_component_id: component_id(feed_name, assigns(socket)),
+  #       feed_count: nil
+  #       # feed: nil,
+  #       # page_info: nil
+  #     ],
+  #     feed_default_assigns_from_preset(feed_name, socket)
+  #   )
+  # end
 
   def feed_default_assigns({feed_name, filters_or_custom_query_or_feed_id_or_ids}, socket)
       when is_atom(feed_name) do
@@ -881,26 +885,6 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
     assigns
     |> Keyword.merge(
       prepare_time_limit(assigns, e(filters_or_custom_query_or_feed_id_or_ids, :time_limit, nil))
-    )
-  end
-
-  def feed_default_assigns(:default, socket) do
-    FeedLoader.feed_name_or_default(:default, socket)
-    |> feed_default_assigns(socket)
-  end
-
-  def feed_default_assigns(feed_name, socket) when is_atom(feed_name) do
-    Keyword.merge(
-      [
-        feed_name: feed_name,
-        feed_id: feed_name,
-        selected_tab: feed_name,
-        feed_component_id: component_id(feed_name, assigns(socket)),
-        feed_count: nil
-        # feed: nil,
-        # page_info: nil
-      ],
-      feed_default_assigns_from_preset(feed_name, socket)
     )
   end
 

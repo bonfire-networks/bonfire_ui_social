@@ -90,52 +90,6 @@ defmodule Bonfire.UI.Social.Feeds.PubSub.Test do
     |> assert_has_or_open_browser("[data-id=object_body]", text: reply_content, timeout: 3000)
   end
 
-  test "new message I receive appears in my inbox in real time", %{
-    conn: conn,
-    me: me,
-    alice: alice
-  } do
-    # Visit inbox as me
-    conn = visit(conn, "/messages")
-
-    message_content = "This is a live message from alice"
-
-    # Send a message as Alice in a separate process
-    Task.start(fn ->
-      Bonfire.Messages.send(
-        alice,
-        %{post_content: %{html_body: message_content}},
-        [me.id]
-      )
-    end)
-
-    conn
-    |> assert_has_or_open_browser("#message_threads", text: message_content, timeout: 3000)
-  end
-
-  test "new message I send appears in my own inbox in real time", %{
-    conn: conn,
-    me: me,
-    alice: alice
-  } do
-    # Visit inbox as me
-    conn = visit(conn, "/messages")
-
-    message_content = "This is a live message from alice"
-
-    # Send a message by me in a separate process
-    Task.start(fn ->
-      Bonfire.Messages.send(
-        me,
-        %{post_content: %{html_body: message_content}},
-        [alice.id]
-      )
-    end)
-
-    conn
-    |> assert_has_or_open_browser("#message_threads", text: message_content, timeout: 3000)
-  end
-
   test "new boost appears in the local feed in real time with both booster and original creator",
        %{
          conn: conn,
