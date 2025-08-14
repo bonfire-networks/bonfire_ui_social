@@ -4,7 +4,7 @@
   data-rendered={@showing_within}
   data-main-object={@viewing_main_object}
   class={
-    "article previewable_activity cursor-pointer border border-base-content/10 rounded-box p-4",
+    "article flex flex-col previewable_activity cursor-pointer border border-base-content/10 rounded-box p-4",
     "!max-w-full !border-0 !cursor-default !rounded-none !p-0":
       @showing_within == :thread && @viewing_main_object
   }
@@ -45,7 +45,7 @@
           data-role="name"
           class={
             "text-lg font-bold",
-            "!text-xl mb-3": @showing_within == :thread and @viewing_main_object
+            "!text-xl mb-3 order-first": @showing_within == :thread and @viewing_main_object
           }
         >
           {rich(name)}
@@ -63,7 +63,10 @@
                 summary={summary}
               />
             {#elseif not is_nil(summary)}
-              <div class="prose max-w-prose prose-p:pt-1 prose-sm">
+              <div class={
+                "prose max-w-prose prose-p:pt-1 prose-sm",
+                "order-first italic mb-3": @showing_within == :thread and @viewing_main_object
+              }>
                 {rich(summary,
                   skip_markdown: @is_remote,
                   __unsafe__: !@is_remote
