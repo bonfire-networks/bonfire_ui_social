@@ -94,7 +94,7 @@
 
   <Bonfire.UI.Social.ToggleTypeLive
     label={l("Follows")}
-    icon="flowbite:user-add-solid"
+    icon="ph:user-plus-duotone"
     key={:follow}
     field={:activity_types}
     feed_filters={@feed_filters}
