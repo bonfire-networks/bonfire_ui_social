@@ -759,14 +759,16 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
   def feed_default_assigns(:explore = feed_name, socket) do
     feed_id = "0AND0MSTRANGERS0FF1NTERNET"
 
+    feed_ids = [
+      feed_id,
+      # both local and remote
+      Bonfire.Social.Feeds.named_feed_id(:activity_pub),
+      Bonfire.Social.Feeds.named_feed_id(:local)
+    ]
+
     component_id =
       component_id(
-        [
-          feed_id,
-          # both local and remote
-          Bonfire.Social.Feeds.named_feed_id(:activity_pub),
-          Bonfire.Social.Feeds.named_feed_id(:local)
-        ],
+        feed_ids,
         assigns(socket)
       )
 
@@ -774,6 +776,7 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
       [
         feed_name: feed_name,
         feed_id: feed_id,
+        # feed_ids: feed_ids,
         feed_component_id: component_id,
         feed_count: nil
       ],
