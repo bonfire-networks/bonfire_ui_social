@@ -216,22 +216,33 @@
         />
       </li>
 
-      <li :if={extension_enabled?(:bonfire_open_science) and @showing_within == :thread and
-        @object_type in [Bonfire.Data.Social.Post] and
-        not is_nil(e(@object, :post_content, nil)) and
-        Bonfire.Social.maybe_can?(
-          @__context__,
-          :edit,
-          @object,
-          @object_boundary
-        )}>
-        <StatelessComponent
-          module={maybe_component(Bonfire.OpenScience.ZenodoDoiButtonLive, @__context__)}
-          post={@object}
-          parent_id={@activity_component_id || id(@activity)}
-          participants={@participants}
-        />
-      </li>
+      {#if @showing_within == :thread and
+          @object_type in [Bonfire.Data.Social.Post] and
+          not is_nil(e(@object, :post_content, nil)) and
+          Bonfire.Social.maybe_can?(
+            @__context__,
+            :edit,
+            @object,
+            @object_boundary
+          )}
+        <li>
+          <StatefulComponent
+            module={maybe_component(Bonfire.UI.Posts.DownloadMarkLive, @__context__)}
+            id={"download_markdown_#{@activity_component_id || id(@activity)}"}
+            object_id={id(@object)}
+            as_icon={false}
+          />
+        </li>
+
+        <li :if={extension_enabled?(:bonfire_open_science)}>
+          <StatelessComponent
+            module={maybe_component(Bonfire.OpenScience.ZenodoDoiButtonLive, @__context__)}
+            post={@object}
+            parent_id={@activity_component_id || id(@activity)}
+            participants={@participants}
+          />
+        </li>
+      {/if}
 
       {#if @feed_name == :my}
         {#case e(@activity, :subject, :id, nil)}

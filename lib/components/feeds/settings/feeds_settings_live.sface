@@ -4,7 +4,7 @@
     <div class="text-base-content/70">{l("Decide which feed you want to show in your sidebar.")}</div>
   </div>
 
-  <!-- <div class="flex flex-col gap-2 divide-y divide-base-content/10">
+  {!-- <div class="flex flex-col gap-2 divide-y divide-base-content/10">
     <div x-data="{open: false}" class="p-4">
       <div x-on:click="open = !open" class="flex items-center justify-between gap-4 cursor-pointer">
         <div class="flex flex-col gap-1">
@@ -19,7 +19,7 @@
           <#Icon iconify="fluent:triangle-right-12-filled" class="w-3 h-3 text-base-content/70" />
         </button>
       </div>
-      <div x-show="open" x-cloak x-collapse> -->
+      <div x-show="open" x-cloak x-collapse> --}
   <ul class="flex flex-col gap-3 bg-base-100 menu-sm p-4 w-full">
     {#for {preset, index} <- Enum.with_index(@presets || [])}
       <li class="relative border border-base-content/20 rounded-xl">
@@ -40,7 +40,7 @@
                   <div class="font-medium text-base">{preset[:name] || preset[:description] || preset.id}</div>
                   <div class="text-sm text-base-content/70">{preset[:description]}</div>
                 </div>
-                <!-- <div class="text-xs text-base-content/50 mt-1 flex gap-2 flex-wrap">
+                {!-- <div class="text-xs text-base-content/50 mt-1 flex gap-2 flex-wrap">
                         {#if preset[:current_user_required]}
                           <span class="badge badge-info badge-soft badge-sm">{l("Requires login")}</span>
                         {/if}
@@ -53,10 +53,15 @@
                         {#if preset[:filters][:media_types]}
                           <span class="badge badge-sm badge-info badge-soft">Media: {Enum.join(preset.filters.media_types, ", ")}</span>
                         {/if}
-                      </div> -->
+                      </div> --}
               </div>
             </div>
             <div class="flex items-center gap-2">
+              <!-- TODO: enable subscribing to feeds that require auth, maybe by generating a single-use token? -->
+              <div :if={!preset[:current_user_required] and
+                module_enabled?(Bonfire.UI.Social.SubscribeFeedLive, @__context__)}>
+                <Bonfire.UI.Social.SubscribeFeedLive feed_name={preset.id} as_icon />
+              </div>
               <button
                 :if={!preset[:built_in]}
                 phx-click="Bonfire.Social.Feeds:preset_delete"
@@ -87,12 +92,12 @@
                   {l("Include in the sidebar")}
                 </button>
               {/if}
-              <!-- <form phx-change="Bonfire.Social.Feeds:preset_nav_toggle" phx-value-id={preset.id}>
+              {!-- <form phx-change="Bonfire.Social.Feeds:preset_nav_toggle" phx-value-id={preset.id}>
                       <label>
                         <input type="checkbox" name="show_in_nav" checked={preset[:exclude_from_nav] == false}>
                         <span>{l("Show in navigation menu")}</span>
                       </label>
-                    </form> -->
+                    </form> --}
             </div>
           </div>
         </div>
@@ -102,7 +107,7 @@
   <!-- </div>
     </div> -->
 
-  <!-- <form phx-change="Bonfire.Common.Settings:set">
+  {!-- <form phx-change="Bonfire.Common.Settings:set">
       <Bonfire.UI.Common.SettingsToggleLive
         name={l("Simplified feed filters")}
         description={l(
@@ -112,7 +117,7 @@
         scope={@scope}
         default_value={Settings.get([Bonfire.UI.Social, :use_lite_feed_controls], true, context: @__context__)}
       />
-    </form> -->
+    </form> --}
 
   {!-- <div
       :if={Settings.get([Bonfire.UI.Social, :use_lite_feed_controls], true, context: @__context__)}
