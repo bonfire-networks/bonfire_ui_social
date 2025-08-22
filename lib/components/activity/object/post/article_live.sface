@@ -15,7 +15,7 @@
   >
     {#case Media.media_url(@primary_image)}
       {#match nil}
-        <p data-role="article_badge" class="mb-2 badge badge-neutral badge-sm">⁂ {l("Article")}</p>
+        <p data-role="article_badge" class="mb-2 badge badge-soft badge-sm">⁂ {l("Article")}</p>
       {#match url}
         <div
           :if={@showing_within != :smart_input}
@@ -34,7 +34,7 @@
             }
             style={"background-image: url('#{url}')"}
           >
-            <p data-role="article_badge" class="absolute left-3 bottom-3 badge badge-neutral badge-sm">⁂ {l("Article")}</p>
+            <p data-role="article_badge" class="absolute left-3 bottom-3 badge badge-soft badge-sm">⁂ {l("Article")}</p>
           </div>
         </div>
     {/case}
