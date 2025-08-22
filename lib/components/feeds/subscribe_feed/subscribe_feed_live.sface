@@ -6,7 +6,7 @@
   {#case {Bonfire.UI.Social.FeedController.feed_path("rss", @feed_name, @params),
      Bonfire.UI.Social.FeedController.feed_path("atom", @feed_name, @params)}}
     {#match {rss_url, atom_url}}
-      <div class="flex flex-col gap-4 p-4">
+      <div class="flex flex-col gap-4 py-4">
         <div class="text-base text-base-content/80">
           {l(
             "You can subscribe to this feed's public posts using your favourite RSS or Atom feed reader app."
@@ -15,28 +15,29 @@
         <div class="flex flex-col gap-3">
           <div class="flex items-center gap-2">
             <a
-              rel="alternate"
-              type="application/rss+xml"
-              href={rss_url}
-              class="btn btn-sm btn-outline flex items-center gap-2 w-[80px] justify-center"
-              target="_blank"
-              title={l("Open RSS feed")}
-              aria-label={l("Open RSS feed")}
-            >
-              <#Icon iconify="mdi:rss" class="w-4 h-4" />
-              RSS
-            </a>
-            <a
               phx-hook="Copy"
               id="rss-feed-copy-btn"
               href={rss_url |> URIs.based_url()}
-              class="btn btn-sm btn-ghost flex items-center gap-2 justify-center"
+              class="btn btn-sm btn-square btn-outline border-base-content/20"
               title={l("Copy RSS URL")}
               aria-label={l("Copy RSS URL")}
             >
               <#Icon iconify="ion:copy" class="w-4 h-4" />
               <span class="sr-only">{l("Copy RSS URL")}</span>
             </a>
+            <a
+              rel="alternate"
+              type="application/rss+xml"
+              href={rss_url}
+              class="btn btn-sm btn-outline border-base-content/20 flex items-center gap-2"
+              target="_blank"
+              title={l("Open RSS feed")}
+              aria-label={l("Open RSS feed")}
+            >
+              <#Icon iconify="mdi:rss" class="w-4 h-4" />
+              Get RSS feed
+            </a>
+            
           </div>
           <div class="flex items-center gap-2">
             <a
@@ -67,7 +68,9 @@
       </div>
   {/case}
   <:open_btn>
-    <#Icon :if={@as_icon} iconify="mdi:rss" class="w-4 h-4" />
-    <span class={"sr-only": @as_icon}>{l("Subscribe to feed (RSS/Atom)")}</span>
+    <div class={"btn btn-sm btn-circle": @as_icon}>
+      <#Icon :if={@as_icon} iconify="ph:rss-simple-duotone" class="w-4 h-4" />
+      <span class={"sr-only": @as_icon}>{l("Subscribe to feed (RSS/Atom)")}</span>
+    </div>
   </:open_btn>
 </Bonfire.UI.Common.OpenModalLive>
