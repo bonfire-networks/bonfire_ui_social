@@ -1,4 +1,4 @@
-<div class="z-500 relative text-center h-full">
+<div class="z-500 relative text-center">
   {#case Media.media_url(@media)}
     {#match media_url}
       {#case MediaLive.media_img(@media) || media_url}
