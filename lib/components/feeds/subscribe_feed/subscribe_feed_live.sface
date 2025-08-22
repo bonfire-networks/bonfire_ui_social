@@ -37,7 +37,6 @@
               <#Icon iconify="mdi:rss" class="w-4 h-4" />
               Get RSS feed
             </a>
-            
           </div>
           <div class="flex items-center gap-2">
             <a
