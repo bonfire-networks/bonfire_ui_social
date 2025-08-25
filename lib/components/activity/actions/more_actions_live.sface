@@ -234,14 +234,14 @@
           />
         </li>
 
-        <li :if={extension_enabled?(:bonfire_open_science)}>
           <StatelessComponent
+            :if={extension_enabled?(:bonfire_open_science)}
             module={maybe_component(Bonfire.OpenScience.ZenodoDoiButtonLive, @__context__)}
             post={@object}
+            activity={@activity}
             parent_id={@activity_component_id || id(@activity)}
             participants={@participants}
           />
-        </li>
       {/if}
 
       {#if @feed_name == :my}
