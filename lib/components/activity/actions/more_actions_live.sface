@@ -234,14 +234,15 @@
           />
         </li>
 
-          <StatelessComponent
-            :if={extension_enabled?(:bonfire_open_science)}
-            module={maybe_component(Bonfire.OpenScience.ZenodoDoiButtonLive, @__context__)}
-            post={@object}
-            activity={@activity}
-            parent_id={@activity_component_id || id(@activity)}
-            participants={@participants}
-          />
+        <StatelessComponent
+          :if={extension_enabled?(:bonfire_open_science)}
+          module={maybe_component(Bonfire.OpenScience.ZenodoDoiButtonLive, @__context__)}
+          parent_id={@activity_component_id || id(@activity)}
+          object={@object}
+          media={e(@activity, :media, nil) || e(@object, :media, nil) || e(@activity, :files, nil) ||
+            e(@object, :files, nil)}
+          participants={@participants}
+        />
       {/if}
 
       {#if @feed_name == :my}
