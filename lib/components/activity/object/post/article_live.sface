@@ -14,9 +14,7 @@
     prompt_external_links={@showing_within == :flags}
   >
     {#case Media.media_url(@primary_image)}
-      {#match nil}
-        <p data-role="article_badge" class="mb-2 badge badge-soft badge-sm">⁂ {l("Article")}</p>
-      {#match url}
+      {#match url when is_binary(url)}
         <div
           :if={@showing_within != :smart_input}
           class={
@@ -37,6 +35,8 @@
             <p data-role="article_badge" class="absolute left-3 bottom-3 badge badge-soft badge-sm">⁂ {l("Article")}</p>
           </div>
         </div>
+      {#match _}
+        <p data-role="article_badge" class="mb-2 badge badge-soft badge-sm">⁂ {l("Article")}</p>
     {/case}
     {#case e(post_content(@object), :name, nil)}
       {#match nil}
