@@ -1,15 +1,15 @@
 <div class="flex flex-1 items-center gap-1">
   <div
     data-tip={if e(@feed_filters, :sort_order, nil) != :asc, do: l("Oldest first"), else: l("Newes first")}
-    class="btn btn-sm btn-soft btn-square tooltip-bottom tooltip btn-primary"
+    class=""
   >
     {#if e(@feed_filters, :sort_order, nil) == :asc}
-      <a phx-click="set_filter" phx-value-sort_order={:desc} phx-target={@event_target}>
+      <a class="btn btn-sm btn-soft btn-square tooltip-bottom tooltip btn-primary" phx-click="set_filter" phx-value-sort_order={:desc} phx-target={@event_target}>
         <#Icon iconify="mdi:arrow-down" class="w-4 h-4" />
         <span class="sr-only">{l("Oldest first")}</span>
       </a>
     {#else}
-      <a phx-click="set_filter" phx-value-sort_order={:asc} phx-target={@event_target}>
+      <a class="btn btn-sm btn-soft btn-square tooltip-bottom tooltip btn-primary" phx-click="set_filter" phx-value-sort_order={:asc} phx-target={@event_target}>
         <#Icon iconify="mdi:arrow-up" class="w-4 h-4" />
         <span class="sr-only">{l("Newest first")}</span>
       </a>
