@@ -21,7 +21,7 @@
     as={:post}
     phx-change="Bonfire.UI.Common.SmartInput:validate"
     phx-submit={JS.push(handler(e(@smart_input_opts, :create_object_type, nil)))
-    |> Bonfire.UI.Common.SmartInput.LiveHandler.minimize()}
+    |> Bonfire.UI.Common.SmartInput.LiveHandler.submitting()}
     action={"/LiveHandler/" <> handler(e(@smart_input_opts, :create_object_type, nil))}
     id="smart_input_form"
     autocomplete="off"
