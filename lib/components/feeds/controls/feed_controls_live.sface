@@ -18,10 +18,7 @@
     />
 
     <div class="">
-      <button
-        phx-click={JS.toggle(to: "#more_filters")}
-        class="btn btn-sm btn-soft btn-square btn-primary"
-      ><#Icon iconify="ph:sliders-horizontal-duotone" class="w-5 h-5" /></button>
+      <button phx-click={JS.toggle(to: "#more_filters")} class="btn btn-sm btn-square"><#Icon iconify="ph:sliders-horizontal-duotone" class="w-5 h-5" /></button>
     </div>
   </div>
 

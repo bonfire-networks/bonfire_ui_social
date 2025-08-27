@@ -49,7 +49,7 @@
         @click="window.scrollTo({top: 0, behavior: 'smooth'})"
         phx-click={JS.show(to: ".fresh_hidden")
         |> JS.add_class("hidden")}
-        class="flex justify-center w-full p-3 mx-auto absolute z-[99999999999999]"
+        class="flex justify-center w-full p-3 mx-auto absolute z-50"
         phx-show={JS.remove_class("hidden")}
       >
         {!-- style={if @hide_fresh==0, do: "display: none;", else: ""} --}

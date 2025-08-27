@@ -5,7 +5,7 @@
   >
     {#if e(@feed_filters, :sort_order, nil) == :asc}
       <a
-        class="btn btn-sm btn-soft btn-square tooltip-bottom tooltip btn-primary"
+        class="btn btn-sm  btn-square tooltip-bottom tooltip"
         phx-click="set_filter"
         phx-value-sort_order={:desc}
         phx-target={@event_target}
@@ -15,7 +15,7 @@
       </a>
     {#else}
       <a
-        class="btn btn-sm btn-soft btn-square tooltip-bottom tooltip btn-primary"
+        class="btn btn-sm  btn-square tooltip-bottom tooltip"
         phx-click="set_filter"
         phx-value-sort_order={:asc}
         phx-target={@event_target}
@@ -31,7 +31,7 @@
     id="order_dropdown_feed"
     class="flex w-full relative"
   >
-    <label tabindex="0" class="tooltip-button w-full btn btn-sm btn-soft btn-primary">
+    <label tabindex="0" class="tooltip-button w-full btn btn-sm">
       {#case e(@feed_filters, :sort_by, nil)}
         {#match :num_replies}
           <span class="flex items-center">

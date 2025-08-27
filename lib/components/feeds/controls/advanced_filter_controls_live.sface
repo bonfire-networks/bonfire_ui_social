@@ -17,7 +17,7 @@
       <label
         tabindex="0"
         class={
-          "tooltip-button btn btn-sm btn-soft btn-primary w-full capitalize",
+          "tooltip-button btn btn-sm w-full capitalize",
           "opacity-50 cursor-not-allowed": @preset_has_fixed_origin
         }
       >
