@@ -30,6 +30,7 @@ defmodule Bonfire.UI.Social.DiscussionLive do
        page_info: nil,
        replies: nil,
        threaded_replies: nil,
+       include_path_ids: nil,
        thread_mode:
          (maybe_to_atom(e(params, "mode", nil)) ||
             Settings.get(
