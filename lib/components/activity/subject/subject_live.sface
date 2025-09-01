@@ -34,7 +34,7 @@
       user_id={@subject_id}
       src={@profile_media}
       showing_within={@showing_within}
-      fallback_class="w-12 h-12"
+      fallback_class="w-8 h-8 opacity-50 place-content-center items-center"
       class={
         "rounded-full w-12 h-12",
         "!w-7 !h-7": @__context__[:ui_compact]
