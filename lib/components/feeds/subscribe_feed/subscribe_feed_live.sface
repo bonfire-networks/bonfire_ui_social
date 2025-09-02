@@ -67,7 +67,7 @@
       </div>
   {/case}
   <:open_btn>
-    <div class={"btn btn-sm btn-circle": @as_icon}>
+    <div class={"text-left cursor-pointer", "btn btn-sm btn-circle": @as_icon}>
       <#Icon :if={@as_icon} iconify="ph:rss-simple-duotone" class="w-4 h-4" />
       <span class={"sr-only": @as_icon}>{l("Subscribe to feed (RSS/Atom)")}</span>
     </div>

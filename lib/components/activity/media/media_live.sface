@@ -229,7 +229,7 @@
                                 to: "#" <> deterministic_dom_id("hide-sensitive-content", id(m), "media", @parent_id),
                                 transition: "fade-in"
                               )}
-                              class="btn z-[9999999999] btn-secondary btn-soft"
+                              class="btn z-[9999999999] btn-secondary btn-soft btn-sm"
                             >
                               {l("Sensitive content")}
                             </button>
@@ -252,7 +252,7 @@
                               to: "#" <> deterministic_dom_id("hide-sensitive-content", id(m), "media", @parent_id),
                               transition: "fade-in"
                             )}
-                            class="absolute top-3 right-3 btn z-50"
+                            class="absolute top-3 right-3 btn z-50 btn-sm"
                           >{l("Hide")}</button>
                         </div>
                         <div
@@ -383,7 +383,7 @@
                                 to: "#" <> deterministic_dom_id("hide-sensitive-content", id(m), "gif", @parent_id),
                                 transition: "fade-in"
                               )}
-                              class="btn z-[9999999999] btn-secondary btn-soft"
+                              class="btn z-[9999999999] btn-secondary btn-soft btn-sm"
                             >
                               {l("Sensitive content")}
                             </button>
@@ -403,7 +403,7 @@
                               to: "#" <> deterministic_dom_id("hide-sensitive-content", id(m), "gif", @parent_id),
                               transition: "fade-in"
                             )}
-                            class="absolute top-3 right-3 btn z-50"
+                            class="absolute top-3 right-3 btn z-50 btn-sm"
                           >{l("Hide")}</button>
                         </div>
                         <div
