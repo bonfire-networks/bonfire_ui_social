@@ -58,19 +58,26 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
 
   def handle_event("fetch_replies", params, %{assigns: assigns} = socket) do
     ActivityPub.Federator.Fetcher.fetch_replies(
-      [pointer: params["id"] || assigns(socket)[:post] || assigns(socket)[:object]],
+      [pointer: params["id"] || assigns[:post] || assigns[:object]],
+      user_id: current_user_id(assigns),
       # TODO: clean/document these?
       mode: :async,
       fetch_collection: :async,
       fetch_collection_entries: :async
     )
 
-    {:noreply, socket}
+    {:noreply,
+     socket
+     |> assign_flash(
+       :info,
+       l("Syncing with remote server. Content will gradually appear in the thread..")
+     )}
   end
 
   def handle_event("fetch_thread", params, socket) do
     ActivityPub.Federator.Fetcher.fetch_thread(
       [pointer: params["id"] || assigns(socket)[:post] || assigns(socket)[:object]],
+      user_id: current_user_id(socket),
       # TODO: clean/document these?
       mode: :async,
       fetch_collection: :async,
