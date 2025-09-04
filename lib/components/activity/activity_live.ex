@@ -587,6 +587,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
          thread_title,
          activity_component_id
        ) ++
+       component_maybe_quote_post(activity, activity_inception, activity_component_id) ++
        (component_activity_subject(
           verb,
           activity,
@@ -2216,5 +2217,35 @@ defmodule Bonfire.UI.Social.ActivityLive do
 
     # preview_header ++ preview_components WIP temp removed to find a better way to show preview_header
     preview_components
+  end
+
+  @doc """
+  Check if the object has quoted posts and return components to render them
+  """
+  def component_maybe_quote_post(activity, _activity_inception, activity_component_id) do
+    case Bonfire.Social.Tags.tags_quote(activity) do
+      [] ->
+        []
+
+      quoted_objects when is_list(quoted_objects) ->
+        quoted_objects
+        |> Enum.with_index()
+        |> Enum.map(fn {quoted_object, index} ->
+          id = "#{activity_component_id}_quoted_post_#{index}_#{id(quoted_object)}"
+
+          {Bonfire.UI.Social.ActivityLive,
+           %{
+             id: id,
+             activity: quoted_object |> flood("quoted_object"),
+             object: quoted_object,
+             activity_inception: id,
+             showing_within: :quote_preview,
+             viewing_main_object: false,
+             hide_actions: true,
+             class:
+               "border-l-4 border-accent/30 pl-4 ml-2 my-3 quote-preview bg-base-200/30 rounded-r-lg"
+           }}
+        end)
+    end
   end
 end

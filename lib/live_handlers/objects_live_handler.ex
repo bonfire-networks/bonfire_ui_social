@@ -260,6 +260,7 @@ defmodule Bonfire.Social.Objects.LiveHandler do
       else: socket
   end
 
+  # TODO: put in Social config like the rest 
   def default_preloads(),
     do: [
       # :default,
@@ -270,7 +271,7 @@ defmodule Bonfire.Social.Objects.LiveHandler do
       :with_parent,
       :with_media,
       :maybe_with_labelled,
-      :tags,
+      :quote_tags,
       :with_object_peered
     ]
 
