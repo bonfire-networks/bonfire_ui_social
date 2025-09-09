@@ -5,4 +5,5 @@ defmodule Bonfire.UI.Social.SubscribeFeedLive do
   prop feed_name, :atom, default: nil
   prop params, :map, default: %{}
   prop as_icon, :boolean, default: false
+  prop parent_id, :any, default: nil
 end

@@ -1,6 +1,9 @@
 <div
   data-id="activity_note"
   id={"note_container_#{@parent_id}_#{id(@activity) || id(@object) || 'no-id'}"}
+  data-activity-id={id(@activity)}
+  data-object-id={id(@object)}
+  data-view-transition-name={"activity-#{id(@activity) || id(@object)}"}
   data-rendered={@showing_within}
   data-main-object={@viewing_main_object}
   class={

@@ -1,5 +1,5 @@
 <Bonfire.UI.Common.OpenModalLive
-  id={"feed_subscribe_#{@feed_name}"}
+  id={"feed_subscribe_#{@feed_name}_#{e(@parent_id, nil)}"}
   title_text={l("Subscribe to this feed")}
   no_actions
 >

@@ -19,7 +19,11 @@
     > --}
   <LinkLive
     :if={@subject_id && !Media.hide_avatars?(@__context__, @showing_within)}
-    opts={"data-id": "subject_avatar"}
+    opts={
+      "data-id": "subject_avatar",
+      "data-subject-id": @subject_id,
+      "data-view-transition-name": "avatar-#{@subject_id}"
+    }
     parent_id={["subject_avatar", @parent_id]}
     class={
       "absolute -ml-[3.7rem] font-semibold text-base-content hover:underline z-50",
@@ -88,7 +92,12 @@
     <div class="flex" role="button" data-id="name_username" aria-haspopup="true" aria-expanded="true">
       <LinkLive
         :if={@profile_name}
-        opts={"data-id": "subject_name", "aria-label": l("%{name}'s profile", name: @profile_name)}
+        opts={
+          "data-id": "subject_name",
+          "data-subject-id": @subject_id,
+          "data-view-transition-name": "profile-#{@subject_id}",
+          "aria-label": l("%{name}'s profile", name: @profile_name)
+        }
         parent_id={["subject_name", @parent_id]}
         class="link text-[15px] max-w-[250px] lg:max-w-[500px] link-hover text-sm font-bold truncate"
         to={@path}
@@ -105,6 +114,8 @@
         :if={@character_username && @showing_within != :smart_input}
         opts={
           "data-id": "subject_username",
+          "data-subject-id": @subject_id,
+          "data-view-transition-name": "profile-#{@subject_id}",
           "aria-label": l("%{name}'s profile", name: @profile_name)
         }
         parent_id={["subject_username", @parent_id]}
@@ -136,7 +147,7 @@
         >From {DatesTimes.format_duration(e(@extra_info, :info, "timestamps", "in", ""))} to {DatesTimes.format_duration(e(@extra_info, :info, "timestamps", "out", ""))}</button>
       {#else}
         {#if @verb != "Create"}
-          <span class="text-sm text-[15px] text-base-content/60">
+          <span class="text-sm text-[15px] text-base-content/60 hidden lg:inline-block">
             {#case @replies_more_count || 0}
               {#match 0}
                 {@verb_display}

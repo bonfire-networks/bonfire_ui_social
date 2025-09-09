@@ -2,6 +2,7 @@
   <div
     id={@id}
     data-id="feed"
+    data-page="feed"
     role="feed"
     aria-live="assertive"
     phx-hook="Bonfire.UI.Common.PreviewContentLive#MainFeed"
