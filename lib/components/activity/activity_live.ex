@@ -12,7 +12,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
   @create_verbs Application.compile_env(:bonfire, [:verb_families, :create]) || ["Write", "Send"]
   @react_verbs (Application.compile_env(:bonfire, [:verb_families, :react]) || []) ++ ["React"]
   @simple_verbs Application.compile_env(:bonfire, [:verb_families, :simple_action]) || []
-  @react_or_request_verbs @react_verbs ++ ["Request"]
+  @react_or_request_verbs @react_verbs
   @react_or_simple_verbs @react_verbs ++ @simple_verbs
   # @react_or_reply_verbs @react_verbs ++ @reply_verbs
   @create_or_reply_verbs @create_verbs ++ @reply_verbs
@@ -159,7 +159,10 @@ defmodule Bonfire.UI.Social.ActivityLive do
     do: some_assigns(socket_assigns, assigns, extras)
 
   defp some_assigns(socket_assigns, assigns, extras) do
-    activity = assigns[:activity] || socket_assigns[:activity]
+    activity =
+      (assigns[:activity] || socket_assigns[:activity])
+      |> flood("the activity")
+
     object = assigns[:object] || e(activity, :object, nil) || socket_assigns[:object]
 
     showing_within =
@@ -460,7 +463,8 @@ defmodule Bonfire.UI.Social.ActivityLive do
       parent_id:
         "#{activity_component_id}_#{e(assigns, :showing_within, nil)}_#{activity_inception}"
     })
-    |> flood("Activity preparation done")
+
+    # |> flood("Activity preparation done")
   end
 
   defp do_prepare(assigns), do: Map.put(assigns, :activity_prepared, :skipped)
@@ -1149,8 +1153,46 @@ defmodule Bonfire.UI.Social.ActivityLive do
   #     ]
 
   # reactions should show the reactor (or requester for requests) + original creator
+
+  def component_activity_subject(
+        "Request to Quote" = verb,
+        activity,
+        object,
+        object_type,
+        _,
+        activity_inception,
+        _
+      ) do
+    # activity: repo().maybe_preload(activity, subject: [:character]),
+    quote_post = e(activity, :edge, :subject, nil)
+    id = "nested_quote_post_#{activity_inception}_#{id(quote_post)}"
+
+    ([
+       {Bonfire.UI.Social.Activity.SubjectMinimalLive,
+        %{
+          verb: verb,
+          subject_id: e(activity, :subject_id, nil),
+          subjects_more: e(activity, :subjects_more, []),
+          profile: e(activity, :subject, :profile, nil),
+          character: e(activity, :subject, :character, nil)
+        }},
+       {Bonfire.UI.Social.ActivityLive,
+        %{
+          id: id,
+          activity: %{subject: e(activity, :subject, nil)},
+          object: quote_post,
+          activity_inception: id,
+          showing_within: :quote_post,
+          viewing_main_object: false,
+          hide_actions: true,
+          class: "border-l-2 border-base-content/20 pl-4 ml-2 my-2 nested-preview"
+        }}
+     ] ++ component_activity_maybe_creator(activity, object, object_type))
+    |> flood("MATCHED react case for verb: #{verb} in component_activity_subject")
+  end
+
   def component_activity_subject(verb, activity, object, object_type, _, _, _)
-      when verb in @react_or_request_verbs do
+      when verb in @react_or_simple_verbs do
     # activity: repo().maybe_preload(activity, subject: [:character]),
     ([
        {Bonfire.UI.Social.Activity.SubjectMinimalLive,

@@ -95,6 +95,23 @@ defmodule Bonfire.Social.Objects.LiveHandler do
     handle_event("share", Map.put(params, "boundary", acl_id), socket)
   end
 
+  def handle_event("quote_accept", %{"id" => request_id} = _params, socket) do
+    # debug(socket)
+
+    with {:ok, quote_post} <-
+           Bonfire.Social.Quotes.accept(request_id,
+             current_user: current_user_required!(socket)
+           ) do
+      {:noreply,
+       socket
+       |> assign_flash(:info, l("Quote request accepted!"))
+       |> redirect_to(path(quote_post), type: :maybe_external)}
+    else
+      e ->
+        error(e, l("There was an error when trying to accept the quote request"))
+    end
+  end
+
   def maybe_redirect_to(socket, to, opts) when is_binary(to) and to != "" do
     redirect_to(
       socket,

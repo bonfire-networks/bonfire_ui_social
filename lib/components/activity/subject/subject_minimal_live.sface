@@ -86,6 +86,37 @@
               {l("Accept")}
             </button>
           </div>
+        {#elseif @verb == "Request to Quote"}
+          <div class="flex items-center w-full justify-between">
+            <div class="flex items-center flex-1 gap-3">
+              <#Icon iconify="heroicons-outline:pencil" class="flex-shrink-0 w-6 h-6 text-info" />
+              <div class="flex gap-2">
+                <div class="font-medium text-sm text-base-content/70">
+                  {@profile_name || @character_username}
+
+                  {raw(@verb_display)}
+                </div>
+              </div>
+            </div>
+            <div class="flex gap-2 -mr-[3rem]">
+              <button
+                :on-click="Bonfire.Social.Objects:quote_accept"
+                phx-value-id={id(@activity_id)}
+                type="button"
+                class="normal-case border !border-primary/30 btn btn-sm btn-primary"
+              >
+                {l("Accept")}
+              </button>
+              <button
+                :on-click="Bonfire.Social.Objects:quote_reject"
+                phx-value-id={id(@activity_id)}
+                type="button"
+                class="normal-case  btn btn-sm btn-error"
+              >
+                {l("Decline")}
+              </button>
+            </div>
+          </div>
         {#elseif @verb in ["Like", "React"]}
           <div data-role="liked_by" class="">
             <div class="flex items-center gap-3 justify-start rounded-full border border-base-content/10 bg-neutral/5 pr-2">
