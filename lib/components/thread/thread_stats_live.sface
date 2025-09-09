@@ -45,7 +45,7 @@
                 <StatelessComponent
                   module={maybe_component(Bonfire.UI.Me.ProfileItemLive)}
                   wrapper_class=""
-                  show_controls={[]}
+                  show_controls={[:follow]}
                   only_img
                   with_popover
                   avatar_class="w-8 h-8 rounded-full"

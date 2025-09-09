@@ -365,17 +365,13 @@
               </div>
             </div>
           </div>
-          {!-- {#else}
+        {#else}
+          <!-- fallback for unimplemented verbs -->
           <div class="flex items-center justify-start">
-            <Iconify.iconify
-                icon={Bonfire.Boundaries.Verbs.get(@verb)[:icon]} 
-                class="w-4 h-4 text-error" />
+            <Iconify.iconify icon={Bonfire.Boundaries.Verbs.get(@verb)[:icon]} class="w-4 h-4 text-error" />
             <div class="flex-1 ml-3">
-              <div class="text-sm font-medium text-base-content/70"   >
-                <LinkLive
-                  class="font-medium link link-hover"
-                  to={@path} opts={"data-id": "subject_name"} 
-                >
+              <div class="text-sm font-medium text-base-content/70">
+                <LinkLive class="font-medium link link-hover" to={@path} opts={"data-id": "subject_name"}>
                   {@profile_name || @character_username}
                 </LinkLive>
                 {#if @verb == "Schedule" and e(@object, :due, nil)}
@@ -389,13 +385,13 @@
                     name:
                       e(@object, :provider, :profile, :name, nil) ||
                         e(@object, :provider, :character, :username, nil)
-                  )} 
+                  )}
                 {#else}
                   {raw(@verb_display)}
                 {/if}
               </div>
             </div>
-          </div> --}
+          </div>
         {/if}
       </div>
     {#match _}
@@ -657,6 +653,32 @@
           </div>
         </div>
       {#else}
+        <!-- fallback for unimplemented verbs -->
+        <div class="flex items-center justify-start">
+          <Iconify.iconify icon={Bonfire.Boundaries.Verbs.get(@verb)[:icon]} class="w-4 h-4 text-error" />
+          <div class="flex-1 ml-3">
+            <div class="text-sm font-medium text-base-content/70">
+              <LinkLive class="font-medium link link-hover" to={@path} opts={"data-id": "subject_name"}>
+                {@profile_name || @character_username}
+              </LinkLive>
+              {#if @verb == "Schedule" and e(@object, :due, nil)}
+                {l("scheduled for %{date}", date: DatesTimes.date_from_now(e(@object, :due, nil)))}
+              {#elseif @verb == "Label" and e(@object, :finished, nil) == true}
+                {l("completed")}
+              {#elseif @verb == "Label" and e(@object, :finished, nil) == false}
+                {l("re-opened")}
+              {#elseif @verb in ["Assign", "Appoint"] and e(@object, :provider, nil)}
+                {l("assigned to %{name}",
+                  name:
+                    e(@object, :provider, :profile, :name, nil) ||
+                      e(@object, :provider, :character, :username, nil)
+                )}
+              {#else}
+                {raw(@verb_display)}
+              {/if}
+            </div>
+          </div>
+        </div>
       {/if}
   {/case}
 </div>

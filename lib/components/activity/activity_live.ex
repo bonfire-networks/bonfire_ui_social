@@ -8,12 +8,13 @@ defmodule Bonfire.UI.Social.ActivityLive do
   import Phoenix.LiveView.JS
 
   # TODO: autogenerate with Verbs genserver?
-  @reply_verbs Application.compile_env(:bonfire, [:verb_families, :reply]) || []
-  @create_verbs Application.compile_env(:bonfire, [:verb_families, :create]) || []
+  @reply_verbs Application.compile_env(:bonfire, [:verb_families, :reply]) || ["Respond"]
+  @create_verbs Application.compile_env(:bonfire, [:verb_families, :create]) || ["Write", "Send"]
   @react_verbs (Application.compile_env(:bonfire, [:verb_families, :react]) || []) ++ ["React"]
   @simple_verbs Application.compile_env(:bonfire, [:verb_families, :simple_action]) || []
+  @react_or_request_verbs @react_verbs ++ ["Request"]
   @react_or_simple_verbs @react_verbs ++ @simple_verbs
-  @react_or_reply_verbs @react_verbs ++ @reply_verbs
+  # @react_or_reply_verbs @react_verbs ++ @reply_verbs
   @create_or_reply_verbs @create_verbs ++ @reply_verbs
   @created_verb_display Activities.verb_display("Create")
 
@@ -311,7 +312,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
     # |> debug("prepare_verb: raw verb before modification")
 
     Activities.verb_maybe_modify(raw_verb || fallback, activity)
-    # |> debug("prepare_verb: final verb after verb_maybe_modify")
+    |> flood("prepare_verb: final verb after verb_maybe_modify")
   end
 
   # defp derive_verb_from_table_id(%{table_id: "300STANN0VNCERESHARESH0VTS"}), do: "Boost"
@@ -459,7 +460,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
       parent_id:
         "#{activity_component_id}_#{e(assigns, :showing_within, nil)}_#{activity_inception}"
     })
-    |> debug("Activity preparation done")
+    |> flood("Activity preparation done")
   end
 
   defp do_prepare(assigns), do: Map.put(assigns, :activity_prepared, :skipped)
@@ -608,13 +609,13 @@ defmodule Bonfire.UI.Social.ActivityLive do
          activity_inception,
          viewing_main_object
        ))
-    |> debug("preview_components unfiltered - #{activity_inception}")
+    |> flood("preview_components unfiltered - #{activity_inception}")
     |> Enum.reject(&is_nil/1)
     |> Enum.map(fn
       c when is_atom(c) -> {c, nil}
       other -> other
     end)
-    |> debug("preview_components - #{activity_inception}")
+    |> flood("preview_components - #{activity_inception}")
   end
 
   def maybe_prepare(%{activity: _, activity_prepared: true} = assigns) do
@@ -1119,22 +1120,22 @@ defmodule Bonfire.UI.Social.ActivityLive do
   # quoting a reply_to <-- this is handled by the Bonfire.UI.Social.Activity.SubjectLive internally
   # def component_activity_subject(_, _, %{activity_inception: true}), do: [Bonfire.UI.Social.Activity.SubjectRepliedLive]
 
-  def component_activity_subject(verb, activity, _, object_type, _, _, _)
-      when verb in @react_or_simple_verbs and object_type == Bonfire.Data.Identity.User do
-    [
-      {Bonfire.UI.Social.Activity.SubjectMinimalLive,
-       %{
-         verb: verb,
-         subject_id: e(activity, :subject_id, nil),
-         subjects_more: e(activity, :subjects_more, []),
-         profile: e(activity, :subject, :profile, nil),
-         character: e(activity, :subject, :character, nil)
-       }}
-    ]
-  end
+  # def component_activity_subject(verb, activity, _, object_type, _, _, _)
+  #     when verb in @react_or_simple_verbs and object_type == Bonfire.Data.Identity.User do
+  #   [
+  #     {Bonfire.UI.Social.Activity.SubjectMinimalLive,
+  #      %{
+  #        verb: verb,
+  #        subject_id: e(activity, :subject_id, nil),
+  #        subjects_more: e(activity, :subjects_more, []),
+  #        profile: e(activity, :subject, :profile, nil),
+  #        character: e(activity, :subject, :character, nil)
+  #      }}
+  #   ]
+  # end
 
   # def component_activity_subject(verb, activity, _object, _object_type, :notifications, _, _)
-  #     when verb in @react_verbs,
+  #     when verb in @react_or_request_verbs,
   #     do: [
   #       {Bonfire.UI.Social.Activity.SubjectMinimalLive,
   #        %{
@@ -1147,22 +1148,21 @@ defmodule Bonfire.UI.Social.ActivityLive do
   #        }}
   #     ]
 
-  # reactions should show the reactor + original creator
+  # reactions should show the reactor (or requester for requests) + original creator
   def component_activity_subject(verb, activity, object, object_type, _, _, _)
-      when verb in @react_verbs do
-    [
-      {Bonfire.UI.Social.Activity.SubjectMinimalLive,
-       %{
-         # activity: repo().maybe_preload(activity, subject: [:character]),
-         verb: verb,
-         subject_id: e(activity, :subject_id, nil),
-         subjects_more: e(activity, :subjects_more, []),
-         profile: e(activity, :subject, :profile, nil),
-         character: e(activity, :subject, :character, nil)
-       }}
-    ] ++ component_activity_maybe_creator(activity, object, object_type)
-
-    # |> debug("MATCHED react case for verb: #{verb} in component_activity_subject")
+      when verb in @react_or_request_verbs do
+    # activity: repo().maybe_preload(activity, subject: [:character]),
+    ([
+       {Bonfire.UI.Social.Activity.SubjectMinimalLive,
+        %{
+          verb: verb,
+          subject_id: e(activity, :subject_id, nil),
+          subjects_more: e(activity, :subjects_more, []),
+          profile: e(activity, :subject, :profile, nil),
+          character: e(activity, :subject, :character, nil)
+        }}
+     ] ++ component_activity_maybe_creator(activity, object, object_type))
+    |> flood("MATCHED react case for verb: #{verb} in component_activity_subject")
   end
 
   # create (or reply) activities
