@@ -49,6 +49,9 @@ defmodule Bonfire.UI.Social.PreloadPresetTest do
                :audio,
                :videos,
                :curated,
+               :trending_links,
+               :trending_discussions,
+               :trending,
                nil
              ] <-
           feed_preset_test_params() do
