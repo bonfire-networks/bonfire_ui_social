@@ -161,7 +161,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
   defp some_assigns(socket_assigns, assigns, extras) do
     activity =
       (assigns[:activity] || socket_assigns[:activity])
-      |> flood("the activity")
+      |> debug("the activity")
 
     object = assigns[:object] || e(activity, :object, nil) || socket_assigns[:object]
 
@@ -315,7 +315,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
     # |> debug("prepare_verb: raw verb before modification")
 
     Activities.verb_maybe_modify(raw_verb || fallback, activity)
-    |> flood("prepare_verb: final verb after verb_maybe_modify")
+    |> debug("prepare_verb: final verb after verb_maybe_modify")
   end
 
   # defp derive_verb_from_table_id(%{table_id: "300STANN0VNCERESHARESH0VTS"}), do: "Boost"
@@ -464,7 +464,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
         "#{activity_component_id}_#{e(assigns, :showing_within, nil)}_#{activity_inception}"
     })
 
-    # |> flood("Activity preparation done")
+    # |> debug("Activity preparation done")
   end
 
   defp do_prepare(assigns), do: Map.put(assigns, :activity_prepared, :skipped)
@@ -613,13 +613,13 @@ defmodule Bonfire.UI.Social.ActivityLive do
          activity_inception,
          viewing_main_object
        ))
-    |> flood("preview_components unfiltered - #{activity_inception}")
+    |> debug("preview_components unfiltered - #{activity_inception}")
     |> Enum.reject(&is_nil/1)
     |> Enum.map(fn
       c when is_atom(c) -> {c, nil}
       other -> other
     end)
-    |> flood("preview_components - #{activity_inception}")
+    |> debug("preview_components - #{activity_inception}")
   end
 
   def maybe_prepare(%{activity: _, activity_prepared: true} = assigns) do
@@ -1188,7 +1188,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
           class: "border-l-2 border-base-content/20 pl-4 ml-2 my-2 nested-preview"
         }}
      ] ++ component_activity_maybe_creator(activity, object, object_type))
-    |> flood("MATCHED react case for verb: #{verb} in component_activity_subject")
+    |> debug("MATCHED react case for verb: #{verb} in component_activity_subject")
   end
 
   def component_activity_subject(verb, activity, object, object_type, _, _, _)
@@ -1204,7 +1204,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
           character: e(activity, :subject, :character, nil)
         }}
      ] ++ component_activity_maybe_creator(activity, object, object_type))
-    |> flood("MATCHED react case for verb: #{verb} in component_activity_subject")
+    |> debug("MATCHED react case for verb: #{verb} in component_activity_subject")
   end
 
   # create (or reply) activities
@@ -2278,7 +2278,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
           {Bonfire.UI.Social.ActivityLive,
            %{
              id: id,
-             activity: quoted_object |> flood("quoted_object"),
+             activity: quoted_object |> debug("quoted_object"),
              object: quoted_object,
              activity_inception: id,
              showing_within: :quote_preview,
