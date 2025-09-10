@@ -17,8 +17,72 @@
       feed_name={@feed_name}
     />
 
-    <div class="">
-      <button phx-click={JS.toggle(to: "#more_filters")} class="btn btn-sm btn-square"><#Icon iconify="ph:sliders-horizontal-duotone" class="w-5 h-5" /></button>
+    <div class="flex items-center gap-1">
+      <div
+        data-position="bottom-end"
+        phx-hook="Tooltip"
+        id="sort_order_dropdown_feed"
+        class="flex w-full relative"
+      >
+        <label tabindex="0" class="tooltip-button opacity-80 btn btn-square btn-sm btn-ghost">
+          {#if e(@feed_filters, :sort_order, nil) == :asc}
+            <span class="tooltip tooltip-bottom" data-tip={l("Oldest first")}>
+              <#Icon iconify="ph:sort-descending-duotone" class="w-5 h-5" />
+              <span class="sr-only">{l("Oldest first")}</span>
+            </span>
+          {#else}
+            <span class="tooltip tooltip-bottom" data-tip={l("Newest first")}>
+              <#Icon iconify="ph:sort-ascending-duotone" class="w-5 h-5" />
+              <span class="sr-only">{l("Newest first")}</span>
+            </span>
+          {/if}
+        </label>
+
+        <ul
+          tabindex="0"
+          class="tooltip z-[999] menu bg-base-100 shadow-lg border rounded-xl border-base-content/10 w-45 absolute top-0 right-0 hidden"
+        >
+          <li>
+            <a
+              phx-click="set_filter"
+              phx-value-sort_order={:desc}
+              phx-target={@event_target}
+              class="flex gap-1 px-2 text-base-content justify-between items-center"
+            >
+              <#Icon iconify="ph:sort-ascending-duotone" class="w-4 h-4" />
+              {l("Newest first")}
+              <div class="w-5 h-5 flex items-center justify-center border border-base-content/20 rounded-full">
+                <span
+                  :if={e(@feed_filters, :sort_order, nil) == :desc}
+                  class="w-[14px] h-[14px] bg-primary rounded-full"
+                />
+              </div>
+            </a>
+          </li>
+          <li>
+            <a
+              phx-click="set_filter"
+              phx-value-sort_order={:asc}
+              phx-target={@event_target}
+              class="flex gap-1 px-2 text-base-content justify-between items-center"
+            >
+              <#Icon iconify="ph:sort-descending-duotone" class="w-4 h-4" />
+
+              {l("Oldest first")}
+              <div class="w-5 h-5 flex items-center justify-center border border-base-content/20 rounded-full">
+                <span
+                  :if={e(@feed_filters, :sort_order, nil) == :asc}
+                  class="w-[14px] h-[14px] bg-primary rounded-full"
+                />
+              </div>
+            </a>
+          </li>
+        </ul>
+      </div>
+      <button
+        phx-click={JS.toggle(to: "#more_filters")}
+        class="btn opacity-80 btn-ghost btn-sm btn-square"
+      ><#Icon iconify="ph:sliders-horizontal-duotone" class="w-5 h-5" /></button>
     </div>
   </div>
 

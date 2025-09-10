@@ -592,7 +592,6 @@ defmodule Bonfire.UI.Social.ActivityLive do
          thread_title,
          activity_component_id
        ) ++
-       component_maybe_quote_post(activity, activity_inception, activity_component_id) ++
        (component_activity_subject(
           verb,
           activity,
@@ -603,6 +602,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
           subject_user
         )
         |> debug("component_activity_subject result")) ++
+       component_maybe_quote_post(activity, activity_inception, activity_component_id) ++
        component_object(object, object_type, %{primary_image: primary_image}) ++
        if(showing_within != :media, do: attachments_component, else: []) ++
        component_actions(
@@ -660,7 +660,9 @@ defmodule Bonfire.UI.Social.ActivityLive do
         "p-5 activity-padding activity relative flex flex-col gap-1 #{@class}",
         "hover:bg-primary hover:bg-opacity-5":
           @showing_within not in [:thread, :smart_input, :widget] && !@activity_inception,
-        "replied !p-0 mb-8": @activity_inception && @showing_within not in [:smart_input, :thread],
+        "replied !p-0 mb-8":
+          @activity_inception &&
+            @showing_within not in [:smart_input, :thread, :quote_preview, :nested_preview],
         "unread-activity":
           is_nil(e(@activity, :seen, nil)) and @showing_within == :notifications and
             is_nil(@activity_inception),
@@ -1048,7 +1050,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
                   activity_inception={e(component_assigns, :activity_inception, @activity_inception)}
                   myself={nil}
                   created_verb_display={@created_verb_display}
-                  showing_within={@showing_within}
+                  showing_within={e(component_assigns, :showing_within, @showing_within)}
                   thread_mode={debug(@thread_mode, "thread_modessss")}
                   activity={e(component_assigns, :activity, @activity)}
                   object={e(component_assigns, :object, @object)}
@@ -1071,6 +1073,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
                   media={e(component_assigns, :media, nil)}
                   json={e(component_assigns, :json, nil)}
                   label={e(component_assigns, :label, nil)}
+                  class={e(component_assigns, :class, nil)}
                   to={e(component_assigns, :to, nil)}
                   is_remote={@is_remote}
                 />
@@ -2216,7 +2219,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
          showing_within: :nested_preview,
          viewing_main_object: false,
          hide_actions: true,
-         class: "border-l-2 border-base-content/20 pl-4 ml-2 my-2 nested-preview"
+         class: "nested-preview"
        }}
     ]
   end
@@ -2237,7 +2240,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
            Map.merge(
              %{
                object: pointer_object,
-               class: "border-l-2 border-base-content/20 pl-4 ml-2 my-2 nested-preview",
+               class: "nested-preview",
                showing_within: :nested_preview,
                hide_actions: true
              },
@@ -2251,7 +2254,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
           {component_module,
            %{
              object: pointer_object,
-             class: "border-l-2 border-base-content/20 pl-4 ml-2 my-2 nested-preview",
+             class: "nested-preview",
              showing_within: :nested_preview,
              hide_actions: true
            }}
@@ -2284,8 +2287,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
              showing_within: :quote_preview,
              viewing_main_object: false,
              hide_actions: true,
-             class:
-               "border-l-4 border-accent/30 pl-4 ml-2 my-3 quote-preview bg-base-200/30 rounded-r-lg"
+             class: "quote-preview"
            }}
         end)
     end

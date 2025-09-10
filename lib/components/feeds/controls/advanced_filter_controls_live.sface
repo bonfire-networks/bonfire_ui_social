@@ -7,17 +7,11 @@
       event_target={@event_target}
     />
 
-    <div
-      class="flex-1"
-      data-position="bottom"
-      phx-hook="Tooltip"
-      class="relative flex-1"
-      id="filter_origin_feed"
-    >
+    <div class="" data-position="bottom" phx-hook="Tooltip" class="relative" id="filter_origin_feed">
       <label
         tabindex="0"
         class={
-          "tooltip-button btn btn-sm w-full capitalize",
+          "tooltip-button btn btn-sm btn-ghost opacity-80 w-full capitalize",
           "opacity-50 cursor-not-allowed": @preset_has_fixed_origin
         }
       >
