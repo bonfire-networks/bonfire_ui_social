@@ -26,12 +26,12 @@
       >
         <label tabindex="0" class="tooltip-button opacity-80 btn btn-square btn-sm btn-ghost">
           {#if e(@feed_filters, :sort_order, nil) == :asc}
-            <span class="tooltip tooltip-bottom" data-tip={l("Oldest first")}>
+            <span class="" data-tip={l("Oldest first")}>
               <#Icon iconify="ph:sort-descending-duotone" class="w-5 h-5" />
               <span class="sr-only">{l("Oldest first")}</span>
             </span>
           {#else}
-            <span class="tooltip tooltip-bottom" data-tip={l("Newest first")}>
+            <span class="" data-tip={l("Newest first")}>
               <#Icon iconify="ph:sort-ascending-duotone" class="w-5 h-5" />
               <span class="sr-only">{l("Newest first")}</span>
             </span>
