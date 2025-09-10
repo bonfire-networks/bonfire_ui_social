@@ -49,8 +49,10 @@
               phx-target={@event_target}
               class="flex gap-1 px-2 text-base-content justify-between items-center"
             >
+              <div class="flex items-center gap-1">
               <#Icon iconify="ph:sort-ascending-duotone" class="w-4 h-4" />
-              {l("Newest first")}
+              <span>{l("Newest first")}</span>
+              </div>
               <div class="w-5 h-5 flex items-center justify-center border border-base-content/20 rounded-full">
                 <span
                   :if={e(@feed_filters, :sort_order, nil) == :desc}
@@ -66,9 +68,11 @@
               phx-target={@event_target}
               class="flex gap-1 px-2 text-base-content justify-between items-center"
             >
+            <div class="flex items-center gap-1">
               <#Icon iconify="ph:sort-descending-duotone" class="w-4 h-4" />
 
               {l("Oldest first")}
+              </div>
               <div class="w-5 h-5 flex items-center justify-center border border-base-content/20 rounded-full">
                 <span
                   :if={e(@feed_filters, :sort_order, nil) == :asc}
