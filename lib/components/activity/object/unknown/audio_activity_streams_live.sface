@@ -63,7 +63,7 @@
             {Bonfire.Common.Localise.Cldr.Unit.new(:second, duration)
             ~> Bonfire.Common.Localise.Cldr.Unit.decompose([:day, :hour, :minute, :second])
             |> Bonfire.Common.Localise.Cldr.Unit.to_string(style: :short)
-            |> ok_unwrap() || duration}
+            |> from_ok() || duration}
           {#match duration}
             {duration}
         {/case}

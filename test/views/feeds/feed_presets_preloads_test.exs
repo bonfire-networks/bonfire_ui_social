@@ -55,7 +55,7 @@ defmodule Bonfire.UI.Social.PreloadPresetTest do
                nil
              ] <-
           feed_preset_test_params() do
-      test "for `/feed/#{preset}` with #{inspect(postloads)}", %{
+      test "for `/feed/#{preset}` with #{inspect(postloads, limit: 10)}", %{
         conn: conn,
         account: account,
         user: user,
