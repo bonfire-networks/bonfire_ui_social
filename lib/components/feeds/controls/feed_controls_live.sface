@@ -50,8 +50,8 @@
               class="flex gap-1 px-2 text-base-content justify-between items-center"
             >
               <div class="flex items-center gap-1">
-              <#Icon iconify="ph:sort-ascending-duotone" class="w-4 h-4" />
-              <span>{l("Newest first")}</span>
+                <#Icon iconify="ph:sort-ascending-duotone" class="w-4 h-4" />
+                <span>{l("Newest first")}</span>
               </div>
               <div class="w-5 h-5 flex items-center justify-center border border-base-content/20 rounded-full">
                 <span
@@ -68,10 +68,10 @@
               phx-target={@event_target}
               class="flex gap-1 px-2 text-base-content justify-between items-center"
             >
-            <div class="flex items-center gap-1">
-              <#Icon iconify="ph:sort-descending-duotone" class="w-4 h-4" />
+              <div class="flex items-center gap-1">
+                <#Icon iconify="ph:sort-descending-duotone" class="w-4 h-4" />
 
-              {l("Oldest first")}
+                {l("Oldest first")}
               </div>
               <div class="w-5 h-5 flex items-center justify-center border border-base-content/20 rounded-full">
                 <span

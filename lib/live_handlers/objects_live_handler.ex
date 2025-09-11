@@ -112,6 +112,23 @@ defmodule Bonfire.Social.Objects.LiveHandler do
     end
   end
 
+  def handle_event("quote_reject", %{"id" => request_id} = _params, socket) do
+    # debug(socket)
+
+    with {:ok, quote_post} <-
+           Bonfire.Social.Quotes.reject(request_id,
+             current_user: current_user_required!(socket)
+           ) do
+      {:noreply,
+       socket
+       |> assign_flash(:info, l("Quote rejection sent."))
+       |> redirect_to(path(quote_post), type: :maybe_external)}
+    else
+      e ->
+        error(e, l("There was an error when trying to reject the quote request"))
+    end
+  end
+
   def maybe_redirect_to(socket, to, opts) when is_binary(to) and to != "" do
     redirect_to(
       socket,

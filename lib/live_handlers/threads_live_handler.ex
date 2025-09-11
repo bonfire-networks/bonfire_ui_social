@@ -50,7 +50,7 @@ defmodule Bonfire.Social.Threads.LiveHandler do
 
     marked =
       if current_user do
-        # Task.async(fn -> # TODO? asynchronously simply so the count is updated quicker for the user
+        # apply_task(:async, fn -> # TODO? asynchronously simply so the count is updated quicker for the user
         debug(thread_id, "mark_seen: all in thread")
         Bonfire.Social.Threads.mark_all_seen([thread_id: thread_id], current_user: current_user)
         # end)

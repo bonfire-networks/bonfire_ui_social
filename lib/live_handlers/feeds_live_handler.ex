@@ -192,7 +192,7 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
 
     marked =
       if current_user do
-        # Task.async(fn -> # TODO? asynchronously simply so the count is updated quicker for the user
+        # apply_task(:async, fn -> # TODO? asynchronously simply so the count is updated quicker for the user
         debug(feed_id, "mark_seen: all in feed")
         FeedActivities.mark_all_seen(feed_id, current_user: current_user)
         # end)
