@@ -20,9 +20,9 @@
         </button>
       </div>
       <div x-show="open" x-cloak x-collapse> --}
-  <ul class="flex flex-col gap-3 bg-base-100 menu-sm p-4 w-full">
+  <ul class="flex flex-col bg-base-100 menu-sm w-full">
     {#for {preset, index} <- Enum.with_index(@presets || [])}
-      <li class="relative border border-base-content/20 rounded-xl">
+      <li class="relative border-b border-base-content/10">
         {!-- TODO? Draggable handle outside Alpine component --}
         {!-- <div
                 data-sortable-handler
@@ -32,12 +32,12 @@
               </div> --}
 
         <div class="flex-col items-start flex w-full p-3">
-          <div class="flex flex-col lg:flex-row gap-3 lg:items-center flex-1 w-full justify-between">
+          <div class="flex gap-3 lg:items-center flex-1 w-full justify-between">
             <div class="flex flex-1 items-center gap-3">
               <div class="flex items-center gap-3">
                 <Iconify.iconify icon={preset[:icon] || "ic:baseline-rss-feed"} class="w-7 h-7 opacity-70" />
                 <div class="flex flex-col gap-0 flex-1">
-                  <div class="font-medium text-base">{preset[:name] || preset[:description] || preset.id}</div>
+                  <div class="font-medium text-sm">{preset[:name] || preset[:description] || preset.id}</div>
                   <div class="text-sm text-base-content/70">{preset[:description]}</div>
                 </div>
                 {!-- <div class="text-xs text-base-content/50 mt-1 flex gap-2 flex-wrap">
@@ -76,20 +76,20 @@
                   phx-click="Bonfire.Social.Feeds:preset_nav_toggle"
                   phx-value-id={preset.id}
                   phx-value-exclude="true"
-                  class="btn btn-sm btn-ghost"
+                  class=""
                 >
                   <input type="checkbox" checked class="checkbox checkbox-primary">
-                  <span>{l("Include in the sidebar")}</span>
+                  <span class="sr-only">{l("Include in the sidebar")}</span>
                 </button>
               {#else}
                 <button
                   phx-click="Bonfire.Social.Feeds:preset_nav_toggle"
                   phx-value-id={preset.id}
                   phx-value-exclude="false"
-                  class="btn btn-sm btn-ghost"
+                  class=""
                 >
                   <input type="checkbox" class="checkbox checkbox-primary">
-                  {l("Include in the sidebar")}
+                  <span class="sr-only">{l("Include in the sidebar")}</span>
                 </button>
               {/if}
               {!-- <form phx-change="Bonfire.Social.Feeds:preset_nav_toggle" phx-value-id={preset.id}>

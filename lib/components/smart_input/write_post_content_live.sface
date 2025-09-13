@@ -1,21 +1,8 @@
-<div class="flex flex-col h-full  write_post_content">
+<div class=" write_post_content">
   {!-- FIXME: using Surface's Form component here causes it to override our @__context__ (containing current_user, etc) with the form metadata, causing issues in any component below this one --}
   <!-- for={%{}} -->
   {!-- DM RECIPIENTS --}
-  {#if e(@smart_input_opts, :create_object_type, nil) == "message" ||
-      e(@smart_input_opts, :recipients_editable, nil)}
-    <div class="relative bg-base-100 px-2">
-      <Bonfire.UI.Common.SelectRecipientsLive
-        preloaded_recipients={e(@preloaded_recipients, [])}
-        to_boundaries={@to_boundaries}
-        to_circles={@to_circles}
-        id="test"
-        event_target={@event_target || "#smart_input"}
-        context_id={@context_id}
-        is_editable={e(@smart_input_opts, :recipients_editable, true)}
-      />
-    </div>
-  {/if}
+  
 
   <form
     as={:post}
@@ -29,6 +16,24 @@
     data-scope="composer_form"
     class="with_editor flex-1"
   >
+
+    <Bonfire.UI.Common.SmartInputHeaderModalLive smart_input_opts={@smart_input_opts} /> 
+
+{#if e(@smart_input_opts, :create_object_type, nil) == "message" ||
+      e(@smart_input_opts, :recipients_editable, nil)}
+    <div class="relative bg-base-100 p-2">
+      <Bonfire.UI.Common.SelectRecipientsLive
+        preloaded_recipients={e(@preloaded_recipients, [])}
+        to_boundaries={@to_boundaries}
+        to_circles={@to_circles}
+        id="test"
+        event_target={@event_target || "#smart_input"}
+        context_id={@context_id}
+        is_editable={e(@smart_input_opts, :recipients_editable, true)}
+      />
+    </div>
+  {/if}
+  
     <Bonfire.UI.Common.InputControlsLive
       preloaded_recipients={e(@preloaded_recipients, [])}
       open_boundaries={@open_boundaries}
@@ -58,6 +63,15 @@
         smart_input_opts={@smart_input_opts}
         insert_text={@insert_text}
         showing_within={@showing_within}
+
+        to_boundaries={@to_boundaries}
+        boundary_preset={@boundary_preset}
+        preview_boundary_for_id={@preview_boundary_for_id}
+        preview_boundary_for_username={@preview_boundary_for_username}
+        preview_boundary_verbs={@preview_boundary_verbs}
+        to_circles={@to_circles}
+        exclude_circles={@exclude_circles}
+
       />
     </Bonfire.UI.Common.InputControlsLive>
   </form>

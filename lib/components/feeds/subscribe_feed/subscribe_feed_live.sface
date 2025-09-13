@@ -18,12 +18,12 @@
               phx-hook="Copy"
               id="rss-feed-copy-btn"
               href={rss_url |> URIs.based_url()}
-              class="btn btn-sm btn-square btn-outline border-base-content/20"
+              class="btn btn-sm btn-outline border-base-content/20 flex items-center gap-2"
               title={l("Copy RSS URL")}
               aria-label={l("Copy RSS URL")}
             >
               <#Icon iconify="ion:copy" class="w-4 h-4" />
-              <span class="sr-only">{l("Copy RSS URL")}</span>
+              <span class="">{l("Copy RSS URL")}</span>
             </a>
             <a
               rel="alternate"
@@ -35,39 +35,40 @@
               aria-label={l("Open RSS feed")}
             >
               <#Icon iconify="mdi:rss" class="w-4 h-4" />
-              Get RSS feed
+              {l "Get RSS feed"}
             </a>
           </div>
           <div class="flex items-center gap-2">
             <a
+              phx-hook="Copy"
+              id="atom-feed-copy-btn"
+              href={atom_url |> URIs.based_url()}
+              class="btn btn-sm btn-outline border-base-content/20 flex items-center gap-2"
+              title={l("Copy Atom URL")}
+              aria-label={l("Copy Atom URL")}
+            >
+              <#Icon iconify="ion:copy" class="w-4 h-4" />
+              <span class="">{l("Copy Atom URL")}</span>
+            </a>
+            <a
               rel="alternate"
               type="application/atom+xml"
               href={atom_url}
-              class="btn btn-sm btn-outline flex items-center gap-2 w-[80px] justify-center"
+              class="btn btn-sm btn-outline border-base-content/20 flex items-center gap-2"
               target="_blank"
               title={l("Open Atom feed")}
               aria-label={l("Open Atom feed")}
             >
               <#Icon iconify="mdi:atom" class="w-4 h-4" />
-              Atom
+              {l "Get Atom feed"}
             </a>
-            <a
-              phx-hook="Copy"
-              id="atom-feed-copy-btn"
-              href={atom_url |> URIs.based_url()}
-              class="btn btn-sm btn-ghost flex items-center gap-2 justify-center"
-              title={l("Copy Atom URL")}
-              aria-label={l("Copy Atom URL")}
-            >
-              <#Icon iconify="ion:copy" class="w-4 h-4" />
-              <span class="sr-only">{l("Copy Atom URL")}</span>
-            </a>
+            
           </div>
         </div>
       </div>
   {/case}
   <:open_btn>
-    <div class={"text-left cursor-pointer", "btn btn-sm btn-circle": @as_icon}>
+    <div class={"text-left cursor-pointer", "btn btn-sm btn-circle btn-ghost": @as_icon}>
       <#Icon :if={@as_icon} iconify="ph:rss-simple-duotone" class="w-4 h-4" />
       <span class={"sr-only": @as_icon}>{l("Subscribe to feed (RSS/Atom)")}</span>
     </div>

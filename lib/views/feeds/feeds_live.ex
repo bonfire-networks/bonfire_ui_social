@@ -4,6 +4,7 @@ defmodule Bonfire.UI.Social.FeedsLive do
   alias Bonfire.Social.Feeds.LiveHandler
   alias Bonfire.UI.Social.FeedLive
   alias Bonfire.UI.Social.FeedController
+  alias Bonfire.UI.Common.SmartInput.LiveHandler, as: SmartInputLiveHandler
 
   declare_extension("Social UI",
     icon: "ph:rss-simple-duotone",
@@ -23,12 +24,12 @@ defmodule Bonfire.UI.Social.FeedsLive do
       # Bonfire.UI.Social.ExploreLive,
       # Bonfire.UI.Social.Feeds.LocalLive,
       # Bonfire.UI.Social.Feeds.FederationLive,
-      Bonfire.UI.Reactions.BookmarksLive,
+      # Bonfire.UI.Reactions.BookmarksLive,
       # Bonfire.UI.Social.Feeds.LikesLive,
       Bonfire.UI.Messages.MessagesLive,
-      Bonfire.UI.Social.NotificationsFeedLive,
+      # Bonfire.UI.Social.NotificationsFeedLive,
       Bonfire.UI.Me.ProfileLive,
-      Bonfire.UI.Groups.ExploreLive,
+      # Bonfire.UI.Groups.ExploreLive,
       Bonfire.UI.Boundaries.SidebarCirclesLive,
       Bonfire.PanDoRa.Components.SidebarPandoraLive,
       Bonfire.UI.Groups.SidebarGroupsLive
@@ -143,6 +144,27 @@ defmodule Bonfire.UI.Social.FeedsLive do
 
   # defp from_socket do
   #   to_options(socket) ++ [feed_filters: %{object_types: params["type"]}]
+  # end
+
+  # def handle_params(%{"compose" => "open"} = params, url, socket) do
+  #   # Remove the compose param to avoid polluting downstream logic
+  #   params_without_compose = Map.delete(params, "compose")
+
+  #   # Call set_feed_assigns directly instead of handle_params to avoid recursion
+  #   {:noreply, updated_socket} = set_feed_assigns(params_without_compose, socket)
+
+  #   # Set smart_input_opts in socket assigns for initial render
+  #   updated_socket = assign(updated_socket, smart_input_opts: %{open: true})
+
+  #   # Send to PersistentLive for initial render (works with PhoenixTest)
+  #   Bonfire.UI.Common.PersistentLive.maybe_send_assigns(assigns(updated_socket))
+
+  #   # Also use SmartInputLiveHandler for dynamic updates (works in browser)
+  #   SmartInputLiveHandler.assign_open(updated_socket)
+
+  #   IO.inspect("Opened composer via both PersistentLive assigns and SmartInputLiveHandler")
+
+  #   {:noreply, updated_socket}
   # end
 
   def handle_params(

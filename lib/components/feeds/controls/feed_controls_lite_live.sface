@@ -44,60 +44,7 @@
       />
     </div>
     <div class="font-semibold uppercase text-xs text-base-content/60 mb-3  border-t border-base-content/10 pt-3 mt-3">{l("Advanced Filters")}</div>
-    <!-- <Bonfire.UI.Social.ToggleTypeLive
-      label={l("Follows")}
-      key={:follow}
-      field={:activity_types}
-      feed_filters={@feed_filters}
-      event_target={@event_target}
-      event_name="set_filter"
-      label_default={l("Include")}
-    />
-
-    {#for key when key not in [:post, :reply, :boost, :follow] <- @feed_filters[:activity_types] || []}
-      <Bonfire.UI.Social.ToggleTypeLive
-        label={String.capitalize(to_string(key))}
-        key={key}
-        field={:activity_types}
-        feed_filters={@feed_filters}
-        event_target={@event_target}
-        event_name="set_filter"
-        label_default={l("Include")}
-      />
-    {/for}
-
-    {#for key when key not in [:image, :link, :audio, :video, :research] <- @feed_filters[:media_types] || []}
-      <Bonfire.UI.Social.ToggleTypeLive
-        label={String.capitalize(to_string(key))}
-        key={key}
-        field={:media_types}
-        feed_filters={@feed_filters}
-        event_target={@event_target}
-        event_name="set_filter"
-        label_default={l("Include")}
-      />
-    {/for}
-
-    {#for key when key not in [:post, "post"] <- @feed_filters[:object_types] || []}
-      <Bonfire.UI.Social.ToggleTypeLive
-        label={String.capitalize(to_string(key))}
-        key={key}
-        field={:object_types}
-        feed_filters={@feed_filters}
-        event_target={@event_target}
-        event_name="set_filter"
-        label_default={l("Include")}
-      />
-    {/for} -->
-    <!-- <div class="flex lg:hidden flex-col gap-2 lg:mt-2 w-full">
-      <Bonfire.UI.Social.TimeControlLive
-        feed_name={@feed_name}
-        event_target={@event_target}
-        event_name="set_filter"
-        current_value={e(@feed_filters, :time_limit, nil)}
-        scope={:user}
-      />
-    </div> -->
+   
     <StatefulComponent
       id="advanced_filter_controls_lite"
       module={Bonfire.UI.Social.AdvancedFilterControlsLive}

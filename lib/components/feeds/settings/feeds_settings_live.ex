@@ -26,6 +26,10 @@ defmodule Bonfire.UI.Social.FeedsSettingsLive do
         |> Enum.map(fn {id, preset} ->
           Map.put(preset, :id, id)
         end)
+        |> Enum.sort_by(fn preset ->
+          # Sort by built_in status first (built-ins come first), then by name/id
+          {preset[:built_in] != true, preset[:name] || preset.id}
+        end)
 
       assigns
       |> assign(scoped: scoped)

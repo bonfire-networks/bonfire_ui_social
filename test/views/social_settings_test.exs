@@ -238,6 +238,7 @@ defmodule Bonfire.UI.Social.SettingsTest do
 
       # Check most liked post is first
       conn = visit(conn, "/feed/local")
+      PhoenixTest.open_browser(conn)
       assert_has(conn, "article", text: "reply 1")
 
       # Change sort to replies

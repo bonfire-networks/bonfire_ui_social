@@ -41,11 +41,11 @@
         <div class="flex flex-wrap items-center gap-3 p-2">
           {#for p <- @participants || []}
             <div class="z-[9] relative">
+                  <!-- show_controls={[:follow]} # convert in a absolute + button placed in the user top right when the profile item is rendered as an avatar--> 
               <div>
                 <StatelessComponent
                   module={maybe_component(Bonfire.UI.Me.ProfileItemLive)}
                   wrapper_class=""
-                  show_controls={[:follow]}
                   only_img
                   with_popover
                   avatar_class="w-8 h-8 rounded-full"

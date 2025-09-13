@@ -7,7 +7,7 @@
       event_target={@event_target}
     />
 
-    <div class="" data-position="bottom" phx-hook="Tooltip" class="relative" id="filter_origin_feed">
+    <!-- <div class="" data-position="bottom" phx-hook="Tooltip" class="relative" id="filter_origin_feed">
       <label
         tabindex="0"
         class={
@@ -116,7 +116,7 @@
           {l("Origin filter is fixed for this feed preset")}
         </p>
       </div>
-    </div>
+    </div> -->
 
     <Bonfire.UI.Social.TimeControlLive
       feed_name={@feed_name}

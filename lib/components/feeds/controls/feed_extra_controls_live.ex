@@ -44,4 +44,56 @@ defmodule Bonfire.UI.Social.FeedExtraControlsLive do
         user_id in exclude_subjects or to_string(user_id) in exclude_subjects
     end
   end
+
+  @doc """
+  Checks if replies are excluded from the feed.
+  Returns true if :reply is in exclude_activity_types list, false otherwise.
+  """
+  def replies_excluded?(feed_filters) do
+    exclude_activity_types = e(feed_filters, :exclude_activity_types, [])
+    
+    case exclude_activity_types do
+      false -> false  # Handle when it's explicitly false
+      types when is_list(types) -> 
+        :reply in types or "reply" in types
+      _ -> false
+    end
+  end
+
+  @doc """
+  Checks if boosts are excluded from the feed.
+  Returns true if :boost is in exclude_activity_types list, false otherwise.
+  """
+  def boosts_excluded?(feed_filters) do
+    exclude_activity_types = e(feed_filters, :exclude_activity_types, [])
+    
+    case exclude_activity_types do
+      false -> false  # Handle when it's explicitly false
+      types when is_list(types) -> 
+        :boost in types or "boost" in types
+      _ -> false
+    end
+  end
+
+  @doc """
+  Gets preset origin information for the feed.
+  Returns a map with preset_has_fixed_origin and preset_origin values.
+  """
+  def get_preset_origin_info(feed_filters, context) do
+    feed_name = e(feed_filters, :feed_name, nil)
+
+    case Bonfire.Social.Feeds.feed_preset_if_permitted(feed_name, context: context) do
+      {:ok, %{filters: %{origin: preset_origin}}} when not is_nil(preset_origin) ->
+        %{
+          preset_has_fixed_origin: true,
+          preset_origin: preset_origin
+        }
+
+      _ ->
+        %{
+          preset_has_fixed_origin: false,
+          preset_origin: nil
+        }
+    end
+  end
 end
