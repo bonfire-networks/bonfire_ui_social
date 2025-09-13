@@ -7,7 +7,7 @@
       event_target={@event_target}
     />
 
-    <!-- <div class="" data-position="bottom" phx-hook="Tooltip" class="relative" id="filter_origin_feed">
+    {!-- <div class="" data-position="bottom" phx-hook="Tooltip" class="relative" id="filter_origin_feed">
       <label
         tabindex="0"
         class={
@@ -116,7 +116,7 @@
           {l("Origin filter is fixed for this feed preset")}
         </p>
       </div>
-    </div> -->
+    </div> --}
 
     <Bonfire.UI.Social.TimeControlLive
       feed_name={@feed_name}
@@ -125,7 +125,7 @@
       current_value={e(@feed_filters, :time_limit, nil)}
       scope={:user}
     />
-    <!-- <div :if={@show_circles_button} class="relative" id="filter_circles_feed">
+    {!-- <div :if={@show_circles_button} class="relative" id="filter_circles_feed">
       <label tabindex="0" class="btn w-full btn-sm btn-ghost capitalize" phx-click={JS.toggle(to: "#open_circles")}>
         <span class="hidden lg:flex">{l("By circles")}</span>
         <span class="lg:hidden"><#Icon iconify="ph:circle-duotone" class="w-4 h-4" /></span>
@@ -135,6 +135,6 @@
           end}</span>
         <#Icon iconify="mdi:chevron-down" class="w-4 h-4" />
       </label>
-    </div> -->
+    </div> --}
   </div>
 </div>

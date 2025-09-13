@@ -1,5 +1,5 @@
 <div class="flex items-center gap-1">
-  <!-- <div
+  {!-- <div
     data-tip={if e(@feed_filters, :sort_order, nil) != :asc, do: l("Oldest first"), else: l("Newes first")}
     class=""
     >
@@ -24,7 +24,7 @@
         <span class="sr-only">{l("Newest first")}</span>
       </a>
     {/if}
-  </div> -->
+  </div> --}
   <div
     data-position="bottom-end"
     phx-hook="Tooltip"
