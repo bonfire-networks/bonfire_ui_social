@@ -35,7 +35,7 @@
               aria-label={l("Open RSS feed")}
             >
               <#Icon iconify="mdi:rss" class="w-4 h-4" />
-              {l "Get RSS feed"}
+              {l("Get RSS feed")}
             </a>
           </div>
           <div class="flex items-center gap-2">
@@ -60,9 +60,8 @@
               aria-label={l("Open Atom feed")}
             >
               <#Icon iconify="mdi:atom" class="w-4 h-4" />
-              {l "Get Atom feed"}
+              {l("Get Atom feed")}
             </a>
-            
           </div>
         </div>
       </div>

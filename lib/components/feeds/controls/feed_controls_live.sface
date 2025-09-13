@@ -90,9 +90,10 @@
     </div>
   </div>
 
-  <div id="more_filters" class="px-6 flex p-4 border-t border-base-content/10 flex-col gap-2 hidden">
-
-
+  <div
+    id="more_filters"
+    class="px-6 flex p-4 border-t border-base-content/10 flex-col gap-2 hidden"
+  >
     <Bonfire.UI.Social.FeedExtraControlsLive
       event_target={@event_target}
       event_name="set_filter"

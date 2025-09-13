@@ -51,12 +51,17 @@ defmodule Bonfire.UI.Social.FeedExtraControlsLive do
   """
   def replies_excluded?(feed_filters) do
     exclude_activity_types = e(feed_filters, :exclude_activity_types, [])
-    
+
     case exclude_activity_types do
-      false -> false  # Handle when it's explicitly false
-      types when is_list(types) -> 
+      # Handle when it's explicitly false
+      false ->
+        false
+
+      types when is_list(types) ->
         :reply in types or "reply" in types
-      _ -> false
+
+      _ ->
+        false
     end
   end
 
@@ -66,12 +71,17 @@ defmodule Bonfire.UI.Social.FeedExtraControlsLive do
   """
   def boosts_excluded?(feed_filters) do
     exclude_activity_types = e(feed_filters, :exclude_activity_types, [])
-    
+
     case exclude_activity_types do
-      false -> false  # Handle when it's explicitly false
-      types when is_list(types) -> 
+      # Handle when it's explicitly false
+      false ->
+        false
+
+      types when is_list(types) ->
         :boost in types or "boost" in types
-      _ -> false
+
+      _ ->
+        false
     end
   end
 

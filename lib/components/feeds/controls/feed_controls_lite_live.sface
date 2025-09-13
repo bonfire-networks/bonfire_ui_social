@@ -44,7 +44,7 @@
       />
     </div>
     <div class="font-semibold uppercase text-xs text-base-content/60 mb-3  border-t border-base-content/10 pt-3 mt-3">{l("Advanced Filters")}</div>
-   
+
     <StatefulComponent
       id="advanced_filter_controls_lite"
       module={Bonfire.UI.Social.AdvancedFilterControlsLive}

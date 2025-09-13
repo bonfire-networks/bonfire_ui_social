@@ -1,6 +1,6 @@
 <div x-data="{open: false}" id={@container_id} class={@container_class}>
   <div x-on:click="open = !open" class="flex items-center justify-between gap-4 cursor-pointer">
-    <div class="font-medium text-sm text-base-content/80 ">{l("Filter by circles")}</div>
+    <div class="font-medium text-sm text-base-content/80">{l("Filter by circles")}</div>
     <button type="button" x-cloak class="btn btn-circle btn-sm btn-ghost" x-show="open">
       <#Icon iconify="ph:caret-down-duotone" class="w-4 h-4 text-primary/80" />
     </button>
@@ -30,6 +30,4 @@
       </li>
     </ul>
   </div>
-
-  
 </div>
