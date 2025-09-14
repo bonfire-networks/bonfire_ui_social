@@ -16,7 +16,7 @@
       object={@object}
     />
 
-    <div :if={!@read_only} phx-update="ignore">
+    <div :if={!@read_only} id={"#{@parent_id}_edit_post_#{id(@object)}"} phx-update="ignore">
       <h3 :if={@versioning_enabled} class="font-bold mt-5 text-base flex-1">
         {l("Edit")}
       </h3>
