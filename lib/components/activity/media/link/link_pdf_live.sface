@@ -16,7 +16,7 @@
       </div>
     {#match preview_img}
       <LazyImage
-        parent_id={["pdf", @parent_id, id(@media)]}
+        parent_id={deterministic_dom_id(__MODULE__, id(@media), "pdf", @parent_id)}
         class="rounded-none object-cover object-top rounded-l-lg cursor-pointer m-image w-full h-[300px] lg:h-[420px]"
         src={preview_img}
         media={@media}

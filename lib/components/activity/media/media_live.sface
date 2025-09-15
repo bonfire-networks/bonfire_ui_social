@@ -272,7 +272,7 @@
                           {#case preview_img(m) || Media.media_url(m)}
                             {#match maybe_preview_img}
                               <LazyImage
-                                parent_id={["media", @parent_id, id(m)]}
+                                parent_id={deterministic_dom_id(__MODULE__, id(m), "media", @parent_id)}
                                 class={
                                   "border-base-content/10 !object-cover m-image w-full h-full cursor-pointer rounded-md",
                                   grayscale: @showing_within == :flags
@@ -300,7 +300,7 @@
                           {#match maybe_preview_img}
                             {#if is_image?(maybe_preview_img)}
                               <LazyImage
-                                parent_id={["imgp", @parent_id, id(m)]}
+                                parent_id={deterministic_dom_id(__MODULE__, id(m), "media", @parent_id)}
                                 class="border-base-content/10 !object-cover m-image h-full cursor-pointer max-h-[500px] rounded-md"
                                 media={m}
                                 alt={media_label}

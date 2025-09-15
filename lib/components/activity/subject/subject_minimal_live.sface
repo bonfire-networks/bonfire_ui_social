@@ -23,7 +23,7 @@
         <div class="flex-1 ml-3">
           <div class="text-sm font-medium text-base-content/70">
             <LinkLive
-              parent_id={["subject_minimal_name", @parent_id]}
+              parent_id={deterministic_dom_id(__MODULE__, @subject_id, "subject_minimal_name", @parent_id)}
               class="font-medium"
               to={@path}
               opts={"data-id": "subject_name"}
@@ -52,7 +52,7 @@
               <#Icon iconify="ph:user-plus-duotone" class="flex-shrink-0 w-6 h-6 text-info" />
               <div class="flex gap-2">
                 {!-- <Bonfire.UI.Common.AvatarLive
-                  parent_id={["sm", @activity_component_id || @activity_id]}
+                  parent_id={deterministic_dom_id(__MODULE__, @subject_id, "subject_follow_avatar", @parent_id)}
                   user_id={@profile_id}
                   src={@profile_media}
                   title={@profile_name}
@@ -61,7 +61,7 @@
                 <LinkLive
                   to={@path}
                   opts={"data-id": "subject_name"}
-                  parent_id={["subject_minimal_name", @parent_id]}
+                  parent_id={deterministic_dom_id(__MODULE__, @subject_id, "subject_minimal_name", @parent_id)}
                   class="flex link link-hover items-center gap-5 justify-start"
                 >
                   <div class="font-medium text-sm text-base-content/70">
@@ -124,7 +124,7 @@
                 {#case @emoji}
                   {#match %{media_type: "emoji"} = emoji}
                     <LazyImage
-                      parent_id={["emoji", @parent_id, id(emoji)]}
+                      parent_id={deterministic_dom_id(__MODULE__, id(emoji), "emoji", @parent_id)}
                       class="w-5 h-5"
                       media={emoji}
                       alt={e(emoji, :metadata, "shortcode", nil) <> " " <> e(emoji, :metadata, "label", nil)}
@@ -135,7 +135,7 @@
                           class="link link-hover font-semibold"
                           to={@path}
                           opts={"data-id": "subject_name"}
-                          parent_id={["subject_minimal_name", @parent_id]}
+                          parent_id={deterministic_dom_id(__MODULE__, @subject_id, "subject_minimal_name", @parent_id)}
                         >
                           {#if @object_id == current_user_id(@__context__)}
                             {l("You")}
@@ -154,7 +154,7 @@
                           class="link link-hover font-semibold"
                           to={@path}
                           opts={"data-id": "subject_name"}
-                          parent_id={["subject_minimal_name", @parent_id]}
+                          parent_id={deterministic_dom_id(__MODULE__, @subject_id, "subject_minimal_name", @parent_id)}
                         >
                           {#if @object_id == current_user_id(@__context__)}
                             {l("You")}
@@ -168,7 +168,7 @@
                   {#match _}
                     <div class="avatar-group -space-x-3">
                       <Bonfire.UI.Common.AvatarLive
-                        parent_id={["sm", @activity_component_id || @activity_id]}
+                        parent_id={deterministic_dom_id(__MODULE__, nil, "sm-main", @parent_id)}
                         user_id={@profile_id}
                         src={@profile_media}
                         title={@profile_name || @character_username}
@@ -178,7 +178,7 @@
                         {#for {subject, idx} <- Enum.with_index(@subjects_more)}
                           {#if idx < 2}
                             <Bonfire.UI.Common.AvatarLive
-                              parent_id={["sm", @activity_component_id || @activity_id, idx]}
+                              parent_id={deterministic_dom_id(__MODULE__, idx, "sm", @parent_id)}
                               user_id={id(subject)}
                               src={nil}
                               title={e(subject, :profile, :name, nil)}
@@ -192,7 +192,7 @@
                       <LinkLive
                         to={@path}
                         opts={"data-id": "subject_name"}
-                        parent_id={["subject_minimal_name", @parent_id]}
+                        parent_id={deterministic_dom_id(__MODULE__, @subject_id, "subject_minimal_name", @parent_id)}
                         class="link link-hover font-bold"
                       >
                         {#if @object_id == current_user_id(@__context__)}
@@ -219,7 +219,7 @@
             <div class="flex-1 flex gap-2 items-center">
               <div class="avatar-group -space-x-3">
                 <Bonfire.UI.Common.AvatarLive
-                  parent_id={["sm", @activity_component_id || @activity_id]}
+                  parent_id={deterministic_dom_id(__MODULE__, nil, "smf-main", @parent_id)}
                   user_id={@profile_id}
                   src={@profile_media}
                   title={@profile_name || @character_username}
@@ -229,7 +229,7 @@
                   {#for {subject, idx} <- Enum.with_index(@subjects_more)}
                     {#if idx < 2}
                       <Bonfire.UI.Common.AvatarLive
-                        parent_id={["sm", @activity_component_id || @activity_id, idx]}
+                        parent_id={deterministic_dom_id(__MODULE__, idx, "smf", @parent_id)}
                         user_id={id(subject)}
                         src={nil}
                         title={e(subject, :profile, :name, nil)}
@@ -243,7 +243,7 @@
                 <LinkLive
                   to={@path}
                   opts={"data-id": "subject_name"}
-                  parent_id={["subject_minimal_name", @parent_id]}
+                  parent_id={deterministic_dom_id(__MODULE__, @subject_id, "subject_minimal_name", @parent_id)}
                   class="flex link link-hover items-center gap-5 justify-start"
                 >
                   <div class="font-bold link link-hover text-sm text-base-content/70">
@@ -267,7 +267,7 @@
               <div class="flex items-center gap-2">
                 <div class="avatar-group -space-x-3">
                   <Bonfire.UI.Common.AvatarLive
-                    parent_id={["sm", @activity_component_id || @activity_id]}
+                    parent_id={deterministic_dom_id(__MODULE__, nil, "smb-main", @parent_id)}
                     user_id={@profile_id}
                     src={@profile_media}
                     title={@profile_name || @character_username}
@@ -277,7 +277,7 @@
                     {#for {subject, idx} <- Enum.with_index(@subjects_more)}
                       {#if idx < 2}
                         <Bonfire.UI.Common.AvatarLive
-                          parent_id={["sm", @activity_component_id || @activity_id, idx]}
+                          parent_id={deterministic_dom_id(__MODULE__, idx, "smb", @parent_id)}
                           user_id={id(subject)}
                           src={nil}
                           title={e(subject, :profile, :name, nil)}
@@ -291,7 +291,7 @@
                   <LinkLive
                     to={@path}
                     opts={"data-id": "subject_name"}
-                    parent_id={["subject_minimal_name", @parent_id]}
+                    parent_id={deterministic_dom_id(__MODULE__, @subject_id, "subject_minimal_name", @parent_id)}
                     class="link link-hover font-bold"
                   >
                     {#if @object_id == current_user_id(@__context__)}
@@ -316,9 +316,13 @@
             {!-- PIN --}
             <#Icon iconify="ph:rocket-launch" class="w-6 h-6 stroke-1 text-success" />
             <div class="flex-1 flex gap-2">
-              <LinkLive to={@path} opts={"data-id": "subject_name"} parent_id={["subject_avatar", @parent_id]}>
+              <LinkLive
+                to={@path}
+                opts={"data-id": "subject_name"}
+                parent_id={deterministic_dom_id(__MODULE__, @subject_id, "subject_avatar", @parent_id)}
+              >
                 <Bonfire.UI.Common.AvatarLive
-                  parent_id={["sm", @activity_component_id || @activity_id]}
+                  parent_id={deterministic_dom_id(__MODULE__, @activity_component_id || @activity_id, "sm", nil)}
                   user_id={@profile_id}
                   src={@profile_media}
                   title={@profile_name}
@@ -329,7 +333,7 @@
                 <LinkLive
                   to={@path}
                   opts={"data-id": "subject_name"}
-                  parent_id={["subject_minimal_name", @parent_id]}
+                  parent_id={deterministic_dom_id(__MODULE__, @subject_id, "subject_minimal_name", @parent_id)}
                   class="link link-hover font-semibold"
                 >
                   {#if @object_id == current_user_id(@__context__)}
@@ -378,7 +382,7 @@
                     class="font-medium link link-hover"
                     to={@path}
                     opts={"data-id": "subject_name"}
-                    parent_id={["subject_minimal_name", @parent_id]}
+                    parent_id={deterministic_dom_id(__MODULE__, @subject_id, "subject_minimal_name", @parent_id)}
                   >
                     {@profile_name || @character_username}
                   </LinkLive>
@@ -436,7 +440,7 @@
                 class="font-medium link link-hover text-base-content/70"
                 to={@path}
                 opts={"data-id": "subject_name"}
-                parent_id={["subject_minimal_name", @parent_id]}
+                parent_id={deterministic_dom_id(__MODULE__, @subject_id, "subject_minimal_name", @parent_id)}
               >
                 {@profile_name || @character_username}
               </LinkLive>
@@ -457,7 +461,7 @@
                 class="font-medium link link-hover text-base-content/70"
                 to={@path}
                 opts={"data-id": "subject_name"}
-                parent_id={["subject_minimal_name", @parent_id]}
+                parent_id={deterministic_dom_id(__MODULE__, @subject_id, "subject_minimal_name", @parent_id)}
               >
                 {#if @object_id == current_user_id(@__context__)}
                   {l("You")}
@@ -482,7 +486,7 @@
                       class="font-medium link link-hover text-base-content/70"
                       to={@path}
                       opts={"data-id": "subject_name"}
-                      parent_id={["subject_minimal_name", @parent_id]}
+                      parent_id={deterministic_dom_id(__MODULE__, @subject_id, "subject_minimal_name", @parent_id)}
                     >
                       {#if @object_id == current_user_id(@__context__) || @subject_id == current_user_id(@__context__)}
                         {l("You")}
@@ -494,7 +498,7 @@
                   </div>
                 {#match %{media_type: "emoji"} = emoji}
                   <LazyImage
-                    parent_id={["emoji", @parent_id, id(emoji)]}
+                    parent_id={deterministic_dom_id(__MODULE__, id(emoji), "emoji", @parent_id)}
                     class="w-5 h-5"
                     media={emoji}
                     alt={e(emoji, :metadata, "label", nil) || e(emoji, :metadata, "shortcode", nil)}
@@ -504,7 +508,7 @@
                       class="font-medium link link-hover text-base-content/70"
                       to={@path}
                       opts={"data-id": "subject_name"}
-                      parent_id={["subject_minimal_name", @parent_id]}
+                      parent_id={deterministic_dom_id(__MODULE__, @subject_id, "subject_minimal_name", @parent_id)}
                     >
                       {#if @object_id == current_user_id(@__context__) || @subject_id == current_user_id(@__context__)}
                         {l("You")}
@@ -517,7 +521,7 @@
                 {#match _}
                   <div class="avatar-group -space-x-3">
                     <Bonfire.UI.Common.AvatarLive
-                      parent_id={["sm", @activity_component_id || @activity_id]}
+                      parent_id={deterministic_dom_id(__MODULE__, nil, "sml-main", @parent_id)}
                       user_id={@profile_id}
                       src={@profile_media}
                       title={@profile_name || @character_username}
@@ -527,7 +531,7 @@
                       {#for {subject, idx} <- Enum.with_index(@subjects_more)}
                         {#if idx < 2}
                           <Bonfire.UI.Common.AvatarLive
-                            parent_id={["sm", @activity_component_id || @activity_id, idx]}
+                            parent_id={deterministic_dom_id(__MODULE__, idx, "sml", @parent_id)}
                             user_id={id(subject)}
                             src={nil}
                             title={e(subject, :profile, :name, nil)}
@@ -541,7 +545,7 @@
                     <LinkLive
                       to={@path}
                       opts={"data-id": "subject_name"}
-                      parent_id={["subject_minimal_name", @parent_id]}
+                      parent_id={deterministic_dom_id(__MODULE__, @subject_id, "subject_minimal_name", @parent_id)}
                       class="link link-hover font-bold"
                     >
                       {#if @object_id == current_user_id(@__context__)}
@@ -572,7 +576,7 @@
                 class="font-medium link link-hover text-base-content/70"
                 to={@path}
                 opts={"data-id": "subject_name"}
-                parent_id={["subject_minimal_name", @parent_id]}
+                parent_id={deterministic_dom_id(__MODULE__, @subject_id, "subject_minimal_name", @parent_id)}
               >
                 {@profile_name || @character_username}
               </LinkLive>
@@ -594,7 +598,7 @@
             <div class="flex-1 flex gap-2 items-center">
               <div class="avatar-group -space-x-3">
                 <Bonfire.UI.Common.AvatarLive
-                  parent_id={["sm", @activity_component_id || @activity_id]}
+                  parent_id={deterministic_dom_id(__MODULE__, nil, "smb-main", @parent_id)}
                   user_id={@profile_id}
                   src={@profile_media}
                   title={@profile_name || @character_username}
@@ -604,7 +608,7 @@
                   {#for {subject, idx} <- Enum.with_index(@subjects_more)}
                     {#if idx < 2}
                       <Bonfire.UI.Common.AvatarLive
-                        parent_id={["sm", @activity_component_id || @activity_id, idx]}
+                        parent_id={deterministic_dom_id(__MODULE__, idx, "smb", @parent_id)}
                         user_id={id(subject)}
                         src={nil}
                         title={e(subject, :profile, :name, nil)}
@@ -618,7 +622,7 @@
                 <LinkLive
                   to={@path}
                   opts={"data-id": "subject_name"}
-                  parent_id={["subject_minimal_name", @parent_id]}
+                  parent_id={deterministic_dom_id(__MODULE__, @subject_id, "subject_minimal_name", @parent_id)}
                   class="link link-hover font-bold"
                 >
                   {#if @object_id == current_user_id(@__context__)}
@@ -646,7 +650,7 @@
                 class="font-medium link link-hover text-base-content/70"
                 to={@path}
                 opts={"data-id": "subject_name"}
-                parent_id={["subject_minimal_name", @parent_id]}
+                parent_id={deterministic_dom_id(__MODULE__, @subject_id, "subject_minimal_name", @parent_id)}
               >
                 {@profile_name || @character_username}
               </LinkLive>
@@ -665,7 +669,7 @@
                   class="font-medium link link-hover"
                   to={@path}
                   opts={"data-id": "subject_name"}
-                  parent_id={["subject_minimal_name", @parent_id]}
+                  parent_id={deterministic_dom_id(__MODULE__, @subject_id, "subject_minimal_name", @parent_id)}
                 >
                   {@profile_name || @character_username}
                 </LinkLive>

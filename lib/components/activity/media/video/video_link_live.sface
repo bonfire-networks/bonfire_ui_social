@@ -15,7 +15,7 @@
                 do: JS.toggle(to: ".remote_media_#{id(@media)}")}
             >
               <LazyImage
-                parent_id={["video", @parent_id, id(@media)]}
+                parent_id={deterministic_dom_id(__MODULE__, id(@media), "video", @parent_id)}
                 class="w-full rounded-t-box !object-cover m-image cursor-pointer aspect-video"
                 media={@media}
                 alt={@media_label}
@@ -31,7 +31,7 @@
                     {#match nil}
                       <#Icon iconify="heroicons:play-20-solid" class="w-6 h-6 hover:text-white text-gray-300" />
                     {#match url}
-                      <LinkLive to={url} parent_id={["video_link", id(@media), @showing_within, @parent_id]} class="">
+                      <LinkLive to={url} parent_id={deterministic_dom_id(__MODULE__, id(@media), "video_link", @parent_id)} class="">
                         <#Icon iconify="heroicons:play-20-solid" class="w-6 h-6 hover:text-white text-gray-300" />
                       </LinkLive>
                   {/case}

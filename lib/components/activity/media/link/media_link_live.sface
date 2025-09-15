@@ -19,7 +19,7 @@
           {#if @small_icon or @activity_inception}
             <div class="flex place-content-center items-center max-w-[130px] h-[130px]">
               <LazyImage
-                parent_id={["icon", @parent_id, id(@media)]}
+                parent_id={deterministic_dom_id(__MODULE__, id(@media), "icon", @parent_id)}
                 class="rounded-none object-cover rounded-l-lg cursor-pointer m-image h-full"
                 fallback_class="w-8 h-8 text-base-content/70"
                 src={@preview_img}
@@ -39,7 +39,7 @@
               /> --}
 
                 <LazyImage
-                  parent_id={["icon", @parent_id, id(@media)]}
+                  parent_id={deterministic_dom_id(__MODULE__, id(@media), "icon", @parent_id)}
                   class="rounded-none object-cover rounded-t-lg cursor-pointer m-image w-full aspect-[1.91/1]"
                   fallback_class="w-8 h-8 text-base-content/70"
                   src={@preview_img}
@@ -55,7 +55,7 @@
                 Bonfire.Files.FaviconStore.favicon_url(@media_url)}
               {#match favicon_url when is_binary(favicon_url)}
                 <LazyImage
-                  parent_id={["icon", @parent_id, id(@media)]}
+                  parent_id={deterministic_dom_id(__MODULE__, id(@media), "icon", @parent_id)}
                   class="rounded-none object-cover rounded-l-lg cursor-pointer m-image min-w-8 max-w-[120px] w-full h-full"
                   fallback_class="w-8 h-8 text-base-content/70"
                   src={favicon_url}

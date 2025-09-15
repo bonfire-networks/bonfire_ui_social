@@ -3,7 +3,7 @@
   phx-hook="Tooltip"
   data-position="bottom-end"
   data-rendered={@showing_within}
-  id={deterministic_dom_id(__MODULE__, id(@activity_component_id || @activity), "more_menu", @parent_id)}
+  id={deterministic_dom_id(__MODULE__, id(@activity), "more_menu", @parent_id)}
   aria-haspopup="true"
   class="feed_activity relative"
 >
@@ -205,7 +205,12 @@
         <li :if={Bonfire.Boundaries.can?(@__context__, :pin, :instance)}>
           <StatelessComponent
             module={maybe_component(Bonfire.UI.Reactions.PinActionLive, @__context__)}
-            parent_id={deterministic_dom_id(__MODULE__, id(@activity_component_id || @activity), "instance-pin", nil)}
+            parent_id={deterministic_dom_id(
+              __MODULE__,
+              id(@activity_component_id || @activity),
+              "instance-pin",
+              @parent_id
+            )}
             scope={:instance}
             object={@object}
             class="flex items-center px-4 text-sm text-neutral-content/80"
@@ -345,7 +350,12 @@
                 permalink={@permalink}
                 flagged={@flagged}
                 hide_icon
-                parent_id={deterministic_dom_id(__MODULE__, id(@activity_component_id || @activity), "flag_object", nil)}
+                parent_id={deterministic_dom_id(
+                  __MODULE__,
+                  id(@activity_component_id || @activity),
+                  "flag_object",
+                  @parent_id
+                )}
                 object_type={e(@object_type_readable, l("object"))}
                 label={l("Flag this %{object}", object: e(@object_type_readable, l("object")))}
               />
@@ -358,7 +368,7 @@
                 object={@creator_id}
                 hide_icon
                 flagged={@flagged}
-                parent_id={deterministic_dom_id(__MODULE__, id(@activity_component_id || @activity), "flag_user", nil)}
+                parent_id={deterministic_dom_id(__MODULE__, id(@activity_component_id || @activity), "flag_user", @parent_id)}
                 object_type={@creator_name || l("user")}
               />
             </li>
@@ -465,7 +475,12 @@
                     creator_id={@creator_id}
                     object_type_readable={@object_type_readable}
                     object_boundary={@object_boundary}
-                    parent_id={deterministic_dom_id(__MODULE__, id(@activity_component_id || @activity), "delete_object", nil)}
+                    parent_id={deterministic_dom_id(
+                      __MODULE__,
+                      id(@activity_component_id || @activity),
+                      "delete_object",
+                      @parent_id
+                    )}
                   />
                 </li>
 
@@ -480,7 +495,12 @@
                     object_boundary={@object_boundary}
                     object_type_readable={l("from feeds")}
                     creator_id={@creator_id}
-                    parent_id={deterministic_dom_id(__MODULE__, id(@activity_component_id || @activity), "delete_activity", nil)}
+                    parent_id={deterministic_dom_id(
+                      __MODULE__,
+                      id(@activity_component_id || @activity),
+                      "delete_activity",
+                      @parent_id
+                    )}
                     explanation={l(
                       "Deleting from feeds means this %{verb} and this %{object} still exist, but this activity won't be discoverable via the local instance's feeds. Remote feeds won't be affected.",
                       object: @object_type_readable || l("object"),
@@ -502,7 +522,12 @@
             hide_icon
             object_type_readable={@object_type_readable}
             object_boundary={@object_boundary}
-            parent_id={deterministic_dom_id(__MODULE__, id(@activity_component_id || @activity), "delete_object", nil)}
+            parent_id={deterministic_dom_id(
+              __MODULE__,
+              id(@activity_component_id || @activity),
+              "delete_object",
+              @parent_id
+            )}
           />
         </li>
       {/if}

@@ -7,7 +7,7 @@
           {#match maybe_preview_img}
             {#if maybe_preview_img && MediaLive.is_image?(maybe_preview_img)}
               <LazyImage
-                parent_id={["audio", @parent_id, id(@media)]}
+                parent_id={deterministic_dom_id(__MODULE__, id(@media), "audio", @parent_id)}
                 class="w-full !object-cover m-image"
                 media={@media}
                 alt={@media_label}
