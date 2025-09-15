@@ -16,10 +16,11 @@ defmodule Bonfire.UI.Social.FeedsNavigation.Test do
       |> assert_path("/feed/my")
       |> click_link("[data-id=nav_sidebar_nav_links] a", "Explore")
       |> assert_path("/feed/explore")
-      |> click_link("[data-id=nav_sidebar_nav_links] a", "Likes")
-      |> assert_path("/feed/likes")
-      |> click_link("[data-id=nav_sidebar_nav_links] a", "Bookmarks")
-      |> assert_path("/feed/bookmarks")
+      # Note: "Likes" and "Bookmarks" feeds are currently commented out in the navigation
+      # |> click_link("[data-id=nav_sidebar_nav_links] a", "Likes")  
+      # |> assert_path("/feed/likes")
+      # |> click_link("[data-id=nav_sidebar_nav_links] a", "Bookmarks")
+      # |> assert_path("/feed/bookmarks")
 
       # |> click_link("[data-id=nav_sidebar_nav_links] a", "Discussions")
       # |> assert_path("/feed/filter/discussions")
@@ -42,9 +43,10 @@ defmodule Bonfire.UI.Social.FeedsNavigation.Test do
     test "user can change sort order", %{} do
       conn(user: fake_user!())
       |> visit("/feed")
-      |> assert_has("span", text: "Newest first")
-      |> click_link("Newest first")
-      |> assert_has("span", text: "Oldest first")
+      # The sort order dropdown is already visible, just click on "Oldest first"
+      |> click_link("Oldest first")
+      # Verify the dropdown button now shows the ascending sort icon (for "Oldest first")
+      |> assert_has("#sort_order_dropdown_feed .sr-only", text: "Oldest first")
     end
 
     @tag :todo
