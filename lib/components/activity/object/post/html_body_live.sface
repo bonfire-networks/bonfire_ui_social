@@ -1,6 +1,11 @@
 <div
-  id={"expandable_note_#{@parent_id}_#{id(@activity) || id(@object) || 'no-id'}"}
-  data-ref={"note_ref_#{@parent_id}_#{id(@activity) || id(@object) || 'no-id'}"}
+  id={deterministic_dom_id(
+    __MODULE__,
+    id(@activity) || id(@object) || "no-id",
+    "expandable_note",
+    @parent_id
+  )}
+  data-ref={deterministic_dom_id(__MODULE__, id(@activity) || id(@object) || "no-id", "note_ref", @parent_id)}
   data-id="object_body"
   data-inception={@activity_inception}
   data-rendered={@showing_within}

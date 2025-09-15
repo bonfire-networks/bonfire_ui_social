@@ -1,6 +1,11 @@
 <div
   :hook
-  id={"truncation_detector_#{@parent_id}_#{id(@activity) || id(@object) || 'no-id'}"}
+  id={deterministic_dom_id(
+    __MODULE__,
+    id(@activity) || id(@object) || "no-id",
+    "truncation_detector",
+    @parent_id
+  )}
   data-showing-within={@showing_within}
   data-viewing-main-object={@viewing_main_object}
 >

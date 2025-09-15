@@ -24,7 +24,7 @@
       LiveHandler.feed_live_update_many_preload_mode() != :async_actions}
     object_id={@object_id}
     object_type={Types.object_type(@published_in) || @object_type}
-    parent_id={"#{@activity_inception}#{@activity_id}"}
+    parent_id={deterministic_dom_id(__MODULE__, @activity_id, "activity_inception", @activity_inception)}
     with_icon
     object_boundary={@object_boundary}
   /> 

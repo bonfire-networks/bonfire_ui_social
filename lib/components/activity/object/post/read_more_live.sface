@@ -1,15 +1,30 @@
 <div
-  id={"expandable_controls_#{@parent_id}_#{id(@activity) || id(@object) || 'no-id'}"}
+  id={deterministic_dom_id(
+    __MODULE__,
+    id(@activity) || id(@object) || "no-id",
+    "expandable_controls",
+    @parent_id
+  )}
   class="read-more-controls"
 >
   <button
     type="button"
-    id={"read_more_button_#{@parent_id}_#{id(@activity) || id(@object) || 'no-id'}"}
+    id={deterministic_dom_id(
+      __MODULE__,
+      id(@activity) || id(@object) || "no-id",
+      "read_more_button",
+      @parent_id
+    )}
     class="link text-sm mt-2 font-medium link-hover link-primary normal-case read-more-btn"
   >{l("Read more")}</button>
   <button
     type="button"
-    id={"read_less_button_#{@parent_id}_#{id(@activity) || id(@object) || 'no-id'}"}
+    id={deterministic_dom_id(
+      __MODULE__,
+      id(@activity) || id(@object) || "no-id",
+      "read_less_button",
+      @parent_id
+    )}
     class="link text-sm mt-2 font-medium link-hover link-primary normal-case read-less-btn"
     style="display: none;"
   >{l("Read less")}</button>

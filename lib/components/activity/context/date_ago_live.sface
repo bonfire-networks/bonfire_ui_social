@@ -11,7 +11,7 @@
       )}
       {#match :relative}
         <span
-          id={"date_ago_#{@parent_id}_#{@activity_id}_#{@object_id}"}
+          id={deterministic_dom_id(__MODULE__, nil, nil, @parent_id)}
           data-date={date_time}
           title={DatesTimes.format(date_time)}
           :hook

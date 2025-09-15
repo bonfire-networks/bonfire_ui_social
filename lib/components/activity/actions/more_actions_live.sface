@@ -3,7 +3,7 @@
   phx-hook="Tooltip"
   data-position="bottom-end"
   data-rendered={@showing_within}
-  id={"more-menu-#{id(@activity_component_id || @activity)}"}
+  id={deterministic_dom_id(__MODULE__, id(@activity_component_id || @activity), "more_menu", @parent_id)}
   aria-haspopup="true"
   class="feed_activity relative"
 >
@@ -66,7 +66,7 @@
     <li>
       <a
         phx-hook="Copy"
-        id={"more_action_copy_url_#{@parent_id}_#{id(@activity)}_#{id(@object)}_#{@showing_within}"}
+        id={deterministic_dom_id(__MODULE__, id(@activity), "more_action_copy_url", @parent_id)}
         href={@permalink || URIs.canonical_url(@object, preload_if_needed: false)}
         class="flex items-center gap-2 text-sm text-base-content"
       >
@@ -82,7 +82,7 @@
         (@object_type == Bonfire.Data.Social.Message ||
            Bonfire.Boundaries.can?(@__context__, :describe, @object_boundary))}>
         <Bonfire.UI.Common.OpenModalLive
-          id={"thread_title_#{id(@activity) || @thread_id}"}
+          id={deterministic_dom_id(__MODULE__, id(@activity) || @thread_id, "thread_title", @parent_id)}
           title_text={l("Edit the title of this discussion")}
           no_actions
           form_opts={%{"phx-submit" => "Bonfire.Social.Objects:set_name", "phx-target" => "##{@activity_component_id}"}}
@@ -173,7 +173,12 @@
           {!-- TODO: should depend on thread creator: current_user_id(@__context__) == @thread_creator_id --}
           <StatelessComponent
             module={maybe_component(Bonfire.UI.Reactions.PinActionLive, @__context__)}
-            parent_id={"object-#{id(@activity_component_id || @activity)}"}
+            parent_id={deterministic_dom_id(
+              __MODULE__,
+              id(@activity_component_id || @activity),
+              "object-pin",
+              @parent_id
+            )}
             scope={:thread}
             scope_object={@thread_id}
             object={@object}
@@ -200,7 +205,7 @@
         <li :if={Bonfire.Boundaries.can?(@__context__, :pin, :instance)}>
           <StatelessComponent
             module={maybe_component(Bonfire.UI.Reactions.PinActionLive, @__context__)}
-            parent_id={"instance-pin-#{id(@activity_component_id || @activity)}"}
+            parent_id={deterministic_dom_id(__MODULE__, id(@activity_component_id || @activity), "instance-pin", nil)}
             scope={:instance}
             object={@object}
             class="flex items-center px-4 text-sm text-neutral-content/80"
@@ -228,7 +233,12 @@
         <li>
           <StatefulComponent
             module={maybe_component(Bonfire.UI.Posts.DownloadMarkLive, @__context__)}
-            id={"download_markdown_#{@activity_component_id || id(@activity)}"}
+            id={deterministic_dom_id(
+              __MODULE__,
+              @activity_component_id || id(@activity),
+              "download_markdown",
+              @parent_id
+            )}
             object_id={id(@object)}
             as_icon={false}
           />
@@ -335,7 +345,7 @@
                 permalink={@permalink}
                 flagged={@flagged}
                 hide_icon
-                parent_id={"object-#{id(@activity_component_id || @activity)}"}
+                parent_id={deterministic_dom_id(__MODULE__, id(@activity_component_id || @activity), "flag_object", nil)}
                 object_type={e(@object_type_readable, l("object"))}
                 label={l("Flag this %{object}", object: e(@object_type_readable, l("object")))}
               />
@@ -348,7 +358,7 @@
                 object={@creator_id}
                 hide_icon
                 flagged={@flagged}
-                parent_id={"user-#{id(@activity_component_id || @activity)}"}
+                parent_id={deterministic_dom_id(__MODULE__, id(@activity_component_id || @activity), "flag_user", nil)}
                 object_type={@creator_name || l("user")}
               />
             </li>
@@ -385,7 +395,7 @@
       {#if Bonfire.Boundaries.can?(@__context__, :grant, @object_boundary)}
         <li>
           <Bonfire.UI.Common.OpenModalLive
-            id={"thread_lock_#{id(@activity) || @thread_id}"}
+            id={deterministic_dom_id(__MODULE__, id(@activity) || @thread_id, "thread_lock", @parent_id)}
             title_text={l("Lock this discussion")}
             no_actions
           >
@@ -411,7 +421,7 @@
           Bonfire.Boundaries.can?(@__context__, :grant, :instance)}
         <li>
           <Bonfire.UI.Common.OpenModalLive
-            id={"thread_unlock_#{id(@activity) || @thread_id}"}
+            id={deterministic_dom_id(__MODULE__, id(@activity) || @thread_id, "thread_unlock", @parent_id)}
             title_text={l("Unlock this discussion")}
             no_actions
           >
@@ -455,7 +465,7 @@
                     creator_id={@creator_id}
                     object_type_readable={@object_type_readable}
                     object_boundary={@object_boundary}
-                    parent_id={"object-#{id(@activity_component_id || @activity)}"}
+                    parent_id={deterministic_dom_id(__MODULE__, id(@activity_component_id || @activity), "delete_object", nil)}
                   />
                 </li>
 
@@ -470,7 +480,7 @@
                     object_boundary={@object_boundary}
                     object_type_readable={l("from feeds")}
                     creator_id={@creator_id}
-                    parent_id={"delete-activity-#{id(@activity_component_id || @activity)}"}
+                    parent_id={deterministic_dom_id(__MODULE__, id(@activity_component_id || @activity), "delete_activity", nil)}
                     explanation={l(
                       "Deleting from feeds means this %{verb} and this %{object} still exist, but this activity won't be discoverable via the local instance's feeds. Remote feeds won't be affected.",
                       object: @object_type_readable || l("object"),
@@ -492,7 +502,7 @@
             hide_icon
             object_type_readable={@object_type_readable}
             object_boundary={@object_boundary}
-            parent_id={"object-#{id(@activity_component_id || @activity)}"}
+            parent_id={deterministic_dom_id(__MODULE__, id(@activity_component_id || @activity), "delete_object", nil)}
           />
         </li>
       {/if}

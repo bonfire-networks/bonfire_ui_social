@@ -1,6 +1,11 @@
 <div
   data-id="activity_article"
-  id={"article_container_#{@parent_id}_#{id(@activity) || id(@object) || 'no-id'}"}
+  id={deterministic_dom_id(
+    __MODULE__,
+    id(@activity) || id(@object) || "no-id",
+    "article_container",
+    @parent_id
+  )}
   data-rendered={@showing_within}
   data-main-object={@viewing_main_object}
   class={
@@ -10,7 +15,7 @@
   }
 >
   <Bonfire.UI.Common.OpenExternalLinkLive
-    id={"article-#{@showing_within}-#{@parent_id}-#{id(@activity) || 'no-a'}-#{id(@object) || 'no-o'}-#{@viewing_main_object}-#{@activity_inception}"}
+    id={deterministic_dom_id(__MODULE__, nil, "link", @parent_id)}
     prompt_external_links={@showing_within == :flags}
   >
     {#case Media.media_url(@primary_image)}

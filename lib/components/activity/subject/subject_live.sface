@@ -84,7 +84,7 @@
             <StatelessComponent
               module={maybe_component(Bonfire.UI.Boundaries.AddToCircleLive, @__context__)}
               user_id={@subject_id}
-              parent_id={"subject_avatar_tooltip_#{@subject_id}_#{@activity_id}_#{@reply_to_id}"}
+              parent_id={deterministic_dom_id(__MODULE__, @subject_id, "subject_avatar_tooltip", "#{@activity_id}_#{@reply_to_id}")}
               as_icon
             />
           </div>

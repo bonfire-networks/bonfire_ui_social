@@ -1,6 +1,11 @@
 <div
   data-id="activity_note"
-  id={"note_container_#{@parent_id}_#{id(@activity) || id(@object) || 'no-id'}"}
+  id={deterministic_dom_id(
+    __MODULE__,
+    id(@activity) || id(@object) || "no-id",
+    "note_container",
+    @parent_id
+  )}
   data-activity-id={id(@activity)}
   data-object-id={id(@object)}
   data-view-transition-name={"activity-#{id(@activity) || id(@object)}"}
@@ -13,7 +18,7 @@
   }
 >
   <Bonfire.UI.Common.OpenExternalLinkLive
-    id={"note-#{@showing_within}-#{@parent_id}-#{id(@activity) || 'no-a'}-#{id(@object) || 'no-o'}-#{@viewing_main_object}-#{@activity_inception}"}
+    id={deterministic_dom_id(__MODULE__, nil, "link", @parent_id)}
     prompt_external_links={@showing_within == :flags}
   >
     {#case e(post_content(@object), :name, nil)}
