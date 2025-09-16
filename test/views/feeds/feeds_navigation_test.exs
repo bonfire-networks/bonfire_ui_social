@@ -16,6 +16,7 @@ defmodule Bonfire.UI.Social.FeedsNavigation.Test do
       |> assert_path("/feed/my")
       |> click_link("[data-id=nav_sidebar_nav_links] a", "Explore")
       |> assert_path("/feed/explore")
+
       # Note: "Likes" and "Bookmarks" feeds are currently commented out in the navigation
       # |> click_link("[data-id=nav_sidebar_nav_links] a", "Likes")  
       # |> assert_path("/feed/likes")

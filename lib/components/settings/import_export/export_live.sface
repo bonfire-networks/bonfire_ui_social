@@ -1,0 +1,267 @@
+<div class="m-4">
+  <div class="overflow-x-auto">
+    <table class="table table-zebra">
+      <tbody>
+        {!-- row 1 --}
+        {!-- <tr>
+          <td>Media Storage</td>
+          <td />
+        </tr> --}
+        {!-- row 2 --}
+        <tr>
+          <td>Posts</td>
+          {!-- <td>42</td> --}
+          <td><a
+              download
+              href="/settings/export/csv/posts"
+              class="btn btn-ghost items-center text-base-content/70 btn-xs normal-case  gap-2"
+            >
+              <#Icon iconify="pajamas:import" class="w-4 h-4" />
+              <span>CSV</span>
+            </a></td>
+        </tr>
+        <tr>
+          <td>Messages</td>
+          {!-- <td>42</td> --}
+          <td><a
+              download
+              href="/settings/export/csv/messages"
+              class="btn btn-ghost items-center text-base-content/70 btn-xs normal-case  gap-2"
+            >
+              <#Icon iconify="pajamas:import" class="w-4 h-4" />
+              <span>CSV</span>
+            </a></td>
+        </tr>
+        {!-- row 3 --}
+        <tr>
+          <td>Following</td>
+          {!-- <td>160</td> --}
+          <td>
+            <a
+              download
+              href="/settings/export/csv/following"
+              class="btn btn-ghost items-center text-base-content/70 btn-xs normal-case  gap-2"
+            >
+              <#Icon iconify="pajamas:import" class="w-4 h-4" />
+              <span>CSV</span>
+            </a>
+          </td>
+        </tr>
+        <tr>
+          <td>Follow Requests</td>
+          {!-- <td>1</td> --}
+          <td>
+            <a
+              download
+              href="/settings/export/csv/requests"
+              class="btn btn-ghost items-center text-base-content/70 btn-xs normal-case  gap-2"
+            >
+              <#Icon iconify="pajamas:import" class="w-4 h-4" />
+              <span>CSV</span>
+            </a>
+          </td>
+        </tr>
+        <tr>
+          <td>Followers</td>
+          {!-- <td>23</td> --}
+          <td><a
+              download
+              href="/settings/export/csv/followers"
+              class="btn btn-ghost items-center text-base-content/70 btn-xs normal-case  gap-2"
+            >
+              <#Icon iconify="pajamas:import" class="w-4 h-4" />
+              <span>CSV</span>
+            </a></td>
+        </tr>
+
+        <tr>
+          <td>Bookmarks</td>
+          <td><a
+              download
+              href="/settings/export/csv/bookmarks"
+              class="btn btn-ghost items-center text-base-content/70 btn-xs normal-case  gap-2"
+            >
+              <#Icon iconify="pajamas:import" class="w-4 h-4" />
+              <span>CSV</span>
+            </a></td>
+        </tr>
+        <tr>
+          <td>Likes</td>
+          <td><a
+              download
+              href="/settings/export/csv/likes"
+              class="btn btn-ghost items-center text-base-content/70 btn-xs normal-case  gap-2"
+            >
+              <#Icon iconify="pajamas:import" class="w-4 h-4" />
+              <span>CSV</span>
+            </a></td>
+        </tr>
+        <tr>
+          <td>Boosts</td>
+          <td><a
+              download
+              href="/settings/export/csv/boosts"
+              class="btn btn-ghost items-center text-base-content/70 btn-xs normal-case  gap-2"
+            >
+              <#Icon iconify="pajamas:import" class="w-4 h-4" />
+              <span>CSV</span>
+            </a></td>
+        </tr>
+        <tr>
+          <td>Circles</td>
+          <td><a
+              download
+              href="/settings/export/csv/circles"
+              class="btn btn-ghost items-center text-base-content/70 btn-xs normal-case  gap-2"
+            >
+              <#Icon iconify="pajamas:import" class="w-4 h-4" />
+              <span>CSV</span>
+            </a></td>
+        </tr>
+
+        {!-- 
+        <tr>
+          <td>Boundaries</td>
+          <td>2</td>
+          <td><button class="btn btn-ghost items-center text-base-content/70 btn-xs normal-case  gap-2">
+              <#Icon iconify="pajamas:import" class="w-4 h-4" />
+              <span>CSV</span>
+            </button></td>
+        </tr> --}
+
+        <tr>
+          <td>Silenced</td>
+          {!-- <td>23</td> --}
+          <td><a
+              download
+              href="/settings/export/csv/silenced"
+              class="btn btn-ghost items-center text-base-content/70 btn-xs normal-case  gap-2"
+            >
+              <#Icon iconify="pajamas:import" class="w-4 h-4" />
+              <span>CSV</span>
+            </a></td>
+        </tr>
+        <tr>
+          <td>Ghosted</td>
+          {!-- <td>23</td> --}
+          <td><a
+              download
+              href="/settings/export/csv/ghosted"
+              class="btn btn-ghost items-center text-base-content/70 btn-xs normal-case  gap-2"
+            >
+              <#Icon iconify="pajamas:import" class="w-4 h-4" />
+              <span>CSV</span>
+            </a></td>
+        </tr>
+        {!-- <tr>
+          <td>Blocks</td>
+          <td>23</td>
+          <td><button class="btn btn-ghost items-center text-base-content/70 btn-xs normal-case  gap-2">
+              <#Icon iconify="pajamas:import" class="w-4 h-4" />
+              <span>CSV</span>
+            </button></td>
+        </tr> --}
+        <tr>
+          <td>My profile</td>
+          {!-- <td>23</td> --}
+          <td><a
+              download
+              href="/settings/export/json/actor"
+              class="btn btn-ghost items-center text-base-content/70 btn-xs normal-case  gap-2"
+            >
+              <#Icon iconify="pajamas:import" class="w-4 h-4" />
+              <span>JSON</span>
+            </a></td>
+        </tr>
+        <tr>
+          <td>My public & private keys</td>
+          {!-- <td>23</td> --}
+          <td><a
+              download
+              href="/settings/export/binary/keys/asc"
+              class="btn btn-ghost items-center text-base-content/70 btn-xs normal-case  gap-2"
+            >
+              <#Icon iconify="pajamas:import" class="w-4 h-4" />
+              <span>PEM</span>
+            </a></td>
+        </tr>
+        <tr>
+          <td>My activities</td>
+          {!-- <td>23</td> --}
+          <td><a
+              download
+              href="/settings/export/json/outbox"
+              class="btn btn-ghost items-center text-base-content/70 btn-xs normal-case  gap-2"
+            >
+              <#Icon iconify="pajamas:import" class="w-4 h-4" />
+              <span>JSON</span>
+            </a></td>
+        </tr>
+        <!-- 
+        TODO: optimise AP-based export
+        <tr>
+          <td>My actitivities</td>
+          {!-- <td>23</td> --}
+          <td><a
+              download
+              href="/settings/export/json/outbox"
+              class="btn btn-ghost items-center text-base-content/70 btn-xs normal-case  gap-2"
+            >
+              <#Icon iconify="pajamas:import" class="w-4 h-4" />
+              <span>JSON</span>
+            </a></td>
+        </tr> -->
+      </tbody>
+    </table>
+  </div>
+
+  <div x-data="{ exporting: false }">
+    <div class="mt-6 text-sm text-base-content/70">
+      {l(
+        "You can also request an archive of all your activities (in the ActivityPub format), copies of uploaded media, along with all of the above data (in CSV format). You can export a new archive every 7 days."
+      )}
+    </div>
+
+    {#case Bonfire.UI.Social.ExportController.archive_previous_date(current_user_id(@__context__))}
+      {#match archive_days_old}
+        {#if archive_days_old}
+          <a
+            href="/settings/export/archive_download"
+            class="btn mt-4 btn-primary normal-case btn-sm"
+            download
+          >
+            {l("Download your existing archive")}</a>
+
+          <a
+            :if={maybe_apply(Bonfire.Me.Accounts, :is_admin?, [@__context__], fallback_return: nil) == true}
+            href="/settings/export/archive_delete"
+            class="btn mt-4 btn-danger normal-case btn-xs"
+          >
+            {l("Delete archive")}</a>
+        {/if}
+        {#if !archive_days_old or archive_days_old >= 7}
+          <a
+            phx-click="Bonfire.Me.Archive:prepare_archive"
+            class="btn mt-4 btn-primary normal-case btn-sm"
+            x-on:click="exporting = true"
+            x-bind:disabled="exporting"
+          >
+            {!-- download
+    href="/settings/export/archive" --}
+
+            {l("Request your archive")}</a>
+
+          <a
+            phx-click="Bonfire.Me.Archive:cancel_archive"
+            class="btn mt-4 btn-primary normal-case btn-sm"
+            x-show="exporting"
+            x-cloak
+            x-on:click="exporting = false"
+          >
+            {l("Cancel")}</a>
+        {/if}
+    {/case}
+  </div>
+</div>
+
+<StatelessComponent module={maybe_component(Bonfire.UI.Social.Graph.MoveAwayLive, @__context__)} />

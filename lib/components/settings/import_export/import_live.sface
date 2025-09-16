@@ -1,0 +1,186 @@
+<div>
+  {#case maybe_apply(Bonfire.Federate.ActivityPub, :federating?, [current_user(@__context__)],
+      fallback_return: false
+    )}
+    {#match federating?}
+      {!-- <div class="flex items-center justify-between mb-4 mx-4">
+        <h2 class="text-lg font-semibold">{l("Import Data")}</h2>
+      </div> --}
+
+      <div class="p-4 mb-0 rounded-md bg-info/10">
+        <div class="flex">
+          <div class="flex-shrink-0">
+            <div iconify="ph:info-duotone" class="w-5 h-5 text-info" aria-hidden="true" />
+          </div>
+          <div class="flex-1 ml-3 md:flex md:justify-between">
+            <div class="text-sm text-info">
+              {cond do
+                @type == :blocks and @scope == :instance_wide ->
+                  l(
+                    "You can import a blocklist of users or instances you want to silence or ghost for all users of this instance."
+                  )
+
+                @type == :blocks ->
+                  l("You can import a blocklist of users or instances you want to silence or ghost.")
+
+                true ->
+                  l(
+                    "You can import your web of relationships from others compatible platforms, this is a key feature of the fediverse. You can import data that you have previously exported from another instance in CVS format."
+                  )
+              end}
+            </div>
+          </div>
+        </div>
+
+        <div :if={@type == :blocks} class="mt-3 text-sm prose">
+          {rich(
+            l(
+              "Here are a few sources to get started (you can download the CSV files from any of those to import here):"
+            ) <>
+              """
+
+                - [DNI](https://connect.iftas.org/library/iftas-documentation/iftas-dni-list/) by [IFTAS](https://iftas.org/)
+                - [Garden Fence](https://github.com/gardenfence/blocklist/blob/main/gardenfence-fediblocksync.csv) by [sunny.garden](https://sunny.garden/@gardenfence)
+                - [Seirdy's lists](https://seirdy.one/posts/2023/05/02/fediverse-blocklists/)
+                - [Unified list (includes Seirdy, Garden Fence, IFTAS DNI...)](https://codeberg.org/oliphant/blocklists/src/branch/main/blocklists/mastodon/_unified_tier0_blocklist.csv) by [Oliphant](https://oliphant.social/)
+                - [The Bad Space](https://tweaking.thebad.space/exports/) ([more info](https://tweaking.thebad.space/about))
+                - [Fediseer](https://fediseer.com/)
+              """
+          )}
+        </div>
+      </div>
+
+      {#if @scope != :instance_wide and @type != :blocks}
+        <form data-scope="set_import" phx-change="Bonfire.Common.Settings:set">
+          <Bonfire.UI.Common.SettingsToggleLive
+            name={l("Fetch replies on import")}
+            description={l("Automatically fetch replies to my imported posts.")}
+            keys={[Bonfire.Social.Import, :fetch_threads_on_import]}
+            scope={@scope}
+            default_value={false}
+          />
+        </form>
+      {/if}
+
+      <Form multipart submit="import" change="validate" opts={"phx-target": @myself}>
+        <div class="p-4">
+          <div class="grid grid-cols-2 mt-5 items-center gap-3">
+            <div class="flex flex-col gap-1 flex-1" id="import_type" phx-update="ignore">
+              <h2 class="font-semibold text-sm">{l("Import type")}</h2>
+              <Select field={:type} class="select" options={options_list(@scope, @type, federating?)} />
+            </div>
+
+            <div class="flex flex-col gap-1 flex-1">
+              <div class="font-semibold text-sm">{l("Data")}</div>
+              {!-- <FileInput field="file" class="mt-4 file-input file-input-bordered w-full max-w-md" opts={"accepts": ".csv"} /> --}
+              <label for={@uploads.file.ref} class="w-full max-w-md">
+                <!-- <span>{l("Upload or drop")}</span> -->
+                <Phoenix.Component.live_file_input upload={@uploads.file} class="file-input" />
+              </label>
+            </div>
+          </div>
+
+          <button class="btn mt-3 w-full btn-primary">{l("Upload")}</button>
+        </div>
+      </Form>
+
+      <div
+        :if={@type != :blocks}
+        x-data="{open: false}"
+        class="m-4 mt-0 border border-base-content/10 rounded-box p-3 bg-base-200/50"
+      >
+        {!-- {...pry()} --}
+        <div x-on:click="open = !open" class="flex items-start gap-4 justify-between cursor-pointer">
+          <div class="flex flex-col gap-1">
+            <div class="items-start flex gap-3">
+              <#Icon iconify="ph:swap-duotone" class="w-7 h-7 text-primary" />
+              <div class="flex flex-col">
+                <div class="font-semibold">{l("Move from a different profile")}</div>
+                <div class="text-sm font-light text-base-content/70">{l(
+                    "Move from another profile to this one (works across instances, and also with other fediverse tools like Mastodon or Akkoma)"
+                  )}</div>
+              </div>
+            </div>
+          </div>
+          <button type="button" x-cloak class="rounded btn btn-square btn-sm btn-ghost" x-show="open">
+            <#Icon iconify="ph:caret-down-duotone" class="w-5 h-5 text-base-content" />
+          </button>
+          <button type="button" class="rounded btn btn-square btn-sm btn-ghost" x-show="!open">
+            <#Icon iconify="ph:caret-up-duotone" class="w-5 h-5 text-base-content" />
+          </button>
+        </div>
+
+        <div x-show="open" x-cloak x-collapse>
+          <div class="prose prose-sm mt-6" />
+          <div class="p-4 mt-4 mb-0 rounded-md bg-warning/10">
+            <div class="flex">
+              <div class="flex-shrink-0">
+                <#Icon solid="InformationCircle" class="w-5 h-5 text-warning" />
+              </div>
+              <div class="flex-1 ml-3 md:flex md:justify-between">
+                <div class="prose prose-sm text-warning max-w-full">
+                  {markdown(
+                    l(
+                      "If you want to move from another profile to this one (%{username}), here you can create an alias, which you must do *before* you can proceed with moving followers from the old account to this new one. This action by itself is harmless and reversible. After adding the alias here, you need to trigger the actual account migration from the old account.",
+                      username: Bonfire.Me.Characters.display_username(current_user(@__context__), true, true)
+                    )
+                  )}
+                </div>
+              </div>
+            </div>
+          </div>
+          <form inert={federating? == false} phx-submit="Bonfire.Social.Graph.Aliases:move_in">
+            <div class="form-control  mt-4 w-full">
+              <div class="text-base font-bold pb-2 border-b border-base-content/20 mb-4">{l("Existing aliases")}</div>
+              <ul>
+                <li :for={%{edge: %{object: %{profile: profile, character: %{id: _} = character}}} <-
+                  Bonfire.Social.Graph.Aliases.list_my_aliases(current_user(@__context__))
+                  |> e(:edges, [])
+                  |> debug("list_my_aliases")}>
+                  <StatelessComponent
+                    module={maybe_component(Bonfire.UI.Me.ProfileItemLive)}
+                    show_controls={[:follows_me]}
+                    character={character}
+                    profile={profile}
+                    class="btn btn-square btn-ghost btn-sm"
+                    avatar_class="w-10 h-10 rounded-full"
+                  />
+                </li>
+              </ul>
+            </div>
+
+            <div class="mt-4 w-full">
+              <fieldset class="fieldset">
+                <legend class="fieldset-legend text-sm">{l("Name of your old account")}</legend>
+                <input name="actor" type="text" placeholder="Type here" class="input w-full">
+                <p class="label text-sm">{markdown(l("Specify the *@username@domain.com* of the account you want to move from"))}</p>
+              </fieldset>
+              <button disabled={federating? == false || federating? == nil} class="w-full btn btn-primary mt-4">
+                {if federating? == false || federating? == nil,
+                  do: l("This feature is not available (because federation is turned off)"),
+                  else: l("Add alias")}</button>
+            </div>
+          </form>
+        </div>
+      </div>
+
+      <div class="m-4">
+        <div class="p-4 mb-0 rounded-md bg-info/10">
+          <div class="flex items-center">
+            <div class="flex-shrink-0">
+              <div iconify="ph:info-duotone" class="w-5 h-5 text-info" aria-hidden="true" />
+            </div>
+            <div class="flex-1 ml-3 md:flex items-center md:justify-between">
+              <div class="text-sm text-info">
+                {l("Already imported some data? You can check the status of each import.")}
+              </div>
+              <Bonfire.UI.Common.LinkLive to="/settings/import_history" class="btn btn-sm ml-4">
+                <#Icon iconify="heroicons:clock" class="w-4 h-4 mr-2" />
+                {l("View Import History")}
+              </Bonfire.UI.Common.LinkLive>
+            </div>
+          </div>
+        </div>
+      </div>
+  {/case}
+</div>

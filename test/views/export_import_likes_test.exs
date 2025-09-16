@@ -2,7 +2,7 @@ defmodule Bonfire.UI.Social.ExportImportLikesTest do
   use Bonfire.UI.Social.ConnCase, async: true
 
   alias Bonfire.Common.URIs
-  alias Bonfire.Social.Graph.Import
+  alias Bonfire.Social.Import
 
   setup do
     account = fake_account!()
