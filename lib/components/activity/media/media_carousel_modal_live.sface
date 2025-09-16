@@ -144,7 +144,7 @@
                 <Bonfire.UI.Social.Activity.RemoteMediaLive
                   media={m}
                   image_css={grayscale: @showing_within == :flags}
-                  parent_id={@parent_id}
+                  parent_id={deterministic_dom_id(__MODULE__, nil, nil, @parent_id)}
                 />
               </div>
 

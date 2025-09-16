@@ -413,7 +413,12 @@ defmodule Bonfire.UI.Social.ActivityLive do
 
     activity_component_id =
       Enums.id(assigns) || assigns[:activity_component_id] ||
-        "activity-#{activity_inception}-#{a_id || "no-activity-id"}"
+        deterministic_dom_id(
+          __MODULE__,
+          a_id || "no-activity-id",
+          activity_inception,
+          e(assigns, :parent_id, nil)
+        )
 
     assigns
     |> some_assigns(
@@ -483,6 +488,9 @@ defmodule Bonfire.UI.Social.ActivityLive do
 
       %{is_sensitive: is_sensitive} when is_boolean(is_sensitive) ->
         is_sensitive
+
+      bool when is_boolean(bool) ->
+        bool
 
       other ->
         err(other, "Sensitive assoc returned something unexpected")
@@ -694,7 +702,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
                     {#if String.starts_with?(@permalink || "", ["/post/", "/discussion/"])}
                       <Bonfire.UI.Common.OpenPreviewLive
                         href={@permalink}
-                        parent_id={@parent_id}
+                        parent_id={@activity_component_id}
                         open_btn_text=""
                         title_text={@thread_title || e(@object, :name, nil) || e(@object, :post_content, :name, nil) ||
                           l("Discussion")}
@@ -749,7 +757,8 @@ defmodule Bonfire.UI.Social.ActivityLive do
                                     replies: [
                                       %{
                                         id: "preview-comment-reply",
-                                        activity: Map.put(@activity || %{}, :object, @object)
+                                        activity:
+                                          Map.put(if(is_map(@activity), do: @activity, else: %{}), :object, @object)
                                       }
                                     ]
                                   }
@@ -769,7 +778,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
                     {#elseif String.starts_with?(@permalink || "", ["/@", "/profile/", "/user"])}
                       {!-- <Bonfire.UI.Common.OpenPreviewLive
               href={@permalink}
-              parent_id={@parent_id}
+              parent_id={@activity_component_id}
               open_btn_text={l("View profile")}
               title_text={e(@object, :profile, :name, nil) || l("Profile")}
               modal_assigns={
@@ -787,7 +796,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
                         module_enabled?(Bonfire.UI.Coordination.TaskLive)}
                       <Bonfire.UI.Common.OpenPreviewLive
                         href={@permalink}
-                        parent_id={@parent_id}
+                        parent_id={@activity_component_id}
                         open_btn_text={l("View task")}
                         title_text={e(@object, :name, nil) || l("Task")}
                         modal_assigns={
@@ -888,7 +897,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
                   activity_component_id={e(component_assigns, :activity_component_id, @activity_component_id)}
                   activity_inception={e(component_assigns, :activity_inception, @activity_inception)}
                   showing_within={@showing_within}
-                  parent_id={@parent_id}
+                  parent_id={@activity_component_id}
                   thread_id={@thread_id}
                   published_in={@published_in}
                   verb={e(component_assigns, :verb, @verb)}
@@ -906,7 +915,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
                 <Bonfire.UI.Social.Activity.NoteLive
                   :if={@hide_activity != "note"}
                   showing_within={@showing_within}
-                  parent_id={@parent_id}
+                  parent_id={@activity_component_id}
                   activity_inception={@activity_inception}
                   activity_component_id={e(component_assigns, :activity_component_id, @activity_component_id)}
                   activity={e(component_assigns, :activity, @activity)}
@@ -922,7 +931,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
                   :if={@hide_activity != "article"}
                   __context__={@__context__}
                   showing_within={@showing_within}
-                  parent_id={@parent_id}
+                  parent_id={@activity_component_id}
                   activity_inception={@activity_inception}
                   activity_component_id={e(component_assigns, :activity_component_id, @activity_component_id)}
                   activity={e(component_assigns, :activity, @activity)}
@@ -945,7 +954,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
                   module={component}
                   __context__={@__context__}
                   showing_within={@showing_within}
-                  parent_id={@parent_id}
+                  parent_id={@activity_component_id}
                   viewing_main_object={e(component_assigns, :viewing_main_object, @viewing_main_object)}
                   activity={e(component_assigns, :activity, @activity)}
                   object={e(component_assigns, :object, @object)}
@@ -965,7 +974,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
                 <Bonfire.UI.Social.Activity.MediaLive
                   :if={@hide_activity != "media"}
                   __context__={@__context__}
-                  parent_id={@parent_id}
+                  parent_id={@activity_component_id}
                   activity_inception={@activity_inception}
                   showing_within={e(component_assigns, :showing_within, @showing_within)}
                   viewing_main_object={e(component_assigns, :viewing_main_object, @viewing_main_object)}
@@ -999,7 +1008,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
                       permalink={e(component_assigns, :permalink, @permalink)}
                       viewing_main_object={e(component_assigns, :viewing_main_object, @viewing_main_object)}
                       activity_component_id={e(component_assigns, :activity_component_id, @activity_component_id)}
-                      parent_id={@parent_id}
+                      parent_id={@activity_component_id}
                       published_in={@published_in}
                       labelled={@labelled}
                       reply_count={@reply_count}
@@ -1029,7 +1038,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
                       permalink={e(component_assigns, :permalink, @permalink)}
                       viewing_main_object={e(component_assigns, :viewing_main_object, @viewing_main_object)}
                       activity_component_id={e(component_assigns, :activity_component_id, @activity_component_id)}
-                      parent_id={@parent_id}
+                      parent_id={@activity_component_id}
                       published_in={@published_in}
                       labelled={@labelled}
                       reply_count={@reply_count}

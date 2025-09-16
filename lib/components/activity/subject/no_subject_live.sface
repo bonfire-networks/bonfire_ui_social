@@ -13,7 +13,7 @@
         date_ago={@date_ago}
         activity_id={@activity_id}
         object_id={@object_id}
-        parent_id={@parent_id}
+        parent_id={deterministic_dom_id(__MODULE__, nil, nil, @parent_id)}
       />
     </span>
   </Bonfire.UI.Social.Activity.LinkToActivityLive>

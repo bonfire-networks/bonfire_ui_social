@@ -23,14 +23,14 @@
             ])}
             showing_within={@showing_within}
             css_borders={@css_borders}
-            parent_id={@parent_id}
+            parent_id={deterministic_dom_id(__MODULE__, m, nil, @parent_id)}
           />
         {#elseif String.ends_with?(media_url || "", ".pdf")}
           <Bonfire.UI.Social.Activity.LinkPdfLive
             media={m}
             media_url={media_url}
             css_borders={@css_borders}
-            parent_id={@parent_id}
+            parent_id={deterministic_dom_id(__MODULE__, m, nil, @parent_id)}
             showing_within={@showing_within}
           />
         {#else _}
@@ -45,7 +45,7 @@
             css_borders={@css_borders}
             activity_inception={@activity_inception}
             showing_within={@showing_within}
-            parent_id={@parent_id}
+            parent_id={deterministic_dom_id(__MODULE__, m, nil, @parent_id)}
           />
         {/if}
     {/case}
@@ -83,7 +83,7 @@
                         media_label={media_label}
                         autoplay={@autoplay || (@viewing_main_object && !@cw && @showing_within != :flags)}
                         muted={@muted || @cw || @showing_within == :flags}
-                        parent_id={@parent_id}
+                        parent_id={deterministic_dom_id(__MODULE__, m, nil, @parent_id)}
                       />
                       {!-- {/if} --}
                     {#else}
@@ -100,7 +100,7 @@
                           media_label={media_label}
                           autoplay={@autoplay || (@viewing_main_object && !@cw && @showing_within != :flags)}
                           muted={@muted}
-                          parent_id={@parent_id}
+                          parent_id={deterministic_dom_id(__MODULE__, m, nil, @parent_id)}
                           showing_within={@showing_within}
                         />
                         {!-- {/if} --}
@@ -180,7 +180,7 @@
           >
             <Bonfire.UI.Social.Activity.MediaCarouselModalLive
               media_list={@image_list}
-              parent_id={@parent_id}
+              parent_id={deterministic_dom_id(__MODULE__, nil, nil, @parent_id)}
               modal_id={deterministic_dom_id("media_carousel_modal", @parent_id)}
               showing_within={@showing_within}
               cw={@cw}
@@ -429,7 +429,7 @@
                             <Bonfire.UI.Social.Activity.RemoteMediaLive
                               media={m}
                               image_css={grayscale: @showing_within == :flags}
-                              parent_id={@parent_id}
+                              parent_id={deterministic_dom_id(__MODULE__, m, nil, @parent_id)}
                             />
                           {#else}
                             {!-- Render actual GIF images --}
@@ -457,7 +457,7 @@
                                 <Bonfire.UI.Social.Activity.RemoteMediaLive
                                   media={m}
                                   image_css={grayscale: @showing_within == :flags}
-                                  parent_id={@parent_id}
+                                  parent_id={deterministic_dom_id(__MODULE__, m, nil, @parent_id)}
                                 />
                               </div>
                             {#else}
@@ -492,7 +492,7 @@
                             <Bonfire.UI.Social.Activity.RemoteMediaLive
                               media={m}
                               image_css={grayscale: @showing_within == :flags}
-                              parent_id={@parent_id}
+                              parent_id={deterministic_dom_id(__MODULE__, m, nil, @parent_id)}
                             />
                           </div>
                         {#else}

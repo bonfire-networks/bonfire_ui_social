@@ -134,7 +134,7 @@
           LiveHandler.feed_live_update_many_preload_mode() != :async_actions}
         object_id={@object_id}
         object_type={Types.object_type(@published_in) || @object_type}
-        parent_id={@parent_id}
+        parent_id={deterministic_dom_id(__MODULE__, nil, nil, @parent_id)}
         with_icon
         class="translate-y-0.5"
         object_boundary={@object_boundary}
@@ -174,7 +174,7 @@
           date_ago={@date_ago}
           activity_id={@activity_id}
           object_id={@object_id}
-          parent_id={@parent_id}
+          parent_id={deterministic_dom_id(__MODULE__, nil, nil, @parent_id)}
         />
       </Bonfire.UI.Social.Activity.LinkToActivityLive>
       <Bonfire.UI.Social.Activity.InstanceIconLive :if={@is_remote} peered={@peered} />
