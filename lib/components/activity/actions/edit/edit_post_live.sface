@@ -18,7 +18,7 @@
 
     <div
       :if={!@read_only}
-      id={deterministic_dom_id(__MODULE__, nil, nil, @parent_id)}
+      id={deterministic_dom_id(__MODULE__, id(@object), nil, @parent_id)}
       phx-update="ignore"
     >
       <h3 :if={@versioning_enabled} class="font-bold mt-5 text-base flex-1">
