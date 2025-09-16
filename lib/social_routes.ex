@@ -44,6 +44,13 @@ defmodule Bonfire.UI.Social.Routes do
         pipe_through(:browser)
         pipe_through(:account_required)
 
+        get "/settings/export/csv/:type", ExportController, :csv_download
+        get "/settings/export/json/:type", ExportController, :json_download
+        get "/settings/export/binary/:type/:ext", ExportController, :binary_download
+        get "/settings/export/archive", ExportController, :archive_export
+        get "/settings/export/archive_download", ExportController, :archive_download
+
+
         # live("/notifications", NotificationsFeedLive, as: :notifications)
         live("/notifications", FeedsLive, :notifications, as: :notifications)
       end
