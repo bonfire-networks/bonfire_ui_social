@@ -1,4 +1,4 @@
-defmodule Bonfire.UI.Social.ImportHistoryLive do
+defmodule Bonfire.UI.Social.BackgroundProcessingStatusLive do
   use Bonfire.UI.Common.Web, :surface_live_view
 
   on_mount {LivePlugs, [Bonfire.UI.Me.LivePlugs.LoadCurrentUser]}
@@ -17,7 +17,7 @@ defmodule Bonfire.UI.Social.ImportHistoryLive do
       {:ok,
        assign(
          socket,
-         page_title: l("Import Dashboard"),
+         page_title: l("Background Processing Status"),
          page: "import_history",
          back: true,
          page_header_aside: [

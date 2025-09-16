@@ -296,6 +296,8 @@ defmodule Bonfire.UI.Social.Activity.MediaLive do
   def preview_img(%{media: media}), do: preview_img(media)
 
   def preview_img(%{} = media) do
+    # Check for common app/site tile images which are often good previews
+    # Check for Open Graph images which might be nested
     (e(media, :metadata, "oembed", "thumbnail_url", nil) ||
        e(media, :metadata, "twitter", "image", nil) ||
        (e(media, :metadata, "facebook", "image", "url", nil) ||
@@ -304,10 +306,8 @@ defmodule Bonfire.UI.Social.Activity.MediaLive do
        e(media, :metadata, "image", nil) ||
        e(media, :metadata, "icon", "url", nil) ||
        e(media, :metadata, "icon", nil) ||
-       # Check for common app/site tile images which are often good previews
        e(media, :metadata, "other", "msapplication-TileImage", nil) ||
        e(media, :metadata, "other", "apple-touch-icon", nil) ||
-       # Check for Open Graph images which might be nested
        e(media, :metadata, "other", "og:image", nil) ||
        e(media, :metadata, "other", "og:image:url", nil) ||
        Media.thumbnail_url(media)
