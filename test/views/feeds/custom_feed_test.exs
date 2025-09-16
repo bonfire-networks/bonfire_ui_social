@@ -66,8 +66,8 @@ defmodule Bonfire.UI.Social.CustomFeedTest do
 
     conn
     |> visit("/feed")
-    # Set time limit to Last Day
-    # |> click_button("All time")
+    |> PhoenixTest.open_browser()
+    # Set time limit to Last Day by clicking dropdown and selecting option
     |> click_link("Last Day")
 
     # Click on Save button to open modal
@@ -81,7 +81,7 @@ defmodule Bonfire.UI.Social.CustomFeedTest do
 
     # Submit the form
     |> click_button("Save feed")
-
+    |> PhoenixTest.open_browser()
     # The feed should be saved and should appear in the navigation
     |> visit("/settings/user/feeds")
 
@@ -102,7 +102,7 @@ defmodule Bonfire.UI.Social.CustomFeedTest do
     conn
     |> visit("/feed")
     # Set time limit to Last Day
-    # |> click_button("All time")
+    |> click_button("All time")
     |> click_link("Last Day")
     # Save the feed preset
     |> click_button("Save")

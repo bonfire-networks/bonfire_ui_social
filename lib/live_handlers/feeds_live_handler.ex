@@ -877,6 +877,14 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
         _ -> filters_or_custom_query_or_feed_id_or_ids
       end
 
+    # Provide fallback page_title if preset doesn't have one
+    preset_assigns_with_fallback =
+      if Keyword.has_key?(preset_assigns, :page_title) do
+        preset_assigns
+      else
+        Keyword.put(preset_assigns, :page_title, String.capitalize(feed_name))
+      end
+
     assigns =
       Keyword.merge(
         [
@@ -889,7 +897,7 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
           # feed: nil,
           # page_info: nil
         ],
-        preset_assigns
+        preset_assigns_with_fallback
       )
 
     assigns
@@ -2288,7 +2296,7 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
                description: params["description"],
                icon: "ph:rss-simple-duotone",
                exclude_from_nav: params["show_in_nav"] != "on",
-               filters: filters
+               filters: Enums.struct_to_map(filters)
              },
              current_user: current_user(socket)
            ) do

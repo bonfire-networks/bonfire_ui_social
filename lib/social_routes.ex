@@ -50,7 +50,6 @@ defmodule Bonfire.UI.Social.Routes do
         get "/settings/export/archive", ExportController, :archive_export
         get "/settings/export/archive_download", ExportController, :archive_download
 
-
         # live("/notifications", NotificationsFeedLive, as: :notifications)
         live("/notifications", FeedsLive, :notifications, as: :notifications)
       end
