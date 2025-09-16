@@ -52,6 +52,7 @@
                   profile={e(p, :profile, nil)}
                   character={e(p, :character, nil)}
                   parent_id="thread_stats"
+                  show_controls={[]}
                 />
               </div>
             </div>

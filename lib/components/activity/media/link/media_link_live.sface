@@ -76,7 +76,7 @@
                 <div data-id="media_author" class="text-xs">
                   <div class="flex items-center gap-2">
                     <#Icon iconify="ph:globe-duotone" class="w-4 h-4 text-primary" />
-                    <span class="capitalize text-primary">{provider}</span>
+                    <span class="text-primary">{provider}</span>
                   </div>
                 </div>
               {#match _}

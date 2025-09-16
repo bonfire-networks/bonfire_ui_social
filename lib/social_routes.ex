@@ -37,6 +37,8 @@ defmodule Bonfire.UI.Social.Routes do
         # TODO:
         live("/feed/:tab/:object_types", FeedsLive, as: :feed)
         live("/write", WriteLive, as: :write)
+
+        live("/settings/import_history", ImportHistoryLive, as: :import_history)
       end
 
       # pages you need an account to view

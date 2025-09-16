@@ -1891,34 +1891,34 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
       {Bonfire.Poll.Question,
        Utils.maybe_apply(Bonfire.Poll.Web.Preview.QuestionLive, :preloads, [],
          fallback_return: nil,
-         ignore_errors: true
+         on_error: :ignore
        )},
       {Bonfire.Data.Identity.User,
        Utils.maybe_apply(Bonfire.UI.Me.Preview.CharacterLive, :preloads, [], fallback_return: nil)},
       {Bonfire.Classify.Category,
        Utils.maybe_apply(Bonfire.Classify.Web.Preview.CategoryLive, :preloads, [],
          fallback_return: nil,
-         ignore_errors: true
+         on_error: :ignore
        )},
       {ValueFlows.EconomicEvent,
        Utils.maybe_apply(Bonfire.UI.ValueFlows.Preview.EconomicEventLive, :preloads, [],
          fallback_return: nil,
-         ignore_errors: true
+         on_error: :ignore
        )},
       {ValueFlows.EconomicResource,
        Utils.maybe_apply(Bonfire.UI.ValueFlows.Preview.EconomicResourceLive, :preloads, [],
          fallback_return: nil,
-         ignore_errors: true
+         on_error: :ignore
        )},
       {ValueFlows.Planning.Intent,
        Utils.maybe_apply(Bonfire.UI.ValueFlows.Preview.IntentTaskLive, :preloads, [],
          fallback_return: nil,
-         ignore_errors: true
+         on_error: :ignore
        )},
       {ValueFlows.Process,
        Utils.maybe_apply(Bonfire.UI.ValueFlows.Preview.ProcessListLive, :preloads, [],
          fallback_return: nil,
-         ignore_errors: true
+         on_error: :ignore
        )}
     ]
     |> Enums.filter_empty([])

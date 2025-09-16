@@ -175,10 +175,26 @@
           </div>
           <div class="text-sm text-base-content/70 space-y-1">
             <p :if={job.identifier && !job.target_user}>
-              <span class="font-medium">{l("Importing:")}</span>
-              <span class="font-mono">{if is_binary(job.identifier),
-                  do: job.identifier,
-                  else: e(job.identifier, "object", "id", nil) || e(job.identifier, "object", nil)}</span>
+              <span class="font-medium">{l("Item:")}</span>
+              {#case (is_binary(job.identifier) and job.identifier) || e(job.identifier, "object", "id", nil) ||
+                  e(job.identifier, "object", nil)}
+                {#match nil}
+                  {l("No identifier")}
+                {#match "http" <> _ = url}
+                  <LinkLive to={url}>{url}</LinkLive>
+                {#match id}
+                  {#if Needle.UID.is_ulid?(id)}
+                    <LinkLive to={"/discussion/#{id}"}>{id}</LinkLive>
+                  {#else}
+                    {#if Types.is_uid?(id)}
+                      <LinkLive to={"/pub/objects/#{id}"}>{id}</LinkLive>
+                    {#else}
+                      <span class="font-mono">
+                        {id}
+                      </span>
+                    {/if}
+                  {/if}
+              {/case}
             </p>
 
             <p class="font-normal">

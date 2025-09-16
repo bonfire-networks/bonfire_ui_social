@@ -180,7 +180,10 @@ defmodule Bonfire.UI.Social.ImportHistoryLive do
     try do
       # Bonfire.Common.ObanHelpers.list_jobs_queue_for_user(repo(), "import", 
       jobs =
-        Bonfire.Common.ObanHelpers.list_jobs_for_user(repo(), user_id,
+        Bonfire.Common.ObanHelpers.list_jobs_for_user(
+          repo(),
+          user_id,
+          e(current_user, :character, :username, nil),
           # Fetch one extra to check if there are more
           limit: per_page + 1,
           offset: offset,
@@ -212,6 +215,9 @@ defmodule Bonfire.UI.Social.ImportHistoryLive do
 
   defp identifier(%{"identifier" => identifier}), do: identifier
   defp identifier(%{"id" => identifier}), do: identifier
+  defp identifier(%{"activity_id" => identifier}), do: identifier
+  defp identifier(%{"activity" => %{"id" => identifier}}), do: identifier
+  defp identifier(%{"params" => %{"id" => identifier}}), do: identifier
   defp identifier(_), do: nil
 
   defp apply_filters(jobs, %{type: nil, status: nil}), do: jobs
@@ -287,7 +293,12 @@ defmodule Bonfire.UI.Social.ImportHistoryLive do
       # Get all jobs for detailed analysis
       # FIXME: do this with DB query rather than fetching all and doing in memory
       jobs =
-        Bonfire.Common.ObanHelpers.list_jobs_for_user(repo(), user_id, limit: 10000)
+        Bonfire.Common.ObanHelpers.list_jobs_for_user(
+          repo(),
+          user_id,
+          e(current_user, :character, :username, nil),
+          limit: 10000
+        )
 
       # Debug: show actual states that exist
       actual_states = jobs |> Enum.map(& &1.state) |> Enum.uniq() |> debug("unique_states_found")
@@ -403,7 +414,7 @@ defmodule Bonfire.UI.Social.ImportHistoryLive do
       op_code: op_code,
       operation: op_type,
       identifier: identifier,
-      context: get_in(job.args, ["context"]),
+      context: e(job.args, "context", nil) || e(job.args, "params", "inbox", nil),
       target_user: target_user,
       state: if(is_pre_existing, do: "pre_existing", else: job.state),
       inserted_at: job.inserted_at,
@@ -426,6 +437,10 @@ defmodule Bonfire.UI.Social.ImportHistoryLive do
   defp format_operation_type("likes_import"), do: l("Like")
   defp format_operation_type("boosts_import"), do: l("Boost")
   defp format_operation_type("fetch_remote"), do: l("Fetch Content")
+  defp format_operation_type("publish"), do: l("Federate")
+  defp format_operation_type("publish_one"), do: l("Federate")
+  defp format_operation_type("incoming_ap_doc"), do: l("Incoming federated activity")
+  defp format_operation_type("incoming_unverified_ap_doc"), do: l("Incoming federated activity")
   defp format_operation_type(other), do: other
 
   defp format_state("pre_existing"), do: {l("Pre-existing"), "text-info/70"}
