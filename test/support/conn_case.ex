@@ -33,6 +33,7 @@ defmodule Bonfire.UI.Social.ConnCase do
 
       import PhoenixTest
 
+      use Bonfire.Common.Utils
       use Bonfire.Common.Config
       use Bonfire.Common.Settings
       import Untangle

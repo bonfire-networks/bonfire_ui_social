@@ -1,6 +1,6 @@
-defmodule Bonfire.UI.Me.ExportTest do
-  use Bonfire.UI.Me.ConnCase, async: true
-
+defmodule Bonfire.UI.Social.ExportTest do
+  use Bonfire.UI.Social.ConnCase, async: true
+  import Bonfire.Common.Simulation
   import Bonfire.Files.Simulation
   alias Bonfire.Social.Graph.Follows
   alias Bonfire.Social.Import
