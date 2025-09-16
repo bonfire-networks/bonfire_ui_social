@@ -12,18 +12,18 @@ defmodule Bonfire.UI.Social.FeedsNavigation.Test do
       conn(user: fake_user!())
       |> visit("/")
       # |> PhoenixTest.open_browser()
-      |> click_link("[data-id=nav_sidebar_nav_links] a", "Following")
+      |> click_link("li a", "Following")
       |> assert_path("/feed/my")
-      |> click_link("[data-id=nav_sidebar_nav_links] a", "Explore")
+      |> click_link("li a", "Explore")
       |> assert_path("/feed/explore")
 
       # Note: "Likes" and "Bookmarks" feeds are currently commented out in the navigation
-      # |> click_link("[data-id=nav_sidebar_nav_links] a", "Likes")  
+      # |> click_link("li a", "Likes")
       # |> assert_path("/feed/likes")
-      # |> click_link("[data-id=nav_sidebar_nav_links] a", "Bookmarks")
+      # |> click_link("li a", "Bookmarks")
       # |> assert_path("/feed/bookmarks")
 
-      # |> click_link("[data-id=nav_sidebar_nav_links] a", "Discussions")
+      # |> click_link("li a", "Discussions")
       # |> assert_path("/feed/filter/discussions")
     end
 
