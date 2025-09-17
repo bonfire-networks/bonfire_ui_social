@@ -1,216 +1,153 @@
 defmodule Bonfire.UI.Social.BackgroundProcessingStatusLive do
-  use Bonfire.UI.Common.Web, :surface_live_view
+  use Bonfire.UI.Common.Web, :stateful_component
 
-  on_mount {LivePlugs, [Bonfire.UI.Me.LivePlugs.LoadCurrentUser]}
+  prop selected_tab, :string, default: nil
+  prop filters, :map, default: %{}
+  prop per_page, :integer, default: 20
+  prop page_title, :string, default: "Background Processing Status"
+  prop page, :string, default: "background_processing_status_live"
 
-  def mount(_params, _session, socket) do
-    current_user = current_user(socket)
+  @impl true
+  def update(assigns, socket) do
+    current_user = current_user(assigns) || current_user(socket)
 
-    if current_user do
-      filters = %{type: nil, status: nil}
-      page = 1
-      per_page = 20
-
-      jobs = fetch_import_jobs(current_user, filters, page, per_page)
-      stats = fetch_import_stats(current_user)
-
-      {:ok,
-       assign(
-         socket,
-         page_title: l("Background Processing Status"),
-         page: "import_history",
-         back: true,
-         page_header_aside: [
-           {Bonfire.UI.Social.ImportRefreshLive,
-            [
-              feed_id: :import_history
-            ]}
-         ],
-         selected_tab: :import_history,
-         nav_items: Bonfire.Common.ExtensionModule.default_nav(),
-         jobs: jobs,
-         stats: stats,
-         filters: filters,
-         current_page: page,
-         per_page: per_page,
-         has_more: length(jobs) == per_page
-       )}
-    else
-      throw(l("You need to log in to view import history"))
-    end
+    {:ok,
+     socket
+     |> assign(assigns)
+     |> assign(:filters, normalize_filters(assigns.filters, assigns.selected_tab))
+     |> assign_new(:current_page, fn -> 1 end)
+     |> assign(:back, true)
+     |> assign(:page_header_aside, [
+       {Bonfire.UI.Social.ImportRefreshLive, [feed_id: :import_history]}
+     ])
+     # |> assign(:nav_items, Bonfire.Common.ExtensionModule.default_nav())
+     |> load_jobs_and_maybe_stats(current_user)}
   end
 
-  def handle_params(params, _url, socket) do
-    filters = %{
-      type: params["type"],
-      status: params["status"]
-    }
-
-    page = String.to_integer(params["page"] || "1")
-
-    current_user = current_user(socket)
-    jobs = fetch_import_jobs(current_user, filters, page, socket.assigns.per_page)
-
-    {:noreply,
-     assign(socket,
-       jobs: jobs,
-       filters: filters,
-       current_page: page,
-       has_more: length(jobs) == socket.assigns.per_page
-     )}
-  end
-
+  @impl true
   def handle_event("refresh", _attrs, socket) do
-    current_user = current_user(socket)
-
-    jobs =
-      fetch_import_jobs(
-        current_user,
-        socket.assigns.filters,
-        socket.assigns.current_page,
-        socket.assigns.per_page
-      )
-
-    stats = fetch_import_stats(current_user)
-
-    {:noreply, assign(socket, jobs: jobs, stats: stats)}
+    {:noreply, load_jobs_and_maybe_stats(socket)}
   end
 
+  @impl true
   def handle_event("filter", %{"type" => type}, socket) do
-    new_filters = %{socket.assigns.filters | type: if(type == "", do: nil, else: type)}
-    params = filter_params(new_filters, 1)
-
-    {:noreply,
-     push_patch(socket,
-       to:
-         "/settings/import_history" <>
-           if(map_size(params) > 0, do: "?" <> URI.encode_query(params), else: "")
-     )}
+    filters = %{socket.assigns.filters | type: if(type == "", do: nil, else: type)}
+    socket = assign(socket, filters: filters, current_page: 1)
+    {:noreply, assign_jobs(socket)}
   end
 
+  @impl true
   def handle_event("filter", %{"status" => status}, socket) do
-    new_filters = %{socket.assigns.filters | status: if(status == "", do: nil, else: status)}
-    params = filter_params(new_filters, 1)
-
-    {:noreply,
-     push_patch(socket,
-       to:
-         "/settings/import_history" <>
-           if(map_size(params) > 0, do: "?" <> URI.encode_query(params), else: "")
-     )}
+    filters = %{socket.assigns.filters | status: if(status == "", do: nil, else: status)}
+    socket = assign(socket, filters: filters, current_page: 1)
+    {:noreply, assign_jobs(socket)}
   end
 
+  @impl true
   def handle_event("clear_filters", _params, socket) do
     {:noreply,
-     push_patch(socket,
-       to: ~p"/settings/import_history"
-     )}
+     socket
+     |> assign(
+       filters:
+         normalize_filters(
+           %{socket.assigns.filters | type: nil, status: nil},
+           socket.assigns.selected_tab
+         ),
+       current_page: 1
+     )
+     |> load_jobs_and_maybe_stats()}
   end
 
+  @impl true
   def handle_event("next_page", _params, socket) do
-    next_page = socket.assigns.current_page + 1
-    params = filter_params(socket.assigns.filters, next_page)
-
-    {:noreply,
-     push_patch(socket,
-       to:
-         "/settings/import_history" <>
-           if(map_size(params) > 0, do: "?" <> URI.encode_query(params), else: "")
-     )}
+    socket = assign(socket, current_page: socket.assigns.current_page + 1)
+    {:noreply, assign_jobs(socket)}
   end
 
+  @impl true
   def handle_event("prev_page", _params, socket) do
-    prev_page = max(1, socket.assigns.current_page - 1)
-    params = filter_params(socket.assigns.filters, prev_page)
-
-    {:noreply,
-     push_patch(socket,
-       to:
-         "/settings/import_history" <>
-           if(map_size(params) > 0, do: "?" <> URI.encode_query(params), else: "")
-     )}
+    socket = assign(socket, current_page: max(1, socket.assigns.current_page - 1))
+    {:noreply, assign_jobs(socket)}
   end
 
+  @impl true
   def handle_event("cancel_jobs_by_type", %{"type" => type}, socket) do
     current_user = current_user(socket)
     user_id = id(current_user)
-    # |> type_to_op_code()
-    op_code = type
+    username = e(current_user, :character, :username, nil)
 
-    try do
-      {count, _} =
-        Bonfire.Common.ObanHelpers.cancel_jobs_by_type_for_user(repo(), user_id, op_code)
+    {count, _} =
+      Bonfire.Common.ObanHelpers.cancel_jobs_by_type_for_user(repo(), user_id, username, type)
 
-      # Refresh data
-      jobs =
-        fetch_import_jobs(
-          current_user,
-          socket.assigns.filters,
-          socket.assigns.current_page,
-          socket.assigns.per_page
-        )
+    {:noreply,
+     load_jobs_and_maybe_stats(socket)
+     |> assign_flash(:info, l("Cancelled %{count} jobs", count: count))}
+  rescue
+    error ->
+      debug(error, "Error cancelling jobs")
+      {:noreply, assign_error(socket, l("Failed to cancel jobs"))}
+  end
 
-      stats = fetch_import_stats(current_user)
+  defp load_jobs(socket, current_user \\ nil) do
+    current_user = current_user || current_user(socket)
+    filters = socket.assigns.filters
+    page = socket.assigns.current_page || 1
+    per_page = socket.assigns.per_page || 20
 
-      {:noreply,
-       socket
-       |> assign(jobs: jobs, stats: stats)
-       |> assign_flash(
-         :info,
-         l("Cancelled %{count} jobs of type %{type}", count: count, type: type)
-       )}
-    rescue
-      error ->
-        debug(error, "Error cancelling jobs")
-        {:noreply, assign_error(socket, l("Failed to cancel jobs"))}
+    jobs = fetch_import_jobs(current_user, filters, page, per_page)
+    has_more = length(jobs) == per_page
+
+    %{jobs: jobs, has_more: has_more}
+  end
+
+  defp assign_jobs(socket, current_user \\ nil) do
+    %{jobs: jobs, has_more: has_more} = load_jobs(socket, current_user)
+    assign(socket, jobs: jobs |> format_jobs(), has_more: has_more)
+  end
+
+  defp load_jobs_and_maybe_stats(socket, current_user \\ nil) do
+    %{jobs: jobs, has_more: has_more} = load_jobs(socket, current_user)
+
+    if jobs != [] do
+      stats =
+        if has_more or (socket.assigns.current_page || 1) != 1 do
+          fetch_import_stats(current_user, e(socket.assigns, :selected_tab, nil))
+        else
+          fetch_import_stats(current_user, e(socket.assigns, :selected_tab, nil), jobs)
+        end
+        |> flood("computed_stats")
+
+      assign(socket, stats: stats, jobs: jobs |> format_jobs(), has_more: has_more)
+    else
+      assign(socket, stats: %{}, jobs: jobs |> format_jobs(), has_more: has_more)
     end
   end
 
-  defp filter_params(filters, page) do
-    %{}
-    |> Enums.maybe_put("type", filters.type)
-    |> Enums.maybe_put("status", filters.status)
-    |> Enums.maybe_put("page", if(page > 1, do: page, else: nil))
+  defp normalize_filters(filters, nil), do: filters
+
+  defp normalize_filters(filters, type_group) do
+    filters
+    |> Map.put(:type, type_group_op_codes(type_group))
   end
 
   defp fetch_import_jobs(current_user, filters \\ %{}, page \\ 1, per_page \\ 20) do
     user_id = id(current_user)
     offset = (page - 1) * per_page
 
-    try do
-      # Bonfire.Common.ObanHelpers.list_jobs_queue_for_user(repo(), "import", 
-      jobs =
-        Bonfire.Common.ObanHelpers.list_jobs_for_user(
-          repo(),
-          user_id,
-          e(current_user, :character, :username, nil),
-          # Fetch one extra to check if there are more
-          limit: per_page + 1,
-          offset: offset,
-          filters: filters
-        )
+    # Bonfire.Common.ObanHelpers.list_jobs_queue_for_user(repo(), "import", 
+    jobs =
+      Bonfire.Common.ObanHelpers.list_jobs_for_user(
+        repo(),
+        user_id,
+        e(current_user, :character, :username, nil),
+        # Fetch one extra to check if there are more
+        limit: per_page + 1,
+        offset: offset,
+        filters: filters
+      )
 
-      # Take only the requested amount (the extra one is just for pagination check)
-      jobs = Enum.take(jobs, per_page)
-
-      # Extract all identifiers for batch user lookup
-      identifiers =
-        jobs
-        |> Enum.map(&identifier/1)
-        |> debug("idds")
-        |> Enum.reject(&is_nil/1)
-        |> Enum.uniq()
-
-      # Batch fetch users to avoid N+1
-      users_by_identifier = fetch_users_by_identifiers(identifiers)
-
-      jobs
-      |> Enum.map(&format_job(&1, users_by_identifier))
-    rescue
-      error ->
-        debug(error, "Error fetching import jobs")
-        []
-    end
+    # Take only the requested amount (the extra one is just for pagination check)
+    Enum.take(jobs, per_page)
   end
 
   defp identifier(%{"identifier" => identifier}), do: identifier
@@ -219,19 +156,6 @@ defmodule Bonfire.UI.Social.BackgroundProcessingStatusLive do
   defp identifier(%{"activity" => %{"id" => identifier}}), do: identifier
   defp identifier(%{"params" => %{"id" => identifier}}), do: identifier
   defp identifier(_), do: nil
-
-  defp apply_filters(jobs, %{type: nil, status: nil}), do: jobs
-
-  defp apply_filters(jobs, %{type: type, status: status}) do
-    jobs
-    |> Enum.filter(fn job ->
-      type_match =
-        if type, do: format_operation_type(get_in(job.args, ["op"])) == type, else: true
-
-      status_match = if status, do: normalize_status(job.state) == status, else: true
-      type_match and status_match
-    end)
-  end
 
   defp normalize_status("completed"), do: "successful"
   defp normalize_status("pre_existing"), do: "successful"
@@ -281,34 +205,53 @@ defmodule Bonfire.UI.Social.BackgroundProcessingStatusLive do
 
   defp fetch_users_by_identifiers([]), do: %{}
 
-  defp fetch_import_stats(current_user) do
+  defp fetch_import_stats(current_user, selected_tab, jobs \\ nil) do
     user_id = id(current_user)
+    username = e(current_user, :character, :username, nil)
+    types = selected_tab && type_group_op_codes(selected_tab)
 
-    try do
-      # Get basic job state counts
-      basic_stats =
-        Bonfire.Common.ObanHelpers.job_stats_for_user(repo(), user_id)
-        |> debug("actual_job_states_in_db")
+    # Only apply type group filter if selected_tab is set and not a single type filter
+    jobs =
+      cond do
+        is_list(jobs) ->
+          jobs
 
-      # Get all jobs for detailed analysis
-      # FIXME: do this with DB query rather than fetching all and doing in memory
-      jobs =
-        Bonfire.Common.ObanHelpers.list_jobs_for_user(
-          repo(),
-          user_id,
-          e(current_user, :character, :username, nil),
-          limit: 10000
-        )
+        is_list(types) ->
+          Bonfire.Common.ObanHelpers.list_jobs_for_user(
+            repo(),
+            user_id,
+            username,
+            limit: 10000,
+            filters: %{type: types}
+          )
 
-      # Debug: show actual states that exist
-      actual_states = jobs |> Enum.map(& &1.state) |> Enum.uniq() |> debug("unique_states_found")
+        true ->
+          Bonfire.Common.ObanHelpers.list_jobs_for_user(
+            repo(),
+            user_id,
+            username,
+            limit: 10000
+          )
+      end
 
-      # Compute enhanced statistics
-      compute_enhanced_stats(basic_stats, jobs)
-    rescue
-      _error ->
-        %{}
-    end
+    basic_stats =
+      Bonfire.Common.ObanHelpers.job_stats_for_user(repo(), user_id, username, %{
+        type: types || nil
+      })
+      |> debug("actual_job_states_in_db")
+
+    # Debug: show actual states that exist
+    actual_states = jobs |> Enum.map(& &1.state) |> Enum.uniq() |> debug("unique_states_found")
+
+    # Compute enhanced statistics
+    compute_enhanced_stats(basic_stats, jobs)
+    # rescue
+    #   error ->
+    #     error(error, "Error fetching import stats")
+    #     %{}
+  end
+
+  defp list_jobs_and_stats(jobs) do
   end
 
   defp compute_enhanced_stats(basic_stats, jobs) do
@@ -332,7 +275,6 @@ defmodule Bonfire.UI.Social.BackgroundProcessingStatusLive do
     success_rate = if total_jobs > 0, do: Float.round(successful / total_jobs * 100, 1), else: 0
 
     # Count by operation type
-    operation_counts = count_by_operation_type(jobs)
 
     %{
       # Enhanced metrics
@@ -341,7 +283,7 @@ defmodule Bonfire.UI.Social.BackgroundProcessingStatusLive do
       active: active_jobs,
       failed: failed_jobs,
       success_rate: success_rate,
-      by_operation: operation_counts,
+      by_operation: count_by_operation_type(jobs),
 
       # Original basic stats for backward compatibility
       raw_stats: basic_stats
@@ -357,39 +299,61 @@ defmodule Bonfire.UI.Social.BackgroundProcessingStatusLive do
 
   defp count_by_operation_type(jobs) do
     # Start with all operation types set to 0
-    all_operations = all_operation_types()
+    # all_operations = all_operation_types()
 
     # Count actual jobs by operation type
     actual_counts =
       jobs
       |> Enum.group_by(fn job -> get_in(job.args, ["op"]) end)
       |> Enum.map(fn {op_code, job_list} ->
-        {format_operation_type(op_code), length(job_list)}
+        {op_code, format_operation_type(op_code), length(job_list)}
       end)
-      |> Enum.into(%{})
+
+    # |> Enum.into(%{})
 
     # Merge actual counts with all types (actual counts override 0 defaults)
-    Map.merge(all_operations, actual_counts)
+    # Map.merge(all_operations, actual_counts)
   end
 
-  defp all_operation_types do
-    %{
-      l("Follow") => 0,
-      l("Block") => 0
-      # l("Silence") => 0,
-      # l("Ghost") => 0,
-      # l("Bookmark") => 0,
-      # l("Like") => 0,
-      # l("Boost") => 0,
-      # l("Circle") => 0
-    }
-  end
+  # defp all_operation_types do
+  #   %{
+  #     l("Follow") => 0,
+  #     l("Block") => 0
+  #     # l("Silence") => 0,
+  #     # l("Ghost") => 0,
+  #     # l("Bookmark") => 0,
+  #     # l("Like") => 0,
+  #     # l("Boost") => 0,
+  #     # l("Circle") => 0
+  #   }
+  # end
 
   defp pre_existing_data_errors,
     do: [
       "Subject id: has already been taken",
       "You already boosted this."
     ]
+
+  defp format_jobs(jobs) do
+    # Extract all identifiers for batch user lookup
+    identifiers =
+      jobs
+      |> Enum.map(&identifier/1)
+      |> debug("idds")
+      |> Enum.reject(&is_nil/1)
+      |> Enum.uniq()
+
+    # Batch fetch users to avoid N+1
+    users_by_identifier = fetch_users_by_identifiers(identifiers)
+
+    jobs
+    |> Enum.map(&format_job(&1, users_by_identifier))
+
+    # rescue
+    #   error ->
+    #     error(error, "Error fetching job identifers")
+    #     []
+  end
 
   defp format_job(job, users_by_identifier \\ %{}) do
     op_code = get_in(job.args, ["op"])
@@ -426,6 +390,31 @@ defmodule Bonfire.UI.Social.BackgroundProcessingStatusLive do
     }
   end
 
+  defp type_group_op_codes("import"),
+    do: [
+      "follows_import",
+      "blocks_import",
+      "silences_import",
+      "ghosts_import",
+      "bookmarks_import",
+      "circles_import",
+      "outbox_import",
+      "outbox_creations_import",
+      "likes_import",
+      "boosts_import"
+    ]
+
+  defp type_group_op_codes("federation"),
+    do: [
+      "fetch_remote",
+      "publish",
+      "publish_one",
+      "incoming_ap_doc",
+      "incoming_unverified_ap_doc"
+    ]
+
+  defp type_group_op_codes(_), do: []
+
   defp format_operation_type("follows_import"), do: l("Follow")
   defp format_operation_type("blocks_import"), do: l("Block")
   defp format_operation_type("silences_import"), do: l("Silence")
@@ -436,11 +425,14 @@ defmodule Bonfire.UI.Social.BackgroundProcessingStatusLive do
   defp format_operation_type("outbox_creations_import"), do: l("Posts/Creations")
   defp format_operation_type("likes_import"), do: l("Like")
   defp format_operation_type("boosts_import"), do: l("Boost")
-  defp format_operation_type("fetch_remote"), do: l("Fetch Content")
-  defp format_operation_type("publish"), do: l("Federate")
-  defp format_operation_type("publish_one"), do: l("Federate")
-  defp format_operation_type("incoming_ap_doc"), do: l("Incoming federated activity")
-  defp format_operation_type("incoming_unverified_ap_doc"), do: l("Incoming federated activity")
+  defp format_operation_type("fetch_remote"), do: l("Fetch content")
+  defp format_operation_type("publish"), do: l("Prep for federation")
+  defp format_operation_type("publish_one"), do: l("Outgoing federation")
+  defp format_operation_type("incoming_ap_doc"), do: l("Incoming federation")
+
+  defp format_operation_type("incoming_unverified_ap_doc"),
+    do: l("Incoming federation (unverified)")
+
   defp format_operation_type(other), do: other
 
   defp format_state("pre_existing"), do: {l("Pre-existing"), "text-info/70"}

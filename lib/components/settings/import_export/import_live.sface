@@ -174,7 +174,7 @@
               <div class="text-sm text-info">
                 {l("Already imported some data? You can check the status of each import.")}
               </div>
-              <Bonfire.UI.Common.LinkLive to="/settings/background_processing" class="btn btn-sm ml-4">
+              <Bonfire.UI.Common.LinkLive to="/settings/user/import_status" class="btn btn-sm ml-4">
                 <#Icon iconify="heroicons:clock" class="w-4 h-4 mr-2" />
                 {l("View Import Status")}
               </Bonfire.UI.Common.LinkLive>
