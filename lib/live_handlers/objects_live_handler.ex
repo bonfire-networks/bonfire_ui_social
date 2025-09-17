@@ -107,6 +107,9 @@ defmodule Bonfire.Social.Objects.LiveHandler do
        |> assign_flash(:info, l("Quote request accepted!"))
        |> redirect_to(path(quote_post), type: :maybe_external)}
     else
+      {:error, e} when is_binary(e) ->
+        {:error, e}
+
       e ->
         error(e, l("There was an error when trying to accept the quote request"))
     end
@@ -124,8 +127,42 @@ defmodule Bonfire.Social.Objects.LiveHandler do
        |> assign_flash(:info, l("Quote rejection sent."))
        |> redirect_to(path(quote_post), type: :maybe_external)}
     else
+      {:error, e} when is_binary(e) ->
+        {:error, e}
+
       e ->
         error(e, l("There was an error when trying to reject the quote request"))
+    end
+  end
+
+  def handle_event(
+        "quote_verify",
+        %{"quote_post" => quote_post_id, "quoted_post" => quoted_post_id} = _params,
+        socket
+      ) do
+    # TODO
+
+    case Bonfire.Social.Quotes.verify_quote_authorization(quote_post_id, quoted_post_id,
+           current_user: current_user_required!(socket)
+         ) do
+      {:ok, :authorization_verified} ->
+        {:noreply,
+         socket
+         |> assign_flash(:info, l("This quote has been authorised by the original author."))}
+
+      {:not_authorized, _reason} ->
+        {:noreply,
+         socket
+         |> assign_flash(
+           :error,
+           l("This quote does not seem to be authorised by the original author.")
+         )}
+
+      {:error, e} when is_binary(e) ->
+        {:error, e}
+
+      e ->
+        error(e, l("There was an error when trying to verify the quote authorisation."))
     end
   end
 

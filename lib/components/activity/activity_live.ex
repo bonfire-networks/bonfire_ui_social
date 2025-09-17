@@ -1071,7 +1071,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
                   verb={e(component_assigns, :verb, @verb)}
                   verb_display={e(component_assigns, :verb_display, @verb_display)}
                   permalink={e(component_assigns, :permalink, @permalink)}
-                  thread_url={@thread_url}
+                  thread_url={Map.get(component_assigns, :thread_url, @thread_url)}
                   thread_id={@thread_id}
                   thread_level={@thread_level}
                   viewing_main_object={e(component_assigns, :viewing_main_object, @viewing_main_object)}
@@ -2296,6 +2296,8 @@ defmodule Bonfire.UI.Social.ActivityLive do
              showing_within: :quote_preview,
              viewing_main_object: false,
              hide_actions: true,
+             thread_url: nil,
+             thread_id: id(quoted_object),
              class: "quote-preview"
            }}
         end)

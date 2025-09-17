@@ -1634,13 +1634,14 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
     # TODO: entirely replace with filter-based preloads?
     case {showing_within, thread_mode} do
       {:annotations, :flat} ->
-        [:extra_info, :with_subject, :with_reply_to, :with_post_content]
+        [:quote_tags, :extra_info, :with_subject, :with_reply_to, :with_post_content]
 
       {:annotations, _} ->
-        [:extra_info, :with_subject, :with_post_content]
+        [:quote_tags, :extra_info, :with_subject, :with_post_content]
 
       {:thread, :flat} ->
         [
+          :quote_tags,
           :feed,
           :with_reply_to,
           :with_media,
@@ -1650,19 +1651,26 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
         ]
 
       {:thread, _nested} ->
-        [:feed, :with_media, :with_object_more, :maybe_with_labelled, :with_object_peered]
+        [
+          :quote_tags,
+          :feed,
+          :with_media,
+          :with_object_more,
+          :maybe_with_labelled,
+          :with_object_peered
+        ]
 
       {:feed_by_creator, _} ->
-        [:with_object_more, :feed_postload, :post_content]
+        [:quote_tags, :with_object_more, :feed_postload, :post_content]
 
       {:feed_by_subject, _} ->
-        [:feed_by_subject, :feed_postload, :post_content]
+        [:quote_tags, :feed_by_subject, :feed_postload, :post_content]
 
       {:media, _} ->
-        [:per_media, :with_creator, :with_post_content]
+        [:quote_tags, :per_media, :with_creator, :with_post_content]
 
       _ ->
-        [:feed_by_subject, :feed_postload, :post_content]
+        [:quote_tags, :feed_by_subject, :feed_postload, :post_content]
     end
     |> debug("whatpreloads")
   end
