@@ -177,29 +177,91 @@ defmodule Bonfire.UI.Social.Activity.MediaLive do
   def is_gif?(url, media_type),
     do: is_gif?(url) or String.starts_with?(media_type || "", "image/gif")
 
-  def is_gif?(url, media_type, _media) do
-    is_gif?(url, media_type)
+  def is_gif?(url, media_type, media) do
+    # Basic file extension/type check first
+    basic_gif_check = is_gif?(url, media_type)
+
+    if basic_gif_check do
+      true
+    else
+      # Simple converted GIF detection
+      is_likely_converted_gif?(url, media_type, media)
+    end
   end
 
-  # def multimedia_list(media) do
-  #   Enum.filter(List.wrap(media), fn m ->
-  #     m_type = m |> e(:media_type, nil)
+  @doc """
+  Detects videos that were likely originally GIFs but converted to MP4.
+  Uses common conversion rules: GIFs up to 1MP (1280x720) are typically converted to soundless MP4s.
+  """
+  def is_converted_gif?(url, media_type, media) do
+    is_likely_converted_gif?(url, media_type, media)
+  end
 
-  #     # WIP: use modal for videos and embeds too
-  #     # String.starts_with?(m_type, @image_types) or
-  #     String.starts_with?(m_type, @multimedia_exts ) or
-  #       String.ends_with?(Media.media_url(m), @image_exts)
-  #   end)
-  # end
+  defp is_likely_converted_gif?(url, media_type, media) do
+    if String.starts_with?(media_type || "", "video/") do
+      metadata = media.metadata || %{}
 
-  # def link_list(media) do
-  #   Enum.reject(List.wrap(media), fn m ->
-  #     m_type = m |> e(:media_type, nil)
+      # Priority order: explicit indicators > size rules > conservative fallback
+      cond do
+        # 1. Explicit mentions (highest confidence)
+        gif_explicitly_mentioned?(media, url) -> true
+        # 2. Size-based (standard conversion: GIFs ≤ 1MP converted to MP4)
+        within_gif_conversion_limits?(metadata) -> true
+        # 3. Conservative fallback
+        true -> false
+      end
+    else
+      false
+    end
+  end
 
-  #     String.starts_with?(m_type, @multimedia_exts) or
-  #       String.ends_with?(Media.media_url(m), @image_exts)
-  #   end)
-  # end
+  # Check if GIF is explicitly mentioned in metadata or filename
+  defp gif_explicitly_mentioned?(media, url) do
+    gif_in_metadata?(media) or gif_in_filename?(url)
+  end
+
+  # Check if metadata contains GIF-related information
+  defp gif_in_metadata?(media) do
+    metadata = media.metadata || %{}
+    label = get_in(metadata, ["label"]) || ""
+    description = get_in(metadata, ["description"]) || ""
+
+    # Check various metadata fields for GIF indicators
+    String.contains?(String.downcase(label), "gif") or
+      String.contains?(String.downcase(description), "gif") or
+      get_in(metadata, ["original_type"]) == "image/gif" or
+      get_in(metadata, ["converted_from"]) == "gif"
+  end
+
+  # Check if filename suggests it was originally a GIF
+  defp gif_in_filename?(url) when is_binary(url) do
+    # Extract filename from URL
+    filename = Path.basename(url)
+
+    # Check for explicit GIF indicators in filename
+    String.contains?(String.downcase(filename), "gif")
+  end
+
+  defp gif_in_filename?(_), do: false
+
+  # Check if dimensions are within common GIF conversion limits
+  defp within_gif_conversion_limits?(metadata) do
+    width = get_in(metadata, ["width"])
+    height = get_in(metadata, ["height"])
+
+    # Use standard conversion rules:
+    # - GIFs up to 1MP (1280x720 = 921,600 pixels) are typically converted to MP4
+    # - Dimensions must be ≤ 1280x720
+    case {width, height} do
+      {w, h} when is_integer(w) and is_integer(h) ->
+        # 1MP limit
+        w <= 1280 and h <= 720 and w * h <= 921_600
+
+      _ ->
+        # No dimensions = can't determine, be conservative
+        false
+    end
+  end
 
   def provider(%{} = media) do
     (e(media.metadata, "facebook", "site_name", nil) ||
@@ -298,22 +360,34 @@ defmodule Bonfire.UI.Social.Activity.MediaLive do
   def preview_img(%{} = media) do
     # Check for common app/site tile images which are often good previews
     # Check for Open Graph images which might be nested
-    (e(media, :metadata, "oembed", "thumbnail_url", nil) ||
-       e(media, :metadata, "twitter", "image", nil) ||
-       (e(media, :metadata, "facebook", "image", "url", nil) ||
-          e(media, :metadata, "facebook", "image", nil)) ||
-       e(media, :metadata, "image", "url", nil) ||
-       e(media, :metadata, "image", nil) ||
-       e(media, :metadata, "icon", "url", nil) ||
-       e(media, :metadata, "icon", nil) ||
-       e(media, :metadata, "other", "msapplication-TileImage", nil) ||
-       e(media, :metadata, "other", "apple-touch-icon", nil) ||
-       e(media, :metadata, "other", "og:image", nil) ||
-       e(media, :metadata, "other", "og:image:url", nil) ||
-       Media.thumbnail_url(media)
-       |> debug("medthumbur") ||
-       media_img(media))
-    |> unwrap()
+    preview =
+      e(media, :metadata, "oembed", "thumbnail_url", nil) ||
+        e(media, :metadata, "twitter", "image", nil) ||
+        (e(media, :metadata, "facebook", "image", "url", nil) ||
+           e(media, :metadata, "facebook", "image", nil)) ||
+        e(media, :metadata, "image", "url", nil) ||
+        e(media, :metadata, "image", nil) ||
+        e(media, :metadata, "icon", "url", nil) ||
+        e(media, :metadata, "icon", nil) ||
+        e(media, :metadata, "other", "msapplication-TileImage", nil) ||
+        e(media, :metadata, "other", "apple-touch-icon", nil) ||
+        e(media, :metadata, "other", "og:image", nil) ||
+        e(media, :metadata, "other", "og:image:url", nil) ||
+        Media.thumbnail_url(media)
+        |> debug("medthumbur")
+
+    # Only fall back to media_img if we have a proper image media type
+    # Never use video URLs as poster images
+    preview =
+      preview ||
+        if is_image_media_type?(media.media_type), do: media_img(media), else: nil
+
+    preview |> unwrap()
+  end
+
+  # Helper to check if media type is actually an image
+  defp is_image_media_type?(media_type) do
+    String.starts_with?(media_type || "", @image_types)
   end
 
   def media_img(%{} = media) do

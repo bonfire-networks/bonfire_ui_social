@@ -21,8 +21,7 @@
                   {#match nil}
                     {#if is_binary(media_url)}
                       {#if Bonfire.Files.has_extension?(media_url, [".mp4", ".mkv"])}
-                        {#if e(@media, :media_type, nil) == "image/gif" ||
-                            String.contains?(Bonfire.Files.Media.media_label(@media) || "", "image/gif")}
+                        {#if MediaLive.is_gif?(@media.path, e(@media, :media_type, nil), @media)}
                           {!-- Handle GIF-labeled MP4 files (converted GIFs) --}
                           <div class="relative">
                             <video
@@ -242,6 +241,37 @@
                             Your browser does not support the audio tag.
                             {!-- <a href={media_url}> {l "Download audio"} </a> --}
                           </audio>
+                        </div>
+                      {#elseif MediaLive.preview_img(@media)}
+                        {!-- Handle media with preview images (like video.movie, video.other, etc.) --}
+                        <div class="relative rounded-box border border-base-content/10 overflow-hidden">
+                          <a href={media_url} target="_blank" class="block">
+                            <LazyImage
+                              parent_id={deterministic_dom_id(__MODULE__, id(@media), "preview", @parent_id)}
+                              class="w-full aspect-video object-cover hover:opacity-90 transition-opacity"
+                              alt={Bonfire.Files.Media.media_label(@media) || "Media preview"}
+                              src={MediaLive.preview_img(@media)}
+                              media={@media}
+                              fallback_icon="heroicons:play-circle"
+                            />
+                            <div class="absolute inset-0 bg-black/20 hover:bg-black/10 transition-colors flex items-center justify-center">
+                              <div class="bg-white/90 rounded-full p-3 shadow-lg">
+                                <#Icon iconify="heroicons:play-20-solid" class="w-8 h-8 text-gray-800" />
+                              </div>
+                            </div>
+                          </a>
+                          {#case Bonfire.Files.Media.media_label(@media)}
+                            {#match nil}
+                            {#match title}
+                              <div class="p-3 bg-base-100">
+                                <h3 class="font-semibold text-base-content line-clamp-2">{title}</h3>
+                                {#case MediaLive.provider(@media)}
+                                  {#match nil}
+                                  {#match provider}
+                                    <p class="text-sm text-base-content/70 mt-1">{provider}</p>
+                                {/case}
+                              </div>
+                          {/case}
                         </div>
                       {#else}
                         <div class="pt-4 text-center">

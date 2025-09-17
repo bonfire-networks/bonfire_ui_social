@@ -10,7 +10,7 @@
   />
 {#else}
   <form
-    data-scope="reactions_sort"
+    data-scope={@scope}
     phx-change={@event_name || "Bonfire.Common.Settings:set"}
     phx-target={@event_target}
   >

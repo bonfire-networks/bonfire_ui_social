@@ -225,7 +225,7 @@ defmodule Bonfire.UI.Social.SettingsTest do
       conn = visit(conn, "/feed/local")
       assert_has(conn, "article", text: "reply 2")
 
-      conn = visit(conn, "/settings/user/preferences/behaviours")
+      conn = visit(conn, "/settings/user/feeds")
 
       # Change sort to likes
       conn =
@@ -242,7 +242,7 @@ defmodule Bonfire.UI.Social.SettingsTest do
       assert_has(conn, "article", text: "reply 1")
 
       # Change sort to replies
-      conn = visit(conn, "/settings/user/preferences/behaviours")
+      conn = visit(conn, "/settings/user/feeds")
 
       conn =
         within(conn, "form[data-scope=reactions_sort]", fn c ->

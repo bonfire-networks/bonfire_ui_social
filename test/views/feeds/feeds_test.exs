@@ -122,6 +122,9 @@ defmodule Bonfire.UI.Social.Feeds.Test do
       # Visit the feed and verify boundary is displayed
       conn
       |> visit("/feed/local")
+      |> wait_async()
+      # |> click_button("[data-role=open_modal]", "Local")
+      |> PhoenixTest.open_browser()
       |> assert_has("[data-scope=local-boundary-set]", text: "Local")
     end
 

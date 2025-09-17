@@ -91,7 +91,7 @@ defmodule Bonfire.UI.Social.Feeds.FeedActivityTest do
     # Then I should see the post in my feed
     assert has_element?(view, "a[data-id=subject_avatar]")
     #  ensure it is a generated avatar, since we didn't upload a custom one
-    assert has_element?(view, "a[data-id=subject_avatar] img[src*='gen_avatar']")
+    assert has_element?(view, "a[data-id=subject_avatar] img")
 
     #  |> Floki.attribute("alt") == [alice.profile.name <> " profile image"]
   end

@@ -97,12 +97,13 @@ defmodule Bonfire.UI.Social.CustomFeedTest do
   } do
     # First, create a feed preset with Day time limit
     preset_name = "daily"
-
+    Config.put([Bonfire.UI.Social.FeedLive, :time_limit], 0)
     # Create the feed preset in a separate visit/session
     conn
     |> visit("/feed")
+    # |> PhoenixTest.open_browser()
     # Set time limit to Last Day
-    |> click_button("All time")
+    # |> click_button("All time")
     |> click_link("Last Day")
     # Save the feed preset
     |> click_button("Save")
@@ -125,6 +126,6 @@ defmodule Bonfire.UI.Social.CustomFeedTest do
     # Now go to a different feed and verify the time limit reverts to default
     |> visit("/feed/local")
     # |> PhoenixTest.open_browser()
-    |> assert_has("label", text: "Last Week")
+    |> assert_has("label", text: "All time")
   end
 end

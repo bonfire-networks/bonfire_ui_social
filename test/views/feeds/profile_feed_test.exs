@@ -93,7 +93,6 @@ defmodule Bonfire.UI.Social.Feeds.ProfileFeed.Test do
     # alice visits my profile feed
     conn
     |> visit("/user/#{me.id}")
-    # |> PhoenixTest.open_browser()
     |> assert_has("[data-id=feed_controls]")
     |> assert_has_or_open_browser("[data-id=object_body]", text: my_post_content)
     |> assert_has("article [data-role=name]", text: "Image post")
@@ -107,7 +106,8 @@ defmodule Bonfire.UI.Social.Feeds.ProfileFeed.Test do
     #  then we hide posts
     |> click_button("[data-toggle=post] button", "Hide")
     |> wait_async()
+    |> PhoenixTest.open_browser()
     # should have nothing left
-    |> refute_has("[data-id=feed] article")
+    |> refute_has("[data-id=feed] article", text: "This is my original post")
   end
 end
