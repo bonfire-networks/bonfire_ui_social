@@ -486,7 +486,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
 
         nil
 
-      %{is_sensitive: is_sensitive} when is_boolean(is_sensitive) ->
+      %{is_sensitive: is_sensitive} when is_boolean(is_sensitive) or is_nil(is_sensitive) ->
         is_sensitive
 
       bool when is_boolean(bool) ->

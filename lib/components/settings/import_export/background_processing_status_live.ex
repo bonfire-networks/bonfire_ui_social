@@ -115,7 +115,7 @@ defmodule Bonfire.UI.Social.BackgroundProcessingStatusLive do
         else
           fetch_import_stats(current_user, e(socket.assigns, :selected_tab, nil), jobs)
         end
-        |> flood("computed_stats")
+        |> debug("computed_stats")
 
       assign(socket, stats: stats, jobs: jobs |> format_jobs(), has_more: has_more)
     else
