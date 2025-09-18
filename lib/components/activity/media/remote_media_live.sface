@@ -16,7 +16,27 @@
             {#case e(@media, :metadata, "facebook", "video", nil) ||
                 e(@media, :metadata, "twitter", "player", nil) ||
                 e(@media, :metadata, "facebook", "video", nil)}
-              {#match nil}
+              {#match url when is_binary(url)}
+                {!-- TODO: url |> String.replace("youtube.com", "yewtu.be") --}
+                {!-- width={e(@media, :metadata, "facebook", "video:width", nil) ||
+                    e(@media, :metadata, "other", "video_width", nil) || "800"}
+                  height={e(@media, :metadata, "facebook", "video:height", nil) ||
+                    e(@media, :metadata, "other", "video_height", nil) || "500"} --}
+                <div class="aspect-video rounded-t-box">
+                  {!-- TODO: only load external embed if autoplay or user clicks on a play button --}
+                  <iframe
+                    src={"#{url}?&autoplay=#{if @autoplay, do: 1, else: 0}"}
+                    frameborder="0"
+                    width="100%"
+                    loading="lazy"
+                    height="100%"
+                    allow="accelerometer; gyroscope; picture-in-picture"
+                    allowfullscreen="allowfullscreen"
+                    picture-in-picture
+                    class={"rounded-t-box", @base_css}
+                  />
+                </div>
+              {#match _}
                 {#case e(@media, :metadata, "oembed", "html", nil)}
                   {#match nil}
                     {#if is_binary(media_url)}
@@ -283,26 +303,6 @@
                     {!-- TODO: only load external embed if autoplay or user clicks on a play button --}
                     {raw(embed)}
                 {/case}
-              {#match url}
-                {!-- TODO: url |> String.replace("youtube.com", "yewtu.be") --}
-                {!-- width={e(@media, :metadata, "facebook", "video:width", nil) ||
-                    e(@media, :metadata, "other", "video_width", nil) || "800"}
-                  height={e(@media, :metadata, "facebook", "video:height", nil) ||
-                    e(@media, :metadata, "other", "video_height", nil) || "500"} --}
-                <div class="aspect-video rounded-t-box">
-                  {!-- TODO: only load external embed if autoplay or user clicks on a play button --}
-                  <iframe
-                    src={"#{e(url, "secure_url", nil) || url}?&autoplay=#{if @autoplay, do: 1, else: 0}"}
-                    frameborder="0"
-                    width="100%"
-                    loading="lazy"
-                    height="100%"
-                    allow="accelerometer; gyroscope; picture-in-picture"
-                    allowfullscreen="allowfullscreen"
-                    picture-in-picture
-                    class={"rounded-t-box", @base_css}
-                  />
-                </div>
             {/case}
           {/if}
       {/case}
