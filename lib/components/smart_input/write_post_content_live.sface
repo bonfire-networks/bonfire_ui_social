@@ -42,6 +42,7 @@
       to_boundaries={@to_boundaries}
       to_circles={@to_circles}
       exclude_circles={@exclude_circles}
+      verb_permissions={@verb_permissions}
       mentions={@mentions}
       showing_within={@showing_within}
       uploads={@uploads}
@@ -62,6 +63,7 @@
         insert_text={@insert_text}
         showing_within={@showing_within}
         to_boundaries={@to_boundaries}
+        verb_permissions={@verb_permissions}
         boundary_preset={@boundary_preset}
         preview_boundary_for_id={@preview_boundary_for_id}
         preview_boundary_for_username={@preview_boundary_for_username}

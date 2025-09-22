@@ -142,31 +142,6 @@ defmodule Bonfire.UI.Social.FeedsLive do
      )}
   end
 
-  # defp from_socket do
-  #   to_options(socket) ++ [feed_filters: %{object_types: params["type"]}]
-  # end
-
-  # def handle_params(%{"compose" => "open"} = params, url, socket) do
-  #   # Remove the compose param to avoid polluting downstream logic
-  #   params_without_compose = Map.delete(params, "compose")
-
-  #   # Call set_feed_assigns directly instead of handle_params to avoid recursion
-  #   {:noreply, updated_socket} = set_feed_assigns(params_without_compose, socket)
-
-  #   # Set smart_input_opts in socket assigns for initial render
-  #   updated_socket = assign(updated_socket, smart_input_opts: %{open: true})
-
-  #   # Send to PersistentLive for initial render (works with PhoenixTest)
-  #   Bonfire.UI.Common.PersistentLive.maybe_send_assigns(assigns(updated_socket))
-
-  #   # Also use SmartInputLiveHandler for dynamic updates (works in browser)
-  #   SmartInputLiveHandler.assign_open(updated_socket)
-
-  #   IO.inspect("Opened composer via both PersistentLive assigns and SmartInputLiveHandler")
-
-  #   {:noreply, updated_socket}
-  # end
-
   def handle_params(
         %{"after" => _cursor_after} = attrs,
         url,
