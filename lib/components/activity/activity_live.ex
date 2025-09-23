@@ -145,20 +145,24 @@ defmodule Bonfire.UI.Social.ActivityLive do
     )
 
     socket
-    |> assign(prepare(assigns) |> assigns_clean())
+    |> assign(prepare_assigns(assigns) |> assigns_clean())
   end
 
   def maybe_update_some_assigns(socket \\ nil, assigns, extras) do
     socket
-    |> assign(some_assigns(socket, assigns, extras) |> assigns_clean())
+    |> assign(prepare_mutable_assigns(socket, assigns, extras) |> assigns_clean())
   end
 
-  defp some_assigns(socket \\ %{}, assigns, extras)
+  defp prepare_mutable_assigns(socket \\ %{}, assigns, extras)
 
-  defp some_assigns(%Phoenix.LiveView.Socket{assigns: socket_assigns}, assigns, extras),
-    do: some_assigns(socket_assigns, assigns, extras)
+  defp prepare_mutable_assigns(
+         %Phoenix.LiveView.Socket{assigns: socket_assigns},
+         assigns,
+         extras
+       ),
+       do: prepare_mutable_assigns(socket_assigns, assigns, extras)
 
-  defp some_assigns(socket_assigns, assigns, extras) do
+  defp prepare_mutable_assigns(socket_assigns, assigns, extras) do
     activity =
       (assigns[:activity] || socket_assigns[:activity])
       |> debug("the activity")
@@ -240,7 +244,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
   end
 
   # def assigns_from_activity(activity) do
-  #   # TODO: use this also in `prepare` to avoid duplication
+  #   # TODO: use this also in `prepare_assigns` to avoid duplication
   #   %{
   #     activity: if(is_map(activity), do: Map.drop(activity, [:object])),
   #     object: e(activity, :object, nil),
@@ -264,65 +268,35 @@ defmodule Bonfire.UI.Social.ActivityLive do
   end
 
   @decorate time()
-  def prepare(assigns)
+  def prepare_assigns(assigns)
 
-  def prepare(%{activity: _, object: %{}} = assigns) do
-    do_prepare(assigns)
+  def prepare_assigns(%{activity: _, object: %{}} = assigns) do
+    do_prepare_assigns(assigns)
   end
 
-  def prepare(%{activity: %{object: object} = activity, object: nil} = assigns)
+  def prepare_assigns(%{activity: %{object: object} = activity, object: nil} = assigns)
       when not is_nil(object) do
     debug(
-      "Activity ##{debug_i(assigns[:activity_id] || id(assigns[:activity]), assigns[:activity_inception])} prepare activity with object in assoc"
+      "Activity ##{debug_i(assigns[:activity_id] || id(assigns[:activity]), assigns[:activity_inception])} prepare_assigns activity with object in assoc"
     )
 
     Map.put(assigns, :object, object)
     |> Map.put(:activity, Map.delete(activity, :object))
-    |> do_prepare()
+    |> do_prepare_assigns()
   end
 
-  def prepare(%{activity: %{object: object} = activity} = assigns) when not is_nil(object) do
+  def prepare_assigns(%{activity: %{object: object} = activity} = assigns)
+      when not is_nil(object) do
     assigns
     |> Map.put(:object, object)
     |> Map.put(:activity, Map.delete(activity, :object))
-    |> do_prepare()
+    |> do_prepare_assigns()
   end
 
-  def prepare(assigns), do: Map.put(assigns, :activity_prepared, :skipped)
+  def prepare_assigns(assigns), do: Map.put(assigns, :activity_prepared, :skipped)
 
-  defp prepare_verb(activity, fallback \\ nil)
-
-  defp prepare_verb(%{emoji: %{media_type: "emoji"}}, fallback) do
-    "React"
-  end
-
-  defp prepare_verb(%{emoji: %{summary: _}}, fallback) do
-    "React"
-  end
-
-  defp prepare_verb(activity, fallback) do
-    # Debug the activity structure to understand what's available
-    # debug(e(activity, :verb, nil), "prepare_verb: activity.verb")
-    # debug(e(activity, :verb_id, nil), "prepare_verb: activity.verb_id")
-    # debug(e(activity, :table_id, nil), "prepare_verb: activity.table_id")
-    # debug(e(activity, :__struct__, nil), "prepare_verb: activity.__struct__")
-    # debug(e(activity, :edge, nil), "prepare_verb: activity.edge")
-
-    # Extract verb string from nested structure if present
-    raw_verb =
-      e(activity, :verb, :verb, nil) || e(activity, :verb, nil) || e(activity, :verb_id, nil)
-
-    # |> debug("prepare_verb: raw verb before modification")
-
-    Activities.verb_maybe_modify(raw_verb || fallback, activity)
-    |> debug("prepare_verb: final verb after verb_maybe_modify")
-  end
-
-  # defp derive_verb_from_table_id(%{table_id: "300STANN0VNCERESHARESH0VTS"}), do: "Boost"
-  # defp derive_verb_from_table_id(%{table_id: "61KESLYKL1KE1Y0VL1KESTH1S"}), do: "Like"
-  # defp derive_verb_from_table_id(_), do: nil
-
-  defp do_prepare(%{activity: activity, object: object} = assigns) when not is_nil(object) do
+  defp do_prepare_assigns(%{activity: activity, object: object} = assigns)
+       when not is_nil(object) do
     activity_inception = e(assigns, :activity_inception, nil)
 
     # debug("Activity ##{debug_i(assigns[:activity_id], activity_inception)} preparation started")
@@ -421,7 +395,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
         )
 
     assigns
-    |> some_assigns(
+    |> prepare_mutable_assigns(
       verb: verb,
       thread: thread
     )
@@ -472,7 +446,39 @@ defmodule Bonfire.UI.Social.ActivityLive do
     # |> debug("Activity preparation done")
   end
 
-  defp do_prepare(assigns), do: Map.put(assigns, :activity_prepared, :skipped)
+  defp do_prepare_assigns(assigns), do: Map.put(assigns, :activity_prepared, :skipped)
+
+  defp prepare_verb(activity, fallback \\ nil)
+
+  defp prepare_verb(%{emoji: %{media_type: "emoji"}}, fallback) do
+    "React"
+  end
+
+  defp prepare_verb(%{emoji: %{summary: _}}, fallback) do
+    "React"
+  end
+
+  defp prepare_verb(activity, fallback) do
+    # Debug the activity structure to understand what's available
+    # debug(e(activity, :verb, nil), "prepare_verb: activity.verb")
+    # debug(e(activity, :verb_id, nil), "prepare_verb: activity.verb_id")
+    # debug(e(activity, :table_id, nil), "prepare_verb: activity.table_id")
+    # debug(e(activity, :__struct__, nil), "prepare_verb: activity.__struct__")
+    # debug(e(activity, :edge, nil), "prepare_verb: activity.edge")
+
+    # Extract verb string from nested structure if present
+    raw_verb =
+      e(activity, :verb, :verb, nil) || e(activity, :verb, nil) || e(activity, :verb_id, nil)
+
+    # |> debug("prepare_verb: raw verb before modification")
+
+    Activities.verb_maybe_modify(raw_verb || fallback, activity)
+    |> debug("prepare_verb: final verb after verb_maybe_modify")
+  end
+
+  # defp derive_verb_from_table_id(%{table_id: "300STANN0VNCERESHARESH0VTS"}), do: "Boost"
+  # defp derive_verb_from_table_id(%{table_id: "61KESLYKL1KE1Y0VL1KESTH1S"}), do: "Like"
+  # defp derive_verb_from_table_id(_), do: nil
 
   defp sensitive?(activity) do
     case Map.get(activity, :sensitive) do
@@ -635,7 +641,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
   end
 
   def maybe_prepare(%{activity: _} = assigns) do
-    prepare(assigns)
+    prepare_assigns(assigns)
   end
 
   def render(%{activity: _} = assigns) do
@@ -865,13 +871,13 @@ defmodule Bonfire.UI.Social.ActivityLive do
                 <StatelessComponent
                   :if={@hide_activity != "subject"}
                   module={component}
-                  path={case e(component_assigns, :character, nil) do
-                    nil -> e(component_assigns, :subject_id, nil)
+                  path={case maybe_get(component_assigns, :character, nil) do
+                    nil -> maybe_get(component_assigns, :subject_id, nil)
                     character -> path(character)
                   end}
-                  profile={e(component_assigns, :profile, nil)}
-                  profile_id={id(e(component_assigns, :profile, nil))}
-                  profile_media={Media.avatar_url(e(component_assigns, :profile, nil))}
+                  profile={maybe_get(component_assigns, :profile, nil)}
+                  profile_id={id(maybe_get(component_assigns, :profile, nil))}
+                  profile_media={Media.avatar_url(maybe_get(component_assigns, :profile, nil))}
                   profile_summary={e(component_assigns, :profile, :summary, nil)}
                   profile_name={e(
                     component_assigns,
@@ -882,33 +888,34 @@ defmodule Bonfire.UI.Social.ActivityLive do
                     )
                   )}
                   character_username={e(component_assigns, :character, :username, nil)}
-                  activity_id={id(e(component_assigns, :activity, nil) || @activity)}
-                  object_id={id(e(component_assigns, :object, nil) || @object)}
-                  subject_id={e(component_assigns, :subject_id, nil) ||
-                    e(@activity, :subject_id, nil)}
-                  subjects_more={e(component_assigns, :subjects_more, [])}
-                  replies_more_count={e(@activity, :replies_more_count, 0)}
-                  subject_peered={e(component_assigns, :character, :peered, nil) || e(@activity, :subject, :character, :peered, nil)}
+                  activity_id={id(maybe_get(component_assigns, :activity, @activity))}
+                  object_id={id(maybe_get(component_assigns, :object, @object))}
+                  subject_id={maybe_get(component_assigns, :subject_id, nil) ||
+                    e(maybe_get(component_assigns, :activity, @activity), :subject_id, nil)}
+                  subjects_more={maybe_get(component_assigns, :subjects_more, [])}
+                  replies_more_count={e(maybe_get(component_assigns, :activity, @activity), :replies_more_count, 0)}
+                  subject_peered={e(component_assigns, :character, :peered, nil) ||
+                    e(maybe_get(component_assigns, :activity, @activity), :subject, :character, :peered, nil)}
                   object_boundary={@object_boundary}
-                  object_type={e(component_assigns, :object_type, @object_type)}
-                  date_ago={e(component_assigns, :date_ago, @date_ago)}
-                  permalink={e(component_assigns, :permalink, @permalink)}
-                  viewing_main_object={e(component_assigns, :viewing_main_object, @viewing_main_object)}
-                  activity_component_id={e(component_assigns, :activity_component_id, @activity_component_id)}
-                  activity_inception={e(component_assigns, :activity_inception, @activity_inception)}
+                  object_type={maybe_get(component_assigns, :object_type, @object_type)}
+                  date_ago={maybe_get(component_assigns, :date_ago, @date_ago)}
+                  permalink={maybe_get(component_assigns, :permalink, @permalink)}
+                  viewing_main_object={maybe_get(component_assigns, :viewing_main_object, @viewing_main_object)}
+                  activity_component_id={maybe_get(component_assigns, :activity_component_id, @activity_component_id)}
+                  activity_inception={maybe_get(component_assigns, :activity_inception, @activity_inception)}
                   showing_within={@showing_within}
                   parent_id={@activity_component_id}
                   thread_id={@thread_id}
                   published_in={@published_in}
-                  verb={e(component_assigns, :verb, @verb)}
-                  verb_display={e(component_assigns, :verb_display, @verb_display)}
-                  emoji={@emoji || e(component_assigns, :activity, :emoji, nil) || e(@activity, :emoji, nil)}
+                  verb={maybe_get(component_assigns, :verb, @verb)}
+                  verb_display={maybe_get(component_assigns, :verb_display, @verb_display)}
+                  emoji={@emoji || e(maybe_get(component_assigns, :activity, @activity), :emoji, nil)}
                   reply_to_id={e(@activity, :replied, :reply_to_id, nil)}
                   peered={@peered}
                   is_remote={@is_remote}
-                  thread_title={e(component_assigns, :thread_title, @thread_title)}
+                  thread_title={maybe_get(component_assigns, :thread_title, @thread_title)}
                   subject_user={@subject_user}
-                  show_minimal_subject_and_note={e(component_assigns, :show_minimal_subject_and_note, @show_minimal_subject_and_note)}
+                  show_minimal_subject_and_note={maybe_get(component_assigns, :show_minimal_subject_and_note, @show_minimal_subject_and_note)}
                   extra_info={e(@object, :extra_info, nil)}
                 />
               {#match Bonfire.UI.Social.Activity.NoteLive}
@@ -917,10 +924,10 @@ defmodule Bonfire.UI.Social.ActivityLive do
                   showing_within={@showing_within}
                   parent_id={@activity_component_id}
                   activity_inception={@activity_inception}
-                  activity_component_id={e(component_assigns, :activity_component_id, @activity_component_id)}
-                  activity={e(component_assigns, :activity, @activity)}
-                  object={e(component_assigns, :object, @object)}
-                  viewing_main_object={e(component_assigns, :viewing_main_object, @viewing_main_object)}
+                  activity_component_id={maybe_get(component_assigns, :activity_component_id, @activity_component_id)}
+                  activity={maybe_get(component_assigns, :activity, @activity)}
+                  object={maybe_get(component_assigns, :object, @object)}
+                  viewing_main_object={maybe_get(component_assigns, :viewing_main_object, @viewing_main_object)}
                   cw={@cw}
                   thread_title={@thread_title}
                   is_remote={@is_remote}
@@ -933,15 +940,15 @@ defmodule Bonfire.UI.Social.ActivityLive do
                   showing_within={@showing_within}
                   parent_id={@activity_component_id}
                   activity_inception={@activity_inception}
-                  activity_component_id={e(component_assigns, :activity_component_id, @activity_component_id)}
-                  activity={e(component_assigns, :activity, @activity)}
-                  object={e(component_assigns, :object, @object)}
-                  viewing_main_object={e(component_assigns, :viewing_main_object, @viewing_main_object)}
+                  activity_component_id={maybe_get(component_assigns, :activity_component_id, @activity_component_id)}
+                  activity={maybe_get(component_assigns, :activity, @activity)}
+                  object={maybe_get(component_assigns, :object, @object)}
+                  viewing_main_object={maybe_get(component_assigns, :viewing_main_object, @viewing_main_object)}
                   cw={@cw}
                   thread_title={@thread_title}
                   is_remote={@is_remote}
                   hide_actions={@hide_actions}
-                  primary_image={e(component_assigns, :primary_image, nil)}
+                  primary_image={maybe_get(component_assigns, :primary_image, nil)}
                 />
               {#match _
                 when component in [
@@ -955,12 +962,12 @@ defmodule Bonfire.UI.Social.ActivityLive do
                   __context__={@__context__}
                   showing_within={@showing_within}
                   parent_id={@activity_component_id}
-                  viewing_main_object={e(component_assigns, :viewing_main_object, @viewing_main_object)}
-                  activity={e(component_assigns, :activity, @activity)}
-                  object={e(component_assigns, :object, @object)}
-                  object_type={e(component_assigns, :object_type, @object_type)}
-                  object_type_readable={e(component_assigns, :object_type_readable, @object_type_readable)}
-                  json={e(component_assigns, :json, nil)}
+                  viewing_main_object={maybe_get(component_assigns, :viewing_main_object, @viewing_main_object)}
+                  activity={maybe_get(component_assigns, :activity, @activity)}
+                  object={maybe_get(component_assigns, :object, @object)}
+                  object_type={maybe_get(component_assigns, :object_type, @object_type)}
+                  object_type_readable={maybe_get(component_assigns, :object_type_readable, @object_type_readable)}
+                  json={maybe_get(component_assigns, :json, nil)}
                 />
               {#match Bonfire.UI.Social.Activity.MediaSkeletonLive}
                 <Bonfire.UI.Social.Activity.MediaSkeletonLive
@@ -976,9 +983,9 @@ defmodule Bonfire.UI.Social.ActivityLive do
                   __context__={@__context__}
                   parent_id={@activity_component_id}
                   activity_inception={@activity_inception}
-                  showing_within={e(component_assigns, :showing_within, @showing_within)}
-                  viewing_main_object={e(component_assigns, :viewing_main_object, @viewing_main_object)}
-                  media={e(component_assigns, :media, [])}
+                  showing_within={maybe_get(component_assigns, :showing_within, @showing_within)}
+                  viewing_main_object={maybe_get(component_assigns, :viewing_main_object, @viewing_main_object)}
+                  media={maybe_get(component_assigns, :media, [])}
                   cw={@cw}
                 />
               {#match _
@@ -997,17 +1004,17 @@ defmodule Bonfire.UI.Social.ActivityLive do
                       feed_name={@feed_name}
                       feed_id={@feed_id}
                       thread_mode={@thread_mode}
-                      activity={e(component_assigns, :activity, @activity)}
-                      object={e(component_assigns, :object, @object)}
-                      object_boundary={@object_boundary}
-                      object_type={e(component_assigns, :object_type, @object_type)}
-                      object_type_readable={e(component_assigns, :object_type_readable, @object_type_readable)}
-                      verb={e(component_assigns, :verb, @verb)}
+                      activity={maybe_get(component_assigns, :activity, @activity)}
+                      object={maybe_get(component_assigns, :object, @object)}
+                      object_boundary={maybe_get(component_assigns, :object_boundary, @object_boundary)}
+                      object_type={maybe_get(component_assigns, :object_type, @object_type)}
+                      object_type_readable={maybe_get(component_assigns, :object_type_readable, @object_type_readable)}
+                      verb={maybe_get(component_assigns, :verb, @verb)}
                       thread_id={@thread_id}
-                      thread_title={e(component_assigns, :thread_title, @thread_title)}
-                      permalink={e(component_assigns, :permalink, @permalink)}
-                      viewing_main_object={e(component_assigns, :viewing_main_object, @viewing_main_object)}
-                      activity_component_id={e(component_assigns, :activity_component_id, @activity_component_id)}
+                      thread_title={maybe_get(component_assigns, :thread_title, @thread_title)}
+                      permalink={maybe_get(component_assigns, :permalink, @permalink)}
+                      viewing_main_object={maybe_get(component_assigns, :viewing_main_object, @viewing_main_object)}
+                      activity_component_id={maybe_get(component_assigns, :activity_component_id, @activity_component_id)}
                       parent_id={@activity_component_id}
                       published_in={@published_in}
                       labelled={@labelled}
@@ -1027,26 +1034,27 @@ defmodule Bonfire.UI.Social.ActivityLive do
                       __context__={@__context__}
                       showing_within={@showing_within}
                       thread_mode={@thread_mode}
-                      activity={e(component_assigns, :activity, @activity)}
-                      object={e(component_assigns, :object, @object)}
-                      object_boundary={@object_boundary}
-                      object_type={e(component_assigns, :object_type, @object_type)}
-                      object_type_readable={e(component_assigns, :object_type_readable, @object_type_readable)}
-                      verb={e(component_assigns, :verb, @verb)}
-                      thread_id={@thread_id}
-                      thread_title={e(component_assigns, :thread_title, @thread_title)}
-                      permalink={e(component_assigns, :permalink, @permalink)}
-                      viewing_main_object={e(component_assigns, :viewing_main_object, @viewing_main_object)}
-                      activity_component_id={e(component_assigns, :activity_component_id, @activity_component_id)}
+                      activity={maybe_get(component_assigns, :activity, @activity)}
+                      object={maybe_get(component_assigns, :object, @object)}
+                      object_boundary={maybe_get(component_assigns, :object_boundary, @object_boundary)}
+                      object_type={maybe_get(component_assigns, :object_type, @object_type)}
+                      object_type_readable={maybe_get(component_assigns, :object_type_readable, @object_type_readable)}
+                      verb={maybe_get(component_assigns, :verb, @verb)}
+                      thread_id={maybe_get(component_assigns, :thread_id, @thread_id)}
+                      thread_title={maybe_get(component_assigns, :thread_title, @thread_title)}
+                      permalink={maybe_get(component_assigns, :permalink, @permalink)}
+                      viewing_main_object={maybe_get(component_assigns, :viewing_main_object, @viewing_main_object)}
+                      activity_component_id={maybe_get(component_assigns, :activity_component_id, @activity_component_id)}
                       parent_id={@activity_component_id}
-                      published_in={@published_in}
-                      labelled={@labelled}
-                      reply_count={@reply_count}
-                      is_remote={@is_remote}
+                      published_in={maybe_get(component_assigns, :published_in, @published_in)}
+                      labelled={maybe_get(component_assigns, :labelled, @labelled)}
+                      reply_count={maybe_get(component_assigns, :reply_count, @reply_count)}
+                      is_remote={maybe_get(component_assigns, :is_remote, @is_remote)}
                       hide_actions={@hide_actions}
                       subject_user={@subject_user}
-                      creator={e(@object, :created, :creator, nil) || e(@activity, :created, :creator, nil) ||
-                        e(@activity, :subject, nil)}
+                      creator={e(maybe_get(component_assigns, :object, @object), :created, :creator, nil) ||
+                        e(maybe_get(component_assigns, :activity, @activity), :created, :creator, nil) ||
+                        e(maybe_get(component_assigns, :activity, @activity), :subject, nil)}
                     />
                   {/if}
                 {/if}
@@ -1054,37 +1062,38 @@ defmodule Bonfire.UI.Social.ActivityLive do
                 <StatelessComponent
                   :if={@hide_activity != "dynamic"}
                   module={component}
-                  activity_component_id={e(component_assigns, :id, nil)}
+                  activity_component_id={id(component_assigns)}
                   activity_prepared={:defer_to_render}
-                  activity_inception={e(component_assigns, :activity_inception, @activity_inception)}
+                  activity_inception={maybe_get(component_assigns, :activity_inception, @activity_inception)}
                   myself={nil}
                   created_verb_display={@created_verb_display}
-                  showing_within={e(component_assigns, :showing_within, @showing_within)}
-                  thread_mode={debug(@thread_mode, "thread_modessss")}
-                  activity={e(component_assigns, :activity, @activity)}
-                  object={e(component_assigns, :object, @object)}
-                  object_id={e(component_assigns, :object_id, @object_id)}
-                  object_boundary={@object_boundary}
-                  object_type={e(component_assigns, :object_type, @object_type)}
-                  object_type_readable={e(component_assigns, :object_type_readable, @object_type_readable)}
-                  date_ago={e(component_assigns, :date_ago, @date_ago)}
-                  verb={e(component_assigns, :verb, @verb)}
-                  verb_display={e(component_assigns, :verb_display, @verb_display)}
-                  permalink={e(component_assigns, :permalink, @permalink)}
-                  thread_url={e(component_assigns, :thread_url, @thread_url)}
-                  thread_id={@thread_id}
-                  thread_level={@thread_level}
-                  viewing_main_object={e(component_assigns, :viewing_main_object, @viewing_main_object)}
-                  show_minimal_subject_and_note={e(component_assigns, :show_minimal_subject_and_note, @show_minimal_subject_and_note)}
-                  hide_reply={e(component_assigns, :hide_reply, @hide_reply)}
-                  profile={e(component_assigns, :profile, nil)}
-                  character={e(component_assigns, :character, nil)}
-                  media={e(component_assigns, :media, nil)}
-                  json={e(component_assigns, :json, nil)}
-                  label={e(component_assigns, :label, nil)}
-                  class={e(component_assigns, :class, nil)}
-                  to={e(component_assigns, :to, nil)}
-                  is_remote={@is_remote}
+                  showing_within={maybe_get(component_assigns, :showing_within, @showing_within)}
+                  thread_mode={@thread_mode}
+                  activity={maybe_get(component_assigns, :activity, @activity)}
+                  object={maybe_get(component_assigns, :object, @object)}
+                  object_id={maybe_get(component_assigns, :object_id, @object_id)}
+                  object_boundary={maybe_get(component_assigns, :object_boundary, @object_boundary)}
+                  object_type={maybe_get(component_assigns, :object_type, @object_type)}
+                  object_type_readable={maybe_get(component_assigns, :object_type_readable, @object_type_readable)}
+                  date_ago={maybe_get(component_assigns, :date_ago, @date_ago)}
+                  verb={maybe_get(component_assigns, :verb, @verb)}
+                  verb_display={maybe_get(component_assigns, :verb_display, @verb_display)}
+                  permalink={maybe_get(component_assigns, :permalink, @permalink)}
+                  thread_url={maybe_get(component_assigns, :thread_url, @thread_url)}
+                  thread_id={maybe_get(component_assigns, :thread_id, @thread_id)}
+                  thread_level={maybe_get(component_assigns, :thread_level, @thread_level)}
+                  viewing_main_object={maybe_get(component_assigns, :viewing_main_object, @viewing_main_object)}
+                  show_minimal_subject_and_note={maybe_get(component_assigns, :show_minimal_subject_and_note, @show_minimal_subject_and_note)}
+                  hide_reply={maybe_get(component_assigns, :hide_reply, @hide_reply)}
+                  profile={maybe_get(component_assigns, :profile, nil)}
+                  character={maybe_get(component_assigns, :character, nil)}
+                  media={maybe_get(component_assigns, :media, nil)}
+                  json={maybe_get(component_assigns, :json, nil)}
+                  label={maybe_get(component_assigns, :label, nil)}
+                  class={maybe_get(component_assigns, :class, nil)}
+                  to={maybe_get(component_assigns, :to, nil)}
+                  is_remote={maybe_get(component_assigns, :is_remote, @is_remote)}
+                  hide_actions={maybe_get(component_assigns, :hide_actions, @hide_actions)}
                 />
             {/case}
           {/for}
@@ -1198,7 +1207,8 @@ defmodule Bonfire.UI.Social.ActivityLive do
           viewing_main_object: false,
           hide_actions: true,
           class: "border-l-2 border-base-content/20 pl-4 ml-2 my-2 nested-preview"
-        }}
+        }
+        |> prepare_assigns()}
      ] ++ component_activity_maybe_creator(activity, object, object_type))
     |> debug("MATCHED react case for verb: #{verb} in component_activity_subject")
   end
@@ -1716,7 +1726,8 @@ defmodule Bonfire.UI.Social.ActivityLive do
          activity: activity,
          cw: sensitive?(activity)
          #  || e(reply_to_object, :summary, nil) != nil <-- summary is not a replacement for cw
-       }}
+       }
+       |> prepare_assigns()}
     ]
   end
 
@@ -2229,7 +2240,8 @@ defmodule Bonfire.UI.Social.ActivityLive do
          viewing_main_object: false,
          hide_actions: true,
          class: "nested-preview"
-       }}
+       }
+       |> prepare_assigns()}
     ]
   end
 
@@ -2299,7 +2311,8 @@ defmodule Bonfire.UI.Social.ActivityLive do
              thread_url: nil,
              thread_id: id(quoted_object),
              class: "quote-preview"
-           }}
+           }
+           |> prepare_assigns()}
         end)
     end
   end

@@ -124,8 +124,9 @@ defmodule Bonfire.UI.Social.Feeds.Test do
       |> visit("/feed/local")
       |> wait_async()
       # |> click_button("[data-role=open_modal]", "Local")
-      |> PhoenixTest.open_browser()
-      |> assert_has("[data-scope=local-boundary-set]", text: "Local")
+      # |> PhoenixTest.open_browser()
+      # FIXME
+      |> assert_has_or_open_browser("[data-scope=local-boundary-set]", text: "Local")
     end
 
     @tag :skip

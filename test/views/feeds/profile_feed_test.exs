@@ -106,7 +106,7 @@ defmodule Bonfire.UI.Social.Feeds.ProfileFeed.Test do
     #  then we hide posts
     |> click_button("[data-toggle=post] button", "Hide")
     |> wait_async()
-    |> PhoenixTest.open_browser()
+    # |> PhoenixTest.open_browser()
     # should have nothing left
     |> refute_has("[data-id=feed] article", text: "This is my original post")
   end

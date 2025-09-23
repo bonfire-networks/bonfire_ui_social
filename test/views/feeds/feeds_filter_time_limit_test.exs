@@ -177,7 +177,7 @@ defmodule Bonfire.UI.Social.FeedsFilterTimeLimit.Test do
       # Test with Day filter
       conn(user: user)
       |> visit("/feed/local")
-      |> PhoenixTest.open_browser()
+      # |> PhoenixTest.open_browser()
       # Select Day from dropdown
       |> click_link("Last Day")
       |> assert_has_or_open_browser("[data-id=feed] article")
