@@ -90,7 +90,6 @@ data-show-plain-actions={!Settings.get(
         {#if LiveHandler.feed_live_update_many_preload_mode() == :async_actions}
           {#if @object_boundary || !user_socket_connected?(@__context__)}
             <!-- LOAD ALL AS IF THEY WERE STATELESS COMPONENTS, since we preload data in this component -->
-
             <StatelessComponent
               :if={@showing_within != :messages}
               module={maybe_component(Bonfire.UI.Reactions.BoostActionLive, @__context__)}
@@ -152,6 +151,7 @@ data-show-plain-actions={!Settings.get(
               thread_mode={@thread_mode}
               thread_title={@thread_title}
               showing_within={@showing_within}
+              quotes={@quotes}
               feed_name={@feed_name}
               viewing_main_object={@viewing_main_object}
               activity_component_id={@activity_component_id}

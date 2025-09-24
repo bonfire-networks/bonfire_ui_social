@@ -32,7 +32,7 @@ defmodule Bonfire.UI.Social.Activity.ActionsLive do
   prop hide_actions, :any, default: false
   prop is_answer, :boolean, default: false
   prop participants, :any, default: nil
-
+  prop quotes, :list, default: []
   prop my_boost, :any, default: nil
   prop my_like, :any, default: nil
   prop my_bookmark, :any, default: nil

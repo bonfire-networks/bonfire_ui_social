@@ -66,6 +66,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
   prop hide_actions, :any, default: false
   prop activity_preloads, :tuple, default: {nil, nil}
   prop custom_preview, :any, default: nil
+  prop quotes, :list, default: []
 
   def update_many(assigns_sockets) do
     assigns_sockets
@@ -425,6 +426,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
       current_url: current_url,
       thread_id: thread_id,
       thread_level: thread_level,
+      quotes: Bonfire.Social.Tags.tags_quote(activity),
       cw:
         if e(assigns, :activity_inception, nil) do
           # This may be a reply_to, calculate CW based on reply_to data structure
@@ -568,7 +570,8 @@ defmodule Bonfire.UI.Social.ActivityLive do
       nil,
       nil,
       nil,
-      reply_to
+      reply_to,
+      []
     )
   end
 
@@ -585,7 +588,8 @@ defmodule Bonfire.UI.Social.ActivityLive do
         thread_title,
         activity_component_id,
         subject_user,
-        reply_to
+        reply_to,
+        quotes
       ) do
     {primary_image, attachments_component} =
       primary_image_and_component_maybe_attachments(
@@ -616,7 +620,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
           subject_user
         )
         |> debug("component_activity_subject result")) ++
-       component_maybe_quote_post(activity, activity_inception, activity_component_id) ++
+       component_maybe_quote_post(activity_component_id, quotes) ++
        component_object(object, object_type, %{primary_image: primary_image}) ++
        if(showing_within != :media, do: attachments_component, else: []) ++
        component_actions(
@@ -857,7 +861,8 @@ defmodule Bonfire.UI.Social.ActivityLive do
                 @thread_title,
                 @activity_component_id,
                 @subject_user,
-                @reply_to
+                @reply_to,
+                @quotes
               ) || []}
             {#case component}
               {#match :html}
@@ -1026,6 +1031,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
                       creator={e(@object, :created, :creator, nil) || e(@activity, :created, :creator, nil) ||
                         e(@activity, :subject, nil)}
                       participants={@participants}
+                      quotes={@quotes}
                     />
                   {#else}
                     <StatelessComponent
@@ -1206,7 +1212,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
           showing_within: :quote_post,
           viewing_main_object: false,
           hide_actions: true,
-          class: "border-l-2 border-base-content/20 pl-4 ml-2 my-2 nested-preview"
+          class: ""
         }
         |> prepare_assigns()}
      ] ++ component_activity_maybe_creator(activity, object, object_type))
@@ -2239,7 +2245,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
          showing_within: :nested_preview,
          viewing_main_object: false,
          hide_actions: true,
-         class: "nested-preview"
+         class: ""
        }
        |> prepare_assigns()}
     ]
@@ -2261,7 +2267,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
            Map.merge(
              %{
                object: pointer_object,
-               class: "nested-preview",
+               class: "",
                showing_within: :nested_preview,
                hide_actions: true
              },
@@ -2275,7 +2281,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
           {component_module,
            %{
              object: pointer_object,
-             class: "nested-preview",
+             class: "",
              showing_within: :nested_preview,
              hide_actions: true
            }}
@@ -2288,8 +2294,8 @@ defmodule Bonfire.UI.Social.ActivityLive do
   @doc """
   Check if the object has quoted posts and return components to render them
   """
-  def component_maybe_quote_post(activity, _activity_inception, activity_component_id) do
-    case Bonfire.Social.Tags.tags_quote(activity) do
+  def component_maybe_quote_post(activity_component_id, quotes) do
+    case quotes do
       [] ->
         []
 

@@ -136,6 +136,28 @@ defmodule Bonfire.Social.Objects.LiveHandler do
   end
 
   def handle_event(
+        "quote_remove",
+        %{"quoted_id" => quoted_id, "quote_id" => quote_id} = _params,
+        socket
+      ) do
+    with {:ok, quote_post} <-
+           Bonfire.Social.Quotes.reject_quote(quote_id, quoted_id,
+             current_user: current_user_required!(socket)
+           ) do
+      {:noreply,
+       socket
+       |> assign_flash(:info, l("Quote removal sent."))
+       |> redirect_to(path(quote_post), type: :maybe_external)}
+    else
+      {:error, e} when is_binary(e) ->
+        {:error, e}
+
+      e ->
+        error(e, l("There was an error when trying to reject the quote request"))
+    end
+  end
+
+  def handle_event(
         "quote_verify",
         %{"quote_post" => quote_post_id, "quoted_post" => quoted_post_id} = _params,
         socket
@@ -331,7 +353,7 @@ defmodule Bonfire.Social.Objects.LiveHandler do
       else: socket
   end
 
-  # TODO: put in Social config like the rest 
+  # TODO: put in Social config like the rest
   def default_preloads(),
     do: [
       # :default,

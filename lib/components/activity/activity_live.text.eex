@@ -11,6 +11,7 @@
                 @thread_title,
                 @activity_component_id,
                 @subject_user,
-                @reply_to
+                @reply_to,
+                @quotes
               ) || [] do %><%= maybe_apply(component, "#{filename_for_module_template(component)}_text", [Map.merge(assigns, component_assigns || %{})], fallback_return: "skip #{component}") %><% end %>
 <%= @permalink %>

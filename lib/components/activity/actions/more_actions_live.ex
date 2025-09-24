@@ -24,7 +24,7 @@ defmodule Bonfire.UI.Social.Activity.MoreActionsLive do
   prop parent_id, :any, default: nil
   prop published_in, :any, default: nil
   prop participants, :any, default: nil
-
+  prop quotes, :list, default: []
   prop showing_within, :atom, default: nil
   prop feed_name, :any, default: nil
   prop viewing_main_object, :boolean, default: false
@@ -50,6 +50,12 @@ defmodule Bonfire.UI.Social.Activity.MoreActionsLive do
           l("the user")
     )
     |> render_sface()
+  end
+
+  def has_my_first_quote(quotes, my_id) when is_list(quotes) and not is_nil(my_id) do
+    Enum.find_value(quotes, fn quote ->
+      e(quote, :created, :creator_id, nil) == my_id && id(quote)
+    end)
   end
 
   # def prepare(assigns) do

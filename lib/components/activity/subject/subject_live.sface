@@ -30,7 +30,7 @@
       "!relative !ml-0 ": @viewing_main_object,
       "margin-compact":
         (@__context__[:ui_compact] && !@viewing_main_object) ||
-          @showing_within in [:smart_input, :quote_preview, :nested_preview]
+          @showing_within in [:smart_input, :quote_preview]
     }
     to={@path}
     label={e(@character_username, "") <> " profile"}
@@ -45,7 +45,7 @@
         "rounded-full w-12 h-12",
         "avatar-compact":
           @__context__[:ui_compact] ||
-            @showing_within in [:smart_input, :quote_preview, :nested_preview]
+            @showing_within in [:smart_input, :quote_preview]
       }
     />
   </LinkLive>
