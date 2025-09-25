@@ -79,7 +79,7 @@
         {!-- name={l("How many items to show in feeds and other lists (maximum %{number})", number: Config.get(:pagination_hard_max_limit, 500))} --}
       </form>
 
-      <div x-data="{open: false}" class="p-4 cursor-pointer">
+      <div x-data="{open: false}" class="p-4 cursor-pointer rounded-b-box">
         <div x-on:click="open = !open" class="flex items-center justify-between gap-4">
           <div class="flex flex-col gap-1">
             <div
