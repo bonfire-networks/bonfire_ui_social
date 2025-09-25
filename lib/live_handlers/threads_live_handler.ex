@@ -319,7 +319,7 @@ defmodule Bonfire.Social.Threads.LiveHandler do
       debug(mentions, "send activity to smart input")
 
       Bonfire.UI.Common.SmartInput.LiveHandler.open_with_text_suggestion(
-        mentions,
+        "",
         # we reply to objects, not
         [
           # reset_smart_input: false, # avoid double-reset

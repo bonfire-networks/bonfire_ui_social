@@ -23,12 +23,12 @@
         </span>
       {#match {:num_boosts, :desc}}
         <span class="flex items-center">
-          <#Icon iconify="ph:rocket-launch-duotone" class="lg:hidden block w-4 h-4" />
+          <#Icon iconify="ph:arrows-counter-clockwise-duotone" class="lg:hidden block w-4 h-4" />
           <span class="hidden lg:block">{l("Most boosted")}</span>
         </span>
       {#match {:num_boosts, :asc}}
         <span class="flex items-center">
-          <#Icon iconify="ph:rocket-launch-duotone" class="lg:hidden block w-4 h-4" />
+          <#Icon iconify="ph:arrows-counter-clockwise-duotone" class="lg:hidden block w-4 h-4" />
           <span class="hidden lg:block">{l("Least boosted")}</span>
         </span>
       {#match {:num_likes, :desc}}

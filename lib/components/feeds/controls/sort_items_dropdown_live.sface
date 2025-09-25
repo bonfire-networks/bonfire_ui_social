@@ -14,7 +14,7 @@
           </span>
         {#match :num_boosts}
           <span class="flex items-center">
-            <#Icon iconify="ph:rocket-launch-duotone" class="lg:hidden block w-4 h-4" />
+            <#Icon iconify="ph:arrows-counter-clockwise-duotone" class="lg:hidden block w-4 h-4" />
             <span class="hidden lg:block">{if e(@feed_filters, :sort_order, nil) == :asc, do: l("Least boosted"), else: l("Most boosted")}</span>
           </span>
         {#match :num_likes}

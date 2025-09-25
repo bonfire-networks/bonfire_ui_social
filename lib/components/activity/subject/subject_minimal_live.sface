@@ -13,7 +13,7 @@
             class="flex-shrink-0 w-5 h-5 text-info"
           />
           <#Icon
-            iconify="ph:rocket-launch-duotone"
+            iconify="ph:arrows-counter-clockwise-duotone"
             :if={@verb == "Boost"}
             class="w-5 h-5 stroke-1 fill-info"
           />
@@ -308,13 +308,13 @@
                   {raw(@verb_display)} {l(" your activity")}
                 </div>
               </div>
-              <#Icon iconify="ph:rocket-launch-fill" class="w-4 h-4 text-primary flex-shrink-0" />
+              <#Icon iconify="ph:arrows-counter-clockwise-duotone" class="w-4 h-4 text-primary flex-shrink-0" />
             </div>
           </div>
         {#elseif @verb == "Pin"}
           <div data-role="pinned_by" class="">
             {!-- PIN --}
-            <#Icon iconify="ph:rocket-launch" class="w-6 h-6 stroke-1 text-success" />
+            <#Icon iconify="ph:arrows-counter-clockwise" class="w-6 h-6 stroke-1 text-success" />
             <div class="flex-1 flex gap-2">
               <LinkLive
                 to={@path}
@@ -641,7 +641,7 @@
                 {raw(@verb_display)}
               </div>
             </div>
-            <#Icon iconify="ph:rocket-launch-fill" class="w-4 h-4 text-primary" />
+            <#Icon iconify="ph:arrows-counter-clockwise-duotone" class="w-4 h-4 text-primary" />
           </div>
 
           {!-- <div class="flex-1 ml-3">
