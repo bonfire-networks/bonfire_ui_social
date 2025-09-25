@@ -1025,7 +1025,7 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
               e in RuntimeError ->
                 err(
                   e,
-                  "There was an error when trying to load the feed. Error raised by feed_assigns"
+                  "There was an error when trying to load the feed. Runtime error raised by feed_assigns"
                 )
 
                 assign_error(

@@ -99,22 +99,45 @@
               </div>
             </div>
             <div class="flex gap-2">
-              <button
-                :on-click="Bonfire.Social.Objects:quote_accept"
-                phx-value-id={id(@activity_id)}
-                type="button"
-                class="btn btn-xs btn-primary"
-              >
-                {l("Accept")}
-              </button>
-              <button
-                :on-click="Bonfire.Social.Objects:quote_reject"
-                phx-value-id={id(@activity_id)}
-                type="button"
-                class="btn btn-xs btn-error"
-              >
-                {l("Decline")}
-              </button>
+              {#case {is_nil(e(@request, :accepted_at, nil)), is_nil(e(@request, :ignored_at, nil))}}
+                {#match {true, true}}
+                  <button
+                    :on-click="Bonfire.Social.Objects:quote_accept"
+                    phx-value-id={id(@activity_id)}
+                    type="button"
+                    class="btn btn-xs btn-success"
+                  >
+                    {l("Accept")}
+                  </button>
+                  <button
+                    :on-click="Bonfire.Social.Objects:quote_reject"
+                    phx-value-id={id(@activity_id)}
+                    type="button"
+                    class="btn btn-xs btn-error"
+                  >
+                    {l("Decline")}
+                  </button>
+                {#match {true, _false}}
+                  <span class="btn btn-xs btn-error cursor-default">{l("Previously rejected")}</span>
+
+                  <button
+                    :on-click="Bonfire.Social.Objects:quote_accept"
+                    phx-value-id={id(@activity_id)}
+                    type="button"
+                    class="btn btn-xs btn-success"
+                  >
+                    {l("Accept")}
+                  </button>
+                {#match {_false, _true}}
+                  <button
+                    :on-click="Bonfire.Social.Objects:quote_reject"
+                    phx-value-id={id(@activity_id)}
+                    type="button"
+                    class="btn btn-xs btn-error"
+                  >
+                    {l("Remove quote")}
+                  </button>
+              {/case}
             </div>
           </div>
         {#elseif @verb in ["Like", "React"]}

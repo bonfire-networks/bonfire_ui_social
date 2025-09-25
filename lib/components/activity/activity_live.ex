@@ -893,8 +893,14 @@ defmodule Bonfire.UI.Social.ActivityLive do
                     )
                   )}
                   character_username={e(component_assigns, :character, :username, nil)}
-                  activity_id={id(maybe_get(component_assigns, :activity, @activity))}
-                  object_id={id(maybe_get(component_assigns, :object, @object))}
+                  activity_id={id(
+                    maybe_get(component_assigns, :activity, @activity)
+                    |> flood("activity used in ActivityLive")
+                  )}
+                  object_id={id(
+                    maybe_get(component_assigns, :object, @object)
+                    |> flood("object used in ActivityLive")
+                  )}
                   subject_id={maybe_get(component_assigns, :subject_id, nil) ||
                     e(maybe_get(component_assigns, :activity, @activity), :subject_id, nil)}
                   subjects_more={maybe_get(component_assigns, :subjects_more, [])}
@@ -921,6 +927,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
                   thread_title={maybe_get(component_assigns, :thread_title, @thread_title)}
                   subject_user={@subject_user}
                   show_minimal_subject_and_note={maybe_get(component_assigns, :show_minimal_subject_and_note, @show_minimal_subject_and_note)}
+                  request={e(maybe_get(component_assigns, :activity, @activity), :edge, :request, nil)}
                   extra_info={e(@object, :extra_info, nil)}
                 />
               {#match Bonfire.UI.Social.Activity.NoteLive}
@@ -1212,7 +1219,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
           showing_within: :quote_post,
           viewing_main_object: false,
           hide_actions: true,
-          class: ""
+          class: "quote-preview"
         }
         |> prepare_assigns()}
      ] ++ component_activity_maybe_creator(activity, object, object_type))
