@@ -107,10 +107,11 @@
             <span class="text-base-content/70">{l("More from")}</span>
             {#case List.first(creator_names)}
               {#match creator when creator != nil}
-                <LinkLive to={"/user/" <> creator.username} class="link link-hover flex items-center gap-2">
+                <LinkLive to={"/user/" <> creator.username} class="link link-hover flex items-center gap-2 flex-1">
                   <Bonfire.UI.Common.AvatarLive
                     src={creator.avatar_url}
                     name={creator.display_name}
+                    wrapper_class="avatar"
                     class="w-4 h-4"
                   />
                   <span class="font-semibold text-base-content">{creator.display_name}</span>
