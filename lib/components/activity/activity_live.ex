@@ -895,11 +895,11 @@ defmodule Bonfire.UI.Social.ActivityLive do
                   character_username={e(component_assigns, :character, :username, nil)}
                   activity_id={id(
                     maybe_get(component_assigns, :activity, @activity)
-                    |> flood("activity used in ActivityLive")
+                    |> debug("activity used in ActivityLive")
                   )}
                   object_id={id(
                     maybe_get(component_assigns, :object, @object)
-                    |> flood("object used in ActivityLive")
+                    |> debug("object used in ActivityLive")
                   )}
                   subject_id={maybe_get(component_assigns, :subject_id, nil) ||
                     e(maybe_get(component_assigns, :activity, @activity), :subject_id, nil)}

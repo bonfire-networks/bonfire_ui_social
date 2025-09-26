@@ -1,4 +1,10 @@
-<button type="button" class="btn btn-primary btn-sm" phx-click="refresh">
+<button
+  type="button"
+  class="btn btn-primary btn-sm"
+  phx-click="refresh"
+  phx-target={@event_target}
+  phx-disable-with={l("Refreshing...")}
+>
   <#Icon iconify="ph:arrows-clockwise-duotone" class="w-4 h-4 mr-2" />
   {l("Refresh")}
 </button>

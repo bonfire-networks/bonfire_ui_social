@@ -98,7 +98,7 @@
           <div class={"stat-value text-sm " <> if(count == 0, do: "text-base-content/60", else: "")}>
             {count}
           </div>
-          <div :if={count > 0 and @stats.active > 0} class="stat-desc">
+          <div :if={@scope != :instance_wide and count > 0 and @stats.active > 0} class="stat-desc">
             <button
               class="btn btn-xs btn-error btn-outline gap-1 mt-1"
               phx-target={@myself}
@@ -153,6 +153,8 @@
   {#else}
     <div class="space-y-4">
       <div class="flex justify-between items-center mb-2">
+        <Bonfire.UI.Social.ImportRefreshLive event_target={@myself} />
+
         <div class="text-sm text-base-content/70">
           {l("Showing page %{page} (%{count} items)", page: @current_page, count: length(@jobs))}
         </div>

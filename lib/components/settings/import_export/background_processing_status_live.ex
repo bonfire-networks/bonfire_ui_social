@@ -6,6 +6,8 @@ defmodule Bonfire.UI.Social.BackgroundProcessingStatusLive do
   prop per_page, :integer, default: 20
   prop page_title, :string, default: "Background Processing Status"
   prop page, :string, default: "background_processing_status_live"
+  # current_user by default
+  prop scope, :atom, default: nil
 
   @impl true
   def update(assigns, socket) do
@@ -16,10 +18,10 @@ defmodule Bonfire.UI.Social.BackgroundProcessingStatusLive do
      |> assign(assigns)
      |> assign(:filters, normalize_filters(assigns.filters, assigns.selected_tab))
      |> assign_new(:current_page, fn -> 1 end)
-     |> assign(:back, true)
-     |> assign(:page_header_aside, [
-       {Bonfire.UI.Social.ImportRefreshLive, [feed_id: :import_history]}
-     ])
+     #  |> assign(:back, true)
+     #  |> assign(:page_header_aside, [
+     #    {Bonfire.UI.Social.ImportRefreshLive, [feed_id: :import_history]}
+     #  ])
      # |> assign(:nav_items, Bonfire.Common.ExtensionModule.default_nav())
      |> load_jobs_and_maybe_stats(current_user)}
   end
@@ -31,14 +33,16 @@ defmodule Bonfire.UI.Social.BackgroundProcessingStatusLive do
 
   @impl true
   def handle_event("filter", %{"type" => type}, socket) do
-    filters = %{socket.assigns.filters | type: if(type == "", do: nil, else: type)}
+    filters = Map.put(socket.assigns.filters || %{}, :type, if(type == "", do: nil, else: type))
     socket = assign(socket, filters: filters, current_page: 1)
     {:noreply, assign_jobs(socket)}
   end
 
   @impl true
   def handle_event("filter", %{"status" => status}, socket) do
-    filters = %{socket.assigns.filters | status: if(status == "", do: nil, else: status)}
+    filters =
+      Map.put(socket.assigns.filters || %{}, :status, if(status == "", do: nil, else: status))
+
     socket = assign(socket, filters: filters, current_page: 1)
     {:noreply, assign_jobs(socket)}
   end
@@ -50,7 +54,7 @@ defmodule Bonfire.UI.Social.BackgroundProcessingStatusLive do
      |> assign(
        filters:
          normalize_filters(
-           %{socket.assigns.filters | type: nil, status: nil},
+           Map.merge(socket.assigns.filters || %{}, %{type: nil, status: nil}),
            socket.assigns.selected_tab
          ),
        current_page: 1
@@ -93,11 +97,28 @@ defmodule Bonfire.UI.Social.BackgroundProcessingStatusLive do
     filters = socket.assigns.filters
     page = socket.assigns.current_page || 1
     per_page = socket.assigns.per_page || 20
+    scope = socket.assigns.scope
 
-    jobs = fetch_import_jobs(current_user, filters, page, per_page)
-    has_more = length(jobs) == per_page
+    {user_id, username} =
+      if scope == :instance_wide do
+        {nil, nil}
+      else
+        {id(current_user), e(current_user, :character, :username, nil)}
+      end
 
-    %{jobs: jobs, has_more: has_more}
+    jobs =
+      Bonfire.Common.ObanHelpers.list_jobs(
+        repo(),
+        user_id,
+        username,
+        limit: per_page + 1,
+        offset: (page - 1) * per_page,
+        filters: filters
+      )
+
+    has_more = length(jobs) == per_page + 1
+
+    %{jobs: Enum.take(jobs, per_page), has_more: has_more}
   end
 
   defp assign_jobs(socket, current_user \\ nil) do
@@ -107,13 +128,14 @@ defmodule Bonfire.UI.Social.BackgroundProcessingStatusLive do
 
   defp load_jobs_and_maybe_stats(socket, current_user \\ nil) do
     %{jobs: jobs, has_more: has_more} = load_jobs(socket, current_user)
+    scope = socket.assigns.scope
 
     if jobs != [] do
       stats =
         if has_more or (socket.assigns.current_page || 1) != 1 do
-          fetch_import_stats(current_user, e(socket.assigns, :selected_tab, nil))
+          fetch_import_stats(current_user, e(socket.assigns, :selected_tab, nil), nil, scope)
         else
-          fetch_import_stats(current_user, e(socket.assigns, :selected_tab, nil), jobs)
+          fetch_import_stats(current_user, e(socket.assigns, :selected_tab, nil), jobs, scope)
         end
         |> debug("computed_stats")
 
@@ -205,9 +227,16 @@ defmodule Bonfire.UI.Social.BackgroundProcessingStatusLive do
 
   defp fetch_users_by_identifiers([]), do: %{}
 
-  defp fetch_import_stats(current_user, selected_tab, jobs \\ nil) do
-    user_id = id(current_user)
-    username = e(current_user, :character, :username, nil)
+  defp fetch_import_stats(current_user, selected_tab, jobs \\ nil, scope \\ nil) do
+    scope = scope || @scope
+
+    {user_id, username} =
+      if scope == :instance_wide do
+        {nil, nil}
+      else
+        {id(current_user), e(current_user, :character, :username, nil)}
+      end
+
     types = selected_tab && type_group_op_codes(selected_tab)
 
     # Only apply type group filter if selected_tab is set and not a single type filter
@@ -217,7 +246,7 @@ defmodule Bonfire.UI.Social.BackgroundProcessingStatusLive do
           jobs
 
         is_list(types) ->
-          Bonfire.Common.ObanHelpers.list_jobs_for_user(
+          Bonfire.Common.ObanHelpers.list_jobs(
             repo(),
             user_id,
             username,
@@ -226,7 +255,7 @@ defmodule Bonfire.UI.Social.BackgroundProcessingStatusLive do
           )
 
         true ->
-          Bonfire.Common.ObanHelpers.list_jobs_for_user(
+          Bonfire.Common.ObanHelpers.list_jobs(
             repo(),
             user_id,
             username,
@@ -235,9 +264,12 @@ defmodule Bonfire.UI.Social.BackgroundProcessingStatusLive do
       end
 
     basic_stats =
-      Bonfire.Common.ObanHelpers.job_stats_for_user(repo(), user_id, username, %{
-        type: types || nil
-      })
+      Bonfire.Common.ObanHelpers.job_stats(
+        repo(),
+        user_id,
+        username,
+        %{type: types || nil}
+      )
       |> debug("actual_job_states_in_db")
 
     # Debug: show actual states that exist
