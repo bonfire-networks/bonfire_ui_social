@@ -34,6 +34,7 @@ defmodule Bonfire.UI.Social.WritePostContentLive do
   prop uploads, :any, default: nil
   prop uploaded_files, :list, default: nil
   prop title_prompt, :string, default: nil
+  prop selected_cover, :any, default: nil
 
   prop open_boundaries, :boolean, default: false
   prop boundaries_modal_id, :string, default: :sidebar_composer

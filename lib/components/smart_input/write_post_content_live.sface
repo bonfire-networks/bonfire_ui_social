@@ -16,7 +16,6 @@
     class="with_editor flex-1"
   >
     <Bonfire.UI.Common.SmartInputHeaderModalLive smart_input_opts={@smart_input_opts} />
-
     {#if e(@smart_input_opts, :create_object_type, nil) == "message" ||
         e(@smart_input_opts, :recipients_editable, nil)}
       <div class="relative bg-base-100 p-2">
@@ -47,6 +46,8 @@
       mentions={@mentions}
       showing_within={@showing_within}
       uploads={@uploads}
+      event_target={@event_target}
+      selected_cover={@selected_cover}
       uploaded_files={@uploaded_files}
       reset_smart_input={@reset_smart_input}
       custom_emojis={@custom_emojis}

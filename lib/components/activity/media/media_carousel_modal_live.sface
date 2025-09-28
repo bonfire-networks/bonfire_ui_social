@@ -45,10 +45,9 @@
     >
       <h2 id="carousel-label" class="sr-only" hidden>{l("Media carousel")}</h2>
 
-      <!-- Prev Button -->
       <button
         x-on:click="prev"
-        class="text-6xl z-20 absolute left-4"
+        class="btn btn-primary btn-circle shadow-xl btn-xl z-20 absolute left-4"
         :aria-disabled="atBeginning"
         :tabindex="atBeginning ? -1 : 0"
         :class="{ 'opacity-50 cursor-not-allowed': atBeginning }"
@@ -60,7 +59,7 @@
             viewBox="0 0 24 24"
             stroke-width="1.5"
             stroke="currentColor"
-            class="w-12 h-12 text-white drop-shadow-lg"
+            class="w-8 h-8"
           >
             <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 19.5 8.25 12l7.5-7.5" />
           </svg>
@@ -160,10 +159,9 @@
         {/for}
       </ul>
 
-      <!-- Next Button -->
       <button
         x-on:click="next"
-        class="text-6xl z-20 absolute right-4"
+        class="z-[9999999999] btn btn-primary btn-circle btn-xl shadow-xl absolute right-4"
         :aria-disabled="atEnd"
         :tabindex="atEnd ? -1 : 0"
         :class="{ 'opacity-50 cursor-not-allowed': atEnd }"
@@ -175,7 +173,7 @@
             viewBox="0 0 24 24"
             stroke-width="1.5"
             stroke="currentColor"
-            class="w-12 h-12 text-white drop-shadow-lg"
+            class="w-8 h-8"
           >
             <path stroke-linecap="round" stroke-linejoin="round" d="m8.25 4.5 7.5 7.5-7.5 7.5" />
           </svg>
@@ -184,7 +182,7 @@
       </button>
     </div>
 
-    <!-- Image counter and dots navigation -->
+
     <div class="absolute bottom-20 left-0 right-0 z-30">
       <div class="sr-only text-center">
         <span class="text-white/90 text-sm drop-shadow-lg bg-black/30 px-2 py-1 rounded">
@@ -192,7 +190,7 @@
         </span>
       </div>
 
-      <!-- Dots navigation -->
+
       <div class="flex justify-center mt-2 gap-1">
         {#for {_, index} <- Enum.with_index(@media_list)}
           <button
