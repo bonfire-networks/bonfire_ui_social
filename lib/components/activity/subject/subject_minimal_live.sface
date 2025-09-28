@@ -454,7 +454,7 @@
       </div>
     {#match _}
       {#if @verb == "Request to Follow"}
-        <div class="flex items-center justify-between w-full mb-1">
+        <div class="flex items-center justify-between w-full mb-2 -ml-[60px]">
           {!-- FOLLOW --}
           <#Icon iconify="ph:user-plus-duotone" class="flex-shrink-0 w-5 h-5 text-base-content/70" />
           <div class="flex-1 ml-3">
@@ -475,7 +475,7 @@
           </div>
         </div>
       {#elseif @verb == "Pin"}
-        <div data-role="pinned" class="flex items-center justify-between w-full mb-1">
+        <div data-role="pinned" class="flex items-center justify-between w-full mb-2 -ml-[60px]">
           {!-- LIKE --}
           <#Icon iconify="material-symbols:push-pin" class="w-5 h-5 text-base-content/70" />
           <div class="flex-1 ml-3">
@@ -498,7 +498,7 @@
           </div>
         </div>
       {#elseif @verb in ["Like", "React"]}
-        <div data-role="liked_by" class="flex items-center justify-between w-full mb-1">
+        <div data-role="liked_by" class="flex items-center justify-between w-full mb-2 -ml-[60px]">
           <div class="flex items-center gap-3 justify-start rounded-full border border-base-content/10 bg-neutral/5 pr-2">
             <div class="flex-1 flex gap-2 items-center">
               {#case @emoji}
@@ -590,7 +590,7 @@
           </div>
         </div>
       {#elseif @verb == "Follow"}
-        <div class="flex items-center justify-between w-full mb-1">
+        <div class="flex items-center justify-between w-full mb-2 -ml-[60px]">
           {!-- FOLLOW --}
           <#Icon iconify="ph:user-plus-duotone" class="flex-shrink-0 w-5 h-5 text-base-content/70" />
           <div class="flex-1 ml-3">
@@ -616,7 +616,7 @@
       {#elseif @published_in}
       {#elseif @verb == "Boost"}
         {!-- BOOST --}
-        <div data-role="boosted_by" class="flex items-center justify-between w-full mb-1">
+        <div data-role="boosted_by" class="flex items-center justify-between w-full mb-2 -ml-[60px]">
           <div class="flex items-center gap-3 justify-start rounded-full border border-base-content/10 bg-neutral/5 pr-2">
             <div class="flex-1 flex gap-2 items-center">
               <div class="avatar-group -space-x-3">
