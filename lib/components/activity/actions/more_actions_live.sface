@@ -33,7 +33,7 @@
           <span>{l("Direct Message")}</span></div>
       </li>
     {#else}
-      <li><div class="w-full p-0 flex bg-base-content/5">
+      <li><div data-id="boundary_details" class="w-full p-0 flex bg-base-content/5">
           {#if LiveHandler.feed_live_update_many_preload_mode() == :async_actions}
             <StatelessComponent
               module={maybe_component(Bonfire.UI.Boundaries.BoundaryIconStatelessLive, @__context__)}

@@ -47,7 +47,7 @@
 
       <button
         x-on:click="prev"
-        class="btn btn-primary btn-circle shadow-xl btn-xl z-20 absolute left-4"
+        class="btn btn-primary btn-circle shadow-xl btn-xl z-[9999999999999] absolute left-4"
         :aria-disabled="atBeginning"
         :tabindex="atBeginning ? -1 : 0"
         :class="{ 'opacity-50 cursor-not-allowed': atBeginning }"
@@ -147,9 +147,8 @@
                 />
               </div>
 
-              <!-- Caption overlay -->
               <div class="absolute z-20 bottom-0 left-0 bg-black/50 right-0">
-                <div class="text-center text-sm p-4 text-white/90 mx-auto">
+                <div class="text-center pb-safe text-sm p-4 text-white/90 mx-auto">
                   {Bonfire.Files.Media.media_label(m) || l("Sorry, no caption provided by author")}
                   <p class="text-sm mt-1">{Bonfire.Files.Media.description(m.metadata)}</p>
                 </div>
