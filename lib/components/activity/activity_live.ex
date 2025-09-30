@@ -680,7 +680,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
           @showing_within not in [:thread, :smart_input, :widget] && !@activity_inception,
         "replied !p-0 mb-8":
           @activity_inception &&
-            @showing_within not in [:smart_input, :thread, :quote_preview, :nested_preview],
+            @showing_within not in [:smart_input, :thread, :quote_preview, :quote_post, :nested_preview],
         "unread-activity":
           is_nil(e(@activity, :seen, nil)) and @showing_within == :notifications and
             is_nil(@activity_inception),
