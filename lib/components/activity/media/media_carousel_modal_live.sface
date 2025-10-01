@@ -181,14 +181,12 @@
       </button>
     </div>
 
-
     <div class="absolute bottom-20 left-0 right-0 z-30">
       <div class="sr-only text-center">
         <span class="text-white/90 text-sm drop-shadow-lg bg-black/30 px-2 py-1 rounded">
           <span x-text="currentIndex + 1" /> {l("of")} <span x-text="totalImages" />
         </span>
       </div>
-
 
       <div class="flex justify-center mt-2 gap-1">
         {#for {_, index} <- Enum.with_index(@media_list)}
