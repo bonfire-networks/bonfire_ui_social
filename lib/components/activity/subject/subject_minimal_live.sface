@@ -279,8 +279,8 @@
             </div>
             <#Icon iconify="ph:user-plus-duotone" class="flex-shrink-0 w-4 h-4 text-primary" />
           </div>
-        {#elseif @published_in}
-          {!-- <Bonfire.UI.Social.Activity.PublishedInLive
+          {!-- {#elseif @published_in}
+          <Bonfire.UI.Social.Activity.PublishedInLive
             context={@published_in}
             showing_within={@showing_within}
           /> --}
