@@ -149,7 +149,8 @@ defmodule Bonfire.UI.Social.BackgroundProcessingStatusLive do
 
   defp normalize_filters(filters, type_group) do
     filters
-    |> Map.put(:type, type_group_op_codes(type_group))
+    # |> Map.put(:type, type_group_op_codes(type_group))
+    |> Map.put(:queue, type_group_queues(type_group))
   end
 
   defp fetch_import_jobs(current_user, filters \\ %{}, page \\ 1, per_page \\ 20) do
@@ -237,7 +238,8 @@ defmodule Bonfire.UI.Social.BackgroundProcessingStatusLive do
         {id(current_user), e(current_user, :character, :username, nil)}
       end
 
-    types = selected_tab && type_group_op_codes(selected_tab)
+    # types = selected_tab && type_group_op_codes(selected_tab)
+    queues = selected_tab && type_group_queues(selected_tab)
 
     # Only apply type group filter if selected_tab is set and not a single type filter
     jobs =
@@ -245,14 +247,23 @@ defmodule Bonfire.UI.Social.BackgroundProcessingStatusLive do
         is_list(jobs) ->
           jobs
 
-        is_list(types) ->
+        is_list(queues) ->
           Bonfire.Common.ObanHelpers.list_jobs(
             repo(),
             user_id,
             username,
             limit: 10000,
-            filters: %{type: types}
+            filters: %{queue: queues}
           )
+
+        # is_list(types) ->
+        #   Bonfire.Common.ObanHelpers.list_jobs(
+        #     repo(),
+        #     user_id,
+        #     username,
+        #     limit: 10000,
+        #     filters: %{type: types}
+        #   )
 
         true ->
           Bonfire.Common.ObanHelpers.list_jobs(
@@ -268,7 +279,10 @@ defmodule Bonfire.UI.Social.BackgroundProcessingStatusLive do
         repo(),
         user_id,
         username,
-        %{type: types || nil}
+        %{
+          # type: types || nil,
+          queue: queues || nil
+        }
       )
       |> debug("actual_job_states_in_db")
 
@@ -422,30 +436,53 @@ defmodule Bonfire.UI.Social.BackgroundProcessingStatusLive do
     }
   end
 
-  defp type_group_op_codes("import"),
-    do: [
-      "follows_import",
-      "blocks_import",
-      "silences_import",
-      "ghosts_import",
-      "bookmarks_import",
-      "circles_import",
-      "outbox_import",
-      "outbox_creations_import",
-      "likes_import",
-      "boosts_import"
-    ]
+  # defp type_group_op_codes("import"),
+  #   do: [
+  #     "follows_import",
+  #     "blocks_import",
+  #     "silences_import",
+  #     "ghosts_import",
+  #     "bookmarks_import",
+  #     "circles_import",
+  #     "outbox_import",
+  #     "outbox_creations_import",
+  #     "likes_import",
+  #     "boosts_import"
+  #   ]
 
-  defp type_group_op_codes("federation"),
-    do: [
-      "fetch_remote",
-      "publish",
-      "publish_one",
-      "incoming_ap_doc",
-      "incoming_unverified_ap_doc"
-    ]
+  # defp type_group_op_codes("federation"),
+  #   do: [
+  #     "fetch_remote",
+  #     "publish",
+  #     "publish_one",
+  #     "incoming_ap_doc",
+  #     "incoming_unverified_ap_doc"
+  #   ]
 
-  defp type_group_op_codes(_), do: []
+  # defp type_group_op_codes(_), do: []
+
+  @doc """
+  Returns the list of Oban queue names for a given type group.
+
+  ## Examples
+
+      iex> type_group_queues("federation")
+      ["federator_incoming", "federator_outgoing", "remote_fetcher"]
+
+      iex> type_group_queues("import")
+      ["import", "deletion", "video_transcode", "fetch_open_science"]
+
+      iex> type_group_queues("other")
+      []
+
+  """
+  defp type_group_queues("federation"),
+    do: ["federator_incoming", "federator_outgoing", "remote_fetcher"]
+
+  defp type_group_queues("import"),
+    do: ["import", "deletion", "video_transcode", "fetch_open_science"]
+
+  defp type_group_queues(_), do: nil
 
   defp format_operation_type("follows_import"), do: l("Follow")
   defp format_operation_type("blocks_import"), do: l("Block")
