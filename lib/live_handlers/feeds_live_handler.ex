@@ -63,7 +63,8 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
       # TODO: clean/document these?
       mode: :async,
       fetch_collection: :async,
-      fetch_collection_entries: :async
+      fetch_collection_entries: :async,
+      triggered_by: "live_handler:fetch_replies"
     )
 
     {:noreply,
@@ -81,7 +82,8 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
       # TODO: clean/document these?
       mode: :async,
       fetch_collection: :async,
-      fetch_collection_entries: :async
+      fetch_collection_entries: :async,
+      triggered_by: "live_handler:fetch_thread"
     )
 
     {:noreply,
