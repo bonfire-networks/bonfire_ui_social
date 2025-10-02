@@ -297,9 +297,6 @@ defmodule Bonfire.UI.Social.BackgroundProcessingStatusLive do
     #     %{}
   end
 
-  defp list_jobs_and_stats(jobs) do
-  end
-
   defp compute_enhanced_stats(basic_stats, jobs) do
     total_jobs = Enum.sum(Map.values(basic_stats))
 
