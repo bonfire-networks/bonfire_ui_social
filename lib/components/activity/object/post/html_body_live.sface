@@ -11,11 +11,12 @@
   data-rendered={@showing_within}
   data-main-object={@viewing_main_object}
   class={
-    "prose prose-bonfire break-normal object_body max-w-none text-base-content prose-hr:!my-2 prose-br:hidden",
+    "prose break-normal object_body max-w-none text-base-content prose-hr:!my-2 prose-br:hidden",
     previewable_truncate:
       !@viewing_main_object &&
         @showing_within not in [:smart_input],
-    "!text-sm !text-base-content/70": e(@object_type, nil) == :article && @showing_within != :thread
+    "!text-sm !text-base-content/70": e(@object_type, nil) == :article && @showing_within != :thread,
+    "prose-bonfire": @showing_within not in [:thread]
   }
 >
   {rich(
