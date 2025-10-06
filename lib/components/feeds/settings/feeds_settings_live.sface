@@ -95,10 +95,10 @@
           </div>
           {!-- Alpinejs: If open is true, set x-text to "Expand", otherwise set to "Collapse" --}
           <button type="button" x-cloak class="btn btn-circle btn-sm btn-ghost" x-show="open">
-            <#Icon iconify="ph:caret-down-duotone" class="w-3 h-3 text-base-content/70" />
+            <#Icon iconify="ph:caret-down-duotone" class="w-4 h-4 text-base-content/70" />
           </button>
           <button type="button" class="btn btn-circle btn-sm btn-ghost" x-show="!open">
-            <#Icon iconify="ph:caret-up-duotone" class="w-3 h-3 text-base-content/70" />
+            <#Icon iconify="ph:caret-up-duotone" class="w-4 h-4 text-base-content/70" />
           </button>
         </div>
         <div x-show="open" x-cloak x-collapse class="pt-2">
@@ -241,10 +241,10 @@
         </div>
 
         <button type="button" x-cloak class="btn btn-circle btn-sm btn-ghost" x-show="open">
-          <#Icon iconify="ph:caret-down-duotone" class="w-3 h-3 text-base-content/70" />
+          <#Icon iconify="ph:caret-down-duotone" class="w-4 h-4 text-base-content/70" />
         </button>
         <button type="button" class="btn btn-circle btn-sm btn-ghost" x-show="!open">
-          <#Icon iconify="ph:caret-up-duotone" class="w-3 h-3 text-base-content/70" />
+          <#Icon iconify="ph:caret-up-duotone" class="w-4 h-4 text-base-content/70" />
         </button>
       </div>
       <div x-show="open" x-cloak x-collapse>
