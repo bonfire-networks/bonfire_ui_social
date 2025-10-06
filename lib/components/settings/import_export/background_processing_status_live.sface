@@ -136,7 +136,11 @@
           class="text-xs hover:text-error"
         >✕</button>
       </div>
-      <button phx-target={@myself} phx-click="clear_filters" class="btn btn-xs btn-outline border-base-content/30">{l("Clear all")}</button>
+      <button
+        phx-target={@myself}
+        phx-click="clear_filters"
+        class="btn btn-xs btn-outline border-base-content/30"
+      >{l("Clear all")}</button>
     </div>
   </div>
 

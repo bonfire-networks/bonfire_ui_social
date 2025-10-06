@@ -328,10 +328,10 @@
         </div>
       {#else}
         <div class="gap-2 mt-1">
-            <div class="flex items-center gap-2">
-              <#Icon iconify="ri:attachment-2" class="w-4 h-4 text-base-content/50" />
-              <span class="text-sm text-base-content/70">{length(@image_list)} {l"media"}</span>
-            </div>
+          <div class="flex items-center gap-2">
+            <#Icon iconify="ri:attachment-2" class="w-4 h-4 text-base-content/50" />
+            <span class="text-sm text-base-content/70">{length(@image_list)} {l("media")}</span>
+          </div>
         </div>
       {/if}
   {/case}

@@ -15,7 +15,8 @@
     previewable_truncate:
       !@viewing_main_object &&
         @showing_within not in [:smart_input],
-    "!text-sm !text-base-content/70": e(@object_type, nil) == :article && @showing_within != :thread,
+    "!text-sm !text-base-content/70":
+      e(@object_type, nil) == :article && @showing_within != :thread,
     "prose-bonfire": @showing_within not in [:thread]
   }
 >
