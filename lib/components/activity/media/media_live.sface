@@ -151,7 +151,7 @@
             {/case}
           {#else}
             <div class="text-base-content/70 text-sm flex items-center gap-2">
-              <#Icon iconify="ri:attachment-2" class="w-4 h-4 text-base-content/70" />
+              <#Icon iconify="ph:paperclip-duotone" class="w-4 h-4 text-base-content/70" />
               <span>{id(m)}</span>
             </div>
           {/if}
@@ -329,7 +329,7 @@
       {#else}
         <div class="gap-2 mt-1">
           <div class="flex items-center gap-2">
-            <#Icon iconify="ri:attachment-2" class="w-4 h-4 text-base-content/50" />
+            <#Icon iconify="ph:paperclip-duotonew-4 h-4 text-base-content/50" />
             <span class="text-sm text-base-content/70">{length(@image_list)} {l("media")}</span>
           </div>
         </div>
@@ -522,7 +522,7 @@
         <div class="gap-2 mt-1">
           {#for %{} = m <- @gif_list}
             <div class="flex items-center gap-2">
-              <#Icon iconify="ri:attachment-2" class="w-4 h-4 text-base-content/50" />
+              <#Icon iconify="ph:paperclip-duotonew-4 h-4 text-base-content/50" />
               <span class="text-sm text-base-content/50 truncate max-w-[320px]">{Media.media_url(m)} (GIF)</span>
             </div>
           {/for}
