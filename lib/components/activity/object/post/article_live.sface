@@ -35,7 +35,7 @@
               "flex relative h-[160px] lg:h-[220px] bg-center items-center rounded-t-lg shrink-0 w-full bg-base-content/10  place-content-center bg-no-repeat bg-cover",
               "!rounded-none": @showing_within == :thread and @viewing_main_object
             }
-            style={"background-image: url('#{URI.encode(url)}')"}
+            style={["background-image": "url('#{URI.encode(url)}')"]}
           >
             <p data-role="article_badge" class="absolute left-3 bottom-3 badge badge-soft badge-sm">⁂ {l("Article")}</p>
           </div>
