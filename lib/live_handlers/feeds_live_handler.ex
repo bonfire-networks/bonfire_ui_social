@@ -1532,7 +1532,9 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
               [opts]
             ),
             if(
-              module_enabled?(Bonfire.UI.Reactions.BookmarkActionLive, current_user: current_user),
+              module_enabled?(Bonfire.UI.Reactions.BookmarkActionLive,
+                current_user: current_user
+              ),
               do:
                 Utils.maybe_apply(
                   Bonfire.Social.Bookmarks.LiveHandler,
