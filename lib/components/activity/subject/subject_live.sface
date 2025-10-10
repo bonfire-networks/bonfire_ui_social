@@ -122,7 +122,7 @@
           "aria-label": l("%{name}'s profile", name: @profile_name)
         }
         parent_id={deterministic_dom_id(__MODULE__, @subject_id, "subject_username", @parent_id)}
-        class="text-sm text-[15px] truncate max-w-[150px] lg:max-w-[400px] link link-hover ellipsis text-base-content/60 subject_username"
+        class="text-sm text-[15px] truncate max-w-[150px] lg:max-w-[250px] link link-hover ellipsis text-base-content/60 subject_username"
         to={e(@subject_peered, :canonical_uri, nil) || @path}
       >
         @{@character_username}
