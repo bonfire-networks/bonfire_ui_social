@@ -2197,15 +2197,15 @@ defmodule Bonfire.UI.Social.ActivityLive do
   Reuses existing component_object/3 logic to keep it DRY.
   """
   def nested_object_components(json) when is_map(json) do
-    preloaded_fields = Map.get(json, "_bonfire_preloaded_fields", [])
+    preloaded_fields = Map.get(json, "__bonfire_preloaded_fields__", [])
 
     if preloaded_fields != [] do
-      Enum.flat_map(preloaded_fields, fn field_name ->
-        field_str = to_string(field_name)
+      Enum.flat_map(preloaded_fields, fn path ->
+        field_str = Enum.join(path, ".")
 
-        case Map.get(json, field_str) do
-          %{"pointer" => pointer_object} = _field_data when is_map(pointer_object) ->
-            # Single nested object with pointer - reuse component_object logic
+        # path is now a list of keys for nested fields
+        case get_in(json, path) do
+          %{"nested_object" => pointer_object} = _field_data when is_map(pointer_object) ->
             nested_object_preview_components(
               field_str,
               Types.object_type(pointer_object),
@@ -2213,12 +2213,11 @@ defmodule Bonfire.UI.Social.ActivityLive do
             )
 
           list when is_list(list) ->
-            # List of potentially nested objects
             list
             |> Enum.with_index()
             |> Enum.flat_map(fn {item, index} ->
               case item do
-                %{"pointer" => pointer_object} = _item_data when is_map(pointer_object) ->
+                %{"nested_object" => pointer_object} = _item_data when is_map(pointer_object) ->
                   nested_object_preview_components(
                     "#{field_str}[#{index}]",
                     Types.object_type(pointer_object),
@@ -2245,7 +2244,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
     [
       {Bonfire.UI.Social.ActivityLive,
        %{
-         id: "nested_activity_#{field_str}_#{id(pointer_activity)}",
+         id: "nested_object_#{field_str}_#{id(pointer_activity)}",
          activity: pointer_activity,
          object: nil,
          activity_inception: "nested_#{field_str}",

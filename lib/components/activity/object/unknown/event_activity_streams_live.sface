@@ -41,23 +41,23 @@
       {#case object_field(@json, "location")}
         {#match nil}
         {#match location}
-          <div class="flex items-center gap-2">
-            <#Icon iconify="ph:map-pin-fill" class="w-4 h-4 text-base-content/70" />
-            <div class="text-base-content/70 text-sm">
-              {#case [
-                  e(location, "name", nil),
-                  e(location, "address", "streetAddress", nil),
-                  e(location, "address", "addressLocality", nil),
-                  e(location, "address", "addressRegion", nil)
-                ]
-                |> Enum.filter(&(&1 not in [nil, ""]))
-                |> Enum.join(" - ")}
-                {#match ""}
-                {#match location_text}
-                  {location_text}
-              {/case}
-            </div>
-          </div>
+          {#case [
+              e(location, "name", nil),
+              e(location, "address", "streetAddress", nil),
+              e(location, "address", "addressLocality", nil),
+              e(location, "address", "addressRegion", nil)
+            ]
+            |> Enum.reject(&(&1 in [nil, ""]))
+            |> Enum.join(" - ")}
+            {#match ""}
+            {#match location_text}
+              <div class="flex items-center gap-2">
+                <#Icon iconify="ph:map-pin-fill" class="w-4 h-4 text-base-content/70" />
+                <div class="text-base-content/70 text-sm">
+                  <a href={"https://www.openstreetmap.org/search?zoom=6&query=#{location_text}"} target="_blank">{location_text}</a>
+                </div>
+              </div>
+          {/case}
       {/case}
 
       {#case object_field(@json, "startTime")}

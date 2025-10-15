@@ -1,44 +1,56 @@
 <div class="py-2">
-  <div class="mb-2 text-sm font-medium text-base-content text-opacity-80">
-    <span :if={@object_type_readable && @object_type_readable != "" && @object_type_readable != "apactivity"}>
-      {String.capitalize(@object_type_readable || "Unknown")}:
-    </span>
-    {rich(
-      e(
-        @object |> debug("Unsupported type or deleted object"),
-        :name,
-        nil
-      ) ||
-        e(
-          @object,
-          :profile,
-          :name,
-          nil
-        ) ||
-        e(
-          @object,
-          :post_content,
-          :name,
-          nil
-        ) || e(@object, :title, nil) || e(@object, :label, nil) ||
-        e(@object, :json, "object", "name", nil) || e(@object, :json, "object", "summary", nil) ||
-        e(@object, :json, "object", "content", nil) || e(@object, :json, "name", nil) ||
-        e(@object, :json, "content", nil) || l("Unsupported type or deleted object")
-    )}
-  </div>
-
-  {#case e(@object, :summary, nil) || e(@object, :post_content, :summary, nil) ||
-      e(@object, :profile, :summary, nil)}
+  {#case the_data(@object)}
     {#match nil}
-    {#match summary}
-      <h3 class="text-xs tracking-wider text-primary-content-600 uppercase">Summary</h3>
-      <div class="mb-2 prose-sm prose text-primary-content-700 max-w-prose">{rich(summary)}</div>
-  {/case}
+      <div class="rounded-box border border-base-content/10 p-4">
+        <div class="mb-2 text-sm font-medium text-base-content text-opacity-80">
+          {l("Unknown object")}
+        </div>
+        <div class="text-sm text-base-content/70">
+          {l("This object is of an unsupported type or has been deleted.")}
+        </div>
+      </div>
+    {#match object}
+      <div class="mb-2 text-sm font-medium text-base-content text-opacity-80">
+        <span :if={@object_type_readable && @object_type_readable != "" && @object_type_readable != "apactivity"}>
+          {String.capitalize(@object_type_readable || "Unknown")}:
+        </span>
+        {rich(
+          ed(
+            object |> debug("Unsupported type or deleted object"),
+            :name,
+            nil
+          ) ||
+            e(
+              object,
+              :profile,
+              :name,
+              nil
+            ) ||
+            e(
+              object,
+              :post_content,
+              :name,
+              nil
+            ) || ed(object, :title, nil) || ed(object, :label, nil) ||
+            l("Unknown type of activity/object")
+        )}
+      </div>
 
-  <article
-    :if={e(@object, :post_content, :html_body, e(@object, :html_body, e(@object, :note, nil)))}
-    class="prose-sm prose max-w-prose"
-  >
-    {rich(e(@object, :post_content, :html_body, e(@object, :html_body, e(@object, :note, nil))))}
-  </article>
+      {#case ed(object, :summary, nil) || e(object, :post_content, :summary, nil) ||
+          ed(object, :profile, :summary, nil)}
+        {#match nil}
+        {#match summary}
+          <h3 class="text-xs tracking-wider text-primary-content-600 uppercase">Summary</h3>
+          <div class="mb-2 prose-sm prose text-primary-content-700 max-w-prose">{rich(summary)}</div>
+      {/case}
+
+      {#case ed(object, :content, nil) || ed(object, :html_body, nil) ||
+          e(object, :post_content, :html_body, nil) || e(object, :note, nil)}
+        {#match nil}
+        {#match content}
+          <article class="prose-sm prose max-w-prose">
+            {rich(content)}
+          </article>
+      {/case}
+  {/case}
 </div>
