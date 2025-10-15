@@ -37,7 +37,7 @@
               name="name"
               class="w-full bg-base-content/10 input input-bordered"
               value={e(@page_title, "")}
-              opts={placeholder: "Set a name for the thread..."}
+              opts={[placeholder: "Set a name for the thread..."]}
             />
             <HiddenInput name="thread_id" value={@thread_id} />
             <button class="normal-case w-full  btn-outline btn btn-primary mt-3">
