@@ -353,7 +353,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
       e(assigns, :thread_url, nil) ||
         if not is_nil(thread) do
           if is_struct(thread) do
-            path(thread, [], preload_character: false)
+            path(thread, [], preload_if_needed: false)
           else
             "/discussion/#{thread_id}"
           end
@@ -369,7 +369,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
       (assigns[:current_url] || current_url(assigns[:__context__]))
       |> debug("activity_current_url")
 
-    # permalink = path(object, [], preload_character: false)
+    # permalink = path(object, [], preload_if_needed: false)
     permalink =
       cond do
         thread_url && thread_id != o_id ->
@@ -380,7 +380,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
           end
 
         true ->
-          "#{path(object, [], preload_character: false)}#"
+          "#{path(object, [], preload_if_needed: false)}#"
       end
       |> String.trim_leading("#{current_url || "#"}#")
 
@@ -878,7 +878,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
                   module={component}
                   path={case maybe_get(component_assigns, :character, nil) do
                     nil -> maybe_get(component_assigns, :subject_id, nil)
-                    character -> path(character, [], preload_character: false)
+                    character -> path(character, [], preload_if_needed: false)
                   end}
                   profile={maybe_get(component_assigns, :profile, nil)}
                   profile_id={id(maybe_get(component_assigns, :profile, nil))}
@@ -1998,15 +1998,15 @@ defmodule Bonfire.UI.Social.ActivityLive do
 
   defp component_object_fallback(type, %{named: %{name: name}} = object)
        when type == Bonfire.Tag.Hashtag do
-    [{LinkLive, label: "##{name}", to: path(object, [], preload_character: false)}]
+    [{LinkLive, label: "##{name}", to: path(object, [], preload_if_needed: false)}]
   end
 
   defp component_object_fallback(_type, %{name: name} = object) do
-    [{LinkLive, label: name, to: path(object, [], preload_character: false)}]
+    [{LinkLive, label: name, to: path(object, [], preload_if_needed: false)}]
   end
 
   defp component_object_fallback(_type, %{named: %{name: name}} = object) do
-    [{LinkLive, label: name, to: path(object, [], preload_character: false)}]
+    [{LinkLive, label: name, to: path(object, [], preload_if_needed: false)}]
   end
 
   defp component_object_fallback(type, _object) do
