@@ -1,5 +1,5 @@
 defmodule Bonfire.UI.Social.Feeds.FeedActivityTest do
-  use Bonfire.UI.Social.ConnCase, async: true
+  use Bonfire.UI.Social.ConnCase, async: System.get_env("TEST_UI_ASYNC") != "no"
   @moduletag :ui
 
   alias Bonfire.Social.Fake
@@ -89,9 +89,9 @@ defmodule Bonfire.UI.Social.Feeds.FeedActivityTest do
 
     {:ok, view, _html} = live(conn, next)
     # Then I should see the post in my feed
-    assert has_element?(view, "a[data-id=subject_avatar]")
+    assert has_element?(view, "[data-id=subject_avatar]")
     #  ensure it is a generated avatar, since we didn't upload a custom one
-    assert has_element?(view, "a[data-id=subject_avatar] img")
+    assert has_element?(view, "[data-id=subject_avatar] img")
 
     #  |> Floki.attribute("alt") == [alice.profile.name <> " profile image"]
   end
@@ -117,9 +117,9 @@ defmodule Bonfire.UI.Social.Feeds.FeedActivityTest do
 
     {:ok, view, _html} = live(conn, next)
     # Then I should see the post in my feed
-    assert has_element?(view, "a[data-id=subject_avatar]")
+    assert has_element?(view, "[data-id=subject_avatar]")
     #  ensure it is not a generated avatar, since we uploaded a custom one
-    refute has_element?(view, "a[data-id=subject_avatar] img[src*='gen_avatar']")
+    refute has_element?(view, "[data-id=subject_avatar] img[src*='gen_avatar']")
 
     #  |> Floki.attribute("alt") == [alice.profile.name <> " profile image"]
   end
@@ -139,8 +139,9 @@ defmodule Bonfire.UI.Social.Feeds.FeedActivityTest do
     next = "/feed/local"
 
     {:ok, view, _html} = live(conn, next)
+    # Phoenix.LiveViewTest.open_browser(view)
     # Then I should see the post in my feed
-    assert has_element?(view, "a[data-id=subject_name]", alice.profile.name)
+    assert has_element?(view, "[data-id=subject_name]", alice.profile.name)
   end
 
   test "As a user, when I create a new post, I want to see my username next to my name in the activity subject" do
@@ -160,10 +161,12 @@ defmodule Bonfire.UI.Social.Feeds.FeedActivityTest do
     {:ok, view, _html} = live(conn, next)
     # open_browser(view)
     # Then I should see the post in my feed
-    assert has_element?(view, "a[data-id=subject_username]", alice.character.username)
+    assert has_element?(view, "[data-id=subject_username]", alice.character.username)
   end
 
   test "As a user, when I create a new post, I want to see the content in the activity object" do
+    flood(self(), "test pid")
+
     account = fake_account!()
     alice = fake_user!(account)
     feed_id = Bonfire.Social.Feeds.named_feed_id(:local)
@@ -178,6 +181,7 @@ defmodule Bonfire.UI.Social.Feeds.FeedActivityTest do
     next = "/feed/local"
 
     {:ok, view, _html} = live(conn, next)
+    # Phoenix.LiveViewTest.open_browser(view)
     # Then I should see the post in my feed
     assert has_element?(view, "div[data-id=object_body]", "first post")
   end

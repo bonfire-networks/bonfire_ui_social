@@ -1,5 +1,5 @@
 defmodule Bonfire.UI.Social.ExportTest do
-  use Bonfire.UI.Social.ConnCase, async: true
+  use Bonfire.UI.Social.ConnCase, async: System.get_env("TEST_UI_ASYNC") != "no"
   import Bonfire.Common.Simulation
   import Bonfire.Files.Simulation
   alias Bonfire.Social.Graph.Follows

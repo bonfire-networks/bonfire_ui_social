@@ -1,5 +1,5 @@
 defmodule Bonfire.UI.Social.SmartInputTest do
-  use Bonfire.UI.Social.ConnCase, async: true
+  use Bonfire.UI.Social.ConnCase, async: System.get_env("TEST_UI_ASYNC") != "no"
   use Bonfire.Common.Utils
   import Bonfire.Files.Simulation
 

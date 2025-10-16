@@ -176,7 +176,7 @@ defmodule Bonfire.UI.Social.PreloadPresetTest do
         expected_path = "/@#{username}"
 
         session
-        |> assert_has_or_open_browser("a[data-id=subject_name][href='#{expected_path}']")
+        |> assert_has_or_open_browser("[data-id=subject_name][href='#{expected_path}']")
       end
     end ||
       session
@@ -197,7 +197,7 @@ defmodule Bonfire.UI.Social.PreloadPresetTest do
         expected_path = "/@#{username}"
 
         conn
-        |> assert_has_or_open_browser("a[data-id=subject_avatar][href='#{expected_path}']")
+        |> assert_has_or_open_browser("[data-id=subject_avatar][href='#{expected_path}']")
       end
     end ||
       conn

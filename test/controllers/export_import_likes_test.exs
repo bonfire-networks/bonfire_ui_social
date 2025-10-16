@@ -1,5 +1,5 @@
 defmodule Bonfire.UI.Social.ExportImportLikesTest do
-  use Bonfire.UI.Social.ConnCase, async: true
+  use Bonfire.UI.Social.ConnCase, async: System.get_env("TEST_UI_ASYNC") != "no"
 
   alias Bonfire.Common.URIs
   alias Bonfire.Social.Import

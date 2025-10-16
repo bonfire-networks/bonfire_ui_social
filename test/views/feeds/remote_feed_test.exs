@@ -1,5 +1,5 @@
 defmodule Bonfire.Social.UI.Feeds.RemoteFeed.Test do
-  use Bonfire.UI.Social.ConnCase, async: true
+  use Bonfire.UI.Social.ConnCase, async: System.get_env("TEST_UI_ASYNC") != "no"
   @moduletag :ui
   alias Bonfire.Social.Fake
   alias Bonfire.Posts
