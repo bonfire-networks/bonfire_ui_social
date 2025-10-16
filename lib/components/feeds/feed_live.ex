@@ -743,27 +743,27 @@ defmodule Bonfire.UI.Social.FeedLive do
     )
   end
 
-  def handle_event(
-        "live_select_change",
-        %{"text" => text, "id" => live_select_id, "field" => field},
-        socket
-      ) do
-    options =
-      case field do
-        "subject_circles" ->
-          Bonfire.UI.Boundaries.SetBoundariesLive.circles_for_multiselect(
-            assigns(socket)[:__context__],
-            :subject_circles,
-            text
-          )
+  # def handle_event(
+  #       "live_select_change",
+  #       %{"text" => text, "id" => live_select_id, "field" => field},
+  #       socket
+  #     ) do
+  #   options =
+  #     case field do
+  #       "subject_circles" ->
+  #         Bonfire.UI.Boundaries.SetBoundariesLive.circles_for_multiselect(
+  #           assigns(socket)[:__context__],
+  #           :subject_circles,
+  #           text
+  #         )
 
-        _ ->
-          []
-      end
+  #       _ ->
+  #         []
+  #     end
 
-    send_update(LiveSelect.Component, id: live_select_id, options: options)
-    {:noreply, socket}
-  end
+  #   send_update(LiveSelect.Component, id: live_select_id, options: options)
+  #   {:noreply, socket}
+  # end
 
   def handle_event("toggle_circle_filter", %{"circle_id" => circle_id}, socket) do
     current_circles = e(socket.assigns, :feed_filters, :subject_circles, [])

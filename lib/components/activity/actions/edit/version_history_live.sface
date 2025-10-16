@@ -1,7 +1,6 @@
 {#for {%{
      diffed: diffed
-   } = diff,
-   i} <-
+   } = diff, i} <-
     Bonfire.Social.PostContents.get_versions_diffed(
       Bonfire.UI.Social.Activity.NoteLive.post_content(@object),
       versioning_enabled: @versioning_enabled,
