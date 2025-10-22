@@ -617,17 +617,18 @@
       {#elseif @verb == "Boost"}
         {!-- BOOST --}
         <div data-role="boosted_by" class="flex items-center justify-between w-full mb-2 -ml-[60px]">
-          <div class="flex items-center gap-3 justify-start rounded-full border border-base-content/10 bg-neutral/5 pr-2">
+          <div class="flex items-center gap-3 justify-start">
             <div class="flex-1 flex gap-2 items-center">
-              <div class="avatar-group -space-x-3">
+              <#Icon iconify="ph:arrows-counter-clockwise-duotone" class="w-5 h-5 text-primary" />
+              <!-- <div class="avatar-group -space-x-3">
                 <Bonfire.UI.Common.AvatarLive
                   parent_id={deterministic_dom_id(__MODULE__, nil, "smb-main", @parent_id)}
                   user_id={@profile_id}
                   src={@profile_media}
                   title={@profile_name || @character_username}
                   class="h-7 w-7 rounded-full"
-                />
-                {#if @subjects_more != []}
+                /> -->
+                <!-- {#if @subjects_more != []}
                   {#for {subject, idx} <- Enum.with_index(@subjects_more)}
                     {#if idx < 2}
                       <Bonfire.UI.Common.AvatarLive
@@ -639,8 +640,8 @@
                       />
                     {/if}
                   {/for}
-                {/if}
-              </div>
+                {/if} -->
+              <!-- </div> -->
               <div class="text-sm text-base-content/70">
                 <LinkLive
                   to={@path}
@@ -664,7 +665,6 @@
                 {raw(@verb_display)}
               </div>
             </div>
-            <#Icon iconify="ph:arrows-counter-clockwise-duotone" class="w-4 h-4 text-primary" />
           </div>
 
           {!-- <div class="flex-1 ml-3">

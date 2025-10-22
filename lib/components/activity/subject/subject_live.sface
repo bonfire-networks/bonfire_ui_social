@@ -47,6 +47,7 @@
           @__context__[:ui_compact] ||
             @showing_within in [:smart_input, :quote_preview]
       }
+      disable_lazy={@disable_lazy}
     />
   </LinkLive>
   {!-- </label>

@@ -280,6 +280,7 @@
                                 media={m}
                                 alt={media_label}
                                 src={maybe_preview_img}
+                                disable_lazy={@disable_lazy}
                               />
                           {/case}
                           <figcaption class="sr-only">{media_label}</figcaption>
@@ -305,6 +306,7 @@
                                 media={m}
                                 alt={media_label}
                                 src={maybe_preview_img}
+                                disable_lazy={@disable_lazy}
                               />
                             {#else}
                               <div class="flex items-center rounded-l shrink-0 w-10 h-10 place-content-center">

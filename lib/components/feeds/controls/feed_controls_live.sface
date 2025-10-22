@@ -27,12 +27,12 @@
         <label tabindex="0" class="tooltip-button opacity-80 btn btn-square btn-sm btn-ghost">
           {#if e(@feed_filters, :sort_order, nil) == :asc}
             <span class="" data-tip={l("Oldest first")}>
-              <#Icon iconify="ph:sort-descending-duotone" class="w-5 h-5" />
+              <#Icon iconify="ph:sort-descending-duotone" class="w-5 h-5 text-primary" />
               <span class="sr-only">{l("Oldest first")}</span>
             </span>
           {#else}
             <span class="" data-tip={l("Newest first")}>
-              <#Icon iconify="ph:sort-ascending-duotone" class="w-5 h-5" />
+              <#Icon iconify="ph:sort-ascending-duotone" class="w-5 h-5 text-primary" />
               <span class="sr-only">{l("Newest first")}</span>
             </span>
           {/if}
@@ -86,7 +86,7 @@
       <button
         phx-click={JS.toggle(to: "#more_filters")}
         class="btn opacity-80 btn-ghost btn-sm btn-square"
-      ><#Icon iconify="ph:sliders-horizontal-duotone" class="w-5 h-5" /></button>
+      ><#Icon iconify="ph:sliders-horizontal-duotone" class="w-5 h-5 text-primary" /></button>
     </div>
   </div>
 

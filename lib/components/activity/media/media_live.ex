@@ -17,6 +17,7 @@ defmodule Bonfire.UI.Social.Activity.MediaLive do
 
   prop css_borders, :css_class, default: "border border-base-content/10 rounded-md"
   prop small_icon, :boolean, default: false
+  prop disable_lazy, :boolean, default: true
 
   # TODO: move all these to config (and move to Bonfire.Files)
   @image_types ["image", "photo"]
