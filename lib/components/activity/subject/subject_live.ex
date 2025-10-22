@@ -40,7 +40,7 @@ defmodule Bonfire.UI.Social.Activity.SubjectLive do
   prop show_minimal_subject_and_note, :any, default: nil
   prop extra_info, :any, default: nil
   prop replies_more_count, :integer, default: 0
-  prop disable_lazy, :boolean, default: false
+  prop disable_lazy, :boolean, default: true
 
   # def render(assigns) do
   #   assigns
