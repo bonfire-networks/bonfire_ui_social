@@ -15,7 +15,8 @@
           {#else}
             {#case e(@media, :metadata, "facebook", "video", nil) ||
                 e(@media, :metadata, "twitter", "player", nil) ||
-                e(@media, :metadata, "facebook", "video", nil)}
+                e(@media, :metadata, "facebook", "video", nil) ||
+                MediaLive.extract_oembed_url(e(@media, :metadata, "oembed", "html", nil))}
               {#match url when is_binary(url)}
                 {!-- TODO: url |> String.replace("youtube.com", "yewtu.be") --}
                 {!-- width={e(@media, :metadata, "facebook", "video:width", nil) ||
@@ -37,8 +38,6 @@
                   />
                 </div>
               {#match _}
-                {#case e(@media, :metadata, "oembed", "html", nil)}
-                  {#match nil}
                     {#if is_binary(media_url)}
                       {#if Bonfire.Files.has_extension?(media_url, [".mp4", ".mkv"])}
                         {#if MediaLive.is_gif?(@media.path, e(@media, :media_type, nil), @media)}
@@ -264,26 +263,84 @@
                         </div>
                       {#elseif MediaLive.preview_img(@media)}
                         {!-- Handle media with preview images (like video.movie, video.other, etc.) --}
-                        <div class="relative rounded-box border border-base-content/10 overflow-hidden">
-                          <a href={media_url} target="_blank" class="block">
-                            <LazyImage
-                              parent_id={deterministic_dom_id(__MODULE__, id(@media), "preview", @parent_id)}
-                              class="w-full aspect-video object-cover hover:opacity-90 transition-opacity"
-                              alt={Bonfire.Files.Media.media_label(@media) || "Media preview"}
-                              src={MediaLive.preview_img(@media)}
-                              media={@media}
-                              fallback_icon="heroicons:play-circle"
-                            />
-                            <div class="absolute inset-0 bg-black/20 hover:bg-black/10 transition-colors flex items-center justify-center">
-                              <div class="bg-white/90 rounded-full p-3 shadow-lg">
-                                <#Icon iconify="heroicons:play-20-solid" class="w-8 h-8 text-gray-800" />
+                        <div class="rounded-box border border-base-content/10 overflow-hidden">
+                          {#case MediaLive.extract_oembed_url(e(@media, :metadata, "oembed", "html", nil)) ||
+                              e(@media, :metadata, "facebook", "video", nil) ||
+                              e(@media, :metadata, "twitter", "player", nil)}
+                            {#match embed_url when is_binary(embed_url)}
+                              {!-- Preview thumbnail with action buttons overlay --}
+                              <div id={"preview-#{id(@media)}"} class="relative">
+                                <LazyImage
+                                  parent_id={deterministic_dom_id(__MODULE__, id(@media), "preview", @parent_id)}
+                                  class="w-full aspect-video object-cover"
+                                  alt={Bonfire.Files.Media.media_label(@media) || "Media preview"}
+                                  src={MediaLive.preview_img(@media)}
+                                  media={@media}
+                                  fallback_icon="heroicons:play-circle"
+                                />
+                                {!-- Action buttons overlay --}
+                                <div class="absolute inset-0 bg-black/20 hover:bg-black/10 transition-colors flex items-center justify-center gap-3">
+                                  {!-- Play inline button --}
+                                  <div class="flex items-center bg-white/90 hover:bg-white rounded p-3 gap-6 shadow-lg transition-all hover:scale-110">
+                                  <button
+                                    type="button"
+                                    phx-click={JS.hide(to: "#preview-#{id(@media)}")
+                                      |> JS.show(to: "#embed-#{id(@media)}")}
+                                    class="cursor-pointer"
+                                    title={l("Play inline")}
+                                  >
+                                    <#Icon iconify="heroicons:play-20-solid" class="w-6 h-6 text-gray-800" />
+                                  </button>
+                                  {!-- Open in new tab button --}
+                                  <a
+                                    href={media_url}
+                                    target="_blank"
+                                    class=""
+                                    title={l("Open in new tab")}
+                                  >
+                                    <#Icon iconify="heroicons-solid:external-link" class="w-6 h-6 text-gray-600" />
+                                  </a>
+                                  </div>
+                                </div>
                               </div>
-                            </div>
-                          </a>
+                              {!-- Embedded iframe (hidden by default) --}
+                              <div id={"embed-#{id(@media)}"} class="hidden aspect-video">
+                                <iframe
+                                  src={"#{embed_url}?&autoplay=1"}
+                                  frameborder="0"
+                                  width="100%"
+                                  loading="lazy"
+                                  height="100%"
+                                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                                  allowfullscreen="allowfullscreen"
+                                  picture-in-picture
+                                  class={"rounded-t-box", @base_css}
+                                />
+                              </div>
+                            {#match _}
+                              {!-- Fallback: Open in new tab only --}
+                              <div class="relative">
+                                <a href={media_url} target="_blank" class="block">
+                                  <LazyImage
+                                    parent_id={deterministic_dom_id(__MODULE__, id(@media), "preview", @parent_id)}
+                                    class="w-full aspect-video object-cover hover:opacity-90 transition-opacity"
+                                    alt={Bonfire.Files.Media.media_label(@media) || "Media preview"}
+                                    src={MediaLive.preview_img(@media)}
+                                    media={@media}
+                                    fallback_icon="heroicons:play-circle"
+                                  />
+                                  <div class="absolute inset-0 bg-black/20 hover:bg-black/10 transition-colors flex items-center justify-center">
+                                    <div class="bg-white/90 rounded-full p-3 shadow-lg">
+                                      <#Icon iconify="heroicons:arrow-top-right-on-square-20-solid" class="w-8 h-8 text-gray-800" />
+                                    </div>
+                                  </div>
+                                </a>
+                              </div>
+                          {/case}
                           {#case Bonfire.Files.Media.media_label(@media)}
                             {#match nil}
                             {#match title}
-                              <div class="p-3 bg-base-100">
+                              <div class="p-3 text-left bg-base-100">
                                 <h3 class="font-semibold text-base-content line-clamp-2">{title}</h3>
                                 {#case MediaLive.provider(@media)}
                                   {#match nil}
@@ -299,10 +356,6 @@
                         </div>
                       {/if}
                     {/if}
-                  {#match embed}
-                    {!-- TODO: only load external embed if autoplay or user clicks on a play button --}
-                    {raw(embed)}
-                {/case}
             {/case}
           {/if}
       {/case}

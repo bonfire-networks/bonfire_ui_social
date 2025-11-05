@@ -1,4 +1,4 @@
-<div class="rounded-box border border-base-content/10 h-full text-center items-center justify-center">
+<div class="">
   {!-- {#case {MediaLive.is_supported_multimedia_format?(@media.path, @media.media_type),
      MediaLive.is_embeddable?(@media.media_type, e(@media, :metadata, "oembed", nil)),
      MediaLive.preview_img(@media) || Media.media_url(@media)}}

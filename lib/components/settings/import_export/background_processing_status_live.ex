@@ -157,7 +157,7 @@ defmodule Bonfire.UI.Social.BackgroundProcessingStatusLive do
     user_id = id(current_user)
     offset = (page - 1) * per_page
 
-    # Bonfire.Common.ObanHelpers.list_jobs_queue_for_user(repo(), "import", 
+    # Bonfire.Common.ObanHelpers.list_jobs_queue_for_user(repo(), "import",
     jobs =
       Bonfire.Common.ObanHelpers.list_jobs_for_user(
         repo(),

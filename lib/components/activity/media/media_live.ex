@@ -155,6 +155,19 @@ defmodule Bonfire.UI.Social.Activity.MediaLive do
       String.starts_with?(media_type || "", "embed")
   end
 
+  @doc """
+  Extract the embed URL from oEmbed HTML iframe src attribute.
+  Returns nil if no iframe or src attribute is found.
+  """
+  def extract_oembed_url(nil), do: nil
+
+  def extract_oembed_url(html) when is_binary(html) do
+    case Regex.run(~r/src=["']([^"']+)["']/, html) do
+      [_, url] -> url
+      _ -> nil
+    end
+  end
+
   def is_video?(url), do: Files.has_extension?(url || "", @video_exts)
 
   def is_video?(url, media_type),
