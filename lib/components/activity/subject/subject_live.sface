@@ -19,19 +19,19 @@
     > --}
   <LinkLive
     :if={@subject_id && !Media.hide_avatars?(@__context__, @showing_within)}
-    opts={
+    opts={[
       "data-id": "subject_avatar",
       "data-subject-id": @subject_id,
       "data-view-transition-name": "avatar-#{@subject_id}"
-    }
+    ]}
     parent_id={deterministic_dom_id(__MODULE__, @subject_id, "subject_avatar", @parent_id)}
-    class={
+    class={[
       "absolute -ml-[3.7rem] font-semibold text-base-content hover:underline z-50",
       "!relative !ml-0 ": @viewing_main_object,
       "margin-compact":
         (@__context__[:ui_compact] && !@viewing_main_object) ||
           @showing_within in [:smart_input, :quote_preview]
-    }
+    ]}
     to={@path}
     label={e(@character_username, "") <> " profile"}
   >
@@ -41,12 +41,12 @@
       src={@profile_media}
       showing_within={@showing_within}
       fallback_class="w-8 h-8 opacity-30 mx-auto"
-      class={
+      class={[
         "rounded-full w-12 h-12",
         "avatar-compact":
           @__context__[:ui_compact] ||
             @showing_within in [:smart_input, :quote_preview]
-      }
+      ]}
       disable_lazy={@disable_lazy}
     />
   </LinkLive>
@@ -96,12 +96,12 @@
     <div class="flex" role="button" data-id="name_username" aria-haspopup="true" aria-expanded="true">
       <LinkLive
         :if={@profile_name}
-        opts={
+        opts={[
           "data-id": "subject_name",
           "data-subject-id": @subject_id,
           "data-view-transition-name": "profile-#{@subject_id}",
           "aria-label": l("%{name}'s profile", name: @profile_name)
-        }
+        ]}
         parent_id={deterministic_dom_id(__MODULE__, @subject_id, "subject_name", @parent_id)}
         class="link text-[15px] max-w-[250px] lg:max-w-[500px] link-hover text-sm font-bold truncate"
         to={@path}
@@ -116,12 +116,12 @@
     >
       <LinkLive
         :if={@character_username && @showing_within != :smart_input}
-        opts={
+        opts={[
           "data-id": "subject_username",
           "data-subject-id": @subject_id,
           "data-view-transition-name": "profile-#{@subject_id}",
           "aria-label": l("%{name}'s profile", name: @profile_name)
-        }
+        ]}
         parent_id={deterministic_dom_id(__MODULE__, @subject_id, "subject_username", @parent_id)}
         class="text-sm text-[15px] truncate max-w-[150px] lg:max-w-[250px] link link-hover ellipsis text-base-content/60 subject_username"
         to={e(@subject_peered, :canonical_uri, nil) || @path}
