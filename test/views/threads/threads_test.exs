@@ -88,4 +88,103 @@ defmodule Bonfire.Social.Threads.ThreadsTest do
     post_view
     |> assert_has("article", text: "Second reply")
   end
+
+  test "activities within thread comments have proper preloads in default mode", %{
+    conn: conn,
+    post: post,
+    other_user: other_user
+  } do
+    # Create a reply with content
+    attrs_reply = %{
+      post_content: %{html_body: "Reply with preloadable data"},
+      reply_to_id: post.id
+    }
+
+    {:ok, reply} =
+      Posts.publish(current_user: other_user, post_attrs: attrs_reply, boundary: "public")
+
+    # Visit the thread and verify preloads
+    conn
+    |> visit("/discussion/#{post.id}")
+    |> assert_has("[data-id='comment']")
+    # Verify creator/subject is preloaded
+    |> assert_has("[data-role=subject]")
+    |> assert_has("[data-id=subject_name]", text: other_user.profile.name)
+    |> assert_has("[data-id=subject_avatar]")
+    # Verify post content is preloaded
+    |> assert_has("[data-id=activity_note]", text: "Reply with preloadable data")
+
+    # Verify the link to creator profile works
+    # |> assert_has("[data-id=subject_avatar][href='/@#{other_user.character.username}']")
+  end
+
+  test "activities within thread comments have proper preloads in flat mode", %{
+    conn: conn,
+    post: post,
+    other_user: other_user
+  } do
+    # Set flat mode
+    Process.put([:bonfire_ui_social, Bonfire.UI.Social.ThreadLive, :thread_mode], :flat)
+
+    # Create a reply with content
+    attrs_reply = %{
+      post_content: %{html_body: "Reply in flat mode"},
+      reply_to_id: post.id
+    }
+
+    {:ok, reply} =
+      Posts.publish(current_user: other_user, post_attrs: attrs_reply, boundary: "public")
+
+    # Visit the thread and verify preloads
+    conn
+    |> visit("/discussion/#{post.id}")
+    |> assert_has("[data-role='comment-flat']")
+    # Verify creator/subject is preloaded
+    |> assert_has("[data-role=subject]")
+    |> assert_has("[data-id=subject_name]", text: other_user.profile.name)
+    |> assert_has("[data-id=subject_avatar]")
+    # Verify post content is preloaded
+    |> assert_has("[data-id=activity_note]", text: "Reply in flat mode")
+    |> PhoenixTest.open_browser()
+
+    # Verify the link to creator profile works
+    # |> assert_has("[data-id=subject_avatar][href='/@#{other_user.character.username}']")
+  end
+
+  test "switching to flat mode via UI maintains proper preloads", %{
+    conn: conn,
+    post: post,
+    other_user: other_user
+  } do
+    # Create a reply with content
+    attrs_reply = %{
+      post_content: %{html_body: "Reply to test mode switching"},
+      reply_to_id: post.id
+    }
+
+    {:ok, reply} =
+      Posts.publish(current_user: other_user, post_attrs: attrs_reply, boundary: "public")
+
+    # Visit the thread (defaults to nested/threaded mode)
+    conn
+    |> visit("/discussion/#{post.id}")
+    # Verify we start in threaded mode
+    |> assert_has("[data-id='comment']")
+    |> click_link("li[phx-value-thread_mode='flat']", "Flat list")
+    # |> click_button("Flat list")  # or find the actual button/link text
+    # Click the flat mode option in the dropdown
+    # |> unwrap(fn view ->
+    #   view
+    #   |> element("li[phx-value-thread_mode='flat']")
+    #   |> render_click()
+    # end)
+    # Verify we switched to flat mode
+    |> assert_has("[data-role='comment-flat']")
+    # Verify creator/subject is still preloaded after switching
+    |> assert_has("[data-role=subject]")
+    |> assert_has("[data-id=subject_name]", text: other_user.profile.name)
+    |> assert_has("[data-id=subject_avatar]")
+    # Verify post content is still accessible
+    |> assert_has("[data-id=activity_note]", text: "Reply to test mode switching")
+  end
 end
