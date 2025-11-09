@@ -48,8 +48,8 @@
       >
         {#if @verb == "Request to Follow"}
           <div class="flex items-center w-full justify-between">
-            <div class="flex items-center flex-1 gap-3">
-              <#Icon iconify="ph:user-plus-duotone" class="flex-shrink-0 w-6 h-6 text-info" />
+            <div class="flex items-center flex-1 gap-3 -ml-[60px]">
+              <#Icon iconify="ph:user-plus-duotone" class="flex-shrink-0 w-5 h-5 text-info" />
               <div class="flex gap-2">
                 {!-- <Bonfire.UI.Common.AvatarLive
                   parent_id={deterministic_dom_id(__MODULE__, @subject_id, "subject_follow_avatar", @parent_id)}
@@ -141,8 +141,8 @@
             </div>
           </div>
         {#elseif @verb in ["Like", "React"]}
-          <div data-role="liked_by" class="">
-            <div class="flex items-center gap-3 justify-start rounded-full border border-base-content/10 bg-neutral/5 pr-2">
+          <div data-role="liked_by" class="w-full -ml-[60px]">
+            <div class="flex items-center gap-3 justify-start ">
               <div class="flex flex-1 items-center gap-2">
                 {#case @emoji}
                   {#match %{media_type: "emoji"} = emoji}
@@ -189,7 +189,7 @@
                       </div>
                     </div>
                   {#match _}
-                    <div class="avatar-group -space-x-3">
+                    <!-- <div class="avatar-group -space-x-3">
                       <Bonfire.UI.Common.AvatarLive
                         parent_id={deterministic_dom_id(__MODULE__, nil, "sm-main", @parent_id)}
                         user_id={@profile_id}
@@ -210,8 +210,9 @@
                           {/if}
                         {/for}
                       {/if}
-                    </div>
-                    <div class="text-sm text-base-content/70">
+                    </div> -->
+                    <#Icon iconify="ph:fire-fill" class="w-5 h-5 text-yellow-500 flex-shrink-0" />
+                    <div class="text-sm w-full text-base-content/70">
                       <LinkLive
                         to={@path}
                         opts={"data-id": "subject_name"}
@@ -233,12 +234,12 @@
                     </div>
                 {/case}
               </div>
-              <#Icon iconify="ph:fire-fill" class="w-4 h-4 text-yellow-500 flex-shrink-0" />
             </div>
           </div>
         {#elseif @verb == "Follow"}
+        
           {!-- FOLLOW --}
-          <div class="flex items-center gap-3 justify-start rounded-full border border-base-content/10 bg-neutral/5 pr-2">
+          <div class="flex items-center gap-3 justify-start">
             <div class="flex-1 flex gap-2 items-center">
               <div class="avatar-group -space-x-3">
                 <Bonfire.UI.Common.AvatarLive
@@ -285,10 +286,11 @@
             showing_within={@showing_within}
           /> --}
         {#elseif @verb == "Boost"}
-          <div data-role="boosted_by" class="">
-            <div class="flex items-center gap-3 justify-start rounded-full border border-base-content/10 bg-neutral/5 pr-2">
+          <div data-role="boosted_by" class="w-full -ml-[60px]">
+            <div class="flex items-center gap-3 justify-start">
               <div class="flex items-center gap-2">
-                <div class="avatar-group -space-x-3">
+                <#Icon iconify="ph:arrows-counter-clockwise-duotone" class="w-5 h-5 text-primary flex-shrink-0" />
+                <!-- <div class="avatar-group -space-x-3">
                   <Bonfire.UI.Common.AvatarLive
                     parent_id={deterministic_dom_id(__MODULE__, nil, "smb-main", @parent_id)}
                     user_id={@profile_id}
@@ -309,7 +311,7 @@
                       {/if}
                     {/for}
                   {/if}
-                </div>
+                </div> -->
                 <div class="text-sm text-base-content/70">
                   <LinkLive
                     to={@path}
@@ -331,7 +333,6 @@
                   {raw(@verb_display)} {l(" your activity")}
                 </div>
               </div>
-              <#Icon iconify="ph:arrows-counter-clockwise-duotone" class="w-4 h-4 text-primary flex-shrink-0" />
             </div>
           </div>
         {#elseif @verb == "Pin"}
@@ -499,7 +500,7 @@
         </div>
       {#elseif @verb in ["Like", "React"]}
         <div data-role="liked_by" class="flex items-center justify-between w-full mb-2 -ml-[60px]">
-          <div class="flex items-center gap-3 justify-start rounded-full border border-base-content/10 bg-neutral/5 pr-2">
+          <div class="flex items-center gap-3 justify-start">
             <div class="flex-1 flex gap-2 items-center">
               {#case @emoji}
                 {#match %{summary: emoji}}
@@ -542,7 +543,7 @@
                     {if @verb == "React", do: l("reacted to this activity"), else: l("liked this activity")}
                   </div>
                 {#match _}
-                  <div class="avatar-group -space-x-3">
+                  <!-- <div class="avatar-group -space-x-3">
                     <Bonfire.UI.Common.AvatarLive
                       parent_id={deterministic_dom_id(__MODULE__, nil, "sml-main", @parent_id)}
                       user_id={@profile_id}
@@ -563,7 +564,8 @@
                         {/if}
                       {/for}
                     {/if}
-                  </div>
+                  </div> -->
+                  <#Icon iconify="ph:fire-fill" class="w-5 h-5 text-yellow-500" />
                   <div class="text-sm text-base-content/70">
                     <LinkLive
                       to={@path}
@@ -586,7 +588,6 @@
                   </div>
               {/case}
             </div>
-            <#Icon iconify="ph:fire-fill" class="w-4 h-4 text-yellow-500" />
           </div>
         </div>
       {#elseif @verb == "Follow"}
