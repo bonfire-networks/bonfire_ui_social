@@ -11,7 +11,7 @@
 
   <button
     tabindex="0"
-    class="tooltip-button btn btn-ghost group hover:bg-primary/10 btn-circle btn-sm transition-transform duration-150 ease-out hover:scale-105 active:scale-95 hover:-translate-y-0.5"
+    class="tooltip-button btn btn-ghost group hover:bg-primary/10 btn-circle btn-sm"
   >
     <#Icon
       iconify="ph:dots-three-outline-vertical-duotone"
@@ -21,16 +21,16 @@
   </button>
   <ul
     tabindex="0"
-    class="tooltip z-[999999999999] menu shadow bg-base-100 shadow border border-base-content/10 rounded-lg p-1 w-64 absolute top-0 left-0 hidden"
+    class="tooltip z-[999999999999] menu shadow bg-base-300 shadow rounded-box w-64 absolute top-0 left-0 hidden"
     role="menu"
     aria-orientation="vertical"
     aria-labelledby="more-menu"
   >
     {#if @object_type == Bonfire.Data.Social.Message}
       <li class="hover:bg-base-100">
-        <div class="hover:bg-base-100 cursor-default flex items-center gap-2">
-          <#Icon iconify="mingcute:inbox-2-fill" class="w-4 h-4 shrink-0" />
-          <span>{l("Direct Message")}</span></div>
+        <div class="hover:bg-base-100 cursor-default flex justify-between items-center gap-2">
+          <span class="text-sm font-meium">{l("Direct Message")}</span></div>
+          <#Icon iconify="ph:tray-duotone" class="w-5 h-5 shrink-0" />
       </li>
     {#else}
       <li><div data-id="boundary_details" class="w-full p-0 flex bg-base-content/5">
@@ -68,10 +68,10 @@
         phx-hook="Copy"
         id={deterministic_dom_id(__MODULE__, id(@activity), "more_action_copy_url", @parent_id)}
         href={@permalink || URIs.canonical_url(@object, preload_if_needed: false)}
-        class="flex items-center gap-2 text-sm text-base-content"
+        class="flex items-center justify-between gap-2 text-sm text-base-content"
       >
-        <!-- <#Icon iconify="ri:file-copy-line" class="w-4 h-4 shrink-0" /> -->
-        <span data-role="label">{l("Copy link")}</span>
+        <span class="flex-1 text-sm font-medium" data-role="label">{l("Copy link")}</span>
+        <#Icon iconify="ph:copy-duotone" class="w-5 h-5 shrink-0" />
       </a>
     </li>
 
@@ -103,9 +103,9 @@
             </button>
           </Field>
           <:open_btn>
-            <div class="flex items-center w-full gap-2 text-sm text-base-content">
-              <!-- <#Icon iconify="subway:title" class="w-4 h-4 shrink-0" /> -->
-              {l("Edit discussion title")}
+            <div class="flex items-center justify-between w-full gap-2 text-base-content">
+              <span class="text-sm font-medium">{l("Edit discussion title")}</span>
+              <#Icon iconify="ph:text-h-one-duotone" class="w-5 h-5 shrink-0" />
             </div>
           </:open_btn>
         </Bonfire.UI.Common.OpenModalLive>
@@ -120,10 +120,10 @@
               phx-click="Bonfire.Social.Feeds:fetch_replies"
               phx-target={"##{@activity_component_id}"}
               phx-value-id={id(@object) || id(@activity)}
-              class="!flex items-center gap-2"
+              class="!flex items-center gap-2 justify-between "
             >
-              <!-- <#Icon iconify="mdi:sprout" class="w-4 h-4 shrink-0 text-base-content" /> -->
               <span>{l("Get latest replies")}</span>
+              <#Icon iconify="mdi:sprout" class="w-5 h-5 shrink-0 text-base-content" />
             </a>
           </li>
           <li :if={@showing_within == :thread and @viewing_main_object}>
@@ -131,10 +131,10 @@
               phx-click="Bonfire.Social.Feeds:fetch_thread"
               phx-target={"##{@activity_component_id}"}
               phx-value-id={id(@object) || id(@activity)}
-              class="!flex items-center gap-2"
+              class="!flex items-center gap-2 justify-between "
             >
-              <!-- <#Icon iconify="bi:list-nested" class="w-4 h-4 shrink-0 text-base-content" /> -->
-              <span>{l("Get latest replies")}</span>
+              <span class="text-sm font-medium">{l("Get latest replies")}</span>
+              <#Icon iconify="bi:list-nested" class="w-5 h-5 shrink-0 text-base-content" />
             </a>
           </li>
           <li :if={is_binary(canonical_uri)}>
@@ -142,10 +142,10 @@
               href={canonical_uri}
               target="_blank"
               rel="noopener noreferrer"
-              class="!flex items-center gap-2"
+              class="!flex items-center justify-between gap-2"
             >
-              <!-- <#Icon solid="ExternalLink" class="w-4 h-4 shrink-0 text-base-content" /> -->
-              <span>{l("View remotely")}</span>
+              <span class="text-sm font-medium">{l("View remotely")}</span>
+              <#Icon iconify="ph:arrow-square-out-duotone" class="w-5 h-5 shrink-0" />
             </a>
           </li>
       {/case}
@@ -270,7 +270,7 @@
                 data-id="unfollow"
                 :on-click="Bonfire.Social.Graph.Follows:unfollow"
                 phx-value-id={subject_id}
-                class="!flex items-center gap-2"
+                class="!flex items-center gap-2 justify-between "
               >
                 <!-- <#Icon solid="UserRemove" class="w-4 h-4 shrink-0" /> -->
                 <span class="truncate ellipsis">
@@ -309,7 +309,7 @@
           >
             <!-- <#Icon
               iconify="material-symbols:difference-outline-rounded"
-              class="w-4 h-4 shrink-0 text-base-content"
+              class="w-5 h-5 shrink-0 text-base-content"
             /> -->
             <div class="text-sm text-base-content">
               {l("Version history")}
@@ -319,7 +319,6 @@
       {/if}
     {/if}
 
-    <li class="m-1 border-t border-base-content/10" />
 
     {#case current_user_id(@__context__) && has_my_first_quote(@quotes, current_user_id(@__context__))}
       {#match id when is_binary(id)}
@@ -329,17 +328,20 @@
             phx-value-quoted_id={id}
             phx-value-quote_id={id(@object)}
             phx-target={"##{@activity_component_id}"}
-            class="!flex items-center gap-2 text-error"
+            class="!flex items-center gap-2 justify-between  text-error"
           >
-            <!-- <#Icon iconify="mdi:comment-quote-outline" class="w-4 h-4 shrink-0 text-base-content" /> -->
+            <!-- <#Icon iconify="mdi:comment-quote-outline" class="w-5 h-5 shrink-0 text-base-content" /> -->
             <span>{l("Remove quote")}</span>
           </button>
         </li>
       {#match _}
     {/case}
 
-    <li :if={current_user_id(@__context__) != @creator_id and @verb != "Flag" and
-      module_enabled?(Bonfire.UI.Moderation.FlagActionLive, @__context__)}>
+    {#if current_user_id(@__context__) != @creator_id and @verb != "Flag" and
+      module_enabled?(Bonfire.UI.Moderation.FlagActionLive, @__context__)}
+      
+      <li class="m-1 border-t border-base-content/10" />
+      
       {#if !current_user_id(@__context__)}
         <li>
           <a
@@ -351,14 +353,13 @@
           </a>
         </li>
       {#else}
-        <details>
+        <!-- <details>
           <summary class="">
             <div class="flex items-center w-full gap-2 text-sm text-base-content">
-              <!-- <#Icon solid="Flag" class="w-4 h-4 shrink-0" /> -->
               <span class="truncate ellipsis">{l("Flag")}</span>
             </div>
           </summary>
-          <ul>
+          <ul> -->
             {!-- Flag the object --}
             <li data-role="flag_object">
               <StatelessComponent
@@ -366,7 +367,6 @@
                 object={@object}
                 permalink={@permalink}
                 flagged={@flagged}
-                hide_icon
                 parent_id={deterministic_dom_id(
                   __MODULE__,
                   id(@activity_component_id || @activity),
@@ -383,16 +383,16 @@
               <StatelessComponent
                 module={maybe_component(Bonfire.UI.Moderation.FlagActionLive)}
                 object={@creator_id}
-                hide_icon
                 flagged={@flagged}
                 parent_id={deterministic_dom_id(__MODULE__, id(@activity_component_id || @activity), "flag_user", @parent_id)}
                 object_type={@creator_name || l("user")}
               />
             </li>
-          </ul>
-        </details>
+          <!-- </ul>
+        </details> -->
       {/if}
-    </li>
+    {/if}
+    
 
     <StatelessComponent
       module={maybe_component(Bonfire.Label.Web.ContentLabelLive, @__context__)}
@@ -414,7 +414,7 @@
       hide_object={@object}
       extra_object_label={l("this %{object}", object: e(@object_type_readable, l("object")))}
       peered={e(@object, :peered, nil)}
-      with_icon={false}
+      with_icon={true}
     />
 
     {#if @viewing_main_object && @thread_id && @object_type != Bonfire.Data.Social.Message &&
@@ -471,24 +471,24 @@
       {/if}
     {/if}
 
+        <li class="m-1 border-t border-base-content/10" />
+
     {#if @object_boundary && (id(@object) || id(@activity))}
       {#if @object_type != Bonfire.Data.Social.Message}
         {#if Bonfire.UI.Social.Activity.DeleteObjectLive.can_delete?(@__context__, @object, @object_boundary)}
-          <li>
+          <!-- <li>
             <details>
               <summary class="text-error/80">
                 <div class="flex items-center w-full gap-2 text-sm text-error/80">
-                  <!-- <#Icon solid="Trash" class="w-4 h-4 shrink-0" /> -->
                   <span class="truncate ellipsis">{l("Delete")}</span>
                 </div>
               </summary>
-              <ul>
+              <ul> -->
                 <li :if={id(@object)}>
                   <StatelessComponent
                     module={maybe_component(Bonfire.UI.Social.Activity.DeleteObjectLive, @__context__)}
                     skip_permission_check
                     object={@object}
-                    hide_icon
                     creator_id={@creator_id}
                     object_type_readable={@object_type_readable}
                     object_boundary={@object_boundary}
@@ -508,7 +508,6 @@
                     skip_permission_check
                     action="Bonfire.Social.Feeds:delete"
                     object={@activity}
-                    hide_icon
                     object_boundary={@object_boundary}
                     object_type_readable={l("from feeds")}
                     creator_id={@creator_id}
@@ -525,9 +524,9 @@
                     )}
                   />
                 </li>
-              </ul>
+              <!-- </ul>
             </details>
-          </li>
+          </li> -->
         {/if}
         {!-- Delete the object --}
       {#else}
@@ -536,7 +535,6 @@
             module={maybe_component(Bonfire.UI.Social.Activity.DeleteObjectLive, @__context__)}
             object={@object || @activity}
             creator_id={@creator_id}
-            hide_icon
             object_type_readable={@object_type_readable}
             object_boundary={@object_boundary}
             parent_id={deterministic_dom_id(

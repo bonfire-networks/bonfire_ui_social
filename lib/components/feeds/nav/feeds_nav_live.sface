@@ -11,7 +11,7 @@
             data-position="top-end"
             phx-hook="Tooltip"
             id="feeds_nav_settings" -->
-          <div class="normal-case font-normal absolute right-0">
+          <div class="normal-case font-normal absolute right-6">
             <LinkLive
               to={~p"/settings/user/feeds"}
               class="z-999 tooltip-button btn btn-circle btn-ghost btn-xs"

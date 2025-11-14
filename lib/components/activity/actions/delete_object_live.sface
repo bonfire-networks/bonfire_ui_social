@@ -29,10 +29,10 @@ TODO: use preloaded boundaries for can? when available
 
   <:open_btn>
     <div role="delete" title={l("Delete this object")} class={@open_btn_class}>
-      <#Icon :if={!@hide_icon} solid="Trash" class={e(@icon_class, "w-4 h-4 shrink-0")} />
-      <span :if={!@hide_text} class="truncate ellipsis">
+      <span :if={!@hide_text} class="text-sm font-medium truncate ellipsis text-left flex-1">
         {l("Delete")} {e(@object_type_readable, l("object"))}
       </span>
+      <#Icon :if={!@hide_icon} iconify="ph:trash-duotone" class={e(@icon_class, "w-5 h-5 shrink-0")} />
     </div>
   </:open_btn>
 
@@ -40,6 +40,7 @@ TODO: use preloaded boundaries for can? when available
     <button
       phx-click={@action || if @form_opts == %{}, do: "Bonfire.Social.Objects:delete"}
       phx-value-id={id(@object)}
+      phx-disable-with={l("Deleting...")}
       phx-value-redirect_after={@redirect_after}
       class="normal-case  btn btn-error btn-sm"
     >
