@@ -79,7 +79,7 @@
         {!-- name={l("How many items to show in feeds and other lists (maximum %{number})", number: Config.get(:pagination_hard_max_limit, 500))} --}
       </form>
 
-      <div x-data="{open: false}" class="p-4 cursor-pointer rounded-b-box">
+      <!-- <div x-data="{open: false}" class="p-4 cursor-pointer rounded-b-box">
         <div x-on:click="open = !open" class="flex items-center justify-between gap-4">
           <div class="flex flex-col gap-1">
             <div
@@ -91,9 +91,7 @@
               class="badge mb-2 !border !border-warning/30 badge-outline badge-warning"
             >{l("Dark Pattern")}</div>
             <div class="text-sm font-medium">{l("Infinite scrolling")}</div>
-            <!-- <div class="text-sm font-light text-base-content/70">{l("Infinite scrolling")}</div> -->
           </div>
-          {!-- Alpinejs: If open is true, set x-text to "Expand", otherwise set to "Collapse" --}
           <button type="button" x-cloak class="btn btn-circle btn-sm btn-ghost" x-show="open">
             <#Icon iconify="ph:caret-down-duotone" class="w-4 h-4 text-base-content/70" />
           </button>
@@ -115,7 +113,22 @@
             />
           </form>
         </div>
-      </div>
+        
+      </div> -->
+      <form phx-change="Bonfire.Common.Settings:set">
+        <Bonfire.UI.Common.SettingsToggleLive
+          id="infinite_scroll_toggle"
+          show_label={Settings.get([:ui, :infinite_scroll], :preload, context: @__context__) == true}
+          label={l("Dark Pattern")}
+          name={l("Infinite scrolling")}
+          description={l("Enable infinite scrolling (doom scrolling) instead of pre-loading activities that require clicking 'Show more' to see them")}
+          keys={[:ui, :infinite_scroll]}
+          disabled_value={:preload}
+          enabled_value={true}
+          default_value={:preload}
+          scope={@scope}
+        />
+      </form>
     </div>
   </div>
   <div class="border border-base-content/20 rounded-box m-3 bg-base-200/50">
