@@ -877,9 +877,12 @@ defmodule Bonfire.UI.Social.ActivityLive do
                   :if={@hide_activity != "subject"}
                   module={component}
                   path={case maybe_get(component_assigns, :character, nil) do
-                    nil -> maybe_get(component_assigns, :subject_id, nil)
-                    character -> path(character, [], preload_if_needed: false)
-                  end}
+                    nil -> 
+                      maybe_get(component_assigns, :subject_id, nil) 
+                    character -> character
+                  end                    
+                  |> path([], preload_if_needed: false)
+}
                   profile={maybe_get(component_assigns, :profile, nil)}
                   profile_id={id(maybe_get(component_assigns, :profile, nil))}
                   profile_media={Media.avatar_url(maybe_get(component_assigns, :profile, nil))}

@@ -30,7 +30,7 @@
       <li class="hover:bg-base-100">
         <div class="hover:bg-base-100 cursor-default flex justify-between items-center gap-2">
           <span class="text-sm font-meium">{l("Direct Message")}</span></div>
-          <#Icon iconify="ph:tray-duotone" class="w-5 h-5 shrink-0" />
+        <#Icon iconify="ph:tray-duotone" class="w-5 h-5 shrink-0" />
       </li>
     {#else}
       <li><div data-id="boundary_details" class="w-full p-0 flex bg-base-content/5">
@@ -120,7 +120,7 @@
               phx-click="Bonfire.Social.Feeds:fetch_replies"
               phx-target={"##{@activity_component_id}"}
               phx-value-id={id(@object) || id(@activity)}
-              class="!flex items-center gap-2 justify-between "
+              class="!flex items-center gap-2 justify-between"
             >
               <span>{l("Get latest replies")}</span>
               <#Icon iconify="mdi:sprout" class="w-5 h-5 shrink-0 text-base-content" />
@@ -131,7 +131,7 @@
               phx-click="Bonfire.Social.Feeds:fetch_thread"
               phx-target={"##{@activity_component_id}"}
               phx-value-id={id(@object) || id(@activity)}
-              class="!flex items-center gap-2 justify-between "
+              class="!flex items-center gap-2 justify-between"
             >
               <span class="text-sm font-medium">{l("Get latest replies")}</span>
               <#Icon iconify="bi:list-nested" class="w-5 h-5 shrink-0 text-base-content" />
@@ -270,7 +270,7 @@
                 data-id="unfollow"
                 :on-click="Bonfire.Social.Graph.Follows:unfollow"
                 phx-value-id={subject_id}
-                class="!flex items-center gap-2 justify-between "
+                class="!flex items-center gap-2 justify-between"
               >
                 <!-- <#Icon solid="UserRemove" class="w-4 h-4 shrink-0" /> -->
                 <span class="truncate ellipsis">
@@ -319,7 +319,6 @@
       {/if}
     {/if}
 
-
     {#case current_user_id(@__context__) && has_my_first_quote(@quotes, current_user_id(@__context__))}
       {#match id when is_binary(id)}
         <li>
@@ -338,10 +337,9 @@
     {/case}
 
     {#if current_user_id(@__context__) != @creator_id and @verb != "Flag" and
-      module_enabled?(Bonfire.UI.Moderation.FlagActionLive, @__context__)}
-      
+        module_enabled?(Bonfire.UI.Moderation.FlagActionLive, @__context__)}
       <li class="m-1 border-t border-base-content/10" />
-      
+
       {#if !current_user_id(@__context__)}
         <li>
           <a
@@ -360,39 +358,38 @@
             </div>
           </summary>
           <ul> -->
-            {!-- Flag the object --}
-            <li data-role="flag_object">
-              <StatelessComponent
-                module={maybe_component(Bonfire.UI.Moderation.FlagActionLive)}
-                object={@object}
-                permalink={@permalink}
-                flagged={@flagged}
-                parent_id={deterministic_dom_id(
-                  __MODULE__,
-                  id(@activity_component_id || @activity),
-                  "flag_object",
-                  @parent_id
-                )}
-                object_type={e(@object_type_readable, l("object"))}
-                label={l("Flag this %{object}", object: e(@object_type_readable, l("object")))}
-              />
-            </li>
+        {!-- Flag the object --}
+        <li data-role="flag_object">
+          <StatelessComponent
+            module={maybe_component(Bonfire.UI.Moderation.FlagActionLive)}
+            object={@object}
+            permalink={@permalink}
+            flagged={@flagged}
+            parent_id={deterministic_dom_id(
+              __MODULE__,
+              id(@activity_component_id || @activity),
+              "flag_object",
+              @parent_id
+            )}
+            object_type={e(@object_type_readable, l("object"))}
+            label={l("Flag this %{object}", object: e(@object_type_readable, l("object")))}
+          />
+        </li>
 
-            {!-- Flag the author --}
-            <li data-role="flag_author" :if={not is_nil(@creator_id)}>
-              <StatelessComponent
-                module={maybe_component(Bonfire.UI.Moderation.FlagActionLive)}
-                object={@creator_id}
-                flagged={@flagged}
-                parent_id={deterministic_dom_id(__MODULE__, id(@activity_component_id || @activity), "flag_user", @parent_id)}
-                object_type={@creator_name || l("user")}
-              />
-            </li>
-          <!-- </ul>
+        {!-- Flag the author --}
+        <li data-role="flag_author" :if={not is_nil(@creator_id)}>
+          <StatelessComponent
+            module={maybe_component(Bonfire.UI.Moderation.FlagActionLive)}
+            object={@creator_id}
+            flagged={@flagged}
+            parent_id={deterministic_dom_id(__MODULE__, id(@activity_component_id || @activity), "flag_user", @parent_id)}
+            object_type={@creator_name || l("user")}
+          />
+        </li>
+        <!-- </ul>
         </details> -->
       {/if}
     {/if}
-    
 
     <StatelessComponent
       module={maybe_component(Bonfire.Label.Web.ContentLabelLive, @__context__)}
@@ -414,7 +411,7 @@
       hide_object={@object}
       extra_object_label={l("this %{object}", object: e(@object_type_readable, l("object")))}
       peered={e(@object, :peered, nil)}
-      with_icon={true}
+      with_icon
     />
 
     {#if @viewing_main_object && @thread_id && @object_type != Bonfire.Data.Social.Message &&
@@ -471,7 +468,7 @@
       {/if}
     {/if}
 
-        <li class="m-1 border-t border-base-content/10" />
+    <li class="m-1 border-t border-base-content/10" />
 
     {#if @object_boundary && (id(@object) || id(@activity))}
       {#if @object_type != Bonfire.Data.Social.Message}
@@ -484,47 +481,47 @@
                 </div>
               </summary>
               <ul> -->
-                <li :if={id(@object)}>
-                  <StatelessComponent
-                    module={maybe_component(Bonfire.UI.Social.Activity.DeleteObjectLive, @__context__)}
-                    skip_permission_check
-                    object={@object}
-                    creator_id={@creator_id}
-                    object_type_readable={@object_type_readable}
-                    object_boundary={@object_boundary}
-                    parent_id={deterministic_dom_id(
-                      __MODULE__,
-                      id(@activity_component_id || @activity),
-                      "delete_object",
-                      @parent_id
-                    )}
-                  />
-                </li>
+          <li :if={id(@object)}>
+            <StatelessComponent
+              module={maybe_component(Bonfire.UI.Social.Activity.DeleteObjectLive, @__context__)}
+              skip_permission_check
+              object={@object}
+              creator_id={@creator_id}
+              object_type_readable={@object_type_readable}
+              object_boundary={@object_boundary}
+              parent_id={deterministic_dom_id(
+                __MODULE__,
+                id(@activity_component_id || @activity),
+                "delete_object",
+                @parent_id
+              )}
+            />
+          </li>
 
-                {!-- Delete the activity --}
-                <li :if={id(@activity)}>
-                  <StatelessComponent
-                    module={maybe_component(Bonfire.UI.Social.Activity.DeleteObjectLive, @__context__)}
-                    skip_permission_check
-                    action="Bonfire.Social.Feeds:delete"
-                    object={@activity}
-                    object_boundary={@object_boundary}
-                    object_type_readable={l("from feeds")}
-                    creator_id={@creator_id}
-                    parent_id={deterministic_dom_id(
-                      __MODULE__,
-                      id(@activity_component_id || @activity),
-                      "delete_activity",
-                      @parent_id
-                    )}
-                    explanation={l(
-                      "Deleting from feeds means this %{verb} and this %{object} still exist, but this activity won't be discoverable via the local instance's feeds. Remote feeds won't be affected.",
-                      object: @object_type_readable || l("object"),
-                      verb: @verb
-                    )}
-                  />
-                </li>
-              <!-- </ul>
+          {!-- Delete the activity --}
+          <li :if={id(@activity)}>
+            <StatelessComponent
+              module={maybe_component(Bonfire.UI.Social.Activity.DeleteObjectLive, @__context__)}
+              skip_permission_check
+              action="Bonfire.Social.Feeds:delete"
+              object={@activity}
+              object_boundary={@object_boundary}
+              object_type_readable={l("from feeds")}
+              creator_id={@creator_id}
+              parent_id={deterministic_dom_id(
+                __MODULE__,
+                id(@activity_component_id || @activity),
+                "delete_activity",
+                @parent_id
+              )}
+              explanation={l(
+                "Deleting from feeds means this %{verb} and this %{object} still exist, but this activity won't be discoverable via the local instance's feeds. Remote feeds won't be affected.",
+                object: @object_type_readable || l("object"),
+                verb: @verb
+              )}
+            />
+          </li>
+          <!-- </ul>
             </details>
           </li> -->
         {/if}

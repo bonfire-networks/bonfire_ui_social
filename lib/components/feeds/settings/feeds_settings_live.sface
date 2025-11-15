@@ -29,7 +29,7 @@
         />
       </form>
 
-      <!-- <div class="p-4 flex flex-col lg:flex-row lg:items-center gap-4 justify-between"> -->
+      {!-- <div class="p-4 flex flex-col lg:flex-row lg:items-center gap-4 justify-between"> -->
       <!-- <div class="flex items-center justify-between gap-4">
         <div class="flex flex-col gap-1">
           <div class="text-sm font-medium">{l("Default sort")}</div>
@@ -37,7 +37,7 @@
               "Select the default sorting options for your feeds (can always change in the feed controls options)"
             )}</div>
         </div>
-      </div> -->
+      </div> --}
       <form data-scope="reactions_sort" class="p-4" phx-change="Bonfire.Common.Settings:set">
         <Bonfire.UI.Common.SettingsSelectLive
           keys={[Bonfire.UI.Social.FeedLive, :sort_by]}
@@ -121,10 +121,12 @@
           show_label={Settings.get([:ui, :infinite_scroll], :preload, context: @__context__) == true}
           label={l("Dark Pattern")}
           name={l("Infinite scrolling")}
-          description={l("Enable infinite scrolling (doom scrolling) instead of pre-loading activities that require clicking 'Show more' to see them")}
+          description={l(
+            "Enable infinite scrolling (doom scrolling) instead of pre-loading activities that require clicking 'Show more' to see them"
+          )}
           keys={[:ui, :infinite_scroll]}
           disabled_value={:preload}
-          enabled_value={true}
+          enabled_value
           default_value={:preload}
           scope={@scope}
         />
