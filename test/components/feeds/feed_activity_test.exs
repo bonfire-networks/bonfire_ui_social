@@ -165,7 +165,7 @@ defmodule Bonfire.UI.Social.Feeds.FeedActivityTest do
   end
 
   test "As a user, when I create a new post, I want to see the content in the activity object" do
-    flood(self(), "test pid")
+    debug(self(), "test pid")
 
     account = fake_account!()
     alice = fake_user!(account)
