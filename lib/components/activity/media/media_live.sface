@@ -6,7 +6,7 @@
   class="flex flex-col gap-2 my-2"
 >
   {!-- LINKS --}
-  {#for m <- @link_list}
+  {#for m <- if @showing_within == :feed, do: Enum.take(@link_list, 1), else: @link_list}
     {#case Media.media_url(m)}
       {#match nil}
       {#match media_url}
@@ -50,6 +50,14 @@
         {/if}
     {/case}
   {/for}
+  
+  {!-- Show indicator for hidden links in feed view --}
+  {#if @showing_within == :feed && length(@link_list) > 1}
+    <div class="text-xs text-base-content/50 flex items-center gap-1 px-2">
+      <#Icon iconify="ph:link-simple" class="w-3 h-3" />
+      <span>{length(@link_list) - 1} {l("more link(s)")}</span>
+    </div>
+  {/if}
 </div>
 
 <div data-main-object={@viewing_main_object} data-id="multimedia_list">
@@ -202,12 +210,12 @@
                 <article
                   data-id="article_media"
                   data-media={num_medias}
-                  class={
+                  class={[
                     "m-entry h-full w-full row-span-4 object-cover",
                     "!row-span-2 !h-auto":
                       num_medias ==
                         3 && counter != 0
-                  }
+                  ]}
                 >
                   <figure class="h-full relative">
                     {!-- FIXME: enable_fallback for logged out visitors instead of just not using the modal --}
@@ -274,8 +282,8 @@
                               <LazyImage
                                 parent_id={deterministic_dom_id(__MODULE__, id(m), "media", @parent_id)}
                                 class={
-                                  "border-base-content/10 !object-cover m-image w-full h-full cursor-pointer rounded-md",
-                                  grayscale: @showing_within == :flags
+                                  "border-base-content/10 !object-cover m-image w-full h-full cursor-pointer rounded-md", 
+                                  "grayscale": @showing_within==:flags
                                 }
                                 media={m}
                                 alt={media_label}
@@ -357,12 +365,12 @@
                 <article
                   data-id="article_gif"
                   data-media={num_gifs}
-                  class={
+                  class={[
                     "m-entry h-full w-full row-span-4 object-cover",
                     "!row-span-2 !h-auto":
                       num_gifs ==
                         3 && counter != 0
-                  }
+                  ]}
                 >
                   <figure class="h-full relative">
                     {#if current_user_id(@__context__)}
@@ -440,10 +448,10 @@
                             />
                           {/if}
                           <div class="fixed z-20 bottom-0 left-0 bg-black/30 right-0">
-                            <div class={
+                            <div class={[
                               "text-center text-sm p-4 text-white/90 mx-auto",
                               "line-clamp-6": @showing_within in [:feed, :profile]
-                            }>{media_label}
+                            ]}>{media_label}
                               <p class="text-sm">{Bonfire.Files.Media.description(m.metadata)}</p>
                             </div>
                           </div>
