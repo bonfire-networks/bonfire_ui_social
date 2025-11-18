@@ -1,6 +1,6 @@
 <button
   phx-click="Bonfire.Social.Feeds:mark_seen"
-  phx-target={"#badge_counter_badge_#{e(@feed_name, "missing_feed_id")}"}
+  phx-target={"#badge_counter_#{@feed_id || @feed_name || "missing_feed_id"}"}
   phx-value-feed_id={@feed_id}
   phx-value-scope="all"
   data-tip={l("Mark as read")}

@@ -661,9 +661,9 @@ defmodule Bonfire.UI.Social.ActivityLive do
       data-object_id={@object_id}
       data-href={@permalink}
       data-url={@current_url}
-      phx-hook={if !@viewing_main_object and
+      phx-hook={if @highlight_activity_id == @activity_id, do: "ScrollTo", else: (if !@viewing_main_object and
            @showing_within not in [:thread, :smart_input, :widget],
-         do: "Bonfire.UI.Common.PreviewContentLive#PreviewActivity"}
+         do: "Bonfire.UI.Common.PreviewContentLive#PreviewActivity")}
       role="article"
       data-id="activity"
       data-rendered={@showing_within}
@@ -688,7 +688,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
           @highlight_activity_id == @activity_id and
             @showing_within != :smart_input and @viewing_main_object == false
       }
-      phx-hook={if @highlight_activity_id == @activity_id, do: "ScrollTo"}
+      
     >
       {#if @custom_preview}
         <StatelessComponent
@@ -826,20 +826,23 @@ defmodule Bonfire.UI.Social.ActivityLive do
             {/case}
           {/if}
 
-          {!-- form
+          <form
             :if={!id(e(@activity, :seen, nil)) and not is_nil(@feed_id) and
               @showing_within in [:messages, :thread, :notifications] and
-              e(@activity, :subject, :id, nil) != current_user_id(@__context__) and
-              e(@object, :created, :creator_id, nil) != current_user_id(@__context__) and
-              e(@object, :created, :creator_id, nil) != current_user_id(@__context__)}
+              current_user_id(@__context__) != ( e(@object, :created, :creator_id, nil) || e(@activity, :subject, :id, nil) )}
+            x-init="
+              if ($el.getBoundingClientRect().top < window.innerHeight && $el.getBoundingClientRect().bottom > 0) {
+                $el.dispatchEvent(new Event('submit', {bubbles: true, cancelable: true}));
+                $el.parentNode.classList.remove('unread-activity');
+              }
+            "
             x-intersect.once.full="$el.dispatchEvent(new Event('submit', {bubbles: true, cancelable: true})); $el.parentNode.classList.remove('unread-activity');"
             phx-submit={if @feed_id, do: "Bonfire.Social.Feeds:mark_seen"}
             phx-target={if @feed_id, do: "#badge_counter_#{@feed_id}"}
           >
-            <!-- ^^ FIXME: mark_seen should only be included for notifications and messages -->
             <input type="hidden" name="feed_id" value={@feed_id}>
             <input type="hidden" name="activity_id" value={@activity_id}>
-          </form --}
+          </form>
 
           <Bonfire.UI.Social.Activity.PublishedInLive
             :if={@published_in && @showing_within != :smart_input}
