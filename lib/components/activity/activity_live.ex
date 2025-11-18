@@ -661,9 +661,14 @@ defmodule Bonfire.UI.Social.ActivityLive do
       data-object_id={@object_id}
       data-href={@permalink}
       data-url={@current_url}
-      phx-hook={if @highlight_activity_id == @activity_id, do: "ScrollTo", else: (if !@viewing_main_object and
-           @showing_within not in [:thread, :smart_input, :widget],
-         do: "Bonfire.UI.Common.PreviewContentLive#PreviewActivity")}
+      phx-hook={if @highlight_activity_id == @activity_id,
+        do: "ScrollTo",
+        else:
+          if(
+            !@viewing_main_object and
+              @showing_within not in [:thread, :smart_input, :widget],
+            do: "Bonfire.UI.Common.PreviewContentLive#PreviewActivity"
+          )}
       role="article"
       data-id="activity"
       data-rendered={@showing_within}
@@ -674,7 +679,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
       data-verb={@verb}
       aria-label="user activity"
       tabIndex="0"
-      class={
+      class={[
         "p-5 activity-padding activity relative flex flex-col gap-1 #{@class}",
         "hover:bg-primary hover:bg-opacity-5":
           @showing_within not in [:thread, :smart_input, :widget] && !@activity_inception,
@@ -687,8 +692,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
         "active-activity":
           @highlight_activity_id == @activity_id and
             @showing_within != :smart_input and @viewing_main_object == false
-      }
-      
+      ]}
     >
       {#if @custom_preview}
         <StatelessComponent
@@ -716,7 +720,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
                         open_btn_text=""
                         title_text={@thread_title || e(@object, :name, nil) || e(@object, :post_content, :name, nil) ||
                           l("Discussion")}
-                        modal_assigns={
+                        modal_assigns={[
                           post_id:
                             if(
                               @object_type in [Bonfire.Data.Social.Post, :article] or
@@ -780,10 +784,10 @@ defmodule Bonfire.UI.Social.ActivityLive do
                           activity_inception: "preview",
                           showing_within: :thread,
                           check_object_boundary: !top_of_thread? and !reply_to_top_of_thread?
-                        }
-                        root_assigns={
+                        ]}
+                        root_assigns={[
                           page_title: l("Discussion")
-                        }
+                        ]}
                       />
                     {#elseif String.starts_with?(@permalink || "", ["/@", "/profile/", "/user"])}
                       {!-- <Bonfire.UI.Common.OpenPreviewLive
@@ -809,17 +813,17 @@ defmodule Bonfire.UI.Social.ActivityLive do
                         parent_id={@activity_component_id}
                         open_btn_text={l("View task")}
                         title_text={e(@object, :name, nil) || l("Task")}
-                        modal_assigns={
+                        modal_assigns={[
                           id: @thread_id || @object_id,
                           current_url: @permalink,
                           modal_view: Bonfire.UI.Coordination.TaskLive,
                           activity_inception: "preview",
                           check_object_boundary: false,
                           loaded: true
-                        }
-                        root_assigns={
+                        ]}
+                        root_assigns={[
                           page_title: l("Task")
-                        }
+                        ]}
                       />
                     {/if}
                 {/case}
@@ -829,13 +833,12 @@ defmodule Bonfire.UI.Social.ActivityLive do
           <form
             :if={!id(e(@activity, :seen, nil)) and not is_nil(@feed_id) and
               @showing_within in [:messages, :thread, :notifications] and
-              current_user_id(@__context__) != ( e(@object, :created, :creator_id, nil) || e(@activity, :subject, :id, nil) )}
-            x-init="
-              if ($el.getBoundingClientRect().top < window.innerHeight && $el.getBoundingClientRect().bottom > 0) {
+              current_user_id(@__context__) !=
+                (e(@object, :created, :creator_id, nil) || e(@activity, :subject, :id, nil))}
+            x-init="if ($el.getBoundingClientRect().top < window.innerHeight && $el.getBoundingClientRect().bottom > 0) {
                 $el.dispatchEvent(new Event('submit', {bubbles: true, cancelable: true}));
                 $el.parentNode.classList.remove('unread-activity');
-              }
-            "
+              }"
             x-intersect.once.full="$el.dispatchEvent(new Event('submit', {bubbles: true, cancelable: true})); $el.parentNode.classList.remove('unread-activity');"
             phx-submit={if @feed_id, do: "Bonfire.Social.Feeds:mark_seen"}
             phx-target={if @feed_id, do: "#badge_counter_#{@feed_id}"}
@@ -880,12 +883,13 @@ defmodule Bonfire.UI.Social.ActivityLive do
                   :if={@hide_activity != "subject"}
                   module={component}
                   path={case maybe_get(component_assigns, :character, nil) do
-                    nil -> 
-                      maybe_get(component_assigns, :subject_id, nil) 
-                    character -> character
-                  end                    
-                  |> path([], preload_if_needed: false)
-}
+                    nil ->
+                      maybe_get(component_assigns, :subject_id, nil)
+
+                    character ->
+                      character
+                  end
+                  |> path([], preload_if_needed: false)}
                   profile={maybe_get(component_assigns, :profile, nil)}
                   profile_id={id(maybe_get(component_assigns, :profile, nil))}
                   profile_media={Media.avatar_url(maybe_get(component_assigns, :profile, nil))}
@@ -1297,37 +1301,37 @@ defmodule Bonfire.UI.Social.ActivityLive do
   # do: if is_nil(e(activity, :object, :created, :creator, nil)) and is_nil(e(object, :created, :creator, nil)), do: [{Bonfire.UI.Social.Activity.SubjectLive, %{subject_id: id}}], else: component_activity_maybe_creator(activity, object, object_type)
 
   # Handle smart_input showing_within - extract subject info from any activity structure
-  def component_activity_subject(verb, activity, object, object_type, :smart_input, _, _) do
-    # Try to extract subject info from various possible structures
-    subject_id = e(activity, :subject_id, nil) || e(activity, :subject, :id, nil)
+  # def component_activity_subject(verb, activity, object, object_type, :smart_input, _, _) do
+  #   # Try to extract subject info from various possible structures
+  #   subject_id = e(activity, :subject_id, nil) || e(activity, :subject, :id, nil)
 
-    if subject_id do
-      # Check if we have preloaded subject data
-      profile = e(activity, :subject, :profile, nil)
-      character = e(activity, :subject, :character, nil)
+  #   if subject_id do
+  #     # Check if we have preloaded subject data
+  #     profile = e(activity, :subject, :profile, nil)
+  #     character = e(activity, :subject, :character, nil)
 
-      # If we have subject_id but no profile/character, try to get creator data instead
-      if is_nil(profile) and is_nil(character) do
-        activity
-        |> component_activity_maybe_creator(object, object_type)
-      else
-        # We have proper subject data
-        [
-          {Bonfire.UI.Social.Activity.SubjectLive,
-           %{
-             verb: verb,
-             subject_id: subject_id,
-             profile: profile,
-             character: character
-           }}
-        ]
-      end
-    else
-      # Fall back to the default behavior when no subject is found
-      activity
-      |> component_activity_maybe_creator(object, object_type)
-    end
-  end
+  #     # If we have subject_id but no profile/character, try to get creator data instead
+  #     if is_nil(profile) and is_nil(character) do
+  #       activity
+  #       |> component_activity_maybe_creator(object, object_type)
+  #     else
+  #       # We have proper subject data
+  #       [
+  #         {Bonfire.UI.Social.Activity.SubjectLive,
+  #          %{
+  #            verb: verb,
+  #            subject_id: subject_id,
+  #            profile: profile,
+  #            character: character
+  #          }}
+  #       ]
+  #     end
+  #   else
+  #     # Fall back to the default behavior when no subject is found
+  #     activity
+  #     |> component_activity_maybe_creator(object, object_type)
+  #   end
+  # end
 
   # other
   def component_activity_subject(_verb, activity, object, object_type, _, _, _),
