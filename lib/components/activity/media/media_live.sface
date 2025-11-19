@@ -50,7 +50,7 @@
         {/if}
     {/case}
   {/for}
-  
+
   {!-- Show indicator for hidden links in feed view --}
   {#if @showing_within == :feed && length(@link_list) > 1}
     <div class="text-xs text-base-content/50 flex items-center gap-1 px-2">
@@ -281,10 +281,10 @@
                             {#match maybe_preview_img}
                               <LazyImage
                                 parent_id={deterministic_dom_id(__MODULE__, id(m), "media", @parent_id)}
-                                class={
-                                  "border-base-content/10 !object-cover m-image w-full h-full cursor-pointer rounded-md", 
-                                  "grayscale": @showing_within==:flags
-                                }
+                                class={[
+                                  "border-base-content/10 !object-cover m-image w-full h-full cursor-pointer rounded-md",
+                                  grayscale: @showing_within == :flags
+                                ]}
                                 media={m}
                                 alt={media_label}
                                 src={maybe_preview_img}
@@ -436,7 +436,7 @@
                             {!-- Render video files as GIF-style --}
                             <Bonfire.UI.Social.Activity.RemoteMediaLive
                               media={m}
-                              image_css={grayscale: @showing_within == :flags}
+                              image_css={[grayscale: @showing_within == :flags]}
                               parent_id={deterministic_dom_id(__MODULE__, m, nil, @parent_id)}
                             />
                           {#else}
@@ -464,7 +464,7 @@
                               <div class="w-full h-full cursor-pointer rounded-md overflow-hidden">
                                 <Bonfire.UI.Social.Activity.RemoteMediaLive
                                   media={m}
-                                  image_css={grayscale: @showing_within == :flags}
+                                  image_css={[grayscale: @showing_within == :flags]}
                                   parent_id={deterministic_dom_id(__MODULE__, m, nil, @parent_id)}
                                 />
                               </div>
@@ -499,7 +499,7 @@
                           <div class="w-full h-full cursor-pointer rounded-md overflow-hidden">
                             <Bonfire.UI.Social.Activity.RemoteMediaLive
                               media={m}
-                              image_css={grayscale: @showing_within == :flags}
+                              image_css={[grayscale: @showing_within == :flags]}
                               parent_id={deterministic_dom_id(__MODULE__, m, nil, @parent_id)}
                             />
                           </div>

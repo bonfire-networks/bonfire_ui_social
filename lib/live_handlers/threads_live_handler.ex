@@ -265,9 +265,7 @@ defmodule Bonfire.Social.Threads.LiveHandler do
     end
   end
 
-  def reply(reply_to, activity, socket) do
-    debug(reply_to, "reply!")
-
+  def prepare_reply_assigns(reply_to, activity, socket) do
     # TODO: we should be getting the type from ActivityLive
     object_type =
       case e(assigns(socket), :object_type, nil) || Types.object_type(reply_to) do
@@ -296,7 +294,7 @@ defmodule Bonfire.Social.Threads.LiveHandler do
       # TODO: include thread_id in list_participants/3 call
       participants =
         (e(assigns(socket), :participants, nil) ||
-           Bonfire.Social.Threads.list_participants(Map.put(activity, :object, reply_to), nil,
+           Bonfire.Social.Threads.list_participants(Map.put(activity, :object, reply_to), :skip,
              current_user: current_user
            ) || [])
         |> Enum.reject(&(e(&1, :character, :id, nil) in [id(current_user), published_in_id]))
@@ -316,50 +314,58 @@ defmodule Bonfire.Social.Threads.LiveHandler do
         e(activity, :replied, :thread_id, nil) ||
           e(reply_to_id, :replied, :thread_id, nil)
 
-      debug(mentions, "send activity to smart input")
+      [
+        # reset_smart_input: false, # avoid double-reset
+        reply_to_id: reply_to_id,
+        context_id: thread_id,
+        participants: participants,
+        to_circles: to_circles || [],
+        mentions: if(published_in_id, do: [published_in_id], else: []),
+        #  do not allow editing recipients when replying to a group thread
+        smart_input_opts: [
+          create_object_type: create_object_type,
+          recipients_editable: false,
+          cw:
+            e(activity, :sensitive, :is_sensitive, nil) &&
+              e(activity, :object, :post_content, :summary, nil)
+        ],
+        to_boundaries: [
+          if(published_in_id,
+            do:
+              {:clone_context,
+               e(published_in, :profile, :name, nil) || e(published_in, :named, :name, nil) ||
+                 e(published_in, :name, nil)},
+            else:
+              Bonfire.Boundaries.preset_boundary_tuple_from_acl(
+                e(assigns(socket), :object_boundary, nil),
+                object_type
+              )
+          )
+          |> debug("to_boundaries")
+        ],
+        activity_inception: "reply_to",
+        # TODO: use assigns_merge and send_update to the ActivityLive component within smart_input instead, so that `update/2` isn't triggered again
+        activity: activity,
+        object: reply_to
+      ]
+    end
+  end
+
+  def reply(reply_to, activity, socket) do
+    debug(reply_to, "reply!")
+
+    with assigns when is_list(assigns) <- prepare_reply_assigns(reply_to, activity, socket) do
+      # debug(mentions, "send activity to smart input")
 
       Bonfire.UI.Common.SmartInput.LiveHandler.open_with_text_suggestion(
         "",
-        # we reply to objects, not
-        [
-          # reset_smart_input: false, # avoid double-reset
-          reply_to_id: reply_to_id,
-          context_id: thread_id,
-          to_circles: to_circles || [],
-          mentions: if(published_in_id, do: [published_in_id], else: []),
-          #  do not allow editing recipients when replying to a group thread
-          smart_input_opts: [
-            create_object_type: create_object_type,
-            recipients_editable: false,
-            cw:
-              e(activity, :sensitive, :is_sensitive, nil) &&
-                e(activity, :object, :post_content, :summary, nil)
-          ],
-          to_boundaries: [
-            if(published_in_id,
-              do:
-                {:clone_context,
-                 e(published_in, :profile, :name, nil) || e(published_in, :named, :name, nil) ||
-                   e(published_in, :name, nil)},
-              else:
-                Bonfire.Boundaries.preset_boundary_tuple_from_acl(
-                  e(assigns(socket), :object_boundary, nil),
-                  object_type
-                )
-            )
-            |> debug("to_boundaries")
-          ],
-          activity_inception: "reply_to",
-          # TODO: use assigns_merge and send_update to the ActivityLive component within smart_input instead, so that `update/2` isn't triggered again
-          activity: activity,
-          object: reply_to
-        ],
+        assigns,
         socket
       )
 
       {:noreply,
        socket
-       |> maybe_push_event("mention_suggestions", %{text: mentions})}
+       |> maybe_push_event("mention_suggestions", %{text: assigns[:mentions] || ""})}
     else
       false ->
         error(l("Sorry, you cannot reply to this"))

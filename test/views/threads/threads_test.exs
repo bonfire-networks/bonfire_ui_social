@@ -187,4 +187,66 @@ defmodule Bonfire.Social.Threads.ThreadsTest do
     # Verify post content is still accessible
     |> assert_has("[data-id=activity_note]", text: "Reply to test mode switching")
   end
+
+  test "LiveHandler.reply/3 only includes participants from reply_to rather than the whole thread",
+       %{
+         me: me,
+         other_user: other_user,
+         post: post
+       } do
+    # Publish a reply with a tag/mention
+    third_user = fake_user!()
+    reply_user = fake_user!()
+    tag_user = other_user
+
+    attrs_reply = %{
+      post_content: %{html_body: "Reply with mention"},
+      reply_to_id: post.id,
+      tags: [tag_user.character.id]
+    }
+
+    {:ok, reply} =
+      Posts.publish(current_user: reply_user, post_attrs: attrs_reply, boundary: "public")
+
+    # create an unrelated reply in the thread to ensure its participants are not included
+    attrs_reply = %{
+      post_content: %{html_body: "Another reply without mention"},
+      reply_to_id: post.id
+    }
+
+    {:ok, reply2} =
+      Posts.publish(current_user: third_user, post_attrs: attrs_reply, boundary: "public")
+
+    # Simulate a minimal socket
+    socket = %Phoenix.LiveView.Socket{
+      assigns: %{
+        current_user: me,
+        activity: reply.activity,
+        object: reply,
+        published_in: nil,
+        object_boundary: nil,
+        object_type: nil
+      }
+    }
+
+    # Call reply/3 directly
+    assigns =
+      Bonfire.Social.Threads.LiveHandler.prepare_reply_assigns(reply, reply.activity, socket)
+
+    # Build expected participants manually from tags
+    expected_participants = [
+      reply_user.id,
+      tag_user.id
+    ]
+
+    # Extract actual participants from assigns (simulate what reply/3 would use)
+    actual_participants =
+      assigns
+      |> flood("assigns result")
+      |> Keyword.get(:participants, [])
+      |> Enums.ids()
+
+    # Assert only the tagged user is included
+    assert actual_participants == expected_participants
+  end
 end
