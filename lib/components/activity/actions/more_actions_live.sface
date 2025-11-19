@@ -365,6 +365,7 @@
             object={@object}
             permalink={@permalink}
             flagged={@flagged}
+            is_remote={@is_remote || not is_nil(e(@object, :peered, :canonical_uri, nil))}
             parent_id={deterministic_dom_id(
               __MODULE__,
               id(@activity_component_id || @activity),
@@ -382,6 +383,7 @@
             module={maybe_component(Bonfire.UI.Moderation.FlagActionLive)}
             object={@creator_id}
             flagged={@flagged}
+            is_remote={@is_remote || not is_nil(e(@creator, :peered, :canonical_uri, nil))}
             parent_id={deterministic_dom_id(__MODULE__, id(@activity_component_id || @activity), "flag_user", @parent_id)}
             object_type={@creator_name || l("user")}
           />
