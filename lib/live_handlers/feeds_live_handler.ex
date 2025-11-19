@@ -742,6 +742,8 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
   #   ]
   # end
 
+  def feed_default_assigns(:none, socket), do: []
+
   def feed_default_assigns(:my = feed_name, socket) do
     feed_id =
       Bonfire.Social.Feeds.my_feed_id(:inbox, socket)

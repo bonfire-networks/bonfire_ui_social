@@ -73,7 +73,8 @@ if Application.compile_env(:bonfire_api_graphql, :modularity) != :disabled do
       filter_with_pagination =
         filter
         |> Map.merge(extract_id_filters(params))
-        |> Map.put("time_limit", 0)  # Disable Bonfire's default 1-month time limit for Mastodon API
+        # Disable Bonfire's default 1-month time limit for Mastodon API
+        |> Map.put("time_limit", 0)
 
       %{"filter" => filter_with_pagination}
       |> Map.merge(extract_limit(params))
@@ -83,26 +84,27 @@ if Application.compile_env(:bonfire_api_graphql, :modularity) != :disabled do
       # Map Mastodon pagination IDs to filter fields
       # max_id → id_before (get older posts)
       # since_id/min_id → id_after (get newer posts, min_id takes precedence)
-      result = params
-      |> Map.take(["max_id", "since_id", "min_id"])
-      |> Enum.reduce(%{}, fn
-        {"max_id", id}, acc when is_binary(id) and id != "" ->
-          debug(id, "max_id parameter")
-          Map.put(acc, "id_before", id)
+      result =
+        params
+        |> Map.take(["max_id", "since_id", "min_id"])
+        |> Enum.reduce(%{}, fn
+          {"max_id", id}, acc when is_binary(id) and id != "" ->
+            debug(id, "max_id parameter")
+            Map.put(acc, "id_before", id)
 
-        {"min_id", id}, acc when is_binary(id) and id != "" ->
-          debug(id, "min_id parameter")
-          # min_id takes precedence over since_id
-          Map.put(acc, "id_after", id)
+          {"min_id", id}, acc when is_binary(id) and id != "" ->
+            debug(id, "min_id parameter")
+            # min_id takes precedence over since_id
+            Map.put(acc, "id_after", id)
 
-        {"since_id", id}, acc when is_binary(id) and id != "" ->
-          debug(id, "since_id parameter")
-          # Only use since_id if min_id not already set
-          if Map.has_key?(acc, "id_after"), do: acc, else: Map.put(acc, "id_after", id)
+          {"since_id", id}, acc when is_binary(id) and id != "" ->
+            debug(id, "since_id parameter")
+            # Only use since_id if min_id not already set
+            if Map.has_key?(acc, "id_after"), do: acc, else: Map.put(acc, "id_after", id)
 
-        _, acc ->
-          acc
-      end)
+          _, acc ->
+            acc
+        end)
 
       debug(result, "extracted ID filters")
       result

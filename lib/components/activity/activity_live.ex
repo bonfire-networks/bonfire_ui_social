@@ -674,7 +674,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
       data-verb={@verb}
       aria-label="user activity"
       tabIndex="0"
-      class={
+      class={[
         "p-5 activity-padding activity relative flex flex-col gap-1 #{@class}",
         "hover:bg-primary hover:bg-opacity-5":
           @showing_within not in [:thread, :smart_input, :widget] && !@activity_inception,
@@ -687,7 +687,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
         "active-activity":
           @highlight_activity_id == @activity_id and
             @showing_within != :smart_input and @viewing_main_object == false
-      }
+      ]}
       phx-hook={if @highlight_activity_id == @activity_id, do: "ScrollTo"}
     >
       {#if @custom_preview}
@@ -716,7 +716,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
                         open_btn_text=""
                         title_text={@thread_title || e(@object, :name, nil) || e(@object, :post_content, :name, nil) ||
                           l("Discussion")}
-                        modal_assigns={
+                        modal_assigns={[
                           post_id:
                             if(
                               @object_type in [Bonfire.Data.Social.Post, :article] or
@@ -780,10 +780,10 @@ defmodule Bonfire.UI.Social.ActivityLive do
                           activity_inception: "preview",
                           showing_within: :thread,
                           check_object_boundary: !top_of_thread? and !reply_to_top_of_thread?
-                        }
-                        root_assigns={
+                        ]}
+                        root_assigns={[
                           page_title: l("Discussion")
-                        }
+                        ]}
                       />
                     {#elseif String.starts_with?(@permalink || "", ["/@", "/profile/", "/user"])}
                       {!-- <Bonfire.UI.Common.OpenPreviewLive
@@ -809,17 +809,17 @@ defmodule Bonfire.UI.Social.ActivityLive do
                         parent_id={@activity_component_id}
                         open_btn_text={l("View task")}
                         title_text={e(@object, :name, nil) || l("Task")}
-                        modal_assigns={
+                        modal_assigns={[
                           id: @thread_id || @object_id,
                           current_url: @permalink,
                           modal_view: Bonfire.UI.Coordination.TaskLive,
                           activity_inception: "preview",
                           check_object_boundary: false,
                           loaded: true
-                        }
-                        root_assigns={
+                        ]}
+                        root_assigns={[
                           page_title: l("Task")
-                        }
+                        ]}
                       />
                     {/if}
                 {/case}
@@ -877,12 +877,13 @@ defmodule Bonfire.UI.Social.ActivityLive do
                   :if={@hide_activity != "subject"}
                   module={component}
                   path={case maybe_get(component_assigns, :character, nil) do
-                    nil -> 
-                      maybe_get(component_assigns, :subject_id, nil) 
-                    character -> character
-                  end                    
-                  |> path([], preload_if_needed: false)
-}
+                    nil ->
+                      maybe_get(component_assigns, :subject_id, nil)
+
+                    character ->
+                      character
+                  end
+                  |> path([], preload_if_needed: false)}
                   profile={maybe_get(component_assigns, :profile, nil)}
                   profile_id={id(maybe_get(component_assigns, :profile, nil))}
                   profile_media={Media.avatar_url(maybe_get(component_assigns, :profile, nil))}
