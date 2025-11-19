@@ -99,26 +99,31 @@ defmodule Bonfire.UI.Social.BackgroundProcessingStatusLive do
     per_page = socket.assigns.per_page || 20
     scope = socket.assigns.scope
 
-    {user_id, username} =
-      if scope == :instance_wide do
-        {nil, nil}
-      else
-        {id(current_user), e(current_user, :character, :username, nil)}
-      end
+    # Guard: if not instance_wide and current_user is nil, return empty jobs
+    if scope != :instance_wide and is_nil(current_user) do
+      %{jobs: [], has_more: false}
+    else
+      {user_id, username} =
+        if scope == :instance_wide do
+          {nil, nil}
+        else
+          {id(current_user), e(current_user, :character, :username, nil)}
+        end
 
-    jobs =
-      Bonfire.Common.ObanHelpers.list_jobs(
-        repo(),
-        user_id,
-        username,
-        limit: per_page + 1,
-        offset: (page - 1) * per_page,
-        filters: filters
-      )
+      jobs =
+        Bonfire.Common.ObanHelpers.list_jobs(
+          repo(),
+          user_id,
+          username,
+          limit: per_page + 1,
+          offset: (page - 1) * per_page,
+          filters: filters
+        )
 
-    has_more = length(jobs) == per_page + 1
+      has_more = length(jobs) == per_page + 1
 
-    %{jobs: Enum.take(jobs, per_page), has_more: has_more}
+      %{jobs: Enum.take(jobs, per_page), has_more: has_more}
+    end
   end
 
   defp assign_jobs(socket, current_user \\ nil) do
@@ -127,6 +132,7 @@ defmodule Bonfire.UI.Social.BackgroundProcessingStatusLive do
   end
 
   defp load_jobs_and_maybe_stats(socket, current_user \\ nil) do
+    current_user = current_user || current_user(socket)
     %{jobs: jobs, has_more: has_more} = load_jobs(socket, current_user)
     scope = socket.assigns.scope
 
@@ -231,70 +237,75 @@ defmodule Bonfire.UI.Social.BackgroundProcessingStatusLive do
   defp fetch_import_stats(current_user, selected_tab, jobs \\ nil, scope \\ nil) do
     scope = scope || @scope
 
-    {user_id, username} =
-      if scope == :instance_wide do
-        {nil, nil}
-      else
-        {id(current_user), e(current_user, :character, :username, nil)}
-      end
+    # Guard: if not instance_wide and current_user is nil, return empty stats
+    if scope != :instance_wide and is_nil(current_user) do
+      %{}
+    else
+      {user_id, username} =
+        if scope == :instance_wide do
+          {nil, nil}
+        else
+          {id(current_user), e(current_user, :character, :username, nil)}
+        end
 
-    # types = selected_tab && type_group_op_codes(selected_tab)
-    queues = selected_tab && type_group_queues(selected_tab)
+      # types = selected_tab && type_group_op_codes(selected_tab)
+      queues = selected_tab && type_group_queues(selected_tab)
 
-    # Only apply type group filter if selected_tab is set and not a single type filter
-    jobs =
-      cond do
-        is_list(jobs) ->
-          jobs
+      # Only apply type group filter if selected_tab is set and not a single type filter
+      jobs =
+        cond do
+          is_list(jobs) ->
+            jobs
 
-        is_list(queues) ->
-          Bonfire.Common.ObanHelpers.list_jobs(
-            repo(),
-            user_id,
-            username,
-            limit: 10000,
-            filters: %{queue: queues}
-          )
+          is_list(queues) ->
+            Bonfire.Common.ObanHelpers.list_jobs(
+              repo(),
+              user_id,
+              username,
+              limit: 10000,
+              filters: %{queue: queues}
+            )
 
-        # is_list(types) ->
-        #   Bonfire.Common.ObanHelpers.list_jobs(
-        #     repo(),
-        #     user_id,
-        #     username,
-        #     limit: 10000,
-        #     filters: %{type: types}
-        #   )
+          # is_list(types) ->
+          #   Bonfire.Common.ObanHelpers.list_jobs(
+          #     repo(),
+          #     user_id,
+          #     username,
+          #     limit: 10000,
+          #     filters: %{type: types}
+          #   )
 
-        true ->
-          Bonfire.Common.ObanHelpers.list_jobs(
-            repo(),
-            user_id,
-            username,
-            limit: 10000
-          )
-      end
+          true ->
+            Bonfire.Common.ObanHelpers.list_jobs(
+              repo(),
+              user_id,
+              username,
+              limit: 10000
+            )
+        end
 
-    basic_stats =
-      Bonfire.Common.ObanHelpers.job_stats(
-        repo(),
-        user_id,
-        username,
-        %{
-          # type: types || nil,
-          queue: queues || nil
-        }
-      )
-      |> debug("actual_job_states_in_db")
+      basic_stats =
+        Bonfire.Common.ObanHelpers.job_stats(
+          repo(),
+          user_id,
+          username,
+          %{
+            # type: types || nil,
+            queue: queues || nil
+          }
+        )
+        |> debug("actual_job_states_in_db")
 
-    # Debug: show actual states that exist
-    actual_states = jobs |> Enum.map(& &1.state) |> Enum.uniq() |> debug("unique_states_found")
+      # Debug: show actual states that exist
+      actual_states = jobs |> Enum.map(& &1.state) |> Enum.uniq() |> debug("unique_states_found")
 
-    # Compute enhanced statistics
-    compute_enhanced_stats(basic_stats, jobs)
-    # rescue
-    #   error ->
-    #     error(error, "Error fetching import stats")
-    #     %{}
+      # Compute enhanced statistics
+      compute_enhanced_stats(basic_stats, jobs)
+      # rescue
+      #   error ->
+      #     error(error, "Error fetching import stats")
+      #     %{}
+    end
   end
 
   defp compute_enhanced_stats(basic_stats, jobs) do
