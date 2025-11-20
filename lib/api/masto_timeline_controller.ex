@@ -69,52 +69,114 @@ if Application.compile_env(:bonfire_api_graphql, :modularity) != :disabled do
     # Private helpers
 
     defp build_feed_params(params, filter) do
-      # Merge pagination params into the filter
-      filter_with_pagination =
+      # Build filter without pagination cursors (cursors are top-level GraphQL args, not filters)
+      filter_without_pagination =
         filter
-        |> Map.merge(extract_id_filters(params))
         # Disable Bonfire's default 1-month time limit for Mastodon API
         |> Map.put("time_limit", 0)
 
-      %{"filter" => filter_with_pagination}
-      |> Map.merge(extract_limit(params))
+      # Extract pagination cursors first to determine direction
+      cursors = extract_pagination_cursors(params)
+
+      # Atomize pagination keys because pagination_args_filter expects atom keys
+      %{"filter" => filter_without_pagination}
+      # Merge cursors at top level
+      |> Map.merge(cursors)
+      # Pass cursors to determine first vs last
+      |> Map.merge(extract_limit(params, cursors))
+      |> atomize_pagination_keys()
     end
 
-    defp extract_id_filters(params) do
-      # Map Mastodon pagination IDs to filter fields
-      # max_id → id_before (get older posts)
-      # since_id/min_id → id_after (get newer posts, min_id takes precedence)
-      result =
-        params
-        |> Map.take(["max_id", "since_id", "min_id"])
-        |> Enum.reduce(%{}, fn
-          {"max_id", id}, acc when is_binary(id) and id != "" ->
-            debug(id, "max_id parameter")
-            Map.put(acc, "id_before", id)
+    # Convert pagination param keys from strings to atoms
+    # pagination_args_filter in Pagination module expects atom keys
+    defp atomize_pagination_keys(params) do
+      params
+      |> Enum.map(fn
+        {"after", val} -> {:after, val}
+        {"before", val} -> {:before, val}
+        {"first", val} -> {:first, val}
+        {"last", val} -> {:last, val}
+        # Keep other keys as-is
+        {key, val} -> {key, val}
+      end)
+      |> Enum.into(%{})
+    end
 
-          {"min_id", id}, acc when is_binary(id) and id != "" ->
-            debug(id, "min_id parameter")
-            # min_id takes precedence over since_id
-            Map.put(acc, "id_after", id)
+    defp extract_pagination_cursors(params) do
+      # Map Mastodon pagination IDs to Relay cursor params
+      # With descending sort (newest first):
+      # - max_id → after (items AFTER cursor in list = older/lower IDs)
+      # - since_id/min_id → before (items BEFORE cursor in list = newer/higher IDs)
+      # Encode cursors as base64 for GraphQL (will be decoded in resolver)
+      params
+      |> Map.take(["max_id", "since_id", "min_id"])
+      |> Enum.reduce(%{}, fn
+        {"max_id", id}, acc when is_binary(id) and id != "" ->
+          # max_id: get older posts (items after cursor in descending list)
+          Map.put(acc, "after", encode_cursor_for_graphql(id))
 
-          {"since_id", id}, acc when is_binary(id) and id != "" ->
-            debug(id, "since_id parameter")
-            # Only use since_id if min_id not already set
-            if Map.has_key?(acc, "id_after"), do: acc, else: Map.put(acc, "id_after", id)
+        {"min_id", id}, acc when is_binary(id) and id != "" ->
+          # min_id: get newer posts (items before cursor in descending list)
+          # min_id takes precedence over since_id
+          Map.put(acc, "before", encode_cursor_for_graphql(id))
 
-          _, acc ->
+        {"since_id", id}, acc when is_binary(id) and id != "" ->
+          # since_id: get newer posts (items before cursor in descending list)
+          # Only use since_id if min_id not already set
+          if Map.has_key?(acc, "before") do
             acc
-        end)
+          else
+            Map.put(acc, "before", encode_cursor_for_graphql(id))
+          end
 
-      debug(result, "extracted ID filters")
-      result
+        _, acc ->
+          acc
+      end)
     end
 
-    defp extract_limit(params) do
+    # Prepare cursor for Paginator
+    # - If already base64 encoded (from our Link headers), pass through
+    # - If plain ID (ULID), create proper cursor map and encode it
+    #   (Bonfire uses tuple-based cursor_fields: {{:activity, :id}, :desc})
+    defp encode_cursor_for_graphql(id) when is_binary(id) do
+      # Check if already base64 encoded (starts with "g3" from Erlang term format)
+      if String.match?(id, ~r/^g3[A-Za-z0-9_-]+=*$/) do
+        # Already encoded, pass through
+        id
+      else
+        # Plain ID - create cursor map matching Bonfire's cursor_fields format
+        # cursor_fields: [{{:activity, :id}, :desc}]
+        # cursor must be: %{{:activity, :id} => id}
+        %{{:activity, :id} => id}
+        |> :erlang.term_to_binary()
+        |> Base.url_encode64()
+      end
+    end
+
+    defp extract_limit(params, cursors) do
       # Extract and validate limit parameter
-      case params["limit"] do
-        nil -> %{"first" => @default_limit}
-        limit -> %{"first" => validate_limit(limit)}
+      # Relay pagination: "first" with "after", "last" with "before"
+      # With our descending sort:
+      # - "after" + "first" = older posts (max_id)
+      # - "before" + "last" = newer posts (min_id/since_id)
+      limit =
+        case params["limit"] do
+          nil -> @default_limit
+          limit -> validate_limit(limit)
+        end
+
+      cond do
+        Map.has_key?(cursors, "after") ->
+          # Forward through descending list (older posts) - use "first"
+          %{"first" => limit}
+
+        Map.has_key?(cursors, "before") ->
+          # Backward through descending list (newer posts) - use "last"
+          %{"last" => limit}
+
+        true ->
+          # No cursor (initial page) - use "first" (start from newest)
+          %{"first" => limit}
       end
     end
 
