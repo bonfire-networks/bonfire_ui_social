@@ -18,7 +18,13 @@ if Application.compile_env(:bonfire_api_graphql, :modularity) != :disabled do
     @doc "Home timeline for authenticated user"
     def home(conn, params) do
       params
-      |> build_feed_params(%{"feed_name" => "my"})
+      |> build_feed_params(%{
+        "feed_name" => "my",
+        # Preload associations to ensure user data (character, peered) is loaded
+        "preload" => ["with_subject", "with_creator", "with_media"],
+        # Ensure current user's data loads properly (needed for user profiles in timeline)
+        "skip_current_user_preload" => false
+      })
       |> then(&Adapter.feed(&1, conn))
     end
 
@@ -28,7 +34,13 @@ if Application.compile_env(:bonfire_api_graphql, :modularity) != :disabled do
       feed_name = if params["local"] == "true", do: "local", else: "explore"
 
       params
-      |> build_feed_params(%{"feed_name" => feed_name})
+      |> build_feed_params(%{
+        "feed_name" => feed_name,
+        # Preload associations to ensure user data (character, peered) is loaded
+        "preload" => ["with_subject", "with_creator", "with_media"],
+        # Ensure current user's data loads properly (needed for user profiles in timeline)
+        "skip_current_user_preload" => false
+      })
       |> then(&Adapter.feed(&1, conn))
     end
 
@@ -44,7 +56,15 @@ if Application.compile_env(:bonfire_api_graphql, :modularity) != :disabled do
       # Build filter for notifications feed
       # Note: Mastodon clients may send exclude_types and types parameters
       # but we'll start with a simple implementation and enhance later
-      filter = %{"feed_name" => "notifications"}
+      filter = %{
+        "feed_name" => "notifications",
+        # Preload associations to avoid N+1 queries in GraphQL resolution
+        "preload" => ["with_subject", "with_creator", "with_media"],
+        # CRITICAL: Don't skip loading current user's data in notifications
+        # The current user is often the subject of notification actions (likes, boosts, etc.)
+        # Without this, their account data won't load properly in the Mastodon API
+        "skip_current_user_preload" => false
+      }
 
       params
       |> build_feed_params(filter)
@@ -113,12 +133,18 @@ if Application.compile_env(:bonfire_api_graphql, :modularity) != :disabled do
       |> Enum.reduce(%{}, fn
         {"max_id", id}, acc when is_binary(id) and id != "" ->
           # max_id: get older posts (items after cursor in descending list)
-          Map.put(acc, "after", encode_cursor_for_graphql(id))
+          case encode_cursor_for_graphql(id) do
+            {:ok, cursor} -> Map.put(acc, "after", cursor)
+            {:error, _reason} -> acc
+          end
 
         {"min_id", id}, acc when is_binary(id) and id != "" ->
           # min_id: get newer posts (items before cursor in descending list)
           # min_id takes precedence over since_id
-          Map.put(acc, "before", encode_cursor_for_graphql(id))
+          case encode_cursor_for_graphql(id) do
+            {:ok, cursor} -> Map.put(acc, "before", cursor)
+            {:error, _reason} -> acc
+          end
 
         {"since_id", id}, acc when is_binary(id) and id != "" ->
           # since_id: get newer posts (items before cursor in descending list)
@@ -126,7 +152,10 @@ if Application.compile_env(:bonfire_api_graphql, :modularity) != :disabled do
           if Map.has_key?(acc, "before") do
             acc
           else
-            Map.put(acc, "before", encode_cursor_for_graphql(id))
+            case encode_cursor_for_graphql(id) do
+              {:ok, cursor} -> Map.put(acc, "before", cursor)
+              {:error, _reason} -> acc
+            end
           end
 
         _, acc ->
@@ -134,22 +163,57 @@ if Application.compile_env(:bonfire_api_graphql, :modularity) != :disabled do
       end)
     end
 
-    # Prepare cursor for Paginator
-    # - If already base64 encoded (from our Link headers), pass through
+    # Prepare cursor for Paginator with validation
+    # - If already base64 encoded (from our Link headers), validate and pass through
     # - If plain ID (ULID), create proper cursor map and encode it
     #   (Bonfire uses tuple-based cursor_fields: {{:activity, :id}, :desc})
+    # Returns {:ok, cursor} or {:error, reason}
     defp encode_cursor_for_graphql(id) when is_binary(id) do
       # Check if already base64 encoded (starts with "g3" from Erlang term format)
       if String.match?(id, ~r/^g3[A-Za-z0-9_-]+=*$/) do
-        # Already encoded, pass through
-        id
+        # Already encoded - validate it can be decoded
+        validate_encoded_cursor(id)
       else
         # Plain ID - create cursor map matching Bonfire's cursor_fields format
         # cursor_fields: [{{:activity, :id}, :desc}]
         # cursor must be: %{{:activity, :id} => id}
-        %{{:activity, :id} => id}
-        |> :erlang.term_to_binary()
-        |> Base.url_encode64()
+        encode_plain_id_cursor(id)
+      end
+    end
+
+    defp encode_cursor_for_graphql(_), do: {:error, :invalid_cursor_format}
+
+    # Validate that an already-encoded cursor can be decoded properly
+    defp validate_encoded_cursor(cursor) do
+      case Base.url_decode64(cursor) do
+        {:ok, binary} ->
+          # Try to decode the Erlang term to ensure it's valid
+          try do
+            _term = :erlang.binary_to_term(binary, [:safe])
+            {:ok, cursor}
+          rescue
+            ArgumentError -> {:error, :invalid_erlang_term}
+          end
+
+        :error ->
+          {:error, :invalid_base64}
+      end
+    end
+
+    # Encode a plain ULID as a cursor
+    defp encode_plain_id_cursor(id) do
+      try do
+        cursor =
+          %{{:activity, :id} => id}
+          |> :erlang.term_to_binary()
+          |> Base.url_encode64()
+
+        {:ok, cursor}
+      rescue
+        e ->
+          require Logger
+          Logger.warning("Failed to encode cursor for ID #{inspect(id)}: #{inspect(e)}")
+          {:error, :cursor_encoding_failed}
       end
     end
 
