@@ -11,6 +11,38 @@ if Application.compile_env(:bonfire_api_graphql, :modularity) != :disabled do
 
     alias Bonfire.Social.API.GraphQLMasto.Adapter
 
+    @doc "Get a single status by ID"
+    def show(conn, %{"id" => id} = params) do
+      debug(params, "GET /api/v1/statuses/#{id}")
+
+      %{"id" => id}
+      |> then(&Adapter.show_status(&1, conn))
+    end
+
+    @doc "Get thread context (ancestors and descendants)"
+    def context(conn, %{"id" => id} = params) do
+      debug(params, "GET /api/v1/statuses/#{id}/context")
+
+      %{"id" => id}
+      |> then(&Adapter.status_context(&1, conn))
+    end
+
+    @doc "Get accounts who favourited a status"
+    def favourited_by(conn, %{"id" => id} = params) do
+      debug(params, "GET /api/v1/statuses/#{id}/favourited_by")
+
+      params
+      |> then(&Adapter.status_favourited_by(&1, conn))
+    end
+
+    @doc "Get accounts who reblogged a status"
+    def reblogged_by(conn, %{"id" => id} = params) do
+      debug(params, "GET /api/v1/statuses/#{id}/reblogged_by")
+
+      params
+      |> then(&Adapter.status_reblogged_by(&1, conn))
+    end
+
     @doc "Favourite (like) a status"
     def favourite(conn, %{"id" => id} = params) do
       debug(params, "POST /api/v1/statuses/#{id}/favourite")
