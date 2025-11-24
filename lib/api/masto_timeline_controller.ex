@@ -18,13 +18,7 @@ if Application.compile_env(:bonfire_api_graphql, :modularity) != :disabled do
     @doc "Home timeline for authenticated user"
     def home(conn, params) do
       params
-      |> build_feed_params(%{
-        "feed_name" => "my",
-        # Preload associations to ensure user data (character, peered) is loaded
-        "preload" => ["with_subject", "with_creator", "with_media"],
-        # Ensure current user's data loads properly (needed for user profiles in timeline)
-        "skip_current_user_preload" => false
-      })
+      |> build_feed_params(%{"feed_name" => "my"})
       |> then(&Adapter.feed(&1, conn))
     end
 
@@ -34,26 +28,14 @@ if Application.compile_env(:bonfire_api_graphql, :modularity) != :disabled do
       feed_name = if params["local"] == "true", do: "local", else: "explore"
 
       params
-      |> build_feed_params(%{
-        "feed_name" => feed_name,
-        # Preload associations to ensure user data (character, peered) is loaded
-        "preload" => ["with_subject", "with_creator", "with_media"],
-        # Ensure current user's data loads properly (needed for user profiles in timeline)
-        "skip_current_user_preload" => false
-      })
+      |> build_feed_params(%{"feed_name" => feed_name})
       |> then(&Adapter.feed(&1, conn))
     end
 
     @doc "Local timeline - shows only local instance activities"
     def local(conn, params) do
       params
-      |> build_feed_params(%{
-        "feed_name" => "local",
-        # Preload associations to ensure user data (character, peered) is loaded
-        "preload" => ["with_subject", "with_creator", "with_media"],
-        # Ensure current user's data loads properly (needed for user profiles in timeline)
-        "skip_current_user_preload" => false
-      })
+      |> build_feed_params(%{"feed_name" => "local"})
       |> then(&Adapter.feed(&1, conn))
     end
 
@@ -68,11 +50,7 @@ if Application.compile_env(:bonfire_api_graphql, :modularity) != :disabled do
       params
       |> build_feed_params(%{
         "feed_name" => feed_name,
-        "tags" => [normalized_tag],
-        # Preload associations to ensure user data (character, peered) is loaded
-        "preload" => ["with_subject", "with_creator", "with_media"],
-        # Ensure current user's data loads properly (needed for user profiles in timeline)
-        "skip_current_user_preload" => false
+        "tags" => [normalized_tag]
       })
       |> then(&Adapter.feed(&1, conn))
     end
@@ -89,19 +67,16 @@ if Application.compile_env(:bonfire_api_graphql, :modularity) != :disabled do
       # Build filter for notifications feed
       # Note: Mastodon clients may send exclude_types and types parameters
       # but we'll start with a simple implementation and enhance later
-      filter = %{
-        "feed_name" => "notifications",
-        # Preload associations to avoid N+1 queries in GraphQL resolution
-        "preload" => ["with_subject", "with_creator", "with_media"],
-        # CRITICAL: Don't skip loading current user's data in notifications
-        # The current user is often the subject of notification actions (likes, boosts, etc.)
-        # Without this, their account data won't load properly in the Mastodon API
-        "skip_current_user_preload" => false
-      }
-
       params
-      |> build_feed_params(filter)
+      |> build_feed_params(%{"feed_name" => "notifications"})
       |> then(&Adapter.notifications(&1, conn))
+    end
+
+    @doc "Bookmarks timeline - shows posts bookmarked by authenticated user"
+    def bookmarks(conn, params) do
+      params
+      |> build_feed_params(%{"feed_name" => "bookmarks"})
+      |> then(&Adapter.feed(&1, conn))
     end
 
     @doc "User's statuses timeline"

@@ -74,5 +74,21 @@ if Application.compile_env(:bonfire_api_graphql, :modularity) != :disabled do
       %{"id" => id}
       |> then(&Adapter.unboost_status(&1, conn))
     end
+
+    @doc "Bookmark a status"
+    def bookmark(conn, %{"id" => id} = params) do
+      debug(params, "POST /api/v1/statuses/#{id}/bookmark")
+
+      %{"id" => id}
+      |> then(&Adapter.bookmark_status(&1, conn))
+    end
+
+    @doc "Unbookmark a status"
+    def unbookmark(conn, %{"id" => id} = params) do
+      debug(params, "POST /api/v1/statuses/#{id}/unbookmark")
+
+      %{"id" => id}
+      |> then(&Adapter.unbookmark_status(&1, conn))
+    end
   end
 end
