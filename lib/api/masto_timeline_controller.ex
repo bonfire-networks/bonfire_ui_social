@@ -44,6 +44,26 @@ if Application.compile_env(:bonfire_api_graphql, :modularity) != :disabled do
       |> then(&Adapter.feed(&1, conn))
     end
 
+    @doc "Hashtag timeline - shows posts with specific hashtag"
+    def hashtag(conn, %{"hashtag" => hashtag} = params) do
+      # Mastodon API convention: ?local=true for local-only, otherwise federated
+      feed_name = if params["local"] == "true", do: "local", else: "explore"
+
+      # Normalize hashtag (remove # if present, lowercase)
+      normalized_tag = normalize_hashtag(hashtag)
+
+      params
+      |> build_feed_params(%{
+        "feed_name" => feed_name,
+        "tags" => [normalized_tag],
+        # Preload associations to ensure user data (character, peered) is loaded
+        "preload" => ["with_subject", "with_creator", "with_media"],
+        # Ensure current user's data loads properly (needed for user profiles in timeline)
+        "skip_current_user_preload" => false
+      })
+      |> then(&Adapter.feed(&1, conn))
+    end
+
     @doc "Named timeline (public, local, etc.)"
     def timeline(conn, %{"feed" => feed} = params) do
       params
@@ -260,5 +280,25 @@ if Application.compile_env(:bonfire_api_graphql, :modularity) != :disabled do
     end
 
     defp validate_limit(_), do: @default_limit
+
+    # Normalize hashtag string for querying
+    # Removes # prefix if present and handles case sensitivity
+    defp normalize_hashtag(hashtag) when is_binary(hashtag) do
+      hashtag
+      |> String.trim()
+      |> String.trim_leading("#")
+      # Use Bonfire's hashtag normalization if available
+      |> then(fn tag ->
+        if Code.ensure_loaded?(Bonfire.Tag.Hashtag) and
+             function_exported?(Bonfire.Tag.Hashtag, :normalize_name, 1) do
+          Bonfire.Tag.Hashtag.normalize_name(tag)
+        else
+          # Fallback: simple lowercase normalization
+          String.downcase(tag)
+        end
+      end)
+    end
+
+    defp normalize_hashtag(_), do: ""
   end
 end
