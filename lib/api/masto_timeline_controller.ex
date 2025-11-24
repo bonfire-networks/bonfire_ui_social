@@ -44,6 +44,19 @@ if Application.compile_env(:bonfire_api_graphql, :modularity) != :disabled do
       |> then(&Adapter.feed(&1, conn))
     end
 
+    @doc "Local timeline - shows only local instance activities"
+    def local(conn, params) do
+      params
+      |> build_feed_params(%{
+        "feed_name" => "local",
+        # Preload associations to ensure user data (character, peered) is loaded
+        "preload" => ["with_subject", "with_creator", "with_media"],
+        # Ensure current user's data loads properly (needed for user profiles in timeline)
+        "skip_current_user_preload" => false
+      })
+      |> then(&Adapter.feed(&1, conn))
+    end
+
     @doc "Hashtag timeline - shows posts with specific hashtag"
     def hashtag(conn, %{"hashtag" => hashtag} = params) do
       # Mastodon API convention: ?local=true for local-only, otherwise federated
