@@ -79,6 +79,13 @@ if Application.compile_env(:bonfire_api_graphql, :modularity) != :disabled do
       |> then(&Adapter.feed(&1, conn))
     end
 
+    @doc "Favourites timeline - shows posts favourited/liked by authenticated user"
+    def favourites(conn, params) do
+      params
+      |> build_feed_params(%{})
+      |> then(&Adapter.favourites(&1, conn))
+    end
+
     @doc "User's statuses timeline"
     def user_statuses(conn, %{"id" => user_id} = params) do
       # TODO: Implement actual pinned post functionality
