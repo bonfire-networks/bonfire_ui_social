@@ -475,7 +475,7 @@ defmodule Bonfire.UI.Social.BackgroundProcessingStatusLive do
   ## Examples
 
       iex> type_group_queues("federation")
-      ["federator_incoming", "federator_outgoing", "remote_fetcher"]
+      ["federator_incoming_mentions", "federator_incoming", "federator_incoming_follows", "federator_incoming_unverified", "federator_outgoing", "remote_fetcher"]
 
       iex> type_group_queues("import")
       ["import", "deletion", "video_transcode", "fetch_open_science"]
@@ -485,7 +485,14 @@ defmodule Bonfire.UI.Social.BackgroundProcessingStatusLive do
 
   """
   defp type_group_queues("federation"),
-    do: ["federator_incoming", "federator_outgoing", "remote_fetcher"]
+    do: [
+      "federator_incoming_mentions",
+      "federator_incoming",
+      "federator_incoming_follows",
+      "federator_incoming_unverified",
+      "federator_outgoing",
+      "remote_fetcher"
+    ]
 
   defp type_group_queues("import"),
     do: ["import", "deletion", "video_transcode", "fetch_open_science"]
