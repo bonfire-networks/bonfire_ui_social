@@ -62,13 +62,23 @@ if Application.compile_env(:bonfire_api_graphql, :modularity) != :disabled do
       |> then(&Adapter.feed(&1, conn))
     end
 
+    @doc "List timeline - shows posts from accounts in a list"
+    def list_timeline(conn, %{"list_id" => list_id} = params) do
+      Adapter.list_timeline(list_id, params, conn)
+    end
+
     @doc "Notifications timeline"
     def notifications(conn, params) do
       # Build filter for notifications feed
       # Note: Mastodon clients may send exclude_types and types parameters
       # but we'll start with a simple implementation and enhance later
       params
-      |> build_feed_params(%{"feed_name" => "notifications"})
+      |> build_feed_params(%{
+        "feed_name" => "notifications",
+        # Explicitly request subject preload since notifications need the account who triggered them
+        # This is needed because the :notifications preload preset is not defined
+        "preload" => ["with_subject"]
+      })
       |> then(&Adapter.notifications(&1, conn))
     end
 
