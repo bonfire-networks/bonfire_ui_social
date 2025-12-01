@@ -19,6 +19,14 @@ if Application.compile_env(:bonfire_api_graphql, :modularity) != :disabled do
       |> then(&Adapter.show_status(&1, conn))
     end
 
+    @doc "Delete a status"
+    def delete(conn, %{"id" => id} = params) do
+      debug(params, "DELETE /api/v1/statuses/#{id}")
+
+      %{"id" => id}
+      |> then(&Adapter.delete_status(&1, conn))
+    end
+
     @doc "Get thread context (ancestors and descendants)"
     def context(conn, %{"id" => id} = params) do
       debug(params, "GET /api/v1/statuses/#{id}/context")
