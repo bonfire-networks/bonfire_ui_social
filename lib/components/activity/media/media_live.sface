@@ -98,6 +98,7 @@
                       {#if String.starts_with?(m.media_type || "", "audio")}
                         {!-- {#if is_playable_multimedia_format?(m.path, m.media_type)}
                         <Bonfire.UI.Social.Activity.RemoteMediaLive
+                          id={deterministic_dom_id(__MODULE__, id(m), nil, @parent_id)}
                           media={m}
                           muted={@muted}
                           autoplay={@autoplay || (@viewing_main_object && !@cw && @showing_within != :flags)}
@@ -114,6 +115,7 @@
                         {!-- {/if} --}
                       {#else}
                         <Bonfire.UI.Social.Activity.RemoteMediaLive
+                          id={deterministic_dom_id(__MODULE__, id(m), nil, @parent_id)}
                           media={m}
                           muted={@muted}
                           autoplay={@autoplay || (@viewing_main_object && !@cw && @showing_within != :flags)}
@@ -435,6 +437,7 @@
                           {#if is_video?(m.path, m.media_type)}
                             {!-- Render video files as GIF-style --}
                             <Bonfire.UI.Social.Activity.RemoteMediaLive
+                              id={deterministic_dom_id(__MODULE__, id(m), nil, @parent_id)}
                               media={m}
                               image_css={[grayscale: @showing_within == :flags]}
                               parent_id={deterministic_dom_id(__MODULE__, m, nil, @parent_id)}
@@ -463,6 +466,7 @@
                               {!-- Render video files as GIF-style preview --}
                               <div class="w-full h-full cursor-pointer rounded-md overflow-hidden">
                                 <Bonfire.UI.Social.Activity.RemoteMediaLive
+                                  id={deterministic_dom_id(__MODULE__, id(m), nil, @parent_id)}
                                   media={m}
                                   image_css={[grayscale: @showing_within == :flags]}
                                   parent_id={deterministic_dom_id(__MODULE__, m, nil, @parent_id)}
@@ -498,6 +502,7 @@
                           {!-- Render video files as GIF-style for logged-out users --}
                           <div class="w-full h-full cursor-pointer rounded-md overflow-hidden">
                             <Bonfire.UI.Social.Activity.RemoteMediaLive
+                              id={deterministic_dom_id(__MODULE__, id(m), nil, @parent_id)}
                               media={m}
                               image_css={[grayscale: @showing_within == :flags]}
                               parent_id={deterministic_dom_id(__MODULE__, m, nil, @parent_id)}

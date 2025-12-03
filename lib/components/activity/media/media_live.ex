@@ -13,7 +13,7 @@ defmodule Bonfire.UI.Social.Activity.MediaLive do
 
   prop cw, :any, default: nil
   prop muted, :boolean, default: false
-  prop autoplay, :any, default: false
+  prop autoplay, :any, default: nil
 
   prop css_borders, :css_class, default: "border border-base-content/10 rounded-md"
   prop small_icon, :boolean, default: false
@@ -95,21 +95,41 @@ defmodule Bonfire.UI.Social.Activity.MediaLive do
         ])
     end
 
-    assigns
-    |> assign(:media, media)
-    # |> assign(:multimedia_list, multimedia_list(medias))
-    # |> assign(:link_list, link_list(medias))
-    |> assign(:image_list, image_list)
-    |> assign(:gif_list, gif_list)
-    |> assign(:multimedia_exts, @multimedia_exts)
-    |> assign(:multimedia_types, @multimedia_types)
-    |> assign(:multimedia_list, multimedia_list)
-    |> assign(:link_list, link_list)
-    |> assign(:multimedia_count, multimedia_count)
-    |> assign(:image_count, image_count)
-    |> assign(:gif_count, gif_count)
-    |> assign(:link_count, link_count)
-    |> render_sface()
+    # Determine autoplay value based on prop and settings
+    autoplay =
+      case assigns[:autoplay] do
+        nil ->
+          case assigns[:viewing_main_object] &&
+                 Settings.get(
+                   [Bonfire.UI.Social.Activity.MediaLive, :autoplay],
+                   nil,
+                   assigns[:__context__]
+                 ) do
+            true -> true
+            _ -> false
+          end
+
+        other ->
+          other
+      end
+
+    assigns =
+      assigns
+      |> assign(:autoplay, autoplay)
+      |> assign(:media, media)
+      # |> assign(:multimedia_list, multimedia_list(medias))
+      # |> assign(:link_list, link_list(medias))
+      |> assign(:image_list, image_list)
+      |> assign(:gif_list, gif_list)
+      |> assign(:multimedia_exts, @multimedia_exts)
+      |> assign(:multimedia_types, @multimedia_types)
+      |> assign(:multimedia_list, multimedia_list)
+      |> assign(:link_list, link_list)
+      |> assign(:multimedia_count, multimedia_count)
+      |> assign(:image_count, image_count)
+      |> assign(:gif_count, gif_count)
+      |> assign(:link_count, link_count)
+      |> render_sface()
   end
 
   def the_medias(medias) when is_list(medias) do

@@ -1,6 +1,11 @@
 <div class="rounded-box border border-base-content/10 h-full text-center items-center justify-center">
   <div class="relative rounded-t-box bg-base-100">
-    <Bonfire.UI.Social.Activity.RemoteMediaLive media={@media} muted={@muted} autoplay={false} />
+    <Bonfire.UI.Social.Activity.RemoteMediaLive
+      id={deterministic_dom_id(__MODULE__, id(@media), nil, @parent_id)}
+      media={@media}
+      muted={@muted}
+      autoplay={@autoplay}
+    />
 
     {!-- {#case MediaLive.preview_img(@media) || Media.media_url(@media)}
       {#match maybe_preview_img}
@@ -43,7 +48,9 @@
             data-video={true}
             class="h-full sticky bg-base-100 z-[9999999999999]"
           >
-            <Bonfire.UI.Social.Activity.RemoteMediaLive media={@media} muted={@muted} autoplay={@autoplay} />
+            <Bonfire.UI.Social.Activity.RemoteMediaLive 
+            id={deterministic_dom_id(__MODULE__, @media, @showing_within, @parent_id)}
+            media={@media} muted={@muted} autoplay={@autoplay} />
           </div>
 
           <:open_btn>

@@ -52,6 +52,7 @@
   </div>
   {#if MediaLive.is_playable_multimedia_format?(@media.path, @media.media_type)}
     <Bonfire.UI.Social.Activity.RemoteMediaLive
+      id={deterministic_dom_id(__MODULE__, id(@media), nil, @parent_id)}
       base_css="relative p-2 w-full bg-base-300 rounded-b-lg"
       media={@media}
       muted={@muted}

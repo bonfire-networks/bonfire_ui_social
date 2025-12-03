@@ -67,6 +67,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
   prop activity_preloads, :tuple, default: {nil, nil}
   prop custom_preview, :any, default: nil
   prop quotes, :list, default: []
+  prop autoplay, :any, default: nil
 
   def update_many(assigns_sockets) do
     assigns_sockets
@@ -742,6 +743,9 @@ defmodule Bonfire.UI.Social.ActivityLive do
                           show: true,
                           hide_actions: false,
                           cw: false,
+                          autoplay:
+                            @autoplay ||
+                              Settings.get([Bonfire.UI.Social.Activity.MediaLive, :autoplay], nil, @__context__) != false,
                           label: "",
                           object:
                             cond do
@@ -1009,6 +1013,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
                   viewing_main_object={maybe_get(component_assigns, :viewing_main_object, @viewing_main_object)}
                   media={maybe_get(component_assigns, :media, [])}
                   cw={@cw}
+                  autoplay={@autoplay}
                 />
               {#match _
                 when component in [

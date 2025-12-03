@@ -26,7 +26,7 @@
                 <div class="aspect-video rounded-t-box">
                   {!-- TODO: only load external embed if autoplay or user clicks on a play button --}
                   <iframe
-                    src={"#{url}?&autoplay=#{if @autoplay, do: 1, else: 0}"}
+                    src={rewrite_embed_url(url, %{"autoplay" => (if @autoplay, do: "1", else: "0")})}
                     frameborder="0"
                     width="100%"
                     loading="lazy"
@@ -268,6 +268,7 @@
                               e(@media, :metadata, "facebook", "video", nil) ||
                               e(@media, :metadata, "twitter", "player", nil)}
                             {#match embed_url when is_binary(embed_url)}
+                            {#if !(@show_embed || @autoplay) && socket_connected?(@__context__)}
                               {!-- Preview thumbnail with action buttons overlay --}
                               <div id={"preview-#{id(@media)}"} class="relative">
                                 <LazyImage
@@ -284,8 +285,8 @@
                                   <div class="flex items-center bg-white/90 hover:bg-white rounded p-3 gap-6 shadow-lg transition-all hover:scale-110">
                                   <button
                                     type="button"
-                                    phx-click={JS.hide(to: "#preview-#{id(@media)}")
-                                      |> JS.show(to: "#embed-#{id(@media)}")}
+                                    phx-click="show_embed"
+                                    phx-target={@myself}
                                     class="cursor-pointer"
                                     title={l("Play inline")}
                                   >
@@ -303,20 +304,25 @@
                                   </div>
                                 </div>
                               </div>
-                              {!-- Embedded iframe (hidden by default) --}
-                              <div id={"embed-#{id(@media)}"} class="hidden aspect-video">
+                              {#else}
+                              {!-- Embedded iframe  --}
+                              <div class="aspect-video">
+
+                 
                                 <iframe
-                                  src={"#{embed_url}?&autoplay=1"}
+                                  src={rewrite_embed_url(embed_url, %{"autoplay" => (if @autoplay, do: "1", else: "0")})}
                                   frameborder="0"
                                   width="100%"
                                   loading="lazy"
                                   height="100%"
-                                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
                                   allowfullscreen="allowfullscreen"
                                   picture-in-picture
+                                  referrerpolicy="strict-origin-when-cross-origin"
                                   class={"rounded-t-box", @base_css}
                                 />
                               </div>
+                              {/if}
                             {#match _}
                               {!-- Fallback: Open in new tab only --}
                               <div class="relative">

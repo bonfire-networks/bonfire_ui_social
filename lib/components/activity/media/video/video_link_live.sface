@@ -47,6 +47,7 @@
               style={if show_cover?, do: "display: none;", else: ""}
             >
               <Bonfire.UI.Social.Activity.RemoteMediaLive
+              id={deterministic_dom_id(__MODULE__, id(@media), nil, @parent_id)}
                 media={@media}
                 muted={@muted}
                 autoplay={@autoplay}
@@ -57,6 +58,7 @@
       {/case} --}
 
   <Bonfire.UI.Social.Activity.RemoteMediaLive
+    id={deterministic_dom_id(__MODULE__, id(@media), nil, @parent_id)}
     media={@media}
     muted={@muted}
     autoplay={@autoplay}

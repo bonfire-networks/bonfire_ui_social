@@ -141,9 +141,10 @@
                 data-media-type-video={String.starts_with?(m.media_type || "", "video")}
               >
                 <Bonfire.UI.Social.Activity.RemoteMediaLive
+                  id={deterministic_dom_id(__MODULE__, m, nil, @parent_id)}
                   media={m}
                   image_css={grayscale: @showing_within == :flags}
-                  parent_id={deterministic_dom_id(__MODULE__, nil, nil, @parent_id)}
+                  parent_id={deterministic_dom_id(__MODULE__, m, nil, @parent_id)}
                 />
               </div>
 
