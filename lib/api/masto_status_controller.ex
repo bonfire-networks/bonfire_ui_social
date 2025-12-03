@@ -1,21 +1,11 @@
 if Application.compile_env(:bonfire_api_graphql, :modularity) != :disabled do
   defmodule Bonfire.API.MastoCompatible.StatusController do
-    @moduledoc """
-    Mastodon-compatible status interaction endpoints.
+    @moduledoc "Mastodon-compatible status interaction endpoints (show, delete, like, boost, bookmark)"
 
-    Implements like/unlike (favourite/unfavourite) and boost/unboost (reblog/unreblog)
-    endpoints following Mastodon API conventions while using Bonfire's GraphQL backend.
-    """
     use Bonfire.UI.Common.Web, :controller
     import Untangle
 
     alias Bonfire.Social.API.GraphQLMasto.Adapter
-
-    @doc "Create a new status (POST /api/v1/statuses)"
-    def create(conn, params) do
-      debug(params, "POST /api/v1/statuses")
-      Adapter.create_status(params, conn)
-    end
 
     @doc "Get a single status by ID"
     def show(conn, %{"id" => id} = params) do
