@@ -11,6 +11,12 @@ if Application.compile_env(:bonfire_api_graphql, :modularity) != :disabled do
 
     alias Bonfire.Social.API.GraphQLMasto.Adapter
 
+    @doc "Create a new status (POST /api/v1/statuses)"
+    def create(conn, params) do
+      debug(params, "POST /api/v1/statuses")
+      Adapter.create_status(params, conn)
+    end
+
     @doc "Get a single status by ID"
     def show(conn, %{"id" => id} = params) do
       debug(params, "GET /api/v1/statuses/#{id}")
