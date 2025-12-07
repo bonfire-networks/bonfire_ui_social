@@ -10,7 +10,10 @@
   |> JS.toggle(to: "#content_show_less_#{@activity_component_id}")}
   class={e(@class, nil)}
 >
-  <span data-role="cw" class="leading-[24px] text-left text-sm text-base-content/70 flex-1">{rich(@summary || l("Content Warning"))}</span>
+  <span
+    data-role="cw"
+    class="translatable leading-[24px] text-left text-sm text-base-content/70 flex-1"
+  >{rich(@summary || l("Content Warning"))}</span>
   <div class="show_more_toggle_action normal-case btn-ghost btn btn-xs">
     <span id={"content_show_more_#{@activity_component_id}"} class={if !@cw, do: "hidden"}>
       {l("Show")}

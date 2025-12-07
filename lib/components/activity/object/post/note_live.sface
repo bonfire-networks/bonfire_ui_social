@@ -6,6 +6,8 @@
     "note_container",
     @parent_id
   )}
+  phx-hook="Translate"
+  data-translate-debug="true"
   data-activity-id={id(@activity)}
   data-object-id={id(@object)}
   data-view-transition-name={"activity-#{id(@activity) || id(@object)}"}
@@ -27,7 +29,7 @@
         <div
           :if={name != @thread_title and @showing_within != :smart_input}
           data-role="name"
-          class="text-sm my-1 mt-2"
+          class="translatable text-sm my-1 mt-2"
         >
           {rich(name)}
         </div>
@@ -44,7 +46,7 @@
                 summary={summary}
               />
             {#elseif not is_nil(summary)}
-              <div class="prose max-w-prose prose-p:pt-1">
+              <div class="translatable prose max-w-prose prose-p:pt-1">
                 {rich(summary)}
               </div>
             {/if}
@@ -68,4 +70,9 @@
         {/case}
     {/case}
   </Bonfire.UI.Common.OpenExternalLinkLive>
+
+   <button class="translate-btn btn btn-sm btn-ghost" phx-update="ignore">
+        <span class="loading-spinner"></span>
+        Translate
+    </button>
 </div>

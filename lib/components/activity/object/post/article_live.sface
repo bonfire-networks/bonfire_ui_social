@@ -49,7 +49,7 @@
         <div
           data-role="name"
           class={
-            "text-lg font-bold",
+            "translatable text-lg font-bold",
             "!text-xl mb-3 order-first": @showing_within == :thread and @viewing_main_object
           }
         >
@@ -69,7 +69,7 @@
               />
             {#elseif not is_nil(summary)}
               <div class={
-                "prose max-w-prose prose-p:pt-1 prose-sm",
+                "translatable prose max-w-prose prose-p:pt-1 prose-sm",
                 "order-first italic mb-3": @showing_within == :thread and @viewing_main_object
               }>
                 {rich(summary,

@@ -11,7 +11,7 @@
   data-rendered={@showing_within}
   data-main-object={@viewing_main_object}
   class={
-    "prose break-normal object_body max-w-none text-base-content prose-hr:!my-2 prose-br:hidden",
+    "object_body translatable prose break-normal max-w-none text-base-content prose-hr:!my-2 prose-br:hidden",
     previewable_truncate:
       !@viewing_main_object &&
         @showing_within not in [:smart_input],
