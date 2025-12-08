@@ -111,17 +111,48 @@ if Application.compile_env(:bonfire_api_graphql, :modularity) != :disabled do
 
     @doc "User's statuses timeline"
     def user_statuses(conn, %{"id" => user_id} = params) do
-      # TODO: Implement actual pinned post functionality
-      # For now, we ignore the pinned parameter and return all posts
+      if params["pinned"] == "true" do
+        pinned_statuses(conn, user_id, params)
+      else
+        filter =
+          params
+          |> Map.take(["feed_name", "feed_ids", "creators", "objects", "tags"])
+          |> Map.put("subjects", [user_id])
 
-      filter =
         params
-        |> Map.take(["feed_name", "feed_ids", "creators", "objects", "tags"])
-        |> Map.put("subjects", [user_id])
+        |> PaginationHelpers.build_feed_params(filter)
+        |> then(&Adapter.feed(&1, conn))
+      end
+    end
 
-      params
-      |> PaginationHelpers.build_feed_params(filter)
-      |> then(&Adapter.feed(&1, conn))
+    defp pinned_statuses(conn, user_id, params) do
+      current_user = conn.assigns[:current_user]
+      limit = PaginationHelpers.validate_limit(params["limit"] || 20)
+
+      case Bonfire.Social.Pins.list_by(user_id, limit: limit, preload: :object_with_creator) do
+        %{edges: edges} when is_list(edges) ->
+          statuses =
+            edges
+            |> Enum.flat_map(fn edge ->
+              post = Bonfire.Common.Utils.e(edge, :edge, :object, nil)
+
+              if post do
+                case Bonfire.API.MastoCompat.Mappers.Status.from_post(post,
+                       current_user: current_user
+                     ) do
+                  nil -> []
+                  status -> [Map.put(status, "pinned", true)]
+                end
+              else
+                []
+              end
+            end)
+
+          Phoenix.Controller.json(conn, statuses)
+
+        _ ->
+          Phoenix.Controller.json(conn, [])
+      end
     end
   end
 end
