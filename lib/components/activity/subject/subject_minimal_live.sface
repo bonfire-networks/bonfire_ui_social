@@ -240,29 +240,8 @@
         
           {!-- FOLLOW --}
           <div class="flex items-center gap-3 justify-start">
-            <div class="flex-1 flex gap-2 items-center">
-              <div class="avatar-group -space-x-3">
-                <Bonfire.UI.Common.AvatarLive
-                  parent_id={deterministic_dom_id(__MODULE__, nil, "smf-main", @parent_id)}
-                  user_id={@profile_id}
-                  src={@profile_media}
-                  title={@profile_name || @character_username}
-                  class="h-7 w-7 rounded-full"
-                />
-                {#if @subjects_more != []}
-                  {#for {subject, idx} <- Enum.with_index(@subjects_more)}
-                    {#if idx < 2}
-                      <Bonfire.UI.Common.AvatarLive
-                        parent_id={deterministic_dom_id(__MODULE__, idx, "smf", @parent_id)}
-                        user_id={id(subject)}
-                        src={nil}
-                        title={e(subject, :profile, :name, nil)}
-                        class="h-7 w-7 rounded-full"
-                      />
-                    {/if}
-                  {/for}
-                {/if}
-              </div>
+            <div class="flex items-center flex-1 gap-3 -ml-[60px]">
+              <#Icon iconify="ph:user-plus-duotone" class="flex-shrink-0 w-4 h-4 text-primary" />
               <div class="text-sm text-base-content/70">
                 <LinkLive
                   to={@path}
@@ -278,7 +257,7 @@
                 </LinkLive>
               </div>
             </div>
-            <#Icon iconify="ph:user-plus-duotone" class="flex-shrink-0 w-4 h-4 text-primary" />
+            
           </div>
           {!-- {#elseif @published_in}
           <Bonfire.UI.Social.Activity.PublishedInLive
