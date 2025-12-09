@@ -242,7 +242,7 @@ defmodule Bonfire.Social.Threads.ThreadsTest do
     # Extract actual participants from assigns (simulate what reply/3 would use)
     actual_participants =
       assigns
-      |> flood("assigns result")
+      |> debug("assigns result")
       |> Keyword.get(:participants, [])
       |> Enums.ids()
 
