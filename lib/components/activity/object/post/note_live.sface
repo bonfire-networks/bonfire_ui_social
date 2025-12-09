@@ -13,11 +13,11 @@
   data-view-transition-name={"activity-#{id(@activity) || id(@object)}"}
   data-rendered={@showing_within}
   data-main-object={@viewing_main_object}
-  class={
+  class={[
     "note previewable_activity cursor-pointer",
     "!max-w-full":
       is_nil(current_user_id(@__context__)) && @showing_within == :thread && @viewing_main_object
-  }
+  ]}
 >
   <Bonfire.UI.Common.OpenExternalLinkLive
     id={deterministic_dom_id(__MODULE__, nil, "link", @parent_id)}
@@ -51,7 +51,7 @@
               </div>
             {/if}
 
-            <div id={"content_#{@activity_component_id}"} class={hidden: cw}>
+            <div id={"content_#{@activity_component_id}"} class={[hidden: cw]}>
               {#case e(post_content(@object), :html_body, nil) ||
                   if !e(@activity, :media, nil), do: l("This content is not available.")}
                 {#match nil}
@@ -71,8 +71,8 @@
     {/case}
   </Bonfire.UI.Common.OpenExternalLinkLive>
 
-   <button class="translate-btn link link-primary link-hover text-sm" phx-update="ignore">
-        <span class="loading-spinner"></span>
-        Translate
-    </button>
+  <button class="translate-btn link link-primary link-hover text-sm" phx-update="ignore">
+    <span class="loading-spinner" />
+    Translate
+  </button>
 </div>
