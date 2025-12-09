@@ -1,7 +1,4 @@
-<div class="justify-end flex items-center gap-3 py-3">
-  <button phx-click={JS.toggle(to: "#more_filters")} type="button" class="btn btn-sm">
-    {l("Close")}
-  </button>
+<div class="justify-end flex items-center gap-3 pt-2 border-t border-base-content/10 mt-3">
   <div>
     <Bonfire.UI.Common.OpenModalLive
       id="add_to_feed_preset_button"

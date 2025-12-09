@@ -6,6 +6,7 @@ defmodule Bonfire.UI.Social.ToggleTypeLive do
   prop key, :any
   prop label, :string, default: nil
   prop icon, :any, default: nil
+  prop with_icons, :boolean, default: false
   # prop disabled, :boolean, default: false
   # prop scope, :any, default: nil
 

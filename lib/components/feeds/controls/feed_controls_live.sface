@@ -1,7 +1,7 @@
 <div
   data-id="feed_controls"
   id="feed_controls"
-  class="relative border-base-content/10 border-b relative feed_control_wrapper bg-base-100 lg:rounded-t-xl"
+  class="relative  relative feed_control_wrapper bg-base-100"
 >
   {#if @reloading}
     <div class="absolute z-10 inset-0 flex items-center justify-center bg-base-content/10">
@@ -17,22 +17,266 @@
       feed_name={@feed_name}
     />
 
-    <div class="flex items-center gap-1">
+
+
+    <div class="flex items-center gap-3">
+      <Bonfire.UI.Social.FilterByCirclesLive
+        feed_filters={@feed_filters}
+        event_target={@event_target}
+      />
+
+    <div 
+      data-position="bottom"
+      phx-hook="Tooltip"
+      class="flex w-full relative"
+      id="filter_by_types_feed"
+      >
+      <label tabindex="0" class="tooltip-button btn btn-circle btn-outline border-base-content/20 btn-sm">
+        <div class="sr-only">{l("Filter by activity types")}</div>
+        <#Icon iconify="ph:pulse-duotone" class="w-4 h-4 text-primary" />
+      </label>
+
+    <ul
+      tabindex="0"
+      class="tooltip z-[999] menu bg-base-100 divide-y divide-base-content/10 border pt-0 border-base-content/20 shadow rounded-box w-72 absolute top-0 right-0 hidden"
+    > 
+      <div class="pt-2" :if={extension_enabled?(:bonfire_ui_reactions, @__context__)} data-scope="boosts">
+        <!-- icon="ph:rocket-launch-duotone" -->
+        <Bonfire.UI.Social.ToggleTypeLive
+          label={l("Boosts")}
+          key={:boost}
+          field={:activity_types}
+          feed_filters={@feed_filters}
+          event_target={@event_target}
+          event_name="set_filter"
+          label_default={l("Include")}
+        />
+      </div>
+
+      <!-- icon="ph:user-plus-duotone" -->
+      <div class="pt-2">
+      <Bonfire.UI.Social.ToggleTypeLive
+        label={l("Follows")}
+        key={:follow}
+        field={:activity_types}
+        feed_filters={@feed_filters}
+        event_target={@event_target}
+        event_name="set_filter"
+        label_default={l("Include")}
+      />
+      </div>
+      <div class="pt-2">
+      <Bonfire.UI.Social.ToggleTypeLive
+        label={l("All posts")}
+        key={:post}
+        field={:object_types}
+        feed_filters={@feed_filters}
+        event_target={@event_target}
+        event_name="set_filter"
+        label_default={l("Include")}
+      />
+
+      </div>
+      <div class="pt-2">
+      <Bonfire.UI.Social.ToggleTypeLive
+        label={l("Articles")}
+        key={:article}
+        field={:object_types}
+        feed_filters={@feed_filters}
+        event_target={@event_target}
+        event_name="set_filter"
+        label_default={l("Include")}
+      />
+
+     </div>
+      <div class="pt-2">
+      <Bonfire.UI.Social.ToggleTypeLive
+        label={l("Replies")}
+        key={:reply}
+        field={:activity_types}
+        feed_filters={@feed_filters}
+        event_target={@event_target}
+        event_name="set_filter"
+        label_default={l("Include")}
+      />
+
+     </div>
+      <div class="pt-2">
+      <Bonfire.UI.Social.ToggleTypeLive
+        label={l("Links")}
+        key={:link}
+        field={:media_types}
+        feed_filters={@feed_filters}
+        event_target={@event_target}
+        event_name="set_filter"
+        label_default={l("Include")}
+      />
+
+     </div>
+      <div class="pt-2">
+      <Bonfire.UI.Social.ToggleTypeLive
+        label={l("Images")}
+        key={:image}
+        field={:media_types}
+        feed_filters={@feed_filters}
+        event_target={@event_target}
+        event_name="set_filter"
+        label_default={l("Include")}
+      />
+
+      </div>
+      <div class="pt-2">
+      <Bonfire.UI.Social.ToggleTypeLive
+        label={l("Videos")}
+        key={:video}
+        field={:media_types}
+        feed_filters={@feed_filters}
+        event_target={@event_target}
+        event_name="set_filter"
+        label_default={l("Include")}
+      />
+
+      </div>
+      <div class="pt-2">
+      <Bonfire.UI.Social.ToggleTypeLive
+        label={l("Audio")}
+        key={:audio}
+        field={:media_types}
+        feed_filters={@feed_filters}
+        event_target={@event_target}
+        event_name="set_filter"
+        label_default={l("Include")}
+      />
+
+      </div>
+      <div class="pt-2">
+      <Bonfire.UI.Social.ToggleTypeLive
+        label={l("Books")}
+        key="Edition"
+        field={:object_types}
+        feed_filters={@feed_filters}
+        event_target={@event_target}
+        event_name="set_filter"
+        label_default={l("Include")}
+      />
+
+     </div>
+      <div class="pt-2">
+      <Bonfire.UI.Social.ToggleTypeLive
+        label={l("Events")}
+        key={:Event}
+        field={:object_types}
+        feed_filters={@feed_filters}
+        event_target={@event_target}
+        event_name="set_filter"
+        label_default={l("Include")}
+      />
+
+     </div>
+      <div class="pt-2">
+      <Bonfire.UI.Social.ToggleTypeLive
+        label={l("Research publications")}
+        key={:research}
+        field={:media_types}
+        feed_filters={@feed_filters}
+        event_target={@event_target}
+        event_name="set_filter"
+        label_default={l("Include")}
+      />
+</div>
+      <!-- icon="mingcute:users-fill" -->
+      {#for key <- @feed_filters[:subject_types] || []}
+      
+      <div class="pt-2">
+        <Bonfire.UI.Social.ToggleTypeLive
+          label={String.capitalize(to_string(key))}
+          key={key}
+          field={:subject_types}
+          feed_filters={@feed_filters}
+          event_target={@event_target}
+          event_name="set_filter"
+          label_default={l("Include")}
+        />
+        </div>
+      
+      {/for}
+
+      <!-- icon="heroicons-outline:eye" -->
+      {#for key when key not in [:boost, :follow, :reply] <- @feed_filters[:activity_types] || []}
+        <div class="pt-2">
+        <Bonfire.UI.Social.ToggleTypeLive
+          label={String.capitalize(to_string(key))}
+          key={key}
+          field={:activity_types}
+          feed_filters={@feed_filters}
+          event_target={@event_target}
+          event_name="set_filter"
+          label_default={l("Include")}
+        />
+        </div>
+      {/for}
+
+      <!-- icon="fluent:box-16-regular" -->
+      {#for key when key not in [:post, "post", Bonfire.Data.Social.Post, :Event, "Event", "Edition"] <-
+          @feed_filters[:object_types] || []}
+          <div class="pt-2">
+        <Bonfire.UI.Social.ToggleTypeLive
+          label={String.capitalize(to_string(key))}
+          key={key}
+          field={:object_types}
+          feed_filters={@feed_filters}
+          event_target={@event_target}
+          event_name="set_filter"
+          label_default={l("Include")}
+        />
+        </div>
+      {/for}
+
+      {#for key
+        when key not in [
+               :image,
+               :link,
+               :audio,
+               :video,
+               :research,
+               "image",
+               "link",
+               "audio",
+               "video",
+               "research"
+             ] <- @feed_filters[:media_types] || []}
+        <!-- icon="octicon:file-media-24" -->
+        <div class="pt-2">
+        <Bonfire.UI.Social.ToggleTypeLive
+          label={String.capitalize(to_string(key))}
+          key={key}
+          field={:media_types}
+          feed_filters={@feed_filters}
+          event_target={@event_target}
+          event_name="set_filter"
+          label_default={l("Include")}
+        />
+        </div>
+      {/for}
+  </ul>
+    </div>
+
+
       <div
         data-position="bottom-end"
         phx-hook="Tooltip"
         id="sort_order_dropdown_feed"
         class="flex w-full relative"
       >
-        <label tabindex="0" class="tooltip-button opacity-80 btn btn-square btn-sm btn-ghost">
+        <label tabindex="0" class="tooltip-button btn btn-circle btn-outline border-base-content/20 btn-sm">
           {#if e(@feed_filters, :sort_order, nil) == :asc}
             <span class="" data-tip={l("Oldest first")}>
-              <#Icon iconify="ph:sort-descending-duotone" class="w-5 h-5 text-primary" />
+              <#Icon iconify="ph:sort-descending-duotone" class="w-4 h-4 text-primary" />
               <span class="sr-only">{l("Oldest first")}</span>
             </span>
           {#else}
             <span class="" data-tip={l("Newest first")}>
-              <#Icon iconify="ph:sort-ascending-duotone" class="w-5 h-5 text-primary" />
+              <#Icon iconify="ph:sort-ascending-duotone" class="w-4 h-4 text-primary" />
               <span class="sr-only">{l("Newest first")}</span>
             </span>
           {/if}
@@ -83,18 +327,22 @@
           </li>
         </ul>
       </div>
-      <button
-        phx-click={JS.toggle(to: "#more_filters")}
-        class="btn opacity-80 btn-ghost btn-sm btn-square"
-      ><#Icon iconify="ph:sliders-horizontal-duotone" class="w-5 h-5 text-primary" /></button>
-    </div>
-  </div>
 
-  <div
-    id="more_filters"
-    class="px-6 flex p-4 border-t border-base-content/10 flex-col gap-2 hidden"
-  >
-    <Bonfire.UI.Social.FeedExtraControlsLive
+
+      <div 
+  data-position="bottom-end"
+  phx-hook="Tooltip"
+  class="flex w-full relative"
+  id="extra_filters">
+   <label tabindex="0" class="tooltip-button btn btn-circle btn-outline border-base-content/20 btn-sm">
+    <div class="sr-only">{l("Extra Filters")}</div>
+    <#Icon iconify="ph:sliders-horizontal-duotone" class="w-4 h-4 text-primary" />
+  </label>
+    <ul
+      tabindex="0"
+      class="tooltip z-[999] menu bg-base-100 shadow border border-base-content/20 rounded-box w-72 absolute top-0 right-0 hidden"
+    >    
+     <Bonfire.UI.Social.FeedExtraControlsLive
       event_target={@event_target}
       event_name="set_filter"
       feed_id={@feed_id}
@@ -107,5 +355,12 @@
       event_target={@event_target}
       open_btn_wrapper_class="flex-1"
     />
+    </ul>
   </div>
+
+      
+    </div>
+  </div>
+
+
 </div>

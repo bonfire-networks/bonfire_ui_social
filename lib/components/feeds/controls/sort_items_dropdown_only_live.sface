@@ -1,5 +1,5 @@
 <div data-position="bottom" phx-hook="Tooltip" id="order_dropdown_feed" class="flex relative">
-  <label tabindex="0" class="tooltip-button btn btn-sm btn-ghost">
+  <label tabindex="0" class="tooltip-button btn btn-outline rounded-full border-base-content/20 w-full capitalize">
     {#case {e(@feed_filters, :sort_by, :date_created), e(@feed_filters, :sort_order, :desc)}}
       {#match {:date_created, :desc}}
         <span class="flex items-center">

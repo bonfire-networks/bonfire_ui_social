@@ -1,17 +1,18 @@
-<div x-data="{open: false}" id={@container_id} class={@container_class}>
-  <div x-on:click="open = !open" class="flex items-center justify-between gap-4 cursor-pointer">
-    <div class="font-medium text-sm text-base-content/80">{l("Filter by circles")}</div>
-    <button type="button" x-cloak class="btn btn-circle btn-sm btn-ghost" x-show="open">
-      <#Icon iconify="ph:caret-down-duotone" class="w-4 h-4 text-primary/80" />
-    </button>
-    <button type="button" class="btn btn-circle btn-sm btn-ghost" x-show="!open">
-      <#Icon iconify="ph:caret-up-duotone" class="w-4 h-4 text-primary/80" />
-    </button>
-  </div>
-  <div x-show="open" x-cloak x-collapse>
-    <ul tabindex="0" class="w-full border rounded-box border-base-content/10 px-3 pt-2  mt-2">
-      <li
-        class="flex flex-1 w-full"
+<div 
+  data-position="bottom-end"
+  phx-hook="Tooltip"
+  class="flex w-full relative"
+  id={@container_id}>
+   <label tabindex="0" class="tooltip-button btn btn-circle btn-outline border-base-content/20 btn-sm">
+    <div class="sr-only">{l("Filter by circles")}</div>
+    <#Icon iconify="ph:circle-duotone" class="w-4 h-4 text-primary" />
+  </label>
+    <ul
+      tabindex="0"
+      class="tooltip z-[999] menu bg-base-100 pt-0 shadow divide-y divide-base-content/10 border border-base-content/20 rounded-box w-72 absolute top-0 right-0 hidden"
+    >    
+      <div
+        class="pt-2"
         :for={circle <-
           Bonfire.UI.Boundaries.SetBoundariesLive.circles_for_multiselect(
             @__context__,
@@ -27,7 +28,6 @@
           event_name={@event_name}
           label_default={l("Include")}
         />
-      </li>
+      </div>
     </ul>
   </div>
-</div>

@@ -5,7 +5,7 @@
     id="order_dropdown_feed"
     class="flex w-full relative"
   >
-    <label tabindex="0" class="tooltip-button opacity-80 w-full btn btn-sm btn-ghost">
+    <label tabindex="0" class="tooltip-button btn-sm w-full btn btn-outline border-base-content/20 rounded-full">
       {#case e(@feed_filters, :sort_by, nil)}
         {#match :num_replies}
           <span class="flex items-center">
