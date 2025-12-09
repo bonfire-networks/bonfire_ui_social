@@ -71,7 +71,7 @@
     {/case}
   </Bonfire.UI.Common.OpenExternalLinkLive>
 
-   <button class="translate-btn btn btn-sm btn-ghost" phx-update="ignore">
+   <button class="translate-btn link link-primary link-hover text-sm" phx-update="ignore">
         <span class="loading-spinner"></span>
         Translate
     </button>

@@ -3,10 +3,7 @@
     id={@id}
     data-id="feed"
     data-page="feed"
-    role="feed"
-    aria-live="assertive"
     phx-hook="Bonfire.UI.Common.PreviewContentLive#MainFeed"
-    aria-atomic="true"
     class="w-full flex flex-col feed bg-base-100 mx-auto"
   >
     <div :if={!@hide_filters and current_user_id(@__context__)} id="feed_controls_wrapper">
@@ -66,6 +63,8 @@
         <div
           id={"feed_#{@feed_name || @feed_id || @id}"}
           data-id="feed_activity_list"
+          role="feed"
+          aria-busy={to_string(@loading || @reloading || false)}
           phx-update="append"
           class="flex flex-col divide-y divide-base-content/10"
         >
@@ -98,6 +97,8 @@
         <div
           id={"feed_#{@feed_name || @feed_id || @id}"}
           data-id="feed_activity_list"
+          role="feed"
+          aria-busy={to_string(@loading || @reloading || false)}
           phx-update="stream"
           class="flex flex-col divide-y divide-base-content/10 flex-1 h-full grow"
         >

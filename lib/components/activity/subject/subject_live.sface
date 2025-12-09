@@ -39,6 +39,7 @@
       parent_id={deterministic_dom_id(__MODULE__, @subject_id, "subject", @parent_id)}
       user_id={@subject_id}
       src={@profile_media}
+      title={@profile_name || @character_username}
       showing_within={@showing_within}
       fallback_class="w-8 h-8 opacity-30 mx-auto"
       class={[
@@ -93,7 +94,7 @@
       </:actions>
     </Bonfire.UI.Me.UserPreviewLive> --}
   <div data-id="subject_details" class="flex flex-col gap-0 w-full feed-clickable justify-start">
-    <div class="flex" role="button" data-id="name_username" aria-haspopup="true" aria-expanded="true">
+    <div class="flex" data-id="name_username">
       <LinkLive
         :if={@profile_name}
         opts={[

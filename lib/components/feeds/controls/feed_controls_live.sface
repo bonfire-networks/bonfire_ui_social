@@ -40,7 +40,7 @@
 
         <ul
           tabindex="0"
-          class="tooltip z-[999] menu bg-base-100 shadow-lg border rounded-xl border-base-content/10 w-45 absolute top-0 right-0 hidden"
+          class="tooltip z-[999] menu bg-base-300 shadow rounded-box w-64 absolute top-0 right-0 hidden"
         >
           <li>
             <a
