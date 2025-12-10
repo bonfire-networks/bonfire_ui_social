@@ -1,12 +1,11 @@
 <div class="flex flex-col">
   <div class="flex flex-col gap-1 py-6 p-4">
-    <div class="text-xl font-semibold">{l("Feed Control")}</div>
     <div class="text-base-content/70">{l(
         "Customize your feed experience by configuring default display settings and managing which feed presets appear in your sidebar navigation."
       )}</div>
   </div>
 
-  <div class="border border-base-content/20 rounded-box m-3 my-0 bg-base-200/50">
+  <div class="">
     <div>
       <div class="p-4 text-lg font-bold flex items-center gap-4 border-b border-base-content/10">
         <#Icon iconify="ph:list-bullets-duotone" class="w-6 h-6 text-primary" />
@@ -133,7 +132,7 @@
       </form>
     </div>
   </div>
-  <div class="border border-base-content/20 rounded-box m-3 bg-base-200/50">
+  <div class="">
     <div>
       <div class="p-4 text-lg font-bold flex items-start gap-4 border-b border-base-content/10">
         <#Icon iconify="ph:list-star-duotone" class="w-6 h-6 text-primary" />
