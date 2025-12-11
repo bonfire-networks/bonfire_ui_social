@@ -95,6 +95,13 @@ if Application.compile_env(:bonfire_api_graphql, :modularity) != :disabled do
       |> then(&Adapter.notifications(&1, conn))
     end
 
+    @doc "Notification requests (pending follow requests) - returns empty for now"
+    def notification_requests(conn, _params) do
+      # Mastodon 4.2+ feature for filtered notification requests
+      # Return empty array as Bonfire doesn't have this feature yet
+      Phoenix.Controller.json(conn, [])
+    end
+
     @doc "Bookmarks timeline - shows posts bookmarked by authenticated user"
     def bookmarks(conn, params) do
       params
