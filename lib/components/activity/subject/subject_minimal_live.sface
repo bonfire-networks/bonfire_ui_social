@@ -377,7 +377,7 @@
         {#elseif @verb == "Flag"}
           {!-- FLAG --}
           <div data-role="flagged_by" class="">
-            <div class="flex items-start gap-3 justify-start">
+            <div class="flex items-start gap-3 justify-start mb-2 -ml-[60px]">
               <#Icon solid="Flag" class="w-6 h-6 text-error" />
               <div class="flex-1">
                 <div class="text-sm font-medium text-base-content/70">
@@ -393,7 +393,7 @@
                 </div>
               </div>
             </div>
-            <div :if={@thread_title} class="ml-8 w-full">
+            <div :if={@thread_title} class="ml-8 w-full my-3">
               <div class="relative w-full flex-1 text-sm text-base-content/90 flex items-baseline gap-1 alert alert-warning alert-soft alert-sm pl-8">
                 <#Icon
                   iconify="mingcute:quote-left-fill"
@@ -680,7 +680,7 @@
               </div>
             </div>
           </div>
-          <div :if={@thread_title} class="ml-8 w-full">
+          <div :if={@thread_title} class="ml-8 w-full my-3">
             <div class="relative w-full flex-1 text-sm text-base-content/90 flex items-baseline gap-1 alert alert-warning alert-soft alert-sm pl-8">
               <#Icon
                 iconify="mingcute:quote-left-fill"
