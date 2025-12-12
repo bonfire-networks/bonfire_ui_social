@@ -304,7 +304,7 @@ defmodule Bonfire.Social.Threads.LiveHandler do
           do:
             Enum.map(participants, &{e(&1, :id, nil), e(&1, :character, :username, l("someone"))})
 
-      mentions =
+      mention_text =
         if create_object_type != :message and participants != [],
           do: Enum.map_join(participants, " ", &("@" <> e(&1, :character, :username, ""))) <> " "
 
@@ -321,6 +321,7 @@ defmodule Bonfire.Social.Threads.LiveHandler do
         participants: participants,
         to_circles: to_circles || [],
         mentions: if(published_in_id, do: [published_in_id], else: []),
+        mention_text: mention_text,
         #  do not allow editing recipients when replying to a group thread
         smart_input_opts: [
           create_object_type: create_object_type,
@@ -365,7 +366,7 @@ defmodule Bonfire.Social.Threads.LiveHandler do
 
       {:noreply,
        socket
-       |> maybe_push_event("mention_suggestions", %{text: assigns[:mentions] || ""})}
+       |> maybe_push_event("mention_suggestions", %{text: assigns[:mention_text] || ""})}
     else
       false ->
         error(l("Sorry, you cannot reply to this"))
