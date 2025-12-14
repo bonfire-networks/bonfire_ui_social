@@ -17,6 +17,7 @@ defmodule Bonfire.UI.Social.FeedsLive do
     # FIXME: should only include modules from current extension?
     # FIXME: these should be set somewhere in config
     default_nav: [
+      Bonfire.Web.Views.DashboardLive,
       Bonfire.UI.Social.FeedsLive,
       Bonfire.UI.Social.FeedsNavLive,
       # Bonfire.UI.Files.Web.MediaFeedLive,
