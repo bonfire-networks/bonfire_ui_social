@@ -187,80 +187,118 @@
       </div>
 
       <!-- Job List -->
-      <div :for={job <- @jobs} class="card bg-base-100 border border-base-content/10 shadow-sm">
-        <div class="p-4 pb-0 flex items-start justify-between card-title">
-          <div class="flex flex-col gap-1 mb-2 w-full">
-            <div class="flex items-center gap-2 justify-between">
-              <h3 class="font-semibold text-sm">{job.operation}<span :if={job[:context]}>:
-                  {job[:context]}</span>
-              </h3>
-              <div class="text-right text-xs text-base-content/50 flex items-center gap-2">
-                <div class={"badge badge-sm badge-soft " <> elem(format_state(job.state), 1)}>
+      <div
+        :for={job <- @jobs}
+        class={"card bg-base-100 border border-base-content/10 shadow-sm " <> state_border_class(job.state)}
+        title={"Job ##{job.id}"}
+      >
+        <div class="p-4 flex items-start gap-3">
+          {!-- State icon with animation for running state --}
+          <div class={"flex-shrink-0 mt-0.5 " <> elem(format_state(job.state), 1)}>
+            {#case job.state}
+              {#match "executing"}
+                <#Icon iconify="heroicons:arrow-path" class="w-5 h-5 animate-spin" />
+              {#match "retryable"}
+                <#Icon iconify="heroicons:arrow-path" class="w-5 h-5 animate-spin" />
+              {#match "completed"}
+                <#Icon iconify="heroicons:check-circle" class="w-5 h-5" />
+              {#match "available"}
+                <#Icon iconify="heroicons:clock" class="w-5 h-5" />
+              {#match "scheduled"}
+                <#Icon iconify="heroicons:calendar" class="w-5 h-5" />
+              {#match "failed"}
+                <#Icon iconify="heroicons:exclamation-circle" class="w-5 h-5" />
+              {#match "discarded"}
+                <#Icon iconify="heroicons:x-circle" class="w-5 h-5" />
+              {#match "cancelled"}
+                <#Icon iconify="heroicons:x-circle" class="w-5 h-5" />
+              {#match "pre_existing"}
+                <#Icon iconify="heroicons:information-circle" class="w-5 h-5" />
+              {#match _}
+                <#Icon iconify="heroicons:question-mark-circle" class="w-5 h-5" />
+            {/case}
+          </div>
+
+          <div class="flex-1 min-w-0">
+            {!-- Header row: operation name + status --}
+            <div class="flex items-start justify-between gap-2">
+              <div class="min-w-0">
+                <h3 class="font-medium text-sm text-base-content">
+                  {friendly_operation(job.operation)}
+                </h3>
+                {!-- Show source/destination based on operation type --}
+                {#if is_binary(job[:context]) and String.starts_with?(job[:context] || "", "http")}
+                  {!-- Outgoing federation: show destination server --}
+                  <p class="text-xs text-base-content/60 truncate" title={job[:context]}>
+                    {l("to")} <span class="font-medium">{extract_domain(job[:context])}</span>
+                  </p>
+                {#elseif is_binary(job.identifier) and String.starts_with?(job.identifier || "", "http")}
+                  {!-- Incoming with URL identifier --}
+                  <p class="text-xs text-base-content/60 truncate" title={job.identifier}>
+                    {l("from")} <span class="font-medium">{extract_domain(job.identifier)}</span>
+                  </p>
+                {#elseif is_binary(e(job.identifier, "object", "id", nil)) and String.starts_with?(e(job.identifier, "object", "id", "") || "", "http")}
+                  {!-- Incoming with nested object URL --}
+                  <p class="text-xs text-base-content/60 truncate" title={e(job.identifier, "object", "id", nil)}>
+                    {l("from")} <span class="font-medium">{extract_domain(e(job.identifier, "object", "id", nil))}</span>
+                  </p>
+                {#elseif is_binary(job.identifier) and !job.target_user}
+                  {!-- ID reference (activity, post, etc) --}
+                  <p class="text-xs text-base-content/60 truncate">
+                    {#if Needle.UID.is_ulid?(job.identifier)}
+                      <LinkLive to={"/discussion/#{job.identifier}"} class="hover:underline font-mono">{String.slice(job.identifier, 0, 8)}...</LinkLive>
+                    {#elseif Types.is_uid?(job.identifier)}
+                      <LinkLive to={"/pub/objects/#{job.identifier}"} class="hover:underline font-mono">{String.slice(job.identifier, 0, 8)}...</LinkLive>
+                    {#else}
+                      <span class="font-mono" title={job.identifier}>{String.slice(job.identifier, 0, 12)}...</span>
+                    {/if}
+                  </p>
+                {#elseif is_binary(job[:context])}
+                  {!-- Non-URL context --}
+                  <p class="text-xs text-base-content/60">{job[:context]}</p>
+                {/if}
+              </div>
+
+              {!-- Status badge + time --}
+              <div class="flex-shrink-0 text-right">
+                <div class={"text-xs font-medium " <> elem(format_state(job.state), 1)}>
                   {elem(format_state(job.state), 0)}
                 </div>
-                #{job.id}
+                <div class="text-xs text-base-content/50 mt-0.5">
+                  <time datetime={DatesTimes.format(job.inserted_at)}>{DatesTimes.date_from_now(job.inserted_at)}</time>
+                </div>
               </div>
             </div>
-            <div class="text-sm text-base-content/70 space-y-1">
-              <p :if={job.identifier && !job.target_user}>
-                <span class="font-medium">{l("Item:")}</span>
-                {#case (is_binary(job.identifier) and job.identifier) || e(job.identifier, "object", "id", nil) ||
-                    e(job.identifier, "object", nil)}
-                  {#match nil}
-                    {l("No identifier")}
-                  {#match "http" <> _ = url}
-                    <LinkLive to={url}>{url}</LinkLive>
-                  {#match id}
-                    {#if Needle.UID.is_ulid?(id)}
-                      <LinkLive to={"/discussion/#{id}"}>{id}</LinkLive>
-                    {#else}
-                      {#if Types.is_uid?(id)}
-                        <LinkLive to={"/pub/objects/#{id}"}>{id}</LinkLive>
-                      {#else}
-                        <span class="font-mono">
-                          {id}
-                        </span>
-                      {/if}
-                    {/if}
-                {/case}
-              </p>
 
-              <p class="font-normal">
-                <span class="text-sm">{l("Started ")}</span>
-                <time datetime={DatesTimes.format(job.inserted_at)}>{DatesTimes.date_from_now(job.inserted_at)}</time>
-                <span :if={job.completed_at} class="text-sm">
-                  · {l("Completed ")} <time datetime={DatesTimes.format(job.completed_at)}>{DatesTimes.date_from_now(job.completed_at)}</time></span>
-              </p>
-
-              <p :if={job.attempt > 1}>
-                <span class="text-sm">{l("Attempts:")}</span>
-                {job.attempt} / {job.max_attempts}
-              </p>
+            {!-- Target user (for follow/block operations) --}
+            <div :if={job.target_user} class="mt-3">
+              <StatelessComponent
+                module={maybe_component(Bonfire.UI.Me.ProfileItemLive)}
+                parent_id={deterministic_dom_id(__MODULE__, job.id, "import_history", nil)}
+                character={job.target_user}
+                profile={e(job.target_user, :profile, nil)}
+                wrapper_class="flex items-center gap-2 profile-item group"
+                avatar_class="w-8 h-8"
+                show_controls={[:follow, :follows_me, :add_to_circles, :blocks]}
+              />
             </div>
-          </div>
-        </div>
-        <div class="card-body p-4">
-          <div class="flex items-start justify-between">
-            <div class="flex-1">
-              <div :if={job.target_user} class="">
-                <StatelessComponent
-                  module={maybe_component(Bonfire.UI.Me.ProfileItemLive)}
-                  parent_id={deterministic_dom_id(__MODULE__, job.id, "import_history", nil)}
-                  character={job.target_user}
-                  profile={e(job.target_user, :profile, nil)}
-                  wrapper_class="flex items-start gap-3 profile-item group"
-                  avatar_class="w-12 h-12"
-                  show_controls={[:follow, :follows_me, :add_to_circles, :blocks]}
-                />
-              </div>
-            </div>
-          </div>
 
-          <div :if={job.error && job.error != ""} class="mt-3 p-3 bg-error/10 rounded-lg">
-            <div class="flex items-start gap-2">
-              <#Icon iconify="heroicons:exclamation-triangle" class="w-4 h-4 text-error mt-0.5 flex-shrink-0" />
-              <div class="text-sm">
-                <p class="font-medium text-error mb-1">{l("Error:")}</p>
+            {!-- Retry indicator --}
+            <p :if={job.attempt > 1} class="text-xs text-base-content/50 mt-2">
+              {l("Attempt %{current} of %{max}", current: job.attempt, max: job.max_attempts)}
+            </p>
+
+            {!-- Collapsible error section --}
+            <div :if={job.error && job.error != ""} class="mt-3">
+              <button
+                type="button"
+                class="btn btn-xs btn-ghost text-error gap-1"
+                phx-click={JS.toggle(to: "#error-details-#{job.id}")}
+              >
+                <#Icon iconify="heroicons:exclamation-triangle" class="w-3.5 h-3.5" />
+                {l("Show error details")}
+              </button>
+              <div id={"error-details-#{job.id}"} class="hidden mt-2 p-3 bg-error/10 rounded-lg">
                 <pre class="text-xs text-error/80 whitespace-pre-wrap font-mono">{job.error}</pre>
               </div>
             </div>

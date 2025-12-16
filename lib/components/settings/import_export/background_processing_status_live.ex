@@ -432,7 +432,7 @@ defmodule Bonfire.UI.Social.BackgroundProcessingStatusLive do
       op_code: op_code,
       operation: op_type,
       identifier: identifier,
-      context: e(job.args, "context", nil) || e(job.args, "params", "inbox", nil),
+      context: e(job.args, "params", "inbox", nil) || e(job.args, "context", nil),
       target_user: target_user,
       state: if(is_pre_existing, do: "pre_existing", else: job.state),
       inserted_at: job.inserted_at,
@@ -529,6 +529,58 @@ defmodule Bonfire.UI.Social.BackgroundProcessingStatusLive do
   defp format_state("cancelled"), do: {l("Cancelled"), "text-base-content/60"}
   defp format_state("discarded"), do: {l("Failed"), "text-error"}
   defp format_state(other), do: {other, "text-base-content"}
+
+  # Icon for each state (iconify format)
+  def state_icon("pre_existing"), do: "heroicons:information-circle"
+  def state_icon("completed"), do: "heroicons:check-circle"
+  def state_icon("failed"), do: "heroicons:exclamation-circle"
+  def state_icon("executing"), do: "heroicons:arrow-path"
+  def state_icon("available"), do: "heroicons:clock"
+  def state_icon("scheduled"), do: "heroicons:calendar"
+  def state_icon("retryable"), do: "heroicons:arrow-path"
+  def state_icon("cancelled"), do: "heroicons:x-circle"
+  def state_icon("discarded"), do: "heroicons:x-circle"
+  def state_icon(_), do: "heroicons:question-mark-circle"
+
+  # Left border color class for each state
+  def state_border_class("pre_existing"), do: "border-l-4 border-l-info/50"
+  def state_border_class("completed"), do: "border-l-4 border-l-success"
+  def state_border_class("failed"), do: "border-l-4 border-l-error"
+  def state_border_class("executing"), do: "border-l-4 border-l-warning"
+  def state_border_class("available"), do: "border-l-4 border-l-info"
+  def state_border_class("scheduled"), do: "border-l-4 border-l-info"
+  def state_border_class("retryable"), do: "border-l-4 border-l-warning"
+  def state_border_class("cancelled"), do: "border-l-4 border-l-base-content/30"
+  def state_border_class("discarded"), do: "border-l-4 border-l-error"
+  def state_border_class(_), do: "border-l-4 border-l-base-content/20"
+
+  # Extract domain from URL for friendlier display
+  def extract_domain(url) when is_binary(url) do
+    case URI.parse(url) do
+      %URI{host: host} when is_binary(host) -> host
+      _ -> url
+    end
+  end
+
+  def extract_domain(other), do: other
+
+  # User-friendly operation names
+  def friendly_operation("Incoming federation"), do: l("Receiving post")
+  def friendly_operation("Incoming federation (unverified)"), do: l("Receiving post")
+  def friendly_operation("Outgoing federation"), do: l("Sending post")
+  def friendly_operation("Prep for federation"), do: l("Preparing to send")
+  def friendly_operation("Fetch content"), do: l("Fetching content")
+  def friendly_operation("Follow"), do: l("Following user")
+  def friendly_operation("Block"), do: l("Blocking user")
+  def friendly_operation("Silence"), do: l("Silencing user")
+  def friendly_operation("Ghost"), do: l("Ghosting user")
+  def friendly_operation("Bookmark"), do: l("Adding bookmark")
+  def friendly_operation("Circle"), do: l("Adding to circle")
+  def friendly_operation("Posts & boosts"), do: l("Importing posts")
+  def friendly_operation("Posts/Creations"), do: l("Importing posts")
+  def friendly_operation("Like"), do: l("Adding like")
+  def friendly_operation("Boost"), do: l("Adding boost")
+  def friendly_operation(other), do: other
 
   defp format_errors(errors) when is_list(errors) do
     errors
