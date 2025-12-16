@@ -1,5 +1,5 @@
 <div class="write_post_content">
-  {!-- FIXME: using Surface's Form component here causes it to override our @__context__ (containing current_user, etc) with the form metadata, causing issues in any component below this one --}
+  {!-- NOTE: if using Surface's Form component here it would cause it to override our @__context__ (containing current_user, etc) with the form metadata, causing issues in any component below this one --}
   <!-- for={%{}} -->
   {!-- DM RECIPIENTS --}
 
