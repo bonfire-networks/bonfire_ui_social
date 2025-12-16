@@ -237,7 +237,8 @@
                   <p class="text-xs text-base-content/60 truncate" title={job.identifier}>
                     {l("from")} <span class="font-medium">{extract_domain(job.identifier)}</span>
                   </p>
-                {#elseif is_binary(e(job.identifier, "object", "id", nil)) and String.starts_with?(e(job.identifier, "object", "id", "") || "", "http")}
+                {#elseif is_binary(e(job.identifier, "object", "id", nil)) and
+                    String.starts_with?(e(job.identifier, "object", "id", "") || "", "http")}
                   {!-- Incoming with nested object URL --}
                   <p class="text-xs text-base-content/60 truncate" title={e(job.identifier, "object", "id", nil)}>
                     {l("from")} <span class="font-medium">{extract_domain(e(job.identifier, "object", "id", nil))}</span>
