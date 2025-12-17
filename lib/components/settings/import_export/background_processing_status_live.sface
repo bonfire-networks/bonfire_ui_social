@@ -234,8 +234,8 @@
                   </p>
                 {#elseif is_binary(job.identifier) and String.starts_with?(job.identifier || "", "http")}
                   {!-- Incoming with URL identifier --}
-                  <p class="text-xs text-base-content/60 truncate" title={job.identifier}>
-                    {l("from")} <span class="font-medium">{extract_domain(job.identifier)}</span>
+                  <p class="text-xs text-base-content/60 truncate">
+                    {l("from")} <a href={job.identifier} class="font-medium">{extract_domain(job.identifier)}</a>
                   </p>
                 {#elseif is_binary(e(job.identifier, "object", "id", nil)) and
                     String.starts_with?(e(job.identifier, "object", "id", "") || "", "http")}
