@@ -572,8 +572,15 @@ defmodule Bonfire.UI.Social.BackgroundProcessingStatusLive do
   def friendly_operation("Fetch content", "fix_replies"), do: l("Fetching replies")
   def friendly_operation("Fetch content", "fix_context"), do: l("Fetching thread context")
   def friendly_operation("Fetch content", "Object.normalize"), do: l("Normalizing object")
-  def friendly_operation("Fetch content", "fetch_fresh_object_from_id"), do: l("Fetching fresh object")
+
+  def friendly_operation("Fetch content", "fetch_fresh_object_from_id"),
+    do: l("Fetching fresh object")
+
   def friendly_operation("Fetch content", "handle_incoming"), do: l("Processing incoming")
+
+  def friendly_operation("Fetch content", detail) when is_binary(detail),
+    do: l("Fetching content") <> " (#{detail})"
+
   def friendly_operation("Fetch content", _), do: l("Fetching content")
 
   # Other operations
@@ -591,6 +598,7 @@ defmodule Bonfire.UI.Social.BackgroundProcessingStatusLive do
   def friendly_operation("Posts/Creations", _), do: l("Importing posts")
   def friendly_operation("Like", _), do: l("Adding like")
   def friendly_operation("Boost", _), do: l("Adding boost")
+  def friendly_operation(other, detail) when is_binary(detail), do: "#{other} (#{detail})"
   def friendly_operation(other, _), do: other
 
   defp format_errors(errors) when is_list(errors) do
