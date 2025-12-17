@@ -564,23 +564,34 @@ defmodule Bonfire.UI.Social.BackgroundProcessingStatusLive do
 
   def extract_domain(other), do: other
 
-  # User-friendly operation names
-  def friendly_operation("Incoming federation"), do: l("Receiving post")
-  def friendly_operation("Incoming federation (unverified)"), do: l("Receiving post")
-  def friendly_operation("Outgoing federation"), do: l("Sending post")
-  def friendly_operation("Prep for federation"), do: l("Preparing to send")
-  def friendly_operation("Fetch content"), do: l("Fetching content")
-  def friendly_operation("Follow"), do: l("Following user")
-  def friendly_operation("Block"), do: l("Blocking user")
-  def friendly_operation("Silence"), do: l("Silencing user")
-  def friendly_operation("Ghost"), do: l("Ghosting user")
-  def friendly_operation("Bookmark"), do: l("Adding bookmark")
-  def friendly_operation("Circle"), do: l("Adding to circle")
-  def friendly_operation("Posts & boosts"), do: l("Importing posts")
-  def friendly_operation("Posts/Creations"), do: l("Importing posts")
-  def friendly_operation("Like"), do: l("Adding like")
-  def friendly_operation("Boost"), do: l("Adding boost")
-  def friendly_operation(other), do: other
+  # User-friendly operation names with optional context
+  def friendly_operation(operation, context \\ nil)
+
+  # Fetch content with specific context - provide detailed info for admins
+  def friendly_operation("Fetch content", "fix_in_reply_to"), do: l("Fetching parent post")
+  def friendly_operation("Fetch content", "fix_replies"), do: l("Fetching replies")
+  def friendly_operation("Fetch content", "fix_context"), do: l("Fetching thread context")
+  def friendly_operation("Fetch content", "Object.normalize"), do: l("Normalizing object")
+  def friendly_operation("Fetch content", "fetch_fresh_object_from_id"), do: l("Fetching fresh object")
+  def friendly_operation("Fetch content", "handle_incoming"), do: l("Processing incoming")
+  def friendly_operation("Fetch content", _), do: l("Fetching content")
+
+  # Other operations
+  def friendly_operation("Incoming federation", _), do: l("Receiving post")
+  def friendly_operation("Incoming federation (unverified)", _), do: l("Receiving post")
+  def friendly_operation("Outgoing federation", _), do: l("Sending post")
+  def friendly_operation("Prep for federation", _), do: l("Preparing to send")
+  def friendly_operation("Follow", _), do: l("Following user")
+  def friendly_operation("Block", _), do: l("Blocking user")
+  def friendly_operation("Silence", _), do: l("Silencing user")
+  def friendly_operation("Ghost", _), do: l("Ghosting user")
+  def friendly_operation("Bookmark", _), do: l("Adding bookmark")
+  def friendly_operation("Circle", _), do: l("Adding to circle")
+  def friendly_operation("Posts & boosts", _), do: l("Importing posts")
+  def friendly_operation("Posts/Creations", _), do: l("Importing posts")
+  def friendly_operation("Like", _), do: l("Adding like")
+  def friendly_operation("Boost", _), do: l("Adding boost")
+  def friendly_operation(other, _), do: other
 
   defp format_errors(errors) when is_list(errors) do
     errors

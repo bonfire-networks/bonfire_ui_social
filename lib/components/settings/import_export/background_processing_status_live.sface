@@ -224,7 +224,7 @@
             <div class="flex items-start justify-between gap-2">
               <div class="min-w-0">
                 <h3 class="font-medium text-sm text-base-content">
-                  {friendly_operation(job.operation)}
+                  {friendly_operation(job.operation, job[:context])}
                 </h3>
                 {!-- Show source/destination based on operation type --}
                 {#if is_binary(job[:context]) and String.starts_with?(job[:context] || "", "http")}
@@ -293,7 +293,7 @@
             <div :if={job.error && job.error != ""} class="mt-3">
               <button
                 type="button"
-                class="btn btn-xs btn-ghost text-error gap-1"
+                class="link text-sm text-error gap-1"
                 phx-click={JS.toggle(to: "#error-details-#{job.id}")}
               >
                 <#Icon iconify="heroicons:exclamation-triangle" class="w-3.5 h-3.5" />
