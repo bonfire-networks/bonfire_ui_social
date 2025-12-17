@@ -64,8 +64,8 @@
           {#match duration when is_number(duration)}
             {Bonfire.Common.Localise.Cldr.Unit.new(:second, duration)
             ~> Bonfire.Common.Localise.Cldr.Unit.decompose([:day, :hour, :minute, :second])
-            |> Bonfire.Common.Localise.Cldr.Unit.to_string(style: :short)
-            |> from_ok() || duration}
+            ~> Bonfire.Common.Localise.Cldr.Unit.to_string(style: :short)
+            ~> from_ok() || duration}
           {#match duration}
             {duration}
         {/case}

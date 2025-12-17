@@ -50,8 +50,8 @@ defmodule Bonfire.UI.Social.Feeds.Notifications.ReplyTest do
     assert doc
            |> Floki.parse_fragment()
            ~> elem(1)
-           |> Floki.find("[data-role=subject]")
-           |> Floki.text() =~ bob.profile.name
+           ~> Floki.find("[data-role=subject]")
+           ~> Floki.text() =~ bob.profile.name
   end
 
   test "As a user, when someone replies to my activity, I want to see it in notifications, include the replied message" do
@@ -92,8 +92,8 @@ defmodule Bonfire.UI.Social.Feeds.Notifications.ReplyTest do
            |> Floki.parse_fragment()
            ~> elem(1)
            # |> debug()
-           |> Floki.find("div.reply_message")
-           |> Floki.text() =~ "reply to first post"
+           ~> Floki.find("div.reply_message")
+           ~> Floki.text() =~ "reply to first post"
   end
 
   test "As a user, when someone replies to my activity, I want to see it in notifications, included the author's name of the original activity" do
@@ -134,8 +134,8 @@ defmodule Bonfire.UI.Social.Feeds.Notifications.ReplyTest do
            |> Floki.parse_fragment()
            ~> elem(1)
            # |> debug()
-           |> Floki.find("div.main_reply_to a")
-           |> Floki.text() =~ alice.profile.name
+           ~> Floki.find("div.main_reply_to a")
+           ~> Floki.text() =~ alice.profile.name
   end
 
   test "As a user, when someone replies to my activity, I want to see it in notifications, included the content of the original activity" do
