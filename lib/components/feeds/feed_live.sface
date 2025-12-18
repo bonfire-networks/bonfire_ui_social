@@ -42,21 +42,17 @@
       {!-- :if={@feed_name in [nil, :my, :local, :remote, :explore] and current_user_id(@__context__)} --}
 
       <div
-        :if={@hide_fresh != 0}
+        :if={@fresh_ids != nil and MapSet.size(@fresh_ids) > 0}
         id="show_fresh"
         @click="window.scrollTo({top: 0, behavior: 'smooth'})"
         phx-click={JS.show(to: ".fresh_hidden")
+        |> JS.push("show_fresh", target: @myself)
         |> JS.add_class("hidden")}
-        class="flex justify-center w-full p-3 mx-auto absolute z-50"
+        class="flex justify-center w-full mx-auto btn btn-ghost text-primary z-50 border-0 border-b border-base-content/10 rounded-none border-t py-6 font-light"
         phx-show={JS.remove_class("hidden")}
       >
-        {!-- style={if @hide_fresh==0, do: "display: none;", else: ""} --}
-        <btn class="normal-case btn btn-sm btn-primary">
           <#Icon iconify="mdi:arrow-up" class="w-4 h-4" />
-          {!-- |> JS.push("hide_fresh", target: @myself) --}
-          {l("Show more recent")}
-          {!-- {"(#{@hide_fresh})"} --}
-        </btn>
+          {lp("Show %{count} new post", "Show %{count} new posts", MapSet.size(@fresh_ids), count: MapSet.size(@fresh_ids))}
       </div>
 
       {#if is_list(@feed) and @feed != []}
@@ -111,7 +107,7 @@
               class={
                 "activity_wrapper w-full max-w-full",
                 "infinite_scroll_hidden hidden": @hide_activities == "infinite_scroll",
-                "fresh_hidden hidden": @hide_fresh != 0
+                "fresh_hidden hidden": fresh_entry?(@fresh_ids, entry)
               }
             >
               {!-- id={"activity-#{component_id(@feed_id || @id, entry)}"} --}

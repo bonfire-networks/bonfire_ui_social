@@ -66,7 +66,7 @@ defmodule Bonfire.UI.Social.FeedLive do
   # prop sort_order, :any, default: false
   prop activity_preloads, :tuple, default: {nil, nil}
 
-  prop hide_fresh, :integer, default: 0
+  prop fresh_ids, :any, default: nil
   prop feed_count, :any, default: nil
   prop deferred_join_multiply_limit, :any, default: nil
   prop cute_gif, :any, default: nil
@@ -127,6 +127,17 @@ defmodule Bonfire.UI.Social.FeedLive do
   defp get_activity(%{edge: %{id: _} = activity}), do: activity
   defp get_activity(activity), do: activity
 
+  @doc "Check if a feed entry is in the fresh_ids set (newly arrived via PubSub)"
+  def fresh_entry?(nil, _entry), do: false
+
+  def fresh_entry?(fresh_ids, entry) do
+    entry_id =
+      id(entry) || e(entry, :activity, :id, nil) ||
+        e(entry, :object, :id, nil) || e(entry, :edge, :id, nil)
+
+    entry_id && MapSet.member?(fresh_ids, entry_id)
+  end
+
   def tabs(_page, context) do
     # disabled hiding of remote tab because it is also useful to find remote activities that were looked up manually
     # case Bonfire.Social.federating?(current_user(context)) do
@@ -177,17 +188,24 @@ defmodule Bonfire.UI.Social.FeedLive do
   def update(%{new_activity: new_activity} = _assigns, socket) when is_map(new_activity) do
     debug("new_activity, add to top of feed")
 
+    activity_id =
+      id(new_activity) || e(new_activity, :activity, :id, nil) ||
+        e(new_activity, :object, :id, nil) || e(new_activity, :edge, :id, nil)
+
+    current_fresh_ids = e(assigns(socket), :fresh_ids, nil) || MapSet.new()
+
+    updated_fresh_ids =
+      if activity_id, do: MapSet.put(current_fresh_ids, activity_id), else: current_fresh_ids
+
     {
       :ok,
       socket
-      |> assign(hide_fresh: e(assigns(socket), :hide_fresh, 0) + 1)
-      # what an ugly way but idk
+      |> assign(fresh_ids: updated_fresh_ids)
       |> push_event("js-exec-attr-event", %{
         to: "#show_fresh",
         attr: "phx-show"
       })
       |> LiveHandler.insert_feed(new_activity, at: 0, reset: false)
-      #  |> JS.show(to: "#show_fresh") # LV doesn't have this for some reason
     }
   end
 
@@ -969,16 +987,7 @@ defmodule Bonfire.UI.Social.FeedLive do
     )
   end
 
-  #   def handle_event(
-  #       "hide_fresh",
-  #       attrs,
-  #       socket
-  #     )do
-
-  #   ok_socket(
-  #    socket
-  #    |> assign(
-  #      hide_fresh: 0
-  #    ))
-  # end
+  def handle_event("show_fresh", _attrs, socket) do
+    {:noreply, assign(socket, fresh_ids: nil)}
+  end
 end
