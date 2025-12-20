@@ -96,6 +96,7 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
 
   def handle_event("reply_to_activity", _params, socket) do
     activity = e(assigns(socket), :activity, %{})
+    object_boundary = e(assigns(socket), :object_boundary, nil)
 
     Bonfire.Social.Threads.LiveHandler.reply(
       e(assigns(socket), :object, nil) ||
@@ -103,6 +104,7 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
         e(assigns(socket), :object_id, nil) ||
         e(activity, :object_id, nil),
       activity,
+      object_boundary,
       socket
     )
   end

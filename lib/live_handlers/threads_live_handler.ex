@@ -131,6 +131,7 @@ defmodule Bonfire.Social.Threads.LiveHandler do
 
   def handle_event("reply", %{"id" => reply_to_id} = _params, socket) do
     activity = e(assigns(socket), :activity, %{})
+    object_boundary = e(assigns(socket), :object_boundary, nil)
 
     reply_to =
       e(assigns(socket), :object, nil) ||
@@ -139,14 +140,15 @@ defmodule Bonfire.Social.Threads.LiveHandler do
         e(activity, :object_id, nil)
 
     if reply_to_id == Enums.id(reply_to) do
-      reply(reply_to, activity, socket)
+      reply(reply_to, activity, object_boundary, socket)
     else
-      reply(reply_to_id, activity, socket)
+      reply(reply_to_id, activity, object_boundary, socket)
     end
   end
 
   def handle_event("reply", _params, socket) do
     activity = e(assigns(socket), :activity, %{})
+    object_boundary = e(assigns(socket), :object_boundary, nil)
 
     reply(
       e(assigns(socket), :object, nil) ||
@@ -154,6 +156,7 @@ defmodule Bonfire.Social.Threads.LiveHandler do
         e(assigns(socket), :object_id, nil) ||
         e(activity, :object_id, nil),
       activity,
+      object_boundary,
       socket
     )
   end
@@ -265,7 +268,7 @@ defmodule Bonfire.Social.Threads.LiveHandler do
     end
   end
 
-  def prepare_reply_assigns(reply_to, activity, socket) do
+  def prepare_reply_assigns(reply_to, activity, object_boundary, socket) do
     # TODO: we should be getting the type from ActivityLive
     object_type =
       case e(assigns(socket), :object_type, nil) || Types.object_type(reply_to) do
@@ -277,9 +280,9 @@ defmodule Bonfire.Social.Threads.LiveHandler do
           other
       end
 
-    debug(e(assigns(socket), :object_boundary, nil), "object_boundary!")
-    debug(e(assigns(socket), :published_in, nil), "published_in_id!")
-    debug(object_type, "object_type!")
+    # Use passed object_boundary or fall back to socket assigns
+    object_boundary = object_boundary || e(assigns(socket), :object_boundary, nil)
+
     reply_to_id = Enums.id(reply_to)
 
     with {:ok, current_user} <- current_user_or_remote_interaction(socket, l("reply"), reply_to),
@@ -338,7 +341,7 @@ defmodule Bonfire.Social.Threads.LiveHandler do
                  e(published_in, :name, nil)},
             else:
               Bonfire.Boundaries.preset_boundary_tuple_from_acl(
-                e(assigns(socket), :object_boundary, nil),
+                object_boundary,
                 object_type
               )
           )
@@ -352,10 +355,11 @@ defmodule Bonfire.Social.Threads.LiveHandler do
     end
   end
 
-  def reply(reply_to, activity, socket) do
+  def reply(reply_to, activity, object_boundary \\ nil, socket) do
     debug(reply_to, "reply!")
 
-    with assigns when is_list(assigns) <- prepare_reply_assigns(reply_to, activity, socket) do
+    with assigns when is_list(assigns) <-
+           prepare_reply_assigns(reply_to, activity, object_boundary, socket) do
       # debug(mentions, "send activity to smart input")
 
       Bonfire.UI.Common.SmartInput.LiveHandler.open_with_text_suggestion(
