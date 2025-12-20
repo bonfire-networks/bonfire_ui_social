@@ -159,9 +159,9 @@
       <div class="flex justify-between items-center mb-2">
         <Bonfire.UI.Social.ImportRefreshLive event_target={@myself} />
 
-        <div class="text-sm text-base-content/70">
+        <!-- <div class="text-sm text-base-content/70">
           {l("Showing page %{page} (%{count} items)", page: @current_page, count: length(@jobs))}
-        </div>
+        </div> -->
 
         <!-- Pagination Controls -->
         <div class="flex gap-2">
@@ -189,7 +189,7 @@
       <!-- Job List -->
       <div
         :for={job <- @jobs}
-        class={"card bg-base-100 border border-base-content/10 shadow-sm " <> state_border_class(job.state)}
+        class={"card bg-base-100 border mb-2 border-base-content/10 shadow-sm " <> state_border_class(job.state)}
         title={"Job ##{job.id}"}
       >
         <div class="p-4 flex items-start gap-3">
