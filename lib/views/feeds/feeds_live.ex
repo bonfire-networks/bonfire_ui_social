@@ -103,7 +103,7 @@ defmodule Bonfire.UI.Social.FeedsLive do
        selected_tab: nil,
        #  page: :explore,
        page_title: l("Activities"),
-       page_header_icon: "carbon:home",
+       page_header_icon: "ph:house-duotone",
        feed: nil,
        page_info: nil,
        no_header: false,
