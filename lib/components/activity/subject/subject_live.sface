@@ -104,7 +104,7 @@
           "aria-label": l("%{name}'s profile", name: @profile_name)
         ]}
         parent_id={deterministic_dom_id(__MODULE__, @subject_id, "subject_name", @parent_id)}
-        class="link text-[15px] max-w-[250px] lg:max-w-[500px] link-hover text-sm font-bold truncate"
+        class="link max-w-[250px] lg:max-w-[500px] link-hover text-base font-bold truncate"
         to={@path}
       >
         {@profile_name}
