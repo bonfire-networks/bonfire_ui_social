@@ -39,7 +39,7 @@
 
         <ul
           tabindex="0"
-          class="tooltip z-[999] menu bg-base-100 divide-y divide-base-content/10 border pt-0 border-base-content/20 shadow rounded-box w-72 absolute top-0 right-0 hidden"
+          class="tooltip z-[999] menu bg-base-100 divide-y divide-base-content/10 border pt-0 border-base-content/20 shadow rounded-box absolute top-0 right-0 hidden"
         >
           <div
             class="pt-2"

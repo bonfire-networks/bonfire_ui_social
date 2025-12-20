@@ -1,37 +1,38 @@
-<div
-  data-position="bottom-end"
-  phx-hook="Tooltip"
-  class="flex w-full relative"
-  id={@container_id}
->
-  <label
-    tabindex="0"
-    class="tooltip-button btn btn-circle btn-outline border-base-content/20 btn-sm"
-  >
-    <div class="sr-only">{l("Filter by circles")}</div>
-    <#Icon iconify="ph:circle-duotone" class="w-4 h-4 text-primary" />
-  </label>
-  <ul
-    tabindex="0"
-    class="tooltip z-[999] menu bg-base-100 pt-0 shadow divide-y divide-base-content/10 border border-base-content/20 rounded-box w-72 absolute top-0 right-0 hidden"
-  >
+{#case Bonfire.UI.Boundaries.SetBoundariesLive.circles_for_multiselect(
+    @__context__,
+    :subject_circles
+  ) || []}
+  {#match []}
+    {!-- No circles to filter by --}
+  {#match my_circles}
     <div
-      class="pt-2"
-      :for={circle <-
-        Bonfire.UI.Boundaries.SetBoundariesLive.circles_for_multiselect(
-          @__context__,
-          :subject_circles
-        )}
+      data-position="bottom-end"
+      phx-hook="Tooltip"
+      class="flex w-full relative"
+      id={@container_id}
     >
-      <Bonfire.UI.Social.ToggleTypeLive
-        label={elem(circle, 1)[:name]}
-        key={elem(circle, 1)[:id]}
-        field={:subject_circles}
-        feed_filters={@feed_filters}
-        event_target={@event_target}
-        event_name={@event_name}
-        label_default={l("Include")}
-      />
+      <label
+        tabindex="0"
+        class="tooltip-button btn btn-circle btn-outline border-base-content/20 btn-sm"
+      >
+        <div class="sr-only">{l("Filter by circles")}</div>
+        <#Icon iconify="ph:circle-duotone" class="w-4 h-4 text-primary" />
+      </label>
+      <ul
+        tabindex="0"
+        class="tooltip z-[999] menu bg-base-100 pt-0 shadow divide-y divide-base-content/10 border border-base-content/20 rounded-box w-72 absolute top-0 right-0 hidden"
+      >
+        <div class="pt-2" :for={circle <- my_circles}>
+          <Bonfire.UI.Social.ToggleTypeLive
+            label={elem(circle, 1)[:name]}
+            key={elem(circle, 1)[:id]}
+            field={:subject_circles}
+            feed_filters={@feed_filters}
+            event_target={@event_target}
+            event_name={@event_name}
+            label_default={l("Include")}
+          />
+        </div>
+      </ul>
     </div>
-  </ul>
-</div>
+{/case}
