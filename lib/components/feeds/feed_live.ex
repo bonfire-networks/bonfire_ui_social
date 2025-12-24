@@ -473,7 +473,7 @@ defmodule Bonfire.UI.Social.FeedLive do
           page_header_aside: [
             {Bonfire.UI.Social.HeaderAsideNotificationsSeenLive,
              [
-               feed_id: :notifications,
+               feed_id: e(assigns[:current_user], :character, :notifications_id, nil),
                feed_name: "notifications"
              ]}
             # {Bonfire.UI.Social.HeaderAsideFeedFiltersLive, [feed_name: "notifications"]}
