@@ -11,14 +11,13 @@
   data-rendered={@showing_within}
   data-main-object={@viewing_main_object}
   class={
-    "object_body translatable prose break-normal max-w-none text-base-content prose-hr:!my-2 prose-br:hidden",
+    "object_body prose-bonfire translatable prose break-normal max-w-none text-base-content prose-hr:!my-2 prose-br:hidden",
     previewable_truncate:
       !@viewing_main_object &&
         @showing_within not in [:smart_input],
     "!text-sm !text-base-content/70":
-      e(@object_type, nil) == :article && @showing_within != :thread,
-    "prose-bonfire": @showing_within not in [:thread]
-  }
+      e(@object_type, nil) == :article && @showing_within != :thread  
+    }
 >
   {rich(
     # maybe_truncate(
