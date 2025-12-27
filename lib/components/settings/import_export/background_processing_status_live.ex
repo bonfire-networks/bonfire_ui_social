@@ -584,20 +584,20 @@ defmodule Bonfire.UI.Social.BackgroundProcessingStatusLive do
   def friendly_operation("Fetch content", _), do: l("Fetching content")
 
   # Other operations
-  def friendly_operation("Incoming federation", _), do: l("Receiving post")
-  def friendly_operation("Incoming federation (unverified)", _), do: l("Receiving post")
-  def friendly_operation("Outgoing federation", _), do: l("Sending post")
+  def friendly_operation("Incoming federation", _), do: l("Receiving activity")
+  def friendly_operation("Incoming federation (unverified)", _), do: l("Receiving activity")
+  def friendly_operation("Outgoing federation", _), do: l("Sending activity")
   def friendly_operation("Prep for federation", _), do: l("Preparing to send")
   def friendly_operation("Follow", _), do: l("Following user")
-  def friendly_operation("Block", _), do: l("Blocking user")
-  def friendly_operation("Silence", _), do: l("Silencing user")
-  def friendly_operation("Ghost", _), do: l("Ghosting user")
-  def friendly_operation("Bookmark", _), do: l("Adding bookmark")
+  def friendly_operation("Block", _), do: l("Blocking or instance")
+  def friendly_operation("Silence", _), do: l("Silencing user or instance")
+  def friendly_operation("Ghost", _), do: l("Ghosting user or instance")
+  def friendly_operation("Bookmark", _), do: l("Importing bookmark")
   def friendly_operation("Circle", _), do: l("Adding to circle")
-  def friendly_operation("Posts & boosts", _), do: l("Importing posts")
-  def friendly_operation("Posts/Creations", _), do: l("Importing posts")
-  def friendly_operation("Like", _), do: l("Adding like")
-  def friendly_operation("Boost", _), do: l("Adding boost")
+  def friendly_operation("Posts & boosts", _), do: l("Importing object or boost")
+  def friendly_operation("Posts/Creations", _), do: l("Importing object")
+  def friendly_operation("Like", _), do: l("Importing like")
+  def friendly_operation("Boost", _), do: l("Importing boost")
   def friendly_operation(other, detail) when is_binary(detail), do: "#{other} (#{detail})"
   def friendly_operation(other, _), do: other
 

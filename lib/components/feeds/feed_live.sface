@@ -52,7 +52,7 @@
         phx-show={JS.remove_class("hidden")}
       >
           <#Icon iconify="mdi:arrow-up" class="w-4 h-4" />
-          {lp("Show %{count} new post", "Show %{count} new posts", MapSet.size(@fresh_ids), count: MapSet.size(@fresh_ids))}
+          {lp("Show %{count} new activity", "Show %{count} new activities", MapSet.size(@fresh_ids), count: MapSet.size(@fresh_ids))}
       </div>
 
       {#if is_list(@feed) and @feed != []}

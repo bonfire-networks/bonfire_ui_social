@@ -230,18 +230,18 @@
                 {#if is_binary(job[:context]) and String.starts_with?(job[:context] || "", "http")}
                   {!-- Outgoing federation: show destination server --}
                   <p class="text-xs text-base-content/60 truncate" title={job[:context]}>
-                    {l("to")} <span class="font-medium">{extract_domain(job[:context])}</span>
+                    {l("to")} <a href={job[:context]} target="_blank" class="font-medium">{extract_domain(job[:context])}</a>
                   </p>
                 {#elseif is_binary(job.identifier) and String.starts_with?(job.identifier || "", "http")}
                   {!-- Incoming with URL identifier --}
                   <p class="text-xs text-base-content/60 truncate">
-                    {l("from")} <a href={job.identifier} class="font-medium">{extract_domain(job.identifier)}</a>
+                    {l("from")} <a href={job.identifier} target="_blank" class="font-medium">{extract_domain(job.identifier)}</a>
                   </p>
                 {#elseif is_binary(e(job.identifier, "object", "id", nil)) and
                     String.starts_with?(e(job.identifier, "object", "id", "") || "", "http")}
                   {!-- Incoming with nested object URL --}
-                  <p class="text-xs text-base-content/60 truncate" title={e(job.identifier, "object", "id", nil)}>
-                    {l("from")} <span class="font-medium">{extract_domain(e(job.identifier, "object", "id", nil))}</span>
+                  <p class="text-xs text-base-content/60 truncate">
+                    {l("from")} <a href={e(job.identifier, "object", "id", nil))} target="_blank" class="font-medium">{extract_domain(e(job.identifier, "object", "id", nil))}</a>
                   </p>
                 {#elseif is_binary(job.identifier) and !job.target_user}
                   {!-- ID reference (activity, post, etc) --}
