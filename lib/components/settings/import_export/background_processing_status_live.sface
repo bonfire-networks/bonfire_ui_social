@@ -229,7 +229,7 @@
                 {!-- Show source/destination based on operation type --}
                 {#if is_binary(job[:context]) and String.starts_with?(job[:context] || "", "http")}
                   {!-- Outgoing federation: show destination server --}
-                  <p class="text-xs text-base-content/60 truncate" title={job[:context]}>
+                  <p class="text-xs text-base-content/60 truncate">
                     {l("to")} <a href={job[:context]} target="_blank" class="font-medium">{extract_domain(job[:context])}</a>
                   </p>
                 {#elseif is_binary(job.identifier) and String.starts_with?(job.identifier || "", "http")}
