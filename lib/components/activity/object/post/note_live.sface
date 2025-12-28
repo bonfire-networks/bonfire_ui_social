@@ -74,6 +74,7 @@
   <button
     id={deterministic_dom_id(__MODULE__, id(@activity) || id(@object), "translate", @parent_id)}
     class="translate-btn link link-primary link-hover text-sm"
+    style="display: none;"
     phx-update="ignore"
   >
     <span class="loading-spinner" />
