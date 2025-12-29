@@ -675,7 +675,7 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
   # defp feed_filter_assigns(_),
   #   do: [tab_path_suffix: nil,
   #   page_title: l("Activities"),
-  #   page_header_icon: "carbon:home"]
+  #   page_header_icon: "ph:house-duotone"]
 
   # @decorate time()
 

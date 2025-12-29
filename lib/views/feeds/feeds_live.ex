@@ -55,7 +55,7 @@ defmodule Bonfire.UI.Social.FeedsLive do
   #     href: &nav_link_feed/1,
   #     #  TODO: these should be generated from preset filters and settings
   #     sub_links: [
-  #       {l("Following"), page: "following", href: "/feed/my", icon: "carbon:home"},
+  #       {l("Following"), page: "following", href: "/feed/my", icon: "ph:house-duotone"},
   #       {l("Explore"), page: "explore", href: "/feed/explore", icon: "carbon:explore"},
   #       {l("Local"),
   #        page: "local", href: "/feed/local", icon: "material-symbols:camping-rounded"},
