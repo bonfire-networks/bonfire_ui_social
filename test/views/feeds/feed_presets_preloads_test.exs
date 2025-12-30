@@ -96,7 +96,7 @@ defmodule Bonfire.UI.Social.PreloadPresetTest do
             |> visit(feed_path)
             |> assert_path(feed_path)
             |> assert_has_or_open_browser("[data-id=activity]")
-            |> assert_has_or_open_browser("[data-object_id=#{id(object)}]")
+            |> assert_has_or_open_browser("[data-object_id=\"#{id(object)}\"]")
 
           # Verify preloads based on the feed preset configuration
           verify_preloads_in_html(conn, preset, params.postloads, object, activity)
