@@ -170,7 +170,7 @@ defmodule Bonfire.UI.Social.Feeds.LoadMoreRemoveTimeFilterTest do
       |> click_link("Last Day")
       |> wait_async()
       # Set sort to likes
-      |> within("#order-dropdown", fn session ->
+      |> within("#order_dropdown_feed", fn session ->
         session
         |> click_link("Most liked")
       end)

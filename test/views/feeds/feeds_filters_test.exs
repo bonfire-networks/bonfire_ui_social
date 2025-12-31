@@ -277,13 +277,13 @@ defmodule Bonfire.UI.Social.FeedsFilters.Test do
 
       conn(user: user)
       |> visit("/feed/local")
-      |> within("#order-dropdown", fn session ->
+      |> within("#order_dropdown_feed", fn session ->
         session
         |> click_link("Most liked")
       end)
-
+      |> wait_async()
       # Verify the popular post appears first
-      |> assert_has("article:first-child", text: popular_post.post_content.html_body)
+      |> assert_has_or_open_browser("[data-id=feed] article:first-child", text: popular_post.post_content.html_body)
     end
   end
 
@@ -293,7 +293,7 @@ defmodule Bonfire.UI.Social.FeedsFilters.Test do
       # Create original post and boost it
       original_post =
         fake_post!(other_user, "public", %{
-          post_content: %{name: "default post", html_body: "content"}
+          post_content: %{name: "filter test post", html_body: "filter test content"}
         })
 
       booster = fake_user!("booster")
@@ -309,9 +309,10 @@ defmodule Bonfire.UI.Social.FeedsFilters.Test do
         |> wait_async()
         # |> PhoenixTest.open_browser()
         |> assert_has("[data-toggle='boost'] [data-id='disabled'].active")
+        # Verify boost is hidden
         |> refute_has("[data-id=feed] article[data-verb=Boost]")
-        # Only original
-        |> assert_has("[data-id=feed] article", count: 1)
+        # Verify original post is still visible (don't check exact count as other seeded data may exist)
+        |> assert_has("[data-id=feed] article", text: "filter test content")
         |> click_button("[data-toggle='boost'] button", "Only")
         |> assert_has("[data-id=feed] article[data-verb=Boost]")
     end

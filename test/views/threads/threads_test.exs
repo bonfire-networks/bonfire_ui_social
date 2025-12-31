@@ -229,9 +229,14 @@ defmodule Bonfire.Social.Threads.ThreadsTest do
       }
     }
 
-    # Call reply/3 directly
+    # Call prepare_reply_assigns/4 directly
     assigns =
-      Bonfire.Social.Threads.LiveHandler.prepare_reply_assigns(reply, reply.activity, socket)
+      Bonfire.Social.Threads.LiveHandler.prepare_reply_assigns(
+        reply,
+        reply.activity,
+        nil,
+        socket
+      )
 
     # Build expected participants manually from tags
     expected_participants = [

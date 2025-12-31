@@ -34,19 +34,20 @@ defmodule Bonfire.Social.Notifications.Threads.Test do
       carl: carl,
       conn_bob: conn_bob
     } do
-      # Bob creates a post (private by default)
+      # Bob creates a public post so Carl can see and reply to it
       attrs = %{post_content: %{html_body: "here is an epic html post"}}
-      assert {:ok, post} = Posts.publish(current_user: bob, post_attrs: attrs)
+      assert {:ok, post} = Posts.publish(current_user: bob, post_attrs: attrs, boundary: "public")
 
-      # Carl replies to Bob's post (private by default)
+      # Carl replies to Bob's post with a private reply (Bob shouldn't see it)
       attrs_reply = %{
         post_content: %{summary: "summary", html_body: "epic html reply"},
         reply_to_id: post.id
       }
 
+      # Private reply - Bob shouldn't be able to see this
       assert {:ok, _post_reply} = Posts.publish(current_user: carl, post_attrs: attrs_reply)
 
-      # Bob checks notifications
+      # Bob checks notifications - should NOT see Carl's private reply
       conn_bob
       |> visit("/notifications")
       |> refute_has("article", text: "epic html reply")
