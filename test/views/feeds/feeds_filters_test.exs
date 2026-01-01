@@ -283,7 +283,9 @@ defmodule Bonfire.UI.Social.FeedsFilters.Test do
       end)
       |> wait_async()
       # Verify the popular post appears first
-      |> assert_has_or_open_browser("[data-id=feed] article:first-child", text: popular_post.post_content.html_body)
+      |> assert_has_or_open_browser("[data-id=feed] article:first-child",
+        text: popular_post.post_content.html_body
+      )
     end
   end
 

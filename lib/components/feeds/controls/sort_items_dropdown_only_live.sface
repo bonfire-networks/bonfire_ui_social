@@ -51,7 +51,7 @@
   </label>
   <ul
     tabindex="0"
-    class="tooltip z-[999] menu bg-base-300 shadow rounded-box w-64 absolute top-0 right-0 hidden"
+    class="tooltip z-[999] menu bg-base-100 pt-0 shadow border border-base-content/20 rounded-box w-72 absolute top-0 right-0 hidden"
   >
     <li>
       <a

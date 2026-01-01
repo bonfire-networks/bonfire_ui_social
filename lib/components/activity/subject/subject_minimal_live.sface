@@ -680,7 +680,7 @@
               </div>
             </div>
           </div>
-          <div :if={@thread_title} class="-ml-[60px]">
+          <div :if={@thread_title} class="">
             <div class="relative w-full flex-1 text-sm text-base-content/90 flex items-baseline gap-1 alert alert-warning alert-soft alert-sm pl-8">
               <#Icon
                 iconify="mingcute:quote-left-fill"
