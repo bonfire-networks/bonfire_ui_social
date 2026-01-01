@@ -516,7 +516,6 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
     {:noreply,
      socket
      |> assign_generic(
-       feed_update_mode: "append",
        hide_activities: opts[:hide_activities],
        time_limit: opts[:time_limit],
        deferred_join_multiply_limit: opts[:deferred_join_multiply_limit],
@@ -545,7 +544,6 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
     {:noreply,
      socket
      |> assign_generic(
-       feed_update_mode: "append",
        hide_activities: opts[:hide_activities],
        feed_count: e(opts, :page_info, :page_count, nil) || Enum.count(e(feed, :edges, [])),
        time_limit: opts[:time_limit],

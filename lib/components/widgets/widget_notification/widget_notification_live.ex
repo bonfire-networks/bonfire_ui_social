@@ -23,7 +23,6 @@ defmodule Bonfire.UI.Social.WidgetNotificationLive do
       page_info: e(feed, :page_info, []),
       current_user: current_user,
       showing_within: :widget,
-      feed_update_mode: "prepend",
       hide_load_more: true
     ]
   end

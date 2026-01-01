@@ -28,7 +28,6 @@ defmodule Bonfire.UI.Social.FeedLive do
   prop feedback_title, :string, default: nil
   prop feedback_message, :string, default: nil
   prop showing_within, :atom, default: nil
-  prop feed_update_mode, :string, default: "append"
   prop hide_load_more, :boolean, default: false
   prop verb_default, :string, default: nil
 
@@ -227,21 +226,16 @@ defmodule Bonfire.UI.Social.FeedLive do
     ok_socket(socket)
   end
 
-  def update(%{feed: feed, page_info: _page_info} = assigns, socket) when is_list(feed) do
-    debug("an initial feed was provided via assigns")
-    debug(assigns)
+  def update(%{feed: feed, page_info: page_info} = assigns, socket) when is_list(feed) do
+    debug("an initial feed was provided via assigns, auto-converting to stream")
 
-    # debug(assigns(socket), "socket assigns")
-    # debug(assigns)
-    socket = assign(socket, assigns)
-    # debug(socket)
+    socket =
+      socket
+      |> assign(Map.drop(assigns, [:feed]))
+      |> assign(page_info: page_info)
+      |> stream(:feed, feed, reset: true)
 
     maybe_subscribe(socket)
-    # |> assign(
-    # page_info: page_info,
-    # feed: feed
-    # |> debug("FeedLive: feed")
-    # )
     |> ok_socket()
   end
 

@@ -55,41 +55,7 @@
           {lp("Show %{count} new activity", "Show %{count} new activities", MapSet.size(@fresh_ids), count: MapSet.size(@fresh_ids))}
       </div>
 
-      {#if is_list(@feed) and @feed != []}
-        <div
-          id={"feed_#{@feed_name || @feed_id || @id}"}
-          data-id="feed_activity_list"
-          role="feed"
-          aria-busy={to_string(@loading || @reloading || false)}
-          phx-update="append"
-          class="flex flex-col divide-y divide-base-content/10"
-        >
-          {!-- phx-update={e(@feed_update_mode, "append")} --}
-          {#for {entry, i} <- Enum.with_index(@feed)}
-            <div id={"f_#{@feed_id || @id}_a_#{i}"} :if={@hide_activities != "component"}>
-              <ActivityLive
-                id={ActivityLive.component_id(
-                  id(entry) || e(entry, :activity, :id, nil) || e(entry, :object, :id, nil) ||
-                    e(entry, :edge, :id, nil),
-                  "f_activity_#{@feed_name || @feed_id || @id}_#{i}"
-                )}
-                activity={get_activity(entry)}
-                showing_within={@showing_within}
-                hide_actions={@hide_actions}
-                custom_preview={e(@custom_preview, nil)}
-                verb_default={@verb_default}
-                feed_name={@feed_name}
-                feed_id={@feed_id || @feed_ids}
-                is_remote={@feed_name in [:remote]}
-                hide_activity={@hide_activities}
-                class={@activity_class}
-                subject_user={@subject_user}
-                activity_preloads={@activity_preloads}
-              />
-            </div>
-          {/for}
-        </div>
-      {#elseif is_map(@streams) and is_struct(@streams.feed)}
+      {#if is_map(@streams) and is_struct(@streams.feed)}
         <div
           id={"feed_#{@feed_name || @feed_id || @id}"}
           data-id="feed_activity_list"
@@ -98,9 +64,7 @@
           phx-update="stream"
           class="flex flex-col divide-y divide-base-content/10 flex-1 h-full grow"
         >
-          {!-- phx-update={e(@feed_update_mode, "append")} --}
           {#for {entry_id, entry} <- @streams.feed}
-            {!-- id={"f-#{@feed_id || @id}-a-#{i}"} --}
             <div
               id={entry_id}
               :if={@hide_activities != "component"}
@@ -110,7 +74,6 @@
                 "fresh_hidden hidden": fresh_entry?(@fresh_ids, entry)
               }
             >
-              {!-- id={"activity-#{component_id(@feed_id || @id, entry)}"} --}
               <ActivityLive
                 id={ActivityLive.component_id(
                   id(entry) || e(entry, :activity, :id, nil) || e(entry, :object, :id, nil) ||
@@ -120,6 +83,7 @@
                 activity={get_activity(entry)}
                 custom_preview={e(@custom_preview, nil)}
                 showing_within={@showing_within}
+                hide_actions={@hide_actions}
                 verb_default={@verb_default}
                 feed_name={@feed_name}
                 feed_id={@feed_id || @feed_ids}
@@ -203,7 +167,7 @@
 
                                         <div class="sr-only text-base-content">{l("Loading...")}</div>
                                       </div>
-                                    {#elseif not is_integer(@feed_count) or @feed_count == 0 or !(is_list(@feed) and @feed != [])}
+                                    {#elseif not is_integer(@feed_count) or @feed_count == 0}
                                       <div data-id="empty-feed" class="flex items-center place-content-center">
                                         <Bonfire.UI.Common.EmptyFeed
                                           feed_name={@feed_name}
