@@ -2,187 +2,92 @@ defmodule Bonfire.UI.Social.Feeds.Notifications.ReplyTest do
   use Bonfire.UI.Social.ConnCase, async: System.get_env("TEST_UI_ASYNC") != "no"
   @moduletag :ui
 
-  alias Bonfire.Social.Fake
-  alias Bonfire.Me.Users
-  alias Bonfire.Social.Boosts
-  alias Bonfire.Social.Likes
-  alias Bonfire.Social.Graph.Follows
   alias Bonfire.Posts
 
-  # When an activity is a reply to another one, in the feed I want to see both activities: the original activity and the reply with enough information to understand the context
-  test "As a user, when someone replies to my activity, I want to see it in notifications, including the author' name of the reply" do
-    account = fake_account!()
-    alice = fake_user!(account)
+  setup do
+    alice = fake_user!("alice")
+    bob = fake_user!("bob")
 
-    account2 = fake_account!()
-    bob = fake_user!(account2)
+    conn_alice = conn(user: alice)
 
-    # Follows.follow(alice, bob)
-
-    attrs = %{
-      post_content: %{summary: "summary", html_body: "<p>first post</p>"}
-    }
-
-    # {:ok, post} =        Posts.publish(current_user: me, post_attrs: attrs, boundary: "public")
-    assert {:ok, post} = Posts.publish(current_user: alice, post_attrs: attrs, boundary: "public")
-
-    # Reply to the original post
-    attrs_reply = %{
-      post_content: %{summary: "summary", html_body: "<p>reply to first post</p>"},
-      reply_to_id: post.id
-    }
-
-    # |> IO.inspect
-    assert {:ok, post_reply} =
-             Posts.publish(current_user: bob, post_attrs: attrs_reply, boundary: "public")
-
-    feed = Bonfire.Social.FeedActivities.feed(:notifications, current_user: alice)
-
-    fp =
-      feed.edges
-      |> List.first()
-
-    # |> IO.inspect
-
-    assigns = [activity: fp.activity, showing_within: :notifications]
-    assert doc = render_stateful(Bonfire.UI.Social.ActivityLive, assigns)
-
-    assert doc
-           |> Floki.parse_fragment()
-           ~> elem(1)
-           ~> Floki.find("[data-role=subject]")
-           ~> Floki.text() =~ bob.profile.name
+    {:ok, %{alice: alice, bob: bob, conn_alice: conn_alice}}
   end
 
-  test "As a user, when someone replies to my activity, I want to see it in notifications, include the replied message" do
-    account = fake_account!()
-    alice = fake_user!(account)
+  # When an activity is a reply to another one, in the feed I want to see both activities:
+  # the original activity and the reply with enough information to understand the context
 
-    account2 = fake_account!()
-    bob = fake_user!(account2)
+  describe "reply notifications" do
+    test "show the author's name of the reply", %{alice: alice, bob: bob, conn_alice: conn_alice} do
+      # Alice creates a post
+      attrs = %{
+        post_content: %{summary: "summary", html_body: "first post"}
+      }
 
-    # Follows.follow(alice, bob)
+      {:ok, post} = Posts.publish(current_user: alice, post_attrs: attrs, boundary: "public")
 
-    attrs = %{
-      post_content: %{summary: "summary", html_body: "<p>first post</p>"}
-    }
+      # Bob replies to Alice's post (with @ mention to trigger notification)
+      attrs_reply = %{
+        post_content: %{summary: "summary", html_body: "@alice reply to first post"},
+        reply_to_id: post.id
+      }
 
-    assert {:ok, post} =
-             Posts.publish(current_user: alice, post_attrs: attrs, boundary: "public")
+      {:ok, _post_reply} =
+        Posts.publish(current_user: bob, post_attrs: attrs_reply, boundary: "public")
 
-    # Reply to the original post
-    attrs_reply = %{
-      post_content: %{summary: "summary", html_body: "reply to first post"},
-      reply_to_id: post.id
-    }
+      # Alice checks her notifications
+      conn_alice
+      |> visit("/notifications")
+      |> assert_has("[data-role=subject]", text: bob.profile.name)
+    end
 
-    # |> IO.inspect
-    assert {:ok, post_reply} =
-             Posts.publish(current_user: bob, post_attrs: attrs_reply, boundary: "public")
+    test "show the replied message", %{alice: alice, bob: bob, conn_alice: conn_alice} do
+      # Alice creates a post
+      attrs = %{
+        post_content: %{summary: "summary", html_body: "first post"}
+      }
 
-    feed = Bonfire.Social.FeedActivities.feed(:notifications, current_user: alice)
+      {:ok, post} = Posts.publish(current_user: alice, post_attrs: attrs, boundary: "public")
 
-    fp =
-      feed.edges
-      # |> debug()
-      |> List.first()
+      # Bob replies to Alice's post (with @ mention to trigger notification)
+      attrs_reply = %{
+        post_content: %{summary: "summary", html_body: "@alice reply to first post"},
+        reply_to_id: post.id
+      }
 
-    assigns = [activity: fp.activity, showing_within: :notifications]
-    assert doc = render_stateful(Bonfire.UI.Social.ActivityLive, assigns)
+      {:ok, _post_reply} =
+        Posts.publish(current_user: bob, post_attrs: attrs_reply, boundary: "public")
 
-    assert doc
-           |> Floki.parse_fragment()
-           ~> elem(1)
-           # |> debug()
-           ~> Floki.find("div.reply_message")
-           ~> Floki.text() =~ "reply to first post"
-  end
+      # Alice checks her notifications - should see the reply content
+      conn_alice
+      |> visit("/notifications")
+      |> assert_has("article", text: "reply to first post")
+    end
 
-  test "As a user, when someone replies to my activity, I want to see it in notifications, included the author's name of the original activity" do
-    account = fake_account!()
-    alice = fake_user!(account)
+    test "show the reply verb indicator", %{
+      alice: alice,
+      bob: bob,
+      conn_alice: conn_alice
+    } do
+      # Alice creates a post
+      attrs = %{
+        post_content: %{summary: "summary", html_body: "first post"}
+      }
 
-    account2 = fake_account!()
-    bob = fake_user!(account2)
+      {:ok, post} = Posts.publish(current_user: alice, post_attrs: attrs, boundary: "public")
 
-    # Follows.follow(alice, bob)
+      # Bob replies to Alice's post (with @ mention to trigger notification)
+      attrs_reply = %{
+        post_content: %{summary: "summary", html_body: "@alice reply to first post"},
+        reply_to_id: post.id
+      }
 
-    attrs = %{
-      post_content: %{summary: "summary", html_body: "<p>first post</p>"}
-    }
+      {:ok, _post_reply} =
+        Posts.publish(current_user: bob, post_attrs: attrs_reply, boundary: "public")
 
-    assert {:ok, post} =
-             Posts.publish(current_user: alice, post_attrs: attrs, boundary: "public")
-
-    # Reply to the original post
-    attrs_reply = %{
-      post_content: %{summary: "summary", html_body: "reply to first post"},
-      reply_to_id: post.id
-    }
-
-    # |> IO.inspect
-    assert {:ok, post_reply} =
-             Posts.publish(current_user: bob, post_attrs: attrs_reply, boundary: "public")
-
-    feed = Bonfire.Social.FeedActivities.feed(:notifications, current_user: alice)
-
-    fp =
-      feed.edges
-      # |> debug()
-      |> List.first()
-
-    assigns = [activity: fp.activity, showing_within: :notifications]
-    assert doc = render_stateful(Bonfire.UI.Social.ActivityLive, assigns)
-
-    assert doc
-           |> Floki.parse_fragment()
-           ~> elem(1)
-           # |> debug()
-           ~> Floki.find("div.main_reply_to a")
-           ~> Floki.text() =~ alice.profile.name
-  end
-
-  test "As a user, when someone replies to my activity, I want to see it in notifications, included the content of the original activity" do
-    account = fake_account!()
-    alice = fake_user!(account)
-
-    account2 = fake_account!()
-    bob = fake_user!(account2)
-
-    # Follows.follow(alice, bob)
-
-    attrs = %{
-      post_content: %{summary: "summary", html_body: "<p>first post</p>"}
-    }
-
-    assert {:ok, post} =
-             Posts.publish(current_user: alice, post_attrs: attrs, boundary: "public")
-
-    # Reply to the original post
-    attrs_reply = %{
-      post_content: %{summary: "summary", html_body: "reply to first post"},
-      reply_to_id: post.id
-    }
-
-    # |> IO.inspect
-    assert {:ok, post_reply} =
-             Posts.publish(current_user: bob, post_attrs: attrs_reply, boundary: "public")
-
-    feed = Bonfire.Social.FeedActivities.feed(:notifications, current_user: alice)
-
-    fp =
-      feed.edges
-      # |> debug()
-      |> List.first()
-
-    assigns = [activity: fp.activity, showing_within: :notifications]
-    assert doc = render_stateful(Bonfire.UI.Social.ActivityLive, assigns)
-
-    assert doc
-           |> Floki.parse_fragment()
-           ~> elem(1)
-           # |> debug()
-           |> Floki.find("div.reply_to")
-           |> Floki.text() =~ "first post"
+      # Alice checks her notifications - should see the Reply verb indicator
+      conn_alice
+      |> visit("/notifications")
+      |> assert_has("[data-verb=Reply]")
+    end
   end
 end
