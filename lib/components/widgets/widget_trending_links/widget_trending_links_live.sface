@@ -1,35 +1,48 @@
 {#case load(@limit)}
   {#match [links: links] when links != []}
     <Bonfire.UI.Common.WidgetBlockLive widget_title={@widget_title || l("Popular Links")}>
-      <div class="flex flex-col gap-3">
+      <div class="flex flex-col gap-2">
         {#for link <- links}
-          <div class="flex flex-col gap-1 pb-3 border-b border-base-content/5 last:border-b-0">
+          <div class="flex flex-col gap-0 pb-2">
+            {#case Bonfire.UI.Social.Activity.MediaLive.provider(link.media)}
+                {#match provider when is_binary(provider)}
+                  <span class="truncate text-sm text-primary max-w-[120px]">{provider}</span>
+                {#match _}
+              {/case}
             <Bonfire.UI.Common.OpenExternalLinkLive id={deterministic_dom_id("trending_link", link.path)}>
               <LinkLive
                 to={link.path}
                 target="_blank"
-                class="text-sm font-medium hover:text-primary line-clamp-2 leading-tight"
+                class="font-semibold link link-hover line-clamp-2 leading-tight"
               >
                 {Bonfire.Files.Media.media_label(link.media) || link.path}
               </LinkLive>
             </Bonfire.UI.Common.OpenExternalLinkLive>
 
-            <div class="flex items-center gap-2 text-xs text-base-content/60">
-              {#case Bonfire.UI.Social.Activity.MediaLive.provider(link.media)}
-                {#match provider when is_binary(provider)}
-                  <span class="truncate text-primary max-w-[120px]">{provider}</span>
-                  <span class="text-base-content/30">·</span>
-                {#match _}
-              {/case}
+            <div class="flex items-center mt-1 gap-2 text-sm text-base-content/60">
+              
+              <div class="flex items-center -space-x-1" title={l("Shared by")}>
+                {#for sharer <- Enum.take(link.sharers || [], 3)}
+                  <Bonfire.UI.Common.AvatarLive
+                    parent_id={deterministic_dom_id("trending_sharer", id(sharer))}
+                    user_id={id(sharer)}
+                    src={Bonfire.Common.Media.avatar_url(sharer)}
+                    class="w-5 h-5 rounded-full"
+                    bg_class="rounded-full"
+                  />
+                {/for}
+                {#if link.unique_sharers > 3}
+                  <span class="ml-1 text-sm text-base-content/70">
+                    +{link.unique_sharers - 3}
+                  </span>
+                {/if}
+              </div>
+              <span class="text-base-content/30">·</span>
               <span class="flex items-center gap-1" title={l("Total boosts")}>
                 <#Icon iconify="ph:rocket-launch-duotone" class="w-4 h-4" />
                 {link.total_boosts}
               </span>
-              <span class="text-base-content/30">·</span>
-              <span class="flex items-center gap-1" title={l("Shared by")}>
-                <#Icon iconify="ph:users-duotone" class="w-4 h-4" />
-                {link.unique_sharers}
-              </span>
+              
             </div>
           </div>
         {/for}
