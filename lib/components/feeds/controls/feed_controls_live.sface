@@ -41,22 +41,32 @@
           tabindex="0"
           class="tooltip z-[999] menu bg-base-100 divide-y divide-base-content/10 border pt-0 border-base-content/20 shadow rounded-box absolute top-0 right-0 hidden"
         >
-          <div
-            class="pt-2"
-            :if={extension_enabled?(:bonfire_ui_reactions, @__context__)}
-            data-scope="boosts"
-          >
-            <!-- icon="ph:rocket-launch-duotone" -->
-            <Bonfire.UI.Social.ToggleTypeLive
-              label={l("Boosts")}
-              key={:boost}
-              field={:activity_types}
-              feed_filters={@feed_filters}
-              event_target={@event_target}
-              event_name="set_filter"
-              label_default={l("Include")}
-            />
-          </div>
+          {#if extension_enabled?(:bonfire_ui_reactions, @__context__)}
+            <div class="pt-2" data-scope="boosts">
+              <!-- icon="ph:rocket-launch-duotone" -->
+              <Bonfire.UI.Social.ToggleTypeLive
+                label={l("Boosts")}
+                key={:boost}
+                field={:activity_types}
+                feed_filters={@feed_filters}
+                event_target={@event_target}
+                event_name="set_filter"
+                label_default={l("Include")}
+              />
+            </div>
+
+            <div class="pt-2" data-scope="likes">
+              <Bonfire.UI.Social.ToggleTypeLive
+                label={l("Likes")}
+                key={:like}
+                field={:activity_types}
+                feed_filters={@feed_filters}
+                event_target={@event_target}
+                event_name="set_filter"
+                label_default={l("Include")}
+              />
+            </div>
+          {/if}
 
           <!-- icon="ph:user-plus-duotone" -->
           <div class="pt-2">
@@ -196,7 +206,7 @@
           {/for}
 
           <!-- icon="heroicons-outline:eye" -->
-          {#for key when key not in [:boost, :follow, :reply] <- @feed_filters[:activity_types] || []}
+          {#for key when key not in [:boost, :like, :follow, :reply] <- @feed_filters[:activity_types] || []}
             <div class="pt-2">
               <Bonfire.UI.Social.ToggleTypeLive
                 label={String.capitalize(to_string(key))}
