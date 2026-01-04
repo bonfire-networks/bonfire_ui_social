@@ -528,7 +528,7 @@ defmodule Bonfire.UI.Social.FeedLive do
             #    showing_within: e(assigns, :showing_within, nil)
             #  ]},
             {Bonfire.Tag.Web.WidgetTagsLive, []},
-            {Bonfire.UI.Social.WidgetTrendingLinksLive, [limit: 5]}
+            {Bonfire.UI.Social.WidgetTrendingLinksLive, []}
           ]
         ]
       ]

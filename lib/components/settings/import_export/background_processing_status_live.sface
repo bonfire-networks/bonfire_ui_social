@@ -226,13 +226,10 @@
                 <h3 class="font-medium text-sm text-base-content">
                   {friendly_operation(job.operation, job[:context])}
                 </h3>
-                {!-- Show source/destination based on operation type --}
-                {#if is_binary(job[:context]) and String.starts_with?(job[:context] || "", "http")}
-                  {!-- Outgoing federation: show destination server --}
-                  <p class="text-xs text-base-content/60 truncate">
-                    {l("to")} <a href={job[:context]} target="_blank" class="font-medium">{extract_domain(job[:context])}</a>
-                  </p>
-                {#elseif is_binary(job.identifier) and String.starts_with?(job.identifier || "", "http")}
+
+                {!-- Show source and/or destination based on operation type --}
+
+                {#if is_binary(job.identifier) and String.starts_with?(job.identifier, "http")}
                   {!-- Incoming with URL identifier --}
                   <p class="text-xs text-base-content/60 truncate">
                     {l("from")} <a href={job.identifier} target="_blank" class="font-medium">{extract_domain(job.identifier)}</a>
@@ -243,7 +240,7 @@
                   <p class="text-xs text-base-content/60 truncate">
                     {l("from")} <a href={e(job.identifier, "object", "id", nil)} target="_blank" class="font-medium">{extract_domain(e(job.identifier, "object", "id", nil))}</a>
                   </p>
-                {#elseif is_binary(job.identifier) and !job.target_user}
+                {#elseif is_binary(job.identifier)}
                   {!-- ID reference (activity, post, etc) --}
                   <p class="text-xs text-base-content/60 truncate">
                     {#if Needle.UID.is_ulid?(job.identifier)}
@@ -253,6 +250,13 @@
                     {#else}
                       <span class="font-mono" title={job.identifier}>{String.slice(job.identifier, 0, 12)}...</span>
                     {/if}
+                  </p>
+                {/if}
+
+                {#if is_binary(job[:context]) and String.starts_with?(job[:context], "http")}
+                  {!-- Outgoing federation: show destination server --}
+                  <p class="text-xs text-base-content/60 truncate">
+                    {l("to")} <a href={job[:context]} target="_blank" class="font-medium">{extract_domain(job[:context])}</a>
                   </p>
                 {#elseif is_binary(job[:context])}
                   {!-- Non-URL context --}
