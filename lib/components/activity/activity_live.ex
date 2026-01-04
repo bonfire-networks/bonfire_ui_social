@@ -59,6 +59,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
   prop object_type_readable, :string, default: nil
   prop reply_count, :any, default: nil
   prop reply_to, :any, default: nil
+  prop thread_start, :any, default: nil
   prop published_in, :any, default: nil
   prop labelled, :any, default: nil
   prop subject_user, :any, default: nil
@@ -322,6 +323,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
         e(assigns, :thread_id, nil)
 
     reply_to = if verb in @reply_verbs, do: prepare_reply_to(replied || activity)
+    thread_start = if verb in @reply_verbs, do: prepare_thread_start(replied || activity)
 
     verb_display = Activities.verb_display(verb)
 
@@ -408,6 +410,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
       object_id: o_id || "no-object-id",
       activity_component_id: activity_component_id,
       reply_to: reply_to,
+      thread_start: thread_start,
       object_type: object_type,
       object_type_readable: object_type_readable,
       # unit: :minute
@@ -590,7 +593,8 @@ defmodule Bonfire.UI.Social.ActivityLive do
         activity_component_id,
         subject_user,
         reply_to,
-        quotes
+        quotes,
+        opts \\ []
       ) do
     {primary_image, attachments_component} =
       primary_image_and_component_maybe_attachments(
@@ -601,7 +605,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
       )
 
     (if(showing_within == :media, do: attachments_component, else: []) ++
-       component_maybe_in_reply_to(
+       component_maybe_thread_start_or_reply_to(
          reply_to,
          showing_within,
          activity_inception,
@@ -609,7 +613,8 @@ defmodule Bonfire.UI.Social.ActivityLive do
          thread_mode,
          thread_id,
          thread_title,
-         activity_component_id
+         activity_component_id,
+         opts
        ) ++
        (component_activity_subject(
           verb,
@@ -872,7 +877,9 @@ defmodule Bonfire.UI.Social.ActivityLive do
                 @activity_component_id,
                 @subject_user,
                 @reply_to,
-                @quotes
+                @quotes,
+                thread_start: @thread_start,
+                current_user_context: @__context__
               ) || []}
             {#case component}
               {#match :html}
@@ -1675,6 +1682,144 @@ defmodule Bonfire.UI.Social.ActivityLive do
 
   def prepare_reply_to(_),
     do: nil
+
+  @doc """
+  Prepares thread start data for displaying the first post in a thread.
+  Used when the setting to show thread start in feeds is enabled.
+  """
+  def prepare_thread_start(%{
+        id: activity_id,
+        thread:
+          %{
+            post_content: %{id: _} = thread_post_content,
+            created: %{
+              creator: %{
+                character: %{id: creator_id},
+                profile: %{id: _}
+              }
+            }
+          } = thread
+      }) do
+    %{
+      activity_id: activity_id,
+      object: thread_post_content,
+      subject_id: creator_id,
+      activity: thread
+    }
+  end
+
+  def prepare_thread_start(%{
+        id: activity_id,
+        thread:
+          %{
+            id: thread_id,
+            created: %{
+              creator: %{
+                character: %{id: _} = subject_character,
+                profile: %{id: creator_id} = subject_profile
+              }
+            }
+          } = thread
+      })
+      when is_binary(thread_id) do
+    %{
+      activity_id: activity_id,
+      object: thread,
+      subject_id: creator_id,
+      activity: %{
+        subject: %{
+          profile: subject_profile,
+          character: subject_character
+        }
+      }
+    }
+  end
+
+  def prepare_thread_start(%{replied: %{id: _} = replied}),
+    do: prepare_thread_start(replied)
+
+  def prepare_thread_start(_),
+    do: nil
+
+  @doc """
+  Checks the reply context mode setting and returns appropriate components.
+
+  Modes:
+  - `:reply_to` (default) - Show the post being replied to
+  - `:thread_start` - Show the original thread post
+  - `:minimal` - Show just a "Replied in thread" label
+  """
+  def component_maybe_thread_start_or_reply_to(
+        reply_to,
+        showing_within,
+        activity_inception,
+        viewing_main_object,
+        thread_mode,
+        thread_id,
+        thread_title,
+        activity_component_id,
+        opts
+      ) do
+    thread_start = Keyword.get(opts, :thread_start)
+    current_user_context = Keyword.get(opts, :current_user_context)
+
+    reply_context_mode =
+      Settings.get(
+        [Bonfire.UI.Social.ActivityLive, :reply_context_mode],
+        :reply_to,
+        current_user_context
+      )
+
+    case reply_context_mode do
+      :thread_start when showing_within == :feed and is_nil(activity_inception) and not is_nil(thread_start) ->
+        component_thread_start(thread_start, thread_title, activity_component_id)
+
+      :minimal when showing_within == :feed and is_nil(activity_inception) and not is_nil(reply_to) ->
+        [{Bonfire.UI.Social.Activity.RepliedInThreadIndicatorLive, %{}}]
+
+      _ ->
+        component_maybe_in_reply_to(
+          reply_to,
+          showing_within,
+          activity_inception,
+          viewing_main_object,
+          thread_mode,
+          thread_id,
+          thread_title,
+          activity_component_id
+        )
+    end
+  end
+
+  defp component_thread_start(
+         %{
+           activity_id: activity_id,
+           subject_id: subject_id,
+           activity: activity,
+           object: %{id: object_id} = thread_object
+         },
+         thread_title,
+         activity_component_id
+       ) do
+    [
+      {Bonfire.UI.Social.ActivityLive,
+       %{
+         id: "thread_start-#{activity_component_id}-#{object_id}",
+         activity_inception: activity_id,
+         show_minimal_subject_and_note: true,
+         viewing_main_object: false,
+         thread_title: thread_title,
+         object: thread_object,
+         object_type: Types.object_type(thread_object),
+         subject_id: subject_id,
+         activity: activity,
+         cw: sensitive?(activity)
+       }
+       |> prepare_assigns()}
+    ]
+  end
+
+  defp component_thread_start(_thread_start, _, _), do: []
 
   # @decorate time()
   def component_maybe_in_reply_to(
