@@ -60,6 +60,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
   prop reply_count, :any, default: nil
   prop reply_to, :any, default: nil
   prop thread_start, :any, default: nil
+  prop is_thread_start, :boolean, default: false
   prop published_in, :any, default: nil
   prop labelled, :any, default: nil
   prop subject_user, :any, default: nil
@@ -952,6 +953,10 @@ defmodule Bonfire.UI.Social.ActivityLive do
                   extra_info={e(@object, :extra_info, nil)}
                 />
               {#match Bonfire.UI.Social.Activity.NoteLive}
+                <span :if={@is_thread_start} class="badge badge-outline badge-warning mb-2">
+                  <#Icon iconify="ph:chats-circle-duotone" class="w-4 h-4 mr-1" />
+                  {l("Original post")}
+                </span>
                 <Bonfire.UI.Social.Activity.NoteLive
                   :if={@hide_activity != "note"}
                   showing_within={@showing_within}
@@ -1129,6 +1134,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
                   to={maybe_get(component_assigns, :to, nil)}
                   is_remote={maybe_get(component_assigns, :is_remote, @is_remote)}
                   hide_actions={maybe_get(component_assigns, :hide_actions, @hide_actions)}
+                  is_thread_start={maybe_get(component_assigns, :is_thread_start, false)}
                 />
             {/case}
           {/for}
@@ -1807,6 +1813,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
          id: "thread_start-#{activity_component_id}-#{object_id}",
          activity_inception: activity_id,
          show_minimal_subject_and_note: true,
+         is_thread_start: true,
          viewing_main_object: false,
          thread_title: thread_title,
          object: thread_object,
