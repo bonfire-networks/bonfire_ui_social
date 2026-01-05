@@ -441,19 +441,15 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
   # end
 
   def paginate_opts(attrs, socket, opts) do
-    attrs =
-      input_to_atoms(attrs)
-      |> debug("atttt")
+    attrs = input_to_atoms(attrs)
+    socket_opts = to_options(socket)
 
     opts =
-      to_options(socket)
+      socket_opts
       |> Keyword.merge(opts)
-
-    opts =
-      opts
       |> Keyword.merge(
         prepare_time_limit(
-          opts,
+          socket_opts ++ opts,
           e(attrs, :time_limit, nil)
         )
       )
@@ -478,13 +474,14 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
             showing_within: e(opts, :showing_within, nil)
           )
       end)
-      |> debug()
   end
 
   def extract_time_limit(opts, time_limit) do
-    Types.maybe_to_integer(time_limit, nil) |> debug("from attr") ||
-      e(opts, :time_limit, nil) |> debug("from opt") ||
-      e(opts, :feed_filters, :time_limit, nil) |> debug("from filt")
+    # Priority: attrs > feed_filters > direct time_limit assign
+    # feed_filters is updated when user changes filters, so it takes precedence over preset default
+    Types.maybe_to_integer(time_limit, nil) ||
+      e(opts, :feed_filters, :time_limit, nil) ||
+      e(opts, :time_limit, nil)
   end
 
   def prepare_time_limit(opts, time_limit) do
@@ -532,7 +529,7 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
 
   defp paginate_fetch_assign_feed(feed_id, opts, socket) do
     filters =
-      e(opts, :filters, %{})
+      e(opts, :feed_filters, nil) || e(opts, :filters, %{})
 
     feed =
       FeedLoader.feed(

@@ -74,25 +74,33 @@
                 "fresh_hidden hidden": fresh_entry?(@fresh_ids, entry)
               }
             >
-              <ActivityLive
-                id={ActivityLive.component_id(
-                  id(entry) || e(entry, :activity, :id, nil) || e(entry, :object, :id, nil) ||
-                    e(entry, :edge, :id, nil),
-                  "s_activity_#{entry_id}"
-                )}
-                activity={get_activity(entry)}
-                custom_preview={e(@custom_preview, nil)}
-                showing_within={@showing_within}
-                hide_actions={@hide_actions}
-                verb_default={@verb_default}
-                feed_name={@feed_name}
-                feed_id={@feed_id || @feed_ids}
-                class={@activity_class}
-                is_remote={@feed_name in [:remote]}
-                hide_activity={@hide_activities}
-                subject_user={@subject_user}
-                activity_preloads={@activity_preloads}
-              />
+              {#if e(entry, :__type__, nil) == :trending_link}
+                <Bonfire.UI.Social.TrendingLinkCardLive
+                  link={entry}
+                  show_thumbnail
+                  featured={e(entry, :featured, false)}
+                />
+              {#else}
+                <ActivityLive
+                  id={ActivityLive.component_id(
+                    id(entry) || e(entry, :activity, :id, nil) || e(entry, :object, :id, nil) ||
+                      e(entry, :edge, :id, nil),
+                    "s_activity_#{entry_id}"
+                  )}
+                  activity={get_activity(entry)}
+                  custom_preview={e(@custom_preview, nil)}
+                  showing_within={@showing_within}
+                  hide_actions={@hide_actions}
+                  verb_default={@verb_default}
+                  feed_name={@feed_name}
+                  feed_id={@feed_id || @feed_ids}
+                  class={@activity_class}
+                  is_remote={@feed_name in [:remote]}
+                  hide_activity={@hide_activities}
+                  subject_user={@subject_user}
+                  activity_preloads={@activity_preloads}
+                />
+              {/if}
             </div>
           {/for}
         </div>

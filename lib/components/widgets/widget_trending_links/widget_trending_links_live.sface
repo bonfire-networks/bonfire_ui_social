@@ -36,9 +36,13 @@
                   </LinkLive>
                 {/for}
                 {#if link.unique_sharers > 3}
-                  <span class="ml-1 text-sm text-base-content/70">
-                    +{link.unique_sharers - 3}
-                  </span>
+                  <button
+                    type="button"
+                    class="ml-1 text-sm text-base-content/70 hover:text-primary hover:underline cursor-pointer"
+                    :on-click={JS.toggle(to: "#sharers-#{deterministic_dom_id("trending_link_sharers", link.path)}")}
+                  >
+                    +{link.unique_sharers - 3} {l("others")}
+                  </button>
                 {/if}
               </div>
               {#if link.total_boosts > 0}
@@ -49,6 +53,34 @@
                 </span>
               {/if}
             </div>
+
+            {#if link.unique_sharers > 3}
+              <div
+                id={"sharers-#{deterministic_dom_id("trending_link_sharers", link.path)}"}
+                class="hidden mt-2 pl-1 border-l-2 border-base-content/10"
+              >
+                <div class="text-xs text-base-content/50 mb-1">{l("Shared by:")}</div>
+                <div class="flex flex-col gap-1">
+                  {#for sharer <- Enum.drop(link.sharers || [], 3)}
+                    <LinkLive
+                      to={URIs.path(sharer)}
+                      class="flex items-center gap-2 text-xs hover:bg-base-200 rounded p-1 -ml-1"
+                    >
+                      <Bonfire.UI.Common.AvatarLive
+                        parent_id={deterministic_dom_id("trending_sharer_expanded", id(sharer))}
+                        user_id={id(sharer)}
+                        src={Bonfire.Common.Media.avatar_url(sharer)}
+                        class="w-4 h-4 rounded-full"
+                        bg_class="rounded-full"
+                      />
+                      <span class="text-base-content/80 truncate">
+                        {e(sharer, :profile, :name, nil) || e(sharer, :character, :username, nil)}
+                      </span>
+                    </LinkLive>
+                  {/for}
+                </div>
+              </div>
+            {/if}
           </div>
         {/for}
       </div>
