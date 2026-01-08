@@ -14,4 +14,5 @@ defmodule Bonfire.UI.Social.TopLevelMediaLive do
   prop class, :css_class, default: nil
   prop show_thumbnail, :boolean, default: false
   prop featured, :boolean, default: false
+  prop in_widget, :boolean, default: false
 end

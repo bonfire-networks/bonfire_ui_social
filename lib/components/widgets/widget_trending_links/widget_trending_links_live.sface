@@ -13,7 +13,7 @@
               <LinkLive
                 to={media.path}
                 target="_blank"
-                class="text-sm font-semibold media media-hover line-clamp-2 leading-tight"
+                class="text-sm font-semibold link link-hover line-clamp-2 leading-tight"
               >
                 {Bonfire.Files.Media.media_label(media)}
               </LinkLive>

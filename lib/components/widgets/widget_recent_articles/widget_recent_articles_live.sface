@@ -1,0 +1,29 @@
+{#case current_user(@__context__)}
+  {#match nil}
+  {#match current_user}
+    {#case load(current_user, @limit)}
+      {#match [articles: []]}
+      {#match [articles: articles]}
+        <Bonfire.UI.Common.WidgetBlockLive title_class="text-lg font-bold tracking-wide" class="w-full flex-auto mx-auto" widget_title={@widget_title || l("Recent Articles")}>
+          <div class="flex gap-4 flex-col">
+            {#for fp <- articles}
+              {#case {e(fp, :activity, nil), e(fp, :activity, :object, nil) || e(fp, :object, nil), e(fp, :activity, :subject, nil) || e(fp, :subject, nil)}}
+                {#match {activity, object, subject} when not is_nil(object)}
+                  {#case Bonfire.Files.split_primary_image(e(activity, :files, nil) || e(object, :files, nil) || e(activity, :media, nil) || e(object, :media, nil))}
+                    {#match {primary_image, _files}}
+                      <Bonfire.UI.Social.Activity.ArticleLive
+                        object={object}
+                        activity={activity}
+                        subject={subject}
+                        primary_image={primary_image}
+                        showing_within={:widget}
+                        viewing_main_object={false}
+                      />
+                  {/case}
+                {#match _}
+              {/case}
+            {/for}
+          </div>
+        </Bonfire.UI.Common.WidgetBlockLive>
+    {/case}
+{/case}

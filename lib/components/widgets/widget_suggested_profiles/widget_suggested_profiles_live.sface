@@ -1,0 +1,60 @@
+{#case list_suggested_profiles()}
+  {#match []}
+    <div />
+  {#match suggested_profiles}
+    <Bonfire.UI.Common.WidgetBlockLive
+      :if={current_user_id(@__context__)}
+      class="w-full flex-auto mx-auto"
+      widget_title={e(@widget_title, l("Who to follow"))}
+    >
+      <:action>
+        <div style="top: 60px" class="flex relative gap-1">
+          <button
+            type="button"
+            class="btn btn-circle btn-primary btn-soft absolute left-0 z-50"
+            phx-click={JS.dispatch("scroll-left", to: "#suggested-profiles-carousel")}
+          >
+            <#Icon iconify="ph:caret-left" class="w-4 h-4" />
+          </button>
+          <button
+            type="button"
+            class="btn btn-circle btn-primary btn-soft absolute right-0 z-50"
+            phx-click={JS.dispatch("scroll-right", to: "#suggested-profiles-carousel")}
+          >
+            <#Icon iconify="ph:caret-right" class="w-4 h-4" />
+          </button>
+        </div>
+      </:action>
+
+      <div class="grid grid-cols-1 overflow-hidden">
+        <div
+          id="suggested-profiles-carousel"
+          class="flex gap-3 overflow-x-auto scroll-smooth snap-x snap-mandatory pb-2"
+          phx-hook="CarouselScroll"
+        >
+          {#for user <- suggested_profiles}
+            <div class="flex-shrink-0 w-72 snap-start rounded-lg bg-base-200 overflow-hidden">
+              <StatelessComponent
+                module={maybe_component(Bonfire.UI.Me.UserPreviewLive, @__context__)}
+                user={user}
+                href={"/@#{e(user, :character, :username, "")}"}
+                with_summary
+                parent_id="widget_suggested_profiles"
+              >
+                <:actions>
+                  <div class="px-3 pb-3">
+                    <StatefulComponent
+                      :if={current_user_id(@__context__)}
+                      module={maybe_component(Bonfire.UI.Social.Graph.FollowButtonLive, @__context__)}
+                      id={ComponentID.new(Bonfire.UI.Social.Graph.FollowButtonLive, id(user), "widget_suggested_profiles")}
+                      object_id={id(user)}
+                    />
+                  </div>
+                </:actions>
+              </StatelessComponent>
+            </div>
+          {/for}
+        </div>
+      </div>
+    </Bonfire.UI.Common.WidgetBlockLive>
+{/case}

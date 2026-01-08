@@ -20,15 +20,14 @@
   >
     {#case Media.media_url(@primary_image)}
       {#match url when is_binary(url)}
-        <div
+        <LinkLive
           :if={@showing_within != :smart_input}
+          to={path(@object)}
           class={
-            "-mx-4 -mt-4 mb-4",
+            "block -mx-4 -mt-4 mb-4",
             "!-mx-5 !mt-2 mb-6": @showing_within == :thread and @viewing_main_object
           }
         >
-          <!-- WIP: Add the proper Image, or use a fallback: note. i'd still use a fallback for articles without images -->
-
           <div
             data-id="article_cover"
             class={
@@ -39,22 +38,42 @@
           >
             <p data-role="article_badge" class="absolute left-3 bottom-3 badge badge-soft badge-sm">⁂ {l("Article")}</p>
           </div>
-        </div>
+        </LinkLive>
       {#match _}
         <p data-role="article_badge" class="mb-2 badge badge-soft badge-sm">⁂ {l("Article")}</p>
     {/case}
     {#case e(post_content(@object), :name, nil)}
       {#match nil}
       {#match name}
-        <div
+        <LinkLive
+          to={path(@object)}
           data-role="name"
           class={
-            "translatable text-lg font-bold",
+            "block translatable text-lg font-bold link link-hover",
             "!text-xl mb-3 order-first": @showing_within == :thread and @viewing_main_object
           }
         >
           {rich(name)}
-        </div>
+        </LinkLive>
+    {/case}
+
+    {#case @subject}
+      {#match nil}
+      {#match author}
+        <LinkLive
+          to={path(author)}
+          class="link link-hover font-semibold flex items-center gap-3 text-base text-base-content mt-1 mb-2"
+        >
+          <StatelessComponent
+            module={maybe_component(Bonfire.UI.Common.AvatarLive, @__context__)}
+            parent_id="article_author"
+            wrapper_class="border-0 avatar !flex"
+            src={Media.avatar_url(author)}
+            user_id={id(author)}
+            class="w-5 h-5 rounded-full"
+          />
+          <span>{e(author, :profile, :name, nil) || e(author, :character, :username, l("Unknown"))}</span>
+        </LinkLive>
     {/case}
 
     {#case e(post_content(@object), :summary, nil)}

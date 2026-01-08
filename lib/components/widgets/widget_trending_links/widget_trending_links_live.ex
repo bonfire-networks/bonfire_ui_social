@@ -14,6 +14,7 @@ defmodule Bonfire.UI.Social.WidgetTrendingLinksLive do
 
   prop limit, :integer, default: 5
   prop widget_title, :string, default: nil
+  prop showing_within, :atom, default: nil
 
   def load(limit \\ 5) do
     [links: Bonfire.Social.Media.trending_links(limit: limit)]
