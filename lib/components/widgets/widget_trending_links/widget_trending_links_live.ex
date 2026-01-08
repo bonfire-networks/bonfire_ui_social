@@ -12,12 +12,10 @@ defmodule Bonfire.UI.Social.WidgetTrendingLinksLive do
   """
   use Bonfire.UI.Common.Web, :stateless_component
 
-  alias Bonfire.Social.TrendingLinks
-
   prop limit, :integer, default: 5
   prop widget_title, :string, default: nil
 
   def load(limit \\ 5) do
-    [links: TrendingLinks.list_trending(limit: limit)]
+    [links: Bonfire.Social.Media.trending_links(limit: limit)]
   end
 end

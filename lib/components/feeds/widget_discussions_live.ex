@@ -22,7 +22,7 @@ defmodule Bonfire.UI.Social.WidgetDiscussionsLive do
         streams: %{feed: nil}
       ],
       %{
-        sort_by: :num_replies,
+        sort_by: :reply_count,
         # days
         time_limit: 10,
         limit: 12

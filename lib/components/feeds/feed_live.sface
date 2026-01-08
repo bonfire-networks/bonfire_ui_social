@@ -74,13 +74,14 @@
                 "fresh_hidden hidden": fresh_entry?(@fresh_ids, entry)
               }
             >
-              {#if e(entry, :__type__, nil) == :trending_link}
-                <Bonfire.UI.Social.TrendingLinkCardLive
+              {#case entry}
+                {#match %Bonfire.Files.Media{}}
+                <Bonfire.UI.Social.TopLevelMediaLive
                   link={entry}
                   show_thumbnail
                   featured={e(entry, :featured, false)}
                 />
-              {#else}
+              {#match _}
                 <ActivityLive
                   id={ActivityLive.component_id(
                     id(entry) || e(entry, :activity, :id, nil) || e(entry, :object, :id, nil) ||
@@ -100,7 +101,7 @@
                   subject_user={@subject_user}
                   activity_preloads={@activity_preloads}
                 />
-              {/if}
+              {/case}
             </div>
           {/for}
         </div>

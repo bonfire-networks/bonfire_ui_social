@@ -10,17 +10,17 @@
       class="tooltip-button btn-sm w-full btn btn-outline border-base-content/20 rounded-full"
     >
       {#case e(@feed_filters, :sort_by, nil)}
-        {#match :num_replies}
+        {#match :reply_count}
           <span class="flex items-center">
             <#Icon iconify="ph:chat-circle-duotone" class="lg:hidden block w-4 h-4" />
             <span class="hidden lg:block">{if e(@feed_filters, :sort_order, nil) == :asc, do: l("Least replied"), else: l("Most replied")}</span>
           </span>
-        {#match :num_boosts}
+        {#match :boost_count}
           <span class="flex items-center">
             <#Icon iconify="ph:arrows-counter-clockwise-duotone" class="lg:hidden block w-4 h-4" />
             <span class="hidden lg:block">{if e(@feed_filters, :sort_order, nil) == :asc, do: l("Least boosted"), else: l("Most boosted")}</span>
           </span>
-        {#match :num_likes}
+        {#match :like_count}
           <span class="flex items-center">
             <#Icon iconify="ph:fire-duotone" class="lg:hidden block h-[20px] w-[18px]" />
             <span class="hidden lg:block">{if e(@feed_filters, :sort_order, nil) == :asc, do: l("Least liked"), else: l("Most liked")}</span>
@@ -49,7 +49,7 @@
           {l("Chronological")}
           <div class="w-5 h-5 flex items-center justify-center border border-base-content/20 rounded-full">
             <span
-              :if={e(@feed_filters, :sort_by, nil) not in [:num_replies, :num_boosts, :num_likes]}
+              :if={e(@feed_filters, :sort_by, nil) not in [:reply_count, :boost_count, :like_count]}
               class="w-[14px] h-[14px] bg-primary rounded-full"
             />
           </div>
@@ -58,7 +58,7 @@
       <li>
         <a
           phx-click="set_filter"
-          phx-value-sort_by="num_replies"
+          phx-value-sort_by="reply_count"
           phx-value-sort_order="desc"
           phx-target={@event_target}
           class="flex gap-3 px-2 text-base-content justify-between items-center"
@@ -66,7 +66,7 @@
           {l("Most replied")}
           <div class="w-5 h-5 flex items-center justify-center border border-base-content/20 rounded-full">
             <span
-              :if={e(@feed_filters, :sort_by, nil) == :num_replies}
+              :if={e(@feed_filters, :sort_by, nil) == :reply_count}
               class="w-[14px] h-[14px] bg-primary rounded-full"
             />
           </div>
@@ -77,7 +77,7 @@
         <li>
           <a
             phx-click="set_filter"
-            phx-value-sort_by="num_boosts"
+            phx-value-sort_by="boost_count"
             phx-value-sort_order="desc"
             phx-target={@event_target}
             class="flex gap-3 px-2 text-base-content justify-between items-center"
@@ -85,7 +85,7 @@
             {l("Most boosted")}
             <div class="w-5 h-5 flex items-center justify-center border border-base-content/20 rounded-full">
               <span
-                :if={e(@feed_filters, :sort_by, nil) == :num_boosts}
+                :if={e(@feed_filters, :sort_by, nil) == :boost_count}
                 class="w-[14px] h-[14px] bg-primary rounded-full"
               />
             </div>
@@ -95,7 +95,7 @@
         <li>
           <a
             phx-click="set_filter"
-            phx-value-sort_by="num_likes"
+            phx-value-sort_by="like_count"
             phx-value-sort_order="desc"
             phx-target={@event_target}
             class="flex gap-3 px-2 text-base-content justify-between items-center"
@@ -103,7 +103,7 @@
             {l("Most liked")}
             <div class="w-5 h-5 flex items-center justify-center border border-base-content/20 rounded-full">
               <span
-                :if={e(@feed_filters, :sort_by, nil) == :num_likes}
+                :if={e(@feed_filters, :sort_by, nil) == :like_count}
                 class="w-[14px] h-[14px] bg-primary rounded-full"
               />
             </div>

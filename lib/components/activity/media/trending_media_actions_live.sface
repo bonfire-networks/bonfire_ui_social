@@ -1,0 +1,55 @@
+<!-- <div class="flex items-center -space-x-1">
+                {#for sharer <- Enum.take(@media.sharers || [], 3)}
+                  <LinkLive to={URIs.path(sharer)}>
+                    <Bonfire.UI.Common.AvatarLive
+                      parent_id={deterministic_dom_id("trending_sharer", id(sharer))}
+                      user_id={id(sharer)}
+                      src={Bonfire.Common.Media.avatar_url(sharer)}
+                      class="w-5 h-5 rounded-full"
+                      bg_class="rounded-full"
+                      alt={l("Shared by %{user_name}",
+                        user_name: e(sharer, :profile, :name, nil) || e(sharer, :character, :username, nil)
+                      )}
+                    />
+                  </LinkLive>
+                {/for}
+                {#if @media.unique_sharers > 3}
+                  <button
+                    type="button"
+                    class="ml-1 text-sm text-base-content/70 hover:text-primary hover:underline cursor-pointer"
+                    :on-click={JS.toggle(to: "#sharers-#{deterministic_dom_id("trending_link_sharers", @media.path)}")}
+                  >
+                    +{@media.unique_sharers - 3} {l("others")}
+                  </button>
+                {/if}
+              </div> -->
+{#if to_int(@media.object_count) > 0}
+  <!-- <span class="text-base-content/30">·</span> -->
+  <LinkLive to={URIs.path(@media.newest_activity_id)}>
+    <span class="flex items-center gap-1" title={l("Shares")}>
+      <#Icon iconify="ph:note-duotone" class="w-4 h-4" />
+      {@media.object_count}
+    </span>
+  </LinkLive>
+{/if}
+{#if to_int(@media.reply_count) > 0}
+  <span class="text-base-content/30">·</span>
+  <span class="flex items-center gap-1" title={l("Replies")}>
+    <#Icon iconify="ph:chat-teardrop-text-duotone" class="w-4 h-4" />
+    {@media.reply_count}
+  </span>
+{/if}
+{#if to_int(@media.boost_count) > 0}
+  <span class="text-base-content/30">·</span>
+  <span class="flex items-center gap-1" title={l("Boosts")}>
+    <#Icon iconify="ph:rocket-launch-duotone" class="w-4 h-4" />
+    {@media.boost_count}
+  </span>
+{/if}
+{#if to_int(@media.like_count) > 0}
+  <span class="text-base-content/30">·</span>
+  <span class="flex items-center gap-1" title={l("Likes")}>
+    <#Icon iconify="ph:fire-duotone" class="w-4 h-4" />
+    {@media.like_count}
+  </span>
+{/if}

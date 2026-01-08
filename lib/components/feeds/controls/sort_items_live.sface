@@ -19,13 +19,13 @@
       options={if extension_enabled?(:bonfire_ui_reactions, @__context__),
         do: [
           false: l("Chronological"),
-          num_replies: l("Amount of replies"),
-          num_boosts: l("Amount of boosts"),
-          num_likes: l("Amount of likes")
+          reply_count: l("Amount of replies"),
+          boost_count: l("Amount of boosts"),
+          like_count: l("Amount of likes")
         ],
         else: [
           false: l("Chronological"),
-          num_replies: l("Amount of replies")
+          reply_count: l("Amount of replies")
         ]}
       default_value={false}
       current_value={@sort_by || :load_from_settings}
@@ -41,13 +41,13 @@
       class=" btn-sm btn btn-ghost normal-case text-base-content/70"
     >
       {#case e(@feed_filters, :sort_by, nil)}
-        {#match :num_replies}
+        {#match :reply_count}
           <#Icon iconify="ph:chat-circle-duotone" class="w-5 h-5 stroke-1 fill-base-content/50" />
           <span>{l("Sort by amount of replies")}</span>
-        {#match :num_boosts}
+        {#match :boost_count}
           <#Icon iconify="ph:rocket-launch" class="w-5 h-5 stroke-1 fill-base-content/50" />
           <span>{l("Sort by amount of boosts")}</span>
-        {#match :num_likes}
+        {#match :like_count}
           <#Icon iconify="ph:fire-duotone" class="w-5 h-5" />
           <span>{l("Sort by amount of likes")}</span>
         {#match _}
@@ -80,7 +80,7 @@
     data-role="amount_of_replies"
     phx-click="set_filter"
     
-    phx-value-sort_by="num_replies"
+    phx-value-sort_by="reply_count"
     
     phx-target={@event_target}
   >
@@ -88,7 +88,7 @@
       data-tip={l("Most replied")}
       class={
         "lg:tooltip lg:tooltip-bottom flex gap-2 text-base-content/70 border ",
-        "border-base-content/5 active !text-base-content/100": e(@feed_filters, :sort_by, nil) == :num_replies
+        "border-base-content/5 active !text-base-content/100": e(@feed_filters, :sort_by, nil) == :reply_count
       }
     >
       <#Icon iconify="ph:chat-circle-duotone" class="w-5 h-5 stroke-1 fill-base-content/50" />
@@ -99,7 +99,7 @@
     data-role="amount_of_boosts"
     phx-click="set_filter"
     
-    phx-value-sort_by="num_boosts"
+    phx-value-sort_by="boost_count"
     
     phx-target={@event_target}
   >
@@ -107,7 +107,7 @@
       data-tip={l("Most boosted")}
       class={
         "lg:tooltip lg:tooltip-bottom flex gap-2 text-base-content/70 border ",
-        "border-base-content/5 active !text-base-content/100": e(@feed_filters, :sort_by, nil) == :num_boosts
+        "border-base-content/5 active !text-base-content/100": e(@feed_filters, :sort_by, nil) == :boost_count
       }
     >
       <#Icon iconify="ph:rocket-launch" class="w-5 h-5 stroke-1 fill-base-content/50" />
@@ -118,7 +118,7 @@
     data-role="amount_of_likes"
     phx-click="set_filter"
     
-    phx-value-sort_by="num_likes"
+    phx-value-sort_by="like_count"
     
     phx-target={@event_target}
   >
@@ -126,7 +126,7 @@
       data-tip={l("Most liked")}
       class={
         "lg:tooltip lg:tooltip-bottom flex gap-2 text-base-content/70 border ",
-        "border-base-content/5 active !text-base-content/100": e(@feed_filters, :sort_by, nil) == :num_likes
+        "border-base-content/5 active !text-base-content/100": e(@feed_filters, :sort_by, nil) == :like_count
       }
     >
       <#Icon iconify="ph:fire-fill" class="w-5 h-5" />

@@ -2,85 +2,26 @@
   {#match [links: links] when links != []}
     <Bonfire.UI.Common.WidgetBlockLive widget_title={@widget_title || l("Popular Links")}>
       <div class="flex flex-col gap-2">
-        {#for link <- links}
+        {#for media <- links}
           <div class="flex flex-col gap-0 pb-2">
-            {#case Bonfire.UI.Social.Activity.MediaLive.provider(link.media)}
+            {#case Bonfire.UI.Social.Activity.MediaLive.provider(media)}
               {#match provider when is_binary(provider)}
                 <span class="truncate text-sm text-primary max-w-full">{provider}</span>
               {#match _}
             {/case}
-            <Bonfire.UI.Common.OpenExternalLinkLive id={deterministic_dom_id("trending_link", link.path)}>
+            <Bonfire.UI.Common.OpenExternalLinkLive id={deterministic_dom_id("trending_link", media.path)}>
               <LinkLive
-                to={link.path}
+                to={media.path}
                 target="_blank"
-                class="text-sm font-semibold link link-hover line-clamp-2 leading-tight"
+                class="text-sm font-semibold media media-hover line-clamp-2 leading-tight"
               >
-                {Bonfire.Files.Media.media_label(link.media) || link.path}
+                {Bonfire.Files.Media.media_label(media)}
               </LinkLive>
             </Bonfire.UI.Common.OpenExternalLinkLive>
 
             <div class="flex items-center mt-1 gap-2 text-sm text-base-content/60">
-              <div class="flex items-center -space-x-1">
-                {#for sharer <- Enum.take(link.sharers || [], 3)}
-                  <LinkLive to={URIs.path(sharer)}>
-                    <Bonfire.UI.Common.AvatarLive
-                      parent_id={deterministic_dom_id("trending_sharer", id(sharer))}
-                      user_id={id(sharer)}
-                      src={Bonfire.Common.Media.avatar_url(sharer)}
-                      class="w-5 h-5 rounded-full"
-                      bg_class="rounded-full"
-                      alt={l("Shared by %{user_name}",
-                        user_name: e(sharer, :profile, :name, nil) || e(sharer, :character, :username, nil)
-                      )}
-                    />
-                  </LinkLive>
-                {/for}
-                {#if link.unique_sharers > 3}
-                  <button
-                    type="button"
-                    class="ml-1 text-sm text-base-content/70 hover:text-primary hover:underline cursor-pointer"
-                    :on-click={JS.toggle(to: "#sharers-#{deterministic_dom_id("trending_link_sharers", link.path)}")}
-                  >
-                    +{link.unique_sharers - 3} {l("others")}
-                  </button>
-                {/if}
-              </div>
-              {#if link.total_boosts > 0}
-                <span class="text-base-content/30">·</span>
-                <span class="flex items-center gap-1" title={l("Recent boosts")}>
-                  <#Icon iconify="ph:rocket-launch-duotone" class="w-4 h-4" />
-                  {link.total_boosts}
-                </span>
-              {/if}
+              <Bonfire.UI.Social.TrendingMediaActionsLive media={media} />
             </div>
-
-            {#if link.unique_sharers > 3}
-              <div
-                id={"sharers-#{deterministic_dom_id("trending_link_sharers", link.path)}"}
-                class="hidden mt-2 pl-1 border-l-2 border-base-content/10"
-              >
-                <div class="text-xs text-base-content/50 mb-1">{l("Shared by:")}</div>
-                <div class="flex flex-col gap-1">
-                  {#for sharer <- Enum.drop(link.sharers || [], 3)}
-                    <LinkLive
-                      to={URIs.path(sharer)}
-                      class="flex items-center gap-2 text-xs hover:bg-base-200 rounded p-1 -ml-1"
-                    >
-                      <Bonfire.UI.Common.AvatarLive
-                        parent_id={deterministic_dom_id("trending_sharer_expanded", id(sharer))}
-                        user_id={id(sharer)}
-                        src={Bonfire.Common.Media.avatar_url(sharer)}
-                        class="w-4 h-4 rounded-full"
-                        bg_class="rounded-full"
-                      />
-                      <span class="text-base-content/80 truncate">
-                        {e(sharer, :profile, :name, nil) || e(sharer, :character, :username, nil)}
-                      </span>
-                    </LinkLive>
-                  {/for}
-                </div>
-              </div>
-            {/if}
           </div>
         {/for}
       </div>

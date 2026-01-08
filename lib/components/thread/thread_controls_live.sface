@@ -73,32 +73,32 @@
               <#Icon iconify="mdi:sprout" class="lg:hidden block w-4 h-4" />
               <span class="hidden lg:block">{l("Oldest reply first")}</span>
             </span>
-          {#match {:num_replies, :desc}}
+          {#match {:reply_count, :desc}}
             <span class="flex items-center">
               <#Icon iconify="ph:chat-circle-duotone" class="lg:hidden block w-4 h-4" />
               <span class="hidden lg:block">{l("Most replied")}</span>
             </span>
-          {#match {:num_replies, :asc}}
+          {#match {:reply_count, :asc}}
             <span class="flex items-center">
               <#Icon iconify="ph:chat-circle-duotone" class="lg:hidden block w-4 h-4" />
               <span class="hidden lg:block">{l("Least replied")}</span>
             </span>
-          {#match {:num_boosts, :desc}}
+          {#match {:boost_count, :desc}}
             <span class="flex items-center">
               <#Icon iconify="ph:arrows-counter-clockwise-duotone" class="lg:hidden block w-4 h-4" />
               <span class="hidden lg:block">{l("Most boosted")}</span>
             </span>
-          {#match {:num_boosts, :asc}}
+          {#match {:boost_count, :asc}}
             <span class="flex items-center">
               <#Icon iconify="ph:arrows-counter-clockwise-duotone" class="lg:hidden block w-4 h-4" />
               <span class="hidden lg:block">{l("Least boosted")}</span>
             </span>
-          {#match {:num_likes, :desc}}
+          {#match {:like_count, :desc}}
             <span class="flex items-center">
               <#Icon iconify="ph:fire-duotone" class="lg:hidden block h-[20px] w-[18px]" />
               <span class="hidden lg:block">{l("Most liked")}</span>
             </span>
-          {#match {:num_likes, :asc}}
+          {#match {:like_count, :asc}}
             <span class="flex items-center">
               <#Icon iconify="ph:fire-duotone" class="lg:hidden block h-[20px] w-[18px]" />
               <span class="hidden lg:block">{l("Least liked")}</span>
@@ -195,7 +195,7 @@
           <a
             phx-click="set"
             phx-value-to_atoms="true"
-            phx-value-sort_by="num_replies"
+            phx-value-sort_by="reply_count"
             phx-value-sort_order="desc"
             phx-value-assign_global="true"
             phx-target={@event_target}
@@ -203,7 +203,7 @@
           >
             {l("Most replied")}
             <div class="w-5 h-5 flex items-center justify-center border border-base-content/20 rounded-full">
-              {#if @sort_by == :num_replies and @sort_order == :desc}
+              {#if @sort_by == :reply_count and @sort_order == :desc}
                 <span class="w-[14px] h-[14px] bg-primary rounded-full" />
               {/if}
             </div>
@@ -213,7 +213,7 @@
           <a
             phx-click="set"
             phx-value-to_atoms="true"
-            phx-value-sort_by="num_replies"
+            phx-value-sort_by="reply_count"
             phx-value-sort_order="asc"
             phx-value-assign_global="true"
             phx-target={@event_target}
@@ -221,7 +221,7 @@
           >
             {l("Least replied")}
             <div class="w-5 h-5 flex items-center justify-center border border-base-content/20 rounded-full">
-              {#if @sort_by == :num_replies and @sort_order == :asc}
+              {#if @sort_by == :reply_count and @sort_order == :asc}
                 <span class="w-[14px] h-[14px] bg-primary rounded-full" />
               {/if}
             </div>
@@ -233,7 +233,7 @@
             <a
               phx-click="set"
               phx-value-to_atoms="true"
-              phx-value-sort_by="num_boosts"
+              phx-value-sort_by="boost_count"
               phx-value-sort_order="desc"
               phx-value-assign_global="true"
               phx-target={@event_target}
@@ -241,7 +241,7 @@
             >
               {l("Most boosted")}
               <div class="w-5 h-5 flex items-center justify-center border border-base-content/20 rounded-full">
-                {#if @sort_by == :num_boosts and @sort_order == :desc}
+                {#if @sort_by == :boost_count and @sort_order == :desc}
                   <span class="w-[14px] h-[14px] bg-primary rounded-full" />
                 {/if}
               </div>
@@ -251,7 +251,7 @@
             <a
               phx-click="set"
               phx-value-to_atoms="true"
-              phx-value-sort_by="num_boosts"
+              phx-value-sort_by="boost_count"
               phx-value-sort_order="asc"
               phx-value-assign_global="true"
               phx-target={@event_target}
@@ -259,7 +259,7 @@
             >
               {l("Least boosted")}
               <div class="w-5 h-5 flex items-center justify-center border border-base-content/20 rounded-full">
-                {#if @sort_by == :num_boosts and @sort_order == :asc}
+                {#if @sort_by == :boost_count and @sort_order == :asc}
                   <span class="w-[14px] h-[14px] bg-primary rounded-full" />
                 {/if}
               </div>
@@ -270,7 +270,7 @@
             <a
               phx-click="set"
               phx-value-to_atoms="true"
-              phx-value-sort_by="num_likes"
+              phx-value-sort_by="like_count"
               phx-value-sort_order="desc"
               phx-value-assign_global="true"
               phx-target={@event_target}
@@ -278,7 +278,7 @@
             >
               {l("Most liked")}
               <div class="w-5 h-5 flex items-center justify-center border border-base-content/20 rounded-full">
-                {#if @sort_by == :num_likes and @sort_order == :desc}
+                {#if @sort_by == :like_count and @sort_order == :desc}
                   <span class="w-[14px] h-[14px] bg-primary rounded-full" />
                 {/if}
               </div>
@@ -288,7 +288,7 @@
             <a
               phx-click="set"
               phx-value-to_atoms="true"
-              phx-value-sort_by="num_likes"
+              phx-value-sort_by="like_count"
               phx-value-sort_order="asc"
               phx-value-assign_global="true"
               phx-target={@event_target}
@@ -296,7 +296,7 @@
             >
               {l("Least liked")}
               <div class="w-5 h-5 flex items-center justify-center border border-base-content/20 rounded-full">
-                {#if @sort_by == :num_likes and @sort_order == :asc}
+                {#if @sort_by == :like_count and @sort_order == :asc}
                   <span class="w-[14px] h-[14px] bg-primary rounded-full" />
                 {/if}
               </div>

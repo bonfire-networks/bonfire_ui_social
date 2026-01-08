@@ -442,14 +442,18 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
 
   def paginate_opts(attrs, socket, opts) do
     attrs = input_to_atoms(attrs)
-    socket_opts = to_options(socket)
 
     opts =
-      socket_opts
+      to_options(socket)
       |> Keyword.merge(opts)
+
+    preloads = e(opts, :activity_preloads, {[], []})
+
+    opts =
+      opts
       |> Keyword.merge(
         prepare_time_limit(
-          socket_opts ++ opts,
+          opts,
           e(attrs, :time_limit, nil)
         )
       )
@@ -464,15 +468,16 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
           Keyword.new(attrs) |> Keyword.delete(:multiply_limit),
           Activities.order_pagination_opts(
             opts[:sort_by] || e(opts, :feed_filters, :sort_by, nil),
-            opts[:sort_order] || e(opts, :feed_filters, :sort_order, nil)
+            opts[:sort_order] || e(opts, :feed_filters, :sort_order, nil),
+            opts
+            |> Keyword.put(:preload, preloads |> elem(0))
           )
         )
       )
       |> Keyword.put_new_lazy(:activity_preloads, fn ->
-        e(opts, :activity_preloads, nil) ||
-          activity_preloads_tuple_from_filters(e(opts, :feed_filters, %{}),
-            showing_within: e(opts, :showing_within, nil)
-          )
+        activity_preloads_tuple_from_filters(e(opts, :feed_filters, %{}),
+          showing_within: e(opts, :showing_within, nil)
+        )
       end)
   end
 
@@ -531,11 +536,14 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
     filters =
       e(opts, :feed_filters, nil) || e(opts, :filters, %{})
 
+    preloads = e(opts, :activity_preloads, {[], []})
+
     feed =
       FeedLoader.feed(
         feed_id,
         filters,
         opts
+        |> Keyword.put(:preload, preloads |> elem(0))
       )
 
     {:noreply,
@@ -549,7 +557,7 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
        page_info: e(feed, :page_info, []),
        loading: true,
        #  feed_filters: filters,
-       activity_preloads: opts[:activity_preloads]
+       activity_preloads: preloads
      )
      |> insert_feed(e(feed, :edges, []), opts)}
   end
@@ -1020,7 +1028,11 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
                     "There was an error when trying to load the feed. Received invalid response from feed_assigns"
                   )
 
-                  assign_error(socket, "There was an error when trying to load the feed.", pid)
+                  assign_error(
+                    socket,
+                    "There was an error when trying to load the feed (case 1)",
+                    pid
+                  )
               end
             rescue
               e in RuntimeError ->
@@ -1031,19 +1043,24 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
 
                 assign_error(
                   socket,
-                  e(e, :message, nil) || "There was an error when trying to load the feed.",
+                  e(e, :message, nil) ||
+                    "There was an error when trying to load the feed (case 2)",
                   pid
                 )
 
               e ->
-                err(
+                flood(
                   e,
                   "There was an error when trying to load the feed. Error raised by feed_assigns"
                 )
 
-                err(__STACKTRACE__, "Stacktrace")
+                flood(__STACKTRACE__, "Stacktrace")
 
-                assign_error(socket, "There was an error when trying to load the feed.", pid)
+                assign_error(
+                  socket,
+                  "There was an error when trying to load the feed (case 3)",
+                  pid
+                )
             end
           end,
           socket: socket,

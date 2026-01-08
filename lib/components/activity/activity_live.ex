@@ -1777,10 +1777,12 @@ defmodule Bonfire.UI.Social.ActivityLive do
       )
 
     case reply_context_mode do
-      :thread_start when showing_within == :feed and is_nil(activity_inception) and not is_nil(thread_start) ->
+      :thread_start
+      when showing_within == :feed and is_nil(activity_inception) and not is_nil(thread_start) ->
         component_thread_start(thread_start, thread_title, activity_component_id)
 
-      :minimal when showing_within == :feed and is_nil(activity_inception) and not is_nil(reply_to) ->
+      :minimal
+      when showing_within == :feed and is_nil(activity_inception) and not is_nil(reply_to) ->
         [{Bonfire.UI.Social.Activity.RepliedInThreadIndicatorLive, %{}}]
 
       _ ->

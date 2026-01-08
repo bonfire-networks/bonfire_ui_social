@@ -317,7 +317,7 @@ defmodule Bonfire.UI.Social.SettingsTest do
 
       conn = conn(user: alice, account: account)
 
-      # Change thread sorting to num_replies
+      # Change thread sorting to reply_count
       conn = visit(conn, "/settings/user/preferences/behaviours")
 
       conn =
@@ -331,7 +331,7 @@ defmodule Bonfire.UI.Social.SettingsTest do
 
       # Check thread is sorted by replies
       conn = visit(conn, "/discussion/#{post.id}")
-      assert_has(conn, "[data-sorted=num_replies]")
+      assert_has(conn, "[data-sorted=reply_count]")
     end
 
     # test "show reaction counts (likes/boosts)" do

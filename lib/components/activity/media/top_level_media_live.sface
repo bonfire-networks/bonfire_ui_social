@@ -1,7 +1,8 @@
 {#if @featured}
-  {!-- Featured layout: Large image at top, content below (like Mastodon's first item) --}
+  <!-- Featured layout: Large image at top, content below (like Mastodon's first item) -->
   <div class={"flex flex-col bg-base-100 overflow-hidden", @class}>
-    {#case MediaLive.preview_img(@link.media)}
+
+    {#case MediaLive.preview_img(@link)}
       {#match preview_img when is_binary(preview_img)}
         <Bonfire.UI.Common.OpenExternalLinkLive
           id={deterministic_dom_id("feed_link_featured", @link.path)}
@@ -12,7 +13,7 @@
               class="w-full aspect-[1.91/1] object-cover"
               fallback_class="w-12 h-12 text-base-content/70"
               src={preview_img}
-              media={@link.media}
+              media={@link}
               fallback_icon="ion:newspaper-outline"
             />
           </LinkLive>
@@ -26,7 +27,7 @@
 
     <div class="p-4 flex flex-col gap-2">
       <div class="flex items-center gap-2 text-sm text-base-content/60">
-        {#case MediaLive.provider(@link.media)}
+        {#case MediaLive.provider(@link)}
           {#match provider when is_binary(provider)}
             <span class="text-primary font-medium">{provider}</span>
           {#match _}
@@ -39,58 +40,31 @@
           target="_blank"
           class="text-lg font-bold link link-hover line-clamp-2 leading-snug"
         >
-          {@link.title || @link.path}
+          {Bonfire.Files.Media.media_label(@link)}
         </LinkLive>
       </Bonfire.UI.Common.OpenExternalLinkLive>
 
-      {#case @link.description}
+      {#case Bonfire.Files.Media.description(@link)}
         {#match description when is_binary(description) and description != ""}
           <p class="text-sm text-base-content/70 line-clamp-2">{description}</p>
-        {#match _}
+        {#match _}  
       {/case}
 
       <div class="flex items-center mt-2 gap-2 text-sm text-base-content/60">
-        <div class="flex items-center -space-x-1">
-          {#for sharer <- Enum.take(@link.sharers || [], 3)}
-            <LinkLive to={URIs.path(sharer)}>
-              <Bonfire.UI.Common.AvatarLive
-                parent_id={deterministic_dom_id("trending_sharer", id(sharer))}
-                user_id={id(sharer)}
-                src={Bonfire.Common.Media.avatar_url(sharer)}
-                class="w-6 h-6 rounded-full"
-                bg_class="rounded-full"
-                alt={l("Shared by %{user_name}",
-                  user_name: e(sharer, :profile, :name, nil) || e(sharer, :character, :username, nil)
-                )}
-              />
-            </LinkLive>
-          {/for}
-          {#if @link.unique_sharers > 3}
-            <span class="ml-1 text-sm text-base-content/70">
-              +{@link.unique_sharers - 3}
-            </span>
-          {/if}
-        </div>
-        {#if @link.total_boosts > 0}
-          <span class="flex items-center gap-1" title={l("Recent boosts")}>
-            <#Icon iconify="ph:rocket-launch-duotone" class="w-4 h-4" />
-            {@link.total_boosts}
-          </span>
-        {/if}
-        <span class="flex-1" />
-        <span class="badge badge-ghost text-sm">
-          {lp("1 post", "%{count} posts", @link.share_count, count: @link.share_count)}
-        </span>
+        
+      <Bonfire.UI.Social.TrendingMediaActionsLive media={@link} />
+
       </div>
     </div>
-  </div>
-{#else}
-  {!-- Compact layout: Small thumbnail on right, content on left --}
+  </div> 
+{/if}
+{#if not @featured}
+  <!-- Compact layout: Small thumbnail on right, content on left -->
   <div class={"flex gap-3 p-4 bg-base-100", @class}>
     {!-- Content on left --}
     <div class="flex flex-col gap-1 flex-1 min-w-0">
       <div class="flex items-center gap-2 text-sm text-base-content/60">
-        {#case MediaLive.provider(@link.media)}
+        {#case MediaLive.provider(@link)}
           {#match provider when is_binary(provider)}
             <span class="text-primary">{provider}</span>
           {#match _}
@@ -103,44 +77,18 @@
           target="_blank"
           class="text-base font-semibold link link-hover line-clamp-2 leading-tight"
         >
-          {@link.title || @link.path}
+          {Bonfire.Files.Media.media_label(@link)}
         </LinkLive>
       </Bonfire.UI.Common.OpenExternalLinkLive>
 
-      <div class="flex items-center mt-2 gap-2 text-sm text-base-content/60">
-        <div class="flex items-center -space-x-1">
-          {#for sharer <- Enum.take(@link.sharers || [], 3)}
-            <LinkLive to={URIs.path(sharer)}>
-              <Bonfire.UI.Common.AvatarLive
-                parent_id={deterministic_dom_id("trending_sharer_c", id(sharer))}
-                user_id={id(sharer)}
-                src={Bonfire.Common.Media.avatar_url(sharer)}
-                class="w-5 h-5 rounded-full"
-                bg_class="rounded-full"
-                alt={l("Shared by %{user_name}",
-                  user_name: e(sharer, :profile, :name, nil) || e(sharer, :character, :username, nil)
-                )}
-              />
-            </LinkLive>
-          {/for}
-          {#if @link.unique_sharers > 3}
-            <span class="ml-1 text-sm text-base-content/70">
-              +{@link.unique_sharers - 3}
-            </span>
-          {/if}
-        </div>
-        {#if @link.total_boosts > 0}
-          <span class="flex items-center gap-1" title={l("Recent boosts")}>
-            <#Icon iconify="ph:rocket-launch-duotone" class="w-4 h-4" />
-            {@link.total_boosts}
-          </span>
-        {/if}
+<div class="flex items-center mt-2 gap-2 text-sm text-base-content/60">
+      <Bonfire.UI.Social.TrendingMediaActionsLive media={@link} />
       </div>
     </div>
 
     {!-- Thumbnail on right --}
     {#if @show_thumbnail}
-      {#case MediaLive.preview_img(@link.media)}
+      {#case MediaLive.preview_img(@link)}
         {#match preview_img when is_binary(preview_img)}
           <Bonfire.UI.Common.OpenExternalLinkLive
             id={deterministic_dom_id("feed_link_thumb", @link.path)}
@@ -152,7 +100,7 @@
                 class="w-[120px] h-[120px] rounded-lg object-cover"
                 fallback_class="w-6 h-6 text-base-content/70"
                 src={preview_img}
-                media={@link.media}
+                media={@link}
                 fallback_icon="ion:newspaper-outline"
               />
             </LinkLive>
@@ -164,5 +112,6 @@
           </div>
       {/case}
     {/if}
+
   </div>
 {/if}
