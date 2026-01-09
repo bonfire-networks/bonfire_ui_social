@@ -1,63 +1,113 @@
 {#if @showing_within == :widget}
-  {!-- Medium-style widget layout --}
+  {!-- Card widget layout with text overlay --}
   <article
     data-id="activity_article"
     id={deterministic_dom_id(__MODULE__, id(@activity) || id(@object) || "no-id", "article_widget", @parent_id)}
     data-rendered={@showing_within}
-    class="group flex gap-4 pb-4 cursor-pointer"
+    class="group cursor-pointer"
   >
-    {!-- Content --}
-    <div class="flex flex-col flex-1 min-w-0">
-      {!-- Author row --}
-      {#case @subject}
-        {#match nil}
-        {#match author}
-          <LinkLive
-            to={path(author)}
-            class="inline-flex items-center gap-2 mb-2 text-sm hover:underline transition-colors w-fit"
+    <LinkLive to={path(@object)} class="block">
+      {#case Media.media_url(@primary_image)}
+        {#match url when is_binary(url)}
+          <div
+            class="relative w-full aspect-[4/3] rounded-xl bg-center bg-cover bg-no-repeat overflow-hidden"
+            style={["background-image": "url('#{URI.encode(url)}')"]}
           >
-            <StatelessComponent
-              module={maybe_component(Bonfire.UI.Common.AvatarLive, @__context__)}
-              parent_id="article_widget_author"
-              wrapper_class="border-0 avatar !flex"
-              src={Media.avatar_url(author)}
-              user_id={id(author)}
-              class="w-5 h-5 rounded-full"
+            {!-- Gradient overlay --}
+            <div
+              class="absolute inset-0"
+              style="background: linear-gradient(to top, rgba(0,0,0,0.8) 0%, rgba(0,0,0,0.4) 50%, transparent 100%)"
             />
-            <span class="font-medium">{e(author, :profile, :name, nil) || e(author, :character, :username, l("Unknown"))}</span>
-          </LinkLive>
-      {/case}
 
-      {!-- Title --}
-      <LinkLive
-        to={path(@object)}
-        data-role="name"
-        class="text-base font-bold line-clamp-2 leading-snug"
-      >
-        {rich(e(post_content(@object), :name, nil) || l("Untitled"))}
-      </LinkLive>
+            {!-- Content overlay --}
+            <div class="absolute inset-x-0 bottom-0 p-4" style="color: white">
+              {!-- Author row --}
+              {#case @subject}
+                {#match nil}
+                {#match author}
+                  <div class="flex items-center gap-2 mb-2 text-sm" style="color: rgba(255,255,255,0.9)">
+                    <StatelessComponent
+                      module={maybe_component(Bonfire.UI.Common.AvatarLive, @__context__)}
+                      parent_id="article_widget_author"
+                      wrapper_class="border-0 avatar !flex"
+                      src={Media.avatar_url(author)}
+                      user_id={id(author)}
+                      class="w-5 h-5 rounded-full"
+                      style="box-shadow: 0 0 0 1px rgba(255,255,255,0.3)"
+                    />
+                    <span class="font-medium">{e(author, :profile, :name, nil) || e(author, :character, :username, l("Unknown"))}</span>
+                  </div>
+              {/case}
 
-      {!-- Summary/excerpt --}
-      {#case e(post_content(@object), :summary, nil) || e(post_content(@object), :html_body, nil)}
-        {#match excerpt when is_binary(excerpt) and excerpt != ""}
-          <div class="mt-1 text-sm text-base-content/60 line-clamp-2 prose prose-sm prose-p:m-0 prose-p:leading-normal max-w-none [&>*]:m-0">
-            {rich(maybe_truncate(excerpt, false, 300))}
+              {!-- Title --}
+              <h3 class="text-lg font-bold line-clamp-2 leading-snug">
+                {rich(e(post_content(@object), :name, nil) || l("Untitled"))}
+              </h3>
+
+              {!-- Summary/excerpt --}
+              {#case e(post_content(@object), :summary, nil) || e(post_content(@object), :html_body, nil)}
+                {#match excerpt when is_binary(excerpt) and excerpt != ""}
+                  <div class="mt-1 text-sm line-clamp-2 [&>*]:m-0" style="color: rgba(255,255,255,0.8)">
+                    {rich(maybe_truncate(excerpt, false, 200))}
+                  </div>
+                {#match _}
+              {/case}
+            </div>
           </div>
         {#match _}
-      {/case}
-    </div>
-
-    {!-- Thumbnail --}
-    {#case Media.media_url(@primary_image)}
-      {#match url when is_binary(url)}
-        <LinkLive to={path(@object)} class="shrink-0 self-center">
+          {!-- Fallback with placeholder background --}
           <div
-            class="w-28 h-28 rounded bg-center bg-cover bg-no-repeat"
-            style={["background-image": "url('#{URI.encode(url)}')", "width": "160px", "height": "108px"]}
-          />
-        </LinkLive>
-      {#match _}
-    {/case}
+            class="relative w-full aspect-[4/3] rounded-xl overflow-hidden"
+            style="background: linear-gradient(135deg, oklch(var(--p) / 0.3) 0%, oklch(var(--s) / 0.3) 100%)"
+          >
+            {!-- Decorative element --}
+            <div class="absolute inset-0 flex items-center justify-center opacity-10">
+              <span class="text-8xl">⁂</span>
+            </div>
+
+            {!-- Gradient overlay --}
+            <div
+              class="absolute inset-0"
+              style="background: linear-gradient(to top, rgba(0,0,0,0.8) 0%, rgba(0,0,0,0.4) 50%, transparent 100%)"
+            ></div>
+
+            {!-- Content overlay --}
+            <div class="absolute inset-x-0 bottom-0 p-4" style="color: white">
+              {!-- Author row --}
+              {#case @subject}
+                {#match nil}
+                {#match author}
+                  <div class="flex items-center gap-2 mb-2 text-sm" style="color: rgba(255,255,255,0.9)">
+                    <StatelessComponent
+                      module={maybe_component(Bonfire.UI.Common.AvatarLive, @__context__)}
+                      parent_id="article_widget_author_fallback"
+                      wrapper_class="border-0 avatar !flex"
+                      src={Media.avatar_url(author)}
+                      user_id={id(author)}
+                      class="w-5 h-5 rounded-full"
+                      style="box-shadow: 0 0 0 1px rgba(255,255,255,0.3)"
+                    />
+                    <span class="font-medium">{e(author, :profile, :name, nil) || e(author, :character, :username, l("Unknown"))}</span>
+                  </div>
+              {/case}
+
+              {!-- Title --}
+              <h3 class="text-lg font-bold line-clamp-2 leading-snug">
+                {rich(e(post_content(@object), :name, nil) || l("Untitled"))}
+              </h3>
+
+              {!-- Summary/excerpt --}
+              {#case e(post_content(@object), :summary, nil) || e(post_content(@object), :html_body, nil)}
+                {#match excerpt when is_binary(excerpt) and excerpt != ""}
+                  <div class="mt-1 text-sm line-clamp-2 [&>*]:m-0" style="color: rgba(255,255,255,0.8)">
+                    {rich(maybe_truncate(excerpt, false, 200))}
+                  </div>
+                {#match _}
+              {/case}
+            </div>
+          </div>
+      {/case}
+    </LinkLive>
   </article>
 {#else}
   {!-- Full layout --}

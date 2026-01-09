@@ -6,6 +6,7 @@ defmodule Bonfire.UI.Social.WidgetRecentArticlesLive do
   from users the current user follows, without subject or action buttons.
   """
   use Bonfire.UI.Common.Web, :stateless_component
+  import Phoenix.LiveView.JS
 
   prop limit, :integer, default: 5
   prop widget_title, :string, default: nil

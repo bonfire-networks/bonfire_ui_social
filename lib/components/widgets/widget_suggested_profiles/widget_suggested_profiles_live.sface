@@ -8,7 +8,7 @@
       widget_title={e(@widget_title, l("Who to follow"))}
     >
       <:action>
-        <div style="top: 60px" class="flex relative gap-1">
+        <div style="top: 100px;" class="flex relative gap-1">
           <button
             type="button"
             class="btn btn-circle btn-primary btn-soft absolute left-0 z-50"
@@ -33,12 +33,12 @@
           phx-hook="CarouselScroll"
         >
           {#for user <- suggested_profiles}
-            <div class="flex-shrink-0 w-72 snap-start rounded-lg bg-base-200 overflow-hidden">
+            <div class="flex-shrink-0 snap-start rounded-xl bg-base-200 overflow-hidden" style="width: calc(50% - 8px);">
               <StatelessComponent
                 module={maybe_component(Bonfire.UI.Me.UserPreviewLive, @__context__)}
                 user={user}
                 href={"/@#{e(user, :character, :username, "")}"}
-                with_summary
+                with_banner
                 parent_id="widget_suggested_profiles"
               >
                 <:actions>
