@@ -5,11 +5,11 @@
       {#match [articles: []]}
       {#match [articles: articles]}
         <Bonfire.UI.Common.WidgetBlockLive
-          title_class="text-lg font-bold tracking-wide"
+          title_class="text-lg mb-4 font-bold tracking-wide"
           class="w-full flex-auto mx-auto"
           widget_title={@widget_title || l("Recent Articles")}
         >
-          <div class="flex gap-4 flex-col">
+          <div class="flex gap-4 flex-col divide-y divide-base-content/20">
             {#for fp <- articles}
               {#case {e(fp, :activity, nil), e(fp, :activity, :object, nil) || e(fp, :object, nil),
                  e(fp, :activity, :subject, nil) || e(fp, :subject, nil)}}

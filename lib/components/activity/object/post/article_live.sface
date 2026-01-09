@@ -1,133 +1,217 @@
-<div
-  data-id="activity_article"
-  id={deterministic_dom_id(
-    __MODULE__,
-    id(@activity) || id(@object) || "no-id",
-    "article_container",
-    @parent_id
-  )}
-  data-rendered={@showing_within}
-  data-main-object={@viewing_main_object}
-  class={
-    "article flex flex-col previewable_activity cursor-pointer border border-base-content/10 rounded-box p-4",
-    "!max-w-full !border-0 !cursor-default !rounded-none !p-0":
-      @showing_within == :thread && @viewing_main_object
-  }
->
-  <Bonfire.UI.Common.OpenExternalLinkLive
-    id={deterministic_dom_id(__MODULE__, id(@activity) || id(@object), "link", @parent_id)}
-    prompt_external_links={@showing_within == :flags}
+{#if @showing_within == :widget}
+  {!-- Medium-style widget layout --}
+  <article
+    data-id="activity_article"
+    id={deterministic_dom_id(__MODULE__, id(@activity) || id(@object) || "no-id", "article_widget", @parent_id)}
+    data-rendered={@showing_within}
+    class="group flex gap-4 pb-4 cursor-pointer"
   >
+    {!-- Content --}
+    <div class="flex flex-col flex-1 min-w-0">
+      {!-- Author row --}
+      {#case @subject}
+        {#match nil}
+        {#match author}
+          <LinkLive
+            to={path(author)}
+            class="inline-flex items-center gap-2 mb-2 text-sm hover:underline transition-colors w-fit"
+          >
+            <StatelessComponent
+              module={maybe_component(Bonfire.UI.Common.AvatarLive, @__context__)}
+              parent_id="article_widget_author"
+              wrapper_class="border-0 avatar !flex"
+              src={Media.avatar_url(author)}
+              user_id={id(author)}
+              class="w-5 h-5 rounded-full"
+            />
+            <span class="font-medium">{e(author, :profile, :name, nil) || e(author, :character, :username, l("Unknown"))}</span>
+          </LinkLive>
+      {/case}
+
+      {!-- Title --}
+      <LinkLive
+        to={path(@object)}
+        data-role="name"
+        class="text-base font-bold line-clamp-2 leading-snug"
+      >
+        {rich(e(post_content(@object), :name, nil) || l("Untitled"))}
+      </LinkLive>
+
+      {!-- Summary/excerpt --}
+      {#case e(post_content(@object), :summary, nil) || e(post_content(@object), :html_body, nil)}
+        {#match excerpt when is_binary(excerpt) and excerpt != ""}
+          <div class="mt-1 text-sm text-base-content/60 line-clamp-2 prose prose-sm prose-p:m-0 prose-p:leading-normal max-w-none [&>*]:m-0">
+            {rich(maybe_truncate(excerpt, false, 300))}
+          </div>
+        {#match _}
+      {/case}
+    </div>
+
+    {!-- Thumbnail --}
     {#case Media.media_url(@primary_image)}
       {#match url when is_binary(url)}
-        <LinkLive
-          :if={@showing_within != :smart_input}
-          to={path(@object)}
-          class={
-            "block -mx-4 -mt-4 mb-4",
-            "!-mx-5 !mt-2 mb-6": @showing_within == :thread and @viewing_main_object
-          }
-        >
+        <LinkLive to={path(@object)} class="shrink-0 self-center">
           <div
-            data-id="article_cover"
-            class={
-              "flex relative h-[160px] lg:h-[220px] bg-center items-center rounded-t-lg shrink-0 w-full bg-base-content/10  place-content-center bg-no-repeat bg-cover",
-              "!rounded-none": @showing_within == :thread and @viewing_main_object
-            }
-            style={["background-image": "url('#{URI.encode(url)}')"]}
-          >
-            <p data-role="article_badge" class="absolute left-3 bottom-3 badge badge-soft badge-sm">⁂ {l("Article")}</p>
-          </div>
+            class="w-28 h-28 rounded bg-center bg-cover bg-no-repeat"
+            style={["background-image": "url('#{URI.encode(url)}')", "width": "160px", "height": "108px"]}
+          />
         </LinkLive>
       {#match _}
-        <p data-role="article_badge" class="mb-2 badge badge-soft badge-sm">⁂ {l("Article")}</p>
     {/case}
-    {#case e(post_content(@object), :name, nil)}
-      {#match nil}
-      {#match name}
-        <LinkLive
-          to={path(@object)}
-          data-role="name"
-          class={
-            "block translatable text-lg font-bold link link-hover",
-            "!text-xl mb-3 order-first": @showing_within == :thread and @viewing_main_object
-          }
-        >
-          {rich(name)}
-        </LinkLive>
-    {/case}
-
-    {#case @subject}
-      {#match nil}
-      {#match author}
-        <LinkLive
-          to={path(author)}
-          class="link link-hover font-semibold flex items-center gap-3 text-base text-base-content mt-1 mb-2"
-        >
-          <StatelessComponent
-            module={maybe_component(Bonfire.UI.Common.AvatarLive, @__context__)}
-            parent_id="article_author"
-            wrapper_class="border-0 avatar !flex"
-            src={Media.avatar_url(author)}
-            user_id={id(author)}
-            class="w-5 h-5 rounded-full"
-          />
-          <span>{e(author, :profile, :name, nil) || e(author, :character, :username, l("Unknown"))}</span>
-        </LinkLive>
-    {/case}
-
-    {#case e(post_content(@object), :summary, nil)}
-      {#match summary}
-        {#case @cw == true or (@cw != false and not is_nil(summary))}
-          {#match cw}
-            {#if cw and e(post_content(@object), :html_body, nil)}
-              <Bonfire.UI.Social.Activity.CWLive
-                cw={@cw}
-                activity_component_id={@activity_component_id}
-                summary={summary}
-              />
-            {#elseif not is_nil(summary)}
-              <div class={
-                "translatable prose max-w-prose prose-p:pt-1 prose-sm",
-                "order-first italic mb-3": @showing_within == :thread and @viewing_main_object
-              }>
-                {rich(summary,
-                  skip_markdown: @is_remote,
-                  __unsafe__: !@is_remote
-                )}
-              </div>
-            {/if}
-
-            <div id={"content_#{@activity_component_id}"} class={hidden: cw}>
-              {#if @showing_within != :thread and !cw and e(post_content(@object), :summary, nil)}
-                {!-- <div
-          id={"expandable_note_#{@parent_id}_#{id(@activity) || id(@object) || 'no-id'}"}
-          class="prose max-w-prose prose-p:pt-1 prose-sm"
-        >
-          {rich(e(post_content(@object), :summary, nil),
-            skip_markdown: @is_remote,
-            __unsafe__: !@is_remote
-          )}
-        </div> --}
-              {#else}
-                {#case e(post_content(@object), :html_body, nil) ||
-                    if !e(@activity, :media, nil), do: l("This content is not available.")}
-                  {#match nil}
-                  {#match html_body}
-                    <Bonfire.UI.Social.Activity.TruncatableContentLive
-                      html_body={html_body}
-                      activity={@activity}
-                      object={@object}
-                      parent_id={deterministic_dom_id(__MODULE__, id(@activity) || id(@object), nil, @parent_id)}
-                      object_type={:article}
-                      showing_within={@showing_within}
-                      viewing_main_object={@viewing_main_object}
-                      activity_inception={@activity_inception}
-                    />
-                {/case}
-              {/if}
+  </article>
+{#else}
+  {!-- Full layout --}
+  <article
+    data-id="activity_article"
+    id={deterministic_dom_id(
+      __MODULE__,
+      id(@activity) || id(@object) || "no-id",
+      "article_container",
+      @parent_id
+    )}
+    data-rendered={@showing_within}
+    data-main-object={@viewing_main_object}
+    class={
+      "group article flex flex-col previewable_activity cursor-pointer bg-base-100 border border-base-content/10 rounded-xl overflow-hidden transition-all hover:border-base-content/20 hover:shadow-sm",
+      "!max-w-full !border-0 !cursor-default !rounded-none !shadow-none !bg-transparent":
+        @showing_within == :thread && @viewing_main_object
+    }
+  >
+    <Bonfire.UI.Common.OpenExternalLinkLive
+      id={deterministic_dom_id(__MODULE__, id(@activity) || id(@object), "link", @parent_id)}
+      prompt_external_links={@showing_within == :flags}
+    >
+      {#case Media.media_url(@primary_image)}
+        {#match url when is_binary(url)}
+          <LinkLive
+            :if={@showing_within != :smart_input}
+            to={path(@object)}
+            class={
+              "block",
+              "mb-6": @showing_within == :thread and @viewing_main_object
+            }
+          >
+            <div
+              data-id="article_cover"
+              class={
+                "relative h-[180px] lg:h-[240px] bg-center bg-no-repeat bg-cover overflow-hidden",
+                "!rounded-none": @showing_within == :thread and @viewing_main_object
+              }
+              style={["background-image": "url('#{URI.encode(url)}')"]}
+            >
+              {!-- Gradient overlay for better text contrast --}
+              <div class="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent" />
+              <span
+                data-role="article_badge"
+                style="top: 16px"
+                class="absolute left-4 inline-flex items-center gap-2 px-3 py-1 text-xs font-medium tracking-wide uppercase bg-white/90 text-base-content rounded-full backdrop-blur-sm"
+              >
+                <span class="text-primary">⁂</span> {l("Article")}
+              </span>
             </div>
+          </LinkLive>
+        {#match _}
+          <span
+            data-role="article_badge"
+            style="width: fit-content;"
+            class="mt-4 mb-2 inline-flex items-center gap-2 px-3 py-1 text-xs font-medium tracking-wide uppercase bg-base-content/5 text-base-content/70 rounded-full w-fit"
+          >
+            <span class="text-primary">⁂</span> {l("Article")}
+          </span>
+      {/case}
+
+      <div class={
+        "flex flex-col gap-3 p-4 pt-3",
+        "!p-0": @showing_within == :thread and @viewing_main_object
+      }>
+        {#case e(post_content(@object), :name, nil)}
+          {#match nil}
+          {#match name}
+            <LinkLive
+              to={path(@object)}
+              data-role="name"
+              class={
+                "block translatable text-lg font-bold leading-snug transition-colors",
+                "!text-2xl !leading-tight order-first": @showing_within == :thread and @viewing_main_object
+              }
+            >
+              {rich(name)}
+            </LinkLive>
         {/case}
-    {/case}
-  </Bonfire.UI.Common.OpenExternalLinkLive>
-</div>
+
+        {#case @subject}
+          {#match nil}
+          {#match author}
+            <LinkLive
+              to={path(author)}
+              class="inline-flex items-center gap-2 text-sm text-base-content/70 hover:text-base-content transition-colors w-fit"
+            >
+              <StatelessComponent
+                module={maybe_component(Bonfire.UI.Common.AvatarLive, @__context__)}
+                parent_id="article_author"
+                wrapper_class="border-0 avatar !flex"
+                src={Media.avatar_url(author)}
+                user_id={id(author)}
+                class="w-6 h-6 rounded-full ring-2 ring-base-content/10"
+              />
+              <span class="font-medium">{e(author, :profile, :name, nil) || e(author, :character, :username, l("Unknown"))}</span>
+            </LinkLive>
+        {/case}
+
+        {#case e(post_content(@object), :summary, nil)}
+          {#match summary}
+            {#case @cw == true or (@cw != false and not is_nil(summary))}
+              {#match cw}
+                {#if cw and e(post_content(@object), :html_body, nil)}
+                  <Bonfire.UI.Social.Activity.CWLive
+                    cw={@cw}
+                    activity_component_id={@activity_component_id}
+                    summary={summary}
+                  />
+                {#elseif not is_nil(summary)}
+                  <div class={
+                    "translatable prose prose-sm prose-base-content/80 max-w-prose prose-p:leading-relaxed",
+                    "order-first italic text-base-content/60": @showing_within == :thread and @viewing_main_object
+                  }>
+                    {rich(summary,
+                      skip_markdown: @is_remote,
+                      __unsafe__: !@is_remote
+                    )}
+                  </div>
+                {/if}
+
+                <div id={"content_#{@activity_component_id}"} class={hidden: cw}>
+                  {#if @showing_within != :thread and !cw and e(post_content(@object), :summary, nil)}
+                    {!-- <div
+              id={"expandable_note_#{@parent_id}_#{id(@activity) || id(@object) || 'no-id'}"}
+              class="prose max-w-prose prose-p:pt-1 prose-sm"
+            >
+              {rich(e(post_content(@object), :summary, nil),
+                skip_markdown: @is_remote,
+                __unsafe__: !@is_remote
+              )}
+            </div> --}
+                  {#else}
+                    {#case e(post_content(@object), :html_body, nil) ||
+                        if !e(@activity, :media, nil), do: l("This content is not available.")}
+                      {#match nil}
+                      {#match html_body}
+                        <Bonfire.UI.Social.Activity.TruncatableContentLive
+                          html_body={html_body}
+                          activity={@activity}
+                          object={@object}
+                          parent_id={deterministic_dom_id(__MODULE__, id(@activity) || id(@object), nil, @parent_id)}
+                          object_type={:article}
+                          showing_within={@showing_within}
+                          viewing_main_object={@viewing_main_object}
+                          activity_inception={@activity_inception}
+                        />
+                    {/case}
+                  {/if}
+                </div>
+            {/case}
+        {/case}
+      </div>
+    </Bonfire.UI.Common.OpenExternalLinkLive>
+  </article>
+{/if}

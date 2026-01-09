@@ -1,28 +1,67 @@
 {#case load(@limit)}
   {#match [links: links] when links != []}
     <Bonfire.UI.Common.WidgetBlockLive widget_title={@widget_title || l("Popular Links")}>
-      <div class="flex flex-col gap-2">
+      <div class="flex flex-col divide-y divide-base-content/10">
         {#for media <- links}
-          <div class="flex flex-col gap-0 pb-2">
-            {#case Bonfire.UI.Social.Activity.MediaLive.provider(media)}
-              {#match provider when is_binary(provider)}
-                <span class="truncate text-sm text-primary max-w-full">{provider}</span>
+          <article class="group flex gap-4 py-4 first:pt-0 last:pb-0">
+            {!-- Content --}
+            <div class="flex flex-col gap-1 flex-1 min-w-0">
+              {!-- Provider badge --}
+              {#case Bonfire.UI.Social.Activity.MediaLive.provider(media)}
+                {#match provider when is_binary(provider)}
+                  <span class="text-xs font-medium text-primary/80 uppercase tracking-wide truncate max-w-full">
+                    {provider}
+                  </span>
+                {#match _}
+              {/case}
+
+              {!-- Title --}
+              <Bonfire.UI.Common.OpenExternalLinkLive id={deterministic_dom_id("trending_link", media.path)}>
+                <LinkLive
+                  to={media.path}
+                  target="_blank"
+                  class="text-sm font-semibold link link-hover line-clamp-2 leading-snug transition-colors"
+                >
+                  {Bonfire.Files.Media.media_label(media)}
+                </LinkLive>
+              </Bonfire.UI.Common.OpenExternalLinkLive>
+
+              {!-- Description --}
+              {#case Bonfire.Files.Media.description(media)}
+                {#match description when is_binary(description) and description != ""}
+                  <p class="text-xs text-base-content/60 line-clamp-2 leading-relaxed">
+                    {description}
+                  </p>
+                {#match _}
+              {/case}
+
+              {!-- Engagement metrics --}
+              <div class="flex items-center mt-1.5 gap-2 text-xs text-base-content/50">
+                <Bonfire.UI.Social.TrendingMediaActionsLive media={media} />
+              </div>
+            </div>
+
+            {!-- Thumbnail --}
+            {#case Bonfire.UI.Social.Activity.MediaLive.preview_img(media)}
+              {#match preview_img when is_binary(preview_img)}
+                <Bonfire.UI.Common.OpenExternalLinkLive
+                  id={deterministic_dom_id("trending_link_thumb", media.path)}
+                  class="shrink-0"
+                >
+                  <LinkLive to={media.path} target="_blank" class="block">
+                    <LazyImage
+                      parent_id={deterministic_dom_id("trending_widget_thumb", media.path)}
+                      class="w-16 h-16 rounded-lg object-cover transition-all"
+                      fallback_class="w-4 h-4 text-base-content/50"
+                      src={preview_img}
+                      media={media}
+                      fallback_icon="ion:newspaper-outline"
+                    />
+                  </LinkLive>
+                </Bonfire.UI.Common.OpenExternalLinkLive>
               {#match _}
             {/case}
-            <Bonfire.UI.Common.OpenExternalLinkLive id={deterministic_dom_id("trending_link", media.path)}>
-              <LinkLive
-                to={media.path}
-                target="_blank"
-                class="text-sm font-semibold link link-hover line-clamp-2 leading-tight"
-              >
-                {Bonfire.Files.Media.media_label(media)}
-              </LinkLive>
-            </Bonfire.UI.Common.OpenExternalLinkLive>
-
-            <div class="flex items-center mt-1 gap-2 text-sm text-base-content/60">
-              <Bonfire.UI.Social.TrendingMediaActionsLive media={media} />
-            </div>
-          </div>
+          </article>
         {/for}
       </div>
     </Bonfire.UI.Common.WidgetBlockLive>
