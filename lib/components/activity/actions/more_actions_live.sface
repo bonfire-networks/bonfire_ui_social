@@ -273,7 +273,7 @@
                 class="!flex items-center gap-2 justify-between"
               >
                 <!-- <#Icon solid="UserRemove" class="w-4 h-4 shrink-0" /> -->
-                <span class="truncate ellipsis">
+                <span class="truncate max-w-[230px] ellipsis">
                   {l("Unfollow")} {e(@activity, :subject, :profile, :name, nil) || e(@activity, :subject, :character, :username, nil)}</span>
               </a>
             </li>

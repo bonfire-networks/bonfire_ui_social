@@ -12,11 +12,13 @@ defmodule Bonfire.UI.Social.WidgetRecentArticlesLive do
 
   def load(current_user, limit \\ 5) do
     # Directly query articles using FeedActivities (simpler than feed_assigns_non_live)
+    # Note: :with_post_content is NOT needed here because the :articles feed filter
+    # already joins and preloads post_content for filtering by title/body length
     case Bonfire.Social.FeedActivities.feed(
            %{feed_name: :articles},
            current_user: current_user,
            paginate: %{limit: limit},
-           preload: [:with_object, :with_post_content, :with_subject, :with_media]
+           preload: [:with_object, :with_subject, :with_media]
          ) do
       %{edges: edges} when is_list(edges) and edges != [] ->
         [articles: edges]
