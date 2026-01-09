@@ -15,7 +15,7 @@
   }
 >
   <Bonfire.UI.Common.OpenExternalLinkLive
-    id={deterministic_dom_id(__MODULE__, nil, "link", @parent_id)}
+    id={deterministic_dom_id(__MODULE__, id(@activity) || id(@object), "link", @parent_id)}
     prompt_external_links={@showing_within == :flags}
   >
     {#case Media.media_url(@primary_image)}
@@ -118,7 +118,7 @@
                       html_body={html_body}
                       activity={@activity}
                       object={@object}
-                      parent_id={deterministic_dom_id(__MODULE__, nil, nil, @parent_id)}
+                      parent_id={deterministic_dom_id(__MODULE__, id(@activity) || id(@object), nil, @parent_id)}
                       object_type={:article}
                       showing_within={@showing_within}
                       viewing_main_object={@viewing_main_object}
