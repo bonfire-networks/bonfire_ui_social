@@ -17,6 +17,8 @@ defmodule Bonfire.UI.Social.WidgetTrendingLinksLive do
   prop showing_within, :atom, default: nil
 
   def load(limit \\ 5) do
-    [links: Bonfire.Social.Media.trending_links(limit: limit)]
+    # Only return cached data - don't trigger slow queries from UI
+    # Cache is warmed by TrendingLinksCacheWorker Oban cron job
+    [links: Bonfire.Social.Media.cached_trending_links(limit: limit) || []]
   end
 end
