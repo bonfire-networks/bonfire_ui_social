@@ -154,7 +154,7 @@
               <span
                 data-role="article_badge"
                 style="top: 16px"
-                class="absolute left-4 inline-flex items-center gap-2 px-3 py-1 text-xs font-medium tracking-wide uppercase bg-white/90 text-base-content rounded-full backdrop-blur-sm"
+                class="absolute left-4 inline-flex items-center gap-2 px-3 py-1 text-xs font-medium tracking-wide uppercase glass text-base-content rounded-full"
               >
                 <span class="text-primary">⁂</span> {l("Article")}
               </span>
