@@ -845,12 +845,12 @@ defmodule Bonfire.UI.Social.ActivityLive do
               @showing_within in [:messages, :thread, :notifications] and
               current_user_id(@__context__) !=
                 (e(@object, :created, :creator_id, nil) || e(@activity, :subject, :id, nil))}
-            x-init="if ($el.getBoundingClientRect().top < window.innerHeight && $el.getBoundingClientRect().bottom > 0) {
+            x-init={if @feed_id && current_user_id(@__context__), do: "if ($el.getBoundingClientRect().top < window.innerHeight && $el.getBoundingClientRect().bottom > 0) {
                 $el.dispatchEvent(new Event('submit', {bubbles: true, cancelable: true}));
                 $el.parentNode.classList.remove('unread-activity');
-              }"
-            x-intersect.once.full="$el.dispatchEvent(new Event('submit', {bubbles: true, cancelable: true})); $el.parentNode.classList.remove('unread-activity');"
-            phx-submit={if @feed_id, do: "Bonfire.Social.Feeds:mark_seen"}
+              }"}
+            x-intersect.once.full={if @feed_id && current_user_id(@__context__), do: "$el.dispatchEvent(new Event('submit', {bubbles: true, cancelable: true})); $el.parentNode.classList.remove('unread-activity');"}
+            phx-submit={if @feed_id && current_user_id(@__context__), do: "Bonfire.Social.Feeds:mark_seen"}
             phx-target={if @feed_id, do: "#badge_counter_#{@feed_id}"}
           >
             <input type="hidden" name="feed_id" value={@feed_id}>
