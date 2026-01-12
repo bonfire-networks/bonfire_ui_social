@@ -62,7 +62,7 @@
           role="feed"
           aria-busy={to_string(@loading || @reloading || false)}
           phx-update="stream"
-          class="flex flex-col divide-y divide-base-content/10 flex-1 h-full grow"
+          class="flex flex-col divide-y divide-base-content/20 flex-1 h-full grow"
         >
           {#for {entry_id, entry} <- @streams.feed}
             <div

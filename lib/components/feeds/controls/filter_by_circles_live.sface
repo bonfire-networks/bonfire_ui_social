@@ -20,7 +20,7 @@
       </label>
       <ul
         tabindex="0"
-        class="tooltip z-[999] menu bg-base-100 pt-0 shadow divide-y divide-base-content/10 border border-base-content/20 rounded-box w-72 absolute top-0 right-0 hidden"
+        class="tooltip z-[999] menu bg-base-100 pt-0 shadow divide-y divide-base-content/20 border border-base-content/20 rounded-box w-72 absolute top-0 right-0 hidden"
       >
         <div class="pt-2" :for={circle <- my_circles}>
           <Bonfire.UI.Social.ToggleTypeLive

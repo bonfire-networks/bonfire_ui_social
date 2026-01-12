@@ -1,7 +1,7 @@
 {#case load(@limit)}
   {#match [links: links] when links != []}
     <Bonfire.UI.Common.WidgetBlockLive widget_title={@widget_title || l("Popular Links")}>
-      <div class="flex flex-col divide-y divide-base-content/10">
+      <div class="flex flex-col divide-y divide-base-content/20">
         {#for media <- links}
           <article class="group flex gap-4 py-4 first:pt-0 last:pb-0">
             {!-- Content --}
