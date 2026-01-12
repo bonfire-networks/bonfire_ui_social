@@ -16,9 +16,11 @@ defmodule Bonfire.UI.Social.WidgetTrendingLinksLive do
   prop widget_title, :string, default: nil
   prop showing_within, :atom, default: nil
 
-  def load(limit \\ 5) do
+  def load(_limit \\ 5) do
     # Only return cached data - don't trigger slow queries from UI
     # Cache is warmed by TrendingLinksCacheWorker Oban cron job
-    [links: Bonfire.Social.Media.cached_trending_links(limit: limit) || []]
+    # Note: We don't pass limit option to match the cache key used by warm_cache()
+    # The default limit (5) is already applied in list_trending_paginated
+    [links: Bonfire.Social.Media.cached_trending_links() || []]
   end
 end
