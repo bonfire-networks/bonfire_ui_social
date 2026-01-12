@@ -33,7 +33,7 @@
           value={e(Bonfire.UI.Social.Activity.NoteLive.post_content(@object), :name, nil)}
         />
 
-        <div class="relative border-b border-base-content/10">
+        <div class="relative border-b border-base-content/20">
           <#Icon
             iconify="ri:alert-fill"
             class="absolute w-5 h-5 stroke-1 top-[14px] left-3 text-base-content/70"

@@ -65,7 +65,7 @@
       <ul
         :if={not @preset_has_fixed_origin}
         tabindex="0"
-        class="tooltip z-[999] menu bg-base-100 shadow-lg border rounded-xl border-base-content/10  w-52 absolute top-0 left-0 hidden"
+        class="tooltip z-[999] menu bg-base-100 shadow-lg border rounded-xl border-base-content/20  w-52 absolute top-0 left-0 hidden"
       >
         <li><a
             phx-click="set_filter"
@@ -110,7 +110,7 @@
       </ul>
       <div
         :if={@preset_has_fixed_origin}
-        class="tooltip z-[999] bg-base-100 shadow-lg border rounded-xl border-base-content/10 p-3 w-52 absolute top-0 left-0 hidden"
+        class="tooltip z-[999] bg-base-100 shadow-lg border rounded-xl border-base-content/20 p-3 w-52 absolute top-0 left-0 hidden"
       >
         <p class="text-sm text-base-content/70">
           {l("Origin filter is fixed for this feed preset")}

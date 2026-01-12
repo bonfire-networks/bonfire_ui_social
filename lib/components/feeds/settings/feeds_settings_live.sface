@@ -7,7 +7,7 @@
 
   <div class="">
     <div>
-      <div class="p-4 text-lg font-bold flex items-center gap-4 border-b border-base-content/10">
+      <div class="p-4 text-lg font-bold flex items-center gap-4 border-b border-base-content/20">
         <#Icon iconify="ph:list-bullets-duotone" class="w-6 h-6 text-primary" />
         <span>{l("Default settings")}</span>
       </div>
@@ -134,7 +134,7 @@
   </div>
   <div class="">
     <div>
-      <div class="p-4 text-lg font-bold flex items-start gap-4 border-b border-base-content/10">
+      <div class="p-4 text-lg font-bold flex items-start gap-4 border-b border-base-content/20">
         <#Icon iconify="ph:list-star-duotone" class="w-6 h-6 text-primary" />
         <div>
           <div>{l("Feed presets")}</div>
@@ -145,11 +145,11 @@
 
     <ul class="flex flex-col bg-base-100 menu-sm w-full">
       {#for {preset, index} <- Enum.with_index(@presets || [])}
-        <li class="relative border-b border-base-content/10">
+        <li class="relative border-b border-base-content/20">
           {!-- TODO? Draggable handle outside Alpine component --}
           {!-- <div
                 data-sortable-handler
-                class="absolute left-0 top-0 bottom-0 w-23 flex items-center place-content-center border-r border-base-content/10"
+                class="absolute left-0 top-0 bottom-0 w-23 flex items-center place-content-center border-r border-base-content/20"
               >
                 <#Icon iconify="ic:baseline-drag-indicator" class="w-5 h-5" />
               </div> --}

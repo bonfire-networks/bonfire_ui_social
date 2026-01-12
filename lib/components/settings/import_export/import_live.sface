@@ -87,7 +87,7 @@
       <div
         :if={@type != :blocks}
         x-data="{open: false}"
-        class="m-4 mt-0 border border-base-content/10 rounded-box p-3 bg-base-200/50"
+        class="m-4 mt-0 border border-base-content/20 rounded-box p-3 bg-base-200/50"
       >
         {!-- {...pry()} --}
         <div x-on:click="open = !open" class="flex items-start gap-4 justify-between cursor-pointer">

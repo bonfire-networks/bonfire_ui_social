@@ -8,7 +8,7 @@
     )
     |> debug("vccc")
     |> Enum.with_index()}
-  <div class="collapse collapse-arrow  border border-base-content/10 rounded-none">
+  <div class="collapse collapse-arrow  border border-base-content/20 rounded-none">
     <input type="checkbox" id={"version_#{i}"} phx-update="ignore">
     <div class="collapse-title w-full flex items-center text-sm text-base-content gap-1">
       <StatelessComponent

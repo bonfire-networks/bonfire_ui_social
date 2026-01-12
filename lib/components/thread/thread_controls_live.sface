@@ -1,4 +1,4 @@
-<div class="p-2 border-t border-base-content/10">
+<div class="p-2 border-t border-base-content/20">
   <div :if={current_user_id(@__context__)} class="flex flex-1 gap-2">
     <div data-position="bottom" phx-hook="Tooltip" id="layout-dropdown" class="">
       <label tabindex="0" class="tooltip-button btn btn-sm">
@@ -12,7 +12,7 @@
       </label>
       <ul
         tabindex="0"
-        class="tooltip z-[999] menu bg-base-100 shadow-lg border rounded-xl border-base-content/10   w-52 absolute top-0 left-0 hidden"
+        class="tooltip z-[999] menu bg-base-100 shadow-lg border rounded-xl border-base-content/20   w-52 absolute top-0 left-0 hidden"
       >
         <li
           phx-click="set"
@@ -113,7 +113,7 @@
       </label>
       <ul
         tabindex="0"
-        class="tooltip z-[999] menu bg-base-100 shadow-lg border rounded-xl border-base-content/10 w-60 absolute top-0 right-0 hidden"
+        class="tooltip z-[999] menu bg-base-100 shadow-lg border rounded-xl border-base-content/20 w-60 absolute top-0 right-0 hidden"
       >
         <li>
           <a
@@ -318,7 +318,7 @@
       </label>
       <ul
         tabindex="0"
-        class="tooltip z-[999] menu bg-base-100 shadow-lg border rounded-xl border-base-content/10  w-52 absolute top-0 left-0 hidden"
+        class="tooltip z-[999] menu bg-base-100 shadow-lg border rounded-xl border-base-content/20  w-52 absolute top-0 left-0 hidden"
       >
         <li
           phx-click="set"

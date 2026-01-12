@@ -122,7 +122,7 @@
     data-rendered={@showing_within}
     data-main-object={@viewing_main_object}
     class={
-      "group article flex flex-col previewable_activity cursor-pointer bg-base-100 border border-base-content/10 rounded-xl overflow-hidden transition-all hover:border-base-content/20 hover:shadow-sm",
+      "group article flex flex-col previewable_activity cursor-pointer bg-base-100 border border-base-content/20 rounded-xl overflow-hidden transition-all hover:border-base-content/20 hover:shadow-sm",
       "!max-w-full !border-0 !cursor-default !rounded-none !shadow-none !bg-transparent":
         @showing_within == :thread && @viewing_main_object
     }
@@ -164,7 +164,9 @@
           <span
             data-role="article_badge"
             style="width: fit-content;"
-            class="mt-4 mb-2 inline-flex items-center gap-2 px-3 py-1 text-xs font-medium tracking-wide uppercase bg-base-content/5 text-base-content/70 rounded-full w-fit"
+            class={
+              "mt-4 mx-4 inline-flex items-center gap-2 px-3 py-1 text-xs font-medium tracking-wide uppercase bg-base-content/5 text-base-content/70 rounded-full w-fit",
+              "mb-2 !mx-0": @showing_within == :thread and @viewing_main_object}
           >
             <span class="text-primary">⁂</span> {l("Article")}
           </span>

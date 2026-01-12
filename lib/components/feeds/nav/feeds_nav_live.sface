@@ -16,7 +16,7 @@
               to={~p"/settings/user/feeds"}
               class="z-999 tooltip-button btn btn-circle btn-ghost btn-xs"
             ><#Icon iconify="ph:gear-six-duotone" class="w-4 h-4" /></LinkLive>
-            {!-- <span class="tooltip z-[9999999999999999] bg-base-300 rounded-md px-2 py-1.5 text-base-content/90 text-[13px] font-medium border border-base-content/10 shadow hidden absolute top-0">{l "Settings"}</span> --}
+            {!-- <span class="tooltip z-[9999999999999999] bg-base-300 rounded-md px-2 py-1.5 text-base-content/90 text-[13px] font-medium border border-base-content/20 shadow hidden absolute top-0">{l "Settings"}</span> --}
           </div>
         </summary>
 

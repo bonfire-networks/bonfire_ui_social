@@ -263,7 +263,7 @@
                         </div>
                       {#elseif MediaLive.preview_img(@media)}
                         {!-- Handle media with preview images (like video.movie, video.other, etc.) --}
-                        <div class="rounded-box border border-base-content/10 overflow-hidden">
+                        <div class="rounded-box border border-base-content/20 overflow-hidden">
                           {#case MediaLive.extract_oembed_url(e(@media, :metadata, "oembed", "html", nil)) ||
                               e(@media, :metadata, "facebook", "video", nil) ||
                               e(@media, :metadata, "twitter", "player", nil)}

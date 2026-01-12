@@ -1,7 +1,7 @@
 <div class="py-2">
   {#case the_data(@object)}
     {#match nil}
-      <div class="rounded-box border border-base-content/10 p-4">
+      <div class="rounded-box border border-base-content/20 p-4">
         <div class="mb-2 text-sm font-medium text-base-content text-opacity-80">
           {l("Unknown object")}
         </div>

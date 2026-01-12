@@ -1,7 +1,7 @@
 <div
   data-id="feed_controls"
   id="feed_controls"
-  class="py-1 lg:py-2 p-2 relative lg:rounded-t-xl border-t lg:border-t-0 border-b border-base-content/10 relative feed_control_wrapper bg-base-100"
+  class="py-1 lg:py-2 p-2 relative lg:rounded-t-xl border-t lg:border-t-0 border-b border-base-content/20 relative feed_control_wrapper bg-base-100"
 >
   {#if @reloading}
     <div class="absolute lg:rounded-t-xl z-10 inset-0 flex items-center justify-center bg-base-content/10">
@@ -23,7 +23,7 @@
       event_target={@event_target}
     />
 
-    <div class="border-l border-base-content/10 pl-2">
+    <div class="border-l border-base-content/20 pl-2">
       <button
         data-tip={l("Advanced")}
         phx-click={JS.toggle(to: "#more_filters")}
@@ -34,7 +34,7 @@
 
   <div id="more_filters" class="pb-0 flex flex-col gap-2 hidden mt-2">
     <div class="flex flex-col w-full">
-      <div class="font-semibold uppercase text-xs text-base-content/60 mb-3  border-t border-base-content/10 pt-3">{l("Time limit")}</div>
+      <div class="font-semibold uppercase text-xs text-base-content/60 mb-3  border-t border-base-content/20 pt-3">{l("Time limit")}</div>
       <Bonfire.UI.Social.TimeControlLive
         feed_name={@feed_name}
         event_target={@event_target}
@@ -43,7 +43,7 @@
         scope={:user}
       />
     </div>
-    <div class="font-semibold uppercase text-xs text-base-content/60 mb-3  border-t border-base-content/10 pt-3 mt-3">{l("Advanced Filters")}</div>
+    <div class="font-semibold uppercase text-xs text-base-content/60 mb-3  border-t border-base-content/20 pt-3 mt-3">{l("Advanced Filters")}</div>
 
     <StatefulComponent
       id="advanced_filter_controls_lite"

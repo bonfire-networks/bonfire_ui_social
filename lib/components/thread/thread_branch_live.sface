@@ -4,7 +4,7 @@
   x-data="{show_replies: true}"
   class={
     "reply thread-level-#{@thread_level} flex relative",
-    "border-b border-base-content/10": @thread_mode == :flat
+    "border-b border-base-content/20": @thread_mode == :flat
   }
 >
   {!-- <div class="box-border h-md border-0 border-tone-4 border-solid border-b-[1px]  w-[calc(50%+0.5px)] border-l-[1px] rounded-bl-[12px]"></div> --}

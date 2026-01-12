@@ -1,4 +1,4 @@
-<div class="flex flex-col w-full border rounded-lg media_container border-base-content/10">
+<div class="flex flex-col w-full border rounded-lg media_container border-base-content/20">
   <div>
     <div class="p-4 w-full flex-1 flex items-center gap-3 bg-base-300 rounded-t-lg relative">
       {!-- Title button (shown initially) --}

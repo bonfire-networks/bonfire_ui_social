@@ -9,7 +9,7 @@
     </h2>
   </div>
 {#else}
-  <div class="rounded-box border border-base-content/10">
+  <div class="rounded-box border border-base-content/20">
     {#case object_field(@json, "attachment")}
       {#match nil}
       {#match attachments when is_list(attachments)}

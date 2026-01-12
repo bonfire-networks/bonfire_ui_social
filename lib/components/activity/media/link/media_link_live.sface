@@ -2,7 +2,7 @@
   id={deterministic_dom_id("media_link", id(@media), @showing_within, @parent_id)}
   prompt_external_links={@showing_within == :flags}
 >
-  <div class={@css_borders || "border rounded-lg border-base-content/10"}>
+  <div class={@css_borders || "border rounded-lg border-base-content/20"}>
     <LinkLive
       opts={"data-id": "media_link"}
       to={if !@download_url, do: @media_url || @preview_img}
@@ -100,7 +100,7 @@
       {#match creator_names when creator_names != []}
         <div
           data-id="fediverse_creators"
-          class="text-sm border-t border-base-content/10 text-base-content/70 flex items-center gap-3 p-3"
+          class="text-sm border-t border-base-content/20 text-base-content/70 flex items-center gap-3 p-3"
         >
           <span class="text-xl text-secondary">⁂</span>
           <div class="flex-1 font-medium gap-2 flex items-center">
