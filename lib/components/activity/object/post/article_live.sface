@@ -100,7 +100,7 @@
               {#case e(post_content(@object), :summary, nil) || e(post_content(@object), :html_body, nil)}
                 {#match excerpt when is_binary(excerpt) and excerpt != ""}
                   <div class="mt-1 text-sm line-clamp-2 [&>*]:m-0" style="color: rgba(255,255,255,0.8)">
-                    {rich(maybe_truncate(excerpt, false, 200))}
+                    {maybe_truncate(Bonfire.Common.Text.text_only(excerpt), false, 200)}
                   </div>
                 {#match _}
               {/case}
