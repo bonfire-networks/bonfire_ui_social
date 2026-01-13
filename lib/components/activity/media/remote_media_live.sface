@@ -42,7 +42,7 @@
                       {#if Bonfire.Files.has_extension?(media_url, [".mp4", ".mkv"])}
                         {#if MediaLive.is_gif?(@media.path, e(@media, :media_type, nil), @media)}
                           {!-- Handle GIF-labeled MP4 files (converted GIFs) --}
-                          <div id={deterministic_dom_id(__MODULE__, id(@media), "gif-wrapper", @parent_id)} phx-hook="Bonfire.UI.Social.Activity.RemoteMediaLive" class="relative">
+                          <div id={deterministic_dom_id(__MODULE__, id(@media), "gif-wrapper", @parent_id)}  class="relative">
                             <video
                               class={@base_css, @video_css, "gif-as-mp4"}
                               autoplay
@@ -77,7 +77,7 @@
                             </div>
                           </div>
                         {#else}
-                          <div id={deterministic_dom_id(__MODULE__, id(@media), "mp4-wrapper", @parent_id)} phx-hook="Bonfire.UI.Social.Activity.RemoteMediaLive">
+                          <div id={deterministic_dom_id(__MODULE__, id(@media), "mp4-wrapper", @parent_id)} >
                             <video
                               class={@base_css, @video_css}
                               controls
@@ -141,7 +141,7 @@
                             </div>
                           </div>
                         {#else}
-                          <div id={deterministic_dom_id(__MODULE__, id(@media), "mov-wrapper", @parent_id)} phx-hook="Bonfire.UI.Social.Activity.RemoteMediaLive">
+                          <div id={deterministic_dom_id(__MODULE__, id(@media), "mov-wrapper", @parent_id)} >
                             <video
                               class={@base_css, @video_css}
                               controls
@@ -205,7 +205,7 @@
                             </div>
                           </div>
                         {#else}
-                          <div id={deterministic_dom_id(__MODULE__, id(@media), "ogg-wrapper", @parent_id)} phx-hook="Bonfire.UI.Social.Activity.RemoteMediaLive">
+                          <div id={deterministic_dom_id(__MODULE__, id(@media), "ogg-wrapper", @parent_id)} >
                             <video
                               class={@base_css, @video_css}
                               controls
@@ -269,7 +269,7 @@
                             </div>
                           </div>
                         {#else}
-                          <div id={deterministic_dom_id(__MODULE__, id(@media), "webm-wrapper", @parent_id)} phx-hook="Bonfire.UI.Social.Activity.RemoteMediaLive">
+                          <div id={deterministic_dom_id(__MODULE__, id(@media), "webm-wrapper", @parent_id)} >
                             <video
                               class={@base_css, @video_css}
                               controls
@@ -314,7 +314,7 @@
                         {/if}
                       {#elseif MediaLive.is_supported_audio_format?(@media.path, e(@media, :media_type, nil)) or
                           e(@media, :media_type, nil) == "audio"}
-                        <div id={deterministic_dom_id(__MODULE__, id(@media), "audio-wrapper", @parent_id)} phx-hook="Bonfire.UI.Social.Activity.RemoteMediaLive" class="w-full">
+                        <div id={deterministic_dom_id(__MODULE__, id(@media), "audio-wrapper", @parent_id)}  class="w-full">
                           <div class="flex items-center gap-3">
                             {#case MediaLive.preview_img(@media)}
                               {#match nil}
