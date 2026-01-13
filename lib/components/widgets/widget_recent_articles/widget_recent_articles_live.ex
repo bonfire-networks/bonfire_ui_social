@@ -17,7 +17,7 @@ defmodule Bonfire.UI.Social.WidgetRecentArticlesLive do
            %{feed_name: :articles},
            current_user: current_user,
            paginate: %{limit: limit},
-           preload: [:with_object, :with_post_content, :with_subject, :with_media]
+           preload: [:with_post_content, :with_subject, :with_media]
          ) do
       %{edges: edges} when is_list(edges) and edges != [] ->
         [articles: edges]
