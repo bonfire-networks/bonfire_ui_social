@@ -23,6 +23,8 @@
     tabindex="0"
     class="tooltip z-[999999999999] menu shadow bg-base-300 shadow rounded-box w-64 absolute top-0 left-0 hidden"
     role="menu"
+    id={deterministic_dom_id(__MODULE__, id(@activity), "more_menu_content", @parent_id)}
+    phx-update="ignore"
     aria-orientation="vertical"
     aria-labelledby="more-menu"
   >

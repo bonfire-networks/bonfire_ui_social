@@ -13,6 +13,8 @@
       <ul
         tabindex="0"
         class="tooltip z-[999] menu bg-base-100 shadow-lg border rounded-xl border-base-content/20   w-52 absolute top-0 left-0 hidden"
+        id="thread_controls_content"
+        phx-update="ignore"
       >
         <li
           phx-click="set"

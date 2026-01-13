@@ -40,6 +40,8 @@
         <ul
           tabindex="0"
           class="tooltip z-[999] menu bg-base-100 divide-y divide-base-content/20 border pt-0 border-base-content/20 shadow rounded-box absolute top-0 right-0 hidden"
+          id="filter_by_types_feed_content"
+          phx-update="ignore"
         >
           {#if extension_enabled?(:bonfire_ui_reactions, @__context__)}
             <div class="pt-2" data-scope="boosts">

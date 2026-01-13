@@ -37,6 +37,8 @@
     <ul
       tabindex="0"
       class="tooltip z-[999] menu bg-base-100 pt-0 shadow border border-base-content/20 rounded-box w-72 absolute top-0 right-0 hidden"
+      id="sort_items_dropdown_content"
+      phx-update="ignore"
     >
       <li>
         <a

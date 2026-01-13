@@ -66,6 +66,8 @@
         :if={not @preset_has_fixed_origin}
         tabindex="0"
         class="tooltip z-[999] menu bg-base-100 shadow-lg border rounded-xl border-base-content/20  w-52 absolute top-0 left-0 hidden"
+        id="advanced_filter_origin_content"
+        phx-update="ignore"
       >
         <li><a
             phx-click="set_filter"
