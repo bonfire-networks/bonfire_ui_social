@@ -71,8 +71,8 @@ defmodule Bonfire.UI.Social.Activity.MediaLive do
               Files.has_extension?(m.path || "", @multimedia_exts) ->
             {image_list, gif_list, [m | multimedia_list], link_list}
 
-          # Video page links with embeddable content (YouTube, Vimeo, PeerTube, Owncast, etc.)
-          is_embeddable?(m.media_type, e(m.metadata, "oembed", nil)) and preview_img(m) ->
+          # Video page links (YouTube, Vimeo, PeerTube, Owncast, etc.)
+          has_video_page_metadata?(m) ->
             {image_list, gif_list, [m | multimedia_list], link_list}
 
           true ->
@@ -178,6 +178,16 @@ defmodule Bonfire.UI.Social.Activity.MediaLive do
     e(oembed, "html", nil) || e(oembed, "url", nil) ||
       String.starts_with?(media_type || "", "embed")
   end
+
+  @doc """
+  Checks if a media item is a video page link based on oEmbed or OG metadata.
+  """
+  def has_video_page_metadata?(%{metadata: metadata}) when is_map(metadata) do
+    e(metadata, "oembed", "type", nil) == "video" or
+      String.starts_with?(e(metadata, "facebook", "type", nil) || "", "video")
+  end
+
+  def has_video_page_metadata?(_), do: false
 
   @doc """
   Extract the embed URL from oEmbed HTML iframe src attribute.
