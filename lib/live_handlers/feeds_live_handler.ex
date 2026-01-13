@@ -1054,7 +1054,7 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
                   "There was an error when trying to load the feed. Error raised by feed_assigns"
                 )
 
-                flood(__STACKTRACE__, "Stacktrace")
+                debug(__STACKTRACE__, "Stacktrace")
 
                 assign_error(
                   socket,
