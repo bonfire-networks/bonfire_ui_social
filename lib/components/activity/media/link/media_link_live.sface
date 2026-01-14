@@ -20,7 +20,7 @@
             <div class="flex place-content-center items-center max-w-[130px] h-[130px]">
               <LazyImage
                 parent_id={deterministic_dom_id(__MODULE__, id(@media), "icon", @parent_id)}
-                class="rounded-none object-cover rounded-l-lg cursor-pointer m-image h-full"
+                class="rounded-md object-cover cursor-pointer m-image h-full"
                 fallback_class="w-8 h-8 text-base-content/70"
                 src={@preview_img}
                 media={@media}

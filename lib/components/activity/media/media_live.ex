@@ -56,34 +56,49 @@ defmodule Bonfire.UI.Social.Activity.MediaLive do
 
     # |> debug("the_medias...")
 
-    {image_list, gif_list, multimedia_list, link_list} =
+    # Split media into categories: images, videos, gifs, audio/embeds, links
+    {image_list, video_list, gif_list, audio_embed_list, link_list} =
       media
-      |> Enum.reduce({[], [], [], []}, fn m, {image_list, gif_list, multimedia_list, link_list} ->
+      |> Enum.reduce({[], [], [], [], []}, fn m, {image_list, video_list, gif_list, audio_embed_list, link_list} ->
         cond do
           is_gif?(m.path, m.media_type, m) ->
-            {image_list, [m | gif_list], multimedia_list, link_list}
+            {image_list, video_list, [m | gif_list], audio_embed_list, link_list}
 
           String.starts_with?(m.media_type || "", @image_types) or
               Files.has_extension?(m.path || "", @image_exts) ->
-            {[m | image_list], gif_list, multimedia_list, link_list}
+            {[m | image_list], video_list, gif_list, audio_embed_list, link_list}
 
-          String.starts_with?(m.media_type || "", @multimedia_types) or
-              Files.has_extension?(m.path || "", @multimedia_exts) ->
-            {image_list, gif_list, [m | multimedia_list], link_list}
+          # Direct video files go to video_list (for carousel with images)
+          String.starts_with?(m.media_type || "", @video_types) or
+              Files.has_extension?(m.path || "", @video_exts) ->
+            {image_list, [m | video_list], gif_list, audio_embed_list, link_list}
 
-          # Video page links (YouTube, Vimeo, PeerTube, Owncast, etc.)
+          # Audio files
+          String.starts_with?(m.media_type || "", @audio_types) or
+              Files.has_extension?(m.path || "", @audio_exts) ->
+            {image_list, video_list, gif_list, [m | audio_embed_list], link_list}
+
+          # Embeds (YouTube, Vimeo, etc.) go to audio_embed_list for separate rendering
           has_video_page_metadata?(m) ->
-            {image_list, gif_list, [m | multimedia_list], link_list}
+            {image_list, video_list, gif_list, [m | audio_embed_list], link_list}
 
           true ->
-            {image_list, gif_list, multimedia_list, [m | link_list]}
+            {image_list, video_list, gif_list, audio_embed_list, [m | link_list]}
         end
       end)
-      |> debug("3_media_lists")
+      |> debug("media_lists")
+
+    # Combine images, videos, and GIFs into visual_list for the carousel
+    visual_list = Enum.reverse(image_list) ++ Enum.reverse(video_list) ++ Enum.reverse(gif_list)
+
+    # Keep multimedia_list for backwards compatibility (audio + embeds)
+    multimedia_list = audio_embed_list
 
     multimedia_count = Enum.count(multimedia_list)
     image_count = Enum.count(image_list)
+    video_count = Enum.count(video_list)
     gif_count = Enum.count(gif_list)
+    visual_count = Enum.count(visual_list)
     link_count = Enum.count(link_list)
 
     case assigns[:parent_id] do
@@ -121,9 +136,10 @@ defmodule Bonfire.UI.Social.Activity.MediaLive do
       assigns
       |> assign(:autoplay, autoplay)
       |> assign(:media, media)
-      # |> assign(:multimedia_list, multimedia_list(medias))
-      # |> assign(:link_list, link_list(medias))
+      |> assign(:visual_list, visual_list)
+      |> assign(:visual_count, visual_count)
       |> assign(:image_list, image_list)
+      |> assign(:video_list, video_list)
       |> assign(:gif_list, gif_list)
       |> assign(:multimedia_exts, @multimedia_exts)
       |> assign(:multimedia_types, @multimedia_types)
@@ -131,6 +147,7 @@ defmodule Bonfire.UI.Social.Activity.MediaLive do
       |> assign(:link_list, link_list)
       |> assign(:multimedia_count, multimedia_count)
       |> assign(:image_count, image_count)
+      |> assign(:video_count, video_count)
       |> assign(:gif_count, gif_count)
       |> assign(:link_count, link_count)
       |> render_sface()

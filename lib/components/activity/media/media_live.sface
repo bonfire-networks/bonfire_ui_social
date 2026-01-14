@@ -1,71 +1,7 @@
-<div
-  data-id="media_list"
-  data-rendered={@showing_within}
-  data-main-object={@viewing_main_object}
-  :if={@link_list != [] && @showing_within != :smart_input}
-  class="flex flex-col gap-2 my-2"
->
-  {!-- LINKS --}
-  {#for m <- if @showing_within == :feed, do: Enum.take(@link_list, 1), else: @link_list}
-    {#case Media.media_url(m)}
-      {#match nil}
-      {#match media_url}
-        {#if m.media_type == "research"}
-          <Bonfire.UI.Social.Activity.AcademicPaperLive
-            media={m}
-            metadata={Enums.deep_merge_reduce([
-              e(m.metadata, "other", nil),
-              e(m.metadata, "json_ld", []) |> List.wrap() |> List.first(),
-              e(m.metadata, "oembed", nil),
-              e(m.metadata, "wikibase", nil),
-              e(m.metadata, "orcid", nil),
-              e(m.metadata, "crossref", nil)
-            ])}
-            showing_within={@showing_within}
-            css_borders={@css_borders}
-            parent_id={deterministic_dom_id(__MODULE__, m, nil, @parent_id)}
-          />
-        {#elseif String.ends_with?(media_url || "", ".pdf")}
-          <Bonfire.UI.Social.Activity.LinkPdfLive
-            media={m}
-            media_url={media_url}
-            css_borders={@css_borders}
-            parent_id={deterministic_dom_id(__MODULE__, m, nil, @parent_id)}
-            showing_within={@showing_within}
-          />
-        {#else _}
-          <Bonfire.UI.Social.Activity.MediaLinkLive
-            cw={@cw}
-            media_url={media_url}
-            media={m}
-            no_cover={Enum.count(@link_list) > 1 and !@small_icon}
-            small_icon={@small_icon or Enum.count(@link_list) > 1}
-            download_url={e(m.metadata, "oembed", "download_url", nil) || e(m.metadata, "download_url", nil)}
-            preview_img={preview_img(m)}
-            css_borders={@css_borders}
-            activity_inception={@activity_inception}
-            showing_within={@showing_within}
-            parent_id={deterministic_dom_id(__MODULE__, m, nil, @parent_id)}
-          />
-        {/if}
-    {/case}
-  {/for}
-
-  {!-- Show indicator for hidden links in feed view --}
-  {#if @showing_within == :feed && length(@link_list) > 1}
-    <div class="text-xs text-base-content/50 flex items-center gap-1 px-2">
-      <#Icon iconify="ph:link-simple" class="w-3 h-3" />
-      <span>{length(@link_list) - 1} {l("more link(s)")}</span>
-    </div>
-  {/if}
-</div>
-
 <div data-main-object={@viewing_main_object} data-id="multimedia_list">
   {#case @multimedia_count}
     {#match 0}
-      {!-- NO MULTIMEDIA --}
     {#match num_medias}
-      {!-- MULTIMEDIA ATTACHMENTS --}
       <div
         data-id="multimedia_grid"
         data-media={num_medias}
@@ -73,7 +9,7 @@
         data-main-object={@viewing_main_object}
         class="flex flex-col gap-2 my-2"
       >
-        {#for {%{} = m, counter} <- Enum.with_index(@multimedia_list)}
+        {#for %{} = m <- @multimedia_list}
           {#if @showing_within != :smart_input}
             {#case Bonfire.Files.Media.media_label(m)}
               {#match media_label}
@@ -83,8 +19,6 @@
                     :if={@cw || Settings.get([Bonfire.UI.Social.Activity.MediaLive, :hide], false, @__context__)}
                   />
                   <figure class="h-full">
-                    {!-- FIXME: enable_fallback for logged out visitors instead of just not using the modal --}
-                    <!-- {#if current_user_id(@__context__)} -->
                     {#if String.starts_with?(m.media_type || "", "video")}
                       <Bonfire.UI.Social.Activity.VideoLinkLive
                         media={m}
@@ -93,17 +27,8 @@
                         muted={@muted || @cw || @showing_within == :flags}
                         parent_id={deterministic_dom_id(__MODULE__, m, nil, @parent_id)}
                       />
-                      {!-- {/if} --}
                     {#else}
                       {#if String.starts_with?(m.media_type || "", "audio")}
-                        {!-- {#if is_playable_multimedia_format?(m.path, m.media_type)}
-                        <Bonfire.UI.Social.Activity.RemoteMediaLive
-                          id={deterministic_dom_id(__MODULE__, id(m), nil, @parent_id)}
-                          media={m}
-                          muted={@muted}
-                          autoplay={@autoplay || (@viewing_main_object && !@cw && @showing_within != :flags)}
-                        />
-                      {#else} --}
                         <Bonfire.UI.Social.Activity.AudioLive
                           media={m}
                           media_label={media_label}
@@ -112,7 +37,6 @@
                           parent_id={deterministic_dom_id(__MODULE__, m, nil, @parent_id)}
                           showing_within={@showing_within}
                         />
-                        {!-- {/if} --}
                       {#else}
                         <Bonfire.UI.Social.Activity.RemoteMediaLive
                           id={deterministic_dom_id(__MODULE__, id(m), nil, @parent_id)}
@@ -122,40 +46,6 @@
                         />
                       {/if}
                     {/if}
-                    {!-- else if logged out: --}
-                    {!-- {#else}
-                    <a href={Media.media_url(m)} target="_blank" class="relative h-full">
-                        <div
-                          class="absolute inset-0 backdrop-blur-xl bg-white/30 z-50 rounded-box"
-                          :if={@cw || Settings.get([Bonfire.UI.Social.Activity.MediaLive, :hide], false, @__context__)}
-                        />
-
-                        {#case preview_img(m) || Media.media_url(m)}
-                          {#match maybe_preview_img}
-                            {#if is_image?(maybe_preview_img)}
-                              <LazyImage
-                                class="border-4 border-base-content/20 w-full !object-cover m-image h-full cursor-pointer aspect-video rounded-md"
-                                media={m}
-                                alt={media_label}
-                                src={maybe_preview_img}
-                                fallback_icon="majesticons:video"
-                              />
-                            {#else}
-                              <div class="flex items-center rounded-l shrink-0 w-10 h-10 place-content-center">
-                                <#Icon iconify="bi:play-fill" class="w-8 h-8 text-base-content/70" />
-                              </div>
-                            {/if}
-                        {/case}
-                        <!-- <div class="absolute z-50 bottom-3 left-3 dropdown dropdown-hover dropdown-top">
-                            <label tabindex="0" class="text-white border-none rounded btn btn-xs bg-black/60">alt</label>
-                            <div tabindex="0" class="p-2 rounded shadow dropdown-content bg-base-100 w-52">
-                              <div class="prose-sm prose text-base-content">{media_label}</div>
-                            </div>
-                          </div> -->
-                        <figcaption class="sr-only">{media_label}</figcaption>
-                      </a> 
-                      {/if}
-                      --}
                   </figure>
                 </article>
             {/case}
@@ -169,13 +59,10 @@
       </div>
   {/case}
 
-  {#case @image_count}
+  {#case @visual_count}
     {#match 0}
-      {!-- NO IMAGES --}
     {#match num_medias}
-      {!-- IMAGE ATTACHMENTS --}
       {#if @showing_within != :smart_input}
-        {!-- Create a single carousel modal for all images --}
         {#if current_user_id(@__context__)}
           <Bonfire.UI.Common.OpenModalLive
             id={deterministic_dom_id("media_carousel_modal", @parent_id)}
@@ -189,7 +76,7 @@
             open_btn_wrapper_class="hidden"
           >
             <Bonfire.UI.Social.Activity.MediaCarouselModalLive
-              media_list={@image_list}
+              media_list={@visual_list}
               parent_id={deterministic_dom_id(__MODULE__, nil, nil, @parent_id)}
               modal_id={deterministic_dom_id("media_carousel_modal", @parent_id)}
               showing_within={@showing_within}
@@ -199,32 +86,60 @@
           </Bonfire.UI.Common.OpenModalLive>
         {/if}
 
-        <div
-          data-id="multimedia_grid"
-          data-media={num_medias}
-          data-rendered={@showing_within}
-          data-main-object={@viewing_main_object}
-          class="grid max-h-[380px] w-full grid-flow-col grid-with-ratio grid-rows-4 gap-1 mt-3"
-        >
-          {#for {%{} = m, counter} <- Enum.with_index(@image_list)}
-            {#case Bonfire.Files.Media.media_label(m) || l("Sorry, no caption provided by author")}
-              {#match media_label}
-                <article
-                  data-id="article_media"
-                  data-media={num_medias}
-                  class={[
-                    "m-entry h-full w-full row-span-4 object-cover",
-                    "!row-span-2 !h-auto":
-                      num_medias ==
-                        3 && counter != 0
-                  ]}
-                >
-                  <figure class="h-full relative">
-                    {!-- FIXME: enable_fallback for logged out visitors instead of just not using the modal --}
+        <div class="relative mt-3">
+          {#if num_medias > 1}
+            <div class="absolute inset-y-0 left-2 z-[60] flex items-center">
+              <button
+                type="button"
+                data-nav="prev"
+                class="btn btn-circle btn-sm bg-black/50 hover:bg-black/70 border-none text-white transition-opacity"
+                onclick={"document.getElementById('carousel_#{@parent_id}').scrollBy({left: -(document.getElementById('carousel_#{@parent_id}').offsetWidth - 40), behavior: 'smooth'})"}
+              >
+                <#Icon iconify="ph:caret-left" class="w-4 h-4" />
+              </button>
+            </div>
+            <div class="absolute inset-y-0 right-2 z-[60] flex items-center">
+              <button
+                type="button"
+                data-nav="next"
+                class="btn btn-circle btn-sm bg-black/50 hover:bg-black/70 border-none text-white transition-opacity"
+                onclick={"document.getElementById('carousel_#{@parent_id}').scrollBy({left: document.getElementById('carousel_#{@parent_id}').offsetWidth - 40, behavior: 'smooth'})"}
+              >
+                <#Icon iconify="ph:caret-right" class="w-4 h-4" />
+              </button>
+            </div>
+          {/if}
+
+          {#if num_medias > 1}
+            <div class="absolute top-3 right-3 z-[60] bg-black/60 text-white text-xs px-2 py-1 rounded-full">
+              {num_medias} {l("media")}
+            </div>
+          {/if}
+
+          <div
+            id={"carousel_#{@parent_id}"}
+            :hook
+            data-id="multimedia_carousel"
+            data-media={num_medias}
+            data-rendered={@showing_within}
+            data-main-object={@viewing_main_object}
+            class="flex gap-2 overflow-x-auto scroll-smooth snap-x snap-mandatory pl-1"
+            style="scrollbar-width: none; -ms-overflow-style: none;"
+          >
+            {#for %{} = m <- @visual_list}
+              {#case Bonfire.Files.Media.media_label(m) || l("Sorry, no caption provided by author")}
+                {#match media_label}
+                  <div data-carousel-slide style={if num_medias > 1, do: "flex-shrink: 0; width: calc(100% - 40px); scroll-snap-align: start;", else: "flex-shrink: 0; width: 100%; scroll-snap-align: start;"}>
+                    <article
+                      data-id="article_media"
+                      data-media={num_medias}
+                      style="aspect-ratio: 4/5; overflow: hidden; border-radius: 0.375rem;"
+                    >
+                  <figure style="width: 100%; height: 100%; position: relative;">
                     {#if current_user_id(@__context__)}
                       {#if @cw || @showing_within == :flags ||
                           Settings.get([Bonfire.UI.Social.Activity.MediaLive, :hide], false, @__context__)}
-                        <div id={deterministic_dom_id("sensitive-content-overlay", id(m), "media", @parent_id)}>
+                        <div id={deterministic_dom_id("sensitive-content-overlay", id(m), "media", @parent_id)} class="w-full h-full">
                           <div class="absolute inset-0 flex items-center cursor-pointer place-content-center justify-center z-[60]">
                             <button
                               phx-click={JS.hide(
@@ -271,277 +186,204 @@
                         />
                       {/if}
 
-                      {!-- Thumbnail that opens carousel modal --}
-                      <button
-                        type="button"
-                        phx-click="open"
-                        phx-target={"#" <> deterministic_dom_id("media_carousel_modal", @parent_id)}
-                        class="w-full h-full block"
-                      >
-                        <div class="relative h-full overflow-hidden">
-                          {#case preview_img(m) || Media.media_url(m)}
-                            {#match maybe_preview_img}
-                              <LazyImage
-                                parent_id={deterministic_dom_id(__MODULE__, id(m), "media", @parent_id)}
-                                class={[
-                                  "border-base-content/20 !object-cover m-image w-full h-full cursor-pointer rounded-md",
-                                  grayscale: @showing_within == :flags
-                                ]}
-                                media={m}
-                                alt={media_label}
-                                src={maybe_preview_img}
-                                disable_lazy={@disable_lazy}
-                              />
-                          {/case}
-                          <figcaption class="sr-only">{media_label}</figcaption>
-                        </div>
-                      </button>
-                    {#else}
-                      {!-- if logged out --}
-                      <a href={Media.media_url(m)} target="_blank" class="relative h-full block">
-                        {#if @cw || @showing_within == :flags ||
-                            Settings.get([Bonfire.UI.Social.Activity.MediaLive, :hide], false, @__context__)}
-                          <div class="absolute inset-0 flex items-center cursor-pointer place-content-center justify-center z-[60]">
-                            <button class="btn btn-sm  normal-case btn-outline border-base-content/20 btn-active">{l("Media Hidden")}</button>
-                          </div>
-                          <div class="absolute inset-0 backdrop-blur-2xl z-50 cursor-pointer rounded-md" />
-                        {/if}
-
-                        {#case preview_img(m) || Media.media_url(m)}
-                          {#match maybe_preview_img}
-                            {#if is_image?(maybe_preview_img)}
-                              <LazyImage
-                                parent_id={deterministic_dom_id(__MODULE__, id(m), "media", @parent_id)}
-                                class="border-base-content/20 !object-cover m-image h-full cursor-pointer max-h-[500px] rounded-md"
-                                media={m}
-                                alt={media_label}
-                                src={maybe_preview_img}
-                                disable_lazy={@disable_lazy}
-                              />
-                            {#else}
-                              <div class="flex items-center rounded-l shrink-0 w-10 h-10 place-content-center">
-                                <#Icon iconify="octicon:file-media-24" class="w-8 h-8 text-base-content/70" />
-                              </div>
-                            {/if}
-                        {/case}
-                        <div class="absolute z-50 bottom-3 left-3 dropdown dropdown-hover dropdown-top">
-                          <label tabindex="0" class="text-white border-none rounded btn btn-xs bg-black/60">{l("alt")}</label>
-                          <div tabindex="0" class="p-2 rounded shadow dropdown-content bg-base-200 w-52">
-                            <div class="prose-sm prose text-base-content">{media_label}</div>
-                          </div>
-                        </div>
-                        <figcaption class="sr-only">{media_label}</figcaption>
-                      </a>
-                    {/if}
-                  </figure>
-                </article>
-            {/case}
-          {/for}
-        </div>
-      {#else}
-        <div class="gap-2 mt-1">
-          <div class="flex items-center gap-2">
-            <#Icon iconify="ph:paperclip-duotonew-4 h-4 text-base-content/50" />
-            <span class="text-sm text-base-content/70">{length(@image_list)} {l("media")}</span>
-          </div>
-        </div>
-      {/if}
-  {/case}
-
-  {#case @gif_count}
-    {#match 0}
-      {!-- NO GIFS --}
-    {#match num_gifs}
-      {!-- GIF ATTACHMENTS --}
-      {#if @showing_within != :smart_input}
-        <div
-          data-id="gif_grid"
-          data-media={num_gifs}
-          data-rendered={@showing_within}
-          data-main-object={@viewing_main_object}
-          class="flex flex-col gap-2 my-2"
-        >
-          {#for {%{} = m, counter} <- Enum.with_index(@gif_list)}
-            {#case Bonfire.Files.Media.media_label(m) || l("Sorry, no caption provided by author")}
-              {#match media_label}
-                <article
-                  data-id="article_gif"
-                  data-media={num_gifs}
-                  class={[
-                    "m-entry h-full w-full row-span-4 object-cover",
-                    "!row-span-2 !h-auto":
-                      num_gifs ==
-                        3 && counter != 0
-                  ]}
-                >
-                  <figure class="h-full relative">
-                    {#if current_user_id(@__context__)}
-                      {#if @cw || @showing_within == :flags ||
-                          Settings.get([Bonfire.UI.Social.Activity.MediaLive, :hide], false, @__context__)}
-                        <div id={deterministic_dom_id("sensitive-content-overlay", id(m), "gif", @parent_id)}>
-                          <div class="absolute inset-0 flex items-center cursor-pointer place-content-center justify-center z-[60]">
-                            <button
-                              phx-click={JS.hide(
-                                to: "#" <> deterministic_dom_id("sensitive-content-overlay", id(m), "gif", @parent_id),
-                                transition: "fade-out"
-                              )
-                              |> JS.hide(
-                                to: "#" <> deterministic_dom_id("sensitive-content-backdrop", id(m), "gif", @parent_id),
-                                transition: "fade-out"
-                              )
-                              |> JS.show(
-                                to: "#" <> deterministic_dom_id("hide-sensitive-content", id(m), "gif", @parent_id),
-                                transition: "fade-in"
-                              )}
-                              class="btn z-[9999999999] btn-secondary btn-soft btn-sm"
-                            >
-                              {l("Sensitive content")}
-                            </button>
-                          </div>
-                        </div>
-                        <div id={deterministic_dom_id("hide-sensitive-content", id(m), "gif", @parent_id)} class="hidden">
-                          <button
-                            phx-click={JS.show(
-                              to: "#" <> deterministic_dom_id("sensitive-content-overlay", id(m), "gif", @parent_id),
-                              transition: "fade-out"
-                            )
-                            |> JS.show(
-                              to: "#" <> deterministic_dom_id("sensitive-content-backdrop", id(m), "gif", @parent_id),
-                              transition: "fade-out"
-                            )
-                            |> JS.hide(
-                              to: "#" <> deterministic_dom_id("hide-sensitive-content", id(m), "gif", @parent_id),
-                              transition: "fade-in"
-                            )}
-                            class="absolute top-3 right-3 btn z-50 btn-sm"
-                          >{l("Hide")}</button>
-                        </div>
-                        <div
-                          id={deterministic_dom_id("sensitive-content-backdrop", id(m), "gif", @parent_id)}
-                          class="absolute inset-0 backdrop-blur-2xl z-50 cursor-pointer rounded-md"
-                        />
-                      {/if}
-
-                      <Bonfire.UI.Common.OpenModalLive
-                        id={deterministic_dom_id("gif_modal", id(m), "gif", @parent_id)}
-                        no_actions
-                        no_header
-                        image_preview
-                        enable_fallback={false}
-                        modal_class="modal !modal-middle max-h-[100%]"
-                        wrapper_class="max-h-full !w-full md:w-10/12 !p-0 max-w-[100%] !bg-transparent shadow-none rounded-none"
-                        open_btn_class="w-full"
-                        open_btn_wrapper_class="w-full h-full"
-                      >
-                        <div class="h-full">
-                          {#if is_video?(m.path, m.media_type)}
-                            {!-- Render video files as GIF-style --}
-                            <Bonfire.UI.Social.Activity.RemoteMediaLive
-                              id={deterministic_dom_id(__MODULE__, id(m), nil, @parent_id)}
-                              media={m}
-                              image_css={[grayscale: @showing_within == :flags]}
-                              parent_id={deterministic_dom_id(__MODULE__, m, nil, @parent_id)}
-                            />
-                          {#else}
-                            {!-- Render actual GIF images --}
-                            <img
-                              src={Media.media_url(m)}
-                              class="gif-image-modal w-full h-full object-contain"
-                              alt={media_label}
-                            />
-                          {/if}
-                          <div class="fixed z-20 bottom-0 left-0 bg-black/30 right-0">
-                            <div class={[
-                              "text-center text-sm p-4 text-white/90 mx-auto",
-                              "line-clamp-6": @showing_within in [:feed, :profile]
-                            ]}>{media_label}
-                              <p class="text-sm">{Bonfire.Files.Media.description(m.metadata)}</p>
-                            </div>
-                          </div>
-                        </div>
-
-                        <:open_btn>
-                          <div class="relative h-full overflow-hidden">
-                            {#if is_video?(m.path, m.media_type)}
-                              {!-- Render video files as GIF-style preview --}
-                              <div class="w-full h-full cursor-pointer rounded-md overflow-hidden">
-                                <Bonfire.UI.Social.Activity.RemoteMediaLive
-                                  id={deterministic_dom_id(__MODULE__, id(m), nil, @parent_id)}
-                                  media={m}
-                                  image_css={[grayscale: @showing_within == :flags]}
-                                  parent_id={deterministic_dom_id(__MODULE__, m, nil, @parent_id)}
-                                />
-                              </div>
-                            {#else}
-                              {!-- Render actual GIF images --}
-                              <img
-                                src={Media.media_url(m)}
-                                class="gif-image border-base-content/20 !object-cover w-full h-full cursor-pointer rounded-md"
-                                alt={media_label}
-                              />
-                            {/if}
-                            <div class="absolute top-2 right-2 bg-black/50 text-white px-2 py-1 rounded text-xs">
-                              GIF
-                            </div>
-                            <figcaption class="sr-only">{media_label}</figcaption>
-                          </div>
-                        </:open_btn>
-                      </Bonfire.UI.Common.OpenModalLive>
-                    {#else}
-                      {!-- if logged out --}
-                      <a href={Media.media_url(m)} target="_blank" class="relative h-full block">
-                        {#if @cw || @showing_within == :flags ||
-                            Settings.get([Bonfire.UI.Social.Activity.MediaLive, :hide], false, @__context__)}
-                          <div class="absolute inset-0 flex items-center cursor-pointer place-content-center justify-center z-[60]">
-                            <button class="btn btn-sm  normal-case btn-outline border-base-content/20 btn-active">{l("Media Hidden")}</button>
-                          </div>
-                          <div class="absolute inset-0 backdrop-blur-2xl z-50 cursor-pointer rounded-md" />
-                        {/if}
-
+                      {#if is_gif?(m.path, m.media_type, m)}
                         {#if is_video?(m.path, m.media_type)}
-                          {!-- Render video files as GIF-style for logged-out users --}
-                          <div class="w-full h-full cursor-pointer rounded-md overflow-hidden">
+                          <div class="w-full h-full [&_video]:w-full [&_video]:h-full [&_video]:object-cover [&_video]:rounded-none [&_video]:border-0">
                             <Bonfire.UI.Social.Activity.RemoteMediaLive
-                              id={deterministic_dom_id(__MODULE__, id(m), nil, @parent_id)}
+                              id={deterministic_dom_id(__MODULE__, id(m), "gif", @parent_id)}
                               media={m}
                               image_css={[grayscale: @showing_within == :flags]}
                               parent_id={deterministic_dom_id(__MODULE__, m, nil, @parent_id)}
                             />
                           </div>
                         {#else}
-                          {!-- Render actual GIF images --}
                           <img
                             src={Media.media_url(m)}
-                            class="gif-image border-base-content/20 !object-cover h-full cursor-pointer max-h-[500px] rounded-md"
+                            class="gif-image w-full h-full object-cover"
                             alt={media_label}
                           />
                         {/if}
-                        <div class="absolute top-2 right-2 bg-black/50 text-white px-2 py-1 rounded text-xs">
+                        <div class="absolute top-2 right-2 bg-black/50 text-white px-2 py-1 rounded text-xs z-10">
                           GIF
                         </div>
-                        <div class="absolute z-50 bottom-3 left-3 dropdown dropdown-hover dropdown-top">
-                          <label tabindex="0" class="text-white border-none rounded btn btn-xs bg-black/60">{l("alt")}</label>
-                          <div tabindex="0" class="p-2 rounded shadow dropdown-content bg-base-200 w-52">
-                            <div class="prose-sm prose text-base-content">{media_label}</div>
-                          </div>
+                      {#elseif is_video?(m.path, m.media_type)}
+                        <div class="w-full h-full [&_video]:w-full [&_video]:h-full [&_video]:object-cover [&_video]:rounded-none [&_video]:border-0 [&_iframe]:w-full [&_iframe]:h-full">
+                          <Bonfire.UI.Social.Activity.VideoLinkLive
+                            media={m}
+                            media_label={media_label}
+                            autoplay={@autoplay}
+                            muted={@muted || @cw || @showing_within == :flags}
+                            parent_id={deterministic_dom_id(__MODULE__, m, nil, @parent_id)}
+                          />
                         </div>
-                        <figcaption class="sr-only">{media_label}</figcaption>
-                      </a>
+                      {#else}
+                        <button
+                          type="button"
+                          phx-click="open"
+                          phx-target={"#" <> deterministic_dom_id("media_carousel_modal", @parent_id)}
+                          class="w-full h-full block"
+                        >
+                          <div class="relative h-full overflow-hidden w-full">
+                            {#case preview_img(m) || Media.media_url(m)}
+                              {#match maybe_preview_img}
+                                <LazyImage
+                                  parent_id={deterministic_dom_id(__MODULE__, id(m), "media", @parent_id)}
+                                  class={[
+                                    "!object-cover w-full h-full cursor-pointer",
+                                    grayscale: @showing_within == :flags
+                                  ]}
+                                  media={m}
+                                  alt={media_label}
+                                  src={maybe_preview_img}
+                                  disable_lazy={@disable_lazy}
+                                />
+                            {/case}
+                            <figcaption class="sr-only">{media_label}</figcaption>
+                          </div>
+                        </button>
+                      {/if}
+                    {#else}
+                      {#if is_gif?(m.path, m.media_type, m)}
+                        {#if is_video?(m.path, m.media_type)}
+                          <div class="w-full h-full [&_video]:w-full [&_video]:h-full [&_video]:object-cover [&_video]:rounded-none [&_video]:border-0">
+                            <Bonfire.UI.Social.Activity.RemoteMediaLive
+                              id={deterministic_dom_id(__MODULE__, id(m), "gif", @parent_id)}
+                              media={m}
+                              image_css={[grayscale: @showing_within == :flags]}
+                              parent_id={deterministic_dom_id(__MODULE__, m, nil, @parent_id)}
+                            />
+                          </div>
+                        {#else}
+                          <img
+                            src={Media.media_url(m)}
+                            class="gif-image w-full h-full object-cover"
+                            alt={media_label}
+                          />
+                        {/if}
+                        <div class="absolute top-2 right-2 bg-black/50 text-white px-2 py-1 rounded text-xs z-10">
+                          GIF
+                        </div>
+                      {#elseif is_video?(m.path, m.media_type)}
+                        <div class="w-full h-full [&_video]:w-full [&_video]:h-full [&_video]:object-cover [&_video]:rounded-none [&_video]:border-0 [&_iframe]:w-full [&_iframe]:h-full">
+                          <Bonfire.UI.Social.Activity.VideoLinkLive
+                            media={m}
+                            media_label={media_label}
+                            autoplay={false}
+                            muted={true}
+                            parent_id={deterministic_dom_id(__MODULE__, m, nil, @parent_id)}
+                          />
+                        </div>
+                      {#else}
+                        <a href={Media.media_url(m)} target="_blank" class="w-full h-full block">
+                          {#if @cw || @showing_within == :flags ||
+                              Settings.get([Bonfire.UI.Social.Activity.MediaLive, :hide], false, @__context__)}
+                            <div class="absolute inset-0 flex items-center cursor-pointer place-content-center justify-center z-[60]">
+                              <button class="btn btn-sm  normal-case btn-outline border-base-content/20 btn-active">{l("Media Hidden")}</button>
+                            </div>
+                            <div class="absolute inset-0 backdrop-blur-2xl z-50 cursor-pointer rounded-md" />
+                          {/if}
+
+                          {#case preview_img(m) || Media.media_url(m)}
+                            {#match maybe_preview_img}
+                              {#if is_image?(maybe_preview_img)}
+                                <LazyImage
+                                  parent_id={deterministic_dom_id(__MODULE__, id(m), "media", @parent_id)}
+                                  class="!object-cover w-full h-full cursor-pointer"
+                                  media={m}
+                                  alt={media_label}
+                                  src={maybe_preview_img}
+                                  disable_lazy={@disable_lazy}
+                                />
+                              {#else}
+                                <div class="flex items-center rounded-l shrink-0 w-10 h-10 place-content-center">
+                                  <#Icon iconify="octicon:file-media-24" class="w-8 h-8 text-base-content/70" />
+                                </div>
+                              {/if}
+                          {/case}
+                          <div class="absolute z-50 bottom-3 left-3 dropdown dropdown-hover dropdown-top">
+                            <label tabindex="0" class="text-white border-none rounded btn btn-xs bg-black/60">{l("alt")}</label>
+                            <div tabindex="0" class="p-2 rounded shadow dropdown-content bg-base-200 w-52">
+                              <div class="prose-sm prose text-base-content">{media_label}</div>
+                            </div>
+                          </div>
+                          <figcaption class="sr-only">{media_label}</figcaption>
+                        </a>
+                      {/if}
                     {/if}
                   </figure>
                 </article>
-            {/case}
-          {/for}
+                  </div>
+              {/case}
+            {/for}
+          </div>
         </div>
       {#else}
         <div class="gap-2 mt-1">
-          {#for %{} = m <- @gif_list}
-            <div class="flex items-center gap-2">
-              <#Icon iconify="ph:paperclip-duotonew-4 h-4 text-base-content/50" />
-              <span class="text-sm text-base-content/50 truncate max-w-[320px]">{Media.media_url(m)} (GIF)</span>
-            </div>
-          {/for}
+          <div class="flex items-center gap-2">
+            <#Icon iconify="ph:paperclip-duotone" class="w-4 h-4 text-base-content/50" />
+            <span class="text-sm text-base-content/70">{length(@visual_list)} {l("media")}</span>
+          </div>
         </div>
       {/if}
   {/case}
+
+</div>
+<div
+  data-id="media_list"
+  data-rendered={@showing_within}
+  data-main-object={@viewing_main_object}
+  :if={@link_list != [] && @showing_within != :smart_input}
+  class="flex flex-col gap-2 my-2"
+>
+  {#for m <- if @showing_within == :feed, do: Enum.take(@link_list, 1), else: @link_list}
+    {#case Media.media_url(m)}
+      {#match nil}
+      {#match media_url}
+        {#if m.media_type == "research"}
+          <Bonfire.UI.Social.Activity.AcademicPaperLive
+            media={m}
+            metadata={Enums.deep_merge_reduce([
+              e(m.metadata, "other", nil),
+              e(m.metadata, "json_ld", []) |> List.wrap() |> List.first(),
+              e(m.metadata, "oembed", nil),
+              e(m.metadata, "wikibase", nil),
+              e(m.metadata, "orcid", nil),
+              e(m.metadata, "crossref", nil)
+            ])}
+            showing_within={@showing_within}
+            css_borders={@css_borders}
+            parent_id={deterministic_dom_id(__MODULE__, m, nil, @parent_id)}
+          />
+        {#elseif String.ends_with?(media_url || "", ".pdf")}
+          <Bonfire.UI.Social.Activity.LinkPdfLive
+            media={m}
+            media_url={media_url}
+            css_borders={@css_borders}
+            parent_id={deterministic_dom_id(__MODULE__, m, nil, @parent_id)}
+            showing_within={@showing_within}
+          />
+        {#else _}
+          <Bonfire.UI.Social.Activity.MediaLinkLive
+            cw={@cw}
+            media_url={media_url}
+            media={m}
+            no_cover={Enum.count(@link_list) > 1 and !@small_icon}
+            small_icon={@small_icon or Enum.count(@link_list) > 1}
+            download_url={e(m.metadata, "oembed", "download_url", nil) || e(m.metadata, "download_url", nil)}
+            preview_img={preview_img(m)}
+            css_borders={@css_borders}
+            activity_inception={@activity_inception}
+            showing_within={@showing_within}
+            parent_id={deterministic_dom_id(__MODULE__, m, nil, @parent_id)}
+          />
+        {/if}
+    {/case}
+  {/for}
+
+  {#if @showing_within == :feed && length(@link_list) > 1}
+    <div class="text-xs text-base-content/50 flex items-center gap-1 px-2">
+      <#Icon iconify="ph:link-simple" class="w-3 h-3" />
+      <span>{length(@link_list) - 1} {l("more link(s)")}</span>
+    </div>
+  {/if}
 </div>
