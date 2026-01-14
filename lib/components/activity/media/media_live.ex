@@ -59,7 +59,9 @@ defmodule Bonfire.UI.Social.Activity.MediaLive do
     # Split media into categories: images, videos, gifs, audio/embeds, links
     {image_list, video_list, gif_list, audio_embed_list, link_list} =
       media
-      |> Enum.reduce({[], [], [], [], []}, fn m, {image_list, video_list, gif_list, audio_embed_list, link_list} ->
+      |> Enum.reduce({[], [], [], [], []}, fn m,
+                                              {image_list, video_list, gif_list, audio_embed_list,
+                                               link_list} ->
         cond do
           is_gif?(m.path, m.media_type, m) ->
             {image_list, video_list, [m | gif_list], audio_embed_list, link_list}
