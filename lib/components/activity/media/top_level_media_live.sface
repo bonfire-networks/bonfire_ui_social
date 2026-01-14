@@ -1,6 +1,6 @@
 {#if @featured}
   <!-- Featured layout: Large image at top, content below (like Mastodon's first item) -->
-  <div class={"flex flex-col bg-base-100 overflow-hidden", @class}>
+  <div data-id="top_level_media" data-object_id={id(@link)} class={"flex flex-col bg-base-100 overflow-hidden", @class}>
 
     {#case MediaLive.preview_img(@link)}
       {#match preview_img when is_binary(preview_img)}
@@ -59,7 +59,7 @@
   </div>
 {#else}
   {!-- Compact layout: Small thumbnail on right, content on left --}
-  <div class={"flex gap-3 bg-base-100", @class, "p-4": !@in_widget}>
+  <div data-id="top_level_media" data-object_id={id(@link)} class={"flex gap-3 bg-base-100", @class, "p-4": !@in_widget}>
     {!-- Content on left --}
     <div class="flex flex-col gap-1 flex-1 min-w-0">
       <div class="flex items-center gap-2 text-sm text-base-content/60">
