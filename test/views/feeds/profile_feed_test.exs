@@ -95,13 +95,13 @@ defmodule Bonfire.UI.Social.Feeds.ProfileFeed.Test do
     |> visit("/user/#{me.id}")
     |> assert_has("[data-id=feed_controls]")
     |> assert_has_or_open_browser("[data-id=object_body]", text: my_post_content)
-    |> assert_has("article [data-role=name]", text: "Image post")
+    |> assert_has("article [data-role=name]", text: "Post with Media")
 
     #  then we hide images
     |> click_button("[data-toggle=image] button", "Hide")
     |> wait_async()
     |> assert_has_or_open_browser("[data-id=object_body]", text: my_post_content)
-    |> refute_has_or_open_browser("article [data-role=name]", text: "Image post")
+    |> refute_has_or_open_browser("article [data-role=name]", text: "Post with Media")
 
     #  then we hide posts
     |> click_button("[data-toggle=post] button", "Hide")

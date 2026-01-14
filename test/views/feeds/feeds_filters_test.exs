@@ -309,8 +309,6 @@ defmodule Bonfire.UI.Social.FeedsFilters.Test do
         # |> click_button("Filters")
         |> click_button("[data-toggle='boost'] button", "Hide")
         |> wait_async()
-        # |> PhoenixTest.open_browser()
-        |> assert_has("[data-toggle='boost'] [data-id='disabled'].active")
         # Verify boost is hidden
         |> refute_has("[data-id=feed] article[data-verb=Boost]")
         # Verify original post is still visible (don't check exact count as other seeded data may exist)

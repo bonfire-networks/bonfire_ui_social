@@ -138,6 +138,9 @@ defmodule Bonfire.Social.Feeds.LocalFeed.Test do
 
     conn()
     |> visit("/feed/local")
-    |> assert_has("article", count: 1)
+    |> assert_has("article", text: "post with guest_attrs")
+    # Only public boundary posts should be visible to guests
+    |> refute_has("article", text: "post with local_attrs")
+    |> refute_has("article", text: "post with admin_attrs")
   end
 end
