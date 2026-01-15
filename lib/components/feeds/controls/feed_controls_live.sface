@@ -24,7 +24,7 @@
       />
 
       <div
-        data-position="bottom"
+        data-position="bottom-end"
         phx-hook="Tooltip"
         class="flex w-full relative"
         id="filter_by_types_feed"
@@ -39,9 +39,7 @@
 
         <ul
           tabindex="0"
-          class="tooltip z-[999] menu bg-base-100 divide-y divide-base-content/20 border pt-0 border-base-content/20 shadow rounded-box absolute top-0 right-0 hidden"
-          id="filter_by_types_feed_content"
-          phx-update="ignore"
+          class="tooltip z-[999] menu bg-base-100 divide-y divide-base-content/20 border pt-0 border-base-content/20 shadow rounded-box absolute top-0 right-0 hidden w-72"
         >
           {#if extension_enabled?(:bonfire_ui_reactions, @__context__)}
             <div class="pt-2" data-scope="boosts">

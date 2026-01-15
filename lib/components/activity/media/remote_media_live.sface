@@ -394,7 +394,7 @@
                                     class="cursor-pointer"
                                     title={l("Play inline")}
                                   >
-                                    <#Icon iconify="heroicons:play-20-solid" class="w-6 h-6 text-gray-800" />
+                                    <#Icon iconify="ph:play-duotone" class="w-6 h-6 text-gray-800" />
                                   </button>
                                   {!-- Open in new tab button --}
                                   <a
@@ -403,7 +403,7 @@
                                     class=""
                                     title={l("Open in new tab")}
                                   >
-                                    <#Icon iconify="heroicons-solid:external-link" class="w-6 h-6 text-gray-600" />
+                                    <#Icon iconify="ph:arrow-square-out-duotone" class="w-6 h-6 text-gray-600" />
                                   </a>
                                   </div>
                                 </div>
