@@ -111,7 +111,7 @@
           {/if}
 
           {#if num_medias > 1}
-            <div class="absolute top-3 right-3 z-[60] bg-black/60 text-white text-xs px-2 py-1 rounded-full">
+            <div class="absolute top-3 right-3 z-[99999] bg-black/60 text-white text-xs px-2 py-1 rounded-full">
               {num_medias} {l("media")}
             </div>
           {/if}
