@@ -47,7 +47,7 @@
 
       <button
         x-on:click="prev"
-        class="btn btn-primary btn-circle shadow-xl btn-xl z-[9999999999999] absolute left-4"
+        class="btn btn-primary btn-circle shadow-xl btn-xl z-50 absolute left-4"
         :aria-disabled="atBeginning"
         :tabindex="atBeginning ? -1 : 0"
         :class="{ 'opacity-50 cursor-not-allowed': atBeginning }"
@@ -102,7 +102,7 @@
                         to: "#" <> deterministic_dom_id("carousel-hide-sensitive", id(m), "media", @parent_id),
                         transition: "fade-in"
                       )}
-                      class="btn z-[9999999999] btn-secondary btn-soft btn-sm"
+                      class="btn z-50 btn-secondary btn-soft btn-sm"
                     >
                       {l("Sensitive content")}
                     </button>
@@ -132,7 +132,7 @@
                 <div
                   x-show="currentIndex === {counter}"
                   id={deterministic_dom_id("carousel-sensitive-backdrop", id(m), "media", @parent_id)}
-                  class="absolute inset-0 backdrop-blur-2xl z-50 cursor-pointer rounded-md"
+                  class="absolute inset-0 backdrop-blur-sm bg-black/50 z-40 cursor-pointer rounded-md"
                 />
               {/if}
 
@@ -161,7 +161,7 @@
 
       <button
         x-on:click="next"
-        class="z-[9999999999] btn btn-primary btn-circle btn-xl shadow-xl absolute right-4"
+        class="z-50 btn btn-primary btn-circle btn-xl shadow-xl absolute right-4"
         :aria-disabled="atEnd"
         :tabindex="atEnd ? -1 : 0"
         :class="{ 'opacity-50 cursor-not-allowed': atEnd }"

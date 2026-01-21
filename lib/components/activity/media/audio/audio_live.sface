@@ -20,7 +20,7 @@
         {/case}
       </div>
 
-      <div class="font-medium text-lg line-clamp-2">
+      <div class="font-medium text-lg line-clamp-2 text-balance">
         {@media_label}
       </div>
 
@@ -28,6 +28,7 @@
         href={Media.media_url(@media)}
         class="btn btn-ghost btn-sm absolute right-0 top-0 btn-square btn-soft"
         title={l("Open in new tab")}
+        aria-label={l("Open in new tab")}
         target="_blank"
       >
         <#Icon iconify="heroicons-outline:external-link" class="w-4 h-4" />

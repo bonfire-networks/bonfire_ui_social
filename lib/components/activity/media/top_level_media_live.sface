@@ -38,7 +38,7 @@
         <LinkLive
           to={@link.path}
           target="_blank"
-          class="text-lg font-bold link link-hover line-clamp-2 leading-snug"
+          class="text-lg font-bold link link-hover line-clamp-2 leading-snug text-balance"
         >
           {Bonfire.Files.Media.media_label(@link)}
         </LinkLive>
@@ -46,7 +46,7 @@
 
       {#case Bonfire.Files.Media.description(@link)}
         {#match description when is_binary(description) and description != ""}
-          <p class="text-sm text-base-content/70 line-clamp-2">{description}</p>
+          <p class="text-sm text-base-content/70 line-clamp-2 text-pretty">{description}</p>
         {#match _}  
       {/case}
 

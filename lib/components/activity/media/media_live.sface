@@ -15,7 +15,7 @@
               {#match media_label}
                 <article class="m-entry relative h-full w-full row-span-4 object-cover">
                   <div
-                    class="absolute inset-0 backdrop-blur-xl bg-white/30 z-50 rounded-box"
+                    class="absolute inset-0 backdrop-blur-sm bg-black/50 z-50 rounded-box"
                     :if={@cw || Settings.get([Bonfire.UI.Social.Activity.MediaLive, :hide], false, @__context__)}
                   />
                   <figure class="h-full">
@@ -88,20 +88,22 @@
 
         <div class="relative mt-3">
           {#if num_medias > 1}
-            <div class="absolute inset-y-0 left-2 z-[60] flex items-center">
+            <div class="absolute inset-y-0 left-2 z-30 flex items-center">
               <button
                 type="button"
                 data-nav="prev"
+                aria-label={l("Previous")}
                 class="btn btn-circle btn-sm bg-black/50 hover:bg-black/70 border-none text-white transition-opacity"
                 onclick={"document.getElementById('carousel_#{@parent_id}').scrollBy({left: -(document.getElementById('carousel_#{@parent_id}').offsetWidth - 40), behavior: 'smooth'})"}
               >
                 <#Icon iconify="ph:caret-left" class="w-4 h-4" />
               </button>
             </div>
-            <div class="absolute inset-y-0 right-2 z-[60] flex items-center">
+            <div class="absolute inset-y-0 right-2 z-30 flex items-center">
               <button
                 type="button"
                 data-nav="next"
+                aria-label={l("Next")}
                 class="btn btn-circle btn-sm bg-black/50 hover:bg-black/70 border-none text-white transition-opacity"
                 onclick={"document.getElementById('carousel_#{@parent_id}').scrollBy({left: document.getElementById('carousel_#{@parent_id}').offsetWidth - 40, behavior: 'smooth'})"}
               >
@@ -111,7 +113,7 @@
           {/if}
 
           {#if num_medias > 1}
-            <div class="absolute top-3 right-3 z-[99999] bg-black/60 text-white text-xs px-2 py-1 rounded-full">
+            <div class="absolute top-3 right-3 z-30 bg-black/60 text-white text-xs px-2 py-1 rounded-full">
               {num_medias} {l("media")}
             </div>
           {/if}
@@ -162,7 +164,7 @@
                                     to: "#" <> deterministic_dom_id("hide-sensitive-content", id(m), "media", @parent_id),
                                     transition: "fade-in"
                                   )}
-                                  class="btn z-[9999999999] btn-secondary btn-soft btn-sm"
+                                  class="btn z-50 btn-secondary btn-soft btn-sm"
                                 >
                                   {l("Sensitive content")}
                                 </button>
@@ -190,7 +192,7 @@
                             </div>
                             <div
                               id={deterministic_dom_id("sensitive-content-backdrop", id(m), "media", @parent_id)}
-                              class="absolute inset-0 backdrop-blur-2xl z-50 cursor-pointer rounded-md"
+                              class="absolute inset-0 backdrop-blur-sm bg-black/50 z-40 cursor-pointer rounded-md"
                             />
                           {/if}
 
@@ -280,7 +282,7 @@
                                 <div class="absolute inset-0 flex items-center cursor-pointer place-content-center justify-center z-[60]">
                                   <button class="btn btn-sm  normal-case btn-outline border-base-content/20 btn-active">{l("Media Hidden")}</button>
                                 </div>
-                                <div class="absolute inset-0 backdrop-blur-2xl z-50 cursor-pointer rounded-md" />
+                                <div class="absolute inset-0 backdrop-blur-sm bg-black/50 z-40 cursor-pointer rounded-md" />
                               {/if}
 
                               {#case preview_img(m) || Media.media_url(m)}

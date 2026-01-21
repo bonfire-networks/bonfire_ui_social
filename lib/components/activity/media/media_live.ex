@@ -70,6 +70,11 @@ defmodule Bonfire.UI.Social.Activity.MediaLive do
               Files.has_extension?(m.path || "", @image_exts) ->
             {[m | image_list], video_list, gif_list, audio_embed_list, link_list}
 
+          # Embeds (YouTube, Vimeo, etc.) - check BEFORE video files since embeds
+          # may have video/* media_type but should render with 16:9 aspect ratio
+          has_video_page_metadata?(m) ->
+            {image_list, video_list, gif_list, [m | audio_embed_list], link_list}
+
           # Direct video files go to video_list (for carousel with images)
           String.starts_with?(m.media_type || "", @video_types) or
               Files.has_extension?(m.path || "", @video_exts) ->
@@ -78,10 +83,6 @@ defmodule Bonfire.UI.Social.Activity.MediaLive do
           # Audio files
           String.starts_with?(m.media_type || "", @audio_types) or
               Files.has_extension?(m.path || "", @audio_exts) ->
-            {image_list, video_list, gif_list, [m | audio_embed_list], link_list}
-
-          # Embeds (YouTube, Vimeo, etc.) go to audio_embed_list for separate rendering
-          has_video_page_metadata?(m) ->
             {image_list, video_list, gif_list, [m | audio_embed_list], link_list}
 
           true ->
