@@ -1049,7 +1049,7 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
                 )
 
               e ->
-                flood(
+                debug(
                   e,
                   "There was an error when trying to load the feed. Error raised by feed_assigns"
                 )
