@@ -264,11 +264,13 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
     # dump(data)
     current_user = current_user(socket)
 
+    # check if contains blocked keywords or blocked by other boundaries
     permitted? =
-      Bonfire.Common.Needles.exists?([id: e(activity, :object, :id, nil) || id(activity)],
-        current_user: current_user
-      )
-      |> debug("checked boundary upon receiving a LivePush - permitted?")
+      Bonfire.Social.show_activity?(activity, current_user: current_user) and
+        Bonfire.Common.Needles.exists?([id: e(activity, :object, :id, nil) || id(activity)],
+          current_user: current_user
+        )
+        |> debug("checked boundary upon receiving a LivePush - permitted?")
 
     if permitted? && is_list(feed_ids) do
       my_home_feed_ids = Bonfire.Social.Feeds.my_home_feed_ids(current_user)
